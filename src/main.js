@@ -6,6 +6,7 @@ const checkSpeed = function(tasks, options) {
   const optionsA = getOptions(options)
   const results = getResults({ tasks, options: optionsA })
   reportResults(results)
+  return results
 }
 
 // We do not use `export default` because Babel transpiles it in a way that
