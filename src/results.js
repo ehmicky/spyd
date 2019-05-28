@@ -48,10 +48,21 @@ const getArgResult = function({
   options,
 }) {
   const titleA = variant === undefined ? title : `${title} (${variant})`
-  const mainA =
-    variantArgs === undefined ? main : main.bind(null, ...variantArgs)
+  const mainA = useVariantArgs(main, variantArgs)
 
   const durations = loop.map(() => measure(mainA))
   const duration = getStats(durations)
   return { title: titleA, task, variant, duration, options }
+}
+
+const useVariantArgs = function(main, variantArgs) {
+  if (variantArgs === undefined) {
+    return main
+  }
+
+  if (Array.isArray(variantArgs)) {
+    return main.bind(null, ...variantArgs)
+  }
+
+  return main.bind(null, variantArgs)
 }

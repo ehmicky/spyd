@@ -21,6 +21,10 @@ testEach(
     { one: { main }, opts: { repeat: 1 } },
     { one: { main }, opts: { repeat: 3 } },
     {
+      one: { main, variants: { blue: 'blue', green: 'green' } },
+      opts: { repeat: 1 },
+    },
+    {
       one: { main, variants: { blue: ['blue'], green: ['green'] } },
       opts: { repeat: 1 },
     },
