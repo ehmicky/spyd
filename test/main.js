@@ -1,5 +1,5 @@
 import test from 'ava'
-import testEach from 'test-each'
+import { each } from 'test-each'
 
 import checkSpeed from '../src/main.js'
 
@@ -16,7 +16,7 @@ const normalizeResult = function({ duration: { average, all }, ...result }) {
   return { ...result, duration: { average: averageA, all: allA } }
 }
 
-testEach(
+each(
   [
     { one: { main }, opts: { repeat: 1 } },
     { one: { main }, opts: { repeat: 3 } },
