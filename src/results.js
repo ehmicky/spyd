@@ -22,12 +22,13 @@ const getResult = function({
     return getArgResult({ name, main, loop, task: taskA, opts })
   }
 
-  return parameters.map(({ name: parameter, values: args }) =>
+  return parameters.map(({ name: parameter, values: args, cleanup }) =>
     getArgResult({
       name,
       main,
       parameter,
       args,
+      cleanup,
       loop,
       task: taskA,
       opts,
@@ -39,29 +40,23 @@ const getArgResult = function({
   name,
   main,
   parameter,
-  args,
+  args = [],
+  cleanup,
   loop,
   task,
   opts,
 }) {
-  const durations = loop.map(() => getDuration(main, args))
+  const durations = loop.map(() => getDuration({ main, args, cleanup }))
   const duration = getStats(durations)
   return { name, task, parameter, duration, opts }
 }
 
-const getDuration = function(main, args) {
-  const mainA = bindArgs(main, args)
-  const duration = measure(mainA)
-  return duration
-}
-
-const bindArgs = function(main, args) {
-  if (args === undefined) {
-    return main
-  }
-
+const getDuration = function({ main, args, cleanup }) {
   const argsA = callArgs(args)
-  return main.bind(null, ...argsA)
+  const mainA = bindArgs(main, argsA)
+  const duration = measure(mainA)
+  performCleanup(cleanup, argsA)
+  return duration
 }
 
 const callArgs = function(args) {
@@ -70,4 +65,20 @@ const callArgs = function(args) {
   }
 
   return args()
+}
+
+const bindArgs = function(main, args) {
+  if (args.length === 0) {
+    return main
+  }
+
+  return main.bind(null, ...args)
+}
+
+const performCleanup = function(cleanup, args) {
+  if (cleanup === undefined) {
+    return
+  }
+
+  cleanup(...args)
 }
