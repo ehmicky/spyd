@@ -44,13 +44,12 @@ const getArgResult = function({
   task,
   opts,
 }) {
-  const nameA = parameter === undefined ? name : `${name} (${parameter})`
   const mainA = useArgs(main, args)
   const getDuration = measure.bind(null, mainA)
 
   const durations = loop.map(getDuration)
   const duration = getStats(durations)
-  return { name: nameA, task, parameter, duration, opts }
+  return { name, task, parameter, duration, opts }
 }
 
 const useArgs = function(main, args) {
