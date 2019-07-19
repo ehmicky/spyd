@@ -12,19 +12,19 @@ const getIndex = function(value, index) {
 
 const getResult = function({
   task,
-  task: { title, main, variants },
+  task: { name, main, variants },
   loop,
   opts,
 }) {
-  const taskA = { ...task, title }
+  const taskA = { ...task, name }
 
   if (variants === undefined) {
-    return getArgResult({ title, main, loop, task: taskA, opts })
+    return getArgResult({ name, main, loop, task: taskA, opts })
   }
 
   return Object.entries(variants).map(([variant, variantArgs]) =>
     getArgResult({
-      title,
+      name,
       main,
       variantArgs,
       variant,
@@ -36,7 +36,7 @@ const getResult = function({
 }
 
 const getArgResult = function({
-  title,
+  name,
   main,
   variantArgs,
   variant,
@@ -44,13 +44,13 @@ const getArgResult = function({
   task,
   opts,
 }) {
-  const titleA = variant === undefined ? title : `${title} (${variant})`
+  const nameA = variant === undefined ? name : `${name} (${variant})`
   const mainA = useVariantArgs(main, variantArgs)
   const getDuration = measure.bind(null, mainA)
 
   const durations = loop.map(getDuration)
   const duration = getStats(durations)
-  return { title: titleA, task, variant, duration, opts }
+  return { name: nameA, task, variant, duration, opts }
 }
 
 const useVariantArgs = function(main, variantArgs) {
