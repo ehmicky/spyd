@@ -44,11 +44,11 @@ const getParamResult = async function({
   return { task: name, parameter, duration }
 }
 
-const getDuration = function({ main, args, cleanup }) {
-  const argsA = callArgs(args)
+const getDuration = async function({ main, args, cleanup }) {
+  const argsA = await callArgs(args)
   const mainA = bindArgs(main, argsA)
-  const duration = measure(mainA)
-  performCleanup(cleanup, argsA)
+  const duration = await measure(mainA)
+  await performCleanup(cleanup, argsA)
   return duration
 }
 
