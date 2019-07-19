@@ -1,10 +1,10 @@
-import { getOptions } from './options.js'
+import { getOpts } from './options.js'
 import { getResults } from './results.js'
 import { reportResults } from './report.js'
 
-const checkSpeed = function(tasks, options) {
-  const optionsA = getOptions(options)
-  const results = getResults({ tasks, options: optionsA })
+const checkSpeed = function(tasks, opts) {
+  const optsA = getOpts(opts)
+  const results = getResults({ tasks, opts: optsA })
   reportResults(results)
   return results
 }

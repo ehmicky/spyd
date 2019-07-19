@@ -1,7 +1,7 @@
-export const getOptions = function(options) {
-  return { ...DEFAULT_OPTIONS, ...options }
+export const getOpts = function(opts) {
+  return { ...DEFAULT_OPTS, ...opts }
 }
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTS = {
   repeat: 1e3,
 }

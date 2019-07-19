@@ -1,10 +1,10 @@
 import { measure } from './measure.js'
 import { getStats } from './stats.js'
 
-export const getResults = function({ tasks, options, options: { repeat } }) {
+export const getResults = function({ tasks, opts, opts: { repeat } }) {
   const loop = Array.from({ length: repeat }, getIndex)
   return Object.entries(tasks).flatMap(([id, task]) =>
-    getResult({ id, task, loop, options }),
+    getResult({ id, task, loop, opts }),
   )
 }
 
@@ -17,12 +17,12 @@ const getResult = function({
   task,
   task: { title = id, main, variants },
   loop,
-  options,
+  opts,
 }) {
   const taskA = { ...task, title }
 
   if (variants === undefined) {
-    return getArgResult({ title, main, loop, task: taskA, options })
+    return getArgResult({ title, main, loop, task: taskA, opts })
   }
 
   return Object.entries(variants).map(([variant, variantArgs]) =>
@@ -33,7 +33,7 @@ const getResult = function({
       variant,
       loop,
       task: taskA,
-      options,
+      opts,
     }),
   )
 }
@@ -45,14 +45,15 @@ const getArgResult = function({
   variant,
   loop,
   task,
-  options,
+  opts,
 }) {
   const titleA = variant === undefined ? title : `${title} (${variant})`
   const mainA = useVariantArgs(main, variantArgs)
+  const getDuration = measure.bind(null, mainA)
 
-  const durations = loop.map(() => measure(mainA))
+  const durations = loop.map(getDuration)
   const duration = getStats(durations)
-  return { title: titleA, task, variant, duration, options }
+  return { title: titleA, task, variant, duration, opts }
 }
 
 const useVariantArgs = function(main, variantArgs) {
