@@ -1,3 +1,5 @@
+import pTimes from 'p-times'
+
 import { measure } from './measure.js'
 import { getStats } from './stats.js'
 
@@ -29,15 +31,13 @@ const getParamResult = async function({
   cleanup,
   opts: { repeat },
 }) {
-  const loop = Array.from({ length: repeat }, getIndex)
-  const promises = loop.map(() => getDuration({ main, args, cleanup }))
-  const durations = await Promise.all(promises)
+  const durations = await pTimes(
+    repeat,
+    () => getDuration({ main, args, cleanup }),
+    {},
+  )
   const duration = getStats(durations)
   return { task: name, parameter, duration }
-}
-
-const getIndex = function(value, index) {
-  return index
 }
 
 const getDuration = function({ main, args, cleanup }) {

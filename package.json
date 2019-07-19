@@ -30,7 +30,8 @@
     "test": "test"
   },
   "dependencies": {
-    "core-js": "^3.1.4"
+    "core-js": "^3.1.4",
+    "p-times": "^2.1.0"
   },
   "devDependencies": {
     "ava": "^2.2.0",
