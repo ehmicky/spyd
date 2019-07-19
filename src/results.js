@@ -44,18 +44,30 @@ const getArgResult = function({
   task,
   opts,
 }) {
-  const mainA = useArgs(main, args)
-  const getDuration = measure.bind(null, mainA)
-
-  const durations = loop.map(getDuration)
+  const durations = loop.map(() => getDuration(main, args))
   const duration = getStats(durations)
   return { name, task, parameter, duration, opts }
 }
 
-const useArgs = function(main, args) {
+const getDuration = function(main, args) {
+  const mainA = bindArgs(main, args)
+  const duration = measure(mainA)
+  return duration
+}
+
+const bindArgs = function(main, args) {
   if (args === undefined) {
     return main
   }
 
-  return main.bind(null, ...args)
+  const argsA = callArgs(args)
+  return main.bind(null, ...argsA)
+}
+
+const callArgs = function(args) {
+  if (typeof args !== 'function') {
+    return args
+  }
+
+  return args()
 }
