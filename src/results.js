@@ -3,9 +3,7 @@ import { getStats } from './stats.js'
 
 export const getResults = function({ tasks, opts, opts: { repeat } }) {
   const loop = Array.from({ length: repeat }, getIndex)
-  return Object.entries(tasks).flatMap(([id, task]) =>
-    getResult({ id, task, loop, opts }),
-  )
+  return tasks.flatMap(task => getResult({ task, loop, opts }))
 }
 
 const getIndex = function(value, index) {
@@ -13,9 +11,8 @@ const getIndex = function(value, index) {
 }
 
 const getResult = function({
-  id,
   task,
-  task: { title = id, main, variants },
+  task: { title, main, variants },
   loop,
   opts,
 }) {
