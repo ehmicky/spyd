@@ -29,12 +29,12 @@ const getParamResult = async function({
   parameter,
   args = [],
   cleanup,
-  opts: { repeat },
+  opts: { repeat, concurrency },
 }) {
   const durations = await pTimes(
     repeat,
     () => getDuration({ main, args, cleanup }),
-    {},
+    { concurrency },
   )
   const duration = getStats(durations)
   return { task: name, parameter, duration }
