@@ -1,16 +1,23 @@
 import { measure } from './measure.js'
 import { getStats } from './stats.js'
 
-export const getTasksResults = function({ tasks, opts, opts: { repeat } }) {
+export const getTasksResults = async function({
+  tasks,
+  opts,
+  opts: { repeat },
+}) {
   const loop = Array.from({ length: repeat }, getIndex)
-  return tasks.flatMap(task => getTaskResults({ task, loop, opts }))
+  const promises = tasks.map(task => getTaskResults({ task, loop, opts }))
+  const results = await Promise.all(promises)
+  const resultsA = results.flat()
+  return resultsA
 }
 
 const getIndex = function(value, index) {
   return index
 }
 
-const getTaskResults = function({
+const getTaskResults = async function({
   task,
   task: { name, main, parameters },
   loop,
@@ -19,24 +26,28 @@ const getTaskResults = function({
   const taskA = { ...task, name }
 
   if (parameters === undefined) {
-    return getParamResult({ name, main, loop, task: taskA, opts })
+    const result = await getParamResult({ name, main, loop, task: taskA, opts })
+    return [result]
   }
 
-  return parameters.map(({ name: parameter, values: args, cleanup }) =>
-    getParamResult({
-      name,
-      main,
-      parameter,
-      args,
-      cleanup,
-      loop,
-      task: taskA,
-      opts,
-    }),
+  const promises = parameters.map(
+    ({ name: parameter, values: args, cleanup }) =>
+      getParamResult({
+        name,
+        main,
+        parameter,
+        args,
+        cleanup,
+        loop,
+        task: taskA,
+        opts,
+      }),
   )
+  const results = await Promise.all(promises)
+  return results
 }
 
-const getParamResult = function({
+const getParamResult = async function({
   name,
   main,
   parameter,
@@ -46,7 +57,8 @@ const getParamResult = function({
   task,
   opts,
 }) {
-  const durations = loop.map(() => getDuration({ main, args, cleanup }))
+  const promises = loop.map(() => getDuration({ main, args, cleanup }))
+  const durations = await Promise.all(promises)
   const duration = getStats(durations)
   return { name, task, parameter, duration, opts }
 }
