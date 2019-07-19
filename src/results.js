@@ -12,21 +12,21 @@ const getIndex = function(value, index) {
 
 const getResult = function({
   task,
-  task: { name, main, variants },
+  task: { name, main, parameters },
   loop,
   opts,
 }) {
   const taskA = { ...task, name }
 
-  if (variants === undefined) {
+  if (parameters === undefined) {
     return getArgResult({ name, main, loop, task: taskA, opts })
   }
 
-  return variants.map(({ name: variantName, values: args }) =>
+  return parameters.map(({ name: parameter, values: args }) =>
     getArgResult({
       name,
       main,
-      variantName,
+      parameter,
       args,
       loop,
       task: taskA,
@@ -38,19 +38,19 @@ const getResult = function({
 const getArgResult = function({
   name,
   main,
-  variantName,
+  parameter,
   args,
   loop,
   task,
   opts,
 }) {
-  const nameA = variantName === undefined ? name : `${name} (${variantName})`
+  const nameA = parameter === undefined ? name : `${name} (${parameter})`
   const mainA = useArgs(main, args)
   const getDuration = measure.bind(null, mainA)
 
   const durations = loop.map(getDuration)
   const duration = getStats(durations)
-  return { name: nameA, task, variant: variantName, duration, opts }
+  return { name: nameA, task, parameter, duration, opts }
 }
 
 const useArgs = function(main, args) {
