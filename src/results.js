@@ -1,11 +1,12 @@
 import pTimes from 'p-times'
+import pMapSeries from 'p-map-series'
 
 import { measure } from './measure.js'
 import { getStats } from './stats.js'
 
 export const getTasksResults = async function(tasks, opts) {
-  const promises = tasks.map(task => getTaskResults(task, opts))
-  const results = await Promise.all(promises)
+  // Run each task serially to avoid one task influencing the timing of another
+  const results = await pMapSeries(tasks, task => getTaskResults(task, opts))
   const resultsA = results.flat()
   return resultsA
 }
@@ -16,11 +17,13 @@ const getTaskResults = async function({ parameters, ...task }, opts) {
     return [result]
   }
 
-  const promises = parameters.map(
+  // Run each parameter serially to avoid one parameter influencing the timing
+  // of another
+  const results = await pMapSeries(
+    parameters,
     ({ name: parameter, values: args, cleanup }) =>
       getParamResult({ task, parameter, args, cleanup, opts }),
   )
-  const results = await Promise.all(promises)
   return results
 }
 
@@ -31,6 +34,7 @@ const getParamResult = async function({
   cleanup,
   opts: { repeat, concurrency },
 }) {
+  // Run repetitions in parallel to make the run faster
   const durations = await pTimes(
     repeat,
     () => getDuration({ main, args, cleanup }),
