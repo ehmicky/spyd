@@ -4,7 +4,7 @@ import { reportResults } from './report.js'
 
 const checkSpeed = async function(tasks, opts) {
   const optsA = getOpts(opts)
-  const results = await getTasksResults({ tasks, opts: optsA })
+  const results = await getTasksResults(tasks, optsA)
   reportResults(results)
   return results
 }

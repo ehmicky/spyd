@@ -1,66 +1,43 @@
 import { measure } from './measure.js'
 import { getStats } from './stats.js'
 
-export const getTasksResults = async function({
-  tasks,
-  opts,
-  opts: { repeat },
-}) {
-  const loop = Array.from({ length: repeat }, getIndex)
-  const promises = tasks.map(task => getTaskResults({ task, loop, opts }))
+export const getTasksResults = async function(tasks, opts) {
+  const promises = tasks.map(task => getTaskResults(task, opts))
   const results = await Promise.all(promises)
   const resultsA = results.flat()
   return resultsA
 }
 
-const getIndex = function(value, index) {
-  return index
-}
-
-const getTaskResults = async function({
-  task,
-  task: { name, main, parameters },
-  loop,
-  opts,
-}) {
-  const taskA = { ...task, name }
-
+const getTaskResults = async function({ parameters, ...task }, opts) {
   if (parameters === undefined) {
-    const result = await getParamResult({ name, main, loop, task: taskA, opts })
+    const result = await getParamResult({ task, opts })
     return [result]
   }
 
   const promises = parameters.map(
     ({ name: parameter, values: args, cleanup }) =>
-      getParamResult({
-        name,
-        main,
-        parameter,
-        args,
-        cleanup,
-        loop,
-        task: taskA,
-        opts,
-      }),
+      getParamResult({ task, parameter, args, cleanup, opts }),
   )
   const results = await Promise.all(promises)
   return results
 }
 
 const getParamResult = async function({
-  name,
-  main,
+  task: { name, main },
   parameter,
   args = [],
   cleanup,
-  loop,
-  task,
-  opts,
+  opts: { repeat },
 }) {
+  const loop = Array.from({ length: repeat }, getIndex)
   const promises = loop.map(() => getDuration({ main, args, cleanup }))
   const durations = await Promise.all(promises)
   const duration = getStats(durations)
-  return { name, task, parameter, duration, opts }
+  return { task: name, parameter, duration }
+}
+
+const getIndex = function(value, index) {
+  return index
 }
 
 const getDuration = function({ main, args, cleanup }) {
