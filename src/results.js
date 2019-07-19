@@ -1,16 +1,16 @@
 import { measure } from './measure.js'
 import { getStats } from './stats.js'
 
-export const getResults = function({ tasks, opts, opts: { repeat } }) {
+export const getTasksResults = function({ tasks, opts, opts: { repeat } }) {
   const loop = Array.from({ length: repeat }, getIndex)
-  return tasks.flatMap(task => getResult({ task, loop, opts }))
+  return tasks.flatMap(task => getTaskResults({ task, loop, opts }))
 }
 
 const getIndex = function(value, index) {
   return index
 }
 
-const getResult = function({
+const getTaskResults = function({
   task,
   task: { name, main, parameters },
   loop,
@@ -19,11 +19,11 @@ const getResult = function({
   const taskA = { ...task, name }
 
   if (parameters === undefined) {
-    return getArgResult({ name, main, loop, task: taskA, opts })
+    return getParamResult({ name, main, loop, task: taskA, opts })
   }
 
   return parameters.map(({ name: parameter, values: args, cleanup }) =>
-    getArgResult({
+    getParamResult({
       name,
       main,
       parameter,
@@ -36,7 +36,7 @@ const getResult = function({
   )
 }
 
-const getArgResult = function({
+const getParamResult = function({
   name,
   main,
   parameter,
