@@ -11,9 +11,9 @@ export const getTasksResults = async function(tasks, opts) {
   return resultsA
 }
 
-const getTaskResults = async function({ parameters, cleanup, ...task }, opts) {
+const getTaskResults = async function({ parameters, after, ...task }, opts) {
   if (parameters === undefined) {
-    const result = await getParamResult({ task, cleanup, opts })
+    const result = await getParamResult({ task, after, opts })
     return [result]
   }
 
@@ -22,7 +22,7 @@ const getTaskResults = async function({ parameters, cleanup, ...task }, opts) {
   const results = await pMapSeries(
     parameters,
     ({ name: parameter, values: args }) =>
-      getParamResult({ task, parameter, args, cleanup, opts }),
+      getParamResult({ task, parameter, args, after, opts }),
   )
   return results
 }
@@ -31,24 +31,24 @@ const getParamResult = async function({
   task: { name, main },
   parameter,
   args = [],
-  cleanup,
+  after,
   opts: { repeat, concurrency },
 }) {
   // Run repetitions in parallel to make the run faster
   const durations = await pTimes(
     repeat,
-    () => getDuration({ main, args, cleanup }),
+    () => getDuration({ main, args, after }),
     { concurrency },
   )
   const duration = getStats(durations)
   return { task: name, parameter, duration }
 }
 
-const getDuration = async function({ main, args, cleanup }) {
+const getDuration = async function({ main, args, after }) {
   const argsA = await callArgs(args)
   const mainA = bindArgs(main, argsA)
   const duration = await measure(mainA)
-  await performCleanup(cleanup, argsA)
+  await performAfter(after, argsA)
   return duration
 }
 
@@ -68,10 +68,10 @@ const bindArgs = function(main, args) {
   return main.bind(null, ...args)
 }
 
-const performCleanup = function(cleanup, args) {
-  if (cleanup === undefined) {
+const performAfter = function(after, args) {
+  if (after === undefined) {
     return
   }
 
-  cleanup(...args)
+  after(...args)
 }
