@@ -11,53 +11,59 @@ export const getTasksResults = async function(tasks, opts) {
   return resultsA
 }
 
-const getTaskResults = async function({ parameters, after, ...task }, opts) {
+const getTaskResults = async function(
+  { name: task, main, parameters, before, after },
+  opts,
+) {
   if (parameters === undefined) {
-    const result = await getParamResult({ task, after, opts })
+    const result = await getParamResult({ task, main, before, after, opts })
     return [result]
   }
 
   // Run each parameter serially to avoid one parameter influencing the timing
   // of another
   const results = await pMapSeries(
-    parameters,
-    ({ name: parameter, values: args }) =>
-      getParamResult({ task, parameter, args, after, opts }),
+    Object.entries(parameters),
+    ([paramName, param]) =>
+      getParamResult({ task, main, paramName, param, before, after, opts }),
   )
   return results
 }
 
 const getParamResult = async function({
-  task: { name, main },
-  parameter,
-  args = [],
+  task,
+  main,
+  paramName,
+  param,
+  before,
   after,
   opts: { repeat, concurrency },
 }) {
   // Run repetitions in parallel to make the run faster
   const durations = await pTimes(
     repeat,
-    () => getDuration({ main, args, after }),
+    () => getDuration({ main, param, before, after }),
     { concurrency },
   )
   const duration = getStats(durations)
-  return { task: name, parameter, duration }
+  return { task, parameter: paramName, duration }
 }
 
-const getDuration = async function({ main, args, after }) {
-  const argsA = await callArgs(args)
-  const mainA = bindArgs(main, argsA)
+const getDuration = async function({ main, param, before, after }) {
+  const args = await performBefore(before, param)
+  const mainA = bindArgs(main, args)
   const duration = await measure(mainA)
-  await performAfter(after, argsA)
+  await performAfter(after, args)
   return duration
 }
 
-const callArgs = function(args) {
-  if (typeof args !== 'function') {
-    return args
+const performBefore = async function(before, param) {
+  if (before === undefined) {
+    return [param]
   }
 
-  return args()
+  const arg = await before(param)
+  return [param, arg]
 }
 
 const bindArgs = function(main, args) {
