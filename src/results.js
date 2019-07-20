@@ -11,9 +11,9 @@ export const getTasksResults = async function(tasks, opts) {
   return resultsA
 }
 
-const getTaskResults = async function({ parameters, ...task }, opts) {
+const getTaskResults = async function({ parameters, cleanup, ...task }, opts) {
   if (parameters === undefined) {
-    const result = await getParamResult({ task, opts })
+    const result = await getParamResult({ task, cleanup, opts })
     return [result]
   }
 
@@ -21,7 +21,7 @@ const getTaskResults = async function({ parameters, ...task }, opts) {
   // of another
   const results = await pMapSeries(
     parameters,
-    ({ name: parameter, values: args, cleanup }) =>
+    ({ name: parameter, values: args }) =>
       getParamResult({ task, parameter, args, cleanup, opts }),
   )
   return results
