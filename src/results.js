@@ -16,7 +16,14 @@ const getTaskResults = async function(
   opts,
 ) {
   if (parameters === undefined) {
-    const result = await getParamResult({ task, main, before, after, opts })
+    const result = await getParamResult({
+      task,
+      main,
+      param: [],
+      before,
+      after,
+      opts,
+    })
     return [result]
   }
 
@@ -25,7 +32,15 @@ const getTaskResults = async function(
   const results = await pMapSeries(
     Object.entries(parameters),
     ([paramName, param]) =>
-      getParamResult({ task, main, paramName, param, before, after, opts }),
+      getParamResult({
+        task,
+        main,
+        paramName,
+        param: [param],
+        before,
+        after,
+        opts,
+      }),
   )
   return results
 }
@@ -59,11 +74,11 @@ const getDuration = async function({ main, param, before, after }) {
 
 const performBefore = async function(before, param) {
   if (before === undefined) {
-    return [param]
+    return param
   }
 
-  const arg = await before(param)
-  return [param, arg]
+  const arg = await before(...param)
+  return [...param, arg]
 }
 
 const bindArgs = function(main, args) {
