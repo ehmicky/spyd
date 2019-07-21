@@ -1,3 +1,5 @@
+import { cwd as getCwd } from 'process'
+
 export const getOpts = function(opts) {
   return { ...DEFAULT_OPTS, ...opts }
 }
@@ -8,4 +10,5 @@ const DEFAULT_OPTS = {
   // Increasing it makes run faster but makes it more likely for machine to
   // crash
   concurrency: 1e2,
+  cwd: getCwd(),
 }
