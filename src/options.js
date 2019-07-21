@@ -1,7 +1,11 @@
 import { cwd as getCwd } from 'process'
 
-export const getOpts = function(opts) {
-  return { ...DEFAULT_OPTS, ...opts }
+import { handleConfig } from './config.js'
+
+export const getOpts = async function(opts = {}) {
+  const optsA = await handleConfig(opts)
+
+  return { ...DEFAULT_OPTS, ...optsA }
 }
 
 const DEFAULT_OPTS = {
