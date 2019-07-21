@@ -32,6 +32,9 @@ const DEFAULT_TASK_PATHS = [
   'benchmarks.js',
   'benchmarks/index.js',
   'benchmarks/main.js',
+  'benchmarks.ts',
+  'benchmarks/index.ts',
+  'benchmarks/main.ts',
 ]
 
 const loadTaskFile = function(taskFile, cwd) {
