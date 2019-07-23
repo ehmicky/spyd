@@ -2,6 +2,8 @@ import { now } from './now.js'
 
 // Retrieve system's time resolution in nanoseconds.
 // If the resolution is <1ns, returns 1ns.
+// This does not work if `now()` is slower than the time resolution, but this
+// should not be the case.
 // Time resolution depends on a combination of hardware and software factors.
 export const getTimeResolution = function() {
   const times = getTimes(REPEAT)

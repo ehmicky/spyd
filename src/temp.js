@@ -1,6 +1,5 @@
 import { now } from './now.js'
 
-// TODO: remove `depth` once it's clear we don't need it
 export const getMedian = function(main, duration) {
   const getTime = measure.bind(null, main)
   const runEnd = now() + duration / 2
