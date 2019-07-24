@@ -25,10 +25,10 @@ export const getMedian = function(
 ) {
   const getTime = measure.bind(null, main, nowBias, loopBias)
   const runEnd = now() + duration
-  return recursiveMedian(getTime, runEnd, 0, true)
+  return recursiveMedian(getTime, runEnd, 0, true, 1)
 }
 
-const measure = function(main, nowBias, loopBias, repeat = 1) {
+const measure = function(main, nowBias, loopBias, repeat) {
   // eslint-disable-next-line fp/no-let
   let count = repeat
   const start = now()
@@ -49,19 +49,22 @@ const recursiveMedian = function(
   runEnd,
   depth,
   recurse,
-  timeA = getTime(),
+  repeat,
+  timeA = getTime(repeat),
 ) {
   if (now() > runEnd) {
     return timeA
   }
 
-  const timeB = getTime()
-  const timeC = getTime()
+  const timeB = getTime(repeat)
+  const timeC = getTime(repeat)
   const median = medianOfThree(timeA, timeB, timeC)
 
   if (!recurse) {
     return median
   }
+
+  const newRepeat = getRepeat(median)
 
   const recursiveGetTime = recursiveMedian.bind(
     null,
@@ -70,7 +73,22 @@ const recursiveMedian = function(
     depth,
     false,
   )
-  return recursiveMedian(recursiveGetTime, runEnd, depth + 1, true, median)
+  return recursiveMedian(
+    recursiveGetTime,
+    runEnd,
+    depth + 1,
+    true,
+    newRepeat,
+    median,
+  )
+}
+
+const getRepeat = function(median) {
+  if (median === 0) {
+    return 1
+  }
+
+  return Math.ceil(MIN_TIME / median)
 }
 
 // We purposely use nested `if`, avoid destructuring and do not use nested
