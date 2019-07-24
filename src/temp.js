@@ -1,4 +1,9 @@
 import { now } from './now.js'
+import { getTimeResolution } from './resolution.js'
+
+const TIME_RESOLUTION = getTimeResolution()
+const MIN_PRECISION = 1e2
+const MIN_PRECISION_TIME = TIME_RESOLUTION * MIN_PRECISION
 
 export const getMedian = function(main, duration) {
   const getTime = measure.bind(null, main)
