@@ -1,13 +1,21 @@
 import { now } from './now.js'
 import { getTimeResolution } from './resolution.js'
 
-const TIME_RESOLUTION = getTimeResolution()
-const MIN_PRECISION = 1e2
-const MIN_PRECISION_TIME = TIME_RESOLUTION * MIN_PRECISION
-
 // TODO: calculate it instead
 const NOW_BIAS = 45
 const LOOP_BIAS = 0.45
+
+const getMinTime = function(nowBias) {
+  const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
+  const minNowBiasTime = nowBias * MIN_NOW_BIAS
+  return Math.max(minPrecisionTime, minNowBiasTime)
+}
+
+const TIME_RESOLUTION = getTimeResolution()
+const MIN_PRECISION = 1e2
+const MIN_NOW_BIAS = 1e2
+
+const MIN_TIME = getMinTime(NOW_BIAS)
 
 export const getMedian = function(
   main,
