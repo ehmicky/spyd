@@ -2,7 +2,7 @@ import { now } from './now.js'
 
 export const getMedian = function(main, duration) {
   const getTime = measure.bind(null, main)
-  const runEnd = now() + duration / 2
+  const runEnd = now() + duration
   return recursiveMedian(getTime, runEnd, 0, true)
 }
 
@@ -20,11 +20,15 @@ const recursiveMedian = function(
   recurse,
   timeA = getTime(),
 ) {
+  if (now() > runEnd) {
+    return timeA
+  }
+
   const timeB = getTime()
   const timeC = getTime()
   const median = medianOfThree(timeA, timeB, timeC)
 
-  if (!recurse || now() > runEnd) {
+  if (!recurse) {
     return median
   }
 
