@@ -11,11 +11,20 @@ export const getMedian = function(main, duration) {
   return recursiveMedian(getTime, runEnd, 0, true)
 }
 
-const measure = function(main) {
+const measure = function(main, repeat = 1) {
+  // eslint-disable-next-line fp/no-let
+  let count = repeat
   const start = now()
-  main()
+
+  // We use a do/while loop for speed purpose.
+  // eslint-disable-next-line fp/no-loops
+  do {
+    main()
+    // eslint-disable-next-line no-plusplus, fp/no-mutation
+  } while (--count)
+
   const end = now()
-  return end - start
+  return (end - start) / repeat
 }
 
 const recursiveMedian = function(
