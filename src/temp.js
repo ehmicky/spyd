@@ -1,7 +1,7 @@
 import { now } from './now.js'
 import { getTimeResolution } from './resolution.js'
 
-const getBiases = function(duration) {
+export const getBiases = function(duration) {
   const biasDuration = Math.max(
     MIN_BIAS_DURATION,
     duration / BIAS_DURATION_RATIO,
