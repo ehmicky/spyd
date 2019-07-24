@@ -25,18 +25,20 @@ export const getMedian = function(
   loopBias,
   constRepeat,
 ) {
-  const getTime = measure.bind(null, main, nowBias, loopBias)
   const runEnd = now() + duration
   const minTime = getMinTime(nowBias)
   const initialRepeat = constRepeat === undefined ? 1 : constRepeat
   return recursiveMedian(
-    getTime,
+    main,
+    nowBias,
+    loopBias,
+    initialRepeat,
+    constRepeat,
+    minTime,
     runEnd,
+    measure,
     0,
     true,
-    minTime,
-    constRepeat,
-    initialRepeat,
   )
 }
 
@@ -66,23 +68,26 @@ const measure = function(main, nowBias, loopBias, repeat) {
   return Math.max((end - start - nowBias) / repeat - loopBias, 0)
 }
 
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, max-lines-per-function
 const recursiveMedian = function(
-  getTime,
+  main,
+  nowBias,
+  loopBias,
+  repeat,
+  constRepeat,
+  minTime,
   runEnd,
+  measureTime,
   depth,
   recurse,
-  minTime,
-  constRepeat,
-  repeat,
-  timeA = getTime(repeat),
+  timeA = measureTime(main, nowBias, loopBias, repeat),
 ) {
   if (now() > runEnd) {
     return timeA
   }
 
-  const timeB = getTime(repeat)
-  const timeC = getTime(repeat)
+  const timeB = measureTime(main, nowBias, loopBias, repeat)
+  const timeC = measureTime(main, nowBias, loopBias, repeat)
   const median = medianOfThree(timeA, timeB, timeC)
 
   if (!recurse) {
@@ -92,23 +97,31 @@ const recursiveMedian = function(
   const nextRepeat = getRepeat(median, minTime, constRepeat)
   const nextMedian = getNextMedian(repeat, nextRepeat, median)
 
-  const recursiveGetTime = recursiveMedian.bind(
-    null,
-    getTime,
-    runEnd,
-    depth,
-    false,
-    minTime,
-    constRepeat,
-  )
+  const recursiveGetTime = (main, nowBias, loopBias, repeat) =>
+    recursiveMedian(
+      main,
+      nowBias,
+      loopBias,
+      repeat,
+      constRepeat,
+      minTime,
+      runEnd,
+      measureTime,
+      depth,
+      false,
+    )
+
   return recursiveMedian(
-    recursiveGetTime,
+    main,
+    nowBias,
+    loopBias,
+    nextRepeat,
+    constRepeat,
+    minTime,
     runEnd,
+    recursiveGetTime,
     depth + 1,
     true,
-    minTime,
-    constRepeat,
-    nextRepeat,
     nextMedian,
   )
 }
