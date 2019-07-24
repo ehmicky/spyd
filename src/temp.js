@@ -5,13 +5,22 @@ const TIME_RESOLUTION = getTimeResolution()
 const MIN_PRECISION = 1e2
 const MIN_PRECISION_TIME = TIME_RESOLUTION * MIN_PRECISION
 
-export const getMedian = function(main, duration) {
-  const getTime = measure.bind(null, main)
+// TODO: calculate it instead
+const NOW_BIAS = 45
+const LOOP_BIAS = 0.45
+
+export const getMedian = function(
+  main,
+  duration,
+  nowBias = NOW_BIAS,
+  loopBias = LOOP_BIAS,
+) {
+  const getTime = measure.bind(null, main, nowBias, loopBias)
   const runEnd = now() + duration
   return recursiveMedian(getTime, runEnd, 0, true)
 }
 
-const measure = function(main, repeat = 1) {
+const measure = function(main, nowBias, loopBias, repeat = 1) {
   // eslint-disable-next-line fp/no-let
   let count = repeat
   const start = now()
@@ -24,7 +33,7 @@ const measure = function(main, repeat = 1) {
   } while (--count)
 
   const end = now()
-  return (end - start) / repeat
+  return Math.max((end - start - nowBias) / repeat - loopBias, 0)
 }
 
 const recursiveMedian = function(
