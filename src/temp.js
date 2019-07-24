@@ -6,9 +6,10 @@ export const getBiases = function(duration) {
     MIN_BIAS_DURATION,
     duration / BIAS_DURATION_RATIO,
   )
-  const nowBias = getMedian(now, biasDuration, 0, 0, NOW_BIAS_REPEAT)
-  const loopBias = getMedian(noop, biasDuration, 0, 0, LOOP_BIAS_REPEAT)
-  return { nowBias, loopBias }
+  const nowBias = getMedian(now, biasDuration, 0, 0, 0, NOW_BIAS_REPEAT)
+  const loopBias = getMedian(noop, biasDuration, 0, 0, 0, LOOP_BIAS_REPEAT)
+  const minTime = getMinTime(nowBias)
+  return { nowBias, loopBias, minTime }
 }
 
 const noop = function() {}
@@ -18,15 +19,25 @@ const BIAS_DURATION_RATIO = 1e2
 const NOW_BIAS_REPEAT = 1e3
 const LOOP_BIAS_REPEAT = 1e4
 
+const getMinTime = function(nowBias) {
+  const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
+  const minNowBiasTime = nowBias * MIN_NOW_BIAS
+  return Math.max(minPrecisionTime, minNowBiasTime)
+}
+
+const TIME_RESOLUTION = getTimeResolution()
+const MIN_PRECISION = 1e2
+const MIN_NOW_BIAS = 1e2
+
 export const getMedian = function(
   main,
   duration,
   nowBias,
   loopBias,
+  minTime,
   constRepeat,
 ) {
   const runEnd = now() + duration
-  const minTime = getMinTime(nowBias)
   const initialRepeat = constRepeat === undefined ? 1 : constRepeat
   return recursiveMedian(
     main,
@@ -40,32 +51,6 @@ export const getMedian = function(
     0,
     true,
   )
-}
-
-const getMinTime = function(nowBias) {
-  const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
-  const minNowBiasTime = nowBias * MIN_NOW_BIAS
-  return Math.max(minPrecisionTime, minNowBiasTime)
-}
-
-const TIME_RESOLUTION = getTimeResolution()
-const MIN_PRECISION = 1e2
-const MIN_NOW_BIAS = 1e2
-
-const measure = function(main, nowBias, loopBias, repeat) {
-  // eslint-disable-next-line fp/no-let
-  let count = repeat
-  const start = now()
-
-  // We use a do/while loop for speed purpose.
-  // eslint-disable-next-line fp/no-loops
-  do {
-    main()
-    // eslint-disable-next-line no-plusplus, fp/no-mutation
-  } while (--count)
-
-  const end = now()
-  return Math.max((end - start - nowBias) / repeat - loopBias, 0)
 }
 
 // eslint-disable-next-line max-statements, max-lines-per-function
@@ -124,6 +109,22 @@ const recursiveMedian = function(
     true,
     nextMedian,
   )
+}
+
+const measure = function(main, nowBias, loopBias, repeat) {
+  // eslint-disable-next-line fp/no-let
+  let count = repeat
+  const start = now()
+
+  // We use a do/while loop for speed purpose.
+  // eslint-disable-next-line fp/no-loops
+  do {
+    main()
+    // eslint-disable-next-line no-plusplus, fp/no-mutation
+  } while (--count)
+
+  const end = now()
+  return Math.max((end - start - nowBias) / repeat - loopBias, 0)
 }
 
 const getRepeat = function(median, minTime, constRepeat) {
