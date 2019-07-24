@@ -64,7 +64,7 @@ const recursiveMedian = function(
     return median
   }
 
-  const newRepeat = getRepeat(median)
+  const nextRepeat = getRepeat(median)
 
   const recursiveGetTime = recursiveMedian.bind(
     null,
@@ -78,7 +78,7 @@ const recursiveMedian = function(
     runEnd,
     depth + 1,
     true,
-    newRepeat,
+    nextRepeat,
     median,
   )
 }
