@@ -44,6 +44,7 @@ const measure = function(main, nowBias, loopBias, repeat) {
   return Math.max((end - start - nowBias) / repeat - loopBias, 0)
 }
 
+// eslint-disable-next-line max-statements
 const recursiveMedian = function(
   getTime,
   runEnd,
@@ -65,6 +66,7 @@ const recursiveMedian = function(
   }
 
   const nextRepeat = getRepeat(median)
+  const nextMedian = getNextMedian(repeat, nextRepeat, median)
 
   const recursiveGetTime = recursiveMedian.bind(
     null,
@@ -79,7 +81,7 @@ const recursiveMedian = function(
     depth + 1,
     true,
     nextRepeat,
-    median,
+    nextMedian,
   )
 }
 
@@ -90,6 +92,27 @@ const getRepeat = function(median) {
 
   return Math.ceil(MIN_TIME / median)
 }
+
+// We should not mix medians that have been computed with different `repeat`.
+// This is because different `repeat` give different medians due to bias
+// correction and JavaScript engine loop optimizations.
+// So if the `repeat` changes too much, we discard the previously computed
+// medians.
+// However, once stabilized, `repeat` will slightly vary. Those slight changes
+// should not discard the previously computed medians.
+// When `repeat` change is <10%, this should not impact the computed medians
+// too much, so we do not need to discard them.
+const getNextMedian = function(repeat, nextRepeat, median) {
+  const repeatDiff = Math.abs(nextRepeat - repeat) / repeat
+
+  if (repeatDiff >= MIN_REPEAT_DIFF) {
+    return
+  }
+
+  return median
+}
+
+const MIN_REPEAT_DIFF = 0.1
 
 // We purposely use nested `if`, avoid destructuring and do not use nested
 // function calls for performance reasons.
