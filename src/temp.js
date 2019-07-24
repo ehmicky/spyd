@@ -18,15 +18,26 @@ const BIAS_DURATION_RATIO = 1e2
 const NOW_BIAS_REPEAT = 1e3
 const LOOP_BIAS_REPEAT = 1e4
 
-export const getMedian = function(main, duration, nowBias, loopBias, repeat) {
-  // TODO: remove that bind()
-  const getTime =
-    repeat === undefined
-      ? measure.bind(null, main, nowBias, loopBias)
-      : measure.bind(null, main, nowBias, loopBias, repeat)
+export const getMedian = function(
+  main,
+  duration,
+  nowBias,
+  loopBias,
+  constRepeat,
+) {
+  const getTime = measure.bind(null, main, nowBias, loopBias)
   const runEnd = now() + duration
   const minTime = getMinTime(nowBias)
-  return recursiveMedian(getTime, runEnd, 0, true, minTime, 1)
+  const initialRepeat = constRepeat === undefined ? 1 : constRepeat
+  return recursiveMedian(
+    getTime,
+    runEnd,
+    0,
+    true,
+    minTime,
+    constRepeat,
+    initialRepeat,
+  )
 }
 
 const getMinTime = function(nowBias) {
@@ -62,6 +73,7 @@ const recursiveMedian = function(
   depth,
   recurse,
   minTime,
+  constRepeat,
   repeat,
   timeA = getTime(repeat),
 ) {
@@ -77,7 +89,7 @@ const recursiveMedian = function(
     return median
   }
 
-  const nextRepeat = getRepeat(median, minTime)
+  const nextRepeat = getRepeat(median, minTime, constRepeat)
   const nextMedian = getNextMedian(repeat, nextRepeat, median)
 
   const recursiveGetTime = recursiveMedian.bind(
@@ -87,6 +99,7 @@ const recursiveMedian = function(
     depth,
     false,
     minTime,
+    constRepeat,
   )
   return recursiveMedian(
     recursiveGetTime,
@@ -94,12 +107,17 @@ const recursiveMedian = function(
     depth + 1,
     true,
     minTime,
+    constRepeat,
     nextRepeat,
     nextMedian,
   )
 }
 
-const getRepeat = function(median, minTime) {
+const getRepeat = function(median, minTime, constRepeat) {
+  if (constRepeat !== undefined) {
+    return constRepeat
+  }
+
   if (median === 0) {
     return 1
   }
