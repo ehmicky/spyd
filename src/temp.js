@@ -1,9 +1,33 @@
 import { now } from './now.js'
 import { getTimeResolution } from './resolution.js'
 
-// TODO: calculate it instead
-const NOW_BIAS = 45
-const LOOP_BIAS = 0.45
+const getBiases = function(duration) {
+  const biasDuration = Math.max(
+    MIN_BIAS_DURATION,
+    duration / BIAS_DURATION_RATIO,
+  )
+  const nowBias = getMedian(now, biasDuration, 0, 0, NOW_BIAS_REPEAT)
+  const loopBias = getMedian(noop, biasDuration, 0, 0, LOOP_BIAS_REPEAT)
+  return { nowBias, loopBias }
+}
+
+const noop = function() {}
+
+const MIN_BIAS_DURATION = 1e8
+const BIAS_DURATION_RATIO = 1e2
+const NOW_BIAS_REPEAT = 1e3
+const LOOP_BIAS_REPEAT = 1e4
+
+export const getMedian = function(main, duration, nowBias, loopBias, repeat) {
+  // TODO: remove that bind()
+  const getTime =
+    repeat === undefined
+      ? measure.bind(null, main, nowBias, loopBias)
+      : measure.bind(null, main, nowBias, loopBias, repeat)
+  const runEnd = now() + duration
+  const minTime = getMinTime(nowBias)
+  return recursiveMedian(getTime, runEnd, 0, true, minTime, 1)
+}
 
 const getMinTime = function(nowBias) {
   const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
@@ -14,19 +38,6 @@ const getMinTime = function(nowBias) {
 const TIME_RESOLUTION = getTimeResolution()
 const MIN_PRECISION = 1e2
 const MIN_NOW_BIAS = 1e2
-
-const MIN_TIME = getMinTime(NOW_BIAS)
-
-export const getMedian = function(
-  main,
-  duration,
-  nowBias = NOW_BIAS,
-  loopBias = LOOP_BIAS,
-) {
-  const getTime = measure.bind(null, main, nowBias, loopBias)
-  const runEnd = now() + duration
-  return recursiveMedian(getTime, runEnd, 0, true, 1)
-}
 
 const measure = function(main, nowBias, loopBias, repeat) {
   // eslint-disable-next-line fp/no-let
@@ -50,6 +61,7 @@ const recursiveMedian = function(
   runEnd,
   depth,
   recurse,
+  minTime,
   repeat,
   timeA = getTime(repeat),
 ) {
@@ -65,7 +77,7 @@ const recursiveMedian = function(
     return median
   }
 
-  const nextRepeat = getRepeat(median)
+  const nextRepeat = getRepeat(median, minTime)
   const nextMedian = getNextMedian(repeat, nextRepeat, median)
 
   const recursiveGetTime = recursiveMedian.bind(
@@ -74,23 +86,25 @@ const recursiveMedian = function(
     runEnd,
     depth,
     false,
+    minTime,
   )
   return recursiveMedian(
     recursiveGetTime,
     runEnd,
     depth + 1,
     true,
+    minTime,
     nextRepeat,
     nextMedian,
   )
 }
 
-const getRepeat = function(median) {
+const getRepeat = function(median, minTime) {
   if (median === 0) {
     return 1
   }
 
-  return Math.ceil(MIN_TIME / median)
+  return Math.ceil(minTime / median)
 }
 
 // We should not mix medians that have been computed with different `repeat`.
