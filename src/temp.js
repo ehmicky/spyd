@@ -58,27 +58,20 @@ export const benchmark = function(
   nowBias,
   loopBias,
   minTime,
-  constRepeat,
+  initialRepeat,
 ) {
   const runEnd = now() + duration
-  const initialRepeat = constRepeat === undefined ? 1 : constRepeat
 
-  const times = recursiveBenchmark(
+  const times = benchmarkLoop(
     main,
     nowBias,
     loopBias,
-    initialRepeat,
-    constRepeat,
     minTime,
     runEnd,
-    measure,
-    0,
-    true,
+    initialRepeat,
   )
 
-  // eslint-disable-next-line fp/no-mutating-methods
-  const timesA = times.sort()
-  const median = getMedian(timesA)
+  const median = getMedian(times)
   return median
 }
 
@@ -86,67 +79,34 @@ export const benchmark = function(
 //  - stop benchmarking exactly when the `duration` has been reached
 //  - adjust some parameters as we take more measurements (e.g. `repeat`)
 //  - reduce the sample size when we hit the max memory limit
-// eslint-disable-next-line max-statements, max-lines-per-function
-const recursiveBenchmark = function(
+const benchmarkLoop = function(
   main,
   nowBias,
   loopBias,
-  repeat,
-  constRepeat,
   minTime,
   runEnd,
-  measureTimes,
-  depth,
-  recurse,
-  timesA = measureTimes(main, nowBias, loopBias, repeat),
+  initialRepeat,
 ) {
-  // We've reached the end of the `duration`
-  if (now() > runEnd) {
-    return timesA
-  }
+  let times = []
+  let repeat = initialRepeat === undefined ? 1 : initialRepeat
 
-  const timesB = measureTimes(main, nowBias, loopBias, repeat)
-  const timesC = measureTimes(main, nowBias, loopBias, repeat)
+  // eslint-disable-next-line fp/no-loops
+  do {
+    const time = measure(main, nowBias, loopBias, repeat)
 
-  // eslint-disable-next-line fp/no-mutating-methods
-  const times = [...timesA, ...timesB, ...timesC].sort()
+    sortedInsert(times, time)
 
-  if (!recurse) {
-    return times
-  }
+    const nextRepeat = getRepeat(times, minTime, initialRepeat)
 
-  const nextRepeat = getRepeat(times, minTime, constRepeat)
-  const nextTimes = getNextTimes(repeat, nextRepeat, times)
+    if (shouldDiscardTimes(repeat, nextRepeat)) {
+      times = []
+    }
 
-  // Recurse but pass itself as the next `measureTime()`, which means the next
-  // recursion will be three times slower and more precise.
-  const recursiveGetTime = (main, nowBias, loopBias, repeat) =>
-    recursiveBenchmark(
-      main,
-      nowBias,
-      loopBias,
-      repeat,
-      constRepeat,
-      minTime,
-      runEnd,
-      measureTimes,
-      depth,
-      false,
-    )
+    repeat = nextRepeat
+    // Until we reach the end of the `duration`
+  } while (now() < runEnd)
 
-  return recursiveBenchmark(
-    main,
-    nowBias,
-    loopBias,
-    nextRepeat,
-    constRepeat,
-    minTime,
-    runEnd,
-    recursiveGetTime,
-    depth + 1,
-    true,
-    nextTimes,
-  )
+  return times
 }
 
 // Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
@@ -166,18 +126,37 @@ const measure = function(main, nowBias, loopBias, repeat) {
   // The final time might be negative if the task is as fast or faster than the
   // iteration code itself. In this case, we return `0`.
   const time = Math.max((end - start - nowBias) / repeat - loopBias, 0)
-  return [time]
+  return time
+}
+
+const sortedInsert = function(array, value) {
+  let leftIndex = 0
+  let rightIndex = array.length
+
+  while (leftIndex < rightIndex) {
+    const index = (leftIndex + rightIndex) >>> 1
+
+    if (array[index] < value) {
+      leftIndex = index + 1
+    } else {
+      rightIndex = index
+    }
+  }
+
+  array.splice(leftIndex, 0, value)
 }
 
 // Estimate how many times to repeat the benchmarking loop.
-const getRepeat = function(times, minTime, constRepeat) {
-  // `constRepeat` is used during bias calculation to set a fixed `repeat` value
-  if (constRepeat !== undefined) {
-    return constRepeat
+const getRepeat = function(times, minTime, initialRepeat) {
+  // `initialRepeat` is used during bias calculation to set a fixed `repeat`
+  // value
+  if (initialRepeat !== undefined) {
+    return initialRepeat
   }
 
   const median = getMedian(times)
 
+  // TODO: fix this, this is wrong?
   if (median === 0) {
     return 1
   }
@@ -185,6 +164,7 @@ const getRepeat = function(times, minTime, constRepeat) {
   return Math.ceil(minTime / median)
 }
 
+// Array must be sorted and non-empty
 const getMedian = function(array) {
   if (array.length % 2 === 1) {
     return array[(array.length - 1) / 2]
@@ -202,14 +182,8 @@ const getMedian = function(array) {
 // should not discard the previously computed times.
 // When `repeat` change is low though, this should not impact the computed times
 // too much, so we do not need to discard them.
-const getNextTimes = function(repeat, nextRepeat, times) {
-  const repeatDiff = Math.abs(nextRepeat - repeat) / repeat
-
-  if (repeatDiff >= MIN_REPEAT_DIFF) {
-    return
-  }
-
-  return times
+const shouldDiscardTimes = function(repeat, nextRepeat) {
+  return Math.abs(nextRepeat - repeat) / repeat >= MIN_REPEAT_DIFF
 }
 
 const MIN_REPEAT_DIFF = 0.1
