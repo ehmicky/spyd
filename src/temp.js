@@ -13,8 +13,8 @@ export const getBiases = function(duration) {
     MIN_BIAS_DURATION,
     duration / BIAS_DURATION_RATIO,
   )
-  const nowBias = getMedian(now, biasDuration, 0, 0, 0, NOW_BIAS_REPEAT)
-  const loopBias = getMedian(noop, biasDuration, 0, 0, 0, LOOP_BIAS_REPEAT)
+  const nowBias = benchmark(now, biasDuration, 0, 0, 0, NOW_BIAS_REPEAT)
+  const loopBias = benchmark(noop, biasDuration, 0, 0, 0, LOOP_BIAS_REPEAT)
   const minTime = getMinTime(nowBias)
   return { nowBias, loopBias, minTime }
 }
@@ -52,7 +52,7 @@ const MIN_PRECISION = 1e2
 const MIN_NOW_BIAS = 1e2
 
 // Entry point of the main benchmarking logic
-export const getMedian = function(
+export const benchmark = function(
   main,
   duration,
   nowBias,
@@ -62,7 +62,8 @@ export const getMedian = function(
 ) {
   const runEnd = now() + duration
   const initialRepeat = constRepeat === undefined ? 1 : constRepeat
-  return recursiveMedian(
+
+  const times = recursiveBenchmark(
     main,
     nowBias,
     loopBias,
@@ -74,6 +75,11 @@ export const getMedian = function(
     0,
     true,
   )
+
+  // eslint-disable-next-line fp/no-mutating-methods
+  const timesA = times.sort()
+  const median = getMedian(timesA)
+  return median
 }
 
 // We perform benchmarking incrementally/recursively in order to:
@@ -81,7 +87,7 @@ export const getMedian = function(
 //  - adjust some parameters as we take more measurements (e.g. `repeat`)
 //  - reduce the sample size when we hit the max memory limit
 // eslint-disable-next-line max-statements, max-lines-per-function
-const recursiveMedian = function(
+const recursiveBenchmark = function(
   main,
   nowBias,
   loopBias,
@@ -89,31 +95,33 @@ const recursiveMedian = function(
   constRepeat,
   minTime,
   runEnd,
-  measureTime,
+  measureTimes,
   depth,
   recurse,
-  timeA = measureTime(main, nowBias, loopBias, repeat),
+  timesA = measureTimes(main, nowBias, loopBias, repeat),
 ) {
   // We've reached the end of the `duration`
   if (now() > runEnd) {
-    return timeA
+    return timesA
   }
 
-  const timeB = measureTime(main, nowBias, loopBias, repeat)
-  const timeC = measureTime(main, nowBias, loopBias, repeat)
-  const median = medianOfThree(timeA, timeB, timeC)
+  const timesB = measureTimes(main, nowBias, loopBias, repeat)
+  const timesC = measureTimes(main, nowBias, loopBias, repeat)
+
+  // eslint-disable-next-line fp/no-mutating-methods
+  const times = [...timesA, ...timesB, ...timesC].sort()
 
   if (!recurse) {
-    return median
+    return times
   }
 
-  const nextRepeat = getRepeat(median, minTime, constRepeat)
-  const nextMedian = getNextMedian(repeat, nextRepeat, median)
+  const nextRepeat = getRepeat(times, minTime, constRepeat)
+  const nextTimes = getNextTimes(repeat, nextRepeat, times)
 
   // Recurse but pass itself as the next `measureTime()`, which means the next
   // recursion will be three times slower and more precise.
   const recursiveGetTime = (main, nowBias, loopBias, repeat) =>
-    recursiveMedian(
+    recursiveBenchmark(
       main,
       nowBias,
       loopBias,
@@ -121,12 +129,12 @@ const recursiveMedian = function(
       constRepeat,
       minTime,
       runEnd,
-      measureTime,
+      measureTimes,
       depth,
       false,
     )
 
-  return recursiveMedian(
+  return recursiveBenchmark(
     main,
     nowBias,
     loopBias,
@@ -137,7 +145,7 @@ const recursiveMedian = function(
     recursiveGetTime,
     depth + 1,
     true,
-    nextMedian,
+    nextTimes,
   )
 }
 
@@ -157,21 +165,32 @@ const measure = function(main, nowBias, loopBias, repeat) {
   const end = now()
   // The final time might be negative if the task is as fast or faster than the
   // iteration code itself. In this case, we return `0`.
-  return Math.max((end - start - nowBias) / repeat - loopBias, 0)
+  const time = Math.max((end - start - nowBias) / repeat - loopBias, 0)
+  return [time]
 }
 
 // Estimate how many times to repeat the benchmarking loop.
-const getRepeat = function(median, minTime, constRepeat) {
+const getRepeat = function(times, minTime, constRepeat) {
   // `constRepeat` is used during bias calculation to set a fixed `repeat` value
   if (constRepeat !== undefined) {
     return constRepeat
   }
+
+  const median = getMedian(times)
 
   if (median === 0) {
     return 1
   }
 
   return Math.ceil(minTime / median)
+}
+
+const getMedian = function(array) {
+  if (array.length % 2 === 1) {
+    return array[(array.length - 1) / 2]
+  }
+
+  return (array[array.length / 2 - 1] + array[array.length / 2]) / 2
 }
 
 // We should not mix times that have been computed with different `repeat`.
@@ -183,45 +202,14 @@ const getRepeat = function(median, minTime, constRepeat) {
 // should not discard the previously computed times.
 // When `repeat` change is low though, this should not impact the computed times
 // too much, so we do not need to discard them.
-const getNextMedian = function(repeat, nextRepeat, median) {
+const getNextTimes = function(repeat, nextRepeat, times) {
   const repeatDiff = Math.abs(nextRepeat - repeat) / repeat
 
   if (repeatDiff >= MIN_REPEAT_DIFF) {
     return
   }
 
-  return median
+  return times
 }
 
 const MIN_REPEAT_DIFF = 0.1
-
-// We use a median instead of an arithmetic mean in order to exclude outliers
-// and increase precision.
-// We purposely use nested `if`, avoid destructuring and do not use nested
-// function calls for performance reasons.
-// eslint-disable-next-line max-statements, complexity
-const medianOfThree = function(valueA, valueB, valueC) {
-  if (valueA < valueB) {
-    // eslint-disable-next-line max-depth
-    if (valueB < valueC) {
-      return valueB
-    }
-
-    // eslint-disable-next-line max-depth
-    if (valueA < valueC) {
-      return valueC
-    }
-
-    return valueA
-  }
-
-  if (valueA < valueC) {
-    return valueA
-  }
-
-  if (valueB < valueC) {
-    return valueC
-  }
-
-  return valueB
-}
