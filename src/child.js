@@ -1,7 +1,7 @@
 import { execute } from './execute.js'
 import { sendParentMessage, getParentMessage } from './ipc_helpers.js'
 
-const setupIpc = async function() {
+const run = async function() {
   await sendParentMessage('ready')
 
   const duration = await getParentMessage('run')
@@ -10,4 +10,4 @@ const setupIpc = async function() {
   await sendParentMessage('time', time)
 }
 
-setupIpc()
+run()

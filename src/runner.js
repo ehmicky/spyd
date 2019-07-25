@@ -6,27 +6,21 @@ import pMapSeries from 'p-map-series'
 import { now } from './now.js'
 import { getChildMessage, sendChildMessage } from './ipc_helpers.js'
 
-const CHILD_MAIN = `${__dirname}/ipc.js`
+const CHILD_MAIN = `${__dirname}/child.js`
 
 const start = async function(duration) {
   const runStart = startTimer()
-  const runEnd = runStart + duration
 
   const childProcesses = await startChildren()
 
-  const times = await runChildren(childProcesses, runEnd)
+  const runEnd = now() + duration
+  const processDuration = getProcessDuration(duration)
+
+  const times = await runChildren(childProcesses, processDuration, runEnd)
 
   printStats(times)
   stopTimer(runStart)
 }
-
-// This is the maximum number of child processes.
-// The actual number might be lower:
-//  - the process duration excludes the bias calculation, but that bias
-//    calculation has a minimum value which can increase the process duration
-//    a lot if it is small
-//  - if running the task only once is slower than `runDuration / PROCESS_COUNT`
-const PROCESS_COUNT = 2e1
 
 // We boot all child processes at once in parallel because it is slow.
 // We do it before running the benchmarks, otherwise this would slow it down
@@ -36,6 +30,14 @@ const startChildren = async function() {
   const childProcesses = await Promise.all(promises)
   return childProcesses
 }
+
+// This is the maximum number of child processes.
+// The actual number might be lower:
+//  - the process duration excludes the bias calculation, but that bias
+//    calculation has a minimum value which can increase the process duration
+//    a lot if it is small
+//  - if running the task only once is slower than `runDuration / PROCESS_COUNT`
+const PROCESS_COUNT = 2e1
 
 const startChild = async function() {
   const childProcess = spawn(
@@ -50,11 +52,15 @@ const startChild = async function() {
   return childProcess
 }
 
+const getProcessDuration = function(duration) {
+  return Math.max(duration / PROCESS_COUNT, MIN_PROCESS_DURATION)
+}
+
+const MIN_PROCESS_DURATION = 1e7
+
 // We launch child processes serially, otherwise they slow down each other and
 // have higher variance.
-const runChildren = async function(childProcesses, runEnd) {
-  const processDuration = (runEnd - now()) / PROCESS_COUNT
-
+const runChildren = async function(childProcesses, processDuration, runEnd) {
   const results = await pMapSeries(childProcesses, childProcess =>
     runChild(childProcess, processDuration, runEnd),
   )
