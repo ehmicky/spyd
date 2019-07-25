@@ -8,6 +8,7 @@ import { getChildMessage, sendChildMessage } from './ipc_helpers.js'
 
 const CHILD_MAIN = `${__dirname}/child.js`
 
+// Start several child processes benchmarking the same tasks
 const start = async function(duration) {
   const runStart = startTimer()
 
@@ -23,20 +24,21 @@ const start = async function(duration) {
 }
 
 // We boot all child processes at once in parallel because it is slow.
-// We do it before running the benchmarks, otherwise this would slow it down
-// and add variance.
+// We do it before running the benchmarks because it would slow them down and
+// add variance.
 const startChildren = async function() {
   const promises = Array.from({ length: PROCESS_COUNT }, startChild)
   const childProcesses = await Promise.all(promises)
   return childProcesses
 }
 
-// This is the maximum number of child processes.
+// Maximum number of child processes.
 // The actual number might be lower:
-//  - the process duration excludes the bias calculation, but that bias
-//    calculation has a minimum value which can increase the process duration
-//    a lot if it is small
-//  - if running the task only once is slower than `runDuration / PROCESS_COUNT`
+//  - the process duration excludes the bias calculation. That bias calculation
+//    has a minimum duration which can be relatively huge if the process
+//    duration is small.
+//  - the task might be relatively slow, i.e. slower than
+//    `runDuration / PROCESS_COUNT`
 const PROCESS_COUNT = 2e1
 
 const startChild = async function() {
@@ -52,14 +54,19 @@ const startChild = async function() {
   return childProcess
 }
 
+// How long to run each child process
 const getProcessDuration = function(duration) {
   return Math.max(duration / PROCESS_COUNT, MIN_PROCESS_DURATION)
 }
 
+// The actual minimum duration is actually likely to be the bias calculation
+// minimum duration.
 const MIN_PROCESS_DURATION = 1e7
 
-// We launch child processes serially, otherwise they slow down each other and
-// have higher variance.
+// We launch child processes serially. Otherwise they would slow down each other
+// and have higher variance. Multi-core CPUs are designed to run in parallel
+// but in practice they do impact the performance of each other.
+// This does mean we are under-utilizing CPUs.
 const runChildren = async function(childProcesses, processDuration, runEnd) {
   const results = await pMapSeries(childProcesses, childProcess =>
     runChild(childProcess, processDuration, runEnd),

@@ -1,6 +1,13 @@
 import { now } from './now.js'
 import { getTimeResolution } from './resolution.js'
 
+// The following biases are introduced by the benchmarking code itself:
+//   - `nowBias` is the time taken to retrieve the current timestamp
+//   - `loopBias` is the time taken to iterate in a loop, when running a task
+//     repeatedly, excluding the task itself.
+// We remove those two biases from the calculated times.
+// This function calculates those biases by benchmarking them.
+// Biases calculation does not account into the spent `duration`.
 export const getBiases = function(duration) {
   const biasDuration = Math.max(
     MIN_BIAS_DURATION,
@@ -14,7 +21,7 @@ export const getBiases = function(duration) {
 
 const noop = function() {}
 
-// Biases must be very precise in order to benchmark fast tasks accurately.
+// Biases must be very precise to benchmark fast tasks accurately.
 // So we impose a minimum duration when calculating them.
 const MIN_BIAS_DURATION = 1e8
 // However if the duration is high enough, we spend even more time calculating
@@ -25,6 +32,13 @@ const BIAS_DURATION_RATIO = 1e2
 const NOW_BIAS_REPEAT = 1e3
 const LOOP_BIAS_REPEAT = 1e4
 
+// If a task duration is too close to `nowBias, the returned variance will be
+// mostly due to the timestamp function itself.
+// Also if a task duration is too close to the minimum system time resolution,
+// it will lack precision.
+// To fix this we run the task in a loop to increase its running time. We then
+// perform an arithmetic mean.
+// `minTime` is the minimum time under which we consider a task should do this.
 const getMinTime = function(nowBias) {
   const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
   const minNowBiasTime = nowBias * MIN_NOW_BIAS
@@ -32,9 +46,12 @@ const getMinTime = function(nowBias) {
 }
 
 const TIME_RESOLUTION = getTimeResolution()
+// The task loop must be at least `MIN_PRECISION` slower than time resolution
 const MIN_PRECISION = 1e2
+// The task loop must be at least `MIN_NOW_BIAS` slower than `nowBias`
 const MIN_NOW_BIAS = 1e2
 
+// Entry point of the main benchmarking logic
 export const getMedian = function(
   main,
   duration,
@@ -59,6 +76,10 @@ export const getMedian = function(
   )
 }
 
+// We perform benchmarking incrementally/recursively in order to:
+//  - stop benchmarking exactly when the `duration` has been reached
+//  - adjust some parameters as we take more measurements (e.g. `repeat`)
+//  - reduce the sample size when we hit the max memory limit
 // eslint-disable-next-line max-statements, max-lines-per-function
 const recursiveMedian = function(
   main,
@@ -73,6 +94,7 @@ const recursiveMedian = function(
   recurse,
   timeA = measureTime(main, nowBias, loopBias, repeat),
 ) {
+  // We've reached the end of the `duration`
   if (now() > runEnd) {
     return timeA
   }
@@ -88,6 +110,8 @@ const recursiveMedian = function(
   const nextRepeat = getRepeat(median, minTime, constRepeat)
   const nextMedian = getNextMedian(repeat, nextRepeat, median)
 
+  // Recurse but pass itself as the next `measureTime()`, which means the next
+  // recursion will be three times slower and more precise.
   const recursiveGetTime = (main, nowBias, loopBias, repeat) =>
     recursiveMedian(
       main,
@@ -117,6 +141,7 @@ const recursiveMedian = function(
   )
 }
 
+// Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
 const measure = function(main, nowBias, loopBias, repeat) {
   // eslint-disable-next-line fp/no-let
   let count = repeat
@@ -130,10 +155,14 @@ const measure = function(main, nowBias, loopBias, repeat) {
   } while (--count)
 
   const end = now()
+  // The final time might be negative if the task is as fast or faster than the
+  // iteration code itself. In this case, we return `0`.
   return Math.max((end - start - nowBias) / repeat - loopBias, 0)
 }
 
+// Estimate how many times to repeat the benchmarking loop.
 const getRepeat = function(median, minTime, constRepeat) {
+  // `constRepeat` is used during bias calculation to set a fixed `repeat` value
   if (constRepeat !== undefined) {
     return constRepeat
   }
@@ -145,14 +174,14 @@ const getRepeat = function(median, minTime, constRepeat) {
   return Math.ceil(minTime / median)
 }
 
-// We should not mix medians that have been computed with different `repeat`.
-// This is because different `repeat` give different medians due to bias
+// We should not mix times that have been computed with different `repeat`.
+// This is because different `repeat` give different times due to bias
 // correction and JavaScript engine loop optimizations.
 // So if the `repeat` changes too much, we discard the previously computed
-// medians.
+// times.
 // However, once stabilized, `repeat` will slightly vary. Those slight changes
-// should not discard the previously computed medians.
-// When `repeat` change is <10%, this should not impact the computed medians
+// should not discard the previously computed times.
+// When `repeat` change is low though, this should not impact the computed times
 // too much, so we do not need to discard them.
 const getNextMedian = function(repeat, nextRepeat, median) {
   const repeatDiff = Math.abs(nextRepeat - repeat) / repeat
@@ -166,6 +195,8 @@ const getNextMedian = function(repeat, nextRepeat, median) {
 
 const MIN_REPEAT_DIFF = 0.1
 
+// We use a median instead of an arithmetic mean in order to exclude outliers
+// and increase precision.
 // We purposely use nested `if`, avoid destructuring and do not use nested
 // function calls for performance reasons.
 // eslint-disable-next-line max-statements, complexity
