@@ -1,6 +1,7 @@
 import { spawn } from 'child_process'
 
 import pEvent from 'p-event'
+import pMapSeries from 'p-map-series'
 
 import { now } from './now.js'
 import { getChildMessage, sendChildMessage } from './ipc_helpers.js'
@@ -8,60 +9,36 @@ import { getChildMessage, sendChildMessage } from './ipc_helpers.js'
 const CHILD_MAIN = `${__dirname}/ipc.js`
 
 const start = async function(duration) {
-  const topStart = startTimer()
+  const runStart = startTimer()
+  const runEnd = runStart + duration
 
-  const processDuration = duration / PROCESS_COUNT
-  // The last child process will in average spend half of its time beyond the
-  // `totalDuration`, so we need to adjust it so the time spent matches
-  // the specified `duration`.
-  // eslint-disable-next-line no-magic-numbers
-  const totalDuration = duration * (1 - 0.5 / PROCESS_COUNT)
+  const childProcesses = await startChildren()
 
-  const times = await timedRepeatAsync(
-    () => runChild(processDuration),
-    totalDuration,
-  )
+  const times = await runChildren(childProcesses, runEnd)
 
   printStats(times)
-  stopTimer(topStart)
+  stopTimer(runStart)
 }
 
 // This is the maximum number of child processes.
-// The actual number might be lower due to the time required to boot child
-// processes.
+// The actual number might be lower:
+//  - the process duration excludes the bias calculation, but that bias
+//    calculation has a minimum value which can increase the process duration
+//    a lot if it is small
+//  - if running the task only once is slower than `runDuration / PROCESS_COUNT`
 const PROCESS_COUNT = 2e1
 
-// Repeat an async function serially for a specific duration.
-// We launch child processes serially, otherwise they slow down each other and
-// have higher variance.
-const timedRepeatAsync = async function(func, duration) {
-  const end = now() + duration
-
-  const results = []
-
-  // eslint-disable-next-line fp/no-loops
-  do {
-    // eslint-disable-next-line no-await-in-loop
-    const result = await func()
-    // eslint-disable-next-line fp/no-mutating-methods
-    results.push(result)
-  } while (now() < end)
-
-  return results
-}
-
-const runChild = async processDuration => {
-  const childProcess = await startChild()
-
-  const time = await executeChild(childProcess, processDuration)
-
-  await endChild(childProcess)
-
-  return time
+// We boot all child processes at once in parallel because it is slow.
+// We do it before running the benchmarks, otherwise this would slow it down
+// and add variance.
+const startChildren = async function() {
+  const promises = Array.from({ length: PROCESS_COUNT }, startChild)
+  const childProcesses = await Promise.all(promises)
+  return childProcesses
 }
 
 const startChild = async function() {
-  const childProcess = await spawn(
+  const childProcess = spawn(
     'node',
     [CHILD_MAIN],
     // TODO: remove `inherit` on stderr, it's just for debugging
@@ -73,7 +50,32 @@ const startChild = async function() {
   return childProcess
 }
 
-const executeChild = async function(childProcess, processDuration) {
+// We launch child processes serially, otherwise they slow down each other and
+// have higher variance.
+const runChildren = async function(childProcesses, runEnd) {
+  const processDuration = (runEnd - now()) / PROCESS_COUNT
+
+  const results = await pMapSeries(childProcesses, childProcess =>
+    runChild(childProcess, processDuration, runEnd),
+  )
+
+  const times = results.filter(isDefined)
+  return times
+}
+
+const runChild = async function(childProcess, processDuration, runEnd) {
+  const time = await executeChild(childProcess, processDuration, runEnd)
+
+  await endChild(childProcess)
+
+  return time
+}
+
+const executeChild = async function(childProcess, processDuration, runEnd) {
+  if (now() > runEnd) {
+    return
+  }
+
   await sendChildMessage(childProcess, 'run', processDuration)
   const time = await getChildMessage(childProcess, 'time')
   return time
@@ -93,6 +95,10 @@ const endChild = async function(childProcess) {
   if (signal !== null) {
     throw new Error(`Child process exited with signal '${signal}'`)
   }
+}
+
+const isDefined = function(value) {
+  return value !== undefined
 }
 
 const startTimer = function() {
