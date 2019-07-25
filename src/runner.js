@@ -7,7 +7,7 @@ import { getChildMessage, sendChildMessage } from './ipc_helpers.js'
 
 const CHILD_MAIN = `${__dirname}/ipc.js`
 
-const start = async duration => {
+const start = async function(duration) {
   const topStart = startTimer()
 
   const processDuration = duration / PROCESS_COUNT
