@@ -14,8 +14,14 @@ export const getBiases = function(duration) {
 
 const noop = function() {}
 
+// Biases must be very precise in order to benchmark fast tasks accurately.
+// So we impose a minimum duration when calculating them.
 const MIN_BIAS_DURATION = 1e8
+// However if the duration is high enough, we spend even more time calculating
+// biases.
 const BIAS_DURATION_RATIO = 1e2
+
+// Hard-code the number of `repeat` when calculating biases
 const NOW_BIAS_REPEAT = 1e3
 const LOOP_BIAS_REPEAT = 1e4
 
