@@ -1,11 +1,11 @@
-import { execFile } from 'child_process'
-import { promisify } from 'util'
+import { spawn } from 'child_process'
+
+import pEvent from 'p-event'
 
 import { now } from './now.js'
+import { getChildMessage, sendChildMessage } from './ipc_helpers.js'
 
-const LAUNCHER = `${__dirname}/launch.js`
-
-const pExecFile = promisify(execFile)
+const CHILD_MAIN = `${__dirname}/ipc.js`
 
 const start = async duration => {
   const topStart = startTimer()
@@ -18,7 +18,7 @@ const start = async duration => {
   const totalDuration = duration * (1 - 0.5 / PROCESS_COUNT)
 
   const times = await timedRepeatAsync(
-    () => launch(processDuration),
+    () => runChild(processDuration),
     totalDuration,
   )
 
@@ -50,19 +50,49 @@ const timedRepeatAsync = async function(func, duration) {
   return results
 }
 
-const launch = async processDuration => {
-  const { stdout, stderr } = await pExecFile('node', [
-    LAUNCHER,
-    processDuration,
-  ])
+const runChild = async processDuration => {
+  const childProcess = await startChild()
 
-  // TODO: remove
-  if (stderr.trim()) {
-    console.log(stderr)
+  const time = await executeChild(childProcess, processDuration)
+
+  await endChild(childProcess)
+
+  return time
+}
+
+const startChild = async function() {
+  const childProcess = await spawn(
+    'node',
+    [CHILD_MAIN],
+    // TODO: remove `inherit` on stderr, it's just for debugging
+    { stdio: ['ignore', 'ignore', 'inherit', 'ipc'] },
+  )
+
+  await getChildMessage(childProcess, 'ready')
+
+  return childProcess
+}
+
+const executeChild = async function(childProcess, processDuration) {
+  await sendChildMessage(childProcess, 'run', processDuration)
+  const time = await getChildMessage(childProcess, 'time')
+  return time
+}
+
+const endChild = async function(childProcess) {
+  childProcess.disconnect()
+
+  const [exitCode, signal] = await pEvent(childProcess, 'exit', {
+    multiArgs: true,
+  })
+
+  if (exitCode !== 0) {
+    throw new Error(`Child process exited with code ${exitCode}`)
   }
 
-  const time = Number(stdout.trim())
-  return time
+  if (signal !== null) {
+    throw new Error(`Child process exited with signal '${signal}'`)
+  }
 }
 
 const startTimer = function() {
@@ -92,4 +122,4 @@ const compareNumbers = function(numA, numB) {
   return numA < numB ? 1 : -1
 }
 
-start(1e10)
+start(1e9)
