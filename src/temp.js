@@ -140,21 +140,32 @@ const measure = function(main, nowBias, loopBias, repeat) {
   return time
 }
 
+// Insert a value into a sorted array.
+// We need the times to always be sorted since each iteration needs to retrieve
+// the median (to compute `repeat`). Doing sorting incrementally is much better
+// as it only requires O(log n) of time complexity and O(1) of space complexity.
 const sortedInsert = function(array, value) {
-  let leftIndex = 0
-  let rightIndex = array.length
+  // eslint-disable-next-line fp/no-let
+  let start = 0
+  // eslint-disable-next-line fp/no-let
+  let end = array.length
 
-  while (leftIndex < rightIndex) {
-    const index = (leftIndex + rightIndex) >>> 1
+  // eslint-disable-next-line fp/no-loops
+  while (start < end) {
+    const middle = Math.floor((start + end) / 2)
 
-    if (array[index] < value) {
-      leftIndex = index + 1
+    // eslint-disable-next-line max-depth
+    if (array[middle] < value) {
+      // eslint-disable-next-line fp/no-mutation
+      start = middle + 1
     } else {
-      rightIndex = index
+      // eslint-disable-next-line fp/no-mutation
+      end = middle
     }
   }
 
-  array.splice(leftIndex, 0, value)
+  // eslint-disable-next-line fp/no-mutating-methods
+  array.splice(start, 0, value)
 }
 
 // Estimate how many times to repeat the benchmarking loop.
