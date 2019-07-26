@@ -58,7 +58,7 @@ export const benchmark = function(
   nowBias,
   loopBias,
   minTime,
-  initialRepeat,
+  constRepeat,
 ) {
   const runEnd = now() + duration
 
@@ -68,7 +68,7 @@ export const benchmark = function(
     loopBias,
     minTime,
     runEnd,
-    initialRepeat,
+    constRepeat,
   )
 
   const median = getMedian(times)
@@ -79,16 +79,25 @@ export const benchmark = function(
 //  - stop benchmarking exactly when the `duration` has been reached
 //  - adjust some parameters as we take more measurements (e.g. `repeat`)
 //  - reduce the sample size when we hit the max memory limit
+// eslint-disable-next-line max-statements, complexity
 const benchmarkLoop = function(
   main,
   nowBias,
   loopBias,
   minTime,
   runEnd,
-  initialRepeat,
+  constRepeat,
 ) {
-  let times = []
-  let repeat = initialRepeat === undefined ? 1 : initialRepeat
+  const times = []
+
+  // eslint-disable-next-line fp/no-let
+  let repeat = constRepeat === undefined ? 1 : constRepeat
+  const callibration = { done: false }
+
+  // Due to some JavaScript engine optimization, the first run of a function is
+  // much slower than the next calls. For example running an empty function
+  // might be 1000 times slower on the first call. So we do a cold start.
+  main()
 
   // eslint-disable-next-line fp/no-loops
   do {
@@ -96,17 +105,67 @@ const benchmarkLoop = function(
 
     sortedInsert(times, time)
 
-    const nextRepeat = getRepeat(times, minTime, loopBias, initialRepeat)
-
-    if (shouldDiscardTimes(repeat, nextRepeat)) {
-      times = []
-    }
-
-    repeat = nextRepeat
+    // eslint-disable-next-line fp/no-mutation
+    repeat = getRepeat(
+      times,
+      minTime,
+      loopBias,
+      constRepeat,
+      repeat,
+      callibration,
+    )
     // Until we reach the end of the `duration`
   } while (now() < runEnd)
 
   return times
+}
+
+// Estimate how many times to repeat the benchmarking loop.
+// This is performed continuously based on the previous benchmarked times.
+const getRepeat = function(
+  times,
+  minTime,
+  loopBias,
+  constRepeat,
+  previousRepeat,
+  callibration,
+) {
+  const repeat = computeRepeat(times, minTime, loopBias, constRepeat)
+  callibrateRepeat(callibration, times, repeat, previousRepeat)
+  return repeat
+}
+
+const computeRepeat = function(times, minTime, loopBias, constRepeat) {
+  // `constRepeat` is used during bias calculation to set a fixed `repeat` value
+  if (constRepeat !== undefined) {
+    return constRepeat
+  }
+
+  const median = getMedian(times)
+  const repeat = Math.ceil(minTime / (median + loopBias))
+  return repeat
+}
+
+// `repeat` initially varies greatly but quickly stabilitizes. Once this
+// happens, we only keep 2/3 median times and discard the others.
+// This is because mixing times computed with different `repeat` is bad.
+// Different `repeat` give different times due to bias correction and JavaScript
+// engine loop optimizations.
+// After stabilizing `repeat` does not change enough to impact statistical
+// significance anymore.
+// When `repeat` is not used (always `1`), no times are discarded.
+const callibrateRepeat = function(callibration, times, repeat, previousRepeat) {
+  // When two successive `repeat` are the same, we consider they have stabilized
+  if (callibration.done || repeat !== previousRepeat) {
+    return
+  }
+
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation
+  callibration.done = true
+
+  const newTimes = getMedianRange(times)
+  // eslint-disable-next-line fp/no-mutating-methods
+  times.splice(0, times.length, ...newTimes)
 }
 
 // Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
@@ -146,20 +205,7 @@ const sortedInsert = function(array, value) {
   array.splice(leftIndex, 0, value)
 }
 
-// Estimate how many times to repeat the benchmarking loop.
-const getRepeat = function(times, minTime, loopBias, initialRepeat) {
-  // `initialRepeat` is used during bias calculation to set a fixed `repeat`
-  // value
-  if (initialRepeat !== undefined) {
-    return initialRepeat
-  }
-
-  const median = getMedian(times)
-  const repeat = Math.ceil(minTime / (median + loopBias))
-  return repeat
-}
-
-// Array must be sorted and non-empty
+// Retrieve median of a sorted array
 const getMedian = function(array) {
   if (array.length % 2 === 1) {
     return array[(array.length - 1) / 2]
@@ -168,17 +214,19 @@ const getMedian = function(array) {
   return (array[array.length / 2 - 1] + array[array.length / 2]) / 2
 }
 
-// We should not mix times that have been computed with different `repeat`.
-// This is because different `repeat` give different times due to bias
-// correction and JavaScript engine loop optimizations.
-// So if the `repeat` changes too much, we discard the previously computed
-// times.
-// However, once stabilized, `repeat` will slightly vary. Those slight changes
-// should not discard the previously computed times.
-// When `repeat` change is low though, this should not impact the computed times
-// too much, so we do not need to discard them.
-const shouldDiscardTimes = function(repeat, nextRepeat) {
-  return Math.abs(nextRepeat - repeat) / repeat >= MIN_REPEAT_DIFF
-}
+// Retrieve 2/3 elements at the median of a sorted array
+const getMedianRange = function(array) {
+  if (array.length <= 1) {
+    return array
+  }
 
-const MIN_REPEAT_DIFF = 0.1
+  if (array.length % 2 === 0) {
+    return [array[array.length / 2 - 1], array[array.length / 2]]
+  }
+
+  return [
+    array[(array.length - 1) / 2 - 1],
+    array[(array.length - 1) / 2],
+    array[(array.length - 1) / 2 + 1],
+  ]
+}
