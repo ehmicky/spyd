@@ -96,7 +96,7 @@ const benchmarkLoop = function(
 
     sortedInsert(times, time)
 
-    const nextRepeat = getRepeat(times, minTime, initialRepeat)
+    const nextRepeat = getRepeat(times, minTime, loopBias, initialRepeat)
 
     if (shouldDiscardTimes(repeat, nextRepeat)) {
       times = []
@@ -147,7 +147,7 @@ const sortedInsert = function(array, value) {
 }
 
 // Estimate how many times to repeat the benchmarking loop.
-const getRepeat = function(times, minTime, initialRepeat) {
+const getRepeat = function(times, minTime, loopBias, initialRepeat) {
   // `initialRepeat` is used during bias calculation to set a fixed `repeat`
   // value
   if (initialRepeat !== undefined) {
@@ -155,13 +155,8 @@ const getRepeat = function(times, minTime, initialRepeat) {
   }
 
   const median = getMedian(times)
-
-  // TODO: fix this, this is wrong?
-  if (median === 0) {
-    return 1
-  }
-
-  return Math.ceil(minTime / median)
+  const repeat = Math.ceil(minTime / (median + loopBias))
+  return repeat
 }
 
 // Array must be sorted and non-empty
