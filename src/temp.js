@@ -120,6 +120,43 @@ const benchmarkLoop = function(
   return times
 }
 
+// Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
+const measure = function(main, nowBias, loopBias, repeat) {
+  // eslint-disable-next-line fp/no-let
+  let count = repeat
+  const start = now()
+
+  // We use a do/while loop for speed purpose.
+  // eslint-disable-next-line fp/no-loops
+  do {
+    main()
+    // eslint-disable-next-line no-plusplus, fp/no-mutation
+  } while (--count)
+
+  const end = now()
+  // The final time might be negative if the task is as fast or faster than the
+  // iteration code itself. In this case, we return `0`.
+  const time = Math.max((end - start - nowBias) / repeat - loopBias, 0)
+  return time
+}
+
+const sortedInsert = function(array, value) {
+  let leftIndex = 0
+  let rightIndex = array.length
+
+  while (leftIndex < rightIndex) {
+    const index = (leftIndex + rightIndex) >>> 1
+
+    if (array[index] < value) {
+      leftIndex = index + 1
+    } else {
+      rightIndex = index
+    }
+  }
+
+  array.splice(leftIndex, 0, value)
+}
+
 // Estimate how many times to repeat the benchmarking loop.
 // This is performed continuously based on the previous benchmarked times.
 const getRepeat = function(
@@ -166,43 +203,6 @@ const callibrateRepeat = function(callibration, times, repeat, previousRepeat) {
   const newTimes = getMedianRange(times)
   // eslint-disable-next-line fp/no-mutating-methods
   times.splice(0, times.length, ...newTimes)
-}
-
-// Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
-const measure = function(main, nowBias, loopBias, repeat) {
-  // eslint-disable-next-line fp/no-let
-  let count = repeat
-  const start = now()
-
-  // We use a do/while loop for speed purpose.
-  // eslint-disable-next-line fp/no-loops
-  do {
-    main()
-    // eslint-disable-next-line no-plusplus, fp/no-mutation
-  } while (--count)
-
-  const end = now()
-  // The final time might be negative if the task is as fast or faster than the
-  // iteration code itself. In this case, we return `0`.
-  const time = Math.max((end - start - nowBias) / repeat - loopBias, 0)
-  return time
-}
-
-const sortedInsert = function(array, value) {
-  let leftIndex = 0
-  let rightIndex = array.length
-
-  while (leftIndex < rightIndex) {
-    const index = (leftIndex + rightIndex) >>> 1
-
-    if (array[index] < value) {
-      leftIndex = index + 1
-    } else {
-      rightIndex = index
-    }
-  }
-
-  array.splice(leftIndex, 0, value)
 }
 
 // Retrieve median of a sorted array
