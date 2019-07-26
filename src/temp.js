@@ -6,9 +6,12 @@ import { getTimeResolution } from './resolution.js'
 export const benchmark = function(main, duration) {
   initialMeasure()
 
-  const { nowBias, loopBias, minTime } = getBiases(duration)
+  const biasDuration = duration * BIAS_DURATION_RATIO
+  const mainDuration = duration - biasDuration * 2
 
-  const median = benchmarkMain(main, duration, nowBias, loopBias, minTime)
+  const { nowBias, loopBias, minTime } = getBiases(biasDuration)
+
+  const median = benchmarkMain(main, mainDuration, nowBias, loopBias, minTime)
   return median
 }
 
@@ -23,6 +26,10 @@ const initialMeasure = function() {
 // eslint-disable-next-line no-empty-function
 const noopTwo = function() {}
 
+// Biases must be very precise to benchmark fast tasks accurately.
+// So we dedicate a significant part of the total benchmark to them.
+const BIAS_DURATION_RATIO = 0.1
+
 // The following biases are introduced by the benchmarking code itself:
 //   - `nowBias` is the time taken to retrieve the current timestamp
 //   - `loopBias` is the time taken to iterate in a loop, when running a task
@@ -33,11 +40,7 @@ const noopTwo = function() {}
 // On top of this, the more the benchmarking code itself is run, the faster it
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
-const getBiases = function(duration) {
-  const biasDuration = Math.max(
-    MIN_BIAS_DURATION,
-    duration / BIAS_DURATION_RATIO,
-  )
+const getBiases = function(biasDuration) {
   const nowBias = benchmarkMain(noop, biasDuration, 0, 0, 0, 0)
   const minTime = getMinTime(nowBias)
   const loopBias = benchmarkMain(noop, biasDuration, nowBias, 0, minTime)
@@ -46,15 +49,6 @@ const getBiases = function(duration) {
 
 // eslint-disable-next-line no-empty-function
 const noop = function() {}
-
-// TODO: Min good biasDuration for nowBias: 5e7 - 1e8
-// TODO: Min good biasDuration for loopBias: 5e6 - 1e7
-// Biases must be very precise to benchmark fast tasks accurately.
-// So we impose a minimum duration when calculating them.
-const MIN_BIAS_DURATION = 5e6
-// However if the duration is high enough, we spend even more time calculating
-// biases.
-const BIAS_DURATION_RATIO = 1e2
 
 // If a task duration is too close to `nowBias, the returned variance will be
 // mostly due to the timestamp function itself.
@@ -98,7 +92,7 @@ const benchmarkMain = function(
   return median
 }
 
-// We perform benchmarking incrementally/recursively in order to:
+// We perform benchmarking incrementally in order to:
 //  - stop benchmarking exactly when the `duration` has been reached
 //  - adjust some parameters as we take more measurements (e.g. `repeat`)
 //  - reduce the sample size when we hit the max memory limit
