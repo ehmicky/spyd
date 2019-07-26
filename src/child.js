@@ -1,4 +1,4 @@
-import { execute } from './execute.js'
+import { benchmark } from './temp.js'
 import { sendParentMessage, getParentMessage } from './ipc_helpers.js'
 
 // Child process entry point.
@@ -9,8 +9,10 @@ const run = async function() {
 
   const duration = await getParentMessage('run')
 
-  const time = execute(duration)
+  const time = benchmark(func, duration)
   await sendParentMessage('time', time)
 }
+
+const func = () => {}
 
 run()

@@ -1,6 +1,28 @@
 import { now } from './now.js'
 import { getTimeResolution } from './resolution.js'
 
+// Measure how long a task takes.
+// Run the benchmark for a specific amount of time.
+export const benchmark = function(main, duration) {
+  initialMeasure()
+
+  const { nowBias, loopBias, minTime } = getBiases(duration)
+
+  const median = benchmarkMain(main, duration, nowBias, loopBias, minTime)
+  return median
+}
+
+// For some reasons I ignore (likely engine optimizations), when `measure()`
+// is benchmarking its first function, it's running much faster than for the
+// next functions passed to it.
+// We fix this by doing a cold start using an empty function
+const initialMeasure = function() {
+  measure(noopTwo, 0, 0, 1)
+}
+
+// eslint-disable-next-line no-empty-function
+const noopTwo = function() {}
+
 // The following biases are introduced by the benchmarking code itself:
 //   - `nowBias` is the time taken to retrieve the current timestamp
 //   - `loopBias` is the time taken to iterate in a loop, when running a task
@@ -11,14 +33,14 @@ import { getTimeResolution } from './resolution.js'
 // On top of this, the more the benchmarking code itself is run, the faster it
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
-export const getBiases = function(duration) {
+const getBiases = function(duration) {
   const biasDuration = Math.max(
     MIN_BIAS_DURATION,
     duration / BIAS_DURATION_RATIO,
   )
-  const nowBias = benchmark(noop, biasDuration, 0, 0, 0, 0)
+  const nowBias = benchmarkMain(noop, biasDuration, 0, 0, 0, 0)
   const minTime = getMinTime(nowBias)
-  const loopBias = benchmark(noop, biasDuration, nowBias, 0, minTime)
+  const loopBias = benchmarkMain(noop, biasDuration, nowBias, 0, minTime)
   return { nowBias, loopBias, minTime }
 }
 
@@ -53,8 +75,7 @@ const MIN_PRECISION = 1e2
 // The task loop must be at least `MIN_NOW_BIAS` slower than `nowBias`
 const MIN_NOW_BIAS = 1e2
 
-// Entry point of the main benchmarking logic
-export const benchmark = function(
+const benchmarkMain = function(
   main,
   duration,
   nowBias,
@@ -62,8 +83,6 @@ export const benchmark = function(
   minTime,
   constRepeat,
 ) {
-  initialMeasure()
-
   const runEnd = now() + duration
 
   const times = benchmarkLoop(
@@ -78,17 +97,6 @@ export const benchmark = function(
   const median = getMedian(times)
   return median
 }
-
-// For some reasons I ignore (likely engine optimizations), when `measure()`
-// is benchmarking its first function, it's running much faster than for the
-// next functions passed to it.
-// We fix this by doing a cold start using an empty function
-const initialMeasure = function() {
-  measure(noopTwo, 0, 0, 1)
-}
-
-// eslint-disable-next-line no-empty-function
-const noopTwo = function() {}
 
 // We perform benchmarking incrementally/recursively in order to:
 //  - stop benchmarking exactly when the `duration` has been reached
