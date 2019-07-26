@@ -1,7 +1,9 @@
 import { benchmark } from './temp.js'
 
-const func = () => {}
+const func = Math.random
 
-Array.from({ length: 10 }, () => {
-  benchmark(func, 1e7)
-})
+console.log(
+  Array.from({ length: 10 }, () => {
+    return benchmark(func, 1e8)
+  }).join('\n'),
+)
