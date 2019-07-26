@@ -13,6 +13,6 @@ const run = async function() {
   await sendParentMessage('time', time)
 }
 
-const func = () => {}
+const func = Math.random
 
 run()

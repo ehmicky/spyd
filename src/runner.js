@@ -15,7 +15,8 @@ const start = async function(duration) {
   const childProcesses = await startChildren()
 
   const runEnd = now() + duration
-  const processDuration = getProcessDuration(duration)
+  // How long to run each child process
+  const processDuration = duration / PROCESS_COUNT
 
   const times = await runChildren(childProcesses, processDuration, runEnd)
 
@@ -53,15 +54,6 @@ const startChild = async function() {
 
   return childProcess
 }
-
-// How long to run each child process
-const getProcessDuration = function(duration) {
-  return Math.max(duration / PROCESS_COUNT, MIN_PROCESS_DURATION)
-}
-
-// The actual minimum duration is actually likely to be the bias calculation
-// minimum duration.
-const MIN_PROCESS_DURATION = 1e7
 
 // We launch child processes serially. Otherwise they would slow down each other
 // and have higher variance. Multi-core CPUs are designed to run in parallel
