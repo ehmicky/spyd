@@ -141,4 +141,4 @@ const compareNumbers = function(numA, numB) {
   return numA < numB ? 1 : -1
 }
 
-start(1e9)
+start(2e9)
