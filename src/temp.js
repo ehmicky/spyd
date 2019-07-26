@@ -12,8 +12,6 @@ import { getTimeResolution } from './resolution.js'
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
 export const getBiases = function(duration) {
-  initialMeasure()
-
   const biasDuration = Math.max(
     MIN_BIAS_DURATION,
     duration / BIAS_DURATION_RATIO,
@@ -24,17 +22,8 @@ export const getBiases = function(duration) {
   return { nowBias, loopBias, minTime }
 }
 
+// eslint-disable-next-line no-empty-function
 const noop = function() {}
-
-// For some reasons I ignore (likely engine optimizations), when `measure()`
-// is benchmarking its first function, it's running much faster than for the
-// next functions passed to it.
-// We fix this by doing a cold start using an empty function
-const initialMeasure = function() {
-  measure(noopTwo, 0, 0, 1)
-}
-
-const noopTwo = function() {}
 
 // TODO: Min good biasDuration for nowBias: 5e7 - 1e8
 // TODO: Min good biasDuration for loopBias: 5e6 - 1e7
@@ -73,6 +62,8 @@ export const benchmark = function(
   minTime,
   constRepeat,
 ) {
+  initialMeasure()
+
   const runEnd = now() + duration
 
   const times = benchmarkLoop(
@@ -87,6 +78,17 @@ export const benchmark = function(
   const median = getMedian(times)
   return median
 }
+
+// For some reasons I ignore (likely engine optimizations), when `measure()`
+// is benchmarking its first function, it's running much faster than for the
+// next functions passed to it.
+// We fix this by doing a cold start using an empty function
+const initialMeasure = function() {
+  measure(noopTwo, 0, 0, 1)
+}
+
+// eslint-disable-next-line no-empty-function
+const noopTwo = function() {}
 
 // We perform benchmarking incrementally/recursively in order to:
 //  - stop benchmarking exactly when the `duration` has been reached
