@@ -88,6 +88,8 @@ const benchmarkMain = function(
     constRepeat,
   )
 
+  // eslint-disable-next-line fp/no-mutating-methods
+  times.sort()
   const median = getMedian(times)
   return median
 }
@@ -105,10 +107,10 @@ const benchmarkLoop = function(
   constRepeat,
 ) {
   const times = []
-
   // eslint-disable-next-line fp/no-let
-  let repeat = constRepeat === undefined ? 1 : constRepeat
-  const callibration = { done: false }
+  let repeat = 0
+  // eslint-disable-next-line fp/no-let
+  let count = 0
 
   // Due to some JavaScript engine optimization, the first run of a function is
   // much slower than the next calls. For example running an empty function
@@ -117,19 +119,16 @@ const benchmarkLoop = function(
 
   // eslint-disable-next-line fp/no-loops
   do {
-    const time = measure(main, nowBias, loopBias, repeat)
-
-    sortedInsert(times, time)
+    // eslint-disable-next-line fp/no-mutation
+    count += 1
 
     // eslint-disable-next-line fp/no-mutation
-    repeat = getRepeat(
-      times,
-      minTime,
-      loopBias,
-      constRepeat,
-      repeat,
-      callibration,
-    )
+    repeat = getRepeat(repeat, times, count, minTime, loopBias, constRepeat)
+
+    const time = measure(main, nowBias, loopBias, repeat)
+
+    // eslint-disable-next-line fp/no-mutating-methods
+    times.push(time)
     // Until we reach the end of the `duration`
   } while (now() < runEnd)
 
@@ -160,99 +159,69 @@ const measure = function(main, nowBias, loopBias, repeat) {
   return time
 }
 
-// Insert a value into a sorted array.
-// We need the times to always be sorted since each iteration needs to retrieve
-// the median (to compute `repeat`). Doing sorting incrementally is much better
-// as it only requires O(log n) of time complexity and O(1) of space complexity.
-const sortedInsert = function(array, value) {
-  // eslint-disable-next-line fp/no-let
-  let start = 0
-  // eslint-disable-next-line fp/no-let
-  let end = array.length
-
-  // eslint-disable-next-line fp/no-loops
-  while (start < end) {
-    const middle = Math.floor((start + end) / 2)
-
-    // eslint-disable-next-line max-depth
-    if (array[middle] < value) {
-      // eslint-disable-next-line fp/no-mutation
-      start = middle + 1
-    } else {
-      // eslint-disable-next-line fp/no-mutation
-      end = middle
-    }
-  }
-
-  // eslint-disable-next-line fp/no-mutating-methods
-  array.splice(start, 0, value)
-}
-
 // Estimate how many times to repeat the benchmarking loop.
-// This is performed continuously based on the previous benchmarked times.
+// This is performed continuously based on the previous benchmarked times
+// because fast functions get optimized by JavaScript engines after they are
+// run several times in a row ("hot paths"). Those number of times are several
+// specific thresholds. When this happens, `repeat` needs to be computed again.
 const getRepeat = function(
+  repeat,
   times,
+  count,
   minTime,
   loopBias,
   constRepeat,
-  previousRepeat,
-  callibration,
-) {
-  const repeat = computeRepeat(
-    times,
-    minTime,
-    loopBias,
-    constRepeat,
-    previousRepeat,
-  )
-  callibrateRepeat(callibration, times, repeat, previousRepeat)
-  return repeat
-}
-
-const computeRepeat = function(
-  times,
-  minTime,
-  loopBias,
-  constRepeat,
-  previousRepeat,
 ) {
   // `constRepeat` is used during bias calculation to set a fixed `repeat` value
   if (constRepeat !== undefined) {
     return constRepeat
   }
 
+  // This is performed logarithmatically (on iteration number 1, 2, 4, 8, etc.)
+  // because `times.sort()` is slow: O(n log(n))
+  if (!Number.isInteger(Math.log2(count))) {
+    return repeat
+  }
+
+  // First iteration
+  if (repeat === 0) {
+    return 1
+  }
+
+  const nextRepeat = computeRepeat(repeat, times, minTime, loopBias)
+  callibrateRepeat(times, nextRepeat, repeat)
+  return nextRepeat
+}
+
+// `repeat` is adjusted so that `measure()` time === `minTime`
+const computeRepeat = function(repeat, times, minTime, loopBias) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  times.sort()
   const median = getMedian(times)
 
   // When calculating `loopBias`, `median` might initially be `0`
   if (loopBias === 0 && median === 0) {
-    return previousRepeat * 2
+    return repeat * 2
   }
 
-  const repeat = Math.ceil(minTime / (median + loopBias))
-  return repeat
+  return Math.ceil(minTime / (median + loopBias))
 }
 
-// `repeat` initially varies greatly but quickly stabilitizes. Once this
-// happens, we only keep 2/3 median times and discard the others.
+// When `repeat` changes too much, we discard previously computed times.
 // This is because mixing times computed with different `repeat` is bad.
 // Different `repeat` give different times due to bias correction and JavaScript
 // engine loop optimizations.
-// After stabilizing `repeat` does not change enough to impact statistical
-// significance anymore.
-// When `repeat` is not used (always `1`), no times are discarded.
-const callibrateRepeat = function(callibration, times, repeat, previousRepeat) {
-  // When two successive `repeat` are the same, we consider they have stabilized
-  if (callibration.done || repeat !== previousRepeat) {
+// However `repeat` always eventually stabilizes.
+const callibrateRepeat = function(times, nextRepeat, repeat) {
+  if (Math.abs(nextRepeat - repeat) / repeat <= MIN_REPEAT_DIFF) {
     return
   }
 
-  // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  callibration.done = true
-
-  const newTimes = getMedianRange(times)
   // eslint-disable-next-line fp/no-mutating-methods
-  times.splice(0, times.length, ...newTimes)
+  times.splice(0)
 }
+
+const MIN_REPEAT_DIFF = 0.1
 
 // Retrieve median of a sorted array
 const getMedian = function(array) {
@@ -261,21 +230,4 @@ const getMedian = function(array) {
   }
 
   return (array[array.length / 2 - 1] + array[array.length / 2]) / 2
-}
-
-// Retrieve 2/3 elements at the median of a sorted array
-const getMedianRange = function(array) {
-  if (array.length <= 1) {
-    return array
-  }
-
-  if (array.length % 2 === 0) {
-    return [array[array.length / 2 - 1], array[array.length / 2]]
-  }
-
-  return [
-    array[(array.length - 1) / 2 - 1],
-    array[(array.length - 1) / 2],
-    array[(array.length - 1) / 2 + 1],
-  ]
 }
