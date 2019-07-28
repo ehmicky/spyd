@@ -11,8 +11,8 @@ export const benchmark = function(main, duration) {
 
   const { nowBias, loopBias, minTime } = getBiases(biasDuration)
 
-  const median = benchmarkMain(main, mainDuration, nowBias, loopBias, minTime)
-  return median
+  const stats = benchmarkMain(main, mainDuration, nowBias, loopBias, minTime)
+  return stats
 }
 
 // For some reasons I ignore (likely engine optimizations), when `measure()`
@@ -41,9 +41,15 @@ const BIAS_DURATION_RATIO = 0.1
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
 const getBiases = function(biasDuration) {
-  const nowBias = benchmarkMain(noop, biasDuration, 0, 0, 0, 0)
+  const { median: nowBias } = benchmarkMain(noop, biasDuration, 0, 0, 0, 0)
   const minTime = getMinTime(nowBias)
-  const loopBias = benchmarkMain(noop, biasDuration, nowBias, 0, minTime)
+  const { median: loopBias } = benchmarkMain(
+    noop,
+    biasDuration,
+    nowBias,
+    0,
+    minTime,
+  )
   return { nowBias, loopBias, minTime }
 }
 
@@ -79,7 +85,7 @@ const benchmarkMain = function(
 ) {
   const runEnd = now() + duration
 
-  const times = benchmarkLoop(
+  const { times, count } = benchmarkLoop(
     main,
     nowBias,
     loopBias,
@@ -88,16 +94,15 @@ const benchmarkMain = function(
     constRepeat,
   )
 
-  // eslint-disable-next-line fp/no-mutating-methods
-  times.sort()
-  const median = getMedian(times)
-  return median
+  const stats = getStats(times, count)
+  return stats
 }
 
 // We perform benchmarking incrementally in order to:
 //  - stop benchmarking exactly when the `duration` has been reached
 //  - adjust some parameters as we take more measurements (e.g. `repeat`)
 //  - reduce the sample size when we hit the max memory limit
+// eslint-disable-next-line max-statements
 const benchmarkLoop = function(
   main,
   nowBias,
@@ -110,7 +115,8 @@ const benchmarkLoop = function(
   // eslint-disable-next-line fp/no-let
   let repeat = 0
   // eslint-disable-next-line fp/no-let
-  let count = 0
+  let iterIndex = 1
+  const count = { value: 0 }
 
   // Due to some JavaScript engine optimization, the first run of a function is
   // much slower than the next calls. For example running an empty function
@@ -120,19 +126,28 @@ const benchmarkLoop = function(
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line fp/no-mutation
-    count += 1
-
-    // eslint-disable-next-line fp/no-mutation
-    repeat = getRepeat(repeat, times, count, minTime, loopBias, constRepeat)
+    repeat = getRepeat(
+      repeat,
+      times,
+      iterIndex,
+      count,
+      minTime,
+      loopBias,
+      constRepeat,
+    )
 
     const time = measure(main, nowBias, loopBias, repeat)
 
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)
+    // eslint-disable-next-line fp/no-mutation
+    iterIndex += 1
+    // eslint-disable-next-line fp/no-mutation
+    count.value += repeat
     // Until we reach the end of the `duration`
   } while (now() < runEnd)
 
-  return times
+  return { times, count: count.value }
 }
 
 // Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
@@ -167,6 +182,7 @@ const measure = function(main, nowBias, loopBias, repeat) {
 const getRepeat = function(
   repeat,
   times,
+  iterIndex,
   count,
   minTime,
   loopBias,
@@ -178,8 +194,8 @@ const getRepeat = function(
   }
 
   // This is performed logarithmatically (on iteration number 1, 2, 4, 8, etc.)
-  // because `times.sort()` is slow: O(n log(n))
-  if (!Number.isInteger(Math.log2(count))) {
+  // because `array.sort()` is slow: O(n log(n))
+  if (!Number.isInteger(Math.log2(iterIndex))) {
     return repeat
   }
 
@@ -189,14 +205,13 @@ const getRepeat = function(
   }
 
   const nextRepeat = computeRepeat(repeat, times, minTime, loopBias)
-  callibrateRepeat(times, nextRepeat, repeat)
+  callibrateRepeat(nextRepeat, repeat, times, count)
   return nextRepeat
 }
 
 // `repeat` is adjusted so that `measure()` time === `minTime`
 const computeRepeat = function(repeat, times, minTime, loopBias) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  times.sort()
+  sortNumbers(times)
   const median = getMedian(times)
 
   // When calculating `loopBias`, `median` might initially be `0`
@@ -212,16 +227,45 @@ const computeRepeat = function(repeat, times, minTime, loopBias) {
 // Different `repeat` give different times due to bias correction and JavaScript
 // engine loop optimizations.
 // However `repeat` always eventually stabilizes.
-const callibrateRepeat = function(times, nextRepeat, repeat) {
+const callibrateRepeat = function(nextRepeat, repeat, times, count) {
   if (Math.abs(nextRepeat - repeat) / repeat <= MIN_REPEAT_DIFF) {
     return
   }
 
   // eslint-disable-next-line fp/no-mutating-methods
   times.splice(0)
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation
+  count.value = 0
 }
 
 const MIN_REPEAT_DIFF = 0.1
+
+const sortNumbers = function(array) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  array.sort(compareNumbers)
+}
+
+const compareNumbers = function(numA, numB) {
+  return numA > numB ? 1 : -1
+}
+
+const getStats = function(array, count) {
+  sortNumbers(array)
+
+  const loops = array.length
+  const repeat = Math.round(count / loops)
+
+  const median = getMedian(array)
+
+  const [min] = array
+  const max = array[array.length - 1]
+
+  const mean = getMean(array)
+  const variance = getVariance(array, mean)
+  const deviation = getDeviation(variance)
+
+  return { median, mean, min, max, deviation, variance, loops, count, repeat }
+}
 
 // Retrieve median of a sorted array
 const getMedian = function(array) {
@@ -230,4 +274,20 @@ const getMedian = function(array) {
   }
 
   return (array[array.length / 2 - 1] + array[array.length / 2]) / 2
+}
+
+const getDeviation = function(variance) {
+  return Math.sqrt(variance)
+}
+
+const getMean = function(array) {
+  return array.reduce(addNumbers) / array.length
+}
+
+const addNumbers = function(numA, numB) {
+  return numA + numB
+}
+
+const getVariance = function(array, mean) {
+  return getMean(array.map(num => (num - mean) ** 2))
 }
