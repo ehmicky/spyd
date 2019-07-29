@@ -79,6 +79,11 @@ export const getMedian = function(array) {
   return (array[array.length / 2 - 1] + array[array.length / 2]) / 2
 }
 
+// Note that when `repeat > 1`, the distribution of the measured function will
+// be modified by the looping process and transformed to a bell shape, even if
+// if was not one. This means `percentiles`, `histogram`, `variance` and
+// `deviation` will have a different meaning: they visualize the measurements of
+// the function not function itself).
 const getPercentiles = function(array) {
   // eslint-disable-next-line no-magic-numbers
   return getQuantiles(array, 1e2)
