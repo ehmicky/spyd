@@ -144,11 +144,31 @@ const benchmarkLoop = function(
     iterIndex += 1
     // eslint-disable-next-line fp/no-mutation
     count.value += repeat
-    // Until we reach the end of the `duration`
-  } while (now() < runEnd)
+  } while (!shouldStop(runEnd, times))
 
   return { times, count: count.value }
 }
+
+// The benchmark stops if we reach the end of the `duration` or run more than
+// `MAX_LOOPS` iterations.
+const shouldStop = function(runEnd, times) {
+  return (
+    now() >= runEnd ||
+    times.length >= Math.floor(MAX_LOOPS / (1 - OUTLIERS_THRESHOLD))
+  )
+}
+
+// We limit the max number of iterations because:
+//  - the more iterations are run, the more JavaScript engines optimize it,
+//    making code run faster and faster. This results in higher variance.
+//    This is especially true for very fast functions.
+//  - after many iterations have been run, the precision does not increase much
+//    anymore. The extra `duration` should instead be spent launching more child
+//    processes which are more effective at increasing precision.
+//  - this avoids hitting the process maximum memory limit.
+// This number if corrected by `OUTLITERS_THRESHOLD` so the final `loops` looks
+// round after removing outliers.
+const MAX_LOOPS = 1e5
 
 // Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
 const measure = function(main, nowBias, loopBias, repeat) {

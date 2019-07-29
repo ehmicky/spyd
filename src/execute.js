@@ -26,7 +26,7 @@ const fixedLength = function(number, length, lengthA) {
 
 console.log(
   Array.from({ length: 10 }, () => {
-    return benchmark(func, 1e8)
+    return benchmark(func, 1e10)
   })
     .map((stats, index, allStats) => {
       return Object.entries(stats)
