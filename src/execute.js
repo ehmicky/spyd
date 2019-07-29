@@ -9,7 +9,9 @@ const printStat = function(name, value, allStats) {
   )
   const padding = Math.max(...intDigits)
 
-  const numberInts = String(value).indexOf('.')
+  const numberInts = String(value).includes('.')
+    ? String(value).indexOf('.')
+    : String(value).length
 
   const printedValue = fixedLength(value, LENGTH + numberInts, LENGTH + padding)
   return `${name} ${printedValue}`
