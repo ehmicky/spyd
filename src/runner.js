@@ -17,38 +17,51 @@ const start = async function(duration) {
   // How long to run each child process
   const processDuration = duration / PROCESS_COUNT
 
-  const childProcesses = await startChildren()
+  const results = await runChildren(processDuration, runEnd)
 
-  const allStats = await runChildren(childProcesses, processDuration, runEnd)
-
-  printStats(allStats)
+  printStats(results)
   stopTimer(runStart)
 }
 
-// We boot all child processes at once in parallel because it is slow.
-// We do it before running the benchmarks because it would slow them down and
-// add variance.
-const startChildren = async function() {
-  const promises = Array.from({ length: PROCESS_COUNT }, startChild)
+const PROCESS_COUNT = 2e1
+
+// We initially aim at launching `PROCESS_COUNT` child processes
+// If the task is slower than `duration / PROCESS_COUNT`, we launch fewer than
+// `PROCESS_COUNT`.
+// If `duration` is high enough to run each task until it reaches its
+// `MAX_LOOPS` limit, we keep spawning new child processes.
+const runChildren = async function(processDuration, runEnd) {
+  const allResults = []
+
+  // eslint-disable-next-line fp/no-loops
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    const pool = await startPool()
+    // eslint-disable-next-line no-await-in-loop
+    const results = await runPool(pool, processDuration, runEnd)
+    // eslint-disable-next-line fp/no-mutating-methods
+    allResults.push(...results)
+  } while (now() <= runEnd)
+
+  const allResultsA = allResults.filter(isDefined)
+  return allResultsA
+}
+
+// We boot several child processes at once in parallel because it is slow.
+// We do it in-between benchmarks because it would slow them down and add
+// variance.
+const startPool = async function() {
+  const promises = Array.from({ length: POOL_SIZE }, startChild)
   const childProcesses = await Promise.all(promises)
   return childProcesses
 }
 
-// Number of child processes.
-// The actual number might be:
-//  - lower if the task is slower than `duration / PROCESS_COUNT`.
-//  - higher if `duration` is high enough to run `MAX_LOOPS` iterations within
-//    each task.
-// This is also used as the pool size.
-const PROCESS_COUNT = 2e1
+const POOL_SIZE = PROCESS_COUNT
 
 const startChild = async function() {
-  const childProcess = spawn(
-    'node',
-    [CHILD_MAIN],
-    // TODO: remove `inherit` on stderr, it's just for debugging
-    { stdio: ['ignore', 'ignore', 'inherit', 'ipc'] },
-  )
+  const childProcess = spawn('node', [CHILD_MAIN], {
+    stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
+  })
 
   await getChildMessage(childProcess, 'ready')
 
@@ -59,12 +72,10 @@ const startChild = async function() {
 // and have higher variance. Multi-core CPUs are designed to run in parallel
 // but in practice they do impact the performance of each other.
 // This does mean we are under-utilizing CPUs.
-const runChildren = async function(childProcesses, processDuration, runEnd) {
-  const results = await pMapSeries(childProcesses, childProcess =>
+const runPool = async function(pool, processDuration, runEnd) {
+  const allStats = await pMapSeries(pool, childProcess =>
     runChild(childProcess, processDuration, runEnd),
   )
-
-  const allStats = results.filter(isDefined)
   return allStats
 }
 
@@ -116,8 +127,8 @@ const stopTimer = function(topStart) {
   console.log('Time', topTime)
 }
 
-const printStats = function(allStats) {
-  const sortedTimes = allStats.map(({ median }) => median)
+const printStats = function(results) {
+  const sortedTimes = results.map(({ median }) => median)
   sortNumbers(sortedTimes)
 
   const timesMedian = getMedian(sortedTimes)
