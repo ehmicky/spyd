@@ -13,11 +13,11 @@ const CHILD_MAIN = `${__dirname}/child.js`
 const start = async function(duration) {
   const runStart = startTimer()
 
-  const childProcesses = await startChildren()
-
   const runEnd = now() + duration
   // How long to run each child process
   const processDuration = duration / PROCESS_COUNT
+
+  const childProcesses = await startChildren()
 
   const allStats = await runChildren(childProcesses, processDuration, runEnd)
 
