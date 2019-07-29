@@ -37,7 +37,6 @@ const BIAS_DURATION_RATIO = 0.1
 //     repeatedly, excluding the task itself.
 // We remove those two biases from the calculated times.
 // This function calculates those biases by benchmarking them.
-// Biases calculation does not account into the spent `duration`.
 // On top of this, the more the benchmarking code itself is run, the faster it
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
@@ -57,7 +56,7 @@ const getBiases = function(biasDuration) {
 // eslint-disable-next-line no-empty-function
 const noop = function() {}
 
-// If a task duration is too close to `nowBias, the returned variance will be
+// If a task duration is too close to `nowBias`, the returned variance will be
 // mostly due to the timestamp function itself.
 // Also if a task duration is too close to the minimum system time resolution,
 // it will lack precision.
@@ -99,10 +98,9 @@ const benchmarkMain = function(
   return stats
 }
 
-// We perform benchmarking incrementally in order to:
-//  - stop benchmarking exactly when the `duration` has been reached
-//  - adjust some parameters as we take more measurements (e.g. `repeat`)
-//  - reduce the sample size when we hit the max memory limit
+// We perform benchmarking iteratively in order to stop benchmarking exactly
+// when the `duration` or `MAX_LOOPS` has been reached.
+// We also adjust some parameters as we take more measurements (e.g. `repeat`).
 // eslint-disable-next-line max-statements
 const benchmarkLoop = function(
   main,
