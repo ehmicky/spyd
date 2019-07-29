@@ -249,23 +249,50 @@ const compareNumbers = function(numA, numB) {
   return numA - numB
 }
 
-const getStats = function(array, count) {
-  sortNumbers(array)
+// eslint-disable-next-line max-statements
+const getStats = function(times, count) {
+  sortNumbers(times)
 
-  const loops = array.length
-  const repeat = Math.round(count / loops)
+  const { times: timesA, count: countA } = removeOutliers(times, count)
 
-  const median = getMedian(array)
+  const loops = timesA.length
+  const repeat = Math.round(countA / loops)
 
-  const [min] = array
-  const max = array[array.length - 1]
+  const median = getMedian(timesA)
 
-  const mean = getMean(array)
-  const variance = getVariance(array, mean)
+  const [min] = timesA
+  const max = timesA[timesA.length - 1]
+
+  const mean = getMean(timesA)
+  const variance = getVariance(timesA, mean)
   const deviation = getDeviation(variance)
 
-  return { median, mean, min, max, deviation, variance, loops, count, repeat }
+  return {
+    median,
+    mean,
+    min,
+    max,
+    deviation,
+    variance,
+    loops,
+    count: countA,
+    repeat,
+  }
 }
+
+// Due to background processes (such as garbage collection) in JavaScript
+// engines, the execution becomes periodically much slower for very short
+// amounts of time. Those slow downs are due to the engine and not the function
+// being measured, so we remove them.
+// We do it by removing the slowest 15%.
+const removeOutliers = function(times, count) {
+  const outliersLimit = Math.ceil(times.length * (1 - OUTLIERS_THRESHOLD))
+  const timesA = times.slice(0, outliersLimit)
+  const countA = Math.ceil(count * (1 - OUTLIERS_THRESHOLD))
+  return { times: timesA, count: countA }
+}
+
+const OUTLIERS_THRESHOLD = 0.15
 
 // Retrieve median of a sorted array
 const getMedian = function(array) {
