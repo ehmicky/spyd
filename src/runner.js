@@ -30,7 +30,8 @@ const PROCESS_COUNT = 2e1
 // If the task is slower than `duration / PROCESS_COUNT`, we launch fewer than
 // `PROCESS_COUNT`.
 // If `duration` is high enough to run each task until it reaches its
-// `MAX_LOOPS` limit, we keep spawning new child processes.
+// `MAX_LOOPS` limit, we keep spawning new child processes. We stop once
+// reaching `MAX_RESULTS` though.
 const runChildren = async function(processDuration, runEnd) {
   const allResults = []
   const processCount = { value: 0 }
@@ -43,11 +44,28 @@ const runChildren = async function(processDuration, runEnd) {
     const results = await runPool(pool, processDuration, runEnd, processCount)
     // eslint-disable-next-line fp/no-mutating-methods
     allResults.push(...results)
-  } while (now() <= runEnd)
+  } while (!shouldStop(runEnd, allResults))
 
   const allResultsA = allResults.filter(isDefined)
   return { results: allResultsA, processes: processCount.value }
 }
+
+const shouldStop = function(runEnd, results) {
+  return now() > runEnd || isOverMaxLoops(results)
+}
+
+// We limit the size of the `results` in order to avoid crashing the process
+// due to memory limits
+const isOverMaxLoops = function(results) {
+  const resultsSize = results.reduce(addLoops, 0)
+  return resultsSize >= MAX_RESULTS
+}
+
+const addLoops = function(total, { loops }) {
+  return total + loops
+}
+
+const MAX_RESULTS = 1e8
 
 // We boot several child processes at once in parallel because it is slow.
 // We do it in-between benchmarks because it would slow them down and add
@@ -112,7 +130,7 @@ const executeChild = async function(
   await sendChildMessage(childProcess, 'run', processDuration)
   const stats = await getChildMessage(childProcess, 'stats')
 
-  // eslint-disable-next-line fp/no-mutation
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation
   processCount.value += 1
 
   return stats
