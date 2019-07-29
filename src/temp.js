@@ -246,7 +246,7 @@ const sortNumbers = function(array) {
 }
 
 const compareNumbers = function(numA, numB) {
-  return numA > numB ? 1 : -1
+  return numA - numB
 }
 
 const getStats = function(array, count) {
