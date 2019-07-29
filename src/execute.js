@@ -30,6 +30,7 @@ console.log(
   })
     .map((stats, index, allStats) => {
       return Object.entries(stats)
+        .filter(([name]) => name !== 'times')
         .map(([name, value]) => printStat(name, value, allStats))
         .join(' | ')
     })
