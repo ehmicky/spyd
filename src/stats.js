@@ -43,7 +43,7 @@ const computeStats = function(times, count) {
   const repeat = Math.round(count / loops)
 
   const median = getMedian(times)
-
+  const percentiles = getPercentiles(times)
   const [min] = times
   const max = times[times.length - 1]
 
@@ -53,6 +53,7 @@ const computeStats = function(times, count) {
 
   return {
     median,
+    percentiles,
     mean,
     min,
     max,
@@ -72,6 +73,30 @@ export const getMedian = function(array) {
   }
 
   return (array[array.length / 2 - 1] + array[array.length / 2]) / 2
+}
+
+const getPercentiles = function(array) {
+  // eslint-disable-next-line no-magic-numbers
+  return getQuantiles(array, 1e2)
+}
+
+const getQuantiles = function(array, length) {
+  return Array.from({ length }, (value, index) =>
+    getQuantile(array, length, index),
+  )
+}
+
+const getQuantile = function(array, length, index) {
+  const position = ((array.length - 1) * index) / (length - 1)
+
+  if (Number.isInteger(position)) {
+    return array[position]
+  }
+
+  return (
+    array[Math.floor(position)] * (position - Math.floor(position)) +
+    array[Math.ceil(position)] * (Math.ceil(position) - position)
+  )
 }
 
 const getDeviation = function(variance) {
