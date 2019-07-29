@@ -1,6 +1,6 @@
 export const printStats = function(stats, allStats = [stats]) {
   const statsStr = Object.entries(stats)
-    .filter(([name]) => !['times', 'percentiles'].includes(name))
+    .filter(([name]) => !['times', 'percentiles', 'histogram'].includes(name))
     .map(([name, value]) => printStat(name, value, allStats))
     .join(' | ')
   console.log(statsStr)

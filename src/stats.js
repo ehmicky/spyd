@@ -38,14 +38,17 @@ const reduceCount = function(totalCount, { count }) {
   return totalCount + count
 }
 
+// eslint-disable-next-line max-statements
 const computeStats = function(times, count) {
   const loops = times.length
   const repeat = Math.round(count / loops)
 
-  const median = getMedian(times)
-  const percentiles = getPercentiles(times)
   const [min] = times
   const max = times[times.length - 1]
+
+  const median = getMedian(times)
+  const percentiles = getPercentiles(times)
+  const histogram = getHistogram(times)
 
   const mean = getMean(times)
   const variance = getVariance(times, mean)
@@ -53,7 +56,6 @@ const computeStats = function(times, count) {
 
   return {
     median,
-    percentiles,
     mean,
     min,
     max,
@@ -62,6 +64,8 @@ const computeStats = function(times, count) {
     loops,
     count,
     repeat,
+    histogram,
+    percentiles,
     times,
   }
 }
@@ -97,6 +101,53 @@ const getQuantile = function(array, length, index) {
     array[Math.floor(position)] * (position - Math.floor(position)) +
     array[Math.ceil(position)] * (Math.ceil(position) - position)
   )
+}
+
+const getHistogram = function(array) {
+  return getSpecificHistogram(array, HISTOGRAM_SIZE)
+}
+
+// Choose to be detailed when displayed on a normal computer screen size
+const HISTOGRAM_SIZE = 1e3
+
+const getSpecificHistogram = function(array, bucketsNumber) {
+  const [min] = array
+  const max = array[array.length - 1]
+  const bucketSize = (max - min) / bucketsNumber
+
+  const arrayLength = array.length
+  const arrayCopy = array.slice()
+
+  return Array.from({ length: bucketsNumber }, (value, index) =>
+    getBucket(index, arrayCopy, arrayLength, min, bucketSize, bucketsNumber),
+  )
+}
+
+const getBucket = function(
+  index,
+  array,
+  arrayLength,
+  min,
+  bucketSize,
+  bucketsNumber,
+) {
+  const low = min + bucketSize * index
+  const high = low + bucketSize
+  const bucketCount = getBucketCount(index, array, bucketsNumber, high)
+  const frequency = bucketCount / arrayLength
+  return { low, high, frequency }
+}
+
+const getBucketCount = function(index, array, bucketsNumber, high) {
+  if (index === bucketsNumber - 1) {
+    return array.length
+  }
+
+  const count = array.findIndex(number => number >= high)
+  // Performance optimization so that `array.findIndex()` is twice faster
+  // eslint-disable-next-line fp/no-mutating-methods
+  array.splice(0, count)
+  return count
 }
 
 const getDeviation = function(variance) {
