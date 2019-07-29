@@ -1,38 +1,8 @@
 import { benchmark } from './temp.js'
+import { printStats } from './print.js'
 
 const func = Math.random
 
-const printStat = function(name, value, allStats) {
-  const otherStats = allStats.map(stats => stats[name])
-  const intDigits = otherStats.map(stat =>
-    String(stat).includes('.') ? String(stat).indexOf('.') : 1,
-  )
-  const padding = Math.max(...intDigits)
-
-  const numberInts = String(value).includes('.')
-    ? String(value).indexOf('.')
-    : String(value).length
-
-  const printedValue = fixedLength(value, LENGTH + numberInts, LENGTH + padding)
-  return `${name} ${printedValue}`
-}
-
-const LENGTH = 5
-
-const fixedLength = function(number, length, lengthA) {
-  const numberStr = String(number)
-  return numberStr.slice(0, length).padStart(lengthA)
-}
-
-console.log(
-  Array.from({ length: 10 }, () => {
-    return benchmark(func, 1e10)
-  })
-    .map((stats, index, allStats) => {
-      return Object.entries(stats)
-        .filter(([name]) => name !== 'times')
-        .map(([name, value]) => printStat(name, value, allStats))
-        .join(' | ')
-    })
-    .join('\n'),
+Array.from({ length: 10 }, () => benchmark(func, 1e8)).map(
+  (stats, index, allStats) => printStats(stats, allStats),
 )

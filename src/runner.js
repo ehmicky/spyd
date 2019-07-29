@@ -5,7 +5,8 @@ import pMapSeries from 'p-map-series'
 
 import { now } from './now.js'
 import { getChildMessage, sendChildMessage } from './ipc_helpers.js'
-import { sortNumbers, getMedian } from './stats.js'
+import { mergeStats } from './stats.js'
+import { printStats } from './print.js'
 
 const CHILD_MAIN = `${__dirname}/child.js`
 
@@ -17,9 +18,9 @@ const start = async function(duration) {
   // How long to run each child process
   const processDuration = duration / PROCESS_COUNT
 
-  const results = await runChildren(processDuration, runEnd)
+  const { results, processes } = await runChildren(processDuration, runEnd)
 
-  printStats(results)
+  printResults(results, processes)
   stopTimer(runStart)
 }
 
@@ -32,19 +33,20 @@ const PROCESS_COUNT = 2e1
 // `MAX_LOOPS` limit, we keep spawning new child processes.
 const runChildren = async function(processDuration, runEnd) {
   const allResults = []
+  const processCount = { value: 0 }
 
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
     const pool = await startPool()
     // eslint-disable-next-line no-await-in-loop
-    const results = await runPool(pool, processDuration, runEnd)
+    const results = await runPool(pool, processDuration, runEnd, processCount)
     // eslint-disable-next-line fp/no-mutating-methods
     allResults.push(...results)
   } while (now() <= runEnd)
 
   const allResultsA = allResults.filter(isDefined)
-  return allResultsA
+  return { results: allResultsA, processes: processCount.value }
 }
 
 // We boot several child processes at once in parallel because it is slow.
@@ -72,28 +74,47 @@ const startChild = async function() {
 // and have higher variance. Multi-core CPUs are designed to run in parallel
 // but in practice they do impact the performance of each other.
 // This does mean we are under-utilizing CPUs.
-const runPool = async function(pool, processDuration, runEnd) {
+const runPool = async function(pool, processDuration, runEnd, processCount) {
   const allStats = await pMapSeries(pool, childProcess =>
-    runChild(childProcess, processDuration, runEnd),
+    runChild(childProcess, processDuration, runEnd, processCount),
   )
   return allStats
 }
 
-const runChild = async function(childProcess, processDuration, runEnd) {
-  const stats = await executeChild(childProcess, processDuration, runEnd)
+const runChild = async function(
+  childProcess,
+  processDuration,
+  runEnd,
+  processCount,
+) {
+  const stats = await executeChild(
+    childProcess,
+    processDuration,
+    runEnd,
+    processCount,
+  )
 
   await endChild(childProcess)
 
   return stats
 }
 
-const executeChild = async function(childProcess, processDuration, runEnd) {
+const executeChild = async function(
+  childProcess,
+  processDuration,
+  runEnd,
+  processCount,
+) {
   if (now() > runEnd) {
     return
   }
 
   await sendChildMessage(childProcess, 'run', processDuration)
   const stats = await getChildMessage(childProcess, 'stats')
+
+  // eslint-disable-next-line fp/no-mutation
+  processCount.value += 1
+
   return stats
 }
 
@@ -127,17 +148,9 @@ const stopTimer = function(topStart) {
   console.log('Time', topTime)
 }
 
-const printStats = function(results) {
-  const sortedTimes = results.map(({ median }) => median)
-  sortNumbers(sortedTimes)
-
-  const timesMedian = getMedian(sortedTimes)
-  const gap = (sortedTimes[sortedTimes.length - 1] - sortedTimes[0]) / 2
-  const gapPercentage = (gap / timesMedian) * 1e2
-
-  console.log(sortedTimes.join('\n'))
-  console.log('Median', timesMedian)
-  console.log('Gap %', gapPercentage)
+const printResults = function(results, processes) {
+  const stats = mergeStats(results)
+  printStats({ ...stats, processes })
 }
 
 start(2e9)

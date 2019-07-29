@@ -1,33 +1,9 @@
-// eslint-disable-next-line max-statements
 export const getStats = function(times, count) {
   sortNumbers(times)
 
   const { times: timesA, count: countA } = removeOutliers(times, count)
-
-  const loops = timesA.length
-  const repeat = Math.round(countA / loops)
-
-  const median = getMedian(timesA)
-
-  const [min] = timesA
-  const max = timesA[timesA.length - 1]
-
-  const mean = getMean(timesA)
-  const variance = getVariance(timesA, mean)
-  const deviation = getDeviation(variance)
-
-  return {
-    median,
-    mean,
-    min,
-    max,
-    deviation,
-    variance,
-    loops,
-    count: countA,
-    repeat,
-    times,
-  }
+  const stats = computeStats(timesA, countA)
+  return stats
 }
 
 // Due to background processes (such as garbage collection) in JavaScript
@@ -43,6 +19,51 @@ const removeOutliers = function(times, count) {
 }
 
 const OUTLIERS_THRESHOLD = 0.15
+
+export const mergeStats = function(results) {
+  const times = results.flatMap(getTimes)
+  const count = results.reduce(reduceCount, 0)
+
+  sortNumbers(times)
+
+  const stats = computeStats(times, count)
+  return stats
+}
+
+const getTimes = function({ times }) {
+  return times
+}
+
+const reduceCount = function(totalCount, { count }) {
+  return totalCount + count
+}
+
+const computeStats = function(times, count) {
+  const loops = times.length
+  const repeat = Math.round(count / loops)
+
+  const median = getMedian(times)
+
+  const [min] = times
+  const max = times[times.length - 1]
+
+  const mean = getMean(times)
+  const variance = getVariance(times, mean)
+  const deviation = getDeviation(variance)
+
+  return {
+    median,
+    mean,
+    min,
+    max,
+    deviation,
+    variance,
+    loops,
+    count,
+    repeat,
+    times,
+  }
+}
 
 // Retrieve median of a sorted array
 export const getMedian = function(array) {
