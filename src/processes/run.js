@@ -1,8 +1,8 @@
 import pMapSeries from 'p-map-series'
 
 import { now } from '../now.js'
-import { getChildMessage, sendChildMessage } from '../ipc.js'
 
+import { getChildMessage, sendChildMessage } from './ipc.js'
 import { endChild } from './end.js'
 
 // We launch child processes serially. Otherwise they would slow down each other

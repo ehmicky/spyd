@@ -1,6 +1,7 @@
+import { benchmark } from '../temp.js'
+import { loadTask } from '../load.js'
+
 import { sendParentMessage, getParentMessage } from './ipc.js'
-import { benchmark } from './temp.js'
-import { loadTask } from './load.js'
 
 // Child process entry point.
 // Wait for the parent process to ask it to benchmark the task then send the

@@ -1,8 +1,8 @@
 import { spawn } from 'child_process'
 
-import { getChildMessage, sendChildMessage } from '../ipc.js'
+import { getChildMessage, sendChildMessage } from './ipc.js'
 
-const CHILD_MAIN = `${__dirname}/../child.js`
+const CHILD_MAIN = `${__dirname}/child.js`
 
 // We boot several child processes at once in parallel because it is slow.
 // We do it in-between benchmarks because it would slow them down and add
