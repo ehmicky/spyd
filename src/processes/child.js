@@ -1,5 +1,5 @@
 import { benchmark } from '../measure/main.js'
-import { loadTask } from '../load.js'
+import { getTask } from '../tasks/get.js'
 
 import { sendParentMessage, getParentMessage } from './ipc.js'
 
@@ -11,7 +11,7 @@ const run = async function() {
 
   const { taskPath, taskId, parameter } = await getParentMessage('load')
 
-  const { main, before, after } = loadTask(taskPath, taskId, parameter)
+  const { main, before, after } = await getTask(taskPath, taskId, parameter)
 
   const duration = await getParentMessage('run')
 

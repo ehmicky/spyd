@@ -1,7 +1,7 @@
-import { loadTaskFile } from './tasks/load.js'
+import { loadTaskFile } from './load.js'
 
-export const loadTask = function(taskPath, taskId, parameter) {
-  const tasks = loadTaskFile(taskPath)
+export const getTask = async function(taskPath, taskId, parameter) {
+  const tasks = await loadTaskFile(taskPath)
   const { main, before, after, parameters } = tasks.find(
     task => task.taskId === taskId,
   )
