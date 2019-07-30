@@ -1,21 +1,18 @@
 import pMapSeries from 'p-map-series'
 
 import { getOpts } from './options.js'
-import { getTaskPath, loadTaskFile, getTasksInputs } from './tasks.js'
+import { getIterations } from './tasks.js'
 import { start } from './runner.js'
 import { report } from './report.js'
 
 const checkSpeed = async function(opts) {
   const optsA = await getOpts(opts)
-  const taskPath = await getTaskPath(optsA)
-  const tasks = await loadTaskFile(taskPath)
-  const tasksInputs = getTasksInputs(tasks)
+
+  const iterations = await getIterations(optsA)
 
   // Run each parameter serially to avoid one parameter influencing the timing
   // of another
-  const benchmarks = await pMapSeries(tasksInputs, taskInput =>
-    start({ ...optsA, taskPath, ...taskInput }),
-  )
+  const benchmarks = await pMapSeries(iterations, start)
 
   report(benchmarks)
 
