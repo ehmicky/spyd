@@ -1,9 +1,9 @@
 import pMapSeries from 'p-map-series'
 
 import { now } from '../now.js'
+import { getChildMessage, sendChildMessage } from '../ipc.js'
 
 import { endChild } from './end.js'
-import { getChildMessage, sendChildMessage } from './ipc.js'
 
 // We launch child processes serially. Otherwise they would slow down each other
 // and have higher variance. Multi-core CPUs are designed to run in parallel

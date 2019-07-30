@@ -1,5 +1,5 @@
+import { sendParentMessage, getParentMessage } from './ipc.js'
 import { benchmark } from './temp.js'
-import { sendParentMessage, getParentMessage } from './ipc_helpers.js'
 import { loadTask } from './load.js'
 
 // Child process entry point.
