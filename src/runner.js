@@ -42,12 +42,13 @@ const runChildren = async function(processDuration, runEnd) {
     const pool = await startPool()
     // eslint-disable-next-line no-await-in-loop
     const results = await runPool(pool, processDuration, runEnd, processCount)
+
+    const resultsA = results.filter(isDefined)
     // eslint-disable-next-line fp/no-mutating-methods
-    allResults.push(...results)
+    allResults.push(...resultsA)
   } while (!shouldStop(runEnd, allResults))
 
-  const allResultsA = allResults.filter(isDefined)
-  return { results: allResultsA, processes: processCount.value }
+  return { results: allResults, processes: processCount.value }
 }
 
 const shouldStop = function(runEnd, results) {
@@ -61,8 +62,8 @@ const isOverMaxLoops = function(results) {
   return resultsSize >= MAX_RESULTS
 }
 
-const addLoops = function(total, { loops }) {
-  return total + loops
+const addLoops = function(total, { times }) {
+  return total + times.length
 }
 
 const MAX_RESULTS = 1e8
