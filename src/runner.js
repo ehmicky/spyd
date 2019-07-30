@@ -144,15 +144,15 @@ const executeChild = async function(
   runEnd,
   processCount,
 ) {
-  if (now() > runEnd) {
+  if (now() > runEnd && processCount.value !== 0) {
     return
   }
 
-  await sendChildMessage(childProcess, 'run', processDuration)
-  const result = await getChildMessage(childProcess, 'result')
-
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
   processCount.value += 1
+
+  await sendChildMessage(childProcess, 'run', processDuration)
+  const result = await getChildMessage(childProcess, 'result')
 
   return result
 }
