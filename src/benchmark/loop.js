@@ -1,5 +1,5 @@
 import { now } from '../now.js'
-import { getResult, MAX_LOOPS } from '../stats.js'
+import { normalizeResult, MAX_LOOPS } from '../stats.js'
 import { isPromiseLike } from '../utils.js'
 
 import { measure } from './measure.js'
@@ -49,7 +49,7 @@ export const benchmarkLoop = async function(
     )
   } while (!shouldStop(runEnd, times))
 
-  const result = getResult(times, state.count)
+  const result = normalizeResult(times, state.count)
   return result
 }
 

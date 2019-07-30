@@ -1,6 +1,6 @@
 import { sortNumbers } from './utils.js'
 
-export const getResult = function(times, count) {
+export const normalizeResult = function(times, count) {
   sortNumbers(times)
 
   const result = removeOutliers(times, count)
@@ -20,6 +20,19 @@ const removeOutliers = function(times, count) {
 }
 
 const OUTLIERS_THRESHOLD = 0.15
+
+// We limit the max number of iterations because:
+//  - the more iterations are run, the more JavaScript engines optimize it,
+//    making code run faster and faster. This results in higher variance.
+//    This is especially true for very fast functions.
+//  - after many iterations have been run, the precision does not increase much
+//    anymore. The extra `duration` should instead be spent launching more child
+//    processes which are more effective at increasing precision.
+//  - this avoids hitting the process maximum memory limit.
+// This number if corrected by `OUTLITERS_THRESHOLD` so the final `loops` looks
+// round after removing outliers.
+const RAW_MAX_LOOPS = 1e5
+export const MAX_LOOPS = Math.floor(RAW_MAX_LOOPS / (1 - OUTLIERS_THRESHOLD))
 
 export const getStats = function(results, processes) {
   const times = results.flatMap(getTimes)
@@ -171,16 +184,3 @@ const addNumbers = function(numA, numB) {
 const getVariance = function(array, mean) {
   return getMean(array.map(num => (num - mean) ** 2))
 }
-
-// We limit the max number of iterations because:
-//  - the more iterations are run, the more JavaScript engines optimize it,
-//    making code run faster and faster. This results in higher variance.
-//    This is especially true for very fast functions.
-//  - after many iterations have been run, the precision does not increase much
-//    anymore. The extra `duration` should instead be spent launching more child
-//    processes which are more effective at increasing precision.
-//  - this avoids hitting the process maximum memory limit.
-// This number if corrected by `OUTLITERS_THRESHOLD` so the final `loops` looks
-// round after removing outliers.
-const RAW_MAX_LOOPS = 1e5
-export const MAX_LOOPS = Math.floor(RAW_MAX_LOOPS / (1 - OUTLIERS_THRESHOLD))
