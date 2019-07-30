@@ -9,8 +9,8 @@ const run = async function() {
 
   const duration = await getParentMessage('run')
 
-  const stats = benchmark(func, duration)
-  await sendParentMessage('stats', stats)
+  const result = benchmark(func, duration)
+  await sendParentMessage('result', result)
 }
 
 const func = Math.random

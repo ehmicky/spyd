@@ -5,7 +5,7 @@ import pMapSeries from 'p-map-series'
 
 import { now } from './now.js'
 import { getChildMessage, sendChildMessage } from './ipc_helpers.js'
-import { mergeStats } from './stats.js'
+import { getStats } from './stats.js'
 import { printStats } from './print.js'
 
 const CHILD_MAIN = `${__dirname}/child.js`
@@ -94,10 +94,10 @@ const startChild = async function() {
 // but in practice they do impact the performance of each other.
 // This does mean we are under-utilizing CPUs.
 const runPool = async function(pool, processDuration, runEnd, processCount) {
-  const allStats = await pMapSeries(pool, childProcess =>
+  const results = await pMapSeries(pool, childProcess =>
     runChild(childProcess, processDuration, runEnd, processCount),
   )
-  return allStats
+  return results
 }
 
 const runChild = async function(
@@ -106,7 +106,7 @@ const runChild = async function(
   runEnd,
   processCount,
 ) {
-  const stats = await executeChild(
+  const result = await executeChild(
     childProcess,
     processDuration,
     runEnd,
@@ -115,7 +115,7 @@ const runChild = async function(
 
   await endChild(childProcess)
 
-  return stats
+  return result
 }
 
 const executeChild = async function(
@@ -129,12 +129,12 @@ const executeChild = async function(
   }
 
   await sendChildMessage(childProcess, 'run', processDuration)
-  const stats = await getChildMessage(childProcess, 'stats')
+  const result = await getChildMessage(childProcess, 'result')
 
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
   processCount.value += 1
 
-  return stats
+  return result
 }
 
 const endChild = async function(childProcess) {
@@ -168,7 +168,7 @@ const stopTimer = function(topStart) {
 }
 
 const printResults = function(results, processes) {
-  const stats = mergeStats(results)
+  const stats = getStats(results)
   printStats({ ...stats, processes })
 }
 

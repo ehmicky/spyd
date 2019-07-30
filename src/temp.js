@@ -1,6 +1,6 @@
 import { now } from './now.js'
 import { getTimeResolution } from './resolution.js'
-import { getStats, getMedian, sortNumbers, MAX_LOOPS } from './stats.js'
+import { getResult, getMedian, sortNumbers, MAX_LOOPS } from './stats.js'
 
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
@@ -12,8 +12,8 @@ export const benchmark = function(main, duration) {
 
   const { nowBias, loopBias, minTime } = getBiases(biasDuration)
 
-  const stats = benchmarkMain(main, mainDuration, nowBias, loopBias, minTime)
-  return stats
+  const result = benchmarkMain(main, mainDuration, nowBias, loopBias, minTime)
+  return result
 }
 
 // For some reasons I ignore (likely engine optimizations), when `measure()`
@@ -41,16 +41,22 @@ const BIAS_DURATION_RATIO = 0.1
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
 const getBiases = function(biasDuration) {
-  const { median: nowBias } = benchmarkMain(noop, biasDuration, 0, 0, 0, 0)
+  const nowBias = getNowBias(biasDuration)
   const minTime = getMinTime(nowBias)
-  const { median: loopBias } = benchmarkMain(
-    noop,
-    biasDuration,
-    nowBias,
-    0,
-    minTime,
-  )
+  const loopBias = getLoopBias(biasDuration, nowBias, minTime)
   return { nowBias, loopBias, minTime }
+}
+
+const getNowBias = function(biasDuration) {
+  const { times } = benchmarkMain(noop, biasDuration, 0, 0, 0, 0)
+  const nowBias = getMedian(times)
+  return nowBias
+}
+
+const getLoopBias = function(biasDuration, nowBias, minTime) {
+  const { times } = benchmarkMain(noop, biasDuration, nowBias, 0, minTime)
+  const loopBias = getMedian(times)
+  return loopBias
 }
 
 // eslint-disable-next-line no-empty-function
@@ -94,8 +100,8 @@ const benchmarkMain = function(
     constRepeat,
   )
 
-  const stats = getStats(times, count)
-  return stats
+  const result = getResult(times, count)
+  return result
 }
 
 // We perform benchmarking iteratively in order to stop benchmarking exactly

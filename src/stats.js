@@ -1,9 +1,8 @@
-export const getStats = function(times, count) {
+export const getResult = function(times, count) {
   sortNumbers(times)
 
-  const { times: timesA, count: countA } = removeOutliers(times, count)
-  const stats = computeStats(timesA, countA)
-  return stats
+  const result = removeOutliers(times, count)
+  return result
 }
 
 // Due to background processes (such as garbage collection) in JavaScript
@@ -20,7 +19,7 @@ const removeOutliers = function(times, count) {
 
 const OUTLIERS_THRESHOLD = 0.15
 
-export const mergeStats = function(results) {
+export const getStats = function(results) {
   const times = results.flatMap(getTimes)
   const count = results.reduce(reduceCount, 0)
 
