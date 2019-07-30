@@ -2,7 +2,7 @@ import pMapSeries from 'p-map-series'
 
 import { getOpts } from './options/main.js'
 import { getIterations } from './tasks/main.js'
-import { start } from './runner.js'
+import { runProcesses } from './processes/main.js'
 import { report } from './report.js'
 
 const checkSpeed = async function(opts) {
@@ -10,9 +10,7 @@ const checkSpeed = async function(opts) {
 
   const iterations = await getIterations(optsA)
 
-  // Run each parameter serially to avoid one parameter influencing the timing
-  // of another
-  const benchmarks = await pMapSeries(iterations, start)
+  const benchmarks = await pMapSeries(iterations, runProcesses)
 
   report(benchmarks)
 
