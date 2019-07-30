@@ -4,15 +4,21 @@ import { getResult, getMedian, sortNumbers, MAX_LOOPS } from './stats.js'
 
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
-export const benchmark = function(main, duration) {
+export const benchmark = async function(main, duration) {
   initialMeasure()
 
   const biasDuration = duration * BIAS_DURATION_RATIO
   const mainDuration = duration - biasDuration * 2
 
-  const { nowBias, loopBias, minTime } = getBiases(biasDuration)
+  const { nowBias, loopBias, minTime } = await getBiases(biasDuration)
 
-  const result = benchmarkMain(main, mainDuration, nowBias, loopBias, minTime)
+  const result = await benchmarkMain(
+    main,
+    mainDuration,
+    nowBias,
+    loopBias,
+    minTime,
+  )
   return result
 }
 
@@ -40,21 +46,21 @@ const BIAS_DURATION_RATIO = 0.1
 // On top of this, the more the benchmarking code itself is run, the faster it
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
-const getBiases = function(biasDuration) {
-  const nowBias = getNowBias(biasDuration)
+const getBiases = async function(biasDuration) {
+  const nowBias = await getNowBias(biasDuration)
   const minTime = getMinTime(nowBias)
-  const loopBias = getLoopBias(biasDuration, nowBias, minTime)
+  const loopBias = await getLoopBias(biasDuration, nowBias, minTime)
   return { nowBias, loopBias, minTime }
 }
 
-const getNowBias = function(biasDuration) {
-  const { times } = benchmarkMain(noop, biasDuration, 0, 0, 0, 0)
+const getNowBias = async function(biasDuration) {
+  const { times } = await benchmarkMain(noop, biasDuration, 0, 0, 0, 0)
   const nowBias = getMedian(times)
   return nowBias
 }
 
-const getLoopBias = function(biasDuration, nowBias, minTime) {
-  const { times } = benchmarkMain(noop, biasDuration, nowBias, 0, minTime)
+const getLoopBias = async function(biasDuration, nowBias, minTime) {
+  const { times } = await benchmarkMain(noop, biasDuration, nowBias, 0, minTime)
   const loopBias = getMedian(times)
   return loopBias
 }
@@ -81,7 +87,7 @@ const MIN_PRECISION = 1e2
 // The task loop must be at least `MIN_NOW_BIAS` slower than `nowBias`
 const MIN_NOW_BIAS = 1e2
 
-const benchmarkMain = function(
+const benchmarkMain = async function(
   main,
   duration,
   nowBias,
@@ -91,7 +97,7 @@ const benchmarkMain = function(
 ) {
   const runEnd = now() + duration
 
-  const { times, count } = benchmarkLoop(
+  const { times, count } = await benchmarkLoop(
     main,
     nowBias,
     loopBias,
@@ -108,7 +114,7 @@ const benchmarkMain = function(
 // when the `duration` or `MAX_LOOPS` has been reached.
 // We also adjust some parameters as we take more measurements (e.g. `repeat`).
 // eslint-disable-next-line max-statements
-const benchmarkLoop = function(
+const benchmarkLoop = async function(
   main,
   nowBias,
   loopBias,
@@ -126,7 +132,10 @@ const benchmarkLoop = function(
   // Due to some JavaScript engine optimization, the first run of a function is
   // much slower than the next calls. For example running an empty function
   // might be 1000 times slower on the first call. So we do a cold start.
-  main()
+  const returnValue = main()
+  // We only check once if `main()` is async in order to simplify the logic.
+  // This means `main()` cannot be sometimes sync and other times async.
+  const isAsync = isPromiseLike(returnValue)
 
   // eslint-disable-next-line fp/no-loops
   do {
@@ -141,7 +150,8 @@ const benchmarkLoop = function(
       constRepeat,
     )
 
-    const time = measure(main, nowBias, loopBias, repeat)
+    // eslint-disable-next-line no-await-in-loop
+    const time = await measure(main, nowBias, loopBias, repeat, isAsync)
 
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)
@@ -154,6 +164,15 @@ const benchmarkLoop = function(
   return { times, count: count.value }
 }
 
+const isPromiseLike = function(value) {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    // eslint-disable-next-line promise/prefer-await-to-then
+    typeof value.then === 'function'
+  )
+}
+
 // The benchmark stops if we reach the end of the `duration` or run more than
 // `MAX_LOOPS` iterations.
 const shouldStop = function(runEnd, times) {
@@ -161,27 +180,54 @@ const shouldStop = function(runEnd, times) {
 }
 
 // Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
-const measure = function(main, nowBias, loopBias, repeat) {
+const measure = async function(main, nowBias, loopBias, repeat, isAsync) {
   // When calculating `nowBias`
   if (repeat === 0) {
     return Math.abs(now() - now())
   }
 
-  // eslint-disable-next-line fp/no-let
-  let count = repeat
+  const duration = await getDuration(main, repeat, isAsync)
+
+  // The final time might be negative if the task is as fast or faster than the
+  // iteration code itself. In this case, we return `0`.
+  const time = Math.max((duration - nowBias) / repeat - loopBias, 0)
+  return time
+}
+
+// We separate async and sync measurements because following a promise (`await`)
+// takes several microseconds, which does not work when measuring fast
+// synchronous functions.
+const getDuration = function(main, repeat, isAsync) {
+  if (isAsync) {
+    return getDurationAsync(main, repeat)
+  }
+
+  return getDurationSync(main, repeat)
+}
+
+const getDurationAsync = async function(main, repeat) {
   const start = now()
 
-  // We use a while loop for speed purpose.
-  // eslint-disable-next-line no-plusplus, fp/no-mutation, fp/no-loops
-  while (count--) {
+  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
+  while (repeat--) {
+    // eslint-disable-next-line no-await-in-loop
+    await main()
+  }
+
+  const end = now()
+  return end - start
+}
+
+const getDurationSync = function(main, repeat) {
+  const start = now()
+
+  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
+  while (repeat--) {
     main()
   }
 
   const end = now()
-  // The final time might be negative if the task is as fast or faster than the
-  // iteration code itself. In this case, we return `0`.
-  const time = Math.max((end - start - nowBias) / repeat - loopBias, 0)
-  return time
+  return end - start
 }
 
 // Estimate how many times to repeat the benchmarking loop.

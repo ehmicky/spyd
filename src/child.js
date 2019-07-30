@@ -9,7 +9,7 @@ const run = async function() {
 
   const duration = await getParentMessage('run')
 
-  const result = benchmark(func, duration)
+  const result = await benchmark(func, duration)
   await sendParentMessage('result', result)
 }
 
