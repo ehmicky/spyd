@@ -19,13 +19,13 @@ const removeOutliers = function(times, count) {
 
 const OUTLIERS_THRESHOLD = 0.15
 
-export const getStats = function(results) {
+export const getStats = function(results, processes) {
   const times = results.flatMap(getTimes)
   const count = results.reduce(reduceCount, 0)
 
   sortNumbers(times)
 
-  const stats = computeStats(times, count)
+  const stats = computeStats(times, count, processes)
   return stats
 }
 
@@ -38,7 +38,7 @@ const reduceCount = function(totalCount, { count }) {
 }
 
 // eslint-disable-next-line max-statements
-const computeStats = function(times, count) {
+const computeStats = function(times, count, processes) {
   const loops = times.length
   const repeat = Math.round(count / loops)
 
@@ -60,12 +60,12 @@ const computeStats = function(times, count) {
     max,
     deviation,
     variance,
-    loops,
     count,
+    loops,
     repeat,
+    processes,
     histogram,
     percentiles,
-    times,
   }
 }
 

@@ -6,14 +6,11 @@ import pMapSeries from 'p-map-series'
 import { now } from './now.js'
 import { getChildMessage, sendChildMessage } from './ipc_helpers.js'
 import { getStats } from './stats.js'
-import { printStats } from './print.js'
 
 const CHILD_MAIN = `${__dirname}/child.js`
 
-// Start several child processes benchmarking the same tasks
-const start = async function({ taskPath, task, parameters, duration }) {
-  const runStart = startTimer()
-
+// Start several child processes benchmarking the same task
+export const start = async function({ taskPath, task, parameter, duration }) {
   const runEnd = now() + duration
   // How long to run each child process
   const processDuration = duration / PROCESS_COUNT
@@ -21,13 +18,14 @@ const start = async function({ taskPath, task, parameters, duration }) {
   const { results, processes } = await runChildren({
     taskPath,
     task,
-    parameters,
+    parameter,
     processDuration,
     runEnd,
   })
 
-  printResults(results, processes)
-  stopTimer(runStart)
+  const stats = getStats(results, processes)
+  const benchmark = { task, parameter, stats }
+  return benchmark
 }
 
 const PROCESS_COUNT = 2e1
@@ -172,25 +170,3 @@ const endChild = async function(childProcess) {
 const isDefined = function(value) {
   return value !== undefined
 }
-
-const startTimer = function() {
-  return now()
-}
-
-const stopTimer = function(topStart) {
-  const topEnd = now()
-  const topTime = (topEnd - topStart) / 1e9
-  console.log('Time', topTime)
-}
-
-const printResults = function(results, processes) {
-  const stats = getStats(results)
-  printStats({ ...stats, processes })
-}
-
-start({
-  taskPath: `${__dirname}/../benchmarks/main.js`,
-  task: 'random',
-  parameter: undefined,
-  duration: 1e10,
-})

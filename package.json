@@ -35,7 +35,6 @@
     "locate-path": "^5.0.0",
     "p-event": "^4.1.0",
     "p-map-series": "^2.1.0",
-    "p-times": "^2.1.0",
     "yargs": "^13.3.0"
   },
   "devDependencies": {

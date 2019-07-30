@@ -2,19 +2,15 @@ import { resolve } from 'path'
 
 import locatePath from 'locate-path'
 
-export const getTasks = async function({ tasks, file, cwd }) {
-  if (tasks !== undefined) {
-    return tasks
-  }
+export const getTaskPath = async function({ file, cwd }) {
+  const taskFile = await getTaskFile(file, cwd)
 
-  const taskPath = await getTaskFile(file, cwd)
-
-  if (taskPath === undefined) {
+  if (taskFile === undefined) {
     throw new TypeError('No tasks file found')
   }
 
-  const tasksA = loadTaskFile(taskPath)
-  return tasksA
+  const taskPath = resolve(cwd, taskFile)
+  return taskPath
 }
 
 const getTaskFile = async function(file, cwd) {
@@ -23,8 +19,7 @@ const getTaskFile = async function(file, cwd) {
   }
 
   const taskFile = await locatePath(DEFAULT_TASK_PATHS, { cwd })
-  const taskPath = resolve(cwd, taskFile)
-  return taskPath
+  return taskFile
 }
 
 const DEFAULT_TASK_PATHS = [
@@ -36,20 +31,7 @@ const DEFAULT_TASK_PATHS = [
   'benchmarks/main.ts',
 ]
 
-export const loadTask = function(taskPath, taskName, parameter) {
-  const tasks = loadTaskFile(taskPath)
-  const { main, before, after, parameters } = tasks.find(
-    ({ name }) => name === taskName,
-  )
-  const [mainA, beforeA, afterA] = bindParameter(parameters, parameter, [
-    main,
-    before,
-    after,
-  ])
-  return { main: mainA, before: beforeA, after: afterA }
-}
-
-const loadTaskFile = function(taskPath) {
+export const loadTaskFile = function(taskPath) {
   // TODO: replace with `import()` once it is supported by default by ESLint
   // eslint-disable-next-line global-require, import/no-dynamic-require
   const tasks = require(taskPath)
@@ -67,6 +49,31 @@ const normalizeTask = function([name, task]) {
   }
 
   return { name, ...task }
+}
+
+export const getTasksInputs = function(tasks) {
+  return tasks.flatMap(getTasksInput)
+}
+
+const getTasksInput = function({ name: task, parameters }) {
+  if (parameters === undefined) {
+    return [{ task }]
+  }
+
+  return Object.keys(parameters).map(parameter => ({ task, parameter }))
+}
+
+export const loadTask = function(taskPath, taskName, parameter) {
+  const tasks = loadTaskFile(taskPath)
+  const { main, before, after, parameters } = tasks.find(
+    ({ name }) => name === taskName,
+  )
+  const [mainA, beforeA, afterA] = bindParameter(parameters, parameter, [
+    main,
+    before,
+    after,
+  ])
+  return { main: mainA, before: beforeA, after: afterA }
 }
 
 const bindParameter = function(parameters, parameter, funcs) {
