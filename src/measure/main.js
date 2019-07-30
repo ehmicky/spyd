@@ -1,6 +1,6 @@
-import { now } from './now.js'
-import { getTimeResolution } from './resolution.js'
-import { getResult, getMedian, sortNumbers, MAX_LOOPS } from './stats.js'
+import { now } from '../now.js'
+import { getTimeResolution } from '../resolution.js'
+import { getResult, getMedian, sortNumbers, MAX_LOOPS } from '../stats.js'
 
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
