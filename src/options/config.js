@@ -7,7 +7,7 @@ import findUp from 'find-up'
 
 const pReadFile = promisify(readFile)
 
-export const handleConfig = async function({ config, ...opts }) {
+export const getConfig = async function({ config, ...opts }) {
   const { cwd = getCwd() } = opts
 
   const configFile = await getConfigFile(config, cwd)

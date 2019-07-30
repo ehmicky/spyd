@@ -1,9 +1,9 @@
 import { cwd as getCwd } from 'process'
 
-import { handleConfig } from './config.js'
+import { getConfig } from './config.js'
 
 export const getOpts = async function(opts = {}) {
-  const optsA = await handleConfig(opts)
+  const optsA = await getConfig(opts)
 
   const optsB = { ...DEFAULT_OPTS, ...optsA }
 
