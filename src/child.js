@@ -9,12 +9,14 @@ const run = async function() {
 
   const duration = await getParentMessage('run')
 
-  const result = await benchmark(main, before, duration)
+  const result = await benchmark(main, before, after, duration)
   await sendParentMessage('result', result)
 }
 
 const before = undefined
 
 const main = Math.random
+
+const after = undefined
 
 run()

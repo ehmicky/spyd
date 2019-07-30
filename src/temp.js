@@ -4,7 +4,7 @@ import { getResult, getMedian, sortNumbers, MAX_LOOPS } from './stats.js'
 
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
-export const benchmark = async function(main, before, duration) {
+export const benchmark = async function(main, before, after, duration) {
   initialMeasure()
 
   const biasDuration = duration * BIAS_DURATION_RATIO
@@ -15,6 +15,7 @@ export const benchmark = async function(main, before, duration) {
   const result = await benchmarkMain(
     main,
     before,
+    after,
     mainDuration,
     nowBias,
     loopBias,
@@ -28,7 +29,7 @@ export const benchmark = async function(main, before, duration) {
 // next functions passed to it.
 // We fix this by doing a cold start using an empty function
 const initialMeasure = function() {
-  measure(noopTwo, undefined, 0, 0, 1)
+  measure(noopTwo, undefined, undefined, 0, 0, 1)
 }
 
 // eslint-disable-next-line no-empty-function
@@ -58,6 +59,7 @@ const getNowBias = async function(biasDuration) {
   const { times } = await benchmarkMain(
     noop,
     undefined,
+    undefined,
     biasDuration,
     0,
     0,
@@ -71,6 +73,7 @@ const getNowBias = async function(biasDuration) {
 const getLoopBias = async function(biasDuration, nowBias, minTime) {
   const { times } = await benchmarkMain(
     noop,
+    undefined,
     undefined,
     biasDuration,
     nowBias,
@@ -106,6 +109,7 @@ const MIN_NOW_BIAS = 1e2
 const benchmarkMain = async function(
   main,
   before,
+  after,
   duration,
   nowBias,
   loopBias,
@@ -117,6 +121,7 @@ const benchmarkMain = async function(
   const { times, count } = await benchmarkLoop(
     main,
     before,
+    after,
     nowBias,
     loopBias,
     minTime,
@@ -135,6 +140,7 @@ const benchmarkMain = async function(
 const benchmarkLoop = async function(
   main,
   before,
+  after,
   nowBias,
   loopBias,
   minTime,
@@ -171,7 +177,15 @@ const benchmarkLoop = async function(
     )
 
     // eslint-disable-next-line no-await-in-loop
-    const time = await measure(main, before, nowBias, loopBias, repeat, isAsync)
+    const time = await measure(
+      main,
+      before,
+      after,
+      nowBias,
+      loopBias,
+      repeat,
+      isAsync,
+    )
 
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)
@@ -203,6 +217,7 @@ const shouldStop = function(runEnd, times) {
 const measure = async function(
   main,
   before,
+  after,
   nowBias,
   loopBias,
   repeat,
@@ -213,9 +228,11 @@ const measure = async function(
     return Math.abs(now() - now())
   }
 
-  const beforeArgs = await getBeforeArgs(before, repeat)
+  const beforeArgs = await performBefore(before, repeat)
 
   const duration = await getDuration(main, repeat, isAsync, beforeArgs)
+
+  await performAfter(after, repeat, beforeArgs)
 
   // The final time might be negative if the task is as fast or faster than the
   // iteration code itself. In this case, we return `0`.
@@ -223,13 +240,24 @@ const measure = async function(
   return time
 }
 
-const getBeforeArgs = function(before, repeat) {
+const performBefore = function(before, repeat) {
   if (before === undefined) {
     return
   }
 
   const beforeArgs = Array.from({ length: repeat }, () => before())
   return Promise.all(beforeArgs)
+}
+
+const performAfter = function(after, repeat, beforeArgs = []) {
+  if (after === undefined) {
+    return
+  }
+
+  const promises = Array.from({ length: repeat }, (value, index) =>
+    after(beforeArgs[index]),
+  )
+  return Promise.all(promises)
 }
 
 // We separate async and sync measurements because following a promise (`await`)
