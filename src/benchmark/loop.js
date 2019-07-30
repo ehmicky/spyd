@@ -1,5 +1,5 @@
 import { now } from '../now.js'
-import { normalizeResult, MAX_LOOPS } from '../stats.js'
+import { normalizeResult, MAX_LOOPS } from '../stats/main.js'
 import { isPromiseLike } from '../utils.js'
 
 import { measure } from './measure.js'

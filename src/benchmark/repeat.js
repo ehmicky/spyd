@@ -1,4 +1,4 @@
-import { getMedian } from '../stats.js'
+import { getMedian } from '../stats/main.js'
 import { sortNumbers } from '../utils.js'
 
 // Estimate how many times to repeat the benchmarking loop.

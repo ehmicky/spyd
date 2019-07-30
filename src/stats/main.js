@@ -1,4 +1,4 @@
-import { sortNumbers } from './utils.js'
+import { sortNumbers } from '../utils.js'
 
 export const normalizeResult = function(times, count) {
   sortNumbers(times)

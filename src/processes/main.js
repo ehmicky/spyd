@@ -1,5 +1,5 @@
 import { now } from '../now.js'
-import { getStats } from '../stats.js'
+import { getStats } from '../stats/main.js'
 
 import { startChildren } from './start.js'
 import { runChildren } from './run.js'
