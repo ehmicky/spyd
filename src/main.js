@@ -3,7 +3,7 @@ import pMapSeries from 'p-map-series'
 import { getOpts } from './options/main.js'
 import { getIterations } from './tasks/main.js'
 import { runProcesses } from './processes/main.js'
-import { report } from './report.js'
+import { report } from './report/main.js'
 
 const checkSpeed = async function(opts) {
   const optsA = await getOpts(opts)
