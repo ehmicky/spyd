@@ -1,4 +1,4 @@
-import { benchmark } from '../measure/main.js'
+import { benchmark } from '../benchmark/main.js'
 import { getTask } from '../tasks/get.js'
 
 import { sendParentMessage, getParentMessage } from './ipc.js'
