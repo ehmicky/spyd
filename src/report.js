@@ -1,12 +1,14 @@
 export const report = function(benchmarks) {
-  benchmarks.forEach(reportBenchmark)
+  const output = benchmarks.map(reportBenchmark).join('\n')
+  // eslint-disable-next-line no-console, no-restricted-globals
+  console.log(output)
 }
 
 const reportBenchmark = function({ task, parameter, stats }) {
   const parameterA = parameter === undefined ? '' : ` (${parameter})`
+  const title = `${task}${parameterA}`.padEnd(TITLE_PADDING)
   const statsStr = serializeStats(stats)
-  // eslint-disable-next-line no-console, no-restricted-globals
-  console.log(`${task}${parameterA} | ${statsStr}`)
+  return `${title} | ${statsStr}`
 }
 
 export const serializeStats = function(stats) {
@@ -24,17 +26,25 @@ const NON_PRINTED_STATS = ['percentiles', 'histogram']
 
 const serializeStat = function([name, number]) {
   const string = serializeNumber(number)
-  const stringA = string.padStart(LENGTH)
+  const stringA = string.padStart(LENGTH + EXPONENTS_SIZE)
   return `${name} ${stringA}`
 }
 
 const serializeNumber = function(number) {
-  if (Number.isInteger(number)) {
-    return String(number)
+  if (number > MIN_EXPONENTIAL) {
+    return number.toExponential(DECIMALS)
   }
 
-  return number.toFixed(DECIMALS)
+  if (!Number.isInteger(number)) {
+    return number.toFixed(DECIMALS)
+  }
+
+  return String(number)
 }
 
-const DECIMALS = 4
-const LENGTH = 7
+const TITLE_PADDING = 13
+const DECIMALS = 3
+const LENGTH = 5
+// eslint-disable-next-line no-magic-numbers
+const MIN_EXPONENTIAL = 10 ** LENGTH
+const EXPONENTS_SIZE = 4
