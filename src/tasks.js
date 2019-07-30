@@ -7,16 +7,14 @@ export const getTasks = async function({ tasks, file, cwd }) {
     return tasks
   }
 
-  const taskFile = await getTaskFile(file, cwd)
+  const taskPath = await getTaskFile(file, cwd)
 
-  if (taskFile === undefined) {
+  if (taskPath === undefined) {
     throw new TypeError('No tasks file found')
   }
 
-  const tasksA = loadTaskFile(taskFile, cwd)
-
-  const tasksB = normalizeTasks(tasksA)
-  return tasksB
+  const tasksA = loadTaskFile(taskPath)
+  return tasksA
 }
 
 const getTaskFile = async function(file, cwd) {
@@ -25,7 +23,8 @@ const getTaskFile = async function(file, cwd) {
   }
 
   const taskFile = await locatePath(DEFAULT_TASK_PATHS, { cwd })
-  return taskFile
+  const taskPath = resolve(cwd, taskFile)
+  return taskPath
 }
 
 const DEFAULT_TASK_PATHS = [
@@ -37,12 +36,12 @@ const DEFAULT_TASK_PATHS = [
   'benchmarks/main.ts',
 ]
 
-const loadTaskFile = function(taskFile, cwd) {
-  const taskPath = resolve(cwd, taskFile)
+const loadTaskFile = function(taskPath) {
   // TODO: replace with `import()` once it is supported by default by ESLint
   // eslint-disable-next-line global-require, import/no-dynamic-require
   const tasks = require(taskPath)
-  return tasks
+  const tasksA = normalizeTasks(tasks)
+  return tasksA
 }
 
 const normalizeTasks = function(tasks) {

@@ -7,7 +7,8 @@ import { sendParentMessage, getParentMessage } from './ipc_helpers.js'
 const run = async function() {
   await sendParentMessage('ready')
 
-  const parameter = undefined
+  const { taskPath, parameter } = await getParentMessage('load')
+
   const [mainA, beforeA, afterA] = bindParameter(PARAMETERS, parameter, [
     main,
     before,

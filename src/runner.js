@@ -86,6 +86,8 @@ const startChild = async function() {
 
   await getChildMessage(childProcess, 'ready')
 
+  await sendChildMessage(childProcess, 'load', { parameter: undefined })
+
   return childProcess
 }
 
