@@ -5,3 +5,12 @@ export const omitBy = function(object, condition) {
     .map(([key, value]) => ({ [key]: value }))
   return Object.assign({}, ...pairs)
 }
+
+export const isPromiseLike = function(value) {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    // eslint-disable-next-line promise/prefer-await-to-then
+    typeof value.then === 'function'
+  )
+}
