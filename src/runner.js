@@ -86,7 +86,11 @@ const startChild = async function() {
 
   await getChildMessage(childProcess, 'ready')
 
-  await sendChildMessage(childProcess, 'load', { parameter: undefined })
+  await sendChildMessage(childProcess, 'load', {
+    parameter: undefined,
+    taskPath: `${__dirname}/../benchmarks/main.js`,
+    task: 'random',
+  })
 
   return childProcess
 }

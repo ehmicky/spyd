@@ -36,6 +36,19 @@ const DEFAULT_TASK_PATHS = [
   'benchmarks/main.ts',
 ]
 
+export const loadTask = function(taskPath, taskName, parameter) {
+  const tasks = loadTaskFile(taskPath)
+  const { main, before, after, parameters } = tasks.find(
+    ({ name }) => name === taskName,
+  )
+  const [mainA, beforeA, afterA] = bindParameter(parameters, parameter, [
+    main,
+    before,
+    after,
+  ])
+  return { main: mainA, before: beforeA, after: afterA }
+}
+
 const loadTaskFile = function(taskPath) {
   // TODO: replace with `import()` once it is supported by default by ESLint
   // eslint-disable-next-line global-require, import/no-dynamic-require
@@ -54,4 +67,21 @@ const normalizeTask = function([name, task]) {
   }
 
   return { name, ...task }
+}
+
+const bindParameter = function(parameters, parameter, funcs) {
+  if (parameter === undefined) {
+    return funcs
+  }
+
+  const parameterValue = parameters[parameter]
+  return funcs.map(func => bindFunction(func, parameterValue))
+}
+
+const bindFunction = function(func, parameterValue) {
+  if (func === undefined) {
+    return
+  }
+
+  return func.bind(null, parameterValue)
 }
