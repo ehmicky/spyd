@@ -1,13 +1,8 @@
 import { sortNumbers } from '../utils.js'
 
-import {
-  getMedian,
-  getPercentiles,
-  getHistogram,
-  getMean,
-  getVariance,
-  getDeviation,
-} from './methods.js'
+import { getMedian, getMean, getVariance, getDeviation } from './methods.js'
+import { getPercentiles } from './percentiles.js'
+import { getHistogram } from './histogram.js'
 
 export const getStats = function(results, processes) {
   const times = results.flatMap(getTimes)
