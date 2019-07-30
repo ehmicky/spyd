@@ -5,6 +5,7 @@ export const defineCli = function() {
     .options(CONFIG)
     .usage(USAGE)
     .example(MAIN_EXAMPLE, 'Run benchmarks')
+    .example(LONG_EXAMPLE, 'Run benchmarks for 60 seconds')
     .help()
     .version()
     .strict()
@@ -18,18 +19,12 @@ const CONFIG = {
     describe: `Configuration file.
 Default: "check_speed.json" in the current directory or any parent directory`,
   },
-  repeat: {
-    alias: 'r',
+  duration: {
+    alias: 'd',
     number: true,
     requiresArg: true,
-    describe: `Number of times to repeat each task.
-Default: 1000`,
-  },
-  concurrency: {
-    number: true,
-    requiresArg: true,
-    describe: `Maximum number of iterations to run in parallel.
-Default: 100`,
+    describe: `How many seconds to benchmark each task.
+Default: 10`,
   },
   cwd: {
     string: true,
@@ -45,3 +40,4 @@ Benchmark the tasks defined in FILE.
 FILE defaults to "benchmarks.js|ts", "benchmarks/index.js|ts" or "benchmarks/main.js|ts".`
 
 const MAIN_EXAMPLE = '$0'
+const LONG_EXAMPLE = '$0 -d 60'
