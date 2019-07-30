@@ -2,6 +2,8 @@ import { now } from '../now.js'
 import { getTimeResolution } from '../resolution.js'
 import { getResult, getMedian, sortNumbers, MAX_LOOPS } from '../stats.js'
 
+import { measure } from './measure.js'
+
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
 export const benchmark = async function(main, before, after, duration) {
@@ -211,129 +213,6 @@ const isPromiseLike = function(value) {
 // `MAX_LOOPS` iterations.
 const shouldStop = function(runEnd, times) {
   return now() >= runEnd || times.length >= MAX_LOOPS
-}
-
-// Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
-const measure = async function(
-  main,
-  before,
-  after,
-  nowBias,
-  loopBias,
-  repeat,
-  isAsync,
-) {
-  // When calculating `nowBias`
-  if (repeat === 0) {
-    return Math.abs(now() - now())
-  }
-
-  const beforeArgs = await performBefore(before, repeat)
-
-  const duration = await getDuration(main, repeat, isAsync, beforeArgs)
-
-  await performAfter(after, repeat, beforeArgs)
-
-  // The final time might be negative if the task is as fast or faster than the
-  // iteration code itself. In this case, we return `0`.
-  const time = Math.max((duration - nowBias) / repeat - loopBias, 0)
-  return time
-}
-
-const performBefore = function(before, repeat) {
-  if (before === undefined) {
-    return
-  }
-
-  const beforeArgs = Array.from({ length: repeat }, () => before())
-  return Promise.all(beforeArgs)
-}
-
-const performAfter = function(after, repeat, beforeArgs = []) {
-  if (after === undefined) {
-    return
-  }
-
-  const promises = Array.from({ length: repeat }, (value, index) =>
-    after(beforeArgs[index]),
-  )
-  return Promise.all(promises)
-}
-
-// We separate async and sync measurements because following a promise (`await`)
-// takes several microseconds, which does not work when measuring fast
-// synchronous functions.
-// For the same reasons, we have different functions depending on whether
-// `beforeArgs` is used because passing an argument to `main()` is slightly
-// slower.
-const getDuration = function(main, repeat, isAsync, beforeArgs) {
-  if (isAsync) {
-    return getDurationAsync(main, repeat, beforeArgs)
-  }
-
-  return getDurationSync(main, repeat, beforeArgs)
-}
-
-const getDurationAsync = function(main, repeat, beforeArgs) {
-  if (beforeArgs !== undefined) {
-    return getDurationArgsAsync(main, repeat, beforeArgs)
-  }
-
-  return getDurationNoArgsAsync(main, repeat)
-}
-
-const getDurationSync = function(main, repeat, beforeArgs) {
-  if (beforeArgs !== undefined) {
-    return getDurationArgsSync(main, repeat, beforeArgs)
-  }
-
-  return getDurationNoArgsSync(main, repeat)
-}
-
-const getDurationArgsAsync = async function(main, repeat, beforeArgs) {
-  const start = now()
-
-  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
-  while (repeat--) {
-    // eslint-disable-next-line no-await-in-loop
-    await main(beforeArgs[repeat])
-  }
-
-  return now() - start
-}
-
-const getDurationNoArgsAsync = async function(main, repeat) {
-  const start = now()
-
-  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
-  while (repeat--) {
-    // eslint-disable-next-line no-await-in-loop
-    await main()
-  }
-
-  return now() - start
-}
-
-const getDurationArgsSync = function(main, repeat, beforeArgs) {
-  const start = now()
-
-  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
-  while (repeat--) {
-    main(beforeArgs[repeat])
-  }
-
-  return now() - start
-}
-
-const getDurationNoArgsSync = function(main, repeat) {
-  const start = now()
-
-  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
-  while (repeat--) {
-    main()
-  }
-
-  return now() - start
 }
 
 // Estimate how many times to repeat the benchmarking loop.
