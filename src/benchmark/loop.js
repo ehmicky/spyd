@@ -77,10 +77,10 @@ const benchmarkIteration = async function(
     repeat,
     isAsync,
   )
-
   // eslint-disable-next-line fp/no-mutating-methods
   times.push(time)
-  // eslint-disable-next-line no-param-reassign, fp/no-mutation
+
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation, require-atomic-updates
   state.iterIndex += 1
 }
 
