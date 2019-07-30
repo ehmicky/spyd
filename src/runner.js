@@ -172,4 +172,4 @@ const printResults = function(results, processes) {
   printStats({ ...stats, processes })
 }
 
-start(2e9)
+start(1e10)
