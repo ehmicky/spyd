@@ -8,7 +8,6 @@ import { getRepeat } from './repeat.js'
 // We perform benchmarking iteratively in order to stop benchmarking exactly
 // when the `duration` or `MAX_LOOPS` has been reached.
 // We also adjust some parameters as we take more measurements (e.g. `repeat`).
-// eslint-disable-next-line max-statements
 export const benchmarkLoop = async function(
   main,
   before,
@@ -21,11 +20,7 @@ export const benchmarkLoop = async function(
 ) {
   const runEnd = now() + duration
   const times = []
-  // eslint-disable-next-line fp/no-let
-  let repeat = 0
-  // eslint-disable-next-line fp/no-let
-  let iterIndex = 1
-  const count = { value: 0 }
+  const state = { repeat: 0, count: 0, iterIndex: 1 }
 
   // Due to some JavaScript engine optimization, the first run of a function is
   // much slower than the next calls. For example running an empty function
@@ -38,38 +33,66 @@ export const benchmarkLoop = async function(
 
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line fp/no-mutation
-    repeat = getRepeat(
-      repeat,
-      times,
-      iterIndex,
-      count,
-      minTime,
-      loopBias,
-      constRepeat,
-    )
-
     // eslint-disable-next-line no-await-in-loop
-    const time = await measure(
+    await benchmarkIteration(
       main,
       before,
       after,
+      duration,
       nowBias,
       loopBias,
-      repeat,
+      minTime,
+      constRepeat,
+      times,
+      state,
       isAsync,
     )
-
-    // eslint-disable-next-line fp/no-mutating-methods
-    times.push(time)
-    // eslint-disable-next-line fp/no-mutation
-    iterIndex += 1
-    // eslint-disable-next-line fp/no-mutation
-    count.value += repeat
   } while (!shouldStop(runEnd, times))
 
-  const result = getResult(times, count.value)
+  const result = getResult(times, state.count)
   return result
+}
+
+const benchmarkIteration = async function(
+  main,
+  before,
+  after,
+  duration,
+  nowBias,
+  loopBias,
+  minTime,
+  constRepeat,
+  times,
+  state,
+  isAsync,
+) {
+  const repeat = getRepeat(
+    state.repeat,
+    times,
+    state,
+    minTime,
+    loopBias,
+    constRepeat,
+  )
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation
+  state.count += repeat
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation
+  state.repeat = repeat
+
+  const time = await measure(
+    main,
+    before,
+    after,
+    nowBias,
+    loopBias,
+    repeat,
+    isAsync,
+  )
+
+  // eslint-disable-next-line fp/no-mutating-methods
+  times.push(time)
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation
+  state.iterIndex += 1
 }
 
 // The benchmark stops if we reach the end of the `duration` or run more than

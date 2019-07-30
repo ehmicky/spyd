@@ -8,8 +8,7 @@ import { getMedian, sortNumbers } from '../stats.js'
 export const getRepeat = function(
   repeat,
   times,
-  iterIndex,
-  count,
+  state,
   minTime,
   loopBias,
   constRepeat,
@@ -21,7 +20,7 @@ export const getRepeat = function(
 
   // This is performed logarithmatically (on iteration number 1, 2, 4, 8, etc.)
   // because `array.sort()` is slow: O(n log(n))
-  if (!Number.isInteger(Math.log2(iterIndex))) {
+  if (!Number.isInteger(Math.log2(state.iterIndex))) {
     return repeat
   }
 
@@ -31,7 +30,7 @@ export const getRepeat = function(
   }
 
   const nextRepeat = computeRepeat(repeat, times, minTime, loopBias)
-  callibrateRepeat(nextRepeat, repeat, times, count)
+  callibrateRepeat(nextRepeat, repeat, times, state)
   return nextRepeat
 }
 
@@ -53,7 +52,7 @@ const computeRepeat = function(repeat, times, minTime, loopBias) {
 // Different `repeat` give different times due to bias correction and JavaScript
 // engine loop optimizations.
 // However `repeat` always eventually stabilizes.
-const callibrateRepeat = function(nextRepeat, repeat, times, count) {
+const callibrateRepeat = function(nextRepeat, repeat, times, state) {
   if (Math.abs(nextRepeat - repeat) / repeat <= MIN_REPEAT_DIFF) {
     return
   }
@@ -61,7 +60,7 @@ const callibrateRepeat = function(nextRepeat, repeat, times, count) {
   // eslint-disable-next-line fp/no-mutating-methods
   times.splice(0)
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  count.value = 0
+  state.count = 0
 }
 
 const MIN_REPEAT_DIFF = 0.1
