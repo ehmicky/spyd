@@ -1,4 +1,4 @@
-import { loadTaskFile } from './tasks.js'
+import { loadTaskFile } from './tasks/load.js'
 
 export const loadTask = function(taskPath, taskId, parameter) {
   const tasks = loadTaskFile(taskPath)
