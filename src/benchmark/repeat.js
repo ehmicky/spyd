@@ -5,14 +5,37 @@ import { getMedian, sortNumbers } from '../stats.js'
 // because fast functions get optimized by JavaScript engines after they are
 // run several times in a row ("hot paths"). Those number of times are several
 // specific thresholds. When this happens, `repeat` needs to be computed again.
-export const getRepeat = function(
-  repeat,
-  times,
+export const handleRepeat = function(
   state,
+  times,
   minTime,
   loopBias,
   constRepeat,
 ) {
+  const repeat = getRepeat({
+    times,
+    state,
+    minTime,
+    loopBias,
+    constRepeat,
+  })
+
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation
+  state.count += repeat
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation
+  state.repeat = repeat
+
+  return repeat
+}
+
+const getRepeat = function({
+  times,
+  state,
+  state: { repeat, iterIndex },
+  minTime,
+  loopBias,
+  constRepeat,
+}) {
   // `constRepeat` is used during bias calculation to set a fixed `repeat` value
   if (constRepeat !== undefined) {
     return constRepeat
@@ -20,7 +43,7 @@ export const getRepeat = function(
 
   // This is performed logarithmatically (on iteration number 1, 2, 4, 8, etc.)
   // because `array.sort()` is slow: O(n log(n))
-  if (!Number.isInteger(Math.log2(state.iterIndex))) {
+  if (!Number.isInteger(Math.log2(iterIndex))) {
     return repeat
   }
 
