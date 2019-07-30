@@ -4,7 +4,7 @@ import { getResult, getMedian, sortNumbers, MAX_LOOPS } from './stats.js'
 
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
-export const benchmark = async function(main, duration) {
+export const benchmark = async function(main, before, duration) {
   initialMeasure()
 
   const biasDuration = duration * BIAS_DURATION_RATIO
@@ -14,6 +14,7 @@ export const benchmark = async function(main, duration) {
 
   const result = await benchmarkMain(
     main,
+    before,
     mainDuration,
     nowBias,
     loopBias,
@@ -27,7 +28,7 @@ export const benchmark = async function(main, duration) {
 // next functions passed to it.
 // We fix this by doing a cold start using an empty function
 const initialMeasure = function() {
-  measure(noopTwo, 0, 0, 1)
+  measure(noopTwo, undefined, 0, 0, 1)
 }
 
 // eslint-disable-next-line no-empty-function
@@ -54,13 +55,28 @@ const getBiases = async function(biasDuration) {
 }
 
 const getNowBias = async function(biasDuration) {
-  const { times } = await benchmarkMain(noop, biasDuration, 0, 0, 0, 0)
+  const { times } = await benchmarkMain(
+    noop,
+    undefined,
+    biasDuration,
+    0,
+    0,
+    0,
+    0,
+  )
   const nowBias = getMedian(times)
   return nowBias
 }
 
 const getLoopBias = async function(biasDuration, nowBias, minTime) {
-  const { times } = await benchmarkMain(noop, biasDuration, nowBias, 0, minTime)
+  const { times } = await benchmarkMain(
+    noop,
+    undefined,
+    biasDuration,
+    nowBias,
+    0,
+    minTime,
+  )
   const loopBias = getMedian(times)
   return loopBias
 }
@@ -89,6 +105,7 @@ const MIN_NOW_BIAS = 1e2
 
 const benchmarkMain = async function(
   main,
+  before,
   duration,
   nowBias,
   loopBias,
@@ -99,6 +116,7 @@ const benchmarkMain = async function(
 
   const { times, count } = await benchmarkLoop(
     main,
+    before,
     nowBias,
     loopBias,
     minTime,
@@ -116,6 +134,7 @@ const benchmarkMain = async function(
 // eslint-disable-next-line max-statements
 const benchmarkLoop = async function(
   main,
+  before,
   nowBias,
   loopBias,
   minTime,
@@ -135,6 +154,7 @@ const benchmarkLoop = async function(
   const returnValue = main()
   // We only check once if `main()` is async in order to simplify the logic.
   // This means `main()` cannot be sometimes sync and other times async.
+  // This does not apply to `before()` nor `after()`.
   const isAsync = isPromiseLike(returnValue)
 
   // eslint-disable-next-line fp/no-loops
@@ -151,7 +171,7 @@ const benchmarkLoop = async function(
     )
 
     // eslint-disable-next-line no-await-in-loop
-    const time = await measure(main, nowBias, loopBias, repeat, isAsync)
+    const time = await measure(main, before, nowBias, loopBias, repeat, isAsync)
 
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)
@@ -180,13 +200,22 @@ const shouldStop = function(runEnd, times) {
 }
 
 // Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
-const measure = async function(main, nowBias, loopBias, repeat, isAsync) {
+const measure = async function(
+  main,
+  before,
+  nowBias,
+  loopBias,
+  repeat,
+  isAsync,
+) {
   // When calculating `nowBias`
   if (repeat === 0) {
     return Math.abs(now() - now())
   }
 
-  const duration = await getDuration(main, repeat, isAsync)
+  const beforeArgs = await getBeforeArgs(before, repeat)
+
+  const duration = await getDuration(main, repeat, isAsync, beforeArgs)
 
   // The final time might be negative if the task is as fast or faster than the
   // iteration code itself. In this case, we return `0`.
@@ -194,18 +223,58 @@ const measure = async function(main, nowBias, loopBias, repeat, isAsync) {
   return time
 }
 
+const getBeforeArgs = function(before, repeat) {
+  if (before === undefined) {
+    return
+  }
+
+  const beforeArgs = Array.from({ length: repeat }, () => before())
+  return Promise.all(beforeArgs)
+}
+
 // We separate async and sync measurements because following a promise (`await`)
 // takes several microseconds, which does not work when measuring fast
 // synchronous functions.
-const getDuration = function(main, repeat, isAsync) {
+// For the same reasons, we have different functions depending on whether
+// `beforeArgs` is used because passing an argument to `main()` is slightly
+// slower.
+const getDuration = function(main, repeat, isAsync, beforeArgs) {
   if (isAsync) {
-    return getDurationAsync(main, repeat)
+    return getDurationAsync(main, repeat, beforeArgs)
   }
 
-  return getDurationSync(main, repeat)
+  return getDurationSync(main, repeat, beforeArgs)
 }
 
-const getDurationAsync = async function(main, repeat) {
+const getDurationAsync = function(main, repeat, beforeArgs) {
+  if (beforeArgs !== undefined) {
+    return getDurationArgsAsync(main, repeat, beforeArgs)
+  }
+
+  return getDurationNoArgsAsync(main, repeat)
+}
+
+const getDurationSync = function(main, repeat, beforeArgs) {
+  if (beforeArgs !== undefined) {
+    return getDurationArgsSync(main, repeat, beforeArgs)
+  }
+
+  return getDurationNoArgsSync(main, repeat)
+}
+
+const getDurationArgsAsync = async function(main, repeat, beforeArgs) {
+  const start = now()
+
+  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
+  while (repeat--) {
+    // eslint-disable-next-line no-await-in-loop
+    await main(beforeArgs[repeat])
+  }
+
+  return now() - start
+}
+
+const getDurationNoArgsAsync = async function(main, repeat) {
   const start = now()
 
   // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
@@ -214,11 +283,21 @@ const getDurationAsync = async function(main, repeat) {
     await main()
   }
 
-  const end = now()
-  return end - start
+  return now() - start
 }
 
-const getDurationSync = function(main, repeat) {
+const getDurationArgsSync = function(main, repeat, beforeArgs) {
+  const start = now()
+
+  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
+  while (repeat--) {
+    main(beforeArgs[repeat])
+  }
+
+  return now() - start
+}
+
+const getDurationNoArgsSync = function(main, repeat) {
   const start = now()
 
   // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
@@ -226,8 +305,7 @@ const getDurationSync = function(main, repeat) {
     main()
   }
 
-  const end = now()
-  return end - start
+  return now() - start
 }
 
 // Estimate how many times to repeat the benchmarking loop.
