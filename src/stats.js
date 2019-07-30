@@ -159,7 +159,7 @@ const getDeviation = function(variance) {
 }
 
 const getMean = function(array) {
-  return array.reduce(addNumbers) / array.length
+  return array.reduce(addNumbers, 0) / array.length
 }
 
 const addNumbers = function(numA, numB) {
