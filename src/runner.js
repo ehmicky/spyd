@@ -10,21 +10,27 @@ import { getStats } from './stats.js'
 const CHILD_MAIN = `${__dirname}/child.js`
 
 // Start several child processes benchmarking the same task
-export const start = async function({ taskPath, task, parameter, duration }) {
+export const start = async function({
+  taskPath,
+  taskId,
+  title,
+  parameter,
+  duration,
+}) {
   const runEnd = now() + duration
   // How long to run each child process
   const processDuration = duration / PROCESS_COUNT
 
   const { results, processes } = await runChildren({
     taskPath,
-    task,
+    taskId,
     parameter,
     processDuration,
     runEnd,
   })
 
   const stats = getStats(results, processes)
-  const benchmark = { task, parameter, stats }
+  const benchmark = { task: title, parameter, stats }
   return benchmark
 }
 
@@ -38,7 +44,7 @@ const PROCESS_COUNT = 2e1
 // reaching `MAX_RESULTS` though.
 const runChildren = async function({
   taskPath,
-  task,
+  taskId,
   parameter,
   processDuration,
   runEnd,
@@ -49,7 +55,7 @@ const runChildren = async function({
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    const pool = await startPool({ taskPath, task, parameter })
+    const pool = await startPool({ taskPath, taskId, parameter })
     // eslint-disable-next-line no-await-in-loop
     const results = await runPool(pool, processDuration, runEnd, processCount)
 
@@ -81,9 +87,9 @@ const MAX_RESULTS = 1e8
 // We boot several child processes at once in parallel because it is slow.
 // We do it in-between benchmarks because it would slow them down and add
 // variance.
-const startPool = async function({ taskPath, task, parameter }) {
+const startPool = async function({ taskPath, taskId, parameter }) {
   const promises = Array.from({ length: POOL_SIZE }, () =>
-    startChild({ taskPath, task, parameter }),
+    startChild({ taskPath, taskId, parameter }),
   )
   const childProcesses = await Promise.all(promises)
   return childProcesses
@@ -91,14 +97,14 @@ const startPool = async function({ taskPath, task, parameter }) {
 
 const POOL_SIZE = PROCESS_COUNT
 
-const startChild = async function({ taskPath, task, parameter }) {
+const startChild = async function({ taskPath, taskId, parameter }) {
   const childProcess = spawn('node', [CHILD_MAIN], {
     stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
   })
 
   await getChildMessage(childProcess, 'ready')
 
-  await sendChildMessage(childProcess, 'load', { taskPath, task, parameter })
+  await sendChildMessage(childProcess, 'load', { taskPath, taskId, parameter })
 
   return childProcess
 }

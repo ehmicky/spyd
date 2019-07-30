@@ -8,9 +8,9 @@ import { loadTask } from './tasks.js'
 const run = async function() {
   await sendParentMessage('ready')
 
-  const { taskPath, task, parameter } = await getParentMessage('load')
+  const { taskPath, taskId, parameter } = await getParentMessage('load')
 
-  const { main, before, after } = loadTask(taskPath, task, parameter)
+  const { main, before, after } = loadTask(taskPath, taskId, parameter)
 
   const duration = await getParentMessage('run')
 

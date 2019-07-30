@@ -43,30 +43,39 @@ const normalizeTasks = function(tasks) {
   return Object.entries(tasks).map(normalizeTask)
 }
 
-const normalizeTask = function([name, task]) {
+const normalizeTask = function([taskId, task]) {
+  const { title = taskId, ...taskA } = normalizeTaskFunc(task)
+  return { ...taskA, taskId, title }
+}
+
+const normalizeTaskFunc = function(task) {
   if (typeof task === 'function') {
-    return { name, main: task }
+    return { main: task }
   }
 
-  return { name, ...task }
+  return task
 }
 
 export const getTasksInputs = function(tasks) {
   return tasks.flatMap(getTasksInput)
 }
 
-const getTasksInput = function({ name: task, parameters }) {
+const getTasksInput = function({ taskId, title, parameters }) {
   if (parameters === undefined) {
-    return [{ task }]
+    return [{ taskId, title }]
   }
 
-  return Object.keys(parameters).map(parameter => ({ task, parameter }))
+  return Object.keys(parameters).map(parameter => ({
+    taskId,
+    title,
+    parameter,
+  }))
 }
 
-export const loadTask = function(taskPath, taskName, parameter) {
+export const loadTask = function(taskPath, taskId, parameter) {
   const tasks = loadTaskFile(taskPath)
   const { main, before, after, parameters } = tasks.find(
-    ({ name }) => name === taskName,
+    task => task.taskId === taskId,
   )
   const [mainA, beforeA, afterA] = bindParameter(parameters, parameter, [
     main,
