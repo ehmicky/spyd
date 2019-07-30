@@ -1,6 +1,6 @@
 import pMapSeries from 'p-map-series'
 
-import { getOpts } from './options.js'
+import { getOpts } from './options/main.js'
 import { getIterations } from './tasks.js'
 import { start } from './runner.js'
 import { report } from './report.js'
