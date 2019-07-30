@@ -14,3 +14,12 @@ export const isPromiseLike = function(value) {
     typeof value.then === 'function'
   )
 }
+
+export const sortNumbers = function(array) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  array.sort(compareNumbers)
+}
+
+const compareNumbers = function(numA, numB) {
+  return numA - numB
+}

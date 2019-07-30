@@ -1,3 +1,5 @@
+import { sortNumbers } from './utils.js'
+
 export const getResult = function(times, count) {
   sortNumbers(times)
 
@@ -168,15 +170,6 @@ const addNumbers = function(numA, numB) {
 
 const getVariance = function(array, mean) {
   return getMean(array.map(num => (num - mean) ** 2))
-}
-
-export const sortNumbers = function(array) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  array.sort(compareNumbers)
-}
-
-const compareNumbers = function(numA, numB) {
-  return numA - numB
 }
 
 // We limit the max number of iterations because:
