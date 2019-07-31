@@ -6,20 +6,8 @@ import { sortNumbers } from '../utils.js'
 // because fast functions get optimized by JavaScript engines after they are
 // run several times in a row ("hot paths"). Those number of times are several
 // specific thresholds. When this happens, `repeat` needs to be computed again.
-export const handleRepeat = function(
-  state,
-  times,
-  minTime,
-  loopBias,
-  constRepeat,
-) {
-  const repeat = getRepeat({
-    times,
-    state,
-    minTime,
-    loopBias,
-    constRepeat,
-  })
+export const handleRepeat = function(state, minTime, loopBias, constRepeat) {
+  const repeat = getRepeat({ state, minTime, loopBias, constRepeat })
 
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
   state.count += repeat
@@ -30,9 +18,8 @@ export const handleRepeat = function(
 }
 
 const getRepeat = function({
-  times,
   state,
-  state: { repeat, iterIndex },
+  state: { times, repeat, iterIndex },
   minTime,
   loopBias,
   constRepeat,

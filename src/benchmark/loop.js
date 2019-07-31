@@ -19,8 +19,7 @@ export const benchmarkLoop = async function(
   constRepeat,
 ) {
   const runEnd = now() + duration
-  const times = []
-  const state = { repeat: 0, count: 0, iterIndex: 1 }
+  const state = { times: [], repeat: 0, count: 0, iterIndex: 1 }
 
   // Due to some JavaScript engine optimization, the first run of a function is
   // much slower than the next calls. For example running an empty function
@@ -43,13 +42,12 @@ export const benchmarkLoop = async function(
       loopBias,
       minTime,
       constRepeat,
-      times,
       state,
       isAsync,
     )
-  } while (!shouldStop(runEnd, times))
+  } while (!shouldStop(runEnd, state.times))
 
-  const result = normalizeResult(times, state.count)
+  const result = normalizeResult(state.times, state.count)
   return result
 }
 
@@ -62,11 +60,10 @@ const benchmarkIteration = async function(
   loopBias,
   minTime,
   constRepeat,
-  times,
   state,
   isAsync,
 ) {
-  const repeat = handleRepeat(state, times, minTime, loopBias, constRepeat)
+  const repeat = handleRepeat(state, minTime, loopBias, constRepeat)
 
   const time = await measure(
     main,
@@ -78,7 +75,7 @@ const benchmarkIteration = async function(
     isAsync,
   )
   // eslint-disable-next-line fp/no-mutating-methods
-  times.push(time)
+  state.times.push(time)
 
   // eslint-disable-next-line no-param-reassign, fp/no-mutation, require-atomic-updates
   state.iterIndex += 1
