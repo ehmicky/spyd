@@ -1,5 +1,5 @@
 {
-  "name": "check-speed",
+  "name": "spyd",
   "version": "0.0.3",
   "main": "build/src/main.js",
   "files": [
@@ -8,7 +8,7 @@
     "!~"
   ],
   "bin": {
-    "check-speed": "build/src/bin/main.js"
+    "spyd": "build/src/bin/main.js"
   },
   "scripts": {
     "test": "gulp test"
@@ -22,9 +22,9 @@
   "keywords": [],
   "license": "Apache-2.0",
   "homepage": "https://git.io/fjRQu",
-  "repository": "ehmicky/check-speed",
+  "repository": "ehmicky/spyd",
   "bugs": {
-    "url": "https://github.com/ehmicky/check-speed/issues"
+    "url": "https://github.com/ehmicky/spyd/issues"
   },
   "author": "ehmicky <ehmicky@gmail.com> (https://github.com/ehmicky)",
   "directories": {

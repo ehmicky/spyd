@@ -30,8 +30,7 @@ const getConfigFile = async function(config, cwd) {
   return configFile
 }
 
-// The dash version is only allowed for typos, not documented
-const DEFAULT_CONFIG_FILE = ['check_speed.json', 'check-speed.json']
+const DEFAULT_CONFIG_FILE = 'spyd.json'
 
 const getConfigContent = async function(configFile, cwd) {
   const configPath = resolve(cwd, configFile)
