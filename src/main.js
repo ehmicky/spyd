@@ -1,7 +1,7 @@
 import pMapSeries from 'p-map-series'
 
 import { getOpts } from './options/main.js'
-import { getIterations } from './tasks/main.js'
+import { getIterations } from './tasks/iterations.js'
 import { runProcesses } from './processes/main.js'
 import { report } from './report/main.js'
 
