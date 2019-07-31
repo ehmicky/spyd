@@ -13,8 +13,8 @@ export const measure = async function(
   isAsync,
 ) {
   // When calculating `nowBias`
-  if (repeat === 0) {
-    return Math.abs(now() - now())
+  if (main === undefined) {
+    return -now() + now()
   }
 
   const beforeArgs = await performBefore(before, repeat)

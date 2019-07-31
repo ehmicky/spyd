@@ -17,7 +17,6 @@ export const benchmarkLoop = async function(
   nowBias,
   loopBias,
   minTime,
-  constRepeat,
 ) {
   const runEnd = now() + duration
   const state = { times: [], repeat: 1, count: 0, iterIndex: 0 }
@@ -33,7 +32,6 @@ export const benchmarkLoop = async function(
       nowBias,
       loopBias,
       minTime,
-      constRepeat,
       state,
       isAsync,
     )
@@ -51,11 +49,10 @@ const benchmarkIteration = async function(
   nowBias,
   loopBias,
   minTime,
-  constRepeat,
   state,
   isAsync,
 ) {
-  const repeat = getRepeat({ state, minTime, loopBias, constRepeat })
+  const repeat = getRepeat({ main, state, minTime, loopBias })
 
   updateState(state, repeat)
 

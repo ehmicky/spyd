@@ -7,14 +7,14 @@ import { sortNumbers } from '../utils.js'
 // run several times in a row ("hot paths"). Those number of times are several
 // specific thresholds. When this happens, `repeat` needs to be computed again.
 export const getRepeat = function({
+  main,
   state: { times, repeat, iterIndex },
   minTime,
   loopBias,
-  constRepeat,
 }) {
-  // `constRepeat` is used during bias calculation to set a fixed `repeat` value
-  if (constRepeat !== undefined) {
-    return constRepeat
+  // When calculating `nowBias`
+  if (main === undefined) {
+    return 1
   }
 
   // This is performed logarithmatically (on iteration number 1, 2, 4, 8, etc.)

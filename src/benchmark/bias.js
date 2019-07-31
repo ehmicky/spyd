@@ -16,7 +16,7 @@ export const getBiases = async function(duration, isAsync) {
   const biasDuration = duration * BIAS_DURATION_RATIO
   const mainDuration = duration - biasDuration * 2
 
-  const nowBias = await getNowBias(biasDuration, isAsync)
+  const nowBias = await getNowBias(biasDuration)
   const minTime = getMinTime(nowBias)
 
   const loopBias = await getLoopBias(biasDuration, isAsync, nowBias, minTime)
@@ -28,17 +28,13 @@ export const getBiases = async function(duration, isAsync) {
 // So we dedicate a significant part of the total benchmark to them.
 const BIAS_DURATION_RATIO = 0.1
 
-const getNowBias = async function(biasDuration, isAsync) {
+const getNowBias = async function(biasDuration) {
   const { times } = await benchmarkLoop(
-    noop,
+    undefined,
     undefined,
     undefined,
     biasDuration,
-    isAsync,
-    0,
-    0,
-    0,
-    0,
+    false,
   )
   const nowBias = getMedian(times)
   return nowBias
