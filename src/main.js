@@ -5,6 +5,7 @@ import { getIterations } from './tasks/main.js'
 import { runProcesses } from './processes/main.js'
 import { report } from './report/main.js'
 
+// Benchmark JavaScript code defined in a tasks file and report the results.
 const spyd = async function(opts) {
   const optsA = await getOpts(opts)
 

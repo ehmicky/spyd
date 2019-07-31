@@ -7,9 +7,11 @@ import findUp from 'find-up'
 
 const pReadFile = promisify(readFile)
 
-export const getConfig = async function({ config, ...opts }) {
-  const { cwd = getCwd() } = opts
-
+// Retrieve options from the configuration file (if any)
+export const getConfig = async function({
+  opts: { config, ...opts },
+  opts: { cwd = getCwd() },
+}) {
   const configFile = await getConfigFile(config, cwd)
 
   if (configFile === undefined) {
@@ -39,7 +41,7 @@ const getConfigContent = async function(configFile, cwd) {
     return await pReadFile(configPath, 'utf-8')
   } catch (error) {
     throw new Error(
-      `Could not load config file '${configFile}': ${error.message}`,
+      `Could not load configuration file '${configFile}': ${error.message}`,
     )
   }
 }
@@ -49,7 +51,7 @@ const parseConfig = function(configContent, configFile) {
     return JSON.parse(configContent)
   } catch (error) {
     throw new Error(
-      `Could not parse config file '${configFile}: ${error.message}`,
+      `Configuration file '${configFile}' is not valid JSON: ${error.message}`,
     )
   }
 }

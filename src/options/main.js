@@ -2,8 +2,9 @@ import { cwd as getCwd } from 'process'
 
 import { getConfig } from './config.js'
 
+// Retrieve options/configuration
 export const getOpts = async function(opts = {}) {
-  const optsA = await getConfig(opts)
+  const optsA = await getConfig({ opts })
 
   const optsB = { ...DEFAULT_OPTS, ...optsA }
 
