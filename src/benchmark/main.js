@@ -1,3 +1,5 @@
+import { isPromiseLike } from '../utils.js'
+
 import { getBiases } from './bias.js'
 import { benchmarkLoop } from './loop.js'
 import { measure } from './measure.js'
@@ -5,15 +7,24 @@ import { measure } from './measure.js'
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
 export const benchmark = async function(main, before, after, duration) {
+  // We only check once if `main()` is async in order to simplify the logic.
+  // This means `main()` cannot be sometimes sync and other times async.
+  // This does not apply to `before()` nor `after()`.
+  const isAsync = false
+
   initialMeasure()
 
-  const { nowBias, loopBias, minTime, mainDuration } = await getBiases(duration)
+  const { nowBias, loopBias, minTime, mainDuration } = await getBiases(
+    duration,
+    isAsync,
+  )
 
   const result = await benchmarkLoop(
     main,
     before,
     after,
     mainDuration,
+    isAsync,
     nowBias,
     loopBias,
     minTime,

@@ -6,19 +6,7 @@ import { sortNumbers } from '../utils.js'
 // because fast functions get optimized by JavaScript engines after they are
 // run several times in a row ("hot paths"). Those number of times are several
 // specific thresholds. When this happens, `repeat` needs to be computed again.
-export const handleRepeat = function(state, minTime, loopBias, constRepeat) {
-  const repeat = getRepeat({ state, minTime, loopBias, constRepeat })
-
-  // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  state.count += repeat
-  // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  state.repeat = repeat
-
-  return repeat
-}
-
-const getRepeat = function({
-  state,
+export const getRepeat = function({
   state: { times, repeat, iterIndex },
   minTime,
   loopBias,
@@ -35,14 +23,7 @@ const getRepeat = function({
     return repeat
   }
 
-  // First iteration
-  if (repeat === 0) {
-    return 1
-  }
-
-  const nextRepeat = computeRepeat(repeat, times, minTime, loopBias)
-  callibrateRepeat(nextRepeat, repeat, times, state)
-  return nextRepeat
+  return computeRepeat(repeat, times, minTime, loopBias)
 }
 
 // `repeat` is adjusted so that `measure()` time === `minTime`
@@ -57,21 +38,3 @@ const computeRepeat = function(repeat, times, minTime, loopBias) {
 
   return Math.ceil(minTime / (median + loopBias))
 }
-
-// When `repeat` changes too much, we discard previously computed times.
-// This is because mixing times computed with different `repeat` is bad.
-// Different `repeat` give different times due to bias correction and JavaScript
-// engine loop optimizations.
-// However `repeat` always eventually stabilizes.
-const callibrateRepeat = function(nextRepeat, repeat, times, state) {
-  if (Math.abs(nextRepeat - repeat) / repeat <= MIN_REPEAT_DIFF) {
-    return
-  }
-
-  // eslint-disable-next-line fp/no-mutating-methods
-  times.splice(0)
-  // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  state.count = 0
-}
-
-const MIN_REPEAT_DIFF = 0.1

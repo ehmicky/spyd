@@ -1,9 +1,9 @@
 import { now } from '../now.js'
 import { normalizeResult, MAX_LOOPS } from '../stats/normalize.js'
-import { isPromiseLike } from '../utils.js'
 
 import { measure } from './measure.js'
-import { handleRepeat } from './repeat.js'
+import { getRepeat } from './repeat.js'
+import { updateState } from './state.js'
 
 // We perform benchmarking iteratively in order to stop benchmarking exactly
 // when the `duration` or `MAX_LOOPS` has been reached.
@@ -13,22 +13,14 @@ export const benchmarkLoop = async function(
   before,
   after,
   duration,
+  isAsync,
   nowBias,
   loopBias,
   minTime,
   constRepeat,
 ) {
   const runEnd = now() + duration
-  const state = { times: [], repeat: 0, count: 0, iterIndex: 1 }
-
-  // Due to some JavaScript engine optimization, the first run of a function is
-  // much slower than the next calls. For example running an empty function
-  // might be 1000 times slower on the first call. So we do a cold start.
-  const returnValue = main()
-  // We only check once if `main()` is async in order to simplify the logic.
-  // This means `main()` cannot be sometimes sync and other times async.
-  // This does not apply to `before()` nor `after()`.
-  const isAsync = isPromiseLike(returnValue)
+  const state = { times: [], repeat: 1, count: 0, iterIndex: 0 }
 
   // eslint-disable-next-line fp/no-loops
   do {
@@ -63,7 +55,9 @@ const benchmarkIteration = async function(
   state,
   isAsync,
 ) {
-  const repeat = handleRepeat(state, minTime, loopBias, constRepeat)
+  const repeat = getRepeat({ state, minTime, loopBias, constRepeat })
+
+  updateState(state, repeat)
 
   const time = await measure(
     main,
@@ -76,9 +70,6 @@ const benchmarkIteration = async function(
   )
   // eslint-disable-next-line fp/no-mutating-methods
   state.times.push(time)
-
-  // eslint-disable-next-line no-param-reassign, fp/no-mutation, require-atomic-updates
-  state.iterIndex += 1
 }
 
 // The benchmark stops if we reach the end of the `duration` or run more than
