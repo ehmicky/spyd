@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/ehmicky/design/master/spyd/spyd.svg?sanitize=true" width="500"/>
+<img src="https://raw.githubusercontent.com/ehmicky/design/master/spyd/spyd.svg?sanitize=true" width="400"/>
 
 [![Codecov](https://img.shields.io/codecov/c/github/ehmicky/spyd.svg?label=tested&logo=codecov)](https://codecov.io/gh/ehmicky/spyd)
 [![Travis](https://img.shields.io/badge/cross-platform-4cc61e.svg?logo=travis)](https://travis-ci.org/ehmicky/spyd)
