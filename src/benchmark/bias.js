@@ -59,6 +59,8 @@ const MIN_PRECISION = 1e2
 // The task loop must be at least `MIN_NOW_BIAS` slower than `nowBias`
 const MIN_NOW_BIAS = 1e2
 
+// We need to make sure to pass `isAsync` since the loop bias is much slower
+// when async.
 const getLoopBias = async function(biasDuration, isAsync, nowBias, minTime) {
   const { times } = await benchmarkLoop(
     noop,
