@@ -17,7 +17,7 @@ const CONFIG = {
     string: true,
     requiresArg: true,
     describe: `Configuration file.
-Default: "check_speed.json" in the current directory or any parent directory`,
+Default: "spyd.json" in the current directory or any parent directory`,
   },
   duration: {
     alias: 'd',
