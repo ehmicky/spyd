@@ -5,7 +5,7 @@ import { startChildren } from './start.js'
 import { runChildren } from './run.js'
 import { shouldStop } from './stop.js'
 
-// Start several child processes benchmarking the same task
+// Start several child processes benchmarking the same task.
 // Each task (and parameter combination) is run serially to avoid influencing
 // the timing of another.
 export const runProcesses = async function({
@@ -37,8 +37,8 @@ const PROCESS_COUNT = 2e1
 // If the task is slower than `duration / PROCESS_COUNT`, we launch fewer than
 // `PROCESS_COUNT`.
 // If `duration` is high enough to run each task until it reaches its
-// `MAX_LOOPS` limit, we keep spawning new child processes. We stop once
-// reaching `MAX_RESULTS` though.
+// `MAX_LOOPS` limit, we keep spawning new child processes. We stop once we
+// reach `MAX_RESULTS` though.
 const runPools = async function({
   taskPath,
   taskId,
@@ -46,8 +46,7 @@ const runPools = async function({
   processDuration,
   runEnd,
 }) {
-  const results = []
-  const processCount = { value: 0 }
+  const state = { results: [], processes: 0 }
 
   // eslint-disable-next-line fp/no-loops
   do {
@@ -58,12 +57,12 @@ const runPools = async function({
       parameter,
       processDuration,
       runEnd,
-      processCount,
-      results,
+      state,
     })
-  } while (!shouldStop(runEnd, results))
+  } while (!shouldStop(runEnd, state.results))
 
-  return { results, processes: processCount.value }
+  const { results, processes } = state
+  return { results, processes }
 }
 
 const runPool = async function({
@@ -72,8 +71,7 @@ const runPool = async function({
   parameter,
   processDuration,
   runEnd,
-  processCount,
-  results,
+  state,
 }) {
   const children = await startChildren({ taskPath, taskId, parameter })
 
@@ -81,11 +79,11 @@ const runPool = async function({
     children,
     processDuration,
     runEnd,
-    processCount,
+    state,
   )
 
   // eslint-disable-next-line fp/no-mutating-methods
-  results.push(...poolResults)
+  state.results.push(...poolResults)
 }
 
 const getBenchmark = function({ results, processes, parameter, title }) {
