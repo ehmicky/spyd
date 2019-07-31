@@ -2,20 +2,28 @@ import { cwd as getCwd } from 'process'
 
 import { validate } from 'jest-validate'
 
+import { omitBy } from '../utils.js'
+
 import { getConfig } from './config.js'
 
 // Retrieve options/configuration
 export const getOpts = async function(opts = {}) {
+  const optsA = omitBy(opts, isUndefined)
+
   // We need to do this twice because configuration loading needs to have
   // `cwd` and `config` type checked, but it also adds new options.
-  validate(opts, { exampleConfig: EXAMPLE_OPTS })
+  validate(optsA, { exampleConfig: EXAMPLE_OPTS })
 
-  const optsB = await getConfig({ opts })
+  const optsB = await getConfig({ opts: optsA })
 
   const optsC = normalizeOpts(optsB)
 
   const optsD = normalizeDuration(optsC)
   return optsD
+}
+
+const isUndefined = function(value) {
+  return value === undefined
 }
 
 const normalizeOpts = function(opts) {
