@@ -4,9 +4,10 @@ import { getMedian, getMean, getVariance, getDeviation } from './methods.js'
 import { getPercentiles } from './percentiles.js'
 import { getHistogram } from './histogram.js'
 
-export const getStats = function(results, processes) {
+export const getStats = function(results) {
   const times = results.flatMap(getTimes)
   const count = results.reduce(reduceCount, 0)
+  const processes = results.length
 
   sortNumbers(times)
 

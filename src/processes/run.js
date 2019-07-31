@@ -13,37 +13,26 @@ export const runChildren = async function(
   children,
   processDuration,
   runEnd,
-  state,
+  results,
 ) {
-  const results = await pMapSeries(children, child =>
-    runChild(child, processDuration, runEnd, state),
+  await pMapSeries(children, child =>
+    runChild(child, processDuration, runEnd, results),
   )
-  const resultsA = results.filter(isDefined)
-  return resultsA
 }
 
-const runChild = async function(child, processDuration, runEnd, state) {
-  const result = await executeChild(child, processDuration, runEnd, state)
+const runChild = async function(child, processDuration, runEnd, results) {
+  await executeChild(child, processDuration, runEnd, results)
 
   await endChild(child)
-
-  return result
 }
 
-const executeChild = async function(child, processDuration, runEnd, state) {
-  if (now() > runEnd && state.processes !== 0) {
+const executeChild = async function(child, processDuration, runEnd, results) {
+  if (now() > runEnd && results.length !== 0) {
     return
   }
 
-  // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  state.processes += 1
-
   await sendChildMessage(child, 'run', processDuration)
   const result = await getChildMessage(child, 'result')
-
-  return result
-}
-
-const isDefined = function(value) {
-  return value !== undefined
+  // eslint-disable-next-line fp/no-mutating-methods
+  results.push(result)
 }
