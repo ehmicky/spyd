@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/ehmicky/design/master/spyd/spyd.svg?sanitize=true" width="500"/>
+
 [![Codecov](https://img.shields.io/codecov/c/github/ehmicky/spyd.svg?label=tested&logo=codecov)](https://codecov.io/gh/ehmicky/spyd)
 [![Travis](https://img.shields.io/badge/cross-platform-4cc61e.svg?logo=travis)](https://travis-ci.org/ehmicky/spyd)
 [![Node](https://img.shields.io/node/v/spyd.svg?logo=node.js)](https://www.npmjs.com/package/spyd)
