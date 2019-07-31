@@ -5,7 +5,7 @@ import { getIterations } from './tasks/main.js'
 import { runProcesses } from './processes/main.js'
 import { report } from './report/main.js'
 
-const checkSpeed = async function(opts) {
+const spyd = async function(opts) {
   const optsA = await getOpts(opts)
 
   const iterations = await getIterations(optsA)
@@ -19,4 +19,4 @@ const checkSpeed = async function(opts) {
 
 // We do not use `export default` because Babel transpiles it in a way that
 // requires CommonJS users to `require(...).default` instead of `require(...)`.
-module.exports = checkSpeed
+module.exports = spyd

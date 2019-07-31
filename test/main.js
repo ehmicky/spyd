@@ -1,7 +1,7 @@
 import test from 'ava'
 import { each } from 'test-each'
 
-import checkSpeed from '../src/main.js'
+import spyd from '../src/main.js'
 
 // eslint-disable-next-line no-empty-function
 const main = function() {}
@@ -30,8 +30,8 @@ each(
     },
   ],
   ({ title }, { opts, ...tasks }) => {
-    test(`checkSpeed() | ${title}`, t => {
-      t.snapshot(normalizeResults(checkSpeed(tasks, opts)))
+    test(`spyd() | ${title}`, t => {
+      t.snapshot(normalizeResults(spyd(tasks, opts)))
     })
   },
 )
