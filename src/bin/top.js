@@ -39,8 +39,7 @@ const USAGE = `$0 [OPTIONS] [FILE]
 
 Benchmark JavaScript code.
 
-FILE defaults to "./benchmarks.js|ts", "./benchmarks/index.js|ts" or
-"./benchmarks/main.js|ts".
+FILE defaults to "./benchmarks.js|ts" or "./benchmarks/main.js|ts".
 
 FILE must export the tasks to benchmark. Each task must be either:
   - a function
