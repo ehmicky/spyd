@@ -6,6 +6,15 @@ export const omitBy = function(object, condition) {
   return Object.assign({}, ...pairs)
 }
 
+export const isPlainObject = function(value) {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    (value.constructor === Object || value.constructor === undefined)
+  )
+}
+
+// ES specifications mostly use promiseLike objects not promises
 export const isPromiseLike = function(value) {
   return (
     typeof value === 'object' &&
@@ -15,6 +24,7 @@ export const isPromiseLike = function(value) {
   )
 }
 
+// Sort an array of numbers
 export const sortNumbers = function(array) {
   // eslint-disable-next-line fp/no-mutating-methods
   array.sort(compareNumbers)

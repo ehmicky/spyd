@@ -1,12 +1,13 @@
 import { getTaskPath } from './path.js'
 import { loadTaskFile } from './load.js'
 
-export const getIterations = async function(opts) {
-  const taskPath = await getTaskPath(opts)
+// Retrieve each iteration, i.e. combination of task + parameter (if any)
+export const getIterations = async function({ file, cwd, duration }) {
+  const taskPath = await getTaskPath(file, cwd)
   const tasks = await loadTaskFile(taskPath)
   const iterations = tasks
     .flatMap(getIteration)
-    .map(iteration => ({ ...opts, taskPath, ...iteration }))
+    .map(iteration => ({ ...iteration, duration, taskPath }))
   return iterations
 }
 

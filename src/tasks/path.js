@@ -2,11 +2,12 @@ import { resolve } from 'path'
 
 import locatePath from 'locate-path'
 
-export const getTaskPath = async function({ file, cwd }) {
+// Retrieve the path to the task file using the `file` and `cwd` options
+export const getTaskPath = async function(file, cwd) {
   const taskFile = await getTaskFile(file, cwd)
 
   if (taskFile === undefined) {
-    throw new TypeError('No tasks file found')
+    throw new Error('No tasks file found')
   }
 
   const taskPath = resolve(cwd, taskFile)
