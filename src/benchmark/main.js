@@ -8,11 +8,12 @@ import { measure } from './measure.js'
 export const benchmark = async function(main, before, after, duration) {
   const isAsync = isAsyncFunc(main)
 
-  initialMeasure(isAsync)
+  initialMeasure(isAsync, before)
 
   const { nowBias, loopBias, minTime, mainDuration } = await getBiases(
     duration,
     isAsync,
+    before,
   )
 
   const result = await benchmarkLoop(
@@ -32,8 +33,11 @@ export const benchmark = async function(main, before, after, duration) {
 // is benchmarking its first function, it's running much faster than for the
 // next functions passed to it.
 // We fix this by doing a cold start using an empty function
-const initialMeasure = function(isAsync) {
-  measure(noop, undefined, undefined, 0, 0, 1, isAsync)
+// The `before()` and `isAsync` parameters need to match what is used during
+// the bias calculation.
+const initialMeasure = function(isAsync, before) {
+  const beforeFunc = before === undefined ? undefined : noop
+  measure(noop, beforeFunc, undefined, 0, 0, 1, isAsync)
 }
 
 // This needs to be a different function from the `noop` used during bias
