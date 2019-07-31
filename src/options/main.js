@@ -38,6 +38,10 @@ export const EXAMPLE_OPTS = {
 
 // Duration is specified in seconds by the user but we convert it to nanoseconds
 const normalizeDuration = function({ duration, ...opts }) {
+  if (!Number.isFinite(duration) || duration <= 0) {
+    throw new TypeError(`duration must be a positive number: ${duration}`)
+  }
+
   const durationA = duration * SECONDS_TO_NANOSECONDS
   return { ...opts, duration: durationA }
 }
