@@ -4,19 +4,25 @@ import { getTask } from '../tasks/get.js'
 import { sendParentMessage, getParentMessage } from './ipc.js'
 
 // Child process entry point.
-// Wait for the parent process to ask it to benchmark the task then send the
-// result back to the parent.
+// Wait for the parent process to request benchmarks then send the result back
+// to the parent.
 const run = async function() {
-  await sendParentMessage('ready')
+  try {
+    await sendParentMessage('ready')
 
-  const { taskPath, taskId, parameter } = await getParentMessage('load')
+    const { taskPath, taskId, parameter } = await getParentMessage('load')
 
-  const { main, before, after } = await getTask(taskPath, taskId, parameter)
+    const { main, before, after } = await getTask(taskPath, taskId, parameter)
 
-  const duration = await getParentMessage('run')
+    const duration = await getParentMessage('run')
 
-  const result = await benchmark(main, before, after, duration)
-  await sendParentMessage('result', result)
+    const result = await benchmark(main, before, after, duration)
+    await sendParentMessage('result', result)
+  } catch (error) {
+    // This will be printed to stderr, which means parent will print it
+    // eslint-disable-next-line no-console, no-restricted-globals
+    console.error(error)
+  }
 }
 
 run()
