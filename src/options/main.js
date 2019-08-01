@@ -49,4 +49,5 @@ export const EXAMPLE_OPTS = {
   file: 'benchmarks.js',
   require: ['ts-node/register'],
   output: './file.js',
+  insert: './README.md',
 }

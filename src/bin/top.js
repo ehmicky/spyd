@@ -49,10 +49,22 @@ For example --report.json.* options would be passed to the json reporter.`,
     alias: 'o',
     string: true,
     requiresArg: true,
-    describe: `File to output benchmark results.
+    describe: `Overwrite the specified file with the benchmark results.
 Can be "" for silent output.
-Can be "-" to print to stdout (the default value).
+Can be "-" to print to stdout.
+Default: "" if --insert is used, "-" otherwise.
 Use --report.REPORTER.output to set this option on a specific reporter instead of all reporters.`,
+  },
+  insert: {
+    alias: 'i',
+    string: true,
+    requiresArg: true,
+    describe: `Insert the benchmark results inside the specified file.
+The file must contain:
+  - a line with the words "spyd-start" such as <!-- spyd-start --> or #spyd-start
+  - a line with the words "spyd-end"
+The benchmarks results will be inserted between those two lines.
+Use --report.REPORTER.insert to set this option on a specific reporter instead of all reporters.`,
   },
   require: {
     alias: 'r',

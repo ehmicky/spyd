@@ -4,42 +4,56 @@ import { promisify } from 'util'
 
 const pWriteFile = promisify(writeFile)
 
-// Print reporting result to file or to terminal
-export const print = async function({ content, reportOpt, output }) {
-  if (!hasContent(content)) {
-    return
-  }
+// Print reporting result to file or to terminal based on the `output` option
+export const print = async function({ content, reportOpt, output, insert }) {
+  const contentA = addFinalNewline(content)
 
-  const outputA = getOutput(reportOpt, output)
+  const outputA = getOutput(reportOpt, output, insert)
 
   if (outputA === '') {
     return
   }
 
   if (outputA === '-') {
-    stdout.write(content)
+    stdout.write(contentA)
     return
   }
 
-  await printToFile(outputA, content)
+  await writeFileContent(outputA, contentA)
 }
 
-const hasContent = function(content) {
-  return typeof content === 'string' && content.trim() !== ''
+const addFinalNewline = function(content) {
+  if (content.endsWith('\n')) {
+    return content
+  }
+
+  return `${content}\n`
 }
 
-const getOutput = function(reportOpt, output) {
+const getOutput = function(reportOpt, output, insert) {
   if (typeof reportOpt.output === 'string') {
     return reportOpt.output
   }
 
-  return output
+  if (output !== undefined) {
+    return output
+  }
+
+  if (hasInsert(reportOpt, insert)) {
+    return ''
+  }
+
+  return '-'
 }
 
-const printToFile = async function(file, content) {
+const hasInsert = function(reportOpt, insert) {
+  return reportOpt.insert !== undefined || insert !== undefined
+}
+
+const writeFileContent = async function(file, content) {
   try {
     await pWriteFile(file, content)
   } catch (error) {
-    throw new Error(`Could not report to output '${file}'\n\n${error.stack}`)
+    throw new Error(`Could not write to file '${file}'\n\n${error.stack}`)
   }
 }
