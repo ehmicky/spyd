@@ -6,8 +6,7 @@ import { benchmarkLoop } from './loop.js'
 // The following biases are introduced by the benchmarking code itself:
 //   - `nowBias` is the time taken to retrieve the current timestamp
 //   - `loopBias` is the time taken to iterate in a loop, when running a task
-//     repeatedly, excluding the task itself. This is slower when the loop logic
-//     is async.
+//     repeatedly, excluding the task itself
 // We remove those two biases from the calculated times.
 // This function calculates those biases by benchmarking them.
 // On top of this, the more the benchmarking code itself is run, the faster it
@@ -20,13 +19,13 @@ export const getBiases = async function({ duration, isAsync, before }) {
   const nowBias = await getNowBias(biasDuration)
   const minTime = getMinTime(nowBias)
 
-  const loopBias = await getLoopBias(
+  const loopBias = await getLoopBias({
     biasDuration,
     isAsync,
     before,
     nowBias,
     minTime,
-  )
+  })
 
   return { nowBias, loopBias, minTime, mainDuration }
 }
@@ -35,8 +34,8 @@ export const getBiases = async function({ duration, isAsync, before }) {
 // So we dedicate a significant part of the total benchmark to them.
 const BIAS_DURATION_RATIO = 0.1
 
-// `nowBias` is calculated by benchmarking `undefined`, which translated to
-// simply calling `now()` twice in a row.
+// `nowBias` is calculated by benchmarking nothing, which translates to simply
+// calling `now()` twice in a row.
 const getNowBias = async function(biasDuration) {
   const { times } = await benchmarkLoop({
     duration: biasDuration,
@@ -46,8 +45,8 @@ const getNowBias = async function(biasDuration) {
   return nowBias
 }
 
-// If a task duration is too close to `nowBias`, the returned variance will be
-// mostly due to the timestamp function itself.
+// If a task duration is too close to `nowBias`, the variance will be mostly due
+// to the timestamp function itself.
 // Also if a task duration is too close to the minimum system time resolution,
 // it will lack precision.
 // To fix this we run the task in a loop to increase its running time. We then
@@ -69,13 +68,13 @@ const MIN_NOW_BIAS = 1e2
 // when async.
 // Same thing goes for `before()` since passing an argument (even `undefined`)
 // to `main()` makes it slightly slower. We use a dummy `before()`.
-const getLoopBias = async function(
+const getLoopBias = async function({
   biasDuration,
   isAsync,
   before,
   nowBias,
   minTime,
-) {
+}) {
   const beforeFunc = before === undefined ? undefined : noop
   const { times } = await benchmarkLoop({
     main: noop,
