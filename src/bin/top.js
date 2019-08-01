@@ -45,6 +45,15 @@ Built-in reporters: silent`,
     describe: `Options passed to specific reporters.
 For example --report.json.* options would be passed to the json reporter.`,
   },
+  output: {
+    alias: 'o',
+    string: true,
+    requiresArg: true,
+    describe: `File to output benchmark results.
+Can be "" for silent output.
+Can be "-" to print to stdout (the default value).
+Use --report.REPORTER.output to set this option on a specific reporter instead of all reporters.`,
+  },
   require: {
     alias: 'r',
     string: true,

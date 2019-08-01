@@ -9,7 +9,8 @@ export const normalizeOpts = function(opts) {
   const optsB = normalizeCwd(optsA)
   const optsC = normalizeRequire(optsB)
   const optsD = normalizeReporters(optsC)
-  return optsD
+  const optsE = normalizeOutput(optsD)
+  return optsE
 }
 
 // Normalize and validate 'duration' option
@@ -55,7 +56,7 @@ const resolveRequire = function(requiredModule, cwd) {
   return resolve(cwd, requiredModule)
 }
 
-// Validate 'reporters' option
+// Normalize and validate 'reporters' option
 const normalizeReporters = function({
   reporters,
   report: reportOpts,
@@ -83,4 +84,18 @@ const validateReportOpt = function(reporterName, reporters) {
       `Invalid reporter '${reporterName}' in 'report.${reporterName}' option`,
     )
   }
+}
+
+// Assign default value for the 'output' option
+const normalizeOutput = function({ output, ...opts }) {
+  const outputA = getDefaultOutput(output)
+  return { ...opts, output: outputA }
+}
+
+const getDefaultOutput = function(output) {
+  if (output !== undefined) {
+    return output
+  }
+
+  return '-'
 }

@@ -1,11 +1,15 @@
 import { REPORTERS } from './reporters/main.js'
+import { print } from './print.js'
 
 // Report benchmark results
-export const report = async function(benchmarks, { reporters, reportOpts }) {
+export const report = async function(
+  benchmarks,
+  { reporters, reportOpts, output },
+) {
   const reportersA = getDefaultReporters(reporters)
 
   const promises = reportersA.map(reporterName =>
-    useReporter({ reporterName, benchmarks, reportOpts }),
+    useReporter({ reporterName, benchmarks, reportOpts, output }),
   )
   await Promise.all(promises)
 }
@@ -18,13 +22,22 @@ const getDefaultReporters = function(reporters) {
   return ['debug']
 }
 
-const useReporter = async function({ reporterName, benchmarks, reportOpts }) {
+// Perform each reporter
+const useReporter = async function({
+  reporterName,
+  benchmarks,
+  reportOpts,
+  output,
+}) {
   const reporter = getReporter(reporterName)
   const reportOpt = getReportOpt(reporterName, reportOpts)
-  const output = await reporter(benchmarks, reportOpt)
-  printOutput(output)
+
+  const content = await reporter(benchmarks, reportOpt)
+
+  await print({ content, reportOpt, output })
 }
 
+// Retrieve reporter's main function
 const getReporter = function(reporterName) {
   if (REPORTERS[reporterName] !== undefined) {
     return REPORTERS[reporterName]
@@ -49,13 +62,4 @@ const getReportOpt = function(reporterName, reportOpt) {
   }
 
   return reporterOpt
-}
-
-const printOutput = function(output) {
-  if (typeof output !== 'string' || output.trim() === '') {
-    return
-  }
-
-  // eslint-disable-next-line no-console, no-restricted-globals
-  console.log(output)
 }

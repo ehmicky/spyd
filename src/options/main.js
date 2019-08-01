@@ -48,4 +48,5 @@ export const EXAMPLE_OPTS = {
   config: 'spyd.json',
   file: 'benchmarks.js',
   require: ['ts-node/register'],
+  output: './file.js',
 }
