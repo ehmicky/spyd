@@ -37,7 +37,14 @@ export const benchmark = async function({ main, before, after, duration }) {
 // the bias calculation.
 const initialMeasure = function(isAsync, before) {
   const beforeFunc = before === undefined ? undefined : noop
-  measure(noop, beforeFunc, undefined, 0, 0, 1, isAsync)
+  measure({
+    main: noop,
+    before: beforeFunc,
+    nowBias: 0,
+    loopBias: 0,
+    repeat: 1,
+    isAsync,
+  })
 }
 
 // This needs to be a different function from the `noop` used during bias

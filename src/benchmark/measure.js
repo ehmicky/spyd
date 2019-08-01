@@ -2,8 +2,9 @@ import { now } from '../now.js'
 
 import { getDuration } from './duration.js'
 
-// Main measuring code. If `repeat` is specified, we perform an arithmetic mean.
-export const measure = async function(
+// Main measuring code.
+// If `repeat` is specified, we loop and perform an arithmetic mean.
+export const measure = async function({
   main,
   before,
   after,
@@ -11,7 +12,7 @@ export const measure = async function(
   loopBias,
   repeat,
   isAsync,
-) {
+}) {
   // When calculating `nowBias`
   if (main === undefined) {
     return -now() + now()

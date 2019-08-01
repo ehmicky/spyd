@@ -54,7 +54,7 @@ const benchmarkIteration = async function({
 }) {
   const repeat = getRepeat({ main, state, minTime, loopBias })
 
-  const time = await measure(
+  const time = await measure({
     main,
     before,
     after,
@@ -62,7 +62,7 @@ const benchmarkIteration = async function({
     loopBias,
     repeat,
     isAsync,
-  )
+  })
 
   const stateA = updateState(state, time, repeat)
   return stateA

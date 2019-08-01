@@ -1,5 +1,6 @@
 import { sortNumbers } from '../utils.js'
 
+// Transform raw results into a result object that can be used by parent
 export const normalizeResult = function(times, count) {
   sortNumbers(times)
 
