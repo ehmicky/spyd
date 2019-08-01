@@ -23,6 +23,11 @@ const reduceCount = function(totalCount, { count }) {
   return totalCount + count
 }
 
+// Note that when `repeat > 1`, the distribution of the measured function will
+// be modified by the looping process and transformed to a bell shape, even if
+// if was not one. This means `percentiles`, `histogram`, `variance` and
+// `deviation` will have a different meaning: they visualize the measurements of
+// the function not function itself).
 // eslint-disable-next-line max-statements
 const computeStats = function(times, count, processes) {
   const loops = times.length
@@ -33,7 +38,7 @@ const computeStats = function(times, count, processes) {
 
   const median = getMedian(times)
   const percentiles = getPercentiles(times)
-  const histogram = getHistogram(times)
+  const histogram = getHistogram(times, HISTOGRAM_SIZE)
 
   const mean = getMean(times)
   const variance = getVariance(times, mean)
@@ -54,3 +59,6 @@ const computeStats = function(times, count, processes) {
     percentiles,
   }
 }
+
+// Choose to be detailed when displayed on a normal computer screen size
+const HISTOGRAM_SIZE = 1e3

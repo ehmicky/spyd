@@ -1,8 +1,6 @@
-// Note that when `repeat > 1`, the distribution of the measured function will
-// be modified by the looping process and transformed to a bell shape, even if
-// if was not one. This means `percentiles`, `histogram`, `variance` and
-// `deviation` will have a different meaning: they visualize the measurements of
-// the function not function itself).
+// Retrieve percentiles of an array of floats.
+// Array must be sorted.
+// Percentiles are `undefined` when array is empty.
 export const getPercentiles = function(array) {
   // eslint-disable-next-line no-magic-numbers
   return getQuantiles(array, 1e2)
