@@ -1,5 +1,6 @@
 import { loadTaskFile } from './load.js'
 
+// Retrieve a specific task in the task file
 export const getTask = async function(taskPath, taskId, parameter) {
   const tasks = await loadTaskFile(taskPath)
   const { main, before, after, parameters } = tasks.find(

@@ -77,6 +77,7 @@ const runPool = async function({
   return results
 }
 
+// Convert results to `benchmark` object passed to reporters
 const getBenchmark = function({ results, parameter, title }) {
   const stats = getStats(results)
   return { task: title, parameter, stats }
