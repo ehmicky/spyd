@@ -8,7 +8,7 @@ import { measure } from './measure.js'
 export const benchmark = async function({ main, before, after, duration }) {
   const isAsync = isAsyncFunc(main)
 
-  initialMeasure(isAsync, before)
+  await initialMeasure(isAsync, before)
 
   const { nowBias, loopBias, minTime, mainDuration } = await getBiases({
     duration,
@@ -35,9 +35,9 @@ export const benchmark = async function({ main, before, after, duration }) {
 // We fix this by doing a cold start using an empty function.
 // The `before()` and `isAsync` parameters need to match what is used during
 // the bias calculation.
-const initialMeasure = function(isAsync, before) {
+const initialMeasure = async function(isAsync, before) {
   const beforeFunc = before === undefined ? undefined : noop
-  measure({
+  await measure({
     main: noop,
     before: beforeFunc,
     nowBias: 0,
