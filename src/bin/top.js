@@ -41,6 +41,10 @@ Default: 10`,
     describe: `Module to report benchmark results.
 Built-in reporters: silent`,
   },
+  report: {
+    describe: `Options passed to specific reporters.
+For example --report.json.* options would be passed to the json reporter.`,
+  },
   require: {
     alias: 'r',
     string: true,

@@ -1,13 +1,15 @@
 import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
 
+import { REPORTERS } from '../report/reporters/main.js'
+
 // Normalize options shape and do custom validation
 export const normalizeOpts = function(opts) {
   const optsA = normalizeDuration(opts)
   const optsB = normalizeCwd(optsA)
   const optsC = normalizeRequire(optsB)
-  validateReporters(optsC)
-  return optsC
+  const optsD = normalizeReporters(optsC)
+  return optsD
 }
 
 // Normalize and validate 'duration' option
@@ -54,12 +56,31 @@ const resolveRequire = function(requiredModule, cwd) {
 }
 
 // Validate 'reporters' option
-const validateReporters = function({ reporters }) {
+const normalizeReporters = function({
+  reporters,
+  report: reportOpts,
+  ...opts
+}) {
   reporters.forEach(validateReporter)
+  Object.keys(reportOpts).forEach(reporterName =>
+    validateReportOpt(reporterName, reporters),
+  )
+  return { ...opts, reporters, reportOpts }
 }
 
 const validateReporter = function(reporter) {
   if (typeof reporter !== 'string') {
     throw new TypeError(`'reporter' must be a string: ${reporter}`)
+  }
+}
+
+const validateReportOpt = function(reporterName, reporters) {
+  if (
+    !reporters.includes(reporterName) &&
+    REPORTERS[reporterName] === undefined
+  ) {
+    throw new TypeError(
+      `Invalid reporter '${reporterName}' in 'report.${reporterName}' option`,
+    )
   }
 }

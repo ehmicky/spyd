@@ -11,17 +11,24 @@ import { normalizeOpts } from './normalize.js'
 export const getOpts = async function(opts = {}) {
   const optsA = omitBy(opts, isUndefined)
 
-  // We need to do this twice because configuration loading needs to have
-  // `cwd` and `config` type checked, but it also adds new options.
-  validate(optsA, { exampleConfig: EXAMPLE_OPTS })
+  validateOpts(optsA)
 
   const optsB = await getConfig({ opts: optsA })
 
-  validate(optsB, { exampleConfig: EXAMPLE_OPTS })
+  validateOpts(optsB)
   const optsC = { ...DEFAULT_OPTS, ...optsB }
 
   const optsD = normalizeOpts(optsC)
   return optsD
+}
+
+// We need to do this twice because configuration loading needs to have
+// `cwd` and `config` type checked, but it also adds new options.
+const validateOpts = function(opts) {
+  validate(opts, {
+    exampleConfig: EXAMPLE_OPTS,
+    recursiveBlacklist: ['report'],
+  })
 }
 
 const isUndefined = function(value) {
@@ -33,6 +40,7 @@ const DEFAULT_OPTS = {
   duration: 10,
   require: [],
   reporters: [],
+  report: {},
 }
 
 export const EXAMPLE_OPTS = {
