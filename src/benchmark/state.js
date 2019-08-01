@@ -1,7 +1,9 @@
-// Update iteration state
-export const updateState = function(state, repeat) {
+// Update some state on each iteration
+export const updateState = function(state, time, repeat) {
   resetState(state, repeat)
 
+  // eslint-disable-next-line fp/no-mutating-methods
+  state.times.push(time)
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
   state.count += repeat
   // eslint-disable-next-line no-param-reassign, fp/no-mutation

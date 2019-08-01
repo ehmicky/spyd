@@ -4,8 +4,9 @@ import { sortNumbers } from '../utils.js'
 // Estimate how many times to repeat the benchmarking loop.
 // This is performed continuously based on the previous benchmarked times
 // because fast functions get optimized by JavaScript engines after they are
-// run several times in a row ("hot paths"). Those number of times are several
-// specific thresholds. When this happens, `repeat` needs to be computed again.
+// run several times in a row ("hot paths").
+// JavaScript engines do this after specific number of iterations / thresholds.
+// When this happens, `repeat` needs to be computed again.
 export const getRepeat = function({
   main,
   state: { times, repeat, iterIndex },
@@ -23,11 +24,11 @@ export const getRepeat = function({
     return repeat
   }
 
-  return computeRepeat(repeat, times, minTime, loopBias)
+  return computeRepeat({ repeat, times, minTime, loopBias })
 }
 
 // `repeat` is adjusted so that `measure()` time === `minTime`
-const computeRepeat = function(repeat, times, minTime, loopBias) {
+const computeRepeat = function({ repeat, times, minTime, loopBias }) {
   sortNumbers(times)
   const median = getMedian(times)
 
