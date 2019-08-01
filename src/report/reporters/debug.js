@@ -1,5 +1,5 @@
 // Debugging reporter only meant for development purpose
-export const debug = function(benchmarks, opts) {
+export const debug = function(benchmarks) {
   return benchmarks.map(serializeBenchmark).join('\n')
 }
 
