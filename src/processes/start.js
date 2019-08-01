@@ -10,9 +10,14 @@ const CHILD_MAIN = `${__dirname}/child.js`
 // This includes loading the task file.
 // We do it in-between benchmarks because it would slow them down and add
 // variance.
-export const startChildren = async function({ taskPath, taskId, parameter }) {
+export const startChildren = async function({
+  taskPath,
+  taskId,
+  parameter,
+  requireOpt,
+}) {
   const promises = Array.from({ length: POOL_SIZE }, () =>
-    startChild({ taskPath, taskId, parameter }),
+    startChild({ taskPath, taskId, parameter, requireOpt }),
   )
   const children = await Promise.all(promises)
   return children
@@ -21,7 +26,7 @@ export const startChildren = async function({ taskPath, taskId, parameter }) {
 // Same as `PROCESS_COUNT`
 const POOL_SIZE = 2e1
 
-const startChild = async function({ taskPath, taskId, parameter }) {
+const startChild = async function({ taskPath, taskId, parameter, requireOpt }) {
   const child = spawn('node', [CHILD_MAIN], {
     stdio: ['ignore', 'ignore', 'pipe', 'ipc'],
   })
@@ -32,7 +37,12 @@ const startChild = async function({ taskPath, taskId, parameter }) {
   await getChildMessage(child, 'ready')
 
   // Communicate to the child process which task to load
-  await sendChildMessage(child, 'load', { taskPath, taskId, parameter })
+  await sendChildMessage(child, 'load', {
+    taskPath,
+    taskId,
+    parameter,
+    requireOpt,
+  })
 
   return child
 }

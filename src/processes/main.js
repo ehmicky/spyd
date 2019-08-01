@@ -14,6 +14,7 @@ export const runProcesses = async function({
   title,
   parameter,
   duration,
+  requireOpt,
 }) {
   const runEnd = now() + duration
   // How long to run each child process
@@ -25,6 +26,7 @@ export const runProcesses = async function({
     parameter,
     processDuration,
     runEnd,
+    requireOpt,
   })
 
   const benchmark = getBenchmark({ results, parameter, title })
@@ -45,6 +47,7 @@ const runPools = async function({
   parameter,
   processDuration,
   runEnd,
+  requireOpt,
 }) {
   const results = []
 
@@ -57,6 +60,7 @@ const runPools = async function({
       parameter,
       processDuration,
       runEnd,
+      requireOpt,
     })
     // eslint-disable-next-line fp/no-mutating-methods
     results.push(...poolResults)
@@ -71,9 +75,15 @@ const runPool = async function({
   parameter,
   processDuration,
   runEnd,
+  requireOpt,
 }) {
   try {
-    const children = await startChildren({ taskPath, taskId, parameter })
+    const children = await startChildren({
+      taskPath,
+      taskId,
+      parameter,
+      requireOpt,
+    })
     const results = await runChildren({ children, processDuration, runEnd })
     return results
   } catch (error) {

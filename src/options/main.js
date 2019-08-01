@@ -5,6 +5,7 @@ import { validate } from 'jest-validate'
 import { omitBy } from '../utils.js'
 
 import { getConfig } from './config.js'
+import { normalizeOpts } from './normalize.js'
 
 // Retrieve options/configuration
 export const getOpts = async function(opts = {}) {
@@ -16,9 +17,10 @@ export const getOpts = async function(opts = {}) {
 
   const optsB = await getConfig({ opts: optsA })
 
-  const optsC = normalizeOpts(optsB)
+  validate(optsB, { exampleConfig: EXAMPLE_OPTS })
+  const optsC = { ...DEFAULT_OPTS, ...optsB }
 
-  const optsD = normalizeDuration(optsC)
+  const optsD = normalizeOpts(optsC)
   return optsD
 }
 
@@ -26,32 +28,15 @@ const isUndefined = function(value) {
   return value === undefined
 }
 
-const normalizeOpts = function(opts) {
-  validate(opts, { exampleConfig: EXAMPLE_OPTS })
-
-  const optsA = { ...DEFAULT_OPTS, ...opts }
-  return optsA
-}
-
 const DEFAULT_OPTS = {
   cwd: getCwd(),
   duration: 10,
+  require: [],
 }
 
 export const EXAMPLE_OPTS = {
   ...DEFAULT_OPTS,
   config: 'spyd.json',
   file: 'benchmarks.js',
+  require: ['ts-node/register'],
 }
-
-// Duration is specified in seconds by the user but we convert it to nanoseconds
-const normalizeDuration = function({ duration, ...opts }) {
-  if (!Number.isFinite(duration) || duration <= 0) {
-    throw new TypeError(`duration must be a positive number: ${duration}`)
-  }
-
-  const durationA = duration * SECONDS_TO_NANOSECONDS
-  return { ...opts, duration: durationA }
-}
-
-const SECONDS_TO_NANOSECONDS = 1e9

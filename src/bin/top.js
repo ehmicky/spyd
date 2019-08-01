@@ -33,6 +33,13 @@ Used to find the default configuration and tasks files.`,
     describe: `How many seconds to benchmark each task.
 Default: 10`,
   },
+  require: {
+    alias: 'r',
+    string: true,
+    array: true,
+    requiresArg: true,
+    describe: 'Module to load before the task file.',
+  },
 }
 
 const USAGE = `$0 [OPTIONS] [FILE]

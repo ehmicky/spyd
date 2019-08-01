@@ -1,8 +1,10 @@
+import { useRequireOpt } from './require_opt.js'
 import { validateTasks } from './validate.js'
 import { normalizeTasks } from './normalize.js'
 
 // Load the task file using its absolute path
-export const loadTaskFile = async function(taskPath) {
+export const loadTaskFile = async function({ taskPath, requireOpt }) {
+  useRequireOpt(requireOpt, taskPath)
   const tasks = await loadFile(taskPath)
   validateTasks(tasks, taskPath)
   const tasksA = normalizeTasks(tasks)
@@ -16,7 +18,7 @@ const loadFile = function(taskPath) {
     return require(taskPath)
   } catch (error) {
     throw new Error(
-      `Could not load the task file '${taskPath}':\n${error.stack}`,
+      `Could not load the task file '${taskPath}'\n\n${error.stack}`,
     )
   }
 }
