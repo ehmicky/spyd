@@ -72,9 +72,23 @@ const runPool = async function({
   processDuration,
   runEnd,
 }) {
-  const children = await startChildren({ taskPath, taskId, parameter })
-  const results = await runChildren({ children, processDuration, runEnd })
-  return results
+  try {
+    const children = await startChildren({ taskPath, taskId, parameter })
+    const results = await runChildren({ children, processDuration, runEnd })
+    return results
+  } catch (error) {
+    addTaskInfo({ error, taskId, parameter })
+    throw error
+  }
+}
+
+// When a task errors, communicate to user which one failed
+const addTaskInfo = function({ error, taskId, parameter }) {
+  const parameterStr =
+    parameter === undefined ? '' : ` (parameter '${parameter}')`
+  const message = error instanceof Error ? error.message : String(error)
+  // eslint-disable-next-line no-param-reassign, fp/no-mutation
+  error.message = `Task '${taskId}'${parameterStr} errored:\n\n${message}`
 }
 
 // Convert results to `benchmark` object passed to reporters
