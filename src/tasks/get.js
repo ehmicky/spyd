@@ -1,11 +1,13 @@
 import { loadTaskFile } from './load.js'
 
 // Retrieve a specific task in the task file
-export const getTask = async function(taskPath, taskId, parameter) {
+export const getTask = async function({ taskPath, taskId, parameter }) {
   const tasks = await loadTaskFile(taskPath)
+
   const { main, before, after, parameters } = tasks.find(
     task => task.taskId === taskId,
   )
+
   const [mainA, beforeA, afterA] = bindParameter(parameters, parameter, [
     main,
     before,
@@ -14,6 +16,7 @@ export const getTask = async function(taskPath, taskId, parameter) {
   return { main: mainA, before: beforeA, after: afterA }
 }
 
+// Bind task `parameter` (if present) to `main()`, `before()` and `after()`
 const bindParameter = function(parameters, parameter, funcs) {
   if (parameter === undefined) {
     return funcs

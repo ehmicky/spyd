@@ -12,11 +12,15 @@ const run = async function() {
 
     const { taskPath, taskId, parameter } = await getParentMessage('load')
 
-    const { main, before, after } = await getTask(taskPath, taskId, parameter)
+    const { main, before, after } = await getTask({
+      taskPath,
+      taskId,
+      parameter,
+    })
 
     const duration = await getParentMessage('run')
 
-    const result = await benchmark(main, before, after, duration)
+    const result = await benchmark({ main, before, after, duration })
     await sendParentMessage('result', result)
   } catch (error) {
     // This will be printed to stderr, which means parent will print it

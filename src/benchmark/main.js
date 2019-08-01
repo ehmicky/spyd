@@ -5,7 +5,7 @@ import { measure } from './measure.js'
 
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
-export const benchmark = async function(main, before, after, duration) {
+export const benchmark = async function({ main, before, after, duration }) {
   const isAsync = isAsyncFunc(main)
 
   initialMeasure(isAsync, before)
