@@ -1,3 +1,4 @@
+// Report benchmark results
 export const report = function(benchmarks) {
   const output = benchmarks.map(reportBenchmark).join('\n')
   // eslint-disable-next-line no-console, no-restricted-globals
