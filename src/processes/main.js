@@ -51,7 +51,7 @@ const runPools = async function({
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    await runPool({
+    const poolResults = await runPool({
       taskPath,
       taskId,
       parameter,
@@ -59,6 +59,8 @@ const runPools = async function({
       runEnd,
       results,
     })
+    // eslint-disable-next-line fp/no-mutating-methods
+    results.push(...poolResults)
   } while (!shouldStop(runEnd, results))
 
   return results
@@ -70,11 +72,11 @@ const runPool = async function({
   parameter,
   processDuration,
   runEnd,
-  results,
 }) {
   const children = await startChildren({ taskPath, taskId, parameter })
 
-  await runChildren(children, processDuration, runEnd, results)
+  const results = await runChildren(children, processDuration, runEnd)
+  return results
 }
 
 const getBenchmark = function({ results, parameter, title }) {
