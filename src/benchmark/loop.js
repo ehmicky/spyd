@@ -20,12 +20,13 @@ export const benchmarkLoop = async function({
   minTime,
 }) {
   const runEnd = now() + duration
-  const state = { times: [], repeat: 1, count: 0, iterIndex: 0 }
+  // eslint-disable-next-line fp/no-let
+  let state = { times: [], repeat: 1, count: 0, iterIndex: 0 }
 
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line no-await-in-loop
-    await benchmarkIteration({
+    // eslint-disable-next-line no-await-in-loop, fp/no-mutation
+    state = await benchmarkIteration({
       main,
       before,
       after,
@@ -63,7 +64,8 @@ const benchmarkIteration = async function({
     isAsync,
   )
 
-  updateState(state, time, repeat)
+  const stateA = updateState(state, time, repeat)
+  return stateA
 }
 
 // The benchmark stops if we reach the end of the `duration` or run more than
