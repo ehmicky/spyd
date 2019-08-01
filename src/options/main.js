@@ -32,6 +32,7 @@ const DEFAULT_OPTS = {
   cwd: getCwd(),
   duration: 10,
   require: [],
+  reporters: [],
 }
 
 export const EXAMPLE_OPTS = {

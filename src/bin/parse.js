@@ -3,10 +3,11 @@ import { omitBy } from '../utils.js'
 export const parseOpts = function(yargs) {
   const {
     _: [file],
+    reporter: reporters,
     ...opts
   } = yargs.parse()
 
-  const optsA = { ...opts, file }
+  const optsA = { ...opts, file, reporters }
   const optsB = omitBy(optsA, isInternalKey)
   return optsB
 }

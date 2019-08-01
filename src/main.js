@@ -13,7 +13,7 @@ const spyd = async function(opts) {
 
   const benchmarks = await pMapSeries(iterations, runProcesses)
 
-  report(benchmarks)
+  await report(benchmarks, optsA)
 
   return benchmarks
 }

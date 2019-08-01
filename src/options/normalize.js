@@ -6,6 +6,7 @@ export const normalizeOpts = function(opts) {
   const optsA = normalizeDuration(opts)
   const optsB = normalizeCwd(optsA)
   const optsC = normalizeRequire(optsB)
+  validateReporters(optsC)
   return optsC
 }
 
@@ -50,4 +51,15 @@ const resolveRequire = function(requiredModule, cwd) {
   }
 
   return resolve(cwd, requiredModule)
+}
+
+// Validate 'reporters' option
+const validateReporters = function({ reporters }) {
+  reporters.forEach(validateReporter)
+}
+
+const validateReporter = function(reporter) {
+  if (typeof reporter !== 'string') {
+    throw new TypeError(`'reporter' must be a string: ${reporter}`)
+  }
 }
