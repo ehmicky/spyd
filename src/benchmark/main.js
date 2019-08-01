@@ -10,29 +10,29 @@ export const benchmark = async function({ main, before, after, duration }) {
 
   initialMeasure(isAsync, before)
 
-  const { nowBias, loopBias, minTime, mainDuration } = await getBiases(
+  const { nowBias, loopBias, minTime, mainDuration } = await getBiases({
     duration,
     isAsync,
     before,
-  )
+  })
 
-  const result = await benchmarkLoop(
+  const result = await benchmarkLoop({
     main,
     before,
     after,
-    mainDuration,
+    duration: mainDuration,
     isAsync,
     nowBias,
     loopBias,
     minTime,
-  )
+  })
   return result
 }
 
 // For some reasons I ignore (likely engine optimizations), when `measure()`
 // is benchmarking its first function, it's running much faster than for the
 // next functions passed to it.
-// We fix this by doing a cold start using an empty function
+// We fix this by doing a cold start using an empty function.
 // The `before()` and `isAsync` parameters need to match what is used during
 // the bias calculation.
 const initialMeasure = function(isAsync, before) {
@@ -41,6 +41,6 @@ const initialMeasure = function(isAsync, before) {
 }
 
 // This needs to be a different function from the `noop` used during bias
-// calculation
+// calculation.
 // eslint-disable-next-line no-empty-function
 const noop = function() {}

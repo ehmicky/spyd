@@ -6,13 +6,14 @@ import { benchmarkLoop } from './loop.js'
 // The following biases are introduced by the benchmarking code itself:
 //   - `nowBias` is the time taken to retrieve the current timestamp
 //   - `loopBias` is the time taken to iterate in a loop, when running a task
-//     repeatedly, excluding the task itself.
+//     repeatedly, excluding the task itself. This is slower when the loop logic
+//     is async.
 // We remove those two biases from the calculated times.
 // This function calculates those biases by benchmarking them.
 // On top of this, the more the benchmarking code itself is run, the faster it
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
-export const getBiases = async function(duration, isAsync, before) {
+export const getBiases = async function({ duration, isAsync, before }) {
   const biasDuration = duration * BIAS_DURATION_RATIO
   const mainDuration = duration - biasDuration * 2
 
@@ -34,14 +35,13 @@ export const getBiases = async function(duration, isAsync, before) {
 // So we dedicate a significant part of the total benchmark to them.
 const BIAS_DURATION_RATIO = 0.1
 
+// `nowBias` is calculated by benchmarking `undefined`, which translated to
+// simply calling `now()` twice in a row.
 const getNowBias = async function(biasDuration) {
-  const { times } = await benchmarkLoop(
-    undefined,
-    undefined,
-    undefined,
-    biasDuration,
-    false,
-  )
+  const { times } = await benchmarkLoop({
+    duration: biasDuration,
+    isAsync: false,
+  })
   const nowBias = getMedian(times)
   return nowBias
 }
@@ -77,16 +77,15 @@ const getLoopBias = async function(
   minTime,
 ) {
   const beforeFunc = before === undefined ? undefined : noop
-  const { times } = await benchmarkLoop(
-    noop,
-    beforeFunc,
-    undefined,
-    biasDuration,
+  const { times } = await benchmarkLoop({
+    main: noop,
+    before: beforeFunc,
+    duration: biasDuration,
     isAsync,
     nowBias,
-    0,
+    loopBias: 0,
     minTime,
-  )
+  })
   const loopBias = getMedian(times)
   return loopBias
 }

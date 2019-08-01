@@ -8,7 +8,7 @@ import { updateState } from './state.js'
 // We perform benchmarking iteratively in order to stop benchmarking exactly
 // when the `duration` or `MAX_LOOPS` has been reached.
 // We also adjust some parameters as we take more measurements (e.g. `repeat`).
-export const benchmarkLoop = async function(
+export const benchmarkLoop = async function({
   main,
   before,
   after,
@@ -17,7 +17,7 @@ export const benchmarkLoop = async function(
   nowBias,
   loopBias,
   minTime,
-) {
+}) {
   const runEnd = now() + duration
   const state = { times: [], repeat: 1, count: 0, iterIndex: 0 }
 
