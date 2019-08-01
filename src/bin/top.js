@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import yargs from 'yargs'
 
 export const defineCli = function() {
@@ -107,3 +108,4 @@ Task properties:
 
 const MAIN_EXAMPLE = '$0'
 const LONG_EXAMPLE = '$0 -d 60'
+/* eslint-enable max-lines */
