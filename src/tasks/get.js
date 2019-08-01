@@ -31,5 +31,6 @@ const bindFunction = function(func, parameterValue) {
     return
   }
 
-  return func.bind(null, parameterValue)
+  // `func.bind()` is much slower, which shows with very functions
+  return () => func(parameterValue)
 }
