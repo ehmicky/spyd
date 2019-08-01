@@ -4,11 +4,11 @@
 // several things depending on the platform.
 // Designed to run very fast.
 // Comparison between methods:
-//   - `Date()`:
+//   - `Date.now()`:
 //      - works in all environments
 //      - duration since Epoch
 //      - integers (milliseconds)
-//      - slowest. But faster than `new Date().getTime()` and
+//      - fastest. Also faster than `new Date().getTime()` and
 //        `Number(new Date())`
 //      - less accurate. Can be skewed by OS clock.
 //      - less precise: only milliseconds precise. The other methods are as
@@ -49,15 +49,15 @@ const hrtime = function() {
 
 const performanceNow = function() {
   // eslint-disable-next-line no-undef
-  return Math.round(performance.now() * MILLISECONDS_TO_NANOSECS)
+  return Math.round(performance.now() * MILLISECS_TO_NANOSECS)
 }
 
 const dateNow = function() {
-  return Date.now() * MILLISECONDS_TO_NANOSECS
+  return Date.now() * MILLISECS_TO_NANOSECS
 }
 
 const SECS_TO_NANOSECS = 1e9
-const MILLISECONDS_TO_NANOSECS = 1e6
+const MILLISECS_TO_NANOSECS = 1e6
 
 const { name, now } = getExports()
 export { name, now }
