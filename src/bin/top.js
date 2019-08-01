@@ -33,7 +33,7 @@ Used to find the default configuration and tasks files.`,
     describe: `How many seconds to benchmark each task.
 Default: 10`,
   },
-  reporter: {
+  reporters: {
     alias: 'R',
     string: true,
     array: true,

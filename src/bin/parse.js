@@ -3,7 +3,7 @@ import { omitBy } from '../utils.js'
 export const parseOpts = function(yargs) {
   const {
     _: [file],
-    reporter: reporters,
+    reporters,
     ...opts
   } = yargs.parse()
 
