@@ -6,31 +6,31 @@ import { now } from '../now.js'
 // For the same reasons, we have different functions depending on whether
 // `beforeArgs` is used because passing an argument to `main()` is slightly
 // slower.
-export const getDuration = function(main, repeat, isAsync, beforeArgs) {
+export const getDuration = function({ main, repeat, isAsync, beforeArgs }) {
   if (isAsync) {
-    return getDurationAsync(main, repeat, beforeArgs)
+    return getDurationAsync({ main, repeat, beforeArgs })
   }
 
-  return getDurationSync(main, repeat, beforeArgs)
+  return getDurationSync({ main, repeat, beforeArgs })
 }
 
-const getDurationAsync = function(main, repeat, beforeArgs) {
+const getDurationAsync = function({ main, repeat, beforeArgs }) {
   if (beforeArgs !== undefined) {
-    return getDurationArgsAsync(main, repeat, beforeArgs)
+    return getDurationArgsAsync({ main, repeat, beforeArgs })
   }
 
-  return getDurationNoArgsAsync(main, repeat)
+  return getDurationNoArgsAsync({ main, repeat })
 }
 
-const getDurationSync = function(main, repeat, beforeArgs) {
+const getDurationSync = function({ main, repeat, beforeArgs }) {
   if (beforeArgs !== undefined) {
-    return getDurationArgsSync(main, repeat, beforeArgs)
+    return getDurationArgsSync({ main, repeat, beforeArgs })
   }
 
-  return getDurationNoArgsSync(main, repeat)
+  return getDurationNoArgsSync({ main, repeat })
 }
 
-const getDurationArgsAsync = async function(main, repeat, beforeArgs) {
+const getDurationArgsAsync = async function({ main, repeat, beforeArgs }) {
   const start = now()
 
   // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
@@ -42,7 +42,7 @@ const getDurationArgsAsync = async function(main, repeat, beforeArgs) {
   return now() - start
 }
 
-const getDurationNoArgsAsync = async function(main, repeat) {
+const getDurationNoArgsAsync = async function({ main, repeat }) {
   const start = now()
 
   // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
@@ -54,7 +54,7 @@ const getDurationNoArgsAsync = async function(main, repeat) {
   return now() - start
 }
 
-const getDurationArgsSync = function(main, repeat, beforeArgs) {
+const getDurationArgsSync = function({ main, repeat, beforeArgs }) {
   const start = now()
 
   // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
@@ -65,7 +65,7 @@ const getDurationArgsSync = function(main, repeat, beforeArgs) {
   return now() - start
 }
 
-const getDurationNoArgsSync = function(main, repeat) {
+const getDurationNoArgsSync = function({ main, repeat }) {
   const start = now()
 
   // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops

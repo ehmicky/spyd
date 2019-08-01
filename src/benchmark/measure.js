@@ -20,7 +20,7 @@ export const measure = async function({
 
   const beforeArgs = await performBefore(before, repeat)
 
-  const duration = await getDuration(main, repeat, isAsync, beforeArgs)
+  const duration = await getDuration({ main, repeat, isAsync, beforeArgs })
 
   await performAfter(after, repeat, beforeArgs)
 
