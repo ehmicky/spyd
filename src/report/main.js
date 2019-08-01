@@ -34,7 +34,8 @@ const useReporter = async function({
 
   const content = await reporter(benchmarks, reportOpt)
 
-  await print({ content, reportOpt, output })
+  const contentA = addFinalNewline(content)
+  await print({ content: contentA, reportOpt, output })
 }
 
 // Retrieve reporter's main function
@@ -62,4 +63,12 @@ const getReportOpt = function(reporterName, reportOpt) {
   }
 
   return reporterOpt
+}
+
+const addFinalNewline = function(content) {
+  if (typeof content !== 'string' || content.endsWith('\n')) {
+    return content
+  }
+
+  return `${content}\n`
 }

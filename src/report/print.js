@@ -10,8 +10,6 @@ export const print = async function({ content, reportOpt, output }) {
     return
   }
 
-  const contentA = addFinalNewline(content)
-
   const outputA = getOutput(reportOpt, output)
 
   if (outputA === '') {
@@ -19,23 +17,15 @@ export const print = async function({ content, reportOpt, output }) {
   }
 
   if (outputA === '-') {
-    stdout.write(contentA)
+    stdout.write(content)
     return
   }
 
-  await printToFile(outputA, contentA)
+  await printToFile(outputA, content)
 }
 
 const hasContent = function(content) {
   return typeof content === 'string' && content.trim() !== ''
-}
-
-const addFinalNewline = function(content) {
-  if (content.endsWith('\n')) {
-    return content
-  }
-
-  return `${content}\n`
 }
 
 const getOutput = function(reportOpt, output) {
