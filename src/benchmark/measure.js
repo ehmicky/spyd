@@ -30,16 +30,20 @@ export const measure = async function({
   return time
 }
 
-const performBefore = function(before, repeat) {
+// Task `before()`. Performed outside measurements. Can be async.
+// Its return value is passed to `main()` and `after()`.
+const performBefore = async function(before, repeat) {
   if (before === undefined) {
     return
   }
 
-  const beforeArgs = Array.from({ length: repeat }, () => before())
-  return Promise.all(beforeArgs)
+  const promises = Array.from({ length: repeat }, () => before())
+  const beforeArgs = await Promise.all(promises)
+  return beforeArgs
 }
 
-const performAfter = function(after, repeat, beforeArgs = []) {
+// Task `after()`. Performed outside measurements. Can be async.
+const performAfter = async function(after, repeat, beforeArgs = []) {
   if (after === undefined) {
     return
   }
@@ -47,5 +51,5 @@ const performAfter = function(after, repeat, beforeArgs = []) {
   const promises = Array.from({ length: repeat }, (value, index) =>
     after(beforeArgs[index]),
   )
-  return Promise.all(promises)
+  await Promise.all(promises)
 }
