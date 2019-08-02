@@ -35,7 +35,7 @@ export const runProcesses = async function({
     requireOpt,
   })
 
-  const taskData = getTaskData({ results, name, title, parameter })
+  const taskData = getTaskData({ results, taskId, name, title, parameter })
   return taskData
 }
 
@@ -108,7 +108,7 @@ const addTaskInfo = function({ error, taskId, parameter }) {
 }
 
 // Convert results to `taskData` object passed to reporters
-const getTaskData = function({ results, name, title, parameter }) {
+const getTaskData = function({ results, taskId, name, title, parameter }) {
   const stats = getStats(results)
-  return { name, title, parameter, stats }
+  return { taskId, name, title, parameter, stats }
 }

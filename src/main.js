@@ -4,6 +4,7 @@ import { getOpts } from './options/main.js'
 import { startProgress, stopProgress } from './progress/main.js'
 import { getIterations } from './tasks/iterations.js'
 import { runProcesses } from './processes/main.js'
+import { addBenchmarkInfo } from './info/main.js'
 import { report } from './report/main.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
@@ -23,11 +24,13 @@ const spyd = async function(opts) {
     opts: optsA,
   })
 
+  const benchmarkA = addBenchmarkInfo(benchmark)
+
   await stopProgress(progressInfo)
 
-  await report(benchmark, optsA)
+  await report(benchmarkA, optsA)
 
-  return benchmark
+  return benchmarkA
 }
 
 const getBenchmark = async function({ iterations, progressState, opts }) {
