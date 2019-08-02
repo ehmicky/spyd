@@ -1,4 +1,5 @@
 import { sortBy } from '../utils/sort.js'
+import { addPrintedStats } from '../stats/printed.js'
 
 import { getTasks, getParameters } from './group.js'
 
@@ -15,7 +16,9 @@ export const addBenchmarkInfo = function({ benchmark: { iterations }, opts }) {
   // task
   sortBy(iterationsA, ['task', 'stats.median'])
 
-  return { opts, tasks, parameters, iterations: iterationsA }
+  const iterationsB = addPrintedStats(iterationsA)
+
+  return { opts, tasks, parameters, iterations: iterationsB }
 }
 
 const addIterationInfo = function({

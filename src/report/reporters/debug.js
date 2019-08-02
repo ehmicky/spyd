@@ -3,13 +3,13 @@ export const debug = function({ iterations }) {
   return iterations.map(serializeIteration).join('\n')
 }
 
-const serializeIteration = function({ name, stats }) {
-  const statsStr = serializeStats(stats)
+const serializeIteration = function({ name, printedStats }) {
+  const statsStr = serializeStats(printedStats)
   return `${name} | ${statsStr}`
 }
 
-export const serializeStats = function(stats) {
-  return Object.entries(stats)
+export const serializeStats = function(printedStats) {
+  return Object.entries(printedStats)
     .filter(shouldPrintStat)
     .map(serializeStat)
     .join(' | ')
@@ -21,26 +21,6 @@ const shouldPrintStat = function([name]) {
 
 const NON_PRINTED_STATS = ['percentiles', 'histogram']
 
-const serializeStat = function([name, number]) {
-  const string = serializeNumber(number)
-  const stringA = string.padStart(LENGTH + EXPONENTS_SIZE)
-  return `${name} ${stringA}`
+const serializeStat = function([name, string]) {
+  return `${name} ${string}`
 }
-
-const serializeNumber = function(number) {
-  if (number > MIN_EXPONENTIAL) {
-    return number.toExponential(DECIMALS)
-  }
-
-  if (!Number.isInteger(number)) {
-    return number.toFixed(DECIMALS)
-  }
-
-  return String(number)
-}
-
-const DECIMALS = 3
-const LENGTH = 4
-// eslint-disable-next-line no-magic-numbers
-const MIN_EXPONENTIAL = 10 ** LENGTH
-const EXPONENTS_SIZE = 4
