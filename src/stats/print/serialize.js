@@ -3,36 +3,51 @@ import { STAT_TYPES } from './types.js'
 export const serializeStats = function({
   iteration,
   iteration: { stats },
-  units,
+  unit,
+  scale,
+  statDecimals,
 }) {
   const statsA = Object.entries(stats).map(([name, stat]) =>
-    serializeStat({ name, stat, units }),
+    serializeStat({ name, stat, unit, scale, statDecimals }),
   )
   const printedStats = Object.fromEntries(statsA)
   return { ...iteration, printedStats }
 }
 
-const serializeStat = function({ name, stat, units }) {
+const serializeStat = function({ name, stat, unit, scale, statDecimals }) {
   const type = STAT_TYPES[name]
-  const { unit, scale } = units[name]
-  const statA = SERIALIZE_STAT[type](stat, scale, unit)
+  const decimals = statDecimals[name]
+  const statA = SERIALIZE_STAT[type]({ stat, scale, unit, decimals })
   return [name, statA]
 }
 
-const serializeCount = function(stat) {
+const serializeCount = function({ stat }) {
   return String(stat)
 }
 
-const serializeSkip = function(stat) {
+const serializeSkip = function({ stat }) {
   return stat
 }
 
-const serializeScalar = function(stat, scale, unit) {
-  return `${Math.round(stat / scale)}${unit}`
+const serializeScalar = function({ stat, scale, unit, decimals }) {
+  const statA = stat / scale
+  const integer = Math.floor(statA)
+  const fraction = getFraction({ stat: statA, integer, decimals })
+  return `${integer}${fraction}${unit}`
 }
 
-const serializeArray = function(stat, scale, unit) {
-  return stat.map(integer => serializeScalar(integer, scale, unit))
+const getFraction = function({ stat, integer, decimals }) {
+  if (Number.isInteger(stat) || decimals === 0) {
+    return ''
+  }
+
+  return (stat - integer).toFixed(decimals).slice(1)
+}
+
+const serializeArray = function({ stat, scale, unit, decimals }) {
+  return stat.map(integer =>
+    serializeScalar({ integer, scale, unit, decimals }),
+  )
 }
 
 const SERIALIZE_STAT = {

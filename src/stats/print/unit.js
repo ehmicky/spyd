@@ -1,39 +1,26 @@
-import { STAT_TYPES } from './types.js'
-
-export const getUnits = function(iterations) {
-  const units = Object.entries(STAT_TYPES).map(([name, type]) =>
-    getUnit({ name, type, iterations }),
-  )
-  return Object.fromEntries(units)
-}
-
-const getUnit = function({ name, type, iterations }) {
-  if (type === 'count' || type === 'skip') {
-    return [name, {}]
-  }
-
-  const allStats = iterations.flatMap(({ stats }) => stats[name])
-  const { unit, scale } = findPreciseUnit(allStats)
-  return [name, { unit, scale }]
-}
-
-const findPreciseUnit = function(floats) {
-  const unit = findUnit(floats)
+// Use the same unit for all measures
+export const getUnit = function(iterations) {
+  const medians = iterations.flatMap(getMedianStat)
+  const unit = findUnit(medians)
   const scale = UNITS[unit]
   return { unit, scale }
 }
 
-const findUnit = function(floats) {
-  const floatsA = floats.filter(isNotZero)
+const getMedianStat = function({ stats: { median } }) {
+  return median
+}
 
-  if (floatsA.length === 0) {
+const findUnit = function(measures) {
+  const measuresA = measures.filter(isNotZero)
+
+  if (measuresA.length === 0) {
     return DEFAULT_UNIT
   }
 
-  const float = Math.min(...floatsA)
+  const min = Math.min(...measuresA)
 
-  const preciseUnit = Object.entries(UNITS).find(([, minUnit]) =>
-    isPreciseUnit(float, minUnit),
+  const preciseUnit = Object.entries(UNITS).find(
+    ([, minUnit]) => min >= minUnit,
   )
 
   if (preciseUnit === undefined) {
@@ -43,13 +30,8 @@ const findUnit = function(floats) {
   return preciseUnit[0]
 }
 
-const isNotZero = function(number) {
-  return number !== 0
-}
-
-const isPreciseUnit = function(float, minUnit) {
-  const minPrecision = minUnit * MIN_PRECISION
-  return float >= minPrecision
+const isNotZero = function(measure) {
+  return measure !== 0
 }
 
 /* eslint-disable id-length */
@@ -68,4 +50,3 @@ const UNITS = {
 
 const DEFAULT_UNIT = 'ns'
 const MIN_UNIT = 'fs'
-const MIN_PRECISION = 1e1
