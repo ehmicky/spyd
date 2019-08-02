@@ -13,12 +13,17 @@ export const runProcesses = async function({
   taskId,
   title,
   parameter,
+  index,
+  progressState,
   duration,
   requireOpt,
 }) {
   const runEnd = now() + duration
   // How long to run each child process
   const processDuration = duration / PROCESS_COUNT
+
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(progressState, { index, runEnd, title })
 
   const results = await runPools({
     taskPath,

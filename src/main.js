@@ -1,6 +1,7 @@
 import pMapSeries from 'p-map-series'
 
 import { getOpts } from './options/main.js'
+import { startProgress, stopProgress } from './progress/main.js'
 import { getIterations } from './tasks/iterations.js'
 import { runProcesses } from './processes/main.js'
 import { report } from './report/main.js'
@@ -11,15 +12,28 @@ const spyd = async function(opts) {
 
   const iterations = await getIterations(optsA)
 
-  const benchmark = await getBenchmark(iterations, optsA)
+  const { progressState, progressInfo } = await startProgress({
+    iterations,
+    opts: optsA,
+  })
+
+  const benchmark = await getBenchmark({
+    iterations,
+    progressState,
+    opts: optsA,
+  })
+
+  await stopProgress(progressInfo)
 
   await report(benchmark, optsA)
 
   return benchmark
 }
 
-const getBenchmark = async function(iterations, opts) {
-  const tasks = await pMapSeries(iterations, runProcesses)
+const getBenchmark = async function({ iterations, progressState, opts }) {
+  const tasks = await pMapSeries(iterations, (iteration, index) =>
+    runProcesses({ ...iteration, index, progressState }),
+  )
   return { tasks, opts }
 }
 
