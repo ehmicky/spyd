@@ -1,16 +1,16 @@
 export const MathRandom = {
   main: Math.random,
   parameters: {
-    a: 1,
-    d: 2,
+    one: 1,
+    two: 2,
   },
 }
 
 export const MathRandomTwo = {
-  main: () => Math.random(),
+  main: Math.random,
   parameters: {
-    a: 1,
-    b: 2,
-    c: 3,
+    one: 1,
+    three: 2,
+    four: 3,
   },
 }
