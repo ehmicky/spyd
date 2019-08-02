@@ -1,29 +1,28 @@
 import { sortBy } from '../utils.js'
 
-import { getTaskGroups } from './group.js'
+import { getTaskGroups, getParameterGroups } from './group.js'
 
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function({ iterations, ...benchmark }) {
   const taskGroups = getTaskGroups(iterations)
+  const parameterGroups = getParameterGroups(iterations)
 
   const iterationsA = iterations.map(iteration =>
-    addIterationInfo({ iteration, taskGroups }),
+    addIterationInfo({ iteration, taskGroups, parameterGroups }),
   )
 
-  sortIterations(iterationsA)
+  sortBy(iterationsA, ['taskRank', 'parameterRank'])
 
   return { ...benchmark, iterations: iterationsA }
 }
 
 const addIterationInfo = function({
   iteration,
-  iteration: { taskId },
+  iteration: { taskId, parameter },
   taskGroups,
+  parameterGroups,
 }) {
   const { taskMean, taskRank } = taskGroups[taskId]
-  return { ...iteration, taskMean, taskRank }
-}
-
-const sortIterations = function(iterations) {
-  sortBy(iterations, 'taskRank')
+  const { parameterMean, parameterRank } = parameterGroups[parameter]
+  return { ...iteration, taskRank, taskMean, parameterRank, parameterMean }
 }

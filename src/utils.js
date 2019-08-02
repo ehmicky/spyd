@@ -57,13 +57,28 @@ const addGroup = function(object, groups, propName) {
   groups[group].push(object)
 }
 
-// Sort an array of objects according to one of its properties
-export const sortBy = function(array, propName) {
+// Sort an array of objects according to its properties
+export const sortBy = function(array, propNames) {
   // eslint-disable-next-line fp/no-mutating-methods
-  array.sort((objA, objB) => sortByProp(objA, objB, propName))
+  array.sort((objA, objB) => sortByProps(objA, objB, propNames))
 }
 
-const sortByProp = function(objA, objB, propName) {
+const sortByProps = function(objA, objB, propNames) {
+  // We use a for loop for performance reasons
+  // eslint-disable-next-line fp/no-loops
+  for (const propName of propNames) {
+    const result = compareByProp(objA, objB, propName)
+
+    // eslint-disable-next-line max-depth
+    if (result !== undefined) {
+      return result
+    }
+  }
+
+  return 0
+}
+
+const compareByProp = function(objA, objB, propName) {
   const propA = objA[propName]
   const propB = objB[propName]
 
@@ -74,6 +89,4 @@ const sortByProp = function(objA, objB, propName) {
   if (propA < propB) {
     return -1
   }
-
-  return 0
 }

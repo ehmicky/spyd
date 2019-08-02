@@ -13,6 +13,18 @@ export const getTaskGroups = function(iterations) {
   })
 }
 
+// Group iterations by `parameter` and compute:
+//  - `parameterMean`: mean of all iterations medians (of the same task)
+//  - `parameterRank`: rank among all `taskMean`
+export const getParameterGroups = function(iterations) {
+  return groupIterations({
+    iterations,
+    groupProp: 'parameter',
+    meanProp: 'parameterMean',
+    rankProp: 'parameterRank',
+  })
+}
+
 const groupIterations = function({
   iterations,
   groupProp,
@@ -22,7 +34,7 @@ const groupIterations = function({
   const groups = Object.entries(groupBy(iterations, groupProp))
 
   const groupsA = groups.map(getGroupMean)
-  sortBy(groupsA, 'mean')
+  sortBy(groupsA, ['mean'])
   const groupsB = groupsA
     .map(addRank)
     .map(group => renameProps({ group, meanProp, rankProp }))
