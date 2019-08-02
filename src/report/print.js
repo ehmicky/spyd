@@ -15,7 +15,7 @@ export const print = async function({ content, reportOpt, output, insert }) {
   }
 
   if (outputA === '-') {
-    stdout.write(contentA)
+    await promisify(stdout.write.bind(stdout))(contentA)
     return
   }
 
