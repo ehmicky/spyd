@@ -11,6 +11,7 @@ import { shouldStop } from './stop.js'
 export const runProcesses = async function({
   taskPath,
   taskId,
+  name,
   title,
   parameter,
   index,
@@ -23,7 +24,7 @@ export const runProcesses = async function({
   const processDuration = duration / PROCESS_COUNT
 
   // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(progressState, { index, runEnd, title })
+  Object.assign(progressState, { name, index, runEnd })
 
   const results = await runPools({
     taskPath,
@@ -34,7 +35,7 @@ export const runProcesses = async function({
     requireOpt,
   })
 
-  const taskData = getTaskData({ results, parameter, title })
+  const taskData = getTaskData({ results, name, title, parameter })
   return taskData
 }
 
@@ -107,7 +108,7 @@ const addTaskInfo = function({ error, taskId, parameter }) {
 }
 
 // Convert results to `taskData` object passed to reporters
-const getTaskData = function({ results, parameter, title }) {
+const getTaskData = function({ results, name, title, parameter }) {
   const stats = getStats(results)
-  return { title, parameter, stats }
+  return { name, title, parameter, stats }
 }

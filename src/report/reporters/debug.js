@@ -3,11 +3,9 @@ export const debug = function({ tasks }) {
   return tasks.map(serializeTask).join('\n')
 }
 
-const serializeTask = function({ title, parameter, stats }) {
-  const parameterA = parameter === undefined ? '' : ` (${parameter})`
-  const titleA = `${title}${parameterA}`.padEnd(TITLE_PADDING)
+const serializeTask = function({ name, stats }) {
   const statsStr = serializeStats(stats)
-  return `${titleA} | ${statsStr}`
+  return `${name} | ${statsStr}`
 }
 
 export const serializeStats = function(stats) {
@@ -41,7 +39,6 @@ const serializeNumber = function(number) {
   return String(number)
 }
 
-const TITLE_PADDING = 13
 const DECIMALS = 3
 const LENGTH = 4
 // eslint-disable-next-line no-magic-numbers

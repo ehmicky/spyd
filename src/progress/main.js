@@ -35,7 +35,7 @@ const startReporters = async function(reporters, total) {
 
 // Called at regular interval
 const updateProgress = async function({
-  progressState: { index, runEnd, title },
+  progressState: { index, runEnd, name },
   total,
   duration,
   reporters,
@@ -49,7 +49,7 @@ const updateProgress = async function({
 
   // Call each `reporter.update()`
   const promises = reporters.map(reporter =>
-    reporter.update({ title, percentage, index, total }),
+    reporter.update({ name, percentage, index, total }),
   )
   await Promise.all(promises)
 }
