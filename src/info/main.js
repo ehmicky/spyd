@@ -1,6 +1,6 @@
 import { sortBy } from '../utils.js'
 
-import { getTaskGroups } from './task_group.js'
+import { getTaskGroups } from './group.js'
 
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function({ iterations, ...benchmark }) {
