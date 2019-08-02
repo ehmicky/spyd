@@ -1,18 +1,18 @@
 import { STAT_TYPES } from './types.js'
 
-export const addIterationStats = function({
+export const serializeStats = function({
   iteration,
   iteration: { stats },
   units,
 }) {
   const statsA = Object.entries(stats).map(([name, stat]) =>
-    addPrintedStat({ name, stat, units }),
+    serializeStat({ name, stat, units }),
   )
   const printedStats = Object.fromEntries(statsA)
   return { ...iteration, printedStats }
 }
 
-const addPrintedStat = function({ name, stat, units }) {
+const serializeStat = function({ name, stat, units }) {
   const type = STAT_TYPES[name]
   const { unit, scale } = units[name]
   const statA = SERIALIZE_STAT[type](stat, scale, unit)
