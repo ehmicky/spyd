@@ -4,17 +4,15 @@ import { insertContent } from './insert.js'
 // Handle content using the `output` and `insert` options
 export const handleContent = async function({
   content,
-  reportOpt,
-  output,
-  insert,
+  reportOpt: { output, insert },
 }) {
   if (!hasContent(content)) {
     return
   }
 
   await Promise.all([
-    print({ content, reportOpt, output, insert }),
-    insertContent({ content, reportOpt, insert }),
+    print({ content, output, insert }),
+    insertContent({ content, insert }),
   ])
 }
 

@@ -5,10 +5,10 @@ import { promisify } from 'util'
 const pWriteFile = promisify(writeFile)
 
 // Print reporting result to file or to terminal based on the `output` option
-export const print = async function({ content, reportOpt, output, insert }) {
+export const print = async function({ content, output, insert }) {
   const contentA = addFinalNewline(content)
 
-  const outputA = getOutput(reportOpt, output, insert)
+  const outputA = getOutput({ output, insert })
 
   if (outputA === '') {
     return
@@ -30,24 +30,16 @@ const addFinalNewline = function(content) {
   return `${content}\n`
 }
 
-const getOutput = function(reportOpt, output, insert) {
-  if (typeof reportOpt.output === 'string') {
-    return reportOpt.output
-  }
-
-  if (output !== undefined) {
+const getOutput = function({ output, insert }) {
+  if (typeof output === 'string') {
     return output
   }
 
-  if (hasInsert(reportOpt, insert)) {
+  if (insert !== undefined) {
     return ''
   }
 
   return '-'
-}
-
-const hasInsert = function(reportOpt, insert) {
-  return reportOpt.insert !== undefined || insert !== undefined
 }
 
 const writeFileContent = async function(file, content) {

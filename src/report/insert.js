@@ -12,9 +12,7 @@ const pWriteFile = promisify(writeFile)
 //  - does not require any parsing.
 //  - does not require wrapping inserted content (e.g. in a code block).
 //    This should be done by reporters.
-export const insertContent = async function({ content, reportOpt, insert }) {
-  const file = getFile(reportOpt, insert)
-
+export const insertContent = async function({ content, insert: file }) {
   if (file === undefined) {
     return
   }
@@ -22,14 +20,6 @@ export const insertContent = async function({ content, reportOpt, insert }) {
   const fileContent = await getFileContent(file)
   const fileContentA = insertToFile(fileContent, content, file)
   await writeFileContent(file, fileContentA)
-}
-
-const getFile = function(reportOpt, insert) {
-  if (typeof reportOpt.insert === 'string') {
-    return reportOpt.insert
-  }
-
-  return insert
 }
 
 const getFileContent = async function(file) {
