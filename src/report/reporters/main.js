@@ -1,3 +1,4 @@
+import { silent } from './silent.js'
 import { debug } from './debug.js'
 
-export const REPORTERS = { debug }
+export const REPORTERS = { silent, debug }
