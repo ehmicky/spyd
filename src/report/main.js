@@ -3,13 +3,13 @@ import { handleContent } from './content.js'
 
 // Report benchmark results
 export const report = async function(
-  benchmarks,
+  benchmark,
   { reporters, reportOpts, output, insert },
 ) {
   const reportersA = getDefaultReporters(reporters)
 
   const promises = reportersA.map(reporterName =>
-    useReporter({ reporterName, benchmarks, reportOpts, output, insert }),
+    useReporter({ reporterName, benchmark, reportOpts, output, insert }),
   )
   await Promise.all(promises)
 }
@@ -25,7 +25,7 @@ const getDefaultReporters = function(reporters) {
 // Perform each reporter
 const useReporter = async function({
   reporterName,
-  benchmarks,
+  benchmark,
   reportOpts,
   output,
   insert,
@@ -33,7 +33,7 @@ const useReporter = async function({
   const reporter = getReporter(reporterName)
   const reportOpt = getReportOpt(reporterName, reportOpts)
 
-  const content = await reporter(benchmarks, reportOpt)
+  const content = await reporter(benchmark, reportOpt)
 
   await handleContent({ content, reportOpt, output, insert })
 }

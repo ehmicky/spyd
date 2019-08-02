@@ -1,13 +1,13 @@
 // Debugging reporter only meant for development purpose
-export const debug = function(benchmarks) {
-  return benchmarks.map(serializeBenchmark).join('\n')
+export const debug = function({ tasks }) {
+  return tasks.map(serializeTask).join('\n')
 }
 
-const serializeBenchmark = function({ task, parameter, stats }) {
+const serializeTask = function({ title, parameter, stats }) {
   const parameterA = parameter === undefined ? '' : ` (${parameter})`
-  const title = `${task}${parameterA}`.padEnd(TITLE_PADDING)
+  const titleA = `${title}${parameterA}`.padEnd(TITLE_PADDING)
   const statsStr = serializeStats(stats)
-  return `${title} | ${statsStr}`
+  return `${titleA} | ${statsStr}`
 }
 
 export const serializeStats = function(stats) {

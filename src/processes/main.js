@@ -29,8 +29,8 @@ export const runProcesses = async function({
     requireOpt,
   })
 
-  const benchmark = getBenchmark({ results, parameter, title })
-  return benchmark
+  const taskData = getTaskData({ results, parameter, title })
+  return taskData
 }
 
 const PROCESS_COUNT = 2e1
@@ -101,8 +101,8 @@ const addTaskInfo = function({ error, taskId, parameter }) {
   error.message = `Task '${taskId}'${parameterStr} errored:\n\n${message}`
 }
 
-// Convert results to `benchmark` object passed to reporters
-const getBenchmark = function({ results, parameter, title }) {
+// Convert results to `taskData` object passed to reporters
+const getTaskData = function({ results, parameter, title }) {
   const stats = getStats(results)
-  return { task: title, parameter, stats }
+  return { title, parameter, stats }
 }
