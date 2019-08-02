@@ -2,18 +2,20 @@ import { groupBy, sortBy } from '../utils.js'
 import { getMean } from '../stats/methods.js'
 
 // Add more information to the final benchmark and normalize/sort results
-export const addBenchmarkInfo = function({ tasks, ...benchmark }) {
-  const taskGroups = getTaskGroups(tasks)
+export const addBenchmarkInfo = function({ iterations, ...benchmark }) {
+  const taskGroups = getTaskGroups(iterations)
 
-  const tasksA = tasks.map(task => addTaskInfo({ task, taskGroups }))
+  const iterationsA = iterations.map(iteration =>
+    addIterationInfo({ iteration, taskGroups }),
+  )
 
-  sortTasks(tasksA)
+  sortIterations(iterationsA)
 
-  return { ...benchmark, tasks: tasksA }
+  return { ...benchmark, iterations: iterationsA }
 }
 
-const getTaskGroups = function(tasks) {
-  const taskGroups = Object.entries(groupBy(tasks, 'taskId'))
+const getTaskGroups = function(iterations) {
+  const taskGroups = Object.entries(groupBy(iterations, 'taskId'))
 
   const taskGroupsA = taskGroups.map(getTaskMean)
   sortBy(taskGroupsA, 'taskMean')
@@ -23,13 +25,13 @@ const getTaskGroups = function(tasks) {
   return taskGroupsC
 }
 
-const getTaskMean = function([taskId, tasks]) {
-  const medians = tasks.map(getTaskMedian)
+const getTaskMean = function([taskId, iterations]) {
+  const medians = iterations.map(getIterationMedian)
   const taskMean = getMean(medians)
   return { taskId, taskMean }
 }
 
-const getTaskMedian = function({ stats: { median } }) {
+const getIterationMedian = function({ stats: { median } }) {
   return median
 }
 
@@ -37,11 +39,15 @@ const addTaskRank = function({ taskId, taskMean }, taskRank) {
   return [taskId, { taskMean, taskRank }]
 }
 
-const addTaskInfo = function({ task, task: { taskId }, taskGroups }) {
+const addIterationInfo = function({
+  iteration,
+  iteration: { taskId },
+  taskGroups,
+}) {
   const { taskMean, taskRank } = taskGroups[taskId]
-  return { ...task, taskMean, taskRank }
+  return { ...iteration, taskMean, taskRank }
 }
 
-const sortTasks = function(tasks) {
-  sortBy(tasks, 'taskRank')
+const sortIterations = function(iterations) {
+  sortBy(iterations, 'taskRank')
 }

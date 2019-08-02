@@ -34,10 +34,10 @@ const spyd = async function(opts) {
 }
 
 const getBenchmark = async function({ iterations, progressState, opts }) {
-  const tasks = await pMapSeries(iterations, (iteration, index) =>
+  const iterationsA = await pMapSeries(iterations, (iteration, index) =>
     runProcesses({ ...iteration, index, progressState }),
   )
-  return { tasks, opts }
+  return { iterations: iterationsA, opts }
 }
 
 // We do not use `export default` because Babel transpiles it in a way that

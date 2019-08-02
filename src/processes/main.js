@@ -35,8 +35,14 @@ export const runProcesses = async function({
     requireOpt,
   })
 
-  const taskData = getTaskData({ results, taskId, name, title, parameter })
-  return taskData
+  const iteration = getIterationResult({
+    results,
+    taskId,
+    name,
+    title,
+    parameter,
+  })
+  return iteration
 }
 
 const PROCESS_COUNT = 2e1
@@ -107,8 +113,14 @@ const addTaskInfo = function({ error, taskId, parameter }) {
   error.message = `Task '${taskId}'${parameterStr} errored:\n\n${message}`
 }
 
-// Convert results to `taskData` object passed to reporters
-const getTaskData = function({ results, taskId, name, title, parameter }) {
+// Convert results to `benchmark.iterations[*]` object passed to reporters
+const getIterationResult = function({
+  results,
+  taskId,
+  name,
+  title,
+  parameter,
+}) {
   const stats = getStats(results)
   return { taskId, name, title, parameter, stats }
 }

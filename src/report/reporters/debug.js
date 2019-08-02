@@ -1,9 +1,9 @@
 // Debugging reporter only meant for development purpose
-export const debug = function({ tasks }) {
-  return tasks.map(serializeTask).join('\n')
+export const debug = function({ iterations }) {
+  return iterations.map(serializeIteration).join('\n')
 }
 
-const serializeTask = function({ name, stats }) {
+const serializeIteration = function({ name, stats }) {
   const statsStr = serializeStats(stats)
   return `${name} | ${statsStr}`
 }
