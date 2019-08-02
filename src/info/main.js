@@ -1,28 +1,29 @@
 import { sortBy } from '../utils/sort.js'
 
-import { getTaskGroups, getParameterGroups } from './group.js'
+import { getTasks, getParameters } from './group.js'
 
 // Add more information to the final benchmark and normalize/sort results
-export const addBenchmarkInfo = function({ iterations, ...benchmark }) {
-  const taskGroups = getTaskGroups(iterations)
-  const parameterGroups = getParameterGroups(iterations)
+export const addBenchmarkInfo = function({ benchmark: { iterations }, opts }) {
+  const tasks = getTasks(iterations)
+  const parameters = getParameters(iterations)
 
   const iterationsA = iterations.map(iteration =>
-    addIterationInfo({ iteration, taskGroups, parameterGroups }),
+    addIterationInfo({ iteration, tasks, parameters }),
   )
 
-  sortBy(iterationsA, ['taskRank', 'stats.median'])
+  // The fastest tasks will be first, then the fastest iterations within each
+  // task
+  sortBy(iterationsA, ['task', 'stats.median'])
 
-  return { ...benchmark, iterations: iterationsA }
+  return { opts, tasks, parameters, iterations: iterationsA }
 }
 
 const addIterationInfo = function({
-  iteration,
-  iteration: { taskId, parameter },
-  taskGroups,
-  parameterGroups,
+  iteration: { name, taskId, parameter, stats },
+  tasks,
+  parameters,
 }) {
-  const { taskMean, taskRank } = taskGroups[taskId]
-  const { parameterMean, parameterRank } = parameterGroups[parameter]
-  return { ...iteration, taskRank, taskMean, parameterRank, parameterMean }
+  const taskA = tasks.findIndex(task => task.taskId === taskId)
+  const parameterA = parameters.findIndex(task => task.parameter === parameter)
+  return { name, task: taskA, parameter: parameterA, stats }
 }

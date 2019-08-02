@@ -9,9 +9,9 @@ import { shouldStop } from './stop.js'
 // Each task (and parameter combination) is run serially to avoid influencing
 // the timing of another.
 export const runProcesses = async function({
+  name,
   taskPath,
   taskId,
-  name,
   title,
   parameter,
   index,
@@ -37,8 +37,8 @@ export const runProcesses = async function({
 
   const iteration = getIterationResult({
     results,
-    taskId,
     name,
+    taskId,
     title,
     parameter,
   })
@@ -116,11 +116,11 @@ const addTaskInfo = function({ error, taskId, parameter }) {
 // Convert results to `benchmark.iterations[*]` object passed to reporters
 const getIterationResult = function({
   results,
-  taskId,
   name,
+  taskId,
   title,
   parameter,
 }) {
   const stats = getStats(results)
-  return { taskId, name, title, parameter, stats }
+  return { name, taskId, title, parameter, stats }
 }
