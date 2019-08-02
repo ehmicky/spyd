@@ -11,7 +11,7 @@ export const addBenchmarkInfo = function({ iterations, ...benchmark }) {
     addIterationInfo({ iteration, taskGroups, parameterGroups }),
   )
 
-  sortBy(iterationsA, ['taskRank', 'parameterRank'])
+  sortBy(iterationsA, ['parameterRank', 'taskRank'])
 
   return { ...benchmark, iterations: iterationsA }
 }
