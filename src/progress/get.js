@@ -1,7 +1,15 @@
+import { stderr } from 'process'
+
+import isInteractive from 'is-interactive'
+
 import { PROGRESS_REPORTERS } from './reporters/main.js'
 
 // Retrieve reporters methods
 export const getReporters = function(progressReporters) {
+  if (!isInteractive(stderr)) {
+    return [PROGRESS_REPORTERS.silent]
+  }
+
   return progressReporters.map(getReporter)
 }
 
