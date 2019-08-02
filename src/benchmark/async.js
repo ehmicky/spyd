@@ -1,4 +1,4 @@
-import { isPromiseLike } from '../utils.js'
+import { isPromiseLike } from '../utils/main.js'
 
 // Async functions use different benchmarking logic.
 // We only check once if `main()` is async in order to simplify the logic.

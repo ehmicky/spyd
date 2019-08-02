@@ -1,4 +1,4 @@
-import { sortNumbers } from '../utils.js'
+import { sortNumbers } from '../utils/sort.js'
 
 import { getMedian, getMean, getVariance, getDeviation } from './methods.js'
 import { getPercentiles } from './percentiles.js'

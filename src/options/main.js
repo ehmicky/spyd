@@ -2,7 +2,7 @@ import { cwd as getCwd } from 'process'
 
 import { validate } from 'jest-validate'
 
-import { omitBy } from '../utils.js'
+import { omitBy } from '../utils/main.js'
 
 import { getConfig } from './config.js'
 import { normalizeOpts } from './normalize.js'

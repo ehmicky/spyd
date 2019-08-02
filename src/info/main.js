@@ -1,4 +1,4 @@
-import { sortBy } from '../utils.js'
+import { sortBy } from '../utils/sort.js'
 
 import { getTaskGroups, getParameterGroups } from './group.js'
 
@@ -11,7 +11,7 @@ export const addBenchmarkInfo = function({ iterations, ...benchmark }) {
     addIterationInfo({ iteration, taskGroups, parameterGroups }),
   )
 
-  sortBy(iterationsA, ['parameterRank', 'taskRank'])
+  sortBy(iterationsA, ['taskRank', 'stats.median'])
 
   return { ...benchmark, iterations: iterationsA }
 }

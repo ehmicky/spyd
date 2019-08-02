@@ -1,4 +1,5 @@
-import { groupBy, sortBy } from '../utils.js'
+import { groupBy } from '../utils/group.js'
+import { sortBy } from '../utils/sort.js'
 import { getMean } from '../stats/methods.js'
 
 // Group iterations by `taskId` and compute:

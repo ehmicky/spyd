@@ -1,4 +1,4 @@
-import { omitBy } from '../utils.js'
+import { omitBy } from '../utils/main.js'
 
 export const parseOpts = function(yargs) {
   const {

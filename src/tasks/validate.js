@@ -1,4 +1,4 @@
-import { isPlainObject } from '../utils.js'
+import { isPlainObject } from '../utils/main.js'
 
 // Validate that tasks have correct shape
 export const validateTasks = function(tasks, taskPath) {
