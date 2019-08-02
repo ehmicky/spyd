@@ -9,7 +9,8 @@ export const normalizeOpts = function(opts) {
   const optsB = normalizeCwd(optsA)
   const optsC = normalizeRequire(optsB)
   const optsD = normalizeReporters(optsC)
-  return optsD
+  const optsE = normalizeProgress(optsD)
+  return optsE
 }
 
 // Normalize and validate 'duration' option
@@ -82,5 +83,17 @@ const validateReportOpt = function(reporterName, reporters) {
     throw new TypeError(
       `Invalid reporter '${reporterName}' in 'report.${reporterName}' option`,
     )
+  }
+}
+
+// Normalize and validate `progress' option
+const normalizeProgress = function({ progress: progressReporters, ...opts }) {
+  progressReporters.forEach(validateProgressReporter)
+  return { ...opts, progressReporters }
+}
+
+const validateProgressReporter = function(progressReporter) {
+  if (typeof progressReporter !== 'string') {
+    throw new TypeError(`'progress' must be a string: ${progressReporter}`)
   }
 }

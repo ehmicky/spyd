@@ -1,31 +1,28 @@
 import { show as showCursor, hide as hideCursor } from 'cli-cursor'
 
-import { now } from '../now.js'
-
-import { PROGRESS_REPORTERS } from './reporters/main.js'
+import { getReporters } from './get.js'
+import { startUpdate, stopUpdate } from './update.js'
 
 // Start progress reporting using the `progress` option
 export const startProgress = async function({
   iterations,
-  opts: { duration },
+  opts: { duration, progressReporters },
 }) {
-  hideCursor()
-
   const total = iterations.length
 
-  const reporters = [PROGRESS_REPORTERS.debug]
+  hideCursor()
+
+  const reporters = getReporters(progressReporters)
   await startReporters(reporters, total)
 
-  const progressState = {}
-  const progressId = setInterval(
-    () => updateProgress({ progressState, total, duration, reporters }),
-    FREQUENCY,
-  )
+  const { progressState, progressId } = startUpdate({
+    total,
+    duration,
+    reporters,
+  })
 
   return { progressState, progressInfo: { progressId, reporters } }
 }
-
-const FREQUENCY = 1e2
 
 // Call each `reporter.start()`
 const startReporters = async function(reporters, total) {
@@ -33,38 +30,9 @@ const startReporters = async function(reporters, total) {
   await Promise.all(promises)
 }
 
-// Called at regular interval
-const updateProgress = async function({
-  progressState: { index, runEnd, name },
-  total,
-  duration,
-  reporters,
-}) {
-  // Not started yet
-  if (index === undefined) {
-    return
-  }
-
-  const percentage = getPercentage({ index, runEnd, total, duration })
-
-  // Call each `reporter.update()`
-  const promises = reporters.map(reporter =>
-    reporter.update({ name, percentage, index, total }),
-  )
-  await Promise.all(promises)
-}
-
-// Percentage left of the whole run
-const getPercentage = function({ index, runEnd, total, duration }) {
-  const timeLeft = Math.max(runEnd - now(), 0)
-  const taskPercentage = 1 - timeLeft / duration
-  const percentage = (index + taskPercentage) / total
-  return percentage
-}
-
 // Stop progress reporting
 export const stopProgress = async function({ progressId, reporters }) {
-  clearInterval(progressId)
+  stopUpdate(progressId)
 
   await stopReporters(reporters)
 

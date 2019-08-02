@@ -41,6 +41,7 @@ const DEFAULT_OPTS = {
   require: [],
   reporters: [],
   report: {},
+  progress: ['debug'],
 }
 
 export const EXAMPLE_OPTS = {

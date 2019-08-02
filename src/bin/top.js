@@ -35,11 +35,19 @@ Used to find the default configuration and tasks files.`,
 Default: 10`,
   },
   reporters: {
-    alias: 'R',
+    alias: 'r',
     string: true,
     array: true,
     requiresArg: true,
-    describe: `Module to report benchmark results.
+    describe: `Module to report benchmark final results.
+Built-in reporters: silent`,
+  },
+  progress: {
+    alias: 'p',
+    string: true,
+    array: true,
+    requiresArg: true,
+    describe: `Module to report benchmark progress.
 Built-in reporters: silent`,
   },
   report: {
@@ -68,7 +76,6 @@ The benchmarks results will be inserted between those two lines.
 Use --report.REPORTER.insert to set this option on a specific reporter instead of all reporters.`,
   },
   require: {
-    alias: 'r',
     string: true,
     array: true,
     requiresArg: true,
