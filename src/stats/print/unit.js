@@ -1,4 +1,7 @@
-// Use the same unit for all measures
+// Retrieve the time unit to use in `printedStats`.
+// The same unit is used for all `printedStats` to make it easier to compare
+// between stats.
+// We use the minimum time unit where all medians are >= 1
 export const getUnit = function(iterations) {
   const medians = iterations.flatMap(getMedianStat)
   const unit = findUnit(medians)
@@ -10,19 +13,21 @@ const getMedianStat = function({ stats: { median } }) {
   return median
 }
 
-const findUnit = function(measures) {
-  const measuresA = measures.filter(isNotZero)
+const findUnit = function(medians) {
+  const mediansA = medians.filter(isNotZero)
 
-  if (measuresA.length === 0) {
+  // When all medians are 0
+  if (mediansA.length === 0) {
     return DEFAULT_UNIT
   }
 
-  const min = Math.min(...measuresA)
+  const min = Math.min(...mediansA)
 
   const preciseUnit = Object.entries(UNITS).find(
     ([, minUnit]) => min >= minUnit,
   )
 
+  // When all medians are extremely fast. Failsafe unlikely to happen.
   if (preciseUnit === undefined) {
     return MIN_UNIT
   }
@@ -30,8 +35,8 @@ const findUnit = function(measures) {
   return preciseUnit[0]
 }
 
-const isNotZero = function(measure) {
-  return measure !== 0
+const isNotZero = function(median) {
+  return median !== 0
 }
 
 // The maximum unit is seconds:

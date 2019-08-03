@@ -5,18 +5,18 @@ export const serializeStats = function({
   iteration: { stats },
   unit,
   scale,
-  statDecimals,
+  statsDecimals,
 }) {
   const statsA = Object.entries(stats).map(([name, stat]) =>
-    serializeStat({ name, stat, unit, scale, statDecimals }),
+    serializeStat({ name, stat, unit, scale, statsDecimals }),
   )
   const printedStats = Object.fromEntries(statsA)
   return { ...iteration, printedStats }
 }
 
-const serializeStat = function({ name, stat, unit, scale, statDecimals }) {
+const serializeStat = function({ name, stat, unit, scale, statsDecimals }) {
   const type = STAT_TYPES[name]
-  const decimals = statDecimals[name]
+  const decimals = statsDecimals[name]
   const statA = SERIALIZE_STAT[type]({ stat, scale, unit, decimals })
   return [name, statA]
 }

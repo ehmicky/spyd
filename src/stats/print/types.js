@@ -1,3 +1,4 @@
+// Type of each `stat`
 export const STAT_TYPES = {
   median: 'scalar',
   mean: 'scalar',
