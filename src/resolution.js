@@ -45,7 +45,6 @@ const getExponent = function(value, index) {
 }
 
 const getPossibleResolution = function(exponent) {
-  // eslint-disable-next-line no-magic-numbers
   const scale = 10 ** exponent
   // eslint-disable-next-line no-magic-numbers
   return [5 * scale, scale]
