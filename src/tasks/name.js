@@ -1,3 +1,5 @@
+// Add `iteration.name` which combines `task.title` and `parameter` in a
+// reporter-friendly string.
 export const addNames = function(iterations) {
   const iterationsA = iterations.map(addName)
   const iterationsB = addNamePaddings(iterationsA)
