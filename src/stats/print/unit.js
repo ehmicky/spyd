@@ -38,15 +38,8 @@ const isNotZero = function(measure) {
 //  - minutes require writing two units (e.g. 1m56s) which is harder to read
 //  - minutes are not base 10 which makes it harder to visually compare
 //  - hours-long tasks are unlikely
-const UNITS = {
-  // eslint-disable-next-line id-length
-  s: 1e9,
-  ms: 1e6,
-  μs: 1e3,
-  ns: 1,
-  ps: 1e-3,
-  fs: 1e-6,
-}
+// eslint-disable-next-line id-length
+const UNITS = { s: 1e9, ms: 1e6, μs: 1e3, ns: 1, ps: 1e-3, fs: 1e-6 }
 
 const DEFAULT_UNIT = 'ns'
 const MIN_UNIT = 'fs'
