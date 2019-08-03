@@ -38,5 +38,5 @@ const isNotZero = function(measure) {
   return measure !== 0
 }
 
-// Two digits of precision
-const MIN_PRECISION = 1e1
+// Three digits of precision
+const MIN_PRECISION = 1e2
