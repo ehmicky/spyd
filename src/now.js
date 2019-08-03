@@ -27,18 +27,18 @@
 //      - duration since machine was started
 //      - bigint (nanoseconds)
 //      - slightly slower than `hrtime()`
-const getExports = function() {
+const getExport = function() {
   // eslint-disable-next-line no-restricted-globals, node/prefer-global/process
   if (process !== undefined) {
-    return { name: 'hrtime', now: hrtime }
+    return hrtime
   }
 
   // eslint-disable-next-line no-undef
   if (performance !== undefined) {
-    return { name: 'performance.now', now: performanceNow }
+    return performanceNow
   }
 
-  return { name: 'date.now', now: dateNow }
+  return dateNow
 }
 
 const hrtime = function() {
@@ -59,5 +59,4 @@ const dateNow = function() {
 const SECS_TO_NANOSECS = 1e9
 const MILLISECS_TO_NANOSECS = 1e6
 
-const { name, now } = getExports()
-export { name, now }
+export const now = getExport()
