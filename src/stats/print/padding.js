@@ -1,5 +1,7 @@
 import { STAT_TYPES } from './types.js'
 
+// Pad `printedStats` on the left so they vertically align.
+// Right padding was already performed when setting the number of decimals.
 export const addPaddings = function(iterations) {
   const paddings = getPaddings(iterations)
   const iterationsA = iterations.map(iteration =>
@@ -8,6 +10,7 @@ export const addPaddings = function(iterations) {
   return iterationsA
 }
 
+// Retrieve the maximum length of any measures for each stat
 const getPaddings = function(iterations) {
   const paddings = Object.entries(STAT_TYPES).map(([name, type]) =>
     getPadding({ name, type, iterations }),

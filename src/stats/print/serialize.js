@@ -1,5 +1,7 @@
 import { STAT_TYPES } from './types.js'
 
+// Serialize each stat measure using the right time unit, number of decimals
+// and padding
 export const serializeStats = function({
   iteration,
   iteration: { stats },
