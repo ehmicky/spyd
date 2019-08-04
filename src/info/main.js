@@ -2,6 +2,7 @@ import { sortBy } from '../utils/sort.js'
 import { addPrintedStats } from '../stats/print/main.js'
 
 import { getTasks, getParameters } from './group.js'
+import { addFastestIterations } from './fastest.js'
 
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function({ benchmark: { iterations }, opts }) {
@@ -12,13 +13,15 @@ export const addBenchmarkInfo = function({ benchmark: { iterations }, opts }) {
     addIterationInfo({ iteration, tasks, parameters }),
   )
 
+  const iterationsB = addFastestIterations(iterationsA)
+
   // The fastest tasks will be first, then the fastest iterations within each
   // task
-  sortBy(iterationsA, ['task', 'stats.median'])
+  sortBy(iterationsB, ['task', 'stats.median'])
 
-  const iterationsB = addPrintedStats(iterationsA)
+  const iterationsC = addPrintedStats(iterationsB)
 
-  return { opts, tasks, parameters, iterations: iterationsB }
+  return { opts, tasks, parameters, iterations: iterationsC }
 }
 
 const addIterationInfo = function({
