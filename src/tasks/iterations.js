@@ -1,6 +1,6 @@
 import { getTaskPath } from './path.js'
 import { loadTaskFile } from './load.js'
-import { addNames } from './name.js'
+import { addPaddings } from './paddings.js'
 
 // Retrieve each iteration, i.e. combination of task + parameter (if any)
 export const getIterations = async function({
@@ -14,7 +14,7 @@ export const getIterations = async function({
   const iterations = tasks
     .flatMap(getIteration)
     .map(iteration => ({ ...iteration, taskPath, duration, requireOpt }))
-  const iterationsA = addNames(iterations)
+  const iterationsA = addPaddings(iterations)
   return iterationsA
 }
 
