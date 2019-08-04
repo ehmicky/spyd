@@ -3,9 +3,10 @@ export const debug = function({ iterations }) {
   return iterations.map(serializeIteration).join('\n')
 }
 
-const serializeIteration = function({ name, printedStats }) {
+const serializeIteration = function({ name, printedStats, fastest }) {
+  const fastestMark = fastest ? '*' : ' '
   const statsStr = serializeStats(printedStats)
-  return `${name} | ${statsStr}`
+  return `${fastestMark} ${name} | ${statsStr}`
 }
 
 export const serializeStats = function(printedStats) {
