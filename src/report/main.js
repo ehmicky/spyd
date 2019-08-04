@@ -4,9 +4,15 @@ import { handleContent } from './content.js'
 // Report benchmark results
 export const report = async function(
   benchmark,
-  { reporters, reportOpts, output, insert },
+  { reporters, reportOpts, output, insert, link },
 ) {
-  const reportersA = getReporters({ reporters, reportOpts, output, insert })
+  const reportersA = getReporters({
+    reporters,
+    reportOpts,
+    output,
+    insert,
+    link,
+  })
 
   const promises = reportersA.map(reporter =>
     useReporter({ ...reporter, benchmark }),

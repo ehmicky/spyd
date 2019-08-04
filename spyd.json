@@ -1,5 +1,6 @@
 {
   "cwd": "build",
   "duration": 3,
-  "verbose": true
+  "verbose": true,
+  "link": false
 }

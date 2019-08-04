@@ -43,6 +43,7 @@ const DEFAULT_OPTS = {
   report: {},
   progress: ['debug'],
   verbose: false,
+  link: true,
 }
 
 export const EXAMPLE_OPTS = {

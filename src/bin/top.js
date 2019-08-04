@@ -75,15 +75,21 @@ The file must contain:
 The benchmarks results will be inserted between those two lines.
 Use --report.REPORTER.insert to set this option on a specific reporter instead of all reporters.`,
   },
+  verbose: {
+    boolean: true,
+    describe: `Show advanced statistics.
+Default: false`,
+  },
+  link: {
+    boolean: true,
+    describe: `Show link to the library's main page.
+Default: true`,
+  },
   require: {
     string: true,
     array: true,
     requiresArg: true,
     describe: 'Module to load before the task file.',
-  },
-  verbose: {
-    boolean: true,
-    describe: 'Show advanced statistics.',
   },
 }
 

@@ -1,6 +1,8 @@
 // Debugging reporter only meant for development purpose
-export const debug = function({ iterations }) {
-  return iterations.map(serializeIteration).join('\n')
+export const debug = function({ iterations }, { link }) {
+  const content = iterations.map(serializeIteration).join('\n')
+  const contentA = addLink(content, link)
+  return contentA
 }
 
 const serializeIteration = function({ name, printedStats, fastest }) {
@@ -24,4 +26,12 @@ const NON_PRINTED_STATS = ['percentiles', 'histogram']
 
 const serializeStat = function([name, string]) {
   return `${name} ${string}`
+}
+
+const addLink = function(content, link) {
+  if (!link) {
+    return content
+  }
+
+  return `${content}\n\nBenchmarked with spyd (https://github.com/ehmicky/spyd)`
 }

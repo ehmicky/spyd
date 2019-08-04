@@ -6,10 +6,11 @@ export const getReporters = function({
   reportOpts,
   output,
   insert,
+  link,
 }) {
   const reportersA = getDefaultReporters(reporters)
   return reportersA.map(name =>
-    getReporter({ name, reportOpts, output, insert }),
+    getReporter({ name, reportOpts, output, insert, link }),
   )
 }
 
@@ -22,9 +23,9 @@ const getDefaultReporters = function(reporters) {
 }
 
 // Retrieve reporter's main function
-const getReporter = function({ name, reportOpts, output, insert }) {
+const getReporter = function({ name, reportOpts, output, insert, link }) {
   const main = loadReporter(name)
-  const reportOpt = getReportOpt({ name, reportOpts, output, insert })
+  const reportOpt = getReportOpt({ name, reportOpts, output, insert, link })
   return { main, reportOpt }
 }
 
@@ -42,14 +43,14 @@ const loadReporter = function(name) {
   }
 }
 
-// `output` and `insert` can be set either for specific reporter
+// `output`, `insert`, `link` can be set either for specific reporter
 // (--reporter.REPORTER.output) or for all (--output)
-const getReportOpt = function({ name, reportOpts, output, insert }) {
+const getReportOpt = function({ name, reportOpts, output, insert, link }) {
   const reporterOpt = reportOpts[name]
 
   if (reporterOpt === undefined) {
-    return { output, insert }
+    return { output, insert, link }
   }
 
-  return { output, insert, ...reporterOpt }
+  return { output, insert, link, ...reporterOpt }
 }
