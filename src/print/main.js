@@ -6,11 +6,11 @@ import { addPaddings } from './padding.js'
 // Add `iteration.printedStats` which is like `iteration.stats` but serialized
 // and reporter-friendly. It adds time units, rounding, padding and ensures
 // proper vertical alignment.
-export const addPrintedStats = function(iterations) {
+export const addPrintedStats = function(iterations, { verbose }) {
   const { unit, scale } = getUnit(iterations)
   const statsDecimals = getStatsDecimals(iterations, scale)
   const iterationsA = iterations.map(iteration =>
-    serializeStats({ iteration, unit, scale, statsDecimals }),
+    serializeStats({ iteration, unit, scale, statsDecimals, verbose }),
   )
   const iterationsB = addPaddings(iterationsA)
   return iterationsB

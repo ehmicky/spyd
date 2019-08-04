@@ -81,6 +81,10 @@ Use --report.REPORTER.insert to set this option on a specific reporter instead o
     requiresArg: true,
     describe: 'Module to load before the task file.',
   },
+  verbose: {
+    boolean: true,
+    describe: 'Show advanced statistics.',
+  },
 }
 
 const USAGE = `$0 [OPTIONS] [FILE]

@@ -19,7 +19,7 @@ export const addBenchmarkInfo = function({ benchmark: { iterations }, opts }) {
   // task
   sortBy(iterationsB, ['task', 'stats.median'])
 
-  const iterationsC = addPrintedStats(iterationsB)
+  const iterationsC = addPrintedStats(iterationsB, opts)
 
   return { opts, tasks, parameters, iterations: iterationsC }
 }

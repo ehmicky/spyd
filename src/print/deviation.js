@@ -2,16 +2,26 @@
 //  - not shown unless option `verbose` true
 //  - not shown if not enough samples
 //  - prepended with ±
-export const handleDeviation = function({ stat, statNumber, name, loops }) {
+export const handleDeviation = function({
+  stat,
+  statNumber,
+  name,
+  loops,
+  verbose,
+}) {
   if (!DEVIATION_STATS.includes(name)) {
     return stat
   }
 
-  if (loops < MIN_LOOPS || statNumber === 0) {
+  if (shouldSkip({ statNumber, loops, verbose })) {
     return ''
   }
 
   return `${PREFIX}${stat}`
+}
+
+const shouldSkip = function({ statNumber, loops, verbose }) {
+  return statNumber === 0 || loops < MIN_LOOPS || !verbose
 }
 
 const DEVIATION_STATS = ['deviation', 'variance']

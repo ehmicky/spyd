@@ -12,9 +12,10 @@ export const serializeStats = function({
   unit,
   scale,
   statsDecimals,
+  verbose,
 }) {
   const statsA = Object.entries(stats).map(([name, stat]) =>
-    serializeStat({ name, stat, unit, scale, statsDecimals, loops }),
+    serializeStat({ name, stat, unit, scale, statsDecimals, loops, verbose }),
   )
   const printedStats = Object.fromEntries(statsA)
   return { ...iteration, printedStats }
@@ -27,11 +28,18 @@ const serializeStat = function({
   scale,
   statsDecimals,
   loops,
+  verbose,
 }) {
   const type = STAT_TYPES[name]
   const decimals = statsDecimals[name]
   const statA = SERIALIZE_STAT[type]({ stat, scale, unit, decimals })
-  const statB = handleDeviation({ stat: statA, statNumber: stat, name, loops })
+  const statB = handleDeviation({
+    stat: statA,
+    statNumber: stat,
+    name,
+    loops,
+    verbose,
+  })
   return [name, statB]
 }
 
