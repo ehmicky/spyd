@@ -1,26 +1,38 @@
 import { STAT_TYPES } from './types.js'
+import { handleDeviation } from './deviation.js'
 
 // Serialize each stat measure using the right time unit, number of decimals
 // and padding
 export const serializeStats = function({
   iteration,
-  iteration: { stats },
+  iteration: {
+    stats,
+    stats: { loops },
+  },
   unit,
   scale,
   statsDecimals,
 }) {
   const statsA = Object.entries(stats).map(([name, stat]) =>
-    serializeStat({ name, stat, unit, scale, statsDecimals }),
+    serializeStat({ name, stat, unit, scale, statsDecimals, loops }),
   )
   const printedStats = Object.fromEntries(statsA)
   return { ...iteration, printedStats }
 }
 
-const serializeStat = function({ name, stat, unit, scale, statsDecimals }) {
+const serializeStat = function({
+  name,
+  stat,
+  unit,
+  scale,
+  statsDecimals,
+  loops,
+}) {
   const type = STAT_TYPES[name]
   const decimals = statsDecimals[name]
   const statA = SERIALIZE_STAT[type]({ stat, scale, unit, decimals })
-  return [name, statA]
+  const statB = handleDeviation({ stat: statA, statNumber: stat, name, loops })
+  return [name, statB]
 }
 
 const serializeCount = function({ stat }) {
