@@ -1,5 +1,5 @@
 import { sortBy } from '../utils/sort.js'
-import { addPrintedStats } from '../stats/print/main.js'
+import { addPrintedStats } from '../print/main.js'
 
 import { getTasks, getParameters } from './group.js'
 import { addFastestIterations } from './fastest.js'
