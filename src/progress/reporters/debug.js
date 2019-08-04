@@ -12,7 +12,7 @@ const start = function() {}
 const update = async function({ name, percentage, timeLeft, index, total }) {
   const percentageStr = serializePercentage(percentage)
   const indexStr = String(index + 1).padStart(String(total).length)
-  const content = `${percentageStr} ${timeLeft} ${indexStr}/${total} ${name}`
+  const content = `${timeLeft} ${percentageStr} ${indexStr}/${total} ${name}`
 
   await clearProgress()
 

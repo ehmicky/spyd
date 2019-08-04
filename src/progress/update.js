@@ -1,5 +1,7 @@
 import { now } from '../now.js'
 
+import { getTimeLeft } from './time.js'
+
 // Update progress at regular interval
 export const startUpdate = function({ total, duration, reporters }) {
   const progressState = {}
@@ -41,14 +43,6 @@ const getPercentage = function({ index, taskTimeLeft, total, duration }) {
   const percentage = (index + taskPercentage) / total
   return percentage
 }
-
-const getTimeLeft = function({ index, taskTimeLeft, total, duration }) {
-  const nanosecsLeft = (total - index - 1) * duration + taskTimeLeft
-  const secsLeft = Math.ceil(nanosecsLeft / NANOSECS_TO_SECS)
-  return secsLeft
-}
-
-const NANOSECS_TO_SECS = 1e9
 
 export const stopUpdate = function(progressId) {
   clearInterval(progressId)
