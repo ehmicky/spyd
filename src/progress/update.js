@@ -24,22 +24,31 @@ const updateProgress = async function({
     return
   }
 
-  const percentage = getPercentage({ index, runEnd, total, duration })
+  const taskTimeLeft = Math.max(runEnd - now(), 0)
+  const percentage = getPercentage({ index, taskTimeLeft, total, duration })
+  const timeLeft = getTimeLeft({ index, taskTimeLeft, total, duration })
 
   // Call each `reporter.update()`
   const promises = reporters.map(reporter =>
-    reporter.update({ name, percentage, index, total }),
+    reporter.update({ name, percentage, timeLeft, index, total }),
   )
   await Promise.all(promises)
 }
 
 // Percentage left of the whole run
-const getPercentage = function({ index, runEnd, total, duration }) {
-  const timeLeft = Math.max(runEnd - now(), 0)
-  const taskPercentage = 1 - timeLeft / duration
+const getPercentage = function({ index, taskTimeLeft, total, duration }) {
+  const taskPercentage = 1 - taskTimeLeft / duration
   const percentage = (index + taskPercentage) / total
   return percentage
 }
+
+const getTimeLeft = function({ index, taskTimeLeft, total, duration }) {
+  const nanosecsLeft = (total - index - 1) * duration + taskTimeLeft
+  const secsLeft = Math.ceil(nanosecsLeft / NANOSECS_TO_SECS)
+  return secsLeft
+}
+
+const NANOSECS_TO_SECS = 1e9
 
 export const stopUpdate = function(progressId) {
   clearInterval(progressId)

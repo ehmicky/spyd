@@ -9,10 +9,10 @@ const pClearLine = promisify(clearLine)
 // eslint-disable-next-line no-empty-function
 const start = function() {}
 
-const update = async function({ name, percentage, index, total }) {
+const update = async function({ name, percentage, timeLeft, index, total }) {
   const percentageStr = serializePercentage(percentage)
   const indexStr = String(index + 1).padStart(String(total).length)
-  const content = `${percentageStr} ${indexStr}/${total} ${name}`
+  const content = `${percentageStr} ${timeLeft} ${indexStr}/${total} ${name}`
 
   await clearProgress()
 
