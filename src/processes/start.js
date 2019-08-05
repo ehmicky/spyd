@@ -10,28 +10,19 @@ const CHILD_MAIN = `${__dirname}/../run/node/main.js`
 // This includes loading the task file.
 // We do it in-between benchmarks because it would slow them down and add
 // variance.
-export const startChildren = async function({
-  taskPath,
-  taskId,
-  variationId,
-  requireOpt,
-}) {
+export const startChildren = async function({ taskPath, requireOpt }) {
   const promises = Array.from({ length: POOL_SIZE }, () =>
-    startChild({ taskPath, taskId, variationId, requireOpt }),
+    startChild({ taskPath, requireOpt, skip: false }),
   )
-  const children = await Promise.all(promises)
+  const results = await Promise.all(promises)
+  const children = results.map(getChild)
   return children
 }
 
 // Same as `PROCESS_COUNT`
 const POOL_SIZE = 2e1
 
-const startChild = async function({
-  taskPath,
-  taskId,
-  variationId,
-  requireOpt,
-}) {
+export const startChild = async function({ taskPath, requireOpt, skip }) {
   const child = spawn('node', [CHILD_MAIN], {
     stdio: ['ignore', 'ignore', 'pipe', 'ipc'],
   })
@@ -42,12 +33,13 @@ const startChild = async function({
   await getChildMessage(child, 'ready')
 
   // Communicate to the child process which task to load
-  await sendChildMessage(child, 'load', {
-    taskPath,
-    taskId,
-    variationId,
-    requireOpt,
-  })
+  await sendChildMessage(child, 'load', { taskPath, requireOpt, skip })
 
+  const { iterations } = await getChildMessage(child, 'load')
+
+  return { iterations, child }
+}
+
+const getChild = function({ child }) {
   return child
 }

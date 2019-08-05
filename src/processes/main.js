@@ -1,8 +1,9 @@
 import { now } from '../now.js'
 import { getStats } from '../stats/compute.js'
 
-import { startChildren } from './start.js'
+import { startChildren, startChild } from './start.js'
 import { runChildren } from './run.js'
+import { endChild } from './end.js'
 import { shouldStop } from './stop.js'
 
 // Start several child processes benchmarking the same task.
@@ -85,13 +86,14 @@ const runPool = async function({
   requireOpt,
 }) {
   try {
-    const children = await startChildren({
-      taskPath,
+    const children = await startChildren({ taskPath, requireOpt })
+    const results = await runChildren({
+      children,
+      processDuration,
+      runEnd,
       taskId,
       variationId,
-      requireOpt,
     })
-    const results = await runChildren({ children, processDuration, runEnd })
     return results
   } catch (error) {
     addTaskInfo({ error, taskId, variationId })
@@ -106,4 +108,16 @@ const addTaskInfo = function({ error, taskId, variationId }) {
   const message = error instanceof Error ? error.message : String(error)
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
   error.message = `Task '${taskId}'${variationStr} errored:\n\n${message}`
+}
+
+// At startup we run child processes but do not run an benchmarks. We only
+// retrieve the task files iterations
+export const loadTaskFile = async function(taskPath, requireOpt) {
+  const { iterations, child } = await startChild({
+    taskPath,
+    requireOpt,
+    skip: true,
+  })
+  await endChild(child)
+  return iterations
 }

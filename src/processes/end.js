@@ -1,7 +1,9 @@
 import pEvent from 'p-event'
 
 // Wait for child process exit. Forward any termination errors.
-export const waitForExit = async function(child) {
+export const endChild = async function(child) {
+  child.disconnect()
+
   const { exitCode, signal } = await getExit(child)
 
   if (exitCode === 0 && signal === null) {
