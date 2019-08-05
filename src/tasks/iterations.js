@@ -1,5 +1,6 @@
+import { loadTaskFile } from '../load/main.js'
+
 import { getTaskPaths } from './path.js'
-import { loadTaskFile } from './load.js'
 import { addPaddings } from './paddings.js'
 
 // Retrieve each iteration, i.e. combination of task + variation (if any)
