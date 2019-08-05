@@ -10,8 +10,8 @@ export const getSystem = function() {
   const cpu = serializeCpus()
   const memory = getMemory()
   const os = osName()
-  const node = version
-  return { cpu, memory, os, node }
+  const runtimeVersions = getRuntimeVersions()
+  return { CPU: cpu, Memory: memory, OS: os, ...runtimeVersions }
 }
 
 const serializeCpus = function() {
@@ -28,4 +28,8 @@ const serializeCpu = function([name, cores]) {
 const getMemory = function() {
   const memory = totalmem()
   return formatBytes(memory, { decimalPlaces: 0 })
+}
+
+const getRuntimeVersions = function() {
+  return { Node: version }
 }
