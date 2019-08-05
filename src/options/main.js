@@ -44,6 +44,7 @@ const DEFAULT_OPTS = {
   progress: ['debug'],
   verbose: false,
   link: true,
+  system: false,
 }
 
 export const EXAMPLE_OPTS = {

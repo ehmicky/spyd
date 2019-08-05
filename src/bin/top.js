@@ -52,7 +52,9 @@ Built-in reporters: silent`,
   },
   report: {
     describe: `Options passed to specific reporters.
-For example --report.json.* options would be passed to the json reporter.`,
+For example --report.json.* options would be passed to the json reporter.
+The following options can be always be set: output, insert, system, link.
+For example --report.json.output is like --output but only for the json reporter.`,
   },
   output: {
     alias: 'o',
@@ -61,8 +63,7 @@ For example --report.json.* options would be passed to the json reporter.`,
     describe: `Overwrite the specified file with the benchmark results.
 Can be "" for silent output.
 Can be "-" to print to stdout.
-Default: "" if --insert is used, "-" otherwise.
-Use --report.REPORTER.output to set this option on a specific reporter instead of all reporters.`,
+Default: "" if --insert is used, "-" otherwise.`,
   },
   insert: {
     alias: 'i',
@@ -72,8 +73,12 @@ Use --report.REPORTER.output to set this option on a specific reporter instead o
 The file must contain:
   - a line with the words "spyd-start" such as <!-- spyd-start --> or #spyd-start
   - a line with the words "spyd-end"
-The benchmarks results will be inserted between those two lines.
-Use --report.REPORTER.insert to set this option on a specific reporter instead of all reporters.`,
+The benchmarks results will be inserted between those two lines.`,
+  },
+  system: {
+    boolean: true,
+    describe: `Show hardware and software information.
+Default: false`,
   },
   verbose: {
     boolean: true,

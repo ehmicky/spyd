@@ -1,16 +1,19 @@
 import { REPORTERS } from './reporters/main.js'
 
 // Retrieve reporters method and options
+// `output`, `insert`, `system`, link` can be set either for specific reporter
+// (--reporter.REPORTER.output) or for all (--output)
 export const getReporters = function({
   reporters,
   reportOpts,
   output,
   insert,
+  system,
   link,
 }) {
   const reportersA = getDefaultReporters(reporters)
   return reportersA.map(name =>
-    getReporter({ name, reportOpts, output, insert, link }),
+    getReporter({ name, reportOpts, output, insert, system, link }),
   )
 }
 
@@ -23,9 +26,16 @@ const getDefaultReporters = function(reporters) {
 }
 
 // Retrieve reporter's main function
-const getReporter = function({ name, reportOpts, output, insert, link }) {
+const getReporter = function({
+  name,
+  reportOpts,
+  output,
+  insert,
+  system,
+  link,
+}) {
   const main = loadReporter(name)
-  const reportOpt = getReportOpt({ name, reportOpts, output, insert, link })
+  const reportOpt = { output, insert, system, link, ...reportOpts[name] }
   return { main, reportOpt }
 }
 
@@ -41,16 +51,4 @@ const loadReporter = function(name) {
   } catch (error) {
     throw new Error(`Could not load reporter '${name}'\n\n${error.stack}`)
   }
-}
-
-// `output`, `insert`, `link` can be set either for specific reporter
-// (--reporter.REPORTER.output) or for all (--output)
-const getReportOpt = function({ name, reportOpts, output, insert, link }) {
-  const reporterOpt = reportOpts[name]
-
-  if (reporterOpt === undefined) {
-    return { output, insert, link }
-  }
-
-  return { output, insert, link, ...reporterOpt }
 }

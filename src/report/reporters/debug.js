@@ -1,8 +1,12 @@
 // Debugging reporter only meant for development purpose
-export const debug = function({ iterations }, { link }) {
+export const debug = function(
+  { iterations, system },
+  { link, system: showSystem },
+) {
   const content = iterations.map(serializeIteration).join('\n')
-  const contentA = addLink(content, link)
-  return contentA
+  const contentA = addSystem(content, system, showSystem)
+  const contentB = addLink(contentA, link)
+  return contentB
 }
 
 const serializeIteration = function({ name, printedStats, fastest }) {
@@ -27,6 +31,24 @@ const NON_PRINTED_STATS = ['percentiles', 'histogram']
 const serializeStat = function([name, string]) {
   return `${name} ${string}`
 }
+
+const addSystem = function(content, system, showSystem) {
+  if (!showSystem) {
+    return content
+  }
+
+  const systemA = Object.entries(system)
+    .map(serializeSystemValue)
+    .join('\n')
+  return `${content}\n\nSystem:\n${systemA}`
+}
+
+const serializeSystemValue = function([name, value]) {
+  const nameA = `${name}:`.padEnd(SYSTEM_PADDING)
+  return `  ${nameA} ${value}`
+}
+
+const SYSTEM_PADDING = 7
 
 const addLink = function(content, link) {
   if (!link) {
