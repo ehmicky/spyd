@@ -1,4 +1,4 @@
-import { sendParentMessage, getParentMessage } from '../processes/ipc.js'
+import { sendParentMessage, getParentMessage } from '../../processes/ipc.js'
 
 import { benchmark } from './benchmark/main.js'
 import { loadTaskFile } from './load/main.js'
