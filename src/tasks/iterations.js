@@ -6,29 +6,15 @@ import { addPaddings } from './paddings.js'
 export const getIterations = async function({ files, cwd, requireOpt }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
-  const tasks = await loadTasks(taskPaths, requireOpt)
-  const iterations = tasks.flatMap(getIteration)
+  const iterations = await loadIterations(taskPaths, requireOpt)
+
   const iterationsA = addPaddings(iterations)
   return iterationsA
 }
 
-const loadTasks = async function(taskPaths, requireOpt) {
+const loadIterations = async function(taskPaths, requireOpt) {
   const promises = taskPaths.map(taskPath => loadTaskFile(taskPath, requireOpt))
-  const tasks = await Promise.all(promises)
-  const tasksA = tasks.flat()
-  return tasksA
-}
-
-const getIteration = function({ taskPath, taskId, taskTitle, variations }) {
-  if (variations === undefined) {
-    return [{ taskPath, taskId, taskTitle }]
-  }
-
-  return variations.map(({ variationId, variationTitle }) => ({
-    taskPath,
-    taskId,
-    taskTitle,
-    variationId,
-    variationTitle,
-  }))
+  const iterations = await Promise.all(promises)
+  const iterationsA = iterations.flat()
+  return iterationsA
 }

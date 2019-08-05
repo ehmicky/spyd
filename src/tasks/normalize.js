@@ -1,86 +1,28 @@
-// Normalize tasks and variations
-export const normalizeEntries = function(
-  { variations = {}, ...tasks },
-  taskPath,
-) {
-  const variationsA = variations.map(normalizeVariation)
-  const tasksA = Object.entries(tasks).map(([taskId, task]) =>
-    normalizeTask({ taskId, task, variations: variationsA, taskPath }),
-  )
-  return tasksA
-}
-
-const normalizeVariation = function({
-  id: variationId,
-  title: variationTitle = variationId,
-  value,
-}) {
-  return { variationId, variationTitle, value }
-}
-
 // `taskTitle` defaults to the function variable name. `taskTitle` is used by
 // reporters while the `taskId` is used for identification.
-// We also link tasks to their variations
-const normalizeTask = function({
-  taskId,
-  task,
-  variations: allVariations,
-  taskPath,
-}) {
-  const { taskTitle = taskId, variations, ...taskA } = normalizeTaskFunc(task)
-  const variationsA = getTaskVariations({
-    variations,
-    allVariations,
-    taskId,
-    taskPath,
-  })
-  return { ...taskA, taskPath, taskId, taskTitle, variations: variationsA }
+export const normalizeTasks = function({ variations, ...tasks }, taskPath) {
+  const tasksA = Object.entries(tasks).map(([taskId, task]) =>
+    normalizeTask({ taskId, task, taskPath }),
+  )
+  return { tasks: tasksA, variations }
+}
+
+const normalizeTask = function({ taskId, task, taskPath }) {
+  const {
+    title: taskTitle = taskId,
+    variations: variationsIds,
+    main,
+    before,
+    after,
+  } = normalizeMain(task)
+  return { taskPath, taskId, taskTitle, variationsIds, main, before, after }
 }
 
 // Tasks can be functions as a shortcut to `{ main() { ... } }`
-const normalizeTaskFunc = function(task) {
+const normalizeMain = function(task) {
   if (typeof task === 'function') {
     return { main: task }
   }
 
   return task
-}
-
-// `task.variations` is an array of `variationId` pointing towards the top-level
-// `variations` object. We dereference those pointers here.
-// `variations` as scoped to each task file. However the same `variationId` can
-// be used across task files.
-// Defaults to using all `variations`.
-const getTaskVariations = function({
-  variations,
-  allVariations,
-  taskId,
-  taskPath,
-}) {
-  if (variations === undefined) {
-    return allVariations
-  }
-
-  return variations.map(variationId =>
-    getTaskVariation({ variationId, allVariations, taskId, taskPath }),
-  )
-}
-
-const getTaskVariation = function({
-  variationId,
-  allVariations,
-  taskId,
-  taskPath,
-}) {
-  const variation = allVariations.find(
-    ({ variationId: variationIdA }) => variationIdA === variationId,
-  )
-
-  if (variation === undefined) {
-    throw new TypeError(
-      `Variation '${variationId}' of task '${taskId}' in '${taskPath}' does not exist`,
-    )
-  }
-
-  return variation
 }

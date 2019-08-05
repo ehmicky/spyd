@@ -1,5 +1,5 @@
 import { benchmark } from '../benchmark/main.js'
-import { getTask } from '../tasks/get.js'
+import { loadTaskFile } from '../tasks/load.js'
 
 import { sendParentMessage, getParentMessage } from './ipc.js'
 
@@ -17,12 +17,12 @@ const run = async function() {
       requireOpt,
     } = await getParentMessage('load')
 
-    const { main, before, after } = await getTask({
-      taskPath,
-      taskId,
-      variationId,
-      requireOpt,
-    })
+    const iterations = await loadTaskFile(taskPath, requireOpt)
+
+    const { main, before, after } = iterations.find(
+      iteration =>
+        iteration.taskId === taskId && iteration.variationId === variationId,
+    )
 
     const duration = await getParentMessage('run')
 
