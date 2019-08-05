@@ -67,8 +67,8 @@ const getFraction = function({ stat, integer, decimals }) {
 }
 
 const serializeArray = function({ stat, scale, unit, decimals }) {
-  return stat.map(integer =>
-    serializeScalar({ integer, scale, unit, decimals }),
+  return stat.map(statA =>
+    serializeScalar({ stat: statA, scale, unit, decimals }),
   )
 }
 
