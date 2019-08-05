@@ -68,7 +68,21 @@ const BOUND_FUNCS = ['main', 'before', 'after']
 
 const bindFunction = function(task, name, variationValue) {
   const func = task[name]
-  // `func.bind()` is much slower, especially for very fast functions
-  const funcA = () => func(variationValue)
+  const funcA = getBoundFunction({ func, task, name, variationValue })
   return { [name]: funcA }
+}
+
+// `func.bind()` is much slower, especially for very fast functions.
+const getBoundFunction = function({
+  func,
+  task: { before },
+  name,
+  variationValue,
+}) {
+  // Passing a `beforeArgs` is slower as well, so we only do it when needed.
+  if (name === 'before' || before === undefined) {
+    return () => func(variationValue)
+  }
+
+  return beforeArgs => func(variationValue, beforeArgs)
 }
