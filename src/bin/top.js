@@ -101,11 +101,11 @@ FILE defaults to "./benchmarks.js|ts" or "./benchmarks/main.js|ts".
 
 FILE must export the tasks to benchmark. Each task must be either:
   - a function
-  - an object with any of the following properties
+  - an object with any of the following properties:
 
-Task properties:
   main()      Function being benchmarked.
               Can be async.
+              Required.
 
   before()    Function fired before each main(). Not benchmarked.
               Can be async.
@@ -119,9 +119,21 @@ Task properties:
   title       Title shown by reporters.
               Defaults to the task variable name.                       [string]
 
-  variations  Each value of that object is passed to main(), before(), after().
-              Separate benchmarks for each value are created.
-              The keys are the variations titles shown by reporters.    [object]`
+  variations  Ids of the variations this task should benchmark.
+              Defaults to all available variations.                   [string[]]
+
+FILE can also export a 'variations' array. One benchmark per combination of
+tasks and variations are run. Each variation is an object with the following
+properties:
+
+  id          Variation identifier.
+              Required.                                                 [string]
+
+  title       Title shown by reporters.
+              Defaults to the variation 'id'.                           [string]
+
+  value       Passed as first argument to tasks main(), before() and
+              after().                                                     [any]`
 
 const MAIN_EXAMPLE = '$0'
 const LONG_EXAMPLE = '$0 -d 60'
