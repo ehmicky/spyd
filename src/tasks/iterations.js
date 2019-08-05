@@ -3,18 +3,13 @@ import { loadTaskFile } from './load.js'
 import { addPaddings } from './paddings.js'
 
 // Retrieve each iteration, i.e. combination of task + variation (if any)
-export const getIterations = async function({
-  files,
-  cwd,
-  duration,
-  requireOpt,
-}) {
+export const getIterations = async function({ files, cwd, requireOpt }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
   const tasks = await loadTasks(taskPaths, requireOpt)
   const iterations = tasks
     .flatMap(getIteration)
-    .map(iteration => ({ ...iteration, duration, requireOpt }))
+    .map(iteration => ({ ...iteration, requireOpt }))
   const iterationsA = addPaddings(iterations)
   return iterationsA
 }

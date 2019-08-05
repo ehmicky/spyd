@@ -32,13 +32,17 @@ const waitForBenchmark = async function(iterations, opts) {
   return benchmark
 }
 
-const getBenchmark = async function({ iterations, progressState, opts }) {
+const getBenchmark = async function({
+  iterations,
+  progressState,
+  opts,
+  opts: { duration },
+}) {
   const iterationsA = await pMapSeries(iterations, (iteration, index) =>
-    runProcesses({ ...iteration, index, progressState }),
+    runProcesses({ ...iteration, index, progressState, duration }),
   )
-  const benchmark = { iterations: iterationsA }
-  const benchmarkA = addBenchmarkInfo({ benchmark, opts })
-  return benchmarkA
+  const benchmark = addBenchmarkInfo(iterationsA, opts)
+  return benchmark
 }
 
 // We do not use `export default` because Babel transpiles it in a way that

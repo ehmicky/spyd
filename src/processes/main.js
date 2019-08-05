@@ -14,10 +14,10 @@ export const runProcesses = async function({
   taskTitle,
   variationId,
   variationTitle,
+  requireOpt,
   index,
   progressState,
   duration,
-  requireOpt,
 }) {
   const runEnd = now() + duration
   // How long to run each child process
