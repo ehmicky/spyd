@@ -1,4 +1,4 @@
-import { now } from '../now.js'
+import { now } from '../../now.js'
 
 import { getDuration } from './duration.js'
 

@@ -1,4 +1,4 @@
-import { benchmark } from '../benchmark/main.js'
+import { benchmark } from '../run/benchmark/main.js'
 import { loadTaskFile } from '../run/load/main.js'
 
 import { sendParentMessage, getParentMessage } from './ipc.js'

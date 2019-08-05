@@ -1,5 +1,5 @@
-import { getTimeResolution } from '../resolution.js'
-import { getMedian } from '../stats/methods.js'
+import { getTimeResolution } from '../../resolution.js'
+import { getMedian } from '../../stats/methods.js'
 
 import { benchmarkLoop } from './loop.js'
 

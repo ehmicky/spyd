@@ -1,4 +1,4 @@
-import { now } from '../now.js'
+import { now } from '../../now.js'
 
 // We separate async and sync measurements because following a promise (`await`)
 // takes several microseconds, which does not work when measuring fast
