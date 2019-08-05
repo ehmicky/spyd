@@ -4,7 +4,7 @@ import getStream from 'get-stream'
 
 import { getChildMessage, sendChildMessage } from './ipc.js'
 
-const CHILD_MAIN = `${__dirname}/child.js`
+const CHILD_MAIN = `${__dirname}/../run/main.js`
 
 // We boot several child processes at once in parallel because it is slow.
 // This includes loading the task file.

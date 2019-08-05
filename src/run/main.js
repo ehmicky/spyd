@@ -1,7 +1,7 @@
-import { benchmark } from '../run/benchmark/main.js'
-import { loadTaskFile } from '../run/load/main.js'
+import { sendParentMessage, getParentMessage } from '../processes/ipc.js'
 
-import { sendParentMessage, getParentMessage } from './ipc.js'
+import { benchmark } from './benchmark/main.js'
+import { loadTaskFile } from './load/main.js'
 
 // Child process entry point.
 // Wait for the parent process to request benchmarks then send the result back
