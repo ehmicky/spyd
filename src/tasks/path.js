@@ -2,28 +2,30 @@ import { resolve } from 'path'
 
 import locatePath from 'locate-path'
 
-// Retrieve the path to the task file using the `file` and `cwd` options
-export const getTaskPath = async function(file, cwd) {
-  const taskFile = await getTaskFile(file, cwd)
+// Retrieve the absolute paths to the task files using the `files` and `cwd`
+// options
+export const getTaskPaths = async function(files, cwd) {
+  const filesA = await getDefaultFiles(files, cwd)
+  const taskPaths = filesA.map(file => resolve(cwd, file))
+  return taskPaths
+}
 
-  if (taskFile === undefined) {
+// `files` option defaults to looking up files in the current directory
+const getDefaultFiles = async function(files, cwd) {
+  if (files.length !== 0) {
+    return files
+  }
+
+  const defaultFiles = await locatePath(DEFAULT_FILES, { cwd })
+
+  if (defaultFiles === undefined) {
     throw new Error('No tasks file found')
   }
 
-  const taskPath = resolve(cwd, taskFile)
-  return taskPath
+  return [defaultFiles]
 }
 
-const getTaskFile = async function(file, cwd) {
-  if (file !== undefined) {
-    return file
-  }
-
-  const taskFile = await locatePath(DEFAULT_TASK_PATHS, { cwd })
-  return taskFile
-}
-
-const DEFAULT_TASK_PATHS = [
+const DEFAULT_FILES = [
   'benchmarks.js',
   'benchmarks/main.js',
   'benchmarks.ts',

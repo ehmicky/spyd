@@ -1,8 +1,8 @@
 // Normalize tasks and variations
-export const normalizeEntries = function({
-  entries: { variations = {}, ...tasks },
+export const normalizeEntries = function(
+  { variations = {}, ...tasks },
   taskPath,
-}) {
+) {
   const variationsA = variations.map(normalizeVariation)
   const tasksA = Object.entries(tasks).map(([taskId, task]) =>
     normalizeTask({ taskId, task, variations: variationsA, taskPath }),
@@ -34,7 +34,7 @@ const normalizeTask = function({
     taskId,
     taskPath,
   })
-  return { ...taskA, taskId, taskTitle, variations: variationsA }
+  return { ...taskA, taskPath, taskId, taskTitle, variations: variationsA }
 }
 
 // Tasks can be functions as a shortcut to `{ main() { ... } }`
@@ -48,6 +48,8 @@ const normalizeTaskFunc = function(task) {
 
 // `task.variations` is an array of `variationId` pointing towards the top-level
 // `variations` object. We dereference those pointers here.
+// `variations` as scoped to each task file. However the same `variationId` can
+// be used across task files.
 // Defaults to using all `variations`.
 const getTaskVariations = function({
   variations,

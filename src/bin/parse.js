@@ -3,16 +3,11 @@ import { omitBy } from '../utils/main.js'
 import { normalizeDynamicOpts } from './dynamic.js'
 
 export const parseOpts = function(yargs) {
-  const {
-    _: [file],
-    report,
-    progress,
-    ...opts
-  } = yargs.parse()
+  const { _: files, report, progress, ...opts } = yargs.parse()
 
   const reportA = normalizeDynamicOpts(report)
   const progressA = normalizeDynamicOpts(progress)
-  const optsA = { ...opts, file, report: reportA, progress: progressA }
+  const optsA = { ...opts, files, report: reportA, progress: progressA }
   const optsB = omitBy(optsA, isInternalKey)
   return optsB
 }

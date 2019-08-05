@@ -50,7 +50,7 @@ const DEFAULT_OPTS = {
 export const EXAMPLE_OPTS = {
   ...DEFAULT_OPTS,
   config: 'spyd.json',
-  file: 'benchmarks.js',
+  files: ['benchmarks.js'],
   require: ['ts-node/register'],
   output: './file.js',
   insert: './README.md',

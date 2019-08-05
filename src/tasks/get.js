@@ -7,7 +7,7 @@ export const getTask = async function({
   variationId,
   requireOpt,
 }) {
-  const tasks = await loadTaskFile({ taskPath, requireOpt })
+  const tasks = await loadTaskFile(taskPath, requireOpt)
 
   const { main, before, after, variations } = tasks.find(
     task => task.taskId === taskId,

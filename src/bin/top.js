@@ -91,7 +91,7 @@ Default: true`,
   },
 }
 
-const USAGE = `$0 [OPTIONS] [FILE]
+const USAGE = `$0 [OPTIONS] [FILE...]
 
 Benchmark JavaScript code.
 
@@ -131,7 +131,10 @@ properties:
               Defaults to the variation 'id'.                           [string]
 
   value       Passed as first argument to tasks main(), before() and
-              after().                                                     [any]`
+              after().                                                     [any]
+
+Several FILEs can be specified at once. Each set of 'variations' is specific to
+the FILE which declared it.`
 
 const MAIN_EXAMPLE = '$0'
 const LONG_EXAMPLE = '$0 -d 60'
