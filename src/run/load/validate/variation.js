@@ -1,4 +1,4 @@
-import { isPlainObject } from '../../utils/main.js'
+import { isPlainObject } from '../../../utils/main.js'
 
 import { validateProp, validateString } from './common.js'
 

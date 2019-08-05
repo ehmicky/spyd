@@ -1,4 +1,4 @@
-import { loadTaskFile } from '../load/main.js'
+import { loadTaskFile } from '../run/load/main.js'
 
 import { getTaskPaths } from './path.js'
 import { addPaddings } from './paddings.js'
