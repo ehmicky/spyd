@@ -1,4 +1,5 @@
 import pMapSeries from 'p-map-series'
+import pFinally from 'p-finally'
 
 import { getOpts } from './options/main.js'
 import { startProgress, stopProgress } from './progress/main.js'
@@ -13,27 +14,31 @@ const spyd = async function(opts) {
 
   const iterations = await getIterations(optsA)
 
-  const { progressState, progressInfo } = await startProgress({
-    iterations,
-    opts: optsA,
-  })
+  const benchmark = await waitForBenchmark(iterations, optsA)
 
-  const benchmark = await getBenchmark(iterations, progressState)
+  await report(benchmark, optsA)
 
-  const benchmarkA = addBenchmarkInfo({ benchmark, opts: optsA })
-
-  await stopProgress(progressInfo)
-
-  await report(benchmarkA, optsA)
-
-  return benchmarkA
+  return benchmark
 }
 
-const getBenchmark = async function(iterations, progressState) {
+const waitForBenchmark = async function(iterations, opts) {
+  const { progressState, progressInfo } = await startProgress(iterations, opts)
+
+  // TODO: replace with `try {} finally {}` when dropping support for Node 8/9
+  const benchmark = await pFinally(
+    getBenchmark({ iterations, progressState, opts }),
+    () => stopProgress(progressInfo),
+  )
+  return benchmark
+}
+
+const getBenchmark = async function({ iterations, progressState, opts }) {
   const iterationsA = await pMapSeries(iterations, (iteration, index) =>
     runProcesses({ ...iteration, index, progressState }),
   )
-  return { iterations: iterationsA }
+  const benchmark = { iterations: iterationsA }
+  const benchmarkA = addBenchmarkInfo({ benchmark, opts })
+  return benchmarkA
 }
 
 // We do not use `export default` because Babel transpiles it in a way that

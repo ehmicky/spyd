@@ -4,10 +4,10 @@ import { getReporters } from './get.js'
 import { startUpdate, stopUpdate } from './update.js'
 
 // Start progress reporting using the `progress` option
-export const startProgress = async function({
+export const startProgress = async function(
   iterations,
-  opts: { duration, progressReporters },
-}) {
+  { duration, progressReporters },
+) {
   const total = iterations.length
 
   hideCursor()
