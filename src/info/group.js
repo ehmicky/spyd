@@ -11,8 +11,8 @@ export const getTasks = function(iterations) {
   return tasksA
 }
 
-const getTask = function({ groupId: taskId, mean, iteration: { title } }) {
-  return { taskId, title, mean }
+const getTask = function({ groupId: taskId, mean, iteration: { taskTitle } }) {
+  return { taskId, taskTitle, mean }
 }
 
 // Retrieve all variations.

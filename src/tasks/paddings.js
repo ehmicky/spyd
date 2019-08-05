@@ -1,5 +1,5 @@
-// Make `title` and `name` reporter-friendly by adding paddings.
-// Also add `iteration.name` which combines `title` and `variationTitle`.
+// Make `taskTitle` and `variationTitle` reporter-friendly by adding paddings.
+// Also add `iteration.name` which combines `taskTitle` and `variationTitle`.
 export const addPaddings = function(iterations) {
   const paddings = getPaddings(iterations)
   const iterationsA = iterations.map(iteration =>
@@ -8,11 +8,11 @@ export const addPaddings = function(iterations) {
   return iterationsA
 }
 
-// Vertically align both `title` and `variationTitle`
+// Vertically align both `taskTitle` and `variationTitle`
 const getPaddings = function(iterations) {
-  const title = getPadding(iterations, 'title')
+  const task = getPadding(iterations, 'taskTitle')
   const variation = getPadding(iterations, 'variationTitle')
-  return { title, variation }
+  return { task, variation }
 }
 
 const getPadding = function(iterations, propName) {
@@ -20,19 +20,22 @@ const getPadding = function(iterations, propName) {
   return Math.max(...lengths)
 }
 
-const addPadding = function({ title, variationTitle, ...iteration }, paddings) {
-  const titleA = title.padEnd(paddings.title)
+const addPadding = function(
+  { taskTitle, variationTitle, ...iteration },
+  paddings,
+) {
+  const taskTitleA = taskTitle.padEnd(paddings.task)
 
   if (variationTitle === undefined) {
-    const name = titleA.padEnd(paddings.variation + 3)
-    return { ...iteration, title: titleA, name }
+    const name = taskTitleA.padEnd(paddings.variation + 3)
+    return { ...iteration, taskTitle: taskTitleA, name }
   }
 
   const variationTitleA = variationTitle.padEnd(paddings.variation)
-  const nameA = `${titleA} | ${variationTitleA}`
+  const nameA = `${taskTitleA} | ${variationTitleA}`
   return {
     ...iteration,
-    title: titleA,
+    taskTitle: taskTitleA,
     variationTitle: variationTitleA,
     name: nameA,
   }

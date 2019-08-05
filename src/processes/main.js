@@ -11,7 +11,7 @@ export const runProcesses = async function({
   name,
   taskPath,
   taskId,
-  title,
+  taskTitle,
   variationId,
   variationTitle,
   index,
@@ -37,7 +37,7 @@ export const runProcesses = async function({
 
   const stats = getStats(results)
 
-  return { name, taskId, title, variationId, variationTitle, stats }
+  return { name, taskId, taskTitle, variationId, variationTitle, stats }
 }
 
 const PROCESS_COUNT = 2e1

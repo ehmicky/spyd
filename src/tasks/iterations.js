@@ -18,14 +18,14 @@ export const getIterations = async function({
   return iterationsA
 }
 
-const getIteration = function({ taskId, title, variations }) {
+const getIteration = function({ taskId, taskTitle, variations }) {
   if (variations === undefined) {
-    return [{ taskId, title }]
+    return [{ taskId, taskTitle }]
   }
 
   return Object.keys(variations).map(variation => ({
     taskId,
-    title,
+    taskTitle,
     variationId: variation,
     variationTitle: variation,
   }))
