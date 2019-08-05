@@ -3,6 +3,7 @@ import { addPrintedStats } from '../print/main.js'
 
 import { getTasks, getParameters } from './group.js'
 import { addFastestIterations } from './fastest.js'
+import { getSystem } from './system.js'
 
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function({ benchmark: { iterations }, opts }) {
@@ -21,7 +22,9 @@ export const addBenchmarkInfo = function({ benchmark: { iterations }, opts }) {
 
   const iterationsC = addPrintedStats(iterationsB, opts)
 
-  return { opts, tasks, parameters, iterations: iterationsC }
+  const system = getSystem()
+
+  return { opts, tasks, parameters, iterations: iterationsC, system }
 }
 
 const addIterationInfo = function({

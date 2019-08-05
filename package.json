@@ -33,6 +33,7 @@
     "test": "test"
   },
   "dependencies": {
+    "bytes": "^3.1.0",
     "cli-cursor": "^3.1.0",
     "core-js": "^3.1.4",
     "find-up": "^4.1.0",
@@ -40,6 +41,7 @@
     "is-interactive": "^1.0.0",
     "jest-validate": "^24.8.0",
     "locate-path": "^5.0.0",
+    "os-name": "^3.1.0",
     "p-event": "^4.1.0",
     "p-map-series": "^2.1.0",
     "p-reduce": "^2.1.0",
