@@ -27,15 +27,17 @@ const bindVariation = function(variations, variationId, funcs) {
     return funcs
   }
 
-  const variationValue = variations[variationId]
-  return funcs.map(func => bindFunction(func, variationValue))
+  const { value } = variations.find(
+    ({ variationId: variationIdA }) => variationIdA === variationId,
+  )
+  return funcs.map(func => bindFunction(func, value))
 }
 
-const bindFunction = function(func, variationValue) {
+const bindFunction = function(func, value) {
   if (func === undefined) {
     return
   }
 
   // `func.bind()` is much slower, which shows with very functions
-  return () => func(variationValue)
+  return () => func(value)
 }

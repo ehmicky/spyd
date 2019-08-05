@@ -1,14 +1,14 @@
 import { useRequireOpt } from './require_opt.js'
-import { validateTasks } from './validate.js'
-import { normalizeTasks } from './normalize.js'
+import { validateTaskFile } from './validate/main.js'
+import { normalizeEntries } from './normalize.js'
 
 // Load the task file using its absolute path
 export const loadTaskFile = async function({ taskPath, requireOpt }) {
   useRequireOpt(requireOpt, taskPath)
-  const tasks = await loadFile(taskPath)
-  validateTasks(tasks, taskPath)
-  const tasksA = normalizeTasks(tasks)
-  return tasksA
+  const entries = await loadFile(taskPath)
+  validateTaskFile(entries, taskPath)
+  const tasks = normalizeEntries({ entries, taskPath })
+  return tasks
 }
 
 const loadFile = function(taskPath) {

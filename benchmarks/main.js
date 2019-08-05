@@ -1,16 +1,12 @@
 export const MathRandom = {
   main: Math.random,
-  variations: {
-    one: 1,
-    two: 2,
-  },
+  variations: ['one', 'two'],
 }
 
-export const MathRandomTwo = {
-  main: Math.random,
-  variations: {
-    one: 1,
-    three: 2,
-    four: 3,
-  },
-}
+export const MathRandomTwo = Math.random
+
+export const variations = [
+  { id: 'one', title: 'One', value: 1 },
+  { id: 'two', value: 2 },
+  { id: 'three', value: 3 },
+]

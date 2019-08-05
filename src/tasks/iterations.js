@@ -23,10 +23,10 @@ const getIteration = function({ taskId, taskTitle, variations }) {
     return [{ taskId, taskTitle }]
   }
 
-  return Object.keys(variations).map(variation => ({
+  return variations.map(({ variationId, variationTitle }) => ({
     taskId,
     taskTitle,
-    variationId: variation,
-    variationTitle: variation,
+    variationId,
+    variationTitle,
   }))
 }
