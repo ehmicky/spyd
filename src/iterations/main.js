@@ -14,8 +14,21 @@ export const getIterations = async function({ files, cwd, requireOpt }) {
 }
 
 const loadIterations = async function(taskPaths, requireOpt) {
-  const promises = taskPaths.map(taskPath => loadTaskFile(taskPath, requireOpt))
+  const promises = taskPaths.map(taskPath => loadFile(taskPath, requireOpt))
   const iterations = await Promise.all(promises)
   const iterationsA = iterations.flat()
   return iterationsA
+}
+
+const loadFile = async function(taskPath, requireOpt) {
+  const iterations = await loadTaskFile(taskPath, requireOpt)
+  return iterations.map(
+    ({ taskId, taskTitle, variationId, variationTitle }) => ({
+      taskId,
+      taskTitle,
+      variationId,
+      variationTitle,
+      taskPath,
+    }),
+  )
 }
