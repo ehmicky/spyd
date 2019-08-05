@@ -34,13 +34,14 @@ Used to find the default configuration and tasks files.`,
     describe: `How many seconds to benchmark each task.
 Default: 10`,
   },
-  reporters: {
-    alias: 'r',
-    string: true,
-    array: true,
-    requiresArg: true,
+  report: {
     describe: `Module to report benchmark final results.
-Built-in reporters: silent`,
+Built-in reporters: silent.
+Custom reporters (installed with npm) can also be used.
+Uses a dot notation such as --report.json (not --report=json nor --report json).
+Reporter-specific options can be specified using the same dot notation.
+The following options can be set for any reporter: output, insert, system, link.
+For example --report.json.output is like --output but only for the json reporter.`,
   },
   progress: {
     alias: 'p',
@@ -49,12 +50,6 @@ Built-in reporters: silent`,
     requiresArg: true,
     describe: `Module to report benchmark progress.
 Built-in reporters: silent`,
-  },
-  report: {
-    describe: `Options passed to specific reporters.
-For example --report.json.* options would be passed to the json reporter.
-The following options can be always be set: output, insert, system, link.
-For example --report.json.output is like --output but only for the json reporter.`,
   },
   output: {
     alias: 'o',

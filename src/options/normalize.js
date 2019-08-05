@@ -1,7 +1,7 @@
 import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
 
-import { REPORTERS } from '../report/reporters/main.js'
+import { isPlainObject } from '../utils/main.js'
 
 // Normalize options shape and do custom validation
 export const normalizeOpts = function(opts) {
@@ -56,33 +56,15 @@ const resolveRequire = function(requiredModule, cwd) {
   return resolve(cwd, requiredModule)
 }
 
-// Normalize and validate 'reporters' option
-const normalizeReporters = function({
-  reporters,
-  report: reportOpts,
-  ...opts
-}) {
-  reporters.forEach(validateReporter)
-  Object.keys(reportOpts).forEach(reporterName =>
-    validateReportOpt(reporterName, reporters),
-  )
-  return { ...opts, reporters, reportOpts }
+// Normalize and validate 'report' option
+const normalizeReporters = function({ report: reportOpts, ...opts }) {
+  Object.entries(reportOpts).forEach(validateReportOpt)
+  return { ...opts, reportOpts }
 }
 
-const validateReporter = function(reporter) {
-  if (typeof reporter !== 'string') {
-    throw new TypeError(`'reporter' must be a string: ${reporter}`)
-  }
-}
-
-const validateReportOpt = function(reporterName, reporters) {
-  if (
-    !reporters.includes(reporterName) &&
-    REPORTERS[reporterName] === undefined
-  ) {
-    throw new TypeError(
-      `Invalid reporter '${reporterName}' in 'report.${reporterName}' option`,
-    )
+const validateReportOpt = function([reporter, reportOpt]) {
+  if (!isPlainObject(reportOpt)) {
+    throw new TypeError(`'report.${reporter}' value must be a plain object`)
   }
 }
 

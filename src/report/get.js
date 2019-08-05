@@ -4,39 +4,38 @@ import { REPORTERS } from './reporters/main.js'
 // `output`, `insert`, `system`, link` can be set either for specific reporter
 // (--reporter.REPORTER.output) or for all (--output)
 export const getReporters = function({
-  reporters,
   reportOpts,
   output,
   insert,
   system,
   link,
 }) {
-  const reportersA = getDefaultReporters(reporters)
-  return reportersA.map(name =>
-    getReporter({ name, reportOpts, output, insert, system, link }),
+  const reportOptsA = getDefaultReporters(reportOpts)
+  return Object.entries(reportOptsA).map(([name, reportOpt]) =>
+    getReporter({ name, reportOpt, output, insert, system, link }),
   )
 }
 
-const getDefaultReporters = function(reporters) {
-  if (reporters.length !== 0) {
-    return reporters
+const getDefaultReporters = function(reportOpts) {
+  if (Object.keys(reportOpts).length !== 0) {
+    return reportOpts
   }
 
-  return ['debug']
+  return { debug: {} }
 }
 
 // Retrieve reporter's main function
 const getReporter = function({
   name,
-  reportOpts,
+  reportOpt,
   output,
   insert,
   system,
   link,
 }) {
   const main = loadReporter(name)
-  const reportOpt = { output, insert, system, link, ...reportOpts[name] }
-  return { main, reportOpt }
+  const reportOptA = { output, insert, system, link, ...reportOpt }
+  return { main, reportOpt: reportOptA }
 }
 
 const loadReporter = function(name) {
