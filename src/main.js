@@ -3,7 +3,7 @@ import pFinally from 'p-finally'
 
 import { getOpts } from './options/main.js'
 import { startProgress, stopProgress } from './progress/main.js'
-import { getIterations } from './tasks/iterations.js'
+import { getIterations } from './iterations/main.js'
 import { runProcesses } from './processes/main.js'
 import { addBenchmarkInfo } from './info/main.js'
 import { report } from './report/main.js'
