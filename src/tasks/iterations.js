@@ -7,9 +7,7 @@ export const getIterations = async function({ files, cwd, requireOpt }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
   const tasks = await loadTasks(taskPaths, requireOpt)
-  const iterations = tasks
-    .flatMap(getIteration)
-    .map(iteration => ({ ...iteration, requireOpt }))
+  const iterations = tasks.flatMap(getIteration)
   const iterationsA = addPaddings(iterations)
   return iterationsA
 }

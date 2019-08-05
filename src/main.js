@@ -36,10 +36,10 @@ const getBenchmark = async function({
   iterations,
   progressState,
   opts,
-  opts: { duration },
+  opts: { duration, requireOpt },
 }) {
   const iterationsA = await pMapSeries(iterations, (iteration, index) =>
-    runProcesses({ ...iteration, index, progressState, duration }),
+    runProcesses({ ...iteration, index, progressState, duration, requireOpt }),
   )
   const benchmark = addBenchmarkInfo(iterationsA, opts)
   return benchmark
