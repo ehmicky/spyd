@@ -10,14 +10,17 @@ const run = async function() {
   try {
     await sendParentMessage('ready')
 
-    const { taskPath, taskId, parameter, requireOpt } = await getParentMessage(
-      'load',
-    )
+    const {
+      taskPath,
+      taskId,
+      variationId,
+      requireOpt,
+    } = await getParentMessage('load')
 
     const { main, before, after } = await getTask({
       taskPath,
       taskId,
-      parameter,
+      variationId,
       requireOpt,
     })
 

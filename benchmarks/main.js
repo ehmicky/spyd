@@ -1,6 +1,6 @@
 export const MathRandom = {
   main: Math.random,
-  parameters: {
+  variations: {
     one: 1,
     two: 2,
   },
@@ -8,7 +8,7 @@ export const MathRandom = {
 
 export const MathRandomTwo = {
   main: Math.random,
-  parameters: {
+  variations: {
     one: 1,
     three: 2,
     four: 3,

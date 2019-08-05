@@ -1,17 +1,17 @@
 import { sortBy } from '../utils/sort.js'
 import { addPrintedStats } from '../print/main.js'
 
-import { getTasks, getParameters } from './group.js'
+import { getTasks, getVariations } from './group.js'
 import { addFastestIterations } from './fastest.js'
 import { getSystem } from './system.js'
 
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function({ benchmark: { iterations }, opts }) {
   const tasks = getTasks(iterations)
-  const parameters = getParameters(iterations)
+  const variations = getVariations(iterations)
 
   const iterationsA = iterations.map(iteration =>
-    addIterationInfo({ iteration, tasks, parameters }),
+    addIterationInfo({ iteration, tasks, variations }),
   )
 
   const iterationsB = addFastestIterations(iterationsA)
@@ -24,15 +24,17 @@ export const addBenchmarkInfo = function({ benchmark: { iterations }, opts }) {
 
   const system = getSystem()
 
-  return { opts, tasks, parameters, iterations: iterationsC, system }
+  return { opts, tasks, variations, iterations: iterationsC, system }
 }
 
 const addIterationInfo = function({
-  iteration: { name, taskId, parameter, stats },
+  iteration: { name, taskId, variationId, stats },
   tasks,
-  parameters,
+  variations,
 }) {
   const taskA = tasks.findIndex(task => task.taskId === taskId)
-  const parameterA = parameters.findIndex(task => task.parameter === parameter)
-  return { name, task: taskA, parameter: parameterA, stats }
+  const variationA = variations.findIndex(
+    variation => variation.variationId === variationId,
+  )
+  return { name, task: taskA, variation: variationA, stats }
 }

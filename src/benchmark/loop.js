@@ -7,7 +7,7 @@ import { normalizeResult, OUTLIERS_THRESHOLD } from './normalize.js'
 
 // We perform benchmarking iteratively in order to stop benchmarking exactly
 // when the `duration` or `MAX_LOOPS` has been reached.
-// We also adjust or increment some `state` parameters as we take more
+// We also adjust or increment some `state` variables as we take more
 // measurements.
 export const benchmarkLoop = async function({
   main,

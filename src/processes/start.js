@@ -13,11 +13,11 @@ const CHILD_MAIN = `${__dirname}/child.js`
 export const startChildren = async function({
   taskPath,
   taskId,
-  parameter,
+  variationId,
   requireOpt,
 }) {
   const promises = Array.from({ length: POOL_SIZE }, () =>
-    startChild({ taskPath, taskId, parameter, requireOpt }),
+    startChild({ taskPath, taskId, variationId, requireOpt }),
   )
   const children = await Promise.all(promises)
   return children
@@ -26,7 +26,12 @@ export const startChildren = async function({
 // Same as `PROCESS_COUNT`
 const POOL_SIZE = 2e1
 
-const startChild = async function({ taskPath, taskId, parameter, requireOpt }) {
+const startChild = async function({
+  taskPath,
+  taskId,
+  variationId,
+  requireOpt,
+}) {
   const child = spawn('node', [CHILD_MAIN], {
     stdio: ['ignore', 'ignore', 'pipe', 'ipc'],
   })
@@ -40,7 +45,7 @@ const startChild = async function({ taskPath, taskId, parameter, requireOpt }) {
   await sendChildMessage(child, 'load', {
     taskPath,
     taskId,
-    parameter,
+    variationId,
     requireOpt,
   })
 

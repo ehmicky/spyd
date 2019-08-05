@@ -4,16 +4,16 @@ import { loadTaskFile } from './load.js'
 export const getTask = async function({
   taskPath,
   taskId,
-  parameter,
+  variationId,
   requireOpt,
 }) {
   const tasks = await loadTaskFile({ taskPath, requireOpt })
 
-  const { main, before, after, parameters } = tasks.find(
+  const { main, before, after, variations } = tasks.find(
     task => task.taskId === taskId,
   )
 
-  const [mainA, beforeA, afterA] = bindParameter(parameters, parameter, [
+  const [mainA, beforeA, afterA] = bindVariation(variations, variationId, [
     main,
     before,
     after,
@@ -21,21 +21,21 @@ export const getTask = async function({
   return { main: mainA, before: beforeA, after: afterA }
 }
 
-// Bind task `parameter` (if present) to `main()`, `before()` and `after()`
-const bindParameter = function(parameters, parameter, funcs) {
-  if (parameter === undefined) {
+// Bind task `variation` (if present) to `main()`, `before()` and `after()`
+const bindVariation = function(variations, variationId, funcs) {
+  if (variationId === undefined) {
     return funcs
   }
 
-  const parameterValue = parameters[parameter]
-  return funcs.map(func => bindFunction(func, parameterValue))
+  const variationValue = variations[variationId]
+  return funcs.map(func => bindFunction(func, variationValue))
 }
 
-const bindFunction = function(func, parameterValue) {
+const bindFunction = function(func, variationValue) {
   if (func === undefined) {
     return
   }
 
   // `func.bind()` is much slower, which shows with very functions
-  return () => func(parameterValue)
+  return () => func(variationValue)
 }

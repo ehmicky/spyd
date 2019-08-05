@@ -15,17 +15,21 @@ const getTask = function({ groupId: taskId, mean, iteration: { title } }) {
   return { taskId, title, mean }
 }
 
-// Retrieve all parameters.
-// Also compute the mean of all iterations medians (of the same parameter)
+// Retrieve all variations.
+// Also compute the mean of all iterations medians (of the same variation)
 // The array is sorted by mean.
-export const getParameters = function(iterations) {
-  const parameters = groupIterations(iterations, 'parameter')
-  const parametersA = parameters.map(getParameter)
-  return parametersA
+export const getVariations = function(iterations) {
+  const variations = groupIterations(iterations, 'variationId')
+  const variationsA = variations.map(getVariation)
+  return variationsA
 }
 
-const getParameter = function({ groupId: parameter, mean }) {
-  return { parameter, mean }
+const getVariation = function({
+  groupId: variationId,
+  mean,
+  iteration: { variationTitle },
+}) {
+  return { variationId, variationTitle, mean }
 }
 
 const groupIterations = function(iterations, groupId) {

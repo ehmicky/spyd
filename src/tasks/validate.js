@@ -81,5 +81,5 @@ const VALIDATORS = {
   before: validateFunction,
   after: validateFunction,
   title: validateString,
-  parameters: validateObject,
+  variations: validateObject,
 }

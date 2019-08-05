@@ -6,14 +6,14 @@ import { runChildren } from './run.js'
 import { shouldStop } from './stop.js'
 
 // Start several child processes benchmarking the same task.
-// Each task (and parameter combination) is run serially to avoid influencing
-// the timing of another.
+// Each iteration is run serially to avoid influencing the timing of another.
 export const runProcesses = async function({
   name,
   taskPath,
   taskId,
   title,
-  parameter,
+  variationId,
+  variationTitle,
   index,
   progressState,
   duration,
@@ -29,7 +29,7 @@ export const runProcesses = async function({
   const results = await runPools({
     taskPath,
     taskId,
-    parameter,
+    variationId,
     processDuration,
     runEnd,
     requireOpt,
@@ -37,7 +37,7 @@ export const runProcesses = async function({
 
   const stats = getStats(results)
 
-  return { name, taskId, title, parameter, stats }
+  return { name, taskId, title, variationId, variationTitle, stats }
 }
 
 const PROCESS_COUNT = 2e1
@@ -51,7 +51,7 @@ const PROCESS_COUNT = 2e1
 const runPools = async function({
   taskPath,
   taskId,
-  parameter,
+  variationId,
   processDuration,
   runEnd,
   requireOpt,
@@ -64,7 +64,7 @@ const runPools = async function({
     const poolResults = await runPool({
       taskPath,
       taskId,
-      parameter,
+      variationId,
       processDuration,
       runEnd,
       requireOpt,
@@ -79,7 +79,7 @@ const runPools = async function({
 const runPool = async function({
   taskPath,
   taskId,
-  parameter,
+  variationId,
   processDuration,
   runEnd,
   requireOpt,
@@ -88,22 +88,22 @@ const runPool = async function({
     const children = await startChildren({
       taskPath,
       taskId,
-      parameter,
+      variationId,
       requireOpt,
     })
     const results = await runChildren({ children, processDuration, runEnd })
     return results
   } catch (error) {
-    addTaskInfo({ error, taskId, parameter })
+    addTaskInfo({ error, taskId, variationId })
     throw error
   }
 }
 
 // When a task errors, communicate to user which one failed
-const addTaskInfo = function({ error, taskId, parameter }) {
-  const parameterStr =
-    parameter === undefined ? '' : ` (parameter '${parameter}')`
+const addTaskInfo = function({ error, taskId, variationId }) {
+  const variationStr =
+    variationId === undefined ? '' : ` (variation '${variationId}')`
   const message = error instanceof Error ? error.message : String(error)
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  error.message = `Task '${taskId}'${parameterStr} errored:\n\n${message}`
+  error.message = `Task '${taskId}'${variationStr} errored:\n\n${message}`
 }

@@ -33,7 +33,7 @@ export const benchmark = async function({ main, before, after, duration }) {
 // is benchmarking its first function, it's running much faster than for the
 // next functions passed to it.
 // We fix this by doing a cold start using an empty function.
-// The `before()` and `isAsync` parameters need to match what is used during
+// The `before()` and `isAsync` arguments need to match what is used during
 // the bias calculation.
 const initialMeasure = async function(isAsync, before) {
   const beforeFunc = before === undefined ? undefined : noop

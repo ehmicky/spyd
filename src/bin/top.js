@@ -119,9 +119,9 @@ Task properties:
   title       Title shown by reporters.
               Defaults to the task variable name.                       [string]
 
-  parameters  Each value of that object is passed to main(), before(), after().
+  variations  Each value of that object is passed to main(), before(), after().
               Separate benchmarks for each value are created.
-              The keys are the parameters titles shown by reporters.    [object]`
+              The keys are the variations titles shown by reporters.    [object]`
 
 const MAIN_EXAMPLE = '$0'
 const LONG_EXAMPLE = '$0 -d 60'
