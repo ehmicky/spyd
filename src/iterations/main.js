@@ -16,7 +16,7 @@ export const getIterations = async function({ files, cwd, requireOpt }) {
 const loadIterations = async function(taskPaths, requireOpt) {
   const promises = taskPaths.map(taskPath => loadFile(taskPath, requireOpt))
   const iterations = await Promise.all(promises)
-  const iterationsA = iterations.flat()
+  const iterationsA = iterations.flat().filter(removeDuplicates)
   return iterationsA
 }
 
@@ -31,4 +31,14 @@ const loadFile = async function(taskPath, requireOpt) {
       taskPath,
     }),
   )
+}
+
+// When two `files` define the same iteration, the last one prevails
+const removeDuplicates = function({ taskId, variationId }, index, iterations) {
+  return iterations
+    .slice(index + 1)
+    .every(
+      iteration =>
+        iteration.taskId !== taskId || iteration.variationId !== variationId,
+    )
 }
