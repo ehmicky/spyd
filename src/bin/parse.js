@@ -6,11 +6,13 @@ export const parseOpts = function(yargs) {
   const {
     _: [file],
     report,
+    progress,
     ...opts
   } = yargs.parse()
 
   const reportA = normalizeDynamicOpts(report)
-  const optsA = { ...opts, file, report: reportA }
+  const progressA = normalizeDynamicOpts(progress)
+  const optsA = { ...opts, file, report: reportA, progress: progressA }
   const optsB = omitBy(optsA, isInternalKey)
   return optsB
 }

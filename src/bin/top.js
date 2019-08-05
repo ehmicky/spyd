@@ -44,12 +44,10 @@ The following options can be set for any reporter: output, insert, system, link.
 For example --report.json.output is like --output but only for the json reporter.`,
   },
   progress: {
-    alias: 'p',
-    string: true,
-    array: true,
-    requiresArg: true,
     describe: `Module to report benchmark progress.
-Built-in reporters: silent`,
+Built-in reporters: silent.
+Custom progress reporters (installed with npm) can also be used.
+Uses a dot notation such as --progress.bar (not --progress=bar nor --progress bar).`,
   },
   output: {
     alias: 'o',

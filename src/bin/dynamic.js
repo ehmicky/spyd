@@ -1,7 +1,8 @@
 import { isPlainObject } from '../utils/main.js'
 
 // `--report.json` and `--report.json.option` are normalized to
-// `{ report: { json: { option } } }`
+// `{ report: { json: { option } } }`.
+// Same thing for `--progress`.
 export const normalizeDynamicOpts = function(opt) {
   if (!isPlainObject(opt)) {
     return opt

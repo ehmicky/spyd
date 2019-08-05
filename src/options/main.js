@@ -27,7 +27,7 @@ export const getOpts = async function(opts = {}) {
 const validateOpts = function(opts) {
   validate(opts, {
     exampleConfig: EXAMPLE_OPTS,
-    recursiveBlacklist: ['report'],
+    recursiveBlacklist: ['report', 'progress'],
   })
 }
 
@@ -41,7 +41,7 @@ const DEFAULT_OPTS = {
   require: [],
   reporters: [],
   report: {},
-  progress: ['debug'],
+  progress: { debug: {} },
   verbose: false,
   link: true,
   system: false,

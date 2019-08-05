@@ -5,12 +5,12 @@ import isInteractive from 'is-interactive'
 import { PROGRESS_REPORTERS } from './reporters/main.js'
 
 // Retrieve reporters methods
-export const getReporters = function(progressReporters) {
+export const getReporters = function(progressOpts) {
   if (!isInteractive(stderr)) {
     return [PROGRESS_REPORTERS.silent]
   }
 
-  return progressReporters.map(getReporter)
+  return Object.keys(progressOpts).map(getReporter)
 }
 
 // Retrieve reporter's main function

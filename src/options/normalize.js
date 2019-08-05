@@ -62,20 +62,20 @@ const normalizeReporters = function({ report: reportOpts, ...opts }) {
   return { ...opts, reportOpts }
 }
 
-const validateReportOpt = function([reporter, reportOpt]) {
+const validateReportOpt = function([name, reportOpt]) {
   if (!isPlainObject(reportOpt)) {
-    throw new TypeError(`'report.${reporter}' value must be a plain object`)
+    throw new TypeError(`'report.${name}' value must be a plain object`)
   }
 }
 
 // Normalize and validate `progress' option
-const normalizeProgress = function({ progress: progressReporters, ...opts }) {
-  progressReporters.forEach(validateProgressReporter)
-  return { ...opts, progressReporters }
+const normalizeProgress = function({ progress: progressOpts, ...opts }) {
+  Object.entries(progressOpts).forEach(validateProgressOpt)
+  return { ...opts, progressOpts }
 }
 
-const validateProgressReporter = function(progressReporter) {
-  if (typeof progressReporter !== 'string') {
-    throw new TypeError(`'progress' must be a string: ${progressReporter}`)
+const validateProgressOpt = function([name, progressOpt]) {
+  if (!isPlainObject(progressOpt)) {
+    throw new TypeError(`'report.${name}' value must be a plain object`)
   }
 }
