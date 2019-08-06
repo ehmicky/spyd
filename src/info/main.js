@@ -12,13 +12,13 @@ export const addBenchmarkInfo = function(iterations, opts) {
   const runners = getRunners(iterations)
 
   const iterationsA = iterations.map(iteration =>
-    addIterationInfo({ iteration, tasks, variations }),
+    addIterationInfo({ iteration, tasks, variations, runners }),
   )
 
   const iterationsB = addFastestIterations(iterationsA)
 
   // The fastest tasks will be first, then the fastest iterations within each
-  // task
+  // task (regardless of variants or runners)
   sortBy(iterationsB, ['task', 'stats.median'])
 
   const iterationsC = addPrintedStats(iterationsB, opts)
@@ -29,13 +29,17 @@ export const addBenchmarkInfo = function(iterations, opts) {
 }
 
 const addIterationInfo = function({
-  iteration: { name, taskId, variationId, stats },
+  iteration: { name, taskId, variationId, runnerId, stats },
   tasks,
   variations,
+  runners,
 }) {
   const taskA = tasks.findIndex(task => task.taskId === taskId)
   const variationA = variations.findIndex(
     variation => variation.variationId === variationId,
   )
-  return { name, task: taskA, variation: variationA, stats }
+  const runnerA = runners.findIndex(
+    variation => variation.runnerId === runnerId,
+  )
+  return { name, task: taskA, variation: variationA, runner: runnerA, stats }
 }
