@@ -1,3 +1,4 @@
+import { getRunner } from '../run/main.js'
 import { loadTaskFile } from '../processes/load.js'
 
 import { getTaskPaths } from './path.js'
@@ -48,7 +49,9 @@ const loadIterations = async function({
 }
 
 const loadFile = async function(taskPath, requireOpt) {
-  const iterations = await loadTaskFile(taskPath, requireOpt)
+  const runner = getRunner(taskPath)
+
+  const iterations = await loadTaskFile({ taskPath, runner, requireOpt })
   return iterations.map(
     ({
       taskId,
@@ -61,6 +64,7 @@ const loadFile = async function(taskPath, requireOpt) {
       variationId,
       variationTitle,
       taskPath,
+      runner,
     }),
   )
 }
