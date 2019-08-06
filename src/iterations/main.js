@@ -23,7 +23,12 @@ const loadIterations = async function(taskPaths, requireOpt) {
 const loadFile = async function(taskPath, requireOpt) {
   const iterations = await loadTaskFile(taskPath, requireOpt)
   return iterations.map(
-    ({ taskId, taskTitle, variationId, variationTitle }) => ({
+    ({
+      taskId,
+      taskTitle = taskId,
+      variationId,
+      variationTitle = variationId,
+    }) => ({
       taskId,
       taskTitle,
       variationId,

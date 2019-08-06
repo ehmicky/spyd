@@ -9,7 +9,7 @@ export const normalizeTasks = function({ variations, ...tasks }, taskPath) {
 
 const normalizeTask = function({ taskId, task, taskPath }) {
   const {
-    title: taskTitle = taskId,
+    title: taskTitle,
     variations: variationsIds,
     main,
     before,

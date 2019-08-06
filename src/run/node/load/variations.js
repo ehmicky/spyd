@@ -35,7 +35,7 @@ const getVariations = function(task, variationsIds, variations = []) {
 
 const normalizeVariation = function({
   id: variationId,
-  title: variationTitle = variationId,
+  title: variationTitle,
   value: variationValue,
 }) {
   return { variationId, variationTitle, variationValue }
