@@ -12,7 +12,7 @@ const start = async function() {
 
     const iterations = await load()
 
-    await Promise.race([runIterations(iterations), getParentMessage('end')])
+    await Promise.race([runIteration(iterations), getParentMessage('end')])
   } catch (error) {
     // This will be printed to stderr, which means parent will print it
     // eslint-disable-next-line no-console, no-restricted-globals
@@ -30,7 +30,7 @@ const load = async function() {
   return iterations
 }
 
-const runIterations = async function(iterations) {
+const runIteration = async function(iterations) {
   const { taskId, variationId, duration } = await getParentMessage('run')
 
   const { main, before, after } = iterations.find(
