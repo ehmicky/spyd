@@ -1,7 +1,11 @@
 import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
 
-import { isPlainObject } from '../utils/main.js'
+import {
+  validateStringArray,
+  validateDeepObject,
+  validatePositiveNumber,
+} from './validate.js'
 
 // Normalize options shape and do custom validation
 export const normalizeOpts = function(opts) {
@@ -17,24 +21,18 @@ export const normalizeOpts = function(opts) {
 
 // Validate 'files' option
 const validateFiles = function({ files }) {
-  if (!files.every(isString)) {
-    throw new TypeError(`'files' must be an array of strings: ${files}`)
-  }
+  validateStringArray(files, 'files')
 }
 
 // Validate 'tasks' option
 const validateTasks = function({ tasks }) {
-  if (tasks !== undefined && !tasks.every(isString)) {
-    throw new TypeError(`'tasks' must be an array of strings: ${tasks}`)
-  }
+  validateStringArray(tasks, 'tasks')
 }
 
 // Normalize and validate 'duration' option
 // Duration is specified in seconds by the user but we convert it to nanoseconds
 const normalizeDuration = function({ duration, ...opts }) {
-  if (!Number.isFinite(duration) || duration <= 0) {
-    throw new TypeError(`'duration' must be a positive number: ${duration}`)
-  }
+  validatePositiveNumber(duration, 'duration')
 
   const durationA = duration * SECONDS_TO_NANOSECONDS
   return { ...opts, duration: durationA }
@@ -50,18 +48,12 @@ const normalizeCwd = function({ cwd, ...opts }) {
 
 // Normalize and validate 'require' option
 const normalizeRequire = function({ require: requireOpt, cwd, ...opts }) {
-  if (!requireOpt.every(isString)) {
-    throw new TypeError(`'require' must be an array of strings: ${requireOpt}`)
-  }
+  validateStringArray(requireOpt, 'require')
 
   const requireOptA = requireOpt.map(requiredModule =>
     resolveRequire(requiredModule, cwd),
   )
   return { ...opts, requireOpt: requireOptA, cwd }
-}
-
-const isString = function(value) {
-  return typeof value === 'string'
 }
 
 const resolveRequire = function(requiredModule, cwd) {
@@ -74,24 +66,12 @@ const resolveRequire = function(requiredModule, cwd) {
 
 // Normalize and validate 'report' option
 const normalizeReporters = function({ report: reportOpts, ...opts }) {
-  Object.entries(reportOpts).forEach(validateReportOpt)
+  validateDeepObject(reportOpts, 'report')
   return { ...opts, reportOpts }
-}
-
-const validateReportOpt = function([name, reportOpt]) {
-  if (!isPlainObject(reportOpt)) {
-    throw new TypeError(`'report.${name}' value must be a plain object`)
-  }
 }
 
 // Normalize and validate `progress' option
 const normalizeProgress = function({ progress: progressOpts, ...opts }) {
-  Object.entries(progressOpts).forEach(validateProgressOpt)
+  validateDeepObject(progressOpts, 'progress')
   return { ...opts, progressOpts }
-}
-
-const validateProgressOpt = function([name, progressOpt]) {
-  if (!isPlainObject(progressOpt)) {
-    throw new TypeError(`'report.${name}' value must be a plain object`)
-  }
 }
