@@ -10,7 +10,6 @@ const pExecFile = promisify(execFile)
 // This also makes sure runtimes exist.
 export const getVersions = async function(iterations) {
   const runners = getRunners(iterations)
-
   const versions = await getRunnersVersions(runners)
   return versions
 }
