@@ -1,16 +1,21 @@
+import { loadRunners } from '../run/load.js'
 import { getRunners } from '../run/main.js'
 import { loadTaskFile } from '../processes/load.js'
 
 // Load iterations by launching each runner
-export const loadIterations = async function(taskPaths, requireOpt) {
-  const promises = taskPaths.map(taskPath => loadFiles(taskPath, requireOpt))
+export const loadIterations = async function(taskPaths, runOpts, requireOpt) {
+  const allRunners = await loadRunners(runOpts)
+
+  const promises = taskPaths.map(taskPath =>
+    loadFiles(taskPath, allRunners, requireOpt),
+  )
   const iterations = await Promise.all(promises)
   const iterationsA = iterations.flat()
   return iterationsA
 }
 
-const loadFiles = async function(taskPath, requireOpt) {
-  const runners = getRunners(taskPath)
+const loadFiles = async function(taskPath, allRunners, requireOpt) {
+  const runners = getRunners(taskPath, allRunners)
   const promises = runners.map(runner =>
     loadFile({ taskPath, runner, requireOpt }),
   )

@@ -1,16 +1,16 @@
 import { extname } from 'path'
 
-import { node } from './node/main.js'
-
-export const getRunners = function(taskPath) {
-  const runners = findRunners(taskPath)
+// Retrieve the runners for a specific task file
+export const getRunners = function(taskPath, allRunners) {
+  const runners = findRunners(taskPath, allRunners)
   const runnersA = normalizeRunners(runners)
   return runnersA
 }
 
-const findRunners = function(taskPath) {
+// Find the runners according to the task file extension
+const findRunners = function(taskPath, allRunners) {
   const extension = extname(taskPath)
-  const runners = RUNNERS.filter(({ extensions }) =>
+  const runners = allRunners.filter(({ extensions }) =>
     matchExtension(extensions, extension),
   )
 
@@ -21,26 +21,25 @@ const findRunners = function(taskPath) {
   return runners
 }
 
-const RUNNERS = [node]
-
 const matchExtension = function(extensions, extension) {
   return extensions.some(extensionA => `.${extensionA}` === extension)
 }
 
+// Runners can spawn multiple commands
 const normalizeRunners = function(runners) {
   return runners.flatMap(normalizeCommands)
 }
 
-const normalizeCommands = function({ id, commands }) {
-  const commandsA = commands()
+const normalizeCommands = function({ id, commands, runOpt }) {
+  const commandsA = commands(runOpt)
   return commandsA.map(({ id: commandId, command }) =>
-    normalizeCommand({ id, commandId, command }),
+    normalizeCommand({ id, commandId, command, runOpt }),
   )
 }
 
-const normalizeCommand = function({ id, commandId, command }) {
+const normalizeCommand = function({ id, commandId, command, runOpt }) {
   const runnerId = getRunnerId(id, commandId)
-  return { id: runnerId, command }
+  return { id: runnerId, command, runOpt }
 }
 
 const getRunnerId = function(id, commandId) {

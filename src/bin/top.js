@@ -52,6 +52,15 @@ Default: all tasks`,
 Each identifier can start with a ! to exclude the variation instead of selecting it.
 Default: all variations`,
   },
+  run: {
+    describe: `Module to run benchmarks for a specific programming language or
+platform.
+Built-in runners: node.
+Custom runners (installed with npm) can also be used.
+Uses a dot notation such as --run.node (not --run=node nor --run node).
+Runner-specific options can be specified using the same dot notation such as
+--run.node.require.`,
+  },
   report: {
     describe: `Module to report benchmark final results.
 Built-in reporters: silent.
@@ -63,7 +72,7 @@ For example --report.json.output is like --output but only for the json reporter
   },
   progress: {
     describe: `Module to report benchmark progress.
-Built-in reporters: silent.
+Built-in progress reporters: silent.
 Custom progress reporters (installed with npm) can also be used.
 Uses a dot notation such as --progress.bar (not --progress=bar nor --progress bar).`,
   },

@@ -15,9 +15,10 @@ export const normalizeOpts = function(opts) {
   const optsA = normalizeDuration(opts)
   const optsB = normalizeCwd(optsA)
   const optsC = normalizeRequire(optsB)
-  const optsD = normalizeReporters(optsC)
-  const optsE = normalizeProgress(optsD)
-  return optsE
+  const optsD = normalizeRunners(optsC)
+  const optsE = normalizeReporters(optsD)
+  const optsF = normalizeProgress(optsE)
+  return optsF
 }
 
 // Validate 'files' option
@@ -68,6 +69,12 @@ const resolveRequire = function(requiredModule, cwd) {
   }
 
   return resolve(cwd, requiredModule)
+}
+
+// Normalize and validate 'run' option
+const normalizeRunners = function({ run: runOpts, ...opts }) {
+  validateDeepObject(runOpts, 'run')
+  return { ...opts, runOpts }
 }
 
 // Normalize and validate 'report' option
