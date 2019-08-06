@@ -1,7 +1,7 @@
 import { sendParentMessage, getParentMessage } from '../../processes/ipc.js'
 
 import { benchmark } from './benchmark/main.js'
-import { loadTaskFile } from './load/main.js'
+import { load } from './load/main.js'
 
 // Child process entry point.
 // Wait for the parent process to request benchmarks then send the result back
@@ -10,13 +10,7 @@ const start = async function() {
   try {
     await sendParentMessage('ready')
 
-    const { taskPath, requireOpt } = await getParentMessage('load')
-
-    const iterations = await loadTaskFile(taskPath, requireOpt)
-
-    const loadEvent = getLoadEvent(iterations)
-
-    await sendParentMessage('load', loadEvent)
+    const iterations = await load()
 
     await Promise.race([runIterations(iterations), getParentMessage('end')])
   } catch (error) {
@@ -24,20 +18,6 @@ const start = async function() {
     // eslint-disable-next-line no-console, no-restricted-globals
     console.error(error)
   }
-}
-
-const getLoadEvent = function(iterations) {
-  const iterationsA = iterations.map(getIteration)
-  return { iterations: iterationsA }
-}
-
-const getIteration = function({
-  taskId,
-  taskTitle,
-  variationId,
-  variationTitle,
-}) {
-  return { taskId, taskTitle, variationId, variationTitle }
 }
 
 const runIterations = async function(iterations) {
