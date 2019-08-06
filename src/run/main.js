@@ -32,7 +32,8 @@ const normalizeRunners = function(runners) {
 }
 
 const normalizeCommands = function({ id, commands }) {
-  return commands.map(({ id: commandId, command }) =>
+  const commandsA = commands()
+  return commandsA.map(({ id: commandId, command }) =>
     normalizeCommand({ id, commandId, command }),
   )
 }
