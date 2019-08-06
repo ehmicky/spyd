@@ -29,7 +29,7 @@ export const addBenchmarkInfo = function(iterations, opts) {
 }
 
 const addIterationInfo = function({
-  iteration: { name, taskId, variationId, runnerId, stats },
+  iteration: { name, columnName, taskId, variationId, runnerId, stats },
   tasks,
   variations,
   runners,
@@ -41,5 +41,12 @@ const addIterationInfo = function({
   const runnerA = runners.findIndex(
     variation => variation.runnerId === runnerId,
   )
-  return { name, task: taskA, variation: variationA, runner: runnerA, stats }
+  return {
+    name,
+    columnName,
+    task: taskA,
+    variation: variationA,
+    runner: runnerA,
+    stats,
+  }
 }

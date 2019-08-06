@@ -9,6 +9,7 @@ import { shouldStop } from './stop.js'
 // Each iteration is run serially to avoid influencing the timing of another.
 export const runProcesses = async function({
   name,
+  columnName,
   taskPath,
   taskId,
   taskTitle,
@@ -43,6 +44,7 @@ export const runProcesses = async function({
 
   return {
     name,
+    columnName,
     taskId,
     taskTitle,
     variationId,

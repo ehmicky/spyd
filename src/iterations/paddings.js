@@ -1,6 +1,6 @@
 // Make `taskTitle`, `variationTitle`, 'runnerTitle' reporter-friendly by
 // adding paddings.
-// Also add `iteration.name` which combines them.
+// Also add `iteration.name` and `iteration.columnName`.
 export const addPaddings = function(iterations) {
   const paddings = getPaddings(iterations)
   const iterationsA = iterations.map(iteration =>
@@ -45,7 +45,11 @@ const padTitle = function(padding, title = '') {
   return title.padEnd(padding)
 }
 
-// Add `iteration.name`
+// Add:
+//  - `iteration.name`: combines task, variation and runner.
+//     For one-dimensional reporters.
+//  - `iteration.columnName`: combines variation and runner
+//     For two-dimensional reporters. `taskTitle` is the row name.
 const addNames = function(iterations) {
   const props = PADDED_PROPS.filter(propName =>
     shouldShowProp(iterations, propName),
@@ -54,11 +58,31 @@ const addNames = function(iterations) {
 }
 
 const addName = function(iteration, props) {
-  const name = props
+  const name = getName(iteration, props)
+  const columnName = getColumnName(iteration, props)
+  return { ...iteration, name, columnName }
+}
+
+const getColumnName = function(iteration, props) {
+  const propsA = props.filter(isColumnProp)
+  const columnName = getName(iteration, propsA)
+
+  if (columnName === '') {
+    return
+  }
+
+  return columnName
+}
+
+const isColumnProp = function(propName) {
+  return propName !== 'taskTitle'
+}
+
+const getName = function(iteration, props) {
+  return props
     .map(propName => iteration[propName])
     .filter(Boolean)
     .join(' | ')
-  return { ...iteration, name }
 }
 
 // If all variations and/or runners are the same, do not report them.
