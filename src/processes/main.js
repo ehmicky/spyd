@@ -5,6 +5,7 @@ import { startChildren, startChild } from './start.js'
 import { runChildren } from './run.js'
 import { endChild } from './end.js'
 import { shouldStop } from './stop.js'
+import { sendChildMessage } from './ipc.js'
 
 // Start several child processes benchmarking the same task.
 // Each iteration is run serially to avoid influencing the timing of another.
@@ -114,6 +115,7 @@ const addTaskInfo = function({ error, taskId, variationId }) {
 // retrieve the task files iterations
 export const loadTaskFile = async function(taskPath, requireOpt) {
   const { iterations, child } = await startChild({ taskPath, requireOpt })
+  await sendChildMessage(child, 'end')
   await endChild(child)
   return iterations
 }

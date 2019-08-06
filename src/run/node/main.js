@@ -37,16 +37,9 @@ const runIterations = async function(iterations) {
     iteration =>
       iteration.taskId === taskId && iteration.variationId === variationId,
   )
+  const { times, count } = await benchmark({ main, before, after, duration })
 
-  const { times, count } = await benchmark({
-    main,
-    before,
-    after,
-    duration,
-  })
   await sendParentMessage('run', { times, count })
-
-  await getParentMessage('end')
 }
 
 start()
