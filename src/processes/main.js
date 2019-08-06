@@ -10,11 +10,13 @@ import { shouldStop } from './stop.js'
 export const runProcesses = async function({
   name,
   taskPath,
-  command,
   taskId,
   taskTitle,
   variationId,
   variationTitle,
+  runnerId,
+  runnerTitle,
+  command,
   index,
   progressState,
   duration,
@@ -29,9 +31,9 @@ export const runProcesses = async function({
 
   const results = await runPools({
     taskPath,
-    command,
     taskId,
     variationId,
+    command,
     processDuration,
     runEnd,
     requireOpt,
@@ -39,7 +41,16 @@ export const runProcesses = async function({
 
   const stats = getStats(results)
 
-  return { name, taskId, taskTitle, variationId, variationTitle, stats }
+  return {
+    name,
+    taskId,
+    taskTitle,
+    variationId,
+    variationTitle,
+    runnerId,
+    runnerTitle,
+    stats,
+  }
 }
 
 const PROCESS_COUNT = 2e1
@@ -52,9 +63,9 @@ const PROCESS_COUNT = 2e1
 // reach `MAX_RESULTS` though.
 const runPools = async function({
   taskPath,
-  command,
   taskId,
   variationId,
+  command,
   processDuration,
   runEnd,
   requireOpt,
@@ -66,9 +77,9 @@ const runPools = async function({
     // eslint-disable-next-line no-await-in-loop
     const poolResults = await runPool({
       taskPath,
-      command,
       taskId,
       variationId,
+      command,
       processDuration,
       runEnd,
       requireOpt,
@@ -82,9 +93,9 @@ const runPools = async function({
 
 const runPool = async function({
   taskPath,
-  command,
   taskId,
   variationId,
+  command,
   processDuration,
   runEnd,
   requireOpt,
