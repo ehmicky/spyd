@@ -1,4 +1,4 @@
-// Select tasks according to the `tasks` option (if specified)
+// Select tasks according to the `tasks` and `variations` options (if specified)
 export const selectIterations = function({
   iterations: allIterations,
   taskIds,
