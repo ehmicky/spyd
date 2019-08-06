@@ -1,5 +1,5 @@
 import { sortBy } from '../utils/sort.js'
-import { addPrintedStats } from '../print/main.js'
+import { getPrintedInfo } from '../print/main.js'
 
 import { getTasks, getVariations, getRunners } from './group.js'
 import { addFastestIterations } from './fastest.js'
@@ -21,11 +21,23 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   // task (regardless of variants or runners)
   sortBy(iterationsB, ['task', 'stats.median'])
 
-  const iterationsC = addPrintedStats(iterationsB, opts)
-
   const system = getSystem(versions)
 
-  return { opts, tasks, variations, runners, iterations: iterationsC, system }
+  const { iterations: iterationsC, printedSystem } = getPrintedInfo(
+    iterationsB,
+    system,
+    opts,
+  )
+
+  return {
+    opts,
+    tasks,
+    variations,
+    runners,
+    iterations: iterationsC,
+    system,
+    printedSystem,
+  }
 }
 
 const addIterationInfo = function({

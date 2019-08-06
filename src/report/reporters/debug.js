@@ -1,10 +1,7 @@
 // Debugging reporter only meant for development purpose
-export const debug = function(
-  { iterations, system },
-  { link, system: showSystem },
-) {
+export const debug = function({ iterations, printedSystem }, { link, system }) {
   const content = iterations.map(serializeIteration).join('\n')
-  const contentA = addSystem(content, system, showSystem)
+  const contentA = addSystem(content, system, printedSystem)
   const contentB = addLink(contentA, link)
   return contentB
 }
@@ -32,30 +29,12 @@ const serializeStat = function([name, string]) {
   return `${name} ${string}`
 }
 
-const addSystem = function(content, system, showSystem) {
-  if (!showSystem) {
+const addSystem = function(content, system, printedSystem) {
+  if (!system) {
     return content
   }
 
-  const padding = getSystemPadding(system)
-  const systemA = Object.entries(system)
-    .map(([name, value]) => serializeSystemValue(name, value, padding))
-    .join('\n')
-  return `${content}\n\nSystem:\n${systemA}`
-}
-
-const getSystemPadding = function(system) {
-  const lengths = Object.keys(system).map(getLength)
-  return Math.max(...lengths)
-}
-
-const getLength = function(key) {
-  return key.length
-}
-
-const serializeSystemValue = function(name, value, padding) {
-  const nameA = `${name}:`.padEnd(padding + 1)
-  return `  ${nameA} ${value}`
+  return `${content}\n\n${printedSystem}`
 }
 
 const addLink = function(content, link) {
