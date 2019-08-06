@@ -6,7 +6,7 @@ import { addFastestIterations } from './fastest.js'
 import { getSystem } from './system.js'
 
 // Add more information to the final benchmark and normalize/sort results
-export const addBenchmarkInfo = function(iterations, opts) {
+export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   const tasks = getTasks(iterations)
   const variations = getVariations(iterations)
   const runners = getRunners(iterations)
@@ -23,7 +23,7 @@ export const addBenchmarkInfo = function(iterations, opts) {
 
   const iterationsC = addPrintedStats(iterationsB, opts)
 
-  const system = getSystem()
+  const system = getSystem(versions)
 
   return { opts, tasks, variations, runners, iterations: iterationsC, system }
 }

@@ -1,17 +1,15 @@
 import { cpus as getCpus, totalmem } from 'os'
-import { version } from 'process'
 
 import osName from 'os-name'
 import { format as formatBytes } from 'bytes'
 
 import { groupBy } from '../utils/group.js'
 
-export const getSystem = function() {
+export const getSystem = function(versions) {
   const cpu = serializeCpus()
   const memory = getMemory()
   const os = osName()
-  const runtimeVersions = getRuntimeVersions()
-  return { CPU: cpu, Memory: memory, OS: os, ...runtimeVersions }
+  return { CPU: cpu, Memory: memory, OS: os, ...versions }
 }
 
 const serializeCpus = function() {
@@ -28,8 +26,4 @@ const serializeCpu = function([name, cores]) {
 const getMemory = function() {
   const memory = totalmem()
   return formatBytes(memory, { decimalPlaces: 0 })
-}
-
-const getRuntimeVersions = function() {
-  return { Node: version }
 }

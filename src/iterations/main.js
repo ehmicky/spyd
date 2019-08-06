@@ -13,7 +13,11 @@ export const getIterations = async function({
 }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
-  const iterations = await loadIterations({ taskPaths, runOpts, cwd })
+  const { iterations, versions } = await loadIterations({
+    taskPaths,
+    runOpts,
+    cwd,
+  })
 
   const iterationsA = iterations.filter(removeDuplicates)
   const iterationsB = selectIterations({
@@ -27,7 +31,7 @@ export const getIterations = async function({
   }
 
   const iterationsC = addPaddings(iterationsB)
-  return iterationsC
+  return { iterations: iterationsC, versions }
 }
 
 // When two `files` define the same iteration, the last one prevails

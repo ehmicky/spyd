@@ -12,31 +12,44 @@ import { report } from './report/main.js'
 const spyd = async function(opts) {
   const optsA = await getOpts(opts)
 
-  const iterations = await getIterations(optsA)
+  const { iterations, versions } = await getIterations(optsA)
 
-  const benchmark = await waitForBenchmark(iterations, optsA)
+  const benchmark = await waitForBenchmark({
+    iterations,
+    opts: optsA,
+    versions,
+  })
 
   await report(benchmark, optsA)
 
   return benchmark
 }
 
-const waitForBenchmark = async function(iterations, opts) {
+const waitForBenchmark = async function({ iterations, opts, versions }) {
   const { progressState, progressInfo } = await startProgress(iterations, opts)
 
   // TODO: replace with `try {} finally {}` when dropping support for Node 8/9
   const benchmark = await pFinally(
-    getBenchmark({ iterations, progressState, opts }),
+    getBenchmark({ iterations, progressState, opts, versions }),
     () => stopProgress(progressInfo),
   )
   return benchmark
 }
 
-const getBenchmark = async function({ iterations, progressState, opts }) {
+const getBenchmark = async function({
+  iterations,
+  progressState,
+  opts,
+  versions,
+}) {
   const iterationsA = await pMapSeries(iterations, (iteration, index) =>
     runProcesses({ ...iteration, index, progressState, opts }),
   )
-  const benchmark = addBenchmarkInfo(iterationsA, opts)
+  const benchmark = addBenchmarkInfo({
+    iterations: iterationsA,
+    opts,
+    versions,
+  })
   return benchmark
 }
 
