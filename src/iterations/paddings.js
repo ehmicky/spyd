@@ -1,42 +1,76 @@
-// Make `taskTitle` and `variationTitle` reporter-friendly by adding paddings.
-// Also add `iteration.name` which combines `taskTitle` and `variationTitle`.
+// Make `taskTitle`, `variationTitle`, 'runnerTitle' reporter-friendly by
+// adding paddings.
+// Also add `iteration.name` which combines them.
 export const addPaddings = function(iterations) {
   const paddings = getPaddings(iterations)
   const iterationsA = iterations.map(iteration =>
     addPadding(iteration, paddings),
   )
-  return iterationsA
+  const iterationsB = addNames(iterationsA)
+  return iterationsB
 }
 
-// Vertically align both `taskTitle` and `variationTitle`
+// Vertically align `taskTitle`, `variationTitle` and `runnerTitle`
 const getPaddings = function(iterations) {
-  const task = getPadding(iterations, 'taskTitle')
-  const variation = getPadding(iterations, 'variationTitle')
-  return { task, variation }
+  const paddings = PADDED_PROPS.map(propName =>
+    getPadding(iterations, propName),
+  )
+  return Object.fromEntries(paddings)
 }
 
 const getPadding = function(iterations, propName) {
   const lengths = iterations.map(({ [propName]: value = '' }) => value.length)
-  return Math.max(...lengths)
+  const padding = Math.max(...lengths)
+  return [propName, padding]
 }
 
-const addPadding = function(
-  { taskTitle, variationTitle, ...iteration },
-  paddings,
-) {
-  const taskTitleA = taskTitle.padEnd(paddings.task)
-
-  if (variationTitle === undefined) {
-    const name = taskTitleA.padEnd(paddings.variation + 3)
-    return { ...iteration, taskTitle: taskTitleA, name }
-  }
-
-  const variationTitleA = variationTitle.padEnd(paddings.variation)
-  const nameA = `${taskTitleA} | ${variationTitleA}`
-  return {
-    ...iteration,
-    taskTitle: taskTitleA,
-    variationTitle: variationTitleA,
-    name: nameA,
-  }
+const addPadding = function(iteration, paddings) {
+  const titles = PADDED_PROPS.map(propName =>
+    padProp(iteration, paddings, propName),
+  )
+  const titlesA = Object.fromEntries(titles)
+  return { ...iteration, ...titlesA }
 }
+
+const padProp = function(iteration, paddings, propName) {
+  const title = padTitle(paddings[propName], iteration[propName])
+  return [propName, title]
+}
+
+const padTitle = function(padding, title = '') {
+  if (padding === 0) {
+    return
+  }
+
+  return title.padEnd(padding)
+}
+
+// Add `iteration.name`
+const addNames = function(iterations) {
+  const props = PADDED_PROPS.filter(propName =>
+    shouldShowProp(iterations, propName),
+  )
+  return iterations.map(iteration => addName(iteration, props))
+}
+
+const addName = function(iteration, props) {
+  const name = props
+    .map(propName => iteration[propName])
+    .filter(Boolean)
+    .join(' | ')
+  return { ...iteration, name }
+}
+
+// If all variations and/or runners are the same, do not report them.
+// Do not do this for tasks though, since `name` should not be empty.
+const shouldShowProp = function(iterations, propName) {
+  if (propName === 'taskTitle') {
+    return true
+  }
+
+  const props = iterations.map(iteration => iteration[propName])
+  const uniqueProps = [...new Set(props)]
+  return uniqueProps.length !== 1
+}
+
+const PADDED_PROPS = ['taskTitle', 'variationTitle', 'runnerTitle']

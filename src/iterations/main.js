@@ -1,4 +1,4 @@
-import { getRunner } from '../run/main.js'
+import { getRunners } from '../run/main.js'
 import { loadTaskFile } from '../processes/load.js'
 
 import { getTaskPaths } from './path.js'
@@ -32,7 +32,7 @@ const loadIterations = async function({
   variationIds,
   requireOpt,
 }) {
-  const promises = taskPaths.map(taskPath => loadFile(taskPath, requireOpt))
+  const promises = taskPaths.map(taskPath => loadFiles(taskPath, requireOpt))
   const iterations = await Promise.all(promises)
   const iterationsA = iterations.flat().filter(removeDuplicates)
   const iterationsB = selectIterations({
@@ -48,33 +48,57 @@ const loadIterations = async function({
   return iterationsB
 }
 
-const loadFile = async function(taskPath, requireOpt) {
-  const runner = getRunner(taskPath)
+const loadFiles = async function(taskPath, requireOpt) {
+  const runners = getRunners(taskPath)
+  const promises = runners.map(runner =>
+    loadFile({ taskPath, runner, requireOpt }),
+  )
+  const iterations = await Promise.all(promises)
+  const iterationsA = iterations.flat()
+  return iterationsA
+}
 
-  const iterations = await loadTaskFile({ taskPath, runner, requireOpt })
-  return iterations.map(
-    ({
-      taskId,
-      taskTitle = taskId,
-      variationId,
-      variationTitle = variationId,
-    }) => ({
-      taskId,
-      taskTitle,
-      variationId,
-      variationTitle,
-      taskPath,
-      runner,
-    }),
+const loadFile = async function({
+  taskPath,
+  runner,
+  runner: { command },
+  requireOpt,
+}) {
+  const iterations = await loadTaskFile({ taskPath, command, requireOpt })
+  return iterations.map(iteration =>
+    normalizeIteration(iteration, runner, taskPath),
   )
 }
 
+const normalizeIteration = function(
+  { taskId, taskTitle = taskId, variationId, variationTitle = variationId },
+  { id: runnerId, title: runnerTitle = runnerId, command },
+  taskPath,
+) {
+  return {
+    taskPath,
+    taskId,
+    taskTitle,
+    variationId,
+    variationTitle,
+    runnerId,
+    runnerTitle,
+    command,
+  }
+}
+
 // When two `files` define the same iteration, the last one prevails
-const removeDuplicates = function({ taskId, variationId }, index, iterations) {
+const removeDuplicates = function(
+  { taskId, variationId, runnerId },
+  index,
+  iterations,
+) {
   return iterations
     .slice(index + 1)
     .every(
       iteration =>
-        iteration.taskId !== taskId || iteration.variationId !== variationId,
+        iteration.taskId !== taskId ||
+        iteration.variationId !== variationId ||
+        iteration.runnerId !== runnerId,
     )
 }

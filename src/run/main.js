@@ -2,7 +2,7 @@ import { extname } from 'path'
 
 import { node } from './node/main.js'
 
-export const getRunner = function(taskPath) {
+export const getRunners = function(taskPath) {
   const extension = extname(taskPath)
   const runner = RUNNERS.find(({ extensions }) =>
     findExtension({ extensions, extension }),
@@ -12,7 +12,7 @@ export const getRunner = function(taskPath) {
     throw new Error(`Please specify a 'runner' for '${taskPath}'`)
   }
 
-  return runner
+  return [runner]
 }
 
 const findExtension = function({ extensions, extension }) {
