@@ -1,7 +1,7 @@
+const extensions = ['js', 'ts', 'jsx', 'tsx', 'es6', 'mjs']
+
 const commands = function() {
   return [{ command: ['node', `${__dirname}/start.js`] }]
 }
 
-const extensions = ['js', 'ts', 'jsx', 'tsx', 'es6', 'mjs']
-
-export const node = { id: 'node', commands, extensions }
+export const node = { id: 'node', extensions, commands }
