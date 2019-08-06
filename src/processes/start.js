@@ -12,7 +12,7 @@ const CHILD_MAIN = `${__dirname}/../run/node/main.js`
 // variance.
 export const startChildren = async function({ taskPath, requireOpt }) {
   const promises = Array.from({ length: POOL_SIZE }, () =>
-    startChild({ taskPath, requireOpt, skip: false }),
+    startChild({ taskPath, requireOpt }),
   )
   const results = await Promise.all(promises)
   const children = results.map(getChild)
@@ -22,7 +22,7 @@ export const startChildren = async function({ taskPath, requireOpt }) {
 // Same as `PROCESS_COUNT`
 const POOL_SIZE = 2e1
 
-export const startChild = async function({ taskPath, requireOpt, skip }) {
+export const startChild = async function({ taskPath, requireOpt }) {
   const child = spawn('node', [CHILD_MAIN], {
     stdio: ['ignore', 'ignore', 'pipe', 'ipc'],
   })
@@ -33,7 +33,7 @@ export const startChild = async function({ taskPath, requireOpt, skip }) {
   await getChildMessage(child, 'ready')
 
   // Communicate to the child process which task to load
-  await sendChildMessage(child, 'load', { taskPath, requireOpt, skip })
+  await sendChildMessage(child, 'load', { taskPath, requireOpt })
 
   const { iterations } = await getChildMessage(child, 'load')
 
