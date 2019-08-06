@@ -42,6 +42,14 @@ Default: 10`,
     describe: `Identifiers of the tasks to benchmark.
 Default: all tasks`,
   },
+  variations: {
+    alias: 'v',
+    string: true,
+    array: true,
+    requiresArg: true,
+    describe: `Identifiers of the variations to benchmark.
+Default: all variations`,
+  },
   report: {
     describe: `Module to report benchmark final results.
 Built-in reporters: silent.

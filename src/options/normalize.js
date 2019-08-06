@@ -11,6 +11,7 @@ import {
 export const normalizeOpts = function(opts) {
   validateFiles(opts)
   validateTasks(opts)
+  validateVariations(opts)
   const optsA = normalizeDuration(opts)
   const optsB = normalizeCwd(optsA)
   const optsC = normalizeRequire(optsB)
@@ -27,6 +28,11 @@ const validateFiles = function({ files }) {
 // Validate 'tasks' option
 const validateTasks = function({ tasks }) {
   validateStringArray(tasks, 'tasks')
+}
+
+// Validate 'variations' option
+const validateVariations = function({ variations }) {
+  validateStringArray(variations, 'variations')
 }
 
 // Normalize and validate 'duration' option

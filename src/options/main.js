@@ -52,6 +52,7 @@ export const EXAMPLE_OPTS = {
   config: 'spyd.json',
   files: ['benchmarks.js'],
   tasks: ['taskId'],
+  variations: ['variationId'],
   require: ['ts-node/register'],
   output: './file.js',
   insert: './README.md',
