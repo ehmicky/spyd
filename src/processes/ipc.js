@@ -2,7 +2,7 @@ import { promisify } from 'util'
 
 import pEvent from 'p-event'
 
-import { failOnExit, reportStderr } from './exit.js'
+import { failOnExit, reportStderr } from './end.js'
 
 // Receive IPC message from parent to child
 export const getChildMessage = async function(child, eventName) {
