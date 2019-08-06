@@ -38,9 +38,7 @@ const useRequiredModule = function(requiredModule) {
     require(requiredModule)
   } catch (error) {
     throw new Error(
-      `Could not load 'node.require' option '${requiredModule}'\n\n${
-        error.stack
-      }`,
+      `Could not load 'node.require' option '${requiredModule}'\n\n${error.stack}`,
     )
   }
 }
