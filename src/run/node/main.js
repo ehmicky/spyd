@@ -1,7 +1,7 @@
 import { sendParentMessage, getParentMessage } from '../../processes/ipc.js'
 
 import { benchmark } from './benchmark/main.js'
-import { load } from './load/main.js'
+import { loadTaskFile } from './load/main.js'
 
 // Child process entry point.
 // Wait for the parent process to request benchmarks then send the result back
@@ -18,6 +18,16 @@ const start = async function() {
     // eslint-disable-next-line no-console, no-restricted-globals
     console.error(error)
   }
+}
+
+const load = async function() {
+  const { taskPath, requireOpt } = await getParentMessage('load')
+
+  const { iterations, loadEvent } = await loadTaskFile(taskPath, requireOpt)
+
+  await sendParentMessage('load', loadEvent)
+
+  return iterations
 }
 
 const runIterations = async function(iterations) {

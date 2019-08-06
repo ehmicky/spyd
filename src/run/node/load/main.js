@@ -1,24 +1,14 @@
-import { sendParentMessage, getParentMessage } from '../../../processes/ipc.js'
-
 import { useRequireOpt } from './require_opt.js'
 import { validateTaskFile } from './validate/main.js'
 import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 
+// Load the iterations using the 'load' event sent by parent
+// Those iterations are used:
+//   - to run benchmarks
+//   - by the parent at startup, but only iterations ids and titles are needed
 // Load the task file using its absolute path
-export const load = async function() {
-  const { taskPath, requireOpt } = await getParentMessage('load')
-
-  const iterations = await loadTaskFile(taskPath, requireOpt)
-
-  const loadEvent = getLoadEvent(iterations)
-
-  await sendParentMessage('load', loadEvent)
-
-  return iterations
-}
-
-const loadTaskFile = async function(taskPath, requireOpt) {
+export const loadTaskFile = async function(taskPath, requireOpt) {
   useRequireOpt(requireOpt, taskPath)
 
   const entries = await loadFile(taskPath)
@@ -26,7 +16,9 @@ const loadTaskFile = async function(taskPath, requireOpt) {
 
   const { tasks, variations } = normalizeTasks(entries, taskPath)
   const iterations = addTasksVariations(tasks, variations)
-  return iterations
+
+  const loadEvent = getLoadEvent(iterations)
+  return { iterations, loadEvent }
 }
 
 const loadFile = function(taskPath) {
@@ -41,6 +33,7 @@ const loadFile = function(taskPath) {
   }
 }
 
+// Communicate iterations ids and titles to parent
 const getLoadEvent = function(iterations) {
   const iterationsA = iterations.map(getIteration)
   return { iterations: iterationsA }
