@@ -39,7 +39,7 @@ Default: 10`,
     string: true,
     array: true,
     requiresArg: true,
-    describe: `Identifiers of the tasks to benchmarks.
+    describe: `Identifiers of the tasks to benchmark.
 Default: all tasks`,
   },
   report: {
