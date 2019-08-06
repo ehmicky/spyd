@@ -18,7 +18,7 @@ export const runProcesses = async function({
   runner,
   index,
   progressState,
-  duration,
+  opts: { duration, cwd },
 }) {
   const runEnd = now() + duration
   // How long to run each child process
@@ -34,6 +34,7 @@ export const runProcesses = async function({
     runner,
     processDuration,
     runEnd,
+    cwd,
   })
 
   const stats = getStats(results)

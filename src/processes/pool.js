@@ -15,6 +15,7 @@ export const runPools = async function({
   runner,
   processDuration,
   runEnd,
+  cwd,
 }) {
   const results = []
 
@@ -28,6 +29,7 @@ export const runPools = async function({
       runner,
       processDuration,
       runEnd,
+      cwd,
     })
     // eslint-disable-next-line fp/no-mutating-methods
     results.push(...poolResults)
@@ -43,9 +45,10 @@ const runPool = async function({
   runner,
   processDuration,
   runEnd,
+  cwd,
 }) {
   try {
-    const children = await startChildren(taskPath, runner)
+    const children = await startChildren({ taskPath, runner, cwd })
     const results = await runChildren({
       children,
       processDuration,

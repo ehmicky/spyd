@@ -8,9 +8,9 @@ import { getChildMessage, sendChildMessage } from './ipc.js'
 // This includes loading the task file.
 // We do it in-between benchmarks because it would slow them down and add
 // variance.
-export const startChildren = async function(taskPath, runner) {
+export const startChildren = async function({ taskPath, runner, cwd }) {
   const promises = Array.from({ length: POOL_SIZE }, () =>
-    startChild(taskPath, runner),
+    startChild({ taskPath, runner, cwd }),
   )
   const results = await Promise.all(promises)
   const children = results.map(getChild)
@@ -20,12 +20,17 @@ export const startChildren = async function(taskPath, runner) {
 // Same as `PROCESS_COUNT`
 const POOL_SIZE = 2e1
 
-export const startChild = async function(
+export const startChild = async function({
   taskPath,
-  { command: [file, ...args], runOpt },
-) {
+  runner: {
+    command: [file, ...args],
+    runOpt,
+  },
+  cwd,
+}) {
   const child = spawn(file, args, {
     stdio: ['ignore', 'ignore', 'pipe', 'ipc'],
+    cwd,
   })
   // eslint-disable-next-line fp/no-mutation
   child.stderrPromise = getStream(child.stderr)

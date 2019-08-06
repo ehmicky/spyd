@@ -13,7 +13,7 @@ export const getIterations = async function({
 }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
-  const iterations = await loadIterations(taskPaths, runOpts)
+  const iterations = await loadIterations({ taskPaths, runOpts, cwd })
 
   const iterationsA = iterations.filter(removeDuplicates)
   const iterationsB = selectIterations({
