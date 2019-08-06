@@ -2,15 +2,20 @@ import { promisify } from 'util'
 
 import pEvent from 'p-event'
 
-import { failOnExit, reportStderr } from './end.js'
+import { throwOnExit, reportStderr } from './end.js'
 
 // Receive IPC message from parent to child
 export const getChildMessage = async function(child, eventName) {
-  const payload = await Promise.race([
-    getMessage(child, eventName),
-    failOnExit(child),
-  ])
-  return payload
+  try {
+    const payload = await Promise.race([
+      getMessage(child, eventName),
+      throwOnExit(child),
+    ])
+    return payload
+  } catch (error) {
+    await reportStderr(child)
+    throw error
+  }
 }
 
 // Send IPC message from parent to child
