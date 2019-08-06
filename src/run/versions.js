@@ -40,11 +40,7 @@ const getRunnersVersions = async function(runners) {
   return versionsB
 }
 
-export const getRunnerVersions = async function({
-  runnerId,
-  versions,
-  runOpt,
-}) {
+const getRunnerVersions = async function({ runnerId, versions, runOpt }) {
   const versionsA = versions(runOpt)
   const promises = versionsA.map(({ title, version }) =>
     getVersion({ title, version, runnerId }),
