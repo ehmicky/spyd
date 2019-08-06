@@ -4,18 +4,18 @@ import { node } from './node/main.js'
 
 export const getRunners = function(taskPath) {
   const extension = extname(taskPath)
-  const runner = RUNNERS.find(({ extensions }) =>
-    findExtension({ extensions, extension }),
+  const runners = RUNNERS.filter(({ extensions }) =>
+    matchExtension(extensions, extension),
   )
 
-  if (runner === undefined) {
+  if (runners.length === 0) {
     throw new Error(`Please specify a 'runner' for '${taskPath}'`)
   }
 
-  return [runner]
+  return runners
 }
 
-const findExtension = function({ extensions, extension }) {
+const matchExtension = function(extensions, extension) {
   return extensions.some(extensionA => `.${extensionA}` === extension)
 }
 
