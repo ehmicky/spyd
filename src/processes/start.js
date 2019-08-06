@@ -2,9 +2,9 @@ import { spawn } from 'child_process'
 
 import getStream from 'get-stream'
 
-import { getChildMessage, sendChildMessage } from './ipc.js'
+import { getRunner } from '../run/main.js'
 
-const CHILD_MAIN = `${__dirname}/../run/node/main.js`
+import { getChildMessage, sendChildMessage } from './ipc.js'
 
 // We boot several child processes at once in parallel because it is slow.
 // This includes loading the task file.
@@ -23,7 +23,10 @@ export const startChildren = async function({ taskPath, requireOpt }) {
 const POOL_SIZE = 2e1
 
 export const startChild = async function({ taskPath, requireOpt }) {
-  const child = spawn('node', [CHILD_MAIN], {
+  const {
+    command: [file, ...args],
+  } = getRunner(taskPath)
+  const child = spawn(file, args, {
     stdio: ['ignore', 'ignore', 'pipe', 'ipc'],
   })
   // eslint-disable-next-line fp/no-mutation
