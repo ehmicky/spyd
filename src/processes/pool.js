@@ -12,7 +12,7 @@ export const runPools = async function({
   taskPath,
   taskId,
   variationId,
-  command,
+  runner,
   processDuration,
   runEnd,
   requireOpt,
@@ -26,7 +26,7 @@ export const runPools = async function({
       taskPath,
       taskId,
       variationId,
-      command,
+      runner,
       processDuration,
       runEnd,
       requireOpt,
@@ -42,13 +42,13 @@ const runPool = async function({
   taskPath,
   taskId,
   variationId,
-  command,
+  runner,
   processDuration,
   runEnd,
   requireOpt,
 }) {
   try {
-    const children = await startChildren({ taskPath, command, requireOpt })
+    const children = await startChildren({ taskPath, runner, requireOpt })
     const results = await runChildren({
       children,
       processDuration,

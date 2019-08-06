@@ -4,10 +4,10 @@ import { sendChildMessage } from './ipc.js'
 
 // At startup we run child processes but do not run an benchmarks. We only
 // retrieve the task files iterations
-export const loadTaskFile = async function({ taskPath, command, requireOpt }) {
+export const loadTaskFile = async function({ taskPath, runner, requireOpt }) {
   const { iterations, child } = await startChild({
     taskPath,
-    command,
+    runner,
     requireOpt,
   })
 

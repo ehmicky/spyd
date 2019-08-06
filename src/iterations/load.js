@@ -24,13 +24,8 @@ const loadFiles = async function(taskPath, allRunners, requireOpt) {
   return iterationsA
 }
 
-const loadFile = async function({
-  taskPath,
-  runner,
-  runner: { command },
-  requireOpt,
-}) {
-  const iterations = await loadTaskFile({ taskPath, command, requireOpt })
+const loadFile = async function({ taskPath, runner, requireOpt }) {
+  const iterations = await loadTaskFile({ taskPath, runner, requireOpt })
   return iterations.map(iteration =>
     normalizeIteration(iteration, runner, taskPath),
   )
@@ -38,7 +33,7 @@ const loadFile = async function({
 
 const normalizeIteration = function(
   { taskId, taskTitle = taskId, variationId, variationTitle = variationId },
-  { id: runnerId, title: runnerTitle = runnerId, command },
+  { id: runnerId, title: runnerTitle = runnerId, ...runner },
   taskPath,
 ) {
   return {
@@ -49,6 +44,6 @@ const normalizeIteration = function(
     variationTitle,
     runnerId,
     runnerTitle,
-    command,
+    runner,
   }
 }
