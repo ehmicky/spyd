@@ -40,6 +40,7 @@ Default: 10`,
     array: true,
     requiresArg: true,
     describe: `Identifiers of the tasks to benchmark.
+Each identifier can start with a ! to exclude the task instead of selecting it.
 Default: all tasks`,
   },
   variations: {
@@ -48,6 +49,7 @@ Default: all tasks`,
     array: true,
     requiresArg: true,
     describe: `Identifiers of the variations to benchmark.
+Each identifier can start with a ! to exclude the variation instead of selecting it.
 Default: all variations`,
   },
   report: {
