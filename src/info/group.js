@@ -15,9 +15,7 @@ const getTask = function({ groupId: taskId, mean, iteration: { taskTitle } }) {
   return { taskId, taskTitle, mean }
 }
 
-// Retrieve all variations.
-// Also compute the mean of all iterations medians (of the same variation)
-// The array is sorted by mean.
+// Same for variations
 export const getVariations = function(iterations) {
   const variations = groupIterations(iterations, 'variationId')
   const variationsA = variations.map(getVariation)
@@ -30,6 +28,21 @@ const getVariation = function({
   iteration: { variationTitle },
 }) {
   return { variationId, variationTitle, mean }
+}
+
+// Same for runners
+export const getRunners = function(iterations) {
+  const runners = groupIterations(iterations, 'runnerId')
+  const runnersA = runners.map(getRunner)
+  return runnersA
+}
+
+const getRunner = function({
+  groupId: runnerId,
+  mean,
+  iteration: { runnerTitle },
+}) {
+  return { runnerId, runnerTitle, mean }
 }
 
 const groupIterations = function(iterations, groupId) {

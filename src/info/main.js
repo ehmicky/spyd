@@ -1,7 +1,7 @@
 import { sortBy } from '../utils/sort.js'
 import { addPrintedStats } from '../print/main.js'
 
-import { getTasks, getVariations } from './group.js'
+import { getTasks, getVariations, getRunners } from './group.js'
 import { addFastestIterations } from './fastest.js'
 import { getSystem } from './system.js'
 
@@ -9,6 +9,7 @@ import { getSystem } from './system.js'
 export const addBenchmarkInfo = function(iterations, opts) {
   const tasks = getTasks(iterations)
   const variations = getVariations(iterations)
+  const runners = getRunners(iterations)
 
   const iterationsA = iterations.map(iteration =>
     addIterationInfo({ iteration, tasks, variations }),
@@ -24,7 +25,7 @@ export const addBenchmarkInfo = function(iterations, opts) {
 
   const system = getSystem()
 
-  return { opts, tasks, variations, iterations: iterationsC, system }
+  return { opts, tasks, variations, runners, iterations: iterationsC, system }
 }
 
 const addIterationInfo = function({
