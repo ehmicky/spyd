@@ -38,7 +38,7 @@ export const startChild = async function({
   await getChildMessage(child, 'ready')
 
   // Communicate to the child process which task to load
-  await sendChildMessage(child, 'load', { taskPath, runOpt, requireOpt })
+  await sendChildMessage(child, 'load', { taskPath, opts: runOpt, requireOpt })
 
   const { iterations } = await getChildMessage(child, 'load')
 

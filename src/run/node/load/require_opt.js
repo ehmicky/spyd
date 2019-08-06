@@ -2,9 +2,33 @@ import { handleTypeScript } from './typescript.js'
 
 // Use the `require` option
 export const useRequireOpt = function(requireOpt, taskPath) {
-  handleTypeScript(requireOpt, taskPath)
+  const requireOptA = normalizeRequireOpt(requireOpt)
 
-  requireOpt.forEach(useRequiredModule)
+  handleTypeScript(requireOptA, taskPath)
+
+  requireOptA.forEach(useRequiredModule)
+}
+
+const normalizeRequireOpt = function(requireOpt = []) {
+  if (typeof requireOpt === 'string') {
+    return [requireOpt]
+  }
+
+  validateRequireOpt(requireOpt)
+
+  return requireOpt
+}
+
+const validateRequireOpt = function(requireOpt) {
+  if (!Array.isArray(requireOpt) || !requireOpt.every(isString)) {
+    throw new TypeError(
+      `'node.require' option must be an array of strings: ${requireOpt}`,
+    )
+  }
+}
+
+const isString = function(value) {
+  return typeof value === 'string'
 }
 
 const useRequiredModule = function(requiredModule) {
@@ -14,7 +38,9 @@ const useRequiredModule = function(requiredModule) {
     require(requiredModule)
   } catch (error) {
     throw new Error(
-      `Could not load 'require' option '${requiredModule}'\n\n${error.stack}`,
+      `Could not load 'node.require' option '${requiredModule}'\n\n${
+        error.stack
+      }`,
     )
   }
 }

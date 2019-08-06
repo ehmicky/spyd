@@ -8,7 +8,7 @@ import { addTasksVariations } from './variations.js'
 //   - to run benchmarks
 //   - by the parent at startup, but only iterations ids and titles are needed
 // Load the task file using its absolute path
-export const loadTaskFile = async function(taskPath, requireOpt) {
+export const loadTaskFile = async function(taskPath, { require: requireOpt }) {
   useRequireOpt(requireOpt, taskPath)
 
   const entries = await loadFile(taskPath)
