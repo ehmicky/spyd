@@ -46,7 +46,7 @@ const getRunner = function({
 }
 
 const groupIterations = function(iterations, groupId) {
-  const groups = Object.entries(groupBy(iterations, groupId))
+  const groups = Object.entries(groupBy(iterations, [groupId]))
 
   const groupsA = groups.map(getGroupMean)
   sortBy(groupsA, ['mean'])

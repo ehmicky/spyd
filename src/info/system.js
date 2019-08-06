@@ -16,7 +16,7 @@ export const getSystem = function() {
 
 const serializeCpus = function() {
   const cpus = getCpus()
-  return Object.entries(groupBy(cpus, 'model'))
+  return Object.entries(groupBy(cpus, ['model']))
     .map(serializeCpu)
     .join(', ')
 }
