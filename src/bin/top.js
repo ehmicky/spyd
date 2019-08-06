@@ -34,6 +34,14 @@ Used to find the default configuration and tasks files.`,
     describe: `How many seconds to benchmark each task.
 Default: 10`,
   },
+  tasks: {
+    alias: 't',
+    string: true,
+    array: true,
+    requiresArg: true,
+    describe: `Identifiers of the tasks to benchmarks.
+Default: all tasks`,
+  },
   report: {
     describe: `Module to report benchmark final results.
 Built-in reporters: silent.

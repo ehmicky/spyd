@@ -6,6 +6,7 @@ import { isPlainObject } from '../utils/main.js'
 // Normalize options shape and do custom validation
 export const normalizeOpts = function(opts) {
   validateFiles(opts)
+  validateTasks(opts)
   const optsA = normalizeDuration(opts)
   const optsB = normalizeCwd(optsA)
   const optsC = normalizeRequire(optsB)
@@ -18,6 +19,13 @@ export const normalizeOpts = function(opts) {
 const validateFiles = function({ files }) {
   if (!files.every(isString)) {
     throw new TypeError(`'files' must be an array of strings: ${files}`)
+  }
+}
+
+// Validate 'tasks' option
+const validateTasks = function({ tasks }) {
+  if (tasks !== undefined && !tasks.every(isString)) {
+    throw new TypeError(`'tasks' must be an array of strings: ${tasks}`)
   }
 }
 
