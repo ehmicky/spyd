@@ -110,12 +110,6 @@ Default: false`,
     describe: `Show link to the library's main page.
 Default: true`,
   },
-  require: {
-    string: true,
-    array: true,
-    requiresArg: true,
-    describe: 'Module to load before the task file.',
-  },
 }
 
 const USAGE = `$0 [OPTIONS] [FILE...]

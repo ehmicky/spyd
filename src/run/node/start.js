@@ -21,7 +21,7 @@ const start = async function() {
 }
 
 const load = async function() {
-  const { taskPath, opts, requireOpt } = await getParentMessage('load')
+  const { taskPath, opts } = await getParentMessage('load')
 
   const { iterations, loadEvent } = await loadTaskFile(taskPath, opts)
 

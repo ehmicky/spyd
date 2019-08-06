@@ -14,11 +14,10 @@ export const normalizeOpts = function(opts) {
   validateVariations(opts)
   const optsA = normalizeDuration(opts)
   const optsB = normalizeCwd(optsA)
-  const optsC = normalizeRequire(optsB)
-  const optsD = normalizeRunners(optsC)
-  const optsE = normalizeReporters(optsD)
-  const optsF = normalizeProgress(optsE)
-  return optsF
+  const optsC = normalizeRunners(optsB)
+  const optsD = normalizeReporters(optsC)
+  const optsE = normalizeProgress(optsD)
+  return optsE
 }
 
 // Validate 'files' option
@@ -51,24 +50,6 @@ const SECONDS_TO_NANOSECONDS = 1e9
 const normalizeCwd = function({ cwd, ...opts }) {
   const cwdA = resolve(getCwd(), cwd)
   return { ...opts, cwd: cwdA }
-}
-
-// Normalize and validate 'require' option
-const normalizeRequire = function({ require: requireOpt, cwd, ...opts }) {
-  validateStringArray(requireOpt, 'require')
-
-  const requireOptA = requireOpt.map(requiredModule =>
-    resolveRequire(requiredModule, cwd),
-  )
-  return { ...opts, requireOpt: requireOptA, cwd }
-}
-
-const resolveRequire = function(requiredModule, cwd) {
-  if (!requiredModule.startsWith('.')) {
-    return requiredModule
-  }
-
-  return resolve(cwd, requiredModule)
 }
 
 // Normalize and validate 'run' option

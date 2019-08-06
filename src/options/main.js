@@ -38,7 +38,6 @@ const isUndefined = function(value) {
 const DEFAULT_OPTS = {
   cwd: getCwd(),
   duration: 10,
-  require: [],
   run: { node: {} },
   report: {},
   progress: { debug: {} },
@@ -53,7 +52,6 @@ export const EXAMPLE_OPTS = {
   files: ['benchmarks.js'],
   tasks: ['taskId'],
   variations: ['variationId'],
-  require: ['ts-node/register'],
   output: './file.js',
   insert: './README.md',
 }
