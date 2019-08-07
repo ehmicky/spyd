@@ -1,22 +1,18 @@
 #!/usr/bin/env node
 import { argv, exit } from 'process'
-import { spawn } from 'child_process'
 import { readFile, writeFile } from 'fs'
 import { promisify } from 'util'
 
-import pEvent from 'p-event'
-import findCacheDir from 'find-cache-dir'
 import pathExists from 'path-exists'
 import { validRange, clean as cleanRange, maxSatisfying, ltr } from 'semver'
 
-import { downloadNode, NODE_FILENAME } from './download.js'
+import { CACHE_DIR } from './cache.js'
+import { runNode } from './run.js'
 import { cleanupOnError } from './cleanup.js'
 import { fetchUrl } from './fetch.js'
 
 const pReadFile = promisify(readFile)
 const pWriteFile = promisify(writeFile)
-
-const CACHE_DIR = findCacheDir({ name: 'nve', create: true })
 
 // CLI that forwards its arguments to another node instance of a specific
 // version range. The version range is specified as the first argument.
@@ -152,40 +148,5 @@ const VERSIONS_CACHE = `${CACHE_DIR}/versions.json`
 
 // eslint-disable-next-line fp/no-let, init-declarations
 let currentCachedVersions
-
-// Download the Node binary for a specific `version` then run it with `args`
-const runNode = async function(version, args) {
-  const nodePath = await getNodePath(version)
-  const { exitCode, signal } = await runNodeProcess(nodePath, args)
-  return { exitCode, signal }
-}
-
-// Download the Node binary for a specific `version`.
-// The binary is cached under `node_modules/.cache/nve/{version}/node`.
-const getNodePath = async function(version) {
-  const outputDir = `${CACHE_DIR}/${version}`
-  const nodePath = `${outputDir}/${NODE_FILENAME}`
-
-  if (await pathExists(nodePath)) {
-    return nodePath
-  }
-
-  await cleanupOnError(
-    () => downloadNode(version, outputDir, nodePath),
-    nodePath,
-  )
-
-  return nodePath
-}
-
-// Forward arguments to another node binary located at `nodePath`.
-// We also forward standard streams and exit code.
-const runNodeProcess = async function(nodePath, args) {
-  const childProcess = spawn(nodePath, args, { stdio: 'inherit' })
-  const [exitCode, signal] = await pEvent(childProcess, 'exit', {
-    multiArgs: true,
-  })
-  return { exitCode, signal }
-}
 
 runCli()
