@@ -64,6 +64,14 @@ functions is much slower than later runs. This applies to both:
 _Solution_: We do a cold start, i.e. run functions once before benchmarking
 them.
 
+## Caching
+
+_Problem_: The benchmarked code might perform caching or memoization. This would
+make the first invocation much slower than later runs.
+
+_Solution_: If the first invocation is much slower than later runs, we discard
+it.
+
 ## Speedups
 
 _Problem_: Due to JavaScript engine optimization, the more a function is run,
