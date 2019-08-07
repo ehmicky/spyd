@@ -4,8 +4,9 @@ import { readFile, writeFile } from 'fs'
 import { promisify } from 'util'
 
 import pathExists from 'path-exists'
-import { validRange, clean as cleanRange, maxSatisfying, ltr } from 'semver'
+import { clean as cleanRange, maxSatisfying, ltr } from 'semver'
 
+import { validateInput } from './validate.js'
 import { CACHE_DIR } from './cache.js'
 import { runNode } from './run.js'
 import { cleanupOnError } from './cleanup.js'
@@ -36,29 +37,6 @@ const nve = async function(versionRange, args = []) {
   const versionA = await getVersion(versionRange)
   const { exitCode, signal } = await runNode(versionA, args)
   return { exitCode, signal }
-}
-
-// Validate input parameters
-// `versionRange` can start with `v` or not.
-const validateInput = function(versionRange, args) {
-  validateVersion(versionRange)
-  validateArgs(args)
-}
-
-const validateVersion = function(versionRange) {
-  if (typeof versionRange !== 'string' || validRange(versionRange) === null) {
-    throw new TypeError('First argument must be a valid Node version range')
-  }
-}
-
-const validateArgs = function(args) {
-  if (!Array.isArray(args) || !args.every(isString)) {
-    throw new TypeError('Second argument must be an array of strings')
-  }
-}
-
-const isString = function(arg) {
-  return typeof arg === 'string'
 }
 
 // Retrieve the Node version matching a specific `versionRange`
