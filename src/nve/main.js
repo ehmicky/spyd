@@ -2,27 +2,29 @@
 import { platform, arch, argv, exit } from 'process'
 import { createGunzip } from 'zlib'
 import { spawn } from 'child_process'
-import { readFile, writeFile, createWriteStream } from 'fs'
+import { readFile, writeFile, createWriteStream, unlinkSync } from 'fs'
 import { promisify } from 'util'
 
-import fetch from 'cross-fetch'
 import { extract as tarExtract } from 'tar-fs'
 import pEvent from 'p-event'
 import findCacheDir from 'find-cache-dir'
 import pathExists from 'path-exists'
 import { validRange, clean as cleanRange, maxSatisfying, ltr } from 'semver'
+import onExit from 'signal-exit'
+
+import { fetchUrl } from './fetch.js'
 
 const pReadFile = promisify(readFile)
 const pWriteFile = promisify(writeFile)
 
-const CACHE_DIR = findCacheDir({ name: 'nvrun', create: true })
+const CACHE_DIR = findCacheDir({ name: 'nve', create: true })
 
 // CLI that forwards its arguments to another node instance of a specific
 // version range. The version range is specified as the first argument.
 const runCli = async function() {
   try {
     const [versionRange, ...args] = argv.slice(2)
-    const { exitCode } = await nvrun(versionRange, args)
+    const { exitCode } = await nve(versionRange, args)
     // Forward the exit code from the child process
     exit(exitCode)
   } catch (error) {
@@ -33,7 +35,7 @@ const runCli = async function() {
 }
 
 // Forwards `args` to another node instance of a specific `versionRange`
-const nvrun = async function(versionRange, args = []) {
+const nve = async function(versionRange, args = []) {
   validateInput(versionRange, args)
 
   const versionA = await getVersion(versionRange)
@@ -87,7 +89,10 @@ const getVersions = async function(versionRange) {
 
   const versions = await fetchVersions()
 
-  await cacheVersions(versions)
+  await cleanupOnError(
+    () => cacheVersions(versions),
+    () => cleanup(VERSIONS_CACHE),
+  )
 
   return versions
 }
@@ -110,18 +115,18 @@ const getVersionField = function({ version }) {
 // We cache the HTTP request. The cache needs to be invalidated sometimes since
 // new Node versions are made available every week. We only invalidate it when
 // the requested `versionRange` targets the latest Node version.
-// The cache is persisted to `./node_modules/.cache/nvrun/versions.json`.
+// The cache is persisted to `./node_modules/.cache/nve/versions.json`.
 // Also we also cache it in-memory so it's performed only once per process.
 const getCachedVersions = async function(versionRange) {
   if (currentCachedVersions !== undefined) {
     return currentCachedVersions
   }
 
-  if (!(await pathExists(INDEX_CACHE))) {
+  if (!(await pathExists(VERSIONS_CACHE))) {
     return
   }
 
-  const versions = await pReadFile(INDEX_CACHE, 'utf8')
+  const versions = await pReadFile(VERSIONS_CACHE, 'utf8')
   const versionsA = JSON.parse(versions)
 
   if (isLatestVersion(versionRange, versionsA)) {
@@ -142,12 +147,12 @@ const isLatestVersion = function(versionRange, versions) {
 
 // Persist the cached versions
 const cacheVersions = async function(versions) {
-  await pWriteFile(INDEX_CACHE, JSON.stringify(versions, null, 2))
+  await pWriteFile(VERSIONS_CACHE, JSON.stringify(versions, null, 2))
   // eslint-disable-next-line fp/no-mutation
   currentCachedVersions = versions
 }
 
-const INDEX_CACHE = `${CACHE_DIR}/versions.json`
+const VERSIONS_CACHE = `${CACHE_DIR}/versions.json`
 
 // eslint-disable-next-line fp/no-let, init-declarations
 let currentCachedVersions
@@ -160,7 +165,7 @@ const runNode = async function(version, args) {
 }
 
 // Download the Node binary for a specific `version`.
-// The binary is cached under `node_modules/.cache/nvrun/{version}/node`.
+// The binary is cached under `node_modules/.cache/nve/{version}/node`.
 const getNodePath = async function(version) {
   const outputDir = `${CACHE_DIR}/${version}`
   const nodePath = `${outputDir}/${NODE_FILENAME}`
@@ -169,7 +174,10 @@ const getNodePath = async function(version) {
     return nodePath
   }
 
-  await downloadNode(version, outputDir, nodePath)
+  await cleanupOnError(
+    () => downloadNode(version, outputDir, nodePath),
+    () => cleanup(nodePath),
+  )
 
   return nodePath
 }
@@ -223,25 +231,6 @@ const shouldExclude = function(path) {
 
 const NODE_FILENAME = platform === 'win32' ? 'node.exe' : 'node'
 
-// Make a HTTP GET request
-const fetchUrl = async function(url) {
-  const response = await performFetch(url)
-
-  if (!response.ok) {
-    throw new Error(`Could not fetch ${url} (status ${response.status})`)
-  }
-
-  return response
-}
-
-const performFetch = async function(url) {
-  try {
-    return await fetch(url)
-  } catch (error) {
-    throw new Error(`Could not fetch ${url}\n\n${error.stack}`)
-  }
-}
-
 // Forward arguments to another node binary located at `nodePath`.
 // We also forward standard streams and exit code.
 const runNodeProcess = async function(nodePath, args) {
@@ -250,6 +239,32 @@ const runNodeProcess = async function(nodePath, args) {
     multiArgs: true,
   })
   return { exitCode, signal }
+}
+
+// If an error happens while persisting the `node` executable or
+// `versions.json`, it will be corrupted so we need to remove it.
+// We catch both exits like CTRL-C and exceptions thrown.
+// This needs to be synchronous if it happens on exit.
+const cleanupOnError = async function(func, onError) {
+  const removeOnExit = onExit(onError)
+
+  try {
+    await func()
+  } catch (error) {
+    removeOnExit()
+    onError()
+    throw error
+  }
+
+  removeOnExit()
+}
+
+const cleanup = function(path) {
+  if (!pathExists.sync(path)) {
+    return
+  }
+
+  unlinkSync(path)
 }
 
 runCli()

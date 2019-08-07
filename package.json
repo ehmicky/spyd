@@ -50,6 +50,7 @@
     "p-reduce": "^2.1.0",
     "path-exists": "^4.0.0",
     "semver": "^6.3.0",
+    "signal-exit": "^3.0.2",
     "strip-final-newline": "^2.0.0",
     "tar-fs": "^2.0.0",
     "yargs": "^13.3.0"
