@@ -2,7 +2,7 @@
 import { platform, arch, argv, exit } from 'process'
 import { createGunzip } from 'zlib'
 import { spawn } from 'child_process'
-import { readFile, writeFile } from 'fs'
+import { readFile, writeFile, createWriteStream } from 'fs'
 import { promisify } from 'util'
 
 import fetch from 'cross-fetch'
@@ -17,9 +17,6 @@ const pWriteFile = promisify(writeFile)
 
 const CACHE_DIR = findCacheDir({ name: 'nvrun', create: true })
 
-// TODO: compare speed
-// TODO: win32 is not *.tar.gz
-// TODO: check it works on Windows
 // CLI that forwards its arguments to another node instance of a specific
 // version range. The version range is specified as the first argument.
 const runCli = async function() {
@@ -172,36 +169,45 @@ const getNodePath = async function(version) {
     return nodePath
   }
 
-  const body = await fetchNode(version)
-
-  await unpack(body, outputDir)
+  await downloadNode(version, outputDir, nodePath)
 
   return nodePath
 }
 
-// Retrieve the Node binary from the Node website
-const fetchNode = async function(version) {
-  const url = getUrl(version)
-  const { body } = await fetchUrl(url)
-  return body
-}
-
+// Retrieve the Node binary from the Node website and persist it
 // The URL depends on the current OS and CPU architecture
-const getUrl = function(version) {
+const downloadNode = function(version, outputDir, nodePath) {
   if (platform === 'win32') {
-    return `${URL_BASE}/v${version}/win-${arch}/${NODE_FILENAME}`
+    return downloadWindowsNode(version, nodePath)
   }
 
-  return `${URL_BASE}/v${version}/node-v${version}-${platform}-${arch}.tar.gz`
+  return downloadUnixNode(version, outputDir)
 }
 
-const URL_BASE = 'https://nodejs.org/dist'
+// The Windows Node binary comes as a regular file
+const downloadWindowsNode = async function(version, nodePath) {
+  const { body } = await fetchUrl(
+    `${URL_BASE}/v${version}/win-${arch}/${NODE_FILENAME}`,
+  )
 
-// The Node binary comes in a tar.gz folder
-const unpack = async function(body, outputDir) {
+  const writeStream = createWriteStream(nodePath, { mode: NODE_MODE })
+  body.pipe(writeStream)
+  await pEvent(writeStream, 'finish')
+}
+
+const NODE_MODE = 0o755
+
+// The Unix Node binary comes in a tar.gz folder
+const downloadUnixNode = async function(version, outputDir) {
+  const { body } = await fetchUrl(
+    `${URL_BASE}/v${version}/node-v${version}-${platform}-${arch}.tar.gz`,
+  )
+
   const archive = body.pipe(createGunzip())
   await unarchive(archive, outputDir)
 }
+
+const URL_BASE = 'https://nodejs.org/dist'
 
 const unarchive = async function(archive, outputDir) {
   const extract = tarExtract(outputDir, { ignore: shouldExclude, strip: 2 })
