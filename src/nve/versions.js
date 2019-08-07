@@ -8,13 +8,13 @@ import { fetchUrl } from './fetch.js'
 export const getVersion = async function(versionRange) {
   const versions = await getVersions(versionRange)
 
-  const versionA = maxSatisfying(versions, versionRange)
+  const version = maxSatisfying(versions, versionRange)
 
-  if (versionA === null) {
+  if (version === null) {
     throw new Error(`Invalid Node version: ${versionRange}`)
   }
 
-  return versionA
+  return version
 }
 
 // Retrieve all available Node versions

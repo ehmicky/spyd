@@ -8,8 +8,8 @@ import { runNode } from './run.js'
 const nve = async function(versionRange, args = []) {
   validateInput(versionRange, args)
 
-  const versionA = await getVersion(versionRange)
-  const { exitCode, signal } = await runNode(versionA, args)
+  const version = await getVersion(versionRange)
+  const { exitCode, signal } = await runNode(version, args)
   return { exitCode, signal }
 }
 
