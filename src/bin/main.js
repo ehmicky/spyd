@@ -13,15 +13,9 @@ const runCli = async function() {
     const opts = parseOpts(yargs)
     await spyd(opts)
   } catch (error) {
-    runCliHandler(error)
+    console.error(error.message)
+    exit(1)
   }
-}
-
-// If an error is thrown, print error's description, then exit with exit code 1
-const runCliHandler = function({ message }) {
-  console.error(message)
-
-  exit(1)
 }
 
 runCli()
