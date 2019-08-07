@@ -36,8 +36,6 @@
     "bytes": "^3.1.0",
     "cli-cursor": "^3.1.0",
     "core-js": "^3.1.4",
-    "cross-fetch": "^3.0.4",
-    "find-cache-dir": "^3.0.0",
     "find-up": "^4.1.0",
     "get-stream": "^5.1.0",
     "is-interactive": "^1.0.0",
@@ -48,11 +46,7 @@
     "p-finally": "^2.0.1",
     "p-map-series": "^2.1.0",
     "p-reduce": "^2.1.0",
-    "path-exists": "^4.0.0",
-    "semver": "^6.3.0",
-    "signal-exit": "^3.0.2",
     "strip-final-newline": "^2.0.0",
-    "tar-fs": "^2.0.0",
     "yargs": "^13.3.0"
   },
   "devDependencies": {
