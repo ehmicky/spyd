@@ -2,7 +2,7 @@
 import { platform, arch, argv, exit } from 'process'
 import { createGunzip } from 'zlib'
 import { spawn } from 'child_process'
-import { readFile, writeFile, createWriteStream, unlinkSync } from 'fs'
+import { readFile, writeFile, createWriteStream } from 'fs'
 import { promisify } from 'util'
 
 import { extract as tarExtract } from 'tar-fs'
@@ -10,8 +10,8 @@ import pEvent from 'p-event'
 import findCacheDir from 'find-cache-dir'
 import pathExists from 'path-exists'
 import { validRange, clean as cleanRange, maxSatisfying, ltr } from 'semver'
-import onExit from 'signal-exit'
 
+import { cleanupOnError } from './cleanup.js'
 import { fetchUrl } from './fetch.js'
 
 const pReadFile = promisify(readFile)
@@ -89,10 +89,7 @@ const getVersions = async function(versionRange) {
 
   const versions = await fetchVersions()
 
-  await cleanupOnError(
-    () => cacheVersions(versions),
-    () => cleanup(VERSIONS_CACHE),
-  )
+  await cleanupOnError(() => cacheVersions(versions), VERSIONS_CACHE)
 
   return versions
 }
@@ -176,7 +173,7 @@ const getNodePath = async function(version) {
 
   await cleanupOnError(
     () => downloadNode(version, outputDir, nodePath),
-    () => cleanup(nodePath),
+    nodePath,
   )
 
   return nodePath
@@ -239,32 +236,6 @@ const runNodeProcess = async function(nodePath, args) {
     multiArgs: true,
   })
   return { exitCode, signal }
-}
-
-// If an error happens while persisting the `node` executable or
-// `versions.json`, it will be corrupted so we need to remove it.
-// We catch both exits like CTRL-C and exceptions thrown.
-// This needs to be synchronous if it happens on exit.
-const cleanupOnError = async function(func, onError) {
-  const removeOnExit = onExit(onError)
-
-  try {
-    await func()
-  } catch (error) {
-    removeOnExit()
-    onError()
-    throw error
-  }
-
-  removeOnExit()
-}
-
-const cleanup = function(path) {
-  if (!pathExists.sync(path)) {
-    return
-  }
-
-  unlinkSync(path)
 }
 
 runCli()
