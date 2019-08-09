@@ -35,7 +35,7 @@
   "dependencies": {
     "bytes": "^3.1.0",
     "cli-cursor": "^3.1.0",
-    "core-js": "^3.1.4",
+    "core-js": "^3.2.0",
     "find-up": "^4.1.0",
     "get-stream": "^5.1.0",
     "is-interactive": "^1.0.0",
