@@ -34,7 +34,7 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
 }
 
 // We only keep options that are relevant for reporting
-const getOpts = function({ duration, runOpts }) {
+const getOpts = function({ duration, run: runOpts }) {
   const durationA = Math.round(duration / NANOSECS_TO_SECS)
   const runOptsA = getRunOpts(runOpts)
   return { duration: durationA, ...runOptsA }
@@ -43,7 +43,7 @@ const getOpts = function({ duration, runOpts }) {
 const NANOSECS_TO_SECS = 1e9
 
 const getRunOpts = function(runOpts) {
-  const runOptsA = Object.fromEntries(Object.entries(runOpts).filter(hasRunOpt))
+  const runOptsA = Object.fromEntries(runOpts.filter(hasRunOpt).map(getRunOpt))
 
   if (Object.keys(runOptsA).length === 0) {
     return {}
@@ -52,8 +52,12 @@ const getRunOpts = function(runOpts) {
   return { runOpts: runOptsA }
 }
 
-const hasRunOpt = function([, runOpt]) {
-  return Object.keys(runOpt).length !== 0
+const hasRunOpt = function({ opts }) {
+  return Object.keys(opts).length !== 0
+}
+
+const getRunOpt = function({ name, opts }) {
+  return [name, opts]
 }
 
 const getIterations = function({ iterations, tasks, variations, commands }) {
