@@ -6,16 +6,15 @@ import pEvent from 'p-event'
 import { childTimeout } from './timeout.js'
 import { forwardChildError } from './error.js'
 
-// Execute a runner child process and retrieve its output
+// Execute a runner child process and retrieve its output.
 // We are:
 //  - passing input with `argv`
-//  - retrieving output with file descriptor 4. The reason we do this is:
-//     - IPC needs to work across programming languages
-//     - standard streams are likely be used by the benchmarking code
-//     - likewise, file descriptor 3 is sometimes (though rarely) used
-//  - retrieving error messages with file descriptor 5. We don't use stderr
-//    for the same reason. Also we don't want to display repeated stderr from
-//    the benchmarked code.
+//  - retrieving output with file descriptor 4
+//  - retrieving error messages with file descriptor 5
+// The reasons we are not using stdout/stderr instead are:
+//  - standard streams are likely be used by the benchmarking code
+//  - likewise, file descriptor 3 is sometimes (though rarely) used
+//  - IPC needs to work across programming languages
 // Both input and output are JSON objects.
 export const executeChild = async function({
   commandValue: [file, ...args],
@@ -52,7 +51,8 @@ const STDIO = ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe']
 const OUTPUT_FD = 4
 const ERROR_FD = 5
 
-// Wait for child process exit, successful or not
+// Wait for child process successful exit, failed exit, spawning error,
+// stream error or timeout
 const waitForExit = async function(child, duration) {
   try {
     const [[exitCode, signal], output, errorOutput] = await Promise.all([
