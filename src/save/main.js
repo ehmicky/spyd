@@ -1,6 +1,6 @@
 import { omitBy } from '../utils/main.js'
 
-import { STORES } from './stores/main.js'
+import { findStore } from './find.js'
 
 // Save benchmark results so they can be compared or shown later
 export const save = async function(benchmark, { save: saveOpt, dataDir }) {
@@ -8,7 +8,7 @@ export const save = async function(benchmark, { save: saveOpt, dataDir }) {
     return
   }
 
-  const store = STORES.file
+  const store = findStore()
 
   const benchmarkA = normalizeBenchmark(benchmark)
 
