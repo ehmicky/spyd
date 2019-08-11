@@ -1,6 +1,6 @@
 import { validate } from 'jest-validate'
 
-import { omitBy } from '../../utils/main.js'
+import { omitBy } from '../../../utils/main.js'
 
 // Validate runner options
 export const getOpts = function(runOpts) {

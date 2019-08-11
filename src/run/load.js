@@ -1,7 +1,7 @@
 import { getCommands } from './command.js'
 import { getVersions, loadVersions } from './versions.js'
 import { hasTasks } from './find.js'
-import { node } from './node/main.js'
+import { node } from './runners/node/main.js'
 
 const RUNNERS = { node }
 
