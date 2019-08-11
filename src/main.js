@@ -1,15 +1,9 @@
-import pMapSeries from 'p-map-series'
-import pFinally from 'p-finally'
-
 import { getOpts } from './options/main.js'
-import { startProgress, stopProgress } from './progress/main.js'
-import { getIterations } from './iterations/main.js'
-import { runProcesses } from './processes/main.js'
-import { addBenchmarkInfo } from './info/main.js'
 import { report } from './report/main.js'
 import { save } from './save/main.js'
 import { remove } from './save/remove.js'
 import { load } from './save/load.js'
+import { runBenchmark } from './run.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
 const spyd = async function(opts) {
@@ -40,42 +34,12 @@ const showAction = async function(opts) {
   return benchmark
 }
 
-// Main action: run new benchmarks.
+// Default action: run a new benchmark
 const runAction = async function(opts) {
-  const { iterations, versions } = await getIterations(opts)
-
-  const benchmark = await runBenchmark({ iterations, opts, versions })
+  const benchmark = await runBenchmark(opts)
 
   await Promise.all([report(benchmark, opts), save(benchmark, opts)])
 
-  return benchmark
-}
-
-const runBenchmark = async function({ iterations, opts, versions }) {
-  const { progressState, progressInfo } = await startProgress(iterations, opts)
-
-  // TODO: replace with `try {} finally {}` when dropping support for Node 8/9
-  const benchmark = await pFinally(
-    computeBenchmark({ iterations, progressState, opts, versions }),
-    () => stopProgress(progressInfo),
-  )
-  return benchmark
-}
-
-const computeBenchmark = async function({
-  iterations,
-  progressState,
-  opts,
-  versions,
-}) {
-  const iterationsA = await pMapSeries(iterations, (iteration, index) =>
-    runProcesses({ ...iteration, index, progressState, opts }),
-  )
-  const benchmark = addBenchmarkInfo({
-    iterations: iterationsA,
-    opts,
-    versions,
-  })
   return benchmark
 }
 
