@@ -18,7 +18,7 @@ export const getOpts = async function(opts = {}) {
   validateOpts(optsB)
   const optsC = { ...DEFAULT_OPTS, ...optsB }
 
-  const optsD = normalizeOpts(optsC)
+  const optsD = await normalizeOpts(optsC)
   return optsD
 }
 
@@ -55,4 +55,5 @@ const EXAMPLE_OPTS = {
   variations: ['variationId'],
   output: './file.js',
   insert: './README.md',
+  data: './spyd',
 }

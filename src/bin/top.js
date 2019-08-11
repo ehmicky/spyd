@@ -116,6 +116,12 @@ Default: true`,
     describe: `Save the benchmark results.
 Default: false`,
   },
+  data: {
+    string: true,
+    requiresArg: true,
+    describe: `Directory where the benchmark results are saved.
+Default: '{packageRoot}/spyd/'`,
+  },
 }
 
 const USAGE = `$0 [OPTIONS] [FILE...]

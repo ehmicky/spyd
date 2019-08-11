@@ -3,12 +3,11 @@ import { omitBy } from '../utils/main.js'
 import { add } from './file/main.js'
 
 // Save benchmark results so they can be compared or shown later
-export const save = async function(benchmark, { save: saveOpt }) {
+export const save = async function(benchmark, { save: saveOpt, dataDir }) {
   if (!saveOpt) {
     return
   }
 
-  const dataDir = '/tmp/spyd'
   const benchmarkA = normalizeBenchmark(benchmark)
 
   try {
