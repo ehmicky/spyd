@@ -13,11 +13,16 @@ import { save } from './save/main.js'
 const spyd = async function(opts) {
   const optsA = await getOpts(opts)
 
-  const { iterations, versions } = await getIterations(optsA)
+  return run(optsA)
+}
 
-  const benchmark = await getBenchmark({ iterations, opts: optsA, versions })
+// Main action
+const run = async function(opts) {
+  const { iterations, versions } = await getIterations(opts)
 
-  await Promise.all([report(benchmark, optsA), save(benchmark, optsA)])
+  const benchmark = await getBenchmark({ iterations, opts, versions })
+
+  await Promise.all([report(benchmark, opts), save(benchmark, opts)])
 
   return benchmark
 }
