@@ -1,6 +1,6 @@
 import { omitBy } from '../utils/main.js'
 
-import { add } from './stores/file/main.js'
+import { STORES } from './stores/main.js'
 
 // Save benchmark results so they can be compared or shown later
 export const save = async function(benchmark, { save: saveOpt, dataDir }) {
@@ -8,10 +8,12 @@ export const save = async function(benchmark, { save: saveOpt, dataDir }) {
     return
   }
 
+  const store = STORES.file
+
   const benchmarkA = normalizeBenchmark(benchmark)
 
   try {
-    await add(dataDir, benchmarkA)
+    await store.add(dataDir, benchmarkA)
   } catch (error) {
     throw new Error(
       `Could not save benchmark to '${dataDir}':\n\n${error.stack}`,
