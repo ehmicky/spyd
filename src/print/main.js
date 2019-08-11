@@ -4,7 +4,7 @@ import { normalizeStats, addPrintedStats } from './stats/main.js'
 import { getPrintedSystem } from './system.js'
 
 // Add report-specific information that is not saved in data files
-export const normalizeBenchmark = async function(
+export const addPrintedInfo = async function(
   { show, diff, dataDir, store, verbose, nested },
   { iterations, ...benchmark },
 ) {
@@ -48,7 +48,7 @@ const getNestedNormalize = function({ show, diff, dataDir, store, nested }) {
     return
   }
 
-  return normalizeBenchmark.bind(null, {
+  return addPrintedInfo.bind(null, {
     show,
     diff,
     dataDir,

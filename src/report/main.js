@@ -1,4 +1,4 @@
-import { normalizeBenchmark } from '../print/main.js'
+import { addPrintedInfo } from '../print/main.js'
 
 import { handleContent } from './content.js'
 
@@ -18,7 +18,7 @@ export const report = async function(
     verbose,
   },
 ) {
-  const benchmarkA = await normalizeBenchmark(
+  const benchmarkA = await addPrintedInfo(
     { show, diff, dataDir, store, verbose },
     benchmark,
   )
