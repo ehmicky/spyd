@@ -15,29 +15,25 @@ const spyd = async function(opts) {
 
   const { iterations, versions } = await getIterations(optsA)
 
-  const benchmark = await waitForBenchmark({
-    iterations,
-    opts: optsA,
-    versions,
-  })
+  const benchmark = await getBenchmark({ iterations, opts: optsA, versions })
 
   await Promise.all([report(benchmark, optsA), save(benchmark, optsA)])
 
   return benchmark
 }
 
-const waitForBenchmark = async function({ iterations, opts, versions }) {
+const getBenchmark = async function({ iterations, opts, versions }) {
   const { progressState, progressInfo } = await startProgress(iterations, opts)
 
   // TODO: replace with `try {} finally {}` when dropping support for Node 8/9
   const benchmark = await pFinally(
-    getBenchmark({ iterations, progressState, opts, versions }),
+    computeBenchmark({ iterations, progressState, opts, versions }),
     () => stopProgress(progressInfo),
   )
   return benchmark
 }
 
-const getBenchmark = async function({
+const computeBenchmark = async function({
   iterations,
   progressState,
   opts,
