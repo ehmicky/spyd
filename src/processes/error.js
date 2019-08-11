@@ -26,7 +26,7 @@ const hasChildError = function({ exitCode, signal, error }) {
 }
 
 const getSignalError = function(signal) {
-  if (signal === null) {
+  if (signal === null || signal === undefined) {
     return ''
   }
 
@@ -34,7 +34,7 @@ const getSignalError = function(signal) {
 }
 
 const getExitCodeError = function(exitCode) {
-  if (exitCode === 0 || exitCode === null) {
+  if (exitCode === 0 || exitCode === null || exitCode === undefined) {
     return ''
   }
 
