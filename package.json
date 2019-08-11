@@ -40,7 +40,7 @@
     "find-up": "^4.1.0",
     "get-stream": "^5.1.0",
     "is-interactive": "^1.0.0",
-    "jest-validate": "^24.8.0",
+    "jest-validate": "^24.9.0",
     "make-dir": "^3.0.0",
     "normalize-node-version": "^1.0.0",
     "nve": "^1.1.4",
