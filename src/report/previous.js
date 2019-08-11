@@ -8,15 +8,15 @@ import { getDiffIndex, getDiff } from './diff.js'
 //    task and variation
 // When combined with the 'show' option, we only show the benchmarks before it.
 export const addPrevious = async function({
-  benchmark,
-  benchmark: { timestamp, iterations },
+  benchmark: { timestamp },
+  iterations,
   diff,
   dataDir,
   store: { list: listStore },
   nestedNormalize,
 }) {
   if (nestedNormalize === undefined) {
-    return benchmark
+    return { iterations }
   }
 
   const benchmarks = await listBenchmarks(dataDir, listStore)
@@ -27,7 +27,7 @@ export const addPrevious = async function({
   const previousA = await Promise.all(previous.map(nestedNormalize))
   const iterationsA = addPreviousIterations(iterations, previousA, diffIndex)
   const previousB = previousA.map(removeIterations)
-  return { ...benchmark, previous: previousB, iterations: iterationsA }
+  return { iterations: iterationsA, previous: previousB }
 }
 
 const listBenchmarks = async function(dataDir, listStore) {

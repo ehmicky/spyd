@@ -6,9 +6,9 @@ import { dereferenceBenchmark } from './dereference.js'
 // Add report-specific information that is not saved in data files
 export const normalizeBenchmark = async function(
   { show, diff, dataDir, store, nested },
-  benchmark,
+  { iterations, ...benchmark },
 ) {
-  const benchmarkA = dereferenceBenchmark(benchmark)
+  const iterationsA = dereferenceBenchmark({ benchmark, iterations })
 
   const nestedNormalize = getNestedNormalize({
     show,
@@ -17,19 +17,26 @@ export const normalizeBenchmark = async function(
     store,
     nested,
   })
-  const benchmarkB = await addPrevious({
-    benchmark: benchmarkA,
+  const { previous, iterations: iterationsB } = await addPrevious({
+    benchmark,
+    iterations: iterationsA,
     diff,
     dataDir,
     store,
     nestedNormalize,
   })
 
-  const timestamp = getTimestamp(benchmarkB, show)
+  const timestamp = getTimestamp(benchmark, show)
 
-  const printedSystem = getPrintedSystem(benchmarkB)
+  const printedSystem = getPrintedSystem(benchmark)
 
-  return { ...benchmarkB, timestamp, printedSystem }
+  return {
+    ...benchmark,
+    timestamp,
+    printedSystem,
+    iterations: iterationsB,
+    previous,
+  }
 }
 
 // Apply `normalizeBenchmark()` recursively on the `previous` benchmarks
