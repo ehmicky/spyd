@@ -7,10 +7,56 @@ import { getSystem } from './system.js'
 
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function({ iterations, opts, versions }) {
+  const timestamp = new Date().toISOString()
+  const optsA = getOpts(opts)
   const tasks = getTasks(iterations)
   const variations = getVariations(iterations)
   const commands = getCommands(iterations)
+  const system = getSystem(versions)
 
+  const iterationsA = getIterations({ iterations, tasks, variations, commands })
+  const { iterations: iterationsB, printedSystem } = getPrintedInfo(
+    iterationsA,
+    system,
+    opts,
+  )
+
+  return {
+    timestamp,
+    opts: optsA,
+    tasks,
+    variations,
+    commands,
+    system,
+    printedSystem,
+    iterations: iterationsB,
+  }
+}
+
+// We only keep options that are relevant for reporting
+const getOpts = function({ duration, runOpts }) {
+  const durationA = Math.round(duration / NANOSECS_TO_SECS)
+  const runOptsA = getRunOpts(runOpts)
+  return { duration: durationA, ...runOptsA }
+}
+
+const NANOSECS_TO_SECS = 1e9
+
+const getRunOpts = function(runOpts) {
+  const runOptsA = Object.fromEntries(Object.entries(runOpts).filter(hasRunOpt))
+
+  if (Object.keys(runOptsA).length === 0) {
+    return {}
+  }
+
+  return { runOpts: runOptsA }
+}
+
+const hasRunOpt = function([, runOpt]) {
+  return Object.keys(runOpt).length !== 0
+}
+
+const getIterations = function({ iterations, tasks, variations, commands }) {
   const iterationsA = iterations.map(iteration =>
     addIterationInfo({ iteration, tasks, variations, commands }),
   )
@@ -20,27 +66,7 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   // The fastest tasks will be first, then the fastest iterations within each
   // task (regardless of variants or runners)
   sortBy(iterationsB, ['task', 'stats.median'])
-
-  const system = getSystem(versions)
-
-  const { iterations: iterationsC, printedSystem } = getPrintedInfo(
-    iterationsB,
-    system,
-    opts,
-  )
-
-  const timestamp = new Date().toISOString()
-
-  return {
-    timestamp,
-    opts,
-    tasks,
-    variations,
-    commands,
-    iterations: iterationsC,
-    system,
-    printedSystem,
-  }
+  return iterationsB
 }
 
 const addIterationInfo = function({
