@@ -1,4 +1,4 @@
-import { normalizeBenchmark } from '../normalize/main.js'
+import { normalizeBenchmark } from '../print/main.js'
 
 import { handleContent } from './content.js'
 
