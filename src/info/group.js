@@ -11,8 +11,11 @@ export const getTasks = function(iterations) {
   return tasksA
 }
 
-const getTask = function({ groupId: taskId, mean, iteration: { taskTitle } }) {
-  return { taskId, taskTitle, mean }
+const getTask = function(
+  { groupId: taskId, mean, iteration: { taskTitle } },
+  rank,
+) {
+  return { taskId, taskTitle, mean, rank }
 }
 
 // Same for variations
@@ -22,12 +25,11 @@ export const getVariations = function(iterations) {
   return variationsA
 }
 
-const getVariation = function({
-  groupId: variationId,
-  mean,
-  iteration: { variationTitle },
-}) {
-  return { variationId, variationTitle, mean }
+const getVariation = function(
+  { groupId: variationId, mean, iteration: { variationTitle } },
+  rank,
+) {
+  return { variationId, variationTitle, mean, rank }
 }
 
 // Same for runner commands
@@ -37,12 +39,11 @@ export const getCommands = function(iterations) {
   return commandsA
 }
 
-const getCommand = function({
-  groupId: commandId,
-  mean,
-  iteration: { commandTitle },
-}) {
-  return { commandId, commandTitle, mean }
+const getCommand = function(
+  { groupId: commandId, mean, iteration: { commandTitle } },
+  rank,
+) {
+  return { commandId, commandTitle, mean, rank }
 }
 
 const groupIterations = function(iterations, groupId) {
