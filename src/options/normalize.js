@@ -62,12 +62,6 @@ const normalizeRunners = function({ run: runOpts, ...opts }) {
   return { ...opts, runOpts }
 }
 
-// Normalize and validate 'report' option
-const normalizeReporters = function({ report: reportOpts, ...opts }) {
-  validateDeepObject(reportOpts, 'report')
-  return { ...opts, reportOpts }
-}
-
 // Normalize and validate 'store' option
 const normalizeStores = function({ store: storeOpts, ...opts }) {
   validateDeepObject(storeOpts, 'store')
@@ -81,7 +75,6 @@ const NORMALIZERS = [
   normalizeDuration,
   normalizeCwd,
   normalizeRunners,
-  normalizeReporters,
   normalizeProgress,
   normalizeStores,
 ]

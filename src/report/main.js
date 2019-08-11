@@ -1,23 +1,28 @@
-import { getReporters } from './get.js'
 import { handleContent } from './content.js'
 
 // Report benchmark results
 export const report = async function(
   benchmark,
-  { reportOpts, output, insert, system, link },
+  { report: reporters, output, insert, system, link },
 ) {
-  const reporters = getReporters(reportOpts)
-
   await Promise.all(
-    reporters.map(reporter =>
-      useReporter({ ...reporter, benchmark, output, insert, system, link }),
+    reporters.map(({ report: reportFunc, opts: reportOpt }) =>
+      useReporter({
+        reportFunc,
+        reportOpt,
+        benchmark,
+        output,
+        insert,
+        system,
+        link,
+      }),
     ),
   )
 }
 
 // Perform each reporter
 const useReporter = async function({
-  report: reportFunc,
+  reportFunc,
   reportOpt,
   benchmark,
   output,
@@ -25,6 +30,8 @@ const useReporter = async function({
   system,
   link,
 }) {
+  // `output`, `insert`, `system`, link` can be set either for specific reporter
+  // (--reporter.REPORTER.output) or for all (--output)
   const reportOptA = { output, insert, system, link, ...reportOpt }
 
   const content = await reportFunc(benchmark, reportOptA)

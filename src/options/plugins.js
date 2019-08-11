@@ -1,3 +1,4 @@
+import { REPORTERS } from '../report/reporters/main.js'
 import { PROGRESS_REPORTERS } from '../progress/reporters/main.js'
 
 import { validateDeepObject } from './validate.js'
@@ -13,7 +14,10 @@ export const loadAllPlugins = async function(opts) {
   return { ...opts, ...pluginsOptsA }
 }
 
-const TYPES = [{ type: 'progress', builtins: PROGRESS_REPORTERS }]
+const TYPES = [
+  { type: 'report', builtins: REPORTERS },
+  { type: 'progress', builtins: PROGRESS_REPORTERS },
+]
 
 const loadPlugins = async function({ opts, type, builtins }) {
   const pluginOpts = opts[type]
