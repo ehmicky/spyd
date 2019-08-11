@@ -35,5 +35,5 @@ const DATA_FILE = 'data.json'
 // Persist benchmarks from filesystem
 export const setBenchmarks = async function(dataFile, benchmarks) {
   const content = JSON.stringify({ benchmarks }, null, 2)
-  await writeFileAtomic(dataFile, content)
+  await writeFileAtomic(dataFile, `${content}\n`)
 }
