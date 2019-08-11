@@ -14,5 +14,9 @@ export const childTimeout = function(promise, duration) {
   )
 }
 
+export const isTimeout = function(error) {
+  return error instanceof pTimeout.TimeoutError
+}
+
 const NANOSECS_TO_MICROSECS = 1e6
 const NANOSECS_TO_SECS = 1e9

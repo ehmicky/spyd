@@ -35,6 +35,7 @@ export const executeChild = async function({
   )
 
   forwardChildError({
+    child,
     exitCode,
     signal,
     error,
