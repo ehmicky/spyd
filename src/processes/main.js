@@ -21,47 +21,33 @@ export const runProcesses = async function({
   progressState,
   opts: { duration, cwd },
 }) {
-  try {
-    const runEnd = now() + duration
+  const runEnd = now() + duration
 
-    // eslint-disable-next-line fp/no-mutating-assign
-    Object.assign(progressState, { name, index, runEnd })
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(progressState, { name, index, runEnd })
 
-    const results = await runChildren({
-      taskPath,
-      taskId,
-      variationId,
-      commandValue,
-      commandOpt,
-      duration,
-      runEnd,
-      cwd,
-    })
+  const results = await runChildren({
+    taskPath,
+    taskId,
+    variationId,
+    commandValue,
+    commandOpt,
+    duration,
+    runEnd,
+    cwd,
+  })
 
-    const stats = getStats(results)
+  const stats = getStats(results)
 
-    return {
-      name,
-      columnName,
-      taskId,
-      taskTitle,
-      variationId,
-      variationTitle,
-      commandId,
-      commandTitle,
-      stats,
-    }
-  } catch (error) {
-    addTaskInfo({ error, taskId, variationId })
-    throw error
+  return {
+    name,
+    columnName,
+    taskId,
+    taskTitle,
+    variationId,
+    variationTitle,
+    commandId,
+    commandTitle,
+    stats,
   }
-}
-
-// When a task errors, communicate to user which one failed
-const addTaskInfo = function({ error, taskId, variationId }) {
-  const variationStr =
-    variationId === undefined ? '' : ` (variation '${variationId}')`
-  const message = error instanceof Error ? error.message : String(error)
-  // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  error.message = `Task '${taskId}'${variationStr} errored:\n\n${message}`
 }

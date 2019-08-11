@@ -40,6 +40,8 @@ export const runChildren = async function({
       input,
       duration,
       cwd,
+      taskId,
+      variationId,
     })
     // eslint-disable-next-line fp/no-mutating-methods
     results.push({ times, count })

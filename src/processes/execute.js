@@ -21,6 +21,8 @@ export const executeChild = async function({
   input,
   duration,
   cwd,
+  taskId,
+  variationId,
 }) {
   const inputA = JSON.stringify(input)
 
@@ -31,12 +33,20 @@ export const executeChild = async function({
   const outputPromise = getStream(child.stdio[OUTPUT_FD])
   const stderrPromise = getStream(child.stderr)
 
-  const { exitCode, signal, error } = await childTimeout(
-    waitForExit(child),
+  const { exitCode, signal, error } = await childTimeout(waitForExit(child), {
     duration,
-  )
+    taskId,
+    variationId,
+  })
 
-  await forwardChildError({ exitCode, signal, error, stderrPromise })
+  await forwardChildError({
+    exitCode,
+    signal,
+    error,
+    stderrPromise,
+    taskId,
+    variationId,
+  })
 
   const output = await outputPromise
   const outputA = JSON.parse(output)
