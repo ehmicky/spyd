@@ -1,7 +1,7 @@
 import { cwd as getCwd } from 'process'
-import { resolve, normalize } from 'path'
+import { resolve } from 'path'
 
-import pkgDir from 'pkg-dir'
+import { normalizeData } from '../save/options.js'
 
 import {
   validateStringArray,
@@ -72,35 +72,6 @@ const normalizeProgress = function({ progress: progressOpts, ...opts }) {
   validateDeepObject(progressOpts, 'progress')
   return { ...opts, progressOpts }
 }
-
-// Add default value to `data' option
-const normalizeData = async function({ data: dataDir, cwd, ...opts }) {
-  const dataDirA = await getDataDir(dataDir, cwd)
-  const dataDirB = normalize(dataDirA)
-  return { ...opts, dataDir: dataDirB, cwd }
-}
-
-const getDataDir = async function(dataDir, cwd) {
-  if (dataDir !== undefined) {
-    return dataDir
-  }
-
-  const dataRoot = await getDataRoot(cwd)
-  const dataDirA = `${dataRoot}/${DATA_DIRNAME}`
-  return dataDirA
-}
-
-const getDataRoot = async function(cwd) {
-  const dataRoot = await pkgDir(cwd)
-
-  if (dataRoot === undefined) {
-    return cwd
-  }
-
-  return dataRoot
-}
-
-const DATA_DIRNAME = 'spyd'
 
 const NORMALIZERS = [
   normalizeFiles,
