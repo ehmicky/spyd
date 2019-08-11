@@ -1,8 +1,8 @@
 import { argv } from 'process'
-import { writeFile } from 'fs'
+import { write } from 'fs'
 import { promisify } from 'util'
 
-const pWriteFile = promisify(writeFile)
+const pWrite = promisify(write)
 
 // Get input from parent to child process
 export const getInput = function() {
@@ -13,13 +13,13 @@ export const getInput = function() {
 // Send output from child to parent process
 export const sendOutput = async function(message) {
   const messageStr = JSON.stringify(message)
-  await pWriteFile(OUTPUT_FD, messageStr)
+  await pWrite(OUTPUT_FD, messageStr)
 }
 
 // Send error messages from child to parent process
 export const sendError = async function(error) {
   const message = error instanceof Error ? error.stack : String(error)
-  await pWriteFile(ERROR_FD, `${message}\n`)
+  await pWrite(ERROR_FD, `${message}\n`)
 }
 
 // Communicate to parent using those file descriptors
