@@ -1,9 +1,7 @@
 import { getCommands } from './command.js'
 import { getVersions, loadVersions } from './versions.js'
 import { hasTasks } from './find.js'
-import { node } from './runners/node/main.js'
-
-const RUNNERS = { node }
+import { RUNNERS } from './runners/main.js'
 
 // Import all available runners, as defined by the `run` option.
 // Associate each runner option with its runner as well.
