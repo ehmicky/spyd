@@ -1,11 +1,11 @@
-import { getPrintedSystem } from '../print/system.js'
-
-import { addPrevious } from './previous.js'
 import { dereferenceBenchmark } from './dereference.js'
+import { addPrevious } from './previous.js'
+import { normalizeStats, addPrintedStats } from './stats/main.js'
+import { getPrintedSystem } from './system.js'
 
 // Add report-specific information that is not saved in data files
 export const normalizeBenchmark = async function(
-  { show, diff, dataDir, store, nested },
+  { show, diff, dataDir, store, verbose, nested },
   { iterations, ...benchmark },
 ) {
   const iterationsA = dereferenceBenchmark({ benchmark, iterations })
@@ -26,6 +26,9 @@ export const normalizeBenchmark = async function(
     nestedNormalize,
   })
 
+  const iterationsC = normalizeStats(iterationsB)
+  const iterationsD = addPrintedStats(iterationsC, verbose)
+
   const timestamp = getTimestamp(benchmark, show)
 
   const printedSystem = getPrintedSystem(benchmark)
@@ -34,7 +37,7 @@ export const normalizeBenchmark = async function(
     ...benchmark,
     timestamp,
     printedSystem,
-    iterations: iterationsB,
+    iterations: iterationsD,
     previous,
   }
 }

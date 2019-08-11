@@ -6,6 +6,7 @@ export const STAT_TYPES = {
   max: 'scalar',
   deviation: 'scalar',
   variance: 'scalar',
+  diff: 'scalar',
   count: 'count',
   loops: 'count',
   repeat: 'count',

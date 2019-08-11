@@ -15,10 +15,11 @@ export const report = async function(
     diff,
     dataDir,
     store,
+    verbose,
   },
 ) {
   const benchmarkA = await normalizeBenchmark(
-    { show, diff, dataDir, store },
+    { show, diff, dataDir, store, verbose },
     benchmark,
   )
 

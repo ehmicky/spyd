@@ -1,5 +1,4 @@
 import { sortBy } from '../utils/sort.js'
-import { getPrintedInfo } from '../print/main.js'
 
 import { getTasks, getVariations, getCommands } from './group.js'
 import { addFastestIterations } from './fastest.js'
@@ -15,7 +14,6 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   const system = getSystem(versions)
 
   const iterationsA = getIterations({ iterations, tasks, variations, commands })
-  const { iterations: iterationsB } = getPrintedInfo(iterationsA, system, opts)
 
   return {
     timestamp,
@@ -24,7 +22,7 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
     variations,
     commands,
     system,
-    iterations: iterationsB,
+    iterations: iterationsA,
   }
 }
 
@@ -81,23 +79,12 @@ const addIterationInfo = function({
   const commandA = commands.findIndex(
     variation => variation.commandId === commandId,
   )
-  const statsA = normalizeStats(stats)
   return {
     name,
     columnName,
     task: taskA,
     variation: variationA,
     command: commandA,
-    stats: statsA,
+    stats,
   }
-}
-
-// Some stats are removed when `--save` is used. When showing saved benchmarks,
-// those will be `undefined`. We default them to `[]`.
-const normalizeStats = function({
-  histogram = [],
-  percentiles = [],
-  ...stats
-}) {
-  return { ...stats, histogram, percentiles }
 }

@@ -28,10 +28,9 @@ const normalizeBenchmark = function({ iterations, ...benchmark }) {
   return { ...benchmark, iterations: iterationsA }
 }
 
-const normalizeIteration = function({ stats, printedStats, ...iteration }) {
+const normalizeIteration = function({ stats, ...iteration }) {
   const statsA = removeBigStats(stats)
-  const printedStatsA = removeBigStats(printedStats)
-  return { ...iteration, stats: statsA, printedStats: printedStatsA }
+  return { ...iteration, stats: statsA }
 }
 
 const removeBigStats = function(stats) {

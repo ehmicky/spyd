@@ -3,16 +3,23 @@ import { getStatsDecimals } from './decimals.js'
 import { serializeStats } from './serialize.js'
 import { addPaddings } from './padding.js'
 
-// Add serialized information for CLI reporters
-export const getPrintedInfo = function(iterations, system, { verbose }) {
-  const iterationsA = addPrintedStats(iterations, verbose)
-  return { iterations: iterationsA }
+// Some stats are removed when `--save` is used. When showing saved benchmarks,
+// those will be `undefined`. We default them to `[]`.
+export const normalizeStats = function(iterations) {
+  return iterations.map(normalizeIterationStats)
+}
+
+const normalizeIterationStats = function({
+  stats: { histogram = [], percentiles = [], ...stats },
+  ...iteration
+}) {
+  return { ...iteration, stats: { ...stats, histogram, percentiles } }
 }
 
 // Add `iteration.printedStats` which is like `iteration.stats` but serialized
 // and CLI-reporter-friendly. It adds time units, rounding, padding and ensures
 // proper vertical alignment.
-const addPrintedStats = function(iterations, verbose) {
+export const addPrintedStats = function(iterations, verbose) {
   const { unit, scale } = getUnit(iterations)
   const statsDecimals = getStatsDecimals(iterations, scale)
   const iterationsA = iterations.map(iteration =>

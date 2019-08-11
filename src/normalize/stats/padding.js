@@ -24,7 +24,7 @@ const getPadding = function({ name, type, iterations }) {
   }
 
   const allPrintedStats = iterations.map(
-    ({ printedStats }) => printedStats[name].length,
+    ({ printedStats: { [name]: value = '' } }) => value.length,
   )
   const padding = Math.max(...allPrintedStats)
   return [name, padding]
