@@ -4,10 +4,20 @@ import { handleContent } from './content.js'
 // Report benchmark results
 export const report = async function(
   benchmark,
-  { report: reporters, output, insert, system, link, show, dataDir, store },
+  {
+    report: reporters,
+    output,
+    insert,
+    system,
+    link,
+    show,
+    diff,
+    dataDir,
+    store,
+  },
 ) {
   const benchmarkA = await normalizeBenchmark(
-    { show, dataDir, store },
+    { show, diff, dataDir, store },
     benchmark,
   )
 

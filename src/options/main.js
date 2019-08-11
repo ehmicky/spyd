@@ -50,6 +50,7 @@ const DEFAULT_OPTS = {
   progress: { debug: {} },
   store: { file: {} },
   show: false,
+  diff: true,
   remove: false,
 }
 
@@ -73,5 +74,6 @@ const EXAMPLE_OPTS = {
   insert: './README.md',
   data: './spyd',
   show: VALID_BENCHMARK_DELTA,
+  diff: VALID_BENCHMARK_DELTA,
   remove: VALID_BENCHMARK_DELTA,
 }

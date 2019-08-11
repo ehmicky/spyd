@@ -1,5 +1,6 @@
+import { findBenchmark } from '../../find.js'
+
 import { getBenchmarks, setBenchmarks } from './fs.js'
-import { findBenchmark } from './find.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves benchmarks to `dataDir/data.json`

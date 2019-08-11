@@ -1,7 +1,7 @@
 // Find a benchmark by `count` or `timestamp`
 export const findBenchmark = function(benchmarks, queryType, queryValue) {
   if (benchmarks.length === 0) {
-    throw new Error('No benchmarks are saved yet')
+    throw new Error('Could not find any matching benchmarks')
   }
 
   const index = QUERIES[queryType](benchmarks, queryValue)

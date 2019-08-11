@@ -59,6 +59,12 @@ const normalizeShow = function({ show, ...opts }) {
   return { ...opts, show: showA }
 }
 
+// Normalize 'diff' option
+const normalizeDiff = function({ diff, ...opts }) {
+  const diffA = getBenchmarkDelta('diff', diff)
+  return { ...opts, diff: diffA }
+}
+
 // Normalize 'remove' option
 const normalizeRemove = function({ remove, ...opts }) {
   const removeA = getBenchmarkDelta('remove', remove)
@@ -73,5 +79,6 @@ const NORMALIZERS = [
   normalizeCwd,
   normalizeProgress,
   normalizeShow,
+  normalizeDiff,
   normalizeRemove,
 ]
