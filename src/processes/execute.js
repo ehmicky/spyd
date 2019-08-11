@@ -29,9 +29,9 @@ export const executeChild = async function({
 
   const child = spawn(file, [...args, inputA], { stdio: STDIO, cwd })
 
-  const { exitCode, signal, output, errorOutput, error } = await childTimeout(
-    waitForExit(child),
-    { duration, taskId, variationId },
+  const { exitCode, signal, output, errorOutput, error } = await waitForExit(
+    child,
+    duration,
   )
 
   forwardChildError({
@@ -52,10 +52,10 @@ const OUTPUT_FD = 4
 const ERROR_FD = 5
 
 // Wait for child process exit, successful or not
-const waitForExit = async function(child) {
+const waitForExit = async function(child, duration) {
   try {
     const [[exitCode, signal], output, errorOutput] = await Promise.all([
-      pEvent(child, 'exit', { multiArgs: true }),
+      childTimeout(pEvent(child, 'exit', { multiArgs: true }), duration),
       getStream(child.stdio[OUTPUT_FD], { maxBuffer: MAX_BUFFER }),
       getStream(child.stdio[ERROR_FD], { maxBuffer: MAX_BUFFER }),
     ])

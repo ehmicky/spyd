@@ -12,6 +12,11 @@ export const forwardChildError = function({
   }
 
   const taskError = getTaskError(taskId, variationId)
+
+  if (error.name === 'TimeoutError') {
+    throw new Error(`${taskError}${error.message}`)
+  }
+
   const signalError = getSignalError(signal)
   const exitCodeError = getExitCodeError(exitCode)
   const errorStack = getErrorStack(error)
@@ -64,7 +69,7 @@ const normalizeErrorOutput = function(errorOutput) {
 }
 
 // Add task/variation context to child process errors
-export const getTaskError = function(taskId, variationId) {
+const getTaskError = function(taskId, variationId) {
   if (taskId === undefined) {
     return ''
   }
