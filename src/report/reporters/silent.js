@@ -1,5 +1,5 @@
 // Silent reporter
 // eslint-disable-next-line no-empty-function
-const main = function() {}
+const report = function() {}
 
-export const silent = { main }
+export const silent = { report }

@@ -3,30 +3,16 @@ import { REPORTERS } from './reporters/main.js'
 // Retrieve reporters method and options
 // `output`, `insert`, `system`, link` can be set either for specific reporter
 // (--reporter.REPORTER.output) or for all (--output)
-export const getReporters = function({
-  reportOpts,
-  output,
-  insert,
-  system,
-  link,
-}) {
+export const getReporters = function(reportOpts) {
   return Object.entries(reportOpts).map(([name, reportOpt]) =>
-    getReporter({ name, reportOpt, output, insert, system, link }),
+    getReporter({ name, reportOpt }),
   )
 }
 
 // Retrieve reporter's main function
-const getReporter = function({
-  name,
-  reportOpt,
-  output,
-  insert,
-  system,
-  link,
-}) {
-  const { main } = loadReporter(name)
-  const reportOptA = { output, insert, system, link, ...reportOpt }
-  return { main, reportOpt: reportOptA }
+const getReporter = function({ name, reportOpt }) {
+  const { report } = loadReporter(name)
+  return { report, reportOpt }
 }
 
 const loadReporter = function(name) {

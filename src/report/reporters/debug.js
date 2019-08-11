@@ -1,5 +1,5 @@
 // Debugging reporter only meant for development purpose
-const main = function({ iterations, printedSystem }, { link, system }) {
+const report = function({ iterations, printedSystem }, { link, system }) {
   const content = iterations.map(serializeIteration).join('\n')
   const contentA = addSystem(content, system, printedSystem)
   const contentB = addLink(contentA, link)
@@ -45,4 +45,4 @@ const addLink = function(content, link) {
   return `${content}\n\nBenchmarked with spyd (https://github.com/ehmicky/spyd)`
 }
 
-export const debug = { main }
+export const debug = { report }
