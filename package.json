@@ -51,6 +51,7 @@
     "read-pkg-up": "^6.0.0",
     "semver": "^6.3.0",
     "signal-exit": "^3.0.2",
+    "write-file-atomic": "^3.0.0",
     "yargs": "^13.3.0"
   },
   "devDependencies": {

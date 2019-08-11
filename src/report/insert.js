@@ -1,8 +1,9 @@
-import { readFile, writeFile } from 'fs'
+import { readFile } from 'fs'
 import { promisify } from 'util'
 
+import writeFileAtomic from 'write-file-atomic'
+
 const pReadFile = promisify(readFile)
-const pWriteFile = promisify(writeFile)
 
 // Use the `insert` option to insert content inside a file.
 // We insert between any two lines with the tokens "spyd-start" and "spyd-end".
@@ -79,7 +80,7 @@ const END_LINE_TOKEN = 'spyd-end'
 
 const writeFileContent = async function(file, fileContent) {
   try {
-    await pWriteFile(file, fileContent)
+    await writeFileAtomic(file, fileContent)
   } catch (error) {
     throw new Error(`Could not write to file '${file}'\n\n${error.stack}`)
   }
