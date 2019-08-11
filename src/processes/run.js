@@ -1,7 +1,4 @@
-import { getChildMessage, sendChildMessage } from './ipc.js'
-import { startChild } from './start.js'
-import { endChild } from './end.js'
-import { childTimeout } from './timeout.js'
+import { executeChild } from './execute.js'
 
 // We launch child processes serially. Otherwise they would slow down each other
 // and have higher variance. Multi-core CPUs are designed to run in parallel
@@ -17,27 +14,19 @@ export const runChild = async function({
   commandOpt,
   cwd,
 }) {
-  const { child } = await startChild({
+  const input = {
+    type: 'run',
     taskPath,
-    commandValue,
-    commandOpt,
-    cwd,
-  })
-
-  // Tell the child process to start benchmarking
-  await sendChildMessage(child, 'run', {
+    opts: commandOpt,
     taskId,
     variationId,
     duration: processDuration,
-  })
-
-  // Wait for the benchmark result
-  const { times, count } = await childTimeout(
-    getChildMessage(child, 'run'),
+  }
+  const { times, count } = await executeChild({
+    commandValue,
+    input,
     duration,
-  )
-
-  endChild(child)
-
+    cwd,
+  })
   return { times, count }
 }

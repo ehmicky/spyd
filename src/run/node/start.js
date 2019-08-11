@@ -1,20 +1,14 @@
 import { exit } from 'process'
 
-import { sendParentMessage, getParentMessage } from '../../processes/ipc.js'
-
 import { benchmark } from './benchmark/main.js'
 import { loadTaskFile } from './load/main.js'
+import { getInput, sendOutput } from './ipc.js'
 
-// Child process entry point.
-// Wait for the parent process to request benchmarks then send the result back
-// to the parent.
+// Child process entry point
 const start = async function() {
   try {
-    await sendParentMessage('ready')
-
-    const iterations = await load()
-
-    await runIteration(iterations)
+    const { type, ...input } = getInput()
+    await TYPES[type](input)
   } catch (error) {
     // This will be printed to stderr, which means parent will print it
     // eslint-disable-next-line no-console, no-restricted-globals
@@ -23,26 +17,34 @@ const start = async function() {
   }
 }
 
-const load = async function() {
-  const { taskPath, opts } = await getParentMessage('load')
-
-  const { iterations, loadEvent } = await loadTaskFile(taskPath, opts)
-
-  await sendParentMessage('load', loadEvent)
-
-  return iterations
+// Communicate iterations ids and titles to parent
+const load = async function({ taskPath, opts }) {
+  const iterations = await loadTaskFile(taskPath, opts)
+  const iterationsA = iterations.map(getIteration)
+  await sendOutput({ iterations: iterationsA })
 }
 
-const runIteration = async function(iterations) {
-  const { taskId, variationId, duration } = await getParentMessage('run')
+const getIteration = function({
+  taskId,
+  taskTitle,
+  variationId,
+  variationTitle,
+}) {
+  return { taskId, taskTitle, variationId, variationTitle }
+}
+
+// Run benchmarks
+const run = async function({ taskPath, opts, taskId, variationId, duration }) {
+  const iterations = await loadTaskFile(taskPath, opts)
 
   const { main, before, after } = iterations.find(
     iteration =>
       iteration.taskId === taskId && iteration.variationId === variationId,
   )
   const { times, count } = await benchmark({ main, before, after, duration })
-
-  await sendParentMessage('run', { times, count })
+  await sendOutput({ times, count })
 }
+
+const TYPES = { load, run }
 
 start()

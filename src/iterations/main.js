@@ -8,6 +8,7 @@ import { addPaddings } from './paddings.js'
 // Retrieve each iteration, i.e. combination of task + variation (if any)
 export const getIterations = async function({
   files,
+  duration,
   cwd,
   tasks: taskIds,
   variations: variationIds,
@@ -17,7 +18,7 @@ export const getIterations = async function({
 
   const { runners, versions } = await loadRunners(runOpts, taskPaths)
 
-  const iterations = await loadIterations(taskPaths, runners, cwd)
+  const iterations = await loadIterations({ taskPaths, runners, duration, cwd })
 
   const iterationsA = iterations.filter(removeDuplicates)
   const iterationsB = selectIterations({

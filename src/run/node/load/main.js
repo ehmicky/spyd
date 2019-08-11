@@ -16,9 +16,7 @@ export const loadTaskFile = async function(taskPath, { require: requireOpt }) {
 
   const { tasks, variations } = normalizeTasks(entries, taskPath)
   const iterations = addTasksVariations(tasks, variations)
-
-  const loadEvent = getLoadEvent(iterations)
-  return { iterations, loadEvent }
+  return iterations
 }
 
 const loadFile = function(taskPath) {
@@ -31,19 +29,4 @@ const loadFile = function(taskPath) {
       `Could not load the task file '${taskPath}'\n\n${error.stack}`,
     )
   }
-}
-
-// Communicate iterations ids and titles to parent
-const getLoadEvent = function(iterations) {
-  const iterationsA = iterations.map(getIteration)
-  return { iterations: iterationsA }
-}
-
-const getIteration = function({
-  taskId,
-  taskTitle,
-  variationId,
-  variationTitle,
-}) {
-  return { taskId, taskTitle, variationId, variationTitle }
 }
