@@ -11,31 +11,31 @@ import {
 
 // Normalize options shape and do custom validation
 export const normalizeOpts = async function(opts) {
-  validateFiles(opts)
-  validateTasks(opts)
-  validateVariations(opts)
-  const optsA = normalizeDuration(opts)
-  const optsB = normalizeCwd(optsA)
-  const optsC = normalizeRunners(optsB)
-  const optsD = normalizeReporters(optsC)
-  const optsE = normalizeProgress(optsD)
-  const optsF = await normalizeData(optsE)
-  return optsF
+  const optsA = NORMALIZERS.reduce(normalizeOpt, opts)
+  const optsB = await normalizeData(optsA)
+  return optsB
+}
+
+const normalizeOpt = function(opts, normalizer) {
+  return normalizer(opts)
 }
 
 // Validate 'files' option
-const validateFiles = function({ files }) {
+const normalizeFiles = function({ files, ...opts }) {
   validateStringArray(files, 'files')
+  return { ...opts, files }
 }
 
 // Validate 'tasks' option
-const validateTasks = function({ tasks }) {
+const normalizeTasks = function({ tasks, ...opts }) {
   validateStringArray(tasks, 'tasks')
+  return { ...opts, tasks }
 }
 
 // Validate 'variations' option
-const validateVariations = function({ variations }) {
+const normalizeVariations = function({ variations, ...opts }) {
   validateStringArray(variations, 'variations')
+  return { ...opts, variations }
 }
 
 // Normalize and validate 'duration' option
@@ -101,3 +101,14 @@ const getDataRoot = async function(cwd) {
 }
 
 const DATA_DIRNAME = 'spyd'
+
+const NORMALIZERS = [
+  normalizeFiles,
+  normalizeTasks,
+  normalizeVariations,
+  normalizeDuration,
+  normalizeCwd,
+  normalizeRunners,
+  normalizeReporters,
+  normalizeProgress,
+]
