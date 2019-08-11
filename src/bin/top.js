@@ -140,6 +140,11 @@ Can be:
     Timestamp can be a date or a date + time.
     Examples of valid timstamps include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.`,
   },
+  remove: {
+    describe: `Remove a previous benchmark.
+Can be false, true, integer or timestamp (like the 'show' option).
+Default: false`,
+  },
 }
 
 const USAGE = `$0 [OPTIONS] [FILE...]

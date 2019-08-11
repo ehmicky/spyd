@@ -59,6 +59,12 @@ const normalizeShow = function({ show, ...opts }) {
   return { ...opts, show: showA }
 }
 
+// Normalize 'remove' option
+const normalizeRemove = function({ remove, ...opts }) {
+  const removeA = getBenchmarkDelta('remove', remove)
+  return { ...opts, remove: removeA }
+}
+
 const NORMALIZERS = [
   normalizeFiles,
   normalizeTasks,
@@ -67,4 +73,5 @@ const NORMALIZERS = [
   normalizeCwd,
   normalizeProgress,
   normalizeShow,
+  normalizeRemove,
 ]

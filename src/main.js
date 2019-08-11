@@ -8,17 +8,27 @@ import { runProcesses } from './processes/main.js'
 import { addBenchmarkInfo } from './info/main.js'
 import { report } from './report/main.js'
 import { save } from './save/main.js'
+import { remove } from './save/remove.js'
 import { load } from './save/load.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
 const spyd = async function(opts) {
   const optsA = await getOpts(opts)
 
+  if (optsA.remove !== undefined) {
+    return removeAction(optsA)
+  }
+
   if (optsA.show !== undefined) {
     return showAction(optsA)
   }
 
   return runAction(optsA)
+}
+
+// Action when the 'remove' option is used: remove a previous benchmark
+const removeAction = async function(opts) {
+  await remove(opts.remove, opts)
 }
 
 // Action when the 'show' option is used: show a previous benchmark

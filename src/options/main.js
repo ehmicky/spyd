@@ -50,6 +50,7 @@ const DEFAULT_OPTS = {
   progress: { debug: {} },
   store: { file: {} },
   show: false,
+  remove: false,
 }
 
 const VALID_TIMESTAMPS = [
@@ -72,4 +73,5 @@ const EXAMPLE_OPTS = {
   insert: './README.md',
   data: './spyd',
   show: VALID_BENCHMARK_DELTA,
+  remove: VALID_BENCHMARK_DELTA,
 }
