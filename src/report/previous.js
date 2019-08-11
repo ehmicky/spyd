@@ -7,22 +7,21 @@ import { dereferenceBenchmark } from './dereference.js'
 // When combined with the 'show' option, we only show the benchmarks before it.
 export const addPrevious = async function({
   benchmark,
-  benchmark: { timestamp },
+  benchmark: { timestamp, iterations },
   dataDir,
-  store,
+  store: { list: listStore },
 }) {
-  const benchmarks = await listBenchmarks({ dataDir, store })
+  const benchmarks = await listBenchmarks(dataDir, listStore)
   const previous = benchmarks
     .filter(benchmarkA => benchmarkA.timestamp < timestamp)
     .map(dereferenceBenchmark)
-  const iterationsA = addPreviousIterations(benchmark, previous)
-  return { ...benchmark, timestamp, iterations: iterationsA, previous }
+  const iterationsA = addPreviousIterations(iterations, previous)
+  return { ...benchmark, previous, iterations: iterationsA }
 }
 
-const listBenchmarks = async function({ dataDir, store: { list: listStore } }) {
+const listBenchmarks = async function(dataDir, listStore) {
   try {
-    const benchmarks = await listStore(dataDir)
-    return benchmarks
+    return await listStore(dataDir)
   } catch (error) {
     throw new Error(
       `Could not list benchmarks from '${dataDir}':\n${error.message}`,
@@ -30,12 +29,11 @@ const listBenchmarks = async function({ dataDir, store: { list: listStore } }) {
   }
 }
 
-const addPreviousIterations = function(benchmark, previous) {
+const addPreviousIterations = function(iterations, previous) {
   const previousIterations = previous.flatMap(getIterations)
-  const iterationsA = benchmark.iterations.map(iteration =>
+  return iterations.map(iteration =>
     addPreviousIteration(iteration, previousIterations),
   )
-  return iterationsA
 }
 
 const getIterations = function({ iterations }) {
