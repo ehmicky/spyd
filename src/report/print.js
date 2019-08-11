@@ -43,7 +43,7 @@ const getOutput = function({ output, insert }) {
 
 const writeFileContent = async function(file, content) {
   try {
-    await writeFileAtomic(file, fileContent)
+    await writeFileAtomic(file, content)
   } catch (error) {
     throw new Error(`Could not write to file '${file}'\n\n${error.stack}`)
   }
