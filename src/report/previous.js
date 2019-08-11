@@ -36,8 +36,8 @@ const addPreviousIterations = function(iterations, previous) {
   )
 }
 
-const getIterations = function({ iterations }) {
-  return iterations
+const getIterations = function({ iterations }, benchmark) {
+  return iterations.map(iteration => ({ ...iteration, benchmark }))
 }
 
 const addPreviousIteration = function(iteration, previousIterations) {
