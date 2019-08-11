@@ -40,7 +40,7 @@ const DEFAULT_OPTS = {
   cwd: getCwd(),
   duration: 10,
   run: { node: {} },
-  report: {},
+  report: { debug: {} },
   progress: { debug: {} },
   verbose: false,
   link: true,

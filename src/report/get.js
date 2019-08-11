@@ -10,18 +10,9 @@ export const getReporters = function({
   system,
   link,
 }) {
-  const reportOptsA = getDefaultReporters(reportOpts)
-  return Object.entries(reportOptsA).map(([name, reportOpt]) =>
+  return Object.entries(reportOpts).map(([name, reportOpt]) =>
     getReporter({ name, reportOpt, output, insert, system, link }),
   )
-}
-
-const getDefaultReporters = function(reportOpts) {
-  if (Object.keys(reportOpts).length !== 0) {
-    return reportOpts
-  }
-
-  return { debug: {} }
 }
 
 // Retrieve reporter's main function
