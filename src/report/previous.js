@@ -1,3 +1,5 @@
+import { dereferenceBenchmark } from './dereference.js'
+
 // Add:
 //  - `benchmark.previous`: all previous benchmarks
 //  - `benchmark.iterations[*].previous`: previous iteration with same runner,
@@ -10,9 +12,9 @@ export const addPrevious = async function({
   store,
 }) {
   const benchmarks = await listBenchmarks({ dataDir, store })
-  const previous = benchmarks.filter(
-    benchmarkA => benchmarkA.timestamp < timestamp,
-  )
+  const previous = benchmarks
+    .filter(benchmarkA => benchmarkA.timestamp < timestamp)
+    .map(dereferenceBenchmark)
   const iterationsA = addPreviousIterations(benchmark, previous)
   return { ...benchmark, timestamp, iterations: iterationsA, previous }
 }
@@ -29,48 +31,20 @@ const listBenchmarks = async function({ dataDir, store: { list: listStore } }) {
 }
 
 const addPreviousIterations = function(benchmark, previous) {
-  const previousIterations = previous.flatMap(normalizeIterations)
-  const normalizedIterations = normalizeIterations(benchmark)
-  const iterationsA = benchmark.iterations.map((iteration, index) =>
-    addPreviousIteration(
-      iteration,
-      previousIterations,
-      normalizedIterations[index],
-    ),
+  const previousIterations = previous.flatMap(getIterations)
+  const iterationsA = benchmark.iterations.map(iteration =>
+    addPreviousIteration(iteration, previousIterations),
   )
   return iterationsA
 }
 
-const normalizeIterations = function({
-  iterations,
-  tasks,
-  variations,
-  commands,
-}) {
-  return iterations.map(iteration =>
-    normalizeIteration({ iteration, tasks, variations, commands }),
-  )
+const getIterations = function({ iterations }) {
+  return iterations
 }
 
-const normalizeIteration = function({
-  iteration: { task, variation, command, ...iteration },
-  tasks,
-  variations,
-  commands,
-}) {
-  const taskA = tasks[task]
-  const variationA = variation === undefined ? {} : variations[variation]
-  const commandA = commands[command]
-  return { ...iteration, task: taskA, variation: variationA, command: commandA }
-}
-
-const addPreviousIteration = function(
-  iteration,
-  previousIterations,
-  normalizedIteration,
-) {
+const addPreviousIteration = function(iteration, previousIterations) {
   const previous = previousIterations.filter(previousIteration =>
-    isSameIteration(previousIteration, normalizedIteration),
+    isSameIteration(iteration, previousIteration),
   )
   return { ...iteration, previous }
 }
