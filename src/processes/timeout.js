@@ -5,7 +5,7 @@ import pTimeout from 'p-timeout'
 //  - users set the correct `duration` depending on the task's duration
 export const childTimeout = function(promise, duration) {
   // `setTimeout()` minimum is always 1ms
-  const timeout = Math.max(duration / NANOSECS_TO_MICROSECS, 1)
+  const timeout = Math.max(duration / NANOSECS_TO_MILLISECS, 1)
   const secs = Math.ceil(duration / NANOSECS_TO_SECS)
   return pTimeout(
     promise,
@@ -18,5 +18,5 @@ export const isTimeout = function(error) {
   return error instanceof pTimeout.TimeoutError
 }
 
-const NANOSECS_TO_MICROSECS = 1e6
+const NANOSECS_TO_MILLISECS = 1e6
 const NANOSECS_TO_SECS = 1e9

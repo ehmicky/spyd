@@ -44,19 +44,19 @@ const getExport = function() {
 const hrtime = function() {
   // eslint-disable-next-line no-restricted-globals, node/prefer-global/process
   const [secs, nanosecs] = process.hrtime()
-  return secs * SECS_TO_NANOSECS + nanosecs
+  return secs * NANOSECS_TO_SECS + nanosecs
 }
 
 const performanceNow = function() {
   // eslint-disable-next-line no-undef
-  return Math.round(performance.now() * MILLISECS_TO_NANOSECS)
+  return Math.round(performance.now() * NANOSECS_TO_MILLISECS)
 }
 
 const dateNow = function() {
-  return Date.now() * MILLISECS_TO_NANOSECS
+  return Date.now() * NANOSECS_TO_MILLISECS
 }
 
-const SECS_TO_NANOSECS = 1e9
-const MILLISECS_TO_NANOSECS = 1e6
+const NANOSECS_TO_SECS = 1e9
+const NANOSECS_TO_MILLISECS = 1e6
 
 export const now = getExport()

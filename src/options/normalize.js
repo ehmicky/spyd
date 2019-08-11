@@ -40,11 +40,11 @@ const validateVariations = function({ variations }) {
 const normalizeDuration = function({ duration, ...opts }) {
   validatePositiveNumber(duration, 'duration')
 
-  const durationA = duration * SECONDS_TO_NANOSECONDS
+  const durationA = duration * NANOSECS_TO_SECS
   return { ...opts, duration: durationA }
 }
 
-const SECONDS_TO_NANOSECONDS = 1e9
+const NANOSECS_TO_SECS = 1e9
 
 // Normalize 'cwd' option
 const normalizeCwd = function({ cwd, ...opts }) {
