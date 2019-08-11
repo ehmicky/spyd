@@ -1,7 +1,5 @@
 import { omitBy } from '../utils/main.js'
 
-import { dereferenceBenchmark } from './dereference.js'
-
 // Add:
 //  - `benchmark.previous`: all previous benchmarks
 //  - `benchmark.iterations[*].previous`: previous iteration with same runner,
@@ -12,14 +10,20 @@ export const addPrevious = async function({
   benchmark: { timestamp, iterations },
   dataDir,
   store: { list: listStore },
+  nestedNormalize,
 }) {
+  if (nestedNormalize === undefined) {
+    return benchmark
+  }
+
   const benchmarks = await listBenchmarks(dataDir, listStore)
-  const previous = benchmarks
-    .filter(benchmarkA => benchmarkA.timestamp < timestamp)
-    .map(dereferenceBenchmark)
-  const iterationsA = addPreviousIterations(iterations, previous)
-  const previousA = previous.map(removeIterations)
-  return { ...benchmark, previous: previousA, iterations: iterationsA }
+  const previous = benchmarks.filter(
+    benchmarkA => benchmarkA.timestamp < timestamp,
+  )
+  const previousA = await Promise.all(previous.map(nestedNormalize))
+  const iterationsA = addPreviousIterations(iterations, previousA)
+  const previousB = previousA.map(removeIterations)
+  return { ...benchmark, previous: previousB, iterations: iterationsA }
 }
 
 const listBenchmarks = async function(dataDir, listStore) {

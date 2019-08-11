@@ -6,12 +6,10 @@ export const report = async function(
   benchmark,
   { report: reporters, output, insert, system, link, show, dataDir, store },
 ) {
-  const benchmarkA = await normalizeBenchmark({
+  const benchmarkA = await normalizeBenchmark(
+    { show, dataDir, store },
     benchmark,
-    show,
-    dataDir,
-    store,
-  })
+  )
 
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>
