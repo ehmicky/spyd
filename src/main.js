@@ -15,14 +15,14 @@ const spyd = async function(opts) {
   const optsA = await getOpts(opts)
 
   if (optsA.show !== undefined) {
-    return show(optsA)
+    return showAction(optsA)
   }
 
-  return run(optsA)
+  return runAction(optsA)
 }
 
-// Action when the 'show' option is used: show previous benchmarks
-const show = async function(opts) {
+// Action when the 'show' option is used: show a previous benchmark
+const showAction = async function(opts) {
   const benchmark = await load(opts.show, opts)
 
   await report(benchmark, opts)
@@ -31,7 +31,7 @@ const show = async function(opts) {
 }
 
 // Main action: run new benchmarks.
-const run = async function(opts) {
+const runAction = async function(opts) {
   const { iterations, versions } = await getIterations(opts)
 
   const benchmark = await getBenchmark({ iterations, opts, versions })
