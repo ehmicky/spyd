@@ -3,24 +3,21 @@ import { omitBy } from '../utils/main.js'
 // Save benchmark results so they can be compared or shown later
 export const save = async function(
   benchmark,
-  { save: saveOpt, dataDir, store: stores },
+  { save: saveOpt, dataDir, store: { add: addToStore } },
 ) {
   if (!saveOpt) {
     return
   }
 
-  const storesA = stores.filter(store => shouldUseStore(store, dataDir))
-
   const benchmarkA = normalizeBenchmark(benchmark)
 
-  await Promise.all(
-    storesA.map(store => saveToStore(store, dataDir, benchmarkA)),
-  )
-}
-
-// Stores are picked according to `store.test(dataDir) => boolean`
-const shouldUseStore = function({ test }, dataDir) {
-  return test(dataDir)
+  try {
+    await addToStore(dataDir, benchmarkA)
+  } catch (error) {
+    throw new Error(
+      `Could not save benchmark to '${dataDir}':\n\n${error.stack}`,
+    )
+  }
 }
 
 // Some benchmark information are not persisted:
@@ -42,13 +39,3 @@ const removeBigStats = function(stats) {
 }
 
 const OMITTED_STATS_PROPS = ['histogram', 'percentiles']
-
-const saveToStore = async function(store, dataDir, benchmark) {
-  try {
-    await store.add(dataDir, benchmark)
-  } catch (error) {
-    throw new Error(
-      `Could not save benchmark to '${dataDir}':\n\n${error.stack}`,
-    )
-  }
-}

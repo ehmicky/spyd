@@ -31,8 +31,4 @@ const remove = async function(dataDir, queryType, queryValue) {
   await setBenchmarks(dataFile, benchmarksA)
 }
 
-const test = function() {
-  return true
-}
-
-export const file = { list, get, add, remove, test }
+export const file = { list, get, add, remove }

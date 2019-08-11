@@ -10,7 +10,9 @@ import { validateDeepObject } from './validate.js'
 // Options can be passed to each module.
 export const loadAllPlugins = async function(opts) {
   const pluginsOpts = await Promise.all(
-    TYPES.map(({ type, builtins }) => loadPlugins({ opts, type, builtins })),
+    TYPES.map(({ type, builtins, single }) =>
+      loadPlugins({ opts, type, builtins, single }),
+    ),
   )
   const pluginsOptsA = Object.fromEntries(pluginsOpts)
   return { ...opts, ...pluginsOptsA }
@@ -20,10 +22,10 @@ const TYPES = [
   { type: 'run', builtins: RUNNERS },
   { type: 'report', builtins: REPORTERS },
   { type: 'progress', builtins: PROGRESS_REPORTERS },
-  { type: 'store', builtins: STORES },
+  { type: 'store', builtins: STORES, single: true },
 ]
 
-const loadPlugins = async function({ opts, type, builtins }) {
+const loadPlugins = async function({ opts, type, builtins, single }) {
   const pluginOpts = opts[type]
 
   validateDeepObject(pluginOpts, type)
@@ -33,6 +35,12 @@ const loadPlugins = async function({ opts, type, builtins }) {
       loadPlugin({ type, name, pluginOpt, builtins }),
     ),
   )
+
+  if (single) {
+    const plugin = getSinglePlugin(plugins, type)
+    return [type, plugin]
+  }
+
   return [type, plugins]
 }
 
@@ -57,4 +65,12 @@ const importPlugin = function({ type, name, builtins }) {
       `Could not load '${type}' module '${name}'\n\n${error.stack}`,
     )
   }
+}
+
+const getSinglePlugin = function(plugins, type) {
+  if (plugins.length > 1) {
+    throw new TypeError(`Cannot specify more than one '${type}'`)
+  }
+
+  return plugins[0]
 }
