@@ -1,6 +1,6 @@
 import { omitBy } from '../utils/main.js'
 
-import { add } from './file/main.js'
+import { add } from './stores/file/main.js'
 
 // Save benchmark results so they can be compared or shown later
 export const save = async function(benchmark, { save: saveOpt, dataDir }) {
