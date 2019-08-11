@@ -13,8 +13,9 @@ import { forwardChildError } from './error.js'
 //     - IPC needs to work across programming languages
 //     - standard streams are likely be used by the benchmarking code
 //     - likewise, file descriptor 3 is sometimes (though rarely) used
-//  - hooking into the child's stderr to display it in error messages in case
-//    the process failed
+//  - retrieving error messages with file descriptor 5. We don't use stderr
+//    for the same reason. Also we don't want to display repeated stderr from
+//    the benchmarked code.
 // Both input and output are JSON objects.
 export const executeChild = async function({
   commandValue: [file, ...args],
@@ -27,11 +28,11 @@ export const executeChild = async function({
   const inputA = JSON.stringify(input)
 
   const child = spawn(file, [...args, inputA], {
-    stdio: ['ignore', 'ignore', 'pipe', 'ignore', 'pipe'],
+    stdio: ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe'],
     cwd,
   })
   const outputPromise = getStream(child.stdio[OUTPUT_FD])
-  const stderrPromise = getStream(child.stderr)
+  const errorPromise = getStream(child.stdio[ERROR_FD])
 
   const { exitCode, signal, error } = await childTimeout(waitForExit(child), {
     duration,
@@ -43,7 +44,7 @@ export const executeChild = async function({
     exitCode,
     signal,
     error,
-    stderrPromise,
+    errorPromise,
     taskId,
     variationId,
   })
@@ -54,6 +55,7 @@ export const executeChild = async function({
 }
 
 const OUTPUT_FD = 4
+const ERROR_FD = 5
 
 // Wait for child process exit, successful or not
 const waitForExit = async function(child) {

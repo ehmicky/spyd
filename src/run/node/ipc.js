@@ -16,5 +16,12 @@ export const sendOutput = async function(message) {
   await pWriteFile(OUTPUT_FD, messageStr)
 }
 
-// Communicate to parent using that file descriptor
+// Send error messages from child to parent process
+export const sendError = async function(error) {
+  const message = error instanceof Error ? error.stack : String(error)
+  await pWriteFile(ERROR_FD, `${message}\n`)
+}
+
+// Communicate to parent using those file descriptors
 const OUTPUT_FD = 4
+const ERROR_FD = 5

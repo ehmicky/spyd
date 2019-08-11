@@ -2,17 +2,16 @@ import { exit } from 'process'
 
 import { benchmark } from './benchmark/main.js'
 import { loadTaskFile } from './load/main.js'
-import { getInput, sendOutput } from './ipc.js'
+import { getInput, sendOutput, sendError } from './ipc.js'
 
 // Child process entry point
 const start = async function() {
   try {
     const { type, ...input } = getInput()
-    await TYPES[type](input)
+    const output = await TYPES[type](input)
+    await sendOutput(output)
   } catch (error) {
-    // This will be printed to stderr, which means parent will print it
-    // eslint-disable-next-line no-console, no-restricted-globals
-    console.error(error)
+    await sendError(error)
     exit(1)
   }
 }
@@ -21,7 +20,7 @@ const start = async function() {
 const load = async function({ taskPath, opts }) {
   const iterations = await loadTaskFile(taskPath, opts)
   const iterationsA = iterations.map(getIteration)
-  await sendOutput({ iterations: iterationsA })
+  return { iterations: iterationsA }
 }
 
 const getIteration = function({
@@ -42,7 +41,7 @@ const run = async function({ taskPath, opts, taskId, variationId, duration }) {
       iteration.taskId === taskId && iteration.variationId === variationId,
   )
   const { times, count } = await benchmark({ main, before, after, duration })
-  await sendOutput({ times, count })
+  return { times, count }
 }
 
 const TYPES = { load, run }
