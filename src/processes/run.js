@@ -1,8 +1,5 @@
-import pReduce from 'p-reduce'
-
-import { now } from '../now.js'
-
 import { getChildMessage, sendChildMessage } from './ipc.js'
+import { startChild } from './start.js'
 import { endChild } from './end.js'
 import { childTimeout } from './timeout.js'
 
@@ -10,67 +7,22 @@ import { childTimeout } from './timeout.js'
 // and have higher variance. Multi-core CPUs are designed to run in parallel
 // but in practice they do impact the performance of each other.
 // This does mean we are under-utilizing CPUs.
-export const runChildren = function({
-  children,
+export const runChild = async function({
   processDuration,
   duration,
-  runEnd,
+  taskPath,
   taskId,
   variationId,
+  commandValue,
+  commandOpt,
+  cwd,
 }) {
-  return pReduce(
-    children,
-    (results, child) =>
-      runChild({
-        child,
-        processDuration,
-        duration,
-        runEnd,
-        taskId,
-        variationId,
-        results,
-      }),
-    [],
-  )
-}
-
-const runChild = async function({
-  child,
-  processDuration,
-  duration,
-  runEnd,
-  taskId,
-  variationId,
-  results,
-}) {
-  const resultsA = await executeChild({
-    child,
-    processDuration,
-    duration,
-    runEnd,
-    taskId,
-    variationId,
-    results,
+  const { child } = await startChild({
+    taskPath,
+    commandValue,
+    commandOpt,
+    cwd,
   })
-
-  endChild(child)
-
-  return resultsA
-}
-
-const executeChild = async function({
-  child,
-  processDuration,
-  duration,
-  runEnd,
-  taskId,
-  variationId,
-  results,
-}) {
-  // Ensure at least one child process is executed
-  if (now() > runEnd && results.length !== 0) {
-    return results
-  }
 
   // Tell the child process to start benchmarking
   await sendChildMessage(child, 'run', {
@@ -84,5 +36,8 @@ const executeChild = async function({
     getChildMessage(child, 'run'),
     duration,
   )
-  return [...results, { times, count }]
+
+  endChild(child)
+
+  return { times, count }
 }

@@ -4,6 +4,7 @@ import { now } from '../now.js'
 //  - we reached the max `duration`
 //  - the `results` size is over `MAX_RESULTS`. We do so in order to avoid
 //    crashing the process due to memory limits.
+// At least one child must be executed.
 export const shouldStop = function(runEnd, results) {
   return now() > runEnd || isOverMaxLoops(results)
 }
