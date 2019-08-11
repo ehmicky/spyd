@@ -1,6 +1,7 @@
 import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
 
+import { normalizeProgress } from '../progress/options.js'
 import { normalizeData } from '../save/options.js'
 
 import {
@@ -65,12 +66,6 @@ const normalizeRunners = function({ run: runOpts, ...opts }) {
 const normalizeReporters = function({ report: reportOpts, ...opts }) {
   validateDeepObject(reportOpts, 'report')
   return { ...opts, reportOpts }
-}
-
-// Normalize and validate 'progress' option
-const normalizeProgress = function({ progress: progressOpts, ...opts }) {
-  validateDeepObject(progressOpts, 'progress')
-  return { ...opts, progressOpts }
 }
 
 // Normalize and validate 'store' option

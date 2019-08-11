@@ -6,6 +6,7 @@ import { omitBy } from '../utils/main.js'
 
 import { getConfig } from './config.js'
 import { normalizeOpts } from './normalize.js'
+import { loadAllPlugins } from './plugins.js'
 
 // Retrieve options/configuration
 export const getOpts = async function(opts = {}) {
@@ -19,7 +20,8 @@ export const getOpts = async function(opts = {}) {
   const optsC = { ...DEFAULT_OPTS, ...optsB }
 
   const optsD = await normalizeOpts(optsC)
-  return optsD
+  const optsE = await loadAllPlugins(optsD)
+  return optsE
 }
 
 const isUndefined = function(value) {
@@ -39,13 +41,13 @@ const DEFAULT_OPTS = {
   files: ['benchmarks.*', 'benchmarks/main.*'],
   cwd: getCwd(),
   duration: 10,
-  run: { node: {} },
-  report: { debug: {} },
-  progress: { debug: {} },
   verbose: false,
   link: true,
   system: false,
   save: false,
+  run: { node: {} },
+  report: { debug: {} },
+  progress: { debug: {} },
   store: { file: {} },
 }
 

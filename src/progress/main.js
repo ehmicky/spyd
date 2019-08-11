@@ -1,19 +1,17 @@
 import { show as showCursor, hide as hideCursor } from 'cli-cursor'
 import onExit from 'signal-exit'
 
-import { getReporters } from './get.js'
 import { startUpdate, stopUpdate } from './update.js'
 
 // Start progress reporting using the `progress` option
 export const startProgress = async function(
   iterations,
-  { duration, progressOpts },
+  { duration, progress: reporters },
 ) {
   const total = iterations.length
 
   hideCursor()
 
-  const reporters = getReporters(progressOpts)
   await startReporters(reporters, total)
 
   const { progressState, progressId } = startUpdate({
