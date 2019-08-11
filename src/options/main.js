@@ -1,6 +1,6 @@
 import { cwd as getCwd } from 'process'
 
-import { validate } from 'jest-validate'
+import { validate, multipleValidOptions } from 'jest-validate'
 
 import { omitBy } from '../utils/main.js'
 
@@ -49,7 +49,19 @@ const DEFAULT_OPTS = {
   report: { debug: {} },
   progress: { debug: {} },
   store: { file: {} },
+  show: false,
 }
+
+const VALID_TIMESTAMPS = [
+  'yyyy-mm-dd',
+  'yyyymmdd',
+  'yyyy-mm-dd hh:mm:ss',
+  'yyyy-mm-dd hh:mm:ssZ',
+  'yyyy-mm-ddThh:mm:ss.sss',
+  'yyyy-mm-ddThh:mm:ss.sssZ',
+]
+
+const VALID_BENCHMARK_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 
 const EXAMPLE_OPTS = {
   ...DEFAULT_OPTS,
@@ -59,4 +71,5 @@ const EXAMPLE_OPTS = {
   output: './file.js',
   insert: './README.md',
   data: './spyd',
+  show: VALID_BENCHMARK_DELTA,
 }

@@ -2,7 +2,7 @@ import { normalize } from 'path'
 
 import pkgDir from 'pkg-dir'
 
-// Add default value to `data' option
+// Normalize 'data' option
 export const normalizeData = async function({ data: dataDir, cwd, ...opts }) {
   const dataDirA = await getDataDir(dataDir, cwd)
   const dataDirB = normalize(dataDirA)

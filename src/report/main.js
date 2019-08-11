@@ -1,16 +1,19 @@
+import { normalizeBenchmark } from './normalize.js'
 import { handleContent } from './content.js'
 
 // Report benchmark results
 export const report = async function(
   benchmark,
-  { report: reporters, output, insert, system, link },
+  { report: reporters, output, insert, system, link, show },
 ) {
+  const benchmarkA = normalizeBenchmark({ benchmark, show })
+
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>
       useReporter({
         reportFunc,
         reportOpt,
-        benchmark,
+        benchmark: benchmarkA,
         output,
         insert,
         system,

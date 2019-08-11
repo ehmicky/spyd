@@ -130,6 +130,16 @@ Which store is used depends on the 'data' option format. For example the http
 store is picked when the 'data' option is an HTTP URL.
 Uses a dot notation such as --store.file (not --store=file nor --store file).`,
   },
+  show: {
+    describe: `Show a previous benchmark.
+Can be:
+  - false (default value)
+  - true: show the last benchmark
+  - integer: show the {integer} previous benchmark
+  - timestamp: show the last benchmark before this timestamp.
+    Timestamp can be a date or a date + time.
+    Examples of valid timstamps include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.`,
+  },
 }
 
 const USAGE = `$0 [OPTIONS] [FILE...]

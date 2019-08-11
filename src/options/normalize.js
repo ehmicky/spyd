@@ -3,6 +3,7 @@ import { resolve } from 'path'
 
 import { normalizeProgress } from '../progress/options.js'
 import { normalizeData } from '../save/options.js'
+import { getBenchmarkDelta } from '../save/delta.js'
 
 import { validateStringArray, validatePositiveNumber } from './validate.js'
 
@@ -52,6 +53,12 @@ const normalizeCwd = function({ cwd, ...opts }) {
   return { ...opts, cwd: cwdA }
 }
 
+// Normalize 'show' option
+const normalizeShow = function({ show, ...opts }) {
+  const showA = getBenchmarkDelta('show', show)
+  return { ...opts, show: showA }
+}
+
 const NORMALIZERS = [
   normalizeFiles,
   normalizeTasks,
@@ -59,4 +66,5 @@ const NORMALIZERS = [
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,
+  normalizeShow,
 ]

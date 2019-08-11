@@ -8,15 +8,29 @@ import { runProcesses } from './processes/main.js'
 import { addBenchmarkInfo } from './info/main.js'
 import { report } from './report/main.js'
 import { save } from './save/main.js'
+import { load } from './save/load.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
 const spyd = async function(opts) {
   const optsA = await getOpts(opts)
 
+  if (optsA.show !== undefined) {
+    return show(optsA)
+  }
+
   return run(optsA)
 }
 
-// Main action
+// Action when the 'show' option is used: show previous benchmarks
+const show = async function(opts) {
+  const benchmark = await load(opts.show, opts)
+
+  await report(benchmark, opts)
+
+  return benchmark
+}
+
+// Main action: run new benchmarks.
 const run = async function(opts) {
   const { iterations, versions } = await getIterations(opts)
 
