@@ -1,3 +1,5 @@
+import { omitBy } from '../utils/main.js'
+
 import { dereferenceBenchmark } from './dereference.js'
 
 // Add:
@@ -16,7 +18,8 @@ export const addPrevious = async function({
     .filter(benchmarkA => benchmarkA.timestamp < timestamp)
     .map(dereferenceBenchmark)
   const iterationsA = addPreviousIterations(iterations, previous)
-  return { ...benchmark, previous, iterations: iterationsA }
+  const previousA = previous.map(removeIterations)
+  return { ...benchmark, previous: previousA, iterations: iterationsA }
 }
 
 const listBenchmarks = async function(dataDir, listStore) {
@@ -53,4 +56,8 @@ const isSameIteration = function(iterationA, iterationB) {
     iterationA.variation.variationId === iterationB.variation.variationId &&
     iterationA.command.commandId === iterationB.command.commandId
   )
+}
+
+const removeIterations = function(benchmark) {
+  return omitBy(benchmark, key => key === 'iterations')
 }
