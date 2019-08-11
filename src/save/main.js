@@ -9,11 +9,18 @@ export const save = async function(
     return
   }
 
+  const storesA = stores.filter(store => shouldUseStore(store, dataDir))
+
   const benchmarkA = normalizeBenchmark(benchmark)
 
   await Promise.all(
-    stores.map(store => saveToStore(store, dataDir, benchmarkA)),
+    storesA.map(store => saveToStore(store, dataDir, benchmarkA)),
   )
+}
+
+// Stores are picked according to `store.test(dataDir) => boolean`
+const shouldUseStore = function({ test }, dataDir) {
+  return test(dataDir)
 }
 
 // Some benchmark information are not persisted:
