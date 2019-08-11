@@ -7,6 +7,7 @@ import { getIterations } from './iterations/main.js'
 import { runProcesses } from './processes/main.js'
 import { addBenchmarkInfo } from './info/main.js'
 import { report } from './report/main.js'
+import { save } from './save/main.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
 const spyd = async function(opts) {
@@ -20,7 +21,7 @@ const spyd = async function(opts) {
     versions,
   })
 
-  await report(benchmark, optsA)
+  await Promise.all([report(benchmark, optsA), save(benchmark, optsA)])
 
   return benchmark
 }

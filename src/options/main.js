@@ -45,6 +45,7 @@ const DEFAULT_OPTS = {
   verbose: false,
   link: true,
   system: false,
+  save: false,
 }
 
 const EXAMPLE_OPTS = {

@@ -110,6 +110,12 @@ Default: false`,
     describe: `Show link to the library's main page.
 Default: true`,
   },
+  save: {
+    alias: 's',
+    boolean: true,
+    describe: `Save the benchmark results.
+Default: false`,
+  },
 }
 
 const USAGE = `$0 [OPTIONS] [FILE...]
