@@ -24,7 +24,7 @@ const getReporter = function({
   system,
   link,
 }) {
-  const main = loadReporter(name)
+  const { main } = loadReporter(name)
   const reportOptA = { output, insert, system, link, ...reportOpt }
   return { main, reportOpt: reportOptA }
 }
