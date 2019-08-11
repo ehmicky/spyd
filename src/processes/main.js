@@ -4,7 +4,6 @@ import { getStats } from '../stats/compute.js'
 import { runChildren } from './run.js'
 
 // Start several child processes benchmarking the same task.
-// Each iteration is run serially to avoid influencing the timing of another.
 export const runProcesses = async function({
   name,
   columnName,
