@@ -1,4 +1,5 @@
-import { normalizeBenchmark } from './normalize.js'
+import { normalizeBenchmark } from '../normalize/main.js'
+
 import { handleContent } from './content.js'
 
 // Report benchmark results
