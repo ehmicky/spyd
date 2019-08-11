@@ -67,10 +67,16 @@ const normalizeReporters = function({ report: reportOpts, ...opts }) {
   return { ...opts, reportOpts }
 }
 
-// Normalize and validate `progress' option
+// Normalize and validate 'progress' option
 const normalizeProgress = function({ progress: progressOpts, ...opts }) {
   validateDeepObject(progressOpts, 'progress')
   return { ...opts, progressOpts }
+}
+
+// Normalize and validate 'store' option
+const normalizeStores = function({ store: storeOpts, ...opts }) {
+  validateDeepObject(storeOpts, 'store')
+  return { ...opts, storeOpts }
 }
 
 const NORMALIZERS = [
@@ -82,4 +88,5 @@ const NORMALIZERS = [
   normalizeRunners,
   normalizeReporters,
   normalizeProgress,
+  normalizeStores,
 ]

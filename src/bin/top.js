@@ -122,6 +122,14 @@ Default: false`,
     describe: `Directory where the benchmark results are saved.
 Default: '{packageRoot}/spyd/'`,
   },
+  store: {
+    describe: `Modules to save benchmark results.
+Built-in stores: file.
+Custom stores (installed with npm) can also be used.
+Which store is used depends on the 'data' option format. For example the http
+store is picked when the 'data' option is an HTTP URL.
+Uses a dot notation such as --store.file (not --store=file nor --store file).`,
+  },
 }
 
 const USAGE = `$0 [OPTIONS] [FILE...]

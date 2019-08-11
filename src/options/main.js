@@ -31,7 +31,7 @@ const isUndefined = function(value) {
 const validateOpts = function(opts) {
   validate(opts, {
     exampleConfig: EXAMPLE_OPTS,
-    recursiveBlacklist: ['run', 'report', 'progress'],
+    recursiveBlacklist: ['run', 'report', 'progress', 'store'],
   })
 }
 
@@ -46,6 +46,7 @@ const DEFAULT_OPTS = {
   link: true,
   system: false,
   save: false,
+  store: { file: {} },
 }
 
 const EXAMPLE_OPTS = {
