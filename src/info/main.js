@@ -82,12 +82,23 @@ const addIterationInfo = function({
   const commandA = commands.findIndex(
     variation => variation.commandId === commandId,
   )
+  const statsA = normalizeStats(stats)
   return {
     name,
     columnName,
     task: taskA,
     variation: variationA,
     command: commandA,
-    stats,
+    stats: statsA,
   }
+}
+
+// Some stats are removed when `--save` is used. When showing saved benchmarks,
+// those will be `undefined`. We default them to `[]`.
+const normalizeStats = function({
+  histogram = [],
+  percentiles = [],
+  ...stats
+}) {
+  return { ...stats, histogram, percentiles }
 }
