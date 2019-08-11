@@ -1,6 +1,6 @@
 import { omitBy } from '../utils/main.js'
 
-import { findStore } from './find.js'
+import { findStores } from './find.js'
 
 // Save benchmark results so they can be compared or shown later
 export const save = async function(benchmark, { save: saveOpt, dataDir }) {
@@ -8,17 +8,12 @@ export const save = async function(benchmark, { save: saveOpt, dataDir }) {
     return
   }
 
-  const store = findStore()
-
   const benchmarkA = normalizeBenchmark(benchmark)
 
-  try {
-    await store.add(dataDir, benchmarkA)
-  } catch (error) {
-    throw new Error(
-      `Could not save benchmark to '${dataDir}':\n\n${error.stack}`,
-    )
-  }
+  const stores = findStores()
+  await Promise.all(
+    stores.map(store => saveToStore(store, dataDir, benchmarkA)),
+  )
 }
 
 // Some benchmark information are not persisted:
@@ -40,3 +35,13 @@ const removeBigStats = function(stats) {
 }
 
 const OMITTED_STATS_PROPS = ['histogram', 'percentiles']
+
+const saveToStore = async function(store, dataDir, benchmark) {
+  try {
+    await store.add(dataDir, benchmark)
+  } catch (error) {
+    throw new Error(
+      `Could not save benchmark to '${dataDir}':\n\n${error.stack}`,
+    )
+  }
+}

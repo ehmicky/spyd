@@ -1,6 +1,7 @@
 import { STORES } from './stores/main.js'
 
-// Find the store according to the `stores` option
-export const findStore = function() {
-  return STORES.file
+// Find the stores according to the `stores` and `data` options.
+// Several stores can be used at once when saving, but only one when loading.
+export const findStores = function() {
+  return [STORES.file]
 }
