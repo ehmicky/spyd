@@ -1,7 +1,9 @@
 import { findRunners } from '../run/find.js'
-import { loadTaskFile } from '../processes/load.js'
+import { executeChild } from '../processes/execute.js'
 
 // Load iterations by launching each runner
+// At startup we run child processes but do not run an benchmarks. We only
+// retrieve the task files iterations
 export const loadIterations = async function({
   taskPaths,
   runners,
@@ -55,10 +57,10 @@ const getCommandIterations = async function({
   duration,
   cwd,
 }) {
-  const iterations = await loadTaskFile({
-    taskPath,
+  const input = { type: 'load', taskPath, opts: commandOpt }
+  const { iterations } = await executeChild({
     commandValue,
-    commandOpt,
+    input,
     duration,
     cwd,
   })

@@ -1,7 +1,7 @@
 import { now } from '../now.js'
 import { getStats } from '../stats/compute.js'
 
-import { runChild } from './run.js'
+import { executeChild } from './execute.js'
 import { shouldStop } from './stop.js'
 
 // Start several child processes benchmarking the same task.
@@ -64,6 +64,10 @@ export const runProcesses = async function({
 // If `duration` is high enough to run each task until it reaches its
 // `MAX_LOOPS` limit, we keep spawning new child processes. We stop once we
 // reach `MAX_RESULTS` though.
+// We launch child processes serially. Otherwise they would slow down each other
+// and have higher variance. Multi-core CPUs are designed to run in parallel
+// but in practice they do impact the performance of each other.
+// This does mean we are under-utilizing CPUs.
 const runChildren = async function({
   taskPath,
   taskId,
@@ -74,26 +78,28 @@ const runChildren = async function({
   runEnd,
   cwd,
 }) {
-  // How long to run each child process
   const processDuration = duration / PROCESS_COUNT
-
+  const input = {
+    type: 'run',
+    taskPath,
+    opts: commandOpt,
+    taskId,
+    variationId,
+    duration: processDuration,
+  }
   const results = []
 
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    const result = await runChild({
-      taskPath,
-      taskId,
-      variationId,
+    const { times, count } = await executeChild({
       commandValue,
-      commandOpt,
-      processDuration,
+      input,
       duration,
       cwd,
     })
     // eslint-disable-next-line fp/no-mutating-methods
-    results.push(result)
+    results.push({ times, count })
   } while (!shouldStop(runEnd, results))
 
   return results
