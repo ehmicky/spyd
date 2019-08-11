@@ -34,14 +34,14 @@ const showAction = async function(opts) {
 const runAction = async function(opts) {
   const { iterations, versions } = await getIterations(opts)
 
-  const benchmark = await getBenchmark({ iterations, opts, versions })
+  const benchmark = await runBenchmark({ iterations, opts, versions })
 
   await Promise.all([report(benchmark, opts), save(benchmark, opts)])
 
   return benchmark
 }
 
-const getBenchmark = async function({ iterations, opts, versions }) {
+const runBenchmark = async function({ iterations, opts, versions }) {
   const { progressState, progressInfo } = await startProgress(iterations, opts)
 
   // TODO: replace with `try {} finally {}` when dropping support for Node 8/9
