@@ -6,10 +6,10 @@ export const report = async function(
   benchmark,
   { reportOpts, output, insert, system, link },
 ) {
-  const reportersA = getReporters({ reportOpts, output, insert, system, link })
+  const reporters = getReporters({ reportOpts, output, insert, system, link })
 
   await Promise.all(
-    reportersA.map(reporter => useReporter({ ...reporter, benchmark })),
+    reporters.map(reporter => useReporter({ ...reporter, benchmark })),
   )
 }
 
