@@ -22,6 +22,8 @@ export const getBenchmarks = async function(dataDir) {
 
 const getDataFile = async function(dataDir) {
   if (!(await pathExists(dataDir))) {
+    // TODO: replace with `util.promisify(fs.mkdir)(cacheDir,{recursive: true})`
+    // after dropping support for Node 8/9
     await makeDir(dataDir)
   }
 
