@@ -1,9 +1,9 @@
 // Forward any child process error
-export const forwardChildError = async function({
+export const forwardChildError = function({
   exitCode,
   signal,
   error,
-  errorPromise,
+  errorOutput,
   taskId,
   variationId,
 }) {
@@ -15,9 +15,9 @@ export const forwardChildError = async function({
   const signalError = getSignalError(signal)
   const exitCodeError = getExitCodeError(exitCode)
   const errorStack = getErrorStack(error)
-  const errorMessages = await getErrorStream(errorPromise)
+  const errorOutputA = normalizeErrorOutput(errorOutput)
   throw new Error(
-    `${taskError}Child process exited${signalError}${exitCodeError}${errorStack}${errorMessages}`,
+    `${taskError}Child process exited${signalError}${exitCodeError}${errorStack}${errorOutputA}`,
   )
 }
 
@@ -49,15 +49,18 @@ const getErrorStack = function(error) {
   return `\n\n${error.stack}`
 }
 
-const getErrorStream = async function(errorPromise) {
-  const errorMessages = await errorPromise
-  const errorMessagesA = errorMessages.trim()
-
-  if (errorMessagesA === '') {
+const normalizeErrorOutput = function(errorOutput) {
+  if (errorOutput === undefined) {
     return ''
   }
 
-  return `\n\n${errorMessagesA}`
+  const errorOutputA = errorOutput.trim()
+
+  if (errorOutputA === '') {
+    return ''
+  }
+
+  return `\n\n${errorOutputA}`
 }
 
 // Add task/variation context to child process errors

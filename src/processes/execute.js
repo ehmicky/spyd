@@ -27,42 +27,43 @@ export const executeChild = async function({
 }) {
   const inputA = JSON.stringify(input)
 
-  const child = spawn(file, [...args, inputA], {
-    stdio: ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe'],
-    cwd,
-  })
-  const outputPromise = getStream(child.stdio[OUTPUT_FD])
-  const errorPromise = getStream(child.stdio[ERROR_FD])
+  const child = spawn(file, [...args, inputA], { stdio: STDIO, cwd })
 
-  const { exitCode, signal, error } = await childTimeout(waitForExit(child), {
-    duration,
-    taskId,
-    variationId,
-  })
+  const { exitCode, signal, output, errorOutput, error } = await childTimeout(
+    waitForExit(child),
+    { duration, taskId, variationId },
+  )
 
-  await forwardChildError({
+  forwardChildError({
     exitCode,
     signal,
     error,
-    errorPromise,
+    errorOutput,
     taskId,
     variationId,
   })
 
-  const output = await outputPromise
   const outputA = JSON.parse(output)
   return outputA
 }
 
+const STDIO = ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe']
 const OUTPUT_FD = 4
 const ERROR_FD = 5
 
 // Wait for child process exit, successful or not
 const waitForExit = async function(child) {
   try {
-    const [exitCode, signal] = await pEvent(child, 'exit', { multiArgs: true })
-    return { exitCode, signal }
+    const [[exitCode, signal], output, errorOutput] = await Promise.all([
+      pEvent(child, 'exit', { multiArgs: true }),
+      getStream(child.stdio[OUTPUT_FD], { maxBuffer: MAX_BUFFER }),
+      getStream(child.stdio[ERROR_FD], { maxBuffer: MAX_BUFFER }),
+    ])
+    return { exitCode, signal, output, errorOutput }
   } catch (error) {
     return { error }
   }
 }
+
+// Child process output and error output cannot exceed 100 MB
+const MAX_BUFFER = 1e8
