@@ -62,7 +62,7 @@ Runner-specific options can be specified using the same dot notation such as
 --run.node.require.`,
   },
   report: {
-    describe: `Module to report benchmark final results.
+    describe: `Module to report benchmarks.
 Built-in reporters: silent.
 Custom reporters (installed with npm) can also be used.
 Uses a dot notation such as --report.json (not --report=json nor --report json).
@@ -80,7 +80,7 @@ Uses a dot notation such as --progress.bar (not --progress=bar nor --progress ba
     alias: 'o',
     string: true,
     requiresArg: true,
-    describe: `Overwrite the specified file with the benchmark results.
+    describe: `Overwrite the specified file with the benchmarks.
 Can be "" for silent output.
 Can be "-" to print to stdout.
 Default: "" if --insert is used, "-" otherwise.`,
@@ -89,11 +89,11 @@ Default: "" if --insert is used, "-" otherwise.`,
     alias: 'i',
     string: true,
     requiresArg: true,
-    describe: `Insert the benchmark results inside the specified file.
+    describe: `Insert the benchmarks inside the specified file.
 The file must contain:
   - a line with the words "spyd-start" such as <!-- spyd-start --> or #spyd-start
   - a line with the words "spyd-end"
-The benchmarks results will be inserted between those two lines.`,
+The benchmarks will be inserted between those two lines.`,
   },
   system: {
     boolean: true,
@@ -113,17 +113,17 @@ Default: true`,
   save: {
     alias: 's',
     boolean: true,
-    describe: `Save the benchmark results.
+    describe: `Save the benchmarks.
 Default: false`,
   },
   data: {
     string: true,
     requiresArg: true,
-    describe: `Directory where the benchmark results are saved.
+    describe: `Directory where the benchmarks are saved.
 Default: '{packageRoot}/spyd/'`,
   },
   store: {
-    describe: `Modules to save benchmark results.
+    describe: `Modules to save benchmarks.
 Built-in stores: file.
 Custom stores (installed with npm) can also be used.
 Which store is used depends on the 'data' option format. For example the http
