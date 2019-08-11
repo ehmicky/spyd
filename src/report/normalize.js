@@ -1,3 +1,5 @@
+import { getPrintedSystem } from '../print/system.js'
+
 import { addPrevious } from './previous.js'
 import { dereferenceBenchmark } from './dereference.js'
 
@@ -23,8 +25,11 @@ export const normalizeBenchmark = async function(
     nestedNormalize,
   })
 
-  const benchmarkC = hideTimestamp(benchmarkB, show)
-  return benchmarkC
+  const timestamp = getTimestamp(benchmarkB, show)
+
+  const printedSystem = getPrintedSystem(benchmarkB)
+
+  return { ...benchmarkB, timestamp, printedSystem }
 }
 
 // Apply `normalizeBenchmark()` recursively on the `previous` benchmarks
@@ -43,11 +48,10 @@ const getNestedNormalize = function({ show, diff, dataDir, store, nested }) {
 }
 
 // Only show timestamp when the `show` option is used
-const hideTimestamp = function({ timestamp, ...benchmark }, show) {
+const getTimestamp = function({ timestamp }, show) {
   if (show === undefined) {
-    return benchmark
+    return
   }
 
-  const timestampA = new Date(timestamp).toLocaleString()
-  return { ...benchmark, timestamp: timestampA }
+  return new Date(timestamp).toLocaleString()
 }

@@ -15,11 +15,7 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   const system = getSystem(versions)
 
   const iterationsA = getIterations({ iterations, tasks, variations, commands })
-  const { iterations: iterationsB, printedSystem } = getPrintedInfo(
-    iterationsA,
-    system,
-    opts,
-  )
+  const { iterations: iterationsB } = getPrintedInfo(iterationsA, system, opts)
 
   return {
     timestamp,
@@ -28,7 +24,6 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
     variations,
     commands,
     system,
-    printedSystem,
     iterations: iterationsB,
   }
 }

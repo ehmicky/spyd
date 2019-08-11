@@ -1,5 +1,5 @@
 // Serialize `system` information for CLI reporters
-export const getPrintedSystem = function(system) {
+export const getPrintedSystem = function({ system }) {
   const padding = getPadding(system)
 
   const systemA = Object.entries(system)
