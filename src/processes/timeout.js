@@ -6,11 +6,13 @@ import pTimeout from 'p-timeout'
 export const childTimeout = function(promise, duration) {
   // `setTimeout()` minimum is always 1ms
   const timeout = Math.max(duration / NANOSECS_TO_MICROSECS, 1)
+  const secs = Math.ceil(duration / NANOSECS_TO_SECS)
   return pTimeout(
     promise,
     timeout,
-    "Timeout: please increase the 'duration' option",
+    `Timed out after ${secs} seconds: please increase the 'duration' option`,
   )
 }
 
 const NANOSECS_TO_MICROSECS = 1e6
+const NANOSECS_TO_SECS = 1e9
