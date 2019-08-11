@@ -26,7 +26,7 @@ const getVersion = async function({ title, value, runnerId }) {
     const version = stdout.trim()
     return [title, version]
   } catch (error) {
-    throw new Error(`Could not load runner '${runnerId}'\n\n${error.stack}`)
+    throw new Error(`Could not load runner '${runnerId}'\n\n${error.message}`)
   }
 }
 

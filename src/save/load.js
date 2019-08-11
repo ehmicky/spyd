@@ -8,7 +8,7 @@ export const load = async function(
     return benchmark
   } catch (error) {
     throw new Error(
-      `Could not find benchmark from '${dataDir}':\n\n${error.stack}`,
+      `Could not find benchmark from '${dataDir}':\n${error.message}`,
     )
   }
 }

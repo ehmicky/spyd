@@ -27,7 +27,7 @@ const getFileContent = async function(file) {
   try {
     return await pReadFile(file, 'utf8')
   } catch (error) {
-    throw new Error(`Could not read file '${file}'\n\n${error.stack}`)
+    throw new Error(`Could not read file '${file}'\n${error.message}`)
   }
 }
 
@@ -82,6 +82,6 @@ const writeFileContent = async function(file, fileContent) {
   try {
     await writeFileAtomic(file, fileContent)
   } catch (error) {
-    throw new Error(`Could not write to file '${file}'\n\n${error.stack}`)
+    throw new Error(`Could not write to file '${file}'\n${error.message}`)
   }
 }

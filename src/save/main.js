@@ -15,7 +15,7 @@ export const save = async function(
     await addToStore(dataDir, benchmarkA)
   } catch (error) {
     throw new Error(
-      `Could not save benchmark to '${dataDir}':\n\n${error.stack}`,
+      `Could not save benchmark to '${dataDir}':\n${error.message}`,
     )
   }
 }
