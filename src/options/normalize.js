@@ -4,11 +4,7 @@ import { resolve } from 'path'
 import { normalizeProgress } from '../progress/options.js'
 import { normalizeData } from '../save/options.js'
 
-import {
-  validateStringArray,
-  validateDeepObject,
-  validatePositiveNumber,
-} from './validate.js'
+import { validateStringArray, validatePositiveNumber } from './validate.js'
 
 // Normalize options shape and do custom validation
 export const normalizeOpts = async function(opts) {
@@ -56,12 +52,6 @@ const normalizeCwd = function({ cwd, ...opts }) {
   return { ...opts, cwd: cwdA }
 }
 
-// Normalize and validate 'store' option
-const normalizeStores = function({ store: storeOpts, ...opts }) {
-  validateDeepObject(storeOpts, 'store')
-  return { ...opts, storeOpts }
-}
-
 const NORMALIZERS = [
   normalizeFiles,
   normalizeTasks,
@@ -69,5 +59,4 @@ const NORMALIZERS = [
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,
-  normalizeStores,
 ]

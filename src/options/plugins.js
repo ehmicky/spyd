@@ -1,6 +1,7 @@
 import { RUNNERS } from '../run/runners/main.js'
 import { REPORTERS } from '../report/reporters/main.js'
 import { PROGRESS_REPORTERS } from '../progress/reporters/main.js'
+import { STORES } from '../save/stores/main.js'
 
 import { validateDeepObject } from './validate.js'
 
@@ -19,6 +20,7 @@ const TYPES = [
   { type: 'run', builtins: RUNNERS },
   { type: 'report', builtins: REPORTERS },
   { type: 'progress', builtins: PROGRESS_REPORTERS },
+  { type: 'store', builtins: STORES },
 ]
 
 const loadPlugins = async function({ opts, type, builtins }) {

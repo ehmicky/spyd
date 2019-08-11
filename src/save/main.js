@@ -3,16 +3,19 @@ import { omitBy } from '../utils/main.js'
 import { findStores } from './find.js'
 
 // Save benchmark results so they can be compared or shown later
-export const save = async function(benchmark, { save: saveOpt, dataDir }) {
+export const save = async function(
+  benchmark,
+  { save: saveOpt, dataDir, store: stores },
+) {
   if (!saveOpt) {
     return
   }
 
   const benchmarkA = normalizeBenchmark(benchmark)
 
-  const stores = findStores()
+  const storesA = findStores(stores)
   await Promise.all(
-    stores.map(store => saveToStore(store, dataDir, benchmarkA)),
+    storesA.map(store => saveToStore(store, dataDir, benchmarkA)),
   )
 }
 
