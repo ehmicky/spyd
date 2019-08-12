@@ -15,6 +15,7 @@ export const loadIterations = async function({ taskPaths, runOpts, cwd }) {
   return { iterations, versions }
 }
 
+// Couple each taskPath with one or several runners/commands
 const getFilesRunners = function(taskPaths, runners) {
   return taskPaths.flatMap(taskPath => getFileRunners(taskPath, runners))
 }
