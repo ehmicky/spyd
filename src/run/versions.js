@@ -5,55 +5,29 @@ import stripFinalNewline from 'strip-final-newline'
 
 const pExecFile = promisify(execFile)
 
-// Retrieve runners runtime versions.
-// Only show versions of runners actually used by some task files.
-// This also makes sure runtimes exist.
-export const getVersions = async function(iterations) {
-  const runners = getRunners(iterations)
-  const versions = await getCommandsVersions(runners)
+export const getActionsVersions = async function(actions) {
+  const versions = await Promise.all(actions.map(getVersions))
   return versions
 }
 
-const getRunners = function(iterations) {
-  const runnerIds = iterations.map(getRunnerId)
-  const runnerIdsA = [...new Set(runnerIds)]
-  const runners = runnerIdsA.map(runnerId => getRunner(iterations, runnerId))
-  return runners
-}
-
-const getRunnerId = function({ runnerId }) {
-  return runnerId
-}
-
-const getRunner = function(iterations, runnerId) {
-  const {
-    runner: { versions, runOpt },
-  } = iterations.find(iteration => iteration.runnerId === runnerId)
-  return { runnerId, versions, runOpt }
-}
-
-const getCommandsVersions = async function(runners) {
-  const promises = runners.map(getRunnerVersions)
-  const versions = await Promise.all(promises)
-  const versionsA = versions.flat()
-  const versionsB = Object.fromEntries(versionsA)
-  return versionsB
-}
-
-const getRunnerVersions = async function({ runnerId, versions, runOpt }) {
-  const versionsA = versions(runOpt)
-  const promises = versionsA.map(({ title, version }) =>
-    getVersion({ title, version, runnerId }),
+const getVersions = async function({ versions, runnerId }) {
+  const promises = versions.map(({ title, value }) =>
+    getVersion({ title, value, runnerId }),
   )
-  const versionsB = await Promise.all(promises)
+  const versionsA = await Promise.all(promises)
+  const versionsB = versionsA.flat()
   return versionsB
 }
 
-const getVersion = async function({
-  title,
-  version: [file, ...args],
-  runnerId,
-}) {
+// `versions[*].value` can either be a CLI command (array of strings) or
+// the result directly (string)
+const getVersion = async function({ title, value, runnerId }) {
+  if (typeof value === 'string') {
+    return value
+  }
+
+  const [file, ...args] = value
+
   try {
     const { stdout } = await pExecFile(file, args)
     const version = stripFinalNewline(stdout)

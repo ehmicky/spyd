@@ -1,32 +1,50 @@
 import { loadRunners } from '../run/load.js'
 import { getCommands } from '../run/main.js'
-import { getVersions } from '../run/versions.js'
 import { loadTaskFile } from '../processes/load.js'
 
 // Load iterations by launching each runner
 export const loadIterations = async function({ taskPaths, runOpts, cwd }) {
   const runners = await loadRunners(runOpts)
 
-  const promises = taskPaths.map(taskPath =>
-    loadFiles({ taskPath, runners, cwd }),
-  )
-  const iterations = await Promise.all(promises)
-  const iterationsA = iterations.flat()
+  const files = await loadFilesCommands(taskPaths, runners)
 
-  const versions = {} // await getVersions(iterationsA)
+  const iterations = await loadFilesIterations(files, cwd)
 
-  return { iterations: iterationsA, versions }
+  const versions = loadVersions(files)
+
+  return { iterations, versions }
 }
 
-const loadFiles = async function({ taskPath, runners, cwd }) {
-  const commands = await getCommands(taskPath, runners)
-  const promises = commands.map(command => loadFile({ taskPath, command, cwd }))
+const loadFilesCommands = async function(taskPaths, runners) {
+  const promises = taskPaths.map(taskPath =>
+    loadFileCommands(taskPath, runners),
+  )
+  const files = await Promise.all(promises)
+  return files
+}
+
+const loadFileCommands = async function(taskPath, runners) {
+  const { commands, versions } = await getCommands(taskPath, runners)
+  return { taskPath, commands, versions }
+}
+
+const loadFilesIterations = async function(files, cwd) {
+  const promises = files.map(file => loadFileIterations(file, cwd))
   const iterations = await Promise.all(promises)
   const iterationsA = iterations.flat()
   return iterationsA
 }
 
-const loadFile = async function({
+const loadFileIterations = async function({ taskPath, commands }, cwd) {
+  const promises = commands.map(command =>
+    loadCommandIterations({ taskPath, command, cwd }),
+  )
+  const iterations = await Promise.all(promises)
+  const iterationsA = iterations.flat()
+  return iterationsA
+}
+
+const loadCommandIterations = async function({
   taskPath,
   command,
   command: { commandValue, commandOpt },
@@ -59,4 +77,12 @@ const normalizeIteration = function(
     commandValue,
     commandOpt,
   }
+}
+
+const loadVersions = function(files) {
+  return Object.fromEntries(files.flatMap(getVersion))
+}
+
+const getVersion = function({ versions }) {
+  return versions
 }
