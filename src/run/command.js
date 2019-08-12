@@ -1,17 +1,12 @@
 // Runners can spawn multiple commands
 export const getActionsCommands = function(actions) {
-  return actions.flatMap(normalizeCommands)
+  return actions.flatMap(getCommands)
 }
 
-const normalizeCommands = function({
-  runnerId,
-  runnerTitle,
-  runOpt,
-  commands,
-}) {
+const getCommands = function({ runnerId, runnerTitle, runOpt, commands }) {
   return commands.map(
     ({ id: commandId, title: commandTitle, value: commandValue }) =>
-      normalizeCommand({
+      getCommand({
         runnerId,
         runnerTitle,
         runOpt,
@@ -22,7 +17,7 @@ const normalizeCommands = function({
   )
 }
 
-const normalizeCommand = function({
+const getCommand = function({
   runnerId,
   runnerTitle,
   runOpt,
