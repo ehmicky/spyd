@@ -1,21 +1,29 @@
 import { getCommands } from './command.js'
 import { getVersions, loadVersions } from './versions.js'
+import { hasTasks } from './find.js'
 import { node } from './node/main.js'
 
 const RUNNERS = { node }
 
 // Import all available runners, as defined by the `run` option.
 // Associate each runner option with its runner as well.
-export const loadRunners = async function(runOpts) {
-  const promises = Object.entries(runOpts).map(loadRunner)
+export const loadRunners = async function(runOpts, taskPaths) {
+  const promises = Object.entries(runOpts).map(([runnerId, runOpt]) =>
+    loadRunner({ runnerId, runOpt, taskPaths }),
+  )
   const runners = await Promise.all(promises)
+  const runnersA = runners.filter(Boolean)
 
-  const versions = loadVersions(runners)
-  return { runners, versions }
+  const versions = loadVersions(runnersA)
+  return { runners: runnersA, versions }
 }
 
-const loadRunner = async function([runnerId, runOpt]) {
+const loadRunner = async function({ runnerId, runOpt, taskPaths }) {
   const runner = await importRunner(runnerId)
+
+  if (!hasTasks(runner, taskPaths)) {
+    return
+  }
 
   const action = await fireAction(runner, runOpt)
 

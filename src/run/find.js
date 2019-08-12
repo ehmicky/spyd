@@ -17,3 +17,11 @@ export const findRunners = function(taskPath, runners) {
 const matchExtension = function(extensions, extension) {
   return extensions.some(extensionA => `.${extensionA}` === extension)
 }
+
+// Inverse.
+// Only trigger `runner.action` is the runner is used by some task files.
+export const hasTasks = function({ extensions }, taskPaths) {
+  return taskPaths.some(taskPath =>
+    matchExtension(extensions, extname(taskPath)),
+  )
+}
