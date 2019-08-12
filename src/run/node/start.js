@@ -1,3 +1,5 @@
+import { exit } from 'process'
+
 import { sendParentMessage, getParentMessage } from '../../processes/ipc.js'
 
 import { benchmark } from './benchmark/main.js'
@@ -17,6 +19,7 @@ const start = async function() {
     // This will be printed to stderr, which means parent will print it
     // eslint-disable-next-line no-console, no-restricted-globals
     console.error(error)
+    exit(1)
   }
 }
 
