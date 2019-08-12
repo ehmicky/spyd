@@ -19,7 +19,7 @@ export const loadIterations = async function({ taskPaths, runOpts, cwd }) {
 }
 
 const loadFiles = async function({ taskPath, runners, cwd }) {
-  const commands = getCommands(taskPath, runners)
+  const commands = await getCommands(taskPath, runners)
   const promises = commands.map(command => loadFile({ taskPath, command, cwd }))
   const iterations = await Promise.all(promises)
   const iterationsA = iterations.flat()

@@ -1,10 +1,12 @@
 import { extname } from 'path'
 
 // Retrieve the commands for a specific task file
-export const getCommands = function(taskPath, runners) {
+export const getCommands = async function(taskPath, runners) {
   const runnersA = findRunners(taskPath, runners)
-  const commands = runnersA.flatMap(normalizeCommands)
-  return commands
+  const promises = runnersA.map(normalizeCommands)
+  const commands = await Promise.all(promises)
+  const commandsA = commands.flat()
+  return commandsA
 }
 
 // Find the runners according to the task file extension
@@ -26,14 +28,14 @@ const matchExtension = function(extensions, extension) {
 }
 
 // Runners can spawn multiple commands
-const normalizeCommands = function({
+const normalizeCommands = async function({
   id: runnerId,
   title: runnerTitle,
   action,
   runOpt,
   versions,
 }) {
-  const { commands } = action(runOpt)
+  const { commands } = await action(runOpt)
   return commands.map(
     ({ id: commandId, title: commandTitle, value: commandValue }) =>
       normalizeCommand({
