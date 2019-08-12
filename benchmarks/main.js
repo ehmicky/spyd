@@ -3,7 +3,9 @@ export const MathRandom = {
   variations: ['one', 'two'],
 }
 
-export const MathRandomTwo = Math.random
+export const MathRandomTwo = {
+  main: Math.random,
+}
 
 export const variations = [
   { id: 'one', title: 'One', value: 1 },

@@ -7,22 +7,10 @@ export const normalizeTasks = function({ variations, ...tasks }, taskPath) {
   return { tasks: tasksA, variations }
 }
 
-const normalizeTask = function({ taskId, task, taskPath }) {
-  const {
-    title: taskTitle,
-    variations: variationsIds,
-    main,
-    before,
-    after,
-  } = normalizeMain(task)
+const normalizeTask = function({
+  taskId,
+  task: { title: taskTitle, variations: variationsIds, main, before, after },
+  taskPath,
+}) {
   return { taskPath, taskId, taskTitle, variationsIds, main, before, after }
-}
-
-// Tasks can be functions as a shortcut to `{ main() { ... } }`
-const normalizeMain = function(task) {
-  if (typeof task === 'function') {
-    return { main: task }
-  }
-
-  return task
 }
