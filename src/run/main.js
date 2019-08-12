@@ -30,9 +30,9 @@ const normalizeRunners = function(runners) {
   return runners.flatMap(normalizeCommands)
 }
 
-const normalizeCommands = function({ id, commands, runOpt, versions }) {
-  const commandsA = commands(runOpt)
-  return commandsA.map(({ id: commandId, command }) =>
+const normalizeCommands = function({ id, action, runOpt, versions }) {
+  const commands = action(runOpt)
+  return commands.map(({ id: commandId, command }) =>
     normalizeCommand({ id, commandId, command, runOpt, versions }),
   )
 }
