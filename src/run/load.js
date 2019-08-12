@@ -1,3 +1,5 @@
+import { getCommands } from './command.js'
+import { getVersions } from './versions.js'
 import { node } from './node/main.js'
 
 const RUNNERS = { node }
@@ -12,7 +14,14 @@ export const loadRunners = async function(runOpts) {
 
 const loadRunner = async function([runnerId, runOpt]) {
   const runner = await importRunner(runnerId)
-  return { ...runner, runOpt }
+
+  const action = await fireAction(runner, runOpt)
+
+  const commands = getCommands(action)
+
+  const versions = await getVersions(action)
+
+  return { commands, versions, extensions: runner.extensions }
 }
 
 const importRunner = function(runnerId) {
@@ -29,4 +38,13 @@ const importRunner = function(runnerId) {
   } catch (error) {
     throw new Error(`Could not load runner '${runnerId}'\n\n${error.stack}`)
   }
+}
+
+// Fire runner `action()`
+const fireAction = async function(
+  { id: runnerId, title: runnerTitle, action },
+  runOpt,
+) {
+  const { commands, versions } = await action(runOpt)
+  return { runnerId, runnerTitle, runOpt, commands, versions }
 }

@@ -5,18 +5,14 @@ import stripFinalNewline from 'strip-final-newline'
 
 const pExecFile = promisify(execFile)
 
-export const getActionsVersions = async function(actions) {
-  const versions = await Promise.all(actions.map(getVersions))
-  return versions
-}
-
-const getVersions = async function({ versions, runnerId }) {
+// Runtime versions for this runner, specified as `action.versions`
+// Used by the `--system` option
+export const getVersions = async function({ versions, runnerId }) {
   const promises = versions.map(({ title, value }) =>
     getVersion({ title, value, runnerId }),
   )
   const versionsA = await Promise.all(promises)
-  const versionsB = versionsA.flat()
-  return versionsB
+  return versionsA
 }
 
 // `versions[*].value` can either be a CLI command (array of strings) or

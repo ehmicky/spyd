@@ -1,9 +1,10 @@
-// Runners can spawn multiple commands
-export const getActionsCommands = function(actions) {
-  return actions.flatMap(getCommands)
-}
-
-const getCommands = function({ runnerId, runnerTitle, runOpt, commands }) {
+// Runners can spawn multiple commands, specified as `action.commands`
+export const getCommands = function({
+  runnerId,
+  runnerTitle,
+  runOpt,
+  commands,
+}) {
   return commands.map(
     ({ id: commandId, title: commandTitle, value: commandValue }) =>
       getCommand({

@@ -1,35 +1,36 @@
 import { loadRunners } from '../run/load.js'
-import { getCommands } from '../run/main.js'
+import { findRunners } from '../run/find.js'
 import { loadTaskFile } from '../processes/load.js'
 
 // Load iterations by launching each runner
 export const loadIterations = async function({ taskPaths, runOpts, cwd }) {
   const runners = await loadRunners(runOpts)
 
-  const files = await loadFilesCommands(taskPaths, runners)
+  const runnersA = getFilesRunners(taskPaths, runners)
 
-  const iterations = await loadFilesIterations(files, cwd)
+  const iterations = await loadFilesIterations(runnersA, cwd)
 
-  const versions = loadVersions(files)
+  const versions = loadVersions(runnersA)
 
   return { iterations, versions }
 }
 
-const loadFilesCommands = async function(taskPaths, runners) {
-  const promises = taskPaths.map(taskPath =>
-    loadFileCommands(taskPath, runners),
-  )
-  const files = await Promise.all(promises)
-  return files
+const getFilesRunners = function(taskPaths, runners) {
+  return taskPaths.flatMap(taskPath => getFileRunners(taskPath, runners))
 }
 
-const loadFileCommands = async function(taskPath, runners) {
-  const { commands, versions } = await getCommands(taskPath, runners)
-  return { taskPath, commands, versions }
+const getFileRunners = function(taskPath, runners) {
+  const runnersA = findRunners(taskPath, runners)
+  const runnersB = runnersA.map(({ commands, versions }) => ({
+    commands,
+    versions,
+    taskPath,
+  }))
+  return runnersB
 }
 
-const loadFilesIterations = async function(files, cwd) {
-  const promises = files.map(file => loadFileIterations(file, cwd))
+const loadFilesIterations = async function(runners, cwd) {
+  const promises = runners.map(runner => loadFileIterations(runner, cwd))
   const iterations = await Promise.all(promises)
   const iterationsA = iterations.flat()
   return iterationsA
@@ -79,8 +80,8 @@ const normalizeIteration = function(
   }
 }
 
-const loadVersions = function(files) {
-  return Object.fromEntries(files.flatMap(getVersion))
+const loadVersions = function(runners) {
+  return Object.fromEntries(runners.flatMap(getVersion))
 }
 
 const getVersion = function({ versions }) {
