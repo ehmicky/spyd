@@ -6,8 +6,8 @@ const RUNNERS = { node }
 // Associate each runner option with its runner as well.
 export const loadRunners = async function(runOpts) {
   const promises = Object.entries(runOpts).map(loadRunner)
-  const allRunners = await Promise.all(promises)
-  return allRunners
+  const runners = await Promise.all(promises)
+  return runners
 }
 
 const loadRunner = async function([runnerId, runOpt]) {

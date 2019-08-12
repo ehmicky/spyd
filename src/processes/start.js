@@ -8,9 +8,14 @@ import { getChildMessage, sendChildMessage } from './ipc.js'
 // This includes loading the task file.
 // We do it in-between benchmarks because it would slow them down and add
 // variance.
-export const startChildren = async function({ taskPath, runner, cwd }) {
+export const startChildren = async function({
+  taskPath,
+  commandValue,
+  commandOpt,
+  cwd,
+}) {
   const promises = Array.from({ length: POOL_SIZE }, () =>
-    startChild({ taskPath, runner, cwd }),
+    startChild({ taskPath, commandValue, commandOpt, cwd }),
   )
   const results = await Promise.all(promises)
   const children = results.map(getChild)
@@ -22,10 +27,8 @@ const POOL_SIZE = 2e1
 
 export const startChild = async function({
   taskPath,
-  runner: {
-    command: [file, ...args],
-    runOpt,
-  },
+  commandValue: [file, ...args],
+  commandOpt,
   cwd,
 }) {
   const child = spawn(file, args, {
@@ -39,7 +42,7 @@ export const startChild = async function({
   await getChildMessage(child, 'ready')
 
   // Communicate to the child process which task to load
-  await sendChildMessage(child, 'load', { taskPath, opts: runOpt })
+  await sendChildMessage(child, 'load', { taskPath, opts: commandOpt })
 
   const { iterations } = await getChildMessage(child, 'load')
 

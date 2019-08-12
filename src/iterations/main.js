@@ -36,7 +36,7 @@ export const getIterations = async function({
 
 // When two `files` define the same iteration, the last one prevails
 const removeDuplicates = function(
-  { taskId, variationId, runnerId },
+  { taskId, variationId, commandId },
   index,
   iterations,
 ) {
@@ -46,6 +46,6 @@ const removeDuplicates = function(
       iteration =>
         iteration.taskId !== taskId ||
         iteration.variationId !== variationId ||
-        iteration.runnerId !== runnerId,
+        iteration.commandId !== commandId,
     )
 }

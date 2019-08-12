@@ -10,7 +10,7 @@ const pExecFile = promisify(execFile)
 // This also makes sure runtimes exist.
 export const getVersions = async function(iterations) {
   const runners = getRunners(iterations)
-  const versions = await getRunnersVersions(runners)
+  const versions = await getCommandsVersions(runners)
   return versions
 }
 
@@ -32,7 +32,7 @@ const getRunner = function(iterations, runnerId) {
   return { runnerId, versions, runOpt }
 }
 
-const getRunnersVersions = async function(runners) {
+const getCommandsVersions = async function(runners) {
   const promises = runners.map(getRunnerVersions)
   const versions = await Promise.all(promises)
   const versionsA = versions.flat()

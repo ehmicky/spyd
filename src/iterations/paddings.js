@@ -1,4 +1,4 @@
-// Make `taskTitle`, `variationTitle`, 'runnerTitle' reporter-friendly by
+// Make `taskTitle`, `variationTitle`, 'commandTitle' reporter-friendly by
 // adding paddings.
 // Also add `iteration.name` and `iteration.columnName`.
 export const addPaddings = function(iterations) {
@@ -10,7 +10,7 @@ export const addPaddings = function(iterations) {
   return iterationsB
 }
 
-// Vertically align `taskTitle`, `variationTitle` and `runnerTitle`
+// Vertically align `taskTitle`, `variationTitle` and `commandTitle`
 const getPaddings = function(iterations) {
   const paddings = PADDED_PROPS.map(propName =>
     getPadding(iterations, propName),
@@ -46,9 +46,9 @@ const padTitle = function(padding, title = '') {
 }
 
 // Add:
-//  - `iteration.name`: combines task, variation and runner.
+//  - `iteration.name`: combines task, variation and command.
 //     For one-dimensional reporters.
-//  - `iteration.columnName`: combines variation and runner
+//  - `iteration.columnName`: combines variation and command.
 //     For two-dimensional reporters. `taskTitle` is the row name.
 const addNames = function(iterations) {
   const props = PADDED_PROPS.filter(propName =>
@@ -85,7 +85,7 @@ const getName = function(iteration, props) {
     .join(' | ')
 }
 
-// If all variations and/or runners are the same, do not report them.
+// If all variations and/or commands are the same, do not report them.
 // Do not do this for tasks though, since `name` should not be empty.
 const shouldShowProp = function(iterations, propName) {
   if (propName === 'taskTitle') {
@@ -97,4 +97,4 @@ const shouldShowProp = function(iterations, propName) {
   return uniqueProps.length !== 1
 }
 
-const PADDED_PROPS = ['taskTitle', 'variationTitle', 'runnerTitle']
+const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle']

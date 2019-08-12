@@ -1,10 +1,10 @@
 import { groupBy } from '../utils/group.js'
 
 // Add `iteration.fastest` boolean indicating fastest iterations,
-// for each variation+runner combination, among all tasks
+// for each variation+command combination, among all tasks
 export const addFastestIterations = function(iterations) {
   const iterationsGroups = Object.values(
-    groupBy(iterations, ['variation', 'runner']),
+    groupBy(iterations, ['variation', 'command']),
   )
   return iterationsGroups.flatMap(addFastestIteration)
 }

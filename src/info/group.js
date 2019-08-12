@@ -30,19 +30,19 @@ const getVariation = function({
   return { variationId, variationTitle, mean }
 }
 
-// Same for runners
-export const getRunners = function(iterations) {
-  const runners = groupIterations(iterations, 'runnerId')
-  const runnersA = runners.map(getRunner)
-  return runnersA
+// Same for runner commands
+export const getCommands = function(iterations) {
+  const commands = groupIterations(iterations, 'commandId')
+  const commandsA = commands.map(getCommand)
+  return commandsA
 }
 
-const getRunner = function({
-  groupId: runnerId,
+const getCommand = function({
+  groupId: commandId,
   mean,
-  iteration: { runnerTitle },
+  iteration: { commandTitle },
 }) {
-  return { runnerId, runnerTitle, mean }
+  return { commandId, commandTitle, mean }
 }
 
 const groupIterations = function(iterations, groupId) {

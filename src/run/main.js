@@ -1,24 +1,24 @@
 import { extname } from 'path'
 
-// Retrieve the runners for a specific task file
-export const getRunners = function(taskPath, allRunners) {
-  const runners = findRunners(taskPath, allRunners)
-  const runnersA = normalizeRunners(runners)
-  return runnersA
+// Retrieve the commands for a specific task file
+export const getCommands = function(taskPath, runners) {
+  const runnersA = findRunners(taskPath, runners)
+  const commands = runnersA.flatMap(normalizeCommands)
+  return commands
 }
 
 // Find the runners according to the task file extension
-const findRunners = function(taskPath, allRunners) {
+const findRunners = function(taskPath, runners) {
   const extension = extname(taskPath)
-  const runners = allRunners.filter(({ extensions }) =>
+  const runnersA = runners.filter(({ extensions }) =>
     matchExtension(extensions, extension),
   )
 
-  if (runners.length === 0) {
+  if (runnersA.length === 0) {
     throw new Error(`Please specify a 'runner' for '${taskPath}'`)
   }
 
-  return runners
+  return runnersA
 }
 
 const matchExtension = function(extensions, extension) {
@@ -26,32 +26,44 @@ const matchExtension = function(extensions, extension) {
 }
 
 // Runners can spawn multiple commands
-const normalizeRunners = function(runners) {
-  return runners.flatMap(normalizeCommands)
-}
-
-const normalizeCommands = function({ id, action, runOpt, versions }) {
-  const commands = action(runOpt)
-  return commands.map(({ id: commandId, command }) =>
-    normalizeCommand({ id, commandId, command, runOpt, versions }),
+const normalizeCommands = function({
+  id: runnerId,
+  title: runnerTitle,
+  action,
+  runOpt,
+  versions,
+}) {
+  const { commands } = action(runOpt)
+  return commands.map(
+    ({ id: commandId, title: commandTitle, value: commandValue }) =>
+      normalizeCommand({
+        runnerId,
+        runnerTitle,
+        commandId,
+        commandTitle,
+        commandValue,
+        runOpt,
+        versions,
+      }),
   )
 }
 
 const normalizeCommand = function({
-  id,
+  runnerId,
+  runnerTitle,
   commandId,
-  command,
+  commandTitle,
+  commandValue,
   runOpt,
   versions,
 }) {
-  const runnerId = getRunnerId(id, commandId)
-  return { id: runnerId, command, runOpt, versions }
-}
-
-const getRunnerId = function(id, commandId) {
-  if (commandId === undefined) {
-    return id
+  const commandIdA = [runnerId, commandId].filter(Boolean).join(' ')
+  const commandTitleA = [runnerTitle, commandTitle].filter(Boolean).join(' ')
+  return {
+    commandId: commandIdA,
+    commandTitle: commandTitleA,
+    commandValue,
+    commandOpt: runOpt,
+    versions,
   }
-
-  return `${id} ${commandId}`
 }

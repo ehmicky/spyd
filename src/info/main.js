@@ -1,7 +1,7 @@
 import { sortBy } from '../utils/sort.js'
 import { getPrintedInfo } from '../print/main.js'
 
-import { getTasks, getVariations, getRunners } from './group.js'
+import { getTasks, getVariations, getCommands } from './group.js'
 import { addFastestIterations } from './fastest.js'
 import { getSystem } from './system.js'
 
@@ -9,10 +9,10 @@ import { getSystem } from './system.js'
 export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   const tasks = getTasks(iterations)
   const variations = getVariations(iterations)
-  const runners = getRunners(iterations)
+  const commands = getCommands(iterations)
 
   const iterationsA = iterations.map(iteration =>
-    addIterationInfo({ iteration, tasks, variations, runners }),
+    addIterationInfo({ iteration, tasks, variations, commands }),
   )
 
   const iterationsB = addFastestIterations(iterationsA)
@@ -33,7 +33,7 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
     opts,
     tasks,
     variations,
-    runners,
+    commands,
     iterations: iterationsC,
     system,
     printedSystem,
@@ -41,24 +41,24 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
 }
 
 const addIterationInfo = function({
-  iteration: { name, columnName, taskId, variationId, runnerId, stats },
+  iteration: { name, columnName, taskId, variationId, commandId, stats },
   tasks,
   variations,
-  runners,
+  commands,
 }) {
   const taskA = tasks.findIndex(task => task.taskId === taskId)
   const variationA = variations.findIndex(
     variation => variation.variationId === variationId,
   )
-  const runnerA = runners.findIndex(
-    variation => variation.runnerId === runnerId,
+  const commandA = commands.findIndex(
+    variation => variation.commandId === commandId,
   )
   return {
     name,
     columnName,
     task: taskA,
     variation: variationA,
-    runner: runnerA,
+    command: commandA,
     stats,
   }
 }
