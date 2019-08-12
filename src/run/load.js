@@ -1,5 +1,5 @@
 import { getCommands } from './command.js'
-import { getVersions } from './versions.js'
+import { getVersions, loadVersions } from './versions.js'
 import { node } from './node/main.js'
 
 const RUNNERS = { node }
@@ -9,7 +9,9 @@ const RUNNERS = { node }
 export const loadRunners = async function(runOpts) {
   const promises = Object.entries(runOpts).map(loadRunner)
   const runners = await Promise.all(promises)
-  return runners
+
+  const versions = loadVersions(runners)
+  return { runners, versions }
 }
 
 const loadRunner = async function([runnerId, runOpt]) {

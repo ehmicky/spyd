@@ -4,13 +4,11 @@ import { loadTaskFile } from '../processes/load.js'
 
 // Load iterations by launching each runner
 export const loadIterations = async function({ taskPaths, runOpts, cwd }) {
-  const runners = await loadRunners(runOpts)
+  const { runners, versions } = await loadRunners(runOpts)
 
   const runnersA = getFilesRunners(taskPaths, runners)
 
   const iterations = await loadFilesIterations(runnersA, cwd)
-
-  const versions = loadVersions(runnersA)
 
   return { iterations, versions }
 }
@@ -22,11 +20,7 @@ const getFilesRunners = function(taskPaths, runners) {
 
 const getFileRunners = function(taskPath, runners) {
   const runnersA = findRunners(taskPath, runners)
-  const runnersB = runnersA.map(({ commands, versions }) => ({
-    commands,
-    versions,
-    taskPath,
-  }))
+  const runnersB = runnersA.map(({ commands }) => ({ commands, taskPath }))
   return runnersB
 }
 
@@ -79,12 +73,4 @@ const normalizeIteration = function(
     commandValue,
     commandOpt,
   }
-}
-
-const loadVersions = function(runners) {
-  return Object.fromEntries(runners.flatMap(getVersion))
-}
-
-const getVersion = function({ versions }) {
-  return versions
 }

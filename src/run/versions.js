@@ -32,3 +32,11 @@ const getVersion = async function({ title, value, runnerId }) {
     throw new Error(`Could not load runner '${runnerId}'\n\n${error.stack}`)
   }
 }
+
+export const loadVersions = function(runners) {
+  return Object.fromEntries(runners.flatMap(getVersionsField))
+}
+
+const getVersionsField = function({ versions }) {
+  return versions
+}
