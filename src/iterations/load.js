@@ -6,19 +6,19 @@ import { loadTaskFile } from '../processes/load.js'
 export const loadIterations = async function({ taskPaths, runOpts, cwd }) {
   const { runners, versions } = await loadRunners(runOpts)
 
-  const runnersA = getFilesRunners(taskPaths, runners)
+  const commands = getFilesCommands(taskPaths, runners)
 
-  const iterations = await loadFilesIterations(runnersA, cwd)
+  const iterations = await loadFilesIterations(commands, cwd)
 
   return { iterations, versions }
 }
 
-// Couple each taskPath with one or several runners/commands
-const getFilesRunners = function(taskPaths, runners) {
-  return taskPaths.flatMap(taskPath => getFileRunners(taskPath, runners))
+// Couple each taskPath with one or several commands
+const getFilesCommands = function(taskPaths, runners) {
+  return taskPaths.flatMap(taskPath => getFileCommands(taskPath, runners))
 }
 
-const getFileRunners = function(taskPath, runners) {
+const getFileCommands = function(taskPath, runners) {
   const runnersA = findRunners(taskPath, runners)
   const runnersB = runnersA.map(({ commands }) => ({ commands, taskPath }))
   return runnersB
