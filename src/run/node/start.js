@@ -14,7 +14,7 @@ const start = async function() {
 
     const iterations = await load()
 
-    await Promise.race([runIteration(iterations), getParentMessage('end')])
+    await runIteration(iterations)
   } catch (error) {
     // This will be printed to stderr, which means parent will print it
     // eslint-disable-next-line no-console, no-restricted-globals
