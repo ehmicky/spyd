@@ -15,6 +15,7 @@ export const runPools = async function({
   commandValue,
   commandOpt,
   processDuration,
+  duration,
   runEnd,
   cwd,
 }) {
@@ -30,6 +31,7 @@ export const runPools = async function({
       commandValue,
       commandOpt,
       processDuration,
+      duration,
       runEnd,
       cwd,
     })
@@ -47,6 +49,7 @@ const runPool = async function({
   commandValue,
   commandOpt,
   processDuration,
+  duration,
   runEnd,
   cwd,
 }) {
@@ -60,6 +63,7 @@ const runPool = async function({
     const results = await runChildren({
       children,
       processDuration,
+      duration,
       runEnd,
       taskId,
       variationId,

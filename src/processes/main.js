@@ -35,6 +35,7 @@ export const runProcesses = async function({
     commandValue,
     commandOpt,
     processDuration,
+    duration,
     runEnd,
     cwd,
   })
