@@ -19,7 +19,7 @@ export const getVersions = async function({ versions, runnerId }) {
 // the result directly (string)
 const getVersion = async function({ title, value, runnerId }) {
   if (typeof value === 'string') {
-    return value
+    return [title, value]
   }
 
   const [file, ...args] = value
