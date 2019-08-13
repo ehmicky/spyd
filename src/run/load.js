@@ -55,6 +55,12 @@ const fireAction = async function(
   { id: runnerId, title: runnerTitle, action },
   runOpt,
 ) {
-  const { commands, versions } = await action(runOpt)
-  return { runnerId, runnerTitle, runOpt, commands, versions }
+  try {
+    const { commands, versions } = await action(runOpt)
+    return { runnerId, runnerTitle, runOpt, commands, versions }
+  } catch (error) {
+    // eslint-disable-next-line fp/no-mutation
+    error.message = `In runner '${runnerId}': ${error.message}`
+    throw error
+  }
 }
