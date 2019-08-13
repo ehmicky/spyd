@@ -31,6 +31,7 @@ const getVersion = async function({ title, value, runnerId }) {
   }
 }
 
+// Concatenate the `versions` of all runners
 export const loadVersions = function(runners) {
   return Object.fromEntries(runners.flatMap(getVersionsField))
 }
