@@ -7,34 +7,34 @@ export const loadIterations = async function(taskPaths, runOpts, cwd) {
   const { runners, versions } = await loadRunners(runOpts, taskPaths)
 
   const iterations = await Promise.all(
-    taskPaths.map(taskPath => getFileIterations(taskPath, runners, cwd)),
+    taskPaths.map(taskPath => getFilesIterations(taskPath, runners, cwd)),
   )
   const iterationsA = iterations.flat()
 
   return { iterations: iterationsA, versions }
 }
 
-const getFileIterations = async function(taskPath, runners, cwd) {
+const getFilesIterations = async function(taskPath, runners, cwd) {
   const runnersA = findRunners(taskPath, runners)
   const iterations = await Promise.all(
     runnersA.map(({ commands }) =>
-      loadFileIterations({ commands, taskPath, cwd }),
+      getFileIterations({ commands, taskPath, cwd }),
     ),
   )
   const iterationsA = iterations.flat()
   return iterationsA
 }
 
-const loadFileIterations = async function({ taskPath, commands, cwd }) {
+const getFileIterations = async function({ taskPath, commands, cwd }) {
   const promises = commands.map(command =>
-    loadCommandIterations({ taskPath, command, cwd }),
+    getCommandIterations({ taskPath, command, cwd }),
   )
   const iterations = await Promise.all(promises)
   const iterationsA = iterations.flat()
   return iterationsA
 }
 
-const loadCommandIterations = async function({
+const getCommandIterations = async function({
   taskPath,
   command,
   command: { commandValue, commandOpt },
