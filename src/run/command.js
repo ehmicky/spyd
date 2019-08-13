@@ -5,16 +5,8 @@ export const getCommands = function({
   runOpt,
   commands,
 }) {
-  return commands.map(
-    ({ id: commandId, title: commandTitle, value: commandValue }) =>
-      getCommand({
-        runnerId,
-        runnerTitle,
-        runOpt,
-        commandId,
-        commandTitle,
-        commandValue,
-      }),
+  return commands.map(({ id, title, value }) =>
+    getCommand({ runnerId, runnerTitle, runOpt, id, title, value }),
   )
 }
 
@@ -22,9 +14,9 @@ const getCommand = function({
   runnerId,
   runnerTitle,
   runOpt,
-  commandId,
-  commandTitle,
-  commandValue,
+  id: commandId,
+  title: commandTitle,
+  value: commandValue,
 }) {
   const commandIdA = [runnerId, commandId].filter(Boolean).join(' ')
   const commandTitleA = [runnerTitle, commandTitle].filter(Boolean).join(' ')
