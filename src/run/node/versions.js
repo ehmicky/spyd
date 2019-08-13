@@ -5,7 +5,7 @@ import readPkgUp from 'read-pkg-up'
 // Normalize the node `versions` option
 export const getNodeVersions = async function({ versions }) {
   if (versions === undefined) {
-    return
+    return {}
   }
 
   const versionsA = versions.split(WHITESPACE_REGEXP)
