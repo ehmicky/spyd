@@ -1,10 +1,5 @@
-const extensions = ['js', 'ts', 'jsx', 'tsx', 'es6', 'mjs']
+import { action } from './action.js'
 
-const action = function() {
-  return {
-    commands: [{ value: ['node', `${__dirname}/start.js`] }],
-    versions: [{ title: 'Node', value: ['node', '--version'] }],
-  }
-}
+const extensions = ['js', 'ts', 'jsx', 'tsx', 'es6', 'mjs']
 
 export const node = { id: 'node', title: 'Node', extensions, action }
