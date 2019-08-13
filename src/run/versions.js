@@ -1,8 +1,6 @@
 import { execFile } from 'child_process'
 import { promisify } from 'util'
 
-import stripFinalNewline from 'strip-final-newline'
-
 const pExecFile = promisify(execFile)
 
 // Runtime versions for this runner, specified as `action.versions`
@@ -26,7 +24,7 @@ const getVersion = async function({ title, value, runnerId }) {
 
   try {
     const { stdout } = await pExecFile(file, args)
-    const version = stripFinalNewline(stdout)
+    const version = stdout.trim()
     return [title, version]
   } catch (error) {
     throw new Error(`Could not load runner '${runnerId}'\n\n${error.stack}`)
