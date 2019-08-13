@@ -18,12 +18,15 @@ const getCommand = function({
   title,
   value,
 }) {
-  const commandId = [runnerId, id].filter(Boolean).join(' ')
-  const commandTitle = [runnerTitle, title].filter(Boolean).join(' ')
-  return {
-    commandId,
-    commandTitle,
-    commandValue: value,
-    commandOpt: runOpt,
+  const commandId = joinCommand(runnerId, id)
+  const commandTitle = joinCommand(runnerTitle, title)
+  return { commandId, commandTitle, commandValue: value, commandOpt: runOpt }
+}
+
+const joinCommand = function(runnerInfo, commandInfo) {
+  if (commandInfo === undefined) {
+    return runnerInfo
   }
+
+  return `${runnerInfo} ${commandInfo}`
 }
