@@ -7,13 +7,17 @@ export const getOpts = function(runOpts) {
 
   validate(runOptsA, { exampleConfig: EXAMPLE_OPTS })
 
-  return runOptsA
+  const runOptsB = { ...DEFAULT_OPTS, ...runOptsA }
+  return runOptsB
 }
 
 const isUndefined = function(value) {
   return value === undefined
 }
 
+const DEFAULT_OPTS = {}
+
 const EXAMPLE_OPTS = {
+  ...DEFAULT_OPTS,
   versions: '12 10.5.0 8.0.0',
 }
