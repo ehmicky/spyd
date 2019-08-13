@@ -4,7 +4,7 @@ import { now } from '../now.js'
 
 import { getChildMessage, sendChildMessage } from './ipc.js'
 import { endChild } from './end.js'
-import { waitForTimeout } from './timeout.js'
+import { childTimeout } from './timeout.js'
 
 // We launch child processes serially. Otherwise they would slow down each other
 // and have higher variance. Multi-core CPUs are designed to run in parallel
@@ -80,9 +80,9 @@ const executeChild = async function({
   })
 
   // Wait for the benchmark result
-  const { times, count } = await Promise.race([
+  const { times, count } = await childTimeout(
     getChildMessage(child, 'run'),
-    waitForTimeout(duration),
-  ])
+    duration,
+  )
   return [...results, { times, count }]
 }
