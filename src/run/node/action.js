@@ -1,3 +1,5 @@
+import { getPath } from 'nve'
+
 import { getOpts } from './options.js'
 import { getNodeVersions } from './versions.js'
 
@@ -13,11 +15,14 @@ export const action = async function(runOpts) {
     }
   }
 
-  const commands = versions.map(version => getNodeCommand(version, versions))
+  const commands = await Promise.all(
+    versions.map(version => getNodeCommand(version, versions)),
+  )
   return { commands, versions: [{ title: 'Node', value: versionString }] }
 }
 
-const getNodeCommand = function(version, versions) {
+const getNodeCommand = async function(version, versions) {
   const title = versions.length === 1 ? 'Node' : `Node ${version}`
-  return { title, value: ['node', `${__dirname}/start.js`] }
+  const nodePath = await getPath(version)
+  return { title, value: [nodePath, `${__dirname}/start.js`] }
 }
