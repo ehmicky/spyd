@@ -1,16 +1,15 @@
 import { extname } from 'path'
 
-// Find the runners according to the task file extension
+// Find the runners according to the task file extension.
+// This might return an empty array since some `taskPaths` might have been
+// selected by globbing pattern due to their siblings. E.g. `benchmarks.*`
+// would catch `benchmarks.js` but also `benchmarks.js.map`, `benchmarks.js~`
+// and so on. We silently ignore the files that have no runners.
 export const findRunners = function(taskPath, runners) {
   const extension = extname(taskPath)
   const runnersA = runners.filter(({ extensions }) =>
     matchExtension(extensions, extension),
   )
-
-  if (runnersA.length === 0) {
-    throw new Error(`Please specify a 'runner' for '${taskPath}'`)
-  }
-
   return runnersA
 }
 

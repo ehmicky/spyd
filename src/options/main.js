@@ -36,6 +36,7 @@ const validateOpts = function(opts) {
 }
 
 const DEFAULT_OPTS = {
+  files: ['benchmarks.*', 'benchmarks/main.*'],
   cwd: getCwd(),
   duration: 10,
   run: { node: {} },
@@ -49,7 +50,6 @@ const DEFAULT_OPTS = {
 const EXAMPLE_OPTS = {
   ...DEFAULT_OPTS,
   config: 'spyd.json',
-  files: ['benchmarks.js'],
   tasks: ['taskId'],
   variations: ['variationId'],
   output: './file.js',

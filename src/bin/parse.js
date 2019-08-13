@@ -5,12 +5,13 @@ import { normalizeDynamicOpts } from './dynamic.js'
 export const parseOpts = function(yargs) {
   const { _: files, report, progress, run, ...opts } = yargs.parse()
 
+  const filesA = files.length === 0 ? undefined : files
   const reportA = normalizeDynamicOpts(report)
   const progressA = normalizeDynamicOpts(progress)
   const runA = normalizeDynamicOpts(run)
   const optsA = {
     ...opts,
-    files,
+    files: filesA,
     report: reportA,
     progress: progressA,
     run: runA,

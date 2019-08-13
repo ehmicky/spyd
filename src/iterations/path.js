@@ -1,34 +1,25 @@
 import { resolve } from 'path'
 
-import locatePath from 'locate-path'
+import fastGlob from 'fast-glob'
 
 // Retrieve the absolute paths to the task files using the `files` and `cwd`
 // options
 export const getTaskPaths = async function(files, cwd) {
-  const filesA = await getDefaultFiles(files, cwd)
-  const taskPaths = filesA.map(file => resolve(cwd, file))
-  const taskPathsA = [...new Set(taskPaths)]
-  return taskPathsA
-}
+  const taskPaths = await Promise.all(
+    files.map(pattern => applyGlobbing(pattern, cwd)),
+  )
+  const taskPathsA = taskPaths.flat()
 
-// `files` option defaults to looking up files in the current directory
-const getDefaultFiles = async function(files, cwd) {
-  if (files.length !== 0) {
-    return files
-  }
-
-  const defaultFiles = await locatePath(DEFAULT_FILES, { cwd })
-
-  if (defaultFiles === undefined) {
+  if (taskPathsA.length === 0) {
     throw new Error('No tasks file found')
   }
 
-  return [defaultFiles]
+  const taskPathsB = [...new Set(taskPathsA)]
+  return taskPathsB
 }
 
-const DEFAULT_FILES = [
-  'benchmarks.js',
-  'benchmarks/main.js',
-  'benchmarks.ts',
-  'benchmarks/main.ts',
-]
+const applyGlobbing = async function(pattern, cwd) {
+  const files = await fastGlob(pattern, { cwd })
+  const filesA = files.map(file => resolve(cwd, file))
+  return filesA
+}

@@ -116,11 +116,11 @@ const USAGE = `$0 [OPTIONS] [FILE...]
 
 Benchmark JavaScript code.
 
-FILE defaults to "./benchmarks.js|ts" or "./benchmarks/main.js|ts".
+FILE can be a globbing pattern.
+It defaults to "./benchmarks.*" or "./benchmarks/main.*".
 
-FILE must export the tasks to benchmark. Each task must be either:
-  - a function
-  - an object with any of the following properties:
+Each FILE must export the tasks to benchmark.
+Each task must be an object with any of the following properties:
 
   main()      Function being benchmarked.
               Can be async.
