@@ -48,7 +48,7 @@ const runChild = async function({
     results,
   })
 
-  await endChild(child)
+  endChild(child)
 
   return resultsA
 }

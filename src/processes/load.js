@@ -16,7 +16,7 @@ export const loadTaskFile = async function({
     cwd,
   })
 
-  await endChild(child)
+  endChild(child)
 
   return iterations
 }
