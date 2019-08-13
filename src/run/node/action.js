@@ -1,7 +1,7 @@
-import { validateRunOpts } from './validate.js'
+import { getOpts } from './options.js'
 
 export const action = function(runOpts) {
-  validateRunOpts(runOpts)
+  const runOptsA = getOpts(runOpts)
 
   return {
     commands: [{ value: ['node', `${__dirname}/start.js`] }],
