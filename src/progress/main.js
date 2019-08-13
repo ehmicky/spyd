@@ -1,4 +1,5 @@
 import { show as showCursor, hide as hideCursor } from 'cli-cursor'
+import onExit from 'signal-exit'
 
 import { getReporters } from './get.js'
 import { startUpdate, stopUpdate } from './update.js'
@@ -21,7 +22,12 @@ export const startProgress = async function(
     reporters,
   })
 
-  return { progressState, progressInfo: { progressId, reporters } }
+  const removeOnExit = onExit(() => stopProgress({ progressId, reporters }))
+
+  return {
+    progressState,
+    progressInfo: { progressId, reporters, removeOnExit },
+  }
 }
 
 // Call each `reporter.start()`
@@ -30,7 +36,15 @@ const startReporters = async function(reporters, total) {
 }
 
 // Stop progress reporting
-export const stopProgress = async function({ progressId, reporters }) {
+export const stopProgress = async function({
+  progressId,
+  reporters,
+  removeOnExit,
+}) {
+  if (removeOnExit !== undefined) {
+    removeOnExit()
+  }
+
   stopUpdate(progressId)
 
   await stopReporters(reporters)
