@@ -22,6 +22,10 @@ export const getOpts = async function(opts = {}) {
   return optsD
 }
 
+const isUndefined = function(value) {
+  return value === undefined
+}
+
 // We need to do this twice because configuration loading needs to have
 // `cwd` and `config` type checked, but it also adds new options.
 const validateOpts = function(opts) {
@@ -29,10 +33,6 @@ const validateOpts = function(opts) {
     exampleConfig: EXAMPLE_OPTS,
     recursiveBlacklist: ['run', 'report', 'progress'],
   })
-}
-
-const isUndefined = function(value) {
-  return value === undefined
 }
 
 const DEFAULT_OPTS = {
@@ -46,7 +46,7 @@ const DEFAULT_OPTS = {
   system: false,
 }
 
-export const EXAMPLE_OPTS = {
+const EXAMPLE_OPTS = {
   ...DEFAULT_OPTS,
   config: 'spyd.json',
   files: ['benchmarks.js'],
