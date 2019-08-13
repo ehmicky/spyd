@@ -1,3 +1,5 @@
+import { loadRunners } from '../run/load.js'
+
 import { getTaskPaths } from './path.js'
 import { loadIterations } from './load.js'
 import { selectIterations } from './select.js'
@@ -13,7 +15,9 @@ export const getIterations = async function({
 }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
-  const { iterations, versions } = await loadIterations(taskPaths, runOpts, cwd)
+  const { runners, versions } = await loadRunners(runOpts, taskPaths)
+
+  const iterations = await loadIterations(taskPaths, runners, cwd)
 
   const iterationsA = iterations.filter(removeDuplicates)
   const iterationsB = selectIterations({
