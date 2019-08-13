@@ -17,16 +17,15 @@ export const loadIterations = async function(taskPaths, runOpts, cwd) {
 const getFileIterations = async function(taskPath, runners, cwd) {
   const runnersA = findRunners(taskPath, runners)
   const iterations = await Promise.all(
-    runnersA.map(
-      ({ commands }) => loadFileIterations({ commands, taskPath }),
-      cwd,
+    runnersA.map(({ commands }) =>
+      loadFileIterations({ commands, taskPath, cwd }),
     ),
   )
   const iterationsA = iterations.flat()
   return iterationsA
 }
 
-const loadFileIterations = async function({ taskPath, commands }, cwd) {
+const loadFileIterations = async function({ taskPath, commands, cwd }) {
   const promises = commands.map(command =>
     loadCommandIterations({ taskPath, command, cwd }),
   )
