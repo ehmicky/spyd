@@ -46,9 +46,10 @@ const getCommandIterations = async function({
     commandOpt,
     cwd,
   })
-  return iterations.map(iteration =>
+  const iterationsA = iterations.map(iteration =>
     normalizeIteration(iteration, command, taskPath),
   )
+  return iterationsA
 }
 
 const normalizeIteration = function(
