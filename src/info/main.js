@@ -29,7 +29,10 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
     opts,
   )
 
+  const timestamp = new Date().toISOString()
+
   return {
+    timestamp,
     opts,
     tasks,
     variations,
