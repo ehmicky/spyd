@@ -22,10 +22,9 @@ const getFilesIterations = async function(taskPath, runners, cwd) {
 }
 
 const getFileIterations = async function({ taskPath, commands, cwd }) {
-  const promises = commands.map(command =>
-    getCommandIterations({ taskPath, command, cwd }),
+  const iterations = await Promise.all(
+    commands.map(command => getCommandIterations({ taskPath, command, cwd })),
   )
-  const iterations = await Promise.all(promises)
   const iterationsA = iterations.flat()
   return iterationsA
 }
