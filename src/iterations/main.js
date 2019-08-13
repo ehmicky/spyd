@@ -27,7 +27,7 @@ export const getIterations = async function({
   })
 
   if (iterationsB.length === 0) {
-    throw new Error('No tasks to bechmark')
+    throw new Error('No tasks to benchmark')
   }
 
   const iterationsC = addPaddings(iterationsB)
