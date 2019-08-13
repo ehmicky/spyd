@@ -31,10 +31,11 @@ const updateProgress = async function({
   const timeLeft = getTimeLeft({ index, taskTimeLeft, total, duration })
 
   // Call each `reporter.update()`
-  const promises = reporters.map(reporter =>
-    reporter.update({ name, percentage, timeLeft, index, total }),
+  await Promise.all(
+    reporters.map(reporter =>
+      reporter.update({ name, percentage, timeLeft, index, total }),
+    ),
   )
-  await Promise.all(promises)
 }
 
 // Percentage left of the whole run

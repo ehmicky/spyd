@@ -26,8 +26,7 @@ export const startProgress = async function(
 
 // Call each `reporter.start()`
 const startReporters = async function(reporters, total) {
-  const promises = reporters.map(reporter => reporter.start({ total }))
-  await Promise.all(promises)
+  await Promise.all(reporters.map(reporter => reporter.start({ total })))
 }
 
 // Stop progress reporting
@@ -41,6 +40,5 @@ export const stopProgress = async function({ progressId, reporters }) {
 
 // Call each `reporter.stop()`
 const stopReporters = async function(reporters) {
-  const promises = reporters.map(reporter => reporter.stop({}))
-  await Promise.all(promises)
+  await Promise.all(reporters.map(reporter => reporter.stop({})))
 }

@@ -6,10 +6,9 @@ const pExecFile = promisify(execFile)
 // Runtime versions for this runner, specified as `action.versions`
 // Used by the `--system` option
 export const getVersions = async function({ versions, runnerId }) {
-  const promises = versions.map(({ title, value }) =>
-    getVersion({ title, value, runnerId }),
+  const versionsA = await Promise.all(
+    versions.map(({ title, value }) => getVersion({ title, value, runnerId })),
   )
-  const versionsA = await Promise.all(promises)
   return versionsA
 }
 

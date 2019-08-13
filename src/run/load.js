@@ -8,10 +8,11 @@ const RUNNERS = { node }
 // Import all available runners, as defined by the `run` option.
 // Associate each runner option with its runner as well.
 export const loadRunners = async function(runOpts, taskPaths) {
-  const promises = Object.entries(runOpts).map(([runnerId, runOpt]) =>
-    loadRunner({ runnerId, runOpt, taskPaths }),
+  const runners = await Promise.all(
+    Object.entries(runOpts).map(([runnerId, runOpt]) =>
+      loadRunner({ runnerId, runOpt, taskPaths }),
+    ),
   )
-  const runners = await Promise.all(promises)
   const runnersA = runners.filter(Boolean)
 
   const versions = loadVersions(runnersA)

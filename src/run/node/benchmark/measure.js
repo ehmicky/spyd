@@ -37,8 +37,9 @@ const performBefore = async function(before, repeat) {
     return
   }
 
-  const promises = Array.from({ length: repeat }, () => before())
-  const beforeArgs = await Promise.all(promises)
+  const beforeArgs = await Promise.all(
+    Array.from({ length: repeat }, () => before()),
+  )
   return beforeArgs
 }
 
@@ -48,8 +49,7 @@ const performAfter = async function(after, repeat, beforeArgs = []) {
     return
   }
 
-  const promises = Array.from({ length: repeat }, (value, index) =>
-    after(beforeArgs[index]),
+  await Promise.all(
+    Array.from({ length: repeat }, (value, index) => after(beforeArgs[index])),
   )
-  await Promise.all(promises)
 }

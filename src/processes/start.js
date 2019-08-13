@@ -14,10 +14,11 @@ export const startChildren = async function({
   commandOpt,
   cwd,
 }) {
-  const promises = Array.from({ length: POOL_SIZE }, () =>
-    startChild({ taskPath, commandValue, commandOpt, cwd }),
+  const results = await Promise.all(
+    Array.from({ length: POOL_SIZE }, () =>
+      startChild({ taskPath, commandValue, commandOpt, cwd }),
+    ),
   )
-  const results = await Promise.all(promises)
   const children = results.map(getChild)
   return children
 }

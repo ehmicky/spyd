@@ -8,10 +8,9 @@ export const report = async function(
 ) {
   const reportersA = getReporters({ reportOpts, output, insert, system, link })
 
-  const promises = reportersA.map(reporter =>
-    useReporter({ ...reporter, benchmark }),
+  await Promise.all(
+    reportersA.map(reporter => useReporter({ ...reporter, benchmark })),
   )
-  await Promise.all(promises)
 }
 
 // Perform each reporter
