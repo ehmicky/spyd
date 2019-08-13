@@ -14,16 +14,16 @@ const getCommand = function({
   runnerId,
   runnerTitle,
   runOpt,
-  id: commandId,
-  title: commandTitle,
-  value: commandValue,
+  id,
+  title,
+  value,
 }) {
-  const commandIdA = [runnerId, commandId].filter(Boolean).join(' ')
-  const commandTitleA = [runnerTitle, commandTitle].filter(Boolean).join(' ')
+  const commandId = [runnerId, id].filter(Boolean).join(' ')
+  const commandTitle = [runnerTitle, title].filter(Boolean).join(' ')
   return {
-    commandId: commandIdA,
-    commandTitle: commandTitleA,
-    commandValue,
+    commandId,
+    commandTitle,
+    commandValue: value,
     commandOpt: runOpt,
   }
 }
