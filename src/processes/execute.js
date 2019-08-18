@@ -55,12 +55,12 @@ const ERROR_FD = 5
 // stream error or timeout
 const waitForExit = async function(child, duration) {
   const childPromise = getChildPromise(child, duration)
+  const streams = getStreams(child, [OUTPUT_FD, ERROR_FD])
 
   try {
     const [[exitCode, signal], output, errorOutput] = await Promise.all([
       childPromise,
-      getStream(child.stdio[OUTPUT_FD], { maxBuffer: MAX_BUFFER }),
-      getStream(child.stdio[ERROR_FD], { maxBuffer: MAX_BUFFER }),
+      ...streams,
     ])
     return { exitCode, signal, output, errorOutput }
   } catch (error) {
@@ -76,6 +76,10 @@ const getChildPromise = function(child, duration) {
   }
 
   return childTimeout(childPromise, duration)
+}
+
+const getStreams = function(child, fds) {
+  return fds.map(fd => getStream(child.stdio[fd], { maxBuffer: MAX_BUFFER }))
 }
 
 // Child process output and error output cannot exceed 100 MB
