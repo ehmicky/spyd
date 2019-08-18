@@ -1,7 +1,7 @@
 import { addFastestIterations } from './fastest.js'
 import { dereferenceBenchmark } from './dereference.js'
 import { addPrevious } from './previous.js'
-import { normalizeStats, addPrintedStats } from './stats/main.js'
+import { normalizeStats, prettifyStats } from './stats/main.js'
 import { getPrintedSystem } from './system.js'
 
 // We try to save as little as possible in stores, and compute anything that
@@ -24,7 +24,7 @@ export const addPrintedInfo = function(
   })
 
   const iterationsD = normalizeStats(iterationsC)
-  const iterationsE = addPrintedStats(iterationsD, verbose)
+  const iterationsE = prettifyStats(iterationsD, verbose)
 
   const timestamp = prettifyTimestamp(benchmark)
 

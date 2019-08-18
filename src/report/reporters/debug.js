@@ -10,27 +10,33 @@ const report = function(
   return contentC
 }
 
-const serializeIteration = function({ name, printedStats, fastest }) {
+const serializeIteration = function({ name, stats, fastest }) {
   const fastestMark = fastest ? '*' : ' '
-  const statsStr = serializeStats(printedStats)
+  const statsStr = serializeStats(stats)
   return `${fastestMark} ${name} | ${statsStr}`
 }
 
-export const serializeStats = function(printedStats) {
-  return Object.entries(printedStats)
-    .filter(shouldPrintStat)
-    .map(serializeStat)
-    .join(' | ')
+export const serializeStats = function(stats) {
+  return STATS.map(statName => serializeStat(stats, statName)).join(' | ')
 }
 
-const shouldPrintStat = function([name]) {
-  return !NON_PRINTED_STATS.includes(name)
-}
+const STATS = [
+  'median',
+  'mean',
+  'min',
+  'max',
+  'diff',
+  'deviation',
+  'variance',
+  'count',
+  'loops',
+  'repeat',
+  'processes',
+]
 
-const NON_PRINTED_STATS = ['percentiles', 'histogram']
-
-const serializeStat = function([name, string]) {
-  return `${name} ${string}`
+const serializeStat = function(stats, statName) {
+  const stat = stats[`${statName}Pretty`]
+  return `${statName} ${stat}`
 }
 
 const addSystem = function(content, system, printedSystem) {

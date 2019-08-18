@@ -16,10 +16,10 @@ const normalizeIterationStats = function({
   return { ...iteration, stats: { ...stats, histogram, percentiles } }
 }
 
-// Add `iteration.printedStats` which is like `iteration.stats` but serialized
-// and CLI-reporter-friendly. It adds time units, rounding, padding and ensures
-// proper vertical alignment.
-export const addPrintedStats = function(iterations, verbose) {
+// Add `iteration.stats.*Pretty` which is like `iteration.stats.*` but
+// serialized and CLI-reporter-friendly. It adds time units, rounding, padding
+// and ensures proper vertical alignment.
+export const prettifyStats = function(iterations, verbose) {
   const { unit, scale } = getUnit(iterations)
   const statsDecimals = getStatsDecimals(iterations, scale)
   const iterationsA = iterations.map(iteration =>

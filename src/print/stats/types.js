@@ -1,4 +1,5 @@
-// Type of each `stat`
+// Type of each `stat`.
+// Skipped: histogram.
 export const STAT_TYPES = {
   median: 'scalar',
   mean: 'scalar',
@@ -11,6 +12,5 @@ export const STAT_TYPES = {
   loops: 'count',
   repeat: 'count',
   processes: 'count',
-  histogram: 'skip',
   percentiles: 'array',
 }

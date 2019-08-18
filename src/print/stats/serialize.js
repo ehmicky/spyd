@@ -14,23 +14,39 @@ export const serializeStats = function({
   statsDecimals,
   verbose,
 }) {
-  const statsA = Object.entries(stats).map(([name, stat]) =>
-    serializeStat({ name, stat, unit, scale, statsDecimals, loops, verbose }),
+  const statsA = Object.entries(STAT_TYPES).map(([name, type]) =>
+    serializeStat({
+      name,
+      type,
+      stats,
+      unit,
+      scale,
+      statsDecimals,
+      loops,
+      verbose,
+    }),
   )
-  const printedStats = Object.fromEntries(statsA)
-  return { ...iteration, printedStats }
+  const statsPretty = Object.fromEntries(statsA)
+  return { ...iteration, stats: { ...stats, ...statsPretty } }
 }
 
 const serializeStat = function({
   name,
-  stat,
+  type,
+  stats,
   unit,
   scale,
   statsDecimals,
   loops,
   verbose,
 }) {
-  const type = STAT_TYPES[name]
+  const prettyName = `${name}Pretty`
+  const stat = stats[name]
+
+  if (stat === undefined) {
+    return [prettyName, '']
+  }
+
   const decimals = statsDecimals[name]
   const statA = SERIALIZE_STAT[type]({ stat, scale, unit, decimals })
   const statB = handleDeviation({
@@ -40,15 +56,11 @@ const serializeStat = function({
     loops,
     verbose,
   })
-  return [name, statB]
+  return [prettyName, statB]
 }
 
 const serializeCount = function({ stat }) {
   return String(stat)
-}
-
-const serializeSkip = function({ stat }) {
-  return stat
 }
 
 const serializeScalar = function({ stat, scale, unit, decimals }) {
@@ -74,7 +86,6 @@ const serializeArray = function({ stat, scale, unit, decimals }) {
 
 const SERIALIZE_STAT = {
   count: serializeCount,
-  skip: serializeSkip,
   scalar: serializeScalar,
   array: serializeArray,
 }

@@ -18,16 +18,15 @@ const getStatDecimal = function({ name, type, iterations, scale }) {
 }
 
 const getDecimals = function({ name, type, iterations, scale }) {
-  // Those stats don't have decimals
-  if (type === 'count' || type === 'skip') {
+  if (type === 'count') {
     return 0
   }
 
   const measures = iterations
     .flatMap(({ stats }) => stats[name])
-    .filter(isNotZero)
+    .filter(isNotEmpty)
 
-  // When every measure is 0, there are no decimals
+  // When every measure is 0 or undefined, there are no decimals
   if (measures.length === 0) {
     return 0
   }
@@ -41,8 +40,8 @@ const getDecimals = function({ name, type, iterations, scale }) {
   return decimals
 }
 
-const isNotZero = function(measure) {
-  return measure !== 0
+const isNotEmpty = function(measure) {
+  return measure !== 0 && measure !== undefined
 }
 
 // Three siginificant digits

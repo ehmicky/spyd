@@ -1,69 +1,57 @@
 import { STAT_TYPES } from './types.js'
 
-// Pad `printedStats` on the left so they vertically align.
+// Pad `*.statsPretty` on the left so they vertically align.
 // Right padding was already performed when setting the number of decimals.
 export const addPaddings = function(iterations) {
   const paddings = getPaddings(iterations)
-  const iterationsA = iterations.map(iteration =>
-    addPadding({ iteration, paddings }),
-  )
-  return iterationsA
+  return iterations.map(iteration => addPadding({ iteration, paddings }))
 }
 
 // Retrieve the maximum length of any measures for each stat
 const getPaddings = function(iterations) {
-  const paddings = Object.entries(STAT_TYPES).map(([name, type]) =>
-    getPadding({ name, type, iterations }),
+  const paddings = Object.keys(STAT_TYPES).map(name =>
+    getPadding(name, iterations),
   )
   return Object.fromEntries(paddings)
 }
 
-const getPadding = function({ name, type, iterations }) {
-  if (type === 'skip') {
-    return [name]
-  }
-
-  const allPrintedStats = iterations.map(
-    ({ printedStats: { [name]: value = '' } }) => value.length,
+const getPadding = function(name, iterations) {
+  const allPrettyStats = iterations.map(
+    ({ stats }) => stats[`${name}Pretty`].length,
   )
-  const padding = Math.max(...allPrintedStats)
+  const padding = Math.max(...allPrettyStats)
   return [name, padding]
 }
 
-const addPadding = function({
-  iteration,
-  iteration: { printedStats },
-  paddings,
-}) {
-  const printedStatsA = Object.entries(printedStats).map(
-    ([name, printedStat]) => padStat({ name, printedStat, paddings }),
+const addPadding = function({ iteration, iteration: { stats }, paddings }) {
+  const prettyStats = Object.keys(STAT_TYPES).map(name =>
+    padStat(name, stats, paddings),
   )
-  const printedStatsB = Object.fromEntries(printedStatsA)
-  return { ...iteration, printedStats: printedStatsB }
+  const prettyStatsA = Object.fromEntries(prettyStats)
+  return { ...iteration, stats: { ...stats, ...prettyStatsA } }
 }
 
-const padStat = function({ name, printedStat, paddings }) {
+const padStat = function(name, stats, paddings) {
+  const prettyName = `${name}Pretty`
+  const stat = stats[prettyName]
+
   const type = STAT_TYPES[name]
   const padding = paddings[name]
-  const printedStatA = PADDING_STAT[type](printedStat, padding)
-  return [name, printedStatA]
+  const statA = PADDING_STAT[type](stat, padding)
+
+  return [prettyName, statA]
 }
 
-const noPadding = function(printedStat) {
-  return printedStat
+const padScalar = function(stat, padding) {
+  return stat.padStart(padding)
 }
 
-const padScalar = function(printedStat, padding) {
-  return printedStat.padStart(padding)
-}
-
-const padArray = function(printedStat, padding) {
-  return printedStat.map(string => padScalar(string, padding))
+const padArray = function(stat, padding) {
+  return stat.map(string => padScalar(string, padding))
 }
 
 const PADDING_STAT = {
   count: padScalar,
-  skip: noPadding,
   scalar: padScalar,
   array: padArray,
 }

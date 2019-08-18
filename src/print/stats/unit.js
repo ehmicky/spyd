@@ -1,5 +1,5 @@
-// Retrieve the time unit to use in `printedStats`.
-// The same unit is used for all `printedStats` to make it easier to compare
+// Retrieve the time unit to use in `stats.*Pretty`.
+// The same unit is used for all `stats.*Pretty` to make it easier to compare
 // between stats.
 // We use the minimum time unit where all medians are >= 1
 export const getUnit = function(iterations) {
