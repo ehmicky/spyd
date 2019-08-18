@@ -16,11 +16,20 @@ const getPaddings = function(iterations) {
 }
 
 const getPadding = function(name, iterations) {
-  const allPrettyStats = iterations.map(
-    ({ stats }) => stats[`${name}Pretty`].length,
-  )
-  const padding = Math.max(...allPrettyStats)
+  const allLengths = iterations
+    .flatMap(({ stats }) => stats[`${name}Pretty`])
+    .map(getStatLength)
+
+  if (allLengths.length === 0) {
+    return [name, 0]
+  }
+
+  const padding = Math.max(...allLengths)
   return [name, padding]
+}
+
+const getStatLength = function(stat) {
+  return stat.length
 }
 
 const addPadding = function({ iteration, iteration: { stats }, paddings }) {
