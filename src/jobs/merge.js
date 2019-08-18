@@ -9,22 +9,37 @@ export const mergeJobBenchmarks = function(benchmarks, benchmark) {
     .reduce(mergeBenchmarks, benchmark)
 }
 
-const mergeBenchmarks = function(benchmark, previousBenchmark) {
-  validateSameOpts(benchmark, previousBenchmark)
-
-  const iterations = removeDuplicates([
-    ...benchmark.iterations,
-    ...previousBenchmark.iterations,
-  ])
-  return { ...benchmark, iterations }
+const mergeBenchmarks = function(
+  { env, envs = [env], iterations, ...benchmark },
+  { env: previousEnv, iterations: previousIterations },
+) {
+  const envsA = mergeEnv(envs, previousEnv)
+  const iterationsA = removeDuplicates([...iterations, ...previousIterations])
+  return { ...benchmark, envs: envsA, iterations: iterationsA }
 }
 
-const validateSameOpts = function({ opts }, { opts: previousOpts }) {
+const mergeEnv = function(envs, previousEnv) {
+  const duplicateEnv = envs.find(env => env.id === previousEnv.id)
+
+  if (duplicateEnv === undefined) {
+    return [...envs, previousEnv]
+  }
+
+  SAME_ENV_PROPS.forEach(propName =>
+    validateEnv(duplicateEnv, previousEnv, propName),
+  )
+
+  return envs
+}
+
+const SAME_ENV_PROPS = ['options']
+
+const validateEnv = function(env, previousEnv, propName) {
   // TODO: replace with util.isDeepStrictEqual() once dropping support for
   // Node 8
-  if (!fastDeepEqual(opts, previousOpts)) {
-    throw new Error(`Several benchmarks with the same "job" cannot have different options:
-${JSON.stringify(opts)}
-${JSON.stringify(previousOpts)}`)
+  if (!fastDeepEqual(env[propName], previousEnv[propName])) {
+    throw new Error(`Several benchmarks with the same "job" and "env" cannot have different ${propName}:
+${JSON.stringify(env[propName])}
+${JSON.stringify(previousEnv[propName])}`)
   }
 }
