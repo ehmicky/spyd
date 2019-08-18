@@ -22,7 +22,3 @@ const handleSame = function(benchmarks, benchmark, job) {
 }
 
 const SAME_JOB = 'same'
-
-export const addJobBenchmarks = function(benchmarks, benchmark) {
-  return benchmark
-}

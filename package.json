@@ -37,6 +37,7 @@
     "chalk": "^2.4.2",
     "cli-cursor": "^3.1.0",
     "core-js": "^3.2.1",
+    "fast-deep-equal": "^2.0.1",
     "fast-glob": "^3.0.4",
     "figures": "^3.0.0",
     "find-up": "^4.1.0",

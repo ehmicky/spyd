@@ -1,5 +1,5 @@
 import { getOpts } from './options/main.js'
-import { addJobId, addJobBenchmarks } from './job.js'
+import { addJobId } from './jobs/id.js'
 import { report } from './report/main.js'
 import { list } from './store/list.js'
 import { save } from './store/save.js'
@@ -33,10 +33,10 @@ const showAction = async function(showOpt, opts) {
   const benchmarks = await list(opts)
   const benchmark = get(benchmarks, showOpt, opts)
 
-  const benchmarkA = addJobBenchmarks(benchmarks, benchmark)
-
-  await report(benchmarks, benchmarkA, { ...opts, show: true })
-
+  const benchmarkA = await report(benchmarks, benchmark, {
+    ...opts,
+    show: true,
+  })
   return benchmarkA
 }
 
@@ -47,13 +47,11 @@ const runAction = async function(opts) {
   const benchmarks = await list(opts)
 
   const benchmarkA = addJobId(benchmarks, benchmark, opts)
-  const benchmarkB = addJobBenchmarks(benchmarks, benchmarkA)
 
-  await Promise.all([
-    report(benchmarks, benchmarkB, opts),
-    save(benchmarkB, opts),
+  const [benchmarkB] = await Promise.all([
+    report(benchmarks, benchmarkA, opts),
+    save(benchmarkA, opts),
   ])
-
   return benchmarkB
 }
 
