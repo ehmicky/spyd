@@ -49,9 +49,7 @@ const isColumnProp = function(propName) {
 
 const getName = function(iteration, props) {
   return props
-    .map(propName => iteration[propName])
-    .filter(Boolean)
-    .map(part => cyan.bold(part))
+    .map(propName => cyan.bold(iteration[propName]))
     .join(`${cyan.dim(pointer)}  `)
 }
 

@@ -12,7 +12,7 @@ export const addTaskVariations = function(
   variations,
 ) {
   if (variationsIds === undefined && variations === undefined) {
-    return [task]
+    return [{ ...task, variationId: DEFAULT_VARIATION }]
   }
 
   const variationsA = getVariations(task, variationsIds, variations)
@@ -20,6 +20,9 @@ export const addTaskVariations = function(
   const tasksA = tasks.map(bindVariation)
   return tasksA
 }
+
+// `variationId` must default to an empty string before being sent to parent
+const DEFAULT_VARIATION = ''
 
 const getVariations = function(task, variationsIds, variations = []) {
   const variationsA = variations.map(normalizeVariation)

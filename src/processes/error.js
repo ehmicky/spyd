@@ -43,7 +43,7 @@ const getTaskError = function(taskId, variationId) {
     return ''
   }
 
-  if (variationId === undefined) {
+  if (variationId === '') {
     return `Task '${taskId}': `
   }
 
