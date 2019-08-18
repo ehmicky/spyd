@@ -1,23 +1,37 @@
+import { pointer } from 'figures'
+
 // Debugging reporter only meant for development purpose
 const report = function(
   { timestamp, iterations, systemPretty },
-  { link, system, show },
+  { link, system, show, chalk },
 ) {
-  const content = iterations.map(serializeIteration).join('\n')
+  const content = iterations
+    .map(iteration => serializeIteration({ iteration, chalk }))
+    .join('\n')
   const contentA = addSystem(content, system, systemPretty)
-  const contentB = addLink(contentA, link)
+  const contentB = addLink({ content: contentA, link, chalk })
   const contentC = addTimestamp(contentB, timestamp, show)
   return contentC
 }
 
-const serializeIteration = function({ name, stats, fastest }) {
-  const fastestMark = fastest ? '*' : ' '
-  const statsStr = serializeStats(stats)
-  return `${fastestMark} ${name} | ${statsStr}`
+const serializeIteration = function({
+  iteration: { name, stats, fastest },
+  chalk,
+  chalk: { cyan },
+}) {
+  const fastestMark = fastest ? cyan.bold('*') : ' '
+  const statsStr = serializeStats({ stats, chalk })
+  const nameA = name
+    .split('|')
+    .map(part => cyan.bold(part))
+    .join(cyan.dim(pointer))
+  return ` ${fastestMark} ${nameA}  ${cyan.dim('|')}  ${statsStr}`
 }
 
-export const serializeStats = function(stats) {
-  return STATS.map(statName => serializeStat(stats, statName)).join(' | ')
+export const serializeStats = function({ stats, chalk, chalk: { dim } }) {
+  return STATS.map(statName => serializeStat(stats, statName, chalk)).join(
+    dim(' | '),
+  )
 }
 
 const STATS = [
@@ -34,9 +48,9 @@ const STATS = [
   'processes',
 ]
 
-const serializeStat = function(stats, statName) {
+const serializeStat = function(stats, statName, { yellow }) {
   const stat = stats[`${statName}Pretty`]
-  return `${statName} ${stat}`
+  return `${statName} ${yellow(stat)}`
 }
 
 const addSystem = function(content, system, systemPretty) {
@@ -47,12 +61,14 @@ const addSystem = function(content, system, systemPretty) {
   return `${content}\n\n${systemPretty}`
 }
 
-const addLink = function(content, link) {
+const addLink = function({ content, link, chalk: { dim, underline } }) {
   if (!link) {
     return content
   }
 
-  return `${content}\n\nBenchmarked with spyd (https://github.com/ehmicky/spyd)`
+  return `${content}\n\n${dim(
+    `Benchmarked with spyd ${underline('(https://github.com/ehmicky/spyd)')}`,
+  )}`
 }
 
 const addTimestamp = function(content, timestamp, show) {

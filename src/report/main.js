@@ -1,5 +1,6 @@
 import { addPrintedInfo } from '../print/main.js'
 
+import { getChalk } from './colors.js'
 import { handleContent } from './content.js'
 
 // Report benchmark results
@@ -63,9 +64,11 @@ const useReporter = async function({
 
   const reportOptB = convertBooleans(reportOptA)
 
-  const content = await reportFunc(benchmark, reportOptB)
+  const reportOptC = getChalk(reportOptB)
 
-  await handleContent(content, reportOptB)
+  const content = await reportFunc(benchmark, reportOptC)
+
+  await handleContent(content, reportOptC)
 }
 
 // --report.REPORTER.* options are dynamic, i.e. are not normalized by our
