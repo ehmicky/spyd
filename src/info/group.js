@@ -3,6 +3,11 @@ import { groupBy } from '../utils/group.js'
 import { sortBy } from '../utils/sort.js'
 import { getMean } from '../stats/methods.js'
 
+// Instead of repeating tasks/variations/commands information in each iteration,
+// group them to top-level properties and make iteration point to them with
+// an index instead.
+// Also add the mean speed of each group (using iterations medians).
+// We also sort both groups and iterations by speed.
 export const addGroups = function(iterations) {
   const tasks = getGroup(iterations, 'taskId', 'taskTitle')
   const variations = getGroup(iterations, 'variationId', 'variationTitle')
@@ -12,15 +17,12 @@ export const addGroups = function(iterations) {
   )
 
   // The fastest tasks will be first, then the fastest iterations within each
-  // task (regardless of variants or runners)
+  // task (regardless of variations/commands)
   sortBy(iterationsA, ['task', 'stats.median'])
 
   return { tasks, variations, commands, iterations: iterationsA }
 }
 
-// Retrieve all tasks/variations/commands.
-// Also compute the mean of all iterations medians (of the same group)
-// The array is sorted by mean.
 const getGroup = function(iterations, id, title) {
   const groups = Object.values(groupBy(iterations, [id])).map(iterationsA =>
     normalizeGroup({ id, title, iterations: iterationsA }),
@@ -44,7 +46,6 @@ const getIterationMedian = function({ stats: { median } }) {
   return median
 }
 
-// Replace group id/title by index towards top-level group
 const addGroupIndexes = function({
   iteration,
   iteration: { taskId, variationId, commandId },
