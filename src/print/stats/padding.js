@@ -44,24 +44,16 @@ const padStat = function(name, stats, paddings) {
   const prettyName = `${name}Pretty`
   const stat = stats[prettyName]
 
-  const type = STAT_TYPES[name]
   const padding = paddings[name]
-  const statA = PADDING_STAT[type](stat, padding)
+  const statA = padValue(stat, padding)
 
   return [prettyName, statA]
 }
 
-const padScalar = function(stat, padding) {
+const padValue = function(stat, padding) {
+  if (Array.isArray(stat)) {
+    return stat.map(statA => statA.padStart(padding))
+  }
+
   return stat.padStart(padding)
-}
-
-const padArray = function(stat, padding) {
-  return stat.map(string => padScalar(string, padding))
-}
-
-const PADDING_STAT = {
-  count: padScalar,
-  scalar: padScalar,
-  percentage: padScalar,
-  array: padArray,
 }

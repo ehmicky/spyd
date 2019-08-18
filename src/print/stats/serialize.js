@@ -49,8 +49,23 @@ const serializeStat = function({
   }
 
   const decimals = statsDecimals[name]
-  const statA = SERIALIZE_STAT[type]({ stat, name, scale, unit, decimals })
-  return [prettyName, statA]
+  const statPretty = serialize({ stat, type, name, scale, unit, decimals })
+  return [prettyName, statPretty]
+}
+
+const serialize = function({ stat, type, name, scale, unit, decimals }) {
+  if (Array.isArray(stat)) {
+    return stat.map(statA =>
+      serializeEach({ stat: statA, type, name, scale, unit, decimals }),
+    )
+  }
+
+  return serializeEach({ stat, type, name, scale, unit, decimals })
+}
+
+const serializeEach = function({ stat, type, name, scale, unit, decimals }) {
+  const statPretty = SERIALIZE_STAT[type]({ stat, name, scale, unit, decimals })
+  return statPretty
 }
 
 const serializeCount = function({ stat }) {
@@ -81,15 +96,8 @@ const serializePercentage = function({ stat, name }) {
 
 const PERCENTAGE_SCALE = 1e2
 
-const serializeArray = function({ stat, name, scale, unit, decimals }) {
-  return stat.map(statA =>
-    serializeScalar({ stat: statA, name, scale, unit, decimals }),
-  )
-}
-
 const SERIALIZE_STAT = {
   count: serializeCount,
   scalar: serializeScalar,
   percentage: serializePercentage,
-  array: serializeArray,
 }

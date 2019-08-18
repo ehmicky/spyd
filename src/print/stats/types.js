@@ -12,5 +12,5 @@ export const STAT_TYPES = {
   loops: 'count',
   repeat: 'count',
   processes: 'count',
-  percentiles: 'array',
+  percentiles: 'scalar',
 }
