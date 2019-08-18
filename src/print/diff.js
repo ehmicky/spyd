@@ -27,6 +27,8 @@ export const getDiff = function(previous, diffIndex, { median }) {
     .reverse()
     .find(({ benchmark }) => benchmark <= diffIndex)
 
+  // This can happen when some iterations have a previous benchmark but others
+  // not
   if (diffIteration === undefined) {
     return
   }
