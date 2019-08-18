@@ -2,11 +2,11 @@ import { findBenchmark } from './find.js'
 
 // Remove previous benchmark
 export const remove = async function(
+  benchmarks,
   { queryType, queryValue },
-  { dataDir, store: { list: listStore, remove: removeFromStore } },
+  { dataDir, store: { remove: removeFromStore } },
 ) {
   try {
-    const benchmarks = await listStore(dataDir)
     const index = findBenchmark(benchmarks, queryType, queryValue)
     const { id } = benchmarks[index]
     await removeFromStore(dataDir, id)

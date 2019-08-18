@@ -1,5 +1,6 @@
 import { getOpts } from './options/main.js'
 import { report } from './report/main.js'
+import { list } from './store/list.js'
 import { save } from './store/save.js'
 import { remove } from './store/remove.js'
 import { load } from './store/load.js'
@@ -22,7 +23,8 @@ const spyd = async function(opts) {
 
 // Action when the 'remove' option is used: remove a previous benchmark
 const removeAction = async function(opts) {
-  await remove(opts.remove, opts)
+  const benchmarks = await list(opts)
+  await remove(benchmarks, opts.remove, opts)
 }
 
 // Action when the 'show' option is used: show a previous benchmark
