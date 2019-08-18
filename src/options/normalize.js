@@ -38,7 +38,7 @@ const normalizeVariations = function({ variations, ...opts }) {
 
 // Normalize 'group' option
 const normalizeGroup = function({ group = uuidv4(), ...opts }) {
-  const groupA = typeof group === 'string' ? group.trim() : group
+  const groupA = group.trim()
   return { ...opts, group: groupA }
 }
 

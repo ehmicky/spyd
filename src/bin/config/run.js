@@ -39,6 +39,7 @@ export const RUN_CONFIG = {
 Default: 10`,
   },
   group: {
+    string: true,
     describe: `Append the current benchmarks to the previous one.
 Used to create a single benchmark incrementally.
 Can also be a group identifier. Benchmarks with the group are reported together.
