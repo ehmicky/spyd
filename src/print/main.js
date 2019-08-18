@@ -1,34 +1,23 @@
 import { mergeBenchmarks } from '../jobs/merge.js'
 
-import { normalizeEnvs, mergeEnvs } from './env.js'
+import { normalizeEnv, mergeEnvs } from './env.js'
 import { addGroups } from './group.js'
 import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
-import { addPrevious } from './previous.js'
 import { normalizeStats } from './stats/main.js'
 import { prettifySystems } from './system.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
-export const addPrintedInfo = function(
-  benchmarks,
-  benchmark,
-  { diff, verbose },
-) {
-  const benchmarksA = [...benchmarks, benchmark]
+export const addPrintedInfo = function(benchmarks, { verbose }) {
+  const benchmarksA = benchmarks.map(normalizeEnv)
 
-  const benchmarksB = normalizeEnvs(benchmarksA)
-  const benchmarksC = mergeBenchmarks(benchmarksB)
+  const benchmarksB = mergeBenchmarks(benchmarksA)
 
-  const benchmarksD = benchmarksC.map(benchmarkA =>
-    addBenchmarkInfo(benchmarkA, { verbose }),
+  const benchmarksC = benchmarksB.map(benchmark =>
+    addBenchmarkInfo(benchmark, { verbose }),
   )
-
-  const benchmarkB = benchmarksD[benchmarksD.length - 1]
-  const benchmarksE = benchmarksD.slice(0, -1)
-
-  const benchmarkC = addPrevious(benchmarksE, benchmarkB, { diff, verbose })
-  return benchmarkC
+  return benchmarksC
 }
 
 const addBenchmarkInfo = function(

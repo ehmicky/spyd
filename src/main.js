@@ -15,10 +15,11 @@ export const run = async function(opts) {
   const benchmark = await runBenchmark(optsA)
 
   const benchmarks = await list(optsA)
-  const benchmarkA = addJob(benchmarks, benchmark, optsA)
+  const benchmarkA = addJob(benchmark, benchmarks, optsA)
+  const benchmarksA = [...benchmarks, benchmarkA]
 
   const [benchmarkB] = await Promise.all([
-    report(benchmarks, benchmarkA, optsA),
+    report(benchmarkA.job, benchmarksA, { ...optsA, show: false }),
     save(benchmarkA, optsA),
   ])
   return benchmarkB
@@ -29,12 +30,9 @@ export const show = async function(opts) {
   const { show: showOpt, ...optsA } = await getOpts(opts)
 
   const benchmarks = await list(optsA)
-  const benchmark = get(benchmarks, showOpt)
+  const { job } = get(benchmarks, showOpt)
 
-  const benchmarkA = await report(benchmarks, benchmark, {
-    ...optsA,
-    show: true,
-  })
+  const benchmarkA = await report(job, benchmarks, { ...optsA, show: true })
   return benchmarkA
 }
 

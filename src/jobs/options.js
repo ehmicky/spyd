@@ -1,6 +1,6 @@
 // Add `benchmark.job`.
 // Also the `job` option can be "same" to re-use the previous benchmark's job.
-export const addJob = function(benchmarks, benchmark, { job }) {
+export const addJob = function(benchmark, benchmarks, { job }) {
   const jobA = handleSame(benchmarks, job)
   return { ...benchmark, job: jobA }
 }

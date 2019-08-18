@@ -1,4 +1,5 @@
 import { addPrintedInfo } from '../print/main.js'
+import { addPrevious } from '../print/previous.js'
 
 import { handleReportOpt } from './options.js'
 import { handleColors } from './colors.js'
@@ -6,8 +7,8 @@ import { handleContent } from './content.js'
 
 // Report benchmark results
 export const report = async function(
+  job,
   benchmarks,
-  benchmark,
   {
     report: reporters,
     output,
@@ -20,14 +21,14 @@ export const report = async function(
     verbose,
   },
 ) {
-  const benchmarkA = addPrintedInfo(benchmarks, benchmark, { diff, verbose })
+  const benchmark = getBenchmark(job, benchmarks, { diff, verbose })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>
       useReporter({
         reportFunc,
         reportOpt,
-        benchmark: benchmarkA,
+        benchmark,
         output,
         insert,
         colors,
@@ -38,7 +39,15 @@ export const report = async function(
     ),
   )
 
-  return benchmarkA
+  return benchmark
+}
+
+const getBenchmark = function(job, benchmarks, { diff, verbose }) {
+  const benchmarksA = addPrintedInfo(benchmarks, { verbose })
+
+  const benchmarkA = benchmarksA.find(benchmark => benchmark.job === job)
+  const benchmarkB = addPrevious(benchmarksA, benchmarkA, { diff, verbose })
+  return benchmarkB
 }
 
 // Perform each reporter

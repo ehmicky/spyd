@@ -1,10 +1,12 @@
 // Each benchmark has a single `env|opts|system`. When merged, those are put
 // together inside `envs` array. Iterations then point to them using `envId`.
-export const normalizeEnvs = function(benchmarks) {
-  return benchmarks.map(normalizeEnv)
-}
-
-const normalizeEnv = function({ opts, system, env, iterations, ...benchmark }) {
+export const normalizeEnv = function({
+  opts,
+  system,
+  env,
+  iterations,
+  ...benchmark
+}) {
   const iterationsA = iterations.map(iteration => ({
     ...iteration,
     envId: env,
