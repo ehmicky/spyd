@@ -7,8 +7,8 @@ const report = function(
     .map(iteration => serializeIteration({ iteration, chalk }))
     .join('\n')
   const contentA = addSystem(content, system, systemPretty)
-  const contentB = addLink({ content: contentA, link, chalk })
-  const contentC = addTimestamp(contentB, timestamp, show)
+  const contentB = addTimestamp(contentA, timestamp, show)
+  const contentC = addLink({ content: contentB, link, chalk })
   return contentC
 }
 
