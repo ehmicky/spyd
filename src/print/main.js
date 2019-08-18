@@ -7,10 +7,12 @@ import { prettifySystems } from './system.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
-export const addPrintedInfo = function(
-  { iterations, envs, timestamp, ...benchmark },
-  { verbose },
-) {
+export const addPrintedInfo = function({
+  iterations,
+  envs,
+  timestamp,
+  ...benchmark
+}) {
   const {
     iterations: iterationsA,
     tasks,
@@ -23,7 +25,7 @@ export const addPrintedInfo = function(
   const iterationsB = addNames(iterationsA)
 
   const iterationsC = addSpeedInfo(iterationsB)
-  const iterationsD = normalizeStats(iterationsC, verbose)
+  const iterationsD = normalizeStats(iterationsC)
 
   const timestampPretty = prettifyTimestamp(timestamp)
 

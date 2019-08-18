@@ -47,7 +47,6 @@ const DEFAULT_OPTS = {
   cwd: getCwd(),
   duration: 10,
   colors: isInteractive(stderr),
-  verbose: false,
   link: true,
   system: false,
   save: false,

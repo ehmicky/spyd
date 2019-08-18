@@ -20,10 +20,9 @@ export const report = async function(
     link,
     show,
     diff,
-    verbose,
   },
 ) {
-  const benchmark = getBenchmark(job, benchmarks, { limits, diff, verbose })
+  const benchmark = getBenchmark(job, benchmarks, { limits, diff })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>
@@ -46,17 +45,11 @@ export const report = async function(
   return benchmark
 }
 
-const getBenchmark = function(job, benchmarks, { limits, diff, verbose }) {
-  const benchmarksA = benchmarks.map(benchmark =>
-    addPrintedInfo(benchmark, { verbose }),
-  )
+const getBenchmark = function(job, benchmarks, { limits, diff }) {
+  const benchmarksA = benchmarks.map(benchmark => addPrintedInfo(benchmark))
 
   const benchmarkA = benchmarksA.find(benchmark => benchmark.job === job)
-  const benchmarkB = addPrevious(benchmarksA, benchmarkA, {
-    limits,
-    diff,
-    verbose,
-  })
+  const benchmarkB = addPrevious(benchmarksA, benchmarkA, { limits, diff })
   return benchmarkB
 }
 

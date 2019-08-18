@@ -14,7 +14,6 @@ export const serializeStats = function({
   unit,
   scale,
   statsDecimals,
-  verbose,
 }) {
   const statsA = Object.entries(STAT_TYPES).map(([name, type]) =>
     serializeStat({
@@ -25,7 +24,6 @@ export const serializeStats = function({
       scale,
       statsDecimals,
       loops,
-      verbose,
     }),
   )
   const statsPretty = Object.fromEntries(statsA)
@@ -40,12 +38,11 @@ const serializeStat = function({
   scale,
   statsDecimals,
   loops,
-  verbose,
 }) {
   const prettyName = `${name}Pretty`
   const stat = stats[name]
 
-  if (shouldSkipStat({ stat, name, loops, verbose })) {
+  if (shouldSkipStat({ stat, name, loops })) {
     return [prettyName, '']
   }
 

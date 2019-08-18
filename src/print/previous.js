@@ -11,7 +11,7 @@ import { normalizeStats } from './stats/main.js'
 export const addPrevious = function(
   benchmarks,
   { timestamp, iterations, ...benchmark },
-  { limits, diff, verbose },
+  { limits, diff },
 ) {
   // When combined with the 'show' option, we only show the benchmarks before it
   // We exclude benchmarks from the same job (since they are already grouped
@@ -25,7 +25,6 @@ export const addPrevious = function(
     previous,
     diffIndex,
     limits,
-    verbose,
   })
 
   const previousA = previous.map(removeIterations)
@@ -42,14 +41,13 @@ const addPreviousIterations = function({
   previous,
   diffIndex,
   limits,
-  verbose,
 }) {
   const previousIterations = previous.flatMap(getIterations)
   const iterationsA = iterations.map(iteration =>
     addPreviousIteration({ iteration, previousIterations, diffIndex, limits }),
   )
   // Needs to be done again since we added `diff` and `limit`
-  const iterationsB = normalizeStats(iterationsA, verbose)
+  const iterationsB = normalizeStats(iterationsA)
   return iterationsB
 }
 

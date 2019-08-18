@@ -51,11 +51,6 @@ Default: true if the terminal is interactive`,
     describe: `Show hardware and software information.
 Default: false`,
   },
-  verbose: {
-    boolean: true,
-    describe: `Show advanced statistics.
-Default: false`,
-  },
   link: {
     boolean: true,
     describe: `Show link to the library's main page.
