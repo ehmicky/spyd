@@ -13,6 +13,7 @@ export const addBenchmarkInfo = function(
 
   const optsA = getOpts(opts)
   const system = getSystem(versions)
+  const envs = [{ id: env, title: env, opts: optsA, system }]
 
-  return { id, timestamp, group, env, opts: optsA, system, iterations }
+  return { id, timestamp, group, envs, iterations }
 }

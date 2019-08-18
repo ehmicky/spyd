@@ -12,10 +12,11 @@ export const loadIterations = async function({
   duration,
   cwd,
   debug,
+  env,
 }) {
   const iterations = await Promise.all(
     taskPaths.map(taskPath =>
-      getFilesIterations({ taskPath, runners, duration, cwd, debug }),
+      getFilesIterations({ taskPath, runners, duration, cwd, debug, env }),
     ),
   )
   const iterationsA = iterations.flat()
@@ -28,11 +29,12 @@ const getFilesIterations = async function({
   duration,
   cwd,
   debug,
+  env,
 }) {
   const runnersA = findRunners(taskPath, runners)
   const iterations = await Promise.all(
     runnersA.map(({ commands }) =>
-      getFileIterations({ taskPath, commands, duration, cwd, debug }),
+      getFileIterations({ taskPath, commands, duration, cwd, debug, env }),
     ),
   )
   const iterationsA = iterations.flat()
@@ -45,10 +47,11 @@ const getFileIterations = async function({
   duration,
   cwd,
   debug,
+  env,
 }) {
   const iterations = await Promise.all(
     commands.map(command =>
-      getCommandIterations({ taskPath, command, duration, cwd, debug }),
+      getCommandIterations({ taskPath, command, duration, cwd, debug, env }),
     ),
   )
   const iterationsA = iterations.flat()
@@ -62,6 +65,7 @@ const getCommandIterations = async function({
   duration,
   cwd,
   debug,
+  env,
 }) {
   const input = { type: 'load', taskPath, opts: commandOpt }
   const type = debug ? 'loadDebug' : 'run'
@@ -73,7 +77,7 @@ const getCommandIterations = async function({
     type,
   })
   const iterationsA = iterations.map(iteration =>
-    normalizeIteration(iteration, command, taskPath),
+    normalizeIteration(iteration, command, { taskPath, env }),
   )
   return iterationsA
 }
@@ -81,7 +85,7 @@ const getCommandIterations = async function({
 const normalizeIteration = function(
   { taskId, taskTitle = taskId, variationId, variationTitle = variationId },
   { commandId, commandTitle, commandValue, commandOpt },
-  taskPath,
+  { taskPath, env },
 ) {
   validateIds({ taskId, variationId, commandId })
 
@@ -95,5 +99,7 @@ const normalizeIteration = function(
     commandTitle,
     commandValue,
     commandOpt,
+    envId: env,
+    envTitle: env,
   }
 }
