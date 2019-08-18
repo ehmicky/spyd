@@ -22,8 +22,9 @@ const add = async function(dataDir, benchmark) {
   await setBenchmarks(dataDir, benchmarksA)
 }
 
-const remove = async function(dataDir, index) {
+const remove = async function(dataDir, id) {
   const benchmarks = await getBenchmarks(dataDir)
+  const index = benchmarks.findIndex(benchmark => benchmark.id === id)
   const benchmarksA = [
     ...benchmarks.slice(0, index),
     ...benchmarks.slice(index + 1),

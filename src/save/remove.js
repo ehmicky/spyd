@@ -8,7 +8,8 @@ export const remove = async function(
   try {
     const benchmarks = await listStore(dataDir)
     const index = findBenchmark(benchmarks, queryType, queryValue)
-    await removeFromStore(dataDir, index)
+    const { id } = benchmarks[index]
+    await removeFromStore(dataDir, id)
   } catch (error) {
     throw new Error(
       `Could not remove benchmark from '${dataDir}':\n${error.message}`,
