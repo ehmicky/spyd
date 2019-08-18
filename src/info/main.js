@@ -1,3 +1,5 @@
+import uuidv4 from 'uuid/v4.js'
+
 import { sortBy } from '../utils/sort.js'
 
 import { getTasks, getVariations, getCommands } from './group.js'
@@ -6,6 +8,7 @@ import { getSystem } from './system.js'
 
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function({ iterations, opts, versions }) {
+  const id = uuidv4()
   const timestamp = new Date().toISOString()
   const optsA = getOpts(opts)
   const tasks = getTasks(iterations)
@@ -16,6 +19,7 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   const iterationsA = getIterations({ iterations, tasks, variations, commands })
 
   return {
+    id,
     timestamp,
     opts: optsA,
     tasks,
