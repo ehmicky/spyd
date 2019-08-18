@@ -25,18 +25,14 @@ export const addGroups = function(iterations) {
 
 const getGroup = function(iterations, id, title) {
   const groups = Object.values(groupBy(iterations, [id])).map(iterationsA =>
-    normalizeGroup({ id, title, iterations: iterationsA }),
+    normalizeGroup(iterationsA, id, title),
   )
   sortBy(groups, ['mean'])
   return groups
 }
 
-const normalizeGroup = function({
-  id,
-  title,
-  iterations,
-  iterations: [{ [id]: groupId, [title]: groupTitle }],
-}) {
+const normalizeGroup = function(iterations, id, title) {
+  const [{ [id]: groupId, [title]: groupTitle }] = iterations
   const medians = iterations.map(getIterationMedian)
   const mean = getMean(medians)
   return { id: groupId, title: groupTitle, mean }
