@@ -1,9 +1,9 @@
 import { spawn } from 'child_process'
 
-import getStream from 'get-stream'
 import pEvent from 'p-event'
 
 import { childTimeout } from './timeout.js'
+import { getOutput, getErrorOutput } from './output.js'
 import { forwardChildError } from './error.js'
 
 // Execute a runner child process and retrieve its output.
@@ -86,28 +86,3 @@ const waitForChild = function(child, duration) {
 
   return childTimeout(childPromise, duration)
 }
-
-// Retrieve success output
-const getOutput = function(child, outputFd) {
-  if (outputFd === undefined) {
-    return
-  }
-
-  return getChildFd(child, outputFd)
-}
-
-// Retrieve error output. Can be distributed over several file descriptors.
-const getErrorOutput = async function(child, errorFds) {
-  const errorOutputs = await Promise.all(
-    errorFds.map(fd => getChildFd(child, fd)),
-  )
-  return errorOutputs.filter(Boolean).join('\n\n')
-}
-
-const getChildFd = async function(child, fd) {
-  const output = await getStream(child.stdio[fd], { maxBuffer: MAX_BUFFER })
-  return output.trim()
-}
-
-// Child process output and error output cannot exceed 100 MB
-const MAX_BUFFER = 1e8
