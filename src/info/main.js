@@ -8,10 +8,13 @@ import { getSystem } from './system.js'
 export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   const id = uuidv4()
   const timestamp = new Date().toISOString()
+
   const optsA = getOpts(opts)
+
   const tasks = getTasks(iterations)
   const variations = getVariations(iterations)
   const commands = getCommands(iterations)
+
   const system = getSystem(versions)
 
   const iterationsA = iterations.map(iteration =>
