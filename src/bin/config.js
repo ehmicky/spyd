@@ -17,19 +17,13 @@ Default: "spyd.json" in the current directory or any parent directory`,
     describe: `Current directory.
 Used to find the default configuration and tasks files.`,
   },
-  data: {
-    string: true,
-    requiresArg: true,
-    describe: `Directory where the benchmarks are saved.
-Default: '{packageRoot}/spyd/'`,
-  },
   store: {
-    describe: `Modules to save benchmarks.
+    describe: `Module to save benchmarks.
 Built-in stores: file.
 Custom stores (installed with npm) can also be used.
-Which store is used depends on the 'data' option format. For example the http
-store is picked when the 'data' option is an HTTP URL.
-Uses a dot notation such as --store.file (not --store=file nor --store file).`,
+Uses a dot notation such as --store.file (not --store=file nor --store file).
+Store-specific options can be specified using the same dot notation such as
+--store.file.dir`,
   },
 }
 

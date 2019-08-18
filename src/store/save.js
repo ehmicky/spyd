@@ -1,11 +1,9 @@
 import { omit } from '../utils/main.js'
 
-import { getDir } from './dir.js'
-
 // Save benchmark results so they can be compared or shown later
 export const save = async function(
   benchmark,
-  { save: saveOpt, data, cwd, store: { add: addToStore } },
+  { save: saveOpt, store: { add: addToStore, opts } },
 ) {
   if (!saveOpt) {
     return
@@ -13,12 +11,10 @@ export const save = async function(
 
   const benchmarkA = normalizeBenchmark(benchmark)
 
-  const dir = await getDir({ data, cwd })
-
   try {
-    await addToStore(dir, benchmarkA)
+    await addToStore(benchmarkA, opts)
   } catch (error) {
-    throw new Error(`Could not save benchmark to '${dir}':\n${error.message}`)
+    throw new Error(`Could not save benchmark: ${error.message}`)
   }
 }
 

@@ -1,15 +1,9 @@
-import { getDir } from './dir.js'
-
 // List previous benchmarks
-export const list = async function({ data, cwd, store: { list: listStore } }) {
-  const dir = await getDir({ data, cwd })
-
+export const list = async function({ store: { list: listStore, opts } }) {
   try {
-    const benchmarks = await listStore(dir)
+    const benchmarks = await listStore(opts)
     return benchmarks
   } catch (error) {
-    throw new Error(
-      `Could not list previous benchmarks from '${dir}':\n${error.message}`,
-    )
+    throw new Error(`Could not list previous benchmarks: ${error.message}`)
   }
 }

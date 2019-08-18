@@ -4,6 +4,7 @@ import { validate, multipleValidOptions } from 'jest-validate'
 import isInteractive from 'is-interactive'
 
 import { omitBy } from '../utils/main.js'
+import { normalizeStore } from '../store/options.js'
 
 import { getConfig } from './config.js'
 import { addEnvVars } from './env.js'
@@ -24,7 +25,8 @@ export const getOpts = async function(opts = {}) {
 
   const optsE = normalizeOpts(optsD)
   const optsF = await loadAllPlugins(optsE)
-  return optsF
+  const optsG = await normalizeStore(optsF)
+  return optsG
 }
 
 const isUndefined = function(value) {
