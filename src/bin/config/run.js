@@ -38,13 +38,13 @@ export const RUN_CONFIG = {
     describe: `How many seconds to benchmark each task.
 Default: 10`,
   },
-  job: {
+  group: {
     string: true,
     requiresArg: true,
-    describe: `Identifier of the current job.
-Running several benchmarks with the same 'job' reports them together.
+    describe: `Identifier of the current group.
+Running several benchmarks with the same 'group' reports them together.
 Used to create a single benchmark incrementally.
-The value can be "same" to re-use the previous benchmark's job.
+The value can be "same" to re-use the previous benchmark's group.
 Default: random UUID`,
   },
   env: {
@@ -52,7 +52,6 @@ Default: random UUID`,
     requiresArg: true,
     describe: `Name of the current hardware/software environment.
 Used to compare different machines or configurations together.
-Meant to be used together with the 'job' option.
 Default: ""`,
   },
   progress: {

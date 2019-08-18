@@ -1,22 +1,25 @@
 import { blue, dim, underline } from 'chalk'
 import indentString from 'indent-string'
 
-// Retrieve footer: system, timestamp, job, link
+// Retrieve footer: system, timestamp, group, link
 export const getFooter = function({
   timestampPretty,
   systemPretty,
-  job,
+  group,
   system,
   show,
   link,
 }) {
   const systemFooter = getSystem(systemPretty, system)
   const timestampFooter = getTimestamp(timestampPretty, show)
-  const jobFooter = getJob(job, show)
+  const groupFooter = getGroup(group, show)
   const linkFooter = getLink(link)
-  const footers = [systemFooter, timestampFooter, jobFooter, linkFooter].filter(
-    Boolean,
-  )
+  const footers = [
+    systemFooter,
+    timestampFooter,
+    groupFooter,
+    linkFooter,
+  ].filter(Boolean)
 
   if (footers.length === 0) {
     return ''
@@ -42,12 +45,12 @@ const getTimestamp = function(timestampPretty, show) {
   return `${blue.bold('Timestamp:')} ${timestampPretty}`
 }
 
-const getJob = function(job, show) {
+const getGroup = function(group, show) {
   if (!show) {
     return
   }
 
-  return `${blue.bold('Job:')} ${job}`
+  return `${blue.bold('Group:')} ${group}`
 }
 
 const getLink = function(link) {

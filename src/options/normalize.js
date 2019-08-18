@@ -36,10 +36,10 @@ const normalizeVariations = function({ variations, ...opts }) {
   return { ...opts, variations }
 }
 
-// Normalize 'job' option
-const normalizeJob = function({ job = uuidv4(), ...opts }) {
-  const jobA = job.trim()
-  return { ...opts, job: jobA }
+// Normalize 'group' option
+const normalizeGroup = function({ group = uuidv4(), ...opts }) {
+  const groupA = group.trim()
+  return { ...opts, group: groupA }
 }
 
 // Normalize 'env' option
@@ -87,7 +87,7 @@ const NORMALIZERS = [
   normalizeFiles,
   normalizeTasks,
   normalizeVariations,
-  normalizeJob,
+  normalizeGroup,
   normalizeEnv,
   normalizeDuration,
   normalizeCwd,

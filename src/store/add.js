@@ -1,5 +1,5 @@
 import { mergeBenchmarks } from '../jobs/merge.js'
-import { addJob } from '../jobs/options.js'
+import { addGroup } from '../jobs/options.js'
 import { omit } from '../utils/main.js'
 
 import { list } from './list.js'
@@ -8,13 +8,13 @@ import { list } from './list.js'
 export const add = async function(benchmark, opts) {
   const benchmarks = await list(opts)
 
-  const benchmarkA = addJob(benchmark, benchmarks, opts)
+  const benchmarkA = addGroup(benchmark, benchmarks, opts)
   await save(benchmarkA, opts)
 
   const benchmarksA = [...benchmarks, benchmarkA]
   const benchmarksB = mergeBenchmarks(benchmarksA)
 
-  return { job: benchmarkA.job, benchmarks: benchmarksB }
+  return { group: benchmarkA.group, benchmarks: benchmarksB }
 }
 
 // Save benchmark results so they can be compared or shown later

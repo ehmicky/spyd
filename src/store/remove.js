@@ -1,11 +1,11 @@
 // Call `store.remove()`
 export const remove = async function(
-  job,
+  group,
   benchmarks,
   { store: { remove: removeFromStore, opts } },
 ) {
   const ids = benchmarks
-    .filter(benchmark => benchmark.job === job)
+    .filter(benchmark => benchmark.group === group)
     .flatMap(getIds)
 
   try {

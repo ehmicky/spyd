@@ -6,7 +6,7 @@ import { getSystem } from './system.js'
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function(
   iterations,
-  { opts, opts: { job, env }, versions },
+  { opts, opts: { group, env }, versions },
 ) {
   const id = uuidv4()
   const timestamp = new Date().toISOString()
@@ -14,5 +14,5 @@ export const addBenchmarkInfo = function(
   const optsA = getOpts(opts)
   const system = getSystem(versions)
 
-  return { id, timestamp, job, env, opts: optsA, system, iterations }
+  return { id, timestamp, group, env, opts: optsA, system, iterations }
 }

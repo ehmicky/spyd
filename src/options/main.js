@@ -76,7 +76,7 @@ const EXAMPLE_OPTS = {
   config: 'spyd.json',
   tasks: ['taskId'],
   variations: ['variationId'],
-  job: '546',
+  group: '546',
   env: 'Windows 10',
   output: './file.js',
   insert: './README.md',

@@ -1,5 +1,5 @@
 // We merge two collection of similar `envs`:
-//  - after merging with previous benchmarks of same job, to retrieve their
+//  - after merging with previous benchmarks of same group, to retrieve their
 //    options and systems
 //  - after grouping iterations, to retrieve their speed and set iteration.rank
 export const mergeEnvs = function(envs, envCollections) {

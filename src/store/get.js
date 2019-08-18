@@ -9,9 +9,9 @@ export const get = async function(delta, opts) {
 
   const benchmarksA = mergeBenchmarks(benchmarks)
 
-  const { job } = getBenchmark(benchmarksA, delta)
+  const { group } = getBenchmark(benchmarksA, delta)
 
-  return { job, benchmarks: benchmarksA }
+  return { group, benchmarks: benchmarksA }
 }
 
 const getBenchmark = function(benchmarks, delta) {

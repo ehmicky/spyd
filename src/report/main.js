@@ -8,7 +8,7 @@ import { handleContent } from './content.js'
 
 // Report benchmark results
 export const report = async function(
-  job,
+  group,
   benchmarks,
   {
     report: reporters,
@@ -22,7 +22,7 @@ export const report = async function(
     diff,
   },
 ) {
-  const benchmark = getBenchmark(job, benchmarks, { limits, diff })
+  const benchmark = getBenchmark(group, benchmarks, { limits, diff })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>
@@ -45,10 +45,10 @@ export const report = async function(
   return benchmark
 }
 
-const getBenchmark = function(job, benchmarks, { limits, diff }) {
+const getBenchmark = function(group, benchmarks, { limits, diff }) {
   const benchmarksA = benchmarks.map(benchmark => addPrintedInfo(benchmark))
 
-  const benchmarkA = benchmarksA.find(benchmark => benchmark.job === job)
+  const benchmarkA = benchmarksA.find(benchmark => benchmark.group === group)
   const benchmarkB = addPrevious(benchmarksA, benchmarkA, { limits, diff })
   return benchmarkB
 }

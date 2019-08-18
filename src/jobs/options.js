@@ -1,24 +1,25 @@
-// Add `benchmark.job`.
-// Also the `job` option can be "same" to re-use the previous benchmark's job.
-export const addJob = function(benchmark, benchmarks, { job }) {
-  const jobA = handleSame(benchmarks, job)
-  return { ...benchmark, job: jobA }
+// Add `benchmark.group`.
+// Also the `group` option can be "same" to re-use the previous benchmark's
+// group.
+export const addGroup = function(benchmark, benchmarks, { group }) {
+  const groupA = handleSame(benchmarks, group)
+  return { ...benchmark, group: groupA }
 }
 
-const handleSame = function(benchmarks, job) {
-  if (job !== SAME_JOB) {
-    return job
+const handleSame = function(benchmarks, group) {
+  if (group !== SAME_GROUP) {
+    return group
   }
 
   const lastBenchmark = benchmarks[benchmarks.length - 1]
 
   if (lastBenchmark === undefined) {
     throw new Error(
-      "Cannot use 'job' 'same' because there are no previous benchmarks",
+      "Cannot use 'group' 'same' because there are no previous benchmarks",
     )
   }
 
-  return lastBenchmark.job
+  return lastBenchmark.group
 }
 
-const SAME_JOB = 'same'
+const SAME_GROUP = 'same'

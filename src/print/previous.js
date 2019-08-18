@@ -14,8 +14,7 @@ export const addPrevious = function(
   { limits, diff },
 ) {
   // When combined with the 'show' option, we only show the benchmarks before it
-  // We exclude benchmarks from the same job (since they are already grouped
-  // by job).
+  // We exclude benchmarks from the same group (since they are already grouped)
   const previous = benchmarks.filter(
     benchmarkA => benchmarkA.timestamp < timestamp,
   )

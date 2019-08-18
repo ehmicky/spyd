@@ -3,11 +3,11 @@ import fastDeepEqual from 'fast-deep-equal'
 import { groupBy } from '../utils/group.js'
 import { removeDuplicates } from '../iterations/duplicate.js'
 
-// Merge previous benchmarks part of the same `job`.
+// Merge previous benchmarks part of the same `group`.
 // Later benchmarks have priority.
 export const mergeBenchmarks = function(benchmarks) {
   const benchmarksA = benchmarks.map(normalizeEnv)
-  return Object.values(groupBy(benchmarksA, 'job')).map(mergeGroup)
+  return Object.values(groupBy(benchmarksA, 'group')).map(mergeGroup)
 }
 
 // Each benchmark has a single `env|opts|system`. When merged, those are put
@@ -65,7 +65,7 @@ const validateEnv = function(duplicateEnv, env, propName) {
   // TODO: replace with util.isDeepStrictEqual() once dropping support for
   // Node 8
   if (!fastDeepEqual(duplicateEnv[propName], env[propName])) {
-    throw new Error(`Several benchmarks with the same "job" and "env" cannot have different ${propName}:
+    throw new Error(`Several benchmarks with the same "group" and "env" cannot have different ${propName}:
 ${JSON.stringify(duplicateEnv[propName])}
 ${JSON.stringify(env[propName])}`)
   }

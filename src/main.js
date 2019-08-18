@@ -13,9 +13,9 @@ export const run = async function(opts) {
 
   const benchmark = await runBenchmark(optsA)
 
-  const { job, benchmarks } = await add(benchmark, optsA)
+  const { group, benchmarks } = await add(benchmark, optsA)
 
-  const benchmarkA = await report(job, benchmarks, { ...optsA, show: false })
+  const benchmarkA = await report(group, benchmarks, { ...optsA, show: false })
   return benchmarkA
 }
 
@@ -23,9 +23,9 @@ export const run = async function(opts) {
 export const show = async function(opts) {
   const { show: showOpt, ...optsA } = await getOpts(opts)
 
-  const { job, benchmarks } = await get(showOpt, optsA)
+  const { group, benchmarks } = await get(showOpt, optsA)
 
-  const benchmarkA = await report(job, benchmarks, { ...optsA, show: true })
+  const benchmarkA = await report(group, benchmarks, { ...optsA, show: true })
   return benchmarkA
 }
 
@@ -33,9 +33,9 @@ export const show = async function(opts) {
 export const remove = async function(opts) {
   const { remove: removeOpt, ...optsA } = await getOpts(opts)
 
-  const { job, benchmarks } = await get(removeOpt, optsA)
+  const { group, benchmarks } = await get(removeOpt, optsA)
 
-  await removeFromStore(job, benchmarks, optsA)
+  await removeFromStore(group, benchmarks, optsA)
 }
 
 // Run benchmark in debug mode

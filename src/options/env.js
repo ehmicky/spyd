@@ -5,7 +5,7 @@ import yn from 'yn'
 import { set } from '../utils/get_set.js'
 
 // All the options can be set using environment variables.
-// This is especially handy in CI, including for the `job` and `env` options.
+// This is especially handy in CI, including for the `group` and `env` options.
 export const addEnvVars = function(opts) {
   const envVars = Object.entries(env)
     .filter(isSpydEnvVar)
@@ -68,7 +68,7 @@ const OPTS = {
   data: 'string',
   env: 'string',
   insert: 'string',
-  job: 'string',
+  group: 'string',
   output: 'string',
   duration: 'number',
   files: 'stringArray',
