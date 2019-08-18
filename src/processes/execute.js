@@ -74,6 +74,7 @@ const waitForExit = async function({ child, duration, outputFd, errorFds }) {
   }
 }
 
+// The `debug` action does not use any timeout
 const waitForChild = function(child, duration) {
   const childPromise = pEvent(child, 'exit', { multiArgs: true })
 
@@ -84,6 +85,7 @@ const waitForChild = function(child, duration) {
   return childTimeout(childPromise, duration)
 }
 
+// Retrieve success output
 const getOutput = function(child, outputFd) {
   if (outputFd === undefined) {
     return
@@ -92,6 +94,7 @@ const getOutput = function(child, outputFd) {
   return getChildFd(child, outputFd)
 }
 
+// Retrieve error output. Can be distributed over several file descriptors.
 const getErrorOutput = async function(child, errorFds) {
   const errorOutputs = await Promise.all(
     errorFds.map(fd => getChildFd(child, fd)),
