@@ -1,7 +1,7 @@
 import { omit } from '../utils/main.js'
 
 import { getDiffIndex, getDiff } from './diff.js'
-import { prettifyStats } from './stats/main.js'
+import { normalizeStats } from './stats/main.js'
 
 // Add:
 //  - `benchmark.previous`: all previous benchmarks
@@ -46,7 +46,7 @@ const addPreviousIterations = function({
     addPreviousIteration(iteration, previousIterations, diffIndex),
   )
   // Needs to be done again since we added `diff`
-  const iterationsB = prettifyStats(iterationsA, verbose)
+  const iterationsB = normalizeStats(iterationsA, verbose)
   return iterationsB
 }
 

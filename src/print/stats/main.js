@@ -5,8 +5,10 @@ import { addPaddings } from './padding.js'
 
 // Some stats are removed when `--save` is used. When showing saved benchmarks,
 // those will be `undefined`. We default them to `[]`.
-export const normalizeStats = function(iterations) {
-  return iterations.map(normalizeIterationStats)
+export const normalizeStats = function(iterations, verbose) {
+  const iterationsA = iterations.map(normalizeIterationStats)
+  const iterationsB = prettifyStats(iterationsA, verbose)
+  return iterationsB
 }
 
 const normalizeIterationStats = function({
@@ -19,7 +21,7 @@ const normalizeIterationStats = function({
 // Add `iteration.stats.*Pretty` which is like `iteration.stats.*` but
 // serialized and CLI-reporter-friendly. It adds time units, rounding, padding
 // and ensures proper vertical alignment.
-export const prettifyStats = function(iterations, verbose) {
+const prettifyStats = function(iterations, verbose) {
   const { unit, scale } = getUnit(iterations)
   const statsDecimals = getStatsDecimals(iterations, scale)
   const iterationsA = iterations.map(iteration =>

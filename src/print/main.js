@@ -5,7 +5,7 @@ import { addGroups } from './group.js'
 import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
 import { addPrevious } from './previous.js'
-import { normalizeStats, prettifyStats } from './stats/main.js'
+import { normalizeStats } from './stats/main.js'
 import { prettifySystems } from './system.js'
 
 // We try to save as little as possible in stores, and compute anything that
@@ -45,8 +45,7 @@ const addBenchmarkInfo = function(
   const iterationsB = addNames(iterationsA)
 
   const iterationsC = addSpeedInfo(iterationsB)
-  const iterationsD = normalizeStats(iterationsC)
-  const iterationsE = prettifyStats(iterationsD, verbose)
+  const iterationsD = normalizeStats(iterationsC, verbose)
 
   const timestampPretty = prettifyTimestamp(benchmark)
 
@@ -60,7 +59,7 @@ const addBenchmarkInfo = function(
     commands,
     envs: envsB,
     systemPretty,
-    iterations: iterationsE,
+    iterations: iterationsD,
   }
 }
 
