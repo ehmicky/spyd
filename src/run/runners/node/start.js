@@ -7,13 +7,12 @@ import { debugRun } from './debug.js'
 
 // Child process entry point
 const start = async function() {
-  const { type, ...input } = getInput()
-
   try {
+    const { type, ...input } = getInput()
     const output = await TYPES[type](input)
     await sendOutput(output)
   } catch (error) {
-    await sendError(error, type)
+    await sendError(error)
     exit(1)
   }
 }
