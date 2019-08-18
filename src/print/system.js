@@ -3,7 +3,9 @@ import indentString from 'indent-string'
 
 import { pick } from '../utils/main.js'
 
-// Serialize `system` information for CLI reporters
+// Serialize `system` information for CLI reporters.
+// Each `env` get its own `systemPretty`, but a top-level one merging them is
+// available too.
 export const prettifySystems = function(envs) {
   const envsA = envs.map(prettifySystem)
   const systemPretty = envsA
