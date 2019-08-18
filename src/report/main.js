@@ -64,13 +64,11 @@ const useReporter = async function({
 
   const reportOptB = convertBooleans(reportOptA)
 
-  const reportOptC = getChalk(reportOptB)
-
-  const content = await reportFunc(benchmark, reportOptC)
+  const content = await reportFunc(benchmark, reportOptB)
 
   const contentA = handleColors(content, reportOptB)
 
-  await handleContent(contentA, reportOptC)
+  await handleContent(contentA, reportOptB)
 }
 
 // --report.REPORTER.* options are dynamic, i.e. are not normalized by our

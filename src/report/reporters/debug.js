@@ -1,31 +1,25 @@
+import { cyan, blue, yellow, dim, underline } from 'chalk'
+
 // Debugging reporter only meant for development purpose
 const report = function(
   { timestamp, iterations, systemPretty },
-  { link, system, show, chalk },
+  { link, system, show },
 ) {
-  const content = iterations
-    .map(iteration => serializeIteration({ iteration, chalk }))
-    .join('\n')
+  const content = iterations.map(serializeIteration).join('\n')
   const contentA = addSystem({ content, system, systemPretty })
-  const contentB = addTimestamp({ content: contentA, timestamp, show, chalk })
-  const contentC = addLink({ content: contentB, link, chalk })
+  const contentB = addTimestamp({ content: contentA, timestamp, show })
+  const contentC = addLink({ content: contentB, link })
   return contentC
 }
 
-const serializeIteration = function({
-  iteration: { name, stats, fastest },
-  chalk,
-  chalk: { cyan },
-}) {
+const serializeIteration = function({ name, stats, fastest }) {
   const fastestMark = fastest ? cyan.bold('*') : ' '
-  const statsStr = serializeStats({ stats, chalk })
+  const statsStr = serializeStats(stats)
   return ` ${fastestMark} ${name}  ${cyan.dim('|')}  ${statsStr}`
 }
 
-export const serializeStats = function({ stats, chalk, chalk: { dim } }) {
-  return STATS.map(statName => serializeStat(stats, statName, chalk)).join(
-    dim(' | '),
-  )
+export const serializeStats = function(stats) {
+  return STATS.map(statName => serializeStat(stats, statName)).join(dim(' | '))
 }
 
 const STATS = [
@@ -42,7 +36,7 @@ const STATS = [
   'processes',
 ]
 
-const serializeStat = function(stats, statName, { yellow }) {
+const serializeStat = function(stats, statName) {
   const stat = stats[`${statName}Pretty`]
   return `${statName} ${yellow(stat)}`
 }
@@ -55,7 +49,7 @@ const addSystem = function({ content, system, systemPretty }) {
   return `${content}\n\n${systemPretty}`
 }
 
-const addLink = function({ content, link, chalk: { dim, underline } }) {
+const addLink = function({ content, link }) {
   if (!link) {
     return content
   }
@@ -65,7 +59,7 @@ const addLink = function({ content, link, chalk: { dim, underline } }) {
   )}`
 }
 
-const addTimestamp = function({ content, timestamp, show, chalk: { blue } }) {
+const addTimestamp = function({ content, timestamp, show }) {
   if (!show) {
     return content
   }
