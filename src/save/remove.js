@@ -1,10 +1,14 @@
+import { findBenchmark } from './find.js'
+
 // Remove previous benchmark
 export const remove = async function(
   { queryType, queryValue },
-  { dataDir, store: { remove: removeFromStore } },
+  { dataDir, store: { list: listStore, remove: removeFromStore } },
 ) {
   try {
-    await removeFromStore(dataDir, queryType, queryValue)
+    const benchmarks = await listStore(dataDir)
+    const index = findBenchmark(benchmarks, queryType, queryValue)
+    await removeFromStore(dataDir, index)
   } catch (error) {
     throw new Error(
       `Could not remove benchmark from '${dataDir}':\n${error.message}`,

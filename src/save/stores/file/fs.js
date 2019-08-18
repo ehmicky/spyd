@@ -12,12 +12,19 @@ export const getBenchmarks = async function(dataDir) {
   const dataFile = await getDataFile(dataDir)
 
   if (!(await pathExists(dataFile))) {
-    return { dataFile, benchmarks: [] }
+    return []
   }
 
   const content = await pReadFile(dataFile, 'utf-8')
   const { benchmarks } = JSON.parse(content)
-  return { dataFile, benchmarks }
+  return benchmarks
+}
+
+// Persist benchmarks from filesystem
+export const setBenchmarks = async function(dataDir, benchmarks) {
+  const dataFile = await getDataFile(dataDir)
+  const content = JSON.stringify({ benchmarks }, null, 2)
+  await writeFileAtomic(dataFile, `${content}\n`)
 }
 
 const getDataFile = async function(dataDir) {
@@ -31,9 +38,3 @@ const getDataFile = async function(dataDir) {
 }
 
 const DATA_FILE = 'data.json'
-
-// Persist benchmarks from filesystem
-export const setBenchmarks = async function(dataFile, benchmarks) {
-  const content = JSON.stringify({ benchmarks }, null, 2)
-  await writeFileAtomic(dataFile, `${content}\n`)
-}
