@@ -8,11 +8,13 @@ import { padTitles } from './titles.js'
 //     For one-dimensional reporters.
 //  - `iteration.columnName`: combines variation, command and env.
 //     For two-dimensional reporters. `taskTitle` is the row name.
-// We need to do this twice:
+// We need to do this three times:
 //  - before benchmarks start because `iteration.name` is used by progress
 //    reporters.
 //  - after benchmarks end and previous benchmarks merging because those add
 //    new iterations
+//  - after `diff` has been computed, which has to be after previous benchmarks
+//    names have been added
 export const addNames = function(iterations) {
   const iterationsA = padTitles(iterations)
 
