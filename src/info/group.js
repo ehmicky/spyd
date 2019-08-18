@@ -4,71 +4,40 @@ import { sortBy } from '../utils/sort.js'
 import { getMean } from '../stats/methods.js'
 
 export const addGroups = function(iterations) {
-  const tasks = getTasks(iterations)
-  const variations = getVariations(iterations)
-  const commands = getCommands(iterations)
+  const tasks = getGroup(iterations, 'taskId', 'taskTitle')
+  const variations = getGroup(iterations, 'variationId', 'variationTitle')
+  const commands = getGroup(iterations, 'commandId', 'commandTitle')
   const iterationsA = iterations.map(iteration =>
     addGroupIndexes({ iteration, tasks, variations, commands }),
   )
+
+  // The fastest tasks will be first, then the fastest iterations within each
+  // task (regardless of variants or runners)
+  sortBy(iterationsA, ['task', 'stats.median'])
+
   return { tasks, variations, commands, iterations: iterationsA }
 }
 
-// Retrieve all tasks.
-// Also compute the mean of all iterations medians (of the same task)
+// Retrieve all tasks/variations/commands.
+// Also compute the mean of all iterations medians (of the same group)
 // The array is sorted by mean.
-const getTasks = function(iterations) {
-  const tasks = groupIterations(iterations, 'taskId')
-  const tasksA = tasks.map(getTask)
-  return tasksA
+const getGroup = function(iterations, id, title) {
+  const groups = Object.values(groupBy(iterations, [id])).map(iterationsA =>
+    normalizeGroup({ id, title, iterations: iterationsA }),
+  )
+  sortBy(groups, ['mean'])
+  return groups
 }
 
-const getTask = function({ groupId: taskId, mean, iteration: { taskTitle } }) {
-  return { taskId, taskTitle, mean }
-}
-
-// Same for variations
-const getVariations = function(iterations) {
-  const variations = groupIterations(iterations, 'variationId')
-  const variationsA = variations.map(getVariation)
-  return variationsA
-}
-
-const getVariation = function({
-  groupId: variationId,
-  mean,
-  iteration: { variationTitle },
+const normalizeGroup = function({
+  id,
+  title,
+  iterations,
+  iterations: [{ [id]: groupId, [title]: groupTitle }],
 }) {
-  return { variationId, variationTitle, mean }
-}
-
-// Same for runner commands
-const getCommands = function(iterations) {
-  const commands = groupIterations(iterations, 'commandId')
-  const commandsA = commands.map(getCommand)
-  return commandsA
-}
-
-const getCommand = function({
-  groupId: commandId,
-  mean,
-  iteration: { commandTitle },
-}) {
-  return { commandId, commandTitle, mean }
-}
-
-const groupIterations = function(iterations, groupId) {
-  const groups = Object.entries(groupBy(iterations, [groupId]))
-
-  const groupsA = groups.map(getGroupMean)
-  sortBy(groupsA, ['mean'])
-  return groupsA
-}
-
-const getGroupMean = function([groupId, iterations]) {
   const medians = iterations.map(getIterationMedian)
   const mean = getMean(medians)
-  const [iteration] = iterations
-  return { groupId, mean, iteration }
+  return { [id]: groupId, [title]: groupTitle, mean }
 }
 
 const getIterationMedian = function({ stats: { median } }) {
