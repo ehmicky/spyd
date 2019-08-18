@@ -49,7 +49,7 @@ export const runChildren = async function({
       cwd,
       taskId,
       variationId,
-      ...ITERATION_RUN_FDS,
+      type: 'run',
     })
     // eslint-disable-next-line fp/no-mutating-methods
     results.push({ times, count })
@@ -58,12 +58,6 @@ export const runChildren = async function({
   } while (now() < runEnd && loops < MAX_RESULTS)
 
   return results
-}
-
-const ITERATION_RUN_FDS = {
-  stdio: ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe'],
-  outputFd: 4,
-  errorFds: [5],
 }
 
 const PROCESS_COUNT = 2e1

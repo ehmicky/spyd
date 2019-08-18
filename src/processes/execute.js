@@ -2,25 +2,19 @@ import { spawn } from 'child_process'
 
 import pEvent from 'p-event'
 
+import { FDS } from './fd.js'
 import { childTimeout } from './timeout.js'
 import { getOutput, getErrorOutput } from './output.js'
 import { forwardChildError } from './error.js'
 
 // Execute a runner child process and retrieve its output.
 // We are:
-//  - passing input with `argv`
-//  - retrieving output with file descriptor 4
-//  - retrieving error messages with file descriptor 5
-// The reasons we are not using stdout/stderr instead are:
-//  - standard streams are likely be used by the benchmarking code
-//  - likewise, file descriptor 3 is sometimes (though rarely) used
-//  - IPC needs to work across programming languages
-// Both input and output are JSON objects.
-// In `debug` we do things differently:
-//  - iterations don't use fd4 since there's no benchmarking output
-//  - iterations pipe stdout/stderr directly to console
-//  - initial load shows stdout/stderr to console but only if an exception was
-//    thrown. Otherwise iterations will show it anyway, so no need to repeat it.
+//  - passing JSON input with `argv`
+//  - retrieving success JSON output with a specific file descriptor
+//  - retrieving error string output with one or several file descriptors
+// Which file descriptors are used depends on:
+//  - whether `run` or `debug` is used
+//  - whether this is the initial load
 export const executeChild = async function({
   commandValue: [file, ...args],
   input,
@@ -28,11 +22,11 @@ export const executeChild = async function({
   cwd,
   taskId,
   variationId,
-  stdio,
-  outputFd,
-  errorFds,
+  type,
 }) {
   const inputA = JSON.stringify(input)
+
+  const { stdio, outputFd, errorFds } = FDS[type]
 
   const child = spawn(file, [...args, inputA], { stdio, cwd })
 

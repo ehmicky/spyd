@@ -34,11 +34,6 @@ const runIteration = async function({
     cwd,
     taskId,
     variationId,
-    ...ITERATION_DEBUG_FDS,
+    type: 'iterationDebug',
   })
-}
-
-const ITERATION_DEBUG_FDS = {
-  stdio: ['ignore', 'inherit', 'inherit', 'ignore', 'ignore', 'pipe'],
-  errorFds: [5],
 }
