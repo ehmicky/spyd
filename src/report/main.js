@@ -1,5 +1,6 @@
 import { addPrintedInfo } from '../print/main.js'
 import { addPrevious } from '../print/previous.js'
+import { checkLimits } from '../limit/error.js'
 
 import { handleReportOpt } from './options.js'
 import { handleColors } from './colors.js'
@@ -39,6 +40,8 @@ export const report = async function(
       }),
     ),
   )
+
+  checkLimits(benchmark)
 
   return benchmark
 }

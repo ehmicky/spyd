@@ -68,8 +68,19 @@ const addPreviousIteration = function({
     isSameIteration(iteration, previousIteration),
   )
   const { previousMedian, diff } = getDiff(previous, diffIndex, stats)
-  const { limit, slow } = getLimit({ iteration, limits, previousMedian, diff })
-  return { ...iteration, stats: { ...stats, diff, limit }, slow, previous }
+  const { limit, slow, slowError } = getLimit({
+    iteration,
+    limits,
+    previousMedian,
+    diff,
+  })
+  return {
+    ...iteration,
+    stats: { ...stats, diff, limit },
+    slow,
+    slowError,
+    previous,
+  }
 }
 
 const isSameIteration = function(iterationA, iterationB) {
