@@ -4,6 +4,7 @@ import { add } from './store/add.js'
 import { get } from './store/get.js'
 import { remove as removeFromStore } from './store/remove.js'
 import { runBenchmark } from './run.js'
+import { debugBenchmark } from './debug/main.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
 // Default action: run a new benchmark
@@ -35,4 +36,11 @@ export const remove = async function(opts) {
   const { job } = await get(removeOpt, optsA)
 
   await removeFromStore(job, optsA)
+}
+
+// Run benchmark in debug mode
+export const debug = async function(opts) {
+  const optsA = await getOpts(opts)
+
+  await debugBenchmark(optsA)
 }
