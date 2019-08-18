@@ -78,6 +78,18 @@ const getFraction = function({ stat, integer, decimals }) {
   return (stat - integer).toFixed(decimals).slice(1)
 }
 
+const serializePercentage = function({ stat }) {
+  const percentage = Math.abs(Math.floor(stat * PERCENTAGE_SCALE))
+
+  if (stat >= 0) {
+    return `+${percentage}%`
+  }
+
+  return `-${percentage}%`
+}
+
+const PERCENTAGE_SCALE = 1e2
+
 const serializeArray = function({ stat, scale, unit, decimals }) {
   return stat.map(statA =>
     serializeScalar({ stat: statA, scale, unit, decimals }),
@@ -87,5 +99,6 @@ const serializeArray = function({ stat, scale, unit, decimals }) {
 const SERIALIZE_STAT = {
   count: serializeCount,
   scalar: serializeScalar,
+  percentage: serializePercentage,
   array: serializeArray,
 }

@@ -62,5 +62,6 @@ const padArray = function(stat, padding) {
 const PADDING_STAT = {
   count: padScalar,
   scalar: padScalar,
+  percentage: padScalar,
   array: padArray,
 }
