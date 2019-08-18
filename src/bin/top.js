@@ -182,7 +182,12 @@ FILE can be a globbing pattern.
 It defaults to "./benchmarks.*" or "./benchmarks/main.*".
 
 Each FILE must export the tasks to benchmark.
-Each task must be an object with any of the following properties:
+
+Several FILEs can be specified at once. Each set of 'variations' is specific to
+the FILE which declared it.
+
+The format of the FILE is runner-specific. For example for Node.js, each task
+must be an object with any of the following properties:
 
   main()      Function being benchmarked.
               Can be async.
@@ -203,9 +208,9 @@ Each task must be an object with any of the following properties:
   variations  Ids of the variations this task should benchmark.
               Defaults to all available variations.                   [string[]]
 
-FILE can also export a 'variations' array. One benchmark per combination of
-tasks and variations are run. Each variation is an object with the following
-properties:
+In Node.js, FILE can also export a 'variations' array. One benchmark per
+combination of tasks and variations are run. Each variation is an object with
+the following properties:
 
   id          Variation identifier.
               Required.                                                 [string]
@@ -214,10 +219,7 @@ properties:
               Defaults to the variation 'id'.                           [string]
 
   value       Passed as first argument to tasks main(), before() and
-              after().                                                     [any]
-
-Several FILEs can be specified at once. Each set of 'variations' is specific to
-the FILE which declared it.`
+              after().                                                     [any]`
 
 const MAIN_EXAMPLE = '$0'
 const LONG_EXAMPLE = '$0 -d 60'
