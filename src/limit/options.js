@@ -32,7 +32,7 @@ const stringify = function(limit) {
 const getPercentage = function(string) {
   const percentage = Number(string)
 
-  if (!Number.isFinite(percentage) || percentage <= 0) {
+  if (!Number.isFinite(percentage) || percentage < 0) {
     throw new TypeError(`'limit' must be a positive percentage: ${string}`)
   }
 
