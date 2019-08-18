@@ -1,4 +1,4 @@
-import { mergeBenchmarks } from '../jobs/merge.js'
+import { mergeBenchmarks } from '../group/merge.js'
 
 import { list } from './list.js'
 import { find } from './delta/find.js'

@@ -1,5 +1,5 @@
-import { mergeBenchmarks } from '../jobs/merge.js'
-import { addGroup } from '../jobs/options.js'
+import { mergeBenchmarks } from '../group/merge.js'
+import { addGroup } from '../group/options.js'
 import { omit } from '../utils/main.js'
 
 import { list } from './list.js'
