@@ -5,6 +5,7 @@ import { addNames } from '../print/name.js'
 import { getTaskPaths } from './path.js'
 import { loadIterations } from './load.js'
 import { selectIterations } from './select.js'
+import { removeDuplicateIterations } from './duplicate.js'
 
 // Retrieve each iteration, i.e. combination of task + variation (if any)
 export const getIterations = async function({
@@ -45,7 +46,7 @@ const getAllIterations = async function({
 }) {
   const iterations = await loadIterations({ taskPaths, runners, duration, cwd })
 
-  const iterationsA = iterations.filter(removeDuplicates)
+  const iterationsA = removeDuplicateIterations(iterations)
   const iterationsB = selectIterations({
     iterations: iterationsA,
     taskIds,
@@ -57,22 +58,6 @@ const getAllIterations = async function({
   }
 
   return iterationsB
-}
-
-// When two `files` define the same iteration, the last one prevails
-const removeDuplicates = function(
-  { taskId, variationId, commandId },
-  index,
-  iterations,
-) {
-  return iterations
-    .slice(index + 1)
-    .every(
-      iteration =>
-        iteration.taskId !== taskId ||
-        iteration.variationId !== variationId ||
-        iteration.commandId !== commandId,
-    )
 }
 
 const addEnv = function(iterations, env) {
