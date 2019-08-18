@@ -1,5 +1,3 @@
-import { findBenchmark } from '../../find.js'
-
 import { getBenchmarks, setBenchmarks } from './fs.js'
 
 // Filesystem store. This is the default built-in store.
@@ -7,13 +5,6 @@ import { getBenchmarks, setBenchmarks } from './fs.js'
 const list = async function(dataDir) {
   const benchmarks = await getBenchmarks(dataDir)
   return benchmarks
-}
-
-const get = async function(dataDir, queryType, queryValue) {
-  const benchmarks = await getBenchmarks(dataDir)
-  const index = findBenchmark(benchmarks, queryType, queryValue)
-  const benchmark = benchmarks[index]
-  return benchmark
 }
 
 const add = async function(dataDir, benchmark) {
@@ -32,4 +23,4 @@ const remove = async function(dataDir, id) {
   await setBenchmarks(dataDir, benchmarksA)
 }
 
-export const file = { list, get, add, remove }
+export const file = { list, add, remove }

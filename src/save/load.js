@@ -1,10 +1,14 @@
+import { findBenchmark } from './find.js'
+
 // Load previous benchmark
 export const load = async function(
   { queryType, queryValue },
-  { dataDir, store: { get: getFromStore } },
+  { dataDir, store: { list: listStore } },
 ) {
   try {
-    const benchmark = await getFromStore(dataDir, queryType, queryValue)
+    const benchmarks = await listStore(dataDir)
+    const index = findBenchmark(benchmarks, queryType, queryValue)
+    const benchmark = benchmarks[index]
     return benchmark
   } catch (error) {
     throw new Error(
