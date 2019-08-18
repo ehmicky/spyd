@@ -1,0 +1,65 @@
+import { blue, dim, underline } from 'chalk'
+import indentString from 'indent-string'
+
+// Retrieve footer: system, timestamp, job, link
+export const getFooter = function({
+  timestampPretty,
+  systemPretty,
+  job,
+  system,
+  show,
+  link,
+}) {
+  const systemFooter = getSystem(systemPretty, system)
+  const timestampFooter = getTimestamp(timestampPretty, show)
+  const jobFooter = getJob(job, show)
+  const linkFooter = getLink(link)
+  const footers = [systemFooter, timestampFooter, jobFooter, linkFooter].filter(
+    Boolean,
+  )
+
+  if (footers.length === 0) {
+    return ''
+  }
+
+  const footer = footers.map(indentFooter).join('\n\n')
+  return `\n\n${footer}`
+}
+
+const getSystem = function(systemPretty, system) {
+  if (!system) {
+    return
+  }
+
+  return systemPretty
+}
+
+const getTimestamp = function(timestampPretty, show) {
+  if (!show) {
+    return
+  }
+
+  return `${blue.bold('Timestamp:')} ${timestampPretty}`
+}
+
+const getJob = function(job, show) {
+  if (!show) {
+    return
+  }
+
+  return `${blue.bold('Job:')} ${job}`
+}
+
+const getLink = function(link) {
+  if (!link) {
+    return
+  }
+
+  return dim(
+    `Benchmarked with spyd ${underline('(https://github.com/ehmicky/spyd)')}`,
+  )
+}
+
+const indentFooter = function(footer) {
+  return indentString(footer, 1)
+}
