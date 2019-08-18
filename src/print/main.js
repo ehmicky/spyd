@@ -30,7 +30,7 @@ export const addPrintedInfo = function(
 }
 
 const addBenchmarkInfo = function(
-  { iterations, envs, ...benchmark },
+  { iterations, envs, timestamp, ...benchmark },
   { verbose },
 ) {
   const {
@@ -47,12 +47,13 @@ const addBenchmarkInfo = function(
   const iterationsC = addSpeedInfo(iterationsB)
   const iterationsD = normalizeStats(iterationsC, verbose)
 
-  const timestampPretty = prettifyTimestamp(benchmark)
+  const timestampPretty = prettifyTimestamp(timestamp)
 
   const { envs: envsB, systemPretty } = prettifySystems(envsA)
 
   return {
     ...benchmark,
+    timestamp,
     timestampPretty,
     tasks,
     variations,
@@ -65,6 +66,6 @@ const addBenchmarkInfo = function(
 
 // Make timestamp more human-friendly.
 // Must be done at end since `previous` must use raw timestamps.
-const prettifyTimestamp = function({ timestamp }) {
+const prettifyTimestamp = function(timestamp) {
   return new Date(timestamp).toLocaleString()
 }
