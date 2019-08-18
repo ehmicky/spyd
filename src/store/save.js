@@ -1,4 +1,4 @@
-import { omitBy } from '../utils/main.js'
+import { omit } from '../utils/main.js'
 
 // Save benchmark results so they can be compared or shown later
 export const save = async function(
@@ -36,7 +36,7 @@ const normalizeIteration = function({ stats, ...iteration }) {
 }
 
 const removeBigStats = function(stats) {
-  return omitBy(stats, key => OMITTED_STATS_PROPS.includes(key))
+  return omit(stats, OMITTED_STATS_PROPS)
 }
 
 const OMITTED_STATS_PROPS = ['histogram', 'percentiles']

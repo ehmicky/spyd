@@ -1,4 +1,4 @@
-import { omitBy } from '../utils/main.js'
+import { omit } from '../utils/main.js'
 
 import { getDiffIndex, getDiff } from './diff.js'
 
@@ -69,5 +69,5 @@ const isSameIteration = function(iterationA, iterationB) {
 }
 
 const removeIterations = function(benchmark) {
-  return omitBy(benchmark, key => key === 'iterations')
+  return omit(benchmark, ['iterations'])
 }
