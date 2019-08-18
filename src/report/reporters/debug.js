@@ -1,10 +1,10 @@
 // Debugging reporter only meant for development purpose
 const report = function(
-  { timestamp, iterations, printedSystem },
+  { timestamp, iterations, systemPretty },
   { link, system, show },
 ) {
   const content = iterations.map(serializeIteration).join('\n')
-  const contentA = addSystem(content, system, printedSystem)
+  const contentA = addSystem(content, system, systemPretty)
   const contentB = addLink(contentA, link)
   const contentC = addTimestamp(contentB, timestamp, show)
   return contentC
@@ -39,12 +39,12 @@ const serializeStat = function(stats, statName) {
   return `${statName} ${stat}`
 }
 
-const addSystem = function(content, system, printedSystem) {
+const addSystem = function(content, system, systemPretty) {
   if (!system) {
     return content
   }
 
-  return `${content}\n\n${printedSystem}`
+  return `${content}\n\n${systemPretty}`
 }
 
 const addLink = function(content, link) {

@@ -2,7 +2,7 @@ import { addFastestIterations } from './fastest.js'
 import { dereferenceBenchmark } from './dereference.js'
 import { addPrevious } from './previous.js'
 import { normalizeStats, prettifyStats } from './stats/main.js'
-import { getPrintedSystem } from './system.js'
+import { prettifySystem } from './system.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
@@ -28,12 +28,12 @@ export const addPrintedInfo = function(
 
   const timestamp = prettifyTimestamp(benchmark)
 
-  const printedSystem = getPrintedSystem(benchmark)
+  const systemPretty = prettifySystem(benchmark)
 
   return {
     ...benchmark,
     timestamp,
-    printedSystem,
+    systemPretty,
     iterations: iterationsE,
     previous,
   }
