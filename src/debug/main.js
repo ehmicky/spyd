@@ -35,6 +35,6 @@ const runIteration = async function({
     taskId,
     variationId,
     stdio: ['ignore', 'inherit', 'inherit'],
-    fds: [],
+    errorFds: [],
   })
 }

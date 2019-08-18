@@ -27,7 +27,8 @@ export const executeChild = async function({
   taskId,
   variationId,
   stdio,
-  fds,
+  outputFd,
+  errorFds,
 }) {
   const inputA = JSON.stringify(input)
 
@@ -36,7 +37,8 @@ export const executeChild = async function({
   const { exitCode, signal, output, errorOutput, error } = await waitForExit({
     child,
     duration,
-    fds,
+    outputFd,
+    errorFds,
   })
 
   forwardChildError({
@@ -59,14 +61,12 @@ export const executeChild = async function({
 
 // Wait for child process successful exit, failed exit, spawning error,
 // stream error or timeout
-const waitForExit = async function({ child, duration, fds }) {
-  const childPromise = getChildPromise(child, duration)
-  const streams = getStreams(child, fds)
-
+const waitForExit = async function({ child, duration, outputFd, errorFds }) {
   try {
     const [[exitCode, signal], output, errorOutput] = await Promise.all([
-      childPromise,
-      ...streams,
+      waitForChild(child, duration),
+      getOutput(child, outputFd),
+      getErrorOutput(child, errorFds),
     ])
     return { exitCode, signal, output, errorOutput }
   } catch (error) {
@@ -74,7 +74,7 @@ const waitForExit = async function({ child, duration, fds }) {
   }
 }
 
-const getChildPromise = function(child, duration) {
+const waitForChild = function(child, duration) {
   const childPromise = pEvent(child, 'exit', { multiArgs: true })
 
   if (duration === undefined) {
@@ -84,8 +84,27 @@ const getChildPromise = function(child, duration) {
   return childTimeout(childPromise, duration)
 }
 
-const getStreams = function(child, fds) {
-  return fds.map(fd => getStream(child.stdio[fd], { maxBuffer: MAX_BUFFER }))
+const getOutput = function(child, outputFd) {
+  if (outputFd === undefined) {
+    return
+  }
+
+  return getChildFd(child, outputFd)
+}
+
+const getErrorOutput = async function(child, errorFds) {
+  const errorOutputs = await Promise.all(
+    errorFds.map(fd => getChildFd(child, fd)),
+  )
+  return errorOutputs.filter(hasData).join('\n\n')
+}
+
+const hasData = function(errorOutput) {
+  return errorOutput.trim() !== ''
+}
+
+const getChildFd = function(child, fd) {
+  return getStream(child.stdio[fd], { maxBuffer: MAX_BUFFER })
 }
 
 // Child process output and error output cannot exceed 100 MB
