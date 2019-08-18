@@ -1,7 +1,7 @@
 import { RUNNERS } from '../run/runners/main.js'
 import { REPORTERS } from '../report/reporters/main.js'
 import { PROGRESS_REPORTERS } from '../progress/reporters/main.js'
-import { STORES } from '../save/stores/main.js'
+import { STORES } from '../store/stores/main.js'
 
 import { validateDeepObject } from './validate.js'
 

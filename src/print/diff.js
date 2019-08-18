@@ -1,4 +1,4 @@
-import { findBenchmark } from '../save/find.js'
+import { findBenchmark } from '../store/find.js'
 
 // Retrieve the index of the previous benchmark to compare/diff with
 export const getDiffIndex = function(previous, diff) {

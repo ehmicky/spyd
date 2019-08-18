@@ -1,8 +1,8 @@
 import { getOpts } from './options/main.js'
 import { report } from './report/main.js'
-import { save } from './save/main.js'
-import { remove } from './save/remove.js'
-import { load } from './save/load.js'
+import { save } from './store/save.js'
+import { remove } from './store/remove.js'
+import { load } from './store/load.js'
 import { runBenchmark } from './run.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.

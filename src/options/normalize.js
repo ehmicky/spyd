@@ -2,8 +2,8 @@ import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
 
 import { normalizeProgress } from '../progress/options.js'
-import { normalizeData } from '../save/options.js'
-import { getBenchmarkDelta } from '../save/delta.js'
+import { normalizeData } from '../store/options.js'
+import { getBenchmarkDelta } from '../store/delta.js'
 
 import { validateStringArray, validatePositiveNumber } from './validate.js'
 
