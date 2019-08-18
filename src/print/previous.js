@@ -6,7 +6,6 @@ import { getDiffIndex, getDiff } from './diff.js'
 //  - `benchmark.previous`: all previous benchmarks
 //  - `benchmark.iterations[*].previous`: previous iteration with same runner,
 //    task and variation
-// When combined with the 'show' option, we only show the benchmarks before it.
 export const addPrevious = function({
   benchmarks,
   benchmark: { timestamp },
@@ -21,6 +20,7 @@ export const addPrevious = function({
     return { iterations }
   }
 
+  // When combined with the 'show' option, we only show the benchmarks before it
   const previous = benchmarks.filter(
     benchmarkA => benchmarkA.timestamp < timestamp,
   )
