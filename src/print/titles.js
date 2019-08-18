@@ -59,6 +59,18 @@ const addNames = function(iterations) {
   return iterations.map(iteration => addName(iteration, props))
 }
 
+// If all variations and/or commands are the same, do not report them.
+// Do not do this for tasks though, since `name` should not be empty.
+const shouldShowProp = function(iterations, propName) {
+  if (propName === 'taskTitle') {
+    return true
+  }
+
+  const props = iterations.map(iteration => iteration[propName])
+  const uniqueProps = [...new Set(props)]
+  return uniqueProps.length !== 1
+}
+
 const addName = function(iteration, props) {
   const name = getName(iteration, props)
   const columnName = getColumnName(iteration, props)
@@ -85,18 +97,6 @@ const getName = function(iteration, props) {
     .map(propName => iteration[propName])
     .filter(Boolean)
     .join(' | ')
-}
-
-// If all variations and/or commands are the same, do not report them.
-// Do not do this for tasks though, since `name` should not be empty.
-const shouldShowProp = function(iterations, propName) {
-  if (propName === 'taskTitle') {
-    return true
-  }
-
-  const props = iterations.map(iteration => iteration[propName])
-  const uniqueProps = [...new Set(props)]
-  return uniqueProps.length !== 1
 }
 
 const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle']
