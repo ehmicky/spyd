@@ -17,8 +17,10 @@ import { forwardChildError } from './error.js'
 //  - IPC needs to work across programming languages
 // Both input and output are JSON objects.
 // In `debug` we do things differently:
-//  - iterations uses stdout/stderr for output/error, directly piped to console
-//  - initial load combines both approaches
+//  - iterations don't use fd4 since there's no benchmarking output
+//  - iterations pipe stdout/stderr directly to console
+//  - initial load shows stdout/stderr to console but only if an exception was
+//    thrown. Otherwise iterations will show it anyway, so no need to repeat it.
 export const executeChild = async function({
   commandValue: [file, ...args],
   input,
