@@ -19,6 +19,9 @@ const CONFIG = {
     requiresArg: true,
     describe: `JSON configuration file.
 Can specify the same options as the CLI flags.
+Environment variables can also be used, prefixed with "SPYD_". For example
+SPYD_JOB=same is like --job same and SPYD_RUN_NODE_VERSIONS 8 is like
+--run.node.versions 8.
 Default: "spyd.json" in the current directory or any parent directory`,
   },
   cwd: {
