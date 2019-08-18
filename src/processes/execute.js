@@ -49,6 +49,10 @@ export const executeChild = async function({
     variationId,
   })
 
+  if (output === undefined) {
+    return
+  }
+
   const outputA = JSON.parse(output)
   return outputA
 }

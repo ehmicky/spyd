@@ -1,8 +1,7 @@
 import pMapSeries from 'p-map-series'
 
 import { getIterations } from '../iterations/main.js'
-
-import { executeChild } from './execute.js'
+import { executeChild } from '../processes/execute.js'
 
 // Run benchmark in debug mode
 export const debugBenchmark = async function(opts) {
@@ -35,5 +34,7 @@ const runIteration = async function({
     cwd,
     taskId,
     variationId,
+    stdio: ['ignore', 'inherit', 'inherit'],
+    fds: [],
   })
 }
