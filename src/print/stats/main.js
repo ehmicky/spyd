@@ -5,10 +5,19 @@ import { addPaddings } from './padding.js'
 
 // Some stats are removed when `--save` is used. When showing saved benchmarks,
 // those will be `undefined`. We default them to `[]`.
+// Also add `iteration.stats.*Pretty` which is like `iteration.stats.*` but
+// serialized and CLI-reporter-friendly. It adds time units, rounding, padding
+// and ensures proper vertical alignment.
 export const normalizeStats = function(iterations, verbose) {
   const iterationsA = iterations.map(normalizeIterationStats)
-  const iterationsB = prettifyStats(iterationsA, verbose)
-  return iterationsB
+
+  const { unit, scale } = getUnit(iterationsA)
+  const statsDecimals = getStatsDecimals(iterationsA, scale)
+  const iterationsB = iterationsA.map(iteration =>
+    serializeStats({ iteration, unit, scale, statsDecimals, verbose }),
+  )
+  const iterationsC = addPaddings(iterationsB)
+  return iterationsC
 }
 
 const normalizeIterationStats = function({
@@ -16,17 +25,4 @@ const normalizeIterationStats = function({
   ...iteration
 }) {
   return { ...iteration, stats: { ...stats, histogram, percentiles } }
-}
-
-// Add `iteration.stats.*Pretty` which is like `iteration.stats.*` but
-// serialized and CLI-reporter-friendly. It adds time units, rounding, padding
-// and ensures proper vertical alignment.
-const prettifyStats = function(iterations, verbose) {
-  const { unit, scale } = getUnit(iterations)
-  const statsDecimals = getStatsDecimals(iterations, scale)
-  const iterationsA = iterations.map(iteration =>
-    serializeStats({ iteration, unit, scale, statsDecimals, verbose }),
-  )
-  const iterationsB = addPaddings(iterationsA)
-  return iterationsB
 }
