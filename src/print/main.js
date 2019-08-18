@@ -2,7 +2,7 @@ import { addGroups } from './group.js'
 import { addSpeedInfo } from './speed.js'
 import { addPrevious } from './previous.js'
 import { normalizeStats, prettifyStats } from './stats/main.js'
-import { prettifySystem } from './system.js'
+import { prettifySystems } from './system.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
@@ -35,7 +35,7 @@ export const addPrintedInfo = function(
 
   const timestamp = prettifyTimestamp(benchmark)
 
-  const systemPretty = prettifySystem(benchmark)
+  const { envs: envsB, systemPretty } = prettifySystems(envsA)
 
   return {
     ...benchmark,
@@ -43,7 +43,7 @@ export const addPrintedInfo = function(
     tasks,
     variations,
     commands,
-    envs: envsA,
+    envs: envsB,
     systemPretty,
     iterations: iterationsE,
     previous,

@@ -4,10 +4,10 @@ import indentString from 'indent-string'
 // Debugging reporter only meant for development purpose
 const report = function(
   { timestamp, iterations, systemPretty },
-  { link, show },
+  { system, show, link },
 ) {
   const content = iterations.map(serializeIteration).join('\n')
-  const footer = getFooter({ systemPretty, timestamp, show, link })
+  const footer = getFooter({ systemPretty, timestamp, system, show, link })
   return `\n${content}${footer}\n\n`
 }
 
@@ -40,10 +40,11 @@ const serializeStat = function(stats, statName) {
   return `${statName} ${yellow(stat)}`
 }
 
-const getFooter = function({ systemPretty, timestamp, show, link }) {
+const getFooter = function({ systemPretty, timestamp, system, show, link }) {
+  const systemFooter = getSystem(systemPretty, system)
   const timestampFooter = getTimestamp(timestamp, show)
   const linkFooter = getLink(link)
-  const footers = [systemPretty, timestampFooter, linkFooter].filter(Boolean)
+  const footers = [systemFooter, timestampFooter, linkFooter].filter(Boolean)
 
   if (footers.length === 0) {
     return ''
@@ -51,6 +52,14 @@ const getFooter = function({ systemPretty, timestamp, show, link }) {
 
   const footer = footers.map(indentFooter).join('\n\n')
   return `\n\n${footer}`
+}
+
+const getSystem = function(systemPretty, system) {
+  if (!system) {
+    return
+  }
+
+  return systemPretty
 }
 
 const getTimestamp = function(timestamp, show) {

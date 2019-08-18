@@ -55,7 +55,7 @@ const useReporter = async function({
   link,
   show,
 }) {
-  const { system: systemOpt, ...reportOptB } = handleReportOpt({
+  const reportOptB = handleReportOpt({
     reportOpt,
     output,
     insert,
@@ -65,23 +65,9 @@ const useReporter = async function({
     show,
   })
 
-  const benchmarkA = handleSystem(benchmark, systemOpt)
-
-  const content = await reportFunc(benchmarkA, reportOptB)
+  const content = await reportFunc(benchmark, reportOptB)
 
   const contentA = handleColors(content, reportOptB)
 
   await handleContent(contentA, reportOptB)
-}
-
-// If `system` option is `false`, do not pass it to reporters
-const handleSystem = function(
-  { system, systemPretty, ...benchmark },
-  systemOpt,
-) {
-  if (systemOpt) {
-    return { ...benchmark, system, systemPretty }
-  }
-
-  return benchmark
 }
