@@ -21,23 +21,15 @@ const getPadding = function(iterations, propName) {
 
 const addPadding = function(iteration, paddings) {
   const titles = PADDED_PROPS.map(propName =>
-    padProp(iteration, paddings, propName),
+    padProp(iteration[propName], paddings[propName], propName),
   )
   const titlesA = Object.fromEntries(titles)
   return { ...iteration, ...titlesA }
 }
 
-const padProp = function(iteration, paddings, propName) {
-  const title = padValue(paddings[propName], iteration[propName])
-  return [propName, title]
-}
-
-const padValue = function(padding, title) {
-  if (padding === 0) {
-    return ''
-  }
-
-  return title.padEnd(padding)
+const padProp = function(title = '', padding, propName) {
+  const titleA = title.padEnd(padding)
+  return [propName, titleA]
 }
 
 const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle', 'envTitle']
