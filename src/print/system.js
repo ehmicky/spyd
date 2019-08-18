@@ -1,3 +1,5 @@
+import { blue } from 'chalk'
+
 // Serialize `system` information for CLI reporters
 export const prettifySystem = function({ system }) {
   const padding = getPadding(system)
@@ -5,7 +7,7 @@ export const prettifySystem = function({ system }) {
   const systemA = Object.entries(system)
     .map(([name, value]) => serializeValue(name, value, padding))
     .join('\n')
-  return `System:\n${systemA}`
+  return `${blue.bold('System:')}\n${systemA}`
 }
 
 const getPadding = function(system) {
@@ -19,5 +21,5 @@ const getLength = function(key) {
 
 const serializeValue = function(name, value, padding) {
   const nameA = `${name}:`.padEnd(padding + 1)
-  return `  ${nameA} ${value}`
+  return `  ${blue.bold(nameA)} ${value}`
 }
