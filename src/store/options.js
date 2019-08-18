@@ -1,26 +1,33 @@
-import pkgDir from 'pkg-dir'
+import { dirname } from 'path'
 
-// Add `cwd` and `packageRoot` to every store options
+import readPkgUp from 'read-pkg-up'
+
+// Add `cwd`, `packageRoot` and `name` to every store options
 export const normalizeStore = async function({
   cwd,
   store: { opts: storeOpts, ...store },
   ...opts
 }) {
-  const packageRoot = await getPackageRoot(cwd)
+  const { packageRoot, name } = await getPackageInfo(cwd)
 
   return {
     ...opts,
     cwd,
-    store: { opts: { ...storeOpts, cwd, packageRoot }, ...store },
+    store: { opts: { ...storeOpts, cwd, packageRoot, name }, ...store },
   }
 }
 
-const getPackageRoot = async function(cwd) {
-  const packageRoot = await pkgDir(cwd)
+const getPackageInfo = async function(cwd) {
+  const packageInfo = await readPkgUp(cwd)
 
-  if (packageRoot === undefined) {
-    return cwd
+  if (packageInfo === undefined) {
+    return { packageRoot: cwd }
   }
 
-  return packageRoot
+  const {
+    package: { name },
+    path,
+  } = packageInfo
+  const packageRoot = dirname(path)
+  return { packageRoot, name }
 }
