@@ -7,7 +7,7 @@ import { prettifySystem } from './system.js'
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
 export const addPrintedInfo = function(
-  { iterations, ...benchmark },
+  { iterations, env, envs = [env], ...benchmark },
   { diff, verbose, benchmarks },
 ) {
   const {
@@ -15,8 +15,9 @@ export const addPrintedInfo = function(
     tasks,
     variations,
     commands,
-    envs,
+    envs: envGroups,
   } = addGroups(iterations)
+  const envsA = mergeEnvs(envs, envGroups)
 
   const iterationsB = addSpeedInfo(iterationsA)
 
@@ -42,11 +43,24 @@ export const addPrintedInfo = function(
     tasks,
     variations,
     commands,
-    envs,
+    envs: envsA,
     systemPretty,
     iterations: iterationsE,
     previous,
   }
+}
+
+// We merge two groups of similar `envs`:
+//  - after merging with previous benchmarks of same job, to retrieve their
+//    options and systems
+//  - after grouping iterations, to retrieve their speed and set iteration.rank
+const mergeEnvs = function(envs, envGroups) {
+  return envGroups.map(envGroup => mergeEnv(envs, envGroup))
+}
+
+const mergeEnv = function(envs, envGroup) {
+  const env = envs.find(envA => envA.id === envGroup.id)
+  return { ...envGroup, ...env }
 }
 
 // Make timestamp more human-friendly.
