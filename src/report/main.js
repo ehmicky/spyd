@@ -61,7 +61,25 @@ const useReporter = async function({
     show,
   }
 
-  const content = await reportFunc(benchmark, reportOptA)
+  const reportOptB = convertBooleans(reportOptA)
 
-  await handleContent(content, reportOptA)
+  const content = await reportFunc(benchmark, reportOptB)
+
+  await handleContent(content, reportOptB)
+}
+
+// --report.REPORTER.* options are dynamic, i.e. are not normalized by our
+// options layer. Boolean options might be set on the CLI either as --[no-]OPT
+// or --OPT true|false. We normalize both to a boolean value.
+const convertBooleans = function(reportOpt) {
+  return Object.fromEntries(
+    BOOLEAN_OPTS.map(name => convertBoolean(name, reportOpt[name])),
+  )
+}
+
+const BOOLEAN_OPTS = ['colors', 'system', 'link']
+
+const convertBoolean = function(name, value) {
+  const valueA = value === true || value === 'true'
+  return [name, valueA]
 }
