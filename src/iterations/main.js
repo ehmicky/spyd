@@ -1,5 +1,4 @@
 import { loadRunners } from '../run/load.js'
-import { padTitles } from '../print/titles.js'
 import { addNames } from '../print/name.js'
 
 import { getTaskPaths } from './path.js'
@@ -31,9 +30,8 @@ export const getIterations = async function({
   })
 
   const iterationsC = addEnv(iterationsB, env)
-  const iterationsD = padTitles(iterationsC)
-  const iterationsE = addNames(iterationsD)
-  return { iterations: iterationsE, versions }
+  const iterationsD = addNames(iterationsC)
+  return { iterations: iterationsD, versions }
 }
 
 const getAllIterations = async function({

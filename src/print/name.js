@@ -1,19 +1,26 @@
 import { pointer } from 'figures'
 import { cyan } from 'chalk'
 
+import { padTitles } from './titles.js'
+
 // Add:
 //  - `iteration.name`: combines task, variation, command and env.
 //     For one-dimensional reporters.
 //  - `iteration.columnName`: combines variation, command and env.
 //     For two-dimensional reporters. `taskTitle` is the row name.
-// We need to do this before benchmarks start because `iteration.name` is used
-// by progress reporters.
+// We need to do this twice:
+//  - before benchmarks start because `iteration.name` is used by progress
+//    reporters.
+//  - after benchmarks end and previous benchmarks merging because those add
+//    new iterations
 export const addNames = function(iterations) {
+  const iterationsA = padTitles(iterations)
+
   const props = NAME_PROPS.filter(propName =>
-    shouldShowProp(propName, iterations),
+    shouldShowProp(propName, iterationsA),
   )
   const propsA = [COLUMN_PROP, ...props]
-  return iterations.map(iteration => addName(iteration, propsA))
+  return iterationsA.map(iteration => addName(iteration, propsA))
 }
 
 const NAME_PROPS = ['variationTitle', 'commandTitle', 'envTitle']
