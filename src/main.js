@@ -42,14 +42,14 @@ const showAction = async function(showOpt, opts) {
 
 // Default action: run a new benchmark
 const runAction = async function(opts) {
-  const benchmarks = await list(opts)
-  const optsA = normalizeJob(benchmarks, opts)
+  const benchmark = await runBenchmark(opts)
 
-  const benchmark = await runBenchmark(optsA)
+  const benchmarks = await list(opts)
+  const benchmarkA = normalizeJob(benchmarks, benchmark, opts)
 
   const [benchmarkB] = await Promise.all([
-    report(benchmarks, benchmark, optsA),
-    save(benchmark, optsA),
+    report(benchmarks, benchmarkA, opts),
+    save(benchmarkA, opts),
   ])
   return benchmarkB
 }
