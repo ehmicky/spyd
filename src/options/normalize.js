@@ -4,7 +4,7 @@ import { resolve } from 'path'
 import uuidv4 from 'uuid/v4.js'
 
 import { normalizeProgress } from '../progress/options.js'
-import { getBenchmarkDelta } from '../store/delta.js'
+import { getBenchmarkDelta } from '../store/delta/main.js'
 
 import { validateStringArray, validatePositiveNumber } from './validate.js'
 
