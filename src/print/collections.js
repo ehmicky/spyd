@@ -4,56 +4,56 @@ import { getMean } from '../stats/methods.js'
 
 // Group row/columns information into top-level properties so that reporters
 // can list them.
-// Also add the mean speed of each group (using iterations medians).
+// Also add the mean speed of each collection (using iterations medians).
 export const addCollections = function(iterations) {
-  return GROUPS.reduce(addGroup, { iterations })
+  return COLLECTIONS.reduce(addCollection, { iterations })
 }
 
-const GROUPS = [
-  { groupName: 'tasks', id: 'taskId', title: 'taskTitle', rank: 'taskRank' },
+const COLLECTIONS = [
+  { name: 'tasks', id: 'taskId', title: 'taskTitle', rank: 'taskRank' },
   {
-    groupName: 'variations',
+    name: 'variations',
     id: 'variationId',
     title: 'variationTitle',
     rank: 'variationRank',
   },
   {
-    groupName: 'commands',
+    name: 'commands',
     id: 'commandId',
     title: 'commandTitle',
     rank: 'commandRank',
   },
-  { groupName: 'envs', id: 'envId', title: 'envTitle', rank: 'envRank' },
+  { name: 'envs', id: 'envId', title: 'envTitle', rank: 'envRank' },
 ]
 
-const addGroup = function(
-  { iterations, ...groups },
-  { groupName, id, title, rank },
+const addCollection = function(
+  { iterations, ...collections },
+  { name, id, title, rank },
 ) {
-  const group = Object.values(groupBy(iterations, id)).map(iterationsA =>
-    normalizeGroup(iterationsA, id, title),
+  const collection = Object.values(groupBy(iterations, id)).map(iterationsA =>
+    normalizeCollection(iterationsA, id, title),
   )
-  sortBy(group, ['mean'])
+  sortBy(collection, ['mean'])
 
   const iterationsB = iterations.map(iteration =>
-    addRank({ iteration, group, id, rank }),
+    addRank({ iteration, collection, id, rank }),
   )
-  return { iterations: iterationsB, ...groups, [groupName]: group }
+  return { iterations: iterationsB, ...collections, [name]: collection }
 }
 
-const normalizeGroup = function(iterations, id, title) {
-  const [{ [id]: groupId, [title]: groupTitle }] = iterations
+const normalizeCollection = function(iterations, id, title) {
+  const [{ [id]: collectionId, [title]: collectionTitle }] = iterations
   const medians = iterations.map(getIterationMedian)
   const mean = getMean(medians)
-  return { id: groupId, title: groupTitle, mean }
+  return { id: collectionId, title: collectionTitle, mean }
 }
 
 const getIterationMedian = function({ stats: { median } }) {
   return median
 }
 
-// Add speed rank within each group for each iteration
-const addRank = function({ iteration, group, id, rank }) {
-  const rankValue = group.findIndex(elem => elem.id === iteration[id])
+// Add speed rank within each collection for each iteration
+const addRank = function({ iteration, collection, id, rank }) {
+  const rankValue = collection.findIndex(elem => elem.id === iteration[id])
   return { ...iteration, [rank]: rankValue }
 }
