@@ -8,29 +8,29 @@ import { runBenchmark } from './run.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
 const spyd = async function(opts) {
-  const optsA = await getOpts(opts)
+  const { remove: removeOpt, show: showOpt, ...optsA } = await getOpts(opts)
 
-  if (optsA.remove !== undefined) {
-    return removeAction(optsA)
+  if (removeOpt !== undefined) {
+    return removeAction(removeOpt, optsA)
   }
 
-  if (optsA.show !== undefined) {
-    return showAction(optsA)
+  if (showOpt !== undefined) {
+    return showAction(showOpt, optsA)
   }
 
   return runAction(optsA)
 }
 
 // Action when the 'remove' option is used: remove a previous benchmark
-const removeAction = async function(opts) {
+const removeAction = async function(removeOpt, opts) {
   const benchmarks = await list(opts)
-  await remove(benchmarks, opts.remove, opts)
+  await remove(benchmarks, removeOpt, opts)
 }
 
 // Action when the 'show' option is used: show a previous benchmark
-const showAction = async function(opts) {
+const showAction = async function(showOpt, opts) {
   const benchmarks = await list(opts)
-  const benchmark = get(benchmarks, opts.show, opts)
+  const benchmark = get(benchmarks, showOpt, opts)
 
   await report(benchmarks, benchmark, opts)
 
