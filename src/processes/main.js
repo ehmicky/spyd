@@ -16,6 +16,8 @@ export const runProcesses = async function({
   commandTitle,
   commandValue,
   commandOpt,
+  envId,
+  envTitle,
   index,
   progressState,
   opts: { duration, cwd },
@@ -47,6 +49,8 @@ export const runProcesses = async function({
     variationTitle,
     commandId,
     commandTitle,
+    envId,
+    envTitle,
     stats,
   }
 }

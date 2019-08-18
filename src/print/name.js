@@ -2,25 +2,25 @@ import { pointer } from 'figures'
 import { cyan } from 'chalk'
 
 // Add:
-//  - `iteration.name`: combines task, variation and command.
+//  - `iteration.name`: combines task, variation, command and env.
 //     For one-dimensional reporters.
-//  - `iteration.columnName`: combines variation and command.
+//  - `iteration.columnName`: combines variation, command and env.
 //     For two-dimensional reporters. `taskTitle` is the row name.
 // We need to do this before benchmarks start because `iteration.name` is used
 // by progress reporters.
 export const addNames = function(iterations) {
   const props = NAME_PROPS.filter(propName =>
-    shouldShowProp(iterations, propName),
+    shouldShowProp(propName, iterations),
   )
-  const propsA = ['taskTitle', ...props]
+  const propsA = [COLUMN_PROP, ...props]
   return iterations.map(iteration => addName(iteration, propsA))
 }
 
-const NAME_PROPS = ['variationTitle', 'commandTitle']
+const NAME_PROPS = ['variationTitle', 'commandTitle', 'envTitle']
 
-// If all variations and/or commands are the same, do not report them.
+// If all variations/commands/envs are the same, do not include them.
 // Do not do this for tasks though, since `name` should not be empty.
-const shouldShowProp = function(iterations, propName) {
+const shouldShowProp = function(propName, iterations) {
   const props = iterations.map(iteration => iteration[propName])
   const uniqueProps = [...new Set(props)]
   return uniqueProps.length !== 1
@@ -44,7 +44,7 @@ const getColumnName = function(iteration, props) {
 }
 
 const isColumnProp = function(propName) {
-  return propName !== 'taskTitle'
+  return propName !== COLUMN_PROP
 }
 
 const getName = function(iteration, props) {
@@ -54,3 +54,5 @@ const getName = function(iteration, props) {
     .map(part => cyan.bold(part))
     .join(`${cyan.dim(pointer)}  `)
 }
+
+const COLUMN_PROP = 'taskTitle'

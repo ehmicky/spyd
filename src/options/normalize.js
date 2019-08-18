@@ -1,4 +1,4 @@
-import { cwd as getCwd } from 'process'
+import { cwd as getCwd, env as processEnv } from 'process'
 import { resolve } from 'path'
 
 import { normalizeProgress } from '../progress/options.js'
@@ -37,15 +37,20 @@ const normalizeVariations = function({ variations, ...opts }) {
 }
 
 // Normalize 'env' option
-const normalizeEnv = function({ env = '', ...opts }) {
+const normalizeEnv = function({ env = getDefaultEnv(), ...opts }) {
   const envA = env.trim()
-
-  if (envA === '') {
-    return opts
-  }
-
   return { ...opts, env: envA }
 }
+
+const getDefaultEnv = function() {
+  if (processEnv.SPYD_ENV) {
+    return processEnv.SPYD_ENV
+  }
+
+  return DEFAULT_ENV
+}
+
+const DEFAULT_ENV = ''
 
 // Normalize and validate 'duration' option
 // Duration is specified in seconds by the user but we convert it to nanoseconds

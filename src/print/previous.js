@@ -62,7 +62,8 @@ const isSameIteration = function(iterationA, iterationB) {
   return (
     iterationA.task.id === iterationB.task.id &&
     iterationA.variation.id === iterationB.variation.id &&
-    iterationA.command.id === iterationB.command.id
+    iterationA.command.id === iterationB.command.id &&
+    iterationA.env.id === iterationB.env.id
   )
 }
 

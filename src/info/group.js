@@ -12,15 +12,16 @@ export const addGroups = function(iterations) {
   const tasks = getGroup(iterations, 'taskId', 'taskTitle')
   const variations = getGroup(iterations, 'variationId', 'variationTitle')
   const commands = getGroup(iterations, 'commandId', 'commandTitle')
+  const envs = getGroup(iterations, 'envId', 'envTitle')
   const iterationsA = iterations.map(iteration =>
-    addGroupIndexes({ iteration, tasks, variations, commands }),
+    addGroupIndexes({ iteration, tasks, variations, commands, envs }),
   )
 
   // The fastest tasks will be first, then the fastest iterations within each
   // task (regardless of variations/commands)
-  sortBy(iterationsA, ['task', 'variation', 'command'])
+  sortBy(iterationsA, ['task', 'variation', 'command', 'env'])
 
-  return { tasks, variations, commands, iterations: iterationsA }
+  return { tasks, variations, commands, envs, iterations: iterationsA }
 }
 
 const getGroup = function(iterations, id, title) {
@@ -44,10 +45,11 @@ const getIterationMedian = function({ stats: { median } }) {
 
 const addGroupIndexes = function({
   iteration,
-  iteration: { taskId, variationId, commandId },
+  iteration: { taskId, variationId, commandId, envId },
   tasks,
   variations,
   commands,
+  envs,
 }) {
   const iterationA = omitBy(iteration, key => GROUP_KEYS.includes(key))
 
@@ -55,12 +57,15 @@ const addGroupIndexes = function({
   const variationA = variations.findIndex(
     variation => variation.id === variationId,
   )
-  const commandA = commands.findIndex(variation => variation.id === commandId)
+  const commandA = commands.findIndex(command => command.id === commandId)
+  const envA = envs.findIndex(env => env.id === envId)
+
   return {
     ...iterationA,
     task: taskA,
     variation: variationA,
     command: commandA,
+    env: envA,
   }
 }
 
@@ -71,4 +76,6 @@ const GROUP_KEYS = [
   'variationTitle',
   'commandId',
   'commandTitle',
+  'envId',
+  'envTitle',
 ]

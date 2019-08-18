@@ -1,4 +1,4 @@
-import { cwd as getCwd, stderr, env } from 'process'
+import { cwd as getCwd, stderr } from 'process'
 
 import { validate, multipleValidOptions } from 'jest-validate'
 import isInteractive from 'is-interactive'
@@ -41,7 +41,6 @@ const validateOpts = function(opts) {
 const DEFAULT_OPTS = {
   files: ['benchmarks.*', 'benchmarks/main.*'],
   cwd: getCwd(),
-  env: env.SPYD_ENV,
   duration: 10,
   colors: isInteractive(stderr),
   verbose: false,

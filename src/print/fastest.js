@@ -1,10 +1,10 @@
 import { groupBy } from '../utils/group.js'
 
 // Add `iteration.fastest` boolean indicating fastest iterations,
-// for each variation+command combination, among all tasks
+// for each variation+command+env combination, among all tasks
 export const addFastestIterations = function(iterations) {
   const minMedians = Object.entries(
-    groupBy(iterations, ['variation', 'command']),
+    groupBy(iterations, ['variation', 'command', 'env']),
   ).map(getMinMedian)
   const minMediansA = Object.fromEntries(minMedians)
 

@@ -14,17 +14,36 @@ export const getIterations = async function({
   tasks: taskIds,
   variations: variationIds,
   run: runners,
+  env,
 }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
   const { runners: runnersA, versions } = await loadRunners(runners, taskPaths)
 
-  const iterations = await loadIterations({
+  const iterationsB = await getAllIterations({
     taskPaths,
     runners: runnersA,
     duration,
     cwd,
+    taskIds,
+    variationIds,
   })
+
+  const iterationsC = addEnv(iterationsB, env)
+  const iterationsD = padTitles(iterationsC)
+  const iterationsE = addNames(iterationsD)
+  return { iterations: iterationsE, versions }
+}
+
+const getAllIterations = async function({
+  taskPaths,
+  runners,
+  duration,
+  cwd,
+  taskIds,
+  variationIds,
+}) {
+  const iterations = await loadIterations({ taskPaths, runners, duration, cwd })
 
   const iterationsA = iterations.filter(removeDuplicates)
   const iterationsB = selectIterations({
@@ -37,9 +56,7 @@ export const getIterations = async function({
     throw new Error('No tasks to benchmark')
   }
 
-  const iterationsC = padTitles(iterationsB)
-  const iterationsD = addNames(iterationsC)
-  return { iterations: iterationsD, versions }
+  return iterationsB
 }
 
 // When two `files` define the same iteration, the last one prevails
@@ -56,4 +73,12 @@ const removeDuplicates = function(
         iteration.variationId !== variationId ||
         iteration.commandId !== commandId,
     )
+}
+
+const addEnv = function(iterations, env) {
+  return iterations.map(iteration => ({
+    ...iteration,
+    envId: env,
+    envTitle: env,
+  }))
 }

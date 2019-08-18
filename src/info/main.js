@@ -11,9 +11,13 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
 
   const optsA = getOpts(opts)
 
-  const { tasks, variations, commands, iterations: iterationsA } = addGroups(
-    iterations,
-  )
+  const {
+    tasks,
+    variations,
+    commands,
+    envs,
+    iterations: iterationsA,
+  } = addGroups(iterations)
 
   const system = getSystem(versions)
 
@@ -24,6 +28,7 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
     tasks,
     variations,
     commands,
+    envs,
     system,
     iterations: iterationsA,
   }

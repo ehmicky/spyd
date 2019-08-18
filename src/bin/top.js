@@ -58,7 +58,7 @@ Default: all variations`,
     describe: `Name of the current hardware/software environment.
 Used to compare different machines or configurations together.
 Meant to be used together with the 'job' option.
-Default: none`,
+Default: ""`,
   },
   run: {
     describe: `Module to run benchmarks for a specific programming language or
