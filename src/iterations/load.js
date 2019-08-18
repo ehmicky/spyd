@@ -63,6 +63,8 @@ const getCommandIterations = async function({
     input,
     duration,
     cwd,
+    stdio: ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe'],
+    fds: [4, 5],
   })
   const iterationsA = iterations.map(iteration =>
     normalizeIteration(iteration, command, taskPath),

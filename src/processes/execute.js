@@ -26,10 +26,9 @@ export const executeChild = async function({
   cwd,
   taskId,
   variationId,
+  stdio,
+  fds,
 }) {
-  const stdio = ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe']
-  const fds = [4, 5]
-
   const inputA = JSON.stringify(input)
 
   const child = spawn(file, [...args, inputA], { stdio, cwd })

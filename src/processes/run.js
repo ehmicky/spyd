@@ -49,6 +49,8 @@ export const runChildren = async function({
       cwd,
       taskId,
       variationId,
+      stdio: ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe'],
+      fds: [4, 5],
     })
     // eslint-disable-next-line fp/no-mutating-methods
     results.push({ times, count })
