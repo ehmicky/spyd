@@ -2,7 +2,7 @@ import { findBenchmark } from '../save/find.js'
 
 // Retrieve the index of the previous benchmark to compare/diff with
 export const getDiffIndex = function(previous, diff) {
-  if (diff === undefined) {
+  if (diff === undefined || previous.length === 0) {
     return
   }
 
