@@ -34,7 +34,7 @@ const padProp = function(iteration, paddings, propName) {
 
 const padValue = function(padding, title) {
   if (padding === 0) {
-    return
+    return ''
   }
 
   return title.padEnd(padding)
