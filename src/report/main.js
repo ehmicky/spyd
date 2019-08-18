@@ -1,6 +1,6 @@
 import { addPrintedInfo } from '../print/main.js'
 
-import { getChalk } from './colors.js'
+import { getChalk, handleColors } from './colors.js'
 import { handleContent } from './content.js'
 
 // Report benchmark results
@@ -68,7 +68,9 @@ const useReporter = async function({
 
   const content = await reportFunc(benchmark, reportOptC)
 
-  await handleContent(content, reportOptC)
+  const contentA = handleColors(content, reportOptB)
+
+  await handleContent(contentA, reportOptC)
 }
 
 // --report.REPORTER.* options are dynamic, i.e. are not normalized by our
