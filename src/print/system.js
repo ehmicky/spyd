@@ -20,7 +20,7 @@ const prettifySystem = function(env) {
   return { ...env, systemPretty }
 }
 
-const getSystemPretty = function({ title = 'System', ...env }) {
+const getSystemPretty = function({ title = MAIN_TITLE, ...env }) {
   const fields = Object.keys(MACHINE_FIELDS).filter(
     field => env[field] !== undefined,
   )
@@ -38,6 +38,8 @@ const getSystemPretty = function({ title = 'System', ...env }) {
   const systemPretty = `${blue.bold(`${title}:`)}\n${machineA}`
   return systemPretty
 }
+
+const MAIN_TITLE = 'System'
 
 const getPadding = function(fields) {
   const lengths = fields.map(getLength)
