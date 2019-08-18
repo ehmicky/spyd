@@ -1,8 +1,7 @@
-// Add `benchmark.job` using the `job` option.
-// That option can be "same" to re-use the previous benchmark's job.
-export const addJobId = function(benchmarks, benchmark, { job }) {
+// The `job` option can be "same" to re-use the previous benchmark's job.
+export const normalizeJob = function(benchmarks, { job, ...opts }) {
   const jobA = handleSame(benchmarks, job)
-  return { ...benchmark, job: jobA }
+  return { ...opts, job: jobA }
 }
 
 const handleSame = function(benchmarks, job) {

@@ -4,13 +4,18 @@ import { getOptions } from './options.js'
 import { getSystem } from './system.js'
 
 // Add more information to the final benchmark and normalize/sort results
-export const addBenchmarkInfo = function({ iterations, opts, versions }) {
+export const addBenchmarkInfo = function({
+  iterations,
+  opts,
+  opts: { job },
+  versions,
+}) {
   const id = uuidv4()
   const timestamp = new Date().toISOString()
 
   const env = getEnv({ opts, versions })
 
-  return { id, timestamp, env, iterations }
+  return { id, timestamp, job, env, iterations }
 }
 
 // Retrieve current `benchmark.env` (options + system)

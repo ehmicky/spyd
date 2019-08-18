@@ -1,5 +1,5 @@
 import { getOpts } from './options/main.js'
-import { addJobId } from './jobs/id.js'
+import { normalizeJob } from './jobs/normalize.js'
 import { report } from './report/main.js'
 import { list } from './store/list.js'
 import { save } from './store/save.js'
@@ -42,15 +42,14 @@ const showAction = async function(showOpt, opts) {
 
 // Default action: run a new benchmark
 const runAction = async function(opts) {
-  const benchmark = await runBenchmark(opts)
-
   const benchmarks = await list(opts)
+  const optsA = normalizeJob(benchmarks, opts)
 
-  const benchmarkA = addJobId(benchmarks, benchmark, opts)
+  const benchmark = await runBenchmark(optsA)
 
   const [benchmarkB] = await Promise.all([
-    report(benchmarks, benchmarkA, opts),
-    save(benchmarkA, opts),
+    report(benchmarks, benchmark, optsA),
+    save(benchmark, optsA),
   ])
   return benchmarkB
 }
