@@ -27,8 +27,6 @@ const addPadding = function(iteration, paddings) {
   return { ...iteration, ...titlesA }
 }
 
-const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle']
-
 const padProp = function(iteration, paddings, propName) {
   const title = padValue(paddings[propName], iteration[propName])
   return [propName, title]
@@ -41,3 +39,5 @@ const padValue = function(padding, title = '') {
 
   return title.padEnd(padding)
 }
+
+const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle']
