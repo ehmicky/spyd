@@ -1,3 +1,5 @@
+import { get } from './get_set.js'
+
 // Sort an array of numbers
 export const sortNumbers = function(array) {
   // eslint-disable-next-line fp/no-mutating-methods
@@ -46,12 +48,4 @@ const compareByProp = function(objA, objB, propName) {
   if (propA < propB) {
     return -1
   }
-}
-
-const get = function(obj, keys) {
-  return keys.reduce(getReduce, obj)
-}
-
-const getReduce = function(obj, key) {
-  return obj[key]
 }
