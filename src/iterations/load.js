@@ -9,10 +9,11 @@ export const loadIterations = async function({
   runners,
   duration,
   cwd,
+  debug,
 }) {
   const iterations = await Promise.all(
     taskPaths.map(taskPath =>
-      getFilesIterations({ taskPath, runners, duration, cwd }),
+      getFilesIterations({ taskPath, runners, duration, cwd, debug }),
     ),
   )
   const iterationsA = iterations.flat()
@@ -24,11 +25,12 @@ const getFilesIterations = async function({
   runners,
   duration,
   cwd,
+  debug,
 }) {
   const runnersA = findRunners(taskPath, runners)
   const iterations = await Promise.all(
     runnersA.map(({ commands }) =>
-      getFileIterations({ taskPath, commands, duration, cwd }),
+      getFileIterations({ taskPath, commands, duration, cwd, debug }),
     ),
   )
   const iterationsA = iterations.flat()
@@ -40,10 +42,11 @@ const getFileIterations = async function({
   commands,
   duration,
   cwd,
+  debug,
 }) {
   const iterations = await Promise.all(
     commands.map(command =>
-      getCommandIterations({ taskPath, command, duration, cwd }),
+      getCommandIterations({ taskPath, command, duration, cwd, debug }),
     ),
   )
   const iterationsA = iterations.flat()
@@ -56,21 +59,37 @@ const getCommandIterations = async function({
   command: { commandValue, commandOpt },
   duration,
   cwd,
+  debug,
 }) {
   const input = { type: 'load', taskPath, opts: commandOpt }
+  const fds = getFds(debug)
   const { iterations } = await executeChild({
     commandValue,
     input,
     duration,
     cwd,
-    stdio: ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe'],
-    outputFd: 4,
-    errorFds: [5],
+    ...fds,
   })
   const iterationsA = iterations.map(iteration =>
     normalizeIteration(iteration, command, taskPath),
   )
   return iterationsA
+}
+
+const getFds = function(debug) {
+  if (debug) {
+    return {
+      stdio: ['ignore', 'pipe', 'pipe', 'ignore', 'pipe', 'pipe'],
+      outputFd: 4,
+      errorFds: [5, 2, 1],
+    }
+  }
+
+  return {
+    stdio: ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe'],
+    outputFd: 4,
+    errorFds: [5],
+  }
 }
 
 const normalizeIteration = function(

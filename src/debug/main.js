@@ -5,7 +5,7 @@ import { executeChild } from '../processes/execute.js'
 
 // Run benchmark in debug mode
 export const debugBenchmark = async function(opts) {
-  const { iterations } = await getIterations(opts)
+  const { iterations } = await getIterations({ ...opts, debug: true })
 
   await pMapSeries(iterations, iteration =>
     runIteration({ ...iteration, opts }),

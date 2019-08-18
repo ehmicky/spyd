@@ -11,6 +11,7 @@ export const getIterations = async function({
   files,
   duration,
   cwd,
+  debug,
   tasks: taskIds,
   variations: variationIds,
   run: runners,
@@ -24,6 +25,7 @@ export const getIterations = async function({
     runners: runnersA,
     duration,
     cwd,
+    debug,
     taskIds,
     variationIds,
   })
@@ -37,10 +39,17 @@ const getAllIterations = async function({
   runners,
   duration,
   cwd,
+  debug,
   taskIds,
   variationIds,
 }) {
-  const iterations = await loadIterations({ taskPaths, runners, duration, cwd })
+  const iterations = await loadIterations({
+    taskPaths,
+    runners,
+    duration,
+    cwd,
+    debug,
+  })
 
   const iterationsA = removeDuplicates(iterations)
   const iterationsB = selectIterations({

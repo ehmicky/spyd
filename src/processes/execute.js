@@ -96,15 +96,12 @@ const getErrorOutput = async function(child, errorFds) {
   const errorOutputs = await Promise.all(
     errorFds.map(fd => getChildFd(child, fd)),
   )
-  return errorOutputs.filter(hasData).join('\n\n')
+  return errorOutputs.filter(Boolean).join('\n\n')
 }
 
-const hasData = function(errorOutput) {
-  return errorOutput.trim() !== ''
-}
-
-const getChildFd = function(child, fd) {
-  return getStream(child.stdio[fd], { maxBuffer: MAX_BUFFER })
+const getChildFd = async function(child, fd) {
+  const output = await getStream(child.stdio[fd], { maxBuffer: MAX_BUFFER })
+  return output.trim()
 }
 
 // Child process output and error output cannot exceed 100 MB

@@ -89,15 +89,9 @@ const getErrorStack = function(error) {
 }
 
 const normalizeErrorOutput = function(errorOutput) {
-  if (errorOutput === undefined) {
+  if (errorOutput === undefined || errorOutput === '') {
     return ''
   }
 
-  const errorOutputA = errorOutput.trim()
-
-  if (errorOutputA === '') {
-    return ''
-  }
-
-  return `\n\n${errorOutputA}`
+  return `\n\n${errorOutput}`
 }
