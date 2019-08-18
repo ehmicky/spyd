@@ -4,17 +4,15 @@ import { addPrevious } from './previous.js'
 import { normalizeStats, addPrintedStats } from './stats/main.js'
 import { getPrintedSystem } from './system.js'
 
-// Add report-specific information that is not saved in data files
+// We try to save as little as possible in stores, and compute anything that
+// can on the fly, before reporting.
 export const addPrintedInfo = function(
   { iterations, ...benchmark },
   { show, diff, verbose, benchmarks },
 ) {
   const iterationsA = addFastestIterations(iterations)
 
-  const iterationsB = dereferenceBenchmark({
-    benchmark,
-    iterations: iterationsA,
-  })
+  const iterationsB = dereferenceBenchmark(iterationsA, benchmark)
 
   const { previous, iterations: iterationsC } = addPrevious({
     benchmarks,

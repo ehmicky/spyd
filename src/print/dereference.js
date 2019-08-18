@@ -1,8 +1,8 @@
 // Dereference task/variation/command indexes
-export const dereferenceBenchmark = function({
-  benchmark: { tasks, variations, commands },
+export const dereferenceBenchmark = function(
   iterations,
-}) {
+  { tasks, variations, commands },
+) {
   return iterations.map(iteration =>
     dereferenceIteration({ iteration, tasks, variations, commands }),
   )
