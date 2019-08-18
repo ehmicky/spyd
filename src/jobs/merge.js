@@ -5,9 +5,19 @@ import { addNames } from '../print/name.js'
 
 // Merge previous benchmarks part of the same `job`
 export const mergeJobBenchmarks = function(benchmarks, benchmark) {
+  const benchmarkA = normalizeEnv(benchmark)
+
   return benchmarks
-    .filter(benchmarkA => benchmarkA.job === benchmark.job)
-    .reduce(mergeBenchmarks, benchmark)
+    .map(normalizeEnv)
+    .filter(benchmarkB => benchmarkB.job === benchmarkA.job)
+    .reduce(mergeBenchmarks, benchmarkA)
+}
+
+const normalizeEnv = function({ opts, system, env, ...benchmark }) {
+  return {
+    ...benchmark,
+    envs: [{ id: env, title: env, opts, system }],
+  }
 }
 
 const mergeBenchmarks = function(
@@ -37,7 +47,7 @@ const mergeEnv = function(envs, env) {
   return envs
 }
 
-const SAME_ENV_PROPS = ['options']
+const SAME_ENV_PROPS = ['opts']
 
 const validateEnv = function(duplicateEnv, env, propName) {
   // TODO: replace with util.isDeepStrictEqual() once dropping support for
