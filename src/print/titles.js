@@ -100,7 +100,7 @@ const getName = function(iteration, props) {
     .map(propName => iteration[propName])
     .filter(Boolean)
     .map(part => cyan.bold(part))
-    .join(` ${cyan.dim(pointer)} `)
+    .join(`${cyan.dim(pointer)}  `)
 }
 
 const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle']
