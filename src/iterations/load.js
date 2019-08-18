@@ -62,7 +62,7 @@ const getCommandIterations = async function({
   debug,
 }) {
   const input = { type: 'load', taskPath, opts: commandOpt }
-  const fds = getFds(debug)
+  const fds = debug ? LOAD_DEBUG_FDS : LOAD_RUN_FDS
   const { iterations } = await executeChild({
     commandValue,
     input,
@@ -76,20 +76,16 @@ const getCommandIterations = async function({
   return iterationsA
 }
 
-const getFds = function(debug) {
-  if (debug) {
-    return {
-      stdio: ['ignore', 'pipe', 'pipe', 'ignore', 'pipe', 'pipe'],
-      outputFd: 4,
-      errorFds: [5, 2, 1],
-    }
-  }
+const LOAD_DEBUG_FDS = {
+  stdio: ['ignore', 'pipe', 'pipe', 'ignore', 'pipe', 'pipe'],
+  outputFd: 4,
+  errorFds: [5, 2, 1],
+}
 
-  return {
-    stdio: ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe'],
-    outputFd: 4,
-    errorFds: [5],
-  }
+const LOAD_RUN_FDS = {
+  stdio: ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe'],
+  outputFd: 4,
+  errorFds: [5],
 }
 
 const normalizeIteration = function(
