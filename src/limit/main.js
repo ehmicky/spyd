@@ -34,7 +34,10 @@ export const getLimit = function({
 }
 
 const isTarget = function({ taskId, variationId, commandId }, ids) {
-  return ids.some(id => taskId === id || variationId === id || commandId === id)
+  return (
+    ids === undefined ||
+    ids.some(id => taskId === id || variationId === id || commandId === id)
+  )
 }
 
 const getPercentage = function({ percentage }) {
