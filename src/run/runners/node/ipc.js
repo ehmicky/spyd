@@ -12,6 +12,10 @@ export const getInput = function() {
 
 // Send output from child to parent process
 export const sendOutput = async function(message) {
+  if (message === undefined) {
+    return
+  }
+
   const messageStr = JSON.stringify(message)
   await pWrite(OUTPUT_FD, messageStr)
 }

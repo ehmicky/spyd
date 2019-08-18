@@ -3,6 +3,7 @@ import { exit } from 'process'
 import { benchmark } from './benchmark/main.js'
 import { loadTaskFile } from './load/main.js'
 import { getInput, sendOutput, sendError } from './ipc.js'
+import { debugRun } from './debug.js'
 
 // Child process entry point
 const start = async function() {
@@ -34,16 +35,36 @@ const getIteration = function({
 
 // Run benchmarks
 const run = async function({ taskPath, opts, taskId, variationId, duration }) {
+  const { main, before, after } = await getTask({
+    taskPath,
+    opts,
+    taskId,
+    variationId,
+  })
+  const { times, count } = await benchmark({ main, before, after, duration })
+  return { times, count }
+}
+
+const debug = async function({ taskPath, opts, taskId, variationId }) {
+  const { main, before, after } = await getTask({
+    taskPath,
+    opts,
+    taskId,
+    variationId,
+  })
+  await debugRun({ main, before, after })
+}
+
+const getTask = async function({ taskPath, opts, taskId, variationId }) {
   const iterations = await loadTaskFile(taskPath, opts)
 
   const { main, before, after } = iterations.find(
     iteration =>
       iteration.taskId === taskId && iteration.variationId === variationId,
   )
-  const { times, count } = await benchmark({ main, before, after, duration })
-  return { times, count }
+  return { main, before, after }
 }
 
-const TYPES = { load, run }
+const TYPES = { load, run, debug }
 
 start()
