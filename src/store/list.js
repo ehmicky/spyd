@@ -1,18 +1,6 @@
 import { mergeBenchmarks } from '../jobs/merge.js'
-import { addJob } from '../jobs/options.js'
 
 import { getIndex } from './get.js'
-
-// Add a new benchmark
-export const add = async function(benchmark, opts) {
-  const benchmarks = await listFromStore(opts)
-
-  const benchmarkA = addJob(benchmark, benchmarks, opts)
-  const benchmarksA = [...benchmarks, benchmarkA]
-
-  const benchmarksB = mergeBenchmarks(benchmarksA)
-  return [benchmarkA, benchmarksB]
-}
 
 // Get a previous benchmark
 export const get = async function(delta, opts) {
@@ -24,7 +12,9 @@ export const get = async function(delta, opts) {
   return [benchmark, benchmarksA]
 }
 
-const listFromStore = async function({ store: { list: listStore, opts } }) {
+export const listFromStore = async function({
+  store: { list: listStore, opts },
+}) {
   try {
     return await listStore(opts)
   } catch (error) {

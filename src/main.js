@@ -1,6 +1,7 @@
 import { getOpts } from './options/main.js'
 import { report } from './report/main.js'
-import { add, get } from './store/list.js'
+import { add } from './store/add.js'
+import { get } from './store/list.js'
 import { save } from './store/save.js'
 import { remove as removeFromStore } from './store/remove.js'
 import { runBenchmark } from './run.js'
