@@ -52,6 +52,14 @@ Default: all tasks`,
 Each identifier can start with a ! to exclude the variation instead of selecting it.
 Default: all variations`,
   },
+  env: {
+    string: true,
+    requiresArg: true,
+    describe: `Name of the current hardware/software environment.
+Used to compare different machines or configurations together.
+Meant to be used together with the 'job' option.
+Default: none`,
+  },
   run: {
     describe: `Module to run benchmarks for a specific programming language or
 platform.

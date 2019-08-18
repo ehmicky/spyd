@@ -36,6 +36,17 @@ const normalizeVariations = function({ variations, ...opts }) {
   return { ...opts, variations }
 }
 
+// Normalize 'env' option
+const normalizeEnv = function({ env = '', ...opts }) {
+  const envA = env.trim()
+
+  if (envA === '') {
+    return opts
+  }
+
+  return { ...opts, env: envA }
+}
+
 // Normalize and validate 'duration' option
 // Duration is specified in seconds by the user but we convert it to nanoseconds
 const normalizeDuration = function({ duration, ...opts }) {
@@ -75,6 +86,7 @@ const NORMALIZERS = [
   normalizeFiles,
   normalizeTasks,
   normalizeVariations,
+  normalizeEnv,
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,
