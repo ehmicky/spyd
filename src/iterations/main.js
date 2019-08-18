@@ -1,9 +1,9 @@
 import { loadRunners } from '../run/load.js'
+import { normalizeTitles } from '../print/titles.js'
 
 import { getTaskPaths } from './path.js'
 import { loadIterations } from './load.js'
 import { selectIterations } from './select.js'
-import { addPaddings } from './paddings.js'
 
 // Retrieve each iteration, i.e. combination of task + variation (if any)
 export const getIterations = async function({
@@ -36,7 +36,7 @@ export const getIterations = async function({
     throw new Error('No tasks to benchmark')
   }
 
-  const iterationsC = addPaddings(iterationsB)
+  const iterationsC = normalizeTitles(iterationsB)
   return { iterations: iterationsC, versions }
 }
 

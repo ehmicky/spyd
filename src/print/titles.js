@@ -1,7 +1,9 @@
 // Make `taskTitle`, `variationTitle`, 'commandTitle' reporter-friendly by
 // adding paddings.
 // Also add `iteration.name` and `iteration.columnName`.
-export const addPaddings = function(iterations) {
+// We need to do this before benchmarks start because `iteration.name` is used
+// by progress reporters.
+export const normalizeTitles = function(iterations) {
   const paddings = getPaddings(iterations)
   const iterationsA = iterations.map(iteration =>
     addPadding(iteration, paddings),
