@@ -26,26 +26,29 @@ const serializeIteration = function({ name, stats, fastest }) {
 }
 
 export const serializeStats = function(stats) {
-  return STATS.map(statName => serializeStat(stats, statName)).join(dim(' | '))
+  return STATS.map(({ name, shortName }) =>
+    serializeStat(stats, name, shortName),
+  ).join(dim(' | '))
 }
 
 const STATS = [
-  'median',
-  'mean',
-  'min',
-  'max',
-  'diff',
-  'deviation',
-  'variance',
-  'count',
-  'loops',
-  'repeat',
-  'processes',
+  { name: 'medianPretty', shortName: 'mdn' },
+  { name: 'meanPretty', shortName: 'mea' },
+  { name: 'minPretty', shortName: 'min' },
+  { name: 'maxPretty', shortName: 'max' },
+  { name: 'diffPretty', shortName: 'dif' },
+  { name: 'limitPretty', shortName: 'lmt' },
+  { name: 'deviationPretty', shortName: 'dev' },
+  { name: 'variancePretty', shortName: 'vrc' },
+  { name: 'countPretty', shortName: 'cnt' },
+  { name: 'loopsPretty', shortName: 'lps' },
+  { name: 'repeatPretty', shortName: 'rpt' },
+  { name: 'processesPretty', shortName: 'prc' },
 ]
 
-const serializeStat = function(stats, statName) {
-  const stat = stats[`${statName}Pretty`]
-  return `${statName} ${yellow(stat)}`
+const serializeStat = function(stats, name, shortName) {
+  const stat = stats[name]
+  return `${shortName} ${yellow(stat)}`
 }
 
 export const debug = { report }
