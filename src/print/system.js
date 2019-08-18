@@ -1,4 +1,5 @@
 import { blue } from 'chalk'
+import indentString from 'indent-string'
 
 import { pick } from '../utils/main.js'
 
@@ -58,6 +59,10 @@ const serializeField = function(field, padding) {
 
 const MACHINE_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
 
-const getSystemPrettyField = function({ systemPretty }) {
-  return systemPretty
+const getSystemPrettyField = function({ systemPretty }, index) {
+  if (index === 0) {
+    return systemPretty
+  }
+
+  return indentString(systemPretty, 2)
 }
