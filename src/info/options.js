@@ -1,6 +1,6 @@
 // We only keep options that are relevant for reporting
 export const getOpts = function({ duration, run: runOpts }) {
-  const durationA = Math.round(duration / NANOSECS_TO_SECS)
+  const durationA = duration / NANOSECS_TO_SECS
   const runOptsA = getRunOpts(runOpts)
   return { duration: durationA, ...runOptsA }
 }
