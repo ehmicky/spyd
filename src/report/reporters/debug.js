@@ -63,7 +63,7 @@ const getSystem = function(system, systemPretty) {
 }
 
 const getTimestamp = function(timestamp, show) {
-  if (!show && false) {
+  if (!show) {
     return
   }
 
