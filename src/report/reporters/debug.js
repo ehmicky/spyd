@@ -3,11 +3,11 @@ import indentString from 'indent-string'
 
 // Debugging reporter only meant for development purpose
 const report = function(
-  { timestamp, iterations, systemPretty },
+  { timestamp, job, systemPretty, iterations },
   { system, show, link },
 ) {
   const content = iterations.map(serializeIteration).join('\n')
-  const footer = getFooter({ systemPretty, timestamp, system, show, link })
+  const footer = getFooter({ timestamp, job, systemPretty, system, show, link })
   return `\n${content}${footer}\n\n`
 }
 
@@ -40,11 +40,21 @@ const serializeStat = function(stats, statName) {
   return `${statName} ${yellow(stat)}`
 }
 
-const getFooter = function({ systemPretty, timestamp, system, show, link }) {
+const getFooter = function({
+  timestamp,
+  systemPretty,
+  job,
+  system,
+  show,
+  link,
+}) {
   const systemFooter = getSystem(systemPretty, system)
   const timestampFooter = getTimestamp(timestamp, show)
+  const jobFooter = getJob(job, show)
   const linkFooter = getLink(link)
-  const footers = [systemFooter, timestampFooter, linkFooter].filter(Boolean)
+  const footers = [systemFooter, timestampFooter, jobFooter, linkFooter].filter(
+    Boolean,
+  )
 
   if (footers.length === 0) {
     return ''
@@ -68,6 +78,14 @@ const getTimestamp = function(timestamp, show) {
   }
 
   return `${blue.bold('Timestamp:')} ${timestamp}`
+}
+
+const getJob = function(job, show) {
+  if (!show) {
+    return
+  }
+
+  return `${blue.bold('Job:')} ${job}`
 }
 
 const getLink = function(link) {
