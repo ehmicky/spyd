@@ -4,7 +4,7 @@ import { resolve } from 'path'
 import uuidv4 from 'uuid/v4.js'
 
 import { normalizeProgress } from '../progress/options.js'
-import { getBenchmarkDelta } from '../store/delta/main.js'
+import { normalizeDelta } from '../store/delta/main.js'
 
 import { validateStringArray, validatePositiveNumber } from './validate.js'
 
@@ -66,19 +66,19 @@ const normalizeCwd = function({ cwd, ...opts }) {
 
 // Normalize 'show' option
 const normalizeShow = function({ show, ...opts }) {
-  const showA = getBenchmarkDelta('show', show)
+  const showA = normalizeDelta('show', show)
   return { ...opts, show: showA }
 }
 
 // Normalize 'diff' option
 const normalizeDiff = function({ diff, ...opts }) {
-  const diffA = getBenchmarkDelta('diff', diff)
+  const diffA = normalizeDelta('diff', diff)
   return { ...opts, diff: diffA }
 }
 
 // Normalize 'remove' option
 const normalizeRemove = function({ remove, ...opts }) {
-  const removeA = getBenchmarkDelta('remove', remove)
+  const removeA = normalizeDelta('remove', remove)
   return { ...opts, remove: removeA }
 }
 

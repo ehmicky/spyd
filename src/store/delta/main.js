@@ -3,7 +3,7 @@ import { getDeltaTimestamp } from './timestamp.js'
 // Several options targets a previous benchmarks using either a boolean, an
 // integer or a timestamp. We normalize to a `query` object that stores can use.
 // We also validate it.
-export const getBenchmarkDelta = function(name, delta) {
+export const normalizeDelta = function(name, delta) {
   if (delta === false) {
     return
   }
