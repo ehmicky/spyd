@@ -1,4 +1,5 @@
 import { getOpts } from './options/main.js'
+import { addJobId, addJobBenchmarks } from './job.js'
 import { report } from './report/main.js'
 import { list } from './store/list.js'
 import { save } from './store/save.js'
@@ -32,9 +33,11 @@ const showAction = async function(showOpt, opts) {
   const benchmarks = await list(opts)
   const benchmark = get(benchmarks, showOpt, opts)
 
-  await report(benchmarks, benchmark, { ...opts, show: true })
+  const benchmarkA = addJobBenchmarks(benchmarks, benchmark)
 
-  return benchmark
+  await report(benchmarks, benchmarkA, { ...opts, show: true })
+
+  return benchmarkA
 }
 
 // Default action: run a new benchmark
@@ -42,12 +45,16 @@ const runAction = async function(opts) {
   const benchmark = await runBenchmark(opts)
 
   const benchmarks = await list(opts)
+
+  const benchmarkA = addJobId(benchmarks, benchmark, opts)
+  const benchmarkB = addJobBenchmarks(benchmarks, benchmarkA)
+
   await Promise.all([
-    report(benchmarks, benchmark, opts),
-    save(benchmark, opts),
+    report(benchmarks, benchmarkB, opts),
+    save(benchmarkB, opts),
   ])
 
-  return benchmark
+  return benchmarkB
 }
 
 // We do not use `export default` because Babel transpiles it in a way that
