@@ -1,5 +1,6 @@
 import { loadRunners } from '../run/load.js'
 import { addNames } from '../print/name.js'
+import { validateLimits } from '../limit/validate.js'
 
 import { getTaskPaths } from './path.js'
 import { loadIterations } from './load.js'
@@ -15,6 +16,7 @@ export const getIterations = async function({
   tasks: taskIds,
   variations: variationIds,
   run: runners,
+  limits,
 }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
@@ -28,6 +30,7 @@ export const getIterations = async function({
     debug,
     taskIds,
     variationIds,
+    limits,
   })
 
   const iterationsC = addNames(iterationsB)
@@ -42,6 +45,7 @@ const getAllIterations = async function({
   debug,
   taskIds,
   variationIds,
+  limits,
 }) {
   const iterations = await loadIterations({
     taskPaths,
@@ -61,6 +65,8 @@ const getAllIterations = async function({
   if (iterationsB.length === 0) {
     throw new Error('No tasks to benchmark')
   }
+
+  validateLimits(iterationsB, limits)
 
   return iterationsB
 }
