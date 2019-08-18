@@ -33,9 +33,9 @@ export const show = async function(opts) {
 export const remove = async function(opts) {
   const { remove: removeOpt, ...optsA } = await getOpts(opts)
 
-  const { group, benchmarks } = await get(removeOpt, optsA)
+  const { group, rawBenchmarks } = await get(removeOpt, optsA)
 
-  await removeFromStore(group, benchmarks, optsA)
+  await removeFromStore(group, rawBenchmarks, optsA)
 }
 
 // Run benchmark in debug mode
