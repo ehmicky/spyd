@@ -1,4 +1,4 @@
-// Get previous benchmark index by `count` or `timestamp`
+// Get previous benchmark index by benchmark delta
 export const find = function(benchmarks, { queryType, queryValue }) {
   if (benchmarks.length === 0) {
     throw new Error('No previous benchmarks')

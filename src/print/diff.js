@@ -1,4 +1,4 @@
-import { find } from '../store/find.js'
+import { find } from '../store/delta/find.js'
 
 // Retrieve the index of the previous benchmark to compare/diff with
 export const getDiffIndex = function(previous, diff) {

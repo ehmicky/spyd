@@ -1,7 +1,7 @@
 import { mergeBenchmarks } from '../jobs/merge.js'
 
 import { list } from './list.js'
-import { find } from './find.js'
+import { find } from './delta/find.js'
 
 // Get a previous benchmark by `count` or `timestamp`
 export const get = async function(delta, opts) {
