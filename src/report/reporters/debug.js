@@ -1,5 +1,3 @@
-import { pointer } from 'figures'
-
 // Debugging reporter only meant for development purpose
 const report = function(
   { timestamp, iterations, systemPretty },
@@ -21,11 +19,7 @@ const serializeIteration = function({
 }) {
   const fastestMark = fastest ? cyan.bold('*') : ' '
   const statsStr = serializeStats({ stats, chalk })
-  const nameA = name
-    .split('|')
-    .map(part => cyan.bold(part))
-    .join(cyan.dim(pointer))
-  return ` ${fastestMark} ${nameA}  ${cyan.dim('|')}  ${statsStr}`
+  return ` ${fastestMark} ${name}  ${cyan.dim('|')}  ${statsStr}`
 }
 
 export const serializeStats = function({ stats, chalk, chalk: { dim } }) {

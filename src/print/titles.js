@@ -1,3 +1,6 @@
+import { pointer } from 'figures'
+import { cyan } from 'chalk'
+
 // Make `taskTitle`, `variationTitle`, 'commandTitle' reporter-friendly by
 // adding paddings.
 // Also add `iteration.name` and `iteration.columnName`.
@@ -96,7 +99,8 @@ const getName = function(iteration, props) {
   return props
     .map(propName => iteration[propName])
     .filter(Boolean)
-    .join(' | ')
+    .map(part => cyan.bold(part))
+    .join(` ${cyan.dim(pointer)} `)
 }
 
 const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle']
