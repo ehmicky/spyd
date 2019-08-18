@@ -2,7 +2,6 @@ import { getOpts } from './options/main.js'
 import { report } from './report/main.js'
 import { add } from './store/add.js'
 import { get } from './store/get.js'
-import { save } from './store/save.js'
 import { remove as removeFromStore } from './store/remove.js'
 import { runBenchmark } from './run.js'
 
@@ -13,13 +12,10 @@ export const run = async function(opts) {
 
   const benchmark = await runBenchmark(optsA)
 
-  const [benchmarkA, benchmarks] = await add(benchmark, optsA)
+  const [{ job }, benchmarks] = await add(benchmark, optsA)
 
-  const [benchmarkB] = await Promise.all([
-    report(benchmarkA.job, benchmarks, { ...optsA, show: false }),
-    save(benchmarkA, optsA),
-  ])
-  return benchmarkB
+  const benchmarkA = await report(job, benchmarks, { ...optsA, show: false })
+  return benchmarkA
 }
 
 // Show a previous benchmark
