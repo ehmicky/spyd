@@ -77,9 +77,10 @@ const useReporter = async function({
 // options layer. Boolean options might be set on the CLI either as --[no-]OPT
 // or --OPT true|false. We normalize both to a boolean value.
 const convertBooleans = function(reportOpt) {
-  return Object.fromEntries(
+  const booleanOpts = Object.fromEntries(
     BOOLEAN_OPTS.map(name => convertBoolean(name, reportOpt[name])),
   )
+  return { ...reportOpt, ...booleanOpts }
 }
 
 const BOOLEAN_OPTS = ['colors', 'system', 'link']
