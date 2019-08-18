@@ -1,7 +1,7 @@
 import { findBenchmark } from './find.js'
 
 // Get previous benchmark
-export const load = function(
+export const get = function(
   benchmarks,
   { queryType, queryValue },
   { dataDir },

@@ -3,7 +3,7 @@ import { report } from './report/main.js'
 import { list } from './store/list.js'
 import { save } from './store/save.js'
 import { remove } from './store/remove.js'
-import { load } from './store/load.js'
+import { get } from './store/get.js'
 import { runBenchmark } from './run.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
@@ -30,7 +30,7 @@ const removeAction = async function(opts) {
 // Action when the 'show' option is used: show a previous benchmark
 const showAction = async function(opts) {
   const benchmarks = await list(opts)
-  const benchmark = load(benchmarks, opts.show, opts)
+  const benchmark = get(benchmarks, opts.show, opts)
 
   await report(benchmark, opts)
 
