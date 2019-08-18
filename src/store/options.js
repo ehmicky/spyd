@@ -13,7 +13,7 @@ export const normalizeStore = async function({
   return {
     ...opts,
     cwd,
-    store: { opts: { ...storeOpts, cwd, root, name }, ...store },
+    store: { opts: { cwd, root, name, ...storeOpts }, ...store },
   }
 }
 
