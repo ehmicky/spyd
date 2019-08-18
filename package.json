@@ -62,7 +62,8 @@
     "strip-ansi": "^5.2.0",
     "uuid": "^3.3.2",
     "write-file-atomic": "^3.0.0",
-    "yargs": "^13.3.0"
+    "yargs": "^13.3.0",
+    "yn": "^3.1.1"
   },
   "devDependencies": {
     "ava": "^2.3.0",

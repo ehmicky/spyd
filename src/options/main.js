@@ -6,6 +6,7 @@ import isInteractive from 'is-interactive'
 import { omitBy } from '../utils/main.js'
 
 import { getConfig } from './config.js'
+import { addEnvVars } from './env.js'
 import { normalizeOpts } from './normalize.js'
 import { loadAllPlugins } from './plugins.js'
 
@@ -16,13 +17,14 @@ export const getOpts = async function(opts = {}) {
   validateOpts(optsA)
 
   const optsB = await getConfig({ opts: optsA })
+  const optsC = addEnvVars(optsB)
 
-  validateOpts(optsB)
-  const optsC = { ...DEFAULT_OPTS, ...optsB }
+  validateOpts(optsC)
+  const optsD = { ...DEFAULT_OPTS, ...optsC }
 
-  const optsD = await normalizeOpts(optsC)
-  const optsE = await loadAllPlugins(optsD)
-  return optsE
+  const optsE = await normalizeOpts(optsD)
+  const optsF = await loadAllPlugins(optsE)
+  return optsF
 }
 
 const isUndefined = function(value) {
