@@ -26,6 +26,7 @@ export const addPrintedInfo = function(
 
   const benchmarkB = benchmarksD[benchmarksD.length - 1]
   const benchmarksE = benchmarksD.slice(0, -1)
+
   const benchmarkC = addPrevious(benchmarksE, benchmarkB, { diff, verbose })
   return benchmarkC
 }
