@@ -29,6 +29,18 @@ The file must contain:
   - a line with the words "spyd-end"
 The benchmarks will be inserted between those two lines.`,
   },
+  limit: {
+    alias: 'l',
+    string: true,
+    array: true,
+    requiresArg: true,
+    describe: `Report when the average duration has increased by more than a
+specific percentage.
+Can be specified several times.
+The value is the percentage (e.g. "50" for 50%).
+It can prefixed by a comma-separated list of identifiers (tasks, variations or
+commands) to target.`,
+  },
   colors: {
     boolean: true,
     describe: `Use colors in output.
