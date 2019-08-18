@@ -72,7 +72,8 @@ const serializeEach = function({ stat, type, name, scale, unit, decimals }) {
 }
 
 const serializeCount = function({ stat }) {
-  return String(stat)
+  // Adds thousands separators
+  return stat.toLocaleString()
 }
 
 const serializeScalar = function({ stat, scale, unit, decimals }) {
