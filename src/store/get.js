@@ -1,43 +1,24 @@
-// Get previous benchmark index by `count` or `timestamp`
-export const getIndex = function(benchmarks, queryType, queryValue) {
-  if (benchmarks.length === 0) {
-    throw new Error('No previous benchmarks')
-  }
+import { mergeBenchmarks } from '../jobs/merge.js'
 
-  const index = QUERIES[queryType](benchmarks, queryValue)
+import { list } from './list.js'
+import { find } from './find.js'
 
-  if (index === undefined) {
-    throw new Error('No matching benchmarks')
-  }
+// Get a previous benchmark by `count` or `timestamp`
+export const get = async function(delta, opts) {
+  const benchmarks = await list(opts)
 
-  return index
+  const benchmarksA = mergeBenchmarks(benchmarks)
+
+  const benchmark = getBenchmark(benchmarks, delta)
+  return [benchmark, benchmarksA]
 }
 
-const findByCount = function(benchmarks, count) {
-  if (count > benchmarks.length) {
-    return
+const getBenchmark = function(benchmarks, delta) {
+  try {
+    const index = find(benchmarks, delta)
+    const benchmark = benchmarks[index]
+    return benchmark
+  } catch (error) {
+    throw new Error(`Could not find previous benchmark: ${error.message}`)
   }
-
-  return benchmarks.length - count
-}
-
-const findByTimestamp = function(benchmarks, timestamp) {
-  const index = benchmarks.findIndex(
-    benchmark => benchmark.timestamp > timestamp,
-  )
-
-  if (index === 0) {
-    return
-  }
-
-  if (index === -1) {
-    return benchmarks.length - 1
-  }
-
-  return index - 1
-}
-
-const QUERIES = {
-  count: findByCount,
-  timestamp: findByTimestamp,
 }

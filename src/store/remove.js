@@ -1,4 +1,4 @@
-// Remove previous benchmark
+// Call `store.remove()`
 export const remove = async function(
   job,
   { store: { remove: removeFromStore, opts } },

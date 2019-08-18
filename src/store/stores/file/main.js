@@ -5,14 +5,12 @@ import { getBenchmarks, setBenchmarks } from './fs.js'
 // Saves benchmarks to `dir/data.json`
 const list = async function(opts) {
   const dir = getDir(opts)
-
   const benchmarks = await getBenchmarks(dir)
   return benchmarks
 }
 
 const add = async function(benchmark, opts) {
   const dir = getDir(opts)
-
   const benchmarks = await getBenchmarks(dir)
   const benchmarksA = [...benchmarks, benchmark]
   await setBenchmarks(dir, benchmarksA)
@@ -20,7 +18,6 @@ const add = async function(benchmark, opts) {
 
 const remove = async function(job, opts) {
   const dir = getDir(opts)
-
   const benchmarks = await getBenchmarks(dir)
   const benchmarksA = benchmarks.filter(benchmark => benchmark.job !== job)
   await setBenchmarks(dir, benchmarksA)

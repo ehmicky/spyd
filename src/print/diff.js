@@ -1,4 +1,4 @@
-import { getIndex } from '../store/get.js'
+import { find } from '../store/find.js'
 
 // Retrieve the index of the previous benchmark to compare/diff with
 export const getDiffIndex = function(previous, diff) {
@@ -6,7 +6,7 @@ export const getDiffIndex = function(previous, diff) {
     return
   }
 
-  return getIndex(previous, diff.queryType, diff.queryValue)
+  return find(previous, diff)
 }
 
 // We do not error when using the default `--diff` and no benchmarks have been
