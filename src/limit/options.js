@@ -4,8 +4,8 @@ import { validateStringArray } from '../options/validate.js'
 export const normalizeLimits = function({ limit, ...opts }) {
   validateStringArray(limit, 'limit')
 
-  const limitA = limit.map(normalizeLimit)
-  return { ...opts, limit: limitA }
+  const limits = limit.map(normalizeLimit)
+  return { ...opts, limits }
 }
 
 const normalizeLimit = function(limit) {

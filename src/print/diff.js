@@ -18,7 +18,7 @@ const isInitialDiff = function(previous, { queryType, queryValue }) {
 // Retrieve the difference of median compared with a previous benchmark
 export const getDiff = function(previous, diffIndex, { median }) {
   if (diffIndex === undefined) {
-    return
+    return {}
   }
 
   // eslint-disable-next-line fp/no-mutating-methods
@@ -30,7 +30,7 @@ export const getDiff = function(previous, diffIndex, { median }) {
   // This can happen when some iterations have a previous benchmark but others
   // not
   if (diffIteration === undefined) {
-    return
+    return {}
   }
 
   const {
@@ -38,7 +38,7 @@ export const getDiff = function(previous, diffIndex, { median }) {
   } = diffIteration
 
   const diff = computeDiff(median, previousMedian)
-  return diff
+  return { previousMedian, diff }
 }
 
 const computeDiff = function(median, previousMedian) {

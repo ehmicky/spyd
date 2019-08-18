@@ -1,3 +1,4 @@
+import { getLimit } from '../limit/main.js'
 import { omit } from '../utils/main.js'
 
 import { getDiffIndex, getDiff } from './diff.js'
@@ -10,7 +11,7 @@ import { normalizeStats } from './stats/main.js'
 export const addPrevious = function(
   benchmarks,
   { timestamp, iterations, ...benchmark },
-  { diff, verbose },
+  { limits, diff, verbose },
 ) {
   // When combined with the 'show' option, we only show the benchmarks before it
   // We exclude benchmarks from the same job (since they are already grouped
@@ -23,6 +24,7 @@ export const addPrevious = function(
     iterations,
     previous,
     diffIndex,
+    limits,
     verbose,
   })
 
@@ -39,11 +41,12 @@ const addPreviousIterations = function({
   iterations,
   previous,
   diffIndex,
+  limits,
   verbose,
 }) {
   const previousIterations = previous.flatMap(getIterations)
   const iterationsA = iterations.map(iteration =>
-    addPreviousIteration(iteration, previousIterations, diffIndex),
+    addPreviousIteration({ iteration, previousIterations, diffIndex, limits }),
   )
   // Needs to be done again since we added `diff`
   const iterationsB = normalizeStats(iterationsA, verbose)
@@ -54,16 +57,19 @@ const getIterations = function({ iterations }, benchmark) {
   return iterations.map(iteration => ({ ...iteration, benchmark }))
 }
 
-const addPreviousIteration = function(
-  { stats, ...iteration },
+const addPreviousIteration = function({
+  iteration,
+  iteration: { stats },
   previousIterations,
   diffIndex,
-) {
+  limits,
+}) {
   const previous = previousIterations.filter(previousIteration =>
     isSameIteration(iteration, previousIteration),
   )
-  const diff = getDiff(previous, diffIndex, stats)
-  return { ...iteration, stats: { ...stats, diff }, previous }
+  const { previousMedian, diff } = getDiff(previous, diffIndex, stats)
+  const { limit, slow } = getLimit({ iteration, limits, previousMedian })
+  return { ...iteration, stats: { ...stats, diff, limit }, slow, previous }
 }
 
 const isSameIteration = function(iterationA, iterationB) {
