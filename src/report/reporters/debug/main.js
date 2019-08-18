@@ -1,4 +1,4 @@
-import { cyan, yellow, dim } from 'chalk'
+import { cyan, yellow, dim, red } from 'chalk'
 
 import { getFooter } from './footer.js'
 
@@ -19,15 +19,15 @@ const report = function(
   return `\n${content}${footer}\n\n`
 }
 
-const serializeIteration = function({ name, stats, fastest }) {
+const serializeIteration = function({ name, stats, fastest, slow }) {
   const fastestMark = fastest ? cyan.bold('*') : ' '
-  const statsStr = serializeStats(stats)
+  const statsStr = serializeStats(stats, slow)
   return ` ${fastestMark} ${name}  ${cyan.dim('|')}  ${statsStr}`
 }
 
-export const serializeStats = function(stats) {
+export const serializeStats = function(stats, slow) {
   return STATS.map(({ name, shortName }) =>
-    serializeStat(stats, name, shortName),
+    serializeStat({ stats, name, shortName, slow }),
   ).join(dim(' | '))
 }
 
@@ -46,8 +46,13 @@ const STATS = [
   { name: 'processesPretty', shortName: 'prc' },
 ]
 
-const serializeStat = function(stats, name, shortName) {
+const serializeStat = function({ stats, name, shortName, slow }) {
   const stat = stats[name]
+
+  if (name === 'limitPretty' && slow) {
+    return red.inverse.bold(`${shortName} ${stat}`)
+  }
+
   return `${shortName} ${yellow(stat)}`
 }
 
