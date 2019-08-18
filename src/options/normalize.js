@@ -4,16 +4,13 @@ import { resolve } from 'path'
 import uuidv4 from 'uuid/v4.js'
 
 import { normalizeProgress } from '../progress/options.js'
-import { normalizeData } from '../store/options.js'
 import { getBenchmarkDelta } from '../store/delta.js'
 
 import { validateStringArray, validatePositiveNumber } from './validate.js'
 
 // Normalize options shape and do custom validation
-export const normalizeOpts = async function(opts) {
-  const optsA = NORMALIZERS.reduce(normalizeOpt, opts)
-  const optsB = await normalizeData(optsA)
-  return optsB
+export const normalizeOpts = function(opts) {
+  return NORMALIZERS.reduce(normalizeOpt, opts)
 }
 
 const normalizeOpt = function(opts, normalizer) {

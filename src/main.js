@@ -29,7 +29,7 @@ export const show = async function(opts) {
   const { show: showOpt, ...optsA } = await getOpts(opts)
 
   const benchmarks = await list(optsA)
-  const benchmark = get(benchmarks, showOpt, optsA)
+  const benchmark = await get(benchmarks, showOpt, optsA)
 
   const benchmarkA = await report(benchmarks, benchmark, {
     ...optsA,

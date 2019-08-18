@@ -1,18 +1,19 @@
 import { findBenchmark } from './find.js'
+import { getDir } from './dir.js'
 
 // Get previous benchmark
-export const get = function(
+export const get = async function(
   benchmarks,
   { queryType, queryValue },
-  { dataDir },
+  { data, cwd },
 ) {
+  const dir = await getDir({ data, cwd })
+
   try {
     const index = findBenchmark(benchmarks, queryType, queryValue)
     const benchmark = benchmarks[index]
     return benchmark
   } catch (error) {
-    throw new Error(
-      `Could not find benchmark from '${dataDir}':\n${error.message}`,
-    )
+    throw new Error(`Could not find benchmark from '${dir}':\n${error.message}`)
   }
 }

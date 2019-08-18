@@ -22,7 +22,7 @@ export const getOpts = async function(opts = {}) {
   validateOpts(optsC)
   const optsD = { ...DEFAULT_OPTS, ...optsC }
 
-  const optsE = await normalizeOpts(optsD)
+  const optsE = normalizeOpts(optsD)
   const optsF = await loadAllPlugins(optsE)
   return optsF
 }
@@ -78,7 +78,6 @@ const EXAMPLE_OPTS = {
   env: 'Windows 10',
   output: './file.js',
   insert: './README.md',
-  data: './spyd',
   show: VALID_BENCHMARK_DELTA,
   diff: VALID_BENCHMARK_DELTA,
   remove: VALID_BENCHMARK_DELTA,

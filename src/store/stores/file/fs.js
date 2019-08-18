@@ -8,8 +8,8 @@ import makeDir from 'make-dir'
 const pReadFile = promisify(readFile)
 
 // Retrieve benchmarks from filesystem
-export const getBenchmarks = async function(dataDir) {
-  const dataFile = await getDataFile(dataDir)
+export const getBenchmarks = async function(dir) {
+  const dataFile = await getDataFile(dir)
 
   if (!(await pathExists(dataFile))) {
     return []
@@ -21,20 +21,20 @@ export const getBenchmarks = async function(dataDir) {
 }
 
 // Persist benchmarks from filesystem
-export const setBenchmarks = async function(dataDir, benchmarks) {
-  const dataFile = await getDataFile(dataDir)
+export const setBenchmarks = async function(dir, benchmarks) {
+  const dataFile = await getDataFile(dir)
   const content = JSON.stringify({ benchmarks }, null, 2)
   await writeFileAtomic(dataFile, `${content}\n`)
 }
 
-const getDataFile = async function(dataDir) {
-  if (!(await pathExists(dataDir))) {
+const getDataFile = async function(dir) {
+  if (!(await pathExists(dir))) {
     // TODO: replace with `util.promisify(fs.mkdir)(cacheDir,{recursive: true})`
     // after dropping support for Node 8/9
-    await makeDir(dataDir)
+    await makeDir(dir)
   }
 
-  return `${dataDir}/${DATA_FILE}`
+  return `${dir}/${DATA_FILE}`
 }
 
 const DATA_FILE = 'data.json'
