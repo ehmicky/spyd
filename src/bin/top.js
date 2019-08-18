@@ -111,7 +111,6 @@ Default: false`,
 Default: true`,
   },
   save: {
-    alias: 's',
     boolean: true,
     describe: `Save the benchmarks.
 Default: false`,
