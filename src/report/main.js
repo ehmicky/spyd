@@ -1,3 +1,4 @@
+import { normalizeEnvs } from '../print/env.js'
 import { addPrintedInfo } from '../print/main.js'
 import { mergeJobBenchmarks } from '../jobs/merge.js'
 
@@ -21,15 +22,23 @@ export const report = async function(
     verbose,
   },
 ) {
-  const benchmarkA = mergeJobBenchmarks(benchmarks, benchmark)
-  const benchmarkB = addPrintedInfo(benchmarkA, { diff, verbose, benchmarks })
+  const { benchmark: benchmarkA, benchmarks: benchmarksA } = normalizeEnvs(
+    benchmark,
+    benchmarks,
+  )
+  const benchmarkB = mergeJobBenchmarks(benchmarksA, benchmarkA)
+  const benchmarkC = addPrintedInfo(benchmarkB, {
+    diff,
+    verbose,
+    benchmarks: benchmarksA,
+  })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>
       useReporter({
         reportFunc,
         reportOpt,
-        benchmark: benchmarkB,
+        benchmark: benchmarkC,
         output,
         insert,
         colors,
@@ -40,7 +49,7 @@ export const report = async function(
     ),
   )
 
-  return benchmarkB
+  return benchmarkC
 }
 
 // Perform each reporter

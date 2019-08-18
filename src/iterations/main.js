@@ -14,7 +14,6 @@ export const getIterations = async function({
   tasks: taskIds,
   variations: variationIds,
   run: runners,
-  env,
 }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
@@ -29,9 +28,8 @@ export const getIterations = async function({
     variationIds,
   })
 
-  const iterationsC = addEnv(iterationsB, env)
-  const iterationsD = addNames(iterationsC)
-  return { iterations: iterationsD, versions }
+  const iterationsC = addNames(iterationsB)
+  return { iterations: iterationsC, versions }
 }
 
 const getAllIterations = async function({
@@ -56,12 +54,4 @@ const getAllIterations = async function({
   }
 
   return iterationsB
-}
-
-const addEnv = function(iterations, env) {
-  return iterations.map(iteration => ({
-    ...iteration,
-    envId: env,
-    envTitle: env,
-  }))
 }

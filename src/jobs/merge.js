@@ -5,19 +5,9 @@ import { addNames } from '../print/name.js'
 
 // Merge previous benchmarks part of the same `job`
 export const mergeJobBenchmarks = function(benchmarks, benchmark) {
-  const benchmarkA = normalizeEnv(benchmark)
-
   return benchmarks
-    .map(normalizeEnv)
-    .filter(benchmarkB => benchmarkB.job === benchmarkA.job)
-    .reduce(mergeBenchmarks, benchmarkA)
-}
-
-const normalizeEnv = function({ opts, system, env, ...benchmark }) {
-  return {
-    ...benchmark,
-    envs: [{ id: env, title: env, opts, system }],
-  }
+    .filter(benchmarkA => benchmarkA.job === benchmark.job)
+    .reduce(mergeBenchmarks, benchmark)
 }
 
 const mergeBenchmarks = function(
