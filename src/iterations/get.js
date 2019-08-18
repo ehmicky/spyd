@@ -30,17 +30,24 @@ export const getCommandIterations = async function({
 }
 
 const normalizeIteration = function(
-  { taskId, taskTitle = taskId, variationId, variationTitle = variationId },
+  {
+    taskId,
+    taskTitle = taskId,
+    variationId = '',
+    variationTitle = variationId,
+  },
   { commandId, commandTitle, commandValue, commandOpt },
   { taskPath, env },
 ) {
-  validateIds({ taskId, variationId, commandId })
+  const variationIdA = variationId.trim()
+
+  validateIds({ taskId, variationId: variationIdA, commandId })
 
   return {
     taskPath,
     taskId,
     taskTitle,
-    variationId,
+    variationId: variationIdA,
     variationTitle,
     commandId,
     commandTitle,
