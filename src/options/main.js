@@ -53,9 +53,9 @@ const DEFAULT_OPTS = {
   report: { debug: {} },
   progress: { debug: {} },
   store: { file: {} },
-  show: false,
+  show: true,
   diff: true,
-  remove: false,
+  remove: true,
 }
 
 const VALID_TIMESTAMPS = [

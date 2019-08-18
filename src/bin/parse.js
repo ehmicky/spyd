@@ -3,24 +3,33 @@ import { omitBy } from '../utils/main.js'
 import { normalizeDynamicOpts } from './dynamic.js'
 
 export const parseOpts = function(yargs) {
-  const { _: files, report, progress, run, store, ...opts } = yargs.parse()
+  const {
+    _: [command = DEFAULT_COMMAND],
+    report,
+    progress,
+    run,
+    store,
+    benchmark,
+    ...opts
+  } = yargs.parse()
 
-  const filesA = files.length === 0 ? undefined : files
   const reportA = normalizeDynamicOpts(report)
   const progressA = normalizeDynamicOpts(progress)
   const runA = normalizeDynamicOpts(run)
   const storeA = normalizeDynamicOpts(store)
   const optsA = {
     ...opts,
-    files: filesA,
+    [command]: benchmark,
     report: reportA,
     progress: progressA,
     run: runA,
     store: storeA,
   }
   const optsB = omitBy(optsA, isInternalKey)
-  return optsB
+  return [command, optsB]
 }
+
+const DEFAULT_COMMAND = 'run'
 
 // Remove `yargs`-specific options, shortcuts and dash-cased
 const isInternalKey = function(key, value) {

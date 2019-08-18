@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { exit } from 'process'
 
-import spyd from '../main.js'
+import * as commands from '../main.js'
 
 import { defineCli } from './top.js'
 import { parseOpts } from './parse.js'
@@ -10,8 +10,8 @@ import { parseOpts } from './parse.js'
 const runCli = async function() {
   try {
     const yargs = defineCli()
-    const opts = parseOpts(yargs)
-    await spyd(opts)
+    const [command, opts] = parseOpts(yargs)
+    await commands[command](opts)
   } catch (error) {
     console.error(error.message)
     exit(1)
