@@ -13,6 +13,7 @@ export const debugBenchmark = async function(opts) {
 }
 
 const runIteration = async function({
+  name,
   taskPath,
   taskId,
   variationId,
@@ -20,6 +21,9 @@ const runIteration = async function({
   commandOpt,
   opts: { cwd },
 }) {
+  // eslint-disable-next-line no-restricted-globals, no-console
+  console.log(name)
+
   const input = {
     type: 'debug',
     taskPath,
@@ -36,4 +40,7 @@ const runIteration = async function({
     variationId,
     type: 'iterationDebug',
   })
+
+  // eslint-disable-next-line no-restricted-globals, no-console
+  console.log('')
 }
