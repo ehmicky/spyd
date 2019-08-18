@@ -8,7 +8,7 @@ import { getDiffIndex, getDiff } from './diff.js'
 //    task and variation
 export const addPrevious = function({
   benchmarks,
-  benchmark: { timestamp },
+  benchmark: { timestamp, job },
   iterations,
   diff,
   verbose,
@@ -20,8 +20,9 @@ export const addPrevious = function({
   }
 
   // When combined with the 'show' option, we only show the benchmarks before it
+  // We exclude benchmarks from the same job.
   const previous = benchmarks.filter(
-    benchmarkA => benchmarkA.timestamp < timestamp,
+    benchmarkA => benchmarkA.timestamp < timestamp && benchmarkA.job !== job,
   )
   const diffIndex = getDiffIndex(previous, diff)
 
