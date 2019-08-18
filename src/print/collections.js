@@ -5,7 +5,7 @@ import { getMean } from '../stats/methods.js'
 // Group row/columns information into top-level properties so that reporters
 // can list them.
 // Also add the mean speed of each group (using iterations medians).
-export const addGroups = function(iterations) {
+export const addCollections = function(iterations) {
   return GROUPS.reduce(addGroup, { iterations })
 }
 

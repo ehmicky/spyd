@@ -1,5 +1,5 @@
 import { mergeEnvs } from './env.js'
-import { addGroups } from './group.js'
+import { addCollections } from './collections.js'
 import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
 import { normalizeStats } from './stats/main.js'
@@ -19,7 +19,7 @@ export const addPrintedInfo = function({
     variations,
     commands,
     envs: envGroups,
-  } = addGroups(iterations)
+  } = addCollections(iterations)
   const envsA = mergeEnvs(envs, envGroups)
 
   const iterationsB = addNames(iterationsA)
