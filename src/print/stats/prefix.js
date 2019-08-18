@@ -1,5 +1,3 @@
-import { red, green } from 'chalk'
-
 // Prepend some statistics with prefixes
 export const addPrefix = function(stat, statPretty, name) {
   const getPrefix = PREFIXES[name]
@@ -26,8 +24,8 @@ const getPlusMinus = function() {
 }
 
 // The symbols works on CP437 too
-const UP_ARROW = red('\u2191')
-const DOWN_ARROW = green('\u2193')
+const UP_ARROW = '\u2191'
+const DOWN_ARROW = '\u2193'
 const PLUS_MINUS = '±'
 
 const PREFIXES = {
