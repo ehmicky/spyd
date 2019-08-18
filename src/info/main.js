@@ -62,12 +62,10 @@ const getIterations = function({ iterations, tasks, variations, commands }) {
     addIterationInfo({ iteration, tasks, variations, commands }),
   )
 
-  const iterationsB = addFastestIterations(iterationsA)
-
   // The fastest tasks will be first, then the fastest iterations within each
   // task (regardless of variants or runners)
-  sortBy(iterationsB, ['task', 'stats.median'])
-  return iterationsB
+  sortBy(iterationsA, ['task', 'stats.median'])
+  return iterationsA
 }
 
 const addIterationInfo = function({

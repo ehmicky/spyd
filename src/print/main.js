@@ -1,3 +1,4 @@
+import { addFastestIterations } from './fastest.js'
 import { dereferenceBenchmark } from './dereference.js'
 import { addPrevious } from './previous.js'
 import { normalizeStats, addPrintedStats } from './stats/main.js'
@@ -8,7 +9,12 @@ export const addPrintedInfo = async function(
   { show, diff, dataDir, store, verbose, nested },
   { iterations, ...benchmark },
 ) {
-  const iterationsA = dereferenceBenchmark({ benchmark, iterations })
+  const iterationsA = addFastestIterations(iterations)
+
+  const iterationsB = dereferenceBenchmark({
+    benchmark,
+    iterations: iterationsA,
+  })
 
   const nestedNormalize = getNestedNormalize({
     show,
@@ -17,17 +23,17 @@ export const addPrintedInfo = async function(
     store,
     nested,
   })
-  const { previous, iterations: iterationsB } = await addPrevious({
+  const { previous, iterations: iterationsC } = await addPrevious({
     benchmark,
-    iterations: iterationsA,
+    iterations: iterationsB,
     diff,
     dataDir,
     store,
     nestedNormalize,
   })
 
-  const iterationsC = normalizeStats(iterationsB)
-  const iterationsD = addPrintedStats(iterationsC, verbose)
+  const iterationsD = normalizeStats(iterationsC)
+  const iterationsE = addPrintedStats(iterationsD, verbose)
 
   const timestamp = getTimestamp(benchmark, show)
 
@@ -37,7 +43,7 @@ export const addPrintedInfo = async function(
     ...benchmark,
     timestamp,
     printedSystem,
-    iterations: iterationsD,
+    iterations: iterationsE,
     previous,
   }
 }
