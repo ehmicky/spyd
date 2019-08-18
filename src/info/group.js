@@ -18,7 +18,7 @@ export const addGroups = function(iterations) {
 
   // The fastest tasks will be first, then the fastest iterations within each
   // task (regardless of variations/commands)
-  sortBy(iterationsA, ['task', 'stats.median'])
+  sortBy(iterationsA, ['task', 'variation', 'command'])
 
   return { tasks, variations, commands, iterations: iterationsA }
 }
