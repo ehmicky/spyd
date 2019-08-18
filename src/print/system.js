@@ -15,13 +15,16 @@ const prettifySystem = function({ title, system, ...env }, index, envs) {
     .map(([name, value]) => serializeValue(name, value, padding))
     .join('\n')
 
-  const systemPretty = `${header}\n${systemA}`
+  const systemPretty = `${blue.bold(`${header}:`)}\n${systemA}`
   return { ...env, system, systemPretty }
 }
 
 const getHeader = function(title, envs) {
-  const header = envs.length === 1 || title === '' ? 'System' : title
-  return blue.bold(`${header}:`)
+  if (envs.length === 1 || title === '') {
+    return 'System'
+  }
+
+  return title
 }
 
 const getPadding = function(system) {
