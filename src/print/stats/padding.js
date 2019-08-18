@@ -50,8 +50,14 @@ const padStat = function(name, stats, paddings) {
 
 const padValue = function(stat, padding) {
   if (Array.isArray(stat)) {
-    return stat.map(statA => statA.padStart(padding))
+    return stat.map(statA => coloredPad(statA, padding))
   }
 
-  return stat.padStart(padding)
+  return coloredPad(stat, padding)
+}
+
+// Pad that takes into account ANSI color sequences
+const coloredPad = function(stat, padding) {
+  const ansiLength = stat.length - stringWidth(stat)
+  return stat.padStart(padding + ansiLength)
 }
