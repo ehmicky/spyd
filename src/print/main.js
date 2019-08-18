@@ -18,9 +18,9 @@ export const addPrintedInfo = function({
     tasks,
     variations,
     commands,
-    envs: envGroups,
+    envs: envCollections,
   } = addCollections(iterations)
-  const envsA = mergeEnvs(envs, envGroups)
+  const envsA = mergeEnvs(envs, envCollections)
 
   const iterationsB = addNames(iterationsA)
 
