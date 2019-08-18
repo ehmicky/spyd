@@ -16,6 +16,9 @@ import { forwardChildError } from './error.js'
 //  - likewise, file descriptor 3 is sometimes (though rarely) used
 //  - IPC needs to work across programming languages
 // Both input and output are JSON objects.
+// In `debug` we do things differently:
+//  - iterations uses stdout/stderr for output/error, directly piped to console
+//  - initial load combines both approaches
 export const executeChild = async function({
   commandValue: [file, ...args],
   input,
@@ -24,14 +27,18 @@ export const executeChild = async function({
   taskId,
   variationId,
 }) {
+  const stdio = ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe']
+  const fds = [4, 5]
+
   const inputA = JSON.stringify(input)
 
-  const child = spawn(file, [...args, inputA], { stdio: STDIO, cwd })
+  const child = spawn(file, [...args, inputA], { stdio, cwd })
 
-  const { exitCode, signal, output, errorOutput, error } = await waitForExit(
+  const { exitCode, signal, output, errorOutput, error } = await waitForExit({
     child,
     duration,
-  )
+    fds,
+  })
 
   forwardChildError({
     child,
@@ -47,15 +54,11 @@ export const executeChild = async function({
   return outputA
 }
 
-const STDIO = ['ignore', 'ignore', 'ignore', 'ignore', 'pipe', 'pipe']
-const OUTPUT_FD = 4
-const ERROR_FD = 5
-
 // Wait for child process successful exit, failed exit, spawning error,
 // stream error or timeout
-const waitForExit = async function(child, duration) {
+const waitForExit = async function({ child, duration, fds }) {
   const childPromise = getChildPromise(child, duration)
-  const streams = getStreams(child, [OUTPUT_FD, ERROR_FD])
+  const streams = getStreams(child, fds)
 
   try {
     const [[exitCode, signal], output, errorOutput] = await Promise.all([
