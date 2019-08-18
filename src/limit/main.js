@@ -1,3 +1,5 @@
+import { getSlowError } from './error.js'
+
 // Use the `limit` option to:
 //  - add `iteration.limit`
 //  - add `iteration.slow`
@@ -5,10 +7,12 @@
 export const getLimit = function({
   iteration,
   iteration: {
+    name,
     stats: { median },
   },
   limits,
   previousMedian,
+  diff,
 }) {
   if (previousMedian === undefined || previousMedian === 0) {
     return { slow: false }
@@ -25,10 +29,9 @@ export const getLimit = function({
   const percentage = Math.max(...percentages)
   const limit = previousMedian * (1 + percentage / PERCENTAGE_RATIO)
   const slow = median >= limit
-  return { limit, slow }
+  const slowError = getSlowError({ slow, name, percentage, diff })
+  return { limit, slow, slowError }
 }
-
-const PERCENTAGE_RATIO = 1e2
 
 const isTarget = function({ taskId, variationId, commandId }, ids) {
   return ids.some(id => taskId === id || variationId === id || commandId === id)
@@ -37,3 +40,5 @@ const isTarget = function({ taskId, variationId, commandId }, ids) {
 const getPercentage = function({ percentage }) {
   return percentage
 }
+
+const PERCENTAGE_RATIO = 1e2
