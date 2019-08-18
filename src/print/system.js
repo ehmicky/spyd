@@ -20,6 +20,6 @@ const getLength = function(key) {
 }
 
 const serializeValue = function(name, value, padding) {
-  const nameA = `${name}:`.padEnd(padding + 1)
+  const nameA = `${name}:`.padEnd(padding + 2)
   return `  ${blue.bold(nameA)} ${value}`
 }
