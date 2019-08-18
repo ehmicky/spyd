@@ -31,12 +31,18 @@ const mergeGroup = function([benchmark, ...benchmarks]) {
 }
 
 const mergePair = function(
-  { envs: previousEnvs, iterations: previousIterations },
-  { envs: [env], iterations, ...benchmark },
+  {
+    id: previousId,
+    ids: previousIds = [previousId],
+    envs: previousEnvs,
+    iterations: previousIterations,
+  },
+  { id, envs: [env], iterations, ...benchmark },
 ) {
+  const ids = [...previousIds, id]
   const envs = mergeEnvs(previousEnvs, env)
   const iterationsA = removeDuplicates([...previousIterations, ...iterations])
-  return { ...benchmark, envs, iterations: iterationsA }
+  return { ...benchmark, ids, envs, iterations: iterationsA }
 }
 
 // Several benchmarks can have the same env, providing it is exactly the same
