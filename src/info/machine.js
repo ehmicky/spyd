@@ -9,7 +9,7 @@ export const getMachine = function(versions) {
   const cpu = serializeCpus()
   const memory = getMemory()
   const os = osName()
-  return { CPU: cpu, Memory: memory, OS: os, ...versions }
+  return { cpu, memory, os, ...versions }
 }
 
 const serializeCpus = function() {

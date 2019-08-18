@@ -12,8 +12,8 @@ export const addBenchmarkInfo = function(
   const timestamp = new Date().toISOString()
 
   const optsA = getOpts(opts)
-  const system = getMachine(versions)
-  const envs = [{ id: env, title: env, opts: optsA, system }]
+  const machine = getMachine(versions)
+  const envs = [{ id: env, title: env, opts: optsA, ...machine }]
 
   return { id, timestamp, group, envs, iterations }
 }
