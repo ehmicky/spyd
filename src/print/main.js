@@ -1,5 +1,5 @@
-import { addFastestIterations } from './fastest.js'
-import { dereferenceBenchmark } from './dereference.js'
+import { addGroups } from './group.js'
+import { addSpeedInfo } from './speed.js'
 import { addPrevious } from './previous.js'
 import { normalizeStats, prettifyStats } from './stats/main.js'
 import { prettifySystem } from './system.js'
@@ -10,9 +10,15 @@ export const addPrintedInfo = function(
   { iterations, ...benchmark },
   { diff, verbose, benchmarks },
 ) {
-  const iterationsA = addFastestIterations(iterations)
+  const {
+    iterations: iterationsA,
+    tasks,
+    variations,
+    commands,
+    envs,
+  } = addGroups(iterations)
 
-  const iterationsB = dereferenceBenchmark(iterationsA, benchmark)
+  const iterationsB = addSpeedInfo(iterationsA)
 
   const { previous, iterations: iterationsC } = addPrevious({
     benchmarks,
@@ -33,6 +39,10 @@ export const addPrintedInfo = function(
   return {
     ...benchmark,
     timestamp,
+    tasks,
+    variations,
+    commands,
+    envs,
     systemPretty,
     iterations: iterationsE,
     previous,

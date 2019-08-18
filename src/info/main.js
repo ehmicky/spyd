@@ -1,7 +1,6 @@
 import uuidv4 from 'uuid/v4.js'
 
 import { getOpts } from './options.js'
-import { addGroups } from './group.js'
 import { getSystem } from './system.js'
 
 // Add more information to the final benchmark and normalize/sort results
@@ -11,25 +10,7 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
 
   const optsA = getOpts(opts)
 
-  const {
-    tasks,
-    variations,
-    commands,
-    envs,
-    iterations: iterationsA,
-  } = addGroups(iterations)
-
   const system = getSystem(versions)
 
-  return {
-    id,
-    timestamp,
-    opts: optsA,
-    tasks,
-    variations,
-    commands,
-    envs,
-    system,
-    iterations: iterationsA,
-  }
+  return { id, timestamp, opts: optsA, system, iterations }
 }
