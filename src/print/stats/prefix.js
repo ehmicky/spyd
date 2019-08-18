@@ -1,12 +1,16 @@
-// Prepend some statistics with prefixes
-export const getPrefix = function(stat, name) {
-  const prefix = PREFIXES[name]
+import { red, green } from 'chalk'
 
-  if (prefix === undefined) {
-    return ''
+// Prepend some statistics with prefixes
+export const addPrefix = function(stat, statPretty, name) {
+  const getPrefix = PREFIXES[name]
+
+  if (getPrefix === undefined) {
+    return statPretty
   }
 
-  return prefix(stat)
+  const prefix = getPrefix(stat)
+  const statPrettyA = `${prefix}${statPretty}`
+  return statPrettyA
 }
 
 const getArrow = function(stat) {
@@ -22,8 +26,8 @@ const getPlusMinus = function() {
 }
 
 // The symbols works on CP437 too
-const UP_ARROW = '\u2191'
-const DOWN_ARROW = '\u2193'
+const UP_ARROW = red('\u2191')
+const DOWN_ARROW = green('\u2193')
 const PLUS_MINUS = '±'
 
 const PREFIXES = {

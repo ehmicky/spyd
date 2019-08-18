@@ -1,6 +1,6 @@
 import { STAT_TYPES } from './types.js'
 import { shouldSkipStat } from './skip.js'
-import { getPrefix } from './prefix.js'
+import { addPrefix } from './prefix.js'
 
 // Serialize each stat measure using the right time unit, number of decimals
 // and padding
@@ -64,9 +64,9 @@ const serialize = function({ stat, type, name, scale, unit, decimals }) {
 }
 
 const serializeEach = function({ stat, type, name, scale, unit, decimals }) {
-  const prefix = getPrefix(stat, name)
   const statPretty = SERIALIZE_STAT[type]({ stat, scale, unit, decimals })
-  return `${prefix}${statPretty}`
+  const statPrettyA = addPrefix(stat, statPretty, name)
+  return statPrettyA
 }
 
 const serializeCount = function({ stat }) {

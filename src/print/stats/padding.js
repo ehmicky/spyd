@@ -1,3 +1,5 @@
+import stringWidth from 'string-width'
+
 import { STAT_TYPES } from './types.js'
 
 // Pad `*.statsPretty` on the left so they vertically align.
@@ -18,7 +20,7 @@ const getPaddings = function(iterations) {
 const getPadding = function(name, iterations) {
   const allLengths = iterations
     .flatMap(({ stats }) => stats[`${name}Pretty`])
-    .map(getStatLength)
+    .map(stringWidth)
 
   if (allLengths.length === 0) {
     return [name, 0]
@@ -26,10 +28,6 @@ const getPadding = function(name, iterations) {
 
   const padding = Math.max(...allLengths)
   return [name, padding]
-}
-
-const getStatLength = function(stat) {
-  return stat.length
 }
 
 const addPadding = function({ iteration, iteration: { stats }, paddings }) {
