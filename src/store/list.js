@@ -3,8 +3,8 @@ import { addJob } from '../jobs/options.js'
 
 import { getIndex } from './get.js'
 
-// Append a new benchmark
-export const append = async function(benchmark, opts) {
+// Add a new benchmark
+export const add = async function(benchmark, opts) {
   const benchmarks = await listFromStore(opts)
 
   const benchmarkA = addJob(benchmark, benchmarks, opts)
