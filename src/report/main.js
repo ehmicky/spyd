@@ -43,7 +43,9 @@ export const report = async function(
 }
 
 const getBenchmark = function(job, benchmarks, { diff, verbose }) {
-  const benchmarksA = addPrintedInfo(benchmarks, { verbose })
+  const benchmarksA = benchmarks.map(benchmark =>
+    addPrintedInfo(benchmark, { verbose }),
+  )
 
   const benchmarkA = benchmarksA.find(benchmark => benchmark.job === job)
   const benchmarkB = addPrevious(benchmarksA, benchmarkA, { diff, verbose })

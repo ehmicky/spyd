@@ -6,7 +6,24 @@ import { removeDuplicates } from '../iterations/duplicate.js'
 // Merge previous benchmarks part of the same `job`.
 // Later benchmarks have priority.
 export const mergeBenchmarks = function(benchmarks) {
-  return Object.values(groupBy(benchmarks, 'job')).map(mergeGroup)
+  const benchmarksA = benchmarks.map(normalizeEnv)
+  return Object.values(groupBy(benchmarksA, 'job')).map(mergeGroup)
+}
+
+// Each benchmark has a single `env|opts|system`. When merged, those are put
+// together inside `envs` array. Iterations then point to them using `envId`.
+// We need to do this before merging benchmarks.
+const normalizeEnv = function({ opts, system, env, iterations, ...benchmark }) {
+  const iterationsA = iterations.map(iteration => ({
+    ...iteration,
+    envId: env,
+    envTitle: env,
+  }))
+  return {
+    ...benchmark,
+    iterations: iterationsA,
+    envs: [{ id: env, title: env, opts, system }],
+  }
 }
 
 const mergeGroup = function([benchmark, ...benchmarks]) {
