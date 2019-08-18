@@ -54,9 +54,11 @@ const ERROR_FD = 5
 // Wait for child process successful exit, failed exit, spawning error,
 // stream error or timeout
 const waitForExit = async function(child, duration) {
+  const childPromise = getChildPromise(child, duration)
+
   try {
     const [[exitCode, signal], output, errorOutput] = await Promise.all([
-      childTimeout(pEvent(child, 'exit', { multiArgs: true }), duration),
+      childPromise,
       getStream(child.stdio[OUTPUT_FD], { maxBuffer: MAX_BUFFER }),
       getStream(child.stdio[ERROR_FD], { maxBuffer: MAX_BUFFER }),
     ])
@@ -64,6 +66,16 @@ const waitForExit = async function(child, duration) {
   } catch (error) {
     return { error }
   }
+}
+
+const getChildPromise = function(child, duration) {
+  const childPromise = pEvent(child, 'exit', { multiArgs: true })
+
+  if (duration === undefined) {
+    return childPromise
+  }
+
+  return childTimeout(childPromise, duration)
 }
 
 // Child process output and error output cannot exceed 100 MB
