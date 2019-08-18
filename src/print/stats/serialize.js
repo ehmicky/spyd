@@ -1,5 +1,6 @@
 import { STAT_TYPES } from './types.js'
-import { handleDeviation } from './deviation.js'
+import { shouldSkipStat } from './skip.js'
+import { getPrefix } from './prefix.js'
 
 // Serialize each stat measure using the right time unit, number of decimals
 // and padding
@@ -43,31 +44,25 @@ const serializeStat = function({
   const prettyName = `${name}Pretty`
   const stat = stats[name]
 
-  if (stat === undefined) {
+  if (shouldSkipStat({ stat, name, loops, verbose })) {
     return [prettyName, '']
   }
 
   const decimals = statsDecimals[name]
-  const statA = SERIALIZE_STAT[type]({ stat, scale, unit, decimals })
-  const statB = handleDeviation({
-    stat: statA,
-    statNumber: stat,
-    name,
-    loops,
-    verbose,
-  })
-  return [prettyName, statB]
+  const statA = SERIALIZE_STAT[type]({ stat, name, scale, unit, decimals })
+  return [prettyName, statA]
 }
 
 const serializeCount = function({ stat }) {
   return String(stat)
 }
 
-const serializeScalar = function({ stat, scale, unit, decimals }) {
+const serializeScalar = function({ stat, name, scale, unit, decimals }) {
+  const prefix = getPrefix(stat, name)
   const statA = stat / scale
   const integer = Math.floor(statA)
   const fraction = getFraction({ stat: statA, integer, decimals })
-  return `${integer}${fraction}${unit}`
+  return `${prefix}${integer}${fraction}${unit}`
 }
 
 const getFraction = function({ stat, integer, decimals }) {
@@ -78,24 +73,17 @@ const getFraction = function({ stat, integer, decimals }) {
   return (stat - integer).toFixed(decimals).slice(1)
 }
 
-const serializePercentage = function({ stat }) {
+const serializePercentage = function({ stat, name }) {
+  const prefix = getPrefix(stat, name)
   const percentage = Math.abs(Math.floor(stat * PERCENTAGE_SCALE))
-
-  if (stat >= 0) {
-    return `${UP_ARROW} ${percentage}%`
-  }
-
-  return `${DOWN_ARROW} ${percentage}%`
+  return `${prefix}${percentage}%`
 }
 
 const PERCENTAGE_SCALE = 1e2
-// Works on CP437 too
-const UP_ARROW = '\u2191'
-const DOWN_ARROW = '\u2193'
 
-const serializeArray = function({ stat, scale, unit, decimals }) {
+const serializeArray = function({ stat, name, scale, unit, decimals }) {
   return stat.map(statA =>
-    serializeScalar({ stat: statA, scale, unit, decimals }),
+    serializeScalar({ stat: statA, name, scale, unit, decimals }),
   )
 }
 

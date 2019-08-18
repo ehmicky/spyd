@@ -51,7 +51,7 @@ const computeStats = function({ times, count, processes }) {
 
   const mean = getMean(times)
   const variance = getVariance(times, mean)
-  const deviation = getDeviation(variance)
+  const deviation = getDeviation(variance, mean)
 
   return {
     median,

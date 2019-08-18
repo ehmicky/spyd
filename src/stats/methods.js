@@ -25,7 +25,12 @@ export const getVariance = function(array, mean) {
   return getMean(array.map(num => (num - mean) ** 2))
 }
 
-// Same as variance but for standard deviation
-export const getDeviation = function(variance) {
-  return Math.sqrt(variance)
+// Same as variance but for standard deviation.
+// In percentage relative to the mean.
+export const getDeviation = function(variance, mean) {
+  if (mean === 0) {
+    return 0
+  }
+
+  return Math.sqrt(variance) / mean
 }
