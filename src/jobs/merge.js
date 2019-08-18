@@ -3,17 +3,15 @@ import fastDeepEqual from 'fast-deep-equal'
 import { removeDuplicates } from '../iterations/duplicate.js'
 
 // Merge previous benchmarks part of the same `job`
-export const mergeJobBenchmarks = function(benchmarks, { env, ...benchmark }) {
-  const benchmarkA = { ...benchmark, envs: [env] }
-
+export const mergeJobBenchmarks = function(benchmarks, benchmark) {
   return benchmarks
-    .filter(benchmarkB => benchmarkB.job === benchmarkA.job)
-    .reduce(mergeBenchmarks, benchmarkA)
+    .filter(benchmarkA => benchmarkA.job === benchmark.job)
+    .reduce(mergeBenchmarks, benchmark)
 }
 
 const mergeBenchmarks = function(
   { envs, iterations, ...benchmark },
-  { env, iterations: previousIterations },
+  { envs: [env], iterations: previousIterations },
 ) {
   const envsA = mergeEnv(envs, env)
   const iterationsA = removeDuplicates([...iterations, ...previousIterations])

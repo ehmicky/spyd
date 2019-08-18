@@ -13,14 +13,14 @@ export const addBenchmarkInfo = function({
   const id = uuidv4()
   const timestamp = new Date().toISOString()
 
-  const env = getEnv({ opts, versions })
+  const envs = getEnvs({ opts, versions })
 
-  return { id, timestamp, job, env, iterations }
+  return { id, timestamp, job, envs, iterations }
 }
 
-// Retrieve current `benchmark.env` (options + system)
-export const getEnv = function({ opts, opts: { env }, versions }) {
+// Retrieve current `benchmark.envs` (options + system)
+export const getEnvs = function({ opts, opts: { env }, versions }) {
   const options = getOptions(opts)
   const system = getSystem(versions)
-  return { id: env, title: env, options, system }
+  return [{ id: env, title: env, options, system }]
 }
