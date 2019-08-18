@@ -24,19 +24,19 @@ export const save = async function(
 // We otherwise try to persist everything, so that `--show` report the same
 // information.
 // We try to only persist what cannot be computed runtime (which is done by
-// `addPrintedInfo()` during reporting)
+// `addPrintedInfo()` during reporting). This includes
+// `iteration.name|columnName` which are only computed for progress reporters,
+// but re-computer after previous benchmarks loading/merging.
 const normalizeBenchmark = function({ iterations, ...benchmark }) {
   const iterationsA = iterations.map(normalizeIteration)
   return { ...benchmark, iterations: iterationsA }
 }
 
 const normalizeIteration = function({ stats, ...iteration }) {
-  const statsA = removeBigStats(stats)
-  return { ...iteration, stats: statsA }
+  const iterationA = omit(iteration, OMITTED_PROPS)
+  const statsA = omit(stats, OMITTED_STATS_PROPS)
+  return { ...iterationA, stats: statsA }
 }
 
-const removeBigStats = function(stats) {
-  return omit(stats, OMITTED_STATS_PROPS)
-}
-
+const OMITTED_PROPS = ['name', 'columnName']
 const OMITTED_STATS_PROPS = ['histogram', 'percentiles']
