@@ -4,7 +4,7 @@ import { add } from './store/add.js'
 import { get } from './store/get.js'
 import { remove as removeFromStore } from './store/remove.js'
 import { runBenchmark } from './run.js'
-import { debugBenchmark } from './debug/main.js'
+import { debugBenchmark } from './debug.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
 // Default action: run a new benchmark

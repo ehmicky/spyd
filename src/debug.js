@@ -1,7 +1,7 @@
 import pMapSeries from 'p-map-series'
 
-import { getIterations } from '../iterations/main.js'
-import { executeChild } from '../processes/execute.js'
+import { getIterations } from './iterations/main.js'
+import { executeChild } from './processes/execute.js'
 
 // Run benchmark in debug mode
 export const debugBenchmark = async function(opts) {
