@@ -1,6 +1,7 @@
 import { addPrintedInfo } from '../print/main.js'
 
-import { getChalk, handleColors } from './colors.js'
+import { handleReportOpt } from './options.js'
+import { handleColors } from './colors.js'
 import { handleContent } from './content.js'
 
 // Report benchmark results
@@ -50,40 +51,19 @@ const useReporter = async function({
   link,
   show,
 }) {
-  // `output`, `insert`, `colors`, `system`, link` can be set either for
-  // specific reporter (--report.REPORTER.output) or for all (--output)
-  const reportOptA = {
+  const reportOptB = handleReportOpt({
+    reportOpt,
     output,
     insert,
     colors,
     system,
     link,
-    ...reportOpt,
     show,
-  }
-
-  const reportOptB = convertBooleans(reportOptA)
+  })
 
   const content = await reportFunc(benchmark, reportOptB)
 
   const contentA = handleColors(content, reportOptB)
 
   await handleContent(contentA, reportOptB)
-}
-
-// --report.REPORTER.* options are dynamic, i.e. are not normalized by our
-// options layer. Boolean options might be set on the CLI either as --[no-]OPT
-// or --OPT true|false. We normalize both to a boolean value.
-const convertBooleans = function(reportOpt) {
-  const booleanOpts = Object.fromEntries(
-    BOOLEAN_OPTS.map(name => convertBoolean(name, reportOpt[name])),
-  )
-  return { ...reportOpt, ...booleanOpts }
-}
-
-const BOOLEAN_OPTS = ['colors', 'system', 'link']
-
-const convertBoolean = function(name, value) {
-  const valueA = value === true || value === 'true'
-  return [name, valueA]
 }
