@@ -1,9 +1,6 @@
 import uuidv4 from 'uuid/v4.js'
 
-import { sortBy } from '../utils/sort.js'
-
 import { getTasks, getVariations, getCommands } from './group.js'
-import { addFastestIterations } from './fastest.js'
 import { getSystem } from './system.js'
 
 // Add more information to the final benchmark and normalize/sort results
@@ -16,7 +13,9 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   const commands = getCommands(iterations)
   const system = getSystem(versions)
 
-  const iterationsA = getIterations({ iterations, tasks, variations, commands })
+  const iterationsA = iterations.map(iteration =>
+    addIterationInfo({ iteration, tasks, variations, commands }),
+  )
 
   return {
     id,
@@ -55,17 +54,6 @@ const hasRunOpt = function({ opts }) {
 
 const getRunOpt = function({ name, opts }) {
   return [name, opts]
-}
-
-const getIterations = function({ iterations, tasks, variations, commands }) {
-  const iterationsA = iterations.map(iteration =>
-    addIterationInfo({ iteration, tasks, variations, commands }),
-  )
-
-  // The fastest tasks will be first, then the fastest iterations within each
-  // task (regardless of variants or runners)
-  sortBy(iterationsA, ['task', 'stats.median'])
-  return iterationsA
 }
 
 const addIterationInfo = function({

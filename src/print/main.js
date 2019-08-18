@@ -1,3 +1,5 @@
+import { sortBy } from '../utils/sort.js'
+
 import { addFastestIterations } from './fastest.js'
 import { dereferenceBenchmark } from './dereference.js'
 import { addPrevious } from './previous.js'
@@ -10,6 +12,10 @@ export const addPrintedInfo = async function(
   { iterations, ...benchmark },
 ) {
   const iterationsA = addFastestIterations(iterations)
+
+  // The fastest tasks will be first, then the fastest iterations within each
+  // task (regardless of variants or runners)
+  sortBy(iterationsA, ['task', 'stats.median'])
 
   const iterationsB = dereferenceBenchmark({
     benchmark,
