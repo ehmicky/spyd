@@ -32,7 +32,7 @@ const showAction = async function(opts) {
   const benchmarks = await list(opts)
   const benchmark = get(benchmarks, opts.show, opts)
 
-  await report(benchmark, opts)
+  await report(benchmarks, benchmark, opts)
 
   return benchmark
 }
@@ -41,7 +41,11 @@ const showAction = async function(opts) {
 const runAction = async function(opts) {
   const benchmark = await runBenchmark(opts)
 
-  await Promise.all([report(benchmark, opts), save(benchmark, opts)])
+  const benchmarks = await list(opts)
+  await Promise.all([
+    report(benchmarks, benchmark, opts),
+    save(benchmark, opts),
+  ])
 
   return benchmark
 }

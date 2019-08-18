@@ -5,9 +5,9 @@ import { normalizeStats, addPrintedStats } from './stats/main.js'
 import { getPrintedSystem } from './system.js'
 
 // Add report-specific information that is not saved in data files
-export const addPrintedInfo = async function(
-  { show, diff, dataDir, store, verbose, nested },
+export const addPrintedInfo = function(
   { iterations, ...benchmark },
+  { show, diff, verbose, benchmarks },
 ) {
   const iterationsA = addFastestIterations(iterations)
 
@@ -16,20 +16,14 @@ export const addPrintedInfo = async function(
     iterations: iterationsA,
   })
 
-  const nestedNormalize = getNestedNormalize({
-    show,
-    diff,
-    dataDir,
-    store,
-    nested,
-  })
-  const { previous, iterations: iterationsC } = await addPrevious({
+  const { previous, iterations: iterationsC } = addPrevious({
+    benchmarks,
     benchmark,
     iterations: iterationsB,
+    show,
     diff,
-    dataDir,
-    store,
-    nestedNormalize,
+    verbose,
+    addPrintedInfo,
   })
 
   const iterationsD = normalizeStats(iterationsC)
@@ -46,21 +40,6 @@ export const addPrintedInfo = async function(
     iterations: iterationsE,
     previous,
   }
-}
-
-// Apply `normalizeBenchmark()` recursively on the `previous` benchmarks
-const getNestedNormalize = function({ show, diff, dataDir, store, nested }) {
-  if (nested) {
-    return
-  }
-
-  return addPrintedInfo.bind(null, {
-    show,
-    diff,
-    dataDir,
-    store,
-    nested: true,
-  })
 }
 
 // Only show timestamp when the `show` option is used

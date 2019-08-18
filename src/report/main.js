@@ -4,24 +4,16 @@ import { handleContent } from './content.js'
 
 // Report benchmark results
 export const report = async function(
+  benchmarks,
   benchmark,
-  {
-    report: reporters,
-    output,
-    insert,
-    system,
-    link,
+  { report: reporters, output, insert, system, link, show, diff, verbose },
+) {
+  const benchmarkA = addPrintedInfo(benchmark, {
     show,
     diff,
-    dataDir,
-    store,
     verbose,
-  },
-) {
-  const benchmarkA = await addPrintedInfo(
-    { show, diff, dataDir, store, verbose },
-    benchmark,
-  )
+    benchmarks,
+  })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>

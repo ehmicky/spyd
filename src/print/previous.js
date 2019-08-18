@@ -7,37 +7,32 @@ import { getDiffIndex, getDiff } from './diff.js'
 //  - `benchmark.iterations[*].previous`: previous iteration with same runner,
 //    task and variation
 // When combined with the 'show' option, we only show the benchmarks before it.
-export const addPrevious = async function({
+export const addPrevious = function({
+  benchmarks,
   benchmark: { timestamp },
   iterations,
+  show,
   diff,
-  dataDir,
-  store: { list: listStore },
-  nestedNormalize,
+  verbose,
+  addPrintedInfo,
 }) {
-  if (nestedNormalize === undefined) {
+  if (benchmarks === undefined) {
     return { iterations }
   }
 
-  const benchmarks = await listBenchmarks(dataDir, listStore)
   const previous = benchmarks.filter(
     benchmarkA => benchmarkA.timestamp < timestamp,
   )
   const diffIndex = getDiffIndex(previous, diff)
-  const previousA = await Promise.all(previous.map(nestedNormalize))
+
+  // Apply `addPrintedInfo()` recursively on the `previous` benchmarks
+  const previousA = previous.map(benchmark =>
+    addPrintedInfo(benchmark, { show, diff, verbose }),
+  )
+
   const iterationsA = addPreviousIterations(iterations, previousA, diffIndex)
   const previousB = previousA.map(removeIterations)
   return { iterations: iterationsA, previous: previousB }
-}
-
-const listBenchmarks = async function(dataDir, listStore) {
-  try {
-    return await listStore(dataDir)
-  } catch (error) {
-    throw new Error(
-      `Could not list benchmarks from '${dataDir}':\n${error.message}`,
-    )
-  }
 }
 
 const addPreviousIterations = function(iterations, previous, diffIndex) {
