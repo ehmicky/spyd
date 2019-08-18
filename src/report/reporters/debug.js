@@ -9,7 +9,7 @@ const report = function(
   const contentA = addSystem({ content, system, systemPretty })
   const contentB = addTimestamp({ content: contentA, timestamp, show })
   const contentC = addLink({ content: contentB, link })
-  return contentC
+  return `\n${contentC}\n\n`
 }
 
 const serializeIteration = function({ name, stats, fastest }) {
@@ -55,7 +55,7 @@ const addLink = function({ content, link }) {
   }
 
   return `${content}\n\n${dim(
-    `Benchmarked with spyd ${underline('(https://github.com/ehmicky/spyd)')}`,
+    ` Benchmarked with spyd ${underline('(https://github.com/ehmicky/spyd)')}`,
   )}`
 }
 
