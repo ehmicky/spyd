@@ -16,10 +16,10 @@ const add = async function(benchmark, opts) {
   await setBenchmarks(dir, benchmarksA)
 }
 
-const remove = async function(job, opts) {
+const remove = async function(ids, opts) {
   const dir = getDir(opts)
   const benchmarks = await getBenchmarks(dir)
-  const benchmarksA = benchmarks.filter(benchmark => benchmark.job !== job)
+  const benchmarksA = benchmarks.filter(({ id }) => !ids.includes(id))
   await setBenchmarks(dir, benchmarksA)
 }
 
