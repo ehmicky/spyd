@@ -22,7 +22,7 @@ export const action = async function(runOpts) {
 }
 
 const getNodeCommand = async function(version, versions) {
-  const id = versions.length === 1 ? undefined : version
+  const title = versions.length === 1 ? undefined : version
   const nodePath = await getPath(version, false)
-  return { id, title: id, value: [nodePath, `${__dirname}/start.js`] }
+  return { id: version, title, value: [nodePath, `${__dirname}/start.js`] }
 }

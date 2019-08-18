@@ -18,15 +18,8 @@ const getCommand = function({
   title,
   value,
 }) {
-  const commandId = joinCommand(runnerId, id)
-  const commandTitle = joinCommand(runnerTitle, title)
+  const commandId = id === undefined ? runnerId : `${runnerId}_${id}`
+  const commandTitle =
+    title === undefined ? runnerTitle : `${runnerTitle} ${title}`
   return { commandId, commandTitle, commandValue: value, commandOpt: runOpt }
-}
-
-const joinCommand = function(runnerInfo, commandInfo) {
-  if (commandInfo === undefined) {
-    return runnerInfo
-  }
-
-  return `${runnerInfo} ${commandInfo}`
 }
