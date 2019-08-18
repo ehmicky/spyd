@@ -65,9 +65,9 @@ const addPreviousIteration = function(
 
 const isSameIteration = function(iterationA, iterationB) {
   return (
-    iterationA.task.taskId === iterationB.task.taskId &&
-    iterationA.variation.variationId === iterationB.variation.variationId &&
-    iterationA.command.commandId === iterationB.command.commandId
+    iterationA.task.id === iterationB.task.id &&
+    iterationA.variation.id === iterationB.variation.id &&
+    iterationA.command.id === iterationB.command.id
   )
 }
 

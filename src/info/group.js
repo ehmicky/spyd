@@ -39,7 +39,7 @@ const normalizeGroup = function({
 }) {
   const medians = iterations.map(getIterationMedian)
   const mean = getMean(medians)
-  return { [id]: groupId, [title]: groupTitle, mean }
+  return { id: groupId, title: groupTitle, mean }
 }
 
 const getIterationMedian = function({ stats: { median } }) {
@@ -55,13 +55,11 @@ const addGroupIndexes = function({
 }) {
   const iterationA = omitBy(iteration, key => GROUP_KEYS.includes(key))
 
-  const taskA = tasks.findIndex(task => task.taskId === taskId)
+  const taskA = tasks.findIndex(task => task.id === taskId)
   const variationA = variations.findIndex(
-    variation => variation.variationId === variationId,
+    variation => variation.id === variationId,
   )
-  const commandA = commands.findIndex(
-    variation => variation.commandId === commandId,
-  )
+  const commandA = commands.findIndex(variation => variation.id === commandId)
   return {
     ...iterationA,
     task: taskA,
