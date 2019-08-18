@@ -1,38 +1,43 @@
 import { blue } from 'chalk'
 
+import { pick } from '../utils/main.js'
+
 // Serialize `system` information for CLI reporters
 export const prettifySystems = function(envs) {
   const envsA = envs.map(prettifySystem)
-  const systemPretty = envsA.map(getSystemPretty).join('\n\n')
+  const systemPretty = envsA
+    .map(getSystemPrettyField)
+    .filter(Boolean)
+    .join('\n')
   return { envs: envsA, systemPretty }
 }
 
-const prettifySystem = function(
-  { id, title, opts, mean, ...machine },
-  index,
-  envs,
-) {
-  const header = getHeader(title, envs)
-
-  const padding = getPadding(machine)
-  const systemA = Object.entries(machine)
-    .map(([name, value]) => serializeValue(name, value, padding))
-    .join('\n')
-
-  const systemPretty = `${blue.bold(`${header}:`)}\n${systemA}`
-  return { ...machine, id, title, opts, mean, systemPretty }
+const prettifySystem = function(env) {
+  const systemPretty = getSystemPretty(env)
+  return { ...env, systemPretty }
 }
 
-const getHeader = function(title, envs) {
-  if (envs.length === 1 || title === '') {
-    return 'System'
+const getSystemPretty = function({ title = 'System', ...env }) {
+  const fields = Object.keys(MACHINE_FIELDS).filter(
+    field => env[field] !== undefined,
+  )
+
+  if (fields.length === 0) {
+    return ''
   }
 
-  return title
+  const machine = pick(env, fields)
+  const padding = getPadding(fields)
+  const machineA = fields
+    .map(field => serializeValue(field, machine[field], padding))
+    .join('\n')
+
+  const systemPretty = `${blue.bold(`${title}:`)}\n${machineA}`
+  return systemPretty
 }
 
-const getPadding = function(machine) {
-  const lengths = Object.keys(machine).map(getLength)
+const getPadding = function(fields) {
+  const lengths = fields.map(getLength)
   return Math.max(...lengths)
 }
 
@@ -40,23 +45,19 @@ const getLength = function(key) {
   return key.length
 }
 
-const serializeValue = function(name, value, padding) {
-  const nameA = serializeName(name, padding)
-  return `  ${nameA} ${value}`
+const serializeValue = function(field, value, padding) {
+  const fieldA = serializeField(field, padding)
+  return `  ${fieldA} ${value}`
 }
 
-const serializeName = function(name, padding) {
-  const nameA = MACHINE_NAMES[name]
-  const nameB = `${nameA}:`.padEnd(padding + 1)
-  return blue.bold(nameB)
+const serializeField = function(field, padding) {
+  const fieldA = MACHINE_FIELDS[field]
+  const fieldB = `${fieldA}:`.padEnd(padding + 1)
+  return blue.bold(fieldB)
 }
 
-const MACHINE_NAMES = {
-  cpu: 'CPU',
-  memory: 'Memory',
-  os: 'OS',
-}
+const MACHINE_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
 
-const getSystemPretty = function({ systemPretty }) {
+const getSystemPrettyField = function({ systemPretty }) {
   return systemPretty
 }
