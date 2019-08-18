@@ -1,40 +1,38 @@
 import fastDeepEqual from 'fast-deep-equal'
 
+import { groupBy } from '../utils/group.js'
 import { removeDuplicates } from '../iterations/duplicate.js'
-import { addNames } from '../print/name.js'
 
-// Merge previous benchmarks part of the same `job`
-export const mergeJobBenchmarks = function(benchmarks, benchmark) {
-  return benchmarks
-    .filter(benchmarkA => benchmarkA.job === benchmark.job)
-    .reduce(mergeBenchmarks, benchmark)
+// Merge previous benchmarks part of the same `job`.
+// Later benchmarks have priority.
+export const mergeBenchmarks = function(benchmarks) {
+  return Object.values(groupBy(benchmarks, 'job')).map(mergeGroup)
 }
 
-const mergeBenchmarks = function(
-  { envs, iterations, ...benchmark },
-  { envs: [env], iterations: previousIterations },
+const mergeGroup = function([benchmark, ...benchmarks]) {
+  return benchmarks.reduce(mergePair, benchmark)
+}
+
+const mergePair = function(
+  { envs: previousEnvs, iterations: previousIterations },
+  { envs: [env], iterations, ...benchmark },
 ) {
-  const envsA = mergeEnv(envs, env)
-  const iterationsA = mergeIterations(iterations, previousIterations)
-  return { ...benchmark, envs: envsA, iterations: iterationsA }
+  const envs = mergeEnv(previousEnvs, env)
+  const iterationsA = removeDuplicates([...previousIterations, ...iterations])
+  return { ...benchmark, envs, iterations: iterationsA }
 }
 
-const mergeIterations = function(iterations, previousIterations) {
-  const iterationsA = removeDuplicates([...iterations, ...previousIterations])
-  const iterationsB = addNames(iterationsA)
-  return iterationsB
-}
-
-const mergeEnv = function(envs, env) {
-  const duplicateEnv = envs.find(envA => envA.id === env.id)
+const mergeEnv = function(previousEnvs, env) {
+  const duplicateEnv = previousEnvs.find(envA => envA.id === env.id)
 
   if (duplicateEnv === undefined) {
-    return [...envs, env]
+    return [...previousEnvs, env]
   }
 
   SAME_ENV_PROPS.forEach(propName => validateEnv(duplicateEnv, env, propName))
 
-  return envs
+  const previousEnvsA = previousEnvs.filter(envA => envA.id !== env.id)
+  return [...previousEnvsA, env]
 }
 
 const SAME_ENV_PROPS = ['opts']

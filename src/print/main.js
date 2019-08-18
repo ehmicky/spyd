@@ -1,4 +1,8 @@
+import { mergeBenchmarks } from '../jobs/merge.js'
+
+import { normalizeEnvs, mergeEnvs } from './env.js'
 import { addGroups } from './group.js'
+import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
 import { addPrevious } from './previous.js'
 import { normalizeStats, prettifyStats } from './stats/main.js'
@@ -7,8 +11,24 @@ import { prettifySystems } from './system.js'
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
 export const addPrintedInfo = function(
+  benchmarks,
+  benchmark,
+  { diff, verbose },
+) {
+  const benchmarksA = [...benchmarks, benchmark]
+  const benchmarksB = normalizeEnvs(benchmarksA)
+  const benchmarksC = mergeBenchmarks(benchmarksB)
+  const benchmarksD = benchmarksC.map(benchmarkA =>
+    addBenchmarkInfo(benchmarkA, { verbose }),
+  )
+  const benchmarkB = benchmarksD[benchmarksD.length - 1]
+  const benchmarkC = addPrevious(benchmarksD, benchmarkB, { diff, verbose })
+  return benchmarkC
+}
+
+const addBenchmarkInfo = function(
   { iterations, envs, ...benchmark },
-  { diff, verbose, benchmarks },
+  { verbose },
 ) {
   const {
     iterations: iterationsA,
@@ -19,48 +39,26 @@ export const addPrintedInfo = function(
   } = addGroups(iterations)
   const envsA = mergeEnvs(envs, envGroups)
 
-  const iterationsB = addSpeedInfo(iterationsA)
+  const iterationsB = addNames(iterationsA)
 
-  const { previous, iterations: iterationsC } = addPrevious({
-    benchmarks,
-    benchmark,
-    iterations: iterationsB,
-    diff,
-    verbose,
-    addPrintedInfo,
-  })
-
+  const iterationsC = addSpeedInfo(iterationsB)
   const iterationsD = normalizeStats(iterationsC)
   const iterationsE = prettifyStats(iterationsD, verbose)
 
-  const timestamp = prettifyTimestamp(benchmark)
+  const timestampPretty = prettifyTimestamp(benchmark)
 
   const { envs: envsB, systemPretty } = prettifySystems(envsA)
 
   return {
     ...benchmark,
-    timestamp,
+    timestampPretty,
     tasks,
     variations,
     commands,
     envs: envsB,
     systemPretty,
     iterations: iterationsE,
-    previous,
   }
-}
-
-// We merge two groups of similar `envs`:
-//  - after merging with previous benchmarks of same job, to retrieve their
-//    options and systems
-//  - after grouping iterations, to retrieve their speed and set iteration.rank
-const mergeEnvs = function(envs, envGroups) {
-  return envGroups.map(envGroup => mergeEnv(envs, envGroup))
-}
-
-const mergeEnv = function(envs, envGroup) {
-  const env = envs.find(envA => envA.id === envGroup.id)
-  return { ...envGroup, ...env }
 }
 
 // Make timestamp more human-friendly.

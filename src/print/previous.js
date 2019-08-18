@@ -1,46 +1,53 @@
 import { omit } from '../utils/main.js'
 
 import { getDiffIndex, getDiff } from './diff.js'
+import { prettifyStats } from './stats/main.js'
 
 // Add:
 //  - `benchmark.previous`: all previous benchmarks
 //  - `benchmark.iterations[*].previous`: previous iteration with same runner,
 //    task and variation
-export const addPrevious = function({
+export const addPrevious = function(
   benchmarks,
-  benchmark: { timestamp, job },
-  iterations,
-  diff,
-  verbose,
-  addPrintedInfo,
-}) {
-  // Nested calls: we do not add `previous` to `previous` itself
-  if (benchmarks === undefined) {
-    return { iterations }
-  }
-
+  { timestamp, iterations, ...benchmark },
+  { diff, verbose },
+) {
   // When combined with the 'show' option, we only show the benchmarks before it
-  // We exclude benchmarks from the same job.
+  // We exclude benchmarks from the same job (since they are already grouped
+  // by job).
   const previous = benchmarks.filter(
-    benchmarkA => benchmarkA.timestamp < timestamp && benchmarkA.job !== job,
+    benchmarkA => benchmarkA.timestamp < timestamp,
   )
   const diffIndex = getDiffIndex(previous, diff)
+  const iterationsA = addPreviousIterations({
+    iterations,
+    previous,
+    diffIndex,
+    verbose,
+  })
 
-  // Apply `addPrintedInfo()` recursively on the `previous` benchmarks
-  const previousA = previous.map(benchmark =>
-    addPrintedInfo(benchmark, { diff, verbose }),
-  )
-
-  const iterationsA = addPreviousIterations(iterations, previousA, diffIndex)
-  const previousB = previousA.map(removeIterations)
-  return { iterations: iterationsA, previous: previousB }
+  const previousA = previous.map(removeIterations)
+  return {
+    ...benchmark,
+    timestamp,
+    iterations: iterationsA,
+    previous: previousA,
+  }
 }
 
-const addPreviousIterations = function(iterations, previous, diffIndex) {
+const addPreviousIterations = function({
+  iterations,
+  previous,
+  diffIndex,
+  verbose,
+}) {
   const previousIterations = previous.flatMap(getIterations)
-  return iterations.map(iteration =>
+  const iterationsA = iterations.map(iteration =>
     addPreviousIteration(iteration, previousIterations, diffIndex),
   )
+  // Needs to be done again since we added `diff`
+  const iterationsB = prettifyStats(iterationsA, verbose)
+  return iterationsB
 }
 
 const getIterations = function({ iterations }, benchmark) {
