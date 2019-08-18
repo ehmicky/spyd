@@ -20,9 +20,11 @@ export const save = async function(
   }
 }
 
-// Some benchmark information are not persisted:
-//  - when too big: histograms, percentiles
-//  - when related to current report-related options
+// Benchmark information that are too big are not persisted.
+// We otherwise try to persist everything, so that `--show` report the same
+// information.
+// We try to only persist what cannot be computed runtime (which is done by
+// `addPrintedInfo()` during reporting)
 const normalizeBenchmark = function({ iterations, ...benchmark }) {
   const iterationsA = iterations.map(normalizeIteration)
   return { ...benchmark, iterations: iterationsA }
