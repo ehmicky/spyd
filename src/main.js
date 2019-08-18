@@ -29,7 +29,8 @@ const removeAction = async function(opts) {
 
 // Action when the 'show' option is used: show a previous benchmark
 const showAction = async function(opts) {
-  const benchmark = await load(opts.show, opts)
+  const benchmarks = await list(opts)
+  const benchmark = load(benchmarks, opts.show, opts)
 
   await report(benchmark, opts)
 
