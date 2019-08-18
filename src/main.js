@@ -38,7 +38,7 @@ export const remove = async function(opts) {
   const { remove: removeOpt, ...optsA } = await getOpts(opts)
 
   const benchmarks = await list(optsA)
-  const { id } = get(benchmarks, removeOpt)
+  const { job } = get(benchmarks, removeOpt)
 
-  await removeFromStore(id, optsA)
+  await removeFromStore(job, optsA)
 }

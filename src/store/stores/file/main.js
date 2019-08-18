@@ -18,15 +18,11 @@ const add = async function(benchmark, opts) {
   await setBenchmarks(dir, benchmarksA)
 }
 
-const remove = async function(id, opts) {
+const remove = async function(job, opts) {
   const dir = getDir(opts)
 
   const benchmarks = await getBenchmarks(dir)
-  const index = benchmarks.findIndex(benchmark => benchmark.id === id)
-  const benchmarksA = [
-    ...benchmarks.slice(0, index),
-    ...benchmarks.slice(index + 1),
-  ]
+  const benchmarksA = benchmarks.filter(benchmark => benchmark.job !== job)
   await setBenchmarks(dir, benchmarksA)
 }
 
