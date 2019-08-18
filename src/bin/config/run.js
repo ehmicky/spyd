@@ -39,12 +39,9 @@ export const RUN_CONFIG = {
 Default: 10`,
   },
   group: {
-    string: true,
-    requiresArg: true,
-    describe: `Identifier of the current group.
-Running several benchmarks with the same 'group' reports them together.
+    describe: `Append the current benchmarks to the previous one.
 Used to create a single benchmark incrementally.
-The value can be "same" to re-use the previous benchmark's group.
+Can also be a group identifier. Benchmarks with the group are reported together.
 Default: random UUID`,
   },
   env: {

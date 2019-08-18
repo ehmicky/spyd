@@ -7,7 +7,7 @@ export const addGroup = function(benchmark, benchmarks, { group }) {
 }
 
 const handleSame = function(benchmarks, group) {
-  if (group !== SAME_GROUP) {
+  if (group !== true) {
     return group
   }
 
@@ -21,5 +21,3 @@ const handleSame = function(benchmarks, group) {
 
   return lastBenchmark.group
 }
-
-const SAME_GROUP = 'same'
