@@ -16,6 +16,7 @@ export const addPrevious = function({
   verbose,
   addPrintedInfo,
 }) {
+  // Nested calls: we do not add `previous` to `previous` itself
   if (benchmarks === undefined) {
     return { iterations }
   }
