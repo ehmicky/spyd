@@ -8,9 +8,15 @@ export const addBenchmarkInfo = function({ iterations, opts, versions }) {
   const id = uuidv4()
   const timestamp = new Date().toISOString()
 
-  const optsA = getOpts(opts)
+  const envs = getEnvs({ opts })
 
   const system = getSystem(versions)
 
-  return { id, timestamp, opts: optsA, system, iterations }
+  return { id, timestamp, envs, system, iterations }
+}
+
+// Retrieve current `env` (options + system) and set it to `benchmark.envs`
+export const getEnvs = function({ opts, opts: { env } }) {
+  const optsA = getOpts(opts)
+  return [{ id: env, title: env, opts: optsA }]
 }
