@@ -1,9 +1,8 @@
 import { getOpts } from './options/main.js'
 import { report } from './report/main.js'
-import { append, list } from './store/list.js'
+import { append, get } from './store/list.js'
 import { save } from './store/save.js'
 import { remove as removeFromStore } from './store/remove.js'
-import { get } from './store/get.js'
 import { runBenchmark } from './run.js'
 
 // Benchmark JavaScript code defined in a tasks file and report the results.
@@ -13,7 +12,7 @@ export const run = async function(opts) {
 
   const benchmark = await runBenchmark(optsA)
 
-  const [benchmarks, benchmarkA] = await append(benchmark, optsA)
+  const [benchmarkA, benchmarks] = await append(benchmark, optsA)
 
   const [benchmarkB] = await Promise.all([
     report(benchmarkA.job, benchmarks, { ...optsA, show: false }),
@@ -26,8 +25,7 @@ export const run = async function(opts) {
 export const show = async function(opts) {
   const { show: showOpt, ...optsA } = await getOpts(opts)
 
-  const benchmarks = await list(optsA)
-  const { job } = get(benchmarks, showOpt)
+  const [{ job }, benchmarks] = await get(showOpt, optsA)
 
   const benchmarkA = await report(job, benchmarks, { ...optsA, show: true })
   return benchmarkA
@@ -37,8 +35,7 @@ export const show = async function(opts) {
 export const remove = async function(opts) {
   const { remove: removeOpt, ...optsA } = await getOpts(opts)
 
-  const benchmarks = await list(optsA)
-  const { job } = get(benchmarks, removeOpt)
+  const [{ job }] = await get(removeOpt, optsA)
 
   await removeFromStore(job, optsA)
 }

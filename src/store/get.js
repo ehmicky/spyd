@@ -1,15 +1,4 @@
-// Get previous benchmark by `count` or `timestamp`
-export const get = function(benchmarks, { queryType, queryValue }) {
-  try {
-    const index = getIndex(benchmarks, queryType, queryValue)
-    const benchmark = benchmarks[index]
-    return benchmark
-  } catch (error) {
-    throw new Error(`Could not find benchmark: ${error.message}`)
-  }
-}
-
-// Same but index only
+// Get previous benchmark index by `count` or `timestamp`
 export const getIndex = function(benchmarks, queryType, queryValue) {
   if (benchmarks.length === 0) {
     throw new Error('No previous benchmarks')
