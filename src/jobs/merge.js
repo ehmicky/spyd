@@ -1,6 +1,6 @@
 import fastDeepEqual from 'fast-deep-equal'
 
-import { removeDuplicateIterations } from '../iterations/duplicate.js'
+import { removeDuplicates } from '../iterations/duplicate.js'
 
 // Merge previous benchmarks part of the same `job`
 export const mergeJobBenchmarks = function(benchmarks, benchmark) {
@@ -12,7 +12,7 @@ export const mergeJobBenchmarks = function(benchmarks, benchmark) {
 const mergeBenchmarks = function(benchmark, previousBenchmark) {
   validateSameOpts(benchmark, previousBenchmark)
 
-  const iterations = removeDuplicateIterations([
+  const iterations = removeDuplicates([
     ...benchmark.iterations,
     ...previousBenchmark.iterations,
   ])

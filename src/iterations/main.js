@@ -5,7 +5,7 @@ import { addNames } from '../print/name.js'
 import { getTaskPaths } from './path.js'
 import { loadIterations } from './load.js'
 import { selectIterations } from './select.js'
-import { removeDuplicateIterations } from './duplicate.js'
+import { removeDuplicates } from './duplicate.js'
 
 // Retrieve each iteration, i.e. combination of task + variation (if any)
 export const getIterations = async function({
@@ -46,7 +46,7 @@ const getAllIterations = async function({
 }) {
   const iterations = await loadIterations({ taskPaths, runners, duration, cwd })
 
-  const iterationsA = removeDuplicateIterations(iterations)
+  const iterationsA = removeDuplicates(iterations)
   const iterationsB = selectIterations({
     iterations: iterationsA,
     taskIds,
