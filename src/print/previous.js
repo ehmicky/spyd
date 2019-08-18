@@ -48,7 +48,7 @@ const addPreviousIterations = function({
   const iterationsA = iterations.map(iteration =>
     addPreviousIteration({ iteration, previousIterations, diffIndex, limits }),
   )
-  // Needs to be done again since we added `diff`
+  // Needs to be done again since we added `diff` and `limit`
   const iterationsB = normalizeStats(iterationsA, verbose)
   return iterationsB
 }
