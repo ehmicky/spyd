@@ -1,5 +1,7 @@
-import { cwd as getCwd, env as processEnv } from 'process'
+import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
+
+import uuidv4 from 'uuid/v4.js'
 
 import { normalizeProgress } from '../progress/options.js'
 import { normalizeData } from '../store/options.js'
@@ -36,21 +38,17 @@ const normalizeVariations = function({ variations, ...opts }) {
   return { ...opts, variations }
 }
 
+// Normalize 'job' option
+const normalizeJob = function({ job = uuidv4(), ...opts }) {
+  const jobA = job.trim()
+  return { ...opts, job: jobA }
+}
+
 // Normalize 'env' option
-const normalizeEnv = function({ env = getDefaultEnv(), ...opts }) {
+const normalizeEnv = function({ env = '', ...opts }) {
   const envA = env.trim()
   return { ...opts, env: envA }
 }
-
-const getDefaultEnv = function() {
-  if (processEnv.SPYD_ENV) {
-    return processEnv.SPYD_ENV
-  }
-
-  return DEFAULT_ENV
-}
-
-const DEFAULT_ENV = ''
 
 // Normalize and validate 'duration' option
 // Duration is specified in seconds by the user but we convert it to nanoseconds
@@ -91,6 +89,7 @@ const NORMALIZERS = [
   normalizeFiles,
   normalizeTasks,
   normalizeVariations,
+  normalizeJob,
   normalizeEnv,
   normalizeDuration,
   normalizeCwd,

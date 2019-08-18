@@ -52,6 +52,15 @@ Default: all tasks`,
 Each identifier can start with a ! to exclude the variation instead of selecting it.
 Default: all variations`,
   },
+  job: {
+    string: true,
+    requiresArg: true,
+    describe: `Identifier of the current job.
+Running several benchmarks with the same 'job' reports them together.
+Used to create a single benchmark incrementally.
+The value can be "same" to re-use the previous benchmark's job.
+Default: random UUID`,
+  },
   env: {
     string: true,
     requiresArg: true,
