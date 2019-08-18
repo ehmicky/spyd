@@ -67,7 +67,8 @@ Built-in reporters: silent.
 Custom reporters (installed with npm) can also be used.
 Uses a dot notation such as --report.json (not --report=json nor --report json).
 Reporter-specific options can be specified using the same dot notation.
-The following options can be set for any reporter: output, insert, system, link.
+The following options can be set for any reporter: output, insert, colors,
+system, link.
 For example --report.json.output is like --output but only for the json reporter.`,
   },
   progress: {
@@ -94,6 +95,11 @@ The file must contain:
   - a line with the words "spyd-start" such as <!-- spyd-start --> or #spyd-start
   - a line with the words "spyd-end"
 The benchmarks will be inserted between those two lines.`,
+  },
+  colors: {
+    boolean: true,
+    describe: `Use colors in output.
+Default: true if the terminal is interactive`,
   },
   system: {
     boolean: true,

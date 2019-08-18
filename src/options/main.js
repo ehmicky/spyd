@@ -1,6 +1,7 @@
-import { cwd as getCwd } from 'process'
+import { cwd as getCwd, stderr } from 'process'
 
 import { validate, multipleValidOptions } from 'jest-validate'
+import isInteractive from 'is-interactive'
 
 import { omitBy } from '../utils/main.js'
 
@@ -41,6 +42,7 @@ const DEFAULT_OPTS = {
   files: ['benchmarks.*', 'benchmarks/main.*'],
   cwd: getCwd(),
   duration: 10,
+  colors: isInteractive(stderr),
   verbose: false,
   link: true,
   system: false,
