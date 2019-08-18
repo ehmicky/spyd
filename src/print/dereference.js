@@ -14,8 +14,9 @@ const dereferenceIteration = function({
   variations,
   commands,
 }) {
-  const taskA = tasks[task]
-  const variationA = variation === undefined ? {} : variations[variation]
-  const commandA = commands[command]
+  const taskA = { ...tasks[task], rank: task }
+  const variationA =
+    variation === undefined ? {} : { ...variations[variation], rank: variation }
+  const commandA = { ...commands[command], rank: command }
   return { ...iteration, task: taskA, variation: variationA, command: commandA }
 }
