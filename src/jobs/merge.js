@@ -17,12 +17,13 @@ const mergePair = function(
   { envs: previousEnvs, iterations: previousIterations },
   { envs: [env], iterations, ...benchmark },
 ) {
-  const envs = mergeEnv(previousEnvs, env)
+  const envs = mergeEnvs(previousEnvs, env)
   const iterationsA = removeDuplicates([...previousIterations, ...iterations])
   return { ...benchmark, envs, iterations: iterationsA }
 }
 
-const mergeEnv = function(previousEnvs, env) {
+// Several benchmarks can have the same env, providing it is exactly the same
+const mergeEnvs = function(previousEnvs, env) {
   const duplicateEnv = previousEnvs.find(envA => envA.id === env.id)
 
   if (duplicateEnv === undefined) {

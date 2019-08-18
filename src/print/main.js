@@ -16,11 +16,14 @@ export const addPrintedInfo = function(
   { diff, verbose },
 ) {
   const benchmarksA = [...benchmarks, benchmark]
+
   const benchmarksB = normalizeEnvs(benchmarksA)
   const benchmarksC = mergeBenchmarks(benchmarksB)
+
   const benchmarksD = benchmarksC.map(benchmarkA =>
     addBenchmarkInfo(benchmarkA, { verbose }),
   )
+
   const benchmarkB = benchmarksD[benchmarksD.length - 1]
   const benchmarkC = addPrevious(benchmarksD, benchmarkB, { diff, verbose })
   return benchmarkC
