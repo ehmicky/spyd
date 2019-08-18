@@ -6,8 +6,8 @@ const report = function(
   const content = iterations
     .map(iteration => serializeIteration({ iteration, chalk }))
     .join('\n')
-  const contentA = addSystem(content, system, systemPretty)
-  const contentB = addTimestamp(contentA, timestamp, show)
+  const contentA = addSystem({ content, system, systemPretty })
+  const contentB = addTimestamp({ content: contentA, timestamp, show, chalk })
   const contentC = addLink({ content: contentB, link, chalk })
   return contentC
 }
@@ -47,7 +47,7 @@ const serializeStat = function(stats, statName, { yellow }) {
   return `${statName} ${yellow(stat)}`
 }
 
-const addSystem = function(content, system, systemPretty) {
+const addSystem = function({ content, system, systemPretty }) {
   if (!system) {
     return content
   }
@@ -65,12 +65,12 @@ const addLink = function({ content, link, chalk: { dim, underline } }) {
   )}`
 }
 
-const addTimestamp = function(content, timestamp, show) {
+const addTimestamp = function({ content, timestamp, show, chalk: { blue } }) {
   if (!show) {
     return content
   }
 
-  return `${content}\n\nTimestamp: ${timestamp}`
+  return `${content}\n\n${blue.bold('Timestamp:')} ${timestamp}`
 }
 
 export const debug = { report }
