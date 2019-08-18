@@ -82,13 +82,16 @@ const serializePercentage = function({ stat }) {
   const percentage = Math.abs(Math.floor(stat * PERCENTAGE_SCALE))
 
   if (stat >= 0) {
-    return `+${percentage}%`
+    return `${UP_ARROW} ${percentage}%`
   }
 
-  return `-${percentage}%`
+  return `${DOWN_ARROW} ${percentage}%`
 }
 
 const PERCENTAGE_SCALE = 1e2
+// Works on CP437 too
+const UP_ARROW = '\u2191'
+const DOWN_ARROW = '\u2193'
 
 const serializeArray = function({ stat, scale, unit, decimals }) {
   return stat.map(statA =>
