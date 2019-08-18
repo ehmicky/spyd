@@ -1,4 +1,5 @@
 import { cyan, blue, yellow, dim, underline } from 'chalk'
+import indentString from 'indent-string'
 
 // Debugging reporter only meant for development purpose
 const report = function(
@@ -6,10 +7,8 @@ const report = function(
   { link, system, show },
 ) {
   const content = iterations.map(serializeIteration).join('\n')
-  const contentA = addSystem({ content, system, systemPretty })
-  const contentB = addTimestamp({ content: contentA, timestamp, show })
-  const contentC = addLink({ content: contentB, link })
-  return `\n${contentC}\n\n`
+  const footer = getFooter({ system, systemPretty, timestamp, show, link })
+  return `\n${content}${footer}\n\n`
 }
 
 const serializeIteration = function({ name, stats, fastest }) {
@@ -41,30 +40,48 @@ const serializeStat = function(stats, statName) {
   return `${statName} ${yellow(stat)}`
 }
 
-const addSystem = function({ content, system, systemPretty }) {
+const getFooter = function({ system, systemPretty, timestamp, show, link }) {
+  const systemFooter = getSystem(system, systemPretty)
+  const timestampFooter = getTimestamp(timestamp, show)
+  const linkFooter = getLink(link)
+  const footers = [systemFooter, timestampFooter, linkFooter].filter(Boolean)
+
+  if (footers.length === 0) {
+    return ''
+  }
+
+  const footer = footers.map(indentFooter).join('\n\n')
+  return `\n\n${footer}`
+}
+
+const getSystem = function(system, systemPretty) {
   if (!system) {
-    return content
+    return
   }
 
-  return `${content}\n\n${systemPretty}`
+  return systemPretty
 }
 
-const addLink = function({ content, link }) {
+const getTimestamp = function(timestamp, show) {
+  if (!show && false) {
+    return
+  }
+
+  return `${blue.bold('Timestamp:')} ${timestamp}`
+}
+
+const getLink = function(link) {
   if (!link) {
-    return content
+    return
   }
 
-  return `${content}\n\n${dim(
-    ` Benchmarked with spyd ${underline('(https://github.com/ehmicky/spyd)')}`,
-  )}`
+  return dim(
+    `Benchmarked with spyd ${underline('(https://github.com/ehmicky/spyd)')}`,
+  )
 }
 
-const addTimestamp = function({ content, timestamp, show }) {
-  if (!show) {
-    return content
-  }
-
-  return `${content}\n\n${blue.bold('Timestamp:')} ${timestamp}`
+const indentFooter = function(footer) {
+  return indentString(footer, 1)
 }
 
 export const debug = { report }
