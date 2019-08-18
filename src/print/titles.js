@@ -14,7 +14,7 @@ const getPaddings = function(iterations) {
 }
 
 const getPadding = function(iterations, propName) {
-  const lengths = iterations.map(({ [propName]: value = '' }) => value.length)
+  const lengths = iterations.map(({ [propName]: value }) => value.length)
   const padding = Math.max(...lengths)
   return [propName, padding]
 }
@@ -27,7 +27,7 @@ const addPadding = function(iteration, paddings) {
   return { ...iteration, ...titlesA }
 }
 
-const padProp = function(title = '', padding, propName) {
+const padProp = function(title, padding, propName) {
   const titleA = title.padEnd(padding)
   return [propName, titleA]
 }

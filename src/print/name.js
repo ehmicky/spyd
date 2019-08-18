@@ -35,27 +35,14 @@ const shouldShowProp = function(propName, iterations) {
 
   return (
     uniqueProps.length !== 1 ||
-    (propName !== 'commandTitle' &&
-      uniqueProps[0] !== undefined &&
-      uniqueProps[0] !== '')
+    (propName !== 'commandTitle' && uniqueProps[0].trim() !== '')
   )
 }
 
 const addName = function(iteration, props) {
   const name = getName(iteration, props)
-  const columnName = getColumnName(iteration, props)
+  const columnName = getName(iteration, props.filter(isColumnProp))
   return { ...iteration, name, columnName }
-}
-
-const getColumnName = function(iteration, props) {
-  const propsA = props.filter(isColumnProp)
-  const columnName = getName(iteration, propsA)
-
-  if (columnName === '') {
-    return
-  }
-
-  return columnName
 }
 
 const isColumnProp = function(propName) {

@@ -14,4 +14,4 @@ const validateId = function(id, name) {
   }
 }
 
-const VALID_ID_REGEXP = /^[a-zA-Z\d_.-]+$/u
+const VALID_ID_REGEXP = /^[a-zA-Z\d_.-]*$/u
