@@ -27,12 +27,18 @@ export const addNames = function(iterations) {
 
 const NAME_PROPS = ['variationTitle', 'commandTitle', 'envTitle']
 
-// If all variations/commands/envs are the same, do not include them.
-// Do not do this for tasks though, since `name` should not be empty.
+// If all commands are the same, do not include them.
+// Tasks/variations/envs should always be shown though, unless always empty.
 const shouldShowProp = function(propName, iterations) {
   const props = iterations.map(iteration => iteration[propName])
   const uniqueProps = [...new Set(props)]
-  return uniqueProps.length !== 1
+
+  return (
+    uniqueProps.length !== 1 ||
+    (propName !== 'commandTitle' &&
+      uniqueProps[0] !== undefined &&
+      uniqueProps[0] !== '')
+  )
 }
 
 const addName = function(iteration, props) {
