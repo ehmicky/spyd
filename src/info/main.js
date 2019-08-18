@@ -45,7 +45,7 @@ const getRunOpts = function(runOpts) {
     return {}
   }
 
-  return { runOpts: runOptsA }
+  return { run: runOptsA }
 }
 
 const hasRunOpt = function({ opts }) {
