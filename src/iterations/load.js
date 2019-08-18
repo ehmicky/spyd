@@ -1,6 +1,8 @@
 import { findRunners } from '../run/find.js'
 import { executeChild } from '../processes/execute.js'
 
+import { validateIds } from './validate.js'
+
 // Load iterations by launching each runner
 // At startup we run child processes but do not run an benchmarks. We only
 // retrieve the task files iterations
@@ -81,6 +83,8 @@ const normalizeIteration = function(
   { commandId, commandTitle, commandValue, commandOpt },
   taskPath,
 ) {
+  validateIds({ taskId, variationId, commandId })
+
   return {
     taskPath,
     taskId,
