@@ -1,5 +1,6 @@
 import { loadRunners } from '../run/load.js'
-import { normalizeTitles } from '../print/titles.js'
+import { padTitles } from '../print/titles.js'
+import { addNames } from '../print/name.js'
 
 import { getTaskPaths } from './path.js'
 import { loadIterations } from './load.js'
@@ -36,8 +37,9 @@ export const getIterations = async function({
     throw new Error('No tasks to benchmark')
   }
 
-  const iterationsC = normalizeTitles(iterationsB)
-  return { iterations: iterationsC, versions }
+  const iterationsC = padTitles(iterationsB)
+  const iterationsD = addNames(iterationsC)
+  return { iterations: iterationsD, versions }
 }
 
 // When two `files` define the same iteration, the last one prevails

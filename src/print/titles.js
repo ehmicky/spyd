@@ -1,18 +1,8 @@
-import { pointer } from 'figures'
-import { cyan } from 'chalk'
-
 // Make `taskTitle`, `variationTitle`, 'commandTitle' reporter-friendly by
 // adding paddings.
-// Also add `iteration.name` and `iteration.columnName`.
-// We need to do this before benchmarks start because `iteration.name` is used
-// by progress reporters.
-export const normalizeTitles = function(iterations) {
+export const padTitles = function(iterations) {
   const paddings = getPaddings(iterations)
-  const iterationsA = iterations.map(iteration =>
-    addPadding(iteration, paddings),
-  )
-  const iterationsB = addNames(iterationsA)
-  return iterationsB
+  return iterations.map(iteration => addPadding(iteration, paddings))
 }
 
 // Vertically align `taskTitle`, `variationTitle` and `commandTitle`
@@ -37,70 +27,17 @@ const addPadding = function(iteration, paddings) {
   return { ...iteration, ...titlesA }
 }
 
+const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle']
+
 const padProp = function(iteration, paddings, propName) {
-  const title = padTitle(paddings[propName], iteration[propName])
+  const title = padValue(paddings[propName], iteration[propName])
   return [propName, title]
 }
 
-const padTitle = function(padding, title = '') {
+const padValue = function(padding, title = '') {
   if (padding === 0) {
     return
   }
 
   return title.padEnd(padding)
 }
-
-// Add:
-//  - `iteration.name`: combines task, variation and command.
-//     For one-dimensional reporters.
-//  - `iteration.columnName`: combines variation and command.
-//     For two-dimensional reporters. `taskTitle` is the row name.
-const addNames = function(iterations) {
-  const props = PADDED_PROPS.filter(propName =>
-    shouldShowProp(iterations, propName),
-  )
-  return iterations.map(iteration => addName(iteration, props))
-}
-
-// If all variations and/or commands are the same, do not report them.
-// Do not do this for tasks though, since `name` should not be empty.
-const shouldShowProp = function(iterations, propName) {
-  if (propName === 'taskTitle') {
-    return true
-  }
-
-  const props = iterations.map(iteration => iteration[propName])
-  const uniqueProps = [...new Set(props)]
-  return uniqueProps.length !== 1
-}
-
-const addName = function(iteration, props) {
-  const name = getName(iteration, props)
-  const columnName = getColumnName(iteration, props)
-  return { ...iteration, name, columnName }
-}
-
-const getColumnName = function(iteration, props) {
-  const propsA = props.filter(isColumnProp)
-  const columnName = getName(iteration, propsA)
-
-  if (columnName === '') {
-    return
-  }
-
-  return columnName
-}
-
-const isColumnProp = function(propName) {
-  return propName !== 'taskTitle'
-}
-
-const getName = function(iteration, props) {
-  return props
-    .map(propName => iteration[propName])
-    .filter(Boolean)
-    .map(part => cyan.bold(part))
-    .join(`${cyan.dim(pointer)}  `)
-}
-
-const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle']
