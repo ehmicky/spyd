@@ -8,7 +8,7 @@ import { getPrintedSystem } from './system.js'
 // can on the fly, before reporting.
 export const addPrintedInfo = function(
   { iterations, ...benchmark },
-  { show, diff, verbose, benchmarks },
+  { diff, verbose, benchmarks },
 ) {
   const iterationsA = addFastestIterations(iterations)
 
@@ -18,7 +18,6 @@ export const addPrintedInfo = function(
     benchmarks,
     benchmark,
     iterations: iterationsB,
-    show,
     diff,
     verbose,
     addPrintedInfo,
@@ -27,7 +26,7 @@ export const addPrintedInfo = function(
   const iterationsD = normalizeStats(iterationsC)
   const iterationsE = addPrintedStats(iterationsD, verbose)
 
-  const timestamp = getTimestamp(benchmark, show)
+  const timestamp = prettifyTimestamp(benchmark)
 
   const printedSystem = getPrintedSystem(benchmark)
 
@@ -40,11 +39,8 @@ export const addPrintedInfo = function(
   }
 }
 
-// Only show timestamp when the `show` option is used
-const getTimestamp = function({ timestamp }, show) {
-  if (show === undefined) {
-    return
-  }
-
+// Make timestamp more human-friendly.
+// Must be done at end since `previous` must use raw timestamps.
+const prettifyTimestamp = function({ timestamp }) {
   return new Date(timestamp).toLocaleString()
 }

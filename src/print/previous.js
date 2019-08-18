@@ -10,7 +10,6 @@ export const addPrevious = function({
   benchmarks,
   benchmark: { timestamp },
   iterations,
-  show,
   diff,
   verbose,
   addPrintedInfo,
@@ -28,7 +27,7 @@ export const addPrevious = function({
 
   // Apply `addPrintedInfo()` recursively on the `previous` benchmarks
   const previousA = previous.map(benchmark =>
-    addPrintedInfo(benchmark, { show, diff, verbose }),
+    addPrintedInfo(benchmark, { diff, verbose }),
   )
 
   const iterationsA = addPreviousIterations(iterations, previousA, diffIndex)

@@ -32,7 +32,7 @@ const showAction = async function(showOpt, opts) {
   const benchmarks = await list(opts)
   const benchmark = get(benchmarks, showOpt, opts)
 
-  await report(benchmarks, benchmark, opts)
+  await report(benchmarks, benchmark, { ...opts, show: true })
 
   return benchmark
 }

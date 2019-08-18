@@ -1,12 +1,12 @@
 // Debugging reporter only meant for development purpose
 const report = function(
   { timestamp, iterations, printedSystem },
-  { link, system },
+  { link, system, show },
 ) {
   const content = iterations.map(serializeIteration).join('\n')
   const contentA = addSystem(content, system, printedSystem)
   const contentB = addLink(contentA, link)
-  const contentC = addTimestamp(contentB, timestamp)
+  const contentC = addTimestamp(contentB, timestamp, show)
   return contentC
 }
 
@@ -49,8 +49,8 @@ const addLink = function(content, link) {
   return `${content}\n\nBenchmarked with spyd (https://github.com/ehmicky/spyd)`
 }
 
-const addTimestamp = function(content, timestamp) {
-  if (timestamp === undefined) {
+const addTimestamp = function(content, timestamp, show) {
+  if (!show) {
     return content
   }
 

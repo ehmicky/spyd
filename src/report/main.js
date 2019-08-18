@@ -8,12 +8,7 @@ export const report = async function(
   benchmark,
   { report: reporters, output, insert, system, link, show, diff, verbose },
 ) {
-  const benchmarkA = addPrintedInfo(benchmark, {
-    show,
-    diff,
-    verbose,
-    benchmarks,
-  })
+  const benchmarkA = addPrintedInfo(benchmark, { diff, verbose, benchmarks })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>
@@ -25,6 +20,7 @@ export const report = async function(
         insert,
         system,
         link,
+        show,
       }),
     ),
   )
@@ -39,10 +35,11 @@ const useReporter = async function({
   insert,
   system,
   link,
+  show,
 }) {
   // `output`, `insert`, `system`, link` can be set either for specific reporter
   // (--reporter.REPORTER.output) or for all (--output)
-  const reportOptA = { output, insert, system, link, ...reportOpt }
+  const reportOptA = { output, insert, system, link, ...reportOpt, show }
 
   const content = await reportFunc(benchmark, reportOptA)
 
