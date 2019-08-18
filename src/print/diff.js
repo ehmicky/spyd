@@ -37,7 +37,12 @@ export const getDiff = function(previous, diffIndex, { median }) {
     stats: { median: previousMedian },
   } = diffIteration
 
-  if (previousMedian === 0) {
+  const diff = computeDiff(median, previousMedian)
+  return diff
+}
+
+const computeDiff = function(median, previousMedian) {
+  if (previousMedian === 0 || median === 0) {
     return
   }
 
