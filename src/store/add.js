@@ -13,6 +13,7 @@ export const add = async function(benchmark, opts) {
 
   const benchmarksA = [...benchmarks, benchmarkA]
   const benchmarksB = mergeBenchmarks(benchmarksA)
+
   return { job: benchmarkA.job, benchmarks: benchmarksB }
 }
 
