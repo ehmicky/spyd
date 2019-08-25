@@ -21,7 +21,7 @@ export const measure = async function({
 }
 
 // Task `before`. Performed outside measurements.
-// Its return value is passed as variable <<before>> to `main()` and `after()`.
+// Its return value is passed as variable <<before>> to `main` and `after`.
 const performBefore = async function({ before, variables, shell, debug }) {
   if (before === undefined) {
     return variables
