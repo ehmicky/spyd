@@ -94,9 +94,7 @@ const addVariation = function(
   { variationValue, ...variation },
   variables,
 ) {
-  const beforeA = applyTemplate(before, {
-    ...variables,
-    variation: variationValue,
-  })
-  return { before: beforeA, ...task, variationValue, ...variation }
+  const variablesA = { ...variables, variation: variationValue }
+  const beforeA = applyTemplate(before, variablesA)
+  return { before: beforeA, ...task, ...variation, variables: variablesA }
 }

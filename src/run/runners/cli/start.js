@@ -3,7 +3,7 @@ import { exit } from 'process'
 import { benchmark } from './benchmark/main.js'
 import { loadTaskFile } from './load/main.js'
 import { getInput, sendOutput, sendError } from './ipc.js'
-import { debugRun } from './debug.js'
+import { measure } from './benchmark/measure.js'
 
 // Child process entry point
 const start = async function() {
@@ -35,7 +35,7 @@ const getIteration = function({
 
 // Run benchmarks
 const run = async function({ taskPath, opts, taskId, variationId, duration }) {
-  const { main, before, after, variation, shell } = await getTask({
+  const { main, before, after, variables, shell } = await getTask({
     taskPath,
     opts,
     taskId,
@@ -45,31 +45,32 @@ const run = async function({ taskPath, opts, taskId, variationId, duration }) {
     main,
     before,
     after,
-    variation,
+    variables,
     shell,
     duration,
   })
   return { times, count }
 }
 
+// Run an iteration once without benchmarking it
 const debug = async function({ taskPath, opts, taskId, variationId }) {
-  const { main, before, after, variation, shell } = await getTask({
+  const { main, before, after, variables, shell } = await getTask({
     taskPath,
     opts,
     taskId,
     variationId,
   })
-  await debugRun({ main, before, after, variation, shell })
+  await measure({ main, before, after, variables, shell, stdio: 'inherit' })
 }
 
 const getTask = async function({ taskPath, opts, taskId, variationId }) {
   const { iterations, shell } = await loadTaskFile(taskPath, opts)
 
-  const { main, before, after, variationValue: variation } = iterations.find(
+  const { main, before, after, variables } = iterations.find(
     iteration =>
       iteration.taskId === taskId && iteration.variationId === variationId,
   )
-  return { main, before, after, variation, shell }
+  return { main, before, after, variables, shell }
 }
 
 const TYPES = { load, run, debug }

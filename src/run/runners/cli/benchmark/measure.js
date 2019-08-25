@@ -7,33 +7,33 @@ export const measure = async function({
   main,
   before,
   after,
-  variation,
+  variables,
   shell,
   stdio,
 }) {
-  const beforeArgs = await performBefore({ before, variation, shell, stdio })
+  const beforeArgs = await performBefore({ before, variables, shell, stdio })
   const start = now()
-  await spawnProcess(main, { variation, shell, stdio })
+  await spawnProcess(main, { variables, shell, stdio })
   const time = now() - start
-  await performAfter({ after, variation, shell, stdio })
+  await performAfter({ after, variables, shell, stdio })
   return time
 }
 
 // Task `before`. Performed outside measurements.
 // Its return value is passed as variable {{before}} to `main()` and `after()`.
-const performBefore = function({ before, variation, shell, stdio }) {
+const performBefore = function({ before, variables, shell, stdio }) {
   if (before === undefined) {
     return
   }
 
-  return spawnProcess(before, { variation, shell, stdio })
+  return spawnProcess(before, { variables, shell, stdio })
 }
 
 // Task `after`. Performed outside measurements.
-const performAfter = function({ after, variation, shell, stdio }) {
+const performAfter = function({ after, variables, shell, stdio }) {
   if (after === undefined) {
     return
   }
 
-  return spawnProcess(after, { variation, shell, stdio })
+  return spawnProcess(after, { variables, shell, stdio })
 }

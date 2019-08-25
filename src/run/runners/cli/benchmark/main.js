@@ -11,7 +11,7 @@ export const benchmark = async function({
   main,
   before,
   after,
-  variation,
+  variables,
   shell,
   duration,
 }) {
@@ -25,7 +25,7 @@ export const benchmark = async function({
       main,
       before,
       after,
-      variation,
+      variables,
       shell,
       stdio: 'ignore',
     })
