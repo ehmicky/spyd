@@ -10,11 +10,9 @@ export const normalizeTasks = function({
   const tasksA = Object.entries(tasks).map(([taskId, task]) =>
     normalizeTask({ taskId, task, taskPath, variables }),
   )
-  const shellA = applyTemplate(shell, variables)
+  const shellA = getShell({ shell, variables })
   return { tasks: tasksA, variations, shell: shellA }
 }
-
-const DEFAULT_SHELL = true
 
 const normalizeTask = function({
   taskId,
@@ -42,3 +40,15 @@ const applyTaskTemplates = function({ title, variations, variables }) {
   )
   return { taskTitle, variationsIds }
 }
+
+// `shell` can contain variables, i.e. can be a string 'true' or 'false'
+const getShell = function({ shell = DEFAULT_SHELL, variables }) {
+  if (typeof shell === 'boolean') {
+    return shell
+  }
+
+  const shellA = applyTemplate(shell, variables)
+  return shellA === 'true'
+}
+
+const DEFAULT_SHELL = true
