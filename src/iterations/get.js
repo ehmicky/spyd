@@ -4,7 +4,7 @@ import { validateIds } from './validate.js'
 
 // Load iterations by launching each command.
 // At startup we run child processes but do not run an benchmarks. We only
-// retrieve the task files iterations.
+// retrieve the benchmark files iterations.
 export const getCommandIterations = async function({
   taskPath,
   command,

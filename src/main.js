@@ -7,7 +7,7 @@ import { destroyStore } from './store/destroy.js'
 import { runBenchmark } from './run.js'
 import { debugBenchmark } from './debug.js'
 
-// Benchmark JavaScript code defined in a tasks file and report the results.
+// Benchmark JavaScript code defined in a benchmark file and report the results.
 // Default action: run a new benchmark
 export const run = async function(opts) {
   const optsA = await getOpts('run', opts)

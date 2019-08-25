@@ -5,11 +5,7 @@ import { getShell } from './shell.js'
 import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 
-// Load the iterations using the 'load' event sent by parent
-// Those iterations are used:
-//   - to run benchmarks
-//   - by the parent at startup, but only iterations ids and titles are needed
-// Load the task file using its absolute path
+// Load the benchmark file
 export const loadTaskFile = async function(taskPath, debug) {
   const entries = await loadFile(taskPath)
   validateTaskFile(entries)

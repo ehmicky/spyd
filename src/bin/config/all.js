@@ -15,6 +15,6 @@ Default: "spyd.json" in the current directory or any parent directory`,
     string: true,
     requiresArg: true,
     describe: `Current directory.
-Used to find the default configuration and tasks files.`,
+Used to find the default configuration and benchmark files.`,
   },
 }

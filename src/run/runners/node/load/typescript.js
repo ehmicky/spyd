@@ -1,6 +1,7 @@
 import { extname } from 'path'
 
-// When the task file is in TypeScript, automatically use `ts-node/register`
+// When the benchmark file is in TypeScript, automatically use
+// `ts-node/register`
 export const handleTypeScript = function(requireOpt, taskPath) {
   if (!shouldUseTsNode(requireOpt, taskPath)) {
     return
@@ -12,9 +13,9 @@ export const handleTypeScript = function(requireOpt, taskPath) {
     require(TS_NODE)
   } catch (error) {
     throw new Error(
-      `When the task file is in TypeScript either:
+      `When the benchmark file is in TypeScript either:
   - 'ts-node' and 'typescript' must be installed
-  - the task file must be transpiled by 'tsc'\n\n${error.message}`,
+  - the benchmark file must be transpiled by 'tsc'\n\n${error.message}`,
     )
   }
 }

@@ -7,7 +7,7 @@ import { addTasksVariations } from './variations.js'
 // Those iterations are used:
 //   - to run benchmarks
 //   - by the parent at startup, but only iterations ids and titles are needed
-// Load the task file using its absolute path
+// Load the benchmark file using its absolute path
 export const loadTaskFile = async function(taskPath, { require: requireOpt }) {
   useRequireOpt(requireOpt, taskPath)
 
@@ -25,8 +25,6 @@ const loadFile = function(taskPath) {
     // eslint-disable-next-line global-require, import/no-dynamic-require
     return require(taskPath)
   } catch (error) {
-    throw new Error(
-      `Could not load the task file '${taskPath}'\n\n${error.stack}`,
-    )
+    throw new Error(`Could not load the benchmark file\n\n${error.stack}`)
   }
 }

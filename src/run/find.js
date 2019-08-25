@@ -1,6 +1,6 @@
 import { extname } from 'path'
 
-// Find the runners according to the task file extension.
+// Find the runners according to the benchmark file extension.
 // This might return an empty array since some `taskPaths` might have been
 // selected by globbing pattern due to their siblings. E.g. `benchmarks.*`
 // would catch `benchmarks.js` but also `benchmarks.js.map`, `benchmarks.js~`
@@ -18,7 +18,8 @@ const matchExtension = function(extensions, extension) {
 }
 
 // Inverse.
-// Only trigger `runner.commands()` if the runner is used by some task files.
+// Only trigger `runner.commands()` if the runner is used by some benchmark
+// files.
 export const hasTasks = function({ extensions }, taskPaths) {
   return taskPaths.some(taskPath =>
     matchExtension(extensions, extname(taskPath)),
