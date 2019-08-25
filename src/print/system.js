@@ -1,69 +1,63 @@
 import { blue } from 'chalk'
 import indentString from 'indent-string'
 
-import { pick } from '../utils/main.js'
-
 // Serialize `system` information for CLI reporters.
-// Each `env` get its own `systemPretty`, but a top-level one merging them is
-// available too.
 export const prettifySystems = function(envs) {
-  const envsA = envs.map(prettifySystem)
-  const systemPretty = envsA
-    .map(getSystemPrettyField)
-    .filter(Boolean)
+  return envs
+    .filter(hasFields)
+    .map(prettifySystem)
     .join('\n')
-  return { envs: envsA, systemPretty }
 }
 
-const prettifySystem = function(env) {
-  const systemPretty = getSystemPretty(env)
-  return { ...env, systemPretty }
+const hasFields = function(env) {
+  return getFields(env).length !== 0
 }
 
-const getSystemPretty = function({ title = MAIN_TITLE, ...env }) {
-  const fields = Object.keys(MACHINE_FIELDS).filter(
-    field => env[field] !== undefined,
-  )
+const prettifySystem = function(env, index) {
+  const header = getHeader(env)
+  const body = getBody(env)
+  const systemPretty = `${header}\n${body}`
+  const systemPrettyA = indent(systemPretty, index)
+  return systemPrettyA
+}
 
-  if (fields.length === 0) {
-    return ''
+const getHeader = function(env) {
+  const title = getTitle(env)
+  return blue.bold(`${title}:`)
+}
+
+const getTitle = function({ title = MAIN_TITLE }) {
+  if (title === '') {
+    return DEFAULT_TITLE
   }
 
-  const machine = pick(env, fields)
-  const padding = getPadding(fields)
-  const machineA = fields
-    .map(field => serializeValue(field, machine[field], padding))
-    .join('\n')
-
-  const systemPretty = `${blue.bold(`${title}:`)}\n${machineA}`
-  return systemPretty
+  return title
 }
 
+// Top-level title (for shared `env`)
 const MAIN_TITLE = 'System'
+// Nested title when `env` is an empty string
+const DEFAULT_TITLE = 'Default'
 
-const getPadding = function(fields) {
-  const lengths = fields.map(getLength)
-  return Math.max(...lengths)
+const getBody = function(env) {
+  const fields = getFields(env)
+  return fields.map(field => serializeField(field, env)).join('\n')
 }
 
-const getLength = function(key) {
-  return key.length
+const getFields = function(env) {
+  return Object.keys(MACHINE_FIELDS).filter(field => env[field] !== undefined)
 }
 
-const serializeValue = function(field, value, padding) {
-  const fieldA = serializeField(field, padding)
-  return `  ${fieldA} ${value}`
-}
-
-const serializeField = function(field, padding) {
+const serializeField = function(field, env) {
+  const value = env[field]
   const fieldA = MACHINE_FIELDS[field]
-  const fieldB = `${fieldA}:`.padEnd(padding + 1)
-  return blue.bold(fieldB)
+  const fieldB = blue.bold(`${fieldA}:`)
+  return `  ${fieldB} ${value}`
 }
 
 const MACHINE_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
 
-const getSystemPrettyField = function({ systemPretty }, index) {
+const indent = function(systemPretty, index) {
   if (index === 0) {
     return systemPretty
   }

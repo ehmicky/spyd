@@ -17,11 +17,6 @@ export const omitBy = function(object, condition) {
   return Object.assign({}, ...pairs)
 }
 
-// Like lodash _.pick()
-export const pick = function(object, keys) {
-  return keys.reduce((memo, key) => ({ ...memo, [key]: object[key] }), {})
-}
-
 export const isPlainObject = function(value) {
   return (
     typeof value === 'object' &&

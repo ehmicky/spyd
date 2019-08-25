@@ -29,7 +29,7 @@ export const addPrintedInfo = function({
 
   const timestampPretty = prettifyTimestamp(timestamp)
 
-  const { envs: envsB, systemPretty } = prettifySystems(envsA)
+  const systemPretty = prettifySystems(envsA)
 
   return {
     ...benchmark,
@@ -38,7 +38,7 @@ export const addPrintedInfo = function({
     tasks,
     variations,
     commands,
-    envs: envsB,
+    envs: envsA,
     systemPretty,
     iterations: iterationsD,
   }
