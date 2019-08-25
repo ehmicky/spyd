@@ -50,7 +50,6 @@ const STATS = [
   { name: 'diffPretty', shortName: 'dif' },
   { name: 'limitPretty', shortName: 'lmt' },
   { name: 'deviationPretty', shortName: 'dev' },
-  { name: 'variancePretty', shortName: 'vrc' },
   { name: 'countPretty', shortName: 'cnt' },
   { name: 'loopsPretty', shortName: 'lps' },
   { name: 'repeatPretty', shortName: 'rpt' },

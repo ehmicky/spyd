@@ -19,18 +19,14 @@ const addNumbers = function(numA, numB) {
   return numA + numB
 }
 
-// Retrieve variance of an array of floats (cannot be NaN nor Infinite).
-// Returns Infinity when array is empty.
-export const getVariance = function(array, mean) {
-  return getMean(array.map(num => (num - mean) ** 2))
-}
-
-// Same as variance but for standard deviation.
+// Retrieve standard deviation of an array of floats (cannot be NaN/Infinity).
 // In percentage relative to the mean.
-export const getDeviation = function(variance, mean) {
+// Returns Infinity when array is empty.
+export const getDeviation = function(array, mean) {
   if (mean === 0) {
     return 0
   }
 
+  const variance = getMean(array.map(num => (num - mean) ** 2))
   return Math.sqrt(variance) / mean
 }

@@ -31,5 +31,4 @@ const PLUS_MINUS = '±'
 const PREFIXES = {
   diff: getArrow,
   deviation: getPlusMinus,
-  variance: getPlusMinus,
 }

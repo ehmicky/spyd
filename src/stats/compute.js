@@ -1,6 +1,6 @@
 import { sortNumbers } from '../utils/sort.js'
 
-import { getMedian, getMean, getVariance, getDeviation } from './methods.js'
+import { getMedian, getMean, getDeviation } from './methods.js'
 import { getPercentiles } from './percentiles.js'
 import { getHistogram } from './histogram.js'
 
@@ -28,9 +28,9 @@ const reduceCount = function(totalCount, { count }) {
 // Perform the statistical logic.
 // Note that when `repeat > 1`, the distribution of the measured function will
 // be modified by the looping process and transformed to a bell shape, even if
-// if was not one. This means `percentiles`, `histogram`, `variance` and
-// `deviation` will have a different meaning: they visualize the measurements of
-// the function not function itself.
+// if was not one. This means `percentiles`, `histogram` and `deviation` will
+// have a different meaning: they visualize the measurements of the function not
+// function itself.
 // eslint-disable-next-line max-statements
 const computeStats = function({ times, count, processes }) {
   // Half of the statistics require the array to be sorted
@@ -50,8 +50,7 @@ const computeStats = function({ times, count, processes }) {
   const histogram = getHistogram(times, HISTOGRAM_SIZE)
 
   const mean = getMean(times)
-  const variance = getVariance(times, mean)
-  const deviation = getDeviation(variance, mean)
+  const deviation = getDeviation(times, mean)
 
   return {
     median,
@@ -59,7 +58,6 @@ const computeStats = function({ times, count, processes }) {
     min,
     max,
     deviation,
-    variance,
     count,
     loops,
     repeat,
