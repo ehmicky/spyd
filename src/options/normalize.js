@@ -4,12 +4,19 @@ import { resolve } from 'path'
 import { normalizeProgress } from '../progress/options.js'
 import { normalizeDelta } from '../store/delta/options.js'
 import { normalizeLimits } from '../limit/options.js'
+import { normalizeStore } from '../store/options.js'
+import { normalizeSystem } from '../system/normalize.js'
 
 import { validateStringArray, validatePositiveNumber } from './validate.js'
+import { loadAllPlugins } from './plugins.js'
 
 // Normalize options shape and do custom validation
-export const normalizeOpts = function(opts) {
-  return NORMALIZERS.reduce(normalizeOpt, opts)
+export const normalizeOpts = async function(opts) {
+  const optsA = NORMALIZERS.reduce(normalizeOpt, opts)
+  const optsB = await loadAllPlugins(optsA)
+  const optsC = await normalizeStore(optsB)
+  const optsD = normalizeSystem(optsC)
+  return optsD
 }
 
 const normalizeOpt = function(opts, normalizer) {
@@ -39,15 +46,6 @@ const normalizeGroup = function({ group, ...opts }) {
   const groupA = group.trim()
   return { ...opts, group: groupA }
 }
-
-// Normalize 'system' option
-// Can be either "systemId" or "systemId/systemTitle"
-const normalizeSystem = function({ system, ...opts }) {
-  const [id, title = id] = system.trim().split(SLASH_REGEXP)
-  return { ...opts, system: { id, title } }
-}
-
-const SLASH_REGEXP = / *\/ */u
 
 // Normalize and validate 'duration' option
 // Duration is specified in seconds by the user but we convert it to nanoseconds
@@ -89,7 +87,6 @@ const NORMALIZERS = [
   normalizeTasks,
   normalizeVariations,
   normalizeGroup,
-  normalizeSystem,
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,
