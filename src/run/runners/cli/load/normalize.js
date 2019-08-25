@@ -10,7 +10,8 @@ export const normalizeTasks = function({
   const tasksA = Object.entries(tasks).map(([taskId, task]) =>
     normalizeTask({ taskId, task, taskPath, variables }),
   )
-  return { tasks: tasksA, variations, shell }
+  const shellA = applyTemplate(shell, variables)
+  return { tasks: tasksA, variations, shell: shellA }
 }
 
 const DEFAULT_SHELL = true
