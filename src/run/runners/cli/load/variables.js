@@ -1,5 +1,6 @@
 import { spawnOutput } from '../spawn.js'
 
+// Retrieve `file.variables`
 export const getVariables = async function({
   entries: { variables: fileVariables = {}, ...entries },
   variables,

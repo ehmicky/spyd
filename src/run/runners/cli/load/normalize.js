@@ -1,7 +1,6 @@
 import { applyTemplate } from '../template.js'
 
-// `taskTitle` defaults to the function variable name. `taskTitle` is used by
-// reporters while the `taskId` is used for identification.
+// Apply templates in tasks and normalize their property names
 export const normalizeTasks = function({ tasks, variations }, variables) {
   const tasksA = tasks.map(task => normalizeTask(task, variables))
   return { tasks: tasksA, variations }
@@ -11,23 +10,25 @@ const normalizeTask = function(
   { id, title, variations, main, before, after },
   variables,
 ) {
-  const { taskTitle, variationsIds } = applyTaskTemplates({
+  const { taskId, taskTitle, variationsIds } = applyTaskTemplates({
+    id,
     title,
     variations,
     variables,
   })
-  return { taskId: id, taskTitle, variationsIds, main, before, after }
+  return { taskId, taskTitle, variationsIds, main, before, after }
 }
 
-const applyTaskTemplates = function({ title, variations, variables }) {
+const applyTaskTemplates = function({ id, title, variations, variables }) {
+  const taskId = applyTemplate(id, variables)
   const taskTitle = applyTemplate(title, variables)
 
   if (variations === undefined) {
-    return { taskTitle }
+    return { taskId, taskTitle }
   }
 
   const variationsIds = variations.map(variation =>
     applyTemplate(variation, variables),
   )
-  return { taskTitle, variationsIds }
+  return { taskId, taskTitle, variationsIds }
 }
