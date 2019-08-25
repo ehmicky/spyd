@@ -3,7 +3,7 @@ import { isPlainObject } from '../../../../../utils/main.js'
 import { validateTasks } from './tasks.js'
 import { validateVariations } from './variation.js'
 
-// Validate that tasks and variations have correct shape
+// Validate that the benchmark file has correct shape
 export const validateBenchmarkFile = function(entries) {
   if (!isPlainObject(entries) || entries.default !== undefined) {
     throw new TypeError(`Benchmark file must use named exports`)
