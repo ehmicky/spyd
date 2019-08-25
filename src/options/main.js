@@ -16,7 +16,7 @@ export const getOpts = async function(action, opts = {}) {
 
   validateOpts(optsA)
 
-  const optsB = await getConfig({ opts: optsA })
+  const optsB = await getConfig(optsA)
   const optsC = addEnvVars(optsB)
 
   validateOpts(optsC)
