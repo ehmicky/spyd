@@ -20,6 +20,6 @@ export const loadTaskFile = async function(taskPath) {
     taskPath,
     variables,
   })
-  const iterations = addTasksVariations(tasks, variations)
+  const iterations = addTasksVariations({ tasks, variations, variables })
   return { iterations, shell }
 }
