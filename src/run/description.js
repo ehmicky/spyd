@@ -3,7 +3,7 @@ import { promisify } from 'util'
 
 const pExecFile = promisify(execFile)
 
-// Runtime versions for this runner, specified as `command.versions`
+// Runtime description for this runner, specified as `command.versions`
 // Used by the `--info` option
 export const getCommandDescription = async function({
   commandTitle,

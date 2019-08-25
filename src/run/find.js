@@ -13,10 +13,6 @@ export const findRunners = function(taskPath, runners) {
   return runnersA
 }
 
-const matchExtension = function(extensions, extension) {
-  return extensions.some(extensionA => `.${extensionA}` === extension)
-}
-
 // Inverse.
 // Only trigger `runner.commands()` if the runner is used by some benchmark
 // files.
@@ -24,4 +20,8 @@ export const hasTasks = function({ extensions }, taskPaths) {
   return taskPaths.some(taskPath =>
     matchExtension(extensions, extname(taskPath)),
   )
+}
+
+const matchExtension = function(extensions, extension) {
+  return extensions.some(extensionA => `.${extensionA}` === extension)
 }

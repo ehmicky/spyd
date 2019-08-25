@@ -27,7 +27,7 @@ const loadRunner = async function({
   return { commands: commandsA, extensions }
 }
 
-// Fire runner `runner.commands()`
+// Fire `runner.commands()`
 const fireCommands = async function({ runnerId, runOpt, retrieveCommands }) {
   try {
     return await retrieveCommands(runOpt)
