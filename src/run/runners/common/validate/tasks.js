@@ -11,7 +11,7 @@ export const validateTasks = function(validators, tasks) {
   tasks.forEach(task => validateTask(task, validators))
 }
 
-export const validateTask = function(task, validators) {
+const validateTask = function(task, validators) {
   if (!isPlainObject(task)) {
     throw new TypeError(`Task '${task}' must be an object`)
   }
