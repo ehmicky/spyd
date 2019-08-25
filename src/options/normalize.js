@@ -11,10 +11,10 @@ import { validateStringArray, validatePositiveNumber } from './validate.js'
 import { loadAllPlugins } from './plugins.js'
 
 // Normalize options shape and do custom validation
-export const normalizeOpts = async function(opts) {
+export const normalizeOpts = async function(opts, action) {
   const optsA = NORMALIZERS.reduce(normalizeOpt, opts)
   const optsB = await loadAllPlugins(optsA)
-  const optsC = await normalizeStore(optsB)
+  const optsC = await normalizeStore(optsB, action)
   const optsD = await normalizeSystem(optsC)
   return optsD
 }

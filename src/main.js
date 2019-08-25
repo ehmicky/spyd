@@ -53,8 +53,6 @@ export const debug = async function(opts) {
   const optsA = await getOpts('debug', opts)
 
   await debugBenchmark(optsA)
-
-  await destroyStore(optsA)
 }
 
 // Migrate previous benchmarks

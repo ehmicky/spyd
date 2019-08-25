@@ -22,7 +22,7 @@ export const getOpts = async function(action, opts = {}) {
   validateOpts(optsC)
   const optsD = addDefaultOpts(optsC, action)
 
-  const optsE = await normalizeOpts(optsD)
+  const optsE = await normalizeOpts(optsD, action)
   return optsE
 }
 
