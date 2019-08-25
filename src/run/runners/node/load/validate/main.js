@@ -4,7 +4,7 @@ import { validateTasks } from './tasks.js'
 import { validateVariations } from './variation.js'
 
 // Validate that tasks and variations have correct shape
-export const validateTaskFile = function(entries) {
+export const validateBenchmarkFile = function(entries) {
   if (!isPlainObject(entries)) {
     throw new TypeError(`Tasks must use named exports`)
   }

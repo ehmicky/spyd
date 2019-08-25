@@ -4,8 +4,8 @@ import { validateVariables } from './variables.js'
 import { validateTasks } from './tasks.js'
 import { validateVariations } from './variation.js'
 
-// Validate that tasks and variations have correct shape
-export const validateTaskFile = function(entries) {
+// Validate that benchmark file has correct shape
+export const validateBenchmarkFile = function(entries) {
   if (!isPlainObject(entries)) {
     throw new TypeError(`Tasks must be a top-level object`)
   }

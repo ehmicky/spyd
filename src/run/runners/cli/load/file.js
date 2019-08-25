@@ -7,12 +7,12 @@ const pReadFile = promisify(readFile)
 
 // Load and parse benchmark YAML file
 export const loadFile = async function(taskPath) {
-  const content = await readTaskFile(taskPath)
+  const content = await readBenchmarkFile(taskPath)
   const entries = parseYaml(content)
   return entries
 }
 
-const readTaskFile = async function(taskPath) {
+const readBenchmarkFile = async function(taskPath) {
   try {
     return await pReadFile(taskPath, 'utf8')
   } catch (error) {

@@ -1,14 +1,14 @@
 import { loadFile } from './file.js'
-import { validateTaskFile } from './validate/main.js'
+import { validateBenchmarkFile } from './validate/main.js'
 import { getInitialVariables, getVariables } from './variables.js'
 import { getShell } from './shell.js'
 import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 
 // Load the benchmark file
-export const loadTaskFile = async function(taskPath, debug) {
+export const loadBenchmarkFile = async function(taskPath, debug) {
   const entries = await loadFile(taskPath)
-  validateTaskFile(entries)
+  validateBenchmarkFile(entries)
 
   const variables = getInitialVariables()
   const { shell, entries: entriesA } = getShell(entries, variables)

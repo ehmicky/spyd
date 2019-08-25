@@ -1,5 +1,5 @@
 import { useRequireOpt } from './require_opt.js'
-import { validateTaskFile } from './validate/main.js'
+import { validateBenchmarkFile } from './validate/main.js'
 import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 
@@ -8,11 +8,14 @@ import { addTasksVariations } from './variations.js'
 //   - to run benchmarks
 //   - by the parent at startup, but only iterations ids and titles are needed
 // Load the benchmark file using its absolute path
-export const loadTaskFile = async function(taskPath, { require: requireOpt }) {
+export const loadBenchmarkFile = async function(
+  taskPath,
+  { require: requireOpt },
+) {
   useRequireOpt(requireOpt, taskPath)
 
   const entries = await loadFile(taskPath)
-  validateTaskFile(entries)
+  validateBenchmarkFile(entries)
 
   const { tasks, variations } = normalizeTasks(entries)
   const iterations = addTasksVariations(tasks, variations)

@@ -1,7 +1,7 @@
 import { exit } from 'process'
 
 import { benchmark } from './benchmark/main.js'
-import { loadTaskFile } from './load/main.js'
+import { loadBenchmarkFile } from './load/main.js'
 import { getInput, sendOutput, sendError } from './ipc.js'
 import { measure } from './benchmark/measure.js'
 
@@ -19,7 +19,7 @@ const start = async function() {
 
 // Communicate iterations ids and titles to parent
 const load = async function({ taskPath }) {
-  const { iterations } = await loadTaskFile(taskPath)
+  const { iterations } = await loadBenchmarkFile(taskPath)
   const iterationsA = iterations.map(getIteration)
   return { iterations: iterationsA }
 }
@@ -68,7 +68,7 @@ const getTask = async function({
   variationId,
   debug: debugOpt,
 }) {
-  const { iterations, shell } = await loadTaskFile(taskPath, debugOpt)
+  const { iterations, shell } = await loadBenchmarkFile(taskPath, debugOpt)
 
   const { main, before, after, variables } = iterations.find(
     iteration =>
