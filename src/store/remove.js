@@ -1,5 +1,5 @@
 // Call `store.remove()`
-export const remove = async function(group, rawBenchmarks, { store }) {
+export const removeFromStore = async function(group, rawBenchmarks, { store }) {
   const ids = rawBenchmarks
     .filter(benchmark => benchmark.group === group)
     .map(getId)

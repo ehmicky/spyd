@@ -2,11 +2,11 @@ import { mergeBenchmarks } from '../group/merge.js'
 import { addGroup } from '../group/options.js'
 import { omit } from '../utils/main.js'
 
-import { list } from './list.js'
+import { listStore } from './list.js'
 
 // Add a new benchmark
-export const add = async function(benchmark, opts) {
-  const benchmarks = await list(opts)
+export const addToStore = async function(benchmark, opts) {
+  const benchmarks = await listStore(opts)
 
   const benchmarkA = addGroup(benchmark, benchmarks, opts)
   await save(benchmarkA, opts)

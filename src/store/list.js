@@ -1,5 +1,5 @@
 // Call `store.list()`
-export const list = async function({ store }) {
+export const listStore = async function({ store }) {
   try {
     return await store.list()
   } catch (error) {
