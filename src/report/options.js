@@ -1,4 +1,4 @@
-// `output`, `insert`, `colors`, `info`, link` can be set either for
+// `output`, `insert`, `colors`, `info`, `context`,`link` can be set either for
 // specific reporter (--report.REPORTER.output) or for all (--output)
 export const handleReportOpt = function({
   reportOpt,
@@ -6,17 +6,17 @@ export const handleReportOpt = function({
   insert,
   colors,
   info,
+  context,
   link,
-  show,
 }) {
   const reportOptA = {
     output,
     insert,
     colors,
     info,
+    context,
     link,
     ...reportOpt,
-    show,
   }
 
   const reportOptB = convertBooleans(reportOptA)
@@ -33,7 +33,7 @@ const convertBooleans = function(reportOpt) {
   return { ...reportOpt, ...booleanOpts }
 }
 
-const BOOLEAN_OPTS = ['colors', 'info', 'link']
+const BOOLEAN_OPTS = ['colors', 'info', 'context', 'link']
 
 const convertBoolean = function(name, value) {
   const valueA = value === true || value === 'true'

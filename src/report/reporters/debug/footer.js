@@ -7,12 +7,12 @@ export const getFooter = function({
   systemPretty,
   group,
   info,
-  show,
+  context,
   link,
 }) {
   const systemFooter = getSystem(systemPretty, info)
-  const timestampFooter = getTimestamp(timestampPretty, show)
-  const groupFooter = getGroup(group, show)
+  const timestampFooter = getTimestamp(timestampPretty, context)
+  const groupFooter = getGroup(group, context)
   const linkFooter = getLink(link)
   const footers = [
     systemFooter,
@@ -37,16 +37,16 @@ const getSystem = function(systemPretty, info) {
   return systemPretty
 }
 
-const getTimestamp = function(timestampPretty, show) {
-  if (!show) {
+const getTimestamp = function(timestampPretty, context) {
+  if (!context) {
     return
   }
 
   return `${blue.bold('Timestamp:')} ${timestampPretty}`
 }
 
-const getGroup = function(group, show) {
-  if (!show) {
+const getGroup = function(group, context) {
+  if (!context) {
     return
   }
 

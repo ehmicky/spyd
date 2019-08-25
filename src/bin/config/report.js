@@ -7,7 +7,7 @@ Custom reporters (installed with npm) can also be used.
 Uses a dot notation such as --report.json (not --report=json nor --report json).
 Reporter-specific options can be specified using the same dot notation.
 The following options can be set for any reporter: output, insert, colors, info,
-link.
+context, link.
 For example --report.json.output is like --output but only for the json reporter.`,
   },
   output: {
@@ -50,6 +50,11 @@ Default: true if the terminal is interactive`,
     boolean: true,
     describe: `Show hardware and software information.
 Default: false`,
+  },
+  context: {
+    boolean: true,
+    describe: `Show context information such as timestamp, group, commit/branch
+or CI build.`,
   },
   link: {
     boolean: true,

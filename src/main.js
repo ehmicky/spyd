@@ -15,7 +15,7 @@ export const run = async function(opts) {
 
   const { group, benchmarks } = await add(benchmark, optsA)
 
-  const benchmarkA = await report(group, benchmarks, { ...optsA, show: false })
+  const benchmarkA = await report(group, benchmarks, optsA)
   return benchmarkA
 }
 
@@ -25,7 +25,7 @@ export const show = async function(opts) {
 
   const { group, benchmarks } = await get(showOpt, optsA)
 
-  const benchmarkA = await report(group, benchmarks, { ...optsA, show: true })
+  const benchmarkA = await report(group, benchmarks, optsA)
   return benchmarkA
 }
 

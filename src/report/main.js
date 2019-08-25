@@ -10,7 +10,17 @@ import { handleContent } from './content.js'
 export const report = async function(
   group,
   benchmarks,
-  { report: reporters, output, insert, limits, colors, info, link, show, diff },
+  {
+    report: reporters,
+    output,
+    insert,
+    limits,
+    colors,
+    info,
+    context,
+    link,
+    diff,
+  },
 ) {
   const benchmark = getBenchmark(group, benchmarks, { limits, diff })
 
@@ -24,8 +34,8 @@ export const report = async function(
         insert,
         colors,
         info,
+        context,
         link,
-        show,
       }),
     ),
   )
@@ -52,8 +62,8 @@ const useReporter = async function({
   insert,
   colors,
   info,
+  context,
   link,
-  show,
 }) {
   const reportOptB = handleReportOpt({
     reportOpt,
@@ -61,8 +71,8 @@ const useReporter = async function({
     insert,
     colors,
     info,
+    context,
     link,
-    show,
   })
 
   const content = await reportFunc(benchmark, reportOptB)

@@ -5,7 +5,7 @@ import { getFooter } from './footer.js'
 // Debugging reporter only meant for development purpose
 const report = function(
   { timestampPretty, group, systemPretty, iterations },
-  { info, show, link },
+  { info, context, link },
 ) {
   const content = iterations.map(serializeIteration).join('\n')
   const footer = getFooter({
@@ -13,7 +13,7 @@ const report = function(
     group,
     systemPretty,
     info,
-    show,
+    context,
     link,
   })
   return `\n${content}${footer}\n\n`

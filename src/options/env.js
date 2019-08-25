@@ -63,6 +63,7 @@ const OPTS = {
   save: 'boolean',
   show: 'boolean',
   info: 'boolean',
+  context: 'boolean',
   config: 'string',
   cwd: 'string',
   data: 'string',

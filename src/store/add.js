@@ -36,7 +36,7 @@ const save = async function(
 }
 
 // Benchmark information that are too big are not persisted.
-// We otherwise try to persist everything, so that `--show` report the same
+// We otherwise try to persist everything, so that `show` report the same
 // information.
 // We try to only persist what cannot be computed runtime (which is done by
 // `addPrintedInfo()` during reporting). This includes

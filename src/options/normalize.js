@@ -65,6 +65,15 @@ const normalizeCwd = function({ cwd, ...opts }) {
   return { ...opts, cwd: cwdA }
 }
 
+// Normalize 'context' option
+const normalizeContext = function({
+  show,
+  context = show !== undefined,
+  ...opts
+}) {
+  return { ...opts, show, context }
+}
+
 // Normalize 'show' option
 const normalizeShow = function({ show, ...opts }) {
   const showA = normalizeDelta('show', show)
@@ -92,6 +101,7 @@ const NORMALIZERS = [
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,
+  normalizeContext,
   normalizeShow,
   normalizeDiff,
   normalizeRemove,

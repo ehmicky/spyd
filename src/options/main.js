@@ -80,6 +80,7 @@ const EXAMPLE_OPTS = {
   env: 'Windows 10',
   output: './file.js',
   insert: './README.md',
+  context: true,
   limit: ['taskId=10'],
   show: VALID_BENCHMARK_DELTA,
   diff: VALID_BENCHMARK_DELTA,
