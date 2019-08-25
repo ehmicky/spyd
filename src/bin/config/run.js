@@ -8,6 +8,7 @@ export const RUN_CONFIG = {
 Default: 10`,
   },
   group: {
+    alias: 'g',
     string: true,
     describe: `Append the current benchmarks to the previous one.
 Used to create a single benchmark incrementally.
@@ -21,6 +22,7 @@ Custom progress reporters (installed with npm) can also be used.
 Uses a dot notation such as --progress.bar (not --progress=bar nor --progress bar).`,
   },
   save: {
+    alias: 's',
     boolean: true,
     describe: `Save the benchmarks.
 Default: false`,
