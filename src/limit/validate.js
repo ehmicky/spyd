@@ -12,11 +12,13 @@ const validateLimitId = function(iterations, id) {
 
   if (!isValidId) {
     throw new TypeError(
-      `Invalid limit '${id}': no such tasks, variations nor commands`,
+      `Invalid limit '${id}': no such tasks, variations, commands nor systems`,
     )
   }
 }
 
-const hasId = function({ taskId, variationId, commandId }, id) {
-  return taskId === id || variationId === id || commandId === id
+const hasId = function({ taskId, variationId, commandId, systemId }, id) {
+  return (
+    taskId === id || variationId === id || commandId === id || systemId === id
+  )
 }
