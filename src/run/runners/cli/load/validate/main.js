@@ -7,7 +7,7 @@ import { validateVariations } from './variation.js'
 // Validate that benchmark file has correct shape
 export const validateBenchmarkFile = function(entries) {
   if (!isPlainObject(entries)) {
-    throw new TypeError(`Tasks must be a top-level object`)
+    throw new TypeError(`Benchmark file must be a top-level object`)
   }
 
   if (entries.tasks === undefined) {
