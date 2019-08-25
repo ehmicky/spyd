@@ -1,5 +1,5 @@
 import { useRequireOpt } from './require_opt.js'
-import { validateBenchmarkFile } from './validate/main.js'
+import { validateBenchmarkFile } from './validate.js'
 import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 

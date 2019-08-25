@@ -23,12 +23,6 @@ const validateVariation = function(variation, validators) {
   }
 
   Object.entries(variation).forEach(([propName, prop]) =>
-    validateProp({
-      id,
-      validators,
-      category: 'variation',
-      propName,
-      prop,
-    }),
+    validateProp({ id, validators, category: 'variation', propName, prop }),
   )
 }
