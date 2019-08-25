@@ -16,14 +16,14 @@ export const getBenchmarks = async function(dir) {
   }
 
   const content = await pReadFile(dataFile, 'utf-8')
-  const { benchmarks } = JSON.parse(content)
+  const benchmarks = JSON.parse(content)
   return benchmarks
 }
 
 // Persist benchmarks from filesystem
 export const setBenchmarks = async function(dir, benchmarks) {
   const dataFile = await getDataFile(dir)
-  const content = JSON.stringify({ benchmarks }, null, 2)
+  const content = JSON.stringify(benchmarks, null, 2)
   await writeFileAtomic(dataFile, `${content}\n`)
 }
 
