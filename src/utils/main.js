@@ -25,6 +25,14 @@ export const isPlainObject = function(value) {
   )
 }
 
+export const isEmptyObject = function(object) {
+  return Object.values(object).every(isUndefined)
+}
+
+const isUndefined = function(value) {
+  return value === undefined
+}
+
 // ES specifications mostly use promiseLike objects not promises
 export const isPromiseLike = function(value) {
   return (

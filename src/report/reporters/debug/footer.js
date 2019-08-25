@@ -6,6 +6,7 @@ export const getFooter = function({
   timestampPretty,
   systemsPretty,
   gitPretty,
+  ciPretty,
   commandsPretty,
   group,
   info,
@@ -14,7 +15,13 @@ export const getFooter = function({
 }) {
   const footers = [
     ...getInfoFooters({ info, systemsPretty, commandsPretty }),
-    ...getContextFooters({ context, gitPretty, timestampPretty, group }),
+    ...getContextFooters({
+      context,
+      gitPretty,
+      ciPretty,
+      timestampPretty,
+      group,
+    }),
     ...getLinkFooters(link),
   ]
 
@@ -37,6 +44,7 @@ const getInfoFooters = function({ info, systemsPretty, commandsPretty }) {
 const getContextFooters = function({
   context,
   gitPretty,
+  ciPretty,
   timestampPretty,
   group,
 }) {
@@ -46,7 +54,7 @@ const getContextFooters = function({
 
   const timestampPrettyA = `${blue.bold('Timestamp:')} ${timestampPretty}`
   const groupPretty = `${blue.bold('Group:')} ${group}`
-  return [gitPretty, timestampPrettyA, groupPretty]
+  return [gitPretty, ciPretty, timestampPrettyA, groupPretty].filter(Boolean)
 }
 
 const getLinkFooters = function(link) {
@@ -55,7 +63,7 @@ const getLinkFooters = function(link) {
   }
 
   const linkPretty = dim(
-    `Benchmarked with spyd ${underline('(https://github.com/ehmicky/spyd)')}`,
+    `Benchmarked with spyd (${underline('https://github.com/ehmicky/spyd')})`,
   )
   return [linkPretty]
 }

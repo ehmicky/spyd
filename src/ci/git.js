@@ -1,8 +1,10 @@
 import { blue } from 'chalk'
 
+import { isEmptyObject } from '../utils/main.js'
+
 // Serialize `git` information for CLI reporters.
 export const prettifyGit = function(git) {
-  if (isEmpty(git)) {
+  if (isEmptyObject(git)) {
     return ''
   }
 
@@ -11,14 +13,6 @@ export const prettifyGit = function(git) {
   const prPretty = prettifyPr(git)
   const body = [commitPretty, prPretty].filter(Boolean).join('\n')
   return `${header}\n${body}`
-}
-
-const isEmpty = function(git) {
-  return Object.values(git).every(isUndefined)
-}
-
-const isUndefined = function(value) {
-  return value === undefined
 }
 
 const prettifyCommit = function({ commit, tag, branch }) {
@@ -44,7 +38,7 @@ const COMMIT_SIZE = 8
 
 const prettifyPr = function({ prNumber, prBranch }) {
   if (prNumber === undefined) {
-    return ''
+    return
   }
 
   const field = blue.bold('  PR: ')

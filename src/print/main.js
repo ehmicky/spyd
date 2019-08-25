@@ -1,6 +1,7 @@
 import { prettifySystems } from '../system/pretty.js'
 import { joinSystems } from '../system/join.js'
 import { prettifyGit } from '../ci/git.js'
+import { prettifyCi } from '../ci/pretty.js'
 
 import { addCollections } from './collections.js'
 import { addNames } from './name.js'
@@ -14,6 +15,7 @@ export const addPrintedInfo = function({
   iterations,
   systems,
   git,
+  ci,
   timestamp,
   ...benchmark
 }) {
@@ -35,11 +37,13 @@ export const addPrintedInfo = function({
     timestampPretty,
     systemsPretty,
     gitPretty,
+    ciPretty,
     commandsPretty,
   } = prettify({
     timestamp,
     systems: systemsA,
     git,
+    ci,
     commands,
   })
 
@@ -53,17 +57,19 @@ export const addPrintedInfo = function({
     systems: systemsA,
     systemsPretty,
     gitPretty,
+    ciPretty,
     commandsPretty,
     iterations: iterationsD,
   }
 }
 
-const prettify = function({ timestamp, systems, git, commands }) {
+const prettify = function({ timestamp, systems, git, ci, commands }) {
   const timestampPretty = prettifyTimestamp(timestamp)
   const systemsPretty = prettifySystems(systems)
   const gitPretty = prettifyGit(git)
+  const ciPretty = prettifyCi(ci)
   const commandsPretty = prettifyCommands(commands)
-  return { timestampPretty, systemsPretty, gitPretty, commandsPretty }
+  return { timestampPretty, systemsPretty, gitPretty, ciPretty, commandsPretty }
 }
 
 // Make timestamp more human-friendly.
