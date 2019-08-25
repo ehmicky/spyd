@@ -11,9 +11,9 @@ export const loadTaskFile = async function(taskPath) {
   const entries = await loadFile(taskPath)
   validateTaskFile(entries, taskPath)
 
-  const { tasks, variations } = normalizeTasks(entries, taskPath)
+  const { tasks, variations, shell } = normalizeTasks(entries, taskPath)
   const iterations = addTasksVariations(tasks, variations)
-  return iterations
+  return { iterations, shell }
 }
 
 const loadFile = function(taskPath) {

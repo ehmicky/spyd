@@ -15,10 +15,19 @@ export const validateTaskFile = function(entries, taskPath) {
 }
 
 const validateEntry = function(name, entry, taskPath) {
+  if (name === 'shell') {
+    return validateShell(entry, taskPath)
+  }
+
   if (name === 'variations') {
-    validateVariations(entry, taskPath)
-    return
+    return validateVariations(entry, taskPath)
   }
 
   validateTask(name, entry, taskPath)
+}
+
+const validateShell = function(shell, taskPath) {
+  if (typeof shell !== 'boolean') {
+    throw new TypeError(`'shell' in '${taskPath}' must be a boolean`)
+  }
 }

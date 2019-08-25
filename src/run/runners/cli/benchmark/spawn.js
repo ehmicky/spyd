@@ -1,6 +1,7 @@
 import execa from 'execa'
 
 // Errors are propagated
-export const spawnProcess = async function(command, { stdio }) {
-  await execa(command, { stdio, shell: true, preferLocal: true })
+export const spawnProcess = async function(command, { shell, stdio }) {
+  const execaFunc = shell ? execa : execa.command
+  await execaFunc(command, { stdio, shell, preferLocal: true })
 }
