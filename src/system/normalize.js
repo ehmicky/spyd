@@ -1,8 +1,10 @@
+import slugify from 'slugify'
+
 // Normalize 'system' option
-// Can be either "systemId" or "systemId/systemTitle"
-export const normalizeSystem = function({ system, ...opts }) {
-  const [id, title = id] = system.trim().split(SLASH_REGEXP)
-  return { ...opts, system: { id, title } }
+export const normalizeSystem = function({ system, run, ...opts }) {
+  const title = system.trim()
+  const id = slugify(title, { lower: true, remove: INVALID_ID_REGEXP })
+  return { ...opts, run, system: { id, title } }
 }
 
-const SLASH_REGEXP = / *\/ */u
+const INVALID_ID_REGEXP = /[^ a-zA-Z\d_.-]/gu
