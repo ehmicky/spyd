@@ -1,8 +1,6 @@
 import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
 
-import uuidv4 from 'uuid/v4.js'
-
 import { normalizeProgress } from '../progress/options.js'
 import { normalizeDelta } from '../store/delta/options.js'
 import { normalizeLimits } from '../limit/options.js'
@@ -37,13 +35,13 @@ const normalizeVariations = function({ variations, ...opts }) {
 }
 
 // Normalize 'group' option
-const normalizeGroup = function({ group = uuidv4(), ...opts }) {
+const normalizeGroup = function({ group, ...opts }) {
   const groupA = group.trim()
   return { ...opts, group: groupA }
 }
 
 // Normalize 'env' option
-const normalizeEnv = function({ env = '', ...opts }) {
+const normalizeEnv = function({ env, ...opts }) {
   const envA = env.trim()
   return { ...opts, env: envA }
 }
@@ -63,15 +61,6 @@ const NANOSECS_TO_SECS = 1e9
 const normalizeCwd = function({ cwd, ...opts }) {
   const cwdA = resolve(getCwd(), cwd)
   return { ...opts, cwd: cwdA }
-}
-
-// Normalize 'context' option
-const normalizeContext = function({
-  show,
-  context = show !== undefined,
-  ...opts
-}) {
-  return { ...opts, show, context }
 }
 
 // Normalize 'show' option
@@ -101,7 +90,6 @@ const NORMALIZERS = [
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,
-  normalizeContext,
   normalizeShow,
   normalizeDiff,
   normalizeRemove,

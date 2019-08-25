@@ -2,6 +2,7 @@ import { cwd as getCwd, stderr } from 'process'
 
 import { validate, multipleValidOptions } from 'jest-validate'
 import isInteractive from 'is-interactive'
+import uuidv4 from 'uuid/v4.js'
 
 import { omitBy } from '../utils/main.js'
 import { normalizeStore } from '../store/options.js'
@@ -12,7 +13,7 @@ import { normalizeOpts } from './normalize.js'
 import { loadAllPlugins } from './plugins.js'
 
 // Retrieve options/configuration
-export const getOpts = async function(opts = {}) {
+export const getOpts = async function(action, opts = {}) {
   const optsA = omitBy(opts, isUndefined)
 
   validateOpts(optsA)
@@ -21,7 +22,7 @@ export const getOpts = async function(opts = {}) {
   const optsC = addEnvVars(optsB)
 
   validateOpts(optsC)
-  const optsD = { ...DEFAULT_OPTS, ...optsC }
+  const optsD = addDefaultOpts(optsC, action)
 
   const optsE = normalizeOpts(optsD)
   const optsF = await loadAllPlugins(optsE)
@@ -42,11 +43,21 @@ const validateOpts = function(opts) {
   })
 }
 
+const addDefaultOpts = function(opts, action) {
+  return {
+    ...DEFAULT_OPTS,
+    group: uuidv4(),
+    context: action === 'show',
+    ...opts,
+  }
+}
+
 const DEFAULT_OPTS = {
   files: ['benchmarks.*', 'benchmarks/main.*'],
   cwd: getCwd(),
   duration: 10,
   colors: isInteractive(stderr),
+  env: '',
   link: true,
   info: false,
   save: false,
