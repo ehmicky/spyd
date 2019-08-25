@@ -1,5 +1,4 @@
-// `taskTitle` defaults to the function variable name. `taskTitle` is used by
-// reporters while the `taskId` is used for identification.
+// Normalize task properties names
 export const normalizeTasks = function({ tasks, variations }) {
   const tasksA = tasks.map(normalizeTask)
   return { tasks: tasksA, variations }
