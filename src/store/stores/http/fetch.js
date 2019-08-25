@@ -8,6 +8,7 @@ export const fetchUrl = async function({
   body: json = undefined,
   noResponse,
 }) {
+  // The following only works with the next version of `got`, not released yet
   const responseType = noResponse
     ? {}
     : { responseType: 'json', resolveBodyOnly: true }
