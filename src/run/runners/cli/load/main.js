@@ -1,7 +1,7 @@
 import { env } from 'process'
 
 import { loadFile } from './file.js'
-import { validateFile } from './validate/main.js'
+import { validateFile } from './validate.js'
 import { getVariables } from './variables.js'
 import { getShell } from './shell.js'
 import { normalizeTasks } from './normalize.js'
