@@ -6,12 +6,10 @@ export const validateVariables = function(variables) {
     throw new TypeError(`'variables' must be an object`)
   }
 
-  Object.entries(variables).forEach(([name, value]) =>
-    validateVariable(name, value),
-  )
+  Object.entries(variables).forEach(validateVariable)
 }
 
-const validateVariable = function(name, value) {
+const validateVariable = function([name, value]) {
   if (!VARIABLE_NAME_REGEXP.test(name)) {
     throw new TypeError(
       `'variables' '${name}' name must only contain letters, digits or - _`,
