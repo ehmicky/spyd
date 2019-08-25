@@ -1,5 +1,5 @@
 // Configuration shared by commands that can select iterations: `run`, `debug`,
-// `show`, `remove`
+// `show`
 export const SELECT_CONFIG = {
   tasks: {
     alias: 't',

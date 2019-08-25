@@ -13,7 +13,7 @@ export const selectIterations = function(iterations, { tasks, variations }) {
 }
 
 // Select benchmarks according to options `tasks`, `variations`, `system` and
-// `run`. For the `show` and `remove` commands.
+// `run`. For the `show` command.
 export const selectBenchmarks = function(rawBenchmarks, opts) {
   const targets = getTargets(opts)
   validateTargets(targets, rawBenchmarks)
