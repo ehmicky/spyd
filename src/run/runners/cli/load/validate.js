@@ -1,5 +1,5 @@
 import { isPlainObject } from '../../../../utils/main.js'
-import { validateBenchmarkFile } from '../../common/validate/main.js'
+import { validateBenchmarkFile } from '../../common/validate/file.js'
 import {
   validateString,
   validateStringArray,
