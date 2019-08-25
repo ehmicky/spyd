@@ -62,7 +62,7 @@ const OPTS = {
   remove: 'boolean',
   save: 'boolean',
   show: 'boolean',
-  system: 'boolean',
+  info: 'boolean',
   config: 'string',
   cwd: 'string',
   data: 'string',

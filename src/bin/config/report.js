@@ -6,8 +6,8 @@ Built-in reporters: silent.
 Custom reporters (installed with npm) can also be used.
 Uses a dot notation such as --report.json (not --report=json nor --report json).
 Reporter-specific options can be specified using the same dot notation.
-The following options can be set for any reporter: output, insert, colors,
-system, link.
+The following options can be set for any reporter: output, insert, colors, info,
+link.
 For example --report.json.output is like --output but only for the json reporter.`,
   },
   output: {
@@ -46,7 +46,7 @@ commands) to target.`,
     describe: `Use colors in output.
 Default: true if the terminal is interactive`,
   },
-  system: {
+  info: {
     boolean: true,
     describe: `Show hardware and software information.
 Default: false`,

@@ -48,7 +48,7 @@ const DEFAULT_OPTS = {
   duration: 10,
   colors: isInteractive(stderr),
   link: true,
-  system: false,
+  info: false,
   save: false,
   run: { node: {} },
   report: { debug: {} },

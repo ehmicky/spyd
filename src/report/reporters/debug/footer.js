@@ -6,11 +6,11 @@ export const getFooter = function({
   timestampPretty,
   systemPretty,
   group,
-  system,
+  info,
   show,
   link,
 }) {
-  const systemFooter = getSystem(systemPretty, system)
+  const systemFooter = getSystem(systemPretty, info)
   const timestampFooter = getTimestamp(timestampPretty, show)
   const groupFooter = getGroup(group, show)
   const linkFooter = getLink(link)
@@ -29,8 +29,8 @@ export const getFooter = function({
   return `\n\n${footer}`
 }
 
-const getSystem = function(systemPretty, system) {
-  if (!system) {
+const getSystem = function(systemPretty, info) {
+  if (!info) {
     return
   }
 

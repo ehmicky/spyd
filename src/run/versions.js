@@ -4,7 +4,7 @@ import { promisify } from 'util'
 const pExecFile = promisify(execFile)
 
 // Runtime versions for this runner, specified as `action.versions`
-// Used by the `--system` option
+// Used by the `--info` option
 export const getVersions = async function({ versions, runnerId }) {
   const versionsA = await Promise.all(
     versions.map(({ title, value }) => getVersion({ title, value, runnerId })),

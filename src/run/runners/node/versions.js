@@ -24,7 +24,7 @@ export const getNodeVersions = async function({ versions }) {
 
 const WHITESPACE_REGEXP = /\s+/u
 
-// We normalize the Node versions for validation purpose and for `--system`,
+// We normalize the Node versions for validation purpose and for `--info`,
 // but not for the command id/title
 const normalizeVersions = async function(versions) {
   const normalizedVersions = await Promise.all(versions.map(normalizeVersion))
@@ -66,7 +66,7 @@ const validateVersion = function(version, allowedVersions) {
   }
 }
 
-// Versions shown in `--system` are normalized.
+// Versions shown in `--info` are normalized.
 const getVersionString = function(normalizedVersions) {
   // eslint-disable-next-line fp/no-mutating-methods
   return normalizedVersions.sort(rcompare).join(' ')
