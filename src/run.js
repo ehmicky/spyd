@@ -6,7 +6,7 @@ import { startProgress, stopProgress } from './progress/main.js'
 import { getIterations } from './iterations/main.js'
 import { runProcesses } from './processes/main.js'
 import { getSystems } from './system/info.js'
-import { getCiInfo } from './ci.js'
+import { getCiInfo } from './ci/info.js'
 import { cleanObject } from './utils/clean.js'
 
 // Run a new benchmark

@@ -5,24 +5,18 @@ import indentString from 'indent-string'
 export const getFooter = function({
   timestampPretty,
   systemsPretty,
+  gitPretty,
   commandsPretty,
   group,
   info,
   context,
   link,
 }) {
-  const systemFooter = getSystem(systemsPretty, info)
-  const commandsFooter = getCommands(commandsPretty, info)
-  const timestampFooter = getTimestamp(timestampPretty, context)
-  const groupFooter = getGroup(group, context)
-  const linkFooter = getLink(link)
   const footers = [
-    systemFooter,
-    commandsFooter,
-    timestampFooter,
-    groupFooter,
-    linkFooter,
-  ].filter(Boolean)
+    ...getInfoFooters({ info, systemsPretty, commandsPretty }),
+    ...getContextFooters({ context, gitPretty, timestampPretty, group }),
+    ...getLinkFooters(link),
+  ]
 
   if (footers.length === 0) {
     return ''
@@ -32,46 +26,38 @@ export const getFooter = function({
   return `\n\n${footer}`
 }
 
-const getSystem = function(systemsPretty, info) {
+const getInfoFooters = function({ info, systemsPretty, commandsPretty }) {
   if (!info) {
-    return
+    return []
   }
 
-  return systemsPretty
+  return [systemsPretty, commandsPretty]
 }
 
-const getCommands = function(commandsPretty, info) {
-  if (!info) {
-    return
-  }
-
-  return commandsPretty
-}
-
-const getTimestamp = function(timestampPretty, context) {
+const getContextFooters = function({
+  context,
+  gitPretty,
+  timestampPretty,
+  group,
+}) {
   if (!context) {
-    return
+    return []
   }
 
-  return `${blue.bold('Timestamp:')} ${timestampPretty}`
+  const timestampPrettyA = `${blue.bold('Timestamp:')} ${timestampPretty}`
+  const groupPretty = `${blue.bold('Group:')} ${group}`
+  return [gitPretty, timestampPrettyA, groupPretty]
 }
 
-const getGroup = function(group, context) {
-  if (!context) {
-    return
-  }
-
-  return `${blue.bold('Group:')} ${group}`
-}
-
-const getLink = function(link) {
+const getLinkFooters = function(link) {
   if (!link) {
-    return
+    return []
   }
 
-  return dim(
+  const linkPretty = dim(
     `Benchmarked with spyd ${underline('(https://github.com/ehmicky/spyd)')}`,
   )
+  return [linkPretty]
 }
 
 const indentFooter = function(footer) {
