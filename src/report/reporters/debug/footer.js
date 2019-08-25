@@ -5,17 +5,20 @@ import indentString from 'indent-string'
 export const getFooter = function({
   timestampPretty,
   systemPretty,
+  commandsPretty,
   group,
   info,
   context,
   link,
 }) {
   const systemFooter = getSystem(systemPretty, info)
+  const commandsFooter = getCommands(commandsPretty, info)
   const timestampFooter = getTimestamp(timestampPretty, context)
   const groupFooter = getGroup(group, context)
   const linkFooter = getLink(link)
   const footers = [
     systemFooter,
+    commandsFooter,
     timestampFooter,
     groupFooter,
     linkFooter,
@@ -35,6 +38,14 @@ const getSystem = function(systemPretty, info) {
   }
 
   return systemPretty
+}
+
+const getCommands = function(commandsPretty, info) {
+  if (!info) {
+    return
+  }
+
+  return commandsPretty
 }
 
 const getTimestamp = function(timestampPretty, context) {

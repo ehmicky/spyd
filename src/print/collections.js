@@ -21,6 +21,7 @@ const COLLECTIONS = [
     name: 'commands',
     id: 'commandId',
     title: 'commandTitle',
+    description: 'commandDescription',
     rank: 'commandRank',
   },
   { name: 'systems', id: 'systemId', title: 'systemTitle', rank: 'systemRank' },
@@ -28,10 +29,10 @@ const COLLECTIONS = [
 
 const addCollection = function(
   { iterations, ...collections },
-  { name, id, title, rank },
+  { name, id, title, description, rank },
 ) {
   const collection = Object.values(groupBy(iterations, id)).map(iterationsA =>
-    normalizeCollection(iterationsA, id, title),
+    normalizeCollection({ iterations: iterationsA, id, title, description }),
   )
   sortBy(collection, ['mean'])
 
@@ -41,11 +42,23 @@ const addCollection = function(
   return { iterations: iterationsB, ...collections, [name]: collection }
 }
 
-const normalizeCollection = function(iterations, id, title) {
-  const [{ [id]: collectionId, [title]: collectionTitle }] = iterations
+const normalizeCollection = function({ iterations, id, title, description }) {
+  const lastIteration = iterations[iterations.length - 1]
+  const {
+    [id]: collectionId,
+    [title]: collectionTitle,
+    [description]: collectionDescription,
+  } = lastIteration
+
   const medians = iterations.map(getIterationMedian)
   const mean = getMean(medians)
-  return { id: collectionId, title: collectionTitle, mean }
+
+  return {
+    id: collectionId,
+    title: collectionTitle,
+    description: collectionDescription,
+    mean,
+  }
 }
 
 const getIterationMedian = function({ stats: { median } }) {

@@ -21,7 +21,7 @@ export const getIterations = async function({
 }) {
   const taskPaths = await getTaskPaths(files, cwd)
 
-  const { runners: runnersA, versions } = await loadRunners(runners, taskPaths)
+  const runnersA = await loadRunners(runners, taskPaths)
 
   const iterationsB = await getAllIterations({
     taskPaths,
@@ -36,7 +36,7 @@ export const getIterations = async function({
   })
 
   const iterationsC = addNames(iterationsB)
-  return { iterations: iterationsC, versions }
+  return { iterations: iterationsC }
 }
 
 const getAllIterations = async function({

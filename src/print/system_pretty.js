@@ -45,19 +45,17 @@ const getBody = function(system) {
 }
 
 const getFields = function(system) {
-  return Object.keys(MACHINE_FIELDS).filter(
-    field => system[field] !== undefined,
-  )
+  return Object.keys(SYSTEM_FIELDS).filter(field => system[field] !== undefined)
 }
 
 const serializeField = function(field, system) {
   const value = system[field]
-  const fieldA = MACHINE_FIELDS[field]
+  const fieldA = SYSTEM_FIELDS[field]
   const fieldB = blue.bold(`${fieldA}:`)
   return `  ${fieldB} ${value}`
 }
 
-const MACHINE_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
+const SYSTEM_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
 
 const indent = function(systemPretty, index) {
   if (index === 0) {

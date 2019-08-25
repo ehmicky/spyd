@@ -5,11 +5,11 @@ import { format as formatBytes } from 'bytes'
 
 import { groupBy } from '../utils/group.js'
 
-export const getMachine = function(versions) {
+export const getSystem = function() {
   const cpu = serializeCpus()
   const memory = getMemory()
   const os = osName()
-  return { cpu, memory, os, ...versions }
+  return { cpu, memory, os }
 }
 
 const serializeCpus = function() {

@@ -1,39 +1,37 @@
 import normalizeNodeVersion from 'normalize-node-version'
-import { rcompare, satisfies } from 'semver'
+import { satisfies } from 'semver'
 import readPkgUp from 'read-pkg-up'
 
 // Normalize the node `versions` option
 export const getNodeVersions = async function({ versions }) {
   if (versions === undefined) {
-    return {}
+    return
   }
 
   const versionsA = versions.split(WHITESPACE_REGEXP)
 
-  const [normalizedVersions, allowedVersions] = await Promise.all([
-    normalizeVersions(versionsA),
+  const [versionsB, allowedVersions] = await Promise.all([
+    getFullVersions(versionsA),
     getAllowedVersions(),
   ])
 
-  validateVersions(normalizedVersions, allowedVersions)
+  validateVersions(versionsB, allowedVersions)
 
-  const versionString = getVersionString(normalizedVersions)
-
-  return { versions: versionsA, versionString }
+  return versionsB
 }
 
 const WHITESPACE_REGEXP = /\s+/u
 
-// We normalize the Node versions for validation purpose and for `--info`,
+// We retrieve the full Node versions for validation purpose and for `--info`,
 // but not for the command id/title
-const normalizeVersions = async function(versions) {
-  const normalizedVersions = await Promise.all(versions.map(normalizeVersion))
-  return normalizedVersions
+const getFullVersions = function(versions) {
+  return Promise.all(versions.map(getFullVersion))
 }
 
-const normalizeVersion = async function(version) {
+const getFullVersion = async function(version) {
   try {
-    return await normalizeNodeVersion(version)
+    const fullVersion = await normalizeNodeVersion(version)
+    return { version, fullVersion }
   } catch (error) {
     // eslint-disable-next-line fp/no-mutation
     error.message = `In option 'run.node.versions': ${error.message}`
@@ -52,22 +50,16 @@ const getAllowedVersions = async function() {
 }
 
 // We validate the versions before starting the benchmarks.
-const validateVersions = function(normalizedVersions, allowedVersions) {
-  normalizedVersions.forEach(version =>
-    validateVersion(version, allowedVersions),
+const validateVersions = function(versions, allowedVersions) {
+  versions.forEach(({ version, fullVersion }) =>
+    validateVersion(version, fullVersion, allowedVersions),
   )
 }
 
-const validateVersion = function(version, allowedVersions) {
-  if (!satisfies(version, allowedVersions)) {
+const validateVersion = function(version, fullVersion, allowedVersions) {
+  if (!satisfies(fullVersion, allowedVersions)) {
     throw new Error(
       `In option 'run.node.versions': version ${version} must be ${allowedVersions}`,
     )
   }
-}
-
-// Versions shown in `--info` are normalized.
-const getVersionString = function(normalizedVersions) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  return normalizedVersions.sort(rcompare).join(' ')
 }

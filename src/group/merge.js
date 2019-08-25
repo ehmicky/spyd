@@ -14,18 +14,12 @@ const mergeGroup = function([benchmark, ...benchmarks]) {
 }
 
 const mergePair = function(
-  {
-    id: previousId,
-    ids: previousIds = [previousId],
-    systems: previousSystems,
-    iterations: previousIterations,
-  },
+  { systems: previousSystems, iterations: previousIterations },
   { id, systems: [system], iterations, ...benchmark },
 ) {
-  const ids = [...previousIds, id]
   const systems = mergeSystems(previousSystems, system)
   const iterationsA = removeDuplicates([...previousIterations, ...iterations])
-  return { ...benchmark, ids, systems, iterations: iterationsA }
+  return { ...benchmark, id, systems, iterations: iterationsA }
 }
 
 // Several benchmarks can have the same system, providing it is exactly the same

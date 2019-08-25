@@ -4,6 +4,7 @@ import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
 import { normalizeStats } from './stats/main.js'
 import { prettifySystems } from './system_pretty.js'
+import { prettifyCommands } from './commands.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
@@ -30,6 +31,7 @@ export const addPrintedInfo = function({
   const timestampPretty = prettifyTimestamp(timestamp)
 
   const systemPretty = prettifySystems(systemsA)
+  const commandsPretty = prettifyCommands(commands)
 
   return {
     ...benchmark,
@@ -40,6 +42,7 @@ export const addPrintedInfo = function({
     commands,
     systems: systemsA,
     systemPretty,
+    commandsPretty,
     iterations: iterationsD,
   }
 }

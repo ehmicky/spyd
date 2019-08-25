@@ -1,5 +1,4 @@
 import { getCommands } from './command.js'
-import { getVersions, loadVersions } from './versions.js'
 import { hasTasks } from './find.js'
 
 // Select the runners for the current benchmark files, and retrieve their
@@ -8,31 +7,30 @@ export const loadRunners = async function(runners, taskPaths) {
   const runnersA = runners.filter(runner => hasTasks(runner, taskPaths))
 
   const runnersB = await Promise.all(runnersA.map(loadRunner))
-
-  const versions = loadVersions(runnersB)
-  return { runners: runnersB, versions }
+  return runnersB
 }
 
-const loadRunner = async function(runner) {
-  const action = await fireAction(runner)
-
-  const commands = getCommands(action)
-
-  const versions = await getVersions(action)
-
-  return { commands, versions, extensions: runner.extensions }
+const loadRunner = async function({
+  id: runnerId,
+  title: runnerTitle,
+  opts: runOpt,
+  extensions,
+  action,
+}) {
+  const commands = await fireAction({ runnerId, runOpt, action })
+  const commandsA = await getCommands({
+    runnerId,
+    runnerTitle,
+    runOpt,
+    commands,
+  })
+  return { commands: commandsA, extensions }
 }
 
 // Fire runner `action()`
-const fireAction = async function({
-  id: runnerId,
-  title: runnerTitle,
-  action,
-  opts: runOpt,
-}) {
+const fireAction = async function({ runnerId, runOpt, action }) {
   try {
-    const { commands, versions } = await action(runOpt)
-    return { runnerId, runnerTitle, runOpt, commands, versions }
+    return await action(runOpt)
   } catch (error) {
     // eslint-disable-next-line fp/no-mutation
     error.message = `In runner '${runnerId}': ${error.message}`
