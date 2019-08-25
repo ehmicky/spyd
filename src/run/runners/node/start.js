@@ -28,8 +28,8 @@ const load = async function({ taskPath, opts }) {
 const getIteration = function({
   taskId,
   taskTitle,
-  variationId,
   variationTitle,
+  variationId,
 }) {
   return { taskId, taskTitle, variationId, variationTitle }
 }
