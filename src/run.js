@@ -6,6 +6,7 @@ import { startProgress, stopProgress } from './progress/main.js'
 import { getIterations } from './iterations/main.js'
 import { runProcesses } from './processes/main.js'
 import { getSystems } from './system/info.js'
+import { getCiInfo } from './ci.js'
 import { cleanObject } from './utils/clean.js'
 
 // Run a new benchmark
@@ -38,12 +39,13 @@ const computeBenchmark = async function({
 // Add more information to the final benchmark and normalize/sort results
 const addBenchmarkInfo = function(
   iterations,
-  { opts, opts: { group, system } },
+  { opts, opts: { group, system, cwd } },
 ) {
   const id = uuidv4()
   const timestamp = new Date().toISOString()
-  const systems = getSystems(opts, system)
-  const benchmark = { id, timestamp, group, systems, iterations }
+  const { git, ci, job } = getCiInfo(cwd)
+  const systems = getSystems({ opts, system, job })
+  const benchmark = { id, timestamp, group, systems, git, ci, iterations }
   const benchmarkA = cleanObject(benchmark)
   return benchmarkA
 }
