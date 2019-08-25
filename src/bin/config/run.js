@@ -50,6 +50,8 @@ Default: random UUID`,
     requiresArg: true,
     describe: `Name of the current hardware/software system.
 Used to compare different machines or configurations together.
+Can contain variables such as {{OS}}, {{OS_FULL}} or {{VAR}} where VAR is an
+environment variable.
 Default: ""`,
   },
   progress: {
