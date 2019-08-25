@@ -1,8 +1,9 @@
 import { isPlainObject } from '../../../../../utils/main.js'
+import { validateString, validatePrimitive } from '../../../common/validate.js'
+import { validateVariations } from '../../../common/variations.js'
 
 import { validateVariables } from './variables.js'
 import { validateTasks } from './tasks.js'
-import { validateVariations } from './variation.js'
 
 // Validate that benchmark file has correct shape
 export const validateBenchmarkFile = function(entries) {
@@ -33,9 +34,15 @@ const validateShell = function(shell) {
   }
 }
 
+const VARIATION_VALIDATORS = {
+  id: validateString,
+  title: validateString,
+  value: validatePrimitive,
+}
+
 const VALIDATORS = {
   shell: validateShell,
   variables: validateVariables,
   tasks: validateTasks,
-  variations: validateVariations,
+  variations: validateVariations.bind(null, VARIATION_VALIDATORS),
 }

@@ -1,16 +1,17 @@
-import { isPlainObject } from '../../../../../utils/main.js'
-import { validateProp, validateString } from '../../../common/validate.js'
+import { isPlainObject } from '../../../utils/main.js'
+
+import { validateProp } from './validate.js'
 
 // Validate that variations have correct shape
-export const validateVariations = function(variations) {
+export const validateVariations = function(validators, variations) {
   if (!Array.isArray(variations)) {
     throw new TypeError(`'variations' must be an array of objects`)
   }
 
-  variations.forEach(validateVariation)
+  variations.forEach(variation => validateVariation(variation, validators))
 }
 
-const validateVariation = function(variation) {
+const validateVariation = function(variation, validators) {
   if (!isPlainObject(variation)) {
     throw new TypeError(`'variations' must be an array of objects`)
   }
@@ -24,17 +25,10 @@ const validateVariation = function(variation) {
   Object.entries(variation).forEach(([propName, prop]) =>
     validateProp({
       id,
-      validators: VALIDATE_VARIATION,
+      validators,
       category: 'variation',
       propName,
       prop,
     }),
   )
-}
-
-const VALIDATE_VARIATION = {
-  id: validateString,
-  title: validateString,
-  // eslint-disable-next-line no-empty-function
-  value() {},
 }

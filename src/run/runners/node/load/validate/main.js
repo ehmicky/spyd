@@ -1,7 +1,8 @@
 import { isPlainObject } from '../../../../../utils/main.js'
+import { validateString } from '../../../common/validate.js'
+import { validateVariations } from '../../../common/variations.js'
 
 import { validateTasks } from './tasks.js'
-import { validateVariations } from './variation.js'
 
 // Validate that the benchmark file has correct shape
 export const validateBenchmarkFile = function(entries) {
@@ -26,7 +27,14 @@ const validateEntry = function([name, entry]) {
   validator(entry)
 }
 
+const VARIATION_VALIDATORS = {
+  id: validateString,
+  title: validateString,
+  // eslint-disable-next-line no-empty-function
+  value() {},
+}
+
 const VALIDATORS = {
-  variations: validateVariations,
+  variations: validateVariations.bind(null, VARIATION_VALIDATORS),
   tasks: validateTasks,
 }
