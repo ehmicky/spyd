@@ -31,7 +31,7 @@ Default: ""`,
   run: {
     describe: `Module to run benchmarks for a specific programming language or
 platform.
-Built-in runners: node.
+Built-in runners: node, cli.
 Custom runners (installed with npm) can also be used.
 Uses a dot notation such as --run.node (not --run=node nor --run node).
 Runner-specific options can be specified using the same dot notation such as
