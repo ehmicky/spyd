@@ -35,7 +35,7 @@ const getIteration = function({
 
 // Run benchmarks
 const run = async function({ taskPath, opts, taskId, variationId, duration }) {
-  const { main, before, after, shell } = await getTask({
+  const { main, before, after, variation, shell } = await getTask({
     taskPath,
     opts,
     taskId,
@@ -45,6 +45,7 @@ const run = async function({ taskPath, opts, taskId, variationId, duration }) {
     main,
     before,
     after,
+    variation,
     shell,
     duration,
   })
@@ -52,23 +53,23 @@ const run = async function({ taskPath, opts, taskId, variationId, duration }) {
 }
 
 const debug = async function({ taskPath, opts, taskId, variationId }) {
-  const { main, before, after, shell } = await getTask({
+  const { main, before, after, variation, shell } = await getTask({
     taskPath,
     opts,
     taskId,
     variationId,
   })
-  await debugRun({ main, before, after, shell })
+  await debugRun({ main, before, after, variation, shell })
 }
 
 const getTask = async function({ taskPath, opts, taskId, variationId }) {
   const { iterations, shell } = await loadTaskFile(taskPath, opts)
 
-  const { main, before, after } = iterations.find(
+  const { main, before, after, variationValue: variation } = iterations.find(
     iteration =>
       iteration.taskId === taskId && iteration.variationId === variationId,
   )
-  return { main, before, after, shell }
+  return { main, before, after, variation, shell }
 }
 
 const TYPES = { load, run, debug }

@@ -11,6 +11,7 @@ export const benchmark = async function({
   main,
   before,
   after,
+  variation,
   shell,
   duration,
 }) {
@@ -20,7 +21,14 @@ export const benchmark = async function({
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    const time = await measure({ main, before, after, shell, stdio: 'ignore' })
+    const time = await measure({
+      main,
+      before,
+      after,
+      variation,
+      shell,
+      stdio: 'ignore',
+    })
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)
   } while (!shouldStop(runEnd, times))
