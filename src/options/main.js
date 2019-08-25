@@ -39,15 +39,22 @@ const validateOpts = function(opts) {
   })
 }
 
-const addDefaultOpts = function({ run, ...opts }, action) {
+const addDefaultOpts = function(opts, action) {
   return {
     ...DEFAULT_OPTS,
     context: action === 'show',
-    runners: run === undefined ? undefined : Object.keys(run),
+    runners: getRunners(opts),
     group: getDefaultGroup({ ...DEFAULT_OPTS, ...opts }),
-    run,
     ...opts,
   }
+}
+
+const getRunners = function({ run }) {
+  if (run === undefined) {
+    return
+  }
+
+  return Object.keys(run)
 }
 
 const DEFAULT_OPTS = {
