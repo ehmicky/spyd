@@ -1,6 +1,5 @@
 import { isPlainObject } from '../../../../../utils/main.js'
-
-import { validateProp, validateString } from './common.js'
+import { validateProp, validateString } from '../../../common/validate.js'
 
 // Validate that variations have correct shape
 export const validateVariations = function(variations) {

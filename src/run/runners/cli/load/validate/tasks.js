@@ -1,6 +1,9 @@
 import { isPlainObject } from '../../../../../utils/main.js'
-
-import { validateProp, validateString, validateStringArray } from './common.js'
+import {
+  validateProp,
+  validateString,
+  validateStringArray,
+} from '../../../common/validate.js'
 
 // Validate that tasks have correct shape
 export const validateTasks = function(tasks) {
