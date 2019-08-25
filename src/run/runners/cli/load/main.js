@@ -1,3 +1,4 @@
+import { loadFile } from './file.js'
 import { validateTaskFile } from './validate/main.js'
 import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
@@ -14,16 +15,4 @@ export const loadTaskFile = async function(taskPath) {
   const { tasks, variations, shell } = normalizeTasks(entries, taskPath)
   const iterations = addTasksVariations(tasks, variations)
   return { iterations, shell }
-}
-
-const loadFile = function(taskPath) {
-  try {
-    // TODO: replace with `import()` once it is supported by default by ESLint
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    return require(taskPath)
-  } catch (error) {
-    throw new Error(
-      `Could not load the task file '${taskPath}'\n\n${error.stack}`,
-    )
-  }
 }

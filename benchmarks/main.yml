@@ -1,0 +1,13 @@
+execaTask:
+  title: execa()
+  before: 'true'
+  main: node --version
+  after: 'true'
+  variations: [one]
+
+shell: true
+
+variations:
+  - id: one
+    title: One
+    value: 1

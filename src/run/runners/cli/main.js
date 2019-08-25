@@ -1,5 +1,5 @@
 const START_PATH = `${__dirname}/start.js`
-const extensions = ['js', 'ts', 'jsx', 'tsx', 'es6', 'mjs']
+const extensions = ['yml', 'yaml']
 
 const action = function() {
   return [{ value: ['node', START_PATH], versions: [] }]

@@ -47,6 +47,7 @@
     "indent-string": "^4.0.0",
     "is-interactive": "^1.0.0",
     "jest-validate": "^24.9.0",
+    "js-yaml": "^3.13.1",
     "make-dir": "^3.0.0",
     "moize": "^5.4.4",
     "normalize-node-version": "^1.0.1",
