@@ -10,9 +10,7 @@ import {
 // Validate that tasks have correct shape
 export const validateTask = function(taskId, task, taskPath) {
   if (!isPlainObject(task)) {
-    throw new TypeError(
-      `Task '${taskId}' in '${taskPath}' must be either a function or an object`,
-    )
+    throw new TypeError(`Task '${taskId}' in '${taskPath}' must be an object`)
   }
 
   if (task.main === undefined) {
