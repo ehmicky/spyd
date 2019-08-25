@@ -10,7 +10,8 @@ import { measure } from './benchmark/measure.js'
 const start = async function() {
   try {
     const { type, ...input } = getInput()
-    const output = await TYPES[type](input)
+    const typeFunc = TYPES[type]
+    const output = await typeFunc(input)
     await sendOutput(output)
   } catch (error) {
     await sendError(error)
