@@ -12,16 +12,21 @@ const destroy = function() {}
 
 // The server must return an empty array when there are no benchmarks
 const list = async function(url) {
-  const benchmarks = await fetchUrl('GET', url)
+  const benchmarks = await fetchUrl({ method: 'GET', url })
   return benchmarks
 }
 
 const add = async function(benchmark, url) {
-  await fetchUrl('POST', url, benchmark)
+  await fetchUrl({ method: 'POST', url, body: benchmark, noResponse: true })
 }
 
 const remove = async function(ids, url) {
-  await fetchUrl('DELETE', `${url}?ids=${ids.join(',')}`)
+  await fetchUrl({
+    method: 'DELETE',
+    url,
+    searchParams: { ids: ids.join(',') },
+    noResponse: true,
+  })
 }
 
 export const http = { init, destroy, list, add, remove }
