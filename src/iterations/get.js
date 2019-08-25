@@ -36,7 +36,14 @@ const normalizeIteration = function(
     variationId = '',
     variationTitle = variationId,
   },
-  { commandId, commandTitle, commandDescription, commandValue, commandOpt },
+  {
+    commandRunner,
+    commandId,
+    commandTitle,
+    commandDescription,
+    commandValue,
+    commandOpt,
+  },
   { taskPath, system: { id: systemId, title: systemTitle } },
 ) {
   const variationIdA = variationId.trim()
@@ -49,6 +56,7 @@ const normalizeIteration = function(
     taskTitle,
     variationId: variationIdA,
     variationTitle,
+    commandRunner,
     commandId,
     commandTitle,
     commandDescription,

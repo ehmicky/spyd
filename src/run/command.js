@@ -32,6 +32,7 @@ const getCommand = async function({
     runnerId,
   })
   return {
+    commandRunner: runnerId,
     commandId,
     commandTitle,
     commandDescription,

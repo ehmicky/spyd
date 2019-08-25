@@ -39,7 +39,7 @@ specific percentage.
 Can be specified several times.
 The value is the percentage (e.g. "50" for 50%).
 It can prefixed by a comma-separated list of identifiers (tasks, variations,
-commands or systems) to target.`,
+runners or systems) to target.`,
   },
   colors: {
     boolean: true,
