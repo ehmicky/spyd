@@ -9,7 +9,6 @@ export const parseOpts = function(yargs) {
     progress,
     run,
     store,
-    benchmark,
     ...opts
   } = yargs.parse()
 
@@ -19,7 +18,6 @@ export const parseOpts = function(yargs) {
   const storeA = normalizeDynamicOpts(store)
   const optsA = {
     ...opts,
-    [command]: benchmark,
     report: reportA,
     progress: progressA,
     run: runA,

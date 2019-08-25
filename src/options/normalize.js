@@ -64,22 +64,16 @@ const normalizeCwd = function({ cwd, ...opts }) {
   return { ...opts, cwd: cwdA }
 }
 
-// Normalize 'show' option
-const normalizeShow = function({ show, ...opts }) {
-  const showA = normalizeDelta('show', show)
-  return { ...opts, show: showA }
+// Normalize 'delta' option
+const normalizeDeltaOpt = function({ delta, ...opts }) {
+  const deltaA = normalizeDelta('delta', delta)
+  return { ...opts, delta: deltaA }
 }
 
 // Normalize 'diff' option
 const normalizeDiff = function({ diff, ...opts }) {
   const diffA = normalizeDelta('diff', diff)
   return { ...opts, diff: diffA }
-}
-
-// Normalize 'remove' option
-const normalizeRemove = function({ remove, ...opts }) {
-  const removeA = normalizeDelta('remove', remove)
-  return { ...opts, remove: removeA }
 }
 
 const NORMALIZERS = [
@@ -90,8 +84,7 @@ const NORMALIZERS = [
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,
-  normalizeShow,
+  normalizeDeltaOpt,
   normalizeDiff,
-  normalizeRemove,
   normalizeLimits,
 ]

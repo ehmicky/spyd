@@ -2,16 +2,16 @@ import { ALL_CONFIG } from '../config/all.js'
 import { STORE_CONFIG } from '../config/store.js'
 
 export const REMOVE_COMMAND = {
-  input: 'remove [benchmark]',
+  input: 'remove [delta]',
   description: 'Remove a previous benchmark',
 
   config: { ...ALL_CONFIG, ...STORE_CONFIG },
 
-  usage: `$0 [options] remove [integer|date|time]
+  usage: `$0 [options] remove [delta]
 
 Remove a previous benchmark.
 
-The argument can be:
+The 'delta' argument can be:
   - nothing: remove the last benchmark
   - integer: remove the {integer} previous benchmark
   - a date|time: remove the last benchmark before that date|time.

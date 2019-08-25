@@ -26,9 +26,9 @@ export const run = async function(opts) {
 
 // Show a previous benchmark
 export const show = async function(opts) {
-  const { show: showOpt, ...optsA } = await getOpts('show', opts)
+  const { delta, ...optsA } = await getOpts('show', opts)
 
-  const { group, benchmarks } = await getFromStore(showOpt, optsA)
+  const { group, benchmarks } = await getFromStore(delta, optsA)
 
   const benchmarkA = await report(group, benchmarks, optsA)
 
@@ -39,9 +39,9 @@ export const show = async function(opts) {
 
 // Remove a previous benchmark
 export const remove = async function(opts) {
-  const { remove: removeOpt, ...optsA } = await getOpts('remove', opts)
+  const { delta, ...optsA } = await getOpts('remove', opts)
 
-  const { group, rawBenchmarks } = await getFromStore(removeOpt, optsA)
+  const { group, rawBenchmarks } = await getFromStore(delta, optsA)
 
   await removeFromStore(group, rawBenchmarks, optsA)
 

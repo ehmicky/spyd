@@ -15,16 +15,16 @@ const addCommand = function(
   yargsA,
   { input, description, config, usage, examples },
 ) {
-  return yargsA.command(input, description, yargsB =>
-    addCommandInfo(yargsB, { config, usage, examples }),
+  return yargsA.command(input, description, commandYargs =>
+    addCommandInfo(commandYargs, { config, usage, examples }),
   )
 }
 
-const addCommandInfo = function(yargsA, { config, usage, examples }) {
-  const yargsB = yargsA.options(config).usage(usage)
-  return examples.reduce(addExample, yargsB)
+const addCommandInfo = function(commandYargs, { config, usage, examples }) {
+  const commandYargsA = commandYargs.options(config).usage(usage)
+  return examples.reduce(addExample, commandYargsA)
 }
 
-const addExample = function(yargsA, example) {
-  return yargsA.example(...example)
+const addExample = function(commandYargs, example) {
+  return commandYargs.example(...example)
 }

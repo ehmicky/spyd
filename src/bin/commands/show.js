@@ -4,7 +4,7 @@ import { SELECT_CONFIG } from '../config/select.js'
 import { REPORT_CONFIG } from '../config/report.js'
 
 export const SHOW_COMMAND = {
-  input: 'show [benchmark]',
+  input: 'show [delta]',
   description: 'Show a previous benchmark',
 
   config: {
@@ -14,11 +14,11 @@ export const SHOW_COMMAND = {
     ...REPORT_CONFIG,
   },
 
-  usage: `$0 [options] show [integer|date|time]
+  usage: `$0 [options] show [delta]
 
 Show a previous benchmark.
 
-The argument can be:
+The 'delta' argument can be:
   - nothing: show the last benchmark
   - integer: show the {integer} previous benchmark
   - a date|time: show the last benchmark before that date|time.

@@ -71,9 +71,8 @@ const DEFAULT_OPTS = {
   progress: { debug: {} },
   store: { file: {} },
   limit: [],
-  show: true,
+  delta: true,
   diff: true,
-  remove: true,
 }
 
 const VALID_TIMESTAMPS = [
@@ -98,7 +97,6 @@ const EXAMPLE_OPTS = {
   insert: './README.md',
   context: true,
   limit: ['taskId=10'],
-  show: VALID_BENCHMARK_DELTA,
+  delta: VALID_BENCHMARK_DELTA,
   diff: VALID_BENCHMARK_DELTA,
-  remove: VALID_BENCHMARK_DELTA,
 }
