@@ -26,7 +26,9 @@ export const addTaskVariations = function({
     variations,
     variables,
   })
-  const tasks = variationsA.map(variation => ({ ...task, ...variation }))
+  const tasks = variationsA.map(variation =>
+    addVariation(task, variation, variables),
+  )
   return tasks
 }
 
@@ -85,4 +87,16 @@ const getVariation = function(variationId, variations, { taskId, taskPath }) {
   }
 
   return variationA
+}
+
+const addVariation = function(
+  { before, ...task },
+  { variationValue, ...variation },
+  variables,
+) {
+  const beforeA = applyTemplate(before, {
+    ...variables,
+    variation: variationValue,
+  })
+  return { before: beforeA, ...task, variationValue, ...variation }
 }
