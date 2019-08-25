@@ -24,6 +24,10 @@ export const loadTaskFile = async function(taskPath, debug) {
   })
 
   const { tasks, variations } = normalizeTasks(entriesB, variablesA)
-  const iterations = addTasksVariations({ tasks, variations, variables })
+  const iterations = addTasksVariations({
+    tasks,
+    variations,
+    variables: variablesA,
+  })
   return { iterations, shell }
 }

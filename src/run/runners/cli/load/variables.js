@@ -8,7 +8,7 @@ export const getInitialVariables = function() {
 }
 
 export const getVariables = async function({
-  entries: { variables: fileVariables, ...entries },
+  entries: { variables: fileVariables = {}, ...entries },
   variables,
   shell,
   debug,

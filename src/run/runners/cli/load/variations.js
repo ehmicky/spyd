@@ -17,7 +17,7 @@ export const addTaskVariations = function({
   variables,
 }) {
   if (variationsIds === undefined && variations === undefined) {
-    return [{ ...task, variationId: DEFAULT_VARIATION }]
+    return [{ ...task, variationId: DEFAULT_VARIATION, variables }]
   }
 
   const variationsA = getVariations({
