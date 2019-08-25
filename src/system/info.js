@@ -5,7 +5,15 @@ import { format as formatBytes } from 'bytes'
 
 import { groupBy } from '../utils/group.js'
 
-export const getSystem = function() {
+import { getOpts } from './options.js'
+
+export const getSystems = function(opts, { id, title }) {
+  const optsA = getOpts(opts)
+  const system = getSystem()
+  return [{ id, title, opts: optsA, ...system }]
+}
+
+const getSystem = function() {
   const cpu = serializeCpus()
   const memory = getMemory()
   const os = osName()

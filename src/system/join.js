@@ -1,10 +1,10 @@
 import { omit } from '../utils/main.js'
 
-// We merge two collection of similar `systems`:
-//  - after merging with previous benchmarks of same group, to retrieve their
+// We join two collection of similar `systems`:
+//  - after joining with previous benchmarks of same group, to retrieve their
 //    options and systems
 //  - after grouping iterations, to retrieve their speed and set iteration.rank
-export const mergeSystems = function(systems, systemColls) {
+export const joinSystems = function(systems, systemColls) {
   const systemsA = systemColls.map(systemColl =>
     mergeSystem(systems, systemColl),
   )

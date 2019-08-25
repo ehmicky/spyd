@@ -1,9 +1,10 @@
-import { mergeSystems } from './systems_merge.js'
+import { prettifySystems } from '../system/pretty.js'
+import { joinSystems } from '../system/join.js'
+
 import { addCollections } from './collections.js'
 import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
 import { normalizeStats } from './stats/main.js'
-import { prettifySystems } from './systems_pretty.js'
 import { prettifyCommands } from './commands.js'
 
 // We try to save as little as possible in stores, and compute anything that
@@ -21,7 +22,7 @@ export const addPrintedInfo = function({
     commands,
     systems: systemColls,
   } = addCollections(iterations)
-  const systemsA = mergeSystems(systems, systemColls)
+  const systemsA = joinSystems(systems, systemColls)
 
   const iterationsB = addNames(iterationsA)
 
