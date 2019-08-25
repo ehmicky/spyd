@@ -4,8 +4,8 @@ import osName from 'os-name'
 
 // The `system` option can contain some `$VAR` that are substituted:
 //  - environment variables
-//  - $OS, $OS_FULL
-//  - runner-specific variables like $NODE_MAJOR_VERSION
+//  - {{OS}}, {{OS_FULL}}
+//  - runner-specific variables like {{NODE_MAJOR_VERSION}}
 export const replaceSystemVars = async function(title, run) {
   const tokens = [...title.matchAll(SYSTEM_VAR_REGEXP)]
 
