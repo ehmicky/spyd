@@ -36,6 +36,6 @@ const validateShell = function(shell) {
 const VALIDATORS = {
   shell: validateShell,
   variables: validateVariables,
-  variations: validateVariations,
   tasks: validateTasks,
+  variations: validateVariations,
 }
