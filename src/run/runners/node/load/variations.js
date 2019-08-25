@@ -1,7 +1,7 @@
 // `task.variations` is an array of `variationId` pointing towards the top-level
 // `variations` object. We dereference those pointers here.
-// `variations` as scoped to each benchmark file. However the same `variationId`
-// can be used across benchmark files.
+// `variations` are scoped to each benchmark file. However the same
+// `variationId` can be used across benchmark files.
 // Defaults to using all `variations`.
 export const addTasksVariations = function(tasks, variations) {
   return tasks.flatMap(task => addTaskVariations(task, variations))
