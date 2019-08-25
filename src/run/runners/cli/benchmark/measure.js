@@ -13,7 +13,7 @@ export const measure = async function({
   const variablesA = await performBefore({ before, variables, shell, debug })
 
   const start = now()
-  await spawnNoOutput(main, { variables: variablesA, shell, debug })
+  await spawnNoOutput(main, 'Main', { variables: variablesA, shell, debug })
   const time = now() - start
 
   await performAfter({ after, variables: variablesA, shell, debug })
@@ -27,7 +27,11 @@ const performBefore = async function({ before, variables, shell, debug }) {
     return variables
   }
 
-  const beforeOutput = await spawnOutput(before, { variables, shell, debug })
+  const beforeOutput = await spawnOutput(before, 'Before', {
+    variables,
+    shell,
+    debug,
+  })
   return { ...variables, before: beforeOutput }
 }
 
@@ -37,5 +41,5 @@ const performAfter = async function({ after, variables, shell, debug }) {
     return
   }
 
-  await spawnNoOutput(after, { variables, shell, debug })
+  await spawnNoOutput(after, 'After', { variables, shell, debug })
 }

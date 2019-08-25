@@ -26,7 +26,11 @@ export const getVariables = async function({
 
 const getVariable = async function({ name, command, variables, shell, debug }) {
   try {
-    const stdout = await spawnOutput(command, { variables, shell, debug })
+    const stdout = await spawnOutput(command, `Variable '${name}'`, {
+      variables,
+      shell,
+      debug,
+    })
     return [name, stdout]
   } catch (error) {
     throw new Error(`Could not use variable '${name}': ${error.message}`)
