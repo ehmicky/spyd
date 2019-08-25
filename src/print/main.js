@@ -1,9 +1,9 @@
-import { mergeSystems } from './system.js'
+import { mergeSystems } from './systems_merge.js'
 import { addCollections } from './collections.js'
 import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
 import { normalizeStats } from './stats/main.js'
-import { prettifySystems } from './system_pretty.js'
+import { prettifySystems } from './systems_pretty.js'
 import { prettifyCommands } from './commands.js'
 
 // We try to save as little as possible in stores, and compute anything that
@@ -30,7 +30,7 @@ export const addPrintedInfo = function({
 
   const timestampPretty = prettifyTimestamp(timestamp)
 
-  const systemPretty = prettifySystems(systemsA)
+  const systemsPretty = prettifySystems(systemsA)
   const commandsPretty = prettifyCommands(commands)
 
   return {
@@ -41,7 +41,7 @@ export const addPrintedInfo = function({
     variations,
     commands,
     systems: systemsA,
-    systemPretty,
+    systemsPretty,
     commandsPretty,
     iterations: iterationsD,
   }

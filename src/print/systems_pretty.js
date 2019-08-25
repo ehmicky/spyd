@@ -16,9 +16,9 @@ const hasFields = function(system) {
 const prettifySystem = function(system, index) {
   const header = getHeader(system)
   const body = getBody(system)
-  const systemPretty = `${header}\n${body}`
-  const systemPrettyA = indent(systemPretty, index)
-  return systemPrettyA
+  const systemsPretty = `${header}\n${body}`
+  const systemsPrettyA = indent(systemsPretty, index)
+  return systemsPrettyA
 }
 
 const getHeader = function(system) {
@@ -57,10 +57,10 @@ const serializeField = function(field, system) {
 
 const SYSTEM_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
 
-const indent = function(systemPretty, index) {
+const indent = function(systemsPretty, index) {
   if (index === 0) {
-    return systemPretty
+    return systemsPretty
   }
 
-  return indentString(systemPretty, 2)
+  return indentString(systemsPretty, 2)
 }

@@ -4,14 +4,14 @@ import indentString from 'indent-string'
 // Retrieve footer: system, timestamp, group, link
 export const getFooter = function({
   timestampPretty,
-  systemPretty,
+  systemsPretty,
   commandsPretty,
   group,
   info,
   context,
   link,
 }) {
-  const systemFooter = getSystem(systemPretty, info)
+  const systemFooter = getSystem(systemsPretty, info)
   const commandsFooter = getCommands(commandsPretty, info)
   const timestampFooter = getTimestamp(timestampPretty, context)
   const groupFooter = getGroup(group, context)
@@ -32,12 +32,12 @@ export const getFooter = function({
   return `\n\n${footer}`
 }
 
-const getSystem = function(systemPretty, info) {
+const getSystem = function(systemsPretty, info) {
   if (!info) {
     return
   }
 
-  return systemPretty
+  return systemsPretty
 }
 
 const getCommands = function(commandsPretty, info) {

@@ -4,14 +4,14 @@ import { getFooter } from './footer.js'
 
 // Debugging reporter only meant for development purpose
 const report = function(
-  { timestampPretty, group, systemPretty, commandsPretty, iterations },
+  { timestampPretty, group, systemsPretty, commandsPretty, iterations },
   { info, context, link },
 ) {
   const content = iterations.map(serializeIteration).join('\n')
   const footer = getFooter({
     timestampPretty,
     group,
-    systemPretty,
+    systemsPretty,
     commandsPretty,
     info,
     context,
