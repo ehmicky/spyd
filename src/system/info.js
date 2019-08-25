@@ -10,7 +10,7 @@ import { getOpts } from './options.js'
 export const getSystems = function({ opts, system: { id, title }, job }) {
   const optsA = getOpts(opts)
   const system = getSystem()
-  return [{ id, title, opts: optsA, ...system, job }]
+  return [{ id, title, opts: optsA, ...system, ...job }]
 }
 
 const getSystem = function() {

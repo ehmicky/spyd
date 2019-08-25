@@ -1,4 +1,4 @@
-import { blue } from 'chalk'
+import { blue, underline } from 'chalk'
 import indentString from 'indent-string'
 
 // Serialize `system` information for CLI reporters.
@@ -10,7 +10,7 @@ export const prettifySystems = function(systems) {
 }
 
 const hasFields = function(system) {
-  return getFields(system).length !== 0
+  return getFields(system).length !== 0 || hasComplexFields(system)
 }
 
 const prettifySystem = function(system, index) {
@@ -41,7 +41,9 @@ const DEFAULT_TITLE = 'Default'
 
 const getBody = function(system) {
   const fields = getFields(system)
-  return fields.map(field => serializeField(field, system)).join('\n')
+  const fieldsA = fields.map(field => serializeField(field, system))
+  const job = getJob(system)
+  return [...fieldsA, ...job].join('\n')
 }
 
 const getFields = function(system) {
@@ -56,6 +58,21 @@ const serializeField = function(field, system) {
 }
 
 const SYSTEM_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
+
+// Those fields involve more dynamic logic
+const hasComplexFields = function(system) {
+  return COMPLEX_FIELDS.some(field => system[field] !== undefined)
+}
+
+const COMPLEX_FIELDS = ['jobNumber']
+
+const getJob = function({ jobNumber, jobUrl }) {
+  if (jobNumber === undefined) {
+    return []
+  }
+
+  return [`${blue.bold('  Job:')} #${jobNumber} (${underline(jobUrl)})`]
+}
 
 const indent = function(systemsPretty, index) {
   if (index === 0) {

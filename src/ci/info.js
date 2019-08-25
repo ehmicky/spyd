@@ -17,7 +17,7 @@ const mGetCiInfo = function(cwd) {
   } = envCi({ cwd })
   const git = { commit, branch, tag, prNumber: pr, prBranch }
   const ci = { provider: name, buildNumber, buildUrl }
-  const job = { number: jobNumber, url: jobUrl }
+  const job = { jobNumber, jobUrl }
   return { git, ci, job }
 }
 

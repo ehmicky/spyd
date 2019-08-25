@@ -34,7 +34,7 @@ const getSharedProps = function([firstSystem, ...nextSystems]) {
 }
 
 // Can optionally be the same across systems
-const SHARED_PROPS = ['cpu', 'memory', 'os']
+const SHARED_PROPS = ['cpu', 'memory', 'os', 'jobNumber', 'jobUrl']
 // Validated to always be the same across systems, so it's always shared.
 const SAME_PROPS = ['opts']
 
@@ -45,9 +45,15 @@ const isSharedProp = function(firstSystem, nextSystems, propName) {
 }
 
 const getSharedSystem = function(sharedProps, [firstSystem]) {
-  const props = sharedProps.map(sharedProp => [
-    sharedProp,
-    firstSystem[sharedProp],
-  ])
+  const props = sharedProps
+    .filter(isOmitedSharedProp)
+    .map(sharedProp => [sharedProp, firstSystem[sharedProp]])
   return Object.fromEntries(props)
 }
+
+// Jobs are only shown when they differ between systems.
+const isOmitedSharedProp = function(propName) {
+  return !OMITTED_SHARED_PROPS.includes(propName)
+}
+
+const OMITTED_SHARED_PROPS = ['jobNumber', 'jobUrl']
