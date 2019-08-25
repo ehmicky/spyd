@@ -18,6 +18,7 @@ import { forwardChildError } from './error.js'
 export const executeChild = async function({
   commandValue: [file, ...args],
   input,
+  input: { taskPath },
   duration,
   cwd,
   taskId,
@@ -39,6 +40,7 @@ export const executeChild = async function({
 
   forwardChildError({
     child,
+    taskPath,
     exitCode,
     signal,
     error,

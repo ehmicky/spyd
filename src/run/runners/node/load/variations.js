@@ -44,14 +44,14 @@ const normalizeVariation = function({
   return { variationId, variationTitle, variationValue }
 }
 
-const getVariation = function(variationId, variations, { taskId, taskPath }) {
+const getVariation = function(variationId, variations, { taskId }) {
   const variationA = variations.find(
     variation => variation.variationId === variationId,
   )
 
   if (variationA === undefined) {
     throw new TypeError(
-      `Variation '${variationId}' of task '${taskId}' in '${taskPath}' does not exist`,
+      `Variation '${variationId}' of task '${taskId}' does not exist`,
     )
   }
 

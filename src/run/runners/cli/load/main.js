@@ -12,7 +12,7 @@ import { addTasksVariations } from './variations.js'
 // Load the task file using its absolute path
 export const loadTaskFile = async function(taskPath, stdio) {
   const entries = await loadFile(taskPath)
-  validateTaskFile(entries, taskPath)
+  validateTaskFile(entries)
 
   const variables = getInitialVariables()
   const { shell, entries: entriesA } = getShell(entries, variables)
@@ -23,11 +23,7 @@ export const loadTaskFile = async function(taskPath, stdio) {
     stdio,
   })
 
-  const { tasks, variations } = normalizeTasks({
-    entries: entriesB,
-    taskPath,
-    variables: variablesA,
-  })
+  const { tasks, variations } = normalizeTasks(entriesB, variablesA)
   const iterations = addTasksVariations({ tasks, variations, variables })
   return { iterations, shell }
 }

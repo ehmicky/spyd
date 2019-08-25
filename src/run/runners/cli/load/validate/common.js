@@ -3,7 +3,6 @@ export const validateProp = function({
   id,
   validators,
   category,
-  taskPath,
   propName,
   prop,
 }) {
@@ -12,7 +11,7 @@ export const validateProp = function({
   if (validator === undefined) {
     const validProps = Object.keys(validators).join(', ')
     throw new TypeError(
-      `Invalid property '${propName}' of ${category} '${id}' in '${taskPath}'. Must be one of: ${validProps}`,
+      `Invalid property '${propName}' of ${category} '${id}'. Must be one of: ${validProps}`,
     )
   }
 
@@ -20,7 +19,7 @@ export const validateProp = function({
 
   if (message !== undefined) {
     throw new TypeError(
-      `Property '${propName}' of ${category} '${id}' in '${taskPath}' ${message}`,
+      `Property '${propName}' of ${category} '${id}' ${message}`,
     )
   }
 }

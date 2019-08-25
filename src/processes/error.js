@@ -3,6 +3,7 @@ import { isTimeout } from './timeout.js'
 // Forward any child process error
 export const forwardChildError = function({
   child,
+  taskPath,
   exitCode,
   signal,
   error,
@@ -17,7 +18,7 @@ export const forwardChildError = function({
   // The child process might already have exited. In that case, this is a noop.
   child.kill()
 
-  const taskError = getTaskError(taskId, variationId)
+  const taskError = getTaskError({ taskPath, taskId, variationId })
 
   if (isTimeout(error)) {
     throw new TypeError(`${taskError}${error.message}`)
@@ -38,16 +39,16 @@ const hasChildError = function({ exitCode, signal, error }) {
 }
 
 // Add task/variation context to child process errors
-const getTaskError = function(taskId, variationId) {
+const getTaskError = function({ taskPath, taskId, variationId }) {
   if (taskId === undefined) {
-    return ''
+    return `In '${taskPath}': `
   }
 
   if (variationId === '') {
-    return `Task '${taskId}': `
+    return `In '${taskPath}', task '${taskId}': `
   }
 
-  return `Task '${taskId}' (variation '${variationId}'): `
+  return `In '${taskPath}', task '${taskId}' (variation '${variationId}'): `
 }
 
 const getErrorMessage = function({
@@ -61,7 +62,7 @@ const getErrorMessage = function({
   const exitCodeError = getExitCodeError(exitCode)
   const errorStack = getErrorStack(error)
   const errorOutputA = normalizeErrorOutput(errorOutput)
-  return `${taskError}Child process exited${signalError}${exitCodeError}${errorStack}${errorOutputA}`
+  return `${taskError}child process exited${signalError}${exitCodeError}${errorStack}${errorOutputA}`
 }
 
 const getSignalError = function(signal) {

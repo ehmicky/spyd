@@ -1,8 +1,8 @@
 // `taskTitle` defaults to the function variable name. `taskTitle` is used by
 // reporters while the `taskId` is used for identification.
-export const normalizeTasks = function({ variations, ...tasks }, taskPath) {
+export const normalizeTasks = function({ variations, ...tasks }) {
   const tasksA = Object.entries(tasks).map(([taskId, task]) =>
-    normalizeTask({ taskId, task, taskPath }),
+    normalizeTask({ taskId, task }),
   )
   return { tasks: tasksA, variations }
 }
@@ -10,7 +10,6 @@ export const normalizeTasks = function({ variations, ...tasks }, taskPath) {
 const normalizeTask = function({
   taskId,
   task: { title: taskTitle, variations: variationsIds, main, before, after },
-  taskPath,
 }) {
-  return { taskPath, taskId, taskTitle, variationsIds, main, before, after }
+  return { taskId, taskTitle, variationsIds, main, before, after }
 }

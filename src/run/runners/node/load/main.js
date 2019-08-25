@@ -12,9 +12,9 @@ export const loadTaskFile = async function(taskPath, { require: requireOpt }) {
   useRequireOpt(requireOpt, taskPath)
 
   const entries = await loadFile(taskPath)
-  validateTaskFile(entries, taskPath)
+  validateTaskFile(entries)
 
-  const { tasks, variations } = normalizeTasks(entries, taskPath)
+  const { tasks, variations } = normalizeTasks(entries)
   const iterations = addTasksVariations(tasks, variations)
   return iterations
 }

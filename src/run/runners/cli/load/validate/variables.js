@@ -1,27 +1,25 @@
 import { isPlainObject } from '../../../../../utils/main.js'
 
 // Validate `file.variables`
-export const validateVariables = function(variables, taskPath) {
+export const validateVariables = function(variables) {
   if (!isPlainObject(variables)) {
-    throw new TypeError(`'variables' in '${taskPath}' must be an object`)
+    throw new TypeError(`'variables' must be an object`)
   }
 
   Object.entries(variables).forEach(([name, value]) =>
-    validateVariable(name, value, taskPath),
+    validateVariable(name, value),
   )
 }
 
-const validateVariable = function(name, value, taskPath) {
+const validateVariable = function(name, value) {
   if (!VARIABLE_NAME_REGEXP.test(name)) {
     throw new TypeError(
-      `'variables' '${name}' in '${taskPath}' name must only contain letters, digits or - _`,
+      `'variables' '${name}' name must only contain letters, digits or - _`,
     )
   }
 
   if (typeof value !== 'string') {
-    throw new TypeError(
-      `'variables' '${name}' in '${taskPath}' must be a string`,
-    )
+    throw new TypeError(`'variables' '${name}' must be a string`)
   }
 }
 
