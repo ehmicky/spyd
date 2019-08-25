@@ -13,6 +13,7 @@ export const benchmark = async function({
   after,
   variables,
   shell,
+  stdio,
   duration,
 }) {
   const runEnd = now() + duration
@@ -27,7 +28,7 @@ export const benchmark = async function({
       after,
       variables,
       shell,
-      stdio: 'ignore',
+      stdio,
     })
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)

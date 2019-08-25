@@ -12,7 +12,7 @@ variations:
   - id: two
     value: variationTwo
 
-shell: true
+shell: false
 
 variables:
   cwd: pwd

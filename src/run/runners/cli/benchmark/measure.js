@@ -1,6 +1,5 @@
 import { now } from '../../../../now.js'
-
-import { spawnProcess } from './spawn.js'
+import { spawnCommand, spawnProcess } from '../spawn.js'
 
 // Main measuring code.
 export const measure = async function({
@@ -28,18 +27,7 @@ const performBefore = async function({ before, variables, shell, stdio }) {
     return variables
   }
 
-  const { stdout: beforeOutput } = await spawnProcess(before, {
-    variables,
-    shell,
-    stdio: ['ignore', 'pipe', stdio],
-  })
-
-  // In debug mode, we need to print every command's output
-  if (stdio === 'inherit' && beforeOutput !== '') {
-    // eslint-disable-next-line no-restricted-globals, no-console
-    console.log(beforeOutput)
-  }
-
+  const beforeOutput = await spawnCommand(before, { variables, shell, stdio })
   return { ...variables, before: beforeOutput }
 }
 

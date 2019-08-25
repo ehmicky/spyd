@@ -18,8 +18,8 @@ const start = async function() {
 }
 
 // Communicate iterations ids and titles to parent
-const load = async function({ taskPath, opts }) {
-  const { iterations } = await loadTaskFile(taskPath, opts)
+const load = async function({ taskPath }) {
+  const { iterations } = await loadTaskFile(taskPath)
   const iterationsA = iterations.map(getIteration)
   return { iterations: iterationsA }
 }
@@ -34,12 +34,13 @@ const getIteration = function({
 }
 
 // Run benchmarks
-const run = async function({ taskPath, opts, taskId, variationId, duration }) {
+const run = async function({ taskPath, taskId, variationId, duration }) {
+  const stdio = 'ignore'
   const { main, before, after, variables, shell } = await getTask({
     taskPath,
-    opts,
     taskId,
     variationId,
+    stdio,
   })
   const { times, count } = await benchmark({
     main,
@@ -47,24 +48,26 @@ const run = async function({ taskPath, opts, taskId, variationId, duration }) {
     after,
     variables,
     shell,
+    stdio,
     duration,
   })
   return { times, count }
 }
 
 // Run an iteration once without benchmarking it
-const debug = async function({ taskPath, opts, taskId, variationId }) {
+const debug = async function({ taskPath, taskId, variationId }) {
+  const stdio = 'inherit'
   const { main, before, after, variables, shell } = await getTask({
     taskPath,
-    opts,
     taskId,
     variationId,
+    stdio,
   })
-  await measure({ main, before, after, variables, shell, stdio: 'inherit' })
+  await measure({ main, before, after, variables, shell, stdio })
 }
 
-const getTask = async function({ taskPath, opts, taskId, variationId }) {
-  const { iterations, shell } = await loadTaskFile(taskPath, opts)
+const getTask = async function({ taskPath, taskId, variationId, stdio }) {
+  const { iterations, shell } = await loadTaskFile(taskPath, stdio)
 
   const { main, before, after, variables } = iterations.find(
     iteration =>
