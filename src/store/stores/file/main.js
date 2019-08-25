@@ -7,6 +7,9 @@ const init = function(opts) {
   return getDir(opts)
 }
 
+// eslint-disable-next-line no-empty-function
+const destroy = function() {}
+
 const list = async function(dir) {
   const benchmarks = await getBenchmarks(dir)
   return benchmarks
@@ -24,4 +27,4 @@ const remove = async function(ids, dir) {
   await setBenchmarks(dir, benchmarksA)
 }
 
-export const file = { init, list, add, remove }
+export const file = { init, destroy, list, add, remove }

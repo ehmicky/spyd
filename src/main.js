@@ -3,6 +3,7 @@ import { report } from './report/main.js'
 import { add } from './store/add.js'
 import { get } from './store/get.js'
 import { remove as removeFromStore } from './store/remove.js'
+import { destroyStore } from './store/destroy.js'
 import { runBenchmark } from './run.js'
 import { debugBenchmark } from './debug.js'
 
@@ -16,6 +17,9 @@ export const run = async function(opts) {
   const { group, benchmarks } = await add(benchmark, optsA)
 
   const benchmarkA = await report(group, benchmarks, optsA)
+
+  await destroyStore(optsA)
+
   return benchmarkA
 }
 
@@ -26,6 +30,9 @@ export const show = async function(opts) {
   const { group, benchmarks } = await get(showOpt, optsA)
 
   const benchmarkA = await report(group, benchmarks, optsA)
+
+  await destroyStore(optsA)
+
   return benchmarkA
 }
 
@@ -36,6 +43,8 @@ export const remove = async function(opts) {
   const { group, rawBenchmarks } = await get(removeOpt, optsA)
 
   await removeFromStore(group, rawBenchmarks, optsA)
+
+  await destroyStore(optsA)
 }
 
 // Run benchmark in debug mode
@@ -43,4 +52,6 @@ export const debug = async function(opts) {
   const optsA = await getOpts('debug', opts)
 
   await debugBenchmark(optsA)
+
+  await destroyStore(optsA)
 }
