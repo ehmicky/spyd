@@ -17,11 +17,11 @@ export const runBenchmark = async function(opts) {
   const { progressState, progressInfo } = await startProgress(iterations, opts)
 
   // TODO: replace with `try {} finally {}` when dropping support for Node 8/9
-  const benchmark = await pFinally(
+  const rawBenchmark = await pFinally(
     computeBenchmark({ iterations, progressState, opts, versions }),
     () => stopProgress(progressInfo),
   )
-  return benchmark
+  return rawBenchmark
 }
 
 const computeBenchmark = async function({
@@ -33,8 +33,8 @@ const computeBenchmark = async function({
   const iterationsA = await pMapSeries(iterations, (iteration, index) =>
     runProcesses({ ...iteration, index, progressState, opts }),
   )
-  const benchmark = addBenchmarkInfo(iterationsA, { opts, versions })
-  return benchmark
+  const rawBenchmark = addBenchmarkInfo(iterationsA, { opts, versions })
+  return rawBenchmark
 }
 
 // Add more information to the final benchmark and normalize/sort results
@@ -47,7 +47,7 @@ const addBenchmarkInfo = function(
   const timestamp = new Date().toISOString()
   const { git, ci, job } = getCiInfo(cwd)
   const systems = getSystems({ opts, system, job })
-  const benchmark = {
+  const rawBenchmark = {
     version,
     id,
     timestamp,
@@ -57,6 +57,6 @@ const addBenchmarkInfo = function(
     ci,
     iterations,
   }
-  const benchmarkA = cleanObject(benchmark)
-  return benchmarkA
+  const rawBenchmarkA = cleanObject(rawBenchmark)
+  return rawBenchmarkA
 }

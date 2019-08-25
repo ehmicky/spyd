@@ -3,7 +3,7 @@ import { report } from './report/main.js'
 import { addToStore } from './store/add.js'
 import { getFromStore } from './store/get.js'
 import { removeFromStore } from './store/remove.js'
-import { migrateStore } from './store/migrate.js'
+import { migrateStore } from './store/migrate/main.js'
 import { destroyStore } from './store/destroy.js'
 import { runBenchmark } from './run.js'
 import { debugBenchmark } from './debug.js'
@@ -13,9 +13,9 @@ import { debugBenchmark } from './debug.js'
 export const run = async function(opts) {
   const optsA = await getOpts('run', opts)
 
-  const benchmark = await runBenchmark(optsA)
+  const rawBenchmark = await runBenchmark(optsA)
 
-  const { group, benchmarks } = await addToStore(benchmark, optsA)
+  const { group, benchmarks } = await addToStore(rawBenchmark, optsA)
 
   const benchmarkA = await report(group, benchmarks, optsA)
 

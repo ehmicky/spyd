@@ -1,7 +1,7 @@
 // Call `store.remove()`
 export const removeFromStore = async function(group, rawBenchmarks, { store }) {
   const ids = rawBenchmarks
-    .filter(benchmark => benchmark.group === group)
+    .filter(rawBenchmark => rawBenchmark.group === group)
     .map(getId)
 
   try {
