@@ -48,8 +48,10 @@ Default: random UUID`,
   system: {
     string: true,
     requiresArg: true,
-    describe: `Name of the current hardware/software system.
+    describe: `Identifier of the current hardware/software system.
 Used to compare different machines or configurations together.
+If the reporting title is different from the identifier, it can be specified
+after a slash: --system "systemId/systemTitle".
 Default: ""`,
   },
   progress: {
