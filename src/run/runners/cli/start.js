@@ -1,8 +1,9 @@
 import { exit } from 'process'
 
+import { getInput, sendOutput, sendError } from '../common/ipc.js'
+
 import { benchmark } from './benchmark/main.js'
 import { loadBenchmarkFile } from './load/main.js'
-import { getInput, sendOutput, sendError } from './ipc.js'
 import { measure } from './benchmark/measure.js'
 
 // Child process entry point
