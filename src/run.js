@@ -2,12 +2,14 @@ import pMapSeries from 'p-map-series'
 import pFinally from 'p-finally'
 import uuidv4 from 'uuid/v4.js'
 
-import { startProgress, stopProgress } from './progress/main.js'
+import { startProgress } from './progress/start.js'
+import { stopProgress } from './progress/stop.js'
 import { getIterations } from './iterations/main.js'
 import { runProcesses } from './processes/main.js'
 import { DATA_VERSION } from './store/migrate/main.js'
 import { getSystems } from './system/info.js'
 import { getCiInfo } from './ci/info.js'
+// eslint-disable-next-line import/max-dependencies
 import { cleanObject } from './utils/clean.js'
 
 // Run a new benchmark
