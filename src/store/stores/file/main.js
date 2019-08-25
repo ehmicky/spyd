@@ -1,4 +1,4 @@
-import { getDir } from './dir.js'
+import { getDir } from './options.js'
 import { getBenchmarks, setBenchmarks } from './fs.js'
 
 // Filesystem store. This is the default built-in store.
