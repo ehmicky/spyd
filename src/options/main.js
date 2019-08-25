@@ -45,6 +45,7 @@ const addDefaultOpts = function({ run, ...opts }, action) {
     context: action === 'show',
     runners: run === undefined ? undefined : Object.keys(run),
     group: getDefaultGroup({ ...DEFAULT_OPTS, ...opts }),
+    run,
     ...opts,
   }
 }
