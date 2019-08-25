@@ -40,10 +40,10 @@ const normalizeGroup = function({ group, ...opts }) {
   return { ...opts, group: groupA }
 }
 
-// Normalize 'env' option
-const normalizeEnv = function({ env, ...opts }) {
-  const envA = env.trim()
-  return { ...opts, env: envA }
+// Normalize 'system' option
+const normalizeSystem = function({ system, ...opts }) {
+  const systemA = system.trim()
+  return { ...opts, system: systemA }
 }
 
 // Normalize and validate 'duration' option
@@ -86,7 +86,7 @@ const NORMALIZERS = [
   normalizeTasks,
   normalizeVariations,
   normalizeGroup,
-  normalizeEnv,
+  normalizeSystem,
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,

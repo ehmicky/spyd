@@ -2,27 +2,27 @@ import { blue } from 'chalk'
 import indentString from 'indent-string'
 
 // Serialize `system` information for CLI reporters.
-export const prettifySystems = function(envs) {
-  return envs
+export const prettifySystems = function(systems) {
+  return systems
     .filter(hasFields)
     .map(prettifySystem)
     .join('\n')
 }
 
-const hasFields = function(env) {
-  return getFields(env).length !== 0
+const hasFields = function(system) {
+  return getFields(system).length !== 0
 }
 
-const prettifySystem = function(env, index) {
-  const header = getHeader(env)
-  const body = getBody(env)
+const prettifySystem = function(system, index) {
+  const header = getHeader(system)
+  const body = getBody(system)
   const systemPretty = `${header}\n${body}`
   const systemPrettyA = indent(systemPretty, index)
   return systemPrettyA
 }
 
-const getHeader = function(env) {
-  const title = getTitle(env)
+const getHeader = function(system) {
+  const title = getTitle(system)
   return blue.bold(`${title}:`)
 }
 
@@ -34,22 +34,24 @@ const getTitle = function({ title = MAIN_TITLE }) {
   return title
 }
 
-// Top-level title (for shared `env`)
+// Top-level title (for shared `system`)
 const MAIN_TITLE = 'System'
-// Nested title when `env` is an empty string
+// Nested title when `system` is an empty string
 const DEFAULT_TITLE = 'Default'
 
-const getBody = function(env) {
-  const fields = getFields(env)
-  return fields.map(field => serializeField(field, env)).join('\n')
+const getBody = function(system) {
+  const fields = getFields(system)
+  return fields.map(field => serializeField(field, system)).join('\n')
 }
 
-const getFields = function(env) {
-  return Object.keys(MACHINE_FIELDS).filter(field => env[field] !== undefined)
+const getFields = function(system) {
+  return Object.keys(MACHINE_FIELDS).filter(
+    field => system[field] !== undefined,
+  )
 }
 
-const serializeField = function(field, env) {
-  const value = env[field]
+const serializeField = function(field, system) {
+  const value = system[field]
   const fieldA = MACHINE_FIELDS[field]
   const fieldB = blue.bold(`${fieldA}:`)
   return `  ${fieldB} ${value}`

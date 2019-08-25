@@ -45,10 +45,10 @@ Used to create a single benchmark incrementally.
 Can also be a group identifier. Benchmarks with the group are reported together.
 Default: random UUID`,
   },
-  env: {
+  system: {
     string: true,
     requiresArg: true,
-    describe: `Name of the current hardware/software environment.
+    describe: `Name of the current hardware/software system.
 Used to compare different machines or configurations together.
 Default: ""`,
   },

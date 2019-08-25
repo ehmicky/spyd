@@ -13,7 +13,7 @@ export const getIterations = async function({
   duration,
   cwd,
   debug,
-  env,
+  system,
   tasks: taskIds,
   variations: variationIds,
   run: runners,
@@ -29,7 +29,7 @@ export const getIterations = async function({
     duration,
     cwd,
     debug,
-    env,
+    system,
     taskIds,
     variationIds,
     limits,
@@ -45,7 +45,7 @@ const getAllIterations = async function({
   duration,
   cwd,
   debug,
-  env,
+  system,
   taskIds,
   variationIds,
   limits,
@@ -56,7 +56,7 @@ const getAllIterations = async function({
     duration,
     cwd,
     debug,
-    env,
+    system,
   })
 
   const iterationsA = removeDuplicates(iterations)

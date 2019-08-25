@@ -12,7 +12,7 @@ export const getCommandIterations = async function({
   duration,
   cwd,
   debug,
-  env,
+  system,
 }) {
   const input = { type: 'load', taskPath, opts: commandOpt }
   const type = debug ? 'loadDebug' : 'run'
@@ -24,7 +24,7 @@ export const getCommandIterations = async function({
     type,
   })
   const iterationsA = iterations.map(iteration =>
-    normalizeIteration(iteration, command, { taskPath, env }),
+    normalizeIteration(iteration, command, { taskPath, system }),
   )
   return iterationsA
 }
@@ -37,7 +37,7 @@ const normalizeIteration = function(
     variationTitle = variationId,
   },
   { commandId, commandTitle, commandValue, commandOpt },
-  { taskPath, env },
+  { taskPath, system },
 ) {
   const variationIdA = variationId.trim()
 
@@ -53,7 +53,7 @@ const normalizeIteration = function(
     commandTitle,
     commandValue,
     commandOpt,
-    envId: env,
-    envTitle: env,
+    systemId: system,
+    systemTitle: system,
   }
 }

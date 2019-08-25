@@ -1,51 +1,53 @@
 import { omit } from '../utils/main.js'
 
-// We merge two collection of similar `envs`:
+// We merge two collection of similar `systems`:
 //  - after merging with previous benchmarks of same group, to retrieve their
 //    options and systems
 //  - after grouping iterations, to retrieve their speed and set iteration.rank
-export const mergeEnvs = function(envs, envCollections) {
-  const envsA = envCollections.map(envCollection =>
-    mergeEnv(envs, envCollection),
+export const mergeSystems = function(systems, systemColls) {
+  const systemsA = systemColls.map(systemColl =>
+    mergeSystem(systems, systemColl),
   )
-  const envsB = addSharedEnv(envsA)
-  return envsB
+  const systemsB = addSharedSystem(systemsA)
+  return systemsB
 }
 
-const mergeEnv = function(envs, envCollection) {
-  const env = envs.find(envA => envA.id === envCollection.id)
-  return { ...envCollection, ...env }
+const mergeSystem = function(systems, systemColl) {
+  const system = systems.find(systemA => systemA.id === systemColl.id)
+  return { ...systemColl, ...system }
 }
 
-// The first `env` is a collection of all properties shared by other `envs`.
-// Its `id`, `title` and `mean` are `undefined`.
-const addSharedEnv = function(envs) {
-  const sharedProps = getSharedProps(envs)
-  const sharedEnv = getSharedEnv(sharedProps, envs)
-  const envsA = envs.map(env => omit(env, sharedProps))
-  return [sharedEnv, ...envsA]
+// The first `system` is a collection of all properties shared by other
+// `systems`. Its `id`, `title` and `mean` are `undefined`.
+const addSharedSystem = function(systems) {
+  const sharedProps = getSharedProps(systems)
+  const sharedSystem = getSharedSystem(sharedProps, systems)
+  const systemsA = systems.map(system => omit(system, sharedProps))
+  return [sharedSystem, ...systemsA]
 }
 
-const getSharedProps = function([firstEnv, ...nextEnvs]) {
+const getSharedProps = function([firstSystem, ...nextSystems]) {
   const sharedProps = SHARED_PROPS.filter(propName =>
-    isSharedProp(firstEnv, nextEnvs, propName),
+    isSharedProp(firstSystem, nextSystems, propName),
   )
   return [...SAME_PROPS, ...sharedProps]
 }
 
-// Can optionally be the same across envs
+// Can optionally be the same across systems
 const SHARED_PROPS = ['cpu', 'memory', 'os']
-// Validated to always be the same across envs, so it's always shared.
+// Validated to always be the same across systems, so it's always shared.
 const SAME_PROPS = ['opts']
 
-const isSharedProp = function(firstEnv, nextEnvs, propName) {
-  return nextEnvs.every(nextEnv => nextEnv[propName] === firstEnv[propName])
+const isSharedProp = function(firstSystem, nextSystems, propName) {
+  return nextSystems.every(
+    nextSystem => nextSystem[propName] === firstSystem[propName],
+  )
 }
 
-const getSharedEnv = function(sharedProps, [firstEnv]) {
+const getSharedSystem = function(sharedProps, [firstSystem]) {
   const props = sharedProps.map(sharedProp => [
     sharedProp,
-    firstEnv[sharedProp],
+    firstSystem[sharedProp],
   ])
   return Object.fromEntries(props)
 }

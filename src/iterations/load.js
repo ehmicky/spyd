@@ -10,11 +10,11 @@ export const loadIterations = async function({
   duration,
   cwd,
   debug,
-  env,
+  system,
 }) {
   const iterations = await Promise.all(
     taskPaths.map(taskPath =>
-      getFilesIterations({ taskPath, runners, duration, cwd, debug, env }),
+      getFilesIterations({ taskPath, runners, duration, cwd, debug, system }),
     ),
   )
   const iterationsA = iterations.flat()
@@ -27,12 +27,12 @@ const getFilesIterations = async function({
   duration,
   cwd,
   debug,
-  env,
+  system,
 }) {
   const runnersA = findRunners(taskPath, runners)
   const iterations = await Promise.all(
     runnersA.map(({ commands }) =>
-      getFileIterations({ taskPath, commands, duration, cwd, debug, env }),
+      getFileIterations({ taskPath, commands, duration, cwd, debug, system }),
     ),
   )
   const iterationsA = iterations.flat()
@@ -45,11 +45,11 @@ const getFileIterations = async function({
   duration,
   cwd,
   debug,
-  env,
+  system,
 }) {
   const iterations = await Promise.all(
     commands.map(command =>
-      getCommandIterations({ taskPath, command, duration, cwd, debug, env }),
+      getCommandIterations({ taskPath, command, duration, cwd, debug, system }),
     ),
   )
   const iterationsA = iterations.flat()

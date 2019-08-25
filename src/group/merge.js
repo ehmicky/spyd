@@ -17,39 +17,45 @@ const mergePair = function(
   {
     id: previousId,
     ids: previousIds = [previousId],
-    envs: previousEnvs,
+    systems: previousSystems,
     iterations: previousIterations,
   },
-  { id, envs: [env], iterations, ...benchmark },
+  { id, systems: [system], iterations, ...benchmark },
 ) {
   const ids = [...previousIds, id]
-  const envs = mergeEnvs(previousEnvs, env)
+  const systems = mergeSystems(previousSystems, system)
   const iterationsA = removeDuplicates([...previousIterations, ...iterations])
-  return { ...benchmark, ids, envs, iterations: iterationsA }
+  return { ...benchmark, ids, systems, iterations: iterationsA }
 }
 
-// Several benchmarks can have the same env, providing it is exactly the same
-const mergeEnvs = function(previousEnvs, env) {
-  const duplicateEnv = previousEnvs.find(envA => envA.id === env.id)
+// Several benchmarks can have the same system, providing it is exactly the same
+const mergeSystems = function(previousSystems, system) {
+  const duplicateSystem = previousSystems.find(
+    systemA => systemA.id === system.id,
+  )
 
-  if (duplicateEnv === undefined) {
-    return [...previousEnvs, env]
+  if (duplicateSystem === undefined) {
+    return [...previousSystems, system]
   }
 
-  SAME_ENV_PROPS.forEach(propName => validateEnv(duplicateEnv, env, propName))
+  SAME_SYSTEM_PROPS.forEach(propName =>
+    validateSystem(duplicateSystem, system, propName),
+  )
 
-  const previousEnvsA = previousEnvs.filter(envA => envA.id !== env.id)
-  return [...previousEnvsA, env]
+  const previousSystemsA = previousSystems.filter(
+    systemA => systemA.id !== system.id,
+  )
+  return [...previousSystemsA, system]
 }
 
-const SAME_ENV_PROPS = ['opts']
+const SAME_SYSTEM_PROPS = ['opts']
 
-const validateEnv = function(duplicateEnv, env, propName) {
+const validateSystem = function(duplicateSystem, system, propName) {
   // TODO: replace with util.isDeepStrictEqual() once dropping support for
   // Node 8
-  if (!fastDeepEqual(duplicateEnv[propName], env[propName])) {
-    throw new Error(`Several benchmarks with the same "group" and "env" cannot have different ${propName}:
-${JSON.stringify(duplicateEnv[propName])}
-${JSON.stringify(env[propName])}`)
+  if (!fastDeepEqual(duplicateSystem[propName], system[propName])) {
+    throw new Error(`Several benchmarks with the same "group" and "system" cannot have different ${propName}:
+${JSON.stringify(duplicateSystem[propName])}
+${JSON.stringify(system[propName])}`)
   }
 }

@@ -1,4 +1,4 @@
-import { mergeEnvs } from './env.js'
+import { mergeSystems } from './env.js'
 import { addCollections } from './collections.js'
 import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
@@ -9,7 +9,7 @@ import { prettifySystems } from './system.js'
 // can on the fly, before reporting.
 export const addPrintedInfo = function({
   iterations,
-  envs,
+  systems,
   timestamp,
   ...benchmark
 }) {
@@ -18,9 +18,9 @@ export const addPrintedInfo = function({
     tasks,
     variations,
     commands,
-    envs: envCollections,
+    systems: systemColls,
   } = addCollections(iterations)
-  const envsA = mergeEnvs(envs, envCollections)
+  const systemsA = mergeSystems(systems, systemColls)
 
   const iterationsB = addNames(iterationsA)
 
@@ -29,7 +29,7 @@ export const addPrintedInfo = function({
 
   const timestampPretty = prettifyTimestamp(timestamp)
 
-  const systemPretty = prettifySystems(envsA)
+  const systemPretty = prettifySystems(systemsA)
 
   return {
     ...benchmark,
@@ -38,7 +38,7 @@ export const addPrintedInfo = function({
     tasks,
     variations,
     commands,
-    envs: envsA,
+    systems: systemsA,
     systemPretty,
     iterations: iterationsD,
   }

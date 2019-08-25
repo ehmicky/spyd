@@ -5,7 +5,8 @@ import yn from 'yn'
 import { set } from '../utils/get_set.js'
 
 // All the options can be set using environment variables.
-// This is especially handy in CI, including for the `group` and `env` options.
+// This is especially handy in CI, including for the `group` and `system`
+// options.
 export const addEnvVars = function(opts) {
   const envVars = Object.entries(env)
     .filter(isSpydEnvVar)
@@ -67,7 +68,7 @@ const OPTS = {
   config: 'string',
   cwd: 'string',
   data: 'string',
-  env: 'string',
+  system: 'string',
   insert: 'string',
   group: 'string',
   output: 'string',

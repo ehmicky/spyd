@@ -1,4 +1,4 @@
-// Make `taskTitle`, `variationTitle`, 'commandTitle', 'envTitle'
+// Make `taskTitle`, `variationTitle`, 'commandTitle', 'systemTitle'
 // reporter-friendly by adding paddings.
 export const padTitles = function(iterations) {
   const paddings = getPaddings(iterations)
@@ -32,4 +32,9 @@ const padProp = function(title, padding, propName) {
   return [propName, titleA]
 }
 
-const PADDED_PROPS = ['taskTitle', 'variationTitle', 'commandTitle', 'envTitle']
+const PADDED_PROPS = [
+  'taskTitle',
+  'variationTitle',
+  'commandTitle',
+  'systemTitle',
+]

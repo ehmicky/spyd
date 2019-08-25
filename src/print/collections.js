@@ -23,7 +23,7 @@ const COLLECTIONS = [
     title: 'commandTitle',
     rank: 'commandRank',
   },
-  { name: 'envs', id: 'envId', title: 'envTitle', rank: 'envRank' },
+  { name: 'systems', id: 'systemId', title: 'systemTitle', rank: 'systemRank' },
 ]
 
 const addCollection = function(
