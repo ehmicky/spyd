@@ -1,4 +1,4 @@
-import { applyTemplate } from './template.js'
+import { applyTemplate } from '../template.js'
 
 // `task.variations` is an array of `variationId` pointing towards the top-level
 // `variations` object. We dereference those pointers here.
@@ -90,11 +90,10 @@ const getVariation = function(variationId, variations, { taskId, taskPath }) {
 }
 
 const addVariation = function(
-  { before, ...task },
+  task,
   { variationValue, ...variation },
   variables,
 ) {
   const variablesA = { ...variables, variation: variationValue }
-  const beforeA = applyTemplate(before, variablesA)
-  return { before: beforeA, ...task, ...variation, variables: variablesA }
+  return { ...task, ...variation, variables: variablesA }
 }

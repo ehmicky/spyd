@@ -11,7 +11,7 @@ export const measure = async function({
   shell,
   stdio,
 }) {
-  const beforeArgs = await performBefore({ before, variables, shell, stdio })
+  await performBefore({ before, variables, shell, stdio })
   const start = now()
   await spawnProcess(main, { variables, shell, stdio })
   const time = now() - start

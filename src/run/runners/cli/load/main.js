@@ -1,6 +1,7 @@
+import { getVariables } from '../template.js'
+
 import { loadFile } from './file.js'
 import { validateTaskFile } from './validate/main.js'
-import { getVariables } from './template.js'
 import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 

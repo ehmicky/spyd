@@ -1,7 +1,7 @@
 execaTask:
   title: execa()
   before: 'true'
-  main: echo $PWD
+  main: echo <<variation>>
   after: 'true'
   variations: [one]
 

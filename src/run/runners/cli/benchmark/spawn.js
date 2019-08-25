@@ -1,10 +1,14 @@
 import execa from 'execa'
 
+import { applyTemplate } from '../template.js'
+
 // Errors are propagated
 export const spawnProcess = async function(
   command,
   { variables, shell, stdio },
 ) {
+  const commandA = applyTemplate(command, variables)
+
   const execaFunc = shell ? execa : execa.command
-  await execaFunc(command, { stdio, shell, preferLocal: true })
+  await execaFunc(commandA, { stdio, shell, preferLocal: true })
 }

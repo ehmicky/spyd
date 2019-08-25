@@ -1,4 +1,4 @@
-import { applyTemplate } from './template.js'
+import { applyTemplate } from '../template.js'
 
 // `taskTitle` defaults to the function variable name. `taskTitle` is used by
 // reporters while the `taskId` is used for identification.
