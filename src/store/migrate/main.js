@@ -1,5 +1,7 @@
 import { listStore } from '../list.js'
 
+import { MIGRATIONS } from './migrations.js'
+
 // Saved benchmarked have a major version. This allows the
 // saved benchmark format to introduce breaking changes without users losing
 // their previous benchmarks. A `migrate` command performs the migration.
@@ -53,9 +55,6 @@ const migrateBenchmark = function({ version, ...rawBenchmark }) {
 const reduceBenchmark = function(rawBenchmark, migration) {
   return migration(rawBenchmark)
 }
-
-// Each entry is a migration function from one data version to the next one
-const MIGRATIONS = []
 
 const replaceStore = async function(rawBenchmarks, { store }) {
   try {
