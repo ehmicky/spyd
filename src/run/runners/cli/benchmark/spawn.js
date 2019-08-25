@@ -10,5 +10,6 @@ export const spawnProcess = async function(
   const commandA = applyTemplate(command, variables)
 
   const execaFunc = shell ? execa : execa.command
-  await execaFunc(commandA, { stdio, shell, preferLocal: true })
+  const result = await execaFunc(commandA, { stdio, shell, preferLocal: true })
+  return result
 }

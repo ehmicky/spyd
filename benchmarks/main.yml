@@ -1,13 +1,15 @@
-execaTask:
-  title: execa()
-  before: 'true'
-  main: echo <<variation>>
-  after: 'true'
-  variations: [one]
+debug:
+  title: Debug
+  before: echo before
+  main: echo main <<variation>> <<before>>
+  after: echo after <<variation>> <<before>>
+  variations: [one, two]
 
 shell: true
 
 variations:
   - id: one
     title: One
-    value: 1
+    value: variationOne
+  - id: two
+    value: variationTwo
