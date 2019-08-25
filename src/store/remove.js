@@ -1,15 +1,11 @@
 // Call `store.remove()`
-export const remove = async function(
-  group,
-  rawBenchmarks,
-  { store: { remove: removeFromStore, opts } },
-) {
+export const remove = async function(group, rawBenchmarks, { store }) {
   const ids = rawBenchmarks
     .filter(benchmark => benchmark.group === group)
     .map(getId)
 
   try {
-    await removeFromStore(ids, opts)
+    await store.remove(ids)
   } catch (error) {
     throw new Error(`Could not remove benchmark: ${error.message}`)
   }

@@ -3,24 +3,25 @@ import { getBenchmarks, setBenchmarks } from './fs.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves benchmarks to `dir/data.json`
-const list = async function(opts) {
-  const dir = getDir(opts)
+const init = function(opts) {
+  return getDir(opts)
+}
+
+const list = async function(dir) {
   const benchmarks = await getBenchmarks(dir)
   return benchmarks
 }
 
-const add = async function(benchmark, opts) {
-  const dir = getDir(opts)
+const add = async function(benchmark, dir) {
   const benchmarks = await getBenchmarks(dir)
   const benchmarksA = [...benchmarks, benchmark]
   await setBenchmarks(dir, benchmarksA)
 }
 
-const remove = async function(ids, opts) {
-  const dir = getDir(opts)
+const remove = async function(ids, dir) {
   const benchmarks = await getBenchmarks(dir)
   const benchmarksA = benchmarks.filter(({ id }) => !ids.includes(id))
   await setBenchmarks(dir, benchmarksA)
 }
 
-export const file = { list, add, remove }
+export const file = { init, list, add, remove }

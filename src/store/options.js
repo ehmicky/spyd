@@ -2,19 +2,22 @@ import { dirname } from 'path'
 
 import readPkgUp from 'read-pkg-up'
 
-// Add `cwd`, `root` and `name` to every store options
+// Call `store.init(storeOpts)`
 export const normalizeStore = async function({
   cwd,
-  store: { opts: storeOpts, ...store },
+  store: { opts: storeOpts, init, ...store },
   ...opts
 }) {
-  const { root, name } = await getPackageInfo(cwd)
+  const storeOptsA = await getStoreOpts(cwd, storeOpts)
+  const initOpts = await callInit(init, storeOptsA)
+  const storeA = bindInitOpts(store, initOpts)
+  return { ...opts, cwd, store: storeA }
+}
 
-  return {
-    ...opts,
-    cwd,
-    store: { opts: { cwd, root, name, ...storeOpts }, ...store },
-  }
+// Add `cwd`, `root` and `name` to store options passed to `init()`
+const getStoreOpts = async function(cwd, storeOpts) {
+  const { root, name } = await getPackageInfo(cwd)
+  return { cwd, root, name, ...storeOpts }
 }
 
 const getPackageInfo = async function(cwd) {
@@ -30,4 +33,27 @@ const getPackageInfo = async function(cwd) {
   } = packageInfo
   const root = dirname(path)
   return { root, name }
+}
+
+const callInit = async function(init, storeOpts) {
+  try {
+    return await init(storeOpts)
+  } catch (error) {
+    throw new Error(`Could not initialize store: ${error.message}`)
+  }
+}
+
+// Pass return value of `init()` to every store method
+const bindInitOpts = function(store, initOpts) {
+  return Object.fromEntries(
+    STORE_METHODS.map(method => bindMethod(store, method, initOpts)),
+  )
+}
+
+const STORE_METHODS = ['list', 'add', 'remove']
+
+const bindMethod = function(store, method, initOpts) {
+  const originalFunc = store[method]
+  const func = (...args) => originalFunc(...args, initOpts)
+  return [method, func]
 }

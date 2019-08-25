@@ -1,7 +1,7 @@
 // Call `store.list()`
-export const list = async function({ store: { list: listStore, opts } }) {
+export const list = async function({ store }) {
   try {
-    return await listStore(opts)
+    return await store.list()
   } catch (error) {
     throw new Error(`Could not list previous benchmarks: ${error.message}`)
   }

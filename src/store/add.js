@@ -18,10 +18,7 @@ export const add = async function(benchmark, opts) {
 }
 
 // Save benchmark results so they can be compared or shown later
-const save = async function(
-  benchmark,
-  { save: saveOpt, store: { add: addToStore, opts } },
-) {
+const save = async function(benchmark, { save: saveOpt, store }) {
   if (!saveOpt) {
     return
   }
@@ -29,7 +26,7 @@ const save = async function(
   const benchmarkA = normalizeBenchmark(benchmark)
 
   try {
-    await addToStore(benchmarkA, opts)
+    await store.add(benchmarkA)
   } catch (error) {
     throw new Error(`Could not save benchmark: ${error.message}`)
   }
