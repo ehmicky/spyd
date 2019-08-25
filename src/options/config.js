@@ -22,11 +22,11 @@ const getConfigPath = async function(config, { cwd = getCwd() }) {
     return resolve(cwd, config)
   }
 
-  const configFile = await findUp(DEFAULT_CONFIG_FILES, { cwd })
+  const configFile = await findUp(DEFAULT_CONFIG, { cwd })
   return configFile
 }
 
-const DEFAULT_CONFIG_FILES = ['spyd.yml', 'spyd.yaml']
+const DEFAULT_CONFIG = ['spyd.yml', 'spyd.yaml']
 
 const getConfigContent = async function(configPath) {
   try {
