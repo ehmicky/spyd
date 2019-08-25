@@ -1,5 +1,6 @@
 import { loadFile } from './file.js'
 import { validateTaskFile } from './validate/main.js'
+import { getVariables } from './template.js'
 import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 
@@ -12,7 +13,13 @@ export const loadTaskFile = async function(taskPath) {
   const entries = await loadFile(taskPath)
   validateTaskFile(entries, taskPath)
 
-  const { tasks, variations, shell } = normalizeTasks(entries, taskPath)
+  const variables = getVariables()
+
+  const { tasks, variations, shell } = normalizeTasks({
+    entries,
+    taskPath,
+    variables,
+  })
   const iterations = addTasksVariations(tasks, variations)
   return { iterations, shell }
 }
