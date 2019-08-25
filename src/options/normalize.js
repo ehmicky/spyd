@@ -41,10 +41,13 @@ const normalizeGroup = function({ group, ...opts }) {
 }
 
 // Normalize 'system' option
+// Can be either "systemId" or "systemId/systemTitle"
 const normalizeSystem = function({ system, ...opts }) {
-  const systemA = system.trim()
-  return { ...opts, system: systemA }
+  const [id, title = id] = system.trim().split(SLASH_REGEXP)
+  return { ...opts, system: { id, title } }
 }
+
+const SLASH_REGEXP = / *\/ */u
 
 // Normalize and validate 'duration' option
 // Duration is specified in seconds by the user but we convert it to nanoseconds

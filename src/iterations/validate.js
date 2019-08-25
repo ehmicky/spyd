@@ -1,9 +1,15 @@
 // Validate that identifiers don't use characters that we are using for parsing
 // (e.g. , and = are used by `--limit`) or could use in the future.
-export const validateIds = function({ taskId, variationId, commandId }) {
+export const validateIds = function({
+  taskId,
+  variationId,
+  commandId,
+  systemId,
+}) {
   validateId(taskId, 'task')
   validateId(variationId, 'variation')
   validateId(commandId, 'command')
+  validateId(systemId, 'systemId')
 }
 
 const validateId = function(id, name) {
