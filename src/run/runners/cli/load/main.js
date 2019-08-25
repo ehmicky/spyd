@@ -14,10 +14,10 @@ export const loadTaskFile = async function(taskPath) {
   const entries = await loadFile(taskPath)
   validateTaskFile(entries, taskPath)
 
-  const variables = getVariables()
+  const { variables, entries: entriesA } = getVariables(entries)
 
   const { tasks, variations, shell } = normalizeTasks({
-    entries,
+    entries: entriesA,
     taskPath,
     variables,
   })

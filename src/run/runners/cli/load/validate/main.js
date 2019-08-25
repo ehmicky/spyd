@@ -1,5 +1,6 @@
 import { isPlainObject } from '../../../../../utils/main.js'
 
+import { validateVariables } from './variables.js'
 import { validateTask } from './task.js'
 import { validateVariations } from './variation.js'
 
@@ -15,15 +16,14 @@ export const validateTaskFile = function(entries, taskPath) {
 }
 
 const validateEntry = function(name, entry, taskPath) {
-  if (name === 'shell') {
-    return validateShell(entry, taskPath)
+  const validator = VALIDATORS[name]
+
+  if (validator === undefined) {
+    validateTask(name, entry, taskPath)
+    return
   }
 
-  if (name === 'variations') {
-    return validateVariations(entry, taskPath)
-  }
-
-  validateTask(name, entry, taskPath)
+  validator(entry, taskPath)
 }
 
 const validateShell = function(shell, taskPath) {
@@ -32,4 +32,10 @@ const validateShell = function(shell, taskPath) {
       `'shell' in '${taskPath}' must be a boolean or a string`,
     )
   }
+}
+
+const VALIDATORS = {
+  shell: validateShell,
+  variables: validateVariables,
+  variations: validateVariations,
 }

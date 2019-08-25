@@ -1,8 +1,9 @@
 import { env } from 'process'
 
 // Get initial set of variables
-export const getVariables = function() {
-  return env
+export const getVariables = function({ variables, ...entries }) {
+  const variablesA = { ...env }
+  return { variables: variablesA, entries }
 }
 
 // Substitute template <<variable>> using a set of variables:

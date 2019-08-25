@@ -1,11 +1,9 @@
 debug:
   title: Debug
-  before: echo before
+  before: echo before <<cwd>>
   main: echo main <<variation>> <<before>>
   after: echo after <<variation>> <<before>>
   variations: [one, two]
-
-shell: true
 
 variations:
   - id: one
@@ -13,3 +11,8 @@ variations:
     value: variationOne
   - id: two
     value: variationTwo
+
+shell: true
+
+variables:
+  cwd: pwd
