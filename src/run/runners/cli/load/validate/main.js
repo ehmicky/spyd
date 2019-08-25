@@ -27,7 +27,9 @@ const validateEntry = function(name, entry, taskPath) {
 }
 
 const validateShell = function(shell, taskPath) {
-  if (typeof shell !== 'boolean') {
-    throw new TypeError(`'shell' in '${taskPath}' must be a boolean`)
+  if (typeof shell !== 'boolean' && typeof shell !== 'string') {
+    throw new TypeError(
+      `'shell' in '${taskPath}' must be a boolean or a string`,
+    )
   }
 }

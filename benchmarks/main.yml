@@ -1,7 +1,7 @@
 execaTask:
   title: execa()
   before: 'true'
-  main: node --version
+  main: echo $PWD
   after: 'true'
   variations: [one]
 
