@@ -1,6 +1,6 @@
 import { isPlainObject } from '../../../../../utils/main.js'
 
-import { validateTask } from './task.js'
+import { validateTasks } from './tasks.js'
 import { validateVariations } from './variation.js'
 
 // Validate that tasks and variations have correct shape
@@ -9,18 +9,24 @@ export const validateTaskFile = function(entries) {
     throw new TypeError(`Tasks must use named exports`)
   }
 
-  if (entries.default !== undefined) {
-    throw new TypeError(`Tasks must use named exports not default exports`)
+  if (entries.tasks === undefined) {
+    throw new TypeError(`Missing property 'tasks'`)
   }
 
-  Object.entries(entries).forEach(([name, entry]) => validateEntry(name, entry))
+  Object.entries(entries).forEach(validateEntry)
 }
 
-const validateEntry = function(name, entry) {
-  if (name === 'variations') {
-    validateVariations(entry)
-    return
+const validateEntry = function([name, entry]) {
+  const validator = VALIDATORS[name]
+
+  if (validator === undefined) {
+    throw new TypeError(`Unknown property '${name}'`)
   }
 
-  validateTask(name, entry)
+  validator(entry)
+}
+
+const VALIDATORS = {
+  variations: validateVariations,
+  tasks: validateTasks,
 }

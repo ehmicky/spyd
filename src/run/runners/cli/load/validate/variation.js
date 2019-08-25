@@ -8,7 +8,7 @@ export const validateVariations = function(variations) {
     throw new TypeError(`'variations' must be an array of objects`)
   }
 
-  variations.forEach(variation => validateVariation(variation))
+  variations.forEach(validateVariation)
 }
 
 const validateVariation = function(variation) {
@@ -16,13 +16,15 @@ const validateVariation = function(variation) {
     throw new TypeError(`'variations' must be an array of objects`)
   }
 
-  if (variation.id === undefined) {
+  const { id } = variation
+
+  if (id === undefined) {
     throw new TypeError(`All 'variations' must have 'id' properties`)
   }
 
   Object.entries(variation).forEach(([propName, prop]) =>
     validateProp({
-      id: variation.id,
+      id,
       validators: VALIDATE_VARIATION,
       category: 'variation',
       propName,

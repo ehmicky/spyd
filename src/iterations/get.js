@@ -23,6 +23,11 @@ export const getCommandIterations = async function({
     cwd,
     type,
   })
+
+  if (iterations.length === 0) {
+    throw new Error(`File '${taskPath}' does not have any tasks to run`)
+  }
+
   const iterationsA = iterations.map(iteration =>
     normalizeIteration(iteration, command, { taskPath, system }),
   )

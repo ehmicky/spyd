@@ -1,11 +1,14 @@
-export const MathRandom = {
-  main: Math.random,
-  variations: ['one', 'two'],
-}
-
-export const MathRandomTwo = {
-  main: Math.random,
-}
+export const tasks = [
+  {
+    id: 'MathRandom',
+    main: Math.random,
+    variations: ['one', 'two'],
+  },
+  {
+    id: 'MathRandomTwo',
+    main: Math.random,
+  },
+]
 
 export const variations = [
   { id: 'one', title: 'One', value: 1 },
