@@ -78,7 +78,7 @@ const getVariationValue = function(value, variables) {
 // Add each variation to each task by adding the <<variation>> variable
 const getVariation = function(variationId, variations, { taskId }) {
   const variationA = variations.find(
-    variation => variation.variationId === variationId,
+    ({ variationId: variationIdA }) => variationIdA === variationId,
   )
 
   if (variationA === undefined) {
