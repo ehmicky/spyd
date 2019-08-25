@@ -29,10 +29,11 @@ export const addPrintedInfo = function({
   const iterationsC = addSpeedInfo(iterationsB)
   const iterationsD = normalizeStats(iterationsC)
 
-  const timestampPretty = prettifyTimestamp(timestamp)
-
-  const systemsPretty = prettifySystems(systemsA)
-  const commandsPretty = prettifyCommands(commands)
+  const { timestampPretty, systemsPretty, commandsPretty } = prettify({
+    timestamp,
+    systems: systemsA,
+    commands,
+  })
 
   return {
     ...benchmark,
@@ -46,6 +47,13 @@ export const addPrintedInfo = function({
     commandsPretty,
     iterations: iterationsD,
   }
+}
+
+const prettify = function({ timestamp, systems, commands }) {
+  const timestampPretty = prettifyTimestamp(timestamp)
+  const systemsPretty = prettifySystems(systems)
+  const commandsPretty = prettifyCommands(commands)
+  return { timestampPretty, systemsPretty, commandsPretty }
 }
 
 // Make timestamp more human-friendly.
