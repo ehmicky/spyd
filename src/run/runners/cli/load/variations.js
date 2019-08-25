@@ -5,21 +5,23 @@ import { applyTemplate } from '../template.js'
 // `variations` are scoped to each benchmark file. However the same
 // `variationId` can be used across benchmark files.
 // Defaults to using all `variations`.
-export const addTasksVariations = function({ tasks, variations, variables }) {
+export const addTasksVariations = function({
+  tasks,
+  variations = DEFAULT_VARIATIONS,
+  variables,
+}) {
   return tasks.flatMap(task =>
     addTaskVariations({ task, variations, variables }),
   )
 }
+
+const DEFAULT_VARIATIONS = [{ id: '' }]
 
 export const addTaskVariations = function({
   task: { variationsIds, ...task },
   variations,
   variables,
 }) {
-  if (variationsIds === undefined && variations === undefined) {
-    return [{ ...task, variationId: DEFAULT_VARIATION, variables }]
-  }
-
   const variationsA = getVariations({
     task,
     variationsIds,
@@ -31,9 +33,6 @@ export const addTaskVariations = function({
   )
   return tasks
 }
-
-// `variationId` must default to an empty string before being sent to parent
-const DEFAULT_VARIATION = ''
 
 const getVariations = function({
   task,
@@ -54,6 +53,7 @@ const getVariations = function({
   )
 }
 
+// Apply templates on variations
 const normalizeVariation = function({ id, title, value }, variables) {
   const variationId = applyTemplate(id, variables)
   const variationTitle = applyTemplate(title, variables)
@@ -75,6 +75,7 @@ const getVariationValue = function(value, variables) {
   return applyTemplate(value, variables)
 }
 
+// Add each variation to each task by adding the <<variation>> variable
 const getVariation = function(variationId, variations, { taskId }) {
   const variationA = variations.find(
     variation => variation.variationId === variationId,
