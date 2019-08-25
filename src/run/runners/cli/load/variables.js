@@ -1,6 +1,6 @@
 import { env } from 'process'
 
-import { spawnCommand } from '../spawn.js'
+import { spawnOutput } from '../spawn.js'
 
 // Get initial set of variables
 export const getInitialVariables = function() {
@@ -11,11 +11,11 @@ export const getVariables = async function({
   entries: { variables: fileVariables, ...entries },
   variables,
   shell,
-  stdio,
+  debug,
 }) {
   const fileVariablesA = await Promise.all(
     Object.entries(fileVariables).map(([name, command]) =>
-      getVariable({ name, command, variables, shell, stdio }),
+      getVariable({ name, command, variables, shell, debug }),
     ),
   )
   const fileVariablesB = Object.fromEntries(fileVariablesA)
@@ -24,9 +24,9 @@ export const getVariables = async function({
   return { variables: variablesA, entries }
 }
 
-const getVariable = async function({ name, command, variables, shell, stdio }) {
+const getVariable = async function({ name, command, variables, shell, debug }) {
   try {
-    const stdout = await spawnCommand(command, { variables, shell, stdio })
+    const stdout = await spawnOutput(command, { variables, shell, debug })
     return [name, stdout]
   } catch (error) {
     throw new Error(`Could not use variable '${name}': ${error.message}`)

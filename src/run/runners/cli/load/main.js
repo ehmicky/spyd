@@ -10,7 +10,7 @@ import { addTasksVariations } from './variations.js'
 //   - to run benchmarks
 //   - by the parent at startup, but only iterations ids and titles are needed
 // Load the task file using its absolute path
-export const loadTaskFile = async function(taskPath, stdio) {
+export const loadTaskFile = async function(taskPath, debug) {
   const entries = await loadFile(taskPath)
   validateTaskFile(entries)
 
@@ -20,7 +20,7 @@ export const loadTaskFile = async function(taskPath, stdio) {
     entries: entriesA,
     variables,
     shell,
-    stdio,
+    debug,
   })
 
   const { tasks, variations } = normalizeTasks(entriesB, variablesA)

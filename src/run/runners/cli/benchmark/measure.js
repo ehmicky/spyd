@@ -1,5 +1,5 @@
 import { now } from '../../../../now.js'
-import { spawnCommand, spawnProcess } from '../spawn.js'
+import { spawnOutput, spawnNoOutput } from '../spawn.js'
 
 // Main measuring code.
 export const measure = async function({
@@ -8,34 +8,34 @@ export const measure = async function({
   after,
   variables,
   shell,
-  stdio,
+  debug,
 }) {
-  const variablesA = await performBefore({ before, variables, shell, stdio })
+  const variablesA = await performBefore({ before, variables, shell, debug })
 
   const start = now()
-  await spawnProcess(main, { variables: variablesA, shell, stdio })
+  await spawnNoOutput(main, { variables: variablesA, shell, debug })
   const time = now() - start
 
-  await performAfter({ after, variables: variablesA, shell, stdio })
+  await performAfter({ after, variables: variablesA, shell, debug })
   return time
 }
 
 // Task `before`. Performed outside measurements.
 // Its return value is passed as variable <<before>> to `main()` and `after()`.
-const performBefore = async function({ before, variables, shell, stdio }) {
+const performBefore = async function({ before, variables, shell, debug }) {
   if (before === undefined) {
     return variables
   }
 
-  const beforeOutput = await spawnCommand(before, { variables, shell, stdio })
+  const beforeOutput = await spawnOutput(before, { variables, shell, debug })
   return { ...variables, before: beforeOutput }
 }
 
 // Task `after`. Performed outside measurements.
-const performAfter = async function({ after, variables, shell, stdio }) {
+const performAfter = async function({ after, variables, shell, debug }) {
   if (after === undefined) {
     return
   }
 
-  await spawnProcess(after, { variables, shell, stdio })
+  await spawnNoOutput(after, { variables, shell, debug })
 }

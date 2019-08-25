@@ -35,12 +35,10 @@ const getIteration = function({
 
 // Run benchmarks
 const run = async function({ taskPath, taskId, variationId, duration }) {
-  const stdio = 'ignore'
   const { main, before, after, variables, shell } = await getTask({
     taskPath,
     taskId,
     variationId,
-    stdio,
   })
   const { times, count } = await benchmark({
     main,
@@ -48,7 +46,6 @@ const run = async function({ taskPath, taskId, variationId, duration }) {
     after,
     variables,
     shell,
-    stdio,
     duration,
   })
   return { times, count }
@@ -56,18 +53,22 @@ const run = async function({ taskPath, taskId, variationId, duration }) {
 
 // Run an iteration once without benchmarking it
 const debug = async function({ taskPath, taskId, variationId }) {
-  const stdio = 'inherit'
   const { main, before, after, variables, shell } = await getTask({
     taskPath,
     taskId,
     variationId,
-    stdio,
+    debug: true,
   })
-  await measure({ main, before, after, variables, shell, stdio })
+  await measure({ main, before, after, variables, shell, debug: true })
 }
 
-const getTask = async function({ taskPath, taskId, variationId, stdio }) {
-  const { iterations, shell } = await loadTaskFile(taskPath, stdio)
+const getTask = async function({
+  taskPath,
+  taskId,
+  variationId,
+  debug: debugOpt,
+}) {
+  const { iterations, shell } = await loadTaskFile(taskPath, debugOpt)
 
   const { main, before, after, variables } = iterations.find(
     iteration =>

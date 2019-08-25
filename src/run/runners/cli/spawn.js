@@ -3,18 +3,18 @@ import execa from 'execa'
 import { applyTemplate } from './template.js'
 
 // Spawn a command and retrieve its output
-export const spawnCommand = async function(
+export const spawnOutput = async function(
   command,
-  { variables, shell, stdio },
+  { variables, shell, debug },
 ) {
+  const stderr = debug ? 'inherit' : 'ignore'
   const { stdout } = await spawnProcess(command, {
     variables,
     shell,
-    stdio: ['ignore', 'pipe', stdio],
+    stdio: ['ignore', 'pipe', stderr],
   })
 
-  // In debug mode, we need to print every command's output
-  if (stdio === 'inherit' && stdout !== '') {
+  if (debug && stdout !== '') {
     // eslint-disable-next-line no-restricted-globals, no-console
     console.log(stdout)
   }
@@ -22,11 +22,16 @@ export const spawnCommand = async function(
   return stdout
 }
 
-// Spawn a command and retrieve its child process result
-export const spawnProcess = async function(
+// Spawn a command and do not retrieve its output
+export const spawnNoOutput = async function(
   command,
-  { variables, shell, stdio },
+  { variables, shell, debug },
 ) {
+  const stdio = debug ? 'inherit' : 'ignore'
+  await spawnProcess(command, { variables, shell, stdio })
+}
+
+const spawnProcess = async function(command, { variables, shell, stdio }) {
   const commandA = applyTemplate(command, variables)
 
   const execaFunc = shell ? execa : execa.command
