@@ -3,9 +3,9 @@ import {
   validateString,
   validateFunction,
   validateStringArray,
-} from '../../common/validate.js'
-import { validateTasks } from '../../common/tasks.js'
-import { validateVariations } from '../../common/variations.js'
+} from '../../common/validate/helpers.js'
+import { validateTasks } from '../../common/validate/tasks.js'
+import { validateVariations } from '../../common/validate/variations.js'
 
 // Validate that the benchmark file has correct shape
 export const validateFile = function(entries) {

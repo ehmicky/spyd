@@ -1,6 +1,6 @@
-import { isPlainObject } from '../../../utils/main.js'
+import { isPlainObject } from '../../../../utils/main.js'
 
-import { validateProp } from './validate.js'
+import { validateProp } from './helpers.js'
 
 // Validate that variations have correct shape
 export const validateVariations = function(validators, variations) {

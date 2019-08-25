@@ -1,6 +1,6 @@
-import { isPlainObject } from '../../../utils/main.js'
+import { isPlainObject } from '../../../../utils/main.js'
 
-import { validateProp } from './validate.js'
+import { validateProp } from './helpers.js'
 
 // Validate that tasks have correct shape
 export const validateTasks = function(validators, tasks) {
