@@ -1,4 +1,4 @@
-import { isPlainObject } from '../../../../../utils/main.js'
+import { validateBenchmarkFile } from '../../../common/validate/main.js'
 import {
   validateString,
   validateStringArray,
@@ -10,26 +10,8 @@ import { validateVariations } from '../../../common/variations.js'
 import { validateVariables } from './variables.js'
 
 // Validate that benchmark file has correct shape
-export const validateBenchmarkFile = function(entries) {
-  if (!isPlainObject(entries)) {
-    throw new TypeError(`Benchmark file must be a top-level object`)
-  }
-
-  if (entries.tasks === undefined) {
-    throw new TypeError(`Missing property 'tasks'`)
-  }
-
-  Object.entries(entries).forEach(validateEntry)
-}
-
-const validateEntry = function([name, entry]) {
-  const validator = VALIDATORS[name]
-
-  if (validator === undefined) {
-    throw new TypeError(`Unknown property '${name}'`)
-  }
-
-  validator(entry)
+export const validateFile = function(entries) {
+  validateBenchmarkFile(entries, VALIDATORS)
 }
 
 const validateShell = function(shell) {

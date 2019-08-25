@@ -1,5 +1,5 @@
 import { useRequireOpt } from './require_opt.js'
-import { validateBenchmarkFile } from './validate.js'
+import { validateFile } from './validate.js'
 import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 
@@ -15,7 +15,7 @@ export const loadBenchmarkFile = async function(
   useRequireOpt(requireOpt, taskPath)
 
   const entries = await loadFile(taskPath)
-  validateBenchmarkFile(entries)
+  validateFile(entries)
 
   const { tasks, variations } = normalizeTasks(entries)
   const iterations = addTasksVariations(tasks, variations)
