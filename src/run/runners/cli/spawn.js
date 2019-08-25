@@ -40,11 +40,11 @@ const spawnProcess = async function(
   command,
   { variables, shell, stdio, debug, header },
 ) {
-  const commandA = applyTemplate(command, variables)
+  const commandA = applyTemplate(command, variables).trim()
 
   if (debug) {
     // eslint-disable-next-line no-restricted-globals, no-console
-    console.log(blue.bold(header))
+    console.log(blue.bold(`${header}: ${commandA}`))
   }
 
   const execaFunc = shell ? execa : execa.command

@@ -16,8 +16,8 @@ const validateVariable = function([name, value]) {
     )
   }
 
-  if (typeof value !== 'string') {
-    throw new TypeError(`'variables' '${name}' must be a string`)
+  if (typeof value !== 'string' || value.trim() === '') {
+    throw new TypeError(`'variables' '${name}' must be a non-empty string`)
   }
 }
 
