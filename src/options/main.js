@@ -8,7 +8,7 @@ import { getDefaultGroup } from '../ci/info.js'
 
 import { getConfig } from './config.js'
 import { addEnvVars } from './env.js'
-import { normalizeOpts } from './normalize.js'
+import { preNormalizeOpts, normalizeOpts } from './normalize.js'
 
 // Retrieve options/configuration
 export const getOpts = async function(action, opts = {}) {
@@ -20,10 +20,12 @@ export const getOpts = async function(action, opts = {}) {
   const optsC = addEnvVars(optsB)
 
   validateOpts(optsC)
-  const optsD = addDefaultOpts(optsC, action)
 
-  const optsE = await normalizeOpts(optsD, action)
-  return optsE
+  const optsD = preNormalizeOpts(optsC)
+  const optsE = addDefaultOpts(optsD, action)
+
+  const optsF = await normalizeOpts(optsE, action)
+  return optsF
 }
 
 const isUndefined = function(value) {
@@ -43,18 +45,9 @@ const addDefaultOpts = function(opts, action) {
   return {
     ...DEFAULT_OPTS,
     context: action === 'show',
-    runners: getRunners(opts),
     group: getDefaultGroup({ ...DEFAULT_OPTS, ...opts }),
     ...opts,
   }
-}
-
-const getRunners = function({ run }) {
-  if (run === undefined) {
-    return
-  }
-
-  return Object.keys(run)
 }
 
 const DEFAULT_OPTS = {

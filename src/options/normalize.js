@@ -10,6 +10,22 @@ import { normalizeSystem } from '../system/normalize.js'
 import { validateStringArray, validatePositiveNumber } from './validate.js'
 import { loadAllPlugins } from './plugins.js'
 
+// Normalize some options before assigning default values
+export const preNormalizeOpts = function(opts) {
+  const optsA = addRunners(opts)
+  return optsA
+}
+
+// Add 'runners' option
+const addRunners = function({ run, ...opts }) {
+  if (run === undefined) {
+    return opts
+  }
+
+  const runners = Object.keys(run)
+  return { ...opts, run, runners }
+}
+
 // Normalize options shape and do custom validation
 export const normalizeOpts = async function(opts, action) {
   const optsA = NORMALIZERS.reduce(normalizeOpt, opts)
