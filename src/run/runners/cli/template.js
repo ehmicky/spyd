@@ -1,5 +1,8 @@
 // Substitute template <<variable>> using a set of variables:
 //  - environment variables
+//  - file.variables
+//  - task.before output (<<before>>)
+//  - each <<variation>>
 // Can be escaped as <<<variable>>>
 export const applyTemplate = function(string, variables) {
   if (string === undefined) {
