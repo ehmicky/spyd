@@ -89,7 +89,7 @@ const VALID_BENCHMARK_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 
 const EXAMPLE_OPTS = {
   ...DEFAULT_OPTS,
-  config: 'spyd.json',
+  config: 'spyd.yml',
   tasks: ['taskId'],
   variations: ['variationId'],
   group: multipleValidOptions('', '546'),

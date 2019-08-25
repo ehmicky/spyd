@@ -1,57 +1,42 @@
 import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
-import { readFile } from 'fs'
-import { promisify } from 'util'
 
 import findUp from 'find-up'
 
-const pReadFile = promisify(readFile)
+import { loadYamlFile } from '../utils/yaml.js'
 
 // Retrieve options from the configuration file (if any)
 export const getConfig = async function({
   opts: { config, ...opts },
   opts: { cwd = getCwd() },
 }) {
-  const configFile = await getConfigFile(config, cwd)
+  const configPath = await getConfigPath(config, cwd)
 
-  if (configFile === undefined) {
+  if (configPath === undefined) {
     return opts
   }
 
-  const configContent = await getConfigContent(configFile, cwd)
-  const configOpts = parseConfig(configContent, configFile)
-  return { ...configOpts, ...opts }
+  const configContent = await getConfigContent(configPath)
+  return { ...configContent, ...opts }
 }
 
-const getConfigFile = async function(config, cwd) {
+const getConfigPath = async function(config, cwd) {
   if (config !== undefined) {
-    return config
+    return resolve(cwd, config)
   }
 
-  const configFile = await findUp(DEFAULT_CONFIG_FILE, { cwd })
+  const configFile = await findUp(DEFAULT_CONFIG_FILES, { cwd })
   return configFile
 }
 
-const DEFAULT_CONFIG_FILE = 'spyd.json'
+const DEFAULT_CONFIG_FILES = ['spyd.yml', 'spyd.yaml']
 
-const getConfigContent = async function(configFile, cwd) {
-  const configPath = resolve(cwd, configFile)
-
+const getConfigContent = async function(configPath) {
   try {
-    return await pReadFile(configPath, 'utf-8')
+    return await loadYamlFile(configPath)
   } catch (error) {
     throw new Error(
-      `Could not load configuration file '${configFile}': ${error.message}`,
-    )
-  }
-}
-
-const parseConfig = function(configContent, configFile) {
-  try {
-    return JSON.parse(configContent)
-  } catch (error) {
-    throw new Error(
-      `Configuration file '${configFile}' is not valid JSON: ${error.message}`,
+      `Could not load configuration file '${configPath}': ${error.message}`,
     )
   }
 }
