@@ -1,11 +1,4 @@
-import { env } from 'process'
-
 import { spawnOutput } from '../spawn.js'
-
-// Get initial set of variables
-export const getInitialVariables = function() {
-  return env
-}
 
 export const getVariables = async function({
   entries: { variables: fileVariables = {}, ...entries },
