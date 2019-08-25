@@ -1,4 +1,5 @@
-import { getTimeResolution } from '../../../../resolution.js'
+import timeResolution from 'time-resolution'
+
 import { getMedian } from '../../../../stats/methods.js'
 
 import { benchmarkLoop } from './loop.js'
@@ -58,7 +59,7 @@ const getMinTime = function(nowBias) {
   return Math.max(minPrecisionTime, minNowBiasTime)
 }
 
-const TIME_RESOLUTION = getTimeResolution()
+const TIME_RESOLUTION = timeResolution()
 // The task loop must be at least `MIN_PRECISION` slower than time resolution
 const MIN_PRECISION = 1e2
 // The task loop must be at least `MIN_NOW_BIAS` slower than `nowBias`
