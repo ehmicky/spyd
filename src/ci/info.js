@@ -1,8 +1,9 @@
 import envCi from 'env-ci'
 import moize from 'moize'
+import uuidv4 from 'uuid/v4.js'
 
 // Retrieve information related to git and to CI environment
-const mGetCiInfo = function(cwd) {
+export const getCiInfo = function(cwd) {
   const {
     commit,
     branch,
@@ -14,11 +15,28 @@ const mGetCiInfo = function(cwd) {
     tag,
     pr,
     prBranch,
-  } = envCi({ cwd })
+    slug,
+  } = getEnvCi(cwd)
   const git = { commit, branch, tag, prNumber: pr, prBranch }
   const ci = { provider: name, buildNumber, buildUrl }
   const job = { jobNumber, jobUrl }
-  return { git, ci, job }
+  return { git, ci, job, slug }
 }
 
-export const getCiInfo = moize(mGetCiInfo)
+// By default `group` is the current CI build. If not in CI, it is a UUIDv4.
+export const getDefaultGroup = function({ cwd }) {
+  const { service, build: buildNumber, slug } = getEnvCi(cwd)
+
+  if (service === undefined || buildNumber === undefined) {
+    return uuidv4()
+  }
+
+  const slugA = slug === undefined ? undefined : slug.replace('/', '-')
+  return [slugA, service, buildNumber].filter(Boolean).join('-')
+}
+
+const mGetEnvCi = function(cwd) {
+  return envCi({ cwd })
+}
+
+const getEnvCi = moize(mGetEnvCi)

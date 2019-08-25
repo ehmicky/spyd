@@ -2,9 +2,9 @@ import { cwd as getCwd, stderr } from 'process'
 
 import { validate, multipleValidOptions } from 'jest-validate'
 import isInteractive from 'is-interactive'
-import uuidv4 from 'uuid/v4.js'
 
 import { omitBy } from '../utils/main.js'
+import { getDefaultGroup } from '../ci/info.js'
 
 import { getConfig } from './config.js'
 import { addEnvVars } from './env.js'
@@ -40,12 +40,11 @@ const validateOpts = function(opts) {
 }
 
 const addDefaultOpts = function({ run, ...opts }, action) {
-  const runners = run === undefined ? undefined : Object.keys(run)
   return {
     ...DEFAULT_OPTS,
-    group: uuidv4(),
     context: action === 'show',
-    runners,
+    runners: run === undefined ? undefined : Object.keys(run),
+    group: getDefaultGroup({ ...DEFAULT_OPTS, ...opts }),
     ...opts,
   }
 }
