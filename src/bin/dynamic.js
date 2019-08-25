@@ -2,7 +2,7 @@ import { isPlainObject } from '../utils/main.js'
 
 // `--report.json` and `--report.json.option` are normalized to
 // `{ report: { json: { option } } }`.
-// Same thing for `--progress`.
+// Same thing for `--progress`, `--run` and `--store`
 export const normalizeDynamicOpts = function(opts) {
   const dynamicOpts = DYNAMIC_OPTS.map(name => normalizeDynamicOpt(name, opts))
   const dynamicOptsA = Object.fromEntries(dynamicOpts)
