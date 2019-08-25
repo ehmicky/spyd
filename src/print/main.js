@@ -1,9 +1,9 @@
-import { mergeSystems } from './env.js'
+import { mergeSystems } from './system.js'
 import { addCollections } from './collections.js'
 import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
 import { normalizeStats } from './stats/main.js'
-import { prettifySystems } from './system.js'
+import { prettifySystems } from './system_pretty.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.

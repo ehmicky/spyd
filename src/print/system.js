@@ -1,68 +1,53 @@
-import { blue } from 'chalk'
-import indentString from 'indent-string'
+import { omit } from '../utils/main.js'
 
-// Serialize `system` information for CLI reporters.
-export const prettifySystems = function(systems) {
-  return systems
-    .filter(hasFields)
-    .map(prettifySystem)
-    .join('\n')
+// We merge two collection of similar `systems`:
+//  - after merging with previous benchmarks of same group, to retrieve their
+//    options and systems
+//  - after grouping iterations, to retrieve their speed and set iteration.rank
+export const mergeSystems = function(systems, systemColls) {
+  const systemsA = systemColls.map(systemColl =>
+    mergeSystem(systems, systemColl),
+  )
+  const systemsB = addSharedSystem(systemsA)
+  return systemsB
 }
 
-const hasFields = function(system) {
-  return getFields(system).length !== 0
+const mergeSystem = function(systems, systemColl) {
+  const system = systems.find(systemA => systemA.id === systemColl.id)
+  return { ...systemColl, ...system }
 }
 
-const prettifySystem = function(system, index) {
-  const header = getHeader(system)
-  const body = getBody(system)
-  const systemPretty = `${header}\n${body}`
-  const systemPrettyA = indent(systemPretty, index)
-  return systemPrettyA
+// The first `system` is a collection of all properties shared by other
+// `systems`. Its `id`, `title` and `mean` are `undefined`.
+const addSharedSystem = function(systems) {
+  const sharedProps = getSharedProps(systems)
+  const sharedSystem = getSharedSystem(sharedProps, systems)
+  const systemsA = systems.map(system => omit(system, sharedProps))
+  return [sharedSystem, ...systemsA]
 }
 
-const getHeader = function(system) {
-  const title = getTitle(system)
-  return blue.bold(`${title}:`)
+const getSharedProps = function([firstSystem, ...nextSystems]) {
+  const sharedProps = SHARED_PROPS.filter(propName =>
+    isSharedProp(firstSystem, nextSystems, propName),
+  )
+  return [...SAME_PROPS, ...sharedProps]
 }
 
-const getTitle = function({ title = MAIN_TITLE }) {
-  if (title === '') {
-    return DEFAULT_TITLE
-  }
+// Can optionally be the same across systems
+const SHARED_PROPS = ['cpu', 'memory', 'os']
+// Validated to always be the same across systems, so it's always shared.
+const SAME_PROPS = ['opts']
 
-  return title
-}
-
-// Top-level title (for shared `system`)
-const MAIN_TITLE = 'System'
-// Nested title when `system` is an empty string
-const DEFAULT_TITLE = 'Default'
-
-const getBody = function(system) {
-  const fields = getFields(system)
-  return fields.map(field => serializeField(field, system)).join('\n')
-}
-
-const getFields = function(system) {
-  return Object.keys(MACHINE_FIELDS).filter(
-    field => system[field] !== undefined,
+const isSharedProp = function(firstSystem, nextSystems, propName) {
+  return nextSystems.every(
+    nextSystem => nextSystem[propName] === firstSystem[propName],
   )
 }
 
-const serializeField = function(field, system) {
-  const value = system[field]
-  const fieldA = MACHINE_FIELDS[field]
-  const fieldB = blue.bold(`${fieldA}:`)
-  return `  ${fieldB} ${value}`
-}
-
-const MACHINE_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
-
-const indent = function(systemPretty, index) {
-  if (index === 0) {
-    return systemPretty
-  }
-
-  return indentString(systemPretty, 2)
+const getSharedSystem = function(sharedProps, [firstSystem]) {
+  const props = sharedProps.map(sharedProp => [
+    sharedProp,
+    firstSystem[sharedProp],
+  ])
+  return Object.fromEntries(props)
 }
