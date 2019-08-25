@@ -5,7 +5,7 @@ import { getNodeVersions } from './versions.js'
 
 const START_PATH = `${__dirname}/start.js`
 
-export const action = async function(runOpts) {
+export const commands = async function(runOpts) {
   const runOptsA = getOpts(runOpts)
 
   const versions = await getNodeVersions(runOptsA)
@@ -19,8 +19,7 @@ export const action = async function(runOpts) {
     ]
   }
 
-  const commands = await Promise.all(versions.map(getNodeCommand))
-  return commands
+  return Promise.all(versions.map(getNodeCommand))
 }
 
 const getNodeCommand = async function({ version, fullVersion }) {

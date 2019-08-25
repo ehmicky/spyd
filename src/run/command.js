@@ -1,6 +1,6 @@
 import { getCommandDescription } from './description.js'
 
-// Runners can spawn multiple commands, specified as `action.commands`
+// Runners can spawn multiple commands, specified as `commands`
 export const getCommands = function({
   runnerId,
   runnerTitle,

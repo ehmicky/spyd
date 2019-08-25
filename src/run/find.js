@@ -18,7 +18,7 @@ const matchExtension = function(extensions, extension) {
 }
 
 // Inverse.
-// Only trigger `runner.action` is the runner is used by some task files.
+// Only trigger `runner.commands()` if the runner is used by some task files.
 export const hasTasks = function({ extensions }, taskPaths) {
   return taskPaths.some(taskPath =>
     matchExtension(extensions, extname(taskPath)),

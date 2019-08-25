@@ -2,7 +2,7 @@ import { getCommands } from './command.js'
 import { hasTasks } from './find.js'
 
 // Select the runners for the current benchmark files, and retrieve their
-// related commands using `runner.action()`
+// related commands using `runner.commands()`
 export const loadRunners = async function(runners, taskPaths) {
   const runnersA = runners.filter(runner => hasTasks(runner, taskPaths))
 
@@ -15,9 +15,9 @@ const loadRunner = async function({
   title: runnerTitle,
   opts: runOpt,
   extensions,
-  action,
+  commands: retrieveCommands,
 }) {
-  const commands = await fireAction({ runnerId, runOpt, action })
+  const commands = await fireCommands({ runnerId, runOpt, retrieveCommands })
   const commandsA = await getCommands({
     runnerId,
     runnerTitle,
@@ -27,10 +27,10 @@ const loadRunner = async function({
   return { commands: commandsA, extensions }
 }
 
-// Fire runner `action()`
-const fireAction = async function({ runnerId, runOpt, action }) {
+// Fire runner `runner.commands()`
+const fireCommands = async function({ runnerId, runOpt, retrieveCommands }) {
   try {
-    return await action(runOpt)
+    return await retrieveCommands(runOpt)
   } catch (error) {
     // eslint-disable-next-line fp/no-mutation
     error.message = `In runner '${runnerId}': ${error.message}`
