@@ -1,10 +1,10 @@
 import { loadRunners } from '../run/load.js'
 import { addNames } from '../print/name.js'
 import { validateLimits } from '../limit/validate.js'
+import { selectIterations } from '../select/main.js'
 
 import { getTaskPaths } from './path.js'
 import { loadIterations } from './load.js'
-import { selectIterations } from './select.js'
 import { removeDuplicates } from './duplicate.js'
 
 // Retrieve each iteration, i.e. combination of task + variation (if any)
@@ -14,8 +14,8 @@ export const getIterations = async function({
   cwd,
   debug,
   system,
-  tasks: taskIds,
-  variations: variationIds,
+  tasks,
+  variations,
   run: runners,
   limits,
 }) {
@@ -30,8 +30,8 @@ export const getIterations = async function({
     cwd,
     debug,
     system,
-    taskIds,
-    variationIds,
+    tasks,
+    variations,
     limits,
   })
 
@@ -46,8 +46,8 @@ const getAllIterations = async function({
   cwd,
   debug,
   system,
-  taskIds,
-  variationIds,
+  tasks,
+  variations,
   limits,
 }) {
   const iterations = await loadIterations({
@@ -60,15 +60,7 @@ const getAllIterations = async function({
   })
 
   const iterationsA = removeDuplicates(iterations)
-  const iterationsB = selectIterations({
-    iterations: iterationsA,
-    taskIds,
-    variationIds,
-  })
-
-  if (iterationsB.length === 0) {
-    throw new Error('No tasks to benchmark')
-  }
+  const iterationsB = selectIterations(iterationsA, { tasks, variations })
 
   validateLimits(iterationsB, limits)
 

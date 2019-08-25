@@ -1,7 +1,8 @@
 import { ALL_CONFIG } from '../config/all.js'
 import { STORE_CONFIG } from '../config/store.js'
 import { REPORT_CONFIG } from '../config/report.js'
-import { RUN_SHARED_CONFIG, RUN_CONFIG } from '../config/run.js'
+import { SELECT_CONFIG } from '../config/select.js'
+import { RUN_CONFIG } from '../config/run.js'
 
 export const RUN_COMMAND = {
   input: ['run [<files...>]', '* [<files...>'],
@@ -11,7 +12,7 @@ export const RUN_COMMAND = {
     ...ALL_CONFIG,
     ...STORE_CONFIG,
     ...REPORT_CONFIG,
-    ...RUN_SHARED_CONFIG,
+    ...SELECT_CONFIG,
     ...RUN_CONFIG,
   },
 

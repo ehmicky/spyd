@@ -1,12 +1,18 @@
 import { ALL_CONFIG } from '../config/all.js'
 import { STORE_CONFIG } from '../config/store.js'
+import { SELECT_CONFIG } from '../config/select.js'
 import { REPORT_CONFIG } from '../config/report.js'
 
 export const SHOW_COMMAND = {
   input: 'show [benchmark]',
   description: 'Show a previous benchmark',
 
-  config: { ...ALL_CONFIG, ...STORE_CONFIG, ...REPORT_CONFIG },
+  config: {
+    ...ALL_CONFIG,
+    ...STORE_CONFIG,
+    ...SELECT_CONFIG,
+    ...REPORT_CONFIG,
+  },
 
   usage: `$0 [options] show [integer|date|time]
 

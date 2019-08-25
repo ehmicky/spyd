@@ -1,11 +1,12 @@
 import { ALL_CONFIG } from '../config/all.js'
 import { STORE_CONFIG } from '../config/store.js'
+import { SELECT_CONFIG } from '../config/select.js'
 
 export const REMOVE_COMMAND = {
   input: 'remove [benchmark]',
   description: 'Remove a previous benchmark',
 
-  config: { ...ALL_CONFIG, ...STORE_CONFIG },
+  config: { ...ALL_CONFIG, ...STORE_CONFIG, ...SELECT_CONFIG },
 
   usage: `$0 [options] remove [integer|date|time]
 

@@ -1,34 +1,3 @@
-// Configuration shared by commands that run benchmark files: `run`, `debug`
-export const RUN_SHARED_CONFIG = {
-  tasks: {
-    alias: 't',
-    string: true,
-    array: true,
-    requiresArg: true,
-    describe: `Identifiers of the tasks to benchmark.
-Each identifier can start with a ! to exclude the task instead of selecting it.
-Default: all tasks`,
-  },
-  variations: {
-    alias: 'v',
-    string: true,
-    array: true,
-    requiresArg: true,
-    describe: `Identifiers of the variations to benchmark.
-Each identifier can start with a ! to exclude the variation instead of selecting it.
-Default: all variations`,
-  },
-  run: {
-    describe: `Module to run benchmarks for a specific programming language or
-platform.
-Built-in runners: node.
-Custom runners (installed with npm) can also be used.
-Uses a dot notation such as --run.node (not --run=node nor --run node).
-Runner-specific options can be specified using the same dot notation such as
---run.node.require.`,
-  },
-}
-
 // Configuration specific to `run`
 export const RUN_CONFIG = {
   duration: {
@@ -44,15 +13,6 @@ Default: 10`,
 Used to create a single benchmark incrementally.
 Can also be a group identifier. Benchmarks with the group are reported together.
 Default: random UUID`,
-  },
-  system: {
-    string: true,
-    requiresArg: true,
-    describe: `Name of the current hardware/software system.
-Used to compare different machines or configurations together.
-Can contain variables such as {{OS}}, {{OS_FULL}} or {{VAR}} where VAR is an
-environment variable.
-Default: ""`,
   },
   progress: {
     describe: `Module to report benchmark progress.

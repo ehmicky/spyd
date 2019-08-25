@@ -1,4 +1,5 @@
 import { mergeBenchmarks } from '../group/merge.js'
+import { selectBenchmarks } from '../select/main.js'
 
 import { list } from './list.js'
 import { find } from './delta/find.js'
@@ -6,12 +7,13 @@ import { find } from './delta/find.js'
 // Get a previous benchmark by `count` or `timestamp`
 export const get = async function(delta, opts) {
   const rawBenchmarks = await list(opts)
+  const rawBenchmarksA = selectBenchmarks(rawBenchmarks, opts)
 
-  const benchmarks = mergeBenchmarks(rawBenchmarks)
+  const benchmarks = mergeBenchmarks(rawBenchmarksA)
 
   const { group } = getBenchmark(benchmarks, delta)
 
-  return { group, benchmarks, rawBenchmarks }
+  return { group, benchmarks, rawBenchmarks: rawBenchmarksA }
 }
 
 const getBenchmark = function(benchmarks, delta) {
