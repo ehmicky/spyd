@@ -6,6 +6,7 @@ import { startProgress, stopProgress } from './progress/main.js'
 import { getIterations } from './iterations/main.js'
 import { runProcesses } from './processes/main.js'
 import { getSystems } from './system/info.js'
+import { cleanObject } from './utils/clean.js'
 
 // Run a new benchmark
 export const runBenchmark = async function(opts) {
@@ -42,5 +43,7 @@ const addBenchmarkInfo = function(
   const id = uuidv4()
   const timestamp = new Date().toISOString()
   const systems = getSystems(opts, system)
-  return { id, timestamp, group, systems, iterations }
+  const benchmark = { id, timestamp, group, systems, iterations }
+  const benchmarkA = cleanObject(benchmark)
+  return benchmarkA
 }
