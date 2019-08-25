@@ -1,4 +1,4 @@
-import { now } from '../now.js'
+import now from 'precise-now'
 
 import { getTimeLeft } from './time.js'
 

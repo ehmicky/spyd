@@ -1,4 +1,4 @@
-import { now } from '../now.js'
+import now from 'precise-now'
 
 import { executeChild } from './execute.js'
 

@@ -1,4 +1,4 @@
-import { now } from '../../../../now.js'
+import now from 'precise-now'
 
 import { measure } from './measure.js'
 import { getRepeat } from './repeat.js'

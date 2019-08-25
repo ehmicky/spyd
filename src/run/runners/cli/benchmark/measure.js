@@ -1,4 +1,5 @@
-import { now } from '../../../../now.js'
+import now from 'precise-now'
+
 import { spawnOutput, spawnNoOutput } from '../spawn.js'
 
 // Main measuring code.

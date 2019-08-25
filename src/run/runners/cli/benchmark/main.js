@@ -1,4 +1,5 @@
-import { now } from '../../../../now.js'
+import now from 'precise-now'
+
 import { sortNumbers } from '../../../../utils/sort.js'
 
 import { measure } from './measure.js'

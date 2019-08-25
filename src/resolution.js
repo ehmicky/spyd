@@ -1,4 +1,4 @@
-import { now } from './now.js'
+import now from 'precise-now'
 
 // Retrieve system's time resolution in nanoseconds.
 // If the resolution is <1ns, returns 1ns.

@@ -1,4 +1,5 @@
-import { now } from '../now.js'
+import now from 'precise-now'
+
 import { getStats } from '../stats/compute.js'
 
 import { runChildren } from './run.js'
