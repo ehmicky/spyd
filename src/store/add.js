@@ -3,18 +3,20 @@ import { addGroup } from '../group/options.js'
 import { omit } from '../utils/main.js'
 
 import { listStore } from './list.js'
+import { validateDataVersion } from './migrate/main.js'
 
 // Add a new benchmark
-export const addToStore = async function(benchmark, opts) {
-  const benchmarks = await listStore(opts)
+export const addToStore = async function(rawBenchmark, opts) {
+  const rawBenchmarks = await listStore(opts)
+  validateDataVersion(rawBenchmarks)
 
-  const benchmarkA = addGroup(benchmark, benchmarks, opts)
-  await save(benchmarkA, opts)
+  const rawBenchmarkA = addGroup(rawBenchmark, rawBenchmarks, opts)
+  await save(rawBenchmarkA, opts)
 
-  const benchmarksA = [...benchmarks, benchmarkA]
-  const benchmarksB = mergeBenchmarks(benchmarksA)
+  const rawBenchmarksA = [...rawBenchmarks, rawBenchmarkA]
+  const benchmarks = mergeBenchmarks(rawBenchmarksA)
 
-  return { group: benchmarkA.group, benchmarks: benchmarksB }
+  return { group: rawBenchmarkA.group, benchmarks }
 }
 
 // Save benchmark results so they can be compared or shown later

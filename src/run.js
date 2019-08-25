@@ -5,6 +5,7 @@ import uuidv4 from 'uuid/v4.js'
 import { startProgress, stopProgress } from './progress/main.js'
 import { getIterations } from './iterations/main.js'
 import { runProcesses } from './processes/main.js'
+import { DATA_VERSION } from './store/migrate/main.js'
 import { getSystems } from './system/info.js'
 import { getCiInfo } from './ci/info.js'
 import { cleanObject } from './utils/clean.js'
@@ -41,11 +42,21 @@ const addBenchmarkInfo = function(
   iterations,
   { opts, opts: { group, system, cwd } },
 ) {
+  const version = DATA_VERSION
   const id = uuidv4()
   const timestamp = new Date().toISOString()
   const { git, ci, job } = getCiInfo(cwd)
   const systems = getSystems({ opts, system, job })
-  const benchmark = { id, timestamp, group, systems, git, ci, iterations }
+  const benchmark = {
+    version,
+    id,
+    timestamp,
+    group,
+    systems,
+    git,
+    ci,
+    iterations,
+  }
   const benchmarkA = cleanObject(benchmark)
   return benchmarkA
 }

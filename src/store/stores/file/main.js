@@ -21,10 +21,14 @@ const add = async function(benchmark, dir) {
   await setBenchmarks(dir, benchmarksA)
 }
 
+const replace = async function(benchmarks, dir) {
+  await setBenchmarks(dir, benchmarks)
+}
+
 const remove = async function(ids, dir) {
   const benchmarks = await getBenchmarks(dir)
   const benchmarksA = benchmarks.filter(({ id }) => !ids.includes(id))
   await setBenchmarks(dir, benchmarksA)
 }
 
-export const file = { init, destroy, list, add, remove }
+export const file = { init, destroy, list, add, replace, remove }
