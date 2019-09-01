@@ -72,9 +72,9 @@
     "yn": "^3.1.1"
   },
   "devDependencies": {
+    "@ehmicky/dev-tasks": "^0.30.40",
     "ava": "^2.3.0",
     "gulp": "^4.0.2",
-    "gulp-shared-tasks": "^0.30.40",
     "husky": "^3.0.5"
   },
   "engines": {
