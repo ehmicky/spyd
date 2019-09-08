@@ -8,13 +8,13 @@ const getReduce = function(obj, key) {
 }
 
 // Set a deep property using an array of keys
-export const set = function(obj = {}, keys, val) {
+export const set = function(obj, keys, val) {
   if (keys.length === 0) {
     return val
   }
 
   const [childKey, ...keysA] = keys
-  const child = obj[childKey]
+  const child = obj[childKey] || {}
   const childA = set(child, keysA, val)
 
   return { ...obj, [childKey]: childA }
