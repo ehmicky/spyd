@@ -43,7 +43,7 @@
     "fast-glob": "^3.0.4",
     "figures": "^3.0.0",
     "find-up": "^4.1.0",
-    "get-node": "^3.0.0",
+    "get-node": "^3.0.1",
     "get-stream": "^5.1.0",
     "got": "^9.6.0",
     "indent-string": "^4.0.0",
