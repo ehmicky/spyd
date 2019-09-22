@@ -33,7 +33,7 @@ const getPackageInfo = async function(cwd) {
   }
 
   const {
-    package: { name },
+    packageJson: { name },
     path,
   } = packageInfo
   const root = dirname(path)

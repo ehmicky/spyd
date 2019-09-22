@@ -45,7 +45,7 @@ const getFullVersion = async function(version) {
 // We can only allow Node versions that are valid with the runner's code
 const getAllowedVersions = async function() {
   const {
-    package: {
+    packageJson: {
       engines: { node: allowedVersions },
     },
   } = await readPkgUp({ cwd: __dirname })
