@@ -1,4 +1,4 @@
-import { omitBy } from '../utils/main.js'
+import filterObj from 'filter-obj'
 
 import { normalizeDynamicOpts } from './dynamic.js'
 
@@ -10,19 +10,19 @@ export const parseOpts = function(yargs) {
 
   const optsA = normalizeDynamicOpts(opts)
 
-  const optsB = omitBy(optsA, isInternalKey)
+  const optsB = filterObj(optsA, isUserOpt)
   return [command, optsB]
 }
 
 const DEFAULT_COMMAND = 'run'
 
 // Remove `yargs`-specific options, shortcuts and dash-cased
-const isInternalKey = function(key, value) {
+const isUserOpt = function(key, value) {
   return (
-    value === undefined ||
-    INTERNAL_KEYS.includes(key) ||
-    key.length === 1 ||
-    key.includes('-')
+    value !== undefined &&
+    !INTERNAL_KEYS.includes(key) &&
+    key.length !== 1 &&
+    !key.includes('-')
   )
 }
 

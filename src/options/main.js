@@ -2,8 +2,8 @@ import { cwd as getCwd, stderr } from 'process'
 
 import { validate, multipleValidOptions } from 'jest-validate'
 import isInteractive from 'is-interactive'
+import filterObj from 'filter-obj'
 
-import { omitBy } from '../utils/main.js'
 import { getDefaultGroup } from '../ci/info.js'
 
 import { getConfig } from './config.js'
@@ -12,7 +12,7 @@ import { preNormalizeOpts, normalizeOpts } from './normalize.js'
 
 // Retrieve options/configuration
 export const getOpts = async function(action, opts = {}) {
-  const optsA = omitBy(opts, isUndefined)
+  const optsA = filterObj(opts, isDefined)
 
   validateOpts(optsA)
 
@@ -28,8 +28,8 @@ export const getOpts = async function(action, opts = {}) {
   return optsF
 }
 
-const isUndefined = function(value) {
-  return value === undefined
+const isDefined = function(key, value) {
+  return value !== undefined
 }
 
 // We need to do this twice because configuration loading needs to have

@@ -1,10 +1,9 @@
 import { validate } from 'jest-validate'
-
-import { omitBy } from '../../../utils/main.js'
+import filterObj from 'filter-obj'
 
 // Validate runner options
 export const getOpts = function(runOpts) {
-  const runOptsA = omitBy(runOpts, isUndefined)
+  const runOptsA = filterObj(runOpts, isDefined)
   const runOptsB = normalizeVersions(runOptsA)
 
   validate(runOptsB, { exampleConfig: EXAMPLE_OPTS })
@@ -13,8 +12,8 @@ export const getOpts = function(runOpts) {
   return runOptsC
 }
 
-const isUndefined = function(value) {
-  return value === undefined
+const isDefined = function(key, value) {
+  return value !== undefined
 }
 
 // If versions is `MAJOR` or `MAJOR.MINOR`, yargs will parse it as a number
