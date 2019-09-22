@@ -1,4 +1,4 @@
-import { omit } from '../utils/main.js'
+import omit from 'omit.js'
 
 // We join two collection of similar `systems`:
 //  - after joining with previous benchmarks of same group, to retrieve their

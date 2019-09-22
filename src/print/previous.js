@@ -1,5 +1,6 @@
+import omit from 'omit.js'
+
 import { getLimit } from '../limit/main.js'
-import { omit } from '../utils/main.js'
 
 import { getDiffIndex, getDiff } from './diff.js'
 import { normalizeStats } from './stats/main.js'

@@ -1,6 +1,7 @@
+import omit from 'omit.js'
+
 import { mergeBenchmarks } from '../group/merge.js'
 import { addGroup } from '../group/options.js'
-import { omit } from '../utils/main.js'
 
 import { listStore } from './list.js'
 import { validateDataVersion } from './migrate/main.js'
