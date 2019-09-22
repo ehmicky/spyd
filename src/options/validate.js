@@ -1,4 +1,4 @@
-import { isPlainObject } from '../utils/main.js'
+import isPlainObj from 'is-plain-obj'
 
 // Options validation helper functions
 export const validateDeepObject = function(object, name) {
@@ -8,7 +8,7 @@ export const validateDeepObject = function(object, name) {
 }
 
 const validateObject = function(value, name) {
-  if (!isPlainObject(value)) {
+  if (!isPlainObj(value)) {
     throw new TypeError(`'${name}' value must be a plain object: ${value}`)
   }
 }

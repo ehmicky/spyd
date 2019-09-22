@@ -1,4 +1,4 @@
-import { isPlainObject } from '../utils/main.js'
+import isPlainObj from 'is-plain-obj'
 
 // `--report.json` and `--report.json.option` are normalized to
 // `{ report: { json: { option } } }`.
@@ -14,7 +14,7 @@ const DYNAMIC_OPTS = ['report', 'progress', 'run', 'store']
 const normalizeDynamicOpt = function(name, opts) {
   const opt = opts[name]
 
-  if (!isPlainObject(opt)) {
+  if (!isPlainObj(opt)) {
     return [name, opt]
   }
 

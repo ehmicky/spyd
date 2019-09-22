@@ -1,4 +1,4 @@
-import { isPlainObject } from '../../../../utils/main.js'
+import isPlainObj from 'is-plain-obj'
 
 import { validateProp } from './helpers.js'
 
@@ -12,7 +12,7 @@ export const validateTasks = function(validators, tasks) {
 }
 
 const validateTask = function(task, validators) {
-  if (!isPlainObject(task)) {
+  if (!isPlainObj(task)) {
     throw new TypeError(`Task '${task}' must be an object`)
   }
 

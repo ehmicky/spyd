@@ -1,8 +1,8 @@
-import { isPlainObject } from './main.js'
+import isPlainObj from 'is-plain-obj'
 
 // Deeply remove `undefined` values in an object
 export const cleanObject = function(obj) {
-  if (!isPlainObject(obj)) {
+  if (!isPlainObj(obj)) {
     return obj
   }
 

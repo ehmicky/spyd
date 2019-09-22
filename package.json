@@ -48,6 +48,7 @@
     "got": "^10.0.0-alpha.1",
     "indent-string": "^4.0.0",
     "is-interactive": "^1.0.0",
+    "is-plain-obj": "^2.0.0",
     "jest-validate": "^24.9.0",
     "js-yaml": "^3.13.1",
     "make-dir": "^3.0.0",

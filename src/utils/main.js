@@ -17,14 +17,6 @@ export const omitBy = function(object, condition) {
   return Object.assign({}, ...pairs)
 }
 
-export const isPlainObject = function(value) {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    (value.constructor === Object || value.constructor === undefined)
-  )
-}
-
 export const isEmptyObject = function(object) {
   return Object.values(object).every(isUndefined)
 }

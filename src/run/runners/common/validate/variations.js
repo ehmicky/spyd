@@ -1,4 +1,4 @@
-import { isPlainObject } from '../../../../utils/main.js'
+import isPlainObj from 'is-plain-obj'
 
 import { validateProp } from './helpers.js'
 
@@ -12,7 +12,7 @@ export const validateVariations = function(validators, variations) {
 }
 
 const validateVariation = function(variation, validators) {
-  if (!isPlainObject(variation)) {
+  if (!isPlainObj(variation)) {
     throw new TypeError(`'variations' must be an array of objects`)
   }
 

@@ -1,4 +1,5 @@
-import { isPlainObject } from '../../../../utils/main.js'
+import isPlainObj from 'is-plain-obj'
+
 import {
   validateBenchmarkFile,
   validateString,
@@ -21,7 +22,7 @@ const validateShell = function(shell) {
 
 // Validate `file.variables`
 const validateVariables = function(variables) {
-  if (!isPlainObject(variables)) {
+  if (!isPlainObj(variables)) {
     throw new TypeError(`'variables' must be an object`)
   }
 
