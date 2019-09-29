@@ -42,7 +42,7 @@
     "fast-deep-equal": "^2.0.1",
     "fast-glob": "^3.0.4",
     "figures": "^3.0.0",
-    "filter-obj": "^2.0.0",
+    "filter-obj": "^2.0.1",
     "find-up": "^4.1.0",
     "get-node": "^4.0.3",
     "get-stream": "^5.1.0",
