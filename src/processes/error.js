@@ -1,45 +1,55 @@
-import { isTimeout } from './timeout.js'
+import { getTimeoutError } from './timeout.js'
 
 // Forward any child process error
 export const forwardChildError = function({
-  child,
+  message,
+  failed,
+  timedOut,
+  duration,
   taskPath,
-  exitCode,
-  signal,
-  error,
   errorOutput,
   taskId,
   variationId,
 }) {
-  if (!hasChildError({ exitCode, signal, error })) {
+  if (!failed) {
     return
   }
 
-  // The child process might already have exited. In that case, this is a noop.
-  child.kill()
-
-  const taskError = getTaskError({ taskPath, taskId, variationId })
-
-  if (isTimeout(error)) {
-    throw new TypeError(`${taskError}${error.message}`)
-  }
-
-  const message = getErrorMessage({
-    taskError,
-    signal,
-    exitCode,
-    error,
+  const messageA = getMessage({
+    message,
+    timedOut,
+    duration,
+    taskPath,
     errorOutput,
+    taskId,
+    variationId,
   })
-  throw new Error(message)
+  throw new Error(messageA)
 }
 
-const hasChildError = function({ exitCode, signal, error }) {
-  return exitCode !== 0 || signal !== null || error !== undefined
+const getMessage = function({
+  message,
+  timedOut,
+  duration,
+  taskPath,
+  errorOutput,
+  taskId,
+  variationId,
+}) {
+  const taskPrefix = getTaskPrefix({ taskPath, taskId, variationId })
+
+  if (timedOut) {
+    const timeoutError = getTimeoutError(duration)
+    return `${taskPrefix}${timeoutError}`
+  }
+
+  const execaError = getExecaError(message)
+  const errorOutputA = normalizeErrorOutput(errorOutput)
+  return `${taskPrefix}${execaError}${errorOutputA}`
 }
 
 // Add task/variation context to child process errors
-const getTaskError = function({ taskPath, taskId, variationId }) {
+const getTaskPrefix = function({ taskPath, taskId, variationId }) {
   if (taskId === undefined) {
     return `In '${taskPath}': `
   }
@@ -51,43 +61,12 @@ const getTaskError = function({ taskPath, taskId, variationId }) {
   return `In '${taskPath}', task '${taskId}' (variation '${variationId}'): `
 }
 
-const getErrorMessage = function({
-  taskError,
-  signal,
-  exitCode,
-  error,
-  errorOutput,
-}) {
-  const signalError = getSignalError(signal)
-  const exitCodeError = getExitCodeError(exitCode)
-  const errorStack = getErrorStack(error)
-  const errorOutputA = normalizeErrorOutput(errorOutput)
-  return `${taskError}child process exited${signalError}${exitCodeError}${errorStack}${errorOutputA}`
+const getExecaError = function(message) {
+  return message.replace(EXECA_MESSAGE_START, '').replace(EXECA_MESSAGE_END, '')
 }
 
-const getSignalError = function(signal) {
-  if (signal === null || signal === undefined) {
-    return ''
-  }
-
-  return ` with ${signal}`
-}
-
-const getExitCodeError = function(exitCode) {
-  if (exitCode === 0 || exitCode === null || exitCode === undefined) {
-    return ''
-  }
-
-  return ` (exit code ${exitCode})`
-}
-
-const getErrorStack = function(error) {
-  if (error === undefined) {
-    return ''
-  }
-
-  return `\n\n${error.stack}`
-}
+const EXECA_MESSAGE_START = 'Command '
+const EXECA_MESSAGE_END = /: .*/u
 
 const normalizeErrorOutput = function(errorOutput) {
   if (errorOutput === undefined || errorOutput === '') {

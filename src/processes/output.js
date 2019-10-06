@@ -1,6 +1,8 @@
 import getStream from 'get-stream'
 
 // Retrieve success output
+// We cannot use `execa` `buffer: true` because we are targetting other file
+// descriptors than stdin/stdout/stderr
 export const getOutput = function(child, outputFd) {
   if (outputFd === undefined) {
     return

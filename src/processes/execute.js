@@ -1,9 +1,7 @@
-import { spawn } from 'child_process'
-
-import pEvent from 'p-event'
+import execa from 'execa'
 
 import { FDS } from './fd.js'
-import { childTimeout } from './timeout.js'
+import { getTimeout } from './timeout.js'
 import { getOutput, getErrorOutput } from './output.js'
 import { forwardChildError } from './error.js'
 
@@ -29,21 +27,27 @@ export const executeChild = async function({
 
   const { stdio, outputFd, errorFds } = FDS[type]
 
-  const child = spawn(file, [...args, inputA], { stdio, cwd })
+  const spawnOptions = getSpawnOptions({ stdio, cwd, duration })
+  const child = execa(file, [...args, inputA], spawnOptions)
 
-  const { exitCode, signal, output, errorOutput, error } = await waitForExit({
+  // Wait for child process successful exit, failed exit, spawning error,
+  // stream error or timeout
+  const [
+    { message, failed, timedOut },
+    output,
+    errorOutput,
+  ] = await Promise.all([
     child,
-    duration,
-    outputFd,
-    errorFds,
-  })
+    getOutput(child, outputFd),
+    getErrorOutput(child, errorFds),
+  ])
 
   forwardChildError({
-    child,
+    message,
+    failed,
+    timedOut,
+    duration,
     taskPath,
-    exitCode,
-    signal,
-    error,
     errorOutput,
     taskId,
     variationId,
@@ -57,28 +61,7 @@ export const executeChild = async function({
   return outputA
 }
 
-// Wait for child process successful exit, failed exit, spawning error,
-// stream error or timeout
-const waitForExit = async function({ child, duration, outputFd, errorFds }) {
-  try {
-    const [[exitCode, signal], output, errorOutput] = await Promise.all([
-      waitForChild(child, duration),
-      getOutput(child, outputFd),
-      getErrorOutput(child, errorFds),
-    ])
-    return { exitCode, signal, output, errorOutput }
-  } catch (error) {
-    return { error }
-  }
-}
-
-// The `debug` action does not use any timeout
-const waitForChild = function(child, duration) {
-  const childPromise = pEvent(child, 'exit', { multiArgs: true })
-
-  if (duration === undefined) {
-    return childPromise
-  }
-
-  return childTimeout(childPromise, duration)
+const getSpawnOptions = function({ stdio, cwd, duration }) {
+  const timeout = getTimeout(duration)
+  return { stdio, cwd, timeout, buffer: false, reject: false }
 }
