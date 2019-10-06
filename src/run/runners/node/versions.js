@@ -8,7 +8,7 @@ export const getNodeVersions = async function({ versions }) {
     return
   }
 
-  const versionsA = versions.split(WHITESPACE_REGEXP)
+  const versionsA = versions.split(SEPARATOR_REGEXP)
 
   const [versionsB, allowedVersions] = await Promise.all([
     getFullVersions(versionsA),
@@ -20,7 +20,7 @@ export const getNodeVersions = async function({ versions }) {
   return versionsB
 }
 
-const WHITESPACE_REGEXP = /\s+/u
+const SEPARATOR_REGEXP = /\s*,\s*/u
 
 // We retrieve the full Node versions for validation purpose and for `--info`,
 // but not for the command id/title
