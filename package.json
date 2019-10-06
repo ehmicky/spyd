@@ -44,7 +44,7 @@
     "figures": "^3.0.0",
     "filter-obj": "^2.0.1",
     "find-up": "^4.1.0",
-    "get-node": "^4.0.3",
+    "get-node": "^5.0.0",
     "get-stream": "^5.1.0",
     "got": "^10.0.0-alpha.1",
     "indent-string": "^4.0.0",
