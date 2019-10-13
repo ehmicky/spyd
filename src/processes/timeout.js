@@ -7,7 +7,7 @@ export const getTimeout = function(duration) {
     return
   }
 
-  return Math.max(duration / NANOSECS_TO_MILLISECS, 1)
+  return Math.ceil(duration / NANOSECS_TO_MILLISECS)
 }
 
 export const getTimeoutError = function(duration) {
