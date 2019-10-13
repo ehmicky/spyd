@@ -38,7 +38,7 @@
     "cli-cursor": "^3.1.0",
     "core-js": "^3.2.1",
     "env-ci": "^4.5.0",
-    "execa": "^2.1.0",
+    "execa": "sindresorhus/execa#07d2b76a32566d147c5ee44fd617e68a0e4f231e",
     "fast-deep-equal": "^2.0.1",
     "fast-glob": "^3.0.4",
     "figures": "^3.0.0",
