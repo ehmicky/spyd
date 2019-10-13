@@ -28,13 +28,15 @@ const getFullVersions = function(versions) {
   return Promise.all(versions.map(getFullVersion))
 }
 
-// This both downloads Node.js binary and normalize its `version`
+// This both downloads Node.js binary and normalize its `version`.
+// This also retrieves the `command` and `spawnOptions`.
 const getFullVersion = async function(version) {
   try {
     const { version: fullVersion, command, spawnOptions } = await runVersion(
       version,
       'node',
       ['--version'],
+      { progress: true },
     )
     return { version, fullVersion, command, spawnOptions }
   } catch (error) {
