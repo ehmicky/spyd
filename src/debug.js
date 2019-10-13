@@ -17,7 +17,8 @@ const runIteration = async function({
   taskPath,
   taskId,
   variationId,
-  commandValue,
+  commandSpawn,
+  commandSpawnOptions,
   commandOpt,
   opts: { cwd },
 }) {
@@ -33,7 +34,8 @@ const runIteration = async function({
   }
 
   await executeChild({
-    commandValue,
+    commandSpawn,
+    commandSpawnOptions,
     input,
     cwd,
     taskId,

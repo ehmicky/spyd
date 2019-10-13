@@ -5,6 +5,7 @@ import { getStats } from '../stats/compute.js'
 import { runChildren } from './run.js'
 
 // Start several child processes benchmarking the same task.
+// eslint-disable-next-line max-lines-per-function
 export const runProcesses = async function({
   name,
   columnName,
@@ -17,7 +18,8 @@ export const runProcesses = async function({
   commandId,
   commandTitle,
   commandDescription,
-  commandValue,
+  commandSpawn,
+  commandSpawnOptions,
   commandOpt,
   systemId,
   systemTitle,
@@ -34,7 +36,8 @@ export const runProcesses = async function({
     taskPath,
     taskId,
     variationId,
-    commandValue,
+    commandSpawn,
+    commandSpawnOptions,
     commandOpt,
     duration,
     runEnd,

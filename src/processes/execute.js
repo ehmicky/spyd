@@ -14,7 +14,8 @@ import { forwardChildError } from './error.js'
 //  - whether `run` or `debug` is used
 //  - whether this is the initial load
 export const executeChild = async function({
-  commandValue: [file, ...args],
+  commandSpawn: [file, ...args],
+  commandSpawnOptions,
   input,
   input: { taskPath },
   duration,
@@ -27,7 +28,12 @@ export const executeChild = async function({
 
   const { stdio, outputFd, errorFds } = FDS[type]
 
-  const spawnOptions = getSpawnOptions({ stdio, cwd, duration })
+  const spawnOptions = getSpawnOptions({
+    stdio,
+    cwd,
+    duration,
+    commandSpawnOptions,
+  })
   const child = execa(file, [...args, inputA], spawnOptions)
 
   // Wait for child process successful exit, failed exit, spawning error,
@@ -61,14 +67,23 @@ export const executeChild = async function({
   return outputA
 }
 
-const getSpawnOptions = function({ stdio, cwd, duration }) {
+// Commands cannot override the spawn options we set with one exception:
+// `preferLocal` since that option can create issues with some runners, such as
+// `node` runner `versions` option.
+const getSpawnOptions = function({
+  stdio,
+  cwd,
+  duration,
+  commandSpawnOptions,
+}) {
   const timeout = getTimeout(duration)
   return {
+    preferLocal: true,
+    ...commandSpawnOptions,
     stdio,
     cwd,
     timeout,
     buffer: false,
     reject: false,
-    preferLocal: true,
   }
 }

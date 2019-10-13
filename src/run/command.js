@@ -8,8 +8,17 @@ export const getCommands = function({
   commands,
 }) {
   return Promise.all(
-    commands.map(({ id, title, value, versions }) =>
-      getCommand({ runnerId, runnerTitle, runOpt, id, title, value, versions }),
+    commands.map(({ id, title, spawn, spawnOptions, versions }) =>
+      getCommand({
+        runnerId,
+        runnerTitle,
+        runOpt,
+        id,
+        title,
+        spawn,
+        spawnOptions,
+        versions,
+      }),
     ),
   )
 }
@@ -20,7 +29,8 @@ const getCommand = async function({
   runOpt,
   id,
   title,
-  value,
+  spawn,
+  spawnOptions = {},
   versions,
 }) {
   const commandId = id === undefined ? runnerId : `${runnerId}_${id}`
@@ -36,7 +46,8 @@ const getCommand = async function({
     commandId,
     commandTitle,
     commandDescription,
-    commandValue: value,
+    commandSpawn: spawn,
+    commandSpawnOptions: spawnOptions,
     commandOpt: runOpt,
   }
 }

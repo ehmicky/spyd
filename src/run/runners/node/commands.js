@@ -13,7 +13,7 @@ export const commands = async function(runOpts) {
   if (versions === undefined) {
     return [
       {
-        value: ['node', START_PATH],
+        spawn: ['node', START_PATH],
         versions: [{ value: ['node', '--version'] }],
       },
     ]
@@ -27,7 +27,7 @@ const getNodeCommand = function({ nodePath, version, fullVersion }) {
   return {
     id: version,
     title: version,
-    value: [nodePath, START_PATH],
+    spawn: [nodePath, START_PATH],
     versions,
   }
 }

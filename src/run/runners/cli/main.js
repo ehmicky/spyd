@@ -1,7 +1,7 @@
 const START_PATH = `${__dirname}/start.js`
 
 const commands = function() {
-  return [{ value: ['node', START_PATH], versions: [] }]
+  return [{ spawn: ['node', START_PATH], versions: [] }]
 }
 
 export const cli = {

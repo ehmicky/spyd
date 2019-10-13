@@ -8,7 +8,7 @@ import { validateIds } from './validate.js'
 export const getCommandIterations = async function({
   taskPath,
   command,
-  command: { commandValue, commandOpt },
+  command: { commandSpawn, commandSpawnOptions, commandOpt },
   duration,
   cwd,
   debug,
@@ -17,7 +17,8 @@ export const getCommandIterations = async function({
   const input = { type: 'load', taskPath, opts: commandOpt }
   const type = debug ? 'loadDebug' : 'run'
   const { iterations } = await executeChild({
-    commandValue,
+    commandSpawn,
+    commandSpawnOptions,
     input,
     duration,
     cwd,
@@ -46,7 +47,8 @@ const normalizeIteration = function(
     commandId,
     commandTitle,
     commandDescription,
-    commandValue,
+    commandSpawn,
+    commandSpawnOptions,
     commandOpt,
   },
   { taskPath, system: { id: systemId, title: systemTitle } },
@@ -65,7 +67,8 @@ const normalizeIteration = function(
     commandId,
     commandTitle,
     commandDescription,
-    commandValue,
+    commandSpawn,
+    commandSpawnOptions,
     commandOpt,
     systemId,
     systemTitle,

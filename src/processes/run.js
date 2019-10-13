@@ -20,7 +20,8 @@ export const runChildren = async function({
   taskPath,
   taskId,
   variationId,
-  commandValue,
+  commandSpawn,
+  commandSpawnOptions,
   commandOpt,
   duration,
   runEnd,
@@ -43,7 +44,8 @@ export const runChildren = async function({
   do {
     // eslint-disable-next-line no-await-in-loop
     const { times, count } = await executeChild({
-      commandValue,
+      commandSpawn,
+      commandSpawnOptions,
       input,
       duration,
       cwd,
