@@ -1,4 +1,4 @@
-import getNode from 'get-node'
+import { runVersion } from 'nve'
 import { satisfies } from 'semver'
 import readPkgUp from 'read-pkg-up'
 
@@ -31,10 +31,12 @@ const getFullVersions = function(versions) {
 // This both downloads Node.js binary and normalize its `version`
 const getFullVersion = async function(version) {
   try {
-    const { path: nodePath, version: fullVersion } = await getNode(version, {
-      progress: false,
-    })
-    return { nodePath, version, fullVersion }
+    const { version: fullVersion, command, spawnOptions } = await runVersion(
+      version,
+      'node',
+      ['--version'],
+    )
+    return { version, fullVersion, command, spawnOptions }
   } catch (error) {
     // eslint-disable-next-line fp/no-mutation
     error.message = `In option 'run.node.versions': ${error.message}`

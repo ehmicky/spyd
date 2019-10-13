@@ -22,12 +22,18 @@ export const commands = async function(runOpts) {
   return versions.map(getNodeCommand)
 }
 
-const getNodeCommand = function({ nodePath, version, fullVersion }) {
+const getNodeCommand = function({
+  command,
+  spawnOptions,
+  version,
+  fullVersion,
+}) {
   const versions = version === fullVersion ? [] : [{ value: fullVersion }]
   return {
     id: version,
     title: version,
-    spawn: [nodePath, START_PATH],
+    spawn: [command, START_PATH],
+    spawnOptions,
     versions,
   }
 }
