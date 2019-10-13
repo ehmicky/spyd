@@ -67,9 +67,7 @@ export const executeChild = async function({
   return outputA
 }
 
-// Commands cannot override the spawn options we set with one exception:
-// `preferLocal` since that option can create issues with some runners, such as
-// `node` runner `versions` option.
+// Our spawn options have priority over commands spawn options.
 const getSpawnOptions = function({
   stdio,
   cwd,
@@ -78,12 +76,12 @@ const getSpawnOptions = function({
 }) {
   const timeout = getTimeout(duration)
   return {
-    preferLocal: true,
     ...commandSpawnOptions,
     stdio,
     cwd,
     timeout,
     buffer: false,
     reject: false,
+    preferLocal: true,
   }
 }
