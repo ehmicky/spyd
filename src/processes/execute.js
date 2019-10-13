@@ -63,5 +63,12 @@ export const executeChild = async function({
 
 const getSpawnOptions = function({ stdio, cwd, duration }) {
   const timeout = getTimeout(duration)
-  return { stdio, cwd, timeout, buffer: false, reject: false }
+  return {
+    stdio,
+    cwd,
+    timeout,
+    buffer: false,
+    reject: false,
+    preferLocal: true,
+  }
 }
