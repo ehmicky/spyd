@@ -25,13 +25,13 @@ export const commands = async function(runOpts) {
 const getNodeCommand = function({
   command,
   spawnOptions,
+  versionRange,
   version,
-  fullVersion,
 }) {
-  const versions = version === fullVersion ? [] : [{ value: fullVersion }]
+  const versions = versionRange === version ? [] : [{ value: version }]
   return {
-    id: version,
-    title: version,
+    id: versionRange,
+    title: versionRange,
     spawn: [command, START_PATH],
     spawnOptions,
     versions,

@@ -1,6 +1,7 @@
-import { runVersion } from 'nve'
+import { runVersions } from 'nve'
 import { satisfies } from 'semver'
 import readPkgUp from 'read-pkg-up'
+import asyncIteratorAll from 'async-iterator-all'
 
 // Normalize the node `versions` option
 export const getNodeVersions = async function({ versions }) {
@@ -24,21 +25,15 @@ const SEPARATOR_REGEXP = /\s*,\s*/u
 
 // We retrieve the full Node versions for validation purpose and for `--info`,
 // but not for the command id/title
-const getFullVersions = function(versions) {
-  return Promise.all(versions.map(getFullVersion))
-}
-
 // This both downloads Node.js binary and normalize its `version`.
 // This also retrieves the `command` and `spawnOptions`.
-const getFullVersion = async function(version) {
+const getFullVersions = async function(versions) {
   try {
-    const { version: fullVersion, command, spawnOptions } = await runVersion(
-      version,
-      'node',
-      ['--version'],
-      { progress: true },
-    )
-    return { version, fullVersion, command, spawnOptions }
+    const iterable = await runVersions(versions, 'node', ['--version'], {
+      progress: true,
+    })
+    const versionsA = await asyncIteratorAll(iterable)
+    return versionsA
   } catch (error) {
     // eslint-disable-next-line fp/no-mutation
     error.message = `In option 'run.node.versions': ${error.message}`
@@ -58,15 +53,15 @@ const getAllowedVersions = async function() {
 
 // We validate the versions before starting the benchmarks.
 const validateVersions = function(versions, allowedVersions) {
-  versions.forEach(({ version, fullVersion }) =>
-    validateVersion(version, fullVersion, allowedVersions),
+  versions.forEach(({ versionRange, version }) =>
+    validateVersion(versionRange, version, allowedVersions),
   )
 }
 
-const validateVersion = function(version, fullVersion, allowedVersions) {
-  if (!satisfies(fullVersion, allowedVersions)) {
+const validateVersion = function(versionRange, version, allowedVersions) {
+  if (!satisfies(version, allowedVersions)) {
     throw new Error(
-      `In option 'run.node.versions': version ${version} must be ${allowedVersions}`,
+      `In option 'run.node.versions': version ${versionRange} must be ${allowedVersions}`,
     )
   }
 }
