@@ -1,7 +1,8 @@
 import { runVersions } from 'nve'
 import { satisfies } from 'semver'
 import readPkgUp from 'read-pkg-up'
-import asyncIteratorAll from 'async-iterator-all'
+
+import { asyncIteratorAll } from '../../../utils/iterator.js'
 
 // Normalize the node `versions` option
 export const getNodeVersions = async function({ versions }) {
