@@ -27,7 +27,7 @@ const update = async function({ name, percentage, timeLeft, index, total }) {
 }
 
 const serializePercentage = function(percentage) {
-  const percentageInt = Math.round(percentage * FLOAT_TO_PERCENTAGE)
+  const percentageInt = Math.floor(percentage * FLOAT_TO_PERCENTAGE)
   return `${percentageInt}%`.padStart(PERCENTAGE_WIDTH)
 }
 
