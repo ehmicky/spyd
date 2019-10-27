@@ -1,8 +1,6 @@
-import { runVersions } from 'nve'
+import { dryRunVersion } from 'nve'
 import { satisfies } from 'semver'
 import readPkgUp from 'read-pkg-up'
-
-import { asyncIteratorAll } from '../../../utils/iterator.js'
 
 // Normalize the node `versions` option
 export const getNodeVersions = async function({ versions }) {
@@ -30,11 +28,11 @@ const SEPARATOR_REGEXP = /\s*,\s*/u
 // This also retrieves the `command` and `spawnOptions`.
 const getFullVersions = async function(versions) {
   try {
-    const iterable = await runVersions(versions, 'node', ['--version'], {
-      progress: true,
-    })
-    const versionsA = await asyncIteratorAll(iterable)
-    return versionsA
+    return await Promise.all(
+      versions.map(version =>
+        dryRunVersion(version, 'node', ['--version'], { progress: true }),
+      ),
+    )
   } catch (error) {
     // eslint-disable-next-line fp/no-mutation
     error.message = `In option 'run.node.versions': ${error.message}`
