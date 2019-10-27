@@ -1,4 +1,4 @@
-import { dryRunVersion } from 'nve'
+import nve from 'nve'
 import { satisfies } from 'semver'
 import readPkgUp from 'read-pkg-up'
 
@@ -30,7 +30,7 @@ const getFullVersions = async function(versions) {
   try {
     return await Promise.all(
       versions.map(version =>
-        dryRunVersion(version, 'node', { progress: true }),
+        nve(version, 'node', { progress: true, dry: true }),
       ),
     )
   } catch (error) {
