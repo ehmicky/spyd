@@ -30,7 +30,7 @@ const getFullVersions = async function(versions) {
   try {
     return await Promise.all(
       versions.map(version =>
-        dryRunVersion(version, 'node', [], { progress: true }),
+        dryRunVersion(version, 'node', { progress: true }),
       ),
     )
   } catch (error) {
