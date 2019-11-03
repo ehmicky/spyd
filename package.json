@@ -53,7 +53,7 @@
     "js-yaml": "^3.13.1",
     "make-dir": "^3.0.0",
     "moize": "^5.4.4",
-    "nvexeca": "^1.1.0",
+    "nvexeca": "^1.1.1",
     "omit.js": "^1.0.2",
     "os-name": "^3.1.0",
     "p-finally": "^2.0.1",
