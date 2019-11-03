@@ -1,4 +1,4 @@
-import nve from 'nve'
+import nvexeca from 'nvexeca'
 import { satisfies } from 'semver'
 import readPkgUp from 'read-pkg-up'
 
@@ -30,7 +30,7 @@ const getFullVersions = async function(versions) {
   try {
     return await Promise.all(
       versions.map(version =>
-        nve(version, 'node', { progress: true, dry: true }),
+        nvexeca(version, 'node', { progress: true, dry: true }),
       ),
     )
   } catch (error) {
