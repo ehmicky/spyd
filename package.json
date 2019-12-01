@@ -71,7 +71,7 @@
     "uuid": "^3.3.3",
     "write-file-atomic": "^3.0.1",
     "yargs": "^15.0.2",
-    "yn": "^3.1.1"
+    "yn": "^4.0.0"
   },
   "devDependencies": {
     "@ehmicky/dev-tasks": "^0.30.61",
