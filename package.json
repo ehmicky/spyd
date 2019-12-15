@@ -37,7 +37,7 @@
     "chalk": "^3.0.0",
     "cli-cursor": "^3.1.0",
     "core-js": "^3.5.0",
-    "env-ci": "^4.5.1",
+    "env-ci": "^4.5.2",
     "execa": "^3.4.0",
     "fast-deep-equal": "^3.1.1",
     "fast-glob": "^3.1.1",
