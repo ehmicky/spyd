@@ -4,12 +4,13 @@ import { blue } from 'chalk'
 import { applyTemplate } from './template.js'
 
 // Spawn a command and retrieve its output
+// We use `pipe` (unless debug) so that error messages contain stdout/stderr
 export const spawnOutput = async function(
   command,
   header,
   { variables, shell, debug },
 ) {
-  const stderr = debug ? 'inherit' : 'ignore'
+  const stderr = debug ? 'inherit' : 'pipe'
   const { stdout } = await spawnProcess(command, {
     variables,
     shell,
@@ -27,12 +28,13 @@ export const spawnOutput = async function(
 }
 
 // Spawn a command and do not retrieve its output
+// We use `pipe` (unless debug) so that error messages contain stdout/stderr
 export const spawnNoOutput = async function(
   command,
   header,
   { variables, shell, debug },
 ) {
-  const stdio = debug ? 'inherit' : 'ignore'
+  const stdio = debug ? 'inherit' : 'pipe'
   await spawnProcess(command, { variables, shell, stdio, debug, header })
 }
 
