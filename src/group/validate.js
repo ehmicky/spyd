@@ -1,4 +1,4 @@
-import fastDeepEqual from 'fast-deep-equal'
+import { isDeepStrictEqual } from 'util'
 
 // Several benchmarks can have the same system, providing it has exactly the
 // same options.
@@ -41,9 +41,7 @@ const validateSameSystem = function(previousSystems, system) {
 const SAME_SYSTEM_PROPS = ['opts']
 
 const validateSame = function(objectA, objectB, { propName, groups }) {
-  // TODO: replace with util.isDeepStrictEqual() once dropping support for
-  // Node 8
-  if (!fastDeepEqual(objectA, objectB)) {
+  if (!isDeepStrictEqual(objectA, objectB)) {
     throw new Error(`Several benchmarks with the same ${groups} cannot have different ${propName}:
 ${JSON.stringify(objectA)}
 ${JSON.stringify(objectB)}`)
