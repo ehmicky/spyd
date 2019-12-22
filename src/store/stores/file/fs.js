@@ -1,9 +1,8 @@
 import { promisify } from 'util'
-import { readFile } from 'fs'
+import { readFile, promises } from 'fs'
 
 import writeFileAtomic from 'write-file-atomic'
 import pathExists from 'path-exists'
-import makeDir from 'make-dir'
 
 const pReadFile = promisify(readFile)
 
@@ -28,12 +27,7 @@ export const setBenchmarks = async function(dir, benchmarks) {
 }
 
 const getDataFile = async function(dir) {
-  if (!(await pathExists(dir))) {
-    // TODO: replace with `util.promisify(fs.mkdir)(cacheDir,{recursive: true})`
-    // after dropping support for Node 8/9
-    await makeDir(dir)
-  }
-
+  await promises.mkdir(dir, { recursive: true })
   return `${dir}/${DATA_FILE}`
 }
 
