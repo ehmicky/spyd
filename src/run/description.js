@@ -34,7 +34,9 @@ const getVersion = async function({ name, value, runnerId }) {
     const version = stdout.replace(LEADING_V, '')
     return `${nameA}${version}`
   } catch (error) {
-    throw new Error(`Could not load runner '${runnerId}'\n\n${error.message}`)
+    throw new Error(
+      `Could not load runner '${runnerId}'\n\n${error.shortMessage}`,
+    )
   }
 }
 

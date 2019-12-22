@@ -39,7 +39,7 @@ export const executeChild = async function({
   // Wait for child process successful exit, failed exit, spawning error,
   // stream error or timeout
   const [
-    { message, failed, timedOut },
+    { shortMessage, failed, timedOut },
     output,
     errorOutput,
   ] = await Promise.all([
@@ -49,7 +49,7 @@ export const executeChild = async function({
   ])
 
   forwardChildError({
-    message,
+    shortMessage,
     failed,
     timedOut,
     duration,
