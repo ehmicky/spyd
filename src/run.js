@@ -1,5 +1,4 @@
 import pMapSeries from 'p-map-series'
-import pFinally from 'p-finally'
 
 import { startProgress } from './progress/start.js'
 import { stopProgress } from './progress/stop.js'
@@ -13,12 +12,11 @@ export const runBenchmark = async function(opts) {
 
   const { progressState, progressInfo } = await startProgress(iterations, opts)
 
-  // TODO: replace with `try {} finally {}` when dropping support for Node 8/9
-  const rawBenchmark = await pFinally(
-    computeBenchmark({ iterations, progressState, opts, versions }),
-    () => stopProgress(progressInfo),
-  )
-  return rawBenchmark
+  try {
+    return await computeBenchmark({ iterations, progressState, opts, versions })
+  } finally {
+    await stopProgress(progressInfo)
+  }
 }
 
 const computeBenchmark = async function({
