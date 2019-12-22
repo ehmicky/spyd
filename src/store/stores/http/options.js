@@ -1,4 +1,4 @@
-import { URL, format } from 'url'
+import { format } from 'url'
 
 // The `store.http.url` and `store.http.name` options specify the base URL
 export const getUrl = function({ url, name }) {
