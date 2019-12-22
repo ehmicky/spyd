@@ -1,9 +1,6 @@
-import { readFile } from 'fs'
-import { promisify } from 'util'
+import { promises } from 'fs'
 
 import { load as loadYaml, JSON_SCHEMA } from 'js-yaml'
-
-const pReadFile = promisify(readFile)
 
 // Load and parse YAML file
 export const loadYamlFile = async function(path) {
@@ -14,7 +11,7 @@ export const loadYamlFile = async function(path) {
 
 const readYamlFile = async function(path) {
   try {
-    return await pReadFile(path, 'utf8')
+    return await promises.readFile(path, 'utf8')
   } catch (error) {
     throw new Error(`Could not read file '${path}'\n\n${error.stack}`)
   }

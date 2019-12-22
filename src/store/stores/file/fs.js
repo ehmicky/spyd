@@ -1,10 +1,7 @@
-import { promisify } from 'util'
-import { readFile, promises } from 'fs'
+import { promises } from 'fs'
 
 import writeFileAtomic from 'write-file-atomic'
 import pathExists from 'path-exists'
-
-const pReadFile = promisify(readFile)
 
 // Retrieve benchmarks from filesystem
 export const getBenchmarks = async function(dir) {
@@ -14,7 +11,7 @@ export const getBenchmarks = async function(dir) {
     return []
   }
 
-  const content = await pReadFile(dataFile, 'utf-8')
+  const content = await promises.readFile(dataFile, 'utf8')
   const benchmarks = JSON.parse(content)
   return benchmarks
 }

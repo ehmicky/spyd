@@ -1,9 +1,6 @@
-import { readFile } from 'fs'
-import { promisify } from 'util'
+import { promises } from 'fs'
 
 import writeFileAtomic from 'write-file-atomic'
-
-const pReadFile = promisify(readFile)
 
 // Use the `insert` option to insert content inside a file.
 // We insert between any two lines with the tokens "spyd-start" and "spyd-end".
@@ -25,7 +22,7 @@ export const insertContent = async function({ content, insert: file }) {
 
 const getFileContent = async function(file) {
   try {
-    return await pReadFile(file, 'utf8')
+    return await promises.readFile(file, 'utf8')
   } catch (error) {
     throw new Error(`Could not read file '${file}'\n${error.message}`)
   }
