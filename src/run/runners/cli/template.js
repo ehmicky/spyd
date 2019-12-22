@@ -17,8 +17,7 @@ export const applyTemplate = function(string, variables) {
 // We use <> because:
 //  - $ and % are already used in shell, leading to confusion
 //  - {} is not YAML-friendly
-// TODO: prepend (?<!<) after dropping support for Node 8
-const TEMPLATE_REGEXP = /<<([^<>]+)>>(?!>)/gu
+const TEMPLATE_REGEXP = /(?<!<)<<([^<>]+)>>(?!>)/gu
 
 const replaceToken = function(varName, variables) {
   const value = variables[varName]
