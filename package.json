@@ -44,7 +44,7 @@
     "filter-obj": "^2.0.1",
     "find-up": "^4.1.0",
     "get-stream": "^5.1.0",
-    "got": "^10.2.2",
+    "got": "^10.5.7",
     "indent-string": "^4.0.0",
     "is-interactive": "^1.0.0",
     "is-plain-obj": "^2.1.0",
