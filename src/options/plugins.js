@@ -49,7 +49,7 @@ const loadPlugin = async function({ type, name, pluginOpt, builtins }) {
   return { ...plugin, name, opts: pluginOpt }
 }
 
-const importPlugin = function({ type, name, builtins }) {
+const importPlugin = async function({ type, name, builtins }) {
   const builtin = builtins[name]
 
   if (builtin !== undefined) {
@@ -57,9 +57,7 @@ const importPlugin = function({ type, name, builtins }) {
   }
 
   try {
-    // TODO: replace with `import()` once it is supported by default by ESLint
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    return require(name)
+    return await import(name)
   } catch (error) {
     throw new Error(
       `Could not load '${type}' module '${name}'\n\n${error.stack}`,

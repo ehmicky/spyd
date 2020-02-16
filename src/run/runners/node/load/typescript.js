@@ -2,15 +2,13 @@ import { extname } from 'path'
 
 // When the benchmark file is in TypeScript, automatically use
 // `ts-node/register`
-export const handleTypeScript = function(requireOpt, taskPath) {
+export const handleTypeScript = async function(requireOpt, taskPath) {
   if (!shouldUseTsNode(requireOpt, taskPath)) {
     return
   }
 
   try {
-    // TODO: replace with `import()` once it is supported by default by ESLint
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    require(TS_NODE)
+    await import(TS_NODE)
   } catch (error) {
     throw new Error(
       `When the benchmark file is in TypeScript either:

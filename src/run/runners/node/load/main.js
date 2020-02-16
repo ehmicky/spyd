@@ -12,7 +12,7 @@ export const loadBenchmarkFile = async function(
   taskPath,
   { require: requireOpt },
 ) {
-  useRequireOpt(requireOpt, taskPath)
+  await useRequireOpt(requireOpt, taskPath)
 
   const entries = await loadFile(taskPath)
   validateFile(entries)
@@ -22,11 +22,9 @@ export const loadBenchmarkFile = async function(
   return iterations
 }
 
-const loadFile = function(taskPath) {
+const loadFile = async function(taskPath) {
   try {
-    // TODO: replace with `import()` once it is supported by default by ESLint
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    return require(taskPath)
+    return await import(taskPath)
   } catch (error) {
     throw new Error(`Could not load the benchmark file\n\n${error.stack}`)
   }
