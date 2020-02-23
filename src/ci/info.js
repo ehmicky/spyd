@@ -1,6 +1,6 @@
 import envCi from 'env-ci'
 import moize from 'moize'
-import uuidv4 from 'uuid/v4.js'
+import { v4 as uuidv4 } from 'uuid'
 
 // Retrieve information related to git and to CI environment
 export const getCiInfo = function(cwd) {

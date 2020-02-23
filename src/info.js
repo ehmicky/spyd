@@ -1,4 +1,4 @@
-import uuidv4 from 'uuid/v4.js'
+import { v4 as uuidv4 } from 'uuid'
 
 import { DATA_VERSION } from './store/migrate/main.js'
 import { getSystems } from './system/info.js'
