@@ -1,5 +1,5 @@
 // Run an iteration once without benchmarking it
-export const debugRun = async function({ main, before, after }) {
+export const debugRun = async function ({ main, before, after }) {
   const beforeArgs = await performBefore(before)
 
   await main(beforeArgs)
@@ -7,7 +7,7 @@ export const debugRun = async function({ main, before, after }) {
   await performAfter(after, beforeArgs)
 }
 
-const performBefore = async function(before) {
+const performBefore = async function (before) {
   if (before === undefined) {
     return
   }
@@ -16,7 +16,7 @@ const performBefore = async function(before) {
   return beforeArgs
 }
 
-const performAfter = async function(after, beforeArgs) {
+const performAfter = async function (after, beforeArgs) {
   if (after === undefined) {
     return
   }

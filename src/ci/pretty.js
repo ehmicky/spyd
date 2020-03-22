@@ -3,7 +3,7 @@ import { blue, underline } from 'chalk'
 import { isEmptyObject } from '../utils/main.js'
 
 // Serialize `ci` information for CLI reporters.
-export const prettifyCi = function(ci) {
+export const prettifyCi = function (ci) {
   if (isEmptyObject(ci)) {
     return ''
   }
@@ -15,7 +15,7 @@ export const prettifyCi = function(ci) {
   return `${header}\n${body}`
 }
 
-const prettifyProvider = function({ provider }) {
+const prettifyProvider = function ({ provider }) {
   if (provider === undefined) {
     return
   }
@@ -24,7 +24,7 @@ const prettifyProvider = function({ provider }) {
   return `${field}${provider}`
 }
 
-const prettifyBuild = function({ buildNumber, buildUrl }) {
+const prettifyBuild = function ({ buildNumber, buildUrl }) {
   if (buildNumber === undefined) {
     return
   }
@@ -34,7 +34,7 @@ const prettifyBuild = function({ buildNumber, buildUrl }) {
   return `${field}#${buildNumber}${urlA}`
 }
 
-const getUrl = function(url) {
+const getUrl = function (url) {
   if (url === undefined) {
     return ''
   }

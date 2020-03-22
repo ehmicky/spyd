@@ -1,7 +1,7 @@
 import { handleTypeScript } from './typescript.js'
 
 // Use the `require` option
-export const useRequireOpt = async function(requireOpt, taskPath) {
+export const useRequireOpt = async function (requireOpt, taskPath) {
   const requireOptA = normalizeRequireOpt(requireOpt)
 
   await handleTypeScript(requireOptA, taskPath)
@@ -9,7 +9,7 @@ export const useRequireOpt = async function(requireOpt, taskPath) {
   await Promise.all(requireOptA.map(useRequiredModule))
 }
 
-const normalizeRequireOpt = function(requireOpt = []) {
+const normalizeRequireOpt = function (requireOpt = []) {
   if (typeof requireOpt === 'string') {
     return [requireOpt]
   }
@@ -19,7 +19,7 @@ const normalizeRequireOpt = function(requireOpt = []) {
   return requireOpt
 }
 
-const validateRequireOpt = function(requireOpt) {
+const validateRequireOpt = function (requireOpt) {
   if (!Array.isArray(requireOpt) || !requireOpt.every(isString)) {
     throw new TypeError(
       `'node.require' option must be an array of strings: ${requireOpt}`,
@@ -27,11 +27,11 @@ const validateRequireOpt = function(requireOpt) {
   }
 }
 
-const isString = function(value) {
+const isString = function (value) {
   return typeof value === 'string'
 }
 
-const useRequiredModule = async function(requiredModule) {
+const useRequiredModule = async function (requiredModule) {
   try {
     await import(requiredModule)
   } catch (error) {

@@ -7,7 +7,7 @@ import { runProcesses } from './processes/main.js'
 import { addBenchmarkInfo } from './info.js'
 
 // Run a new benchmark
-export const runBenchmark = async function(opts) {
+export const runBenchmark = async function (opts) {
   const { iterations, versions } = await getIterations(opts)
 
   const { progressState, progressInfo } = await startProgress(iterations, opts)
@@ -19,7 +19,7 @@ export const runBenchmark = async function(opts) {
   }
 }
 
-const computeBenchmark = async function({
+const computeBenchmark = async function ({
   iterations,
   progressState,
   opts,

@@ -4,7 +4,7 @@ import { getCommandIterations } from './get.js'
 
 // Load iterations by launching each combination of
 // benchmark files + runners commands
-export const loadIterations = async function({
+export const loadIterations = async function ({
   taskPaths,
   runners,
   duration,
@@ -13,7 +13,7 @@ export const loadIterations = async function({
   system,
 }) {
   const iterations = await Promise.all(
-    taskPaths.map(taskPath =>
+    taskPaths.map((taskPath) =>
       getFilesIterations({ taskPath, runners, duration, cwd, debug, system }),
     ),
   )
@@ -21,7 +21,7 @@ export const loadIterations = async function({
   return iterationsA
 }
 
-const getFilesIterations = async function({
+const getFilesIterations = async function ({
   taskPath,
   runners,
   duration,
@@ -39,7 +39,7 @@ const getFilesIterations = async function({
   return iterationsA
 }
 
-const getFileIterations = async function({
+const getFileIterations = async function ({
   taskPath,
   commands,
   duration,
@@ -48,7 +48,7 @@ const getFileIterations = async function({
   system,
 }) {
   const iterations = await Promise.all(
-    commands.map(command =>
+    commands.map((command) =>
       getCommandIterations({ taskPath, command, duration, cwd, debug, system }),
     ),
   )

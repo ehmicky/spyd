@@ -7,7 +7,7 @@ import { listStore } from './list.js'
 import { validateDataVersion } from './migrate/main.js'
 
 // Add a new benchmark
-export const addToStore = async function(rawBenchmark, opts) {
+export const addToStore = async function (rawBenchmark, opts) {
   const rawBenchmarks = await listStore(opts)
   validateDataVersion(rawBenchmarks)
 
@@ -21,7 +21,7 @@ export const addToStore = async function(rawBenchmark, opts) {
 }
 
 // Save benchmark results so they can be compared or shown later
-const save = async function(benchmark, { save: saveOpt, store }) {
+const save = async function (benchmark, { save: saveOpt, store }) {
   if (!saveOpt) {
     return
   }
@@ -42,12 +42,12 @@ const save = async function(benchmark, { save: saveOpt, store }) {
 // `addPrintedInfo()` during reporting). This includes
 // `iteration.name|columnName` which are only computed for progress reporters,
 // but re-computer after previous benchmarks loading/merging.
-const normalizeBenchmark = function({ iterations, ...benchmark }) {
+const normalizeBenchmark = function ({ iterations, ...benchmark }) {
   const iterationsA = iterations.map(normalizeIteration)
   return { ...benchmark, iterations: iterationsA }
 }
 
-const normalizeIteration = function({ stats, ...iteration }) {
+const normalizeIteration = function ({ stats, ...iteration }) {
   const iterationA = omit(iteration, OMITTED_PROPS)
   const statsA = omit(stats, OMITTED_STATS_PROPS)
   return { ...iterationA, stats: statsA }

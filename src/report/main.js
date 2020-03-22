@@ -7,7 +7,7 @@ import { handleColors } from './colors.js'
 import { handleContent } from './content.js'
 
 // Report benchmark results
-export const report = async function(
+export const report = async function (
   group,
   benchmarks,
   {
@@ -45,16 +45,16 @@ export const report = async function(
   return benchmark
 }
 
-const getBenchmark = function(group, benchmarks, { limits, diff }) {
-  const benchmarksA = benchmarks.map(benchmark => addPrintedInfo(benchmark))
+const getBenchmark = function (group, benchmarks, { limits, diff }) {
+  const benchmarksA = benchmarks.map((benchmark) => addPrintedInfo(benchmark))
 
-  const benchmarkA = benchmarksA.find(benchmark => benchmark.group === group)
+  const benchmarkA = benchmarksA.find((benchmark) => benchmark.group === group)
   const benchmarkB = addPrevious(benchmarksA, benchmarkA, { limits, diff })
   return benchmarkB
 }
 
 // Perform each reporter
-const useReporter = async function({
+const useReporter = async function ({
   reportFunc,
   reportOpt,
   benchmark,

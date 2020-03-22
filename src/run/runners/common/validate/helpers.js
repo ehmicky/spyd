@@ -1,5 +1,5 @@
 // Common validation utility when validating both tasks and variations
-export const validateProp = function({
+export const validateProp = function ({
   id,
   validators,
   category,
@@ -24,29 +24,29 @@ export const validateProp = function({
   }
 }
 
-export const validateFunction = function(prop) {
+export const validateFunction = function (prop) {
   if (typeof prop !== 'function') {
     return 'must be a function'
   }
 }
 
-export const validateString = function(prop) {
+export const validateString = function (prop) {
   if (!isValidString(prop)) {
     return 'must be a non-empty string'
   }
 }
 
-export const validateStringArray = function(prop) {
+export const validateStringArray = function (prop) {
   if (!Array.isArray(prop) || !prop.every(isValidString)) {
     return 'must be an array of non-empty strings'
   }
 }
 
-const isValidString = function(prop) {
+const isValidString = function (prop) {
   return typeof prop === 'string' && prop.trim() !== ''
 }
 
-export const validatePrimitive = function(prop) {
+export const validatePrimitive = function (prop) {
   if (
     !isValidString(prop) &&
     typeof prop !== 'number' &&

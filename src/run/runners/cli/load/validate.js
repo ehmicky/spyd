@@ -10,18 +10,18 @@ import {
 } from '../../common/validate/main.js'
 
 // Validate that benchmark file has correct shape
-export const validateFile = function(entries) {
+export const validateFile = function (entries) {
   validateBenchmarkFile(entries, VALIDATORS)
 }
 
-const validateShell = function(shell) {
+const validateShell = function (shell) {
   if (typeof shell !== 'boolean' && typeof shell !== 'string') {
     throw new TypeError(`'shell' must be a boolean or a string`)
   }
 }
 
 // Validate `file.variables`
-const validateVariables = function(variables) {
+const validateVariables = function (variables) {
   if (!isPlainObj(variables)) {
     throw new TypeError(`'variables' must be an object`)
   }
@@ -29,7 +29,7 @@ const validateVariables = function(variables) {
   Object.entries(variables).forEach(validateVariable)
 }
 
-const validateVariable = function([name, value]) {
+const validateVariable = function ([name, value]) {
   if (!VARIABLE_NAME_REGEXP.test(name)) {
     throw new TypeError(
       `'variables' '${name}' name must only contain letters, digits or - _`,

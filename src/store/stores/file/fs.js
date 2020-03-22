@@ -4,7 +4,7 @@ import writeFileAtomic from 'write-file-atomic'
 import pathExists from 'path-exists'
 
 // Retrieve benchmarks from filesystem
-export const getBenchmarks = async function(dir) {
+export const getBenchmarks = async function (dir) {
   const dataFile = await getDataFile(dir)
 
   if (!(await pathExists(dataFile))) {
@@ -17,13 +17,13 @@ export const getBenchmarks = async function(dir) {
 }
 
 // Persist benchmarks from filesystem
-export const setBenchmarks = async function(dir, benchmarks) {
+export const setBenchmarks = async function (dir, benchmarks) {
   const dataFile = await getDataFile(dir)
   const content = JSON.stringify(benchmarks, null, 2)
   await writeFileAtomic(dataFile, `${content}\n`)
 }
 
-const getDataFile = async function(dir) {
+const getDataFile = async function (dir) {
   await promises.mkdir(dir, { recursive: true })
   return `${dir}/${DATA_FILE}`
 }

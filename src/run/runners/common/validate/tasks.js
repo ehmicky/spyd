@@ -3,15 +3,15 @@ import isPlainObj from 'is-plain-obj'
 import { validateProp } from './helpers.js'
 
 // Validate that tasks have correct shape
-export const validateTasks = function(validators, tasks) {
+export const validateTasks = function (validators, tasks) {
   if (!Array.isArray(tasks)) {
     throw new TypeError(`Tasks must be an array`)
   }
 
-  tasks.forEach(task => validateTask(task, validators))
+  tasks.forEach((task) => validateTask(task, validators))
 }
 
-const validateTask = function(task, validators) {
+const validateTask = function (task, validators) {
   if (!isPlainObj(task)) {
     throw new TypeError(`Task '${task}' must be an object`)
   }

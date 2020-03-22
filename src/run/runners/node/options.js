@@ -2,7 +2,7 @@ import { validate } from 'jest-validate'
 import filterObj from 'filter-obj'
 
 // Validate runner options
-export const getOpts = function(runOpts) {
+export const getOpts = function (runOpts) {
   const runOptsA = filterObj(runOpts, isDefined)
   const runOptsB = normalizeVersions(runOptsA)
 
@@ -12,12 +12,12 @@ export const getOpts = function(runOpts) {
   return runOptsC
 }
 
-const isDefined = function(key, value) {
+const isDefined = function (key, value) {
   return value !== undefined
 }
 
 // If versions is `MAJOR` or `MAJOR.MINOR`, yargs will parse it as a number
-const normalizeVersions = function({ versions, ...runOpts }) {
+const normalizeVersions = function ({ versions, ...runOpts }) {
   const versionsA = typeof versions === 'number' ? String(versions) : versions
   return { ...runOpts, versions: versionsA }
 }

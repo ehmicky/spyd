@@ -10,7 +10,7 @@ import { debugBenchmark } from './debug.js'
 
 // Benchmark JavaScript code defined in a benchmark file and report the results.
 // Default action: run a new benchmark
-export const run = async function(opts) {
+export const run = async function (opts) {
   const optsA = await getOpts('run', opts)
 
   const rawBenchmark = await runBenchmark(optsA)
@@ -25,7 +25,7 @@ export const run = async function(opts) {
 }
 
 // Show a previous benchmark
-export const show = async function(opts) {
+export const show = async function (opts) {
   const { delta, ...optsA } = await getOpts('show', opts)
 
   const { group, benchmarks } = await getFromStore(delta, optsA)
@@ -38,7 +38,7 @@ export const show = async function(opts) {
 }
 
 // Remove a previous benchmark
-export const remove = async function(opts) {
+export const remove = async function (opts) {
   const { delta, ...optsA } = await getOpts('remove', opts)
 
   const { group, rawBenchmarks } = await getFromStore(delta, optsA)
@@ -49,14 +49,14 @@ export const remove = async function(opts) {
 }
 
 // Run benchmark in debug mode
-export const debug = async function(opts) {
+export const debug = async function (opts) {
   const optsA = await getOpts('debug', opts)
 
   await debugBenchmark(optsA)
 }
 
 // Migrate previous benchmarks
-export const migrate = async function(opts) {
+export const migrate = async function (opts) {
   const optsA = await getOpts('migrate', opts)
 
   await migrateStore(optsA)

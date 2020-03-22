@@ -1,5 +1,5 @@
 // Prepend some statistics with prefixes
-export const addPrefix = function(stat, statPretty, name) {
+export const addPrefix = function (stat, statPretty, name) {
   const getPrefix = PREFIXES[name]
 
   if (getPrefix === undefined) {
@@ -11,7 +11,7 @@ export const addPrefix = function(stat, statPretty, name) {
   return statPrettyA
 }
 
-const getArrow = function(stat) {
+const getArrow = function (stat) {
   if (stat >= 0) {
     return `${UP_ARROW} `
   }
@@ -19,7 +19,7 @@ const getArrow = function(stat) {
   return `${DOWN_ARROW} `
 }
 
-const getPlusMinus = function() {
+const getPlusMinus = function () {
   return PLUS_MINUS
 }
 

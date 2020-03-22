@@ -1,14 +1,14 @@
 // Group an array of objects into an object of objects based on a property
-export const groupBy = function(array, propName) {
+export const groupBy = function (array, propName) {
   const groups = {}
 
-  array.forEach(object => addGroup(object, groups, propName))
+  array.forEach((object) => addGroup(object, groups, propName))
 
   return groups
 }
 
 // We directly mutate `groups` for performance reasons
-const addGroup = function(object, groups, propName) {
+const addGroup = function (object, groups, propName) {
   const group = String(object[propName])
 
   if (groups[group] === undefined) {

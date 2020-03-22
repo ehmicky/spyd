@@ -7,7 +7,7 @@ import { loadBenchmarkFile } from './load/main.js'
 import { measure } from './benchmark/measure.js'
 
 // Child process entry point
-const start = async function() {
+const start = async function () {
   try {
     const { type, ...input } = getInput()
     const typeFunc = TYPES[type]
@@ -20,13 +20,13 @@ const start = async function() {
 }
 
 // Communicate iterations ids and titles to parent
-const load = async function({ taskPath }) {
+const load = async function ({ taskPath }) {
   const { iterations } = await loadBenchmarkFile(taskPath)
   const iterationsA = iterations.map(getIteration)
   return { iterations: iterationsA }
 }
 
-const getIteration = function({
+const getIteration = function ({
   taskId,
   taskTitle,
   variationId,
@@ -36,7 +36,7 @@ const getIteration = function({
 }
 
 // Run benchmarks
-const run = async function({ taskPath, taskId, variationId, duration }) {
+const run = async function ({ taskPath, taskId, variationId, duration }) {
   const { main, before, after, variables, shell } = await getTask({
     taskPath,
     taskId,
@@ -54,7 +54,7 @@ const run = async function({ taskPath, taskId, variationId, duration }) {
 }
 
 // Run an iteration once without benchmarking it
-const debug = async function({ taskPath, taskId, variationId }) {
+const debug = async function ({ taskPath, taskId, variationId }) {
   const { main, before, after, variables, shell } = await getTask({
     taskPath,
     taskId,
@@ -64,7 +64,7 @@ const debug = async function({ taskPath, taskId, variationId }) {
   await measure({ main, before, after, variables, shell, debug: true })
 }
 
-const getTask = async function({
+const getTask = async function ({
   taskPath,
   taskId,
   variationId,
@@ -73,7 +73,7 @@ const getTask = async function({
   const { iterations, shell } = await loadBenchmarkFile(taskPath, debugOpt)
 
   const { main, before, after, variables } = iterations.find(
-    iteration =>
+    (iteration) =>
       iteration.taskId === taskId && iteration.variationId === variationId,
   )
   return { main, before, after, variables, shell }

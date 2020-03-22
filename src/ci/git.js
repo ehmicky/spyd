@@ -3,7 +3,7 @@ import { blue } from 'chalk'
 import { isEmptyObject } from '../utils/main.js'
 
 // Serialize `git` information for CLI reporters.
-export const prettifyGit = function(git) {
+export const prettifyGit = function (git) {
   if (isEmptyObject(git)) {
     return ''
   }
@@ -15,7 +15,7 @@ export const prettifyGit = function(git) {
   return `${header}\n${body}`
 }
 
-const prettifyCommit = function({ commit, tag, branch }) {
+const prettifyCommit = function ({ commit, tag, branch }) {
   if (commit === undefined) {
     return
   }
@@ -26,7 +26,7 @@ const prettifyCommit = function({ commit, tag, branch }) {
   return `${field}${hash}${branchA}`
 }
 
-const getHash = function(commit, tag) {
+const getHash = function (commit, tag) {
   if (tag !== undefined) {
     return tag
   }
@@ -36,7 +36,7 @@ const getHash = function(commit, tag) {
 
 const COMMIT_SIZE = 8
 
-const prettifyPr = function({ prNumber, prBranch }) {
+const prettifyPr = function ({ prNumber, prBranch }) {
   if (prNumber === undefined) {
     return
   }
@@ -46,7 +46,7 @@ const prettifyPr = function({ prNumber, prBranch }) {
   return `${field}#${prNumber}${prBranchA}`
 }
 
-const getBranch = function(branch) {
+const getBranch = function (branch) {
   if (branch === undefined) {
     return ''
   }

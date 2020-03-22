@@ -1,5 +1,5 @@
 // Get previous benchmark index by benchmark delta
-export const find = function(benchmarks, { queryType, queryValue }) {
+export const find = function (benchmarks, { queryType, queryValue }) {
   if (benchmarks.length === 0) {
     throw new Error('No previous benchmarks')
   }
@@ -13,7 +13,7 @@ export const find = function(benchmarks, { queryType, queryValue }) {
   return index
 }
 
-const findByCount = function(benchmarks, count) {
+const findByCount = function (benchmarks, count) {
   if (count > benchmarks.length) {
     return
   }
@@ -21,9 +21,9 @@ const findByCount = function(benchmarks, count) {
   return benchmarks.length - count
 }
 
-const findByTimestamp = function(benchmarks, timestamp) {
+const findByTimestamp = function (benchmarks, timestamp) {
   const index = benchmarks.findIndex(
-    benchmark => benchmark.timestamp > timestamp,
+    (benchmark) => benchmark.timestamp > timestamp,
   )
 
   if (index === 0) {

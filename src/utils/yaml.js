@@ -3,13 +3,13 @@ import { promises } from 'fs'
 import { load as loadYaml, JSON_SCHEMA } from 'js-yaml'
 
 // Load and parse YAML file
-export const loadYamlFile = async function(path) {
+export const loadYamlFile = async function (path) {
   const string = await readYamlFile(path)
   const content = parseYaml(string, path)
   return content
 }
 
-const readYamlFile = async function(path) {
+const readYamlFile = async function (path) {
   try {
     return await promises.readFile(path, 'utf8')
   } catch (error) {
@@ -17,7 +17,7 @@ const readYamlFile = async function(path) {
   }
 }
 
-const parseYaml = function(string, path) {
+const parseYaml = function (string, path) {
   try {
     return loadYaml(string, { schema: JSON_SCHEMA, onWarning })
   } catch (error) {
@@ -25,6 +25,6 @@ const parseYaml = function(string, path) {
   }
 }
 
-const onWarning = function(error) {
+const onWarning = function (error) {
   throw error
 }

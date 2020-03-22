@@ -5,7 +5,7 @@ import { validateIds } from './validate.js'
 // Load iterations by launching each command.
 // At startup we run child processes but do not run an benchmarks. We only
 // retrieve the benchmark files iterations.
-export const getCommandIterations = async function({
+export const getCommandIterations = async function ({
   taskPath,
   command,
   command: { commandSpawn, commandSpawnOptions, commandOpt },
@@ -29,13 +29,13 @@ export const getCommandIterations = async function({
     throw new Error(`File '${taskPath}' does not have any tasks to run`)
   }
 
-  const iterationsA = iterations.map(iteration =>
+  const iterationsA = iterations.map((iteration) =>
     normalizeIteration(iteration, command, { taskPath, system }),
   )
   return iterationsA
 }
 
-const normalizeIteration = function(
+const normalizeIteration = function (
   {
     taskId,
     taskTitle = taskId,

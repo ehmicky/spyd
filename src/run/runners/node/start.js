@@ -7,7 +7,7 @@ import { loadBenchmarkFile } from './load/main.js'
 import { debugRun } from './debug.js'
 
 // Child process entry point
-const start = async function() {
+const start = async function () {
   try {
     const { type, ...input } = getInput()
     const output = await TYPES[type](input)
@@ -19,13 +19,13 @@ const start = async function() {
 }
 
 // Communicate iterations ids and titles to parent
-const load = async function({ taskPath, opts }) {
+const load = async function ({ taskPath, opts }) {
   const iterations = await loadBenchmarkFile(taskPath, opts)
   const iterationsA = iterations.map(getIteration)
   return { iterations: iterationsA }
 }
 
-const getIteration = function({
+const getIteration = function ({
   taskId,
   taskTitle,
   variationTitle,
@@ -35,7 +35,7 @@ const getIteration = function({
 }
 
 // Run benchmarks
-const run = async function({ taskPath, opts, taskId, variationId, duration }) {
+const run = async function ({ taskPath, opts, taskId, variationId, duration }) {
   const { main, before, after } = await getTask({
     taskPath,
     opts,
@@ -46,7 +46,7 @@ const run = async function({ taskPath, opts, taskId, variationId, duration }) {
   return { times, count }
 }
 
-const debug = async function({ taskPath, opts, taskId, variationId }) {
+const debug = async function ({ taskPath, opts, taskId, variationId }) {
   const { main, before, after } = await getTask({
     taskPath,
     opts,
@@ -56,11 +56,11 @@ const debug = async function({ taskPath, opts, taskId, variationId }) {
   await debugRun({ main, before, after })
 }
 
-const getTask = async function({ taskPath, opts, taskId, variationId }) {
+const getTask = async function ({ taskPath, opts, taskId, variationId }) {
   const iterations = await loadBenchmarkFile(taskPath, opts)
 
   const { main, before, after } = iterations.find(
-    iteration =>
+    (iteration) =>
       iteration.taskId === taskId && iteration.variationId === variationId,
   )
   return { main, before, after }

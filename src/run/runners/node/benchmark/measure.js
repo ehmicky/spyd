@@ -4,7 +4,7 @@ import { getDuration } from './duration.js'
 
 // Main measuring code.
 // If `repeat` is specified, we loop and perform an arithmetic mean.
-export const measure = async function({
+export const measure = async function ({
   main,
   before,
   after,
@@ -32,7 +32,7 @@ export const measure = async function({
 
 // Task `before()`. Performed outside measurements. Can be async.
 // Its return value is passed to `main()` and `after()`.
-const performBefore = async function(before, repeat) {
+const performBefore = async function (before, repeat) {
   if (before === undefined) {
     return
   }
@@ -44,7 +44,7 @@ const performBefore = async function(before, repeat) {
 }
 
 // Task `after()`. Performed outside measurements. Can be async.
-const performAfter = async function(after, repeat, beforeArgs = []) {
+const performAfter = async function (after, repeat, beforeArgs = []) {
   if (after === undefined) {
     return
   }

@@ -13,7 +13,7 @@ import { forwardChildError } from './error.js'
 // Which file descriptors are used depends on:
 //  - whether `run` or `debug` is used
 //  - whether this is the initial load
-export const executeChild = async function({
+export const executeChild = async function ({
   commandSpawn: [file, ...args],
   commandSpawnOptions,
   input,
@@ -68,7 +68,7 @@ export const executeChild = async function({
 }
 
 // Our spawn options have priority over commands spawn options.
-const getSpawnOptions = function({
+const getSpawnOptions = function ({
   stdio,
   cwd,
   duration,

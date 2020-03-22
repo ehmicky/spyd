@@ -1,7 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
 // Validate that the benchmark file has correct shape
-export const validateBenchmarkFile = function(entries, validators) {
+export const validateBenchmarkFile = function (entries, validators) {
   if (!isPlainObj(entries)) {
     throw new TypeError(`Benchmark file must be a top-level object`)
   }
@@ -15,7 +15,7 @@ export const validateBenchmarkFile = function(entries, validators) {
   )
 }
 
-const validateEntry = function(name, entry, validators) {
+const validateEntry = function (name, entry, validators) {
   const validator = validators[name]
 
   if (validator === undefined) {

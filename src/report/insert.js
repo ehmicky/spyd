@@ -10,7 +10,7 @@ import writeFileAtomic from 'write-file-atomic'
 //  - does not require any parsing.
 //  - does not require wrapping inserted content (e.g. in a code block).
 //    This should be done by reporters.
-export const insertContent = async function({ content, insert: file }) {
+export const insertContent = async function ({ content, insert: file }) {
   if (file === undefined) {
     return
   }
@@ -20,7 +20,7 @@ export const insertContent = async function({ content, insert: file }) {
   await writeFileContent(file, fileContentA)
 }
 
-const getFileContent = async function(file) {
+const getFileContent = async function (file) {
   try {
     return await promises.readFile(file, 'utf8')
   } catch (error) {
@@ -28,7 +28,7 @@ const getFileContent = async function(file) {
   }
 }
 
-const insertToFile = function(fileContent, content, file) {
+const insertToFile = function (fileContent, content, file) {
   const newline = detectNewline(fileContent)
   const lines = fileContent.split(newline)
 
@@ -38,7 +38,7 @@ const insertToFile = function(fileContent, content, file) {
   return fileContentA
 }
 
-const detectNewline = function(fileContent) {
+const detectNewline = function (fileContent) {
   if (fileContent.includes(WINDOWS_NEWLINE)) {
     return WINDOWS_NEWLINE
   }
@@ -49,7 +49,7 @@ const detectNewline = function(fileContent) {
 const WINDOWS_NEWLINE = '\r\n'
 const UNIX_NEWLINE = '\n'
 
-const insertToLines = function(lines, content, file) {
+const insertToLines = function (lines, content, file) {
   const startLine = getLineIndex(lines, file, START_LINE_TOKEN)
   const endLine = getLineIndex(lines, file, END_LINE_TOKEN)
 
@@ -60,8 +60,8 @@ const insertToLines = function(lines, content, file) {
 
 // We require both delimiters so that user is aware that both should be moved
 // when moving lines around
-const getLineIndex = function(lines, file, token) {
-  const lineIndex = lines.findIndex(line => line.includes(token))
+const getLineIndex = function (lines, file, token) {
+  const lineIndex = lines.findIndex((line) => line.includes(token))
 
   if (lineIndex === -1) {
     throw new TypeError(
@@ -75,7 +75,7 @@ const getLineIndex = function(lines, file, token) {
 const START_LINE_TOKEN = 'spyd-start'
 const END_LINE_TOKEN = 'spyd-end'
 
-const writeFileContent = async function(file, fileContent) {
+const writeFileContent = async function (file, fileContent) {
   try {
     await writeFileAtomic(file, fileContent)
   } catch (error) {

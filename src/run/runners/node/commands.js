@@ -5,7 +5,7 @@ const START_PATH = `${__dirname}/start.js`
 
 // Retrieve Node commands. By default it uses the current Node.js.
 // But the `run.node.versions` can be used to spawn several Node.js versions.
-export const commands = async function(runOpts) {
+export const commands = async function (runOpts) {
   const runOptsA = getOpts(runOpts)
 
   const versions = await getNodeVersions(runOptsA)
@@ -22,7 +22,7 @@ export const commands = async function(runOpts) {
   return versions.map(getNodeCommand)
 }
 
-const getNodeCommand = function({
+const getNodeCommand = function ({
   command,
   spawnOptions,
   versionRange,

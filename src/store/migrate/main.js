@@ -10,7 +10,7 @@ import { MIGRATIONS } from './migrations.js'
 // to reporters have a different format. That format also does not introduce
 // breaking changes unless a major release is done, since users might rely
 // on that format as well. But no migration is needed then.
-export const validateDataVersion = function(rawBenchmarks) {
+export const validateDataVersion = function (rawBenchmarks) {
   if (hasOldBenchmarks(rawBenchmarks)) {
     throw new Error(`Please run 'spyd migrate'.
 The previous benchmarks must be upgraded to the latest version of spyd.`)
@@ -18,7 +18,7 @@ The previous benchmarks must be upgraded to the latest version of spyd.`)
 }
 
 // Migrate all previous benchmarks to the latest data version
-export const migrateStore = async function(opts) {
+export const migrateStore = async function (opts) {
   const rawBenchmarks = await listStore(opts)
 
   if (!hasOldBenchmarks(rawBenchmarks)) {
@@ -32,11 +32,11 @@ export const migrateStore = async function(opts) {
   await replaceStore(rawBenchmarksA, opts)
 }
 
-const hasOldBenchmarks = function(rawBenchmarks) {
+const hasOldBenchmarks = function (rawBenchmarks) {
   return rawBenchmarks.some(isOldBenchmark)
 }
 
-const isOldBenchmark = function({ version }) {
+const isOldBenchmark = function ({ version }) {
   return version < DATA_VERSION
 }
 
@@ -44,7 +44,7 @@ const isOldBenchmark = function({ version }) {
 export const DATA_VERSION = 3
 
 // Perform each migration for each data version, one by one
-const migrateBenchmark = function({ version, ...rawBenchmark }) {
+const migrateBenchmark = function ({ version, ...rawBenchmark }) {
   const rawBenchmarkA = MIGRATIONS.slice(version).reduce(
     reduceBenchmark,
     rawBenchmark,
@@ -52,11 +52,11 @@ const migrateBenchmark = function({ version, ...rawBenchmark }) {
   return { ...rawBenchmarkA, version: DATA_VERSION }
 }
 
-const reduceBenchmark = function(rawBenchmark, migration) {
+const reduceBenchmark = function (rawBenchmark, migration) {
   return migration(rawBenchmark)
 }
 
-const replaceStore = async function(rawBenchmarks, { store }) {
+const replaceStore = async function (rawBenchmarks, { store }) {
   try {
     await store.replace(rawBenchmarks)
   } catch (error) {

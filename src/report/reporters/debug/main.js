@@ -3,7 +3,7 @@ import { cyan, yellow, dim, red } from 'chalk'
 import { getFooter } from './footer.js'
 
 // Debugging reporter only meant for development purpose
-const report = function(
+const report = function (
   {
     timestampPretty,
     group,
@@ -30,13 +30,13 @@ const report = function(
   return `\n${content}${footer}\n\n`
 }
 
-const serializeIteration = function({ name, stats, fastest, slow }) {
+const serializeIteration = function ({ name, stats, fastest, slow }) {
   const fastestMark = fastest ? cyan.bold('*') : ' '
   const statsStr = serializeStats(stats, slow)
   return ` ${fastestMark} ${name}  ${cyan.dim('|')}  ${statsStr}`
 }
 
-export const serializeStats = function(stats, slow) {
+export const serializeStats = function (stats, slow) {
   return STATS.map(({ name, shortName }) =>
     serializeStat({ stats, name, shortName, slow }),
   ).join(dim(' | '))
@@ -56,7 +56,7 @@ const STATS = [
   { name: 'processesPretty', shortName: 'prc' },
 ]
 
-const serializeStat = function({ stats, name, shortName, slow }) {
+const serializeStat = function ({ stats, name, shortName, slow }) {
   const stat = stats[name]
 
   if (name === 'limitPretty' && slow) {

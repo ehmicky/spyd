@@ -6,7 +6,7 @@ import osName from 'os-name'
 //  - environment variables
 //  - <<OS>>, <<OS_FULL>>
 //  - runner-specific variables like <<NODE_MAJOR_VERSION>>
-export const replaceSystemVars = async function(title, run) {
+export const replaceSystemVars = async function (title, run) {
   const tokens = [...title.matchAll(SYSTEM_VAR_REGEXP)]
 
   if (tokens === null) {
@@ -24,7 +24,7 @@ export const replaceSystemVars = async function(title, run) {
 const SYSTEM_VAR_REGEXP = /<<(\w+)>>/gu
 
 // Retrieve all available variables
-const getSystemVars = function(run) {
+const getSystemVars = function (run) {
   const runSystemVars = Object.assign({}, ...run.map(({ system }) => system))
   return { ...runSystemVars, ...SYSTEM_VARS }
 }
@@ -49,12 +49,12 @@ const OS = {
   openbsd: 'OpenBSD',
 }
 
-const getToken = async function({ name, varName, systemVars }) {
+const getToken = async function ({ name, varName, systemVars }) {
   const value = await getTokenValue({ name, varName, systemVars })
   return { name, value }
 }
 
-const getTokenValue = async function({ name, varName, systemVars }) {
+const getTokenValue = async function ({ name, varName, systemVars }) {
   const getValue = systemVars[varName]
 
   if (getValue === undefined) {
@@ -68,6 +68,6 @@ const getTokenValue = async function({ name, varName, systemVars }) {
   }
 }
 
-const replaceToken = function(title, { name, value = '' }) {
+const replaceToken = function (title, { name, value = '' }) {
   return title.replace(name, value)
 }

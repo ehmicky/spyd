@@ -2,7 +2,7 @@ import { blue, dim, underline } from 'chalk'
 import indentString from 'indent-string'
 
 // Retrieve footer: system, timestamp, group, link
-export const getFooter = function({
+export const getFooter = function ({
   timestampPretty,
   systemsPretty,
   gitPretty,
@@ -33,7 +33,7 @@ export const getFooter = function({
   return `\n\n${footer}`
 }
 
-const getInfoFooters = function({ info, systemsPretty, commandsPretty }) {
+const getInfoFooters = function ({ info, systemsPretty, commandsPretty }) {
   if (!info) {
     return []
   }
@@ -41,7 +41,7 @@ const getInfoFooters = function({ info, systemsPretty, commandsPretty }) {
   return [systemsPretty, commandsPretty]
 }
 
-const getContextFooters = function({
+const getContextFooters = function ({
   context,
   gitPretty,
   ciPretty,
@@ -57,7 +57,7 @@ const getContextFooters = function({
   return [gitPretty, ciPretty, timestampPrettyA, groupPretty].filter(Boolean)
 }
 
-const getLinkFooters = function(link) {
+const getLinkFooters = function (link) {
   if (!link) {
     return []
   }
@@ -68,6 +68,6 @@ const getLinkFooters = function(link) {
   return [linkPretty]
 }
 
-const indentFooter = function(footer) {
+const indentFooter = function (footer) {
   return indentString(footer, 1)
 }

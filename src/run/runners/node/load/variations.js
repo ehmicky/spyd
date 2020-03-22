@@ -3,11 +3,11 @@
 // `variations` are scoped to each benchmark file. However the same
 // `variationId` can be used across benchmark files.
 // Defaults to using all `variations`.
-export const addTasksVariations = function(tasks, variations) {
-  return tasks.flatMap(task => addTaskVariations(task, variations))
+export const addTasksVariations = function (tasks, variations) {
+  return tasks.flatMap((task) => addTaskVariations(task, variations))
 }
 
-export const addTaskVariations = function(
+export const addTaskVariations = function (
   { variationsIds, ...task },
   variations,
 ) {
@@ -16,7 +16,7 @@ export const addTaskVariations = function(
   }
 
   const variationsA = getVariations(task, variationsIds, variations)
-  const tasks = variationsA.map(variation => ({ ...task, ...variation }))
+  const tasks = variationsA.map((variation) => ({ ...task, ...variation }))
   const tasksA = tasks.map(bindVariation)
   return tasksA
 }
@@ -24,19 +24,19 @@ export const addTaskVariations = function(
 // `variationId` must default to an empty string before being sent to parent
 const DEFAULT_VARIATION = ''
 
-const getVariations = function(task, variationsIds, variations = []) {
+const getVariations = function (task, variationsIds, variations = []) {
   const variationsA = variations.map(normalizeVariation)
 
   if (variationsIds === undefined) {
     return variationsA
   }
 
-  return variationsIds.map(variationId =>
+  return variationsIds.map((variationId) =>
     getVariation(variationId, variationsA, task),
   )
 }
 
-const normalizeVariation = function({
+const normalizeVariation = function ({
   id: variationId,
   title: variationTitle,
   value: variationValue,
@@ -44,9 +44,9 @@ const normalizeVariation = function({
   return { variationId, variationTitle, variationValue }
 }
 
-const getVariation = function(variationId, variations, { taskId }) {
+const getVariation = function (variationId, variations, { taskId }) {
   const variationA = variations.find(
-    variation => variation.variationId === variationId,
+    (variation) => variation.variationId === variationId,
   )
 
   if (variationA === undefined) {
@@ -60,23 +60,23 @@ const getVariation = function(variationId, variations, { taskId }) {
 
 // Bind task `variation.value` (if present) to `main()`, `before()` and
 // `after()`
-const bindVariation = function({ variationValue, ...task }) {
-  const funcs = BOUND_FUNCS.filter(name => task[name] !== undefined).map(name =>
-    bindFunction(task, name, variationValue),
-  )
+const bindVariation = function ({ variationValue, ...task }) {
+  const funcs = BOUND_FUNCS.filter(
+    (name) => task[name] !== undefined,
+  ).map((name) => bindFunction(task, name, variationValue))
   return Object.assign({}, task, ...funcs)
 }
 
 const BOUND_FUNCS = ['main', 'before', 'after']
 
-const bindFunction = function(task, name, variationValue) {
+const bindFunction = function (task, name, variationValue) {
   const func = task[name]
   const funcA = getBoundFunction({ func, task, name, variationValue })
   return { [name]: funcA }
 }
 
 // `func.bind()` is much slower, especially for very fast functions.
-const getBoundFunction = function({
+const getBoundFunction = function ({
   func,
   task: { before },
   name,
@@ -87,5 +87,5 @@ const getBoundFunction = function({
     return () => func(variationValue)
   }
 
-  return beforeArgs => func(variationValue, beforeArgs)
+  return (beforeArgs) => func(variationValue, beforeArgs)
 }

@@ -7,7 +7,7 @@ import { startUpdate } from './update.js'
 import { stopProgress } from './stop.js'
 
 // Start progress reporting using the `progress` option
-export const startProgress = async function(
+export const startProgress = async function (
   iterations,
   { duration, progress: reporters },
 ) {
@@ -33,7 +33,7 @@ export const startProgress = async function(
 
 // Call each `reporter.start()`
 // Also call an initial `reporter.update()`
-const startReporters = async function({ reporters, total, duration }) {
+const startReporters = async function ({ reporters, total, duration }) {
   const name = cyan.bold('Start')
   const timeLeft = getTimeLeft({
     index: 0,
@@ -43,13 +43,13 @@ const startReporters = async function({ reporters, total, duration }) {
   })
 
   await Promise.all(
-    reporters.map(reporter =>
+    reporters.map((reporter) =>
       startReporter({ reporter, name, timeLeft, total }),
     ),
   )
 }
 
-const startReporter = async function({ reporter, name, timeLeft, total }) {
+const startReporter = async function ({ reporter, name, timeLeft, total }) {
   await reporter.start({ total })
 
   await reporter.update({ name, percentage: 0, timeLeft, index: 0, total })

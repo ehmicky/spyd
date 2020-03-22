@@ -8,7 +8,7 @@ import { measure } from './measure.js'
 // Run the benchmark for a specific amount of time.
 // We perform benchmarking iteratively in order to stop benchmarking exactly
 // when the `duration` or `MAX_LOOPS` has been reached.
-export const benchmark = async function({
+export const benchmark = async function ({
   main,
   before,
   after,
@@ -41,7 +41,7 @@ export const benchmark = async function({
 // The benchmark stops if either:
 //  - we reach the end of the `duration`
 //  - we run more than `MAX_LOOPS` iterations
-const shouldStop = function(runEnd, times) {
+const shouldStop = function (runEnd, times) {
   return now() >= runEnd || times.length >= MAX_LOOPS
 }
 
@@ -57,7 +57,7 @@ const RAW_MAX_LOOPS = 1e3
 const MAX_LOOPS = Math.floor(RAW_MAX_LOOPS / (1 - OUTLIERS_THRESHOLD))
 
 // Remove outliers to increase precision
-const normalizeTimes = function(times) {
+const normalizeTimes = function (times) {
   sortNumbers(times)
 
   const outliersLimit = Math.ceil(times.length * (1 - OUTLIERS_THRESHOLD))

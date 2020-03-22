@@ -1,5 +1,5 @@
 // Update some state on each iteration
-export const updateState = function(
+export const updateState = function (
   { times, count, repeat: previousRepeat, iterIndex },
   time,
   repeat,
@@ -24,7 +24,7 @@ export const updateState = function(
   }
 }
 
-const resetState = function({
+const resetState = function ({
   times,
   count,
   repeat,
@@ -46,7 +46,7 @@ const resetState = function({
 // statistically significant. Different `repeat` give different times due to
 // bias correction and JavaScript engine loop optimizations.
 // However `repeat` always eventually stabilizes.
-const isSameRepeat = function(previousRepeat, repeat) {
+const isSameRepeat = function (previousRepeat, repeat) {
   return Math.abs(repeat - previousRepeat) / previousRepeat <= MIN_REPEAT_DIFF
 }
 
@@ -57,6 +57,6 @@ const MIN_REPEAT_DIFF = 0.1
 // much slower than the next calls. For example running an empty function
 // might be 1000 times slower on the first call. So we always remove it.
 // Except when there is only enough `duration` to run `main()` once.
-const isSlowStart = function(iterIndex) {
+const isSlowStart = function (iterIndex) {
   return iterIndex === 1
 }

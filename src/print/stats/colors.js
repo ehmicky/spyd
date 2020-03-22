@@ -1,7 +1,7 @@
 import { red, green } from 'chalk'
 
 // Add colors on `diff`
-export const addColors = function(stat, statPretty, name) {
+export const addColors = function (stat, statPretty, name) {
   const getColor = COLORS[name]
 
   if (getColor === undefined) {
@@ -13,7 +13,7 @@ export const addColors = function(stat, statPretty, name) {
   return statPrettyA
 }
 
-const getSignColor = function(stat) {
+const getSignColor = function (stat) {
   if (stat >= 0) {
     return red
   }

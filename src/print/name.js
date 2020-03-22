@@ -15,22 +15,22 @@ import { padTitles } from './titles.js'
 //    new iterations
 //  - after `diff` has been computed, which has to be after previous benchmarks
 //    names have been added
-export const addNames = function(iterations) {
+export const addNames = function (iterations) {
   const iterationsA = padTitles(iterations)
 
-  const props = NAME_PROPS.filter(propName =>
+  const props = NAME_PROPS.filter((propName) =>
     shouldShowProp(propName, iterationsA),
   )
   const propsA = [COLUMN_PROP, ...props]
-  return iterationsA.map(iteration => addName(iteration, propsA))
+  return iterationsA.map((iteration) => addName(iteration, propsA))
 }
 
 const NAME_PROPS = ['variationTitle', 'commandTitle', 'systemTitle']
 
 // If all commands are the same, do not include them.
 // Tasks/variations/systems should always be shown though, unless always empty.
-const shouldShowProp = function(propName, iterations) {
-  const props = iterations.map(iteration => iteration[propName])
+const shouldShowProp = function (propName, iterations) {
+  const props = iterations.map((iteration) => iteration[propName])
   const uniqueProps = [...new Set(props)]
 
   return (
@@ -39,19 +39,19 @@ const shouldShowProp = function(propName, iterations) {
   )
 }
 
-const addName = function(iteration, props) {
+const addName = function (iteration, props) {
   const name = getName(iteration, props)
   const columnName = getName(iteration, props.filter(isColumnProp))
   return { ...iteration, name, columnName }
 }
 
-const isColumnProp = function(propName) {
+const isColumnProp = function (propName) {
   return propName !== COLUMN_PROP
 }
 
-const getName = function(iteration, props) {
+const getName = function (iteration, props) {
   return props
-    .map(propName => cyan.bold(iteration[propName]))
+    .map((propName) => cyan.bold(iteration[propName]))
     .join(`${cyan.dim(pointer)}  `)
 }
 

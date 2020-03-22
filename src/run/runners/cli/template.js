@@ -4,7 +4,7 @@
 //  - task.before output (<<before>>)
 //  - each <<variation>>
 // Can be escaped as <<<variable>>>
-export const applyTemplate = function(string, variables) {
+export const applyTemplate = function (string, variables) {
   if (string === undefined) {
     return
   }
@@ -19,7 +19,7 @@ export const applyTemplate = function(string, variables) {
 //  - {} is not YAML-friendly
 const TEMPLATE_REGEXP = /(?<!<)<<([^<>]+)>>(?!>)/gu
 
-const replaceToken = function(varName, variables) {
+const replaceToken = function (varName, variables) {
   const value = variables[varName]
 
   if (value === undefined) {

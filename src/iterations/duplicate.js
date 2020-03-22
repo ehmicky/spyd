@@ -1,10 +1,10 @@
 // When two `files` define the same iteration, the last one prevails.
 // Also used when merging benchmarks of the same group.
-export const removeDuplicates = function(iterations) {
+export const removeDuplicates = function (iterations) {
   return iterations.filter(removeDuplicate)
 }
 
-const removeDuplicate = function(
+const removeDuplicate = function (
   { taskId, variationId, commandId, systemId },
   index,
   iterations,
@@ -12,7 +12,7 @@ const removeDuplicate = function(
   return iterations
     .slice(index + 1)
     .every(
-      iteration =>
+      (iteration) =>
         iteration.taskId !== taskId ||
         iteration.variationId !== variationId ||
         iteration.commandId !== commandId ||

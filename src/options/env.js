@@ -7,18 +7,16 @@ import { set } from '../utils/get_set.js'
 // All the options can be set using environment variables.
 // This is especially handy in CI, including for the `group` and `system`
 // options.
-export const addEnvVars = function(opts) {
-  const envVars = Object.entries(env)
-    .filter(isSpydEnvVar)
-    .map(getEnvVar)
+export const addEnvVars = function (opts) {
+  const envVars = Object.entries(env).filter(isSpydEnvVar).map(getEnvVar)
   return Object.assign({}, opts, ...envVars)
 }
 
-const isSpydEnvVar = function([key]) {
+const isSpydEnvVar = function ([key]) {
   return key.startsWith(SPYD_NAMESPACE)
 }
 
-const getEnvVar = function([key, value]) {
+const getEnvVar = function ([key, value]) {
   const keyA = key.replace(SPYD_NAMESPACE, '').toLowerCase()
 
   if (keyA.includes('_')) {
@@ -37,15 +35,15 @@ const getEnvVar = function([key, value]) {
 
 const SPYD_NAMESPACE = 'SPYD_'
 
-const getBoolean = function(value) {
+const getBoolean = function (value) {
   return yn(value, { default: true })
 }
 
-const getString = function(value) {
+const getString = function (value) {
   return value
 }
 
-const getStringArray = function(value) {
+const getStringArray = function (value) {
   return [value]
 }
 

@@ -1,7 +1,7 @@
 import stripAnsi from 'strip-ansi'
 
 // Add `iteration.slowError`
-export const getSlowError = function({ slow, name, percentage, diff }) {
+export const getSlowError = function ({ slow, name, percentage, diff }) {
   if (!slow) {
     return
   }
@@ -12,7 +12,7 @@ export const getSlowError = function({ slow, name, percentage, diff }) {
   return `${nameA} should be at most ${percentageStr}% slower but is ${diffStr}% slower`
 }
 
-const serializePercentage = function(percentage) {
+const serializePercentage = function (percentage) {
   return percentage
     .toPrecision(PERCENTAGE_PRECISION)
     .replace(ONLY_ZEROS_REGEXP, '')
@@ -26,7 +26,7 @@ const TRAILING_ZEROS_REGEXP = /(\.\d*)0+$/gu
 
 // If any `iteration.slowError` is set, we throw them.
 // We do it after reporting.
-export const checkLimits = function({ iterations }) {
+export const checkLimits = function ({ iterations }) {
   const limitError = iterations
     .map(getSlowErrorField)
     .filter(Boolean)
@@ -39,6 +39,6 @@ export const checkLimits = function({ iterations }) {
   throw new Error(limitError)
 }
 
-const getSlowErrorField = function({ slowError }) {
+const getSlowErrorField = function ({ slowError }) {
   return slowError
 }

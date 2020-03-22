@@ -4,7 +4,7 @@ import { getSlowError } from './error.js'
 //  - add `iteration.limit`
 //  - add `iteration.slow`
 //  - add `iteration.slowError`
-export const getLimit = function({
+export const getLimit = function ({
   iteration,
   iteration: {
     name,
@@ -33,14 +33,14 @@ export const getLimit = function({
   return { limit, slow, slowError }
 }
 
-const isTarget = function(
+const isTarget = function (
   { taskId, variationId, commandRunner, systemId },
   ids,
 ) {
   return (
     ids === undefined ||
     ids.some(
-      id =>
+      (id) =>
         taskId === id ||
         variationId === id ||
         commandRunner === id ||
@@ -49,7 +49,7 @@ const isTarget = function(
   )
 }
 
-const getPercentage = function({ percentage }) {
+const getPercentage = function ({ percentage }) {
   return percentage
 }
 

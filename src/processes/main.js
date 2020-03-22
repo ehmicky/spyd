@@ -6,7 +6,7 @@ import { runChildren } from './run.js'
 
 // Start several child processes benchmarking the same task.
 // eslint-disable-next-line max-lines-per-function
-export const runProcesses = async function({
+export const runProcesses = async function ({
   name,
   columnName,
   taskPath,

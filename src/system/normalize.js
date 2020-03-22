@@ -3,7 +3,7 @@ import slugify from 'slugify'
 import { replaceSystemVars } from './vars.js'
 
 // Normalize 'system' option
-export const normalizeSystem = async function({ system, run, ...opts }) {
+export const normalizeSystem = async function ({ system, run, ...opts }) {
   const title = system.trim()
   const titleA = await replaceSystemVars(title, run)
   const id = slugify(titleA, { lower: true, remove: INVALID_ID_REGEXP })

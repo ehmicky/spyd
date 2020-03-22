@@ -4,20 +4,20 @@ import { STAT_TYPES } from './types.js'
 
 // Pad `*.statsPretty` on the left so they vertically align.
 // Right padding was already performed when setting the number of decimals.
-export const addPaddings = function(iterations) {
+export const addPaddings = function (iterations) {
   const paddings = getPaddings(iterations)
-  return iterations.map(iteration => addPadding({ iteration, paddings }))
+  return iterations.map((iteration) => addPadding({ iteration, paddings }))
 }
 
 // Retrieve the maximum length of any measures for each stat
-const getPaddings = function(iterations) {
-  const paddings = Object.keys(STAT_TYPES).map(name =>
+const getPaddings = function (iterations) {
+  const paddings = Object.keys(STAT_TYPES).map((name) =>
     getPadding(name, iterations),
   )
   return Object.fromEntries(paddings)
 }
 
-const getPadding = function(name, iterations) {
+const getPadding = function (name, iterations) {
   const allLengths = iterations
     .flatMap(({ stats }) => stats[`${name}Pretty`])
     .map(stringWidth)
@@ -30,15 +30,15 @@ const getPadding = function(name, iterations) {
   return [name, padding]
 }
 
-const addPadding = function({ iteration, iteration: { stats }, paddings }) {
-  const prettyStats = Object.keys(STAT_TYPES).map(name =>
+const addPadding = function ({ iteration, iteration: { stats }, paddings }) {
+  const prettyStats = Object.keys(STAT_TYPES).map((name) =>
     padStat(name, stats, paddings),
   )
   const prettyStatsA = Object.fromEntries(prettyStats)
   return { ...iteration, stats: { ...stats, ...prettyStatsA } }
 }
 
-const padStat = function(name, stats, paddings) {
+const padStat = function (name, stats, paddings) {
   const prettyName = `${name}Pretty`
   const stat = stats[prettyName]
 
@@ -48,16 +48,16 @@ const padStat = function(name, stats, paddings) {
   return [prettyName, statA]
 }
 
-const padValue = function(stat, padding) {
+const padValue = function (stat, padding) {
   if (Array.isArray(stat)) {
-    return stat.map(statA => coloredPad(statA, padding))
+    return stat.map((statA) => coloredPad(statA, padding))
   }
 
   return coloredPad(stat, padding)
 }
 
 // Pad that takes into account ANSI color sequences
-const coloredPad = function(stat, padding) {
+const coloredPad = function (stat, padding) {
   const ansiLength = stat.length - stringWidth(stat)
   return stat.padStart(padding + ansiLength)
 }

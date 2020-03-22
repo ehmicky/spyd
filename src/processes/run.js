@@ -16,7 +16,7 @@ import { executeChild } from './execute.js'
 //  - multi-core CPUs are designed to run in parallel but in practice they do
 //    impact the performance of each other
 //  - this does mean we are under-utilizing CPUs
-export const runChildren = async function({
+export const runChildren = async function ({
   taskPath,
   taskId,
   variationId,

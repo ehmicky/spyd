@@ -11,7 +11,7 @@ import { addEnvVars } from './env.js'
 import { preNormalizeOpts, normalizeOpts } from './normalize.js'
 
 // Retrieve options/configuration
-export const getOpts = async function(action, opts = {}) {
+export const getOpts = async function (action, opts = {}) {
   const optsA = filterObj(opts, isDefined)
 
   validateOpts(optsA)
@@ -28,20 +28,20 @@ export const getOpts = async function(action, opts = {}) {
   return optsF
 }
 
-const isDefined = function(key, value) {
+const isDefined = function (key, value) {
   return value !== undefined
 }
 
 // We need to do this twice because configuration loading needs to have
 // `cwd` and `config` type checked, but it also adds new options.
-const validateOpts = function(opts) {
+const validateOpts = function (opts) {
   validate(opts, {
     exampleConfig: EXAMPLE_OPTS,
     recursiveBlacklist: ['run', 'report', 'progress', 'store'],
   })
 }
 
-const addDefaultOpts = function(opts, action) {
+const addDefaultOpts = function (opts, action) {
   return {
     ...DEFAULT_OPTS,
     context: action === 'show',

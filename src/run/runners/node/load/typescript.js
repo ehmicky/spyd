@@ -2,7 +2,7 @@ import { extname } from 'path'
 
 // When the benchmark file is in TypeScript, automatically use
 // `ts-node/register`
-export const handleTypeScript = async function(requireOpt, taskPath) {
+export const handleTypeScript = async function (requireOpt, taskPath) {
   if (!shouldUseTsNode(requireOpt, taskPath)) {
     return
   }
@@ -18,7 +18,7 @@ export const handleTypeScript = async function(requireOpt, taskPath) {
   }
 }
 
-const shouldUseTsNode = function(requireOpt, taskPath) {
+const shouldUseTsNode = function (requireOpt, taskPath) {
   return (
     !requireOpt.some(isTsNode) &&
     TYPESCRIPT_EXTENSIONS.includes(extname(taskPath))
@@ -27,7 +27,7 @@ const shouldUseTsNode = function(requireOpt, taskPath) {
 
 // Works not only with 'ts-node/register' but also
 // 'ts-node/register/transpile-only', etc.
-const isTsNode = function(requiredModule) {
+const isTsNode = function (requiredModule) {
   return requiredModule.startsWith(TS_NODE)
 }
 

@@ -1,7 +1,7 @@
 import { spawnOutput } from '../spawn.js'
 
 // Retrieve `file.variables`
-export const getVariables = async function({
+export const getVariables = async function ({
   entries: { variables: fileVariables = {}, ...entries },
   variables,
   shell,
@@ -18,7 +18,13 @@ export const getVariables = async function({
   return { variables: variablesA, entries }
 }
 
-const getVariable = async function({ name, command, variables, shell, debug }) {
+const getVariable = async function ({
+  name,
+  command,
+  variables,
+  shell,
+  debug,
+}) {
   try {
     const stdout = await spawnOutput(command, `Variable '${name}'`, {
       variables,

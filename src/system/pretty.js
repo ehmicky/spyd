@@ -2,18 +2,15 @@ import { blue, underline } from 'chalk'
 import indentString from 'indent-string'
 
 // Serialize `system` information for CLI reporters.
-export const prettifySystems = function(systems) {
-  return systems
-    .filter(hasFields)
-    .map(prettifySystem)
-    .join('\n')
+export const prettifySystems = function (systems) {
+  return systems.filter(hasFields).map(prettifySystem).join('\n')
 }
 
-const hasFields = function(system) {
+const hasFields = function (system) {
   return getFields(system).length !== 0 || hasComplexFields(system)
 }
 
-const prettifySystem = function(system, index) {
+const prettifySystem = function (system, index) {
   const header = getHeader(system)
   const body = getBody(system)
   const systemsPretty = `${header}\n${body}`
@@ -21,12 +18,12 @@ const prettifySystem = function(system, index) {
   return systemsPrettyA
 }
 
-const getHeader = function(system) {
+const getHeader = function (system) {
   const title = getTitle(system)
   return blue.bold(`${title}:`)
 }
 
-const getTitle = function({ title = MAIN_TITLE }) {
+const getTitle = function ({ title = MAIN_TITLE }) {
   if (title === '') {
     return DEFAULT_TITLE
   }
@@ -39,18 +36,20 @@ const MAIN_TITLE = 'System'
 // Nested title when `system` is an empty string
 const DEFAULT_TITLE = 'Default'
 
-const getBody = function(system) {
+const getBody = function (system) {
   const fields = getFields(system)
-  const fieldsA = fields.map(field => serializeField(field, system))
+  const fieldsA = fields.map((field) => serializeField(field, system))
   const job = getJob(system)
   return [...fieldsA, ...job].join('\n')
 }
 
-const getFields = function(system) {
-  return Object.keys(SYSTEM_FIELDS).filter(field => system[field] !== undefined)
+const getFields = function (system) {
+  return Object.keys(SYSTEM_FIELDS).filter(
+    (field) => system[field] !== undefined,
+  )
 }
 
-const serializeField = function(field, system) {
+const serializeField = function (field, system) {
   const value = system[field]
   const fieldA = SYSTEM_FIELDS[field]
   const fieldB = blue.bold(`${fieldA}:`)
@@ -60,13 +59,13 @@ const serializeField = function(field, system) {
 const SYSTEM_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
 
 // Those fields involve more dynamic logic
-const hasComplexFields = function(system) {
-  return COMPLEX_FIELDS.some(field => system[field] !== undefined)
+const hasComplexFields = function (system) {
+  return COMPLEX_FIELDS.some((field) => system[field] !== undefined)
 }
 
 const COMPLEX_FIELDS = ['jobNumber']
 
-const getJob = function({ jobNumber, jobUrl }) {
+const getJob = function ({ jobNumber, jobUrl }) {
   if (jobNumber === undefined) {
     return []
   }
@@ -74,7 +73,7 @@ const getJob = function({ jobNumber, jobUrl }) {
   return [`${blue.bold('  Job:')} #${jobNumber} (${underline(jobUrl)})`]
 }
 
-const indent = function(systemsPretty, index) {
+const indent = function (systemsPretty, index) {
   if (index === 0) {
     return systemsPretty
   }

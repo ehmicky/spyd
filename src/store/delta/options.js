@@ -3,7 +3,7 @@ import { getDeltaTimestamp } from './timestamp.js'
 // Several options targets a previous benchmarks using either a boolean, an
 // integer or a timestamp. We normalize to a `query` object that stores can use.
 // We also validate it.
-export const normalizeDelta = function(name, delta) {
+export const normalizeDelta = function (name, delta) {
   if (delta === false) {
     return
   }
@@ -13,7 +13,7 @@ export const normalizeDelta = function(name, delta) {
   return { queryType, queryValue }
 }
 
-const getDelta = function(name, delta) {
+const getDelta = function (name, delta) {
   if (delta === true) {
     return 1
   }
@@ -25,7 +25,7 @@ const getDelta = function(name, delta) {
   return getDeltaTimestamp(name, delta)
 }
 
-const getDeltaNumber = function(name, delta) {
+const getDeltaNumber = function (name, delta) {
   if (!Number.isInteger(delta) || delta < 1) {
     throw new TypeError(`'${name}' option must be a positive integer: ${delta}`)
   }
@@ -34,7 +34,7 @@ const getDeltaNumber = function(name, delta) {
 }
 
 // Normalize to a query object for the stores
-const getQuery = function(delta) {
+const getQuery = function (delta) {
   if (Number.isInteger(delta)) {
     return { queryType: 'count', queryValue: delta }
   }

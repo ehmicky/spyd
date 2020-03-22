@@ -9,7 +9,7 @@ import { normalizeStats } from './stats/main.js'
 //  - `benchmark.previous`: all previous benchmarks
 //  - `benchmark.iterations[*].previous`: previous iteration with same runner,
 //    task and variation
-export const addPrevious = function(
+export const addPrevious = function (
   benchmarks,
   { timestamp, iterations, ...benchmark },
   { limits, diff },
@@ -17,7 +17,7 @@ export const addPrevious = function(
   // When combined with the 'show' option, we only show the benchmarks before it
   // We exclude benchmarks from the same group (since they are already grouped)
   const previous = benchmarks.filter(
-    benchmarkA => benchmarkA.timestamp < timestamp,
+    (benchmarkA) => benchmarkA.timestamp < timestamp,
   )
   const diffIndex = getDiffIndex(previous, diff)
   const iterationsA = addPreviousIterations({
@@ -36,14 +36,14 @@ export const addPrevious = function(
   }
 }
 
-const addPreviousIterations = function({
+const addPreviousIterations = function ({
   iterations,
   previous,
   diffIndex,
   limits,
 }) {
   const previousIterations = previous.flatMap(getIterations)
-  const iterationsA = iterations.map(iteration =>
+  const iterationsA = iterations.map((iteration) =>
     addPreviousIteration({ iteration, previousIterations, diffIndex, limits }),
   )
   // Needs to be done again since we added `diff` and `limit`
@@ -51,18 +51,18 @@ const addPreviousIterations = function({
   return iterationsB
 }
 
-const getIterations = function({ iterations }, benchmark) {
-  return iterations.map(iteration => ({ ...iteration, benchmark }))
+const getIterations = function ({ iterations }, benchmark) {
+  return iterations.map((iteration) => ({ ...iteration, benchmark }))
 }
 
-const addPreviousIteration = function({
+const addPreviousIteration = function ({
   iteration,
   iteration: { stats },
   previousIterations,
   diffIndex,
   limits,
 }) {
-  const previous = previousIterations.filter(previousIteration =>
+  const previous = previousIterations.filter((previousIteration) =>
     isSameIteration(iteration, previousIteration),
   )
   const { previousMedian, diff } = getDiff(previous, diffIndex, stats)
@@ -81,7 +81,7 @@ const addPreviousIteration = function({
   }
 }
 
-const isSameIteration = function(iterationA, iterationB) {
+const isSameIteration = function (iterationA, iterationB) {
   return (
     iterationA.taskId === iterationB.taskId &&
     iterationA.variationId === iterationB.variationId &&
@@ -90,6 +90,6 @@ const isSameIteration = function(iterationA, iterationB) {
   )
 }
 
-const removeIterations = function(benchmark) {
+const removeIterations = function (benchmark) {
   return omit(benchmark, ['iterations'])
 }

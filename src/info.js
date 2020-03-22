@@ -6,7 +6,7 @@ import { getCiInfo } from './ci/info.js'
 import { cleanObject } from './utils/clean.js'
 
 // Add more information to the final benchmark and normalize/sort results
-export const addBenchmarkInfo = function(
+export const addBenchmarkInfo = function (
   iterations,
   { opts, opts: { group, system, cwd } },
 ) {

@@ -4,7 +4,7 @@ import { STAT_TYPES } from './types.js'
 // Always show at least 3 significant digits.
 // All iterations use the same number of decimals for each stat, so they are
 // vertically aligned. Padding is used instead of trailing zeros.
-export const getStatsDecimals = function(iterations, scale) {
+export const getStatsDecimals = function (iterations, scale) {
   const statsDecimals = Object.entries(STAT_TYPES).map(([name, type]) =>
     getStatDecimal({ name, type, iterations, scale }),
   )
@@ -12,12 +12,12 @@ export const getStatsDecimals = function(iterations, scale) {
   return statsDecimalsA
 }
 
-const getStatDecimal = function({ name, type, iterations, scale }) {
+const getStatDecimal = function ({ name, type, iterations, scale }) {
   const decimals = getDecimals({ name, type, iterations, scale })
   return [name, decimals]
 }
 
-const getDecimals = function({ name, type, iterations, scale }) {
+const getDecimals = function ({ name, type, iterations, scale }) {
   if (type === 'count') {
     return 0
   }
@@ -40,7 +40,7 @@ const getDecimals = function({ name, type, iterations, scale }) {
   return decimals
 }
 
-const isNotEmpty = function(measure) {
+const isNotEmpty = function (measure) {
   return measure !== 0 && measure !== undefined
 }
 

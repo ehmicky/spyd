@@ -1,7 +1,7 @@
 import { sortNumbers } from '../../../../utils/sort.js'
 
 // Transform raw results into a result object that can be used by parent
-export const normalizeResult = function(times, count) {
+export const normalizeResult = function (times, count) {
   sortNumbers(times)
 
   const result = removeOutliers(times, count)
@@ -13,7 +13,7 @@ export const normalizeResult = function(times, count) {
 // amounts of time. Those slow downs are due to the engine and not the function
 // being measured, so we remove them.
 // We do it by removing the slowest 15%.
-const removeOutliers = function(times, count) {
+const removeOutliers = function (times, count) {
   const outliersLimit = Math.ceil(times.length * (1 - OUTLIERS_THRESHOLD))
   const timesA = times.slice(0, outliersLimit)
   const countA = Math.ceil(count * (1 - OUTLIERS_THRESHOLD))

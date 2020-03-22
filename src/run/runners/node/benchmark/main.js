@@ -5,7 +5,7 @@ import { measure } from './measure.js'
 
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
-export const benchmark = async function({ main, before, after, duration }) {
+export const benchmark = async function ({ main, before, after, duration }) {
   const isAsync = isAsyncFunc(main)
 
   await initialMeasure(isAsync, before)
@@ -35,7 +35,7 @@ export const benchmark = async function({ main, before, after, duration }) {
 // We fix this by doing a cold start using an empty function.
 // The `before()` and `isAsync` arguments need to match what is used during
 // the bias calculation.
-const initialMeasure = async function(isAsync, before) {
+const initialMeasure = async function (isAsync, before) {
   const beforeFunc = before === undefined ? undefined : noop
   await measure({
     main: noop,
@@ -50,4 +50,4 @@ const initialMeasure = async function(isAsync, before) {
 // This needs to be a different function from the `noop` used during bias
 // calculation.
 // eslint-disable-next-line no-empty-function
-const noop = function() {}
+const noop = function () {}

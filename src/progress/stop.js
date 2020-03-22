@@ -3,7 +3,7 @@ import { show as showCursor } from 'cli-cursor'
 import { stopUpdate } from './update.js'
 
 // Stop progress reporting
-export const stopProgress = async function({
+export const stopProgress = async function ({
   progressId,
   reporters,
   removeOnExit,
@@ -20,6 +20,6 @@ export const stopProgress = async function({
 }
 
 // Call each `reporter.stop()`
-const stopReporters = async function(reporters) {
-  await Promise.all(reporters.map(reporter => reporter.stop({})))
+const stopReporters = async function (reporters) {
+  await Promise.all(reporters.map((reporter) => reporter.stop({})))
 }

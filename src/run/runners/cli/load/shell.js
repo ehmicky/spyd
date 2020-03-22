@@ -2,7 +2,7 @@ import { applyTemplate } from '../template.js'
 
 // Retrieve the `shell` property which indicates whether to run commands through
 // a shell.
-export const getShell = function(
+export const getShell = function (
   { shell = DEFAULT_SHELL, ...entries },
   variables,
 ) {

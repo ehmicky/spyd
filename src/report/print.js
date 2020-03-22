@@ -4,7 +4,7 @@ import { promisify } from 'util'
 import writeFileAtomic from 'write-file-atomic'
 
 // Print reporting result to file or to terminal based on the `output` option
-export const print = async function({ content, output, insert }) {
+export const print = async function ({ content, output, insert }) {
   const contentA = addFinalNewline(content)
 
   const outputA = getOutput({ output, insert })
@@ -21,7 +21,7 @@ export const print = async function({ content, output, insert }) {
   await writeFileContent(outputA, contentA)
 }
 
-const addFinalNewline = function(content) {
+const addFinalNewline = function (content) {
   if (content.endsWith('\n')) {
     return content
   }
@@ -29,7 +29,7 @@ const addFinalNewline = function(content) {
   return `${content}\n`
 }
 
-const getOutput = function({ output, insert }) {
+const getOutput = function ({ output, insert }) {
   if (typeof output === 'string') {
     return output
   }
@@ -41,7 +41,7 @@ const getOutput = function({ output, insert }) {
   return '-'
 }
 
-const writeFileContent = async function(file, content) {
+const writeFileContent = async function (file, content) {
   try {
     await writeFileAtomic(file, content)
   } catch (error) {

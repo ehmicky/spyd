@@ -3,7 +3,7 @@ import now from 'precise-now'
 import { spawnOutput, spawnNoOutput } from '../spawn.js'
 
 // Main measuring code.
-export const measure = async function({
+export const measure = async function ({
   main,
   before,
   after,
@@ -23,7 +23,7 @@ export const measure = async function({
 
 // Task `before`. Performed outside measurements.
 // Its return value is passed as variable <<before>> to `main` and `after`.
-const performBefore = async function({ before, variables, shell, debug }) {
+const performBefore = async function ({ before, variables, shell, debug }) {
   if (before === undefined) {
     return variables
   }
@@ -37,7 +37,7 @@ const performBefore = async function({ before, variables, shell, debug }) {
 }
 
 // Task `after`. Performed outside measurements.
-const performAfter = async function({ after, variables, shell, debug }) {
+const performAfter = async function ({ after, variables, shell, debug }) {
   if (after === undefined) {
     return
   }

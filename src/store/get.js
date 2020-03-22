@@ -6,7 +6,7 @@ import { validateDataVersion } from './migrate/main.js'
 import { find } from './delta/find.js'
 
 // Get a previous benchmark by `count` or `timestamp`
-export const getFromStore = async function(delta, opts) {
+export const getFromStore = async function (delta, opts) {
   const rawBenchmarks = await listStore(opts)
   validateDataVersion(rawBenchmarks)
 
@@ -19,7 +19,7 @@ export const getFromStore = async function(delta, opts) {
   return { group, benchmarks, rawBenchmarks: rawBenchmarksA }
 }
 
-const getBenchmark = function(benchmarks, delta) {
+const getBenchmark = function (benchmarks, delta) {
   try {
     const index = find(benchmarks, delta)
     const benchmark = benchmarks[index]

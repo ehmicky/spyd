@@ -6,7 +6,7 @@ import findUp from 'find-up'
 import { loadYamlFile } from '../utils/yaml.js'
 
 // Retrieve options from the configuration file (if any)
-export const getConfig = async function({ config, ...opts }) {
+export const getConfig = async function ({ config, ...opts }) {
   const configPath = await getConfigPath(config, opts)
 
   if (configPath === undefined) {
@@ -17,7 +17,7 @@ export const getConfig = async function({ config, ...opts }) {
   return { ...configContent, ...opts }
 }
 
-const getConfigPath = async function(config, { cwd = getCwd() }) {
+const getConfigPath = async function (config, { cwd = getCwd() }) {
   if (config !== undefined) {
     return resolve(cwd, config)
   }
@@ -28,7 +28,7 @@ const getConfigPath = async function(config, { cwd = getCwd() }) {
 
 const DEFAULT_CONFIG = ['spyd.yml', 'spyd.yaml']
 
-const getConfigContent = async function(configPath) {
+const getConfigContent = async function (configPath) {
   try {
     return await loadYamlFile(configPath)
   } catch (error) {

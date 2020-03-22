@@ -2,7 +2,7 @@
 //  - child processes do not run forever
 //  - users set the correct `duration` depending on the task's duration
 // The `debug` action does not use any timeout
-export const getTimeout = function(duration) {
+export const getTimeout = function (duration) {
   if (duration === undefined) {
     return
   }
@@ -10,7 +10,7 @@ export const getTimeout = function(duration) {
   return Math.ceil(duration / NANOSECS_TO_MILLISECS)
 }
 
-export const getTimeoutError = function(duration) {
+export const getTimeoutError = function (duration) {
   const secs = Math.ceil(duration / NANOSECS_TO_SECS)
   return `timed out after ${secs} seconds. Please increase the 'duration' option.`
 }

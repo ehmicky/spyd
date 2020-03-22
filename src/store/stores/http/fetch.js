@@ -1,7 +1,7 @@
 import got from 'got'
 
 // Perform a HTTP request
-export const fetchUrl = async function({
+export const fetchUrl = async function ({
   method,
   url,
   searchParams,

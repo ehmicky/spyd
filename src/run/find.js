@@ -5,7 +5,7 @@ import { extname } from 'path'
 // selected by globbing pattern due to their siblings. E.g. `benchmarks.*`
 // would catch `benchmarks.js` but also `benchmarks.js.map`, `benchmarks.js~`
 // and so on. We silently ignore the files that have no runners.
-export const findRunners = function(taskPath, runners) {
+export const findRunners = function (taskPath, runners) {
   const extension = extname(taskPath)
   const runnersA = runners.filter(({ extensions }) =>
     matchExtension(extensions, extension),
@@ -16,12 +16,12 @@ export const findRunners = function(taskPath, runners) {
 // Inverse.
 // Only trigger `runner.commands()` if the runner is used by some benchmark
 // files.
-export const hasTasks = function({ extensions }, taskPaths) {
-  return taskPaths.some(taskPath =>
+export const hasTasks = function ({ extensions }, taskPaths) {
+  return taskPaths.some((taskPath) =>
     matchExtension(extensions, extname(taskPath)),
   )
 }
 
-const matchExtension = function(extensions, extension) {
-  return extensions.some(extensionA => `.${extensionA}` === extension)
+const matchExtension = function (extensions, extension) {
+  return extensions.some((extensionA) => `.${extensionA}` === extension)
 }

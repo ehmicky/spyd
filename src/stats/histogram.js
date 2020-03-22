@@ -1,6 +1,6 @@
 // Retrieve histogram of an array of floats.
 // Array must be sorted.
-export const getHistogram = function(array, bucketsNumber) {
+export const getHistogram = function (array, bucketsNumber) {
   const [min] = array
   const max = array[array.length - 1]
   const bucketSize = (max - min) / bucketsNumber
@@ -20,7 +20,7 @@ export const getHistogram = function(array, bucketsNumber) {
   )
 }
 
-const getBucket = function({
+const getBucket = function ({
   index,
   array,
   arrayLength,
@@ -35,12 +35,12 @@ const getBucket = function({
   return { low, high, frequency }
 }
 
-const getBucketCount = function({ index, array, bucketsNumber, high }) {
+const getBucketCount = function ({ index, array, bucketsNumber, high }) {
   if (index === bucketsNumber - 1) {
     return array.length
   }
 
-  const count = array.findIndex(number => number >= high)
+  const count = array.findIndex((number) => number >= high)
   // Performance optimization so that `array.findIndex()` is twice faster
   // eslint-disable-next-line fp/no-mutating-methods
   array.splice(0, count)

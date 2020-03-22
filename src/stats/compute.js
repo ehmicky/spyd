@@ -5,7 +5,7 @@ import { getPercentiles } from './percentiles.js'
 import { getHistogram } from './histogram.js'
 
 // Retrieve statistics from a raw set of benchmark results
-export const getStats = function(results) {
+export const getStats = function (results) {
   const times = results.flatMap(getTimes)
   const count = results.reduce(reduceCount, 0)
   // Number of child processes that provided with benchmarks results
@@ -16,12 +16,12 @@ export const getStats = function(results) {
 }
 
 // Merge all processes measurements
-const getTimes = function({ times }) {
+const getTimes = function ({ times }) {
   return times
 }
 
 // Retrieve total `count`
-const reduceCount = function(totalCount, { count }) {
+const reduceCount = function (totalCount, { count }) {
   return totalCount + count
 }
 
@@ -32,7 +32,7 @@ const reduceCount = function(totalCount, { count }) {
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
 // eslint-disable-next-line max-statements
-const computeStats = function({ times, count, processes }) {
+const computeStats = function ({ times, count, processes }) {
   // Half of the statistics require the array to be sorted
   sortNumbers(times)
 

@@ -9,7 +9,7 @@ import { normalizeResult, OUTLIERS_THRESHOLD } from './normalize.js'
 // when the `duration` or `MAX_LOOPS` has been reached.
 // We also adjust or increment some `state` variables as we take more
 // measurements.
-export const benchmarkLoop = async function({
+export const benchmarkLoop = async function ({
   main,
   before,
   after,
@@ -42,7 +42,7 @@ export const benchmarkLoop = async function({
   return result
 }
 
-const benchmarkIteration = async function({
+const benchmarkIteration = async function ({
   main,
   before,
   after,
@@ -71,7 +71,7 @@ const benchmarkIteration = async function({
 // The benchmark stops if either:
 //  - we reach the end of the `duration`
 //  - we run more than `MAX_LOOPS` iterations
-const shouldStop = function(runEnd, times) {
+const shouldStop = function (runEnd, times) {
   return now() >= runEnd || times.length >= MAX_LOOPS
 }
 

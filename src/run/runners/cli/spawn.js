@@ -5,7 +5,7 @@ import { applyTemplate } from './template.js'
 
 // Spawn a command and retrieve its output
 // We use `pipe` (unless debug) so that error messages contain stdout/stderr
-export const spawnOutput = async function(
+export const spawnOutput = async function (
   command,
   header,
   { variables, shell, debug },
@@ -29,7 +29,7 @@ export const spawnOutput = async function(
 
 // Spawn a command and do not retrieve its output
 // We use `pipe` (unless debug) so that error messages contain stdout/stderr
-export const spawnNoOutput = async function(
+export const spawnNoOutput = async function (
   command,
   header,
   { variables, shell, debug },
@@ -38,7 +38,7 @@ export const spawnNoOutput = async function(
   await spawnProcess(command, { variables, shell, stdio, debug, header })
 }
 
-const spawnProcess = async function(
+const spawnProcess = async function (
   command,
   { variables, shell, stdio, debug, header },
 ) {

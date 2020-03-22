@@ -2,7 +2,7 @@ import execa from 'execa'
 
 // Runtime description for this runner, specified as `command.versions`
 // Used by the `--info` option
-export const getCommandDescription = async function({
+export const getCommandDescription = async function ({
   commandTitle,
   versions,
   runnerId,
@@ -20,7 +20,7 @@ export const getCommandDescription = async function({
 
 // `versions[*].value` can either be a CLI command (array of strings) or
 // the result directly (string)
-const getVersion = async function({ name, value, runnerId }) {
+const getVersion = async function ({ name, value, runnerId }) {
   const nameA = name === undefined ? '' : `${name} `
 
   if (typeof value === 'string') {

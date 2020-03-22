@@ -5,7 +5,7 @@ import { isDeepStrictEqual } from 'util'
 // If several benchmarks with the same system have different
 // titles/machines/jobs, the last one prevails.
 // Several benchmarks from the same group must have the same ci/git.
-export const validateMerge = function({
+export const validateMerge = function ({
   previousSystems,
   system,
   previousGit,
@@ -21,16 +21,16 @@ export const validateMerge = function({
   validateSame(previousCi, ci, { propName: 'CI build number', groups: 'group' })
 }
 
-const validateSameSystem = function(previousSystems, system) {
+const validateSameSystem = function (previousSystems, system) {
   const duplicateSystem = previousSystems.find(
-    systemA => systemA.id === system.id,
+    (systemA) => systemA.id === system.id,
   )
 
   if (duplicateSystem === undefined) {
     return
   }
 
-  SAME_SYSTEM_PROPS.forEach(propName =>
+  SAME_SYSTEM_PROPS.forEach((propName) =>
     validateSame(duplicateSystem[propName], system[propName], {
       propName,
       groups: `group and system`,
@@ -40,7 +40,7 @@ const validateSameSystem = function(previousSystems, system) {
 
 const SAME_SYSTEM_PROPS = ['opts']
 
-const validateSame = function(objectA, objectB, { propName, groups }) {
+const validateSame = function (objectA, objectB, { propName, groups }) {
   if (!isDeepStrictEqual(objectA, objectB)) {
     throw new Error(`Several benchmarks with the same ${groups} cannot have different ${propName}:
 ${JSON.stringify(objectA)}

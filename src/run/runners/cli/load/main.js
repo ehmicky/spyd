@@ -9,7 +9,7 @@ import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 
 // Load the benchmark file
-export const loadBenchmarkFile = async function(taskPath, debug) {
+export const loadBenchmarkFile = async function (taskPath, debug) {
   const entries = await loadYamlFile(taskPath)
   validateFile(entries)
 

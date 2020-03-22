@@ -1,5 +1,5 @@
 // Retrieve targets, i.e. identifiers to select iterations
-export const getTargets = function(opts) {
+export const getTargets = function (opts) {
   const optsA = normalizeSystems(opts)
 
   return TARGETS.map(({ idName, idsName, name }) =>
@@ -8,7 +8,7 @@ export const getTargets = function(opts) {
 }
 
 // Turn `system` option into an array
-const normalizeSystems = function({
+const normalizeSystems = function ({
   system: { id = '', title } = {},
   ...opts
 }) {
@@ -31,7 +31,7 @@ const TARGETS = [
 
 // Ids can start with ! to blacklist instead of whitelist
 // Whitelisting has priority over blacklisting
-const normalizeIds = function({ opts, idName, idsName, name }) {
+const normalizeIds = function ({ opts, idName, idsName, name }) {
   const ids = opts[idsName]
 
   if (ids === undefined) {
@@ -42,7 +42,7 @@ const normalizeIds = function({ opts, idName, idsName, name }) {
   return { idName, name, ids: idsA }
 }
 
-const normalizeId = function(id) {
+const normalizeId = function (id) {
   const blacklist = id.startsWith('!')
   const idA = blacklist ? id.slice(1) : id
   return { id: idA, blacklist }

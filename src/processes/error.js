@@ -1,7 +1,7 @@
 import { getTimeoutError } from './timeout.js'
 
 // Forward any child process error
-export const forwardChildError = function({
+export const forwardChildError = function ({
   shortMessage,
   failed,
   timedOut,
@@ -27,7 +27,7 @@ export const forwardChildError = function({
   throw new Error(messageA)
 }
 
-const getMessage = function({
+const getMessage = function ({
   shortMessage,
   timedOut,
   duration,
@@ -49,7 +49,7 @@ const getMessage = function({
 }
 
 // Add task/variation context to child process errors
-const getTaskPrefix = function({ taskPath, taskId, variationId }) {
+const getTaskPrefix = function ({ taskPath, taskId, variationId }) {
   if (taskId === undefined) {
     return `In '${taskPath}': `
   }
@@ -61,7 +61,7 @@ const getTaskPrefix = function({ taskPath, taskId, variationId }) {
   return `In '${taskPath}', task '${taskId}' (variation '${variationId}'): `
 }
 
-const getExecaError = function(shortMessage) {
+const getExecaError = function (shortMessage) {
   return shortMessage
     .replace(EXECA_MESSAGE_START, '')
     .replace(EXECA_MESSAGE_END, '')
@@ -70,7 +70,7 @@ const getExecaError = function(shortMessage) {
 const EXECA_MESSAGE_START = 'Command '
 const EXECA_MESSAGE_END = /: .*/u
 
-const normalizeErrorOutput = function(errorOutput) {
+const normalizeErrorOutput = function (errorOutput) {
   if (errorOutput === undefined || errorOutput === '') {
     return ''
   }

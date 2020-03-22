@@ -11,7 +11,7 @@ import { prettifyCommands } from './commands.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
-export const addPrintedInfo = function({
+export const addPrintedInfo = function ({
   iterations,
   systems,
   git,
@@ -63,7 +63,7 @@ export const addPrintedInfo = function({
   }
 }
 
-const prettify = function({ timestamp, systems, git, ci, commands }) {
+const prettify = function ({ timestamp, systems, git, ci, commands }) {
   const timestampPretty = prettifyTimestamp(timestamp)
   const systemsPretty = prettifySystems(systems)
   const gitPretty = prettifyGit(git)
@@ -74,6 +74,6 @@ const prettify = function({ timestamp, systems, git, ci, commands }) {
 
 // Make timestamp more human-friendly.
 // Must be done at end since `previous` must use raw timestamps.
-const prettifyTimestamp = function(timestamp) {
+const prettifyTimestamp = function (timestamp) {
   return new Date(timestamp).toLocaleString()
 }

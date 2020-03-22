@@ -1,6 +1,6 @@
 const START_PATH = `${__dirname}/start.js`
 
-const commands = function() {
+const commands = function () {
   return [{ spawn: ['node', START_PATH], versions: [] }]
 }
 

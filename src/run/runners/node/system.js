@@ -2,15 +2,15 @@ import { version } from 'process'
 
 import { major, minor, patch } from 'semver'
 
-const getNodeMajor = function() {
+const getNodeMajor = function () {
   return `Node ${major(version)}`
 }
 
-const getNodeMinor = function() {
+const getNodeMinor = function () {
   return `${getNodeMajor()}.${minor(version)}`
 }
 
-const getNodePatch = function() {
+const getNodePatch = function () {
   return `${getNodeMinor()}.${patch(version)}`
 }
 

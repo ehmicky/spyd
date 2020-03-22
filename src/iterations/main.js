@@ -8,7 +8,7 @@ import { loadIterations } from './load.js'
 import { removeDuplicates } from './duplicate.js'
 
 // Retrieve each iteration, i.e. combination of task + variation (if any)
-export const getIterations = async function({
+export const getIterations = async function ({
   files,
   duration,
   cwd,
@@ -39,7 +39,7 @@ export const getIterations = async function({
   return { iterations: iterationsC }
 }
 
-const getAllIterations = async function({
+const getAllIterations = async function ({
   taskPaths,
   runners,
   duration,

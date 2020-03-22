@@ -1,28 +1,28 @@
 import { get } from './get_set.js'
 
 // Sort an array of numbers
-export const sortNumbers = function(array) {
+export const sortNumbers = function (array) {
   // eslint-disable-next-line fp/no-mutating-methods
   array.sort(compareNumbers)
 }
 
-const compareNumbers = function(numA, numB) {
+const compareNumbers = function (numA, numB) {
   return numA - numB
 }
 
 // Sort an array of objects according to its properties
-export const sortBy = function(array, propNames) {
+export const sortBy = function (array, propNames) {
   const propNamesA = propNames.map(splitPropName)
 
   // eslint-disable-next-line fp/no-mutating-methods
   array.sort((objA, objB) => sortByProps(objA, objB, propNamesA))
 }
 
-const splitPropName = function(propName) {
+const splitPropName = function (propName) {
   return propName.split('.')
 }
 
-const sortByProps = function(objA, objB, propNames) {
+const sortByProps = function (objA, objB, propNames) {
   // We use a for loop for performance reasons
   // eslint-disable-next-line fp/no-loops
   for (const propName of propNames) {
@@ -37,7 +37,7 @@ const sortByProps = function(objA, objB, propNames) {
   return 0
 }
 
-const compareByProp = function(objA, objB, propName) {
+const compareByProp = function (objA, objB, propName) {
   const propA = get(objA, propName)
   const propB = get(objB, propName)
 

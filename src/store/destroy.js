@@ -1,5 +1,5 @@
 // Call `store.destroy()`
-export const destroyStore = async function({ store }) {
+export const destroyStore = async function ({ store }) {
   try {
     return await store.destroy()
   } catch (error) {

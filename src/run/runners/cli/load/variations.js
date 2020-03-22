@@ -5,19 +5,19 @@ import { applyTemplate } from '../template.js'
 // `variations` are scoped to each benchmark file. However the same
 // `variationId` can be used across benchmark files.
 // Defaults to using all `variations`.
-export const addTasksVariations = function({
+export const addTasksVariations = function ({
   tasks,
   variations = DEFAULT_VARIATIONS,
   variables,
 }) {
-  return tasks.flatMap(task =>
+  return tasks.flatMap((task) =>
     addTaskVariations({ task, variations, variables }),
   )
 }
 
 const DEFAULT_VARIATIONS = [{ id: '' }]
 
-export const addTaskVariations = function({
+export const addTaskVariations = function ({
   task: { variationsIds, ...task },
   variations,
   variables,
@@ -28,19 +28,19 @@ export const addTaskVariations = function({
     variations,
     variables,
   })
-  const tasks = variationsA.map(variation =>
+  const tasks = variationsA.map((variation) =>
     addVariation(task, variation, variables),
   )
   return tasks
 }
 
-const getVariations = function({
+const getVariations = function ({
   task,
   variationsIds,
   variations = [],
   variables,
 }) {
-  const variationsA = variations.map(variation =>
+  const variationsA = variations.map((variation) =>
     normalizeVariation(variation, variables),
   )
 
@@ -48,13 +48,13 @@ const getVariations = function({
     return variationsA
   }
 
-  return variationsIds.map(variationId =>
+  return variationsIds.map((variationId) =>
     getVariation(variationId, variationsA, task),
   )
 }
 
 // Apply templates on variations
-const normalizeVariation = function({ id, title, value }, variables) {
+const normalizeVariation = function ({ id, title, value }, variables) {
   const variationId = applyTemplate(id, variables)
   const variationTitle = applyTemplate(title, variables)
   const variationValue = getVariationValue(value, variables)
@@ -63,7 +63,7 @@ const normalizeVariation = function({ id, title, value }, variables) {
 
 // `value` can be a string but also a number or boolean, to avoid quoting
 // those in YAML
-const getVariationValue = function(value, variables) {
+const getVariationValue = function (value, variables) {
   if (value === undefined) {
     return ''
   }
@@ -76,7 +76,7 @@ const getVariationValue = function(value, variables) {
 }
 
 // Add each variation to each task by adding the <<variation>> variable
-const getVariation = function(variationId, variations, { taskId }) {
+const getVariation = function (variationId, variations, { taskId }) {
   const variationA = variations.find(
     ({ variationId: variationIdA }) => variationIdA === variationId,
   )
@@ -90,7 +90,7 @@ const getVariation = function(variationId, variations, { taskId }) {
   return variationA
 }
 
-const addVariation = function(
+const addVariation = function (
   task,
   { variationValue, ...variation },
   variables,

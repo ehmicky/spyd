@@ -7,7 +7,7 @@ import { sortNumbers } from '../../../../utils/sort.js'
 // run several times in a row ("hot paths").
 // JavaScript engines do this after specific number of iterations / thresholds.
 // When this happens, `repeat` needs to be computed again.
-export const getRepeat = function({
+export const getRepeat = function ({
   main,
   state: { times, repeat, iterIndex },
   minTime,
@@ -28,7 +28,7 @@ export const getRepeat = function({
 }
 
 // `repeat` is adjusted so that `measure()` time === `minTime`
-const computeRepeat = function({ repeat, times, minTime, loopBias }) {
+const computeRepeat = function ({ repeat, times, minTime, loopBias }) {
   sortNumbers(times)
   const median = getMedian(times)
 

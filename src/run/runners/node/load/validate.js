@@ -8,7 +8,7 @@ import {
 } from '../../common/validate/main.js'
 
 // Validate that the benchmark file has correct shape
-export const validateFile = function(entries) {
+export const validateFile = function (entries) {
   validateBenchmarkFile(entries, VALIDATORS)
 }
 

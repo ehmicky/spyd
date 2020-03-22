@@ -13,7 +13,7 @@ import { benchmarkLoop } from './loop.js'
 // On top of this, the more the benchmarking code itself is run, the faster it
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
-export const getBiases = async function({ duration, isAsync, before }) {
+export const getBiases = async function ({ duration, isAsync, before }) {
   const biasDuration = duration * BIAS_DURATION_RATIO
   const mainDuration = duration - biasDuration * 2
 
@@ -37,7 +37,7 @@ const BIAS_DURATION_RATIO = 0.1
 
 // `nowBias` is calculated by benchmarking nothing, which translates to simply
 // calling `now()` twice in a row.
-const getNowBias = async function(biasDuration) {
+const getNowBias = async function (biasDuration) {
   const { times } = await benchmarkLoop({
     duration: biasDuration,
     isAsync: false,
@@ -53,7 +53,7 @@ const getNowBias = async function(biasDuration) {
 // To fix this we run the task in a loop to increase its running time. We then
 // perform an arithmetic mean.
 // `minTime` is the minimum time under which we consider a task should do this.
-const getMinTime = function(nowBias) {
+const getMinTime = function (nowBias) {
   const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
   const minNowBiasTime = nowBias * MIN_NOW_BIAS
   return Math.max(minPrecisionTime, minNowBiasTime)
@@ -69,7 +69,7 @@ const MIN_NOW_BIAS = 1e2
 // when async.
 // Same thing goes for `before()` since passing an argument (even `undefined`)
 // to `main()` makes it slightly slower. We use a dummy `before()`.
-const getLoopBias = async function({
+const getLoopBias = async function ({
   biasDuration,
   isAsync,
   before,
@@ -91,4 +91,4 @@ const getLoopBias = async function({
 }
 
 // eslint-disable-next-line no-empty-function
-const noop = function() {}
+const noop = function () {}

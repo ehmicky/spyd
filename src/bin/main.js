@@ -10,7 +10,7 @@ import { defineCli } from './top.js'
 import { parseOpts } from './parse.js'
 
 // Parse CLI arguments then run tasks
-const runCli = async function() {
+const runCli = async function () {
   try {
     await checkUpdate()
 
@@ -23,7 +23,7 @@ const runCli = async function() {
   }
 }
 
-const checkUpdate = async function() {
+const checkUpdate = async function () {
   const { packageJson } = await readPkgUp({ cwd: __dirname, normalize: false })
   UpdateNotifier({ pkg: packageJson }).notify()
 }

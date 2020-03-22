@@ -1,12 +1,12 @@
 // Add `benchmark.group`.
 // Also the `group` option can be "same" to re-use the previous benchmark's
 // group.
-export const addGroup = function(benchmark, benchmarks, { group }) {
+export const addGroup = function (benchmark, benchmarks, { group }) {
   const groupA = handleSame(benchmarks, group)
   return { ...benchmark, group: groupA }
 }
 
-const handleSame = function(benchmarks, group) {
+const handleSame = function (benchmarks, group) {
   if (group !== '') {
     return group
   }

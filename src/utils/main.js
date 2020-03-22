@@ -1,13 +1,13 @@
-export const isEmptyObject = function(object) {
+export const isEmptyObject = function (object) {
   return Object.values(object).every(isUndefined)
 }
 
-const isUndefined = function(value) {
+const isUndefined = function (value) {
   return value === undefined
 }
 
 // ES specifications mostly use promiseLike objects not promises
-export const isPromiseLike = function(value) {
+export const isPromiseLike = function (value) {
   return (
     typeof value === 'object' &&
     value !== null &&

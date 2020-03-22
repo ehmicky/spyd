@@ -2,18 +2,18 @@
 // The same unit is used for all `stats.*Pretty` to make it easier to compare
 // between stats.
 // We use the minimum time unit where all medians are >= 1
-export const getUnit = function(iterations) {
+export const getUnit = function (iterations) {
   const medians = iterations.flatMap(getMedianStat)
   const unit = findUnit(medians)
   const scale = UNITS[unit]
   return { unit, scale }
 }
 
-const getMedianStat = function({ stats: { median } }) {
+const getMedianStat = function ({ stats: { median } }) {
   return median
 }
 
-const findUnit = function(medians) {
+const findUnit = function (medians) {
   const mediansA = medians.filter(isNotZero)
 
   // When all medians are 0
@@ -35,7 +35,7 @@ const findUnit = function(medians) {
   return preciseUnit[0]
 }
 
-const isNotZero = function(median) {
+const isNotZero = function (median) {
   return median !== 0
 }
 

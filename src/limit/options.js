@@ -1,10 +1,10 @@
 // Normalize 'limit' option
-export const normalizeLimits = function({ limit: limits, ...opts }) {
+export const normalizeLimits = function ({ limit: limits, ...opts }) {
   const limitsA = limits.map(normalizeLimit)
   return { ...opts, limits: limitsA }
 }
 
-const normalizeLimit = function(limit) {
+const normalizeLimit = function (limit) {
   const limitA = stringify(limit)
 
   if (!limitA.includes('=')) {
@@ -17,7 +17,7 @@ const normalizeLimit = function(limit) {
   return { ids: idsA, percentage: percentageA }
 }
 
-const stringify = function(limit) {
+const stringify = function (limit) {
   if (Number.isFinite(limit)) {
     return String(limit)
   }
@@ -29,7 +29,7 @@ const stringify = function(limit) {
   return limit
 }
 
-const getPercentage = function(string) {
+const getPercentage = function (string) {
   const percentage = Number(string)
 
   if (!Number.isFinite(percentage) || percentage < 0) {
