@@ -7,7 +7,7 @@ export const normalizeStore = async function (
   { cwd, store: { opts: storeOpts, init, ...store }, ...opts },
   action,
 ) {
-  if (NO_STORE_ACTIONS.includes(action)) {
+  if (NO_STORE_ACTIONS.has(action)) {
     return { ...opts, cwd }
   }
 
@@ -17,7 +17,7 @@ export const normalizeStore = async function (
   return { ...opts, cwd, store: storeA }
 }
 
-const NO_STORE_ACTIONS = ['debug']
+const NO_STORE_ACTIONS = new Set(['debug'])
 
 // Add `cwd`, `root` and `name` to store options passed to `init()`
 const getStoreOpts = async function (cwd, storeOpts) {

@@ -53,7 +53,7 @@ const getSharedSystem = function (sharedProps, [firstSystem]) {
 
 // Jobs are only shown when they differ between systems.
 const isOmitedSharedProp = function (propName) {
-  return !OMITTED_SHARED_PROPS.includes(propName)
+  return !OMITTED_SHARED_PROPS.has(propName)
 }
 
-const OMITTED_SHARED_PROPS = ['jobNumber', 'jobUrl']
+const OMITTED_SHARED_PROPS = new Set(['jobNumber', 'jobUrl'])

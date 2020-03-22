@@ -20,8 +20,7 @@ export const handleTypeScript = async function (requireOpt, taskPath) {
 
 const shouldUseTsNode = function (requireOpt, taskPath) {
   return (
-    !requireOpt.some(isTsNode) &&
-    TYPESCRIPT_EXTENSIONS.includes(extname(taskPath))
+    !requireOpt.some(isTsNode) && TYPESCRIPT_EXTENSIONS.has(extname(taskPath))
   )
 }
 
@@ -31,5 +30,5 @@ const isTsNode = function (requiredModule) {
   return requiredModule.startsWith(TS_NODE)
 }
 
-const TYPESCRIPT_EXTENSIONS = ['.ts', '.tsx']
+const TYPESCRIPT_EXTENSIONS = new Set(['.ts', '.tsx'])
 const TS_NODE = 'ts-node/register'
