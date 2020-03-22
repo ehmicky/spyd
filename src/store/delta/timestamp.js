@@ -7,7 +7,7 @@ export const getDeltaTimestamp = function (name, delta) {
 
   const date = new Date(deltaA)
 
-  if (isNaN(date)) {
+  if (Number.isNaN(Number(date))) {
     throw new TypeError(`'${name}' option is an invalid date/time: ${delta}`)
   }
 
