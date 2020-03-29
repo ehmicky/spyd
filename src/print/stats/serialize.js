@@ -1,7 +1,7 @@
-import { STAT_TYPES } from './types.js'
-import { shouldSkipStat } from './skip.js'
-import { addPrefix } from './prefix.js'
 import { addColors } from './colors.js'
+import { addPrefix } from './prefix.js'
+import { shouldSkipStat } from './skip.js'
+import { STAT_TYPES } from './types.js'
 
 // Serialize each stat measure using the right time unit, number of decimals
 // and padding

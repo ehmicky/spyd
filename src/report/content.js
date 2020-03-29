@@ -1,5 +1,5 @@
-import { print } from './print.js'
 import { insertContent } from './insert.js'
+import { print } from './print.js'
 
 // Handle content using the `output` and `insert` options
 export const handleContent = async function (content, { output, insert }) {

@@ -1,13 +1,13 @@
-import { prettifySystems } from '../system/pretty.js'
-import { joinSystems } from '../system/join.js'
 import { prettifyGit } from '../ci/git.js'
 import { prettifyCi } from '../ci/pretty.js'
+import { joinSystems } from '../system/join.js'
+import { prettifySystems } from '../system/pretty.js'
 
 import { addCollections } from './collections.js'
+import { prettifyCommands } from './commands.js'
 import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
 import { normalizeStats } from './stats/main.js'
-import { prettifyCommands } from './commands.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.

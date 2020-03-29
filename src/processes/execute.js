@@ -1,9 +1,9 @@
 import execa from 'execa'
 
-import { FDS } from './fd.js'
-import { getTimeout } from './timeout.js'
-import { getOutput, getErrorOutput } from './output.js'
 import { forwardChildError } from './error.js'
+import { FDS } from './fd.js'
+import { getOutput, getErrorOutput } from './output.js'
+import { getTimeout } from './timeout.js'
 
 // Execute a runner child process and retrieve its output.
 // We are:

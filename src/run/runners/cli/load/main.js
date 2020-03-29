@@ -2,10 +2,10 @@ import { env } from 'process'
 
 import { loadYamlFile } from '../../../../utils/yaml.js'
 
+import { normalizeTasks } from './normalize.js'
+import { getShell } from './shell.js'
 import { validateFile } from './validate.js'
 import { getVariables } from './variables.js'
-import { getShell } from './shell.js'
-import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 
 // Load the benchmark file

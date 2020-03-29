@@ -1,5 +1,5 @@
-import { pointer } from 'figures'
 import { cyan } from 'chalk'
+import { pointer } from 'figures'
 
 import { padTitles } from './titles.js'
 

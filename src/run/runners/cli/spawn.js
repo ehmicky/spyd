@@ -1,5 +1,5 @@
-import execa from 'execa'
 import { blue } from 'chalk'
+import execa from 'execa'
 
 import { applyTemplate } from './template.js'
 

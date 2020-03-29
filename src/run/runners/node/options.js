@@ -1,5 +1,5 @@
-import { validate } from 'jest-validate'
 import filterObj from 'filter-obj'
+import { validate } from 'jest-validate'
 
 // Validate runner options
 export const getOpts = function (runOpts) {

@@ -1,9 +1,9 @@
 import now from 'precise-now'
 
 import { measure } from './measure.js'
+import { normalizeResult, OUTLIERS_THRESHOLD } from './normalize.js'
 import { getRepeat } from './repeat.js'
 import { updateState } from './state.js'
-import { normalizeResult, OUTLIERS_THRESHOLD } from './normalize.js'
 
 // We perform benchmarking iteratively in order to stop benchmarking exactly
 // when the `duration` or `MAX_LOOPS` has been reached.

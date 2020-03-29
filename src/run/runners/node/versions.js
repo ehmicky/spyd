@@ -1,6 +1,6 @@
 import nvexeca from 'nvexeca'
-import { satisfies } from 'semver'
 import readPkgUp from 'read-pkg-up'
+import { satisfies } from 'semver'
 
 // Normalize the node `versions` option
 export const getNodeVersions = async function ({ versions }) {

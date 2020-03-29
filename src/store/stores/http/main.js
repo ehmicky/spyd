@@ -1,5 +1,5 @@
-import { getUrl } from './options.js'
 import { fetchUrl } from './fetch.js'
+import { getUrl } from './options.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves benchmarks to `dir/data.json`

@@ -1,5 +1,5 @@
-import { getDir } from './options.js'
 import { getBenchmarks, setBenchmarks } from './fs.js'
+import { getDir } from './options.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves benchmarks to `dir/data.json`

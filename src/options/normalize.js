@@ -1,14 +1,14 @@
-import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
+import { cwd as getCwd } from 'process'
 
+import { normalizeLimits } from '../limit/options.js'
 import { normalizeProgress } from '../progress/options.js'
 import { normalizeDelta } from '../store/delta/options.js'
-import { normalizeLimits } from '../limit/options.js'
 import { normalizeStore } from '../store/options.js'
 import { normalizeSystem } from '../system/normalize.js'
 
-import { validateStringArray, validatePositiveNumber } from './validate.js'
 import { loadAllPlugins } from './plugins.js'
+import { validateStringArray, validatePositiveNumber } from './validate.js'
 
 // Normalize some options before assigning default values
 export const preNormalizeOpts = function (opts) {

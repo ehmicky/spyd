@@ -1,5 +1,5 @@
-import { cwd as getCwd } from 'process'
 import { resolve } from 'path'
+import { cwd as getCwd } from 'process'
 
 import findUp from 'find-up'
 

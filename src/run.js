@@ -1,10 +1,10 @@
 import pMapSeries from 'p-map-series'
 
-import { startProgress } from './progress/start.js'
-import { stopProgress } from './progress/stop.js'
+import { addBenchmarkInfo } from './info.js'
 import { getIterations } from './iterations/main.js'
 import { runProcesses } from './processes/main.js'
-import { addBenchmarkInfo } from './info.js'
+import { startProgress } from './progress/start.js'
+import { stopProgress } from './progress/stop.js'
 
 // Run a new benchmark
 export const runBenchmark = async function (opts) {

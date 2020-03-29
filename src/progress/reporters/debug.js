@@ -1,6 +1,6 @@
 import { stderr } from 'process'
-import { promisify } from 'util'
 import { cursorTo, clearLine } from 'readline'
+import { promisify } from 'util'
 
 import { yellow, cyan } from 'chalk'
 

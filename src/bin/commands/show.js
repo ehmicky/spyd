@@ -1,7 +1,7 @@
 import { ALL_CONFIG } from '../config/all.js'
-import { STORE_CONFIG } from '../config/store.js'
-import { SELECT_CONFIG } from '../config/select.js'
 import { REPORT_CONFIG } from '../config/report.js'
+import { SELECT_CONFIG } from '../config/select.js'
+import { STORE_CONFIG } from '../config/store.js'
 
 export const SHOW_COMMAND = {
   input: 'show [delta]',

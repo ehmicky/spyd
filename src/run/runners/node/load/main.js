@@ -1,6 +1,6 @@
+import { normalizeTasks } from './normalize.js'
 import { useRequireOpt } from './require_opt.js'
 import { validateFile } from './validate.js'
-import { normalizeTasks } from './normalize.js'
 import { addTasksVariations } from './variations.js'
 
 // Load the iterations using the 'load' event sent by parent

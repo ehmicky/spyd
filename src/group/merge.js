@@ -1,5 +1,5 @@
-import { groupBy } from '../utils/group.js'
 import { removeDuplicates } from '../iterations/duplicate.js'
+import { groupBy } from '../utils/group.js'
 
 import { validateMerge } from './validate.js'
 

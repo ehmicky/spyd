@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
 
+import { getCiInfo } from './ci/info.js'
 import { DATA_VERSION } from './store/migrate/main.js'
 import { getSystems } from './system/info.js'
-import { getCiInfo } from './ci/info.js'
 import { cleanObject } from './utils/clean.js'
 
 // Add more information to the final benchmark and normalize/sort results

@@ -1,7 +1,7 @@
-import { getUnit } from './unit.js'
 import { getStatsDecimals } from './decimals.js'
-import { serializeStats } from './serialize.js'
 import { addPaddings } from './padding.js'
+import { serializeStats } from './serialize.js'
+import { getUnit } from './unit.js'
 
 // Some stats are removed when `--save` is used. When showing saved benchmarks,
 // those will be `undefined`. We default them to `[]`.

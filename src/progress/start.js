@@ -1,10 +1,10 @@
+import { cyan } from 'chalk'
 import { hide as hideCursor } from 'cli-cursor'
 import onExit from 'signal-exit'
-import { cyan } from 'chalk'
 
+import { stopProgress } from './stop.js'
 import { getTimeLeft } from './time.js'
 import { startUpdate } from './update.js'
-import { stopProgress } from './stop.js'
 
 // Start progress reporting using the `progress` option
 export const startProgress = async function (

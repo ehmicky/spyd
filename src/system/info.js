@@ -1,7 +1,7 @@
 import { cpus as getCpus, totalmem } from 'os'
 
-import osName from 'os-name'
 import { format as formatBytes } from 'bytes'
+import osName from 'os-name'
 
 import { groupBy } from '../utils/group.js'
 

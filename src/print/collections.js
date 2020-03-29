@@ -1,6 +1,6 @@
+import { getMean } from '../stats/methods.js'
 import { groupBy } from '../utils/group.js'
 import { sortBy } from '../utils/sort.js'
-import { getMean } from '../stats/methods.js'
 
 // Group row/columns information into top-level properties so that reporters
 // can list them.

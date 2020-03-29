@@ -1,10 +1,10 @@
+import { checkLimits } from '../limit/error.js'
 import { addPrintedInfo } from '../print/main.js'
 import { addPrevious } from '../print/previous.js'
-import { checkLimits } from '../limit/error.js'
 
-import { handleReportOpt } from './options.js'
 import { handleColors } from './colors.js'
 import { handleContent } from './content.js'
+import { handleReportOpt } from './options.js'
 
 // Report benchmark results
 export const report = async function (

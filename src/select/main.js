@@ -1,6 +1,6 @@
+import { applyTargets } from './apply.js'
 import { getTargets } from './targets.js'
 import { validateTargets } from './validate.js'
-import { applyTargets } from './apply.js'
 
 // Select iterations according to options `tasks` and `variations`.
 // For the `run` and `debug` commands.

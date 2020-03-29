@@ -1,5 +1,5 @@
-import { argv } from 'process'
 import { write } from 'fs'
+import { argv } from 'process'
 import { promisify } from 'util'
 
 const pWrite = promisify(write)

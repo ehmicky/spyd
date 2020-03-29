@@ -1,12 +1,12 @@
+import { debugBenchmark } from './debug.js'
 import { getOpts } from './options/main.js'
 import { report } from './report/main.js'
-import { addToStore } from './store/add.js'
-import { getFromStore } from './store/get.js'
-import { removeFromStore } from './store/remove.js'
-import { migrateStore } from './store/migrate/main.js'
-import { destroyStore } from './store/destroy.js'
 import { runBenchmark } from './run.js'
-import { debugBenchmark } from './debug.js'
+import { addToStore } from './store/add.js'
+import { destroyStore } from './store/destroy.js'
+import { getFromStore } from './store/get.js'
+import { migrateStore } from './store/migrate/main.js'
+import { removeFromStore } from './store/remove.js'
 
 // Benchmark JavaScript code defined in a benchmark file and report the results.
 // Default action: run a new benchmark

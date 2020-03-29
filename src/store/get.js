@@ -1,9 +1,9 @@
 import { mergeBenchmarks } from '../group/merge.js'
 import { selectBenchmarks } from '../select/main.js'
 
+import { find } from './delta/find.js'
 import { listStore } from './list.js'
 import { validateDataVersion } from './migrate/main.js'
-import { find } from './delta/find.js'
 
 // Get a previous benchmark by `count` or `timestamp`
 export const getFromStore = async function (delta, opts) {

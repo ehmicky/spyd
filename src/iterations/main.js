@@ -1,11 +1,11 @@
-import { loadRunners } from '../run/load.js'
-import { addNames } from '../print/name.js'
 import { validateLimits } from '../limit/validate.js'
+import { addNames } from '../print/name.js'
+import { loadRunners } from '../run/load.js'
 import { selectIterations } from '../select/main.js'
 
-import { getTaskPaths } from './path.js'
-import { loadIterations } from './load.js'
 import { removeDuplicates } from './duplicate.js'
+import { loadIterations } from './load.js'
+import { getTaskPaths } from './path.js'
 
 // Retrieve each iteration, i.e. combination of task + variation (if any)
 export const getIterations = async function ({

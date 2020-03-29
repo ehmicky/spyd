@@ -1,7 +1,7 @@
 import { promises } from 'fs'
 
-import writeFileAtomic from 'write-file-atomic'
 import pathExists from 'path-exists'
+import writeFileAtomic from 'write-file-atomic'
 
 // Retrieve benchmarks from filesystem
 export const getBenchmarks = async function (dir) {

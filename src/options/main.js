@@ -1,8 +1,8 @@
 import { cwd as getCwd, stderr } from 'process'
 
-import { validate, multipleValidOptions } from 'jest-validate'
-import isInteractive from 'is-interactive'
 import filterObj from 'filter-obj'
+import isInteractive from 'is-interactive'
+import { validate, multipleValidOptions } from 'jest-validate'
 
 import { getDefaultGroup } from '../ci/info.js'
 

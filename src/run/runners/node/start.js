@@ -3,8 +3,8 @@ import { exit } from 'process'
 import { getInput, sendOutput, sendError } from '../common/ipc.js'
 
 import { benchmark } from './benchmark/main.js'
-import { loadBenchmarkFile } from './load/main.js'
 import { debugRun } from './debug.js'
+import { loadBenchmarkFile } from './load/main.js'
 
 // Child process entry point
 const start = async function () {
