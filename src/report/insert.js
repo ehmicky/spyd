@@ -1,4 +1,4 @@
-import { promises } from 'fs'
+import { promises as fs } from 'fs'
 
 import writeFileAtomic from 'write-file-atomic'
 
@@ -22,7 +22,7 @@ export const insertContent = async function ({ content, insert: file }) {
 
 const getFileContent = async function (file) {
   try {
-    return await promises.readFile(file, 'utf8')
+    return await fs.readFile(file, 'utf8')
   } catch (error) {
     throw new Error(`Could not read file '${file}'\n${error.message}`)
   }

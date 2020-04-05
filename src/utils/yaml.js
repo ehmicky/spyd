@@ -1,4 +1,4 @@
-import { promises } from 'fs'
+import { promises as fs } from 'fs'
 
 import { load as loadYaml, JSON_SCHEMA } from 'js-yaml'
 
@@ -11,7 +11,7 @@ export const loadYamlFile = async function (path) {
 
 const readYamlFile = async function (path) {
   try {
-    return await promises.readFile(path, 'utf8')
+    return await fs.readFile(path, 'utf8')
   } catch (error) {
     throw new Error(`Could not read file '${path}'\n\n${error.stack}`)
   }

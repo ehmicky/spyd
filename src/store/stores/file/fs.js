@@ -1,4 +1,4 @@
-import { promises } from 'fs'
+import { promises as fs } from 'fs'
 
 import pathExists from 'path-exists'
 import writeFileAtomic from 'write-file-atomic'
@@ -11,7 +11,7 @@ export const getBenchmarks = async function (dir) {
     return []
   }
 
-  const content = await promises.readFile(dataFile, 'utf8')
+  const content = await fs.readFile(dataFile, 'utf8')
   const benchmarks = JSON.parse(content)
   return benchmarks
 }
@@ -24,7 +24,7 @@ export const setBenchmarks = async function (dir, benchmarks) {
 }
 
 const getDataFile = async function (dir) {
-  await promises.mkdir(dir, { recursive: true })
+  await fs.mkdir(dir, { recursive: true })
   return `${dir}/${DATA_FILE}`
 }
 
