@@ -5,7 +5,7 @@
   "files": [
     "build/src",
     "examples",
-    "!~"
+    "!*~"
   ],
   "bin": {
     "spyd": "build/src/bin/main.js"
