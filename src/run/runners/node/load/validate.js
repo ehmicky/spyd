@@ -29,6 +29,6 @@ const VARIATION_VALIDATORS = {
 }
 
 const VALIDATORS = {
-  tasks: validateTasks.bind(null, TASK_VALIDATORS),
-  variations: validateVariations.bind(null, VARIATION_VALIDATORS),
+  tasks: validateTasks.bind(undefined, TASK_VALIDATORS),
+  variations: validateVariations.bind(undefined, VARIATION_VALIDATORS),
 }

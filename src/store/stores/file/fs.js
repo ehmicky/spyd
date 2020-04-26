@@ -19,7 +19,7 @@ export const getBenchmarks = async function (dir) {
 // Persist benchmarks from filesystem
 export const setBenchmarks = async function (dir, benchmarks) {
   const dataFile = await getDataFile(dir)
-  const content = JSON.stringify(benchmarks, null, 2)
+  const content = JSON.stringify(benchmarks, undefined, 2)
   await writeFileAtomic(dataFile, `${content}\n`)
 }
 
