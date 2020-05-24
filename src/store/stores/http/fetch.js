@@ -5,7 +5,7 @@ export const fetchUrl = async function ({
   method,
   url,
   searchParams,
-  body: json = undefined,
+  body: json,
   noResponse,
 }) {
   const responseType = noResponse

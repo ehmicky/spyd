@@ -40,7 +40,7 @@ const stop = async function () {
 
 const clearProgress = async function () {
   try {
-    await pCursorTo(stderr, 0, undefined)
+    await pCursorTo(stderr, 0)
     await pClearLine(stderr, 0)
   } catch {}
 }
