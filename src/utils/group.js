@@ -2,7 +2,9 @@
 export const groupBy = function (array, propName) {
   const groups = {}
 
-  array.forEach((object) => addGroup(object, groups, propName))
+  array.forEach((object) => {
+    addGroup(object, groups, propName)
+  })
 
   return groups
 }
