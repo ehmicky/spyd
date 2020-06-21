@@ -10,9 +10,9 @@ export const validateBenchmarkFile = function (entries, validators) {
     throw new TypeError(`Missing property 'tasks'`)
   }
 
-  Object.entries(entries).forEach(([name, entry]) =>
-    validateEntry(name, entry, validators),
-  )
+  Object.entries(entries).forEach(([name, entry]) => {
+    validateEntry(name, entry, validators)
+  })
 }
 
 const validateEntry = function (name, entry, validators) {

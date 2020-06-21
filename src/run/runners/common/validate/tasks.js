@@ -8,7 +8,9 @@ export const validateTasks = function (validators, tasks) {
     throw new TypeError(`Tasks must be an array`)
   }
 
-  tasks.forEach((task) => validateTask(task, validators))
+  tasks.forEach((task) => {
+    validateTask(task, validators)
+  })
 }
 
 const validateTask = function (task, validators) {
@@ -26,7 +28,7 @@ const validateTask = function (task, validators) {
     throw new TypeError(`Task '${id}' must have a 'main' property`)
   }
 
-  Object.entries(task).forEach(([propName, prop]) =>
-    validateProp({ id, validators, category: 'task', propName, prop }),
-  )
+  Object.entries(task).forEach(([propName, prop]) => {
+    validateProp({ id, validators, category: 'task', propName, prop })
+  })
 }

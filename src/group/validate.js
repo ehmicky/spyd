@@ -30,12 +30,12 @@ const validateSameSystem = function (previousSystems, system) {
     return
   }
 
-  SAME_SYSTEM_PROPS.forEach((propName) =>
+  SAME_SYSTEM_PROPS.forEach((propName) => {
     validateSame(duplicateSystem[propName], system[propName], {
       propName,
       groups: `group and system`,
-    }),
-  )
+    })
+  })
 }
 
 const SAME_SYSTEM_PROPS = ['opts']

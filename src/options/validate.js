@@ -2,9 +2,9 @@ import isPlainObj from 'is-plain-obj'
 
 // Options validation helper functions
 export const validateDeepObject = function (object, name) {
-  Object.entries(object).forEach(([propName, value]) =>
-    validateObject(value, `${name}.${propName}`),
-  )
+  Object.entries(object).forEach(([propName, value]) => {
+    validateObject(value, `${name}.${propName}`)
+  })
 }
 
 const validateObject = function (value, name) {

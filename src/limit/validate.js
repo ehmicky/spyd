@@ -1,10 +1,14 @@
 // Ensure ids exist
 export const validateLimits = function (iterations, limits) {
-  limits.forEach((limit) => validateLimit(iterations, limit))
+  limits.forEach((limit) => {
+    validateLimit(iterations, limit)
+  })
 }
 
 const validateLimit = function (iterations, { ids = [] }) {
-  ids.forEach((id) => validateLimitId(iterations, id))
+  ids.forEach((id) => {
+    validateLimitId(iterations, id)
+  })
 }
 
 const validateLimitId = function (iterations, id) {
