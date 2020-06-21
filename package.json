@@ -60,7 +60,7 @@
     "read-pkg-up": "^7.0.1",
     "semver": "^7.3.2",
     "signal-exit": "^3.0.3",
-    "slugify": "^1.4.0",
+    "slugify": "^1.4.4",
     "string-width": "^4.2.0",
     "strip-ansi": "^6.0.0",
     "time-resolution": "^0.2.0",
