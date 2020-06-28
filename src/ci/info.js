@@ -39,4 +39,4 @@ const mGetEnvCi = function (cwd) {
   return envCi({ cwd })
 }
 
-const getEnvCi = moize(mGetEnvCi)
+const getEnvCi = moize(mGetEnvCi, { maxSize: 1e3 })
