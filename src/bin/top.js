@@ -12,15 +12,10 @@ const addCommand = function (
   { input, description, config, usage, examples },
 ) {
   return yargsA.command(input, description, (commandYargs) =>
-    addCommandInfo(commandYargs, { config, usage, examples }),
+    addCommandInfo({ commandYargs, config, usage, examples }),
   )
 }
 
-const addCommandInfo = function (commandYargs, { config, usage, examples }) {
-  const commandYargsA = commandYargs.options(config).usage(usage)
-  return examples.reduce(addExample, commandYargsA)
-}
-
-const addExample = function (commandYargs, example) {
-  return commandYargs.example(...example)
+const addCommandInfo = function ({ commandYargs, config, usage, examples }) {
+  return commandYargs.options(config).usage(usage).example(examples)
 }
