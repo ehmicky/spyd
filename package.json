@@ -39,7 +39,7 @@
     "core-js": "^3.6.5",
     "env-ci": "^5.0.2",
     "execa": "^4.0.3",
-    "fast-glob": "^3.2.2",
+    "fast-glob": "^3.2.4",
     "figures": "^3.2.0",
     "filter-obj": "^2.0.1",
     "find-up": "^4.1.0",
