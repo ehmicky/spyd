@@ -43,7 +43,7 @@
     "figures": "^3.2.0",
     "filter-obj": "^2.0.1",
     "find-up": "^5.0.0",
-    "get-stream": "^5.1.0",
+    "get-stream": "^6.0.0",
     "got": "^11.5.2",
     "indent-string": "^4.0.0",
     "is-interactive": "^1.0.0",
