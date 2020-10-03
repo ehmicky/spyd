@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/ehmicky/design/master/spyd/spyd.svg?sanitize=true" width="400"/>
+<img src="https://raw.githubusercontent.com/ehmicky/design/main/spyd/spyd.svg?sanitize=true" width="400"/>
 
 [![Codecov](https://img.shields.io/codecov/c/github/ehmicky/spyd.svg?label=tested&logo=codecov)](https://codecov.io/gh/ehmicky/spyd)
 [![Build](https://github.com/ehmicky/spyd/workflows/Build/badge.svg)](https://github.com/ehmicky/spyd/actions)
