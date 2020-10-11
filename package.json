@@ -67,7 +67,7 @@
     "update-notifier": "^5.0.0",
     "uuid": "^8.3.1",
     "write-file-atomic": "^3.0.3",
-    "yargs": "^16.0.3",
+    "yargs": "^16.1.0",
     "yn": "^4.0.0"
   },
   "devDependencies": {
