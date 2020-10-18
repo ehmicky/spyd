@@ -29,8 +29,8 @@ const TARGETS = [
   { idName: 'commandRunner', idsName: 'runners', name: 'runner' },
 ]
 
-// Ids can start with ! to blacklist instead of whitelist
-// Whitelisting has priority over blacklisting
+// Ids can start with ! to deny instead of allow
+// Allow has priority over deny
 const normalizeIds = function ({ opts, idName, idsName, name }) {
   const ids = opts[idsName]
 
@@ -43,7 +43,7 @@ const normalizeIds = function ({ opts, idName, idsName, name }) {
 }
 
 const normalizeId = function (id) {
-  const blacklist = id.startsWith('!')
-  const idA = blacklist ? id.slice(1) : id
-  return { id: idA, blacklist }
+  const deny = id.startsWith('!')
+  const idA = deny ? id.slice(1) : id
+  return { id: idA, deny }
 }

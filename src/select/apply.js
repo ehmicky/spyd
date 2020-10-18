@@ -18,10 +18,10 @@ const matchTarget = function (id, ids) {
     return false
   }
 
-  const whitelistIds = ids.filter(({ blacklist }) => !blacklist)
+  const allowedIds = ids.filter(({ deny }) => !deny)
 
-  if (whitelistIds.length !== 0) {
-    return whitelistIds.some(({ id: idA }) => idA === id)
+  if (allowedIds.length !== 0) {
+    return allowedIds.some(({ id: idA }) => idA === id)
   }
 
   return !ids.some(({ id: idA }) => idA === id)

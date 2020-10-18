@@ -37,7 +37,7 @@ const isDefined = function (key, value) {
 const validateOpts = function (opts) {
   validate(opts, {
     exampleConfig: EXAMPLE_OPTS,
-    recursiveBlacklist: ['run', 'report', 'progress', 'store'],
+    recursiveDenylist: ['run', 'report', 'progress', 'store'],
   })
 }
 
