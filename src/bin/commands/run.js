@@ -32,6 +32,6 @@ The format of the FILE is runner-specific.`,
 
   examples: [
     ['$0', 'Run a new benchmark'],
-    ['$0 -d 60', 'Benchmark each task for 30 seconds'],
+    ['$0 -d 60', 'Benchmark each task for 60 seconds'],
   ],
 }
