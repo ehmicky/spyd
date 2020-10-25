@@ -18,7 +18,7 @@ export const RUN_COMMAND = {
 
   usage: `$0 [options] [<files...>]
 
-Benchmark JavaScript code.
+Benchmark code.
 
 FILE can be a globbing pattern.
 It defaults to "./benchmarks.*" or "./benchmarks/main.*".
