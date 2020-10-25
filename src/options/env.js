@@ -19,8 +19,8 @@ const isSpydEnvVar = function ([key]) {
 const getEnvVar = function ([key, value]) {
   const keyA = key.replace(SPYD_NAMESPACE, '').toLowerCase()
 
-  if (keyA.includes('_')) {
-    return set({}, keyA.split('_'), value)
+  if (keyA.includes(DELIMITER)) {
+    return set({}, keyA.split(DELIMITER), value)
   }
 
   const type = OPTS[keyA]
@@ -33,7 +33,8 @@ const getEnvVar = function ([key, value]) {
   return { [keyA]: valueA }
 }
 
-const SPYD_NAMESPACE = 'SPYD_'
+const DELIMITER = '_'
+const SPYD_NAMESPACE = `SPYD${DELIMITER}`
 
 const getBoolean = function (value) {
   return yn(value, { default: true })
