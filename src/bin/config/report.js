@@ -3,7 +3,7 @@ export const REPORT_CONFIG = {
   report: {
     describe: `Module to report benchmarks.
 Built-in reporters: silent.
-Custom reporters (installed with npm) can also be used.
+Custom reporters can also be installed from npm.
 Uses a dot notation such as --report.json (not --report=json nor --report json).
 Reporter-specific options can be specified using the same dot notation.
 The following options can be set for any reporter: output, insert, colors, info,
@@ -36,10 +36,9 @@ The benchmarks will be inserted between those two lines.`,
     requiresArg: true,
     describe: `Report when the average duration has increased by more than a
 specific percentage.
-Can be specified several times.
 The value is the percentage (e.g. "50" for 50%).
 It can prefixed by a comma-separated list of identifiers (tasks, variations,
-runners or systems) to target.`,
+runners or systems) to target. This can be specified several times.`,
   },
   colors: {
     boolean: true,
@@ -54,7 +53,8 @@ Default: false`,
   context: {
     boolean: true,
     describe: `Show context information such as timestamp, group, commit/branch
-or CI build.`,
+or CI build.
+Default: true for command "show", false otherwise`,
   },
   link: {
     boolean: true,
@@ -62,8 +62,13 @@ or CI build.`,
 Default: true`,
   },
   diff: {
-    describe: `Compare difference with a previous benchmark.
-Can be false, true, integer or timestamp (like the 'show' option).
+    describe: `Compare the difference with a previous benchmark.
+Can be:
+  - false: do not compare
+  - true: compare with the last benchmark
+  - integer: compare with the {integer}-th previous benchmark
+  - a date|time: compare with the last benchmark before that date|time.
+    Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.
 Default: true`,
   },
 }

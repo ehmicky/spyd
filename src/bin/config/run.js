@@ -11,14 +11,14 @@ Default: 10`,
     alias: 'g',
     string: true,
     describe: `Append the current benchmarks to the previous one.
-Used to create a single benchmark incrementally.
-Can also be a group identifier. Benchmarks with the group are reported together.
+Used to create a single benchmark in several incremental runs.
+Can also be a group identifier. Benchmarks within the same group are reported together.
 Default: random UUID`,
   },
   progress: {
     describe: `Module to report benchmark progress.
 Built-in progress reporters: silent.
-Custom progress reporters (installed with npm) can also be used.
+Custom progress reporters can be installed from npm.
 Uses a dot notation such as --progress.bar (not --progress=bar nor --progress bar).`,
   },
   save: {
