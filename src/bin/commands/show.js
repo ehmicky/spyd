@@ -20,7 +20,7 @@ Show a previous benchmark.
 
 The 'delta' argument can be:
   - nothing: show the last benchmark
-  - integer: show the {integer} previous benchmark
+  - integer: show the {integer}-th previous benchmark
   - a date|time: show the last benchmark before that date|time.
     Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.`,
 

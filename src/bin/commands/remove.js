@@ -13,7 +13,7 @@ Remove a previous benchmark.
 
 The 'delta' argument can be:
   - nothing: remove the last benchmark
-  - integer: remove the {integer} previous benchmark
+  - integer: remove the {integer}-th previous benchmark
   - a date|time: remove the last benchmark before that date|time.
     Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.`,
 
