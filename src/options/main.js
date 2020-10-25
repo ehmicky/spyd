@@ -37,9 +37,12 @@ const isDefined = function (key, value) {
 const validateOpts = function (opts) {
   validate(opts, {
     exampleConfig: EXAMPLE_OPTS,
-    recursiveDenylist: ['run', 'report', 'progress', 'store'],
+    recursiveDenylist: RECURSIVE_OPTS,
   })
 }
+
+// Options using the dot notation
+const RECURSIVE_OPTS = ['run', 'report', 'progress', 'store']
 
 const addDefaultOpts = function (opts, action) {
   return {
