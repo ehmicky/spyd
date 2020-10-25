@@ -4,7 +4,7 @@ import { COMMANDS } from './commands/main.js'
 
 // Define all CLI commands and options
 export const defineCli = function () {
-  return COMMANDS.reduce(addCommand, yargs).usage('').help().version().strict()
+  return COMMANDS.reduce(addCommand, yargs).usage('').strict()
 }
 
 const addCommand = function (
