@@ -6,8 +6,8 @@ import findUp from 'find-up'
 import { loadYamlFile } from '../utils/yaml.js'
 
 // Retrieve options from the configuration file (if any)
-export const getConfig = async function ({ config, ...opts }) {
-  const configPath = await getConfigPath(config, opts)
+export const getConfig = async function ({ config, cwd, opts }) {
+  const configPath = await getConfigPath(config, cwd)
 
   if (configPath === undefined) {
     return opts
@@ -17,7 +17,7 @@ export const getConfig = async function ({ config, ...opts }) {
   return { ...configContent, ...opts }
 }
 
-const getConfigPath = async function (config, { cwd = getCwd() }) {
+const getConfigPath = async function (config, cwd = getCwd()) {
   if (config !== undefined) {
     return resolve(cwd, config)
   }

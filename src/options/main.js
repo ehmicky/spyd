@@ -11,12 +11,14 @@ import { addEnvVars } from './env.js'
 import { preNormalizeOpts, normalizeOpts } from './normalize.js'
 
 // Retrieve options/configuration
+// `cwd` and `config` cannot be specified in the configuration file nor in
+// environment variables
 export const getOpts = async function (action, opts = {}) {
-  const optsA = filterObj(opts, isDefined)
+  const { config, cwd, ...optsA } = filterObj(opts, isDefined)
 
-  validateOpts(optsA)
+  validateOpts({ config, cwd })
 
-  const optsB = await getConfig(optsA)
+  const optsB = await getConfig({ config, cwd, opts: optsA })
   const optsC = addEnvVars(optsB)
 
   validateOpts(optsC)
