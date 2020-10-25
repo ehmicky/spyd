@@ -44,7 +44,7 @@ const getString = function (value) {
 }
 
 const getStringArray = function (value) {
-  return [value]
+  return value.split(',')
 }
 
 const TYPES = {
