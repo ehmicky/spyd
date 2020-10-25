@@ -4,7 +4,7 @@ export const ALL_CONFIG = {
     alias: 'c',
     string: true,
     requiresArg: true,
-    describe: `JSON configuration file.
+    describe: `YAML configuration file.
 Can specify the same options as the CLI flags.
 Environment variables can also be used, prefixed with "SPYD_". For example
 SPYD_GROUP=same is like --group same and SPYD_RUN_NODE_VERSIONS 8 is like
