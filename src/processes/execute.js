@@ -1,5 +1,5 @@
 import { forwardChildError } from './error.js'
-import { addResultFile, getResult } from './result.js'
+import { addResultFile, getResult } from './ipc.js'
 import { spawnChild } from './spawn.js'
 
 // Execute a runner child process and retrieve its output.
