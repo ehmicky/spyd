@@ -67,7 +67,7 @@ Can be:
   - true: compare with the last benchmark
   - integer: compare with the {integer}-th previous benchmark
   - a date|time: compare with the last benchmark before that date|time.
-    Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.
+    Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-ddThh:mm:ssZ'.
 Default: true`,
   },
 }

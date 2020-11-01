@@ -32,8 +32,8 @@ The 'delta' argument can be:
       'Show the last benchmark before the 1st of February 2018',
     ],
     [
-      '$0 show "2018-02-01 15:00:00"',
-      'Show the last benchmark before the 1st of February 2018 at 15:00 local time',
+      '$0 show 2018-02-01T15:00:00Z',
+      'Show the last benchmark before the 1st of February 2018 at 15:00 UTC',
     ],
   ],
 }
