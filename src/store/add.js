@@ -41,7 +41,7 @@ const save = async function (benchmark, { save: saveOpt, store }) {
 // We try to only persist what cannot be computed runtime (which is done by
 // `addPrintedInfo()` during reporting). This includes
 // `iteration.name|columnName` which are only computed for progress reporters,
-// but re-computer after previous benchmarks loading/merging.
+// but re-computed after previous benchmarks loading/merging.
 const normalizeBenchmark = function ({ iterations, ...benchmark }) {
   const iterationsA = iterations.map(normalizeIteration)
   return { ...benchmark, iterations: iterationsA }
