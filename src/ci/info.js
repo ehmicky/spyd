@@ -15,12 +15,11 @@ export const getCiInfo = function (cwd) {
     tag,
     pr,
     prBranch,
-    slug,
   } = getEnvCi(cwd)
   const git = { commit, branch, tag, prNumber: pr, prBranch }
   const ci = { provider: name, buildNumber, buildUrl }
   const job = { jobNumber, jobUrl }
-  return { git, ci, job, slug }
+  return { git, ci, job }
 }
 
 // By default `group` is the current CI build. If not in CI, it is a UUIDv4.
