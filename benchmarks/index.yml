@@ -1,9 +1,9 @@
 tasks:
   - id: example
     title: Example
-    before: echo before <<cwd>>
-    main: echo main <<variation>> <<before>>
-    after: echo after <<variation>> <<before>>
+    before: echo before {{cwd}}
+    main: echo main {{variation}} {{before}}
+    after: echo after {{variation}} {{before}}
     variations: [one, two]
 
 variations:

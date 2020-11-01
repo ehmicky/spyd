@@ -75,7 +75,7 @@ const getVariationValue = function (value, variables) {
   return applyTemplate(value, variables)
 }
 
-// Add each variation to each task by adding the <<variation>> variable
+// Add each variation to each task by adding the {{variationId}} variable
 const getVariation = function (variationId, variations, { taskId }) {
   const variationA = variations.find(
     ({ variationId: variationIdA }) => variationIdA === variationId,

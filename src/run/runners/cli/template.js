@@ -1,9 +1,9 @@
-// Substitute template <<variable>> using a set of variables:
+// Substitute template {{variable}} using a set of variables:
 //  - environment variables
 //  - file.variables
-//  - task.before output (<<before>>)
-//  - each <<variation>>
-// Can be escaped as <<<variable>>>
+//  - task.before output ({{before}})
+//  - each {{variation}}
+// Can be escaped as {{{variable}}}
 export const applyTemplate = function (string, variables) {
   if (string === undefined) {
     return
@@ -14,10 +14,9 @@ export const applyTemplate = function (string, variables) {
   )
 }
 
-// We use <> because:
-//  - $ and % are already used in shell, leading to confusion
-//  - {} is not YAML-friendly
-const TEMPLATE_REGEXP = /(?<!<)<<([^<>]+)>>(?!>)/gu
+// We use {{}} because $ and % are already used in shell, leading to confusion.
+// Also, this is used by many template engines.
+const TEMPLATE_REGEXP = /(?<!\{)\{\{([^{}]+)\}\}(?!\})/gu
 
 const replaceToken = function (varName, variables) {
   const value = variables[varName]
