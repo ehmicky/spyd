@@ -1,10 +1,10 @@
-import { sortBy } from '../utils/sort.js'
+import sortOn from 'sort-on'
 
 // Call `store.list()`
 export const listStore = async function ({ store }) {
   const rawBenchmarks = await callList(store)
-  sortBy(rawBenchmarks, ['timestamp'])
-  return rawBenchmarks
+  const rawBenchmarksA = sortOn(rawBenchmarks, 'timestamp')
+  return rawBenchmarksA
 }
 
 const callList = async function (store) {

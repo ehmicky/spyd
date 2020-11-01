@@ -1,6 +1,7 @@
+import sortOn from 'sort-on'
+
 import { getMean } from '../stats/methods.js'
 import { groupBy } from '../utils/group.js'
-import { sortBy } from '../utils/sort.js'
 
 // Group row/columns information into top-level properties so that reporters
 // can list them.
@@ -34,12 +35,12 @@ const addCollection = function (
   const collection = Object.values(groupBy(iterations, id)).map((iterationsA) =>
     normalizeCollection({ iterations: iterationsA, id, title, description }),
   )
-  sortBy(collection, ['mean'])
+  const collectionA = sortOn(collection, 'mean')
 
   const iterationsB = iterations.map((iteration) =>
-    addRank({ iteration, collection, id, rank }),
+    addRank({ iteration, collection: collectionA, id, rank }),
   )
-  return { iterations: iterationsB, ...collections, [name]: collection }
+  return { iterations: iterationsB, ...collections, [name]: collectionA }
 }
 
 const normalizeCollection = function ({ iterations, id, title, description }) {

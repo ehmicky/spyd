@@ -1,17 +1,14 @@
-import { sortBy } from '../utils/sort.js'
+import sortOn from 'sort-on'
 
 // Add `iteration.fastest` boolean indicating fastest iterations,
 // for each column (variation + command + system combination)
 // Also sort iterations so the fastest tasks will be first, then the fastest
 // iterations within each task (regardless of column)
 export const addSpeedInfo = function (iterations) {
-  sortBy(iterations, ['stats.median', ...COLUMN_RANKS])
-
-  const iterationsA = iterations.reduce(addFastest, [])
-
-  sortBy(iterationsA, [ROW_RANK, ...COLUMN_RANKS])
-
-  return iterationsA
+  const iterationsA = sortOn(iterations, ['stats.median', ...COLUMN_RANKS])
+  const iterationsB = iterationsA.reduce(addFastest, [])
+  const iterationsC = sortOn(iterationsB, [ROW_RANK, ...COLUMN_RANKS])
+  return iterationsC
 }
 
 const ROW_RANK = 'taskRank'
