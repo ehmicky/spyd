@@ -110,14 +110,13 @@ const getSpawnOptions = function ({
   }
 }
 
-// We use a file for IPC (success and error output).
-// We are not using stdout/stderr because they are likely be used by the
-// benchmarking code itself.
-// We are not using `child_process` `ipc` because this would not work across
-// programming languages.
-// stdout/stderr are ignored in `run`. However, in `debug`, they are inherited
-// during iterations. The initial `debug` load ignores them except if an error
-// happens, in which case they are printed.
+// For IPC (success and error output), we use a file instead of:
+//  - stdout/stderr: they are likely be used by the benchmarking code itself
+//  - `child_process` `ipc`: would not work across programming languages
+// stdout/stderr are:
+//  - ignored in `run`
+//  - printed in `debug` iterations
+//  - not printed in `debug` load, unless an error happened
 const STDIO = {
   run: ['ignore', 'ignore', 'ignore'],
   loadDebug: ['ignore', 'pipe', 'pipe'],
