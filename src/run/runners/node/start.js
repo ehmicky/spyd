@@ -1,23 +1,8 @@
-import { exit } from 'process'
-
-import { getInput, sendResult, sendError } from '../common/ipc.js'
+import { runMethod } from '../common/ipc.js'
 
 import { benchmark } from './benchmark/main.js'
 import { debugRun } from './debug.js'
 import { loadBenchmarkFile } from './load/main.js'
-
-// Child process entry point
-const start = async function () {
-  const { type, resultFile, ...input } = getInput()
-
-  try {
-    const result = await TYPES[type](input)
-    await sendResult(resultFile, result)
-  } catch (error) {
-    await sendError(resultFile, error)
-    exit(1)
-  }
-}
 
 // Communicate iterations ids and titles to parent
 const load = async function ({ taskPath, opts }) {
@@ -68,6 +53,4 @@ const getTask = async function ({ taskPath, opts, taskId, variationId }) {
   return { main, before, after }
 }
 
-const TYPES = { load, run, debug }
-
-start()
+runMethod({ load, run, debug })
