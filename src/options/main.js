@@ -3,7 +3,7 @@ import { cwd as getCwd } from 'process'
 import filterObj from 'filter-obj'
 import { validate, multipleValidOptions } from 'jest-validate'
 
-import { getDefaultGroup } from '../ci/info.js'
+import { getDefaultGroup } from '../group/options.js'
 
 import { getConfig } from './config.js'
 import { addEnvVars } from './env.js'
