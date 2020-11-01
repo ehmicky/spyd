@@ -1,7 +1,6 @@
-import { cwd as getCwd, stderr } from 'process'
+import { cwd as getCwd } from 'process'
 
 import filterObj from 'filter-obj'
-import isInteractive from 'is-interactive'
 import { validate, multipleValidOptions } from 'jest-validate'
 
 import { getDefaultGroup } from '../ci/info.js'
@@ -56,7 +55,7 @@ const addDefaultOpts = function (opts, action) {
 }
 
 const DEFAULT_OPTS = {
-  colors: isInteractive(stderr),
+  output: '-',
   cwd: getCwd(),
   delta: true,
   diff: true,
@@ -64,7 +63,6 @@ const DEFAULT_OPTS = {
   files: ['benchmarks.*', 'benchmarks/index.*'],
   info: false,
   limit: [],
-  link: true,
   progress: { debug: {} },
   report: { debug: {} },
   run: { node: {} },
@@ -93,6 +91,7 @@ const EXAMPLE_OPTS = {
   group: multipleValidOptions('', '546'),
   insert: './README.md',
   limit: ['taskId=10'],
+  link: false,
   output: './file.js',
   system: 'Windows 10',
   tasks: ['taskId'],

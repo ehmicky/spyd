@@ -19,8 +19,7 @@ export const handleReportOpt = function ({
     ...reportOpt,
   }
   const reportOptB = convertBooleans(reportOptA)
-  const reportOptC = addDefaultOpts(reportOptB)
-  return reportOptC
+  return reportOptB
 }
 
 // --report.REPORTER.* options are dynamic, i.e. are not normalized by our
@@ -36,16 +35,10 @@ const convertBooleans = function (reportOpt) {
 const BOOLEAN_OPTS = ['colors', 'info', 'context', 'link']
 
 const convertBoolean = function (name, value) {
+  if (value === undefined) {
+    return [name, value]
+  }
+
   const valueA = value === true || value === 'true'
   return [name, valueA]
 }
-
-const addDefaultOpts = function ({
-  output = DEFAULT_OUTPUT,
-  insert,
-  ...reportOpt
-}) {
-  return { ...reportOpt, output, insert }
-}
-
-const DEFAULT_OUTPUT = '-'

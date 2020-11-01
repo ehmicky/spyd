@@ -11,7 +11,6 @@ export const getFooter = function ({
   group,
   info,
   context,
-  link,
 }) {
   const footers = [
     ...getInfoFooters({ info, systemsPretty, commandsPretty }),
@@ -22,7 +21,7 @@ export const getFooter = function ({
       timestampPretty,
       group,
     }),
-    ...getLinkFooters(link),
+    LINK_FOOTER,
   ]
 
   if (footers.length === 0) {
@@ -57,16 +56,9 @@ const getContextFooters = function ({
   return [gitPretty, ciPretty, timestampPrettyA, groupPretty].filter(Boolean)
 }
 
-const getLinkFooters = function (link) {
-  if (!link) {
-    return []
-  }
-
-  const linkPretty = dim(
-    `Benchmarked with spyd (${underline('https://github.com/ehmicky/spyd')})`,
-  )
-  return [linkPretty]
-}
+const LINK_FOOTER = dim(
+  `Benchmarked with spyd (${underline('https://github.com/ehmicky/spyd')})`,
+)
 
 const indentFooter = function (footer) {
   return indentString(footer, 1)

@@ -4,33 +4,27 @@ import { promisify } from 'util'
 import writeFileAtomic from 'write-file-atomic'
 
 // Print reporting result to file or to terminal based on the `output` option
-export const print = async function (content, output) {
+export const printContent = async function ({
+  interactiveContent,
+  nonInteractiveContent,
+  output,
+}) {
   if (output === '') {
     return
   }
 
-  const contentA = addFinalNewline(content)
-
   if (output === '-') {
-    await promisify(stdout.write.bind(stdout))(contentA)
+    await promisify(stdout.write.bind(stdout))(`\n${interactiveContent}\n`)
     return
   }
 
-  await writeFileContent(output, contentA)
+  await writeFileContent(output, nonInteractiveContent)
 }
 
-const addFinalNewline = function (content) {
-  if (content.endsWith('\n')) {
-    return content
-  }
-
-  return `${content}\n`
-}
-
-const writeFileContent = async function (file, content) {
+const writeFileContent = async function (output, nonInteractiveContent) {
   try {
-    await writeFileAtomic(file, content)
+    await writeFileAtomic(output, nonInteractiveContent)
   } catch (error) {
-    throw new Error(`Could not write to file '${file}'\n${error.message}`)
+    throw new Error(`Could not write to file '${output}'\n${error.message}`)
   }
 }

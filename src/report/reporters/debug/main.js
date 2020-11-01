@@ -13,7 +13,7 @@ const report = function (
     commandsPretty,
     iterations,
   },
-  { info, context, link },
+  { info, context },
 ) {
   const content = iterations.map(serializeIteration).join('\n')
   const footer = getFooter({
@@ -25,7 +25,6 @@ const report = function (
     commandsPretty,
     info,
     context,
-    link,
   })
   return `\n${content}${footer}\n\n`
 }

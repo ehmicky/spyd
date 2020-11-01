@@ -2,9 +2,10 @@ import { checkLimits } from '../limit/error.js'
 import { addPrintedInfo } from '../print/main.js'
 import { addPrevious } from '../print/previous.js'
 
-import { handleColors } from './colors.js'
-import { handleContent } from './content.js'
+import { getContents } from './content.js'
+import { insertContent } from './insert.js'
 import { handleReportOpt } from './options.js'
+import { printContent } from './print.js'
 
 // Report benchmark results
 export const report = async function (
@@ -65,7 +66,7 @@ const useReporter = async function ({
   context,
   link,
 }) {
-  const reportOptB = handleReportOpt({
+  const reportOptA = handleReportOpt({
     reportOpt,
     output,
     insert,
@@ -75,9 +76,18 @@ const useReporter = async function ({
     link,
   })
 
-  const content = await reportFunc(benchmark, reportOptB)
+  const { nonInteractiveContent, interactiveContent } = await getContents({
+    reportFunc,
+    benchmark,
+    reportOpt: reportOptA,
+  })
 
-  const contentA = handleColors(content, reportOptB)
+  if (nonInteractiveContent === undefined) {
+    return
+  }
 
-  await handleContent(contentA, reportOptB)
+  await Promise.all([
+    printContent({ nonInteractiveContent, interactiveContent, output }),
+    insertContent(nonInteractiveContent, insert),
+  ])
 }

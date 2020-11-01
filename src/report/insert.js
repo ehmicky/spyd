@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs'
 
+import detectNewline from 'detect-newline'
 import writeFileAtomic from 'write-file-atomic'
 
 // Use the `insert` option to insert content inside a file.
@@ -29,33 +30,22 @@ const getFileContent = async function (file) {
 }
 
 const insertToFile = function (fileContent, content, file) {
-  const newline = detectNewline(fileContent)
+  const newline = detectNewline.graceful(fileContent)
   const lines = fileContent.split(newline)
 
-  const contentA = trimContent(content, newline)
+  const contentA = replaceNewline(content, newline)
   const linesA = insertToLines(lines, contentA, file)
 
   const fileContentA = linesA.join(newline)
   return fileContentA
 }
 
-const detectNewline = function (fileContent) {
-  if (fileContent.includes(WINDOWS_NEWLINE)) {
-    return WINDOWS_NEWLINE
-  }
-
-  return UNIX_NEWLINE
+const replaceNewline = function (content, newline) {
+  const contentA = content.split(UNIX_NEWLINE).join(newline)
+  return `${newline}${contentA}`
 }
 
-const WINDOWS_NEWLINE = '\r\n'
 const UNIX_NEWLINE = '\n'
-
-const trimContent = function (content, newline) {
-  const contentA = content.replace(NEWLINE_REGEXP, '')
-  return `${newline}${contentA}${newline}`
-}
-
-const NEWLINE_REGEXP = /((\r?\n)*$)|(^(\r?\n)*)/gu
 
 const insertToLines = function (lines, content, file) {
   const startLine = getLineIndex(lines, file, START_LINE_TOKEN)
