@@ -4,7 +4,7 @@ import osName from 'os-name'
 
 // The `system` option can contain some `$VAR` that are substituted:
 //  - environment variables
-//  - {{OS}}, {{OS_FULL}}
+//  - {{os}}, {{os_full}}
 //  - runner-specific variables like {{NODE_MAJOR_VERSION}}
 export const replaceSystemVars = async function (title, run) {
   // TODO: use String.matchAll after dropping support for Node <12
@@ -35,10 +35,10 @@ const getRunSystemVars = function ({ system }) {
 }
 
 const SYSTEM_VARS = {
-  OS() {
+  os() {
     return OS[platform]
   },
-  OS_FULL() {
+  os_full() {
     return osName()
   },
 }
