@@ -24,14 +24,7 @@ export const executeChild = async function ({
   variationId,
   type,
 }) {
-  const {
-    shortMessage,
-    failed,
-    timedOut,
-    stdout,
-    stderr,
-    result,
-  } = await spawnFile({
+  const { message, failed, timedOut, result } = await spawnFile({
     commandSpawn,
     commandSpawnOptions,
     input,
@@ -41,13 +34,11 @@ export const executeChild = async function ({
   })
 
   forwardChildError({
-    shortMessage,
+    message,
     failed,
     timedOut,
     duration,
     taskPath,
-    stdout,
-    stderr,
     result,
     taskId,
     variationId,
@@ -76,13 +67,13 @@ const spawnFile = async function ({
       cwd,
       type,
     })
-    const { shortMessage, failed, timedOut, stdout, stderr } = await execa(
+    const { message, failed, timedOut } = await execa(
       file,
       [...args, inputStr],
       spawnOptions,
     )
     const result = await getResult(resultFile, failed)
-    return { shortMessage, failed, timedOut, stdout, stderr, result }
+    return { message, failed, timedOut, result }
   } finally {
     await cleanup()
   }
