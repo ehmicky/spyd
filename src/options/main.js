@@ -61,7 +61,7 @@ const DEFAULT_OPTS = {
   delta: true,
   diff: true,
   duration: 10,
-  files: ['benchmarks.*', 'benchmarks/main.*'],
+  files: ['benchmarks.*', 'benchmarks/index.*'],
   info: false,
   limit: [],
   link: true,

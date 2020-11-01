@@ -21,7 +21,7 @@ export const RUN_COMMAND = {
 Benchmark code.
 
 FILE can be a globbing pattern.
-It defaults to "./benchmarks.*" or "./benchmarks/main.*".
+It defaults to "./benchmarks.*" or "./benchmarks/index.*".
 
 Each FILE must export the tasks to benchmark.
 
