@@ -7,10 +7,7 @@ export const handleContent = async function (content, { output, insert }) {
     return
   }
 
-  await Promise.all([
-    print({ content, output, insert }),
-    insertContent({ content, insert }),
-  ])
+  await Promise.all([print(content, output), insertContent(content, insert)])
 }
 
 const hasContent = function (content) {

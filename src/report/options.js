@@ -18,9 +18,9 @@ export const handleReportOpt = function ({
     link,
     ...reportOpt,
   }
-
   const reportOptB = convertBooleans(reportOptA)
-  return reportOptB
+  const reportOptC = addDefaultOpts(reportOptB)
+  return reportOptC
 }
 
 // --report.REPORTER.* options are dynamic, i.e. are not normalized by our
@@ -39,3 +39,13 @@ const convertBoolean = function (name, value) {
   const valueA = value === true || value === 'true'
   return [name, valueA]
 }
+
+const addDefaultOpts = function ({
+  output = DEFAULT_OUTPUT,
+  insert,
+  ...reportOpt
+}) {
+  return { ...reportOpt, output, insert }
+}
+
+const DEFAULT_OUTPUT = '-'
