@@ -32,7 +32,8 @@ const insertToFile = function (fileContent, content, file) {
   const newline = detectNewline(fileContent)
   const lines = fileContent.split(newline)
 
-  const linesA = insertToLines(lines, content, file)
+  const contentA = trimContent(content, newline)
+  const linesA = insertToLines(lines, contentA, file)
 
   const fileContentA = linesA.join(newline)
   return fileContentA
@@ -48,6 +49,13 @@ const detectNewline = function (fileContent) {
 
 const WINDOWS_NEWLINE = '\r\n'
 const UNIX_NEWLINE = '\n'
+
+const trimContent = function (content, newline) {
+  const contentA = content.replace(NEWLINE_REGEXP, '')
+  return `${newline}${contentA}${newline}`
+}
+
+const NEWLINE_REGEXP = /((\r?\n)*$)|(^(\r?\n)*)/gu
 
 const insertToLines = function (lines, content, file) {
   const startLine = getLineIndex(lines, file, START_LINE_TOKEN)
