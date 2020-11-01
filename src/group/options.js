@@ -1,6 +1,5 @@
 // Add `benchmark.group`.
-// Also the `group` option can be "same" to re-use the previous benchmark's
-// group.
+// Also the `group` option can be "" to re-use the previous benchmark's group.
 export const addGroup = function (benchmark, benchmarks, { group }) {
   const groupA = handleSame(benchmarks, group)
   return { ...benchmark, group: groupA }
@@ -15,7 +14,7 @@ const handleSame = function (benchmarks, group) {
 
   if (lastBenchmark === undefined) {
     throw new Error(
-      "Cannot use 'group' 'same' because there are no previous benchmarks",
+      "Cannot use group='' because there are no previous benchmarks",
     )
   }
 
