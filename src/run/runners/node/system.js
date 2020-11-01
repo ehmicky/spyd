@@ -14,9 +14,9 @@ const getNodePatch = function () {
   return `${getNodeMinor()}.${patch(version)}`
 }
 
-// Can use used as variable inside `system`
+// Can be used as variable inside `system`
 export const system = {
-  NODE_MAJOR: getNodeMajor,
-  NODE_MINOR: getNodeMinor,
-  NODE_PATCH: getNodePatch,
+  node_major: getNodeMajor,
+  node_minor: getNodeMinor,
+  node_patch: getNodePatch,
 }
