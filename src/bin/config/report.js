@@ -14,10 +14,9 @@ For example --report.json.output is like --output but only for the json reporter
     alias: 'o',
     string: true,
     requiresArg: true,
-    describe: `Overwrite the specified file with the benchmarks.
-Can be "" for silent output.
-Can be "-" to print to stdout.
-Default: "" if --insert is used, "-" otherwise.`,
+    describe: `Output the benchmarks to the specified file.
+For silent output, use "". This is the default if --insert is used.
+To print to stdout, use "-". This is the default otherwise.`,
   },
   insert: {
     alias: 'i',

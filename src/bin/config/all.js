@@ -5,11 +5,11 @@ export const ALL_CONFIG = {
     string: true,
     requiresArg: true,
     describe: `YAML configuration file.
+Default: "spyd.yml" in the current directory or any parent directory.
 Can specify the same options as the CLI flags.
-Environment variables can also be used, prefixed with "SPYD_". For example
-SPYD_GROUP=same is like --group same and SPYD_RUN_NODE_VERSIONS 8 is like
---run.node.versions 8.
-Default: "spyd.yml" in the current directory or any parent directory`,
+Environment variables can also be used, prefixed with "SPYD__". For example
+SPYD__GROUP=same is like --group same and SPYD__RUN__NODE__VERSIONS 8 is like
+--run.node.versions 8.`,
   },
   cwd: {
     string: true,
