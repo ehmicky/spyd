@@ -10,4 +10,4 @@ export const normalizeSystem = async function ({ system, run, ...opts }) {
   return { ...opts, run, system: { id, title: titleA } }
 }
 
-const INVALID_ID_REGEXP = /[^ a-zA-Z\d_.-]/gu
+const INVALID_ID_REGEXP = /[^\w. -]/gu
