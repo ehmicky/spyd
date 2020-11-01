@@ -15,7 +15,7 @@ export const getCommandIterations = async function ({
   system,
 }) {
   const input = { type: 'load', taskPath, opts: commandOpt }
-  const type = debug ? 'loadDebug' : 'run'
+  const type = debug ? 'loadDebug' : 'loadRun'
   const { iterations } = await executeChild({
     commandSpawn,
     commandSpawnOptions,
