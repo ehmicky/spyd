@@ -48,6 +48,7 @@ export const executeChild = async function ({
     taskPath,
     stdout,
     stderr,
+    result,
     taskId,
     variationId,
   })
@@ -80,7 +81,7 @@ const spawnFile = async function ({
       [...args, inputStr],
       spawnOptions,
     )
-    const result = await getResult(resultFile)
+    const result = await getResult(resultFile, failed)
     return { shortMessage, failed, timedOut, stdout, stderr, result }
   } finally {
     await cleanup()
@@ -103,7 +104,6 @@ const getSpawnOptions = function ({
     stdio,
     cwd,
     timeout,
-    buffer: false,
     maxBuffer: MAX_BUFFER,
     reject: false,
     preferLocal: true,

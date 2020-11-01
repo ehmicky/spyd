@@ -9,6 +9,7 @@ export const forwardChildError = function ({
   taskPath,
   stdout,
   stderr,
+  result,
   taskId,
   variationId,
 }) {
@@ -23,6 +24,7 @@ export const forwardChildError = function ({
     taskPath,
     stdout,
     stderr,
+    result,
     taskId,
     variationId,
   })
@@ -36,6 +38,7 @@ const getMessage = function ({
   taskPath,
   stdout,
   stderr,
+  result: { error: errorResult },
   taskId,
   variationId,
 }) {
@@ -47,8 +50,9 @@ const getMessage = function ({
   }
 
   const execaError = getExecaError(shortMessage)
-  const errorOutputA = normalizeErrorOutput(stdout, stderr)
-  return `${taskPrefix}${execaError}${errorOutputA}`
+  return [`${taskPrefix}${execaError}`, errorResult, stderr, stdout]
+    .filter(Boolean)
+    .join('\n\n')
 }
 
 // Add task/variation context to child process errors
@@ -72,13 +76,3 @@ const getExecaError = function (shortMessage) {
 
 const EXECA_MESSAGE_START = 'Command '
 const EXECA_MESSAGE_END = /: .*/u
-
-const normalizeErrorOutput = function (stdout, stderr) {
-  const errorOutput = [stderr, stdout].filter(Boolean).join('\n\n')
-
-  if (errorOutput === '') {
-    return ''
-  }
-
-  return `\n\n${errorOutput}`
-}

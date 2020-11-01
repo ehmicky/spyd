@@ -1,6 +1,6 @@
 import { exit } from 'process'
 
-import { getInput, sendOutput, sendError } from '../common/ipc.js'
+import { getInput, sendResult, sendError } from '../common/ipc.js'
 
 import { benchmark } from './benchmark/main.js'
 import { debugRun } from './debug.js'
@@ -11,8 +11,8 @@ const start = async function () {
   const { type, resultFile, ...input } = getInput()
 
   try {
-    const output = await TYPES[type](input)
-    await sendOutput(resultFile, output)
+    const result = await TYPES[type](input)
+    await sendResult(resultFile, result)
   } catch (error) {
     await sendError(resultFile, error)
     exit(1)

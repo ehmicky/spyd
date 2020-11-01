@@ -11,18 +11,17 @@ export const getInput = function () {
 }
 
 // Send output from child to parent process
-export const sendOutput = async function (resultFile, message = {}) {
-  await writeOutput(resultFile, message)
+export const sendResult = async function (resultFile, message = {}) {
+  await writeResult(resultFile, message)
 }
 
 // Send error messages from child to parent process
 export const sendError = async function (resultFile, error) {
   const errorProp = error instanceof Error ? error.stack : String(error)
-  const message = { error: errorProp }
-  await writeOutput(resultFile, message)
+  await writeResult(resultFile, { error: errorProp })
 }
 
-const writeOutput = async function (resultFile, message) {
-  const messageStr = JSON.stringify(message)
-  await pWriteFile(resultFile, `${messageStr}\n`)
+const writeResult = async function (resultFile, message) {
+  const messageStr = `${JSON.stringify(message)}\n`
+  await pWriteFile(resultFile, messageStr)
 }
