@@ -55,6 +55,7 @@ const debug = async function ({ taskPath, opts, taskId, variationId }) {
     variationId,
   })
   await debugRun({ main, before, after })
+  return {}
 }
 
 const getTask = async function ({ taskPath, opts, taskId, variationId }) {

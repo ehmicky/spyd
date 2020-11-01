@@ -1,9 +1,6 @@
-import execa from 'execa'
-import { file as getTmpFile } from 'tmp-promise'
-
 import { forwardChildError } from './error.js'
-import { getResult } from './result.js'
-import { getTimeout } from './timeout.js'
+import { addResultFile, getResult } from './result.js'
+import { spawnChild } from './spawn.js'
 
 // Execute a runner child process and retrieve its output.
 // We are:
@@ -48,70 +45,27 @@ export const executeChild = async function ({
 }
 
 const spawnFile = async function ({
-  commandSpawn: [file, ...args],
+  commandSpawn,
   commandSpawnOptions,
   input,
   duration,
   cwd,
   type,
 }) {
-  const { path: resultFile, cleanup } = await getTmpFile({
-    template: RESULT_FILENAME,
-  })
+  const { input: inputA, removeResultFile } = await addResultFile(input)
 
   try {
-    const inputStr = JSON.stringify({ ...input, resultFile })
-    const spawnOptions = getSpawnOptions({
+    const { message, failed, timedOut } = await spawnChild({
+      commandSpawn,
       commandSpawnOptions,
+      input: inputA,
       duration,
       cwd,
       type,
     })
-    const { message, failed, timedOut } = await execa(
-      file,
-      [...args, inputStr],
-      spawnOptions,
-    )
-    const result = await getResult(resultFile, failed)
+    const result = await getResult({ input: inputA, failed })
     return { message, failed, timedOut, result }
   } finally {
-    await cleanup()
+    await removeResultFile()
   }
 }
-
-const RESULT_FILENAME = 'spyd-XXXXXX.json'
-
-// Our spawn options have priority over commands spawn options.
-const getSpawnOptions = function ({
-  commandSpawnOptions,
-  duration,
-  cwd,
-  type,
-}) {
-  const stdio = STDIO[type]
-  const timeout = getTimeout(duration)
-  return {
-    ...commandSpawnOptions,
-    stdio,
-    cwd,
-    timeout,
-    maxBuffer: MAX_BUFFER,
-    reject: false,
-    preferLocal: true,
-  }
-}
-
-// For IPC (success and error output), we use a file instead of:
-//  - stdout/stderr: they are likely be used by the benchmarking code itself
-//  - `child_process` `ipc`: would not work across programming languages
-// stdout/stderr are:
-//  - ignored in `run`
-//  - printed in `debug`
-//  - not printed during load for both `run`/`debug`, unless an error happened
-const STDIO = {
-  loadRun: ['ignore', 'pipe', 'pipe'],
-  loadDebug: ['ignore', 'pipe', 'pipe'],
-  iterationRun: ['ignore', 'ignore', 'ignore'],
-  iterationDebug: ['ignore', 'inherit', 'inherit'],
-}
-const MAX_BUFFER = 1e8
