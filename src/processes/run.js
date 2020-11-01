@@ -28,7 +28,7 @@ export const runChildren = async function ({
   cwd,
 }) {
   const processDuration = duration / PROCESS_COUNT
-  const input = {
+  const eventPayload = {
     type: 'run',
     taskPath,
     opts: commandOpt,
@@ -46,7 +46,7 @@ export const runChildren = async function ({
     const { times, count } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
-      input,
+      eventPayload,
       duration,
       cwd,
       taskId,

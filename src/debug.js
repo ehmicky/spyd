@@ -25,7 +25,7 @@ const runIteration = async function ({
   // eslint-disable-next-line no-restricted-globals, no-console
   console.log(name)
 
-  const input = {
+  const eventPayload = {
     type: 'debug',
     taskPath,
     opts: commandOpt,
@@ -36,7 +36,7 @@ const runIteration = async function ({
   await executeChild({
     commandSpawn,
     commandSpawnOptions,
-    input,
+    eventPayload,
     cwd,
     taskId,
     variationId,

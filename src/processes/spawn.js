@@ -6,12 +6,12 @@ import { getTimeout } from './timeout.js'
 export const spawnChild = async function ({
   commandSpawn: [file, ...args],
   commandSpawnOptions,
-  input,
+  eventPayload,
   duration,
   cwd,
   type,
 }) {
-  const inputStr = JSON.stringify(input)
+  const eventPayloadStr = JSON.stringify(eventPayload)
   const spawnOptions = getSpawnOptions({
     commandSpawnOptions,
     duration,
@@ -20,7 +20,7 @@ export const spawnChild = async function ({
   })
   const { message, failed, timedOut } = await execa(
     file,
-    [...args, inputStr],
+    [...args, eventPayloadStr],
     spawnOptions,
   )
   return { message, failed, timedOut }

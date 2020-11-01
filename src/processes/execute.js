@@ -4,7 +4,7 @@ import { spawnChild } from './spawn.js'
 
 // Execute a runner child process and retrieve its output.
 // We are:
-//  - passing JSON input with `argv`
+//  - passing JSON event payload with `argv`
 //  - retrieving success JSON output with a specific file descriptor
 //  - retrieving error string output with one or several file descriptors
 // Which file descriptors are used depends on:
@@ -13,8 +13,8 @@ import { spawnChild } from './spawn.js'
 export const executeChild = async function ({
   commandSpawn,
   commandSpawnOptions,
-  input,
-  input: { taskPath },
+  eventPayload,
+  eventPayload: { taskPath },
   duration,
   cwd,
   taskId,
@@ -24,7 +24,7 @@ export const executeChild = async function ({
   const { message, failed, timedOut, result } = await spawnFile({
     commandSpawn,
     commandSpawnOptions,
-    input,
+    eventPayload,
     duration,
     cwd,
     type,
@@ -47,23 +47,25 @@ export const executeChild = async function ({
 const spawnFile = async function ({
   commandSpawn,
   commandSpawnOptions,
-  input,
+  eventPayload,
   duration,
   cwd,
   type,
 }) {
-  const { input: inputA, removeResultFile } = await addResultFile(input)
+  const { eventPayload: eventPayloadA, removeResultFile } = await addResultFile(
+    eventPayload,
+  )
 
   try {
     const { message, failed, timedOut } = await spawnChild({
       commandSpawn,
       commandSpawnOptions,
-      input: inputA,
+      eventPayload: eventPayloadA,
       duration,
       cwd,
       type,
     })
-    const result = await getResult({ input: inputA, failed })
+    const result = await getResult({ eventPayload: eventPayloadA, failed })
     return { message, failed, timedOut, result }
   } finally {
     await removeResultFile()

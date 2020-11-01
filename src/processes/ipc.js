@@ -10,15 +10,21 @@ const pReadFile = promisify(readFile)
 // Streaming results would provide with better progress reporting, but would
 // be harder to implement for reporters and force them to stop benchmarking
 // at regular intervals, which might increase variance.
-export const addResultFile = async function (input) {
+export const addResultFile = async function (eventPayload) {
   const { path, cleanup } = await getTmpFile({ template: RESULT_FILENAME })
-  return { input: { ...input, resultFile: path }, removeResultFile: cleanup }
+  return {
+    eventPayload: { ...eventPayload, resultFile: path },
+    removeResultFile: cleanup,
+  }
 }
 
 const RESULT_FILENAME = 'spyd-XXXXXX.json'
 
 // Retrieve child's IPC result.
-export const getResult = async function ({ input: { resultFile }, failed }) {
+export const getResult = async function ({
+  eventPayload: { resultFile },
+  failed,
+}) {
   try {
     const rawResult = await pReadFile(resultFile, 'utf8')
     const result = JSON.parse(rawResult)
