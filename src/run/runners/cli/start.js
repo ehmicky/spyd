@@ -1,6 +1,6 @@
 import { exit } from 'process'
 
-import { getInput, sendOutput, sendError } from '../common/ipc.js'
+import { getInput, sendResult, sendError } from '../common/ipc.js'
 
 import { benchmark } from './benchmark/main.js'
 import { measure } from './benchmark/measure.js'
@@ -8,13 +8,13 @@ import { loadBenchmarkFile } from './load/main.js'
 
 // Child process entry point
 const start = async function () {
+  const { type, resultFile, ...input } = getInput()
+
   try {
-    const { type, ...input } = getInput()
-    const typeFunc = TYPES[type]
-    const output = await typeFunc(input)
-    await sendOutput(output)
+    const result = await TYPES[type](input)
+    await sendResult(resultFile, result)
   } catch (error) {
-    await sendError(error)
+    await sendError(resultFile, error)
     exit(1)
   }
 }
@@ -62,6 +62,7 @@ const debug = async function ({ taskPath, taskId, variationId }) {
     debug: true,
   })
   await measure({ main, before, after, variables, shell, debug: true })
+  return {}
 }
 
 const getTask = async function ({
