@@ -26,5 +26,5 @@ const DEFAULT_OPTS = {}
 
 const EXAMPLE_OPTS = {
   ...DEFAULT_OPTS,
-  versions: '12 10.5.0 8.0.0',
+  versions: '12,10.5.0,8.0.0',
 }
