@@ -5,17 +5,17 @@ export const handleReportOpt = function ({
   output,
   insert,
   colors,
+  link,
   info,
   context,
-  link,
 }) {
   const reportOptA = {
     output,
     insert,
     colors,
+    link,
     info,
     context,
-    link,
     ...reportOpt,
   }
   const reportOptB = convertBooleans(reportOptA)

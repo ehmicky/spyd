@@ -1,6 +1,7 @@
 import { stderr } from 'process'
 
 import isInteractive from 'is-interactive'
+import omit from 'omit.js'
 import stripAnsi from 'strip-ansi'
 
 // Since `report()` might have side effects such as making a HTTP call, we make
@@ -11,9 +12,11 @@ import stripAnsi from 'strip-ansi'
 export const getContents = async function ({
   reportFunc,
   benchmark,
-  reportOpt: { link, colors, ...reportOpt },
+  reportOpt,
+  reportOpt: { link, colors },
 }) {
-  const content = await reportFunc(benchmark, reportOpt)
+  const reportFuncOpts = omit(reportOpt, CORE_REPORT_OPTS)
+  const content = await reportFunc(benchmark, reportFuncOpts)
 
   if (!hasContent(content)) {
     return {}
@@ -27,6 +30,9 @@ export const getContents = async function ({
   const interactiveContent = getInteractiveContent({ content, link, colors })
   return { interactiveContent, nonInteractiveContent }
 }
+
+// We handle some report options in core, and do not pass those to reporters.
+const CORE_REPORT_OPTS = ['output', 'insert', 'link', 'colors']
 
 // A reporter can choose not to return anything, in which case `output` and
 // `insert` are not used.
@@ -50,7 +56,6 @@ const getInteractiveContent = function ({
   return normalizeContent({ content, link, colors })
 }
 
-// We handle some report options in core, and do not pass those to reporters.
 // Reporters should always assume `link` and `colors` are true, but the core
 // remove those from the returned content if not.
 const normalizeContent = function ({ content, link, colors }) {
