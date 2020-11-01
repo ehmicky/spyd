@@ -1,4 +1,4 @@
-import { get } from './get_set.js'
+import { get } from 'dot-prop'
 
 // Sort an array of numbers
 export const sortNumbers = function (array) {
@@ -12,14 +12,8 @@ const compareNumbers = function (numA, numB) {
 
 // Sort an array of objects according to its properties
 export const sortBy = function (array, propNames) {
-  const propNamesA = propNames.map(splitPropName)
-
   // eslint-disable-next-line fp/no-mutating-methods
-  array.sort((objA, objB) => sortByProps(objA, objB, propNamesA))
-}
-
-const splitPropName = function (propName) {
-  return propName.split('.')
+  array.sort((objA, objB) => sortByProps(objA, objB, propNames))
 }
 
 const sortByProps = function (objA, objB, propNames) {

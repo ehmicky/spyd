@@ -37,6 +37,7 @@
     "chalk": "^4.1.0",
     "cli-cursor": "^3.1.0",
     "core-js": "^3.6.5",
+    "dot-prop": "^6.0.0",
     "env-ci": "^5.0.2",
     "execa": "^4.1.0",
     "fast-glob": "^3.2.4",
@@ -67,8 +68,7 @@
     "update-notifier": "^5.0.0",
     "uuid": "^8.3.1",
     "write-file-atomic": "^3.0.3",
-    "yargs": "^16.1.0",
-    "yn": "^4.0.0"
+    "yargs": "^16.1.0"
   },
   "devDependencies": {
     "@ehmicky/dev-tasks": "^0.31.76",
