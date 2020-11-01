@@ -11,12 +11,12 @@ export const getFooter = function ({
   group,
 }) {
   const footers = [
-    systemsPretty,
     commandsPretty,
+    systemsPretty,
+    addPrefix('Group', group),
+    addPrefix('Timestamp', timestampPretty),
     gitPretty,
     ciPretty,
-    addPrefix('Timestamp', timestampPretty),
-    addPrefix('Group', group),
     LINK_FOOTER,
   ].filter(Boolean)
 

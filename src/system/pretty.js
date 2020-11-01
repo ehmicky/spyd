@@ -56,7 +56,7 @@ const serializeField = function (field, system) {
   return `  ${fieldB} ${value}`
 }
 
-const SYSTEM_FIELDS = { cpu: 'CPU', memory: 'Memory', os: 'OS' }
+const SYSTEM_FIELDS = { os: 'OS', cpu: 'CPU', memory: 'Memory' }
 
 // Those fields involve more dynamic logic
 const hasComplexFields = function (system) {
