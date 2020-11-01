@@ -1,7 +1,6 @@
 import execa from 'execa'
 
 import { forwardChildError } from './error.js'
-import { FDS } from './fd.js'
 import { getOutput, getErrorOutput } from './output.js'
 import { getTimeout } from './timeout.js'
 
@@ -26,10 +25,8 @@ export const executeChild = async function ({
 }) {
   const inputA = JSON.stringify(input)
 
-  const { stdio, outputFd, errorFds } = FDS[type]
-
   const spawnOptions = getSpawnOptions({
-    stdio,
+    type,
     cwd,
     duration,
     commandSpawnOptions,
@@ -42,11 +39,7 @@ export const executeChild = async function ({
     { shortMessage, failed, timedOut },
     output,
     errorOutput,
-  ] = await Promise.all([
-    child,
-    getOutput(child, outputFd),
-    getErrorOutput(child, errorFds),
-  ])
+  ] = await Promise.all([child, getOutput(child), getErrorOutput(child)])
 
   forwardChildError({
     shortMessage,
@@ -59,7 +52,7 @@ export const executeChild = async function ({
     variationId,
   })
 
-  if (output === undefined) {
+  if (output === '') {
     return
   }
 
@@ -69,11 +62,12 @@ export const executeChild = async function ({
 
 // Our spawn options have priority over commands spawn options.
 const getSpawnOptions = function ({
-  stdio,
+  type,
   cwd,
   duration,
   commandSpawnOptions,
 }) {
+  const stdio = FDS[type]
   const timeout = getTimeout(duration)
   return {
     ...commandSpawnOptions,
@@ -84,4 +78,18 @@ const getSpawnOptions = function ({
     reject: false,
     preferLocal: true,
   }
+}
+
+// We use file descriptor 3 for IPC (success and error output).
+// We are not using stdout/stderr because they are likely be used by the
+// benchmarking code itself.
+// We are not using `child_process` `ipc` because this would not work across
+// programming languages.
+// stdout/stderr are ignored in `run`. However, in `debug`, they are inherited
+// during iterations. The initial `debug` load ignores them except if an error
+// happens, in which case they are printed.
+const FDS = {
+  run: ['ignore', 'ignore', 'ignore', 'pipe'],
+  loadDebug: ['ignore', 'pipe', 'pipe', 'pipe'],
+  iterationDebug: ['ignore', 'inherit', 'inherit', 'pipe'],
 }

@@ -17,15 +17,18 @@ export const sendOutput = async function (message) {
   }
 
   const messageStr = JSON.stringify(message)
-  await pWrite(OUTPUT_FD, messageStr)
+  await writeOutput(messageStr)
 }
 
 // Send error messages from child to parent process
 export const sendError = async function (error) {
   const message = error instanceof Error ? error.stack : String(error)
-  await pWrite(ERROR_FD, `${message}\n`)
+  await writeOutput(message)
+}
+
+const writeOutput = async function (message) {
+  await pWrite(OUTPUT_FD, `${message}\n`)
 }
 
 // Communicate to parent using those file descriptors
-const OUTPUT_FD = 4
-const ERROR_FD = 5
+const OUTPUT_FD = 3
