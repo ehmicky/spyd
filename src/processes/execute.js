@@ -1,7 +1,8 @@
 import execa from 'execa'
+import { file as getTmpFile } from 'tmp-promise'
 
 import { forwardChildError } from './error.js'
-import { getOutput, getErrorOutput } from './output.js'
+import { getResult } from './result.js'
 import { getTimeout } from './timeout.js'
 
 // Execute a runner child process and retrieve its output.
@@ -13,7 +14,7 @@ import { getTimeout } from './timeout.js'
 //  - whether `run` or `debug` is used
 //  - whether this is the initial load
 export const executeChild = async function ({
-  commandSpawn: [file, ...args],
+  commandSpawn,
   commandSpawnOptions,
   input,
   input: { taskPath },
@@ -23,23 +24,21 @@ export const executeChild = async function ({
   variationId,
   type,
 }) {
-  const inputA = JSON.stringify(input)
-
-  const spawnOptions = getSpawnOptions({
-    type,
-    cwd,
-    duration,
+  const {
+    shortMessage,
+    failed,
+    timedOut,
+    stdout,
+    stderr,
+    result,
+  } = await spawnFile({
+    commandSpawn,
     commandSpawnOptions,
+    input,
+    duration,
+    cwd,
+    type,
   })
-  const child = execa(file, [...args, inputA], spawnOptions)
-
-  // Wait for child process successful exit, failed exit, spawning error,
-  // stream error or timeout
-  const [
-    { shortMessage, failed, timedOut },
-    output,
-    errorOutput,
-  ] = await Promise.all([child, getOutput(child), getErrorOutput(child)])
 
   forwardChildError({
     shortMessage,
@@ -47,27 +46,57 @@ export const executeChild = async function ({
     timedOut,
     duration,
     taskPath,
-    errorOutput,
+    stdout,
+    stderr,
     taskId,
     variationId,
   })
 
-  if (output === '') {
-    return
-  }
-
-  const outputA = JSON.parse(output)
-  return outputA
+  return result
 }
+
+const spawnFile = async function ({
+  commandSpawn: [file, ...args],
+  commandSpawnOptions,
+  input,
+  duration,
+  cwd,
+  type,
+}) {
+  const { path: resultFile, cleanup } = await getTmpFile({
+    template: RESULT_FILENAME,
+  })
+
+  try {
+    const inputStr = JSON.stringify({ ...input, resultFile })
+    const spawnOptions = getSpawnOptions({
+      commandSpawnOptions,
+      duration,
+      cwd,
+      type,
+    })
+    const { shortMessage, failed, timedOut, stdout, stderr } = await execa(
+      file,
+      [...args, inputStr],
+      spawnOptions,
+    )
+    const result = await getResult(resultFile)
+    return { shortMessage, failed, timedOut, stdout, stderr, result }
+  } finally {
+    await cleanup()
+  }
+}
+
+const RESULT_FILENAME = 'spyd-XXXXXX.json'
 
 // Our spawn options have priority over commands spawn options.
 const getSpawnOptions = function ({
-  type,
-  cwd,
-  duration,
   commandSpawnOptions,
+  duration,
+  cwd,
+  type,
 }) {
-  const stdio = FDS[type]
+  const stdio = STDIO[type]
   const timeout = getTimeout(duration)
   return {
     ...commandSpawnOptions,
@@ -75,12 +104,13 @@ const getSpawnOptions = function ({
     cwd,
     timeout,
     buffer: false,
+    maxBuffer: MAX_BUFFER,
     reject: false,
     preferLocal: true,
   }
 }
 
-// We use file descriptor 3 for IPC (success and error output).
+// We use a file for IPC (success and error output).
 // We are not using stdout/stderr because they are likely be used by the
 // benchmarking code itself.
 // We are not using `child_process` `ipc` because this would not work across
@@ -88,8 +118,9 @@ const getSpawnOptions = function ({
 // stdout/stderr are ignored in `run`. However, in `debug`, they are inherited
 // during iterations. The initial `debug` load ignores them except if an error
 // happens, in which case they are printed.
-const FDS = {
-  run: ['ignore', 'ignore', 'ignore', 'pipe'],
-  loadDebug: ['ignore', 'pipe', 'pipe', 'pipe'],
-  iterationDebug: ['ignore', 'inherit', 'inherit', 'pipe'],
+const STDIO = {
+  run: ['ignore', 'ignore', 'ignore'],
+  loadDebug: ['ignore', 'pipe', 'pipe'],
+  iterationDebug: ['ignore', 'inherit', 'inherit'],
 }
+const MAX_BUFFER = 1e8

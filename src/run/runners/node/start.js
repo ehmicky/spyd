@@ -8,12 +8,13 @@ import { loadBenchmarkFile } from './load/main.js'
 
 // Child process entry point
 const start = async function () {
+  const { type, resultFile, ...input } = getInput()
+
   try {
-    const { type, ...input } = getInput()
     const output = await TYPES[type](input)
-    await sendOutput(output)
+    await sendOutput(resultFile, output)
   } catch (error) {
-    await sendError(error)
+    await sendError(resultFile, error)
     exit(1)
   }
 }

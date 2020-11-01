@@ -7,7 +7,8 @@ export const forwardChildError = function ({
   timedOut,
   duration,
   taskPath,
-  errorOutput,
+  stdout,
+  stderr,
   taskId,
   variationId,
 }) {
@@ -20,7 +21,8 @@ export const forwardChildError = function ({
     timedOut,
     duration,
     taskPath,
-    errorOutput,
+    stdout,
+    stderr,
     taskId,
     variationId,
   })
@@ -32,7 +34,8 @@ const getMessage = function ({
   timedOut,
   duration,
   taskPath,
-  errorOutput,
+  stdout,
+  stderr,
   taskId,
   variationId,
 }) {
@@ -44,7 +47,7 @@ const getMessage = function ({
   }
 
   const execaError = getExecaError(shortMessage)
-  const errorOutputA = normalizeErrorOutput(errorOutput)
+  const errorOutputA = normalizeErrorOutput(stdout, stderr)
   return `${taskPrefix}${execaError}${errorOutputA}`
 }
 
@@ -70,8 +73,10 @@ const getExecaError = function (shortMessage) {
 const EXECA_MESSAGE_START = 'Command '
 const EXECA_MESSAGE_END = /: .*/u
 
-const normalizeErrorOutput = function (errorOutput) {
-  if (errorOutput === undefined || errorOutput === '') {
+const normalizeErrorOutput = function (stdout, stderr) {
+  const errorOutput = [stderr, stdout].filter(Boolean).join('\n\n')
+
+  if (errorOutput === '') {
     return ''
   }
 
