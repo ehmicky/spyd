@@ -3,18 +3,15 @@ import { cyan, yellow, dim, red } from 'chalk'
 import { getFooter } from './footer.js'
 
 // Debugging reporter only meant for development purpose
-const report = function (
-  {
-    timestampPretty,
-    group,
-    systemsPretty,
-    gitPretty,
-    ciPretty,
-    commandsPretty,
-    iterations,
-  },
-  { info, context },
-) {
+const report = function ({
+  timestampPretty,
+  group,
+  systemsPretty,
+  gitPretty,
+  ciPretty,
+  commandsPretty,
+  iterations,
+}) {
   const content = iterations.map(serializeIteration).join('\n')
   const footer = getFooter({
     timestampPretty,
@@ -23,8 +20,6 @@ const report = function (
     gitPretty,
     ciPretty,
     commandsPretty,
-    info,
-    context,
   })
   return `\n${content}${footer}\n\n`
 }

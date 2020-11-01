@@ -9,20 +9,16 @@ export const getFooter = function ({
   ciPretty,
   commandsPretty,
   group,
-  info,
-  context,
 }) {
   const footers = [
-    ...getInfoFooters({ info, systemsPretty, commandsPretty }),
-    ...getContextFooters({
-      context,
-      gitPretty,
-      ciPretty,
-      timestampPretty,
-      group,
-    }),
+    systemsPretty,
+    commandsPretty,
+    gitPretty,
+    ciPretty,
+    addPrefix('Timestamp', timestampPretty),
+    addPrefix('Group', group),
     LINK_FOOTER,
-  ]
+  ].filter(Boolean)
 
   if (footers.length === 0) {
     return ''
@@ -32,28 +28,12 @@ export const getFooter = function ({
   return `\n\n${footer}`
 }
 
-const getInfoFooters = function ({ info, systemsPretty, commandsPretty }) {
-  if (!info) {
-    return []
+const addPrefix = function (name, value) {
+  if (value === undefined) {
+    return
   }
 
-  return [systemsPretty, commandsPretty]
-}
-
-const getContextFooters = function ({
-  context,
-  gitPretty,
-  ciPretty,
-  timestampPretty,
-  group,
-}) {
-  if (!context) {
-    return []
-  }
-
-  const timestampPrettyA = `${blue.bold('Timestamp:')} ${timestampPretty}`
-  const groupPretty = `${blue.bold('Group:')} ${group}`
-  return [gitPretty, ciPretty, timestampPrettyA, groupPretty].filter(Boolean)
+  return `${blue.bold(`${name}:`)} ${value}`
 }
 
 const LINK_FOOTER = dim(

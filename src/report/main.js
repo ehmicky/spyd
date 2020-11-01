@@ -2,6 +2,7 @@ import { checkLimits } from '../limit/error.js'
 import { addPrintedInfo } from '../print/main.js'
 import { addPrevious } from '../print/previous.js'
 
+import { callReportFunc } from './call.js'
 import { getContents } from './content.js'
 import { insertContent } from './insert.js'
 import { handleReportOpt } from './options.js'
@@ -76,18 +77,28 @@ const useReporter = async function ({
     link,
   })
 
-  const { nonInteractiveContent, interactiveContent } = await getContents({
+  const content = await callReportFunc({
     reportFunc,
     benchmark,
     reportOpt: reportOptA,
   })
 
-  if (nonInteractiveContent === undefined) {
+  if (!hasContent(content)) {
     return
   }
 
+  const { nonInteractiveContent, interactiveContent } = getContents({
+    content,
+    reportOpt: reportOptA,
+  })
   await Promise.all([
     printContent({ nonInteractiveContent, interactiveContent, output }),
     insertContent(nonInteractiveContent, insert),
   ])
+}
+
+// A reporter can choose not to return anything, in which case `output` and
+// `insert` are not used.
+const hasContent = function (content) {
+  return typeof content === 'string' && content.trim() !== ''
 }

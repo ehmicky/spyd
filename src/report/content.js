@@ -1,7 +1,6 @@
 import { stderr } from 'process'
 
 import isInteractive from 'is-interactive'
-import omit from 'omit.js'
 import stripAnsi from 'strip-ansi'
 
 // Since `report()` might have side effects such as making a HTTP call, we make
@@ -9,19 +8,7 @@ import stripAnsi from 'strip-ansi'
 // Interactive output/terminal have different default values for some report
 // options, so we compute two different contents: interactive and
 // non-interactive.
-export const getContents = async function ({
-  reportFunc,
-  benchmark,
-  reportOpt,
-  reportOpt: { link, colors },
-}) {
-  const reportFuncOpts = omit(reportOpt, CORE_REPORT_OPTS)
-  const content = await reportFunc(benchmark, reportFuncOpts)
-
-  if (!hasContent(content)) {
-    return {}
-  }
-
+export const getContents = function ({ content, reportOpt: { link, colors } }) {
   const nonInteractiveContent = getNonInteractiveContent({
     content,
     link,
@@ -29,15 +16,6 @@ export const getContents = async function ({
   })
   const interactiveContent = getInteractiveContent({ content, link, colors })
   return { interactiveContent, nonInteractiveContent }
-}
-
-// We handle some report options in core, and do not pass those to reporters.
-const CORE_REPORT_OPTS = ['output', 'insert', 'link', 'colors']
-
-// A reporter can choose not to return anything, in which case `output` and
-// `insert` are not used.
-const hasContent = function (content) {
-  return typeof content === 'string' && content.trim() !== ''
 }
 
 const getNonInteractiveContent = function ({
