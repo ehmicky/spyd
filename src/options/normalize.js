@@ -1,5 +1,4 @@
 import { resolve } from 'path'
-import { cwd as getCwd } from 'process'
 
 import { normalizeLimits } from '../limit/options.js'
 import { normalizeProgress } from '../progress/options.js'
@@ -76,7 +75,7 @@ const NANOSECS_TO_SECS = 1e9
 
 // Normalize 'cwd' option
 const normalizeCwd = function ({ cwd, ...opts }) {
-  const cwdA = resolve(getCwd(), cwd)
+  const cwdA = resolve(cwd)
   return { ...opts, cwd: cwdA }
 }
 
