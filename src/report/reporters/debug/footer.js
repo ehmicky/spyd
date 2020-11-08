@@ -1,22 +1,27 @@
 import { blue, dim, underline } from 'chalk'
 import indentString from 'indent-string'
 
+import { prettifyGit } from '../../../ci/git.js'
+import { prettifyCi } from '../../../ci/pretty.js'
+import { prettifyCommands } from '../../../print/commands.js'
+import { prettifySystems } from '../../../system/pretty.js'
+
 // Retrieve footer: system, timestamp, mergeId, link
 export const getFooter = function ({
-  timestampPretty,
-  systemsPretty,
-  gitPretty,
-  ciPretty,
-  commandsPretty,
+  timestamp,
+  systems,
+  git,
+  ci,
+  commands,
   mergeId,
 }) {
   const footers = [
-    commandsPretty,
-    systemsPretty,
+    prettifyCommands(commands),
+    prettifySystems(systems),
     addPrefix('Id', mergeId),
-    addPrefix('Timestamp', timestampPretty),
-    gitPretty,
-    ciPretty,
+    addPrefix('Timestamp', prettifyTimestamp(timestamp)),
+    prettifyGit(git),
+    prettifyCi(ci),
     LINK_FOOTER,
   ].filter(Boolean)
 
@@ -28,8 +33,18 @@ export const getFooter = function ({
   return `\n\n${footer}`
 }
 
+// Make timestamp more human-friendly.
+// Must be done at end since `previous` must use raw timestamps.
+const prettifyTimestamp = function (timestamp) {
+  if (timestamp === undefined) {
+    return ''
+  }
+
+  return new Date(timestamp).toLocaleString()
+}
+
 const addPrefix = function (name, value) {
-  if (value === undefined) {
+  if (value === undefined || value === '') {
     return
   }
 

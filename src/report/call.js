@@ -22,16 +22,8 @@ const cleanBenchmark = function ({ benchmark, info, context }) {
   return omit(benchmark, omittedProps)
 }
 
-const INFO_PROPS = ['systems', 'systemsPretty', 'commands', 'commandsPretty']
-const CONTEXT_PROPS = [
-  'git',
-  'gitPretty',
-  'ci',
-  'ciPretty',
-  'timestamp',
-  'timestampPretty',
-  'mergeId',
-]
+const INFO_PROPS = ['systems', 'commands']
+const CONTEXT_PROPS = ['git', 'ci', 'timestamp', 'mergeId']
 
 // We handle some report options in core, and do not pass those to reporters.
 const CORE_REPORT_OPTS = [

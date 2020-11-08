@@ -4,7 +4,7 @@ import { isEmptyObject } from '../utils/main.js'
 
 // Serialize `git` information for CLI reporters.
 export const prettifyGit = function (git) {
-  if (isEmptyObject(git)) {
+  if (git === undefined || isEmptyObject(git)) {
     return ''
   }
 

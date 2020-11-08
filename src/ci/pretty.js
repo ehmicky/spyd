@@ -4,7 +4,7 @@ import { isEmptyObject } from '../utils/main.js'
 
 // Serialize `ci` information for CLI reporters.
 export const prettifyCi = function (ci) {
-  if (isEmptyObject(ci)) {
+  if (ci === undefined || isEmptyObject(ci)) {
     return ''
   }
 

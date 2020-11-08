@@ -4,23 +4,16 @@ import { getFooter } from './footer.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({
-  timestampPretty,
+  timestamp,
   mergeId,
-  systemsPretty,
-  gitPretty,
-  ciPretty,
-  commandsPretty,
+  systems,
+  git,
+  ci,
+  commands,
   iterations,
 }) {
   const content = iterations.map(serializeIteration).join('\n')
-  const footer = getFooter({
-    timestampPretty,
-    mergeId,
-    systemsPretty,
-    gitPretty,
-    ciPretty,
-    commandsPretty,
-  })
+  const footer = getFooter({ timestamp, mergeId, systems, git, ci, commands })
   return `\n${content}${footer}\n\n`
 }
 

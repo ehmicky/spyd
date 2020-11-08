@@ -3,6 +3,10 @@ import indentString from 'indent-string'
 
 // Serialize `system` information for CLI reporters.
 export const prettifySystems = function (systems) {
+  if (systems === undefined) {
+    return ''
+  }
+
   return systems.filter(hasFields).map(prettifySystem).join('\n')
 }
 
