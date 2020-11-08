@@ -96,7 +96,13 @@ const finalizeValue = function ({
   padding,
 }) {
   const prettyName = `${name}Pretty`
-  const statPretty = padValue(stats[prettyName], padding)
-  const statPrettyA = addColors(stat, statPretty, name)
+  const statPretty = stats[prettyName]
+  const statPrettyA = finalizeItem({ stat, statPretty, padding, name })
   return { ...iteration, stats: { ...stats, [prettyName]: statPrettyA } }
+}
+
+const finalizeItem = function ({ stat, statPretty, padding, name }) {
+  const statPrettyA = padValue(statPretty, padding)
+  const statPrettyB = addColors(stat, statPrettyA, name)
+  return statPrettyB
 }
