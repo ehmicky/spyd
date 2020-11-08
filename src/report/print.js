@@ -5,6 +5,8 @@ import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
 
+import { addPadding } from './utils/indent.js'
+
 // Print reporting result to file or to terminal based on the `output` option
 export const printContent = async function ({
   interactiveContent,
@@ -16,7 +18,7 @@ export const printContent = async function ({
   }
 
   if (output === '-') {
-    await promisify(stdout.write.bind(stdout))(`\n${interactiveContent}\n`)
+    await promisify(stdout.write.bind(stdout))(addPadding(interactiveContent))
     return
   }
 

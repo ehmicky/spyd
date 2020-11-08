@@ -1,7 +1,5 @@
 import { cyan, yellow, dim, red } from 'chalk'
 
-import { addPadding } from '../../utils/indent.js'
-
 import { getFooter } from './footer.js'
 
 // Debugging reporter only meant for development purpose
@@ -16,7 +14,7 @@ const report = function ({
 }) {
   const content = iterations.map(serializeIteration).join('\n')
   const footer = getFooter({ timestamp, mergeId, systems, git, ci, commands })
-  return addPadding(`${content}${footer}`)
+  return `${content}${footer}`
 }
 
 const serializeIteration = function ({ name, stats, fastest, slow }) {
