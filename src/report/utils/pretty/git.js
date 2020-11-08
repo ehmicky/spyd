@@ -1,7 +1,6 @@
 import { blue } from 'chalk'
 
 import { isEmptyObject } from '../../../utils/main.js'
-import { addIndentedPrefix } from '../prefix.js'
 
 // Serialize `git` information for CLI reporters.
 export const prettifyGit = function (git) {
@@ -12,8 +11,7 @@ export const prettifyGit = function (git) {
   const commitPretty = prettifyCommit(git)
   const prPretty = prettifyPr(git)
   const body = [commitPretty, prPretty].filter(Boolean).join('\n')
-  const bodyA = addIndentedPrefix('Git', body)
-  return bodyA
+  return body
 }
 
 const prettifyCommit = function ({ commit, tag, branch }) {
