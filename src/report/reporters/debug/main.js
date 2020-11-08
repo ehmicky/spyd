@@ -1,8 +1,8 @@
 import { cyan, yellow, dim, red } from 'chalk'
 
+import { getFooter } from '../../utils/footer/main.js'
 import { joinSections } from '../../utils/join.js'
 import { prettifyValue } from '../../utils/prettify_value.js'
-import { getFooter } from '../../utils/pretty/footer.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({
