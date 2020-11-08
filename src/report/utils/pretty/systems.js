@@ -13,12 +13,13 @@ export const prettifySystems = function (systems) {
 }
 
 const hasFields = function (system) {
-  return getFields(system).length !== 0 || hasComplexFields(system)
+  return getFields(system).length !== 0
 }
 
 const prettifySystem = function (system, index) {
   const title = getTitle(system)
-  const body = getBody(system)
+  const fields = getFields(system)
+  const body = fields.join('\n')
   const systemsPrettyA = addIndentedPrefix(title, body)
   const systemsPrettyB =
     index === 0 ? systemsPrettyA : indentBlock(systemsPrettyA)
@@ -38,30 +39,15 @@ const MAIN_TITLE = 'System'
 // Nested title when `system` is an empty string
 const DEFAULT_TITLE = 'Default'
 
-const getBody = function (system) {
-  const fields = getFields(system)
-  const job = getJob(system)
-  return [...fields, job].filter(Boolean).join('\n')
-}
-
 const getFields = function (system) {
-  return Object.keys(SYSTEM_FIELDS)
-    .map((field) => serializeField(field, system))
-    .filter(Boolean)
+  return SYSTEM_FIELDS.map(({ title, value }) =>
+    serializeField({ title, value, system }),
+  ).filter(Boolean)
 }
 
-const serializeField = function (field, system) {
-  return addPrefix(SYSTEM_FIELDS[field], system[field])
+const serializeField = function ({ title, value, system }) {
+  return addPrefix(title, value(system))
 }
-
-const SYSTEM_FIELDS = { os: 'OS', cpu: 'CPU', memory: 'Memory' }
-
-// Those fields involve more dynamic logic
-const hasComplexFields = function (system) {
-  return COMPLEX_FIELDS.some((field) => system[field] !== undefined)
-}
-
-const COMPLEX_FIELDS = ['jobNumber']
 
 const getJob = function ({ jobNumber, jobUrl }) {
   if (jobNumber === undefined) {
@@ -70,3 +56,10 @@ const getJob = function ({ jobNumber, jobUrl }) {
 
   return addPrefix('Job', `#${jobNumber} (${underline(jobUrl)})`)
 }
+
+const SYSTEM_FIELDS = [
+  { title: 'OS', value: ({ os }) => os },
+  { title: 'CPU', value: ({ cpu }) => cpu },
+  { title: 'Memory', value: ({ memory }) => memory },
+  { title: 'Job', value: getJob },
+]
