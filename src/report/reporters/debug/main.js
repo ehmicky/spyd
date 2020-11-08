@@ -1,8 +1,8 @@
 import { cyan, yellow, dim, red } from 'chalk'
 
 import { joinSections } from '../../utils/join.js'
-
-import { getFooter } from './footer.js'
+import { prettifyValue } from '../../utils/prettify_value.js'
+import { getFooter } from '../../utils/pretty/footer.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({
@@ -15,7 +15,9 @@ const report = function ({
   iterations,
 }) {
   const content = iterations.map(serializeIteration).join('\n')
-  const footer = getFooter({ timestamp, mergeId, systems, git, ci, commands })
+  const footer = prettifyValue(
+    getFooter({ timestamp, mergeId, systems, git, ci, commands }),
+  )
   return joinSections([content, footer])
 }
 
