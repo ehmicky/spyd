@@ -13,16 +13,17 @@ export const prettifySystems = function (systems) {
 }
 
 const prettifySystem = function (system, index) {
-  const fields = SYSTEM_FIELDS.map(({ title, value }) =>
+  const body = SYSTEM_FIELDS.map(({ title, value }) =>
     serializeField({ title, value, system }),
-  ).filter(Boolean)
+  )
+    .filter(Boolean)
+    .join('\n')
 
-  if (fields.length === 0) {
+  if (body === '') {
     return
   }
 
   const systemTitle = getTitle(system)
-  const body = fields.join('\n')
   const systemsPrettyA = addIndentedPrefix(systemTitle, body)
   const systemsPrettyB =
     index === 0 ? systemsPrettyA : indentBlock(systemsPrettyA)
