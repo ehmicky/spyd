@@ -83,56 +83,52 @@ const serializeStat = function ({
   }
 
   const decimals = statsDecimals[name]
-  const statPretty = serialize({ stat, type, name, scale, unit, decimals })
-  return statPretty
-}
 
-const serialize = function ({ stat, type, name, scale, unit, decimals }) {
   if (Array.isArray(stat)) {
     return stat.map((statA) =>
-      serializeEach({ stat: statA, type, name, scale, unit, decimals }),
+      serializeValue({ stat: statA, type, name, scale, unit, decimals }),
     )
   }
 
-  return serializeEach({ stat, type, name, scale, unit, decimals })
+  return serializeValue({ stat, type, name, scale, unit, decimals })
 }
 
-const serializeEach = function ({ stat, type, name, scale, unit, decimals }) {
-  const statPretty = SERIALIZE_STAT[type]({ stat, scale, unit, decimals })
+const serializeValue = function ({ stat, type, name, scale, unit, decimals }) {
+  const statPretty = SERIALIZE_STAT[type](stat, { scale, unit, decimals })
   const statPrettyA = addPrefix(stat, statPretty, name)
   const statPrettyB = addColors(stat, statPrettyA, name)
   return statPrettyB
 }
 
-const serializeCount = function ({ stat }) {
+const serializeCount = function (stat) {
   // Adds thousands separators
   return stat.toLocaleString()
 }
 
-const serializeDuration = function ({ stat, scale, unit, decimals }) {
-  const statA = stat / scale
-  const integer = Math.floor(statA)
-  const fraction = getFraction({ stat: statA, integer, decimals })
-  return `${integer}${fraction}${unit}`
-}
-
-const getFraction = function ({ stat, integer, decimals }) {
-  if (Number.isInteger(stat) || decimals === 0) {
-    return ''
-  }
-
-  return (stat - integer).toFixed(decimals).slice(1)
-}
-
-const serializePercentage = function ({ stat }) {
+const serializePercentage = function (stat) {
   const percentage = Math.abs(Math.floor(stat * PERCENTAGE_SCALE))
   return `${percentage}%`
 }
 
 const PERCENTAGE_SCALE = 1e2
 
+const serializeDuration = function (stat, { scale, unit, decimals }) {
+  const scaledStat = stat / scale
+  const integer = Math.floor(scaledStat)
+  const fraction = getFraction({ scaledStat, integer, decimals })
+  return `${integer}${fraction}${unit}`
+}
+
+const getFraction = function ({ scaledStat, integer, decimals }) {
+  if (Number.isInteger(scaledStat) || decimals === 0) {
+    return ''
+  }
+
+  return (scaledStat - integer).toFixed(decimals).slice(1)
+}
+
 const SERIALIZE_STAT = {
   count: serializeCount,
-  duration: serializeDuration,
   percentage: serializePercentage,
+  duration: serializeDuration,
 }
