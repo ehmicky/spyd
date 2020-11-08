@@ -1,11 +1,9 @@
 import { addColors } from './colors.js'
 import { getStatsDecimals } from './decimals.js'
 import { getPadding, padValue } from './padding.js'
-import { addPrefix } from './prefix.js'
-import { shouldSkipStat } from './skip.js'
+import { serializeStat } from './serialize.js'
 import { STAT_TYPES } from './types.js'
 import { getUnit } from './unit.js'
-import { serializeValue } from './value.js'
 
 // Add `iteration.stats.*Pretty` which is like `iteration.stats.*` but
 // serialized and CLI-reporter-friendly. It adds time units, rounding, padding
@@ -59,34 +57,7 @@ const serializeIterationStat = function ({
   return { ...iteration, stats: { ...stats, [prettyName]: statPretty } }
 }
 
-const serializeStat = function ({
-  stat,
-  name,
-  type,
-  unit,
-  scale,
-  decimals,
-  loops,
-}) {
-  if (shouldSkipStat({ stat, name, loops })) {
-    return ''
-  }
-
-  if (Array.isArray(stat)) {
-    return stat.map((statA) =>
-      serializeItem({ stat: statA, type, name, scale, unit, decimals }),
-    )
-  }
-
-  return serializeItem({ stat, type, name, scale, unit, decimals })
-}
-
-const serializeItem = function ({ stat, type, name, scale, unit, decimals }) {
-  const statPretty = serializeValue({ stat, type, scale, unit, decimals })
-  const statPrettyA = addPrefix(stat, statPretty, name)
-  return statPrettyA
-}
-
+// Add paddings and colors after stats have been prettified
 // We pad after values length for each iteration is known.
 // We pad before adding colors because ANSI sequences makes padding harder.
 const finalizeValue = function ({
