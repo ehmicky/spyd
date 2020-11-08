@@ -1,5 +1,7 @@
 import { cyan, yellow, dim, red } from 'chalk'
 
+import { joinSections } from '../../utils/join.js'
+
 import { getFooter } from './footer.js'
 
 // Debugging reporter only meant for development purpose
@@ -14,7 +16,7 @@ const report = function ({
 }) {
   const content = iterations.map(serializeIteration).join('\n')
   const footer = getFooter({ timestamp, mergeId, systems, git, ci, commands })
-  return `${content}${footer}`
+  return joinSections([content, footer])
 }
 
 const serializeIteration = function ({ name, stats, fastest, slow }) {

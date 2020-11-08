@@ -20,7 +20,7 @@ export const getFooter = function ({
   commands,
   mergeId,
 }) {
-  const footer = joinSections([
+  return joinSections([
     prettifyCommands(commands),
     prettifySharedSystem(systems),
     prettifySystems(systems),
@@ -32,12 +32,6 @@ export const getFooter = function ({
     ]),
     LINK_FOOTER,
   ])
-
-  if (footer === '') {
-    return ''
-  }
-
-  return `\n\n${footer}`
 }
 
 const LINK_FOOTER = dim(
