@@ -1,3 +1,5 @@
+import { arrowUp, arrowDown } from 'figures'
+
 // Prepend some statistics with prefixes
 export const addPrefix = function (stat, statPretty, name) {
   const getPrefix = PREFIXES[name]
@@ -13,19 +15,17 @@ export const addPrefix = function (stat, statPretty, name) {
 
 const getArrow = function (stat) {
   if (stat >= 0) {
-    return `${UP_ARROW} `
+    return `${arrowUp} `
   }
 
-  return `${DOWN_ARROW} `
+  return `${arrowDown} `
 }
 
 const getPlusMinus = function () {
   return PLUS_MINUS
 }
 
-// The symbols works on CP437 too
-const UP_ARROW = '\u2191'
-const DOWN_ARROW = '\u2193'
+// Works on CP437 too
 const PLUS_MINUS = '±'
 
 const PREFIXES = {
