@@ -48,7 +48,7 @@ export const report = async function (
 }
 
 const getBenchmark = function (mergeId, benchmarks, { limits, diff }) {
-  const benchmarksA = benchmarks.map((benchmark) => addPrintedInfo(benchmark))
+  const benchmarksA = benchmarks.map(addPrintedInfo)
 
   const benchmarkA = benchmarksA.find(
     (benchmark) => benchmark.mergeId === mergeId,
