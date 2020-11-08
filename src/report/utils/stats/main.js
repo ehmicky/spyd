@@ -1,4 +1,3 @@
-import { getStatsDecimals } from './decimals.js'
 import { addPaddings } from './padding.js'
 import { serializeStats } from './serialize.js'
 import { getUnit } from './unit.js'
@@ -8,8 +7,7 @@ import { getUnit } from './unit.js'
 // and ensures proper vertical alignment.
 export const prettifyStats = function (iterations) {
   const { unit, scale } = getUnit(iterations)
-  const statsDecimals = getStatsDecimals(iterations, scale)
-  const iterationsA = serializeStats({ iterations, unit, scale, statsDecimals })
+  const iterationsA = serializeStats({ iterations, unit, scale })
   const iterationsB = addPaddings(iterationsA)
   return iterationsB
 }

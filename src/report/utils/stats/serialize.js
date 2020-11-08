@@ -1,4 +1,5 @@
 import { addColors } from './colors.js'
+import { getStatsDecimals } from './decimals.js'
 import { addPrefix } from './prefix.js'
 import { shouldSkipStat } from './skip.js'
 import { STAT_TYPES } from './types.js'
@@ -6,12 +7,7 @@ import { serializeValue } from './value.js'
 
 // Serialize each stat measure using the right time unit, number of decimals
 // and padding
-export const serializeStats = function ({
-  iterations,
-  unit,
-  scale,
-  statsDecimals,
-}) {
+export const serializeStats = function ({ iterations, unit, scale }) {
   return Object.entries(STAT_TYPES).reduce(
     (iterationsA, [name, type]) =>
       serializeIterationsStats({
@@ -20,7 +16,6 @@ export const serializeStats = function ({
         type,
         unit,
         scale,
-        statsDecimals,
       }),
     iterations,
   )
@@ -32,17 +27,10 @@ const serializeIterationsStats = function ({
   type,
   unit,
   scale,
-  statsDecimals,
 }) {
+  const decimals = getStatsDecimals({ iterations, name, type, scale })
   return iterations.map((iteration) =>
-    serializeIterationStat({
-      iteration,
-      name,
-      type,
-      unit,
-      scale,
-      statsDecimals,
-    }),
+    serializeIterationStat({ iteration, name, type, unit, scale, decimals }),
   )
 }
 
@@ -56,7 +44,7 @@ const serializeIterationStat = function ({
   type,
   unit,
   scale,
-  statsDecimals,
+  decimals,
 }) {
   const statPretty = serializeStat({
     stat,
@@ -64,7 +52,7 @@ const serializeIterationStat = function ({
     type,
     unit,
     scale,
-    statsDecimals,
+    decimals,
     loops,
   })
   return { ...iteration, stats: { ...stats, [`${name}Pretty`]: statPretty } }
@@ -76,14 +64,12 @@ const serializeStat = function ({
   type,
   unit,
   scale,
-  statsDecimals,
+  decimals,
   loops,
 }) {
   if (shouldSkipStat({ stat, name, loops })) {
     return ''
   }
-
-  const decimals = statsDecimals[name]
 
   if (Array.isArray(stat)) {
     return stat.map((statA) =>
