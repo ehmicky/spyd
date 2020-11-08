@@ -6,3 +6,10 @@ export const indentBlock = function (block) {
 }
 
 const INDENT_SIZE = 2
+
+// Add left padding to terminal content
+export const addPadding = function (block) {
+  return indentString(block, PADDING_SIZE)
+}
+
+const PADDING_SIZE = 1

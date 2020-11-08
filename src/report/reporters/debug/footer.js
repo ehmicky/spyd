@@ -1,6 +1,6 @@
 import { dim } from 'chalk'
-import indentString from 'indent-string'
 
+import { addPadding } from '../../utils/indent.js'
 import { prettifyCi } from '../../utils/pretty/ci.js'
 import { prettifyCommands } from '../../utils/pretty/commands.js'
 import { prettifyGit } from '../../utils/pretty/git.js'
@@ -20,7 +20,7 @@ export const getFooter = function ({
   commands,
   mergeId,
 }) {
-  const footers = joinSections(
+  const footer = joinSections(
     [
       prettifyCommands(commands),
       prettifySharedSystem(systems),
@@ -39,12 +39,12 @@ export const getFooter = function ({
     2,
   )
 
-  if (footers === '') {
+  if (footer === '') {
     return ''
   }
 
-  const footer = indentString(footers, 1)
-  return `\n\n${footer}`
+  const paddedFooter = addPadding(footer)
+  return `\n\n${paddedFooter}`
 }
 
 const LINK_FOOTER = dim(
