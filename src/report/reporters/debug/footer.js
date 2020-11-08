@@ -1,4 +1,4 @@
-import { dim, underline } from 'chalk'
+import { dim } from 'chalk'
 import indentString from 'indent-string'
 
 import { prettifyCi } from '../../utils/pretty/ci.js'
@@ -40,7 +40,7 @@ export const getFooter = function ({
 }
 
 const LINK_FOOTER = dim(
-  `Benchmarked with spyd (${underline('https://github.com/ehmicky/spyd')})`,
+  'Benchmarked with spyd (https://github.com/ehmicky/spyd)',
 )
 
 const indentFooter = function (footer) {
