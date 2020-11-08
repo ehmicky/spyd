@@ -1,6 +1,6 @@
 import { addColors } from './colors.js'
 import { getStatsDecimals } from './decimals.js'
-import { getPadding, addPadding } from './padding.js'
+import { getPadding, padValue } from './padding.js'
 import { addPrefix } from './prefix.js'
 import { shouldSkipStat } from './skip.js'
 import { STAT_TYPES } from './types.js'
@@ -29,7 +29,7 @@ const serializeIterationsStats = function (
   )
   const padding = getPadding(name, iterationsA)
   const iterationsB = iterationsA.map((iteration) =>
-    addPadding({ iteration, name, padding }),
+    finalizeValue({ iteration, name, padding }),
   )
   return iterationsB
 }
@@ -85,4 +85,15 @@ const serializeItem = function ({ stat, type, name, scale, unit, decimals }) {
   const statPrettyA = addPrefix(stat, statPretty, name)
   const statPrettyB = addColors(stat, statPrettyA, name)
   return statPrettyB
+}
+
+const finalizeValue = function ({
+  iteration,
+  iteration: { stats },
+  name,
+  padding,
+}) {
+  const prettyName = `${name}Pretty`
+  const prettyStat = padValue(stats[prettyName], padding)
+  return { ...iteration, stats: { ...stats, [prettyName]: prettyStat } }
 }
