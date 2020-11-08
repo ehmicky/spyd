@@ -18,36 +18,21 @@ export const prettifySystems = function (systems) {
     return
   }
 
-  return systems.slice(1).map(prettifySpecificSystem).filter(Boolean).join('\n')
+  const specificSystems = systems.slice(1)
+  const fields = getSystemsFields(specificSystems)
+  return prettifyObject(fields)
 }
 
-const prettifySpecificSystem = function (system) {
-  const fields = getFields(system)
+const getSystemsFields = function (systems) {
+  const specificSystemsFields = systems.map(getSystemFields)
+  return Object.assign({}, ...specificSystemsFields)
+}
+
+const getSystemFields = function (system) {
   const systemTitle = getTitle(system)
-  return prettifyObject({ [systemTitle]: fields })
+  const fields = getFields(system)
+  return { [systemTitle]: fields }
 }
-
-const getFields = function (system) {
-  const fields = SYSTEM_FIELDS.map(({ title, value }) => ({
-    [title]: value(system),
-  }))
-  return Object.assign({}, ...fields)
-}
-
-const getJob = function ({ jobNumber, jobUrl }) {
-  if (jobNumber === undefined) {
-    return
-  }
-
-  return `#${jobNumber} (${underline(jobUrl)})`
-}
-
-const SYSTEM_FIELDS = [
-  { title: 'OS', value: ({ os }) => os },
-  { title: 'CPU', value: ({ cpu }) => cpu },
-  { title: 'Memory', value: ({ memory }) => memory },
-  { title: 'Job', value: getJob },
-]
 
 const getTitle = function ({ title }) {
   if (title === '') {
@@ -59,3 +44,23 @@ const getTitle = function ({ title }) {
 
 // Nested title when `system` is an empty string
 const DEFAULT_TITLE = 'Default'
+
+const getFields = function (system) {
+  const fields = SYSTEM_FIELDS.map(({ title, value }) => ({
+    [title]: value(system),
+  }))
+  return Object.assign({}, ...fields)
+}
+
+const SYSTEM_FIELDS = [
+  { title: 'OS', value: ({ os }) => os },
+  { title: 'CPU', value: ({ cpu }) => cpu },
+  { title: 'Memory', value: ({ memory }) => memory },
+  {
+    title: 'Job',
+    value: ({ jobNumber, jobUrl }) =>
+      jobNumber === undefined
+        ? undefined
+        : `#${jobNumber} (${underline(jobUrl)})`,
+  },
+]
