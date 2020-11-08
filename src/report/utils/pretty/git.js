@@ -1,6 +1,5 @@
-import { blue } from 'chalk'
-
 import { isEmptyObject } from '../../../utils/main.js'
+import { addPrefix } from '../prefix.js'
 
 // Serialize `git` information for CLI reporters.
 export const prettifyGit = function (git) {
@@ -19,10 +18,9 @@ const prettifyCommit = function ({ commit, tag, branch }) {
     return
   }
 
-  const field = blue.bold('Commit: ')
   const hash = getHash(commit, tag)
   const branchA = getBranch(branch)
-  return `${field}${hash}${branchA}`
+  return addPrefix('Commit', `${hash}${branchA}`)
 }
 
 const getHash = function (commit, tag) {
@@ -40,9 +38,8 @@ const prettifyPr = function ({ prNumber, prBranch }) {
     return
   }
 
-  const field = blue.bold('PR: ')
   const prBranchA = getBranch(prBranch)
-  return `${field}#${prNumber}${prBranchA}`
+  return addPrefix('PR', `#${prNumber}${prBranchA}`)
 }
 
 const getBranch = function (branch) {
