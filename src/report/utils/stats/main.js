@@ -83,10 +83,11 @@ const serializeStat = function ({
 const serializeItem = function ({ stat, type, name, scale, unit, decimals }) {
   const statPretty = serializeValue({ stat, type, scale, unit, decimals })
   const statPrettyA = addPrefix(stat, statPretty, name)
-  const statPrettyB = addColors(stat, statPrettyA, name)
-  return statPrettyB
+  return statPrettyA
 }
 
+// We pad after values length for each iteration is known.
+// We pad before adding colors because ANSI sequences makes padding harder.
 const finalizeValue = function ({
   iteration,
   iteration: { stats },
@@ -94,6 +95,7 @@ const finalizeValue = function ({
   padding,
 }) {
   const prettyName = `${name}Pretty`
-  const prettyStat = padValue(stats[prettyName], padding)
-  return { ...iteration, stats: { ...stats, [prettyName]: prettyStat } }
+  const statPretty = padValue(stats[prettyName], padding)
+  const statPrettyA = addColors(stats[name], statPretty, name)
+  return { ...iteration, stats: { ...stats, [prettyName]: statPrettyA } }
 }
