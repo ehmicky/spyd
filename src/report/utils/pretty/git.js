@@ -1,5 +1,5 @@
 import { isEmptyObject } from '../../../utils/main.js'
-import { addPrefix, addIndentedPrefix } from '../prefix.js'
+import { addBlockPrefix } from '../prefix.js'
 
 // Serialize `git` information for CLI reporters.
 export const prettifyGit = function (git) {
@@ -9,19 +9,18 @@ export const prettifyGit = function (git) {
 
   const commitPretty = prettifyCommit(git)
   const prPretty = prettifyPr(git)
-  const body = [commitPretty, prPretty].filter(Boolean).join('\n')
-  const bodyA = addIndentedPrefix('Git', body)
+  const bodyA = addBlockPrefix('Git', { ...commitPretty, ...prPretty })
   return bodyA
 }
 
 const prettifyCommit = function ({ commit, tag, branch }) {
   if (commit === undefined) {
-    return
+    return {}
   }
 
   const hash = getHash(commit, tag)
   const branchA = getBranch(branch)
-  return addPrefix('Commit', `${hash}${branchA}`)
+  return { Commit: `${hash}${branchA}` }
 }
 
 const getHash = function (commit, tag) {
@@ -36,11 +35,11 @@ const COMMIT_SIZE = 8
 
 const prettifyPr = function ({ prNumber, prBranch }) {
   if (prNumber === undefined) {
-    return
+    return {}
   }
 
   const prBranchA = getBranch(prBranch)
-  return addPrefix('PR', `#${prNumber}${prBranchA}`)
+  return { PR: `#${prNumber}${prBranchA}` }
 }
 
 const getBranch = function (branch) {
