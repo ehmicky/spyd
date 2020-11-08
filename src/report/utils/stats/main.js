@@ -46,7 +46,7 @@ const serializeIterationStat = function ({
   scale,
   decimals,
 }) {
-  const prettyName = `${name}Pretty`
+  const prettyName = getPrettyName(name)
   const statPretty = serializeStat({
     stat,
     name,
@@ -98,7 +98,7 @@ const finalizeValue = function ({
   },
   padding,
 }) {
-  const prettyName = `${name}Pretty`
+  const prettyName = getPrettyName(name)
   const statPretty = stats[prettyName]
   const statPrettyA = Array.isArray(stat)
     ? stat.map((statA, index) =>
@@ -117,4 +117,8 @@ const finalizeItem = function ({ stat, statPretty, padding, name }) {
   const statPrettyA = padValue(statPretty, padding)
   const statPrettyB = addColors(stat, statPrettyA, name)
   return statPrettyB
+}
+
+const getPrettyName = function (name) {
+  return `${name}Pretty`
 }
