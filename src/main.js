@@ -3,7 +3,7 @@ import { getOpts } from './options/main.js'
 import { report } from './report/main.js'
 import { runBenchmark } from './run.js'
 import { addToStore } from './store/add.js'
-import { destroyStore } from './store/destroy.js'
+import { endStore } from './store/end.js'
 import { getFromStore } from './store/get.js'
 import { migrateStore } from './store/migrate/main.js'
 import { removeFromStore } from './store/remove.js'
@@ -23,7 +23,7 @@ export const run = async function (opts) {
     const benchmark = await report(mergeId, benchmarks, optsB)
     return benchmark
   } finally {
-    await destroyStore(optsB)
+    await endStore(optsB)
   }
 }
 
@@ -38,7 +38,7 @@ export const show = async function (opts) {
     const benchmark = await report(mergeId, benchmarks, optsB)
     return benchmark
   } finally {
-    await destroyStore(optsB)
+    await endStore(optsB)
   }
 }
 
@@ -52,7 +52,7 @@ export const remove = async function (opts) {
 
     await removeFromStore(mergeId, rawBenchmarks, optsB)
   } finally {
-    await destroyStore(optsA)
+    await endStore(optsA)
   }
 }
 
@@ -71,6 +71,6 @@ export const migrate = async function (opts) {
   try {
     await migrateStore(optsB)
   } finally {
-    await destroyStore(optsB)
+    await endStore(optsB)
   }
 }

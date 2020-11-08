@@ -8,7 +8,7 @@ const start = function (opts) {
 }
 
 // eslint-disable-next-line no-empty-function
-const destroy = function () {}
+const end = function () {}
 
 // The server must return an empty array when there are no benchmarks
 const list = async function (url) {
@@ -33,4 +33,4 @@ const remove = async function (ids, url) {
   })
 }
 
-export const http = { start, destroy, list, add, replace, remove }
+export const http = { start, end, list, add, replace, remove }

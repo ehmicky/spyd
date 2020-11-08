@@ -50,7 +50,7 @@ const bindInitOpts = function (store, startOpts) {
   )
 }
 
-const STORE_METHODS = ['list', 'add', 'replace', 'remove', 'destroy']
+const STORE_METHODS = ['list', 'add', 'replace', 'remove', 'end']
 
 const bindMethod = function (store, method, startOpts) {
   const originalFunc = store[method]
