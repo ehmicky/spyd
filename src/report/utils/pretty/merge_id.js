@@ -1,8 +1,11 @@
+import { addPrefix } from '../prefix.js'
+
 // Serialize `git` information for CLI reporters.
 export const prettifyMergeId = function (mergeId) {
   if (mergeId === undefined) {
     return
   }
 
-  return mergeId
+  const body = addPrefix('Id', mergeId)
+  return body
 }

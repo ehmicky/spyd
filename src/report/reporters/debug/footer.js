@@ -1,7 +1,6 @@
 import { dim, underline } from 'chalk'
 import indentString from 'indent-string'
 
-import { addPrefix, addIndentedPrefix } from '../../utils/prefix.js'
 import { prettifyCi } from '../../utils/pretty/ci.js'
 import { prettifyCommands } from '../../utils/pretty/commands.js'
 import { prettifyGit } from '../../utils/pretty/git.js'
@@ -21,10 +20,10 @@ export const getFooter = function ({
   const footers = [
     prettifyCommands(commands),
     prettifySystems(systems),
-    addPrefix('Id', prettifyMergeId(mergeId)),
-    addPrefix('Timestamp', prettifyTimestamp(timestamp)),
-    addIndentedPrefix('Git', prettifyGit(git)),
-    addIndentedPrefix('Ci', prettifyCi(ci)),
+    prettifyMergeId(mergeId),
+    prettifyTimestamp(timestamp),
+    prettifyGit(git),
+    prettifyCi(ci),
     LINK_FOOTER,
   ].filter(Boolean)
 

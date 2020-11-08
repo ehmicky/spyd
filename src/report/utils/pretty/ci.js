@@ -1,7 +1,7 @@
 import { underline } from 'chalk'
 
 import { isEmptyObject } from '../../../utils/main.js'
-import { addPrefix } from '../prefix.js'
+import { addPrefix, addIndentedPrefix } from '../prefix.js'
 
 // Serialize `ci` information for CLI reporters.
 export const prettifyCi = function (ci) {
@@ -12,7 +12,8 @@ export const prettifyCi = function (ci) {
   const providerPretty = prettifyProvider(ci)
   const buildPretty = prettifyBuild(ci)
   const body = [providerPretty, buildPretty].filter(Boolean).join('\n')
-  return body
+  const bodyA = addIndentedPrefix('Ci', body)
+  return bodyA
 }
 
 const prettifyProvider = function ({ provider }) {
