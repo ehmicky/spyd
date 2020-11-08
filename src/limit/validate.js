@@ -16,7 +16,7 @@ const validateLimitId = function (iterations, id) {
 
   if (!isValidId) {
     throw new TypeError(
-      `Invalid limit '${id}': no such tasks, inputs, commands nor systems`,
+      `In 'limit' option, invalid id '${id}': no such tasks, inputs, commands nor systems`,
     )
   }
 }

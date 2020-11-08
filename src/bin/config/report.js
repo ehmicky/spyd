@@ -35,7 +35,7 @@ The benchmarks will be inserted between those two lines.`,
     describe: `Report when the average duration has increased by more than a
 specific percentage such as "50%".
 To target a specific task, input, system or runner, prefix its id, for example
-"taskId:50%" or "taskId,inputId:50%". Can be specified several times`,
+"taskId:50%" or "taskId:inputId:50%". Can be specified several times`,
   },
   colors: {
     boolean: true,

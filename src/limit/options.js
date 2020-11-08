@@ -4,19 +4,13 @@ export const normalizeLimits = function (limits) {
 }
 
 const normalizeLimit = function (limit) {
-  const [ids, percentage] = limit.split(MAIN_SEPARATOR_REGEX)
-
-  if (percentage === undefined) {
-    return { percentage: getPercentage(limit) }
-  }
-
-  const percentageA = getPercentage(percentage)
-  const idsA = ids.split(IDS_SEPARATOR_REGEX).filter(Boolean)
-  return { ids: idsA, percentage: percentageA }
+  const parts = limit.split(SEPARATOR)
+  const ids = parts.slice(0, -1).filter(Boolean)
+  const percentage = getPercentage(parts[parts.length - 1])
+  return { ids, percentage }
 }
 
-const MAIN_SEPARATOR_REGEX = /\s*:\s*/u
-const IDS_SEPARATOR_REGEX = /\s*,\s*/gu
+const SEPARATOR = ':'
 
 const getPercentage = function (originalPercentage) {
   const percentageStr = originalPercentage.replace(PERCENTAGE_REGEXP, '')
