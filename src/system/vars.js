@@ -6,7 +6,7 @@ import osName from 'os-name'
 //  - environment variables
 //  - {{os}}, {{os_full}}
 //  - runner-specific variables like {{node_major}}
-export const replaceSystemVars = async function (title, run) {
+export const replaceSystemVars = function (title, run) {
   // TODO: use String.matchAll after dropping support for Node <12
   const rawTokens = title.match(SYSTEM_VAR_REGEXP)
 
@@ -15,14 +15,11 @@ export const replaceSystemVars = async function (title, run) {
   }
 
   const systemVars = getSystemVars(run)
-  const tokens = await Promise.all(
-    rawTokens.map((rawToken) => getToken(rawToken, systemVars)),
-  )
-  const titleA = tokens.reduce(replaceToken, title)
+  const titleA = rawTokens
+    .map((rawToken) => getToken(rawToken, systemVars))
+    .reduce(replaceToken, title)
   return titleA
 }
-
-const SYSTEM_VAR_REGEXP = /\{\{(\w+)\}\}/gu
 
 // Retrieve all available variables
 const getSystemVars = function (run) {
@@ -54,13 +51,15 @@ const OS = {
   openbsd: 'OpenBSD',
 }
 
-const getToken = async function (rawToken, systemVars) {
+const getToken = function (rawToken, systemVars) {
   const name = rawToken.replace(SYSTEM_VAR_REGEXP, '$1')
-  const value = await getTokenValue({ name, rawToken, systemVars })
+  const value = getTokenValue({ name, rawToken, systemVars })
   return { name, value }
 }
 
-const getTokenValue = async function ({ name, rawToken, systemVars }) {
+const SYSTEM_VAR_REGEXP = /\{\{(\w+)\}\}/gu
+
+const getTokenValue = function ({ name, rawToken, systemVars }) {
   const getValue = systemVars[name]
 
   if (getValue === undefined) {
@@ -68,7 +67,7 @@ const getTokenValue = async function ({ name, rawToken, systemVars }) {
   }
 
   try {
-    return await getValue()
+    return getValue()
   } catch (error) {
     throw new Error(
       `Could not use system variable ${rawToken}:\n${error.stack}`,

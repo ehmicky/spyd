@@ -28,7 +28,7 @@ const addRunners = function ({ run, ...opts }) {
 export const normalizeOpts = async function (opts) {
   const optsA = NORMALIZERS.reduce(normalizeOpt, opts)
   const optsB = await loadAllPlugins(optsA)
-  const optsC = await normalizeSystem(optsB)
+  const optsC = normalizeSystem(optsB)
   return optsC
 }
 
