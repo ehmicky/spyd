@@ -10,14 +10,14 @@ export const SELECT_CONFIG = {
 Each identifier can start with a ! to exclude the task instead of selecting it.
 Default: all tasks`,
   },
-  variations: {
-    alias: 'v',
+  inputs: {
+    alias: 'i',
     string: true,
     array: true,
     requiresArg: true,
-    describe: `Identifiers of the variations.
-Each identifier can start with a ! to exclude the variation instead of selecting it.
-Default: all variations`,
+    describe: `Identifiers of the inputs.
+Each identifier can start with a ! to exclude the input instead of selecting it.
+Default: all inputs`,
   },
   system: {
     string: true,

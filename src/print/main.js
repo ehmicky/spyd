@@ -22,7 +22,7 @@ export const addPrintedInfo = function ({
   const {
     iterations: iterationsA,
     tasks,
-    variations,
+    inputs,
     commands,
     systems: systemColls,
   } = addCollections(iterations)
@@ -52,7 +52,7 @@ export const addPrintedInfo = function ({
     timestamp,
     timestampPretty,
     tasks,
-    variations,
+    inputs,
     commands,
     systems: systemsA,
     systemsPretty,

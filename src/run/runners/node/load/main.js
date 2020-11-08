@@ -1,7 +1,7 @@
+import { addTasksInputs } from './inputs.js'
 import { normalizeTasks } from './normalize.js'
 import { useRequireOpt } from './require_opt.js'
 import { validateFile } from './validate.js'
-import { addTasksVariations } from './variations.js'
 
 // Load the iterations using the 'load' event sent by parent
 // Those iterations are used:
@@ -17,8 +17,8 @@ export const loadBenchmarkFile = async function (
   const entries = await loadFile(taskPath)
   validateFile(entries)
 
-  const { tasks, variations } = normalizeTasks(entries)
-  const iterations = addTasksVariations(tasks, variations)
+  const { tasks, inputs } = normalizeTasks(entries)
+  const iterations = addTasksInputs(tasks, inputs)
   return iterations
 }
 

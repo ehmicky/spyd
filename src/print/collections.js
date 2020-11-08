@@ -12,12 +12,7 @@ export const addCollections = function (iterations) {
 
 const COLLECTIONS = [
   { name: 'tasks', id: 'taskId', title: 'taskTitle', rank: 'taskRank' },
-  {
-    name: 'variations',
-    id: 'variationId',
-    title: 'variationTitle',
-    rank: 'variationRank',
-  },
+  { name: 'inputs', id: 'inputId', title: 'inputTitle', rank: 'inputRank' },
   {
     name: 'commands',
     id: 'commandId',

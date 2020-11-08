@@ -24,7 +24,7 @@ const normalizeSystems = function ({
 
 const TARGETS = [
   { idName: 'taskId', idsName: 'tasks', name: 'task' },
-  { idName: 'variationId', idsName: 'variations', name: 'variation' },
+  { idName: 'inputId', idsName: 'inputs', name: 'input' },
   { idName: 'systemId', idsName: 'systems', name: 'system' },
   { idName: 'commandRunner', idsName: 'runners', name: 'runner' },
 ]

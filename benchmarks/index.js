@@ -2,7 +2,7 @@ export const tasks = [
   {
     id: 'MathRandom',
     main: Math.random,
-    variations: ['one', 'two'],
+    inputs: ['one', 'two'],
   },
   {
     id: 'MathRandomTwo',
@@ -10,7 +10,7 @@ export const tasks = [
   },
 ]
 
-export const variations = [
+export const inputs = [
   { id: 'one', title: 'One', value: 1 },
   { id: 'two', value: 2 },
   { id: 'three', value: 3 },

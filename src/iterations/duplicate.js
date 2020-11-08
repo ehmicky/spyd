@@ -5,7 +5,7 @@ export const removeDuplicates = function (iterations) {
 }
 
 const removeDuplicate = function (
-  { taskId, variationId, commandId, systemId },
+  { taskId, inputId, commandId, systemId },
   index,
   iterations,
 ) {
@@ -14,7 +14,7 @@ const removeDuplicate = function (
     .every(
       (iteration) =>
         iteration.taskId !== taskId ||
-        iteration.variationId !== variationId ||
+        iteration.inputId !== inputId ||
         iteration.commandId !== commandId ||
         iteration.systemId !== systemId,
     )

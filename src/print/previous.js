@@ -8,7 +8,7 @@ import { normalizeStats } from './stats/main.js'
 // Add:
 //  - `benchmark.previous`: all previous benchmarks
 //  - `benchmark.iterations[*].previous`: previous iteration with same runner,
-//    task and variation
+//    task and input
 export const addPrevious = function (
   benchmarks,
   { timestamp, iterations, ...benchmark },
@@ -84,7 +84,7 @@ const addPreviousIteration = function ({
 const isSameIteration = function (iterationA, iterationB) {
   return (
     iterationA.taskId === iterationB.taskId &&
-    iterationA.variationId === iterationB.variationId &&
+    iterationA.inputId === iterationB.inputId &&
     iterationA.commandId === iterationB.commandId &&
     iterationA.systemId === iterationB.systemId
   )

@@ -11,44 +11,38 @@ const load = async function ({ taskPath, opts }) {
   return { iterations: iterationsA }
 }
 
-const getIteration = function ({
-  taskId,
-  taskTitle,
-  variationTitle,
-  variationId,
-}) {
-  return { taskId, taskTitle, variationId, variationTitle }
+const getIteration = function ({ taskId, taskTitle, inputTitle, inputId }) {
+  return { taskId, taskTitle, inputId, inputTitle }
 }
 
 // Run benchmarks
-const run = async function ({ taskPath, opts, taskId, variationId, duration }) {
+const run = async function ({ taskPath, opts, taskId, inputId, duration }) {
   const { main, before, after } = await getTask({
     taskPath,
     opts,
     taskId,
-    variationId,
+    inputId,
   })
   const { times, count } = await benchmark({ main, before, after, duration })
   return { times, count }
 }
 
-const debug = async function ({ taskPath, opts, taskId, variationId }) {
+const debug = async function ({ taskPath, opts, taskId, inputId }) {
   const { main, before, after } = await getTask({
     taskPath,
     opts,
     taskId,
-    variationId,
+    inputId,
   })
   await debugRun({ main, before, after })
   return {}
 }
 
-const getTask = async function ({ taskPath, opts, taskId, variationId }) {
+const getTask = async function ({ taskPath, opts, taskId, inputId }) {
   const iterations = await loadBenchmarkFile(taskPath, opts)
 
   const { main, before, after } = iterations.find(
-    (iteration) =>
-      iteration.taskId === taskId && iteration.variationId === variationId,
+    (iteration) => iteration.taskId === taskId && iteration.inputId === inputId,
   )
   return { main, before, after }
 }

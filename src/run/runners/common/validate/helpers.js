@@ -1,4 +1,4 @@
-// Common validation utility when validating both tasks and variations
+// Common validation utility when validating both tasks and inputs
 export const validateProp = function ({
   id,
   validators,

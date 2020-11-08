@@ -4,9 +4,9 @@ import { pointer } from 'figures'
 import { padTitles } from './titles.js'
 
 // Add:
-//  - `iteration.name`: combines task, variation, command and system.
+//  - `iteration.name`: combines task, input, command and system.
 //     For one-dimensional reporters.
-//  - `iteration.columnName`: combines variation, command and system.
+//  - `iteration.columnName`: combines input, command and system.
 //     For two-dimensional reporters. `taskTitle` is the row name.
 // We need to do this three times:
 //  - before benchmarks start because `iteration.name` is used by progress
@@ -25,10 +25,10 @@ export const addNames = function (iterations) {
   return iterationsA.map((iteration) => addName(iteration, propsA))
 }
 
-const NAME_PROPS = ['variationTitle', 'commandTitle', 'systemTitle']
+const NAME_PROPS = ['inputTitle', 'commandTitle', 'systemTitle']
 
 // If all commands are the same, do not include them.
-// Tasks/variations/systems should always be shown though, unless always empty.
+// Tasks/inputs/systems should always be shown though, unless always empty.
 const shouldShowProp = function (propName, iterations) {
   const props = iterations.map((iteration) => iteration[propName])
   const uniqueProps = [...new Set(props)]

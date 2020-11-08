@@ -50,10 +50,10 @@ const normalizeTasks = function ({ tasks, ...opts }) {
   return { ...opts, tasks }
 }
 
-// Validate 'variations' option
-const normalizeVariations = function ({ variations, ...opts }) {
-  validateStringArray(variations, 'variations')
-  return { ...opts, variations }
+// Validate 'inputs' option
+const normalizeInputs = function ({ inputs, ...opts }) {
+  validateStringArray(inputs, 'inputs')
+  return { ...opts, inputs }
 }
 
 // Normalize 'group' option
@@ -94,7 +94,7 @@ const normalizeDiff = function ({ diff, ...opts }) {
 const NORMALIZERS = [
   normalizeFiles,
   normalizeTasks,
-  normalizeVariations,
+  normalizeInputs,
   normalizeGroup,
   normalizeDuration,
   normalizeCwd,

@@ -7,7 +7,7 @@ import { removeDuplicates } from './duplicate.js'
 import { loadIterations } from './load.js'
 import { getTaskPaths } from './path.js'
 
-// Retrieve each iteration, i.e. combination of task + variation (if any)
+// Retrieve each iteration, i.e. combination of task + input (if any)
 export const getIterations = async function ({
   files,
   duration,
@@ -15,7 +15,7 @@ export const getIterations = async function ({
   debug,
   system,
   tasks,
-  variations,
+  inputs,
   run: runners,
   limits,
 }) {
@@ -31,7 +31,7 @@ export const getIterations = async function ({
     debug,
     system,
     tasks,
-    variations,
+    inputs,
     limits,
   })
 
@@ -47,7 +47,7 @@ const getAllIterations = async function ({
   debug,
   system,
   tasks,
-  variations,
+  inputs,
   limits,
 }) {
   const iterations = await loadIterations({
@@ -60,7 +60,7 @@ const getAllIterations = async function ({
   })
 
   const iterationsA = removeDuplicates(iterations)
-  const iterationsB = selectIterations(iterationsA, { tasks, variations })
+  const iterationsB = selectIterations(iterationsA, { tasks, inputs })
 
   validateLimits(iterationsB, limits)
 

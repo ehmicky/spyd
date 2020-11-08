@@ -25,8 +25,8 @@ It defaults to "./benchmarks.*" or "./benchmarks/index.*".
 
 Each FILE must export the tasks to benchmark.
 
-Several FILEs can be specified at once. Each set of 'variations' is specific to
-the FILE which declared it.
+Several FILEs can be specified at once.
+Each set of 'inputs' is specific to the FILE which declared it.
 
 The format of the FILE is runner-specific.`,
 

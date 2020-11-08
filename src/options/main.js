@@ -95,5 +95,5 @@ const EXAMPLE_OPTS = {
   output: './file.js',
   system: 'Windows 10',
   tasks: ['taskId'],
-  variations: ['variationId'],
+  inputs: ['inputId'],
 }

@@ -6,7 +6,7 @@ import {
   validateStringArray,
   validatePrimitive,
   validateTasks,
-  validateVariations,
+  validateInputs,
 } from '../../common/validate/main.js'
 
 // Validate that benchmark file has correct shape
@@ -49,10 +49,10 @@ const TASK_VALIDATORS = {
   main: validateString,
   before: validateString,
   after: validateString,
-  variations: validateStringArray,
+  inputs: validateStringArray,
 }
 
-const VARIATION_VALIDATORS = {
+const INPUT_VALIDATORS = {
   id: validateString,
   title: validateString,
   value: validatePrimitive,
@@ -62,5 +62,5 @@ const VALIDATORS = {
   shell: validateShell,
   variables: validateVariables,
   tasks: validateTasks.bind(undefined, TASK_VALIDATORS),
-  variations: validateVariations.bind(undefined, VARIATION_VALIDATORS),
+  inputs: validateInputs.bind(undefined, INPUT_VALIDATORS),
 }

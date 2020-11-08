@@ -2,16 +2,16 @@ tasks:
   - id: example
     title: Example
     before: echo before {{cwd}}
-    main: echo main {{variation}} {{before}}
-    after: echo after {{variation}} {{before}}
-    variations: [one, two]
+    main: echo main {{input}} {{before}}
+    after: echo after {{input}} {{before}}
+    inputs: [one, two]
 
-variations:
+inputs:
   - id: one
     title: One
-    value: variationOne
+    value: inputOne
   - id: two
-    value: variationTwo
+    value: inputTWo
 
 shell: false
 

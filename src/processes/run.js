@@ -19,7 +19,7 @@ import { executeChild } from './execute.js'
 export const runChildren = async function ({
   taskPath,
   taskId,
-  variationId,
+  inputId,
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
@@ -33,7 +33,7 @@ export const runChildren = async function ({
     taskPath,
     opts: commandOpt,
     taskId,
-    variationId,
+    inputId,
     duration: processDuration,
   }
   const results = []
@@ -50,7 +50,7 @@ export const runChildren = async function ({
       duration,
       cwd,
       taskId,
-      variationId,
+      inputId,
       type: 'iterationRun',
     })
     // eslint-disable-next-line fp/no-mutating-methods

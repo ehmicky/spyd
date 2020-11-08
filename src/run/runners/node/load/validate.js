@@ -4,7 +4,7 @@ import {
   validateFunction,
   validateStringArray,
   validateTasks,
-  validateVariations,
+  validateInputs,
 } from '../../common/validate/main.js'
 
 // Validate that the benchmark file has correct shape
@@ -18,10 +18,10 @@ const TASK_VALIDATORS = {
   main: validateFunction,
   before: validateFunction,
   after: validateFunction,
-  variations: validateStringArray,
+  inputs: validateStringArray,
 }
 
-const VARIATION_VALIDATORS = {
+const INPUT_VALIDATORS = {
   id: validateString,
   title: validateString,
   // eslint-disable-next-line no-empty-function
@@ -30,5 +30,5 @@ const VARIATION_VALIDATORS = {
 
 const VALIDATORS = {
   tasks: validateTasks.bind(undefined, TASK_VALIDATORS),
-  variations: validateVariations.bind(undefined, VARIATION_VALIDATORS),
+  inputs: validateInputs.bind(undefined, INPUT_VALIDATORS),
 }

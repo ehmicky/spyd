@@ -19,7 +19,6 @@ For silent output, use "". This is the default if --insert is used.
 To print to stdout, use "-". This is the default otherwise.`,
   },
   insert: {
-    alias: 'i',
     string: true,
     requiresArg: true,
     describe: `Insert the benchmarks inside the specified file.
@@ -36,7 +35,7 @@ The benchmarks will be inserted between those two lines.`,
     describe: `Report when the average duration has increased by more than a
 specific percentage.
 The value is the percentage (e.g. "50" for 50%).
-It can prefixed by a comma-separated list of identifiers (tasks, variations,
+It can prefixed by a comma-separated list of identifiers (tasks, inputs,
 runners or systems) to target. This can be specified several times.`,
   },
   colors: {

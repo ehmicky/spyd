@@ -1,11 +1,11 @@
-// Make `taskTitle`, `variationTitle`, 'commandTitle', 'systemTitle'
+// Make `taskTitle`, `inputTitle`, 'commandTitle', 'systemTitle'
 // reporter-friendly by adding paddings.
 export const padTitles = function (iterations) {
   const paddings = getPaddings(iterations)
   return iterations.map((iteration) => addPadding(iteration, paddings))
 }
 
-// Vertically align `taskTitle`, `variationTitle` and `commandTitle`
+// Vertically align `taskTitle`, `inputTitle` and `commandTitle`
 const getPaddings = function (iterations) {
   const paddings = PADDED_PROPS.map((propName) =>
     getPadding(iterations, propName),
@@ -32,9 +32,4 @@ const padProp = function (title, padding, propName) {
   return [propName, titleA]
 }
 
-const PADDED_PROPS = [
-  'taskTitle',
-  'variationTitle',
-  'commandTitle',
-  'systemTitle',
-]
+const PADDED_PROPS = ['taskTitle', 'inputTitle', 'commandTitle', 'systemTitle']

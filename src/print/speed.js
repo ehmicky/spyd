@@ -1,7 +1,7 @@
 import sortOn from 'sort-on'
 
 // Add `iteration.fastest` boolean indicating fastest iterations,
-// for each column (variation + command + system combination)
+// for each column (input + command + system combination)
 // Also sort iterations so the fastest tasks will be first, then the fastest
 // iterations within each task (regardless of column)
 export const addSpeedInfo = function (iterations) {
@@ -12,7 +12,7 @@ export const addSpeedInfo = function (iterations) {
 }
 
 const ROW_RANK = 'taskRank'
-const COLUMN_RANKS = ['variationRank', 'commandRank', 'systemRank']
+const COLUMN_RANKS = ['inputRank', 'commandRank', 'systemRank']
 
 const addFastest = function (iterations, iteration) {
   const fastest = iterations.every(
@@ -23,7 +23,7 @@ const addFastest = function (iterations, iteration) {
 
 const isSameColumn = function (iterationA, iterationB) {
   return (
-    iterationA.variationId === iterationB.variationId &&
+    iterationA.inputId === iterationB.inputId &&
     iterationA.commandId === iterationB.commandId &&
     iterationA.systemId === iterationB.systemId
   )

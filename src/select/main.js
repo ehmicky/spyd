@@ -2,18 +2,18 @@ import { applyTargets } from './apply.js'
 import { getTargets } from './targets.js'
 import { validateTargets } from './validate.js'
 
-// Select iterations according to options `tasks` and `variations`.
+// Select iterations according to options `tasks` and `inputs`.
 // For the `run` and `debug` commands.
-export const selectIterations = function (iterations, { tasks, variations }) {
+export const selectIterations = function (iterations, { tasks, inputs }) {
   const [{ iterations: iterationsA }] = selectBenchmarks([{ iterations }], {
     tasks,
-    variations,
+    inputs,
   })
   return iterationsA
 }
 
-// Select benchmarks according to options `tasks`, `variations`, `system` and
-// `run`. For the `show` command.
+// Select benchmarks according to options `tasks`, `inputs`, `system` and `run`.
+// For the `show` command.
 export const selectBenchmarks = function (rawBenchmarks, opts) {
   const targets = getTargets(opts)
   validateTargets(targets, rawBenchmarks)

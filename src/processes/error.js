@@ -9,7 +9,7 @@ export const forwardChildError = function ({
   taskPath,
   result,
   taskId,
-  variationId,
+  inputId,
 }) {
   if (!failed) {
     return
@@ -22,7 +22,7 @@ export const forwardChildError = function ({
     taskPath,
     result,
     taskId,
-    variationId,
+    inputId,
   })
   throw new Error(messageA)
 }
@@ -34,9 +34,9 @@ const getMessage = function ({
   taskPath,
   result: { error: errorResult },
   taskId,
-  variationId,
+  inputId,
 }) {
-  const taskPrefix = getTaskPrefix({ taskPath, taskId, variationId })
+  const taskPrefix = getTaskPrefix({ taskPath, taskId, inputId })
 
   if (timedOut) {
     const timeoutError = getTimeoutError(duration)
@@ -47,17 +47,17 @@ const getMessage = function ({
   return [taskPrefix, errorResult, execaError].filter(Boolean).join('\n\n')
 }
 
-// Add task/variation context to child process errors
-const getTaskPrefix = function ({ taskPath, taskId, variationId }) {
+// Add task/input context to child process errors
+const getTaskPrefix = function ({ taskPath, taskId, inputId }) {
   if (taskId === undefined) {
     return `In '${taskPath}' `
   }
 
-  if (variationId === '') {
+  if (inputId === '') {
     return `In '${taskPath}', task '${taskId}'`
   }
 
-  return `In '${taskPath}', task '${taskId}' (variation '${variationId}')`
+  return `In '${taskPath}', task '${taskId}' (input '${inputId}')`
 }
 
 const getExecaError = function (shortMessage) {

@@ -2,11 +2,11 @@ import { env } from 'process'
 
 import { loadYamlFile } from '../../../../utils/yaml.js'
 
+import { addTasksInputs } from './inputs.js'
 import { normalizeTasks } from './normalize.js'
 import { getShell } from './shell.js'
 import { validateFile } from './validate.js'
 import { getVariables } from './variables.js'
-import { addTasksVariations } from './variations.js'
 
 // Load the benchmark file
 export const loadBenchmarkFile = async function (taskPath, debug) {
@@ -22,10 +22,10 @@ export const loadBenchmarkFile = async function (taskPath, debug) {
     debug,
   })
 
-  const { tasks, variations } = normalizeTasks(entriesB, variablesA)
-  const iterations = addTasksVariations({
+  const { tasks, inputs } = normalizeTasks(entriesB, variablesA)
+  const iterations = addTasksInputs({
     tasks,
-    variations,
+    inputs,
     variables: variablesA,
   })
   return { iterations, shell }

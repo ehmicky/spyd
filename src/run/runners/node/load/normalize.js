@@ -1,16 +1,16 @@
 // Normalize task properties names
-export const normalizeTasks = function ({ tasks, variations }) {
+export const normalizeTasks = function ({ tasks, inputs }) {
   const tasksA = tasks.map(normalizeTask)
-  return { tasks: tasksA, variations }
+  return { tasks: tasksA, inputs }
 }
 
 const normalizeTask = function ({
   id: taskId,
   title: taskTitle,
-  variations: variationsIds,
+  inputs: inputsIds,
   main,
   before,
   after,
 }) {
-  return { taskId, taskTitle, variationsIds, main, before, after }
+  return { taskId, taskTitle, inputsIds, main, before, after }
 }

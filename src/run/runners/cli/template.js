@@ -2,7 +2,7 @@
 //  - environment variables
 //  - file.variables
 //  - task.before output ({{before}})
-//  - each {{variation}}
+//  - each {{input}}
 // Can be escaped as {{{variable}}}
 export const applyTemplate = function (string, variables) {
   if (string === undefined) {

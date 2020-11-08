@@ -18,7 +18,7 @@ export const executeChild = async function ({
   duration,
   cwd,
   taskId,
-  variationId,
+  inputId,
   type,
 }) {
   const { message, failed, timedOut, result } = await spawnFile({
@@ -38,7 +38,7 @@ export const executeChild = async function ({
     taskPath,
     result,
     taskId,
-    variationId,
+    inputId,
   })
 
   return result

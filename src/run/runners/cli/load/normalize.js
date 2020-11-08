@@ -1,34 +1,32 @@
 import { applyTemplate } from '../template.js'
 
 // Apply templates in tasks and normalize their property names
-export const normalizeTasks = function ({ tasks, variations }, variables) {
+export const normalizeTasks = function ({ tasks, inputs }, variables) {
   const tasksA = tasks.map((task) => normalizeTask(task, variables))
-  return { tasks: tasksA, variations }
+  return { tasks: tasksA, inputs }
 }
 
 const normalizeTask = function (
-  { id, title, variations, main, before, after },
+  { id, title, inputs, main, before, after },
   variables,
 ) {
-  const { taskId, taskTitle, variationsIds } = applyTaskTemplates({
+  const { taskId, taskTitle, inputsIds } = applyTaskTemplates({
     id,
     title,
-    variations,
+    inputs,
     variables,
   })
-  return { taskId, taskTitle, variationsIds, main, before, after }
+  return { taskId, taskTitle, inputsIds, main, before, after }
 }
 
-const applyTaskTemplates = function ({ id, title, variations, variables }) {
+const applyTaskTemplates = function ({ id, title, inputs, variables }) {
   const taskId = applyTemplate(id, variables)
   const taskTitle = applyTemplate(title, variables)
 
-  if (variations === undefined) {
+  if (inputs === undefined) {
     return { taskId, taskTitle }
   }
 
-  const variationsIds = variations.map((variation) =>
-    applyTemplate(variation, variables),
-  )
-  return { taskId, taskTitle, variationsIds }
+  const inputsIds = inputs.map((input) => applyTemplate(input, variables))
+  return { taskId, taskTitle, inputsIds }
 }

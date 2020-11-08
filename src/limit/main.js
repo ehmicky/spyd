@@ -33,16 +33,13 @@ export const getLimit = function ({
   return { limit, slow, slowError }
 }
 
-const isTarget = function (
-  { taskId, variationId, commandRunner, systemId },
-  ids,
-) {
+const isTarget = function ({ taskId, inputId, commandRunner, systemId }, ids) {
   return (
     ids === undefined ||
     ids.some(
       (id) =>
         taskId === id ||
-        variationId === id ||
+        inputId === id ||
         commandRunner === id ||
         systemId === id,
     )
