@@ -40,17 +40,21 @@ const hasValue = function ([, value]) {
 }
 
 const prettifyObjectPair = function ([name, value]) {
-  const prefix = getPrefix(name)
-
-  if (!isPlainObj(value)) {
-    return `${prefix} ${value}`
+  if (isPlainObj(value)) {
+    return prettifyObjectChild(name, value)
   }
 
-  const children = prettifyObject(value)
+  const prefix = getPrefix(name)
+  return `${prefix} ${value}`
+}
+
+const prettifyObjectChild = function (name, object) {
+  const children = prettifyObject(object)
 
   if (children === '') {
     return
   }
 
+  const prefix = getPrefix(name)
   return `${prefix}\n${indentBlock(children)}`
 }
