@@ -7,12 +7,12 @@ export const RUN_CONFIG = {
     describe: `How many seconds to benchmark each task.
 Default: 10`,
   },
-  group: {
+  merge: {
     alias: 'g',
     string: true,
     describe: `Append the current benchmarks to the previous one.
 Used to create a single benchmark in several incremental runs.
-Can also be a group identifier. Benchmarks within the same group are reported together.
+Can also be an id. Benchmarks within the same id are reported together.
 Default: random UUID`,
   },
   progress: {

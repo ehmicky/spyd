@@ -1,19 +1,19 @@
 import { blue, dim, underline } from 'chalk'
 import indentString from 'indent-string'
 
-// Retrieve footer: system, timestamp, group, link
+// Retrieve footer: system, timestamp, mergeId, link
 export const getFooter = function ({
   timestampPretty,
   systemsPretty,
   gitPretty,
   ciPretty,
   commandsPretty,
-  group,
+  mergeId,
 }) {
   const footers = [
     commandsPretty,
     systemsPretty,
-    addPrefix('Group', group),
+    addPrefix('Id', mergeId),
     addPrefix('Timestamp', timestampPretty),
     gitPretty,
     ciPretty,

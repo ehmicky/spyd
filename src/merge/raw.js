@@ -3,14 +3,14 @@ import { groupBy } from '../utils/group.js'
 
 import { validateMerge } from './validate.js'
 
-// Merge previous benchmarks part of the same `group`.
+// Merge previous benchmarks part of the same `mergeId`.
 // Later benchmarks have priority.
-export const mergeBenchmarks = function (benchmarks) {
-  return Object.values(groupBy(benchmarks, 'group')).map(mergeGroup)
+export const mergeRawBenchmarks = function (rawBenchmarks) {
+  return Object.values(groupBy(rawBenchmarks, 'mergeId')).map(mergeBenchmark)
 }
 
-const mergeGroup = function ([benchmark, ...benchmarks]) {
-  return benchmarks.reduce(mergePair, benchmark)
+const mergeBenchmark = function ([rawBenchmark, ...rawBenchmarks]) {
+  return rawBenchmarks.reduce(mergePair, rawBenchmark)
 }
 
 const mergePair = function (

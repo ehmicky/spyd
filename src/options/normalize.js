@@ -56,10 +56,10 @@ const normalizeInputs = function ({ inputs, ...opts }) {
   return { ...opts, inputs }
 }
 
-// Normalize 'group' option
-const normalizeGroup = function ({ group, ...opts }) {
-  const groupA = group.trim()
-  return { ...opts, group: groupA }
+// Normalize 'merge' option
+const normalizeMerge = function ({ merge, ...opts }) {
+  const mergeId = merge.trim()
+  return { ...opts, mergeId }
 }
 
 // Normalize and validate 'duration' option
@@ -95,7 +95,7 @@ const NORMALIZERS = [
   normalizeFiles,
   normalizeTasks,
   normalizeInputs,
-  normalizeGroup,
+  normalizeMerge,
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,

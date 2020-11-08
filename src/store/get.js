@@ -1,4 +1,4 @@
-import { mergeBenchmarks } from '../group/merge.js'
+import { mergeRawBenchmarks } from '../merge/raw.js'
 import { selectBenchmarks } from '../select/main.js'
 
 import { find } from './delta/find.js'
@@ -12,11 +12,11 @@ export const getFromStore = async function (delta, opts) {
 
   const rawBenchmarksA = selectBenchmarks(rawBenchmarks, opts)
 
-  const benchmarks = mergeBenchmarks(rawBenchmarksA)
+  const benchmarks = mergeRawBenchmarks(rawBenchmarksA)
 
-  const { group } = getBenchmark(benchmarks, delta)
+  const { mergeId } = getBenchmark(benchmarks, delta)
 
-  return { group, benchmarks, rawBenchmarks: rawBenchmarksA }
+  return { mergeId, benchmarks, rawBenchmarks: rawBenchmarksA }
 }
 
 const getBenchmark = function (benchmarks, delta) {

@@ -1,7 +1,7 @@
 import omit from 'omit.js'
 
-import { mergeBenchmarks } from '../group/merge.js'
-import { addGroup } from '../group/options.js'
+import { addMergeId } from '../merge/options.js'
+import { mergeRawBenchmarks } from '../merge/raw.js'
 
 import { listStore } from './list.js'
 import { validateDataVersion } from './migrate/main.js'
@@ -11,13 +11,13 @@ export const addToStore = async function (rawBenchmark, opts) {
   const rawBenchmarks = await listStore(opts)
   validateDataVersion(rawBenchmarks)
 
-  const rawBenchmarkA = addGroup(rawBenchmark, rawBenchmarks, opts)
+  const rawBenchmarkA = addMergeId(rawBenchmark, rawBenchmarks, opts)
   await save(rawBenchmarkA, opts)
 
   const rawBenchmarksA = [...rawBenchmarks, rawBenchmarkA]
-  const benchmarks = mergeBenchmarks(rawBenchmarksA)
+  const benchmarks = mergeRawBenchmarks(rawBenchmarksA)
 
-  return { group: rawBenchmarkA.group, benchmarks }
+  return { mergeId: rawBenchmarkA.mergeId, benchmarks }
 }
 
 // Save benchmark results so they can be compared or shown later

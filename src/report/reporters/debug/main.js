@@ -5,7 +5,7 @@ import { getFooter } from './footer.js'
 // Debugging reporter only meant for development purpose
 const report = function ({
   timestampPretty,
-  group,
+  mergeId,
   systemsPretty,
   gitPretty,
   ciPretty,
@@ -15,7 +15,7 @@ const report = function ({
   const content = iterations.map(serializeIteration).join('\n')
   const footer = getFooter({
     timestampPretty,
-    group,
+    mergeId,
     systemsPretty,
     gitPretty,
     ciPretty,

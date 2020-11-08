@@ -1,5 +1,5 @@
 // When two `files` define the same iteration, the last one prevails.
-// Also used when merging benchmarks of the same group.
+// Also used when merging benchmarks of the same mergeId.
 export const removeDuplicates = function (iterations) {
   return iterations.filter(removeDuplicate)
 }

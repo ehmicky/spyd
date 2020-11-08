@@ -3,7 +3,7 @@ import { cwd as getCwd } from 'process'
 import filterObj from 'filter-obj'
 import { validate, multipleValidOptions } from 'jest-validate'
 
-import { getDefaultGroup } from '../group/options.js'
+import { getDefaultMergeId } from '../merge/options.js'
 
 import { getConfig } from './config.js'
 import { addEnvVars } from './env.js'
@@ -49,7 +49,7 @@ const addDefaultOpts = function (opts, action) {
   return {
     ...DEFAULT_OPTS,
     context: action === 'show',
-    group: getDefaultGroup({ ...DEFAULT_OPTS, ...opts }),
+    merge: getDefaultMergeId({ ...DEFAULT_OPTS, ...opts }),
     ...opts,
   }
 }
@@ -88,7 +88,7 @@ const EXAMPLE_OPTS = {
   context: true,
   delta: VALID_BENCHMARK_DELTA,
   diff: VALID_BENCHMARK_DELTA,
-  group: multipleValidOptions('', '546'),
+  merge: multipleValidOptions('', '546'),
   insert: './README.md',
   limit: ['taskId=10'],
   link: false,

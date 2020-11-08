@@ -15,9 +15,9 @@ export const run = async function (opts) {
 
   const rawBenchmark = await runBenchmark(optsA)
 
-  const { group, benchmarks } = await addToStore(rawBenchmark, optsA)
+  const { mergeId, benchmarks } = await addToStore(rawBenchmark, optsA)
 
-  const benchmarkA = await report(group, benchmarks, optsA)
+  const benchmarkA = await report(mergeId, benchmarks, optsA)
 
   await destroyStore(optsA)
 
@@ -28,9 +28,9 @@ export const run = async function (opts) {
 export const show = async function (opts) {
   const { delta, ...optsA } = await getOpts('show', opts)
 
-  const { group, benchmarks } = await getFromStore(delta, optsA)
+  const { mergeId, benchmarks } = await getFromStore(delta, optsA)
 
-  const benchmarkA = await report(group, benchmarks, optsA)
+  const benchmarkA = await report(mergeId, benchmarks, optsA)
 
   await destroyStore(optsA)
 
@@ -41,9 +41,9 @@ export const show = async function (opts) {
 export const remove = async function (opts) {
   const { delta, ...optsA } = await getOpts('remove', opts)
 
-  const { group, rawBenchmarks } = await getFromStore(delta, optsA)
+  const { mergeId, rawBenchmarks } = await getFromStore(delta, optsA)
 
-  await removeFromStore(group, rawBenchmarks, optsA)
+  await removeFromStore(mergeId, rawBenchmarks, optsA)
 
   await destroyStore(optsA)
 }

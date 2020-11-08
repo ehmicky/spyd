@@ -15,7 +15,7 @@ export const addPrevious = function (
   { limits, diff },
 ) {
   // When combined with the 'show' option, we only show the benchmarks before it
-  // We exclude benchmarks from the same group (since they are already grouped)
+  // We exclude benchmarks from the same mergeId (since they are already merged)
   const previous = benchmarks.filter(
     (benchmarkA) => benchmarkA.timestamp < timestamp,
   )

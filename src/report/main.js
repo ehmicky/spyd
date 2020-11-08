@@ -10,7 +10,7 @@ import { printContent } from './print.js'
 
 // Report benchmark results
 export const report = async function (
-  group,
+  mergeId,
   benchmarks,
   {
     report: reporters,
@@ -24,7 +24,7 @@ export const report = async function (
     diff,
   },
 ) {
-  const benchmark = getBenchmark(group, benchmarks, { limits, diff })
+  const benchmark = getBenchmark(mergeId, benchmarks, { limits, diff })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>
@@ -47,10 +47,12 @@ export const report = async function (
   return benchmark
 }
 
-const getBenchmark = function (group, benchmarks, { limits, diff }) {
+const getBenchmark = function (mergeId, benchmarks, { limits, diff }) {
   const benchmarksA = benchmarks.map((benchmark) => addPrintedInfo(benchmark))
 
-  const benchmarkA = benchmarksA.find((benchmark) => benchmark.group === group)
+  const benchmarkA = benchmarksA.find(
+    (benchmark) => benchmark.mergeId === mergeId,
+  )
   const benchmarkB = addPrevious(benchmarksA, benchmarkA, { limits, diff })
   return benchmarkB
 }

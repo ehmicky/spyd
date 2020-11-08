@@ -3,7 +3,7 @@ import { env } from 'process'
 import { set } from 'dot-prop'
 
 // All the options can be set using environment variables.
-// This is especially handy in CI, including for the `group` and `system`
+// This is especially handy in CI, including for the `merge` and `system`
 // options.
 export const addEnvVars = function (opts) {
   return Object.entries(env).filter(isSpydEnvVar).reduce(addEnvVar, opts)

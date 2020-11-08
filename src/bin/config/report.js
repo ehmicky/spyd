@@ -50,7 +50,7 @@ Default: false`,
   },
   context: {
     boolean: true,
-    describe: `Show context information such as timestamp, group, commit/branch
+    describe: `Show context information such as id, timestamp, commit/branch
 or CI build.
 Default: true for command "show", false otherwise`,
   },

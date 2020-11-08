@@ -4,7 +4,7 @@ import { isDeepStrictEqual } from 'util'
 // same options.
 // If several benchmarks with the same system have different
 // titles/machines/jobs, the last one prevails.
-// Several benchmarks from the same group must have the same ci/git.
+// Several benchmarks from the same mergeId must have the same ci/git.
 export const validateMerge = function ({
   previousSystems,
   system,
@@ -16,9 +16,9 @@ export const validateMerge = function ({
   validateSameSystem(previousSystems, system)
   validateSame(previousGit, git, {
     propName: 'git commit/branch',
-    groups: 'group',
+    groups: 'id',
   })
-  validateSame(previousCi, ci, { propName: 'CI build number', groups: 'group' })
+  validateSame(previousCi, ci, { propName: 'CI build number', groups: 'id' })
 }
 
 const validateSameSystem = function (previousSystems, system) {
@@ -33,7 +33,7 @@ const validateSameSystem = function (previousSystems, system) {
   SAME_SYSTEM_PROPS.forEach((propName) => {
     validateSame(duplicateSystem[propName], system[propName], {
       propName,
-      groups: `group and system`,
+      groups: `id and system`,
     })
   })
 }

@@ -30,7 +30,7 @@ const CONTEXT_PROPS = [
   'ciPretty',
   'timestamp',
   'timestampPretty',
-  'group',
+  'mergeId',
 ]
 
 // We handle some report options in core, and do not pass those to reporters.

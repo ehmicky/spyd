@@ -8,7 +8,7 @@ import { cleanObject } from './utils/clean.js'
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function (
   iterations,
-  { opts, opts: { group, system, cwd } },
+  { opts, opts: { system, cwd } },
 ) {
   const version = DATA_VERSION
   const id = uuidv4()
@@ -19,7 +19,6 @@ export const addBenchmarkInfo = function (
     version,
     id,
     timestamp,
-    group,
     systems,
     git,
     ci,
