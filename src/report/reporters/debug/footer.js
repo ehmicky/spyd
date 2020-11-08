@@ -1,5 +1,6 @@
 import { dim } from 'chalk'
 
+import { joinSubSections, joinSections } from '../../utils/join.js'
 import { prettifyCi } from '../../utils/pretty/ci.js'
 import { prettifyCommands } from '../../utils/pretty/commands.js'
 import { prettifyGit } from '../../utils/pretty/git.js'
@@ -19,24 +20,18 @@ export const getFooter = function ({
   commands,
   mergeId,
 }) {
-  const footer = joinSections(
-    [
-      prettifyCommands(commands),
-      prettifySharedSystem(systems),
-      prettifySystems(systems),
-      joinSections(
-        [
-          prettifyMergeId(mergeId),
-          prettifyTimestamp(timestamp),
-          prettifyGit(git),
-          prettifyCi(ci),
-        ],
-        1,
-      ),
-      LINK_FOOTER,
-    ],
-    2,
-  )
+  const footer = joinSections([
+    prettifyCommands(commands),
+    prettifySharedSystem(systems),
+    prettifySystems(systems),
+    joinSubSections([
+      prettifyMergeId(mergeId),
+      prettifyTimestamp(timestamp),
+      prettifyGit(git),
+      prettifyCi(ci),
+    ]),
+    LINK_FOOTER,
+  ])
 
   if (footer === '') {
     return ''
@@ -48,7 +43,3 @@ export const getFooter = function ({
 const LINK_FOOTER = dim(
   'Benchmarked with spyd (https://github.com/ehmicky/spyd)',
 )
-
-const joinSections = function (sections, newlines) {
-  return sections.filter(Boolean).join('\n'.repeat(newlines))
-}
