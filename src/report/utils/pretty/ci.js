@@ -1,5 +1,3 @@
-import { underline } from 'chalk'
-
 import { prettifyObject } from '../prefix.js'
 
 // Serialize `ci` information for CLI reporters.
@@ -21,6 +19,6 @@ const prettifyBuild = function ({ buildNumber, buildUrl }) {
     return
   }
 
-  const url = buildUrl === undefined ? '' : ` (${underline(buildUrl)})`
+  const url = buildUrl === undefined ? '' : ` (${buildUrl})`
   return `#${buildNumber}${url}`
 }

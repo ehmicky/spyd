@@ -1,5 +1,3 @@
-import { underline } from 'chalk'
-
 import { prettifyObject } from '../prefix.js'
 
 // Serialize `system` information for CLI reporters.
@@ -59,8 +57,6 @@ const SYSTEM_FIELDS = [
   {
     title: 'Job',
     value: ({ jobNumber, jobUrl }) =>
-      jobNumber === undefined
-        ? undefined
-        : `#${jobNumber} (${underline(jobUrl)})`,
+      jobNumber === undefined ? undefined : `#${jobNumber} (${jobUrl})`,
   },
 ]
