@@ -1,5 +1,6 @@
 import filterObj from 'filter-obj'
 
+import { normalizeArrayOpts } from './array.js'
 import { normalizeDynamicOpts } from './dynamic.js'
 
 export const parseOpts = function (yargs) {
@@ -9,9 +10,10 @@ export const parseOpts = function (yargs) {
   } = yargs.parse()
 
   const optsA = normalizeDynamicOpts(opts)
+  const optsB = normalizeArrayOpts(optsA)
 
-  const optsB = filterObj(optsA, isUserOpt)
-  return [command, optsB]
+  const optsC = filterObj(optsB, isUserOpt)
+  return [command, optsC]
 }
 
 const DEFAULT_COMMAND = 'run'
