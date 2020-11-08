@@ -2,6 +2,7 @@ import { addColors } from './colors.js'
 import { addPrefix } from './prefix.js'
 import { shouldSkipStat } from './skip.js'
 import { STAT_TYPES } from './types.js'
+import { serializeValue } from './value.js'
 
 // Serialize each stat measure using the right time unit, number of decimals
 // and padding
@@ -86,49 +87,16 @@ const serializeStat = function ({
 
   if (Array.isArray(stat)) {
     return stat.map((statA) =>
-      serializeValue({ stat: statA, type, name, scale, unit, decimals }),
+      serializeItem({ stat: statA, type, name, scale, unit, decimals }),
     )
   }
 
-  return serializeValue({ stat, type, name, scale, unit, decimals })
+  return serializeItem({ stat, type, name, scale, unit, decimals })
 }
 
-const serializeValue = function ({ stat, type, name, scale, unit, decimals }) {
-  const statPretty = SERIALIZE_STAT[type](stat, { scale, unit, decimals })
+const serializeItem = function ({ stat, type, name, scale, unit, decimals }) {
+  const statPretty = serializeValue({ stat, type, scale, unit, decimals })
   const statPrettyA = addPrefix(stat, statPretty, name)
   const statPrettyB = addColors(stat, statPrettyA, name)
   return statPrettyB
-}
-
-const serializeCount = function (stat) {
-  // Adds thousands separators
-  return stat.toLocaleString()
-}
-
-const serializePercentage = function (stat) {
-  const percentage = Math.abs(Math.floor(stat * PERCENTAGE_SCALE))
-  return `${percentage}%`
-}
-
-const PERCENTAGE_SCALE = 1e2
-
-const serializeDuration = function (stat, { scale, unit, decimals }) {
-  const scaledStat = stat / scale
-  const integer = Math.floor(scaledStat)
-  const fraction = getFraction({ scaledStat, integer, decimals })
-  return `${integer}${fraction}${unit}`
-}
-
-const getFraction = function ({ scaledStat, integer, decimals }) {
-  if (Number.isInteger(scaledStat) || decimals === 0) {
-    return ''
-  }
-
-  return (scaledStat - integer).toFixed(decimals).slice(1)
-}
-
-const SERIALIZE_STAT = {
-  count: serializeCount,
-  percentage: serializePercentage,
-  duration: serializeDuration,
 }
