@@ -73,7 +73,7 @@ const serializeCount = function ({ stat }) {
   return stat.toLocaleString()
 }
 
-const serializeScalar = function ({ stat, scale, unit, decimals }) {
+const serializeDuration = function ({ stat, scale, unit, decimals }) {
   const statA = stat / scale
   const integer = Math.floor(statA)
   const fraction = getFraction({ stat: statA, integer, decimals })
@@ -97,6 +97,6 @@ const PERCENTAGE_SCALE = 1e2
 
 const SERIALIZE_STAT = {
   count: serializeCount,
-  scalar: serializeScalar,
+  duration: serializeDuration,
   percentage: serializePercentage,
 }
