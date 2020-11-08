@@ -40,7 +40,7 @@ const getBody = function (system) {
   const fields = getFields(system)
   const fieldsA = fields.map((field) => serializeField(field, system))
   const job = getJob(system)
-  return [...fieldsA, ...job].join('\n')
+  return [...fieldsA, job].filter(Boolean).join('\n')
 }
 
 const getFields = function (system) {
@@ -67,10 +67,10 @@ const COMPLEX_FIELDS = ['jobNumber']
 
 const getJob = function ({ jobNumber, jobUrl }) {
   if (jobNumber === undefined) {
-    return []
+    return
   }
 
-  return [`${blue.bold('  Job:')} #${jobNumber} (${underline(jobUrl)})`]
+  return `  ${blue.bold('Job:')} #${jobNumber} (${underline(jobUrl)})`
 }
 
 const indent = function (systemsPretty, index) {
