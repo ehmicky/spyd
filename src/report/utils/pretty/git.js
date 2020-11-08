@@ -3,7 +3,7 @@ import { prettifyObject } from '../prefix.js'
 // Serialize `git` information for CLI reporters.
 export const prettifyGit = function (git) {
   if (git === undefined) {
-    return ''
+    return
   }
 
   return prettifyObject({

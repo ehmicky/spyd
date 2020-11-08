@@ -5,7 +5,7 @@ import { prettifyObject } from '../prefix.js'
 // Serialize `ci` information for CLI reporters.
 export const prettifyCi = function (ci) {
   if (ci === undefined) {
-    return ''
+    return
   }
 
   return prettifyObject({
