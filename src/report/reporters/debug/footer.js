@@ -19,7 +19,7 @@ export const getFooter = function ({
   mergeId,
 }) {
   const footers = [
-    addIndentedPrefix('Runners', prettifyCommands(commands)),
+    prettifyCommands(commands),
     prettifySystems(systems),
     addPrefix('Id', prettifyMergeId(mergeId)),
     addPrefix('Timestamp', prettifyTimestamp(timestamp)),
