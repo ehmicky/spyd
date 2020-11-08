@@ -15,23 +15,22 @@ export const addPaddings = function (iterations) {
 
 // Retrieve the maximum length of any measures for each stat
 const getPadding = function (name, iterations) {
-  const allLengths = iterations
+  const statLengths = iterations
     .flatMap(({ stats }) => stats[`${name}Pretty`])
     .map(stringWidth)
 
-  if (allLengths.length === 0) {
+  if (statLengths.length === 0) {
     return 0
   }
 
-  return Math.max(...allLengths)
+  return Math.max(...statLengths)
 }
 
 const addPadding = function ({ iteration, iteration: { stats }, paddings }) {
-  const prettyStats = Object.keys(STAT_TYPES).map((name) =>
+  const prettyStats = mapObj(STAT_TYPES, (name) =>
     padStat(name, stats, paddings),
   )
-  const prettyStatsA = Object.fromEntries(prettyStats)
-  return { ...iteration, stats: { ...stats, ...prettyStatsA } }
+  return { ...iteration, stats: { ...stats, ...prettyStats } }
 }
 
 const padStat = function (name, stats, paddings) {
