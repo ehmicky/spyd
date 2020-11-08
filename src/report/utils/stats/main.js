@@ -13,25 +13,16 @@ import { serializeValue } from './value.js'
 export const prettifyStats = function (iterations) {
   const { unit, scale } = getUnit(iterations)
   return Object.entries(STAT_TYPES).reduce(
-    (iterationsA, [name, type]) =>
-      serializeIterationsStats({
-        iterations: iterationsA,
-        name,
-        type,
-        unit,
-        scale,
-      }),
+    serializeIterationsStats.bind(undefined, { unit, scale }),
     iterations,
   )
 }
 
-const serializeIterationsStats = function ({
+const serializeIterationsStats = function (
+  { unit, scale },
   iterations,
-  name,
-  type,
-  unit,
-  scale,
-}) {
+  [name, type],
+) {
   const decimals = getStatsDecimals({ iterations, name, type, scale })
   const iterationsA = iterations.map((iteration) =>
     serializeIterationStat({ iteration, name, type, unit, scale, decimals }),
