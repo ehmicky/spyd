@@ -1,7 +1,7 @@
 import { underline } from 'chalk'
 
 import { isEmptyObject } from '../../../utils/main.js'
-import { addPrefix, addIndentedPrefix } from '../prefix.js'
+import { addBlockPrefix } from '../prefix.js'
 
 // Serialize `ci` information for CLI reporters.
 export const prettifyCi = function (ci) {
@@ -11,17 +11,16 @@ export const prettifyCi = function (ci) {
 
   const providerPretty = prettifyProvider(ci)
   const buildPretty = prettifyBuild(ci)
-  const body = [providerPretty, buildPretty].filter(Boolean).join('\n')
-  const bodyA = addIndentedPrefix('Ci', body)
-  return bodyA
+  const body = addBlockPrefix('Ci', { ...providerPretty, ...buildPretty })
+  return body
 }
 
 const prettifyProvider = function ({ provider }) {
   if (provider === undefined) {
-    return
+    return {}
   }
 
-  return addPrefix('Provider', provider)
+  return { Provider: provider }
 }
 
 const prettifyBuild = function ({ buildNumber, buildUrl }) {
@@ -30,5 +29,5 @@ const prettifyBuild = function ({ buildNumber, buildUrl }) {
   }
 
   const url = buildUrl === undefined ? '' : ` (${underline(buildUrl)})`
-  return addPrefix('Build', `#${buildNumber}${url}`)
+  return { Build: `#${buildNumber}${url}` }
 }
