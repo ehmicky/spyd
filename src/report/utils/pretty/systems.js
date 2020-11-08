@@ -1,5 +1,6 @@
 import { blue, underline } from 'chalk'
-import indentString from 'indent-string'
+
+import { indentBlock } from '../indent.js'
 
 // Serialize `system` information for CLI reporters.
 export const prettifySystems = function (systems) {
@@ -78,5 +79,5 @@ const indent = function (systemsPretty, index) {
     return systemsPretty
   }
 
-  return indentString(systemsPretty, 2)
+  return indentBlock(systemsPretty)
 }
