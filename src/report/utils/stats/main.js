@@ -6,7 +6,7 @@ import { getUnit } from './unit.js'
 // Add `iteration.stats.*Pretty` which is like `iteration.stats.*` but
 // serialized and CLI-reporter-friendly. It adds time units, rounding, padding
 // and ensures proper vertical alignment.
-export const normalizeStats = function (iterations) {
+export const prettifyStats = function (iterations) {
   const { unit, scale } = getUnit(iterations)
   const statsDecimals = getStatsDecimals(iterations, scale)
   const iterationsA = iterations.map((iteration) =>

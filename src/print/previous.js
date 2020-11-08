@@ -3,7 +3,6 @@ import omit from 'omit.js'
 import { getLimit } from '../limit/main.js'
 
 import { getDiffIndex, getDiff } from './diff.js'
-import { normalizeStats } from './stats/main.js'
 
 // Add:
 //  - `benchmark.previous`: all previous benchmarks
@@ -46,9 +45,7 @@ const addPreviousIterations = function ({
   const iterationsA = iterations.map((iteration) =>
     addPreviousIteration({ iteration, previousIterations, diffIndex, limits }),
   )
-  // Needs to be done again since we added `diff` and `limit`
-  const iterationsB = normalizeStats(iterationsA)
-  return iterationsB
+  return iterationsA
 }
 
 const getIterations = function ({ iterations }, benchmark) {

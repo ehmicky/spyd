@@ -3,7 +3,6 @@ import { joinSystems } from '../system/join.js'
 import { addCollections } from './collections.js'
 import { addNames } from './name.js'
 import { addSpeedInfo } from './speed.js'
-import { normalizeStats } from './stats/main.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
@@ -28,7 +27,6 @@ export const addPrintedInfo = function ({
 
   const iterationsC = addSpeedInfo(iterationsB)
   const iterationsD = iterationsC.map(normalizeIterationStats)
-  const iterationsE = normalizeStats(iterationsD)
 
   return {
     ...benchmark,
@@ -39,7 +37,7 @@ export const addPrintedInfo = function ({
     systems: systemsA,
     git,
     ci,
-    iterations: iterationsE,
+    iterations: iterationsD,
   }
 }
 

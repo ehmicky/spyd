@@ -3,6 +3,7 @@ import { cyan, yellow, dim, red } from 'chalk'
 import { getFooter } from '../utils/footer/main.js'
 import { joinSections } from '../utils/join.js'
 import { prettifyValue } from '../utils/prettify_value.js'
+import { prettifyStats } from '../utils/stats/main.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({
@@ -14,7 +15,8 @@ const report = function ({
   ci,
   iterations,
 }) {
-  const content = iterations.map(serializeIteration).join('\n')
+  const iterationsA = prettifyStats(iterations)
+  const content = iterationsA.map(serializeIteration).join('\n')
   const footer = prettifyValue(
     getFooter({ commands, systems, mergeId, timestamp, git, ci }),
   )
