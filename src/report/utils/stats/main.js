@@ -1,6 +1,6 @@
 import { addColors } from './colors.js'
 import { getStatsDecimals } from './decimals.js'
-import { addPaddings } from './padding.js'
+import { getPadding, addPadding } from './padding.js'
 import { addPrefix } from './prefix.js'
 import { shouldSkipStat } from './skip.js'
 import { STAT_TYPES } from './types.js'
@@ -12,12 +12,6 @@ import { serializeValue } from './value.js'
 // and ensures proper vertical alignment.
 export const prettifyStats = function (iterations) {
   const { unit, scale } = getUnit(iterations)
-  const iterationsA = serializeStats({ iterations, unit, scale })
-  const iterationsB = addPaddings(iterationsA)
-  return iterationsB
-}
-
-const serializeStats = function ({ iterations, unit, scale }) {
   return Object.entries(STAT_TYPES).reduce(
     (iterationsA, [name, type]) =>
       serializeIterationsStats({
@@ -39,9 +33,14 @@ const serializeIterationsStats = function ({
   scale,
 }) {
   const decimals = getStatsDecimals({ iterations, name, type, scale })
-  return iterations.map((iteration) =>
+  const iterationsA = iterations.map((iteration) =>
     serializeIterationStat({ iteration, name, type, unit, scale, decimals }),
   )
+  const padding = getPadding(name, iterationsA)
+  const iterationsB = iterationsA.map((iteration) =>
+    addPadding({ iteration, name, padding }),
+  )
+  return iterationsB
 }
 
 const serializeIterationStat = function ({
