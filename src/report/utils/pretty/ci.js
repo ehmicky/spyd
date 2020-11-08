@@ -1,6 +1,7 @@
-import { blue, underline } from 'chalk'
+import { underline } from 'chalk'
 
 import { isEmptyObject } from '../../../utils/main.js'
+import { addPrefix } from '../prefix.js'
 
 // Serialize `ci` information for CLI reporters.
 export const prettifyCi = function (ci) {
@@ -19,8 +20,7 @@ const prettifyProvider = function ({ provider }) {
     return
   }
 
-  const field = blue.bold('Provider: ')
-  return `${field}${provider}`
+  return addPrefix('Provider', provider)
 }
 
 const prettifyBuild = function ({ buildNumber, buildUrl }) {
@@ -28,15 +28,6 @@ const prettifyBuild = function ({ buildNumber, buildUrl }) {
     return
   }
 
-  const field = blue.bold('Build: ')
-  const urlA = getUrl(buildUrl)
-  return `${field}#${buildNumber}${urlA}`
-}
-
-const getUrl = function (url) {
-  if (url === undefined) {
-    return ''
-  }
-
-  return ` (${underline(url)})`
+  const url = buildUrl === undefined ? '' : ` (${underline(buildUrl)})`
+  return addPrefix('Build', `#${buildNumber}${url}`)
 }
