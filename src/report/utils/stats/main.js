@@ -10,7 +10,7 @@ import { getUnit } from './unit.js'
 // and ensures proper vertical alignment.
 export const prettifyStats = function (iterations) {
   const { unit, scale } = getUnit(iterations)
-  return Object.entries(STAT_TYPES).reduce(
+  return STAT_TYPES.reduce(
     prettifyIterationsStat.bind(undefined, { unit, scale }),
     iterations,
   )
@@ -19,7 +19,7 @@ export const prettifyStats = function (iterations) {
 const prettifyIterationsStat = function (
   { unit, scale },
   iterations,
-  [name, type],
+  { name, type },
 ) {
   const prettyName = `${name}Pretty`
   const decimals = getStatsDecimals({ iterations, name, type, scale })
