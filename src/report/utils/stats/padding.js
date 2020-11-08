@@ -1,3 +1,4 @@
+import mapObj from 'map-obj'
 import stringWidth from 'string-width'
 
 import { STAT_TYPES } from './types.js'
@@ -5,29 +6,24 @@ import { STAT_TYPES } from './types.js'
 // Pad `*.statsPretty` on the left so they vertically align.
 // Right padding was already performed when setting the number of decimals.
 export const addPaddings = function (iterations) {
-  const paddings = getPaddings(iterations)
+  const paddings = mapObj(STAT_TYPES, (name) => [
+    name,
+    getPadding(name, iterations),
+  ])
   return iterations.map((iteration) => addPadding({ iteration, paddings }))
 }
 
 // Retrieve the maximum length of any measures for each stat
-const getPaddings = function (iterations) {
-  const paddings = Object.keys(STAT_TYPES).map((name) =>
-    getPadding(name, iterations),
-  )
-  return Object.fromEntries(paddings)
-}
-
 const getPadding = function (name, iterations) {
   const allLengths = iterations
     .flatMap(({ stats }) => stats[`${name}Pretty`])
     .map(stringWidth)
 
   if (allLengths.length === 0) {
-    return [name, 0]
+    return 0
   }
 
-  const padding = Math.max(...allLengths)
-  return [name, padding]
+  return Math.max(...allLengths)
 }
 
 const addPadding = function ({ iteration, iteration: { stats }, paddings }) {
