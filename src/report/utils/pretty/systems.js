@@ -29,23 +29,6 @@ const prettifySystem = function (system, index) {
   return systemsPrettyB
 }
 
-const getTitle = function ({ title = MAIN_TITLE }) {
-  if (title === '') {
-    return DEFAULT_TITLE
-  }
-
-  return title
-}
-
-// Top-level title (for shared `system`)
-const MAIN_TITLE = 'System'
-// Nested title when `system` is an empty string
-const DEFAULT_TITLE = 'Default'
-
-const serializeField = function ({ title, value, system }) {
-  return addPrefix(title, value(system))
-}
-
 const getJob = function ({ jobNumber, jobUrl }) {
   if (jobNumber === undefined) {
     return
@@ -60,3 +43,20 @@ const SYSTEM_FIELDS = [
   { title: 'Memory', value: ({ memory }) => memory },
   { title: 'Job', value: getJob },
 ]
+
+const serializeField = function ({ title, value, system }) {
+  return addPrefix(title, value(system))
+}
+
+const getTitle = function ({ title = MAIN_TITLE }) {
+  if (title === '') {
+    return DEFAULT_TITLE
+  }
+
+  return title
+}
+
+// Top-level title (for shared `system`)
+const MAIN_TITLE = 'System'
+// Nested title when `system` is an empty string
+const DEFAULT_TITLE = 'Default'
