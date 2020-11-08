@@ -1,7 +1,7 @@
-import { blue, underline } from 'chalk'
+import { underline } from 'chalk'
 
 import { indentBlock } from '../indent.js'
-import { addIndentedPrefix } from '../prefix.js'
+import { addPrefix, addIndentedPrefix } from '../prefix.js'
 
 // Serialize `system` information for CLI reporters.
 export const prettifySystems = function (systems) {
@@ -39,22 +39,18 @@ const DEFAULT_TITLE = 'Default'
 
 const getBody = function (system) {
   const fields = getFields(system)
-  const fieldsA = fields.map((field) => serializeField(field, system))
   const job = getJob(system)
-  return [...fieldsA, job].filter(Boolean).join('\n')
+  return [...fields, job].filter(Boolean).join('\n')
 }
 
 const getFields = function (system) {
-  return Object.keys(SYSTEM_FIELDS).filter(
-    (field) => system[field] !== undefined,
-  )
+  return Object.keys(SYSTEM_FIELDS)
+    .map((field) => serializeField(field, system))
+    .filter(Boolean)
 }
 
 const serializeField = function (field, system) {
-  const value = system[field]
-  const fieldA = SYSTEM_FIELDS[field]
-  const fieldB = blue.bold(`${fieldA}:`)
-  return `${fieldB} ${value}`
+  return addPrefix(SYSTEM_FIELDS[field], system[field])
 }
 
 const SYSTEM_FIELDS = { os: 'OS', cpu: 'CPU', memory: 'Memory' }
@@ -71,7 +67,7 @@ const getJob = function ({ jobNumber, jobUrl }) {
     return
   }
 
-  return `${blue.bold('Job:')} #${jobNumber} (${underline(jobUrl)})`
+  return addPrefix('Job', `#${jobNumber} (${underline(jobUrl)})`)
 }
 
 const indent = function (systemsPretty, index) {
