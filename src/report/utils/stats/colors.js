@@ -9,12 +9,20 @@ export const addColors = function (stat, statPretty, name) {
   }
 
   const color = getColor(stat)
-  const statPrettyA = color(statPretty)
-  return statPrettyA
+
+  if (color === undefined) {
+    return statPretty
+  }
+
+  return color(statPretty)
 }
 
 const getSignColor = function (stat) {
-  if (stat >= 0) {
+  if (stat === 0) {
+    return
+  }
+
+  if (stat > 0) {
     return red
   }
 
