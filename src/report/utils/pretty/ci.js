@@ -1,6 +1,6 @@
 import { blue, underline } from 'chalk'
 
-import { isEmptyObject } from '../utils/main.js'
+import { isEmptyObject } from '../../../utils/main.js'
 
 // Serialize `ci` information for CLI reporters.
 export const prettifyCi = function (ci) {
