@@ -3,7 +3,10 @@ import { STORE_CONFIG } from '../config/store.js'
 
 export const MIGRATE_COMMAND = {
   input: 'migrate',
-  description: 'Migrate previous benchmarks',
+
+  // Hidden command. Users should only use it when asked to do so by this tool
+  // or by the changelog.
+  description: false,
 
   config: { ...ALL_CONFIG, ...STORE_CONFIG },
 
