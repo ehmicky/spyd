@@ -4,7 +4,7 @@ import { blue } from 'chalk'
 // `benchmark.commands`
 export const prettifyCommands = function (commands) {
   if (commands === undefined) {
-    return ''
+    return
   }
 
   const header = blue.bold('Runners:')
