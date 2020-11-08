@@ -20,7 +20,8 @@ const prettifySystem = function (system, index) {
   const title = getTitle(system)
   const body = getBody(system)
   const systemsPrettyA = addIndentedPrefix(title, body)
-  const systemsPrettyB = indent(systemsPrettyA, index)
+  const systemsPrettyB =
+    index === 0 ? systemsPrettyA : indentBlock(systemsPrettyA)
   return systemsPrettyB
 }
 
@@ -68,12 +69,4 @@ const getJob = function ({ jobNumber, jobUrl }) {
   }
 
   return addPrefix('Job', `#${jobNumber} (${underline(jobUrl)})`)
-}
-
-const indent = function (systemsPretty, index) {
-  if (index === 0) {
-    return systemsPretty
-  }
-
-  return indentBlock(systemsPretty)
 }
