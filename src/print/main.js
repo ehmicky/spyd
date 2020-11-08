@@ -27,7 +27,8 @@ export const addPrintedInfo = function ({
   const iterationsB = addNames(iterationsA)
 
   const iterationsC = addSpeedInfo(iterationsB)
-  const iterationsD = normalizeStats(iterationsC)
+  const iterationsD = iterationsC.map(normalizeIterationStats)
+  const iterationsE = normalizeStats(iterationsD)
 
   return {
     ...benchmark,
@@ -38,6 +39,15 @@ export const addPrintedInfo = function ({
     systems: systemsA,
     git,
     ci,
-    iterations: iterationsD,
+    iterations: iterationsE,
   }
+}
+
+// Some stats are removed when `--save` is used. When showing saved benchmarks,
+// those will be `undefined`. We default them to `[]`.
+const normalizeIterationStats = function ({
+  stats: { histogram = [], percentiles = [], ...stats },
+  ...iteration
+}) {
+  return { ...iteration, stats: { ...stats, histogram, percentiles } }
 }
