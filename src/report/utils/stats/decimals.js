@@ -1,3 +1,5 @@
+import mapObj from 'map-obj'
+
 import { STAT_TYPES } from './types.js'
 
 // Retrieve number of decimals to display.
@@ -5,16 +7,10 @@ import { STAT_TYPES } from './types.js'
 // All iterations use the same number of decimals for each stat, so they are
 // vertically aligned. Padding is used instead of trailing zeros.
 export const getStatsDecimals = function (iterations, scale) {
-  const statsDecimals = Object.entries(STAT_TYPES).map(([name, type]) =>
-    getStatDecimal({ name, type, iterations, scale }),
-  )
-  const statsDecimalsA = Object.fromEntries(statsDecimals)
-  return statsDecimalsA
-}
-
-const getStatDecimal = function ({ name, type, iterations, scale }) {
-  const decimals = getDecimals({ name, type, iterations, scale })
-  return [name, decimals]
+  return mapObj(STAT_TYPES, (name, type) => [
+    name,
+    getDecimals({ name, type, iterations, scale }),
+  ])
 }
 
 const getDecimals = function ({ name, type, iterations, scale }) {
