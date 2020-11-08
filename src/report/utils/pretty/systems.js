@@ -1,6 +1,7 @@
 import { blue, underline } from 'chalk'
 
 import { indentBlock } from '../indent.js'
+import { addIndentedPrefix } from '../prefix.js'
 
 // Serialize `system` information for CLI reporters.
 export const prettifySystems = function (systems) {
@@ -17,11 +18,10 @@ const hasFields = function (system) {
 
 const prettifySystem = function (system, index) {
   const title = getTitle(system)
-  const header = blue.bold(`${title}:`)
   const body = getBody(system)
-  const systemsPretty = `${header}\n${body}`
-  const systemsPrettyA = indent(systemsPretty, index)
-  return systemsPrettyA
+  const systemsPrettyA = addIndentedPrefix(title, body)
+  const systemsPrettyB = indent(systemsPrettyA, index)
+  return systemsPrettyB
 }
 
 const getTitle = function ({ title = MAIN_TITLE }) {
@@ -54,7 +54,7 @@ const serializeField = function (field, system) {
   const value = system[field]
   const fieldA = SYSTEM_FIELDS[field]
   const fieldB = blue.bold(`${fieldA}:`)
-  return `  ${fieldB} ${value}`
+  return `${fieldB} ${value}`
 }
 
 const SYSTEM_FIELDS = { os: 'OS', cpu: 'CPU', memory: 'Memory' }
@@ -71,7 +71,7 @@ const getJob = function ({ jobNumber, jobUrl }) {
     return
   }
 
-  return `  ${blue.bold('Job:')} #${jobNumber} (${underline(jobUrl)})`
+  return `${blue.bold('Job:')} #${jobNumber} (${underline(jobUrl)})`
 }
 
 const indent = function (systemsPretty, index) {
