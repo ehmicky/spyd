@@ -3,7 +3,7 @@ import { getUrl } from './options.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves benchmarks to `dir/data.json`
-const init = function (opts) {
+const start = function (opts) {
   return getUrl(opts)
 }
 
@@ -33,4 +33,4 @@ const remove = async function (ids, url) {
   })
 }
 
-export const http = { init, destroy, list, add, replace, remove }
+export const http = { start, destroy, list, add, replace, remove }

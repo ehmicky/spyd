@@ -3,7 +3,7 @@ import { getDir } from './options.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves benchmarks to `dir/data.json`
-const init = function (opts) {
+const start = function (opts) {
   return getDir(opts)
 }
 
@@ -31,4 +31,4 @@ const remove = async function (ids, dir) {
   await setBenchmarks(dir, benchmarksA)
 }
 
-export const file = { init, destroy, list, add, replace, remove }
+export const file = { start, destroy, list, add, replace, remove }

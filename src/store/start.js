@@ -2,19 +2,19 @@ import { dirname } from 'path'
 
 import readPkgUp from 'read-pkg-up'
 
-// Call `store.init(storeOpts)`
+// Call `store.start(storeOpts)`
 export const startStore = async function ({
   cwd,
-  store: { opts: storeOpts, init, ...store },
+  store: { opts: storeOpts, start, ...store },
   ...opts
 }) {
   const storeOptsA = await getStoreOpts(cwd, storeOpts)
-  const initOpts = await callInit(init, storeOptsA)
-  const storeA = bindInitOpts(store, initOpts)
+  const startOpts = await callStart(start, storeOptsA)
+  const storeA = bindInitOpts(store, startOpts)
   return { ...opts, cwd, store: storeA }
 }
 
-// Add `cwd`, `root` and `name` to store options passed to `init()`
+// Add `cwd`, `root` and `name` to store options passed to `start()`
 const getStoreOpts = async function (cwd, storeOpts) {
   const { root, name } = await getPackageInfo(cwd)
   return { cwd, root, name, ...storeOpts }
@@ -35,25 +35,25 @@ const getPackageInfo = async function (cwd) {
   return { root, name }
 }
 
-const callInit = async function (init, storeOpts) {
+const callStart = async function (start, storeOpts) {
   try {
-    return await init(storeOpts)
+    return await start(storeOpts)
   } catch (error) {
-    throw new Error(`Could not initialize store: ${error.message}`)
+    throw new Error(`Could not start store: ${error.message}`)
   }
 }
 
-// Pass return value of `init()` to every store method
-const bindInitOpts = function (store, initOpts) {
+// Pass return value of `start()` to every store method
+const bindInitOpts = function (store, startOpts) {
   return Object.fromEntries(
-    STORE_METHODS.map((method) => bindMethod(store, method, initOpts)),
+    STORE_METHODS.map((method) => bindMethod(store, method, startOpts)),
   )
 }
 
 const STORE_METHODS = ['list', 'add', 'replace', 'remove', 'destroy']
 
-const bindMethod = function (store, method, initOpts) {
+const bindMethod = function (store, method, startOpts) {
   const originalFunc = store[method]
-  const func = (...args) => originalFunc(...args, initOpts)
+  const func = (...args) => originalFunc(...args, startOpts)
   return [method, func]
 }
