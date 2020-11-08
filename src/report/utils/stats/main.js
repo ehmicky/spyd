@@ -9,9 +9,7 @@ import { getUnit } from './unit.js'
 export const prettifyStats = function (iterations) {
   const { unit, scale } = getUnit(iterations)
   const statsDecimals = getStatsDecimals(iterations, scale)
-  const iterationsA = iterations.map((iteration) =>
-    serializeStats({ iteration, unit, scale, statsDecimals }),
-  )
+  const iterationsA = serializeStats({ iterations, unit, scale, statsDecimals })
   const iterationsB = addPaddings(iterationsA)
   return iterationsB
 }
