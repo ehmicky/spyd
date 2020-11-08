@@ -3,7 +3,7 @@
 // between stats.
 // We use the minimum time unit where all medians are >= 1
 export const getUnit = function (iterations) {
-  const medians = iterations.map(getMedianStat)
+  const medians = iterations.map(getMedianStat).filter(isNotZero)
   const unit = findUnit(medians)
   const scale = UNITS[unit]
   return { unit, scale }
@@ -14,14 +14,12 @@ const getMedianStat = function ({ stats: { median } }) {
 }
 
 const findUnit = function (medians) {
-  const mediansA = medians.filter(isNotZero)
-
   // When all medians are 0
-  if (mediansA.length === 0) {
+  if (medians.length === 0) {
     return DEFAULT_UNIT
   }
 
-  const min = Math.min(...mediansA)
+  const min = Math.min(...medians)
 
   const preciseUnit = Object.entries(UNITS).find(
     ([, minUnit]) => min >= minUnit,
