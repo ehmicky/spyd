@@ -1,5 +1,5 @@
 // Serialize `git` information for CLI reporters.
-export const prettifyGit = function (git) {
+export const getGit = function (git) {
   if (git === undefined) {
     return
   }

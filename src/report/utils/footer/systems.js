@@ -1,5 +1,5 @@
 // Serialize `system` information for CLI reporters.
-export const prettifySharedSystem = function (systems) {
+export const getSharedSystem = function (systems) {
   if (systems === undefined) {
     return
   }
@@ -8,7 +8,7 @@ export const prettifySharedSystem = function (systems) {
   return getFields(sharedSystem)
 }
 
-export const prettifySystems = function (systems) {
+export const getSystems = function (systems) {
   if (systems === undefined) {
     return
   }

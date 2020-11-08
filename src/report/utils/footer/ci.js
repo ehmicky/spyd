@@ -1,5 +1,5 @@
 // Serialize `ci` information for CLI reporters.
-export const prettifyCi = function (ci) {
+export const getCi = function (ci) {
   if (ci === undefined) {
     return
   }

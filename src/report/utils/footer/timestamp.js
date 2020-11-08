@@ -1,5 +1,5 @@
 // Make timestamp more human-friendly.
-export const prettifyTimestamp = function (timestamp) {
+export const getTimestamp = function (timestamp) {
   if (timestamp === undefined) {
     return
   }

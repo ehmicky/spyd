@@ -1,11 +1,11 @@
 import { dim } from 'chalk'
 
-import { prettifyCi } from './ci.js'
-import { prettifyCommands } from './commands.js'
-import { prettifyGit } from './git.js'
-import { prettifyMergeId } from './merge_id.js'
-import { prettifySharedSystem, prettifySystems } from './systems.js'
-import { prettifyTimestamp } from './timestamp.js'
+import { getCi } from './ci.js'
+import { getCommands } from './commands.js'
+import { getGit } from './git.js'
+import { getMergeId } from './merge_id.js'
+import { getSharedSystem, getSystems } from './systems.js'
+import { getTimestamp } from './timestamp.js'
 
 // Retrieve footer: commands, systems, mergeId, timestamp, git, ci, link
 export const getFooter = function ({
@@ -17,14 +17,14 @@ export const getFooter = function ({
   ci,
 }) {
   return [
-    prettifyCommands(commands),
-    prettifySharedSystem(systems),
-    prettifySystems(systems),
+    getCommands(commands),
+    getSharedSystem(systems),
+    getSystems(systems),
     {
-      ...prettifyMergeId(mergeId),
-      ...prettifyTimestamp(timestamp),
-      ...prettifyGit(git),
-      ...prettifyCi(ci),
+      ...getMergeId(mergeId),
+      ...getTimestamp(timestamp),
+      ...getGit(git),
+      ...getCi(ci),
     },
     LINK_FOOTER,
   ]

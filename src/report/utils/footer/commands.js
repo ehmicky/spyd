@@ -1,6 +1,6 @@
 // Add `benchmark.commandsPretty`, CLI-friendly serialization of
 // `benchmark.commands`
-export const prettifyCommands = function (commands) {
+export const getCommands = function (commands) {
   if (commands === undefined) {
     return
   }
