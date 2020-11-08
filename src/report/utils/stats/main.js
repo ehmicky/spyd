@@ -11,29 +11,39 @@ import { getUnit } from './unit.js'
 export const prettifyStats = function (iterations) {
   const { unit, scale } = getUnit(iterations)
   return Object.entries(STAT_TYPES).reduce(
-    serializeIterationsStats.bind(undefined, { unit, scale }),
+    prettifyIterationsStat.bind(undefined, { unit, scale }),
     iterations,
   )
 }
 
-const serializeIterationsStats = function (
+const prettifyIterationsStat = function (
   { unit, scale },
   iterations,
   [name, type],
 ) {
+  const prettyName = `${name}Pretty`
   const decimals = getStatsDecimals({ iterations, name, type, scale })
   const iterationsA = iterations.map((iteration) =>
-    serializeIterationStat({ iteration, name, type, unit, scale, decimals }),
+    prettifyIterationStat({
+      iteration,
+      name,
+      prettyName,
+      type,
+      unit,
+      scale,
+      decimals,
+    }),
   )
   const padding = getPadding(name, iterationsA)
   const iterationsB = iterationsA.map((iteration) =>
-    finalizeValue({ iteration, name, padding }),
+    finalizeValue({ iteration, name, prettyName, padding }),
   )
   return iterationsB
 }
 
-const serializeIterationStat = function ({
+const prettifyIterationStat = function ({
   name,
+  prettyName,
   iteration,
   iteration: {
     stats,
@@ -44,7 +54,6 @@ const serializeIterationStat = function ({
   scale,
   decimals,
 }) {
-  const prettyName = getPrettyName(name)
   const statPretty = serializeStat({
     stat,
     name,
@@ -62,15 +71,14 @@ const serializeIterationStat = function ({
 // We pad before adding colors because ANSI sequences makes padding harder.
 const finalizeValue = function ({
   name,
+  prettyName,
   iteration,
   iteration: {
     stats,
-    stats: { [name]: stat },
+    stats: { [name]: stat, [prettyName]: statPretty },
   },
   padding,
 }) {
-  const prettyName = getPrettyName(name)
-  const statPretty = stats[prettyName]
   const statPrettyA = Array.isArray(stat)
     ? stat.map((statA, index) =>
         finalizeItem({
@@ -88,8 +96,4 @@ const finalizeItem = function ({ stat, statPretty, padding, name }) {
   const statPrettyA = padValue(statPretty, padding)
   const statPrettyB = addColors(stat, statPrettyA, name)
   return statPrettyB
-}
-
-const getPrettyName = function (name) {
-  return `${name}Pretty`
 }
