@@ -9,18 +9,21 @@ export const prettifySystems = function (systems) {
     return
   }
 
-  return systems.filter(hasFields).map(prettifySystem).join('\n')
-}
-
-const hasFields = function (system) {
-  return getFields(system).length !== 0
+  return systems.map(prettifySystem).filter(Boolean).join('\n')
 }
 
 const prettifySystem = function (system, index) {
-  const title = getTitle(system)
-  const fields = getFields(system)
+  const fields = SYSTEM_FIELDS.map(({ title, value }) =>
+    serializeField({ title, value, system }),
+  ).filter(Boolean)
+
+  if (fields.length === 0) {
+    return
+  }
+
+  const systemTitle = getTitle(system)
   const body = fields.join('\n')
-  const systemsPrettyA = addIndentedPrefix(title, body)
+  const systemsPrettyA = addIndentedPrefix(systemTitle, body)
   const systemsPrettyB =
     index === 0 ? systemsPrettyA : indentBlock(systemsPrettyA)
   return systemsPrettyB
@@ -38,12 +41,6 @@ const getTitle = function ({ title = MAIN_TITLE }) {
 const MAIN_TITLE = 'System'
 // Nested title when `system` is an empty string
 const DEFAULT_TITLE = 'Default'
-
-const getFields = function (system) {
-  return SYSTEM_FIELDS.map(({ title, value }) =>
-    serializeField({ title, value, system }),
-  ).filter(Boolean)
-}
 
 const serializeField = function ({ title, value, system }) {
   return addPrefix(title, value(system))
