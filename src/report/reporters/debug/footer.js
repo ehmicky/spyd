@@ -29,20 +29,18 @@ export const getFooter = function ({
     prettifyGit(git),
     prettifyCi(ci),
     LINK_FOOTER,
-  ].filter(Boolean)
+  ]
+    .filter(Boolean)
+    .join('\n\n')
 
-  if (footers.length === 0) {
+  if (footers === '') {
     return ''
   }
 
-  const footer = footers.map(indentFooter).join('\n\n')
+  const footer = indentString(footers, 1)
   return `\n\n${footer}`
 }
 
 const LINK_FOOTER = dim(
   'Benchmarked with spyd (https://github.com/ehmicky/spyd)',
 )
-
-const indentFooter = function (footer) {
-  return indentString(footer, 1)
-}
