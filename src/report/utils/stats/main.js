@@ -46,6 +46,7 @@ const serializeIterationStat = function ({
   scale,
   decimals,
 }) {
+  const prettyName = `${name}Pretty`
   const statPretty = serializeStat({
     stat,
     name,
@@ -55,7 +56,7 @@ const serializeIterationStat = function ({
     decimals,
     loops,
   })
-  return { ...iteration, stats: { ...stats, [`${name}Pretty`]: statPretty } }
+  return { ...iteration, stats: { ...stats, [prettyName]: statPretty } }
 }
 
 const serializeStat = function ({
@@ -89,13 +90,13 @@ const serializeItem = function ({ stat, type, name, scale, unit, decimals }) {
 // We pad after values length for each iteration is known.
 // We pad before adding colors because ANSI sequences makes padding harder.
 const finalizeValue = function ({
-  iteration,
-  iteration: { stats },
   name,
+  iteration,
+  iteration: { [name]: stat, stats },
   padding,
 }) {
   const prettyName = `${name}Pretty`
   const statPretty = padValue(stats[prettyName], padding)
-  const statPrettyA = addColors(stats[name], statPretty, name)
+  const statPrettyA = addColors(stat, statPretty, name)
   return { ...iteration, stats: { ...stats, [prettyName]: statPrettyA } }
 }
