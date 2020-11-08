@@ -6,17 +6,17 @@ import { prettifyValue } from '../../utils/prettify_value.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({
-  timestamp,
-  mergeId,
+  commands,
   systems,
+  mergeId,
+  timestamp,
   git,
   ci,
-  commands,
   iterations,
 }) {
   const content = iterations.map(serializeIteration).join('\n')
   const footer = prettifyValue(
-    getFooter({ timestamp, mergeId, systems, git, ci, commands }),
+    getFooter({ commands, systems, mergeId, timestamp, git, ci }),
   )
   return joinSections([content, footer])
 }

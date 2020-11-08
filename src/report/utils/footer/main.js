@@ -7,14 +7,14 @@ import { prettifyMergeId } from './merge_id.js'
 import { prettifySharedSystem, prettifySystems } from './systems.js'
 import { prettifyTimestamp } from './timestamp.js'
 
-// Retrieve footer: system, timestamp, mergeId, link
+// Retrieve footer: commands, systems, mergeId, timestamp, git, ci, link
 export const getFooter = function ({
-  timestamp,
+  commands,
   systems,
+  mergeId,
+  timestamp,
   git,
   ci,
-  commands,
-  mergeId,
 }) {
   return [
     prettifyCommands(commands),
