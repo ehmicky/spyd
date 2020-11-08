@@ -1,40 +1,39 @@
 // Normalize 'limit' option
-export const normalizeLimits = function ({ limit: limits, ...opts }) {
-  const limitsA = limits.map(normalizeLimit)
-  return { ...opts, limits: limitsA }
+export const normalizeLimits = function (limits) {
+  return limits.map(normalizeLimit)
 }
 
 const normalizeLimit = function (limit) {
-  const limitA = stringify(limit)
+  const [ids, percentage] = limit.split(MAIN_SEPARATOR_REGEX)
 
-  if (!limitA.includes('=')) {
-    return { percentage: getPercentage(limitA) }
+  if (percentage === undefined) {
+    return { percentage: getPercentage(limit) }
   }
 
-  const [ids, percentage] = limitA.split('=')
   const percentageA = getPercentage(percentage)
-  const idsA = ids.split(',').filter(Boolean)
+  const idsA = ids.split(IDS_SEPARATOR_REGEX).filter(Boolean)
   return { ids: idsA, percentage: percentageA }
 }
 
-const stringify = function (limit) {
-  if (Number.isFinite(limit)) {
-    return String(limit)
+const MAIN_SEPARATOR_REGEX = /\s*:\s*/u
+const IDS_SEPARATOR_REGEX = /\s*,\s*/gu
+
+const getPercentage = function (originalPercentage) {
+  const percentageStr = originalPercentage.replace(PERCENTAGE_REGEXP, '')
+
+  if (originalPercentage === percentageStr) {
+    throw new TypeError(`'limit' must end with %: ${originalPercentage}`)
   }
 
-  if (typeof limit !== 'string') {
-    throw new TypeError(`'limit' must be an array of strings: ${limit}`)
+  const percentageNum = Number(percentageStr)
+
+  if (!Number.isInteger(percentageNum) || percentageNum < 0) {
+    throw new TypeError(
+      `'limit' must be a positive integer: ${originalPercentage}`,
+    )
   }
 
-  return limit
+  return percentageNum
 }
 
-const getPercentage = function (string) {
-  const percentage = Number(string)
-
-  if (!Number.isFinite(percentage) || percentage < 0) {
-    throw new TypeError(`'limit' must be a positive percentage: ${string}`)
-  }
-
-  return percentage
-}
+const PERCENTAGE_REGEXP = /%$/u

@@ -91,6 +91,13 @@ const normalizeDiff = function ({ diff, ...opts }) {
   return { ...opts, diff: diffA }
 }
 
+// Validate 'limit' option
+const normalizeLimit = function ({ limit, ...opts }) {
+  validateStringArray(limit, 'limit')
+  const limits = normalizeLimits(limit)
+  return { ...opts, limits }
+}
+
 const NORMALIZERS = [
   normalizeFiles,
   normalizeTasks,
@@ -101,5 +108,5 @@ const NORMALIZERS = [
   normalizeProgress,
   normalizeDeltaOpt,
   normalizeDiff,
-  normalizeLimits,
+  normalizeLimit,
 ]
