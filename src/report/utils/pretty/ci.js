@@ -9,18 +9,11 @@ export const prettifyCi = function (ci) {
     return
   }
 
-  const providerPretty = prettifyProvider(ci)
-  const buildPretty = prettifyBuild(ci)
-  const body = addBlockPrefix('Ci', { ...providerPretty, ...buildPretty })
+  const body = addBlockPrefix('Ci', {
+    Provider: ci.provider,
+    Build: prettifyBuild(ci),
+  })
   return body
-}
-
-const prettifyProvider = function ({ provider }) {
-  if (provider === undefined) {
-    return {}
-  }
-
-  return { Provider: provider }
 }
 
 const prettifyBuild = function ({ buildNumber, buildUrl }) {
@@ -29,5 +22,5 @@ const prettifyBuild = function ({ buildNumber, buildUrl }) {
   }
 
   const url = buildUrl === undefined ? '' : ` (${underline(buildUrl)})`
-  return { Build: `#${buildNumber}${url}` }
+  return `#${buildNumber}${url}`
 }

@@ -7,20 +7,21 @@ export const prettifyGit = function (git) {
     return
   }
 
-  const commitPretty = prettifyCommit(git)
-  const prPretty = prettifyPr(git)
-  const bodyA = addBlockPrefix('Git', { ...commitPretty, ...prPretty })
+  const bodyA = addBlockPrefix('Git', {
+    Commit: prettifyCommit(git),
+    PR: prettifyPr(git),
+  })
   return bodyA
 }
 
 const prettifyCommit = function ({ commit, tag, branch }) {
   if (commit === undefined) {
-    return {}
+    return
   }
 
   const hash = getHash(commit, tag)
   const branchA = getBranch(branch)
-  return { Commit: `${hash}${branchA}` }
+  return `${hash}${branchA}`
 }
 
 const getHash = function (commit, tag) {
@@ -35,11 +36,11 @@ const COMMIT_SIZE = 8
 
 const prettifyPr = function ({ prNumber, prBranch }) {
   if (prNumber === undefined) {
-    return {}
+    return
   }
 
   const prBranchA = getBranch(prBranch)
-  return { PR: `#${prNumber}${prBranchA}` }
+  return `#${prNumber}${prBranchA}`
 }
 
 const getBranch = function (branch) {

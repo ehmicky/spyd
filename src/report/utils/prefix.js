@@ -4,7 +4,10 @@ import { indentBlock } from './indent.js'
 
 // Add a title as prefix for terminal reporters
 export const addBlockPrefix = function (title, block) {
-  const body = Object.entries(block).map(addBlockLinePrefix).join('\n')
+  const body = Object.entries(block)
+    .map(addBlockLinePrefix)
+    .filter(Boolean)
+    .join('\n')
   const bodyA = addIndentedPrefix(title, body)
   return bodyA
 }
