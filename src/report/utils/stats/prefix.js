@@ -14,7 +14,11 @@ export const addPrefix = function (stat, statPretty, name) {
 }
 
 const getArrow = function (stat) {
-  if (stat >= 0) {
+  if (stat === 0) {
+    return ''
+  }
+
+  if (stat > 0) {
     return `${arrowUp} `
   }
 
