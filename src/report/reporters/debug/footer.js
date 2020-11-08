@@ -18,12 +18,12 @@ export const getFooter = function ({
   mergeId,
 }) {
   const footers = [
-    prettifyCommands(commands),
+    addIndentedPrefix('Runners', prettifyCommands(commands)),
     prettifySystems(systems),
     addPrefix('Id', mergeId),
     addPrefix('Timestamp', prettifyTimestamp(timestamp)),
     addIndentedPrefix('Git', prettifyGit(git)),
-    prettifyCi(ci),
+    addIndentedPrefix('Ci', prettifyCi(ci)),
     LINK_FOOTER,
   ].filter(Boolean)
 

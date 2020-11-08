@@ -15,16 +15,12 @@ const hasFields = function (system) {
 }
 
 const prettifySystem = function (system, index) {
-  const header = getHeader(system)
+  const title = getTitle(system)
+  const header = blue.bold(`${title}:`)
   const body = getBody(system)
   const systemsPretty = `${header}\n${body}`
   const systemsPrettyA = indent(systemsPretty, index)
   return systemsPrettyA
-}
-
-const getHeader = function (system) {
-  const title = getTitle(system)
-  return blue.bold(`${title}:`)
 }
 
 const getTitle = function ({ title = MAIN_TITLE }) {

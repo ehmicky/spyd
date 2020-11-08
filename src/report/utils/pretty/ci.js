@@ -8,11 +8,10 @@ export const prettifyCi = function (ci) {
     return
   }
 
-  const header = blue.bold('CI:')
   const providerPretty = prettifyProvider(ci)
   const buildPretty = prettifyBuild(ci)
   const body = [providerPretty, buildPretty].filter(Boolean).join('\n')
-  return `${header}\n${body}`
+  return body
 }
 
 const prettifyProvider = function ({ provider }) {
@@ -20,7 +19,7 @@ const prettifyProvider = function ({ provider }) {
     return
   }
 
-  const field = blue.bold('  Provider: ')
+  const field = blue.bold('Provider: ')
   return `${field}${provider}`
 }
 
@@ -29,7 +28,7 @@ const prettifyBuild = function ({ buildNumber, buildUrl }) {
     return
   }
 
-  const field = blue.bold('  Build: ')
+  const field = blue.bold('Build: ')
   const urlA = getUrl(buildUrl)
   return `${field}#${buildNumber}${urlA}`
 }
