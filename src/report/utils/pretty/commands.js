@@ -1,5 +1,3 @@
-import { prettifyValue } from '../prettify_value.js'
-
 // Add `benchmark.commandsPretty`, CLI-friendly serialization of
 // `benchmark.commands`
 export const prettifyCommands = function (commands) {
@@ -7,7 +5,7 @@ export const prettifyCommands = function (commands) {
     return
   }
 
-  return prettifyValue({ Runners: commands.map(getDescription) })
+  return { Runners: commands.map(getDescription) }
 }
 
 const getDescription = function ({ description }) {

@@ -1,17 +1,15 @@
-import { prettifyValue } from '../prettify_value.js'
-
 // Serialize `git` information for CLI reporters.
 export const prettifyGit = function (git) {
   if (git === undefined) {
     return
   }
 
-  return prettifyValue({
+  return {
     Git: {
       Commit: prettifyCommit(git),
       PR: prettifyPr(git),
     },
-  })
+  }
 }
 
 const prettifyCommit = function ({ commit, tag, branch }) {

@@ -1,17 +1,15 @@
-import { prettifyValue } from '../prettify_value.js'
-
 // Serialize `ci` information for CLI reporters.
 export const prettifyCi = function (ci) {
   if (ci === undefined) {
     return
   }
 
-  return prettifyValue({
+  return {
     Ci: {
       Provider: ci.provider,
       Build: prettifyBuild(ci),
     },
-  })
+  }
 }
 
 const prettifyBuild = function ({ buildNumber, buildUrl }) {

@@ -1,6 +1,6 @@
 import { dim } from 'chalk'
 
-import { joinSubSections, joinSections } from '../../utils/join.js'
+import { prettifyValue } from '../../utils/prettify_value.js'
 import { prettifyCi } from '../../utils/pretty/ci.js'
 import { prettifyCommands } from '../../utils/pretty/commands.js'
 import { prettifyGit } from '../../utils/pretty/git.js'
@@ -20,16 +20,16 @@ export const getFooter = function ({
   commands,
   mergeId,
 }) {
-  return joinSections([
+  return prettifyValue([
     prettifyCommands(commands),
     prettifySharedSystem(systems),
     prettifySystems(systems),
-    joinSubSections([
-      prettifyMergeId(mergeId),
-      prettifyTimestamp(timestamp),
-      prettifyGit(git),
-      prettifyCi(ci),
-    ]),
+    {
+      ...prettifyMergeId(mergeId),
+      ...prettifyTimestamp(timestamp),
+      ...prettifyGit(git),
+      ...prettifyCi(ci),
+    },
     LINK_FOOTER,
   ])
 }

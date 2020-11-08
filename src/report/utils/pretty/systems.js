@@ -1,5 +1,3 @@
-import { prettifyValue } from '../prettify_value.js'
-
 // Serialize `system` information for CLI reporters.
 export const prettifySharedSystem = function (systems) {
   if (systems === undefined) {
@@ -7,8 +5,7 @@ export const prettifySharedSystem = function (systems) {
   }
 
   const [sharedSystem] = systems
-  const fields = getFields(sharedSystem)
-  return prettifyValue(fields)
+  return getFields(sharedSystem)
 }
 
 export const prettifySystems = function (systems) {
@@ -16,14 +13,8 @@ export const prettifySystems = function (systems) {
     return
   }
 
-  const specificSystems = systems.slice(1)
-  const fields = getSystemsFields(specificSystems)
-  return prettifyValue(fields)
-}
-
-const getSystemsFields = function (systems) {
-  const specificSystemsFields = systems.map(getSystemFields)
-  return Object.assign({}, ...specificSystemsFields)
+  const fields = systems.slice(1).map(getSystemFields)
+  return Object.assign({}, ...fields)
 }
 
 const getSystemFields = function (system) {
