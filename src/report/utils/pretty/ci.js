@@ -1,19 +1,19 @@
 import { underline } from 'chalk'
 
-import { isEmptyObject } from '../../../utils/main.js'
-import { addBlockPrefix } from '../prefix.js'
+import { prettifyObject } from '../prefix.js'
 
 // Serialize `ci` information for CLI reporters.
 export const prettifyCi = function (ci) {
-  if (ci === undefined || isEmptyObject(ci)) {
-    return
+  if (ci === undefined) {
+    return ''
   }
 
-  const body = addBlockPrefix('Ci', {
-    Provider: ci.provider,
-    Build: prettifyBuild(ci),
+  return prettifyObject({
+    Ci: {
+      Provider: ci.provider,
+      Build: prettifyBuild(ci),
+    },
   })
-  return body
 }
 
 const prettifyBuild = function ({ buildNumber, buildUrl }) {

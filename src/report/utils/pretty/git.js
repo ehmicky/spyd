@@ -1,17 +1,17 @@
-import { isEmptyObject } from '../../../utils/main.js'
-import { addBlockPrefix } from '../prefix.js'
+import { prettifyObject } from '../prefix.js'
 
 // Serialize `git` information for CLI reporters.
 export const prettifyGit = function (git) {
-  if (git === undefined || isEmptyObject(git)) {
-    return
+  if (git === undefined) {
+    return ''
   }
 
-  const bodyA = addBlockPrefix('Git', {
-    Commit: prettifyCommit(git),
-    PR: prettifyPr(git),
+  return prettifyObject({
+    Git: {
+      Commit: prettifyCommit(git),
+      PR: prettifyPr(git),
+    },
   })
-  return bodyA
 }
 
 const prettifyCommit = function ({ commit, tag, branch }) {

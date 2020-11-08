@@ -1,20 +1,7 @@
 import { blue } from 'chalk'
+import isPlainObj from 'is-plain-obj'
 
 import { indentBlock } from './indent.js'
-
-// Add a title as prefix for terminal reporters
-export const addBlockPrefix = function (title, block) {
-  const body = Object.entries(block)
-    .map(addBlockLinePrefix)
-    .filter(Boolean)
-    .join('\n')
-  const bodyA = addIndentedPrefix(title, body)
-  return bodyA
-}
-
-const addBlockLinePrefix = function ([title, value]) {
-  return addPrefix(title, value)
-}
 
 export const addIndentedPrefix = function (name, block) {
   if (block === undefined) {
@@ -37,4 +24,33 @@ export const addPrefix = function (name, value) {
 
 const getPrefix = function (name) {
   return blue.bold(`${name}:`)
+}
+
+// Prettify an object by highlighting keys and indenting it
+export const prettifyObject = function (object) {
+  return Object.entries(object)
+    .filter(hasValue)
+    .map(prettifyObjectPair)
+    .filter(Boolean)
+    .join('\n')
+}
+
+const hasValue = function ([, value]) {
+  return Boolean(value)
+}
+
+const prettifyObjectPair = function ([name, value]) {
+  const prefix = getPrefix(name)
+
+  if (!isPlainObj(value)) {
+    return `${prefix} ${value}`
+  }
+
+  const children = prettifyObject(value)
+
+  if (children === '') {
+    return
+  }
+
+  return `${prefix}\n${indentBlock(children)}`
 }
