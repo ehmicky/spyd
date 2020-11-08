@@ -3,7 +3,6 @@ import { resolve } from 'path'
 import { normalizeLimits } from '../limit/options.js'
 import { normalizeProgress } from '../progress/options.js'
 import { normalizeDelta } from '../store/delta/options.js'
-import { normalizeStore } from '../store/options.js'
 import { normalizeSystem } from '../system/normalize.js'
 
 import { loadAllPlugins } from './plugins.js'
@@ -26,12 +25,11 @@ const addRunners = function ({ run, ...opts }) {
 }
 
 // Normalize options shape and do custom validation
-export const normalizeOpts = async function (opts, action) {
+export const normalizeOpts = async function (opts) {
   const optsA = NORMALIZERS.reduce(normalizeOpt, opts)
   const optsB = await loadAllPlugins(optsA)
-  const optsC = await normalizeStore(optsB, action)
-  const optsD = await normalizeSystem(optsC)
-  return optsD
+  const optsC = await normalizeSystem(optsB)
+  return optsC
 }
 
 const normalizeOpt = function (opts, normalizer) {

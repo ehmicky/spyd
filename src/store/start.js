@@ -3,21 +3,16 @@ import { dirname } from 'path'
 import readPkgUp from 'read-pkg-up'
 
 // Call `store.init(storeOpts)`
-export const normalizeStore = async function (
-  { cwd, store: { opts: storeOpts, init, ...store }, ...opts },
-  action,
-) {
-  if (NO_STORE_ACTIONS.has(action)) {
-    return { ...opts, cwd }
-  }
-
+export const startStore = async function ({
+  cwd,
+  store: { opts: storeOpts, init, ...store },
+  ...opts
+}) {
   const storeOptsA = await getStoreOpts(cwd, storeOpts)
   const initOpts = await callInit(init, storeOptsA)
   const storeA = bindInitOpts(store, initOpts)
   return { ...opts, cwd, store: storeA }
 }
-
-const NO_STORE_ACTIONS = new Set(['debug'])
 
 // Add `cwd`, `root` and `name` to store options passed to `init()`
 const getStoreOpts = async function (cwd, storeOpts) {

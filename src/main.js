@@ -7,45 +7,53 @@ import { destroyStore } from './store/destroy.js'
 import { getFromStore } from './store/get.js'
 import { migrateStore } from './store/migrate/main.js'
 import { removeFromStore } from './store/remove.js'
+import { startStore } from './store/start.js'
 
 // Benchmark JavaScript code defined in a benchmark file and report the results.
 // Default action: run a new benchmark
 export const run = async function (opts) {
   const optsA = await getOpts('run', opts)
+  const optsB = await startStore(optsA)
 
-  const rawBenchmark = await runBenchmark(optsA)
+  try {
+    const rawBenchmark = await runBenchmark(optsB)
 
-  const { mergeId, benchmarks } = await addToStore(rawBenchmark, optsA)
+    const { mergeId, benchmarks } = await addToStore(rawBenchmark, optsB)
 
-  const benchmarkA = await report(mergeId, benchmarks, optsA)
-
-  await destroyStore(optsA)
-
-  return benchmarkA
+    const benchmark = await report(mergeId, benchmarks, optsB)
+    return benchmark
+  } finally {
+    await destroyStore(optsB)
+  }
 }
 
 // Show a previous benchmark
 export const show = async function (opts) {
   const { delta, ...optsA } = await getOpts('show', opts)
+  const optsB = await startStore(optsA)
 
-  const { mergeId, benchmarks } = await getFromStore(delta, optsA)
+  try {
+    const { mergeId, benchmarks } = await getFromStore(delta, optsB)
 
-  const benchmarkA = await report(mergeId, benchmarks, optsA)
-
-  await destroyStore(optsA)
-
-  return benchmarkA
+    const benchmark = await report(mergeId, benchmarks, optsB)
+    return benchmark
+  } finally {
+    await destroyStore(optsB)
+  }
 }
 
 // Remove a previous benchmark
 export const remove = async function (opts) {
   const { delta, ...optsA } = await getOpts('remove', opts)
+  const optsB = await startStore(optsA)
 
-  const { mergeId, rawBenchmarks } = await getFromStore(delta, optsA)
+  try {
+    const { mergeId, rawBenchmarks } = await getFromStore(delta, optsB)
 
-  await removeFromStore(mergeId, rawBenchmarks, optsA)
-
-  await destroyStore(optsA)
+    await removeFromStore(mergeId, rawBenchmarks, optsB)
+  } finally {
+    await destroyStore(optsA)
+  }
 }
 
 // Run benchmark in debug mode
@@ -58,8 +66,11 @@ export const debug = async function (opts) {
 // Migrate previous benchmarks
 export const migrate = async function (opts) {
   const optsA = await getOpts('migrate', opts)
+  const optsB = await startStore(optsA)
 
-  await migrateStore(optsA)
-
-  await destroyStore(optsA)
+  try {
+    await migrateStore(optsB)
+  } finally {
+    await destroyStore(optsB)
+  }
 }

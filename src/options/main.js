@@ -25,7 +25,7 @@ export const getOpts = async function (action, opts = {}) {
   const optsD = preNormalizeOpts(optsC)
   const optsE = addDefaultOpts(optsD, action)
 
-  const optsF = await normalizeOpts(optsE, action)
+  const optsF = await normalizeOpts(optsE)
   return optsF
 }
 
