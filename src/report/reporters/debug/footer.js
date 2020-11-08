@@ -20,18 +20,24 @@ export const getFooter = function ({
   commands,
   mergeId,
 }) {
-  const footers = [
-    prettifyCommands(commands),
-    prettifySharedSystem(systems),
-    prettifySystems(systems),
-    prettifyMergeId(mergeId),
-    prettifyTimestamp(timestamp),
-    prettifyGit(git),
-    prettifyCi(ci),
-    LINK_FOOTER,
-  ]
-    .filter(Boolean)
-    .join('\n\n')
+  const footers = joinSections(
+    [
+      prettifyCommands(commands),
+      prettifySharedSystem(systems),
+      prettifySystems(systems),
+      joinSections(
+        [
+          prettifyMergeId(mergeId),
+          prettifyTimestamp(timestamp),
+          prettifyGit(git),
+          prettifyCi(ci),
+        ],
+        1,
+      ),
+      LINK_FOOTER,
+    ],
+    2,
+  )
 
   if (footers === '') {
     return ''
@@ -44,3 +50,7 @@ export const getFooter = function ({
 const LINK_FOOTER = dim(
   'Benchmarked with spyd (https://github.com/ehmicky/spyd)',
 )
+
+const joinSections = function (sections, newlines) {
+  return sections.filter(Boolean).join('\n'.repeat(newlines))
+}
