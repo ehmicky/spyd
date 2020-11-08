@@ -1,11 +1,8 @@
 import { dim } from 'chalk'
 
 import { getCi } from './ci.js'
-import { getCommands } from './commands.js'
 import { getGit } from './git.js'
-import { getMergeId } from './merge_id.js'
 import { getSharedSystem, getSystems } from './systems.js'
-import { getTimestamp } from './timestamp.js'
 
 // Retrieve footer: commands, systems, mergeId, timestamp, git, ci, link
 export const getFooter = function ({
@@ -17,17 +14,33 @@ export const getFooter = function ({
   ci,
 }) {
   return [
-    getCommands(commands),
+    { Runners: getCommands(commands) },
     getSharedSystem(systems),
     getSystems(systems),
     {
-      ...getMergeId(mergeId),
-      ...getTimestamp(timestamp),
+      Id: mergeId,
+      Timestamp: getTimestamp(timestamp),
       ...getGit(git),
       ...getCi(ci),
     },
     LINK_FOOTER,
   ]
+}
+
+const getCommands = function (commands = []) {
+  return commands.map(getCommandDescription)
+}
+
+const getCommandDescription = function ({ description }) {
+  return description
+}
+
+const getTimestamp = function (timestamp) {
+  if (timestamp === undefined) {
+    return
+  }
+
+  return new Date(timestamp).toLocaleString()
 }
 
 const LINK_FOOTER = dim(
