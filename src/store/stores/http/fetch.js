@@ -1,5 +1,7 @@
 import got from 'got'
 
+import { UserError } from '../../../error/main.js'
+
 // Perform a HTTP request
 export const fetchUrl = async function ({
   method,
@@ -15,6 +17,8 @@ export const fetchUrl = async function ({
   try {
     return await got({ url, method, searchParams, json, ...responseType })
   } catch (error) {
-    throw new Error(`HTTP store error on ${method} ${url}: ${error.message}`)
+    throw new UserError(
+      `HTTP store error on ${method} ${url}: ${error.message}`,
+    )
   }
 }

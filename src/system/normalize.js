@@ -3,6 +3,8 @@ import { platform, env } from 'process'
 import osName from 'os-name'
 import slugify from 'slugify'
 
+import { PluginError } from '../error/main.js'
+
 // The `system` option can contain some `$VAR` that are substituted:
 //  - environment variables
 //  - {{os}}, {{os_full}}
@@ -69,7 +71,9 @@ const getSystemValue = function (getValue, fullName) {
   try {
     return getValue()
   } catch (error) {
-    throw new Error(`Could not use system variable ${fullName}\n${error.stack}`)
+    throw new PluginError(
+      `Could not use system variable ${fullName}\n${error.stack}`,
+    )
   }
 }
 

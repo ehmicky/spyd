@@ -1,3 +1,5 @@
+import { UserError, PluginError } from '../error/main.js'
+
 import { getCommands } from './command.js'
 import { hasTasks } from './find.js'
 
@@ -32,8 +34,14 @@ const fireCommands = async function ({ runnerId, runOpt, retrieveCommands }) {
   try {
     return await retrieveCommands(runOpt)
   } catch (error) {
-    // eslint-disable-next-line fp/no-mutation
-    error.message = `In runner '${runnerId}': ${error.message}`
-    throw error
+    handleCommandsError(error, runnerId)
   }
+}
+
+const handleCommandsError = function (error, runnerId) {
+  if (error instanceof UserError) {
+    throw new UserError(`In runner '${runnerId}': ${error.message}`)
+  }
+
+  throw new PluginError(`Runner '${runnerId}' internal error: ${error.stack}`)
 }

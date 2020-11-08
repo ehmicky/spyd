@@ -1,13 +1,15 @@
+import { UserError } from '../../error/main.js'
+
 // Get previous benchmark index by benchmark delta
 export const find = function (benchmarks, { queryType, queryValue }) {
   if (benchmarks.length === 0) {
-    throw new Error('No previous benchmarks')
+    throw new UserError('No previous benchmarks')
   }
 
   const index = QUERIES[queryType](benchmarks, queryValue)
 
   if (index === undefined) {
-    throw new Error('No matching benchmarks')
+    throw new UserError('No matching benchmarks')
   }
 
   return index

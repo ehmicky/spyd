@@ -1,3 +1,4 @@
+import { UserError } from '../error/main.js'
 import { executeChild } from '../processes/execute.js'
 
 import { validateIds } from './validate.js'
@@ -26,7 +27,7 @@ export const getCommandIterations = async function ({
   })
 
   if (iterations.length === 0) {
-    throw new Error(`File '${taskPath}' does not have any tasks to run`)
+    throw new UserError(`File '${taskPath}' does not have any tasks to run`)
   }
 
   const iterationsA = iterations.map((iteration) =>

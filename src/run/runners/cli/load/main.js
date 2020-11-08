@@ -1,5 +1,6 @@
 import { env } from 'process'
 
+import { UserError } from '../../../../error/main.js'
 import { loadYamlFile } from '../../../../utils/yaml.js'
 
 import { addTasksInputs } from './inputs.js'
@@ -10,7 +11,7 @@ import { getVariables } from './variables.js'
 
 // Load the benchmark file
 export const loadBenchmarkFile = async function (taskPath, debug) {
-  const entries = await loadYamlFile(taskPath)
+  const entries = await getBenchmarkContent(taskPath)
   validateFile(entries)
 
   const variables = env
@@ -29,4 +30,14 @@ export const loadBenchmarkFile = async function (taskPath, debug) {
     variables: variablesA,
   })
   return { iterations, shell }
+}
+
+const getBenchmarkContent = async function (taskPath) {
+  try {
+    return await loadYamlFile(taskPath)
+  } catch (error) {
+    throw new UserError(
+      `Could not load benchmark file '${taskPath}': ${error.message}`,
+    )
+  }
 }

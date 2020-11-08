@@ -1,5 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
+import { UserError } from '../../../../error/main.js'
 import {
   validateBenchmarkFile,
   validateString,
@@ -16,14 +17,14 @@ export const validateFile = function (entries) {
 
 const validateShell = function (shell) {
   if (typeof shell !== 'boolean' && typeof shell !== 'string') {
-    throw new TypeError(`'shell' must be a boolean or a string`)
+    throw new UserError(`'shell' must be a boolean or a string`)
   }
 }
 
 // Validate `file.variables`
 const validateVariables = function (variables) {
   if (!isPlainObj(variables)) {
-    throw new TypeError(`'variables' must be an object`)
+    throw new UserError(`'variables' must be an object`)
   }
 
   Object.entries(variables).forEach(validateVariable)
@@ -31,13 +32,13 @@ const validateVariables = function (variables) {
 
 const validateVariable = function ([name, value]) {
   if (!VARIABLE_NAME_REGEXP.test(name)) {
-    throw new TypeError(
+    throw new UserError(
       `'variables' '${name}' name must only contain letters, digits or - _`,
     )
   }
 
   if (typeof value !== 'string' || value.trim() === '') {
-    throw new TypeError(`'variables' '${name}' must be a non-empty string`)
+    throw new UserError(`'variables' '${name}' must be a non-empty string`)
   }
 }
 

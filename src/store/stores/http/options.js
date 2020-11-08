@@ -1,13 +1,15 @@
 import { format } from 'url'
 
+import { UserError } from '../../../error/main.js'
+
 // The `store.http.url` and `store.http.name` options specify the base URL
 export const getUrl = function ({ url, name }) {
   if (typeof url !== 'string') {
-    throw new TypeError(`'store.http.url' must be a string, not ${url}`)
+    throw new UserError(`'store.http.url' must be a string, not ${url}`)
   }
 
   if (typeof name !== 'string') {
-    throw new TypeError(`'store.http.name' must be a string, not ${name}`)
+    throw new UserError(`'store.http.name' must be a string, not ${name}`)
   }
 
   const urlA = normalizeUrl(url)

@@ -1,3 +1,5 @@
+import { UserError } from '../error/main.js'
+
 // Ensure ids exist
 export const validateLimits = function (iterations, limits) {
   limits.forEach((limit) => {
@@ -15,7 +17,7 @@ const validateLimitId = function (iterations, id) {
   const isValidId = iterations.some((iteration) => hasId(iteration, id))
 
   if (!isValidId) {
-    throw new TypeError(
+    throw new UserError(
       `In 'limit' option, invalid id '${id}': no such tasks, inputs, commands nor systems`,
     )
   }

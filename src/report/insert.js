@@ -3,6 +3,8 @@ import { promises as fs } from 'fs'
 import detectNewline from 'detect-newline'
 import writeFileAtomic from 'write-file-atomic'
 
+import { UserError } from '../error/main.js'
+
 // Use the `insert` option to insert content inside a file.
 // We insert between any two lines with the tokens "spyd-start" and "spyd-end".
 // This:
@@ -25,7 +27,7 @@ const getFileContent = async function (file) {
   try {
     return await fs.readFile(file, 'utf8')
   } catch (error) {
-    throw new Error(`Could not read file '${file}'\n${error.message}`)
+    throw new UserError(`Could not read file '${file}'\n${error.message}`)
   }
 }
 
@@ -62,7 +64,7 @@ const getLineIndex = function (lines, file, token) {
   const lineIndex = lines.findIndex((line) => line.includes(token))
 
   if (lineIndex === -1) {
-    throw new TypeError(
+    throw new UserError(
       `File '${file}' should contain a line with the words ${token}`,
     )
   }
@@ -77,6 +79,6 @@ const writeFileContent = async function (file, fileContent) {
   try {
     await writeFileAtomic(file, fileContent)
   } catch (error) {
-    throw new Error(`Could not write to file '${file}'\n${error.message}`)
+    throw new UserError(`Could not write to file '${file}'\n${error.message}`)
   }
 }

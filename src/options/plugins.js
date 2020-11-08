@@ -1,3 +1,4 @@
+import { UserError, PluginError } from '../error/main.js'
 import { PROGRESS_REPORTERS } from '../progress/reporters/main.js'
 import { REPORTERS } from '../report/reporters/main.js'
 import { RUNNERS } from '../run/runners/main.js'
@@ -59,7 +60,7 @@ const importPlugin = async function ({ type, name, builtins }) {
   try {
     return await import(name)
   } catch (error) {
-    throw new Error(
+    throw new PluginError(
       `Could not load '${type}' module '${name}'\n\n${error.stack}`,
     )
   }
@@ -67,7 +68,7 @@ const importPlugin = async function ({ type, name, builtins }) {
 
 const getSinglePlugin = function (plugins, type) {
   if (plugins.length > 1) {
-    throw new TypeError(`Cannot specify more than one '${type}'`)
+    throw new UserError(`Cannot specify more than one '${type}'`)
   }
 
   return plugins[0]

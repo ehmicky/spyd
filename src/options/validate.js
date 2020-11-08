@@ -1,5 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
+import { UserError } from '../error/main.js'
+
 // Options validation helper functions
 export const validateDeepObject = function (object, name) {
   Object.entries(object).forEach(([propName, value]) => {
@@ -9,13 +11,13 @@ export const validateDeepObject = function (object, name) {
 
 const validateObject = function (value, name) {
   if (!isPlainObj(value)) {
-    throw new TypeError(`'${name}' value must be a plain object: ${value}`)
+    throw new UserError(`'${name}' value must be a plain object: ${value}`)
   }
 }
 
 export const validateStringArray = function (value, name) {
   if (value !== undefined && !(Array.isArray(value) && value.every(isString))) {
-    throw new TypeError(`'${name}' must be an array of strings: ${value}`)
+    throw new UserError(`'${name}' must be an array of strings: ${value}`)
   }
 }
 
@@ -25,6 +27,6 @@ const isString = function (value) {
 
 export const validatePositiveNumber = function (value, name) {
   if (!Number.isFinite(value) || value <= 0) {
-    throw new TypeError(`'${name}' must be a positive number: ${value}`)
+    throw new UserError(`'${name}' must be a positive number: ${value}`)
   }
 }

@@ -1,3 +1,5 @@
+import { UserError } from '../error/main.js'
+
 // Ensure identifiers exist in at least some benchmarks/iterations
 export const validateTargets = function (targets, rawBenchmarks) {
   targets.forEach(({ idName, name, ids }) => {
@@ -17,7 +19,9 @@ const validateId = function ({ idName, name, id, rawBenchmarks }) {
   )
 
   if (!isValid) {
-    throw new Error(`Selected ${name} ${id} but that ${name} does not exist`)
+    throw new UserError(
+      `Selected ${name} ${id} but that ${name} does not exist`,
+    )
   }
 }
 

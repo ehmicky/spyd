@@ -3,6 +3,8 @@ import { promisify } from 'util'
 
 import writeFileAtomic from 'write-file-atomic'
 
+import { UserError } from '../error/main.js'
+
 // Print reporting result to file or to terminal based on the `output` option
 export const printContent = async function ({
   interactiveContent,
@@ -25,6 +27,6 @@ const writeFileContent = async function (output, nonInteractiveContent) {
   try {
     await writeFileAtomic(output, nonInteractiveContent)
   } catch (error) {
-    throw new Error(`Could not write to file '${output}'\n${error.message}`)
+    throw new UserError(`Could not write to file '${output}'\n${error.message}`)
   }
 }

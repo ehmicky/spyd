@@ -1,3 +1,5 @@
+import { UserError } from '../../../../error/main.js'
+
 import { addTasksInputs } from './inputs.js'
 import { normalizeTasks } from './normalize.js'
 import { useRequireOpt } from './require_opt.js'
@@ -26,6 +28,6 @@ const loadFile = async function (taskPath) {
   try {
     return await import(taskPath)
   } catch (error) {
-    throw new Error(`Could not load the benchmark file\n\n${error.stack}`)
+    throw new UserError(`Could not load the benchmark file\n\n${error.stack}`)
   }
 }

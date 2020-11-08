@@ -19,12 +19,8 @@ const readYamlFile = async function (path) {
 
 const parseYaml = function (string, path) {
   try {
-    return loadYaml(string, { schema: JSON_SCHEMA, onWarning })
+    return loadYaml(string, { schema: JSON_SCHEMA })
   } catch (error) {
     throw new Error(`Invalid YAML in file '${path}'\n\n${error.stack}`)
   }
-}
-
-const onWarning = function (error) {
-  throw error
 }

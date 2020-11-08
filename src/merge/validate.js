@@ -1,5 +1,7 @@
 import { isDeepStrictEqual } from 'util'
 
+import { UserError } from '../error/main.js'
+
 // Several benchmarks can have the same system, providing it has exactly the
 // same options.
 // If several benchmarks with the same system have different
@@ -42,7 +44,7 @@ const SAME_SYSTEM_PROPS = ['opts']
 
 const validateSame = function (objectA, objectB, { propName, groups }) {
   if (!isDeepStrictEqual(objectA, objectB)) {
-    throw new Error(`Several benchmarks with the same ${groups} cannot have different ${propName}:
+    throw new UserError(`Several benchmarks with the same ${groups} cannot have different ${propName}:
 ${JSON.stringify(objectA)}
 ${JSON.stringify(objectB)}`)
   }

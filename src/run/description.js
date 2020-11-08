@@ -1,5 +1,7 @@
 import execa from 'execa'
 
+import { PluginError } from '../error/main.js'
+
 // Runtime description for this runner, specified as `command.versions`
 // Used by the `--info` option
 export const getCommandDescription = async function ({
@@ -34,7 +36,7 @@ const getVersion = async function ({ name, value, runnerId }) {
     const version = stdout.replace(LEADING_V, '')
     return `${nameA}${version}`
   } catch (error) {
-    throw new Error(
+    throw new PluginError(
       `Could not load runner '${runnerId}'\n\n${error.shortMessage}`,
     )
   }

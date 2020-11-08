@@ -1,3 +1,5 @@
+import { UserError } from '../error/main.js'
+
 import { applyTargets } from './apply.js'
 import { getTargets } from './targets.js'
 import { validateTargets } from './validate.js'
@@ -23,7 +25,7 @@ export const selectBenchmarks = function (rawBenchmarks, opts) {
     .filter(hasIterations)
 
   if (rawBenchmarksA.length === 0) {
-    throw new Error('No matching selection')
+    throw new UserError('No matching selection')
   }
 
   return rawBenchmarksA

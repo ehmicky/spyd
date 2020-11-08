@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import { getEnvCi } from '../ci/info.js'
+import { UserError } from '../error/main.js'
 
 // By default `mergeId` is the current CI build. If not in CI, it is a UUIDv4.
 export const getDefaultMergeId = function ({ cwd }) {
@@ -29,7 +30,7 @@ const handleSame = function (benchmarks, mergeId) {
   const lastBenchmark = benchmarks[benchmarks.length - 1]
 
   if (lastBenchmark === undefined) {
-    throw new Error(
+    throw new UserError(
       "Cannot use merge='' because there are no previous benchmarks",
     )
   }

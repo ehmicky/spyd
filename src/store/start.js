@@ -2,6 +2,8 @@ import { dirname } from 'path'
 
 import readPkgUp from 'read-pkg-up'
 
+import { UserError } from '../error/main.js'
+
 // Call `store.start(storeOpts)`
 export const startStore = async function ({
   cwd,
@@ -39,7 +41,7 @@ const callStart = async function (start, storeOpts) {
   try {
     return await start(storeOpts)
   } catch (error) {
-    throw new Error(`Could not start store: ${error.message}`)
+    throw new UserError(`Could not start store: ${error.message}`)
   }
 }
 

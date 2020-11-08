@@ -2,6 +2,8 @@ import nvexeca from 'nvexeca'
 import readPkgUp from 'read-pkg-up'
 import { satisfies } from 'semver'
 
+import { UserError } from '../../../error/main.js'
+
 // Normalize the node `versions` option
 export const getNodeVersions = async function ({ versions }) {
   if (versions === undefined) {
@@ -34,9 +36,7 @@ const getFullVersions = async function (versions) {
       ),
     )
   } catch (error) {
-    // eslint-disable-next-line fp/no-mutation
-    error.message = `In option 'run.node.versions': ${error.message}`
-    throw error
+    throw new UserError(`In option 'run.node.versions': ${error.message}`)
   }
 }
 
@@ -59,7 +59,7 @@ const validateVersions = function (versions, allowedVersions) {
 
 const validateVersion = function (versionRange, version, allowedVersions) {
   if (!satisfies(version, allowedVersions)) {
-    throw new Error(
+    throw new UserError(
       `In option 'run.node.versions': version ${versionRange} must be ${allowedVersions}`,
     )
   }

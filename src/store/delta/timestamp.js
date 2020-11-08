@@ -1,3 +1,5 @@
+import { UserError } from '../../error/main.js'
+
 // We use `new Date()` which means:
 //  - can specify only the date, or both date and time
 //  - can omit timezone (default to local timezone) but returned date is UTC
@@ -8,7 +10,7 @@ export const getDeltaTimestamp = function (name, delta) {
   const date = new Date(deltaA)
 
   if (Number.isNaN(Number(date))) {
-    throw new TypeError(`'${name}' option is an invalid date/time: ${delta}`)
+    throw new UserError(`'${name}' option is an invalid date/time: ${delta}`)
   }
 
   const dateA = normalizeDateTime(date)

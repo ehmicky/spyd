@@ -1,3 +1,5 @@
+import { UserError } from '../error/main.js'
+
 import { getTimeoutError } from './timeout.js'
 
 // Forward any child process error
@@ -24,7 +26,7 @@ export const forwardChildError = function ({
     taskId,
     inputId,
   })
-  throw new Error(messageA)
+  throw new UserError(messageA)
 }
 
 const getMessage = function ({

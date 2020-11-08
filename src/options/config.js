@@ -3,6 +3,7 @@ import { cwd as getCwd } from 'process'
 
 import findUp from 'find-up'
 
+import { UserError } from '../error/main.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
 // Retrieve options from the configuration file (if any)
@@ -32,7 +33,7 @@ const getConfigContent = async function (configPath) {
   try {
     return await loadYamlFile(configPath)
   } catch (error) {
-    throw new Error(
+    throw new UserError(
       `Could not load configuration file '${configPath}': ${error.message}`,
     )
   }

@@ -3,6 +3,8 @@ import { promisify } from 'util'
 
 import { file as getTmpFile } from 'tmp-promise'
 
+import { CoreError } from '../error/main.js'
+
 const pReadFile = promisify(readFile)
 
 // Create a JSON file for IPC.
@@ -40,5 +42,5 @@ const handleResultError = function (error, failed) {
     return {}
   }
 
-  throw error
+  throw new CoreError(`Could not read benchmark results: ${error.stack}`)
 }

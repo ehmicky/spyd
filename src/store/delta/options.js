@@ -1,3 +1,5 @@
+import { UserError } from '../../error/main.js'
+
 import { getDeltaTimestamp } from './timestamp.js'
 
 // Several options targets a previous benchmarks using either a boolean, an
@@ -27,7 +29,7 @@ const getDelta = function (name, delta) {
 
 const getDeltaNumber = function (name, delta) {
   if (!Number.isInteger(delta) || delta < 1) {
-    throw new TypeError(`'${name}' option must be a positive integer: ${delta}`)
+    throw new UserError(`'${name}' option must be a positive integer: ${delta}`)
   }
 
   return delta

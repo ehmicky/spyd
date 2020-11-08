@@ -1,3 +1,4 @@
+import { UserError } from '../../../../error/main.js'
 import { applyTemplate } from '../template.js'
 
 // `task.inputs` is an array of `inputId` pointing towards the top-level
@@ -62,7 +63,7 @@ const getInput = function (inputId, inputs, { taskId }) {
   const inputA = inputs.find(({ inputId: inputIdA }) => inputIdA === inputId)
 
   if (inputA === undefined) {
-    throw new TypeError(`Input '${inputId}' of task '${taskId}' does not exist`)
+    throw new UserError(`Input '${inputId}' of task '${taskId}' does not exist`)
   }
 
   return inputA

@@ -1,3 +1,5 @@
+import { UserError } from '../../../../error/main.js'
+
 // `task.inputs` is an array of `inputId` pointing towards the top-level
 // `inputs` object. We dereference those pointers here.
 // `inputs` are scoped to each benchmark file. However the same
@@ -43,7 +45,7 @@ const getInput = function (inputId, inputs, { taskId }) {
   const inputA = inputs.find((input) => input.inputId === inputId)
 
   if (inputA === undefined) {
-    throw new TypeError(`Input '${inputId}' of task '${taskId}' does not exist`)
+    throw new UserError(`Input '${inputId}' of task '${taskId}' does not exist`)
   }
 
   return inputA

@@ -1,3 +1,4 @@
+import { UserError } from '../error/main.js'
 import { mergeRawBenchmarks } from '../merge/raw.js'
 import { selectBenchmarks } from '../select/main.js'
 
@@ -25,6 +26,6 @@ const getBenchmark = function (benchmarks, delta) {
     const benchmark = benchmarks[index]
     return benchmark
   } catch (error) {
-    throw new Error(`Could not find previous benchmark: ${error.message}`)
+    throw new UserError(`Could not find previous benchmark: ${error.message}`)
   }
 }

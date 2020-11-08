@@ -1,3 +1,5 @@
+import { UserError } from '../../../../error/main.js'
+
 // Common validation utility when validating both tasks and inputs
 export const validateProp = function ({
   id,
@@ -10,7 +12,7 @@ export const validateProp = function ({
 
   if (validator === undefined) {
     const validProps = Object.keys(validators).join(', ')
-    throw new TypeError(
+    throw new UserError(
       `Invalid property '${propName}' of ${category} '${id}'. Must be one of: ${validProps}`,
     )
   }
@@ -18,7 +20,7 @@ export const validateProp = function ({
   const message = validator(prop)
 
   if (message !== undefined) {
-    throw new TypeError(
+    throw new UserError(
       `Property '${propName}' of ${category} '${id}' ${message}`,
     )
   }

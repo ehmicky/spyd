@@ -1,3 +1,4 @@
+import { UserError } from '../../error/main.js'
 import { listStore } from '../list.js'
 
 import { MIGRATIONS } from './migrations.js'
@@ -12,7 +13,7 @@ import { MIGRATIONS } from './migrations.js'
 // on that format as well. But no migration is needed then.
 export const validateDataVersion = function (rawBenchmarks) {
   if (hasOldBenchmarks(rawBenchmarks)) {
-    throw new Error(`Please run 'spyd migrate'.
+    throw new UserError(`Please run 'spyd migrate'.
 The previous benchmarks must be upgraded to the latest version of spyd.`)
   }
 }
@@ -22,7 +23,7 @@ export const migrateStore = async function (opts) {
   const rawBenchmarks = await listStore(opts)
 
   if (!hasOldBenchmarks(rawBenchmarks)) {
-    throw new Error(
+    throw new UserError(
       'Previous benchmarks are already upgraded to the latest version of spyd.',
     )
   }
@@ -60,6 +61,8 @@ const replaceStore = async function (rawBenchmarks, { store }) {
   try {
     await store.replace(rawBenchmarks)
   } catch (error) {
-    throw new Error(`Could not migrate previous benchmarks: ${error.message}`)
+    throw new UserError(
+      `Could not migrate previous benchmarks: ${error.message}`,
+    )
   }
 }

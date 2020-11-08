@@ -1,3 +1,5 @@
+import { UserError } from '../../../../error/main.js'
+
 import { handleTypeScript } from './typescript.js'
 
 // Use the `require` option
@@ -21,7 +23,7 @@ const normalizeRequireOpt = function (requireOpt = []) {
 
 const validateRequireOpt = function (requireOpt) {
   if (!Array.isArray(requireOpt) || !requireOpt.every(isString)) {
-    throw new TypeError(
+    throw new UserError(
       `'node.require' option must be an array of strings: ${requireOpt}`,
     )
   }
@@ -35,7 +37,7 @@ const useRequiredModule = async function (requiredModule) {
   try {
     await import(requiredModule)
   } catch (error) {
-    throw new Error(
+    throw new UserError(
       `Could not load 'node.require' option '${requiredModule}'\n\n${error.stack}`,
     )
   }

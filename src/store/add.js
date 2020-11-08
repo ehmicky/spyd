@@ -1,5 +1,6 @@
 import omit from 'omit.js'
 
+import { UserError } from '../error/main.js'
 import { addMergeId } from '../merge/options.js'
 import { mergeRawBenchmarks } from '../merge/raw.js'
 
@@ -31,7 +32,7 @@ const save = async function (benchmark, { save: saveOpt, store }) {
   try {
     await store.add(benchmarkA)
   } catch (error) {
-    throw new Error(`Could not save benchmark: ${error.message}`)
+    throw new UserError(`Could not save benchmark: ${error.message}`)
   }
 }
 

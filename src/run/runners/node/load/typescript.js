@@ -1,5 +1,7 @@
 import { extname } from 'path'
 
+import { UserError } from '../../../../error/main.js'
+
 // When the benchmark file is in TypeScript, automatically use
 // `ts-node/register`
 export const handleTypeScript = async function (requireOpt, taskPath) {
@@ -10,7 +12,7 @@ export const handleTypeScript = async function (requireOpt, taskPath) {
   try {
     await import(TS_NODE)
   } catch (error) {
-    throw new Error(
+    throw new UserError(
       `When the benchmark file is in TypeScript either:
   - 'ts-node' and 'typescript' must be installed
   - the benchmark file must be transpiled by 'tsc'\n\n${error.message}`,

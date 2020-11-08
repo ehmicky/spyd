@@ -1,3 +1,5 @@
+import { UserError } from '../error/main.js'
+
 // Call `store.remove()`
 export const removeFromStore = async function (
   mergeId,
@@ -11,7 +13,7 @@ export const removeFromStore = async function (
   try {
     await store.remove(ids)
   } catch (error) {
-    throw new Error(`Could not remove benchmark: ${error.message}`)
+    throw new UserError(`Could not remove benchmark: ${error.message}`)
   }
 }
 

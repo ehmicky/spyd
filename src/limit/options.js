@@ -1,3 +1,5 @@
+import { UserError } from '../error/main.js'
+
 // Normalize 'limit' option
 export const normalizeLimits = function (limits) {
   return limits.map(normalizeLimit)
@@ -16,13 +18,13 @@ const getPercentage = function (originalPercentage) {
   const percentageStr = originalPercentage.replace(PERCENTAGE_REGEXP, '')
 
   if (originalPercentage === percentageStr) {
-    throw new TypeError(`'limit' must end with %: ${originalPercentage}`)
+    throw new UserError(`'limit' must end with %: ${originalPercentage}`)
   }
 
   const percentageNum = Number(percentageStr)
 
   if (!Number.isInteger(percentageNum) || percentageNum < 0) {
-    throw new TypeError(
+    throw new UserError(
       `'limit' must be a positive integer: ${originalPercentage}`,
     )
   }

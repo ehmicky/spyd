@@ -1,5 +1,7 @@
 import stripAnsi from 'strip-ansi'
 
+import { UserError } from '../error/main.js'
+
 // Add `iteration.slowError`
 export const getSlowError = function ({ slow, name, percentage, diff }) {
   if (!slow) {
@@ -36,7 +38,7 @@ export const checkLimits = function ({ iterations }) {
     return
   }
 
-  throw new Error(limitError)
+  throw new UserError(limitError)
 }
 
 const getSlowErrorField = function ({ slowError }) {

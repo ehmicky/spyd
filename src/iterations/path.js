@@ -2,6 +2,8 @@ import { resolve } from 'path'
 
 import fastGlob from 'fast-glob'
 
+import { UserError } from '../error/main.js'
+
 // Retrieve the absolute paths to the benchmark files using the `files` and
 // `cwd` options
 export const getTaskPaths = async function (files, cwd) {
@@ -11,7 +13,7 @@ export const getTaskPaths = async function (files, cwd) {
   const taskPathsA = taskPaths.flat()
 
   if (taskPathsA.length === 0) {
-    throw new Error('No benchmark file found')
+    throw new UserError('No benchmark file found')
   }
 
   const taskPathsB = [...new Set(taskPathsA)]
