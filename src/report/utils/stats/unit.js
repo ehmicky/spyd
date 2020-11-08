@@ -3,7 +3,7 @@
 // between stats.
 // We use the minimum time unit where all medians are >= 1
 export const getUnit = function (iterations) {
-  const medians = iterations.flatMap(getMedianStat)
+  const medians = iterations.map(getMedianStat)
   const unit = findUnit(medians)
   const scale = UNITS[unit]
   return { unit, scale }
