@@ -1,4 +1,4 @@
-import { addIndentedPrefix } from '../prefix.js'
+import { prettifyObject } from '../prefix.js'
 
 // Add `benchmark.commandsPretty`, CLI-friendly serialization of
 // `benchmark.commands`
@@ -7,9 +7,7 @@ export const prettifyCommands = function (commands) {
     return
   }
 
-  const body = commands.map(getDescription).join('\n')
-  const bodyA = addIndentedPrefix('Runners', body)
-  return bodyA
+  return prettifyObject({ Runners: commands.map(getDescription) })
 }
 
 const getDescription = function ({ description }) {

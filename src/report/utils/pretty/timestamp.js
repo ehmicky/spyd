@@ -1,4 +1,4 @@
-import { addPrefix } from '../prefix.js'
+import { prettifyObject } from '../prefix.js'
 
 // Make timestamp more human-friendly.
 export const prettifyTimestamp = function (timestamp) {
@@ -6,7 +6,6 @@ export const prettifyTimestamp = function (timestamp) {
     return
   }
 
-  const body = new Date(timestamp).toLocaleString()
-  const bodyA = addPrefix('Timestamp', body)
-  return bodyA
+  const timestampStr = new Date(timestamp).toLocaleString()
+  return prettifyObject({ Timestamp: timestampStr })
 }
