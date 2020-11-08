@@ -11,20 +11,12 @@ export const getPadding = function (name, iterations) {
   return Math.max(...statLengths)
 }
 
-const getLength = function (stat) {
-  return stat.length
+const getLength = function (statPretty) {
+  return statPretty.length
 }
 
 // Pad `*.statsPretty` on the left so they vertically align.
 // Right padding was already performed when setting the number of decimals.
-export const padValue = function (stat, padding) {
-  if (Array.isArray(stat)) {
-    return stat.map((statA) => padItem(statA, padding))
-  }
-
-  return padItem(stat, padding)
-}
-
-const padItem = function (stat, padding) {
-  return stat.padStart(padding)
+export const padValue = function (statPretty, padding) {
+  return statPretty.padStart(padding)
 }

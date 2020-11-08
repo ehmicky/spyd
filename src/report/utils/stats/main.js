@@ -92,12 +92,24 @@ const serializeItem = function ({ stat, type, name, scale, unit, decimals }) {
 const finalizeValue = function ({
   name,
   iteration,
-  iteration: { [name]: stat, stats },
+  iteration: {
+    stats,
+    stats: { [name]: stat },
+  },
   padding,
 }) {
   const prettyName = `${name}Pretty`
   const statPretty = stats[prettyName]
-  const statPrettyA = finalizeItem({ stat, statPretty, padding, name })
+  const statPrettyA = Array.isArray(stat)
+    ? stat.map((statA, index) =>
+        finalizeItem({
+          stat: statA,
+          statPretty: statPretty[index],
+          padding,
+          name,
+        }),
+      )
+    : finalizeItem({ stat, statPretty, padding, name })
   return { ...iteration, stats: { ...stats, [prettyName]: statPrettyA } }
 }
 
