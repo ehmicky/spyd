@@ -27,13 +27,10 @@ const getDecimals = function ({ name, type, iterations, scale }) {
     return 0
   }
 
-  const min = Math.min(...measures)
-
-  const decimals = Math.max(
-    Math.ceil(Math.log10((MIN_PRECISION * scale) / min)),
+  return Math.max(
+    Math.ceil(Math.log10((MIN_PRECISION * scale) / Math.min(...measures))),
     0,
   )
-  return decimals
 }
 
 const isNotEmpty = function (measure) {
