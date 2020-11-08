@@ -11,55 +11,80 @@ export const serializeStats = function ({
   scale,
   statsDecimals,
 }) {
-  return iterations.map((iteration) =>
-    serializeIterationStats({ iteration, unit, scale, statsDecimals }),
+  return Object.entries(STAT_TYPES).reduce(
+    (iterationsA, [name, type]) =>
+      serializeIterationsStats({
+        iterations: iterationsA,
+        name,
+        type,
+        unit,
+        scale,
+        statsDecimals,
+      }),
+    iterations,
   )
 }
 
-const serializeIterationStats = function ({
-  iteration,
-  iteration: {
-    stats,
-    stats: { loops },
-  },
+const serializeIterationsStats = function ({
+  iterations,
+  name,
+  type,
   unit,
   scale,
   statsDecimals,
 }) {
-  const statsA = Object.entries(STAT_TYPES).map(([name, type]) =>
-    serializeStat({
+  return iterations.map((iteration) =>
+    serializeIterationStat({
+      iteration,
       name,
       type,
-      stats,
       unit,
       scale,
       statsDecimals,
-      loops,
     }),
   )
-  const statsPretty = Object.fromEntries(statsA)
-  return { ...iteration, stats: { ...stats, ...statsPretty } }
+}
+
+const serializeIterationStat = function ({
+  name,
+  iteration,
+  iteration: {
+    stats,
+    stats: { [name]: stat, loops },
+  },
+  type,
+  unit,
+  scale,
+  statsDecimals,
+}) {
+  const statPretty = serializeStat({
+    stat,
+    name,
+    type,
+    unit,
+    scale,
+    statsDecimals,
+    loops,
+  })
+  return { ...iteration, stats: { ...stats, [`${name}Pretty`]: statPretty } }
 }
 
 const serializeStat = function ({
+  stat,
   name,
   type,
-  stats,
   unit,
   scale,
   statsDecimals,
   loops,
 }) {
-  const prettyName = `${name}Pretty`
-  const stat = stats[name]
-
   if (shouldSkipStat({ stat, name, loops })) {
-    return [prettyName, '']
+    return ''
   }
 
   const decimals = statsDecimals[name]
   const statPretty = serialize({ stat, type, name, scale, unit, decimals })
-  return [prettyName, statPretty]
+  return statPretty
 }
 
 const serialize = function ({ stat, type, name, scale, unit, decimals }) {
