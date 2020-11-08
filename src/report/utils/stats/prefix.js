@@ -9,8 +9,7 @@ export const addPrefix = function (stat, statPretty, name) {
   }
 
   const prefix = getPrefix(stat)
-  const statPrettyA = `${prefix}${statPretty}`
-  return statPrettyA
+  return `${prefix}${statPretty}`
 }
 
 const getArrow = function (stat) {
