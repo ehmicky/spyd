@@ -3,21 +3,35 @@ import { underline } from 'chalk'
 import { prettifyObject } from '../prefix.js'
 
 // Serialize `system` information for CLI reporters.
+export const prettifySharedSystem = function (systems) {
+  if (systems === undefined) {
+    return
+  }
+
+  const [sharedSystem] = systems
+  const fields = getFields(sharedSystem)
+  return prettifyObject(fields)
+}
+
 export const prettifySystems = function (systems) {
   if (systems === undefined) {
     return
   }
 
-  return systems.map(prettifySystem).filter(Boolean).join('\n')
+  return systems.slice(1).map(prettifySpecificSystem).filter(Boolean).join('\n')
 }
 
-const prettifySystem = function (system) {
+const prettifySpecificSystem = function (system) {
+  const fields = getFields(system)
+  const systemTitle = getTitle(system)
+  return prettifyObject({ [systemTitle]: fields })
+}
+
+const getFields = function (system) {
   const fields = SYSTEM_FIELDS.map(({ title, value }) => ({
     [title]: value(system),
   }))
-  const fieldsA = Object.assign({}, ...fields)
-  const systemTitle = getTitle(system)
-  return prettifyObject({ [systemTitle]: fieldsA })
+  return Object.assign({}, ...fields)
 }
 
 const getJob = function ({ jobNumber, jobUrl }) {
@@ -35,7 +49,7 @@ const SYSTEM_FIELDS = [
   { title: 'Job', value: getJob },
 ]
 
-const getTitle = function ({ title = MAIN_TITLE }) {
+const getTitle = function ({ title }) {
   if (title === '') {
     return DEFAULT_TITLE
   }
@@ -43,7 +57,5 @@ const getTitle = function ({ title = MAIN_TITLE }) {
   return title
 }
 
-// Top-level title (for shared `system`)
-const MAIN_TITLE = 'System'
 // Nested title when `system` is an empty string
 const DEFAULT_TITLE = 'Default'
