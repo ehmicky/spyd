@@ -15,9 +15,8 @@ const report = function ({
   iterations,
 }) {
   const content = iterations.map(serializeIteration).join('\n')
-  const indentedContent = addPadding(content)
   const footer = getFooter({ timestamp, mergeId, systems, git, ci, commands })
-  return `\n${indentedContent}${footer}\n`
+  return addPadding(`${content}${footer}`)
 }
 
 const serializeIteration = function ({ name, stats, fastest, slow }) {

@@ -1,6 +1,5 @@
 import { dim } from 'chalk'
 
-import { addPadding } from '../../utils/indent.js'
 import { prettifyCi } from '../../utils/pretty/ci.js'
 import { prettifyCommands } from '../../utils/pretty/commands.js'
 import { prettifyGit } from '../../utils/pretty/git.js'
@@ -43,8 +42,7 @@ export const getFooter = function ({
     return ''
   }
 
-  const paddedFooter = addPadding(footer)
-  return `\n\n${paddedFooter}`
+  return `\n\n${footer}`
 }
 
 const LINK_FOOTER = dim(

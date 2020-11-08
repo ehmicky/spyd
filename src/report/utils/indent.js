@@ -7,9 +7,9 @@ export const indentBlock = function (block) {
 
 const INDENT_SIZE = 2
 
-// Add left padding to terminal content
+// Add left|top|bottom padding to terminal content
 export const addPadding = function (block) {
-  return indentString(block, PADDING_SIZE)
+  return `\n${indentString(block, PADDING_SIZE)}\n`
 }
 
 const PADDING_SIZE = 1
