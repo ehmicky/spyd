@@ -1,4 +1,4 @@
-import { prettifyObject } from '../prefix.js'
+import { prettifyValue } from '../prettify_value.js'
 
 // Serialize `git` information for CLI reporters.
 export const prettifyGit = function (git) {
@@ -6,7 +6,7 @@ export const prettifyGit = function (git) {
     return
   }
 
-  return prettifyObject({
+  return prettifyValue({
     Git: {
       Commit: prettifyCommit(git),
       PR: prettifyPr(git),

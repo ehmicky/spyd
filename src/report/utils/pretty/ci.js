@@ -1,4 +1,4 @@
-import { prettifyObject } from '../prefix.js'
+import { prettifyValue } from '../prettify_value.js'
 
 // Serialize `ci` information for CLI reporters.
 export const prettifyCi = function (ci) {
@@ -6,7 +6,7 @@ export const prettifyCi = function (ci) {
     return
   }
 
-  return prettifyObject({
+  return prettifyValue({
     Ci: {
       Provider: ci.provider,
       Build: prettifyBuild(ci),

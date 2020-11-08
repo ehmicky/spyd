@@ -1,4 +1,4 @@
-import { prettifyObject } from '../prefix.js'
+import { prettifyValue } from '../prettify_value.js'
 
 // Add `benchmark.commandsPretty`, CLI-friendly serialization of
 // `benchmark.commands`
@@ -7,7 +7,7 @@ export const prettifyCommands = function (commands) {
     return
   }
 
-  return prettifyObject({ Runners: commands.map(getDescription) })
+  return prettifyValue({ Runners: commands.map(getDescription) })
 }
 
 const getDescription = function ({ description }) {
