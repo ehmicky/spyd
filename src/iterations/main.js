@@ -1,5 +1,5 @@
 import { validateLimits } from '../limit/validate.js'
-import { addNames } from '../normalize/name.js'
+import { addNames } from '../report/utils/name/main.js'
 import { loadRunners } from '../run/load.js'
 import { selectIterations } from '../select/main.js'
 

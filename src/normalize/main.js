@@ -1,9 +1,9 @@
 import sortOn from 'sort-on'
 
+import { addNames } from '../report/utils/name/main.js'
 import { joinSystems } from '../system/join.js'
 
 import { addCollections } from './collections.js'
-import { addNames } from './name.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.

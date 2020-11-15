@@ -1,8 +1,8 @@
 import { pointer } from 'figures'
 
-import { titleColor, separatorColor } from '../report/utils/colors.js'
+import { titleColor, separatorColor } from '../colors.js'
 
-import { padTitles } from './titles.js'
+import { padTitles } from './padding.js'
 
 // Add:
 //  - `iteration.task|input|command|systemTitlePadded`: like `iteration.*Title`
