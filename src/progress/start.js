@@ -1,8 +1,6 @@
 import { hide as hideCursor } from 'cli-cursor'
 import onExit from 'signal-exit'
 
-import { titleColor } from '../report/utils/colors.js'
-
 import { stopProgress } from './stop.js'
 import { getTimeLeft } from './time.js'
 import { startUpdate } from './update.js'
@@ -35,7 +33,7 @@ export const startProgress = async function (
 // Call each `reporter.start()`
 // Also call an initial `reporter.update()`
 const startReporters = async function ({ reporters, total, duration }) {
-  const name = titleColor('Start')
+  const row = ['Start']
   const timeLeft = getTimeLeft({
     index: 0,
     taskTimeLeft: duration,
@@ -45,13 +43,13 @@ const startReporters = async function ({ reporters, total, duration }) {
 
   await Promise.all(
     reporters.map((reporter) =>
-      startReporter({ reporter, name, timeLeft, total }),
+      startReporter({ row, reporter, timeLeft, total }),
     ),
   )
 }
 
-const startReporter = async function ({ reporter, name, timeLeft, total }) {
+const startReporter = async function ({ row, reporter, timeLeft, total }) {
   await reporter.start({ total })
 
-  await reporter.update({ name, percentage: 0, timeLeft, index: 0, total })
+  await reporter.update({ row, percentage: 0, timeLeft, index: 0, total })
 }

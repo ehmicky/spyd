@@ -3,6 +3,7 @@ import { cursorTo, clearLine } from 'readline'
 import { promisify } from 'util'
 
 import { noteColor, titleColor } from '../../report/utils/colors.js'
+import { SEPARATOR_SIGN } from '../../report/utils/separator.js'
 
 const pCursorTo = promisify(cursorTo)
 const pClearLine = promisify(clearLine)
@@ -11,13 +12,14 @@ const pClearLine = promisify(clearLine)
 // eslint-disable-next-line no-empty-function
 const start = function () {}
 
-const update = async function ({ name, percentage, timeLeft, index, total }) {
+const update = async function ({ row, percentage, timeLeft, index, total }) {
   const percentageStr = serializePercentage(percentage)
   const indexStr = String(index + 1).padStart(String(total).length)
+  const name = row.join(` ${SEPARATOR_SIGN} `)
   const counter = `${indexStr}/${total}`
   const content = ` ${timeLeft} ${noteColor(percentageStr)} ${titleColor(
-    counter,
-  )} ${name}`
+    `${counter} ${SEPARATOR_SIGN} ${name}`,
+  )}`
 
   await clearProgress()
 

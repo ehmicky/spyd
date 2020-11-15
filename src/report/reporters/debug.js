@@ -1,8 +1,14 @@
-import { separatorColor, errorColor, fieldColor } from '../utils/colors.js'
+import {
+  titleColor,
+  separatorColor,
+  errorColor,
+  fieldColor,
+} from '../utils/colors.js'
 import { getFooter } from '../utils/footer/main.js'
 import { joinSections } from '../utils/join.js'
 import { addNames } from '../utils/name/main.js'
 import { prettifyValue } from '../utils/prettify_value.js'
+import { SEPARATOR_SIGN } from '../utils/separator.js'
 import { prettifyStats } from '../utils/stats/main.js'
 
 // Debugging reporter only meant for development purpose
@@ -24,20 +30,17 @@ const report = function ({
   return joinSections([content, footer])
 }
 
-const serializeIteration = function ({ name, stats, slow }) {
+const serializeIteration = function ({ row, stats, slow }) {
+  const name = row.join(` ${SEPARATOR_SIGN} `)
   const statsStr = serializeStats(stats, slow)
-  return `${name}  ${SEPARATOR}  ${statsStr}`
+  return `${titleColor(`${name} ${SEPARATOR_SIGN}`)} ${statsStr}`
 }
 
 export const serializeStats = function (stats, slow) {
   return STATS.map(({ name, shortName }) =>
     serializeStat({ stats, name, shortName, slow }),
-  ).join(` ${SEPARATOR} `)
+  ).join(` ${separatorColor(SEPARATOR_SIGN)} `)
 }
-
-// Works on CP437 too
-const SEPARATOR_SIGN = '\u2502'
-const SEPARATOR = separatorColor(SEPARATOR_SIGN)
 
 const STATS = [
   { name: 'medianPretty', shortName: 'mdn' },

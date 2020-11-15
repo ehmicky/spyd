@@ -7,8 +7,8 @@ import { runChildren } from './run.js'
 // Start several child processes benchmarking the same task.
 // eslint-disable-next-line max-lines-per-function
 export const runProcesses = async function ({
-  name,
-  columnName,
+  row,
+  column,
   taskPath,
   taskId,
   taskTitle,
@@ -30,7 +30,7 @@ export const runProcesses = async function ({
   const runEnd = now() + duration
 
   // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(progressState, { name, index, runEnd })
+  Object.assign(progressState, { row, index, runEnd })
 
   const results = await runChildren({
     taskPath,
@@ -47,8 +47,8 @@ export const runProcesses = async function ({
   const stats = getStats(results)
 
   return {
-    name,
-    columnName,
+    row,
+    column,
     taskId,
     taskTitle,
     inputId,
