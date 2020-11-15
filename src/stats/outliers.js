@@ -1,8 +1,9 @@
-// Due to OS or engines background processes (such as garbage collection), the
-// execution becomes periodically much slower for very short amounts of time.
-// Those slow downs are due to the OS or engine and not the function being
-// measured, so we remove them.
-// We do it by removing the slowest 15%.
+// The slowest times are due to external factors:
+//   - OS or runtime background periodic processes (such as garbage collection)
+//   - The first runs of a specific task in a given process are slow because
+//     the runtimes did not optimize it yet
+//   - The first processes have not reached the final stabilized `repeat` and
+//     `maxDuration`, making them usually slower
 export const removeOutliers = function (times, count) {
   const outliersLimit = Math.ceil(times.length * (1 - OUTLIERS_THRESHOLD))
   const timesA = times.slice(0, outliersLimit)
@@ -10,4 +11,7 @@ export const removeOutliers = function (times, count) {
   return { times: timesA, count: countA }
 }
 
+// How many outliers to remove.
+// A lower value removes fewer outliers, which increases variance.
+// A higher value removes more times, which decreases accuracy.
 const OUTLIERS_THRESHOLD = 0.15
