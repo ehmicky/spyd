@@ -67,5 +67,4 @@ const computeStats = function ({ times, count, processes }) {
   }
 }
 
-// Choose to be detailed when displayed on a normal computer screen size
-const HISTOGRAM_SIZE = 1e3
+const HISTOGRAM_SIZE = 1e2
