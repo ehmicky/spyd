@@ -9,9 +9,9 @@ export const getStatsDecimals = function ({ iterations, name, type, scale }) {
 
   const measures = iterations
     .flatMap(({ stats }) => stats[name])
-    .filter(isNotEmpty)
+    .filter(isNotZero)
 
-  // When every measure is 0 or undefined, there are no decimals
+  // When every measure is 0, there are no decimals
   if (measures.length === 0) {
     return 0
   }
@@ -22,8 +22,8 @@ export const getStatsDecimals = function ({ iterations, name, type, scale }) {
   )
 }
 
-const isNotEmpty = function (measure) {
-  return measure !== 0 && measure !== undefined
+const isNotZero = function (measure) {
+  return measure !== 0
 }
 
 // Three siginificant digits
