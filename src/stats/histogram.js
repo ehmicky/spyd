@@ -32,7 +32,7 @@ const getBucket = function ({
   const high = low + bucketSize
   const bucketCount = getBucketCount({ index, array, bucketsNumber, high })
   const frequency = bucketCount / arrayLength
-  return { low, high, frequency }
+  return [low, high, frequency]
 }
 
 const getBucketCount = function ({ index, array, bucketsNumber, high }) {
