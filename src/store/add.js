@@ -5,12 +5,10 @@ import { addMergeId } from '../merge/options.js'
 import { mergeRawBenchmarks } from '../merge/raw.js'
 
 import { listStore } from './list.js'
-import { validateDataVersion } from './migrate/main.js'
 
 // Add a new benchmark
 export const addToStore = async function (rawBenchmark, opts) {
   const rawBenchmarks = await listStore(opts)
-  validateDataVersion(rawBenchmarks)
 
   const rawBenchmarkA = addMergeId(rawBenchmark, rawBenchmarks, opts)
   await save(rawBenchmarkA, opts)

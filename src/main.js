@@ -5,7 +5,6 @@ import { runBenchmark } from './run.js'
 import { addToStore } from './store/add.js'
 import { endStore } from './store/end.js'
 import { getFromStore } from './store/get.js'
-import { migrateStore } from './store/migrate/main.js'
 import { removeFromStore } from './store/remove.js'
 import { startStore } from './store/start.js'
 
@@ -57,16 +56,4 @@ export const debug = async function (opts) {
   const optsA = await getOpts('debug', opts)
 
   await debugBenchmark(optsA)
-}
-
-// Migrate previous benchmarks
-export const migrate = async function (opts) {
-  const optsA = await getOpts('migrate', opts)
-  const optsB = await startStore(optsA)
-
-  try {
-    await migrateStore(optsB)
-  } finally {
-    await endStore(optsB)
-  }
 }

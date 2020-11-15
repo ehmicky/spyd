@@ -20,10 +20,6 @@ const add = async function (benchmark, url) {
   await fetchUrl({ method: 'POST', url, body: benchmark, noResponse: true })
 }
 
-const replace = async function (benchmarks, url) {
-  await fetchUrl({ method: 'PUT', url, body: benchmarks, noResponse: true })
-}
-
 const remove = async function (ids, url) {
   await fetchUrl({
     method: 'DELETE',
@@ -33,4 +29,4 @@ const remove = async function (ids, url) {
   })
 }
 
-export const http = { start, end, list, add, replace, remove }
+export const http = { start, end, list, add, remove }

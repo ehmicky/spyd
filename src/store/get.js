@@ -4,12 +4,10 @@ import { selectBenchmarks } from '../select/main.js'
 
 import { find } from './delta/find.js'
 import { listStore } from './list.js'
-import { validateDataVersion } from './migrate/main.js'
 
 // Get a previous benchmark by `count` or `timestamp`
 export const getFromStore = async function (delta, opts) {
   const rawBenchmarks = await listStore(opts)
-  validateDataVersion(rawBenchmarks)
 
   const rawBenchmarksA = selectBenchmarks(rawBenchmarks, opts)
 

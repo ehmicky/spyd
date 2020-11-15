@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import { getCiInfo } from './ci/info.js'
-import { DATA_VERSION } from './store/migrate/main.js'
 import { getSystems } from './system/info.js'
 import { cleanObject } from './utils/clean.js'
 
@@ -10,13 +9,11 @@ export const addBenchmarkInfo = function (
   iterations,
   { opts, opts: { system, cwd } },
 ) {
-  const version = DATA_VERSION
   const id = uuidv4()
   const timestamp = new Date().toISOString()
   const { git, ci, job } = getCiInfo(cwd)
   const systems = getSystems({ opts, system, job })
   const rawBenchmark = {
-    version,
     id,
     timestamp,
     systems,
