@@ -1,6 +1,7 @@
 import timeResolution from 'time-resolution'
 
 import { getMedian } from '../../../../stats/methods.js'
+import { sortNumbers } from '../../../../utils/sort.js'
 
 import { benchmarkLoop } from './loop.js'
 
@@ -42,6 +43,7 @@ const getNowBias = async function (biasDuration) {
     duration: biasDuration,
     isAsync: false,
   })
+  sortNumbers(times)
   const nowBias = getMedian(times)
   return nowBias
 }
@@ -86,6 +88,7 @@ const getLoopBias = async function ({
     loopBias: 0,
     minTime,
   })
+  sortNumbers(times)
   const loopBias = getMedian(times)
   return loopBias
 }

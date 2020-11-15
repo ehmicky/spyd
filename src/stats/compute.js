@@ -2,6 +2,7 @@ import { sortNumbers } from '../utils/sort.js'
 
 import { getHistogram } from './histogram.js'
 import { getMedian, getMean, getDeviation } from './methods.js'
+import { removeOutliers } from './outliers.js'
 import { getPercentiles } from './percentiles.js'
 
 // Retrieve statistics from a raw set of benchmark results
@@ -36,21 +37,23 @@ const computeStats = function ({ times, count, processes }) {
   // Half of the statistics require the array to be sorted
   sortNumbers(times)
 
+  const { times: timesA, count: countA } = removeOutliers(times, count)
+
   // `count` is the number of times `main()` was called
   // `loops` is the number of benchmark loops
   // `repeat` is the average number of iterations inside those benchmark loops
-  const loops = times.length
-  const repeat = Math.round(count / loops)
+  const loops = timesA.length
+  const repeat = Math.round(countA / loops)
 
-  const [min] = times
-  const max = times[times.length - 1]
+  const [min] = timesA
+  const max = timesA[timesA.length - 1]
 
-  const median = getMedian(times)
-  const percentiles = getPercentiles(times)
-  const histogram = getHistogram(times, HISTOGRAM_SIZE)
+  const median = getMedian(timesA)
+  const percentiles = getPercentiles(timesA)
+  const histogram = getHistogram(timesA, HISTOGRAM_SIZE)
 
-  const mean = getMean(times)
-  const deviation = getDeviation(times, mean)
+  const mean = getMean(timesA)
+  const deviation = getDeviation(timesA, mean)
 
   return {
     median,
@@ -58,7 +61,7 @@ const computeStats = function ({ times, count, processes }) {
     min,
     max,
     deviation,
-    count,
+    count: countA,
     loops,
     repeat,
     processes,

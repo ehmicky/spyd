@@ -1,7 +1,6 @@
 import now from 'precise-now'
 
 import { measure } from './measure.js'
-import { normalizeResult } from './normalize.js'
 
 // Measure how long a task takes.
 // Run the benchmark for a specific amount of time.
@@ -32,7 +31,5 @@ export const benchmark = async function ({
     times.push(time)
   } while (now() < runEnd)
 
-  const timesA = normalizeResult(times)
-  const count = timesA.length
-  return { times: timesA, count }
+  return { times, count: times.length }
 }

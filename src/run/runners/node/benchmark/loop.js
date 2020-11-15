@@ -1,7 +1,6 @@
 import now from 'precise-now'
 
 import { measure } from './measure.js'
-import { normalizeResult } from './normalize.js'
 import { getRepeat } from './repeat.js'
 import { updateState } from './state.js'
 
@@ -39,8 +38,7 @@ export const benchmarkLoop = async function ({
     })
   } while (now() < runEnd)
 
-  const result = normalizeResult(state.times, state.count)
-  return result
+  return { times: state.times, count: state.count }
 }
 
 const benchmarkIteration = async function ({
