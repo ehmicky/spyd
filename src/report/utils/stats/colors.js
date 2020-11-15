@@ -1,5 +1,7 @@
 import { red, green } from 'chalk'
 
+import { getPercentageDirection } from './percentage.js'
+
 // Add colors on `diff`
 export const addColors = function (stat, statPretty, name) {
   const getColor = COLORS[name]
@@ -17,18 +19,12 @@ export const addColors = function (stat, statPretty, name) {
   return color(statPretty)
 }
 
-const getSignColor = function (stat) {
-  if (stat === 0) {
-    return
-  }
-
-  if (stat > 0) {
-    return red
-  }
-
-  return green
+const getRelPercentageColor = function (percentage) {
+  return DIRECTIONS[getPercentageDirection(percentage)]
 }
 
+const DIRECTIONS = { positive: red, negative: green }
+
 const COLORS = {
-  diff: getSignColor,
+  diff: getRelPercentageColor,
 }
