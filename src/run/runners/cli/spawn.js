@@ -1,4 +1,4 @@
-import { blue } from 'chalk'
+import { cyan } from 'chalk'
 import execa from 'execa'
 
 import { applyTemplate } from './template.js'
@@ -46,7 +46,7 @@ const spawnProcess = async function (
 
   if (debug) {
     // eslint-disable-next-line no-restricted-globals, no-console
-    console.log(blue.bold(`${header}: ${commandA}`))
+    console.log(cyan(`${header}: ${commandA}`))
   }
 
   const execaFunc = shell ? execa : execa.command

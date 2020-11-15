@@ -1,4 +1,4 @@
-import { blue } from 'chalk'
+import { cyan } from 'chalk'
 import isPlainObj from 'is-plain-obj'
 
 import { indentBlock } from './indent.js'
@@ -49,5 +49,5 @@ const isComplex = function (value) {
 }
 
 const getPrefix = function (name) {
-  return blue.bold(`${name}:`)
+  return cyan(`${name}:`)
 }
