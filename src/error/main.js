@@ -1,8 +1,8 @@
 // We distinguish between user, plugin and core errors
 // eslint-disable-next-line fp/no-class
 export class UserError extends Error {
-  constructor() {
-    super()
+  constructor(...args) {
+    super(...args)
     // eslint-disable-next-line fp/no-this, fp/no-mutation
     this.name = 'UserError'
   }
@@ -10,8 +10,8 @@ export class UserError extends Error {
 
 // eslint-disable-next-line fp/no-class
 export class PluginError extends Error {
-  constructor() {
-    super()
+  constructor(...args) {
+    super(...args)
     // eslint-disable-next-line fp/no-this, fp/no-mutation
     this.name = 'PluginError'
   }
@@ -19,8 +19,8 @@ export class PluginError extends Error {
 
 // eslint-disable-next-line fp/no-class
 export class CoreError extends Error {
-  constructor() {
-    super()
+  constructor(...args) {
+    super(...args)
     // eslint-disable-next-line fp/no-this, fp/no-mutation
     this.name = 'CoreError'
   }
