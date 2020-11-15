@@ -1,6 +1,5 @@
 import sortOn from 'sort-on'
 
-import { addNames } from '../report/utils/name/main.js'
 import { joinSystems } from '../system/join.js'
 
 import { addCollections } from './collections.js'
@@ -23,11 +22,8 @@ export const normalizeBenchmark = function ({
     systems: systemColls,
   } = addCollections(iterations)
   const systemsA = joinSystems(systems, systemColls)
-
-  const iterationsB = addNames(iterationsA)
-
-  const iterationsC = sortIterations(iterationsB)
-  const iterationsD = iterationsC.map(normalizeIterationStats)
+  const iterationsB = sortIterations(iterationsA)
+  const iterationsC = iterationsB.map(normalizeIterationStats)
 
   return {
     ...benchmark,
@@ -38,7 +34,7 @@ export const normalizeBenchmark = function ({
     systems: systemsA,
     git,
     ci,
-    iterations: iterationsD,
+    iterations: iterationsC,
   }
 }
 
