@@ -94,7 +94,7 @@ const executeChildren = async function ({
   do {
     const maxTimes = getMaxTimes(processes)
     // eslint-disable-next-line no-await-in-loop
-    const { times: childTimes, count: childCount } = await executeChild({
+    const { times: childTimes } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
       eventPayload: {
@@ -110,7 +110,7 @@ const executeChildren = async function ({
       type: 'iterationRun',
     })
     // eslint-disable-next-line fp/no-mutation
-    count += childCount
+    count += childTimes.length * repeat
     // eslint-disable-next-line fp/no-mutation
     processes += 1
     // eslint-disable-next-line fp/no-mutation

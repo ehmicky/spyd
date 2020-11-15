@@ -16,7 +16,7 @@ export const benchmark = async function ({
 }) {
   await initialMeasure(async, before)
 
-  const result = await benchmarkLoop({
+  const times = await benchmarkLoop({
     main,
     before,
     after,
@@ -27,7 +27,7 @@ export const benchmark = async function ({
     repeat,
     maxTimes,
   })
-  return result
+  return times
 }
 
 // For some reasons I ignore (likely engine optimizations), when `measure()`

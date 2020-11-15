@@ -41,7 +41,7 @@ export const benchmarkLoop = async function ({
     loop += 1
   } while (!shouldStopLoop(maxTimes, loop, runEnd))
 
-  return { times, count: times * repeat }
+  return times
 }
 
 const shouldStopLoop = function (maxTimes, loop, runEnd) {
