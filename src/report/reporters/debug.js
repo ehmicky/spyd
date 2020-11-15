@@ -1,3 +1,5 @@
+import stringWidth from 'string-width'
+
 import {
   titleColor,
   separatorColor,
@@ -6,8 +8,10 @@ import {
 } from '../utils/colors.js'
 import { getFooter } from '../utils/footer/main.js'
 import { joinSections } from '../utils/join.js'
+import { padStart } from '../utils/padding.js'
 import { prettifyValue } from '../utils/prettify_value.js'
 import { SEPARATOR_SIGN } from '../utils/separator.js'
+import { STAT_TITLES } from '../utils/stat_titles.js'
 import { prettifyStats } from '../utils/stats/main.js'
 import { addTitles } from '../utils/title/main.js'
 
@@ -23,47 +27,79 @@ const report = function ({
 }) {
   const iterationsA = prettifyStats(iterations)
   const iterationsB = addTitles(iterationsA)
-  const content = iterationsB.map(serializeIteration).join('\n')
+
+  const table = getTable(iterationsB)
   const footer = prettifyValue(
     getFooter({ commands, systems, mergeId, timestamp, git, ci }),
   )
-  return joinSections([content, footer])
+  return joinSections([table, footer])
 }
 
-const serializeIteration = function ({ row, stats, slow }) {
-  const name = row.join(` ${SEPARATOR_SIGN} `)
-  const statsStr = serializeStats(stats, slow)
-  return `${titleColor(`${name} ${SEPARATOR_SIGN}`)} ${statsStr}`
+const getTable = function (iterations) {
+  const header = getHeader(iterations[0])
+  const rows = iterations.map(getRow)
+  return [header, ...rows].join('\n')
 }
 
-export const serializeStats = function (stats, slow) {
-  return STATS.map(({ name, shortName }) =>
-    serializeStat({ stats, name, shortName, slow }),
-  ).join(` ${separatorColor(SEPARATOR_SIGN)} `)
+const getHeader = function ({ row, stats }) {
+  const rowName = getRowName(row)
+  const nameSpace = ''.padStart(rowName.length)
+  const headerCells = STATS.map((name) => getHeaderCell({ stats, name })).join(
+    CELL_SEPARATOR,
+  )
+  return `${titleColor(`${nameSpace} ${SEPARATOR_SIGN}`)} ${headerCells}`
 }
+
+const getHeaderCell = function ({ stats, name }) {
+  const cell = getCell({ stats, name, slow: false })
+  const headerName = STAT_TITLES[name].padStart(stringWidth(cell))
+  return `${fieldColor(headerName)}`
+}
+
+const getRow = function ({ row, stats, slow }) {
+  const rowName = getRowName(row)
+  const statsStr = getCells(stats, slow)
+  return `${titleColor(`${rowName} ${SEPARATOR_SIGN}`)} ${statsStr}`
+}
+
+const getRowName = function (row) {
+  return row.join(SEPARATOR)
+}
+
+export const getCells = function (stats, slow) {
+  return STATS.map((name) => getCell({ stats, name, slow })).join(
+    CELL_SEPARATOR,
+  )
+}
+
+const getCell = function ({ stats, name, slow }) {
+  const stat = stats[`${name}Pretty`]
+  const padSize = Math.max(
+    COLUMN_MIN_SIZE,
+    STAT_TITLES[name].length,
+    stringWidth(stat),
+  )
+
+  const statA = padStart(stat, padSize)
+  return name === 'limit' && slow ? errorColor(statA) : statA
+}
+
+const COLUMN_MIN_SIZE = 7
+const SEPARATOR = ` ${SEPARATOR_SIGN} `
+const CELL_SEPARATOR = separatorColor(SEPARATOR)
 
 const STATS = [
-  { name: 'medianPretty', shortName: 'mdn' },
-  { name: 'meanPretty', shortName: 'mea' },
-  { name: 'minPretty', shortName: 'min' },
-  { name: 'maxPretty', shortName: 'max' },
-  { name: 'diffPretty', shortName: 'dif' },
-  { name: 'limitPretty', shortName: 'lmt' },
-  { name: 'deviationPretty', shortName: 'dev' },
-  { name: 'countPretty', shortName: 'cnt' },
-  { name: 'loopsPretty', shortName: 'lps' },
-  { name: 'repeatPretty', shortName: 'rpt' },
-  { name: 'processesPretty', shortName: 'prc' },
+  'median',
+  'mean',
+  'min',
+  'max',
+  'diff',
+  'limit',
+  'deviation',
+  'count',
+  'loops',
+  'repeat',
+  'processes',
 ]
-
-const serializeStat = function ({ stats, name, shortName, slow }) {
-  const stat = stats[name]
-
-  if (name === 'limitPretty' && slow) {
-    return errorColor(`${shortName} ${stat}`)
-  }
-
-  return `${fieldColor(shortName)} ${stat}`
-}
 
 export const debug = { report }
