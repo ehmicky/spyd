@@ -9,6 +9,7 @@ import { updateState } from './state.js'
 // when the `duration` or `MAX_LOOPS` has been reached.
 // We also adjust or increment some `state` variables as we take more
 // measurements.
+// We ensure `times` contains at least one measurement.
 export const benchmarkLoop = async function ({
   main,
   before,
