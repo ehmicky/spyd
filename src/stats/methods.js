@@ -1,11 +1,3 @@
-import { sortNumbers } from '../utils/sort.js'
-
-// Like `getMedian()` but sort first
-export const sortAndGetMedian = function (array) {
-  sortNumbers(array)
-  return getMedian(array)
-}
-
 // Retrieve median of an array of floats.
 // Array must be sorted and not empty.
 export const getMedian = function (array) {

@@ -1,4 +1,5 @@
-import { sortAndGetMedian } from '../stats/methods.js'
+import { getMedian } from '../stats/methods.js'
+import { sortNumbers } from '../utils/sort.js'
 
 // Estimate how many times to repeat the benchmarking loop.
 // This is performed continuously based on the previous benchmarked times
@@ -11,7 +12,8 @@ export const adjustRepeat = function ({
   minTime,
   loopBias = 0,
 }) {
-  const median = sortAndGetMedian(childTimes)
+  sortNumbers(childTimes)
+  const median = getMedian(childTimes)
 
   // When calculating `loopBias`, `median` might initially be `0`
   if (loopBias === 0 && median === 0) {

@@ -1,6 +1,7 @@
 import timeResolution from 'time-resolution'
 
-import { sortAndGetMedian } from '../stats/methods.js'
+import { getMedian } from '../stats/methods.js'
+import { sortNumbers } from '../utils/sort.js'
 
 import { executeChild } from './execute.js'
 
@@ -72,7 +73,8 @@ const getBias = async function ({
     cwd,
     type: 'iterationRun',
   })
-  const loopBias = sortAndGetMedian(times)
+  sortNumbers(times)
+  const loopBias = getMedian(times)
   return loopBias
 }
 
