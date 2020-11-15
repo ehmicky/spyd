@@ -1,6 +1,6 @@
 // The `duration` option is also used for timeout. This ensures:
 //  - child processes do not run forever
-//  - users set the correct `duration` depending on the task's duration
+//  - the user set a `duration` option too low
 // The `debug` action does not use any timeout
 export const getTimeout = function (duration) {
   if (duration === undefined) {

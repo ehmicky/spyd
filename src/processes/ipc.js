@@ -39,7 +39,7 @@ export const getResult = async function ({
 // Process might fail before writing error result
 const handleResultError = function (error, failed) {
   if (failed) {
-    return {}
+    return
   }
 
   throw new CoreError(`Could not read benchmark results: ${error.stack}`)
