@@ -40,7 +40,9 @@ export const serializeStats = function (stats, slow) {
 }
 
 const FASTEST_MARK = titleColor('*')
-const SEPARATOR = separatorColor('|')
+// Works on CP437 too
+const SEPARATOR_SIGN = '\u2502'
+const SEPARATOR = separatorColor(SEPARATOR_SIGN)
 
 const STATS = [
   { name: 'medianPretty', shortName: 'mdn' },
