@@ -1,9 +1,8 @@
-import { sortNumbers } from '../utils/sort.js'
-
 import { getHistogram } from './histogram.js'
 import { getMedian, getMean, getDeviation } from './methods.js'
 import { removeOutliers } from './outliers.js'
 import { getPercentiles } from './percentiles.js'
+import { sortNumbers } from './sort.js'
 
 // Retrieve statistics from a raw set of benchmark results
 // Perform the statistical logic.

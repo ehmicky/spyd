@@ -1,7 +1,7 @@
 import timeResolution from 'time-resolution'
 
 import { getMedian } from '../stats/methods.js'
-import { sortNumbers } from '../utils/sort.js'
+import { sortNumbers } from '../stats/sort.js'
 
 import { executeChild } from './execute.js'
 
