@@ -29,7 +29,8 @@ const addPadding = function (iteration, paddings) {
 
 const padProp = function (title, padding, propName) {
   const titleA = title.padEnd(padding)
-  return [propName, titleA]
+  return [`${propName}${PADDED_PREFIX}`, titleA]
 }
 
 const PADDED_PROPS = ['taskTitle', 'inputTitle', 'commandTitle', 'systemTitle']
+const PADDED_PREFIX = 'Padded'

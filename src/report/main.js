@@ -1,6 +1,6 @@
 import { checkLimits } from '../limit/error.js'
-import { normalizeBenchmark } from '../print/main.js'
-import { addPrevious } from '../print/previous.js'
+import { normalizeBenchmark } from '../normalize/main.js'
+import { addPrevious } from '../normalize/previous.js'
 
 import { callReportFunc } from './call.js'
 import { getContents } from './content.js'

@@ -5,10 +5,12 @@ import { titleColor, separatorColor } from '../report/utils/colors.js'
 import { padTitles } from './titles.js'
 
 // Add:
+//  - `iteration.task|input|command|systemTitlePadded`: like `iteration.*Title`
+//     but padded so all iterations vertically align
 //  - `iteration.name`: combines task, input, command and system.
 //     For one-dimensional reporters.
 //  - `iteration.columnName`: combines input, command and system.
-//     For two-dimensional reporters. `taskTitle` is the row name.
+//     For two-dimensional reporters. `taskTitlePadded` is the row name.
 // We need to do this three times:
 //  - before benchmarks start because `iteration.name` is used by progress
 //    reporters.
@@ -18,42 +20,37 @@ import { padTitles } from './titles.js'
 //    names have been added
 export const addNames = function (iterations) {
   const iterationsA = padTitles(iterations)
-
-  const props = NAME_PROPS.filter((propName) =>
-    shouldShowProp(propName, iterationsA),
-  )
-  const propsA = [COLUMN_PROP, ...props]
-  return iterationsA.map((iteration) => addName(iteration, propsA))
+  const iterationsB = addNameProps(iterationsA, 'name', NAME_PROPS)
+  const iterationsC = addNameProps(iterationsB, 'columnName', COLUMN_PROPS)
+  return iterationsC
 }
 
-const NAME_PROPS = ['inputTitle', 'commandTitle', 'systemTitle']
+const COLUMN_PROPS = [
+  'inputTitlePadded',
+  'commandTitlePadded',
+  'systemTitlePadded',
+]
+const NAME_PROPS = ['taskTitlePadded', ...COLUMN_PROPS]
 
-// If all commands are the same, do not include them.
-// Tasks/inputs/systems should always be shown though, unless always empty.
+const addNameProps = function (iterations, name, propNames) {
+  const propNamesA = propNames.filter((propName) =>
+    shouldShowProp(propName, iterations),
+  )
+  return iterations.map((iteration) => addNameProp(iteration, name, propNamesA))
+}
+
+// Inputs/systems are not shown is always empty.
 const shouldShowProp = function (propName, iterations) {
-  const props = iterations.map((iteration) => iteration[propName])
-  const uniqueProps = [...new Set(props)]
-
-  return (
-    uniqueProps.length !== 1 ||
-    (propName !== 'commandTitle' && uniqueProps[0].trim() !== '')
-  )
+  return iterations.some((iteration) => iteration[propName] !== '')
 }
 
-const addName = function (iteration, props) {
-  const name = getName(iteration, props)
-  const columnName = getName(iteration, props.filter(isColumnProp))
-  return { ...iteration, name, columnName }
+const addNameProp = function (iteration, name, propNames) {
+  const value = getName(iteration, propNames)
+  return { ...iteration, [name]: value }
 }
 
-const isColumnProp = function (propName) {
-  return propName !== COLUMN_PROP
-}
-
-const getName = function (iteration, props) {
-  return props
+const getName = function (iteration, propNames) {
+  return propNames
     .map((propName) => titleColor(iteration[propName]))
     .join(`${separatorColor(titleColor(pointer))}  `)
 }
-
-const COLUMN_PROP = 'taskTitle'
