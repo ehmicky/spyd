@@ -7,14 +7,14 @@ export const spawnChild = async function ({
   commandSpawn: [file, ...args],
   commandSpawnOptions,
   eventPayload,
-  duration,
+  timeoutNs,
   cwd,
   type,
 }) {
   const eventPayloadStr = JSON.stringify(eventPayload)
   const spawnOptions = getSpawnOptions({
     commandSpawnOptions,
-    duration,
+    timeoutNs,
     cwd,
     type,
   })
@@ -29,12 +29,12 @@ export const spawnChild = async function ({
 // Our spawn options have priority over commands spawn options.
 const getSpawnOptions = function ({
   commandSpawnOptions,
-  duration,
+  timeoutNs,
   cwd,
   type,
 }) {
   const stdio = STDIO[type]
-  const timeout = getTimeout(duration)
+  const timeout = getTimeout(timeoutNs)
   return {
     ...commandSpawnOptions,
     stdio,

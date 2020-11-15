@@ -7,7 +7,7 @@ export const forwardChildError = function ({
   message,
   failed,
   timedOut,
-  duration,
+  timeoutNs,
   taskPath,
   result,
   taskId,
@@ -20,7 +20,7 @@ export const forwardChildError = function ({
   const messageA = getMessage({
     message,
     timedOut,
-    duration,
+    timeoutNs,
     taskPath,
     result,
     taskId,
@@ -32,16 +32,16 @@ export const forwardChildError = function ({
 const getMessage = function ({
   message,
   timedOut,
-  duration,
+  timeoutNs,
   taskPath,
-  result: { error: errorResult },
+  result: { error: errorResult } = {},
   taskId,
   inputId,
 }) {
   const taskPrefix = getTaskPrefix({ taskPath, taskId, inputId })
 
   if (timedOut) {
-    const timeoutError = getTimeoutError(duration)
+    const timeoutError = getTimeoutError(timeoutNs)
     return `${taskPrefix} ${timeoutError}`
   }
 

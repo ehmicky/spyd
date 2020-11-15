@@ -21,7 +21,7 @@ export const getCommandIterations = async function ({
     commandSpawn,
     commandSpawnOptions,
     eventPayload,
-    duration,
+    timeoutNs: duration,
     cwd,
     type,
   })

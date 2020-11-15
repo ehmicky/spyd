@@ -76,7 +76,7 @@ const executeChildren = async function ({
       commandSpawn,
       commandSpawnOptions,
       eventPayload: { ...eventPayload, duration: processDuration },
-      duration,
+      timeoutNs: duration,
       cwd,
       taskId,
       inputId,
