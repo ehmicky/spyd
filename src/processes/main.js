@@ -32,7 +32,7 @@ export const runProcesses = async function ({
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(progressState, { row, index, runEnd })
 
-  const { times, count, processes } = await runChildren({
+  const { results, count } = await runChildren({
     taskPath,
     taskId,
     inputId,
@@ -44,7 +44,7 @@ export const runProcesses = async function ({
     cwd,
   })
 
-  const stats = getStats({ times, count, processes })
+  const stats = getStats({ results, count })
 
   return {
     row,

@@ -1,6 +1,10 @@
+/* eslint-disable max-lines */
 import { promisify } from 'util'
 
 import now from 'precise-now'
+
+import { getMedian } from '../stats/methods.js'
+import { sortNumbers } from '../stats/sort.js'
 
 import { getBiases } from './bias.js'
 import { executeChild } from './execute.js'
@@ -49,7 +53,7 @@ export const runChildren = async function ({
     nowBias,
     loopBias,
   }
-  const { times, count, processes } = await executeChildren({
+  const { results, count } = await executeChildren({
     taskId,
     inputId,
     commandSpawn,
@@ -64,7 +68,7 @@ export const runChildren = async function ({
 
   await waitForTimeLeft(runEnd)
 
-  return { times, count, processes }
+  return { results, count }
 }
 
 // eslint-disable-next-line max-statements
@@ -80,18 +84,20 @@ const executeChildren = async function ({
   loopBias,
   minTime,
 }) {
-  const times = []
+  const results = []
+  // eslint-disable-next-line fp/no-let
+  let timesLength = 0
   // eslint-disable-next-line fp/no-let
   let count = 0
   // eslint-disable-next-line fp/no-let
-  let processes = 0
-  // eslint-disable-next-line fp/no-let
   let processDuration = DEFAULT_PROCESS_DURATION
+  const processMedians = []
   // eslint-disable-next-line fp/no-let
   let repeat = 1
 
   // eslint-disable-next-line fp/no-loops
   do {
+    const processes = results.length
     const maxTimes = getMaxTimes(processes)
     // eslint-disable-next-line no-await-in-loop
     const { times: childTimes } = await executeChild({
@@ -109,20 +115,28 @@ const executeChildren = async function ({
       inputId,
       type: 'iterationRun',
     })
-    // We directly mutate `times` because it's much faster since it's big
+    // eslint-disable-next-line fp/no-mutation
+    timesLength += childTimes.length
     // eslint-disable-next-line fp/no-mutating-methods
-    times.push(...childTimes)
+    results.push(childTimes)
     // eslint-disable-next-line fp/no-mutation
     count += childTimes.length * repeat
-    // eslint-disable-next-line fp/no-mutation
-    processes += 1
+
+    sortNumbers(childTimes)
+    const processMedian = getMedian(childTimes)
+    // eslint-disable-next-line fp/no-mutating-methods
+    processMedians.push(processMedian)
+    // TODO: use more efficient incremental sorting instead
+    sortNumbers(processMedians)
+    const processesMedian = getMedian(processMedians)
+
     // eslint-disable-next-line fp/no-mutation
     processDuration = adjustDuration(processDuration, childTimes, maxTimes)
     // eslint-disable-next-line fp/no-mutation
-    repeat = adjustRepeat({ repeat, childTimes, minTime, loopBias })
-  } while (now() + processDuration < runEnd && times.length < MAX_RESULTS)
+    repeat = adjustRepeat({ repeat, processesMedian, minTime, loopBias })
+  } while (now() + processDuration < runEnd && timesLength < MAX_RESULTS)
 
-  return { times, count, processes }
+  return { results, count }
 }
 
 // Run increasingly longer children in order to progressively adjust repeat
@@ -188,3 +202,4 @@ const waitForTimeLeft = async function (runEnd) {
 }
 
 const NANOSECS_TO_MSECS = 1e6
+/* eslint-enable max-lines */

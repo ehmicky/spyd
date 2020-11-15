@@ -12,7 +12,8 @@ import { sortNumbers } from './sort.js'
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
 // eslint-disable-next-line max-statements
-export const getStats = function ({ times, count, processes }) {
+export const getStats = function ({ results, count }) {
+  const times = aggregateTimes(results)
   // Half of the statistics require the array to be sorted
   sortNumbers(times)
 
@@ -23,6 +24,7 @@ export const getStats = function ({ times, count, processes }) {
   // `repeat` is the average number of iterations inside those benchmark loops
   const loops = timesA.length
   const repeat = Math.round(countA / loops)
+  const processes = results.length
 
   const [min] = timesA
   const max = timesA[timesA.length - 1]
@@ -47,6 +49,16 @@ export const getStats = function ({ times, count, processes }) {
     histogram,
     percentiles,
   }
+}
+
+// We do not use `[].concat(...results)` because it creates a stack overflow if
+// `results.length` is too large (~1e5 on my machine)
+const aggregateTimes = function (results) {
+  return results.flatMap(identity)
+}
+
+const identity = function (value) {
+  return value
 }
 
 const HISTOGRAM_SIZE = 1e2
