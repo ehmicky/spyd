@@ -1,4 +1,4 @@
-import { dim } from 'chalk'
+import { noteColor } from '../colors.js'
 
 import { getCi } from './ci.js'
 import { getGit } from './git.js'
@@ -43,6 +43,6 @@ const getTimestamp = function (timestamp) {
   return new Date(timestamp).toLocaleString()
 }
 
-const LINK_FOOTER = dim(
+const LINK_FOOTER = noteColor(
   'Benchmarked with spyd (https://github.com/ehmicky/spyd)',
 )

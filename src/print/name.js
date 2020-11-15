@@ -1,5 +1,6 @@
-import { cyan } from 'chalk'
 import { pointer } from 'figures'
+
+import { titleColor, separatorColor } from '../report/utils/colors.js'
 
 import { padTitles } from './titles.js'
 
@@ -51,8 +52,8 @@ const isColumnProp = function (propName) {
 
 const getName = function (iteration, props) {
   return props
-    .map((propName) => cyan.bold(iteration[propName]))
-    .join(`${cyan.dim(pointer)}  `)
+    .map((propName) => titleColor(iteration[propName]))
+    .join(`${separatorColor(titleColor(pointer))}  `)
 }
 
 const COLUMN_PROP = 'taskTitle'

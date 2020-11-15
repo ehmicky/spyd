@@ -1,5 +1,6 @@
-import { cyan } from 'chalk'
 import execa from 'execa'
+
+import { subtitleColor } from '../../../report/utils/colors.js'
 
 import { applyTemplate } from './template.js'
 
@@ -46,7 +47,7 @@ const spawnProcess = async function (
 
   if (debug) {
     // eslint-disable-next-line no-restricted-globals, no-console
-    console.log(cyan(`${header}: ${commandA}`))
+    console.log(subtitleColor(`${header}: ${commandA}`))
   }
 
   const execaFunc = shell ? execa : execa.command

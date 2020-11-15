@@ -1,6 +1,6 @@
-import { cyan } from 'chalk'
 import isPlainObj from 'is-plain-obj'
 
+import { subtitleColor } from './colors.js'
 import { indentBlock } from './indent.js'
 import { joinSections, joinSubSections } from './join.js'
 
@@ -49,5 +49,5 @@ const isComplex = function (value) {
 }
 
 const getPrefix = function (name) {
-  return cyan(`${name}:`)
+  return subtitleColor(`${name}:`)
 }

@@ -1,5 +1,9 @@
-import { cyan, dim, red } from 'chalk'
-
+import {
+  titleColor,
+  separatorColor,
+  errorColor,
+  fieldColor,
+} from '../utils/colors.js'
 import { getFooter } from '../utils/footer/main.js'
 import { joinSections } from '../utils/join.js'
 import { prettifyValue } from '../utils/prettify_value.js'
@@ -24,16 +28,19 @@ const report = function ({
 }
 
 const serializeIteration = function ({ name, stats, fastest, slow }) {
-  const fastestMark = fastest ? cyan.bold('*') : ' '
+  const fastestMark = fastest ? FASTEST_MARK : ' '
   const statsStr = serializeStats(stats, slow)
-  return `${fastestMark} ${name}  ${cyan.dim('|')}  ${statsStr}`
+  return `${fastestMark} ${name}  ${SEPARATOR}  ${statsStr}`
 }
 
 export const serializeStats = function (stats, slow) {
   return STATS.map(({ name, shortName }) =>
     serializeStat({ stats, name, shortName, slow }),
-  ).join(dim(' | '))
+  ).join(` ${SEPARATOR} `)
 }
+
+const FASTEST_MARK = titleColor('*')
+const SEPARATOR = separatorColor('|')
 
 const STATS = [
   { name: 'medianPretty', shortName: 'mdn' },
@@ -53,10 +60,10 @@ const serializeStat = function ({ stats, name, shortName, slow }) {
   const stat = stats[name]
 
   if (name === 'limitPretty' && slow) {
-    return red.inverse.bold(`${shortName} ${stat}`)
+    return errorColor(`${shortName} ${stat}`)
   }
 
-  return `${dim.italic(shortName)} ${stat}`
+  return `${fieldColor(shortName)} ${stat}`
 }
 
 export const debug = { report }

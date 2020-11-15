@@ -1,6 +1,7 @@
-import { cyan } from 'chalk'
 import { hide as hideCursor } from 'cli-cursor'
 import onExit from 'signal-exit'
+
+import { titleColor } from '../report/utils/colors.js'
 
 import { stopProgress } from './stop.js'
 import { getTimeLeft } from './time.js'
@@ -34,7 +35,7 @@ export const startProgress = async function (
 // Call each `reporter.start()`
 // Also call an initial `reporter.update()`
 const startReporters = async function ({ reporters, total, duration }) {
-  const name = cyan.bold('Start')
+  const name = titleColor('Start')
   const timeLeft = getTimeLeft({
     index: 0,
     taskTimeLeft: duration,

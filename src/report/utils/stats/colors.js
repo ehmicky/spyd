@@ -1,10 +1,10 @@
-import { red, cyan } from 'chalk'
+import { badColor, goodColor } from '../colors.js'
 
 import { getPercentageDirection } from './percentage.js'
 
 // Add colors on `diff`
 export const addColors = function (stat, statPretty, name) {
-  const getColor = COLORS[name]
+  const getColor = STAT_COLORS[name]
 
   if (getColor === undefined) {
     return statPretty
@@ -23,8 +23,8 @@ const getRelPercentageColor = function (percentage) {
   return DIRECTIONS[getPercentageDirection(percentage)]
 }
 
-const DIRECTIONS = { positive: red, negative: cyan }
+const DIRECTIONS = { positive: badColor, negative: goodColor }
 
-const COLORS = {
+const STAT_COLORS = {
   diff: getRelPercentageColor,
 }
