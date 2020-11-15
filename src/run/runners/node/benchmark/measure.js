@@ -1,5 +1,3 @@
-import now from 'precise-now'
-
 import { getDuration } from './duration.js'
 
 // Main measuring code.
@@ -9,20 +7,19 @@ export const measure = async function ({
   before,
   after,
   nowBias,
-  loopBias,
+  loopBias = 0,
   repeat,
   async,
 }) {
-  // When calculating `nowBias`
-  if (main === undefined) {
-    return -now() + now()
-  }
-
   const beforeArgs = await performBefore(before, repeat)
 
   const duration = await getDuration({ main, repeat, async, beforeArgs })
 
   await performAfter(after, repeat, beforeArgs)
+
+  if (nowBias === undefined) {
+    return duration
+  }
 
   // The final time might be negative if the task is as fast or faster than the
   // iteration code itself. In this case, we return `0`.

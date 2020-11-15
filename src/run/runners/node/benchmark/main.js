@@ -1,4 +1,3 @@
-import { getBiases } from './bias.js'
 import { benchmarkLoop } from './loop.js'
 import { measure } from './measure.js'
 
@@ -10,20 +9,17 @@ export const benchmark = async function ({
   after,
   duration,
   async,
+  nowBias,
+  loopBias,
+  minTime,
 }) {
   await initialMeasure(async, before)
-
-  const { nowBias, loopBias, minTime, mainDuration } = await getBiases({
-    duration,
-    async,
-    before,
-  })
 
   const result = await benchmarkLoop({
     main,
     before,
     after,
-    duration: mainDuration,
+    duration,
     async,
     nowBias,
     loopBias,

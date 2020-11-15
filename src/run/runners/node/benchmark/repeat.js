@@ -8,13 +8,13 @@ import { sortNumbers } from '../../../../utils/sort.js'
 // JavaScript engines do this after specific number of iterations / thresholds.
 // When this happens, `repeat` needs to be computed again.
 export const getRepeat = function ({
-  main,
   state: { times, repeat, iterIndex },
-  minTime,
+  nowBias,
   loopBias,
+  minTime,
 }) {
   // When calculating `nowBias`
-  if (main === undefined) {
+  if (nowBias === undefined) {
     return 1
   }
 
@@ -28,7 +28,7 @@ export const getRepeat = function ({
 }
 
 // `repeat` is adjusted so that `measure()` time === `minTime`
-const computeRepeat = function ({ repeat, times, minTime, loopBias }) {
+const computeRepeat = function ({ repeat, times, minTime, loopBias = 0 }) {
   sortNumbers(times)
   const median = getMedian(times)
 

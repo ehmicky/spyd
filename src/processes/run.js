@@ -2,6 +2,7 @@ import { promisify } from 'util'
 
 import now from 'precise-now'
 
+import { getBiases } from './bias.js'
 import { executeChild } from './execute.js'
 
 const pSetTimeout = promisify(setTimeout)
@@ -30,12 +31,23 @@ export const runChildren = async function ({
   runEnd,
   cwd,
 }) {
+  const { nowBias, loopBias, minTime } = await getBiases({
+    commandSpawn,
+    commandSpawnOptions,
+    commandOpt,
+    duration,
+    cwd,
+  })
+
   const eventPayload = {
     type: 'run',
     taskPath,
     opts: commandOpt,
     taskId,
     inputId,
+    nowBias,
+    loopBias,
+    minTime,
   }
   const results = await executeChildren({
     taskId,

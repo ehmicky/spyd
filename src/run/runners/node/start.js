@@ -16,7 +16,16 @@ const getIteration = function ({ taskId, taskTitle, inputTitle, inputId }) {
 }
 
 // Run benchmarks
-const run = async function ({ taskPath, opts, taskId, inputId, duration }) {
+const run = async function ({
+  taskPath,
+  opts,
+  taskId,
+  inputId,
+  duration,
+  nowBias,
+  loopBias,
+  minTime,
+}) {
   const { main, before, after, async } = await getTask({
     taskPath,
     opts,
@@ -29,6 +38,9 @@ const run = async function ({ taskPath, opts, taskId, inputId, duration }) {
     after,
     duration,
     async,
+    nowBias,
+    loopBias,
+    minTime,
   })
   return { times, count }
 }
@@ -45,6 +57,10 @@ const debug = async function ({ taskPath, opts, taskId, inputId }) {
 }
 
 const getTask = async function ({ taskPath, opts, taskId, inputId }) {
+  if (taskPath === undefined) {
+    return { main: noop, async: false }
+  }
+
   const iterations = await loadBenchmarkFile(taskPath, opts)
 
   const { main, before, after, async } = iterations.find(
@@ -52,5 +68,8 @@ const getTask = async function ({ taskPath, opts, taskId, inputId }) {
   )
   return { main, before, after, async }
 }
+
+// eslint-disable-next-line no-empty-function
+const noop = function () {}
 
 runMethod({ load, run, debug })

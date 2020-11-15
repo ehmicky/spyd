@@ -51,6 +51,10 @@ const getMessage = function ({
 
 // Add task/input context to child process errors
 const getTaskPrefix = function ({ taskPath, taskId, inputId }) {
+  if (taskPath === undefined) {
+    return ''
+  }
+
   if (taskId === undefined) {
     return `In '${taskPath}' `
   }
