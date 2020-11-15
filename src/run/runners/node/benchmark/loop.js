@@ -1,8 +1,6 @@
 import now from 'precise-now'
 
 import { measure } from './measure.js'
-import { getRepeat } from './repeat.js'
-import { updateState } from './state.js'
 
 // We perform benchmarking iteratively in order to stop benchmarking exactly
 // when the `duration` has been reached.
@@ -17,52 +15,35 @@ export const benchmarkLoop = async function ({
   async,
   nowBias,
   loopBias,
-  minTime,
+  repeat,
+  maxTimes,
 }) {
   const runEnd = now() + duration
+  const times = []
   // eslint-disable-next-line fp/no-let
-  let state = { times: [], repeat: 1, count: 0, iterIndex: 0 }
+  let loop = 0
 
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line no-await-in-loop, fp/no-mutation
-    state = await benchmarkIteration({
+    // eslint-disable-next-line no-await-in-loop
+    const time = await measure({
       main,
       before,
       after,
       nowBias,
       loopBias,
-      minTime,
-      state,
+      repeat,
       async,
     })
-  } while (now() < runEnd)
+    // eslint-disable-next-line fp/no-mutating-methods
+    times.push(time)
+    // eslint-disable-next-line fp/no-mutation
+    loop += 1
+  } while (!shouldStopLoop(maxTimes, loop, runEnd))
 
-  return { times: state.times, count: state.count }
+  return { times, count: times * repeat }
 }
 
-const benchmarkIteration = async function ({
-  main,
-  before,
-  after,
-  nowBias,
-  loopBias,
-  minTime,
-  state,
-  async,
-}) {
-  const repeat = getRepeat({ state, nowBias, loopBias, minTime })
-
-  const time = await measure({
-    main,
-    before,
-    after,
-    nowBias,
-    loopBias,
-    repeat,
-    async,
-  })
-
-  const stateA = updateState(state, time, repeat)
-  return stateA
+const shouldStopLoop = function (maxTimes, loop, runEnd) {
+  return (maxTimes !== undefined && loop >= maxTimes) || now() >= runEnd
 }

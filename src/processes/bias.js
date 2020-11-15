@@ -26,6 +26,7 @@ export const getBiases = async function ({
     duration,
     biasDuration,
     cwd,
+    repeat: 1,
   })
   const minTime = getMinTime(nowBias)
   const loopBias = await getBias({
@@ -36,7 +37,7 @@ export const getBiases = async function ({
     biasDuration,
     cwd,
     nowBias,
-    minTime,
+    repeat: 600,
   })
   return { nowBias, loopBias, minTime }
 }
@@ -54,14 +55,14 @@ const getBias = async function ({
   biasDuration,
   cwd,
   nowBias,
-  minTime,
+  repeat,
 }) {
   const eventPayload = {
     type: 'run',
     opts: commandOpt,
     duration: biasDuration,
     nowBias,
-    minTime,
+    repeat,
   }
   const { times } = await executeChild({
     commandSpawn,

@@ -4,6 +4,7 @@ import now from 'precise-now'
 
 import { getBiases } from './bias.js'
 import { executeChild } from './execute.js'
+import { adjustRepeat } from './repeat.js'
 
 const pSetTimeout = promisify(setTimeout)
 
@@ -47,9 +48,8 @@ export const runChildren = async function ({
     inputId,
     nowBias,
     loopBias,
-    minTime,
   }
-  const results = await executeChildren({
+  const { times, count, processes } = await executeChildren({
     taskId,
     inputId,
     commandSpawn,
@@ -58,13 +58,16 @@ export const runChildren = async function ({
     runEnd,
     cwd,
     eventPayload,
+    loopBias,
+    minTime,
   })
 
   await waitForTimeLeft(runEnd)
 
-  return results
+  return { times, count, processes }
 }
 
+// eslint-disable-next-line max-statements
 const executeChildren = async function ({
   taskId,
   inputId,
@@ -74,36 +77,67 @@ const executeChildren = async function ({
   runEnd,
   cwd,
   eventPayload,
+  loopBias,
+  minTime,
 }) {
-  const results = []
+  const times = []
   // eslint-disable-next-line fp/no-let
-  let loops = 0
+  let count = 0
+  // eslint-disable-next-line fp/no-let
+  let processes = 0
   // eslint-disable-next-line fp/no-let
   let processDuration = DEFAULT_PROCESS_DURATION
+  // eslint-disable-next-line fp/no-let
+  let repeat = 1
 
   // eslint-disable-next-line fp/no-loops
   do {
+    const maxTimes = getMaxTimes(processes)
     // eslint-disable-next-line no-await-in-loop
-    const { times, count } = await executeChild({
+    const { times: childTimes, count: childCount } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
-      eventPayload: { ...eventPayload, duration: processDuration },
+      eventPayload: {
+        ...eventPayload,
+        duration: processDuration,
+        maxTimes,
+        repeat,
+      },
       timeoutNs: duration,
       cwd,
       taskId,
       inputId,
       type: 'iterationRun',
     })
+    // eslint-disable-next-line fp/no-mutation
+    count += childCount
+    // eslint-disable-next-line fp/no-mutation
+    processes += 1
+    // eslint-disable-next-line fp/no-mutation
+    processDuration = adjustDuration(processDuration, childTimes, maxTimes)
+    // eslint-disable-next-line fp/no-mutation
+    repeat = adjustRepeat({ repeat, childTimes, times, minTime, loopBias })
+    // We directly mutate `times` because it's much faster since it's big
     // eslint-disable-next-line fp/no-mutating-methods
-    results.push({ times, count })
-    // eslint-disable-next-line fp/no-mutation
-    loops += times.length
-    // eslint-disable-next-line fp/no-mutation
-    processDuration = adjustDuration(processDuration, times)
-  } while (now() + processDuration < runEnd && loops < MAX_RESULTS)
+    times.push(...childTimes)
+  } while (now() + processDuration < runEnd && times.length < MAX_RESULTS)
 
-  return results
+  return { times, count, processes }
 }
+
+// Run increasingly longer children in order to progressively adjust repeat
+const getMaxTimes = function (processes) {
+  if (processes >= MAX_TIMES_LIMIT) {
+    return
+  }
+
+  return MAX_TIMES_RATE ** processes
+}
+
+const MAX_TIMES_RATE = 2
+// Stop increasing once `maxTimes` cannot be represented as a safe integer
+// anymore
+const MAX_TIMES_LIMIT = Math.log(Number.MAX_SAFE_INTEGER) / Math.log(2)
 
 // 500ms. Chosen:
 //   - so that --duration=1 does not timeout
@@ -118,8 +152,8 @@ const MAX_RESULTS = 1e8
 // and many processes. To find this equilibrium with slower tasks, we adjust
 // `PROCESS_DURATION` when the number of results is too low. We keep increasing
 // it until it reaches a target number.
-const adjustDuration = function (processDuration, times) {
-  if (times.length >= MIN_LOOPS) {
+const adjustDuration = function (processDuration, childTimes, maxTimes) {
+  if (childTimes.length === maxTimes || childTimes.length >= MIN_LOOPS) {
     return processDuration
   }
 

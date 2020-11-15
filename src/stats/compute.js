@@ -6,26 +6,6 @@ import { removeOutliers } from './outliers.js'
 import { getPercentiles } from './percentiles.js'
 
 // Retrieve statistics from a raw set of benchmark results
-export const getStats = function (results) {
-  const times = results.flatMap(getTimes)
-  const count = results.reduce(reduceCount, 0)
-  // Number of child processes that provided with benchmarks results
-  const processes = results.length
-
-  const stats = computeStats({ times, count, processes })
-  return stats
-}
-
-// Merge all processes measurements
-const getTimes = function ({ times }) {
-  return times
-}
-
-// Retrieve total `count`
-const reduceCount = function (totalCount, { count }) {
-  return totalCount + count
-}
-
 // Perform the statistical logic.
 // Note that when `repeat > 1`, the distribution of the measured function will
 // be modified by the looping process and transformed to a bell shape, even if
@@ -33,7 +13,7 @@ const reduceCount = function (totalCount, { count }) {
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
 // eslint-disable-next-line max-statements
-const computeStats = function ({ times, count, processes }) {
+export const getStats = function ({ times, count, processes }) {
   // Half of the statistics require the array to be sorted
   sortNumbers(times)
 

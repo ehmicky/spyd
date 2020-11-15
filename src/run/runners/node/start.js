@@ -24,7 +24,8 @@ const run = async function ({
   duration,
   nowBias,
   loopBias,
-  minTime,
+  repeat,
+  maxTimes,
 }) {
   const { main, before, after, async } = await getTask({
     taskPath,
@@ -40,7 +41,8 @@ const run = async function ({
     async,
     nowBias,
     loopBias,
-    minTime,
+    repeat,
+    maxTimes,
   })
   return { times, count }
 }

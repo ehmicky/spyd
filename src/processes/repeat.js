@@ -1,0 +1,51 @@
+import { sortAndGetMedian } from '../stats/methods.js'
+
+// Estimate how many times to repeat the benchmarking loop.
+// This is performed continuously based on the previous benchmarked times
+// because fast functions get optimized by runtimes after they are run several
+// times in a row ("hot paths").
+// When this happens, `repeat` needs to be computed again.
+export const adjustRepeat = function ({
+  repeat,
+  childTimes,
+  times,
+  minTime,
+  loopBias,
+}) {
+  const newRepeat = getNewRepeat({ repeat, childTimes, minTime, loopBias })
+  resetTimes({ times, repeat, newRepeat })
+  return newRepeat
+}
+
+const getNewRepeat = function ({ repeat, childTimes, minTime, loopBias = 0 }) {
+  const median = sortAndGetMedian(childTimes)
+
+  // When calculating `loopBias`, `median` might initially be `0`
+  if (loopBias === 0 && median === 0) {
+    return repeat * 2
+  }
+
+  return Math.ceil(minTime / (median + loopBias))
+}
+
+// Update some state on each iteration
+const resetTimes = function ({ times, repeat, newRepeat }) {
+  if (isSameRepeat(repeat, newRepeat)) {
+    return
+  }
+
+  // eslint-disable-next-line fp/no-mutating-methods
+  times.splice(0)
+}
+
+// When `repeat` changes too much, we discard previously computed times.
+// This is because mixing times computed with different `repeat` is not
+// statistically significant. Different `repeat` give different times due to
+// bias correction and JavaScript engine loop optimizations.
+// However `repeat` always eventually stabilizes.
+const isSameRepeat = function (repeat, newRepeat) {
+  return Math.abs(newRepeat - repeat) / repeat <= MIN_REPEAT_DIFF
+}
+
+// Minimum percentage of change to trigger a state reset
+const MIN_REPEAT_DIFF = 0.1

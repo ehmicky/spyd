@@ -11,7 +11,8 @@ export const benchmark = async function ({
   async,
   nowBias,
   loopBias,
-  minTime,
+  repeat,
+  maxTimes,
 }) {
   await initialMeasure(async, before)
 
@@ -23,7 +24,8 @@ export const benchmark = async function ({
     async,
     nowBias,
     loopBias,
-    minTime,
+    repeat,
+    maxTimes,
   })
   return result
 }
