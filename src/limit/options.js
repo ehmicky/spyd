@@ -6,26 +6,25 @@ export const normalizeLimits = function (limits) {
 }
 
 const normalizeLimit = function (limit) {
-  const parts = limit.split(SEPARATOR)
-  const ids = parts.slice(0, -1).filter(Boolean)
-  const percentage = getPercentage(parts[parts.length - 1])
+  const [rawPercentage, ...ids] = limit.trim().split(SEPARATOR)
+  const percentage = getPercentage(rawPercentage)
   return { ids, percentage }
 }
 
-const SEPARATOR = ':'
+const SEPARATOR = /\s+/gu
 
-const getPercentage = function (originalPercentage) {
-  const percentageStr = originalPercentage.replace(PERCENTAGE_REGEXP, '')
+const getPercentage = function (rawPercentage) {
+  const percentageStr = rawPercentage.replace(PERCENTAGE_REGEXP, '')
 
-  if (originalPercentage === percentageStr) {
-    throw new UserError(`'limit' must end with %: ${originalPercentage}`)
+  if (rawPercentage === percentageStr) {
+    throw new UserError(`'limit' percentage must end with %: ${rawPercentage}`)
   }
 
   const percentageNum = Number(percentageStr)
 
   if (!Number.isInteger(percentageNum) || percentageNum < 0) {
     throw new UserError(
-      `'limit' must be a positive integer: ${originalPercentage}`,
+      `'limit' percentage must be a positive integer: ${rawPercentage}`,
     )
   }
 
