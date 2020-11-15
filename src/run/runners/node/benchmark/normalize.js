@@ -20,4 +20,4 @@ const removeOutliers = function (times, count) {
   return { times: timesA, count: countA }
 }
 
-export const OUTLIERS_THRESHOLD = 0.15
+const OUTLIERS_THRESHOLD = 0.15
