@@ -1,5 +1,5 @@
 // Retrieve histogram of an array of floats.
-// Array must be sorted.
+// Array must be sorted and not empty.
 export const getHistogram = function (array, bucketsNumber) {
   const [min] = array
   const max = array[array.length - 1]

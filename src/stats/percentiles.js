@@ -1,6 +1,5 @@
 // Retrieve percentiles of an array of floats.
-// Array must be sorted.
-// Percentiles are `undefined` when array is empty.
+// Array must be sorted and not empty.
 export const getPercentiles = function (array) {
   // eslint-disable-next-line no-magic-numbers
   return getQuantiles(array, 1e2)
