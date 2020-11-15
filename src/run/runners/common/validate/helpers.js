@@ -32,6 +32,12 @@ export const validateFunction = function (prop) {
   }
 }
 
+export const validateBoolean = function (prop) {
+  if (typeof prop !== 'boolean') {
+    return 'must be a boolean'
+  }
+}
+
 export const validateString = function (prop) {
   if (!isValidString(prop)) {
     return 'must be a non-empty string'

@@ -1,6 +1,7 @@
 import {
   validateBenchmarkFile,
   validateString,
+  validateBoolean,
   validateFunction,
   validateStringArray,
   validateTasks,
@@ -19,6 +20,7 @@ const TASK_VALIDATORS = {
   before: validateFunction,
   after: validateFunction,
   inputs: validateStringArray,
+  async: validateBoolean,
 }
 
 const INPUT_VALIDATORS = {

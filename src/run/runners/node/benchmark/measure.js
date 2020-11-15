@@ -11,7 +11,7 @@ export const measure = async function ({
   nowBias,
   loopBias,
   repeat,
-  isAsync,
+  async,
 }) {
   // When calculating `nowBias`
   if (main === undefined) {
@@ -20,7 +20,7 @@ export const measure = async function ({
 
   const beforeArgs = await performBefore(before, repeat)
 
-  const duration = await getDuration({ main, repeat, isAsync, beforeArgs })
+  const duration = await getDuration({ main, repeat, async, beforeArgs })
 
   await performAfter(after, repeat, beforeArgs)
 

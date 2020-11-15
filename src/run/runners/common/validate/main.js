@@ -2,6 +2,7 @@ export { validateBenchmarkFile } from './file.js'
 export {
   validateString,
   validateStringArray,
+  validateBoolean,
   validateFunction,
   validatePrimitive,
 } from './helpers.js'

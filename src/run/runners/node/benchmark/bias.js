@@ -14,7 +14,7 @@ import { benchmarkLoop } from './loop.js'
 // On top of this, the more the benchmarking code itself is run, the faster it
 // is optimized. Calculating biases first performs a cold start so that the
 // benchmarking code is already "hot" when we start the actual measurements.
-export const getBiases = async function ({ duration, isAsync, before }) {
+export const getBiases = async function ({ duration, async, before }) {
   const biasDuration = duration * BIAS_DURATION_RATIO
   const mainDuration = duration - biasDuration * 2
 
@@ -23,7 +23,7 @@ export const getBiases = async function ({ duration, isAsync, before }) {
 
   const loopBias = await getLoopBias({
     biasDuration,
-    isAsync,
+    async,
     before,
     nowBias,
     minTime,
@@ -41,7 +41,7 @@ const BIAS_DURATION_RATIO = 0.1
 const getNowBias = async function (biasDuration) {
   const { times } = await benchmarkLoop({
     duration: biasDuration,
-    isAsync: false,
+    async: false,
   })
   sortNumbers(times)
   const nowBias = getMedian(times)
@@ -67,13 +67,13 @@ const MIN_PRECISION = 1e2
 // The task loop must be at least `MIN_NOW_BIAS` slower than `nowBias`
 const MIN_NOW_BIAS = 1e2
 
-// We need to make sure to pass `isAsync` since the loop bias is much slower
+// We need to make sure to pass `async` since the loop bias is much slower
 // when async.
 // Same thing goes for `before()` since passing an argument (even `undefined`)
 // to `main()` makes it slightly slower. We use a dummy `before()`.
 const getLoopBias = async function ({
   biasDuration,
-  isAsync,
+  async,
   before,
   nowBias,
   minTime,
@@ -83,7 +83,7 @@ const getLoopBias = async function ({
     main: noop,
     before: beforeFunc,
     duration: biasDuration,
-    isAsync,
+    async,
     nowBias,
     loopBias: 0,
     minTime,

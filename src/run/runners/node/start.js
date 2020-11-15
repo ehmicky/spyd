@@ -17,13 +17,19 @@ const getIteration = function ({ taskId, taskTitle, inputTitle, inputId }) {
 
 // Run benchmarks
 const run = async function ({ taskPath, opts, taskId, inputId, duration }) {
-  const { main, before, after } = await getTask({
+  const { main, before, after, async } = await getTask({
     taskPath,
     opts,
     taskId,
     inputId,
   })
-  const { times, count } = await benchmark({ main, before, after, duration })
+  const { times, count } = await benchmark({
+    main,
+    before,
+    after,
+    duration,
+    async,
+  })
   return { times, count }
 }
 
@@ -41,10 +47,10 @@ const debug = async function ({ taskPath, opts, taskId, inputId }) {
 const getTask = async function ({ taskPath, opts, taskId, inputId }) {
   const iterations = await loadBenchmarkFile(taskPath, opts)
 
-  const { main, before, after } = iterations.find(
+  const { main, before, after, async } = iterations.find(
     (iteration) => iteration.taskId === taskId && iteration.inputId === inputId,
   )
-  return { main, before, after }
+  return { main, before, after, async }
 }
 
 runMethod({ load, run, debug })

@@ -6,8 +6,8 @@ import now from 'precise-now'
 // For the same reasons, we have different functions depending on whether
 // `beforeArgs` is used because passing an argument to `main()` is slightly
 // slower.
-export const getDuration = function ({ main, repeat, isAsync, beforeArgs }) {
-  if (isAsync) {
+export const getDuration = function ({ main, repeat, async, beforeArgs }) {
+  if (async) {
     return getDurationAsync({ main, repeat, beforeArgs })
   }
 
