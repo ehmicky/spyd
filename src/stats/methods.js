@@ -11,7 +11,12 @@ export const getMedian = function (array) {
 // Retrieve arithmetic mean of an array of floats (cannot be NaN nor Infinite).
 // Array must not be empty.
 export const getMean = function (array) {
-  return array.reduce(addNumbers, 0) / array.length
+  return getSum(array) / array.length
+}
+
+// Retrieve sum of array of floats.
+export const getSum = function (array) {
+  return array.reduce(addNumbers, 0)
 }
 
 const addNumbers = function (numA, numB) {

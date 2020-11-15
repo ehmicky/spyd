@@ -3,7 +3,7 @@ import { promisify } from 'util'
 
 import now from 'precise-now'
 
-import { getMedian } from '../stats/methods.js'
+import { getSum, getMedian } from '../stats/methods.js'
 import { sortNumbers } from '../stats/sort.js'
 
 import { getBiases } from './bias.js'
@@ -71,7 +71,7 @@ export const runChildren = async function ({
   return { results, count }
 }
 
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, max-lines-per-function
 const executeChildren = async function ({
   taskId,
   inputId,
@@ -92,6 +92,7 @@ const executeChildren = async function ({
   // eslint-disable-next-line fp/no-let
   let maxDuration = DEFAULT_MAX_DURATION
   const processMedians = []
+  const benchmarkCosts = []
   // eslint-disable-next-line fp/no-let
   let repeat = 1
 
@@ -99,6 +100,8 @@ const executeChildren = async function ({
   do {
     const processes = results.length
     const maxTimes = getMaxTimes(processes)
+
+    const childStart = now()
     // eslint-disable-next-line no-await-in-loop
     const { times: childTimes } = await executeChild({
       commandSpawn,
@@ -110,6 +113,15 @@ const executeChildren = async function ({
       inputId,
       type: 'iterationRun',
     })
+    const childDuration = now() - childStart
+    const medianBenchmarkCost = addBenchmarkCost({
+      childDuration,
+      childTimes,
+      repeat,
+      benchmarkCosts,
+    })
+    const benchmarkCostMin = getBenchmarkCostMin(medianBenchmarkCost)
+
     // eslint-disable-next-line fp/no-mutation
     timesLength += childTimes.length
     // eslint-disable-next-line fp/no-mutating-methods
@@ -121,7 +133,7 @@ const executeChildren = async function ({
     const processesMedian = addProcessMedian(childTimes, processMedians)
 
     // eslint-disable-next-line fp/no-mutation
-    maxDuration = adjustDuration(maxDuration, childTimes, maxTimes)
+    maxDuration = benchmarkCostMin
     // eslint-disable-next-line fp/no-mutation
     repeat = adjustRepeat({ repeat, processesMedian, minTime, loopBias })
   } while (now() + maxDuration < runEnd && timesLength < MAX_RESULTS)
@@ -174,28 +186,51 @@ const DEFAULT_MAX_DURATION = 5e8
 // Chosen not to overflow the memory of a typical machine
 const MAX_RESULTS = 1e8
 
-// If a task is slow enough, each process will run only few loops due to the
-// fixed `maxDuration`. To reduce variance, we want to run both many loops
-// and many processes. To find this equilibrium with slower tasks, we adjust
-// `maxDuration` when the number of results is too low. We keep increasing
-// it until it reaches a target number.
-const adjustDuration = function (maxDuration, childTimes, maxTimes) {
-  if (childTimes.length === maxTimes || childTimes.length >= MIN_LOOPS) {
-    return maxDuration
+// Computes the median time to spawn processes/runners (as opposed to running
+// the benchmarked task)
+const addBenchmarkCost = function ({
+  childDuration,
+  childTimes,
+  repeat,
+  benchmarkCosts,
+}) {
+  const measuringTaskDuration = getSum(childTimes) * repeat
+  const benchmarkCost = childDuration - measuringTaskDuration
+  // eslint-disable-next-line fp/no-mutating-methods
+  benchmarkCosts.push(benchmarkCost)
+
+  if (benchmarkCosts.length > MAX_BENCHMARK_COSTS) {
+    // eslint-disable-next-line fp/no-mutating-methods
+    benchmarkCosts.shift()
   }
 
-  return maxDuration * MAX_DURATION_GROWTH
+  const benchmarkCostsCopy = [...benchmarkCosts]
+  sortNumbers(benchmarkCostsCopy)
+  const medianBenchmarkCost = getMedian(benchmarkCostsCopy)
+  return medianBenchmarkCost
 }
 
-// The minimum number of loops a process should run.
-// A higher number ensures enough loops are run, which reduces variance.
-// However, it also increases the difference of stats between runs with
-// different `duration` options, since their final `maxDuration` might
-// be different. It also makes live reporting less responsive.
-const MIN_LOOPS = 1e1
-// How fast to grow `maxDuration` until `MIN_LOOPS` is reached.
-// A slow rate is prefered since it will reduce the amount of `waitForTimeLeft`.
-const MAX_DURATION_GROWTH = 2
+// We limit the size of the array storing the last benchmarkCost because
+// sorting big arrays is too slow.
+// In benchmarks with high `duration`:
+//   - a higher number increases the time to sort benchmarkCost
+//   - a lower number makes `maxDuration` more likely to vary
+const MAX_BENCHMARK_COSTS = 1e3
+
+// Ensure that processes are run long enough (by using `maxDuration`) so that
+// they get enough time running the benchmarked task, as opposed to spawning
+// processes/runners
+const getBenchmarkCostMin = function (medianBenchmarkCost) {
+  return medianBenchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
+}
+
+// How much time should be spent spawning processes/runners as opposed to
+// running the benchmarked task.
+// A lower number spawns fewer processes, reducing the precision provided by
+// using several processes.
+// A higher number runs the benchmark task fewer times, reducing the precision
+// provided by running it many times.
+const BENCHMARK_COST_RATIO = 0.1
 
 // We stop running processes when the next process is most likely to go beyond
 // the target `duration`. We do not try to run it with a lower duration since
