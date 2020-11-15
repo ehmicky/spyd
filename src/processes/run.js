@@ -109,6 +109,9 @@ const executeChildren = async function ({
       inputId,
       type: 'iterationRun',
     })
+    // We directly mutate `times` because it's much faster since it's big
+    // eslint-disable-next-line fp/no-mutating-methods
+    times.push(...childTimes)
     // eslint-disable-next-line fp/no-mutation
     count += childTimes.length * repeat
     // eslint-disable-next-line fp/no-mutation
@@ -116,10 +119,7 @@ const executeChildren = async function ({
     // eslint-disable-next-line fp/no-mutation
     processDuration = adjustDuration(processDuration, childTimes, maxTimes)
     // eslint-disable-next-line fp/no-mutation
-    repeat = adjustRepeat({ repeat, childTimes, times, minTime, loopBias })
-    // We directly mutate `times` because it's much faster since it's big
-    // eslint-disable-next-line fp/no-mutating-methods
-    times.push(...childTimes)
+    repeat = adjustRepeat({ repeat, childTimes, minTime, loopBias })
   } while (now() + processDuration < runEnd && times.length < MAX_RESULTS)
 
   return { times, count, processes }
