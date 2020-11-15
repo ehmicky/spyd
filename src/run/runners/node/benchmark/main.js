@@ -7,11 +7,11 @@ export const benchmark = async function ({
   main,
   before,
   after,
-  duration,
   async,
   nowBias,
   loopBias,
   repeat,
+  maxDuration,
   maxTimes,
 }) {
   await initialMeasure(async, before)
@@ -20,11 +20,11 @@ export const benchmark = async function ({
     main,
     before,
     after,
-    duration,
     async,
     nowBias,
     loopBias,
     repeat,
+    maxDuration,
     maxTimes,
   })
   return times

@@ -11,14 +11,14 @@ export const benchmarkLoop = async function ({
   main,
   before,
   after,
-  duration,
   async,
   nowBias,
   loopBias,
   repeat,
+  maxDuration,
   maxTimes,
 }) {
-  const runEnd = now() + duration
+  const runEnd = now() + maxDuration
   const times = []
   // eslint-disable-next-line fp/no-let
   let loop = 0

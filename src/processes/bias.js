@@ -19,13 +19,13 @@ export const getBiases = async function ({
   duration,
   cwd,
 }) {
-  const biasDuration = duration * DURATION_RATIO
+  const maxDuration = duration * DURATION_RATIO
   const nowBias = await getBias({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
     duration,
-    biasDuration,
+    maxDuration,
     cwd,
     repeat: 1,
   })
@@ -35,7 +35,7 @@ export const getBiases = async function ({
     commandSpawnOptions,
     commandOpt,
     duration,
-    biasDuration,
+    maxDuration,
     cwd,
     nowBias,
     repeat: 600,
@@ -53,7 +53,7 @@ const getBias = async function ({
   commandSpawnOptions,
   commandOpt,
   duration,
-  biasDuration,
+  maxDuration,
   cwd,
   nowBias,
   repeat,
@@ -61,7 +61,7 @@ const getBias = async function ({
   const eventPayload = {
     type: 'run',
     opts: commandOpt,
-    duration: biasDuration,
+    maxDuration,
     nowBias,
     repeat,
   }

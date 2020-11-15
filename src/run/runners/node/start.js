@@ -21,10 +21,10 @@ const run = async function ({
   opts,
   taskId,
   inputId,
-  duration,
   nowBias,
   loopBias,
   repeat,
+  maxDuration,
   maxTimes,
 }) {
   const { main, before, after, async } = await getTask({
@@ -37,11 +37,11 @@ const run = async function ({
     main,
     before,
     after,
-    duration,
     async,
     nowBias,
     loopBias,
     repeat,
+    maxDuration,
     maxTimes,
   })
   return { times }

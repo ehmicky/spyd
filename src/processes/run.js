@@ -16,10 +16,10 @@ const pSetTimeout = promisify(setTimeout)
 //  - we reach the max `duration`
 //  - the `results` size is over `MAX_RESULTS`.
 // At least one child must be executed.
-// Each child process is aimed at running the same duration (`PROCESS_DURATION`)
+// Each child process is aimed at running the same duration (`maxDuration`)
 //  - this ensures stats are not modified when the `duration` option changes
 //  - this also provides with a more frequent reporter live updating
-//  - we adjust `PROCESS_DURATION` to run the task at least several times
+//  - we adjust `maxDuration` to run the task at least several times
 // We launch child processes serially:
 //  - otherwise they would slow down each other and have higher variance
 //  - multi-core CPUs are designed to run in parallel but in practice they do
@@ -90,7 +90,7 @@ const executeChildren = async function ({
   // eslint-disable-next-line fp/no-let
   let count = 0
   // eslint-disable-next-line fp/no-let
-  let processDuration = DEFAULT_PROCESS_DURATION
+  let maxDuration = DEFAULT_MAX_DURATION
   const processMedians = []
   // eslint-disable-next-line fp/no-let
   let repeat = 1
@@ -103,12 +103,7 @@ const executeChildren = async function ({
     const { times: childTimes } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
-      eventPayload: {
-        ...eventPayload,
-        duration: processDuration,
-        maxTimes,
-        repeat,
-      },
+      eventPayload: { ...eventPayload, maxDuration, maxTimes, repeat },
       timeoutNs: duration,
       cwd,
       taskId,
@@ -126,10 +121,10 @@ const executeChildren = async function ({
     const processesMedian = addProcessMedian(childTimes, processMedians)
 
     // eslint-disable-next-line fp/no-mutation
-    processDuration = adjustDuration(processDuration, childTimes, maxTimes)
+    maxDuration = adjustDuration(maxDuration, childTimes, maxTimes)
     // eslint-disable-next-line fp/no-mutation
     repeat = adjustRepeat({ repeat, processesMedian, minTime, loopBias })
-  } while (now() + processDuration < runEnd && timesLength < MAX_RESULTS)
+  } while (now() + maxDuration < runEnd && timesLength < MAX_RESULTS)
 
   return { results, count }
 }
@@ -175,32 +170,32 @@ const MAX_TIMES_LIMIT = Math.log(Number.MAX_SAFE_INTEGER) / Math.log(2)
 //   - so that --duration=1 does not timeout
 //   - to provide with frequent report live updating
 //   - to not be too close to the time to spawn a process (~1ms on my machine)
-const DEFAULT_PROCESS_DURATION = 5e8
+const DEFAULT_MAX_DURATION = 5e8
 // Chosen not to overflow the memory of a typical machine
 const MAX_RESULTS = 1e8
 
 // If a task is slow enough, each process will run only few loops due to the
-// fixed `PROCESS_DURATION`. To reduce variance, we want to run both many loops
+// fixed `maxDuration`. To reduce variance, we want to run both many loops
 // and many processes. To find this equilibrium with slower tasks, we adjust
-// `PROCESS_DURATION` when the number of results is too low. We keep increasing
+// `maxDuration` when the number of results is too low. We keep increasing
 // it until it reaches a target number.
-const adjustDuration = function (processDuration, childTimes, maxTimes) {
+const adjustDuration = function (maxDuration, childTimes, maxTimes) {
   if (childTimes.length === maxTimes || childTimes.length >= MIN_LOOPS) {
-    return processDuration
+    return maxDuration
   }
 
-  return processDuration * PROCESS_DURATION_GROWTH
+  return maxDuration * MAX_DURATION_GROWTH
 }
 
 // The minimum number of loops a process should run.
 // A higher number ensures enough loops are run, which reduces variance.
 // However, it also increases the difference of stats between runs with
-// different `duration` options, since their final `PROCESS_DURATION` might
+// different `duration` options, since their final `maxDuration` might
 // be different. It also makes live reporting less responsive.
 const MIN_LOOPS = 1e1
-// How fast to grow `PROCESS_DURATION` until `MIN_LOOPS` is reached.
+// How fast to grow `maxDuration` until `MIN_LOOPS` is reached.
 // A slow rate is prefered since it will reduce the amount of `waitForTimeLeft`.
-const PROCESS_DURATION_GROWTH = 2
+const MAX_DURATION_GROWTH = 2
 
 // We stop running processes when the next process is most likely to go beyond
 // the target `duration`. We do not try to run it with a lower duration since
