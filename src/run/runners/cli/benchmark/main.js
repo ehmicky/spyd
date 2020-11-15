@@ -33,6 +33,6 @@ export const benchmark = async function ({
   } while (now() < runEnd)
 
   const timesA = normalizeResult(times)
-  const count = times.length
+  const count = timesA.length
   return { times: timesA, count }
 }
