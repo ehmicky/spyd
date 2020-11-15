@@ -123,12 +123,7 @@ const executeChildren = async function ({
     count += childTimes.length * repeat
 
     sortNumbers(childTimes)
-    const processMedian = getMedian(childTimes)
-    // eslint-disable-next-line fp/no-mutating-methods
-    processMedians.push(processMedian)
-    // TODO: use more efficient incremental sorting instead
-    sortNumbers(processMedians)
-    const processesMedian = getMedian(processMedians)
+    const processesMedian = addProcessMedian(childTimes, processMedians)
 
     // eslint-disable-next-line fp/no-mutation
     processDuration = adjustDuration(processDuration, childTimes, maxTimes)
@@ -138,6 +133,29 @@ const executeChildren = async function ({
 
   return { results, count }
 }
+
+const addProcessMedian = function (childTimes, processMedians) {
+  const processMedian = getMedian(childTimes)
+  // eslint-disable-next-line fp/no-mutating-methods
+  processMedians.push(processMedian)
+
+  if (processMedians.length > MAX_PROCESS_MEDIANS) {
+    // eslint-disable-next-line fp/no-mutating-methods
+    processMedians.shift()
+  }
+
+  const processMediansCopy = [...processMedians]
+  sortNumbers(processMediansCopy)
+  const processesMedian = getMedian(processMediansCopy)
+  return processesMedian
+}
+
+// We limit the size of the array storing the last processMedians because
+// sorting big arrays is too slow.
+// In benchmarks with high `duration`:
+//   - a higher number increases the time to sort `processMedians`
+//   - a lower number makes `repeat` more likely to vary
+const MAX_PROCESS_MEDIANS = 1e3
 
 // Run increasingly longer children in order to progressively adjust repeat
 const getMaxTimes = function (processes) {
