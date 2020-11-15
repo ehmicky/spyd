@@ -1,9 +1,4 @@
-import {
-  titleColor,
-  separatorColor,
-  errorColor,
-  fieldColor,
-} from '../utils/colors.js'
+import { separatorColor, errorColor, fieldColor } from '../utils/colors.js'
 import { getFooter } from '../utils/footer/main.js'
 import { joinSections } from '../utils/join.js'
 import { prettifyValue } from '../utils/prettify_value.js'
@@ -27,10 +22,9 @@ const report = function ({
   return joinSections([content, footer])
 }
 
-const serializeIteration = function ({ name, stats, fastest, slow }) {
-  const fastestMark = fastest ? FASTEST_MARK : ' '
+const serializeIteration = function ({ name, stats, slow }) {
   const statsStr = serializeStats(stats, slow)
-  return `${fastestMark} ${name}  ${SEPARATOR}  ${statsStr}`
+  return `${name}  ${SEPARATOR}  ${statsStr}`
 }
 
 export const serializeStats = function (stats, slow) {
@@ -39,7 +33,6 @@ export const serializeStats = function (stats, slow) {
   ).join(` ${SEPARATOR} `)
 }
 
-const FASTEST_MARK = titleColor('*')
 // Works on CP437 too
 const SEPARATOR_SIGN = '\u2502'
 const SEPARATOR = separatorColor(SEPARATOR_SIGN)

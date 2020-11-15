@@ -1,8 +1,9 @@
+import sortOn from 'sort-on'
+
 import { joinSystems } from '../system/join.js'
 
 import { addCollections } from './collections.js'
 import { addNames } from './name.js'
-import { addSpeedInfo } from './speed.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
@@ -25,7 +26,7 @@ export const addPrintedInfo = function ({
 
   const iterationsB = addNames(iterationsA)
 
-  const iterationsC = addSpeedInfo(iterationsB)
+  const iterationsC = sortIterations(iterationsB)
   const iterationsD = iterationsC.map(normalizeIterationStats)
 
   return {
@@ -40,6 +41,15 @@ export const addPrintedInfo = function ({
     iterations: iterationsD,
   }
 }
+
+// Sort iterations so the fastest tasks will be first, then the fastest
+// iterations within each task (regardless of column)
+const sortIterations = function (iterations) {
+  return sortOn(iterations, [ROW_RANK, ...COLUMN_RANKS])
+}
+
+const ROW_RANK = 'taskRank'
+const COLUMN_RANKS = ['inputRank', 'commandRank', 'systemRank']
 
 // Some stats are removed when `--save` is used. When showing saved benchmarks,
 // those will be `undefined`. We default them to `[]`.
