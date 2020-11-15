@@ -18,11 +18,15 @@ export const printContent = async function ({
   }
 
   if (output === '-') {
-    await promisify(stdout.write.bind(stdout))(addPadding(interactiveContent))
-    return
+    return printToTerminal(interactiveContent)
   }
 
   await writeFileContent(output, nonInteractiveContent)
+}
+
+const printToTerminal = async function (interactiveContent) {
+  const interactiveContentA = addPadding(interactiveContent)
+  await promisify(stdout.write.bind(stdout))(interactiveContentA)
 }
 
 const writeFileContent = async function (output, nonInteractiveContent) {
