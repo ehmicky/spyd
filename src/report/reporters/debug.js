@@ -1,4 +1,4 @@
-import { cyan, yellow, dim, red } from 'chalk'
+import { cyan, dim, red } from 'chalk'
 
 import { getFooter } from '../utils/footer/main.js'
 import { joinSections } from '../utils/join.js'
@@ -56,7 +56,7 @@ const serializeStat = function ({ stats, name, shortName, slow }) {
     return red.inverse.bold(`${shortName} ${stat}`)
   }
 
-  return `${shortName} ${yellow(stat)}`
+  return `${dim.italic(shortName)} ${stat}`
 }
 
 export const debug = { report }

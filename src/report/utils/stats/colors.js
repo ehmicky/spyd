@@ -1,4 +1,4 @@
-import { red, green } from 'chalk'
+import { red, cyan } from 'chalk'
 
 import { getPercentageDirection } from './percentage.js'
 
@@ -23,7 +23,7 @@ const getRelPercentageColor = function (percentage) {
   return DIRECTIONS[getPercentageDirection(percentage)]
 }
 
-const DIRECTIONS = { positive: red, negative: green }
+const DIRECTIONS = { positive: red, negative: cyan }
 
 const COLORS = {
   diff: getRelPercentageColor,
