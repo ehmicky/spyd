@@ -52,17 +52,8 @@ const ABS_PERCENTAGE_SIGN = '±'
 
 const serializeDuration = function (duration, { scale, unit, decimals }) {
   const scaledDuration = duration / scale
-  const integer = Math.floor(scaledDuration)
-  const fraction = getFraction({ scaledDuration, integer, decimals })
-  return `${integer}${fraction}${unit}`
-}
-
-const getFraction = function ({ scaledDuration, integer, decimals }) {
-  if (Number.isInteger(scaledDuration) || decimals === 0) {
-    return ''
-  }
-
-  return (scaledDuration - integer).toFixed(decimals).slice(1)
+  const scaledDurationStr = scaledDuration.toFixed(decimals)
+  return `${scaledDurationStr}${unit}`
 }
 
 const SERIALIZE_STAT = {
