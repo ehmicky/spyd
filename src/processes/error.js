@@ -42,7 +42,7 @@ const getMessage = function ({
 
   if (timedOut) {
     const timeoutError = getTimeoutError(duration)
-    return `${taskPrefix}${timeoutError}`
+    return `${taskPrefix} ${timeoutError}`
   }
 
   const execaError = getExecaError(message)
