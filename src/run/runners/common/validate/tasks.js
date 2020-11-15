@@ -2,7 +2,7 @@ import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../../../error/main.js'
 
-import { validateProp } from './helpers.js'
+import { validateProp } from './prop.js'
 
 // Validate that tasks have correct shape
 export const validateTasks = function (validators, tasks) {

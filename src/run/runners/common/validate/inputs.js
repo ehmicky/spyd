@@ -2,7 +2,7 @@ import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../../../error/main.js'
 
-import { validateProp } from './helpers.js'
+import { validateProp } from './prop.js'
 
 // Validate that inputs have correct shape
 export const validateInputs = function (validators, inputs) {
