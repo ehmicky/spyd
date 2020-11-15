@@ -34,7 +34,7 @@ const prettifyIterationsStat = function (
       decimals,
     }),
   )
-  const padding = getPadding(name, iterationsA)
+  const padding = getPadding(prettyName, iterationsA)
   const iterationsB = iterationsA.map((iteration) =>
     finalizeValue({ iteration, name, prettyName, padding }),
   )

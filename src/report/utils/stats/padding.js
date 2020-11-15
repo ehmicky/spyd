@@ -1,7 +1,7 @@
 // Retrieve the maximum length of any measures for each stat
-export const getPadding = function (name, iterations) {
+export const getPadding = function (prettyName, iterations) {
   const statLengths = iterations
-    .flatMap(({ stats }) => stats[`${name}Pretty`])
+    .flatMap(({ stats }) => stats[prettyName])
     .map(getLength)
 
   if (statLengths.length === 0) {
