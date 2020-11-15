@@ -2,7 +2,7 @@ import { stderr } from 'process'
 import { cursorTo, clearLine } from 'readline'
 import { promisify } from 'util'
 
-import { yellow, cyan } from 'chalk'
+import { dim, cyan } from 'chalk'
 
 const pCursorTo = promisify(cursorTo)
 const pClearLine = promisify(clearLine)
@@ -15,9 +15,7 @@ const update = async function ({ name, percentage, timeLeft, index, total }) {
   const percentageStr = serializePercentage(percentage)
   const indexStr = String(index + 1).padStart(String(total).length)
   const counter = `${indexStr}/${total}`
-  const content = ` ${yellow(timeLeft)} ${percentageStr} ${cyan(
-    counter,
-  )} ${name}`
+  const content = ` ${timeLeft} ${dim(percentageStr)} ${cyan(counter)} ${name}`
 
   await clearProgress()
 
