@@ -7,7 +7,7 @@ import { addNames } from './name.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
-export const addPrintedInfo = function ({
+export const normalizeBenchmark = function ({
   iterations,
   systems,
   git,

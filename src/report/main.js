@@ -1,5 +1,5 @@
 import { checkLimits } from '../limit/error.js'
-import { addPrintedInfo } from '../print/main.js'
+import { normalizeBenchmark } from '../print/main.js'
 import { addPrevious } from '../print/previous.js'
 
 import { callReportFunc } from './call.js'
@@ -48,7 +48,7 @@ export const report = async function (
 }
 
 const getBenchmark = function (mergeId, benchmarks, { limits, diff }) {
-  const benchmarksA = benchmarks.map(addPrintedInfo)
+  const benchmarksA = benchmarks.map(normalizeBenchmark)
 
   const benchmarkA = benchmarksA.find(
     (benchmark) => benchmark.mergeId === mergeId,
