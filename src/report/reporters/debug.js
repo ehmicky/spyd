@@ -6,10 +6,10 @@ import {
 } from '../utils/colors.js'
 import { getFooter } from '../utils/footer/main.js'
 import { joinSections } from '../utils/join.js'
-import { addNames } from '../utils/name/main.js'
 import { prettifyValue } from '../utils/prettify_value.js'
 import { SEPARATOR_SIGN } from '../utils/separator.js'
 import { prettifyStats } from '../utils/stats/main.js'
+import { addTitles } from '../utils/title/main.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({
@@ -22,7 +22,7 @@ const report = function ({
   iterations,
 }) {
   const iterationsA = prettifyStats(iterations)
-  const iterationsB = addNames(iterationsA)
+  const iterationsB = addTitles(iterationsA)
   const content = iterationsB.map(serializeIteration).join('\n')
   const footer = prettifyValue(
     getFooter({ commands, systems, mergeId, timestamp, git, ci }),

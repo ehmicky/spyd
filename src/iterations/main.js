@@ -1,5 +1,5 @@
 import { validateLimits } from '../limit/validate.js'
-import { addNames } from '../report/utils/name/main.js'
+import { addTitles } from '../report/utils/title/main.js'
 import { loadRunners } from '../run/load.js'
 import { selectIterations } from '../select/main.js'
 
@@ -35,7 +35,7 @@ export const getIterations = async function ({
     limits,
   })
 
-  const iterationsC = addNames(iterationsB)
+  const iterationsC = addTitles(iterationsB)
   return { iterations: iterationsC }
 }
 

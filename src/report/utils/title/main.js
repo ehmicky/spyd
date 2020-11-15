@@ -14,7 +14,7 @@ import { padTitles } from './padding.js'
 //    new iterations
 //  - after `diff` has been computed, which has to be after previous benchmarks
 //    names have been added
-export const addNames = function (iterations) {
+export const addTitles = function (iterations) {
   const iterationsA = padTitles(iterations)
   const iterationsB = addTitlesProps(iterationsA, 'column', COLUMN_PROPS)
   const iterationsC = addTitlesProps(iterationsB, 'row', ROW_PROPS)
