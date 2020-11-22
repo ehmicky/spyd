@@ -94,7 +94,7 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     repeat = getRepeat({ repeat, minLoopTime, repeatCost, median })
   } while (
-    !shouldStopLoop({
+    !shouldStopProcessGroup({
       loadCost,
       measureCost,
       median,
@@ -119,7 +119,7 @@ export const measureProcessGroup = async function ({
 //     process), this improves the total number of `times` enough to justify it.
 //   - Not doing it would make the `count` increment less gradually as the
 //     `duration` increases.
-const shouldStopLoop = function ({
+const shouldStopProcessGroup = function ({
   loadCost,
   measureCost,
   median,
