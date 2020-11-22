@@ -31,12 +31,6 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 //     reporting
 //   - Ensures many processes are run to decrease the overall variance, while
 //     still making sure enough loops are run inside each of those processes
-// We remove the `loopTime` to guarantee runners stop right under the target
-// duration, not right above:
-//   - `loopTime` is the time for the runner to perform a single benchmark loop.
-//     It is estimated from previous processes.
-//   - This ensures users are not experiencing slow downs of the progress
-//     counter at the end of an iteration.
 // We pass a single `maxDuration` parameters for runners to know when to stop
 // benchmarking
 //   - We purposely avoid others like `maxTimes` or `minDuration` to keep it
@@ -59,7 +53,7 @@ export const getMaxDuration = function ({
     loopBias,
     repeat,
   })
-  const loopTime = denormalizeTime(median, { nowBias, loopBias, repeat })
+  const loopTime = getLoopTime({ median, nowBias, loopBias, repeat })
   return Math.max(
     Math.min(timeLeftMeasuring, Math.max(benchmarkCostMin, targetTimesMin)) -
       loopTime,
@@ -122,3 +116,13 @@ const TARGET_TIMES_ADJUST = 1.1
 // A higher number means fewer processes are spawned, reducing their positive
 // impact on variance.
 const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST
+
+// We remove the `loopTime` to guarantee runners stop right under the target
+// duration, not right above.
+// `loopTime` is the time for the runner to perform a single benchmark loop.
+// It is estimated from previous processes.
+// This ensures users are not experiencing slow downs of the progress counter
+// at the end of an iteration.
+const getLoopTime = function ({ median, nowBias, loopBias, repeat }) {
+  return denormalizeTime(median, { nowBias, loopBias, repeat })
+}
