@@ -1,7 +1,9 @@
 import now from 'precise-now'
 
-import { getBiases } from './bias.js'
 import { runMeasureLoop } from './loop.js'
+import { getLoopBias } from './loop_bias.js'
+import { getMinTime } from './min_time.js'
+import { getNowBias } from './now_bias.js'
 
 // We run processes until reaching the max `duration`.
 // At least one process must be executed.
@@ -10,6 +12,7 @@ import { runMeasureLoop } from './loop.js'
 //  - multi-core CPUs are designed to run in parallel but in practice they do
 //    impact the performance of each other
 //  - this does mean we are under-utilizing CPUs
+// eslint-disable-next-line max-lines-per-function
 export const runMeasurement = async function ({
   taskPath,
   taskId,
@@ -22,16 +25,31 @@ export const runMeasurement = async function ({
   runEnd,
   cwd,
 }) {
-  const { nowBias, loopBias, minTime } = await getBiases({
+  const biasDuration = duration * BIAS_DURATION_RATIO
+  const nowBias = await getNowBias({
     taskPath,
     taskId,
     inputId,
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    measureDuration: duration * BIAS_DURATION_RATIO,
+    measureDuration: biasDuration,
     cwd,
     loadDuration,
+  })
+  const minTime = getMinTime(nowBias)
+  const loopBias = await getLoopBias({
+    taskPath,
+    taskId,
+    inputId,
+    commandSpawn,
+    commandSpawnOptions,
+    commandOpt,
+    measureDuration: biasDuration,
+    cwd,
+    loadDuration,
+    nowBias,
+    minTime,
   })
   const { times, count, processes } = await runMeasureLoop({
     taskPath,
