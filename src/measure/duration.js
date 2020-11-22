@@ -74,6 +74,12 @@ const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
 
 // Estimated time to run the task a specific amount of time.
 // This is the number of time the task function is run, not the `repeat` loop.
+const getTargetTimesMin = function ({ median, nowBias, loopBias, repeat }) {
+  return (
+    TARGET_TIMES * denormalizeTimePerCall(median, { nowBias, loopBias, repeat })
+  )
+}
+
 // The process ends up running slightly fewer times that the target due to:
 //   - Using a median where an arithmetic mean would be more in this case.
 //     However, due to cold starts, using an arithmetic mean makes
@@ -93,14 +99,11 @@ const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
 //    because the runtime optimizes it a lot later on.
 //  - The task speed is close to `nowBias` and/or `loopBias`
 // However, stability is more important than accuracy for `targetTimesMin`.
-const getTargetTimesMin = function ({ median, nowBias, loopBias, repeat }) {
-  return (
-    TARGET_TIMES * denormalizeTimePerCall(median, { nowBias, loopBias, repeat })
-  )
-}
-
+// We slightly increase `TARGET_TIMES` to take this into account. This is rather
+// imprecise so we keep this increase small.
+const TARGET_TIMES_ADJUST = 1.1
 // How many times tasks should run at a minimum inside each process.
 // A lower number means cold starts induce more variance in final results.
 // A higher number means fewer processes are spawned, reducing their positive
 // impact on variance.
-const TARGET_TIMES = 10
+const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST
