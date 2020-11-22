@@ -1,6 +1,6 @@
 import { getSortedMedian } from '../stats/median.js'
 
-import { measureProcessGroup } from './loop.js'
+import { measureProcessGroup } from './process_group.js'
 import { getRepeat } from './repeat.js'
 
 // Like `nowBias` but for the time taken to measure an empty task inside a

@@ -1,6 +1,6 @@
 import { getSortedMedian } from '../stats/median.js'
 
-import { measureProcessGroup } from './loop.js'
+import { measureProcessGroup } from './process_group.js'
 
 // `nowBias` is the time taken to measure an empty task when `repeat` is `1`.
 // This includes the time to get the start/end timestamps for example.

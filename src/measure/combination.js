@@ -1,9 +1,9 @@
 import now from 'precise-now'
 
-import { measureProcessGroup } from './loop.js'
 import { getLoopBias } from './loop_bias.js'
 import { getMinTime } from './min_time.js'
 import { getNowBias } from './now_bias.js'
+import { measureProcessGroup } from './process_group.js'
 
 // We measure by spawning processes until reaching the max `duration`.
 // At least one process must be executed.

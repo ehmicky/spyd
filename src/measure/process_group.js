@@ -14,6 +14,7 @@ import { getMedian } from './median.js'
 import { normalizeTimes } from './normalize.js'
 import { getRepeat } from './repeat.js'
 
+// Measure a task, nowBias or loopBias using a group of processes
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const measureProcessGroup = async function ({
   taskPath,
@@ -51,7 +52,7 @@ export const measureProcessGroup = async function ({
   // eslint-disable-next-line fp/no-let
   let repeat = initialRepeat
   // For some unknown reason, the time to spawn a child process is sometimes
-  // higher during bias computation than during the main measurement loop, so
+  // higher during bias computation than during the main process group, so
   // we don't share the `previous` array between those.
   const benchmarkCosts = []
   // eslint-disable-next-line fp/no-let
@@ -110,8 +111,8 @@ export const measureProcessGroup = async function ({
   return { times, count, processes }
 }
 
-// We stop iterating when the next process does not have any time to measure a
-// single loop. We estimate this taking into account the time to launch the
+// We stop iterating when the next process does not have any time to spawn a
+// single one. We estimate this taking into account the time to launch the
 // runner (`benchmarkCost`), the time to measure the task (`nowBias`) and
 // the time of the task itself, based on previous measurements (`median`).
 // This means we allow the last process to be shorter than the others.
