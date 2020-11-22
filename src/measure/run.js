@@ -22,10 +22,6 @@ export const runMeasurement = async function ({
   runEnd,
   cwd,
 }) {
-  // Bias computation and the main measurement loop share the `benchmarkCost`
-  // estimation.
-  const benchmarkCost = { estimate: loadDuration, previous: [] }
-
   const { nowBias, loopBias, minTime } = await getBiases({
     taskPath,
     taskId,
@@ -35,7 +31,7 @@ export const runMeasurement = async function ({
     commandOpt,
     measureDuration: duration * BIAS_DURATION_RATIO,
     cwd,
-    benchmarkCost,
+    loadDuration,
   })
   const { times, count, processes } = await runMeasureLoop({
     taskPath,
@@ -46,7 +42,7 @@ export const runMeasurement = async function ({
     commandOpt,
     measureDuration: runEnd - now(),
     cwd,
-    benchmarkCost,
+    loadDuration,
     nowBias,
     loopBias,
     minTime,

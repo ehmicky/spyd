@@ -68,15 +68,12 @@ export const getMaxDuration = function ({
 
 // Time left for benchmarking (excluding time to load the process/runner)
 const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
-  return Math.max(runEnd - now() - benchmarkCost.estimate, 0)
+  return Math.max(runEnd - now() - benchmarkCost, 0)
 }
 
 // Ensure the `maxDuration` does not go over the process `timeout` if possible
 const getTimeoutMax = function (measureDuration, benchmarkCost) {
-  return Math.max(
-    (measureDuration - benchmarkCost.estimate) * MEASURE_DURATION_RATIO,
-    0,
-  )
+  return Math.max((measureDuration - benchmarkCost) * MEASURE_DURATION_RATIO, 0)
 }
 
 // The measures are not prefectly precise, so we allow some additional room
@@ -86,7 +83,7 @@ const MEASURE_DURATION_RATIO = 0.5
 // they get enough time running the benchmarked task, as opposed to spawning
 // processes/runners.
 const getBenchmarkCostMin = function (benchmarkCost) {
-  return benchmarkCost.estimate * (1 / BENCHMARK_COST_RATIO - 1)
+  return benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
 }
 
 // How much time should be spent spawning processes/runners as opposed to

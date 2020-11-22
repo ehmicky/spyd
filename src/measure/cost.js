@@ -56,17 +56,14 @@ export const endBenchmarkCost = function (
   return Math.max(Number(BigInt(benchmarkCostEnd) - benchmarkCostStart), 0)
 }
 
-export const updateBenchmarkCost = function (
-  childBenchmarkCost,
-  benchmarkCost,
-) {
+export const getBenchmarkCost = function (childBenchmarkCost, benchmarkCosts) {
   // eslint-disable-next-line fp/no-mutating-methods
-  benchmarkCost.previous.push(childBenchmarkCost)
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  benchmarkCost.estimate = getUnsortedMedian(
-    benchmarkCost.previous,
+  benchmarkCosts.push(childBenchmarkCost)
+  const benchmarkCost = getUnsortedMedian(
+    benchmarkCosts,
     BENCHMARK_COST_SORT_MAX,
   )
+  return benchmarkCost
 }
 
 // Size of the sorting sample.

@@ -5,7 +5,7 @@ import { executeChild } from '../processes/main.js'
 import { removeOutliers } from '../stats/outliers.js'
 
 import {
-  updateBenchmarkCost,
+  getBenchmarkCost,
   startBenchmarkCost,
   endBenchmarkCost,
 } from './cost.js'
@@ -24,7 +24,7 @@ export const runMeasureLoop = async function ({
   commandOpt,
   measureDuration,
   cwd,
-  benchmarkCost,
+  loadDuration,
   nowBias,
   loopBias,
   minTime,
@@ -49,6 +49,12 @@ export const runMeasureLoop = async function ({
   let median = 0
   // eslint-disable-next-line fp/no-let
   let repeat = 1
+  // For some unknown reason, the time to spawn a child process is sometimes
+  // higher during bias computation than during the main measurement loop, so
+  // we don't share the `previous` array between those.
+  const benchmarkCosts = []
+  // eslint-disable-next-line fp/no-let
+  let benchmarkCost = loadDuration
 
   // eslint-disable-next-line fp/no-loops
   do {
@@ -83,19 +89,14 @@ export const runMeasureLoop = async function ({
     // eslint-disable-next-line fp/no-mutation
     totalTimes += childTimes.length
 
-    updateBenchmarkCost(childBenchmarkCost, benchmarkCost)
+    // eslint-disable-next-line fp/no-mutation
+    benchmarkCost = getBenchmarkCost(childBenchmarkCost, benchmarkCosts)
     // eslint-disable-next-line fp/no-mutation
     median = getMedian(childTimes, processMedians)
     // eslint-disable-next-line fp/no-mutation
     repeat = adjustRepeat({ repeat, minTime, loopBias, median })
   } while (
-    !shouldStopLoop({
-      benchmarkCost,
-      nowBias,
-      median,
-      runEnd,
-      totalTimes,
-    })
+    !shouldStopLoop({ benchmarkCost, nowBias, median, runEnd, totalTimes })
   )
 
   const { times, count, processes } = removeOutliers(results)
@@ -123,7 +124,7 @@ const shouldStopLoop = function ({
 }) {
   return (
     totalTimes >= TOTAL_MAX_TIMES ||
-    now() + benchmarkCost.estimate + nowBias + median >= runEnd
+    now() + benchmarkCost + nowBias + median >= runEnd
   )
 }
 
