@@ -7,15 +7,15 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 //  1. Must not be longer than the time left in the task (`timeLeftMeasuring`)
 //  2. Must be at least long enough so that we don't spend time only spawning
 //     processes/runners instead of measuring. This is done by estimating
-//     that `benchmarkCost` and making `maxDuration` at least big enough
+//     that `loadCost` and making `maxDuration` at least big enough
 //     compared to it.
 //  3. Must iterates with a minimal amount of loops per process. This is to
 //     ensure cold starts do not impact measures.
 // This means:
-//   - Fast tasks are most likely time-limited by `2.`. Since `benchmarkCost`
+//   - Fast tasks are most likely time-limited by `2.`. Since `loadCost`
 //     mostly depends on the hardware speed, the time to load a given runner and
 //     the time to load tasks files, this is rather stable between runs.
-//     A multiple of `benchmarkCost` is then used as the target duration for
+//     A multiple of `loadCost` is then used as the target duration for
 //     each process.
 //   - Slow tasks are most likely time-limited by `3.`. Their target duration
 //     is computed to execute them a specific amount of times.
@@ -40,16 +40,16 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 //     pass a target integer to runners as parameter.
 export const getMaxDuration = function ({
   processGroupEnd,
-  benchmarkCost,
+  loadCost,
   processGroupDuration,
   nowBias,
   repeatCost,
   repeat,
   median,
 }) {
-  const timeLeftMeasuring = getTimeLeftMeasuring(processGroupEnd, benchmarkCost)
-  const timeoutMax = getTimeoutMax(processGroupDuration, benchmarkCost)
-  const benchmarkCostMin = getBenchmarkCostMin(benchmarkCost)
+  const timeLeftMeasuring = getTimeLeftMeasuring(processGroupEnd, loadCost)
+  const timeoutMax = getTimeoutMax(processGroupDuration, loadCost)
+  const loadCostMin = getLoadCostMin(loadCost)
   const targetTimesMin = getTargetTimesMin({
     median,
     nowBias,
@@ -61,23 +61,20 @@ export const getMaxDuration = function ({
     Math.min(
       timeLeftMeasuring,
       timeoutMax,
-      Math.max(benchmarkCostMin, targetTimesMin),
+      Math.max(loadCostMin, targetTimesMin),
     ) - loopTime,
     1,
   )
 }
 
 // Time left for measuring (excluding time to load the process/runner)
-const getTimeLeftMeasuring = function (processGroupEnd, benchmarkCost) {
-  return Math.max(processGroupEnd - now() - benchmarkCost, 0)
+const getTimeLeftMeasuring = function (processGroupEnd, loadCost) {
+  return Math.max(processGroupEnd - now() - loadCost, 0)
 }
 
 // Ensure the `maxDuration` does not go over the process `timeout` if possible
-const getTimeoutMax = function (processGroupDuration, benchmarkCost) {
-  return Math.max(
-    (processGroupDuration - benchmarkCost) * MEASURE_DURATION_RATIO,
-    0,
-  )
+const getTimeoutMax = function (processGroupDuration, loadCost) {
+  return Math.max((processGroupDuration - loadCost) * MEASURE_DURATION_RATIO, 0)
 }
 
 // The measures are not prefectly precise, so we allow some additional room
@@ -86,8 +83,8 @@ const MEASURE_DURATION_RATIO = 0.5
 // Ensure that processes are executed long enough (by using `maxDuration`) so
 // that they get enough time measuring the task, as opposed to spawning
 // processes/runners.
-const getBenchmarkCostMin = function (benchmarkCost) {
-  return benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
+const getLoadCostMin = function (loadCost) {
+  return loadCost * (1 / LOAD_COST_RATIO - 1)
 }
 
 // How much time should be spent spawning processes/runners as opposed to
@@ -96,10 +93,10 @@ const getBenchmarkCostMin = function (benchmarkCost) {
 // using several processes.
 // A higher number measures the task fewer times, reducing the precision
 // provided by measuring it many times.
-const BENCHMARK_COST_RATIO = 0.5
+const LOAD_COST_RATIO = 0.5
 
 // Estimated time to measure the task a specific amount of time.
-// This is the number of time the task function is meaasured, not the `repeat`
+// This is the number of time the task function is measured, not the `repeat`
 // loop.
 const getTargetTimesMin = function ({ median, nowBias, repeatCost, repeat }) {
   return (
