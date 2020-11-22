@@ -62,7 +62,7 @@ export const getMaxDuration = function ({
       timeoutMax,
       Math.max(benchmarkCostMin, targetTimesMin),
     ) - loopTime,
-    0,
+    1,
   )
 }
 

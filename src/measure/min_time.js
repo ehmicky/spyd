@@ -7,10 +7,11 @@ import timeResolution from 'time-resolution'
 // To fix this we run the task in a loop to increase its running time. We then
 // perform an arithmetic mean.
 // `minTime` is the minimum time under which we consider a task should do this.
-export const getMinTime = function (nowBias) {
+export const getMinTime = function (nowBias, duration) {
   const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
   const minNowBiasTime = nowBias * MIN_NOW_BIAS
-  return Math.max(minPrecisionTime, minNowBiasTime)
+  const maxTotalDuration = duration * MAX_TOTAL_DURATION_RATIO
+  return Math.min(Math.max(minPrecisionTime, minNowBiasTime), maxTotalDuration)
 }
 
 const TIME_RESOLUTION = timeResolution()
@@ -24,3 +25,10 @@ const MIN_PRECISION = 1e2
 // more to the overall variance.
 // A higher value increases the task loop time, creating fewer loops.
 const MIN_NOW_BIAS = 1e2
+// Maximum percentage of the total tas duration a single loop is allowed to
+// last.
+// This ensures that, if `nowBias` is high, benchmarks can still be run without
+// setting a very high total `duration`.
+// A higher value makes it more likely for tasks to timeout.
+// A lower value decreases the impact of `MIN_PRECISION` and `MIN_NOW_BIAS`.
+const MAX_TOTAL_DURATION_RATIO = 0.1

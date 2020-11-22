@@ -37,7 +37,7 @@ export const runMeasurement = async function ({
     cwd,
     loadDuration,
   })
-  const minTime = getMinTime(nowBias)
+  const minTime = getMinTime(nowBias, duration)
   const loopBias = await getLoopBias({
     taskPath,
     taskId,
