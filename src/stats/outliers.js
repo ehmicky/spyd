@@ -47,11 +47,11 @@ const removeOutlierTimes = function (results) {
 // We do not use `[].concat(...results)` because it creates a stack overflow if
 // `results.length` is too large (~1e5 on my machine)
 const aggregateTimes = function (results) {
-  return results.flatMap(getTimes)
+  return results.flatMap(getChildTimes)
 }
 
-const getTimes = function ({ times }) {
-  return times
+const getChildTimes = function ({ childTimes }) {
+  return childTimes
 }
 
 // How many outliers to remove.
@@ -62,12 +62,12 @@ const OUTLIERS_THRESHOLD = 0.15
 // Retrieve the number of times the task was run, including inside a repeated
 // loop. Takes into account the fact that some `times` were removed as outliers.
 const getCount = function (results, outliersMax) {
-  const resultCounts = results.map(({ times, repeat }) =>
-    getResultCount({ times, repeat, outliersMax }),
+  const resultCounts = results.map(({ childTimes, repeat }) =>
+    getResultCount({ childTimes, repeat, outliersMax }),
   )
   return getSum(resultCounts)
 }
 
-const getResultCount = function ({ times, repeat, outliersMax }) {
-  return times.filter((time) => time < outliersMax).length * repeat
+const getResultCount = function ({ childTimes, repeat, outliersMax }) {
+  return childTimes.filter((time) => time < outliersMax).length * repeat
 }

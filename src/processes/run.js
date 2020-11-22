@@ -106,7 +106,7 @@ const executeChildren = async function ({
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    const { times } = await executeChild({
+    const { times: childTimes } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
       eventPayload: { ...eventPayload, maxDuration, repeat },
@@ -116,17 +116,22 @@ const executeChildren = async function ({
       inputId,
       type: 'iterationRun',
     })
-    const timesA = normalizeTimes({ times, nowBias, loopBias, repeat })
+    const childTimesA = normalizeTimes({
+      childTimes,
+      nowBias,
+      loopBias,
+      repeat,
+    })
 
     // eslint-disable-next-line fp/no-mutating-methods
-    results.push({ times: timesA, repeat })
+    results.push({ childTimes: childTimesA, repeat })
     // eslint-disable-next-line fp/no-mutation
-    totalTimes += timesA.length
+    totalTimes += childTimesA.length
 
-    sortNumbers(timesA)
+    sortNumbers(childTimesA)
 
     const { processMedian, processesMedian } = getProcessMedian(
-      timesA,
+      childTimesA,
       processMedians,
     )
     const newRepeat = adjustRepeat({
@@ -145,8 +150,10 @@ const executeChildren = async function ({
 }
 
 // Remove `nowBias`, `loopBias` and `repeat` from measured `times`
-const normalizeTimes = function ({ times, nowBias, loopBias, repeat }) {
-  return times.map((time) => normalizeTime({ time, nowBias, loopBias, repeat }))
+const normalizeTimes = function ({ childTimes, nowBias, loopBias, repeat }) {
+  return childTimes.map((time) =>
+    normalizeTime({ time, nowBias, loopBias, repeat }),
+  )
 }
 
 // The final time might be negative if the task is as fast or faster than the
@@ -159,8 +166,8 @@ const normalizeTime = function ({ time, nowBias, loopBias, repeat }) {
   return Math.max((time - nowBias + loopBias) / repeat - loopBias, 0)
 }
 
-const getProcessMedian = function (times, processMedians) {
-  const processMedian = getMedian(times)
+const getProcessMedian = function (childTimes, processMedians) {
+  const processMedian = getMedian(childTimes)
   const processMediansCopy = [...processMedians, processMedian]
   sortNumbers(processMediansCopy)
   const processesMedian = getMedian(processMediansCopy)
