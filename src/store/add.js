@@ -53,4 +53,4 @@ const normalizeIteration = function ({ stats, ...iteration }) {
 }
 
 const OMITTED_PROPS = ['row', 'column']
-const OMITTED_STATS_PROPS = ['histogram', 'percentiles']
+const OMITTED_STATS_PROPS = ['histogram', 'quantiles']

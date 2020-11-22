@@ -1,4 +1,4 @@
-// Retrieve percentiles of an array of floats.
+// Retrieve quantiles of an array of floats.
 // Array must be sorted and not empty.
 export const getQuantiles = function (array, length) {
   return Array.from({ length }, (value, index) =>

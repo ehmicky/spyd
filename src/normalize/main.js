@@ -50,8 +50,8 @@ const COLUMN_RANKS = ['inputRank', 'commandRank', 'systemRank']
 // Some stats are removed when `--save` is used. When showing saved benchmarks,
 // those will be `undefined`. We default them to `[]`.
 const normalizeIterationStats = function ({
-  stats: { histogram = [], percentiles = [], ...stats },
+  stats: { histogram = [], quantiles = [], ...stats },
   ...iteration
 }) {
-  return { ...iteration, stats: { ...stats, histogram, percentiles } }
+  return { ...iteration, stats: { ...stats, histogram, quantiles } }
 }

@@ -7,7 +7,7 @@ import { getQuantiles } from './quantiles.js'
 // Perform the statistical logic.
 // Note that when `repeat > 1`, the distribution of the measured function will
 // be modified by the looping process and transformed to a bell shape, even if
-// if was not one. This means `percentiles`, `histogram` and `deviation` will
+// if was not one. This means `quantiles`, `histogram` and `deviation` will
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
 export const getStats = function ({ times, count, processes }) {
@@ -21,7 +21,7 @@ export const getStats = function ({ times, count, processes }) {
     min,
     max,
     median,
-    percentiles,
+    quantiles,
     histogram,
     mean,
     deviation,
@@ -38,7 +38,7 @@ export const getStats = function ({ times, count, processes }) {
     repeat,
     processes,
     histogram,
-    percentiles,
+    quantiles,
   }
 }
 
@@ -47,14 +47,14 @@ const computeStats = function (times) {
   const max = times[times.length - 1]
 
   const median = getSortedMedian(times)
-  const percentiles = getQuantiles(times, PERCENTILES_SIZE)
+  const quantiles = getQuantiles(times, QUANTILES_SIZE)
   const histogram = getHistogram(times, HISTOGRAM_SIZE)
 
   const mean = getMean(times)
   const deviation = getDeviation(times, mean)
 
-  return { min, max, median, percentiles, histogram, mean, deviation }
+  return { min, max, median, quantiles, histogram, mean, deviation }
 }
 
-const PERCENTILES_SIZE = 1e2
+const QUANTILES_SIZE = 1e2
 const HISTOGRAM_SIZE = 1e2
