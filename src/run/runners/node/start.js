@@ -23,7 +23,6 @@ const run = async function ({
   inputId,
   repeat,
   maxDuration,
-  maxTimes,
   dry,
 }) {
   const { main, before, after, async } = await getTask({
@@ -40,7 +39,6 @@ const run = async function ({
     async,
     repeat,
     maxDuration,
-    maxTimes,
   })
   return { times }
 }

@@ -10,14 +10,18 @@ export const benchmarkLoopSync = function ({
   after,
   repeat,
   runEnd,
-  maxTimes,
   times,
 }) {
+  // eslint-disable-next-line fp/no-let
+  let lastTime = 0
+
   // eslint-disable-next-line fp/no-loops
   do {
+    // eslint-disable-next-line fp/no-mutation
+    lastTime = measureSync({ main, before, after, repeat })
     // eslint-disable-next-line fp/no-mutating-methods
-    times.push(measureSync({ main, before, after, repeat }))
-  } while (!shouldStopLoop(maxTimes, times, runEnd))
+    times.push(lastTime)
+  } while (!shouldStopLoop(runEnd, lastTime))
 }
 
 const measureSync = function ({ main, before, after, repeat }) {

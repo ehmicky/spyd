@@ -12,15 +12,14 @@ export const benchmark = async function ({
   async,
   repeat,
   maxDuration,
-  maxTimes,
 }) {
   const times = []
 
-  if (maxTimes === 0) {
+  if (maxDuration === 0) {
     return times
   }
 
-  const runEnd = maxDuration === undefined ? undefined : now() + maxDuration
+  const runEnd = now() + maxDuration
   await benchmarkLoop({
     main,
     before,
@@ -28,7 +27,6 @@ export const benchmark = async function ({
     async,
     repeat,
     runEnd,
-    maxTimes,
     times,
   })
   return times
@@ -44,28 +42,11 @@ const benchmarkLoop = function ({
   async,
   repeat,
   runEnd,
-  maxTimes,
   times,
 }) {
   if (async) {
-    return benchmarkLoopAsync({
-      main,
-      before,
-      after,
-      repeat,
-      runEnd,
-      maxTimes,
-      times,
-    })
+    return benchmarkLoopAsync({ main, before, after, repeat, runEnd, times })
   }
 
-  return benchmarkLoopSync({
-    main,
-    before,
-    after,
-    repeat,
-    runEnd,
-    maxTimes,
-    times,
-  })
+  return benchmarkLoopSync({ main, before, after, repeat, runEnd, times })
 }

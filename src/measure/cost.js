@@ -92,7 +92,7 @@ const getBenchmarkCostSample = async function ({
     taskPath,
     taskId,
     inputId,
-    maxTimes: 0,
+    maxDuration: 0,
     repeat: 0,
     dry: true,
   }

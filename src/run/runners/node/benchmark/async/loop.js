@@ -9,14 +9,18 @@ export const benchmarkLoopAsync = async function ({
   after,
   repeat,
   runEnd,
-  maxTimes,
   times,
 }) {
+  // eslint-disable-next-line fp/no-let
+  let lastTime = 0
+
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line no-await-in-loop, fp/no-mutating-methods
-    times.push(await measureAsync({ main, before, after, repeat }))
-  } while (!shouldStopLoop(maxTimes, times, runEnd))
+    // eslint-disable-next-line fp/no-mutation, no-await-in-loop
+    lastTime = await measureAsync({ main, before, after, repeat })
+    // eslint-disable-next-line fp/no-mutating-methods
+    times.push(lastTime)
+  } while (!shouldStopLoop(runEnd, lastTime))
 }
 
 const measureAsync = async function ({ main, before, after, repeat }) {
