@@ -3,8 +3,8 @@ import { promises as fs } from 'fs'
 import pathExists from 'path-exists'
 import writeFileAtomic from 'write-file-atomic'
 
-// Retrieve benchmarks from filesystem
-export const getBenchmarks = async function (dir) {
+// Retrieve results from filesystem
+export const getResults = async function (dir) {
   const dataFile = await getDataFile(dir)
 
   if (!(await pathExists(dataFile))) {
@@ -12,14 +12,14 @@ export const getBenchmarks = async function (dir) {
   }
 
   const content = await fs.readFile(dataFile, 'utf8')
-  const benchmarks = JSON.parse(content)
-  return benchmarks
+  const results = JSON.parse(content)
+  return results
 }
 
-// Persist benchmarks from filesystem
-export const setBenchmarks = async function (dir, benchmarks) {
+// Persist results from filesystem
+export const setResults = async function (dir, results) {
   const dataFile = await getDataFile(dir)
-  const content = JSON.stringify(benchmarks, undefined, 2)
+  const content = JSON.stringify(results, undefined, 2)
   await writeFileAtomic(dataFile, `${content}\n`)
 }
 

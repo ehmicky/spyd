@@ -4,7 +4,7 @@ import { performBeforeSync, performAfterSync } from './before_after.js'
 import { getDurationSync } from './duration.js'
 
 // Get measurements iteratively
-export const benchmarkLoopSync = function ({
+export const performLoopSync = function ({
   main,
   before,
   after,

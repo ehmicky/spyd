@@ -1,7 +1,7 @@
 This describes:
 
-- some problems encountered when trying to benchmark code in an accurate,
-  precise and repeatable way
+- some problems encountered when trying to measure code in an accurate, precise
+  and repeatable way
 - the solutions implemented by this library
 
 ## Number of iterations
@@ -26,29 +26,29 @@ iterations.
 
 ## Processes variance
 
-_Problem_: Different processes (e.g. repeating the same benchmark over time)
-have different performance profiles resulting in differences between runs. This
-is because different processes run with slightly faster or slower performance
-than others due to OS and runtime internals.
+_Problem_: Different processes (e.g. measuring the same tasks over time) have
+different performance profiles resulting in differences between runs. This is
+because different processes run with slightly faster or slower performance than
+others due to OS and runtime internals.
 
-_Solution_: Benchmarks are spread over several processes and their results are
-merged. They are run serially in order not to compete with each other, which
-would otherwise make measures slower and less precise.
+_Solution_: Runs are spread over several processes and their results are merged.
+They are run serially in order not to compete with each other, which would
+otherwise make measures slower and less precise.
 
 Processes are used instead of threads because:
 
 - time slicing might happen in the middle of a measure
 - in some languages (like Node.js), threads run in a slightly different
-  environment which might be unexpected inside the benchmarked task
+  environment which might be unexpected inside the task
 
 ## Runtime optimization
 
 _Problem_: Due to runtime optimization, the more a task is run, the faster is
-gets. Which means longer benchmarks result in faster times.
+gets. Which means longer runs result in faster times.
 
-_Solution_: The benchmark is split into consecutive processes with the same
-duration. As a task gets faster or as a benchmark gets longer, more processes
-are spawned but their duration remains the same.
+_Solution_: The run is split into consecutive processes with the same duration.
+As a task gets faster or as a run gets longer, more processes are spawned but
+their duration remains the same.
 
 ## Slow downs
 
@@ -63,22 +63,22 @@ discarded.
 
 Also, medians are used instead of arithmetic means.
 
-## Benchmarking cost
+## Measuring cost
 
-_Problem_: Benchmarking adds a small performance cost:
+_Problem_: Measuring adds a small performance cost:
 
 - retrieving timestamps
 - making the function call itself (even if the task is empty)
-- repeatedly checking whether the benchmark loop should end
-- loading the benchmarking logic and/or processes
+- repeatedly checking whether the measuring loop should end
+- loading the measuring logic and/or processes
 
 That cost increases a task's apparent time but is unrelated to the task itself.
 
-_Solution_: Those costs are estimated by benchmarking an empty function then
+_Solution_: Those costs are estimated by measuring an empty function then
 subtracting it from the measures.
 
 The task is also looped in order to decrease the percentage of the measure
-related to the benchmarking cost.
+related to the measuring cost.
 
 ## Time resolution
 
@@ -90,21 +90,20 @@ resolution.
 
 ## Asynchronous tasks
 
-_Problem_: Asynchronous functions require asynchrounous benchmarking logic.
-However asynchrounous benchmarking logic is slower, which results in different
-measures.
+_Problem_: Asynchronous functions require asynchrounous measuring logic. However
+asynchrounous measuring logic is slower, which results in different measures.
 
-_Solution_: Different logic is used to benchmark synchronous and asynchronous
+_Solution_: Different logic is used to measure synchronous and asynchronous
 tasks.
 
 ## Very fast tasks
 
-_Problem_: Tasks that are as fast as the benchmarking logic itself (e.g. faster
-than `1ns`) cannot be benchmarked precisely because their measure cannot be
-separated from the duration of the benchmarking logic itself.
+_Problem_: Tasks that are as fast as the measuring logic itself (e.g. faster
+than `1ns`) cannot be measured precisely because their measure cannot be
+separated from the duration of the measuring logic itself.
 
 _Solution_: No benchmarking library (including this one) seems to provide a
-solution at the moment. Such code will be benchmarked as taking `0ns`.
+solution at the moment. Such code will be measured as taking `0ns`.
 
 _Invalid solution_: Using loop unrolling such as
 `new Function('f', 'f();'.repeat(number))` or

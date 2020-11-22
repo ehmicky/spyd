@@ -1,5 +1,5 @@
 // When two `files` define the same combination, the last one prevails.
-// Also used when merging benchmarks of the same mergeId.
+// Also used when merging results of the same mergeId.
 export const removeDuplicates = function (combinations) {
   return combinations.filter(removeDuplicate)
 }

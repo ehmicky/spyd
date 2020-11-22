@@ -18,7 +18,7 @@ const normalizeTask = function ({
   return { taskId, taskTitle, inputsIds, main, before, after, async }
 }
 
-// Async functions use different benchmarking logic.
+// Async functions use different measuring logic.
 // We only check once if `main()` is async in order to simplify the logic.
 // This means `main()` cannot be sometimes sync and other times async.
 // This does not apply to `before()` nor `after()`.

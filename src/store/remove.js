@@ -13,7 +13,7 @@ export const removeFromStore = async function (
   try {
     await store.remove(ids)
   } catch (error) {
-    throw new UserError(`Could not remove benchmark: ${error.message}`)
+    throw new UserError(`Could not remove result: ${error.message}`)
   }
 }
 

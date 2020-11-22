@@ -1,7 +1,7 @@
-// Estimate how many times to repeat the benchmarking loop.
-// This is performed continuously based on the previous benchmarked times
-// because fast functions get optimized by runtimes after they are run several
-// times in a row ("hot paths").
+// Estimate how many times to repeat the repeat loop.
+// This is performed continuously based on the previous measures because fast
+// functions get optimized by runtimes after they are run several times in a
+// row ("hot paths").
 // When this happens, `repeat` needs to be computed again.
 export const getRepeat = function ({ repeat, minTime, loopBias, median }) {
   // When computing `nowBias`

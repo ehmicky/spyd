@@ -4,8 +4,8 @@ import { getCiInfo } from './ci/info.js'
 import { getSystems } from './system/info.js'
 import { cleanObject } from './utils/clean.js'
 
-// Add more information to the final benchmark and normalize/sort results
-export const addBenchmarkInfo = function (
+// Add more information to the final partialResult and normalize/sort it
+export const addResultInfo = function (
   combinations,
   { opts, opts: { system, cwd } },
 ) {

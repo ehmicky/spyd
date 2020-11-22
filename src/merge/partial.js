@@ -3,13 +3,13 @@ import { groupBy } from '../utils/group.js'
 
 import { validateMerge } from './validate.js'
 
-// Merge previous benchmarks part of the same `mergeId`.
-// Later benchmarks have priority.
+// Merge previous results part of the same `mergeId`.
+// Later results have priority.
 export const mergePartialResults = function (partialResults) {
-  return Object.values(groupBy(partialResults, 'mergeId')).map(mergeBenchmark)
+  return Object.values(groupBy(partialResults, 'mergeId')).map(mergeResult)
 }
 
-const mergeBenchmark = function ([partialResult, ...partialResults]) {
+const mergeResult = function ([partialResult, ...partialResults]) {
   return partialResults.reduce(mergePair, partialResult)
 }
 
@@ -20,7 +20,7 @@ const mergePair = function (
     ci: previousCi,
     combinations: previousCombinations,
   },
-  { id, systems: [system], git, ci, combinations, ...benchmark },
+  { id, systems: [system], git, ci, combinations, ...result },
 ) {
   validateMerge({
     previousSystems,
@@ -36,7 +36,7 @@ const mergePair = function (
     ...previousCombinations,
     ...combinations,
   ])
-  return { ...benchmark, id, systems, git, ci, combinations: combinationsA }
+  return { ...result, id, systems, git, ci, combinations: combinationsA }
 }
 
 const mergeSystems = function (previousSystems, system) {

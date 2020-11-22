@@ -1,5 +1,5 @@
 // Statistics are not shown if:
-//  - undefined (e.g. `diff` with no previous benchmark)
+//  - undefined (e.g. `diff` with no previous results)
 //  - deviation if not enough samples
 export const shouldSkipStat = function ({ stat, name, loops }) {
   return (

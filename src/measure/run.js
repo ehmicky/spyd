@@ -70,6 +70,6 @@ export const runMeasurement = async function ({
   return { times, count, processes }
 }
 
-// Biases must be very precise to benchmark fast tasks accurately.
-// So we dedicate a significant part of the total benchmark to them.
+// Biases must be very precise to measure fast tasks accurately.
+// So we dedicate a significant part of the total combination to them.
 const BIAS_DURATION_RATIO = 0.1

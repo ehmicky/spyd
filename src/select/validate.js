@@ -1,6 +1,6 @@
 import { UserError } from '../error/main.js'
 
-// Ensure identifiers exist in at least some benchmarks/combinations
+// Ensure identifiers exist in at least some partialResults' combinations
 export const validateTargets = function (targets, partialResults) {
   targets.forEach(({ idName, name, ids }) => {
     validateTarget({ idName, name, ids, partialResults })

@@ -2,7 +2,7 @@ import { fetchUrl } from './fetch.js'
 import { getUrl } from './options.js'
 
 // Filesystem store. This is the default built-in store.
-// Saves benchmarks to `dir/data.json`
+// Saves results to `dir/data.json`
 const start = function (opts) {
   return getUrl(opts)
 }
@@ -10,14 +10,14 @@ const start = function (opts) {
 // eslint-disable-next-line no-empty-function
 const end = function () {}
 
-// The server must return an empty array when there are no benchmarks
+// The server must return an empty array when there are no results
 const list = async function (url) {
-  const benchmarks = await fetchUrl({ method: 'GET', url })
-  return benchmarks
+  const results = await fetchUrl({ method: 'GET', url })
+  return results
 }
 
-const add = async function (benchmark, url) {
-  await fetchUrl({ method: 'POST', url, body: benchmark, noResponse: true })
+const add = async function (result, url) {
+  await fetchUrl({ method: 'POST', url, body: result, noResponse: true })
 }
 
 const remove = async function (ids, url) {

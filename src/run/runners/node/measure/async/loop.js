@@ -3,7 +3,7 @@ import { shouldStopLoop } from '../stop.js'
 import { performBeforeAsync, performAfterAsync } from './before_after.js'
 import { getDurationAsync } from './duration.js'
 
-export const benchmarkLoopAsync = async function ({
+export const performLoopAsync = async function ({
   main,
   before,
   after,

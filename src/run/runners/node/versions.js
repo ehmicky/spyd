@@ -50,7 +50,7 @@ const getAllowedVersions = async function () {
   return allowedVersions
 }
 
-// We validate the versions before starting the benchmarks.
+// We validate the versions before starting measuring.
 const validateVersions = function (versions, allowedVersions) {
   versions.forEach(({ versionRange, version }) => {
     validateVersion(versionRange, version, allowedVersions)

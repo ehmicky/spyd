@@ -1,13 +1,13 @@
 import pMapSeries from 'p-map-series'
 
 import { getCombinations } from './combination/main.js'
-import { addBenchmarkInfo } from './info.js'
+import { addResultInfo } from './info.js'
 import { measureCombination } from './measure/main.js'
 import { startProgress } from './progress/start.js'
 import { stopProgress } from './progress/stop.js'
 
-// Run a new benchmark
-export const runBenchmark = async function (opts) {
+// Perform a new run
+export const performRun = async function (opts) {
   const { combinations, versions } = await getCombinations(opts)
 
   const { progressState, progressInfo } = await startProgress(
@@ -16,7 +16,7 @@ export const runBenchmark = async function (opts) {
   )
 
   try {
-    return await computeBenchmark({
+    return await getPartialResult({
       combinations,
       progressState,
       opts,
@@ -27,7 +27,7 @@ export const runBenchmark = async function (opts) {
   }
 }
 
-const computeBenchmark = async function ({
+const getPartialResult = async function ({
   combinations,
   progressState,
   opts,
@@ -36,6 +36,6 @@ const computeBenchmark = async function ({
   const combinationsA = await pMapSeries(combinations, (combination, index) =>
     measureCombination({ ...combination, index, progressState, opts }),
   )
-  const partialResult = addBenchmarkInfo(combinationsA, { opts, versions })
+  const partialResult = addResultInfo(combinationsA, { opts, versions })
   return partialResult
 }

@@ -8,11 +8,11 @@ import { padTitles } from './padding.js'
 //  - `combination.column`: combines input, command and system.
 //     For two-dimensional reporters. `taskTitlePadded` is the row name.
 // We need to do this three times:
-//  - before benchmarks start because `combination.name` is used by progress
+//  - before measuring start because `combination.name` is used by progress
 //    reporters.
-//  - after benchmarks end and previous benchmarks merging because those add
+//  - after measuring ends and previous results merging because those add
 //    new combinations
-//  - after `diff` has been computed, which has to be after previous benchmarks
+//  - after `diff` has been computed, which has to be after previous results
 //    names have been added
 export const addTitles = function (combinations) {
   const combinationsA = padTitles(combinations)

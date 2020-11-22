@@ -4,19 +4,19 @@ export const RUN_CONFIG = {
     alias: 'd',
     number: true,
     requiresArg: true,
-    describe: `How many seconds to benchmark each task.
+    describe: `How many seconds to measure each task.
 Default: 10`,
   },
   merge: {
     alias: 'g',
     string: true,
-    describe: `Append the current benchmarks to the previous one.
-Used to create a single benchmark in several incremental runs.
-Can also be an id. Benchmarks within the same id are reported together.
+    describe: `Append the current results to the previous one.
+Used to create a single result in several incremental runs.
+Can also be an id. Results within the same id are reported together.
 Default: random UUID`,
   },
   progress: {
-    describe: `Module to report benchmark progress.
+    describe: `Module to report progress.
 Built-in progress reporters: silent.
 Custom progress reporters can be installed from npm.
 Uses a dot notation such as --progress.bar (not --progress=bar nor --progress bar).`,
@@ -24,7 +24,7 @@ Uses a dot notation such as --progress.bar (not --progress=bar nor --progress ba
   save: {
     alias: 's',
     boolean: true,
-    describe: `Save the benchmarks.
+    describe: `Save the results.
 Default: false`,
   },
 }

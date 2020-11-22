@@ -1,5 +1,5 @@
 import { checkLimits } from '../limit/error.js'
-import { normalizeBenchmark } from '../normalize/main.js'
+import { normalizeResult } from '../normalize/main.js'
 import { addPrevious } from '../normalize/previous.js'
 
 import { callReportFunc } from './call.js'
@@ -8,10 +8,10 @@ import { insertContent } from './insert.js'
 import { handleReportOpt } from './options.js'
 import { printContent } from './print.js'
 
-// Report benchmark results
+// Report results
 export const report = async function (
   mergeId,
-  benchmarks,
+  results,
   {
     report: reporters,
     output,
@@ -24,14 +24,14 @@ export const report = async function (
     diff,
   },
 ) {
-  const benchmark = getBenchmark(mergeId, benchmarks, { limits, diff })
+  const result = getResult(mergeId, results, { limits, diff })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, opts: reportOpt }) =>
       useReporter({
         reportFunc,
         reportOpt,
-        benchmark,
+        result,
         output,
         insert,
         colors,
@@ -42,26 +42,24 @@ export const report = async function (
     ),
   )
 
-  checkLimits(benchmark)
+  checkLimits(result)
 
-  return benchmark
+  return result
 }
 
-const getBenchmark = function (mergeId, benchmarks, { limits, diff }) {
-  const benchmarksA = benchmarks.map(normalizeBenchmark)
+const getResult = function (mergeId, results, { limits, diff }) {
+  const resultsA = results.map(normalizeResult)
 
-  const benchmarkA = benchmarksA.find(
-    (benchmark) => benchmark.mergeId === mergeId,
-  )
-  const benchmarkB = addPrevious(benchmarksA, benchmarkA, { limits, diff })
-  return benchmarkB
+  const resultA = resultsA.find((result) => result.mergeId === mergeId)
+  const resultB = addPrevious(resultsA, resultA, { limits, diff })
+  return resultB
 }
 
 // Perform each reporter
 const useReporter = async function ({
   reportFunc,
   reportOpt,
-  benchmark,
+  result,
   output,
   insert,
   colors,
@@ -81,7 +79,7 @@ const useReporter = async function ({
 
   const content = await callReportFunc({
     reportFunc,
-    benchmark,
+    result,
     reportOpt: reportOptA,
   })
 

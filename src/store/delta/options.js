@@ -2,7 +2,7 @@ import { UserError } from '../../error/main.js'
 
 import { getDeltaTimestamp } from './timestamp.js'
 
-// Several options targets a previous benchmarks using either a boolean, an
+// Several options targets a previous results using either a boolean, an
 // integer or a timestamp. We normalize to a `query` object that stores can use.
 // We also validate it.
 export const normalizeDelta = function (name, delta) {

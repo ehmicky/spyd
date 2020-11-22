@@ -10,7 +10,7 @@ const pReadFile = promisify(readFile)
 // Create a JSON file for IPC.
 // We use a single JSON file because parsing/serializing is not CPU intensive.
 // Streaming results would provide with better progress reporting, but would
-// be harder to implement for reporters and force them to stop benchmarking
+// be harder to implement for reporters and force them to stop measuring
 // at regular intervals, which might increase variance.
 export const addResultFile = async function (eventPayload) {
   const { path, cleanup } = await getTmpFile({ template: RESULT_FILENAME })
@@ -42,5 +42,5 @@ const handleResultError = function (error, failed) {
     return
   }
 
-  throw new CoreError(`Could not read benchmark results: ${error.stack}`)
+  throw new CoreError(`Could not read runner measures: ${error.stack}`)
 }

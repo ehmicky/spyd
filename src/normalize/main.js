@@ -6,13 +6,13 @@ import { addCollections } from './collections.js'
 
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
-export const normalizeBenchmark = function ({
+export const normalizeResult = function ({
   combinations,
   systems,
   git,
   ci,
   timestamp,
-  ...benchmark
+  ...result
 }) {
   const {
     combinations: combinationsA,
@@ -26,7 +26,7 @@ export const normalizeBenchmark = function ({
   const combinationsC = combinationsB.map(normalizeStats)
 
   return {
-    ...benchmark,
+    ...result,
     timestamp,
     tasks,
     inputs,
@@ -47,7 +47,7 @@ const sortCombinations = function (combinations) {
 const ROW_RANK = 'taskRank'
 const COLUMN_RANKS = ['inputRank', 'commandRank', 'systemRank']
 
-// Some stats are removed when `--save` is used. When showing saved benchmarks,
+// Some stats are removed when `--save` is used. When showing saved results,
 // those will be `undefined`. We default them to `[]`.
 const normalizeStats = function ({
   stats: { histogram = [], quantiles = [], ...stats },

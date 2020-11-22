@@ -5,19 +5,17 @@ import { getLimit } from '../limit/main.js'
 import { getDiffIndex, getDiff } from './diff.js'
 
 // Add:
-//  - `benchmark.previous`: all previous benchmarks
-//  - `benchmark.combinations[*].previous`: previous combination with same
+//  - `result.previous`: all previous results
+//  - `result.combinations[*].previous`: previous combination with same
 //    runner, task and input
 export const addPrevious = function (
-  benchmarks,
-  { timestamp, combinations, ...benchmark },
+  results,
+  { timestamp, combinations, ...result },
   { limits, diff },
 ) {
-  // When combined with the 'show' option, we only show the benchmarks before it
-  // We exclude benchmarks from the same mergeId (since they are already merged)
-  const previous = benchmarks.filter(
-    (benchmarkA) => benchmarkA.timestamp < timestamp,
-  )
+  // When combined with the 'show' option, we only show the results before it
+  // We exclude results from the same mergeId (since they are already merged)
+  const previous = results.filter((resultA) => resultA.timestamp < timestamp)
   const diffIndex = getDiffIndex(previous, diff)
   const combinationsA = addPreviousCombinations({
     combinations,
@@ -28,7 +26,7 @@ export const addPrevious = function (
 
   const previousA = previous.map(removeCombinations)
   return {
-    ...benchmark,
+    ...result,
     timestamp,
     combinations: combinationsA,
     previous: previousA,
@@ -53,8 +51,8 @@ const addPreviousCombinations = function ({
   return combinationsA
 }
 
-const getCombinations = function ({ combinations }, benchmark) {
-  return combinations.map((combination) => ({ ...combination, benchmark }))
+const getCombinations = function ({ combinations }, result) {
+  return combinations.map((combination) => ({ ...combination, result }))
 }
 
 const addPreviousCombination = function ({
@@ -92,6 +90,6 @@ const isSameCombination = function (combinationA, combinationB) {
   )
 }
 
-const removeCombinations = function (benchmark) {
-  return omit(benchmark, ['combinations'])
+const removeCombinations = function (result) {
+  return omit(result, ['combinations'])
 }

@@ -1,44 +1,44 @@
-import { debugBenchmark } from './debug.js'
+import { performDebug } from './debug.js'
 import { getOpts } from './options/main.js'
 import { report } from './report/main.js'
-import { runBenchmark } from './run.js'
+import { performRun } from './run.js'
 import { addToStore } from './store/add.js'
 import { endStore } from './store/end.js'
 import { getFromStore } from './store/get.js'
 import { removeFromStore } from './store/remove.js'
 import { startStore } from './store/start.js'
 
-// Benchmark JavaScript code defined in a tasks file and report the results.
-// Default action: run a new benchmark
+// Measure code defined in a tasks file and report the results.
+// Default action.
 export const run = async function (opts) {
   const optsA = await getOpts('run', opts)
   const optsB = await startStore(optsA)
 
   try {
-    const partialResult = await runBenchmark(optsB)
-    const { mergeId, benchmarks } = await addToStore(partialResult, optsB)
-    const benchmark = await report(mergeId, benchmarks, optsB)
-    return benchmark
+    const partialResult = await performRun(optsB)
+    const { mergeId, results } = await addToStore(partialResult, optsB)
+    const result = await report(mergeId, results, optsB)
+    return result
   } finally {
     await endStore(optsB)
   }
 }
 
-// Show a previous benchmark
+// Show a previous result
 export const show = async function (opts) {
   const { delta, ...optsA } = await getOpts('show', opts)
   const optsB = await startStore(optsA)
 
   try {
-    const { mergeId, benchmarks } = await getFromStore(delta, optsB)
-    const benchmark = await report(mergeId, benchmarks, optsB)
-    return benchmark
+    const { mergeId, results } = await getFromStore(delta, optsB)
+    const result = await report(mergeId, results, optsB)
+    return result
   } finally {
     await endStore(optsB)
   }
 }
 
-// Remove a previous benchmark
+// Remove a previous result
 export const remove = async function (opts) {
   const { delta, ...optsA } = await getOpts('remove', opts)
   const optsB = await startStore(optsA)
@@ -51,9 +51,9 @@ export const remove = async function (opts) {
   }
 }
 
-// Run benchmark in debug mode
+// Run tasks in debug mode
 export const debug = async function (opts) {
   const optsA = await getOpts('debug', opts)
 
-  await debugBenchmark(optsA)
+  await performDebug(optsA)
 }

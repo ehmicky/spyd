@@ -1,12 +1,12 @@
 import now from 'precise-now'
 
-import { measure } from './measure.js'
+import { measure } from './loop.js'
 
 // Measure how long a task takes.
-// Run the benchmark for a specific amount of time.
-// We perform benchmarking iteratively in order to stop benchmarking exactly
-// when the `duration` or `MAX_LOOPS` has been reached.
-export const benchmark = async function ({
+// Measure for a specific amount of time.
+// We take measures iteratively in order to stop exactly when the `duration`
+// has been reached.
+export const measureTask = async function ({
   main,
   before,
   after,

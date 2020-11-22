@@ -6,7 +6,7 @@ import { mergePartialResults } from '../merge/partial.js'
 
 import { listStore } from './list.js'
 
-// Add a new benchmark
+// Add a new result
 export const addToStore = async function (partialResult, opts) {
   const partialResults = await listStore(opts)
 
@@ -14,36 +14,36 @@ export const addToStore = async function (partialResult, opts) {
   await save(partialResultA, opts)
 
   const partialResultsA = [...partialResults, partialResultA]
-  const benchmarks = mergePartialResults(partialResultsA)
+  const results = mergePartialResults(partialResultsA)
 
-  return { mergeId: partialResultA.mergeId, benchmarks }
+  return { mergeId: partialResultA.mergeId, results }
 }
 
-// Save benchmark results so they can be compared or shown later
-const save = async function (benchmark, { save: saveOpt, store }) {
+// Save results so they can be compared or shown later
+const save = async function (result, { save: saveOpt, store }) {
   if (!saveOpt) {
     return
   }
 
-  const benchmarkA = normalizeBenchmark(benchmark)
+  const resultA = normalizeResult(result)
 
   try {
-    await store.add(benchmarkA)
+    await store.add(resultA)
   } catch (error) {
-    throw new UserError(`Could not save benchmark: ${error.message}`)
+    throw new UserError(`Could not save result: ${error.message}`)
   }
 }
 
-// Benchmark information that are too big are not persisted.
+// Results that are too big are not persisted.
 // We otherwise try to persist everything, so that `show` report the same
 // information.
 // We try to only persist what cannot be computed runtime (which is done by
 // `addPrintedInfo()` during reporting). This includes
 // `combination.row|column` which are only computed for progress reporters,
-// but re-computed after previous benchmarks loading/merging.
-const normalizeBenchmark = function ({ combinations, ...benchmark }) {
+// but re-computed after previous results loading/merging.
+const normalizeResult = function ({ combinations, ...result }) {
   const combinationsA = combinations.map(normalizeCombination)
-  return { ...benchmark, combinations: combinationsA }
+  return { ...result, combinations: combinationsA }
 }
 
 const normalizeCombination = function ({ stats, ...combination }) {

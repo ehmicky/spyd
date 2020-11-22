@@ -15,25 +15,25 @@ export const getDefaultMergeId = function ({ cwd }) {
   return [slugA, service, buildNumber].filter(Boolean).join('-')
 }
 
-// Add `benchmark.mergeId`.
-// Also the `merge` option can be "" to re-use the previous benchmark's mergeId.
-export const addMergeId = function (benchmark, benchmarks, { mergeId }) {
-  const mergeIdA = handleSame(benchmarks, mergeId)
-  return { ...benchmark, mergeId: mergeIdA }
+// Add `result.mergeId`.
+// Also the `merge` option can be "" to re-use the previous results' mergeId.
+export const addMergeId = function (result, results, { mergeId }) {
+  const mergeIdA = handleSame(results, mergeId)
+  return { ...result, mergeId: mergeIdA }
 }
 
-const handleSame = function (benchmarks, mergeId) {
+const handleSame = function (results, mergeId) {
   if (mergeId !== '') {
     return mergeId
   }
 
-  const lastBenchmark = benchmarks[benchmarks.length - 1]
+  const lastResult = results[results.length - 1]
 
-  if (lastBenchmark === undefined) {
+  if (lastResult === undefined) {
     throw new UserError(
-      "Cannot use merge='' because there are no previous benchmarks",
+      "Cannot use merge='' because there are no previous results",
     )
   }
 
-  return lastBenchmark.mergeId
+  return lastResult.mergeId
 }

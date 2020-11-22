@@ -47,7 +47,7 @@ const getSpawnOptions = function ({
 }
 
 // For IPC (success and error output), we use a file instead of:
-//  - stdout/stderr: they are likely be used by the benchmarking code itself
+//  - stdout/stderr: they are likely be used by the task itself
 //  - `child_process` `ipc`: would not work across programming languages
 // stdout/stderr are:
 //  - ignored in `run`

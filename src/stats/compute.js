@@ -3,7 +3,7 @@ import { getSortedMedian } from './median.js'
 import { getMean, getDeviation } from './methods.js'
 import { getQuantiles } from './quantiles.js'
 
-// Retrieve statistics from a raw set of benchmark results
+// Retrieve statistics from results.
 // Perform the statistical logic.
 // Note that when `repeat > 1`, the distribution of the measured function will
 // be modified by the looping process and transformed to a bell shape, even if
@@ -12,8 +12,8 @@ import { getQuantiles } from './quantiles.js'
 // function itself.
 export const getStats = function ({ times, count, processes }) {
   // `count` is the number of times `main()` was called
-  // `loops` is the number of benchmark loops
-  // `repeat` is the average number of iterations inside those benchmark loops
+  // `loops` is the number of repeat loops
+  // `repeat` is the average number of iterations inside those repeat loops
   const loops = times.length
   const repeat = Math.round(count / loops)
 

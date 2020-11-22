@@ -2,12 +2,12 @@ import now from 'precise-now'
 
 import { preciseTimestamp } from '../../../../measure/precise_timestamp.js'
 
-import { benchmarkLoopAsync } from './async/loop.js'
-import { benchmarkLoopSync } from './sync/loop.js'
+import { performLoopAsync } from './async/loop.js'
+import { performLoopSync } from './sync/loop.js'
 
 // Call the `main` function iteratively and return an array of `times` measuring
 // how long each call took.
-export const benchmark = async function ({
+export const measureTask = async function ({
   main,
   before,
   after,
@@ -18,7 +18,7 @@ export const benchmark = async function ({
   const times = []
   const start = String(preciseTimestamp())
   const runEnd = now() + maxDuration
-  await benchmarkLoop({
+  await performLoop({
     main,
     before,
     after,
@@ -33,7 +33,7 @@ export const benchmark = async function ({
 // We separate async and sync measurements because following a promise (`await`)
 // can take several microseconds, which does not work when measuring fast
 // synchronous functions.
-const benchmarkLoop = function ({
+const performLoop = function ({
   main,
   before,
   after,
@@ -43,8 +43,8 @@ const benchmarkLoop = function ({
   times,
 }) {
   if (async) {
-    return benchmarkLoopAsync({ main, before, after, repeat, runEnd, times })
+    return performLoopAsync({ main, before, after, repeat, runEnd, times })
   }
 
-  return benchmarkLoopSync({ main, before, after, repeat, runEnd, times })
+  return performLoopSync({ main, before, after, repeat, runEnd, times })
 }

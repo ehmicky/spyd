@@ -27,7 +27,7 @@ const MIN_PRECISION = 1e2
 const MIN_NOW_BIAS = 1e2
 // Maximum percentage of the total tas duration a single loop is allowed to
 // last.
-// This ensures that, if `nowBias` is high, benchmarks can still be run without
+// This ensures that, if `nowBias` is high, runs can still work without
 // setting a very high total `duration`.
 // A higher value makes it more likely for tasks to timeout.
 // A lower value decreases the impact of `MIN_PRECISION` and `MIN_NOW_BIAS`.

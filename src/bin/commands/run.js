@@ -6,7 +6,7 @@ import { STORE_CONFIG } from '../config/store.js'
 
 export const RUN_COMMAND = {
   input: ['run [<files...>]', '* [<files...>'],
-  description: 'Run benchmarks',
+  description: 'Measure tasks',
 
   config: {
     ...ALL_CONFIG,
@@ -18,12 +18,12 @@ export const RUN_COMMAND = {
 
   usage: `$0 [options] [<files...>]
 
-Benchmark code.
+Measure tasks.
 
 FILE can be a globbing pattern.
 It defaults to "./benchmarks.*" or "./benchmarks/index.*".
 
-Each FILE must export the tasks to benchmark.
+Each FILE must export the tasks to measure.
 
 Several FILEs can be specified at once.
 Each set of 'inputs' is specific to the FILE which declared it.
@@ -31,7 +31,7 @@ Each set of 'inputs' is specific to the FILE which declared it.
 The format of the FILE is runner-specific.`,
 
   examples: [
-    ['$0', 'Run a new benchmark'],
-    ['$0 -d 60', 'Benchmark each task for 60 seconds'],
+    ['$0', 'Measure tasks'],
+    ['$0 -d 60', 'Measure each task for 60 seconds'],
   ],
 }

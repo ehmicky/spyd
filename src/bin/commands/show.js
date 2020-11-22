@@ -5,7 +5,7 @@ import { STORE_CONFIG } from '../config/store.js'
 
 export const SHOW_COMMAND = {
   input: 'show [delta]',
-  description: 'Show a previous benchmark',
+  description: 'Show a previous result',
 
   config: {
     ...ALL_CONFIG,
@@ -16,24 +16,24 @@ export const SHOW_COMMAND = {
 
   usage: `$0 [options] show [delta]
 
-Show a previous benchmark.
+Show a previous result.
 
 The 'delta' argument can be:
-  - nothing: show the last benchmark
-  - integer: show the {integer}-th previous benchmark
-  - a date|time: show the last benchmark before that date|time.
+  - nothing: show the last result
+  - integer: show the {integer}-th previous result
+  - a date|time: show the last result before that date|time.
     Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.`,
 
   examples: [
-    ['$0 show', 'Show the last benchmark'],
-    ['$0 show 2', 'Show the second-to-last benchmark'],
+    ['$0 show', 'Show the last result'],
+    ['$0 show 2', 'Show the second-to-last result'],
     [
       '$0 show 2018-02-01',
-      'Show the last benchmark before the 1st of February 2018',
+      'Show the last result before the 1st of February 2018',
     ],
     [
       '$0 show 2018-02-01T15:00:00Z',
-      'Show the last benchmark before the 1st of February 2018 at 15:00 UTC',
+      'Show the last result before the 1st of February 2018 at 15:00 UTC',
     ],
   ],
 }

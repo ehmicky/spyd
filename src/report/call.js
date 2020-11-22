@@ -3,23 +3,23 @@ import omit from 'omit.js'
 // Call `reporter.report()`
 export const callReportFunc = async function ({
   reportFunc,
-  benchmark,
+  result,
   reportOpt,
   reportOpt: { info, context },
 }) {
-  const reportFuncBenchmark = cleanBenchmark({ benchmark, info, context })
+  const reportFuncResult = cleanResult({ result, info, context })
   const reportFuncOpts = omit(reportOpt, CORE_REPORT_OPTS)
-  const content = await reportFunc(reportFuncBenchmark, reportFuncOpts)
+  const content = await reportFunc(reportFuncResult, reportFuncOpts)
   return content
 }
 
-// Remove some benchmark properties unless some reporter options are passed
-const cleanBenchmark = function ({ benchmark, info, context }) {
+// Remove some result properties unless some reporter options are passed
+const cleanResult = function ({ result, info, context }) {
   const omittedProps = [
     ...(info ? [] : INFO_PROPS),
     ...(context ? [] : CONTEXT_PROPS),
   ]
-  return omit(benchmark, omittedProps)
+  return omit(result, omittedProps)
 }
 
 const INFO_PROPS = ['systems', 'commands']

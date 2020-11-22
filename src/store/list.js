@@ -13,6 +13,6 @@ const callList = async function (store) {
   try {
     return await store.list()
   } catch (error) {
-    throw new UserError(`Could not list previous benchmarks: ${error.message}`)
+    throw new UserError(`Could not list previous results: ${error.message}`)
   }
 }

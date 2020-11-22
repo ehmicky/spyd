@@ -1,8 +1,8 @@
 import { runMethod } from '../common/ipc.js'
 
-import { benchmark } from './benchmark/main.js'
 import { debugRun } from './debug.js'
 import { loadTasksFile } from './load/main.js'
+import { measureTask } from './measure/main.js'
 
 // Communicate combination ids and titles to parent
 const load = async function ({ opts, taskPath }) {
@@ -15,7 +15,7 @@ const getCombination = function ({ taskId, taskTitle, inputTitle, inputId }) {
   return { taskId, taskTitle, inputId, inputTitle }
 }
 
-// Run benchmarks
+// Compute measures
 const run = async function ({
   opts,
   taskPath,
@@ -32,7 +32,7 @@ const run = async function ({
     inputId,
     dry,
   })
-  const { times, start } = await benchmark({
+  const { times, start } = await measureTask({
     main,
     before,
     after,

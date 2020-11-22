@@ -17,8 +17,7 @@ const isNowBias = function ({ nowBias, loopBias, repeat }) {
   return nowBias === 0 && loopBias === 0 && repeat === 1
 }
 
-// Return the real time spent by the task, as opposed to time spent benchmarking
-// it.
+// Return the real time spent by the task, as opposed to time spent measuring it
 // `time` can be negative if:
 //   - The task is faster than `nowBias`, in which case `nowBias` variation
 //     might be higher than the task duration itself. This is only a problem

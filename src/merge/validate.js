@@ -2,11 +2,11 @@ import { isDeepStrictEqual } from 'util'
 
 import { UserError } from '../error/main.js'
 
-// Several benchmarks can have the same system, providing it has exactly the
-// same options.
-// If several benchmarks with the same system have different
-// titles/machines/jobs, the last one prevails.
-// Several benchmarks from the same mergeId must have the same ci/git.
+// Several results can have the same system, providing it has exactly the same
+// options.
+// If several results with the same system have different titles/machines/jobs,
+// the last one prevails.
+// Several results from the same mergeId must have the same ci/git.
 export const validateMerge = function ({
   previousSystems,
   system,
@@ -44,7 +44,7 @@ const SAME_SYSTEM_PROPS = ['opts']
 
 const validateSame = function (objectA, objectB, { propName, groups }) {
   if (!isDeepStrictEqual(objectA, objectB)) {
-    throw new UserError(`Several benchmarks with the same ${groups} cannot have different ${propName}:
+    throw new UserError(`Several runs with the same ${groups} cannot have different ${propName}:
 ${JSON.stringify(objectA)}
 ${JSON.stringify(objectB)}`)
   }

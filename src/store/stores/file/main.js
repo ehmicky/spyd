@@ -1,8 +1,8 @@
-import { getBenchmarks, setBenchmarks } from './fs.js'
+import { getResults, setResults } from './fs.js'
 import { getDir } from './options.js'
 
 // Filesystem store. This is the default built-in store.
-// Saves benchmarks to `dir/data.json`
+// Saves results to `dir/data.json`
 const start = function (opts) {
   return getDir(opts)
 }
@@ -11,24 +11,24 @@ const start = function (opts) {
 const end = function () {}
 
 const list = async function (dir) {
-  const benchmarks = await getBenchmarks(dir)
-  return benchmarks
+  const results = await getResults(dir)
+  return results
 }
 
-const add = async function (benchmark, dir) {
-  const benchmarks = await getBenchmarks(dir)
-  const benchmarksA = [...benchmarks, benchmark]
-  await setBenchmarks(dir, benchmarksA)
+const add = async function (result, dir) {
+  const results = await getResults(dir)
+  const resultsA = [...results, result]
+  await setResults(dir, resultsA)
 }
 
-const replace = async function (benchmarks, dir) {
-  await setBenchmarks(dir, benchmarks)
+const replace = async function (results, dir) {
+  await setResults(dir, results)
 }
 
 const remove = async function (ids, dir) {
-  const benchmarks = await getBenchmarks(dir)
-  const benchmarksA = benchmarks.filter(({ id }) => !ids.includes(id))
-  await setBenchmarks(dir, benchmarksA)
+  const results = await getResults(dir)
+  const resultsA = results.filter(({ id }) => !ids.includes(id))
+  await setResults(dir, resultsA)
 }
 
 export const file = { start, end, list, add, replace, remove }

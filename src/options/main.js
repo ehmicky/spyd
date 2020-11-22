@@ -80,14 +80,14 @@ const VALID_TIMESTAMPS = [
   'yyyy-mm-ddThh:mm:ss.sssZ',
 ]
 
-const VALID_BENCHMARK_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
+const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 
 const EXAMPLE_OPTS = {
   ...DEFAULT_OPTS,
   config: 'spyd.yml',
   context: true,
-  delta: VALID_BENCHMARK_DELTA,
-  diff: VALID_BENCHMARK_DELTA,
+  delta: VALID_DELTA,
+  diff: VALID_DELTA,
   merge: multipleValidOptions('', '546'),
   insert: './README.md',
   limit: ['taskId=10'],

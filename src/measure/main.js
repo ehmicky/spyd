@@ -8,7 +8,7 @@ import { runMeasurement } from './run.js'
 
 const pSetTimeout = promisify(setTimeout)
 
-// Start several child processes benchmarking the same task.
+// Start several child processes measuring the same task.
 // eslint-disable-next-line max-lines-per-function
 export const measureCombination = async function ({
   row,
@@ -75,7 +75,7 @@ export const measureCombination = async function ({
 // the target `duration`. We do not try to run it with a lower duration since
 // this would skew results due to comparing processes with a different number
 // of loops.
-// However, we still wait for the time left, without running any benchmark.
+// However, we still wait for the time left, without running any processes.
 // This is wasteful time-wise but prevents the timer from jumping fast-forward
 // at the end, giving the feeling of a smooth countdown instead
 const waitForTimeLeft = async function (runEnd) {

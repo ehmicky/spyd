@@ -7,16 +7,16 @@ import { validateTargets } from './validate.js'
 // Select combinations according to options `tasks` and `inputs`.
 // For the `run` and `debug` commands.
 export const selectCombinations = function (combinations, { tasks, inputs }) {
-  const [{ combinations: combinationsA }] = selectBenchmarks(
+  const [{ combinations: combinationsA }] = selectPartialResults(
     [{ combinations }],
     { tasks, inputs },
   )
   return combinationsA
 }
 
-// Select benchmarks according to options `tasks`, `inputs`, `system` and `run`.
-// For the `show` command.
-export const selectBenchmarks = function (partialResults, opts) {
+// Select partialResults according to options `tasks`, `inputs`, `system` and
+// `run`. For the `show` command.
+export const selectPartialResults = function (partialResults, opts) {
   const targets = getTargets(opts)
   validateTargets(targets, partialResults)
 
@@ -31,9 +31,9 @@ export const selectBenchmarks = function (partialResults, opts) {
   return partialResultsA
 }
 
-// Benchmarks with no matching selections are removed from the set.
+// partialResults with no matching selections are removed from the set.
 // This means deltas and reporting only apply to the current set of matching
-// benchmarks.
+// partialResults.
 const hasCombinations = function ({ combinations }) {
   return combinations.length !== 0
 }

@@ -29,7 +29,7 @@ environment variable.
 Default: ""`,
   },
   run: {
-    describe: `Module to run benchmarks for a specific programming language or
+    describe: `Module to measure tasks for a specific programming language or
 platform.
 Built-in runners: node, cli.
 Custom runners can be installed from npm.

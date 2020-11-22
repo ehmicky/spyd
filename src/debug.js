@@ -6,8 +6,8 @@ import { titleColor } from './report/utils/colors.js'
 import { SEPARATOR_SIGN } from './report/utils/separator.js'
 import { addTitles } from './report/utils/title/main.js'
 
-// Run benchmark in debug mode
-export const debugBenchmark = async function (opts) {
+// Run tasks in debug mode
+export const performDebug = async function (opts) {
   const { combinations } = await getCombinations({ ...opts, debug: true })
   const combinationsA = addTitles(combinations)
 

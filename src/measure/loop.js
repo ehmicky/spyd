@@ -106,7 +106,7 @@ export const runMeasureLoop = async function ({
 
 // We stop iterating when the next process does not have any time to run a
 // single loop. We estimate this taking into account the time to launch the
-// runner (`benchmarkCost`), the time to benchmark the task (`nowBias`) and
+// runner (`benchmarkCost`), the time to measure the task (`nowBias`) and
 // the time of the task itself, based on previous measurements (`median`).
 // This means we allow the last process to be shorter than the others.
 // On one side, this means we are comparing processes with different durations,

@@ -3,24 +3,24 @@ import { getUnsortedMedian } from '../stats/median.js'
 import { preciseTimestamp } from './precise_timestamp.js'
 
 // Estimates how much time is spent loading runners as opposed to running the
-// benchmarked task.
+// task.
 // That estimation is used when computing the optimal process `maxDuration`.
 // This includes the time spent:
 //  - spawning the child process
 //  - loading the runner, e.g. loading files and dependencies
 //  - loading the task
 // This does not include the time spent:
-//  - iterating on the benchmark loop itself
+//  - iterating on the repeat loop itself
 //  - sending the results (runner)
 //  - receiving the results (parent process)
 //  - normalizing and aggregating the results
 // The above are not included because their duration depends on the number of
-// benchmark loops performed
+// repeat loops performed
 //  - that number depends on `maxDuration`, which is based on `benchmarkCost`
 //  - this would create a cycle making the `benchmarkCost` increase forever
 // The estimation is based on the difference between two timestamps:
 //  - in the parent process, right before spawning a new runner process
-//  - in the runner process, right before benchmarking, but after loading
+//  - in the runner process, right before measuring, but after loading
 //    dependencies and the task. This is sent back to parent in the results.
 // Those timestamps are in nanoseconds
 //  - some runners or systems might not allow such a high resolution, but they
@@ -28,7 +28,7 @@ import { preciseTimestamp } from './precise_timestamp.js'
 //  - runners with lower resolution make the `benchmarkCost` vary more
 // Runners should strive to load dependencies and tasks as fast as possible,
 // since it:
-//  - increases the time spent on benchmarking
+//  - increases the time spent on measuring
 //  - maximizes the number of processes per run
 // The estimation is made for each new process. A median of the `previous`
 // processes' `benchmarkCost` is used
