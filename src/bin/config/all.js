@@ -15,6 +15,6 @@ SPYD__MERGE=id is like --merge=id and SPYD__RUN__NODE__VERSIONS 8 is like
     string: true,
     requiresArg: true,
     describe: `Current directory.
-Used to find the default configuration and benchmark files.`,
+Used to find the default configuration and tasks files.`,
   },
 }

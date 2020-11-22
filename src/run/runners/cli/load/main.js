@@ -9,9 +9,9 @@ import { getShell } from './shell.js'
 import { validateFile } from './validate.js'
 import { getVariables } from './variables.js'
 
-// Load the benchmark file
-export const loadBenchmarkFile = async function (taskPath, debug) {
-  const entries = await getBenchmarkContent(taskPath)
+// Load the tasks file
+export const loadTasksFile = async function (taskPath, debug) {
+  const entries = await getFileContent(taskPath)
   validateFile(entries)
 
   const variables = env
@@ -32,12 +32,12 @@ export const loadBenchmarkFile = async function (taskPath, debug) {
   return { combinations, shell }
 }
 
-const getBenchmarkContent = async function (taskPath) {
+const getFileContent = async function (taskPath) {
   try {
     return await loadYamlFile(taskPath)
   } catch (error) {
     throw new UserError(
-      `Could not load benchmark file '${taskPath}': ${error.message}`,
+      `Could not load tasks file '${taskPath}': ${error.message}`,
     )
   }
 }

@@ -2,8 +2,7 @@ import { extname } from 'path'
 
 import { UserError } from '../../../../error/main.js'
 
-// When the benchmark file is in TypeScript, automatically use
-// `ts-node/register`
+// When the tasks file is in TypeScript, automatically use `ts-node/register`
 export const handleTypeScript = async function (requireOpt, taskPath) {
   if (!shouldUseTsNode(requireOpt, taskPath)) {
     return
@@ -13,9 +12,9 @@ export const handleTypeScript = async function (requireOpt, taskPath) {
     await import(TS_NODE)
   } catch (error) {
     throw new UserError(
-      `When the benchmark file is in TypeScript either:
+      `When the tasks file is in TypeScript either:
   - 'ts-node' and 'typescript' must be installed
-  - the benchmark file must be transpiled by 'tsc'\n\n${error.message}`,
+  - the tasks file must be transpiled by 'tsc'\n\n${error.message}`,
     )
   }
 }

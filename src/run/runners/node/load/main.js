@@ -6,11 +6,11 @@ import { useRequireOpt } from './require_opt.js'
 import { validateFile } from './validate.js'
 
 // Load the combinations using the 'load' event sent by parent
-// Those combinations are used:
-//   - to run benchmarks
+// Those are used:
+//   - to run combinations
 //   - by the parent at startup, but only combination ids and titles are needed
-// Load the benchmark file using its absolute path
-export const loadBenchmarkFile = async function (
+// Load the tasks file using its absolute path
+export const loadTasksFile = async function (
   taskPath,
   { require: requireOpt },
 ) {
@@ -28,6 +28,6 @@ const loadFile = async function (taskPath) {
   try {
     return await import(taskPath)
   } catch (error) {
-    throw new UserError(`Could not load the benchmark file\n\n${error.stack}`)
+    throw new UserError(`Could not load the tasks file\n\n${error.stack}`)
   }
 }

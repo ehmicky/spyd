@@ -2,8 +2,8 @@ import { findRunners } from '../run/find.js'
 
 import { getCommandCombinations } from './get.js'
 
-// Load combinations by launching each combination of /
-// benchmark files + runners commands
+// Load combinations by launching each combination of
+// tasks files + runners commands
 export const loadCombinations = async function ({
   taskPaths,
   runners,

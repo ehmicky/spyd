@@ -3,7 +3,7 @@ import { UserError, PluginError } from '../error/main.js'
 import { getCommands } from './command.js'
 import { hasTasks } from './find.js'
 
-// Select the runners for the current benchmark files, and retrieve their
+// Select the runners for the current tasks files, and retrieve their
 // related commands using `runner.commands()`
 export const loadRunners = async function (runners, taskPaths) {
   const runnersA = runners.filter((runner) => hasTasks(runner, taskPaths))

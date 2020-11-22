@@ -1,7 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../../../error/main.js'
-import { validateBenchmarkFile } from '../../common/validate/file.js'
+import { validateTasksFile } from '../../common/validate/file.js'
 import { validateInputs } from '../../common/validate/inputs.js'
 import { validateTasks } from '../../common/validate/tasks.js'
 import {
@@ -10,9 +10,9 @@ import {
   validatePrimitive,
 } from '../../common/validate/type.js'
 
-// Validate that benchmark file has correct shape
+// Validate that tasks file has correct shape
 export const validateFile = function (entries) {
-  validateBenchmarkFile(entries, VALIDATORS)
+  validateTasksFile(entries, VALIDATORS)
 }
 
 const validateShell = function (shell) {

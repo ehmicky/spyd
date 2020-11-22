@@ -1,4 +1,4 @@
-import { validateBenchmarkFile } from '../../common/validate/file.js'
+import { validateTasksFile } from '../../common/validate/file.js'
 import { validateInputs } from '../../common/validate/inputs.js'
 import { validateTasks } from '../../common/validate/tasks.js'
 import {
@@ -8,9 +8,9 @@ import {
   validateStringArray,
 } from '../../common/validate/type.js'
 
-// Validate that the benchmark file has correct shape
+// Validate that the tasks file has correct shape
 export const validateFile = function (entries) {
-  validateBenchmarkFile(entries, VALIDATORS)
+  validateTasksFile(entries, VALIDATORS)
 }
 
 const TASK_VALIDATORS = {

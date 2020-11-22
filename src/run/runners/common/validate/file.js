@@ -2,10 +2,10 @@ import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../../../error/main.js'
 
-// Validate that the benchmark file has correct shape
-export const validateBenchmarkFile = function (entries, validators) {
+// Validate that the tasks file has correct shape
+export const validateTasksFile = function (entries, validators) {
   if (!isPlainObj(entries)) {
-    throw new UserError(`Benchmark file must be a top-level object`)
+    throw new UserError(`Tasks file must be a top-level object`)
   }
 
   if (entries.tasks === undefined) {

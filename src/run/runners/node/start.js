@@ -2,11 +2,11 @@ import { runMethod } from '../common/ipc.js'
 
 import { benchmark } from './benchmark/main.js'
 import { debugRun } from './debug.js'
-import { loadBenchmarkFile } from './load/main.js'
+import { loadTasksFile } from './load/main.js'
 
 // Communicate combination ids and titles to parent
 const load = async function ({ opts, taskPath }) {
-  const combinations = await loadBenchmarkFile(taskPath, opts)
+  const combinations = await loadTasksFile(taskPath, opts)
   const combinationsA = combinations.map(getCombination)
   return { combinations: combinationsA }
 }
@@ -55,7 +55,7 @@ const debug = async function ({ opts, taskPath, taskId, inputId }) {
 }
 
 const getTask = async function ({ opts, taskPath, taskId, inputId, dry }) {
-  const combinations = await loadBenchmarkFile(taskPath, opts)
+  const combinations = await loadTasksFile(taskPath, opts)
 
   const { main, before, after, async } = combinations.find(
     (combination) =>

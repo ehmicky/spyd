@@ -3,8 +3,8 @@ import { applyTemplate } from '../template.js'
 
 // `task.inputs` is an array of `inputId` pointing towards the top-level
 // `inputs` object. We dereference those pointers here.
-// `inputs` are scoped to each benchmark file. However the same
-// `inputId` can be used across benchmark files.
+// `inputs` are scoped to each tasks file. However the same
+// `inputId` can be used across tasks files.
 // Defaults to using all `inputs`.
 export const addTasksInputs = function ({
   tasks,

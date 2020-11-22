@@ -6,8 +6,8 @@ import { executeChild } from '../processes/main.js'
 import { validateIds } from './validate.js'
 
 // Load combinations by launching each command.
-// At startup we run child processes but do not run an benchmarks. We only
-// retrieve the benchmark files combinations.
+// At startup we run child processes but do not measure yet.
+// We only retrieve the tasks files combinations.
 export const getCommandCombinations = async function ({
   taskPath,
   command,
