@@ -19,7 +19,6 @@ export const runMeasureLoop = async function ({
   measureDuration,
   cwd,
   benchmarkCost,
-  benchmarkCostMin,
   nowBias,
   loopBias,
   minTime,
@@ -50,7 +49,6 @@ export const runMeasureLoop = async function ({
     const maxDuration = getMaxDuration({
       runEnd,
       benchmarkCost,
-      benchmarkCostMin,
       nowBias,
       loopBias,
       repeat,

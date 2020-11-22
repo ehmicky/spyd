@@ -46,13 +46,13 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 export const getMaxDuration = function ({
   runEnd,
   benchmarkCost,
-  benchmarkCostMin,
   nowBias,
   loopBias,
   repeat,
   median,
 }) {
   const timeLeftMeasuring = getTimeLeftMeasuring(runEnd, benchmarkCost)
+  const benchmarkCostMin = getBenchmarkCostMin(benchmarkCost)
   const targetTimesMin = getTargetTimesMin({
     median,
     nowBias,
@@ -71,6 +71,21 @@ export const getMaxDuration = function ({
 const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
   return runEnd - now() - benchmarkCost
 }
+
+// Ensure that processes are run long enough (by using `maxDuration`) so that
+// they get enough time running the benchmarked task, as opposed to spawning
+// processes/runners.
+const getBenchmarkCostMin = function (benchmarkCost) {
+  return benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
+}
+
+// How much time should be spent spawning processes/runners as opposed to
+// running the benchmarked task.
+// A lower number spawns fewer processes, reducing the precision provided by
+// using several processes.
+// A higher number runs the benchmark task fewer times, reducing the precision
+// provided by running it many times.
+const BENCHMARK_COST_RATIO = 0.5
 
 // Estimated time to run the task a specific amount of time.
 // This is the number of time the task function is run, not the `repeat` loop.

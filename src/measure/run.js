@@ -11,7 +11,6 @@ import { runMeasureLoop } from './loop.js'
 //  - multi-core CPUs are designed to run in parallel but in practice they do
 //    impact the performance of each other
 //  - this does mean we are under-utilizing CPUs
-// eslint-disable-next-line max-lines-per-function
 export const runMeasurement = async function ({
   taskPath,
   taskId,
@@ -23,7 +22,7 @@ export const runMeasurement = async function ({
   runEnd,
   cwd,
 }) {
-  const { benchmarkCost, benchmarkCostMin } = await getBenchmarkCost({
+  const benchmarkCost = await getBenchmarkCost({
     taskPath,
     taskId,
     inputId,
@@ -43,7 +42,6 @@ export const runMeasurement = async function ({
     measureDuration: duration * BIAS_DURATION_RATIO,
     cwd,
     benchmarkCost,
-    benchmarkCostMin,
   })
   const { times, count, processes } = await runMeasureLoop({
     taskPath,
@@ -55,7 +53,6 @@ export const runMeasurement = async function ({
     measureDuration: runEnd - now(),
     cwd,
     benchmarkCost,
-    benchmarkCostMin,
     nowBias,
     loopBias,
     minTime,
