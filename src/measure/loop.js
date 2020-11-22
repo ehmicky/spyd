@@ -4,11 +4,14 @@ import now from 'precise-now'
 import { executeChild } from '../processes/main.js'
 import { removeOutliers } from '../stats/outliers.js'
 
-import { updateBenchmarkCost } from './cost.js'
+import {
+  updateBenchmarkCost,
+  startBenchmarkCost,
+  endBenchmarkCost,
+} from './cost.js'
 import { getMaxDuration } from './duration.js'
 import { getMedian } from './median.js'
 import { normalizeTimes } from './normalize.js'
-import { preciseTimestamp } from './precise_timestamp.js'
 import { adjustRepeat } from './repeat.js'
 
 // eslint-disable-next-line max-statements, max-lines-per-function
@@ -59,7 +62,7 @@ export const runMeasureLoop = async function ({
       median,
     })
 
-    const startChild = preciseTimestamp()
+    const benchmarkCostStart = startBenchmarkCost()
     // eslint-disable-next-line no-await-in-loop
     const { times: childTimes, start } = await executeChild({
       commandSpawn,
@@ -71,7 +74,7 @@ export const runMeasureLoop = async function ({
       inputId,
       type: 'iterationRun',
     })
-    const childBenchmarkCost = Number(BigInt(start) - startChild)
+    const childBenchmarkCost = endBenchmarkCost(benchmarkCostStart, start)
 
     normalizeTimes(childTimes, { nowBias, loopBias, repeat })
 

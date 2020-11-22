@@ -1,5 +1,7 @@
 import { getUnsortedMedian } from '../stats/median.js'
 
+import { preciseTimestamp } from './precise_timestamp.js'
+
 // Estimates how much time is spent loading runners as opposed to running the
 // benchmarked task.
 // That estimation is used when computing the optimal process `maxDuration`.
@@ -41,6 +43,19 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - however, it is possible that a runner might be doing some extra logic at
 //    `run` time (instead of load time) when retrieving a task with a specific
 //    option, such as dynamically loading some code for that specific task
+export const startBenchmarkCost = function () {
+  return preciseTimestamp()
+}
+
+// In case the runner resolution is low, `benchmarkCostEnd` might have a lower
+// resolution than `benchmarkCostStart` and the difference might be negative
+export const endBenchmarkCost = function (
+  benchmarkCostStart,
+  benchmarkCostEnd,
+) {
+  return Math.max(Number(BigInt(benchmarkCostEnd) - benchmarkCostStart), 0)
+}
+
 export const updateBenchmarkCost = function (
   childBenchmarkCost,
   benchmarkCost,
