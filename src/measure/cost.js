@@ -1,9 +1,8 @@
 import now from 'precise-now'
 
+import { executeChild } from '../processes/main.js'
 import { getMedian } from '../stats/methods.js'
 import { sortNumbers } from '../stats/sort.js'
-
-import { executeChild } from './execute.js'
 
 // Computes how much time is spent spawning processes/runners as opposed to
 // running the benchmarked task.

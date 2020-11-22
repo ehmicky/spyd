@@ -1,7 +1,7 @@
 import pMapSeries from 'p-map-series'
 
 import { getIterations } from './iterations/main.js'
-import { executeChild } from './measure/execute.js'
+import { executeChild } from './processes/main.js'
 import { titleColor } from './report/utils/colors.js'
 import { SEPARATOR_SIGN } from './report/utils/separator.js'
 import { addTitles } from './report/utils/title/main.js'

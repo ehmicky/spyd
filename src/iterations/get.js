@@ -1,5 +1,5 @@
 import { UserError } from '../error/main.js'
-import { executeChild } from '../measure/execute.js'
+import { executeChild } from '../processes/main.js'
 
 import { validateIds } from './validate.js'
 

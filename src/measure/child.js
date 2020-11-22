@@ -1,11 +1,11 @@
 /* eslint-disable max-lines */
 import now from 'precise-now'
 
+import { executeChild } from '../processes/main.js'
 import { getMedian } from '../stats/methods.js'
 import { removeOutliers } from '../stats/outliers.js'
 import { sortNumbers } from '../stats/sort.js'
 
-import { executeChild } from './execute.js'
 import { adjustRepeat } from './repeat.js'
 
 // eslint-disable-next-line max-statements, max-lines-per-function
