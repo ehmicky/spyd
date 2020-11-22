@@ -2,29 +2,14 @@ import { getDuration } from './duration.js'
 
 // Main measuring code.
 // If `repeat` is specified, we loop and perform an arithmetic mean.
-export const measure = async function ({
-  main,
-  before,
-  after,
-  nowBias,
-  loopBias = 0,
-  repeat,
-  async,
-}) {
+export const measure = async function ({ main, before, after, repeat, async }) {
   const beforeArgs = await performBefore(before, repeat)
 
   const duration = await getDuration({ main, repeat, async, beforeArgs })
 
   await performAfter(after, repeat, beforeArgs)
 
-  if (nowBias === undefined) {
-    return duration
-  }
-
-  // The final time might be negative if the task is as fast or faster than the
-  // iteration code itself. In this case, we return `0`.
-  const time = Math.max((duration - nowBias) / repeat - loopBias, 0)
-  return time
+  return duration
 }
 
 // Task `before()`. Performed outside measurements. Can be async.

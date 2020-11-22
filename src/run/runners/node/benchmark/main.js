@@ -8,8 +8,6 @@ export const benchmark = async function ({
   before,
   after,
   async,
-  nowBias,
-  loopBias,
   repeat,
   maxDuration,
   maxTimes,
@@ -21,8 +19,6 @@ export const benchmark = async function ({
     before,
     after,
     async,
-    nowBias,
-    loopBias,
     repeat,
     maxDuration,
     maxTimes,
@@ -38,14 +34,7 @@ export const benchmark = async function ({
 // the bias calculation.
 const initialMeasure = async function (async, before) {
   const beforeFunc = before === undefined ? undefined : noop
-  await measure({
-    main: noop,
-    before: beforeFunc,
-    nowBias: 0,
-    loopBias: 0,
-    repeat: 1,
-    async,
-  })
+  await measure({ main: noop, before: beforeFunc, repeat: 1, async })
 }
 
 // This needs to be a different function from the `noop` used during bias

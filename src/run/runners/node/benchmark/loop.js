@@ -12,8 +12,6 @@ export const benchmarkLoop = async function ({
   before,
   after,
   async,
-  nowBias,
-  loopBias,
   repeat,
   maxDuration,
   maxTimes,
@@ -24,15 +22,7 @@ export const benchmarkLoop = async function ({
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    const time = await measure({
-      main,
-      before,
-      after,
-      nowBias,
-      loopBias,
-      repeat,
-      async,
-    })
+    const time = await measure({ main, before, after, repeat, async })
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)
   } while (!shouldStopLoop(maxTimes, times, runEnd))

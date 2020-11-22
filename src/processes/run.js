@@ -50,8 +50,6 @@ export const runChildren = async function ({
     opts: commandOpt,
     taskId,
     inputId,
-    nowBias,
-    loopBias,
   }
   const results = await executeChildren({
     taskId,
@@ -63,7 +61,8 @@ export const runChildren = async function ({
     cwd,
     eventPayload,
     benchmarkCost,
-    loopBias,
+    nowBias,
+    loopBias: 0.41,
     minTime,
   })
 
@@ -83,6 +82,7 @@ const executeChildren = async function ({
   cwd,
   eventPayload,
   benchmarkCost,
+  nowBias,
   loopBias,
   minTime,
 }) {
@@ -109,15 +109,17 @@ const executeChildren = async function ({
       inputId,
       type: 'iterationRun',
     })
-    // eslint-disable-next-line fp/no-mutating-methods
-    results.push({ times, repeat })
-    // eslint-disable-next-line fp/no-mutation
-    totalTimes += times.length
+    const timesA = normalizeTimes({ times, nowBias, loopBias, repeat })
 
-    sortNumbers(times)
+    // eslint-disable-next-line fp/no-mutating-methods
+    results.push({ times: timesA, repeat })
+    // eslint-disable-next-line fp/no-mutation
+    totalTimes += timesA.length
+
+    sortNumbers(timesA)
 
     const { processMedian, processesMedian } = getProcessMedian(
-      times,
+      timesA,
       processMedians,
     )
     const newRepeat = adjustRepeat({
@@ -132,6 +134,17 @@ const executeChildren = async function ({
   } while (now() + maxDuration < runEnd && totalTimes < MAX_TIMES)
 
   return results
+}
+
+// Remove `nowBias`, `loopBias` and `repeat` from measured `times`
+const normalizeTimes = function ({ times, nowBias, loopBias, repeat }) {
+  return times.map((time) => normalizeTime({ time, nowBias, loopBias, repeat }))
+}
+
+// The final time might be negative if the task is as fast or faster than the
+// iteration code itself. In this case, we return `0`.
+const normalizeTime = function ({ time, nowBias, loopBias, repeat }) {
+  return Math.max((time - nowBias) / repeat - loopBias, 0)
 }
 
 const getProcessMedian = function (times, processMedians) {
