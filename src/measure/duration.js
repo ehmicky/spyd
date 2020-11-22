@@ -42,7 +42,7 @@ export const getMaxDuration = function ({
   processGroupEnd,
   loadCost,
   processGroupDuration,
-  nowBias,
+  measureCost,
   repeatCost,
   repeat,
   median,
@@ -52,11 +52,11 @@ export const getMaxDuration = function ({
   const loadCostMin = getLoadCostMin(loadCost)
   const targetTimesMin = getTargetTimesMin({
     median,
-    nowBias,
+    measureCost,
     repeatCost,
     repeat,
   })
-  const loopTime = getLoopTime({ median, nowBias, repeatCost, repeat })
+  const loopTime = getLoopTime({ median, measureCost, repeatCost, repeat })
   return Math.max(
     Math.min(
       timeLeftMeasuring,
@@ -98,10 +98,15 @@ const LOAD_COST_RATIO = 0.5
 // Estimated time to measure the task a specific amount of time.
 // This is the number of time the task function is measured, not the `repeat`
 // loop.
-const getTargetTimesMin = function ({ median, nowBias, repeatCost, repeat }) {
+const getTargetTimesMin = function ({
+  median,
+  measureCost,
+  repeatCost,
+  repeat,
+}) {
   return (
     TARGET_TIMES *
-    denormalizeTimePerCall(median, { nowBias, repeatCost, repeat })
+    denormalizeTimePerCall(median, { measureCost, repeatCost, repeat })
   )
 }
 
@@ -112,17 +117,17 @@ const getTargetTimesMin = function ({ median, nowBias, repeatCost, repeat }) {
 //     combination, while `repeat` is still being callibrated, `targetTimesMin`
 //     can be much larger than the real mean.
 //   - Using the whole duration of the repeat loop instead of an
-//     aggregation of the `times`. Even with `nowBias` and `repeatCost`, the
+//     aggregation of the `times`. Even with `measureCost` and `repeatCost`, the
 //     `times` do not completely capture the time spent measuring.
-//     For example, `nowBias` is the time to measure an empty task, but it
+//     For example, `measureCost` is the time to measure an empty task, but it
 //     might exclude some of the time to make the measurement itself. For
 //     example, if two timestamps are taken at the beginning|end, only half of
-//     them will be included in `nowBias`. The other half will not be reflected
-//     in `times` but will still be spent.
+//     them will be included in `measureCost`. The other half will not be
+//     reflected in `times` but will still be spent.
 // Those concerns are stronger if either:
 //  - The task has a strong cold start, whether because it memoizes a lot or
 //    because the runtime optimizes it a lot later on.
-//  - The task speed is close to `nowBias` and/or `repeatCost`
+//  - The task speed is close to `measureCost` and/or `repeatCost`
 // However, stability is more important than accuracy for `targetTimesMin`.
 // We slightly increase `TARGET_TIMES` to take this into account. This is rather
 // imprecise so we keep this increase small.
@@ -139,6 +144,6 @@ const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST
 // It is estimated from previous processes.
 // This ensures users are not experiencing slow downs of the progress counter
 // at the end of a combination.
-const getLoopTime = function ({ median, nowBias, repeatCost, repeat }) {
-  return denormalizeTime(median, { nowBias, repeatCost, repeat })
+const getLoopTime = function ({ median, measureCost, repeatCost, repeat }) {
+  return denormalizeTime(median, { measureCost, repeatCost, repeat })
 }

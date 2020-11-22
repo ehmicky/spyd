@@ -9,7 +9,7 @@ export const getRepeat = function ({
   repeatCost,
   median,
 }) {
-  // When computing `nowBias`
+  // When computing `measureCost`
   if (minLoopTime === 0) {
     return repeat
   }

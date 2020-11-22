@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
@@ -9,7 +10,7 @@ import { getMedian } from './median.js'
 import { normalizeTimes } from './normalize.js'
 import { getRepeat } from './repeat.js'
 
-// Measure a task, nowBias or repeatCost using a group of processes
+// Measure a task, measureCost or repeatCost using a group of processes
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const measureProcessGroup = async function ({
   taskPath,
@@ -21,7 +22,7 @@ export const measureProcessGroup = async function ({
   processGroupDuration,
   cwd,
   loadDuration,
-  nowBias,
+  measureCost,
   repeatCost,
   minLoopTime,
   initialRepeat,
@@ -59,7 +60,7 @@ export const measureProcessGroup = async function ({
       processGroupEnd,
       loadCost,
       processGroupDuration,
-      nowBias,
+      measureCost,
       repeatCost,
       repeat,
       median,
@@ -79,7 +80,7 @@ export const measureProcessGroup = async function ({
     })
     const childLoadCost = endLoadCost(loadCostStart, start)
 
-    normalizeTimes(childTimes, { nowBias, repeatCost, repeat })
+    normalizeTimes(childTimes, { measureCost, repeatCost, repeat })
 
     // eslint-disable-next-line fp/no-mutating-methods
     processMeasures.push({ childTimes, repeat })
@@ -93,7 +94,13 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     repeat = getRepeat({ repeat, minLoopTime, repeatCost, median })
   } while (
-    !shouldStopLoop({ loadCost, nowBias, median, processGroupEnd, totalTimes })
+    !shouldStopLoop({
+      loadCost,
+      measureCost,
+      median,
+      processGroupEnd,
+      totalTimes,
+    })
   )
 
   const { times, count, processes } = removeOutliers(processMeasures)
@@ -102,7 +109,7 @@ export const measureProcessGroup = async function ({
 
 // We stop iterating when the next process does not have any time to spawn a
 // single one. We estimate this taking into account the time to launch the
-// runner (`loadCost`), the time to measure the task (`nowBias`) and
+// runner (`loadCost`), the time to measure the task (`measureCost`) and
 // the time of the task itself, based on previous measurements (`median`).
 // This means we allow the last process to be shorter than the others.
 // On one side, this means we are comparing processes with different durations,
@@ -114,14 +121,14 @@ export const measureProcessGroup = async function ({
 //     `duration` increases.
 const shouldStopLoop = function ({
   loadCost,
-  nowBias,
+  measureCost,
   median,
   processGroupEnd,
   totalTimes,
 }) {
   return (
     totalTimes >= TOTAL_MAX_TIMES ||
-    now() + loadCost + nowBias + median >= processGroupEnd
+    now() + loadCost + measureCost + median >= processGroupEnd
   )
 }
 
@@ -130,3 +137,4 @@ const shouldStopLoop = function ({
 // The default limit for V8 in Node.js is 1.7GB, which allows times to holds a
 // little more than 1e8 floats.
 const TOTAL_MAX_TIMES = 1e8
+/* eslint-enable max-lines */
