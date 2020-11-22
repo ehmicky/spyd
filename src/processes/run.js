@@ -115,17 +115,41 @@ const executeChildren = async function ({
     totalTimes += times.length
 
     sortNumbers(times)
-    const processesMedian = addProcessMedian(times, processMedians)
 
+    const { processMedian, processesMedian } = getProcessMedian(
+      times,
+      processMedians,
+    )
+    const newRepeat = adjustRepeat({
+      repeat,
+      processesMedian,
+      minTime,
+      loopBias,
+    })
+    addProcessMedian({ processMedian, processMedians, repeat })
     // eslint-disable-next-line fp/no-mutation
-    repeat = adjustRepeat({ repeat, processesMedian, minTime, loopBias })
+    repeat = newRepeat
   } while (now() + maxDuration < runEnd && totalTimes < MAX_TIMES)
 
   return results
 }
 
-const addProcessMedian = function (times, processMedians) {
+const getProcessMedian = function (times, processMedians) {
   const processMedian = getMedian(times)
+  const processMediansCopy = [...processMedians, processMedian]
+  sortNumbers(processMediansCopy)
+  const processesMedian = getMedian(processMediansCopy)
+  return { processMedian, processesMedian }
+}
+
+// When `repeat` is not used (always `1`), we do not use `proccessMedian`.
+// When it is used, we do not use the initial `processMedian` (when `repeat`
+// is `1`) except for computing the initial non-`1` `repeat`.
+const addProcessMedian = function ({ processMedian, processMedians, repeat }) {
+  if (repeat === 1) {
+    return
+  }
+
   // eslint-disable-next-line fp/no-mutating-methods
   processMedians.push(processMedian)
 
@@ -133,11 +157,6 @@ const addProcessMedian = function (times, processMedians) {
     // eslint-disable-next-line fp/no-mutating-methods
     processMedians.shift()
   }
-
-  const processMediansCopy = [...processMedians]
-  sortNumbers(processMediansCopy)
-  const processesMedian = getMedian(processMediansCopy)
-  return processesMedian
 }
 
 // We limit the size of the array storing the last processMedians because
