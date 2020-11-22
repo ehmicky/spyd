@@ -14,8 +14,7 @@ export const runMeasureLoop = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
-  duration,
-  runEnd,
+  measureDuration,
   cwd,
   benchmarkCostMin,
   nowBias,
@@ -23,6 +22,7 @@ export const runMeasureLoop = async function ({
   minTime,
   dry,
 }) {
+  const runEnd = now() + measureDuration
   const eventPayload = {
     type: 'run',
     opts: commandOpt,
@@ -47,7 +47,7 @@ export const runMeasureLoop = async function ({
       commandSpawn,
       commandSpawnOptions,
       eventPayload: { ...eventPayload, maxDuration, repeat },
-      timeoutNs: duration,
+      timeoutNs: measureDuration,
       cwd,
       taskId,
       inputId,

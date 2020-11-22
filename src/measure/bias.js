@@ -1,4 +1,3 @@
-import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
 import { getSortedMedian } from '../stats/median.js'
@@ -25,7 +24,7 @@ export const getBiases = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
-  duration,
+  measureDuration,
   cwd,
   benchmarkCostMin,
 }) {
@@ -36,7 +35,7 @@ export const getBiases = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    duration,
+    measureDuration,
     cwd,
     benchmarkCostMin,
     nowBias: 0,
@@ -51,7 +50,7 @@ export const getBiases = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    duration,
+    measureDuration,
     cwd,
     benchmarkCostMin,
     nowBias,
@@ -73,14 +72,13 @@ const getBias = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
-  duration,
+  measureDuration,
   cwd,
   benchmarkCostMin,
   nowBias,
   loopBias,
   minTime,
 }) {
-  const runEnd = now() + duration * DURATION_RATIO
   const { times } = await runMeasureLoop({
     taskPath,
     taskId,
@@ -88,8 +86,7 @@ const getBias = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    duration,
-    runEnd,
+    measureDuration,
     cwd,
     benchmarkCostMin,
     nowBias,
@@ -100,10 +97,6 @@ const getBias = async function ({
   const median = getSortedMedian(times)
   return median
 }
-
-// Biases must be very precise to benchmark fast tasks accurately.
-// So we dedicate a significant part of the total benchmark to them.
-const DURATION_RATIO = 0.1
 
 // If a task duration is too close to `nowBias`, the variance will be mostly due
 // to the timestamp function itself.

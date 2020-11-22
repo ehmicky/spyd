@@ -1,3 +1,5 @@
+import now from 'precise-now'
+
 import { getBiases } from './bias.js'
 import { getBenchmarkCostMin } from './cost.js'
 import { runMeasureLoop } from './loop.js'
@@ -43,7 +45,7 @@ export const runMeasurement = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    duration,
+    measureDuration: duration * BIAS_DURATION_RATIO,
     cwd,
     benchmarkCostMin,
   })
@@ -54,8 +56,7 @@ export const runMeasurement = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    duration,
-    runEnd,
+    measureDuration: runEnd - now(),
     cwd,
     benchmarkCostMin,
     nowBias,
@@ -65,3 +66,7 @@ export const runMeasurement = async function ({
   })
   return { times, count, processes }
 }
+
+// Biases must be very precise to benchmark fast tasks accurately.
+// So we dedicate a significant part of the total benchmark to them.
+const BIAS_DURATION_RATIO = 0.1
