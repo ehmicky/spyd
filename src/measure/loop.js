@@ -12,7 +12,7 @@ import {
 import { getMaxDuration } from './duration.js'
 import { getMedian } from './median.js'
 import { normalizeTimes } from './normalize.js'
-import { adjustRepeat } from './repeat.js'
+import { getRepeat } from './repeat.js'
 
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const runMeasureLoop = async function ({
@@ -28,6 +28,7 @@ export const runMeasureLoop = async function ({
   nowBias,
   loopBias,
   minTime,
+  initialRepeat,
   dry,
 }) {
   const runEnd = now() + measureDuration
@@ -48,7 +49,7 @@ export const runMeasureLoop = async function ({
   // eslint-disable-next-line fp/no-let
   let median = 0
   // eslint-disable-next-line fp/no-let
-  let repeat = 1
+  let repeat = initialRepeat
   // For some unknown reason, the time to spawn a child process is sometimes
   // higher during bias computation than during the main measurement loop, so
   // we don't share the `previous` array between those.
@@ -94,7 +95,7 @@ export const runMeasureLoop = async function ({
     // eslint-disable-next-line fp/no-mutation
     median = getMedian(childTimes, processMedians)
     // eslint-disable-next-line fp/no-mutation
-    repeat = adjustRepeat({ repeat, minTime, loopBias, median })
+    repeat = getRepeat({ repeat, minTime, loopBias, median })
   } while (
     !shouldStopLoop({ benchmarkCost, nowBias, median, runEnd, totalTimes })
   )

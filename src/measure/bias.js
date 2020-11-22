@@ -3,6 +3,7 @@ import timeResolution from 'time-resolution'
 import { getSortedMedian } from '../stats/median.js'
 
 import { runMeasureLoop } from './loop.js'
+import { getRepeat } from './repeat.js'
 
 // The following biases are introduced by the benchmarking code itself:
 //   - `nowBias` is the time taken to run an empty task. This includes the time
@@ -41,8 +42,15 @@ export const getBiases = async function ({
     nowBias: 0,
     loopBias: 0,
     minTime: 0,
+    initialRepeat: 1,
   })
   const minTime = getMinTime(nowBias)
+  const initialRepeat = getRepeat({
+    repeat: 1,
+    minTime,
+    loopBias: 0,
+    median: nowBias,
+  })
   const loopBias = await getBias({
     taskPath,
     taskId,
@@ -56,6 +64,7 @@ export const getBiases = async function ({
     nowBias,
     loopBias: 0,
     minTime,
+    initialRepeat,
   })
   return { nowBias, loopBias, minTime }
 }
@@ -78,6 +87,7 @@ const getBias = async function ({
   nowBias,
   loopBias,
   minTime,
+  initialRepeat,
 }) {
   const { times } = await runMeasureLoop({
     taskPath,
@@ -92,6 +102,7 @@ const getBias = async function ({
     nowBias,
     loopBias,
     minTime,
+    initialRepeat,
     dry: true,
   })
   const median = getSortedMedian(times)

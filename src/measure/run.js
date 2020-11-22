@@ -46,6 +46,7 @@ export const runMeasurement = async function ({
     nowBias,
     loopBias,
     minTime,
+    initialRepeat: 1,
     dry: false,
   })
   return { times, count, processes }
