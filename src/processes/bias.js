@@ -136,8 +136,8 @@ const getBias = async function ({
     type: 'iterationRun',
   })
   sortNumbers(times)
-  const loopBias = getMedian(times)
-  return loopBias
+  const median = getMedian(times)
+  return median
 }
 
 // Biases must be very precise to benchmark fast tasks accurately.
