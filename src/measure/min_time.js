@@ -14,7 +14,13 @@ export const getMinTime = function (nowBias) {
 }
 
 const TIME_RESOLUTION = timeResolution()
-// The task loop must be at least `MIN_PRECISION` slower than time resolution
+// How many times slower the task loop must be compared to the time resolution.
+// A lower value makes measurements closer to the time resolution, making them
+// less precise.
+// A higher value increases the task loop time, creating fewer loops.
 const MIN_PRECISION = 1e2
-// The task loop must be at least `MIN_NOW_BIAS` slower than `nowBias`
+// How many times slower the task loop must be compared to `nowBias`.
+// A lower value decreases precision as the variance of `nowBias` contributes
+// more to the overall variance.
+// A higher value increases the task loop time, creating fewer loops.
 const MIN_NOW_BIAS = 1e2
