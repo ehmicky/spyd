@@ -1,7 +1,7 @@
 import now from 'precise-now'
 
+import { getNowBias } from './measure_cost.js'
 import { getMinLoopTime } from './min_loop_time.js'
-import { getNowBias } from './now_bias.js'
 import { measureProcessGroup } from './process_group.js'
 import { getRepeatCost } from './repeat_cost.js'
 
