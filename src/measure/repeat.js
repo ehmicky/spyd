@@ -3,9 +3,9 @@
 // functions get optimized by runtimes after they are executed several times in
 // a row ("hot paths").
 // When this happens, `repeat` needs to be computed again.
-export const getRepeat = function ({ repeat, minTime, loopBias, median }) {
+export const getRepeat = function ({ repeat, minLoopTime, loopBias, median }) {
   // When computing `nowBias`
-  if (minTime === 0) {
+  if (minLoopTime === 0) {
     return repeat
   }
 
@@ -14,7 +14,7 @@ export const getRepeat = function ({ repeat, minTime, loopBias, median }) {
     return repeat * FAST_LOOP_BIAS_RATE
   }
 
-  return Math.ceil(minTime / (median + loopBias))
+  return Math.ceil(minLoopTime / (median + loopBias))
 }
 
 const FAST_LOOP_BIAS_RATE = 10

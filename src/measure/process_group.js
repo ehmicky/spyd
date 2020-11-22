@@ -28,7 +28,7 @@ export const measureProcessGroup = async function ({
   loadDuration,
   nowBias,
   loopBias,
-  minTime,
+  minLoopTime,
   initialRepeat,
   dry,
 }) {
@@ -96,7 +96,7 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     median = getMedian(childTimes, processMedians)
     // eslint-disable-next-line fp/no-mutation
-    repeat = getRepeat({ repeat, minTime, loopBias, median })
+    repeat = getRepeat({ repeat, minLoopTime, loopBias, median })
   } while (
     !shouldStopLoop({
       benchmarkCost,

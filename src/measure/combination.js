@@ -1,7 +1,7 @@
 import now from 'precise-now'
 
 import { getLoopBias } from './loop_bias.js'
-import { getMinTime } from './min_time.js'
+import { getMinLoopTime } from './min_loop_time.js'
 import { getNowBias } from './now_bias.js'
 import { measureProcessGroup } from './process_group.js'
 
@@ -37,7 +37,7 @@ export const measureCombination = async function ({
     cwd,
     loadDuration,
   })
-  const minTime = getMinTime(nowBias, duration)
+  const minLoopTime = getMinLoopTime(nowBias, duration)
   const loopBias = await getLoopBias({
     taskPath,
     taskId,
@@ -49,7 +49,7 @@ export const measureCombination = async function ({
     cwd,
     loadDuration,
     nowBias,
-    minTime,
+    minLoopTime,
   })
   const { times, count, processes } = await measureProcessGroup({
     taskPath,
@@ -63,7 +63,7 @@ export const measureCombination = async function ({
     loadDuration,
     nowBias,
     loopBias,
-    minTime,
+    minLoopTime,
     initialRepeat: 1,
     dry: false,
   })

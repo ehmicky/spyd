@@ -6,8 +6,9 @@ import timeResolution from 'time-resolution'
 // it will lack precision.
 // To fix this we measure the task in a loop to increase its running time.
 // We then perform an arithmetic mean.
-// `minTime` is the minimum time under which we consider a task should do this.
-export const getMinTime = function (nowBias, duration) {
+// `minLoopTime` is the minimum time under which we consider a task should do
+// this.
+export const getMinLoopTime = function (nowBias, duration) {
   const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
   const minNowBiasTime = nowBias * MIN_NOW_BIAS
   const maxTotalDuration = duration * MAX_TOTAL_DURATION_RATIO

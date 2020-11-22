@@ -21,11 +21,11 @@ export const getLoopBias = async function ({
   cwd,
   loadDuration,
   nowBias,
-  minTime,
+  minLoopTime,
 }) {
   const initialRepeat = getRepeat({
     repeat: 1,
-    minTime,
+    minLoopTime,
     loopBias: 0,
     median: nowBias,
   })
@@ -41,7 +41,7 @@ export const getLoopBias = async function ({
     loadDuration,
     nowBias,
     loopBias: 0,
-    minTime,
+    minLoopTime,
     initialRepeat,
     dry: true,
   })
