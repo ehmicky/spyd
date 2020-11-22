@@ -47,22 +47,16 @@ export const runChildren = async function ({
     cwd,
   })
 
-  const eventPayload = {
-    type: 'run',
-    opts: commandOpt,
-    taskPath,
-    taskId,
-    inputId,
-  }
   const results = await executeChildren({
+    taskPath,
     taskId,
     inputId,
     commandSpawn,
     commandSpawnOptions,
+    commandOpt,
     duration,
     runEnd,
     cwd,
-    eventPayload,
     benchmarkCost,
     nowBias,
     loopBias: 0.41,
@@ -74,21 +68,30 @@ export const runChildren = async function ({
   return results
 }
 
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, max-lines-per-function
 const executeChildren = async function ({
+  taskPath,
   taskId,
   inputId,
   commandSpawn,
   commandSpawnOptions,
+  commandOpt,
   duration,
   runEnd,
   cwd,
-  eventPayload,
   benchmarkCost,
   nowBias,
   loopBias,
   minTime,
 }) {
+  const eventPayload = {
+    type: 'run',
+    opts: commandOpt,
+    taskPath,
+    taskId,
+    inputId,
+  }
+
   const benchmarkCostMin = getBenchmarkCostMin(benchmarkCost)
   const maxDuration = benchmarkCostMin
 

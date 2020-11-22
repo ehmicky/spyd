@@ -1,8 +1,7 @@
 import { getHistogram } from './histogram.js'
-import { getMedian, getMean, getSum, getDeviation } from './methods.js'
-import { removeOutlierProcesses, removeOutlierTimes } from './outliers.js'
+import { getMedian, getMean, getDeviation } from './methods.js'
+import { removeOutliers } from './outliers.js'
 import { getPercentiles } from './percentiles.js'
-import { sortNumbers } from './sort.js'
 
 // Retrieve statistics from a raw set of benchmark results
 // Perform the statistical logic.
@@ -11,33 +10,24 @@ import { sortNumbers } from './sort.js'
 // if was not one. This means `percentiles`, `histogram` and `deviation` will
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
-// eslint-disable-next-line max-statements
 export const getStats = function (results) {
-  const resultsA = removeOutlierProcesses(results)
-
-  const times = aggregateTimes(resultsA)
-  // Half of the statistics require the array to be sorted
-  sortNumbers(times)
-  const { times: timesA, outliersMax } = removeOutlierTimes(times)
-
-  const count = getCount(resultsA, outliersMax)
+  const { times, count, processes } = removeOutliers(results)
 
   // `count` is the number of times `main()` was called
   // `loops` is the number of benchmark loops
   // `repeat` is the average number of iterations inside those benchmark loops
-  const loops = timesA.length
+  const loops = times.length
   const repeat = Math.round(count / loops)
-  const processes = resultsA.length
 
-  const [min] = timesA
-  const max = timesA[timesA.length - 1]
-
-  const median = getMedian(timesA)
-  const percentiles = getPercentiles(timesA)
-  const histogram = getHistogram(timesA, HISTOGRAM_SIZE)
-
-  const mean = getMean(timesA)
-  const deviation = getDeviation(timesA, mean)
+  const {
+    min,
+    max,
+    median,
+    percentiles,
+    histogram,
+    mean,
+    deviation,
+  } = computeStats(times)
 
   return {
     median,
@@ -54,27 +44,18 @@ export const getStats = function (results) {
   }
 }
 
-// We do not use `[].concat(...results)` because it creates a stack overflow if
-// `results.length` is too large (~1e5 on my machine)
-const aggregateTimes = function (results) {
-  return results.flatMap(getTimes)
-}
+const computeStats = function (times) {
+  const [min] = times
+  const max = times[times.length - 1]
 
-const getTimes = function ({ times }) {
-  return times
-}
+  const median = getMedian(times)
+  const percentiles = getPercentiles(times)
+  const histogram = getHistogram(times, HISTOGRAM_SIZE)
 
-// Retrieve the number of times the task was run, including inside a repeated
-// loop. Takes into account the fact that some `times` were removed as outliers.
-const getCount = function (results, outliersMax) {
-  const resultCounts = results.map(({ times, repeat }) =>
-    getResultCount({ times, repeat, outliersMax }),
-  )
-  return getSum(resultCounts)
-}
+  const mean = getMean(times)
+  const deviation = getDeviation(times, mean)
 
-const getResultCount = function ({ times, repeat, outliersMax }) {
-  return times.filter((time) => time < outliersMax).length * repeat
+  return { min, max, median, percentiles, histogram, mean, deviation }
 }
 
 const HISTOGRAM_SIZE = 1e2
