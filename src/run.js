@@ -2,7 +2,7 @@ import pMapSeries from 'p-map-series'
 
 import { addBenchmarkInfo } from './info.js'
 import { getIterations } from './iterations/main.js'
-import { runProcesses } from './measure/main.js'
+import { measureIteration } from './measure/main.js'
 import { startProgress } from './progress/start.js'
 import { stopProgress } from './progress/stop.js'
 
@@ -26,7 +26,7 @@ const computeBenchmark = async function ({
   versions,
 }) {
   const iterationsA = await pMapSeries(iterations, (iteration, index) =>
-    runProcesses({ ...iteration, index, progressState, opts }),
+    measureIteration({ ...iteration, index, progressState, opts }),
   )
   const rawBenchmark = addBenchmarkInfo(iterationsA, { opts, versions })
   return rawBenchmark

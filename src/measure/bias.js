@@ -3,7 +3,7 @@ import timeResolution from 'time-resolution'
 
 import { getMedian } from '../stats/methods.js'
 
-import { executeChildren } from './child.js'
+import { runMeasureLoop } from './loop.js'
 
 // The following biases are introduced by the benchmarking code itself:
 //   - `nowBias` is the time taken to run an empty task. This includes the time
@@ -81,7 +81,7 @@ const getBias = async function ({
   minTime,
 }) {
   const runEnd = now() + duration * DURATION_RATIO
-  const { times } = await executeChildren({
+  const { times } = await runMeasureLoop({
     taskPath,
     taskId,
     inputId,

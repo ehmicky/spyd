@@ -1,6 +1,6 @@
 import { getBiases } from './bias.js'
-import { executeChildren } from './child.js'
 import { getBenchmarkCost } from './cost.js'
+import { runMeasureLoop } from './loop.js'
 
 // We run child processes until either:
 //  - we reach the max `duration`
@@ -15,7 +15,7 @@ import { getBenchmarkCost } from './cost.js'
 //  - multi-core CPUs are designed to run in parallel but in practice they do
 //    impact the performance of each other
 //  - this does mean we are under-utilizing CPUs
-export const runChildren = async function ({
+export const runMeasurement = async function ({
   taskPath,
   taskId,
   inputId,
@@ -47,7 +47,7 @@ export const runChildren = async function ({
     cwd,
     benchmarkCost,
   })
-  const { times, count, processes } = await executeChildren({
+  const { times, count, processes } = await runMeasureLoop({
     taskPath,
     taskId,
     inputId,

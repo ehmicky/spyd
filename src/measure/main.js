@@ -4,13 +4,13 @@ import now from 'precise-now'
 
 import { getStats } from '../stats/compute.js'
 
-import { runChildren } from './run.js'
+import { runMeasurement } from './run.js'
 
 const pSetTimeout = promisify(setTimeout)
 
 // Start several child processes benchmarking the same task.
 // eslint-disable-next-line max-lines-per-function
-export const runProcesses = async function ({
+export const measureIteration = async function ({
   row,
   column,
   taskPath,
@@ -36,7 +36,7 @@ export const runProcesses = async function ({
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(progressState, { row, index, runEnd })
 
-  const { times, count, processes } = await runChildren({
+  const { times, count, processes } = await runMeasurement({
     taskPath,
     taskId,
     inputId,

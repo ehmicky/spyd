@@ -9,7 +9,7 @@ import { sortNumbers } from '../stats/sort.js'
 import { adjustRepeat } from './repeat.js'
 
 // eslint-disable-next-line max-statements, max-lines-per-function
-export const executeChildren = async function ({
+export const runMeasureLoop = async function ({
   taskPath,
   taskId,
   inputId,
