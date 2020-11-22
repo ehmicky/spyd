@@ -11,13 +11,13 @@ const pWriteFile = promisify(writeFile)
 // The method's return value is sent to the parent process.
 // Errors are handled and sent to the parent process too.
 export const executeMethod = async function (methodTypes) {
-  const { type, resultFile, ...eventPayload } = getEventPayload()
+  const { type, ipcFile, ...eventPayload } = getEventPayload()
 
   try {
-    const result = await methodTypes[type](eventPayload)
-    await sendResult(resultFile, result)
+    const ipcReturn = await methodTypes[type](eventPayload)
+    await sendIpcReturn(ipcFile, ipcReturn)
   } catch (error) {
-    await sendError(resultFile, error)
+    await sendError(ipcFile, error)
     exit(1)
   }
 }
@@ -29,13 +29,13 @@ const getEventPayload = function () {
 }
 
 // Send error messages from child to parent process
-const sendError = async function (resultFile, error) {
+const sendError = async function (ipcFile, error) {
   const errorProp = error instanceof Error ? error.stack : String(error)
-  await sendResult(resultFile, { error: errorProp })
+  await sendIpcReturn(ipcFile, { error: errorProp })
 }
 
-// Send output from child to parent process
-const sendResult = async function (resultFile, message) {
-  const messageStr = `${JSON.stringify(message)}\n`
-  await pWriteFile(resultFile, messageStr)
+// Send return value from child to parent process
+const sendIpcReturn = async function (ipcFile, ipcReturn) {
+  const ipcReturnStr = `${JSON.stringify(ipcReturn)}\n`
+  await pWriteFile(ipcFile, ipcReturnStr)
 }
