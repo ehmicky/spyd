@@ -32,10 +32,10 @@ export const getCombinationResult = async function ({
   progressState,
   opts: { duration, cwd },
 }) {
-  const runEnd = now() + duration
+  const combinationEnd = now() + duration
 
   // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(progressState, { row, index, runEnd })
+  Object.assign(progressState, { row, index, combinationEnd })
 
   const { times, count, processes } = await measureCombination({
     taskPath,
@@ -46,13 +46,13 @@ export const getCombinationResult = async function ({
     commandOpt,
     loadDuration,
     duration,
-    runEnd,
+    combinationEnd,
     cwd,
   })
 
   const stats = getStats({ times, count, processes })
 
-  await waitForTimeLeft(runEnd)
+  await waitForTimeLeft(combinationEnd)
 
   return {
     row,
@@ -78,8 +78,8 @@ export const getCombinationResult = async function ({
 // However, we still wait for the time left, without spawning any processes.
 // This is wasteful time-wise but prevents the timer from jumping fast-forward
 // at the end, giving the feeling of a smooth countdown instead
-const waitForTimeLeft = async function (runEnd) {
-  const timeLeft = (runEnd - now()) / NANOSECS_TO_MSECS
+const waitForTimeLeft = async function (combinationEnd) {
+  const timeLeft = (combinationEnd - now()) / NANOSECS_TO_MSECS
 
   if (timeLeft <= 0) {
     return

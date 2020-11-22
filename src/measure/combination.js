@@ -22,7 +22,7 @@ export const measureCombination = async function ({
   commandOpt,
   loadDuration,
   duration,
-  runEnd,
+  combinationEnd,
   cwd,
 }) {
   const biasDuration = duration * BIAS_DURATION_RATIO
@@ -58,7 +58,7 @@ export const measureCombination = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    processGroupDuration: runEnd - now(),
+    processGroupDuration: combinationEnd - now(),
     cwd,
     loadDuration,
     nowBias,

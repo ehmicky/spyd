@@ -36,7 +36,7 @@ const startReporters = async function ({ reporters, total, duration }) {
   const row = ['Start']
   const timeLeft = getTimeLeft({
     index: 0,
-    taskTimeLeft: duration,
+    timeLeft: duration,
     total,
     duration,
   })

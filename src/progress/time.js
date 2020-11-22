@@ -1,10 +1,10 @@
 // Retrieve seconds/minutes/hours left in a human-friendly string
-export const getTimeLeft = function ({ index, taskTimeLeft, total, duration }) {
-  const nanosecs = (total - index - 1) * duration + taskTimeLeft
+export const getTimeLeft = function ({ index, timeLeft, total, duration }) {
+  const nanosecs = (total - index - 1) * duration + timeLeft
   const secs = Math.ceil(nanosecs / NANOSECS_TO_SECS)
   const totalTime = (total * duration) / NANOSECS_TO_SECS
-  const timeLeft = addTimeUnits(secs, totalTime)
-  return timeLeft
+  const timeLeftStr = addTimeUnits(secs, totalTime)
+  return timeLeftStr
 }
 
 const NANOSECS_TO_SECS = 1e9

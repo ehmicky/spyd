@@ -16,7 +16,7 @@ export const startUpdate = function ({ total, duration, reporters }) {
 const FREQUENCY = 1e2
 
 const updateProgress = async function ({
-  progressState: { index, runEnd, row },
+  progressState: { index, combinationEnd, row },
   total,
   duration,
   reporters,
@@ -26,9 +26,19 @@ const updateProgress = async function ({
     return
   }
 
-  const taskTimeLeft = Math.max(runEnd - now(), 0)
-  const percentage = getPercentage({ index, taskTimeLeft, total, duration })
-  const timeLeft = getTimeLeft({ index, taskTimeLeft, total, duration })
+  const combinationTimeLeft = Math.max(combinationEnd - now(), 0)
+  const percentage = getPercentage({
+    index,
+    combinationTimeLeft,
+    total,
+    duration,
+  })
+  const timeLeft = getTimeLeft({
+    index,
+    timeLeft: combinationTimeLeft,
+    total,
+    duration,
+  })
 
   // Call each `reporter.update()`
   await Promise.all(
@@ -39,8 +49,13 @@ const updateProgress = async function ({
 }
 
 // Percentage left of the whole run
-const getPercentage = function ({ index, taskTimeLeft, total, duration }) {
-  const taskPercentage = 1 - taskTimeLeft / duration
+const getPercentage = function ({
+  index,
+  combinationTimeLeft,
+  total,
+  duration,
+}) {
+  const taskPercentage = 1 - combinationTimeLeft / duration
   const percentage = (index + taskPercentage) / total
   return percentage
 }

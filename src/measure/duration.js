@@ -39,7 +39,7 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 //   - This means `targetTimes` needs to be time-estimated, as opposed to simply
 //     pass a target integer to runners as parameter.
 export const getMaxDuration = function ({
-  runEnd,
+  processGroupEnd,
   benchmarkCost,
   processGroupDuration,
   nowBias,
@@ -47,7 +47,7 @@ export const getMaxDuration = function ({
   repeat,
   median,
 }) {
-  const timeLeftMeasuring = getTimeLeftMeasuring(runEnd, benchmarkCost)
+  const timeLeftMeasuring = getTimeLeftMeasuring(processGroupEnd, benchmarkCost)
   const timeoutMax = getTimeoutMax(processGroupDuration, benchmarkCost)
   const benchmarkCostMin = getBenchmarkCostMin(benchmarkCost)
   const targetTimesMin = getTargetTimesMin({
@@ -68,8 +68,8 @@ export const getMaxDuration = function ({
 }
 
 // Time left for measuring (excluding time to load the process/runner)
-const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
-  return Math.max(runEnd - now() - benchmarkCost, 0)
+const getTimeLeftMeasuring = function (processGroupEnd, benchmarkCost) {
+  return Math.max(processGroupEnd - now() - benchmarkCost, 0)
 }
 
 // Ensure the `maxDuration` does not go over the process `timeout` if possible

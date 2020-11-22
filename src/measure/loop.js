@@ -31,7 +31,7 @@ export const measureProcessGroup = async function ({
   initialRepeat,
   dry,
 }) {
-  const runEnd = now() + processGroupDuration
+  const processGroupEnd = now() + processGroupDuration
   const eventPayload = {
     type: 'run',
     opts: commandOpt,
@@ -60,7 +60,7 @@ export const measureProcessGroup = async function ({
   // eslint-disable-next-line fp/no-loops
   do {
     const maxDuration = getMaxDuration({
-      runEnd,
+      processGroupEnd,
       benchmarkCost,
       processGroupDuration,
       nowBias,
@@ -97,7 +97,13 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     repeat = getRepeat({ repeat, minTime, loopBias, median })
   } while (
-    !shouldStopLoop({ benchmarkCost, nowBias, median, runEnd, totalTimes })
+    !shouldStopLoop({
+      benchmarkCost,
+      nowBias,
+      median,
+      processGroupEnd,
+      totalTimes,
+    })
   )
 
   const { times, count, processes } = removeOutliers(processMeasures)
@@ -120,12 +126,12 @@ const shouldStopLoop = function ({
   benchmarkCost,
   nowBias,
   median,
-  runEnd,
+  processGroupEnd,
   totalTimes,
 }) {
   return (
     totalTimes >= TOTAL_MAX_TIMES ||
-    now() + benchmarkCost + nowBias + median >= runEnd
+    now() + benchmarkCost + nowBias + median >= processGroupEnd
   )
 }
 
