@@ -50,6 +50,7 @@ export const runMeasureLoop = async function ({
     const maxDuration = getMaxDuration({
       runEnd,
       benchmarkCost,
+      measureDuration,
       nowBias,
       loopBias,
       repeat,

@@ -40,12 +40,14 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 export const getMaxDuration = function ({
   runEnd,
   benchmarkCost,
+  measureDuration,
   nowBias,
   loopBias,
   repeat,
   median,
 }) {
   const timeLeftMeasuring = getTimeLeftMeasuring(runEnd, benchmarkCost)
+  const timeoutMax = getTimeoutMax(measureDuration, benchmarkCost)
   const benchmarkCostMin = getBenchmarkCostMin(benchmarkCost)
   const targetTimesMin = getTargetTimesMin({
     median,
@@ -55,16 +57,30 @@ export const getMaxDuration = function ({
   })
   const loopTime = getLoopTime({ median, nowBias, loopBias, repeat })
   return Math.max(
-    Math.min(timeLeftMeasuring, Math.max(benchmarkCostMin, targetTimesMin)) -
-      loopTime,
+    Math.min(
+      timeLeftMeasuring,
+      timeoutMax,
+      Math.max(benchmarkCostMin, targetTimesMin),
+    ) - loopTime,
     0,
   )
 }
 
 // Time left for benchmarking (excluding time to load the process/runner)
 const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
-  return runEnd - now() - benchmarkCost.estimate
+  return Math.max(runEnd - now() - benchmarkCost.estimate, 0)
 }
+
+// Ensure the `maxDuration` does not go over the process `timeout` if possible
+const getTimeoutMax = function (measureDuration, benchmarkCost) {
+  return Math.max(
+    (measureDuration - benchmarkCost.estimate) * MEASURE_DURATION_RATIO,
+    0,
+  )
+}
+
+// The measures are not prefectly precise, so we allow some additional room
+const MEASURE_DURATION_RATIO = 0.5
 
 // Ensure that processes are run long enough (by using `maxDuration`) so that
 // they get enough time running the benchmarked task, as opposed to spawning
