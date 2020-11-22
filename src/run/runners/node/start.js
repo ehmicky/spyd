@@ -5,7 +5,7 @@ import { debugRun } from './debug.js'
 import { loadBenchmarkFile } from './load/main.js'
 
 // Communicate iterations ids and titles to parent
-const load = async function ({ taskPath, opts }) {
+const load = async function ({ opts, taskPath }) {
   const iterations = await loadBenchmarkFile(taskPath, opts)
   const iterationsA = iterations.map(getIteration)
   return { iterations: iterationsA }
@@ -17,19 +17,21 @@ const getIteration = function ({ taskId, taskTitle, inputTitle, inputId }) {
 
 // Run benchmarks
 const run = async function ({
-  taskPath,
   opts,
+  taskPath,
   taskId,
   inputId,
   repeat,
   maxDuration,
   maxTimes,
+  dry,
 }) {
   const { main, before, after, async } = await getTask({
-    taskPath,
     opts,
+    taskPath,
     taskId,
     inputId,
+    dry,
   })
   const times = await benchmark({
     main,
@@ -43,10 +45,10 @@ const run = async function ({
   return { times }
 }
 
-const debug = async function ({ taskPath, opts, taskId, inputId }) {
+const debug = async function ({ opts, taskPath, taskId, inputId }) {
   const { main, before, after } = await getTask({
-    taskPath,
     opts,
+    taskPath,
     taskId,
     inputId,
   })
@@ -54,20 +56,35 @@ const debug = async function ({ taskPath, opts, taskId, inputId }) {
   return {}
 }
 
-const getTask = async function ({ taskPath, opts, taskId, inputId }) {
-  if (taskPath === undefined) {
-    return { main: noop, async: false }
-  }
-
+const getTask = async function ({ opts, taskPath, taskId, inputId, dry }) {
   const iterations = await loadBenchmarkFile(taskPath, opts)
 
   const { main, before, after, async } = iterations.find(
     (iteration) => iteration.taskId === taskId && iteration.inputId === inputId,
   )
-  return { main, before, after, async }
+  const [mainA, beforeA, afterA] = applyDry([main, before, after], dry)
+  return { main: mainA, before: beforeA, after: afterA, async }
 }
 
-// eslint-disable-next-line no-empty-function
-const noop = function () {}
+const applyDry = function (funcs, dry) {
+  if (!dry) {
+    return funcs
+  }
+
+  return funcs.map(applyDryFunc)
+}
+
+// Using `before` has a slight performance impact, so we keep it as `undefined`
+// when `undefined`.
+// We create separate functions for `before`, `main` and `after` so they are
+// optimized separately
+const applyDryFunc = function (value) {
+  if (value === undefined) {
+    return
+  }
+
+  // eslint-disable-next-line no-empty-function
+  return function noop() {}
+}
 
 runMethod({ load, run, debug })

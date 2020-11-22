@@ -37,6 +37,9 @@ export const runChildren = async function ({
   cwd,
 }) {
   const { benchmarkCost, nowBias, loopBias, minTime } = await getBiases({
+    taskPath,
+    taskId,
+    inputId,
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
@@ -46,8 +49,8 @@ export const runChildren = async function ({
 
   const eventPayload = {
     type: 'run',
-    taskPath,
     opts: commandOpt,
+    taskPath,
     taskId,
     inputId,
   }

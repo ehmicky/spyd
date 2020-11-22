@@ -15,6 +15,9 @@ import { executeChild } from './execute.js'
 // We remove those two biases from the calculated times.
 // This function calculates those biases by benchmarking them.
 export const getBiases = async function ({
+  taskPath,
+  taskId,
+  inputId,
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
@@ -22,6 +25,9 @@ export const getBiases = async function ({
   cwd,
 }) {
   const benchmarkCost = await getMedianBenchmarkCost({
+    taskPath,
+    taskId,
+    inputId,
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
@@ -30,7 +36,11 @@ export const getBiases = async function ({
   })
 
   const maxDuration = duration * DURATION_RATIO
+
   const nowBias = await getBias({
+    taskPath,
+    taskId,
+    inputId,
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
@@ -39,8 +49,12 @@ export const getBiases = async function ({
     cwd,
     repeat: 1,
   })
+
   const minTime = getMinTime(nowBias)
   const loopBias = await getBias({
+    taskPath,
+    taskId,
+    inputId,
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
@@ -59,6 +73,9 @@ export const getBiases = async function ({
 // number of loops. It only includes the time initially spent when each process
 // loads.
 const getMedianBenchmarkCost = async function ({
+  taskPath,
+  taskId,
+  inputId,
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
@@ -71,6 +88,9 @@ const getMedianBenchmarkCost = async function ({
   do {
     // eslint-disable-next-line no-await-in-loop
     const benchmarkCost = await getBenchmarkCost({
+      taskPath,
+      taskId,
+      inputId,
       commandSpawn,
       commandSpawnOptions,
       commandOpt,
@@ -92,13 +112,25 @@ const getMedianBenchmarkCost = async function ({
 const BENCHMARK_COSTS_SIZE = 10
 
 const getBenchmarkCost = async function ({
+  taskPath,
+  taskId,
+  inputId,
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
   duration,
   cwd,
 }) {
-  const eventPayload = { type: 'run', opts: commandOpt, maxTimes: 0, repeat: 0 }
+  const eventPayload = {
+    type: 'run',
+    opts: commandOpt,
+    taskPath,
+    taskId,
+    inputId,
+    maxTimes: 0,
+    repeat: 0,
+    dry: true,
+  }
   const start = now()
   await executeChild({
     commandSpawn,
@@ -118,6 +150,9 @@ const getBenchmarkCost = async function ({
 // The first is always using `repeat: 1` while the second is using a normal
 // adaptive `repeat`.
 const getBias = async function ({
+  taskPath,
+  taskId,
+  inputId,
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
@@ -126,7 +161,16 @@ const getBias = async function ({
   cwd,
   repeat,
 }) {
-  const eventPayload = { type: 'run', opts: commandOpt, maxDuration, repeat }
+  const eventPayload = {
+    type: 'run',
+    opts: commandOpt,
+    taskPath,
+    taskId,
+    inputId,
+    maxDuration,
+    repeat,
+    dry: true,
+  }
   const { times } = await executeChild({
     commandSpawn,
     commandSpawnOptions,
