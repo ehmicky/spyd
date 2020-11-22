@@ -14,7 +14,7 @@ const pSetTimeout = promisify(setTimeout)
 
 // We run child processes until either:
 //  - we reach the max `duration`
-//  - the `results` size is over `MAX_RESULTS`.
+//  - the `results` size is over `MAX_TIMES`.
 // At least one child must be executed.
 // Each child process is aimed at running the same duration (`maxDuration`)
 //  - this ensures stats are not modified when the `duration` option changes
