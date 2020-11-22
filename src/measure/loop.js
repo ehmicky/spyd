@@ -88,6 +88,14 @@ export const runMeasureLoop = async function ({
 // single loop. We estimate this taking into account the time to launch the
 // runner (`benchmarkCost`), the time to benchmark the task (`nowBias`) and
 // the time of the task itself, based on previous measurements (`median`).
+// This means we allow the last process to be shorter than the others.
+// On one side, this means we are comparing processes with different durations,
+// which introduce more variance since shorter processes will run slower code
+// (since it is less optimized by the runtime). On the other side:
+//   - When the number of processes is low (including when there is only one
+//     process), this improves the total number of `times` enough to justify it.
+//   - Not doing it would make the `count` increment less gradually as the
+//     `duration` increases.
 const shouldStopLoop = function ({
   benchmarkCost,
   nowBias,
