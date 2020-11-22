@@ -64,8 +64,6 @@ export const runMeasureLoop = async function ({
     // eslint-disable-next-line fp/no-mutation
     totalTimes += childTimes.length
 
-    sortNumbers(childTimes)
-
     const { processMedian, processesMedian } = getProcessMedian(
       childTimes,
       processMedians,
@@ -136,6 +134,7 @@ const normalizeTime = function ({
 }
 
 const getProcessMedian = function (childTimes, processMedians) {
+  sortNumbers(childTimes)
   const processMedian = getMedian(childTimes)
   const processMediansCopy = [...processMedians, processMedian]
   sortNumbers(processMediansCopy)
