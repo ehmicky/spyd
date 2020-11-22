@@ -8,12 +8,18 @@ import { sortNumbers } from '../stats/sort.js'
 import { executeChild } from './execute.js'
 
 // The following biases are introduced by the benchmarking code itself:
-//   - `nowBias` is the time taken to perform a run an empty task. This
-//     includes the time to retrieve the current timestamp for example.
-//   - `loopBias` is the time taken to iterate in a loop, when running a task
-//     repeatedly, excluding the task itself
+//   - `nowBias` is the time taken to run an empty task. This includes the time
+//     to get the start/end timestamps for example.
+//   - `loopBias` is like `nowBias`, but for a whole loop when using `repeat`.
 // We remove those two biases from the calculated times.
 // This function calculates those biases by benchmarking them.
+// Those biases must be computed separately for each iteration since they might
+// vary depending on:
+//  - the task. Some runners might allow task-specific options impacting
+//    benchmarking. For example, the `node` runner has the `async` option.
+//  - the input. The size of the input or whether an input is used or not
+//    might impact benchmarking.
+//  - the system. For example, runner options.
 export const getBiases = async function ({
   taskPath,
   taskId,
