@@ -1,5 +1,6 @@
 import { getHistogram } from './histogram.js'
-import { getMedian, getMean, getDeviation } from './methods.js'
+import { getSortedMedian } from './median.js'
+import { getMean, getDeviation } from './methods.js'
 import { getQuantiles } from './quantiles.js'
 
 // Retrieve statistics from a raw set of benchmark results
@@ -45,7 +46,7 @@ const computeStats = function (times) {
   const [min] = times
   const max = times[times.length - 1]
 
-  const median = getMedian(times)
+  const median = getSortedMedian(times)
   const percentiles = getQuantiles(times, PERCENTILES_SIZE)
   const histogram = getHistogram(times, HISTOGRAM_SIZE)
 

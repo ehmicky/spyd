@@ -1,13 +1,3 @@
-// Retrieve median of an array of floats.
-// Array must be sorted and not empty.
-export const getMedian = function (array) {
-  if (array.length % 2 === 1) {
-    return array[(array.length - 1) / 2]
-  }
-
-  return (array[array.length / 2 - 1] + array[array.length / 2]) / 2
-}
-
 // Retrieve arithmetic mean of an array of floats (cannot be NaN nor Infinite).
 // Array must not be empty.
 export const getMean = function (array) {

@@ -1,7 +1,7 @@
 import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
-import { getMedian } from '../stats/methods.js'
+import { getSortedMedian } from '../stats/median.js'
 
 import { runMeasureLoop } from './loop.js'
 
@@ -97,7 +97,7 @@ const getBias = async function ({
     minTime,
     dry: true,
   })
-  const median = getMedian(times)
+  const median = getSortedMedian(times)
   return median
 }
 

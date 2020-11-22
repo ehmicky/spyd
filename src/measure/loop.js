@@ -1,10 +1,7 @@
-/* eslint-disable max-lines */
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
-import { getMedian } from '../stats/methods.js'
 import { removeOutliers } from '../stats/outliers.js'
-import { sortNumbers } from '../stats/sort.js'
 
 import { adjustRepeat } from './repeat.js'
 
@@ -64,19 +61,14 @@ export const runMeasureLoop = async function ({
     // eslint-disable-next-line fp/no-mutation
     totalTimes += childTimes.length
 
-    const { processMedian, processesMedian } = getProcessMedian(
-      childTimes,
-      processMedians,
-    )
-    const newRepeat = adjustRepeat({
+    // eslint-disable-next-line fp/no-mutation
+    repeat = adjustRepeat({
       repeat,
-      processesMedian,
       minTime,
       loopBias,
+      childTimes,
+      processMedians,
     })
-    addProcessMedian({ processMedian, processMedians, repeat })
-    // eslint-disable-next-line fp/no-mutation
-    repeat = newRepeat
   } while (now() + maxDuration < runEnd && totalTimes < TOTAL_MAX_TIMES)
 
   const { times, count, processes } = removeOutliers(results)
@@ -133,39 +125,5 @@ const normalizeTime = function ({
   )
 }
 
-const getProcessMedian = function (childTimes, processMedians) {
-  sortNumbers(childTimes)
-  const processMedian = getMedian(childTimes)
-  const processMediansCopy = [...processMedians, processMedian]
-  sortNumbers(processMediansCopy)
-  const processesMedian = getMedian(processMediansCopy)
-  return { processMedian, processesMedian }
-}
-
-// When `repeat` is not used (always `1`), we do not use `proccessMedian`.
-// When it is used, we do not use the initial `processMedian` (when `repeat`
-// is `1`) except for computing the initial non-`1` `repeat`.
-const addProcessMedian = function ({ processMedian, processMedians, repeat }) {
-  if (repeat === 1) {
-    return
-  }
-
-  // eslint-disable-next-line fp/no-mutating-methods
-  processMedians.push(processMedian)
-
-  if (processMedians.length > MAX_PROCESS_MEDIANS) {
-    // eslint-disable-next-line fp/no-mutating-methods
-    processMedians.shift()
-  }
-}
-
-// We limit the size of the array storing the last processMedians because
-// sorting big arrays is too slow.
-// In benchmarks with high `duration`:
-//   - a higher number increases the time to sort `processMedians`
-//   - a lower number makes `repeat` more likely to vary
-const MAX_PROCESS_MEDIANS = 1e3
-
 // Chosen not to overflow the memory of a typical machine
 const TOTAL_MAX_TIMES = 1e8
-/* eslint-enable max-lines */

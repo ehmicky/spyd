@@ -1,7 +1,7 @@
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
-import { getMedian } from '../stats/methods.js'
+import { getSortedMedian } from '../stats/median.js'
 import { sortNumbers } from '../stats/sort.js'
 
 // Computes how much time is spent spawning processes/runners as opposed to
@@ -40,7 +40,7 @@ export const getBenchmarkCost = async function ({
   } while (benchmarkCosts.length < BENCHMARK_COSTS_SIZE)
 
   sortNumbers(benchmarkCosts)
-  const medianBenchmarkCost = getMedian(benchmarkCosts)
+  const medianBenchmarkCost = getSortedMedian(benchmarkCosts)
   return medianBenchmarkCost
 }
 
