@@ -1,7 +1,7 @@
 import now from 'precise-now'
 
 import { getBiases } from './bias.js'
-import { getBenchmarkCostMin } from './cost.js'
+import { getBenchmarkCost } from './cost.js'
 import { runMeasureLoop } from './loop.js'
 
 // We run child processes until either:
@@ -17,6 +17,7 @@ import { runMeasureLoop } from './loop.js'
 //  - multi-core CPUs are designed to run in parallel but in practice they do
 //    impact the performance of each other
 //  - this does mean we are under-utilizing CPUs
+// eslint-disable-next-line max-lines-per-function
 export const runMeasurement = async function ({
   taskPath,
   taskId,
@@ -28,7 +29,7 @@ export const runMeasurement = async function ({
   runEnd,
   cwd,
 }) {
-  const benchmarkCostMin = await getBenchmarkCostMin({
+  const { benchmarkCost, benchmarkCostMin } = await getBenchmarkCost({
     taskPath,
     taskId,
     inputId,
@@ -47,6 +48,7 @@ export const runMeasurement = async function ({
     commandOpt,
     measureDuration: duration * BIAS_DURATION_RATIO,
     cwd,
+    benchmarkCost,
     benchmarkCostMin,
   })
   const { times, count, processes } = await runMeasureLoop({
@@ -58,6 +60,7 @@ export const runMeasurement = async function ({
     commandOpt,
     measureDuration: runEnd - now(),
     cwd,
+    benchmarkCost,
     benchmarkCostMin,
     nowBias,
     loopBias,

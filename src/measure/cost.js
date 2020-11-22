@@ -7,7 +7,7 @@ import { sortNumbers } from '../stats/sort.js'
 // Ensure that processes are run long enough (by using `maxDuration`) so that
 // they get enough time running the benchmarked task, as opposed to spawning
 // processes/runners.
-export const getBenchmarkCostMin = async function ({
+export const getBenchmarkCost = async function ({
   taskPath,
   taskId,
   inputId,
@@ -17,7 +17,7 @@ export const getBenchmarkCostMin = async function ({
   duration,
   cwd,
 }) {
-  const benchmarkCost = await getBenchmarkCost({
+  const benchmarkCost = await getBenchmarkCostMedian({
     taskPath,
     taskId,
     inputId,
@@ -27,7 +27,8 @@ export const getBenchmarkCostMin = async function ({
     duration,
     cwd,
   })
-  return benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
+  const benchmarkCostMin = benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
+  return { benchmarkCost, benchmarkCostMin }
 }
 
 // Computes how much time is spent spawning processes/runners as opposed to
@@ -36,7 +37,7 @@ export const getBenchmarkCostMin = async function ({
 // the benchmark loop itself, since that time increases proportionally to the
 // number of loops. It only includes the time initially spent when each process
 // loads.
-const getBenchmarkCost = async function ({
+const getBenchmarkCostMedian = async function ({
   taskPath,
   taskId,
   inputId,

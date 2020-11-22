@@ -8,6 +8,6 @@ import now from 'precise-now'
 export const shouldStopLoop = function (maxTimes, times, runEnd) {
   return (
     (maxTimes !== undefined && times.length >= maxTimes) ||
-    (runEnd !== undefined && now() >= runEnd)
+    (runEnd !== undefined && now() + times[times.length - 1] >= runEnd)
   )
 }
