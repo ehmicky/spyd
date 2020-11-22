@@ -1,11 +1,11 @@
-/* eslint-disable max-lines */
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
 import { removeOutliers } from '../stats/outliers.js'
 
+import { getMaxDuration } from './duration.js'
 import { getMedian } from './median.js'
-import { normalizeTimes, denormalizeTime } from './normalize.js'
+import { normalizeTimes } from './normalize.js'
 import { adjustRepeat } from './repeat.js'
 
 // eslint-disable-next-line max-statements, max-lines-per-function
@@ -93,44 +93,6 @@ export const runMeasureLoop = async function ({
   return { times, count, processes }
 }
 
-// `maxDuration` is the estimated time a process will spend benchmarking.
-// It is callibrated progressively based on several limits:
-//  1. Must not be longer than the time left in the task (`timeLeftMeasuring`)
-//  2. Must be at least long enough so that we don't spend time only spawning
-//     processes/runners instead of benchmarking. This is done by estimating
-//     that `benchmarkCost` and making `maxDuration` at least big enough
-//     compared to it.
-//  3. Must run a minimal amount of loops per process. This is to ensure cold
-//     starts do not impact benchmarking.
-// Fast tasks are most likely time-limited by `2.` while slow tasks are most
-// likely time-limited by `3.`.
-// The above algorithm has several goals:
-//   - Ensures processes to roughly use the same `maxDuration` both inside a
-//     specific run and between runs with different `duration` options.
-//     Processes with different `maxDuration` might give different results to
-//     the runtime having optimized the code longer or not.
-//   - Ensures processes are short enough to provide with frequent realtime
-//     reporting
-//   - Ensures many processes are run to decrease the overall variance, while
-//     still making sure enough loops are run inside each of those processes
-// We remove the `loopTime` (time for the runner to perform a single benchmark
-// loop) (which is estimated from previous processes) to guarantee runners stop
-// right under the target duration, not right above. This ensures users are not
-// experiencing slow downs of the progress counter at the end of an iteration.
-const getMaxDuration = function ({
-  runEnd,
-  benchmarkCost,
-  benchmarkCostMin,
-  nowBias,
-  loopBias,
-  repeat,
-  median,
-}) {
-  const timeLeftMeasuring = runEnd - now() - benchmarkCost
-  const loopTime = denormalizeTime(median, { nowBias, loopBias, repeat })
-  return Math.max(Math.min(benchmarkCostMin, timeLeftMeasuring) - loopTime, 0)
-}
-
 // We stop iterating when the next process does not have any time to run a
 // single loop. We estimate this taking into account the time to launch the
 // runner (`benchmarkCost`), the time to benchmark the task (`nowBias`) and
@@ -161,4 +123,3 @@ const shouldStopLoop = function ({
 // The default limit for V8 in Node.js is 1.7GB, which allows times to holds a
 // little more than 1e8 floats.
 const TOTAL_MAX_TIMES = 1e8
-/* eslint-enable max-lines */
