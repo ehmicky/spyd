@@ -2,7 +2,7 @@ import pMapSeries from 'p-map-series'
 
 import { addBenchmarkInfo } from './info.js'
 import { getIterations } from './iterations/main.js'
-import { runProcesses } from './processes/main.js'
+import { runProcesses } from './measure/main.js'
 import { startProgress } from './progress/start.js'
 import { stopProgress } from './progress/stop.js'
 

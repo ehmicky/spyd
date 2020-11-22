@@ -36,7 +36,6 @@ export const runChildren = async function ({
     duration,
     cwd,
   })
-
   const { nowBias, loopBias, minTime } = await getBiases({
     taskPath,
     taskId,
