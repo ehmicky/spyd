@@ -4,7 +4,7 @@
 // times in a row ("hot paths").
 // When this happens, `repeat` needs to be computed again.
 export const adjustRepeat = function ({ repeat, minTime, loopBias, median }) {
-  // When computing `nowBias`, or when `nowBias` is `0` (i.e. is too fast)
+  // When computing `nowBias`
   if (minTime === 0) {
     return repeat
   }
