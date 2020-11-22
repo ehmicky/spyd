@@ -2,9 +2,18 @@
 // We use `forEach()` instead of `map()` to re-use the allocated array, which
 // is faster.
 export const normalizeTimes = function (times, { nowBias, loopBias, repeat }) {
+  if (isNowBias({ nowBias, loopBias, repeat })) {
+    return
+  }
+
   times.forEach((time, index) => {
     normalizeTime({ time, times, index, nowBias, loopBias, repeat })
   })
+}
+
+// When computing `nowBias`, there is no bias nor `repeat` to use
+const isNowBias = function ({ nowBias, loopBias, repeat }) {
+  return nowBias === 0 && loopBias === 0 && repeat === 1
 }
 
 // `time` can be negative if:
