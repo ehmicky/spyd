@@ -6,7 +6,7 @@
 // `repeat > 1` `before|after` are run in chunks instead of one after another.
 // This is required to be able to loop `main` several times with a single
 // `now()` performed.
-export const performBefore = async function (before, repeat) {
+export const performBeforeAsync = async function (before, repeat) {
   if (before === undefined) {
     return
   }
@@ -27,8 +27,28 @@ export const performBefore = async function (before, repeat) {
   return beforeArgs
 }
 
+export const performBeforeSync = function (before, repeat) {
+  if (before === undefined) {
+    return
+  }
+
+  const beforeArgs = []
+
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, no-plusplus, no-param-reassign
+  while (repeat--) {
+    // eslint-disable-next-line fp/no-mutating-methods
+    beforeArgs.unshift(before())
+  }
+
+  return beforeArgs
+}
+
 // Task `after()`. Performed outside measurements. Can be async.
-export const performAfter = async function (after, repeat, beforeArgs = []) {
+export const performAfterAsync = async function (
+  after,
+  repeat,
+  beforeArgs = [],
+) {
   if (after === undefined) {
     return
   }
@@ -37,5 +57,16 @@ export const performAfter = async function (after, repeat, beforeArgs = []) {
   while (repeat--) {
     // eslint-disable-next-line no-await-in-loop
     await after(beforeArgs[repeat])
+  }
+}
+
+export const performAfterSync = function (after, repeat, beforeArgs = []) {
+  if (after === undefined) {
+    return
+  }
+
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, no-plusplus, no-param-reassign
+  while (repeat--) {
+    after(beforeArgs[repeat])
   }
 }

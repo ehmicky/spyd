@@ -1,12 +1,12 @@
 import { validateBenchmarkFile } from '../../common/validate/file.js'
+import { validateInputs } from '../../common/validate/inputs.js'
+import { validateTasks } from '../../common/validate/tasks.js'
 import {
   validateString,
   validateBoolean,
   validateFunction,
   validateStringArray,
 } from '../../common/validate/type.js'
-import { validateInputs } from '../../common/validate/inputs.js'
-import { validateTasks } from '../../common/validate/tasks.js'
 
 // Validate that the benchmark file has correct shape
 export const validateFile = function (entries) {

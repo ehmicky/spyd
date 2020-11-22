@@ -2,13 +2,13 @@ import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../../../error/main.js'
 import { validateBenchmarkFile } from '../../common/validate/file.js'
+import { validateInputs } from '../../common/validate/inputs.js'
+import { validateTasks } from '../../common/validate/tasks.js'
 import {
   validateString,
   validateStringArray,
   validatePrimitive,
 } from '../../common/validate/type.js'
-import { validateInputs } from '../../common/validate/inputs.js'
-import { validateTasks } from '../../common/validate/tasks.js'
 
 // Validate that benchmark file has correct shape
 export const validateFile = function (entries) {
