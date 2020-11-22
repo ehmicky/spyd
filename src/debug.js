@@ -2,18 +2,22 @@ import pMapSeries from 'p-map-series'
 
 import { getIterations } from './iterations/main.js'
 import { executeChild } from './processes/execute.js'
+import { titleColor } from './report/utils/colors.js'
+import { SEPARATOR_SIGN } from './report/utils/separator.js'
+import { addTitles } from './report/utils/title/main.js'
 
 // Run benchmark in debug mode
 export const debugBenchmark = async function (opts) {
   const { iterations } = await getIterations({ ...opts, debug: true })
+  const iterationsA = addTitles(iterations)
 
-  await pMapSeries(iterations, (iteration) =>
+  await pMapSeries(iterationsA, (iteration) =>
     runIteration({ ...iteration, opts }),
   )
 }
 
 const runIteration = async function ({
-  name,
+  row,
   taskPath,
   taskId,
   inputId,
@@ -22,6 +26,7 @@ const runIteration = async function ({
   commandOpt,
   opts: { cwd },
 }) {
+  const name = getName(row)
   // eslint-disable-next-line no-restricted-globals, no-console
   console.log(name)
 
@@ -45,4 +50,8 @@ const runIteration = async function ({
 
   // eslint-disable-next-line no-restricted-globals, no-console
   console.log('')
+}
+
+const getName = function (row) {
+  return titleColor(row.join(` ${SEPARATOR_SIGN} `))
 }
