@@ -1,6 +1,7 @@
 import now from 'precise-now'
 
-import { benchmarkLoopAsync, benchmarkLoopSync } from './loop.js'
+import { benchmarkLoopAsync } from './async/loop.js'
+import { benchmarkLoopSync } from './sync/loop.js'
 
 // Call the `main` function iteratively and return an array of `times` measuring
 // how long each call took.
