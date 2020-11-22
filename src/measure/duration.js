@@ -9,8 +9,8 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 //     processes/runners instead of measuring. This is done by estimating
 //     that `benchmarkCost` and making `maxDuration` at least big enough
 //     compared to it.
-//  3. Must run a minimal amount of loops per process. This is to ensure cold
-//     starts do not impact measures.
+//  3. Must iterates with a minimal amount of loops per process. This is to
+//     ensure cold starts do not impact measures.
 // This means:
 //   - Fast tasks are most likely time-limited by `2.`. Since `benchmarkCost`
 //     mostly depends on the hardware speed, the time to load a given runner and
@@ -18,7 +18,7 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 //     A multiple of `benchmarkCost` is then used as the target duration for
 //     each process.
 //   - Slow tasks are most likely time-limited by `3.`. Their target duration
-//     is computed to run them a specific amount of times.
+//     is computed to execute them a specific amount of times.
 //   - As fast tasks get slower, their target duration based on `2.` becomes
 //     closer to the target duration based on `3.`, ensuring a perfect
 //     transition.
@@ -29,8 +29,9 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 //     the runtime having optimized hot paths for longer periods of time.
 //   - Ensures processes are short enough to provide with frequent realtime
 //     reporting
-//   - Ensures many processes are run to decrease the overall variance, while
-//     still making sure enough loops are run inside each of those processes
+//   - Ensures many processes are spawned to decrease the overall variance,
+//     while still making sure enough loops are run inside each of those
+//     processes
 // We pass a single `maxDuration` parameters for runners to know when to stop
 // measuring
 //   - We purposely avoid others like `maxTimes` or `minDuration` to keep it
@@ -79,30 +80,31 @@ const getTimeoutMax = function (measureDuration, benchmarkCost) {
 // The measures are not prefectly precise, so we allow some additional room
 const MEASURE_DURATION_RATIO = 0.5
 
-// Ensure that processes are run long enough (by using `maxDuration`) so that
-// they get enough time running the task, as opposed to spawning
+// Ensure that processes are executed long enough (by using `maxDuration`) so
+// that they get enough time measuring the task, as opposed to spawning
 // processes/runners.
 const getBenchmarkCostMin = function (benchmarkCost) {
   return benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
 }
 
 // How much time should be spent spawning processes/runners as opposed to
-// running the task.
+// measuring the task.
 // A lower number spawns fewer processes, reducing the precision provided by
 // using several processes.
-// A higher number runs the task fewer times, reducing the precision provided by
-// running it many times.
+// A higher number measures the task fewer times, reducing the precision
+// provided by measuring it many times.
 const BENCHMARK_COST_RATIO = 0.5
 
-// Estimated time to run the task a specific amount of time.
-// This is the number of time the task function is run, not the `repeat` loop.
+// Estimated time to measure the task a specific amount of time.
+// This is the number of time the task function is meaasured, not the `repeat`
+// loop.
 const getTargetTimesMin = function ({ median, nowBias, loopBias, repeat }) {
   return (
     TARGET_TIMES * denormalizeTimePerCall(median, { nowBias, loopBias, repeat })
   )
 }
 
-// The process ends up running slightly fewer times that the target due to:
+// The process ends up with slightly fewer measures that the target due to:
 //   - Using a median where an arithmetic mean would be more in this case.
 //     However, due to cold starts, using an arithmetic mean makes
 //     `targetTimesMin` vary too much. Also, at the beginning of the
@@ -124,7 +126,7 @@ const getTargetTimesMin = function ({ median, nowBias, loopBias, repeat }) {
 // We slightly increase `TARGET_TIMES` to take this into account. This is rather
 // imprecise so we keep this increase small.
 const TARGET_TIMES_ADJUST = 1.1
-// How many times tasks should run at a minimum inside each process.
+// How many times tasks should be measured at a minimum inside each process.
 // A lower number means cold starts induce more variance in final results.
 // A higher number means fewer processes are spawned, reducing their positive
 // impact on variance.

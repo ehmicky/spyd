@@ -4,13 +4,13 @@ import { promisify } from 'util'
 
 const pWriteFile = promisify(writeFile)
 
-// Run a method among many possible ones, selecting it according to
+// Execute a method among many possible ones, selecting it according to
 // eventPayload.type.
 // Retrieve the parent process's event payload and passes it as argument to
 // the method.
 // The method's return value is sent to the parent process.
 // Errors are handled and sent to the parent process too.
-export const runMethod = async function (methodTypes) {
+export const executeMethod = async function (methodTypes) {
   const { type, resultFile, ...eventPayload } = getEventPayload()
 
   try {

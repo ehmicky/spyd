@@ -1,7 +1,8 @@
 // Task `before()`. Performed outside measurements.
 // Its return value is passed to `main()` and `after()`.
 // `before`, `main` and `after` must be pure functions. This is because when
-// `repeat > 1` `before|after` are run in chunks instead of one after another.
+// `repeat > 1` `before|after` are executed in chunks instead of one after
+// another.
 // This is required to be able to loop `main` several times with a single
 // `now()` performed.
 export const performBeforeSync = function (before, repeat) {

@@ -6,7 +6,7 @@ import { executeChild } from '../processes/main.js'
 import { validateIds } from './validate.js'
 
 // Load combinations by launching each command.
-// At startup we run child processes but do not measure yet.
+// At startup we spawn child processes but do not measure yet.
 // We only retrieve the tasks files combinations.
 export const getCommandCombinations = async function ({
   taskPath,
@@ -32,7 +32,7 @@ export const getCommandCombinations = async function ({
   const loadDuration = now() - start
 
   if (combinations.length === 0) {
-    throw new UserError(`File '${taskPath}' does not have any tasks to run`)
+    throw new UserError(`File '${taskPath}' does not any tasks`)
   }
 
   const combinationsA = combinations.map((combination) =>

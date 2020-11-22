@@ -7,7 +7,7 @@ import { validateFile } from './validate.js'
 
 // Load the combinations using the 'load' event sent by parent
 // Those are used:
-//   - to run combinations
+//   - to measure combinations
 //   - by the parent at startup, but only combination ids and titles are needed
 // Load the tasks file using its absolute path
 export const loadTasksFile = async function (

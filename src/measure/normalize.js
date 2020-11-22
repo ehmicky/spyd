@@ -39,7 +39,7 @@ const normalizeTime = function (
   )
 }
 
-// Inverse of `normalizeTime()`, for the time to run one `repeat` loop
+// Inverse of `normalizeTime()`, for the time to measure one `repeat` loop
 export const denormalizeTime = function (
   normalizedTime,
   { nowBias, loopBias, repeat },
@@ -47,8 +47,8 @@ export const denormalizeTime = function (
   return (normalizedTime + loopBias) * repeat + nowBias - loopBias
 }
 
-// Inverse of `normalizeTime()`, for the time to run each task function inside
-// a `repeat` loop
+// Inverse of `normalizeTime()`, for the time to measure each task inside a
+// `repeat` loop
 export const denormalizeTimePerCall = function (
   normalizedTime,
   { nowBias, loopBias, repeat },

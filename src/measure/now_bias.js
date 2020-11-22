@@ -1,8 +1,8 @@
 import { getSortedMedian } from '../stats/median.js'
 
-import { runMeasureLoop } from './loop.js'
+import { measureProcessGroup } from './loop.js'
 
-// `nowBias` is the time taken to run an empty task when `repeat` is `1`.
+// `nowBias` is the time taken to measure an empty task when `repeat` is `1`.
 // This includes the time to get the start/end timestamps for example.
 // We remove it from the measures so they reflect the real task time with
 // accuracy.
@@ -25,7 +25,7 @@ export const getNowBias = async function ({
   cwd,
   loadDuration,
 }) {
-  const { times } = await runMeasureLoop({
+  const { times } = await measureProcessGroup({
     taskPath,
     taskId,
     inputId,

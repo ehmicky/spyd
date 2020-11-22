@@ -1,4 +1,4 @@
-import { runMethod } from '../common/ipc.js'
+import { executeMethod } from '../common/ipc.js'
 
 import { debugRun } from './debug.js'
 import { loadTasksFile } from './load/main.js'
@@ -86,4 +86,4 @@ const applyDryFunc = function (value) {
   return function noop() {}
 }
 
-runMethod({ load, run, debug })
+executeMethod({ load, run, debug })

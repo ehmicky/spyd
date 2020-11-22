@@ -15,7 +15,7 @@ import { normalizeTimes } from './normalize.js'
 import { getRepeat } from './repeat.js'
 
 // eslint-disable-next-line max-statements, max-lines-per-function
-export const runMeasureLoop = async function ({
+export const measureProcessGroup = async function ({
   taskPath,
   taskId,
   inputId,
@@ -104,14 +104,14 @@ export const runMeasureLoop = async function ({
   return { times, count, processes }
 }
 
-// We stop iterating when the next process does not have any time to run a
+// We stop iterating when the next process does not have any time to measure a
 // single loop. We estimate this taking into account the time to launch the
 // runner (`benchmarkCost`), the time to measure the task (`nowBias`) and
 // the time of the task itself, based on previous measurements (`median`).
 // This means we allow the last process to be shorter than the others.
 // On one side, this means we are comparing processes with different durations,
-// which introduce more variance since shorter processes will run slower code
-// (since it is less optimized by the runtime). On the other side:
+// which introduce more variance since shorter processes will measure slower
+// code (since it is less optimized by the runtime). On the other side:
 //   - When the number of processes is low (including when there is only one
 //     process), this improves the total number of `times` enough to justify it.
 //   - Not doing it would make the `count` increment less gradually as the

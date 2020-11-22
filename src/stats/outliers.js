@@ -3,7 +3,7 @@ import { sortNumbers } from './sort.js'
 
 // The slowest times are due to external factors:
 //   - OS or runtime background periodic processes (such as garbage collection)
-//   - The first runs of a specific task in a given process are slow because
+//   - The first measures of a specific task in a given process are slow because
 //     the runtimes did not optimize it yet
 //   - The first processes have not reached the final stabilized `repeat` and
 //     `maxDuration`, making them usually slower
@@ -59,8 +59,9 @@ const getChildTimes = function ({ childTimes }) {
 // A higher value removes more times, which decreases accuracy.
 const OUTLIERS_THRESHOLD = 0.15
 
-// Retrieve the number of times the task was run, including inside a repeated
-// loop. Takes into account the fact that some `times` were removed as outliers.
+// Retrieve the number of times the task was measured, including inside a
+// repeated loop. Takes into account the fact that some `times` were removed
+// as outliers.
 const getCount = function (results, outliersMax) {
   const resultCounts = results.map(({ childTimes, repeat }) =>
     getResultCount({ childTimes, repeat, outliersMax }),

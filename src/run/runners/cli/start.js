@@ -1,4 +1,4 @@
-import { runMethod } from '../common/ipc.js'
+import { executeMethod } from '../common/ipc.js'
 
 import { loadTasksFile } from './load/main.js'
 import { measure } from './measure/loop.js'
@@ -33,7 +33,7 @@ const run = async function ({ taskPath, taskId, inputId, duration }) {
   return { times, count }
 }
 
-// Run a combination once without measuring it
+// Execute a combination once without measuring it
 const debug = async function ({ taskPath, taskId, inputId }) {
   const { main, before, after, variables, shell } = await getTask({
     taskPath,
@@ -60,4 +60,4 @@ const getTask = async function ({
   return { main, before, after, variables, shell }
 }
 
-runMethod({ load, run, debug })
+executeMethod({ load, run, debug })

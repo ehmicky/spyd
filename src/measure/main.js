@@ -4,13 +4,13 @@ import now from 'precise-now'
 
 import { getStats } from '../stats/compute.js'
 
-import { runMeasurement } from './run.js'
+import { measureCombination } from './combination.js'
 
 const pSetTimeout = promisify(setTimeout)
 
 // Start several child processes measuring the same task.
 // eslint-disable-next-line max-lines-per-function
-export const measureCombination = async function ({
+export const getCombinationResult = async function ({
   row,
   column,
   taskPath,
@@ -37,7 +37,7 @@ export const measureCombination = async function ({
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(progressState, { row, index, runEnd })
 
-  const { times, count, processes } = await runMeasurement({
+  const { times, count, processes } = await measureCombination({
     taskPath,
     taskId,
     inputId,
@@ -71,11 +71,11 @@ export const measureCombination = async function ({
   }
 }
 
-// We stop running processes when the next process is most likely to go beyond
-// the target `duration`. We do not try to run it with a lower duration since
-// this would skew results due to comparing processes with a different number
-// of loops.
-// However, we still wait for the time left, without running any processes.
+// We stop measuring processes when the next process is most likely to go beyond
+// the target `duration`. We do not try to measure it with a lower duration
+// since this would skew results due to comparing processes with a different
+// number of loops.
+// However, we still wait for the time left, without spawning any processes.
 // This is wasteful time-wise but prevents the timer from jumping fast-forward
 // at the end, giving the feeling of a smooth countdown instead
 const waitForTimeLeft = async function (runEnd) {

@@ -29,7 +29,7 @@ import { preciseTimestamp } from './precise_timestamp.js'
 // Runners should strive to load dependencies and tasks as fast as possible,
 // since it:
 //  - increases the time spent on measuring
-//  - maximizes the number of processes per run
+//  - maximizes the number of processes per combination
 // The estimation is made for each new process. A median of the `previous`
 // processes' `benchmarkCost` is used
 //  - the initial default value is based on the time it took to load the
