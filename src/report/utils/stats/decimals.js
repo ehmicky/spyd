@@ -1,13 +1,13 @@
 // Retrieve number of decimals to display.
 // Always show at least 3 significant digits.
-// All iterations use the same number of decimals for each stat, so they are
+// All combinations use the same number of decimals for each stat, so they are
 // vertically aligned. Padding is used instead of trailing zeros.
-export const getStatsDecimals = function ({ iterations, name, type, scale }) {
+export const getStatsDecimals = function ({ combinations, name, type, scale }) {
   if (type === 'count') {
     return 0
   }
 
-  const measures = iterations
+  const measures = combinations
     .flatMap(({ stats }) => stats[name])
     .filter(isNotZero)
 

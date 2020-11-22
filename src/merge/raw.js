@@ -1,4 +1,4 @@
-import { removeDuplicates } from '../iterations/duplicate.js'
+import { removeDuplicates } from '../combination/duplicate.js'
 import { groupBy } from '../utils/group.js'
 
 import { validateMerge } from './validate.js'
@@ -18,9 +18,9 @@ const mergePair = function (
     systems: previousSystems,
     git: previousGit,
     ci: previousCi,
-    iterations: previousIterations,
+    combinations: previousCombinations,
   },
-  { id, systems: [system], git, ci, iterations, ...benchmark },
+  { id, systems: [system], git, ci, combinations, ...benchmark },
 ) {
   validateMerge({
     previousSystems,
@@ -32,8 +32,11 @@ const mergePair = function (
   })
 
   const systems = mergeSystems(previousSystems, system)
-  const iterationsA = removeDuplicates([...previousIterations, ...iterations])
-  return { ...benchmark, id, systems, git, ci, iterations: iterationsA }
+  const combinationsA = removeDuplicates([
+    ...previousCombinations,
+    ...combinations,
+  ])
+  return { ...benchmark, id, systems, git, ci, combinations: combinationsA }
 }
 
 const mergeSystems = function (previousSystems, system) {

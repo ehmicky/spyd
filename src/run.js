@@ -1,33 +1,41 @@
 import pMapSeries from 'p-map-series'
 
+import { getCombinations } from './combination/main.js'
 import { addBenchmarkInfo } from './info.js'
-import { getIterations } from './iterations/main.js'
-import { measureIteration } from './measure/main.js'
+import { measureCombination } from './measure/main.js'
 import { startProgress } from './progress/start.js'
 import { stopProgress } from './progress/stop.js'
 
 // Run a new benchmark
 export const runBenchmark = async function (opts) {
-  const { iterations, versions } = await getIterations(opts)
+  const { combinations, versions } = await getCombinations(opts)
 
-  const { progressState, progressInfo } = await startProgress(iterations, opts)
+  const { progressState, progressInfo } = await startProgress(
+    combinations,
+    opts,
+  )
 
   try {
-    return await computeBenchmark({ iterations, progressState, opts, versions })
+    return await computeBenchmark({
+      combinations,
+      progressState,
+      opts,
+      versions,
+    })
   } finally {
     await stopProgress(progressInfo)
   }
 }
 
 const computeBenchmark = async function ({
-  iterations,
+  combinations,
   progressState,
   opts,
   versions,
 }) {
-  const iterationsA = await pMapSeries(iterations, (iteration, index) =>
-    measureIteration({ ...iteration, index, progressState, opts }),
+  const combinationsA = await pMapSeries(combinations, (combination, index) =>
+    measureCombination({ ...combination, index, progressState, opts }),
   )
-  const rawBenchmark = addBenchmarkInfo(iterationsA, { opts, versions })
+  const rawBenchmark = addBenchmarkInfo(combinationsA, { opts, versions })
   return rawBenchmark
 }

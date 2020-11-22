@@ -1,4 +1,4 @@
-// Retrieve targets, i.e. identifiers to select iterations
+// Retrieve targets, i.e. identifiers to select combinations
 export const getTargets = function (opts) {
   const optsA = normalizeSystems(opts)
 

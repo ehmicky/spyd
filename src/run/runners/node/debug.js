@@ -1,4 +1,4 @@
-// Run an iteration once without benchmarking it
+// Run a combination once without benchmarking it
 export const debugRun = async function ({ main, before, after }) {
   const beforeArgs = await performBefore(before)
 

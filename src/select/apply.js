@@ -1,16 +1,18 @@
-// Select iterations according to sets of identifiers (targets)
+// Select combinations according to sets of identifiers (targets)
 export const applyTargets = function (
-  { iterations, ...rawBenchmark },
+  { combinations, ...rawBenchmark },
   targets,
 ) {
-  const iterationsA = iterations.filter((iteration) =>
-    matchTargets(iteration, targets),
+  const combinationsA = combinations.filter((combination) =>
+    matchTargets(combination, targets),
   )
-  return { ...rawBenchmark, iterations: iterationsA }
+  return { ...rawBenchmark, combinations: combinationsA }
 }
 
-const matchTargets = function (iteration, targets) {
-  return targets.every(({ idName, ids }) => matchTarget(iteration[idName], ids))
+const matchTargets = function (combination, targets) {
+  return targets.every(({ idName, ids }) =>
+    matchTarget(combination[idName], ids),
+  )
 }
 
 const matchTarget = function (id, ids) {

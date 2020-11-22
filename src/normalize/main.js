@@ -7,7 +7,7 @@ import { addCollections } from './collections.js'
 // We try to save as little as possible in stores, and compute anything that
 // can on the fly, before reporting.
 export const normalizeBenchmark = function ({
-  iterations,
+  combinations,
   systems,
   git,
   ci,
@@ -15,15 +15,15 @@ export const normalizeBenchmark = function ({
   ...benchmark
 }) {
   const {
-    iterations: iterationsA,
+    combinations: combinationsA,
     tasks,
     inputs,
     commands,
     systems: systemColls,
-  } = addCollections(iterations)
+  } = addCollections(combinations)
   const systemsA = joinSystems(systems, systemColls)
-  const iterationsB = sortIterations(iterationsA)
-  const iterationsC = iterationsB.map(normalizeIterationStats)
+  const combinationsB = sortCombinations(combinationsA)
+  const combinationsC = combinationsB.map(normalizeStats)
 
   return {
     ...benchmark,
@@ -34,14 +34,14 @@ export const normalizeBenchmark = function ({
     systems: systemsA,
     git,
     ci,
-    iterations: iterationsC,
+    combinations: combinationsC,
   }
 }
 
-// Sort iterations so the fastest tasks will be first, then the fastest
-// iterations within each task (regardless of column)
-const sortIterations = function (iterations) {
-  return sortOn(iterations, [ROW_RANK, ...COLUMN_RANKS])
+// Sort combinations so the fastest tasks will be first, then the fastest
+// combinations within each task (regardless of column)
+const sortCombinations = function (combinations) {
+  return sortOn(combinations, [ROW_RANK, ...COLUMN_RANKS])
 }
 
 const ROW_RANK = 'taskRank'
@@ -49,9 +49,9 @@ const COLUMN_RANKS = ['inputRank', 'commandRank', 'systemRank']
 
 // Some stats are removed when `--save` is used. When showing saved benchmarks,
 // those will be `undefined`. We default them to `[]`.
-const normalizeIterationStats = function ({
+const normalizeStats = function ({
   stats: { histogram = [], quantiles = [], ...stats },
-  ...iteration
+  ...combination
 }) {
-  return { ...iteration, stats: { ...stats, histogram, quantiles } }
+  return { ...combination, stats: { ...stats, histogram, quantiles } }
 }

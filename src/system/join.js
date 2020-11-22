@@ -3,7 +3,8 @@ import omit from 'omit.js'
 // We join two collection of similar `systems`:
 //  - after joining with previous benchmarks of same mergeId, to retrieve their
 //    options and systems
-//  - after merging iterations, to retrieve their speed and set iteration.rank
+//  - after merging combinations, to retrieve their speed and set
+//    combination.rank
 export const joinSystems = function (systems, systemColls) {
   const systemsA = systemColls.map((systemColl) =>
     mergeSystem(systems, systemColl),

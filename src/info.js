@@ -6,7 +6,7 @@ import { cleanObject } from './utils/clean.js'
 
 // Add more information to the final benchmark and normalize/sort results
 export const addBenchmarkInfo = function (
-  iterations,
+  combinations,
   { opts, opts: { system, cwd } },
 ) {
   const id = uuidv4()
@@ -19,7 +19,7 @@ export const addBenchmarkInfo = function (
     systems,
     git,
     ci,
-    iterations,
+    combinations,
   }
 
   const rawBenchmarkA = cleanObject(rawBenchmark)

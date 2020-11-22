@@ -1,12 +1,12 @@
 import { getSlowError } from './error.js'
 
 // Use the `limit` option to:
-//  - add `iteration.limit`
-//  - add `iteration.slow`
-//  - add `iteration.slowError`
+//  - add `combination.limit`
+//  - add `combination.slow`
+//  - add `combination.slowError`
 export const getLimit = function ({
-  iteration,
-  iteration: {
+  combination,
+  combination: {
     name,
     stats: { median },
   },
@@ -19,7 +19,7 @@ export const getLimit = function ({
   }
 
   const percentages = limits
-    .filter(({ ids }) => isTarget(iteration, ids))
+    .filter(({ ids }) => isTarget(combination, ids))
     .map(getPercentage)
 
   if (percentages.length === 0) {

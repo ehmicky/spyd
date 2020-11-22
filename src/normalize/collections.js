@@ -5,9 +5,9 @@ import { groupBy } from '../utils/group.js'
 
 // Group row/columns information into top-level properties so that reporters
 // can list them.
-// Also add the mean speed of each collection (using iterations medians).
-export const addCollections = function (iterations) {
-  return COLLECTIONS.reduce(addCollection, { iterations })
+// Also add the mean speed of each collection (using combinations medians).
+export const addCollections = function (combinations) {
+  return COLLECTIONS.reduce(addCollection, { combinations })
 }
 
 const COLLECTIONS = [
@@ -24,29 +24,40 @@ const COLLECTIONS = [
 ]
 
 const addCollection = function (
-  { iterations, ...collections },
+  { combinations, ...collections },
   { name, id, title, description, rank },
 ) {
-  const collection = Object.values(groupBy(iterations, id)).map((iterationsA) =>
-    normalizeCollection({ iterations: iterationsA, id, title, description }),
+  const collection = Object.values(groupBy(combinations, id)).map(
+    (combinationsA) =>
+      normalizeCollection({
+        combinations: combinationsA,
+        id,
+        title,
+        description,
+      }),
   )
   const collectionA = sortOn(collection, 'mean')
 
-  const iterationsB = iterations.map((iteration) =>
-    addRank({ iteration, collection: collectionA, id, rank }),
+  const combinationsB = combinations.map((combination) =>
+    addRank({ combination, collection: collectionA, id, rank }),
   )
-  return { iterations: iterationsB, ...collections, [name]: collectionA }
+  return { combinations: combinationsB, ...collections, [name]: collectionA }
 }
 
-const normalizeCollection = function ({ iterations, id, title, description }) {
-  const lastIteration = iterations[iterations.length - 1]
+const normalizeCollection = function ({
+  combinations,
+  id,
+  title,
+  description,
+}) {
+  const lastCombination = combinations[combinations.length - 1]
   const {
     [id]: collectionId,
     [title]: collectionTitle,
     [description]: collectionDescription,
-  } = lastIteration
+  } = lastCombination
 
-  const medians = iterations.map(getIterationMedian)
+  const medians = combinations.map(getCombinationMedian)
   const mean = getMean(medians)
 
   return {
@@ -57,12 +68,12 @@ const normalizeCollection = function ({ iterations, id, title, description }) {
   }
 }
 
-const getIterationMedian = function ({ stats: { median } }) {
+const getCombinationMedian = function ({ stats: { median } }) {
   return median
 }
 
-// Add speed rank within each collection for each iteration
-const addRank = function ({ iteration, collection, id, rank }) {
-  const rankValue = collection.findIndex((elem) => elem.id === iteration[id])
-  return { ...iteration, [rank]: rankValue }
+// Add speed rank within each collection for each combination
+const addRank = function ({ combination, collection, id, rank }) {
+  const rankValue = collection.findIndex((elem) => elem.id === combination[id])
+  return { ...combination, [rank]: rankValue }
 }

@@ -1,6 +1,6 @@
 import pMapSeries from 'p-map-series'
 
-import { getIterations } from './iterations/main.js'
+import { getCombinations } from './combination/main.js'
 import { executeChild } from './processes/main.js'
 import { titleColor } from './report/utils/colors.js'
 import { SEPARATOR_SIGN } from './report/utils/separator.js'
@@ -8,15 +8,15 @@ import { addTitles } from './report/utils/title/main.js'
 
 // Run benchmark in debug mode
 export const debugBenchmark = async function (opts) {
-  const { iterations } = await getIterations({ ...opts, debug: true })
-  const iterationsA = addTitles(iterations)
+  const { combinations } = await getCombinations({ ...opts, debug: true })
+  const combinationsA = addTitles(combinations)
 
-  await pMapSeries(iterationsA, (iteration) =>
-    runIteration({ ...iteration, opts }),
+  await pMapSeries(combinationsA, (combination) =>
+    runCombination({ ...combination, opts }),
   )
 }
 
-const runIteration = async function ({
+const runCombination = async function ({
   row,
   taskPath,
   taskId,
@@ -45,7 +45,7 @@ const runIteration = async function ({
     cwd,
     taskId,
     inputId,
-    type: 'iterationDebug',
+    type: 'combinationDebug',
   })
 
   // eslint-disable-next-line no-restricted-globals, no-console

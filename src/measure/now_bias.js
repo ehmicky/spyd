@@ -7,8 +7,8 @@ import { runMeasureLoop } from './loop.js'
 // We remove it from the benchmark times so they reflect the real task time
 // with accuracy.
 // This function estimates `nowBias` by benchmarking an empty task.
-// Those biases must be computed separately for each iteration since they might
-// vary depending on:
+// Those biases must be computed separately for each combination since they
+// might vary depending on:
 //  - the task. Some runners might allow task-specific options impacting
 //    benchmarking. For example, the `node` runner has the `async` option.
 //  - the input. The size of the input or whether an input is used or not

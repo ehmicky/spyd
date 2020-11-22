@@ -24,12 +24,12 @@ export const loadBenchmarkFile = async function (taskPath, debug) {
   })
 
   const { tasks, inputs } = normalizeTasks(entriesB, variablesA)
-  const iterations = addTasksInputs({
+  const combinations = addTasksInputs({
     tasks,
     inputs,
     variables: variablesA,
   })
-  return { iterations, shell }
+  return { combinations, shell }
 }
 
 const getBenchmarkContent = async function (taskPath) {

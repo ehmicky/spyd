@@ -4,14 +4,14 @@ import { benchmark } from './benchmark/main.js'
 import { debugRun } from './debug.js'
 import { loadBenchmarkFile } from './load/main.js'
 
-// Communicate iterations ids and titles to parent
+// Communicate combination ids and titles to parent
 const load = async function ({ opts, taskPath }) {
-  const iterations = await loadBenchmarkFile(taskPath, opts)
-  const iterationsA = iterations.map(getIteration)
-  return { iterations: iterationsA }
+  const combinations = await loadBenchmarkFile(taskPath, opts)
+  const combinationsA = combinations.map(getCombination)
+  return { combinations: combinationsA }
 }
 
-const getIteration = function ({ taskId, taskTitle, inputTitle, inputId }) {
+const getCombination = function ({ taskId, taskTitle, inputTitle, inputId }) {
   return { taskId, taskTitle, inputId, inputTitle }
 }
 
@@ -55,10 +55,11 @@ const debug = async function ({ opts, taskPath, taskId, inputId }) {
 }
 
 const getTask = async function ({ opts, taskPath, taskId, inputId, dry }) {
-  const iterations = await loadBenchmarkFile(taskPath, opts)
+  const combinations = await loadBenchmarkFile(taskPath, opts)
 
-  const { main, before, after, async } = iterations.find(
-    (iteration) => iteration.taskId === taskId && iteration.inputId === inputId,
+  const { main, before, after, async } = combinations.find(
+    (combination) =>
+      combination.taskId === taskId && combination.inputId === inputId,
   )
   const [mainA, beforeA, afterA] = applyDry([main, before, after], dry)
   return { main: mainA, before: beforeA, after: afterA, async }

@@ -105,9 +105,9 @@ const getTargetTimesMin = function ({ median, nowBias, loopBias, repeat }) {
 // The process ends up running slightly fewer times that the target due to:
 //   - Using a median where an arithmetic mean would be more in this case.
 //     However, due to cold starts, using an arithmetic mean makes
-//     `targetTimesMin` vary too much. Also, at the beginning of the iteration,
-//     while `repeat` is still being callibrated, `targetTimesMin` can be much
-//     larger than the real mean.
+//     `targetTimesMin` vary too much. Also, at the beginning of the
+//     combination, while `repeat` is still being callibrated, `targetTimesMin`
+//     can be much larger than the real mean.
 //   - Using the whole duration of the process's benchmark loop instead of an
 //     aggregation of the `times`. Even with `nowBias` and `loopBias`, the
 //     `times` do not completely capture the time spent benchmarking.
@@ -135,7 +135,7 @@ const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST
 // `loopTime` is the time for the runner to perform a single benchmark loop.
 // It is estimated from previous processes.
 // This ensures users are not experiencing slow downs of the progress counter
-// at the end of an iteration.
+// at the end of a combination.
 const getLoopTime = function ({ median, nowBias, loopBias, repeat }) {
   return denormalizeTime(median, { nowBias, loopBias, repeat })
 }

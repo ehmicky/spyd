@@ -5,27 +5,27 @@ import { serializeStat } from './serialize.js'
 import { STAT_TYPES } from './types.js'
 import { getUnit } from './unit.js'
 
-// Add `iteration.stats.*Pretty` which is like `iteration.stats.*` but
+// Add `combination.stats.*Pretty` which is like `combination.stats.*` but
 // serialized and CLI-reporter-friendly. It adds time units, rounding, padding
 // and ensures proper vertical alignment.
-export const prettifyStats = function (iterations) {
-  const { unit, scale } = getUnit(iterations)
+export const prettifyStats = function (combinations) {
+  const { unit, scale } = getUnit(combinations)
   return STAT_TYPES.reduce(
-    prettifyIterationsStat.bind(undefined, { unit, scale }),
-    iterations,
+    prettifyCombinationsStat.bind(undefined, { unit, scale }),
+    combinations,
   )
 }
 
-const prettifyIterationsStat = function (
+const prettifyCombinationsStat = function (
   { unit, scale },
-  iterations,
+  combinations,
   { name, type },
 ) {
   const prettyName = `${name}Pretty`
-  const decimals = getStatsDecimals({ iterations, name, type, scale })
-  const iterationsA = iterations.map((iteration) =>
-    prettifyIterationStat({
-      iteration,
+  const decimals = getStatsDecimals({ combinations, name, type, scale })
+  const combinationsA = combinations.map((combination) =>
+    prettifyCombinationStat({
+      combination,
       name,
       prettyName,
       type,
@@ -34,18 +34,18 @@ const prettifyIterationsStat = function (
       decimals,
     }),
   )
-  const padding = getPadding(prettyName, iterationsA)
-  const iterationsB = iterationsA.map((iteration) =>
-    finalizeValue({ iteration, name, prettyName, padding }),
+  const padding = getPadding(prettyName, combinationsA)
+  const combinationsB = combinationsA.map((combination) =>
+    finalizeValue({ combination, name, prettyName, padding }),
   )
-  return iterationsB
+  return combinationsB
 }
 
-const prettifyIterationStat = function ({
+const prettifyCombinationStat = function ({
   name,
   prettyName,
-  iteration,
-  iteration: {
+  combination,
+  combination: {
     stats,
     stats: { [name]: stat, loops },
   },
@@ -63,17 +63,17 @@ const prettifyIterationStat = function ({
     decimals,
     loops,
   })
-  return { ...iteration, stats: { ...stats, [prettyName]: statPretty } }
+  return { ...combination, stats: { ...stats, [prettyName]: statPretty } }
 }
 
 // Add paddings and colors after stats have been prettified
-// We pad after values length for each iteration is known.
+// We pad after values length for each combination is known.
 // We pad before adding colors because ANSI sequences makes padding harder.
 const finalizeValue = function ({
   name,
   prettyName,
-  iteration,
-  iteration: {
+  combination,
+  combination: {
     stats,
     stats: { [name]: stat, [prettyName]: statPretty },
   },
@@ -89,7 +89,7 @@ const finalizeValue = function ({
         }),
       )
     : finalizeItem({ stat, statPretty, padding, name })
-  return { ...iteration, stats: { ...stats, [prettyName]: statPrettyA } }
+  return { ...combination, stats: { ...stats, [prettyName]: statPrettyA } }
 }
 
 const finalizeItem = function ({ stat, statPretty, padding, name }) {

@@ -7,10 +7,10 @@ import { startUpdate } from './update.js'
 
 // Start progress reporting using the `progress` option
 export const startProgress = async function (
-  iterations,
+  combinations,
   { duration, progress: reporters },
 ) {
-  const total = iterations.length
+  const total = combinations.length
 
   hideCursor()
 

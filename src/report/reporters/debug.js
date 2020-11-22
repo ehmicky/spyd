@@ -23,21 +23,21 @@ const report = function ({
   timestamp,
   git,
   ci,
-  iterations,
+  combinations,
 }) {
-  const iterationsA = prettifyStats(iterations)
-  const iterationsB = addTitles(iterationsA)
+  const combinationsA = prettifyStats(combinations)
+  const combinationsB = addTitles(combinationsA)
 
-  const table = getTable(iterationsB)
+  const table = getTable(combinationsB)
   const footer = prettifyValue(
     getFooter({ commands, systems, mergeId, timestamp, git, ci }),
   )
   return joinSections([table, footer])
 }
 
-const getTable = function (iterations) {
-  const header = getHeader(iterations[0])
-  const rows = iterations.map(getRow)
+const getTable = function (combinations) {
+  const header = getHeader(combinations[0])
+  const rows = combinations.map(getRow)
   return [header, ...rows].join('\n')
 }
 

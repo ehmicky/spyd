@@ -5,10 +5,10 @@ import { executeChild } from '../processes/main.js'
 
 import { validateIds } from './validate.js'
 
-// Load iterations by launching each command.
+// Load combinations by launching each command.
 // At startup we run child processes but do not run an benchmarks. We only
-// retrieve the benchmark files iterations.
-export const getCommandIterations = async function ({
+// retrieve the benchmark files combinations.
+export const getCommandCombinations = async function ({
   taskPath,
   command,
   command: { commandSpawn, commandSpawnOptions, commandOpt },
@@ -21,7 +21,7 @@ export const getCommandIterations = async function ({
   const type = debug ? 'loadDebug' : 'loadRun'
 
   const start = now()
-  const { iterations } = await executeChild({
+  const { combinations } = await executeChild({
     commandSpawn,
     commandSpawnOptions,
     eventPayload,
@@ -31,17 +31,21 @@ export const getCommandIterations = async function ({
   })
   const loadDuration = now() - start
 
-  if (iterations.length === 0) {
+  if (combinations.length === 0) {
     throw new UserError(`File '${taskPath}' does not have any tasks to run`)
   }
 
-  const iterationsA = iterations.map((iteration) =>
-    normalizeIteration(iteration, command, { taskPath, system, loadDuration }),
+  const combinationsA = combinations.map((combination) =>
+    normalizeCombination(combination, command, {
+      taskPath,
+      system,
+      loadDuration,
+    }),
   )
-  return iterationsA
+  return combinationsA
 }
 
-const normalizeIteration = function (
+const normalizeCombination = function (
   { taskId, taskTitle = taskId, inputId = '', inputTitle = inputId },
   {
     commandRunner,

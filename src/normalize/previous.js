@@ -6,11 +6,11 @@ import { getDiffIndex, getDiff } from './diff.js'
 
 // Add:
 //  - `benchmark.previous`: all previous benchmarks
-//  - `benchmark.iterations[*].previous`: previous iteration with same runner,
-//    task and input
+//  - `benchmark.combinations[*].previous`: previous combination with same
+//    runner, task and input
 export const addPrevious = function (
   benchmarks,
-  { timestamp, iterations, ...benchmark },
+  { timestamp, combinations, ...benchmark },
   { limits, diff },
 ) {
   // When combined with the 'show' option, we only show the benchmarks before it
@@ -19,58 +19,63 @@ export const addPrevious = function (
     (benchmarkA) => benchmarkA.timestamp < timestamp,
   )
   const diffIndex = getDiffIndex(previous, diff)
-  const iterationsA = addPreviousIterations({
-    iterations,
+  const combinationsA = addPreviousCombinations({
+    combinations,
     previous,
     diffIndex,
     limits,
   })
 
-  const previousA = previous.map(removeIterations)
+  const previousA = previous.map(removeCombinations)
   return {
     ...benchmark,
     timestamp,
-    iterations: iterationsA,
+    combinations: combinationsA,
     previous: previousA,
   }
 }
 
-const addPreviousIterations = function ({
-  iterations,
+const addPreviousCombinations = function ({
+  combinations,
   previous,
   diffIndex,
   limits,
 }) {
-  const previousIterations = previous.flatMap(getIterations)
-  const iterationsA = iterations.map((iteration) =>
-    addPreviousIteration({ iteration, previousIterations, diffIndex, limits }),
+  const previousCombinations = previous.flatMap(getCombinations)
+  const combinationsA = combinations.map((combination) =>
+    addPreviousCombination({
+      combination,
+      previousCombinations,
+      diffIndex,
+      limits,
+    }),
   )
-  return iterationsA
+  return combinationsA
 }
 
-const getIterations = function ({ iterations }, benchmark) {
-  return iterations.map((iteration) => ({ ...iteration, benchmark }))
+const getCombinations = function ({ combinations }, benchmark) {
+  return combinations.map((combination) => ({ ...combination, benchmark }))
 }
 
-const addPreviousIteration = function ({
-  iteration,
-  iteration: { stats },
-  previousIterations,
+const addPreviousCombination = function ({
+  combination,
+  combination: { stats },
+  previousCombinations,
   diffIndex,
   limits,
 }) {
-  const previous = previousIterations.filter((previousIteration) =>
-    isSameIteration(iteration, previousIteration),
+  const previous = previousCombinations.filter((previousCombination) =>
+    isSameCombination(combination, previousCombination),
   )
   const { previousMedian, diff } = getDiff(previous, diffIndex, stats)
   const { limit, slow, slowError } = getLimit({
-    iteration,
+    combination,
     limits,
     previousMedian,
     diff,
   })
   return {
-    ...iteration,
+    ...combination,
     stats: { ...stats, diff, limit },
     slow,
     slowError,
@@ -78,15 +83,15 @@ const addPreviousIteration = function ({
   }
 }
 
-const isSameIteration = function (iterationA, iterationB) {
+const isSameCombination = function (combinationA, combinationB) {
   return (
-    iterationA.taskId === iterationB.taskId &&
-    iterationA.inputId === iterationB.inputId &&
-    iterationA.commandId === iterationB.commandId &&
-    iterationA.systemId === iterationB.systemId
+    combinationA.taskId === combinationB.taskId &&
+    combinationA.inputId === combinationB.inputId &&
+    combinationA.commandId === combinationB.commandId &&
+    combinationA.systemId === combinationB.systemId
   )
 }
 
-const removeIterations = function (benchmark) {
-  return omit(benchmark, ['iterations'])
+const removeCombinations = function (benchmark) {
+  return omit(benchmark, ['combinations'])
 }

@@ -1,30 +1,30 @@
 // Make `taskTitle`, `inputTitle`, 'commandTitle', 'systemTitle'
 // reporter-friendly by adding paddings.
-export const padTitles = function (iterations) {
-  const paddings = getPaddings(iterations)
-  return iterations.map((iteration) => addPadding(iteration, paddings))
+export const padTitles = function (combinations) {
+  const paddings = getPaddings(combinations)
+  return combinations.map((combination) => addPadding(combination, paddings))
 }
 
 // Vertically align `taskTitle`, `inputTitle` and `commandTitle`
-const getPaddings = function (iterations) {
+const getPaddings = function (combinations) {
   const paddings = PADDED_PROPS.map((propName) =>
-    getPadding(iterations, propName),
+    getPadding(combinations, propName),
   )
   return Object.fromEntries(paddings)
 }
 
-const getPadding = function (iterations, propName) {
-  const lengths = iterations.map(({ [propName]: value }) => value.length)
+const getPadding = function (combinations, propName) {
+  const lengths = combinations.map(({ [propName]: value }) => value.length)
   const padding = Math.max(...lengths)
   return [propName, padding]
 }
 
-const addPadding = function (iteration, paddings) {
+const addPadding = function (combination, paddings) {
   const titles = PADDED_PROPS.map((propName) =>
-    padProp(iteration[propName], paddings[propName], propName),
+    padProp(combination[propName], paddings[propName], propName),
   )
   const titlesA = Object.fromEntries(titles)
-  return { ...iteration, ...titlesA }
+  return { ...combination, ...titlesA }
 }
 
 const padProp = function (title, padding, propName) {

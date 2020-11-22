@@ -56,7 +56,7 @@ const getSpawnOptions = function ({
 const STDIO = {
   loadRun: ['ignore', 'pipe', 'pipe'],
   loadDebug: ['ignore', 'pipe', 'pipe'],
-  iterationRun: ['ignore', 'ignore', 'ignore'],
-  iterationDebug: ['ignore', 'inherit', 'inherit'],
+  combinationRun: ['ignore', 'ignore', 'ignore'],
+  combinationDebug: ['ignore', 'inherit', 'inherit'],
 }
 const MAX_BUFFER = 1e8

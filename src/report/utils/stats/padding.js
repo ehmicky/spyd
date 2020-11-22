@@ -1,6 +1,6 @@
 // Retrieve the maximum length of any measures for each stat
-export const getPadding = function (prettyName, iterations) {
-  const statLengths = iterations
+export const getPadding = function (prettyName, combinations) {
+  const statLengths = combinations
     .flatMap(({ stats }) => stats[prettyName])
     .map(getLength)
 

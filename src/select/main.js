@@ -4,14 +4,14 @@ import { applyTargets } from './apply.js'
 import { getTargets } from './targets.js'
 import { validateTargets } from './validate.js'
 
-// Select iterations according to options `tasks` and `inputs`.
+// Select combinations according to options `tasks` and `inputs`.
 // For the `run` and `debug` commands.
-export const selectIterations = function (iterations, { tasks, inputs }) {
-  const [{ iterations: iterationsA }] = selectBenchmarks([{ iterations }], {
-    tasks,
-    inputs,
-  })
-  return iterationsA
+export const selectCombinations = function (combinations, { tasks, inputs }) {
+  const [{ combinations: combinationsA }] = selectBenchmarks(
+    [{ combinations }],
+    { tasks, inputs },
+  )
+  return combinationsA
 }
 
 // Select benchmarks according to options `tasks`, `inputs`, `system` and `run`.
@@ -22,7 +22,7 @@ export const selectBenchmarks = function (rawBenchmarks, opts) {
 
   const rawBenchmarksA = rawBenchmarks
     .map((rawBenchmark) => applyTargets(rawBenchmark, targets))
-    .filter(hasIterations)
+    .filter(hasCombinations)
 
   if (rawBenchmarksA.length === 0) {
     throw new UserError('No matching selection')
@@ -34,6 +34,6 @@ export const selectBenchmarks = function (rawBenchmarks, opts) {
 // Benchmarks with no matching selections are removed from the set.
 // This means deltas and reporting only apply to the current set of matching
 // benchmarks.
-const hasIterations = function ({ iterations }) {
-  return iterations.length !== 0
+const hasCombinations = function ({ combinations }) {
+  return combinations.length !== 0
 }

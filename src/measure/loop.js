@@ -79,7 +79,7 @@ export const runMeasureLoop = async function ({
       cwd,
       taskId,
       inputId,
-      type: 'iterationRun',
+      type: 'combinationRun',
     })
     const childBenchmarkCost = endBenchmarkCost(benchmarkCostStart, start)
 

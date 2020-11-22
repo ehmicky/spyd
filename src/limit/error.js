@@ -2,7 +2,7 @@ import stripAnsi from 'strip-ansi'
 
 import { UserError } from '../error/main.js'
 
-// Add `iteration.slowError`
+// Add `combination.slowError`
 export const getSlowError = function ({ slow, name, percentage, diff }) {
   if (!slow) {
     return
@@ -26,10 +26,10 @@ const PERCENTAGE_PRECISION = 2
 const ONLY_ZEROS_REGEXP = /\.0+/gu
 const TRAILING_ZEROS_REGEXP = /(\.\d*)0+$/gu
 
-// If any `iteration.slowError` is set, we throw them.
+// If any `combination.slowError` is set, we throw them.
 // We do it after reporting.
-export const checkLimits = function ({ iterations }) {
-  const limitError = iterations
+export const checkLimits = function ({ combinations }) {
+  const limitError = combinations
     .map(getSlowErrorField)
     .filter(Boolean)
     .join('\n')

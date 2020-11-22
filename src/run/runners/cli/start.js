@@ -4,14 +4,14 @@ import { benchmark } from './benchmark/main.js'
 import { measure } from './benchmark/measure.js'
 import { loadBenchmarkFile } from './load/main.js'
 
-// Communicate iterations ids and titles to parent
+// Communicate combination ids and titles to parent
 const load = async function ({ taskPath }) {
-  const { iterations } = await loadBenchmarkFile(taskPath)
-  const iterationsA = iterations.map(getIteration)
-  return { iterations: iterationsA }
+  const { combinations } = await loadBenchmarkFile(taskPath)
+  const combinationsA = combinations.map(getCombination)
+  return { combinations: combinationsA }
 }
 
-const getIteration = function ({ taskId, taskTitle, inputId, inputTitle }) {
+const getCombination = function ({ taskId, taskTitle, inputId, inputTitle }) {
   return { taskId, taskTitle, inputId, inputTitle }
 }
 
@@ -33,7 +33,7 @@ const run = async function ({ taskPath, taskId, inputId, duration }) {
   return { times, count }
 }
 
-// Run an iteration once without benchmarking it
+// Run a combination once without benchmarking it
 const debug = async function ({ taskPath, taskId, inputId }) {
   const { main, before, after, variables, shell } = await getTask({
     taskPath,
@@ -51,10 +51,11 @@ const getTask = async function ({
   inputId,
   debug: debugOpt,
 }) {
-  const { iterations, shell } = await loadBenchmarkFile(taskPath, debugOpt)
+  const { combinations, shell } = await loadBenchmarkFile(taskPath, debugOpt)
 
-  const { main, before, after, variables } = iterations.find(
-    (iteration) => iteration.taskId === taskId && iteration.inputId === inputId,
+  const { main, before, after, variables } = combinations.find(
+    (combination) =>
+      combination.taskId === taskId && combination.inputId === inputId,
   )
   return { main, before, after, variables, shell }
 }

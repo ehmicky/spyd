@@ -5,10 +5,10 @@ import { normalizeTasks } from './normalize.js'
 import { useRequireOpt } from './require_opt.js'
 import { validateFile } from './validate.js'
 
-// Load the iterations using the 'load' event sent by parent
-// Those iterations are used:
+// Load the combinations using the 'load' event sent by parent
+// Those combinations are used:
 //   - to run benchmarks
-//   - by the parent at startup, but only iterations ids and titles are needed
+//   - by the parent at startup, but only combination ids and titles are needed
 // Load the benchmark file using its absolute path
 export const loadBenchmarkFile = async function (
   taskPath,
@@ -20,8 +20,8 @@ export const loadBenchmarkFile = async function (
   validateFile(entries)
 
   const { tasks, inputs } = normalizeTasks(entries)
-  const iterations = addTasksInputs(tasks, inputs)
-  return iterations
+  const combinations = addTasksInputs(tasks, inputs)
+  return combinations
 }
 
 const loadFile = async function (taskPath) {

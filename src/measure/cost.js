@@ -33,12 +33,12 @@ import { preciseTimestamp } from './precise_timestamp.js'
 // The estimation is made for each new process. A median of the `previous`
 // processes' `benchmarkCost` is used
 //  - the initial default value is based on the time it took to load the
-//    iterations
+//    combinations
 //  - it is not included it in the `previous` array though since it might differ
 //    significantly for some runners
 //  - since sorting big arrays is very slow, we only sort a sample of them
-// Each iteration estimates its own `benchmarkCost`:
-//  - in most cases, that value should be similar for iterations using the
+// Each combination estimates its own `benchmarkCost`:
+//  - in most cases, that value should be similar for combinations using the
 //    same runner
 //  - however, it is possible that a runner might be doing some extra logic at
 //    `run` time (instead of load time) when retrieving a task with a specific

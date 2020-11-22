@@ -1,20 +1,20 @@
 import { UserError } from '../error/main.js'
 
 // Ensure ids exist
-export const validateLimits = function (iterations, limits) {
+export const validateLimits = function (combinations, limits) {
   limits.forEach((limit) => {
-    validateLimit(iterations, limit)
+    validateLimit(combinations, limit)
   })
 }
 
-const validateLimit = function (iterations, { ids = [] }) {
+const validateLimit = function (combinations, { ids = [] }) {
   ids.forEach((id) => {
-    validateLimitId(iterations, id)
+    validateLimitId(combinations, id)
   })
 }
 
-const validateLimitId = function (iterations, id) {
-  const isValidId = iterations.some((iteration) => hasId(iteration, id))
+const validateLimitId = function (combinations, id) {
+  const isValidId = combinations.some((combination) => hasId(combination, id))
 
   if (!isValidId) {
     throw new UserError(

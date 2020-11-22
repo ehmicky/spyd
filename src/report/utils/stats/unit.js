@@ -2,8 +2,8 @@
 // The same unit is used for all `stats.*Pretty` to make it easier to compare
 // between stats.
 // We use the minimum time unit where all medians are >= 1
-export const getUnit = function (iterations) {
-  const medians = iterations.map(getMedianStat).filter(isNotZero)
+export const getUnit = function (combinations) {
+  const medians = combinations.map(getMedianStat).filter(isNotZero)
 
   if (medians.length === 0) {
     return DEFAULT_UNIT

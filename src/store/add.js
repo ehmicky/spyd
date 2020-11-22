@@ -39,17 +39,17 @@ const save = async function (benchmark, { save: saveOpt, store }) {
 // information.
 // We try to only persist what cannot be computed runtime (which is done by
 // `addPrintedInfo()` during reporting). This includes
-// `iteration.row|column` which are only computed for progress reporters,
+// `combination.row|column` which are only computed for progress reporters,
 // but re-computed after previous benchmarks loading/merging.
-const normalizeBenchmark = function ({ iterations, ...benchmark }) {
-  const iterationsA = iterations.map(normalizeIteration)
-  return { ...benchmark, iterations: iterationsA }
+const normalizeBenchmark = function ({ combinations, ...benchmark }) {
+  const combinationsA = combinations.map(normalizeCombination)
+  return { ...benchmark, combinations: combinationsA }
 }
 
-const normalizeIteration = function ({ stats, ...iteration }) {
-  const iterationA = omit(iteration, OMITTED_PROPS)
+const normalizeCombination = function ({ stats, ...combination }) {
+  const combinationA = omit(combination, OMITTED_PROPS)
   const statsA = omit(stats, OMITTED_STATS_PROPS)
-  return { ...iterationA, stats: statsA }
+  return { ...combinationA, stats: statsA }
 }
 
 const OMITTED_PROPS = ['row', 'column']

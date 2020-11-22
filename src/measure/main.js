@@ -10,7 +10,7 @@ const pSetTimeout = promisify(setTimeout)
 
 // Start several child processes benchmarking the same task.
 // eslint-disable-next-line max-lines-per-function
-export const measureIteration = async function ({
+export const measureCombination = async function ({
   row,
   column,
   taskPath,

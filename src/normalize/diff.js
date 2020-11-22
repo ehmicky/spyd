@@ -22,20 +22,20 @@ export const getDiff = function (previous, diffIndex, { median }) {
   }
 
   // eslint-disable-next-line fp/no-mutating-methods
-  const diffIteration = previous
+  const diffCombination = previous
     .slice()
     .reverse()
     .find(({ benchmark }) => benchmark <= diffIndex)
 
-  // This can happen when some iterations have a previous benchmark but others
+  // This can happen when some combinations have a previous benchmark but others
   // not
-  if (diffIteration === undefined) {
+  if (diffCombination === undefined) {
     return {}
   }
 
   const {
     stats: { median: previousMedian },
-  } = diffIteration
+  } = diffCombination
 
   const diff = computeDiff(median, previousMedian)
   return { previousMedian, diff }
