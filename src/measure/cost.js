@@ -4,13 +4,39 @@ import { executeChild } from '../processes/main.js'
 import { getSortedMedian } from '../stats/median.js'
 import { sortNumbers } from '../stats/sort.js'
 
+// Ensure that processes are run long enough (by using `maxDuration`) so that
+// they get enough time running the benchmarked task, as opposed to spawning
+// processes/runners.
+export const getBenchmarkCostMin = async function ({
+  taskPath,
+  taskId,
+  inputId,
+  commandSpawn,
+  commandSpawnOptions,
+  commandOpt,
+  duration,
+  cwd,
+}) {
+  const benchmarkCost = await getBenchmarkCost({
+    taskPath,
+    taskId,
+    inputId,
+    commandSpawn,
+    commandSpawnOptions,
+    commandOpt,
+    duration,
+    cwd,
+  })
+  return benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
+}
+
 // Computes how much time is spent spawning processes/runners as opposed to
 // running the benchmarked task.
 // Note that this does not include the time spent by the runner iterating on
 // the benchmark loop itself, since that time increases proportionally to the
 // number of loops. It only includes the time initially spent when each process
 // loads.
-export const getBenchmarkCost = async function ({
+const getBenchmarkCost = async function ({
   taskPath,
   taskId,
   inputId,
@@ -81,3 +107,11 @@ const getBenchmarkCostSample = async function ({
   const benchmarkCost = now() - start
   return benchmarkCost
 }
+
+// How much time should be spent spawning processes/runners as opposed to
+// running the benchmarked task.
+// A lower number spawns fewer processes, reducing the precision provided by
+// using several processes.
+// A higher number runs the benchmark task fewer times, reducing the precision
+// provided by running it many times.
+const BENCHMARK_COST_RATIO = 0.1

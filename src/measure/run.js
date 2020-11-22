@@ -1,5 +1,5 @@
 import { getBiases } from './bias.js'
-import { getBenchmarkCost } from './cost.js'
+import { getBenchmarkCostMin } from './cost.js'
 import { runMeasureLoop } from './loop.js'
 
 // We run child processes until either:
@@ -26,7 +26,7 @@ export const runMeasurement = async function ({
   runEnd,
   cwd,
 }) {
-  const benchmarkCost = await getBenchmarkCost({
+  const benchmarkCostMin = await getBenchmarkCostMin({
     taskPath,
     taskId,
     inputId,
@@ -45,7 +45,7 @@ export const runMeasurement = async function ({
     commandOpt,
     duration,
     cwd,
-    benchmarkCost,
+    benchmarkCostMin,
   })
   const { times, count, processes } = await runMeasureLoop({
     taskPath,
@@ -57,7 +57,7 @@ export const runMeasurement = async function ({
     duration,
     runEnd,
     cwd,
-    benchmarkCost,
+    benchmarkCostMin,
     nowBias,
     loopBias,
     minTime,

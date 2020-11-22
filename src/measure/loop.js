@@ -17,7 +17,7 @@ export const runMeasureLoop = async function ({
   duration,
   runEnd,
   cwd,
-  benchmarkCost,
+  benchmarkCostMin,
   nowBias,
   loopBias,
   minTime,
@@ -31,8 +31,6 @@ export const runMeasureLoop = async function ({
     inputId,
     dry,
   }
-
-  const benchmarkCostMin = getBenchmarkCostMin(benchmarkCost)
   const maxDuration = benchmarkCostMin
 
   const results = []
@@ -75,21 +73,6 @@ export const runMeasureLoop = async function ({
   const { times, count, processes } = removeOutliers(results)
   return { times, count, processes }
 }
-
-// Ensure that processes are run long enough (by using `maxDuration`) so that
-// they get enough time running the benchmarked task, as opposed to spawning
-// processes/runners
-const getBenchmarkCostMin = function (benchmarkCost) {
-  return benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
-}
-
-// How much time should be spent spawning processes/runners as opposed to
-// running the benchmarked task.
-// A lower number spawns fewer processes, reducing the precision provided by
-// using several processes.
-// A higher number runs the benchmark task fewer times, reducing the precision
-// provided by running it many times.
-const BENCHMARK_COST_RATIO = 0.1
 
 // Chosen not to overflow the memory of a typical machine
 const TOTAL_MAX_TIMES = 1e8
