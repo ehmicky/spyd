@@ -1,7 +1,7 @@
 import { getSum } from './methods.js'
 import { sortNumbers } from './sort.js'
 
-// The slowest times are due to external factors:
+// The slowest measures are due to external factors:
 //   - OS or runtime background periodic processes (such as garbage collection)
 //   - The first measures of a specific task in a given process are slow because
 //     the runtimes did not optimize it yet
@@ -9,10 +9,10 @@ import { sortNumbers } from './sort.js'
 //     `maxDuration`, making them usually slower
 export const removeOutliers = function (processMeasures) {
   const processMeasuresA = removeOutlierProcesses(processMeasures)
-  const { times, outliersMax } = removeOutlierTimes(processMeasuresA)
+  const { measures, outliersMax } = removeOutlierMeasures(processMeasuresA)
   const count = getCount(processMeasuresA, outliersMax)
   const processes = processMeasuresA.length
-  return { times, count, processes }
+  return { measures, count, processes }
 }
 
 // Remove initial `repeat` callibration
@@ -34,41 +34,41 @@ const isRepeatCallibration = function ({ repeat }, index, processMeasures) {
   )
 }
 
-const removeOutlierTimes = function (processMeasures) {
-  const times = aggregateTimes(processMeasures)
-  sortNumbers(times)
+const removeOutlierMeasures = function (processMeasures) {
+  const measures = aggregateMeasures(processMeasures)
+  sortNumbers(measures)
 
-  const outliersLimit = Math.ceil(times.length * (1 - OUTLIERS_THRESHOLD))
-  const outliersMax = times[outliersLimit]
-  const timesA = times.slice(0, outliersLimit)
-  return { times: timesA, outliersMax }
+  const outliersLimit = Math.ceil(measures.length * (1 - OUTLIERS_THRESHOLD))
+  const outliersMax = measures[outliersLimit]
+  const measuresA = measures.slice(0, outliersLimit)
+  return { measures: measuresA, outliersMax }
 }
 
 // We do not use `[].concat(...processMeasures)` because it creates a stack
 // overflow if `processMeasures.length` is too large (~1e5 on my machine)
-const aggregateTimes = function (processMeasures) {
-  return processMeasures.flatMap(getChildTimes)
+const aggregateMeasures = function (processMeasures) {
+  return processMeasures.flatMap(getChildMeasures)
 }
 
-const getChildTimes = function ({ childTimes }) {
-  return childTimes
+const getChildMeasures = function ({ childMeasures }) {
+  return childMeasures
 }
 
 // How many outliers to remove.
 // A lower value removes fewer outliers, which increases variance.
-// A higher value removes more times, which decreases accuracy.
+// A higher value removes more measures, which decreases accuracy.
 const OUTLIERS_THRESHOLD = 0.15
 
-// Retrieve the number of times the task was measured, including inside a
-// repeated loop. Takes into account the fact that some `times` were removed
+// Retrieve the number of measures the task was measured, including inside a
+// repeated loop. Takes into account the fact that some measures were removed
 // as outliers.
 const getCount = function (processMeasures, outliersMax) {
-  const processCounts = processMeasures.map(({ childTimes, repeat }) =>
-    getProcessCount({ childTimes, repeat, outliersMax }),
+  const processCounts = processMeasures.map(({ childMeasures, repeat }) =>
+    getProcessCount({ childMeasures, repeat, outliersMax }),
   )
   return getSum(processCounts)
 }
 
-const getProcessCount = function ({ childTimes, repeat, outliersMax }) {
-  return childTimes.filter((time) => time < outliersMax).length * repeat
+const getProcessCount = function ({ childMeasures, repeat, outliersMax }) {
+  return childMeasures.filter((time) => time < outliersMax).length * repeat
 }

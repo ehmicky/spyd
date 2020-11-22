@@ -29,7 +29,7 @@ export const getRepeatCost = async function ({
     repeatCost: 0,
     median: measureCost,
   })
-  const { times } = await measureProcessGroup({
+  const { measures } = await measureProcessGroup({
     taskPath,
     taskId,
     inputId,
@@ -45,6 +45,6 @@ export const getRepeatCost = async function ({
     initialRepeat,
     dry: true,
   })
-  const median = getSortedMedian(times)
+  const median = getSortedMedian(measures)
   return median
 }

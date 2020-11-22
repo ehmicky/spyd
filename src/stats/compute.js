@@ -10,11 +10,11 @@ import { getQuantiles } from './quantiles.js'
 // if was not one. This means `quantiles`, `histogram` and `deviation` will
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
-export const getStats = function ({ times, count, processes }) {
+export const getStats = function ({ measures, count, processes }) {
   // `count` is the number of times `main()` was called
   // `loops` is the number of repeat loops
   // `repeat` is the average number of iterations inside those repeat loops
-  const loops = times.length
+  const loops = measures.length
   const repeat = Math.round(count / loops)
 
   const {
@@ -25,7 +25,7 @@ export const getStats = function ({ times, count, processes }) {
     histogram,
     mean,
     deviation,
-  } = computeStats(times)
+  } = computeStats(measures)
 
   return {
     median,
@@ -42,16 +42,16 @@ export const getStats = function ({ times, count, processes }) {
   }
 }
 
-const computeStats = function (times) {
-  const [min] = times
-  const max = times[times.length - 1]
+const computeStats = function (measures) {
+  const [min] = measures
+  const max = measures[measures.length - 1]
 
-  const median = getSortedMedian(times)
-  const quantiles = getQuantiles(times, QUANTILES_SIZE)
-  const histogram = getHistogram(times, HISTOGRAM_SIZE)
+  const median = getSortedMedian(measures)
+  const quantiles = getQuantiles(measures, QUANTILES_SIZE)
+  const histogram = getHistogram(measures, HISTOGRAM_SIZE)
 
-  const mean = getMean(times)
-  const deviation = getDeviation(times, mean)
+  const mean = getMean(measures)
+  const deviation = getDeviation(measures, mean)
 
   return { min, max, median, quantiles, histogram, mean, deviation }
 }

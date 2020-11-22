@@ -32,7 +32,7 @@ const run = async function ({
     inputId,
     dry,
   })
-  const { times, start } = await measureTask({
+  const { measures, start } = await measureTask({
     main,
     before,
     after,
@@ -40,7 +40,7 @@ const run = async function ({
     repeat,
     maxDuration,
   })
-  return { times, start }
+  return { measures, start }
 }
 
 const debug = async function ({ opts, taskPath, taskId, inputId }) {

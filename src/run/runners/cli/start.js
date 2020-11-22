@@ -1,8 +1,7 @@
 import { executeMethod } from '../common/ipc.js'
 
 import { loadTasksFile } from './load/main.js'
-import { measure } from './measure/loop.js'
-import { measureTask } from './measure/main.js'
+import { measureTask, performLoop } from './measure/main.js'
 
 // Communicate combination ids and titles to parent
 const load = async function ({ taskPath }) {
@@ -22,7 +21,7 @@ const run = async function ({ taskPath, taskId, inputId, duration }) {
     taskId,
     inputId,
   })
-  const { times, count } = await measureTask({
+  const { measures, count } = await measureTask({
     main,
     before,
     after,
@@ -30,7 +29,7 @@ const run = async function ({ taskPath, taskId, inputId, duration }) {
     shell,
     duration,
   })
-  return { times, count }
+  return { measures, count }
 }
 
 // Execute a combination once without measuring it
@@ -41,7 +40,7 @@ const debug = async function ({ taskPath, taskId, inputId }) {
     inputId,
     debug: true,
   })
-  await measure({ main, before, after, variables, shell, debug: true })
+  await performLoop({ main, before, after, variables, shell, debug: true })
   return {}
 }
 

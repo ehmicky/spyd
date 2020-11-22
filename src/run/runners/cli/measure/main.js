@@ -5,7 +5,6 @@ import { spawnNoOutput } from '../spawn.js'
 import { performBefore, performAfter } from './before_after.js'
 
 // Measure how long a task takes.
-// Measure for a specific amount of time.
 // We take measures iteratively in order to stop exactly when the `duration`
 // has been reached.
 export const measureTask = async function ({
@@ -16,7 +15,7 @@ export const measureTask = async function ({
   shell,
   duration,
 }) {
-  const times = []
+  const measures = []
   const measureEnd = now() + duration
   await performLoops({
     main,
@@ -24,10 +23,10 @@ export const measureTask = async function ({
     after,
     variables,
     shell,
-    times,
+    measures,
     measureEnd,
   })
-  return { times, count: times.length }
+  return { measures, count: measures.length }
 }
 
 const performLoops = async function ({
@@ -36,25 +35,17 @@ const performLoops = async function ({
   after,
   variables,
   shell,
-  times,
+  measures,
   measureEnd,
 }) {
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line no-await-in-loop
-    const time = await performLoop({
-      main,
-      before,
-      after,
-      variables,
-      shell,
-    })
-    // eslint-disable-next-line fp/no-mutating-methods
-    times.push(time)
+    // eslint-disable-next-line fp/no-mutating-methods, no-await-in-loop
+    measures.push(await performLoop({ main, before, after, variables, shell }))
   } while (!shouldStopMeasuring(measureEnd))
 }
 
-const performLoop = async function ({
+export const performLoop = async function ({
   main,
   before,
   after,
@@ -63,9 +54,14 @@ const performLoop = async function ({
   debug,
 }) {
   const variablesA = await performBefore({ before, variables, shell, debug })
-  const time = await getDuration({ main, variables: variablesA, shell, debug })
+  const measure = await getDuration({
+    main,
+    variables: variablesA,
+    shell,
+    debug,
+  })
   await performAfter({ after, variables: variablesA, shell, debug })
-  return time
+  return measure
 }
 
 const getDuration = async function ({ main, variables, shell, debug }) {

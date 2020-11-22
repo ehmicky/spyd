@@ -8,7 +8,7 @@ import { performance } from 'perf_hooks'
 //    (timing attacks)
 //  - the machine maximum resolution
 // Unlike `precise-now`, this returns Unix timestamps so this can be used to
-// compare times between different processes
+// compare timestamps between different processes
 // This does not use:
 //  - `Date.now()`: its resolution is only 1ms
 //  - `process.hrtime()`: they do not return Unix timestamps

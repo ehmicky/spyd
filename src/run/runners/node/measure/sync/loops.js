@@ -10,12 +10,12 @@ export const performLoopsSync = function ({
   after,
   repeat,
   measureEnd,
-  times,
+  measures,
 }) {
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line fp/no-mutating-methods
-    times.push(performLoopSync({ main, before, after, repeat }))
+    measures.push(performLoopSync({ main, before, after, repeat }))
   } while (!shouldStopMeasuring(measureEnd))
 }
 

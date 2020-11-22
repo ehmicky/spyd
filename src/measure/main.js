@@ -37,7 +37,7 @@ export const getCombinationResult = async function ({
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(progressState, { row, index, combinationEnd })
 
-  const { times, count, processes } = await measureCombination({
+  const { measures, count, processes } = await measureCombination({
     taskPath,
     taskId,
     inputId,
@@ -50,7 +50,7 @@ export const getCombinationResult = async function ({
     cwd,
   })
 
-  const stats = getStats({ times, count, processes })
+  const stats = getStats({ measures, count, processes })
 
   await waitForTimeLeft(combinationEnd)
 

@@ -44,7 +44,7 @@ Processes are used instead of threads because:
 ## Runtime optimization
 
 _Problem_: Due to runtime optimization, the more a task is run, the faster is
-gets. Which means longer runs result in faster times.
+gets. Which means longer runs result in faster results.
 
 _Solution_: The run is split into consecutive processes with the same duration.
 As a task gets faster or as a run gets longer, more processes are spawned but

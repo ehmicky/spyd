@@ -9,12 +9,12 @@ export const performLoopsAsync = async function ({
   after,
   repeat,
   measureEnd,
-  times,
+  measures,
 }) {
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line fp/no-mutating-methods, no-await-in-loop
-    times.push(await performLoopAsync({ main, before, after, repeat }))
+    measures.push(await performLoopAsync({ main, before, after, repeat }))
   } while (!shouldStopMeasuring(measureEnd))
 }
 
