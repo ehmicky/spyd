@@ -63,14 +63,14 @@ export const getMaxDuration = function ({
 
 // Time left for benchmarking (excluding time to load the process/runner)
 const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
-  return runEnd - now() - benchmarkCost
+  return runEnd - now() - benchmarkCost.estimate
 }
 
 // Ensure that processes are run long enough (by using `maxDuration`) so that
 // they get enough time running the benchmarked task, as opposed to spawning
 // processes/runners.
 const getBenchmarkCostMin = function (benchmarkCost) {
-  return benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
+  return benchmarkCost.estimate * (1 / BENCHMARK_COST_RATIO - 1)
 }
 
 // How much time should be spent spawning processes/runners as opposed to

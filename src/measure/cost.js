@@ -1,8 +1,4 @@
-import now from 'precise-now'
-
-import { executeChild } from '../processes/main.js'
-import { getSortedMedian } from '../stats/median.js'
-import { sortNumbers } from '../stats/sort.js'
+import { getUnsortedMedian } from '../stats/median.js'
 
 // Computes how much time is spent spawning processes/runners as opposed to
 // running the benchmarked task.
@@ -10,74 +6,32 @@ import { sortNumbers } from '../stats/sort.js'
 // the benchmark loop itself, since that time increases proportionally to the
 // number of loops. It only includes the time initially spent when each process
 // loads.
-export const getBenchmarkCost = async function ({
-  taskPath,
-  taskId,
-  inputId,
-  commandSpawn,
-  commandSpawnOptions,
-  commandOpt,
-  duration,
-  cwd,
-}) {
-  const benchmarkCosts = []
-
-  // eslint-disable-next-line fp/no-loops
-  do {
-    // eslint-disable-next-line no-await-in-loop
-    const benchmarkCost = await getBenchmarkCostSample({
-      taskPath,
-      taskId,
-      inputId,
-      commandSpawn,
-      commandSpawnOptions,
-      commandOpt,
-      duration,
-      cwd,
-    })
-    // eslint-disable-next-line fp/no-mutating-methods
-    benchmarkCosts.push(benchmarkCost)
-  } while (benchmarkCosts.length < BENCHMARK_COSTS_SIZE)
-
-  sortNumbers(benchmarkCosts)
-  const medianBenchmarkCost = getSortedMedian(benchmarkCosts)
-  return medianBenchmarkCost
+// We measure this continuously for each new process. Runners returns the
+// `duration` of the benchmarking logic so it can be excluded from this.
+// We use a median of the previous processes' `benchmarkCost`. We do not include
+// it in the `previous` array though since it might differ significantly for
+// some runners.
+// Since sorting big arrays is very slow, we only sort a sample of them.
+// The initial value is based on the time it took to load the iterations.
+// Each iteration estimates its own `benchmarkCost`. In most cases, that value
+// should be similar for iterations using the same runner. However, it is
+// possible that a runner might be doing some extra logic at `run` time
+// (instead of load time) when retrieving a task with a specific option, such
+// as dynamically loading some code for that specific task.
+export const updateBenchmarkCost = function (
+  childBenchmarkCost,
+  benchmarkCost,
+) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  benchmarkCost.previous.push(childBenchmarkCost)
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  benchmarkCost.estimate = getUnsortedMedian(
+    benchmarkCost.previous,
+    BENCHMARK_COST_SORT_MAX,
+  )
 }
 
-// How many samples to measure benchmark cost.
-// A higher number takes more time.
-// A lower number makes `benchmarkCost` vary more between runs.
-const BENCHMARK_COSTS_SIZE = 10
-
-const getBenchmarkCostSample = async function ({
-  taskPath,
-  taskId,
-  inputId,
-  commandSpawn,
-  commandSpawnOptions,
-  commandOpt,
-  duration,
-  cwd,
-}) {
-  const eventPayload = {
-    type: 'run',
-    opts: commandOpt,
-    taskPath,
-    taskId,
-    inputId,
-    maxDuration: 0,
-    repeat: 0,
-    dry: true,
-  }
-  const start = now()
-  await executeChild({
-    commandSpawn,
-    commandSpawnOptions,
-    eventPayload,
-    timeoutNs: duration,
-    cwd,
-    type: 'iterationRun',
-  })
-  const benchmarkCost = now() - start
-  return benchmarkCost
-}
+// Size of the sorting sample.
+// A lower value will make `benchmarkCost` vary more.
+// A higher value will increase the time to sort by `O(n * log(n))`
+const BENCHMARK_COST_SORT_MAX = 1e2

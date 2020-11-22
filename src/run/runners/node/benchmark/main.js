@@ -19,7 +19,8 @@ export const benchmark = async function ({
     return times
   }
 
-  const runEnd = now() + maxDuration
+  const start = now()
+  const runEnd = start + maxDuration
   await benchmarkLoop({
     main,
     before,
@@ -29,7 +30,8 @@ export const benchmark = async function ({
     runEnd,
     times,
   })
-  return times
+  const duration = now() - start
+  return { times, duration }
 }
 
 // We separate async and sync measurements because following a promise (`await`)

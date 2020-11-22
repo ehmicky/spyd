@@ -1,3 +1,5 @@
+import now from 'precise-now'
+
 import { UserError } from '../error/main.js'
 import { executeChild } from '../processes/main.js'
 
@@ -17,6 +19,8 @@ export const getCommandIterations = async function ({
 }) {
   const eventPayload = { type: 'load', taskPath, opts: commandOpt }
   const type = debug ? 'loadDebug' : 'loadRun'
+
+  const start = now()
   const { iterations } = await executeChild({
     commandSpawn,
     commandSpawnOptions,
@@ -25,13 +29,14 @@ export const getCommandIterations = async function ({
     cwd,
     type,
   })
+  const loadDuration = now() - start
 
   if (iterations.length === 0) {
     throw new UserError(`File '${taskPath}' does not have any tasks to run`)
   }
 
   const iterationsA = iterations.map((iteration) =>
-    normalizeIteration(iteration, command, { taskPath, system }),
+    normalizeIteration(iteration, command, { taskPath, system, loadDuration }),
   )
   return iterationsA
 }
@@ -47,7 +52,7 @@ const normalizeIteration = function (
     commandSpawnOptions,
     commandOpt,
   },
-  { taskPath, system: { id: systemId, title: systemTitle } },
+  { taskPath, system: { id: systemId, title: systemTitle }, loadDuration },
 ) {
   const inputIdA = inputId.trim()
 
@@ -68,5 +73,6 @@ const normalizeIteration = function (
     commandOpt,
     systemId,
     systemTitle,
+    loadDuration,
   }
 }

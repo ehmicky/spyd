@@ -32,7 +32,7 @@ const run = async function ({
     inputId,
     dry,
   })
-  const times = await benchmark({
+  const { times, duration } = await benchmark({
     main,
     before,
     after,
@@ -40,7 +40,7 @@ const run = async function ({
     repeat,
     maxDuration,
   })
-  return { times }
+  return { times, duration }
 }
 
 const debug = async function ({ opts, taskPath, taskId, inputId }) {

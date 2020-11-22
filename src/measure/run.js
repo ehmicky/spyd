@@ -1,7 +1,6 @@
 import now from 'precise-now'
 
 import { getBiases } from './bias.js'
-import { getBenchmarkCost } from './cost.js'
 import { runMeasureLoop } from './loop.js'
 
 // We run processes until reaching the max `duration`.
@@ -18,20 +17,15 @@ export const runMeasurement = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
+  loadDuration,
   duration,
   runEnd,
   cwd,
 }) {
-  const benchmarkCost = await getBenchmarkCost({
-    taskPath,
-    taskId,
-    inputId,
-    commandSpawn,
-    commandSpawnOptions,
-    commandOpt,
-    duration,
-    cwd,
-  })
+  // Bias computation and the main measurement loop share the `benchmarkCost`
+  // estimation.
+  const benchmarkCost = { estimate: loadDuration, previous: [] }
+
   const { nowBias, loopBias, minTime } = await getBiases({
     taskPath,
     taskId,

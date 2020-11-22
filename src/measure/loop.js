@@ -3,6 +3,7 @@ import now from 'precise-now'
 import { executeChild } from '../processes/main.js'
 import { removeOutliers } from '../stats/outliers.js'
 
+import { updateBenchmarkCost } from './cost.js'
 import { getMaxDuration } from './duration.js'
 import { getMedian } from './median.js'
 import { normalizeTimes } from './normalize.js'
@@ -55,8 +56,9 @@ export const runMeasureLoop = async function ({
       median,
     })
 
+    const start = now()
     // eslint-disable-next-line no-await-in-loop
-    const { times: childTimes } = await executeChild({
+    const { times: childTimes, duration } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
       eventPayload: { ...eventPayload, maxDuration, repeat },
@@ -66,6 +68,8 @@ export const runMeasureLoop = async function ({
       inputId,
       type: 'iterationRun',
     })
+    const childBenchmarkCost = now() - start - duration
+
     normalizeTimes(childTimes, { nowBias, loopBias, repeat })
 
     // eslint-disable-next-line fp/no-mutating-methods
@@ -73,6 +77,7 @@ export const runMeasureLoop = async function ({
     // eslint-disable-next-line fp/no-mutation
     totalTimes += childTimes.length
 
+    updateBenchmarkCost(childBenchmarkCost, benchmarkCost)
     // eslint-disable-next-line fp/no-mutation
     median = getMedian(childTimes, processMedians)
     // eslint-disable-next-line fp/no-mutation
@@ -112,7 +117,7 @@ const shouldStopLoop = function ({
 }) {
   return (
     totalTimes >= TOTAL_MAX_TIMES ||
-    now() + benchmarkCost + nowBias + median >= runEnd
+    now() + benchmarkCost.estimate + nowBias + median >= runEnd
   )
 }
 
