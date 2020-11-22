@@ -14,7 +14,7 @@ export const measureTask = async function ({
   shell,
   duration,
 }) {
-  const runEnd = now() + duration
+  const measureEnd = now() + duration
   const times = []
 
   // eslint-disable-next-line fp/no-loops
@@ -29,7 +29,7 @@ export const measureTask = async function ({
     })
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)
-  } while (now() < runEnd)
+  } while (now() < measureEnd)
 
   return { times, count: times.length }
 }

@@ -9,14 +9,14 @@ export const performLoopSync = function ({
   before,
   after,
   repeat,
-  runEnd,
+  measureEnd,
   times,
 }) {
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(measureSync({ main, before, after, repeat }))
-  } while (!shouldStopLoop(runEnd))
+  } while (!shouldStopLoop(measureEnd))
 }
 
 const measureSync = function ({ main, before, after, repeat }) {

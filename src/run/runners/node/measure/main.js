@@ -17,14 +17,14 @@ export const measureTask = async function ({
 }) {
   const times = []
   const start = String(preciseTimestamp())
-  const runEnd = now() + maxDuration
+  const measureEnd = now() + maxDuration
   await performLoop({
     main,
     before,
     after,
     async,
     repeat,
-    runEnd,
+    measureEnd,
     times,
   })
   return { times, start }
@@ -39,12 +39,12 @@ const performLoop = function ({
   after,
   async,
   repeat,
-  runEnd,
+  measureEnd,
   times,
 }) {
   if (async) {
-    return performLoopAsync({ main, before, after, repeat, runEnd, times })
+    return performLoopAsync({ main, before, after, repeat, measureEnd, times })
   }
 
-  return performLoopSync({ main, before, after, repeat, runEnd, times })
+  return performLoopSync({ main, before, after, repeat, measureEnd, times })
 }
