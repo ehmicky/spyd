@@ -1,6 +1,6 @@
 import { getHistogram } from './histogram.js'
-import { getMedian, getMean, getDeviation } from './methods.js'
-import { removeOutliers } from './outliers.js'
+import { getMedian, getMean, getSum, getDeviation } from './methods.js'
+import { removeOutlierProcesses, removeOutlierTimes } from './outliers.js'
 import { getPercentiles } from './percentiles.js'
 import { sortNumbers } from './sort.js'
 
@@ -12,19 +12,22 @@ import { sortNumbers } from './sort.js'
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
 // eslint-disable-next-line max-statements
-export const getStats = function ({ results, count }) {
-  const times = aggregateTimes(results)
+export const getStats = function (results) {
+  const resultsA = removeOutlierProcesses(results)
+
+  const times = aggregateTimes(resultsA)
   // Half of the statistics require the array to be sorted
   sortNumbers(times)
+  const { times: timesA, outliersMax } = removeOutlierTimes(times)
 
-  const { times: timesA, count: countA } = removeOutliers(times, count)
+  const count = getCount(resultsA, outliersMax)
 
   // `count` is the number of times `main()` was called
   // `loops` is the number of benchmark loops
   // `repeat` is the average number of iterations inside those benchmark loops
   const loops = timesA.length
-  const repeat = Math.round(countA / loops)
-  const processes = results.length
+  const repeat = Math.round(count / loops)
+  const processes = resultsA.length
 
   const [min] = timesA
   const max = timesA[timesA.length - 1]
@@ -42,7 +45,7 @@ export const getStats = function ({ results, count }) {
     min,
     max,
     deviation,
-    count: countA,
+    count,
     loops,
     repeat,
     processes,
@@ -54,11 +57,24 @@ export const getStats = function ({ results, count }) {
 // We do not use `[].concat(...results)` because it creates a stack overflow if
 // `results.length` is too large (~1e5 on my machine)
 const aggregateTimes = function (results) {
-  return results.flatMap(identity)
+  return results.flatMap(getTimes)
 }
 
-const identity = function (value) {
-  return value
+const getTimes = function ({ times }) {
+  return times
+}
+
+// Retrieve the number of times the task was run, including inside a repeated
+// loop. Takes into account the fact that some `times` were removed as outliers.
+const getCount = function (results, outliersMax) {
+  const resultCounts = results.map(({ times, repeat }) =>
+    getResultCount({ times, repeat, outliersMax }),
+  )
+  return getSum(resultCounts)
+}
+
+const getResultCount = function ({ times, repeat, outliersMax }) {
+  return times.filter((time) => time < outliersMax).length * repeat
 }
 
 const HISTOGRAM_SIZE = 1e2

@@ -53,7 +53,7 @@ export const runChildren = async function ({
     nowBias,
     loopBias,
   }
-  const { results, count } = await executeChildren({
+  const results = await executeChildren({
     taskId,
     inputId,
     commandSpawn,
@@ -69,7 +69,7 @@ export const runChildren = async function ({
 
   await waitForTimeLeft(runEnd)
 
-  return { results, count }
+  return results
 }
 
 // eslint-disable-next-line max-statements
@@ -91,49 +91,41 @@ const executeChildren = async function ({
 
   const results = []
   // eslint-disable-next-line fp/no-let
-  let timesLength = 0
-  // eslint-disable-next-line fp/no-let
-  let count = 0
+  let totalTimes = 0
   const processMedians = []
   // eslint-disable-next-line fp/no-let
   let repeat = 1
 
   // eslint-disable-next-line fp/no-loops
   do {
-    const processes = results.length
-    const maxTimes = getMaxTimes(processes)
-
     // eslint-disable-next-line no-await-in-loop
-    const { times: childTimes } = await executeChild({
+    const { times } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
-      eventPayload: { ...eventPayload, maxDuration, maxTimes, repeat },
+      eventPayload: { ...eventPayload, maxDuration, repeat },
       timeoutNs: duration,
       cwd,
       taskId,
       inputId,
       type: 'iterationRun',
     })
-
-    // eslint-disable-next-line fp/no-mutation
-    timesLength += childTimes.length
     // eslint-disable-next-line fp/no-mutating-methods
-    results.push(childTimes)
+    results.push({ times, repeat })
     // eslint-disable-next-line fp/no-mutation
-    count += childTimes.length * repeat
+    totalTimes += times.length
 
-    sortNumbers(childTimes)
-    const processesMedian = addProcessMedian(childTimes, processMedians)
+    sortNumbers(times)
+    const processesMedian = addProcessMedian(times, processMedians)
 
     // eslint-disable-next-line fp/no-mutation
     repeat = adjustRepeat({ repeat, processesMedian, minTime, loopBias })
-  } while (now() + maxDuration < runEnd && timesLength < MAX_RESULTS)
+  } while (now() + maxDuration < runEnd && totalTimes < MAX_TIMES)
 
-  return { results, count }
+  return results
 }
 
-const addProcessMedian = function (childTimes, processMedians) {
-  const processMedian = getMedian(childTimes)
+const addProcessMedian = function (times, processMedians) {
+  const processMedian = getMedian(times)
   // eslint-disable-next-line fp/no-mutating-methods
   processMedians.push(processMedian)
 
@@ -155,22 +147,8 @@ const addProcessMedian = function (childTimes, processMedians) {
 //   - a lower number makes `repeat` more likely to vary
 const MAX_PROCESS_MEDIANS = 1e3
 
-// Run increasingly longer children in order to progressively adjust repeat
-const getMaxTimes = function (processes) {
-  if (processes >= MAX_TIMES_LIMIT) {
-    return
-  }
-
-  return MAX_TIMES_RATE ** processes
-}
-
-const MAX_TIMES_RATE = 2
-// Stop increasing once `maxTimes` cannot be represented as a safe integer
-// anymore
-const MAX_TIMES_LIMIT = Math.log(Number.MAX_SAFE_INTEGER) / Math.log(2)
-
 // Chosen not to overflow the memory of a typical machine
-const MAX_RESULTS = 1e8
+const MAX_TIMES = 1e8
 
 // Ensure that processes are run long enough (by using `maxDuration`) so that
 // they get enough time running the benchmarked task, as opposed to spawning
