@@ -4,6 +4,7 @@ import { promisify } from 'util'
 import now from 'precise-now'
 
 import { getMedian } from '../stats/methods.js'
+import { removeOutliers } from '../stats/outliers.js'
 import { sortNumbers } from '../stats/sort.js'
 
 import { getBiases } from './bias.js'
@@ -47,7 +48,7 @@ export const runChildren = async function ({
     cwd,
   })
 
-  const results = await executeChildren({
+  const { times, count, processes } = await executeChildren({
     taskPath,
     taskId,
     inputId,
@@ -65,7 +66,7 @@ export const runChildren = async function ({
 
   await waitForTimeLeft(runEnd)
 
-  return results
+  return { times, count, processes }
 }
 
 // eslint-disable-next-line max-statements, max-lines-per-function
@@ -139,7 +140,8 @@ const executeChildren = async function ({
     repeat = newRepeat
   } while (now() + maxDuration < runEnd && totalTimes < MAX_TIMES)
 
-  return results
+  const { times, count, processes } = removeOutliers(results)
+  return { times, count, processes }
 }
 
 // Remove `nowBias`, `loopBias` and `repeat` from measured `times`

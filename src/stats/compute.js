@@ -1,6 +1,5 @@
 import { getHistogram } from './histogram.js'
 import { getMedian, getMean, getDeviation } from './methods.js'
-import { removeOutliers } from './outliers.js'
 import { getPercentiles } from './percentiles.js'
 
 // Retrieve statistics from a raw set of benchmark results
@@ -10,9 +9,7 @@ import { getPercentiles } from './percentiles.js'
 // if was not one. This means `percentiles`, `histogram` and `deviation` will
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
-export const getStats = function (results) {
-  const { times, count, processes } = removeOutliers(results)
-
+export const getStats = function ({ times, count, processes }) {
   // `count` is the number of times `main()` was called
   // `loops` is the number of benchmark loops
   // `repeat` is the average number of iterations inside those benchmark loops
