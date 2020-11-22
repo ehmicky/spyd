@@ -21,7 +21,7 @@ export const getNowBias = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
-  measureDuration,
+  processGroupDuration,
   cwd,
   loadDuration,
 }) {
@@ -32,7 +32,7 @@ export const getNowBias = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    measureDuration,
+    processGroupDuration,
     cwd,
     loadDuration,
     nowBias: 0,

@@ -41,14 +41,14 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 export const getMaxDuration = function ({
   runEnd,
   benchmarkCost,
-  measureDuration,
+  processGroupDuration,
   nowBias,
   loopBias,
   repeat,
   median,
 }) {
   const timeLeftMeasuring = getTimeLeftMeasuring(runEnd, benchmarkCost)
-  const timeoutMax = getTimeoutMax(measureDuration, benchmarkCost)
+  const timeoutMax = getTimeoutMax(processGroupDuration, benchmarkCost)
   const benchmarkCostMin = getBenchmarkCostMin(benchmarkCost)
   const targetTimesMin = getTargetTimesMin({
     median,
@@ -73,8 +73,11 @@ const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
 }
 
 // Ensure the `maxDuration` does not go over the process `timeout` if possible
-const getTimeoutMax = function (measureDuration, benchmarkCost) {
-  return Math.max((measureDuration - benchmarkCost) * MEASURE_DURATION_RATIO, 0)
+const getTimeoutMax = function (processGroupDuration, benchmarkCost) {
+  return Math.max(
+    (processGroupDuration - benchmarkCost) * MEASURE_DURATION_RATIO,
+    0,
+  )
 }
 
 // The measures are not prefectly precise, so we allow some additional room

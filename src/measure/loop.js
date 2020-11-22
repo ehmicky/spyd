@@ -22,7 +22,7 @@ export const measureProcessGroup = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandOpt,
-  measureDuration,
+  processGroupDuration,
   cwd,
   loadDuration,
   nowBias,
@@ -31,7 +31,7 @@ export const measureProcessGroup = async function ({
   initialRepeat,
   dry,
 }) {
-  const runEnd = now() + measureDuration
+  const runEnd = now() + processGroupDuration
   const eventPayload = {
     type: 'run',
     opts: commandOpt,
@@ -62,7 +62,7 @@ export const measureProcessGroup = async function ({
     const maxDuration = getMaxDuration({
       runEnd,
       benchmarkCost,
-      measureDuration,
+      processGroupDuration,
       nowBias,
       loopBias,
       repeat,
@@ -75,7 +75,7 @@ export const measureProcessGroup = async function ({
       commandSpawn,
       commandSpawnOptions,
       eventPayload: { ...eventPayload, maxDuration, repeat },
-      timeoutNs: measureDuration,
+      timeoutNs: processGroupDuration,
       cwd,
       taskId,
       inputId,
