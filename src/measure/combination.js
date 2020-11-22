@@ -51,7 +51,7 @@ export const measureCombination = async function ({
     measureCost,
     minLoopTime,
   })
-  const { measures, count, processes } = await measureProcessGroup({
+  const { measures, times, processes } = await measureProcessGroup({
     taskPath,
     taskId,
     inputId,
@@ -67,7 +67,7 @@ export const measureCombination = async function ({
     initialRepeat: 1,
     dry: false,
   })
-  return { measures, count, processes }
+  return { measures, times, processes }
 }
 
 // Biases must be very precise to measure fast tasks accurately.

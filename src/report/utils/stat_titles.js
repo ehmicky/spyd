@@ -7,7 +7,7 @@ export const STAT_TITLES = {
   diff: 'Difference',
   limit: 'Limit',
   deviation: 'Variation',
-  count: 'Times',
+  times: 'Times',
   loops: 'Loops count',
   repeat: 'Loops size',
   processes: 'Processes',

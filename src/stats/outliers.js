@@ -10,9 +10,9 @@ import { sortNumbers } from './sort.js'
 export const removeOutliers = function (processMeasures) {
   const processMeasuresA = removeOutlierProcesses(processMeasures)
   const { measures, outliersMax } = removeOutlierMeasures(processMeasuresA)
-  const count = getCount(processMeasuresA, outliersMax)
+  const times = getTimes(processMeasuresA, outliersMax)
   const processes = processMeasuresA.length
-  return { measures, count, processes }
+  return { measures, times, processes }
 }
 
 // Remove initial `repeat` callibration
@@ -62,13 +62,13 @@ const OUTLIERS_THRESHOLD = 0.15
 // Retrieve the number of measures the task was measured, including inside a
 // repeated loop. Takes into account the fact that some measures were removed
 // as outliers.
-const getCount = function (processMeasures, outliersMax) {
-  const processCounts = processMeasures.map(({ childMeasures, repeat }) =>
-    getProcessCount({ childMeasures, repeat, outliersMax }),
+const getTimes = function (processMeasures, outliersMax) {
+  const processTimes = processMeasures.map(({ childMeasures, repeat }) =>
+    getProcessTimes({ childMeasures, repeat, outliersMax }),
   )
-  return getSum(processCounts)
+  return getSum(processTimes)
 }
 
-const getProcessCount = function ({ childMeasures, repeat, outliersMax }) {
+const getProcessTimes = function ({ childMeasures, repeat, outliersMax }) {
   return childMeasures.filter((time) => time < outliersMax).length * repeat
 }

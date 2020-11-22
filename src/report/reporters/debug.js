@@ -96,7 +96,7 @@ const STATS = [
   'diff',
   'limit',
   'deviation',
-  'count',
+  'times',
   'loops',
   'repeat',
   'processes',

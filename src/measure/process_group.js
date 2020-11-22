@@ -103,8 +103,8 @@ export const measureProcessGroup = async function ({
     })
   )
 
-  const { measures, count, processes } = removeOutliers(processMeasures)
-  return { measures, count, processes }
+  const { measures, times, processes } = removeOutliers(processMeasures)
+  return { measures, times, processes }
 }
 
 // We stop iterating when the next process does not have any time to spawn a
@@ -117,7 +117,7 @@ export const measureProcessGroup = async function ({
 // code (since it is less optimized by the runtime). On the other side:
 //   - When the number of processes is low (including when there is only one
 //     process), this improves the total number of measures enough to justify it
-//   - Not doing it would make the `count` increment less gradually as the
+//   - Not doing it would make the `times` increment less gradually as the
 //     `duration` increases.
 const shouldStopProcessGroup = function ({
   loadCost,

@@ -21,7 +21,7 @@ const run = async function ({ taskPath, taskId, inputId, duration }) {
     taskId,
     inputId,
   })
-  const { measures, count } = await measureTask({
+  const { measures, times } = await measureTask({
     main,
     before,
     after,
@@ -29,7 +29,7 @@ const run = async function ({ taskPath, taskId, inputId, duration }) {
     shell,
     duration,
   })
-  return { measures, count }
+  return { measures, times }
 }
 
 // Execute a combination once without measuring it

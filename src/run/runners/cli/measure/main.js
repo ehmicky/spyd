@@ -26,7 +26,7 @@ export const measureTask = async function ({
     measures,
     measureEnd,
   })
-  return { measures, count: measures.length }
+  return { measures, times: measures.length }
 }
 
 const performLoops = async function ({

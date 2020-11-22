@@ -8,7 +8,7 @@ export const STAT_TYPES = [
   { name: 'diff', type: 'relativePercentage' },
   { name: 'limit', type: 'duration' },
   { name: 'deviation', type: 'absolutePercentage' },
-  { name: 'count', type: 'count' },
+  { name: 'times', type: 'count' },
   { name: 'loops', type: 'count' },
   { name: 'repeat', type: 'count' },
   { name: 'processes', type: 'count' },
