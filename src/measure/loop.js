@@ -71,13 +71,38 @@ export const runMeasureLoop = async function ({
     // eslint-disable-next-line fp/no-mutation
     repeat = adjustRepeat({ repeat, minTime, loopBias, median })
   } while (
-    now() + benchmarkCost + nowBias + median < runEnd &&
-    totalTimes < TOTAL_MAX_TIMES
+    !shouldStopLoop({
+      benchmarkCost,
+      nowBias,
+      median,
+      runEnd,
+      totalTimes,
+    })
   )
 
   const { times, count, processes } = removeOutliers(results)
   return { times, count, processes }
 }
 
-// Chosen not to overflow the memory of a typical machine
+// We stop iterating when the next process does not have any time to run a
+// single loop. We estimate this taking into account the time to launch the
+// runner (`benchmarkCost`), the time to benchmark the task (`nowBias`) and
+// the time of the task itself, based on previous measurements (`median`).
+const shouldStopLoop = function ({
+  benchmarkCost,
+  nowBias,
+  median,
+  runEnd,
+  totalTimes,
+}) {
+  return (
+    totalTimes >= TOTAL_MAX_TIMES ||
+    now() + benchmarkCost + nowBias + median >= runEnd
+  )
+}
+
+// We stop child processes when the `results` is over `TOTAL_MAX_TIMES`. This
+// is meant to prevent memory overflow.
+// The default limit for V8 in Node.js is 1.7GB, which allows times to holds a
+// little more than 1e8 floats.
 const TOTAL_MAX_TIMES = 1e8
