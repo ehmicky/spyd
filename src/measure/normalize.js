@@ -30,11 +30,29 @@ const isNowBias = function ({ nowBias, loopBias, repeat }) {
 // the time to perform the loop itself (with no rounds). Also, this means that
 // if `repeat` is `1`, `loopBias` will have no impact on the result, which means
 // its variance will not add to the overall variance.
-const normalizeTime = function (time, { nowBias, loopBias, repeat }) {
-  return Math.max((time - nowBias + loopBias) / repeat - loopBias, 0)
+const normalizeTime = function (
+  denormalizedTime,
+  { nowBias, loopBias, repeat },
+) {
+  return Math.max(
+    (denormalizedTime - nowBias + loopBias) / repeat - loopBias,
+    0,
+  )
 }
 
-// Inverse of `normalizeTime()`
-export const denormalizeTime = function (time, { nowBias, loopBias, repeat }) {
-  return (time + loopBias) * repeat - loopBias + nowBias
+// Inverse of `normalizeTime()`, for the time to run one `repeat` loop
+export const denormalizeTime = function (
+  normalizedTime,
+  { nowBias, loopBias, repeat },
+) {
+  return (normalizedTime + loopBias) * repeat + nowBias - loopBias
+}
+
+// Inverse of `normalizeTime()`, for the time to run each task function inside
+// a `repeat` loop
+export const denormalizeTimePerCall = function (
+  normalizedTime,
+  { nowBias, loopBias, repeat },
+) {
+  return denormalizeTime(normalizedTime, { nowBias, loopBias, repeat }) / repeat
 }

@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { denormalizeTime } from './normalize.js'
+import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 
 // `maxDuration` is the estimated time a process will spend benchmarking.
 // It is callibrated progressively based on several limits:
@@ -52,7 +52,36 @@ export const getMaxDuration = function ({
   repeat,
   median,
 }) {
-  const timeLeftMeasuring = runEnd - now() - benchmarkCost
+  const timeLeftMeasuring = getTimeLeftMeasuring(runEnd, benchmarkCost)
+  const targetTimesMin = getTargetTimesMin({
+    median,
+    nowBias,
+    loopBias,
+    repeat,
+  })
   const loopTime = denormalizeTime(median, { nowBias, loopBias, repeat })
-  return Math.max(Math.min(benchmarkCostMin, timeLeftMeasuring) - loopTime, 0)
+  return Math.max(
+    Math.min(timeLeftMeasuring, Math.max(benchmarkCostMin, targetTimesMin)) -
+      loopTime,
+    0,
+  )
 }
+
+// Time left for benchmarking (excluding time to load the process/runner)
+const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
+  return runEnd - now() - benchmarkCost
+}
+
+// Estimated time to run the task a specific amount of time.
+// This is the number of time the task function is run, not the `repeat` loop.
+const getTargetTimesMin = function ({ median, nowBias, loopBias, repeat }) {
+  return (
+    TARGET_TIMES * denormalizeTimePerCall(median, { nowBias, loopBias, repeat })
+  )
+}
+
+// How many times tasks should run at a minimum inside each process.
+// A lower number means cold starts induce more variance in final results.
+// A higher number means fewer processes are spawned, reducing their positive
+// impact on variance.
+const TARGET_TIMES = 10
