@@ -4,6 +4,6 @@ import now from 'precise-now'
 // elapsed.
 // We ensure at least one measurement is taken, unless `maxDuration` is `0`
 // (used when computing the benchmarkCost)
-export const shouldStopLoop = function (runEnd, lastTime) {
-  return now() + lastTime >= runEnd
+export const shouldStopLoop = function (runEnd) {
+  return now() >= runEnd
 }

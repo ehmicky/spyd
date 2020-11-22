@@ -1,10 +1,11 @@
+/* eslint-disable max-lines */
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
 import { removeOutliers } from '../stats/outliers.js'
 
 import { getMedian } from './median.js'
-import { normalizeTimes } from './normalize.js'
+import { normalizeTimes, denormalizeTime } from './normalize.js'
 import { adjustRepeat } from './repeat.js'
 
 // eslint-disable-next-line max-statements, max-lines-per-function
@@ -37,6 +38,8 @@ export const runMeasureLoop = async function ({
   // eslint-disable-next-line fp/no-let
   let totalTimes = 0
   const processMedians = []
+  // `median` is initially 0. This means it is not used to compute `maxDuration`
+  // in the first process.
   // eslint-disable-next-line fp/no-let
   let median = 0
   // eslint-disable-next-line fp/no-let
@@ -48,6 +51,10 @@ export const runMeasureLoop = async function ({
       runEnd,
       benchmarkCost,
       benchmarkCostMin,
+      nowBias,
+      loopBias,
+      repeat,
+      median,
     })
 
     // eslint-disable-next-line no-await-in-loop
@@ -106,9 +113,22 @@ export const runMeasureLoop = async function ({
 //     reporting
 //   - Ensures many processes are run to decrease the overall variance, while
 //     still making sure enough loops are run inside each of those processes
-const getMaxDuration = function ({ runEnd, benchmarkCost, benchmarkCostMin }) {
+// We remove the `loopTime` (time for the runner to perform a single benchmark
+// loop) (which is estimated from previous processes) to guarantee runners stop
+// right under the target duration, not right above. This ensures users are not
+// experiencing slow downs of the progress counter at the end of an iteration.
+const getMaxDuration = function ({
+  runEnd,
+  benchmarkCost,
+  benchmarkCostMin,
+  nowBias,
+  loopBias,
+  repeat,
+  median,
+}) {
   const timeLeftMeasuring = runEnd - now() - benchmarkCost
-  return Math.min(benchmarkCostMin, timeLeftMeasuring)
+  const loopTime = denormalizeTime(median, { nowBias, loopBias, repeat })
+  return Math.max(Math.min(benchmarkCostMin, timeLeftMeasuring) - loopTime, 0)
 }
 
 // We stop iterating when the next process does not have any time to run a
@@ -141,3 +161,4 @@ const shouldStopLoop = function ({
 // The default limit for V8 in Node.js is 1.7GB, which allows times to holds a
 // little more than 1e8 floats.
 const TOTAL_MAX_TIMES = 1e8
+/* eslint-enable max-lines */
