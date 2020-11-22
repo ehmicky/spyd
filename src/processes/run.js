@@ -3,7 +3,7 @@ import { promisify } from 'util'
 
 import now from 'precise-now'
 
-import { getSum, getMedian } from '../stats/methods.js'
+import { getMedian } from '../stats/methods.js'
 import { sortNumbers } from '../stats/sort.js'
 
 import { getBiases } from './bias.js'
@@ -36,7 +36,7 @@ export const runChildren = async function ({
   runEnd,
   cwd,
 }) {
-  const { nowBias, loopBias, minTime } = await getBiases({
+  const { benchmarkCost, nowBias, loopBias, minTime } = await getBiases({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
@@ -62,6 +62,7 @@ export const runChildren = async function ({
     runEnd,
     cwd,
     eventPayload,
+    benchmarkCost,
     loopBias,
     minTime,
   })
@@ -71,7 +72,7 @@ export const runChildren = async function ({
   return { results, count }
 }
 
-// eslint-disable-next-line max-statements, max-lines-per-function
+// eslint-disable-next-line max-statements
 const executeChildren = async function ({
   taskId,
   inputId,
@@ -81,18 +82,19 @@ const executeChildren = async function ({
   runEnd,
   cwd,
   eventPayload,
+  benchmarkCost,
   loopBias,
   minTime,
 }) {
+  const benchmarkCostMin = getBenchmarkCostMin(benchmarkCost)
+  const maxDuration = benchmarkCostMin
+
   const results = []
   // eslint-disable-next-line fp/no-let
   let timesLength = 0
   // eslint-disable-next-line fp/no-let
   let count = 0
-  // eslint-disable-next-line fp/no-let
-  let maxDuration = DEFAULT_MAX_DURATION
   const processMedians = []
-  const benchmarkCosts = []
   // eslint-disable-next-line fp/no-let
   let repeat = 1
 
@@ -101,7 +103,6 @@ const executeChildren = async function ({
     const processes = results.length
     const maxTimes = getMaxTimes(processes)
 
-    const childStart = now()
     // eslint-disable-next-line no-await-in-loop
     const { times: childTimes } = await executeChild({
       commandSpawn,
@@ -113,14 +114,6 @@ const executeChildren = async function ({
       inputId,
       type: 'iterationRun',
     })
-    const childDuration = now() - childStart
-    const medianBenchmarkCost = addBenchmarkCost({
-      childDuration,
-      childTimes,
-      repeat,
-      benchmarkCosts,
-    })
-    const benchmarkCostMin = getBenchmarkCostMin(medianBenchmarkCost)
 
     // eslint-disable-next-line fp/no-mutation
     timesLength += childTimes.length
@@ -132,8 +125,6 @@ const executeChildren = async function ({
     sortNumbers(childTimes)
     const processesMedian = addProcessMedian(childTimes, processMedians)
 
-    // eslint-disable-next-line fp/no-mutation
-    maxDuration = benchmarkCostMin
     // eslint-disable-next-line fp/no-mutation
     repeat = adjustRepeat({ repeat, processesMedian, minTime, loopBias })
   } while (now() + maxDuration < runEnd && timesLength < MAX_RESULTS)
@@ -178,50 +169,14 @@ const MAX_TIMES_RATE = 2
 // anymore
 const MAX_TIMES_LIMIT = Math.log(Number.MAX_SAFE_INTEGER) / Math.log(2)
 
-// 500ms. Chosen:
-//   - so that --duration=1 does not timeout
-//   - to provide with frequent report live updating
-//   - to not be too close to the time to spawn a process (~1ms on my machine)
-const DEFAULT_MAX_DURATION = 5e8
 // Chosen not to overflow the memory of a typical machine
 const MAX_RESULTS = 1e8
-
-// Computes the median time to spawn processes/runners (as opposed to running
-// the benchmarked task)
-const addBenchmarkCost = function ({
-  childDuration,
-  childTimes,
-  repeat,
-  benchmarkCosts,
-}) {
-  const measuringTaskDuration = getSum(childTimes) * repeat
-  const benchmarkCost = childDuration - measuringTaskDuration
-  // eslint-disable-next-line fp/no-mutating-methods
-  benchmarkCosts.push(benchmarkCost)
-
-  if (benchmarkCosts.length > MAX_BENCHMARK_COSTS) {
-    // eslint-disable-next-line fp/no-mutating-methods
-    benchmarkCosts.shift()
-  }
-
-  const benchmarkCostsCopy = [...benchmarkCosts]
-  sortNumbers(benchmarkCostsCopy)
-  const medianBenchmarkCost = getMedian(benchmarkCostsCopy)
-  return medianBenchmarkCost
-}
-
-// We limit the size of the array storing the last benchmarkCost because
-// sorting big arrays is too slow.
-// In benchmarks with high `duration`:
-//   - a higher number increases the time to sort benchmarkCost
-//   - a lower number makes `maxDuration` more likely to vary
-const MAX_BENCHMARK_COSTS = 1e3
 
 // Ensure that processes are run long enough (by using `maxDuration`) so that
 // they get enough time running the benchmarked task, as opposed to spawning
 // processes/runners
-const getBenchmarkCostMin = function (medianBenchmarkCost) {
-  return medianBenchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
+const getBenchmarkCostMin = function (benchmarkCost) {
+  return benchmarkCost * (1 / BENCHMARK_COST_RATIO - 1)
 }
 
 // How much time should be spent spawning processes/runners as opposed to
