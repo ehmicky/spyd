@@ -2,8 +2,8 @@ import now from 'precise-now'
 
 import { preciseTimestamp } from '../../../../measure/precise_timestamp.js'
 
-import { performLoopAsync } from './async/loop.js'
-import { performLoopSync } from './sync/loop.js'
+import { performLoopsAsync } from './async/loops.js'
+import { performLoopsSync } from './sync/loops.js'
 
 // Call the `main` function iteratively and return an array of `times` measuring
 // how long each call took.
@@ -18,7 +18,7 @@ export const measureTask = async function ({
   const times = []
   const start = String(preciseTimestamp())
   const measureEnd = now() + maxDuration
-  await performLoop({
+  await performLoops({
     main,
     before,
     after,
@@ -33,7 +33,7 @@ export const measureTask = async function ({
 // We separate async and sync measurements because following a promise (`await`)
 // can take several microseconds, which does not work when measuring fast
 // synchronous functions.
-const performLoop = function ({
+const performLoops = function ({
   main,
   before,
   after,
@@ -43,8 +43,8 @@ const performLoop = function ({
   times,
 }) {
   if (async) {
-    return performLoopAsync({ main, before, after, repeat, measureEnd, times })
+    return performLoopsAsync({ main, before, after, repeat, measureEnd, times })
   }
 
-  return performLoopSync({ main, before, after, repeat, measureEnd, times })
+  return performLoopsSync({ main, before, after, repeat, measureEnd, times })
 }

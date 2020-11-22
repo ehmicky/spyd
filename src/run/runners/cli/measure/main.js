@@ -1,6 +1,8 @@
 import now from 'precise-now'
 
-import { measure } from './loop.js'
+import { spawnNoOutput } from '../spawn.js'
+
+import { performBefore, performAfter } from './before_after.js'
 
 // Measure how long a task takes.
 // Measure for a specific amount of time.
@@ -14,13 +16,33 @@ export const measureTask = async function ({
   shell,
   duration,
 }) {
-  const measureEnd = now() + duration
   const times = []
+  const measureEnd = now() + duration
+  await performLoops({
+    main,
+    before,
+    after,
+    variables,
+    shell,
+    times,
+    measureEnd,
+  })
+  return { times, count: times.length }
+}
 
+const performLoops = async function ({
+  main,
+  before,
+  after,
+  variables,
+  shell,
+  times,
+  measureEnd,
+}) {
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    const time = await measure({
+    const time = await performLoop({
       main,
       before,
       after,
@@ -29,7 +51,29 @@ export const measureTask = async function ({
     })
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)
-  } while (now() < measureEnd)
+  } while (!shouldStopMeasuring(measureEnd))
+}
 
-  return { times, count: times.length }
+const performLoop = async function ({
+  main,
+  before,
+  after,
+  variables,
+  shell,
+  debug,
+}) {
+  const variablesA = await performBefore({ before, variables, shell, debug })
+  const time = await getDuration({ main, variables: variablesA, shell, debug })
+  await performAfter({ after, variables: variablesA, shell, debug })
+  return time
+}
+
+const getDuration = async function ({ main, variables, shell, debug }) {
+  const start = now()
+  await spawnNoOutput(main, 'Main', { variables, shell, debug })
+  return now() - start
+}
+
+const shouldStopMeasuring = function (measureEnd) {
+  return now() >= measureEnd
 }
