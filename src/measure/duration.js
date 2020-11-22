@@ -74,6 +74,25 @@ const getTimeLeftMeasuring = function (runEnd, benchmarkCost) {
 
 // Estimated time to run the task a specific amount of time.
 // This is the number of time the task function is run, not the `repeat` loop.
+// The process ends up running slightly fewer times that the target due to:
+//   - Using a median where an arithmetic mean would be more in this case.
+//     However, due to cold starts, using an arithmetic mean makes
+//     `targetTimesMin` vary too much. Also, at the beginning of the iteration,
+//     while `repeat` is still being callibrated, `targetTimesMin` can be much
+//     larger than the real mean.
+//   - Using the whole duration of the process's benchmark loop instead of an
+//     aggregation of the `times`. Even with `nowBias` and `loopBias`, the
+//     `times` do not completely capture the time spent benchmarking.
+//     For example, `nowBias` is the time to measure an empty task, but it
+//     might exclude some of the time to make the measurement itself. For
+//     example, if two timestamps are taken at the beginning|end, only half of
+//     them will be included in `nowBias`. The other half will not be reflected
+//     in `times` but will still be spent.
+// Those concerns are stronger if either:
+//  - The task has a strong cold start, whether because it memoizes a lot or
+//    because the runtime optimizes it a lot later on.
+//  - The task speed is close to `nowBias` and/or `loopBias`
+// However, stability is more important than accuracy for `targetTimesMin`.
 const getTargetTimesMin = function ({ median, nowBias, loopBias, repeat }) {
   return (
     TARGET_TIMES * denormalizeTimePerCall(median, { nowBias, loopBias, repeat })
