@@ -11,9 +11,9 @@ import { preciseTimestamp } from './precise_timestamp.js'
 //  - loading the task
 // This does not include the time spent:
 //  - iterating on the repeat loop itself
-//  - sending the results (runner)
-//  - receiving the results (parent process)
-//  - normalizing and aggregating the results
+//  - sending the measures (runner)
+//  - receiving the measures (parent process)
+//  - normalizing and aggregating the processMeasures
 // The above are not included because their duration depends on the number of
 // repeat loops performed
 //  - that number depends on `maxDuration`, which is based on `benchmarkCost`
@@ -21,7 +21,7 @@ import { preciseTimestamp } from './precise_timestamp.js'
 // The estimation is based on the difference between two timestamps:
 //  - in the parent process, right before spawning a new runner process
 //  - in the runner process, right before measuring, but after loading
-//    dependencies and the task. This is sent back to parent in the results.
+//    dependencies and the task. This is sent back to parent in the ipcReturn.
 // Those timestamps are in nanoseconds
 //  - some runners or systems might not allow such a high resolution, but they
 //    should stil use that unit

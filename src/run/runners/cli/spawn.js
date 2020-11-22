@@ -52,6 +52,10 @@ const spawnProcess = async function (
 
   const execaFunc = shell ? execa : execa.command
   // Errors are propagated
-  const result = await execaFunc(commandA, { stdio, shell, preferLocal: true })
-  return result
+  const processReturn = await execaFunc(commandA, {
+    stdio,
+    shell,
+    preferLocal: true,
+  })
+  return processReturn
 }

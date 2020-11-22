@@ -27,8 +27,8 @@ const isNowBias = function ({ nowBias, loopBias, repeat }) {
 // In both cases, we return `0`.
 // `nowBias` includes 1 round of the loop, which is why we add `loopBias` to get
 // the time to perform the loop itself (with no rounds). Also, this means that
-// if `repeat` is `1`, `loopBias` will have no impact on the result, which means
-// its variance will not add to the overall variance.
+// if `repeat` is `1`, `loopBias` will have no impact on the measure, which
+// means its variance will not add to the overall variance.
 const normalizeTime = function (
   denormalizedTime,
   { nowBias, loopBias, repeat },

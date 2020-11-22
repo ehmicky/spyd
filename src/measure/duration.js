@@ -25,7 +25,7 @@ import { denormalizeTime, denormalizeTimePerCall } from './normalize.js'
 // The above algorithm has several goals:
 //   - Ensures processes to roughly use the same `maxDuration` both inside a
 //     specific run and between runs with different `duration` options.
-//     Processes with different `maxDuration` might give different results to
+//     Processes with different `maxDuration` might give different measures to
 //     the runtime having optimized hot paths for longer periods of time.
 //   - Ensures processes are short enough to provide with frequent realtime
 //     reporting
@@ -127,7 +127,7 @@ const getTargetTimesMin = function ({ median, nowBias, loopBias, repeat }) {
 // imprecise so we keep this increase small.
 const TARGET_TIMES_ADJUST = 1.1
 // How many times tasks should be measured at a minimum inside each process.
-// A lower number means cold starts induce more variance in final results.
+// A lower number means cold starts induce more variance in final measures.
 // A higher number means fewer processes are spawned, reducing their positive
 // impact on variance.
 const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST

@@ -7,35 +7,35 @@ import { sortNumbers } from './sort.js'
 //     the runtimes did not optimize it yet
 //   - The first processes have not reached the final stabilized `repeat` and
 //     `maxDuration`, making them usually slower
-export const removeOutliers = function (results) {
-  const resultsA = removeOutlierProcesses(results)
-  const { times, outliersMax } = removeOutlierTimes(resultsA)
-  const count = getCount(resultsA, outliersMax)
-  const processes = resultsA.length
+export const removeOutliers = function (processMeasures) {
+  const processMeasuresA = removeOutlierProcesses(processMeasures)
+  const { times, outliersMax } = removeOutlierTimes(processMeasuresA)
+  const count = getCount(processMeasuresA, outliersMax)
+  const processes = processMeasuresA.length
   return { times, count, processes }
 }
 
 // Remove initial `repeat` callibration
-const removeOutlierProcesses = function (results) {
-  const repeatCallbrationIndex = results.findIndex(isRepeatCallibration)
+const removeOutlierProcesses = function (processMeasures) {
+  const repeatCallbrationIndex = processMeasures.findIndex(isRepeatCallibration)
 
   if (repeatCallbrationIndex === -1) {
-    return results
+    return processMeasures
   }
 
-  return results.slice(repeatCallbrationIndex + 1)
+  return processMeasures.slice(repeatCallbrationIndex + 1)
 }
 
-const isRepeatCallibration = function ({ repeat }, index, results) {
+const isRepeatCallibration = function ({ repeat }, index, processMeasures) {
   return (
     repeat === 1 &&
-    index !== results.length - 1 &&
-    results[index + 1].repeat !== 1
+    index !== processMeasures.length - 1 &&
+    processMeasures[index + 1].repeat !== 1
   )
 }
 
-const removeOutlierTimes = function (results) {
-  const times = aggregateTimes(results)
+const removeOutlierTimes = function (processMeasures) {
+  const times = aggregateTimes(processMeasures)
   sortNumbers(times)
 
   const outliersLimit = Math.ceil(times.length * (1 - OUTLIERS_THRESHOLD))
@@ -44,10 +44,10 @@ const removeOutlierTimes = function (results) {
   return { times: timesA, outliersMax }
 }
 
-// We do not use `[].concat(...results)` because it creates a stack overflow if
-// `results.length` is too large (~1e5 on my machine)
-const aggregateTimes = function (results) {
-  return results.flatMap(getChildTimes)
+// We do not use `[].concat(...processMeasures)` because it creates a stack
+// overflow if `processMeasures.length` is too large (~1e5 on my machine)
+const aggregateTimes = function (processMeasures) {
+  return processMeasures.flatMap(getChildTimes)
 }
 
 const getChildTimes = function ({ childTimes }) {
@@ -62,13 +62,13 @@ const OUTLIERS_THRESHOLD = 0.15
 // Retrieve the number of times the task was measured, including inside a
 // repeated loop. Takes into account the fact that some `times` were removed
 // as outliers.
-const getCount = function (results, outliersMax) {
-  const resultCounts = results.map(({ childTimes, repeat }) =>
-    getResultCount({ childTimes, repeat, outliersMax }),
+const getCount = function (processMeasures, outliersMax) {
+  const processCounts = processMeasures.map(({ childTimes, repeat }) =>
+    getProcessCount({ childTimes, repeat, outliersMax }),
   )
-  return getSum(resultCounts)
+  return getSum(processCounts)
 }
 
-const getResultCount = function ({ childTimes, repeat, outliersMax }) {
+const getProcessCount = function ({ childTimes, repeat, outliersMax }) {
   return childTimes.filter((time) => time < outliersMax).length * repeat
 }

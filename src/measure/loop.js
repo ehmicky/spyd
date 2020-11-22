@@ -40,7 +40,7 @@ export const measureProcessGroup = async function ({
     inputId,
     dry,
   }
-  const results = []
+  const processMeasures = []
   // eslint-disable-next-line fp/no-let
   let totalTimes = 0
   const processMedians = []
@@ -86,7 +86,7 @@ export const measureProcessGroup = async function ({
     normalizeTimes(childTimes, { nowBias, loopBias, repeat })
 
     // eslint-disable-next-line fp/no-mutating-methods
-    results.push({ childTimes, repeat })
+    processMeasures.push({ childTimes, repeat })
     // eslint-disable-next-line fp/no-mutation
     totalTimes += childTimes.length
 
@@ -100,7 +100,7 @@ export const measureProcessGroup = async function ({
     !shouldStopLoop({ benchmarkCost, nowBias, median, runEnd, totalTimes })
   )
 
-  const { times, count, processes } = removeOutliers(results)
+  const { times, count, processes } = removeOutliers(processMeasures)
   return { times, count, processes }
 }
 
@@ -129,7 +129,7 @@ const shouldStopLoop = function ({
   )
 }
 
-// We stop child processes when the `results` is over `TOTAL_MAX_TIMES`. This
+// We stop child processes when the `measures` is over `TOTAL_MAX_TIMES`. This
 // is meant to prevent memory overflow.
 // The default limit for V8 in Node.js is 1.7GB, which allows times to holds a
 // little more than 1e8 floats.

@@ -9,7 +9,7 @@ export const forwardChildError = function ({
   timedOut,
   timeoutNs,
   taskPath,
-  result,
+  ipcReturn,
   taskId,
   inputId,
 }) {
@@ -22,7 +22,7 @@ export const forwardChildError = function ({
     timedOut,
     timeoutNs,
     taskPath,
-    result,
+    ipcReturn,
     taskId,
     inputId,
   })
@@ -34,7 +34,7 @@ const getMessage = function ({
   timedOut,
   timeoutNs,
   taskPath,
-  result: { error: errorResult } = {},
+  ipcReturn: { error: errorResult } = {},
   taskId,
   inputId,
 }) {

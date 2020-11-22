@@ -73,7 +73,7 @@ export const getCombinationResult = async function ({
 
 // We stop measuring processes when the next process is most likely to go beyond
 // the target `duration`. We do not try to measure it with a lower duration
-// since this would skew results due to comparing processes with a different
+// since this would skew measures due to comparing processes with a different
 // number of loops.
 // However, we still wait for the time left, without spawning any processes.
 // This is wasteful time-wise but prevents the timer from jumping fast-forward

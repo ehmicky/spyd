@@ -7,7 +7,7 @@ import { UserError } from '../error/main.js'
 
 import { addPadding } from './utils/indent.js'
 
-// Print reporting result to file or to terminal based on the `output` option
+// Print result to file or to terminal based on the `output` option
 export const printContent = async function ({
   interactiveContent,
   nonInteractiveContent,

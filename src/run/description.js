@@ -21,7 +21,7 @@ export const getCommandDescription = async function ({
 }
 
 // `versions[*].value` can either be a CLI command (array of strings) or
-// the result directly (string)
+// the string directly
 const getVersion = async function ({ name, value, runnerId }) {
   const nameA = name === undefined ? '' : `${name} `
 

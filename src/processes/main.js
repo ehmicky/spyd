@@ -21,7 +21,7 @@ export const executeChild = async function ({
   inputId,
   type,
 }) {
-  const { message, failed, timedOut, result } = await spawnFile({
+  const { message, failed, timedOut, ipcReturn } = await spawnFile({
     commandSpawn,
     commandSpawnOptions,
     eventPayload,
@@ -36,12 +36,12 @@ export const executeChild = async function ({
     timedOut,
     timeoutNs,
     taskPath,
-    result,
+    ipcReturn,
     taskId,
     inputId,
   })
 
-  return result
+  return ipcReturn
 }
 
 const spawnFile = async function ({
@@ -65,11 +65,11 @@ const spawnFile = async function ({
       cwd,
       type,
     })
-    const result = await getIpcReturn({
+    const ipcReturn = await getIpcReturn({
       eventPayload: eventPayloadA,
       failed,
     })
-    return { message, failed, timedOut, result }
+    return { message, failed, timedOut, ipcReturn }
   } finally {
     await removeIpcFile()
   }
