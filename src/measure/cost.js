@@ -114,4 +114,4 @@ const getBenchmarkCostSample = async function ({
 // using several processes.
 // A higher number runs the benchmark task fewer times, reducing the precision
 // provided by running it many times.
-const BENCHMARK_COST_RATIO = 0.1
+const BENCHMARK_COST_RATIO = 0.5
