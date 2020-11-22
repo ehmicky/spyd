@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
@@ -7,6 +8,7 @@ import { updateBenchmarkCost } from './cost.js'
 import { getMaxDuration } from './duration.js'
 import { getMedian } from './median.js'
 import { normalizeTimes } from './normalize.js'
+import { preciseTimestamp } from './precise_timestamp.js'
 import { adjustRepeat } from './repeat.js'
 
 // eslint-disable-next-line max-statements, max-lines-per-function
@@ -57,9 +59,9 @@ export const runMeasureLoop = async function ({
       median,
     })
 
-    const start = now()
+    const startChild = preciseTimestamp()
     // eslint-disable-next-line no-await-in-loop
-    const { times: childTimes, duration } = await executeChild({
+    const { times: childTimes, start } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
       eventPayload: { ...eventPayload, maxDuration, repeat },
@@ -69,7 +71,7 @@ export const runMeasureLoop = async function ({
       inputId,
       type: 'iterationRun',
     })
-    const childBenchmarkCost = now() - start - duration
+    const childBenchmarkCost = Number(BigInt(start) - startChild)
 
     normalizeTimes(childTimes, { nowBias, loopBias, repeat })
 
@@ -127,3 +129,4 @@ const shouldStopLoop = function ({
 // The default limit for V8 in Node.js is 1.7GB, which allows times to holds a
 // little more than 1e8 floats.
 const TOTAL_MAX_TIMES = 1e8
+/* eslint-enable max-lines */
