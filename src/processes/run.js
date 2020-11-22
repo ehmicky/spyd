@@ -146,8 +146,12 @@ const normalizeTimes = function ({ times, nowBias, loopBias, repeat }) {
 
 // The final time might be negative if the task is as fast or faster than the
 // iteration code itself. In this case, we return `0`.
+// `nowBias` includes 1 round of the loop, which is why we add `loopBias` to get
+// the time to perform the loop itself (with no rounds). Also, this means that
+// if `repeat` is `1`, `loopBias` will have no impact on the result, which means
+// its variance will not add to the overall variance.
 const normalizeTime = function ({ time, nowBias, loopBias, repeat }) {
-  return Math.max((time - nowBias) / repeat - loopBias, 0)
+  return Math.max((time - nowBias + loopBias) / repeat - loopBias, 0)
 }
 
 const getProcessMedian = function (times, processMedians) {
