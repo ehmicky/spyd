@@ -20,8 +20,6 @@ export const benchmarkLoop = async function ({
 }) {
   const runEnd = now() + maxDuration
   const times = []
-  // eslint-disable-next-line fp/no-let
-  let loop = 0
 
   // eslint-disable-next-line fp/no-loops
   do {
@@ -37,13 +35,11 @@ export const benchmarkLoop = async function ({
     })
     // eslint-disable-next-line fp/no-mutating-methods
     times.push(time)
-    // eslint-disable-next-line fp/no-mutation
-    loop += 1
-  } while (!shouldStopLoop(maxTimes, loop, runEnd))
+  } while (!shouldStopLoop(maxTimes, times, runEnd))
 
   return times
 }
 
-const shouldStopLoop = function (maxTimes, loop, runEnd) {
-  return (maxTimes !== undefined && loop >= maxTimes) || now() >= runEnd
+const shouldStopLoop = function (maxTimes, times, runEnd) {
+  return (maxTimes !== undefined && times.length >= maxTimes) || now() >= runEnd
 }
