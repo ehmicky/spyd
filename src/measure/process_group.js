@@ -14,7 +14,7 @@ import { getMedian } from './median.js'
 import { normalizeTimes } from './normalize.js'
 import { getRepeat } from './repeat.js'
 
-// Measure a task, nowBias or loopBias using a group of processes
+// Measure a task, nowBias or repeatCost using a group of processes
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const measureProcessGroup = async function ({
   taskPath,
@@ -27,7 +27,7 @@ export const measureProcessGroup = async function ({
   cwd,
   loadDuration,
   nowBias,
-  loopBias,
+  repeatCost,
   minLoopTime,
   initialRepeat,
   dry,
@@ -65,7 +65,7 @@ export const measureProcessGroup = async function ({
       benchmarkCost,
       processGroupDuration,
       nowBias,
-      loopBias,
+      repeatCost,
       repeat,
       median,
     })
@@ -84,7 +84,7 @@ export const measureProcessGroup = async function ({
     })
     const childBenchmarkCost = endBenchmarkCost(benchmarkCostStart, start)
 
-    normalizeTimes(childTimes, { nowBias, loopBias, repeat })
+    normalizeTimes(childTimes, { nowBias, repeatCost, repeat })
 
     // eslint-disable-next-line fp/no-mutating-methods
     processMeasures.push({ childTimes, repeat })
@@ -96,7 +96,7 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     median = getMedian(childTimes, processMedians)
     // eslint-disable-next-line fp/no-mutation
-    repeat = getRepeat({ repeat, minLoopTime, loopBias, median })
+    repeat = getRepeat({ repeat, minLoopTime, repeatCost, median })
   } while (
     !shouldStopLoop({
       benchmarkCost,

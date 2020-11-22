@@ -36,7 +36,7 @@ export const getNowBias = async function ({
     cwd,
     loadDuration,
     nowBias: 0,
-    loopBias: 0,
+    repeatCost: 0,
     minLoopTime: 0,
     initialRepeat: 1,
     dry: true,

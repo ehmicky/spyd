@@ -10,7 +10,7 @@ import { getRepeat } from './repeat.js'
 //  - using the normal `repeat` logic (instead of forcing it to `1`)
 //  - estimates the initial `repeat` to reduce the number of processes needed
 //    to compute the optimal `repeat`
-export const getLoopBias = async function ({
+export const getRepeatCost = async function ({
   taskPath,
   taskId,
   inputId,
@@ -26,7 +26,7 @@ export const getLoopBias = async function ({
   const initialRepeat = getRepeat({
     repeat: 1,
     minLoopTime,
-    loopBias: 0,
+    repeatCost: 0,
     median: nowBias,
   })
   const { times } = await measureProcessGroup({
@@ -40,7 +40,7 @@ export const getLoopBias = async function ({
     cwd,
     loadDuration,
     nowBias,
-    loopBias: 0,
+    repeatCost: 0,
     minLoopTime,
     initialRepeat,
     dry: true,

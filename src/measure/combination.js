@@ -1,9 +1,9 @@
 import now from 'precise-now'
 
-import { getLoopBias } from './loop_bias.js'
 import { getMinLoopTime } from './min_loop_time.js'
 import { getNowBias } from './now_bias.js'
 import { measureProcessGroup } from './process_group.js'
+import { getRepeatCost } from './repeat_cost.js'
 
 // We measure by spawning processes until reaching the max `duration`.
 // At least one process must be executed.
@@ -38,7 +38,7 @@ export const measureCombination = async function ({
     loadDuration,
   })
   const minLoopTime = getMinLoopTime(nowBias, duration)
-  const loopBias = await getLoopBias({
+  const repeatCost = await getRepeatCost({
     taskPath,
     taskId,
     inputId,
@@ -62,7 +62,7 @@ export const measureCombination = async function ({
     cwd,
     loadDuration,
     nowBias,
-    loopBias,
+    repeatCost,
     minLoopTime,
     initialRepeat: 1,
     dry: false,
