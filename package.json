@@ -61,7 +61,7 @@
     "read-pkg-up": "^7.0.1",
     "semver": "^7.3.2",
     "signal-exit": "^3.0.3",
-    "slugify": "^1.4.5",
+    "slugify": "^1.4.6",
     "sort-on": "^4.1.0",
     "string-width": "^4.2.0",
     "strip-ansi": "^6.0.0",
