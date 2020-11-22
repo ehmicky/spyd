@@ -2,6 +2,10 @@
 // Its return value is passed to `main()` and `after()`.
 // Can be async. Run serially to prevent hitting OS resources limits (such as
 // max number of open files)
+// `before`, `main` and `after` must be pure functions. This is because when
+// `repeat > 1` `before|after` are run in chunks instead of one after another.
+// This is required to be able to loop `main` several times with a single
+// `now()` performed.
 export const performBefore = async function (before, repeat) {
   if (before === undefined) {
     return
