@@ -5,12 +5,12 @@ import { validateMerge } from './validate.js'
 
 // Merge previous benchmarks part of the same `mergeId`.
 // Later benchmarks have priority.
-export const mergeRawBenchmarks = function (rawBenchmarks) {
-  return Object.values(groupBy(rawBenchmarks, 'mergeId')).map(mergeBenchmark)
+export const mergePartialResults = function (partialResults) {
+  return Object.values(groupBy(partialResults, 'mergeId')).map(mergeBenchmark)
 }
 
-const mergeBenchmark = function ([rawBenchmark, ...rawBenchmarks]) {
-  return rawBenchmarks.reduce(mergePair, rawBenchmark)
+const mergeBenchmark = function ([partialResult, ...partialResults]) {
+  return partialResults.reduce(mergePair, partialResult)
 }
 
 const mergePair = function (

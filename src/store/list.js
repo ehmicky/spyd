@@ -4,9 +4,9 @@ import { UserError } from '../error/main.js'
 
 // Call `store.list()`
 export const listStore = async function ({ store }) {
-  const rawBenchmarks = await callList(store)
-  const rawBenchmarksA = sortOn(rawBenchmarks, 'timestamp')
-  return rawBenchmarksA
+  const partialResults = await callList(store)
+  const partialResultsA = sortOn(partialResults, 'timestamp')
+  return partialResultsA
 }
 
 const callList = async function (store) {

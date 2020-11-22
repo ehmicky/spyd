@@ -3,11 +3,11 @@ import { UserError } from '../error/main.js'
 // Call `store.remove()`
 export const removeFromStore = async function (
   mergeId,
-  rawBenchmarks,
+  partialResults,
   { store },
 ) {
-  const ids = rawBenchmarks
-    .filter((rawBenchmark) => rawBenchmark.mergeId === mergeId)
+  const ids = partialResults
+    .filter((partialResult) => partialResult.mergeId === mergeId)
     .map(getId)
 
   try {

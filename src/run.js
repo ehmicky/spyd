@@ -36,6 +36,6 @@ const computeBenchmark = async function ({
   const combinationsA = await pMapSeries(combinations, (combination, index) =>
     measureCombination({ ...combination, index, progressState, opts }),
   )
-  const rawBenchmark = addBenchmarkInfo(combinationsA, { opts, versions })
-  return rawBenchmark
+  const partialResult = addBenchmarkInfo(combinationsA, { opts, versions })
+  return partialResult
 }

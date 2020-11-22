@@ -2,21 +2,21 @@ import omit from 'omit.js'
 
 import { UserError } from '../error/main.js'
 import { addMergeId } from '../merge/options.js'
-import { mergeRawBenchmarks } from '../merge/raw.js'
+import { mergePartialResults } from '../merge/partial.js'
 
 import { listStore } from './list.js'
 
 // Add a new benchmark
-export const addToStore = async function (rawBenchmark, opts) {
-  const rawBenchmarks = await listStore(opts)
+export const addToStore = async function (partialResult, opts) {
+  const partialResults = await listStore(opts)
 
-  const rawBenchmarkA = addMergeId(rawBenchmark, rawBenchmarks, opts)
-  await save(rawBenchmarkA, opts)
+  const partialResultA = addMergeId(partialResult, partialResults, opts)
+  await save(partialResultA, opts)
 
-  const rawBenchmarksA = [...rawBenchmarks, rawBenchmarkA]
-  const benchmarks = mergeRawBenchmarks(rawBenchmarksA)
+  const partialResultsA = [...partialResults, partialResultA]
+  const benchmarks = mergePartialResults(partialResultsA)
 
-  return { mergeId: rawBenchmarkA.mergeId, benchmarks }
+  return { mergeId: partialResultA.mergeId, benchmarks }
 }
 
 // Save benchmark results so they can be compared or shown later

@@ -13,7 +13,7 @@ export const addBenchmarkInfo = function (
   const timestamp = new Date().toISOString()
   const { git, ci, job } = getCiInfo(cwd)
   const systems = getSystems({ opts, system, job })
-  const rawBenchmark = {
+  const partialResult = {
     id,
     timestamp,
     systems,
@@ -22,6 +22,6 @@ export const addBenchmarkInfo = function (
     combinations,
   }
 
-  const rawBenchmarkA = cleanObject(rawBenchmark)
-  return rawBenchmarkA
+  const partialResultA = cleanObject(partialResult)
+  return partialResultA
 }

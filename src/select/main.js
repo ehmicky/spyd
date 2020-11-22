@@ -16,19 +16,19 @@ export const selectCombinations = function (combinations, { tasks, inputs }) {
 
 // Select benchmarks according to options `tasks`, `inputs`, `system` and `run`.
 // For the `show` command.
-export const selectBenchmarks = function (rawBenchmarks, opts) {
+export const selectBenchmarks = function (partialResults, opts) {
   const targets = getTargets(opts)
-  validateTargets(targets, rawBenchmarks)
+  validateTargets(targets, partialResults)
 
-  const rawBenchmarksA = rawBenchmarks
-    .map((rawBenchmark) => applyTargets(rawBenchmark, targets))
+  const partialResultsA = partialResults
+    .map((partialResult) => applyTargets(partialResult, targets))
     .filter(hasCombinations)
 
-  if (rawBenchmarksA.length === 0) {
+  if (partialResultsA.length === 0) {
     throw new UserError('No matching selection')
   }
 
-  return rawBenchmarksA
+  return partialResultsA
 }
 
 // Benchmarks with no matching selections are removed from the set.

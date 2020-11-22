@@ -1,12 +1,12 @@
 // Select combinations according to sets of identifiers (targets)
 export const applyTargets = function (
-  { combinations, ...rawBenchmark },
+  { combinations, ...partialResults },
   targets,
 ) {
   const combinationsA = combinations.filter((combination) =>
     matchTargets(combination, targets),
   )
-  return { ...rawBenchmark, combinations: combinationsA }
+  return { ...partialResults, combinations: combinationsA }
 }
 
 const matchTargets = function (combination, targets) {
