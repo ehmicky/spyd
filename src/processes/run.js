@@ -1,9 +1,10 @@
 import { getBiases } from './bias.js'
 import { executeChildren } from './child.js'
+import { getBenchmarkCost } from './cost.js'
 
 // We run child processes until either:
 //  - we reach the max `duration`
-//  - the `results` size is over `MAX_TIMES`.
+//  - the `results` size is over `TOTAL_MAX_TIMES`.
 // At least one child must be executed.
 // Each child process is aimed at running the same duration (`maxDuration`)
 //  - this ensures stats are not modified when the `duration` option changes
@@ -25,7 +26,7 @@ export const runChildren = async function ({
   runEnd,
   cwd,
 }) {
-  const { benchmarkCost, nowBias, loopBias, minTime } = await getBiases({
+  const benchmarkCost = await getBenchmarkCost({
     taskPath,
     taskId,
     inputId,
@@ -36,6 +37,17 @@ export const runChildren = async function ({
     cwd,
   })
 
+  const { nowBias, loopBias, minTime } = await getBiases({
+    taskPath,
+    taskId,
+    inputId,
+    commandSpawn,
+    commandSpawnOptions,
+    commandOpt,
+    duration,
+    cwd,
+    benchmarkCost,
+  })
   const { times, count, processes } = await executeChildren({
     taskPath,
     taskId,
@@ -48,9 +60,9 @@ export const runChildren = async function ({
     cwd,
     benchmarkCost,
     nowBias,
-    loopBias: 0.41,
+    loopBias,
     minTime,
+    dry: false,
   })
-
   return { times, count, processes }
 }

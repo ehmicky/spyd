@@ -7,12 +7,19 @@ export const adjustRepeat = function ({
   repeat,
   processesMedian,
   minTime,
-  loopBias = 0,
+  loopBias,
 }) {
-  // When calculating `loopBias`, `median` might initially be `0`
+  // When computing `nowBias`, or when `nowBias` is `0` (i.e. is too fast)
+  if (minTime === 0) {
+    return repeat
+  }
+
+  // When computing `loopBias`, `median` might initially be `0`
   if (loopBias === 0 && processesMedian === 0) {
-    return repeat * 2
+    return repeat * FAST_LOOP_BIAS_RATE
   }
 
   return Math.ceil(minTime / (processesMedian + loopBias))
 }
+
+const FAST_LOOP_BIAS_RATE = 10

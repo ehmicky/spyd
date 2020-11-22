@@ -1,11 +1,9 @@
-/* eslint-disable max-lines */
 import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
 import { getMedian } from '../stats/methods.js'
-import { sortNumbers } from '../stats/sort.js'
 
-import { executeChild } from './execute.js'
+import { executeChildren } from './child.js'
 
 // The following biases are introduced by the benchmarking code itself:
 //   - `nowBias` is the time taken to run an empty task. This includes the time
@@ -29,20 +27,8 @@ export const getBiases = async function ({
   commandOpt,
   duration,
   cwd,
+  benchmarkCost,
 }) {
-  const benchmarkCost = await getMedianBenchmarkCost({
-    taskPath,
-    taskId,
-    inputId,
-    commandSpawn,
-    commandSpawnOptions,
-    commandOpt,
-    duration,
-    cwd,
-  })
-
-  const maxDuration = duration * DURATION_RATIO
-
   const nowBias = await getBias({
     taskPath,
     taskId,
@@ -51,11 +37,12 @@ export const getBiases = async function ({
     commandSpawnOptions,
     commandOpt,
     duration,
-    maxDuration,
     cwd,
-    repeat: 1,
+    benchmarkCost,
+    nowBias: 0,
+    loopBias: 0,
+    minTime: 0,
   })
-
   const minTime = getMinTime(nowBias)
   const loopBias = await getBias({
     taskPath,
@@ -65,89 +52,13 @@ export const getBiases = async function ({
     commandSpawnOptions,
     commandOpt,
     duration,
-    maxDuration,
     cwd,
-    repeat: 600,
+    benchmarkCost,
+    nowBias,
+    loopBias: 0,
+    minTime,
   })
-  return { benchmarkCost, nowBias, loopBias, minTime }
-}
-
-// Computes how much time is spent spawning processes/runners as opposed to
-// running the benchmarked task.
-// Note that this does not include the time spent by the runner iterating on
-// the benchmark loop itself, since that time increases proportionally to the
-// number of loops. It only includes the time initially spent when each process
-// loads.
-const getMedianBenchmarkCost = async function ({
-  taskPath,
-  taskId,
-  inputId,
-  commandSpawn,
-  commandSpawnOptions,
-  commandOpt,
-  duration,
-  cwd,
-}) {
-  const benchmarkCosts = []
-
-  // eslint-disable-next-line fp/no-loops
-  do {
-    // eslint-disable-next-line no-await-in-loop
-    const benchmarkCost = await getBenchmarkCost({
-      taskPath,
-      taskId,
-      inputId,
-      commandSpawn,
-      commandSpawnOptions,
-      commandOpt,
-      duration,
-      cwd,
-    })
-    // eslint-disable-next-line fp/no-mutating-methods
-    benchmarkCosts.push(benchmarkCost)
-  } while (benchmarkCosts.length < BENCHMARK_COSTS_SIZE)
-
-  sortNumbers(benchmarkCosts)
-  const medianBenchmarkCost = getMedian(benchmarkCosts)
-  return medianBenchmarkCost
-}
-
-// How many samples to measure benchmark cost.
-// A higher number takes more time.
-// A lower number makes `benchmarkCost` vary more between runs.
-const BENCHMARK_COSTS_SIZE = 10
-
-const getBenchmarkCost = async function ({
-  taskPath,
-  taskId,
-  inputId,
-  commandSpawn,
-  commandSpawnOptions,
-  commandOpt,
-  duration,
-  cwd,
-}) {
-  const eventPayload = {
-    type: 'run',
-    opts: commandOpt,
-    taskPath,
-    taskId,
-    inputId,
-    maxTimes: 0,
-    repeat: 0,
-    dry: true,
-  }
-  const start = now()
-  await executeChild({
-    commandSpawn,
-    commandSpawnOptions,
-    eventPayload,
-    timeoutNs: duration,
-    cwd,
-    type: 'iterationRun',
-  })
-  const benchmarkCost = now() - start
-  return benchmarkCost
+  return { nowBias, loopBias, minTime }
 }
 
 // `loopBias` is calculated by benchmarking an empty function with a normal
@@ -163,29 +74,29 @@ const getBias = async function ({
   commandSpawnOptions,
   commandOpt,
   duration,
-  maxDuration,
   cwd,
-  repeat,
+  benchmarkCost,
+  nowBias,
+  loopBias,
+  minTime,
 }) {
-  const eventPayload = {
-    type: 'run',
-    opts: commandOpt,
+  const runEnd = now() + duration * DURATION_RATIO
+  const { times } = await executeChildren({
     taskPath,
     taskId,
     inputId,
-    maxDuration,
-    repeat,
-    dry: true,
-  }
-  const { times } = await executeChild({
     commandSpawn,
     commandSpawnOptions,
-    eventPayload,
-    timeoutNs: duration,
+    commandOpt,
+    duration,
+    runEnd,
     cwd,
-    type: 'iterationRun',
+    benchmarkCost,
+    nowBias,
+    loopBias,
+    minTime,
+    dry: true,
   })
-  sortNumbers(times)
   const median = getMedian(times)
   return median
 }
@@ -202,10 +113,6 @@ const DURATION_RATIO = 0.1
 // perform an arithmetic mean.
 // `minTime` is the minimum time under which we consider a task should do this.
 const getMinTime = function (nowBias) {
-  if (nowBias === undefined) {
-    return
-  }
-
   const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
   const minNowBiasTime = nowBias * MIN_NOW_BIAS
   return Math.max(minPrecisionTime, minNowBiasTime)
@@ -216,4 +123,3 @@ const TIME_RESOLUTION = timeResolution()
 const MIN_PRECISION = 1e2
 // The task loop must be at least `MIN_NOW_BIAS` slower than `nowBias`
 const MIN_NOW_BIAS = 1e2
-/* eslint-enable max-lines */

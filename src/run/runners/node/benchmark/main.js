@@ -15,7 +15,12 @@ export const benchmark = async function ({
   maxTimes,
 }) {
   const times = []
-  const runEnd = now() + maxDuration
+
+  if (maxTimes === 0) {
+    return times
+  }
+
+  const runEnd = maxDuration === undefined ? undefined : now() + maxDuration
   await benchmarkLoop({
     main,
     before,
