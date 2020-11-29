@@ -14,7 +14,6 @@ export const getRepeat = function ({
   repeatCost,
   measureCost,
   resolution,
-  processGroupDuration,
 }) {
   // We should not use a repeat loop when estimating measureCost since
   // measureCost only happens once per repeat loop
@@ -33,12 +32,9 @@ export const getRepeat = function ({
     median,
     repeatCost,
   })
-  const minCostRepeat =
-    Math.max(minResolutionDuration, minMeasureCostDuration) / median
-  const maxTotalDuration = processGroupDuration * MAX_TOTAL_DURATION_RATIO
-  const minDurationRepeat =
-    (maxTotalDuration - measureCost + repeatCost) / (median + repeatCost)
-  return Math.ceil(Math.min(minCostRepeat, minDurationRepeat))
+  return Math.ceil(
+    Math.max(minResolutionDuration, minMeasureCostDuration) / median,
+  )
 }
 
 // Ensure `repeat` is high enough to decrease the impact of `measureCost`.
@@ -72,14 +68,6 @@ const MIN_RESOLUTION_PRECISION = 1e2
 // contributes more to the overall variance.
 // A higher value increases the task loop duration, creating fewer loops.
 const MIN_MEASURE_COST = 1e2
-// Maximum percentage of the total processGroupDuration a single loop is allowed
-// to last.
-// This ensures that, if `measureCost` is high, combinations can still work
-// without setting a very high total `duration`.
-// A higher value makes it more likely for tasks to timeout.
-// A lower value decreases the impact of `MIN_RESOLUTION_PRECISION` and
-// `MIN_MEASURE_COST`.
-const MAX_TOTAL_DURATION_RATIO = 0.1
 
 // When computing `repeatCost`, the first repeat iteration is assumed to be the
 // `measureCost` and is discarded. Only the next iterations are used for the

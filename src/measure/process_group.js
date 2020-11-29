@@ -105,7 +105,6 @@ export const measureProcessGroup = async function ({
       repeatCost,
       measureCost,
       resolution,
-      processGroupDuration,
     })
   } while (
     !shouldStopProcessGroup({
