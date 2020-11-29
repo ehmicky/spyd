@@ -47,7 +47,7 @@ const prettifyCombinationStat = function ({
   combination,
   combination: {
     stats,
-    stats: { [name]: stat, loops },
+    stats: { [name]: stat, loops, measureCost, repeatCost, repeat },
   },
   type,
   unit,
@@ -62,6 +62,9 @@ const prettifyCombinationStat = function ({
     scale,
     decimals,
     loops,
+    repeat,
+    measureCost,
+    repeatCost,
   })
   return { ...combination, stats: { ...stats, [prettyName]: statPretty } }
 }
