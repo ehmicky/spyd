@@ -1,4 +1,4 @@
-import { getTimeResolution } from './resolution.js'
+import { getResolution } from './resolution.js'
 
 // If a task duration is too close to `measureCost`, the variance will be mostly
 // due to the timestamp function itself.
@@ -13,29 +13,29 @@ export const getMinLoopTime = function ({
   measureCostMeasures,
   duration,
 }) {
-  const minResolutionTime = getMinResolutionTime(measureCostMeasures)
-  const minMeasureCostTime = measureCost * MIN_MEASURE_COST
+  const resolution = getResolution(measureCostMeasures)
+  const minResolutionDuration = getMinResolutionDuration(resolution)
+  const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
   const maxTotalDuration = duration * MAX_TOTAL_DURATION_RATIO
   return Math.min(
-    Math.max(minResolutionTime, minMeasureCostTime),
+    Math.max(minResolutionDuration, minMeasureCostDuration),
     maxTotalDuration,
   )
 }
 
-const getMinResolutionTime = function (measureCostMeasures) {
-  const timeResolution = getTimeResolution(measureCostMeasures)
-  return timeResolution * MIN_RESOLUTION_PRECISION
+const getMinResolutionDuration = function (resolution) {
+  return resolution * MIN_RESOLUTION_PRECISION
 }
 
-// How many times slower the task loop must be compared to the time resolution.
-// A lower value makes measurements closer to the time resolution, making them
+// How many times slower the task loop must be compared to the resolution.
+// A lower value makes measurements closer to the resolution, making them
 // less precise.
-// A higher value increases the task loop time, creating fewer loops.
+// A higher value increases the task loop duration, creating fewer loops.
 const MIN_RESOLUTION_PRECISION = 1e2
 // How many times slower the task loop must be compared to `measureCost`.
 // A lower value decreases precision as the variance of `measureCost`
 // contributes more to the overall variance.
-// A higher value increases the task loop time, creating fewer loops.
+// A higher value increases the task loop duration, creating fewer loops.
 const MIN_MEASURE_COST = 1e2
 // Maximum percentage of the total tas duration a single loop is allowed to
 // last.
