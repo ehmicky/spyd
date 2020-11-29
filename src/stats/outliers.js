@@ -39,6 +39,11 @@ const removeOutlierMeasures = function (processMeasures) {
   sortNumbers(measures)
 
   const outliersLimit = Math.ceil(measures.length * (1 - OUTLIERS_THRESHOLD))
+
+  if (outliersLimit === measures.length) {
+    return { measures }
+  }
+
   const outliersMax = measures[outliersLimit]
   const measuresA = measures.slice(0, outliersLimit)
   return { measures: measuresA, outliersMax }
@@ -70,5 +75,9 @@ const getTimes = function (processMeasures, outliersMax) {
 }
 
 const getProcessTimes = function ({ childMeasures, repeat, outliersMax }) {
-  return childMeasures.filter((time) => time < outliersMax).length * repeat
+  const leftMeasures =
+    outliersMax === undefined
+      ? childMeasures
+      : childMeasures.filter((time) => time < outliersMax)
+  return leftMeasures.length * repeat
 }
