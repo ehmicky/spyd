@@ -1,7 +1,7 @@
 // The `duration` configuration property is also used for timeout. This ensures:
 //  - child processes do not execute forever
 //  - the user sets a `duration` higher than the task's duration
-// The `debug` action does not use any timeout
+// The `exec` action does not use any timeout
 // Timeouts are only meant to stop tasks that are longer than the
 // `processGroupDuration`. In that case, measuring is just impossible.
 // Failing the benchmark is disruptive and should only be done when there is no

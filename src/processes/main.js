@@ -8,7 +8,7 @@ import { spawnChild } from './spawn.js'
 //  - retrieving success JSON output with a specific file descriptor
 //  - retrieving error string output with one or several file descriptors
 // Which file descriptors are used depends on:
-//  - whether `bench` or `debug` is used
+//  - whether `bench` or `exec` is used
 //  - whether this is the initial load
 export const executeChild = async function ({
   commandSpawn,

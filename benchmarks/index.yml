@@ -11,7 +11,7 @@ inputs:
     title: One
     value: inputOne
   - id: two
-    value: inputTWo
+    value: inputTwo
 
 shell: false
 

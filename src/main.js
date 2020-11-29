@@ -1,6 +1,6 @@
 import { performBenchmark } from './bench.js'
 import { getConfig } from './config/main.js'
-import { performDebug } from './debug.js'
+import { performExec } from './exec.js'
 import { report } from './report/main.js'
 import { addToStore } from './store/add.js'
 import { endStore } from './store/end.js'
@@ -52,8 +52,8 @@ export const remove = async function (config) {
 }
 
 // Execute tasks without benchmarking them
-export const debug = async function (config) {
-  const configA = await getConfig('debug', config)
+export const exec = async function (config) {
+  const configA = await getConfig('exec', config)
 
-  await performDebug(configA)
+  await performExec(configA)
 }

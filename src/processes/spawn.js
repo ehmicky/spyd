@@ -51,11 +51,11 @@ const getSpawnOptions = function ({
 //  - `child_process` `ipc`: would not work across programming languages
 // stdout/stderr are:
 //  - ignored in `bench`
-//  - printed in `debug`
-//  - not printed during load for both `bench`/`debug`, unless an error happened
+//  - printed in `exec`
+//  - not printed during load for both `bench`/`exec`, unless an error happened
 const STDIO = {
   load: ['ignore', 'pipe', 'pipe'],
   benchmarkBench: ['ignore', 'ignore', 'ignore'],
-  benchmarkDebug: ['ignore', 'inherit', 'inherit'],
+  benchmarkExec: ['ignore', 'inherit', 'inherit'],
 }
 const MAX_BUFFER = 1e8

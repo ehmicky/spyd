@@ -10,7 +10,7 @@ import { applyTemplate } from './template.js'
 //  - The `stdout` of `variables` and `before` is used as template variables,
 //    so it is piped. This is not the case of `main` and `after`.
 //  - The `stdout` and `stderr` of all commands is inherited so it's shown in
-//    `debug`, except for variables since that might be too confusing.
+//    `exec`, except for variables since that might be too confusing.
 // `pipeInherit` is a mechanism to combine `pipe` and `inherit` when `stdout`
 // should be both returned and streamed.
 export const spawnProcess = async function (

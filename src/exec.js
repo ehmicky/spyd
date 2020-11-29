@@ -7,7 +7,7 @@ import { SEPARATOR_SIGN } from './report/utils/separator.js'
 import { addTitles } from './report/utils/title/main.js'
 
 // Execute tasks without benchmarking them
-export const performDebug = async function (config) {
+export const performExec = async function (config) {
   const { combinations } = await getCombinations(config)
   const combinationsA = addTitles(combinations)
 
@@ -50,7 +50,7 @@ const execCombination = async function ({
     cwd,
     taskId,
     inputId,
-    type: 'benchmarkDebug',
+    type: 'benchmarkExec',
   })
 
   // eslint-disable-next-line no-restricted-globals, no-console
