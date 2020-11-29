@@ -1,11 +1,13 @@
 // Remove `measureCost`, `repeatCost` and `repeat` from measures
 // We use `forEach()` instead of `map()` to re-use the allocated array, which
 // is faster.
+// Not done during `measureCost` since each measure is the `measureCost` itself,
+// and `repeat` is not used.
 export const normalizeMeasures = function (
   measures,
-  { measureCost, repeatCost, repeat },
+  { measureCost, repeatCost, repeat, sampleType },
 ) {
-  if (isMeasureCost({ measureCost, repeatCost, repeat })) {
+  if (sampleType === 'measureCost') {
     return
   }
 
@@ -17,11 +19,6 @@ export const normalizeMeasures = function (
       repeat,
     })
   })
-}
-
-// When computing `measureCost`, there is no cost nor `repeat` to use
-const isMeasureCost = function ({ measureCost, repeatCost, repeat }) {
-  return measureCost === 0 && repeatCost === 0 && repeat === 1
 }
 
 // Return the real measure spent by the task, as opposed to how long spent
@@ -50,8 +47,12 @@ const normalizeMeasure = function (
 // Inverse of `normalizeMeasure()`, for how long to measure one `repeat` loop
 export const denormalizeMeasure = function (
   normalizedMeasure,
-  { measureCost, repeatCost, repeat },
+  { measureCost, repeatCost, repeat, sampleType },
 ) {
+  if (sampleType === 'measureCost') {
+    return normalizedMeasure
+  }
+
   return (normalizedMeasure + repeatCost) * repeat + measureCost - repeatCost
 }
 
@@ -59,10 +60,14 @@ export const denormalizeMeasure = function (
 // `repeat` loop
 export const denormalizeCallMeasure = function (
   normalizedMeasure,
-  { measureCost, repeatCost, repeat },
+  { measureCost, repeatCost, repeat, sampleType },
 ) {
   return (
-    denormalizeMeasure(normalizedMeasure, { measureCost, repeatCost, repeat }) /
-    repeat
+    denormalizeMeasure(normalizedMeasure, {
+      measureCost,
+      repeatCost,
+      repeat,
+      sampleType,
+    }) / repeat
   )
 }

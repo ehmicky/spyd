@@ -58,6 +58,7 @@ export const measureProcessGroup = async function ({
   // eslint-disable-next-line fp/no-loops
   do {
     const maxDuration = getMaxDuration({
+      sampleType,
       processGroupEnd,
       loadCost,
       processGroupDuration,
@@ -81,7 +82,12 @@ export const measureProcessGroup = async function ({
     })
     const childLoadCost = endLoadCost(loadCostStart, start)
 
-    normalizeMeasures(childMeasures, { measureCost, repeatCost, repeat })
+    normalizeMeasures(childMeasures, {
+      measureCost,
+      repeatCost,
+      repeat,
+      sampleType,
+    })
 
     // eslint-disable-next-line fp/no-mutating-methods
     processMeasures.push({ childMeasures, repeat })

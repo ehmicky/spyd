@@ -20,23 +20,25 @@ export const getRepeat = function ({
     return 1
   }
 
-  // When computing `repeatCost`, `median` might initially be `0`
-  if (repeatCost === 0 && median === 0) {
-    return repeat * FAST_LOOP_RATE
+  if (median === 0) {
+    return repeat * FAST_MEDIAN_RATE
   }
 
   const minResolutionDuration = resolution * MIN_RESOLUTION_PRECISION
   const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
+  const minCostRepeat =
+    Math.max(minResolutionDuration, minMeasureCostDuration) / median
   const maxTotalDuration = processGroupDuration * MAX_TOTAL_DURATION_RATIO
-  const minLoopDuration = Math.min(
-    Math.max(minResolutionDuration, minMeasureCostDuration),
-    maxTotalDuration,
-  )
-  return Math.ceil(minLoopDuration / (median + repeatCost))
+  const minDurationRepeat =
+    (maxTotalDuration - measureCost + repeatCost) / (median + repeatCost)
+  return Math.ceil(Math.min(minCostRepeat, minDurationRepeat))
 }
 
-const FAST_LOOP_RATE = 10
-
+// `median` can be 0 when the task is smaller than `repeatCost` or
+// `measureCost`.
+// In that case, we multiply the `repeat` with a fixed rate. This fixes
+// the problem with `measureCost` but not with `repeatCost`.
+const FAST_MEDIAN_RATE = 10
 // How many times slower the repeated median must be compared to the resolution.
 // A lower value makes measures closer to the resolution, making them less
 // precise.
