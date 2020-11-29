@@ -16,6 +16,8 @@ export const getRepeat = function ({
   resolution,
   processGroupDuration,
 }) {
+  // We should not use a repeat loop when estimating measureCost since
+  // measureCost only happens once per repeat loop
   if (sampleType === 'measureCost') {
     return 1
   }
