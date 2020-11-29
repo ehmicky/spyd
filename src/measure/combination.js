@@ -63,7 +63,6 @@ export const measureCombination = async function ({
     measureCost,
     repeatCost,
     resolution,
-    initialRepeat: 1,
     dry: false,
   })
   return { measures, times, processes }

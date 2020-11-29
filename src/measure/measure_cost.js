@@ -40,7 +40,6 @@ export const getMeasureCost = async function ({
     measureCost: 0,
     repeatCost: 0,
     resolution: 1,
-    initialRepeat: 1,
     dry: true,
   })
   const measureCost = getSortedMedian(measureCostMeasures)
