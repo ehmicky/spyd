@@ -1,6 +1,4 @@
-import now from 'precise-now'
-
-import { preciseTimestamp } from '../../../../measure/precise_timestamp.js'
+import { startMeasuring } from '../../common/start.js'
 
 import { performLoopsAsync } from './async/loops.js'
 import { performLoopsSync } from './sync/loops.js'
@@ -15,9 +13,7 @@ export const measureTask = async function ({
   repeat,
   maxDuration,
 }) {
-  const measures = []
-  const start = String(preciseTimestamp())
-  const measureEnd = now() + maxDuration
+  const { measures, start, measureEnd } = startMeasuring(maxDuration)
   await performLoops({
     main,
     before,
