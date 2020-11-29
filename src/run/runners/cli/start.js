@@ -42,28 +42,15 @@ const benchmark = async function ({
 const getTask = async function ({ taskPath, taskId, inputId, dry }) {
   const { combinations, shell } = await loadTasksFile(taskPath)
 
+  if (dry) {
+    return { main: DRY_FUNC, variables: {}, shell }
+  }
+
   const { main, before, after, variables } = combinations.find(
     (combination) =>
       combination.taskId === taskId && combination.inputId === inputId,
   )
-  const [mainA, beforeA, afterA] = applyDry([main, before, after], dry)
-  return { main: mainA, before: beforeA, after: afterA, variables, shell }
-}
-
-const applyDry = function (funcs, dry) {
-  if (!dry) {
-    return funcs
-  }
-
-  return funcs.map(applyDryFunc)
-}
-
-const applyDryFunc = function (value) {
-  if (value === undefined) {
-    return
-  }
-
-  return DRY_FUNC
+  return { main, before, after, variables, shell }
 }
 
 const DRY_FUNC = 'true'
