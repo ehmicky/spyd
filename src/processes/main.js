@@ -34,7 +34,6 @@ export const executeChild = async function ({
     message,
     failed,
     timedOut,
-    timeoutNs,
     taskPath,
     ipcReturn,
     taskId,

@@ -18,10 +18,6 @@ export const getTimeout = function (timeoutNs) {
   return Math.ceil(timeoutNs / NANOSECS_TO_MILLISECS)
 }
 
-export const getTimeoutError = function (timeoutNs) {
-  const secs = Math.ceil(timeoutNs / NANOSECS_TO_SECS)
-  return `timed out after ${secs} seconds. Please increase the 'duration' option.`
-}
+export const TIMEOUT_ERROR = 'timed out. Please increase the "duration" option.'
 
 const NANOSECS_TO_MILLISECS = 1e6
-const NANOSECS_TO_SECS = 1e9
