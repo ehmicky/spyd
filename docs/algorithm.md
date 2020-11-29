@@ -19,7 +19,7 @@ Also, users cannot specify how long they are ready to wait:
 
 - user experience is bad when tasks are unexpectedly slow
 - measures are imprecise when tasks are unexpectedly fast
-- a separate timeout option is required
+- a separate timeout configuration property is required
 
 _Solution_: Users specify a maximum duration instead of a fixed number of
 iterations.

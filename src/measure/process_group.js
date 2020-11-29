@@ -20,7 +20,7 @@ export const measureProcessGroup = async function ({
   inputId,
   commandSpawn,
   commandSpawnOptions,
-  commandOpt,
+  commandConfig,
   processGroupDuration,
   cwd,
   loadDuration,
@@ -32,7 +32,7 @@ export const measureProcessGroup = async function ({
   const processGroupEnd = now() + processGroupDuration
   const eventPayload = {
     type: 'run',
-    opts: commandOpt,
+    runConfig: commandConfig,
     taskPath,
     taskId,
     inputId,

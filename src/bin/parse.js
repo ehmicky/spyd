@@ -1,25 +1,25 @@
 import filterObj from 'filter-obj'
 
-import { normalizeArrayOpts } from './array.js'
-import { normalizeDynamicOpts } from './dynamic.js'
+import { normalizeArrayProps } from './array.js'
+import { normalizeDynamicProps } from './dynamic.js'
 
-export const parseOpts = function (yargs) {
+export const parseCliFlags = function (yargs) {
   const {
     _: [command = DEFAULT_COMMAND],
-    ...opts
+    ...config
   } = yargs.parse()
 
-  const optsA = normalizeDynamicOpts(opts)
-  const optsB = normalizeArrayOpts(optsA)
+  const configA = normalizeDynamicProps(config)
+  const configB = normalizeArrayProps(configA)
 
-  const optsC = filterObj(optsB, isUserOpt)
-  return [command, optsC]
+  const configC = filterObj(configB, isUserProp)
+  return [command, configC]
 }
 
 const DEFAULT_COMMAND = 'run'
 
-// Remove `yargs`-specific options, shortcuts and dash-cased
-const isUserOpt = function (key, value) {
+// Remove `yargs`-specific properties, shortcuts and dash-cased
+const isUserProp = function (key, value) {
   return (
     value !== undefined &&
     !INTERNAL_KEYS.has(key) &&

@@ -11,13 +11,13 @@ import { validateIds } from './validate.js'
 export const getCommandCombinations = async function ({
   taskPath,
   command,
-  command: { commandSpawn, commandSpawnOptions, commandOpt },
+  command: { commandSpawn, commandSpawnOptions, commandConfig },
   duration,
   cwd,
   debug,
   system,
 }) {
-  const eventPayload = { type: 'load', taskPath, opts: commandOpt }
+  const eventPayload = { type: 'load', taskPath, runConfig: commandConfig }
   const type = debug ? 'loadDebug' : 'loadRun'
 
   const start = now()
@@ -54,7 +54,7 @@ const normalizeCombination = function (
     commandDescription,
     commandSpawn,
     commandSpawnOptions,
-    commandOpt,
+    commandConfig,
   },
   { taskPath, system: { id: systemId, title: systemTitle }, loadDuration },
 ) {
@@ -74,7 +74,7 @@ const normalizeCombination = function (
     commandDescription,
     commandSpawn,
     commandSpawnOptions,
-    commandOpt,
+    commandConfig,
     systemId,
     systemTitle,
     loadDuration,

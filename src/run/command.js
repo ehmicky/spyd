@@ -48,6 +48,6 @@ const getCommand = async function ({
     commandDescription,
     commandSpawn: spawn,
     commandSpawnOptions: spawnOptions,
-    commandOpt: runOpt,
+    commandConfig: runOpt,
   }
 }

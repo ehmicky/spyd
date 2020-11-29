@@ -7,7 +7,7 @@ import UpdateNotifier from 'update-notifier'
 import { normalizeError, getErrorProps } from '../error/main.js'
 import * as commands from '../main.js'
 
-import { parseOpts } from './parse.js'
+import { parseCliFlags } from './parse.js'
 import { defineCli } from './top.js'
 
 // Parse CLI arguments then run tasks
@@ -16,8 +16,8 @@ const runCli = async function () {
     await checkUpdate()
 
     const yargs = defineCli()
-    const [command, opts] = parseOpts(yargs)
-    await commands[command](opts)
+    const [command, config] = parseCliFlags(yargs)
+    await commands[command](config)
   } catch (error) {
     handleCliError(error)
   }

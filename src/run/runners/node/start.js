@@ -5,8 +5,8 @@ import { loadTasksFile } from './load/main.js'
 import { measureTask } from './measure/main.js'
 
 // Communicate combination ids and titles to parent
-const load = async function ({ opts, taskPath }) {
-  const combinations = await loadTasksFile(taskPath, opts)
+const load = async function ({ runConfig, taskPath }) {
+  const combinations = await loadTasksFile(taskPath, runConfig)
   const combinationsA = combinations.map(getCombination)
   return { combinations: combinationsA }
 }
@@ -17,7 +17,7 @@ const getCombination = function ({ taskId, taskTitle, inputTitle, inputId }) {
 
 // Compute measures
 const run = async function ({
-  opts,
+  runConfig,
   taskPath,
   taskId,
   inputId,
@@ -26,7 +26,7 @@ const run = async function ({
   dry,
 }) {
   const { main, before, after, async } = await getTask({
-    opts,
+    runConfig,
     taskPath,
     taskId,
     inputId,
@@ -43,9 +43,9 @@ const run = async function ({
   return { measures, start }
 }
 
-const debug = async function ({ opts, taskPath, taskId, inputId }) {
+const debug = async function ({ runConfig, taskPath, taskId, inputId }) {
   const { main, before, after } = await getTask({
-    opts,
+    runConfig,
     taskPath,
     taskId,
     inputId,
@@ -54,8 +54,8 @@ const debug = async function ({ opts, taskPath, taskId, inputId }) {
   return {}
 }
 
-const getTask = async function ({ opts, taskPath, taskId, inputId, dry }) {
-  const combinations = await loadTasksFile(taskPath, opts)
+const getTask = async function ({ runConfig, taskPath, taskId, inputId, dry }) {
+  const combinations = await loadTasksFile(taskPath, runConfig)
 
   const { main, before, after, async } = combinations.find(
     (combination) =>

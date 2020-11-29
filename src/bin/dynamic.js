@@ -1,32 +1,32 @@
 import isPlainObj from 'is-plain-obj'
 
-// `--report.json` and `--report.json.option` are normalized to
-// `{ report: { json: { option } } }`.
+// `--report.json` and `--report.json.name` are normalized to
+// `{ report: { json: { name } } }`.
 // Same thing for `--progress`, `--run` and `--store`
-export const normalizeDynamicOpts = function (opts) {
-  const dynamicOpts = DYNAMIC_OPTS.map((name) =>
-    normalizeDynamicOpt(name, opts),
+export const normalizeDynamicProps = function (config) {
+  const dynamicProps = DYNAMIC_CONFIG_PROPS.map((name) =>
+    normalizeDynamicProp(name, config),
   )
-  const dynamicOptsA = Object.fromEntries(dynamicOpts)
-  return { ...opts, ...dynamicOptsA }
+  const dynamicPropsA = Object.fromEntries(dynamicProps)
+  return { ...config, ...dynamicPropsA }
 }
 
-const DYNAMIC_OPTS = ['report', 'progress', 'run', 'store']
+const DYNAMIC_CONFIG_PROPS = ['report', 'progress', 'run', 'store']
 
-const normalizeDynamicOpt = function (name, opts) {
-  const opt = opts[name]
+const normalizeDynamicProp = function (name, config) {
+  const value = config[name]
 
-  if (!isPlainObj(opt)) {
-    return [name, opt]
+  if (!isPlainObj(value)) {
+    return [name, value]
   }
 
-  const optA = Object.entries(opt).map(normalizeOpt)
-  const optB = Object.fromEntries(optA)
-  return [name, optB]
+  const valueA = Object.entries(value).map(normalizeProp)
+  const valueB = Object.fromEntries(valueA)
+  return [name, valueB]
 }
 
 // `value` will be an array when specifying `--report.*` several times
-const normalizeOpt = function ([name, value]) {
+const normalizeProp = function ([name, value]) {
   if (!Array.isArray(value)) {
     return [name, normalizeValue(value)]
   }
@@ -36,7 +36,7 @@ const normalizeOpt = function ([name, value]) {
 }
 
 // `value` will be `true` when specifying `--report.REPORTER` (as opposed to
-// `--report.REPORTER.OPT`
+// `--report.REPORTER.NAME`
 const normalizeValue = function (value) {
   if (value === true) {
     return {}

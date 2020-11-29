@@ -1,23 +1,23 @@
 import mapObj from 'map-obj'
 
-// Array options can be specified on the CLI either using:
+// Array configuration properties can be specified on the CLI either using:
 //   --name=value --name=otherValue
 //   --name=value,otherValue
-export const normalizeArrayOpts = function (opts) {
-  return mapObj(opts, normalizeArrayOpt)
+export const normalizeArrayProps = function (config) {
+  return mapObj(config, normalizeArrayProp)
 }
 
-const normalizeArrayOpt = function (key, value) {
+const normalizeArrayProp = function (key, value) {
   if (!Array.isArray(value)) {
     return [key, value]
   }
 
-  const valueA = [].concat(...value.map(splitArrayOpt))
+  const valueA = [].concat(...value.map(splitArrayProp))
   return [key, valueA]
 }
 
-const splitArrayOpt = function (value) {
-  return value.split(ARRAY_OPT_DELIMITER)
+const splitArrayProp = function (value) {
+  return value.split(ARRAY_PROP_DELIMITER)
 }
 
-const ARRAY_OPT_DELIMITER = /\s*,\s*/gu
+const ARRAY_PROP_DELIMITER = /\s*,\s*/gu

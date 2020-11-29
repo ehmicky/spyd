@@ -23,7 +23,7 @@ const runCombination = async function ({
   inputId,
   commandSpawn,
   commandSpawnOptions,
-  commandOpt,
+  commandConfig,
   opts: { cwd },
 }) {
   const name = getName(row)
@@ -33,7 +33,7 @@ const runCombination = async function ({
   const eventPayload = {
     type: 'debug',
     taskPath,
-    opts: commandOpt,
+    runConfig: commandConfig,
     taskId,
     inputId,
   }
