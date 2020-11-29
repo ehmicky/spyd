@@ -1,5 +1,5 @@
 import { getMinDuration, applyMinDuration } from './min_duration.js'
-import { getPercentageDirection, roundAbsPercentage } from './percentage.js'
+import { serializeRelPercentage, serializeAbsPercentage } from './percentage.js'
 import { shouldSkipStat } from './skip.js'
 
 // Serialize stat into a prettified string
@@ -70,22 +70,6 @@ const serializeCount = function (count) {
   return count.toLocaleString()
 }
 
-const serializeRelPercentage = function (percentage) {
-  const sign = REL_PERCENTAGE_SIGNS[getPercentageDirection(percentage)]
-  const roundedPercentage = roundAbsPercentage(percentage)
-  return `${sign}${roundedPercentage}%`
-}
-
-const REL_PERCENTAGE_SIGNS = { positive: '+', negative: '-', neutral: '' }
-
-const serializeAbsPercentage = function (percentage) {
-  const roundedPercentage = roundAbsPercentage(percentage)
-  return `${ABS_PERCENTAGE_SIGN}${roundedPercentage}%`
-}
-
-// Works on CP437 too
-const ABS_PERCENTAGE_SIGN = '±'
-
 const serializeDuration = function (
   duration,
   { name, scale, unit, decimals, minDuration },
@@ -102,7 +86,7 @@ const serializeDuration = function (
 
 const SERIALIZE_STAT = {
   count: serializeCount,
+  duration: serializeDuration,
   relativePercentage: serializeRelPercentage,
   absolutePercentage: serializeAbsPercentage,
-  duration: serializeDuration,
 }
