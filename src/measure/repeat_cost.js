@@ -21,13 +21,15 @@ export const getRepeatCost = async function ({
   cwd,
   loadDuration,
   measureCost,
-  minLoopTime,
+  resolution,
 }) {
   const initialRepeat = getRepeat({
     repeat: 1,
-    minLoopTime,
-    repeatCost: 0,
     median: measureCost,
+    repeatCost: 0,
+    measureCost,
+    resolution,
+    processGroupDuration,
   })
   const { measures } = await measureProcessGroup({
     taskPath,
@@ -41,7 +43,7 @@ export const getRepeatCost = async function ({
     loadDuration,
     measureCost,
     repeatCost: 0,
-    minLoopTime,
+    resolution,
     initialRepeat,
     dry: true,
   })

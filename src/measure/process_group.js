@@ -24,7 +24,7 @@ export const measureProcessGroup = async function ({
   loadDuration,
   measureCost,
   repeatCost,
-  minLoopTime,
+  resolution,
   initialRepeat,
   dry,
 }) {
@@ -92,7 +92,14 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     median = getMedian(childMeasures, processMedians)
     // eslint-disable-next-line fp/no-mutation
-    repeat = getRepeat({ repeat, minLoopTime, repeatCost, median })
+    repeat = getRepeat({
+      repeat,
+      median,
+      repeatCost,
+      measureCost,
+      resolution,
+      processGroupDuration,
+    })
   } while (
     !shouldStopProcessGroup({
       loadCost,

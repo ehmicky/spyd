@@ -1,7 +1,6 @@
 import now from 'precise-now'
 
 import { getMeasureCost } from './measure_cost.js'
-import { getMinLoopTime } from './min_loop_time.js'
 import { measureProcessGroup } from './process_group.js'
 import { getRepeatCost } from './repeat_cost.js'
 
@@ -37,7 +36,6 @@ export const measureCombination = async function ({
     cwd,
     loadDuration,
   })
-  const minLoopTime = getMinLoopTime({ measureCost, resolution, duration })
   const repeatCost = await getRepeatCost({
     taskPath,
     taskId,
@@ -49,7 +47,7 @@ export const measureCombination = async function ({
     cwd,
     loadDuration,
     measureCost,
-    minLoopTime,
+    resolution,
   })
   const { measures, times, processes } = await measureProcessGroup({
     taskPath,
@@ -63,7 +61,7 @@ export const measureCombination = async function ({
     loadDuration,
     measureCost,
     repeatCost,
-    minLoopTime,
+    resolution,
     initialRepeat: 1,
     dry: false,
   })
