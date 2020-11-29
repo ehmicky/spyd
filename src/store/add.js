@@ -20,15 +20,15 @@ export const addToStore = async function (partialResult, config) {
 }
 
 // Save results so they can be compared or shown later
-const save = async function (result, { save: saveConfig, store }) {
+const save = async function (partialResult, { save: saveConfig, store }) {
   if (!saveConfig) {
     return
   }
 
-  const resultA = normalizeResult(result)
+  const partialResultA = normalizeResult(partialResult)
 
   try {
-    await store.add(resultA)
+    await store.add(partialResultA)
   } catch (error) {
     throw new UserError(`Could not save result: ${error.message}`)
   }

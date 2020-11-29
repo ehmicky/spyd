@@ -74,11 +74,8 @@ export const getCells = function (stats, slow) {
 
 const getCell = function ({ stats, name, slow }) {
   const stat = stats[`${name}Pretty`]
-  const padSize = Math.max(
-    COLUMN_MIN_SIZE,
-    STAT_TITLES[name].length,
-    stringWidth(stat),
-  )
+  const headerLength = STAT_TITLES[name].length
+  const padSize = Math.max(COLUMN_MIN_SIZE, headerLength, stringWidth(stat))
 
   const statA = padStart(stat, padSize)
   return name === 'limit' && slow ? errorColor(statA) : statA
@@ -100,6 +97,9 @@ const STATS = [
   'loops',
   'repeat',
   'processes',
+  'loadCost',
+  'measureCost',
+  'repeatCost',
 ]
 
 export const debug = { report }

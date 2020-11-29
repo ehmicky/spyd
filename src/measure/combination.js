@@ -52,7 +52,7 @@ export const measureCombination = async function ({
     measureCost,
     resolution,
   })
-  const { measures, times, processes } = await measureProcessGroup({
+  const { measures, times, processes, loadCost } = await measureProcessGroup({
     sampleType: 'measureTask',
     taskPath,
     taskId,
@@ -69,7 +69,7 @@ export const measureCombination = async function ({
     resolution,
     dry: false,
   })
-  return { measures, times, processes }
+  return { measures, times, processes, measureCost, repeatCost, loadCost }
 }
 
 // Cost estimates must be very precise to measure fast tasks accurately.

@@ -18,17 +18,21 @@ export const getDefaultMergeId = function ({ cwd }) {
 // Add `result.mergeId`.
 // Also the `merge` configuration property can be "" to re-use the previous
 // results' mergeId.
-export const addMergeId = function (result, results, { mergeId }) {
-  const mergeIdA = handleSame(results, mergeId)
-  return { ...result, mergeId: mergeIdA }
+export const addMergeId = function (
+  partialResult,
+  partialResults,
+  { mergeId },
+) {
+  const mergeIdA = handleSame(partialResults, mergeId)
+  return { ...partialResult, mergeId: mergeIdA }
 }
 
-const handleSame = function (results, mergeId) {
+const handleSame = function (partialResults, mergeId) {
   if (mergeId !== '') {
     return mergeId
   }
 
-  const lastResult = results[results.length - 1]
+  const lastResult = partialResults[partialResults.length - 1]
 
   if (lastResult === undefined) {
     throw new UserError(

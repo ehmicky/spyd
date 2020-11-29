@@ -10,7 +10,14 @@ import { getQuantiles } from './quantiles.js'
 // if was not one. This means `quantiles`, `histogram` and `deviation` will
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
-export const getStats = function ({ measures, times, processes }) {
+export const getStats = function ({
+  measures,
+  times,
+  processes,
+  measureCost,
+  repeatCost,
+  loadCost,
+}) {
   // `times` is the number of times `main()` was called
   // `loops` is the number of repeat loops
   // `repeat` is the average number of iterations inside those repeat loops
@@ -39,6 +46,9 @@ export const getStats = function ({ measures, times, processes }) {
     processes,
     histogram,
     quantiles,
+    measureCost,
+    repeatCost,
+    loadCost,
   }
 }
 

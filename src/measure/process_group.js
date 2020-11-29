@@ -135,7 +135,7 @@ export const measureProcessGroup = async function ({
   )
 
   const { measures, times, processes } = removeOutliers(processMeasures)
-  return { measures, times, processes }
+  return { measures, times, processes, loadCost }
 }
 
 // We stop iterating when the next process does not have any time to spawn a
