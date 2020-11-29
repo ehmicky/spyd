@@ -3,8 +3,8 @@
 // is faster.
 // Not done during `measureCost` since each measure is the `measureCost` itself,
 // and `repeat` is not used.
-export const normalizeMeasures = function (
-  measures,
+export const loopDurationsToMedians = function (
+  loopDurations,
   { measureCost, repeatCost, repeat, sampleType },
 ) {
   // Performance optimization since `measureCost`'s costs are 0 and repeat is 1
@@ -12,9 +12,9 @@ export const normalizeMeasures = function (
     return
   }
 
-  measures.forEach((measure, index) => {
+  loopDurations.forEach((loopDuration, index) => {
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    measures[index] = normalizeMeasure(measure, {
+    loopDurations[index] = loopDurationToMedian(loopDuration, {
       measureCost,
       repeatCost,
       repeat,
@@ -22,8 +22,8 @@ export const normalizeMeasures = function (
   })
 }
 
-// Return the real measure spent by the task, as opposed to how long spent
-// measuring it.
+// The runner measures loops of the task. This retrieve the mean time to execute
+// the task each time, from the time to execute the whole loop.
 // Can be negative if:
 //   - The task is faster than `measureCost`, in which case `measureCost`
 //     variation might be higher than the task duration itself. This is only a
@@ -35,32 +35,30 @@ export const normalizeMeasures = function (
 // to measure how long to perform the loop itself (with no rounds). Also, this
 // means that if `repeat` is `1`, `repeatCost` will have no impact on the
 // measure, which means its variance will not add to the overall variance.
-const normalizeMeasure = function (
-  denormalizedMeasure,
+const loopDurationToMedian = function (
+  loopDuration,
   { measureCost, repeatCost, repeat },
 ) {
   return Math.max(
-    (denormalizedMeasure - measureCost + repeatCost) / repeat - repeatCost,
+    (loopDuration - measureCost + repeatCost) / repeat - repeatCost,
     0,
   )
 }
 
-// Inverse of `normalizeMeasure()`, for how long to measure one `repeat` loop
-export const denormalizeMeasure = function (
-  normalizedMeasure,
+// Compute how long does one whole `repeat` loop last
+export const medianToLoopDuration = function (
+  median,
   { measureCost, repeatCost, repeat },
 ) {
-  return (normalizedMeasure + repeatCost) * repeat + measureCost - repeatCost
+  return (median + repeatCost) * repeat + measureCost - repeatCost
 }
 
-// Inverse of `normalizeMeasure()`, for how long to measure each task inside a
-// `repeat` loop
-export const denormalizeCallMeasure = function (
-  normalizedMeasure,
+// Compute how long does one `repeat` loop iteration last
+export const medianToLoopIteration = function (
+  median,
   { measureCost, repeatCost, repeat },
 ) {
   return (
-    denormalizeMeasure(normalizedMeasure, { measureCost, repeatCost, repeat }) /
-    repeat
+    medianToLoopDuration(median, { measureCost, repeatCost, repeat }) / repeat
   )
 }

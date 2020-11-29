@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { denormalizeMeasure, denormalizeCallMeasure } from './normalize.js'
+import { medianToLoopDuration, medianToLoopIteration } from './normalize.js'
 
 // `maxDuration` is the estimated duration a process will spend measuring.
 // It is callibrated progressively based on several limits:
@@ -55,10 +55,15 @@ export const getMaxDuration = function ({
     repeatCost,
     repeat,
   })
-  const loopTime = getLoopTime({ median, measureCost, repeatCost, repeat })
+  const loopDuration = getLoopDuration({
+    median,
+    measureCost,
+    repeatCost,
+    repeat,
+  })
   return Math.max(
     Math.min(measureDurationLeft, Math.max(loadCostMin, targetTimesMin)) -
-      loopTime,
+      loopDuration,
     1,
   )
 }
@@ -94,7 +99,7 @@ const getTargetTimesMin = function ({
 }) {
   return (
     TARGET_TIMES *
-    denormalizeCallMeasure(median, { measureCost, repeatCost, repeat })
+    medianToLoopIteration(median, { measureCost, repeatCost, repeat })
   )
 }
 
@@ -126,12 +131,12 @@ const TARGET_TIMES_ADJUST = 1.1
 // impact on variance.
 const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST
 
-// We remove the `loopTime` to guarantee runners stop right under the target
+// We remove the `loopDuration` to guarantee runners stop right under the target
 // duration, not right above.
-// `loopTime` is the duration for the runner to perform a single repeat loop.
+// `loopDuration` is the duration for the runner to perform a single repeat loop
 // It is estimated from previous processes.
 // This ensures users are not experiencing slow downs of the progress counter
 // at the end of a combination.
-const getLoopTime = function ({ median, measureCost, repeatCost, repeat }) {
-  return denormalizeMeasure(median, { measureCost, repeatCost, repeat })
+const getLoopDuration = function ({ median, measureCost, repeatCost, repeat }) {
+  return medianToLoopDuration(median, { measureCost, repeatCost, repeat })
 }

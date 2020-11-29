@@ -7,7 +7,7 @@ import { removeOutliers } from '../stats/outliers.js'
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
 import { getMedian } from './median.js'
-import { normalizeMeasures, denormalizeMeasure } from './normalize.js'
+import { loopDurationsToMedians, medianToLoopDuration } from './normalize.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
 
 // Measure a task, measureCost or repeatCost using a group of processes
@@ -80,7 +80,7 @@ export const measureProcessGroup = async function ({
     })
     const childLoadCost = endLoadCost(loadCostStart, start)
 
-    normalizeMeasures(childMeasures, {
+    loopDurationsToMedians(childMeasures, {
       measureCost,
       repeatCost,
       repeat,
@@ -142,7 +142,7 @@ const shouldStopProcessGroup = function ({
   processGroupEnd,
   loops,
 }) {
-  const loopDuration = denormalizeMeasure(median, {
+  const loopDuration = medianToLoopDuration(median, {
     measureCost,
     repeatCost,
     repeat,
