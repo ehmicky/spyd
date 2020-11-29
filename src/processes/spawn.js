@@ -54,9 +54,8 @@ const getSpawnOptions = function ({
 //  - printed in `debug`
 //  - not printed during load for both `bench`/`debug`, unless an error happened
 const STDIO = {
-  loadBench: ['ignore', 'pipe', 'pipe'],
-  loadDebug: ['ignore', 'pipe', 'pipe'],
-  combinationBench: ['ignore', 'ignore', 'ignore'],
-  combinationDebug: ['ignore', 'inherit', 'inherit'],
+  load: ['ignore', 'pipe', 'pipe'],
+  benchmarkBench: ['ignore', 'ignore', 'ignore'],
+  benchmarkDebug: ['ignore', 'inherit', 'inherit'],
 }
 const MAX_BUFFER = 1e8

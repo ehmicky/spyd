@@ -8,7 +8,7 @@ import { addTitles } from './report/utils/title/main.js'
 
 // Execute tasks without benchmarking them
 export const performDebug = async function (config) {
-  const { combinations } = await getCombinations({ ...config, debug: true })
+  const { combinations } = await getCombinations(config)
   const combinationsA = addTitles(combinations)
 
   await pMapSeries(combinationsA, (combination) =>
@@ -24,18 +24,23 @@ const execCombination = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandConfig,
+  runnerRepeats,
   config: { cwd },
 }) {
   const name = getName(row)
   // eslint-disable-next-line no-restricted-globals, no-console
   console.log(name)
 
+  const repeat = runnerRepeats ? 1 : undefined
   const eventPayload = {
-    type: 'debug',
-    taskPath,
+    type: 'benchmark',
     runConfig: commandConfig,
+    taskPath,
     taskId,
     inputId,
+    dry: false,
+    maxDuration: -1,
+    repeat,
   }
 
   await executeChild({
@@ -45,7 +50,7 @@ const execCombination = async function ({
     cwd,
     taskId,
     inputId,
-    type: 'combinationDebug',
+    type: 'benchmarkDebug',
   })
 
   // eslint-disable-next-line no-restricted-globals, no-console

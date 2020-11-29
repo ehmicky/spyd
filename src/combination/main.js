@@ -12,7 +12,6 @@ export const getCombinations = async function ({
   files,
   duration,
   cwd,
-  debug,
   system,
   tasks,
   inputs,
@@ -28,7 +27,6 @@ export const getCombinations = async function ({
     runners: runnersA,
     duration,
     cwd,
-    debug,
     system,
     tasks,
     inputs,
@@ -44,7 +42,6 @@ const getAllCombinations = async function ({
   runners,
   duration,
   cwd,
-  debug,
   system,
   tasks,
   inputs,
@@ -55,7 +52,6 @@ const getAllCombinations = async function ({
     runners,
     duration,
     cwd,
-    debug,
     system,
   })
 

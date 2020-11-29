@@ -14,11 +14,9 @@ export const getCommandCombinations = async function ({
   command: { commandSpawn, commandSpawnOptions, commandConfig },
   duration,
   cwd,
-  debug,
   system,
 }) {
   const eventPayload = { type: 'load', taskPath, runConfig: commandConfig }
-  const type = debug ? 'loadDebug' : 'loadBench'
 
   const start = now()
   const { combinations } = await executeChild({
@@ -27,7 +25,7 @@ export const getCommandCombinations = async function ({
     eventPayload,
     timeoutNs: duration,
     cwd,
-    type,
+    type: 'load',
   })
   const loadDuration = now() - start
 

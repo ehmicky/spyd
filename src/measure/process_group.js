@@ -81,7 +81,7 @@ export const measureProcessGroup = async function ({
       cwd,
       taskId,
       inputId,
-      type: 'combinationBench',
+      type: 'benchmarkBench',
     })
     const childLoadCost = endLoadCost(loadCostStart, start)
 

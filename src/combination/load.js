@@ -9,12 +9,11 @@ export const loadCombinations = async function ({
   runners,
   duration,
   cwd,
-  debug,
   system,
 }) {
   const combinations = await Promise.all(
     taskPaths.map((taskPath) =>
-      getFilesCombinations({ taskPath, runners, duration, cwd, debug, system }),
+      getFilesCombinations({ taskPath, runners, duration, cwd, system }),
     ),
   )
   const combinationsA = combinations.flat()
@@ -26,13 +25,12 @@ const getFilesCombinations = async function ({
   runners,
   duration,
   cwd,
-  debug,
   system,
 }) {
   const runnersA = findRunners(taskPath, runners)
   const combinations = await Promise.all(
     runnersA.map(({ commands }) =>
-      getFileCombinations({ taskPath, commands, duration, cwd, debug, system }),
+      getFileCombinations({ taskPath, commands, duration, cwd, system }),
     ),
   )
   const combinationsA = combinations.flat()
@@ -44,7 +42,6 @@ const getFileCombinations = async function ({
   commands,
   duration,
   cwd,
-  debug,
   system,
 }) {
   const combinations = await Promise.all(
@@ -54,7 +51,6 @@ const getFileCombinations = async function ({
         command,
         duration,
         cwd,
-        debug,
         system,
       }),
     ),
