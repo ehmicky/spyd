@@ -21,7 +21,10 @@ export const getIpcFile = async function () {
 
 const IPC_FILENAME = 'spyd-measures-XXXXXX.json'
 
-// Retrieve processMeasures
+// Retrieve processMeasures.
+// We could probably use a named pipe instead of a regular file. However, this
+// does not seem to provide a significant performance improvement at the
+// moment.
 export const getIpcReturn = async function ({ ipcFile, failed }) {
   try {
     const ipcReturnStr = await pReadFile(ipcFile, 'utf8')
