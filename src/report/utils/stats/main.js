@@ -97,6 +97,5 @@ const finalizeValue = function ({
 
 const finalizeItem = function ({ stat, statPretty, padding, name }) {
   const statPrettyA = padValue(statPretty, padding)
-  const statPrettyB = addColors(stat, statPrettyA, name)
-  return statPrettyB
+  return addColors(stat, statPrettyA, name)
 }
