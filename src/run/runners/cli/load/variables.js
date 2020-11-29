@@ -1,15 +1,14 @@
-import { spawnOutput } from '../spawn.js'
+import { spawnProcess } from '../spawn.js'
 
 // Retrieve `file.variables`
 export const getVariables = async function ({
   entries: { variables: fileVariables = {}, ...entries },
   variables,
   shell,
-  debug,
 }) {
   const fileVariablesA = await Promise.all(
     Object.entries(fileVariables).map(([name, command]) =>
-      getVariable({ name, command, variables, shell, debug }),
+      getVariable({ name, command, variables, shell }),
     ),
   )
   const fileVariablesB = Object.fromEntries(fileVariablesA)
@@ -18,18 +17,13 @@ export const getVariables = async function ({
   return { variables: variablesA, entries }
 }
 
-const getVariable = async function ({
-  name,
-  command,
-  variables,
-  shell,
-  debug,
-}) {
+const getVariable = async function ({ name, command, variables, shell }) {
   try {
-    const stdout = await spawnOutput(command, `Variable '${name}'`, {
+    const stdout = await spawnProcess(command, {
       variables,
       shell,
-      debug,
+      stdout: 'pipe',
+      stderr: 'ignore',
     })
     return [name, stdout]
   } catch (error) {

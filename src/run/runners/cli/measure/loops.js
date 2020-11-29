@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { spawnNoOutput } from '../spawn.js'
+import { spawnProcess } from '../spawn.js'
 
 import { performBefore, performAfter } from './before_after.js'
 
@@ -26,16 +26,10 @@ export const performLoop = async function ({
   after,
   variables,
   shell,
-  debug,
 }) {
-  const variablesA = await performBefore({ before, variables, shell, debug })
-  const measure = await getDuration({
-    main,
-    variables: variablesA,
-    shell,
-    debug,
-  })
-  await performAfter({ after, variables: variablesA, shell, debug })
+  const variablesA = await performBefore({ before, variables, shell })
+  const measure = await getDuration({ main, variables: variablesA, shell })
+  await performAfter({ after, variables: variablesA, shell })
   return measure
 }
 
@@ -43,8 +37,13 @@ const shouldStopMeasuring = function (measureEnd) {
   return now() >= measureEnd
 }
 
-const getDuration = async function ({ main, variables, shell, debug }) {
+const getDuration = async function ({ main, variables, shell }) {
   const start = now()
-  await spawnNoOutput(main, 'Main', { variables, shell, debug })
+  await spawnProcess(main, {
+    variables,
+    shell,
+    stdout: 'inherit',
+    stderr: 'inherit',
+  })
   return now() - start
 }

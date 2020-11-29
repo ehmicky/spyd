@@ -46,27 +46,13 @@ const debug = async function ({ taskPath, taskId, inputId }) {
     taskPath,
     taskId,
     inputId,
-    debug: true,
   })
-  await performLoop({
-    main,
-    before,
-    after,
-    variables,
-    shell,
-    debug: true,
-  })
+  await performLoop({ main, before, after, variables, shell })
   return {}
 }
 
-const getTask = async function ({
-  taskPath,
-  taskId,
-  inputId,
-  debug: debugProp,
-  dry,
-}) {
-  const { combinations, shell } = await loadTasksFile(taskPath, debugProp)
+const getTask = async function ({ taskPath, taskId, inputId, dry }) {
+  const { combinations, shell } = await loadTasksFile(taskPath)
 
   const { main, before, after, variables } = combinations.find(
     (combination) =>

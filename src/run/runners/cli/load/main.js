@@ -10,7 +10,7 @@ import { validateFile } from './validate.js'
 import { getVariables } from './variables.js'
 
 // Load the tasks file
-export const loadTasksFile = async function (taskPath, debug) {
+export const loadTasksFile = async function (taskPath) {
   const entries = await getFileContent(taskPath)
   validateFile(entries)
 
@@ -20,7 +20,6 @@ export const loadTasksFile = async function (taskPath, debug) {
     entries: entriesA,
     variables,
     shell,
-    debug,
   })
 
   const { tasks, inputs } = normalizeTasks(entriesB, variablesA)
