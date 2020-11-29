@@ -1,7 +1,8 @@
 import { executeMethod } from '../common/ipc.js'
 
 import { loadTasksFile } from './load/main.js'
-import { measureTask, performLoop } from './measure/main.js'
+import { performLoop } from './measure/loops.js'
+import { measureTask } from './measure/main.js'
 
 // Communicate combination ids and titles to parent
 const load = async function ({ taskPath }) {
