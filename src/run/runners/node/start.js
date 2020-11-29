@@ -42,25 +42,6 @@ const benchmark = async function ({
   return { measures, start }
 }
 
-const debug = async function ({ runConfig, taskPath, taskId, inputId }) {
-  const { main, before, after, async } = await getTask({
-    runConfig,
-    taskPath,
-    taskId,
-    inputId,
-    dry: false,
-  })
-  await measureTask({
-    main,
-    before,
-    after,
-    async,
-    repeat: 1,
-    maxDuration: -1,
-  })
-  return {}
-}
-
 const getTask = async function ({ runConfig, taskPath, taskId, inputId, dry }) {
   const combinations = await loadTasksFile(taskPath, runConfig)
 
@@ -93,4 +74,4 @@ const applyDryFunc = function (value) {
   return function noop() {}
 }
 
-executeMethod({ load, benchmark, debug })
+executeMethod({ load, benchmark })

@@ -39,18 +39,6 @@ const benchmark = async function ({
   return { measures, start }
 }
 
-// Execute a combination once without measuring it
-const debug = async function ({ taskPath, taskId, inputId }) {
-  const { main, before, after, variables, shell } = await getTask({
-    taskPath,
-    taskId,
-    inputId,
-    dry: false,
-  })
-  await measureTask({ main, before, after, variables, shell, maxDuration: -1 })
-  return {}
-}
-
 const getTask = async function ({ taskPath, taskId, inputId, dry }) {
   const { combinations, shell } = await loadTasksFile(taskPath)
 
@@ -80,4 +68,4 @@ const applyDryFunc = function (value) {
 
 const DRY_FUNC = 'true'
 
-executeMethod({ load, benchmark, debug })
+executeMethod({ load, benchmark })
