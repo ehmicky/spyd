@@ -7,7 +7,7 @@ import { removeOutliers } from '../stats/outliers.js'
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
 import { getMedian } from './median.js'
-import { normalizeMeasures } from './normalize.js'
+import { normalizeMeasures, denormalizeMeasure } from './normalize.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
 
 // Measure a task, measureCost or repeatCost using a group of processes
@@ -60,7 +60,6 @@ export const measureProcessGroup = async function ({
     const maxDuration = getMaxDuration({
       processGroupEnd,
       loadCost,
-      processGroupDuration,
       measureCost,
       repeatCost,
       repeat,
@@ -112,7 +111,9 @@ export const measureProcessGroup = async function ({
     !shouldStopProcessGroup({
       loadCost,
       measureCost,
+      repeatCost,
       median,
+      repeat,
       processGroupEnd,
       loops,
     })
@@ -123,7 +124,7 @@ export const measureProcessGroup = async function ({
 }
 
 // We stop iterating when the next process does not have any time to spawn a
-// single one. We estimate this taking into account the time to launch the
+// single loop. We estimate this taking into account the time to launch the
 // runner (`loadCost`), the time to measure the task (`measureCost`) and
 // the time of the task itself, based on previous measurements (`median`).
 // This means we allow the last process to be shorter than the others.
@@ -137,13 +138,19 @@ export const measureProcessGroup = async function ({
 const shouldStopProcessGroup = function ({
   loadCost,
   measureCost,
+  repeatCost,
   median,
+  repeat,
   processGroupEnd,
   loops,
 }) {
+  const loopDuration = denormalizeMeasure(median, {
+    measureCost,
+    repeatCost,
+    repeat,
+  })
   return (
-    loops >= MAX_LOOPS ||
-    now() + loadCost + measureCost + median >= processGroupEnd
+    loops >= MAX_LOOPS || now() + loadCost + loopDuration >= processGroupEnd
   )
 }
 
