@@ -34,10 +34,10 @@ export const getRepeat = function ({
   return Math.ceil(Math.min(minCostRepeat, minDurationRepeat))
 }
 
-// `median` can be 0 when the task is smaller than `repeatCost` or
-// `measureCost`.
+// `median` can be 0 when the task is too close to `repeatCost`,
+// `measureCost` or `resolution`.
 // In that case, we multiply the `repeat` with a fixed rate. This fixes
-// the problem with `measureCost` but not with `repeatCost`.
+// the problem with `measureCost` and `resolution` but not with `repeatCost`.
 const FAST_MEDIAN_RATE = 10
 // How many times slower the repeated median must be compared to the resolution.
 // A lower value makes measures closer to the resolution, making them less
@@ -57,3 +57,18 @@ const MIN_MEASURE_COST = 1e2
 // A lower value decreases the impact of `MIN_RESOLUTION_PRECISION` and
 // `MIN_MEASURE_COST`.
 const MAX_TOTAL_DURATION_RATIO = 0.1
+
+// When computing `repeatCost`, the first repeat iteration is assumed to be the
+// `measureCost` and is discarded. Only the next iterations are used for the
+// `median`. This leads to two parameters:
+//  - Inside the runner, we use `childRepeat`, which is `repeat` + 1, where
+//    the additional `1` is the first iteration (`measureCost`)
+//  - In the parent process, we discard that first iteration as `measureCost`
+//    and use `repeat` without the additional `1`
+export const getChildRepeat = function (repeat, sampleType) {
+  if (sampleType !== 'repeatCost') {
+    return repeat
+  }
+
+  return repeat + 1
+}

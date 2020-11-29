@@ -8,7 +8,7 @@ import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
 import { getMedian } from './median.js'
 import { normalizeMeasures } from './normalize.js'
-import { getRepeat } from './repeat.js'
+import { getRepeat, getChildRepeat } from './repeat.js'
 
 // Measure a task, measureCost or repeatCost using a group of processes
 // eslint-disable-next-line max-statements, max-lines-per-function
@@ -67,13 +67,14 @@ export const measureProcessGroup = async function ({
       repeat,
       median,
     })
+    const childRepeat = getChildRepeat(repeat, sampleType)
 
     const loadCostStart = startLoadCost()
     // eslint-disable-next-line no-await-in-loop
     const { measures: childMeasures, start } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
-      eventPayload: { ...eventPayload, maxDuration, repeat },
+      eventPayload: { ...eventPayload, maxDuration, repeat: childRepeat },
       timeoutNs: processGroupDuration,
       cwd,
       taskId,
