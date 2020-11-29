@@ -5,7 +5,7 @@ import { stopProgress } from './stop.js'
 import { getTimeLeft } from './time.js'
 import { startUpdate } from './update.js'
 
-// Start progress reporting using the `progress` option
+// Start progress reporting using the `progress` configuration property
 export const startProgress = async function (
   combinations,
   { duration, progress: reporters },

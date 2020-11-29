@@ -1,4 +1,4 @@
-import { getOpts } from './config/main.js'
+import { getConfig } from './config/main.js'
 import { performDebug } from './debug.js'
 import { report } from './report/main.js'
 import { performRun } from './run.js'
@@ -10,50 +10,50 @@ import { startStore } from './store/start.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default action.
-export const run = async function (opts) {
-  const optsA = await getOpts('run', opts)
-  const optsB = await startStore(optsA)
+export const run = async function (config) {
+  const configA = await getConfig('run', config)
+  const configB = await startStore(configA)
 
   try {
-    const partialResult = await performRun(optsB)
-    const { mergeId, results } = await addToStore(partialResult, optsB)
-    const result = await report(mergeId, results, optsB)
+    const partialResult = await performRun(configB)
+    const { mergeId, results } = await addToStore(partialResult, configB)
+    const result = await report(mergeId, results, configB)
     return result
   } finally {
-    await endStore(optsB)
+    await endStore(configB)
   }
 }
 
 // Show a previous result
-export const show = async function (opts) {
-  const { delta, ...optsA } = await getOpts('show', opts)
-  const optsB = await startStore(optsA)
+export const show = async function (config) {
+  const { delta, ...configA } = await getConfig('show', config)
+  const configB = await startStore(configA)
 
   try {
-    const { mergeId, results } = await getFromStore(delta, optsB)
-    const result = await report(mergeId, results, optsB)
+    const { mergeId, results } = await getFromStore(delta, configB)
+    const result = await report(mergeId, results, configB)
     return result
   } finally {
-    await endStore(optsB)
+    await endStore(configB)
   }
 }
 
 // Remove a previous result
-export const remove = async function (opts) {
-  const { delta, ...optsA } = await getOpts('remove', opts)
-  const optsB = await startStore(optsA)
+export const remove = async function (config) {
+  const { delta, ...configA } = await getConfig('remove', config)
+  const configB = await startStore(configA)
 
   try {
-    const { mergeId, partialResults } = await getFromStore(delta, optsB)
-    await removeFromStore(mergeId, partialResults, optsB)
+    const { mergeId, partialResults } = await getFromStore(delta, configB)
+    await removeFromStore(mergeId, partialResults, configB)
   } finally {
-    await endStore(optsA)
+    await endStore(configA)
   }
 }
 
 // Run tasks in debug mode
-export const debug = async function (opts) {
-  const optsA = await getOpts('debug', opts)
+export const debug = async function (config) {
+  const configA = await getConfig('debug', config)
 
-  await performDebug(optsA)
+  await performDebug(configA)
 }

@@ -14,7 +14,7 @@ export const SHOW_COMMAND = {
     ...REPORT_CONFIG,
   },
 
-  usage: `$0 [options] show [delta]
+  usage: `$0 [flags...] show [delta]
 
 Show a previous result.
 

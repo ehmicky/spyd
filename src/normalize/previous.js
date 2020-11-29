@@ -13,7 +13,8 @@ export const addPrevious = function (
   { timestamp, combinations, ...result },
   { limits, diff },
 ) {
-  // When combined with the 'show' option, we only show the results before it
+  // When combined with the 'show' configuration property, we only show the
+  // results before it.
   // We exclude results from the same mergeId (since they are already merged)
   const previous = results.filter((resultA) => resultA.timestamp < timestamp)
   const diffIndex = getDiffIndex(previous, diff)

@@ -8,92 +8,83 @@ import { normalizeSystem } from '../system/normalize.js'
 import { loadAllPlugins } from './plugins.js'
 import { validateStringArray, validatePositiveNumber } from './validate.js'
 
-// Normalize some options before assigning default values
-export const preNormalizeOpts = function (opts) {
-  const optsA = addRunners(opts)
-  return optsA
+// Normalize some configuration properties before assigning default values
+export const preNormalizeConfig = function (config) {
+  const configA = addRunners(config)
+  return configA
 }
 
-// Add 'runners' option
-const addRunners = function ({ run, ...opts }) {
+// Add 'runners' configuration property
+const addRunners = function ({ run, ...config }) {
   if (run === undefined) {
-    return opts
+    return config
   }
 
   const runners = Object.keys(run)
-  return { ...opts, run, runners }
+  return { ...config, run, runners }
 }
 
-// Normalize options shape and do custom validation
-export const normalizeOpts = async function (opts) {
-  const optsA = NORMALIZERS.reduce(normalizeOpt, opts)
-  const optsB = await loadAllPlugins(optsA)
-  const optsC = normalizeSystem(optsB)
-  return optsC
+// Normalize configuration shape and do custom validation
+export const normalizeConfig = async function (config) {
+  const configA = NORMALIZERS.reduce(normalizeProp, config)
+  const configB = await loadAllPlugins(configA)
+  const configC = normalizeSystem(configB)
+  return configC
 }
 
-const normalizeOpt = function (opts, normalizer) {
-  return normalizer(opts)
+const normalizeProp = function (config, normalizer) {
+  return normalizer(config)
 }
 
-// Validate 'files' option
-const normalizeFiles = function ({ files, ...opts }) {
+const normalizeFiles = function ({ files, ...config }) {
   validateStringArray(files, 'files')
-  return { ...opts, files }
+  return { ...config, files }
 }
 
-// Validate 'tasks' option
-const normalizeTasks = function ({ tasks, ...opts }) {
+const normalizeTasks = function ({ tasks, ...config }) {
   validateStringArray(tasks, 'tasks')
-  return { ...opts, tasks }
+  return { ...config, tasks }
 }
 
-// Validate 'inputs' option
-const normalizeInputs = function ({ inputs, ...opts }) {
+const normalizeInputs = function ({ inputs, ...config }) {
   validateStringArray(inputs, 'inputs')
-  return { ...opts, inputs }
+  return { ...config, inputs }
 }
 
-// Normalize 'merge' option
-const normalizeMerge = function ({ merge, ...opts }) {
+const normalizeMerge = function ({ merge, ...config }) {
   const mergeId = merge.trim()
-  return { ...opts, mergeId }
+  return { ...config, mergeId }
 }
 
-// Normalize and validate 'duration' option
 // Duration is specified in seconds by the user but we convert it to nanoseconds
-const normalizeDuration = function ({ duration, ...opts }) {
+const normalizeDuration = function ({ duration, ...config }) {
   validatePositiveNumber(duration, 'duration')
 
   const durationA = duration * NANOSECS_TO_SECS
-  return { ...opts, duration: durationA }
+  return { ...config, duration: durationA }
 }
 
 const NANOSECS_TO_SECS = 1e9
 
-// Normalize 'cwd' option
-const normalizeCwd = function ({ cwd, ...opts }) {
+const normalizeCwd = function ({ cwd, ...config }) {
   const cwdA = resolve(cwd)
-  return { ...opts, cwd: cwdA }
+  return { ...config, cwd: cwdA }
 }
 
-// Normalize 'delta' option
-const normalizeDeltaOpt = function ({ delta, ...opts }) {
+const normalizeDeltaProp = function ({ delta, ...config }) {
   const deltaA = normalizeDelta('delta', delta)
-  return { ...opts, delta: deltaA }
+  return { ...config, delta: deltaA }
 }
 
-// Normalize 'diff' option
-const normalizeDiff = function ({ diff, ...opts }) {
+const normalizeDiff = function ({ diff, ...config }) {
   const diffA = normalizeDelta('diff', diff)
-  return { ...opts, diff: diffA }
+  return { ...config, diff: diffA }
 }
 
-// Validate 'limit' option
-const normalizeLimit = function ({ limit, ...opts }) {
+const normalizeLimit = function ({ limit, ...config }) {
   validateStringArray(limit, 'limit')
   const limits = normalizeLimits(limit)
-  return { ...opts, limits }
+  return { ...config, limits }
 }
 
 const NORMALIZERS = [
@@ -104,7 +95,7 @@ const NORMALIZERS = [
   normalizeDuration,
   normalizeCwd,
   normalizeProgress,
-  normalizeDeltaOpt,
+  normalizeDeltaProp,
   normalizeDiff,
   normalizeLimit,
 ]

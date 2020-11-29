@@ -5,12 +5,12 @@ import osName from 'os-name'
 
 import { groupBy } from '../utils/group.js'
 
-import { getOpts } from './config.js'
+import { getSystemConfig } from './config.js'
 
-export const getSystems = function ({ opts, system: { id, title }, job }) {
-  const optsA = getOpts(opts)
+export const getSystems = function ({ config, system: { id, title }, job }) {
+  const systemConfig = getSystemConfig(config)
   const system = getSystem()
-  return [{ id, title, opts: optsA, ...system, ...job }]
+  return [{ id, title, config: systemConfig, ...system, ...job }]
 }
 
 const getSystem = function () {

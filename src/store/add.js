@@ -7,11 +7,11 @@ import { mergePartialResults } from '../merge/partial.js'
 import { listStore } from './list.js'
 
 // Add a new result
-export const addToStore = async function (partialResult, opts) {
-  const partialResults = await listStore(opts)
+export const addToStore = async function (partialResult, config) {
+  const partialResults = await listStore(config)
 
-  const partialResultA = addMergeId(partialResult, partialResults, opts)
-  await save(partialResultA, opts)
+  const partialResultA = addMergeId(partialResult, partialResults, config)
+  await save(partialResultA, config)
 
   const partialResultsA = [...partialResults, partialResultA]
   const results = mergePartialResults(partialResultsA)
@@ -20,8 +20,8 @@ export const addToStore = async function (partialResult, opts) {
 }
 
 // Save results so they can be compared or shown later
-const save = async function (result, { save: saveOpt, store }) {
-  if (!saveOpt) {
+const save = async function (result, { save: saveConfig, store }) {
+  if (!saveConfig) {
     return
   }
 

@@ -18,7 +18,7 @@ const validateLimitId = function (combinations, id) {
 
   if (!isValidId) {
     throw new UserError(
-      `In 'limit' option, invalid id '${id}': no such tasks, inputs, commands nor systems`,
+      `In the 'limit' configuration property, invalid id '${id}': no such tasks, inputs, commands nor systems`,
     )
   }
 }

@@ -1,26 +1,28 @@
-// We only keep options that are relevant for reporting
-export const getOpts = function ({ duration, run: runOpts }) {
+// We only keep configuration properties that are relevant for reporting
+export const getSystemConfig = function ({ duration, run: runConfig }) {
   const durationA = duration / NANOSECS_TO_SECS
-  const runOptsA = getRunOpts(runOpts)
-  return { duration: durationA, ...runOptsA }
+  const runConfigA = getRunConfig(runConfig)
+  return { duration: durationA, ...runConfigA }
 }
 
 const NANOSECS_TO_SECS = 1e9
 
-const getRunOpts = function (runOpts) {
-  const runOptsA = Object.fromEntries(runOpts.filter(hasRunOpt).map(getRunOpt))
+const getRunConfig = function (runConfig) {
+  const runConfigA = Object.fromEntries(
+    runConfig.filter(hasRunConfig).map(getRunConfigProp),
+  )
 
-  if (Object.keys(runOptsA).length === 0) {
+  if (Object.keys(runConfigA).length === 0) {
     return {}
   }
 
-  return { run: runOptsA }
+  return { run: runConfigA }
 }
 
-const hasRunOpt = function ({ opts }) {
-  return Object.keys(opts).length !== 0
+const hasRunConfig = function ({ config }) {
+  return Object.keys(config).length !== 0
 }
 
-const getRunOpt = function ({ name, opts }) {
-  return [name, opts]
+const getRunConfigProp = function ({ name, config }) {
+  return [name, config]
 }

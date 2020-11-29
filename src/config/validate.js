@@ -2,7 +2,7 @@ import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../error/main.js'
 
-// Options validation helper functions
+// Configuration validation helper functions
 export const validateDeepObject = function (object, name) {
   Object.entries(object).forEach(([propName, value]) => {
     validateObject(value, `${name}.${propName}`)

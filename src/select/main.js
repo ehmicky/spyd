@@ -4,7 +4,8 @@ import { applyTargets } from './apply.js'
 import { getTargets } from './targets.js'
 import { validateTargets } from './validate.js'
 
-// Select combinations according to options `tasks` and `inputs`.
+// Select combinations according to configuration properties `tasks` and
+// `inputs`.
 // For the `run` and `debug` commands.
 export const selectCombinations = function (combinations, { tasks, inputs }) {
   const [{ combinations: combinationsA }] = selectPartialResults(
@@ -14,10 +15,10 @@ export const selectCombinations = function (combinations, { tasks, inputs }) {
   return combinationsA
 }
 
-// Select partialResults according to options `tasks`, `inputs`, `system` and
-// `run`. For the `show` command.
-export const selectPartialResults = function (partialResults, opts) {
-  const targets = getTargets(opts)
+// Select partialResults according to configuration properties `tasks`,
+// `inputs`, `system` and `run`. For the `show` command.
+export const selectPartialResults = function (partialResults, config) {
+  const targets = getTargets(config)
   validateTargets(targets, partialResults)
 
   const partialResultsA = partialResults

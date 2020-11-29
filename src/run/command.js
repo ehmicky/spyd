@@ -4,7 +4,7 @@ import { getCommandDescription } from './description.js'
 export const getCommands = function ({
   runnerId,
   runnerTitle,
-  runOpt,
+  runConfig,
   commands,
 }) {
   return Promise.all(
@@ -12,7 +12,7 @@ export const getCommands = function ({
       getCommand({
         runnerId,
         runnerTitle,
-        runOpt,
+        runConfig,
         id,
         title,
         spawn,
@@ -26,7 +26,7 @@ export const getCommands = function ({
 const getCommand = async function ({
   runnerId,
   runnerTitle,
-  runOpt,
+  runConfig,
   id,
   title,
   spawn,
@@ -48,6 +48,6 @@ const getCommand = async function ({
     commandDescription,
     commandSpawn: spawn,
     commandSpawnOptions: spawnOptions,
-    commandConfig: runOpt,
+    commandConfig: runConfig,
   }
 }

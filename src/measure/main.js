@@ -30,7 +30,7 @@ export const getCombinationResult = async function ({
   loadDuration,
   index,
   progressState,
-  opts: { duration, cwd },
+  config: { duration, cwd },
 }) {
   const combinationEnd = now() + duration
 

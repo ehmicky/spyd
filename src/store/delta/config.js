@@ -2,9 +2,9 @@ import { UserError } from '../../error/main.js'
 
 import { getDeltaTimestamp } from './timestamp.js'
 
-// Several options targets a previous results using either a boolean, an
-// integer or a timestamp. We normalize to a `query` object that stores can use.
-// We also validate it.
+// Several configuration properties targets a previous results using either a
+// boolean, an integer or a timestamp. We normalize to a `query` object that
+// stores can use. We also validate it.
 export const normalizeDelta = function (name, delta) {
   if (delta === false) {
     return
@@ -29,7 +29,9 @@ const getDelta = function (name, delta) {
 
 const getDeltaNumber = function (name, delta) {
   if (!Number.isInteger(delta) || delta < 1) {
-    throw new UserError(`'${name}' option must be a positive integer: ${delta}`)
+    throw new UserError(
+      `'${name}' configuration property must be a positive integer: ${delta}`,
+    )
   }
 
   return delta

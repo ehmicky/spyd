@@ -16,7 +16,8 @@ export const getDefaultMergeId = function ({ cwd }) {
 }
 
 // Add `result.mergeId`.
-// Also the `merge` option can be "" to re-use the previous results' mergeId.
+// Also the `merge` configuration property can be "" to re-use the previous
+// results' mergeId.
 export const addMergeId = function (result, results, { mergeId }) {
   const mergeIdA = handleSame(results, mergeId)
   return { ...result, mergeId: mergeIdA }

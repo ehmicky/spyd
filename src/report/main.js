@@ -3,7 +3,7 @@ import { normalizeResult } from '../normalize/main.js'
 import { addPrevious } from '../normalize/previous.js'
 
 import { callReportFunc } from './call.js'
-import { handleReportOpt } from './config.js'
+import { handleReportConfig } from './config.js'
 import { getContents } from './content.js'
 import { insertContent } from './insert.js'
 import { printContent } from './print.js'
@@ -27,10 +27,10 @@ export const report = async function (
   const result = getResult(mergeId, results, { limits, diff })
 
   await Promise.all(
-    reporters.map(({ report: reportFunc, opts: reportOpt }) =>
+    reporters.map(({ report: reportFunc, config: reportConfig }) =>
       useReporter({
         reportFunc,
-        reportOpt,
+        reportConfig,
         result,
         output,
         insert,
@@ -58,7 +58,7 @@ const getResult = function (mergeId, results, { limits, diff }) {
 // Perform each reporter
 const useReporter = async function ({
   reportFunc,
-  reportOpt,
+  reportConfig,
   result,
   output,
   insert,
@@ -67,8 +67,8 @@ const useReporter = async function ({
   context,
   link,
 }) {
-  const reportOptA = handleReportOpt({
-    reportOpt,
+  const reportConfigA = handleReportConfig({
+    reportConfig,
     output,
     insert,
     colors,
@@ -80,7 +80,7 @@ const useReporter = async function ({
   const content = await callReportFunc({
     reportFunc,
     result,
-    reportOpt: reportOptA,
+    reportConfig: reportConfigA,
   })
 
   if (!hasContent(content)) {
@@ -89,7 +89,7 @@ const useReporter = async function ({
 
   const { nonInteractiveContent, interactiveContent } = getContents({
     content,
-    reportOpt: reportOptA,
+    reportConfig: reportConfigA,
   })
   await Promise.all([
     printContent({ nonInteractiveContent, interactiveContent, output }),

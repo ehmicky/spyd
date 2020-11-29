@@ -25,7 +25,8 @@ import { medianToLoopDuration, medianToLoopIteration } from './normalize.js'
 //     transition.
 // The above algorithm has several goals:
 //   - Ensures processes to roughly use the same `maxDuration` both inside a
-//     specific run and between runs with different `duration` options.
+//     specific run and between runs with different `duration` configuration
+//     property.
 //     Processes with different `maxDuration` might give different measures to
 //     the runtime having optimized hot paths for longer durations.
 //   - Ensures processes are short enough to provide with frequent realtime

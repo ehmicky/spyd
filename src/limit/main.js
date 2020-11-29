@@ -1,6 +1,6 @@
 import { getSlowError } from './error.js'
 
-// Use the `limit` option to:
+// Use the `limit` configuration property to:
 //  - add `combination.limit`
 //  - add `combination.slow`
 //  - add `combination.slowError`

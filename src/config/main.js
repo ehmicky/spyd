@@ -5,28 +5,28 @@ import { validate, multipleValidOptions } from 'jest-validate'
 
 import { getDefaultMergeId } from '../merge/config.js'
 
-import { getConfig } from './config.js'
 import { addEnvVars } from './env.js'
-import { preNormalizeOpts, normalizeOpts } from './normalize.js'
+import { getConfigFile } from './file.js'
+import { preNormalizeConfig, normalizeConfig } from './normalize.js'
 
-// Retrieve options/configuration
+// Retrieve configuration
 // `cwd` and `config` cannot be specified in the configuration file nor in
 // environment variables
-export const getOpts = async function (action, opts = {}) {
-  const { config, cwd, ...optsA } = filterObj(opts, isDefined)
+export const getConfig = async function (action, config = {}) {
+  const { config: configPath, cwd, ...configA } = filterObj(config, isDefined)
 
-  validateOpts({ config, cwd })
+  validateConfig({ config: configPath, cwd })
 
-  const optsB = await getConfig({ config, cwd, opts: optsA })
-  const optsC = addEnvVars(optsB)
+  const configB = await getConfigFile({ configPath, cwd, config: configA })
+  const configC = addEnvVars(configB)
 
-  validateOpts(optsC)
+  validateConfig(configC)
 
-  const optsD = preNormalizeOpts(optsC)
-  const optsE = addDefaultOpts(optsD, action)
+  const configD = preNormalizeConfig(configC)
+  const configE = addDefaultConfig(configD, action)
 
-  const optsF = await normalizeOpts(optsE)
-  return optsF
+  const configF = await normalizeConfig(configE)
+  return configF
 }
 
 const isDefined = function (key, value) {
@@ -34,27 +34,27 @@ const isDefined = function (key, value) {
 }
 
 // We need to do this twice because configuration loading needs to have
-// `cwd` and `config` type checked, but it also adds new options.
-const validateOpts = function (opts) {
-  validate(opts, {
-    exampleConfig: EXAMPLE_OPTS,
-    recursiveDenylist: RECURSIVE_OPTS,
+// `cwd` and `config` type checked, but it also adds new properties.
+const validateConfig = function (config) {
+  validate(config, {
+    exampleConfig: EXAMPLE_CONFIG,
+    recursiveDenylist: RECURSIVE_PROPS,
   })
 }
 
-// Options using the dot notation
-const RECURSIVE_OPTS = ['run', 'report', 'progress', 'store']
+// Configuration properties using the dot notation
+const RECURSIVE_PROPS = ['run', 'report', 'progress', 'store']
 
-const addDefaultOpts = function (opts, action) {
+const addDefaultConfig = function (config, action) {
   return {
-    ...DEFAULT_OPTS,
+    ...DEFAULT_CONFIG,
     context: action === 'show',
-    merge: getDefaultMergeId({ ...DEFAULT_OPTS, ...opts }),
-    ...opts,
+    merge: getDefaultMergeId({ ...DEFAULT_CONFIG, ...config }),
+    ...config,
   }
 }
 
-const DEFAULT_OPTS = {
+const DEFAULT_CONFIG = {
   output: '-',
   cwd: getCwd(),
   delta: true,
@@ -82,8 +82,8 @@ const VALID_TIMESTAMPS = [
 
 const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 
-const EXAMPLE_OPTS = {
-  ...DEFAULT_OPTS,
+const EXAMPLE_CONFIG = {
+  ...DEFAULT_CONFIG,
   config: 'spyd.yml',
   context: true,
   delta: VALID_DELTA,

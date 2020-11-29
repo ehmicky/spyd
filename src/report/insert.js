@@ -5,7 +5,7 @@ import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
 
-// Use the `insert` option to insert content inside a file.
+// Use the `insert` configuration property to insert content inside a file.
 // We insert between any two lines with the tokens "spyd-start" and "spyd-end".
 // This:
 //  - works on any file format. User just needs to pick the right reporter.

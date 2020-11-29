@@ -1,6 +1,6 @@
 import { UserError } from '../error/main.js'
 
-// Normalize 'limit' option
+// Normalize 'limit' configuration property
 export const normalizeLimits = function (limits) {
   return limits.map(normalizeLimit)
 }

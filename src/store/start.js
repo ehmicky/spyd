@@ -4,22 +4,22 @@ import readPkgUp from 'read-pkg-up'
 
 import { UserError } from '../error/main.js'
 
-// Call `store.start(storeOpts)`
+// Call `store.start(storeConfig)`
 export const startStore = async function ({
   cwd,
-  store: { opts: storeOpts, start, ...store },
-  ...opts
+  store: { config: storeConfig, start, ...store },
+  ...config
 }) {
-  const storeOptsA = await getStoreOpts(cwd, storeOpts)
-  const startOpts = await callStart(start, storeOptsA)
-  const storeA = bindInitOpts(store, startOpts)
-  return { ...opts, cwd, store: storeA }
+  const storeConfigA = await getStoreConfig(cwd, storeConfig)
+  const startConfig = await callStart(start, storeConfigA)
+  const storeA = bindStartConfig(store, startConfig)
+  return { ...config, cwd, store: storeA }
 }
 
-// Add `cwd`, `root` and `name` to store options passed to `start()`
-const getStoreOpts = async function (cwd, storeOpts) {
+// Add `cwd`, `root` and `name` to store config passed to `start()`
+const getStoreConfig = async function (cwd, storeConfig) {
   const { root, name } = await getPackageInfo(cwd)
-  return { cwd, root, name, ...storeOpts }
+  return { cwd, root, name, ...storeConfig }
 }
 
 const getPackageInfo = async function (cwd) {
@@ -37,25 +37,25 @@ const getPackageInfo = async function (cwd) {
   return { root, name }
 }
 
-const callStart = async function (start, storeOpts) {
+const callStart = async function (start, storeConfig) {
   try {
-    return await start(storeOpts)
+    return await start(storeConfig)
   } catch (error) {
     throw new UserError(`Could not start store: ${error.message}`)
   }
 }
 
 // Pass return value of `start()` to every store method
-const bindInitOpts = function (store, startOpts) {
+const bindStartConfig = function (store, startConfig) {
   return Object.fromEntries(
-    STORE_METHODS.map((method) => bindMethod(store, method, startOpts)),
+    STORE_METHODS.map((method) => bindMethod(store, method, startConfig)),
   )
 }
 
 const STORE_METHODS = ['list', 'add', 'replace', 'remove', 'end']
 
-const bindMethod = function (store, method, startOpts) {
+const bindMethod = function (store, method, startConfig) {
   const originalFunc = store[method]
-  const func = (...args) => originalFunc(...args, startOpts)
+  const func = (...args) => originalFunc(...args, startConfig)
   return [method, func]
 }

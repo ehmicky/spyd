@@ -3,8 +3,8 @@ import { fetchUrl } from './fetch.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves results to `dir/data.json`
-const start = function (opts) {
-  return getUrl(opts)
+const start = function (config) {
+  return getUrl(config)
 }
 
 // eslint-disable-next-line no-empty-function

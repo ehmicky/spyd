@@ -7,7 +7,7 @@ export const DEBUG_COMMAND = {
 
   config: { ...ALL_CONFIG, ...SELECT_CONFIG },
 
-  usage: `$0 debug [options] [<files...>]
+  usage: `$0 debug [flags...] [<files...>]
 
 Run each task once without measuring them.
 

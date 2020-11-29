@@ -66,10 +66,10 @@ const getTask = async function ({
   taskPath,
   taskId,
   inputId,
-  debug: debugOpt,
+  debug: debugProp,
   dry,
 }) {
-  const { combinations, shell } = await loadTasksFile(taskPath, debugOpt)
+  const { combinations, shell } = await loadTasksFile(taskPath, debugProp)
 
   const { main, before, after, variables } = combinations.find(
     (combination) =>

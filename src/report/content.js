@@ -6,9 +6,12 @@ import stripAnsi from 'strip-ansi'
 // Since `report()` might have side effects such as making a HTTP call, we make
 // sure it is called exactly once.
 // Interactive output/terminal have different default values for some report
-// options, so we compute two different contents: interactive and
+// config properties, so we compute two different contents: interactive and
 // non-interactive.
-export const getContents = function ({ content, reportOpt: { link, colors } }) {
+export const getContents = function ({
+  content,
+  reportConfig: { link, colors },
+}) {
   const nonInteractiveContent = getNonInteractiveContent({
     content,
     link,
@@ -43,7 +46,7 @@ const normalizeContent = function ({ content, link, colors }) {
   return contentC
 }
 
-// Strip colors from reporters output if `colors` option is false
+// Strip colors from reporters output if `colors` config property is false
 const handleColors = function (content, colors) {
   if (colors) {
     return content
@@ -52,7 +55,7 @@ const handleColors = function (content, colors) {
   return stripAnsi(content)
 }
 
-// Remove link if `link` option is false
+// Remove link if `link` config property is false
 const removeLink = function (content, link) {
   if (link) {
     return content

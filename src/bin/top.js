@@ -2,7 +2,7 @@ import yargs from 'yargs'
 
 import { COMMANDS } from './commands/main.js'
 
-// Define all CLI commands and options
+// Define all CLI commands and flags
 export const defineCli = function () {
   return COMMANDS.reduce(addCommand, yargs).usage('').strict()
 }

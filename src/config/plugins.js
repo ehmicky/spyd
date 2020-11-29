@@ -6,17 +6,18 @@ import { STORES } from '../store/stores/main.js'
 
 import { validateDeepObject } from './validate.js'
 
-// Several options (`run`, `report`, `progress`, `store`) can be customized with
-// custom modules. This loads them. Each type can specify builtin modules too.
-// Options can be passed to each module.
-export const loadAllPlugins = async function (opts) {
-  const pluginsOpts = await Promise.all(
+// Several configuration properties (`run`, `report`, `progress`, `store`) can
+// be customized with custom modules. This loads them. Each type can specify
+// builtin modules too.
+// Configuration properties can be passed to each module.
+export const loadAllPlugins = async function (config) {
+  const pluginsConfig = await Promise.all(
     TYPES.map(({ type, builtins, single }) =>
-      loadPlugins({ opts, type, builtins, single }),
+      loadPlugins({ config, type, builtins, single }),
     ),
   )
-  const pluginsOptsA = Object.fromEntries(pluginsOpts)
-  return { ...opts, ...pluginsOptsA }
+  const pluginsConfigA = Object.fromEntries(pluginsConfig)
+  return { ...config, ...pluginsConfigA }
 }
 
 const TYPES = [
@@ -26,14 +27,14 @@ const TYPES = [
   { type: 'store', builtins: STORES, single: true },
 ]
 
-const loadPlugins = async function ({ opts, type, builtins, single }) {
-  const pluginOpts = opts[type]
+const loadPlugins = async function ({ config, type, builtins, single }) {
+  const pluginConfig = config[type]
 
-  validateDeepObject(pluginOpts, type)
+  validateDeepObject(pluginConfig, type)
 
   const plugins = await Promise.all(
-    Object.entries(pluginOpts).map(([name, pluginOpt]) =>
-      loadPlugin({ type, name, pluginOpt, builtins }),
+    Object.entries(pluginConfig).map(([name, prop]) =>
+      loadPlugin({ type, name, prop, builtins }),
     ),
   )
 
@@ -45,9 +46,9 @@ const loadPlugins = async function ({ opts, type, builtins, single }) {
   return [type, plugins]
 }
 
-const loadPlugin = async function ({ type, name, pluginOpt, builtins }) {
+const loadPlugin = async function ({ type, name, prop, builtins }) {
   const plugin = await importPlugin({ type, name, builtins })
-  return { ...plugin, name, opts: pluginOpt }
+  return { ...plugin, name, config: prop }
 }
 
 const importPlugin = async function ({ type, name, builtins }) {

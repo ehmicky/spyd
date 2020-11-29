@@ -5,7 +5,7 @@ import fastGlob from 'fast-glob'
 import { UserError } from '../error/main.js'
 
 // Retrieve the absolute paths to the tasks files using the `files` and
-// `cwd` options
+// `cwd` configuration properties
 export const getTaskPaths = async function (files, cwd) {
   const taskPaths = await Promise.all(
     files.map((pattern) => applyGlobbing(pattern, cwd)),

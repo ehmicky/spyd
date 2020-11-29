@@ -7,12 +7,12 @@ import { SEPARATOR_SIGN } from './report/utils/separator.js'
 import { addTitles } from './report/utils/title/main.js'
 
 // Run tasks in debug mode
-export const performDebug = async function (opts) {
-  const { combinations } = await getCombinations({ ...opts, debug: true })
+export const performDebug = async function (config) {
+  const { combinations } = await getCombinations({ ...config, debug: true })
   const combinationsA = addTitles(combinations)
 
   await pMapSeries(combinationsA, (combination) =>
-    runCombination({ ...combination, opts }),
+    runCombination({ ...combination, config }),
   )
 }
 
@@ -24,7 +24,7 @@ const runCombination = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandConfig,
-  opts: { cwd },
+  config: { cwd },
 }) {
   const name = getName(row)
   // eslint-disable-next-line no-restricted-globals, no-console

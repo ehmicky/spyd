@@ -42,7 +42,8 @@ import { preciseTimestamp } from './precise_timestamp.js'
 //    same runner
 //  - however, it is possible that a runner might be doing some extra logic at
 //    `run` time (instead of load time) when retrieving a task with a specific
-//    option, such as dynamically loading some code for that specific task
+//    configuration property, such as dynamically loading some code for that
+//    specific task
 export const startLoadCost = function () {
   return preciseTimestamp()
 }

@@ -1,6 +1,7 @@
 import { resolve } from 'path'
 
-// The `store.file.dir` option specifies where the directory where to save data.
+// The `store-file-dir` configuration property specifies where the directory
+// where to save data.
 export const getDir = function ({ root, dir = DEFAULT_DIR }) {
   return resolve(root, dir)
 }

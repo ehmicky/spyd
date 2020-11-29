@@ -1,25 +1,25 @@
 // Retrieve targets, i.e. identifiers to select combinations
-export const getTargets = function (opts) {
-  const optsA = normalizeSystems(opts)
+export const getTargets = function (config) {
+  const configA = normalizeSystems(config)
 
   return TARGETS.map(({ idName, idsName, name }) =>
-    normalizeIds({ opts: optsA, idName, idsName, name }),
+    normalizeIds({ config: configA, idName, idsName, name }),
   ).filter(Boolean)
 }
 
-// Turn `system` option into an array
+// Turn the `system` configuration property into an array
 const normalizeSystems = function ({
   system: { id = '', title } = {},
-  ...opts
+  ...config
 }) {
   if (id === '') {
-    return opts
+    return config
   }
 
   // Exclamation marks are removed in `id` during slugification
   const idA = title.startsWith('!') ? `!${id}` : id
 
-  return { ...opts, systems: [idA] }
+  return { ...config, systems: [idA] }
 }
 
 const TARGETS = [
@@ -31,8 +31,8 @@ const TARGETS = [
 
 // Ids can start with ! to deny instead of allow
 // Allow has priority over deny
-const normalizeIds = function ({ opts, idName, idsName, name }) {
-  const ids = opts[idsName]
+const normalizeIds = function ({ config, idName, idsName, name }) {
+  const ids = config[idsName]
 
   if (ids === undefined) {
     return

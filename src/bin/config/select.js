@@ -34,7 +34,7 @@ platform.
 Built-in runners: node, cli.
 Custom runners can be installed from npm.
 Uses a dot notation such as --run.node (not --run=node nor --run node).
-Runner-specific options can be specified using the same dot notation such as
---run.node.require.`,
+Runner-specific configuration properties can be specified using the same dot
+notation such as --run.node.require.`,
   },
 }

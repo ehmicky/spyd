@@ -6,10 +6,10 @@ import { find } from './delta/find.js'
 import { listStore } from './list.js'
 
 // Get a previous result by `count` or `timestamp`
-export const getFromStore = async function (delta, opts) {
-  const partialResults = await listStore(opts)
+export const getFromStore = async function (delta, config) {
+  const partialResults = await listStore(config)
 
-  const partialResultsA = selectPartialResults(partialResults, opts)
+  const partialResultsA = selectPartialResults(partialResults, config)
 
   const results = mergePartialResults(partialResultsA)
 

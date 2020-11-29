@@ -10,11 +10,12 @@ import { getResolution } from './resolution.js'
 // This function estimates `measureCost` by measuring an empty task.
 // Those costs must be computed separately for each combination since they
 // might vary depending on:
-//  - the task. Some runners might allow task-specific options impacting
-//    measuring. For example, the `node` runner has the `async` option.
+//  - the task. Some runners might allow task-specific configuration impacting
+//    measuring. For example, the `node` runner has the `async` configuration
+//    property.
 //  - the input. The size of the input or whether an input is used or not
 //    might impact measuring.
-//  - the system. For example, runner options.
+//  - the system. For example, runConfig.
 export const getMeasureCost = async function ({
   taskPath,
   taskId,

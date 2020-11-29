@@ -5,7 +5,7 @@ export const STORE_CONFIG = {
 Built-in stores: file, http.
 Custom stores can be installed from npm.
 Uses a dot notation such as --store.file (not --store=file nor --store file).
-Store-specific options can be specified using the same dot notation such as
---store.file.dir`,
+Store-specific configuration properties can be specified using the same dot
+notation such as --store.file.dir`,
   },
 }

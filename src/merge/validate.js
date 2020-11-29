@@ -3,7 +3,7 @@ import { isDeepStrictEqual } from 'util'
 import { UserError } from '../error/main.js'
 
 // Several results can have the same system, providing it has exactly the same
-// options.
+// configuration properties.
 // If several results with the same system have different titles/machines/jobs,
 // the last one prevails.
 // Several results from the same mergeId must have the same ci/git.
@@ -40,7 +40,7 @@ const validateSameSystem = function (previousSystems, system) {
   })
 }
 
-const SAME_SYSTEM_PROPS = ['opts']
+const SAME_SYSTEM_PROPS = ['config']
 
 const validateSame = function (objectA, objectB, { propName, groups }) {
   if (!isDeepStrictEqual(objectA, objectB)) {

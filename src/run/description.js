@@ -3,7 +3,7 @@ import execa from 'execa'
 import { PluginError } from '../error/main.js'
 
 // Runtime description for this runner, specified as `command.versions`
-// Used by the `--info` option
+// Used by the `--info` configuration property
 export const getCommandDescription = async function ({
   commandTitle,
   versions,

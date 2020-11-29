@@ -3,8 +3,8 @@ import { getResults, setResults } from './fs.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves results to `dir/data.json`
-const start = function (opts) {
-  return getDir(opts)
+const start = function (config) {
+  return getDir(config)
 }
 
 // eslint-disable-next-line no-empty-function

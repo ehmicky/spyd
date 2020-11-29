@@ -2,7 +2,7 @@ import omit from 'omit.js'
 
 // We join two collection of similar `systems`:
 //  - after joining with previous results of same mergeId, to retrieve their
-//    options and systems
+//    configuration properties and systems
 //  - after merging combinations, to retrieve their speed and set
 //    combination.rank
 export const joinSystems = function (systems, systemColls) {
@@ -37,7 +37,7 @@ const getSharedProps = function ([firstSystem, ...nextSystems]) {
 // Can optionally be the same across systems
 const SHARED_PROPS = ['cpu', 'memory', 'os', 'jobNumber', 'jobUrl']
 // Validated to always be the same across systems, so it's always shared.
-const SAME_PROPS = ['opts']
+const SAME_PROPS = ['config']
 
 const isSharedProp = function (firstSystem, nextSystems, propName) {
   return nextSystems.every(

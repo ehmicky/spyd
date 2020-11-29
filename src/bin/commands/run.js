@@ -16,7 +16,7 @@ export const RUN_COMMAND = {
     ...RUN_CONFIG,
   },
 
-  usage: `$0 [options] [<files...>]
+  usage: `$0 [flags...] [<files...>]
 
 Measure tasks.
 

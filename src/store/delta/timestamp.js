@@ -10,7 +10,9 @@ export const getDeltaTimestamp = function (name, delta) {
   const date = new Date(deltaA)
 
   if (Number.isNaN(Number(date))) {
-    throw new UserError(`'${name}' option is an invalid date/time: ${delta}`)
+    throw new UserError(
+      `'${name}' configuration property is an invalid date/time: ${delta}`,
+    )
   }
 
   const dateA = normalizeDateTime(date)

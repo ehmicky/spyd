@@ -7,7 +7,7 @@ export const REMOVE_COMMAND = {
 
   config: { ...ALL_CONFIG, ...STORE_CONFIG },
 
-  usage: `$0 [options] remove [delta]
+  usage: `$0 [flags...] remove [delta]
 
 Remove a previous result.
 

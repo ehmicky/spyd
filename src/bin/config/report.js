@@ -5,9 +5,10 @@ export const REPORT_CONFIG = {
 Built-in reporters: silent.
 Custom reporters can also be installed from npm.
 Uses a dot notation such as --report.json (not --report=json nor --report json).
-Reporter-specific options can be specified using the same dot notation.
-The following options can be set for any reporter: output, insert, colors, info,
-context, link.
+Reporter-specific configuration properties can be specified using the same dot
+// notation.
+The following properties can be set for any reporter: output, insert, colors,
+info, context, link.
 For example --report.json.output is like --output but only for the json reporter.`,
   },
   output: {

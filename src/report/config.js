@@ -1,7 +1,7 @@
 // `output`, `insert`, `colors`, `info`, `context`,`link` can be set either for
 // specific reporter (--report.REPORTER.output) or for all (--output)
-export const handleReportOpt = function ({
-  reportOpt,
+export const handleReportConfig = function ({
+  reportConfig,
   output,
   insert,
   colors,
@@ -9,30 +9,30 @@ export const handleReportOpt = function ({
   info,
   context,
 }) {
-  const reportOptA = {
+  const reportConfigA = {
     output,
     insert,
     colors,
     link,
     info,
     context,
-    ...reportOpt,
+    ...reportConfig,
   }
-  const reportOptB = convertBooleans(reportOptA)
-  return reportOptB
+  const reportConfigB = convertBooleans(reportConfigA)
+  return reportConfigB
 }
 
-// --report.REPORTER.* options are dynamic, i.e. are not normalized by our
-// options layer. Boolean options might be set on the CLI either as --[no-]OPT
-// or --OPT true|false. We normalize both to a boolean value.
-const convertBooleans = function (reportOpt) {
-  const booleanOpts = Object.fromEntries(
-    BOOLEAN_OPTS.map((name) => convertBoolean(name, reportOpt[name])),
+// --report.REPORTER.* properties are dynamic, i.e. are not normalized by our
+// config layer. Boolean properties might be set on the CLI either as --[no-]VAR
+// or --VAR true|false. We normalize both to a boolean value.
+const convertBooleans = function (reportConfig) {
+  const booleanConfig = Object.fromEntries(
+    BOOLEAN_PROPS.map((name) => convertBoolean(name, reportConfig[name])),
   )
-  return { ...reportOpt, ...booleanOpts }
+  return { ...reportConfig, ...booleanConfig }
 }
 
-const BOOLEAN_OPTS = ['colors', 'info', 'context', 'link']
+const BOOLEAN_PROPS = ['colors', 'info', 'context', 'link']
 
 const convertBoolean = function (name, value) {
   if (value === undefined) {

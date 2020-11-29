@@ -5,14 +5,15 @@ import slugify from 'slugify'
 
 import { PluginError } from '../error/main.js'
 
-// The `system` option can contain some `$VAR` that are substituted:
+// The `system` configuration property can contain some `$VAR` that are
+// substituted:
 //  - environment variables
 //  - {{os}}, {{os_full}}
 //  - runner-specific variables like {{node_major}}
-export const normalizeSystem = function ({ system, run, ...opts }) {
+export const normalizeSystem = function ({ system, run, ...config }) {
   const title = getTitle(system, run)
   const id = slugify(title, { lower: true, remove: INVALID_ID_REGEXP })
-  return { ...opts, run, system: { id, title } }
+  return { ...config, run, system: { id, title } }
 }
 
 const getTitle = function (system, run) {

@@ -2,14 +2,19 @@ import { format } from 'url'
 
 import { UserError } from '../../../error/main.js'
 
-// The `store.http.url` and `store.http.name` options specify the base URL
+// The `store-http-url` and `store-http-name` configuration properties specify
+// the base URL
 export const getUrl = function ({ url, name }) {
   if (typeof url !== 'string') {
-    throw new UserError(`'store.http.url' must be a string, not ${url}`)
+    throw new UserError(
+      `The 'store-http-url' configuration property must be a string, not ${url}`,
+    )
   }
 
   if (typeof name !== 'string') {
-    throw new UserError(`'store.http.name' must be a string, not ${name}`)
+    throw new UserError(
+      `The 'store-http-name' configuration property must be a string, not ${name}`,
+    )
   }
 
   const urlA = normalizeUrl(url)

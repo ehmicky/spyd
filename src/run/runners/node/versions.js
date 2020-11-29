@@ -36,7 +36,9 @@ const getFullVersions = async function (versions) {
       ),
     )
   } catch (error) {
-    throw new UserError(`In option 'run.node.versions': ${error.message}`)
+    throw new UserError(
+      `In the configuration property 'run-node-versions': ${error.message}`,
+    )
   }
 }
 
@@ -60,7 +62,7 @@ const validateVersions = function (versions, allowedVersions) {
 const validateVersion = function (versionRange, version, allowedVersions) {
   if (!satisfies(version, allowedVersions)) {
     throw new UserError(
-      `In option 'run.node.versions': version ${versionRange} must be ${allowedVersions}`,
+      `In the configuration property 'run-node-versions': version ${versionRange} must be ${allowedVersions}`,
     )
   }
 }

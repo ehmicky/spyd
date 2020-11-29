@@ -38,7 +38,7 @@ const useRequiredModule = async function (requiredModule) {
     await import(requiredModule)
   } catch (error) {
     throw new UserError(
-      `Could not load 'node.require' option '${requiredModule}'\n\n${error.stack}`,
+      `Could not load 'run-node-require' configuration property '${requiredModule}'\n\n${error.stack}`,
     )
   }
 }

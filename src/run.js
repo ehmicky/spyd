@@ -7,19 +7,19 @@ import { startProgress } from './progress/start.js'
 import { stopProgress } from './progress/stop.js'
 
 // Perform a new run
-export const performRun = async function (opts) {
-  const { combinations, versions } = await getCombinations(opts)
+export const performRun = async function (config) {
+  const { combinations, versions } = await getCombinations(config)
 
   const { progressState, progressInfo } = await startProgress(
     combinations,
-    opts,
+    config,
   )
 
   try {
     return await getPartialResult({
       combinations,
       progressState,
-      opts,
+      config,
       versions,
     })
   } finally {
@@ -30,12 +30,12 @@ export const performRun = async function (opts) {
 const getPartialResult = async function ({
   combinations,
   progressState,
-  opts,
+  config,
   versions,
 }) {
   const combinationsA = await pMapSeries(combinations, (combination, index) =>
-    getCombinationResult({ ...combination, index, progressState, opts }),
+    getCombinationResult({ ...combination, index, progressState, config }),
   )
-  const partialResult = addResultInfo(combinationsA, { opts, versions })
+  const partialResult = addResultInfo(combinationsA, { config, versions })
   return partialResult
 }

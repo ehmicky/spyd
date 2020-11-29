@@ -15,24 +15,28 @@ export const loadRunners = async function (runners, taskPaths) {
 const loadRunner = async function ({
   id: runnerId,
   title: runnerTitle,
-  opts: runOpt,
+  config: runConfig,
   extensions,
   commands: retrieveCommands,
 }) {
-  const commands = await fireCommands({ runnerId, runOpt, retrieveCommands })
+  const commands = await fireCommands({ runnerId, runConfig, retrieveCommands })
   const commandsA = await getCommands({
     runnerId,
     runnerTitle,
-    runOpt,
+    runConfig,
     commands,
   })
   return { commands: commandsA, extensions }
 }
 
 // Fire `runner.commands()`
-const fireCommands = async function ({ runnerId, runOpt, retrieveCommands }) {
+const fireCommands = async function ({
+  runnerId,
+  runConfig,
+  retrieveCommands,
+}) {
   try {
-    return await retrieveCommands(runOpt)
+    return await retrieveCommands(runConfig)
   } catch (error) {
     handleCommandsError(error, runnerId)
   }
