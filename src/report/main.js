@@ -3,9 +3,9 @@ import { normalizeResult } from '../normalize/main.js'
 import { addPrevious } from '../normalize/previous.js'
 
 import { callReportFunc } from './call.js'
+import { handleReportOpt } from './config.js'
 import { getContents } from './content.js'
 import { insertContent } from './insert.js'
-import { handleReportOpt } from './options.js'
 import { printContent } from './print.js'
 
 // Report results

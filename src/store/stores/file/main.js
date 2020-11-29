@@ -1,5 +1,5 @@
+import { getDir } from './config.js'
 import { getResults, setResults } from './fs.js'
-import { getDir } from './options.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves results to `dir/data.json`

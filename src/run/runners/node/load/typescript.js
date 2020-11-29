@@ -3,8 +3,8 @@ import { extname } from 'path'
 import { UserError } from '../../../../error/main.js'
 
 // When the tasks file is in TypeScript, automatically use `ts-node/register`
-export const handleTypeScript = async function (requireOpt, taskPath) {
-  if (!shouldUseTsNode(requireOpt, taskPath)) {
+export const handleTypeScript = async function (requireConfig, taskPath) {
+  if (!shouldUseTsNode(requireConfig, taskPath)) {
     return
   }
 
@@ -14,14 +14,17 @@ export const handleTypeScript = async function (requireOpt, taskPath) {
     throw new UserError(
       `When the tasks file is in TypeScript either:
   - 'ts-node' and 'typescript' must be installed
-  - the tasks file must be transpiled by 'tsc'\n\n${error.message}`,
+  - the tasks file must be transpiled by 'tsc'
+
+${error.message}`,
     )
   }
 }
 
-const shouldUseTsNode = function (requireOpt, taskPath) {
+const shouldUseTsNode = function (requireConfig, taskPath) {
   return (
-    !requireOpt.some(isTsNode) && TYPESCRIPT_EXTENSIONS.has(extname(taskPath))
+    !requireConfig.some(isTsNode) &&
+    TYPESCRIPT_EXTENSIONS.has(extname(taskPath))
   )
 }
 

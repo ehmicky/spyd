@@ -4,7 +4,7 @@ import { satisfies } from 'semver'
 
 import { UserError } from '../../../error/main.js'
 
-// Normalize the node `versions` option
+// Normalize the node `versions` config
 export const getNodeVersions = async function ({ versions }) {
   if (versions === undefined) {
     return

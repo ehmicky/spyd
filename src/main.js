@@ -1,5 +1,5 @@
+import { getOpts } from './config/main.js'
 import { performDebug } from './debug.js'
-import { getOpts } from './options/main.js'
 import { report } from './report/main.js'
 import { performRun } from './run.js'
 import { addToStore } from './store/add.js'

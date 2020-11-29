@@ -1,5 +1,5 @@
+import { getUrl } from './config.js'
 import { fetchUrl } from './fetch.js'
-import { getUrl } from './options.js'
 
 // Filesystem store. This is the default built-in store.
 // Saves results to `dir/data.json`

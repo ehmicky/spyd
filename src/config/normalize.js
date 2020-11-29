@@ -1,8 +1,8 @@
 import { resolve } from 'path'
 
-import { normalizeLimits } from '../limit/options.js'
-import { normalizeProgress } from '../progress/options.js'
-import { normalizeDelta } from '../store/delta/options.js'
+import { normalizeLimits } from '../limit/config.js'
+import { normalizeProgress } from '../progress/config.js'
+import { normalizeDelta } from '../store/delta/config.js'
 import { normalizeSystem } from '../system/normalize.js'
 
 import { loadAllPlugins } from './plugins.js'

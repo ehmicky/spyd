@@ -2,7 +2,7 @@ import { UserError } from '../../../../error/main.js'
 
 import { addTasksInputs } from './inputs.js'
 import { normalizeTasks } from './normalize.js'
-import { useRequireOpt } from './require_opt.js'
+import { useRequireConfig } from './require_config.js'
 import { validateFile } from './validate.js'
 
 // Load the combinations using the 'load' event sent by parent
@@ -12,9 +12,9 @@ import { validateFile } from './validate.js'
 // Load the tasks file using its absolute path
 export const loadTasksFile = async function (
   taskPath,
-  { require: requireOpt },
+  { require: requireConfig },
 ) {
-  await useRequireOpt(requireOpt, taskPath)
+  await useRequireConfig(requireConfig, taskPath)
 
   const entries = await loadFile(taskPath)
   validateFile(entries)

@@ -1,7 +1,7 @@
 import omit from 'omit.js'
 
 import { UserError } from '../error/main.js'
-import { addMergeId } from '../merge/options.js'
+import { addMergeId } from '../merge/config.js'
 import { mergePartialResults } from '../merge/partial.js'
 
 import { listStore } from './list.js'
