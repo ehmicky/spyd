@@ -1,6 +1,7 @@
 import { getSortedMedian } from '../stats/median.js'
 
 import { measureProcessGroup } from './process_group.js'
+import { getResolution } from './resolution.js'
 
 // `measureCost` is the time taken to measure an empty task when `repeat` is `1`
 // This includes the time to get the start/end timestamps for example.
@@ -42,5 +43,6 @@ export const getMeasureCost = async function ({
     dry: true,
   })
   const measureCost = getSortedMedian(measureCostMeasures)
-  return { measureCost, measureCostMeasures }
+  const resolution = getResolution(measureCostMeasures)
+  return { measureCost, resolution }
 }

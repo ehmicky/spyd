@@ -26,7 +26,7 @@ export const measureCombination = async function ({
   cwd,
 }) {
   const biasDuration = duration * BIAS_DURATION_RATIO
-  const { measureCost, measureCostMeasures } = await getMeasureCost({
+  const { measureCost, resolution } = await getMeasureCost({
     taskPath,
     taskId,
     inputId,
@@ -37,11 +37,7 @@ export const measureCombination = async function ({
     cwd,
     loadDuration,
   })
-  const minLoopTime = getMinLoopTime({
-    measureCost,
-    measureCostMeasures,
-    duration,
-  })
+  const minLoopTime = getMinLoopTime({ measureCost, resolution, duration })
   const repeatCost = await getRepeatCost({
     taskPath,
     taskId,
