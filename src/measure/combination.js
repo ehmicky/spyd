@@ -24,7 +24,7 @@ export const measureCombination = async function ({
   combinationEnd,
   cwd,
 }) {
-  const biasDuration = duration * BIAS_DURATION_RATIO
+  const costDuration = duration * COST_DURATION_RATIO
   const { measureCost, resolution } = await getMeasureCost({
     taskPath,
     taskId,
@@ -32,7 +32,7 @@ export const measureCombination = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    processGroupDuration: biasDuration,
+    processGroupDuration: costDuration,
     cwd,
     loadDuration,
   })
@@ -43,7 +43,7 @@ export const measureCombination = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandOpt,
-    processGroupDuration: biasDuration,
+    processGroupDuration: costDuration,
     cwd,
     loadDuration,
     measureCost,
@@ -69,6 +69,6 @@ export const measureCombination = async function ({
   return { measures, times, processes }
 }
 
-// Biases must be very precise to measure fast tasks accurately.
+// Cost estimates must be very precise to measure fast tasks accurately.
 // So we dedicate a significant part of the total combination to them.
-const BIAS_DURATION_RATIO = 0.1
+const COST_DURATION_RATIO = 0.1

@@ -49,7 +49,7 @@ export const measureProcessGroup = async function ({
   // eslint-disable-next-line fp/no-let
   let repeat = initialRepeat
   // For some unknown reason, the time to spawn a child process is sometimes
-  // higher during bias computation than during the main process group, so
+  // higher during cost estimation than during the main process group, so
   // we don't share the `previous` array between those.
   const loadCosts = []
   // eslint-disable-next-line fp/no-let

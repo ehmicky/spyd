@@ -8,7 +8,7 @@ import { getResolution } from './resolution.js'
 // We remove it from the measures so they reflect the real task time with
 // accuracy.
 // This function estimates `measureCost` by measuring an empty task.
-// Those biases must be computed separately for each combination since they
+// Those costs must be computed separately for each combination since they
 // might vary depending on:
 //  - the task. Some runners might allow task-specific options impacting
 //    measuring. For example, the `node` runner has the `async` option.

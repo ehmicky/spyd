@@ -18,7 +18,7 @@ export const getRepeat = function ({
 
   // When computing `repeatCost`, `median` might initially be `0`
   if (repeatCost === 0 && median === 0) {
-    return repeat * FAST_LOOP_BIAS_RATE
+    return repeat * FAST_LOOP_RATE
   }
 
   const minLoopDuration = getMinLoopDuration({
@@ -29,7 +29,7 @@ export const getRepeat = function ({
   return Math.ceil(minLoopDuration / (median + repeatCost))
 }
 
-const FAST_LOOP_BIAS_RATE = 10
+const FAST_LOOP_RATE = 10
 
 // If a task duration is too close to `measureCost`, the variance will be mostly
 // due to the timestamp function itself.

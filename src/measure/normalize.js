@@ -19,7 +19,7 @@ export const normalizeMeasures = function (
   })
 }
 
-// When computing `measureCost`, there is no bias nor `repeat` to use
+// When computing `measureCost`, there is no cost nor `repeat` to use
 const isMeasureCost = function ({ measureCost, repeatCost, repeat }) {
   return measureCost === 0 && repeatCost === 0 && repeat === 1
 }
