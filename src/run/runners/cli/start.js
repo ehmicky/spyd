@@ -1,7 +1,6 @@
 import { executeMethod } from '../common/ipc.js'
 
 import { loadTasksFile } from './load/main.js'
-import { performLoop } from './measure/loops.js'
 import { measureTask } from './measure/main.js'
 
 // Communicate combination ids and titles to parent
@@ -46,8 +45,9 @@ const debug = async function ({ taskPath, taskId, inputId }) {
     taskPath,
     taskId,
     inputId,
+    dry: false,
   })
-  await performLoop({ main, before, after, variables, shell })
+  await measureTask({ main, before, after, variables, shell, maxDuration: -1 })
   return {}
 }
 
