@@ -16,7 +16,7 @@ export const parseCliFlags = function (yargs) {
   return [command, configC]
 }
 
-const DEFAULT_COMMAND = 'run'
+const DEFAULT_COMMAND = 'bench'
 
 // Remove `yargs`-specific properties, shortcuts and dash-cased
 const isUserProp = function (key, value) {

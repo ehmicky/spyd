@@ -6,8 +6,8 @@ import { getCombinationResult } from './measure/main.js'
 import { startProgress } from './progress/start.js'
 import { stopProgress } from './progress/stop.js'
 
-// Perform a new run
-export const performRun = async function (config) {
+// Perform a new benchmark
+export const performBenchmark = async function (config) {
   const { combinations, versions } = await getCombinations(config)
 
   const { progressState, progressInfo } = await startProgress(

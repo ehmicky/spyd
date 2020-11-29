@@ -31,7 +31,7 @@ export const measureProcessGroup = async function ({
 }) {
   const processGroupEnd = now() + processGroupDuration
   const eventPayload = {
-    type: 'run',
+    type: 'benchmark',
     runConfig: commandConfig,
     taskPath,
     taskId,
@@ -79,7 +79,7 @@ export const measureProcessGroup = async function ({
       cwd,
       taskId,
       inputId,
-      type: 'combinationRun',
+      type: 'combinationBench',
     })
     const childLoadCost = endLoadCost(loadCostStart, start)
 

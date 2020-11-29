@@ -6,8 +6,8 @@ This describes:
 
 ## Number of iterations
 
-_Problem_: Many other benchmarking libraries run tasks using a fixed number of
-iterations. This approach
+_Problem_: Many other benchmarking libraries execute tasks using a fixed number
+of iterations. This approach
 [has several issues](https://mathiasbynens.be/notes/javascript-benchmarking).
 
 Faster code has higher variance which means:
@@ -27,28 +27,28 @@ iterations.
 ## Processes variance
 
 _Problem_: Different processes (e.g. measuring the same tasks over time) have
-different performance profiles resulting in differences between runs. This is
-because different processes run with slightly faster or slower performance than
-others due to OS and runtime internals.
+different performance profiles resulting in differences between benchmarks. This
+is because different processes execute with slightly faster or slower
+performance than others due to OS and runtime internals.
 
-_Solution_: Runs are spread over several processes and their results are merged.
-They are run serially in order not to compete with each other, which would
-otherwise make measures slower and less precise.
+_Solution_: Benchmarks are spread over several processes and their results are
+merged. They are executed serially in order not to compete with each other,
+which would otherwise make measures slower and less precise.
 
 Processes are used instead of threads because:
 
 - time slicing might happen in the middle of a measure
-- in some languages (like Node.js), threads run in a slightly different
+- in some languages (like Node.js), threads execute in a slightly different
   environment which might be unexpected inside the task
 
 ## Runtime optimization
 
-_Problem_: Due to runtime optimization, the more a task is run, the faster is
-gets. Which means longer runs result in faster results.
+_Problem_: Due to runtime optimization, the more a task is executed, the faster
+is gets. Which means longer benchmarks result in faster results.
 
-_Solution_: The run is split into consecutive processes with the same duration.
-As a task gets faster or as a run gets longer, more processes are spawned but
-their duration remains the same.
+_Solution_: The benchmark is split into consecutive processes with the same
+duration. As a task gets faster or as a benchmark gets longer, more processes
+are spawned but their duration remains the same.
 
 ## Slow downs
 

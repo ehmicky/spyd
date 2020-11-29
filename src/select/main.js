@@ -6,7 +6,7 @@ import { validateTargets } from './validate.js'
 
 // Select combinations according to configuration properties `tasks` and
 // `inputs`.
-// For the `run` and `debug` commands.
+// For the `bench` and `debug` commands.
 export const selectCombinations = function (combinations, { tasks, inputs }) {
   const [{ combinations: combinationsA }] = selectPartialResults(
     [{ combinations }],
@@ -16,7 +16,7 @@ export const selectCombinations = function (combinations, { tasks, inputs }) {
 }
 
 // Select partialResults according to configuration properties `tasks`,
-// `inputs`, `system` and `run`. For the `show` command.
+// `inputs`, `system` and `bench`. For the `show` command.
 export const selectPartialResults = function (partialResults, config) {
   const targets = getTargets(config)
   validateTargets(targets, partialResults)

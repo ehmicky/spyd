@@ -1,7 +1,7 @@
+import { performBenchmark } from './bench.js'
 import { getConfig } from './config/main.js'
 import { performDebug } from './debug.js'
 import { report } from './report/main.js'
-import { performRun } from './run.js'
 import { addToStore } from './store/add.js'
 import { endStore } from './store/end.js'
 import { getFromStore } from './store/get.js'
@@ -10,12 +10,12 @@ import { startStore } from './store/start.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default action.
-export const run = async function (config) {
-  const configA = await getConfig('run', config)
+export const bench = async function (config) {
+  const configA = await getConfig('bench', config)
   const configB = await startStore(configA)
 
   try {
-    const partialResult = await performRun(configB)
+    const partialResult = await performBenchmark(configB)
     const { mergeId, results } = await addToStore(partialResult, configB)
     const result = await report(mergeId, results, configB)
     return result
@@ -51,7 +51,7 @@ export const remove = async function (config) {
   }
 }
 
-// Run tasks in debug mode
+// Execute tasks without benchmarking them
 export const debug = async function (config) {
   const configA = await getConfig('debug', config)
 

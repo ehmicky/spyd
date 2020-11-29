@@ -48,7 +48,7 @@ const updateProgress = async function ({
   )
 }
 
-// Percentage left of the whole run
+// Percentage left of the whole benchmark
 const getPercentage = function ({
   index,
   combinationTimeLeft,

@@ -16,7 +16,7 @@ const getCombination = function ({ taskId, taskTitle, inputId, inputTitle }) {
 }
 
 // Compute measures
-const run = async function ({
+const benchmark = async function ({
   taskPath,
   taskId,
   inputId,
@@ -97,4 +97,4 @@ const applyDryFunc = function (value) {
 
 const DRY_FUNC = 'true'
 
-executeMethod({ load, run, debug })
+executeMethod({ load, benchmark, debug })

@@ -69,5 +69,5 @@ const getExecaError = function (shortMessage) {
 }
 
 const EXECA_MESSAGE_START = 'Command '
-const MESSAGE_PREFIX = 'Run '
+const MESSAGE_PREFIX = 'Benchmark '
 const EXECA_MESSAGE_END = /: .*/u

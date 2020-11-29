@@ -1,6 +1,6 @@
 import { executeMethod } from '../common/ipc.js'
 
-import { debugRun } from './debug.js'
+import { debugBenchmark } from './debug.js'
 import { loadTasksFile } from './load/main.js'
 import { measureTask } from './measure/main.js'
 
@@ -16,7 +16,7 @@ const getCombination = function ({ taskId, taskTitle, inputTitle, inputId }) {
 }
 
 // Compute measures
-const run = async function ({
+const benchmark = async function ({
   runConfig,
   taskPath,
   taskId,
@@ -50,7 +50,7 @@ const debug = async function ({ runConfig, taskPath, taskId, inputId }) {
     taskId,
     inputId,
   })
-  await debugRun({ main, before, after })
+  await debugBenchmark({ main, before, after })
   return {}
 }
 
@@ -86,4 +86,4 @@ const applyDryFunc = function (value) {
   return function noop() {}
 }
 
-executeMethod({ load, run, debug })
+executeMethod({ load, benchmark, debug })

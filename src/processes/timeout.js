@@ -4,7 +4,7 @@
 // The `debug` action does not use any timeout
 // Timeouts are only meant to stop tasks that are longer than the
 // `processGroupDuration`. In that case, measuring is just impossible.
-// Failing the run is disruptive and should only be done when there is no
+// Failing the benchmark is disruptive and should only be done when there is no
 // possible fallback. For example, if a task was executed several times but
 // becomes much slower in the middle of the combination (while still being
 // slower than the `duration`), we should not fail. Instead, the task

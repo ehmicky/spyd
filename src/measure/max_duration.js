@@ -15,7 +15,7 @@ import { medianToLoopDuration, medianToLoopIteration } from './normalize.js'
 // This means:
 //   - Fast tasks are most likely duration-limited by `2.`. Since `loadCost`
 //     mostly depends on the hardware speed, how long to load a given runner and
-//     how long to load tasks files, this is rather stable between runs.
+//     how long to load tasks files, this is rather stable between benchmarks.
 //     A multiple of `loadCost` is then used as the target duration for
 //     each process.
 //   - Slow tasks are most likely duration-limited by `3.`. Their target
@@ -25,14 +25,14 @@ import { medianToLoopDuration, medianToLoopIteration } from './normalize.js'
 //     transition.
 // The above algorithm has several goals:
 //   - Ensures processes to roughly use the same `maxDuration` both inside a
-//     specific run and between runs with different `duration` configuration
-//     property.
+//     specific benchmark and between benchmarks with different `duration`
+//     configuration property.
 //     Processes with different `maxDuration` might give different measures to
 //     the runtime having optimized hot paths for longer durations.
 //   - Ensures processes are short enough to provide with frequent realtime
 //     reporting
 //   - Ensures many processes are spawned to decrease the overall variance,
-//     while still making sure enough loops are run inside each of those
+//     while still making sure enough loops are measured inside each of those
 //     processes
 // We pass a single `maxDuration` parameters for runners to know when to stop
 // measuring

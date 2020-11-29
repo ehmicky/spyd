@@ -1,4 +1,4 @@
-// Configuration shared by commands that use stores: `run`, `show`, `remove`
+// Configuration shared by commands that use stores: `bench`, `show`, `remove`
 export const STORE_CONFIG = {
   store: {
     describe: `Module to save results.

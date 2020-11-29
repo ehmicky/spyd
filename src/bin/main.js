@@ -10,7 +10,7 @@ import * as commands from '../main.js'
 import { parseCliFlags } from './parse.js'
 import { defineCli } from './top.js'
 
-// Parse CLI arguments then run tasks
+// Parse CLI arguments then execute commands
 const runCli = async function () {
   try {
     await checkUpdate()

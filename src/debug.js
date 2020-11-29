@@ -6,17 +6,17 @@ import { titleColor } from './report/utils/colors.js'
 import { SEPARATOR_SIGN } from './report/utils/separator.js'
 import { addTitles } from './report/utils/title/main.js'
 
-// Run tasks in debug mode
+// Execute tasks without benchmarking them
 export const performDebug = async function (config) {
   const { combinations } = await getCombinations({ ...config, debug: true })
   const combinationsA = addTitles(combinations)
 
   await pMapSeries(combinationsA, (combination) =>
-    runCombination({ ...combination, config }),
+    execCombination({ ...combination, config }),
   )
 }
 
-const runCombination = async function ({
+const execCombination = async function ({
   row,
   taskPath,
   taskId,

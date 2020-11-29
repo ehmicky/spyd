@@ -1,5 +1,5 @@
-// Configuration specific to `run`
-export const RUN_CONFIG = {
+// Configuration specific to `bench`
+export const BENCH_CONFIG = {
   duration: {
     alias: 'd',
     number: true,
@@ -11,7 +11,7 @@ Default: 10`,
     alias: 'g',
     string: true,
     describe: `Append the current results to the previous one.
-Used to create a single result in several incremental runs.
+Used to create a single result in several incremental benchmarks.
 Can also be an id. Results within the same id are reported together.
 Default: random UUID`,
   },

@@ -10,7 +10,7 @@ export const getTimeLeft = function ({ index, timeLeft, total, duration }) {
 const NANOSECS_TO_SECS = 1e9
 
 // We use the `totalTime` (instead of remaining time) to decide whether to show
-// h/m/s, so that it is constant through the run
+// h/m/s, so that it is constant through the benchmark
 const addTimeUnits = function (secs, totalTime) {
   if (totalTime < SECS_TO_MINUTES) {
     return `${padTime(secs)}s`

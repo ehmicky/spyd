@@ -50,13 +50,13 @@ const getSpawnOptions = function ({
 //  - stdout/stderr: they are likely be used by the task itself
 //  - `child_process` `ipc`: would not work across programming languages
 // stdout/stderr are:
-//  - ignored in `run`
+//  - ignored in `bench`
 //  - printed in `debug`
-//  - not printed during load for both `run`/`debug`, unless an error happened
+//  - not printed during load for both `bench`/`debug`, unless an error happened
 const STDIO = {
-  loadRun: ['ignore', 'pipe', 'pipe'],
+  loadBench: ['ignore', 'pipe', 'pipe'],
   loadDebug: ['ignore', 'pipe', 'pipe'],
-  combinationRun: ['ignore', 'ignore', 'ignore'],
+  combinationBench: ['ignore', 'ignore', 'ignore'],
   combinationDebug: ['ignore', 'inherit', 'inherit'],
 }
 const MAX_BUFFER = 1e8

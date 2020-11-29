@@ -1,5 +1,5 @@
 // Configuration shared by commands that can select combinations:
-// `run`, `debug`, `show`
+// `bench`, `debug`, `show`
 export const SELECT_CONFIG = {
   tasks: {
     alias: 't',

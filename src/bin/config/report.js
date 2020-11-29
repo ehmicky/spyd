@@ -1,4 +1,4 @@
-// Configuration shared by reporting commands: `run`, `show`
+// Configuration shared by reporting commands: `bench`, `show`
 export const REPORT_CONFIG = {
   report: {
     describe: `Module to report the result.
