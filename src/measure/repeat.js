@@ -27,14 +27,31 @@ export const getRepeat = function ({
   }
 
   const minResolutionDuration = resolution * MIN_RESOLUTION_PRECISION
-  const minMeasureCostDuration =
-    Math.max(measureCost - repeatCost, 0) * MIN_MEASURE_COST
+  const minMeasureCostDuration = getMeasureCostDuration({
+    sampleType,
+    measureCost,
+    median,
+    repeatCost,
+  })
   const minCostRepeat =
     Math.max(minResolutionDuration, minMeasureCostDuration) / median
   const maxTotalDuration = processGroupDuration * MAX_TOTAL_DURATION_RATIO
   const minDurationRepeat =
     (maxTotalDuration - measureCost + repeatCost) / (median + repeatCost)
   return Math.ceil(Math.min(minCostRepeat, minDurationRepeat))
+}
+
+// Ensure `repeat` is high enough to decrease the impact of `measureCost`.
+// We need to use the real measure cost, i.e. `measureCost - repeatCost`.
+// When estimating `repeatCost`, this is `measureCost - median` instead.
+const getMeasureCostDuration = function ({
+  sampleType,
+  measureCost,
+  median,
+  repeatCost,
+}) {
+  const realRepeatCost = sampleType === 'repeatCost' ? median : repeatCost
+  return Math.max(measureCost - realRepeatCost, 0) * MIN_MEASURE_COST
 }
 
 // `median` can be 0 when the task is too close to `repeatCost`,
