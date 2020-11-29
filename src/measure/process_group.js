@@ -9,6 +9,7 @@ import { getMaxDuration } from './max_duration.js'
 import { getMedian } from './median.js'
 import { loopDurationsToMedians, medianToLoopDuration } from './normalize.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
+import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 
 // Measure a task, measureCost or repeatCost using a group of processes
 // eslint-disable-next-line max-statements, max-lines-per-function
@@ -47,6 +48,8 @@ export const measureProcessGroup = async function ({
   let median = 0
   // eslint-disable-next-line fp/no-let
   let repeat = 1
+  // eslint-disable-next-line fp/no-let
+  let repeatInit = true
   // For some unknown reason, the time to spawn a child process is sometimes
   // higher during cost estimation than during the main process group, so
   // we don't share the `previous` array between those.
@@ -80,6 +83,14 @@ export const measureProcessGroup = async function ({
     })
     const childLoadCost = endLoadCost(loadCostStart, start)
 
+    // eslint-disable-next-line fp/no-mutation
+    loops = repeatInitReset({
+      repeatInit,
+      processMeasures,
+      processMedians,
+      loops,
+    })
+
     loopDurationsToMedians(childMeasures, {
       measureCost,
       repeatCost,
@@ -96,8 +107,7 @@ export const measureProcessGroup = async function ({
     loadCost = getLoadCost(childLoadCost, loadCosts)
     // eslint-disable-next-line fp/no-mutation
     median = getMedian(childMeasures, processMedians)
-    // eslint-disable-next-line fp/no-mutation
-    repeat = getRepeat({
+    const newRepeat = getRepeat({
       repeat,
       median,
       sampleType,
@@ -105,6 +115,10 @@ export const measureProcessGroup = async function ({
       measureCost,
       resolution,
     })
+    // eslint-disable-next-line fp/no-mutation
+    repeatInit = getRepeatInit({ repeatInit, repeat, newRepeat })
+    // eslint-disable-next-line fp/no-mutation
+    repeat = newRepeat
   } while (
     !shouldStopProcessGroup({
       loadCost,

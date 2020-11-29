@@ -5,33 +5,11 @@ import { sortNumbers } from './sort.js'
 //   - OS or runtime background periodic processes (such as garbage collection)
 //   - The first measures of a specific task in a given process are slow because
 //     the runtimes did not optimize it yet
-//   - The first processes have not reached the final stabilized `repeat` and
-//     `maxDuration`, making them usually slower
 export const removeOutliers = function (processMeasures) {
-  const processMeasuresA = removeOutlierProcesses(processMeasures)
-  const { measures, outliersMax } = removeOutlierMeasures(processMeasuresA)
-  const times = getTimes(processMeasuresA, outliersMax)
-  const processes = processMeasuresA.length
+  const { measures, outliersMax } = removeOutlierMeasures(processMeasures)
+  const times = getTimes(processMeasures, outliersMax)
+  const processes = processMeasures.length
   return { measures, times, processes }
-}
-
-// Remove initial `repeat` callibration
-const removeOutlierProcesses = function (processMeasures) {
-  const repeatCallbrationIndex = processMeasures.findIndex(isRepeatCallibration)
-
-  if (repeatCallbrationIndex === -1) {
-    return processMeasures
-  }
-
-  return processMeasures.slice(repeatCallbrationIndex + 1)
-}
-
-const isRepeatCallibration = function ({ repeat }, index, processMeasures) {
-  return (
-    repeat === 1 &&
-    index !== processMeasures.length - 1 &&
-    processMeasures[index + 1].repeat !== 1
-  )
 }
 
 const removeOutlierMeasures = function (processMeasures) {
