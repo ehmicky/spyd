@@ -15,21 +15,30 @@ const getCombination = function ({ taskId, taskTitle, inputId, inputTitle }) {
 }
 
 // Compute measures
-const run = async function ({ taskPath, taskId, inputId, duration }) {
+const run = async function ({
+  taskPath,
+  taskId,
+  inputId,
+  maxDuration,
+  repeat,
+  dry,
+}) {
   const { main, before, after, variables, shell } = await getTask({
     taskPath,
     taskId,
     inputId,
+    dry,
   })
-  const { measures, times } = await measureTask({
+  const { measures, start } = await measureTask({
     main,
     before,
     after,
     variables,
     shell,
-    duration,
+    repeat,
+    maxDuration,
   })
-  return { measures, times }
+  return { measures, start }
 }
 
 // Execute a combination once without measuring it
@@ -49,6 +58,7 @@ const getTask = async function ({
   taskId,
   inputId,
   debug: debugOpt,
+  dry,
 }) {
   const { combinations, shell } = await loadTasksFile(taskPath, debugOpt)
 
@@ -56,7 +66,26 @@ const getTask = async function ({
     (combination) =>
       combination.taskId === taskId && combination.inputId === inputId,
   )
-  return { main, before, after, variables, shell }
+  const [mainA, beforeA, afterA] = applyDry([main, before, after], dry)
+  return { main: mainA, before: beforeA, after: afterA, variables, shell }
 }
+
+const applyDry = function (funcs, dry) {
+  if (!dry) {
+    return funcs
+  }
+
+  return funcs.map(applyDryFunc)
+}
+
+const applyDryFunc = function (value) {
+  if (value === undefined) {
+    return
+  }
+
+  return DRY_FUNC
+}
+
+const DRY_FUNC = 'true'
 
 executeMethod({ load, run, debug })
