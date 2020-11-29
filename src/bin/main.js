@@ -34,7 +34,6 @@ const handleCliError = function (error) {
   const { exitCode, printStack } = getErrorProps(errorA)
   const errorMessage = printStack ? errorA.stack : errorA.message
   console.error(errorMessage)
-  // eslint-disable-next-line fp/no-mutation
   process.exitCode = exitCode
 }
 
