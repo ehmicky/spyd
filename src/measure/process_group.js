@@ -13,6 +13,7 @@ import { getRepeat } from './repeat.js'
 // Measure a task, measureCost or repeatCost using a group of processes
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const measureProcessGroup = async function ({
+  sampleType,
   taskPath,
   taskId,
   inputId,
@@ -95,6 +96,7 @@ export const measureProcessGroup = async function ({
     repeat = getRepeat({
       repeat,
       median,
+      sampleType,
       repeatCost,
       measureCost,
       resolution,

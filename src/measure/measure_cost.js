@@ -27,6 +27,7 @@ export const getMeasureCost = async function ({
   loadDuration,
 }) {
   const { measures: measureCostMeasures } = await measureProcessGroup({
+    sampleType: 'measureCost',
     taskPath,
     taskId,
     inputId,

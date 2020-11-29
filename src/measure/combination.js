@@ -50,6 +50,7 @@ export const measureCombination = async function ({
     resolution,
   })
   const { measures, times, processes } = await measureProcessGroup({
+    sampleType: 'measureTask',
     taskPath,
     taskId,
     inputId,

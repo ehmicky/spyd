@@ -6,20 +6,14 @@
 export const getRepeat = function ({
   repeat,
   median,
+  sampleType,
   repeatCost,
   measureCost,
   resolution,
   processGroupDuration,
 }) {
-  const minLoopDuration = getMinLoopDuration({
-    measureCost,
-    resolution,
-    processGroupDuration,
-  })
-
-  // When computing `measureCost`
-  if (minLoopDuration === 0) {
-    return repeat
+  if (sampleType === 'measureCost') {
+    return 1
   }
 
   // When computing `repeatCost`, `median` might initially be `0`
@@ -27,6 +21,11 @@ export const getRepeat = function ({
     return repeat * FAST_LOOP_BIAS_RATE
   }
 
+  const minLoopDuration = getMinLoopDuration({
+    measureCost,
+    resolution,
+    processGroupDuration,
+  })
   return Math.ceil(minLoopDuration / (median + repeatCost))
 }
 

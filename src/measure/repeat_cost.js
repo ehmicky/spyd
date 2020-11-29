@@ -32,6 +32,7 @@ export const getRepeatCost = async function ({
     processGroupDuration,
   })
   const { measures } = await measureProcessGroup({
+    sampleType: 'repeatCost',
     taskPath,
     taskId,
     inputId,
