@@ -25,7 +25,7 @@ export const getMeasureCost = async function ({
   cwd,
   loadDuration,
 }) {
-  const { measures } = await measureProcessGroup({
+  const { measures: measureCostMeasures } = await measureProcessGroup({
     taskPath,
     taskId,
     inputId,
@@ -41,6 +41,6 @@ export const getMeasureCost = async function ({
     initialRepeat: 1,
     dry: true,
   })
-  const median = getSortedMedian(measures)
-  return median
+  const measureCost = getSortedMedian(measureCostMeasures)
+  return { measureCost, measureCostMeasures }
 }

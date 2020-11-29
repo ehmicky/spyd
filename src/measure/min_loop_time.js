@@ -1,4 +1,4 @@
-import timeResolution from 'time-resolution'
+import { getTimeResolution } from './resolution.js'
 
 // If a task duration is too close to `measureCost`, the variance will be mostly
 // due to the timestamp function itself.
@@ -8,22 +8,30 @@ import timeResolution from 'time-resolution'
 // We then perform an arithmetic mean.
 // `minLoopTime` is the minimum time under which we consider a task should do
 // this.
-export const getMinLoopTime = function (measureCost, duration) {
-  const minPrecisionTime = TIME_RESOLUTION * MIN_PRECISION
+export const getMinLoopTime = function ({
+  measureCost,
+  measureCostMeasures,
+  duration,
+}) {
+  const minResolutionTime = getMinResolutionTime(measureCostMeasures)
   const minMeasureCostTime = measureCost * MIN_MEASURE_COST
   const maxTotalDuration = duration * MAX_TOTAL_DURATION_RATIO
   return Math.min(
-    Math.max(minPrecisionTime, minMeasureCostTime),
+    Math.max(minResolutionTime, minMeasureCostTime),
     maxTotalDuration,
   )
 }
 
-const TIME_RESOLUTION = timeResolution()
+const getMinResolutionTime = function (measureCostMeasures) {
+  const timeResolution = getTimeResolution(measureCostMeasures)
+  return timeResolution * MIN_RESOLUTION_PRECISION
+}
+
 // How many times slower the task loop must be compared to the time resolution.
 // A lower value makes measurements closer to the time resolution, making them
 // less precise.
 // A higher value increases the task loop time, creating fewer loops.
-const MIN_PRECISION = 1e2
+const MIN_RESOLUTION_PRECISION = 1e2
 // How many times slower the task loop must be compared to `measureCost`.
 // A lower value decreases precision as the variance of `measureCost`
 // contributes more to the overall variance.
