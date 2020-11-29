@@ -50,7 +50,15 @@ const debug = async function ({ taskPath, taskId, inputId }) {
     inputId,
     debug: true,
   })
-  await performLoop({ main, before, after, variables, shell, debug: true })
+  await performLoop({
+    main,
+    before,
+    after,
+    variables,
+    shell,
+    repeat: 1,
+    debug: true,
+  })
   return {}
 }
 
