@@ -1,6 +1,5 @@
 import { executeMethod } from '../common/ipc.js'
 
-import { debugBenchmark } from './debug.js'
 import { loadTasksFile } from './load/main.js'
 import { measureTask } from './measure/main.js'
 
@@ -44,13 +43,21 @@ const benchmark = async function ({
 }
 
 const debug = async function ({ runConfig, taskPath, taskId, inputId }) {
-  const { main, before, after } = await getTask({
+  const { main, before, after, async } = await getTask({
     runConfig,
     taskPath,
     taskId,
     inputId,
+    dry: false,
   })
-  await debugBenchmark({ main, before, after })
+  await measureTask({
+    main,
+    before,
+    after,
+    async,
+    repeat: 1,
+    maxDuration: -1,
+  })
   return {}
 }
 
