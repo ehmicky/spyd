@@ -9,6 +9,8 @@ const pReadFile = promisify(readFile)
 
 // Create a JSON file for IPC.
 // We use a single JSON file because parsing/serializing is not CPU intensive.
+// It is actually faster than using a plain newline-separated list because JSON
+// parsing/serializing is optimized in V8.
 // Streaming measures would provide with better progress reporting, but would
 // be harder to implement for reporters and force them to stop measuring
 // at regular intervals, which might increase variance.
