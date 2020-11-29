@@ -19,7 +19,7 @@ export const getIpcFile = async function () {
   return { ipcFile: path, removeIpcFile: cleanup }
 }
 
-const IPC_FILENAME = 'spyd-XXXXXX.json'
+const IPC_FILENAME = 'spyd-measures-XXXXXX.json'
 
 // Retrieve processMeasures
 export const getIpcReturn = async function ({ ipcFile, failed }) {
