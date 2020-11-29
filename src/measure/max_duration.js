@@ -39,6 +39,8 @@ import { medianToLoopDuration, medianToLoopIteration } from './normalize.js'
 //     simple for runners.
 //   - This means `targetTimes` needs to be estimated, as opposed to simply
 //     pass a target integer to runners as parameter.
+// We purposely avoid using `processGroupDuration` (except for
+// `measureDurationLeft`) so that increasing `duration` does not change measures
 export const getMaxDuration = function ({
   processGroupEnd,
   loadCost,

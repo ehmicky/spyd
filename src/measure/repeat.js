@@ -7,6 +7,8 @@
 //  - `measureCost`
 //  - low resolutions
 // It repeats the task without the `measureCost` and perform an arithmetic mean.
+// We purposely avoid using `processGroupDuration` (except for
+// `measureDurationLeft`) so that increasing `duration` does not change measures
 export const getRepeat = function ({
   repeat,
   median,
