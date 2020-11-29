@@ -42,14 +42,12 @@ import { denormalizeMeasure, denormalizeCallMeasure } from './normalize.js'
 export const getMaxDuration = function ({
   processGroupEnd,
   loadCost,
-  processGroupDuration,
   measureCost,
   repeatCost,
   repeat,
   median,
 }) {
   const measureDurationLeft = getMeasureDurationLeft(processGroupEnd, loadCost)
-  const timeoutMax = getTimeoutMax(processGroupDuration, loadCost)
   const loadCostMin = getLoadCostMin(loadCost)
   const targetTimesMin = getTargetTimesMin({
     median,
@@ -59,11 +57,8 @@ export const getMaxDuration = function ({
   })
   const loopTime = getLoopTime({ median, measureCost, repeatCost, repeat })
   return Math.max(
-    Math.min(
-      measureDurationLeft,
-      timeoutMax,
-      Math.max(loadCostMin, targetTimesMin),
-    ) - loopTime,
+    Math.min(measureDurationLeft, Math.max(loadCostMin, targetTimesMin)) -
+      loopTime,
     1,
   )
 }
@@ -72,14 +67,6 @@ export const getMaxDuration = function ({
 const getMeasureDurationLeft = function (processGroupEnd, loadCost) {
   return Math.max(processGroupEnd - now() - loadCost, 0)
 }
-
-// Ensure the `maxDuration` does not go over the process `timeout` if possible
-const getTimeoutMax = function (processGroupDuration, loadCost) {
-  return Math.max((processGroupDuration - loadCost) * MEASURE_DURATION_RATIO, 0)
-}
-
-// The measures are not prefectly precise, so we allow some additional room
-const MEASURE_DURATION_RATIO = 0.5
 
 // Ensure that processes are executed long enough (by using `maxDuration`) so
 // that they get enough duration to measure the task, as opposed to spawning
