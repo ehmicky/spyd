@@ -65,7 +65,7 @@
     "sort-on": "^4.1.0",
     "string-width": "^4.2.0",
     "strip-ansi": "^6.0.0",
-    "time-resolution": "^0.2.0",
+    "time-resolution": "^0.3.1",
     "tmp-promise": "^3.0.2",
     "update-notifier": "^5.0.1",
     "uuid": "^8.3.1",
