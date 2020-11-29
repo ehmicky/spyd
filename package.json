@@ -38,7 +38,7 @@
     "cli-cursor": "^3.1.0",
     "core-js": "^3.6.5",
     "detect-newline": "^3.1.0",
-    "dot-prop": "^6.0.0",
+    "dot-prop": "^6.0.1",
     "env-ci": "^5.0.2",
     "execa": "^4.1.0",
     "fast-glob": "^3.2.4",
