@@ -9,6 +9,7 @@ import { measureProcessGroup } from './process_group.js'
 //  - using the normal `repeat` logic (instead of forcing it to `1`)
 //  - estimates the initial `repeat` to reduce the number of processes needed
 //    to compute the optimal `repeat`
+// Runners that do not support repeats always use `repeatCost: 0`
 export const getRepeatCost = async function ({
   taskPath,
   taskId,
@@ -16,12 +17,17 @@ export const getRepeatCost = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandConfig,
+  runnerRepeats,
   processGroupDuration,
   cwd,
   loadDuration,
   measureCost,
   resolution,
 }) {
+  if (!runnerRepeats) {
+    return 0
+  }
+
   const { measures } = await measureProcessGroup({
     sampleType: 'repeatCost',
     taskPath,
@@ -30,6 +36,7 @@ export const getRepeatCost = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandConfig,
+    runnerRepeats: true,
     processGroupDuration,
     cwd,
     loadDuration,

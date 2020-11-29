@@ -16,10 +16,12 @@ export const getRepeat = function ({
   repeatCost,
   measureCost,
   resolution,
+  runnerRepeats,
 }) {
+  // If the runner does not supports `repeat`, it is always set to `1`
   // We should not use a repeat loop when estimating measureCost since
   // measureCost only happens once per repeat loop
-  if (sampleType === 'measureCost') {
+  if (sampleType === 'measureCost' || !runnerRepeats) {
     return 1
   }
 
@@ -78,7 +80,14 @@ const MIN_MEASURE_COST = 1e2
 //    the additional `1` is the first iteration (`measureCost`)
 //  - In the parent process, we discard that first iteration as `measureCost`
 //    and use `repeat` without the additional `1`
-export const getChildRepeat = function (repeat, sampleType) {
+// If the runner does not support `repeat`, its value is:
+//  - `undefined` in the runner
+//  - always `1` in the parent process
+export const getChildRepeat = function ({ repeat, sampleType, runnerRepeats }) {
+  if (!runnerRepeats) {
+    return
+  }
+
   if (sampleType !== 'repeatCost') {
     return repeat
   }

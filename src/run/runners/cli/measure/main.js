@@ -13,7 +13,6 @@ export const measureTask = async function ({
   after,
   variables,
   shell,
-  repeat,
   maxDuration,
 }) {
   const measures = []
@@ -25,7 +24,6 @@ export const measureTask = async function ({
     after,
     variables,
     shell,
-    repeat,
     measureEnd,
     measures,
   })

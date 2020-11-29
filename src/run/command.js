@@ -4,6 +4,7 @@ import { getCommandDescription } from './description.js'
 export const getCommands = function ({
   runnerId,
   runnerTitle,
+  runnerRepeats,
   runConfig,
   commands,
 }) {
@@ -12,6 +13,7 @@ export const getCommands = function ({
       getCommand({
         runnerId,
         runnerTitle,
+        runnerRepeats,
         runConfig,
         id,
         title,
@@ -26,6 +28,7 @@ export const getCommands = function ({
 const getCommand = async function ({
   runnerId,
   runnerTitle,
+  runnerRepeats,
   runConfig,
   id,
   title,
@@ -49,5 +52,6 @@ const getCommand = async function ({
     commandSpawn: spawn,
     commandSpawnOptions: spawnOptions,
     commandConfig: runConfig,
+    runnerRepeats,
   }
 }

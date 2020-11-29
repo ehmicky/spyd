@@ -21,7 +21,6 @@ const benchmark = async function ({
   taskId,
   inputId,
   maxDuration,
-  repeat,
   dry,
 }) {
   const { main, before, after, variables, shell } = await getTask({
@@ -36,7 +35,6 @@ const benchmark = async function ({
     after,
     variables,
     shell,
-    repeat,
     maxDuration,
   })
   return { measures, start }
@@ -56,7 +54,6 @@ const debug = async function ({ taskPath, taskId, inputId }) {
     after,
     variables,
     shell,
-    repeat: 1,
     debug: true,
   })
   return {}

@@ -10,4 +10,5 @@ export const cli = {
   extensions: ['yml', 'yaml'],
   commands,
   system: {},
+  repeat: false,
 }

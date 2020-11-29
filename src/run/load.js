@@ -15,6 +15,7 @@ export const loadRunners = async function (runners, taskPaths) {
 const loadRunner = async function ({
   id: runnerId,
   title: runnerTitle,
+  repeat: runnerRepeats,
   config: runConfig,
   extensions,
   commands: retrieveCommands,
@@ -23,6 +24,7 @@ const loadRunner = async function ({
   const commandsA = await getCommands({
     runnerId,
     runnerTitle,
+    runnerRepeats,
     runConfig,
     commands,
   })

@@ -55,6 +55,7 @@ const normalizeCombination = function (
     commandSpawn,
     commandSpawnOptions,
     commandConfig,
+    runnerRepeats,
   },
   { taskPath, system: { id: systemId, title: systemTitle }, loadDuration },
 ) {
@@ -75,6 +76,7 @@ const normalizeCombination = function (
     commandSpawn,
     commandSpawnOptions,
     commandConfig,
+    runnerRepeats,
     systemId,
     systemTitle,
     loadDuration,

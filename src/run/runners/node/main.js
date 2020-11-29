@@ -7,4 +7,5 @@ export const node = {
   extensions: ['js', 'ts', 'jsx', 'tsx', 'es6', 'mjs'],
   commands,
   system,
+  repeat: true,
 }

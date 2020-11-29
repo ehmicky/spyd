@@ -21,6 +21,7 @@ export const measureProcessGroup = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandConfig,
+  runnerRepeats,
   processGroupDuration,
   cwd,
   loadDuration,
@@ -48,8 +49,9 @@ export const measureProcessGroup = async function ({
   let median = 0
   // eslint-disable-next-line fp/no-let
   let repeat = 1
+  // If the runner does not support `repeats`, `repeatInit` is always `false`
   // eslint-disable-next-line fp/no-let
-  let repeatInit = true
+  let repeatInit = runnerRepeats
   // For some unknown reason, the time to spawn a child process is sometimes
   // higher during cost estimation than during the main process group, so
   // we don't share the `previous` array between those.
@@ -67,7 +69,7 @@ export const measureProcessGroup = async function ({
       repeat,
       median,
     })
-    const childRepeat = getChildRepeat(repeat, sampleType)
+    const childRepeat = getChildRepeat({ repeat, sampleType, runnerRepeats })
 
     const loadCostStart = startLoadCost()
     // eslint-disable-next-line no-await-in-loop
@@ -114,6 +116,7 @@ export const measureProcessGroup = async function ({
       repeatCost,
       measureCost,
       resolution,
+      runnerRepeats,
     })
     // eslint-disable-next-line fp/no-mutation
     repeatInit = getRepeatInit({ repeatInit, repeat, newRepeat })

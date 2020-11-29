@@ -1,7 +1,8 @@
 import now from 'precise-now'
 
+import { spawnNoOutput } from '../spawn.js'
+
 import { performBefore, performAfter } from './before_after.js'
-import { getDuration } from './duration.js'
 
 export const performLoops = async function ({
   main,
@@ -9,17 +10,13 @@ export const performLoops = async function ({
   after,
   variables,
   shell,
-  repeat,
   measureEnd,
   measures,
 }) {
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line fp/no-mutating-methods
-    measures.push(
-      // eslint-disable-next-line no-await-in-loop
-      await performLoop({ main, before, after, variables, shell, repeat }),
-    )
+    // eslint-disable-next-line no-await-in-loop, fp/no-mutating-methods
+    measures.push(await performLoop({ main, before, after, variables, shell }))
   } while (!shouldStopMeasuring(measureEnd))
 }
 
@@ -29,28 +26,25 @@ export const performLoop = async function ({
   after,
   variables,
   shell,
-  repeat,
   debug,
 }) {
-  const beforeArgs = await performBefore({
-    before,
-    variables,
-    shell,
-    debug,
-    repeat,
-  })
+  const variablesA = await performBefore({ before, variables, shell, debug })
   const measure = await getDuration({
     main,
-    variables,
+    variables: variablesA,
     shell,
     debug,
-    repeat,
-    beforeArgs,
   })
-  await performAfter({ after, variables, shell, debug, repeat, beforeArgs })
+  await performAfter({ after, variables: variablesA, shell, debug })
   return measure
 }
 
 const shouldStopMeasuring = function (measureEnd) {
   return now() >= measureEnd
+}
+
+const getDuration = async function ({ main, variables, shell, debug }) {
+  const start = now()
+  await spawnNoOutput(main, 'Main', { variables, shell, debug })
+  return now() - start
 }

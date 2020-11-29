@@ -7,26 +7,17 @@ export const performBefore = async function ({
   variables,
   shell,
   debug,
-  repeat,
 }) {
   if (before === undefined) {
-    return
+    return variables
   }
 
-  const beforeArgs = []
-
-  // Each `before` is executed serially to prevent hitting OS resources limits
-  // (such as max number of open files)
-  // eslint-disable-next-line fp/no-loops, fp/no-mutation, no-plusplus, no-param-reassign
-  while (repeat--) {
-    // eslint-disable-next-line fp/no-mutating-methods
-    beforeArgs.unshift(
-      // eslint-disable-next-line no-await-in-loop
-      await spawnOutput(before, 'Before', { variables, shell, debug }),
-    )
-  }
-
-  return beforeArgs
+  const beforeVariable = await spawnOutput(before, 'Before', {
+    variables,
+    shell,
+    debug,
+  })
+  return { ...variables, before: beforeVariable }
 }
 
 // Task `after`. Performed outside measurements.
@@ -35,20 +26,10 @@ export const performAfter = async function ({
   variables,
   shell,
   debug,
-  repeat,
-  beforeArgs = [],
 }) {
   if (after === undefined) {
     return
   }
 
-  // eslint-disable-next-line fp/no-loops, fp/no-mutation, no-plusplus, no-param-reassign
-  while (repeat--) {
-    // eslint-disable-next-line no-await-in-loop
-    await spawnNoOutput(after, 'After', {
-      variables: { ...variables, before: beforeArgs[repeat] },
-      shell,
-      debug,
-    })
-  }
+  await spawnNoOutput(after, 'After', { variables, shell, debug })
 }

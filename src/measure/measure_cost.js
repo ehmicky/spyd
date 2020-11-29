@@ -23,6 +23,7 @@ export const getMeasureCost = async function ({
   commandSpawn,
   commandSpawnOptions,
   commandConfig,
+  runnerRepeats,
   processGroupDuration,
   cwd,
   loadDuration,
@@ -35,6 +36,8 @@ export const getMeasureCost = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandConfig,
+    // TODO: set to `false`
+    runnerRepeats,
     processGroupDuration,
     cwd,
     loadDuration,
