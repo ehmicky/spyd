@@ -1,7 +1,6 @@
 import { getSortedMedian } from '../stats/median.js'
 
 import { measureProcessGroup } from './process_group.js'
-import { getRepeat } from './repeat.js'
 
 // Like `measureCost` but for the time taken to measure an empty task inside a
 // `repeat` loop.
@@ -23,14 +22,6 @@ export const getRepeatCost = async function ({
   measureCost,
   resolution,
 }) {
-  const initialRepeat = getRepeat({
-    repeat: 1,
-    median: measureCost,
-    repeatCost: 0,
-    measureCost,
-    resolution,
-    processGroupDuration,
-  })
   const { measures } = await measureProcessGroup({
     sampleType: 'repeatCost',
     taskPath,
@@ -45,7 +36,7 @@ export const getRepeatCost = async function ({
     measureCost,
     repeatCost: 0,
     resolution,
-    initialRepeat,
+    initialRepeat: 1,
     dry: true,
   })
   const median = getSortedMedian(measures)

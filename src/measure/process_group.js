@@ -58,7 +58,6 @@ export const measureProcessGroup = async function ({
   // eslint-disable-next-line fp/no-loops
   do {
     const maxDuration = getMaxDuration({
-      sampleType,
       processGroupEnd,
       loadCost,
       processGroupDuration,

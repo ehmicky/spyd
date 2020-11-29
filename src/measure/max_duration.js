@@ -40,7 +40,6 @@ import { denormalizeMeasure, denormalizeCallMeasure } from './normalize.js'
 //   - This means `targetTimes` needs to be estimated, as opposed to simply
 //     pass a target integer to runners as parameter.
 export const getMaxDuration = function ({
-  sampleType,
   processGroupEnd,
   loadCost,
   processGroupDuration,
@@ -57,15 +56,8 @@ export const getMaxDuration = function ({
     measureCost,
     repeatCost,
     repeat,
-    sampleType,
   })
-  const loopTime = getLoopTime({
-    median,
-    measureCost,
-    repeatCost,
-    repeat,
-    sampleType,
-  })
+  const loopTime = getLoopTime({ median, measureCost, repeatCost, repeat })
   return Math.max(
     Math.min(
       measureDurationLeft,
@@ -112,16 +104,10 @@ const getTargetTimesMin = function ({
   measureCost,
   repeatCost,
   repeat,
-  sampleType,
 }) {
   return (
     TARGET_TIMES *
-    denormalizeCallMeasure(median, {
-      measureCost,
-      repeatCost,
-      repeat,
-      sampleType,
-    })
+    denormalizeCallMeasure(median, { measureCost, repeatCost, repeat })
   )
 }
 
@@ -159,17 +145,6 @@ const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST
 // It is estimated from previous processes.
 // This ensures users are not experiencing slow downs of the progress counter
 // at the end of a combination.
-const getLoopTime = function ({
-  median,
-  measureCost,
-  repeatCost,
-  repeat,
-  sampleType,
-}) {
-  return denormalizeMeasure(median, {
-    measureCost,
-    repeatCost,
-    repeat,
-    sampleType,
-  })
+const getLoopTime = function ({ median, measureCost, repeatCost, repeat }) {
+  return denormalizeMeasure(median, { measureCost, repeatCost, repeat })
 }

@@ -7,6 +7,7 @@ export const normalizeMeasures = function (
   measures,
   { measureCost, repeatCost, repeat, sampleType },
 ) {
+  // Performance optimization since `measureCost`'s costs are 0 and repeat is 1
   if (sampleType === 'measureCost') {
     return
   }
@@ -47,12 +48,8 @@ const normalizeMeasure = function (
 // Inverse of `normalizeMeasure()`, for how long to measure one `repeat` loop
 export const denormalizeMeasure = function (
   normalizedMeasure,
-  { measureCost, repeatCost, repeat, sampleType },
+  { measureCost, repeatCost, repeat },
 ) {
-  if (sampleType === 'measureCost') {
-    return normalizedMeasure
-  }
-
   return (normalizedMeasure + repeatCost) * repeat + measureCost - repeatCost
 }
 
@@ -60,14 +57,10 @@ export const denormalizeMeasure = function (
 // `repeat` loop
 export const denormalizeCallMeasure = function (
   normalizedMeasure,
-  { measureCost, repeatCost, repeat, sampleType },
+  { measureCost, repeatCost, repeat },
 ) {
   return (
-    denormalizeMeasure(normalizedMeasure, {
-      measureCost,
-      repeatCost,
-      repeat,
-      sampleType,
-    }) / repeat
+    denormalizeMeasure(normalizedMeasure, { measureCost, repeatCost, repeat }) /
+    repeat
   )
 }
