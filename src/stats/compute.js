@@ -1,6 +1,7 @@
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
-import { getMean, getDeviation } from './methods.js'
+import { getMin, getMax, getMean, getDeviation } from './methods.js'
+import { getOutliersMax, OUTLIERS_THRESHOLD } from './outliers.js'
 import { getQuantiles } from './quantiles.js'
 
 // Retrieve statistics from results.
@@ -18,13 +19,9 @@ export const getStats = function ({
   repeatCost,
   loadCost,
 }) {
-  // `times` is the number of times `main()` was called
-  // `loops` is the number of repeat loops
-  // `repeat` is the average number of iterations inside those repeat loops
-  const loops = measures.length
-  const repeat = Math.round(times / loops)
-
   const {
+    loops,
+    repeat,
     min,
     max,
     median,
@@ -32,7 +29,7 @@ export const getStats = function ({
     histogram,
     mean,
     deviation,
-  } = computeStats(measures)
+  } = computeStats(measures, times)
 
   return {
     median,
@@ -52,18 +49,34 @@ export const getStats = function ({
   }
 }
 
-const computeStats = function (measures) {
-  const [min] = measures
-  const max = measures[measures.length - 1]
+const computeStats = function (measures, times) {
+  // `times` is the number of times `main()` was called
+  // `loops` is the number of repeat loops
+  // `repeat` is the average number of iterations inside those repeat loops
+  const loops = getOutliersMax(measures, OUTLIERS_THRESHOLD)
+  const repeat = Math.round(times / loops)
 
-  const median = getSortedMedian(measures)
-  const quantiles = getQuantiles(measures, QUANTILES_SIZE)
-  const histogram = getHistogram(measures, HISTOGRAM_SIZE)
+  const min = getMin(measures)
+  const max = getMax(measures, OUTLIERS_THRESHOLD)
 
-  const mean = getMean(measures)
-  const deviation = getDeviation(measures, mean)
+  const median = getSortedMedian(measures, OUTLIERS_THRESHOLD)
+  const quantiles = getQuantiles(measures, QUANTILES_SIZE, OUTLIERS_THRESHOLD)
+  const histogram = getHistogram(measures, HISTOGRAM_SIZE, OUTLIERS_THRESHOLD)
 
-  return { min, max, median, quantiles, histogram, mean, deviation }
+  const mean = getMean(measures, OUTLIERS_THRESHOLD)
+  const deviation = getDeviation(measures, mean, OUTLIERS_THRESHOLD)
+
+  return {
+    loops,
+    repeat,
+    min,
+    max,
+    median,
+    quantiles,
+    histogram,
+    mean,
+    deviation,
+  }
 }
 
 const QUANTILES_SIZE = 1e2

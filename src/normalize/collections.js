@@ -58,7 +58,7 @@ const normalizeCollection = function ({
   } = lastCombination
 
   const medians = combinations.map(getCombinationMedian)
-  const mean = getMean(medians)
+  const mean = getMean(medians, 1)
 
   return {
     id: collectionId,

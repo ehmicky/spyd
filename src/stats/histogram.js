@@ -1,48 +1,61 @@
+import { getOutliersMax } from './outliers.js'
+
 // Retrieve histogram of an array of floats.
 // Array must be sorted and not empty.
-export const getHistogram = function (array, bucketsNumber) {
+export const getHistogram = function (array, bucketCount, threshold) {
+  const outliersMax = getOutliersMax(array, threshold)
+
   const [min] = array
-  const max = array[array.length - 1]
-  const bucketSize = (max - min) / bucketsNumber
+  const max = array[outliersMax - 1]
+  const bucketSize = (max - min) / bucketCount
 
-  const arrayLength = array.length
-  const arrayCopy = array.slice()
-
-  return Array.from({ length: bucketsNumber }, (value, index) =>
-    getBucket({
-      index,
-      array: arrayCopy,
-      arrayLength,
-      min,
+  const bucketIndexes = Array.from({ length: bucketCount }, getBucketIndex)
+  const { buckets } = bucketIndexes.reduce(
+    addBucket.bind(undefined, {
+      array,
       bucketSize,
-      bucketsNumber,
+      bucketCount,
+      outliersMax,
+      min,
+      max,
     }),
+    { buckets: [], lastHighIndex: -1, lastHigh: min },
   )
+  return buckets
 }
 
-const getBucket = function ({
-  index,
-  array,
-  arrayLength,
-  min,
-  bucketSize,
-  bucketsNumber,
-}) {
-  const low = min + bucketSize * index
-  const high = low + bucketSize
-  const bucketCount = getBucketCount({ index, array, bucketsNumber, high })
-  const frequency = bucketCount / arrayLength
-  return [low, high, frequency]
+const getBucketIndex = function (value, index) {
+  return index
 }
 
-const getBucketCount = function ({ index, array, bucketsNumber, high }) {
-  if (index === bucketsNumber - 1) {
-    return array.length
-  }
+const addBucket = function (
+  { array, bucketSize, bucketCount, outliersMax, min, max },
+  { buckets, lastHighIndex, lastHigh },
+  bucketIndex,
+) {
+  // Avoids float precision roundoff error at the end by using `max` directly
+  const high =
+    bucketIndex + 1 === bucketCount ? max : min + (bucketIndex + 1) * bucketSize
 
-  const count = array.findIndex((number) => number >= high)
-  // Performance optimization so that `array.findIndex()` is twice faster
+  const highIndex = getHighIndex(array, high, lastHighIndex)
+  const bucketsCount = highIndex - lastHighIndex
+  const frequency = bucketsCount / outliersMax
+
+  // Directly mutate for performance
   // eslint-disable-next-line fp/no-mutating-methods
-  array.splice(0, count)
-  return count
+  buckets.push([lastHigh, high, frequency])
+
+  return { buckets, lastHighIndex: highIndex, lastHigh: high }
+}
+
+// Faster than `findIndex()` since it does not require going through the whole
+// array each time, and no `Array.slice()` is needed.
+const getHighIndex = function (array, high, lastHighIndex) {
+  // eslint-disable-next-line fp/no-loops
+  do {
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign
+    lastHighIndex += 1
+  } while (array[lastHighIndex] <= high)
+
+  return lastHighIndex - 1
 }

@@ -1,4 +1,5 @@
 import { getSortedMedian } from '../stats/median.js'
+import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
 
 import { measureProcessGroup } from './process_group.js'
 
@@ -45,6 +46,6 @@ export const getRepeatCost = async function ({
     resolution,
     dry: true,
   })
-  const median = getSortedMedian(measures)
+  const median = getSortedMedian(measures, OUTLIERS_THRESHOLD)
   return median
 }

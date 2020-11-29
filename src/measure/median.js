@@ -1,4 +1,5 @@
 import { getUnsortedMedian } from '../stats/median.js'
+import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
 
 // Retrieve an approximation of the task's median measure.
 // This is based on a median of the median measures of the previous processes.
@@ -7,10 +8,11 @@ export const getMedian = function (childMeasures, processMedians) {
   const processMedian = getUnsortedMedian(
     childMeasures,
     CHILD_MEASURES_SORT_MAX,
+    OUTLIERS_THRESHOLD,
   )
   // eslint-disable-next-line fp/no-mutating-methods
   processMedians.push(processMedian)
-  const median = getUnsortedMedian(processMedians, PROCESS_MEDIANS_SORT_MAX)
+  const median = getUnsortedMedian(processMedians, PROCESS_MEDIANS_SORT_MAX, 1)
   return median
 }
 
