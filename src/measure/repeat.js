@@ -27,7 +27,8 @@ export const getRepeat = function ({
   }
 
   const minResolutionDuration = resolution * MIN_RESOLUTION_PRECISION
-  const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
+  const minMeasureCostDuration =
+    Math.max(measureCost - repeatCost, 0) * MIN_MEASURE_COST
   const minCostRepeat =
     Math.max(minResolutionDuration, minMeasureCostDuration) / median
   const maxTotalDuration = processGroupDuration * MAX_TOTAL_DURATION_RATIO
@@ -47,6 +48,9 @@ const FAST_MEDIAN_RATE = 10
 // A higher value increases the task loop duration, creating fewer loops.
 const MIN_RESOLUTION_PRECISION = 1e2
 // How many times slower the repeated median must be compared to `measureCost`.
+// `measureCost` includes one iteration of the repeat loop, so we subtract
+// `repeatCost` to retrieve the actual time spent measuring and not iterating
+// the repeat loop.
 // A lower value decreases precision as the variance of `measureCost`
 // contributes more to the overall variance.
 // A higher value increases the task loop duration, creating fewer loops.
