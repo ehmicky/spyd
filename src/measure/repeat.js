@@ -3,6 +3,10 @@
 // functions get optimized by runtimes after they are executed several times in
 // a row ("hot paths").
 // When this happens, `repeat` needs to be computed again.
+// The repeat loop is used to minimize the impact on the measures of both:
+//  - `measureCost`
+//  - low resolutions
+// It repeats the task without the `measureCost` and perform an arithmetic mean.
 export const getRepeat = function ({
   repeat,
   median,
@@ -31,14 +35,6 @@ export const getRepeat = function ({
 
 const FAST_LOOP_RATE = 10
 
-// If a task duration is too close to `measureCost`, the variance will be mostly
-// due to the timestamp function itself.
-// Also if a task duration is too close to the minimum system resolution,
-// it will lack precision.
-// To fix this we measure the task in a loop to increase its running duration.
-// We then perform an arithmetic mean.
-// `minLoopDuration` is the minimum duration under which we consider a task
-// should do this.
 const getMinLoopDuration = function ({
   measureCost,
   resolution,
