@@ -1,5 +1,5 @@
 import { forwardChildError } from './error.js'
-import { addIpcFile, getIpcReturn } from './ipc.js'
+import { getIpcFile, getIpcReturn } from './ipc.js'
 import { spawnChild } from './spawn.js'
 
 // Execute a runner child process and retrieve its output.
@@ -52,23 +52,18 @@ const spawnFile = async function ({
   cwd,
   type,
 }) {
-  const { eventPayload: eventPayloadA, removeIpcFile } = await addIpcFile(
-    eventPayload,
-  )
+  const { ipcFile, removeIpcFile } = await getIpcFile()
 
   try {
     const { message, failed, timedOut } = await spawnChild({
       commandSpawn,
       commandSpawnOptions,
-      eventPayload: eventPayloadA,
+      eventPayload: { ...eventPayload, ipcFile },
       timeoutNs,
       cwd,
       type,
     })
-    const ipcReturn = await getIpcReturn({
-      eventPayload: eventPayloadA,
-      failed,
-    })
+    const ipcReturn = await getIpcReturn({ ipcFile, failed })
     return { message, failed, timedOut, ipcReturn }
   } finally {
     await removeIpcFile()

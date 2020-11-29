@@ -12,21 +12,15 @@ const pReadFile = promisify(readFile)
 // Streaming measures would provide with better progress reporting, but would
 // be harder to implement for reporters and force them to stop measuring
 // at regular intervals, which might increase variance.
-export const addIpcFile = async function (eventPayload) {
+export const getIpcFile = async function () {
   const { path, cleanup } = await getTmpFile({ template: IPC_FILENAME })
-  return {
-    eventPayload: { ...eventPayload, ipcFile: path },
-    removeIpcFile: cleanup,
-  }
+  return { ipcFile: path, removeIpcFile: cleanup }
 }
 
 const IPC_FILENAME = 'spyd-XXXXXX.json'
 
 // Retrieve processMeasures
-export const getIpcReturn = async function ({
-  eventPayload: { ipcFile },
-  failed,
-}) {
+export const getIpcReturn = async function ({ ipcFile, failed }) {
   try {
     const ipcReturnStr = await pReadFile(ipcFile, 'utf8')
     const ipcReturn = JSON.parse(ipcReturnStr)
