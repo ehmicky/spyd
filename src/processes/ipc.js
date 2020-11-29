@@ -11,9 +11,9 @@ const pReadFile = promisify(readFile)
 // We use a single JSON file because parsing/serializing is not CPU intensive.
 // It is actually faster than using a plain newline-separated list because JSON
 // parsing/serializing is optimized in V8.
-// Streaming measures would provide with better progress reporting, but would
-// be harder to implement for reporters and force them to stop measuring
-// at regular intervals, which might increase variance.
+// Streaming measures would create CPU and I/O work in the runner which would
+// compete with measuring. Therefore it should not be done as it would impact
+// both accuracy and precision.
 export const getIpcFile = async function () {
   const { path, cleanup } = await getTmpFile({ template: IPC_FILENAME })
   return { ipcFile: path, removeIpcFile: cleanup }
