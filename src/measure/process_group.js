@@ -2,11 +2,12 @@
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
+import { getSortedMedian } from '../stats/median.js'
 import { addMeasures } from '../stats/merge.js'
+import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
 
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
-import { getMedian } from './median.js'
 import { loopDurationsToMedians, medianToLoopDuration } from './normalize.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
@@ -47,8 +48,6 @@ export const measureProcessGroup = async function ({
   let loops = 0
   // eslint-disable-next-line fp/no-let
   let times = 0
-  // eslint-disable-next-line fp/no-let
-  let processMedians = []
   // `median` is initially 0. This means it is not used to compute `maxDuration`
   // in the first process.
   // eslint-disable-next-line fp/no-let
@@ -92,10 +91,9 @@ export const measureProcessGroup = async function ({
     const childLoadCost = endLoadCost(loadCostStart, start)
 
     // eslint-disable-next-line fp/no-mutation
-    ;[measures, processMedians, processes, loops, times] = repeatInitReset({
+    ;[measures, processes, loops, times] = repeatInitReset({
       repeatInit,
       measures,
-      processMedians,
       processes,
       loops,
       times,
@@ -120,7 +118,7 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     loadCost = getLoadCost(childLoadCost, loadCosts)
     // eslint-disable-next-line fp/no-mutation
-    median = getMedian(childMeasures, processMedians)
+    median = getSortedMedian(measures, OUTLIERS_THRESHOLD)
     const newRepeat = getRepeat({
       repeat,
       median,
