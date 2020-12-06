@@ -1,4 +1,4 @@
-import { getMinDuration, applyMinDuration } from './min_duration.js'
+import { getMinDuration, applyMinDuration } from './epsilon.js'
 import { serializeRelPercentage, serializeAbsPercentage } from './percentage.js'
 import { shouldSkipStat } from './skip.js'
 
