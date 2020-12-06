@@ -87,6 +87,8 @@ export const measureProcessGroup = async function ({
       type: 'benchmarkBench',
     })
     const childLoadCost = endLoadCost(loadCostStart, start)
+    // eslint-disable-next-line fp/no-mutation
+    loadCost = getLoadCost(childLoadCost, loadCosts)
 
     // eslint-disable-next-line fp/no-mutation
     ;[measures, processes, times] = repeatInitReset({
@@ -96,24 +98,21 @@ export const measureProcessGroup = async function ({
       times,
     })
 
+    // eslint-disable-next-line fp/no-mutation
+    processes += 1
+    // eslint-disable-next-line fp/no-mutation
+    times += loopDurations.length * repeat
+
     const childMeasures = loopDurationsToMedians(loopDurations, {
       measureCost,
       repeatCost,
       repeat,
       sampleType,
     })
-
     addMeasures(measures, childMeasures)
-
-    // eslint-disable-next-line fp/no-mutation
-    processes += 1
-    // eslint-disable-next-line fp/no-mutation
-    times += childMeasures.length * repeat
-
-    // eslint-disable-next-line fp/no-mutation
-    loadCost = getLoadCost(childLoadCost, loadCosts)
     // eslint-disable-next-line fp/no-mutation
     median = getSortedMedian(measures, OUTLIERS_THRESHOLD)
+
     const newRepeat = getRepeat({
       repeat,
       median,
