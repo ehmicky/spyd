@@ -1,7 +1,11 @@
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
 import { getMin, getMax, getMean, getDeviation } from './methods.js'
-import { getOutliersMax, OUTLIERS_THRESHOLD } from './outliers.js'
+import {
+  getOutliersMax,
+  getNonOutliersLength,
+  OUTLIERS_THRESHOLD,
+} from './outliers.js'
 import { getQuantiles } from './quantiles.js'
 
 // Retrieve statistics from results.
@@ -22,6 +26,7 @@ export const getStats = function ({
   const {
     loops,
     repeat,
+    times: timesA,
     min,
     max,
     median,
@@ -37,8 +42,8 @@ export const getStats = function ({
     min,
     max,
     deviation,
-    times,
     loops,
+    times: timesA,
     repeat,
     processes,
     histogram,
@@ -49,12 +54,14 @@ export const getStats = function ({
   }
 }
 
+// eslint-disable-next-line max-statements
 const computeStats = function (measures, times) {
   // `times` is the number of times `main()` was called
   // `loops` is the number of repeat loops
   // `repeat` is the average number of iterations inside those repeat loops
   const loops = getOutliersMax(measures, OUTLIERS_THRESHOLD)
-  const repeat = Math.round(times / loops)
+  const timesA = getNonOutliersLength(times, OUTLIERS_THRESHOLD)
+  const repeat = Math.round(timesA / loops)
 
   const min = getMin(measures)
   const max = getMax(measures, OUTLIERS_THRESHOLD)
@@ -68,6 +75,7 @@ const computeStats = function (measures, times) {
 
   return {
     loops,
+    times: timesA,
     repeat,
     min,
     max,
