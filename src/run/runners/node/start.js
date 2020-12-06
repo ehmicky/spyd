@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { executeMethod } from '../common/ipc.js'
 
 import { loadTasksFile } from './load/main.js'
