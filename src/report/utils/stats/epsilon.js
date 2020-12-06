@@ -1,5 +1,5 @@
 // Durations that are too close to repeatCost can be measured as 0.
-// The same happens with measureCost when the repeat loop has not been used,
+// The same happens with measureCost when the repeat loop has not been used.
 export const getEpsilon = function ({ repeat, measureCost, repeatCost }) {
   return (measureCost - repeatCost) / repeat + repeatCost
 }
