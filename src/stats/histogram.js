@@ -1,3 +1,4 @@
+import { binarySearch } from './binary_search.js'
 import { getOutliersMax } from './outliers.js'
 
 // Retrieve histogram of an array of floats.
@@ -37,7 +38,7 @@ const addBucket = function (
   const high =
     bucketIndex + 1 === bucketCount ? max : min + (bucketIndex + 1) * bucketSize
 
-  const highIndex = getHighIndex(array, high, lastHighIndex)
+  const highIndex = binarySearch(array, high, lastHighIndex, outliersMax)
   const bucketsCount = highIndex - lastHighIndex
   const frequency = bucketsCount / outliersMax
 
@@ -46,16 +47,4 @@ const addBucket = function (
   buckets.push([lastHigh, high, frequency])
 
   return { buckets, lastHighIndex: highIndex, lastHigh: high }
-}
-
-// Faster than `findIndex()` since it does not require going through the whole
-// array each time, and no `Array.slice()` is needed.
-const getHighIndex = function (array, high, lastHighIndex) {
-  // eslint-disable-next-line fp/no-loops
-  do {
-    // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    lastHighIndex += 1
-  } while (array[lastHighIndex] <= high)
-
-  return lastHighIndex - 1
 }
