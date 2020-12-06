@@ -21,14 +21,10 @@ export const repeatInitReset = function ({
   times,
 }) {
   if (!repeatInit || processes === 0) {
-    return [processes, loops, times]
+    return [measures, processMedians, processes, loops, times]
   }
 
-  // eslint-disable-next-line fp/no-mutating-methods
-  measures.splice(0)
-  // eslint-disable-next-line fp/no-mutating-methods
-  processMedians.splice(0)
-  return [0, 0, 0]
+  return [[], [], 0, 0, 0]
 }
 
 // Decides when `repeatInit` has stopped.

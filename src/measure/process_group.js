@@ -47,7 +47,8 @@ export const measureProcessGroup = async function ({
   let loops = 0
   // eslint-disable-next-line fp/no-let
   let times = 0
-  const processMedians = []
+  // eslint-disable-next-line fp/no-let
+  let processMedians = []
   // `median` is initially 0. This means it is not used to compute `maxDuration`
   // in the first process.
   // eslint-disable-next-line fp/no-let
@@ -91,7 +92,7 @@ export const measureProcessGroup = async function ({
     const childLoadCost = endLoadCost(loadCostStart, start)
 
     // eslint-disable-next-line fp/no-mutation
-    ;[processes, loops, times] = repeatInitReset({
+    ;[measures, processMedians, processes, loops, times] = repeatInitReset({
       repeatInit,
       measures,
       processMedians,
