@@ -14,9 +14,9 @@ export const getDurationSync = function (main, repeat, beforeArgs) {
 const getDurationArgsSync = function (main, repeat, beforeArgs) {
   const start = now()
 
-  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
-  while (repeat--) {
-    main(beforeArgs[repeat])
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index !== repeat; index += 1) {
+    main(beforeArgs[index])
   }
 
   return now() - start
@@ -25,8 +25,8 @@ const getDurationArgsSync = function (main, repeat, beforeArgs) {
 const getDurationNoArgsSync = function (main, repeat) {
   const start = now()
 
-  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
-  while (repeat--) {
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index !== repeat; index += 1) {
     main()
   }
 

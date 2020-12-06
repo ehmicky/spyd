@@ -11,10 +11,10 @@ export const getDurationAsync = function (main, repeat, beforeArgs) {
 const getDurationArgsAsync = async function (main, repeat, beforeArgs) {
   const start = now()
 
-  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
-  while (repeat--) {
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index !== repeat; index += 1) {
     // eslint-disable-next-line no-await-in-loop
-    await main(beforeArgs[repeat])
+    await main(beforeArgs[index])
   }
 
   return now() - start
@@ -23,8 +23,8 @@ const getDurationArgsAsync = async function (main, repeat, beforeArgs) {
 const getDurationNoArgsAsync = async function (main, repeat) {
   const start = now()
 
-  // eslint-disable-next-line no-param-reassign, no-plusplus, fp/no-mutation, fp/no-loops
-  while (repeat--) {
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index !== repeat; index += 1) {
     // eslint-disable-next-line no-await-in-loop
     await main()
   }
