@@ -14,7 +14,7 @@
 // since it is unrelated to the `repeat` loop.
 export const repeatInitReset = function ({
   repeatInit,
-  processMeasures,
+  measures,
   processMedians,
   processes,
   loops,
@@ -25,7 +25,7 @@ export const repeatInitReset = function ({
   }
 
   // eslint-disable-next-line fp/no-mutating-methods
-  processMeasures.splice(0)
+  measures.splice(0)
   // eslint-disable-next-line fp/no-mutating-methods
   processMedians.splice(0)
   return [0, 0, 0]

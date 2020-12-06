@@ -2,7 +2,7 @@
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
-import { aggregateMeasures } from '../stats/aggregate.js'
+import { sortNumbers } from '../stats/sort.js'
 
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
@@ -39,7 +39,8 @@ export const measureProcessGroup = async function ({
     inputId,
     dry,
   }
-  const processMeasures = []
+  // eslint-disable-next-line fp/no-let
+  let measures = []
   // eslint-disable-next-line fp/no-let
   let processes = 0
   // eslint-disable-next-line fp/no-let
@@ -92,7 +93,7 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     ;[processes, loops, times] = repeatInitReset({
       repeatInit,
-      processMeasures,
+      measures,
       processMedians,
       processes,
       loops,
@@ -106,8 +107,8 @@ export const measureProcessGroup = async function ({
       sampleType,
     })
 
-    // eslint-disable-next-line fp/no-mutating-methods
-    processMeasures.push(childMeasures)
+    // eslint-disable-next-line fp/no-mutation
+    measures = concatMeasures(measures, childMeasures)
     // eslint-disable-next-line fp/no-mutation
     processes += 1
     // eslint-disable-next-line fp/no-mutation
@@ -144,8 +145,22 @@ export const measureProcessGroup = async function ({
     })
   )
 
-  const measures = aggregateMeasures(processMeasures)
+  sortNumbers(measures)
   return { measures, times, processes, loadCost }
+}
+
+// Any other alternatives is slower and hits the memory limit faster.
+// This includes:
+//  - array.forEach() + array.push()
+//  (in batches of 1e5 values to overcome the limit of arguments length)
+//  - array.push()
+//  - Array.concat.prototype.push()
+//  - array.splice()
+//  - array.flat()
+// It also has the highest memory limit before crashing (~1e8 elements) which
+// is counter-intuitive since it creates a new array.
+const concatMeasures = function (measures, childMeasures) {
+  return measures.concat(childMeasures)
 }
 
 // We stop iterating when the next process does not have any time to spawn a
