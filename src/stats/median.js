@@ -1,4 +1,5 @@
 import { getQuantiles } from './quantiles.js'
+import { sortNumbers } from './sort.js'
 
 // Retrieve median of an array of floats.
 // Array must be sorted and not empty.
@@ -15,7 +16,6 @@ export const getSortedMedian = function (array) {
 export const getUnsortedMedian = function (array, length) {
   const samples =
     array.length > length ? getQuantiles(array, length) : [...array]
-  // eslint-disable-next-line fp/no-mutating-methods
-  samples.sort()
+  sortNumbers(samples)
   return getSortedMedian(samples)
 }
