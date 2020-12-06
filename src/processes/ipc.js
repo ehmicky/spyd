@@ -21,7 +21,7 @@ export const getIpcFile = async function () {
 
 const IPC_FILENAME = 'spyd-measures-XXXXXX.json'
 
-// Retrieve processMeasures.
+// Retrieve the return value from the child.
 // We could probably use a named pipe instead of a regular file. However, this
 // does not seem to provide a significant performance improvement at the
 // moment.

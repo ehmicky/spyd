@@ -13,7 +13,7 @@ import { preciseTimestamp } from './precise_timestamp.js'
 //  - iterating on the repeat loop itself
 //  - sending the measures (runner)
 //  - receiving the measures (parent process)
-//  - normalizing and aggregating the processMeasures
+//  - normalizing and aggregating the measures
 // The above are not included because their duration depends on the number of
 // repeat loops performed
 //  - that number depends on `maxDuration`, which is based on `loadCost`
