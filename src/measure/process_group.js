@@ -13,6 +13,11 @@ import { getRepeat, getChildRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 
 // Measure a task, measureCost or repeatCost using a group of processes
+// CPU-heavy computation (e.g. sorting `measures` and computing stats) are done
+// incrementally after each process, as opposed to at the end. This is because:
+//  - Stats are reported in realtime
+//  - This avoids a big slowdown at the beginning/end of combinations, which
+//    would be perceived by users
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const measureProcessGroup = async function ({
   sampleType,
