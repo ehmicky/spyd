@@ -68,7 +68,7 @@
     "time-resolution": "^0.3.1",
     "tmp-promise": "^3.0.2",
     "update-notifier": "^5.0.1",
-    "uuid": "^8.3.1",
+    "uuid": "^8.3.2",
     "write-file-atomic": "^3.0.3",
     "yargs": "^16.1.0"
   },
