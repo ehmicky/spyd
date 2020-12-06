@@ -26,7 +26,8 @@ const findConfigPath = function (configPath, cwd = getCwd()) {
   return findUp(DEFAULT_CONFIG, { cwd })
 }
 
-const DEFAULT_CONFIG = 'spyd.yml'
+// spyd.yaml is supported but undocumented. spyd.yml is preferred.
+const DEFAULT_CONFIG = ['spyd.yml', 'spyd.yaml']
 
 const getConfigContent = async function (configPath) {
   try {
