@@ -1,4 +1,5 @@
 import { getSortedMedian } from '../stats/median.js'
+import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
 
 import { measureProcessGroup } from './process_group.js'
 import { getResolution } from './resolution.js'
@@ -28,7 +29,7 @@ export const getMeasureCost = async function ({
   cwd,
   loadDuration,
 }) {
-  const { measures: measureCostMeasures } = await measureProcessGroup({
+  const { measures } = await measureProcessGroup({
     sampleType: 'measureCost',
     taskPath,
     taskId,
@@ -36,7 +37,6 @@ export const getMeasureCost = async function ({
     commandSpawn,
     commandSpawnOptions,
     commandConfig,
-    // TODO: set to `false`
     runnerRepeats,
     processGroupDuration,
     cwd,
@@ -46,7 +46,7 @@ export const getMeasureCost = async function ({
     resolution: 1,
     dry: true,
   })
-  const measureCost = getSortedMedian(measureCostMeasures)
-  const resolution = getResolution(measureCostMeasures)
+  const measureCost = getSortedMedian(measures, OUTLIERS_THRESHOLD)
+  const resolution = getResolution(measures)
   return { measureCost, resolution }
 }

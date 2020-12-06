@@ -57,7 +57,7 @@ export const endLoadCost = function (loadCostStart, loadCostEnd) {
 export const getLoadCost = function (childLoadCost, loadCosts) {
   // eslint-disable-next-line fp/no-mutating-methods
   loadCosts.push(childLoadCost)
-  const loadCost = getUnsortedMedian(loadCosts, LOAD_COST_SORT_MAX)
+  const loadCost = getUnsortedMedian(loadCosts, LOAD_COST_SORT_MAX, 1)
   return loadCost
 }
 

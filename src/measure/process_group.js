@@ -2,7 +2,7 @@
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
-import { removeOutliers } from '../stats/outliers.js'
+import { aggregateMeasures } from '../stats/aggregate.js'
 
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
@@ -134,7 +134,7 @@ export const measureProcessGroup = async function ({
     })
   )
 
-  const { measures, times, processes } = removeOutliers(processMeasures)
+  const { measures, times, processes } = aggregateMeasures(processMeasures)
   return { measures, times, processes, loadCost }
 }
 
