@@ -108,8 +108,8 @@ export const measureProcessGroup = async function ({
       sampleType,
     })
 
-    // eslint-disable-next-line fp/no-mutation
-    measures = concatMeasures(measures, childMeasures)
+    concatMeasures(measures, childMeasures)
+
     // eslint-disable-next-line fp/no-mutation
     processes += 1
     // eslint-disable-next-line fp/no-mutation
@@ -150,18 +150,15 @@ export const measureProcessGroup = async function ({
   return { measures, times, processes, loadCost }
 }
 
-// Any other alternatives is slower and hits the memory limit faster.
-// This includes:
-//  - array.forEach() + array.push()
-//  (in batches of 1e5 values to overcome the limit of arguments length)
-//  - array.push()
-//  - Array.concat.prototype.push()
-//  - array.splice()
-//  - array.flat()
-// It also has the highest memory limit before crashing (~1e8 elements) which
-// is counter-intuitive since it creates a new array.
+// Fastest way to do this.
+// The performance is much slower at regular intervals, probably when the
+// internal array needs to be resized or re-allocated by V8.
 const concatMeasures = function (measures, childMeasures) {
-  return measures.concat(childMeasures)
+  // eslint-disable-next-line fp/no-loops
+  for (const value of childMeasures) {
+    // eslint-disable-next-line fp/no-mutating-methods
+    measures.push(value)
+  }
 }
 
 // We stop iterating when the next process does not have any time to spawn a
