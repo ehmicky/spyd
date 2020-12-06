@@ -41,6 +41,8 @@ export const measureProcessGroup = async function ({
   }
   const processMeasures = []
   // eslint-disable-next-line fp/no-let
+  let processes = 0
+  // eslint-disable-next-line fp/no-let
   let loops = 0
   const processMedians = []
   // `median` is initially 0. This means it is not used to compute `maxDuration`
@@ -86,11 +88,12 @@ export const measureProcessGroup = async function ({
     const childLoadCost = endLoadCost(loadCostStart, start)
 
     // eslint-disable-next-line fp/no-mutation
-    loops = repeatInitReset({
+    ;[loops, processes] = repeatInitReset({
       repeatInit,
       processMeasures,
       processMedians,
       loops,
+      processes,
     })
 
     loopDurationsToMedians(childMeasures, {
@@ -102,6 +105,8 @@ export const measureProcessGroup = async function ({
 
     // eslint-disable-next-line fp/no-mutating-methods
     processMeasures.push({ childMeasures, repeat })
+    // eslint-disable-next-line fp/no-mutation
+    processes += 1
     // eslint-disable-next-line fp/no-mutation
     loops += childMeasures.length
 
@@ -134,7 +139,7 @@ export const measureProcessGroup = async function ({
     })
   )
 
-  const { measures, times, processes } = aggregateMeasures(processMeasures)
+  const { measures, times } = aggregateMeasures(processMeasures)
   return { measures, times, processes, loadCost }
 }
 

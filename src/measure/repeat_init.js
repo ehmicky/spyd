@@ -16,16 +16,17 @@ export const repeatInitReset = function ({
   processMeasures,
   processMedians,
   loops,
+  processes,
 }) {
-  if (!repeatInit || loops === 0) {
-    return loops
+  if (!repeatInit || processes === 0) {
+    return [loops, processes]
   }
 
   // eslint-disable-next-line fp/no-mutating-methods
   processMeasures.splice(0)
   // eslint-disable-next-line fp/no-mutating-methods
   processMedians.splice(0)
-  return 0
+  return [0, 0]
 }
 
 // Decides when `repeatInit` has stopped.

@@ -10,8 +10,7 @@ export const aggregateMeasures = function (processMeasures) {
   const measures = aggregateProcessMeasures(processMeasures)
   sortNumbers(measures)
   const times = getTimes(processMeasures, measures)
-  const processes = processMeasures.length
-  return { measures, times, processes }
+  return { measures, times }
 }
 
 // We do not use `[].concat(...processMeasures)` because it creates a stack
