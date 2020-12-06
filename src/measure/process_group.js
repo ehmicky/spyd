@@ -79,7 +79,7 @@ export const measureProcessGroup = async function ({
 
     const loadCostStart = startLoadCost()
     // eslint-disable-next-line no-await-in-loop
-    const { measures: childMeasures, start } = await executeChild({
+    const { measures: loopDurations, start } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
       eventPayload: { ...eventPayload, maxDuration, repeat: childRepeat },
@@ -101,7 +101,7 @@ export const measureProcessGroup = async function ({
       times,
     })
 
-    loopDurationsToMedians(childMeasures, {
+    const childMeasures = loopDurationsToMedians(loopDurations, {
       measureCost,
       repeatCost,
       repeat,

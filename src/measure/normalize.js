@@ -9,17 +9,14 @@ export const loopDurationsToMedians = function (
 ) {
   // Performance optimization since `measureCost`'s costs are 0 and repeat is 1
   if (sampleType === 'measureCost') {
-    return
+    return loopDurations
   }
 
-  loopDurations.forEach((loopDuration, index) => {
-    // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    loopDurations[index] = loopDurationToMedian(loopDuration, {
-      measureCost,
-      repeatCost,
-      repeat,
-    })
-  })
+  // Somehow this is faster than direct mutation, providing `loopDurations` is
+  // not used anymore after this function and can be garbage collected.
+  return loopDurations.map((loopDuration) =>
+    loopDurationToMedian(loopDuration, { measureCost, repeatCost, repeat }),
+  )
 }
 
 // The runner measures loops of the task. This retrieve the mean time to execute
