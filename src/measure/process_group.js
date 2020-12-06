@@ -45,8 +45,6 @@ export const measureProcessGroup = async function ({
   // eslint-disable-next-line fp/no-let
   let processes = 0
   // eslint-disable-next-line fp/no-let
-  let loops = 0
-  // eslint-disable-next-line fp/no-let
   let times = 0
   // `median` is initially 0. This means it is not used to compute `maxDuration`
   // in the first process.
@@ -91,11 +89,10 @@ export const measureProcessGroup = async function ({
     const childLoadCost = endLoadCost(loadCostStart, start)
 
     // eslint-disable-next-line fp/no-mutation
-    ;[measures, processes, loops, times] = repeatInitReset({
+    ;[measures, processes, times] = repeatInitReset({
       repeatInit,
       measures,
       processes,
-      loops,
       times,
     })
 
@@ -110,8 +107,6 @@ export const measureProcessGroup = async function ({
 
     // eslint-disable-next-line fp/no-mutation
     processes += 1
-    // eslint-disable-next-line fp/no-mutation
-    loops += childMeasures.length
     // eslint-disable-next-line fp/no-mutation
     times += childMeasures.length * repeat
 
@@ -134,13 +129,13 @@ export const measureProcessGroup = async function ({
     repeat = newRepeat
   } while (
     !shouldStopProcessGroup({
+      measures,
       loadCost,
       measureCost,
       repeatCost,
       median,
       repeat,
       processGroupEnd,
-      loops,
     })
   )
 
@@ -160,13 +155,13 @@ export const measureProcessGroup = async function ({
 //   - Not doing it would make the `times` increment less gradually as the
 //     `duration` increases.
 const shouldStopProcessGroup = function ({
+  measures,
   loadCost,
   measureCost,
   repeatCost,
   median,
   repeat,
   processGroupEnd,
-  loops,
 }) {
   const loopDuration = medianToLoopDuration(median, {
     measureCost,
@@ -174,7 +169,8 @@ const shouldStopProcessGroup = function ({
     repeat,
   })
   return (
-    loops >= MAX_LOOPS || now() + loadCost + loopDuration >= processGroupEnd
+    measures.length >= MAX_LOOPS ||
+    now() + loadCost + loopDuration >= processGroupEnd
   )
 }
 
