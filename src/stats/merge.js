@@ -1,5 +1,3 @@
-import { sortNumbers } from './sort.js'
-
 // Merge measures from last process to the ones from all previous processes.
 // The merged `measures` is sorted, but `childMeasures` is not sorted yet.
 export const addMeasures = function (measures, childMeasures) {
@@ -7,12 +5,22 @@ export const addMeasures = function (measures, childMeasures) {
   mergeSort(measures, childMeasures)
 }
 
+// Sort an array of numbers
+const sortNumbers = function (array) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  array.sort(compareNumbers)
+}
+
+const compareNumbers = function (numA, numB) {
+  return numA - numB
+}
+
 // Merges two sorted arrays.
 // For better performance, the bigger array should be first.
 // The first array is directly mutated. The second is not mutated.
 // This is faster than just doing `Array.concat()` then `Array.sort()` and has
 // a `O(n)` time complexity.
-const mergeSort = function (bigArray, smallArray) {
+export const mergeSort = function (bigArray, smallArray) {
   if (bigArray.length === 0) {
     appendArray(bigArray, smallArray)
     return

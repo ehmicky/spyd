@@ -1,5 +1,5 @@
-import { getSortedMedian } from '../stats/median.js'
 import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
+import { getSortedMedian } from '../stats/quantile.js'
 
 import { measureProcessGroup } from './process_group.js'
 import { getResolution } from './resolution.js'

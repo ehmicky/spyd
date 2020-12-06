@@ -2,9 +2,9 @@
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
-import { getSortedMedian } from '../stats/median.js'
 import { addMeasures } from '../stats/merge.js'
 import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
+import { getSortedMedian } from '../stats/quantile.js'
 
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'

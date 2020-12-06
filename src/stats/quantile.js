@@ -8,7 +8,15 @@ export const getQuantiles = function (array, length, threshold) {
   )
 }
 
-export const getQuantile = function (array, percentage, threshold) {
+// Retrieve median of an array of floats.
+// Array must be sorted and not empty.
+export const getSortedMedian = function (array, threshold) {
+  return getQuantile(array, MEDIAN_QUANTILE, threshold)
+}
+
+const MEDIAN_QUANTILE = 0.5
+
+const getQuantile = function (array, percentage, threshold) {
   const outliersMax = getOutliersMax(array, threshold)
   const position = (outliersMax - 1) * percentage
 

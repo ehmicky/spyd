@@ -1,4 +1,5 @@
-import { getUnsortedMedian } from '../stats/median.js'
+import { mergeSort } from '../stats/merge.js'
+import { getSortedMedian } from '../stats/quantile.js'
 
 import { preciseTimestamp } from './precise_timestamp.js'
 
@@ -36,7 +37,6 @@ import { preciseTimestamp } from './precise_timestamp.js'
 //    combinations
 //  - it is not included it in the `previous` array though since it might differ
 //    significantly for some runners
-//  - since sorting big arrays is very slow, we only sort a sample of them
 // Each combination estimates its own `loadCost`:
 //  - in most cases, that value should be similar for combinations using the
 //    same runner
@@ -55,13 +55,7 @@ export const endLoadCost = function (loadCostStart, loadCostEnd) {
 }
 
 export const getLoadCost = function (childLoadCost, loadCosts) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  loadCosts.push(childLoadCost)
-  const loadCost = getUnsortedMedian(loadCosts, LOAD_COST_SORT_MAX, 1)
+  mergeSort(loadCosts, [childLoadCost])
+  const loadCost = getSortedMedian(loadCosts, 1)
   return loadCost
 }
-
-// Size of the sorting sample.
-// A lower value will make `loadCost` vary more.
-// A higher value will increase the time to sort by `O(n * log(n))`
-const LOAD_COST_SORT_MAX = 1e2
