@@ -1,6 +1,6 @@
 import sortOn from 'sort-on'
 
-import { getMean } from '../stats/methods.js'
+import { getMean } from '../stats/sum.js'
 import { groupBy } from '../utils/group.js'
 
 // Group row/columns information into top-level properties so that reporters

@@ -1,11 +1,12 @@
 import { getHistogram } from './histogram.js'
-import { getMin, getMax, getMean, getDeviation } from './methods.js'
+import { getMin, getMax } from './min_max.js'
 import {
   getOutliersMax,
   getNonOutliersLength,
   OUTLIERS_THRESHOLD,
 } from './outliers.js'
 import { getSortedMedian, getQuantiles } from './quantile.js'
+import { getMean, getDeviation } from './sum.js'
 
 // Retrieve statistics from results.
 // Perform the statistical logic.
