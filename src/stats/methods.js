@@ -1,9 +1,10 @@
 import { getOutliersMax } from './outliers.js'
 
 // Retrieve minimum value.
+// Not using destructuring is slightly more performant.
 // Array must be sorted and not empty.
-export const getMin = function ([min]) {
-  return min
+export const getMin = function (array) {
+  return array[0]
 }
 
 // Retrieve maximum value.
@@ -15,25 +16,20 @@ export const getMax = function (array, threshold) {
 
 // Retrieve arithmetic mean of an array of floats (cannot be NaN nor Infinite).
 // Array must not be empty.
-export const getMean = function (array, threshold, mapFunc = identity) {
+export const getMean = function (array, threshold) {
   const outliersMax = getOutliersMax(array, threshold)
-  return getSum(array, threshold, mapFunc) / outliersMax
-}
-
-const identity = function (value) {
-  return value
+  return getSum(array, outliersMax) / outliersMax
 }
 
 // Retrieve sum of array of floats.
-export const getSum = function (array, threshold, mapFunc = identity) {
-  const outliersMax = getOutliersMax(array, threshold)
+const getSum = function (array, outliersMax) {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = 0; index < outliersMax; index++) {
     // eslint-disable-next-line fp/no-mutation
-    sum += mapFunc(array[index])
+    sum += array[index]
   }
 
   return sum
@@ -52,5 +48,20 @@ export const getDeviation = function (array, mean, threshold) {
 }
 
 const getVariance = function (array, mean, threshold) {
-  return getMean(array, threshold, (value) => (value - mean) ** 2)
+  const outliersMax = getOutliersMax(array, threshold)
+  return getSumDeviation(array, mean, outliersMax) / outliersMax
+}
+
+// We use a separate function from `getSum()` because it is much more performant
+const getSumDeviation = function (array, mean, outliersMax) {
+  // eslint-disable-next-line fp/no-let
+  let sum = 0
+
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index < outliersMax; index++) {
+    // eslint-disable-next-line fp/no-mutation
+    sum += (array[index] - mean) ** 2
+  }
+
+  return sum
 }
