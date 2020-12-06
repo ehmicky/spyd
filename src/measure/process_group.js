@@ -2,7 +2,7 @@
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
-import { sortNumbers } from '../stats/sort.js'
+import { addMeasures } from '../stats/merge.js'
 
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
@@ -108,7 +108,7 @@ export const measureProcessGroup = async function ({
       sampleType,
     })
 
-    concatMeasures(measures, childMeasures)
+    addMeasures(measures, childMeasures)
 
     // eslint-disable-next-line fp/no-mutation
     processes += 1
@@ -146,19 +146,7 @@ export const measureProcessGroup = async function ({
     })
   )
 
-  sortNumbers(measures)
   return { measures, times, processes, loadCost }
-}
-
-// Fastest way to do this.
-// The performance is much slower at regular intervals, probably when the
-// internal array needs to be resized or re-allocated by V8.
-const concatMeasures = function (measures, childMeasures) {
-  // eslint-disable-next-line fp/no-loops
-  for (const value of childMeasures) {
-    // eslint-disable-next-line fp/no-mutating-methods
-    measures.push(value)
-  }
 }
 
 // We stop iterating when the next process does not have any time to spawn a
