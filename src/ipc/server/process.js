@@ -31,7 +31,7 @@ export const runProcesses = async function ({
   duration,
 }) {
   const combinationProcesses = combinations.map((combination) =>
-    startProcess({ combination, origin }),
+    startProcess(combination, origin),
   )
 
   try {
@@ -45,17 +45,21 @@ export const runProcesses = async function ({
   }
 }
 
-const startProcess = function ({
-  combination,
-  combination: { taskId, clientId },
-  origin,
-}) {
-  const serverUrl = getServerUrl(origin, clientId)
-  const loadInputString = JSON.stringify({ serverUrl, taskId })
+// Spawn each combination's process.
+// All combinations are loaded in parallel, for performance.
+const startProcess = function (combination, origin) {
+  const loadInput = getLoadInput(combination, origin)
+  const loadInputString = JSON.stringify(loadInput)
   const childProcess = execa('node', [CLIENT_ENTRYFILE, loadInputString], {
     stdio: 'ignore',
   })
   return { childProcess, combination }
+}
+
+// Retrieve inputs passed to runner processes so they can load the right task
+const getLoadInput = function ({ taskId, clientId }, origin) {
+  const serverUrl = getServerUrl(origin, clientId)
+  return { serverUrl, taskId }
 }
 
 const runProcess = async function ({ childProcess, combination, duration }) {
@@ -65,7 +69,6 @@ const runProcess = async function ({ childProcess, combination, duration }) {
   ])
 }
 
-// Processes runs forever (`waitToEnd()` is used instead).
 // This is only done for exception handling
 const waitForProcessError = async function (childProcess, { taskId }) {
   try {
@@ -75,6 +78,9 @@ const waitForProcessError = async function (childProcess, { taskId }) {
   }
 }
 
+// Terminate each runner's process at the end of the benchmark.
+// We ensure that processes are not in the middle of measuring a task, since
+// some tasks might allocate resources that should be cleaned up.
 const stopProcess = function ({ childProcess }) {
   childProcess.kill()
 }

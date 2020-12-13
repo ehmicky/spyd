@@ -18,11 +18,6 @@ import { getTaskMedian } from './task_median.js'
 //  - Stats are reported in realtime
 //  - This avoids a big slowdown at the beginning/end of combinations, which
 //    would be perceived by users
-// We launch child processes serially:
-//  - otherwise they would slow down each other and have higher variance
-//  - multi-core CPUs are designed to execute in parallel but in practice they
-//    do impact the performance of each other
-//  - this does mean we are under-utilizing CPUs
 export const measureProcessGroup = async function ({
   taskPath,
   taskId,

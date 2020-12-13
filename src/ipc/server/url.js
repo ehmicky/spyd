@@ -2,11 +2,17 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { PluginError } from '../../error/main.js'
 
+// Each combination gets its own unique identifier (`clientId`)
 export const createClientId = function () {
   return uuidv4()
 }
 
-// Each runner gets a different endpoint, using a UUID
+// Each combination gets a different endpoint, using the `clientId`
+export const getServerUrl = function (origin, clientId) {
+  return `${origin}/rpc/${clientId}`
+}
+
+// When a request is made, we find the matching combination
 export const findCombinationByUrl = function (req, combinations) {
   const tokens = SERVER_URL_REGEXP.exec(req.url)
 
@@ -26,7 +32,3 @@ export const findCombinationByUrl = function (req, combinations) {
 }
 
 const SERVER_URL_REGEXP = /^\/rpc\/([\da-f-]+)$/iu
-
-export const getServerUrl = function (origin, clientId) {
-  return `${origin}/rpc/${clientId}`
-}

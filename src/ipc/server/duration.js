@@ -1,7 +1,7 @@
 import now from 'precise-now'
 import randomItem from 'random-item'
 
-// Compute when benchmark should end.
+// Compute when the benchmark should end.
 // The `duration` configuration property is for each combination, not the whole
 // benchmark. Otherwise:
 //  - Adding/removing combinations would change the duration (and results) of
@@ -12,6 +12,11 @@ export const getBenchmarkEnd = function (combinations, duration) {
   return now() + benchmarkDuration
 }
 
+// We keep track of:
+//  - The total duration spent on each combination, to know whether it should
+//    keep being measured.
+//  - The mean duration of a sample, to know whether measuring an additional
+//    sample would fit within the allowed `duration`
 export const getSampleStart = function () {
   return now()
 }
@@ -26,6 +31,7 @@ export const addSampleDuration = function ({ state }, sampleStart) {
   Object.assign(state, { combinationDuration, processes, sampleDurationMean })
 }
 
+// Filters out any combinations with no `duration` left
 export const getRemainingCombinations = function (combinations, benchmarkEnd) {
   const benchmarkDurationLeft = benchmarkEnd - now()
   return combinations.filter((combination) =>
@@ -34,7 +40,7 @@ export const getRemainingCombinations = function (combinations, benchmarkEnd) {
 }
 
 // `sampleDurationMean` is initially `undefined`. This ensures each combination
-// runs at least once sample.
+// measures at least once sample.
 const isRemainingCombination = function (
   { state: { sampleDurationMean } },
   benchmarkDurationLeft,
@@ -45,6 +51,9 @@ const isRemainingCombination = function (
   )
 }
 
+// Retrieve the next combination which should be measured.
+// We do it based on which combination are been measured the least.
+// At the beginning, we pick them randomly, because it looks nicer.
 export const getNextCombination = function (combinations) {
   const minCombinations = getMinCombinations(combinations)
   const combination = randomItem(minCombinations)
