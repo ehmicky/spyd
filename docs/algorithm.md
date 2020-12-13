@@ -65,20 +65,13 @@ Also, medians are used instead of arithmetic means.
 
 ## Measuring cost
 
-_Problem_: Measuring adds a small performance cost:
+_Problem_: Measuring typically requires retrieving timestamps. Doing so
+increases a task's apparent duration but is unrelated to the task itself. This
+is a concern especially when the task's duration is close to the duration spent
+retrieving timestamps.
 
-- retrieving timestamps
-- making the function call itself (even if the task is empty)
-- repeatedly checking whether the measuring loop should end
-- loading the measuring logic and/or processes
-
-That cost increases a task's apparent time but is unrelated to the task itself.
-
-_Solution_: Those costs are estimated by measuring an empty function then
-subtracting it from the measures.
-
-The task is also looped in order to decrease the percentage of the measure
-related to the measuring cost.
+_Solution_: The task is looped in order to decrease the percentage of the
+measure related to retrieving timestamps.
 
 ## Time resolution
 
@@ -96,28 +89,24 @@ asynchrounous measuring logic is slower, which results in different measures.
 _Solution_: Different logic is used to measure synchronous and asynchronous
 tasks.
 
+## Simple tasks optimization
+
+_Problem_: Tasks that are very simple like `1 + 1` might be removed by the
+runtime's optimization.
+
+_Solution_: Solving this depends on the runtime. In general, one needs to add
+some statements to prevent this type of runtime optimization. Returning values
+and assigning variables sometimes do the trick.
+
 ## Very fast tasks
 
-_Problem_: Tasks that are as fast as the measuring logic itself (e.g. faster
-than `1ns`) cannot be measured precisely because their measure cannot be
-separated from the duration of the measuring logic itself.
+_Problem_: The duration of tasks that last for only a few CPU cycles (close to
+`1ns` on a typical machine) is hard to differentiate from the time to create its
+function's call stack.
 
-_Solution_: No benchmarking library (including this one) seems to provide a
-solution at the moment. Such code will be measured as taking `0ns`.
+_Solution_: Using a "for" loop is already done by spyd, so does not help there.
+Instead, using a bigger or more complex input/argument should help.
 
-_Invalid solution_: Using loop unrolling such as
-`new Function('f', 'f();'.repeat(number))` or
-`new Function('', func.toString().repeat(number))` has several issues:
-
-- this actually has more variance sometimes and is slower than a regular loop
-- this requires lots of memory. Because of this the number of iterations cannot
-  be high enough to provide with precise results.
-- this is weirdly optimized by runtimes
-
-_Invalid solution_: Using CPU profiling has several issues:
-
-- the measures vary too much due to sampling
-- the minimum resolution is often too high to precisely measure very fast
-  functions
-- the measures are in number of hits instead of number of nanoseconds
-- this is runtime-specific
+Loop unrolling (calling the function several times in a row without a "for"
+loop) is usually not a great solution to this due to peculiar ways those are
+optimized by runtimes and to functions size limits.
