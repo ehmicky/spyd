@@ -57,8 +57,8 @@ const startProcess = function (combination, origin) {
 }
 
 // Retrieve params passed to runner processes so they can load the right task
-const getLoadParams = function ({ taskId, clientId }, origin) {
-  const serverUrl = getServerUrl(origin, clientId)
+const getLoadParams = function ({ taskId, id }, origin) {
+  const serverUrl = getServerUrl(origin, id)
   return { serverUrl, taskId }
 }
 

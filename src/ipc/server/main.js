@@ -2,7 +2,7 @@ import { getBenchmarkEnd } from './duration.js'
 import { initOrchestrators } from './orchestrator.js'
 import { runProcesses } from './process.js'
 import { startServer, stopServer } from './start_stop.js'
-import { createClientId } from './url.js'
+import { createCombinationId } from './url.js'
 
 const runCombinations = async function ({ duration }) {
   const combinations = getCombinations()
@@ -32,10 +32,10 @@ const getCombinations = function () {
 }
 
 const addDefaultState = function (combination) {
-  const clientId = createClientId()
+  const id = createCombinationId()
   return {
     ...combination,
-    clientId,
+    id,
     state: { combinationDuration: 0, processes: 0, measures: [] },
   }
 }

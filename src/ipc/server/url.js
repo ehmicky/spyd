@@ -2,14 +2,14 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { PluginError } from '../../error/main.js'
 
-// Each combination gets its own unique identifier (`clientId`)
-export const createClientId = function () {
+// Each combination gets its own unique `id`
+export const createCombinationId = function () {
   return uuidv4()
 }
 
-// Each combination gets a different endpoint, using the `clientId`
-export const getServerUrl = function (origin, clientId) {
-  return `${origin}/rpc/${clientId}`
+// Each combination gets a different endpoint using its `id`
+export const getServerUrl = function (origin, id) {
+  return `${origin}/rpc/${id}`
 }
 
 // When a request is made, we find the matching combination
@@ -20,9 +20,7 @@ export const findCombinationByUrl = function (req, combinations) {
     throw new PluginError(`Invalid URL: ${req.url}`)
   }
 
-  const combination = combinations.find(
-    ({ clientId }) => clientId === tokens[1],
-  )
+  const combination = combinations.find(({ id }) => id === tokens[1])
 
   if (combination === undefined) {
     throw new PluginError(`Invalid ID in URL: ${req.url}`)
