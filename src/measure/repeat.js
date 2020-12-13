@@ -10,7 +10,7 @@
 // We purposely avoid using `processGroupDuration` (except for
 // `measureDurationLeft`) so that increasing `duration` does not change measures
 export const getRepeat = function ({
-  repeat,
+  lastRepeat,
   taskMedian,
   minLoopDuration,
   runnerRepeats,
@@ -23,7 +23,7 @@ export const getRepeat = function ({
   }
 
   if (taskMedian === 0) {
-    return repeat * FAST_MEDIAN_RATE
+    return lastRepeat * FAST_MEDIAN_RATE
   }
 
   return Math.ceil(minLoopDuration / taskMedian)

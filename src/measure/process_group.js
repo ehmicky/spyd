@@ -144,16 +144,16 @@ export const measureProcessGroup = async function ({
       emptyMeasures,
       empty,
     })
-    const newRepeat = getRepeat({
-      repeat,
+    const lastRepeat = repeat
+    // eslint-disable-next-line fp/no-mutation
+    repeat = getRepeat({
+      lastRepeat,
       taskMedian,
       minLoopDuration,
       runnerRepeats,
     })
     // eslint-disable-next-line fp/no-mutation
-    repeatInit = getRepeatInit({ repeatInit, repeat, newRepeat })
-    // eslint-disable-next-line fp/no-mutation
-    repeat = newRepeat
+    repeatInit = getRepeatInit({ repeatInit, lastRepeat, repeat })
   } while (
     !shouldStopProcessGroup({
       loops,
