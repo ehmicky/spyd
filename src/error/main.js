@@ -29,7 +29,7 @@ export class CoreError extends Error {
 // Error type-specific behavior
 const ERROR_PROPS = {
   UserError: { exitCode: 1, printStack: false },
-  PluginError: { exitCode: 2, printStack: false },
+  PluginError: { exitCode: 2, printStack: true },
   CoreError: { exitCode: 3, printStack: true },
 }
 
