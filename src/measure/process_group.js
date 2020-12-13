@@ -2,12 +2,10 @@
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
-import { mergeSort } from '../stats/merge.js'
-import { sortFloats } from '../stats/sort.js'
 
+import { addProcessMeasures } from './add.js'
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
-import { loopDurationsToMedians } from './normalize.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 import { getTaskMedian } from './task_median.js'
@@ -145,11 +143,7 @@ export const measureProcessGroup = async function ({
   )
 
   const measures = []
-  processMeasures.forEach(({ loopDurations, repeat }) => {
-    const childMeasures = loopDurationsToMedians(loopDurations, repeat)
-    sortFloats(childMeasures)
-    mergeSort(measures, childMeasures)
-  })
+  addProcessMeasures(measures, processMeasures)
 
   return { measures, processes, loops, times, loadCost }
 }
