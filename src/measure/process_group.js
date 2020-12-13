@@ -26,19 +26,18 @@ export const measureProcessGroup = async function ({
   commandSpawnOptions,
   commandConfig,
   runnerRepeats,
-  processGroupDuration,
+  duration,
   cwd,
   loadDuration,
-  dry,
 }) {
-  const processGroupEnd = now() + processGroupDuration
+  const processGroupEnd = now() + duration
   const eventPayload = {
     type: 'benchmark',
     runConfig: commandConfig,
     taskPath,
     taskId,
     inputId,
-    dry,
+    dry: false,
   }
   // eslint-disable-next-line fp/no-let
   let processMeasures = []
@@ -97,7 +96,7 @@ export const measureProcessGroup = async function ({
       commandSpawn,
       commandSpawnOptions,
       eventPayload: eventPayloadA,
-      timeoutNs: processGroupDuration,
+      timeoutNs: duration,
       cwd,
       taskId,
       inputId,

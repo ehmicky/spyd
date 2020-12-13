@@ -34,10 +34,9 @@ export const measureCombination = async function ({
     commandSpawnOptions,
     commandConfig,
     runnerRepeats,
-    processGroupDuration: duration,
+    duration,
     cwd,
     loadDuration,
-    dry: false,
   })
   return { measures, processes, loops, times, minLoopDuration, loadCost }
 }
