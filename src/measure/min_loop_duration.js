@@ -1,5 +1,5 @@
 import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
-import { getSortedMedian } from '../stats/quantile.js'
+import { getMedian } from '../stats/quantile.js'
 
 import { measureProcessGroup } from './process_group.js'
 import { getMinResolutionDuration } from './resolution.js'
@@ -116,7 +116,7 @@ const getMeasureCost = async function ({
     resolution: 1,
     dry: true,
   })
-  const measureCost = getSortedMedian(measures, OUTLIERS_THRESHOLD)
+  const measureCost = getMedian(measures, OUTLIERS_THRESHOLD)
   return { measures, measureCost }
 }
 

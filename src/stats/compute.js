@@ -1,7 +1,7 @@
 import { getHistogram } from './histogram.js'
 import { getMin, getMax } from './min_max.js'
 import { getNonOutliersLength, OUTLIERS_THRESHOLD } from './outliers.js'
-import { getSortedMedian, getQuantiles } from './quantile.js'
+import { getMedian, getQuantiles } from './quantile.js'
 import { getMean, getDeviation } from './sum.js'
 
 // Retrieve statistics from results.
@@ -61,7 +61,7 @@ const computeStats = function (measures, loops, times) {
   const min = getMin(measures)
   const max = getMax(measures, OUTLIERS_THRESHOLD)
 
-  const median = getSortedMedian(measures, OUTLIERS_THRESHOLD)
+  const median = getMedian(measures, OUTLIERS_THRESHOLD)
   const quantiles = getQuantiles(measures, QUANTILES_SIZE, OUTLIERS_THRESHOLD)
   const histogram = getHistogram(measures, HISTOGRAM_SIZE, OUTLIERS_THRESHOLD)
 

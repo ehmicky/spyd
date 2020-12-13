@@ -1,5 +1,5 @@
 import { mergeSort } from '../stats/merge.js'
-import { getSortedMedian } from '../stats/quantile.js'
+import { getMedian } from '../stats/quantile.js'
 
 import { preciseTimestamp } from './precise_timestamp.js'
 
@@ -56,6 +56,6 @@ export const endLoadCost = function (loadCostStart, loadCostEnd) {
 
 export const getLoadCost = function (childLoadCost, loadCosts) {
   mergeSort(loadCosts, [childLoadCost])
-  const loadCost = getSortedMedian(loadCosts, 1)
+  const loadCost = getMedian(loadCosts, 1)
   return loadCost
 }
