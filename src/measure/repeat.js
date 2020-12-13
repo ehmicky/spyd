@@ -11,7 +11,7 @@
 // `measureDurationLeft`) so that increasing `duration` does not change measures
 export const getRepeat = function ({
   repeat,
-  median,
+  taskMedian,
   sampleType,
   minLoopDuration,
   runnerRepeats,
@@ -23,14 +23,14 @@ export const getRepeat = function ({
     return 1
   }
 
-  if (median === 0) {
+  if (taskMedian === 0) {
     return repeat * FAST_MEDIAN_RATE
   }
 
-  return Math.ceil(minLoopDuration / median)
+  return Math.ceil(minLoopDuration / taskMedian)
 }
 
-// `median` can be 0 when the task is too close to `minLoopDuration`.
+// `taskMedian` can be 0 when the task is too close to `minLoopDuration`.
 // In that case, we multiply the `repeat` with a fixed rate.
 const FAST_MEDIAN_RATE = 10
 

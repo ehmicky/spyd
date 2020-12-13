@@ -51,10 +51,10 @@ export const measureProcessGroup = async function ({
   let loops = 0
   // eslint-disable-next-line fp/no-let
   let times = 0
-  // `median` is initially 0. This means it is not used to compute `maxDuration`
-  // in the first process.
+  // `taskMedian` is initially 0. This means it is not used to compute
+  // `maxDuration` in the first process.
   // eslint-disable-next-line fp/no-let
-  let median = 0
+  let taskMedian = 0
   // eslint-disable-next-line fp/no-let
   let repeat = 1
   // If the runner does not support `repeats`, `repeatInit` is always `false`
@@ -73,7 +73,7 @@ export const measureProcessGroup = async function ({
       processGroupEnd,
       loadCost,
       repeat,
-      median,
+      taskMedian,
     })
     const childRepeat = getChildRepeat(repeat, runnerRepeats)
 
@@ -112,11 +112,11 @@ export const measureProcessGroup = async function ({
     const childMeasures = loopDurationsToMedians(loopDurations, repeat)
     addMeasures(measures, childMeasures)
     // eslint-disable-next-line fp/no-mutation
-    median = getSortedMedian(measures, OUTLIERS_THRESHOLD)
+    taskMedian = getSortedMedian(measures, OUTLIERS_THRESHOLD)
 
     const newRepeat = getRepeat({
       repeat,
-      median,
+      taskMedian,
       sampleType,
       minLoopDuration,
       runnerRepeats,
@@ -129,7 +129,7 @@ export const measureProcessGroup = async function ({
     !shouldStopProcessGroup({
       loops,
       loadCost,
-      median,
+      taskMedian,
       repeat,
       processGroupEnd,
     })
@@ -152,11 +152,11 @@ export const measureProcessGroup = async function ({
 const shouldStopProcessGroup = function ({
   loops,
   loadCost,
-  median,
+  taskMedian,
   repeat,
   processGroupEnd,
 }) {
-  const loopDuration = median * repeat
+  const loopDuration = taskMedian * repeat
   return (
     loops >= MAX_LOOPS || now() + loadCost + loopDuration >= processGroupEnd
   )

@@ -44,12 +44,12 @@ export const getMaxDuration = function ({
   processGroupEnd,
   loadCost,
   repeat,
-  median,
+  taskMedian,
 }) {
   const measureDurationLeft = getMeasureDurationLeft(processGroupEnd, loadCost)
   const loadCostMin = getLoadCostMin(loadCost)
-  const targetTimesMin = getTargetTimesMin(median)
-  const loopDuration = getLoopDuration(median, repeat)
+  const targetTimesMin = getTargetTimesMin(taskMedian)
+  const loopDuration = getLoopDuration(taskMedian, repeat)
   return Math.max(
     Math.min(measureDurationLeft, Math.max(loadCostMin, targetTimesMin)) -
       loopDuration,
@@ -80,8 +80,8 @@ const LOAD_COST_RATIO = 0.5
 // Estimated duration to measure the task a specific amount of times.
 // This is the number of times the task function is measured, not the `repeat`
 // loop.
-const getTargetTimesMin = function (median) {
-  return TARGET_TIMES * median
+const getTargetTimesMin = function (taskMedian) {
+  return TARGET_TIMES * taskMedian
 }
 
 // The process ends up with slightly fewer measures that the target due to:
@@ -91,10 +91,10 @@ const getTargetTimesMin = function (median) {
 //     combination, while `repeat` is still being callibrated, `targetTimesMin`
 //     can be much larger than the real mean.
 //   - Using the whole duration of the repeat loop instead of an
-//     aggregation of the measures. The `median` do not completely capture the
+//     aggregation of the measures. The taskMedian do not completely capture the
 //     duration spent measuring. For example, if two timestamps are taken at the
-//     beginning|end, only half of them will be included in `median`. The other
-//     half will not be reflected in the measures but will still be spent.
+//     beginning|end, only half of them will be included in taskMedian. The
+//     other half will not be reflected in the measures but will still be spent.
 // Those concerns are stronger if either:
 //   - The task has a strong cold start, whether because it memoizes a lot or
 //     because the runtime optimizes it a lot later on.
@@ -115,6 +115,6 @@ const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST
 // It is estimated from previous processes.
 // This ensures users are not experiencing slow downs of the progress counter
 // at the end of a combination.
-const getLoopDuration = function (median, repeat) {
-  return median * repeat
+const getLoopDuration = function (taskMedian, repeat) {
+  return taskMedian * repeat
 }

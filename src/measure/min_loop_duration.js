@@ -120,7 +120,8 @@ const getMeasureCost = async function ({
   return { measures, measureCost }
 }
 
-// How many times slower the repeated median must be compared to `measureCost`.
+// How many times slower each repeat loop iteration must be compared to
+// `measureCost`.
 // Ensure `repeat` is high enough to decrease the impact of `measureCost`.
 // A lower value decreases precision as the variance of `measureCost`
 // contributes more to the overall variance.

@@ -10,7 +10,7 @@
 // We only reset cumulated stats like `measures`, `processes`, `loops` and
 // `times`
 // We do not reset stats which only use the last process when those cumulated
-// stats are reset, such as `median`, `repeat`. We do not reset `loadCosts`
+// stats are reset, such as `taskMedian`, `repeat`. We do not reset `loadCosts`
 // since it is unrelated to the `repeat` loop.
 export const repeatInitReset = function ({
   repeatInit,
