@@ -134,6 +134,7 @@ export const measureProcessGroup = async function ({
     processMeasures.push({ mainMeasures, repeat })
     // eslint-disable-next-line fp/no-mutation
     taskMedian = getTaskMedian(processMedians, mainMeasures, repeat)
+
     // eslint-disable-next-line fp/no-mutation
     ;[minLoopDuration, resolution, resolutionSize] = getMinLoopDuration({
       minLoopDuration,
@@ -143,7 +144,6 @@ export const measureProcessGroup = async function ({
       emptyMeasures,
       empty,
     })
-
     const newRepeat = getRepeat({
       repeat,
       taskMedian,
