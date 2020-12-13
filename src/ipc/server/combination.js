@@ -28,9 +28,8 @@ export const measureCombination = async function ({
   // eslint-disable-next-line fp/no-let
   let res = await processOutput(combination, orchestrator)
 
-  // TODO: stop loop on end of `duration * combinations.length`
-  // eslint-disable-next-line fp/no-loops
-  while (true) {
+  // eslint-disable-next-line fp/no-loops, no-await-in-loop
+  while (await waitForStart(orchestrator)) {
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
     res = await measureSample({ combination, orchestrator, res, duration })
   }
@@ -42,8 +41,6 @@ const measureSample = async function ({
   res,
   duration,
 }) {
-  await waitForStart(orchestrator)
-
   const sampleStart = getSampleStart()
 
   const [newRes] = await Promise.race([
