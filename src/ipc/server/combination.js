@@ -74,6 +74,7 @@ const sendParams = async function (combination, res) {
 const receiveReturnValue = async function (combination, orchestrator) {
   const { req, res: nextRes } = await waitForReturn(orchestrator)
   const returnValue = await getJsonReturn(req)
+  handleError(returnValue, combination)
   const newState = handleReturnValue(combination, returnValue)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(combination.state, newState)
@@ -89,6 +90,17 @@ const getJsonReturn = async function (req) {
   } catch {
     throw new PluginError('Invalid JSON return value')
   }
+}
+
+// When a task throws during load or execution, we propagate the error and fail
+// the benchmark. Tasks that throw are unstable and might yield invalid
+// benchmarks, so we fail hard.
+const handleError = function ({ error }, { taskId }) {
+  if (error === undefined) {
+    return
+  }
+
+  throw new UserError(`In task "${taskId}"\n${error}`)
 }
 
 // The `duration` configuration property is also used for timeout. This ensures:
