@@ -1,12 +1,3 @@
-import { sortFloats } from './sort.js'
-
-// Merge measures from last process to the ones from all previous processes.
-// The merged `measures` is sorted, but `childMeasures` is not sorted yet.
-export const addMeasures = function (measures, childMeasures) {
-  sortFloats(childMeasures)
-  mergeSort(measures, childMeasures)
-}
-
 // Merges two sorted arrays.
 // For better performance, the bigger array should be first.
 // The first array is directly mutated. The second is not mutated.

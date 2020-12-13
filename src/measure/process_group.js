@@ -2,7 +2,8 @@
 import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
-import { addMeasures } from '../stats/merge.js'
+import { mergeSort } from '../stats/merge.js'
+import { sortFloats } from '../stats/sort.js'
 
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
@@ -117,11 +118,10 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     times += loopDurations.length * repeat
 
-    const childMeasures = loopDurationsToMedians(loopDurations, repeat)
     // eslint-disable-next-line fp/no-mutating-methods
-    processMeasures.push(childMeasures)
+    processMeasures.push({ loopDurations, repeat })
     // eslint-disable-next-line fp/no-mutation
-    taskMedian = getTaskMedian(childMeasures, processMedians)
+    taskMedian = getTaskMedian(processMedians, loopDurations, repeat)
 
     const newRepeat = getRepeat({
       repeat,
@@ -145,8 +145,10 @@ export const measureProcessGroup = async function ({
   )
 
   const measures = []
-  processMeasures.forEach((childMeasures) => {
-    addMeasures(measures, childMeasures)
+  processMeasures.forEach(({ loopDurations, repeat }) => {
+    const childMeasures = loopDurationsToMedians(loopDurations, repeat)
+    sortFloats(childMeasures)
+    mergeSort(measures, childMeasures)
   })
 
   return { measures, processes, loops, times, loadCost }
