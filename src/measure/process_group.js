@@ -67,7 +67,7 @@ export const measureProcessGroup = async function ({
 const getInitialSampleState = function ({ runnerRepeats, initialLoadCost }) {
   return {
     processMeasures: [],
-    processMedians: [],
+    taskMedians: [],
     // `taskMedian` is initially 0. This means it is not used to compute
     // `maxDuration` in the first process.
     taskMedian: 0,
@@ -104,7 +104,7 @@ const runSample = async function ({
   // Specific to sample, modified by it
   sampleState: {
     processMeasures,
-    processMedians,
+    taskMedians,
     taskMedian,
     processes,
     loops,
@@ -153,7 +153,7 @@ const runSample = async function ({
 
   const [
     processMeasuresA,
-    processMediansA,
+    taskMediansA,
     measureCostsA,
     processesA,
     loopsA,
@@ -161,7 +161,7 @@ const runSample = async function ({
   ] = repeatInitReset({
     repeatInit,
     processMeasures,
-    processMedians,
+    taskMedians,
     measureCosts,
     processes,
     loops,
@@ -175,8 +175,8 @@ const runSample = async function ({
   // TODO: check if concat is faster
   // eslint-disable-next-line fp/no-mutating-methods
   processMeasuresA.push({ mainMeasures, repeat })
-  const [processMediansB, taskMedianA] = getTaskMedian(
-    processMediansA,
+  const [taskMediansB, taskMedianA] = getTaskMedian(
+    taskMediansA,
     mainMeasures,
     repeat,
   )
@@ -204,7 +204,7 @@ const runSample = async function ({
 
   return {
     processMeasures: processMeasuresA,
-    processMedians: processMediansB,
+    taskMedians: taskMediansB,
     taskMedian: taskMedianA,
     processes: processesB,
     loops: loopsB,
