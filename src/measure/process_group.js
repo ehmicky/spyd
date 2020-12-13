@@ -31,13 +31,6 @@ export const measureProcessGroup = async function ({
   loadDuration,
 }) {
   const processGroupEnd = now() + duration
-  const eventPayload = {
-    type: 'benchmark',
-    runConfig: commandConfig,
-    taskPath,
-    taskId,
-    inputId,
-  }
   // eslint-disable-next-line fp/no-let
   let processMeasures = []
   // eslint-disable-next-line fp/no-let
@@ -82,8 +75,12 @@ export const measureProcessGroup = async function ({
     })
     const childRepeat = getChildRepeat(repeat, runnerRepeats)
     const empty = getEmpty(repeat, repeatInit, runnerRepeats)
-    const eventPayloadA = {
-      ...eventPayload,
+    const eventPayload = {
+      type: 'benchmark',
+      runConfig: commandConfig,
+      taskPath,
+      taskId,
+      inputId,
       maxDuration,
       repeat: childRepeat,
       empty,
@@ -98,7 +95,7 @@ export const measureProcessGroup = async function ({
     } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
-      eventPayload: eventPayloadA,
+      eventPayload,
       timeoutNs: duration,
       cwd,
       taskId,
