@@ -188,9 +188,9 @@ const shouldStopProcessGroup = function ({
   repeat,
   processGroupEnd,
 }) {
-  const loopDuration = taskMedian * repeat
   return (
-    loops >= MAX_LOOPS || now() + loadCost + loopDuration >= processGroupEnd
+    loops >= MAX_LOOPS ||
+    now() + loadCost + taskMedian * repeat >= processGroupEnd
   )
 }
 
