@@ -28,21 +28,17 @@ export const repeatInitReset = function ({
 }
 
 // Decides when `repeatInit` has stopped.
-// Based on the difference between `repeat` and `newRepeat`
+// Based on the difference between `repeat` and `newRepeat`.
 export const getRepeatInit = function ({ repeatInit, repeat, newRepeat }) {
-  if (!repeatInit) {
-    return repeatInit
-  }
-
-  const repeatDiff = Math.abs(newRepeat - repeat) / repeat
-  return repeatDiff > MAX_REPEAT_DIFF
+  return repeatInit && newRepeat / repeat > MAX_REPEAT_DIFF
 }
 
 // To stop `repeatInit`, `repeat` must vary once less than this percentage.
+// It also stops when `repeat` stops increasing.
 // A higher number will include more uncallibrated measures, making the results
 // more inaccurate and imprecise.
 // A lower number will make `repeatInit` last longer, making combinations with
 // low `duration` most likely to only use once process.
 // We also need to make sure an increase due to `FAST_MEDIAN_RATE` is below that
 // threshold.
-const MAX_REPEAT_DIFF = 0.09
+const MAX_REPEAT_DIFF = 1.1
