@@ -4,7 +4,7 @@ import now from 'precise-now'
 import { executeChild } from '../processes/main.js'
 
 import { addProcessMeasures } from './add.js'
-import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
+import { startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
 import { getEmpty, getMinLoopDuration } from './min_loop_duration.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
@@ -105,9 +105,8 @@ export const measureProcessGroup = async function ({
       inputId,
       type: 'benchmarkBench',
     })
-    const childLoadCost = endLoadCost(loadCostStart, start)
     // eslint-disable-next-line fp/no-mutation
-    loadCost = getLoadCost(childLoadCost, loadCosts)
+    loadCost = endLoadCost(loadCosts, loadCostStart, start)
 
     // eslint-disable-next-line fp/no-mutation
     ;[

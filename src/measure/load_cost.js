@@ -49,10 +49,7 @@ export const startLoadCost = function () {
 
 // In case the runner resolution is low, `loadCostEnd` might have a lower
 // resolution than `loadCostStart` and the difference might be negative
-export const endLoadCost = function (loadCostStart, loadCostEnd) {
-  return Math.max(Number(BigInt(loadCostEnd) - loadCostStart), 0)
-}
-
-export const getLoadCost = function (childLoadCost, loadCosts) {
+export const endLoadCost = function (loadCosts, loadCostStart, loadCostEnd) {
+  const childLoadCost = Math.max(Number(BigInt(loadCostEnd) - loadCostStart), 0)
   return getIncrementalMedian(loadCosts, childLoadCost)
 }
