@@ -37,7 +37,6 @@ export const measureProcessGroup = async function ({
     taskPath,
     taskId,
     inputId,
-    dry: false,
   }
   // eslint-disable-next-line fp/no-let
   let processMeasures = []

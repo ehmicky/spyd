@@ -23,16 +23,13 @@ const benchmark = async function ({
   inputId,
   repeat,
   maxDuration,
-  dry,
   empty,
 }) {
-  const { main, before, after, async } = await getTask({
-    runConfig,
-    taskPath,
-    taskId,
-    inputId,
-    dry,
-  })
+  const combinations = await loadTasksFile(taskPath, runConfig)
+  const { main, before, after, async } = combinations.find(
+    (combination) =>
+      combination.taskId === taskId && combination.inputId === inputId,
+  )
   const { measures, emptyMeasures, start } = await measureTask({
     main,
     before,
@@ -43,38 +40,6 @@ const benchmark = async function ({
     empty,
   })
   return { measures, emptyMeasures, start }
-}
-
-const getTask = async function ({ runConfig, taskPath, taskId, inputId, dry }) {
-  const combinations = await loadTasksFile(taskPath, runConfig)
-
-  const { main, before, after, async } = combinations.find(
-    (combination) =>
-      combination.taskId === taskId && combination.inputId === inputId,
-  )
-  const [mainA, beforeA, afterA] = applyDry([main, before, after], dry)
-  return { main: mainA, before: beforeA, after: afterA, async }
-}
-
-const applyDry = function (funcs, dry) {
-  if (!dry) {
-    return funcs
-  }
-
-  return funcs.map(applyDryFunc)
-}
-
-// Using `before` has a slight performance impact, so we keep it as `undefined`
-// when `undefined`.
-// We create separate functions for `before`, `main` and `after` so they are
-// optimized separately
-const applyDryFunc = function (value) {
-  if (value === undefined) {
-    return
-  }
-
-  // eslint-disable-next-line no-empty-function
-  return function noop() {}
 }
 
 executeMethod({ load, benchmark })

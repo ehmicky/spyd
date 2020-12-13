@@ -38,7 +38,6 @@ const execCombination = async function ({
     taskPath,
     taskId,
     inputId,
-    dry: false,
     maxDuration: -1,
     repeat,
   }

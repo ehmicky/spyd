@@ -16,19 +16,12 @@ const getCombination = function ({ taskId, taskTitle, inputId, inputTitle }) {
 }
 
 // Compute measures
-const benchmark = async function ({
-  taskPath,
-  taskId,
-  inputId,
-  maxDuration,
-  dry,
-}) {
-  const { main, before, after, variables, shell } = await getTask({
-    taskPath,
-    taskId,
-    inputId,
-    dry,
-  })
+const benchmark = async function ({ taskPath, taskId, inputId, maxDuration }) {
+  const { combinations, shell } = await loadTasksFile(taskPath)
+  const { main, before, after, variables } = combinations.find(
+    (combination) =>
+      combination.taskId === taskId && combination.inputId === inputId,
+  )
   const { measures, start } = await measureTask({
     main,
     before,
@@ -39,21 +32,5 @@ const benchmark = async function ({
   })
   return { measures, start }
 }
-
-const getTask = async function ({ taskPath, taskId, inputId, dry }) {
-  const { combinations, shell } = await loadTasksFile(taskPath)
-
-  if (dry) {
-    return { main: DRY_FUNC, variables: {}, shell }
-  }
-
-  const { main, before, after, variables } = combinations.find(
-    (combination) =>
-      combination.taskId === taskId && combination.inputId === inputId,
-  )
-  return { main, before, after, variables, shell }
-}
-
-const DRY_FUNC = 'true'
 
 executeMethod({ load, benchmark })
