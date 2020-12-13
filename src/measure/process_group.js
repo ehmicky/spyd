@@ -48,6 +48,8 @@ export const measureProcessGroup = async function ({
   // eslint-disable-next-line fp/no-let
   let processes = 0
   // eslint-disable-next-line fp/no-let
+  let loops = 0
+  // eslint-disable-next-line fp/no-let
   let times = 0
   // `median` is initially 0. This means it is not used to compute `maxDuration`
   // in the first process.
@@ -92,15 +94,18 @@ export const measureProcessGroup = async function ({
     loadCost = getLoadCost(childLoadCost, loadCosts)
 
     // eslint-disable-next-line fp/no-mutation
-    ;[measures, processes, times] = repeatInitReset({
+    ;[measures, processes, loops, times] = repeatInitReset({
       repeatInit,
       measures,
       processes,
+      loops,
       times,
     })
 
     // eslint-disable-next-line fp/no-mutation
     processes += 1
+    // eslint-disable-next-line fp/no-mutation
+    loops += loopDurations.length
     // eslint-disable-next-line fp/no-mutation
     times += loopDurations.length * repeat
 
@@ -122,7 +127,7 @@ export const measureProcessGroup = async function ({
     repeat = newRepeat
   } while (
     !shouldStopProcessGroup({
-      measures,
+      loops,
       loadCost,
       median,
       repeat,
@@ -130,7 +135,7 @@ export const measureProcessGroup = async function ({
     })
   )
 
-  return { measures, times, processes, loadCost }
+  return { measures, processes, loops, times, loadCost }
 }
 
 // We stop iterating when the next process does not have any time to spawn a
@@ -145,7 +150,7 @@ export const measureProcessGroup = async function ({
 //   - Not doing it would make the `times` increment less gradually as the
 //     `duration` increases.
 const shouldStopProcessGroup = function ({
-  measures,
+  loops,
   loadCost,
   median,
   repeat,
@@ -153,8 +158,7 @@ const shouldStopProcessGroup = function ({
 }) {
   const loopDuration = median * repeat
   return (
-    measures.length >= MAX_LOOPS ||
-    now() + loadCost + loopDuration >= processGroupEnd
+    loops >= MAX_LOOPS || now() + loadCost + loopDuration >= processGroupEnd
   )
 }
 

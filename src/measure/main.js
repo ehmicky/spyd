@@ -40,8 +40,9 @@ export const getCombinationResult = async function ({
 
   const {
     measures,
-    times,
     processes,
+    loops,
+    times,
     minLoopDuration,
     loadCost,
   } = await measureCombination({
@@ -60,8 +61,9 @@ export const getCombinationResult = async function ({
 
   const stats = getStats({
     measures,
-    times,
     processes,
+    loops,
+    times,
     minLoopDuration,
     loadCost,
   })

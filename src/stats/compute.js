@@ -1,10 +1,6 @@
 import { getHistogram } from './histogram.js'
 import { getMin, getMax } from './min_max.js'
-import {
-  getOutliersMax,
-  getNonOutliersLength,
-  OUTLIERS_THRESHOLD,
-} from './outliers.js'
+import { getNonOutliersLength, OUTLIERS_THRESHOLD } from './outliers.js'
 import { getSortedMedian, getQuantiles } from './quantile.js'
 import { getMean, getDeviation } from './sum.js'
 
@@ -17,13 +13,14 @@ import { getMean, getDeviation } from './sum.js'
 // function itself.
 export const getStats = function ({
   measures,
-  times,
   processes,
+  loops,
+  times,
   minLoopDuration,
   loadCost,
 }) {
   const {
-    loops,
+    loops: loopsA,
     repeat,
     times: timesA,
     min,
@@ -33,7 +30,7 @@ export const getStats = function ({
     histogram,
     mean,
     deviation,
-  } = computeStats(measures, times)
+  } = computeStats(measures, loops, times)
 
   return {
     median,
@@ -41,7 +38,7 @@ export const getStats = function ({
     min,
     max,
     deviation,
-    loops,
+    loops: loopsA,
     times: timesA,
     repeat,
     processes,
@@ -53,13 +50,13 @@ export const getStats = function ({
 }
 
 // eslint-disable-next-line max-statements
-const computeStats = function (measures, times) {
+const computeStats = function (measures, loops, times) {
   // `times` is the number of times `main()` was called
   // `loops` is the number of repeat loops
   // `repeat` is the average number of iterations inside those repeat loops
-  const loops = getOutliersMax(measures, OUTLIERS_THRESHOLD)
+  const loopsA = getNonOutliersLength(loops, OUTLIERS_THRESHOLD)
   const timesA = getNonOutliersLength(times, OUTLIERS_THRESHOLD)
-  const repeat = Math.round(timesA / loops)
+  const repeat = Math.round(timesA / loopsA)
 
   const min = getMin(measures)
   const max = getMax(measures, OUTLIERS_THRESHOLD)
@@ -72,7 +69,7 @@ const computeStats = function (measures, times) {
   const deviation = getDeviation(measures, mean, OUTLIERS_THRESHOLD)
 
   return {
-    loops,
+    loops: loopsA,
     times: timesA,
     repeat,
     min,
