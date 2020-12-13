@@ -1,18 +1,10 @@
+import { sortFloats } from './sort.js'
+
 // Merge measures from last process to the ones from all previous processes.
 // The merged `measures` is sorted, but `childMeasures` is not sorted yet.
 export const addMeasures = function (measures, childMeasures) {
-  sortNumbers(childMeasures)
+  sortFloats(childMeasures)
   mergeSort(measures, childMeasures)
-}
-
-// Sort an array of numbers
-const sortNumbers = function (array) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  array.sort(compareNumbers)
-}
-
-const compareNumbers = function (numA, numB) {
-  return numA - numB
 }
 
 // Merges two sorted arrays.
