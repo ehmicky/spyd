@@ -48,16 +48,16 @@ export const runProcesses = async function ({
 // Spawn each combination's process.
 // All combinations are loaded in parallel, for performance.
 const startProcess = function (combination, origin) {
-  const loadInput = getLoadInput(combination, origin)
-  const loadInputString = JSON.stringify(loadInput)
-  const childProcess = execa('node', [CLIENT_ENTRYFILE, loadInputString], {
+  const loadParams = getLoadParams(combination, origin)
+  const loadParamsString = JSON.stringify(loadParams)
+  const childProcess = execa('node', [CLIENT_ENTRYFILE, loadParamsString], {
     stdio: 'ignore',
   })
   return { childProcess, combination }
 }
 
-// Retrieve inputs passed to runner processes so they can load the right task
-const getLoadInput = function ({ taskId, clientId }, origin) {
+// Retrieve params passed to runner processes so they can load the right task
+const getLoadParams = function ({ taskId, clientId }, origin) {
   const serverUrl = getServerUrl(origin, clientId)
   return { serverUrl, taskId }
 }

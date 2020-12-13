@@ -5,9 +5,9 @@ import getStream from 'get-stream'
 import { PluginError, UserError } from '../../error/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
-import { getInput } from './input.js'
 import { waitForStart, waitForOutput } from './orchestrator.js'
 import { handleOutput } from './output.js'
+import { getParams } from './params.js'
 
 const pSetTimeout = promisify(setTimeout)
 
@@ -44,29 +44,29 @@ const measureSample = async function ({
   return newRes
 }
 
-// We are listening for output before sending input to prevent race condition
+// We are listening for output before sending params to prevent race condition
 const processCombination = async function ({ combination, orchestrator, res }) {
   return await Promise.all([
     receiveOutput(combination, orchestrator),
-    sendInput(combination, res),
+    sendParams(combination, res),
   ])
 }
 
-// Send the next sample's input by responding to the HTTP long poll request.
+// Send the next sample's params by responding to the HTTP long poll request.
 // Runners use long polling:
 //  - They send their output with a new HTTP request
-//  - The server keeps the request alive until a new input is available, which
-//    is then sent as a response
+//  - The server keeps the request alive until new params are available, which
+//    are then sent as a response
 // We use long polling instead of real bidirectional procotols because it is
 // simpler to implement in runners.
 // There is only one single endpoint for each runner, meant to run a new
 // measuring sample:
-//   - The server sends some input to indicate how long to run the sample
+//   - The server sends some params to indicate how long to run the sample
 //   - The runner sends the results back as output
-const sendInput = async function (combination, res) {
-  const input = getInput(combination)
-  const inputString = JSON.stringify(input)
-  await promisify(res.end.bind(res))(inputString)
+const sendParams = async function (combination, res) {
+  const params = getParams(combination)
+  const paramsString = JSON.stringify(params)
+  await promisify(res.end.bind(res))(paramsString)
 }
 
 // Receive the sample's output by receiving a HTTP long poll request.

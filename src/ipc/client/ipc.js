@@ -3,22 +3,22 @@ import { argv } from 'process'
 import fetch from 'cross-fetch'
 
 export const startRunner = async function ({ load, bench }) {
-  const { serverUrl, initialInput } = parseInput()
+  const { serverUrl, loadParams } = parseLoadParams()
   // eslint-disable-next-line fp/no-let
-  let output = load(initialInput)
+  let output = load(loadParams)
 
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    const input = await sendOutput(output, serverUrl)
+    const params = await sendOutput(output, serverUrl)
     // eslint-disable-next-line fp/no-mutation
-    output = bench(input)
+    output = bench(params)
   } while (true)
 }
 
-const parseInput = function () {
-  const { serverUrl, ...initialInput } = JSON.parse(argv[2])
-  return { serverUrl, initialInput }
+const parseLoadParams = function () {
+  const { serverUrl, ...loadParams } = JSON.parse(argv[2])
+  return { serverUrl, loadParams }
 }
 
 const sendOutput = async function (output, serverUrl) {
@@ -27,6 +27,6 @@ const sendOutput = async function (output, serverUrl) {
     method: 'POST',
     body: outputString,
   })
-  const nextInput = await response.json()
-  return nextInput
+  const params = await response.json()
+  return params
 }
