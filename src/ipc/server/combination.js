@@ -46,7 +46,7 @@ const measureSample = async function ({
 
   const sampleStart = getSampleStart()
 
-  const newRes = await Promise.race([
+  const [newRes] = await Promise.race([
     processCombination({ combination, orchestrator, res }),
     waitForSampleTimeout(duration, combination),
   ])
@@ -55,17 +55,18 @@ const measureSample = async function ({
   return newRes
 }
 
+// We are listening for output before sending input to prevent race condition
 const processCombination = async function ({ combination, orchestrator, res }) {
-  await processInput(combination, res)
-  const nextRes = await processOutput(combination, orchestrator)
-  return nextRes
+  return await Promise.all([
+    processOutput(combination, orchestrator),
+    processInput(combination, res),
+  ])
 }
 
 const processInput = async function (combination, res) {
   const input = getInput(combination)
   const inputString = JSON.stringify(input)
   await promisify(res.end.bind(res))(inputString)
-  return inputString
 }
 
 const processOutput = async function (combination, orchestrator) {
