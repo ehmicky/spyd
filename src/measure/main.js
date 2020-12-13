@@ -28,7 +28,7 @@ export const getCombinationResult = async function ({
   runnerRepeats,
   systemId,
   systemTitle,
-  loadDuration,
+  initialLoadCost,
   index,
   progressState,
   config: { duration, cwd },
@@ -53,7 +53,7 @@ export const getCombinationResult = async function ({
     commandSpawnOptions,
     commandConfig,
     runnerRepeats,
-    loadDuration,
+    initialLoadCost,
     duration,
     cwd,
   })

@@ -15,7 +15,7 @@ export const measureCombination = async function ({
   commandSpawnOptions,
   commandConfig,
   runnerRepeats,
-  loadDuration,
+  initialLoadCost,
   duration,
   cwd,
 }) {
@@ -36,7 +36,7 @@ export const measureCombination = async function ({
     runnerRepeats,
     duration,
     cwd,
-    loadDuration,
+    initialLoadCost,
   })
   return { measures, processes, loops, times, minLoopDuration, loadCost }
 }

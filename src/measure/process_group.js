@@ -28,7 +28,7 @@ export const measureProcessGroup = async function ({
   runnerRepeats,
   duration,
   cwd,
-  loadDuration,
+  initialLoadCost,
 }) {
   const processGroupEnd = now() + duration
   // eslint-disable-next-line fp/no-let
@@ -63,7 +63,7 @@ export const measureProcessGroup = async function ({
   // we don't share the `previous` array between those.
   const loadCosts = []
   // eslint-disable-next-line fp/no-let
-  let loadCost = loadDuration
+  let loadCost = initialLoadCost
 
   // eslint-disable-next-line fp/no-loops
   do {

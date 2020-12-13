@@ -27,7 +27,7 @@ export const getCommandCombinations = async function ({
     cwd,
     type: 'load',
   })
-  const loadDuration = now() - start
+  const initialLoadCost = now() - start
 
   if (combinations.length === 0) {
     throw new UserError(`File '${taskPath}' does not any tasks`)
@@ -37,7 +37,7 @@ export const getCommandCombinations = async function ({
     normalizeCombination(combination, command, {
       taskPath,
       system,
-      loadDuration,
+      initialLoadCost,
     }),
   )
   return combinationsA
@@ -55,7 +55,7 @@ const normalizeCombination = function (
     commandConfig,
     runnerRepeats,
   },
-  { taskPath, system: { id: systemId, title: systemTitle }, loadDuration },
+  { taskPath, system: { id: systemId, title: systemTitle }, initialLoadCost },
 ) {
   const inputIdA = inputId.trim()
 
@@ -77,6 +77,6 @@ const normalizeCombination = function (
     runnerRepeats,
     systemId,
     systemTitle,
-    loadDuration,
+    initialLoadCost,
   }
 }
