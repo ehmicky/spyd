@@ -27,7 +27,6 @@ export const measureCombination = async function ({
     loadCost,
     minLoopDuration,
   } = await measureProcessGroup({
-    sampleType: 'measureTask',
     taskPath,
     taskId,
     inputId,

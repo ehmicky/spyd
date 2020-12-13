@@ -19,7 +19,6 @@ import { getTaskMedian } from './task_median.js'
 //    would be perceived by users
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const measureProcessGroup = async function ({
-  sampleType,
   taskPath,
   taskId,
   inputId,
@@ -145,7 +144,6 @@ export const measureProcessGroup = async function ({
     const newRepeat = getRepeat({
       repeat,
       taskMedian,
-      sampleType,
       minLoopDuration,
       runnerRepeats,
     })
