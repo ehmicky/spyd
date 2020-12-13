@@ -1,4 +1,4 @@
-import { getIncrementalMedian } from '../stats/quantile.js'
+import { getIncrementalMedian } from '../stats/median.js'
 
 import { preciseTimestamp } from './precise_timestamp.js'
 

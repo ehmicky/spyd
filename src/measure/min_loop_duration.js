@@ -1,5 +1,5 @@
+import { getMediansMedian } from '../stats/median.js'
 import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
-import { getMediansMedian } from '../stats/quantile.js'
 
 import { getResolution } from './resolution.js'
 

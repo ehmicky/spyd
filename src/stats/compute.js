@@ -1,7 +1,8 @@
 import { getHistogram } from './histogram.js'
+import { getMedian } from './median.js'
 import { getMin, getMax } from './min_max.js'
 import { getNonOutliersLength, OUTLIERS_THRESHOLD } from './outliers.js'
-import { getMedian, getQuantiles } from './quantile.js'
+import { getQuantiles } from './quantile.js'
 import { getMean, getDeviation } from './sum.js'
 
 // Retrieve statistics from results.
