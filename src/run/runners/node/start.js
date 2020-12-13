@@ -24,6 +24,7 @@ const benchmark = async function ({
   repeat,
   maxDuration,
   dry,
+  empty,
 }) {
   const { main, before, after, async } = await getTask({
     runConfig,
@@ -32,15 +33,16 @@ const benchmark = async function ({
     inputId,
     dry,
   })
-  const { measures, start } = await measureTask({
+  const { measures, emptyMeasures, start } = await measureTask({
     main,
     before,
     after,
     async,
     repeat,
     maxDuration,
+    empty,
   })
-  return { measures, start }
+  return { measures, emptyMeasures, start }
 }
 
 const getTask = async function ({ runConfig, taskPath, taskId, inputId, dry }) {

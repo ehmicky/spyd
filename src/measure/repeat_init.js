@@ -16,15 +16,23 @@ export const repeatInitReset = function ({
   repeatInit,
   processMeasures,
   processMedians,
+  measureCosts,
   processes,
   loops,
   times,
 }) {
   if (!repeatInit || processes === 0) {
-    return [processMeasures, processMedians, processes, loops, times]
+    return [
+      processMeasures,
+      processMedians,
+      measureCosts,
+      processes,
+      loops,
+      times,
+    ]
   }
 
-  return [[], [], 0, 0, 0]
+  return [[], [], [], 0, 0, 0]
 }
 
 // Decides when `repeatInit` has stopped.

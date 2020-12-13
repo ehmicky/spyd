@@ -1,8 +1,46 @@
+import { mergeSort } from '../stats/merge.js'
 import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
-import { getMedian } from '../stats/quantile.js'
+import { getApproximateMedian, getMedian } from '../stats/quantile.js'
 
-import { measureProcessGroup } from './process_group.js'
 import { getMinResolutionDuration } from './resolution.js'
+
+// Returns whether the runner should compute empty tasks (for `measureCost`).
+// This is only needed when the `repeat` loop is used, i.e. when `repeat` is
+// not `1`. However, when `runnerRepeats` is `true`, `repeat` might be `1` due
+// to not being callibrated yet.
+// When `runner.repeat` is `false`, `empty` is always `undefined` and runner
+// should not compute empty tasks.
+export const getEmpty = function (repeat, repeatInit, runnerRepeats) {
+  if (!runnerRepeats) {
+    return
+  }
+
+  return repeat !== 1 || repeatInit
+}
+
+// This function estimates `measureCost` by making runners measure empty tasks.
+// That cost must be computed separately for each combination since they might
+// vary depending on the task, input or system. For example, tasks with more
+// iterations per process have more time to optimize `measureCost`, which is
+// usually faster then.
+// This is based on a median of the median measures of the previous processes.
+// Since sorting big arrays is very slow, we only sort a sample of them.
+export const getMeasureCost = function (measureCosts, emptyMeasures) {
+  const processMeasureCost = getApproximateMedian(
+    emptyMeasures,
+    EMPTY_MEASURES_SORT_MAX,
+    OUTLIERS_THRESHOLD,
+  )
+  mergeSort(measureCosts, [processMeasureCost])
+  const measureCost = getMedian(measureCosts, 1)
+  return measureCost
+}
+
+// Size of the sorting sample.
+// A lower value will make `repeat` vary more, which will increase the overall
+// variance.
+// A higher value will increase the time to sort by `O(n * log(n))`
+const EMPTY_MEASURES_SORT_MAX = 1e2
 
 // `measureCost` is the time taken to take a measurement.
 // This includes the time to get the start/end timestamps for example.
@@ -50,74 +88,10 @@ import { getMinResolutionDuration } from './resolution.js'
 //  - The best way to benchmark those very fast functions is to increase their
 //    complexity. Since the runner already runs those in a "for" loop, the only
 //    thing that a task should do is increase the size of its inputs.
-export const getMinLoopDuration = async function ({
-  taskPath,
-  taskId,
-  inputId,
-  commandSpawn,
-  commandSpawnOptions,
-  commandConfig,
-  runnerRepeats,
-  processGroupDuration,
-  cwd,
-  loadDuration,
-}) {
-  const { measures, measureCost } = await getMeasureCost({
-    taskPath,
-    taskId,
-    inputId,
-    commandSpawn,
-    commandSpawnOptions,
-    commandConfig,
-    runnerRepeats,
-    processGroupDuration,
-    cwd,
-    loadDuration,
-  })
+export const getMinLoopDuration = function (measureCost) {
   const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
-  const minResolutionDuration = getMinResolutionDuration(measures)
+  const minResolutionDuration = 1 // getMinResolutionDuration(measures)
   return Math.max(minResolutionDuration, minMeasureCostDuration)
-}
-
-// This function estimates `measureCost` by measuring an empty task.
-// That cost must be computed separately for each combination since they might
-// vary depending on:
-//  - the task. Some runners might allow task-specific configuration impacting
-//    measuring. For example, the `node` runner has the `async` configuration
-//    property.
-//  - the input. The size of the input or whether an input is used or not
-//    might impact measuring.
-//  - the system. For example, runConfig.
-const getMeasureCost = async function ({
-  taskPath,
-  taskId,
-  inputId,
-  commandSpawn,
-  commandSpawnOptions,
-  commandConfig,
-  runnerRepeats,
-  processGroupDuration,
-  cwd,
-  loadDuration,
-}) {
-  const { measures } = await measureProcessGroup({
-    sampleType: 'measureCost',
-    taskPath,
-    taskId,
-    inputId,
-    commandSpawn,
-    commandSpawnOptions,
-    commandConfig,
-    runnerRepeats,
-    processGroupDuration,
-    cwd,
-    loadDuration,
-    measureCost: 0,
-    resolution: 1,
-    dry: true,
-  })
-  const measureCost = getMedian(measures, OUTLIERS_THRESHOLD)
-  return { measures, measureCost }
 }
 
 // How many times slower each repeat loop iteration must be compared to

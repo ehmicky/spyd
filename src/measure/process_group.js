@@ -4,6 +4,7 @@ import now from 'precise-now'
 import { executeChild } from '../processes/main.js'
 
 import { addProcessMeasures } from './add.js'
+import { getEmpty, getMeasureCost, getMinLoopDuration } from './empty.js'
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
@@ -29,7 +30,6 @@ export const measureProcessGroup = async function ({
   processGroupDuration,
   cwd,
   loadDuration,
-  minLoopDuration,
   dry,
 }) {
   const processGroupEnd = now() + processGroupDuration
@@ -45,6 +45,10 @@ export const measureProcessGroup = async function ({
   let processMeasures = []
   // eslint-disable-next-line fp/no-let
   let processMedians = []
+  // eslint-disable-next-line fp/no-let
+  let measureCosts = []
+  // eslint-disable-next-line fp/no-let
+  let minLoopDuration = 0
   // eslint-disable-next-line fp/no-let
   let processes = 0
   // eslint-disable-next-line fp/no-let
@@ -76,13 +80,24 @@ export const measureProcessGroup = async function ({
       taskMedian,
     })
     const childRepeat = getChildRepeat(repeat, runnerRepeats)
+    const empty = getEmpty(repeat, repeatInit, runnerRepeats)
+    const eventPayloadA = {
+      ...eventPayload,
+      maxDuration,
+      repeat: childRepeat,
+      empty,
+    }
 
     const loadCostStart = startLoadCost()
-    // eslint-disable-next-line no-await-in-loop
-    const { measures: loopDurations, start } = await executeChild({
+    const {
+      measures: loopDurations,
+      emptyMeasures,
+      start,
+      // eslint-disable-next-line no-await-in-loop
+    } = await executeChild({
       commandSpawn,
       commandSpawnOptions,
-      eventPayload: { ...eventPayload, maxDuration, repeat: childRepeat },
+      eventPayload: eventPayloadA,
       timeoutNs: processGroupDuration,
       cwd,
       taskId,
@@ -97,6 +112,7 @@ export const measureProcessGroup = async function ({
     ;[
       processMeasures,
       processMedians,
+      measureCosts,
       processes,
       loops,
       times,
@@ -104,6 +120,7 @@ export const measureProcessGroup = async function ({
       repeatInit,
       processMeasures,
       processMedians,
+      measureCosts,
       processes,
       loops,
       times,
@@ -120,6 +137,10 @@ export const measureProcessGroup = async function ({
     processMeasures.push({ loopDurations, repeat })
     // eslint-disable-next-line fp/no-mutation
     taskMedian = getTaskMedian(processMedians, loopDurations, repeat)
+
+    const measureCost = getMeasureCost(measureCosts, emptyMeasures)
+    // eslint-disable-next-line fp/no-mutation
+    minLoopDuration = getMinLoopDuration(measureCost)
 
     const newRepeat = getRepeat({
       repeat,
@@ -145,7 +166,7 @@ export const measureProcessGroup = async function ({
   const measures = []
   addProcessMeasures(measures, processMeasures)
 
-  return { measures, processes, loops, times, loadCost }
+  return { measures, processes, loops, times, loadCost, minLoopDuration }
 }
 
 // We stop iterating when the next process does not have any time to spawn a

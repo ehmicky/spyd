@@ -1,6 +1,3 @@
-import now from 'precise-now'
-
-import { getMinLoopDuration } from './min_loop_duration.js'
 import { measureProcessGroup } from './process_group.js'
 
 // We measure by spawning processes until reaching the max `duration`.
@@ -20,28 +17,15 @@ export const measureCombination = async function ({
   runnerRepeats,
   loadDuration,
   duration,
-  combinationEnd,
   cwd,
 }) {
-  const costDuration = duration * COST_DURATION_RATIO
-  const minLoopDuration = await getMinLoopDuration({
-    taskPath,
-    taskId,
-    inputId,
-    commandSpawn,
-    commandSpawnOptions,
-    commandConfig,
-    runnerRepeats,
-    processGroupDuration: costDuration,
-    cwd,
-    loadDuration,
-  })
   const {
     measures,
     processes,
     loops,
     times,
     loadCost,
+    minLoopDuration,
   } = await measureProcessGroup({
     sampleType: 'measureTask',
     taskPath,
@@ -51,15 +35,10 @@ export const measureCombination = async function ({
     commandSpawnOptions,
     commandConfig,
     runnerRepeats,
-    processGroupDuration: combinationEnd - now(),
+    processGroupDuration: duration,
     cwd,
     loadDuration,
-    minLoopDuration,
     dry: false,
   })
   return { measures, processes, loops, times, minLoopDuration, loadCost }
 }
-
-// Cost estimates must be very precise to measure fast tasks accurately.
-// So we dedicate a significant part of the total combination to them.
-const COST_DURATION_RATIO = 0.1

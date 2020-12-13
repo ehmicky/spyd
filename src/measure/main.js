@@ -55,7 +55,6 @@ export const getCombinationResult = async function ({
     runnerRepeats,
     loadDuration,
     duration,
-    combinationEnd,
     cwd,
   })
 

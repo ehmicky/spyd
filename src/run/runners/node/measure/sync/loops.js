@@ -1,3 +1,4 @@
+import { addEmptyMeasure } from '../empty.js'
 import { shouldStopMeasuring } from '../stop.js'
 
 import { performBeforeSync, performAfterSync } from './before_after.js'
@@ -11,17 +12,26 @@ export const performLoopsSync = function ({
   repeat,
   measureEnd,
   measures,
+  emptyMeasures,
 }) {
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line fp/no-mutating-methods
-    measures.push(performLoopSync({ main, before, after, repeat }))
+    performLoopSync({ main, before, after, repeat, measures, emptyMeasures })
   } while (!shouldStopMeasuring(measureEnd))
 }
 
-const performLoopSync = function ({ main, before, after, repeat }) {
+const performLoopSync = function ({
+  main,
+  before,
+  after,
+  repeat,
+  measures,
+  emptyMeasures,
+}) {
+  addEmptyMeasure(emptyMeasures)
+
   const beforeArgs = performBeforeSync(before, repeat)
-  const duration = getDurationSync(main, repeat, beforeArgs)
+  // eslint-disable-next-line fp/no-mutating-methods
+  measures.push(getDurationSync(main, repeat, beforeArgs))
   performAfterSync(after, repeat, beforeArgs)
-  return duration
 }
