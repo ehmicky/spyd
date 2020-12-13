@@ -14,7 +14,7 @@ export const measureTask = async function ({
   maxDuration,
   empty,
 }) {
-  const { measures, emptyMeasures, start, measureEnd } = startMeasuring(
+  const { mainMeasures, emptyMeasures, start, measureEnd } = startMeasuring(
     maxDuration,
     empty,
   )
@@ -25,10 +25,10 @@ export const measureTask = async function ({
     async,
     repeat,
     measureEnd,
-    measures,
+    mainMeasures,
     emptyMeasures,
   })
-  return { measures, emptyMeasures, start }
+  return { mainMeasures, emptyMeasures, start }
 }
 
 // We separate async and sync measurements because following a promise (`await`)
@@ -41,7 +41,7 @@ const performLoops = function ({
   async,
   repeat,
   measureEnd,
-  measures,
+  mainMeasures,
   emptyMeasures,
 }) {
   if (async) {
@@ -51,7 +51,7 @@ const performLoops = function ({
       after,
       repeat,
       measureEnd,
-      measures,
+      mainMeasures,
       emptyMeasures,
     })
   }
@@ -62,7 +62,7 @@ const performLoops = function ({
     after,
     repeat,
     measureEnd,
-    measures,
+    mainMeasures,
     emptyMeasures,
   })
 }

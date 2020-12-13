@@ -15,22 +15,29 @@ export const measureTask = async function ({
   shell,
   maxDuration,
 }) {
-  const { measures, start, measureEnd } = startMeasuring(maxDuration)
+  const { mainMeasures, start, measureEnd } = startMeasuring(maxDuration)
 
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line no-await-in-loop, fp/no-mutating-methods
-    measures.push(await performLoop({ main, before, after, variables, shell }))
+    // eslint-disable-next-line no-await-in-loop
+    await performLoop({ main, before, after, variables, shell, mainMeasures })
   } while (now() < measureEnd)
 
-  return { measures, start }
+  return { mainMeasures, start }
 }
 
-const performLoop = async function ({ main, before, after, variables, shell }) {
+const performLoop = async function ({
+  main,
+  before,
+  after,
+  variables,
+  shell,
+  mainMeasures,
+}) {
   const variablesA = await performBefore({ before, variables, shell })
-  const measure = await getDuration({ main, variables: variablesA, shell })
+  // eslint-disable-next-line fp/no-mutating-methods
+  mainMeasures.push(await getDuration({ main, variables: variablesA, shell }))
   await performAfter({ after, variables: variablesA, shell })
-  return measure
 }
 
 // Task `before`. Performed outside measurements.

@@ -1,20 +1,30 @@
 import { mergeSort } from '../stats/merge.js'
 import { sortFloats } from '../stats/sort.js'
 
-import { loopDurationsToMedians } from './normalize.js'
-
 // Add all not-merged-yet measures from the last processes.
 // Sort them incrementally to the final `measures` big array, as opposed to
 // sorting `measures` directly, which would be much slower.
-// The measures are also normalized from loopDurations + repeat.
+// The measures are also normalized from mainMeasures + repeat.
 export const addProcessMeasures = function (measures, processMeasures) {
-  processMeasures.forEach(({ loopDurations, repeat }) => {
-    addMeasures(measures, loopDurations, repeat)
+  processMeasures.forEach(({ mainMeasures, repeat }) => {
+    addMeasures(measures, mainMeasures, repeat)
   })
 }
 
-const addMeasures = function (measures, loopDurations, repeat) {
-  const newMeasures = loopDurationsToMedians(loopDurations, repeat)
+const addMeasures = function (measures, mainMeasures, repeat) {
+  const newMeasures = normalizeMainMeasures(mainMeasures, repeat)
   sortFloats(newMeasures)
   mergeSort(measures, newMeasures)
+}
+
+// The runner measures loops of the task. This retrieve the mean time to execute
+// the task each time, from the time to execute the whole loop.
+const normalizeMainMeasures = function (mainMeasures, repeat) {
+  if (repeat === 1) {
+    return mainMeasures
+  }
+
+  // Somehow this is faster than direct mutation, providing `mainMeasures` is
+  // not used anymore after this function and can be garbage collected.
+  return mainMeasures.map((mainMeasure) => mainMeasure / repeat)
 }

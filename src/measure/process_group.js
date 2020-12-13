@@ -87,7 +87,7 @@ export const measureProcessGroup = async function ({
 
     const loadCostStart = startLoadCost()
     const {
-      measures: loopDurations,
+      mainMeasures,
       emptyMeasures,
       start,
       // eslint-disable-next-line no-await-in-loop
@@ -126,14 +126,14 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     processes += 1
     // eslint-disable-next-line fp/no-mutation
-    loops += loopDurations.length
+    loops += mainMeasures.length
     // eslint-disable-next-line fp/no-mutation
-    times += loopDurations.length * repeat
+    times += mainMeasures.length * repeat
 
     // eslint-disable-next-line fp/no-mutating-methods
-    processMeasures.push({ loopDurations, repeat })
+    processMeasures.push({ mainMeasures, repeat })
     // eslint-disable-next-line fp/no-mutation
-    taskMedian = getTaskMedian(processMedians, loopDurations, repeat)
+    taskMedian = getTaskMedian(processMedians, mainMeasures, repeat)
     // eslint-disable-next-line fp/no-mutation
     minLoopDuration = getMinLoopDuration({
       minLoopDuration,

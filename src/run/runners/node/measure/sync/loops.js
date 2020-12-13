@@ -11,12 +11,19 @@ export const performLoopsSync = function ({
   after,
   repeat,
   measureEnd,
-  measures,
+  mainMeasures,
   emptyMeasures,
 }) {
   // eslint-disable-next-line fp/no-loops
   do {
-    performLoopSync({ main, before, after, repeat, measures, emptyMeasures })
+    performLoopSync({
+      main,
+      before,
+      after,
+      repeat,
+      mainMeasures,
+      emptyMeasures,
+    })
   } while (!shouldStopMeasuring(measureEnd))
 }
 
@@ -25,13 +32,13 @@ const performLoopSync = function ({
   before,
   after,
   repeat,
-  measures,
+  mainMeasures,
   emptyMeasures,
 }) {
   addEmptyMeasure(emptyMeasures)
 
   const beforeArgs = performBeforeSync(before, repeat)
   // eslint-disable-next-line fp/no-mutating-methods
-  measures.push(getDurationSync(main, repeat, beforeArgs))
+  mainMeasures.push(getDurationSync(main, repeat, beforeArgs))
   performAfterSync(after, repeat, beforeArgs)
 }

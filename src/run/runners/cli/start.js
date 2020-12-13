@@ -22,7 +22,7 @@ const benchmark = async function ({ taskPath, taskId, inputId, maxDuration }) {
     (combination) =>
       combination.taskId === taskId && combination.inputId === inputId,
   )
-  const { measures, start } = await measureTask({
+  const { mainMeasures, start } = await measureTask({
     main,
     before,
     after,
@@ -30,7 +30,7 @@ const benchmark = async function ({ taskPath, taskId, inputId, maxDuration }) {
     shell,
     maxDuration,
   })
-  return { measures, start }
+  return { mainMeasures, start }
 }
 
 executeMethod({ load, benchmark })

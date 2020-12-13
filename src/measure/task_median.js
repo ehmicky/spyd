@@ -5,13 +5,13 @@ import { getApproximateMedian, getMedian } from '../stats/quantile.js'
 // Retrieve an approximation of the task's median measure.
 // This is based on a median of the median measures of the previous processes.
 // Since sorting big arrays is very slow, we only sort a sample of them.
-export const getTaskMedian = function (processMedians, loopDurations, repeat) {
-  const medianLoopDuration = getApproximateMedian(
-    loopDurations,
+export const getTaskMedian = function (processMedians, mainMeasures, repeat) {
+  const medianMainMeasure = getApproximateMedian(
+    mainMeasures,
     CHILD_MEASURES_SORT_MAX,
     OUTLIERS_THRESHOLD,
   )
-  const processTaskMedian = medianLoopDuration / repeat
+  const processTaskMedian = medianMainMeasure / repeat
   mergeSort(processMedians, [processTaskMedian])
   const taskMedian = getMedian(processMedians, 1)
   return taskMedian

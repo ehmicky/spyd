@@ -109,9 +109,9 @@ const TARGET_TIMES_ADJUST = 1.1
 // impact on variance.
 const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST
 
-// We remove the `loopDuration` to guarantee runners stop right under the target
+// We remove the loop duration to guarantee runners stop right under the target
 // duration, not right above.
-// `loopDuration` is the duration for the runner to perform a single repeat loop
+// This is the duration for the runner to perform a single repeat loop
 // It is estimated from previous processes.
 // This ensures users are not experiencing slow downs of the progress counter
 // at the end of a combination.
