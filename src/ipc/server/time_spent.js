@@ -1,24 +1,23 @@
 import now from 'precise-now'
+import randomItem from 'random-item'
 
-export const setSampleStart = function (combination) {
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  combination.sampleStart = now()
+export const getSampleStart = function () {
+  return now()
 }
 
-export const addTimeSpent = function ({
-  combination,
-  combination: { sampleStart },
-}) {
-  if (sampleStart === undefined) {
-    return
-  }
-
+export const addTimeSpent = function (combination, sampleStart) {
   const sampleDuration = now() - sampleStart
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   combination.timeSpent += sampleDuration
 }
 
-export const getMinCombinations = function (combinations) {
+export const getNextCombination = function (combinations) {
+  const minCombinations = getMinCombinations(combinations)
+  const combination = randomItem(minCombinations)
+  return combination
+}
+
+const getMinCombinations = function (combinations) {
   const minTimeSpent = getMinTimeSpent(combinations)
   return combinations.filter(({ timeSpent }) => timeSpent === minTimeSpent)
 }

@@ -1,19 +1,18 @@
-import { handleRequests } from './handler.js'
+import { initOrchestrators } from './orchestrator.js'
 import { runProcesses } from './process.js'
 import { startServer, stopServer } from './start_stop.js'
 import { createClientId } from './url.js'
-import { createBarrier } from './wait.js'
 
 const runCombinations = async function ({ duration }) {
   const combinations = getCombinations()
 
-  const { httpServer, origin } = await startServer(duration)
+  const { server, origin } = await startServer(duration)
 
   try {
-    handleRequests(combinations, httpServer)
-    await runProcesses({ combinations, origin, duration })
+    const combinationsA = initOrchestrators(server, combinations)
+    await runProcesses({ combinations: combinationsA, origin, duration })
   } finally {
-    await stopServer(httpServer)
+    await stopServer(server)
   }
 }
 
@@ -28,8 +27,7 @@ const getCombinations = function () {
 
 const addDefaultState = function (combination) {
   const clientId = createClientId()
-  const barriers = { load: createBarrier(), start: createBarrier() }
-  return { ...combination, clientId, barriers, timeSpent: 0, measures: [] }
+  return { ...combination, clientId, timeSpent: 0, measures: [] }
 }
 
 runCombinations({ duration: 1e9 })
