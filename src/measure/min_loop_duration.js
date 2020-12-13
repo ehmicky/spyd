@@ -2,7 +2,7 @@ import { mergeSort } from '../stats/merge.js'
 import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
 import { getApproximateMedian, getMedian } from '../stats/quantile.js'
 
-import { getMinResolutionDuration } from './resolution.js'
+import { getResolution } from './resolution.js'
 
 // This function returns whether the runner should measure empty tasks.
 // This is needed in order to compute `measureCost`.
@@ -95,17 +95,28 @@ export const getEmpty = function (repeat, repeatInit, runnerRepeats) {
 export const getMinLoopDuration = function ({
   minLoopDuration,
   measureCosts,
+  resolution,
+  resolutionSize,
   emptyMeasures,
   empty,
 }) {
   if (!empty) {
-    return minLoopDuration
+    return [minLoopDuration, resolution, resolutionSize]
   }
 
   const measureCost = getMeasureCost(measureCosts, emptyMeasures)
   const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
-  const minResolutionDuration = 1 // getMinResolutionDuration(emptyMeasures)
-  return Math.max(minResolutionDuration, minMeasureCostDuration)
+  const [newResolution, newResolutionSize] = getResolution(
+    resolution,
+    resolutionSize,
+    emptyMeasures,
+  )
+  const minResolutionDuration = newResolution * MIN_RESOLUTION_PRECISION
+  const newMinLoopDuration = Math.max(
+    minResolutionDuration,
+    minMeasureCostDuration,
+  )
+  return [newMinLoopDuration, newResolution, newResolutionSize]
 }
 
 // This function estimates `measureCost` by making runners measure empty tasks.
@@ -138,3 +149,9 @@ const EMPTY_MEASURES_SORT_MAX = 1e2
 // contributes more to the overall variance.
 // A higher value increases the task loop duration, creating fewer loops.
 const MIN_MEASURE_COST = 1e2
+
+// How many times slower the repeated median must be compared to the resolution.
+// A lower value makes measures closer to the resolution, making them less
+// precise.
+// A higher value increases the task loop duration, creating fewer loops.
+const MIN_RESOLUTION_PRECISION = 1e2

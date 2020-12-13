@@ -47,6 +47,10 @@ export const measureProcessGroup = async function ({
   // eslint-disable-next-line fp/no-let
   let minLoopDuration = 0
   // eslint-disable-next-line fp/no-let
+  let resolution = Infinity
+  // eslint-disable-next-line fp/no-let
+  let resolutionSize = 0
+  // eslint-disable-next-line fp/no-let
   let processes = 0
   // eslint-disable-next-line fp/no-let
   let loops = 0
@@ -135,9 +139,11 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     taskMedian = getTaskMedian(processMedians, mainMeasures, repeat)
     // eslint-disable-next-line fp/no-mutation
-    minLoopDuration = getMinLoopDuration({
+    ;[minLoopDuration, resolution, resolutionSize] = getMinLoopDuration({
       minLoopDuration,
       measureCosts,
+      resolution,
+      resolutionSize,
       emptyMeasures,
       empty,
     })
