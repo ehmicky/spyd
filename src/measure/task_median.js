@@ -1,5 +1,6 @@
+import { mergeSort } from '../stats/merge.js'
 import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
-import { getApproximateMedian } from '../stats/quantile.js'
+import { getApproximateMedian, getMedian } from '../stats/quantile.js'
 
 // Retrieve an approximation of the task's median measure.
 // This is based on a median of the median measures of the previous processes.
@@ -10,13 +11,8 @@ export const getTaskMedian = function (childMeasures, processMedians) {
     CHILD_MEASURES_SORT_MAX,
     OUTLIERS_THRESHOLD,
   )
-  // eslint-disable-next-line fp/no-mutating-methods
-  processMedians.push(processMedian)
-  const taskMedian = getApproximateMedian(
-    processMedians,
-    PROCESS_MEDIANS_SORT_MAX,
-    1,
-  )
+  mergeSort(processMedians, [processMedian])
+  const taskMedian = getMedian(processMedians, 1)
   return taskMedian
 }
 
@@ -25,6 +21,3 @@ export const getTaskMedian = function (childMeasures, processMedians) {
 // variance.
 // A higher value will increase the time to sort by `O(n * log(n))`
 const CHILD_MEASURES_SORT_MAX = 1e3
-// Same for computing the median or all previous processes' medians.
-// This is lower because the variation between those values is lower.
-const PROCESS_MEDIANS_SORT_MAX = 1e2
