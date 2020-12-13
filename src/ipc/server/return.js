@@ -1,4 +1,4 @@
-export const handleOutput = function (
+export const handleReturnValue = function (
   { state: { measures } },
   { taskTitle, measure },
 ) {

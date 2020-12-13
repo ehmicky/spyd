@@ -5,14 +5,14 @@ import fetch from 'cross-fetch'
 export const startRunner = async function ({ load, bench }) {
   const { serverUrl, loadParams } = parseLoadParams()
   // eslint-disable-next-line fp/no-let
-  let output = load(loadParams)
+  let returnValue = load(loadParams)
 
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    const params = await sendOutput(output, serverUrl)
+    const params = await sendReturnValue(returnValue, serverUrl)
     // eslint-disable-next-line fp/no-mutation
-    output = bench(params)
+    returnValue = bench(params)
   } while (true)
 }
 
@@ -21,11 +21,11 @@ const parseLoadParams = function () {
   return { serverUrl, loadParams }
 }
 
-const sendOutput = async function (output, serverUrl) {
-  const outputString = JSON.stringify(output)
+const sendReturnValue = async function (returnValue, serverUrl) {
+  const returnValueString = JSON.stringify(returnValue)
   const response = await fetch(serverUrl, {
     method: 'POST',
-    body: outputString,
+    body: returnValueString,
   })
   const params = await response.json()
   return params

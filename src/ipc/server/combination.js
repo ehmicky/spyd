@@ -5,9 +5,9 @@ import getStream from 'get-stream'
 import { PluginError, UserError } from '../../error/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
-import { waitForStart, waitForOutput } from './orchestrator.js'
-import { handleOutput } from './output.js'
+import { waitForStart, waitForReturn } from './orchestrator.js'
 import { getParams } from './params.js'
+import { handleReturnValue } from './return.js'
 
 const pSetTimeout = promisify(setTimeout)
 
@@ -17,7 +17,7 @@ export const measureCombination = async function ({
   duration,
 }) {
   // eslint-disable-next-line fp/no-let
-  let res = await receiveOutput(combination, orchestrator)
+  let res = await receiveReturnValue(combination, orchestrator)
 
   // eslint-disable-next-line fp/no-loops, no-await-in-loop
   while (await waitForStart(orchestrator)) {
@@ -44,17 +44,18 @@ const measureSample = async function ({
   return newRes
 }
 
-// We are listening for output before sending params to prevent race condition
+// We are setting up return value listening before sending params to prevent any
+// race condition
 const processCombination = async function ({ combination, orchestrator, res }) {
   return await Promise.all([
-    receiveOutput(combination, orchestrator),
+    receiveReturnValue(combination, orchestrator),
     sendParams(combination, res),
   ])
 }
 
 // Send the next sample's params by responding to the HTTP long poll request.
 // Runners use long polling:
-//  - They send their output with a new HTTP request
+//  - They send their return value with a new HTTP request
 //  - The server keeps the request alive until new params are available, which
 //    are then sent as a response
 // We use long polling instead of real bidirectional procotols because it is
@@ -62,31 +63,31 @@ const processCombination = async function ({ combination, orchestrator, res }) {
 // There is only one single endpoint for each runner, meant to run a new
 // measuring sample:
 //   - The server sends some params to indicate how long to run the sample
-//   - The runner sends the results back as output
+//   - The runner sends the return value
 const sendParams = async function (combination, res) {
   const params = getParams(combination)
   const paramsString = JSON.stringify(params)
   await promisify(res.end.bind(res))(paramsString)
 }
 
-// Receive the sample's output by receiving a HTTP long poll request.
-const receiveOutput = async function (combination, orchestrator) {
-  const { req, res: nextRes } = await waitForOutput(orchestrator)
-  const output = await getJsonOutput(req)
-  const newState = handleOutput(combination, output)
+// Receive the sample's return value by receiving a HTTP long poll request.
+const receiveReturnValue = async function (combination, orchestrator) {
+  const { req, res: nextRes } = await waitForReturn(orchestrator)
+  const returnValue = await getJsonReturn(req)
+  const newState = handleReturnValue(combination, returnValue)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(combination.state, newState)
   return nextRes
 }
 
 // Parse the request's JSON body
-const getJsonOutput = async function (req) {
+const getJsonReturn = async function (req) {
   try {
-    const outputString = await getStream(req)
-    const output = JSON.parse(outputString)
-    return output
+    const returnValueString = await getStream(req)
+    const returnValue = JSON.parse(returnValueString)
+    return returnValue
   } catch {
-    throw new PluginError('Invalid JSON output')
+    throw new PluginError('Invalid JSON return value')
   }
 }
 

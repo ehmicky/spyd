@@ -26,9 +26,9 @@ import { findCombinationByUrl } from './url.js'
 //  - Each combination waits for its turn by awaiting this `start` event
 //  - When there is no `duration` left, the `start` event with `false` is used
 //    so combination stops waiting for their turn
-// Additionally, when a combination is waiting on a runner to return its output
-// by sending an HTTP request, it waits on the `request` event, which is emitted
-// by the HTTP server.
+// Additionally, when a combination is waiting on a runner to return its return
+// value by sending an HTTP request, it waits on the `request` event, which is
+// emitted by the HTTP server.
 export const initOrchestrators = function ({
   server,
   combinations,
@@ -46,7 +46,7 @@ const addOrchestrator = function (combination) {
 }
 
 // Handle HTTP requests coming from runners.
-// Emit an `output` event to communicate it to the proper combination.
+// Emit a `return` event to communicate it to the proper combination.
 const handleRequests = function (server, combinations) {
   server.on('request', (req, res) => {
     handleRequest(combinations, req, res)
@@ -55,7 +55,7 @@ const handleRequests = function (server, combinations) {
 
 const handleRequest = function (combinations, req, res) {
   const { orchestrator } = findCombinationByUrl(req, combinations)
-  orchestrator.emit('output', { req, res })
+  orchestrator.emit('return', { req, res })
 }
 
 // Handles each combination sample
@@ -126,8 +126,8 @@ export const waitForStart = async function (orchestrator) {
   return shouldExit
 }
 
-// Make a combination wait for the runner's sample output
-export const waitForOutput = async function (orchestrator) {
-  const [{ req, res }] = await once(orchestrator, 'output')
+// Make a combination wait for the runner's sample return value
+export const waitForReturn = async function (orchestrator) {
+  const [{ req, res }] = await once(orchestrator, 'return')
   return { req, res }
 }
