@@ -7,8 +7,12 @@ export const getSampleStart = function () {
 
 export const addTimeSpent = function ({ state }, sampleStart) {
   const sampleDuration = now() - sampleStart
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  state.timeSpent += sampleDuration
+  const timeSpent = state.timeSpent + sampleDuration
+  const processes = state.processes + 1
+  const sampleDurationMean = timeSpent / processes
+
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(state, { timeSpent, processes, sampleDurationMean })
 }
 
 export const getNextCombination = function (combinations) {
