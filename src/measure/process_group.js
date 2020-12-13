@@ -4,9 +4,9 @@ import now from 'precise-now'
 import { executeChild } from '../processes/main.js'
 
 import { addProcessMeasures } from './add.js'
-import { getEmpty, getMeasureCost, getMinLoopDuration } from './empty.js'
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
+import { getEmpty, getMinLoopDuration } from './min_loop_duration.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 import { getTaskMedian } from './task_median.js'
@@ -136,10 +136,13 @@ export const measureProcessGroup = async function ({
     processMeasures.push({ loopDurations, repeat })
     // eslint-disable-next-line fp/no-mutation
     taskMedian = getTaskMedian(processMedians, loopDurations, repeat)
-
-    const measureCost = getMeasureCost(measureCosts, emptyMeasures)
     // eslint-disable-next-line fp/no-mutation
-    minLoopDuration = getMinLoopDuration(measureCost)
+    minLoopDuration = getMinLoopDuration({
+      minLoopDuration,
+      measureCosts,
+      emptyMeasures,
+      empty,
+    })
 
     const newRepeat = getRepeat({
       repeat,
