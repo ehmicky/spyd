@@ -172,9 +172,7 @@ const runSample = async function ({
   const loopsB = loopsA + mainMeasures.length
   const timesB = timesA + mainMeasures.length * repeat
 
-  // TODO: check if concat is faster
-  // eslint-disable-next-line fp/no-mutating-methods
-  processMeasuresA.push({ mainMeasures, repeat })
+  const processMeasuresB = [...processMeasuresA, { mainMeasures, repeat }]
   const [taskMediansB, taskMedianA] = getTaskMedian(
     taskMediansA,
     mainMeasures,
@@ -203,7 +201,7 @@ const runSample = async function ({
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
   return {
-    processMeasures: processMeasuresA,
+    processMeasures: processMeasuresB,
     taskMedians: taskMediansB,
     taskMedian: taskMedianA,
     processes: processesB,
