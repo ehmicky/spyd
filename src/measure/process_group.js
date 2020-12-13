@@ -43,7 +43,7 @@ export const measureProcessGroup = async function ({
     dry,
   }
   // eslint-disable-next-line fp/no-let
-  let measures = []
+  let processMeasures = []
   // eslint-disable-next-line fp/no-let
   let processMedians = []
   // eslint-disable-next-line fp/no-let
@@ -95,9 +95,15 @@ export const measureProcessGroup = async function ({
     loadCost = getLoadCost(childLoadCost, loadCosts)
 
     // eslint-disable-next-line fp/no-mutation
-    ;[measures, processMedians, processes, loops, times] = repeatInitReset({
+    ;[
+      processMeasures,
+      processMedians,
+      processes,
+      loops,
+      times,
+    ] = repeatInitReset({
       repeatInit,
-      measures,
+      processMeasures,
       processMedians,
       processes,
       loops,
@@ -112,7 +118,8 @@ export const measureProcessGroup = async function ({
     times += loopDurations.length * repeat
 
     const childMeasures = loopDurationsToMedians(loopDurations, repeat)
-    addMeasures(measures, childMeasures)
+    // eslint-disable-next-line fp/no-mutating-methods
+    processMeasures.push(childMeasures)
     // eslint-disable-next-line fp/no-mutation
     taskMedian = getTaskMedian(childMeasures, processMedians)
 
@@ -136,6 +143,11 @@ export const measureProcessGroup = async function ({
       processGroupEnd,
     })
   )
+
+  const measures = []
+  processMeasures.forEach((childMeasures) => {
+    addMeasures(measures, childMeasures)
+  })
 
   return { measures, processes, loops, times, loadCost }
 }
