@@ -58,7 +58,7 @@ export const getMinLoopDuration = function ({
   empty,
 }) {
   if (!empty) {
-    return [minLoopDuration, resolution, resolutionSize]
+    return [minLoopDuration, measureCosts, resolution, resolutionSize]
   }
 
   const measureCost = getMeasureCost(measureCosts, emptyMeasures)
@@ -73,7 +73,7 @@ export const getMinLoopDuration = function ({
     minResolutionDuration,
     minMeasureCostDuration,
   )
-  return [newMinLoopDuration, newResolution, newResolutionSize]
+  return [newMinLoopDuration, measureCosts, newResolution, newResolutionSize]
 }
 
 // This function estimates `measureCost` by making runners measure empty tasks.

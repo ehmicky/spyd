@@ -17,7 +17,6 @@ import { getTaskMedian } from './task_median.js'
 //  - Stats are reported in realtime
 //  - This avoids a big slowdown at the beginning/end of combinations, which
 //    would be perceived by users
-// eslint-disable-next-line max-statements, max-lines-per-function
 export const measureProcessGroup = async function ({
   taskPath,
   taskId,
@@ -31,143 +30,188 @@ export const measureProcessGroup = async function ({
   initialLoadCost,
 }) {
   const processGroupEnd = now() + duration
+
   // eslint-disable-next-line fp/no-let
-  let processMeasures = []
-  // eslint-disable-next-line fp/no-let
-  let processMedians = []
-  // eslint-disable-next-line fp/no-let
-  let measureCosts = []
-  // eslint-disable-next-line fp/no-let
-  let minLoopDuration = 0
-  // eslint-disable-next-line fp/no-let
-  let resolution = Infinity
-  // eslint-disable-next-line fp/no-let
-  let resolutionSize = 0
-  // eslint-disable-next-line fp/no-let
-  let processes = 0
-  // eslint-disable-next-line fp/no-let
-  let loops = 0
-  // eslint-disable-next-line fp/no-let
-  let times = 0
-  // `taskMedian` is initially 0. This means it is not used to compute
-  // `maxDuration` in the first process.
-  // eslint-disable-next-line fp/no-let
-  let taskMedian = 0
-  // eslint-disable-next-line fp/no-let
-  let repeat = 1
-  // If the runner does not support `repeats`, `repeatInit` is always `false`
-  // eslint-disable-next-line fp/no-let
-  let repeatInit = runnerRepeats
-  // For some unknown reason, the time to spawn a child process is sometimes
-  // higher during cost estimation than during the main process group, so
-  // we don't share the `previous` array between those.
-  const loadCosts = []
-  // eslint-disable-next-line fp/no-let
-  let loadCost = initialLoadCost
+  let sampleState = getInitialSampleState({ runnerRepeats, initialLoadCost })
 
   // eslint-disable-next-line fp/no-loops
   do {
-    const maxDuration = getMaxDuration({
+    // eslint-disable-next-line fp/no-mutation, no-await-in-loop
+    sampleState = await runSample({
+      cwd,
+      duration,
       processGroupEnd,
-      loadCost,
-      repeat,
-      taskMedian,
-    })
-    const childRepeat = getChildRepeat(repeat, runnerRepeats)
-    const empty = getEmpty(repeat, repeatInit, runnerRepeats)
-    const eventPayload = {
-      type: 'benchmark',
-      runConfig: commandConfig,
+      runnerRepeats,
+      commandSpawn,
+      commandSpawnOptions,
+      commandConfig,
       taskPath,
       taskId,
       inputId,
-      maxDuration,
-      repeat: childRepeat,
-      empty,
-    }
-
-    const loadCostStart = startLoadCost()
-    const {
-      mainMeasures,
-      emptyMeasures,
-      start,
-      // eslint-disable-next-line no-await-in-loop
-    } = await executeChild({
-      commandSpawn,
-      commandSpawnOptions,
-      eventPayload,
-      timeoutNs: duration,
-      cwd,
-      taskId,
-      inputId,
-      type: 'benchmarkBench',
+      sampleState,
     })
-    // eslint-disable-next-line fp/no-mutation
-    loadCost = endLoadCost(loadCosts, loadCostStart, start)
-
-    // eslint-disable-next-line fp/no-mutation
-    ;[
-      processMeasures,
-      processMedians,
-      measureCosts,
-      processes,
-      loops,
-      times,
-    ] = repeatInitReset({
-      repeatInit,
-      processMeasures,
-      processMedians,
-      measureCosts,
-      processes,
-      loops,
-      times,
-    })
-
-    // eslint-disable-next-line fp/no-mutation
-    processes += 1
-    // eslint-disable-next-line fp/no-mutation
-    loops += mainMeasures.length
-    // eslint-disable-next-line fp/no-mutation
-    times += mainMeasures.length * repeat
-
-    // eslint-disable-next-line fp/no-mutating-methods
-    processMeasures.push({ mainMeasures, repeat })
-    // eslint-disable-next-line fp/no-mutation
-    taskMedian = getTaskMedian(processMedians, mainMeasures, repeat)
-
-    // eslint-disable-next-line fp/no-mutation
-    ;[minLoopDuration, resolution, resolutionSize] = getMinLoopDuration({
-      minLoopDuration,
-      measureCosts,
-      resolution,
-      resolutionSize,
-      emptyMeasures,
-      empty,
-    })
-    const lastRepeat = repeat
-    // eslint-disable-next-line fp/no-mutation
-    repeat = getRepeat({
-      lastRepeat,
-      taskMedian,
-      minLoopDuration,
-      runnerRepeats,
-    })
-    // eslint-disable-next-line fp/no-mutation
-    repeatInit = getRepeatInit({ repeatInit, lastRepeat, repeat })
-  } while (
-    !shouldStopProcessGroup({
-      loops,
-      loadCost,
-      taskMedian,
-      repeat,
-      processGroupEnd,
-    })
-  )
+  } while (!shouldStopProcessGroup({ processGroupEnd, sampleState }))
 
   const measures = []
-  addProcessMeasures(measures, processMeasures)
+  addProcessMeasures(measures, sampleState.processMeasures)
 
-  return { measures, processes, loops, times, loadCost, minLoopDuration }
+  return { measures, sampleState }
+}
+
+const getInitialSampleState = function ({ runnerRepeats, initialLoadCost }) {
+  return {
+    processMeasures: [],
+    processMedians: [],
+    // `taskMedian` is initially 0. This means it is not used to compute
+    // `maxDuration` in the first process.
+    taskMedian: 0,
+    processes: 0,
+    loops: 0,
+    times: 0,
+    repeat: 1,
+    // If the runner does not support `repeats`, `repeatInit` is always `false`
+    repeatInit: runnerRepeats,
+    loadCosts: [],
+    loadCost: initialLoadCost,
+    measureCosts: [],
+    resolution: Infinity,
+    resolutionSize: 0,
+    minLoopDuration: 0,
+  }
+}
+
+// eslint-disable-next-line max-statements, max-lines-per-function
+const runSample = async function ({
+  // Specific to benchmark
+  cwd,
+  duration,
+  processGroupEnd,
+  // Specific to runner
+  runnerRepeats,
+  commandSpawn,
+  commandSpawnOptions,
+  // Specific to combination
+  commandConfig,
+  taskPath,
+  taskId,
+  inputId,
+  // Specific to sample, modified by it
+  sampleState: {
+    processMeasures,
+    processMedians,
+    taskMedian,
+    processes,
+    loops,
+    times,
+    repeat,
+    repeatInit,
+    loadCosts,
+    loadCost,
+    measureCosts,
+    resolution,
+    resolutionSize,
+    minLoopDuration,
+  },
+}) {
+  const maxDuration = getMaxDuration({
+    processGroupEnd,
+    loadCost,
+    repeat,
+    taskMedian,
+  })
+  const childRepeat = getChildRepeat(repeat, runnerRepeats)
+  const empty = getEmpty(repeat, repeatInit, runnerRepeats)
+  const eventPayload = {
+    type: 'benchmark',
+    runConfig: commandConfig,
+    taskPath,
+    taskId,
+    inputId,
+    maxDuration,
+    repeat: childRepeat,
+    empty,
+  }
+
+  const loadCostStart = startLoadCost()
+  const { mainMeasures, emptyMeasures, start } = await executeChild({
+    commandSpawn,
+    commandSpawnOptions,
+    eventPayload,
+    timeoutNs: duration,
+    cwd,
+    taskId,
+    inputId,
+    type: 'benchmarkBench',
+  })
+  const [loadCostsA, loadCostA] = endLoadCost(loadCosts, loadCostStart, start)
+
+  const [
+    processMeasuresA,
+    processMediansA,
+    measureCostsA,
+    processesA,
+    loopsA,
+    timesA,
+  ] = repeatInitReset({
+    repeatInit,
+    processMeasures,
+    processMedians,
+    measureCosts,
+    processes,
+    loops,
+    times,
+  })
+
+  const processesB = processesA + 1
+  const loopsB = loopsA + mainMeasures.length
+  const timesB = timesA + mainMeasures.length * repeat
+
+  // TODO: check if concat is faster
+  // eslint-disable-next-line fp/no-mutating-methods
+  processMeasuresA.push({ mainMeasures, repeat })
+  const [processMediansB, taskMedianA] = getTaskMedian(
+    processMediansA,
+    mainMeasures,
+    repeat,
+  )
+
+  const [
+    minLoopDurationA,
+    measureCostsB,
+    resolutionA,
+    resolutionSizeA,
+  ] = getMinLoopDuration({
+    minLoopDuration,
+    measureCosts: measureCostsA,
+    resolution,
+    resolutionSize,
+    emptyMeasures,
+    empty,
+  })
+  const repeatA = getRepeat({
+    repeat,
+    taskMedian,
+    minLoopDuration,
+    runnerRepeats,
+  })
+  const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
+
+  return {
+    processMeasures: processMeasuresA,
+    processMedians: processMediansB,
+    taskMedian: taskMedianA,
+    processes: processesB,
+    loops: loopsB,
+    times: timesB,
+    repeat: repeatA,
+    repeatInit: repeatInitA,
+    loadCosts: loadCostsA,
+    loadCost: loadCostA,
+    measureCosts: measureCostsB,
+    resolution: resolutionA,
+    resolutionSize: resolutionSizeA,
+    minLoopDuration: minLoopDurationA,
+  }
 }
 
 // We stop iterating when the next process does not have any time to spawn a
@@ -182,11 +226,8 @@ export const measureProcessGroup = async function ({
 //   - Not doing it would make the `times` increment less gradually as the
 //     `duration` increases.
 const shouldStopProcessGroup = function ({
-  loops,
-  loadCost,
-  taskMedian,
-  repeat,
   processGroupEnd,
+  sampleState: { taskMedian, loops, repeat, loadCost },
 }) {
   return (
     loops >= MAX_LOOPS ||

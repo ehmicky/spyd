@@ -51,5 +51,6 @@ export const startLoadCost = function () {
 // resolution than `loadCostStart` and the difference might be negative
 export const endLoadCost = function (loadCosts, loadCostStart, loadCostEnd) {
   const childLoadCost = Math.max(Number(BigInt(loadCostEnd) - loadCostStart), 0)
-  return getIncrementalMedian(loadCosts, childLoadCost)
+  const loadCost = getIncrementalMedian(loadCosts, childLoadCost)
+  return [loadCosts, loadCost]
 }

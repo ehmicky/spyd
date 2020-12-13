@@ -14,11 +14,7 @@ import { getMean, getDeviation } from './sum.js'
 // function itself.
 export const getStats = function ({
   measures,
-  processes,
-  loops,
-  times,
-  minLoopDuration,
-  loadCost,
+  sampleState: { processes, loops, times, minLoopDuration, loadCost },
 }) {
   const {
     loops: loopsA,

@@ -36,9 +36,9 @@ export const repeatInitReset = function ({
 }
 
 // Decides when `repeatInit` has stopped.
-// Based on the difference between `lastRepeat` and `repeat`.
-export const getRepeatInit = function ({ repeatInit, lastRepeat, repeat }) {
-  return repeatInit && repeat / lastRepeat > MAX_REPEAT_DIFF
+// Based on the difference between `repeat` and `newRepeat`.
+export const getRepeatInit = function ({ repeatInit, repeat, newRepeat }) {
+  return repeatInit && newRepeat / repeat > MAX_REPEAT_DIFF
 }
 
 // To stop `repeatInit`, `repeat` must vary once less than this percentage.

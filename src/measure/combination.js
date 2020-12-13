@@ -19,14 +19,7 @@ export const measureCombination = async function ({
   duration,
   cwd,
 }) {
-  const {
-    measures,
-    processes,
-    loops,
-    times,
-    loadCost,
-    minLoopDuration,
-  } = await measureProcessGroup({
+  const { measures, sampleState } = await measureProcessGroup({
     taskPath,
     taskId,
     inputId,
@@ -38,5 +31,5 @@ export const measureCombination = async function ({
     cwd,
     initialLoadCost,
   })
-  return { measures, processes, loops, times, minLoopDuration, loadCost }
+  return { measures, sampleState }
 }
