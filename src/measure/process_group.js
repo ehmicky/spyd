@@ -3,14 +3,13 @@ import now from 'precise-now'
 
 import { executeChild } from '../processes/main.js'
 import { addMeasures } from '../stats/merge.js'
-import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
-import { getSortedMedian } from '../stats/quantile.js'
 
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
 import { loopDurationsToMedians } from './normalize.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
+import { getTaskMedian } from './task_median.js'
 
 // Measure a task or measureCost using a group of processes.
 // CPU-heavy computation (e.g. sorting `measures` and computing stats) are done
@@ -45,6 +44,8 @@ export const measureProcessGroup = async function ({
   }
   // eslint-disable-next-line fp/no-let
   let measures = []
+  // eslint-disable-next-line fp/no-let
+  let processMedians = []
   // eslint-disable-next-line fp/no-let
   let processes = 0
   // eslint-disable-next-line fp/no-let
@@ -94,9 +95,10 @@ export const measureProcessGroup = async function ({
     loadCost = getLoadCost(childLoadCost, loadCosts)
 
     // eslint-disable-next-line fp/no-mutation
-    ;[measures, processes, loops, times] = repeatInitReset({
+    ;[measures, processMedians, processes, loops, times] = repeatInitReset({
       repeatInit,
       measures,
+      processMedians,
       processes,
       loops,
       times,
@@ -112,7 +114,7 @@ export const measureProcessGroup = async function ({
     const childMeasures = loopDurationsToMedians(loopDurations, repeat)
     addMeasures(measures, childMeasures)
     // eslint-disable-next-line fp/no-mutation
-    taskMedian = getSortedMedian(measures, OUTLIERS_THRESHOLD)
+    taskMedian = getTaskMedian(childMeasures, processMedians)
 
     const newRepeat = getRepeat({
       repeat,
