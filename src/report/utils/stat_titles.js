@@ -13,5 +13,4 @@ export const STAT_TITLES = {
   processes: 'Processes',
   loadCost: 'Loading',
   measureCost: 'Measuring',
-  repeatCost: 'Repeating',
 }

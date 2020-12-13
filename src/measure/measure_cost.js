@@ -42,7 +42,6 @@ export const getMeasureCost = async function ({
     cwd,
     loadDuration,
     measureCost: 0,
-    repeatCost: 0,
     resolution: 1,
     dry: true,
   })

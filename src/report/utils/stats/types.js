@@ -14,6 +14,5 @@ export const STAT_TYPES = [
   { name: 'processes', type: 'count' },
   { name: 'loadCost', type: 'duration' },
   { name: 'measureCost', type: 'duration' },
-  { name: 'repeatCost', type: 'duration' },
   { name: 'quantiles', type: 'duration' },
 ]

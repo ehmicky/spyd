@@ -99,7 +99,6 @@ const STATS = [
   'processes',
   'loadCost',
   'measureCost',
-  'repeatCost',
 ]
 
 export const debug = { report }

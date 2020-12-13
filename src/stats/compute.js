@@ -20,7 +20,6 @@ export const getStats = function ({
   times,
   processes,
   measureCost,
-  repeatCost,
   loadCost,
 }) {
   const {
@@ -49,7 +48,6 @@ export const getStats = function ({
     histogram,
     quantiles,
     measureCost,
-    repeatCost,
     loadCost,
   }
 }

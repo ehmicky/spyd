@@ -43,7 +43,6 @@ export const getCombinationResult = async function ({
     times,
     processes,
     measureCost,
-    repeatCost,
     loadCost,
   } = await measureCombination({
     taskPath,
@@ -64,7 +63,6 @@ export const getCombinationResult = async function ({
     times,
     processes,
     measureCost,
-    repeatCost,
     loadCost,
   })
 

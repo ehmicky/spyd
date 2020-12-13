@@ -2,7 +2,6 @@ import now from 'precise-now'
 
 import { getMeasureCost } from './measure_cost.js'
 import { measureProcessGroup } from './process_group.js'
-import { getRepeatCost } from './repeat_cost.js'
 
 // We measure by spawning processes until reaching the max `duration`.
 // At least one process must be executed.
@@ -11,7 +10,6 @@ import { getRepeatCost } from './repeat_cost.js'
 //  - multi-core CPUs are designed to execute in parallel but in practice they
 //    do impact the performance of each other
 //  - this does mean we are under-utilizing CPUs
-// eslint-disable-next-line max-lines-per-function
 export const measureCombination = async function ({
   taskPath,
   taskId,
@@ -38,20 +36,6 @@ export const measureCombination = async function ({
     cwd,
     loadDuration,
   })
-  const repeatCost = await getRepeatCost({
-    taskPath,
-    taskId,
-    inputId,
-    commandSpawn,
-    commandSpawnOptions,
-    commandConfig,
-    runnerRepeats,
-    processGroupDuration: costDuration,
-    cwd,
-    loadDuration,
-    measureCost,
-    resolution,
-  })
   const { measures, times, processes, loadCost } = await measureProcessGroup({
     sampleType: 'measureTask',
     taskPath,
@@ -65,11 +49,10 @@ export const measureCombination = async function ({
     cwd,
     loadDuration,
     measureCost,
-    repeatCost,
     resolution,
     dry: false,
   })
-  return { measures, times, processes, measureCost, repeatCost, loadCost }
+  return { measures, times, processes, measureCost, loadCost }
 }
 
 // Cost estimates must be very precise to measure fast tasks accurately.

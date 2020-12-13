@@ -12,7 +12,7 @@ import { loopDurationsToMedians, medianToLoopDuration } from './normalize.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 
-// Measure a task, measureCost or repeatCost using a group of processes
+// Measure a task or measureCost using a group of processes.
 // CPU-heavy computation (e.g. sorting `measures` and computing stats) are done
 // incrementally after each process, as opposed to at the end. This is because:
 //  - Stats are reported in realtime
@@ -32,7 +32,6 @@ export const measureProcessGroup = async function ({
   cwd,
   loadDuration,
   measureCost,
-  repeatCost,
   resolution,
   dry,
 }) {
@@ -73,11 +72,10 @@ export const measureProcessGroup = async function ({
       processGroupEnd,
       loadCost,
       measureCost,
-      repeatCost,
       repeat,
       median,
     })
-    const childRepeat = getChildRepeat({ repeat, sampleType, runnerRepeats })
+    const childRepeat = getChildRepeat(repeat, runnerRepeats)
 
     const loadCostStart = startLoadCost()
     // eslint-disable-next-line no-await-in-loop
@@ -110,7 +108,6 @@ export const measureProcessGroup = async function ({
 
     const childMeasures = loopDurationsToMedians(loopDurations, {
       measureCost,
-      repeatCost,
       repeat,
       sampleType,
     })
@@ -122,7 +119,6 @@ export const measureProcessGroup = async function ({
       repeat,
       median,
       sampleType,
-      repeatCost,
       measureCost,
       resolution,
       runnerRepeats,
@@ -136,7 +132,6 @@ export const measureProcessGroup = async function ({
       measures,
       loadCost,
       measureCost,
-      repeatCost,
       median,
       repeat,
       processGroupEnd,
@@ -162,16 +157,11 @@ const shouldStopProcessGroup = function ({
   measures,
   loadCost,
   measureCost,
-  repeatCost,
   median,
   repeat,
   processGroupEnd,
 }) {
-  const loopDuration = medianToLoopDuration(median, {
-    measureCost,
-    repeatCost,
-    repeat,
-  })
+  const loopDuration = medianToLoopDuration(median, measureCost, repeat)
   return (
     measures.length >= MAX_LOOPS ||
     now() + loadCost + loopDuration >= processGroupEnd

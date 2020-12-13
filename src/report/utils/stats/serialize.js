@@ -13,13 +13,12 @@ export const serializeStat = function ({
   loops,
   repeat,
   measureCost,
-  repeatCost,
 }) {
   if (shouldSkipStat({ stat, name, loops })) {
     return ''
   }
 
-  const epsilon = getEpsilon({ repeat, measureCost, repeatCost })
+  const epsilon = getEpsilon(measureCost, repeat)
 
   if (Array.isArray(stat)) {
     return stat.map((statA) =>

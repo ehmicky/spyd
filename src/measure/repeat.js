@@ -13,7 +13,6 @@ export const getRepeat = function ({
   repeat,
   median,
   sampleType,
-  repeatCost,
   measureCost,
   resolution,
   runnerRepeats,
@@ -30,34 +29,14 @@ export const getRepeat = function ({
   }
 
   const minResolutionDuration = resolution * MIN_RESOLUTION_PRECISION
-  const minMeasureCostDuration = getMeasureCostDuration({
-    sampleType,
-    measureCost,
-    median,
-    repeatCost,
-  })
+  const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
   return Math.ceil(
     Math.max(minResolutionDuration, minMeasureCostDuration) / median,
   )
 }
 
-// Ensure `repeat` is high enough to decrease the impact of `measureCost`.
-// We need to use the real measure cost, i.e. `measureCost - repeatCost`.
-// When estimating `repeatCost`, this is `measureCost - median` instead.
-const getMeasureCostDuration = function ({
-  sampleType,
-  measureCost,
-  median,
-  repeatCost,
-}) {
-  const realRepeatCost = sampleType === 'repeatCost' ? median : repeatCost
-  return Math.max(measureCost - realRepeatCost, 0) * MIN_MEASURE_COST
-}
-
-// `median` can be 0 when the task is too close to `repeatCost`,
-// `measureCost` or `resolution`.
-// In that case, we multiply the `repeat` with a fixed rate. This fixes
-// the problem with `measureCost` and `resolution` but not with `repeatCost`.
+// `median` can be 0 when the task is too close to `measureCost` or `resolution`
+// In that case, we multiply the `repeat` with a fixed rate.
 const FAST_MEDIAN_RATE = 10
 // How many times slower the repeated median must be compared to the resolution.
 // A lower value makes measures closer to the resolution, making them less
@@ -65,32 +44,19 @@ const FAST_MEDIAN_RATE = 10
 // A higher value increases the task loop duration, creating fewer loops.
 const MIN_RESOLUTION_PRECISION = 1e2
 // How many times slower the repeated median must be compared to `measureCost`.
-// `measureCost` includes one iteration of the repeat loop, so we subtract
-// `repeatCost` to retrieve the actual time spent measuring and not iterating
-// the repeat loop.
+// Ensure `repeat` is high enough to decrease the impact of `measureCost`.
 // A lower value decreases precision as the variance of `measureCost`
 // contributes more to the overall variance.
 // A higher value increases the task loop duration, creating fewer loops.
 const MIN_MEASURE_COST = 1e2
 
-// When computing `repeatCost`, the first repeat iteration is assumed to be the
-// `measureCost` and is discarded. Only the next iterations are used for the
-// `median`. This leads to two parameters:
-//  - Inside the runner, we use `childRepeat`, which is `repeat` + 1, where
-//    the additional `1` is the first iteration (`measureCost`)
-//  - In the parent process, we discard that first iteration as `measureCost`
-//    and use `repeat` without the additional `1`
 // If the runner does not support `repeat`, its value is:
 //  - `undefined` in the runner
 //  - always `1` in the parent process
-export const getChildRepeat = function ({ repeat, sampleType, runnerRepeats }) {
+export const getChildRepeat = function (repeat, runnerRepeats) {
   if (!runnerRepeats) {
     return
   }
 
-  if (sampleType !== 'repeatCost') {
-    return repeat
-  }
-
-  return repeat + 1
+  return repeat
 }
