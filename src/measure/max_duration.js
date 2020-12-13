@@ -1,7 +1,5 @@
 import now from 'precise-now'
 
-import { medianToLoopDuration, medianToLoopIteration } from './normalize.js'
-
 // `maxDuration` is the estimated duration a process will spend measuring.
 // It is callibrated progressively based on several limits:
 //  1. Must not be longer than the duration left in the task
@@ -45,14 +43,13 @@ import { medianToLoopDuration, medianToLoopIteration } from './normalize.js'
 export const getMaxDuration = function ({
   processGroupEnd,
   loadCost,
-  measureCost,
   repeat,
   median,
 }) {
   const measureDurationLeft = getMeasureDurationLeft(processGroupEnd, loadCost)
   const loadCostMin = getLoadCostMin(loadCost)
-  const targetTimesMin = getTargetTimesMin({ median, measureCost, repeat })
-  const loopDuration = getLoopDuration({ median, measureCost, repeat })
+  const targetTimesMin = getTargetTimesMin(median)
+  const loopDuration = getLoopDuration(median, repeat)
   return Math.max(
     Math.min(measureDurationLeft, Math.max(loadCostMin, targetTimesMin)) -
       loopDuration,
@@ -83,8 +80,8 @@ const LOAD_COST_RATIO = 0.5
 // Estimated duration to measure the task a specific amount of times.
 // This is the number of times the task function is measured, not the `repeat`
 // loop.
-const getTargetTimesMin = function ({ median, measureCost, repeat }) {
-  return TARGET_TIMES * medianToLoopIteration(median, measureCost, repeat)
+const getTargetTimesMin = function (median) {
+  return TARGET_TIMES * median
 }
 
 // The process ends up with slightly fewer measures that the target due to:
@@ -94,17 +91,14 @@ const getTargetTimesMin = function ({ median, measureCost, repeat }) {
 //     combination, while `repeat` is still being callibrated, `targetTimesMin`
 //     can be much larger than the real mean.
 //   - Using the whole duration of the repeat loop instead of an
-//     aggregation of the measures. Even with `measureCost`, the measures do not
-//     completely capture the duration spent measuring.
-//     For example, `measureCost` is the duration measuring an empty task, but
-//     it might exclude some of the duration making the measurement itself. For
-//     example, if two timestamps are taken at the beginning|end, only half of
-//     them will be included in `measureCost`. The other half will not be
-//     reflected in the measures but will still be spent.
+//     aggregation of the measures. The `median` do not completely capture the
+//     duration spent measuring. For example, if two timestamps are taken at the
+//     beginning|end, only half of them will be included in `median`. The other
+//     half will not be reflected in the measures but will still be spent.
 // Those concerns are stronger if either:
-//  - The task has a strong cold start, whether because it memoizes a lot or
-//    because the runtime optimizes it a lot later on.
-//  - The task speed is close to `measureCost`
+//   - The task has a strong cold start, whether because it memoizes a lot or
+//     because the runtime optimizes it a lot later on.
+//   - The task speed is close to `measureCost`
 // However, stability is more important than accuracy for `targetTimesMin`.
 // We slightly increase `TARGET_TIMES` to take this into account. This is rather
 // imprecise so we keep this increase small.
@@ -121,6 +115,6 @@ const TARGET_TIMES = 10 * TARGET_TIMES_ADJUST
 // It is estimated from previous processes.
 // This ensures users are not experiencing slow downs of the progress counter
 // at the end of a combination.
-const getLoopDuration = function ({ median, measureCost, repeat }) {
-  return medianToLoopDuration(median, measureCost, repeat)
+const getLoopDuration = function (median, repeat) {
+  return median * repeat
 }

@@ -8,7 +8,7 @@ import { getSortedMedian } from '../stats/quantile.js'
 
 import { getLoadCost, startLoadCost, endLoadCost } from './load_cost.js'
 import { getMaxDuration } from './max_duration.js'
-import { loopDurationsToMedians, medianToLoopDuration } from './normalize.js'
+import { loopDurationsToMedians } from './normalize.js'
 import { getRepeat, getChildRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 
@@ -71,7 +71,6 @@ export const measureProcessGroup = async function ({
     const maxDuration = getMaxDuration({
       processGroupEnd,
       loadCost,
-      measureCost,
       repeat,
       median,
     })
@@ -106,11 +105,7 @@ export const measureProcessGroup = async function ({
     // eslint-disable-next-line fp/no-mutation
     times += loopDurations.length * repeat
 
-    const childMeasures = loopDurationsToMedians(loopDurations, {
-      measureCost,
-      repeat,
-      sampleType,
-    })
+    const childMeasures = loopDurationsToMedians(loopDurations, repeat)
     addMeasures(measures, childMeasures)
     // eslint-disable-next-line fp/no-mutation
     median = getSortedMedian(measures, OUTLIERS_THRESHOLD)
@@ -131,7 +126,6 @@ export const measureProcessGroup = async function ({
     !shouldStopProcessGroup({
       measures,
       loadCost,
-      measureCost,
       median,
       repeat,
       processGroupEnd,
@@ -156,12 +150,11 @@ export const measureProcessGroup = async function ({
 const shouldStopProcessGroup = function ({
   measures,
   loadCost,
-  measureCost,
   median,
   repeat,
   processGroupEnd,
 }) {
-  const loopDuration = medianToLoopDuration(median, measureCost, repeat)
+  const loopDuration = median * repeat
   return (
     measures.length >= MAX_LOOPS ||
     now() + loadCost + loopDuration >= processGroupEnd

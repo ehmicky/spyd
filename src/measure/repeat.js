@@ -18,8 +18,8 @@ export const getRepeat = function ({
   runnerRepeats,
 }) {
   // If the runner does not supports `repeat`, it is always set to `1`
-  // We should not use a repeat loop when estimating measureCost since
-  // measureCost only happens once per repeat loop
+  // We should not use a repeat loop when estimating `measureCost` since
+  // `measureCost` only happens once per repeat loop
   if (sampleType === 'measureCost' || !runnerRepeats) {
     return 1
   }
