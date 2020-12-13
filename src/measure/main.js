@@ -4,7 +4,7 @@ import now from 'precise-now'
 
 import { getStats } from '../stats/compute.js'
 
-import { measureCombination } from './combination.js'
+import { measureProcessGroup } from './process_group.js'
 
 const pSetTimeout = promisify(setTimeout)
 
@@ -38,7 +38,7 @@ export const getCombinationResult = async function ({
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(progressState, { row, index, combinationEnd })
 
-  const { measures, sampleState } = await measureCombination({
+  const { measures, sampleState } = await measureProcessGroup({
     taskPath,
     taskId,
     inputId,

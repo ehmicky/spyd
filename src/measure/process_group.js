@@ -11,12 +11,18 @@ import { getRepeat, getChildRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 import { getTaskMedian } from './task_median.js'
 
-// Measure a task or measureCost using a group of processes.
+// Measure a task using a group of processes until reaching the max `duration`.
+// At least one process must be executed.
 // CPU-heavy computation (e.g. sorting `measures` and computing stats) are done
 // incrementally after each process, as opposed to at the end. This is because:
 //  - Stats are reported in realtime
 //  - This avoids a big slowdown at the beginning/end of combinations, which
 //    would be perceived by users
+// We launch child processes serially:
+//  - otherwise they would slow down each other and have higher variance
+//  - multi-core CPUs are designed to execute in parallel but in practice they
+//    do impact the performance of each other
+//  - this does mean we are under-utilizing CPUs
 export const measureProcessGroup = async function ({
   taskPath,
   taskId,
@@ -25,9 +31,9 @@ export const measureProcessGroup = async function ({
   commandSpawnOptions,
   commandConfig,
   runnerRepeats,
+  initialLoadCost,
   duration,
   cwd,
-  initialLoadCost,
 }) {
   const processGroupEnd = now() + duration
 
