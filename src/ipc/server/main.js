@@ -30,7 +30,7 @@ const addDefaultState = function (combination) {
   return {
     ...combination,
     clientId,
-    state: { timeSpent: 0, processes: 0, measures: [] },
+    state: { combinationDuration: 0, processes: 0, measures: [] },
   }
 }
 

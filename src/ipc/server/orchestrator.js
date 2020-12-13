@@ -1,7 +1,7 @@
 // eslint-disable-next-line fp/no-events
 import { EventEmitter, once } from 'events'
 
-import { getNextCombination } from './time_spent.js'
+import { getNextCombination } from './duration.js'
 import { findCombinationByUrl } from './url.js'
 
 export const initOrchestrators = function (server, combinations) {

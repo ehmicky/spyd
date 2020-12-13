@@ -4,10 +4,10 @@ import getStream from 'get-stream'
 
 import { PluginError, UserError } from '../../error/main.js'
 
+import { getSampleStart, addSampleDuration } from './duration.js'
 import { getInput } from './input.js'
 import { waitForStart, waitForOutput } from './orchestrator.js'
 import { handleOutput } from './output.js'
-import { getSampleStart, addTimeSpent } from './time_spent.js'
 
 const pSetTimeout = promisify(setTimeout)
 
@@ -51,7 +51,7 @@ const measureSample = async function ({
     waitForSampleTimeout(duration, combination),
   ])
 
-  addTimeSpent(combination, sampleStart)
+  addSampleDuration(combination, sampleStart)
   return newRes
 }
 
