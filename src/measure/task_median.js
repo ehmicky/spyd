@@ -21,4 +21,4 @@ export const getTaskMedian = function (processMedians, loopDurations, repeat) {
 // A lower value will make `repeat` vary more, which will increase the overall
 // variance.
 // A higher value will increase the time to sort by `O(n * log(n))`
-const CHILD_MEASURES_SORT_MAX = 1e3
+const CHILD_MEASURES_SORT_MAX = 1e2
