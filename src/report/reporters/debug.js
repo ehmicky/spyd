@@ -98,7 +98,7 @@ const STATS = [
   'repeat',
   'processes',
   'loadCost',
-  'measureCost',
+  'minLoopDuration',
 ]
 
 export const debug = { report }

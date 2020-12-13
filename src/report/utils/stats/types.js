@@ -13,6 +13,6 @@ export const STAT_TYPES = [
   { name: 'repeat', type: 'count' },
   { name: 'processes', type: 'count' },
   { name: 'loadCost', type: 'duration' },
-  { name: 'measureCost', type: 'duration' },
+  { name: 'minLoopDuration', type: 'duration' },
   { name: 'quantiles', type: 'duration' },
 ]

@@ -12,5 +12,5 @@ export const STAT_TITLES = {
   repeat: 'Loops size',
   processes: 'Processes',
   loadCost: 'Loading',
-  measureCost: 'Measuring',
+  minLoopDuration: 'Min loop duration',
 }

@@ -2,7 +2,7 @@ import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
 import { getSortedMedian } from '../stats/quantile.js'
 
 import { measureProcessGroup } from './process_group.js'
-import { getResolution } from './resolution.js'
+import { getMinResolutionDuration } from './resolution.js'
 
 // `measureCost` is the time taken to take a measurement.
 // This includes the time to get the start/end timestamps for example.
@@ -50,6 +50,35 @@ import { getResolution } from './resolution.js'
 //  - The best way to benchmark those very fast functions is to increase their
 //    complexity. Since the runner already runs those in a "for" loop, the only
 //    thing that a task should do is increase the size of its inputs.
+export const getMinLoopDuration = async function ({
+  taskPath,
+  taskId,
+  inputId,
+  commandSpawn,
+  commandSpawnOptions,
+  commandConfig,
+  runnerRepeats,
+  processGroupDuration,
+  cwd,
+  loadDuration,
+}) {
+  const { measures, measureCost } = await getMeasureCost({
+    taskPath,
+    taskId,
+    inputId,
+    commandSpawn,
+    commandSpawnOptions,
+    commandConfig,
+    runnerRepeats,
+    processGroupDuration,
+    cwd,
+    loadDuration,
+  })
+  const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
+  const minResolutionDuration = getMinResolutionDuration(measures)
+  return Math.max(minResolutionDuration, minMeasureCostDuration)
+}
+
 // This function estimates `measureCost` by measuring an empty task.
 // That cost must be computed separately for each combination since they might
 // vary depending on:
@@ -59,7 +88,7 @@ import { getResolution } from './resolution.js'
 //  - the input. The size of the input or whether an input is used or not
 //    might impact measuring.
 //  - the system. For example, runConfig.
-export const getMeasureCost = async function ({
+const getMeasureCost = async function ({
   taskPath,
   taskId,
   inputId,
@@ -88,6 +117,12 @@ export const getMeasureCost = async function ({
     dry: true,
   })
   const measureCost = getSortedMedian(measures, OUTLIERS_THRESHOLD)
-  const resolution = getResolution(measures)
-  return { measureCost, resolution }
+  return { measures, measureCost }
 }
+
+// How many times slower the repeated median must be compared to `measureCost`.
+// Ensure `repeat` is high enough to decrease the impact of `measureCost`.
+// A lower value decreases precision as the variance of `measureCost`
+// contributes more to the overall variance.
+// A higher value increases the task loop duration, creating fewer loops.
+const MIN_MEASURE_COST = 1e2

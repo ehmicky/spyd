@@ -13,8 +13,7 @@ export const getRepeat = function ({
   repeat,
   median,
   sampleType,
-  measureCost,
-  resolution,
+  minLoopDuration,
   runnerRepeats,
 }) {
   // If the runner does not supports `repeat`, it is always set to `1`
@@ -28,27 +27,12 @@ export const getRepeat = function ({
     return repeat * FAST_MEDIAN_RATE
   }
 
-  const minResolutionDuration = resolution * MIN_RESOLUTION_PRECISION
-  const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
-  return Math.ceil(
-    Math.max(minResolutionDuration, minMeasureCostDuration) / median,
-  )
+  return Math.ceil(minLoopDuration / median)
 }
 
-// `median` can be 0 when the task is too close to `measureCost` or `resolution`
+// `median` can be 0 when the task is too close to `minLoopDuration`.
 // In that case, we multiply the `repeat` with a fixed rate.
 const FAST_MEDIAN_RATE = 10
-// How many times slower the repeated median must be compared to the resolution.
-// A lower value makes measures closer to the resolution, making them less
-// precise.
-// A higher value increases the task loop duration, creating fewer loops.
-const MIN_RESOLUTION_PRECISION = 1e2
-// How many times slower the repeated median must be compared to `measureCost`.
-// Ensure `repeat` is high enough to decrease the impact of `measureCost`.
-// A lower value decreases precision as the variance of `measureCost`
-// contributes more to the overall variance.
-// A higher value increases the task loop duration, creating fewer loops.
-const MIN_MEASURE_COST = 1e2
 
 // If the runner does not support `repeat`, its value is:
 //  - `undefined` in the runner

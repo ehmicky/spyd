@@ -31,8 +31,7 @@ export const measureProcessGroup = async function ({
   processGroupDuration,
   cwd,
   loadDuration,
-  measureCost,
-  resolution,
+  minLoopDuration,
   dry,
 }) {
   const processGroupEnd = now() + processGroupDuration
@@ -114,8 +113,7 @@ export const measureProcessGroup = async function ({
       repeat,
       median,
       sampleType,
-      measureCost,
-      resolution,
+      minLoopDuration,
       runnerRepeats,
     })
     // eslint-disable-next-line fp/no-mutation
@@ -137,8 +135,7 @@ export const measureProcessGroup = async function ({
 
 // We stop iterating when the next process does not have any time to spawn a
 // single loop. We estimate this taking into account the time to launch the
-// runner (`loadCost`), the time to measure the task (`measureCost`) and
-// the time of the task itself, based on previous measurements (`median`).
+// runner (`loadCost`).
 // This means we allow the last process to be shorter than the others.
 // On one side, this means we are comparing processes with different durations,
 // which introduce more variance since shorter processes will measure slower
