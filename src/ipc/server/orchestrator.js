@@ -29,22 +29,22 @@ const handleRequest = function (combinations, req, res) {
 }
 
 const addEndHandlers = function (combinations) {
-  const loadState = { pending: combinations.length - 1 }
+  const state = { pending: combinations.length - 1 }
   combinations.forEach(({ orchestrator }) => {
-    addEndHandler({ orchestrator, combinations, loadState })
+    addEndHandler({ orchestrator, combinations, state })
   })
 }
 
-const addEndHandler = function ({ orchestrator, combinations, loadState }) {
+const addEndHandler = function ({ orchestrator, combinations, state }) {
   orchestrator.on('end', () => {
-    onSampleEnd(combinations, loadState)
+    onSampleEnd(combinations, state)
   })
 }
 
-const onSampleEnd = function (combinations, loadState) {
-  if (loadState.pending !== 0) {
+const onSampleEnd = function (combinations, state) {
+  if (state.pending !== 0) {
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    loadState.pending -= 1
+    state.pending -= 1
     return
   }
 
