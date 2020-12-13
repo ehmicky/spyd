@@ -1,4 +1,7 @@
-export const handleOutput = function ({ measures }, { taskTitle, measure }) {
+export const handleOutput = function (
+  { state: { measures } },
+  { taskTitle, measure },
+) {
   if (taskTitle !== undefined) {
     return { taskTitle }
   }

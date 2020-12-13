@@ -5,10 +5,10 @@ export const getSampleStart = function () {
   return now()
 }
 
-export const addTimeSpent = function (combination, sampleStart) {
+export const addTimeSpent = function ({ state }, sampleStart) {
   const sampleDuration = now() - sampleStart
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  combination.timeSpent += sampleDuration
+  state.timeSpent += sampleDuration
 }
 
 export const getNextCombination = function (combinations) {
@@ -19,13 +19,15 @@ export const getNextCombination = function (combinations) {
 
 const getMinCombinations = function (combinations) {
   const minTimeSpent = getMinTimeSpent(combinations)
-  return combinations.filter(({ timeSpent }) => timeSpent === minTimeSpent)
+  return combinations.filter(
+    (combination) => getTimeSpent(combination) === minTimeSpent,
+  )
 }
 
 const getMinTimeSpent = function (combinations) {
   return Math.min(...combinations.map(getTimeSpent))
 }
 
-const getTimeSpent = function ({ timeSpent }) {
+const getTimeSpent = function ({ state: { timeSpent } }) {
   return timeSpent
 }

@@ -22,8 +22,7 @@ const pSetTimeout = promisify(setTimeout)
 //   - The server sends some input to indicate how long to run the sample
 //   - The runner sends the results back as output
 export const measureCombination = async function ({
-  combination,
-  combination: { orchestrator },
+  combination: { orchestrator, ...combination },
   duration,
 }) {
   // eslint-disable-next-line fp/no-let
@@ -32,19 +31,28 @@ export const measureCombination = async function ({
   // TODO: stop loop on end of `duration * combinations.length`
   // eslint-disable-next-line fp/no-loops
   while (true) {
-    // eslint-disable-next-line no-await-in-loop
-    await waitForStart(orchestrator)
-
-    const sampleStart = getSampleStart()
-
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
-    res = await Promise.race([
-      processCombination({ combination, orchestrator, res }),
-      waitForSampleTimeout(duration, combination),
-    ])
-
-    addTimeSpent(combination, sampleStart)
+    res = await measureSample({ combination, orchestrator, res, duration })
   }
+}
+
+const measureSample = async function ({
+  combination,
+  orchestrator,
+  res,
+  duration,
+}) {
+  await waitForStart(orchestrator)
+
+  const sampleStart = getSampleStart()
+
+  const newRes = await Promise.race([
+    processCombination({ combination, orchestrator, res }),
+    waitForSampleTimeout(duration, combination),
+  ])
+
+  addTimeSpent(combination, sampleStart)
+  return newRes
 }
 
 const processCombination = async function ({ combination, orchestrator, res }) {
@@ -63,9 +71,9 @@ const processInput = async function (combination, res) {
 const processOutput = async function (combination, orchestrator) {
   const { req, res: nextRes } = await waitForOutput(orchestrator)
   const output = await getJsonOutput(req)
-  const combinationProps = handleOutput(combination, output)
+  const newState = handleOutput(combination, output)
   // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(combination, combinationProps)
+  Object.assign(combination.state, newState)
   return nextRes
 }
 

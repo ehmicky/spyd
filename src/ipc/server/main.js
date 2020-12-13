@@ -27,7 +27,7 @@ const getCombinations = function () {
 
 const addDefaultState = function (combination) {
   const clientId = createClientId()
-  return { ...combination, clientId, timeSpent: 0, measures: [] }
+  return { ...combination, clientId, state: { timeSpent: 0, measures: [] } }
 }
 
 runCombinations({ duration: 1e9 })
