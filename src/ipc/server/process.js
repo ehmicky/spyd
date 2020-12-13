@@ -5,6 +5,7 @@ import execa from 'execa'
 import { UserError } from '../../error/main.js'
 
 import { getServerUrl } from './url.js'
+import { waitForLoad } from './wait.js'
 
 const CLIENT_ENTRYFILE = `${__dirname}/../client/main.js`
 
@@ -14,7 +15,6 @@ export const runProcesses = async function ({
   combinations,
   origin,
   duration,
-  loadBarrier,
 }) {
   const combinationProcesses = combinations.map((combination) =>
     startProcess(combination, origin),
@@ -23,7 +23,7 @@ export const runProcesses = async function ({
   try {
     await Promise.race([
       ...combinationProcesses.map(runProcess),
-      waitToEnd({ loadBarrier, duration, combinations }),
+      waitToEnd(duration, combinations),
     ])
   } finally {
     combinationProcesses.forEach(stopProcess)
@@ -58,8 +58,8 @@ const runProcess = async function ({ childProcess, taskId }) {
 //  - This includes using the `include|exclude` configuration properties
 // We also exclude the time to load both runners and tasks. This ensures adding
 // imports in tasks (slowing down their load time) does not change results.
-const waitToEnd = async function ({ loadBarrier, duration, combinations }) {
-  await loadBarrier.promise
+const waitToEnd = async function (duration, combinations) {
+  await waitForLoad(combinations)
   const totalDurationMs = Math.round(
     (duration / NANOSECS_TO_MILLISECS) * combinations.length,
   )

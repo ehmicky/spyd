@@ -1,45 +1,38 @@
 import randomItem from 'random-item'
 
-import { getBarrier } from './barrier.js'
 import { getMinCombinations } from './time_spent.js'
 
-export const waitForTurn = async function ({
-  combination,
-  combinations,
-  loadBarrier,
-}) {
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  combination.barrier = getBarrier()
-
-  await waitForLoad(combinations, loadBarrier)
+export const waitForTurn = async function (combination, combinations) {
+  combination.barriers.load.resolve()
+  await waitForLoad(combinations)
 
   resolveNext(combinations)
-  await combination.barrier.promise
-}
-
-const waitForLoad = async function (combinations, loadBarrier) {
-  if (loadBarrier.resolved) {
-    return
-  }
-
-  if (isLoaded(combinations)) {
-    loadBarrier.resolve()
-    return
-  }
-
-  await loadBarrier.promise
-}
-
-const isLoaded = function (combinations) {
-  return combinations.every(isLoadedCombination)
-}
-
-const isLoadedCombination = function ({ taskTitle }) {
-  return taskTitle !== undefined
+  await combination.barriers.start.promise
 }
 
 const resolveNext = function (combinations) {
   const minCombinations = getMinCombinations(combinations)
   const combination = randomItem(minCombinations)
-  combination.barrier.resolve()
+  combination.barriers.start.resolve()
+}
+
+// Wait until all `combinations[*].barriers.{type}` have resolved
+export const waitForLoad = async function (combinations) {
+  await Promise.all(combinations.map(getLoadBarrier))
+}
+
+const getLoadBarrier = function ({ barriers }) {
+  return barriers.load.promise
+}
+
+// Retrieve a `barrier`, i.e. a promise that can be resolved manually
+export const createBarrier = function () {
+  // eslint-disable-next-line fp/no-let, init-declarations
+  let resolveFunc
+  // eslint-disable-next-line promise/avoid-new
+  const promise = new Promise((resolve) => {
+    // eslint-disable-next-line fp/no-mutation
+    resolveFunc = resolve
+  })
+  return { promise, resolve: resolveFunc }
 }

@@ -11,15 +11,8 @@ import { findCombinationByUrl } from './url.js'
 import { waitForTurn } from './wait.js'
 
 // Handle HTTP requests coming from runners
-export const handleRequests = function ({
-  combinations,
-  httpServer,
-  loadBarrier,
-}) {
-  httpServer.on(
-    'request',
-    handleRequest.bind(undefined, { combinations, loadBarrier }),
-  )
+export const handleRequests = function (combinations, httpServer) {
+  httpServer.on('request', handleRequest.bind(undefined, combinations))
 }
 
 // Runners use long polling:
@@ -32,27 +25,17 @@ export const handleRequests = function ({
 // measuring sample:
 //   - The server sends some input to indicate how long to run the sample
 //   - The runner sends the results back as output
-const handleRequest = async function ({ combinations, loadBarrier }, req, res) {
+const handleRequest = async function (combinations, req, res) {
   const combination = findCombinationByUrl(req, combinations)
   addTimeSpent({ combination })
-  const inputString = await getInputString({
-    combination,
-    combinations,
-    loadBarrier,
-    req,
-  })
+  const inputString = await getInputString({ combination, combinations, req })
   await promisify(res.end.bind(res))(inputString)
   setSampleStart(combination)
 }
 
-const getInputString = async function ({
-  combination,
-  combinations,
-  loadBarrier,
-  req,
-}) {
+const getInputString = async function ({ combination, combinations, req }) {
   await processOutput(combination, req)
-  await waitForTurn({ combination, combinations, loadBarrier })
+  await waitForTurn(combination, combinations)
   const inputString = processInput(combination)
   return inputString
 }
