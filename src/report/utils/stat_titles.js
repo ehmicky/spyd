@@ -10,7 +10,7 @@ export const STAT_TITLES = {
   times: 'Times',
   loops: 'Loops count',
   repeat: 'Loops size',
-  processes: 'Processes',
+  samples: 'Samples',
   loadCost: 'Loading',
   minLoopDuration: 'Min loop duration',
 }

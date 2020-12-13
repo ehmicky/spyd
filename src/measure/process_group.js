@@ -71,7 +71,7 @@ const getInitialSampleState = function ({ runnerRepeats, initialLoadCost }) {
     // `taskMedian` is initially 0. This means it is not used to compute
     // `maxDuration` in the first process.
     taskMedian: 0,
-    processes: 0,
+    samples: 0,
     loops: 0,
     times: 0,
     repeat: 1,
@@ -106,7 +106,7 @@ const runSample = async function ({
     processMeasures,
     taskMedians,
     taskMedian,
-    processes,
+    samples,
     loops,
     times,
     repeat,
@@ -155,7 +155,7 @@ const runSample = async function ({
     processMeasuresA,
     taskMediansA,
     measureCostsA,
-    processesA,
+    samplesA,
     loopsA,
     timesA,
   ] = repeatInitReset({
@@ -163,12 +163,12 @@ const runSample = async function ({
     processMeasures,
     taskMedians,
     measureCosts,
-    processes,
+    samples,
     loops,
     times,
   })
 
-  const processesB = processesA + 1
+  const samplesB = samplesA + 1
   const loopsB = loopsA + mainMeasures.length
   const timesB = timesA + mainMeasures.length * repeat
 
@@ -204,7 +204,7 @@ const runSample = async function ({
     processMeasures: processMeasuresB,
     taskMedians: taskMediansB,
     taskMedian: taskMedianA,
-    processes: processesB,
+    samples: samplesB,
     loops: loopsB,
     times: timesB,
     repeat: repeatA,

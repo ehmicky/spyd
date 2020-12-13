@@ -8,7 +8,7 @@
 // In case there is not enough duration to finish `repeatInit`, we keep only
 // the last process measures.
 // We only reset cumulated stats like `processMeasures`, `taskMedians`,
-// `processes`, `loops` and `times`
+// `samples`, `loops` and `times`
 // We do not reset stats which only use the last process when those cumulated
 // stats are reset, such as `taskMedian`, `repeat`. We do not reset `loadCosts`
 // since it is unrelated to the `repeat` loop.
@@ -17,12 +17,12 @@ export const repeatInitReset = function ({
   processMeasures,
   taskMedians,
   measureCosts,
-  processes,
+  samples,
   loops,
   times,
 }) {
-  if (!repeatInit || processes === 0) {
-    return [processMeasures, taskMedians, measureCosts, processes, loops, times]
+  if (!repeatInit || samples === 0) {
+    return [processMeasures, taskMedians, measureCosts, samples, loops, times]
   }
 
   return [[], [], [], 0, 0, 0]

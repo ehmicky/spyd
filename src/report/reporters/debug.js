@@ -96,7 +96,7 @@ const STATS = [
   'times',
   'loops',
   'repeat',
-  'processes',
+  'samples',
   'loadCost',
   'minLoopDuration',
 ]
