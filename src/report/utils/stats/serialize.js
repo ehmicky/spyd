@@ -1,4 +1,3 @@
-import { getEpsilon, applyEpsilon } from './epsilon.js'
 import { serializeRelPercentage, serializeAbsPercentage } from './percentage.js'
 import { shouldSkipStat } from './skip.js'
 
@@ -11,51 +10,23 @@ export const serializeStat = function ({
   scale,
   decimals,
   loops,
-  repeat,
-  measureCost,
 }) {
   if (shouldSkipStat({ stat, name, loops })) {
     return ''
   }
 
-  const epsilon = getEpsilon(measureCost, repeat)
-
   if (Array.isArray(stat)) {
     return stat.map((statA) =>
-      serializeValue({
-        stat: statA,
-        name,
-        type,
-        scale,
-        unit,
-        decimals,
-        epsilon,
-      }),
+      serializeValue({ stat: statA, type, scale, unit, decimals }),
     )
   }
 
-  return serializeValue({
-    stat,
-    name,
-    type,
-    scale,
-    unit,
-    decimals,
-    epsilon,
-  })
+  return serializeValue({ stat, type, scale, unit, decimals })
 }
 
 // Serialize a stat's value
-const serializeValue = function ({
-  stat,
-  name,
-  type,
-  scale,
-  unit,
-  decimals,
-  epsilon,
-}) {
-  return SERIALIZE_STAT[type](stat, { name, scale, unit, decimals, epsilon })
+const serializeValue = function ({ stat, type, scale, unit, decimals }) {
+  return SERIALIZE_STAT[type](stat, { scale, unit, decimals })
 }
 
 const serializeCount = function (count) {
@@ -63,18 +34,10 @@ const serializeCount = function (count) {
   return count.toLocaleString()
 }
 
-const serializeDuration = function (
-  duration,
-  { name, scale, unit, decimals, epsilon },
-) {
-  const { duration: durationA, prefix } = applyEpsilon({
-    duration,
-    name,
-    epsilon,
-  })
-  const scaledDuration = durationA / scale
+const serializeDuration = function (duration, { scale, unit, decimals }) {
+  const scaledDuration = duration / scale
   const scaledDurationStr = scaledDuration.toFixed(decimals)
-  return `${prefix}${scaledDurationStr}${unit}`
+  return `${scaledDurationStr}${unit}`
 }
 
 const SERIALIZE_STAT = {
