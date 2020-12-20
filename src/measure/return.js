@@ -54,12 +54,12 @@ export const handleReturnValue = function (
   const timesB = timesA + mainMeasures.length * repeat
 
   const processMeasuresB = [...processMeasuresA, { mainMeasures, repeat }]
-  const {
-    measures: measuresB,
-    processMeasures: processMeasuresC,
-    stats: statsA,
-    aggregateCountdown: aggregateCountdownA,
-  } = aggregateMeasures({
+  const [
+    measuresB,
+    processMeasuresC,
+    statsA,
+    aggregateCountdownA,
+  ] = aggregateMeasures({
     measures: measuresA,
     processMeasures: processMeasuresB,
     stats,

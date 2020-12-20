@@ -27,12 +27,8 @@ export const aggregateMeasures = function ({
   repeatInit,
 }) {
   if (!repeatInit && aggregateCountdown > 0 && measures.length !== 0) {
-    return {
-      measures,
-      processMeasures,
-      stats,
-      aggregateCountdown: aggregateCountdown - sampleDurationLast,
-    }
+    const aggregateCountdownA = aggregateCountdown - sampleDurationLast
+    return [measures, processMeasures, stats, aggregateCountdownA]
   }
 
   const aggregateStart = getAggregateStart()
@@ -40,13 +36,8 @@ export const aggregateMeasures = function ({
   addProcessMeasures(measures, processMeasures)
   const statsA = computeStats(measures)
 
-  const aggregateCountdownA = getAggregateCountdown(aggregateStart)
-  return {
-    measures,
-    processMeasures: [],
-    stats: statsA,
-    aggregateCountdown: aggregateCountdownA,
-  }
+  const aggregateCountdownB = getAggregateCountdown(aggregateStart)
+  return [measures, [], statsA, aggregateCountdownB]
 }
 
 const getAggregateStart = function () {
