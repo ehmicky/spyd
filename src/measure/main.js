@@ -4,7 +4,7 @@ import { promisify } from 'util'
 import now from 'precise-now'
 
 import { getBenchmarkEnd } from './duration.js'
-import { initOrchestrators } from './orchestrator.js'
+import { getOrchestrator, initOrchestrators } from './orchestrator.js'
 import { runProcesses } from './process.js'
 import { startServer, stopServer } from './start_stop.js'
 import { createCombinationId } from './url.js'
@@ -21,16 +21,16 @@ export const measureCombinations = async function ({
   Object.assign(progressState, { benchmarkEnd })
 
   const combinationsA = combinations.map(addDefaultState)
-  const combinationsB = await measureAllCombinations({
+  await measureAllCombinations({
     combinations: combinationsA,
     duration,
     cwd,
     benchmarkEnd,
   })
-  const combinationsC = combinationsB.map(getCombinationResult)
+  const combinationsB = combinationsA.map(getCombinationResult)
 
   await waitForTimeLeft(benchmarkEnd)
-  return combinationsC
+  return combinationsB
 }
 
 const measureAllCombinations = async function ({
@@ -42,13 +42,8 @@ const measureAllCombinations = async function ({
   const { server, origin } = await startServer(duration)
 
   try {
-    const combinationsA = initOrchestrators({
-      server,
-      combinations,
-      benchmarkEnd,
-    })
-    await runProcesses({ combinations: combinationsA, origin, duration, cwd })
-    return combinationsA
+    initOrchestrators({ server, combinations, benchmarkEnd })
+    await runProcesses({ combinations, origin, duration, cwd })
   } finally {
     await stopServer(server)
   }
@@ -59,6 +54,7 @@ const addDefaultState = function ({ runnerRepeats, ...combination }) {
     ...combination,
     runnerRepeats,
     id: createCombinationId(),
+    orchestrator: getOrchestrator(),
     state: {
       combinationDuration: 0,
       processes: 0,

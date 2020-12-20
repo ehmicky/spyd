@@ -29,20 +29,17 @@ import { findCombinationByUrl } from './url.js'
 // Additionally, when a combination is waiting on a runner to return its return
 // value by sending an HTTP request, it waits on the `request` event, which is
 // emitted by the HTTP server.
+export const getOrchestrator = function () {
+  return new EventEmitter()
+}
+
 export const initOrchestrators = function ({
   server,
   combinations,
   benchmarkEnd,
 }) {
-  const combinationsA = combinations.map(addOrchestrator)
-  handleRequests(server, combinationsA)
-  addEndHandlers(combinationsA, benchmarkEnd)
-  return combinationsA
-}
-
-const addOrchestrator = function (combination) {
-  const orchestrator = new EventEmitter()
-  return { ...combination, orchestrator }
+  handleRequests(server, combinations)
+  addEndHandlers(combinations, benchmarkEnd)
 }
 
 // Handle HTTP requests coming from runners.
