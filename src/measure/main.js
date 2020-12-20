@@ -21,7 +21,7 @@ export const measureCombinations = async function ({
   Object.assign(progressState, { benchmarkEnd })
 
   const combinationsA = combinations.map(addDefaultState)
-  const combinationsB = measureAllCombinations({
+  const combinationsB = await measureAllCombinations({
     combinations: combinationsA,
     duration,
     cwd,
