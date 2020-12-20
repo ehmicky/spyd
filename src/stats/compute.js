@@ -13,7 +13,7 @@ import { getMean, getDeviation } from './sum.js'
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
 // eslint-disable-next-line max-statements
-export const getStats = function ({
+export const computeStats = function ({
   measures,
   samples,
   loops,

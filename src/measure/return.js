@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { getStats } from '../stats/compute.js'
+import { computeStats } from '../stats/compute.js'
 
 import { addProcessMeasures } from './add.js'
 import { getMinLoopDuration } from './min_loop_duration.js'
@@ -85,7 +85,7 @@ export const handleReturnValue = function (
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
   const processMeasuresC = addProcessMeasures(measuresA, processMeasuresB)
-  const stats = getStats({
+  const stats = computeStats({
     measures: measuresA,
     samples: samplesB,
     loops: loopsB,
