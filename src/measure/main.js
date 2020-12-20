@@ -1,14 +1,12 @@
-/* eslint-disable max-lines */
 import { promisify } from 'util'
 
 import now from 'precise-now'
 
-import { getFinalStats } from './aggregate.js'
 import { getBenchmarkEnd } from './duration.js'
-import { getOrchestrator, initOrchestrators } from './orchestrator.js'
+import { initOrchestrators } from './orchestrator.js'
 import { runProcesses } from './process.js'
+import { addInitProps, getFinalProps } from './props.js'
 import { startServer, stopServer } from './server.js'
-import { createCombinationId } from './url.js'
 
 const pSetTimeout = promisify(setTimeout)
 
@@ -21,14 +19,14 @@ export const measureCombinations = async function ({
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(progressState, { benchmarkEnd })
 
-  const combinationsA = combinations.map(addDefaultState)
+  const combinationsA = combinations.map(addInitProps)
   await measureAllCombinations({
     combinations: combinationsA,
     duration,
     cwd,
     benchmarkEnd,
   })
-  const combinationsB = combinationsA.map(getCombinationResult)
+  const combinationsB = combinationsA.map(getFinalProps)
 
   await waitForTimeLeft(benchmarkEnd)
   return combinationsB
@@ -60,85 +58,6 @@ const measureAllCombinations = async function ({
   }
 }
 
-const addDefaultState = function ({ runnerRepeats, ...combination }) {
-  return {
-    ...combination,
-    runnerRepeats,
-    id: createCombinationId(),
-    orchestrator: getOrchestrator(),
-    state: {
-      combinationDuration: 0,
-      sampleDurationLast: 0,
-      sampleDurationMean: 0,
-      aggregateCountdown: 0,
-      stats: { median: 0 },
-      measures: [],
-      bufferedMeasures: [],
-      allSamples: 0,
-      samples: 0,
-      loops: 0,
-      times: 0,
-      repeat: 1,
-      // If the runner does not support `repeats`, `repeatInit` is always
-      // `false`
-      repeatInit: runnerRepeats,
-      measureCosts: [],
-      resolution: Infinity,
-      resolutionSize: 0,
-      minLoopDuration: 0,
-    },
-  }
-}
-
-const getCombinationResult = function ({
-  row,
-  column,
-  taskId,
-  taskTitle,
-  inputId,
-  inputTitle,
-  commandRunner,
-  commandId,
-  commandTitle,
-  commandDescription,
-  systemId,
-  systemTitle,
-  state: {
-    measures,
-    bufferedMeasures,
-    stats,
-    loops,
-    times,
-    samples,
-    minLoopDuration,
-  },
-}) {
-  const statsA = getFinalStats({
-    measures,
-    bufferedMeasures,
-    stats,
-    loops,
-    times,
-    samples,
-    minLoopDuration,
-  })
-  return {
-    row,
-    column,
-    taskId,
-    taskTitle,
-    inputId,
-    inputTitle,
-    commandRunner,
-    commandId,
-    commandTitle,
-    commandDescription,
-    systemId,
-    systemTitle,
-    stats: statsA,
-  }
-}
-
 // We stop measuring when the next sample is most likely to go beyond the target
 // `duration`.
 // We still wait for the time left. This wastes some time but prevents the
@@ -155,4 +74,3 @@ const waitForTimeLeft = async function (benchmarkEnd) {
 }
 
 const NANOSECS_TO_MSECS = 1e6
-/* eslint-enable max-lines */
