@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { PluginError } from '../../error/main.js'
+import { PluginError } from '../error/main.js'
 
 // Each combination gets its own unique `id`
 export const createCombinationId = function () {

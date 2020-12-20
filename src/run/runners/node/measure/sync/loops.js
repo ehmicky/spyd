@@ -1,5 +1,4 @@
 import { addEmptyMeasure } from '../empty.js'
-import { shouldStopMeasuring } from '../stop.js'
 
 import { performBeforeSync, performAfterSync } from './before_after.js'
 import { getDurationSync } from './duration.js'
@@ -10,12 +9,12 @@ export const performLoopsSync = function ({
   before,
   after,
   repeat,
-  measureEnd,
+  maxLoops,
   mainMeasures,
   emptyMeasures,
 }) {
   // eslint-disable-next-line fp/no-loops
-  do {
+  while (mainMeasures.length < maxLoops) {
     performLoopSync({
       main,
       before,
@@ -24,7 +23,7 @@ export const performLoopsSync = function ({
       mainMeasures,
       emptyMeasures,
     })
-  } while (!shouldStopMeasuring(measureEnd))
+  }
 }
 
 const performLoopSync = function ({

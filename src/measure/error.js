@@ -1,7 +1,5 @@
 import { UserError } from '../error/main.js'
 
-import { TIMEOUT_ERROR } from './timeout.js'
-
 // Forward any child process error
 export const forwardChildError = function ({
   message,
@@ -29,18 +27,12 @@ export const forwardChildError = function ({
 
 const getMessage = function ({
   message,
-  timedOut,
   taskPath,
   ipcReturn: { error: errorResult } = {},
   taskId,
   inputId,
 }) {
   const taskPrefix = getTaskPrefix({ taskPath, taskId, inputId })
-
-  if (timedOut) {
-    return `${taskPrefix} ${TIMEOUT_ERROR}`
-  }
-
   const execaError = getExecaError(message)
   return [taskPrefix, errorResult, execaError].filter(Boolean).join('\n\n')
 }

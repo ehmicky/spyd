@@ -79,7 +79,7 @@ export const getMinLoopDuration = function ({
 // This function estimates `measureCost` by making runners measure empty tasks.
 // That cost must be computed separately for each combination since they might
 // vary depending on the task, input or system. For example, tasks with more
-// iterations per process have more time to optimize `measureCost`, which is
+// iterations per sample have more time to optimize `measureCost`, which is
 // usually faster then.
 const getMeasureCost = function (measureCosts, emptyMeasures) {
   return getMediansMedian({
@@ -121,19 +121,18 @@ const MIN_RESOLUTION_PRECISION = 1e2
 //      - Iterating any loop
 //   - For example, an `emptyMeasure` might only retrieve timestamps and compute
 //     their difference
-// This is done inside each process. We do not:
+// This is done inside each sample. We do not:
 //   - Run this in a separate phase, before any measurement takes place. Doing
 //     both the main measurement and the `measureCost` callibration at the same
 //     time allows the latter to last longer (and be more precise) as the
 //     `duration` is increased.
-//   - Run this in a separate process, due to how slow spawning processes is
 //   - Run this in the runner, before or after the main measuring loop. Instead,
 //     we run this alongside it
 //      - This is because the time to retrieve timestamps often gets faster and
 //        faster, as more iterations are run and the runtime optimize hot paths.
 //        Measuring it alongside is the only way to measure it accurately. It is
 //        also much more precise.
-//      - This also allows using the same `maxDuration`
+//      - This also allows using the same `maxLoops`
 //      - As a small bonus, this also provides with a small cold start for the
 //        main measuring loop
 //      - However, the function measuring `emptyMeasures` and `measures` should

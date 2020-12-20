@@ -12,42 +12,14 @@ import { getMean, getDeviation } from './sum.js'
 // if was not one. This means `quantiles`, `histogram` and `deviation` will
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
+// eslint-disable-next-line max-statements
 export const getStats = function ({
   measures,
-  sampleState: { samples, loops, times, minLoopDuration, loadCost },
+  samples,
+  loops,
+  times,
+  minLoopDuration,
 }) {
-  const {
-    loops: loopsA,
-    repeat,
-    times: timesA,
-    min,
-    max,
-    median,
-    quantiles,
-    histogram,
-    mean,
-    deviation,
-  } = computeStats(measures, loops, times)
-
-  return {
-    median,
-    mean,
-    min,
-    max,
-    deviation,
-    loops: loopsA,
-    times: timesA,
-    repeat,
-    samples,
-    histogram,
-    quantiles,
-    minLoopDuration,
-    loadCost,
-  }
-}
-
-// eslint-disable-next-line max-statements
-const computeStats = function (measures, loops, times) {
   // `times` is the number of times `main()` was called
   // `loops` is the number of repeat loops
   // `repeat` is the average number of iterations inside those repeat loops
@@ -66,16 +38,18 @@ const computeStats = function (measures, loops, times) {
   const deviation = getDeviation(measures, mean, OUTLIERS_THRESHOLD)
 
   return {
+    median,
+    mean,
+    min,
+    max,
+    deviation,
     loops: loopsA,
     times: timesA,
     repeat,
-    min,
-    max,
-    median,
-    quantiles,
+    samples,
     histogram,
-    mean,
-    deviation,
+    quantiles,
+    minLoopDuration,
   }
 }
 

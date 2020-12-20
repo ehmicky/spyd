@@ -2,7 +2,7 @@ import { promisify } from 'util'
 
 import getStream from 'get-stream'
 
-import { PluginError, UserError } from '../../error/main.js'
+import { PluginError, UserError } from '../error/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { waitForStart, waitForReturn } from './orchestrator.js'
@@ -47,9 +47,10 @@ const measureSample = async function ({
 // We are setting up return value listening before sending params to prevent any
 // race condition
 const processCombination = async function ({ combination, orchestrator, res }) {
+  const params = getParams(combination)
   return await Promise.all([
-    receiveReturnValue(combination, orchestrator),
-    sendParams(combination, res),
+    receiveReturnValue({ combination, orchestrator, params }),
+    sendParams(params, res),
   ])
 }
 
@@ -64,18 +65,21 @@ const processCombination = async function ({ combination, orchestrator, res }) {
 // measuring sample:
 //   - The server sends some params to indicate how long to run the sample
 //   - The runner sends the return value
-const sendParams = async function (combination, res) {
-  const params = getParams(combination)
+const sendParams = async function (params, res) {
   const paramsString = JSON.stringify(params)
   await promisify(res.end.bind(res))(paramsString)
 }
 
 // Receive the sample's return value by receiving a HTTP long poll request.
-const receiveReturnValue = async function (combination, orchestrator) {
+const receiveReturnValue = async function ({
+  combination,
+  orchestrator,
+  params,
+}) {
   const { req, res: nextRes } = await waitForReturn(orchestrator)
   const returnValue = await getJsonReturn(req)
   handleError(returnValue, combination)
-  const newState = handleReturnValue(combination, returnValue)
+  const newState = handleReturnValue(combination, returnValue, params)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(combination.state, newState)
   return nextRes
@@ -87,8 +91,8 @@ const getJsonReturn = async function (req) {
     const returnValueString = await getStream(req)
     const returnValue = JSON.parse(returnValueString)
     return returnValue
-  } catch {
-    throw new PluginError('Invalid JSON return value')
+  } catch (error) {
+    throw new PluginError(`Invalid JSON return value: ${error.stack}`)
   }
 }
 

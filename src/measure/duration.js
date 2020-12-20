@@ -42,14 +42,21 @@ export const getRemainingCombinations = function (combinations, benchmarkEnd) {
 // `sampleDurationMean` is initially `undefined`. This ensures each combination
 // measures at least once sample.
 const isRemainingCombination = function (
-  { state: { sampleDurationMean } },
+  { state: { sampleDurationMean, loops } },
   benchmarkDurationLeft,
 ) {
   return (
-    sampleDurationMean === undefined ||
-    sampleDurationMean < benchmarkDurationLeft
+    loops < MAX_LOOPS &&
+    (sampleDurationMean === undefined ||
+      sampleDurationMean < benchmarkDurationLeft)
   )
 }
+
+// We stop running samples when the `measures` is over `MAX_LOOPS`. This
+// is meant to prevent memory overflow.
+// The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
+// little more than 1e8 floats.
+const MAX_LOOPS = 1e8
 
 // Retrieve the next combination which should be measured.
 // We do it based on which combination are been measured the least.

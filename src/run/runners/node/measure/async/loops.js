@@ -1,5 +1,4 @@
 import { addEmptyMeasure } from '../empty.js'
-import { shouldStopMeasuring } from '../stop.js'
 
 import { performBeforeAsync, performAfterAsync } from './before_after.js'
 import { getDurationAsync } from './duration.js'
@@ -9,12 +8,12 @@ export const performLoopsAsync = async function ({
   before,
   after,
   repeat,
-  measureEnd,
+  maxLoops,
   mainMeasures,
   emptyMeasures,
 }) {
   // eslint-disable-next-line fp/no-loops
-  do {
+  while (mainMeasures.length < maxLoops) {
     // eslint-disable-next-line no-await-in-loop
     await performLoopAsync({
       main,
@@ -24,7 +23,7 @@ export const performLoopsAsync = async function ({
       mainMeasures,
       emptyMeasures,
     })
-  } while (!shouldStopMeasuring(measureEnd))
+  }
 }
 
 const performLoopAsync = async function ({

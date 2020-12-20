@@ -1,11 +1,9 @@
 import execa from 'execa'
 
-import { UserError } from '../../error/main.js'
+import { UserError } from '../error/main.js'
 
 import { measureCombination } from './combination.js'
 import { getServerUrl } from './url.js'
-
-const CLIENT_ENTRYFILE = `${__dirname}/../client/main.js`
 
 // Each combination is spawned in its own process:
 //  - This ensures runtime optimization is bound to each combination
@@ -29,9 +27,10 @@ export const runProcesses = async function ({
   combinations,
   origin,
   duration,
+  cwd,
 }) {
   const combinationProcesses = combinations.map((combination) =>
-    startProcess(combination, origin),
+    startProcess({ combination, origin, cwd }),
   )
 
   try {
@@ -47,19 +46,49 @@ export const runProcesses = async function ({
 
 // Spawn each combination's process.
 // All combinations are loaded in parallel, for performance.
-const startProcess = function (combination, origin) {
-  const loadParams = getLoadParams(combination, origin)
+const startProcess = function ({
+  combination,
+  combination: {
+    id,
+    commandConfig: runConfig,
+    commandSpawn: [commandFile, ...commandArgs],
+    commandSpawnOptions,
+    taskPath,
+    taskId,
+    inputId,
+  },
+  origin,
+  cwd,
+}) {
+  const loadParams = getLoadParams({
+    id,
+    runConfig,
+    taskPath,
+    taskId,
+    inputId,
+    origin,
+  })
   const loadParamsString = JSON.stringify(loadParams)
-  const childProcess = execa('node', [CLIENT_ENTRYFILE, loadParamsString], {
+  const childProcess = execa(commandFile, [...commandArgs, loadParamsString], {
+    ...commandSpawnOptions,
     stdio: 'ignore',
+    cwd,
+    preferLocal: true,
   })
   return { childProcess, combination }
 }
 
 // Retrieve params passed to runner processes so they can load the right task
-const getLoadParams = function ({ taskId, id }, origin) {
+const getLoadParams = function ({
+  id,
+  runConfig,
+  taskPath,
+  taskId,
+  inputId,
+  origin,
+}) {
   const serverUrl = getServerUrl(origin, id)
-  return { serverUrl, taskId }
+  return { serverUrl, runConfig, taskPath, taskId, inputId }
 }
 
 const runProcess = async function ({ childProcess, combination, duration }) {

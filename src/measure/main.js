@@ -1,19 +1,93 @@
+/* eslint-disable max-lines */
 import { promisify } from 'util'
 
 import now from 'precise-now'
 
-import { getStats } from '../stats/compute.js'
-
-import { measureProcessGroup } from './process_group.js'
+import { getBenchmarkEnd } from './duration.js'
+import { initOrchestrators } from './orchestrator.js'
+import { runProcesses } from './process.js'
+import { startServer, stopServer } from './start_stop.js'
+import { createCombinationId } from './url.js'
 
 const pSetTimeout = promisify(setTimeout)
 
-// Start several child processes measuring the same task.
-// eslint-disable-next-line max-lines-per-function
-export const getCombinationResult = async function ({
+export const measureCombinations = async function ({
+  combinations,
+  config: { duration, cwd },
+  progressState,
+}) {
+  const benchmarkEnd = getBenchmarkEnd(combinations, duration)
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(progressState, { benchmarkEnd })
+
+  const combinationsA = combinations.map(addDefaultState)
+  const combinationsB = measureAllCombinations({
+    combinations: combinationsA,
+    duration,
+    cwd,
+    benchmarkEnd,
+  })
+  const combinationsC = combinationsB.map(getCombinationResult)
+
+  await waitForTimeLeft(benchmarkEnd)
+  return combinationsC
+}
+
+const measureAllCombinations = async function ({
+  combinations,
+  duration,
+  cwd,
+  benchmarkEnd,
+}) {
+  const { server, origin } = await startServer(duration)
+
+  try {
+    const combinationsA = initOrchestrators({
+      server,
+      combinations,
+      benchmarkEnd,
+    })
+    await runProcesses({ combinations: combinationsA, origin, duration, cwd })
+    return combinationsA
+  } finally {
+    await stopServer(server)
+  }
+}
+
+const addDefaultState = function ({
+  combination,
+  combination: { runnerRepeats },
+}) {
+  return {
+    ...combination,
+    id: createCombinationId(),
+    state: {
+      combinationDuration: 0,
+      processes: 0,
+      measures: [],
+      processMeasures: [],
+      taskMedians: [],
+      // `taskMedian` is initially 0. This means it is not used to compute
+      // `maxDuration` in the first process.
+      taskMedian: 0,
+      samples: 0,
+      loops: 0,
+      times: 0,
+      repeat: 1,
+      // If the runner does not support `repeats`, `repeatInit` is always
+      // `false`
+      repeatInit: runnerRepeats,
+      measureCosts: [],
+      resolution: Infinity,
+      resolutionSize: 0,
+      minLoopDuration: 0,
+    },
+  }
+}
+
+const getCombinationResult = async function ({
   row,
   column,
-  taskPath,
   taskId,
   taskTitle,
   inputId,
@@ -22,39 +96,10 @@ export const getCombinationResult = async function ({
   commandId,
   commandTitle,
   commandDescription,
-  commandSpawn,
-  commandSpawnOptions,
-  commandConfig,
-  runnerRepeats,
   systemId,
   systemTitle,
-  initialLoadCost,
-  index,
-  progressState,
-  config: { duration, cwd },
+  stats,
 }) {
-  const combinationEnd = now() + duration
-
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(progressState, { row, index, combinationEnd })
-
-  const { measures, sampleState } = await measureProcessGroup({
-    taskPath,
-    taskId,
-    inputId,
-    commandSpawn,
-    commandSpawnOptions,
-    commandConfig,
-    runnerRepeats,
-    initialLoadCost,
-    duration,
-    cwd,
-  })
-
-  const stats = getStats({ measures, sampleState })
-
-  await waitForTimeLeft(combinationEnd)
-
   return {
     row,
     column,
@@ -72,15 +117,13 @@ export const getCombinationResult = async function ({
   }
 }
 
-// We stop measuring processes when the next process is most likely to go beyond
-// the target `duration`. We do not try to measure it with a lower duration
-// since this would skew measures due to comparing processes with a different
-// number of loops.
-// However, we still wait for the time left, without spawning any processes.
-// This is wasteful time-wise but prevents the timer from jumping fast-forward
-// at the end, giving the feeling of a smooth countdown instead
-const waitForTimeLeft = async function (combinationEnd) {
-  const timeLeft = (combinationEnd - now()) / NANOSECS_TO_MSECS
+// We stop measuring when the next sample is most likely to go beyond the target
+// `duration`.
+// We still wait for the time left. This wastes some time but prevents the
+// progress timer from jumping fast-forward at the end, giving the feeling of a
+// smooth countdown instead.
+const waitForTimeLeft = async function (benchmarkEnd) {
+  const timeLeft = (benchmarkEnd - now()) / NANOSECS_TO_MSECS
 
   if (timeLeft <= 0) {
     return
@@ -90,3 +133,4 @@ const waitForTimeLeft = async function (combinationEnd) {
 }
 
 const NANOSECS_TO_MSECS = 1e6
+/* eslint-enable max-lines */

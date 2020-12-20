@@ -15,7 +15,7 @@ export const measureTask = async function ({
   shell,
   maxDuration,
 }) {
-  const { mainMeasures, start, measureEnd } = startMeasuring(maxDuration)
+  const { mainMeasures, measureEnd } = startMeasuring(maxDuration)
 
   // eslint-disable-next-line fp/no-loops
   do {
@@ -23,7 +23,7 @@ export const measureTask = async function ({
     await performLoop({ main, before, after, variables, shell, mainMeasures })
   } while (now() < measureEnd)
 
-  return { mainMeasures, start }
+  return { mainMeasures }
 }
 
 const performLoop = async function ({

@@ -1,8 +1,6 @@
-import pMapSeries from 'p-map-series'
-
 import { getCombinations } from './combination/main.js'
 import { addResultInfo } from './info.js'
-import { getCombinationResult } from './measure/main.js'
+import { measureCombinations } from './measure/main.js'
 import { startProgress } from './progress/start.js'
 import { stopProgress } from './progress/stop.js'
 
@@ -33,9 +31,11 @@ const getPartialResult = async function ({
   config,
   versions,
 }) {
-  const combinationsA = await pMapSeries(combinations, (combination, index) =>
-    getCombinationResult({ ...combination, index, progressState, config }),
-  )
+  const combinationsA = await measureCombinations({
+    combinations,
+    config,
+    progressState,
+  })
   const partialResult = addResultInfo(combinationsA, { config, versions })
   return partialResult
 }

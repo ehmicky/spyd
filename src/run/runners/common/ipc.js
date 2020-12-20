@@ -1,41 +1,63 @@
-import { writeFile } from 'fs'
 import { argv, exit } from 'process'
-import { promisify } from 'util'
 
-const pWriteFile = promisify(writeFile)
+import fetch from 'cross-fetch'
 
-// Execute a method among many possible ones, selecting it according to
-// eventPayload.type.
-// Retrieve the parent process's event payload and passes it as argument to
-// the method.
-// The method's return value is sent to the parent process.
-// Errors are handled and sent to the parent process too.
-export const executeMethod = async function (methodTypes) {
-  const { type, ipcFile, ...eventPayload } = getEventPayload()
+// Handles IPC communication with the main process
+export const startRunner = async function ({ load, benchmark }) {
+  const { serverUrl, loadParams } = parseLoadParams()
 
   try {
-    const ipcReturn = await methodTypes[type](eventPayload)
-    await sendIpcReturn(ipcFile, ipcReturn)
+    await measureSamples({ load, benchmark, serverUrl, loadParams })
   } catch (error) {
-    await sendError(ipcFile, error)
+    await handleError(error, serverUrl)
+  }
+}
+
+// Retrieve the load params sent by the main process
+const parseLoadParams = function () {
+  const { serverUrl, ...loadParams } = JSON.parse(argv[2])
+  return { serverUrl, loadParams }
+}
+
+// Load the task then runs a new sample each time the main process asks for it
+const measureSamples = async function ({
+  load,
+  benchmark,
+  serverUrl,
+  loadParams,
+}) {
+  const loadState = load(loadParams)
+  // eslint-disable-next-line fp/no-let
+  let returnValue = {}
+
+  // eslint-disable-next-line fp/no-loops
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    const params = await sendReturnValue(returnValue, serverUrl)
+    // eslint-disable-next-line fp/no-mutation
+    returnValue = benchmark(params, loadState)
+  } while (true)
+}
+
+// Any error during task loading or measuring is most likely a user error,
+// which is sent back to the main process.
+const handleError = async function (error, serverUrl) {
+  const errorProp = error instanceof Error ? error.stack : String(error)
+
+  try {
+    await sendReturnValue({ error: errorProp }, serverUrl)
+  } finally {
     exit(1)
   }
 }
 
-// Get event payload from parent to child process
-const getEventPayload = function () {
-  const [, , eventPayloadStr] = argv
-  return JSON.parse(eventPayloadStr)
-}
-
-// Send error messages from child to parent process
-const sendError = async function (ipcFile, error) {
-  const errorProp = error instanceof Error ? error.stack : String(error)
-  await sendIpcReturn(ipcFile, { error: errorProp })
-}
-
-// Send return value from child to parent process
-const sendIpcReturn = async function (ipcFile, ipcReturn) {
-  const ipcReturnStr = `${JSON.stringify(ipcReturn)}\n`
-  await pWriteFile(ipcFile, ipcReturnStr)
+// Send a HTTP request to the main process
+const sendReturnValue = async function (returnValue, serverUrl) {
+  const returnValueString = JSON.stringify(returnValue)
+  const response = await fetch(serverUrl, {
+    method: 'POST',
+    body: returnValueString,
+  })
+  const params = await response.json()
+  return params
 }

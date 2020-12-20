@@ -36,7 +36,7 @@ const getApproximateMedian = function (array, precision, threshold) {
 }
 
 // Get median of an incrementally growing array
-export const getIncrementalMedian = function (array, value) {
+const getIncrementalMedian = function (array, value) {
   mergeSort(array, [value])
   return getMedian(array, 1)
 }
