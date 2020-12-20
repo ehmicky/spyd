@@ -26,6 +26,10 @@
 //   - It is more stable
 //   - It is simpler to compute
 export const getMaxLoops = function (taskMedian, repeat) {
+  if (taskMedian === 0) {
+    return 1
+  }
+
   const targetMaxLoops = Math.round(TARGET_DURATION / (taskMedian * repeat))
   return Math.max(targetMaxLoops, 1)
 }
