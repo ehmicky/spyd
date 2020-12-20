@@ -12,19 +12,6 @@ import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
 // Measure all combinations, until there is no `duration` left.
-// We ensure combinations are never measured at the same time:
-//  - otherwise they would slow down each other and have higher variance
-//  - multi-core CPUs are designed to execute in parallel but in practice they
-//    do impact the performance of each other
-//  - this does mean we are under-utilizing CPUs
-// We also break down each combination into samples, i.e. small units of
-// duration when measures are taken:
-//  - This allows combinations to be live reported at the same time, displaying
-//    them competing with each other
-//  - This allows some parameters to be callibrated (e.g. `repeat`)
-//  - This helps during manual interruptions (CTRL-C) by allowing samples to
-//    end so tasks can be cleaned up
-//  - This provides with fast fail if one of the combinations fails
 export const measureCombinations = async function (combinations, benchmarkEnd) {
   const combinationsA = await Promise.all(combinations.map(waitForLoad))
   const combinationsB = await measureSamples(combinationsA, benchmarkEnd)
@@ -35,6 +22,18 @@ const waitForLoad = async function (combination) {
   return await receiveReturnValue(combination, {})
 }
 
+// We ensure combinations are never measured at the same time
+//  - Otherwise, they would compete for memory and CPU, making results less
+//    precise.
+//  - Load and exit can be run in parallel though since they do not measure
+// We also break down each combination into samples, i.e. small units of
+// duration when measures are taken:
+//  - This allows combinations to be live reported at the same time, displaying
+//    them competing with each other
+//  - This allows some parameters to be callibrated (e.g. `repeat`)
+//  - This helps during manual interruptions (CTRL-C) by allowing samples to
+//    end so tasks can be cleaned up
+//  - This provides with fast fail if one of the combinations fails
 const measureSamples = async function (combinations, benchmarkEnd) {
   // eslint-disable-next-line fp/no-loops
   while (true) {
