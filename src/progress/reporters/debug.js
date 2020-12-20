@@ -11,9 +11,9 @@ const pClearLine = promisify(clearLine)
 // eslint-disable-next-line no-empty-function
 const start = function () {}
 
-const update = async function ({ percentage, timeLeft }) {
+const update = async function ({ percentage, duration }) {
   const percentageStr = serializePercentage(percentage)
-  const content = ` ${timeLeft} ${noteColor(percentageStr)}`
+  const content = ` ${duration} ${noteColor(percentageStr)}`
 
   await clearProgress()
 

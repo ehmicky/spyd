@@ -1,8 +1,8 @@
 import { hide as hideCursor } from 'cli-cursor'
 import onExit from 'signal-exit'
 
+import { getDuration } from './duration.js'
 import { stopProgress } from './stop.js'
-import { getTimeLeft } from './time_left.js'
 import { startUpdate } from './update.js'
 
 // Start progress reporting using the `progress` configuration property
@@ -31,13 +31,13 @@ export const startProgress = async function (
 // Call each `reporter.start()`
 // Also call an initial `reporter.update()`
 const startReporters = async function (reporters, benchmarkDuration) {
-  const timeLeft = getTimeLeft(benchmarkDuration, benchmarkDuration)
+  const duration = getDuration(benchmarkDuration, benchmarkDuration)
   await Promise.all(
-    reporters.map((reporter) => startReporter(reporter, timeLeft)),
+    reporters.map((reporter) => startReporter(reporter, duration)),
   )
 }
 
-const startReporter = async function (reporter, timeLeft) {
+const startReporter = async function (reporter, duration) {
   await reporter.start({})
-  await reporter.update({ percentage: 0, timeLeft })
+  await reporter.update({ percentage: 0, duration })
 }

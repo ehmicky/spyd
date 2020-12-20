@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { getTimeLeft } from './time_left.js'
+import { getDuration } from './duration.js'
 
 // Update progress at regular interval
 export const startUpdate = function (reporters, benchmarkDuration) {
@@ -27,11 +27,11 @@ const updateProgress = async function ({
 
   const timeLeftNs = Math.max(benchmarkEnd - now(), 0)
   const percentage = 1 - timeLeftNs / benchmarkDuration
-  const timeLeft = getTimeLeft(timeLeftNs, benchmarkDuration)
+  const duration = getDuration(timeLeftNs, benchmarkDuration)
 
   // Call each `reporter.update()`
   await Promise.all(
-    reporters.map((reporter) => reporter.update({ percentage, timeLeft })),
+    reporters.map((reporter) => reporter.update({ percentage, duration })),
   )
 }
 
