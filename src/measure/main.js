@@ -3,8 +3,7 @@ import { promisify } from 'util'
 
 import now from 'precise-now'
 
-import { addSideStats } from '../stats/compute.js'
-
+import { getFinalStats } from './aggregate.js'
 import { getBenchmarkEnd } from './duration.js'
 import { getOrchestrator, initOrchestrators } from './orchestrator.js'
 import { runProcesses } from './process.js'
@@ -94,9 +93,19 @@ const getCombinationResult = function ({
   commandDescription,
   systemId,
   systemTitle,
-  state: { stats, loops, times, samples, minLoopDuration },
+  state: {
+    measures,
+    processMeasures,
+    stats,
+    loops,
+    times,
+    samples,
+    minLoopDuration,
+  },
 }) {
-  const statsA = addSideStats({
+  const statsA = getFinalStats({
+    measures,
+    processMeasures,
     stats,
     loops,
     times,

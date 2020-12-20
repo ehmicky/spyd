@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { computeStats } from '../stats/compute.js'
+import { computeStats, addSideStats } from '../stats/compute.js'
 
 import { addProcessMeasures } from './add.js'
 
@@ -32,12 +32,49 @@ export const aggregateMeasures = function ({
   }
 
   const aggregateStart = getAggregateStart()
-
-  addProcessMeasures(measures, processMeasures)
-  const statsA = computeStats(measures)
-
+  const { measures: measuresA, stats: statsA } = aggregateProcessMeasures(
+    measures,
+    processMeasures,
+  )
   const aggregateCountdownB = getAggregateCountdown(aggregateStart)
-  return [measures, [], statsA, aggregateCountdownB]
+  return [measuresA, [], statsA, aggregateCountdownB]
+}
+
+// At the end, if there are still some pending `processMeasures`, we aggregate
+// them
+export const getFinalStats = function ({
+  measures,
+  processMeasures,
+  stats,
+  loops,
+  times,
+  samples,
+  minLoopDuration,
+}) {
+  const statsA = aggregateMeasuresEnd({ measures, processMeasures, stats })
+  const statsB = addSideStats({
+    stats: statsA,
+    loops,
+    times,
+    samples,
+    minLoopDuration,
+  })
+  return statsB
+}
+
+const aggregateMeasuresEnd = function ({ measures, processMeasures, stats }) {
+  if (processMeasures.length === 0) {
+    return stats
+  }
+
+  const { stats: statsA } = aggregateProcessMeasures(measures, processMeasures)
+  return statsA
+}
+
+const aggregateProcessMeasures = function (measures, processMeasures) {
+  addProcessMeasures(measures, processMeasures)
+  const stats = computeStats(measures)
+  return { measures, stats }
 }
 
 const getAggregateStart = function () {
