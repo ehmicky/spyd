@@ -32,7 +32,7 @@ const loadFile = function (taskPath) {
     return require(taskPath)
   } catch (error) {
     throw new UserError(
-      `Could not load the tasks file ${taskPath}\n\n${error.stack}`,
+      `Could not load the tasks file ${taskPath}\n${error.stack}`,
     )
   }
 }

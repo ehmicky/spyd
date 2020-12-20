@@ -26,7 +26,7 @@ const measureSamples = async function ({
   serverUrl,
   loadParams,
 }) {
-  const loadState = load(loadParams)
+  const loadState = await load(loadParams)
   // eslint-disable-next-line fp/no-let
   let returnValue = {}
 
