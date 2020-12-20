@@ -14,6 +14,7 @@ export const addProcessMeasures = function (measures, processMeasures) {
   processMeasures.forEach(({ mainMeasures, repeat }) => {
     addMeasures(measures, mainMeasures, repeat)
   })
+  return []
 }
 
 const addMeasures = function (measures, mainMeasures, repeat) {

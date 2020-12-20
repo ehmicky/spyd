@@ -84,7 +84,7 @@ export const handleReturnValue = function (
   })
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
-  addProcessMeasures(measuresA, processMeasuresB)
+  const processMeasuresC = addProcessMeasures(measuresA, processMeasuresB)
   const stats = getStats({
     measures: measuresA,
     samples: samplesB,
@@ -95,7 +95,7 @@ export const handleReturnValue = function (
 
   return {
     measures: measuresA,
-    processMeasures: processMeasuresB,
+    processMeasures: processMeasuresC,
     taskMedians: taskMediansB,
     taskMedian,
     samples: samplesB,
