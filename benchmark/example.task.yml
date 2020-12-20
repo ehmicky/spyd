@@ -1,0 +1,3 @@
+before: echo before
+main: echo main {{input}} {{before}}
+after: echo after {{input}} {{before}}

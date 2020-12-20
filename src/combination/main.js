@@ -8,6 +8,7 @@ import { loadCombinations } from './load.js'
 import { getTaskPaths } from './path.js'
 
 // Retrieve each combination, i.e. combination of task + input (if any)
+// eslint-disable-next-line max-lines-per-function
 export const getCombinations = async function ({
   files,
   duration,
@@ -18,6 +19,37 @@ export const getCombinations = async function ({
   run: runners,
   limits,
 }) {
+  return [
+    {
+      taskPath: '/home/ether/code/spyd/build/benchmarks/index.js',
+      taskId: 'MathRandom',
+      taskTitle: 'MathRandom',
+      inputId: 'one',
+      inputTitle: 'One',
+      commandRunner: 'node',
+      commandId: 'node',
+      commandTitle: 'Node',
+      commandDescription: 'Node (15.3.0)',
+      commandSpawn: [
+        'node',
+        '/home/ether/code/spyd/build/src/run/runners/node/start.js',
+      ],
+      commandSpawnOptions: {},
+      commandConfig: {},
+      runnerRepeats: true,
+      systemId: '',
+      systemTitle: '',
+      taskTitlePadded: 'MathRandom   ',
+      inputTitlePadded: 'One  ',
+      commandTitlePadded: 'Node',
+      systemTitlePadded: '',
+      column: ['One  ', 'Node'],
+      row: ['MathRandom   ', 'One  ', 'Node'],
+    },
+  ]
+
+  // TODO: fix
+  // eslint-disable-next-line no-unreachable
   const taskPaths = await getTaskPaths(files, cwd)
 
   const runnersA = await loadRunners(runners, taskPaths)
