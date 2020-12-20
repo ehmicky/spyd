@@ -23,9 +23,9 @@ import { findCombinationByUrl } from './url.js'
 // `EventEmitter`.
 //  - When a combination ends, it notifies it using the `end` event
 //  - The shared logic computes which combination should go next by sending it a
-//    `start` event with `true`
-//  - Each combination waits for its turn by awaiting this `start` event
-//  - When there is no `duration` left, the `start` event with `false` is used
+//    `sample` event with `true`
+//  - Each combination waits for its turn by awaiting this `sample` event
+//  - When there is no `duration` left, the `sample` event with `false` is used
 //    so combination stops waiting for their turn
 // Additionally, when a combination is waiting on a runner to return its return
 // value by sending an HTTP request, it waits on the `request` event, which is
@@ -84,7 +84,7 @@ const addEndHandler = function ({
 }
 
 // Each time a sample ends, we compute the next one to execute and send a
-// `start` event to it.
+// `sample` event to it.
 // During the initial load, each process is executed in parallel. We wait for
 // all of them to have finished loading first, using `state.pending`.
 const onSampleEnd = function ({ combinations, state, benchmarkEnd }) {
@@ -105,10 +105,10 @@ const onSampleEnd = function ({ combinations, state, benchmarkEnd }) {
   }
 
   const { orchestrator } = getNextCombination(remainingCombinations)
-  orchestrator.emit('start', true)
+  orchestrator.emit('sample', true)
 }
 
-// When there is no `duration` left, we send a `start` event with `false` to
+// When there is no `duration` left, we send a `sample` event with `false` to
 // all combinations.
 const shouldExitBenchmark = function (remainingCombinations) {
   return remainingCombinations.length === 0
@@ -119,5 +119,5 @@ const exitCombinations = function (combinations) {
 }
 
 const exitCombination = function ({ orchestrator }) {
-  orchestrator.emit('start', false)
+  orchestrator.emit('sample', false)
 }

@@ -19,7 +19,7 @@ export const measureCombination = async function ({
   let res = await receiveReturnValue({ combination, orchestrator, params: {} })
 
   // eslint-disable-next-line fp/no-loops, no-await-in-loop
-  while (await waitForStart(orchestrator)) {
+  while (await waitForNewSample(orchestrator)) {
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
     res = await measureSample({ combination, orchestrator, res })
   }
@@ -27,9 +27,9 @@ export const measureCombination = async function ({
 
 // Make a combination notify its sample has ended, then wait for its next sample
 // We must do the latter before the former to prevent any race condition.
-const waitForStart = async function (orchestrator) {
+const waitForNewSample = async function (orchestrator) {
   const [[shouldExit]] = await Promise.all([
-    once(orchestrator, 'start'),
+    once(orchestrator, 'sample'),
     orchestrator.emit('end'),
   ])
   return shouldExit
