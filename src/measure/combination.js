@@ -33,10 +33,16 @@ const startCombination = async function (combination) {
 //    end so tasks can be cleaned up
 //  - This provides with fast fail if one of the combinations fails
 const measureSamples = async function (combinations, progressState) {
+  const combinationMaxLoops = getCombinationMaxLoops(combinations)
+
   // eslint-disable-next-line fp/no-loops
   while (true) {
     const sampleStart = getSampleStart()
-    const combination = getNextCombination(combinations, progressState)
+    const combination = getNextCombination(
+      combinations,
+      progressState,
+      combinationMaxLoops,
+    )
 
     // eslint-disable-next-line max-depth
     if (combination === undefined) {
@@ -56,6 +62,16 @@ const measureSamples = async function (combinations, progressState) {
 
   return combinations
 }
+
+const getCombinationMaxLoops = function (combinations) {
+  return Math.ceil(MAX_LOOPS / combinations.length)
+}
+
+// We stop running samples when the `measures` is over `MAX_LOOPS`. This
+// is meant to prevent memory overflow.
+// The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
+// little more than 1e8 floats.
+const MAX_LOOPS = 1e8
 
 const measureSample = async function (combination) {
   const params = getParams(combination)

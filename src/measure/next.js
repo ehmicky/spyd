@@ -5,8 +5,14 @@ import { updateBenchmarkEnd } from './duration.js'
 // Retrieve the next combination which should be measured.
 // We do it based on which combination are been measured the least.
 // At the beginning, we pick them randomly, because it looks nicer.
-export const getNextCombination = function (combinations, progressState) {
-  const remainingCombinations = combinations.filter(isRemainingCombination)
+export const getNextCombination = function (
+  combinations,
+  progressState,
+  combinationMaxLoops,
+) {
+  const remainingCombinations = combinations.filter((combination) =>
+    isRemainingCombination(combination, combinationMaxLoops),
+  )
 
   updateBenchmarkEnd(remainingCombinations, progressState)
 
@@ -15,8 +21,8 @@ export const getNextCombination = function (combinations, progressState) {
   }
 
   const minCombinations = getMinCombinations(remainingCombinations)
-  const combination = randomItem(minCombinations)
-  return combination
+  const combinationA = randomItem(minCombinations)
+  return combinationA
 }
 
 // Filters out any combinations with no `duration` left
@@ -33,24 +39,16 @@ export const getNextCombination = function (combinations, progressState) {
 // them because:
 //  - Adding imports to a task should not change the task's number of samples
 //  - Adding slow-to-load tasks should not change other tasks number of samples
-const isRemainingCombination = function ({
-  totalDuration,
-  maxDuration,
-  sampleDurationMean,
-  loops,
-}) {
+const isRemainingCombination = function (
+  { totalDuration, maxDuration, sampleDurationMean, loops },
+  combinationMaxLoops,
+) {
   return (
-    loops < MAX_LOOPS &&
+    loops < combinationMaxLoops &&
     (sampleDurationMean === undefined ||
       totalDuration + sampleDurationMean < maxDuration)
   )
 }
-
-// We stop running samples when the `measures` is over `MAX_LOOPS`. This
-// is meant to prevent memory overflow.
-// The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
-// little more than 1e8 floats.
-const MAX_LOOPS = 1e8
 
 // The `duration` configuration property is for each combination, not the whole
 // benchmark. Otherwise:
