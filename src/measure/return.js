@@ -15,7 +15,6 @@ export const handleReturnValue = function (
       measures,
       processMeasures,
       taskMedians,
-      taskMedian,
       samples,
       loops,
       times,
@@ -35,6 +34,7 @@ export const handleReturnValue = function (
   }
 
   const [
+    measuresA,
     processMeasuresA,
     taskMediansA,
     measureCostsA,
@@ -43,6 +43,7 @@ export const handleReturnValue = function (
     timesA,
   ] = repeatInitReset({
     repeatInit,
+    measures,
     processMeasures,
     taskMedians,
     measureCosts,
@@ -56,7 +57,7 @@ export const handleReturnValue = function (
   const timesB = timesA + mainMeasures.length * repeat
 
   const processMeasuresB = [...processMeasuresA, { mainMeasures, repeat }]
-  const [taskMediansB, taskMedianA] = getTaskMedian(
+  const [taskMediansB, taskMedian] = getTaskMedian(
     taskMediansA,
     mainMeasures,
     repeat,
@@ -78,18 +79,25 @@ export const handleReturnValue = function (
   const repeatA = getRepeat({
     repeat,
     taskMedian,
-    minLoopDuration,
+    minLoopDuration: minLoopDurationA,
     runnerRepeats,
   })
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
-  addProcessMeasures(measures, processMeasures)
-  const stats = getStats({ measures, samples, loops, times, minLoopDuration })
+  addProcessMeasures(measuresA, processMeasuresA)
+  const stats = getStats({
+    measures: measuresA,
+    samples: samplesB,
+    loops: loopsB,
+    times: timesB,
+    minLoopDuration: minLoopDurationA,
+  })
 
   return {
+    measures: measuresA,
     processMeasures: processMeasuresB,
     taskMedians: taskMediansB,
-    taskMedian: taskMedianA,
+    taskMedian,
     samples: samplesB,
     loops: loopsB,
     times: timesB,
