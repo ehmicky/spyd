@@ -6,12 +6,13 @@ import {
 
 // Validate that the tasks file has correct shape
 export const validateFile = function (task, taskId) {
-  validateTask(task, taskId, VALIDATORS)
+  validateTask({ task, taskId, validators, requiredProps })
 }
 
-const VALIDATORS = {
+const validators = {
   main: validateFunction,
   before: validateFunction,
   after: validateFunction,
   async: validateBoolean,
 }
+const requiredProps = ['main']

@@ -3,18 +3,35 @@ import isPlainObj from 'is-plain-obj'
 import { UserError } from '../../../../error/main.js'
 
 // Validate that the task file has correct shape
-export const validateTask = function (task, taskId, validators) {
+export const validateTask = function ({
+  task,
+  taskId,
+  validators,
+  requiredProps,
+}) {
   if (!isPlainObj(task)) {
     throw new UserError(`Task '${task}' must be an object`)
   }
 
-  if (task.main === undefined) {
-    throw new UserError(`Task '${taskId}' must have a 'main' property`)
-  }
+  validateRequiredProps(task, taskId, requiredProps)
 
   Object.entries(task).forEach(([propName, prop]) => {
     validateProp({ taskId, validators, propName, prop })
   })
+}
+
+const validateRequiredProps = function (task, taskId, requiredProps) {
+  requiredProps.forEach((requiredProp) => {
+    validateRequiredProp(task, taskId, requiredProp)
+  })
+}
+
+const validateRequiredProp = function (task, taskId, requiredProp) {
+  if (task[requiredProp] === undefined) {
+    throw new UserError(
+      `Task '${taskId}' must have a '${requiredProp}' property`,
+    )
+  }
 }
 
 const validateProp = function ({ taskId, validators, propName, prop }) {
