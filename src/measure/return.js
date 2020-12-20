@@ -1,7 +1,5 @@
 /* eslint-disable max-lines */
-import { computeStats } from '../stats/compute.js'
-
-import { addProcessMeasures } from './add.js'
+import { aggregateMeasures } from './aggregate.js'
 import { getMinLoopDuration } from './min_loop_duration.js'
 import { getRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
@@ -24,6 +22,7 @@ export const handleReturnValue = function (
       resolution,
       resolutionSize,
       minLoopDuration,
+      stats,
     },
   },
   { mainMeasures, emptyMeasures },
@@ -62,6 +61,14 @@ export const handleReturnValue = function (
     mainMeasures,
     repeat,
   )
+  const {
+    processMeasures: processMeasuresC,
+    stats: statsA,
+  } = aggregateMeasures({
+    measures: measuresA,
+    processMeasures: processMeasuresB,
+    stats,
+  })
 
   const [
     minLoopDurationA,
@@ -84,15 +91,6 @@ export const handleReturnValue = function (
   })
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
-  const processMeasuresC = addProcessMeasures(measuresA, processMeasuresB)
-  const stats = computeStats({
-    measures: measuresA,
-    samples: samplesB,
-    loops: loopsB,
-    times: timesB,
-    minLoopDuration: minLoopDurationA,
-  })
-
   return {
     measures: measuresA,
     processMeasures: processMeasuresC,
@@ -107,7 +105,7 @@ export const handleReturnValue = function (
     resolution: resolutionA,
     resolutionSize: resolutionSizeA,
     minLoopDuration: minLoopDurationA,
-    stats,
+    stats: statsA,
   }
 }
 /* eslint-enable max-lines */
