@@ -2,7 +2,6 @@
 import { EventEmitter } from 'events'
 
 import { getRemainingCombinations, getNextCombination } from './duration.js'
-import { findCombinationByUrl } from './server.js'
 
 // We ensure combinations are never measured at the same time:
 //  - otherwise they would slow down each other and have higher variance
@@ -34,38 +33,8 @@ export const getOrchestrator = function () {
   return new EventEmitter()
 }
 
-export const initOrchestrators = function ({
-  server,
-  combinations,
-  benchmarkEnd,
-}) {
-  // We need to use `new Promise()` for error handling due to using events.
-  // eslint-disable-next-line promise/avoid-new
-  return new Promise((resolve, reject) => {
-    handleRequests(server, combinations, reject)
-    addEndHandlers(combinations, benchmarkEnd)
-  })
-}
-
-// Handle HTTP requests coming from runners.
-// Emit a `return` event to communicate it to the proper combination.
-const handleRequests = function (server, combinations, reject) {
-  server.on('request', (req, res) => {
-    try {
-      handleRequest(combinations, req, res)
-    } catch (error) {
-      reject(error)
-    }
-  })
-}
-
-const handleRequest = function (combinations, req, res) {
-  const { orchestrator } = findCombinationByUrl(req, combinations)
-  orchestrator.emit('return', { req, res })
-}
-
 // Handles each combination sample
-const addEndHandlers = function (combinations, benchmarkEnd) {
+export const addEndHandlers = function (combinations, benchmarkEnd) {
   const state = { pending: combinations.length - 1 }
   combinations.forEach(({ orchestrator }) => {
     addEndHandler({ orchestrator, combinations, state, benchmarkEnd })
