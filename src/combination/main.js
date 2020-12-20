@@ -21,8 +21,8 @@ export const getCombinations = async function ({
 }) {
   return [
     {
-      taskPath: '/home/ether/code/spyd/build/benchmarks/index.js',
-      taskId: 'MathRandom',
+      taskPath: '/home/ether/code/spyd/benchmark/math_random.task.js',
+      taskId: 'math_random',
       taskTitle: 'MathRandom',
       inputId: 'one',
       inputTitle: 'One',
@@ -47,8 +47,8 @@ export const getCombinations = async function ({
       row: ['MathRandom   ', 'One  ', 'Node'],
     },
     {
-      taskPath: '/home/ether/code/spyd/build/benchmarks/index.js',
-      taskId: 'MathRandomTwo',
+      taskPath: '/home/ether/code/spyd/benchmark/math_random_two.task.js',
+      taskId: 'math_random_two',
       taskTitle: 'MathRandomTwo',
       inputId: 'one',
       inputTitle: 'One',

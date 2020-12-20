@@ -2,27 +2,37 @@ import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../../../error/main.js'
 
-// Validate that the tasks file has correct shape
-export const validateTasksFile = function (entries, validators) {
-  if (!isPlainObj(entries)) {
-    throw new UserError(`Tasks file must be a top-level object`)
+// Validate that the task file has correct shape
+export const validateTask = function (task, validators) {
+  if (!isPlainObj(task)) {
+    throw new UserError(`Task '${task}' must be an object`)
   }
 
-  if (entries.tasks === undefined) {
-    throw new UserError(`Missing property 'tasks'`)
+  const { id, main } = task
+
+  if (main === undefined) {
+    throw new UserError(`Task '${id}' must have a 'main' property`)
   }
 
-  Object.entries(entries).forEach(([name, entry]) => {
-    validateEntry(name, entry, validators)
+  Object.entries(task).forEach(([propName, prop]) => {
+    validateProp({ id, validators, propName, prop })
   })
 }
 
-const validateEntry = function (name, entry, validators) {
-  const validator = validators[name]
+// Common validation utility when validating both tasks and inputs
+const validateProp = function ({ id, validators, propName, prop }) {
+  const validator = validators[propName]
 
   if (validator === undefined) {
-    throw new UserError(`Unknown property '${name}'`)
+    const validProps = Object.keys(validators).join(', ')
+    throw new UserError(
+      `Invalid property '${propName}' of task '${id}'. Must be one of: ${validProps}`,
+    )
   }
 
-  validator(entry)
+  const message = validator(prop)
+
+  if (message !== undefined) {
+    throw new UserError(`Property '${propName}' of task '${id}' ${message}`)
+  }
 }

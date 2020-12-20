@@ -1,1 +1,1 @@
-export const main = Math.random
+module.exports.main = Math.random
