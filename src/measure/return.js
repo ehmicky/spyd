@@ -27,11 +27,11 @@ export const handleReturnValue = function (
       minLoopDuration,
     },
   },
-  { taskTitle, mainMeasures, emptyMeasures },
+  { mainMeasures, emptyMeasures },
   { empty },
 ) {
-  if (taskTitle !== undefined) {
-    return { taskTitle }
+  if (mainMeasures === undefined) {
+    return {}
   }
 
   const [
