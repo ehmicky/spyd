@@ -1,7 +1,6 @@
 import { getHistogram } from './histogram.js'
 import { getMedian } from './median.js'
 import { getMin, getMax } from './min_max.js'
-import { getNonOutliersLength, OUTLIERS_THRESHOLD } from './outliers.js'
 import { getQuantiles } from './quantile.js'
 import { getMean, getDeviation } from './sum.js'
 
@@ -12,16 +11,20 @@ import { getMean, getDeviation } from './sum.js'
 // if was not one. This means `quantiles`, `histogram` and `deviation` will
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
+// We do not remove outliers:
+//  - Doing so make min|max|histogram change weirdly during live reporting
+//  - It also makes most stats not true representation of the measures
+//  - It complicates stats computation quite a lot
 export const computeStats = function (measures) {
   const min = getMin(measures)
-  const max = getMax(measures, OUTLIERS_THRESHOLD)
+  const max = getMax(measures)
 
-  const median = getMedian(measures, OUTLIERS_THRESHOLD)
-  const quantiles = getQuantiles(measures, QUANTILES_SIZE, OUTLIERS_THRESHOLD)
-  const histogram = getHistogram(measures, HISTOGRAM_SIZE, OUTLIERS_THRESHOLD)
+  const median = getMedian(measures)
+  const quantiles = getQuantiles(measures, QUANTILES_SIZE)
+  const histogram = getHistogram(measures, HISTOGRAM_SIZE)
 
-  const mean = getMean(measures, OUTLIERS_THRESHOLD)
-  const deviation = getDeviation(measures, mean, OUTLIERS_THRESHOLD)
+  const mean = getMean(measures)
+  const deviation = getDeviation(measures, mean)
 
   return { median, mean, min, max, deviation, histogram, quantiles }
 }
@@ -40,15 +43,6 @@ export const addSideStats = function ({
   samples,
   minLoopDuration,
 }) {
-  const loopsA = getNonOutliersLength(loops, OUTLIERS_THRESHOLD)
-  const timesA = getNonOutliersLength(times, OUTLIERS_THRESHOLD)
-  const repeat = Math.round(timesA / loopsA)
-  return {
-    ...stats,
-    loops: loopsA,
-    times: timesA,
-    repeat,
-    samples,
-    minLoopDuration,
-  }
+  const repeat = Math.round(times / loops)
+  return { ...stats, loops, times, repeat, samples, minLoopDuration }
 }

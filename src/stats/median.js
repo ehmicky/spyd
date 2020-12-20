@@ -16,35 +16,34 @@ export const getMediansMedian = function ({
   medians,
   array,
   precision,
-  threshold,
   divideBy = 1,
 }) {
-  const approximateMedian = getApproximateMedian(array, precision, threshold)
+  const approximateMedian = getApproximateMedian(array, precision)
   const newMedian = approximateMedian / divideBy
   return getIncrementalMedian(medians, newMedian)
 }
 
 // Retrieve a value close to the real median in an unsorted array.
 // Faster than `getMedian()` but not perfectly accurate.
-const getApproximateMedian = function (array, precision, threshold) {
+const getApproximateMedian = function (array, precision) {
   const samples =
     array.length > precision + 1
       ? getQuantiles(array, precision, 1)
       : [...array]
   sortFloats(samples)
-  return getMedian(samples, threshold)
+  return getMedian(samples)
 }
 
 // Get median of an incrementally growing array
 const getIncrementalMedian = function (array, value) {
   mergeSort(array, [value])
-  return getMedian(array, 1)
+  return getMedian(array)
 }
 
 // Retrieve median of an array of floats.
 // Array must be sorted and not empty.
-export const getMedian = function (array, threshold) {
-  return getQuantile(array, MEDIAN_QUANTILE, threshold)
+export const getMedian = function (array) {
+  return getQuantile(array, MEDIAN_QUANTILE)
 }
 
 const MEDIAN_QUANTILE = 0.5

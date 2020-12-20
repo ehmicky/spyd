@@ -1,25 +1,15 @@
 import { binarySearch } from './binary_search.js'
-import { getOutliersMax } from './outliers.js'
 
 // Retrieve histogram of an array of floats.
 // Array must be sorted and not empty.
-export const getHistogram = function (array, bucketCount, threshold) {
-  const outliersMax = getOutliersMax(array, threshold)
-
+export const getHistogram = function (array, bucketCount) {
   const [min] = array
-  const max = array[outliersMax - 1]
+  const max = array[array.length - 1]
   const bucketSize = (max - min) / bucketCount
 
   const bucketIndexes = Array.from({ length: bucketCount }, getBucketIndex)
   const { buckets } = bucketIndexes.reduce(
-    addBucket.bind(undefined, {
-      array,
-      bucketSize,
-      bucketCount,
-      outliersMax,
-      min,
-      max,
-    }),
+    addBucket.bind(undefined, { array, bucketSize, bucketCount, min, max }),
     { buckets: [], lastHighIndex: -1, lastHigh: min },
   )
   return buckets
@@ -30,7 +20,7 @@ const getBucketIndex = function (value, index) {
 }
 
 const addBucket = function (
-  { array, bucketSize, bucketCount, outliersMax, min, max },
+  { array, bucketSize, bucketCount, min, max },
   { buckets, lastHighIndex, lastHigh },
   bucketIndex,
 ) {
@@ -38,9 +28,9 @@ const addBucket = function (
   const high =
     bucketIndex + 1 === bucketCount ? max : min + (bucketIndex + 1) * bucketSize
 
-  const highIndex = binarySearch(array, high, lastHighIndex, outliersMax)
+  const highIndex = binarySearch(array, high, lastHighIndex)
   const bucketsCount = highIndex - lastHighIndex
-  const frequency = bucketsCount / outliersMax
+  const frequency = bucketsCount / array.length
 
   // Directly mutate for performance
   // eslint-disable-next-line fp/no-mutating-methods

@@ -1,16 +1,13 @@
-import { getOutliersMax } from './outliers.js'
-
 // Retrieve quantiles of an array of floats.
 // Array must be sorted and not empty.
-export const getQuantiles = function (array, length, threshold) {
+export const getQuantiles = function (array, length) {
   return Array.from({ length: length + 1 }, (value, index) =>
-    getQuantile(array, index / length, threshold),
+    getQuantile(array, index / length),
   )
 }
 
-export const getQuantile = function (array, percentage, threshold) {
-  const outliersMax = getOutliersMax(array, threshold)
-  const position = (outliersMax - 1) * percentage
+export const getQuantile = function (array, percentage) {
+  const position = (array.length - 1) * percentage
 
   if (Number.isInteger(position)) {
     return array[position]

@@ -1,5 +1,4 @@
 import { getMediansMedian } from '../stats/median.js'
-import { OUTLIERS_THRESHOLD } from '../stats/outliers.js'
 
 import { getResolution } from './resolution.js'
 
@@ -86,7 +85,6 @@ const getMeasureCost = function (measureCosts, emptyMeasures) {
     medians: measureCosts,
     array: emptyMeasures,
     precision: EMPTY_MEASURES_PRECISION,
-    threshold: OUTLIERS_THRESHOLD,
   })
 }
 
