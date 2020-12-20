@@ -1,6 +1,5 @@
 import { getHistogram } from './histogram.js'
 import { getMedian } from './median.js'
-import { getMin, getMax } from './min_max.js'
 import { getQuantiles } from './quantile.js'
 import { getMean, getDeviation } from './sum.js'
 
@@ -16,8 +15,8 @@ import { getMean, getDeviation } from './sum.js'
 //  - It also makes most stats not true representation of the measures
 //  - It complicates stats computation quite a lot
 export const computeStats = function (measures) {
-  const min = getMin(measures)
-  const max = getMax(measures)
+  const [min] = measures
+  const max = measures[measures.length - 1]
 
   const median = getMedian(measures)
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
