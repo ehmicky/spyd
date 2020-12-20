@@ -16,6 +16,7 @@ import { findCombinationByUrl } from './url.js'
 //  - This allows some parameters to be callibrated (e.g. `repeat`)
 //  - This helps during manual interruptions (CTRL-C) by allowing samples to
 //    end so tasks can be cleaned up
+//  - This provides with fast fail if one of the combinations fails
 // To do this requires orchestrating combinations and samples. Using purely
 // functional code is difficult here, so we use events instead. Each combination
 // communicate to some shared orchestrating logic using its own `orchestrator`
