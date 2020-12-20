@@ -1,12 +1,5 @@
-// eslint-disable-next-line fp/no-events
-import { once } from 'events'
-import { promisify } from 'util'
-
-import getStream from 'get-stream'
-
-import { PluginError, UserError } from '../error/main.js'
-
 import { getSampleStart, addSampleDuration } from './duration.js'
+import { sendAndReceive, sendParams, receiveReturnValue } from './ipc.js'
 import { getNextCombination } from './next.js'
 import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
@@ -15,11 +8,13 @@ import { handleReturnValue } from './return.js'
 export const measureCombinations = async function (combinations, benchmarkEnd) {
   const combinationsA = await Promise.all(combinations.map(waitForLoad))
   const combinationsB = await measureSamples(combinationsA, benchmarkEnd)
-  return combinationsB
+  const combinationsC = await Promise.all(combinationsB.map(stopCombination))
+  return combinationsC
 }
 
 const waitForLoad = async function (combination) {
-  return await receiveReturnValue(combination, {})
+  const { newCombination } = await receiveReturnValue(combination)
+  return newCombination
 }
 
 // We ensure combinations are never measured at the same time
@@ -56,68 +51,26 @@ const measureSamples = async function (combinations, benchmarkEnd) {
 const addSample = async function (combination) {
   const sampleStart = getSampleStart()
 
-  const newCombination = await handleCombination(combination)
+  const newCombination = await measureSample(combination)
 
   const newCombinationA = addSampleDuration(newCombination, sampleStart)
   return newCombinationA
 }
 
-// We are setting up return value listening before sending params to prevent any
-// race condition
-const handleCombination = async function ({ res, ...combination }) {
+const measureSample = async function (combination) {
   const params = getParams(combination)
-  const [newCombination] = await Promise.all([
-    receiveReturnValue(combination, params),
-    sendParams(params, res),
-  ])
+  const { newCombination, returnValue } = await sendAndReceive(
+    combination,
+    params,
+  )
+  const newProps = handleReturnValue(newCombination, returnValue, params)
+  return { ...newCombination, ...newProps }
+}
+
+const stopCombination = async function (combination) {
+  const { newCombination } = await sendAndReceive(combination, {})
+  await sendParams(newCombination, {})
   return newCombination
-}
-
-// Send the next sample's params by responding to the HTTP long poll request.
-// Runners use long polling:
-//  - They send their return value with a new HTTP request
-//  - The server keeps the request alive until new params are available, which
-//    are then sent as a response
-// We use long polling instead of real bidirectional procotols because it is
-// simpler to implement in runners.
-// There is only one single endpoint for each runner, meant to run a new
-// measuring sample:
-//   - The server sends some params to indicate how long to run the sample
-//   - The runner sends the return value
-const sendParams = async function (params, res) {
-  const paramsString = JSON.stringify(params)
-  await promisify(res.end.bind(res))(paramsString)
-}
-
-// Receive the sample's return value by receiving a HTTP long poll request.
-const receiveReturnValue = async function (combination, params) {
-  const [{ req, res }] = await once(combination.serverChannel, 'return')
-  const returnValue = await getJsonReturn(req)
-  handleTaskError(returnValue)
-  const newProps = handleReturnValue(combination, returnValue, params)
-  return { ...combination, ...newProps, res }
-}
-
-// Parse the request's JSON body
-const getJsonReturn = async function (req) {
-  try {
-    const returnValueString = await getStream(req)
-    const returnValue = JSON.parse(returnValueString)
-    return returnValue
-  } catch (error) {
-    throw new PluginError(`Invalid JSON return value: ${error.stack}`)
-  }
-}
-
-// When a task throws during load or execution, we propagate the error and fail
-// the benchmark. Tasks that throw are unstable and might yield invalid
-// benchmarks, so we fail hard.
-const handleTaskError = function ({ error }) {
-  if (error === undefined) {
-    return
-  }
-
-  throw new UserError(error)
 }
 
 const updateCombinations = function (

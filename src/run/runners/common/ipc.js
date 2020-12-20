@@ -7,9 +7,11 @@ export const startRunner = async function ({ load, benchmark }) {
   const { serverUrl, loadParams } = parseLoadParams()
 
   try {
-    await measureSamples({ load, benchmark, serverUrl, loadParams })
+    const loadState = await load(loadParams)
+    await measureSamples({ benchmark, serverUrl, loadState })
+    await successExit(serverUrl)
   } catch (error) {
-    await handleError(error, serverUrl)
+    await errorExit(error, serverUrl)
   }
 }
 
@@ -20,28 +22,33 @@ const parseLoadParams = function () {
 }
 
 // Load the task then runs a new sample each time the main process asks for it
-const measureSamples = async function ({
-  load,
-  benchmark,
-  serverUrl,
-  loadParams,
-}) {
-  const loadState = await load(loadParams)
+const measureSamples = async function ({ benchmark, serverUrl, loadState }) {
   // eslint-disable-next-line fp/no-let
   let returnValue = {}
 
   // eslint-disable-next-line fp/no-loops
-  do {
+  while (true) {
     // eslint-disable-next-line no-await-in-loop
     const params = await sendReturnValue(returnValue, serverUrl)
+
+    // eslint-disable-next-line max-depth
+    if (params.maxLoops === undefined) {
+      break
+    }
+
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
     returnValue = await benchmark(params, loadState)
-  } while (true)
+  }
+}
+
+const successExit = async function (serverUrl) {
+  await sendReturnValue({}, serverUrl)
+  exit(0)
 }
 
 // Any error during task loading or measuring is most likely a user error,
 // which is sent back to the main process.
-const handleError = async function (error, serverUrl) {
+const errorExit = async function (error, serverUrl) {
   const errorProp = error instanceof Error ? error.stack : String(error)
 
   try {
