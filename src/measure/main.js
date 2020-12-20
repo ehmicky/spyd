@@ -92,7 +92,7 @@ const getCombinationResult = function ({
   commandDescription,
   systemId,
   systemTitle,
-  stats,
+  state: { stats },
 }) {
   return {
     row,
