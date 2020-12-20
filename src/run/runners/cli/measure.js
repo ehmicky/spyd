@@ -9,8 +9,8 @@ import { spawnProcess } from './spawn.js'
 // has been reached.
 export const measureTask = async function ({
   main,
-  before,
-  after,
+  beforeEach,
+  afterEach,
   variables,
   shell,
   maxDuration,
@@ -20,7 +20,14 @@ export const measureTask = async function ({
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line no-await-in-loop
-    await performLoop({ main, before, after, variables, shell, mainMeasures })
+    await performLoop({
+      main,
+      beforeEach,
+      afterEach,
+      variables,
+      shell,
+      mainMeasures,
+    })
   } while (now() < measureEnd)
 
   return { mainMeasures }
@@ -28,32 +35,33 @@ export const measureTask = async function ({
 
 const performLoop = async function ({
   main,
-  before,
-  after,
+  beforeEach,
+  afterEach,
   variables,
   shell,
   mainMeasures,
 }) {
-  const variablesA = await performBefore({ before, variables, shell })
+  const variablesA = await performBeforeEach({ beforeEach, variables, shell })
   // eslint-disable-next-line fp/no-mutating-methods
   mainMeasures.push(await getDuration({ main, variables: variablesA, shell }))
-  await performAfter({ after, variables: variablesA, shell })
+  await performAfterEach({ afterEach, variables: variablesA, shell })
 }
 
-// Task `before`. Performed outside measurements.
-// Its return value is passed as variable {{before}} to `main` and `after`.
-const performBefore = async function ({ before, variables, shell }) {
-  if (before === undefined) {
+// Task `beforeEach`. Performed outside measurements.
+// Its return value is passed as variable {{beforeEach}} to `main` and
+// `afterEach`.
+const performBeforeEach = async function ({ beforeEach, variables, shell }) {
+  if (beforeEach === undefined) {
     return variables
   }
 
-  const beforeVariable = await spawnProcess(before, {
+  const beforeEachVariable = await spawnProcess(beforeEach, {
     variables,
     shell,
     stdout: 'pipeInherit',
     stderr: 'inherit',
   })
-  return { ...variables, before: beforeVariable }
+  return { ...variables, beforeEach: beforeEachVariable }
 }
 
 const getDuration = async function ({ main, variables, shell }) {
@@ -67,13 +75,17 @@ const getDuration = async function ({ main, variables, shell }) {
   return now() - start
 }
 
-// Task `after`. Performed outside measurements.
-export const performAfter = async function ({ after, variables, shell }) {
-  if (after === undefined) {
+// Task `afterEach`. Performed outside measurements.
+export const performAfterEach = async function ({
+  afterEach,
+  variables,
+  shell,
+}) {
+  if (afterEach === undefined) {
     return
   }
 
-  await spawnProcess(after, {
+  await spawnProcess(afterEach, {
     variables,
     shell,
     stdout: 'inherit',

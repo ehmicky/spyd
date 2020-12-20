@@ -11,8 +11,8 @@ export const validateFile = function (task) {
 
 const validators = {
   main: validateFunction,
-  before: validateFunction,
-  after: validateFunction,
+  beforeEach: validateFunction,
+  afterEach: validateFunction,
   async: validateBoolean,
 }
 const requiredProps = ['main']

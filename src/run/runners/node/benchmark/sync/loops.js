@@ -6,8 +6,8 @@ import { getDurationSync } from './duration.js'
 // Perform measuring loops iteratively
 export const performLoopsSync = function ({
   main,
-  before,
-  after,
+  beforeEach,
+  afterEach,
   repeat,
   maxLoops,
   mainMeasures,
@@ -17,8 +17,8 @@ export const performLoopsSync = function ({
   while (mainMeasures.length < maxLoops) {
     performLoopSync({
       main,
-      before,
-      after,
+      beforeEach,
+      afterEach,
       repeat,
       mainMeasures,
       emptyMeasures,
@@ -28,16 +28,16 @@ export const performLoopsSync = function ({
 
 const performLoopSync = function ({
   main,
-  before,
-  after,
+  beforeEach,
+  afterEach,
   repeat,
   mainMeasures,
   emptyMeasures,
 }) {
   addEmptyMeasure(emptyMeasures)
 
-  const beforeArgs = performBeforeSync(before, repeat)
+  const beforeArgs = performBeforeSync(beforeEach, repeat)
   // eslint-disable-next-line fp/no-mutating-methods
   mainMeasures.push(getDurationSync(main, repeat, beforeArgs))
-  performAfterSync(after, repeat, beforeArgs)
+  performAfterSync(afterEach, repeat, beforeArgs)
 }

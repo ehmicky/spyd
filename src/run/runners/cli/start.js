@@ -18,14 +18,14 @@ const getCombination = function ({ taskId, taskTitle, inputId, inputTitle }) {
 // Compute measures
 const benchmark = async function ({ taskPath, taskId, inputId, maxDuration }) {
   const { combinations, shell } = await loadTasksFile(taskPath)
-  const { main, before, after, variables } = combinations.find(
+  const { main, beforeEach, afterEach, variables } = combinations.find(
     (combination) =>
       combination.taskId === taskId && combination.inputId === inputId,
   )
   const { mainMeasures } = await measureTask({
     main,
-    before,
-    after,
+    beforeEach,
+    afterEach,
     variables,
     shell,
     maxDuration,

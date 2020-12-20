@@ -1,5 +1,5 @@
-export const performBeforeAsync = async function (before, repeat) {
-  if (before === undefined) {
+export const performBeforeAsync = async function (beforeEach, repeat) {
+  if (beforeEach === undefined) {
     return
   }
 
@@ -10,24 +10,24 @@ export const performBeforeAsync = async function (before, repeat) {
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = 0; index !== repeat; index += 1) {
     // eslint-disable-next-line no-await-in-loop, fp/no-mutating-methods
-    beforeArgs.push(await before())
+    beforeArgs.push(await beforeEach())
   }
 
   return beforeArgs
 }
 
 export const performAfterAsync = async function (
-  after,
+  afterEach,
   repeat,
   beforeArgs = [],
 ) {
-  if (after === undefined) {
+  if (afterEach === undefined) {
     return
   }
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = 0; index !== repeat; index += 1) {
     // eslint-disable-next-line no-await-in-loop
-    await after(beforeArgs[index])
+    await afterEach(beforeArgs[index])
   }
 }

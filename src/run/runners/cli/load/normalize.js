@@ -7,7 +7,7 @@ export const normalizeTasks = function ({ tasks, inputs }, variables) {
 }
 
 const normalizeTask = function (
-  { id, title, inputs, main, before, after },
+  { id, title, inputs, main, beforeEach, afterEach },
   variables,
 ) {
   const { taskId, taskTitle, inputsIds } = applyTaskTemplates({
@@ -16,7 +16,7 @@ const normalizeTask = function (
     inputs,
     variables,
   })
-  return { taskId, taskTitle, inputsIds, main, before, after }
+  return { taskId, taskTitle, inputsIds, main, beforeEach, afterEach }
 }
 
 const applyTaskTemplates = function ({ id, title, inputs, variables }) {

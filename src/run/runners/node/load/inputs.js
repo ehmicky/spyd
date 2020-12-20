@@ -1,10 +1,10 @@
-// Bind task `input` (if present) to `main()`, `before()` and `after()`
+// Bind task `input` (if present) to `main()`, `beforeEach()` and `afterEach()`
 export const bindInput = function (task, input) {
   const funcs = BOUND_FUNCS.map((name) => bindFunction(task, name, input))
   return Object.assign({}, task, ...funcs)
 }
 
-const BOUND_FUNCS = ['before', 'main', 'after']
+const BOUND_FUNCS = ['beforeEach', 'main', 'afterEach']
 
 const bindFunction = function (task, name, input) {
   const func = task[name]
@@ -19,8 +19,13 @@ const bindFunction = function (task, name, input) {
 
 // `func.bind()` is much slower, especially for very fast functions.
 // Passing a `beforeArgs` is slower as well, so we only do it when needed.
-const getBoundFunction = function ({ func, task: { before }, name, input }) {
-  if (name === 'before' || before === undefined) {
+const getBoundFunction = function ({
+  func,
+  task: { beforeEach },
+  name,
+  input,
+}) {
+  if (name === 'beforeEach' || beforeEach === undefined) {
     return () => func(input)
   }
 

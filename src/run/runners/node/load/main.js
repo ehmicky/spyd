@@ -21,8 +21,8 @@ export const load = async function ({
   validateFile(task)
 
   const taskA = normalizeTask(task)
-  const { main, before, after, async } = bindInput(taskA, input)
-  return { main, before, after, async }
+  const { main, beforeEach, afterEach, async } = bindInput(taskA, input)
+  return { main, beforeEach, afterEach, async }
 }
 
 const loadFile = function (taskPath) {

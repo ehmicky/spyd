@@ -7,8 +7,8 @@ import { applyTemplate } from './template.js'
 // Spawn a process and retrieve its output.
 // Errors are propagated.
 // Stdout/stderr is handled differently depending on the command:
-//  - The `stdout` of `variables` and `before` is used as template variables,
-//    so it is piped. This is not the case of `main` and `after`.
+//  - The `stdout` of `variables` and `beforeEach` is used as template
+//    variables, so it is piped. This is not the case of `main` and `afterEach`.
 //  - The `stdout` and `stderr` of all commands is inherited so it's shown in
 //    `exec`, except for variables since that might be too confusing.
 // `pipeInherit` is a mechanism to combine `pipe` and `inherit` when `stdout`

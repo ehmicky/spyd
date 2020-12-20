@@ -114,7 +114,7 @@ const MIN_RESOLUTION_PRECISION = 1e2
 // If `empty` is `true`, the runner should return `emptyMeasures`:
 //   - Before each `measure`, the runner should measure an `emptyMeasure`
 //   - An `emptyMeasure` is like a `measure` but without:
-//      - `before` and `after`
+//      - `beforeEach` and `afterEach`
 //      - Executing any task
 //      - Iterating any loop
 //   - For example, an `emptyMeasure` might only retrieve timestamps and compute

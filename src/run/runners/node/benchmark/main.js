@@ -10,14 +10,14 @@ import { performLoopsSync } from './sync/loops.js'
 // synchronous functions.
 export const benchmark = async function (
   { repeat, maxLoops, empty },
-  { main, before, after, async },
+  { main, beforeEach, afterEach, async },
 ) {
   const { mainMeasures, emptyMeasures } = startMeasuring(empty)
   const performLoopsFunc = async ? performLoopsAsync : performLoopsSync
   await performLoopsFunc({
     main,
-    before,
-    after,
+    beforeEach,
+    afterEach,
     repeat,
     maxLoops,
     mainMeasures,

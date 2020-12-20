@@ -5,8 +5,8 @@ import { getDurationAsync } from './duration.js'
 
 export const performLoopsAsync = async function ({
   main,
-  before,
-  after,
+  beforeEach,
+  afterEach,
   repeat,
   maxLoops,
   mainMeasures,
@@ -17,8 +17,8 @@ export const performLoopsAsync = async function ({
     // eslint-disable-next-line no-await-in-loop
     await performLoopAsync({
       main,
-      before,
-      after,
+      beforeEach,
+      afterEach,
       repeat,
       mainMeasures,
       emptyMeasures,
@@ -28,16 +28,16 @@ export const performLoopsAsync = async function ({
 
 const performLoopAsync = async function ({
   main,
-  before,
-  after,
+  beforeEach,
+  afterEach,
   repeat,
   mainMeasures,
   emptyMeasures,
 }) {
   addEmptyMeasure(emptyMeasures)
 
-  const beforeArgs = await performBeforeAsync(before, repeat)
+  const beforeArgs = await performBeforeAsync(beforeEach, repeat)
   // eslint-disable-next-line fp/no-mutating-methods
   mainMeasures.push(await getDurationAsync(main, repeat, beforeArgs))
-  await performAfterAsync(after, repeat, beforeArgs)
+  await performAfterAsync(afterEach, repeat, beforeArgs)
 }

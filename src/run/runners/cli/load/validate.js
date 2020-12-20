@@ -48,8 +48,8 @@ const TASK_VALIDATORS = {
   id: validateString,
   title: validateString,
   main: validateString,
-  before: validateString,
-  after: validateString,
+  beforeEach: validateString,
+  afterEach: validateString,
   inputs: validateStringArray,
 }
 
