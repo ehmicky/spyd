@@ -39,5 +39,11 @@ const startReporters = async function (reporters, benchmarkDuration) {
 
 const startReporter = async function (reporter, duration) {
   await reporter.start({})
-  await reporter.update({ percentage: 0, duration })
+  await reporter.update({
+    percentage: 0,
+    duration,
+    description: START_DESCRIPTION,
+  })
 }
+
+const START_DESCRIPTION = 'Starting...'

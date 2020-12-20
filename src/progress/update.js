@@ -16,7 +16,7 @@ export const startUpdate = function (reporters, benchmarkDuration) {
 const FREQUENCY = 1e2
 
 const updateProgress = async function ({
-  progressState: { benchmarkEnd },
+  progressState: { benchmarkEnd, description },
   benchmarkDuration,
   reporters,
 }) {
@@ -31,7 +31,9 @@ const updateProgress = async function ({
 
   // Call each `reporter.update()`
   await Promise.all(
-    reporters.map((reporter) => reporter.update({ percentage, duration })),
+    reporters.map((reporter) =>
+      reporter.update({ percentage, duration, description }),
+    ),
   )
 }
 
