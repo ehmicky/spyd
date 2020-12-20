@@ -34,8 +34,8 @@ const measureSamples = async function ({
   do {
     // eslint-disable-next-line no-await-in-loop
     const params = await sendReturnValue(returnValue, serverUrl)
-    // eslint-disable-next-line fp/no-mutation
-    returnValue = benchmark(params, loadState)
+    // eslint-disable-next-line no-await-in-loop, fp/no-mutation
+    returnValue = await benchmark(params, loadState)
   } while (true)
 }
 
