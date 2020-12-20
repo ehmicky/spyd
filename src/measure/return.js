@@ -55,6 +55,7 @@ export const handleReturnValue = function (
 
   const processMeasuresB = [...processMeasuresA, { mainMeasures, repeat }]
   const {
+    measures: measuresB,
     processMeasures: processMeasuresC,
     stats: statsA,
     aggregateCountdown: aggregateCountdownA,
@@ -89,7 +90,7 @@ export const handleReturnValue = function (
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
   return {
-    measures: measuresA,
+    measures: measuresB,
     processMeasures: processMeasuresC,
     samples: samplesB,
     loops: loopsB,

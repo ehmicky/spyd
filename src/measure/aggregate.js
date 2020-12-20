@@ -28,6 +28,7 @@ export const aggregateMeasures = function ({
 }) {
   if (!repeatInit && aggregateCountdown > 0 && measures.length !== 0) {
     return {
+      measures,
       processMeasures,
       stats,
       aggregateCountdown: aggregateCountdown - sampleDurationLast,
@@ -41,6 +42,7 @@ export const aggregateMeasures = function ({
 
   const aggregateCountdownA = getAggregateCountdown(aggregateStart)
   return {
+    measures,
     processMeasures: [],
     stats: statsA,
     aggregateCountdown: aggregateCountdownA,
