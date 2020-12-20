@@ -23,6 +23,8 @@ export const handleReturnValue = function (
       resolutionSize,
       minLoopDuration,
       stats,
+      aggregateCountdown,
+      sampleDurationLast,
     },
   },
   { mainMeasures, emptyMeasures },
@@ -56,19 +58,23 @@ export const handleReturnValue = function (
   const timesB = timesA + mainMeasures.length * repeat
 
   const processMeasuresB = [...processMeasuresA, { mainMeasures, repeat }]
+  const {
+    processMeasures: processMeasuresC,
+    stats: statsA,
+    aggregateCountdown: aggregateCountdownA,
+  } = aggregateMeasures({
+    measures: measuresA,
+    processMeasures: processMeasuresB,
+    stats,
+    aggregateCountdown,
+    sampleDurationLast,
+    repeatInit,
+  })
   const [taskMediansB, taskMedian] = getTaskMedian(
     taskMediansA,
     mainMeasures,
     repeat,
   )
-  const {
-    processMeasures: processMeasuresC,
-    stats: statsA,
-  } = aggregateMeasures({
-    measures: measuresA,
-    processMeasures: processMeasuresB,
-    stats,
-  })
 
   const [
     minLoopDurationA,
@@ -106,6 +112,7 @@ export const handleReturnValue = function (
     resolutionSize: resolutionSizeA,
     minLoopDuration: minLoopDurationA,
     stats: statsA,
+    aggregateCountdown: aggregateCountdownA,
   }
 }
 /* eslint-enable max-lines */

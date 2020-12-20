@@ -59,6 +59,9 @@ const addDefaultState = function ({ runnerRepeats, ...combination }) {
     orchestrator: getOrchestrator(),
     state: {
       combinationDuration: 0,
+      sampleDurationLast: 0,
+      sampleDurationMean: 0,
+      aggregateCountdown: 0,
       processes: 0,
       measures: [],
       processMeasures: [],
