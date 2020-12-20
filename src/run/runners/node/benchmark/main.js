@@ -5,7 +5,7 @@ import { performLoopsSync } from './sync/loops.js'
 
 // Call the `main` function iteratively and return an array of numbers measuring
 // how long each call took.
-export const measureTask = async function (
+export const benchmark = async function (
   { repeat, maxLoops, empty },
   { main, before, after, async },
 ) {
