@@ -35,6 +35,7 @@ const startCombination = async function (combination) {
 const measureSamples = async function (combinations, progressState) {
   // eslint-disable-next-line fp/no-loops
   while (true) {
+    const sampleStart = getSampleStart()
     const combination = getNextCombination(combinations, progressState)
 
     // eslint-disable-next-line max-depth
@@ -43,21 +44,17 @@ const measureSamples = async function (combinations, progressState) {
     }
 
     // eslint-disable-next-line no-await-in-loop
-    const newCombination = await addSample(combination)
+    const newCombination = await measureSample(combination)
+    const newCombinationA = addSampleDuration(newCombination, sampleStart)
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    combinations = updateCombinations(combinations, newCombination, combination)
+    combinations = updateCombinations(
+      combinations,
+      newCombinationA,
+      combination,
+    )
   }
 
   return combinations
-}
-
-const addSample = async function (combination) {
-  const sampleStart = getSampleStart()
-
-  const newCombination = await measureSample(combination)
-
-  const newCombinationA = addSampleDuration(newCombination, sampleStart)
-  return newCombinationA
 }
 
 const measureSample = async function (combination) {
