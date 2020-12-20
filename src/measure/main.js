@@ -64,7 +64,7 @@ const addDefaultState = function ({ runnerRepeats, ...combination }) {
       stats: { median: 0 },
       processes: 0,
       measures: [],
-      processMeasures: [],
+      bufferedMeasures: [],
       samples: 0,
       loops: 0,
       times: 0,
@@ -95,7 +95,7 @@ const getCombinationResult = function ({
   systemTitle,
   state: {
     measures,
-    processMeasures,
+    bufferedMeasures,
     stats,
     loops,
     times,
@@ -105,7 +105,7 @@ const getCombinationResult = function ({
 }) {
   const statsA = getFinalStats({
     measures,
-    processMeasures,
+    bufferedMeasures,
     stats,
     loops,
     times,

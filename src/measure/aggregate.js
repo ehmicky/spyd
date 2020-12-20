@@ -2,9 +2,9 @@ import now from 'precise-now'
 
 import { computeStats, addSideStats } from '../stats/compute.js'
 
-import { addProcessMeasures } from './add.js'
+import { addBufferedMeasures } from './add.js'
 
-// Aggregate `processMeasures` to `measures`.
+// Aggregate `bufferedMeasures` to `measures`.
 // The `stats` need a single `measures` array, so they are computed right after.
 // Since this is CPU-heavy, this is done incrementally after one or several
 // samples, as opposed to at the end of the benchmark. This is because:
@@ -20,7 +20,7 @@ import { addProcessMeasures } from './add.js'
 //    that there are some `measures` to compute the `stats.median`
 export const aggregateMeasures = function ({
   measures,
-  processMeasures,
+  bufferedMeasures,
   stats,
   aggregateCountdown,
   sampleDurationLast,
@@ -28,30 +28,30 @@ export const aggregateMeasures = function ({
 }) {
   if (!repeatInit && aggregateCountdown > 0 && measures.length !== 0) {
     const aggregateCountdownA = aggregateCountdown - sampleDurationLast
-    return [measures, processMeasures, stats, aggregateCountdownA]
+    return [measures, bufferedMeasures, stats, aggregateCountdownA]
   }
 
   const aggregateStart = getAggregateStart()
-  const { measures: measuresA, stats: statsA } = aggregateProcessMeasures(
+  const { measures: measuresA, stats: statsA } = aggregateBuffer(
     measures,
-    processMeasures,
+    bufferedMeasures,
   )
   const aggregateCountdownB = getAggregateCountdown(aggregateStart)
   return [measuresA, [], statsA, aggregateCountdownB]
 }
 
-// At the end, if there are still some pending `processMeasures`, we aggregate
+// At the end, if there are still some pending `bufferedMeasures`, we aggregate
 // them
 export const getFinalStats = function ({
   measures,
-  processMeasures,
+  bufferedMeasures,
   stats,
   loops,
   times,
   samples,
   minLoopDuration,
 }) {
-  const statsA = aggregateMeasuresEnd({ measures, processMeasures, stats })
+  const statsA = aggregateMeasuresEnd({ measures, bufferedMeasures, stats })
   const statsB = addSideStats({
     stats: statsA,
     loops,
@@ -62,17 +62,17 @@ export const getFinalStats = function ({
   return statsB
 }
 
-const aggregateMeasuresEnd = function ({ measures, processMeasures, stats }) {
-  if (processMeasures.length === 0) {
+const aggregateMeasuresEnd = function ({ measures, bufferedMeasures, stats }) {
+  if (bufferedMeasures.length === 0) {
     return stats
   }
 
-  const { stats: statsA } = aggregateProcessMeasures(measures, processMeasures)
+  const { stats: statsA } = aggregateBuffer(measures, bufferedMeasures)
   return statsA
 }
 
-const aggregateProcessMeasures = function (measures, processMeasures) {
-  addProcessMeasures(measures, processMeasures)
+const aggregateBuffer = function (measures, bufferedMeasures) {
+  addBufferedMeasures(measures, bufferedMeasures)
   const stats = computeStats(measures)
   return { measures, stats }
 }

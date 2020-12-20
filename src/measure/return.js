@@ -10,7 +10,7 @@ export const handleReturnValue = function (
     runnerRepeats,
     state: {
       measures,
-      processMeasures,
+      bufferedMeasures,
       samples,
       loops,
       times,
@@ -34,7 +34,7 @@ export const handleReturnValue = function (
 
   const [
     measuresA,
-    processMeasuresA,
+    bufferedMeasuresA,
     measureCostsA,
     samplesA,
     loopsA,
@@ -42,7 +42,7 @@ export const handleReturnValue = function (
   ] = repeatInitReset({
     repeatInit,
     measures,
-    processMeasures,
+    bufferedMeasures,
     measureCosts,
     samples,
     loops,
@@ -53,15 +53,15 @@ export const handleReturnValue = function (
   const loopsB = loopsA + mainMeasures.length
   const timesB = timesA + mainMeasures.length * repeat
 
-  const processMeasuresB = [...processMeasuresA, { mainMeasures, repeat }]
+  const bufferedMeasuresB = [...bufferedMeasuresA, { mainMeasures, repeat }]
   const [
     measuresB,
-    processMeasuresC,
+    bufferedMeasuresC,
     statsA,
     aggregateCountdownA,
   ] = aggregateMeasures({
     measures: measuresA,
-    processMeasures: processMeasuresB,
+    bufferedMeasures: bufferedMeasuresB,
     stats,
     aggregateCountdown,
     sampleDurationLast,
@@ -91,7 +91,7 @@ export const handleReturnValue = function (
 
   return {
     measures: measuresB,
-    processMeasures: processMeasuresC,
+    bufferedMeasures: bufferedMeasuresC,
     samples: samplesB,
     loops: loopsB,
     times: timesB,

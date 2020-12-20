@@ -5,8 +5,8 @@ import { sortFloats } from '../stats/sort.js'
 // Sort them incrementally to the final `measures` big array, as opposed to
 // sorting `measures` directly, which would be much slower.
 // The measures are also normalized from mainMeasures + repeat.
-export const addProcessMeasures = function (measures, processMeasures) {
-  processMeasures.forEach(({ mainMeasures, repeat }) => {
+export const addBufferedMeasures = function (measures, bufferedMeasures) {
+  bufferedMeasures.forEach(({ mainMeasures, repeat }) => {
     addMeasures(measures, mainMeasures, repeat)
   })
 }
