@@ -1,6 +1,6 @@
 import execa from 'execa'
 
-import { getServerUrl } from './url.js'
+import { getServerUrl } from './server.js'
 
 // Spawn each combination's process.
 // All combinations are loaded in parallel, for performance.

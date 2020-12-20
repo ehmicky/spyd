@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events'
 
 import { getRemainingCombinations, getNextCombination } from './duration.js'
-import { findCombinationByUrl } from './url.js'
+import { findCombinationByUrl } from './server.js'
 
 // We ensure combinations are never measured at the same time:
 //  - otherwise they would slow down each other and have higher variance

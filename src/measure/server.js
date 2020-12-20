@@ -1,6 +1,10 @@
 import { createServer } from 'http'
 import { promisify } from 'util'
 
+import { v4 as uuidv4 } from 'uuid'
+
+import { PluginError } from '../error/main.js'
+
 // Start a local HTTP server to communicate with runner processes.
 // We use HTTP instead of other IPC mechanisms:
 //  - Signals and named pipes are not easy to make cross-platform
@@ -34,3 +38,32 @@ const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 export const stopServer = async function (server) {
   await promisify(server.close.bind(server))()
 }
+
+// Each combination gets its own unique `id`
+export const createCombinationId = function () {
+  return uuidv4()
+}
+
+// Each combination gets a different endpoint using its `id`
+export const getServerUrl = function (origin, id) {
+  return `${origin}/rpc/${id}`
+}
+
+// When a request is made, we find the matching combination
+export const findCombinationByUrl = function (req, combinations) {
+  const tokens = SERVER_URL_REGEXP.exec(req.url)
+
+  if (tokens === null) {
+    throw new PluginError(`Invalid URL: ${req.url}`)
+  }
+
+  const combination = combinations.find(({ id }) => id === tokens[1])
+
+  if (combination === undefined) {
+    throw new PluginError(`Invalid ID in URL: ${req.url}`)
+  }
+
+  return combination
+}
+
+const SERVER_URL_REGEXP = /^\/rpc\/([\da-f-]+)$/iu
