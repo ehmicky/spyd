@@ -54,12 +54,10 @@ const measureAllCombinations = async function ({
   }
 }
 
-const addDefaultState = function ({
-  combination,
-  combination: { runnerRepeats },
-}) {
+const addDefaultState = function ({ runnerRepeats, ...combination }) {
   return {
     ...combination,
+    runnerRepeats,
     id: createCombinationId(),
     state: {
       combinationDuration: 0,
@@ -85,7 +83,7 @@ const addDefaultState = function ({
   }
 }
 
-const getCombinationResult = async function ({
+const getCombinationResult = function ({
   row,
   column,
   taskId,
