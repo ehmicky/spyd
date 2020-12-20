@@ -1,7 +1,7 @@
 import { UserError } from '../error/main.js'
 
 import { measureCombination } from './combination.js'
-import { startProcess } from './start_process.js'
+import { startProcess } from './load.js'
 
 // Each combination is spawned in its own process:
 //  - This ensures runtime optimization is bound to each combination
