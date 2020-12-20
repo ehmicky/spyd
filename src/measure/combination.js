@@ -6,13 +6,13 @@ import { handleReturnValue } from './return.js'
 
 // Measure all combinations, until there is no `duration` left.
 export const measureCombinations = async function (combinations, benchmarkEnd) {
-  const combinationsA = await Promise.all(combinations.map(waitForLoad))
+  const combinationsA = await Promise.all(combinations.map(startCombination))
   const combinationsB = await measureSamples(combinationsA, benchmarkEnd)
   const combinationsC = await Promise.all(combinationsB.map(stopCombination))
   return combinationsC
 }
 
-const waitForLoad = async function (combination) {
+const startCombination = async function (combination) {
   const { newCombination } = await receiveReturnValue(combination)
   return newCombination
 }
