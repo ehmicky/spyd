@@ -1,6 +1,6 @@
 import { UserError } from '../error/main.js'
 
-import { measureCombination } from './combination.js'
+import { measureCombinations } from './combination.js'
 import { startProcess } from './load.js'
 
 // Each combination is spawned in its own process:
@@ -28,47 +28,17 @@ export const runProcesses = async function ({
   benchmarkEnd,
   onOrchestratorError,
 }) {
-  const combinationProcesses = combinations.map((combination) =>
+  const combinationsA = combinations.map((combination) =>
     startProcess({ combination, origin, cwd }),
   )
 
   try {
-    await Promise.race([
+    return await Promise.race([
+      measureCombinations(combinationsA, benchmarkEnd),
       onOrchestratorError,
-      runAllProcesses({ combinationProcesses, combinations, benchmarkEnd }),
     ])
   } finally {
-    combinationProcesses.forEach(stopProcess)
-  }
-}
-
-const runAllProcesses = async function ({
-  combinationProcesses,
-  combinations,
-  benchmarkEnd,
-}) {
-  return await Promise.all(
-    combinationProcesses.map(({ childProcess, combination }) =>
-      runProcess({ childProcess, combination, combinations, benchmarkEnd }),
-    ),
-  )
-}
-
-const runProcess = async function ({
-  childProcess,
-  combination,
-  combination: { taskId, inputId },
-  combinations,
-  benchmarkEnd,
-}) {
-  try {
-    await Promise.race([
-      waitForProcessError(childProcess),
-      measureCombination({ combination, combinations, benchmarkEnd }),
-    ])
-  } catch (error) {
-    addTaskPrefix(error, taskId, inputId)
-    throw error
+    combinationsA.forEach(stopProcess)
   }
 }
 

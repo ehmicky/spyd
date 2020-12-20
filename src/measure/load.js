@@ -31,7 +31,7 @@ export const startProcess = function ({
     cwd,
     preferLocal: true,
   })
-  return { childProcess, combination }
+  return { ...combination, childProcess }
 }
 
 // Retrieve params passed to runner processes so they can load the right task

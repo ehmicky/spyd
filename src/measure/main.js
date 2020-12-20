@@ -13,14 +13,14 @@ export const measureCombinations = async function ({
   Object.assign(progressState, { benchmarkEnd })
 
   const combinationsA = combinations.map(addInitProps)
-  await measureAllCombinations({
+  const combinationsB = await measureAllCombinations({
     combinations: combinationsA,
     duration,
     cwd,
     benchmarkEnd,
   })
-  const combinationsB = combinationsA.map(getFinalProps)
-  return combinationsB
+  const combinationsC = combinationsB.map(getFinalProps)
+  return combinationsC
 }
 
 const measureAllCombinations = async function ({
@@ -35,7 +35,7 @@ const measureAllCombinations = async function ({
   )
 
   try {
-    await runProcesses({
+    return await runProcesses({
       combinations,
       origin,
       cwd,

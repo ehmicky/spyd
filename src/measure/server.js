@@ -1,3 +1,5 @@
+// eslint-disable-next-line fp/no-events
+import { EventEmitter } from 'events'
 import { createServer } from 'http'
 import { promisify } from 'util'
 
@@ -92,4 +94,10 @@ const SERVER_URL_REGEXP = /^\/rpc\/([\da-f-]+)$/iu
 // Stop the HTTP server
 export const stopServer = async function (server) {
   await promisify(server.close.bind(server))()
+}
+
+// HTTP server requests use events. We need to create an EventEmitter to
+// propagate each request to the right combintion.
+export const getOrchestrator = function () {
+  return new EventEmitter()
 }

@@ -7,62 +7,71 @@ import getStream from 'get-stream'
 import { PluginError, UserError } from '../error/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
-import { decideNextCombination } from './orchestrator.js'
+import { getNextCombination } from './next.js'
 import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
-// Measure a single combination, until there is no `duration` left
-export const measureCombination = async function ({
-  combination,
-  combination: { orchestrator, state },
-  combinations,
-  benchmarkEnd,
-}) {
-  // eslint-disable-next-line fp/no-let
-  let res = await receiveReturnValue({ combination, orchestrator, params: {} })
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  state.loaded = true
+// Measure all combinations, until there is no `duration` left.
+// We ensure combinations are never measured at the same time:
+//  - otherwise they would slow down each other and have higher variance
+//  - multi-core CPUs are designed to execute in parallel but in practice they
+//    do impact the performance of each other
+//  - this does mean we are under-utilizing CPUs
+// We also break down each combination into samples, i.e. small units of
+// duration when measures are taken:
+//  - This allows combinations to be live reported at the same time, displaying
+//    them competing with each other
+//  - This allows some parameters to be callibrated (e.g. `repeat`)
+//  - This helps during manual interruptions (CTRL-C) by allowing samples to
+//    end so tasks can be cleaned up
+//  - This provides with fast fail if one of the combinations fails
+export const measureCombinations = async function (combinations, benchmarkEnd) {
+  const combinationsA = await Promise.all(combinations.map(waitForLoad))
+  const combinationsB = await measureSamples(combinationsA, benchmarkEnd)
+  return combinationsB
+}
 
-  // eslint-disable-next-line fp/no-loops, no-await-in-loop
-  while (await waitForNewSample({ orchestrator, combinations, benchmarkEnd })) {
-    // eslint-disable-next-line no-await-in-loop, fp/no-mutation
-    res = await measureSample({ combination, orchestrator, res })
+const waitForLoad = async function (combination) {
+  return await receiveReturnValue(combination, {})
+}
+
+const measureSamples = async function (combinations, benchmarkEnd) {
+  // eslint-disable-next-line fp/no-loops
+  while (true) {
+    const combination = getNextCombination(combinations, benchmarkEnd)
+
+    // eslint-disable-next-line max-depth
+    if (combination === undefined) {
+      break
+    }
+
+    // eslint-disable-next-line no-await-in-loop
+    const newCombination = await addSample(combination)
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign
+    combinations = updateCombinations(combinations, newCombination, combination)
   }
+
+  return combinations
 }
 
-// Make a combination notify its sample has ended, then wait for its next sample
-// We must do the latter before the former to prevent any race condition.
-const waitForNewSample = async function ({
-  orchestrator,
-  combinations,
-  benchmarkEnd,
-}) {
-  const [[shouldExit]] = await Promise.all([
-    once(orchestrator, 'sample'),
-    decideNextCombination(combinations, benchmarkEnd),
-  ])
-  return shouldExit
-}
-
-// Each combination is measured in a series of smaller samples
-const measureSample = async function ({ combination, orchestrator, res }) {
+const addSample = async function (combination) {
   const sampleStart = getSampleStart()
 
-  const newRes = await handleCombination({ combination, orchestrator, res })
+  const newCombination = await handleCombination(combination)
 
-  addSampleDuration(combination, sampleStart)
-  return newRes
+  addSampleDuration(newCombination, sampleStart)
+  return newCombination
 }
 
 // We are setting up return value listening before sending params to prevent any
 // race condition
-const handleCombination = async function ({ combination, orchestrator, res }) {
+const handleCombination = async function ({ res, ...combination }) {
   const params = getParams(combination)
-  const [newRes] = await Promise.all([
-    receiveReturnValue({ combination, orchestrator, params }),
+  const [newCombination] = await Promise.all([
+    receiveReturnValue(combination, params),
     sendParams(params, res),
   ])
-  return newRes
+  return newCombination
 }
 
 // Send the next sample's params by responding to the HTTP long poll request.
@@ -82,18 +91,12 @@ const sendParams = async function (params, res) {
 }
 
 // Receive the sample's return value by receiving a HTTP long poll request.
-const receiveReturnValue = async function ({
-  combination,
-  orchestrator,
-  params,
-}) {
-  const [{ req, res: nextRes }] = await once(orchestrator, 'return')
+const receiveReturnValue = async function (combination, params) {
+  const [{ req, res }] = await once(combination.orchestrator, 'return')
   const returnValue = await getJsonReturn(req)
   handleTaskError(returnValue)
-  const newState = handleReturnValue(combination, returnValue, params)
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(combination.state, newState)
-  return nextRes
+  const state = handleReturnValue(combination, returnValue, params)
+  return { ...combination, res, state: { ...combination.state, ...state } }
 }
 
 // Parse the request's JSON body
@@ -116,4 +119,22 @@ const handleTaskError = function ({ error }) {
   }
 
   throw new UserError(error)
+}
+
+const updateCombinations = function (
+  combinations,
+  newCombination,
+  oldCombination,
+) {
+  return combinations.map((combination) =>
+    updateCombination(combination, newCombination, oldCombination),
+  )
+}
+
+const updateCombination = function (
+  combination,
+  newCombination,
+  oldCombination,
+) {
+  return combination === oldCombination ? newCombination : combination
 }

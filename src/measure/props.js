@@ -1,6 +1,5 @@
 import { getFinalStats } from './aggregate.js'
-import { getOrchestrator } from './orchestrator.js'
-import { createCombinationId } from './server.js'
+import { createCombinationId, getOrchestrator } from './server.js'
 
 // Initialize some combination properties
 export const addInitProps = function ({ runnerRepeats, ...combination }) {
