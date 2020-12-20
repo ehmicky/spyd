@@ -38,15 +38,23 @@ export const initOrchestrators = function ({
   combinations,
   benchmarkEnd,
 }) {
-  handleRequests(server, combinations)
-  addEndHandlers(combinations, benchmarkEnd)
+  // We need to use `new Promise()` for error handling due to using events.
+  // eslint-disable-next-line promise/avoid-new
+  return new Promise((resolve, reject) => {
+    handleRequests(server, combinations, reject)
+    addEndHandlers(combinations, benchmarkEnd)
+  })
 }
 
 // Handle HTTP requests coming from runners.
 // Emit a `return` event to communicate it to the proper combination.
-const handleRequests = function (server, combinations) {
+const handleRequests = function (server, combinations, reject) {
   server.on('request', (req, res) => {
-    handleRequest(combinations, req, res)
+    try {
+      handleRequest(combinations, req, res)
+    } catch (error) {
+      reject(error)
+    }
   })
 }
 

@@ -43,8 +43,18 @@ const measureAllCombinations = async function ({
   const { server, origin } = await startServer(duration)
 
   try {
-    initOrchestrators({ server, combinations, benchmarkEnd })
-    await runProcesses({ combinations, origin, duration, cwd })
+    const onOrchestratorError = initOrchestrators({
+      server,
+      combinations,
+      benchmarkEnd,
+    })
+    await runProcesses({
+      combinations,
+      origin,
+      duration,
+      cwd,
+      onOrchestratorError,
+    })
   } finally {
     await stopServer(server)
   }

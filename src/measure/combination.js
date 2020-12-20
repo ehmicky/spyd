@@ -37,7 +37,7 @@ const measureSample = async function ({
 
   const [newRes] = await Promise.race([
     handleCombination({ combination, orchestrator, res }),
-    waitForSampleTimeout(duration, combination),
+    waitForSampleTimeout(duration),
   ])
 
   addSampleDuration(combination, sampleStart)
@@ -78,7 +78,7 @@ const receiveReturnValue = async function ({
 }) {
   const { req, res: nextRes } = await waitForReturn(orchestrator)
   const returnValue = await getJsonReturn(req)
-  handleError(returnValue, combination)
+  handleError(returnValue)
   const newState = handleReturnValue(combination, returnValue, params)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(combination.state, newState)
@@ -99,12 +99,12 @@ const getJsonReturn = async function (req) {
 // When a task throws during load or execution, we propagate the error and fail
 // the benchmark. Tasks that throw are unstable and might yield invalid
 // benchmarks, so we fail hard.
-const handleError = function ({ error }, { taskId }) {
+const handleError = function ({ error }) {
   if (error === undefined) {
     return
   }
 
-  throw new UserError(`In task "${taskId}"\n${error}`)
+  throw new UserError(error)
 }
 
 // The `duration` configuration property is also used for timeout. This ensures:
@@ -119,14 +119,13 @@ const handleError = function ({ error }, { taskId }) {
 // slower than the `duration`), we should not fail. Instead, the task
 // will just take a little longer. We must just make a best effort to minimize
 // the likelihood of this to happen.
-const waitForSampleTimeout = async function (duration, { taskId }) {
+const waitForSampleTimeout = async function (duration) {
   const sampleTimeout = Math.round(duration / NANOSECS_TO_MILLISECS)
   await pSetTimeout(sampleTimeout)
 
-  // TODO: use error messages from ./error.js
-  throw new UserError(`Task "${taskId}" ${TIMEOUT_ERROR}`)
+  throw new UserError(
+    'Task timed out. Please increase the "duration" configuration property.',
+  )
 }
 
 const NANOSECS_TO_MILLISECS = 1e6
-export const TIMEOUT_ERROR =
-  'timed out. Please increase the "duration" configuration property.'

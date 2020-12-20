@@ -28,17 +28,17 @@ export const runProcesses = async function ({
   origin,
   duration,
   cwd,
+  onOrchestratorError,
 }) {
   const combinationProcesses = combinations.map((combination) =>
     startProcess({ combination, origin, cwd }),
   )
 
   try {
-    await Promise.all(
-      combinationProcesses.map(({ childProcess, combination }) =>
-        runProcess({ childProcess, combination, duration }),
-      ),
-    )
+    await Promise.race([
+      onOrchestratorError,
+      runAllProcesses(combinationProcesses, duration),
+    ])
   } finally {
     combinationProcesses.forEach(stopProcess)
   }
@@ -91,21 +91,57 @@ const getLoadParams = function ({
   return { serverUrl, runConfig, taskPath, taskId, input: inputValue }
 }
 
-const runProcess = async function ({ childProcess, combination, duration }) {
-  await Promise.race([
-    waitForProcessError(childProcess, combination),
-    measureCombination({ combination, duration }),
-  ])
+const runAllProcesses = async function (combinationProcesses, duration) {
+  return await Promise.all(
+    combinationProcesses.map(({ childProcess, combination }) =>
+      runProcess({ childProcess, combination, duration }),
+    ),
+  )
+}
+
+const runProcess = async function ({
+  childProcess,
+  combination,
+  combination: { taskId, inputId },
+  duration,
+}) {
+  try {
+    await Promise.race([
+      waitForProcessError(childProcess),
+      measureCombination({ combination, duration }),
+    ])
+  } catch (error) {
+    addTaskPrefix(error, taskId, inputId)
+    throw error
+  }
+}
+
+const addTaskPrefix = function (error, taskId, inputId) {
+  const taskPrefix =
+    inputId === ''
+      ? `In task '${taskId}'`
+      : `In task '${taskId}' (input '${inputId}')`
+  // eslint-disable-next-line no-param-reassign
+  error.message = `${taskPrefix}:\n${error.message}`
 }
 
 // This is only done for exception handling
-const waitForProcessError = async function (childProcess, { taskId }) {
+const waitForProcessError = async function (childProcess) {
   try {
     await childProcess
   } catch (error) {
-    throw new UserError(`Task '${taskId}' failed:\n${error.stack}`)
+    const execaMessage = getExecaMessage(error)
+    throw new UserError(execaMessage)
   }
 }
+
+// Replace "Command" by "Task" and remove the runner process loadParams from the
+// error message
+const getExecaMessage = function (error) {
+  return error.message.replace(EXECA_MESSAGE_REGEXP, 'Task $1')
+}
+
+const EXECA_MESSAGE_REGEXP = /^Command ([^:]+): .*/u
 
 // Terminate each runner's process at the end of the benchmark.
 // We ensure that processes are not in the middle of measuring a task, since
