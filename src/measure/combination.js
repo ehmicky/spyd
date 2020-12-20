@@ -17,7 +17,7 @@ export const measureCombination = async function ({
   duration,
 }) {
   // eslint-disable-next-line fp/no-let
-  let res = await receiveReturnValue(combination, orchestrator)
+  let res = await receiveReturnValue({ combination, orchestrator, params: {} })
 
   // eslint-disable-next-line fp/no-loops, no-await-in-loop
   while (await waitForStart(orchestrator)) {
