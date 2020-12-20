@@ -55,7 +55,7 @@ const startProcess = function ({
     commandSpawnOptions,
     taskPath,
     taskId,
-    inputId,
+    input,
   },
   origin,
   cwd,
@@ -65,7 +65,7 @@ const startProcess = function ({
     runConfig,
     taskPath,
     taskId,
-    inputId,
+    input,
     origin,
   })
   const loadParamsString = JSON.stringify(loadParams)
@@ -84,11 +84,11 @@ const getLoadParams = function ({
   runConfig,
   taskPath,
   taskId,
-  inputId,
+  input,
   origin,
 }) {
   const serverUrl = getServerUrl(origin, id)
-  return { serverUrl, runConfig, taskPath, taskId, inputId }
+  return { serverUrl, runConfig, taskPath, taskId, input }
 }
 
 const runProcess = async function ({ childProcess, combination, duration }) {
