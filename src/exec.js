@@ -67,15 +67,8 @@ const getName = function (row) {
   return titleColor(row.join(` ${SEPARATOR_SIGN} `))
 }
 
-// In the `bench` action, we do not time out combinations using the `duration`
-// configuration property:
-//  - Timing out requires killing process, which might skip some resources
-//    cleanup (afterEach and afterAll)
-//  - The `duration` might be adjusted for a specific machine that is faster
-//    than others. This might make slower machines time out.
-//  - This allows `duration: 0` to be used to measure each combination once
-// However, we still use timeouts in the `exec` action. This allows debugging
-// combinations that hang forever or are too long.
+// Unlike the `bench` action, we use timeouts in the `exec` action. This allows
+// debugging combinations that hang forever or are too long.
 const waitForSampleTimeout = async function (duration) {
   const sampleTimeout = Math.round(duration / NANOSECS_TO_MILLISECS)
   await pSetTimeout(sampleTimeout)

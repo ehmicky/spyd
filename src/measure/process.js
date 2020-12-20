@@ -25,7 +25,7 @@ export const runProcesses = async function ({
   combinations,
   origin,
   cwd,
-  benchmarkEnd,
+  progressState,
   onOrchestratorError,
 }) {
   const combinationsA = combinations.map((combination) =>
@@ -34,7 +34,7 @@ export const runProcesses = async function ({
 
   try {
     return await Promise.race([
-      measureCombinations(combinationsA, benchmarkEnd),
+      measureCombinations(combinationsA, progressState),
       onOrchestratorError,
     ])
   } finally {

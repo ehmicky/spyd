@@ -1,4 +1,3 @@
-import { getBenchmarkEnd } from './duration.js'
 import { runProcesses } from './process.js'
 import { addInitProps, getFinalProps } from './props.js'
 import { startServer, stopServer } from './server.js'
@@ -8,16 +7,14 @@ export const measureCombinations = async function ({
   config: { duration, cwd },
   progressState,
 }) {
-  const benchmarkEnd = getBenchmarkEnd(combinations, duration)
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(progressState, { benchmarkEnd })
-
-  const combinationsA = combinations.map(addInitProps)
+  const combinationsA = combinations.map((combination) =>
+    addInitProps(combination, duration),
+  )
   const combinationsB = await measureAllCombinations({
     combinations: combinationsA,
     duration,
     cwd,
-    benchmarkEnd,
+    progressState,
   })
   const combinationsC = combinationsB.map(getFinalProps)
   return combinationsC
@@ -27,7 +24,7 @@ const measureAllCombinations = async function ({
   combinations,
   duration,
   cwd,
-  benchmarkEnd,
+  progressState,
 }) {
   const {
     server,
@@ -41,7 +38,7 @@ const measureAllCombinations = async function ({
       combinations: combinationsA,
       origin,
       cwd,
-      benchmarkEnd,
+      progressState,
       onOrchestratorError,
     })
   } finally {

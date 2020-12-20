@@ -5,9 +5,12 @@ import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
 // Measure all combinations, until there is no `duration` left.
-export const measureCombinations = async function (combinations, benchmarkEnd) {
+export const measureCombinations = async function (
+  combinations,
+  progressState,
+) {
   const combinationsA = await Promise.all(combinations.map(startCombination))
-  const combinationsB = await measureSamples(combinationsA, benchmarkEnd)
+  const combinationsB = await measureSamples(combinationsA, progressState)
   const combinationsC = await Promise.all(combinationsB.map(stopCombination))
   return combinationsC
 }
@@ -29,10 +32,10 @@ const startCombination = async function (combination) {
 //  - This helps during manual interruptions (CTRL-C) by allowing samples to
 //    end so tasks can be cleaned up
 //  - This provides with fast fail if one of the combinations fails
-const measureSamples = async function (combinations, benchmarkEnd) {
+const measureSamples = async function (combinations, progressState) {
   // eslint-disable-next-line fp/no-loops
   while (true) {
-    const combination = getNextCombination(combinations, benchmarkEnd)
+    const combination = getNextCombination(combinations, progressState)
 
     // eslint-disable-next-line max-depth
     if (combination === undefined) {

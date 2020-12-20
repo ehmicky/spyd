@@ -5,7 +5,7 @@ export const getMean = function (array) {
 }
 
 // Retrieve sum of array of floats.
-const getSum = function (array) {
+export const getSum = function (array) {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 
