@@ -1,7 +1,7 @@
 import { UserError } from '../../../../error/main.js'
 
-import { addTasksInputs } from './inputs.js'
-import { normalizeTasks } from './normalize.js'
+import { bindInput } from './inputs.js'
+import { normalizeTask } from './normalize.js'
 import { useRequireConfig } from './require_config.js'
 import { validateFile } from './validate.js'
 
@@ -10,24 +10,28 @@ import { validateFile } from './validate.js'
 //   - to measure combinations
 //   - by the parent at startup, but only combination ids and titles are needed
 // Load the tasks file using its absolute path
-export const loadTasksFile = async function (
+export const load = async function ({
+  runConfig: { require: requireConfig },
   taskPath,
-  { require: requireConfig },
-) {
+  taskId,
+  input,
+}) {
   await useRequireConfig(requireConfig, taskPath)
 
-  const entries = await loadFile(taskPath)
-  validateFile(entries)
+  const task = await loadFile(taskPath)
+  validateFile(task, taskId)
 
-  const { tasks, inputs } = normalizeTasks(entries)
-  const combinations = addTasksInputs(tasks, inputs)
-  return combinations
+  const taskA = normalizeTask(task)
+  const { main, before, after, async } = bindInput(taskA, input)
+  return { main, before, after, async }
 }
 
 const loadFile = async function (taskPath) {
   try {
     return await import(taskPath)
   } catch (error) {
-    throw new UserError(`Could not load the tasks file\n\n${error.stack}`)
+    throw new UserError(
+      `Could not load the tasks file ${taskPath}\n\n${error.stack}`,
+    )
   }
 }

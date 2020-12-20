@@ -5,15 +5,10 @@ import { performLoopsSync } from './sync/loops.js'
 
 // Call the `main` function iteratively and return an array of numbers measuring
 // how long each call took.
-export const measureTask = async function ({
-  main,
-  before,
-  after,
-  async,
-  repeat,
-  maxLoops,
-  empty,
-}) {
+export const measureTask = async function (
+  { repeat, maxLoops, empty },
+  { main, before, after, async },
+) {
   const { mainMeasures, emptyMeasures } = startMeasuring(empty)
   await performLoops({
     main,

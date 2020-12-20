@@ -1,21 +1,13 @@
 import { promisify } from 'util'
 
-// Normalize task properties names
-export const normalizeTasks = function ({ tasks, inputs }) {
-  const tasksA = tasks.map(normalizeTask)
-  return { tasks: tasksA, inputs }
-}
-
-const normalizeTask = function ({
-  id: taskId,
-  title: taskTitle,
-  inputs: inputsIds,
+// Add default values for tasks
+export const normalizeTask = function ({
   main,
   before,
   after,
   async = isAsyncFunc(main),
 }) {
-  return { taskId, taskTitle, inputsIds, main, before, after, async }
+  return { main, before, after, async }
 }
 
 // Async functions use different measuring logic.
