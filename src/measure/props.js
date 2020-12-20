@@ -14,6 +14,7 @@ export const addInitProps = function ({ runnerRepeats, ...combination }) {
       sampleDurationLast: 0,
       sampleDurationMean: 0,
       aggregateCountdown: 0,
+      loaded: false,
       stats: { median: 0 },
       measures: [],
       bufferedMeasures: [],

@@ -12,11 +12,13 @@ import { handleReturnValue } from './return.js'
 
 // Measure a single combination, until there is no `duration` left
 export const measureCombination = async function ({
-  orchestrator,
-  ...combination
+  combination,
+  combination: { orchestrator, state },
 }) {
   // eslint-disable-next-line fp/no-let
   let res = await receiveReturnValue({ combination, orchestrator, params: {} })
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  state.loaded = true
 
   // eslint-disable-next-line fp/no-loops, no-await-in-loop
   while (await waitForNewSample(orchestrator)) {

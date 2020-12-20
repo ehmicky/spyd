@@ -53,7 +53,7 @@ const runProcess = async function ({
   try {
     await Promise.race([
       waitForProcessError(childProcess),
-      measureCombination(combination),
+      measureCombination({ combination }),
     ])
   } catch (error) {
     addTaskPrefix(error, taskId, inputId)

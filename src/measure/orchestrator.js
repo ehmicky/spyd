@@ -35,20 +35,14 @@ export const getOrchestrator = function () {
 
 // Handles each combination sample
 export const addEndHandlers = function (combinations, benchmarkEnd) {
-  const state = { pending: combinations.length - 1 }
   combinations.forEach(({ orchestrator }) => {
-    addEndHandler({ orchestrator, combinations, state, benchmarkEnd })
+    addEndHandler({ orchestrator, combinations, benchmarkEnd })
   })
 }
 
-const addEndHandler = function ({
-  orchestrator,
-  combinations,
-  state,
-  benchmarkEnd,
-}) {
+const addEndHandler = function ({ orchestrator, combinations, benchmarkEnd }) {
   orchestrator.on('end', () => {
-    onSampleEnd({ combinations, state, benchmarkEnd })
+    onSampleEnd(combinations, benchmarkEnd)
   })
 }
 
@@ -56,10 +50,8 @@ const addEndHandler = function ({
 // `sample` event to it.
 // During the initial load, each process is executed in parallel. We wait for
 // all of them to have finished loading first, using `state.pending`.
-const onSampleEnd = function ({ combinations, state, benchmarkEnd }) {
-  if (state.pending !== 0) {
-    // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    state.pending -= 1
+const onSampleEnd = function (combinations, benchmarkEnd) {
+  if (!isLoadedCombinations(combinations)) {
     return
   }
 
@@ -75,6 +67,14 @@ const onSampleEnd = function ({ combinations, state, benchmarkEnd }) {
 
   const { orchestrator } = getNextCombination(remainingCombinations)
   orchestrator.emit('sample', true)
+}
+
+const isLoadedCombinations = function (combinations) {
+  return combinations.every(isLoadedCombination)
+}
+
+const isLoadedCombination = function ({ state: { loaded } }) {
+  return loaded
 }
 
 // When there is no `duration` left, we send a `sample` event with `false` to
