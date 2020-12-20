@@ -25,6 +25,7 @@ export const runProcesses = async function ({
   combinations,
   origin,
   cwd,
+  benchmarkEnd,
   onOrchestratorError,
 }) {
   const combinationProcesses = combinations.map((combination) =>
@@ -34,26 +35,36 @@ export const runProcesses = async function ({
   try {
     await Promise.race([
       onOrchestratorError,
-      runAllProcesses(combinationProcesses),
+      runAllProcesses({ combinationProcesses, combinations, benchmarkEnd }),
     ])
   } finally {
     combinationProcesses.forEach(stopProcess)
   }
 }
 
-const runAllProcesses = async function (combinationProcesses) {
-  return await Promise.all(combinationProcesses.map(runProcess))
+const runAllProcesses = async function ({
+  combinationProcesses,
+  combinations,
+  benchmarkEnd,
+}) {
+  return await Promise.all(
+    combinationProcesses.map(({ childProcess, combination }) =>
+      runProcess({ childProcess, combination, combinations, benchmarkEnd }),
+    ),
+  )
 }
 
 const runProcess = async function ({
   childProcess,
   combination,
   combination: { taskId, inputId },
+  combinations,
+  benchmarkEnd,
 }) {
   try {
     await Promise.race([
       waitForProcessError(childProcess),
-      measureCombination({ combination }),
+      measureCombination({ combination, combinations, benchmarkEnd }),
     ])
   } catch (error) {
     addTaskPrefix(error, taskId, inputId)

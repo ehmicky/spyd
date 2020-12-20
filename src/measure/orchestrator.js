@@ -33,24 +33,11 @@ export const getOrchestrator = function () {
   return new EventEmitter()
 }
 
-// Handles each combination sample
-export const addEndHandlers = function (combinations, benchmarkEnd) {
-  combinations.forEach(({ orchestrator }) => {
-    addEndHandler({ orchestrator, combinations, benchmarkEnd })
-  })
-}
-
-const addEndHandler = function ({ orchestrator, combinations, benchmarkEnd }) {
-  orchestrator.on('end', () => {
-    onSampleEnd(combinations, benchmarkEnd)
-  })
-}
-
 // Each time a sample ends, we compute the next one to execute and send a
 // `sample` event to it.
 // During the initial load, each process is executed in parallel. We wait for
 // all of them to have finished loading first, using `state.pending`.
-const onSampleEnd = function (combinations, benchmarkEnd) {
+export const decideNextCombination = function (combinations, benchmarkEnd) {
   if (!isLoadedCombinations(combinations)) {
     return
   }

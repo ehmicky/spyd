@@ -7,6 +7,7 @@ import getStream from 'get-stream'
 import { PluginError, UserError } from '../error/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
+import { decideNextCombination } from './orchestrator.js'
 import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
@@ -14,6 +15,8 @@ import { handleReturnValue } from './return.js'
 export const measureCombination = async function ({
   combination,
   combination: { orchestrator, state },
+  combinations,
+  benchmarkEnd,
 }) {
   // eslint-disable-next-line fp/no-let
   let res = await receiveReturnValue({ combination, orchestrator, params: {} })
@@ -21,7 +24,7 @@ export const measureCombination = async function ({
   state.loaded = true
 
   // eslint-disable-next-line fp/no-loops, no-await-in-loop
-  while (await waitForNewSample(orchestrator)) {
+  while (await waitForNewSample({ orchestrator, combinations, benchmarkEnd })) {
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
     res = await measureSample({ combination, orchestrator, res })
   }
@@ -29,10 +32,14 @@ export const measureCombination = async function ({
 
 // Make a combination notify its sample has ended, then wait for its next sample
 // We must do the latter before the former to prevent any race condition.
-const waitForNewSample = async function (orchestrator) {
+const waitForNewSample = async function ({
+  orchestrator,
+  combinations,
+  benchmarkEnd,
+}) {
   const [[shouldExit]] = await Promise.all([
     once(orchestrator, 'sample'),
-    orchestrator.emit('end'),
+    decideNextCombination(combinations, benchmarkEnd),
   ])
   return shouldExit
 }

@@ -1,5 +1,4 @@
 import { getBenchmarkEnd } from './duration.js'
-import { addEndHandlers } from './orchestrator.js'
 import { runProcesses } from './process.js'
 import { addInitProps, getFinalProps } from './props.js'
 import { startServer, stopServer } from './server.js'
@@ -36,8 +35,13 @@ const measureAllCombinations = async function ({
   )
 
   try {
-    addEndHandlers(combinations, benchmarkEnd)
-    await runProcesses({ combinations, origin, cwd, onOrchestratorError })
+    await runProcesses({
+      combinations,
+      origin,
+      cwd,
+      benchmarkEnd,
+      onOrchestratorError,
+    })
   } finally {
     await stopServer(server)
   }
