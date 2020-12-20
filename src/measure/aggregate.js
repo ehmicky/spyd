@@ -15,9 +15,9 @@ import { addProcessMeasures } from './add.js'
 // We do this by computing how long each aggregation takes, then waiting a
 // specific amount of duration based on that last aggregation duration.
 // We always recompute this:
-//  - During `repeatInit` to recompute the `taskMedian`
+//  - During `repeatInit` to recompute the `stats.median`
 //  - At the beginning, or when `repeatInitReset` has just been called, so
-//    that there are some `measures` to compute the `taskMedian`
+//    that there are some `measures` to compute the `stats.median`
 export const aggregateMeasures = function ({
   measures,
   processMeasures,
@@ -61,6 +61,6 @@ const getAggregateCountdown = function (aggregateStart) {
 // How much duration of the benchmark should be spent aggregating.
 // A higher value spends less duration measuring, giving less precise results.
 // A lower value spends less duration aggregating, resulting in less responsive
-// live reporting and less precise `taskMedian`.
+// live reporting and less precise `stats.median`.
 const AGGREGATE_PERCENTAGE = 0.1
 const AGGREGATE_TIMES = 1 / AGGREGATE_PERCENTAGE - 1

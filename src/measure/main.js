@@ -62,13 +62,10 @@ const addDefaultState = function ({ runnerRepeats, ...combination }) {
       sampleDurationLast: 0,
       sampleDurationMean: 0,
       aggregateCountdown: 0,
+      stats: { median: 0 },
       processes: 0,
       measures: [],
       processMeasures: [],
-      taskMedians: [],
-      // `taskMedian` is initially 0. This means it is not used to compute
-      // `maxDuration` in the first process.
-      taskMedian: 0,
       samples: 0,
       loops: 0,
       times: 0,

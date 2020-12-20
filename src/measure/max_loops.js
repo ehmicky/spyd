@@ -20,17 +20,17 @@
 //     small percentage of the overall measures.
 // We purposely avoid using `duration` so that increasing `duration`
 // does not change measures.
-// The duration targets the task median. This does not include the time to
+// The duration targets `stats.median`. This does not include the time to
 // perform the benchmark logic itself (pushing the measures to an array,
 // measuring emptyMeasures, etc.) nor doing IPC because:
 //   - It is more stable
 //   - It is simpler to compute
-export const getMaxLoops = function (taskMedian, repeat) {
-  if (taskMedian === 0) {
+export const getMaxLoops = function (median, repeat) {
+  if (median === 0) {
     return 1
   }
 
-  const targetMaxLoops = Math.round(TARGET_DURATION / (taskMedian * repeat))
+  const targetMaxLoops = Math.round(TARGET_DURATION / (median * repeat))
   return Math.max(targetMaxLoops, 1)
 }
 

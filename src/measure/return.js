@@ -3,7 +3,6 @@ import { aggregateMeasures } from './aggregate.js'
 import { getMinLoopDuration } from './min_loop_duration.js'
 import { getRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
-import { getTaskMedian } from './task_median.js'
 
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const handleReturnValue = function (
@@ -12,7 +11,6 @@ export const handleReturnValue = function (
     state: {
       measures,
       processMeasures,
-      taskMedians,
       samples,
       loops,
       times,
@@ -37,7 +35,6 @@ export const handleReturnValue = function (
   const [
     measuresA,
     processMeasuresA,
-    taskMediansA,
     measureCostsA,
     samplesA,
     loopsA,
@@ -46,7 +43,6 @@ export const handleReturnValue = function (
     repeatInit,
     measures,
     processMeasures,
-    taskMedians,
     measureCosts,
     samples,
     loops,
@@ -70,11 +66,6 @@ export const handleReturnValue = function (
     sampleDurationLast,
     repeatInit,
   })
-  const [taskMediansB, taskMedian] = getTaskMedian(
-    taskMediansA,
-    mainMeasures,
-    repeat,
-  )
 
   const [
     minLoopDurationA,
@@ -91,7 +82,7 @@ export const handleReturnValue = function (
   })
   const repeatA = getRepeat({
     repeat,
-    taskMedian,
+    stats: statsA,
     minLoopDuration: minLoopDurationA,
     runnerRepeats,
   })
@@ -100,8 +91,6 @@ export const handleReturnValue = function (
   return {
     measures: measuresA,
     processMeasures: processMeasuresC,
-    taskMedians: taskMediansB,
-    taskMedian,
     samples: samplesB,
     loops: loopsB,
     times: timesB,

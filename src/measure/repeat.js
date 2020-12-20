@@ -11,7 +11,7 @@
 // measures.
 export const getRepeat = function ({
   repeat,
-  taskMedian,
+  stats: { median },
   minLoopDuration,
   runnerRepeats,
 }) {
@@ -22,14 +22,14 @@ export const getRepeat = function ({
     return 1
   }
 
-  if (taskMedian === 0) {
+  if (median === 0) {
     return repeat * FAST_MEDIAN_RATE
   }
 
-  return Math.ceil(minLoopDuration / taskMedian)
+  return Math.ceil(minLoopDuration / median)
 }
 
-// `taskMedian` can be 0 when the task is too close to `minLoopDuration`.
+// `median` can be 0 when the task is too close to `minLoopDuration`.
 // In that case, we multiply the `repeat` with a fixed rate.
 const FAST_MEDIAN_RATE = 10
 
