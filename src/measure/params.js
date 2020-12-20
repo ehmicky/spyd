@@ -4,11 +4,9 @@ import { getChildRepeat } from './repeat.js'
 
 export const getParams = function ({
   runnerRepeats,
-  state: {
-    stats: { median },
-    repeat,
-    repeatInit,
-  },
+  stats: { median },
+  repeat,
+  repeatInit,
 }) {
   const maxLoops = getMaxLoops(median, repeat)
   const childRepeat = getChildRepeat(repeat, runnerRepeats)

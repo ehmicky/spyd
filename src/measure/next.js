@@ -30,7 +30,7 @@ const getRemainingCombinations = function (combinations, benchmarkEnd) {
 // `sampleDurationMean` is initially `undefined`. This ensures each combination
 // measures at least once sample.
 const isRemainingCombination = function (
-  { state: { sampleDurationMean, loops } },
+  { sampleDurationMean, loops },
   benchmarkDurationLeft,
 ) {
   return (
@@ -58,6 +58,6 @@ const getMinDuration = function (combinations) {
   return Math.min(...combinations.map(getCombinationDuration))
 }
 
-const getCombinationDuration = function ({ state: { combinationDuration } }) {
+const getCombinationDuration = function ({ combinationDuration }) {
   return combinationDuration
 }

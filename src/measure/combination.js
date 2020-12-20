@@ -59,8 +59,8 @@ const addSample = async function (combination) {
 
   const newCombination = await handleCombination(combination)
 
-  addSampleDuration(newCombination, sampleStart)
-  return newCombination
+  const newCombinationA = addSampleDuration(newCombination, sampleStart)
+  return newCombinationA
 }
 
 // We are setting up return value listening before sending params to prevent any
@@ -95,8 +95,8 @@ const receiveReturnValue = async function (combination, params) {
   const [{ req, res }] = await once(combination.serverChannel, 'return')
   const returnValue = await getJsonReturn(req)
   handleTaskError(returnValue)
-  const state = handleReturnValue(combination, returnValue, params)
-  return { ...combination, res, state: { ...combination.state, ...state } }
+  const newProps = handleReturnValue(combination, returnValue, params)
+  return { ...combination, ...newProps, res }
 }
 
 // Parse the request's JSON body
