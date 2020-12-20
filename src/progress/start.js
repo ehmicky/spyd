@@ -2,7 +2,7 @@ import { hide as hideCursor } from 'cli-cursor'
 import onExit from 'signal-exit'
 
 import { stopProgress } from './stop.js'
-import { getTimeLeft } from './time.js'
+import { getTimeLeft } from './time_left.js'
 import { startUpdate } from './update.js'
 
 // Start progress reporting using the `progress` configuration property
@@ -10,17 +10,15 @@ export const startProgress = async function (
   combinations,
   { duration, progress: reporters },
 ) {
-  const total = combinations.length
-
   hideCursor()
 
-  await startReporters({ reporters, total, duration })
+  const benchmarkDuration = combinations.length * duration
+  await startReporters(reporters, benchmarkDuration)
 
-  const { progressState, progressId } = startUpdate({
-    total,
-    duration,
+  const { progressState, progressId } = startUpdate(
     reporters,
-  })
+    benchmarkDuration,
+  )
 
   const removeOnExit = onExit(() => stopProgress({ progressId, reporters }))
 
@@ -32,24 +30,14 @@ export const startProgress = async function (
 
 // Call each `reporter.start()`
 // Also call an initial `reporter.update()`
-const startReporters = async function ({ reporters, total, duration }) {
-  const row = ['Start']
-  const timeLeft = getTimeLeft({
-    index: 0,
-    timeLeft: duration,
-    total,
-    duration,
-  })
-
+const startReporters = async function (reporters, benchmarkDuration) {
+  const timeLeft = getTimeLeft(benchmarkDuration, benchmarkDuration)
   await Promise.all(
-    reporters.map((reporter) =>
-      startReporter({ row, reporter, timeLeft, total }),
-    ),
+    reporters.map((reporter) => startReporter(reporter, timeLeft)),
   )
 }
 
-const startReporter = async function ({ row, reporter, timeLeft, total }) {
-  await reporter.start({ total })
-
-  await reporter.update({ row, percentage: 0, timeLeft, index: 0, total })
+const startReporter = async function (reporter, timeLeft) {
+  await reporter.start({})
+  await reporter.update({ percentage: 0, timeLeft })
 }

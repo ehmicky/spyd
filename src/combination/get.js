@@ -1,7 +1,6 @@
 import now from 'precise-now'
 
 import { UserError } from '../error/main.js'
-import { executeChild } from '../processes/main.js'
 
 import { validateIds } from './validate.js'
 

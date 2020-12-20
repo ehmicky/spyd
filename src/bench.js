@@ -6,7 +6,7 @@ import { stopProgress } from './progress/stop.js'
 
 // Perform a new benchmark
 export const performBenchmark = async function (config) {
-  const { combinations, versions } = await getCombinations(config)
+  const combinations = await getCombinations(config)
 
   const { progressState, progressInfo } = await startProgress(
     combinations,
@@ -14,12 +14,7 @@ export const performBenchmark = async function (config) {
   )
 
   try {
-    return await getPartialResult({
-      combinations,
-      progressState,
-      config,
-      versions,
-    })
+    return await getPartialResult({ combinations, progressState, config })
   } finally {
     await stopProgress(progressInfo)
   }
@@ -29,13 +24,12 @@ const getPartialResult = async function ({
   combinations,
   progressState,
   config,
-  versions,
 }) {
   const combinationsA = await measureCombinations({
     combinations,
     config,
     progressState,
   })
-  const partialResult = addResultInfo(combinationsA, { config, versions })
+  const partialResult = addResultInfo(combinationsA, { config })
   return partialResult
 }

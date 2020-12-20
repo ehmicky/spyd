@@ -46,6 +46,32 @@ export const getCombinations = async function ({
       column: ['One  ', 'Node'],
       row: ['MathRandom   ', 'One  ', 'Node'],
     },
+    {
+      taskPath: '/home/ether/code/spyd/build/benchmarks/index.js',
+      taskId: 'MathRandomTwo',
+      taskTitle: 'MathRandomTwo',
+      inputId: 'one',
+      inputTitle: 'One',
+      commandRunner: 'node',
+      commandId: 'node',
+      commandTitle: 'Node',
+      commandDescription: 'Node (15.3.0)',
+      commandSpawn: [
+        'node',
+        '/home/ether/code/spyd/build/src/run/runners/node/start.js',
+      ],
+      commandSpawnOptions: {},
+      commandConfig: {},
+      runnerRepeats: true,
+      systemId: '',
+      systemTitle: '',
+      taskTitlePadded: 'MathRandomTwo',
+      inputTitlePadded: 'One  ',
+      commandTitlePadded: 'Node',
+      systemTitlePadded: '',
+      column: ['One  ', 'Node'],
+      row: ['MathRandomTwo', 'One  ', 'Node'],
+    },
   ]
 
   // TODO: fix
@@ -66,7 +92,7 @@ export const getCombinations = async function ({
   })
 
   const combinationsA = addTitles(combinations)
-  return { combinations: combinationsA }
+  return combinationsA
 }
 
 const getAllCombinations = async function ({
