@@ -97,7 +97,6 @@ const STATS = [
   'loops',
   'repeat',
   'samples',
-  'loadCost',
   'minLoopDuration',
 ]
 

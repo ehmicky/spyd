@@ -12,7 +12,6 @@ export const STAT_TYPES = [
   { name: 'loops', type: 'count' },
   { name: 'repeat', type: 'count' },
   { name: 'samples', type: 'count' },
-  { name: 'loadCost', type: 'duration' },
   { name: 'minLoopDuration', type: 'duration' },
   { name: 'quantiles', type: 'duration' },
 ]
