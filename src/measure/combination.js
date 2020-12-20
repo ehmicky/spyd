@@ -9,12 +9,10 @@ import { waitForStart, waitForReturn } from './orchestrator.js'
 import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
-const pSetTimeout = promisify(setTimeout)
-
 // Measure a single combination, until there is no `duration` left
 export const measureCombination = async function ({
-  combination: { orchestrator, ...combination },
-  duration,
+  orchestrator,
+  ...combination
 }) {
   // eslint-disable-next-line fp/no-let
   let res = await receiveReturnValue({ combination, orchestrator, params: {} })
@@ -22,23 +20,15 @@ export const measureCombination = async function ({
   // eslint-disable-next-line fp/no-loops, no-await-in-loop
   while (await waitForStart(orchestrator)) {
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
-    res = await measureSample({ combination, orchestrator, res, duration })
+    res = await measureSample({ combination, orchestrator, res })
   }
 }
 
 // Each combination is measured in a series of smaller samples
-const measureSample = async function ({
-  combination,
-  orchestrator,
-  res,
-  duration,
-}) {
+const measureSample = async function ({ combination, orchestrator, res }) {
   const sampleStart = getSampleStart()
 
-  const [newRes] = await Promise.race([
-    handleCombination({ combination, orchestrator, res }),
-    waitForSampleTimeout(duration),
-  ])
+  const newRes = await handleCombination({ combination, orchestrator, res })
 
   addSampleDuration(combination, sampleStart)
   return newRes
@@ -48,10 +38,11 @@ const measureSample = async function ({
 // race condition
 const handleCombination = async function ({ combination, orchestrator, res }) {
   const params = getParams(combination)
-  return await Promise.all([
+  const [newRes] = await Promise.all([
     receiveReturnValue({ combination, orchestrator, params }),
     sendParams(params, res),
   ])
+  return newRes
 }
 
 // Send the next sample's params by responding to the HTTP long poll request.
@@ -106,26 +97,3 @@ const handleTaskError = function ({ error }) {
 
   throw new UserError(error)
 }
-
-// The `duration` configuration property is also used for timeout. This ensures:
-//  - samples do not execute forever
-//  - the user sets a `duration` higher than the task's duration
-// The `exec` action does not use any timeout
-// Timeouts are only meant to stop tasks that are longer than the `duration`.
-// In that case, measuring is just impossible.
-// Failing the benchmark is disruptive and should only be done when there is no
-// possible fallback. For example, if a task was executed several times but
-// becomes much slower in the middle of the combination (while still being
-// slower than the `duration`), we should not fail. Instead, the task
-// will just take a little longer. We must just make a best effort to minimize
-// the likelihood of this to happen.
-const waitForSampleTimeout = async function (duration) {
-  const sampleTimeout = Math.round(duration / NANOSECS_TO_MILLISECS)
-  await pSetTimeout(sampleTimeout)
-
-  throw new UserError(
-    'Task timed out. Please increase the "duration" configuration property.',
-  )
-}
-
-const NANOSECS_TO_MILLISECS = 1e6

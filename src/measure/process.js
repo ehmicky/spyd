@@ -24,7 +24,6 @@ import { startProcess } from './start_process.js'
 export const runProcesses = async function ({
   combinations,
   origin,
-  duration,
   cwd,
   onOrchestratorError,
 }) {
@@ -35,31 +34,26 @@ export const runProcesses = async function ({
   try {
     await Promise.race([
       onOrchestratorError,
-      runAllProcesses(combinationProcesses, duration),
+      runAllProcesses(combinationProcesses),
     ])
   } finally {
     combinationProcesses.forEach(stopProcess)
   }
 }
 
-const runAllProcesses = async function (combinationProcesses, duration) {
-  return await Promise.all(
-    combinationProcesses.map(({ childProcess, combination }) =>
-      runProcess({ childProcess, combination, duration }),
-    ),
-  )
+const runAllProcesses = async function (combinationProcesses) {
+  return await Promise.all(combinationProcesses.map(runProcess))
 }
 
 const runProcess = async function ({
   childProcess,
   combination,
   combination: { taskId, inputId },
-  duration,
 }) {
   try {
     await Promise.race([
       waitForProcessError(childProcess),
-      measureCombination({ combination, duration }),
+      measureCombination(combination),
     ])
   } catch (error) {
     addTaskPrefix(error, taskId, inputId)

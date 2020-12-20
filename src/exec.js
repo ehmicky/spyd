@@ -1,9 +1,14 @@
+import { promisify } from 'util'
+
 import pMapSeries from 'p-map-series'
 
 import { getCombinations } from './combination/main.js'
+import { UserError } from './error/main.js'
 import { titleColor } from './report/utils/colors.js'
 import { SEPARATOR_SIGN } from './report/utils/separator.js'
 import { addTitles } from './report/utils/title/main.js'
+
+const pSetTimeout = promisify(setTimeout)
 
 // Execute tasks without benchmarking them
 export const performExec = async function (config) {
@@ -24,7 +29,7 @@ const execCombination = async function ({
   commandSpawnOptions,
   commandConfig,
   runnerRepeats,
-  config: { cwd },
+  config: { cwd, duration },
 }) {
   const name = getName(row)
   // eslint-disable-next-line no-restricted-globals, no-console
@@ -41,15 +46,18 @@ const execCombination = async function ({
     repeat,
   }
 
-  await executeChild({
-    commandSpawn,
-    commandSpawnOptions,
-    eventPayload,
-    cwd,
-    taskId,
-    inputId,
-    type: 'benchmarkExec',
-  })
+  await Promise.race([
+    waitForSampleTimeout(duration),
+    executeChild({
+      commandSpawn,
+      commandSpawnOptions,
+      eventPayload,
+      cwd,
+      taskId,
+      inputId,
+      type: 'benchmarkExec',
+    }),
+  ])
 
   // eslint-disable-next-line no-restricted-globals, no-console
   console.log('')
@@ -58,3 +66,23 @@ const execCombination = async function ({
 const getName = function (row) {
   return titleColor(row.join(` ${SEPARATOR_SIGN} `))
 }
+
+// In the `bench` action, we do not time out combinations using the `duration`
+// configuration property:
+//  - Timing out requires killing process, which might skip some resources
+//    cleanup (afterEach and afterAll)
+//  - The `duration` might be adjusted for a specific machine that is faster
+//    than others. This might make slower machines time out.
+//  - This allows `duration: 0` to be used to measure each combination once
+// However, we still use timeouts in the `exec` action. This allows debugging
+// combinations that hang forever or are too long.
+const waitForSampleTimeout = async function (duration) {
+  const sampleTimeout = Math.round(duration / NANOSECS_TO_MILLISECS)
+  await pSetTimeout(sampleTimeout)
+
+  throw new UserError(
+    'Task timed out. Please increase the "duration" configuration property.',
+  )
+}
+
+const NANOSECS_TO_MILLISECS = 1e6
