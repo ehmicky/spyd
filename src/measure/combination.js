@@ -92,7 +92,7 @@ const sendParams = async function (params, res) {
 
 // Receive the sample's return value by receiving a HTTP long poll request.
 const receiveReturnValue = async function (combination, params) {
-  const [{ req, res }] = await once(combination.orchestrator, 'return')
+  const [{ req, res }] = await once(combination.serverChannel, 'return')
   const returnValue = await getJsonReturn(req)
   handleTaskError(returnValue)
   const state = handleReturnValue(combination, returnValue, params)

@@ -1,13 +1,13 @@
+import { v4 as uuidv4 } from 'uuid'
+
 import { getFinalStats } from './aggregate.js'
-import { createCombinationId, getOrchestrator } from './server.js'
 
 // Initialize some combination properties
 export const addInitProps = function ({ runnerRepeats, ...combination }) {
   return {
     ...combination,
     runnerRepeats,
-    id: createCombinationId(),
-    orchestrator: getOrchestrator(),
+    id: uuidv4(),
     state: {
       combinationDuration: 0,
       sampleDurationLast: 0,

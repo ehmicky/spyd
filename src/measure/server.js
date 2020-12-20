@@ -3,8 +3,6 @@ import { EventEmitter } from 'events'
 import { createServer } from 'http'
 import { promisify } from 'util'
 
-import { v4 as uuidv4 } from 'uuid'
-
 import { PluginError } from '../error/main.js'
 
 // Start a local HTTP server to communicate with runner processes.
@@ -27,17 +25,25 @@ export const startServer = async function (combinations, duration) {
   const server = createServer()
   // eslint-disable-next-line fp/no-mutation
   server.keepAliveTimeout = Math.ceil(duration / NANOSECS_TO_MILLISECS)
-  const onOrchestratorError = createHandler(server, combinations)
+  const combinationsA = combinations.map(addServerChannel)
+  const onOrchestratorError = createHandler(server, combinationsA)
   await promisify(server.listen.bind(server))(HTTP_SERVER_OPTS)
   const { address, port } = server.address()
   const origin = `http://${address}:${port}`
-  return { server, origin, onOrchestratorError }
+  return { server, origin, combinations: combinationsA, onOrchestratorError }
 }
 
 const NANOSECS_TO_MILLISECS = 1e6
 const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 
-export const createHandler = function (server, combinations) {
+// HTTP server requests use events. We need to create an EventEmitter to
+// propagate each request to the right combintion.
+const addServerChannel = function (combination) {
+  const serverChannel = new EventEmitter()
+  return { ...combination, serverChannel }
+}
+
+const createHandler = function (server, combinations) {
   // We need to use `new Promise()` for error handling due to using events.
   // eslint-disable-next-line promise/avoid-new
   return new Promise((resolve, reject) => {
@@ -58,8 +64,8 @@ const handleRequests = function (server, combinations, reject) {
 }
 
 const handleRequest = function (combinations, req, res) {
-  const { orchestrator } = findCombinationByUrl(req, combinations)
-  orchestrator.emit('return', { req, res })
+  const { serverChannel } = findCombinationByUrl(req, combinations)
+  serverChannel.emit('return', { req, res })
 }
 
 // When a request is made, we find the matching combination
@@ -79,11 +85,6 @@ const findCombinationByUrl = function (req, combinations) {
   return combination
 }
 
-// Each combination gets its own unique `id`
-export const createCombinationId = function () {
-  return uuidv4()
-}
-
 // Each combination gets a different endpoint using its `id`
 export const getServerUrl = function (origin, id) {
   return `${origin}/rpc/${id}`
@@ -94,10 +95,4 @@ const SERVER_URL_REGEXP = /^\/rpc\/([\da-f-]+)$/iu
 // Stop the HTTP server
 export const stopServer = async function (server) {
   await promisify(server.close.bind(server))()
-}
-
-// HTTP server requests use events. We need to create an EventEmitter to
-// propagate each request to the right combintion.
-export const getOrchestrator = function () {
-  return new EventEmitter()
 }
