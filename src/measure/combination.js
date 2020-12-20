@@ -1,3 +1,5 @@
+// eslint-disable-next-line fp/no-events
+import { once } from 'events'
 import { promisify } from 'util'
 
 import getStream from 'get-stream'
@@ -5,7 +7,6 @@ import getStream from 'get-stream'
 import { PluginError, UserError } from '../error/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
-import { waitForStart, waitForReturn } from './orchestrator.js'
 import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
@@ -22,6 +23,16 @@ export const measureCombination = async function ({
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
     res = await measureSample({ combination, orchestrator, res })
   }
+}
+
+// Make a combination notify its sample has ended, then wait for its next sample
+// We must do the latter before the former to prevent any race condition.
+const waitForStart = async function (orchestrator) {
+  const [[shouldExit]] = await Promise.all([
+    once(orchestrator, 'start'),
+    orchestrator.emit('end'),
+  ])
+  return shouldExit
 }
 
 // Each combination is measured in a series of smaller samples
@@ -67,7 +78,7 @@ const receiveReturnValue = async function ({
   orchestrator,
   params,
 }) {
-  const { req, res: nextRes } = await waitForReturn(orchestrator)
+  const [{ req, res: nextRes }] = await once(orchestrator, 'return')
   const returnValue = await getJsonReturn(req)
   handleTaskError(returnValue)
   const newState = handleReturnValue(combination, returnValue, params)

@@ -1,5 +1,5 @@
 // eslint-disable-next-line fp/no-events
-import { EventEmitter, once } from 'events'
+import { EventEmitter } from 'events'
 
 import { getRemainingCombinations, getNextCombination } from './duration.js'
 import { findCombinationByUrl } from './url.js'
@@ -120,20 +120,4 @@ const exitCombinations = function (combinations) {
 
 const exitCombination = function ({ orchestrator }) {
   orchestrator.emit('start', false)
-}
-
-// Make a combination notify its sample has ended, then wait for its next sample
-// We must do the latter before the former to prevent any race condition.
-export const waitForStart = async function (orchestrator) {
-  const [[shouldExit]] = await Promise.all([
-    once(orchestrator, 'start'),
-    orchestrator.emit('end'),
-  ])
-  return shouldExit
-}
-
-// Make a combination wait for the runner's sample return value
-export const waitForReturn = async function (orchestrator) {
-  const [{ req, res }] = await once(orchestrator, 'return')
-  return { req, res }
 }
