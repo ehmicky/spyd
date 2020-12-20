@@ -84,7 +84,7 @@ export const handleReturnValue = function (
   })
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
-  addProcessMeasures(measuresA, processMeasuresA)
+  addProcessMeasures(measuresA, processMeasuresB)
   const stats = getStats({
     measures: measuresA,
     samples: samplesB,
