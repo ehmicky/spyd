@@ -18,7 +18,7 @@ export const load = async function ({
 }) {
   await useRequireConfig(requireConfig, taskPath)
 
-  const task = await loadFile(taskPath)
+  const task = loadFile(taskPath)
   validateFile(task, taskId)
 
   const taskA = normalizeTask(task)
@@ -26,9 +26,10 @@ export const load = async function ({
   return { main, before, after, async }
 }
 
-const loadFile = async function (taskPath) {
+const loadFile = function (taskPath) {
   try {
-    return await import(taskPath)
+    // eslint-disable-next-line node/global-require, import/no-dynamic-require
+    return require(taskPath)
   } catch (error) {
     throw new UserError(
       `Could not load the tasks file ${taskPath}\n\n${error.stack}`,
