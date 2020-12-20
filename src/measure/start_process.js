@@ -12,7 +12,6 @@ export const startProcess = function ({
     commandSpawn: [commandFile, ...commandArgs],
     commandSpawnOptions,
     taskPath,
-    taskId,
     inputValue,
   },
   origin,
@@ -22,7 +21,6 @@ export const startProcess = function ({
     id,
     runConfig,
     taskPath,
-    taskId,
     inputValue,
     origin,
   })
@@ -41,10 +39,9 @@ const getLoadParams = function ({
   id,
   runConfig,
   taskPath,
-  taskId,
   inputValue,
   origin,
 }) {
   const serverUrl = getServerUrl(origin, id)
-  return { serverUrl, runConfig, taskPath, taskId, input: inputValue }
+  return { serverUrl, runConfig, taskPath, input: inputValue }
 }

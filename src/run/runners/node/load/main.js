@@ -13,13 +13,12 @@ import { validateFile } from './validate.js'
 export const load = async function ({
   runConfig: { require: requireConfig },
   taskPath,
-  taskId,
   input,
 }) {
   await useRequireConfig(requireConfig, taskPath)
 
   const task = loadFile(taskPath)
-  validateFile(task, taskId)
+  validateFile(task)
 
   const taskA = normalizeTask(task)
   const { main, before, after, async } = bindInput(taskA, input)
