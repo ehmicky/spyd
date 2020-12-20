@@ -8,7 +8,7 @@ import { getMean, getDeviation } from './sum.js'
 // Retrieve statistics from results.
 // Perform the statistical logic.
 // Note that when `repeat > 1`, the distribution of the measured function will
-// be modified by the looping process and transformed to a bell shape, even if
+// be modified by the repeat loop and transformed to a bell shape, even if
 // if was not one. This means `quantiles`, `histogram` and `deviation` will
 // have a different meaning: they visualize the measurements of the function not
 // function itself.

@@ -5,7 +5,6 @@ import { UserError } from '../error/main.js'
 import { validateIds } from './validate.js'
 
 // Load combinations by launching each command.
-// At startup we spawn child processes but do not measure yet.
 // We only retrieve the tasks files combinations.
 export const getCommandCombinations = async function ({
   taskPath,

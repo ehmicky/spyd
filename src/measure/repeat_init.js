@@ -9,7 +9,7 @@
 // the last sample measures.
 // We only reset cumulated stats like `measures`, `bufferedMeasures`, `samples`,
 // `loops` and `times`
-// We do not reset stats which only use the last process when those cumulated
+// We do not reset stats which only use the last sample when those cumulated
 // stats are reset, such as `stats` and `repeat`.
 export const repeatInitReset = function ({
   repeatInit,

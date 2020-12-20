@@ -36,7 +36,7 @@ const measureSample = async function ({
   const sampleStart = getSampleStart()
 
   const [newRes] = await Promise.race([
-    processCombination({ combination, orchestrator, res }),
+    handleCombination({ combination, orchestrator, res }),
     waitForSampleTimeout(duration, combination),
   ])
 
@@ -46,7 +46,7 @@ const measureSample = async function ({
 
 // We are setting up return value listening before sending params to prevent any
 // race condition
-const processCombination = async function ({ combination, orchestrator, res }) {
+const handleCombination = async function ({ combination, orchestrator, res }) {
   const params = getParams(combination)
   return await Promise.all([
     receiveReturnValue({ combination, orchestrator, params }),
@@ -108,7 +108,7 @@ const handleError = function ({ error }, { taskId }) {
 }
 
 // The `duration` configuration property is also used for timeout. This ensures:
-//  - child processes do not execute forever
+//  - samples do not execute forever
 //  - the user sets a `duration` higher than the task's duration
 // The `exec` action does not use any timeout
 // Timeouts are only meant to stop tasks that are longer than the `duration`.
@@ -123,7 +123,7 @@ const waitForSampleTimeout = async function (duration, { taskId }) {
   const sampleTimeout = Math.round(duration / NANOSECS_TO_MILLISECS)
   await pSetTimeout(sampleTimeout)
 
-  // TODO: use error messages from src/processes/error.js
+  // TODO: use error messages from ./error.js
   throw new UserError(`Task "${taskId}" ${TIMEOUT_ERROR}`)
 }
 

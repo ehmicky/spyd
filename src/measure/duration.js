@@ -24,13 +24,13 @@ export const getSampleStart = function () {
 export const addSampleDuration = function ({ state }, sampleStart) {
   const sampleDurationLast = now() - sampleStart
   const combinationDuration = state.combinationDuration + sampleDurationLast
-  const processes = state.processes + 1
-  const sampleDurationMean = combinationDuration / processes
+  const allSamples = state.allSamples + 1
+  const sampleDurationMean = combinationDuration / allSamples
 
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(state, {
     combinationDuration,
-    processes,
+    allSamples,
     sampleDurationLast,
     sampleDurationMean,
   })

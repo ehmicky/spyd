@@ -76,7 +76,7 @@ const addEndHandler = function ({
 
 // Each time a sample ends, we compute the next one to execute and send a
 // `start` event to it.
-// During the initial load, each process is measured in parallel. We wait for
+// During the initial load, each process is executed in parallel. We wait for
 // all of them to have finished loading first, using `state.pending`.
 const onSampleEnd = function ({ combinations, state, benchmarkEnd }) {
   if (state.pending !== 0) {
