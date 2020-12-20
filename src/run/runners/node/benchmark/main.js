@@ -1,7 +1,7 @@
 import { startMeasuring } from '../../common/start.js'
 
-import { performLoopsAsync } from './async/loops.js'
-import { performLoopsSync } from './sync/loops.js'
+import { performLoopsAsync } from './async.js'
+import { performLoopsSync } from './sync.js'
 
 // Call the `main` function iteratively and return an array of numbers measuring
 // how long each call took.

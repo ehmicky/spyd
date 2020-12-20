@@ -1,1 +1,3 @@
-module.exports.main = Math.random
+module.exports.main = () => {
+  Math.random()
+}
