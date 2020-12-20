@@ -78,7 +78,7 @@ const receiveReturnValue = async function ({
 }) {
   const { req, res: nextRes } = await waitForReturn(orchestrator)
   const returnValue = await getJsonReturn(req)
-  handleError(returnValue)
+  handleTaskError(returnValue)
   const newState = handleReturnValue(combination, returnValue, params)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(combination.state, newState)
@@ -99,7 +99,7 @@ const getJsonReturn = async function (req) {
 // When a task throws during load or execution, we propagate the error and fail
 // the benchmark. Tasks that throw are unstable and might yield invalid
 // benchmarks, so we fail hard.
-const handleError = function ({ error }) {
+const handleTaskError = function ({ error }) {
   if (error === undefined) {
     return
   }

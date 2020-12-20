@@ -7,7 +7,7 @@ import { getFinalStats } from './aggregate.js'
 import { getBenchmarkEnd } from './duration.js'
 import { getOrchestrator, initOrchestrators } from './orchestrator.js'
 import { runProcesses } from './process.js'
-import { startServer, stopServer } from './start_stop.js'
+import { startServer, stopServer } from './server.js'
 import { createCombinationId } from './url.js'
 
 const pSetTimeout = promisify(setTimeout)

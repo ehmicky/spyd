@@ -1,9 +1,7 @@
-import execa from 'execa'
-
 import { UserError } from '../error/main.js'
 
 import { measureCombination } from './combination.js'
-import { getServerUrl } from './url.js'
+import { startProcess } from './start_process.js'
 
 // Each combination is spawned in its own process:
 //  - This ensures runtime optimization is bound to each combination
@@ -44,53 +42,6 @@ export const runProcesses = async function ({
   }
 }
 
-// Spawn each combination's process.
-// All combinations are loaded in parallel, for performance.
-const startProcess = function ({
-  combination,
-  combination: {
-    id,
-    commandConfig: runConfig,
-    commandSpawn: [commandFile, ...commandArgs],
-    commandSpawnOptions,
-    taskPath,
-    taskId,
-    inputValue,
-  },
-  origin,
-  cwd,
-}) {
-  const loadParams = getLoadParams({
-    id,
-    runConfig,
-    taskPath,
-    taskId,
-    inputValue,
-    origin,
-  })
-  const loadParamsString = JSON.stringify(loadParams)
-  const childProcess = execa(commandFile, [...commandArgs, loadParamsString], {
-    ...commandSpawnOptions,
-    stdio: 'ignore',
-    cwd,
-    preferLocal: true,
-  })
-  return { childProcess, combination }
-}
-
-// Retrieve params passed to runner processes so they can load the right task
-const getLoadParams = function ({
-  id,
-  runConfig,
-  taskPath,
-  taskId,
-  inputValue,
-  origin,
-}) {
-  const serverUrl = getServerUrl(origin, id)
-  return { serverUrl, runConfig, taskPath, taskId, input: inputValue }
-}
-
 const runAllProcesses = async function (combinationProcesses, duration) {
   return await Promise.all(
     combinationProcesses.map(({ childProcess, combination }) =>
@@ -116,15 +67,6 @@ const runProcess = async function ({
   }
 }
 
-const addTaskPrefix = function (error, taskId, inputId) {
-  const taskPrefix =
-    inputId === ''
-      ? `In task '${taskId}'`
-      : `In task '${taskId}' (input '${inputId}')`
-  // eslint-disable-next-line no-param-reassign
-  error.message = `${taskPrefix}:\n${error.message}`
-}
-
 // This is only done for exception handling
 const waitForProcessError = async function (childProcess) {
   try {
@@ -142,6 +84,15 @@ const getExecaMessage = function (error) {
 }
 
 const EXECA_MESSAGE_REGEXP = /^Command ([^:]+): .*/u
+
+const addTaskPrefix = function (error, taskId, inputId) {
+  const taskPrefix =
+    inputId === ''
+      ? `In task '${taskId}'`
+      : `In task '${taskId}' (input '${inputId}')`
+  // eslint-disable-next-line no-param-reassign
+  error.message = `${taskPrefix}:\n${error.message}`
+}
 
 // Terminate each runner's process at the end of the benchmark.
 // We ensure that processes are not in the middle of measuring a task, since
