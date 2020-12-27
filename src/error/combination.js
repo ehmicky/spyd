@@ -1,4 +1,7 @@
-import { UserError } from '../error/main.js'
+// eslint-disable-next-line fp/no-events
+import { once } from 'events'
+
+import { UserError } from './main.js'
 
 // When the logic involving a combination throws, we do not propagate the
 // exception right away. This allows the combination and other combinations
@@ -64,3 +67,8 @@ const getProcessExitMessage = function (failed, message) {
 
 const TASK_EXIT_MESSAGE = 'The task must not make the process exit.'
 const EXECA_MESSAGE_REGEXP = /^Command ([^:]+): .*/u
+
+// Make any stream `error` event throw
+export const throwOnStreamError = function (stream) {
+  return once(stream, 'dummy_event')
+}

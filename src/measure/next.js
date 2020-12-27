@@ -1,7 +1,8 @@
 import randomItem from 'random-item'
 
+import { combinationHasErrored } from '../error/combination.js'
+
 import { updateBenchmarkEnd } from './duration.js'
-import { combinationHasErrored } from './error.js'
 
 // Retrieve the next combination which should be measured.
 // We do it based on which combination are been measured the least.

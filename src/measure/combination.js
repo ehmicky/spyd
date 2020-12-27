@@ -1,12 +1,13 @@
-import { setDescription, setDelayedDescription } from '../progress/set.js'
-
-import { getSampleStart, addSampleDuration } from './duration.js'
 import {
   handleCombinationError,
   combinationHasErrored,
   failOnProcessExit,
-} from './error.js'
-import { sendAndReceive, sendParams, receiveReturnValue } from './ipc.js'
+} from '../error/combination.js'
+import { receiveReturnValue } from '../process/receive.js'
+import { sendAndReceive, sendParams } from '../process/send.js'
+import { setDescription, setDelayedDescription } from '../progress/set.js'
+
+import { getSampleStart, addSampleDuration } from './duration.js'
 import {
   getMeasureDurationStart,
   getMeasureDurationLast,
