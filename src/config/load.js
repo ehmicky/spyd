@@ -7,7 +7,7 @@ import { UserError } from '../error/main.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
 // Retrieve the content of the configuration file (if any)
-export const getConfigFile = async function ({ configPath, config }) {
+export const loadConfig = async function ({ settings, configPath, config }) {
   const configPathA = await findConfigPath(configPath, cwd)
 
   if (configPathA === undefined) {

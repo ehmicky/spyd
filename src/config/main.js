@@ -7,7 +7,7 @@ import { validate, multipleValidOptions } from 'jest-validate'
 import { getDefaultMergeId } from '../merge/config.js'
 
 import { addEnvVars } from './env.js'
-import { getConfigFile } from './file.js'
+import { loadConfig } from './load.js'
 import { preNormalizeConfig, normalizeConfig } from './normalize.js'
 import { getSettings } from './settings.js'
 
@@ -23,7 +23,11 @@ export const getConfig = async function (action, config = {}) {
   validateConfig({ settings, config: configPath })
 
   const settingsA = await getSettings(settings)
-  const configB = await getConfigFile({ configPath, config: configA })
+  const configB = await loadConfig({
+    settings: settingsA,
+    configPath,
+    config: configA,
+  })
   const configC = addEnvVars(configB)
 
   validateConfig(configC)
