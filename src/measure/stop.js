@@ -11,7 +11,7 @@ export const stopCombinations = async function (combinations, progressState) {
   return await Promise.all(combinations.map(eStopCombination))
 }
 
-const STOP_DESCRIPTION = 'Finishing...'
+const STOP_DESCRIPTION = 'Stopping...'
 
 const eStopCombination = async function (combination) {
   return await Promise.race([
