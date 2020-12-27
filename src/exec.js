@@ -16,19 +16,21 @@ export const performExec = async function (config) {
   const combinationsA = addTitles(combinations)
 
   await pMapSeries(combinationsA, (combination) =>
-    execCombination({ ...combination, config }),
+    execCombination({ combination, config }),
   )
 }
 
 const execCombination = async function ({
-  row,
-  taskPath,
-  taskId,
-  inputId,
-  commandSpawn,
-  commandSpawnOptions,
-  commandConfig,
-  runnerRepeats,
+  combination: {
+    row,
+    taskPath,
+    taskId,
+    inputId,
+    commandSpawn,
+    commandSpawnOptions,
+    commandConfig,
+    runnerRepeats,
+  },
   config: { cwd, duration },
 }) {
   const name = getName(row)
