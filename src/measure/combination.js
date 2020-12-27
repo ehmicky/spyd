@@ -18,7 +18,8 @@ export const measureCombinations = async function (
   const combinationsA = await startCombinations(combinations, progressState)
   const combinationsB = await measureSamples(combinationsA, progressState)
   const combinationsC = await stopCombinations(combinationsB, progressState)
-  return combinationsC
+  const combinationsD = await exitCombinations(combinationsC)
+  return combinationsD
 }
 
 const startCombinations = async function (combinations, progressState) {
@@ -131,6 +132,14 @@ const STOP_DESCRIPTION = 'Finishing...'
 
 const stopCombination = async function (combination) {
   const { newCombination } = await sendAndReceive(combination, {})
-  await sendParams(newCombination, {})
   return newCombination
+}
+
+const exitCombinations = async function (combinations) {
+  return await Promise.all(combinations.map(exitCombination))
+}
+
+const exitCombination = async function (combination) {
+  await sendParams(combination, {})
+  return combination
 }
