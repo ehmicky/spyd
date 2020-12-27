@@ -13,6 +13,7 @@ export const measureCombinations = async function ({
   combinations,
   config: { duration, cwd },
   progressState,
+  onProgressError,
 }) {
   const combinationsA = combinations.map((combination) =>
     addInitProps(combination, duration),
@@ -22,6 +23,7 @@ export const measureCombinations = async function ({
     duration,
     cwd,
     progressState,
+    onProgressError,
   })
   const combinationsC = combinationsB.map(getFinalProps)
   return combinationsC
@@ -32,6 +34,7 @@ const startServerAndMeasure = async function ({
   duration,
   cwd,
   progressState,
+  onProgressError,
 }) {
   const { server, origin, combinations: combinationsA } = await startServer(
     combinations,
@@ -44,6 +47,7 @@ const startServerAndMeasure = async function ({
       origin,
       cwd,
       progressState,
+      onProgressError,
     })
   } finally {
     await endServer(server)
@@ -55,11 +59,15 @@ const spawnAndMeasure = async function ({
   origin,
   cwd,
   progressState,
+  onProgressError,
 }) {
   const combinationsA = spawnProcesses({ combinations, origin, cwd })
 
   try {
-    return await measureAllCombinations(combinationsA, progressState)
+    return await Promise.race([
+      ...onProgressError,
+      measureAllCombinations(combinationsA, progressState),
+    ])
   } finally {
     terminateProcesses(combinationsA)
   }

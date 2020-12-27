@@ -14,13 +14,14 @@ export const updateProgress = async function ({
   progressState,
   benchmarkDuration,
   reporters,
+  initial,
 }) {
   const progressContent = getProgressContent({
     progressState,
     benchmarkDuration,
     reporters,
   })
-  await clearProgress(false)
+  await clearProgress({ initial, final: false })
   await writeToStderr(progressContent)
 }
 
@@ -49,15 +50,19 @@ const getTimeLeft = function (benchmarkEnd, benchmarkDuration) {
 
 const PROGRESS_SEPARATOR = '\n\n'
 
-export const initialClearProgress = async function () {
-  const newlines = '\n'.repeat(stderr.rows - 1)
-  await writeToStderr(newlines)
-}
+export const clearProgress = async function ({ initial, final }) {
+  if (initial) {
+    await initialClearProgress()
+  }
 
-export const clearProgress = async function (final) {
   const row = final ? 0 : 1
   await pCursorTo(stderr, 0, row)
   await pClearScreenDown(stderr)
+}
+
+const initialClearProgress = async function () {
+  const newlines = '\n'.repeat(stderr.rows - 1)
+  await writeToStderr(newlines)
 }
 
 const writeToStderr = async function (string) {
