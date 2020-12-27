@@ -21,11 +21,8 @@ export const BENCH_COMMAND = {
 Measure tasks.
 
 Task files must be inside the settings directory.
-The settings directory defaults to a "benchmark" directory in the current
-directory or any parent directory.
-Task filenames must end with ".task.*".
-
-The file extension and contents of the task file depends on the runner.`,
+Their filenames must end with ".task.*".
+The file extension and contents of the task files depends on the runner.`,
 
   examples: [
     ['$0', 'Measure tasks'],

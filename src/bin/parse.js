@@ -1,6 +1,5 @@
 import filterObj from 'filter-obj'
 
-import { normalizeArrayProps } from './array.js'
 import { normalizeDynamicProps } from './dynamic.js'
 
 export const parseCliFlags = function (yargs) {
@@ -10,10 +9,9 @@ export const parseCliFlags = function (yargs) {
   } = yargs.parse()
 
   const configA = normalizeDynamicProps(config)
-  const configB = normalizeArrayProps(configA)
 
-  const configC = filterObj(configB, isUserProp)
-  return [command, configC]
+  const configB = filterObj(configA, isUserProp)
+  return { command, config: configB }
 }
 
 const DEFAULT_COMMAND = 'bench'

@@ -16,7 +16,7 @@ const runCli = async function () {
     await checkUpdate()
 
     const yargs = defineCli()
-    const [command, config] = parseCliFlags(yargs)
+    const { command, config } = parseCliFlags(yargs)
     await commands[command](config)
   } catch (error) {
     handleCliError(error)

@@ -25,7 +25,6 @@ Custom progress reporters can be installed from npm.
 Uses a dot notation such as --progress.bar (not --progress=bar nor --progress bar).`,
   },
   save: {
-    alias: 's',
     boolean: true,
     describe: `Save the results.
 Default: false`,

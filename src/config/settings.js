@@ -18,7 +18,7 @@ const getUserSettings = async function (settings) {
   const settingsA = resolve(settings)
 
   if (!(await isDirectory(settings))) {
-    throw new UserError(`"settings" directory does not exist: ${settings}}`)
+    throw new UserError(`"settings" directory does not exist: ${settings}`)
   }
 
   return settingsA
@@ -30,7 +30,9 @@ const getDefaultSettings = async function () {
 
   if (settings === undefined) {
     throw new UserError(
-      `Please specify the "settings" configuration property or create a "${DEFAULT_SETTINGS}" directory`,
+      `You must either:
+  - create a "${DEFAULT_SETTINGS}" directory
+  - or specify the "settings" configuration property`,
     )
   }
 
