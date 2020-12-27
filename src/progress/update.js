@@ -22,7 +22,9 @@ export const updateProgress = async function ({
     duration,
     reporters,
   })
-  await clearProgress({ initial, final: false })
+
+  await (initial ? clearProgressInit() : clearProgress())
+
   await writeToStderr(progressContent)
 }
 
@@ -46,19 +48,32 @@ const getProgressContent = function ({
 
 const PROGRESS_SEPARATOR = '\n\n'
 
-export const clearProgress = async function ({ initial, final }) {
-  if (initial) {
-    await initialClearProgress()
-  }
-
-  const row = final ? 0 : 1
-  await pCursorTo(stderr, 0, row)
-  await pClearScreenDown(stderr)
-}
-
-const initialClearProgress = async function () {
+// At the beginning of the benchmark, we print newlines so that clearing the
+// screen does not remove previous prompts
+const clearProgressInit = async function () {
   const newlines = '\n'.repeat(stderr.rows - 1)
   await writeToStderr(newlines)
+  await clearScreen(1)
+}
+
+const clearProgress = async function () {
+  await clearScreen(1)
+}
+
+// The final screen cleaning prints one less empty row.
+// When stopping a benchmark, we keep the progress duration since it is useful.
+// We also keep the description, to remind the benchmark was stopped.
+export const clearProgressFinal = async function (stopped) {
+  if (stopped) {
+    return
+  }
+
+  await clearScreen(0)
+}
+
+const clearScreen = async function (row) {
+  await pCursorTo(stderr, 0, row)
+  await pClearScreenDown(stderr)
 }
 
 const writeToStderr = async function (string) {

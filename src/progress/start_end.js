@@ -1,7 +1,7 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
 import { setDelayedDescription } from './set.js'
-import { updateProgress, clearProgress } from './update.js'
+import { updateProgress, clearProgressFinal } from './update.js'
 
 // Start progress reporting using the `progress` configuration property
 export const startProgress = function (
@@ -76,9 +76,6 @@ export const endProgress = async function ({
   }
 
   clearInterval(progressId)
+  await clearProgressFinal(stopped)
   showCursor()
-
-  if (!stopped) {
-    await clearProgress({ initial: false, final: true })
-  }
 }
