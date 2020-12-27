@@ -3,12 +3,23 @@ import { argv, exit } from 'process'
 import fetch from 'cross-fetch'
 
 // Handles IPC communication with the main process
-export const performRunner = async function ({ start, measure }) {
+export const performRunner = async function ({
+  start,
+  before,
+  measure,
+  after,
+}) {
   const { serverUrl, spawnParams } = parseSpawnParams()
 
   try {
-    const startState = await start(spawnParams)
-    await measureSamples({ measure, serverUrl, startState })
+    await measureCombination({
+      start,
+      before,
+      measure,
+      after,
+      serverUrl,
+      spawnParams,
+    })
     await successExit(serverUrl)
   } catch (error) {
     await errorExit(error, serverUrl)
@@ -19,6 +30,27 @@ export const performRunner = async function ({ start, measure }) {
 const parseSpawnParams = function () {
   const { serverUrl, ...spawnParams } = JSON.parse(argv[2])
   return { serverUrl, spawnParams }
+}
+
+const measureCombination = async function ({
+  start,
+  before,
+  measure,
+  after,
+  serverUrl,
+  spawnParams,
+}) {
+  const startState = await start(spawnParams)
+
+  try {
+    await before(startState)
+    await measureSamples({ measure, serverUrl, startState })
+  } catch (error) {
+    await safeAfter(after, startState)
+    throw error
+  }
+
+  await after(startState)
 }
 
 // Runs a new sample each time the main process asks for it
@@ -39,6 +71,16 @@ const measureSamples = async function ({ measure, serverUrl, startState }) {
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
     returnValue = await measure(params, startState)
   }
+}
+
+// When `beforeAll`, `beforeEach`, `main` or `afterEach` throws, we still run
+// `afterAll` for cleanup. However, `afterAll` might fail if the global state
+// is in an odd state due to the interruption. Therefore, we do not propagate
+// exceptions from `afterAll` then.
+const safeAfter = async function (after, startState) {
+  try {
+    await after(startState)
+  } catch {}
 }
 
 // We use `process.exit()` instead of `process.exitCode` because if some tasks
