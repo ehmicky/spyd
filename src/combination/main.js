@@ -40,10 +40,6 @@ export const getCombinations = async function ({
       runnerRepeats: true,
       systemId: '',
       systemTitle: '',
-      taskTitlePadded: 'MathRandom   ',
-      inputTitlePadded: 'One  ',
-      commandTitlePadded: 'Node',
-      systemTitlePadded: '',
     },
     {
       taskPath: '/home/ether/code/spyd/benchmark/math_random_two.task.js',
@@ -65,10 +61,6 @@ export const getCombinations = async function ({
       runnerRepeats: true,
       systemId: '',
       systemTitle: '',
-      taskTitlePadded: 'MathRandomTwo',
-      inputTitlePadded: 'One  ',
-      commandTitlePadded: 'Node',
-      systemTitlePadded: '',
     },
   ]
 
