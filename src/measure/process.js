@@ -25,15 +25,11 @@ export const runProcesses = async function ({
   origin,
   cwd,
   progressState,
-  onOrchestratorError,
 }) {
   const combinationsA = spawnProcesses({ combinations, origin, cwd })
 
   try {
-    return await Promise.race([
-      measureCombinations(combinationsA, progressState),
-      onOrchestratorError,
-    ])
+    return await measureCombinations(combinationsA, progressState)
   } finally {
     combinationsA.forEach(terminateProcess)
   }

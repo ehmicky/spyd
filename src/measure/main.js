@@ -26,12 +26,10 @@ const measureAllCombinations = async function ({
   cwd,
   progressState,
 }) {
-  const {
-    server,
-    origin,
-    combinations: combinationsA,
-    onOrchestratorError,
-  } = await startServer(combinations, duration)
+  const { server, origin, combinations: combinationsA } = await startServer(
+    combinations,
+    duration,
+  )
 
   try {
     return await runProcesses({
@@ -39,7 +37,6 @@ const measureAllCombinations = async function ({
       origin,
       cwd,
       progressState,
-      onOrchestratorError,
     })
   } finally {
     await stopServer(server)

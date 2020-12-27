@@ -23,18 +23,25 @@ import { PluginError } from '../error/main.js'
 // Keeping the default `headersTimeout` (1 minute) is fine though.
 export const startServer = async function (combinations, duration) {
   const server = createServer()
-  // eslint-disable-next-line fp/no-mutation
+  const combinationsA = handleRequests({ server, combinations, duration })
+  const origin = await serverListen(server)
+  return { server, origin, combinations: combinationsA }
+}
+
+// Handle HTTP requests coming from runners.
+// Emit a `return` event to communicate it to the proper combination.
+const handleRequests = function ({ server, combinations, duration }) {
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
   server.keepAliveTimeout = Math.ceil(duration / NANOSECS_TO_MILLISECS)
+
   const combinationsA = combinations.map(addServerChannel)
-  const onOrchestratorError = createHandler(server, combinationsA)
-  await promisify(server.listen.bind(server))(HTTP_SERVER_OPTS)
-  const { address, port } = server.address()
-  const origin = `http://${address}:${port}`
-  return { server, origin, combinations: combinationsA, onOrchestratorError }
+  server.on('request', (req, res) => {
+    handleRequest(combinationsA, req, res)
+  })
+  return combinationsA
 }
 
 const NANOSECS_TO_MILLISECS = 1e6
-const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 
 // HTTP server requests use events. We need to create an EventEmitter to
 // propagate each request to the right combintion.
@@ -43,29 +50,15 @@ const addServerChannel = function (combination) {
   return { ...combination, serverChannel }
 }
 
-const createHandler = function (server, combinations) {
-  // We need to use `new Promise()` for error handling due to using events.
-  // eslint-disable-next-line promise/avoid-new
-  return new Promise((resolve, reject) => {
-    handleRequests(server, combinations, reject)
-  })
-}
-
-// Handle HTTP requests coming from runners.
-// Emit a `return` event to communicate it to the proper combination.
-const handleRequests = function (server, combinations, reject) {
-  server.on('request', (req, res) => {
-    try {
-      handleRequest(combinations, req, res)
-    } catch (error) {
-      reject(error)
-    }
-  })
-}
-
 const handleRequest = function (combinations, req, res) {
-  const { serverChannel } = findCombinationByUrl(req, combinations)
-  serverChannel.emit('return', { req, res })
+  const { serverChannel, error } = findCombinationByUrl(req, combinations)
+
+  if (error !== undefined) {
+    emitInvalidReturn({ combinations, req, res, error })
+    return
+  }
+
+  emitReturn({ serverChannel, req, res })
 }
 
 // When a request is made, we find the matching combination
@@ -73,17 +66,39 @@ const findCombinationByUrl = function (req, combinations) {
   const tokens = SERVER_URL_REGEXP.exec(req.url)
 
   if (tokens === null) {
-    throw new PluginError(`Invalid URL: ${req.url}`)
+    return { error: new PluginError(`Invalid URL: ${req.url}`) }
   }
 
   const combination = combinations.find(({ id }) => id === tokens[1])
 
   if (combination === undefined) {
-    throw new PluginError(`Invalid ID in URL: ${req.url}`)
+    return { error: new PluginError(`Invalid ID in URL: ${req.url}`) }
   }
 
-  return combination
+  return { serverChannel: combination.serverChannel }
 }
+
+// If no combination can be found, send an error to any combination currently
+// listening
+const emitInvalidReturn = function ({ combinations, req, res, error }) {
+  combinations.forEach(({ serverChannel }) => {
+    emitReturn({ serverChannel, req, res, error })
+  })
+}
+
+const emitReturn = function ({ serverChannel, req, res, error }) {
+  serverChannel.emit('return', { req, res, error })
+}
+
+// Start listening to requests
+const serverListen = async function (server) {
+  await promisify(server.listen.bind(server))(HTTP_SERVER_OPTS)
+  const { address, port } = server.address()
+  const origin = `http://${address}:${port}`
+  return origin
+}
+
+const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 
 // Each combination gets a different endpoint using its `id`
 export const getServerUrl = function (origin, id) {

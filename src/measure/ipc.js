@@ -34,10 +34,8 @@ export const sendAndReceive = async function (combination, params) {
 }
 
 export const sendParams = async function (combination, params) {
-  const paramsString = JSON.stringify(params)
-
   try {
-    await promisify(combination.res.end.bind(combination.res))(paramsString)
+    await sendResponse(combination, params)
     return combination
   } catch (error) {
     const errorA = new PluginError(
@@ -47,18 +45,40 @@ export const sendParams = async function (combination, params) {
   }
 }
 
-// Receive the sample's return value by receiving a HTTP long poll request.
-export const receiveReturnValue = async function (combination) {
-  const [{ req, res }] = await once(combination.serverChannel, 'return')
-  const newCombination = { ...combination, res }
+// We use `once(res, 'dummy_event')` to make any `error` event throw
+const sendResponse = async function ({ res }, params) {
+  const paramsString = JSON.stringify(params)
+  await Promise.race([
+    once(res, 'dummy_event'),
+    promisify(res.end.bind(res))(paramsString),
+  ])
+}
 
-  const { returnValue, error } = await getJsonReturn(req)
+// Receive the sample's return value by receiving a HTTP long poll request.
+// This can fail for several reasons:
+//  - Wrong HTTP request URL or body due to bug in runner
+//  - Error/exception in task
+export const receiveReturnValue = async function (combination) {
+  const { req, res, error } = await waitForReturnValue(combination)
+  const newCombination = { ...combination, res }
   const newCombinationA = addCombinationError(newCombination, error)
-  return { newCombination: newCombinationA, returnValue }
+
+  if (combinationHasErrored(newCombinationA)) {
+    return { newCombination: newCombinationA }
+  }
+
+  const { returnValue, error: errorA } = await parseReturnValue(req)
+  const newCombinationB = addCombinationError(newCombinationA, errorA)
+  return { newCombination: newCombinationB, returnValue }
+}
+
+const waitForReturnValue = async function ({ serverChannel }) {
+  const [{ req, res, error }] = await once(serverChannel, 'return')
+  return { req, res, error }
 }
 
 // Parse the request's JSON body
-const getJsonReturn = async function (req) {
+const parseReturnValue = async function (req) {
   try {
     const returnValueString = await getStream(req)
     const returnValue = JSON.parse(returnValueString)
