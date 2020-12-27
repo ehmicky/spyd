@@ -5,6 +5,8 @@ import { isDirectory } from 'path-type'
 
 import { UserError } from '../error/main.js'
 
+import { validateConfig } from './validate.js'
+
 // Retrieve `settings` configuration property, and resolve to an absolute path.
 export const getSettings = async function (settings) {
   if (settings !== undefined) {
@@ -15,6 +17,8 @@ export const getSettings = async function (settings) {
 }
 
 const getUserSettings = async function (settings) {
+  validateConfig({ settings })
+
   const settingsA = resolve(settings)
 
   if (!(await isDirectory(settings))) {

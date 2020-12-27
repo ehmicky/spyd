@@ -11,8 +11,6 @@ import { validateConfig } from './validate.js'
 export const getConfig = async function (action, config = {}) {
   const { settings, ...configFlags } = filterObj(config, isDefined)
 
-  validateConfig({ settings })
-
   const configA = await loadConfig(settings, configFlags)
 
   validateConfig(configA)

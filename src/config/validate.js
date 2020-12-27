@@ -3,8 +3,6 @@ import { validate, multipleValidOptions } from 'jest-validate'
 import { DEFAULT_CONFIG } from './default.js'
 
 // Validate configuration against user typos.
-// We need to do this twice because configuration loading needs to have
-// `settings` type checked, but it also adds new properties.
 export const validateConfig = function (config) {
   validate(config, {
     exampleConfig: EXAMPLE_CONFIG,
