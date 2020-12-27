@@ -4,7 +4,7 @@ import { REPORTERS } from '../report/reporters/main.js'
 import { RUNNERS } from '../run/runners/main.js'
 import { STORES } from '../store/stores/main.js'
 
-import { validateDeepObject } from './validate.js'
+import { checkDeepObject } from './check.js'
 
 // Several configuration properties (`run`, `report`, `progress`, `store`) can
 // be customized with custom modules. This loads them. Each type can specify
@@ -30,7 +30,7 @@ const TYPES = [
 const loadPlugins = async function ({ config, type, builtins, single }) {
   const pluginConfig = config[type]
 
-  validateDeepObject(pluginConfig, type)
+  checkDeepObject(pluginConfig, type)
 
   const plugins = await Promise.all(
     Object.entries(pluginConfig).map(([name, prop]) =>

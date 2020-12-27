@@ -5,12 +5,12 @@ import { normalizeQuiet } from '../progress/config.js'
 import { normalizeDelta } from '../store/delta/config.js'
 import { normalizeSystem } from '../system/normalize.js'
 
-import { loadAllPlugins } from './plugins.js'
 import {
-  validateStringArray,
-  validatePositiveInteger,
-  validateSaveDuration,
-} from './validate.js'
+  checkStringArray,
+  checkPositiveInteger,
+  checkSaveDuration,
+} from './check.js'
+import { loadAllPlugins } from './plugins.js'
 
 // Normalize some configuration properties before assigning default values
 export const preNormalizeConfig = function (config) {
@@ -41,12 +41,12 @@ const normalizeProp = function (config, normalizer) {
 }
 
 const normalizeTasks = function ({ tasks, ...config }) {
-  validateStringArray(tasks, 'tasks')
+  checkStringArray(tasks, 'tasks')
   return { ...config, tasks }
 }
 
 const normalizeInputs = function ({ inputs, ...config }) {
-  validateStringArray(inputs, 'inputs')
+  checkStringArray(inputs, 'inputs')
   return { ...config, inputs }
 }
 
@@ -57,8 +57,8 @@ const normalizeMerge = function ({ merge, ...config }) {
 
 // Duration is specified in seconds by the user but we convert it to nanoseconds
 const normalizeDuration = function ({ duration, save, ...config }) {
-  validatePositiveInteger(duration, 'duration')
-  validateSaveDuration(duration, save)
+  checkPositiveInteger(duration, 'duration')
+  checkSaveDuration(duration, save)
 
   const durationA =
     duration === 0 || duration === 1 ? duration : duration * NANOSECS_TO_SECS
@@ -83,7 +83,7 @@ const normalizeDiff = function ({ diff, ...config }) {
 }
 
 const normalizeLimit = function ({ limit, ...config }) {
-  validateStringArray(limit, 'limit')
+  checkStringArray(limit, 'limit')
   const limits = normalizeLimits(limit)
   return { ...config, limits }
 }
