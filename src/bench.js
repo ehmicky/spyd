@@ -15,13 +15,14 @@ export const performBenchmark = async function (config) {
   )
 
   try {
-    return await getPartialResult({
+    const partialResult = await getPartialResult({
       combinations,
       stopState,
       progressState,
       onProgressError,
       config,
     })
+    return { partialResult, stopped: stopState.stopped }
   } finally {
     await endProgress({ progressId, config, stopState })
   }

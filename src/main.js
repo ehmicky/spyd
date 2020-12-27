@@ -15,8 +15,12 @@ export const bench = async function (config) {
   const configB = await startStore(configA)
 
   try {
-    const partialResult = await performBenchmark(configB)
-    const { mergeId, results } = await addToStore(partialResult, configB)
+    const { partialResult, stopped } = await performBenchmark(configB)
+    const { mergeId, results } = await addToStore({
+      partialResult,
+      config: configB,
+      stopped,
+    })
     const result = await report(mergeId, results, configB)
     return result
   } finally {
