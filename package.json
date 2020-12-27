@@ -33,11 +33,13 @@
     "test": "test"
   },
   "dependencies": {
+    "abort-controller": "^3.0.0",
     "bytes": "^3.1.0",
     "chalk": "^4.1.0",
     "cli-cursor": "^3.1.0",
     "core-js": "^3.8.1",
     "cross-fetch": "^3.0.6",
+    "delay": "^4.4.0",
     "detect-newline": "^3.1.0",
     "dot-prop": "^6.0.1",
     "env-ci": "^5.0.2",
@@ -57,6 +59,7 @@
     "nvexeca": "^6.0.1",
     "omit.js": "^2.0.2",
     "os-name": "^3.1.0",
+    "p-event": "^4.2.0",
     "p-map-series": "^2.1.0",
     "path-exists": "^4.0.0",
     "precise-now": "^0.2.0",
