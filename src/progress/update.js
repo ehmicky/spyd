@@ -5,6 +5,7 @@ import { promisify } from 'util'
 import now from 'precise-now'
 
 import { getDuration } from './duration.js'
+import { getDescription } from './set.js'
 
 const pCursorTo = promisify(cursorTo)
 const pClearScreenDown = promisify(clearScreenDown)
@@ -26,13 +27,15 @@ export const updateProgress = async function ({
 }
 
 const getProgressContent = function ({
-  progressState: { benchmarkEnd, description },
+  progressState,
+  progressState: { benchmarkEnd },
   benchmarkDuration,
   reporters,
 }) {
   const timeLeft = getTimeLeft(benchmarkEnd, benchmarkDuration)
   const percentage = 1 - timeLeft / benchmarkDuration
   const duration = getDuration(timeLeft, benchmarkDuration)
+  const description = getDescription(progressState)
 
   return reporters
     .map((reporter) => reporter.update({ percentage, duration, description }))

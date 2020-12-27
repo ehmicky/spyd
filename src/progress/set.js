@@ -29,6 +29,22 @@ const unsetDescriptionTimeout = function (progressState) {
   delete progressState.descriptionTimeout
 }
 
+// Set the progress reporting description, but with higher priority.
+export const setPriorityDescription = function (
+  progressState,
+  priorityDescription,
+) {
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  progressState.priorityDescription = priorityDescription
+}
+
+export const getDescription = function ({
+  description,
+  priorityDescription = description,
+}) {
+  return priorityDescription
+}
+
 // Set the progress reporting duration and percentage by setting the expected
 // end of the benchmark
 export const setBenchmarkEnd = function (progressState, benchmarkEnd) {

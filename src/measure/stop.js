@@ -3,6 +3,7 @@ import process from 'process'
 import now from 'precise-now'
 
 import { UserError } from '../error/main.js'
+import { setPriorityDescription } from '../progress/set.js'
 
 // Allow users to stop measuring by using signals like SIGINT (CTRL-C).
 // When this happens, combinations still properly end and exit.
@@ -47,15 +48,18 @@ const createHandler = function ({ signal, stopState, progressState, reject }) {
 
 const handleStop = function ({ stopState, progressState, reject }) {
   if (stopState.stopped !== undefined) {
-    abortBenchmark({ stopState, progressState, reject })
+    abortBenchmark(stopState, reject)
     return
   }
 
+  setPriorityDescription(progressState, STOP_DESCRIPTION)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = now()
 }
 
-const abortBenchmark = function ({ stopState, progressState, reject }) {
+const STOP_DESCRIPTION = 'Stopping...'
+
+const abortBenchmark = function (stopState, reject) {
   if (isEarlyAbort(stopState)) {
     return
   }
