@@ -11,6 +11,10 @@ import {
 // Allow users to stop measuring by using signals like SIGINT (CTRL-C).
 // When this happens, combinations still properly end and exit.
 // The user can hit the same signal twice to abort immediately instead.
+// When stopping, we do not save results to allow continuing later because this
+// requires spawning processes again, making them go through cold starts again.
+// This would decrease precision and create difference between results depending
+// on how many times the benchmark was stopped/continued.
 export const addStopHandler = function (progressState) {
   const stopState = {}
   const noopHandler = removeDefaultHandlers()
