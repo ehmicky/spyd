@@ -11,6 +11,9 @@ import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
 // Measure all combinations, until there is no `duration` left.
+// When the logic involving a combination throws, we do not propagate the
+// exception right away. This allows the combination and other combinations
+// to properly stop and exit.
 export const measureCombinations = async function (
   combinations,
   progressState,
