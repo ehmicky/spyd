@@ -4,6 +4,7 @@ import { startServer, stopServer } from '../server/start_stop.js'
 import { measureAllCombinations } from './combination.js'
 import { addInitProps, getFinalProps } from './props.js'
 
+// Measure all combinations and add results to `combinations`
 export const measureCombinations = async function ({
   combinations,
   config: { duration, cwd },
