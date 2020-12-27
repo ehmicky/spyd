@@ -40,10 +40,27 @@ const performLoopSync = function ({
   addEmptyMeasure(emptyMeasures)
 
   const taskArgs = getTaskArgs(taskArg, repeat)
-  performHookSync(beforeEach, taskArgs)
-  // eslint-disable-next-line fp/no-mutating-methods
-  mainMeasures.push(getDurationSync(main, taskArgs))
+
+  try {
+    performHookSync(beforeEach, taskArgs)
+    // eslint-disable-next-line fp/no-mutating-methods
+    mainMeasures.push(getDurationSync(main, taskArgs))
+  } catch (error) {
+    silentAfterEachSync(afterEach, taskArgs)
+    throw error
+  }
+
   performHookSync(afterEach, taskArgs)
+}
+
+// `afterEach` is always performed for cleanup, even when `beforeEach` or `main`
+// throws. Since some `taskArgs` might be in different states, or some might be
+// left in the middle of some intermediate state, the cleanup code itself might
+// fail. So we make that failure silent.
+const silentAfterEachSync = function (afterEach, taskArgs) {
+  try {
+    performHookSync(afterEach, taskArgs)
+  } catch {}
 }
 
 // Task `beforeEach()`/`afterEach()`. Performed outside measurements.
