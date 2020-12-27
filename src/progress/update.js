@@ -61,13 +61,7 @@ const clearProgress = async function () {
 }
 
 // The final screen cleaning prints one less empty row.
-// When stopping a benchmark, we keep the progress duration since it is useful.
-// We also keep the description, to remind the benchmark was stopped.
-export const clearProgressFinal = async function (stopped) {
-  if (stopped) {
-    return
-  }
-
+export const clearProgressFinal = async function () {
   await clearScreen(0)
 }
 

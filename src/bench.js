@@ -24,7 +24,7 @@ export const performBenchmark = async function (config) {
     })
     return { partialResult, stopped: stopState.stopped }
   } finally {
-    await endProgress({ progressId, config, stopState })
+    await endProgress({ progressId, config })
   }
 }
 
