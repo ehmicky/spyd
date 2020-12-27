@@ -67,7 +67,6 @@ export const getCombinations = async function ({
     getInputs(),
     loadRunners(run),
   ])
-  dsds
 
   const combinations = getCombinationsProduct({
     tasks,
