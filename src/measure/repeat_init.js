@@ -7,8 +7,8 @@
 // Therefore we remove the measures taken during `repeatInit`.
 // In case there is not enough duration to finish `repeatInit`, we keep only
 // the last sample measures.
-// We only reset cumulated stats like `measures`, `bufferedMeasures`, `samples`,
-// `loops` and `times`
+// We only reset cumulated stats like `measures`, `bufferedMeasures`,
+// `measureDurations`, `samples`, `loops` and `times`
 // We do not reset stats which only use the last sample when those cumulated
 // stats are reset, such as `stats` and `repeat`.
 export const repeatInitReset = function ({
@@ -16,15 +16,24 @@ export const repeatInitReset = function ({
   measures,
   bufferedMeasures,
   measureCosts,
+  measureDurations,
   samples,
   loops,
   times,
 }) {
   if (!repeatInit || samples === 0) {
-    return [measures, bufferedMeasures, measureCosts, samples, loops, times]
+    return [
+      measures,
+      bufferedMeasures,
+      measureCosts,
+      measureDurations,
+      samples,
+      loops,
+      times,
+    ]
   }
 
-  return [[], [], [], 0, 0, 0]
+  return [[], [], [], [], 0, 0, 0]
 }
 
 // Decides when `repeatInit` has stopped.

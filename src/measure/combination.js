@@ -2,6 +2,10 @@ import { setDescription, setDelayedDescription } from '../progress/set.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { sendAndReceive, sendParams, receiveReturnValue } from './ipc.js'
+import {
+  getMeasureDurationStart,
+  getMeasureDurationLast,
+} from './measure_duration.js'
 import { getNextCombination } from './next.js'
 import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
@@ -83,11 +87,19 @@ const MAX_LOOPS = 1e8
 
 const measureSample = async function (combination) {
   const params = getParams(combination)
+
+  const measureDurationStart = getMeasureDurationStart()
   const { newCombination, returnValue } = await sendAndReceive(
     combination,
     params,
   )
-  const newProps = handleReturnValue(newCombination, returnValue, params)
+  const measureDurationLast = getMeasureDurationLast(measureDurationStart)
+
+  const newProps = handleReturnValue(
+    { ...newCombination, measureDurationLast },
+    returnValue,
+    params,
+  )
   return { ...newCombination, ...newProps }
 }
 
