@@ -10,7 +10,7 @@ import { performLoopsSync } from './sync.js'
 // synchronous functions.
 export const measure = async function (
   { repeat, maxLoops, empty },
-  { main, beforeEach, afterEach, async },
+  { task: { main, beforeEach, afterEach, async }, taskArg },
 ) {
   const { mainMeasures, emptyMeasures } = startMeasuring(empty)
   const performLoopsFunc = async ? performLoopsAsync : performLoopsSync
@@ -18,6 +18,7 @@ export const measure = async function (
     main,
     beforeEach,
     afterEach,
+    taskArg,
     repeat,
     maxLoops,
     mainMeasures,

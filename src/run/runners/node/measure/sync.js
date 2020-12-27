@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { getContexts } from './context.js'
+import { getTaskArgs } from './arg.js'
 import { addEmptyMeasure } from './empty.js'
 
 // Perform measuring loops iteratively
@@ -8,23 +8,20 @@ export const performLoopsSync = function ({
   main,
   beforeEach,
   afterEach,
+  taskArg,
   repeat,
   maxLoops,
   mainMeasures,
   emptyMeasures,
 }) {
-  // eslint-disable-next-line fp/no-let
-  let contexts = getContexts(repeat)
-
   // eslint-disable-next-line fp/no-loops
   while (mainMeasures.length < maxLoops) {
-    // eslint-disable-next-line fp/no-mutation
-    contexts = performLoopSync({
+    performLoopSync({
       main,
       beforeEach,
       afterEach,
+      taskArg,
       repeat,
-      contexts,
       mainMeasures,
       emptyMeasures,
     })
@@ -35,40 +32,39 @@ const performLoopSync = function ({
   main,
   beforeEach,
   afterEach,
+  taskArg,
   repeat,
-  contexts,
   mainMeasures,
   emptyMeasures,
 }) {
   addEmptyMeasure(emptyMeasures)
 
-  const contextsA = getContexts(repeat, contexts)
-  performHookSync(beforeEach, contextsA)
+  const taskArgs = getTaskArgs(taskArg, repeat)
+  performHookSync(beforeEach, taskArgs)
   // eslint-disable-next-line fp/no-mutating-methods
-  mainMeasures.push(getDurationSync(main, contextsA))
-  performHookSync(afterEach, contextsA)
-  return contextsA
+  mainMeasures.push(getDurationSync(main, taskArgs))
+  performHookSync(afterEach, taskArgs)
 }
 
 // Task `beforeEach()`/`afterEach()`. Performed outside measurements.
 // `beforeEach`, `main` and `afterEach` should communicate using context objects
-const performHookSync = function (hook, contexts) {
+const performHookSync = function (hook, taskArgs) {
   if (hook === undefined) {
     return
   }
 
   // eslint-disable-next-line fp/no-loops
-  for (const context of contexts) {
-    hook.call(context)
+  for (const taskArg of taskArgs) {
+    hook(taskArg)
   }
 }
 
-const getDurationSync = function (main, contexts) {
+const getDurationSync = function (main, taskArgs) {
   const start = now()
 
   // eslint-disable-next-line fp/no-loops
-  for (const context of contexts) {
-    main.call(context)
+  for (const taskArg of taskArgs) {
+    main(taskArg)
   }
 
   return now() - start

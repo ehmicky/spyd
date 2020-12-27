@@ -1,6 +1,5 @@
 import { UserError } from '../../../../error/main.js'
 
-import { bindInput } from './inputs.js'
 import { normalizeTask } from './normalize.js'
 import { useRequireConfig } from './require_config.js'
 import { validateFile } from './validate.js'
@@ -17,11 +16,8 @@ export const start = async function ({
   validateFile(task)
 
   const taskA = normalizeTask(task)
-  const { beforeAll, beforeEach, main, afterEach, afterAll, async } = bindInput(
-    taskA,
-    input,
-  )
-  return { beforeAll, beforeEach, main, afterEach, afterAll, async }
+  const taskArg = { input }
+  return { task: taskA, taskArg }
 }
 
 const importFile = function (taskPath) {
