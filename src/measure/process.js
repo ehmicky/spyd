@@ -13,11 +13,11 @@ import { spawnProcesses } from './spawn.js'
 //      - Using hard-coded durations does not work since machines or tasks have
 //        very different speeds
 //      - Using the speed of the machine (by measuring the duration to spawn
-//        process, load tasks, etc.) makes results vary based on non-obvious
+//        process, start tasks, etc.) makes results vary based on non-obvious
 //        factors. It is also hard to callibrate.
 //      - Using the `duration` configuration property does not work when it is
 //        `0`
-//  - This would require loading both the runner and the task multiple times,
+//  - This would require starting both the runner and the task multiple times,
 //    which wastes duration and does not allow runners with long initialization.
 //  - Variance is higher due to task cold starts having a higher share of the
 //    total measures.
@@ -50,8 +50,8 @@ const waitForProcessError = async function (childProcess) {
   }
 }
 
-// Replace "Command" by "Task" and remove the runner process loadParams from the
-// error message
+// Replace "Command" by "Task" and remove the runner process spawnParams from
+// the error message
 const getExecaMessage = function (error) {
   return error.message.replace(EXECA_MESSAGE_REGEXP, 'Task $1')
 }

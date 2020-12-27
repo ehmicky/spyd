@@ -3,26 +3,26 @@ import { argv, exit } from 'process'
 import fetch from 'cross-fetch'
 
 // Handles IPC communication with the main process
-export const performRunner = async function ({ load, measure }) {
+export const performRunner = async function ({ start, measure }) {
   const { serverUrl, spawnParams } = parseSpawnParams()
 
   try {
-    const loadState = await load(spawnParams)
-    await measureSamples({ measure, serverUrl, loadState })
+    const startState = await start(spawnParams)
+    await measureSamples({ measure, serverUrl, startState })
     await successExit(serverUrl)
   } catch (error) {
     await errorExit(error, serverUrl)
   }
 }
 
-// Retrieve the load params sent by the main process
+// Retrieve the spawnParams sent by the main process
 const parseSpawnParams = function () {
   const { serverUrl, ...spawnParams } = JSON.parse(argv[2])
   return { serverUrl, spawnParams }
 }
 
-// Load the task then runs a new sample each time the main process asks for it
-const measureSamples = async function ({ measure, serverUrl, loadState }) {
+// Runs a new sample each time the main process asks for it
+const measureSamples = async function ({ measure, serverUrl, startState }) {
   // eslint-disable-next-line fp/no-let
   let returnValue = {}
 
@@ -37,7 +37,7 @@ const measureSamples = async function ({ measure, serverUrl, loadState }) {
     }
 
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
-    returnValue = await measure(params, loadState)
+    returnValue = await measure(params, startState)
   }
 }
 
@@ -48,8 +48,8 @@ const successExit = async function (serverUrl) {
   exit(0)
 }
 
-// Any error during task loading or measuring is most likely a user error,
-// which is sent back to the main process.
+// Any error while starting or measuring is most likely a user error, which is
+// sent back to the main process.
 const errorExit = async function (error, serverUrl) {
   const errorProp = error instanceof Error ? error.stack : String(error)
 

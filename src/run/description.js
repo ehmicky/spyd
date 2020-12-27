@@ -37,7 +37,7 @@ const getVersion = async function ({ name, value, runnerId }) {
     return `${nameA}${version}`
   } catch (error) {
     throw new PluginError(
-      `Could not load runner '${runnerId}'\n\n${error.shortMessage}`,
+      `Could not start runner '${runnerId}'\n\n${error.shortMessage}`,
     )
   }
 }

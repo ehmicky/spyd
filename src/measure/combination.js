@@ -35,7 +35,8 @@ const startCombination = async function (combination) {
 // We ensure combinations are never measured at the same time
 //  - Otherwise, they would compete for memory and CPU, making results less
 //    precise.
-//  - Load and exit can be run in parallel though since they do not measure
+//  - Start, stop and exit can be run in parallel though since they do not
+//    measure
 // We also break down each combination into samples, i.e. small units of
 // duration when measures are taken:
 //  - This allows combinations to be live reported at the same time, displaying

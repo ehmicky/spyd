@@ -35,10 +35,10 @@ export const getNextCombination = function (
 //  - The `duration` might be adjusted for a specific machine that is faster
 //    than others. This might make slower machines time out.
 //  - This allows `duration: 0` to be used to measure each combination once
-// Combination durations does not include the duration spent loading nor exiting
-// them because:
+// Combination durations does not include the duration spent starting, stopping
+// nor exiting them because:
 //  - Adding imports to a task should not change the task's number of samples
-//  - Adding slow-to-load tasks should not change other tasks number of samples
+//  - Adding slow-to-start tasks should not change other tasks number of samples
 const isRemainingCombination = function (
   { totalDuration, maxDuration, sampleDurationMean, loops },
   combinationMaxLoops,

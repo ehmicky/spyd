@@ -52,9 +52,9 @@ const getJsonReturn = async function (req) {
   }
 }
 
-// When a task throws during load or execution, we propagate the error and fail
-// the benchmark. Tasks that throw are unstable and might yield invalid
-// benchmarks, so we fail hard.
+// When a task throws during any stage, we propagate the error and fail the
+// benchmark. Tasks that throw are unstable and might yield invalid benchmarks,
+// so we fail hard.
 const handleTaskError = function ({ error }) {
   if (error === undefined) {
     return

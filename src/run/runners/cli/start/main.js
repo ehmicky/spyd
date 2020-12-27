@@ -9,9 +9,9 @@ import { getShell } from './shell.js'
 import { validateFile } from './validate.js'
 import { getVariables } from './variables.js'
 
-// Load the tasks file
-export const loadTasksFile = async function (taskPath) {
-  const entries = await getFileContent(taskPath)
+// Import the tasks file
+export const startTask = async function (taskPath) {
+  const entries = await importFile(taskPath)
   validateFile(entries)
 
   const variables = env
@@ -31,12 +31,12 @@ export const loadTasksFile = async function (taskPath) {
   return { combinations, shell }
 }
 
-const getFileContent = async function (taskPath) {
+const importFile = async function (taskPath) {
   try {
     return await loadYamlFile(taskPath)
   } catch (error) {
     throw new UserError(
-      `Could not load tasks file '${taskPath}': ${error.message}`,
+      `Could not import tasks file '${taskPath}': ${error.message}`,
     )
   }
 }

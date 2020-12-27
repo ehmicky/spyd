@@ -18,7 +18,6 @@ export const addInitProps = function (
     measureDurationLast: 0,
     measureDurations: [],
     aggregateCountdown: 0,
-    loaded: false,
     stats: { median: 0 },
     measures: [],
     bufferedMeasures: [],
