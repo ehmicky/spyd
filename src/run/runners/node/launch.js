@@ -5,7 +5,7 @@ const MAIN_PATH = `${__dirname}/main.js`
 
 // Retrieve Node commands. By default it uses the current Node.js.
 // But the `run_node_versions` can be used to spawn several Node.js versions.
-export const commands = async function (runConfig) {
+export const launch = async function (runConfig) {
   const runConfigA = normalizeRunConfig(runConfig)
 
   const versionInfo = await getNodeVersion(runConfigA)

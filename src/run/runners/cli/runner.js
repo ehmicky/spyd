@@ -4,7 +4,7 @@ export const extensions = ['yml', 'yaml']
 export const system = {}
 export const repeat = false
 
-export const commands = function () {
+export const launch = function () {
   return [{ spawn: ['node', MAIN_PATH], versions: [] }]
 }
 

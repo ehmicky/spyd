@@ -4,7 +4,7 @@ import { getCommands } from './command.js'
 import { hasTasks } from './find.js'
 
 // Select the runners for the current tasks files, and retrieve their
-// related commands using `runner.commands()`
+// related commands using `runner.launch()`
 export const loadRunners = async function (runners, taskPaths) {
   const runnersA = runners.filter((runner) => hasTasks(runner, taskPaths))
 
@@ -18,9 +18,9 @@ const loadRunner = async function ({
   repeat: runnerRepeats,
   config: runConfig,
   extensions,
-  commands: retrieveCommands,
+  launch: retrieveCommands,
 }) {
-  const commands = await fireCommands({ runnerId, runConfig, retrieveCommands })
+  const commands = await launchRunner({ runnerId, runConfig, retrieveCommands })
   const commandsA = await getCommands({
     runnerId,
     runnerTitle,
@@ -31,8 +31,8 @@ const loadRunner = async function ({
   return { commands: commandsA, extensions }
 }
 
-// Fire `runner.commands()`
-const fireCommands = async function ({
+// Fire `runner.launch()`
+const launchRunner = async function ({
   runnerId,
   runConfig,
   retrieveCommands,
