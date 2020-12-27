@@ -2,12 +2,12 @@ import { ALL_CONFIG } from '../config/all.js'
 import { SELECT_CONFIG } from '../config/select.js'
 
 export const EXEC_COMMAND = {
-  input: 'exec [<files...>]',
+  input: 'exec',
   description: 'Execute tasks without benchmarking them',
 
   config: { ...ALL_CONFIG, ...SELECT_CONFIG },
 
-  usage: `$0 exec [flags...] [<files...>]
+  usage: `$0 exec [flags...]
 
 Execute each task once without benchmarking them.
 

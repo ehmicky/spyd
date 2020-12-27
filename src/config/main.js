@@ -1,4 +1,4 @@
-import { cwd as getCwd, stderr } from 'process'
+import { stderr } from 'process'
 
 import filterObj from 'filter-obj'
 import isInteractive from 'is-interactive'
@@ -9,16 +9,21 @@ import { getDefaultMergeId } from '../merge/config.js'
 import { addEnvVars } from './env.js'
 import { getConfigFile } from './file.js'
 import { preNormalizeConfig, normalizeConfig } from './normalize.js'
+import { getSettings } from './settings.js'
 
 // Retrieve configuration
 // `cwd` and `config` cannot be specified in the configuration file nor in
 // environment variables
 export const getConfig = async function (action, config = {}) {
-  const { config: configPath, cwd, ...configA } = filterObj(config, isDefined)
+  const { settings, config: configPath, ...configA } = filterObj(
+    config,
+    isDefined,
+  )
 
-  validateConfig({ config: configPath, cwd })
+  validateConfig({ settings, config: configPath })
 
-  const configB = await getConfigFile({ configPath, cwd, config: configA })
+  const settingsA = await getSettings(settings)
+  const configB = await getConfigFile({ configPath, config: configA })
   const configC = addEnvVars(configB)
 
   validateConfig(configC)
@@ -35,7 +40,7 @@ const isDefined = function (key, value) {
 }
 
 // We need to do this twice because configuration loading needs to have
-// `cwd` and `config` type checked, but it also adds new properties.
+// `settings` and `config` type checked, but it also adds new properties.
 const validateConfig = function (config) {
   validate(config, {
     exampleConfig: EXAMPLE_CONFIG,
@@ -62,7 +67,6 @@ const getDefaultDuration = function () {
 
 const DEFAULT_CONFIG = {
   output: '-',
-  cwd: getCwd(),
   delta: true,
   diff: true,
   files: ['../benchmark/*.task.*'],
@@ -89,6 +93,7 @@ const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
+  settings: './benchmark',
   config: 'spyd.yml',
   context: true,
   delta: VALID_DELTA,

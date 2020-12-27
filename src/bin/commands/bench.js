@@ -5,7 +5,7 @@ import { SELECT_CONFIG } from '../config/select.js'
 import { STORE_CONFIG } from '../config/store.js'
 
 export const BENCH_COMMAND = {
-  input: ['bench [<files...>]', '* [<files...>'],
+  input: ['bench', '*'],
   description: 'Measure tasks',
 
   config: {
@@ -16,19 +16,16 @@ export const BENCH_COMMAND = {
     ...BENCH_CONFIG,
   },
 
-  usage: `$0 [flags...] [<files...>]
+  usage: `$0 [flags...]
 
 Measure tasks.
 
-FILE can be a globbing pattern.
-It defaults to "./benchmarks.*" or "./benchmarks/index.*".
+Task files must be inside the settings directory.
+The settings directory defaults to a "benchmark" directory in the current
+directory or any parent directory.
+Task filenames must end with ".task.*".
 
-Each FILE must export the tasks to measure.
-
-Several FILEs can be specified at once.
-Each set of 'inputs' is specific to the FILE which declared it.
-
-The format of the FILE is runner-specific.`,
+The file extension and contents of the task file depends on the runner.`,
 
   examples: [
     ['$0', 'Measure tasks'],
