@@ -8,7 +8,6 @@ import { getDefaultMergeId } from '../merge/config.js'
 
 import { loadConfig } from './load.js'
 import { preNormalizeConfig, normalizeConfig } from './normalize.js'
-import { getSettings } from './settings.js'
 
 // Retrieve configuration
 // `cwd` and `config` cannot be specified in the configuration file nor in
@@ -18,16 +17,15 @@ export const getConfig = async function (action, config = {}) {
 
   validateConfig({ settings })
 
-  const settingsA = await getSettings(settings)
-  const configB = await loadConfig(settingsA, configFlags)
+  const configA = await loadConfig(settings, configFlags)
 
-  validateConfig(configB)
+  validateConfig(configA)
 
-  const configC = preNormalizeConfig(configB)
-  const configD = addDefaultConfig(configC, action)
+  const configB = preNormalizeConfig(configA)
+  const configC = addDefaultConfig(configB, action)
 
-  const configE = await normalizeConfig(configD)
-  return configE
+  const configD = await normalizeConfig(configC)
+  return configD
 }
 
 const isDefined = function (key, value) {
