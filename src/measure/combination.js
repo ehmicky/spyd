@@ -54,7 +54,6 @@ const measureSamples = async function (combinations, progressState) {
 
   // eslint-disable-next-line fp/no-loops
   while (true) {
-    const sampleStart = getSampleStart()
     const combination = getNextCombination(
       combinations,
       progressState,
@@ -68,13 +67,8 @@ const measureSamples = async function (combinations, progressState) {
 
     // eslint-disable-next-line no-await-in-loop
     const newCombination = await measureSample(combination)
-    const newCombinationA = addSampleDuration(newCombination, sampleStart)
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    combinations = updateCombinations(
-      combinations,
-      newCombinationA,
-      combination,
-    )
+    combinations = updateCombinations(combinations, newCombination, combination)
   }
 
   return combinations
@@ -91,6 +85,7 @@ const getCombinationMaxLoops = function (combinations) {
 const MAX_LOOPS = 1e8
 
 const measureSample = async function (combination) {
+  const sampleStart = getSampleStart()
   const params = getParams(combination)
 
   const measureDurationStart = getMeasureDurationStart()
@@ -105,7 +100,9 @@ const measureSample = async function (combination) {
     returnValue,
     params,
   )
-  return { ...newCombination, ...newProps }
+  const newCombinationA = { ...newCombination, ...newProps }
+  const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
+  return newCombinationB
 }
 
 const updateCombinations = function (
