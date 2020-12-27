@@ -1,35 +1,62 @@
-import { resolve } from 'path'
-import { cwd as getCwd } from 'process'
-
+import envPaths from 'env-paths'
 import findUp from 'find-up'
+import locatePath from 'locate-path'
 
 import { UserError } from '../error/main.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
-// Retrieve the content of the configuration file (if any)
-export const loadConfig = async function ({ settings, configPath, config }) {
-  const configPathA = await findConfigPath(configPath, cwd)
-
-  if (configPathA === undefined) {
-    return config
+// Load the configuration, shallow merged in priority order:
+//  - any CLI or programmatic flags
+//  - any `SPYD_*` environment variables
+//  - `spyd.yml` in the settings directory or any parent directory
+//  - `spyd.yml` in the current directory or any parent directory
+//  - `spyd.yml` in the global configuration directory which is usually:
+//      - Linux: /home/{user}/.config/spyd/spyd.yml
+//      - macOS: /Users/{user}/Library/Preferences/spyd/spyd.yml
+//      - Windows: C:\Users\{user}\AppData\Roaming\spyd\Config\spyd.yml
+export const loadConfig = async function (settings, configFlags) {
+  const [settingsConfig, cwdConfig, globalConfig] = await Promise.all(
+    [
+      getSettingsConfigPath(settings),
+      getCwdConfigPath(),
+      getGlobalConfigPath(),
+    ].map(getConfigContent),
+  )
+  return {
+    ...globalConfig,
+    ...cwdConfig,
+    ...settingsConfig,
+    ...configFlags,
   }
-
-  const configContent = await getConfigContent(configPathA)
-  return { ...configContent, ...config }
 }
 
-const findConfigPath = function (configPath, cwd = getCwd()) {
-  if (configPath !== undefined) {
-    return resolve(cwd, configPath)
-  }
+const getSettingsConfigPath = async function (settings) {
+  return await findUp(CONFIG_FILENAMES, { cwd: settings })
+}
 
-  return findUp(DEFAULT_CONFIG, { cwd })
+const getCwdConfigPath = async function () {
+  return await findUp(CONFIG_FILENAMES)
+}
+
+const getGlobalConfigPath = async function () {
+  const { config: globalConfigDir } = envPaths(GLOBAL_CONFIG_NAME)
+  const globalConfigPaths = CONFIG_FILENAMES.map(
+    (filename) => `${globalConfigDir}/${filename}`,
+  )
+  return await locatePath(globalConfigPaths)
 }
 
 // spyd.yaml is supported but undocumented. spyd.yml is preferred.
-const DEFAULT_CONFIG = ['spyd.yml', 'spyd.yaml']
+const CONFIG_FILENAMES = ['spyd.yml', 'spyd.yaml']
+const GLOBAL_CONFIG_NAME = 'spyd'
 
-const getConfigContent = async function (configPath) {
+const getConfigContent = async function (configPathPromise) {
+  const configPath = await configPathPromise
+
+  if (configPath === undefined) {
+    return {}
+  }
+
   try {
     return await loadYamlFile(configPath)
   } catch (error) {

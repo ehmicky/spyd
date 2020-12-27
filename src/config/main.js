@@ -15,19 +15,12 @@ import { getSettings } from './settings.js'
 // `cwd` and `config` cannot be specified in the configuration file nor in
 // environment variables
 export const getConfig = async function (action, config = {}) {
-  const { settings, config: configPath, ...configA } = filterObj(
-    config,
-    isDefined,
-  )
+  const { settings, ...configFlags } = filterObj(config, isDefined)
 
-  validateConfig({ settings, config: configPath })
+  validateConfig({ settings })
 
   const settingsA = await getSettings(settings)
-  const configB = await loadConfig({
-    settings: settingsA,
-    configPath,
-    config: configA,
-  })
+  const configB = await loadConfig(settingsA, configFlags)
   const configC = addEnvVars(configB)
 
   validateConfig(configC)
@@ -44,7 +37,7 @@ const isDefined = function (key, value) {
 }
 
 // We need to do this twice because configuration loading needs to have
-// `settings` and `config` type checked, but it also adds new properties.
+// `settings` type checked, but it also adds new properties.
 const validateConfig = function (config) {
   validate(config, {
     exampleConfig: EXAMPLE_CONFIG,
@@ -98,7 +91,6 @@ const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   settings: './benchmark',
-  config: 'spyd.yml',
   context: true,
   delta: VALID_DELTA,
   diff: VALID_DELTA,
