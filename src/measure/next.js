@@ -5,6 +5,8 @@ import { combinationHasErrored } from '../error/combination.js'
 import { setBenchmarkEnd } from '../progress/set.js'
 import { getSum } from '../stats/sum.js'
 
+import { getSampleStart } from './duration.js'
+
 // Retrieve the next combination which should be measured.
 // We do it based on which combination are been measured the least.
 // At the beginning, we pick them randomly, because it looks nicer.
@@ -14,6 +16,7 @@ export const getNextCombination = function ({
   stopState,
   combinationMaxLoops,
 }) {
+  const sampleStart = getSampleStart()
   const remainingCombinations = getRemainingCombinations(
     combinations,
     combinationMaxLoops,
@@ -27,6 +30,8 @@ export const getNextCombination = function ({
 
   const minCombinations = getMinCombinations(remainingCombinations)
   const combination = randomItem(minCombinations)
+  // eslint-disable-next-line fp/no-mutation
+  combination.sampleStart = sampleStart
   return combination
 }
 

@@ -9,8 +9,8 @@ export const getSampleStart = function () {
   return now()
 }
 
-export const addSampleDuration = function (combination, sampleStart) {
-  const sampleDurationLast = now() - sampleStart
+export const addSampleDuration = function (combination) {
+  const sampleDurationLast = now() - combination.sampleStart
   const totalDuration = combination.totalDuration + sampleDurationLast
   const allSamples = combination.allSamples + 1
   const sampleDurationMean = totalDuration / allSamples
