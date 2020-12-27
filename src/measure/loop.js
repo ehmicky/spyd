@@ -14,8 +14,8 @@ import { getNextCombination } from './next.js'
 //  - This allows combinations to be live reported at the same time, displaying
 //    them competing with each other
 //  - This allows some parameters to be callibrated (e.g. `repeat`)
-//  - This helps during manual interruptions (CTRL-C) by allowing samples to
-//    end so tasks can be cleaned up
+//  - This helps when stopping benchmarks by allowing samples to end so tasks
+//    can be cleaned up
 //  - This provides with fast fail if one of the combinations fails
 export const performMeasureLoop = async function (combinations, progressState) {
   const combinationMaxLoops = getCombinationMaxLoops(combinations)
