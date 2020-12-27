@@ -4,8 +4,7 @@ import { noteColor } from '../../report/utils/colors.js'
 const update = function ({ percentage, duration, description }) {
   const percentageStr = serializePercentage(percentage)
   const content = `  ${duration}  ${noteColor(percentageStr)}`
-  // TODO: use newline instead
-  return description === undefined ? content : `${content}  ${description}`
+  return description === undefined ? content : `${content}\n\n  ${description}`
 }
 
 const serializePercentage = function (percentage) {
