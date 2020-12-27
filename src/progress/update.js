@@ -1,20 +1,33 @@
+import { stderr } from 'process'
+import { cursorTo, clearLine } from 'readline'
+import { promisify } from 'util'
+
 import now from 'precise-now'
 
 import { getDuration } from './duration.js'
 
-// Update progress at regular interval
-export const startUpdate = function (reporters, benchmarkDuration) {
-  const progressState = {}
-  const progressId = setInterval(() => {
-    updateProgress({ progressState, benchmarkDuration, reporters })
-  }, UPDATE_FREQUENCY)
-  return { progressState, progressId }
+const pCursorTo = promisify(cursorTo)
+const pClearLine = promisify(clearLine)
+
+// Call each `reporter.update()`
+export const updateProgress = async function ({
+  progressState,
+  benchmarkDuration,
+  reporters,
+}) {
+  try {
+    const progressContent = getProgressContent({
+      progressState,
+      benchmarkDuration,
+      reporters,
+    })
+    await clearProgress()
+    await promisify(stderr.write.bind(stderr))(progressContent)
+    // TODO: better error handling
+  } catch {}
 }
 
-// How often (in milliseconds) to update progress
-const UPDATE_FREQUENCY = 1e2
-
-const updateProgress = async function ({
+const getProgressContent = function ({
   progressState: { benchmarkEnd, description },
   benchmarkDuration,
   reporters,
@@ -23,12 +36,9 @@ const updateProgress = async function ({
   const percentage = 1 - timeLeft / benchmarkDuration
   const duration = getDuration(timeLeft, benchmarkDuration)
 
-  // Call each `reporter.update()`
-  await Promise.all(
-    reporters.map((reporter) =>
-      reporter.update({ percentage, duration, description }),
-    ),
-  )
+  return reporters
+    .map((reporter) => reporter.update({ percentage, duration, description }))
+    .join(PROGRESS_SEPARATOR)
 }
 
 const getTimeLeft = function (benchmarkEnd, benchmarkDuration) {
@@ -40,6 +50,9 @@ const getTimeLeft = function (benchmarkEnd, benchmarkDuration) {
   return Math.max(benchmarkEnd - now(), 0)
 }
 
-export const endUpdate = function (progressId) {
-  clearInterval(progressId)
+const PROGRESS_SEPARATOR = '\n\n'
+
+export const clearProgress = async function () {
+  await pCursorTo(stderr, 0)
+  await pClearLine(stderr, 0)
 }

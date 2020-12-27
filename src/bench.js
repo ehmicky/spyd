@@ -1,14 +1,13 @@
 import { getCombinations } from './combination/main.js'
 import { addResultInfo } from './info.js'
 import { measureCombinations } from './measure/main.js'
-import { endProgress } from './progress/end.js'
-import { startProgress } from './progress/start.js'
+import { startProgress, endProgress } from './progress/start_end.js'
 
 // Perform a new benchmark
 export const performBenchmark = async function (config) {
   const combinations = await getCombinations(config)
 
-  const { progressState, progressInfo } = await startProgress(
+  const { progressState, progressId } = await startProgress(
     combinations,
     config,
   )
@@ -16,7 +15,7 @@ export const performBenchmark = async function (config) {
   try {
     return await getPartialResult({ combinations, progressState, config })
   } finally {
-    await endProgress(progressInfo)
+    await endProgress(progressId)
   }
 }
 

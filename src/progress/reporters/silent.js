@@ -1,5 +1,6 @@
-// eslint-disable-next-line no-empty-function
-const noop = function () {}
-
 // Silent reporter
-export const silent = { start: noop, update: noop, end: noop }
+const update = function () {
+  return ''
+}
+
+export const silent = { update }
