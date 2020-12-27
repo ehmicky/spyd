@@ -41,6 +41,8 @@ const measureSamples = async function ({ benchmark, serverUrl, loadState }) {
   }
 }
 
+// We use `process.exit()` instead of `process.exitCode` because if some tasks
+// have some pending macrotasks, we need to abort them not wait for them.
 const successExit = async function (serverUrl) {
   await sendReturnValue({}, serverUrl)
   exit(0)
