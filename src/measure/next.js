@@ -26,8 +26,8 @@ export const getNextCombination = function ({
   }
 
   const minCombinations = getMinCombinations(remainingCombinations)
-  const combinationA = randomItem(minCombinations)
-  return combinationA
+  const combination = randomItem(minCombinations)
+  return combination
 }
 
 // Filters out any combinations with no `duration` left

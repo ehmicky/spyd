@@ -1,6 +1,7 @@
 import { failOnProcessExit } from '../error/combination.js'
 import { measureSample } from '../sample/main.js'
 
+import { getSampleStart, addSampleDuration } from './duration.js'
 import { getNextCombination } from './next.js'
 
 // Run samples to measure each combination.
@@ -26,6 +27,7 @@ export const performMeasureLoop = async function ({
 
   // eslint-disable-next-line fp/no-loops
   while (true) {
+    const sampleStart = getSampleStart()
     const combination = getNextCombination({
       combinations,
       progressState,
@@ -40,8 +42,13 @@ export const performMeasureLoop = async function ({
 
     // eslint-disable-next-line no-await-in-loop
     const newCombination = await eMeasureSample(combination)
+    const newCombinationA = addSampleDuration(newCombination, sampleStart)
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    combinations = updateCombinations(combinations, newCombination, combination)
+    combinations = updateCombinations(
+      combinations,
+      newCombinationA,
+      combination,
+    )
   }
 
   return combinations

@@ -1,7 +1,6 @@
 import { combinationHasErrored } from '../error/combination.js'
 import { sendAndReceive } from '../process/send.js'
 
-import { getSampleStart, addSampleDuration } from './duration.js'
 import {
   getMeasureDurationStart,
   getMeasureDurationLast,
@@ -11,7 +10,6 @@ import { handleReturnValue } from './return.js'
 
 // Measure a new sample for a given combination
 export const measureSample = async function (combination) {
-  const sampleStart = getSampleStart()
   const params = getParams(combination)
 
   const {
@@ -29,9 +27,7 @@ export const measureSample = async function (combination) {
     returnValue,
     params,
   )
-  const newCombinationA = { ...newCombination, ...newProps }
-  const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
-  return newCombinationB
+  return { ...newCombination, ...newProps }
 }
 
 const measureNewSample = async function (combination, params) {
