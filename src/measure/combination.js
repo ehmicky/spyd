@@ -185,8 +185,14 @@ const exitCombination = async function (combination) {
     return combination
   }
 
-  await Promise.all([combination.childProcess, sendParams(combination, {})])
-  return combination
+  const newCombination = await sendParams(combination, {})
+
+  if (combinationHasErrored(newCombination)) {
+    return newCombination
+  }
+
+  await combination.childProcess
+  return newCombination
 }
 
 const processHasExited = function (childProcess) {

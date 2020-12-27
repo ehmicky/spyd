@@ -6,6 +6,8 @@ import getStream from 'get-stream'
 
 import { PluginError, UserError } from '../error/main.js'
 
+import { addCombinationError, combinationHasErrored } from './error.js'
+
 // Send the next sample's params by responding to the HTTP long poll request.
 // Runners use long polling:
 //  - They send their return value with a new HTTP request
@@ -18,18 +20,31 @@ import { PluginError, UserError } from '../error/main.js'
 //   - The server sends some params to indicate how long to run the sample
 //   - The runner sends the return value
 // We are setting up return value listening before sending params to prevent any
-// race condition
+// race condition.
 export const sendAndReceive = async function (combination, params) {
-  const [{ newCombination, returnValue }] = await Promise.all([
-    receiveReturnValue(combination),
-    sendParams(combination, params),
-  ])
-  return { newCombination, returnValue }
+  const receiveReturnPromise = receiveReturnValue(combination)
+  const newCombination = await sendParams(combination, params)
+
+  if (combinationHasErrored(newCombination)) {
+    receiveReturnPromise.catch(noop)
+    return { newCombination }
+  }
+
+  return await receiveReturnPromise
 }
 
-export const sendParams = async function ({ res }, params) {
+export const sendParams = async function (combination, params) {
   const paramsString = JSON.stringify(params)
-  await promisify(res.end.bind(res))(paramsString)
+
+  try {
+    await promisify(combination.res.end.bind(combination.res))(paramsString)
+    return combination
+  } catch (error) {
+    const errorA = new PluginError(
+      `Could not send HTTP response: ${error.stack}`,
+    )
+    return addCombinationError(combination, errorA)
+  }
 }
 
 // Receive the sample's return value by receiving a HTTP long poll request.
@@ -38,7 +53,7 @@ export const receiveReturnValue = async function (combination) {
   const newCombination = { ...combination, res }
 
   const { returnValue, error } = await getJsonReturn(req)
-  const newCombinationA = { ...newCombination, error }
+  const newCombinationA = addCombinationError(newCombination, error)
   return { newCombination: newCombinationA, returnValue }
 }
 
@@ -65,3 +80,6 @@ const getTaskError = function ({ error }) {
 
   return new UserError(error)
 }
+
+// eslint-disable-next-line no-empty-function
+const noop = function () {}
