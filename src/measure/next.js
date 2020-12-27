@@ -1,6 +1,7 @@
 import randomItem from 'random-item'
 
 import { updateBenchmarkEnd } from './duration.js'
+import { combinationHasErrored } from './error.js'
 
 // Retrieve the next combination which should be measured.
 // We do it based on which combination are been measured the least.
@@ -10,10 +11,10 @@ export const getNextCombination = function (
   progressState,
   combinationMaxLoops,
 ) {
-  const remainingCombinations = combinations.filter((combination) =>
-    isRemainingCombination(combination, combinationMaxLoops),
+  const remainingCombinations = getRemainingCombinations(
+    combinations,
+    combinationMaxLoops,
   )
-
   updateBenchmarkEnd(remainingCombinations, progressState)
 
   if (remainingCombinations.length === 0) {
@@ -39,6 +40,22 @@ export const getNextCombination = function (
 // nor exiting them because:
 //  - Adding imports to a task should not change the task's number of samples
 //  - Adding slow-to-start tasks should not change other tasks number of samples
+const getRemainingCombinations = function (combinations, combinationMaxLoops) {
+  if (shouldStopMeasuring(combinations)) {
+    return []
+  }
+
+  return combinations.filter((combination) =>
+    isRemainingCombination(combination, combinationMaxLoops),
+  )
+}
+
+// When any combination errors, we stop measuring. We still perform each
+// combination stops and exits, for cleanup.
+const shouldStopMeasuring = function (combinations) {
+  return combinations.some(combinationHasErrored)
+}
+
 const isRemainingCombination = function (
   { totalDuration, maxDuration, sampleDurationMean, loops },
   combinationMaxLoops,

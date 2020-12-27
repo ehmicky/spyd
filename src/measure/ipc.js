@@ -36,9 +36,10 @@ export const sendParams = async function ({ res }, params) {
 export const receiveReturnValue = async function (combination) {
   const [{ req, res }] = await once(combination.serverChannel, 'return')
   const newCombination = { ...combination, res }
-  const returnValue = await getJsonReturn(req)
-  handleTaskError(returnValue)
-  return { newCombination, returnValue }
+
+  const { returnValue, error } = await getJsonReturn(req)
+  const newCombinationA = { ...newCombination, error }
+  return { newCombination: newCombinationA, returnValue }
 }
 
 // Parse the request's JSON body
@@ -46,19 +47,21 @@ const getJsonReturn = async function (req) {
   try {
     const returnValueString = await getStream(req)
     const returnValue = JSON.parse(returnValueString)
-    return returnValue
+    const error = getTaskError(returnValue)
+    return { returnValue, error }
   } catch (error) {
-    throw new PluginError(`Invalid JSON return value: ${error.stack}`)
+    const errorA = new PluginError(`Invalid JSON return value: ${error.stack}`)
+    return { error: errorA }
   }
 }
 
 // When a task throws during any stage, we propagate the error and fail the
 // benchmark. Tasks that throw are unstable and might yield invalid benchmarks,
 // so we fail hard.
-const handleTaskError = function ({ error }) {
+const getTaskError = function ({ error }) {
   if (error === undefined) {
     return
   }
 
-  throw new UserError(error)
+  return new UserError(error)
 }

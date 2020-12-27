@@ -15,8 +15,7 @@ import { spawnProcesses } from './spawn.js'
 //      - Using the speed of the machine (by measuring the duration to spawn
 //        process, start tasks, etc.) makes results vary based on non-obvious
 //        factors. It is also hard to callibrate.
-//      - Using the `duration` configuration property does not work when it is
-//        `0`
+//      - Using the `duration` configuration property does not work when it is 0
 //  - This would require starting both the runner and the task multiple times,
 //    which wastes duration and does not allow runners with long initialization.
 //  - Variance is higher due to task cold starts having a higher share of the
@@ -57,15 +56,6 @@ const getExecaMessage = function (error) {
 }
 
 const EXECA_MESSAGE_REGEXP = /^Command ([^:]+): .*/u
-
-const addTaskPrefix = function (error, taskId, inputId) {
-  const taskPrefix =
-    inputId === ''
-      ? `In task '${taskId}'`
-      : `In task '${taskId}' (input '${inputId}')`
-  // eslint-disable-next-line no-param-reassign
-  error.message = `${taskPrefix}:\n${error.message}`
-}
 
 // Terminate each runner's process at the end of the benchmark.
 // We ensure that processes are not in the middle of measuring a task, since

@@ -1,6 +1,7 @@
 import { setDescription, setDelayedDescription } from '../progress/set.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
+import { handleCombinationError, combinationHasErrored } from './error.js'
 import { sendAndReceive, sendParams, receiveReturnValue } from './ipc.js'
 import {
   getMeasureDurationStart,
@@ -11,9 +12,6 @@ import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
 // Measure all combinations, until there is no `duration` left.
-// When the logic involving a combination throws, we do not propagate the
-// exception right away. This allows the combination and other combinations
-// to properly stop and exit.
 export const measureCombinations = async function (
   combinations,
   progressState,
@@ -22,6 +20,7 @@ export const measureCombinations = async function (
   const combinationsB = await measureSamples(combinationsA, progressState)
   const combinationsC = await stopCombinations(combinationsB, progressState)
   const combinationsD = await exitCombinations(combinationsC)
+  handleCombinationError(combinationsD)
   return combinationsD
 }
 
@@ -88,12 +87,15 @@ const measureSample = async function (combination) {
   const sampleStart = getSampleStart()
   const params = getParams(combination)
 
-  const measureDurationStart = getMeasureDurationStart()
-  const { newCombination, returnValue } = await sendAndReceive(
-    combination,
-    params,
-  )
-  const measureDurationLast = getMeasureDurationLast(measureDurationStart)
+  const {
+    newCombination,
+    returnValue,
+    measureDurationLast,
+  } = await measureNewSample(combination, params)
+
+  if (combinationHasErrored(newCombination)) {
+    return newCombination
+  }
 
   const newProps = handleReturnValue(
     { ...newCombination, measureDurationLast },
@@ -103,6 +105,16 @@ const measureSample = async function (combination) {
   const newCombinationA = { ...newCombination, ...newProps }
   const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
   return newCombinationB
+}
+
+const measureNewSample = async function (combination, params) {
+  const measureDurationStart = getMeasureDurationStart()
+  const { newCombination, returnValue } = await sendAndReceive(
+    combination,
+    params,
+  )
+  const measureDurationLast = getMeasureDurationLast(measureDurationStart)
+  return { newCombination, returnValue, measureDurationLast }
 }
 
 const updateCombinations = function (
@@ -131,6 +143,10 @@ const stopCombinations = async function (combinations, progressState) {
 const STOP_DESCRIPTION = 'Finishing...'
 
 const stopCombination = async function (combination) {
+  if (combinationHasErrored(combination)) {
+    return combination
+  }
+
   const { newCombination } = await sendAndReceive(combination, {})
   return newCombination
 }
