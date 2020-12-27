@@ -1,5 +1,3 @@
-import { UserError } from '../error/main.js'
-
 import { measureCombinations } from './combination.js'
 import { spawnProcesses } from './spawn.js'
 
@@ -35,31 +33,14 @@ export const runProcesses = async function ({
       onOrchestratorError,
     ])
   } finally {
-    combinationsA.forEach(stopProcess)
+    combinationsA.forEach(terminateProcess)
   }
 }
-
-// This is only done for exception handling
-const waitForProcessError = async function (childProcess) {
-  try {
-    await childProcess
-  } catch (error) {
-    const execaMessage = getExecaMessage(error)
-    throw new UserError(execaMessage)
-  }
-}
-
-// Replace "Command" by "Task" and remove the runner process spawnParams from
-// the error message
-const getExecaMessage = function (error) {
-  return error.message.replace(EXECA_MESSAGE_REGEXP, 'Task $1')
-}
-
-const EXECA_MESSAGE_REGEXP = /^Command ([^:]+): .*/u
 
 // Terminate each runner's process at the end of the benchmark.
-// We ensure that processes are not in the middle of measuring a task, since
-// some tasks might allocate resources that should be cleaned up.
-const stopProcess = function ({ childProcess }) {
-  childProcess.kill()
+// In general, processes should already have exited thanks to error handling
+// and cleanup logic. However, we terminate those as a safety precaution, for
+// example if there is a bug.
+const terminateProcess = function ({ childProcess }) {
+  childProcess.kill('SIGKILL')
 }

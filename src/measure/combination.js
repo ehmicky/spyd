@@ -1,7 +1,11 @@
 import { setDescription, setDelayedDescription } from '../progress/set.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
-import { handleCombinationError, combinationHasErrored } from './error.js'
+import {
+  handleCombinationError,
+  combinationHasErrored,
+  failOnProcessExit,
+} from './error.js'
 import { sendAndReceive, sendParams, receiveReturnValue } from './ipc.js'
 import {
   getMeasureDurationStart,
@@ -25,9 +29,16 @@ export const measureCombinations = async function (
 }
 
 const startCombinations = async function (combinations, progressState) {
-  const combinationsA = await Promise.all(combinations.map(startCombination))
+  const combinationsA = await Promise.all(combinations.map(eStartCombination))
   setDescription(progressState, '')
   return combinationsA
+}
+
+const eStartCombination = async function (combination) {
+  return await Promise.race([
+    failOnProcessExit(combination),
+    startCombination(combination),
+  ])
 }
 
 const startCombination = async function (combination) {
@@ -65,7 +76,7 @@ const measureSamples = async function (combinations, progressState) {
     }
 
     // eslint-disable-next-line no-await-in-loop
-    const newCombination = await measureSample(combination)
+    const newCombination = await eMeasureSample(combination)
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
     combinations = updateCombinations(combinations, newCombination, combination)
   }
@@ -82,6 +93,13 @@ const getCombinationMaxLoops = function (combinations) {
 // The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
 // little more than 1e8 floats.
 const MAX_LOOPS = 1e8
+
+const eMeasureSample = async function (combination) {
+  return await Promise.race([
+    failOnProcessExit(combination),
+    measureSample(combination),
+  ])
+}
 
 const measureSample = async function (combination) {
   const sampleStart = getSampleStart()
@@ -137,10 +155,17 @@ const updateCombination = function (
 
 const stopCombinations = async function (combinations, progressState) {
   setDelayedDescription(progressState, STOP_DESCRIPTION)
-  return await Promise.all(combinations.map(stopCombination))
+  return await Promise.all(combinations.map(eStopCombination))
 }
 
 const STOP_DESCRIPTION = 'Finishing...'
+
+const eStopCombination = async function (combination) {
+  return await Promise.race([
+    failOnProcessExit(combination),
+    stopCombination(combination),
+  ])
+}
 
 const stopCombination = async function (combination) {
   if (combinationHasErrored(combination)) {
@@ -156,6 +181,14 @@ const exitCombinations = async function (combinations) {
 }
 
 const exitCombination = async function (combination) {
-  await sendParams(combination, {})
+  if (processHasExited(combination.childProcess)) {
+    return combination
+  }
+
+  await Promise.all([combination.childProcess, sendParams(combination, {})])
   return combination
+}
+
+const processHasExited = function (childProcess) {
+  return childProcess.exitCode !== null || childProcess.signalCode !== null
 }

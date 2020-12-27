@@ -10,6 +10,12 @@ export const spawnProcesses = function ({ combinations, origin, cwd }) {
   )
 }
 
+// We use `preferLocal: true` so that locally installed binaries can be used.
+// We use `reject: false` to handle process exit with our own logic, which
+// performs proper cleanup of all combinations.
+// We use `cleanup: true` to ensure processes are cleaned up in case this
+// library is called programmatically and the caller terminates the parent
+// process.
 export const spawnProcess = function ({
   combination,
   combination: {
@@ -36,6 +42,8 @@ export const spawnProcess = function ({
     stdio: 'ignore',
     cwd,
     preferLocal: true,
+    reject: false,
+    cleanup: true,
   })
   return { ...combination, childProcess }
 }
