@@ -1,3 +1,5 @@
+import { setDescription } from '../progress/set.js'
+
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { sendAndReceive, sendParams, receiveReturnValue } from './ipc.js'
 import { getNextCombination } from './next.js'
@@ -9,10 +11,16 @@ export const measureCombinations = async function (
   combinations,
   progressState,
 ) {
-  const combinationsA = await Promise.all(combinations.map(startCombination))
+  const combinationsA = await startCombinations(combinations, progressState)
   const combinationsB = await measureSamples(combinationsA, progressState)
-  const combinationsC = await Promise.all(combinationsB.map(stopCombination))
+  const combinationsC = await stopCombinations(combinationsB)
   return combinationsC
+}
+
+const startCombinations = async function (combinations, progressState) {
+  const combinationsA = await Promise.all(combinations.map(startCombination))
+  setDescription(progressState, '')
+  return combinationsA
 }
 
 const startCombination = async function (combination) {
@@ -83,12 +91,6 @@ const measureSample = async function (combination) {
   return { ...newCombination, ...newProps }
 }
 
-const stopCombination = async function (combination) {
-  const { newCombination } = await sendAndReceive(combination, {})
-  await sendParams(newCombination, {})
-  return newCombination
-}
-
 const updateCombinations = function (
   combinations,
   newCombination,
@@ -105,4 +107,14 @@ const updateCombination = function (
   oldCombination,
 ) {
   return combination === oldCombination ? newCombination : combination
+}
+
+const stopCombinations = async function (combinations) {
+  return await Promise.all(combinations.map(stopCombination))
+}
+
+const stopCombination = async function (combination) {
+  const { newCombination } = await sendAndReceive(combination, {})
+  await sendParams(newCombination, {})
+  return newCombination
 }

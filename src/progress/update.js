@@ -5,29 +5,23 @@ import { getDuration } from './duration.js'
 // Update progress at regular interval
 export const startUpdate = function (reporters, benchmarkDuration) {
   const progressState = {}
-  const progressId = setInterval(
-    () => updateProgress({ progressState, benchmarkDuration, reporters }),
-    FREQUENCY,
-  )
+  const progressId = setInterval(() => {
+    updateProgress({ progressState, benchmarkDuration, reporters })
+  }, UPDATE_FREQUENCY)
   return { progressState, progressId }
 }
 
 // How often (in milliseconds) to update progress
-const FREQUENCY = 1e2
+const UPDATE_FREQUENCY = 1e2
 
 const updateProgress = async function ({
   progressState: { benchmarkEnd, description },
   benchmarkDuration,
   reporters,
 }) {
-  // Not started yet
-  if (benchmarkEnd === undefined) {
-    return
-  }
-
-  const timeLeftNs = Math.max(benchmarkEnd - now(), 0)
-  const percentage = 1 - timeLeftNs / benchmarkDuration
-  const duration = getDuration(timeLeftNs, benchmarkDuration)
+  const timeLeft = getTimeLeft(benchmarkEnd, benchmarkDuration)
+  const percentage = 1 - timeLeft / benchmarkDuration
+  const duration = getDuration(timeLeft, benchmarkDuration)
 
   // Call each `reporter.update()`
   await Promise.all(
@@ -35,6 +29,15 @@ const updateProgress = async function ({
       reporter.update({ percentage, duration, description }),
     ),
   )
+}
+
+const getTimeLeft = function (benchmarkEnd, benchmarkDuration) {
+  // Not started yet
+  if (benchmarkEnd === undefined) {
+    return benchmarkDuration
+  }
+
+  return Math.max(benchmarkEnd - now(), 0)
 }
 
 export const stopUpdate = function (progressId) {

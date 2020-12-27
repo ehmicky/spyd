@@ -1,7 +1,7 @@
 import { hide as hideCursor } from 'cli-cursor'
 import onExit from 'signal-exit'
 
-import { getDuration } from './duration.js'
+import { setDelayedDescription } from './set.js'
 import { stopProgress } from './stop.js'
 import { startUpdate } from './update.js'
 
@@ -12,13 +12,14 @@ export const startProgress = async function (
 ) {
   hideCursor()
 
-  const benchmarkDuration = combinations.length * duration
-  await startReporters(reporters, benchmarkDuration)
+  await startReporters(reporters)
 
+  const benchmarkDuration = combinations.length * duration
   const { progressState, progressId } = startUpdate(
     reporters,
     benchmarkDuration,
   )
+  setStartDescription(progressState)
 
   const removeOnExit = onExit(() => stopProgress({ progressId, reporters }))
 
@@ -29,21 +30,21 @@ export const startProgress = async function (
 }
 
 // Call each `reporter.start()`
-// Also call an initial `reporter.update()`
-const startReporters = async function (reporters, benchmarkDuration) {
-  const duration = getDuration(benchmarkDuration, benchmarkDuration)
-  await Promise.all(
-    reporters.map((reporter) => startReporter(reporter, duration)),
+const startReporters = async function (reporters) {
+  await Promise.all(reporters.map(startReporter))
+}
+
+const startReporter = async function (reporter) {
+  await reporter.start({})
+}
+
+const setStartDescription = function (progressState) {
+  setDelayedDescription(
+    progressState,
+    START_DESCRIPTION,
+    START_DESCRIPTION_DELAY,
   )
 }
 
-const startReporter = async function (reporter, duration) {
-  await reporter.start({})
-  await reporter.update({
-    percentage: 0,
-    duration,
-    description: START_DESCRIPTION,
-  })
-}
-
 const START_DESCRIPTION = 'Starting...'
+const START_DESCRIPTION_DELAY = 1e3
