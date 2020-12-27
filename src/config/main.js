@@ -6,7 +6,6 @@ import { validate, multipleValidOptions } from 'jest-validate'
 
 import { getDefaultMergeId } from '../merge/config.js'
 
-import { addEnvVars } from './env.js'
 import { loadConfig } from './load.js'
 import { preNormalizeConfig, normalizeConfig } from './normalize.js'
 import { getSettings } from './settings.js'
@@ -21,15 +20,14 @@ export const getConfig = async function (action, config = {}) {
 
   const settingsA = await getSettings(settings)
   const configB = await loadConfig(settingsA, configFlags)
-  const configC = addEnvVars(configB)
 
-  validateConfig(configC)
+  validateConfig(configB)
 
-  const configD = preNormalizeConfig(configC)
-  const configE = addDefaultConfig(configD, action)
+  const configC = preNormalizeConfig(configB)
+  const configD = addDefaultConfig(configC, action)
 
-  const configF = await normalizeConfig(configE)
-  return configF
+  const configE = await normalizeConfig(configD)
+  return configE
 }
 
 const isDefined = function (key, value) {

@@ -5,6 +5,8 @@ import locatePath from 'locate-path'
 import { UserError } from '../error/main.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
+import { getEnvVarConfig } from './env.js'
+
 // Load the configuration, shallow merged in priority order:
 //  - any CLI or programmatic flags
 //  - any `SPYD_*` environment variables
@@ -22,10 +24,12 @@ export const loadConfig = async function (settings, configFlags) {
       getGlobalConfigPath(),
     ].map(getConfigContent),
   )
+  const envVarConfig = getEnvVarConfig()
   return {
     ...globalConfig,
     ...cwdConfig,
     ...settingsConfig,
+    ...envVarConfig,
     ...configFlags,
   }
 }

@@ -41,7 +41,6 @@
     "cross-fetch": "^3.0.6",
     "delay": "^4.4.0",
     "detect-newline": "^3.1.0",
-    "dot-prop": "^6.0.1",
     "env-ci": "^5.0.2",
     "env-paths": "^2.2.0",
     "execa": "^4.1.0",

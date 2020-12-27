@@ -1,31 +1,28 @@
 import { env } from 'process'
 
-import { set } from 'dot-prop'
-
 // All the config can be set using environment variables.
-// This is especially handy in CI, including for the `merge` and `system`
-// configuration properties.
-export const addEnvVars = function (config) {
-  return Object.entries(env).filter(isSpydEnvVar).reduce(addEnvVar, config)
+// For example `SPYD_DURATION=1` becomes { duration: 1 }
+// This is especially useful in CI.
+export const getEnvVarConfig = function () {
+  return Object.assign(
+    {},
+    ...Object.entries(env).filter(isSpydEnvVar).map(getEnvVar),
+  )
 }
 
 const isSpydEnvVar = function ([key]) {
   return key.toLowerCase().startsWith(SPYD_NAMESPACE)
 }
 
-const addEnvVar = function (config, [key, string]) {
-  const name = key
-    .toLowerCase()
-    .replace(SPYD_NAMESPACE, '')
-    .replace(DELIMITER_REGEXP, '.')
+const getEnvVar = function ([key, string]) {
+  const name = key.toLowerCase().replace(SPYD_NAMESPACE, '')
   const value = transtypeString(string)
-  return set(config, name, value)
+  return { [name]: value }
 }
 
-const DELIMITER = '__'
-const DELIMITER_REGEXP = /__/gu
-const SPYD_NAMESPACE = `spyd${DELIMITER}`
+const SPYD_NAMESPACE = 'spyd_'
 
+// Allow any JSON type
 const transtypeString = function (string) {
   try {
     return JSON.parse(string)
