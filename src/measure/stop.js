@@ -68,7 +68,7 @@ const waitForStopSignals = async function (abortSignal) {
 
 // Signals usually done interactively by user in terminals, cross-platform.
 // We allow non-interactive signals sending too for programmatic usage.
-const STOP_SIGNALS = ['SIGINT', 'SIGBREAK', 'SIGHUP', 'SIGTERM']
+const STOP_SIGNALS = ['SIGINT', 'SIGBREAK', 'SIGHUP', 'SIGTERM', 'SIGQUIT']
 
 const STOP_DESCRIPTION = 'Stopping...'
 
