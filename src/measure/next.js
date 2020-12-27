@@ -8,14 +8,16 @@ import { getSum } from '../stats/sum.js'
 // Retrieve the next combination which should be measured.
 // We do it based on which combination are been measured the least.
 // At the beginning, we pick them randomly, because it looks nicer.
-export const getNextCombination = function (
+export const getNextCombination = function ({
   combinations,
   progressState,
+  stopState,
   combinationMaxLoops,
-) {
+}) {
   const remainingCombinations = getRemainingCombinations(
     combinations,
     combinationMaxLoops,
+    stopState,
   )
   updateBenchmarkEnd(remainingCombinations, progressState)
 
@@ -42,8 +44,12 @@ export const getNextCombination = function (
 // nor exiting them because:
 //  - Adding imports to a task should not change the task's number of samples
 //  - Adding slow-to-start tasks should not change other tasks number of samples
-const getRemainingCombinations = function (combinations, combinationMaxLoops) {
-  if (shouldEndMeasuring(combinations)) {
+const getRemainingCombinations = function (
+  combinations,
+  combinationMaxLoops,
+  stopState,
+) {
+  if (shouldEndMeasuring(combinations, stopState)) {
     return []
   }
 
@@ -52,10 +58,11 @@ const getRemainingCombinations = function (combinations, combinationMaxLoops) {
   )
 }
 
-// When any combination errors, we end measuring. We still perform each
-// combination ends and exits, for cleanup.
-const shouldEndMeasuring = function (combinations) {
-  return combinations.some(combinationHasErrored)
+// When any combination errors, we end measuring.
+// We also do this when the user stopped the benchmark (e.g. with CTRL-C).
+// We still perform each combination ends and exits, for cleanup.
+const shouldEndMeasuring = function (combinations, { stopped }) {
+  return stopped || combinations.some(combinationHasErrored)
 }
 
 const isRemainingCombination = function (

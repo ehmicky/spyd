@@ -17,16 +17,21 @@ import { getNextCombination } from './next.js'
 //  - This helps when stopping benchmarks by allowing samples to end so tasks
 //    can be cleaned up
 //  - This provides with fast fail if one of the combinations fails
-export const performMeasureLoop = async function (combinations, progressState) {
+export const performMeasureLoop = async function ({
+  combinations,
+  progressState,
+  stopState,
+}) {
   const combinationMaxLoops = getCombinationMaxLoops(combinations)
 
   // eslint-disable-next-line fp/no-loops
   while (true) {
-    const combination = getNextCombination(
+    const combination = getNextCombination({
       combinations,
       progressState,
+      stopState,
       combinationMaxLoops,
-    )
+    })
 
     // eslint-disable-next-line max-depth
     if (combination === undefined) {

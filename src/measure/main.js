@@ -88,7 +88,7 @@ const stopOrMeasure = async function ({
     return await Promise.race([
       onAbort,
       ...onProgressError,
-      measureAllCombinations(combinations, progressState),
+      measureAllCombinations({ combinations, progressState, stopState }),
     ])
   } finally {
     removeStopHandler()
@@ -96,9 +96,17 @@ const stopOrMeasure = async function ({
 }
 
 // Measure all combinations, until there is no `duration` left.
-const measureAllCombinations = async function (combinations, progressState) {
+const measureAllCombinations = async function ({
+  combinations,
+  progressState,
+  stopState,
+}) {
   const combinationsA = await startCombinations(combinations, progressState)
-  const combinationsB = await performMeasureLoop(combinationsA, progressState)
+  const combinationsB = await performMeasureLoop({
+    combinations: combinationsA,
+    progressState,
+    stopState,
+  })
   const combinationsC = await endCombinations(combinationsB, progressState)
   const combinationsD = await exitCombinations(combinationsC)
   handleCombinationError(combinationsD)
