@@ -1,7 +1,7 @@
 import { UserError } from '../error/main.js'
 
 import { measureCombinations } from './combination.js'
-import { startProcess } from './load.js'
+import { spawnProcesses } from './spawn.js'
 
 // Each combination is spawned in its own process:
 //  - This ensures runtime optimization is bound to each combination
@@ -28,9 +28,7 @@ export const runProcesses = async function ({
   progressState,
   onOrchestratorError,
 }) {
-  const combinationsA = combinations.map((combination) =>
-    startProcess({ combination, origin, cwd }),
-  )
+  const combinationsA = spawnProcesses({ combinations, origin, cwd })
 
   try {
     return await Promise.race([

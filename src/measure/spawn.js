@@ -3,8 +3,14 @@ import execa from 'execa'
 import { getServerUrl } from './server.js'
 
 // Spawn each combination's process.
-// All combinations are loaded in parallel, for performance.
-export const startProcess = function ({
+// All combinations are spawned in parallel, for performance.
+export const spawnProcesses = function ({ combinations, origin, cwd }) {
+  return combinations.map((combination) =>
+    spawnProcess({ combination, origin, cwd }),
+  )
+}
+
+export const spawnProcess = function ({
   combination,
   combination: {
     id,
@@ -17,15 +23,15 @@ export const startProcess = function ({
   origin,
   cwd,
 }) {
-  const loadParams = getLoadParams({
+  const spawnParams = getSpawnParams({
     id,
     runConfig,
     taskPath,
     inputValue,
     origin,
   })
-  const loadParamsString = JSON.stringify(loadParams)
-  const childProcess = execa(commandFile, [...commandArgs, loadParamsString], {
+  const spawnParamsString = JSON.stringify(spawnParams)
+  const childProcess = execa(commandFile, [...commandArgs, spawnParamsString], {
     ...commandSpawnOptions,
     stdio: 'ignore',
     cwd,
@@ -34,8 +40,8 @@ export const startProcess = function ({
   return { ...combination, childProcess }
 }
 
-// Retrieve params passed to runner processes so they can load the right task
-const getLoadParams = function ({
+// Retrieve params passed to runner processes so they can find the right task
+const getSpawnParams = function ({
   id,
   runConfig,
   taskPath,

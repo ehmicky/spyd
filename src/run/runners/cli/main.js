@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { executeMethod } from '../common/ipc.js'
+import { performRunner } from '../common/ipc.js'
 
 import { loadTasksFile } from './load/main.js'
 import { measureTask } from './measure.js'
@@ -33,4 +33,4 @@ const measure = async function ({ taskPath, taskId, inputId, maxDuration }) {
   return { mainMeasures }
 }
 
-executeMethod({ load, measure })
+performRunner({ load, measure })

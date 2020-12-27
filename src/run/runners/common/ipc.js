@@ -3,11 +3,11 @@ import { argv, exit } from 'process'
 import fetch from 'cross-fetch'
 
 // Handles IPC communication with the main process
-export const startRunner = async function ({ load, measure }) {
-  const { serverUrl, loadParams } = parseLoadParams()
+export const performRunner = async function ({ load, measure }) {
+  const { serverUrl, spawnParams } = parseSpawnParams()
 
   try {
-    const loadState = await load(loadParams)
+    const loadState = await load(spawnParams)
     await measureSamples({ measure, serverUrl, loadState })
     await successExit(serverUrl)
   } catch (error) {
@@ -16,9 +16,9 @@ export const startRunner = async function ({ load, measure }) {
 }
 
 // Retrieve the load params sent by the main process
-const parseLoadParams = function () {
-  const { serverUrl, ...loadParams } = JSON.parse(argv[2])
-  return { serverUrl, loadParams }
+const parseSpawnParams = function () {
+  const { serverUrl, ...spawnParams } = JSON.parse(argv[2])
+  return { serverUrl, spawnParams }
 }
 
 // Load the task then runs a new sample each time the main process asks for it
