@@ -1,11 +1,8 @@
 import {
-  handleCombinationError,
   combinationHasErrored,
   failOnProcessExit,
 } from '../error/combination.js'
-import { receiveReturnValue } from '../process/receive.js'
-import { sendAndReceive, sendParams } from '../process/send.js'
-import { setDescription, setDelayedDescription } from '../progress/set.js'
+import { sendAndReceive } from '../process/send.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
 import {
@@ -16,37 +13,7 @@ import { getNextCombination } from './next.js'
 import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
-// Measure all combinations, until there is no `duration` left.
-export const measureAllCombinations = async function (
-  combinations,
-  progressState,
-) {
-  const combinationsA = await startCombinations(combinations, progressState)
-  const combinationsB = await measureSamples(combinationsA, progressState)
-  const combinationsC = await stopCombinations(combinationsB, progressState)
-  const combinationsD = await exitCombinations(combinationsC)
-  handleCombinationError(combinationsD)
-  return combinationsD
-}
-
-const startCombinations = async function (combinations, progressState) {
-  const combinationsA = await Promise.all(combinations.map(eStartCombination))
-  setDescription(progressState, '')
-  return combinationsA
-}
-
-const eStartCombination = async function (combination) {
-  return await Promise.race([
-    failOnProcessExit(combination),
-    startCombination(combination),
-  ])
-}
-
-const startCombination = async function (combination) {
-  const { newCombination } = await receiveReturnValue(combination)
-  return newCombination
-}
-
+// Run samples to measure each combination.
 // We ensure combinations are never measured at the same time
 //  - Otherwise, they would compete for memory and CPU, making results less
 //    precise.
@@ -60,7 +27,7 @@ const startCombination = async function (combination) {
 //  - This helps during manual interruptions (CTRL-C) by allowing samples to
 //    end so tasks can be cleaned up
 //  - This provides with fast fail if one of the combinations fails
-const measureSamples = async function (combinations, progressState) {
+export const measureSamples = async function (combinations, progressState) {
   const combinationMaxLoops = getCombinationMaxLoops(combinations)
 
   // eslint-disable-next-line fp/no-loops
@@ -152,50 +119,4 @@ const updateCombination = function (
   oldCombination,
 ) {
   return combination === oldCombination ? newCombination : combination
-}
-
-const stopCombinations = async function (combinations, progressState) {
-  setDelayedDescription(progressState, STOP_DESCRIPTION)
-  return await Promise.all(combinations.map(eStopCombination))
-}
-
-const STOP_DESCRIPTION = 'Finishing...'
-
-const eStopCombination = async function (combination) {
-  return await Promise.race([
-    failOnProcessExit(combination),
-    stopCombination(combination),
-  ])
-}
-
-const stopCombination = async function (combination) {
-  if (combinationHasErrored(combination)) {
-    return combination
-  }
-
-  const { newCombination } = await sendAndReceive(combination, {})
-  return newCombination
-}
-
-const exitCombinations = async function (combinations) {
-  return await Promise.all(combinations.map(exitCombination))
-}
-
-const exitCombination = async function (combination) {
-  if (processHasExited(combination.childProcess)) {
-    return combination
-  }
-
-  const newCombination = await sendParams(combination, {})
-
-  if (combinationHasErrored(newCombination)) {
-    return newCombination
-  }
-
-  await combination.childProcess
-  return newCombination
-}
-
-const processHasExited = function (childProcess) {
-  return childProcess.exitCode !== null || childProcess.signalCode !== null
 }

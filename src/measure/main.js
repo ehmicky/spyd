@@ -1,8 +1,12 @@
+import { handleCombinationError } from '../error/combination.js'
 import { spawnProcesses, terminateProcesses } from '../process/spawn.js'
 import { startServer, stopServer } from '../server/start_stop.js'
 
-import { measureAllCombinations } from './combination.js'
+import { exitCombinations } from './exit.js'
 import { addInitProps, getFinalProps } from './props.js'
+import { measureSamples } from './samples.js'
+import { startCombinations } from './start.js'
+import { stopCombinations } from './stop.js'
 
 // Measure all combinations and add results to `combinations`
 export const measureCombinations = async function ({
@@ -59,4 +63,14 @@ const spawnAndMeasure = async function ({
   } finally {
     terminateProcesses(combinationsA)
   }
+}
+
+// Measure all combinations, until there is no `duration` left.
+const measureAllCombinations = async function (combinations, progressState) {
+  const combinationsA = await startCombinations(combinations, progressState)
+  const combinationsB = await measureSamples(combinationsA, progressState)
+  const combinationsC = await stopCombinations(combinationsB, progressState)
+  const combinationsD = await exitCombinations(combinationsC)
+  handleCombinationError(combinationsD)
+  return combinationsD
 }
