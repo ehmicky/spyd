@@ -1,17 +1,7 @@
-import {
-  combinationHasErrored,
-  failOnProcessExit,
-} from '../error/combination.js'
-import { sendAndReceive } from '../process/send.js'
+import { failOnProcessExit } from '../error/combination.js'
 
-import { getSampleStart, addSampleDuration } from './duration.js'
-import {
-  getMeasureDurationStart,
-  getMeasureDurationLast,
-} from './measure_duration.js'
 import { getNextCombination } from './next.js'
-import { getParams } from './params.js'
-import { handleReturnValue } from './return.js'
+import { measureSample } from './sample.js'
 
 // Run samples to measure each combination.
 // We ensure combinations are never measured at the same time
@@ -67,40 +57,6 @@ const eMeasureSample = async function (combination) {
     failOnProcessExit(combination),
     measureSample(combination),
   ])
-}
-
-const measureSample = async function (combination) {
-  const sampleStart = getSampleStart()
-  const params = getParams(combination)
-
-  const {
-    newCombination,
-    returnValue,
-    measureDurationLast,
-  } = await measureNewSample(combination, params)
-
-  if (combinationHasErrored(newCombination)) {
-    return newCombination
-  }
-
-  const newProps = handleReturnValue(
-    { ...newCombination, measureDurationLast },
-    returnValue,
-    params,
-  )
-  const newCombinationA = { ...newCombination, ...newProps }
-  const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
-  return newCombinationB
-}
-
-const measureNewSample = async function (combination, params) {
-  const measureDurationStart = getMeasureDurationStart()
-  const { newCombination, returnValue } = await sendAndReceive(
-    combination,
-    params,
-  )
-  const measureDurationLast = getMeasureDurationLast(measureDurationStart)
-  return { newCombination, returnValue, measureDurationLast }
 }
 
 const updateCombinations = function (
