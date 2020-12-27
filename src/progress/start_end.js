@@ -35,7 +35,6 @@ const startUpdate = function ({
   combinations,
   duration,
 }) {
-  const benchmarkDuration = combinations.length * duration
   // eslint-disable-next-line fp/no-let, init-declarations
   let progressId
   // eslint-disable-next-line promise/avoid-new
@@ -44,7 +43,8 @@ const startUpdate = function ({
     progressId = setInterval(() => {
       updateProgress({
         progressState,
-        benchmarkDuration,
+        combinations,
+        duration,
         reporters,
         initial: false,
       }).catch(reject)
@@ -52,7 +52,8 @@ const startUpdate = function ({
 
     updateProgress({
       progressState,
-      benchmarkDuration,
+      combinations,
+      duration,
       reporters,
       initial: true,
     }).catch(reject)

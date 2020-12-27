@@ -1,4 +1,5 @@
 import { failOnProcessExit } from '../error/combination.js'
+import { setBenchmarkStart } from '../progress/set.js'
 import { measureSample } from '../sample/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
@@ -21,14 +22,18 @@ import { getNextCombination } from './next.js'
 // eslint-disable-next-line max-statements
 export const performMeasureLoop = async function ({
   combinations,
+  duration,
   progressState,
   stopState,
 }) {
+  setBenchmarkStart(progressState, duration)
+
   // eslint-disable-next-line fp/no-loops
   while (true) {
     const sampleStart = getSampleStart()
     const combination = getNextCombination({
       combinations,
+      duration,
       progressState,
       stopState,
     })

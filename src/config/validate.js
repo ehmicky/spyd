@@ -25,8 +25,8 @@ const isString = function (value) {
   return typeof value === 'string'
 }
 
-export const validatePositiveNumber = function (value, name) {
-  if (!Number.isFinite(value) || value <= 0) {
-    throw new UserError(`'${name}' must be a positive number: ${value}`)
+export const validatePositiveInteger = function (value, name) {
+  if (!Number.isInteger(value) || value < 0) {
+    throw new UserError(`'${name}' must be a positive integer: ${value}`)
   }
 }

@@ -1,13 +1,13 @@
 // Retrieve seconds/minutes/hours left in a human-friendly string
-export const getDuration = function (nsecs, totalNsecs) {
+export const getTime = function (nsecs, totalNsecs = nsecs) {
   const secs = Math.ceil(nsecs / NANOSECS_TO_SECS)
   const totalSecs = Math.ceil(totalNsecs / NANOSECS_TO_SECS)
-  const duration = addTimeUnits(secs, totalSecs)
-  return duration
+  const time = addTimeUnits(secs, totalSecs)
+  return time
 }
 
-// We use the `benchmarkDurationSecs` (instead of remaining time) to decide
-// whether to show h/m/s, so that it is constant through the benchmark
+// We use the `totalSecs` (instead of remaining time) to decide whether to show
+// h/m/s, so that it is constant through the benchmark
 const addTimeUnits = function (secs, totalSecs) {
   if (totalSecs < SECS_TO_MINUTES) {
     return `${padTime(secs)}s`

@@ -1,6 +1,7 @@
-import { cwd as getCwd } from 'process'
+import { cwd as getCwd, stderr } from 'process'
 
 import filterObj from 'filter-obj'
+import isInteractive from 'is-interactive'
 import { validate, multipleValidOptions } from 'jest-validate'
 
 import { getDefaultMergeId } from '../merge/config.js'
@@ -49,9 +50,14 @@ const addDefaultConfig = function (config, action) {
   return {
     ...DEFAULT_CONFIG,
     context: action === 'show',
+    duration: getDefaultDuration(),
     merge: getDefaultMergeId({ ...DEFAULT_CONFIG, ...config }),
     ...config,
   }
+}
+
+const getDefaultDuration = function () {
+  return isInteractive(stderr) ? -1 : 0
 }
 
 const DEFAULT_CONFIG = {
@@ -59,7 +65,6 @@ const DEFAULT_CONFIG = {
   cwd: getCwd(),
   delta: true,
   diff: true,
-  duration: 10,
   files: ['benchmarks.*', 'benchmarks/index.*'],
   info: false,
   limit: [],
@@ -88,6 +93,7 @@ const EXAMPLE_CONFIG = {
   context: true,
   delta: VALID_DELTA,
   diff: VALID_DELTA,
+  duration: 10,
   merge: multipleValidOptions('', '546'),
   insert: './README.md',
   limit: ['taskId=10'],

@@ -4,8 +4,11 @@ export const BENCH_CONFIG = {
     alias: 'd',
     number: true,
     requiresArg: true,
-    describe: `How many seconds to measure each task.
-Default: 10`,
+    describe: `How many seconds to execute each combination.
+Can also be:
+  - 1: execute each combination once
+  - 0: only stop when CTRL-C is typed
+Default: 0 in interactive terminals, 1 otherwise.`,
   },
   merge: {
     alias: 'g',

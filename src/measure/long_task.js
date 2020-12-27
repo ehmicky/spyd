@@ -25,6 +25,7 @@ export const terminateLongTask = function ({
 const isLongTask = function ({ sampleStart, totalDuration, maxDuration }) {
   return (
     totalDuration !== undefined &&
+    maxDuration > 1 &&
     now() - sampleStart + totalDuration > maxDuration
   )
 }
@@ -37,9 +38,9 @@ const isLongTask = function ({ sampleStart, totalDuration, maxDuration }) {
 // In that case, we leave `benchmarkEnd` as is
 export const setStopBenchmarkEnd = function (
   progressState,
-  { sampleStart, combination: { sampleDurationMean = 0 } = {} },
+  { sampleStart, combination: { sampleDurationMean = 0, maxDuration } = {} },
 ) {
-  if (sampleDurationMean === 0) {
+  if (sampleDurationMean === 0 || maxDuration <= 1) {
     return
   }
 

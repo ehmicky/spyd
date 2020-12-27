@@ -10,6 +10,7 @@ import { getSum } from '../stats/sum.js'
 // At the beginning, we pick them randomly, because it looks nicer.
 export const getNextCombination = function ({
   combinations,
+  duration,
   progressState,
   stopState,
 }) {
@@ -17,7 +18,7 @@ export const getNextCombination = function ({
     combinations,
     stopState,
   )
-  updateBenchmarkEnd(remainingCombinations, progressState)
+  updateBenchmarkEnd({ remainingCombinations, progressState, duration })
 
   if (remainingCombinations.length === 0) {
     return
@@ -71,13 +72,29 @@ const getCombinationMaxLoops = function (combinations) {
 const MAX_LOOPS = 1e8
 
 const isRemainingCombination = function (
-  { totalDuration, maxDuration, sampleDurationMean, loops },
+  { totalDuration, maxDuration, sampleDurationMean, loops, repeatInit },
   combinationMaxLoops,
 ) {
   return (
     loops < combinationMaxLoops &&
-    (sampleDurationMean === undefined ||
-      totalDuration + sampleDurationMean < maxDuration)
+    hasTimeLeft({ maxDuration, sampleDurationMean, totalDuration, repeatInit })
+  )
+}
+
+const hasTimeLeft = function ({
+  maxDuration,
+  sampleDurationMean,
+  totalDuration,
+  repeatInit,
+}) {
+  if (maxDuration === 1) {
+    return repeatInit
+  }
+
+  return (
+    maxDuration === 0 ||
+    sampleDurationMean === undefined ||
+    totalDuration + sampleDurationMean < maxDuration
   )
 }
 
@@ -90,7 +107,15 @@ const isRemainingCombination = function (
 // If a task is slower than its `duration`, `benchmarkEnd` might increase. In
 // that case, we make `benchmarkEnd` freeze for a moment instead of making it
 // jump up.
-const updateBenchmarkEnd = function (remainingCombinations, progressState) {
+const updateBenchmarkEnd = function ({
+  remainingCombinations,
+  progressState,
+  duration,
+}) {
+  if (duration <= 1) {
+    return
+  }
+
   const remainingDuration = getSum(
     remainingCombinations.map(getRemainingDuration),
   )

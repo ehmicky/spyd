@@ -49,6 +49,7 @@ const startServerAndMeasure = async function ({
     return await spawnAndMeasure({
       combinations: combinationsA,
       origin,
+      duration,
       cwd,
       stopState,
       progressState,
@@ -62,6 +63,7 @@ const startServerAndMeasure = async function ({
 const spawnAndMeasure = async function ({
   combinations,
   origin,
+  duration,
   cwd,
   stopState,
   progressState,
@@ -72,6 +74,7 @@ const spawnAndMeasure = async function ({
   try {
     return await stopOrMeasure({
       combinations: combinationsA,
+      duration,
       stopState,
       progressState,
       onProgressError,
@@ -83,6 +86,7 @@ const spawnAndMeasure = async function ({
 
 const stopOrMeasure = async function ({
   combinations,
+  duration,
   stopState,
   progressState,
   onProgressError,
@@ -96,7 +100,12 @@ const stopOrMeasure = async function ({
     return await Promise.race([
       onAbort,
       ...onProgressError,
-      measureAllCombinations({ combinations, progressState, stopState }),
+      measureAllCombinations({
+        combinations,
+        duration,
+        progressState,
+        stopState,
+      }),
     ])
   } finally {
     removeStopHandler()
@@ -106,12 +115,14 @@ const stopOrMeasure = async function ({
 // Measure all combinations, until there is no `duration` left.
 const measureAllCombinations = async function ({
   combinations,
+  duration,
   progressState,
   stopState,
 }) {
   const combinationsA = await startCombinations(combinations, progressState)
   const combinationsB = await performMeasureLoop({
     combinations: combinationsA,
+    duration,
     progressState,
     stopState,
   })

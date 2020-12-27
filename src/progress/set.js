@@ -1,3 +1,5 @@
+import now from 'precise-now'
+
 // Like `setDescription()` but wait for a specific `delay` first to avoid
 // flickering.
 export const setDelayedDescription = function (progressState, description) {
@@ -53,4 +55,14 @@ export const setBenchmarkEnd = function (progressState, benchmarkEnd) {
     progressState.benchmarkEnd === undefined
       ? benchmarkEnd
       : Math.min(progressState.benchmarkEnd, benchmarkEnd)
+}
+
+// When duration is 0 or 1, we count up, not down
+export const setBenchmarkStart = function (progressState, duration) {
+  if (duration > 1) {
+    return
+  }
+
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  progressState.benchmarkStart = now()
 }

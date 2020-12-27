@@ -28,13 +28,21 @@ export const startServer = async function (combinations, duration) {
 
 // Start listening to requests
 const serverListen = async function (server, duration) {
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  server.keepAliveTimeout = Math.ceil(duration / NANOSECS_TO_MILLISECS)
+  setKeepAliveTimeout(server, duration)
 
   await promisify(server.listen.bind(server))(HTTP_SERVER_OPTS)
   const { address, port } = server.address()
   const origin = `http://${address}:${port}`
   return origin
+}
+
+const setKeepAliveTimeout = function (server, duration) {
+  if (duration <= 1) {
+    return
+  }
+
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  server.keepAliveTimeout = Math.ceil(duration / NANOSECS_TO_MILLISECS)
 }
 
 const NANOSECS_TO_MILLISECS = 1e6

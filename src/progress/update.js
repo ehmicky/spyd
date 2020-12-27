@@ -2,10 +2,8 @@ import { stderr } from 'process'
 import { cursorTo, clearScreenDown } from 'readline'
 import { promisify } from 'util'
 
-import now from 'precise-now'
-
-import { getDuration } from './duration.js'
 import { getDescription } from './set.js'
+import { getTimeProps } from './time_props.js'
 
 const pCursorTo = promisify(cursorTo)
 const pClearScreenDown = promisify(clearScreenDown)
@@ -13,13 +11,15 @@ const pClearScreenDown = promisify(clearScreenDown)
 // Call each `reporter.update()`
 export const updateProgress = async function ({
   progressState,
-  benchmarkDuration,
+  combinations,
+  duration,
   reporters,
   initial,
 }) {
   const progressContent = getProgressContent({
     progressState,
-    benchmarkDuration,
+    combinations,
+    duration,
     reporters,
   })
   await clearProgress({ initial, final: false })
@@ -28,27 +28,20 @@ export const updateProgress = async function ({
 
 const getProgressContent = function ({
   progressState,
-  progressState: { benchmarkEnd },
-  benchmarkDuration,
+  combinations,
+  duration,
   reporters,
 }) {
-  const timeLeft = getTimeLeft(benchmarkEnd, benchmarkDuration)
-  const percentage = 1 - timeLeft / benchmarkDuration
-  const duration = getDuration(timeLeft, benchmarkDuration)
+  const { percentage, time } = getTimeProps({
+    progressState,
+    combinations,
+    duration,
+  })
   const description = getDescription(progressState)
 
   return reporters
-    .map((reporter) => reporter.update({ percentage, duration, description }))
+    .map((reporter) => reporter.update({ percentage, time, description }))
     .join(PROGRESS_SEPARATOR)
-}
-
-const getTimeLeft = function (benchmarkEnd, benchmarkDuration) {
-  // Not started yet
-  if (benchmarkEnd === undefined) {
-    return benchmarkDuration
-  }
-
-  return Math.max(benchmarkEnd - now(), 0)
 }
 
 const PROGRESS_SEPARATOR = '\n\n'
