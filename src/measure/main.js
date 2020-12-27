@@ -1,4 +1,6 @@
-import { runProcesses } from './process.js'
+import { spawnProcesses, terminateProcesses } from '../process/spawn.js'
+
+import { measureAllCombinations } from './combination.js'
 import { addInitProps, getFinalProps } from './props.js'
 import { startServer, stopServer } from './server.js'
 
@@ -10,7 +12,7 @@ export const measureCombinations = async function ({
   const combinationsA = combinations.map((combination) =>
     addInitProps(combination, duration),
   )
-  const combinationsB = await measureAllCombinations({
+  const combinationsB = await startServerAndMeasure({
     combinations: combinationsA,
     duration,
     cwd,
@@ -20,7 +22,7 @@ export const measureCombinations = async function ({
   return combinationsC
 }
 
-const measureAllCombinations = async function ({
+const startServerAndMeasure = async function ({
   combinations,
   duration,
   cwd,
@@ -32,7 +34,7 @@ const measureAllCombinations = async function ({
   )
 
   try {
-    return await runProcesses({
+    return await spawnAndMeasure({
       combinations: combinationsA,
       origin,
       cwd,
@@ -40,5 +42,20 @@ const measureAllCombinations = async function ({
     })
   } finally {
     await stopServer(server)
+  }
+}
+
+const spawnAndMeasure = async function ({
+  combinations,
+  origin,
+  cwd,
+  progressState,
+}) {
+  const combinationsA = spawnProcesses({ combinations, origin, cwd })
+
+  try {
+    return await measureAllCombinations(combinationsA, progressState)
+  } finally {
+    terminateProcesses(combinationsA)
   }
 }

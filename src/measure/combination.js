@@ -17,7 +17,7 @@ import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
 // Measure all combinations, until there is no `duration` left.
-export const measureCombinations = async function (
+export const measureAllCombinations = async function (
   combinations,
   progressState,
 ) {

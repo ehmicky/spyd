@@ -1,7 +1,6 @@
 import execa from 'execa'
 
-import { measureCombinations } from './combination.js'
-import { getServerUrl } from './server.js'
+import { getServerUrl } from '../measure/server.js'
 
 // Each combination is spawned in its own process:
 //  - This ensures runtime optimization is bound to each combination
@@ -20,24 +19,8 @@ import { getServerUrl } from './server.js'
 //    which wastes duration and does not allow runners with long initialization.
 //  - Variance is higher due to task cold starts having a higher share of the
 //    total measures.
-export const runProcesses = async function ({
-  combinations,
-  origin,
-  cwd,
-  progressState,
-}) {
-  const combinationsA = spawnProcesses({ combinations, origin, cwd })
-
-  try {
-    return await measureCombinations(combinationsA, progressState)
-  } finally {
-    combinationsA.forEach(terminateProcess)
-  }
-}
-
-// Spawn each combination's process.
 // All combinations are spawned in parallel, for performance.
-const spawnProcesses = function ({ combinations, origin, cwd }) {
+export const spawnProcesses = function ({ combinations, origin, cwd }) {
   return combinations.map((combination) =>
     spawnProcess({ combination, origin, cwd }),
   )
@@ -97,6 +80,10 @@ const getSpawnParams = function ({
 // In general, processes should already have exited thanks to error handling
 // and cleanup logic. However, we terminate those as a safety precaution, for
 // example if there is a bug.
+export const terminateProcesses = function (combinations) {
+  combinations.forEach(terminateProcess)
+}
+
 const terminateProcess = function ({ childProcess }) {
   childProcess.kill('SIGKILL')
 }
