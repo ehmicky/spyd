@@ -57,7 +57,7 @@ const mergeValues = function (bigArray, smallArray) {
   let smallValue = smallArray[smallIndex]
   let bigValue = bigArray[bigIndex]
 
-  // Performance optimization: the `smallIndex === 0` check is enough to stop
+  // Performance optimization: the `smallIndex === 0` check is enough to end
   // the iteration. We do not need any test to be performed on each iteration.
   while (true) {
     if (bigValue > smallValue) {

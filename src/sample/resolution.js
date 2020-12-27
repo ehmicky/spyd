@@ -35,5 +35,5 @@ export const getResolution = function (
 // Minimum resolution from `time-resolution`
 const MIN_RESOLUTION = 1
 // We do not need more than this amount of samples to get a very good estimate,
-// so we stop after that.
+// so we end after that.
 const MAX_RESOLUTION_SAMPLES = 1e3

@@ -36,14 +36,14 @@ export const repeatInitReset = function ({
   return [[], [], [], [], 0, 0, 0]
 }
 
-// Decides when `repeatInit` has stopped.
+// Decides when `repeatInit` has ended.
 // Based on the difference between `repeat` and `newRepeat`.
 export const getRepeatInit = function ({ repeatInit, repeat, newRepeat }) {
   return repeatInit && newRepeat / repeat > MAX_REPEAT_DIFF
 }
 
-// To stop `repeatInit`, `repeat` must vary once less than this percentage.
-// It also stops when `repeat` stops increasing.
+// To end `repeatInit`, `repeat` must vary once less than this percentage.
+// It also ends when `repeat` is not increasing anymore.
 // A higher number will include more uncallibrated measures, making the results
 // more inaccurate and imprecise.
 // A lower number will make `repeatInit` last longer, making combinations with

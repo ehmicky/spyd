@@ -38,12 +38,12 @@ export const getNextCombination = function (
 //  - The `duration` might be adjusted for a specific machine that is faster
 //    than others. This might make slower machines time out.
 //  - This allows `duration: 0` to be used to measure each combination once
-// Combination durations does not include the duration spent starting, stopping
+// Combination durations does not include the duration spent starting, ending
 // nor exiting them because:
 //  - Adding imports to a task should not change the task's number of samples
 //  - Adding slow-to-start tasks should not change other tasks number of samples
 const getRemainingCombinations = function (combinations, combinationMaxLoops) {
-  if (shouldStopMeasuring(combinations)) {
+  if (shouldEndMeasuring(combinations)) {
     return []
   }
 
@@ -52,9 +52,9 @@ const getRemainingCombinations = function (combinations, combinationMaxLoops) {
   )
 }
 
-// When any combination errors, we stop measuring. We still perform each
-// combination stops and exits, for cleanup.
-const shouldStopMeasuring = function (combinations) {
+// When any combination errors, we end measuring. We still perform each
+// combination ends and exits, for cleanup.
+const shouldEndMeasuring = function (combinations) {
   return combinations.some(combinationHasErrored)
 }
 
@@ -70,9 +70,9 @@ const isRemainingCombination = function (
 }
 
 // Update the benchmark end in the progress reporting.
-// When a combination ends, we stop including its remaining duration. This
-// allows `benchmarkEnd` to adjust progressively at the end of the benchmark as
-// each combination ends.
+// When a combination ends, we do not include its remaining duration anymore.
+// This allows `benchmarkEnd` to adjust progressively at the end of the
+// benchmark as each combination ends.
 // If a task is slower than its `duration`, `benchmarkEnd` might increase. In
 // that case, we make `benchmarkEnd` freeze for a moment instead of making it
 // jump up.

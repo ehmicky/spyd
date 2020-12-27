@@ -5,7 +5,7 @@ import { UserError } from './main.js'
 
 // When the logic involving a combination throws, we do not propagate the
 // exception right away. This allows the combination and other combinations
-// to properly stop and exit.
+// to properly end and exit.
 // The latest error has priority over the earliest since errors in cleanup code
 // is harder to debug.
 export const addCombinationError = function (combination, error) {

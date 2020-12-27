@@ -2,4 +2,4 @@
 const noop = function () {}
 
 // Silent reporter
-export const silent = { start: noop, update: noop, stop: noop }
+export const silent = { start: noop, update: noop, end: noop }

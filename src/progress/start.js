@@ -1,8 +1,8 @@
 import { hide as hideCursor } from 'cli-cursor'
 import onExit from 'signal-exit'
 
+import { endProgress } from './end.js'
 import { setDelayedDescription } from './set.js'
-import { stopProgress } from './stop.js'
 import { startUpdate } from './update.js'
 
 // Start progress reporting using the `progress` configuration property
@@ -21,7 +21,7 @@ export const startProgress = async function (
   )
   setDelayedDescription(progressState, START_DESCRIPTION)
 
-  const removeOnExit = onExit(() => stopProgress({ progressId, reporters }))
+  const removeOnExit = onExit(() => endProgress({ progressId, reporters }))
 
   return {
     progressState,

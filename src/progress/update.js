@@ -40,6 +40,6 @@ const getTimeLeft = function (benchmarkEnd, benchmarkDuration) {
   return Math.max(benchmarkEnd - now(), 0)
 }
 
-export const stopUpdate = function (progressId) {
+export const endUpdate = function (progressId) {
   clearInterval(progressId)
 }

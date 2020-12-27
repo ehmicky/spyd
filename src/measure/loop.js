@@ -7,7 +7,7 @@ import { getNextCombination } from './next.js'
 // We ensure combinations are never measured at the same time
 //  - Otherwise, they would compete for memory and CPU, making results less
 //    precise.
-//  - Start, stop and exit can be run in parallel though since they do not
+//  - Start, end and exit can be run in parallel though since they do not
 //    measure
 // We also break down each combination into samples, i.e. small units of
 // duration when measures are taken:
@@ -46,7 +46,7 @@ const getCombinationMaxLoops = function (combinations) {
   return Math.ceil(MAX_LOOPS / combinations.length)
 }
 
-// We stop running samples when the `measures` is over `MAX_LOOPS`. This
+// We end running samples when the `measures` is over `MAX_LOOPS`. This
 // is meant to prevent memory overflow.
 // The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
 // little more than 1e8 floats.

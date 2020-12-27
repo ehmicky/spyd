@@ -40,7 +40,7 @@ const serverListen = async function (server, duration) {
 const NANOSECS_TO_MILLISECS = 1e6
 const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 
-// Stop the HTTP server
-export const stopServer = async function (server) {
+// End the HTTP server
+export const endServer = async function (server) {
   await promisify(server.close.bind(server))()
 }

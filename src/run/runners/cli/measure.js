@@ -5,8 +5,6 @@ import { startMeasuring } from '../common/start.js'
 import { spawnProcess } from './spawn.js'
 
 // Measure how long a task takes.
-// We take measures iteratively in order to stop exactly when the `duration`
-// has been reached.
 export const measureTask = async function ({
   main,
   beforeEach,

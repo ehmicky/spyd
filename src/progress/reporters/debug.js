@@ -33,7 +33,7 @@ const serializePercentage = function (percentage) {
 const FLOAT_TO_PERCENTAGE = 1e2
 const PERCENTAGE_WIDTH = 4
 
-const stop = async function () {
+const end = async function () {
   await clearProgress()
 }
 
@@ -44,4 +44,4 @@ const clearProgress = async function () {
   } catch {}
 }
 
-export const debug = { start, update, stop }
+export const debug = { start, update, end }
