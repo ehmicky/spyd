@@ -6,7 +6,11 @@ import { normalizeDelta } from '../store/delta/config.js'
 import { normalizeSystem } from '../system/normalize.js'
 
 import { loadAllPlugins } from './plugins.js'
-import { validateStringArray, validatePositiveInteger } from './validate.js'
+import {
+  validateStringArray,
+  validatePositiveInteger,
+  validateSaveDuration,
+} from './validate.js'
 
 // Normalize some configuration properties before assigning default values
 export const preNormalizeConfig = function (config) {
@@ -57,11 +61,12 @@ const normalizeMerge = function ({ merge, ...config }) {
 }
 
 // Duration is specified in seconds by the user but we convert it to nanoseconds
-const normalizeDuration = function ({ duration, ...config }) {
+const normalizeDuration = function ({ duration, save, ...config }) {
   validatePositiveInteger(duration, 'duration')
+  validateSaveDuration(duration, save)
 
   const durationA = duration <= 1 ? duration : duration * NANOSECS_TO_SECS
-  return { ...config, duration: durationA }
+  return { ...config, duration: durationA, save }
 }
 
 const NANOSECS_TO_SECS = 1e9

@@ -30,3 +30,11 @@ export const validatePositiveInteger = function (value, name) {
     throw new UserError(`'${name}' must be a positive integer: ${value}`)
   }
 }
+
+export const validateSaveDuration = function (duration, save) {
+  if (duration === 0 && save) {
+    throw new UserError(
+      `The "duration" configuration property must not be 0 when "save" is enabled.`,
+    )
+  }
+}
