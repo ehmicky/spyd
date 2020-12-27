@@ -7,7 +7,7 @@ export const exitCombinations = async function (combinations) {
 }
 
 const exitCombination = async function (combination) {
-  if (processHasExited(combination.childProcess)) {
+  if (processHasExited(combination)) {
     return combination
   }
 
@@ -21,6 +21,10 @@ const exitCombination = async function (combination) {
   return newCombination
 }
 
-const processHasExited = function (childProcess) {
-  return childProcess.exitCode !== null || childProcess.signalCode !== null
+const processHasExited = function ({ childProcess, res = {} }) {
+  return (
+    childProcess.exitCode !== null ||
+    childProcess.signalCode !== null ||
+    res.destroyed
+  )
 }
