@@ -1,5 +1,6 @@
 import now from 'precise-now'
 
+import { setBenchmarkEnd } from '../progress/set.js'
 import { getSum } from '../stats/sum.js'
 
 // Update the benchmark end in the progress reporting.
@@ -17,11 +18,7 @@ export const updateBenchmarkEnd = function (
     remainingCombinations.map(getRemainingDuration),
   )
   const benchmarkEnd = now() + remainingDuration
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  progressState.benchmarkEnd =
-    progressState.benchmarkEnd === undefined
-      ? benchmarkEnd
-      : Math.min(progressState.benchmarkEnd, benchmarkEnd)
+  setBenchmarkEnd(progressState, benchmarkEnd)
 }
 
 const getRemainingDuration = function ({ maxDuration, totalDuration }) {
