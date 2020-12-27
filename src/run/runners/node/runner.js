@@ -1,5 +1,4 @@
 export { launch } from './launch.js'
-export { system } from './system.js'
 
 export const id = 'node'
 export const title = 'Node'

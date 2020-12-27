@@ -65,7 +65,7 @@ const DEFAULT_CONFIG = {
   cwd: getCwd(),
   delta: true,
   diff: true,
-  files: ['benchmarks.*', 'benchmarks/index.*'],
+  files: ['../benchmark/*.task.*'],
   info: false,
   limit: [],
   progress: { debug: {} },

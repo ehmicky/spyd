@@ -2,15 +2,27 @@ import { UserError } from '../error/main.js'
 
 // Validate that identifiers don't use characters that we are using for parsing
 // (e.g. , and = are used by `--limit`) or could use in the future.
-export const validateIds = function (ids) {
-  Object.entries(ids).forEach(validateId)
+export const validateCombinationsIds = function (combinations) {
+  combinations.forEach(validateCombinationIds)
 }
 
-const validateId = function ([name, id]) {
+const validateCombinationIds = function (combination) {
+  ID_PROPS.forEach(({ propName, name }) => {
+    validateId(combination[propName], propName, name)
+  })
+}
+
+const ID_PROPS = [
+  { propName: 'taskId', name: 'task' },
+  { propName: 'inputId', name: 'input' },
+  { propName: 'runnerId', name: 'runner' },
+  { propName: 'systemId', name: 'system' },
+]
+
+const validateId = function (id, propName, name) {
   if (!VALID_ID_REGEXP.test(id)) {
-    const nameA = name.replace('Id', '')
     throw new UserError(
-      `Invalid ${nameA} '${id}': must contain only letters, digits or _ . -`,
+      `Invalid ${name} '${id}': must contain only letters, digits or _ . -`,
     )
   }
 }

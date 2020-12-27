@@ -1,44 +1,39 @@
 import { UserError, PluginError } from '../error/main.js'
 
-import { getCommands } from './command.js'
-import { hasTasks } from './find.js'
-
 // Select the runners for the current tasks files, and retrieve their
 // related commands using `runner.launch()`
-export const loadRunners = async function (runners, taskPaths) {
-  const runnersA = runners.filter((runner) => hasTasks(runner, taskPaths))
-
-  const runnersB = await Promise.all(runnersA.map(loadRunner))
-  return runnersB
+export const loadRunners = async function (run) {
+  return await Promise.all(run.map(loadRunner))
 }
 
 const loadRunner = async function ({
   id: runnerId,
   title: runnerTitle,
   repeat: runnerRepeats,
-  config: runConfig,
   extensions,
-  launch: retrieveCommands,
+  launch,
+  config: runConfig,
 }) {
-  const commands = await launchRunner({ runnerId, runConfig, retrieveCommands })
-  const commandsA = await getCommands({
+  const {
+    spawn: runnerSpawn,
+    spawnOptions: runnerSpawnOptions = {},
+    versions: runnerVersions = {},
+  } = await launchRunner({ runnerId, runConfig, launch })
+  return {
     runnerId,
     runnerTitle,
     runnerRepeats,
-    runConfig,
-    commands,
-  })
-  return { commands: commandsA, extensions }
+    runnerSpawn,
+    runnerSpawnOptions,
+    runnerVersions,
+    extensions,
+  }
 }
 
 // Fire `runner.launch()`
-const launchRunner = async function ({
-  runnerId,
-  runConfig,
-  retrieveCommands,
-}) {
+const launchRunner = async function ({ runnerId, runConfig, launch }) {
   try {
-    return await retrieveCommands(runConfig)
+    return await launch(runConfig)
   } catch (error) {
     handleCommandsError(error, runnerId)
   }
@@ -49,5 +44,7 @@ const handleCommandsError = function (error, runnerId) {
     throw new UserError(`In runner '${runnerId}': ${error.message}`)
   }
 
-  throw new PluginError(`Runner '${runnerId}' internal error: ${error.stack}`)
+  throw new PluginError(
+    `In runner '${runnerId}', internal error: ${error.stack}`,
+  )
 }

@@ -1,3 +1,5 @@
+import { version as currentVersion } from 'process'
+
 import { normalizeRunConfig } from './config.js'
 import { getNodeVersion } from './version.js'
 
@@ -11,19 +13,13 @@ export const launch = async function (runConfig) {
   const versionInfo = await getNodeVersion(runConfigA)
 
   if (versionInfo === undefined) {
-    return {
-      spawn: ['node', MAIN_PATH],
-      versions: [{ value: ['node', '--version'] }],
-    }
+    return { spawn: ['node', MAIN_PATH], versions: { Node: currentVersion } }
   }
 
-  const { command, spawnOptions, versionRange, version } = versionInfo
-  const versions = versionRange === version ? [] : [{ value: version }]
+  const { command, spawnOptions, version } = versionInfo
   return {
-    id: versionRange,
-    title: versionRange,
     spawn: [command, MAIN_PATH],
     spawnOptions,
-    versions,
+    versions: { Node: version },
   }
 }

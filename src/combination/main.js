@@ -2,108 +2,84 @@ import { validateLimits } from '../limit/validate.js'
 import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
 
-import { removeDuplicates } from './duplicate.js'
-import { loadCombinations } from './load.js'
-import { getTaskPaths } from './path.js'
+import { getInputs } from './input.js'
+import { getCombinationsProduct } from './product.js'
+import { getTasks } from './task.js'
+import { validateCombinationsIds } from './validate.js'
 
 // Retrieve each combination, i.e. combination of task + input (if any)
-// eslint-disable-next-line max-lines-per-function
 export const getCombinations = async function ({
   files,
-  duration,
   cwd,
   system,
-  tasks,
-  inputs,
-  run: runners,
+  include,
+  exclude,
+  run,
   limits,
 }) {
-  return [
-    {
-      taskPath: '/home/ether/code/spyd/benchmark/math_random.task.js',
-      taskId: 'math_random',
-      taskTitle: 'MathRandom',
-      inputId: 'one',
-      inputTitle: 'One',
-      inputValue: 1,
-      commandRunner: 'node',
-      commandId: 'node',
-      commandTitle: 'Node',
-      commandDescription: 'Node (15.3.0)',
-      commandSpawn: [
-        'node',
-        '/home/ether/code/spyd/build/src/run/runners/node/main.js',
-      ],
-      commandSpawnOptions: {},
-      commandConfig: {},
-      runnerRepeats: true,
-      systemId: '',
-      systemTitle: '',
-    },
-    {
-      taskPath: '/home/ether/code/spyd/benchmark/math_random_two.task.js',
-      taskId: 'math_random_two',
-      taskTitle: 'MathRandomTwo',
-      inputId: 'two',
-      inputTitle: 'Two',
-      inputValue: 1,
-      commandRunner: 'node',
-      commandId: 'node',
-      commandTitle: 'Node',
-      commandDescription: 'Node (15.3.0)',
-      commandSpawn: [
-        'node',
-        '/home/ether/code/spyd/build/src/run/runners/node/main.js',
-      ],
-      commandSpawnOptions: {},
-      commandConfig: {},
-      runnerRepeats: true,
-      systemId: '',
-      systemTitle: '',
-    },
-  ]
+  // return [
+  //   {
+  //     taskPath: '/home/ether/code/spyd/benchmark/math_random.task.js',
+  //     taskId: 'math_random',
+  //     taskTitle: 'MathRandom',
+  //     inputId: 'one',
+  //     inputTitle: 'One',
+  //     inputValue: 1,
+  //     commandRunner: 'node',
+  //     commandId: 'node',
+  //     commandTitle: 'Node',
+  //     commandDescription: 'Node (15.3.0)',
+  //     commandSpawn: [
+  //       'node',
+  //       '/home/ether/code/spyd/build/src/run/runners/node/main.js',
+  //     ],
+  //     commandSpawnOptions: {},
+  //     commandConfig: {},
+  //     runnerRepeats: true,
+  //     systemId: '',
+  //     systemTitle: '',
+  //   },
+  //   {
+  //     taskPath: '/home/ether/code/spyd/benchmark/math_random_two.task.js',
+  //     taskId: 'math_random_two',
+  //     taskTitle: 'MathRandomTwo',
+  //     inputId: 'two',
+  //     inputTitle: 'Two',
+  //     inputValue: 1,
+  //     commandRunner: 'node',
+  //     commandId: 'node',
+  //     commandTitle: 'Node',
+  //     commandDescription: 'Node (15.3.0)',
+  //     commandSpawn: [
+  //       'node',
+  //       '/home/ether/code/spyd/build/src/run/runners/node/main.js',
+  //     ],
+  //     commandSpawnOptions: {},
+  //     commandConfig: {},
+  //     runnerRepeats: true,
+  //     systemId: '',
+  //     systemTitle: '',
+  //   },
+  // ]
 
-  // TODO: fix
-  // eslint-disable-next-line no-unreachable
-  const taskPaths = await getTaskPaths(files, cwd)
+  const [tasks, inputs, runnersA] = await Promise.all([
+    getTasks(files, cwd),
+    getInputs(),
+    loadRunners(run),
+  ])
+  dsds
 
-  const runnersA = await loadRunners(runners, taskPaths)
-
-  const combinations = await getAllCombinations({
-    taskPaths,
-    runners: runnersA,
-    duration,
-    cwd,
-    system,
+  const combinations = getCombinationsProduct({
     tasks,
+    runners: runnersA,
     inputs,
-    limits,
-  })
-  return combinations
-}
-
-const getAllCombinations = async function ({
-  taskPaths,
-  runners,
-  duration,
-  cwd,
-  system,
-  tasks,
-  inputs,
-  limits,
-}) {
-  const combinations = await loadCombinations({
-    taskPaths,
-    runners,
-    duration,
-    cwd,
     system,
   })
+  validateCombinationsIds(combinations)
 
-  const combinationsA = removeDuplicates(combinations)
-  const combinationsB = selectCombinations(combinationsA, { tasks, inputs })
+  const combinationsA = selectCombinations(combinations, { include, exclude })
 
-  validateLimits(combinationsB, limits)
+  validateLimits(combinationsA, limits)
 
-  return combinationsB
+  return combinationsA
 }
