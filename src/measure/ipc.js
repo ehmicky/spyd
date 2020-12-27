@@ -35,7 +35,12 @@ export const sendAndReceive = async function (combination, params) {
 
 export const sendParams = async function (combination, params) {
   try {
-    await sendResponse(combination, params)
+    const paramsString = JSON.stringify(params)
+    const { res } = combination
+    await Promise.race([
+      throwOnStreamError(res),
+      promisify(res.end.bind(res))(paramsString),
+    ])
     return combination
   } catch (error) {
     const errorA = new PluginError(
@@ -43,15 +48,6 @@ export const sendParams = async function (combination, params) {
     )
     return addCombinationError(combination, errorA)
   }
-}
-
-// We use `once(res, 'dummy_event')` to make any `error` event throw
-const sendResponse = async function ({ res }, params) {
-  const paramsString = JSON.stringify(params)
-  await Promise.race([
-    once(res, 'dummy_event'),
-    promisify(res.end.bind(res))(paramsString),
-  ])
 }
 
 // Receive the sample's return value by receiving a HTTP long poll request.
@@ -80,12 +76,17 @@ const waitForReturnValue = async function ({ serverChannel }) {
 // Parse the request's JSON body
 const parseReturnValue = async function (req) {
   try {
-    const returnValueString = await getStream(req)
+    const returnValueString = await Promise.race([
+      throwOnStreamError(req),
+      getStream(req),
+    ])
     const returnValue = JSON.parse(returnValueString)
     const error = getTaskError(returnValue)
     return { returnValue, error }
   } catch (error) {
-    const errorA = new PluginError(`Invalid JSON return value: ${error.stack}`)
+    const errorA = new PluginError(
+      `Could not receive HTTP request: ${error.stack}`,
+    )
     return { error: errorA }
   }
 }
@@ -103,3 +104,8 @@ const getTaskError = function ({ error }) {
 
 // eslint-disable-next-line no-empty-function
 const noop = function () {}
+
+// Make any stream `error` event throw
+const throwOnStreamError = function (stream) {
+  return once(stream, 'dummy_event')
+}
