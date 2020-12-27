@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { getFinalStats } from './aggregate.js'
+import { getFinalStats } from '../sample/aggregate.js'
 
 // Initialize some combination properties
 export const addInitProps = function (

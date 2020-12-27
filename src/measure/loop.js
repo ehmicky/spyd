@@ -1,7 +1,7 @@
 import { failOnProcessExit } from '../error/combination.js'
+import { measureSample } from '../sample/main.js'
 
 import { getNextCombination } from './next.js'
-import { measureSample } from './sample.js'
 
 // Run samples to measure each combination.
 // We ensure combinations are never measured at the same time

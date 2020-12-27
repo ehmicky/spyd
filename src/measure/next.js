@@ -1,8 +1,9 @@
+import now from 'precise-now'
 import randomItem from 'random-item'
 
 import { combinationHasErrored } from '../error/combination.js'
-
-import { updateBenchmarkEnd } from './duration.js'
+import { setBenchmarkEnd } from '../progress/set.js'
+import { getSum } from '../stats/sum.js'
 
 // Retrieve the next combination which should be measured.
 // We do it based on which combination are been measured the least.
@@ -66,6 +67,25 @@ const isRemainingCombination = function (
     (sampleDurationMean === undefined ||
       totalDuration + sampleDurationMean < maxDuration)
   )
+}
+
+// Update the benchmark end in the progress reporting.
+// When a combination ends, we stop including its remaining duration. This
+// allows `benchmarkEnd` to adjust progressively at the end of the benchmark as
+// each combination ends.
+// If a task is slower than its `duration`, `benchmarkEnd` might increase. In
+// that case, we make `benchmarkEnd` freeze for a moment instead of making it
+// jump up.
+const updateBenchmarkEnd = function (remainingCombinations, progressState) {
+  const remainingDuration = getSum(
+    remainingCombinations.map(getRemainingDuration),
+  )
+  const benchmarkEnd = now() + remainingDuration
+  setBenchmarkEnd(progressState, benchmarkEnd)
+}
+
+const getRemainingDuration = function ({ maxDuration, totalDuration }) {
+  return Math.max(maxDuration - totalDuration, 0)
 }
 
 // The `duration` configuration property is for each combination, not the whole
