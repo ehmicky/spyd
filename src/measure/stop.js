@@ -56,7 +56,7 @@ const handleStop = function ({ stopState, progressState, reject }) {
 }
 
 const abortBenchmark = function ({ stopState, progressState, reject }) {
-  if (stopState.stopped + ABORT_DELAY > now()) {
+  if (isEarlyAbort(stopState)) {
     return
   }
 
@@ -67,7 +67,11 @@ const abortBenchmark = function ({ stopState, progressState, reject }) {
 // Users must wait 5 seconds before being able to abort.
 // This promotes proper cleanup.
 // Also, this prevents misuse due to users mistakenly hitting the keys twice.
-const ABORT_DELAY = 5e3
+const isEarlyAbort = function ({ stopped }) {
+  return stopped + ABORT_DELAY > now()
+}
+
+const ABORT_DELAY = 5e9
 
 const removeHandlers = function (handlers) {
   handlers.forEach(removeHandler)
