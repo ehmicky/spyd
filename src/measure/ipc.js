@@ -35,9 +35,9 @@ export const sendParams = async function ({ res }, params) {
 // Receive the sample's return value by receiving a HTTP long poll request.
 export const receiveReturnValue = async function (combination) {
   const [{ req, res }] = await once(combination.serverChannel, 'return')
+  const newCombination = { ...combination, res }
   const returnValue = await getJsonReturn(req)
   handleTaskError(returnValue)
-  const newCombination = { ...combination, res }
   return { newCombination, returnValue }
 }
 
