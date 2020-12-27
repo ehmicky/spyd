@@ -64,13 +64,25 @@ const spawnAndMeasure = async function ({
   const combinationsA = spawnProcesses({ combinations, origin, cwd })
 
   try {
-    return await Promise.race([
-      ...onProgressError,
-      measureAllCombinations(combinationsA, progressState),
-    ])
+    return await stopOrMeasure({
+      combinations: combinationsA,
+      progressState,
+      onProgressError,
+    })
   } finally {
     terminateProcesses(combinationsA)
   }
+}
+
+const stopOrMeasure = async function ({
+  combinations,
+  progressState,
+  onProgressError,
+}) {
+  return await Promise.race([
+    ...onProgressError,
+    measureAllCombinations(combinations, progressState),
+  ])
 }
 
 // Measure all combinations, until there is no `duration` left.
