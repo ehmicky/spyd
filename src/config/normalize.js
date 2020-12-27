@@ -65,7 +65,8 @@ const normalizeDuration = function ({ duration, save, ...config }) {
   validatePositiveInteger(duration, 'duration')
   validateSaveDuration(duration, save)
 
-  const durationA = duration <= 1 ? duration : duration * NANOSECS_TO_SECS
+  const durationA =
+    duration === 0 || duration === 1 ? duration : duration * NANOSECS_TO_SECS
   return { ...config, duration: durationA, save }
 }
 

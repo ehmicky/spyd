@@ -72,7 +72,7 @@ export const setBenchmarkEnd = function (progressState, benchmarkEnd) {
 
 // When duration is 0 or 1, we count up, not down
 export const setBenchmarkStart = function (progressState, duration) {
-  if (duration > 1) {
+  if (duration !== 0 && duration !== 1) {
     return
   }
 

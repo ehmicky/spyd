@@ -11,7 +11,7 @@ export const getTimeProps = function ({
   combinations,
   duration,
 }) {
-  return duration <= 1
+  return duration === 0 || duration === 1
     ? getStartDurationProps(progressState)
     : getEndDurationProps({ progressState, combinations, duration })
 }

@@ -23,7 +23,8 @@ export const terminateLongTask = function ({
 const isLongTask = function ({ sampleStart, totalDuration, duration }) {
   return (
     totalDuration !== undefined &&
-    duration > 1 &&
+    duration !== 0 &&
+    duration !== 1 &&
     now() - sampleStart + totalDuration > duration
   )
 }
@@ -39,7 +40,7 @@ export const setStopBenchmarkEnd = function ({
   stopState: { sampleStart, combination: { sampleDurationMean = 0 } = {} },
   duration,
 }) {
-  if (sampleDurationMean === 0 || duration <= 1) {
+  if (sampleDurationMean === 0 || duration === 0 || duration === 1) {
     return
   }
 

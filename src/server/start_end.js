@@ -37,7 +37,7 @@ const serverListen = async function (server, duration) {
 }
 
 const setKeepAliveTimeout = function (server, duration) {
-  if (duration <= 1) {
+  if (duration === 0 || duration === 1) {
     return
   }
 

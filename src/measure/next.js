@@ -118,7 +118,7 @@ const updateBenchmarkEnd = function ({
   progressState,
   duration,
 }) {
-  if (duration <= 1) {
+  if (duration === 0 || duration === 1) {
     return
   }
 
