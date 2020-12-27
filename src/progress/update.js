@@ -1,5 +1,5 @@
 import { stderr } from 'process'
-import { cursorTo, clearLine } from 'readline'
+import { cursorTo, clearScreenDown } from 'readline'
 import { promisify } from 'util'
 
 import now from 'precise-now'
@@ -7,7 +7,7 @@ import now from 'precise-now'
 import { getDuration } from './duration.js'
 
 const pCursorTo = promisify(cursorTo)
-const pClearLine = promisify(clearLine)
+const pClearScreenDown = promisify(clearScreenDown)
 
 // Call each `reporter.update()`
 export const updateProgress = async function ({
@@ -15,16 +15,13 @@ export const updateProgress = async function ({
   benchmarkDuration,
   reporters,
 }) {
-  try {
-    const progressContent = getProgressContent({
-      progressState,
-      benchmarkDuration,
-      reporters,
-    })
-    await clearProgress()
-    await promisify(stderr.write.bind(stderr))(progressContent)
-    // TODO: better error handling
-  } catch {}
+  const progressContent = getProgressContent({
+    progressState,
+    benchmarkDuration,
+    reporters,
+  })
+  await clearProgress(false)
+  await writeToStderr(progressContent)
 }
 
 const getProgressContent = function ({
@@ -52,7 +49,17 @@ const getTimeLeft = function (benchmarkEnd, benchmarkDuration) {
 
 const PROGRESS_SEPARATOR = '\n\n'
 
-export const clearProgress = async function () {
-  await pCursorTo(stderr, 0)
-  await pClearLine(stderr, 0)
+export const initialClearProgress = async function () {
+  const newlines = '\n'.repeat(stderr.rows - 1)
+  await writeToStderr(newlines)
+}
+
+export const clearProgress = async function (final) {
+  const row = final ? 0 : 1
+  await pCursorTo(stderr, 0, row)
+  await pClearScreenDown(stderr)
+}
+
+const writeToStderr = async function (string) {
+  await promisify(stderr.write.bind(stderr))(string)
 }
