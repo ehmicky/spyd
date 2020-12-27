@@ -12,14 +12,18 @@ export const performLoopsAsync = async function ({
   mainMeasures,
   emptyMeasures,
 }) {
+  // eslint-disable-next-line fp/no-let
+  let contexts = getContexts(repeat)
+
   // eslint-disable-next-line fp/no-loops
   while (mainMeasures.length < maxLoops) {
-    // eslint-disable-next-line no-await-in-loop
-    await performLoopAsync({
+    // eslint-disable-next-line no-await-in-loop, fp/no-mutation
+    contexts = await performLoopAsync({
       main,
       beforeEach,
       afterEach,
       repeat,
+      contexts,
       mainMeasures,
       emptyMeasures,
     })
@@ -31,16 +35,18 @@ const performLoopAsync = async function ({
   beforeEach,
   afterEach,
   repeat,
+  contexts,
   mainMeasures,
   emptyMeasures,
 }) {
   addEmptyMeasure(emptyMeasures)
 
-  const contexts = getContexts(repeat)
-  await performHookAsync(beforeEach, contexts)
+  const contextsA = getContexts(repeat, contexts)
+  await performHookAsync(beforeEach, contextsA)
   // eslint-disable-next-line fp/no-mutating-methods
-  mainMeasures.push(await getDurationAsync(main, contexts))
-  await performHookAsync(afterEach, contexts)
+  mainMeasures.push(await getDurationAsync(main, contextsA))
+  await performHookAsync(afterEach, contextsA)
+  return contextsA
 }
 
 // Each `beforeEach`/`afterEach` is executed serially to prevent hitting OS

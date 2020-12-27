@@ -22,8 +22,22 @@
 //  - Context objects are meant for `beforeEach`, `main` and `afterEach`
 //  - The top-level scope can be read by all, but can only be modified by
 //    `beforeAll` and `afterAll`
-export const getContexts = function (repeat) {
+export const getContexts = function (repeat, contexts) {
+  if (canReuseContexts(contexts)) {
+    return contexts
+  }
+
   return Array.from({ length: repeat }, getContext)
+}
+
+// Creating contexts is slow. If the previous `contexts` was not used, we re-use
+// it
+const canReuseContexts = function (contexts) {
+  return contexts !== undefined && contexts.every(isEmptyObject)
+}
+
+const isEmptyObject = function (obj) {
+  return Object.getOwnPropertyNames(obj).length === 0
 }
 
 const getContext = function () {
