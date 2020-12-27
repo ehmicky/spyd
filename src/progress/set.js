@@ -40,12 +40,25 @@ export const setPriorityDescription = function (
   progressState.priorityDescription = priorityDescription
 }
 
-export const getDescription = function ({
-  description,
-  priorityDescription = description,
-}) {
-  return priorityDescription
+export const getDescription = function (
+  { description, priorityDescription },
+  duration,
+) {
+  if (priorityDescription !== undefined) {
+    return priorityDescription
+  }
+
+  if (description !== undefined) {
+    return description
+  }
+
+  if (duration === 0) {
+    return NO_DURATION_DESCRIPTION
+  }
 }
+
+// Clear instruction when `duration` is 0
+const NO_DURATION_DESCRIPTION = 'Type CTRL-C to stop.'
 
 // Set the progress reporting duration and percentage by setting the expected
 // end of the benchmark

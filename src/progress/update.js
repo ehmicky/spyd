@@ -39,7 +39,7 @@ const getProgressContent = function ({
     combinations,
     duration,
   })
-  const description = getDescription(progressState)
+  const description = getDescription(progressState, duration)
 
   return reporters
     .map((reporter) => reporter.update({ percentage, time, description }))

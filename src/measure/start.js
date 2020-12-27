@@ -5,7 +5,7 @@ import { setDescription } from '../progress/set.js'
 // Wait for each combination to start
 export const startCombinations = async function (combinations, progressState) {
   const combinationsA = await Promise.all(combinations.map(eStartCombination))
-  setDescription(progressState, '')
+  setDescription(progressState)
   return combinationsA
 }
 
