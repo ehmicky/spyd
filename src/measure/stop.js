@@ -1,5 +1,7 @@
 import process from 'process'
 
+import now from 'precise-now'
+
 import { UserError } from '../error/main.js'
 import { setPriorityDescription, setBenchmarkEnd } from '../progress/set.js'
 import {
@@ -16,7 +18,7 @@ import {
 // This would decrease precision and create difference between results depending
 // on how many times the benchmark was stopped/continued.
 export const addStopHandler = function (progressState) {
-  const stopState = {}
+  const stopState = INITIAL_STOP_STATE
   const noopHandler = removeDefaultHandlers()
   const { abortSignal, abort } = createController()
   const onAbort = handleStop({ stopState, progressState, abortSignal })
@@ -27,6 +29,8 @@ export const addStopHandler = function (progressState) {
   )
   return { stopState, onAbort, removeStopHandler: removeStopHandlerA }
 }
+
+const INITIAL_STOP_STATE = { stopped: false, longTask: false }
 
 // Ensure default handlers for those signals are not used.
 // Create a new `noop` function at each call, in case this function is called
@@ -62,6 +66,7 @@ const handleStop = async function ({ stopState, progressState, abortSignal }) {
 }
 
 const setStopState = function (progressState, stopState) {
+  terminateLongTask({ stopState })
   setPriorityDescription(progressState, STOP_DESCRIPTION)
   setStopBenchmarkEnd(progressState, stopState)
 
@@ -85,6 +90,33 @@ const setStopBenchmarkEnd = function (
 
   const benchmarkEnd = sampleStart + sampleDurationMean
   setBenchmarkEnd(progressState, benchmarkEnd)
+}
+
+// Tasks that are longer than the `duration` configuration property are likely
+// reasons why users might stop the benchmark. In that case, the task might be
+// much longer to end, so we do not do any end/exit and directly terminate it.
+const terminateLongTask = function ({
+  stopState,
+  stopState: {
+    sampleStart,
+    combination: { totalDuration, maxDuration, childProcess } = {},
+  },
+}) {
+  if (!isLongTask({ sampleStart, totalDuration, maxDuration })) {
+    return
+  }
+
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  stopState.longTask = true
+  childProcess.kill('SIGKILL')
+}
+
+// Total duration is `undefined` when not in `measure` phase
+const isLongTask = function ({ sampleStart, totalDuration, maxDuration }) {
+  return (
+    totalDuration !== undefined &&
+    now() - sampleStart + totalDuration > maxDuration
+  )
 }
 
 const waitForStopSignals = async function (abortSignal) {

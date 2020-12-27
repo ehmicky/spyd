@@ -48,16 +48,24 @@ const getTaskPrefix = function (taskId, inputId) {
 //  - The task made the process exit, which is improper since it prevents proper
 //    cleanup and orchestration.
 //  - The runner crashed due to a bug.
-export const failOnProcessExit = async function (combination) {
+export const failOnProcessExit = async function (combination, stopState) {
   const { failed, message } = await combination.childProcess
-  const exitMessage = getProcessExitMessage(failed, message)
+  const exitMessage = getProcessExitMessage({ failed, message, stopState })
   const error = new UserError(exitMessage)
   return { ...combination, error }
 }
 
 // Replace "Command" by "Task" and remove the runner process spawnParams from
 // the error message
-const getProcessExitMessage = function (failed, message) {
+const getProcessExitMessage = function ({
+  failed,
+  message,
+  stopState: { longTask } = {},
+}) {
+  if (longTask) {
+    return LONG_TASK_MESSAGE
+  }
+
   if (!failed) {
     return TASK_EXIT_MESSAGE
   }
@@ -65,6 +73,8 @@ const getProcessExitMessage = function (failed, message) {
   return message.replace(EXECA_MESSAGE_REGEXP, 'The task $1')
 }
 
+const LONG_TASK_MESSAGE =
+  'The task is either never ending, or slower than the "duration" configuration property.'
 const TASK_EXIT_MESSAGE = 'The task must not make the process exit.'
 const EXECA_MESSAGE_REGEXP = /^Command ([^:]+): .*/u
 
