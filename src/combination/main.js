@@ -1,5 +1,4 @@
 import { validateLimits } from '../limit/validate.js'
-import { addTitles } from '../report/utils/title/main.js'
 import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
 
@@ -80,9 +79,7 @@ export const getCombinations = async function ({
     inputs,
     limits,
   })
-
-  const combinationsA = addTitles(combinations)
-  return combinationsA
+  return combinations
 }
 
 const getAllCombinations = async function ({
