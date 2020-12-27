@@ -3,16 +3,12 @@ import { v4 as uuidv4 } from 'uuid'
 import { getFinalStats } from '../sample/aggregate.js'
 
 // Initialize some combination properties
-export const addInitProps = function (
-  { runnerRepeats, ...combination },
-  duration,
-) {
+export const addInitProps = function ({ runnerRepeats, ...combination }) {
   return {
     ...combination,
     runnerRepeats,
     id: uuidv4(),
     totalDuration: 0,
-    maxDuration: duration,
     sampleDurationLast: 0,
     sampleDurationMean: 0,
     measureDurationLast: 0,

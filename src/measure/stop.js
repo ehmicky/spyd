@@ -21,10 +21,19 @@ export const getStopState = function () {
   return { stopped: false, longTask: false }
 }
 
-export const addStopHandler = function (stopState, progressState) {
+export const addStopHandler = function ({
+  stopState,
+  progressState,
+  duration,
+}) {
   const noopHandler = removeDefaultHandlers()
   const { abortSignal, abort } = createController()
-  const onAbort = handleStop({ stopState, progressState, abortSignal })
+  const onAbort = handleStop({
+    stopState,
+    progressState,
+    abortSignal,
+    duration,
+  })
   const removeStopHandlerA = removeStopHandler.bind(
     undefined,
     abort,
@@ -53,10 +62,15 @@ const restoreDefaultHandlers = function (signalHandler) {
   })
 }
 
-const handleStop = async function ({ stopState, progressState, abortSignal }) {
+const handleStop = async function ({
+  stopState,
+  progressState,
+  abortSignal,
+  duration,
+}) {
   await waitForStopSignals(abortSignal)
 
-  setStopState(progressState, stopState)
+  setStopState({ progressState, stopState, duration })
 
   await waitForDelay(ABORT_DELAY, abortSignal)
   setPriorityDescription(progressState, ABORT_DESCRIPTION)
@@ -66,10 +80,10 @@ const handleStop = async function ({ stopState, progressState, abortSignal }) {
   throw new UserError('Benchmark has been aborted')
 }
 
-const setStopState = function (progressState, stopState) {
-  terminateLongTask({ stopState })
+const setStopState = function ({ progressState, stopState, duration }) {
+  terminateLongTask({ stopState, duration })
   setPriorityDescription(progressState, STOP_DESCRIPTION)
-  setStopBenchmarkEnd(progressState, stopState)
+  setStopBenchmarkEnd({ progressState, stopState, duration })
 
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true

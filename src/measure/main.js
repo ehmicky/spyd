@@ -17,9 +17,7 @@ export const measureCombinations = async function ({
   progressState,
   onProgressError,
 }) {
-  const combinationsA = combinations.map((combination) =>
-    addInitProps(combination, duration),
-  )
+  const combinationsA = combinations.map(addInitProps)
   const combinationsB = await startServerAndMeasure({
     combinations: combinationsA,
     duration,
@@ -91,10 +89,11 @@ const stopOrMeasure = async function ({
   progressState,
   onProgressError,
 }) {
-  const { onAbort, removeStopHandler } = addStopHandler(
+  const { onAbort, removeStopHandler } = addStopHandler({
     stopState,
     progressState,
-  )
+    duration,
+  })
 
   try {
     return await Promise.race([

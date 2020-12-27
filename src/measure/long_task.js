@@ -7,12 +7,10 @@ import { setBenchmarkEnd } from '../progress/set.js'
 // much longer to end, so we do not do any end/exit and directly terminate it.
 export const terminateLongTask = function ({
   stopState,
-  stopState: {
-    sampleStart,
-    combination: { totalDuration, maxDuration, childProcess } = {},
-  },
+  stopState: { sampleStart, combination: { totalDuration, childProcess } = {} },
+  duration,
 }) {
-  if (!isLongTask({ sampleStart, totalDuration, maxDuration })) {
+  if (!isLongTask({ sampleStart, totalDuration, duration })) {
     return
   }
 
@@ -22,11 +20,11 @@ export const terminateLongTask = function ({
 }
 
 // Total duration is `undefined` when not in `measure` phase
-const isLongTask = function ({ sampleStart, totalDuration, maxDuration }) {
+const isLongTask = function ({ sampleStart, totalDuration, duration }) {
   return (
     totalDuration !== undefined &&
-    maxDuration > 1 &&
-    now() - sampleStart + totalDuration > maxDuration
+    duration > 1 &&
+    now() - sampleStart + totalDuration > duration
   )
 }
 
@@ -36,11 +34,12 @@ const isLongTask = function ({ sampleStart, totalDuration, maxDuration }) {
 //  - not in measure phase
 //  - measuring the first sample of the task
 // In that case, we leave `benchmarkEnd` as is
-export const setStopBenchmarkEnd = function (
+export const setStopBenchmarkEnd = function ({
   progressState,
-  { sampleStart, combination: { sampleDurationMean = 0, maxDuration } = {} },
-) {
-  if (sampleDurationMean === 0 || maxDuration <= 1) {
+  stopState: { sampleStart, combination: { sampleDurationMean = 0 } = {} },
+  duration,
+}) {
+  if (sampleDurationMean === 0 || duration <= 1) {
     return
   }
 

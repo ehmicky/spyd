@@ -14,10 +14,11 @@ export const getNextCombination = function ({
   progressState,
   stopState,
 }) {
-  const remainingCombinations = getRemainingCombinations(
+  const remainingCombinations = getRemainingCombinations({
     combinations,
+    duration,
     stopState,
-  )
+  })
   updateBenchmarkEnd({ remainingCombinations, progressState, duration })
 
   if (remainingCombinations.length === 0) {
@@ -43,14 +44,18 @@ export const getNextCombination = function ({
 // nor exiting them because:
 //  - Adding imports to a task should not change the task's number of samples
 //  - Adding slow-to-start tasks should not change other tasks number of samples
-const getRemainingCombinations = function (combinations, stopState) {
+const getRemainingCombinations = function ({
+  combinations,
+  duration,
+  stopState,
+}) {
   if (shouldEndMeasuring(combinations, stopState)) {
     return []
   }
 
   const combinationMaxLoops = getCombinationMaxLoops(combinations)
   return combinations.filter((combination) =>
-    isRemainingCombination(combination, combinationMaxLoops),
+    isRemainingCombination({ combination, duration, combinationMaxLoops }),
   )
 }
 
@@ -71,30 +76,31 @@ const getCombinationMaxLoops = function (combinations) {
 // little more than 1e8 floats.
 const MAX_LOOPS = 1e8
 
-const isRemainingCombination = function (
-  { totalDuration, maxDuration, sampleDurationMean, loops, repeatInit },
+const isRemainingCombination = function ({
+  combination: { totalDuration, sampleDurationMean, loops, repeatInit },
+  duration,
   combinationMaxLoops,
-) {
+}) {
   return (
     loops < combinationMaxLoops &&
-    hasTimeLeft({ maxDuration, sampleDurationMean, totalDuration, repeatInit })
+    hasTimeLeft({ duration, sampleDurationMean, totalDuration, repeatInit })
   )
 }
 
 const hasTimeLeft = function ({
-  maxDuration,
+  duration,
   sampleDurationMean,
   totalDuration,
   repeatInit,
 }) {
-  if (maxDuration === 1) {
+  if (duration === 1) {
     return repeatInit
   }
 
   return (
-    maxDuration === 0 ||
+    duration === 0 ||
     sampleDurationMean === undefined ||
-    totalDuration + sampleDurationMean < maxDuration
+    totalDuration + sampleDurationMean < duration
   )
 }
 
@@ -117,14 +123,16 @@ const updateBenchmarkEnd = function ({
   }
 
   const remainingDuration = getSum(
-    remainingCombinations.map(getRemainingDuration),
+    remainingCombinations.map((combination) =>
+      getRemainingDuration(combination, duration),
+    ),
   )
   const benchmarkEnd = now() + remainingDuration
   setBenchmarkEnd(progressState, benchmarkEnd)
 }
 
-const getRemainingDuration = function ({ maxDuration, totalDuration }) {
-  return Math.max(maxDuration - totalDuration, 0)
+const getRemainingDuration = function ({ totalDuration }, duration) {
+  return Math.max(duration - totalDuration, 0)
 }
 
 // The `duration` configuration property is for each combination, not the whole
