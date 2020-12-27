@@ -1,4 +1,4 @@
-import { setDescription } from '../progress/set.js'
+import { setDescription, setDelayedDescription } from '../progress/set.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { sendAndReceive, sendParams, receiveReturnValue } from './ipc.js'
@@ -13,7 +13,7 @@ export const measureCombinations = async function (
 ) {
   const combinationsA = await startCombinations(combinations, progressState)
   const combinationsB = await measureSamples(combinationsA, progressState)
-  const combinationsC = await stopCombinations(combinationsB)
+  const combinationsC = await stopCombinations(combinationsB, progressState)
   return combinationsC
 }
 
@@ -109,9 +109,12 @@ const updateCombination = function (
   return combination === oldCombination ? newCombination : combination
 }
 
-const stopCombinations = async function (combinations) {
+const stopCombinations = async function (combinations, progressState) {
+  setDelayedDescription(progressState, STOP_DESCRIPTION)
   return await Promise.all(combinations.map(stopCombination))
 }
+
+const STOP_DESCRIPTION = 'Finishing...'
 
 const stopCombination = async function (combination) {
   const { newCombination } = await sendAndReceive(combination, {})

@@ -19,7 +19,7 @@ export const startProgress = async function (
     reporters,
     benchmarkDuration,
   )
-  setStartDescription(progressState)
+  setDelayedDescription(progressState, START_DESCRIPTION)
 
   const removeOnExit = onExit(() => stopProgress({ progressId, reporters }))
 
@@ -38,13 +38,4 @@ const startReporter = async function (reporter) {
   await reporter.start({})
 }
 
-const setStartDescription = function (progressState) {
-  setDelayedDescription(
-    progressState,
-    START_DESCRIPTION,
-    START_DESCRIPTION_DELAY,
-  )
-}
-
 const START_DESCRIPTION = 'Starting...'
-const START_DESCRIPTION_DELAY = 1e3

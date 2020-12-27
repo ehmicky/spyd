@@ -1,18 +1,16 @@
 // Like `setDescription()` but wait for a specific `delay` first to avoid
 // flickering.
-export const setDelayedDescription = function (
-  progressState,
-  description,
-  delay,
-) {
+export const setDelayedDescription = function (progressState, description) {
   const descriptionTimeout = setTimeout(
     () => setDescription(progressState, description),
-    delay,
+    DESCRIPTION_DELAY,
   )
   descriptionTimeout.unref()
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   progressState.descriptionTimeout = descriptionTimeout
 }
+
+const DESCRIPTION_DELAY = 1e3
 
 // Set the progress reporting description
 export const setDescription = function (progressState, description) {
