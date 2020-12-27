@@ -60,6 +60,7 @@ export const spawnProcess = function ({
     preferLocal: true,
     reject: false,
     cleanup: true,
+    detached: true,
   })
   return { ...combination, childProcess }
 }
