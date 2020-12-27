@@ -43,19 +43,15 @@ const save = async function ({
 // We otherwise try to persist everything, so that `show` report the same
 // information.
 // We try to only persist what cannot be computed runtime (which is done by
-// `addPrintedInfo()` during reporting). This includes
-// `combination.row|column` which are only computed for progress reporters,
-// but re-computed after previous results loading/merging.
+// `addPrintedInfo()` during reporting).
 const normalizeResult = function ({ combinations, ...result }) {
   const combinationsA = combinations.map(normalizeCombination)
   return { ...result, combinations: combinationsA }
 }
 
 const normalizeCombination = function ({ stats, ...combination }) {
-  const combinationA = omit(combination, OMITTED_PROPS)
   const statsA = omit(stats, OMITTED_STATS_PROPS)
-  return { ...combinationA, stats: statsA }
+  return { ...combination, stats: statsA }
 }
 
-const OMITTED_PROPS = ['row', 'column']
 const OMITTED_STATS_PROPS = ['histogram', 'quantiles']

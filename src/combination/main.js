@@ -44,8 +44,6 @@ export const getCombinations = async function ({
       inputTitlePadded: 'One  ',
       commandTitlePadded: 'Node',
       systemTitlePadded: '',
-      column: ['One  ', 'Node'],
-      row: ['MathRandom   ', 'One  ', 'Node'],
     },
     {
       taskPath: '/home/ether/code/spyd/benchmark/math_random_two.task.js',
@@ -71,8 +69,6 @@ export const getCombinations = async function ({
       inputTitlePadded: 'One  ',
       commandTitlePadded: 'Node',
       systemTitlePadded: '',
-      column: ['One  ', 'Node'],
-      row: ['MathRandomTwo', 'One  ', 'Node'],
     },
   ]
 
