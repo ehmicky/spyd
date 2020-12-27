@@ -56,6 +56,7 @@ const handleStop = async function ({ stopState, progressState, abortSignal }) {
   stopState.stopped = true
 
   await waitForDelay(ABORT_DELAY, abortSignal)
+  setPriorityDescription(progressState, ABORT_DESCRIPTION)
 
   await waitForStopSignals(abortSignal)
 
@@ -71,6 +72,7 @@ const waitForStopSignals = async function (abortSignal) {
 const STOP_SIGNALS = ['SIGINT', 'SIGBREAK', 'SIGHUP', 'SIGTERM', 'SIGQUIT']
 
 const STOP_DESCRIPTION = 'Stopping...'
+const ABORT_DESCRIPTION = 'Stopping... Type CTRL-C to abort graceful exit.'
 
 // Users must wait 5 seconds before being able to abort.
 // This promotes proper cleanup.
