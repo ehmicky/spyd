@@ -3,12 +3,12 @@ import { argv, exit } from 'process'
 import fetch from 'cross-fetch'
 
 // Handles IPC communication with the main process
-export const startRunner = async function ({ load, benchmark }) {
+export const startRunner = async function ({ load, measure }) {
   const { serverUrl, loadParams } = parseLoadParams()
 
   try {
     const loadState = await load(loadParams)
-    await measureSamples({ benchmark, serverUrl, loadState })
+    await measureSamples({ measure, serverUrl, loadState })
     await successExit(serverUrl)
   } catch (error) {
     await errorExit(error, serverUrl)
@@ -22,7 +22,7 @@ const parseLoadParams = function () {
 }
 
 // Load the task then runs a new sample each time the main process asks for it
-const measureSamples = async function ({ benchmark, serverUrl, loadState }) {
+const measureSamples = async function ({ measure, serverUrl, loadState }) {
   // eslint-disable-next-line fp/no-let
   let returnValue = {}
 
@@ -37,7 +37,7 @@ const measureSamples = async function ({ benchmark, serverUrl, loadState }) {
     }
 
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
-    returnValue = await benchmark(params, loadState)
+    returnValue = await measure(params, loadState)
   }
 }
 
