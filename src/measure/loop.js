@@ -1,7 +1,7 @@
 import { failOnProcessExit } from '../error/combination.js'
 import { measureSample } from '../sample/main.js'
 
-import { addSampleDuration } from './duration.js'
+import { getSampleStart, addSampleDuration } from './duration.js'
 import { getNextCombination } from './next.js'
 
 // Run samples to measure each combination.
@@ -23,16 +23,16 @@ export const performMeasureLoop = async function ({
   progressState,
   stopState,
 }) {
-  const combinationMaxLoops = getCombinationMaxLoops(combinations)
-
   // eslint-disable-next-line fp/no-loops
   while (true) {
+    const sampleStart = getSampleStart()
     const combination = getNextCombination({
       combinations,
       progressState,
       stopState,
-      combinationMaxLoops,
     })
+    // eslint-disable-next-line fp/no-mutating-assign
+    Object.assign(stopState, { sampleStart, combination })
 
     // eslint-disable-next-line max-depth
     if (combination === undefined) {
@@ -41,7 +41,7 @@ export const performMeasureLoop = async function ({
 
     // eslint-disable-next-line no-await-in-loop
     const newCombination = await eMeasureSample(combination)
-    const newCombinationA = addSampleDuration(newCombination)
+    const newCombinationA = addSampleDuration(newCombination, sampleStart)
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
     combinations = updateCombinations(
       combinations,
@@ -52,16 +52,6 @@ export const performMeasureLoop = async function ({
 
   return combinations
 }
-
-const getCombinationMaxLoops = function (combinations) {
-  return Math.ceil(MAX_LOOPS / combinations.length)
-}
-
-// We end running samples when the `measures` is over `MAX_LOOPS`. This
-// is meant to prevent memory overflow.
-// The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
-// little more than 1e8 floats.
-const MAX_LOOPS = 1e8
 
 const eMeasureSample = async function (combination) {
   return await Promise.race([

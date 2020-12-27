@@ -5,8 +5,6 @@ import { combinationHasErrored } from '../error/combination.js'
 import { setBenchmarkEnd } from '../progress/set.js'
 import { getSum } from '../stats/sum.js'
 
-import { getSampleStart } from './duration.js'
-
 // Retrieve the next combination which should be measured.
 // We do it based on which combination are been measured the least.
 // At the beginning, we pick them randomly, because it looks nicer.
@@ -14,12 +12,9 @@ export const getNextCombination = function ({
   combinations,
   progressState,
   stopState,
-  combinationMaxLoops,
 }) {
-  const sampleStart = getSampleStart()
   const remainingCombinations = getRemainingCombinations(
     combinations,
-    combinationMaxLoops,
     stopState,
   )
   updateBenchmarkEnd(remainingCombinations, progressState)
@@ -30,8 +25,6 @@ export const getNextCombination = function ({
 
   const minCombinations = getMinCombinations(remainingCombinations)
   const combination = randomItem(minCombinations)
-  // eslint-disable-next-line fp/no-mutation
-  combination.sampleStart = sampleStart
   return combination
 }
 
@@ -49,15 +42,12 @@ export const getNextCombination = function ({
 // nor exiting them because:
 //  - Adding imports to a task should not change the task's number of samples
 //  - Adding slow-to-start tasks should not change other tasks number of samples
-const getRemainingCombinations = function (
-  combinations,
-  combinationMaxLoops,
-  stopState,
-) {
+const getRemainingCombinations = function (combinations, stopState) {
   if (shouldEndMeasuring(combinations, stopState)) {
     return []
   }
 
+  const combinationMaxLoops = getCombinationMaxLoops(combinations)
   return combinations.filter((combination) =>
     isRemainingCombination(combination, combinationMaxLoops),
   )
@@ -69,6 +59,16 @@ const getRemainingCombinations = function (
 const shouldEndMeasuring = function (combinations, { stopped }) {
   return stopped || combinations.some(combinationHasErrored)
 }
+
+const getCombinationMaxLoops = function (combinations) {
+  return Math.ceil(MAX_LOOPS / combinations.length)
+}
+
+// We end running samples when the `measures` is over `MAX_LOOPS`. This
+// is meant to prevent memory overflow.
+// The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
+// little more than 1e8 floats.
+const MAX_LOOPS = 1e8
 
 const isRemainingCombination = function (
   { totalDuration, maxDuration, sampleDurationMean, loops },
