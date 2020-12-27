@@ -3,8 +3,8 @@ import { spawnProcesses, terminateProcesses } from '../process/spawn.js'
 import { startServer, stopServer } from '../server/start_stop.js'
 
 import { exitCombinations } from './exit.js'
+import { performMeasureLoop } from './loop.js'
 import { addInitProps, getFinalProps } from './props.js'
-import { measureSamples } from './samples.js'
 import { startCombinations } from './start.js'
 import { stopCombinations } from './stop.js'
 
@@ -68,7 +68,7 @@ const spawnAndMeasure = async function ({
 // Measure all combinations, until there is no `duration` left.
 const measureAllCombinations = async function (combinations, progressState) {
   const combinationsA = await startCombinations(combinations, progressState)
-  const combinationsB = await measureSamples(combinationsA, progressState)
+  const combinationsB = await performMeasureLoop(combinationsA, progressState)
   const combinationsC = await stopCombinations(combinationsB, progressState)
   const combinationsD = await exitCombinations(combinationsC)
   handleCombinationError(combinationsD)

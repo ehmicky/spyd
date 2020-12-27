@@ -27,7 +27,7 @@ import { handleReturnValue } from './return.js'
 //  - This helps during manual interruptions (CTRL-C) by allowing samples to
 //    end so tasks can be cleaned up
 //  - This provides with fast fail if one of the combinations fails
-export const measureSamples = async function (combinations, progressState) {
+export const performMeasureLoop = async function (combinations, progressState) {
   const combinationMaxLoops = getCombinationMaxLoops(combinations)
 
   // eslint-disable-next-line fp/no-loops
