@@ -80,6 +80,8 @@ const isRemainingCombination = function (
 // When a combination ends, we do not include its remaining duration anymore.
 // This allows `benchmarkEnd` to adjust progressively at the end of the
 // benchmark as each combination ends.
+// This also allows updating the progress duration to `0s` when the benchmark
+// is stopped or errors.
 // If a task is slower than its `duration`, `benchmarkEnd` might increase. In
 // that case, we make `benchmarkEnd` freeze for a moment instead of making it
 // jump up.
