@@ -7,6 +7,7 @@ import { exitCombinations } from './exit.js'
 import { performMeasureLoop } from './loop.js'
 import { addInitProps, getFinalProps } from './props.js'
 import { startCombinations } from './start.js'
+import { addStopHandler } from './stop.js'
 
 // Measure all combinations and add results to `combinations`
 export const measureCombinations = async function ({
@@ -79,10 +80,19 @@ const stopOrMeasure = async function ({
   progressState,
   onProgressError,
 }) {
-  return await Promise.race([
-    ...onProgressError,
-    measureAllCombinations(combinations, progressState),
-  ])
+  const { stopState, onAbort, removeStopHandler } = addStopHandler(
+    progressState,
+  )
+
+  try {
+    return await Promise.race([
+      onAbort,
+      ...onProgressError,
+      measureAllCombinations(combinations, progressState),
+    ])
+  } finally {
+    removeStopHandler()
+  }
 }
 
 // Measure all combinations, until there is no `duration` left.
