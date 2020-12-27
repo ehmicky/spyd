@@ -40,11 +40,6 @@ const normalizeProp = function (config, normalizer) {
   return normalizer(config)
 }
 
-const normalizeFiles = function ({ files, ...config }) {
-  validateStringArray(files, 'files')
-  return { ...config, files }
-}
-
 const normalizeTasks = function ({ tasks, ...config }) {
   validateStringArray(tasks, 'tasks')
   return { ...config, tasks }
@@ -94,7 +89,6 @@ const normalizeLimit = function ({ limit, ...config }) {
 }
 
 const NORMALIZERS = [
-  normalizeFiles,
   normalizeTasks,
   normalizeInputs,
   normalizeMerge,

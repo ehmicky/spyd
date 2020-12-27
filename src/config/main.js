@@ -64,7 +64,6 @@ const DEFAULT_CONFIG = {
   output: '-',
   delta: true,
   diff: true,
-  files: ['../benchmark/*.task.*'],
   info: false,
   limit: [],
   progress: { debug: {} },
