@@ -33,7 +33,7 @@ export const getCombinations = async function ({
       commandDescription: 'Node (15.3.0)',
       commandSpawn: [
         'node',
-        '/home/ether/code/spyd/build/src/run/runners/node/start.js',
+        '/home/ether/code/spyd/build/src/run/runners/node/main.js',
       ],
       commandSpawnOptions: {},
       commandConfig: {},
@@ -60,7 +60,7 @@ export const getCombinations = async function ({
       commandDescription: 'Node (15.3.0)',
       commandSpawn: [
         'node',
-        '/home/ether/code/spyd/build/src/run/runners/node/start.js',
+        '/home/ether/code/spyd/build/src/run/runners/node/main.js',
       ],
       commandSpawnOptions: {},
       commandConfig: {},

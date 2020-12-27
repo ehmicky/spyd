@@ -5,7 +5,7 @@ export const system = {}
 export const repeat = false
 
 export const commands = function () {
-  return [{ spawn: ['node', START_PATH], versions: [] }]
+  return [{ spawn: ['node', MAIN_PATH], versions: [] }]
 }
 
-const START_PATH = `${__dirname}/start.js`
+const MAIN_PATH = `${__dirname}/main.js`

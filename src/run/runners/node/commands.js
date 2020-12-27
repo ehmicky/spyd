@@ -1,7 +1,7 @@
 import { normalizeRunConfig } from './config.js'
 import { getNodeVersions } from './versions.js'
 
-const START_PATH = `${__dirname}/start.js`
+const MAIN_PATH = `${__dirname}/main.js`
 
 // Retrieve Node commands. By default it uses the current Node.js.
 // But the `run-node-versions` can be used to spawn several Node.js versions.
@@ -13,7 +13,7 @@ export const commands = async function (runConfig) {
   if (versions === undefined) {
     return [
       {
-        spawn: ['node', START_PATH],
+        spawn: ['node', MAIN_PATH],
         versions: [{ value: ['node', '--version'] }],
       },
     ]
@@ -32,7 +32,7 @@ const getNodeCommand = function ({
   return {
     id: versionRange,
     title: versionRange,
-    spawn: [command, START_PATH],
+    spawn: [command, MAIN_PATH],
     spawnOptions,
     versions,
   }
