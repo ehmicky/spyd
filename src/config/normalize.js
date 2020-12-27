@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 
 import { normalizeLimits } from '../limit/config.js'
-import { normalizeProgress } from '../progress/config.js'
+import { normalizeQuiet } from '../progress/config.js'
 import { normalizeDelta } from '../store/delta/config.js'
 import { normalizeSystem } from '../system/normalize.js'
 
@@ -94,7 +94,7 @@ const NORMALIZERS = [
   normalizeMerge,
   normalizeDuration,
   normalizeCwd,
-  normalizeProgress,
+  normalizeQuiet,
   normalizeDeltaProp,
   normalizeDiff,
   normalizeLimit,

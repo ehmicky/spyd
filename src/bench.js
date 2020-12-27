@@ -15,7 +15,7 @@ export const performBenchmark = async function (config) {
   try {
     return await getPartialResult({ combinations, progressState, config })
   } finally {
-    await endProgress(progressId)
+    await endProgress(progressId, config)
   }
 }
 

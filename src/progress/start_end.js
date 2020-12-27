@@ -10,11 +10,16 @@ import {
 // Start progress reporting using the `progress` configuration property
 export const startProgress = async function (
   combinations,
-  { duration, progress: reporters },
+  { duration, progress: reporters, quiet },
 ) {
+  const progressState = {}
+
+  if (quiet) {
+    return { progressState }
+  }
+
   hideCursor()
 
-  const progressState = {}
   const progressId = await startUpdate({
     reporters,
     combinations,
@@ -50,7 +55,11 @@ const startUpdate = async function ({
 const UPDATE_FREQUENCY = 1e2
 
 // End progress reporting
-export const endProgress = async function (progressId) {
+export const endProgress = async function (progressId, { quiet }) {
+  if (quiet) {
+    return
+  }
+
   clearInterval(progressId)
   await clearProgress(true)
   showCursor()
