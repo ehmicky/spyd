@@ -17,8 +17,11 @@ export const start = async function ({
   validateFile(task)
 
   const taskA = normalizeTask(task)
-  const { main, beforeEach, afterEach, async } = bindInput(taskA, input)
-  return { main, beforeEach, afterEach, async }
+  const { beforeAll, beforeEach, main, afterEach, afterAll, async } = bindInput(
+    taskA,
+    input,
+  )
+  return { beforeAll, beforeEach, main, afterEach, afterAll, async }
 }
 
 const importFile = function (taskPath) {

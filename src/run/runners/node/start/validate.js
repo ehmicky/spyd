@@ -10,9 +10,11 @@ export const validateFile = function (task) {
 }
 
 const validators = {
-  main: validateFunction,
+  beforeAll: validateFunction,
   beforeEach: validateFunction,
+  main: validateFunction,
   afterEach: validateFunction,
+  afterAll: validateFunction,
   async: validateBoolean,
 }
 const requiredProps = ['main']

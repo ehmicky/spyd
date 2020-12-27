@@ -2,12 +2,14 @@ import { promisify } from 'util'
 
 // Add default values for tasks
 export const normalizeTask = function ({
-  main,
+  beforeAll,
   beforeEach,
+  main,
   afterEach,
+  afterAll,
   async = isAsyncFunc(main),
 }) {
-  return { main, beforeEach, afterEach, async }
+  return { beforeAll, beforeEach, main, afterEach, afterAll, async }
 }
 
 // Async functions use different measuring logic.
