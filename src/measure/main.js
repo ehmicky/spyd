@@ -1,8 +1,8 @@
 import { spawnProcesses, terminateProcesses } from '../process/spawn.js'
+import { startServer, stopServer } from '../server/start_stop.js'
 
 import { measureAllCombinations } from './combination.js'
 import { addInitProps, getFinalProps } from './props.js'
-import { startServer, stopServer } from './server.js'
 
 export const measureCombinations = async function ({
   combinations,

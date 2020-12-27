@@ -1,6 +1,6 @@
 import execa from 'execa'
 
-import { getServerUrl } from '../measure/server.js'
+import { getServerUrl } from '../server/url.js'
 
 // Each combination is spawned in its own process:
 //  - This ensures runtime optimization is bound to each combination
