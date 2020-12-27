@@ -17,8 +17,11 @@ import { terminateLongTask, setStopBenchmarkEnd } from './long_task.js'
 // requires spawning processes again, making them go through cold starts again.
 // This would decrease precision and create difference between results depending
 // on how many times the benchmark was stopped/continued.
-export const addStopHandler = function (progressState) {
-  const stopState = INITIAL_STOP_STATE
+export const getStopState = function () {
+  return { stopped: false, longTask: false }
+}
+
+export const addStopHandler = function (stopState, progressState) {
   const noopHandler = removeDefaultHandlers()
   const { abortSignal, abort } = createController()
   const onAbort = handleStop({ stopState, progressState, abortSignal })
@@ -27,10 +30,8 @@ export const addStopHandler = function (progressState) {
     abort,
     noopHandler,
   )
-  return { stopState, onAbort, removeStopHandler: removeStopHandlerA }
+  return { onAbort, removeStopHandler: removeStopHandlerA }
 }
-
-const INITIAL_STOP_STATE = { stopped: false, longTask: false }
 
 // Ensure default handlers for those signals are not used.
 // Create a new `noop` function at each call, in case this function is called

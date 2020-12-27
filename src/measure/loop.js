@@ -18,6 +18,7 @@ import { getNextCombination } from './next.js'
 //  - This helps when stopping benchmarks by allowing samples to end so tasks
 //    can be cleaned up
 //  - This provides with fast fail if one of the combinations fails
+// eslint-disable-next-line max-statements
 export const performMeasureLoop = async function ({
   combinations,
   progressState,
@@ -31,13 +32,14 @@ export const performMeasureLoop = async function ({
       progressState,
       stopState,
     })
-    // eslint-disable-next-line fp/no-mutating-assign
-    Object.assign(stopState, { sampleStart, combination })
 
     // eslint-disable-next-line max-depth
     if (combination === undefined) {
       break
     }
+
+    // eslint-disable-next-line fp/no-mutating-assign
+    Object.assign(stopState, { sampleStart, combination })
 
     // eslint-disable-next-line no-await-in-loop
     const newCombination = await eMeasureSample(combination, stopState)
@@ -49,6 +51,11 @@ export const performMeasureLoop = async function ({
       combination,
     )
   }
+
+  // eslint-disable-next-line fp/no-delete, no-param-reassign
+  delete stopState.sampleStart
+  // eslint-disable-next-line fp/no-delete, no-param-reassign
+  delete stopState.combination
 
   return combinations
 }

@@ -13,6 +13,7 @@ import { addStopHandler } from './stop.js'
 export const measureCombinations = async function ({
   combinations,
   config: { duration, cwd },
+  stopState,
   progressState,
   onProgressError,
 }) {
@@ -23,6 +24,7 @@ export const measureCombinations = async function ({
     combinations: combinationsA,
     duration,
     cwd,
+    stopState,
     progressState,
     onProgressError,
   })
@@ -34,6 +36,7 @@ const startServerAndMeasure = async function ({
   combinations,
   duration,
   cwd,
+  stopState,
   progressState,
   onProgressError,
 }) {
@@ -47,6 +50,7 @@ const startServerAndMeasure = async function ({
       combinations: combinationsA,
       origin,
       cwd,
+      stopState,
       progressState,
       onProgressError,
     })
@@ -59,6 +63,7 @@ const spawnAndMeasure = async function ({
   combinations,
   origin,
   cwd,
+  stopState,
   progressState,
   onProgressError,
 }) {
@@ -67,6 +72,7 @@ const spawnAndMeasure = async function ({
   try {
     return await stopOrMeasure({
       combinations: combinationsA,
+      stopState,
       progressState,
       onProgressError,
     })
@@ -77,10 +83,12 @@ const spawnAndMeasure = async function ({
 
 const stopOrMeasure = async function ({
   combinations,
+  stopState,
   progressState,
   onProgressError,
 }) {
-  const { stopState, onAbort, removeStopHandler } = addStopHandler(
+  const { onAbort, removeStopHandler } = addStopHandler(
+    stopState,
     progressState,
   )
 

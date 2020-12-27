@@ -63,13 +63,21 @@ const startUpdate = function ({
 // How often (in milliseconds) to update progress
 const UPDATE_FREQUENCY = 1e2
 
-// End progress reporting
-export const endProgress = async function (progressId, { quiet }) {
+// End progress reporting.
+// When stopped, we keep the progress reporting.
+export const endProgress = async function ({
+  progressId,
+  config: { quiet },
+  stopState: { stopped },
+}) {
   if (quiet) {
     return
   }
 
   clearInterval(progressId)
-  await clearProgress({ initial: false, final: true })
   showCursor()
+
+  if (!stopped) {
+    await clearProgress({ initial: false, final: true })
+  }
 }
