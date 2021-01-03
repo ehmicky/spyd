@@ -11,7 +11,7 @@ export const validateConfig = function (config) {
 }
 
 // Configuration properties with a variable property name
-const DYNAMIC_PROPS = ['run', 'report', 'progress', 'store']
+const DYNAMIC_PROPS = ['tasks', 'runner', 'reporter', 'progress', 'store']
 
 const VALID_TIMESTAMPS = [
   'yyyy-mm-dd',
