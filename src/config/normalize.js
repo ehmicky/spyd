@@ -3,7 +3,6 @@ import { resolve } from 'path'
 import { normalizeLimits } from '../limit/config.js'
 import { normalizeQuiet } from '../progress/config.js'
 import { normalizeDelta } from '../store/delta/config.js'
-import { normalizeSystem } from '../system/normalize.js'
 
 import {
   checkStringArray,
@@ -32,6 +31,13 @@ const normalizeTasks = function ({ tasks, ...config }) {
 const normalizeInputs = function ({ inputs, ...config }) {
   checkStringArray(inputs, 'inputs')
   return { ...config, inputs }
+}
+
+// In order to pass dynamic information, the user should either:
+//  - use shell features like subshells and environment variable expansion
+//  - use `SPYD_*` environment variables
+const normalizeSystem = function ({ system, ...config }) {
+  return { ...config, systemId: system }
 }
 
 const normalizeMerge = function ({ merge, ...config }) {
@@ -75,6 +81,7 @@ const normalizeLimit = function ({ limit, ...config }) {
 const NORMALIZERS = [
   normalizeTasks,
   normalizeInputs,
+  normalizeSystem,
   normalizeMerge,
   normalizeDuration,
   normalizeCwd,

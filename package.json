@@ -68,7 +68,6 @@
     "random-item": "^3.1.0",
     "read-pkg-up": "^7.0.1",
     "semver": "^7.3.4",
-    "slugify": "^1.4.6",
     "sort-on": "^4.1.0",
     "string-width": "^4.2.0",
     "strip-ansi": "^6.0.0",
