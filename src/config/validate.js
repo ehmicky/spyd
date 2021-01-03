@@ -26,7 +26,7 @@ const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
-  settings: './benchmark',
+  config: './benchmark/spyd.yml',
   context: true,
   delta: VALID_DELTA,
   diff: VALID_DELTA,
