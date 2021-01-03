@@ -7,17 +7,27 @@ import { importJsDefault } from '../utils/import.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
 import { mergeConfigs } from './merge.js'
+import { resolveConfigPaths } from './resolve.js'
 import { validateConfig } from './validate.js'
 
-// Load config YAML file
+// Load `spyd.*` file
 export const loadConfigFile = async function (configPath) {
   if (configPath === undefined) {
     return {}
   }
 
+  const configFile = await loadConfigByPath(configPath)
+  return configFile
+}
+
+const loadConfigByPath = async function (configPath) {
   const configContents = await loadConfigContents(configPath)
-  const configContentsA = await addConfigExtend(configContents, configPath)
-  return configContentsA
+  const configContentsA = resolveConfigPaths(
+    configContents,
+    dirname(configPath),
+  )
+  const configContentsB = await addConfigExtend(configContentsA, configPath)
+  return configContentsB
 }
 
 const loadConfigContents = async function (configPath) {
@@ -68,7 +78,7 @@ export const addConfigExtend = async function (
     )
   }
 
-  const extendedConfig = await loadConfigFile(extendPath)
+  const extendedConfig = await loadConfigByPath(extendPath)
   return mergeConfigs(extendedConfig, configContents)
 }
 
@@ -79,7 +89,15 @@ const getExtendPath = function (extend, configPath) {
     return resolve(baseDir, extend)
   }
 
-  return require.resolve(extend, { paths: [baseDir] })
+  try {
+    return require.resolve(extend, { paths: [baseDir] })
+  } catch (error) {
+    throw new Error(`Cannot find extended configuration: ${extend}
+If the extended configuration is a Node module, please ensure it is installed.
+If it is a local file instead, the path should start with either . or /
+
+${error.stack}`)
+  }
 }
 
 // We do not allow Windows file paths
