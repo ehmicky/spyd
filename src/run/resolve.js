@@ -3,7 +3,7 @@ import { basename } from 'path'
 import fastGlob from 'fast-glob'
 import { not as notJunk } from 'junk'
 
-import { checkObject, checkOptionalStringArray } from './check.js'
+import { checkObject, checkOptionalStringArray } from '../config/check.js'
 
 // `tasks` use globbing instead of file paths. Also, it is an object and the
 // values are arrays.

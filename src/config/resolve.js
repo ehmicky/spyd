@@ -2,7 +2,7 @@ import { dirname, resolve } from 'path'
 
 import mapObj from 'map-obj'
 
-import { resolveTasks } from './task.js'
+import { resolveTasks } from '../run/resolve.js'
 
 // Resolve configuration relative file paths to absolute paths
 // The CLI flags and environment variables use the current directory. However,

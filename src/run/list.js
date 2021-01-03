@@ -26,7 +26,7 @@ import { UserError } from '../error/main.js'
 // In principle, `tasks.{runnerId}` is similar to properties like `reporters`,
 // `progresses` and `stores` but for runners. Specifying both runners and task
 // files at the same time gives a simpler syntax.
-export const getTasks = function (tasks) {
+export const listTasks = function (tasks) {
   const tasksA = Object.entries(tasks).flatMap(getRunnerTasks)
   validateTasks(tasksA)
   return tasksA
