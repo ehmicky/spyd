@@ -1,5 +1,4 @@
 import { resolve } from 'path'
-import { env } from 'process'
 
 import findUp from 'find-up'
 import { isFile } from 'path-type'
@@ -13,10 +12,6 @@ import { validateConfig } from './validate.js'
 export const getConfigPath = async function ({ config: configPath }) {
   if (configPath !== undefined) {
     return await getUserConfigPath(configPath)
-  }
-
-  if (env.SPYD_CONFIG) {
-    return await getUserConfigPath(env.SPYD_CONFIG)
   }
 
   return await getDefaultConfigPath()

@@ -13,8 +13,6 @@ import { getCwd, resolveConfigPaths } from './resolve.js'
 //  - add too many constraints related to naming configuration properties:
 //    case-sensitiveness (due to Windows) and fewer allowed delimiters (due
 //    to underscores only being allowed in Unix)
-// We still provide with an `SPYD_CONFIG` environment variable if environment
-// configuration is really needed.
 export const loadConfig = async function (configFlags) {
   const configNonFile = await resolveConfigPaths(configFlags, '.')
 
