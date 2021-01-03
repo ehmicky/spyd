@@ -6,6 +6,7 @@ import {
   checkObject,
   checkDefinedStringArray,
   checkDefinedString,
+  checkJson,
   checkPositiveInteger,
   checkSaveDuration,
 } from './check.js'
@@ -80,6 +81,9 @@ const checkTitles = function (titles, propName) {
 
 const checkInputs = function (inputs, propName) {
   checkObject(inputs, propName)
+  Object.entries(inputs).forEach(([childName, value]) => {
+    checkJson(value, `${propName}.${childName}`)
+  })
 }
 
 const NORMALIZERS = {

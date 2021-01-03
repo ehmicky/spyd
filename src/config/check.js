@@ -1,3 +1,5 @@
+import { isDeepStrictEqual } from 'util'
+
 import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../error/main.js'
@@ -40,6 +42,22 @@ export const checkDefinedString = function (value, name) {
 
 const isDefinedString = function (value) {
   return typeof value === 'string' && value.trim() !== ''
+}
+
+export const checkJson = function (value, name) {
+  if (!isJson(value)) {
+    throw new UserError(
+      `'${name}' must only contain strings, numbers, booleans, nulls, arrays or plain objects: ${value}`,
+    )
+  }
+}
+
+const isJson = function (value) {
+  try {
+    return isDeepStrictEqual(JSON.parse(JSON.stringify(value)), value)
+  } catch {
+    return false
+  }
 }
 
 export const checkPositiveInteger = function (value, name) {
