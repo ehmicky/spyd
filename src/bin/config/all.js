@@ -11,10 +11,6 @@ Default: "benchmark/spyd.yml" in the current or any parent directory.`,
     string: true,
     requiresArg: true,
   },
-  cwd: {
-    string: true,
-    requiresArg: true,
-  },
   debug: {
     boolean: true,
   },
