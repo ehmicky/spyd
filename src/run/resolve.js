@@ -5,7 +5,7 @@ import { not as notJunk } from 'junk'
 
 import { UserError } from '../error/main.js'
 
-import { checkTasks, checkTaskPatterns } from './check.js'
+import { checkTasks, normalizeTaskPatterns } from './check.js'
 
 // `tasks` use globbing instead of file paths. Also, it is an object and the
 // values are arrays.
@@ -18,24 +18,24 @@ export const resolveTasks = async function ({ tasks, ...config }, cwd) {
 
   const tasksA = await Promise.all(
     Object.entries(tasks).map(([key, patterns]) =>
-      normalizeTaskPatterns(patterns, key, cwd),
+      normalizePatterns(patterns, key, cwd),
     ),
   )
   const tasksB = Object.assign({}, ...tasksA)
   return { ...config, tasks: tasksB }
 }
 
-const normalizeTaskPatterns = async function (patterns, key, cwd) {
+const normalizePatterns = async function (patterns, key, cwd) {
   if (hasNoPatterns(patterns)) {
     return { [key]: patterns }
   }
 
-  checkTaskPatterns(patterns, key)
+  const patternsA = normalizeTaskPatterns(patterns, key)
 
-  const filePaths = await fastGlob(patterns, { cwd, absolute: true })
+  const filePaths = await fastGlob(patternsA, { cwd, absolute: true })
   const filePathsA = filePaths.filter(isNormalFile)
 
-  validateHasPatterns(filePaths, patterns, key)
+  validateHasPatterns(filePaths, patternsA, key)
 
   return { [key]: filePathsA }
 }
@@ -58,7 +58,7 @@ const validateHasPatterns = function (filePaths, patterns, key) {
     return
   }
 
-  const patternsStr = Array.isArray(patterns) ? patterns.join(' or ') : patterns
+  const patternsStr = patterns.join(' or ')
   throw new UserError(
     `Could not find any "${key}" task files matching the globbing pattern: ${patternsStr}`,
   )

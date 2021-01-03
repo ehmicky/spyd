@@ -11,13 +11,14 @@ export const checkObject = function (value, name) {
   }
 }
 
-export const checkOptionalStringArray = function (value, name) {
+export const normalizeOptionalArray = function (value, name) {
   if (typeof value === 'string') {
     checkDefinedString(value, name)
-    return
+    return [value]
   }
 
   checkDefinedStringArray(value, name)
+  return value
 }
 
 export const checkDefinedStringArray = function (value, name) {

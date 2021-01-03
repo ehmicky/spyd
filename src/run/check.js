@@ -1,4 +1,4 @@
-import { checkObject, checkOptionalStringArray } from '../config/check.js'
+import { checkObject, normalizeOptionalArray } from '../config/check.js'
 import { UserError } from '../error/main.js'
 
 // Validate `tasks`
@@ -6,8 +6,8 @@ export const checkTasks = function (tasks) {
   checkObject(tasks, 'tasks')
 }
 
-export const checkTaskPatterns = function (patterns, key) {
-  checkOptionalStringArray(patterns, `tasks.${key}`)
+export const normalizeTaskPatterns = function (patterns, key) {
+  return normalizeOptionalArray(patterns, `tasks.${key}`)
 }
 
 export const checkEmptyTasks = function (tasks) {

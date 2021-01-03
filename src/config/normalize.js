@@ -3,6 +3,7 @@ import { checkEmptyTasks } from '../run/check.js'
 import { normalizeDelta } from '../store/delta/config.js'
 
 import {
+  normalizeOptionalArray,
   checkDefinedStringArray,
   checkDefinedString,
   checkJson,
@@ -60,6 +61,11 @@ const normalizeDeltaProp = function (delta, propName) {
   return { [propName]: normalizeDelta(delta, propName) }
 }
 
+const normalizeOptionalArrProp = function (value, propName) {
+  const valueA = normalizeOptionalArray(value, propName)
+  return { [propName]: valueA }
+}
+
 const checkStringArrayProp = function (value, propName) {
   checkDefinedStringArray(value, propName)
 }
@@ -83,9 +89,9 @@ const NORMALIZERS = {
   limit: normalizeLimit,
   delta: normalizeDeltaProp,
   diff: normalizeDeltaProp,
-  reporter: checkStringArrayProp,
-  progress: checkStringArrayProp,
-  store: checkStringArrayProp,
+  reporter: normalizeOptionalArrProp,
+  progress: normalizeOptionalArrProp,
+  store: normalizeOptionalArrProp,
   include: checkStringArrayProp,
   exclude: checkStringArrayProp,
   tasks: checkEmptyTasks,

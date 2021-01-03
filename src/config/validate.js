@@ -40,9 +40,12 @@ const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
-  tasks: multipleValidOptions({ node: '*.task.js' }, { node: ['*.task.js'] }),
   config: './benchmark/spyd.yml',
   extend: './shared_spyd.yml',
+  tasks: multipleValidOptions({ node: '*.task.js' }, { node: ['*.task.js'] }),
+  reporter: multipleValidOptions('debug', ['debug']),
+  progress: multipleValidOptions('debug', ['debug']),
+  store: multipleValidOptions('file', ['file']),
   debug: false,
   merge: multipleValidOptions('', '546'),
   output: './file.js',
