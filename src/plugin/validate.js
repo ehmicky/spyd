@@ -20,4 +20,6 @@ It should only contain lowercase letters and digits.`)
 //  - we use dots in CLI flags for nested configuration properties
 //  - we want to allow user-defined ids to use _
 //  - environment variables (`SPYD_*`) only allow _
+//  - avoid mixing delimiters, so it's easier to remember for users
+//  - consistent option name across spyd.yml, CLI flags, envvars, programmatic
 const PLUGIN_ID_REGEXP = /^[a-z][a-z0-9]*$/u
