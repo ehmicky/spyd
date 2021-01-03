@@ -1,5 +1,3 @@
 tasks:
-  node:
-    - math_random.js
-    - math_random_two.js
+  node: [math_random*]
   # cli: example.yml
