@@ -5,10 +5,8 @@ export const BENCH_CONFIG = {
     number: true,
     requiresArg: true,
     describe: `How many seconds to execute each combination.
-Can also be:
-  - 1: execute each combination once
-  - 0: only stop when CTRL-C is typed
-Default: 0 in interactive terminals, 1 otherwise.`,
+The default is 1 which executes each combination once.
+Can also be 0 which only stops when CTRL-C is typed.`,
   },
   concurrency: {
     alias: 'C',
