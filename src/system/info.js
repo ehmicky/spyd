@@ -7,10 +7,18 @@ import { groupBy } from '../utils/group.js'
 
 import { getSystemConfig } from './config.js'
 
-export const getSystems = function ({ config, system: { id, title }, job }) {
+export const getSystems = function ({ config, systemId, systemTitle, job }) {
   const systemConfig = getSystemConfig(config)
   const system = getSystem()
-  return [{ id, title, config: systemConfig, ...system, ...job }]
+  return [
+    {
+      id: systemId,
+      title: systemTitle,
+      config: systemConfig,
+      ...system,
+      ...job,
+    },
+  ]
 }
 
 const getSystem = function () {
