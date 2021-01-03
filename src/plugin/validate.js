@@ -14,10 +14,10 @@ It should only contain lowercase letters and digits.`)
   }
 }
 
-// We purposely do not allow any delimiter characters such as . _ - nor
-// uppercase letters because:
+// We do not allow any delimiter characters such as . _ - nor uppercase letters
+// because:
 //  - the id is part of the npm package, which has strict validation rules
 //  - we use dots in CLI flags for nested configuration properties
-//  - we want to allow user-defined ids to use either _ or -
+//  - we want to allow user-defined ids to use _
 //  - environment variables (`SPYD_*`) only allow _
 const PLUGIN_ID_REGEXP = /^[a-z][a-z0-9]*$/u
