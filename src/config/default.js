@@ -21,7 +21,6 @@ export const DEFAULT_CONFIG = {
   delta: true,
   diff: true,
   exclude: [],
-  tasks: {},
   runner: {},
   reporters: ['debug'],
   reporter: {},

@@ -1,4 +1,5 @@
 import { normalizeLimits } from '../limit/config.js'
+import { checkEmptyTasks } from '../run/check.js'
 import { normalizeDelta } from '../store/delta/config.js'
 
 import {
@@ -93,6 +94,7 @@ const NORMALIZERS = {
   stores: checkStringArrayProp,
   include: checkStringArrayProp,
   exclude: checkStringArrayProp,
+  tasks: checkEmptyTasks,
   runner: checkPluginOpts,
   reporter: checkPluginOpts,
   progress: checkPluginOpts,
