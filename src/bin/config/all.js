@@ -12,6 +12,7 @@ directory.`,
     string: true,
     requiresArg: true,
     describe: `Path to a configuration file to extend from.
+This can either a file path or a Node module.
 As opposed to "config", this is used to share configuration between projects.`,
   },
   debug: {

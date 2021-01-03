@@ -60,14 +60,29 @@ export const addConfigExtend = async function (
 
   validateConfig({ extend })
 
-  const absoluteExtend = resolve(dirname(configPath), extend)
+  const extendPath = getExtendPath(extend, configPath)
 
-  if (!(await isFile(absoluteExtend))) {
+  if (!(await isFile(extendPath))) {
     throw new UserError(
-      `Extended configuration file does not exist: '${absoluteExtend}'`,
+      `Extended configuration file does not exist: '${extendPath}'`,
     )
   }
 
-  const extendedConfig = await loadConfigFile(absoluteExtend)
+  const extendedConfig = await loadConfigFile(extendPath)
   return mergeConfigs(extendedConfig, configContents)
+}
+
+const getExtendPath = function (extend, configPath) {
+  const baseDir = dirname(configPath)
+
+  if (isFilePath(extend)) {
+    return resolve(baseDir, extend)
+  }
+
+  return require.resolve(extend, { paths: [baseDir] })
+}
+
+// We do not allow Windows file paths
+const isFilePath = function (extend) {
+  return extend.startsWith('/') || extend.startsWith('.')
 }
