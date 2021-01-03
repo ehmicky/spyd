@@ -12,14 +12,15 @@ import { validateConfig } from './validate.js'
 export const getConfig = async function (action, configFlags = {}) {
   const configFlagsA = filterObj(configFlags, isDefined)
 
-  const configA = await loadConfig(configFlagsA)
+  const { config: configA, cwd } = await loadConfig(configFlagsA)
 
   validateConfig(configA)
   const configB = addDefaultConfig(configA, action)
 
-  const configC = normalizeConfig(configB)
-  const configD = await loadAllPlugins(configC)
-  return configD
+  const configC = { ...configB, cwd }
+  const configD = normalizeConfig(configC)
+  const configE = await loadAllPlugins(configD)
+  return configE
 }
 
 const isDefined = function (key, value) {

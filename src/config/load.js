@@ -17,10 +17,10 @@ export const loadConfig = async function (configFlags) {
   const cwd = getCwd(configPath)
   const configFile = await loadConfigFile(configPath)
   const configA = mergeConfigs(configFile, configNonFile)
-  const configB = { ...configA, config: configPath, cwd }
+  const configB = { ...configA, config: configPath }
 
   const configC = removeEmptyValues(configB)
-  return configC
+  return { config: configC, cwd }
 }
 
 // Load configuration not in `spyd.*`
