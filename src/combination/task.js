@@ -1,5 +1,3 @@
-import { resolve } from 'path'
-
 import fastGlob from 'fast-glob'
 
 import { UserError } from '../error/main.js'
@@ -21,7 +19,5 @@ export const getTasks = async function (files, cwd) {
 }
 
 const applyGlobbing = async function (pattern, cwd) {
-  const files = await fastGlob(pattern, { cwd })
-  const filesA = files.map((file) => resolve(cwd, file))
-  return filesA
+  return await fastGlob(pattern, { cwd, absolute: true })
 }
