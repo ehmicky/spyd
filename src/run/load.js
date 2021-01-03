@@ -7,11 +7,12 @@ export const loadRunners = async function (tasks, runner) {
   return await Promise.all(runners.map(loadRunner))
 }
 
-// `runner` already include only `tasks.*`. However, some globbing patterns
-// might have returned an empty array, in which case we do not load the runner.
-// Not that this can only happen when using globbing patterns matching nothing
-// (as opposed to an empty array), we throw an error earlier.
-// Same thing if all runners use an empty array (as opposed to only some).
+// `runner` already includes only `tasks.*`.
+// We have already validated that:
+//  - globbing patterns match at least one file except when using an empty array
+//  - empty arrays were not used on all `tasks.*`
+// So the following is only required when empty arrays were used only one some
+// of `tasks.*`
 const runnerHasTasks = function (id, tasks) {
   return tasks.some(({ runnerId }) => runnerId === id)
 }
