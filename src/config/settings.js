@@ -8,7 +8,7 @@ import { UserError } from '../error/main.js'
 import { validateConfig } from './validate.js'
 
 // Retrieve `settings` configuration property, and resolve to an absolute path.
-export const getSettings = async function (settings) {
+export const getSettings = async function ({ settings }) {
   if (settings !== undefined) {
     return await getUserSettings(settings)
   }

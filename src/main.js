@@ -10,8 +10,8 @@ import { startStore } from './store/start.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default action.
-export const bench = async function (config) {
-  const configA = await getConfig('bench', config)
+export const bench = async function (configFlags) {
+  const configA = await getConfig('bench', configFlags)
   const configB = await startStore(configA)
 
   try {
@@ -29,8 +29,8 @@ export const bench = async function (config) {
 }
 
 // Show a previous result
-export const show = async function (config) {
-  const { delta, ...configA } = await getConfig('show', config)
+export const show = async function (configFlags) {
+  const { delta, ...configA } = await getConfig('show', configFlags)
   const configB = await startStore(configA)
 
   try {
@@ -43,8 +43,8 @@ export const show = async function (config) {
 }
 
 // Remove a previous result
-export const remove = async function (config) {
-  const { delta, ...configA } = await getConfig('remove', config)
+export const remove = async function (configFlags) {
+  const { delta, ...configA } = await getConfig('remove', configFlags)
   const configB = await startStore(configA)
 
   try {
@@ -56,8 +56,8 @@ export const remove = async function (config) {
 }
 
 // Execute tasks without benchmarking them
-export const exec = async function (config) {
-  const configA = await getConfig('exec', config)
+export const exec = async function (configFlags) {
+  const configA = await getConfig('exec', configFlags)
 
   await performExec(configA)
 }

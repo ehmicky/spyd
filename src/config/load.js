@@ -17,13 +17,13 @@ import { getSettings } from './settings.js'
 //      - Linux: /home/{user}/.config/spyd/spyd.yml
 //      - macOS: /Users/{user}/Library/Preferences/spyd/spyd.yml
 //      - Windows: C:\Users\{user}\AppData\Roaming\spyd\Config\spyd.yml
-export const loadConfig = async function (settings, configFlags) {
-  const settingsA = await getSettings(settings)
-  const config = await mergeConfig(settingsA, configFlags)
+export const loadConfig = async function (configFlags) {
+  const settings = await getSettings(configFlags)
+  const config = await mergeConfig(configFlags, settings)
   return config
 }
 
-const mergeConfig = async function (settings, configFlags) {
+const mergeConfig = async function (configFlags, settings) {
   const [settingsConfig, cwdConfig, globalConfig] = await Promise.all(
     [
       getSettingsConfigPath(settings),

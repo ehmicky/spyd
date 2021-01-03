@@ -3,18 +3,18 @@ import isPlainObj from 'is-plain-obj'
 // `--report.json` and `--report.json.name` are normalized to
 // `{ report: { json: { name } } }`.
 // Same thing for `--progress`, `--run` and `--store`
-export const normalizeDynamicProps = function (config) {
+export const normalizeDynamicProps = function (configFlags) {
   const dynamicProps = DYNAMIC_CONFIG_PROPS.map((name) =>
-    normalizeDynamicProp(name, config),
+    normalizeDynamicProp(name, configFlags),
   )
   const dynamicPropsA = Object.fromEntries(dynamicProps)
-  return { ...config, ...dynamicPropsA }
+  return { ...configFlags, ...dynamicPropsA }
 }
 
 const DYNAMIC_CONFIG_PROPS = ['report', 'progress', 'run', 'store']
 
-const normalizeDynamicProp = function (name, config) {
-  const value = config[name]
+const normalizeDynamicProp = function (name, configFlags) {
+  const value = configFlags[name]
 
   if (!isPlainObj(value)) {
     return [name, value]

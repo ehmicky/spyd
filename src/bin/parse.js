@@ -5,13 +5,13 @@ import { normalizeDynamicProps } from './dynamic.js'
 export const parseCliFlags = function (yargs) {
   const {
     _: [command = DEFAULT_COMMAND],
-    ...config
+    ...configFlags
   } = yargs.parse()
 
-  const configA = normalizeDynamicProps(config)
+  const configFlagsA = normalizeDynamicProps(configFlags)
 
-  const configB = filterObj(configA, isUserProp)
-  return { command, config: configB }
+  const configFlagsB = filterObj(configFlagsA, isUserProp)
+  return { command, configFlags: configFlagsB }
 }
 
 const DEFAULT_COMMAND = 'bench'
