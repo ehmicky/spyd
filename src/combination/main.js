@@ -9,12 +9,12 @@ import { validateCombinationsIds } from './validate.js'
 
 // Retrieve each combination, i.e. combination of task + input (if any)
 export const getCombinations = async function ({
-  files,
+  tasks,
   cwd,
-  system,
+  systemId,
   include,
   exclude,
-  run,
+  runner,
   limits,
 }) {
   // return [
@@ -62,14 +62,14 @@ export const getCombinations = async function ({
   //   },
   // ]
 
-  const [tasks, inputs, runnersA] = await Promise.all([
-    getTasks(files, cwd),
+  const [tasksA, inputs, runnersA] = await Promise.all([
+    getTasks(tasks, cwd),
     getInputs(),
     loadRunners(run),
   ])
 
   const combinations = getCombinationsProduct({
-    tasks,
+    tasks: tasksA,
     runners: runnersA,
     inputs,
     system,
