@@ -9,3 +9,9 @@ export const validateBoolean = function (prop) {
     return 'must be a boolean'
   }
 }
+
+export const validateString = function (prop) {
+  if (typeof prop !== 'string' || prop.trim() === '') {
+    return 'must be a non-empty string'
+  }
+}

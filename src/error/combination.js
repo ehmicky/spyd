@@ -32,7 +32,6 @@ export const combinationHasErrored = function ({ error }) {
 
 const getCombinationError = function ({ error, taskId, inputId }) {
   const taskPrefix = getTaskPrefix(taskId, inputId)
-  // eslint-disable-next-line no-param-reassign
   error.message = `${taskPrefix}:\n${error.message}`
   return error
 }

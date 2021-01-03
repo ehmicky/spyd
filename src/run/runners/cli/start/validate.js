@@ -1,18 +1,12 @@
 import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../../../error/main.js'
-import { validateTasksFile } from '../../common/validate/file.js'
-import { validateInputs } from '../../common/validate/inputs.js'
-import { validateTasks } from '../../common/validate/tasks.js'
-import {
-  validateString,
-  validateStringArray,
-  validatePrimitive,
-} from '../../common/validate/type.js'
+import { validateTask } from '../../common/validate/file.js'
+import { validateString } from '../../common/validate/type.js'
 
 // Validate that tasks file has correct shape
-export const validateFile = function (entries) {
-  validateTasksFile(entries, VALIDATORS)
+export const validateFile = function (task) {
+  validateTask({ task, validators, requiredProps })
 }
 
 const validateShell = function (shell) {
@@ -44,24 +38,11 @@ const validateVariable = function ([name, value]) {
 
 const VARIABLE_NAME_REGEXP = /^[\w_-]+$/u
 
-const TASK_VALIDATORS = {
-  id: validateString,
-  title: validateString,
-  main: validateString,
+const validators = {
   beforeEach: validateString,
   afterEach: validateString,
-  inputs: validateStringArray,
-}
-
-const INPUT_VALIDATORS = {
-  id: validateString,
-  title: validateString,
-  value: validatePrimitive,
-}
-
-const VALIDATORS = {
+  main: validateString,
   shell: validateShell,
   variables: validateVariables,
-  tasks: validateTasks.bind(undefined, TASK_VALIDATORS),
-  inputs: validateInputs.bind(undefined, INPUT_VALIDATORS),
 }
+const requiredProps = ['main']
