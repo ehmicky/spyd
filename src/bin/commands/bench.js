@@ -20,11 +20,7 @@ export const BENCH_COMMAND = {
 
   usage: `$0 [flags...]
 
-Measure tasks.
-
-Task files must be inside the settings directory.
-Their filenames must end with ".task.*".
-The file extension and contents of the task files depends on the runner.`,
+Measure tasks.`,
 
   examples: [
     ['$0', 'Measure tasks'],
