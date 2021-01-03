@@ -18,13 +18,13 @@ Runners measure tasks for a specific programming language or platform.
 Built-in runners: node, cli.
 Custom runners can be installed from npm.`,
   },
-  input: {
+  inputs: {
     group: TASKS,
     describe: `Inputs passed to tasks.
 The key uses a dot notation and specifies the input identifier, such as
---input.size=5
+--inputs.size=5
 When using property sets, the property item identifier must be specified too,
-such as --input.size.small=5
-The input values are passed to tasks as arguments.`,
+such as --inputs.size.small=5
+The inputs values are passed to tasks as arguments.`,
   },
 }

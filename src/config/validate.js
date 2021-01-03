@@ -18,7 +18,7 @@ const DYNAMIC_PROPS = [
   'progress',
   'store',
   'titles',
-  'input',
+  'inputs',
 ]
 
 const VALID_TIMESTAMPS = [

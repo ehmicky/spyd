@@ -29,5 +29,5 @@ export const DEFAULT_CONFIG = {
   stores: ['file'],
   store: {},
   titles: {},
-  input: {},
+  inputs: {},
 }

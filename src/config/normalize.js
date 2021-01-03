@@ -104,5 +104,5 @@ const NORMALIZERS = {
   progress: checkPluginOpts,
   store: checkPluginOpts,
   titles: checkTitles,
-  input: checkInputs,
+  inputs: checkInputs,
 }

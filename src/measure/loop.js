@@ -28,7 +28,7 @@ import { getNextCombination } from './next.js'
 //  - For this type of benchmark, the `duration` can be set to `1` to run only
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
-//  - This can be either hardcoded or using the `input` configuration property.
+//  - This can be either hardcoded or using the `inputs` configuration property.
 // eslint-disable-next-line max-statements
 export const performMeasureLoop = async function ({
   combinations,
