@@ -1,22 +1,20 @@
 import { UserError } from '../error/main.js'
 
-// Validate that user-defined identifiers don't use characters that we are using
-// for parsing or could use in the future.
+// Validate combination identifiers
 export const validateCombinationsIds = function (combinations) {
-  USER_ID_PROPS.forEach(({ getIds, type }) => {
-    validateIdsPerType(combinations, getIds, type)
-  })
+  const combinationIds = COMBINATION_IDS.map(({ type, getIds }) =>
+    getCombinationIds({ type, getIds, combinations }),
+  )
+  combinationIds.forEach(validateIdsPerType)
 }
 
-const validateIdsPerType = function (combinations, getIds, type) {
+const getCombinationIds = function ({ type, getIds, combinations }) {
   const ids = combinations.flatMap(getIds).filter(Boolean)
   const idsA = [...new Set(ids)]
-  idsA.forEach((id) => {
-    validateId(id, type)
-  })
+  return { type, ids: idsA }
 }
 
-const USER_ID_PROPS = [
+const COMBINATION_IDS = [
   { type: 'task', getIds: ({ taskId }) => taskId },
   { type: 'system', getIds: ({ systemId }) => systemId },
   {
@@ -24,6 +22,21 @@ const USER_ID_PROPS = [
     getIds: ({ inputs }) => inputs.map(({ inputName }) => inputName),
   },
 ]
+
+// Validate that identifiers don't use characters that we are using for parsing
+// or could use in the future.
+// Only for user-defined identifiers, not plugin-defined.
+const validateIdsPerType = function ({ type, ids }) {
+  if (!USER_IDS.has(type)) {
+    return
+  }
+
+  ids.forEach((id) => {
+    validateId(id, type)
+  })
+}
+
+const USER_IDS = new Set(['task', 'system', 'input'])
 
 const validateId = function (id, type) {
   if (!USER_ID_REGEXP.test(id)) {
