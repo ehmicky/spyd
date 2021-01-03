@@ -27,7 +27,7 @@ const getFullVersion = async function (version) {
     return await nvexeca(version, 'node', { progress: true, dry: true })
   } catch (error) {
     throw new UserError(
-      `In the configuration property 'run.node.version': ${error.message}`,
+      `In the configuration property 'runner.node.version': ${error.message}`,
     )
   }
 }
@@ -46,7 +46,7 @@ const getAllowedVersions = async function () {
 const validateVersion = function ({ versionRange, version }, allowedVersions) {
   if (!satisfies(version, allowedVersions)) {
     throw new UserError(
-      `In the configuration property 'run.node.version': version ${versionRange} must be ${allowedVersions}`,
+      `In the configuration property 'runner.node.version': version ${versionRange} must be ${allowedVersions}`,
     )
   }
 }

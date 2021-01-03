@@ -1,19 +1,20 @@
 // Configuration shared by reporting commands: `bench`, `show`
 export const REPORT_CONFIG = {
-  report: {},
-  'report.use': {
+  reporters: {
     alias: 'R',
     string: true,
     array: true,
     requiresArg: true,
-    describe: `Module to report the result.
+    describe: `Modules to report the result.
 Built-in reporters: silent.
-Custom reporters can also be installed from npm.
+Custom reporters can also be installed from npm.`,
+  },
+  reporter: {
+    describe: `Reporter-specific configuration properties.
+Uses a dot notation such as --report.json.output=path
 The following properties can be set for any reporter: output, insert, colors,
 info, context, link.
-For example --report.json.output is like --output but only for the json reporter.
-Reporter-specific configuration properties can be specified using the same dot
-notation.`,
+For example --report.json.output is like --output but only for the json reporter.`,
   },
   titles: {
     requiresArg: true,

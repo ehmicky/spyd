@@ -22,8 +22,7 @@ Used to create a single result in several incremental benchmarks.
 Can also be an id. Results within the same id are reported together.
 Default: random UUID`,
   },
-  progress: {},
-  'progress.use': {
+  progresses: {
     alias: 'P',
     string: true,
     array: true,
@@ -31,6 +30,10 @@ Default: random UUID`,
     describe: `Module to report progress.
 Built-in progress reporters: silent.
 Custom progress reporters can be installed from npm.`,
+  },
+  progress: {
+    describe: `Progress reporter-specific configuration properties.
+Uses a dot notation such as --progress.name.prop=value`,
   },
   save: {
     alias: 's',
