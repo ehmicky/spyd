@@ -18,8 +18,7 @@ It should only contain lowercase letters and digits.`)
 // because:
 //  - the id is part of the npm package, which has strict validation rules
 //  - we use dots in CLI flags for nested configuration properties
-//  - we want to allow user-defined ids to use _
-//  - environment variables (`SPYD_*`) only allow _
+//  - we want to allow user-defined ids to use _ or -
 //  - avoid mixing delimiters, so it's easier to remember for users
-//  - consistent option name across spyd.yml, CLI flags, envvars, programmatic
-const PLUGIN_ID_REGEXP = /^[a-z][a-z0-9]*$/u
+//  - consistent option name across spyd.yml, CLI flags, programmatic
+const PLUGIN_ID_REGEXP = /^[a-z][a-z\d]*$/u

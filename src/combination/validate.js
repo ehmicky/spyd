@@ -28,14 +28,18 @@ const USER_ID_PROPS = [
 const validateId = function (id, type) {
   if (!USER_ID_REGEXP.test(id)) {
     throw new UserError(
-      `Invalid ${type} "${id}": must contain only lowercase letters, digits or _`,
+      `Invalid ${type} "${id}": must contain only letters, digits, - or _`,
     )
   }
 }
 
-// We do not allow:
-//  - dots because they are used in CLI flags for nested configuration
-//    properties
-//  - environment variables (`SPYD_*`) only allow _ and are case-insensitive
-//    on Windows
-const USER_ID_REGEXP = /^[a-z_][a-z0-9_]*$/u
+// We allow case-sensitiveness and both - and _ so that users can choose their
+// preferred case convention. This also makes it easier to support different
+// languages.
+// We allow starting with digits since this might be used in inputIds or
+// propSets.
+// We do not allow empty strings.
+// We do not allow dots because they are used in CLI flags for nested
+// configuration properties.
+// We forbid other characters for forward compatibility.
+const USER_ID_REGEXP = /^[\w-]+$/u
