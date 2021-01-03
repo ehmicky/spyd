@@ -9,6 +9,9 @@ export const loadRunners = async function (tasks, runner) {
 
 // `runner` already include only `tasks.*`. However, some globbing patterns
 // might have returned an empty array, in which case we do not load the runner.
+// Not that this can only happen when using globbing patterns matching nothing
+// (as opposed to an empty array), we throw an error earlier.
+// Same thing if all runners use an empty array (as opposed to only some).
 const runnerHasTasks = function (id, tasks) {
   return tasks.some(({ runnerId }) => runnerId === id)
 }
