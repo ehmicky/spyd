@@ -1,6 +1,7 @@
 import camelcase from 'camelcase'
 
 import { checkObject } from '../config/check.js'
+import { UserError } from '../error/main.js'
 
 // Retrieve plugin configuration object.
 // We separate selecting and configuring plugins to make it easier to
@@ -31,7 +32,7 @@ const addPluginConfig = function ({
 }
 
 const getPluginConfig = function ({ id, config, configPrefix }) {
-  const configPropName = camelcase([configPrefix, id])
+  const configPropName = getConfigPropName({ id, config, configPrefix })
   const pluginConfig = config[configPropName]
 
   if (pluginConfig === undefined) {
@@ -40,4 +41,20 @@ const getPluginConfig = function ({ id, config, configPrefix }) {
 
   checkObject(pluginConfig, configPropName)
   return pluginConfig
+}
+
+// Configuration properties are case-sensitive. Making them case-insensitive
+// would introduce polymorphism, which means we (and any spyd config consumer)
+// need to normalize case each time the configuration is read.
+const getConfigPropName = function ({ id, config, configPrefix }) {
+  const configPropName = camelcase([configPrefix, id])
+  const invalidPropName = `${configPrefix}${id}`
+
+  if (config[invalidPropName] !== undefined) {
+    throw new UserError(
+      `Please rename the configuration property "${invalidPropName}" to "${configPropName}".`,
+    )
+  }
+
+  return configPropName
 }
