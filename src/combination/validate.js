@@ -3,13 +3,13 @@ import { UserError } from '../error/main.js'
 // Validate that user-defined identifiers don't use characters that we are using
 // for parsing or could use in the future.
 export const validateCombinationsIds = function (combinations) {
-  USER_ID_PROPS.forEach(({ propName, type }) => {
-    validateIdsPerType(combinations, propName, type)
+  USER_ID_PROPS.forEach(({ getIds, type }) => {
+    validateIdsPerType(combinations, getIds, type)
   })
 }
 
-const validateIdsPerType = function (combinations, propName, type) {
-  const ids = combinations.map((combination) => combination[propName])
+const validateIdsPerType = function (combinations, getIds, type) {
+  const ids = combinations.flatMap(getIds).filter(Boolean)
   const idsA = [...new Set(ids)]
   idsA.forEach((id) => {
     validateId(id, type)
@@ -17,9 +17,12 @@ const validateIdsPerType = function (combinations, propName, type) {
 }
 
 const USER_ID_PROPS = [
-  { propName: 'taskId', type: 'task' },
-  { propName: 'inputId', type: 'input' },
-  { propName: 'systemId', type: 'system' },
+  { type: 'task', getIds: ({ taskId }) => taskId },
+  { type: 'system', getIds: ({ systemId }) => systemId },
+  {
+    type: 'input',
+    getIds: ({ inputs }) => inputs.map(({ inputName }) => inputName),
+  },
 ]
 
 const validateId = function (id, type) {
