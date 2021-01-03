@@ -5,16 +5,18 @@ import { selectCombinations } from '../select/main.js'
 
 import { getInputs } from './input.js'
 import { getCombinationsProduct } from './product.js'
+import { addTitles } from './title.js'
 import { validateCombinationsIds } from './validate.js'
 
 // Retrieve each combination, i.e. combination of task + input (if any)
 export const getCombinations = async function ({
   tasks,
+  runner,
   input,
   systemId,
   include,
   exclude,
-  runner,
+  titles,
   limits,
 }) {
   const tasksA = listTasks(tasks)
@@ -33,7 +35,8 @@ export const getCombinations = async function ({
 
   const combinationsA = selectCombinations(combinations, { include, exclude })
 
-  validateLimits(combinationsA, limits)
+  const combinationsB = addTitles(combinationsA, titles)
+  validateLimits(combinationsB, limits)
 
-  return combinationsA
+  return combinationsB
 }

@@ -24,6 +24,9 @@ For example --report.json.output is like --output but only for the json reporter
   titles: {
     group: REPORT,
     requiresArg: true,
+    describe: `Rename some identifiers in reports.
+Uses a dot notation such as --titles.id=string
+The id can be any identifier: task, runner, system, input, property set.`,
   },
   output: {
     group: REPORT,
