@@ -1,7 +1,7 @@
 import { UserError } from '../error/main.js'
 
-// Validate that identifiers don't use characters that we are using for parsing
-// (e.g. , and = are used by `--limit`) or could use in the future.
+// Validate that user-defined identifiers don't use characters that we are using
+// for parsing or could use in the future.
 export const validateCombinationsIds = function (combinations) {
   combinations.forEach(validateCombinationIds)
 }
