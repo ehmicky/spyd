@@ -1,45 +1,18 @@
-import { dirname } from 'path'
-
-import readPkgUp from 'read-pkg-up'
-
 import { UserError } from '../error/main.js'
 
 // Call `store.start(storeConfig)`
 export const startStore = async function ({
-  cwd,
   store: { config: storeConfig, start, ...store },
   ...config
 }) {
-  const storeConfigA = await getStoreConfig(cwd, storeConfig)
-  const startConfig = await callStart(start, storeConfigA)
+  const startConfig = await callStart(start, storeConfig, config)
   const storeA = bindStartConfig(store, startConfig)
-  return { ...config, cwd, store: storeA }
+  return { ...config, store: storeA }
 }
 
-// Add `cwd`, `root` and `name` to store config passed to `start()`
-const getStoreConfig = async function (cwd, storeConfig) {
-  const { root, name } = await getPackageInfo(cwd)
-  return { cwd, root, name, ...storeConfig }
-}
-
-const getPackageInfo = async function (cwd) {
-  const packageInfo = await readPkgUp(cwd)
-
-  if (packageInfo === undefined) {
-    return { root: cwd }
-  }
-
-  const {
-    packageJson: { name },
-    path,
-  } = packageInfo
-  const root = dirname(path)
-  return { root, name }
-}
-
-const callStart = async function (start, storeConfig) {
+const callStart = async function (start, storeConfig, { cwd }) {
   try {
-    return await start(storeConfig)
+    return await start({ ...storeConfig, cwd })
   } catch (error) {
     throw new UserError(`Could not start store: ${error.message}`)
   }
