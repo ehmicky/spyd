@@ -27,6 +27,7 @@ const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   config: './benchmark/spyd.yml',
+  extend: '',
   context: true,
   delta: VALID_DELTA,
   diff: VALID_DELTA,
@@ -37,6 +38,4 @@ const EXAMPLE_CONFIG = {
   link: false,
   output: './file.js',
   system: 'Windows 10',
-  tasks: ['taskId'],
-  inputs: ['inputId'],
 }
