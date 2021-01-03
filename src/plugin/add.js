@@ -12,13 +12,18 @@ import { validatePlugins } from './validate.js'
 // We use a configuration object.
 // We prepend the plugin name to its type, camelCase. This format is chosen
 // because this:
-//   - keeps using a single delimiter character (dot) instead of mixing others
-//     like - or _
-//   - distinguishes between selecting plugins and configuring them
-//   - allows - and _ in user-defined identifiers
-//   - works unescaped with YAML, JSON and JavaScript
-//   - works with CLI flags without confusion
-//   - introduces only one level of indentation
+//  - keeps using a single delimiter character (dot) instead of mixing others
+//    like - or _
+//  - distinguishes between selecting plugins and configuring them
+//  - allows - and _ in user-defined identifiers
+//  - works unescaped with YAML, JSON and JavaScript
+//  - works with CLI flags without confusion
+//  - introduces only one level of indentation
+// Most plugin types need only a single plugin per benchmark, but they still
+// allow several for some use cases. Since the most common case is a single
+// plugin, selecting plugins:
+//  - can be either a string or an array of strings
+//  - uses a singular property name
 export const addPlugins = async function (config) {
   const pluginsConfigs = await Promise.all(
     PLUGIN_TYPES.map(
