@@ -31,7 +31,15 @@ const getUserConfigPath = async function (configPath) {
 
 // By default, we find the first `benchmark/spyd.yml`.
 const getDefaultConfigPath = async function () {
-  return await findUp(DEFAULT_CONFIG)
+  const configPath = await findUp(DEFAULT_CONFIG)
+
+  if (configPath === undefined) {
+    throw new UserError(`No configuration file was found. Please either:
+  - create ./benchmark/spyd.yml in the repository root directory.
+  - create spyd.yml somewhere else then specify its location using the --config flag.`)
+  }
+
+  return configPath
 }
 
 // spyd.yaml is supported but undocumented. spyd.yml is preferred.

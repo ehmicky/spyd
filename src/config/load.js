@@ -12,10 +12,12 @@ import { getConfigPath } from './path.js'
 export const loadConfig = async function (configFlags) {
   const envVarConfig = getEnvVarConfig()
   const config = { ...envVarConfig, ...configFlags }
+
   const configPath = await getConfigPath(config)
   const configFile = await loadConfigFile(configPath)
   const configA = mergeConfigs(configFile, config)
   const configB = { ...configA, config: configPath }
+
   const configC = removeEmptyValues(configB)
   return configC
 }
