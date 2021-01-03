@@ -1,5 +1,3 @@
-import { findRunners } from '../run/find.js'
-
 // Get cartesian product of all combinations
 export const getCombinationsProduct = function ({
   tasks,
@@ -13,8 +11,7 @@ export const getCombinationsProduct = function ({
 }
 
 const getCombinationsByTask = function ({ task, runners, inputs, system }) {
-  const runnersA = findRunners(task, runners)
-  return runnersA.flatMap((runner) =>
+  return runners.flatMap((runner) =>
     getCombinationsByRunner({ task, runner, inputs, system }),
   )
 }
