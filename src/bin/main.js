@@ -10,7 +10,12 @@ import * as commands from '../main.js'
 import { parseCliFlags } from './parse.js'
 import { defineCli } from './top.js'
 
-// Parse CLI arguments then execute commands
+// Parse CLI flags then execute commands.
+// We use dot-delimited flags because:
+//  - This allows user-defined identifiers to use dashes without conflicting
+//    with CLI flags parsing
+//  - This makes it clear that those flags are meant to be nested objects in
+//    the YAML configuration file
 const runCli = async function () {
   try {
     await checkUpdate()
