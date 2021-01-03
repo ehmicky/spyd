@@ -20,6 +20,13 @@ Used to create a single result in several incremental benchmarks.
 Can also be an id. Results within the same id are reported together.
 Default: random UUID`,
   },
+  system: {
+    string: true,
+    requiresArg: true,
+    describe: `Identifier of the current hardware/software system.
+Used to compare different machines or configurations together.
+Default: "default_system"`,
+  },
   progresses: {
     alias: 'P',
     string: true,

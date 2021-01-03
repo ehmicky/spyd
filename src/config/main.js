@@ -3,6 +3,7 @@ import filterObj from 'filter-obj'
 import { addDefaultConfig } from './default.js'
 import { loadConfig } from './load.js'
 import { normalizeConfig } from './normalize.js'
+import { loadAllPlugins } from './plugins.js'
 import { validateConfig } from './validate.js'
 
 // Retrieve configuration
@@ -16,8 +17,9 @@ export const getConfig = async function (action, configFlags = {}) {
   validateConfig(configA)
   const configB = addDefaultConfig(configA, action)
 
-  const configC = await normalizeConfig(configB)
-  return configC
+  const configC = normalizeConfig(configB)
+  const configD = await loadAllPlugins(configC)
+  return configD
 }
 
 const isDefined = function (key, value) {

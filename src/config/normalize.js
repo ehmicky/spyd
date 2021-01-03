@@ -9,14 +9,10 @@ import {
   checkPositiveInteger,
   checkSaveDuration,
 } from './check.js'
-import { loadAllPlugins } from './plugins.js'
 
 // Normalize configuration shape and do custom validation
-export const normalizeConfig = async function (config) {
-  const configA = NORMALIZERS.reduce(normalizeProp, config)
-  const configB = await loadAllPlugins(configA)
-  const configC = normalizeSystem(configB)
-  return configC
+export const normalizeConfig = function (config) {
+  return NORMALIZERS.reduce(normalizeProp, config)
 }
 
 const normalizeProp = function (config, normalizer) {

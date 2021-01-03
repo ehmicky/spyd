@@ -26,5 +26,5 @@ export const DEFAULT_CONFIG = {
   stores: ['file'],
   store: {},
   save: false,
-  system: '',
+  system: 'default_system',
 }
