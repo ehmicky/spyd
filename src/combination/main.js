@@ -62,11 +62,14 @@ export const getCombinations = async function ({
   // ]
 
   const tasksA = getTasks(tasks)
-  const [inputs, runnersA] = await Promise.all([getInputs(), loadRunners(run)])
+  const [runners, inputs] = await Promise.all([
+    loadRunners(tasksA, runner),
+    getInputs(),
+  ])
 
   const combinations = getCombinationsProduct({
     tasks: tasksA,
-    runners: runnersA,
+    runners,
     inputs,
     system,
   })

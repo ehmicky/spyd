@@ -1,6 +1,5 @@
 export const id = 'cli'
 export const title = 'CLI'
-export const extensions = ['yml', 'yaml']
 export const repeat = false
 
 export const launch = function () {
