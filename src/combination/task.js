@@ -28,11 +28,7 @@ import { UserError } from '../error/main.js'
 // files at the same time gives a simpler syntax.
 export const getTasks = function (tasks) {
   const tasksA = Object.entries(tasks).flatMap(getRunnerTasks)
-
-  if (tasksA.length === 0) {
-    throw new UserError('No tasks files were specified or found.')
-  }
-
+  validateTasks(tasksA)
   return tasksA
 }
 
@@ -56,3 +52,30 @@ const getTaskId = function (taskPath) {
 }
 
 const TASK_ID_REGEXP = /\..*/u
+
+const validateTasks = function (tasks) {
+  if (tasks.length === 0) {
+    throw new UserError('No tasks files were specified or found.')
+  }
+
+  tasks.forEach(validateTaskDuplicate)
+}
+
+// We allow several runners per taskId, several taskIds per runners, but not the
+// same taskId with the same runner. This happens when targetting with the same
+// runner two task files who differ only by their file extension.
+const validateTaskDuplicate = function (
+  { taskId, taskPath, runnerId },
+  index,
+  tasks,
+) {
+  const duplicate = tasks
+    .slice(index + 1)
+    .find((task) => task.taskId === taskId && task.runnerId === runnerId)
+
+  if (duplicate !== undefined) {
+    throw new UserError(`The following tasks must not have both the same runner "${runnerId}" and task identifier "${taskId}":
+  - ${taskPath}
+  - ${duplicate.taskPath}`)
+  }
+}
