@@ -11,7 +11,7 @@ import { STORES } from '../store/stores/main.js'
 // include and exclude specific plugins on-the-fly.
 // We use a nested object for configuration. This uses a dot notation when in
 // the CLI. This format is chosen because this:
-//   - allows more complex properties in spyd.yml
+//   - allows more complex properties in spyd.*
 //   - only requires a single delimiter character (dot) instead of mixing others
 //     like - or _
 //   - distinguishes between selecting plugins and configuring them

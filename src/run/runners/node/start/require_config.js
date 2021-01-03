@@ -1,13 +1,8 @@
 import { UserError } from '../../../../error/main.js'
 
-import { handleTypeScript } from './typescript.js'
-
 // Use the `require` config
-export const useRequireConfig = async function (requireConfig, taskPath) {
+export const useRequireConfig = async function (requireConfig) {
   const requireConfigA = normalizeRequireConfig(requireConfig)
-
-  await handleTypeScript(requireConfigA, taskPath)
-
   await Promise.all(requireConfigA.map(useRequiredModule))
 }
 
@@ -16,17 +11,13 @@ const normalizeRequireConfig = function (requireConfig = []) {
     return [requireConfig]
   }
 
-  validateRequireConfig(requireConfig)
-
-  return requireConfig
-}
-
-const validateRequireConfig = function (requireConfig) {
   if (!Array.isArray(requireConfig) || !requireConfig.every(isString)) {
     throw new UserError(
-      `'run-node-require' configuration property must be an array of strings: ${requireConfig}`,
+      `'runner.node.require' configuration property must be an array of strings: ${requireConfig}`,
     )
   }
+
+  return requireConfig
 }
 
 const isString = function (value) {
@@ -38,7 +29,7 @@ const useRequiredModule = async function (requiredModule) {
     await import(requiredModule)
   } catch (error) {
     throw new UserError(
-      `Could not require 'run-node-require' configuration property '${requiredModule}'\n\n${error.stack}`,
+      `Could not require 'runner.node.require' configuration property '${requiredModule}'\n\n${error.stack}`,
     )
   }
 }

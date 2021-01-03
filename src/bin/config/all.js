@@ -5,7 +5,8 @@ export const ALL_CONFIG = {
     string: true,
     requiresArg: true,
     describe: `Path to the configuration file.
-Default: "benchmark/spyd.yml" in the current or any parent directory.`,
+Default: "benchmark/spyd.{yml,js,cjs,ts}" in the current or any parent
+directory.`,
   },
   extend: {
     string: true,

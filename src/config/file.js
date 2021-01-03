@@ -1,8 +1,9 @@
-import { resolve, dirname } from 'path'
+import { resolve, dirname, extname } from 'path'
 
 import { isFile } from 'path-type'
 
 import { UserError } from '../error/main.js'
+import { importJsDefault } from '../utils/import.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
 import { mergeConfigs } from './merge.js'
@@ -20,13 +21,30 @@ export const loadConfigFile = async function (configPath) {
 }
 
 const loadConfigContents = async function (configPath) {
+  const loadFunc = EXTENSIONS[extname(configPath)]
+
+  if (loadFunc === undefined) {
+    throw new UserError(
+      `The configuration file format is not supported: ${configPath}
+Please use .yml, .js, .cjs or .ts`,
+    )
+  }
+
   try {
-    return await loadYamlFile(configPath)
+    return await loadFunc(configPath)
   } catch (error) {
     throw new UserError(
       `Could not load configuration file '${configPath}': ${error.message}`,
     )
   }
+}
+
+const EXTENSIONS = {
+  '.yml': loadYamlFile,
+  '.yaml': loadYamlFile,
+  '.js': importJsDefault,
+  '.cjs': importJsDefault,
+  '.ts': importJsDefault,
 }
 
 // Configuration files can use shared configuration using the `extend` property.
