@@ -1,3 +1,4 @@
+import { removeEmptyValues } from './empty.js'
 import { getEnvVarConfig } from './env.js'
 import { loadConfigFile } from './file.js'
 import { mergeConfigs } from './merge.js'
@@ -14,5 +15,7 @@ export const loadConfig = async function (configFlags) {
   const configPath = await getConfigPath(config)
   const configFile = await loadConfigFile(configPath)
   const configA = mergeConfigs(configFile, config)
-  return { ...configA, config: configPath }
+  const configB = { ...configA, config: configPath }
+  const configC = removeEmptyValues(configB)
+  return configC
 }
