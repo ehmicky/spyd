@@ -23,6 +23,6 @@ const hasRunConfig = function ({ config }) {
   return Object.keys(config).length !== 0
 }
 
-const getRunConfigProp = function ({ name, config }) {
-  return [name, config]
+const getRunConfigProp = function ({ id, config }) {
+  return [id, config]
 }

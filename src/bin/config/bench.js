@@ -38,7 +38,7 @@ Custom progress reporters can be installed from npm.`,
   },
   progress: {
     describe: `Progress reporter-specific configuration properties.
-Uses a dot notation such as --progress.name.prop=value`,
+Uses a dot notation such as --progress.id.prop=value`,
   },
   save: {
     alias: 's',

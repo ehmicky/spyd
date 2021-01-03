@@ -1,88 +1,110 @@
-import { resolve } from 'path'
-
 import { normalizeLimits } from '../limit/config.js'
-import { normalizeQuiet } from '../progress/config.js'
 import { normalizeDelta } from '../store/delta/config.js'
 
 import {
+  checkObject,
   checkStringArray,
+  checkDefinedString,
   checkPositiveInteger,
   checkSaveDuration,
 } from './check.js'
 
 // Normalize configuration shape and do custom validation
 export const normalizeConfig = function (config) {
-  return NORMALIZERS.reduce(normalizeProp, config)
+  return Object.entries(NORMALIZERS).reduce(normalizeProp, config)
 }
 
-const normalizeProp = function (config, normalizer) {
-  return normalizer(config)
+const normalizeProp = function (config, [propName, normalizer]) {
+  const { [propName]: value, ...configA } = config
+  const props = normalizer(value, propName, configA)
+
+  if (props === undefined) {
+    return config
+  }
+
+  return { ...configA, ...props }
 }
 
-const normalizeTasks = function ({ tasks, ...config }) {
-  checkStringArray(tasks, 'tasks')
-  return { ...config, tasks }
+const normalizeDuration = function (duration, propName, { save }) {
+  checkPositiveInteger(duration, propName)
+  checkSaveDuration(duration, save)
+
+  if (duration === 0 || duration === 1) {
+    return
+  }
+
+  return { [propName]: duration * NANOSECS_TO_SECS }
 }
 
-const normalizeInputs = function ({ inputs, ...config }) {
-  checkStringArray(inputs, 'inputs')
-  return { ...config, inputs }
-}
+// Duration is specified in seconds by the user but we convert it to nanoseconds
+const NANOSECS_TO_SECS = 1e9
 
 // In order to pass dynamic information, the user should either:
 //  - use shell features like subshells and environment variable expansion
 //  - use `SPYD_*` environment variables
-const normalizeSystem = function ({ system, ...config }) {
-  return { ...config, systemId: system }
+const normalizeSystem = function (system) {
+  return { systemId: system }
 }
 
-const normalizeMerge = function ({ merge, ...config }) {
-  const mergeId = merge.trim()
-  return { ...config, mergeId }
+const normalizeMerge = function (merge) {
+  return { mergeId: merge.trim() }
 }
 
-// Duration is specified in seconds by the user but we convert it to nanoseconds
-const normalizeDuration = function ({ duration, save, ...config }) {
-  checkPositiveInteger(duration, 'duration')
-  checkSaveDuration(duration, save)
-
-  const durationA =
-    duration === 0 || duration === 1 ? duration : duration * NANOSECS_TO_SECS
-  return { ...config, duration: durationA, save }
+const normalizeLimit = function (limit, propName) {
+  checkStringArray(limit, propName)
+  return { limits: normalizeLimits(limit) }
 }
 
-const NANOSECS_TO_SECS = 1e9
-
-const normalizeCwd = function ({ cwd, ...config }) {
-  const cwdA = resolve(cwd)
-  return { ...config, cwd: cwdA }
+const normalizeDeltaProp = function (delta, propName) {
+  return { [propName]: normalizeDelta(delta, propName) }
 }
 
-const normalizeDeltaProp = function ({ delta, ...config }) {
-  const deltaA = normalizeDelta('delta', delta)
-  return { ...config, delta: deltaA }
+const checkStringArrayProp = function (value, propName) {
+  checkStringArray(value, propName)
 }
 
-const normalizeDiff = function ({ diff, ...config }) {
-  const diffA = normalizeDelta('diff', diff)
-  return { ...config, diff: diffA }
+const checkTasks = function (tasks, propName) {
+  checkObject(tasks, propName)
+  Object.entries(tasks).forEach(([childName, value]) => {
+    checkStringArray(value, `${propName}.${childName}`)
+  })
 }
 
-const normalizeLimit = function ({ limit, ...config }) {
-  checkStringArray(limit, 'limit')
-  const limits = normalizeLimits(limit)
-  return { ...config, limits }
+const checkPluginOpts = function (pluginOpts, propName) {
+  checkObject(pluginOpts, propName)
+  Object.entries(pluginOpts).forEach(([childName, value]) => {
+    checkObject(value, `${propName}.${childName}`)
+  })
 }
 
-const NORMALIZERS = [
-  normalizeTasks,
-  normalizeInputs,
-  normalizeSystem,
-  normalizeMerge,
-  normalizeDuration,
-  normalizeCwd,
-  normalizeQuiet,
-  normalizeDeltaProp,
-  normalizeDiff,
-  normalizeLimit,
-]
+const checkTitles = function (titles, propName) {
+  checkObject(titles, propName)
+  Object.entries(titles).forEach(([childName, value]) => {
+    checkDefinedString(value, `${propName}.${childName}`)
+  })
+}
+
+const checkInputs = function (inputs, propName) {
+  checkObject(inputs, propName)
+}
+
+const NORMALIZERS = {
+  duration: normalizeDuration,
+  system: normalizeSystem,
+  merge: normalizeMerge,
+  limit: normalizeLimit,
+  delta: normalizeDeltaProp,
+  diff: normalizeDeltaProp,
+  reporters: checkStringArrayProp,
+  progresses: checkStringArrayProp,
+  stores: checkStringArrayProp,
+  include: checkStringArrayProp,
+  exclude: checkStringArrayProp,
+  tasks: checkTasks,
+  runner: checkPluginOpts,
+  reporter: checkPluginOpts,
+  progress: checkPluginOpts,
+  store: checkPluginOpts,
+  titles: checkTitles,
+  input: checkInputs,
+}

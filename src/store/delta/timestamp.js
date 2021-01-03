@@ -4,7 +4,7 @@ import { UserError } from '../../error/main.js'
 //  - can specify only the date, or both date and time
 //  - can omit timezone (default to local timezone) but returned date is UTC
 //  - loose parsing
-export const getDeltaTimestamp = function (name, delta) {
+export const getDeltaTimestamp = function (delta, name) {
   const deltaA = normalizeDayOnly(delta)
 
   const date = new Date(deltaA)

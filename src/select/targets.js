@@ -8,18 +8,8 @@ export const getTargets = function (config) {
 }
 
 // Turn the `system` configuration property into an array
-const normalizeSystems = function ({
-  system: { id = '', title } = {},
-  ...config
-}) {
-  if (id === '') {
-    return config
-  }
-
-  // Exclamation marks are removed in `id` during slugification
-  const idA = title.startsWith('!') ? `!${id}` : id
-
-  return { ...config, systems: [idA] }
+const normalizeSystems = function ({ systemId, ...config }) {
+  return { ...config, systems: [systemId] }
 }
 
 const TARGETS = [

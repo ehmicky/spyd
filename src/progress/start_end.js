@@ -1,16 +1,17 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
 import { setDelayedDescription } from './set.js'
+import { isSilent } from './silent.js'
 import { updateProgress, clearProgressFinal } from './update.js'
 
 // Start progress reporting using the `progress` configuration property
 export const startProgress = function (
   combinations,
-  { duration, progress: reporters, quiet },
+  { duration, progress: reporters },
 ) {
   const progressState = {}
 
-  if (quiet) {
+  if (isSilent(reporters)) {
     return { progressState, onProgressError: [] }
   }
 
@@ -66,8 +67,11 @@ const UPDATE_FREQUENCY = 1e2
 
 // End progress reporting.
 // When stopped, we keep the progress reporting.
-export const endProgress = async function ({ progressId, config: { quiet } }) {
-  if (quiet) {
+export const endProgress = async function ({
+  progressId,
+  config: { progress: reporters },
+}) {
+  if (isSilent(reporters)) {
     return
   }
 

@@ -1,76 +1,73 @@
-import { UserError, PluginError } from '../error/main.js'
+import { PluginError } from '../error/main.js'
 import { PROGRESS_REPORTERS } from '../progress/reporters/main.js'
 import { REPORTERS } from '../report/reporters/main.js'
 import { RUNNERS } from '../run/runners/main.js'
 import { STORES } from '../store/stores/main.js'
 
-import { checkDeepObject } from './check.js'
-
-// Several configuration properties (`run`, `report`, `progress`, `store`) can
-// be customized with custom modules. This loads them. Each type can specify
+// Several configuration properties (`runner`, `reporter`, `progress`, `store`)
+// can be customized with custom modules. This loads them. Each type can specify
 // builtin modules too.
 // Configuration properties can be passed to each module.
+// We use a nested object to set those. This uses a dot notation when in the
+// CLI. This format is chosen because this:
+//   - allows more complex properties in spyd.yml
+//   - only requires a single delimiter character (dot) instead of mixing others
+//     like - or _
+//   - distinguishes between selecting plugins and configuring them
+//   - allows - and _ in user-defined identifiers
+//   - works unescaped with YAML and JSON
 export const loadAllPlugins = async function (config) {
-  const pluginsConfig = await Promise.all(
-    TYPES.map(({ type, builtins, single }) =>
-      loadPlugins({ config, type, builtins, single }),
+  const pluginsConfigs = await Promise.all(
+    TYPES.map(({ type, prefix, builtins }) =>
+      loadPlugins({ config, type, prefix, builtins }),
     ),
   )
-  const pluginsConfigA = Object.fromEntries(pluginsConfig)
+  const pluginsConfigA = Object.fromEntries(pluginsConfigs)
   return { ...config, ...pluginsConfigA }
 }
 
 const TYPES = [
-  { type: 'run', builtins: RUNNERS },
-  { type: 'report', builtins: REPORTERS },
-  { type: 'progress', builtins: PROGRESS_REPORTERS },
-  { type: 'store', builtins: STORES, single: true },
+  { type: 'runner', prefix: 'spyd-runner-', builtins: RUNNERS },
+  { type: 'reporter', prefix: 'spyd-reporter-', builtins: REPORTERS },
+  { type: 'progress', prefix: 'spyd-progress-', builtins: PROGRESS_REPORTERS },
+  { type: 'store', prefix: 'spyd-store-', builtins: STORES },
 ]
 
-const loadPlugins = async function ({ config, type, builtins, single }) {
-  const pluginConfig = config[type]
-
-  checkDeepObject(pluginConfig, type)
-
+const loadPlugins = async function ({ config, type, prefix, builtins }) {
+  const pluginConfigs = config[type]
   const plugins = await Promise.all(
-    Object.entries(pluginConfig).map(([name, prop]) =>
-      loadPlugin({ type, name, prop, builtins }),
+    Object.entries(pluginConfigs).map(([id, pluginConfig]) =>
+      loadPlugin({ type, prefix, id, pluginConfig, builtins }),
     ),
   )
-
-  if (single) {
-    const plugin = getSinglePlugin(plugins, type)
-    return [type, plugin]
-  }
-
   return [type, plugins]
 }
 
-const loadPlugin = async function ({ type, name, prop, builtins }) {
-  const plugin = await importPlugin({ type, name, builtins })
-  return { ...plugin, name, config: prop }
+const loadPlugin = async function ({
+  type,
+  prefix,
+  id,
+  pluginConfig,
+  builtins,
+}) {
+  const plugin = await importPlugin({ type, prefix, id, builtins })
+  return { ...plugin, id, config: pluginConfig }
 }
 
-const importPlugin = async function ({ type, name, builtins }) {
-  const builtin = builtins[name]
+const importPlugin = async function ({ type, prefix, id, builtins }) {
+  const builtin = builtins[id]
 
   if (builtin !== undefined) {
     return builtin
   }
 
+  const moduleName = `${prefix}${id}`
+
   try {
-    return await import(name)
+    return await import(moduleName)
   } catch (error) {
     throw new PluginError(
-      `Could not load '${type}' module '${name}'\n\n${error.stack}`,
+      `Could not load '${type}' module '${moduleName}'\n\n${error.stack}`,
     )
   }
-}
-
-const getSinglePlugin = function (plugins, type) {
-  if (plugins.length > 1) {
-    throw new UserError(`Cannot specify more than one '${type}'`)
-  }
-
-  return plugins[0]
 }

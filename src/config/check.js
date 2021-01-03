@@ -3,13 +3,7 @@ import isPlainObj from 'is-plain-obj'
 import { UserError } from '../error/main.js'
 
 // Configuration validation helper functions
-export const checkDeepObject = function (object, name) {
-  Object.entries(object).forEach(([propName, value]) => {
-    checkObject(value, `${name}.${propName}`)
-  })
-}
-
-const checkObject = function (value, name) {
+export const checkObject = function (value, name) {
   if (!isPlainObj(value)) {
     throw new UserError(`'${name}' value must be a plain object: ${value}`)
   }
@@ -18,6 +12,12 @@ const checkObject = function (value, name) {
 export const checkStringArray = function (value, name) {
   if (value !== undefined && !(Array.isArray(value) && value.every(isString))) {
     throw new UserError(`'${name}' must be an array of strings: ${value}`)
+  }
+}
+
+export const checkDefinedString = function (value, name) {
+  if (!isString(value) || value.trim() === '') {
+    throw new UserError(`'${name}' must be a non-empty string: ${value}`)
   }
 }
 
