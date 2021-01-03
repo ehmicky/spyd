@@ -6,12 +6,12 @@ import { DEFAULT_CONFIG } from './default.js'
 export const validateConfig = function (config) {
   validate(config, {
     exampleConfig: EXAMPLE_CONFIG,
-    recursiveDenylist: RECURSIVE_PROPS,
+    recursiveDenylist: DYNAMIC_PROPS,
   })
 }
 
-// Configuration properties using the dot notation
-const RECURSIVE_PROPS = ['run', 'report', 'progress', 'store']
+// Configuration properties with a variable property name
+const DYNAMIC_PROPS = ['run', 'report', 'progress', 'store']
 
 const VALID_TIMESTAMPS = [
   'yyyy-mm-dd',
@@ -37,5 +37,5 @@ const EXAMPLE_CONFIG = {
   limit: ['taskId=10'],
   link: false,
   output: './file.js',
-  system: 'Windows 10',
+  system: 'windows_10',
 }
