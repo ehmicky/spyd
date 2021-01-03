@@ -11,7 +11,7 @@ import { getCwd, resolveConfigPaths } from './resolve.js'
 //  - `spyd.*`
 // We make sure the `config` property from `spyd.*` is ignored.
 export const loadConfig = async function (configFlags) {
-  const configNonFile = loadConfigNonFile(configFlags)
+  const configNonFile = await loadConfigNonFile(configFlags)
 
   const configPath = await getConfigPath(configNonFile)
   const cwd = getCwd(configPath)
@@ -24,9 +24,9 @@ export const loadConfig = async function (configFlags) {
 }
 
 // Load configuration not in `spyd.*`
-const loadConfigNonFile = function (configFlags) {
+const loadConfigNonFile = async function (configFlags) {
   const envVarConfig = getEnvVarConfig()
   const configNonFile = { ...envVarConfig, ...configFlags }
-  const configNonFileA = resolveConfigPaths(configNonFile, '.')
+  const configNonFileA = await resolveConfigPaths(configNonFile, '.')
   return configNonFileA
 }

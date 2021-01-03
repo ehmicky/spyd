@@ -9,6 +9,15 @@ export const checkObject = function (value, name) {
   }
 }
 
+export const checkOptionalStringArray = function (value, name) {
+  if (typeof value === 'string') {
+    checkDefinedString(value, name)
+    return
+  }
+
+  checkDefinedStringArray(value, name)
+}
+
 export const checkDefinedStringArray = function (value, name) {
   if (value === undefined) {
     return
@@ -45,11 +54,4 @@ export const checkSaveDuration = function (duration, save) {
       `The "duration" configuration property must not be 0 when "save" is enabled.`,
     )
   }
-}
-
-export const checkTasks = function (tasks, propName) {
-  checkObject(tasks, propName)
-  Object.entries(tasks).forEach(([childName, value]) => {
-    checkDefinedStringArray(value, `${propName}.${childName}`)
-  })
 }
