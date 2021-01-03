@@ -1,5 +1,6 @@
 import { dirname, resolve } from 'path'
 
+import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
 // Resolve configuration relative file paths to absolute paths
@@ -15,20 +16,43 @@ export const getCwd = function (configPath) {
 }
 
 export const resolveConfigPaths = function (config, baseDir) {
-  return mapObj(config, (propName, value) =>
-    resolveConfigProp({ propName, value, baseDir }),
-  )
+  return resolveConfigProp(config, baseDir)
 }
 
-const resolveConfigProp = function ({ propName, value, baseDir }) {
-  if (!PATH_CONFIG_PROPS.has(propName) || typeof value !== 'string') {
-    return [propName, value]
+// Resolve all file path configuration properties.
+// Done recursively since some are objects.
+const resolveConfigProp = function (value, baseDir, propName) {
+  if (typeof value === 'string') {
+    return resolve(baseDir, value)
   }
 
-  const resolvedValue = resolve(baseDir, value)
-  return [propName, resolvedValue]
+  if (isPlainObj(value)) {
+    return mapObj(value, (childPropName, child) => [
+      childPropName,
+      resolveConfigPair({ child, baseDir, childPropName, propName }),
+    ])
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => resolveConfigProp(item, baseDir, propName))
+  }
+
+  return value
+}
+
+const resolveConfigPair = function ({
+  child,
+  baseDir,
+  childPropName,
+  propName = childPropName,
+}) {
+  if (!PATH_CONFIG_PROPS.has(propName)) {
+    return child
+  }
+
+  return resolveConfigProp(child, baseDir, propName)
 }
 
 // `extend` can be a Node module and can only be specified in `spyd.*`, so we
 // don't include it here.
-const PATH_CONFIG_PROPS = new Set(['config', 'output', 'insert'])
+const PATH_CONFIG_PROPS = new Set(['config', 'output', 'insert', 'tasks'])
