@@ -11,11 +11,11 @@ export const BENCH_COMMAND = {
 
   config: {
     ...ALL_CONFIG,
-    ...STORE_CONFIG,
-    ...REPORT_CONFIG,
-    ...SELECT_CONFIG,
     ...RUN_CONFIG,
+    ...SELECT_CONFIG,
     ...BENCH_CONFIG,
+    ...REPORT_CONFIG,
+    ...STORE_CONFIG,
   },
 
   usage: `$0 [flags...]

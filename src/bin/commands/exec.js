@@ -6,7 +6,7 @@ export const EXEC_COMMAND = {
   command: 'exec',
   describe: 'Execute tasks without benchmarking them',
 
-  config: { ...ALL_CONFIG, ...SELECT_CONFIG, ...RUN_CONFIG },
+  config: { ...ALL_CONFIG, ...RUN_CONFIG, ...SELECT_CONFIG },
 
   usage: `$0 exec [flags...]
 

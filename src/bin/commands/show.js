@@ -9,9 +9,9 @@ export const SHOW_COMMAND = {
 
   config: {
     ...ALL_CONFIG,
-    ...STORE_CONFIG,
     ...SELECT_CONFIG,
     ...REPORT_CONFIG,
+    ...STORE_CONFIG,
   },
 
   usage: `$0 [flags...] show [delta]

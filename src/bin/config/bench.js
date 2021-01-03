@@ -1,6 +1,9 @@
+import { TASKS, PROGRESS, STORE } from './groups.js'
+
 // Configuration specific to `bench`
 export const BENCH_CONFIG = {
   duration: {
+    group: TASKS,
     alias: 'd',
     number: true,
     requiresArg: true,
@@ -9,11 +12,13 @@ The default is 1 which executes each combination once.
 Can also be 0 which only stops when CTRL-C is typed.`,
   },
   concurrency: {
+    group: TASKS,
     alias: 'C',
     number: true,
     requiresArg: true,
   },
   merge: {
+    group: STORE,
     string: true,
     describe: `Append the current results to the previous one.
 Used to create a single result in several incremental benchmarks.
@@ -21,6 +26,7 @@ Can also be an id. Results within the same id are reported together.
 Default: random UUID`,
   },
   system: {
+    group: STORE,
     string: true,
     requiresArg: true,
     describe: `Identifier of the current hardware/software system.
@@ -28,6 +34,7 @@ Used to compare different machines or configurations together.
 Default: "default_system"`,
   },
   progresses: {
+    group: PROGRESS,
     alias: 'P',
     string: true,
     array: true,
@@ -37,10 +44,12 @@ Built-in progress reporters: silent.
 Custom progress reporters can be installed from npm.`,
   },
   progress: {
+    group: PROGRESS,
     describe: `Progress reporter-specific configuration properties.
 Uses a dot notation such as --progress.id.prop=value`,
   },
   save: {
+    group: STORE,
     alias: 's',
     boolean: true,
     describe: `Save the results.
