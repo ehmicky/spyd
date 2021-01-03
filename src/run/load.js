@@ -2,9 +2,9 @@ import { UserError, PluginError } from '../error/main.js'
 
 // Select the runners for the current tasks files, and retrieve their
 // related commands using `runner.launch()`
-export const loadRunners = async function (tasks, runner) {
-  const runners = runner.filter(({ id }) => runnerHasTasks(id, tasks))
-  return await Promise.all(runners.map(loadRunner))
+export const loadRunners = async function (tasks, runners) {
+  const runnersA = runners.filter(({ id }) => runnerHasTasks(id, tasks))
+  return await Promise.all(runnersA.map(loadRunner))
 }
 
 // `runner` already includes only `tasks.*`.

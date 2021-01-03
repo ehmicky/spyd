@@ -3,7 +3,6 @@ import { checkEmptyTasks } from '../run/check.js'
 import { normalizeDelta } from '../store/delta/config.js'
 
 import {
-  checkObject,
   checkDefinedStringArray,
   checkDefinedString,
   checkJson,
@@ -65,22 +64,13 @@ const checkStringArrayProp = function (value, propName) {
   checkDefinedStringArray(value, propName)
 }
 
-const checkPluginOpts = function (pluginOpts, propName) {
-  checkObject(pluginOpts, propName)
-  Object.entries(pluginOpts).forEach(([childName, value]) => {
-    checkObject(value, `${propName}.${childName}`)
-  })
-}
-
 const checkTitles = function (titles, propName) {
-  checkObject(titles, propName)
   Object.entries(titles).forEach(([childName, value]) => {
     checkDefinedString(value, `${propName}.${childName}`)
   })
 }
 
 const checkInputs = function (inputs, propName) {
-  checkObject(inputs, propName)
   Object.entries(inputs).forEach(([childName, value]) => {
     checkJson(value, `${propName}.${childName}`)
   })
@@ -93,16 +83,12 @@ const NORMALIZERS = {
   limit: normalizeLimit,
   delta: normalizeDeltaProp,
   diff: normalizeDeltaProp,
-  reporters: checkStringArrayProp,
-  progresses: checkStringArrayProp,
-  stores: checkStringArrayProp,
+  reporter: checkStringArrayProp,
+  progress: checkStringArrayProp,
+  store: checkStringArrayProp,
   include: checkStringArrayProp,
   exclude: checkStringArrayProp,
   tasks: checkEmptyTasks,
-  runner: checkPluginOpts,
-  reporter: checkPluginOpts,
-  progress: checkPluginOpts,
-  store: checkPluginOpts,
   titles: checkTitles,
   inputs: checkInputs,
 }

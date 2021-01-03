@@ -3,7 +3,7 @@ import { REPORT } from './groups.js'
 
 // Configuration shared by reporting commands: `bench`, `show`
 export const REPORT_CONFIG = {
-  reporters: {
+  reporter: {
     group: REPORT,
     alias: 'R',
     string: true,
@@ -11,15 +11,13 @@ export const REPORT_CONFIG = {
     requiresArg: true,
     describe: `Modules to report the result.
 Built-in reporters: silent.
-Custom reporters can also be installed from npm.`,
-  },
-  reporter: {
-    group: REPORT,
-    describe: `Reporter-specific configuration properties.
-Uses a dot notation such as --report.json.output=path
+Custom reporters can also be installed from npm.
+Reporter-specific configuration properties can be specified by appending the
+reporter's name: --reportName.prop=value.
+For example: --reportJson.output=path
 The following properties can be set for any reporter: output, insert, colors,
 info, context, link.
-For example --report.json.output is like --output but only for the json reporter.`,
+For example --reportJson.output is like --output but only for the json reporter.`,
   },
   titles: {
     group: REPORT,

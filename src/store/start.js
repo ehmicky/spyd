@@ -2,7 +2,7 @@ import { UserError } from '../error/main.js'
 
 // Call `store.start(storeConfig)`
 export const startStore = async function ({
-  store: [{ config: storeConfig, start, ...store }],
+  stores: [{ config: storeConfig, start, ...store }],
   ...config
 }) {
   const startConfig = await callStart(start, storeConfig, config)

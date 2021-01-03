@@ -13,7 +13,8 @@ The task filename (excluding its extension) is used as the task identifier.`,
   runner: {
     group: TASKS,
     describe: `Runner-specific configuration properties.
-Uses a dot notation such as --runner.node.version=8
+Uses the following notation: --runnerId.prop=value.
+For example: --runnerNode.version=8
 Runners measure tasks for a specific programming language or platform.
 Built-in runners: node, cli.
 Custom runners can be installed from npm.`,

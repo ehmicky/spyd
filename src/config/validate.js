@@ -1,25 +1,31 @@
+import filterObj from 'filter-obj'
 import { validate, multipleValidOptions } from 'jest-validate'
 
 import { DEFAULT_CONFIG } from './default.js'
 
 // Validate configuration against user typos.
 export const validateConfig = function (config) {
-  validate(config, {
+  const configA = ignoreDynamicKeyProps(config)
+  validate(configA, {
     exampleConfig: EXAMPLE_CONFIG,
-    recursiveDenylist: DYNAMIC_PROPS,
+    recursiveDenylist: DYNAMIC_OBJECT_PROPS,
   })
 }
 
-// Configuration properties with a variable property name
-const DYNAMIC_PROPS = [
-  'tasks',
-  'runner',
-  'reporter',
-  'progress',
-  'store',
-  'titles',
-  'inputs',
-]
+const ignoreDynamicKeyProps = function (config) {
+  return filterObj(config, isStaticKeyProp)
+}
+
+const isStaticKeyProp = function (key) {
+  return DYNAMIC_KEY_PROPS.every(
+    (propName) => !key.startsWith(propName) || key === propName,
+  )
+}
+
+// Configuration properties whose key is dynamic but starts with a known prefix
+const DYNAMIC_KEY_PROPS = ['runner', 'reporter', 'progress', 'store']
+// Object configuration properties whose properties are dynamic
+const DYNAMIC_OBJECT_PROPS = ['tasks', 'titles', 'inputs']
 
 const VALID_TIMESTAMPS = [
   'yyyy-mm-dd',
@@ -34,6 +40,7 @@ const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
+  tasks: multipleValidOptions({ node: '*.task.js' }, { node: ['*.task.js'] }),
   config: './benchmark/spyd.yml',
   extend: './shared_spyd.yml',
   debug: false,
@@ -49,4 +56,6 @@ const EXAMPLE_CONFIG = {
   delta: VALID_DELTA,
   diff: VALID_DELTA,
   since: VALID_DELTA,
+  titles: { taskId: 'taskTitle' },
+  inputs: { inputName: 'inputValue' },
 }

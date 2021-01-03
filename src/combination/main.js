@@ -11,7 +11,7 @@ import { validateCombinationsIds } from './validate.js'
 // Retrieve each combination, i.e. combination of each dimension
 export const getCombinations = async function ({
   tasks,
-  runner,
+  runners,
   inputs,
   systemId,
   include,
@@ -20,14 +20,14 @@ export const getCombinations = async function ({
   limits,
 }) {
   const tasksA = listTasks(tasks)
-  const [runners, inputsA] = await Promise.all([
-    loadRunners(tasksA, runner),
+  const [runnersA, inputsA] = await Promise.all([
+    loadRunners(tasksA, runners),
     getInputs(inputs),
   ])
 
   const combinations = getCombinationsProduct({
     tasks: tasksA,
-    runners,
+    runners: runnersA,
     inputs: inputsA,
     systemId,
   })

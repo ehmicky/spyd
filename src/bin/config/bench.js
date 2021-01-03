@@ -33,7 +33,7 @@ Default: random UUID`,
 Used to compare different machines or configurations together.
 Default: "default_system"`,
   },
-  progresses: {
+  progress: {
     group: PROGRESS,
     alias: 'P',
     string: true,
@@ -41,12 +41,9 @@ Default: "default_system"`,
     requiresArg: true,
     describe: `Module to report progress.
 Built-in progress reporters: silent.
-Custom progress reporters can be installed from npm.`,
-  },
-  progress: {
-    group: PROGRESS,
-    describe: `Progress reporter-specific configuration properties.
-Uses a dot notation such as --progress.id.prop=value`,
+Custom progress reporters can be installed from npm.
+Progress-reporter-specific configuration properties can be specified by
+appending the progress reporter's name: --progressName.prop=value`,
   },
   save: {
     group: STORE,
