@@ -2,7 +2,7 @@ import filterObj from 'filter-obj'
 
 import { addDefaultConfig } from './default.js'
 import { loadConfig } from './load.js'
-import { preNormalizeConfig, normalizeConfig } from './normalize.js'
+import { normalizeConfig } from './normalize.js'
 import { validateConfig } from './validate.js'
 
 // Retrieve configuration
@@ -14,12 +14,10 @@ export const getConfig = async function (action, configFlags = {}) {
   const configA = await loadConfig(configFlagsA)
 
   validateConfig(configA)
+  const configB = addDefaultConfig(configA, action)
 
-  const configB = preNormalizeConfig(configA)
-  const configC = addDefaultConfig(configB, action)
-
-  const configD = await normalizeConfig(configC)
-  return configD
+  const configC = await normalizeConfig(configB)
+  return configC
 }
 
 const isDefined = function (key, value) {

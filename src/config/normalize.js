@@ -12,22 +12,6 @@ import {
 } from './check.js'
 import { loadAllPlugins } from './plugins.js'
 
-// Normalize some configuration properties before assigning default values
-export const preNormalizeConfig = function (config) {
-  const configA = addRunners(config)
-  return configA
-}
-
-// Add 'runners' configuration property
-const addRunners = function ({ run, ...config }) {
-  if (run === undefined) {
-    return config
-  }
-
-  const runners = Object.keys(run)
-  return { ...config, run, runners }
-}
-
 // Normalize configuration shape and do custom validation
 export const normalizeConfig = async function (config) {
   const configA = NORMALIZERS.reduce(normalizeProp, config)
