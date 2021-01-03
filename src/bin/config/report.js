@@ -1,15 +1,22 @@
 // Configuration shared by reporting commands: `bench`, `show`
 export const REPORT_CONFIG = {
-  report: {
+  report: {},
+  'report.use': {
+    alias: 'R',
+    string: true,
+    array: true,
+    requiresArg: true,
     describe: `Module to report the result.
 Built-in reporters: silent.
 Custom reporters can also be installed from npm.
-Uses a dot notation such as --report.json (not --report=json nor --report json).
-Reporter-specific configuration properties can be specified using the same dot
-// notation.
 The following properties can be set for any reporter: output, insert, colors,
 info, context, link.
-For example --report.json.output is like --output but only for the json reporter.`,
+For example --report.json.output is like --output but only for the json reporter.
+Reporter-specific configuration properties can be specified using the same dot
+notation.`,
+  },
+  titles: {
+    requiresArg: true,
   },
   output: {
     alias: 'o',
@@ -20,6 +27,7 @@ For silent output, use "". This is the default if --insert is used.
 To print to stdout, use "-". This is the default otherwise.`,
   },
   insert: {
+    alias: 'i',
     string: true,
     requiresArg: true,
     describe: `Insert the result inside the specified file.
@@ -59,6 +67,7 @@ Default: true for command "show", false otherwise`,
     describe: `Show link to the library's main page.
 Default: true`,
   },
+  since: {},
   diff: {
     describe: `Compare the difference with a previous result.
 Can be:

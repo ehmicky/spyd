@@ -1,6 +1,7 @@
 import { ALL_CONFIG } from '../config/all.js'
 import { BENCH_CONFIG } from '../config/bench.js'
 import { REPORT_CONFIG } from '../config/report.js'
+import { RUN_CONFIG } from '../config/run.js'
 import { SELECT_CONFIG } from '../config/select.js'
 import { STORE_CONFIG } from '../config/store.js'
 
@@ -13,6 +14,7 @@ export const BENCH_COMMAND = {
     ...STORE_CONFIG,
     ...REPORT_CONFIG,
     ...SELECT_CONFIG,
+    ...RUN_CONFIG,
     ...BENCH_CONFIG,
   },
 

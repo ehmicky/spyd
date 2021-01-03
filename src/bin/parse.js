@@ -1,17 +1,12 @@
 import filterObj from 'filter-obj'
 
-import { normalizeDynamicProps } from './dynamic.js'
-
 export const parseCliFlags = function (yargs) {
   const {
     _: [command = DEFAULT_COMMAND],
     ...configFlags
   } = yargs.parse()
-
-  const configFlagsA = normalizeDynamicProps(configFlags)
-
-  const configFlagsB = filterObj(configFlagsA, isUserProp)
-  return { command, configFlags: configFlagsB }
+  const configFlagsA = filterObj(configFlags, isUserProp)
+  return { command, configFlags: configFlagsA }
 }
 
 const DEFAULT_COMMAND = 'bench'

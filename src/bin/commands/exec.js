@@ -1,11 +1,12 @@
 import { ALL_CONFIG } from '../config/all.js'
+import { RUN_CONFIG } from '../config/run.js'
 import { SELECT_CONFIG } from '../config/select.js'
 
 export const EXEC_COMMAND = {
   command: 'exec',
   describe: 'Execute tasks without benchmarking them',
 
-  config: { ...ALL_CONFIG, ...SELECT_CONFIG },
+  config: { ...ALL_CONFIG, ...SELECT_CONFIG, ...RUN_CONFIG },
 
   usage: `$0 exec [flags...]
 

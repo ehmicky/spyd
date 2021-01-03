@@ -1,23 +1,24 @@
 // Configuration shared by commands that can select combinations:
 // `bench`, `exec`, `show`
 export const SELECT_CONFIG = {
-  tasks: {
-    alias: 't',
+  include: {
+    alias: 'n',
     string: true,
     array: true,
     requiresArg: true,
-    describe: `Identifiers of the tasks.
-Each identifier can start with a ! to exclude the task instead of selecting it.
-Default: all tasks`,
   },
-  inputs: {
-    alias: 'i',
+  exclude: {
+    alias: 'x',
     string: true,
     array: true,
     requiresArg: true,
-    describe: `Identifiers of the inputs.
-Each identifier can start with a ! to exclude the input instead of selecting it.
-Default: all inputs`,
+  },
+  tasks: {
+    describe: `Paths to the task files.
+Globbing patterns can be used.
+The runner must be specified in the name such as
+--tasks.node=./path/to/task_file.js when using the "node" runner.
+The task filename (excluding its extension) is used as the task identifier.`,
   },
   system: {
     string: true,
@@ -27,14 +28,5 @@ Used to compare different machines or configurations together.
 Can contain variables such as {{os}}, {{os_full}} or {{VAR}} where VAR is an
 environment variable.
 Default: ""`,
-  },
-  run: {
-    describe: `Module to measure tasks for a specific programming language or
-platform.
-Built-in runners: node, cli.
-Custom runners can be installed from npm.
-Uses a dot notation such as --run.node (not --run=node nor --run node).
-Runner-specific configuration properties can be specified using the same dot
-notation such as --run.node.require.`,
   },
 }
