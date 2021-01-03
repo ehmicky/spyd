@@ -7,5 +7,5 @@ Built-in runners: node, cli.
 Custom runners can be installed from npm.
 Uses a dot notation such as --run.node.version=8`,
   },
-  inputs: {},
+  input: {},
 }
