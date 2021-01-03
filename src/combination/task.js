@@ -25,6 +25,9 @@ const getRunnerTask = function ({ taskPath, runnerId }) {
 // The task id is the filename excluding any file extension.
 // If several dots are present in the filename, they are all considered part of
 // the file extension.
+// We do this to:
+//  - be able to retrieve task ids statically in a way that's user-friendly
+//  - allow two different task files with the same id but different runners
 const getTaskId = function (taskPath) {
   return basename(taskPath).replace(TASK_ID_REGEXP, '')
 }
