@@ -2,8 +2,8 @@ import { ALL_CONFIG } from '../config/all.js'
 import { STORE_CONFIG } from '../config/store.js'
 
 export const REMOVE_COMMAND = {
-  input: 'remove [delta]',
-  description: 'Remove a previous result',
+  command: 'remove [delta]',
+  describe: 'Remove a previous result',
 
   config: { ...ALL_CONFIG, ...STORE_CONFIG },
 

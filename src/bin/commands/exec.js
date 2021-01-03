@@ -2,8 +2,8 @@ import { ALL_CONFIG } from '../config/all.js'
 import { SELECT_CONFIG } from '../config/select.js'
 
 export const EXEC_COMMAND = {
-  input: 'exec',
-  description: 'Execute tasks without benchmarking them',
+  command: 'exec',
+  describe: 'Execute tasks without benchmarking them',
 
   config: { ...ALL_CONFIG, ...SELECT_CONFIG },
 

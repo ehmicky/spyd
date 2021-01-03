@@ -4,8 +4,8 @@ import { SELECT_CONFIG } from '../config/select.js'
 import { STORE_CONFIG } from '../config/store.js'
 
 export const SHOW_COMMAND = {
-  input: 'show [delta]',
-  description: 'Show a previous result',
+  command: 'show [delta]',
+  describe: 'Show a previous result',
 
   config: {
     ...ALL_CONFIG,

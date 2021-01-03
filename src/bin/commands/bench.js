@@ -5,8 +5,8 @@ import { SELECT_CONFIG } from '../config/select.js'
 import { STORE_CONFIG } from '../config/store.js'
 
 export const BENCH_COMMAND = {
-  input: ['bench', '*'],
-  description: 'Measure tasks',
+  command: ['bench', '*'],
+  describe: 'Measure tasks',
 
   config: {
     ...ALL_CONFIG,
