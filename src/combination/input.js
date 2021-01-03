@@ -1,7 +1,7 @@
 // TODO: fix
 export const getInputs = function () {
   return [
-    { inputId: 'one', inputTitle: 'One', inputValue: 1 },
-    { inputId: 'two', inputTitle: 'Two', inputValue: 2 },
+    { inputId: 'one', inputValue: 1 },
+    { inputId: 'two', inputValue: 2 },
   ]
 }

@@ -3,27 +3,32 @@ export const getCombinationsProduct = function ({
   tasks,
   runners,
   inputs,
-  system,
+  systemId,
 }) {
   return tasks.flatMap((task) =>
-    getCombinationsByTask({ task, runners, inputs, system }),
+    getCombinationsByTask({ task, runners, inputs, systemId }),
   )
 }
 
-const getCombinationsByTask = function ({ task, runners, inputs, system }) {
-  return runners.flatMap((runner) =>
-    getCombinationsByRunner({ task, runner, inputs, system }),
+const getCombinationsByTask = function ({ task, runners, inputs, systemId }) {
+  const taskRunners = getTaskRunners(task, runners)
+  return taskRunners.flatMap((runner) =>
+    getCombinationsByRunner({ task, runner, inputs, systemId }),
   )
 }
 
-const getCombinationsByRunner = function ({ task, runner, inputs, system }) {
+const getTaskRunners = function (task, runners) {
+  return runners.filter(({ runnerId }) => runnerId === task.runnerId)
+}
+
+const getCombinationsByRunner = function ({ task, runner, inputs, systemId }) {
   return inputs.map((input) =>
-    getCombinationByInput({ task, runner, input, system }),
+    getCombinationByInput({ task, runner, input, systemId }),
   )
 }
 
 const getCombinationByInput = function ({
-  task: { taskId, taskTitle, taskPath },
+  task: { taskId, taskPath },
   runner: {
     runnerId,
     runnerTitle,
@@ -32,22 +37,20 @@ const getCombinationByInput = function ({
     runnerSpawnOptions,
     runnerVersions,
   },
-  input: { inputId, inputTitle },
-  system: { id: systemId, title: systemTitle },
+  input: { inputId, inputValue },
+  systemId,
 }) {
   return {
     taskPath,
     taskId,
-    taskTitle,
-    inputId,
-    inputTitle,
     runnerId,
     runnerTitle,
     runnerRepeats,
     runnerSpawn,
     runnerSpawnOptions,
     runnerVersions,
+    inputId,
+    inputValue,
     systemId,
-    systemTitle,
   }
 }

@@ -71,7 +71,7 @@ export const getCombinations = async function ({
     tasks: tasksA,
     runners,
     inputs,
-    system,
+    systemId,
   })
   validateCombinationsIds(combinations)
 
