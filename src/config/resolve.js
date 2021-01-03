@@ -1,7 +1,8 @@
 import { dirname, resolve } from 'path'
 
-import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
+
+import { resolveTasks } from './task.js'
 
 // Resolve configuration relative file paths to absolute paths
 // The CLI flags and environment variables use the current directory. However,
@@ -15,44 +16,25 @@ export const getCwd = function (configPath) {
   return dirname(configPath)
 }
 
-export const resolveConfigPaths = function (config, baseDir) {
-  return resolveConfigProp(config, baseDir)
+export const resolveConfigPaths = async function (config, cwd) {
+  const configA = mapObj(config, (propName, value) => [
+    propName,
+    resolveConfigProp(propName, value, cwd),
+  ])
+  const configB = await resolveTasks(configA, cwd)
+  return configB
 }
 
 // Resolve all file path configuration properties.
 // Done recursively since some are objects.
-const resolveConfigProp = function (value, baseDir, propName) {
-  if (typeof value === 'string') {
-    return resolve(baseDir, value)
+const resolveConfigProp = function (propName, value, cwd) {
+  if (!PATH_CONFIG_PROPS.has(propName) || value === undefined) {
+    return value
   }
 
-  if (isPlainObj(value)) {
-    return mapObj(value, (childPropName, child) => [
-      childPropName,
-      resolveConfigPair({ child, baseDir, childPropName, propName }),
-    ])
-  }
-
-  if (Array.isArray(value)) {
-    return value.map((item) => resolveConfigProp(item, baseDir, propName))
-  }
-
-  return value
-}
-
-const resolveConfigPair = function ({
-  child,
-  baseDir,
-  childPropName,
-  propName = childPropName,
-}) {
-  if (!PATH_CONFIG_PROPS.has(propName)) {
-    return child
-  }
-
-  return resolveConfigProp(child, baseDir, propName)
+  return resolve(cwd, value)
 }
 
 // `extend` can be a Node module and can only be specified in `spyd.*`, so we
 // don't include it here.
-const PATH_CONFIG_PROPS = new Set(['config', 'output', 'insert', 'tasks'])
+const PATH_CONFIG_PROPS = new Set(['config', 'output', 'insert'])

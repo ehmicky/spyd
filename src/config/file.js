@@ -17,7 +17,7 @@ export const loadConfigFile = async function (configPath, cwd) {
   }
 
   const configFile = await loadConfigByPath(configPath)
-  const configFileA = resolveConfigPaths(configFile, cwd)
+  const configFileA = await resolveConfigPaths(configFile, cwd)
   return configFileA
 }
 

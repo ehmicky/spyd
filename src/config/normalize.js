@@ -3,7 +3,7 @@ import { normalizeDelta } from '../store/delta/config.js'
 
 import {
   checkObject,
-  checkStringArray,
+  checkDefinedStringArray,
   checkDefinedString,
   checkPositiveInteger,
   checkSaveDuration,
@@ -51,7 +51,7 @@ const normalizeMerge = function (merge) {
 }
 
 const normalizeLimit = function (limit, propName) {
-  checkStringArray(limit, propName)
+  checkDefinedStringArray(limit, propName)
   return { limits: normalizeLimits(limit) }
 }
 
@@ -60,14 +60,7 @@ const normalizeDeltaProp = function (delta, propName) {
 }
 
 const checkStringArrayProp = function (value, propName) {
-  checkStringArray(value, propName)
-}
-
-const checkTasks = function (tasks, propName) {
-  checkObject(tasks, propName)
-  Object.entries(tasks).forEach(([childName, value]) => {
-    checkStringArray(value, `${propName}.${childName}`)
-  })
+  checkDefinedStringArray(value, propName)
 }
 
 const checkPluginOpts = function (pluginOpts, propName) {
@@ -100,7 +93,6 @@ const NORMALIZERS = {
   stores: checkStringArrayProp,
   include: checkStringArrayProp,
   exclude: checkStringArrayProp,
-  tasks: checkTasks,
   runner: checkPluginOpts,
   reporter: checkPluginOpts,
   progress: checkPluginOpts,

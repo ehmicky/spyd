@@ -1,13 +1,8 @@
-import fastGlob from 'fast-glob'
-
 import { UserError } from '../error/main.js'
 
 // Retrieve the absolute paths to the tasks files using the `files` and
 // `cwd` configuration properties
-export const getTasks = async function (files, cwd) {
-  const taskPaths = await Promise.all(
-    files.map((pattern) => applyGlobbing(pattern, cwd)),
-  )
+export const getTasks = function (files, cwd) {
   const taskPathsA = taskPaths.flat()
 
   if (taskPathsA.length === 0) {
@@ -16,8 +11,4 @@ export const getTasks = async function (files, cwd) {
 
   const taskPathsB = [...new Set(taskPathsA)]
   return taskPathsB
-}
-
-const applyGlobbing = async function (pattern, cwd) {
-  return await fastGlob(pattern, { cwd, absolute: true })
 }

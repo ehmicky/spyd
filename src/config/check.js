@@ -9,20 +9,28 @@ export const checkObject = function (value, name) {
   }
 }
 
-export const checkStringArray = function (value, name) {
-  if (value !== undefined && !(Array.isArray(value) && value.every(isString))) {
+export const checkDefinedStringArray = function (value, name) {
+  if (value === undefined) {
+    return
+  }
+
+  if (!Array.isArray(value)) {
     throw new UserError(`'${name}' must be an array of strings: ${value}`)
   }
+
+  value.forEach((item, key) => {
+    checkDefinedString(item, `${name}[${key}]`)
+  })
 }
 
 export const checkDefinedString = function (value, name) {
-  if (!isString(value) || value.trim() === '') {
+  if (!isDefinedString(value)) {
     throw new UserError(`'${name}' must be a non-empty string: ${value}`)
   }
 }
 
-const isString = function (value) {
-  return typeof value === 'string'
+const isDefinedString = function (value) {
+  return typeof value === 'string' && value.trim() !== ''
 }
 
 export const checkPositiveInteger = function (value, name) {
@@ -37,4 +45,11 @@ export const checkSaveDuration = function (duration, save) {
       `The "duration" configuration property must not be 0 when "save" is enabled.`,
     )
   }
+}
+
+export const checkTasks = function (tasks, propName) {
+  checkObject(tasks, propName)
+  Object.entries(tasks).forEach(([childName, value]) => {
+    checkDefinedStringArray(value, `${propName}.${childName}`)
+  })
 }
