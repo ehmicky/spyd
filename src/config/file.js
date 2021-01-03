@@ -11,23 +11,20 @@ import { resolveConfigPaths } from './resolve.js'
 import { validateConfig } from './validate.js'
 
 // Load `spyd.*` file
-export const loadConfigFile = async function (configPath) {
+export const loadConfigFile = async function (configPath, cwd) {
   if (configPath === undefined) {
     return {}
   }
 
   const configFile = await loadConfigByPath(configPath)
-  return configFile
+  const configFileA = resolveConfigPaths(configFile, cwd)
+  return configFileA
 }
 
 const loadConfigByPath = async function (configPath) {
   const configContents = await loadConfigContents(configPath)
-  const configContentsA = resolveConfigPaths(
-    configContents,
-    dirname(configPath),
-  )
-  const configContentsB = await addConfigExtend(configContentsA, configPath)
-  return configContentsB
+  const configContentsA = await addConfigExtend(configContents, configPath)
+  return configContentsA
 }
 
 const loadConfigContents = async function (configPath) {

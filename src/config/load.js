@@ -15,7 +15,7 @@ export const loadConfig = async function (configFlags) {
 
   const configPath = await getConfigPath(configNonFile)
   const cwd = getCwd(configPath)
-  const configFile = await loadConfigFile(configPath)
+  const configFile = await loadConfigFile(configPath, cwd)
   const configA = mergeConfigs(configFile, configNonFile)
   const configB = { ...configA, config: configPath }
 
