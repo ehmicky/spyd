@@ -34,8 +34,8 @@ const performLoopAsync = async function ({
   afterEach,
   taskArg,
   repeat,
-  mainMeasures,
   emptyMeasures,
+  mainMeasures,
 }) {
   addEmptyMeasure(emptyMeasures)
 
