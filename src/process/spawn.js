@@ -37,10 +37,10 @@ export const spawnProcess = function ({
   combination: {
     id,
     commandConfig: runConfig,
-    commandSpawn: [commandFile, ...commandArgs],
-    commandSpawnOptions,
+    runnerSpawn: [runnerFile, ...runnerArgs],
+    runnerSpawnOptions,
     taskPath,
-    inputValue,
+    inputs,
   },
   origin,
   cwd,
@@ -49,12 +49,12 @@ export const spawnProcess = function ({
     id,
     runConfig,
     taskPath,
-    inputValue,
+    inputs,
     origin,
   })
   const spawnParamsString = JSON.stringify(spawnParams)
-  const childProcess = execa(commandFile, [...commandArgs, spawnParamsString], {
-    ...commandSpawnOptions,
+  const childProcess = execa(runnerFile, [...runnerArgs, spawnParamsString], {
+    ...runnerSpawnOptions,
     stdio: 'ignore',
     cwd,
     preferLocal: true,
@@ -66,15 +66,14 @@ export const spawnProcess = function ({
 }
 
 // Retrieve params passed to runner processes so they can find the right task
-const getSpawnParams = function ({
-  id,
-  runConfig,
-  taskPath,
-  inputValue,
-  origin,
-}) {
+const getSpawnParams = function ({ id, runConfig, taskPath, inputs, origin }) {
   const serverUrl = getServerUrl(origin, id)
-  return { serverUrl, runConfig, taskPath, input: inputValue }
+  const inputsA = Object.assign({}, ...inputs.map(getInput))
+  return { serverUrl, runConfig, taskPath, inputs: inputsA }
+}
+
+const getInput = function ({ inputId, inputValue }) {
+  return { [inputId]: inputValue }
 }
 
 // Terminate each runner's process at the end of the benchmark.
