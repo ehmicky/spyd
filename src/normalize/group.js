@@ -4,9 +4,12 @@ import { joinSystems } from '../system/join.js'
 
 import { addCollections } from './collections.js'
 
-// We try to save as little as possible in stores, and compute anything that
-// can on the fly, before reporting.
-export const normalizeResult = function ({ combinations, systems, ...result }) {
+// Add `result.*` properties based on grouping different combinations
+export const groupCombinations = function ({
+  combinations,
+  systems,
+  ...result
+}) {
   const {
     tasks,
     runners,

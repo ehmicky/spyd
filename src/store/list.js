@@ -1,5 +1,5 @@
 import { UserError } from '../error/main.js'
-import { normalizeResult } from '../normalize/main.js'
+import { groupCombinations } from '../normalize/group.js'
 import { addPrevious } from '../normalize/previous.js'
 import { selectResults } from '../select/main.js'
 
@@ -21,7 +21,7 @@ export const listStore = async function ({
   const resultsC = sortResults(resultsB)
   const resultsD = selectResults(resultsC, { include, exclude })
   const resultsE = addPrevious(resultsD, { limits, diff })
-  const resultsF = resultsE.map(normalizeResult)
+  const resultsF = resultsE.map(groupCombinations)
   return resultsF
 }
 
