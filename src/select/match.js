@@ -1,6 +1,6 @@
 // Select combinations according to the `include`, `exclude`, `limit`
 // configuration properties
-export const matchSelectors = function (combination, { selectors, propName }) {
+export const matchSelectors = function (combination, { selectors, inverse }) {
   if (selectors.length === 0) {
     return true
   }
@@ -8,7 +8,7 @@ export const matchSelectors = function (combination, { selectors, propName }) {
   const matches = selectors.some((selector) =>
     matchSelector(combination, selector),
   )
-  return propName === 'exclude' ? !matches : matches
+  return inverse ? !matches : matches
 }
 
 // Check if a selector matches the ids of a given combination

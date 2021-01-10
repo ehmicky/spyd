@@ -2,6 +2,7 @@ import { UserError } from '../error/main.js'
 
 import { matchSelectors } from './match.js'
 import { parseSelectors } from './parse.js'
+import { getPrefix } from './prefix.js'
 
 // Select combinations according to the `include` and `exclude` configuration
 // properties.
@@ -46,9 +47,8 @@ const applySelection = function (
   )
 
   if (combinationsA.length === 0) {
-    throw new UserError(
-      `${includeSelectors.prefix}No combinations match the selection.`,
-    )
+    const prefix = getPrefix(rawSelectors, propName)
+    throw new UserError(`${prefix}No combinations match the selection.`)
   }
 
   return combinationsA

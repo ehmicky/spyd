@@ -17,14 +17,18 @@ export const parseSelectors = function (
   propName,
   combinationsIds,
 ) {
-  const prefix = getPrefix(rawSelectors, propName)
-  const selectors = rawSelectors
-    .map((rawSelector) => tokenizeSelector(rawSelector, prefix))
-    .map((tokens) => parseSelector(tokens, combinationsIds, prefix))
-  return { selectors, prefix, propName }
+  const selectors = rawSelectors.map((rawSelector) =>
+    parseSelector(rawSelector, combinationsIds, propName),
+  )
+  const inverse = propName === 'exclude'
+  return { selectors, inverse }
 }
 
-const parseSelector = function (tokens, combinationsIds, prefix) {
+const parseSelector = function (rawSelector, combinationsIds, propName) {
+  const prefix = getPrefix([rawSelector], propName)
+
+  const tokens = tokenizeSelector(rawSelector, prefix)
+
   const tokensA = tokens.map(({ id, inverse }) =>
     addTokenType({ id, inverse, combinationsIds, prefix }),
   )
