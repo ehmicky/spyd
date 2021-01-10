@@ -1,6 +1,8 @@
 import { UserError } from '../error/main.js'
+import { normalizeResult } from '../normalize/main.js'
 import { selectPartialResults } from '../select/main.js'
 
+import { mergePartialResults } from './merge.js'
 import { sortPartialResults } from './sort.js'
 
 // List, sort, filter and normalize all results
@@ -11,7 +13,9 @@ export const listStore = async function ({ store, include, exclude }) {
     include,
     exclude,
   })
-  return partialResultsB
+  const results = mergePartialResults(partialResultsB)
+  const resultsA = results.map(normalizeResult)
+  return resultsA
 }
 
 // Call `store.list()`

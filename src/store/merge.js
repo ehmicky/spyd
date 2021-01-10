@@ -7,6 +7,8 @@ export const mergePartialResults = function (partialResults) {
   return Object.values(groupBy(partialResults, 'mergeId')).map(mergeResult)
 }
 
+export const mergePartialResult = function (results, partialResult) {}
+
 const mergeResult = function ([partialResult, ...partialResults]) {
   return partialResults.reduce(mergePair, partialResult)
 }

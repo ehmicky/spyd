@@ -1,19 +1,17 @@
 import omit from 'omit.js'
 
 import { UserError } from '../error/main.js'
-import { normalizeResult } from '../normalize/main.js'
 
 import { listStore } from './list.js'
-import { mergePartialResults } from './merge.js'
 
 // Add a new result
 export const addToStore = async function ({ partialResult, config, stopped }) {
-  const partialResults = await listStore(config)
+  const results = await listStore(config)
+  const { result, results: resultsA } = mergePartialResult(
+    results,
+    partialResult,
+  )
   await save({ partialResult, config, stopped })
-  const partialResultsA = [...partialResults, partialResult]
-  const results = mergePartialResults(partialResultsA)
-  const resultsA = results.map(normalizeResult)
-  const result = resultsA[resultsA.length - 1]
   return { result, results: resultsA }
 }
 
