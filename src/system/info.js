@@ -5,20 +5,9 @@ import osName from 'os-name'
 
 import { groupBy } from '../utils/group.js'
 
-import { getSystemConfig } from './config.js'
-
-export const getSystems = function ({ config, systemId, systemTitle, job }) {
-  const systemConfig = getSystemConfig(config)
+export const getSystems = function ({ systemId, systemTitle, job }) {
   const system = getSystem()
-  return [
-    {
-      id: systemId,
-      title: systemTitle,
-      config: systemConfig,
-      ...system,
-      ...job,
-    },
-  ]
+  return [{ id: systemId, title: systemTitle, ...system, ...job }]
 }
 
 const getSystem = function () {

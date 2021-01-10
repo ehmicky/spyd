@@ -7,12 +7,12 @@ import { cleanObject } from './utils/clean.js'
 // Add more information to the final partialResult and normalize/sort it
 export const addResultInfo = function (
   combinations,
-  { config, config: { system, cwd } },
+  { config: { system, cwd } },
 ) {
   const id = uuidv4()
   const timestamp = new Date().toISOString()
   const { git, ci, job } = getCiInfo(cwd)
-  const systems = getSystems({ config, system, job })
+  const systems = getSystems({ system, job })
   const partialResult = {
     id,
     timestamp,
