@@ -7,15 +7,9 @@ import { listStore } from './list.js'
 
 // Get a previous result by `count` or `timestamp`
 export const getFromStore = async function (delta, config) {
-  const partialResults = await listStore(config)
-
-  const partialResultsA = selectPartialResults(partialResults, config)
-
-  const results = mergePartialResults(partialResultsA)
-
-  const { id } = getResult(results, delta)
-
-  return { id, results }
+  const results = await listStore(config)
+  const result = getResult(results, delta)
+  return { result, results }
 }
 
 const getResult = function (results, delta) {

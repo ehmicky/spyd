@@ -1,5 +1,4 @@
 import { checkLimits } from '../limit/error.js'
-import { normalizeResult } from '../normalize/main.js'
 import { addPrevious } from '../normalize/previous.js'
 
 import { callReportFunc } from './call.js'
@@ -10,7 +9,7 @@ import { printContent } from './print.js'
 
 // Report results
 export const report = async function (
-  id,
+  result,
   results,
   {
     report: reporters,
@@ -24,14 +23,14 @@ export const report = async function (
     diff,
   },
 ) {
-  const result = getResult(id, results, { limits, diff })
+  const resultA = addPrevious(results, result, { limits, diff })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, config: reportConfig }) =>
       useReporter({
         reportFunc,
         reportConfig,
-        result,
+        result: resultA,
         output,
         insert,
         colors,
@@ -42,17 +41,9 @@ export const report = async function (
     ),
   )
 
-  checkLimits(result)
+  checkLimits(resultA)
 
-  return result
-}
-
-const getResult = function (id, results, { limits, diff }) {
-  const resultsA = results.map(normalizeResult)
-
-  const resultA = resultsA.find((result) => result.id === id)
-  const resultB = addPrevious(resultsA, resultA, { limits, diff })
-  return resultB
+  return resultA
 }
 
 // Perform each reporter

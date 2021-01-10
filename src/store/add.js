@@ -1,19 +1,20 @@
 import omit from 'omit.js'
 
 import { UserError } from '../error/main.js'
-import { mergePartialResults } from '../merge/partial.js'
 
 import { listStore } from './list.js'
 
 // Add a new result
-export const addToStore = async function ({ partialResult, config, stopped }) {
-  const partialResults = await listStore(config)
-
+export const addToStore = async function ({
+  partialResult,
+  partialResult: { id },
+  config,
+  stopped,
+}) {
   await save({ partialResult, config, stopped })
-
-  const partialResultsA = [...partialResults, partialResult]
-  const results = mergePartialResults(partialResultsA)
-  return results
+  const results = await listStore(config)
+  const resultA = results.find((result) => result.ids.includes(id))
+  return { result: resultA, results }
 }
 
 // Save results so they can be compared or shown later.

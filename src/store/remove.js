@@ -1,7 +1,7 @@
 import { UserError } from '../error/main.js'
 
 // Call `store.remove()`
-export const removeFromStore = async function (id, { store }) {
+export const removeFromStore = async function ({ id }, { store }) {
   try {
     await store.remove(id)
   } catch (error) {
