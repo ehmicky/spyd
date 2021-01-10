@@ -25,10 +25,9 @@ const execCombination = async function ({
     row,
     taskPath,
     taskId,
-    inputId,
-    commandSpawn,
-    commandSpawnOptions,
-    commandConfig,
+    runnerSpawn,
+    runnerSpawnOptions,
+    runnerConfig,
     runnerRepeats,
   },
   config: { cwd, duration },
@@ -40,10 +39,9 @@ const execCombination = async function ({
   const repeat = runnerRepeats ? 1 : undefined
   const eventPayload = {
     type: 'benchmark',
-    runConfig: commandConfig,
+    runnerConfig,
     taskPath,
     taskId,
-    inputId,
     maxLoops: 1,
     repeat,
   }
@@ -51,12 +49,11 @@ const execCombination = async function ({
   await Promise.race([
     waitForSampleTimeout(duration),
     executeChild({
-      commandSpawn,
-      commandSpawnOptions,
+      runnerSpawan: runnerSpawn,
+      runnerSpawnOptions,
       eventPayload,
       cwd,
       taskId,
-      inputId,
       type: 'benchmarkExec',
     }),
   ])
