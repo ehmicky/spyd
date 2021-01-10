@@ -34,14 +34,12 @@ export const addInitProps = function ({ runnerRepeats, ...combination }) {
 
 // Retrieve final combination properties used for reporting
 export const getFinalProps = function ({
+  ids,
   taskId,
   taskTitle,
-  inputId,
-  inputTitle,
-  commandRunner,
-  commandId,
-  commandTitle,
-  commandDescription,
+  runnerId,
+  runnerTitle,
+  runnerVersions,
   systemId,
   systemTitle,
   measures,
@@ -62,14 +60,12 @@ export const getFinalProps = function ({
     minLoopDuration,
   })
   return {
+    ids,
     taskId,
     taskTitle,
-    inputId,
-    inputTitle,
-    commandRunner,
-    commandId,
-    commandTitle,
-    commandDescription,
+    runnerId,
+    runnerTitle,
+    runnerVersions,
     systemId,
     systemTitle,
     stats: statsA,
