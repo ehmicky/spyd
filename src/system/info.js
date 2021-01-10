@@ -1,19 +1,20 @@
 import { cpus as getCpus, totalmem } from 'os'
 
 import { format as formatBytes } from 'bytes'
+import envCi from 'env-ci'
 import osName from 'os-name'
 
-import { getCiInfo } from '../ci/info.js'
 import { groupBy } from '../utils/group.js'
 
+// Retrieve system information
 export const getSystem = function ({ systemId, systemTitle, cwd }) {
   const machine = getMachine()
-  const { commit, branch, tag, prNumber, prBranch, buildUrl } = getCiInfo(cwd)
+  const { commit, branch, tag, pr, prBranch, buildUrl } = envCi({ cwd })
   return {
     id: systemId,
     title: systemTitle,
     machine,
-    git: { commit, branch, tag, prNumber, prBranch },
+    git: { commit, branch, tag, prNumber: pr, prBranch },
     ci: buildUrl,
   }
 }
