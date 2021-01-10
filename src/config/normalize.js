@@ -66,10 +66,6 @@ const normalizeOptionalArrProp = function (value, propName) {
   return { [propName]: valueA }
 }
 
-const checkStringArrayProp = function (value, propName) {
-  checkDefinedStringArray(value, propName)
-}
-
 const checkTitles = function (titles, propName) {
   Object.entries(titles).forEach(([childName, value]) => {
     checkDefinedString(value, `${propName}.${childName}`)
@@ -92,8 +88,8 @@ const NORMALIZERS = {
   reporter: normalizeOptionalArrProp,
   progress: normalizeOptionalArrProp,
   store: normalizeOptionalArrProp,
-  include: checkStringArrayProp,
-  exclude: checkStringArrayProp,
+  include: normalizeOptionalArrProp,
+  exclude: normalizeOptionalArrProp,
   tasks: checkEmptyTasks,
   titles: checkTitles,
   inputs: checkInputs,
