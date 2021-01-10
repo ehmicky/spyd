@@ -2,22 +2,40 @@ import { UserError } from '../error/main.js'
 
 // Validate combination identifiers
 export const validateCombinationsIds = function (combinationsIds) {
-  combinationsIds.forEach(validateIdsPerType)
+  combinationsIds.filter(isUserId).forEach(validateIdsPerType)
   combinationsIds.forEach(validateDuplicateId)
 }
+
+const isUserId = function ({ type }) {
+  return USER_ID_TYPES.has(type)
+}
+
+const USER_ID_TYPES = new Set(['task', 'system'])
 
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.
 // Only for user-defined identifiers, not plugin-defined.
 const validateIdsPerType = function ({ type, id }) {
-  if (USER_IDS.has(type) && !USER_ID_REGEXP.test(id)) {
+  if (id.trim() === '') {
     throw new UserError(
-      `Invalid ${type} "${id}": must contain only letters, digits, - or _`,
+      `Invalid ${type} "${id}": the identifier must not be empty.`,
+    )
+  }
+
+  if (id.startsWith(USER_ID_INVALID_START)) {
+    throw new UserError(
+      `Invalid ${type} "${id}": the identifier must not start with a dash.`,
+    )
+  }
+
+  if (!USER_ID_REGEXP.test(id)) {
+    throw new UserError(
+      `Invalid ${type} "${id}": the identifier must contain only letters, digits, - or _`,
     )
   }
 }
 
-const USER_IDS = new Set(['task', 'system'])
+const USER_ID_INVALID_START = '-'
 // We allow case-sensitiveness and both - and _ so that users can choose their
 // preferred case convention. This also makes it easier to support different
 // languages.
@@ -25,8 +43,9 @@ const USER_IDS = new Set(['task', 'system'])
 // We do not allow empty strings.
 // We do not allow dots because they are used in CLI flags for nested
 // configuration properties.
+// We do not allow starting with dash because of CLI flags parsing.
 // We forbid other characters for forward compatibility.
-const USER_ID_REGEXP = /^[\w-]+$/u
+const USER_ID_REGEXP = /^\w[\w-]*$/u
 
 // We validate that identifiers are unique not only within their dimension but
 // across dimensions. This allows specifying identifiers without specifying
