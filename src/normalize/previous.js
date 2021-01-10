@@ -8,6 +8,10 @@ import { getDiffIndex, getDiff } from './diff.js'
 //  - `result.previous`: all previous results
 //  - `result.combinations[*].previous`: previous combination with same
 //    runner, task and input
+// This also adds `combination.slow[Error]|stats.diff|limit`
+//   - Not persisted in stores since it can be computed dynamically
+//   - Also, the "previous" result might change depending on selection or after
+//     results removals
 export const addPrevious = function (
   results,
   { timestamp, combinations, ...result },
