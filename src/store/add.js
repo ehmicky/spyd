@@ -3,22 +3,23 @@ import omit from 'omit.js'
 import { UserError } from '../error/main.js'
 
 import { listStore } from './list.js'
+import { mergeResults } from './merge.js'
 
 // Add a new result
-export const addToStore = async function ({ partialResult, config, stopped }) {
+export const addToStore = async function ({ result, config, stopped }) {
+  await save({ result, config, stopped })
+
   const results = await listStore(config)
-  const { result, results: resultsA } = mergePartialResult(
-    results,
-    partialResult,
-  )
-  await save({ partialResult, config, stopped })
-  return { result, results: resultsA }
+  const resultsA = [...results, result]
+  const resultsB = mergeResults(resultsA)
+  const resultA = resultsB[resultsB.length - 1]
+  return resultA
 }
 
 // Save results so they can be compared or shown later.
 // We do not save stopped benchmarks.
 const save = async function ({
-  partialResult,
+  result,
   config: { save: saveConfig, store },
   stopped,
 }) {
@@ -26,10 +27,10 @@ const save = async function ({
     return
   }
 
-  const partialResultA = normalizeSaveResult(partialResult)
+  const resultA = normalizeSaveResult(result)
 
   try {
-    await store.add(partialResultA)
+    await store.add(resultA)
   } catch (error) {
     throw new UserError(`Could not save result: ${error.message}`)
   }

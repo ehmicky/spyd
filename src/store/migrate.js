@@ -1,10 +1,10 @@
-// Migrate partialResults, i.e. modify them for backward compatibility
-export const migratePartialResults = function (partialResults) {
-  return MIGRATIONS.reduce(runMigration, partialResults)
+// Migrate results, i.e. modify them for backward compatibility
+export const migrateResults = function (results) {
+  return MIGRATIONS.reduce(runMigration, results)
 }
 
-const runMigration = function (partialResults, migration) {
-  return partialResults.map((partialResult) => migration(partialResult))
+const runMigration = function (results, migration) {
+  return results.map((result) => migration(result))
 }
 
 // No backward compatibility migrations defined yet

@@ -15,20 +15,20 @@ export const performBenchmark = async function (config) {
   )
 
   try {
-    const partialResult = await getPartialResult({
+    const result = await getResult({
       combinations,
       stopState,
       progressState,
       onProgressError,
       config,
     })
-    return { partialResult, stopped: stopState.stopped }
+    return { result, stopped: stopState.stopped }
   } finally {
     await endProgress({ progressId, config })
   }
 }
 
-const getPartialResult = async function ({
+const getResult = async function ({
   combinations,
   stopState,
   progressState,
@@ -42,6 +42,6 @@ const getPartialResult = async function ({
     progressState,
     onProgressError,
   })
-  const partialResult = addResultInfo({ combinations: combinationsA, config })
-  return partialResult
+  const result = addResultInfo({ combinations: combinationsA, config })
+  return result
 }

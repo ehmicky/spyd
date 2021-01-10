@@ -15,13 +15,9 @@ export const bench = async function (configFlags) {
   const configB = await startStore(configA)
 
   try {
-    const { partialResult, stopped } = await performBenchmark(configB)
-    const { result, results } = await addToStore({
-      partialResult,
-      config: configB,
-      stopped,
-    })
-    const resultA = await report(result, results, configB)
+    const { result, stopped } = await performBenchmark(configB)
+    const resultA = await addToStore({ result, config: configB, stopped })
+    await report(resultA, configB)
     return resultA
   } finally {
     await endStore(configB)
@@ -34,9 +30,9 @@ export const show = async function (configFlags) {
   const configB = await startStore(configA)
 
   try {
-    const { result, results } = await getFromStore(delta, configB)
-    const resultA = await report(result, results, configB)
-    return resultA
+    const result = await getFromStore(delta, configB)
+    await report(result, configB)
+    return result
   } finally {
     await endStore(configB)
   }
@@ -48,7 +44,7 @@ export const remove = async function (configFlags) {
   const configB = await startStore(configA)
 
   try {
-    const { result } = await getFromStore(delta, configB)
+    const result = await getFromStore(delta, configB)
     await removeFromStore(result, configB)
   } finally {
     await endStore(configA)

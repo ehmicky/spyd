@@ -20,7 +20,7 @@ const USER_ID_TYPES = new Set(['task', 'system', 'input'])
 //  - are checked for duplicates
 // As opposed to non-combination identifiers: inputs.
 // Retrieve all unique combinations identifiers.
-// For all combinations of a given partialResult.
+// For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
   return combinations.flatMap(getIdInfos).filter(isNotSameTypeDuplicate)
 }

@@ -1,16 +1,8 @@
 import { removeDuplicates } from '../combination/duplicate.js'
-import { groupBy } from '../utils/group.js'
 
-// Merge previous results.
-// Later results have priority.
-export const mergePartialResults = function (partialResults) {
-  return Object.values(groupBy(partialResults, 'mergeId')).map(mergeResult)
-}
-
-export const mergePartialResult = function (results, partialResult) {}
-
-const mergeResult = function ([partialResult, ...partialResults]) {
-  return partialResults.reduce(mergePair, partialResult)
+// Merge previous results to the last result
+export const mergeResults = function (results) {
+  return results
 }
 
 const mergePair = function (

@@ -16,23 +16,18 @@ import { getPrefix } from './prefix.js'
 // `undefined` or an empty array. Making an empty array including nothing would
 // be more consistent. However, there is little use for it and it most likely
 // mean the user intent was to include everything.
-export const selectPartialResults = function (
-  partialResults,
-  { include, exclude },
-) {
-  return partialResults
-    .map((partialResult) =>
-      selectPartialResult(partialResult, { include, exclude }),
-    )
+export const selectResults = function (results, { include, exclude }) {
+  return results
+    .map((result) => selectResult(result, { include, exclude }))
     .filter(hasCombinations)
 }
 
-const selectPartialResult = function (
-  { combinations, ...partialResult },
+const selectResult = function (
+  { combinations, ...result },
   { include, exclude },
 ) {
   const combinationsA = selectCombinations(combinations, { include, exclude })
-  return { ...partialResult, combinations: combinationsA }
+  return { ...result, combinations: combinationsA }
 }
 
 export const selectCombinations = function (

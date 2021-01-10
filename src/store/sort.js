@@ -5,43 +5,41 @@ import { groupBy } from '../utils/group.js'
 
 // Results are sorted by timestamp.
 // However, results of the same CI build are always consecutive.
-export const sortPartialResults = function (partialResults) {
-  const partialResultsA = partialResults.map(addGroup)
-  const partialResultsB = groupBy(partialResultsA, 'group')
-  const partialResultsC = Object.values(partialResultsB).map(addTimestamp)
-  const partialResultsD = sortOn(partialResultsC, 'timestamp')
-  const partialResultsE = partialResultsD
-    .flatMap(getPartialResults)
-    .map(removeGroup)
-  return partialResultsE
+export const sortResults = function (results) {
+  const resultsA = results.map(addGroup)
+  const resultsB = groupBy(resultsA, 'group')
+  const resultsC = Object.values(resultsB).map(addTimestamp)
+  const resultsD = sortOn(resultsC, 'timestamp')
+  const resultsE = resultsD.flatMap(getResults).map(removeGroup)
+  return resultsE
 }
 
-// `partialResults` without a CI build use the `index`, i.e. are not grouped
+// `results` without a CI build use the `index`, i.e. are not grouped
 // with others.
-const addGroup = function (partialResult, index) {
+const addGroup = function (result, index) {
   const {
     system: { ci },
-  } = partialResult
+  } = result
   const group = ci === undefined ? String(index) : ci
-  return { ...partialResult, group }
+  return { ...result, group }
 }
 
-// Retrieve the latest partialResult's timestamp
-const addTimestamp = function (partialResults) {
+// Retrieve the latest result's timestamp
+const addTimestamp = function (results) {
   // eslint-disable-next-line fp/no-mutating-methods
-  const timestamps = partialResults.map(getTimestamp).sort()
+  const timestamps = results.map(getTimestamp).sort()
   const timestamp = timestamps[timestamps.length - 1]
-  return { timestamp, partialResults }
+  return { timestamp, results }
 }
 
 const getTimestamp = function ({ timestamp }) {
   return timestamp
 }
 
-const getPartialResults = function ({ partialResults }) {
-  return partialResults
+const getResults = function ({ results }) {
+  return results
 }
 
-const removeGroup = function (partialResult) {
-  return omit(partialResult, ['group'])
+const removeGroup = function (result) {
+  return omit(result, ['group'])
 }
