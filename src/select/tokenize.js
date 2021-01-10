@@ -1,8 +1,8 @@
 import { UserError } from '../error/main.js'
 
-// Tokenize a selector string into an an array of objects.
-export const tokenizeSelector = function (selector, prefix) {
-  const tokens = selector.trim().split(TOKEN_DELIMITER_REGEX)
+// Tokenize a raw selector string into an an array of objects.
+export const tokenizeSelector = function (rawSelector, prefix) {
+  const tokens = rawSelector.trim().split(TOKEN_DELIMITER_REGEX)
   const tokensA = addTokensInverse(tokens, prefix)
   return tokensA
 }

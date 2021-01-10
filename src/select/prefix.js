@@ -1,23 +1,24 @@
-// Serialize `include` and `exclude` properties to include in error messages
-export const getPrefix = function (selectors, propName) {
-  const original = getOriginal(selectors)
+// Serialize `include`, `exclude`, `limit` properties to include in
+// error messages
+export const getPrefix = function (rawSelectors, propName) {
+  const original = getOriginal(rawSelectors)
   return `The "${propName}" configuration property is invalid:
   ${original}
 `
 }
 
-const getOriginal = function (selectors) {
-  if (selectors.length === 0) {
+const getOriginal = function (rawSelectors) {
+  if (rawSelectors.length === 0) {
     return '[]'
   }
 
-  if (selectors.length === 1) {
-    return quoteSelector(selectors[0])
+  if (rawSelectors.length === 1) {
+    return quoteRawSelector(rawSelectors[0])
   }
 
-  return selectors.map(quoteSelector).join(' or ')
+  return rawSelectors.map(quoteRawSelector).join(' or ')
 }
 
-const quoteSelector = function (selector) {
-  return `"${selector}"`
+const quoteRawSelector = function (rawSelector) {
+  return `"${rawSelector}"`
 }

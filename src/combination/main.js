@@ -1,4 +1,4 @@
-import { validateLimits } from '../limit/validate.js'
+import { addLimits } from '../limit/add.js'
 import { listTasks } from '../run/list.js'
 import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
@@ -18,7 +18,7 @@ export const getCombinations = async function ({
   include,
   exclude,
   titles,
-  limits,
+  limit,
 }) {
   const tasksA = listTasks(tasks)
   const [runnersA, inputsA] = await Promise.all([
@@ -41,8 +41,8 @@ export const getCombinations = async function ({
     include,
     exclude,
   })
+  const combinationsC = addLimits(combinationsB, combinationsIds, limit)
 
-  const combinationsC = addTitles(combinationsB, titles)
-  validateLimits(combinationsC, limits)
-  return combinationsC
+  const combinationsD = addTitles(combinationsC, titles)
+  return combinationsD
 }
