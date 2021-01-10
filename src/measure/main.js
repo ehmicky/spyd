@@ -1,5 +1,8 @@
 import { handleCombinationError } from '../error/combination.js'
-import { spawnProcesses, terminateProcesses } from '../process/spawn.js'
+import {
+  spawnRunnerProcesses,
+  terminateRunnerProcesses,
+} from '../process/runner.js'
 import { startServer, endServer } from '../server/start_end.js'
 
 import { endCombinations } from './end.js'
@@ -67,7 +70,7 @@ const spawnAndMeasure = async function ({
   progressState,
   onProgressError,
 }) {
-  const combinationsA = spawnProcesses({ combinations, origin, cwd })
+  const combinationsA = spawnRunnerProcesses({ combinations, origin, cwd })
 
   try {
     return await stopOrMeasure({
@@ -78,7 +81,7 @@ const spawnAndMeasure = async function ({
       onProgressError,
     })
   } finally {
-    terminateProcesses(combinationsA)
+    terminateRunnerProcesses(combinationsA)
   }
 }
 

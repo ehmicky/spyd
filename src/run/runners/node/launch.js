@@ -13,7 +13,10 @@ export const launch = async function (runConfig) {
   const versionInfo = await getNodeVersion(runConfigA)
 
   if (versionInfo === undefined) {
-    return { spawn: ['node', MAIN_PATH], versions: { Node: currentVersion } }
+    return {
+      spawn: ['node', MAIN_PATH],
+      versions: { Node: currentVersion.slice(1) },
+    }
   }
 
   const { command, spawnOptions, version } = versionInfo

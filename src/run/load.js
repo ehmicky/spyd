@@ -1,10 +1,12 @@
 import { UserError, PluginError } from '../error/main.js'
 
+import { getRunnerVersions } from './versions.js'
+
 // Select the runners for the current tasks files, and retrieve their
 // related spawn options using `runner.launch()`
-export const loadRunners = async function (tasks, runners) {
+export const loadRunners = async function ({ tasks, runners, cwd }) {
   const runnersA = runners.filter(({ id }) => runnerHasTasks(id, tasks))
-  return await Promise.all(runnersA.map(loadRunner))
+  return await Promise.all(runnersA.map((runner) => loadRunner(runner, cwd)))
 }
 
 // `runner` already includes only `tasks.*`.
@@ -17,18 +19,27 @@ const runnerHasTasks = function (id, tasks) {
   return tasks.some(({ runnerId }) => runnerId === id)
 }
 
-const loadRunner = async function ({
-  id: runnerId,
-  title: runnerTitle,
-  repeat: runnerRepeats,
-  config: runnerConfig,
-  launch,
-}) {
+const loadRunner = async function (
+  {
+    id: runnerId,
+    title: runnerTitle,
+    repeat: runnerRepeats,
+    config: runnerConfig,
+    launch,
+  },
+  cwd,
+) {
   const {
     spawn: runnerSpawn,
     spawnOptions: runnerSpawnOptions = {},
-    versions: runnerVersions = {},
+    versions = {},
   } = await launchRunner({ runnerId, runnerConfig, launch })
+  const runnerVersions = await getRunnerVersions({
+    versions,
+    runnerId,
+    runnerSpawnOptions,
+    cwd,
+  })
   return {
     runnerId,
     runnerTitle,

@@ -19,10 +19,11 @@ export const getCombinations = async function ({
   exclude,
   titles,
   limit,
+  cwd,
 }) {
   const tasksA = listTasks(tasks)
   const [runnersA, inputsA] = await Promise.all([
-    loadRunners(tasksA, runners),
+    loadRunners({ tasks: tasksA, runners, cwd }),
     getInputs(inputs),
   ])
 
