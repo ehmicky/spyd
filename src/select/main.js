@@ -1,6 +1,7 @@
 import { UserError } from '../error/main.js'
 
 import { matchSelectors } from './match.js'
+import { parseSelectors } from './parse.js'
 
 // Select combinations according to the `include` and `exclude` configuration
 // properties.
@@ -19,14 +20,14 @@ export const selectCombinations = function (
   combinationsIds,
   { include, exclude },
 ) {
-  const combinationsA = combinations
-    .filter((combination) =>
-      matchSelectors(include, 'include', { combination, combinationsIds }),
-    )
-    .filter((combination) =>
-      matchSelectors(exclude, 'exclude', { combination, combinationsIds }),
-    )
+  const includeSelectors = parseSelectors(include, 'include', combinationsIds)
+  const excludeSelectors = parseSelectors(exclude, 'exclude', combinationsIds)
 
+  const combinationsA = combinations
+    .filter((combination) => matchSelectors(combination, includeSelectors))
+    .filter((combination) => matchSelectors(combination, excludeSelectors))
+
+  // TODO: add `original`
   if (combinationsA.length === 0) {
     throw new UserError(
       'No combinations match the "include" and "exclude" properties.',

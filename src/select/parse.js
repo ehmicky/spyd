@@ -1,13 +1,30 @@
 import { UserError } from '../error/main.js'
 
+import { getPrefix } from './prefix.js'
+import { tokenizeSelector } from './tokenize.js'
+
+// Parse `include`, `exclude`, `limit` user-friendly format (array of strings)
+// to a code-friendlier format (objects)
 // Users specify a list of identifiers, some inverted.
 // They do not specify the identifier's category, since we can guess this, in
 // order to simplify the syntax.
 // However, we do need to group identifiers by category since identifiers of
 // the same category use unions while identifiers of different categories use
 // intersection.
-// This also validates whether identifiers exist.
-export const parseSelector = function (tokens, combinationsIds, prefix) {
+// This also validates the syntax.
+export const parseSelectors = function (
+  rawSelectors,
+  propName,
+  combinationsIds,
+) {
+  const prefix = getPrefix(rawSelectors, propName)
+  const selectors = rawSelectors
+    .map((rawSelector) => tokenizeSelector(rawSelector, prefix))
+    .map((tokens) => parseSelector(tokens, combinationsIds, prefix))
+  return { selectors, propName }
+}
+
+const parseSelector = function (tokens, combinationsIds, prefix) {
   const tokensA = tokens.map(({ id, inverse }) =>
     addTokenType({ id, inverse, combinationsIds, prefix }),
   )
