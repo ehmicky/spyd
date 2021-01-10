@@ -5,7 +5,11 @@ import { joinSystems } from '../system/join.js'
 import { addCollections } from './collections.js'
 
 // Add `result.*` properties based on grouping different combinations
-export const groupCombinations = function ({
+export const groupCombinations = function (results) {
+  return results.map(groupResultCombinations)
+}
+
+const groupResultCombinations = function ({
   combinations,
   systems,
   ...result

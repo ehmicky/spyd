@@ -21,7 +21,7 @@ export const listStore = async function ({
   const resultsC = sortResults(resultsB)
   const resultsD = selectResults(resultsC, { include, exclude })
   const resultsE = addPrevious(resultsD, { limits, diff })
-  const resultsF = resultsE.map(groupCombinations)
+  const resultsF = groupCombinations(resultsE)
   return resultsF
 }
 

@@ -6,9 +6,9 @@ import { mergeResults } from './merge.js'
 
 // Add a new result
 export const addToStore = async function ({ result, config, stopped }) {
-  await save({ result, config, stopped })
-
   const results = await listStore(config)
+
+  await save({ result, config, stopped })
 
   const resultsA = [...results, result]
 
