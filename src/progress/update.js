@@ -13,14 +13,14 @@ export const updateProgress = async function ({
   progressState,
   combinations,
   duration,
-  reporters,
+  progresses,
   initial,
 }) {
   const progressContent = getProgressContent({
     progressState,
     combinations,
     duration,
-    reporters,
+    progresses,
   })
 
   await (initial ? clearProgressInit() : clearProgress())
@@ -32,7 +32,7 @@ const getProgressContent = function ({
   progressState,
   combinations,
   duration,
-  reporters,
+  progresses,
 }) {
   const { percentage, time } = getTimeProps({
     progressState,
@@ -41,8 +41,8 @@ const getProgressContent = function ({
   })
   const description = getDescription(progressState, duration)
 
-  return reporters
-    .map((reporter) => reporter.update({ percentage, time, description }))
+  return progresses
+    .map((progress) => progress.update({ percentage, time, description }))
     .join(PROGRESS_SEPARATOR)
 }
 

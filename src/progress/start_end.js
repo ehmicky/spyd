@@ -5,20 +5,17 @@ import { isSilent } from './silent.js'
 import { updateProgress, clearProgressFinal } from './update.js'
 
 // Start progress reporting using the `progress` configuration property
-export const startProgress = function (
-  combinations,
-  { duration, progress: reporters },
-) {
+export const startProgress = function (combinations, { duration, progresses }) {
   const progressState = {}
 
-  if (isSilent(reporters)) {
+  if (isSilent(progresses)) {
     return { progressState, onProgressError: [] }
   }
 
   hideCursor()
 
   const { progressId, onProgressError } = startUpdate({
-    reporters,
+    progresses,
     combinations,
     duration,
     progressState,
@@ -31,7 +28,7 @@ const START_DESCRIPTION = 'Starting...'
 
 // Update progress at regular interval
 const startUpdate = function ({
-  reporters,
+  progresses,
   progressState,
   combinations,
   duration,
@@ -46,7 +43,7 @@ const startUpdate = function ({
         progressState,
         combinations,
         duration,
-        reporters,
+        progresses,
         initial: false,
       }).catch(reject)
     }, UPDATE_FREQUENCY)
@@ -55,7 +52,7 @@ const startUpdate = function ({
       progressState,
       combinations,
       duration,
-      reporters,
+      progresses,
       initial: true,
     }).catch(reject)
   })
@@ -69,9 +66,9 @@ const UPDATE_FREQUENCY = 1e2
 // When stopped, we keep the progress reporting.
 export const endProgress = async function ({
   progressId,
-  config: { progress: reporters },
+  config: { progresses },
 }) {
-  if (isSilent(reporters)) {
+  if (isSilent(progresses)) {
     return
   }
 
