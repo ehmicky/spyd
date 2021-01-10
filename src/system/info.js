@@ -8,17 +8,20 @@ import { groupBy } from '../utils/group.js'
 
 // Retrieve system information
 export const getSystem = function ({
+  combinations,
   combinations: [{ systemId, systemTitle }],
   config: { cwd },
 }) {
   const machine = getMachine()
   const { commit, branch, tag, pr, prBranch, buildUrl } = envCi({ cwd })
+  const versions = getSystemVersions(combinations)
   return {
     id: systemId,
     title: systemTitle,
     machine,
     git: { commit, branch, tag, prNumber: pr, prBranch },
     ci: buildUrl,
+    versions,
   }
 }
 
@@ -41,4 +44,15 @@ const serializeCpu = function ([name, cores]) {
 const getMemory = function () {
   const memory = totalmem()
   return formatBytes(memory, { decimalPlaces: 0 })
+}
+
+// `combinations` preserve the order of `tasks.*`, i.e. this is used as a
+// priority order in the unlikely case two runners return the properties in
+// `versions`.
+const getSystemVersions = function (combinations) {
+  return Object.assign({}, ...combinations.map(getRunnerVersions))
+}
+
+const getRunnerVersions = function ({ runnerVersions }) {
+  return runnerVersions
 }

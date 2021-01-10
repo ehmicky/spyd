@@ -10,6 +10,8 @@ export const getCombinationsProduct = function ({
     .map((combination) => ({ ...combination, inputs, systemId }))
 }
 
+// `runners` preserves the order of `tasks.*`. This order is used when merging
+// `runnerVersions`.
 const getCombinationsByTask = function ({ task, runners }) {
   const taskRunners = getTaskRunners({ task, runners })
   return taskRunners.flatMap((runner) =>

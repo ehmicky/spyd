@@ -4,10 +4,9 @@ import { getCi } from './ci.js'
 import { getGit } from './git.js'
 import { getSharedSystem, getSystems } from './systems.js'
 
-// Retrieve footer: runners, systems, timestamp, git, ci, link
-export const getFooter = function ({ runners, systems, timestamp, git, ci }) {
+// Retrieve footer: systems, timestamp, git, ci, link
+export const getFooter = function ({ systems, timestamp, git, ci }) {
   return [
-    { Runners: getRunners(runners) },
     getSharedSystem(systems),
     getSystems(systems),
     {
@@ -17,14 +16,6 @@ export const getFooter = function ({ runners, systems, timestamp, git, ci }) {
     },
     LINK_FOOTER,
   ]
-}
-
-const getRunners = function (runners = []) {
-  return runners.map(getRunnerVersions)
-}
-
-const getRunnerVersions = function ({ runnerVersions }) {
-  return runnerVersions
 }
 
 const getTimestamp = function (timestamp) {
