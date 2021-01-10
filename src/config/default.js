@@ -20,6 +20,7 @@ export const DEFAULT_CONFIG = {
   info: false,
   delta: true,
   diff: true,
+  include: [],
   exclude: [],
   reporter: ['debug'],
   progress: ['debug'],

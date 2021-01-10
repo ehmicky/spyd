@@ -3,10 +3,11 @@ import { listTasks } from '../run/list.js'
 import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
 
-import { validateCombinationsIds } from './id.js'
+import { getCombinationsIds } from './get_ids.js'
 import { getInputs } from './inputs.js'
 import { getCombinationsProduct } from './product.js'
 import { addTitles } from './titles.js'
+import { validateCombinationsIds } from './validate_ids.js'
 
 // Retrieve each combination, i.e. combination of each dimension
 export const getCombinations = async function ({
@@ -31,12 +32,17 @@ export const getCombinations = async function ({
     inputs: inputsA,
     systemId,
   })
-  validateCombinationsIds(combinations)
+  const { combinations: combinationsA, combinationsIds } = getCombinationsIds(
+    combinations,
+  )
+  validateCombinationsIds(combinationsIds)
 
-  const combinationsA = selectCombinations(combinations, { include, exclude })
+  const combinationsB = selectCombinations(combinationsA, combinationsIds, {
+    include,
+    exclude,
+  })
 
-  const combinationsB = addTitles(combinationsA, titles)
-  validateLimits(combinationsB, limits)
-
-  return combinationsB
+  const combinationsC = addTitles(combinationsB, titles)
+  validateLimits(combinationsC, limits)
+  return combinationsC
 }

@@ -11,7 +11,7 @@ export const PLUGIN_TYPES = [
     // Internal variable name
     varName: 'runners',
     // Configuration property selecting the plugin
-    selector: 'tasks.*',
+    property: 'tasks.*',
     // Prefix of the configuration property configuring the plugin
     configPrefix: 'runner',
     // Prefix of the npm package
@@ -22,7 +22,7 @@ export const PLUGIN_TYPES = [
   {
     type: 'reporter',
     varName: 'reporters',
-    selector: 'reporter',
+    property: 'reporter',
     configPrefix: 'reporter',
     modulePrefix: 'spyd-reporter-',
     builtins: REPORTERS,
@@ -30,7 +30,7 @@ export const PLUGIN_TYPES = [
   {
     type: 'progress',
     varName: 'progresses',
-    selector: 'progress',
+    property: 'progress',
     configPrefix: 'progress',
     modulePrefix: 'spyd-progress-',
     builtins: PROGRESS_REPORTERS,
@@ -38,7 +38,7 @@ export const PLUGIN_TYPES = [
   {
     type: 'store',
     varName: 'stores',
-    selector: 'store',
+    property: 'store',
     configPrefix: 'store',
     modulePrefix: 'spyd-store-',
     builtins: STORES,

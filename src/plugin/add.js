@@ -16,12 +16,12 @@ import { validatePlugins } from './validate.js'
 export const addPlugins = async function (config) {
   const pluginsConfigs = await Promise.all(
     PLUGIN_TYPES.map(
-      ({ type, varName, selector, configPrefix, modulePrefix, builtins }) =>
+      ({ type, varName, property, configPrefix, modulePrefix, builtins }) =>
         getPluginsByType({
           config,
           type,
           varName,
-          selector,
+          property,
           configPrefix,
           modulePrefix,
           builtins,
@@ -37,24 +37,24 @@ const getPluginsByType = async function ({
   config,
   type,
   varName,
-  selector,
+  property,
   configPrefix,
   modulePrefix,
   builtins,
 }) {
-  const ids = selectPlugins(selector, config)
+  const ids = selectPlugins(property, config)
   const plugins = await loadPlugins({ ids, type, modulePrefix, builtins })
   const pluginsA = addPluginsConfig({ plugins, config, configPrefix })
   validatePlugins(pluginsA, type)
   return [varName, pluginsA]
 }
 
-const selectPlugins = function (selector, config) {
-  if (selector === 'tasks.*') {
+const selectPlugins = function (property, config) {
+  if (property === 'tasks.*') {
     return Object.keys(config.tasks)
   }
 
-  return config[selector]
+  return config[property]
 }
 
 // Remove plugin properties, so only the normalized ones are available
