@@ -1,22 +1,9 @@
-import { getCombinationIds } from '../select/ids.js'
-
 // Merge previous results to the last result
 export const mergeResults = function (results) {
   // eslint-disable-next-line fp/no-mutating-methods
-  const [lastResult, ...resultsA] = results.map(addCombinationKeys).reverse()
+  const [lastResult, ...resultsA] = [...results].reverse()
   const result = resultsA.reduce(mergePair, lastResult)
   return result
-}
-
-// Add stable key describing combinations identity
-const addCombinationKeys = function ({ combinations, ...result }) {
-  const combinationsA = combinations.map(addCombinationKey)
-  return { ...result, combinations: combinationsA }
-}
-
-const addCombinationKey = function (combination) {
-  const key = getCombinationIds(combination).join(' ')
-  return { ...combination, key }
 }
 
 // We keep the last result: id, timestamp

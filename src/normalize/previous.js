@@ -1,6 +1,7 @@
 import omit from 'omit.js'
 
 import { getLimit } from '../limit/main.js'
+import { getCombinationIds } from '../select/ids.js'
 
 import { getDiffIndex, getDiff } from './diff.js'
 
@@ -13,9 +14,22 @@ import { getDiffIndex, getDiff } from './diff.js'
 //   - Also, the "previous" result might change depending on selection or after
 //     results removals
 export const addPrevious = function (results, { limits, diff }) {
-  return results.map((result, index, resultsA) =>
-    addResultPrevious(result, resultsA.slice(0, index - 1), { limits, diff }),
-  )
+  return results
+    .map(addCombinationKeys)
+    .map((result, index, resultsA) =>
+      addResultPrevious(result, resultsA.slice(0, index - 1), { limits, diff }),
+    )
+}
+
+// Add stable key describing combinations identity
+const addCombinationKeys = function ({ combinations, ...result }) {
+  const combinationsA = combinations.map(addCombinationKey)
+  return { ...result, combinations: combinationsA }
+}
+
+const addCombinationKey = function (combination) {
+  const key = getCombinationIds(combination).join(' ')
+  return { ...combination, key }
 }
 
 const addResultPrevious = function (
