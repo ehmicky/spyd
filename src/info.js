@@ -13,7 +13,6 @@ export const addResultInfo = function ({
   const timestamp = new Date().toISOString()
   const system = getSystem({ systemId, systemTitle, cwd })
   const partialResult = { id, timestamp, system, combinations }
-
   const partialResultA = cleanObject(partialResult)
   return partialResultA
 }
