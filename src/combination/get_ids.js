@@ -1,5 +1,5 @@
 // Retrieve all unique user-selected identifiers:
-// task, system, runner, propSets
+// task, system, runner, variations
 export const getCombinationsIds = function (combinations) {
   const combinationsA = combinations.map(addIdInfos)
   const combinationsB = combinationsA.map(addCombinationIds)

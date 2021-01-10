@@ -11,7 +11,7 @@ export const SELECT_CONFIG = {
     requiresArg: true,
     describe: `Select only specific combinations.
 The value is a list of identifiers to select.
-Those can be the identifiers of any task, runner, system, input or property set.
+Those can be the identifiers of any task, runner, system or variation.
 
 Identifiers from the same category must be separated by commas.
 The others must be separated by spaces.

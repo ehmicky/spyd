@@ -24,7 +24,7 @@ Custom runners can be installed from npm.`,
     describe: `Inputs passed to tasks.
 The key uses a dot notation and specifies the input identifier, such as
 --inputs.size=5
-When using property sets, the property item identifier must be specified too,
+When using variations, the variation identifier must be specified too,
 such as --inputs.size.small=5
 The inputs values are passed to tasks as arguments.`,
   },

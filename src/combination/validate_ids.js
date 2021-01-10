@@ -21,8 +21,7 @@ const USER_IDS = new Set(['task', 'system'])
 // We allow case-sensitiveness and both - and _ so that users can choose their
 // preferred case convention. This also makes it easier to support different
 // languages.
-// We allow starting with digits since this might be used in inputIds or
-// propSets.
+// We allow starting with digits since this might be used in variations.
 // We do not allow empty strings.
 // We do not allow dots because they are used in CLI flags for nested
 // configuration properties.
@@ -31,7 +30,7 @@ const USER_ID_REGEXP = /^[\w-]+$/u
 
 // We validate that identifiers are unique not only within their dimension but
 // across dimensions. This allows specifying identifiers without specifying
-// their dimension type (task, systems, runners, propSets) in many
+// their dimension type (task, systems, runners, variations) in many
 // places including: `config.titles`, `config.include|exclude`, reporting.
 const validateDuplicateId = function ({ type, id }, index, allIds) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)

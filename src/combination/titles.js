@@ -1,5 +1,5 @@
 // Allow users to rename identifiers from any dimensions: tasks, runners,
-// systems, inputs, propSets. Shown only in reporters.
+// systems, variations. Shown only in reporters.
 // We purposely show identifiers by default, i.e. titles need opt-in because:
 //  - they are more useful for users because they are used for selection
 //  - titles are not meant for user directly but for sharing the reports with
