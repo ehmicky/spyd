@@ -20,11 +20,6 @@ const COMBINATION_IDS = [
 
 const getIdInfo = function (combination, { type, idName }) {
   const id = combination[idName]
-
-  if (id === undefined) {
-    return
-  }
-
   return { type, id }
 }
 
