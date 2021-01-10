@@ -2,7 +2,7 @@ import stripAnsi from 'strip-ansi'
 
 import { UserError } from '../error/main.js'
 
-// If any `combination.slowError` is set, we throw them.
+// If any `combination.slow` is `true`, we fail.
 // We do it after reporting.
 export const checkLimits = function ({ combinations }) {
   const slowCombinations = combinations.filter(isSlow)
@@ -11,21 +11,22 @@ export const checkLimits = function ({ combinations }) {
     return
   }
 
-  const limitError = slowCombinations.map(getSlowError).join('\n')
-  throw new UserError(limitError)
+  const limitErrors = slowCombinations.map(getLimitError).join('\n')
+  throw new UserError(limitErrors)
 }
 
-const isSlow = function ({ slow }) {
+const isSlow = function ({ stats: { slow } }) {
   return slow
 }
 
-const getSlowError = function ({ name, limit, diff }) {
+const getLimitError = function ({ name, stats: { limit, diff } }) {
   const nameA = stripAnsi(name)
-  const diffStr = serializePercentage(diff * PERCENTAGE_RATIO)
+  const diffStr = serializeDiff(diff)
   return `${nameA} should be at most ${limit}% slower but is ${diffStr}% slower`
 }
 
-const serializePercentage = function (percentage) {
+const serializeDiff = function (diff) {
+  const percentage = diff * PERCENTAGE_RATIO
   return percentage
     .toPrecision(PERCENTAGE_PRECISION)
     .replace(ONLY_ZEROS_REGEXP, '')
