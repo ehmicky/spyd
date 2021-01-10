@@ -3,6 +3,7 @@ import { normalizeResult } from '../normalize/main.js'
 import { addPrevious } from '../normalize/previous.js'
 import { selectResults } from '../select/main.js'
 
+import { decompressResults } from './compress.js'
 import { migrateResults } from './migrate.js'
 import { sortResults } from './sort.js'
 
@@ -16,11 +17,12 @@ export const listStore = async function ({
 }) {
   const results = await callList(store)
   const resultsA = migrateResults(results)
-  const resultsB = sortResults(resultsA)
-  const resultsC = selectResults(resultsB, { include, exclude })
-  const resultsD = addPrevious(resultsC, { limits, diff })
-  const resultsE = resultsD.map(normalizeResult)
-  return resultsE
+  const resultsB = decompressResults(resultsA)
+  const resultsC = sortResults(resultsB)
+  const resultsD = selectResults(resultsC, { include, exclude })
+  const resultsE = addPrevious(resultsD, { limits, diff })
+  const resultsF = resultsE.map(normalizeResult)
+  return resultsF
 }
 
 // Call `store.list()`
