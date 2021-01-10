@@ -1,7 +1,7 @@
 import { UserError, PluginError } from '../error/main.js'
 
 // Select the runners for the current tasks files, and retrieve their
-// related commands using `runner.launch()`
+// related spawn options using `runner.launch()`
 export const loadRunners = async function (tasks, runners) {
   const runnersA = runners.filter(({ id }) => runnerHasTasks(id, tasks))
   return await Promise.all(runnersA.map(loadRunner))
