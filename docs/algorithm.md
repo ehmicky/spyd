@@ -10,7 +10,7 @@ _Problem_: Many other benchmarking libraries execute tasks using a fixed number
 of iterations. This approach
 [has several issues](https://mathiasbynens.be/notes/javascript-benchmarking).
 
-Faster code has higher variance which means:
+Faster code has lower precision which means:
 
 - the faster the code or the runtime gets, the less precise the results become
 - when comparing tasks, the faster ones are less precise
@@ -24,7 +24,7 @@ Also, users cannot specify how long they are ready to wait:
 _Solution_: Users specify a maximum duration instead of a fixed number of
 iterations.
 
-## Processes variance
+## Processes precision
 
 _Problem_: Different processes (e.g. measuring the same tasks over time) have
 different performance profiles resulting in differences between benchmarks. This

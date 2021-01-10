@@ -15,9 +15,9 @@ import { getResolution } from './resolution.js'
 //  - Those use `runner.repeat: false`, making them not use any `repeat` loop.
 // Iterating the `repeat` loop adds a small duration, due to the time to
 // increment the loop counter (e.g. 1 or 2 CPU cycles)
-//  - We do not subtract that duration because it is variable, so would add to
-//    the overall variance.
-//  - Also measuring that duration is imperfect, which also adds variance
+//  - We do not subtract that duration because it is variable, so would lower
+//    the overall precision.
+//  - Also measuring that duration is imperfect, which also lowers precision
 //  - Moreover, estimating that duration takes time and adds complexity
 // Runners should minimize that loop counter duration. Using a simple "for" loop
 // should be enough. Loop unrolling is an option but is tricky to get right and
@@ -93,8 +93,8 @@ const EMPTY_MEASURES_PRECISION = 1e2
 // How many times slower each repeat loop iteration must be compared to
 // `measureCost`.
 // Ensure `repeat` is high enough to decrease the impact of `measureCost`.
-// A lower value decreases precision as the variance of `measureCost`
-// contributes more to the overall variance.
+// A lower value decreases precision as the lack of precision of `measureCost`
+// contributes more to the overall lack of precision.
 // A higher value increases the task loop duration, creating fewer loops.
 const MIN_MEASURE_COST = 1e2
 // How many times slower the repeated median must be compared to the resolution.

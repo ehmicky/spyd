@@ -17,7 +17,7 @@ export const getShell = function (
 }
 
 // We default to `true` because many users would expect this. It only adds a
-// very small amount of duration/variance.
+// very small amount of duration and lower precision.
 // However it is less secure and less cross-platform, so we encourage using
 // `false` instead.
 const DEFAULT_SHELL = true

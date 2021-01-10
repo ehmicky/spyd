@@ -17,7 +17,7 @@ import { getServerUrl } from '../server/url.js'
 //      - Using the `duration` configuration property does not work when it is 0
 //  - This would require starting both the runner and the task multiple times,
 //    which wastes duration and does not allow runners with long initialization.
-//  - Variance is higher due to task cold starts having a higher share of the
+//  - Precision is lower due to task cold starts having a higher share of the
 //    total measures.
 // All combinations are spawned in parallel, for performance.
 export const spawnProcesses = function ({ combinations, origin, cwd }) {
