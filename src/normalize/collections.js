@@ -12,29 +12,18 @@ export const addCollections = function (combinations) {
 
 const COLLECTIONS = [
   { name: 'tasks', id: 'taskId', title: 'taskTitle', rank: 'taskRank' },
-  { name: 'inputs', id: 'inputId', title: 'inputTitle', rank: 'inputRank' },
-  {
-    name: 'commands',
-    id: 'commandId',
-    title: 'commandTitle',
-    description: 'commandDescription',
-    rank: 'commandRank',
-  },
+  { name: 'runners', id: 'runnerId', title: 'runnerTitle', rank: 'runnerRank' },
   { name: 'systems', id: 'systemId', title: 'systemTitle', rank: 'systemRank' },
 ]
 
 const addCollection = function (
   { combinations, ...collections },
-  { name, id, title, description, rank },
+  { name, id, title, rank },
 ) {
-  const collection = Object.values(groupBy(combinations, id)).map(
-    (combinationsA) =>
-      normalizeCollection({
-        combinations: combinationsA,
-        id,
-        title,
-        description,
-      }),
+  const collection = Object.values(
+    groupBy(combinations, id),
+  ).map((combinationsA) =>
+    normalizeCollection({ combinations: combinationsA, id, title }),
   )
   const collectionA = sortOn(collection, 'mean')
 
@@ -44,28 +33,14 @@ const addCollection = function (
   return { combinations: combinationsB, ...collections, [name]: collectionA }
 }
 
-const normalizeCollection = function ({
-  combinations,
-  id,
-  title,
-  description,
-}) {
+const normalizeCollection = function ({ combinations, id, title }) {
   const lastCombination = combinations[combinations.length - 1]
-  const {
-    [id]: collectionId,
-    [title]: collectionTitle,
-    [description]: collectionDescription,
-  } = lastCombination
+  const { [id]: collectionId, [title]: collectionTitle } = lastCombination
 
   const medians = combinations.map(getCombinationMedian)
   const mean = getMean(medians, 1)
 
-  return {
-    id: collectionId,
-    title: collectionTitle,
-    description: collectionDescription,
-    mean,
-  }
+  return { id: collectionId, title: collectionTitle, mean }
 }
 
 const getCombinationMedian = function ({ stats: { median } }) {

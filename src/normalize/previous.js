@@ -85,8 +85,7 @@ const addPreviousCombination = function ({
 const isSameCombination = function (combinationA, combinationB) {
   return (
     combinationA.taskId === combinationB.taskId &&
-    combinationA.inputId === combinationB.inputId &&
-    combinationA.commandId === combinationB.commandId &&
+    combinationA.runnerId === combinationB.runnerId &&
     combinationA.systemId === combinationB.systemId
   )
 }

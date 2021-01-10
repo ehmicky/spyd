@@ -17,8 +17,7 @@ export const normalizeResult = function ({
   const {
     combinations: combinationsA,
     tasks,
-    inputs,
-    commands,
+    runners,
     systems: systemColls,
   } = addCollections(combinations)
   const systemsA = joinSystems(systems, systemColls)
@@ -29,8 +28,7 @@ export const normalizeResult = function ({
     ...result,
     timestamp,
     tasks,
-    inputs,
-    commands,
+    runners,
     systems: systemsA,
     git,
     ci,
@@ -45,7 +43,7 @@ const sortCombinations = function (combinations) {
 }
 
 const ROW_RANK = 'taskRank'
-const COLUMN_RANKS = ['inputRank', 'commandRank', 'systemRank']
+const COLUMN_RANKS = ['runnerRank', 'systemRank']
 
 // Some stats are removed when `--save` is used. When showing saved results,
 // those will be `undefined`. We default them to `[]`.

@@ -1,11 +1,11 @@
 import { padTitles } from './padding.js'
 
 // Add:
-//  - `combination.task|input|command|systemTitlePadded`: like
+//  - `combination.task|runner|systemTitlePadded`: like
 //     `combination.*Title` but padded so all combinations vertically align
-//  - `combination.row`: combines task, input, command and system.
+//  - `combination.row`: combines task, runner and system.
 //     For one-dimensional reporters.
-//  - `combination.column`: combines input, command and system.
+//  - `combination.column`: combines runner and system.
 //     For two-dimensional reporters. `taskTitlePadded` is the row name.
 // We need to do this three times:
 //  - before measuring start because `combination.name` is used by progress
@@ -21,11 +21,7 @@ export const addTitles = function (combinations) {
   return combinationsC
 }
 
-const COLUMN_PROPS = [
-  'inputTitlePadded',
-  'commandTitlePadded',
-  'systemTitlePadded',
-]
+const COLUMN_PROPS = ['runnerTitlePadded', 'systemTitlePadded']
 const ROW_PROPS = ['taskTitlePadded', ...COLUMN_PROPS]
 
 const addTitlesProps = function (combinations, name, propNames) {

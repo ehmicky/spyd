@@ -22,7 +22,7 @@ const cleanResult = function ({ result, info, context }) {
   return omit(result, omittedProps)
 }
 
-const INFO_PROPS = ['systems', 'commands']
+const INFO_PROPS = ['systems', 'runners']
 const CONTEXT_PROPS = ['git', 'ci', 'timestamp', 'mergeId']
 
 // We handle some reportConfig properties in core, and do not pass those to

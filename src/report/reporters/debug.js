@@ -17,7 +17,7 @@ import { addTitles } from '../utils/title/main.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({
-  commands,
+  runners,
   systems,
   mergeId,
   timestamp,
@@ -30,7 +30,7 @@ const report = function ({
 
   const table = getTable(combinationsB)
   const footer = prettifyValue(
-    getFooter({ commands, systems, mergeId, timestamp, git, ci }),
+    getFooter({ runners, systems, mergeId, timestamp, git, ci }),
   )
   return joinSections([table, footer])
 }
