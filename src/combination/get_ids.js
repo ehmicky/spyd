@@ -1,19 +1,9 @@
-// Retrieve all unique user-selected identifiers:
-// task, system, runner, variations, inputs
-export const getCombinationsIds = function (combinations, inputs) {
-  const nonCombinationIds = getNonCombinationsIds(inputs)
-  const combinationsA = combinations.map(addIdInfos)
-  const combinationsB = combinationsA.map(addCombinationIds)
-  const combinationsIds = getAllCombinationsIds(combinationsA)
-  return { combinations: combinationsB, combinationsIds, nonCombinationIds }
-}
-
 // Non-combination identifiers are identifiers which do not create a new
 // dimension. Therefore they cannot be used in `include`, `exclude`, `limit`,
 // etc.
 // They are not checked for duplicates, but they are validated against allowed
 // characters.
-const getNonCombinationsIds = function (inputs) {
+export const getNonCombinationsIds = function (inputs) {
   return NON_COMBINATION_IDS.flatMap(
     getNonCombinationIds.bind(undefined, inputs),
   )
@@ -32,6 +22,15 @@ const getInputId = function ({ inputId }) {
 }
 
 const NON_COMBINATION_IDS = [{ type: 'input', getIds: getInputIds }]
+
+// Retrieve all unique user-selected identifiers:
+// task, system, runner, variations, inputs
+export const getCombinationsIds = function (combinations) {
+  const combinationsA = combinations.map(addIdInfos)
+  const combinationsB = combinationsA.map(addCombinationIds)
+  const combinationsIds = getAllCombinationsIds(combinationsA)
+  return { combinations: combinationsB, combinationsIds }
+}
 
 const addIdInfos = function (combination) {
   const idInfos = COMBINATION_IDS.map(getIdInfo.bind(undefined, combination))

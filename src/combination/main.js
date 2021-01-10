@@ -3,7 +3,7 @@ import { listTasks } from '../run/list.js'
 import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
 
-import { getCombinationsIds } from './get_ids.js'
+import { getNonCombinationsIds, getCombinationsIds } from './get_ids.js'
 import { getInputs } from './inputs.js'
 import { getCombinationsProduct } from './product.js'
 import { addTitles } from './titles.js'
@@ -33,11 +33,10 @@ export const getCombinations = async function ({
     inputs: inputsA,
     systemId,
   })
-  const {
-    combinations: combinationsA,
-    combinationsIds,
-    nonCombinationIds,
-  } = getCombinationsIds(combinations, inputsA)
+  const nonCombinationIds = getNonCombinationsIds(inputsA)
+  const { combinations: combinationsA, combinationsIds } = getCombinationsIds(
+    combinations,
+  )
   validateCombinationsIds(combinationsIds, nonCombinationIds)
 
   const combinationsB = selectCombinations(combinationsA, combinationsIds, {
