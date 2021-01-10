@@ -1,20 +1,14 @@
 import { UserError } from '../error/main.js'
+import { getUserIds, getCombinationsIds } from '../select/ids.js'
 
 // Validate combination identifiers.
-export const validateCombinationsIds = function (
-  combinationsIds,
-  nonCombinationIds,
-) {
-  const allIds = [...combinationsIds, ...nonCombinationIds]
-  allIds.filter(isUserId).forEach(validateIdsPerType)
+export const validateCombinationsIds = function (combinations, inputs) {
+  const userIds = getUserIds(combinations, inputs)
+  userIds.forEach(validateIdsPerType)
+
+  const combinationsIds = getCombinationsIds(combinations)
   combinationsIds.forEach(validateDuplicateId)
 }
-
-const isUserId = function ({ type }) {
-  return USER_ID_TYPES.has(type)
-}
-
-const USER_ID_TYPES = new Set(['task', 'system', 'input'])
 
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.

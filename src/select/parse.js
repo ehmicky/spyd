@@ -1,5 +1,4 @@
-import { UserError } from '../error/main.js'
-
+import { getCombinationsIds } from './ids.js'
 import { getPrefix } from './prefix.js'
 import { tokenizeSelector } from './tokenize.js'
 
@@ -12,47 +11,39 @@ import { tokenizeSelector } from './tokenize.js'
 // the same category use unions while identifiers of different categories use
 // intersection.
 // This also validates the syntax.
-export const parseSelectors = function (
-  rawSelectors,
-  propName,
-  combinationsIds,
-) {
+export const parseSelectors = function (rawSelectors, propName, combinations) {
   const selectors = rawSelectors.map((rawSelector) =>
-    parseSelector(rawSelector, propName, combinationsIds),
+    parseSelector(rawSelector, propName, combinations),
   )
   const inverse = propName === 'exclude'
   return { selectors, inverse }
 }
 
-export const parseSelector = function (rawSelector, propName, combinationsIds) {
+export const parseSelector = function (rawSelector, propName, combinations) {
   const prefix = getPrefix([rawSelector], propName)
 
   const tokens = tokenizeSelector(rawSelector, prefix)
 
+  const combinationsIds = getCombinationsIds(combinations)
   const tokensA = tokens.map(({ id, inverse }) =>
-    addTokenType({ id, inverse, combinationsIds, prefix }),
+    addTokenType({ id, inverse, combinationsIds }),
   )
   const types = getSelectorTypes(tokensA)
   const intersect = types.map((type) => getGroup(tokensA, type))
   return { intersect }
 }
 
-const addTokenType = function ({ id, inverse, combinationsIds, prefix }) {
+// Some `ids` might not be found in combinations. This is because they might:
+//  - Have been previously filtered, removing the combinations where those ids
+//    were defined
+//  - Not be recent, with different/older ids
+// Also the `ids` might come from a shared configuration which might not
+// perfectly match the current benchmark's ids.
+// Unknown typed `ids` are grouped together and will never match.
+const addTokenType = function ({ id, inverse, combinationsIds }) {
   const idInfoA = combinationsIds.find((idInfo) => idInfo.id === id)
-
-  if (idInfoA === undefined) {
-    throw new UserError(
-      `${prefix}The identifier "${id}" is selected but does not exist.
-This can indicate:
-  - That the identifier was mispelled.
-  - That the identifier does not exist anymore.
-  - A syntax error in the configuration property.
-    It should be an array of space-separated identifiers.`,
-    )
-  }
-
-  const { type } = idInfoA
-  return { id, type, inverse }
+  const type = idInfoA === undefined ? 'unknown' : idInfoA.type
+  return { id, inverse, type }
 }
 
 const getSelectorTypes = function (tokens) {

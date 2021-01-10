@@ -18,30 +18,15 @@ import { getPrefix } from './prefix.js'
 // mean the user intent was to include everything.
 export const selectCombinations = function (
   combinations,
-  combinationsIds,
   { include, exclude },
 ) {
-  const combinationsA = applySelection(include, 'include', {
-    combinations,
-    combinationsIds,
-  })
-  const combinationsB = applySelection(exclude, 'exclude', {
-    combinations: combinationsA,
-    combinationsIds,
-  })
+  const combinationsA = applySelection(include, 'include', combinations)
+  const combinationsB = applySelection(exclude, 'exclude', combinationsA)
   return combinationsB
 }
 
-const applySelection = function (
-  rawSelectors,
-  propName,
-  { combinations, combinationsIds },
-) {
-  const includeSelectors = parseSelectors(
-    rawSelectors,
-    propName,
-    combinationsIds,
-  )
+const applySelection = function (rawSelectors, propName, combinations) {
+  const includeSelectors = parseSelectors(rawSelectors, propName, combinations)
   const combinationsA = combinations.filter((combination) =>
     matchSelectors(combination, includeSelectors),
   )
