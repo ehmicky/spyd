@@ -43,4 +43,4 @@ const addTokenInverse = function (prefix, { tokens, nextInverse }, token) {
 // We do not use exclamation marks because they need to be escaped in shells.
 // We do not use dashes because they are used in identifiers (which would
 // make it confusing) and in CLI flags.
-const INVERSE_SYMBOL = '-'
+const INVERSE_SYMBOL = '~'
