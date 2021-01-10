@@ -64,5 +64,5 @@ const EXAMPLE_CONFIG = {
   diff: VALID_DELTA,
   since: VALID_DELTA,
   titles: { taskId: 'taskTitle' },
-  inputs: { inputName: 'inputValue' },
+  inputs: { inputId: 'inputValue' },
 }

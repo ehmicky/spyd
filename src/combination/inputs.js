@@ -7,6 +7,6 @@ export const getInputs = function (inputs) {
   return Object.entries(inputs).map(getInput)
 }
 
-const getInput = function ([inputName, inputValue]) {
-  return { inputName, inputValue }
+const getInput = function ([inputId, inputValue]) {
+  return { inputId, inputValue }
 }

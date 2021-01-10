@@ -23,15 +23,15 @@ const getNonCombinationIds = function (inputs, { type, getIds }) {
   return getIds(inputs).map((id) => ({ type, id }))
 }
 
-const getInputNames = function (inputs) {
-  return inputs.map(getInputName)
+const getInputIds = function (inputs) {
+  return inputs.map(getInputId)
 }
 
-const getInputName = function ({ inputName }) {
-  return inputName
+const getInputId = function ({ inputId }) {
+  return inputId
 }
 
-const NON_COMBINATION_IDS = [{ type: 'input', getIds: getInputNames }]
+const NON_COMBINATION_IDS = [{ type: 'input', getIds: getInputIds }]
 
 const addIdInfos = function (combination) {
   const idInfos = COMBINATION_IDS.map(getIdInfo.bind(undefined, combination))
