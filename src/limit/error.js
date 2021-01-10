@@ -3,15 +3,14 @@ import stripAnsi from 'strip-ansi'
 import { UserError } from '../error/main.js'
 
 // Add `combination.slowError`
-export const getSlowError = function ({ slow, name, percentage, diff }) {
+export const getSlowError = function ({ slow, name, limitPercentage, diff }) {
   if (!slow) {
     return
   }
 
   const nameA = stripAnsi(name)
-  const percentageStr = serializePercentage(percentage)
   const diffStr = serializePercentage(diff * PERCENTAGE_RATIO)
-  return `${nameA} should be at most ${percentageStr}% slower but is ${diffStr}% slower`
+  return `${nameA} should be at most ${limitPercentage}% slower but is ${diffStr}% slower`
 }
 
 const serializePercentage = function (percentage) {

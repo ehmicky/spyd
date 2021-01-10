@@ -82,5 +82,5 @@ const addCombinationLimits = function (combination, limitMatchers) {
     return combination
   }
 
-  return { ...combination, limit: limitMatcher.percentage }
+  return { ...combination, limitPercentage: limitMatcher.percentage }
 }

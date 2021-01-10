@@ -54,8 +54,11 @@ The result will be inserted between those two lines.`,
     requiresArg: true,
     describe: `Report when the average duration has increased by more than a
 specific percentage such as "50%".
-To target a specific task, input, system or runner, append its id, for example
-"50% taskId" or "50% taskId inputId". Can be specified several times`,
+The limit can be scoped to specific combinations by appending their identifiers
+after the percentage. The syntax is the same as the "include" configuration
+property. For example "50% taskOne node" applies only to taskOne when the
+runner is node.
+Several limits can be specified at once.`,
   },
   colors: {
     group: REPORT,
