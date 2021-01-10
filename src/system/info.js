@@ -7,7 +7,10 @@ import osName from 'os-name'
 import { groupBy } from '../utils/group.js'
 
 // Retrieve system information
-export const getSystem = function ({ systemId, systemTitle, cwd }) {
+export const getSystem = function ({
+  combinations: [{ systemId, systemTitle }],
+  config: { cwd },
+}) {
   const machine = getMachine()
   const { commit, branch, tag, pr, prBranch, buildUrl } = envCi({ cwd })
   return {
