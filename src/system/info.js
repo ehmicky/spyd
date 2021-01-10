@@ -3,14 +3,16 @@ import { cpus as getCpus, totalmem } from 'os'
 import { format as formatBytes } from 'bytes'
 import osName from 'os-name'
 
+import { getCiInfo } from '../ci/info.js'
 import { groupBy } from '../utils/group.js'
 
-export const getSystems = function ({ systemId, systemTitle, job }) {
-  const system = getSystem()
-  return [{ id: systemId, title: systemTitle, ...system, ...job }]
+export const getSystem = function ({ systemId, systemTitle, cwd }) {
+  const { git, ci, job } = getCiInfo(cwd)
+  const machine = getMachine()
+  return { id: systemId, title: systemTitle, machine, git, ci, job }
 }
 
-const getSystem = function () {
+const getMachine = function () {
   const cpu = serializeCpus()
   const memory = getMemory()
   const os = osName()
