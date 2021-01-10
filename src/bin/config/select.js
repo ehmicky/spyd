@@ -28,8 +28,8 @@ Both can be combined:
 selects any combinations from:
   (taskOne or taskTwo) and runnerOne
 
-Exclamation marks can be used to exclude specific identifiers ("not"):
-  --include='!taskOne !taskTwo'
+Tildes can be used to exclude specific identifiers ("not"):
+  --include='~taskOne ~taskTwo'
 selects any combinations from:
   not (taskOne or taskTwo)
 Note: you need to might to use single quotes with your shell.

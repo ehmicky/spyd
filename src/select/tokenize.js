@@ -8,9 +8,9 @@ export const tokenizeSelector = function (selector, prefix) {
 }
 
 // Split around whitespaces.
-// Also split exclamation marks to their own token, whether they are surrounded
-// by whitespace or another exclamation mark or not.
-const TOKEN_DELIMITER_REGEX = /\s+|(?<=!)/gu
+// Also split tildes to their own token, whether they are surrounded by
+// whitespace or another tilde or not.
+const TOKEN_DELIMITER_REGEX = /\s+|(?<=~)/gu
 
 const addTokensInverse = function (tokens, prefix) {
   const { tokens: tokensA, nextInverse } = tokens.reduce(
@@ -19,9 +19,7 @@ const addTokensInverse = function (tokens, prefix) {
   )
 
   if (nextInverse) {
-    throw new UserError(
-      `${prefix}Exclamation marks must be followed by an identifier.`,
-    )
+    throw new UserError(`${prefix}Tildes must be followed by an identifier.`)
   }
 
   return tokensA
@@ -36,12 +34,13 @@ const addTokenInverse = function (prefix, { tokens, nextInverse }, token) {
   }
 
   if (nextInverse) {
-    throw new UserError(
-      `${prefix}Single exclamation marks must be used, not double.`,
-    )
+    throw new UserError(`${prefix}Single tildes must be used, not double.`)
   }
 
   return { tokens, nextInverse: true }
 }
 
-const INVERSE_SYMBOL = '!'
+// We do not use exclamation marks because they need to be escaped in shells.
+// We do not use dashes because they are used in identifiers (which would
+// make it confusing) and in CLI flags.
+const INVERSE_SYMBOL = '-'
