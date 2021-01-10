@@ -19,7 +19,7 @@ export const addPrevious = function (results, { limits, diff }) {
 }
 
 const addResultPrevious = function (
-  { timestamp, combinations, ...result },
+  { combinations, ...result },
   previous,
   { limits, diff },
 ) {
@@ -30,14 +30,8 @@ const addResultPrevious = function (
     diffIndex,
     limits,
   })
-
   const previousA = previous.map(removeCombinations)
-  return {
-    ...result,
-    timestamp,
-    combinations: combinationsA,
-    previous: previousA,
-  }
+  return { ...result, combinations: combinationsA, previous: previousA }
 }
 
 const addPreviousCombinations = function ({
@@ -47,7 +41,7 @@ const addPreviousCombinations = function ({
   limits,
 }) {
   const previousCombinations = previous.flatMap(getCombinations)
-  const combinationsA = combinations.map((combination) =>
+  return combinations.map((combination) =>
     addPreviousCombination({
       combination,
       previousCombinations,
@@ -55,7 +49,6 @@ const addPreviousCombinations = function ({
       limits,
     }),
   )
-  return combinationsA
 }
 
 const getCombinations = function ({ combinations }, result) {

@@ -18,9 +18,9 @@ export const listStore = async function ({
   const resultsA = migrateResults(results)
   const resultsB = sortResults(resultsA)
   const resultsC = selectResults(resultsB, { include, exclude })
-  const resultsD = resultsC.map(normalizeResult)
-  const resultsF = addPrevious(resultsD, { limits, diff })
-  return resultsF
+  const resultsD = addPrevious(resultsC, { limits, diff })
+  const resultsE = resultsD.map(normalizeResult)
+  return resultsE
 }
 
 // Call `store.list()`
