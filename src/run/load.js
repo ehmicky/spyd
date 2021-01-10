@@ -21,14 +21,14 @@ const loadRunner = async function ({
   id: runnerId,
   title: runnerTitle,
   repeat: runnerRepeats,
-  config: runConfig,
+  config: runnerConfig,
   launch,
 }) {
   const {
     spawn: runnerSpawn,
     spawnOptions: runnerSpawnOptions = {},
     versions: runnerVersions = {},
-  } = await launchRunner({ runnerId, runConfig, launch })
+  } = await launchRunner({ runnerId, runnerConfig, launch })
   return {
     runnerId,
     runnerTitle,
@@ -36,13 +36,14 @@ const loadRunner = async function ({
     runnerSpawn,
     runnerSpawnOptions,
     runnerVersions,
+    runnerConfig,
   }
 }
 
 // Fire `runner.launch()`
-const launchRunner = async function ({ runnerId, runConfig, launch }) {
+const launchRunner = async function ({ runnerId, runnerConfig, launch }) {
   try {
-    return await launch(runConfig)
+    return await launch(runnerConfig)
   } catch (error) {
     throw getCommandsError(error, runnerId)
   }

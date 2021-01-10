@@ -36,9 +36,9 @@ export const spawnProcess = function ({
   combination,
   combination: {
     id,
-    commandConfig: runConfig,
     runnerSpawn: [runnerFile, ...runnerArgs],
     runnerSpawnOptions,
+    runnerConfig,
     taskPath,
     inputs,
   },
@@ -47,7 +47,7 @@ export const spawnProcess = function ({
 }) {
   const spawnParams = getSpawnParams({
     id,
-    runConfig,
+    runnerConfig,
     taskPath,
     inputs,
     origin,
@@ -66,10 +66,16 @@ export const spawnProcess = function ({
 }
 
 // Retrieve params passed to runner processes so they can find the right task
-const getSpawnParams = function ({ id, runConfig, taskPath, inputs, origin }) {
+const getSpawnParams = function ({
+  id,
+  runnerConfig,
+  taskPath,
+  inputs,
+  origin,
+}) {
   const serverUrl = getServerUrl(origin, id)
   const inputsA = Object.assign({}, ...inputs.map(getInput))
-  return { serverUrl, runConfig, taskPath, inputs: inputsA }
+  return { serverUrl, runnerConfig, taskPath, inputs: inputsA }
 }
 
 const getInput = function ({ inputId, inputValue }) {

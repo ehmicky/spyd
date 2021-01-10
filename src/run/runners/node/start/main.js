@@ -7,9 +7,9 @@ import { validateFile } from './validate.js'
 
 // Start the combinations by requiring the task files.
 export const start = async function ({
-  runConfig: { require: requireConfig },
+  runnerConfig: { require: requireConfig },
   taskPath,
-  input,
+  inputs,
 }) {
   await useRequireConfig(requireConfig)
 
@@ -17,8 +17,7 @@ export const start = async function ({
   validateFile(task)
 
   const taskA = normalizeTask(task)
-  const taskArg = { input }
-  return { task: taskA, taskArg }
+  return { task: taskA, taskArg: inputs }
 }
 
 const importFile = function (taskPath) {
