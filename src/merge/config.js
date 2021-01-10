@@ -5,14 +5,14 @@ import { UserError } from '../error/main.js'
 
 // By default `mergeId` is the current CI build. If not in CI, it is a UUIDv4.
 export const getDefaultMergeId = function ({ cwd }) {
-  const { service, build: buildNumber, slug } = getEnvCi(cwd)
+  const { buildUrl } = getEnvCi(cwd)
 
-  if (service === undefined || buildNumber === undefined) {
+  if (buildUrl === undefined) {
     return uuidv4()
   }
 
-  const slugA = slug === undefined ? undefined : slug.replace('/', '-')
-  return [slugA, service, buildNumber].filter(Boolean).join('-')
+  // TODO: slugify
+  return buildUrl
 }
 
 // Add `result.mergeId`.

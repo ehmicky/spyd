@@ -7,9 +7,15 @@ import { getCiInfo } from '../ci/info.js'
 import { groupBy } from '../utils/group.js'
 
 export const getSystem = function ({ systemId, systemTitle, cwd }) {
-  const { git, ci, job } = getCiInfo(cwd)
   const machine = getMachine()
-  return { id: systemId, title: systemTitle, machine, git, ci, job }
+  const { commit, branch, tag, prNumber, prBranch, buildUrl } = getCiInfo(cwd)
+  return {
+    id: systemId,
+    title: systemTitle,
+    machine,
+    git: { commit, branch, tag, prNumber, prBranch },
+    ci: buildUrl,
+  }
 }
 
 const getMachine = function () {

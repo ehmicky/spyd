@@ -3,22 +3,10 @@ import moize from 'moize'
 
 // Retrieve information related to git and to CI environment
 export const getCiInfo = function (cwd) {
-  const {
-    commit,
-    branch,
-    name,
-    build: buildNumber,
-    buildUrl,
-    job: jobNumber,
-    jobUrl,
-    tag,
-    pr,
-    prBranch,
-  } = getEnvCi(cwd)
-  const git = { commit, branch, tag, prNumber: pr, prBranch }
-  const ci = { provider: name, buildNumber, buildUrl }
-  const job = { jobNumber, jobUrl }
-  return { git, ci, job }
+  const { commit, branch, buildUrl, tag, pr: prNumber, prBranch } = getEnvCi(
+    cwd,
+  )
+  return { commit, branch, tag, prNumber, prBranch, buildUrl }
 }
 
 const mGetEnvCi = function (cwd) {
