@@ -1,22 +1,10 @@
 import { UserError } from '../error/main.js'
 
 // Call `store.remove()`
-export const removeFromStore = async function (
-  mergeId,
-  partialResults,
-  { store },
-) {
-  const ids = partialResults
-    .filter((partialResult) => partialResult.mergeId === mergeId)
-    .map(getId)
-
+export const removeFromStore = async function (id, { store }) {
   try {
-    await store.remove(ids)
+    await store.remove(id)
   } catch (error) {
     throw new UserError(`Could not remove result: ${error.message}`)
   }
-}
-
-const getId = function ({ id }) {
-  return id
 }

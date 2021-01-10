@@ -25,9 +25,9 @@ const replace = async function (results, dir) {
   await setResults(dir, results)
 }
 
-const remove = async function (ids, dir) {
+const remove = async function (id, dir) {
   const results = await getResults(dir)
-  const resultsA = results.filter(({ id }) => !ids.includes(id))
+  const resultsA = results.filter((result) => result.id !== id)
   await setResults(dir, resultsA)
 }
 

@@ -46,10 +46,6 @@ const normalizeSystem = function (system) {
   return { systemId: system }
 }
 
-const normalizeMerge = function (merge) {
-  return { mergeId: merge.trim() }
-}
-
 const normalizeDeltaProp = function (delta, propName) {
   return { [propName]: normalizeDelta(delta, propName) }
 }
@@ -74,7 +70,6 @@ const checkInputs = function (inputs, propName) {
 const NORMALIZERS = {
   duration: normalizeDuration,
   system: normalizeSystem,
-  merge: normalizeMerge,
   delta: normalizeDeltaProp,
   diff: normalizeDeltaProp,
   reporter: normalizeOptionalArrProp,

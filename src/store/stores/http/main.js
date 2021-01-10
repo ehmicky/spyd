@@ -20,11 +20,11 @@ const add = async function (result, url) {
   await fetchUrl({ method: 'POST', url, body: result, noResponse: true })
 }
 
-const remove = async function (ids, url) {
+const remove = async function (id, url) {
   await fetchUrl({
     method: 'DELETE',
     url,
-    searchParams: { ids: ids.join(',') },
+    searchParams: { id },
     noResponse: true,
   })
 }

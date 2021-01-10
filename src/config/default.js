@@ -1,11 +1,8 @@
-import { getDefaultMergeId } from '../merge/config.js'
-
 // Add default configuration properties
 export const addDefaultConfig = function (config, action) {
   return {
     ...DEFAULT_CONFIG,
     context: action === 'show',
-    merge: getDefaultMergeId({ ...DEFAULT_CONFIG, ...config }),
     ...config,
   }
 }

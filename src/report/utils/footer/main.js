@@ -4,21 +4,13 @@ import { getCi } from './ci.js'
 import { getGit } from './git.js'
 import { getSharedSystem, getSystems } from './systems.js'
 
-// Retrieve footer: runners, systems, mergeId, timestamp, git, ci, link
-export const getFooter = function ({
-  runners,
-  systems,
-  mergeId,
-  timestamp,
-  git,
-  ci,
-}) {
+// Retrieve footer: runners, systems, timestamp, git, ci, link
+export const getFooter = function ({ runners, systems, timestamp, git, ci }) {
   return [
     { Runners: getRunners(runners) },
     getSharedSystem(systems),
     getSystems(systems),
     {
-      Id: mergeId,
       Timestamp: getTimestamp(timestamp),
       ...getGit(git),
       ...getCi(ci),

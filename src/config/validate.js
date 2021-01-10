@@ -51,7 +51,6 @@ const EXAMPLE_CONFIG = {
   progress: optionalArray('debug'),
   store: optionalArray('file'),
   debug: false,
-  merge: multipleValidOptions('', '546'),
   output: './file.js',
   insert: './README.md',
   limit: optionalArray('task_id=10'),

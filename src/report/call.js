@@ -23,7 +23,7 @@ const cleanResult = function ({ result, info, context }) {
 }
 
 const INFO_PROPS = ['systems', 'runners']
-const CONTEXT_PROPS = ['git', 'ci', 'timestamp', 'mergeId']
+const CONTEXT_PROPS = ['git', 'ci', 'timestamp']
 
 // We handle some reportConfig properties in core, and do not pass those to
 // reporters.

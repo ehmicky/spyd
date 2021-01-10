@@ -1,9 +1,7 @@
 import { removeDuplicates } from '../combination/duplicate.js'
 import { groupBy } from '../utils/group.js'
 
-import { validateMerge } from './validate.js'
-
-// Merge previous results part of the same `mergeId`.
+// Merge previous results.
 // Later results have priority.
 export const mergePartialResults = function (partialResults) {
   return Object.values(groupBy(partialResults, 'mergeId')).map(mergeResult)
@@ -14,23 +12,9 @@ const mergeResult = function ([partialResult, ...partialResults]) {
 }
 
 const mergePair = function (
-  {
-    systems: previousSystems,
-    git: previousGit,
-    ci: previousCi,
-    combinations: previousCombinations,
-  },
+  { systems: previousSystems, combinations: previousCombinations },
   { id, systems: [system], git, ci, combinations, ...result },
 ) {
-  validateMerge({
-    previousSystems,
-    system,
-    previousGit,
-    git,
-    previousCi,
-    ci,
-  })
-
   const systems = mergeSystems(previousSystems, system)
   const combinationsA = removeDuplicates([
     ...previousCombinations,

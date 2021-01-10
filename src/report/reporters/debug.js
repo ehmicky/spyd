@@ -19,7 +19,6 @@ import { addTitles } from '../utils/title/main.js'
 const report = function ({
   runners,
   systems,
-  mergeId,
   timestamp,
   git,
   ci,
@@ -30,7 +29,7 @@ const report = function ({
 
   const table = getTable(combinationsB)
   const footer = prettifyValue(
-    getFooter({ runners, systems, mergeId, timestamp, git, ci }),
+    getFooter({ runners, systems, timestamp, git, ci }),
   )
   return joinSections([table, footer])
 }

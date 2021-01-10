@@ -17,14 +17,6 @@ Can also be 0 which only stops when CTRL-C is typed.`,
     number: true,
     requiresArg: true,
   },
-  merge: {
-    group: STORE,
-    string: true,
-    describe: `Append the current results to the previous one.
-Used to create a single result in several incremental benchmarks.
-Can also be an id. Results within the same id are reported together.
-Default: random UUID`,
-  },
   system: {
     group: STORE,
     string: true,

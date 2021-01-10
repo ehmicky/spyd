@@ -1,7 +1,6 @@
 import omit from 'omit.js'
 
 import { UserError } from '../error/main.js'
-import { addMergeId } from '../merge/config.js'
 import { mergePartialResults } from '../merge/partial.js'
 
 import { listStore } from './list.js'
@@ -10,13 +9,11 @@ import { listStore } from './list.js'
 export const addToStore = async function ({ partialResult, config, stopped }) {
   const partialResults = await listStore(config)
 
-  const partialResultA = addMergeId(partialResult, partialResults, config)
-  await save({ partialResult: partialResultA, config, stopped })
+  await save({ partialResult, config, stopped })
 
-  const partialResultsA = [...partialResults, partialResultA]
+  const partialResultsA = [...partialResults, partialResult]
   const results = mergePartialResults(partialResultsA)
-
-  return { mergeId: partialResultA.mergeId, results }
+  return results
 }
 
 // Save results so they can be compared or shown later.

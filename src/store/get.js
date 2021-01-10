@@ -13,9 +13,9 @@ export const getFromStore = async function (delta, config) {
 
   const results = mergePartialResults(partialResultsA)
 
-  const { mergeId } = getResult(results, delta)
+  const { id } = getResult(results, delta)
 
-  return { mergeId, results, partialResults: partialResultsA }
+  return { id, results }
 }
 
 const getResult = function (results, delta) {

@@ -16,12 +16,12 @@ export const bench = async function (configFlags) {
 
   try {
     const { partialResult, stopped } = await performBenchmark(configB)
-    const { mergeId, results } = await addToStore({
+    const results = await addToStore({
       partialResult,
       config: configB,
       stopped,
     })
-    const result = await report(mergeId, results, configB)
+    const result = await report(results, configB)
     return result
   } finally {
     await endStore(configB)
@@ -34,8 +34,8 @@ export const show = async function (configFlags) {
   const configB = await startStore(configA)
 
   try {
-    const { mergeId, results } = await getFromStore(delta, configB)
-    const result = await report(mergeId, results, configB)
+    const { id, results } = await getFromStore(delta, configB)
+    const result = await report(id, results, configB)
     return result
   } finally {
     await endStore(configB)
@@ -48,8 +48,8 @@ export const remove = async function (configFlags) {
   const configB = await startStore(configA)
 
   try {
-    const { mergeId, partialResults } = await getFromStore(delta, configB)
-    await removeFromStore(mergeId, partialResults, configB)
+    const { id } = await getFromStore(delta, configB)
+    await removeFromStore(id, configB)
   } finally {
     await endStore(configA)
   }

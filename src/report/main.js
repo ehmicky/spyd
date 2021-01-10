@@ -10,7 +10,7 @@ import { printContent } from './print.js'
 
 // Report results
 export const report = async function (
-  mergeId,
+  id,
   results,
   {
     report: reporters,
@@ -24,7 +24,7 @@ export const report = async function (
     diff,
   },
 ) {
-  const result = getResult(mergeId, results, { limits, diff })
+  const result = getResult(id, results, { limits, diff })
 
   await Promise.all(
     reporters.map(({ report: reportFunc, config: reportConfig }) =>
@@ -47,10 +47,10 @@ export const report = async function (
   return result
 }
 
-const getResult = function (mergeId, results, { limits, diff }) {
+const getResult = function (id, results, { limits, diff }) {
   const resultsA = results.map(normalizeResult)
 
-  const resultA = resultsA.find((result) => result.mergeId === mergeId)
+  const resultA = resultsA.find((result) => result.id === id)
   const resultB = addPrevious(resultsA, resultA, { limits, diff })
   return resultB
 }
