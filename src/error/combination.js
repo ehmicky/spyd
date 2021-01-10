@@ -30,16 +30,10 @@ export const combinationHasErrored = function ({ error }) {
   return error !== undefined
 }
 
-const getCombinationError = function ({ error, taskId, inputId }) {
-  const taskPrefix = getTaskPrefix(taskId, inputId)
+const getCombinationError = function ({ error, taskId }) {
+  const taskPrefix = `In task "${taskId}"`
   error.message = `${taskPrefix}:\n${error.message}`
   return error
-}
-
-const getTaskPrefix = function (taskId, inputId) {
-  return inputId === ''
-    ? `In task '${taskId}'`
-    : `In task '${taskId}' (input '${inputId}')`
 }
 
 // Processes should not exit until the end of the benchmark. If they do, this
