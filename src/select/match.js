@@ -12,7 +12,7 @@ export const matchSelectors = function (combination, { selectors, inverse }) {
 }
 
 // Check if a selector matches the ids of a given combination
-const matchSelector = function ({ ids }, { intersect }) {
+export const matchSelector = function ({ ids }, { intersect }) {
   return intersect.every(({ ids: groupIds, inverse }) =>
     matchGroup(ids, groupIds, inverse),
   )

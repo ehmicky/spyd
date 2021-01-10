@@ -18,13 +18,13 @@ export const parseSelectors = function (
   combinationsIds,
 ) {
   const selectors = rawSelectors.map((rawSelector) =>
-    parseSelector(rawSelector, combinationsIds, propName),
+    parseSelector(rawSelector, propName, combinationsIds),
   )
   const inverse = propName === 'exclude'
   return { selectors, inverse }
 }
 
-const parseSelector = function (rawSelector, combinationsIds, propName) {
+export const parseSelector = function (rawSelector, propName, combinationsIds) {
   const prefix = getPrefix([rawSelector], propName)
 
   const tokens = tokenizeSelector(rawSelector, prefix)
@@ -100,4 +100,9 @@ const hasInverse = function ({ inverse }) {
 
 const getId = function ({ id }) {
   return id
+}
+
+// Retrieve selector which catches everything
+export const getCatchAllSelector = function () {
+  return { intersect: [] }
 }
