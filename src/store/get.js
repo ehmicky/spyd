@@ -1,6 +1,5 @@
 import { UserError } from '../error/main.js'
 import { normalizeResult } from '../normalize/main.js'
-import { selectPartialResults } from '../select/main.js'
 
 import { find } from './delta/find.js'
 import { listStore } from './list.js'

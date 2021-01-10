@@ -1,12 +1,16 @@
 import { UserError } from '../error/main.js'
+import { selectPartialResults } from '../select/main.js'
 
-import { sortResults } from './sort.js'
+import { sortPartialResults } from './sort.js'
 
 // List, sort, filter and normalize all results
-export const listStore = async function ({ store, ...config }) {
+export const listStore = async function ({ store, include, exclude }) {
   const partialResults = await callList(store)
-  const partialResultsA = sortResults(partialResults)
-  const partialResultsB = selectPartialResults(partialResultsA, config)
+  const partialResultsA = sortPartialResults(partialResults)
+  const partialResultsB = selectPartialResults(partialResultsA, {
+    include,
+    exclude,
+  })
   return partialResultsB
 }
 

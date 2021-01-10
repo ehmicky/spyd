@@ -5,7 +5,7 @@ import { groupBy } from '../utils/group.js'
 
 // Results are sorted by timestamp.
 // However, results of the same CI build are always consecutive.
-export const sortResults = function (partialResults) {
+export const sortPartialResults = function (partialResults) {
   const partialResultsA = partialResults.map(addGroup)
   const partialResultsB = groupBy(partialResultsA, 'group')
   const partialResultsC = Object.values(partialResultsB).map(addTimestamp)
