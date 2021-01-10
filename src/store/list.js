@@ -3,17 +3,19 @@ import { normalizeResult } from '../normalize/main.js'
 import { selectPartialResults } from '../select/main.js'
 
 import { mergePartialResults } from './merge.js'
+import { migratePartialResults } from './migrate.js'
 import { sortPartialResults } from './sort.js'
 
 // List, sort, filter and normalize all results
 export const listStore = async function ({ store, include, exclude }) {
   const partialResults = await callList(store)
-  const partialResultsA = sortPartialResults(partialResults)
-  const partialResultsB = selectPartialResults(partialResultsA, {
+  const partialResultsA = migratePartialResults(partialResults)
+  const partialResultsB = sortPartialResults(partialResultsA)
+  const partialResultsC = selectPartialResults(partialResultsB, {
     include,
     exclude,
   })
-  const results = mergePartialResults(partialResultsB)
+  const results = mergePartialResults(partialResultsC)
   const resultsA = results.map(normalizeResult)
   return resultsA
 }
