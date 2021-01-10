@@ -5,6 +5,9 @@ import omit from 'omit.js'
 //    properties and systems
 //  - after merging combinations, to retrieve their speed and set
 //    combination.rank
+// The `system` configuration property can be used to specify different
+// dimensions. This is meant for any environment differences, outside of spyd:
+// hardware, OS, git branch, environment variables, etc.
 export const joinSystems = function (systems, systemColls) {
   const systemsA = systemColls.map((systemColl) =>
     mergeSystem(systems, systemColl),
