@@ -45,11 +45,11 @@ const launchRunner = async function ({ runnerId, runnerConfig, launch }) {
   try {
     return await launch(runnerConfig)
   } catch (error) {
-    throw getCommandsError(error, runnerId)
+    throw getLaunchError(error, runnerId)
   }
 }
 
-const getCommandsError = function (error, runnerId) {
+const getLaunchError = function (error, runnerId) {
   if (error instanceof UserError) {
     return new UserError(`In runner '${runnerId}': ${error.message}`)
   }
