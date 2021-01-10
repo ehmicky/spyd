@@ -7,16 +7,17 @@ import { mergeResults } from './merge.js'
 // Get a previous result by `count` or `timestamp`
 export const getFromStore = async function (delta, config) {
   const results = await listStore(config)
-  const resultsA = mergeResults(results)
-  const result = getResult(resultsA, delta)
+
+  const index = getResultIndex(results, delta)
+  const resultsA = results.slice(0, index)
+
+  const result = mergeResults(resultsA)
   return result
 }
 
-const getResult = function (results, delta) {
+const getResultIndex = function (results, delta) {
   try {
-    const index = find(results, delta)
-    const result = results[index]
-    return result
+    return find(results, delta)
   } catch (error) {
     throw new UserError(`Could not find previous results: ${error.message}`)
   }

@@ -2,7 +2,8 @@ import { removeDuplicates } from '../combination/duplicate.js'
 
 // Merge previous results to the last result
 export const mergeResults = function (results) {
-  return results
+  const result = results[results.length - 1]
+  return result
 }
 
 const mergePair = function (

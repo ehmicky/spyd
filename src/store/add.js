@@ -9,9 +9,10 @@ export const addToStore = async function ({ result, config, stopped }) {
   await save({ result, config, stopped })
 
   const results = await listStore(config)
+
   const resultsA = [...results, result]
-  const resultsB = mergeResults(resultsA)
-  const resultA = resultsB[resultsB.length - 1]
+
+  const resultA = mergeResults(resultsA)
   return resultA
 }
 
