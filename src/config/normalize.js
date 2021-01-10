@@ -1,10 +1,8 @@
-import { normalizeLimits } from '../limit/config.js'
 import { checkEmptyTasks } from '../run/check.js'
 import { normalizeDelta } from '../store/delta/config.js'
 
 import {
   normalizeOptionalArray,
-  checkDefinedStringArray,
   checkDefinedString,
   checkJson,
   checkPositiveInteger,
@@ -52,11 +50,6 @@ const normalizeMerge = function (merge) {
   return { mergeId: merge.trim() }
 }
 
-const normalizeLimit = function (limit, propName) {
-  checkDefinedStringArray(limit, propName)
-  return { limits: normalizeLimits(limit) }
-}
-
 const normalizeDeltaProp = function (delta, propName) {
   return { [propName]: normalizeDelta(delta, propName) }
 }
@@ -82,7 +75,6 @@ const NORMALIZERS = {
   duration: normalizeDuration,
   system: normalizeSystem,
   merge: normalizeMerge,
-  limit: normalizeLimit,
   delta: normalizeDeltaProp,
   diff: normalizeDeltaProp,
   reporter: normalizeOptionalArrProp,
@@ -90,6 +82,7 @@ const NORMALIZERS = {
   store: normalizeOptionalArrProp,
   include: normalizeOptionalArrProp,
   exclude: normalizeOptionalArrProp,
+  limit: normalizeOptionalArrProp,
   tasks: checkEmptyTasks,
   titles: checkTitles,
   inputs: checkInputs,
