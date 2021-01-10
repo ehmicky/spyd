@@ -1,4 +1,3 @@
-import { addLimits } from '../limit/add.js'
 import { listTasks } from '../run/list.js'
 import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
@@ -17,7 +16,6 @@ export const getCombinations = async function ({
   include,
   exclude,
   titles,
-  limit,
   cwd,
 }) {
   const tasksA = listTasks(tasks)
@@ -35,8 +33,7 @@ export const getCombinations = async function ({
   validateCombinationsIds(combinations, inputsA)
 
   const combinationsA = selectCombinations(combinations, { include, exclude })
-  const combinationsB = addLimits(combinationsA, limit)
 
-  const combinationsC = addTitles(combinationsB, titles)
-  return combinationsC
+  const combinationsB = addTitles(combinationsA, titles)
+  return combinationsB
 }

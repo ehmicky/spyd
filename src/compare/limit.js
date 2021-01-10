@@ -82,5 +82,13 @@ const addCombinationLimits = function (combination, limitMatchers) {
     return combination
   }
 
-  return { ...combination, limitPercentage: limitMatcher.percentage }
+  return {
+    ...combination,
+    stats: { ...combination.stats, limit: limitMatcher.percentage },
+  }
+}
+
+// Use the `limit` configuration property to add `combination.slow`
+export const isSlow = function ({ stats: { limit } }, diff) {
+  return diff !== undefined && limit !== undefined && diff > limit
 }

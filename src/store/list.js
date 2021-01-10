@@ -1,6 +1,6 @@
+import { compareResults } from '../compare/main.js'
 import { UserError } from '../error/main.js'
 import { groupCombinations } from '../normalize/group.js'
-import { addPrevious } from '../normalize/previous.js'
 import { selectResults } from '../select/main.js'
 
 import { decompressResults } from './compress.js'
@@ -12,15 +12,15 @@ export const listStore = async function ({
   store,
   include,
   exclude,
-  limits,
   diff,
+  limit,
 }) {
   const results = await callList(store)
   const resultsA = migrateResults(results)
   const resultsB = decompressResults(resultsA)
   const resultsC = sortResults(resultsB)
   const resultsD = selectResults(resultsC, { include, exclude })
-  const resultsE = addPrevious(resultsD, { limits, diff })
+  const resultsE = compareResults(resultsD, { diff, limit })
   const resultsF = groupCombinations(resultsE)
   return resultsF
 }

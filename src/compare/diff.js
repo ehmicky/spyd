@@ -18,7 +18,7 @@ const isInitialDiff = function (results, { queryType, queryValue }) {
 // Retrieve the difference of median compared with a previous result
 export const getDiff = function (results, diffIndex, { median }) {
   if (diffIndex === undefined) {
-    return {}
+    return
   }
 
   // eslint-disable-next-line fp/no-mutating-methods
@@ -29,7 +29,7 @@ export const getDiff = function (results, diffIndex, { median }) {
   // This can happen when some combinations have a previous result but others
   // not
   if (diffCombination === undefined) {
-    return {}
+    return
   }
 
   const {
@@ -37,7 +37,7 @@ export const getDiff = function (results, diffIndex, { median }) {
   } = diffCombination
 
   const diff = computeDiff(median, previousMedian)
-  return { previousMedian, diff }
+  return diff
 }
 
 const computeDiff = function (median, previousMedian) {

@@ -1,4 +1,4 @@
-import { checkLimits } from '../limit/error.js'
+import { checkLimits } from '../compare/check.js'
 
 import { callReportFunc } from './call.js'
 import { handleReportConfig } from './config.js'
