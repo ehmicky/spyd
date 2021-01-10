@@ -31,6 +31,7 @@ const removeCombinationKey = function (combination) {
   return omit(combination, ['combinationsKey'])
 }
 
+// We keep the last result: id, timestamp
 const mergePair = function (
   { combinations, ...result },
   { combinations: previousCombinations },
