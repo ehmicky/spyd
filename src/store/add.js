@@ -1,20 +1,20 @@
 import omit from 'omit.js'
 
 import { UserError } from '../error/main.js'
+import { normalizeResult } from '../normalize/main.js'
 
 import { listStore } from './list.js'
+import { mergePartialResults } from './merge.js'
 
 // Add a new result
-export const addToStore = async function ({
-  partialResult,
-  partialResult: { id },
-  config,
-  stopped,
-}) {
+export const addToStore = async function ({ partialResult, config, stopped }) {
+  const partialResults = await listStore(config)
   await save({ partialResult, config, stopped })
-  const results = await listStore(config)
-  const resultA = results.find((result) => result.ids.includes(id))
-  return { result: resultA, results }
+  const partialResultsA = [...partialResults, partialResult]
+  const results = mergePartialResults(partialResultsA)
+  const resultsA = results.map(normalizeResult)
+  const result = resultsA[resultsA.length - 1]
+  return { result, results: resultsA }
 }
 
 // Save results so they can be compared or shown later.
@@ -28,7 +28,7 @@ const save = async function ({
     return
   }
 
-  const partialResultA = normalizeResult(partialResult)
+  const partialResultA = normalizeSaveResult(partialResult)
 
   try {
     await store.add(partialResultA)
@@ -42,7 +42,7 @@ const save = async function ({
 // information.
 // We try to only persist what cannot be computed runtime (which is done by
 // `addPrintedInfo()` during reporting).
-const normalizeResult = function ({ combinations, ...result }) {
+const normalizeSaveResult = function ({ combinations, ...result }) {
   const combinationsA = combinations.map(normalizeCombination)
   return { ...result, combinations: combinationsA }
 }
