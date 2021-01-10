@@ -38,24 +38,28 @@ const VALID_TIMESTAMPS = [
 
 const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
 
+const optionalArray = function (value) {
+  return multipleValidOptions(value, [value])
+}
+
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   config: './benchmark/spyd.yml',
   extend: './shared_spyd.yml',
   tasks: multipleValidOptions({ node: '*.task.js' }, { node: ['*.task.js'] }),
-  reporter: multipleValidOptions('debug', ['debug']),
-  progress: multipleValidOptions('debug', ['debug']),
-  store: multipleValidOptions('file', ['file']),
+  reporter: optionalArray('debug'),
+  progress: optionalArray('debug'),
+  store: optionalArray('file'),
   debug: false,
   merge: multipleValidOptions('', '546'),
   output: './file.js',
   insert: './README.md',
-  limit: ['task_id=10'],
+  limit: optionalArray('task_id=10'),
   colors: false,
   context: true,
   link: false,
-  include: 'task_id',
-  exclude: 'task_id',
+  include: optionalArray('task_id'),
+  exclude: optionalArray('task_id'),
   delta: VALID_DELTA,
   diff: VALID_DELTA,
   since: VALID_DELTA,
