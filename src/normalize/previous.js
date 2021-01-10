@@ -15,14 +15,12 @@ import { getDiffIndex, getDiff } from './diff.js'
 //     results removals
 export const addPrevious = function (results, { limits, diff }) {
   const diffIndex = getDiffIndex(results, diff)
-  return results
-    .map(addCombinationKeys)
-    .map((result, index, resultsA) =>
-      addResultPrevious(result, resultsA.slice(0, index - 1), {
-        limits,
-        diffIndex,
-      }),
-    )
+  return results.map(addCombinationKeys).map((result, index, resultsA) =>
+    addResultPrevious(result, resultsA.slice(0, index - 1), {
+      limits,
+      diffIndex,
+    }),
+  )
 }
 
 // Add stable key describing combinations identity
@@ -94,7 +92,6 @@ const addPreviousCombination = function ({
     stats: { ...stats, diff, limit },
     slow,
     slowError,
-    previous,
   }
 }
 
