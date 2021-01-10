@@ -1,8 +1,12 @@
 import { UserError } from '../error/main.js'
 
-// Validate combination identifiers
-export const validateCombinationsIds = function (combinationsIds) {
-  combinationsIds.filter(isUserId).forEach(validateIdsPerType)
+// Validate combination identifiers.
+export const validateCombinationsIds = function (
+  combinationsIds,
+  nonCombinationIds,
+) {
+  const allIds = [...combinationsIds, ...nonCombinationIds]
+  allIds.filter(isUserId).forEach(validateIdsPerType)
   combinationsIds.forEach(validateDuplicateId)
 }
 
@@ -10,7 +14,7 @@ const isUserId = function ({ type }) {
   return USER_ID_TYPES.has(type)
 }
 
-const USER_ID_TYPES = new Set(['task', 'system'])
+const USER_ID_TYPES = new Set(['task', 'system', 'input'])
 
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.
@@ -51,6 +55,8 @@ const USER_ID_REGEXP = /^\w[\w-]*$/u
 // across dimensions. This allows specifying identifiers without specifying
 // their dimension type (task, systems, runners, variations) in many
 // places including: `config.titles`, `config.include|exclude`, reporting.
+// Non-combination identifiers are not checked for duplicates since they are
+// not used for selection, reporting, `config.titles`, etc.
 const validateDuplicateId = function ({ type, id }, index, allIds) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 

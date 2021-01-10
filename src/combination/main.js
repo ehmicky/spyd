@@ -32,10 +32,12 @@ export const getCombinations = async function ({
     inputs: inputsA,
     systemId,
   })
-  const { combinations: combinationsA, combinationsIds } = getCombinationsIds(
-    combinations,
-  )
-  validateCombinationsIds(combinationsIds)
+  const {
+    combinations: combinationsA,
+    combinationsIds,
+    nonCombinationIds,
+  } = getCombinationsIds(combinations, inputsA)
+  validateCombinationsIds(combinationsIds, nonCombinationIds)
 
   const combinationsB = selectCombinations(combinationsA, combinationsIds, {
     include,
