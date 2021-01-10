@@ -1,8 +1,9 @@
 import { UserError } from '../error/main.js'
 
 import { matchAllSelectors } from './match.js'
-import { parseAllSelectors } from './parse.js'
-import { validateSelectorsIds } from './validate.js'
+import { parseSelector } from './parse.js'
+import { getPrefix } from './prefix.js'
+import { tokenizeSelector } from './tokenize.js'
 
 // Select combinations according to the `include` and `exclude` configuration
 // properties.
@@ -21,8 +22,7 @@ export const selectCombinations = function (
   combinationsIds,
   { include, exclude },
 ) {
-  const allSelectors = parseAllSelectors(include, exclude)
-  validateSelectorsIds(allSelectors, combinationsIds)
+  const allSelectors = parseAllSelectors({ include, exclude, combinationsIds })
 
   const combinationsA = combinations.filter((combination) =>
     matchAllSelectors(combination, allSelectors),
@@ -35,4 +35,22 @@ export const selectCombinations = function (
   }
 
   return combinationsA
+}
+
+// Parse `include` and `exclude` user-friendly format (array of strings) to a
+// code-friendlier format (objects)
+// This also validates the syntax.
+const parseAllSelectors = function ({ include, exclude, combinationsIds }) {
+  return [
+    parseSelectors(include, 'include', combinationsIds),
+    parseSelectors(exclude, 'exclude', combinationsIds),
+  ]
+}
+
+const parseSelectors = function (selectors, propName, combinationsIds) {
+  const prefix = getPrefix(selectors, propName)
+  const selectorsA = selectors
+    .map((selector) => tokenizeSelector(selector, prefix))
+    .map((tokens) => parseSelector(tokens, combinationsIds, prefix))
+  return { selectors: selectorsA, propName }
 }

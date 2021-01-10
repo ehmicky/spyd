@@ -10,25 +10,33 @@ export const SELECT_CONFIG = {
     array: true,
     requiresArg: true,
     describe: `Select only specific combinations.
-The value is a list of identifiers to select.
+The value is a space-separated list of identifiers to select.
 Those can be the identifiers of any task, runner, system or variation.
 
-Identifiers from the same category must be separated by commas.
-The others must be separated by spaces.
-For example:
-  --include="taskOne,taskTwo runnerOne,runnerThree"
+When specifying the same category, "or" is used:
+  --include="taskOne taskTwo"
 selects any combinations from:
-  (taskOne or taskTwo) and (runnerOne or runnerThree)
+  taskOne or taskTwo
 
-It is possible to invert a whole category using an exclamation mark.
-For example:
-  --include="taskOne,taskTwo !runnerOne,runnerThree"
+When specifying different categories, "and" is used instead:
+  --include="taskOne runnerOne"
 selects any combinations from:
-  (taskOne or taskTwo) and not (runnerOne or runnerThree)
+  taskOne and runnerOne
 
-It is possible to set alternatives by specifying the configuration property
-several times.
-For example:
+Both can be combined:
+  --include="taskOne taskTwo runnerOne"
+selects any combinations from:
+  (taskOne or taskTwo) and runnerOne
+
+Exclamation marks can be used to exclude specific identifiers ("not"):
+  --include='!taskOne !taskTwo'
+selects any combinations from:
+  not (taskOne or taskTwo)
+Note: you need to might to use single quotes with your shell.
+
+Alternatives ("or") can be set by specifying the configuration property several
+times. Unless alternatives described above, those can be entire selections,
+including between different categories:
   --include=taskOne --include=runnerOne
 selects any combinations from:
   either taskOne or runnerOne
