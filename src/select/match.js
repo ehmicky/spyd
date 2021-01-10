@@ -1,18 +1,18 @@
 // Select combinations according to the `include`, `exclude`, `limit`
 // configuration properties
-export const matchSelectors = function ({ ids }, { selectors, propName }) {
+export const matchSelectors = function (combination, { selectors, propName }) {
   if (selectors.length === 0) {
     return true
   }
 
-  const matches = selectors.some(({ intersect }) =>
-    matchSelector(ids, intersect),
+  const matches = selectors.some((selector) =>
+    matchSelector(combination, selector),
   )
   return propName === 'exclude' ? !matches : matches
 }
 
 // Check if a selector matches the ids of a given combination
-const matchSelector = function (ids, intersect) {
+const matchSelector = function ({ ids }, { intersect }) {
   return intersect.every(({ ids: groupIds, inverse }) =>
     matchGroup(ids, groupIds, inverse),
   )
