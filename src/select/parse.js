@@ -21,7 +21,7 @@ export const parseSelectors = function (
   const selectors = rawSelectors
     .map((rawSelector) => tokenizeSelector(rawSelector, prefix))
     .map((tokens) => parseSelector(tokens, combinationsIds, prefix))
-  return { selectors, propName }
+  return { selectors, prefix, propName }
 }
 
 const parseSelector = function (tokens, combinationsIds, prefix) {

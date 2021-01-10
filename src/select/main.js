@@ -20,17 +20,34 @@ export const selectCombinations = function (
   combinationsIds,
   { include, exclude },
 ) {
-  const includeSelectors = parseSelectors(include, 'include', combinationsIds)
-  const excludeSelectors = parseSelectors(exclude, 'exclude', combinationsIds)
+  const combinationsA = applySelection(include, 'include', {
+    combinations,
+    combinationsIds,
+  })
+  const combinationsB = applySelection(exclude, 'exclude', {
+    combinations: combinationsA,
+    combinationsIds,
+  })
+  return combinationsB
+}
 
-  const combinationsA = combinations
-    .filter((combination) => matchSelectors(combination, includeSelectors))
-    .filter((combination) => matchSelectors(combination, excludeSelectors))
+const applySelection = function (
+  rawSelectors,
+  propName,
+  { combinations, combinationsIds },
+) {
+  const includeSelectors = parseSelectors(
+    rawSelectors,
+    propName,
+    combinationsIds,
+  )
+  const combinationsA = combinations.filter((combination) =>
+    matchSelectors(combination, includeSelectors),
+  )
 
-  // TODO: add `original`
   if (combinationsA.length === 0) {
     throw new UserError(
-      'No combinations match the "include" and "exclude" properties.',
+      `${includeSelectors.prefix}No combinations match the selection.`,
     )
   }
 
