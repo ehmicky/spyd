@@ -42,6 +42,6 @@ const getPartialResult = async function ({
     progressState,
     onProgressError,
   })
-  const partialResult = addResultInfo(combinationsA, { config })
+  const partialResult = addResultInfo(combinationsA, config)
   return partialResult
 }
