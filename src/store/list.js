@@ -1,11 +1,11 @@
-import sortOn from 'sort-on'
-
 import { UserError } from '../error/main.js'
+
+import { sortResults } from './sort.js'
 
 // Call `store.list()`
 export const listStore = async function ({ store }) {
   const partialResults = await callList(store)
-  const partialResultsA = sortOn(partialResults, 'timestamp')
+  const partialResultsA = sortResults(partialResults)
   return partialResultsA
 }
 
