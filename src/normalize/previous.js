@@ -14,10 +14,14 @@ import { getDiffIndex, getDiff } from './diff.js'
 //   - Also, the "previous" result might change depending on selection or after
 //     results removals
 export const addPrevious = function (results, { limits, diff }) {
+  const diffIndex = getDiffIndex(results, diff)
   return results
     .map(addCombinationKeys)
     .map((result, index, resultsA) =>
-      addResultPrevious(result, resultsA.slice(0, index - 1), { limits, diff }),
+      addResultPrevious(result, resultsA.slice(0, index - 1), {
+        limits,
+        diffIndex,
+      }),
     )
 }
 
@@ -35,9 +39,8 @@ const addCombinationKey = function (combination) {
 const addResultPrevious = function (
   { combinations, ...result },
   previous,
-  { limits, diff },
+  { limits, diffIndex },
 ) {
-  const diffIndex = getDiffIndex(previous, diff)
   const combinationsA = addPreviousCombinations({
     combinations,
     previous,
