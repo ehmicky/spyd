@@ -13,7 +13,7 @@ export const measureSample = async function (combination) {
   const {
     newCombination,
     returnValue,
-    measureDurationLast,
+    measureDuration,
   } = await measureNewSample(combination, params)
 
   if (combinationHasErrored(newCombination)) {
@@ -21,7 +21,7 @@ export const measureSample = async function (combination) {
   }
 
   const newProps = handleReturnValue(newCombination, returnValue)
-  return { ...newCombination, ...newProps, measureDurationLast }
+  return { ...newCombination, ...newProps, measureDuration }
 }
 
 // `measureDuration` is how long it takes to get a single sample's results.
@@ -38,6 +38,6 @@ const measureNewSample = async function (combination, params) {
     combination,
     params,
   )
-  const measureDurationLast = now() - measureDurationStart
-  return { newCombination, returnValue, measureDurationLast }
+  const measureDuration = now() - measureDurationStart
+  return { newCombination, returnValue, measureDuration }
 }

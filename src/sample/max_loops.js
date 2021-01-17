@@ -20,13 +20,13 @@
 //     small percentage of the overall measures.
 // We purposely avoid using `duration` so that increasing `duration`
 // does not change measures.
-export const getMaxLoops = function (measureDurationLast, loopsLast) {
+export const getMaxLoops = function (measureDuration, loopsLast) {
   // First sample of the benchmark
-  if (measureDurationLast === 0) {
+  if (measureDuration === 0) {
     return 1
   }
 
-  const measureDurationPerLoop = measureDurationLast / loopsLast
+  const measureDurationPerLoop = measureDuration / loopsLast
   const targetMaxLoops = Math.round(TARGET_DURATION / measureDurationPerLoop)
   return Math.max(targetMaxLoops, 1)
 }
