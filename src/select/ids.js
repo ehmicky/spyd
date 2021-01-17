@@ -20,7 +20,7 @@ const USER_ID_TYPES = new Set(['task', 'system', 'input'])
 //  - are checked for duplicates
 // As opposed to non-combination identifiers: inputs.
 export const isSameCategory = function (combinationA, combinationB) {
-  return COMBINATION_IDS.every(
+  return COMBINATION_CATEGORIES.every(
     ({ idName }) => combinationA[idName] === combinationB[idName],
   )
 }
@@ -37,13 +37,31 @@ export const getCombinationIds = function (combination) {
 }
 
 const getIdInfos = function (combination) {
-  return COMBINATION_IDS.map(getIdInfo.bind(undefined, combination))
+  return COMBINATION_CATEGORIES.map(getIdInfo.bind(undefined, combination))
 }
 
-const COMBINATION_IDS = [
-  { type: 'task', idName: 'taskId' },
-  { type: 'system', idName: 'systemId' },
-  { type: 'runner', idName: 'runnerId' },
+export const COMBINATION_CATEGORIES = [
+  {
+    type: 'task',
+    name: 'tasks',
+    idName: 'taskId',
+    titleName: 'taskTitle',
+    rankName: 'taskRank',
+  },
+  {
+    type: 'runner',
+    name: 'runners',
+    idName: 'runnerId',
+    titleName: 'runnerTitle',
+    rankName: 'runnerRank',
+  },
+  {
+    type: 'system',
+    name: 'systems',
+    idName: 'systemId',
+    titleName: 'systemTitle',
+    rankName: 'systemRank',
+  },
 ]
 
 const getIdInfo = function (combination, { type, idName }) {
