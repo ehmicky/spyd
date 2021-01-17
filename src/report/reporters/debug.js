@@ -1,11 +1,6 @@
 import stringWidth from 'string-width'
 
-import {
-  titleColor,
-  separatorColor,
-  errorColor,
-  fieldColor,
-} from '../utils/colors.js'
+import { titleColor, separatorColor, fieldColor } from '../utils/colors.js'
 import { getFooter } from '../utils/footer/main.js'
 import { joinSections } from '../utils/join.js'
 import { padStart } from '../utils/padding.js'
