@@ -13,22 +13,22 @@ export const validateCombinationsIds = function (combinations, inputs) {
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.
 // Only for user-defined identifiers, not plugin-defined.
-const validateCategoryIds = function ({ type, id }) {
+const validateCategoryIds = function ({ category, id }) {
   if (id.trim() === '') {
     throw new UserError(
-      `Invalid ${type} "${id}": the identifier must not be empty.`,
+      `Invalid ${category} "${id}": the identifier must not be empty.`,
     )
   }
 
   if (id.startsWith(USER_ID_INVALID_START)) {
     throw new UserError(
-      `Invalid ${type} "${id}": the identifier must not start with a dash.`,
+      `Invalid ${category} "${id}": the identifier must not start with a dash.`,
     )
   }
 
   if (!USER_ID_REGEXP.test(id)) {
     throw new UserError(
-      `Invalid ${type} "${id}": the identifier must contain only letters, digits, - or _`,
+      `Invalid ${category} "${id}": the identifier must contain only letters, digits, - or _`,
     )
   }
 }
@@ -52,11 +52,11 @@ const USER_ID_REGEXP = /^\w[\w-]*$/u
 // `config.titles`, `config.include|exclude`, reporting.
 // Non-combination identifiers are not checked for duplicates since they are
 // not used for selection, reporting, `config.titles`, etc.
-const validateDuplicateId = function ({ type, id }, index, allIds) {
+const validateDuplicateId = function ({ category, id }, index, allIds) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
   if (duplicateId !== undefined) {
-    throw new UserError(`The identifier "${id}" must not be used both as ${type} and ${duplicateId.type}.
+    throw new UserError(`The identifier "${id}" must not be used both as ${category} and ${duplicateId.category}.
 Please rename one of them.`)
   }
 }

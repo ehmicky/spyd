@@ -8,11 +8,11 @@ export const getUserIds = function (combinations, inputs) {
   return userIds
 }
 
-const isUserId = function ({ type }) {
-  return USER_ID_TYPES.has(type)
+const isUserId = function ({ category }) {
+  return USER_ID_CATEGORIES.has(category)
 }
 
-const USER_ID_TYPES = new Set(['task', 'system', 'input'])
+const USER_ID_CATEGORIES = new Set(['task', 'system', 'input'])
 
 // Combination identifiers create a new combination category:
 // tasks, systems, variations, runners.
@@ -29,7 +29,7 @@ export const isSameCategory = function (combinationA, combinationB) {
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
-  return combinations.flatMap(getIdInfos).filter(isNotSameTypeDuplicate)
+  return combinations.flatMap(getIdInfos).filter(isNotSameCatDuplicate)
 }
 
 // Same but for a single combination
@@ -43,21 +43,21 @@ const getIdInfos = function (combination) {
 
 export const COMBINATION_CATEGORIES = [
   {
-    type: 'task',
+    category: 'task',
     propName: 'tasks',
     idName: 'taskId',
     titleName: 'taskTitle',
     rankName: 'taskRank',
   },
   {
-    type: 'runner',
+    category: 'runner',
     propName: 'runners',
     idName: 'runnerId',
     titleName: 'runnerTitle',
     rankName: 'runnerRank',
   },
   {
-    type: 'system',
+    category: 'system',
     propName: 'systems',
     idName: 'systemId',
     titleName: 'systemTitle',
@@ -65,22 +65,22 @@ export const COMBINATION_CATEGORIES = [
   },
 ]
 
-const getIdInfo = function (combination, { type, idName }) {
+const getIdInfo = function (combination, { category, idName }) {
   const id = combination[idName]
-  return { type, id }
+  return { category, id }
 }
 
 const getId = function ({ id }) {
   return id
 }
 
-// Remove duplicate ids with the same type, since this happens due to the
+// Remove duplicate ids with the same category, since this happens due to the
 // cartesian product.
-// Duplicate ids with a different type are validated later.
-const isNotSameTypeDuplicate = function ({ type, id }, index, idInfos) {
+// Duplicate ids with a different category are validated later.
+const isNotSameCatDuplicate = function ({ category, id }, index, idInfos) {
   return !idInfos
     .slice(index + 1)
-    .some((idInfo) => idInfo.type === type && idInfo.id === id)
+    .some((idInfo) => idInfo.category === category && idInfo.id === id)
 }
 
 // Retrieve non-combination identifiers.
@@ -90,8 +90,8 @@ const getNonCombinationsIds = function (inputs) {
   )
 }
 
-const getNonCombinationIds = function (inputs, { type, getIds }) {
-  return getIds(inputs).map((id) => ({ type, id }))
+const getNonCombinationIds = function (inputs, { category, getIds }) {
+  return getIds(inputs).map((id) => ({ category, id }))
 }
 
 const getInputIds = function (inputs) {
@@ -102,4 +102,4 @@ const getInputId = function ({ inputId }) {
   return inputId
 }
 
-const NON_COMBINATION_IDS = [{ type: 'input', getIds: getInputIds }]
+const NON_COMBINATION_IDS = [{ category: 'input', getIds: getInputIds }]

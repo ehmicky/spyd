@@ -26,10 +26,10 @@ export const parseSelector = function (rawSelector, propName, combinations) {
 
   const combinationsIds = getCombinationsIds(combinations)
   const tokensA = tokens.map(({ id, inverse }) =>
-    addTokenType({ id, inverse, combinationsIds }),
+    addTokenCategory({ id, inverse, combinationsIds }),
   )
-  const types = getSelectorTypes(tokensA)
-  const intersect = types.map((type) => getGroup(tokensA, type))
+  const categories = getSelectorCategories(tokensA)
+  const intersect = categories.map((category) => getGroup(tokensA, category))
   return { intersect }
 }
 
@@ -39,20 +39,20 @@ export const parseSelector = function (rawSelector, propName, combinations) {
 //  - Not be recent, with different/older ids
 // Also the `ids` might come from a shared configuration which might not
 // perfectly match the current benchmark's ids.
-// Unknown typed `ids` are grouped together and will never match.
-const addTokenType = function ({ id, inverse, combinationsIds }) {
+// `ids` with unknown categories are grouped together and will never match.
+const addTokenCategory = function ({ id, inverse, combinationsIds }) {
   const idInfoA = combinationsIds.find((idInfo) => idInfo.id === id)
-  const type = idInfoA === undefined ? 'unknown' : idInfoA.type
-  return { id, inverse, type }
+  const category = idInfoA === undefined ? 'unknown' : idInfoA.category
+  return { id, inverse, category }
 }
 
-const getSelectorTypes = function (tokens) {
-  const types = tokens.map(getType)
-  return [...new Set(types)]
+const getSelectorCategories = function (tokens) {
+  const categories = tokens.map(getCategory)
+  return [...new Set(categories)]
 }
 
-const getType = function ({ type }) {
-  return type
+const getCategory = function ({ category }) {
+  return category
 }
 
 // Users invert individual identifiers because it simplifies the syntax.
@@ -61,8 +61,8 @@ const getType = function ({ type }) {
 // There is no strong reason why a user would want to mix invertion and
 // non-invertion for a specific category. However, we silently support it by
 // trying to reconcile both.
-const getGroup = function (tokens, type) {
-  const { normalIds, invertedIds } = getIdGroups(tokens, type)
+const getGroup = function (tokens, category) {
+  const { normalIds, invertedIds } = getIdGroups(tokens, category)
 
   if (normalIds.length !== 0) {
     return { ids: normalIds, inverse: false }
@@ -75,8 +75,8 @@ const getGroup = function (tokens, type) {
   return { ids: invertedIds, inverse: true }
 }
 
-const getIdGroups = function (tokens, type) {
-  const tokensA = tokens.filter((token) => token.type === type)
+const getIdGroups = function (tokens, category) {
+  const tokensA = tokens.filter((token) => token.category === category)
   const normalIds = tokensA.filter((token) => !hasInverse(token)).map(getId)
   const invertedIds = tokensA.filter(hasInverse).map(getId)
   const commonIds = new Set(normalIds.filter((id) => invertedIds.includes(id)))
