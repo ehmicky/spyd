@@ -1,4 +1,5 @@
 import { isSameCategory } from '../combination/ids.js'
+import { findByDelta } from '../delta/main.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
@@ -16,8 +17,9 @@ import { isSameCategory } from '../combination/ids.js'
 export const addCombinationsDiff = function (
   { combinations, ...result },
   results,
+  compare,
 ) {
-  const comparedIndex = getComparedIndex(results)
+  const comparedIndex = getComparedIndex(results, compare)
   const previousResults = results.slice(comparedIndex)
   const combinationsA = combinations.map((combination) =>
     addCombinationDiff(combination, previousResults),
@@ -25,8 +27,8 @@ export const addCombinationsDiff = function (
   return { ...result, combinations: combinationsA }
 }
 
-const getComparedIndex = function () {
-  return 0
+const getComparedIndex = function (results, compare) {
+  return findByDelta(results, compare)
 }
 
 const addCombinationDiff = function (combination, previousResults) {

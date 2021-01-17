@@ -41,7 +41,7 @@ export const show = async function (configFlags) {
 
   try {
     const results = await listStore(configB)
-    const result = getFromStore(results, delta)
+    const result = getFromStore(results, delta, configB)
     await report(result, configB)
     return result
   } finally {
@@ -56,7 +56,7 @@ export const remove = async function (configFlags) {
 
   try {
     const results = await listStore(configB)
-    const result = getFromStore(results, delta)
+    const result = getFromStore(results, delta, configB)
     await removeFromStore(result, configB)
   } finally {
     await endStore(configA)

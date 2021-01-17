@@ -6,23 +6,19 @@ import { mergeResults } from '../normalize/merge.js'
 export const addToStore = async function ({
   results,
   result,
-  config,
+  config: { save, store, compare },
   stopped,
 }) {
-  await saveResult({ result, config, stopped })
+  await saveResult({ result, save, store, stopped })
 
   const resultsA = [result, ...results]
-  const resultA = mergeResults(resultsA)
+  const resultA = mergeResults(resultsA, compare)
   return resultA
 }
 
 // Save results so they can be compared or shown later.
 // We do not save stopped benchmarks.
-const saveResult = async function ({
-  result,
-  config: { save, store },
-  stopped,
-}) {
+const saveResult = async function ({ result, save, store, stopped }) {
   if (!save || stopped) {
     return
   }
