@@ -6,7 +6,6 @@ export const STAT_TYPES = [
   { name: 'min', type: 'duration' },
   { name: 'max', type: 'duration' },
   { name: 'diff', type: 'relativePercentage' },
-  { name: 'limit', type: 'duration' },
   { name: 'deviation', type: 'absolutePercentage' },
   { name: 'times', type: 'count' },
   { name: 'loops', type: 'count' },

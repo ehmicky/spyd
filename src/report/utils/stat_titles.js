@@ -5,7 +5,6 @@ export const STAT_TITLES = {
   min: 'Min',
   max: 'Max',
   diff: 'Difference',
-  limit: 'Limit',
   deviation: 'Deviation',
   times: 'Times',
   loops: 'Loops count',

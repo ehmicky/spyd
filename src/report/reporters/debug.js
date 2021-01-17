@@ -79,7 +79,6 @@ const STATS = [
   'min',
   'max',
   'diff',
-  'limit',
   'deviation',
   'times',
   'loops',
