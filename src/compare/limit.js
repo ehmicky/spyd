@@ -53,19 +53,20 @@ const checkCombinationLimits = function ({
     return
   }
 
-  const { percentage } = limit
+  const { threshold } = limit
 
-  if (diff <= percentage) {
+  if (diff <= threshold) {
     return
   }
 
-  return getLimitError(name, diff, percentage)
+  return getLimitError(name, diff, threshold)
 }
 
-const getLimitError = function (name, diff, percentage) {
+const getLimitError = function (name, diff, threshold) {
   const nameA = stripAnsi(name)
+  const thresholdStr = threshold * PERCENTAGE_RATIO
   const diffStr = serializeDiff(diff)
-  return `${nameA} should be at most ${percentage}% slower but is ${diffStr}% slower`
+  return `${nameA} should be at most ${thresholdStr}% slower but is ${diffStr}% slower`
 }
 
 const serializeDiff = function (diff) {

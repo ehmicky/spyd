@@ -2,48 +2,49 @@ import { UserError } from '../error/main.js'
 import { parseSelector, getCatchAllSelector } from '../select/parse.js'
 
 // Parse the `limit` configuration property.
-// It is an array of strings "percentage selector" where "percentage" is
+// It is an array of strings "threshold selector" where "threshold" is
 // something like "15%" and "selector" follows the same format as each
 // individual string in the `include` configuration property.
 export const parseLimits = function (limit, combinations) {
   // eslint-disable-next-line fp/no-mutating-methods
   return limit
     .map((singleLimit) => parseLimit(singleLimit, combinations))
-    .sort(sortByPercentage)
+    .sort(sortByThreshold)
 }
 
 const parseLimit = function (singleLimit, combinations) {
   const [rawPercentage, ...rawGroups] = singleLimit
     .trim()
     .split(PERCENT_SEPARATOR_REGEXP)
-  const percentage = getPercentage(rawPercentage)
+  const threshold = parsePercentage(rawPercentage)
   const selector = parseLimitSelector(rawGroups, combinations)
-  return { percentage, selector }
+  return { threshold, selector }
 }
 
 const PERCENT_SEPARATOR_REGEXP = /\s+/u
 
-const getPercentage = function (rawPercentage) {
-  const percentageStr = rawPercentage.replace(PERCENTAGE_REGEXP, '')
+const parsePercentage = function (rawPercentage) {
+  const percentage = rawPercentage.replace(PERCENTAGE_REGEXP, '')
 
-  if (rawPercentage === percentageStr) {
+  if (rawPercentage === percentage) {
     throw new UserError(
       `The 'limit' configuration property must start with a percentage ending with %: ${rawPercentage}`,
     )
   }
 
-  const percentage = Number(percentageStr)
+  const threshold = Number(percentage)
 
-  if (!Number.isInteger(percentage) || percentage < 0) {
+  if (!Number.isInteger(threshold) || threshold < 0) {
     throw new UserError(
       `The 'limit' configuration property's percentage must be a positive integer: ${rawPercentage}`,
     )
   }
 
-  return percentage
+  return threshold / PERCENTAGE_RATIO
 }
 
 const PERCENTAGE_REGEXP = /%$/u
+const PERCENTAGE_RATIO = 1e2
 
 const parseLimitSelector = function (rawGroups, combinations) {
   if (rawGroups.length === 0) {
@@ -55,10 +56,10 @@ const parseLimitSelector = function (rawGroups, combinations) {
   return selector
 }
 
-// Higher percentages are checked for matches first
-const sortByPercentage = function (
-  { percentage: percentageA },
-  { percentage: percentageB },
+// Higher threshold are checked for matches first
+const sortByThreshold = function (
+  { threshold: thresholdA },
+  { threshold: thresholdB },
 ) {
-  return percentageB - percentageA
+  return thresholdB - thresholdA
 }
