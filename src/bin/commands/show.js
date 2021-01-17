@@ -18,11 +18,12 @@ export const SHOW_COMMAND = {
 
 Show a previous result.
 
-The "delta" argument can be:
-  - nothing: show the last result
-  - integer: show the {integer}-th previous result
-  - a date|time: show the last result before that date|time.
-    Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.`,
+The "delta" argument targets the result. It can be:
+  - empty: last result
+  - an integer: {integer}-th previous result
+  - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
+  - a result id
+  - a git commit`,
 
   examples: [
     ['$0 show', 'Show the last result'],
@@ -35,5 +36,10 @@ The "delta" argument can be:
       '$0 show 2018-02-01T15:00:00Z',
       'Show the last result before the 1st of February 2018 at 15:00 UTC',
     ],
+    [
+      '$0 show 4209c7d7-721d-4b5b-8465-4e038fa2890c',
+      'Show the result with this id',
+    ],
+    ['$0 show 4221b22a', 'Show the last result with this git commit'],
   ],
 }
