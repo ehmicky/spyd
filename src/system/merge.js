@@ -1,24 +1,31 @@
 import omit from 'omit.js'
 
-// We join two collection of similar `systems`:
-//  - after joining with previous results, to retrieve their configuration
-//    properties and systems
-//  - after merging combinations, to retrieve their speed and set
-//    combination.rank
-// The `system` configuration property can be used to specify different
-// dimensions. This is meant for any environment differences, outside of spyd:
-// hardware, OS, git branch, environment variables, etc.
-export const joinSystems = function (systems, systemColls) {
-  const systemsA = systemColls.map((systemColl) =>
-    mergeSystem(systems, systemColl),
-  )
-  const systemsB = addSharedSystem(systemsA)
-  return systemsB
+// When merging results, we report all `systems`. This concatenates them.
+export const normalizeResultSystems = function ({ system, ...result }) {
+  return { ...result, systems: [system] }
 }
 
-const mergeSystem = function (systems, systemColl) {
-  const system = systems.find((systemA) => systemA.id === systemColl.id)
-  return { ...systemColl, ...system }
+// Systems with the same id are merged, with the most recent result having
+// priority.
+// `system` objects should not contain `undefined`, so we can directly merge.
+// `git` and `machine` properties should not be deeply merged since their
+// properties relate to each other. However, `versions` should.
+export const mergeSystems = function (systems, { id, ...newSystem }) {
+  const systemA = systems.find((system) => system.id === id)
+
+  if (systemA === undefined) {
+    return [...systems, { ...newSystem, id }]
+  }
+
+  const systemsA = systems.filter((systemB) => systemB.id !== id)
+  return [
+    ...systemsA,
+    {
+      ...newSystem,
+      ...systemA,
+      versions: { ...newSystem.versions, ...systemA.versions },
+    },
+  ]
 }
 
 // The first `system` is a collection of all properties shared by other

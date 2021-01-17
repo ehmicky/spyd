@@ -1,6 +1,7 @@
 import { addCombinationsDiff } from '../compare/diff.js'
 import { groupResultCombinations } from '../normalize/group.js'
 import { isSameCategory } from '../select/ids.js'
+import { normalizeResultSystems, mergeSystems } from '../system/merge.js'
 
 // Merge previous results to the last result.
 // We add `result.previous` so that previous results can be reported. This array
@@ -8,7 +9,7 @@ import { isSameCategory } from '../select/ids.js'
 // added during merge (`previous` and `combinations[*].stats.diff`). This allows
 // reporters to re-use code when displaying them.
 export const mergeResults = function ([lastResult, ...previous]) {
-  const result = previous.reduce(mergePair, lastResult)
+  const result = mergePairs(lastResult, previous)
   const resultA = addCombinationsDiff(result, previous)
   const resultB = groupResultCombinations(resultA)
   return { ...resultB, previous }
@@ -38,9 +39,14 @@ export const mergeResults = function ([lastResult, ...previous]) {
 //       user intends to stop using each of the previously used systems.
 //  - Instead, we just use any previous combinations matching the current
 //    `include`/`exclude` properties. This is explicit and predictable.
+const mergePairs = function (lastResult, previous) {
+  const lastResultA = normalizeResultSystems(lastResult)
+  return previous.reduce(mergePair, lastResultA)
+}
+
 const mergePair = function (
   { combinations, ...result },
-  { combinations: previousCombinations },
+  { combinations: previousCombinations, ...previousResult },
 ) {
   const newCombinations = getNewCombinations(previousCombinations, combinations)
 
@@ -48,8 +54,23 @@ const mergePair = function (
     return { ...result, combinations }
   }
 
+  return mergePreviousResult(result, {
+    ...previousResult,
+    combinations: newCombinations,
+  })
+}
+
+// When merging two results, we keep most of the properties of the latest
+// result. However, we still merge `system` so several systems are reported.
+// This allows comparing different systems.
+const mergePreviousResult = function (
+  { combinations, systems, ...result },
+  { combinations: newCombinations, system: previousSystem },
+) {
   const combinationsA = [...combinations, ...newCombinations]
-  return { ...result, combinations: combinationsA }
+  const systemsA = mergeSystems(systems, previousSystem)
+  const resultA = { ...result, combinations: combinationsA, systems: systemsA }
+  return resultA
 }
 
 // For each possible combination, if the last result already has it, we keep it.

@@ -1,7 +1,5 @@
 import sortOn from 'sort-on'
 
-import { joinSystems } from '../system/join.js'
-
 import { addCollections } from './collections.js'
 
 // Add `result.*` properties based on grouping different combinations
@@ -14,25 +12,20 @@ export const groupCombinations = function (results) {
   return results.map(groupResultCombinations)
 }
 
-export const groupResultCombinations = function ({
-  combinations,
-  systems,
-  ...result
-}) {
+export const groupResultCombinations = function ({ combinations, ...result }) {
   const {
     tasks,
     runners,
     systems: systemColls,
     combinations: combinationsA,
   } = addCollections(combinations)
-  const systemsA = joinSystems(systems, systemColls)
   const combinationsB = sortCombinations(combinationsA)
 
   return {
     ...result,
     tasks,
     runners,
-    systems: systemsA,
+    systems: systemColls,
     combinations: combinationsB,
   }
 }

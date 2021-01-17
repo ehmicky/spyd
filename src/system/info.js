@@ -6,7 +6,11 @@ import osName from 'os-name'
 
 import { groupBy } from '../utils/group.js'
 
-// Retrieve system information
+// Users can specify a `system` configuration property.
+// This is a combination category meant to compare any environment differences,
+// outside of spyd: hardware, OS, git branch, environment variables, etc.
+// All tht information are automatically computed.
+// The `versions` are computed by runners.
 export const getSystem = function ({
   combinations,
   combinations: [{ systemId, systemTitle }],
