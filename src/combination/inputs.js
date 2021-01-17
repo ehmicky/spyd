@@ -18,3 +18,11 @@ export const getInputIds = function (inputs) {
 const getInputId = function ({ inputId }) {
   return inputId
 }
+
+export const getInputsObj = function (inputs) {
+  return Object.assign({}, ...inputs.map(getInputPair))
+}
+
+const getInputPair = function ({ inputId, inputValue }) {
+  return { [inputId]: inputValue }
+}

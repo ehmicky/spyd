@@ -1,3 +1,4 @@
+import { getInputsObj } from '../combination/inputs.js'
 import { getServerUrl } from '../server/url.js'
 
 import { spawnProcess } from './spawn.js'
@@ -76,12 +77,8 @@ const getSpawnParams = function ({
   origin,
 }) {
   const serverUrl = getServerUrl(origin, id)
-  const inputsA = Object.assign({}, ...inputs.map(getInput))
+  const inputsA = getInputsObj(inputs)
   return { serverUrl, runnerConfig, taskPath, inputs: inputsA }
-}
-
-const getInput = function ({ inputId, inputValue }) {
-  return { [inputId]: inputValue }
 }
 
 // Terminate each runner's process at the end of the benchmark.
