@@ -21,5 +21,5 @@ export const measure = async function (
     maxLoops,
     measures,
   })
-  return { mainMeasures: measures }
+  return { measures }
 }

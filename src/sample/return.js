@@ -21,9 +21,9 @@ export const handleReturnValue = function (
     measureDurationLast,
     measureDurations,
   },
-  { mainMeasures },
+  { measures: sampleMeasures },
 ) {
-  if (mainMeasures === undefined) {
+  if (sampleMeasures === undefined) {
     return {}
   }
 
@@ -45,7 +45,7 @@ export const handleReturnValue = function (
   })
 
   const samplesB = samplesA + 1
-  const newLoops = mainMeasures.length
+  const newLoops = sampleMeasures.length
   const loopsB = loopsA + newLoops
   const timesB = timesA + newLoops * repeat
 
@@ -55,7 +55,7 @@ export const handleReturnValue = function (
     newLoops,
   )
 
-  const bufferedMeasuresB = [...bufferedMeasuresA, { mainMeasures, repeat }]
+  const bufferedMeasuresB = [...bufferedMeasuresA, { sampleMeasures, repeat }]
   const [
     measuresB,
     bufferedMeasuresC,
