@@ -12,7 +12,8 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - Those should not use any `repeat` loop, since that is meant to remove the
 //    time to take timestamps, not the time to spawn processes.
 //  - Also, `measureCost` would be too large, creating very large `repeat`.
-//  - Those use `runner.repeat: false`, making them not use any `repeat` loop.
+//  - Those return an empty array for `emptyMeasures`, making them not use any
+//    `repeat` loop.
 // Iterating the `repeat` loop adds a small duration, due to the time to
 // increment the loop counter (e.g. 1 or 2 CPU cycles)
 //  - We do not subtract that duration because it is variable, so would lower
@@ -53,20 +54,17 @@ export const getMinLoopDuration = function (emptyMeasures, runnerRepeats) {
     return 0
   }
 
-  const measureCost = getMeasureCost(emptyMeasures)
-  const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
-  const resolution = getResolution(emptyMeasures)
-  const minResolutionDuration = resolution * MIN_RESOLUTION_PRECISION
-  return Math.max(minResolutionDuration, minMeasureCostDuration)
+  const minMeasureCost = getMinMeasureCost(emptyMeasures)
+  const minResolution = getMinResolution(emptyMeasures)
+  return Math.max(minResolution, minMeasureCost)
 }
 
-// This function estimates `measureCost` by making runners measure empty tasks.
+// This function estimates `measureCost` by making runners do `emptyMeasures`.
 // That cost must be computed separately for each combination since they might
-// vary depending on the task, input or system. For example, tasks with more
-// iterations per sample have more time to optimize `measureCost`, which is
-// usually faster then.
-const getMeasureCost = function (emptyMeasures) {
-  return getUnsortedMedian(emptyMeasures)
+// vary depending on the task, system or runnerConfig.
+const getMinMeasureCost = function (emptyMeasures) {
+  const measureCost = getUnsortedMedian(emptyMeasures)
+  return measureCost * MIN_MEASURE_COST
 }
 
 // How many times slower each repeat loop iteration must be compared to
@@ -87,8 +85,9 @@ const MIN_MEASURE_COST = 1e2
 // For example, if a runner can only measure things with 1ms precision, every
 // nanoseconds measures will be a multiple of 1e6.
 // We estimate this using the `emptyMeasures`.
-const getResolution = function (emptyMeasures) {
-  return timeResolution(emptyMeasures)
+const getMinResolution = function (emptyMeasures) {
+  const resolution = timeResolution(emptyMeasures)
+  return resolution * MIN_RESOLUTION_PRECISION
 }
 
 // How many times slower the repeated median must be compared to the resolution.
