@@ -1,4 +1,5 @@
 import { performBenchmark } from './bench.js'
+import { checkLimits } from './compare/limit.js'
 import { getConfig } from './config/main.js'
 import { performExec } from './exec.js'
 import { report } from './report/main.js'
@@ -7,6 +8,7 @@ import { endStore } from './store/end.js'
 import { getFromStore } from './store/get.js'
 import { listStore } from './store/list.js'
 import { removeFromStore } from './store/remove.js'
+// eslint-disable-next-line import/max-dependencies
 import { startStore } from './store/start.js'
 
 // Measure code defined in a tasks file and report the results.
@@ -25,6 +27,7 @@ export const bench = async function (configFlags) {
       stopped,
     })
     await report(resultA, configB)
+    checkLimits(resultA, configB)
     return resultA
   } finally {
     await endStore(configB)

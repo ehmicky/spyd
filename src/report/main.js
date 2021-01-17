@@ -1,5 +1,3 @@
-import { checkLimits } from '../compare/limit.js'
-
 import { callReportFunc } from './call.js'
 import { handleReportConfig } from './config.js'
 import { getContents } from './content.js'
@@ -9,17 +7,7 @@ import { printContent } from './print.js'
 // Report results
 export const report = async function (
   result,
-  {
-    report: reporters,
-    output,
-    insert,
-    colors,
-    showDiff,
-    info,
-    context,
-    link,
-    limit,
-  },
+  { report: reporters, output, insert, colors, showDiff, info, context, link },
 ) {
   await Promise.all(
     reporters.map(({ report: reportFunc, config: reportConfig }) =>
@@ -37,8 +25,6 @@ export const report = async function (
       }),
     ),
   )
-
-  checkLimits(result, limit)
 }
 
 // Perform each reporter

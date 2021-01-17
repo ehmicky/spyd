@@ -13,7 +13,7 @@ import { parseLimits } from './parse.js'
 // during measuring (`bench` command). It is not intended to be shown in
 // reporting. Instead, `showDiff` should be used for similar reporting-focused
 // purposes.
-export const checkLimits = function ({ combinations }, limit) {
+export const checkLimits = function ({ combinations }, { limit }) {
   const combinationsWithDiff = combinations.filter(hasDiff)
 
   if (combinationsWithDiff.length === 0) {
