@@ -32,7 +32,8 @@ const getDeltaQuery = function (delta) {
   return { type, value }
 }
 
-// Get previous results index by result delta
+// Get previous results index by result delta.
+// `results` must be sorted from most to least recent.
 export const findByDelta = function (results, { type, value, original, name }) {
   if (results.length === 0) {
     throw new UserError('No previous results')
