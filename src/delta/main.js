@@ -10,26 +10,27 @@ import { timestampFormat } from './formats/timestamp.js'
 // which can an integer, date/time, result.id or git commit.
 // This validates and normalizes it to a `deltaQuery` object.
 export const normalizeDelta = function (delta, name) {
-  try {
-    const deltaQuery = getDeltaQuery(delta)
-    return { ...deltaQuery, original: delta, name }
-  } catch (error) {
-    error.message = `"${name}" configuration property ${error.message}: ${delta}`
-    throw error
-  }
-}
-
-const getDeltaQuery = function (delta) {
-  const deltaReturn = findValue(FORMATS, ({ parse }) => parse(delta))
+  const deltaReturn = findValue(FORMATS, (format) =>
+    parseDelta(format, delta, name),
+  )
 
   if (deltaReturn === undefined) {
     throw new UserError(
-      'must be a number, a date, a time, an id or a git commit',
+      `"${name}" configuration property "${delta}" must be a number, a date, a time, an id or a git commit.`,
     )
   }
 
   const [value, { type }] = deltaReturn
-  return { type, value }
+  return { type, value, original: delta, name }
+}
+
+const parseDelta = function ({ parse, message }, delta, name) {
+  try {
+    return parse(delta)
+  } catch (error) {
+    error.message = `"${name}" configuration property "${delta}" (${message}) ${error.message}.`
+    throw error
+  }
 }
 
 // Get previous results index by result delta.
@@ -44,7 +45,7 @@ export const findByDelta = function (results, { type, value, original, name }) {
 
   if (index === undefined) {
     throw new UserError(
-      `Invalid "${name}" configuration property "${original}" (${message}): no matching results`,
+      `Invalid "${name}" configuration property "${original}" (${message}): no matching results.`,
     )
   }
 
