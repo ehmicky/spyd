@@ -12,7 +12,7 @@ import { removeFromStore } from './store/remove.js'
 import { startStore } from './store/start.js'
 
 // Measure code defined in a tasks file and report the results.
-// Default action.
+// Default command.
 export const bench = async function (configFlags) {
   const configA = await getConfig('bench', configFlags)
   const configB = await startStore(configA)

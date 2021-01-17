@@ -64,8 +64,8 @@ const getName = function (row) {
   return titleColor(row.join(` ${SEPARATOR_SIGN} `))
 }
 
-// Unlike the `bench` action, we use timeouts in the `exec` action. This allows
-// debugging combinations that hang forever or are too long.
+// Unlike the `bench` command, we use timeouts in the `exec` command.
+// This allows debugging combinations that hang forever or are too long.
 const waitForSampleTimeout = async function (duration) {
   const sampleTimeout = Math.round(duration / NANOSECS_TO_MILLISECS)
   await pSetTimeout(sampleTimeout)

@@ -8,11 +8,11 @@ import { validateConfig } from './validate.js'
 // Retrieve configuration
 // `cwd` and `config` cannot be specified in the configuration file nor in
 // environment variables
-export const getConfig = async function (action, configFlags = {}) {
+export const getConfig = async function (command, configFlags = {}) {
   const { config: configA, cwd } = await loadConfig(configFlags)
 
   validateConfig(configA)
-  const configB = addDefaultConfig(configA, action)
+  const configB = addDefaultConfig(configA, command)
 
   const configC = { ...configB, cwd }
   const configD = normalizeConfig(configC)

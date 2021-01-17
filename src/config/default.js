@@ -1,13 +1,13 @@
 // Add default configuration properties
-export const addDefaultConfig = function (config, action) {
+export const addDefaultConfig = function (config, command) {
   return {
     ...DEFAULT_CONFIG,
-    showMetadata: METADATA_ACTIONS.has(action),
+    showMetadata: METADATA_COMMANDS.has(command),
     ...config,
   }
 }
 
-const METADATA_ACTIONS = new Set(['show', 'remove'])
+const METADATA_COMMANDS = new Set(['show', 'remove'])
 
 export const DEFAULT_CONFIG = {
   duration: 1,
