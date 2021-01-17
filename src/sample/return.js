@@ -1,6 +1,5 @@
 import { aggregateMeasures } from './aggregate.js'
 import { getMeasureDuration } from './measure_duration.js'
-import { getMinLoopDuration } from './min_loop_duration.js'
 import { getRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 
@@ -15,7 +14,7 @@ export const handleReturnValue = function (
     times,
     repeat,
     repeatInit,
-    emptyMeasures,
+    minLoopDuration,
     stats,
     aggregateCountdown,
     sampleDurationLast,
@@ -71,7 +70,6 @@ export const handleReturnValue = function (
     repeatInit,
   })
 
-  const minLoopDuration = getMinLoopDuration(emptyMeasures)
   const repeatA = getRepeat({ repeat, stats: statsA, minLoopDuration })
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
@@ -83,7 +81,6 @@ export const handleReturnValue = function (
     times: timesB,
     repeat: repeatA,
     repeatInit: repeatInitA,
-    minLoopDuration,
     stats: statsA,
     aggregateCountdown: aggregateCountdownA,
     measureDurations: measureDurationsA,

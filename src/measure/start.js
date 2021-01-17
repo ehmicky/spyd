@@ -1,6 +1,7 @@
 import { failOnProcessExit } from '../error/combination.js'
 import { receiveReturnValue } from '../process/receive.js'
 import { setDescription } from '../progress/set.js'
+import { getMinLoopDuration } from '../sample/min_loop_duration.js'
 
 // Wait for each combination to start
 export const startCombinations = async function (combinations, progressState) {
@@ -21,7 +22,9 @@ const startCombination = async function (combination) {
     newCombination,
     returnValue: { emptyMeasures },
   } = await receiveReturnValue(combination)
+
+  const minLoopDuration = getMinLoopDuration(emptyMeasures)
   // If the runner does not support `repeat`, `repeatInit` is always `false`
   const repeatInit = emptyMeasures.length !== 0
-  return { ...newCombination, emptyMeasures, repeatInit }
+  return { ...newCombination, minLoopDuration, repeatInit }
 }
