@@ -1,3 +1,6 @@
+import { stderr } from 'process'
+
+import isInteractive from 'is-interactive'
 import omit from 'omit.js'
 
 // Call `reporter.report()`
@@ -5,12 +8,23 @@ export const callReportFunc = async function ({
   reportFunc,
   result,
   reportConfig,
-  reportConfig: { info, context, showDiff },
+  reportConfig: {
+    info,
+    context,
+    output,
+    showDiff = getDefaultShowDiff(output),
+  },
 }) {
   const reportFuncResult = cleanResult({ result, info, context, showDiff })
   const reportFuncProps = omit(reportConfig, CORE_REPORT_PROPS)
   const content = await reportFunc(reportFuncResult, reportFuncProps)
   return content
+}
+
+// Differences are mostly useful during interaction.
+// In results persisted in files, they are mostly confusing.
+const getDefaultShowDiff = function (output) {
+  return output === '-' && isInteractive(stderr)
 }
 
 // Remove some result properties unless some reportConfig properties are passed

@@ -13,7 +13,7 @@ import { UserError } from '../error/main.js'
 //  - does not require any parsing.
 //  - does not require wrapping inserted content (e.g. in a code block).
 //    This should be done by reporters.
-export const insertContent = async function (content, file) {
+export const insertContent = async function ({ insert: file }, content) {
   if (file === undefined) {
     return
   }

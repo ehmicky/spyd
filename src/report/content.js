@@ -8,10 +8,7 @@ import stripAnsi from 'strip-ansi'
 // Interactive output/terminal have different default values for some report
 // config properties, so we compute two different contents: interactive and
 // non-interactive.
-export const getContents = function ({
-  content,
-  reportConfig: { link, colors },
-}) {
+export const getContents = function ({ link, colors }, content) {
   const nonInteractiveContent = getNonInteractiveContent({
     content,
     link,

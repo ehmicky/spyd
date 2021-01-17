@@ -1,16 +1,10 @@
 // `output`, `insert`, `colors`, `showDiff`, `info`, `context`, `link` can be
 // set either for specific reporter (--report.REPORTER.output) or
 // for all (--output)
-export const handleReportConfig = function ({
+export const handleReportConfig = function (
   reportConfig,
-  output,
-  insert,
-  colors,
-  showDiff,
-  link,
-  info,
-  context,
-}) {
+  { output, insert, colors, showDiff, link, info, context },
+) {
   const reportConfigA = {
     output,
     insert,

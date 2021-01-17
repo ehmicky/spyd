@@ -54,8 +54,7 @@ const useReporter = async function ({
   context,
   link,
 }) {
-  const reportConfigA = handleReportConfig({
-    reportConfig,
+  const reportConfigA = handleReportConfig(reportConfig, {
     output,
     insert,
     colors,
@@ -75,13 +74,13 @@ const useReporter = async function ({
     return
   }
 
-  const { nonInteractiveContent, interactiveContent } = getContents({
+  const { nonInteractiveContent, interactiveContent } = getContents(
+    reportConfigA,
     content,
-    reportConfig: reportConfigA,
-  })
+  )
   await Promise.all([
-    printContent({ nonInteractiveContent, interactiveContent, output }),
-    insertContent(nonInteractiveContent, insert),
+    printContent(reportConfigA, nonInteractiveContent, interactiveContent),
+    insertContent(reportConfigA, nonInteractiveContent),
   ])
 }
 

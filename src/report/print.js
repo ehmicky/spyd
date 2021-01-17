@@ -9,11 +9,11 @@ import { addPadding } from './utils/indent.js'
 
 // Print result to file or to terminal based on the `output` configuration
 // property
-export const printContent = async function ({
+export const printContent = async function (
+  { output },
   interactiveContent,
   nonInteractiveContent,
-  output,
-}) {
+) {
   if (output === '') {
     return
   }
