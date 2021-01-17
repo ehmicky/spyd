@@ -30,6 +30,10 @@ const eNormalizeDelta = function (delta) {
     return getDeltaId(delta)
   }
 
+  if (isDeltaCommit(delta)) {
+    return getDeltaCommit(delta)
+  }
+
   throw new UserError('must be a number, a date or a time')
 }
 
@@ -43,4 +47,15 @@ const getDeltaNumber = function (delta) {
 
 const getDeltaId = function (delta) {
   return { type: 'id', value: delta }
+}
+
+const isDeltaCommit = function (delta) {
+  return GIT_COMMIT_REGEXP.test(delta)
+}
+
+// Git commit hash at least 8 characters long
+const GIT_COMMIT_REGEXP = /^[\da-f]{8,}$/iu
+
+const getDeltaCommit = function (delta) {
+  return { type: 'commit', value: delta }
 }
