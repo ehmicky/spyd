@@ -1,8 +1,8 @@
 import { UserError } from '../error/main.js'
+import { compressResult } from '../normalize/compress.js'
+import { mergeResults } from '../normalize/merge.js'
 
-import { compressResult } from './compress.js'
 import { listStore } from './list.js'
-import { mergeResults } from './merge.js'
 
 // Add a new result
 export const addToStore = async function ({ result, config, stopped }) {

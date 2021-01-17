@@ -1,6 +1,5 @@
 import { UserError } from '../error/main.js'
-
-import { loadResults } from './load.js'
+import { loadResults } from '../normalize/load.js'
 
 // List, sort, filter and normalize all results
 export const listStore = async function ({ store, include, exclude }) {
