@@ -1,7 +1,7 @@
 import { UserError } from '../error/main.js'
 
-import { matchSelectors } from './match.js'
-import { parseSelectors } from './parse.js'
+import { filterBySelectors } from './match.js'
+import { parseIncludeExclude } from './parse.js'
 import { getPrefix } from './prefix.js'
 
 // Select combinations according to the `include` and `exclude` configuration
@@ -38,27 +38,38 @@ const selectResult = function (
   { combinations, ...result },
   { include, exclude },
 ) {
-  const combinationsA = selectCombinations(combinations, { include, exclude })
-  return { ...result, combinations: combinationsA }
+  const { includeSelectors, excludeSelectors } = parseIncludeExclude({
+    include,
+    exclude,
+    combinations,
+  })
+  const combinationsA = filterBySelectors(combinations, includeSelectors)
+  const combinationsB = filterBySelectors(combinationsA, excludeSelectors)
+  return { ...result, combinations: combinationsB }
 }
 
 export const selectCombinations = function (
   combinations,
   { include, exclude },
 ) {
-  const combinationsA = applySelection(include, 'include', combinations)
-  const combinationsB = applySelection(exclude, 'exclude', combinationsA)
+  const { includeSelectors, excludeSelectors } = parseIncludeExclude({
+    include,
+    exclude,
+    combinations,
+  })
+  const combinationsA = strictSelection(combinations, includeSelectors)
+  const combinationsB = strictSelection(combinationsA, excludeSelectors)
   return combinationsB
 }
 
-const applySelection = function (rawSelectors, propName, combinations) {
-  const includeSelectors = parseSelectors(rawSelectors, propName, combinations)
-  const combinationsA = combinations.filter((combination) =>
-    matchSelectors(combination, includeSelectors),
-  )
+// When selecting combinations with `include`/`exclude`, at least one must
+// match. However, when filtering previous combinations, we silently ignore
+// results with no matching combinations instead.
+const strictSelection = function (combinations, allSelectors) {
+  const combinationsA = filterBySelectors(combinations, allSelectors)
 
   if (combinationsA.length === 0) {
-    const prefix = getPrefix(rawSelectors, propName)
+    const prefix = getPrefix(allSelectors)
     throw new UserError(`${prefix}No combinations match the selection.`)
   }
 

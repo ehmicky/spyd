@@ -2,7 +2,13 @@ import { getCombinationIds } from '../combination/ids.js'
 
 // Select combinations according to the `include`, `exclude`, `limit`
 // configuration properties
-export const matchSelectors = function (combination, { selectors, inverse }) {
+export const filterBySelectors = function (combinations, allSelectors) {
+  return combinations.filter((combination) =>
+    matchSelectors(combination, allSelectors),
+  )
+}
+
+const matchSelectors = function (combination, { selectors, inverse }) {
   if (selectors.length === 0) {
     return true
   }

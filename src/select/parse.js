@@ -12,16 +12,26 @@ import { tokenizeSelector } from './tokenize.js'
 // the same category use unions while identifiers of different categories use
 // intersection.
 // This also validates the syntax.
-export const parseSelectors = function (rawSelectors, propName, combinations) {
+export const parseIncludeExclude = function ({
+  include,
+  exclude,
+  combinations,
+}) {
+  const includeSelectors = parseSelectors(include, 'include', combinations)
+  const excludeSelectors = parseSelectors(exclude, 'exclude', combinations)
+  return { includeSelectors, excludeSelectors }
+}
+
+const parseSelectors = function (rawSelectors, propName, combinations) {
   const selectors = rawSelectors.map((rawSelector) =>
     parseSelector(rawSelector, propName, combinations),
   )
   const inverse = propName === 'exclude'
-  return { selectors, inverse }
+  return { selectors, inverse, rawSelectors, propName }
 }
 
 export const parseSelector = function (rawSelector, propName, combinations) {
-  const prefix = getPrefix([rawSelector], propName)
+  const prefix = getPrefix({ rawSelectors: [rawSelector], propName })
 
   const tokens = tokenizeSelector(rawSelector, prefix)
 
