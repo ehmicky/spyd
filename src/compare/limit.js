@@ -8,6 +8,9 @@ import { parseLimits } from './parse.js'
 // If any `combination.diff` is too slow compared to the `limit` configuration
 // property, we fail.
 // Done after reporting.
+// `limit` is only meant to be used during measuring (`bench` command). It is
+// not intended for reporting: `showDiff` should be used for similar
+// reporting-focused purposes.
 export const checkLimits = function ({ combinations }, limit) {
   const limitMatchers = parseLimits(limit, combinations)
   const limitErrors = combinations
