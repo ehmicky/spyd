@@ -51,20 +51,17 @@ const mergePairs = function (lastResult, previous) {
   return lastResultC
 }
 
-const mergePair = function (
-  { combinations, ...result },
-  { combinations: previousCombinations, ...previousResult },
-) {
-  const newCombinations = getNewCombinations(previousCombinations, combinations)
+const mergePair = function (result, previousResult) {
+  const newCombinations = getNewCombinations(
+    previousResult.combinations,
+    result.combinations,
+  )
 
   if (newCombinations.length === 0) {
-    return { ...result, combinations }
+    return result
   }
 
-  return mergePreviousResult(result, {
-    ...previousResult,
-    combinations: newCombinations,
-  })
+  return mergePreviousResult(result, previousResult, newCombinations)
 }
 
 // When merging two results, we keep most of the properties of the latest
@@ -75,12 +72,12 @@ const mergePair = function (
 // category id have different category titles.
 const mergePreviousResult = function (
   { combinations, systems, ...result },
-  { combinations: newCombinations, system: previousSystem },
+  { system: previousSystem },
+  newCombinations,
 ) {
   const combinationsA = [...combinations, ...newCombinations]
   const systemsA = mergeSystems(systems, previousSystem)
-  const resultA = { ...result, combinations: combinationsA, systems: systemsA }
-  return resultA
+  return { ...result, combinations: combinationsA, systems: systemsA }
 }
 
 // For each possible combination, if the last result already has it, we keep it.

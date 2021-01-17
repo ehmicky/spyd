@@ -12,7 +12,7 @@ export const getFromStore = function (results, delta) {
 const listResultsByDelta = function (results, delta) {
   try {
     const index = find(results, delta)
-    return results.slice(0, index)
+    return results.slice(index)
   } catch (error) {
     throw new UserError(`Could not find previous results: ${error.message}`)
   }
