@@ -7,7 +7,7 @@ import { printContent } from './print.js'
 // Report results
 export const report = async function (
   result,
-  { report: reporters, output, insert, colors, showDiff, info, context, link },
+  { reporters, output, insert, colors, showDiff, info, context, link },
 ) {
   await Promise.all(
     reporters.map(({ report: reportFunc, config: reportConfig }) =>
