@@ -11,8 +11,8 @@ import { addPadding } from './utils/indent.js'
 // property
 export const printContent = async function (
   { output },
-  interactiveContent,
   nonInteractiveContent,
+  interactiveContent,
 ) {
   if (output === '') {
     return
