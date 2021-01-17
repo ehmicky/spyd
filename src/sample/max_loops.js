@@ -20,14 +20,25 @@
 //     small percentage of the overall measures.
 // We purposely avoid using `duration` so that increasing `duration`
 // does not change measures.
-export const getMaxLoops = function (measureDuration, loopsLast) {
+// Since `maxLoops` aims to last a specific duration, we need the last
+// `measureDuration` to estimate it. If the `repeat` changes, we need to take it
+// into account as well, which is especially important during calibration.
+export const getMaxLoops = function ({
+  measureDuration,
+  repeat,
+  repeatLast,
+  loopsLast,
+}) {
   // First sample of the benchmark
   if (measureDuration === 0) {
     return 1
   }
 
+  const repeatGrowth = repeat / repeatLast
   const measureDurationPerLoop = measureDuration / loopsLast
-  const targetMaxLoops = Math.round(TARGET_DURATION / measureDurationPerLoop)
+  const targetMaxLoops = Math.round(
+    TARGET_DURATION / (measureDurationPerLoop * repeatGrowth),
+  )
   return Math.max(targetMaxLoops, 1)
 }
 

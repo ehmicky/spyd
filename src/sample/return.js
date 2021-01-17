@@ -81,6 +81,7 @@ export const handleReturnValue = function (
     loopsLast,
     times: timesB,
     repeat: newRepeat,
+    repeatLast: repeat,
     calibrated: calibratedA,
     sampleMedian,
     stats: statsA,
