@@ -1,4 +1,4 @@
-import { isSameCategory } from '../select/ids.js'
+import { isSameCategory } from '../combination/ids.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.

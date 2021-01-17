@@ -1,7 +1,7 @@
 import {
   COMBINATION_CATEGORIES,
   NON_COMBINATION_CATEGORY,
-} from '../combination/categories.js'
+} from './categories.js'
 
 // Retrieve user-defined identifiers: tasks, systems, variations, inputs
 // They are checked for allowed characters.

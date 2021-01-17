@@ -1,6 +1,6 @@
+import { isSameCategory } from '../combination/ids.js'
 import { addCombinationsDiff } from '../compare/diff.js'
 import { groupResultCombinations } from '../normalize/group.js'
-import { isSameCategory } from '../select/ids.js'
 import {
   startMergeSystems,
   mergeSystems,

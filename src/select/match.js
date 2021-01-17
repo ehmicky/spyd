@@ -1,4 +1,4 @@
-import { getCombinationIds } from './ids.js'
+import { getCombinationIds } from '../combination/ids.js'
 
 // Select combinations according to the `include`, `exclude`, `limit`
 // configuration properties

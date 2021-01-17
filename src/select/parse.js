@@ -1,4 +1,5 @@
-import { getCombinationsIds } from './ids.js'
+import { getCombinationsIds } from '../combination/ids.js'
+
 import { getPrefix } from './prefix.js'
 import { tokenizeSelector } from './tokenize.js'
 
