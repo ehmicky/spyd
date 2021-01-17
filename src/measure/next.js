@@ -77,13 +77,13 @@ const getCombinationMaxLoops = function (combinations) {
 const MAX_LOOPS = 1e8
 
 const isRemainingCombination = function ({
-  combination: { totalDuration, sampleDurationMean, loops, repeatInit },
+  combination: { totalDuration, sampleDurationMean, loops, calibrated },
   duration,
   combinationMaxLoops,
 }) {
   return (
     loops < combinationMaxLoops &&
-    hasTimeLeft({ duration, sampleDurationMean, totalDuration, repeatInit })
+    hasTimeLeft({ duration, sampleDurationMean, totalDuration, calibrated })
   )
 }
 
@@ -91,10 +91,10 @@ const hasTimeLeft = function ({
   duration,
   sampleDurationMean,
   totalDuration,
-  repeatInit,
+  calibrated,
 }) {
   if (duration === 1) {
-    return repeatInit
+    return !calibrated
   }
 
   return (

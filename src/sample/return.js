@@ -1,8 +1,8 @@
 import { aggregateMeasures } from './aggregate.js'
+import { calibrateReset, getCalibrated } from './calibrate.js'
 import { getMeasureDuration } from './measure_duration.js'
 import { normalizeSampleMeasures } from './normalize.js'
 import { getRepeat } from './repeat.js'
-import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 
 // Handle return value from the last sample
 // eslint-disable-next-line max-statements, max-lines-per-function
@@ -14,7 +14,7 @@ export const handleReturnValue = function (
     loops,
     times,
     repeat,
-    repeatInit,
+    calibrated,
     minLoopDuration,
     stats,
     aggregateCountdown,
@@ -35,8 +35,8 @@ export const handleReturnValue = function (
     samplesA,
     loopsA,
     timesA,
-  ] = repeatInitReset({
-    repeatInit,
+  ] = calibrateReset({
+    calibrated,
     measures,
     bufferedMeasures,
     measureDurations,
@@ -72,11 +72,11 @@ export const handleReturnValue = function (
     stats,
     aggregateCountdown,
     sampleDurationLast,
-    repeatInit,
+    calibrated,
   })
 
   const newRepeat = getRepeat({ repeat, sampleMedian, minLoopDuration })
-  const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat })
+  const calibratedA = getCalibrated({ calibrated, repeat, newRepeat })
 
   return {
     measures: measuresB,
@@ -85,7 +85,7 @@ export const handleReturnValue = function (
     loops: loopsB,
     times: timesB,
     repeat: newRepeat,
-    repeatInit: repeatInitA,
+    calibrated: calibratedA,
     stats: statsA,
     aggregateCountdown: aggregateCountdownA,
     measureDurations: measureDurationsA,

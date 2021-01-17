@@ -24,7 +24,7 @@ const startCombination = async function (combination) {
   } = await receiveReturnValue(combination)
 
   const minLoopDuration = getMinLoopDuration(calibrations)
-  // If the runner does not support `repeat`, `repeatInit` is always `false`
-  const repeatInit = calibrations.length !== 0
-  return { ...newCombination, minLoopDuration, repeatInit }
+  // If the runner does not support `repeat`, `calibrated` is always `true`
+  const calibrated = calibrations.length === 0
+  return { ...newCombination, minLoopDuration, calibrated }
 }

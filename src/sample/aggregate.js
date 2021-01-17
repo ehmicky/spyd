@@ -14,8 +14,8 @@ import { mergeSort } from '../stats/merge.js'
 // We do this by computing how long each aggregation takes, then waiting a
 // specific amount of duration based on that last aggregation duration.
 // We always recompute this:
-//  - During `repeatInit` to recompute the `stats.median`
-//  - At the beginning, or when `repeatInitReset` has just been called, so
+//  - During calibration to recompute the `stats.median`
+//  - At the beginning, or when `calibrateReset` has just been called, so
 //    that there are some `measures` to compute the `stats.median`
 export const aggregateMeasures = function ({
   measures,
@@ -24,11 +24,11 @@ export const aggregateMeasures = function ({
   stats,
   aggregateCountdown,
   sampleDurationLast,
-  repeatInit,
+  calibrated,
 }) {
   const bufferedMeasuresA = [...bufferedMeasures, sampleMeasures]
 
-  if (!repeatInit && aggregateCountdown > 0 && measures.length !== 0) {
+  if (calibrated && aggregateCountdown > 0 && measures.length !== 0) {
     const aggregateCountdownA = aggregateCountdown - sampleDurationLast
     return [measures, bufferedMeasuresA, stats, aggregateCountdownA]
   }

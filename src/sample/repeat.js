@@ -12,7 +12,7 @@
 // We use the `sampleMedian` instead of `stats.median`:
 //  - So that `repeat` adjusts to slowdowns of the task (for example due to
 //    competing processes).
-//  - It makes the initial `repeatInit` phase shorter. This leads to more
+//  - It makes the initial calibration phase shorter. This leads to more
 //    stable `max` and `deviation` stats.
 export const getRepeat = function ({ repeat, sampleMedian, minLoopDuration }) {
   // If the runner does not supports `repeat`, it is always set to `1`.
