@@ -20,7 +20,6 @@ export const handleReturnValue = function (
     stats,
     aggregateCountdown,
     sampleDurationLast,
-    measureDurationLast,
   },
   { measures: sampleMeasures },
 ) {
@@ -44,11 +43,9 @@ export const handleReturnValue = function (
   })
 
   const samplesB = samplesA + 1
-  const newLoops = sampleMeasures.length
-  const loopsB = loopsA + newLoops
-  const timesB = timesA + newLoops * repeat
-
-  const measureDuration = getMeasureDuration(measureDurationLast, newLoops)
+  const loopsLast = sampleMeasures.length
+  const loopsB = loopsA + loopsLast
+  const timesB = timesA + loopsLast * repeat
 
   const {
     sampleMeasures: sampleMeasuresA,
@@ -82,12 +79,12 @@ export const handleReturnValue = function (
     bufferedMeasures: bufferedMeasuresB,
     samples: samplesB,
     loops: loopsB,
+    loopsLast,
     times: timesB,
     repeat: newRepeat,
     calibrated: calibratedA,
     sampleMedian,
     stats: statsA,
     aggregateCountdown: aggregateCountdownA,
-    measureDuration,
   }
 }

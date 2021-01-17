@@ -15,7 +15,3 @@ export const getMeasureDurationStart = function () {
 export const getMeasureDurationLast = function (measureDurationStart) {
   return now() - measureDurationStart
 }
-
-export const getMeasureDuration = function (measureDurationLast, newLoops) {
-  return measureDurationLast / newLoops
-}

@@ -19,6 +19,7 @@ export const addInitProps = function (combination) {
     allSamples: 0,
     samples: 0,
     loops: 0,
+    loopsLast: 0,
     times: 0,
     repeat: 1,
     calibrated: false,

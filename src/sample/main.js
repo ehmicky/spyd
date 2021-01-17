@@ -22,11 +22,8 @@ export const measureSample = async function (combination) {
     return newCombination
   }
 
-  const newProps = handleReturnValue(
-    { ...newCombination, measureDurationLast },
-    returnValue,
-  )
-  return { ...newCombination, ...newProps }
+  const newProps = handleReturnValue(newCombination, returnValue)
+  return { ...newCombination, ...newProps, measureDurationLast }
 }
 
 const measureNewSample = async function (combination, params) {
