@@ -12,11 +12,9 @@ import { parseLimits } from './parse.js'
 // not intended for reporting: `showDiff` should be used for similar
 // reporting-focused purposes.
 export const checkLimits = function ({ combinations }, limit) {
-  const limitMatchers = parseLimits(limit, combinations)
+  const limits = parseLimits(limit, combinations)
   const limitErrors = combinations
-    .map((combination) =>
-      checkCombinationLimits({ combination, limitMatchers }),
-    )
+    .map((combination) => checkCombinationLimits({ combination, limits }))
     .filter(Boolean)
 
   if (limitErrors.length === 0) {
