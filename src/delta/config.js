@@ -2,7 +2,7 @@ import { validate as isUuid } from 'uuid'
 
 import { UserError } from '../error/main.js'
 
-import { isDeltaTimestamp, getDeltaTimestamp } from './timestamp.js'
+import { getDeltaTimestamp } from './timestamp.js'
 
 // Several configuration properties targets a previous results using either a
 // boolean, an integer or a timestamp. We normalize to a `query` object that
@@ -18,44 +18,54 @@ export const normalizeDelta = function (delta, name) {
 }
 
 const eNormalizeDelta = function (delta) {
-  if (typeof delta === 'number') {
-    return getDeltaNumber(delta)
+  const type = Object.keys(TYPES).find(
+    (typeA) => TYPES[typeA](delta) !== undefined,
+  )
+
+  if (type === undefined) {
+    throw new UserError(
+      'must be a number, a date, a time, an id or a git commit',
+    )
   }
 
-  if (isDeltaTimestamp(delta)) {
-    return getDeltaTimestamp(delta)
-  }
-
-  if (isUuid(delta)) {
-    return getDeltaId(delta)
-  }
-
-  if (isDeltaCommit(delta)) {
-    return getDeltaCommit(delta)
-  }
-
-  throw new UserError('must be a number, a date or a time')
+  const value = TYPES[type](delta)
+  return { type, value }
 }
 
-const getDeltaNumber = function (delta) {
+const getDeltaCount = function (delta) {
+  if (typeof delta !== 'number') {
+    return
+  }
+
   if (!Number.isInteger(delta) || delta < 1) {
     throw new UserError('must be a positive integer')
   }
 
-  return { type: 'count', value: delta }
+  return delta
 }
 
 const getDeltaId = function (delta) {
-  return { type: 'id', value: delta }
+  if (!isUuid(delta)) {
+    return
+  }
+
+  return delta
 }
 
-const isDeltaCommit = function (delta) {
-  return GIT_COMMIT_REGEXP.test(delta)
+const getDeltaCommit = function (delta) {
+  if (!GIT_COMMIT_REGEXP.test(delta)) {
+    return
+  }
+
+  return delta
 }
 
 // Git commit hash at least 8 characters long
 const GIT_COMMIT_REGEXP = /^[\da-f]{8,}$/iu
 
-const getDeltaCommit = function (delta) {
-  return { type: 'commit', value: delta }
+const TYPES = {
+  count: getDeltaCount,
+  id: getDeltaId,
+  timestamp: getDeltaTimestamp,
+  commit: getDeltaCommit,
 }

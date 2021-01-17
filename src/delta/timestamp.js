@@ -2,14 +2,14 @@
 //  - can specify only the date, or both date and time
 //  - can omit timezone (default to local timezone) but returned date is UTC
 //  - loose parsing
-export const isDeltaTimestamp = function (delta) {
-  return !Number.isNaN(Number(new Date(delta)))
-}
-
 export const getDeltaTimestamp = function (delta) {
+  if (Number.isNaN(Number(new Date(delta)))) {
+    return
+  }
+
   const deltaA = normalizeDayOnly(delta)
   const date = new Date(deltaA).toISOString()
-  return { type: 'timestamp', value: date }
+  return date
 }
 
 // When specifying only the day, we default to the end of the day not the
