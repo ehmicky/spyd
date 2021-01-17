@@ -1,19 +1,15 @@
 import { noteColor } from '../colors.js'
 
-import { getCi } from './ci.js'
-import { getGit } from './git.js'
 import { getSharedSystem, getSystems } from './systems.js'
 
 // Retrieve footer: id, systems, timestamp, git, ci, link
-export const getFooter = function ({ id, systems, timestamp, git, ci }) {
+export const getFooter = function ({ id, systems, timestamp }) {
   return [
     getSharedSystem(systems),
     getSystems(systems),
     {
       Id: id,
       Timestamp: getTimestamp(timestamp),
-      ...getGit(git),
-      ...getCi(ci),
     },
     LINK_FOOTER,
   ]
