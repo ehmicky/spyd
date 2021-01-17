@@ -1,4 +1,4 @@
-import { UserError } from '../../error/main.js'
+import { UserError } from '../error/main.js'
 
 // We use `new Date()` which means:
 //  - can specify only the date, or both date and time

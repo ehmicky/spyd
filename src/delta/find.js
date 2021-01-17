@@ -1,4 +1,4 @@
-import { UserError } from '../../error/main.js'
+import { UserError } from '../error/main.js'
 
 // Get previous results index by result delta
 export const find = function (results, { queryType, queryValue }) {

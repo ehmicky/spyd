@@ -1,4 +1,4 @@
-import { UserError } from '../../error/main.js'
+import { UserError } from '../error/main.js'
 
 import { getDeltaTimestamp } from './timestamp.js'
 

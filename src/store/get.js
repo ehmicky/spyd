@@ -1,7 +1,6 @@
+import { find } from '../delta/find.js'
 import { UserError } from '../error/main.js'
 import { mergeResults } from '../normalize/merge.js'
-
-import { find } from './delta/find.js'
 
 // Get a previous result by `count` or `timestamp`
 export const getFromStore = function (results, delta) {

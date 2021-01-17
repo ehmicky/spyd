@@ -1,5 +1,5 @@
+import { normalizeDelta } from '../delta/config.js'
 import { checkEmptyTasks } from '../run/check.js'
-import { normalizeDelta } from '../store/delta/config.js'
 
 import {
   normalizeOptionalArray,
