@@ -2,10 +2,12 @@
 export const addDefaultConfig = function (config, action) {
   return {
     ...DEFAULT_CONFIG,
-    showMetadata: action === 'show',
+    showMetadata: METADATA_ACTIONS.has(action),
     ...config,
   }
 }
+
+const METADATA_ACTIONS = new Set(['show', 'remove'])
 
 export const DEFAULT_CONFIG = {
   duration: 1,
