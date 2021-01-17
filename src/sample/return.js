@@ -1,6 +1,5 @@
 import { aggregateMeasures } from './aggregate.js'
 import { calibrateReset, getCalibrated } from './calibrate.js'
-import { getMeasureDuration } from './measure_duration.js'
 import { normalizeSampleMeasures } from './normalize.js'
 import { getRepeat } from './repeat.js'
 
