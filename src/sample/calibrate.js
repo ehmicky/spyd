@@ -2,15 +2,13 @@
 // based on the number of `repeat` loops themselves, there is a feedback loop.
 // This creates an initial callibration phase where `repeat` increases from `1`
 // to a stable number which does not vary much anymore.
-// During calibration, `repeat` is not callibration and measures can be greatly
+// During calibration, `repeat` is not callibrated and measures can be greatly
 // both inaccurate and imprecise.
-// Therefore we remove the measures taken during calibration
+// Therefore we remove the measures taken during calibration.
 // In case there is not enough duration to finish calibration, we keep only the
 // last sample measures.
-// We only reset cumulated stats like `measures`, `bufferedMeasures`,
-// `measureDurations`, `samples`, `loops` and `times`
-// We do not reset stats which only use the last sample when those cumulated
-// stats are reset, such as `stats` and `repeat`.
+// We only reset cumulated stats. We do not reset stats which only use the last
+// sample when those cumulated stats are reset, such as `stats` and `repeat`.
 export const calibrateReset = function ({
   calibrated,
   measures,
