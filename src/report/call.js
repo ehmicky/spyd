@@ -9,13 +9,18 @@ export const callReportFunc = async function ({
   result,
   reportConfig,
   reportConfig: {
-    info,
-    context,
+    showSystem,
+    showMetadata,
     output,
     showDiff = getDefaultShowDiff(output),
   },
 }) {
-  const reportFuncResult = cleanResult({ result, info, context, showDiff })
+  const reportFuncResult = cleanResult({
+    result,
+    showSystem,
+    showMetadata,
+    showDiff,
+  })
   const reportFuncProps = omit(reportConfig, CORE_REPORT_PROPS)
   const content = await reportFunc(reportFuncResult, reportFuncProps)
   return content
@@ -30,13 +35,13 @@ const getDefaultShowDiff = function (output) {
 // Remove some result properties unless some reportConfig properties are passed
 const cleanResult = function ({
   result: { combinations, ...result },
-  info,
-  context,
+  showSystem,
+  showMetadata,
   showDiff,
 }) {
   const omittedProps = [
-    ...(info ? [] : INFO_PROPS),
-    ...(context ? [] : CONTEXT_PROPS),
+    ...(showSystem ? [] : SYSTEM_PROPS),
+    ...(showMetadata ? [] : METADATA_PROPS),
   ]
   const resultA = omit(result, omittedProps)
   const combinationsA = combinations.map((combination) =>
@@ -45,8 +50,8 @@ const cleanResult = function ({
   return { ...resultA, combinations: combinationsA }
 }
 
-const INFO_PROPS = ['systems', 'runners']
-const CONTEXT_PROPS = ['id', 'timestamp']
+const SYSTEM_PROPS = ['systems', 'runners']
+const METADATA_PROPS = ['id', 'timestamp']
 
 const cleanCombination = function ({ stats, ...combination }, showDiff) {
   const omittedStatsProps = showDiff ? [] : DIFF_STATS_PROPS
@@ -63,7 +68,7 @@ const CORE_REPORT_PROPS = [
   'insert',
   'showDiff',
   'colors',
-  'info',
-  'context',
+  'showSystem',
+  'showMetadata',
   'link',
 ]

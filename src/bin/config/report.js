@@ -15,7 +15,7 @@ Reporter-specific configuration properties can be specified by appending the
 reporter's name: --reportName.prop=value.
 For example: --reportJson.output=path
 The following properties can be set for any reporter: output, insert, colors,
-info, context, link.
+showSystem, showMetadata, link.
 For example --reportJson.output is like --output but only for the json reporter.`,
   },
   titles: {
@@ -51,17 +51,16 @@ The result will be inserted between those two lines.`,
     describe: `Use colors in output.
 Default: true if the terminal is interactive.`,
   },
-  info: {
+  showSystem: {
     group: REPORT,
     boolean: true,
     describe: `Show hardware and software information.
 Default: false`,
   },
-  context: {
+  showMetadata: {
     group: REPORT,
     boolean: true,
-    describe: `Show context information such as id, timestamp, commit/branch
-or CI build.
+    describe: `Show metadata such as id, timestamp, commit/branch or CI build.
 Default: true for command "show", false otherwise`,
   },
   showDiff: {

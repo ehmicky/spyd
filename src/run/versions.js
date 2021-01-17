@@ -8,7 +8,7 @@ import { spawnProcess } from '../process/spawn.js'
 //    Runners should try to omit the leading 'v'.
 //    The value can either be a string (direct value) or an array of strings
 //    (command to retrieve the version).
-// Reported by the `--info` configuration property.
+// Reported by the `--showSystem` configuration property.
 // Meant to show information about runtime versions, modes (e.g. type of shell)
 // and configuration.
 export const getRunnerVersions = async function ({

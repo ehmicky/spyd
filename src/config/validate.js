@@ -56,7 +56,7 @@ const EXAMPLE_CONFIG = {
   limit: optionalArray('task_id=10'),
   colors: false,
   showDiff: false,
-  context: true,
+  showMetadata: true,
   link: false,
   include: optionalArray('task_id'),
   exclude: optionalArray('task_id'),

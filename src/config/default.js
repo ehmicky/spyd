@@ -2,7 +2,7 @@
 export const addDefaultConfig = function (config, action) {
   return {
     ...DEFAULT_CONFIG,
-    context: action === 'show',
+    showMetadata: action === 'show',
     ...config,
   }
 }
@@ -14,7 +14,7 @@ export const DEFAULT_CONFIG = {
   save: false,
   output: '-',
   limit: [],
-  info: false,
+  showSystem: false,
   delta: true,
   compare: 1,
   include: [],

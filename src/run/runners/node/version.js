@@ -18,8 +18,8 @@ export const getNodeVersion = async function ({ version }) {
   return versionInfo
 }
 
-// We retrieve the full Node version for validation purpose and for `--info`,
-// but not for the command id/title
+// We retrieve the full Node version for validation purpose and for
+// `--showSystem`, but not for the command id/title
 // This both downloads Node.js binary and normalize its `version`.
 // This also retrieves the `command` and `spawnOptions`.
 const getFullVersion = async function (version) {
