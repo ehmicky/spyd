@@ -1,21 +1,15 @@
-import { mergeSort } from './merge.js'
 import { getQuantile } from './quantile.js'
 import { sortFloats } from './sort.js'
 
-// Get median of an incrementally growing array
-export const getIncrementalMedian = function (array, value) {
-  mergeSort(array, [value])
-  return getMedian(array)
-}
-
+// Retrieve median of an array of floats.
+// Sort array.
 export const getUnsortedMedian = function (array) {
   sortFloats(array)
-  return getMedian(array)
+  return getSortedMedian(array)
 }
 
-// Retrieve median of an array of floats.
-// Array must be sorted and not empty.
-export const getMedian = function (array) {
+// Same but array must already be sorted.
+export const getSortedMedian = function (array) {
   return getQuantile(array, MEDIAN_QUANTILE)
 }
 

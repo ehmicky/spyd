@@ -1,5 +1,5 @@
 import { getHistogram } from './histogram.js'
-import { getMedian } from './median.js'
+import { getSortedMedian } from './median.js'
 import { getQuantiles } from './quantile.js'
 import { getMean, getDeviation } from './sum.js'
 
@@ -18,7 +18,7 @@ export const computeStats = function (measures) {
   const [min] = measures
   const max = measures[measures.length - 1]
 
-  const median = getMedian(measures)
+  const median = getSortedMedian(measures)
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
   const histogram = getHistogram(measures, HISTOGRAM_SIZE)
 

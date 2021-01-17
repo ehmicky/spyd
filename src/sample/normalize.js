@@ -1,11 +1,11 @@
-import { getMedian } from '../stats/median.js'
+import { getSortedMedian } from '../stats/median.js'
 import { sortFloats } from '../stats/sort.js'
 
 // Normalize `sampleMeasures` by dividing `repeat` and sorting.
 export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
   const sampleMeasuresA = normalizeRepeat(sampleMeasures, repeat)
   sortFloats(sampleMeasuresA)
-  const sampleMedian = getMedian(sampleMeasuresA)
+  const sampleMedian = getSortedMedian(sampleMeasuresA)
   return { sampleMeasures: sampleMeasuresA, sampleMedian }
 }
 
