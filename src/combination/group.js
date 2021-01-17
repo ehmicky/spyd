@@ -1,7 +1,6 @@
 import sortOn from 'sort-on'
 
 import { getMean } from '../stats/sum.js'
-import { groupBy } from '../utils/group.js'
 
 import { COMBINATION_CATEGORIES } from './categories.js'
 
@@ -19,10 +18,9 @@ const addCategoryInfo = function (
   { combinations, categories },
   { propName, idName, titleName, rankName },
 ) {
-  const category = Object.values(
-    groupBy(combinations, idName),
-  ).map((combinationsA) =>
-    getCategory({ combinations: combinationsA, idName, titleName }),
+  const ids = getCategoryIds(combinations, idName)
+  const category = ids.map((id) =>
+    getCategory({ combinations, id, idName, titleName }),
   )
   const categoryA = sortOn(category, 'mean')
 
@@ -35,11 +33,19 @@ const addCategoryInfo = function (
   }
 }
 
-const getCategory = function ({ combinations, idName, titleName }) {
-  const { [idName]: id, [titleName]: title } = combinations[
-    combinations.length - 1
-  ]
-  const medians = combinations.map(getCombinationMedian)
+const getCategoryIds = function (combinations, idName) {
+  const ids = combinations.map((combination) => combination[idName])
+  return [...new Set(ids)]
+}
+
+// After merging, several combinations with the same category id might have
+// different category titles. We prioritize the most recent result.
+const getCategory = function ({ combinations, id, idName, titleName }) {
+  const combinationsA = combinations.filter(
+    (combination) => combination[idName] === id,
+  )
+  const [{ [titleName]: title }] = combinationsA
+  const medians = combinationsA.map(getCombinationMedian)
   const mean = getMean(medians)
   return { id, title, mean }
 }
