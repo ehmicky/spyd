@@ -1,6 +1,6 @@
-import { normalizeSampleMeasures } from './add.js'
 import { aggregateMeasures } from './aggregate.js'
 import { getMeasureDuration } from './measure_duration.js'
+import { normalizeSampleMeasures } from './normalize.js'
 import { getRepeat } from './repeat.js'
 import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 

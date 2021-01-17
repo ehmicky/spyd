@@ -1,8 +1,7 @@
 import now from 'precise-now'
 
 import { computeStats, addSideStats } from '../stats/compute.js'
-
-import { addBufferedMeasures } from './add.js'
+import { mergeSort } from '../stats/merge.js'
 
 // Aggregate `bufferedMeasures` to `measures`.
 // The `stats` need a single `measures` array, so they are computed right after.
@@ -75,6 +74,16 @@ const aggregateBuffer = function (measures, bufferedMeasures) {
   addBufferedMeasures(measures, bufferedMeasures)
   const stats = computeStats(measures)
   return { measures, stats }
+}
+
+// Add all not-merged-yet measures from the last samples.
+// Sort them incrementally to the final `measures` big array, as opposed to
+// sorting `measures` directly, which would be much slower.
+// The measures are also normalized from sampleMeasures + repeat.
+const addBufferedMeasures = function (measures, bufferedMeasures) {
+  bufferedMeasures.forEach((sampleMeasures) => {
+    mergeSort(measures, sampleMeasures)
+  })
 }
 
 const getAggregateStart = function () {
