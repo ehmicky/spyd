@@ -11,10 +11,10 @@ export const report = async function (
   { reporters, output, insert, colors, showDiff, showSystem, showMetadata },
 ) {
   await Promise.all(
-    reporters.map(({ report: reportFunc, config: reportConfig }) =>
+    reporters.map(({ report: reportFunc, config: reporterConfig }) =>
       useReporter({
         reportFunc,
-        reportConfig,
+        reporterConfig,
         result,
         output,
         insert,
@@ -33,7 +33,7 @@ export const report = async function (
 // all (--output).
 const useReporter = async function ({
   reportFunc,
-  reportConfig,
+  reporterConfig,
   result,
   output,
   insert,
@@ -42,20 +42,20 @@ const useReporter = async function ({
   showSystem,
   showMetadata,
 }) {
-  const reportConfigA = cleanObject({
+  const reporterConfigA = cleanObject({
     output,
     insert,
     colors,
     showDiff,
     showSystem,
     showMetadata,
-    ...reportConfig,
+    ...reporterConfig,
   })
 
   const content = await callReportFunc({
     reportFunc,
     result,
-    reportConfig: reportConfigA,
+    reporterConfig: reporterConfigA,
   })
 
   if (!hasContent(content)) {
@@ -64,11 +64,11 @@ const useReporter = async function ({
 
   const { nonInteractiveContent, interactiveContent } = getContents(
     content,
-    reportConfigA,
+    reporterConfigA,
   )
   await Promise.all([
-    printContent(reportConfigA, nonInteractiveContent, interactiveContent),
-    insertContent(reportConfigA, nonInteractiveContent),
+    printContent(reporterConfigA, nonInteractiveContent, interactiveContent),
+    insertContent(reporterConfigA, nonInteractiveContent),
   ])
 }
 

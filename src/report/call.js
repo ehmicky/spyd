@@ -7,8 +7,8 @@ import omit from 'omit.js'
 export const callReportFunc = async function ({
   reportFunc,
   result,
-  reportConfig,
-  reportConfig: {
+  reporterConfig,
+  reporterConfig: {
     showSystem,
     showMetadata,
     output,
@@ -21,7 +21,7 @@ export const callReportFunc = async function ({
     showMetadata,
     showDiff,
   })
-  const reportFuncProps = omit(reportConfig, CORE_REPORT_PROPS)
+  const reportFuncProps = omit(reporterConfig, CORE_REPORT_PROPS)
   const content = await reportFunc(reportFuncResult, reportFuncProps)
   return content
 }
@@ -32,7 +32,11 @@ const getDefaultShowDiff = function (output) {
   return output === '-' && isInteractive(stderr)
 }
 
-// Remove some result properties unless some reportConfig properties are passed
+// Remove some result properties unless some reporterConfig properties are
+// passed. Those all start with `show*`. We use one boolean configuration
+// property for each instead of a single array configuration property because it
+// makes it easier to enable/disable each property both in CLI flags and in
+// `reporter{id}.*` properties.
 const cleanResult = function ({
   result: { combinations, ...result },
   showSystem,
@@ -61,7 +65,7 @@ const cleanCombination = function ({ stats, ...combination }, showDiff) {
 
 const DIFF_STATS_PROPS = ['diff']
 
-// We handle some reportConfig properties in core, and do not pass those to
+// We handle some reporterConfig properties in core, and do not pass those to
 // reporters.
 const CORE_REPORT_PROPS = [
   'output',
