@@ -17,6 +17,8 @@ export const DEFAULT_CONFIG = {
   save: false,
   output: '-',
   limit: [],
+  titles: {},
+  showTitles: false,
   showSystem: false,
   delta: true,
   compare: 1,
@@ -25,6 +27,5 @@ export const DEFAULT_CONFIG = {
   reporter: ['debug'],
   progress: ['debug'],
   store: ['file'],
-  titles: {},
   inputs: {},
 }

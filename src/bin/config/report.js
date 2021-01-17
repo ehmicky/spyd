@@ -18,13 +18,6 @@ The following properties can be set for any reporter: output, insert, colors,
 showSystem, showMetadata.
 For example --reportJson.output is like --output but only for the json reporter.`,
   },
-  titles: {
-    group: REPORT,
-    requiresArg: true,
-    describe: `Rename some identifiers in reports.
-Uses a dot notation such as --titles.id=string
-The id can be any identifier: task, runner, system, variation.`,
-  },
   output: {
     group: REPORT,
     alias: 'o',
@@ -50,6 +43,19 @@ The result will be inserted between those two lines.`,
     boolean: true,
     describe: `Use colors in output.
 Default: true if the terminal is interactive.`,
+  },
+  titles: {
+    group: REPORT,
+    requiresArg: true,
+    describe: `Rename some identifiers in reports.
+Uses a dot notation such as --titles.id=string
+The id can be any identifier: task, runner, system, variation.`,
+  },
+  showTitles: {
+    group: REPORT,
+    boolean: true,
+    describe: `Show titles instead of identifiers.
+Default: false`,
   },
   showSystem: {
     group: REPORT,

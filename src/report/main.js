@@ -8,7 +8,16 @@ import { printContent } from './print.js'
 // Report results
 export const report = async function (
   result,
-  { reporters, output, insert, colors, showDiff, showSystem, showMetadata },
+  {
+    reporters,
+    output,
+    insert,
+    colors,
+    showTitles,
+    showDiff,
+    showSystem,
+    showMetadata,
+  },
 ) {
   await Promise.all(
     reporters.map(({ report: reportFunc, config: reporterConfig }) =>
@@ -19,6 +28,7 @@ export const report = async function (
         output,
         insert,
         colors,
+        showTitles,
         showDiff,
         showSystem,
         showMetadata,
@@ -28,9 +38,9 @@ export const report = async function (
 }
 
 // Perform each reporter.
-// `output`, `insert`, `colors`, `showDiff`, `showSystem`, `showMetadata`
-// can be set either for specific reporter (--reporter{id}.output) or for
-// all (--output).
+// `output`, `insert`, `colors`, `showTitles`, `showDiff`, `showSystem`,
+// `showMetadata` can be set either for specific reporter
+// (--reporter{id}.output) or for all (--output).
 const useReporter = async function ({
   reportFunc,
   reporterConfig,
@@ -38,6 +48,7 @@ const useReporter = async function ({
   output,
   insert,
   colors,
+  showTitles,
   showDiff,
   showSystem,
   showMetadata,
@@ -46,6 +57,7 @@ const useReporter = async function ({
     output,
     insert,
     colors,
+    showTitles,
     showDiff,
     showSystem,
     showMetadata,

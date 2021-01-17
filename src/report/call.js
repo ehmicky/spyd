@@ -3,6 +3,8 @@ import { stderr } from 'process'
 import isInteractive from 'is-interactive'
 import omit from 'omit.js'
 
+import { removeTitles } from '../combination/titles.js'
+
 // Call `reporter.report()`
 export const callReportFunc = async function ({
   reportFunc,
@@ -12,17 +14,19 @@ export const callReportFunc = async function ({
     showSystem,
     showMetadata,
     output,
+    showTitles,
     showDiff = getDefaultShowDiff(output),
   },
 }) {
-  const reportFuncResult = cleanResult({
+  const resultA = cleanResult({
     result,
     showSystem,
     showMetadata,
     showDiff,
   })
+  const resultB = removeTitles(resultA, showTitles)
   const reportFuncProps = omit(reporterConfig, CORE_REPORT_PROPS)
-  const content = await reportFunc(reportFuncResult, reportFuncProps)
+  const content = await reportFunc(resultB, reportFuncProps)
   return content
 }
 
@@ -83,6 +87,7 @@ const CORE_REPORT_PROPS = [
   'output',
   'insert',
   'colors',
+  'showTitles',
   'showSystem',
   'showMetadata',
   'showDiff',
