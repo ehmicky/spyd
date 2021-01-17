@@ -28,8 +28,8 @@ export const mergeSystems = function (systems, { id, ...newSystem }) {
   ]
 }
 
-// The first `system` is a collection of all properties shared by other
-// `systems`. Its `id` and `title` are `undefined`.
+// `systems[0]` is a collection of all properties shared by other `systems`.
+// Its `id` and `title` are `undefined`.
 // This helps avoid duplication when reporting similar systems.
 export const endMergeSystems = function ({ systems, ...result }) {
   const sharedProps = getSharedProps(systems)
