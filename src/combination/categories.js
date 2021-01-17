@@ -1,3 +1,5 @@
+import { getInputIds } from './inputs.js'
+
 // Combination identifiers create a new combination category:
 // tasks, systems, variations, runners.
 // They:
@@ -27,14 +29,6 @@ export const COMBINATION_CATEGORIES = [
     rankName: 'systemRank',
   },
 ]
-
-const getInputIds = function (inputs) {
-  return inputs.map(getInputId)
-}
-
-const getInputId = function ({ inputId }) {
-  return inputId
-}
 
 export const NON_COMBINATION_CATEGORY = [
   { category: 'input', getIds: getInputIds },

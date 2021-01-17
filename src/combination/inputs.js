@@ -10,3 +10,11 @@ export const getInputs = function (inputs) {
 const getInput = function ([inputId, inputValue]) {
   return { inputId, inputValue }
 }
+
+export const getInputIds = function (inputs) {
+  return inputs.map(getInputId)
+}
+
+const getInputId = function ({ inputId }) {
+  return inputId
+}
