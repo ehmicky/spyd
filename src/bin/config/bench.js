@@ -44,4 +44,18 @@ appending the progress reporter's name: --progressName.prop=value`,
     describe: `Save the results.
 Default: false`,
   },
+  limit: {
+    group: STORE,
+    alias: 'l',
+    string: true,
+    array: true,
+    requiresArg: true,
+    describe: `Report when the average duration has increased by more than a
+specific percentage such as "50%".
+The limit can be scoped to specific combinations by appending their identifiers
+after the percentage. The syntax is the same as the "include" configuration
+property. For example "50% taskOne node" applies only to taskOne when the
+runner is node.
+Several limits can be specified at once.`,
+  },
 }
