@@ -49,8 +49,8 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - The best way to benchmark those very fast functions is to increase their
 //    complexity. Since the runner already runs those in a "for" loop, the only
 //    thing that a task should do is increase the size of its inputs.
-export const getMinLoopDuration = function (emptyMeasures, runnerRepeats) {
-  if (!runnerRepeats) {
+export const getMinLoopDuration = function (emptyMeasures) {
+  if (emptyMeasures.length === 0) {
     return 0
   }
 
@@ -95,44 +95,3 @@ const getMinResolution = function (emptyMeasures) {
 // precise.
 // A higher value increases the task loop duration, creating fewer loops.
 const MIN_RESOLUTION_PRECISION = 1e2
-
-// This function returns whether the runner should measure empty tasks.
-// This is needed in order to compute `measureCost`.
-// This is only needed when the `repeat` loop is used:
-//  - When `repeat` is not `1`
-//  - However, when `runnerInit` is `true`, `repeat` might be `1` due to not
-//    being callibrated yet.
-//  - When `runner.repeat` is `false`, `empty` is always `undefined` and runner
-//    should not compute empty tasks.
-// If `empty` is `true`, the runner should return `emptyMeasures`:
-//   - Before each `measure`, the runner should measure an `emptyMeasure`
-//   - An `emptyMeasure` is like a `measure` but without:
-//      - `beforeEach` and `afterEach`
-//      - Executing any task
-//      - Iterating any loop
-//   - For example, an `emptyMeasure` might only retrieve timestamps and compute
-//     their difference
-// This is done inside each sample. We do not:
-//   - Run this in a separate phase, before any measurement takes place. Doing
-//     both the main measurement and the `measureCost` callibration at the same
-//     time allows the latter to last longer (and be more precise) as the
-//     `duration` is increased.
-//   - Run this in the runner, before or after the main measuring loop. Instead,
-//     we run this alongside it
-//      - This is because the time to retrieve timestamps often gets faster and
-//        faster, as more iterations are run and the runtime optimize hot paths.
-//        Measuring it alongside is the only way to measure it accurately. It is
-//        also much more precise.
-//      - This also allows using the same `maxLoops`
-//      - As a small bonus, this also provides with a small cold start for the
-//        main measuring loop
-//      - However, the function measuring `emptyMeasures` and `measures` should
-//        be different. Otherwise, each `emptyMeasure` would de-optimize
-//        the main task `measures`, making it slower.
-export const getEmpty = function (repeat, repeatInit, runnerRepeats) {
-  if (!runnerRepeats) {
-    return
-  }
-
-  return repeat !== 1 || repeatInit
-}

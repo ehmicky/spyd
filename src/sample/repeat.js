@@ -13,12 +13,11 @@ export const getRepeat = function ({
   repeat,
   stats: { median },
   minLoopDuration,
-  runnerRepeats,
 }) {
-  // If the runner does not supports `repeat`, it is always set to `1`
+  // If the runner does not supports `repeat`, it is always set to `1`.
   // We should not use a repeat loop when estimating `measureCost` since
   // `measureCost` only happens once per repeat loop
-  if (!runnerRepeats) {
+  if (minLoopDuration === 0) {
     return 1
   }
 

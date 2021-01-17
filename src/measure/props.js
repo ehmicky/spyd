@@ -3,10 +3,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { getFinalStats } from '../sample/aggregate.js'
 
 // Initialize some combination properties
-export const addInitProps = function ({ runnerRepeats, ...combination }) {
+export const addInitProps = function (combination) {
   return {
     ...combination,
-    runnerRepeats,
     id: uuidv4(),
     totalDuration: 0,
     sampleDurationLast: 0,
@@ -22,9 +21,6 @@ export const addInitProps = function ({ runnerRepeats, ...combination }) {
     loops: 0,
     times: 0,
     repeat: 1,
-    // If the runner does not support `repeats`, `repeatInit` is always
-    // `false`
-    repeatInit: runnerRepeats,
     emptyMeasures: [],
     resolution: 1,
     minLoopDuration: 0,

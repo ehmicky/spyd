@@ -8,7 +8,6 @@ import { repeatInitReset, getRepeatInit } from './repeat_init.js'
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const handleReturnValue = function (
   {
-    runnerRepeats,
     measures,
     bufferedMeasures,
     samples,
@@ -72,13 +71,8 @@ export const handleReturnValue = function (
     repeatInit,
   })
 
-  const minLoopDuration = getMinLoopDuration(emptyMeasures, runnerRepeats)
-  const repeatA = getRepeat({
-    repeat,
-    stats: statsA,
-    minLoopDuration,
-    runnerRepeats,
-  })
+  const minLoopDuration = getMinLoopDuration(emptyMeasures)
+  const repeatA = getRepeat({ repeat, stats: statsA, minLoopDuration })
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
   return {
@@ -89,7 +83,6 @@ export const handleReturnValue = function (
     times: timesB,
     repeat: repeatA,
     repeatInit: repeatInitA,
-    emptyMeasures,
     minLoopDuration,
     stats: statsA,
     aggregateCountdown: aggregateCountdownA,

@@ -20,13 +20,7 @@ const runnerHasTasks = function (id, tasks) {
 }
 
 const loadRunner = async function (
-  {
-    id: runnerId,
-    title: runnerTitle,
-    repeat: runnerRepeats,
-    config: runnerConfig,
-    launch,
-  },
+  { id: runnerId, title: runnerTitle, config: runnerConfig, launch },
   cwd,
 ) {
   const {
@@ -43,7 +37,6 @@ const loadRunner = async function (
   return {
     runnerId,
     runnerTitle,
-    runnerRepeats,
     runnerSpawn,
     runnerSpawnOptions,
     runnerVersions,

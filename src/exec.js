@@ -28,7 +28,6 @@ const execCombination = async function ({
     runnerSpawn,
     runnerSpawnOptions,
     runnerConfig,
-    runnerRepeats,
   },
   config: { cwd, duration },
 }) {
@@ -36,14 +35,13 @@ const execCombination = async function ({
   // eslint-disable-next-line no-restricted-globals, no-console
   console.log(name)
 
-  const repeat = runnerRepeats ? 1 : undefined
   const eventPayload = {
     type: 'benchmark',
     runnerConfig,
     taskPath,
     taskId,
     maxLoops: 1,
-    repeat,
+    repeat: 1,
   }
 
   await Promise.race([

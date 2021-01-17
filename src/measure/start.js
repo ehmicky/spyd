@@ -21,5 +21,7 @@ const startCombination = async function (combination) {
     newCombination,
     returnValue: { emptyMeasures },
   } = await receiveReturnValue(combination)
-  return { ...newCombination, emptyMeasures }
+  // If the runner does not support `repeat`, `repeatInit` is always `false`
+  const repeatInit = emptyMeasures.length !== 0
+  return { ...newCombination, emptyMeasures, repeatInit }
 }

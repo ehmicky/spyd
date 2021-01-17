@@ -26,7 +26,6 @@ const getCombinationByRunner = function ({
   runner: {
     runnerId,
     runnerTitle,
-    runnerRepeats,
     runnerSpawn,
     runnerSpawnOptions,
     runnerVersions,
@@ -38,7 +37,6 @@ const getCombinationByRunner = function ({
     taskId,
     runnerId,
     runnerTitle,
-    runnerRepeats,
     runnerSpawn,
     runnerSpawnOptions,
     runnerVersions,
