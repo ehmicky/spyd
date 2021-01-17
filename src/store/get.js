@@ -1,4 +1,4 @@
-import { find } from '../delta/find.js'
+import { findByDelta } from '../delta/main.js'
 import { mergeResults } from '../normalize/merge.js'
 
 // Get a previous result by `count` or `timestamp`
@@ -9,6 +9,6 @@ export const getFromStore = function (results, delta) {
 }
 
 const listResultsByDelta = function (results, delta) {
-  const index = find(results, delta)
+  const index = findByDelta(results, delta)
   return results.slice(index)
 }

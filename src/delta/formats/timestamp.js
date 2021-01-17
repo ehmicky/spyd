@@ -1,15 +1,16 @@
+// Deltas can be dates or times.
 // We use `new Date()` which means:
 //  - can specify only the date, or both date and time
 //  - can omit timezone (default to local timezone) but returned date is UTC
 //  - loose parsing
-export const getDeltaTimestamp = function (delta) {
+export const parseTimestamp = function (delta) {
   if (Number.isNaN(Number(new Date(delta)))) {
     return
   }
 
   const deltaA = normalizeDayOnly(delta)
-  const date = new Date(deltaA).toISOString()
-  return date
+  const timestamp = new Date(deltaA).toISOString()
+  return timestamp
 }
 
 // When specifying only the day, we default to the end of the day not the
@@ -26,3 +27,13 @@ const normalizeDayOnly = function (delta) {
 // hours/minutes/seconds afterwards. This works with some local formats too
 // such as mm/dd/yyyy
 const DAY_REGEXP = /^[^\d]*\d+[^\d]*\d+[^\d]*\d+[^\d]*$/u
+
+export const findByTimestamp = function (results, timestamp) {
+  const index = results.findIndex((result) => result.timestamp <= timestamp)
+
+  if (index === -1) {
+    return
+  }
+
+  return index
+}

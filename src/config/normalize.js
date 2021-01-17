@@ -1,4 +1,4 @@
-import { normalizeDelta } from '../delta/config.js'
+import { normalizeDelta } from '../delta/main.js'
 import { checkEmptyTasks } from '../run/check.js'
 
 import {
