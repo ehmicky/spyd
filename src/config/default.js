@@ -16,7 +16,7 @@ export const DEFAULT_CONFIG = {
   limit: [],
   info: false,
   delta: true,
-  diff: true,
+  compare: 1,
   include: [],
   exclude: [],
   reporter: ['debug'],

@@ -61,7 +61,7 @@ const EXAMPLE_CONFIG = {
   include: optionalArray('task_id'),
   exclude: optionalArray('task_id'),
   delta: VALID_DELTA,
-  diff: VALID_DELTA,
+  compare: VALID_DELTA,
   since: VALID_DELTA,
   titles: { taskId: 'taskTitle' },
   inputs: { inputId: 'inputValue' },

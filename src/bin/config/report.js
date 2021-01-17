@@ -94,16 +94,15 @@ Default: true`,
   since: {
     group: REPORT,
   },
-  diff: {
+  compare: {
     group: REPORT,
-    describe: `Compare the difference with a previous result.
+    describe: `Which result to compare to when using the "limit" or "showDiff"
+configuration properties.
 Can be:
-  - false: do not compare
-  - true: compare with the last result
   - integer: compare with the {integer}-th previous result
   - a date|time: compare with the last result before that date|time.
     Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-ddThh:mm:ssZ'.
-Default: true`,
+Default: 1`,
   },
 }
 /* eslint-enable max-lines */
