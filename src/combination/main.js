@@ -1,10 +1,10 @@
 import { listTasks } from '../run/list.js'
 import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
+import { addTitles } from '../title/add.js'
 
 import { fromInputsObj } from './inputs.js'
 import { getCombinationsProduct } from './product.js'
-import { addTitles } from './titles.js'
 import { validateCombinationsIds } from './validate_ids.js'
 
 // Retrieve each combination, i.e. combination of each combination category

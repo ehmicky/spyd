@@ -3,7 +3,7 @@ import { stderr } from 'process'
 import isInteractive from 'is-interactive'
 import omit from 'omit.js'
 
-import { removeTitles } from '../combination/titles.js'
+import { removeTitles } from '../title/remove.js'
 
 // Call `reporter.report()`
 export const callReportFunc = async function ({
