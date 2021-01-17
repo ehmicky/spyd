@@ -5,33 +5,51 @@ export const callReportFunc = async function ({
   reportFunc,
   result,
   reportConfig,
-  reportConfig: { info, context },
+  reportConfig: { info, context, showDiff },
 }) {
-  const reportFuncResult = cleanResult({ result, info, context })
+  const reportFuncResult = cleanResult({ result, info, context, showDiff })
   const reportFuncProps = omit(reportConfig, CORE_REPORT_PROPS)
   const content = await reportFunc(reportFuncResult, reportFuncProps)
   return content
 }
 
 // Remove some result properties unless some reportConfig properties are passed
-const cleanResult = function ({ result, info, context }) {
+const cleanResult = function ({
+  result: { combinations, ...result },
+  info,
+  context,
+  showDiff,
+}) {
   const omittedProps = [
     ...(info ? [] : INFO_PROPS),
     ...(context ? [] : CONTEXT_PROPS),
   ]
-  return omit(result, omittedProps)
+  const resultA = omit(result, omittedProps)
+  const combinationsA = combinations.map((combination) =>
+    cleanCombination(combination, showDiff),
+  )
+  return { ...resultA, combinations: combinationsA }
 }
 
 const INFO_PROPS = ['systems', 'runners']
 const CONTEXT_PROPS = ['git', 'ci', 'timestamp']
+
+const cleanCombination = function ({ stats, ...combination }, showDiff) {
+  const omittedStatsProps = showDiff ? [] : DIFF_STATS_PROPS
+  const statsA = omit(stats, omittedStatsProps)
+  return { ...combination, stats: statsA }
+}
+
+const DIFF_STATS_PROPS = ['diff']
 
 // We handle some reportConfig properties in core, and do not pass those to
 // reporters.
 const CORE_REPORT_PROPS = [
   'output',
   'insert',
+  'showDiff',
+  'colors',
   'info',
   'context',
   'link',
-  'colors',
 ]

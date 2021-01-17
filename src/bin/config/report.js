@@ -64,7 +64,7 @@ Several limits can be specified at once.`,
     group: REPORT,
     boolean: true,
     describe: `Use colors in output.
-Default: true if the terminal is interactive`,
+Default: true if the terminal is interactive.`,
   },
   info: {
     group: REPORT,
@@ -78,6 +78,12 @@ Default: false`,
     describe: `Show context information such as id, timestamp, commit/branch
 or CI build.
 Default: true for command "show", false otherwise`,
+  },
+  showDiff: {
+    group: REPORT,
+    boolean: true,
+    describe: `Show the difference with previous results.
+Default: true if the terminal is interactive.`,
   },
   link: {
     group: REPORT,

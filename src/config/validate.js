@@ -55,6 +55,7 @@ const EXAMPLE_CONFIG = {
   insert: './README.md',
   limit: optionalArray('task_id=10'),
   colors: false,
+  showDiff: false,
   context: true,
   link: false,
   include: optionalArray('task_id'),
