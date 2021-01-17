@@ -1,6 +1,6 @@
 import sortOn from 'sort-on'
 
-import { addCategoryInfos } from './category.js'
+import { groupCategoryInfos } from '../combination/group.js'
 
 // Add `result.*` properties based on grouping combinations by category.
 // This is done twice:
@@ -13,7 +13,7 @@ export const groupCombinations = function (results) {
 }
 
 export const groupResultCombinations = function (result) {
-  const { combinations, categories } = addCategoryInfos(result)
+  const { combinations, categories } = groupCategoryInfos(result)
   const combinationsA = sortCombinations(combinations)
   return { ...result, combinations: combinationsA, categories }
 }

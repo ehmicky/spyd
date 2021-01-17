@@ -1,13 +1,14 @@
 import sortOn from 'sort-on'
 
-import { COMBINATION_CATEGORIES } from '../combination/categories.js'
 import { getMean } from '../stats/sum.js'
 import { groupBy } from '../utils/group.js'
+
+import { COMBINATION_CATEGORIES } from './categories.js'
 
 // Group combinations per category.
 // Each category is assigned to a top-level result.categories.* property.
 // It includes its mean speed and rank.
-export const addCategoryInfos = function ({ combinations }) {
+export const groupCategoryInfos = function ({ combinations }) {
   const {
     combinations: combinationsA,
     ...categories
