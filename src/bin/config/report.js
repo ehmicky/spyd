@@ -55,13 +55,13 @@ Default: true if the terminal is interactive.`,
     group: REPORT,
     boolean: true,
     describe: `Show hardware and software information.
-Default: false`,
+Default: true when the "system" configuration property is set, false otherwise`,
   },
   showMetadata: {
     group: REPORT,
     boolean: true,
     describe: `Show metadata such as id, timestamp, commit/branch or CI build.
-Default: true for command "show", false otherwise`,
+Default: true for command "show" and "remove", false otherwise`,
   },
   showDiff: {
     group: REPORT,

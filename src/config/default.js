@@ -2,6 +2,7 @@
 export const addDefaultConfig = function (config, command) {
   return {
     ...DEFAULT_CONFIG,
+    showSystem: config.system !== undefined,
     showMetadata: METADATA_COMMANDS.has(command),
     ...config,
   }
