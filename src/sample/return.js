@@ -60,15 +60,15 @@ export const handleReturnValue = function (
     sampleMeasures: sampleMeasuresA,
     sampleMedian,
   } = normalizeSampleMeasures(sampleMeasures, repeat)
-  const bufferedMeasuresB = [...bufferedMeasuresA, sampleMeasuresA]
   const [
     measuresB,
-    bufferedMeasuresC,
+    bufferedMeasuresB,
     statsA,
     aggregateCountdownA,
   ] = aggregateMeasures({
     measures: measuresA,
-    bufferedMeasures: bufferedMeasuresB,
+    bufferedMeasures: bufferedMeasuresA,
+    sampleMeasures: sampleMeasuresA,
     stats,
     aggregateCountdown,
     sampleDurationLast,
@@ -80,7 +80,7 @@ export const handleReturnValue = function (
 
   return {
     measures: measuresB,
-    bufferedMeasures: bufferedMeasuresC,
+    bufferedMeasures: bufferedMeasuresB,
     samples: samplesB,
     loops: loopsB,
     times: timesB,
