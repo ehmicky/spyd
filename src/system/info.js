@@ -4,6 +4,8 @@ import { format as formatBytes } from 'bytes'
 import envCi from 'env-ci'
 import osName from 'os-name'
 
+// eslint-disable-next-line node/no-missing-import, import/no-unresolved
+import { version as spydVersion } from '../../../package.json'
 import { groupBy } from '../utils/group.js'
 
 // Users can specify a `system` configuration property.
@@ -54,9 +56,16 @@ const getMemory = function () {
 // priority order in the unlikely case two runners return the properties in
 // `versions`.
 const getSystemVersions = function (combinations) {
-  return Object.assign({}, ...combinations.map(getRunnerVersions))
+  return Object.assign({}, ...combinations.map(getRunnerVersions), {
+    [SPYD_VERSION_KEY]: spydVersion,
+  })
 }
 
 const getRunnerVersions = function ({ runnerVersions }) {
   return runnerVersions
 }
+
+// The spyd version is shown after other versions.
+// It has a longer name than just `spyd` to make it clear "spyd" is the tool
+// used for benchmarking.
+export const SPYD_VERSION_KEY = 'Benchmarked with spyd'

@@ -4,6 +4,8 @@ import mapObj from 'map-obj'
 
 import { cleanObject } from '../utils/clean.js'
 
+import { SPYD_VERSION_KEY } from './info.js'
+
 // `systems[0]` is a collection of all properties shared by other `systems`.
 // Its `id` and `title` are `undefined`.
 // This helps avoid duplication when reporting similar systems.
@@ -29,14 +31,17 @@ const getSharedSystem = function (firstSystem, systems) {
 
 const isSharedProp = function (key, value, systems) {
   return (
-    !NOT_SHARED_PROPS.has(key) &&
-    (isPlainObj(value) || systems.every((system) => system[key] === value))
+    ALWAYS_SHARED_PROPS.has(key) ||
+    (!NEVER_SHARED_PROPS.has(key) &&
+      (isPlainObj(value) || systems.every((system) => system[key] === value)))
   )
 }
 
+// Some properties are never system-specific, i.e. we only keep the latest
+const ALWAYS_SHARED_PROPS = new Set([SPYD_VERSION_KEY])
 // Some properties might possibly be common, but should not be shared since
 // they identify systems.
-const NOT_SHARED_PROPS = new Set(['id', 'title'])
+const NEVER_SHARED_PROPS = new Set(['id', 'title'])
 
 const getSharedSystemProp = function (key, value, systems) {
   if (!isPlainObj(value)) {
@@ -48,7 +53,11 @@ const getSharedSystemProp = function (key, value, systems) {
 }
 
 const removeSharedSystem = function (system, sharedSystem = {}) {
-  const systemA = filterObj(system, (key, value) => value !== sharedSystem[key])
+  const systemA = filterObj(
+    system,
+    (key, value) =>
+      !ALWAYS_SHARED_PROPS.has(key) && value !== sharedSystem[key],
+  )
   const systemB = mapObj(systemA, (key, value) => [
     key,
     removeSharedSystemProp(key, value, sharedSystem),
