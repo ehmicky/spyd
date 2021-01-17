@@ -1,0 +1,206 @@
+[
+  {
+    "id": "21148101-4760-4e3c-ac46-5e42d8655c82",
+    "timestamp": "2021-01-21T22:12:15.412Z",
+    "system": {
+      "id": "default_system",
+      "title": "default_system",
+      "machine": {
+        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "memory": "63GB",
+        "os": "Linux 5.8"
+      },
+      "git": {
+        "commit": "4221b22a3e5c539c1e00f19a567e05ddc088cdd4",
+        "branch": "main"
+      },
+      "versions": {
+        "Node": "15.6.0"
+      }
+    },
+    "combinations": [
+      {
+        "taskId": "math_random",
+        "taskTitle": "math_random",
+        "runnerId": "node",
+        "runnerTitle": "Node",
+        "runnerVersions": {
+          "Node": "15.6.0"
+        },
+        "systemId": "default_system",
+        "systemTitle": "default_system",
+        "stats": {
+          "median": 6.357723577235772,
+          "mean": 10.266524861082734,
+          "min": 6.121212121212121,
+          "max": 378.6241685144124,
+          "deviation": 3.6067083237130286,
+          "loops": 467,
+          "times": 2527404,
+          "repeat": 5412,
+          "samples": 1,
+          "minLoopDuration": 14813.999999999987
+        }
+      },
+      {
+        "taskId": "math_random_two",
+        "taskTitle": "math_random_two",
+        "runnerId": "node",
+        "runnerTitle": "Node",
+        "runnerVersions": {
+          "Node": "15.6.0"
+        },
+        "systemId": "default_system",
+        "systemTitle": "default_system",
+        "stats": {
+          "median": 6.376808834729626,
+          "mean": 6.441630701531691,
+          "min": 6.127760853008378,
+          "max": 13.383472962680884,
+          "deviation": 0.0835077861194821,
+          "loops": 486,
+          "times": 2552472,
+          "repeat": 5252,
+          "samples": 1,
+          "minLoopDuration": 13620.000000000002
+        }
+      }
+    ]
+  },
+  {
+    "id": "8f263390-f9fd-425d-b284-fec738b15d31",
+    "timestamp": "2021-01-21T22:12:34.888Z",
+    "system": {
+      "id": "default_system",
+      "title": "default_system",
+      "machine": {
+        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "memory": "63GB",
+        "os": "Linux 5.8"
+      },
+      "git": {
+        "commit": "4221b22a3e5c539c1e00f19a567e05ddc088cdd4",
+        "branch": "main"
+      },
+      "versions": {
+        "Node": "15.6.0"
+      }
+    },
+    "combinations": [
+      {
+        "taskId": "math_random",
+        "taskTitle": "math_random",
+        "runnerId": "node",
+        "runnerTitle": "Node",
+        "runnerVersions": {
+          "Node": "15.6.0"
+        },
+        "systemId": "default_system",
+        "systemTitle": "default_system",
+        "stats": {
+          "median": 6.315891472868217,
+          "mean": 6.431303393071129,
+          "min": 6.109760394644115,
+          "max": 18.648696264975335,
+          "deviation": 0.1223344539317,
+          "loops": 474,
+          "times": 2690424,
+          "repeat": 5676,
+          "samples": 1,
+          "minLoopDuration": 13956.000000000062
+        }
+      },
+      {
+        "taskId": "math_random_two",
+        "taskTitle": "math_random_two",
+        "runnerId": "node",
+        "runnerTitle": "Node",
+        "runnerVersions": {
+          "Node": "15.6.0"
+        },
+        "systemId": "default_system",
+        "systemTitle": "default_system",
+        "stats": {
+          "median": 6.309367373756336,
+          "mean": 14.098567860693596,
+          "min": 6.105124835742444,
+          "max": 435.06457668481323,
+          "deviation": 3.789809987851601,
+          "loops": 493,
+          "times": 2626211,
+          "repeat": 5327,
+          "samples": 1,
+          "minLoopDuration": 16668.00000000005
+        }
+      }
+    ]
+  },
+  {
+    "id": "4209c7d7-721d-4b5b-8465-4e038fa2890c",
+    "timestamp": "2021-01-21T22:12:56.190Z",
+    "system": {
+      "id": "default_system",
+      "title": "default_system",
+      "machine": {
+        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "memory": "63GB",
+        "os": "Linux 5.8"
+      },
+      "git": {
+        "commit": "4221b22a3e5c539c1e00f19a567e05ddc088cdd4",
+        "branch": "main"
+      },
+      "versions": {
+        "Node": "15.6.0"
+      }
+    },
+    "combinations": [
+      {
+        "taskId": "math_random",
+        "taskTitle": "math_random",
+        "runnerId": "node",
+        "runnerTitle": "Node",
+        "runnerVersions": {
+          "Node": "15.6.0"
+        },
+        "systemId": "default_system",
+        "systemTitle": "default_system",
+        "stats": {
+          "median": 6.377336218768444,
+          "mean": 13.373790027183006,
+          "min": 6.130238048396616,
+          "max": 465.0757426716506,
+          "deviation": 3.885266269609567,
+          "loops": 514,
+          "times": 2612662,
+          "repeat": 5083,
+          "samples": 1,
+          "minLoopDuration": 12605.999999999789
+        }
+      },
+      {
+        "taskId": "math_random_two",
+        "taskTitle": "math_random_two",
+        "runnerId": "node",
+        "runnerTitle": "Node",
+        "runnerVersions": {
+          "Node": "15.6.0"
+        },
+        "systemId": "default_system",
+        "systemTitle": "default_system",
+        "stats": {
+          "median": 6.38066248880931,
+          "mean": 13.08128693392794,
+          "min": 6.120859444941808,
+          "max": 394.66982990152195,
+          "deviation": 3.6658319155821775,
+          "loops": 481,
+          "times": 2686385,
+          "repeat": 5585,
+          "samples": 1,
+          "minLoopDuration": 12459.99999999998
+        }
+      }
+    ]
+  }
+]
