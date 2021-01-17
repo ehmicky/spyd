@@ -1,7 +1,11 @@
 import { addCombinationsDiff } from '../compare/diff.js'
 import { groupResultCombinations } from '../normalize/group.js'
 import { isSameCategory } from '../select/ids.js'
-import { normalizeResultSystems, mergeSystems } from '../system/merge.js'
+import {
+  startMergeSystems,
+  mergeSystems,
+  endMergeSystems,
+} from '../system/merge.js'
 
 // Merge previous results to the last result.
 // We add `result.previous` so that previous results can be reported. This array
@@ -40,8 +44,10 @@ export const mergeResults = function ([lastResult, ...previous]) {
 //  - Instead, we just use any previous combinations matching the current
 //    `include`/`exclude` properties. This is explicit and predictable.
 const mergePairs = function (lastResult, previous) {
-  const lastResultA = normalizeResultSystems(lastResult)
-  return previous.reduce(mergePair, lastResultA)
+  const lastResultA = startMergeSystems(lastResult)
+  const lastResultB = previous.reduce(mergePair, lastResultA)
+  const lastResultC = endMergeSystems(lastResultB)
+  return lastResultC
 }
 
 const mergePair = function (
