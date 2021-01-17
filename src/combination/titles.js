@@ -1,4 +1,4 @@
-import { COMBINATION_CATEGORIES } from '../select/ids.js'
+import { COMBINATION_CATEGORIES } from './categories.js'
 
 // Allow users to rename identifiers from any combination category: tasks,
 // runners, systems, variations. Shown only in reporters.

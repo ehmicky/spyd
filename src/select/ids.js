@@ -1,3 +1,8 @@
+import {
+  COMBINATION_CATEGORIES,
+  NON_COMBINATION_CATEGORY,
+} from '../combination/categories.js'
+
 // Retrieve user-defined identifiers: tasks, systems, variations, inputs
 // They are checked for allowed characters.
 // As opposed to plugin-defined identifiers: runners
@@ -14,12 +19,6 @@ const isUserId = function ({ category }) {
 
 const USER_ID_CATEGORIES = new Set(['task', 'system', 'input'])
 
-// Combination identifiers create a new combination category:
-// tasks, systems, variations, runners.
-// They:
-//  - can be used in `include`, `exclude`, `limit`, etc.
-//  - are checked for duplicates
-// As opposed to non-combination identifiers: inputs.
 export const isSameCategory = function (combinationA, combinationB) {
   return COMBINATION_CATEGORIES.every(
     ({ idName }) => combinationA[idName] === combinationB[idName],
@@ -41,30 +40,6 @@ const getIdInfos = function (combination) {
   return COMBINATION_CATEGORIES.map(getIdInfo.bind(undefined, combination))
 }
 
-export const COMBINATION_CATEGORIES = [
-  {
-    category: 'task',
-    propName: 'tasks',
-    idName: 'taskId',
-    titleName: 'taskTitle',
-    rankName: 'taskRank',
-  },
-  {
-    category: 'runner',
-    propName: 'runners',
-    idName: 'runnerId',
-    titleName: 'runnerTitle',
-    rankName: 'runnerRank',
-  },
-  {
-    category: 'system',
-    propName: 'systems',
-    idName: 'systemId',
-    titleName: 'systemTitle',
-    rankName: 'systemRank',
-  },
-]
-
 const getIdInfo = function (combination, { category, idName }) {
   const id = combination[idName]
   return { category, id }
@@ -85,7 +60,7 @@ const isNotSameCatDuplicate = function ({ category, id }, index, idInfos) {
 
 // Retrieve non-combination identifiers.
 const getNonCombinationsIds = function (inputs) {
-  return NON_COMBINATION_IDS.flatMap(
+  return NON_COMBINATION_CATEGORY.flatMap(
     getNonCombinationIds.bind(undefined, inputs),
   )
 }
@@ -93,13 +68,3 @@ const getNonCombinationsIds = function (inputs) {
 const getNonCombinationIds = function (inputs, { category, getIds }) {
   return getIds(inputs).map((id) => ({ category, id }))
 }
-
-const getInputIds = function (inputs) {
-  return inputs.map(getInputId)
-}
-
-const getInputId = function ({ inputId }) {
-  return inputId
-}
-
-const NON_COMBINATION_IDS = [{ category: 'input', getIds: getInputIds }]

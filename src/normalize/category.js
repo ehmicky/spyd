@@ -1,6 +1,6 @@
 import sortOn from 'sort-on'
 
-import { COMBINATION_CATEGORIES } from '../select/ids.js'
+import { COMBINATION_CATEGORIES } from '../combination/categories.js'
 import { getMean } from '../stats/sum.js'
 import { groupBy } from '../utils/group.js'
 
