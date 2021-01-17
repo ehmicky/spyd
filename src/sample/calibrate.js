@@ -20,7 +20,7 @@ export const calibrateReset = function ({
   loops,
   times,
 }) {
-  if (calibrated || samples === 0) {
+  if (calibrated) {
     return [measures, bufferedMeasures, measureDurations, samples, loops, times]
   }
 
