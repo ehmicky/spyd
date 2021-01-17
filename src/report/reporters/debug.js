@@ -34,21 +34,21 @@ const getTable = function (combinations) {
 const getHeader = function ({ row, stats }) {
   const rowName = getRowName(row)
   const nameSpace = ''.padStart(rowName.length)
-  const headerCells = STATS.map((name) => getHeaderCell({ stats, name })).join(
+  const headerCells = STATS.map((name) => getHeaderCell(stats, name)).join(
     CELL_SEPARATOR,
   )
   return `${titleColor(`${nameSpace} ${SEPARATOR_SIGN}`)} ${headerCells}`
 }
 
-const getHeaderCell = function ({ stats, name }) {
-  const cell = getCell({ stats, name, slow: false })
+const getHeaderCell = function (stats, name) {
+  const cell = getCell(stats, name)
   const headerName = STAT_TITLES[name].padStart(stringWidth(cell))
   return `${fieldColor(headerName)}`
 }
 
-const getRow = function ({ row, stats, slow }) {
+const getRow = function ({ row, stats }) {
   const rowName = getRowName(row)
-  const statsStr = getCells(stats, slow)
+  const statsStr = getCells(stats)
   return `${titleColor(`${rowName} ${SEPARATOR_SIGN}`)} ${statsStr}`
 }
 
@@ -56,19 +56,17 @@ const getRowName = function (row) {
   return row.join(SEPARATOR)
 }
 
-export const getCells = function (stats, slow) {
-  return STATS.map((name) => getCell({ stats, name, slow })).join(
-    CELL_SEPARATOR,
-  )
+export const getCells = function (stats) {
+  return STATS.map((name) => getCell(stats, name)).join(CELL_SEPARATOR)
 }
 
-const getCell = function ({ stats, name, slow }) {
+const getCell = function (stats, name) {
   const stat = stats[`${name}Pretty`]
   const headerLength = STAT_TITLES[name].length
   const padSize = Math.max(COLUMN_MIN_SIZE, headerLength, stringWidth(stat))
 
   const statA = padStart(stat, padSize)
-  return name === 'limit' && slow ? errorColor(statA) : statA
+  return statA
 }
 
 const COLUMN_MIN_SIZE = 7
