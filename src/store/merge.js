@@ -1,11 +1,12 @@
 import { isSameCategory } from '../combination/ids.js'
 import { addCombinationsDiff } from '../compare/diff.js'
-import { groupResultCombinations } from '../normalize/group.js'
 import {
   startMergeSystems,
   mergeSystems,
   endMergeSystems,
 } from '../system/merge.js'
+
+import { groupResultCombinations } from './group.js'
 
 // Merge previous results to the last result.
 // We add `result.previous` so that previous results can be reported. This array

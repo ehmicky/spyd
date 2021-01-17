@@ -1,8 +1,8 @@
 import { UserError } from '../error/main.js'
-import { groupCombinations } from '../normalize/group.js'
 import { selectResults } from '../select/main.js'
 
 import { decompressResults } from './compress.js'
+import { groupCombinations } from './group.js'
 import { migrateResults } from './migrate.js'
 import { sortResults } from './sort.js'
 
