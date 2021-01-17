@@ -1,3 +1,5 @@
+import { COMBINATION_CATEGORIES } from '../select/ids.js'
+
 // Allow users to rename identifiers from any combination category: tasks,
 // runners, systems, variations. Shown only in reporters.
 // We purposely show identifiers by default, i.e. titles need opt-in because:
@@ -17,17 +19,11 @@ export const addTitles = function (combinations, titles) {
 }
 
 const addCombinationTitles = function (combination, titles) {
-  return TITLE_PROPS.reduce(
+  return COMBINATION_CATEGORIES.reduce(
     addCombinationTitle.bind(undefined, titles),
     combination,
   )
 }
-
-const TITLE_PROPS = [
-  { idName: 'taskId', titleName: 'taskTitle' },
-  { idName: 'runnerId', titleName: 'runnerTitle' },
-  { idName: 'systemId', titleName: 'systemTitle' },
-]
 
 const addCombinationTitle = function (
   titles,
