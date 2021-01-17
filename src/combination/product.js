@@ -14,9 +14,7 @@ export const getCombinationsProduct = function ({
 // `runnerVersions`.
 const getCombinationsByTask = function ({ task, runners }) {
   const taskRunners = getTaskRunners({ task, runners })
-  return taskRunners.flatMap((runner) =>
-    getCombinationByRunner({ task, runner }),
-  )
+  return taskRunners.map((runner) => getCombinationByRunner({ task, runner }))
 }
 
 const getTaskRunners = function ({ task, runners }) {
