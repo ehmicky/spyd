@@ -4,6 +4,13 @@
 // to a stable number which does not vary much anymore.
 // During calibration, `repeat` is not callibrated and measures can be greatly
 // both inaccurate and imprecise.
+// We also always include the first sample in calibration:
+//  - It always runs the task exactly once. This is the task's cold start, which
+//    is usually much slower due to engine optimization and/or memoization.
+//  - The big difference of performance makes stats very imprecise.
+//  - It hinders `repeat` callibration because it might indicate that the first
+//    sample needs no `repeat` loop (due to being much slower than it really is)
+//    while it actually does.
 // Therefore we remove the measures taken during calibration.
 // In case there is not enough duration to finish calibration, we keep only the
 // last sample measures.
@@ -27,8 +34,15 @@ export const calibrateReset = function ({
 
 // Decides when calibration has ended.
 // Based on the difference between `repeat` and `newRepeat`.
-export const getCalibrated = function ({ calibrated, repeat, newRepeat }) {
-  return calibrated || newRepeat / repeat <= MAX_REPEAT_DIFF
+export const getCalibrated = function ({
+  calibrated,
+  repeat,
+  newRepeat,
+  allSamples,
+}) {
+  return (
+    allSamples !== 0 && (calibrated || newRepeat / repeat <= MAX_REPEAT_DIFF)
+  )
 }
 
 // To end calibration, `repeat` must vary once less than this percentage.

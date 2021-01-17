@@ -10,6 +10,7 @@ export const handleReturnValue = function (
   {
     measures,
     bufferedMeasures,
+    allSamples,
     samples,
     loops,
     times,
@@ -76,7 +77,12 @@ export const handleReturnValue = function (
   })
 
   const newRepeat = getRepeat({ repeat, sampleMedian, minLoopDuration })
-  const calibratedA = getCalibrated({ calibrated, repeat, newRepeat })
+  const calibratedA = getCalibrated({
+    calibrated,
+    repeat,
+    newRepeat,
+    allSamples,
+  })
 
   return {
     measures: measuresB,

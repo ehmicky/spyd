@@ -17,14 +17,13 @@ const eStartCombination = async function (combination) {
   ])
 }
 
+// If the runner does not support `repeat`, `calibrated` is always `true`
+// except for the cold start.
 const startCombination = async function (combination) {
   const {
     newCombination,
     returnValue: { calibrations },
   } = await receiveReturnValue(combination)
-
   const minLoopDuration = getMinLoopDuration(calibrations)
-  // If the runner does not support `repeat`, `calibrated` is always `true`
-  const calibrated = calibrations.length === 0
-  return { ...newCombination, minLoopDuration, calibrated }
+  return { ...newCombination, minLoopDuration }
 }
