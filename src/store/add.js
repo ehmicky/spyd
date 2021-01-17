@@ -8,7 +8,7 @@ import { listStore } from './list.js'
 export const addToStore = async function ({ result, config, stopped }) {
   const results = await listStore(config)
 
-  await save({ result, config, stopped })
+  await saveResult({ result, config, stopped })
 
   const resultsA = [...results, result]
   const resultA = mergeResults(resultsA)
@@ -17,12 +17,12 @@ export const addToStore = async function ({ result, config, stopped }) {
 
 // Save results so they can be compared or shown later.
 // We do not save stopped benchmarks.
-const save = async function ({
+const saveResult = async function ({
   result,
-  config: { save: saveConfig, store },
+  config: { save, store },
   stopped,
 }) {
-  if (!saveConfig || stopped) {
+  if (!save || stopped) {
     return
   }
 
