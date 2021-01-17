@@ -1,5 +1,6 @@
+import { cleanObject } from '../utils/clean.js'
+
 import { callReportFunc } from './call.js'
-import { handleReportConfig } from './config.js'
 import { getContents } from './content.js'
 import { insertContent } from './insert.js'
 import { printContent } from './print.js'
@@ -26,7 +27,10 @@ export const report = async function (
   )
 }
 
-// Perform each reporter
+// Perform each reporter.
+// `output`, `insert`, `colors`, `showDiff`, `showSystem`, `showMetadata`
+// can be set either for specific reporter (--reporter{id}.output) or for
+// all (--output).
 const useReporter = async function ({
   reportFunc,
   reportConfig,
@@ -38,13 +42,14 @@ const useReporter = async function ({
   showSystem,
   showMetadata,
 }) {
-  const reportConfigA = handleReportConfig(reportConfig, {
+  const reportConfigA = cleanObject({
     output,
     insert,
     colors,
     showDiff,
     showSystem,
     showMetadata,
+    ...reportConfig,
   })
 
   const content = await callReportFunc({
