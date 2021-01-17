@@ -11,21 +11,18 @@ export const COMBINATION_CATEGORIES = [
     category: 'task',
     propName: 'tasks',
     idName: 'taskId',
-    titleName: 'taskTitle',
     rankName: 'taskRank',
   },
   {
     category: 'runner',
     propName: 'runners',
     idName: 'runnerId',
-    titleName: 'runnerTitle',
     rankName: 'runnerRank',
   },
   {
     category: 'system',
     propName: 'systems',
     idName: 'systemId',
-    titleName: 'systemTitle',
     rankName: 'systemRank',
   },
 ]

@@ -16,12 +16,10 @@ export const groupCategoryInfos = function (combinations) {
 
 const addCategoryInfo = function (
   { combinations, categories },
-  { propName, idName, titleName, rankName },
+  { propName, idName, rankName },
 ) {
   const ids = getCategoryIds(combinations, idName)
-  const category = ids.map((id) =>
-    getCategory({ combinations, id, idName, titleName }),
-  )
+  const category = ids.map((id) => getCategory({ combinations, id, idName }))
   const categoryA = sortOn(category, 'mean')
 
   const combinationsA = combinations.map((combination) =>
@@ -38,16 +36,12 @@ const getCategoryIds = function (combinations, idName) {
   return [...new Set(ids)]
 }
 
-// After merging, several combinations with the same category id might have
-// different category titles. We prioritize the most recent result.
-const getCategory = function ({ combinations, id, idName, titleName }) {
-  const combinationsA = combinations.filter(
-    (combination) => combination[idName] === id,
-  )
-  const [{ [titleName]: title }] = combinationsA
-  const medians = combinationsA.map(getCombinationMedian)
+const getCategory = function ({ combinations, id, idName }) {
+  const medians = combinations
+    .filter((combination) => combination[idName] === id)
+    .map(getCombinationMedian)
   const mean = getMean(medians)
-  return { id, title, mean }
+  return { id, mean }
 }
 
 const getCombinationMedian = function ({ stats: { median } }) {

@@ -5,7 +5,7 @@ export const padTitles = function (combinations) {
   return combinations.map((combination) => addPadding(combination, paddings))
 }
 
-// Vertically align `taskTitle` and `runnertitle`
+// Vertically align `taskTitle` and `runnerTitle`
 const getPaddings = function (combinations) {
   const paddings = PADDED_PROPS.map((propName) =>
     getPadding(combinations, propName),

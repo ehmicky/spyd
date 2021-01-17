@@ -1,56 +1,24 @@
-import { COMBINATION_CATEGORIES } from '../combination/categories.js'
-
-// Allow users to rename identifiers from any combination category: tasks,
-// runners, systems, variations. Shown only in reporters.
-// We purposely show identifiers by default, i.e. titles need opt-in because:
-//  - they are more useful for users because they are used for selection
-//  - titles are not meant for user directly but for sharing the reports with
-//    others (e.g. with `insert` and `output`).
-// Titles are specified in the configuration instead of inside task files
-// because this:
-//   - allows starting to report titles without waiting for combination
-//     processes to be loaded
-//   - provides a single place for all identifiers, which is simpler
-//   - removes the need for runners to handle this
-export const addTitles = function (combinations, titles) {
-  return combinations.map((combination) =>
-    addCombinationTitles(combination, titles),
-  )
+// Add title to object if the corresponding title exists in the `titles`
+// configuration property.
+export const addTitles = function (obj, idNames, titles) {
+  return idNames.reduce((objA, idName) => addTitle(objA, idName, titles), obj)
 }
 
-const addCombinationTitles = function (combination, titles) {
-  return COMBINATION_CATEGORIES.reduce(
-    addCombinationTitle.bind(undefined, titles),
-    combination,
-  )
-}
+export const addTitle = function (obj, idName, titles) {
+  const id = obj[idName]
+  const { [id]: title = id } = titles
 
-const addCombinationTitle = function (
-  titles,
-  combination,
-  { idName, titleName },
-) {
-  const title = getCombinationTitle({ combination, idName, titleName, titles })
-  return { ...combination, [titleName]: title }
-}
-
-// We default to using the `id` unless a title is already set, which is the case
-// for `runner.title`.
-const getCombinationTitle = function ({
-  combination,
-  idName,
-  titleName,
-  titles,
-}) {
-  const id = combination[idName]
-
-  if (titles[id] !== undefined) {
-    return titles[id]
+  if (title === undefined) {
+    return obj
   }
 
-  if (combination[titleName] !== undefined) {
-    return combination[titleName]
-  }
+  const titleName = TITLE_PROPS[idName]
+  return { ...obj, [titleName]: title }
+}
 
-  return id
+const TITLE_PROPS = {
+  id: 'title',
+  taskId: 'taskTitle',
+  runnerId: 'runnerTitle',
+  systemId: 'systemTitle',
 }

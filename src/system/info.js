@@ -12,7 +12,7 @@ import { groupBy } from '../utils/group.js'
 // All tht information are automatically computed.
 // The `versions` are computed by runners.
 export const getSystem = function ({
-  combinations: [{ systemId, systemTitle }],
+  combinations: [{ systemId }],
   systemVersions,
   config: { cwd },
 }) {
@@ -20,7 +20,6 @@ export const getSystem = function ({
   const { commit, branch, tag, pr, prBranch, buildUrl } = envCi({ cwd })
   return {
     id: systemId,
-    title: systemTitle,
     machine,
     git: { commit, branch, tag, prNumber: pr, prBranch },
     ci: buildUrl,

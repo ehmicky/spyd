@@ -28,11 +28,8 @@ export const addInitProps = function (combination) {
 // Retrieve final combination properties used for reporting
 export const getFinalProps = function ({
   taskId,
-  taskTitle,
   runnerId,
-  runnerTitle,
   systemId,
-  systemTitle,
   measures,
   bufferedMeasures,
   stats,
@@ -52,11 +49,8 @@ export const getFinalProps = function ({
   })
   return {
     taskId,
-    taskTitle,
     runnerId,
-    runnerTitle,
     systemId,
-    systemTitle,
     stats: statsA,
   }
 }

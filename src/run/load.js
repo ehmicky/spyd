@@ -22,7 +22,6 @@ const runnerHasTasks = function (id, tasks) {
 
 const loadRunner = async function ({
   id: runnerId,
-  title: runnerTitle,
   config: runnerConfig,
   launch,
 }) {
@@ -33,7 +32,6 @@ const loadRunner = async function ({
   } = await launchRunner({ runnerId, runnerConfig, launch })
   return {
     runnerId,
-    runnerTitle,
     runnerSpawn,
     runnerSpawnOptions,
     runnerVersions,

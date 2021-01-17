@@ -68,8 +68,7 @@ const mergePair = function (result, previousResult) {
 // result. However, we still merge `system` so several systems are reported.
 // This allows comparing different systems.
 // We make sure the latest `combinations` are first in the merged array, so we
-// can prioritize them, for example when several combinations with the same
-// category id have different category titles.
+// can prioritize them.
 const mergePreviousResult = function (
   { combinations, systems, ...result },
   { system: previousSystem },

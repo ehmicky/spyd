@@ -23,19 +23,12 @@ const getTaskRunners = function ({ task, runners }) {
 
 const getCombinationByRunner = function ({
   task: { taskId, taskPath },
-  runner: {
-    runnerId,
-    runnerTitle,
-    runnerSpawn,
-    runnerSpawnOptions,
-    runnerConfig,
-  },
+  runner: { runnerId, runnerSpawn, runnerSpawnOptions, runnerConfig },
 }) {
   return {
     taskPath,
     taskId,
     runnerId,
-    runnerTitle,
     runnerSpawn,
     runnerSpawnOptions,
     runnerConfig,

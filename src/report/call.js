@@ -3,7 +3,7 @@ import { stderr } from 'process'
 import isInteractive from 'is-interactive'
 import omit from 'omit.js'
 
-import { removeTitles } from '../title/remove.js'
+import { showResultTitles } from '../title/show.js'
 
 // Call `reporter.report()`
 export const callReportFunc = async function ({
@@ -17,8 +17,9 @@ export const callReportFunc = async function ({
     showTitles,
     showDiff = getDefaultShowDiff(output),
   },
+  titles,
 }) {
-  const resultA = removeTitles(result, showTitles)
+  const resultA = showResultTitles(result, titles, showTitles)
   const resultB = cleanResult({
     result: resultA,
     showSystem,

@@ -1,5 +1,4 @@
 export const id = 'cli'
-export const title = 'CLI'
 
 export const launch = function () {
   return { spawn: ['node', MAIN_PATH] }

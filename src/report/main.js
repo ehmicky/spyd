@@ -17,6 +17,7 @@ export const report = async function (
     showDiff,
     showSystem,
     showMetadata,
+    titles,
   },
 ) {
   await Promise.all(
@@ -32,6 +33,7 @@ export const report = async function (
         showDiff,
         showSystem,
         showMetadata,
+        titles,
       }),
     ),
   )
@@ -52,6 +54,7 @@ const useReporter = async function ({
   showDiff,
   showSystem,
   showMetadata,
+  titles,
 }) {
   const reporterConfigA = cleanObject({
     output,
@@ -68,6 +71,7 @@ const useReporter = async function ({
     reportFunc,
     result,
     reporterConfig: reporterConfigA,
+    titles,
   })
 
   if (!hasContent(content)) {
