@@ -54,7 +54,7 @@ const cleanResult = function ({
   return { ...resultA, combinations: combinationsA }
 }
 
-const SYSTEM_PROPS = ['systems', 'runners']
+const SYSTEM_PROPS = ['systems']
 const METADATA_PROPS = ['id', 'timestamp']
 
 const cleanCombination = function ({ stats, ...combination }, showDiff) {
