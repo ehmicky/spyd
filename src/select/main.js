@@ -16,6 +16,18 @@ import { getPrefix } from './prefix.js'
 // `undefined` or an empty array. Making an empty array including nothing would
 // be more consistent. However, there is little use for it and it most likely
 // mean the user intent was to include everything.
+// Selection can be meant to filter which combination is being either measured,
+// or reported
+//  - In the `show` and `remove` commands, only reporting is happening
+//  - However, in the `bench` command, we both measure and report.
+//  - We purposely do not provide separate configuration properties for both
+//    cases because:
+//     - Only reporting what is being measured is more intuitive and provides
+//       with a stronger focus
+//     - This provides with fewer configuration properties, which is simpler
+//  - If users use `include`/`exclude` to limit how many combinations are
+//    being measured, but still want to see all combinations, they should
+//    perform two commands: first `bench` then `show`.
 export const selectResults = function (results, { include, exclude }) {
   return results
     .map((result) => selectResult(result, { include, exclude }))
