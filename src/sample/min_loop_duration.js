@@ -49,6 +49,20 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - The best way to benchmark those very fast functions is to increase their
 //    complexity. Since the runner already runs those in a "for" loop, the only
 //    thing that a task should do is increase the size of its inputs.
+// `minLoopDuration` is estimated based on an array of `emptyMeasures`:
+//  - This must be computed separately for each combination since they might
+//    vary depending on the task, system or runnerConfig
+//  - This results in more difference between the `repeat` of combinations of a
+//    given result, but in less difference between the average `repeat` of
+//    combinations of several results
+// `emptyMeasures` is computed by the runner at start time because:
+//  - This is simpler to implement for both the runner and the parent
+//  - This prevents its computation from de-optimizing the measured task
+//  - The median more stable as the `config` and tasks change
+//  - The precision of `minLoopDuration` is not very critical since the total
+//    number of `times` each step is run should be the same regardless of
+//    `repeat`. This is because a lower|higher `repeat` is balanced by
+//    `maxLoops` and `scale`.
 export const getMinLoopDuration = function (emptyMeasures) {
   if (emptyMeasures.length === 0) {
     return 0
@@ -59,9 +73,7 @@ export const getMinLoopDuration = function (emptyMeasures) {
   return Math.max(minResolution, minMeasureCost)
 }
 
-// This function estimates `measureCost` by making runners do `emptyMeasures`.
-// That cost must be computed separately for each combination since they might
-// vary depending on the task, system or runnerConfig.
+// This function estimates `measureCost`.based on `emptyMeasures`
 const getMinMeasureCost = function (emptyMeasures) {
   const measureCost = getUnsortedMedian(emptyMeasures)
   return measureCost * MIN_MEASURE_COST
