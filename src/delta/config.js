@@ -1,6 +1,7 @@
 import { validate as isUuid } from 'uuid'
 
 import { UserError } from '../error/main.js'
+import { findValue } from '../utils/find.js'
 
 import { getDeltaTimestamp } from './timestamp.js'
 
@@ -18,17 +19,17 @@ export const normalizeDelta = function (delta, name) {
 }
 
 const eNormalizeDelta = function (delta) {
-  const type = Object.keys(TYPES).find(
-    (typeA) => TYPES[typeA](delta) !== undefined,
+  const deltaReturn = findValue(Object.entries(TYPES), ([, getDeltaFunc]) =>
+    getDeltaFunc(delta),
   )
 
-  if (type === undefined) {
+  if (deltaReturn === undefined) {
     throw new UserError(
       'must be a number, a date, a time, an id or a git commit',
     )
   }
 
-  const value = TYPES[type](delta)
+  const [value, [type]] = deltaReturn
   return { type, value }
 }
 
