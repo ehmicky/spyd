@@ -5,12 +5,14 @@ import { matchSelector } from '../select/match.js'
 
 import { parseLimits } from './parse.js'
 
-// If any `combination.diff` is too slow compared to the `limit` configuration
-// property, we fail.
+// If any `combination.stats.diff` is too slow compared to the `limit`
+// configuration property, we fail.
+// It uses the `compare` configuration property like `showDiff` does.
 // Done after reporting.
-// `limit` is only meant to be used during measuring (`bench` command). It is
-// not intended for reporting: `showDiff` should be used for similar
-// reporting-focused purposes.
+// `limit` is only meant to print an error message and change the CLI exit code
+// during measuring (`bench` command). It is not intended to be shown in
+// reporting. Instead, `showDiff` should be used for similar reporting-focused
+// purposes.
 export const checkLimits = function ({ combinations }, limit) {
   const limits = parseLimits(limit, combinations)
   const limitErrors = combinations
