@@ -39,12 +39,12 @@ export const findByDelta = function (results, { type, value, original, name }) {
     throw new UserError('No previous results')
   }
 
-  const { find } = FORMATS.find((format) => format.type === type)
+  const { find, message } = FORMATS.find((format) => format.type === type)
   const index = find(results, value)
 
   if (index === undefined) {
     throw new UserError(
-      `Invalid "${name}" configuration property "${original}" (${type}): no matching results`,
+      `Invalid "${name}" configuration property "${original}" (${message}): no matching results`,
     )
   }
 

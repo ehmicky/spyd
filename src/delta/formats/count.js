@@ -24,6 +24,7 @@ const findByCount = function (results, count) {
 
 export const countFormat = {
   type: 'count',
+  message: 'count',
   parse: parseCount,
   find: findByCount,
 }

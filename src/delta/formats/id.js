@@ -13,4 +13,9 @@ const findById = function (results, id) {
   return results.find((result) => result.id === id)
 }
 
-export const idFormat = { type: 'id', parse: parseId, find: findById }
+export const idFormat = {
+  type: 'id',
+  message: 'id',
+  parse: parseId,
+  find: findById,
+}

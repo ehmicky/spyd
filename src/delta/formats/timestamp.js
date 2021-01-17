@@ -40,6 +40,7 @@ const findByTimestamp = function (results, timestamp) {
 
 export const timestampFormat = {
   type: 'timestamp',
+  message: 'date or time',
   parse: parseTimestamp,
   find: findByTimestamp,
 }

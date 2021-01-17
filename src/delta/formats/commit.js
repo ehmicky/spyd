@@ -19,6 +19,7 @@ const findByCommit = function (results, commit) {
 
 export const commitFormat = {
   type: 'commit',
+  message: 'commit hash',
   parse: parseCommit,
   find: findByCommit,
 }
