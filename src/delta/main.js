@@ -4,19 +4,26 @@ import { findValue } from '../utils/find.js'
 import { commitFormat } from './formats/commit.js'
 import { countFormat } from './formats/count.js'
 import { idFormat } from './formats/id.js'
+import { tagFormat } from './formats/tag.js'
 import { timestampFormat } from './formats/timestamp.js'
 
 // Several configuration properties targets a previous results using a delta,
 // which can an integer, date/time, result.id or git commit.
 // This validates and normalizes it to a `deltaQuery` object.
 export const normalizeDelta = function (delta, name) {
+  if (delta === '') {
+    throw new UserError(
+      `"${name}" configuration property "${delta}" must not be an empty string`,
+    )
+  }
+
   const deltaReturn = findValue(FORMATS, (format) =>
     parseDelta(format, delta, name),
   )
 
   if (deltaReturn === undefined) {
     throw new UserError(
-      `"${name}" configuration property "${delta}" must be a number, a date, a time, an id or a git commit.`,
+      `"${name}" configuration property "${delta}" must be a number, a date, a time, an id or a git commit/tag/branch.`,
     )
   }
 
@@ -53,4 +60,10 @@ export const findByDelta = function (results, { type, value, original, name }) {
 }
 
 // Order matters since the first successful parse() is used
-const FORMATS = [countFormat, timestampFormat, idFormat, commitFormat]
+const FORMATS = [
+  countFormat,
+  timestampFormat,
+  idFormat,
+  commitFormat,
+  tagFormat,
+]

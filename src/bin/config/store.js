@@ -24,6 +24,6 @@ Can be:
   - an integer: {integer}-th previous result
   - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
   - a result id
-  - a git commit`,
+  - a git commit, tag or branch`,
   },
 }
