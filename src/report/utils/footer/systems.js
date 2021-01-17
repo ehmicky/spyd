@@ -1,3 +1,5 @@
+import omit from 'omit.js'
+
 import { prettifyGit, prettifyPr } from './git.js'
 
 // Serialize `system` information for CLI reporters.
@@ -24,18 +26,22 @@ const getSystemFields = function ({ title, ...system }) {
   return { [title]: fields }
 }
 
-const getFields = function (system) {
-  const fields = SYSTEM_FIELDS.map(({ title, value }) => ({
-    [title]: value(system),
-  }))
-  return Object.assign({}, ...fields)
+const getFields = function ({
+  machine: { os, cpu, memory },
+  git: { commit, tag, branch, prNumber, prBranch },
+  ci,
+  versions,
+}) {
+  const fields = {
+    OS: os,
+    CPU: cpu,
+    Memory: memory,
+    Git: prettifyGit({ commit, tag, branch }),
+    PR: prettifyPr({ prNumber, prBranch }),
+    CI: ci,
+  }
+  return {
+    ...fields,
+    ...omit(versions, Object.keys(fields)),
+  }
 }
-
-const SYSTEM_FIELDS = [
-  { title: 'OS', value: ({ machine: { os } }) => os },
-  { title: 'CPU', value: ({ machine: { cpu } }) => cpu },
-  { title: 'Memory', value: ({ machine: { memory } }) => memory },
-  { title: 'Git', value: prettifyGit },
-  { title: 'PR', value: prettifyPr },
-  { title: 'CI', value: ({ ci }) => ci },
-]
