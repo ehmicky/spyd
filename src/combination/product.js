@@ -28,7 +28,6 @@ const getCombinationByRunner = function ({
     runnerTitle,
     runnerSpawn,
     runnerSpawnOptions,
-    runnerVersions,
     runnerConfig,
   },
 }) {
@@ -39,7 +38,6 @@ const getCombinationByRunner = function ({
     runnerTitle,
     runnerSpawn,
     runnerSpawnOptions,
-    runnerVersions,
     runnerConfig,
   }
 }

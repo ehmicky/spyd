@@ -4,7 +4,7 @@ import mapObj from 'map-obj'
 
 import { cleanObject } from '../utils/clean.js'
 
-import { SPYD_VERSION_KEY } from './info.js'
+import { SPYD_VERSION_KEY } from './versions.js'
 
 // `systems[0]` is a collection of all properties shared by other `systems`.
 // Its `id` and `title` are `undefined`.

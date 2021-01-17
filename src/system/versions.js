@@ -1,3 +1,5 @@
+// eslint-disable-next-line node/no-missing-import, import/no-unresolved
+import { version as spydVersion } from '../../../package.json'
 import { PluginError } from '../error/main.js'
 import { spawnProcess } from '../process/spawn.js'
 
@@ -11,18 +13,29 @@ import { spawnProcess } from '../process/spawn.js'
 // Reported by the `--showSystem` configuration property.
 // Meant to show information about runtime versions, modes (e.g. type of shell)
 // and configuration.
-export const getRunnerVersions = async function ({
-  versions,
-  runnerId,
-  runnerSpawnOptions,
-  cwd,
-}) {
+
+// `combinations` preserve the order of `tasks.*`, i.e. this is used as a
+// priority order in the unlikely case two runners return the properties in
+// `versions`.
+export const getSystemVersions = async function (runners, cwd) {
   const runnerVersions = await Promise.all(
-    Object.entries(versions).map(([name, version]) =>
+    runners.map((runner) => getRunnerVersions(runner, cwd)),
+  )
+  return Object.assign({}, ...runnerVersions, {
+    [SPYD_VERSION_KEY]: spydVersion,
+  })
+}
+
+const getRunnerVersions = async function (
+  { runnerVersions, runnerId, runnerSpawnOptions },
+  cwd,
+) {
+  const runnerVersionsA = await Promise.all(
+    Object.entries(runnerVersions).map(([name, version]) =>
       getRunnerVersion({ name, version, runnerId, runnerSpawnOptions, cwd }),
     ),
   )
-  return Object.assign({}, ...runnerVersions)
+  return Object.assign({}, ...runnerVersionsA)
 }
 
 const getRunnerVersion = async function ({
@@ -51,3 +64,8 @@ ${error.message}`,
     )
   }
 }
+
+// The spyd version is shown after other versions.
+// It has a longer name than just `spyd` to make it clear "spyd" is the tool
+// used for benchmarking.
+export const SPYD_VERSION_KEY = 'Benchmarked with spyd'

@@ -4,8 +4,6 @@ import { format as formatBytes } from 'bytes'
 import envCi from 'env-ci'
 import osName from 'os-name'
 
-// eslint-disable-next-line node/no-missing-import, import/no-unresolved
-import { version as spydVersion } from '../../../package.json'
 import { groupBy } from '../utils/group.js'
 
 // Users can specify a `system` configuration property.
@@ -14,20 +12,19 @@ import { groupBy } from '../utils/group.js'
 // All tht information are automatically computed.
 // The `versions` are computed by runners.
 export const getSystem = function ({
-  combinations,
   combinations: [{ systemId, systemTitle }],
+  systemVersions,
   config: { cwd },
 }) {
   const machine = getMachine()
   const { commit, branch, tag, pr, prBranch, buildUrl } = envCi({ cwd })
-  const versions = getSystemVersions(combinations)
   return {
     id: systemId,
     title: systemTitle,
     machine,
     git: { commit, branch, tag, prNumber: pr, prBranch },
     ci: buildUrl,
-    versions,
+    versions: systemVersions,
   }
 }
 
@@ -51,21 +48,3 @@ const getMemory = function () {
   const memory = totalmem()
   return formatBytes(memory, { decimalPlaces: 0 })
 }
-
-// `combinations` preserve the order of `tasks.*`, i.e. this is used as a
-// priority order in the unlikely case two runners return the properties in
-// `versions`.
-const getSystemVersions = function (combinations) {
-  return Object.assign({}, ...combinations.map(getRunnerVersions), {
-    [SPYD_VERSION_KEY]: spydVersion,
-  })
-}
-
-const getRunnerVersions = function ({ runnerVersions }) {
-  return runnerVersions
-}
-
-// The spyd version is shown after other versions.
-// It has a longer name than just `spyd` to make it clear "spyd" is the tool
-// used for benchmarking.
-export const SPYD_VERSION_KEY = 'Benchmarked with spyd'

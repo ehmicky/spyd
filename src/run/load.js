@@ -1,12 +1,13 @@
 import { UserError, PluginError } from '../error/main.js'
-
-import { getRunnerVersions } from './versions.js'
+import { getSystemVersions } from '../system/versions.js'
 
 // Select the runners for the current tasks files, and retrieve their
 // related spawn options using `runner.launch()`
-export const loadRunners = async function ({ tasks, runners, cwd }) {
+export const loadRunners = async function (tasks, runners, cwd) {
   const runnersA = runners.filter(({ id }) => runnerHasTasks(id, tasks))
-  return await Promise.all(runnersA.map((runner) => loadRunner(runner, cwd)))
+  const runnersB = await Promise.all(runnersA.map(loadRunner))
+  const systemVersions = await getSystemVersions(runnersB, cwd)
+  return { runners: runnersB, systemVersions }
 }
 
 // `runner` already includes only `tasks.*`.
@@ -19,21 +20,17 @@ const runnerHasTasks = function (id, tasks) {
   return tasks.some(({ runnerId }) => runnerId === id)
 }
 
-const loadRunner = async function (
-  { id: runnerId, title: runnerTitle, config: runnerConfig, launch },
-  cwd,
-) {
+const loadRunner = async function ({
+  id: runnerId,
+  title: runnerTitle,
+  config: runnerConfig,
+  launch,
+}) {
   const {
     spawn: runnerSpawn,
     spawnOptions: runnerSpawnOptions = {},
-    versions = {},
+    versions: runnerVersions = {},
   } = await launchRunner({ runnerId, runnerConfig, launch })
-  const runnerVersions = await getRunnerVersions({
-    versions,
-    runnerId,
-    runnerSpawnOptions,
-    cwd,
-  })
   return {
     runnerId,
     runnerTitle,

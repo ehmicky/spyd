@@ -9,7 +9,7 @@ import { cleanObject } from './utils/clean.js'
 
 // Perform a new benchmark
 export const performBenchmark = async function (config) {
-  const combinations = await getCombinations(config)
+  const { combinations, systemVersions } = await getCombinations(config)
 
   const stopState = getStopState()
   const { progressState, progressId, onProgressError } = startProgress(
@@ -20,6 +20,7 @@ export const performBenchmark = async function (config) {
   try {
     const result = await getResult({
       combinations,
+      systemVersions,
       stopState,
       progressState,
       onProgressError,
@@ -33,6 +34,7 @@ export const performBenchmark = async function (config) {
 
 const getResult = async function ({
   combinations,
+  systemVersions,
   stopState,
   progressState,
   onProgressError,
@@ -45,15 +47,19 @@ const getResult = async function ({
     progressState,
     onProgressError,
   })
-  const result = addResultInfo({ combinations: combinationsA, config })
+  const result = addResultInfo({
+    combinations: combinationsA,
+    systemVersions,
+    config,
+  })
   return result
 }
 
 // Add more information to the final result and normalize/sort it
-const addResultInfo = function ({ combinations, config }) {
+const addResultInfo = function ({ combinations, systemVersions, config }) {
   const id = uuidv4()
   const timestamp = new Date().toISOString()
-  const system = getSystem({ combinations, config })
+  const system = getSystem({ combinations, systemVersions, config })
   const result = { id, timestamp, system, combinations }
   const resultA = cleanObject(result)
   return resultA
