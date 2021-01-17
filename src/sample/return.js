@@ -75,8 +75,8 @@ export const handleReturnValue = function (
     repeatInit,
   })
 
-  const repeatA = getRepeat({ repeat, sampleMedian, minLoopDuration })
-  const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
+  const newRepeat = getRepeat({ repeat, sampleMedian, minLoopDuration })
+  const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat })
 
   return {
     measures: measuresB,
@@ -84,7 +84,7 @@ export const handleReturnValue = function (
     samples: samplesB,
     loops: loopsB,
     times: timesB,
-    repeat: repeatA,
+    repeat: newRepeat,
     repeatInit: repeatInitA,
     stats: statsA,
     aggregateCountdown: aggregateCountdownA,
