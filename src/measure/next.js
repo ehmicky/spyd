@@ -39,7 +39,7 @@ export const getNextCombination = function ({
 //    cleanup (afterEach and afterAll)
 //  - The `duration` might be adjusted for a specific machine that is faster
 //    than others. This might make slower machines time out.
-//  - This allows `duration: 0` to be used to measure each combination once
+//  - This allows `duration: 1` to be used to measure each combination once
 // Combination durations does not include the duration spent starting, ending
 // nor exiting them because:
 //  - Adding imports to a task should not change the task's number of samples
@@ -77,32 +77,68 @@ const getCombinationMaxLoops = function (combinations) {
 const MAX_LOOPS = 1e8
 
 const isRemainingCombination = function ({
-  combination: { totalDuration, sampleDurationMean, loops, calibrated },
+  combination: {
+    totalDuration,
+    sampleDurationMean,
+    sampleMedian,
+    minLoopDuration,
+    loops,
+    calibrated,
+  },
   duration,
   combinationMaxLoops,
 }) {
   return (
-    loops < combinationMaxLoops &&
-    hasTimeLeft({ duration, sampleDurationMean, totalDuration, calibrated })
+    loops === 0 ||
+    (loops < combinationMaxLoops &&
+      hasTimeLeft({
+        duration,
+        sampleDurationMean,
+        sampleMedian,
+        minLoopDuration,
+        totalDuration,
+        calibrated,
+      }))
   )
 }
 
 const hasTimeLeft = function ({
   duration,
   sampleDurationMean,
+  sampleMedian,
+  minLoopDuration,
   totalDuration,
   calibrated,
 }) {
   if (duration === 1) {
-    return !calibrated
+    return hasFastTimeLeft({ sampleMedian, minLoopDuration, calibrated })
   }
 
-  return (
-    duration === 0 ||
-    sampleDurationMean === undefined ||
-    totalDuration + sampleDurationMean < duration
-  )
+  return duration === 0 || totalDuration + sampleDurationMean < duration
 }
+
+// When `duration` is `1`, we run the combination only once.
+// But if the combination is calibrating, we wait for calibration.
+// This includes removing the cold start.
+// However, we do not remove the cold start for slow combinations since the user
+// would be able to perceive that the combination has run twice.
+const hasFastTimeLeft = function ({
+  sampleMedian,
+  minLoopDuration,
+  calibrated,
+}) {
+  return !calibrated && sampleMedian < minLoopDuration * FAST_MODE_MIN_RATE
+}
+
+// Combinations with a first duration slower than this will stop right away,
+// i.e. their cold start will be reported.
+// We decide what a slow combination is by using a multiple of
+// `minLoopDuration`. This allows not relying on hardcoded durations, making it
+// work on machines of all speed. Also, this ensures that we are not skipping
+// a `repeat` calibration due to a cold start.
+// If the runner does not support repeat loops, `minLoopDuration` will be 0,
+// i.e. cold start will always be included.
+const FAST_MODE_MIN_RATE = 1e2
 
 // Update the benchmark end in the progress reporting.
 // When a combination ends, we do not include its remaining duration anymore.

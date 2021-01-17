@@ -92,6 +92,7 @@ export const handleReturnValue = function (
     times: timesB,
     repeat: newRepeat,
     calibrated: calibratedA,
+    sampleMedian,
     stats: statsA,
     aggregateCountdown: aggregateCountdownA,
     measureDurations: measureDurationsA,
