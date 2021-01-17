@@ -1,3 +1,5 @@
+import { validate as isUuid } from 'uuid'
+
 import { UserError } from '../error/main.js'
 
 import { isDeltaTimestamp, getDeltaTimestamp } from './timestamp.js'
@@ -24,6 +26,10 @@ const eNormalizeDelta = function (delta) {
     return getDeltaTimestamp(delta)
   }
 
+  if (isUuid(delta)) {
+    return getDeltaId(delta)
+  }
+
   throw new UserError('must be a number, a date or a time')
 }
 
@@ -33,4 +39,8 @@ const getDeltaNumber = function (delta) {
   }
 
   return { type: 'count', value: delta }
+}
+
+const getDeltaId = function (delta) {
+  return { type: 'id', value: delta }
 }

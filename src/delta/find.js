@@ -37,7 +37,12 @@ const findByTimestamp = function (results, timestamp) {
   return index
 }
 
+const findById = function (results, id) {
+  return results.find((result) => result.id === id)
+}
+
 const QUERIES = {
   count: findByCount,
   timestamp: findByTimestamp,
+  id: findById,
 }

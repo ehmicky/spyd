@@ -3,7 +3,7 @@
 //  - can omit timezone (default to local timezone) but returned date is UTC
 //  - loose parsing
 export const isDeltaTimestamp = function (delta) {
-  return !Number.isNan(Number(new Date(delta)))
+  return !Number.isNaN(Number(new Date(delta)))
 }
 
 export const getDeltaTimestamp = function (delta) {
