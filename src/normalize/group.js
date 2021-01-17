@@ -12,10 +12,12 @@ export const groupCombinations = function (results) {
   return results.map(groupResultCombinations)
 }
 
-export const groupResultCombinations = function (result) {
-  const { combinations, categories } = groupCategoryInfos(result)
-  const combinationsA = sortCombinations(combinations)
-  return { ...result, combinations: combinationsA, categories }
+export const groupResultCombinations = function ({ combinations, ...result }) {
+  const { combinations: combinationsA, categories } = groupCategoryInfos(
+    combinations,
+  )
+  const combinationsB = sortCombinations(combinationsA)
+  return { ...result, combinations: combinationsB, categories }
 }
 
 // Sort combinations so the fastest tasks will be first, then the fastest

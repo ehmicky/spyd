@@ -8,16 +8,15 @@ import { COMBINATION_CATEGORIES } from './categories.js'
 // Group combinations per category.
 // Each category is assigned to a top-level result.categories.* property.
 // It includes its mean speed and rank.
-export const groupCategoryInfos = function ({ combinations }) {
-  const {
-    combinations: combinationsA,
-    ...categories
-  } = COMBINATION_CATEGORIES.reduce(addCategoryInfo, { combinations })
-  return { combinations: combinationsA, categories }
+export const groupCategoryInfos = function (combinations) {
+  return COMBINATION_CATEGORIES.reduce(addCategoryInfo, {
+    combinations,
+    categories: {},
+  })
 }
 
 const addCategoryInfo = function (
-  { combinations, ...categories },
+  { combinations, categories },
   { propName, idName, titleName, rankName },
 ) {
   const category = Object.values(
@@ -30,7 +29,10 @@ const addCategoryInfo = function (
   const combinationsB = combinations.map((combination) =>
     addRank({ combination, catgory: categoryA, idName, rankName }),
   )
-  return { combinations: combinationsB, ...categories, [propName]: categoryA }
+  return {
+    combinations: combinationsB,
+    categories: { ...categories, [propName]: categoryA },
+  }
 }
 
 const getCategory = function ({ combinations, idName, titleName }) {
