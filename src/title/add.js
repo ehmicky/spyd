@@ -7,9 +7,9 @@ import { COMBINATION_CATEGORIES } from '../combination/categories.js'
 //  - titles are not meant for user directly but for sharing the reports with
 //    others (e.g. with `insert` and `output`).
 // Titles are specified in the configuration instead of inside task files
-// because:
-//   - allow starting to report titles without waiting for combination processes
-//     to be loaded
+// because this:
+//   - allows starting to report titles without waiting for combination
+//     processes to be loaded
 //   - provides a single place for all identifiers, which is simpler
 //   - removes the need for runners to handle this
 export const addTitles = function (combinations, titles) {

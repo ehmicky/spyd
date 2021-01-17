@@ -1,8 +1,6 @@
 import mapObj from 'map-obj'
 
 // When `showTitles` is `false`, we show identifiers instead of titles.
-// Identifiers are shown by default instead of titles because they are most
-// useful, e.g. for selecting with `include` and `exclude`.
 // Titles can be configured with `titles` but requires an explicit opt-in to
 // be shown in reporters.
 // We do this by replacing every `title` by `id` in the `result` passed to
