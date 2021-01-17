@@ -14,8 +14,9 @@ const isUserId = function ({ type }) {
 
 const USER_ID_TYPES = new Set(['task', 'system', 'input'])
 
-// Combination identifiers create a new dimension: tasks, systems, variations,
-// runners. They:
+// Combination identifiers create a new combination category:
+// tasks, systems, variations, runners.
+// They:
 //  - can be used in `include`, `exclude`, `limit`, etc.
 //  - are checked for duplicates
 // As opposed to non-combination identifiers: inputs.

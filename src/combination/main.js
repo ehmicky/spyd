@@ -7,7 +7,7 @@ import { getCombinationsProduct } from './product.js'
 import { addTitles } from './titles.js'
 import { validateCombinationsIds } from './validate_ids.js'
 
-// Retrieve each combination, i.e. combination of each dimension
+// Retrieve each combination, i.e. combination of each combination category
 export const getCombinations = async function ({
   tasks,
   runners,

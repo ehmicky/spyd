@@ -45,10 +45,11 @@ const USER_ID_INVALID_START = '-'
 // We forbid other characters for forward compatibility.
 const USER_ID_REGEXP = /^\w[\w-]*$/u
 
-// We validate that identifiers are unique not only within their dimension but
-// across dimensions. This allows specifying identifiers without specifying
-// their dimension type (task, systems, runners, variations) in many
-// places including: `config.titles`, `config.include|exclude`, reporting.
+// We validate that identifiers are unique not only within their combination
+// category but across combination categories.
+// This allows specifying identifiers without specifying their combination
+// category (task, systems, runners, variations) in many places including:
+// `config.titles`, `config.include|exclude`, reporting.
 // Non-combination identifiers are not checked for duplicates since they are
 // not used for selection, reporting, `config.titles`, etc.
 const validateDuplicateId = function ({ type, id }, index, allIds) {
