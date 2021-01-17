@@ -1,10 +1,10 @@
 import { UserError } from '../error/main.js'
 import { findValue } from '../utils/find.js'
 
-import { parseCount, findByCount } from './formats/count.js'
-import { parseCommit, findByCommit } from './formats/git.js'
-import { parseId, findById } from './formats/id.js'
-import { parseTimestamp, findByTimestamp } from './formats/timestamp.js'
+import { commitFormat } from './formats/commit.js'
+import { countFormat } from './formats/count.js'
+import { idFormat } from './formats/id.js'
+import { timestampFormat } from './formats/timestamp.js'
 
 // Several configuration properties targets a previous results using a delta,
 // which can an integer, date/time, result.id or git commit.
@@ -20,7 +20,7 @@ export const normalizeDelta = function (delta, name) {
 }
 
 const getDeltaQuery = function (delta) {
-  const deltaReturn = findValue(DELTA_FORMATS, ({ parse }) => parse(delta))
+  const deltaReturn = findValue(FORMATS, ({ parse }) => parse(delta))
 
   if (deltaReturn === undefined) {
     throw new UserError(
@@ -39,9 +39,7 @@ export const findByDelta = function (results, { type, value, original, name }) {
     throw new UserError('No previous results')
   }
 
-  const { find } = DELTA_FORMATS.find(
-    (deltaFormat) => deltaFormat.type === type,
-  )
+  const { find } = FORMATS.find((format) => format.type === type)
   const index = find(results, value)
 
   if (index === undefined) {
@@ -54,9 +52,4 @@ export const findByDelta = function (results, { type, value, original, name }) {
 }
 
 // Order matters since the first successful parse() is used
-const DELTA_FORMATS = [
-  { type: 'count', parse: parseCount, find: findByCount },
-  { type: 'timestamp', parse: parseTimestamp, find: findByTimestamp },
-  { type: 'id', parse: parseId, find: findById },
-  { type: 'commit', parse: parseCommit, find: findByCommit },
-]
+const FORMATS = [countFormat, timestampFormat, idFormat, commitFormat]

@@ -3,7 +3,7 @@
 //  - can specify only the date, or both date and time
 //  - can omit timezone (default to local timezone) but returned date is UTC
 //  - loose parsing
-export const parseTimestamp = function (delta) {
+const parseTimestamp = function (delta) {
   if (Number.isNaN(Number(new Date(delta)))) {
     return
   }
@@ -28,7 +28,7 @@ const normalizeDayOnly = function (delta) {
 // such as mm/dd/yyyy
 const DAY_REGEXP = /^[^\d]*\d+[^\d]*\d+[^\d]*\d+[^\d]*$/u
 
-export const findByTimestamp = function (results, timestamp) {
+const findByTimestamp = function (results, timestamp) {
   const index = results.findIndex((result) => result.timestamp <= timestamp)
 
   if (index === -1) {
@@ -36,4 +36,10 @@ export const findByTimestamp = function (results, timestamp) {
   }
 
   return index
+}
+
+export const timestampFormat = {
+  type: 'timestamp',
+  parse: parseTimestamp,
+  find: findByTimestamp,
 }
