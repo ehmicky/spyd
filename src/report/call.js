@@ -46,7 +46,7 @@ const cleanResult = function ({
 }
 
 const INFO_PROPS = ['systems', 'runners']
-const CONTEXT_PROPS = ['git', 'ci', 'timestamp']
+const CONTEXT_PROPS = ['id', 'timestamp']
 
 const cleanCombination = function ({ stats, ...combination }, showDiff) {
   const omittedStatsProps = showDiff ? [] : DIFF_STATS_PROPS
