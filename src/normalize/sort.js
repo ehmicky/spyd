@@ -1,37 +1,29 @@
-import omit from 'omit.js'
 import sortOn from 'sort-on'
-
-import { groupBy } from '../utils/group.js'
 
 // Results are sorted by timestamp.
 // However, results of the same CI build are always consecutive.
 export const sortResults = function (results) {
-  const resultsA = results.map(addGroup)
-  const resultsB = Object.values(groupBy(resultsA, 'group'))
-  const resultsC = resultsB.map(removeGroups)
-  const resultsD = resultsC.map(addTimestamp)
-  const resultsE = sortOn(resultsD, 'timestamp')
+  const resultsGroups = groupResults(results)
+  const resultsGroupsA = resultsGroups.map(addTimestamp)
+  const resultsGroupsB = sortOn(resultsGroupsA, 'timestamp')
   // eslint-disable-next-line fp/no-mutating-methods
-  const resultsF = resultsE.flatMap(getResults).sort()
-  return resultsF
+  const resultsA = resultsGroupsB.flatMap(getResults).sort()
+  return resultsA
+}
+
+const groupResults = function (results) {
+  const groups = [...new Set(results.map(getGroup))]
+  return groups.map((group) => results.filter(isGroup.bind(undefined, group)))
+}
+
+const isGroup = function (group, result, index) {
+  return getGroup(result, index) === group
 }
 
 // `results` without a CI build use the `index`, i.e. are not grouped
 // with others.
-const addGroup = function (result, index) {
-  const {
-    system: { ci },
-  } = result
-  const group = ci === undefined ? String(index) : ci
-  return { ...result, group }
-}
-
-const removeGroups = function (results) {
-  return results.map(removeGroup)
-}
-
-const removeGroup = function (result) {
-  return omit(result, ['group'])
+const getGroup = function ({ system: { ci } }, index) {
+  return ci === undefined ? String(index) : ci
 }
 
 // Retrieve the latest result's timestamp
