@@ -20,9 +20,9 @@ For example: --storeFile.dir=path`,
     describe: `Which result to compare to when using the "limit" or "showDiff"
 configuration properties.
 Can be:
+  - nothing: compare with the last result
   - integer: compare with the {integer}-th previous result
   - a date|time: compare with the last result before that date|time.
-    Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-ddThh:mm:ssZ'.
-Default: 1`,
+    Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.`,
   },
 }

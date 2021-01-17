@@ -18,7 +18,7 @@ export const SHOW_COMMAND = {
 
 Show a previous result.
 
-The 'delta' argument can be:
+The "delta" argument can be:
   - nothing: show the last result
   - integer: show the {integer}-th previous result
   - a date|time: show the last result before that date|time.

@@ -20,7 +20,7 @@ export const DEFAULT_CONFIG = {
   titles: {},
   showTitles: false,
   showSystem: false,
-  delta: true,
+  delta: 1,
   compare: 1,
   include: [],
   exclude: [],
