@@ -11,7 +11,6 @@ export const addToStore = async function ({ result, config, stopped }) {
   await save({ result, config, stopped })
 
   const resultsA = [...results, result]
-
   const resultA = mergeResults(resultsA)
   return resultA
 }
