@@ -5,10 +5,7 @@ export const getFooter = function ({ id, timestamp, systems }) {
   return [
     getSharedSystem(systems),
     getSystems(systems),
-    {
-      Id: id,
-      Timestamp: getTimestamp(timestamp),
-    },
+    { Id: id, Timestamp: getTimestamp(timestamp) },
   ]
 }
 
