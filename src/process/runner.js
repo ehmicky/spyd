@@ -78,8 +78,16 @@ const getSpawnParams = function ({
 }) {
   const serverUrl = getServerUrl(origin, id)
   const inputsA = toInputsObj(inputs)
-  return { serverUrl, runnerConfig, taskPath, inputs: inputsA }
+  return {
+    serverUrl,
+    runnerConfig,
+    taskPath,
+    inputs: inputsA,
+    emptyLength: EMPTY_LENGTH,
+  }
 }
+
+const EMPTY_LENGTH = 1e4
 
 // Terminate each runner's process at the end of the benchmark.
 // In general, processes should already have exited thanks to error handling

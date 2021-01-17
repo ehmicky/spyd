@@ -18,6 +18,7 @@ export const handleReturnValue = function (
     times,
     repeat,
     repeatInit,
+    emptyMeasures,
     measureCosts,
     resolution,
     resolutionSize,
@@ -28,7 +29,7 @@ export const handleReturnValue = function (
     measureDurationLast,
     measureDurations,
   },
-  { mainMeasures, emptyMeasures },
+  { mainMeasures },
   { empty },
 ) {
   if (mainMeasures === undefined) {
@@ -110,6 +111,7 @@ export const handleReturnValue = function (
     repeat: repeatA,
     repeatInit: repeatInitA,
     measureCosts: measureCostsB,
+    emptyMeasures,
     resolution: resolutionA,
     resolutionSize: resolutionSizeA,
     minLoopDuration: minLoopDurationA,

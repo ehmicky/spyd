@@ -17,6 +17,9 @@ const eStartCombination = async function (combination) {
 }
 
 const startCombination = async function (combination) {
-  const { newCombination } = await receiveReturnValue(combination)
-  return newCombination
+  const {
+    newCombination,
+    returnValue: { emptyMeasures },
+  } = await receiveReturnValue(combination)
+  return { ...newCombination, emptyMeasures }
 }

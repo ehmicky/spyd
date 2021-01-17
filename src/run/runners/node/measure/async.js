@@ -1,7 +1,6 @@
 import now from 'precise-now'
 
 import { getTaskArgs } from './arg.js'
-import { addEmptyMeasure } from './empty.js'
 
 export const performLoopsAsync = async function ({
   main,
@@ -10,11 +9,10 @@ export const performLoopsAsync = async function ({
   taskArg,
   repeat,
   maxLoops,
-  mainMeasures,
-  emptyMeasures,
+  measures,
 }) {
   // eslint-disable-next-line fp/no-loops
-  while (mainMeasures.length < maxLoops) {
+  while (measures.length < maxLoops) {
     // eslint-disable-next-line no-await-in-loop
     await performLoopAsync({
       main,
@@ -22,8 +20,7 @@ export const performLoopsAsync = async function ({
       afterEach,
       taskArg,
       repeat,
-      mainMeasures,
-      emptyMeasures,
+      measures,
     })
   }
 }
@@ -34,17 +31,14 @@ const performLoopAsync = async function ({
   afterEach,
   taskArg,
   repeat,
-  emptyMeasures,
-  mainMeasures,
+  measures,
 }) {
-  addEmptyMeasure(emptyMeasures)
-
   const taskArgs = getTaskArgs(taskArg, repeat)
 
   try {
     await performHookAsync(beforeEach, taskArgs)
     // eslint-disable-next-line fp/no-mutating-methods
-    mainMeasures.push(await getDurationAsync(main, taskArgs))
+    measures.push(await getDurationAsync(main, taskArgs))
   } catch (error) {
     await silentAfterEachAsync(afterEach, taskArgs)
     throw error

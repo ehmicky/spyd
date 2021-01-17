@@ -40,11 +40,11 @@ const measureCombination = async function ({
   serverUrl,
   spawnParams,
 }) {
-  const startState = await start(spawnParams)
+  const { emptyMeasures, ...startState } = await start(spawnParams)
 
   try {
     await before(startState)
-    await measureSamples({ measure, serverUrl, startState })
+    await measureSamples({ measure, serverUrl, startState, emptyMeasures })
   } catch (error) {
     await safeAfter(after, startState)
     throw error
@@ -54,9 +54,14 @@ const measureCombination = async function ({
 }
 
 // Runs a new sample each time the main process asks for it
-const measureSamples = async function ({ measure, serverUrl, startState }) {
+const measureSamples = async function ({
+  measure,
+  serverUrl,
+  startState,
+  emptyMeasures,
+}) {
   // eslint-disable-next-line fp/no-let
-  let returnValue = {}
+  let returnValue = { emptyMeasures }
 
   // eslint-disable-next-line fp/no-loops
   while (true) {

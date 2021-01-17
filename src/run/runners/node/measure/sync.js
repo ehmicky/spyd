@@ -1,7 +1,6 @@
 import now from 'precise-now'
 
 import { getTaskArgs } from './arg.js'
-import { addEmptyMeasure } from './empty.js'
 
 // Perform measuring loops iteratively
 export const performLoopsSync = function ({
@@ -11,20 +10,11 @@ export const performLoopsSync = function ({
   taskArg,
   repeat,
   maxLoops,
-  mainMeasures,
-  emptyMeasures,
+  measures,
 }) {
   // eslint-disable-next-line fp/no-loops
-  while (mainMeasures.length < maxLoops) {
-    performLoopSync({
-      main,
-      beforeEach,
-      afterEach,
-      taskArg,
-      repeat,
-      mainMeasures,
-      emptyMeasures,
-    })
+  while (measures.length < maxLoops) {
+    performLoopSync({ main, beforeEach, afterEach, taskArg, repeat, measures })
   }
 }
 
@@ -34,17 +24,14 @@ const performLoopSync = function ({
   afterEach,
   taskArg,
   repeat,
-  mainMeasures,
-  emptyMeasures,
+  measures,
 }) {
-  addEmptyMeasure(emptyMeasures)
-
   const taskArgs = getTaskArgs(taskArg, repeat)
 
   try {
     performHookSync(beforeEach, taskArgs)
     // eslint-disable-next-line fp/no-mutating-methods
-    mainMeasures.push(getDurationSync(main, taskArgs))
+    measures.push(getDurationSync(main, taskArgs))
   } catch (error) {
     silentAfterEachSync(afterEach, taskArgs)
     throw error

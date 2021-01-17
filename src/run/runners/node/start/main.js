@@ -1,6 +1,7 @@
 import { UserError } from '../../../../error/main.js'
 import { importJsFile } from '../../../../utils/import.js'
 
+import { getEmptyMeasures } from './empty.js'
 import { normalizeTask } from './normalize.js'
 import { useRequireConfig } from './require_config.js'
 import { validateFile } from './validate.js'
@@ -10,6 +11,7 @@ export const start = async function ({
   runnerConfig: { require: requireConfig },
   taskPath,
   inputs,
+  emptyLength,
 }) {
   await useRequireConfig(requireConfig)
 
@@ -17,7 +19,8 @@ export const start = async function ({
   validateFile(task)
 
   const taskA = normalizeTask(task)
-  return { task: taskA, taskArg: inputs }
+  const emptyMeasures = getEmptyMeasures(emptyLength)
+  return { task: taskA, taskArg: inputs, emptyMeasures }
 }
 
 const importFile = function (taskPath) {
