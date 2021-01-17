@@ -7,12 +7,13 @@ import { groupBy } from '../utils/group.js'
 // However, results of the same CI build are always consecutive.
 export const sortResults = function (results) {
   const resultsA = results.map(addGroup)
-  const resultsB = groupBy(resultsA, 'group')
-  const resultsC = Object.values(resultsB).map(addTimestamp)
-  const resultsD = sortOn(resultsC, 'timestamp')
+  const resultsB = Object.values(groupBy(resultsA, 'group'))
+  const resultsC = resultsB.map(removeGroups)
+  const resultsD = resultsC.map(addTimestamp)
+  const resultsE = sortOn(resultsD, 'timestamp')
   // eslint-disable-next-line fp/no-mutating-methods
-  const resultsE = resultsD.flatMap(getResults).map(removeGroup).sort()
-  return resultsE
+  const resultsF = resultsE.flatMap(getResults).sort()
+  return resultsF
 }
 
 // `results` without a CI build use the `index`, i.e. are not grouped
@@ -23,6 +24,14 @@ const addGroup = function (result, index) {
   } = result
   const group = ci === undefined ? String(index) : ci
   return { ...result, group }
+}
+
+const removeGroups = function (results) {
+  return results.map(removeGroup)
+}
+
+const removeGroup = function (result) {
+  return omit(result, ['group'])
 }
 
 // Retrieve the latest result's timestamp
@@ -39,8 +48,4 @@ const getTimestamp = function ({ timestamp }) {
 
 const getResults = function ({ results }) {
   return results
-}
-
-const removeGroup = function (result) {
-  return omit(result, ['group'])
 }
