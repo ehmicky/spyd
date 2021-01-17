@@ -7,7 +7,8 @@ import { isDeltaTimestamp, getDeltaTimestamp } from './timestamp.js'
 // stores can use. We also validate it.
 export const normalizeDelta = function (delta, name) {
   try {
-    return eNormalizeDelta(delta)
+    const deltaA = eNormalizeDelta(delta)
+    return { ...deltaA, original: delta, name }
   } catch (error) {
     error.message = `"${name}" configuration property ${error.message}: ${delta}`
     throw error

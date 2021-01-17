@@ -1,15 +1,19 @@
 import { UserError } from '../error/main.js'
 
 // Get previous results index by result delta
-export const find = function (results, { type, value }) {
+export const find = function (results, { type, value, original, name }) {
   if (results.length === 0) {
-    throw new UserError('No previous results')
+    throw new UserError(
+      `Invalid "${name}" configuration property "${original}": no previous results`,
+    )
   }
 
   const index = QUERIES[type](results, value)
 
   if (index === undefined) {
-    throw new UserError('No matching results')
+    throw new UserError(
+      `Invalid "${name}" configuration property "${original}": no matching results`,
+    )
   }
 
   return index
