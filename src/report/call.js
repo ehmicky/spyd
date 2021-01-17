@@ -38,31 +38,43 @@ const getDefaultShowDiff = function (output) {
 // makes it easier to enable/disable each property both in CLI flags and in
 // `reporter{id}.*` properties.
 const cleanResult = function ({
-  result: { combinations, ...result },
-  showSystem,
+  result: { systems, combinations, ...result },
   showMetadata,
+  showSystem,
   showDiff,
 }) {
-  const omittedProps = [
-    ...(showSystem ? [] : SYSTEM_PROPS),
-    ...(showMetadata ? [] : METADATA_PROPS),
-  ]
-  const resultA = omit(result, omittedProps)
+  const resultA = maybeOmit(result, showMetadata, TOP_METADATA_PROPS)
+  const systemsA = systems.map((system) =>
+    cleanSystem(system, showMetadata, showSystem),
+  )
   const combinationsA = combinations.map((combination) =>
     cleanCombination(combination, showDiff),
   )
-  return { ...resultA, combinations: combinationsA }
+  return { ...resultA, systems: systemsA, combinations: combinationsA }
 }
 
-const SYSTEM_PROPS = ['systems']
-const METADATA_PROPS = ['id', 'timestamp']
+const cleanSystem = function (system, showMetadata, showSystem) {
+  const systemA = maybeOmit(system, showMetadata, METADATA_SYSTEM_PROPS)
+  const systemB = maybeOmit(systemA, showSystem, SYSTEM_PROPS)
+  return systemB
+}
 
 const cleanCombination = function ({ stats, ...combination }, showDiff) {
-  const omittedStatsProps = showDiff ? [] : DIFF_STATS_PROPS
-  const statsA = omit(stats, omittedStatsProps)
+  const statsA = maybeOmit(stats, showDiff, DIFF_STATS_PROPS)
   return { ...combination, stats: statsA }
 }
 
+const maybeOmit = function (obj, showProp, propNames) {
+  if (showProp) {
+    return obj
+  }
+
+  return omit(obj, propNames)
+}
+
+const TOP_METADATA_PROPS = ['id', 'timestamp']
+const METADATA_SYSTEM_PROPS = ['git', 'ci']
+const SYSTEM_PROPS = ['machine', 'versions']
 const DIFF_STATS_PROPS = ['diff']
 
 // We handle some reporterConfig properties in core, and do not pass those to

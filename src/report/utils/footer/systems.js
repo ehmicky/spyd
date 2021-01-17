@@ -27,10 +27,10 @@ const getSystemFields = function ({ title, ...system }) {
 }
 
 const getFields = function ({
-  machine: { os, cpu, memory },
-  git: { commit, tag, branch, prNumber, prBranch },
+  machine: { os, cpu, memory } = {},
+  git: { commit, tag, branch, prNumber, prBranch } = {},
   ci,
-  versions,
+  versions = {},
 }) {
   const fields = {
     OS: os,

@@ -11,12 +11,12 @@ import { prettifyStats } from '../utils/stats/main.js'
 import { addTitles } from '../utils/title/main.js'
 
 // Debugging reporter only meant for development purpose
-const report = function ({ id, timestamp, systems, git, ci, combinations }) {
+const report = function ({ id, timestamp, systems, combinations }) {
   const combinationsA = prettifyStats(combinations)
   const combinationsB = addTitles(combinationsA)
 
   const table = getTable(combinationsB)
-  const footer = prettifyValue(getFooter({ id, timestamp, systems, git, ci }))
+  const footer = prettifyValue(getFooter({ id, timestamp, systems }))
   return joinSections([table, footer])
 }
 
