@@ -14,8 +14,14 @@ import { parseLimits } from './parse.js'
 // reporting. Instead, `showDiff` should be used for similar reporting-focused
 // purposes.
 export const checkLimits = function ({ combinations }, limit) {
+  const combinationsWithDiff = combinations.filter(hasDiff)
+
+  if (combinationsWithDiff.length === 0) {
+    return
+  }
+
   const limits = parseLimits(limit, combinations)
-  const limitErrors = combinations
+  const limitErrors = combinationsWithDiff
     .map((combination) => checkCombinationLimits({ combination, limits }))
     .filter(Boolean)
 
@@ -27,6 +33,10 @@ export const checkLimits = function ({ combinations }, limit) {
   throw new UserError(limitError)
 }
 
+const hasDiff = function ({ stats: { diff } }) {
+  return diff !== undefined
+}
+
 const checkCombinationLimits = function ({
   combination,
   combination: {
@@ -35,10 +45,6 @@ const checkCombinationLimits = function ({
   },
   limits,
 }) {
-  if (diff === undefined) {
-    return
-  }
-
   const limit = limits.find(({ selector }) =>
     matchSelector(combination, selector),
   )
