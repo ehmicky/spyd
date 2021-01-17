@@ -1,5 +1,3 @@
-/* eslint-disable max-lines */
-
 import { aggregateMeasures } from './aggregate.js'
 import { getMeasureDuration } from './measure_duration.js'
 import { getMinLoopDuration } from './min_loop_duration.js'
@@ -19,9 +17,6 @@ export const handleReturnValue = function (
     repeat,
     repeatInit,
     emptyMeasures,
-    resolution,
-    resolutionSize,
-    minLoopDuration,
     stats,
     aggregateCountdown,
     sampleDurationLast,
@@ -29,7 +24,6 @@ export const handleReturnValue = function (
     measureDurations,
   },
   { mainMeasures },
-  { empty },
 ) {
   if (mainMeasures === undefined) {
     return {}
@@ -78,17 +72,11 @@ export const handleReturnValue = function (
     repeatInit,
   })
 
-  const [minLoopDurationA, resolutionA, resolutionSizeA] = getMinLoopDuration({
-    minLoopDuration,
-    resolution,
-    resolutionSize,
-    emptyMeasures,
-    empty,
-  })
+  const minLoopDuration = getMinLoopDuration(emptyMeasures, runnerRepeats)
   const repeatA = getRepeat({
     repeat,
     stats: statsA,
-    minLoopDuration: minLoopDurationA,
+    minLoopDuration,
     runnerRepeats,
   })
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
@@ -102,13 +90,10 @@ export const handleReturnValue = function (
     repeat: repeatA,
     repeatInit: repeatInitA,
     emptyMeasures,
-    resolution: resolutionA,
-    resolutionSize: resolutionSizeA,
-    minLoopDuration: minLoopDurationA,
+    minLoopDuration,
     stats: statsA,
     aggregateCountdown: aggregateCountdownA,
     measureDurations: measureDurationsA,
     measureDuration,
   }
 }
-/* eslint-enable max-lines */

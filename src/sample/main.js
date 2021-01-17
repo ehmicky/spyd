@@ -25,7 +25,6 @@ export const measureSample = async function (combination) {
   const newProps = handleReturnValue(
     { ...newCombination, measureDurationLast },
     returnValue,
-    params,
   )
   return { ...newCombination, ...newProps }
 }

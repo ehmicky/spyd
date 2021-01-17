@@ -1,7 +1,6 @@
-import { getMediansMedian, getMedian } from '../stats/median.js'
-import { sortFloats } from '../stats/sort.js'
+import timeResolution from 'time-resolution'
 
-import { getResolution } from './resolution.js'
+import { getUnsortedMedian } from '../stats/median.js'
 
 // `measureCost` is the time taken to take a measurement.
 // This includes the time to get the start/end timestamps for example.
@@ -49,30 +48,16 @@ import { getResolution } from './resolution.js'
 //  - The best way to benchmark those very fast functions is to increase their
 //    complexity. Since the runner already runs those in a "for" loop, the only
 //    thing that a task should do is increase the size of its inputs.
-export const getMinLoopDuration = function ({
-  minLoopDuration,
-  resolution,
-  resolutionSize,
-  emptyMeasures,
-  empty,
-}) {
-  if (!empty) {
-    return [minLoopDuration, resolution, resolutionSize]
+export const getMinLoopDuration = function (emptyMeasures, runnerRepeats) {
+  if (!runnerRepeats) {
+    return 0
   }
 
   const measureCost = getMeasureCost(emptyMeasures)
   const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
-  const [newResolution, newResolutionSize] = getResolution(
-    resolution,
-    resolutionSize,
-    emptyMeasures,
-  )
-  const minResolutionDuration = newResolution * MIN_RESOLUTION_PRECISION
-  const newMinLoopDuration = Math.max(
-    minResolutionDuration,
-    minMeasureCostDuration,
-  )
-  return [newMinLoopDuration, newResolution, newResolutionSize]
+  const resolution = getResolution(emptyMeasures)
+  const minResolutionDuration = resolution * MIN_RESOLUTION_PRECISION
+  return Math.max(minResolutionDuration, minMeasureCostDuration)
 }
 
 // This function estimates `measureCost` by making runners measure empty tasks.
@@ -81,8 +66,7 @@ export const getMinLoopDuration = function ({
 // iterations per sample have more time to optimize `measureCost`, which is
 // usually faster then.
 const getMeasureCost = function (emptyMeasures) {
-  sortFloats(emptyMeasures)
-  return getMedian(emptyMeasures)
+  return getUnsortedMedian(emptyMeasures)
 }
 
 // How many times slower each repeat loop iteration must be compared to
@@ -92,6 +76,21 @@ const getMeasureCost = function (emptyMeasures) {
 // contributes more to the overall lack of precision.
 // A higher value increases the task loop duration, creating fewer loops.
 const MIN_MEASURE_COST = 1e2
+
+// If the minimum resolution is too close to the measures, results will not be
+// precise enough. We apply the same `repeat` loop method as for `measureCost`
+// to prevent this.
+// The runner's resolution is the granularity of timestamps and measures.
+// This can be different from the OS resolution as the runner (or its
+// language/platform) might have a lower resolution.
+// We use `time-resolution` to guess the runner's minimum resolution.
+// For example, if a runner can only measure things with 1ms precision, every
+// nanoseconds measures will be a multiple of 1e6.
+// We estimate this using the `emptyMeasures`.
+const getResolution = function (emptyMeasures) {
+  return timeResolution(emptyMeasures)
+}
+
 // How many times slower the repeated median must be compared to the resolution.
 // A lower value makes measures closer to the resolution, making them less
 // precise.
