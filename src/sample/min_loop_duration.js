@@ -1,4 +1,5 @@
-import { getMediansMedian } from '../stats/median.js'
+import { getMediansMedian, getMedian } from '../stats/median.js'
+import { sortFloats } from '../stats/sort.js'
 
 import { getResolution } from './resolution.js'
 
@@ -50,17 +51,16 @@ import { getResolution } from './resolution.js'
 //    thing that a task should do is increase the size of its inputs.
 export const getMinLoopDuration = function ({
   minLoopDuration,
-  measureCosts,
   resolution,
   resolutionSize,
   emptyMeasures,
   empty,
 }) {
   if (!empty) {
-    return [minLoopDuration, measureCosts, resolution, resolutionSize]
+    return [minLoopDuration, resolution, resolutionSize]
   }
 
-  const measureCost = getMeasureCost(measureCosts, emptyMeasures)
+  const measureCost = getMeasureCost(emptyMeasures)
   const minMeasureCostDuration = measureCost * MIN_MEASURE_COST
   const [newResolution, newResolutionSize] = getResolution(
     resolution,
@@ -72,7 +72,7 @@ export const getMinLoopDuration = function ({
     minResolutionDuration,
     minMeasureCostDuration,
   )
-  return [newMinLoopDuration, measureCosts, newResolution, newResolutionSize]
+  return [newMinLoopDuration, newResolution, newResolutionSize]
 }
 
 // This function estimates `measureCost` by making runners measure empty tasks.
@@ -80,15 +80,10 @@ export const getMinLoopDuration = function ({
 // vary depending on the task, input or system. For example, tasks with more
 // iterations per sample have more time to optimize `measureCost`, which is
 // usually faster then.
-const getMeasureCost = function (measureCosts, emptyMeasures) {
-  return getMediansMedian({
-    medians: measureCosts,
-    array: emptyMeasures,
-    precision: EMPTY_MEASURES_PRECISION,
-  })
+const getMeasureCost = function (emptyMeasures) {
+  sortFloats(emptyMeasures)
+  return getMedian(emptyMeasures)
 }
-
-const EMPTY_MEASURES_PRECISION = 1e2
 
 // How many times slower each repeat loop iteration must be compared to
 // `measureCost`.

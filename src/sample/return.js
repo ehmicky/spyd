@@ -19,7 +19,6 @@ export const handleReturnValue = function (
     repeat,
     repeatInit,
     emptyMeasures,
-    measureCosts,
     resolution,
     resolutionSize,
     minLoopDuration,
@@ -39,7 +38,6 @@ export const handleReturnValue = function (
   const [
     measuresA,
     bufferedMeasuresA,
-    measureCostsA,
     measureDurationsA,
     samplesA,
     loopsA,
@@ -48,7 +46,6 @@ export const handleReturnValue = function (
     repeatInit,
     measures,
     bufferedMeasures,
-    measureCosts,
     measureDurations,
     samples,
     loops,
@@ -81,14 +78,8 @@ export const handleReturnValue = function (
     repeatInit,
   })
 
-  const [
-    minLoopDurationA,
-    measureCostsB,
-    resolutionA,
-    resolutionSizeA,
-  ] = getMinLoopDuration({
+  const [minLoopDurationA, resolutionA, resolutionSizeA] = getMinLoopDuration({
     minLoopDuration,
-    measureCosts: measureCostsA,
     resolution,
     resolutionSize,
     emptyMeasures,
@@ -110,7 +101,6 @@ export const handleReturnValue = function (
     times: timesB,
     repeat: repeatA,
     repeatInit: repeatInitA,
-    measureCosts: measureCostsB,
     emptyMeasures,
     resolution: resolutionA,
     resolutionSize: resolutionSizeA,

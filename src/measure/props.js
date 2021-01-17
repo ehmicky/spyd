@@ -26,7 +26,6 @@ export const addInitProps = function ({ runnerRepeats, ...combination }) {
     // `false`
     repeatInit: runnerRepeats,
     emptyMeasures: [],
-    measureCosts: [],
     resolution: Number.POSITIVE_INFINITY,
     resolutionSize: 0,
     minLoopDuration: 0,
