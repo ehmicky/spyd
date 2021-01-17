@@ -4,7 +4,7 @@ import { getUserIds, getCombinationsIds } from '../select/ids.js'
 // Validate combination identifiers.
 export const validateCombinationsIds = function (combinations, inputs) {
   const userIds = getUserIds(combinations, inputs)
-  userIds.forEach(validateIdsPerType)
+  userIds.forEach(validateCategoryIds)
 
   const combinationsIds = getCombinationsIds(combinations)
   combinationsIds.forEach(validateDuplicateId)
@@ -13,7 +13,7 @@ export const validateCombinationsIds = function (combinations, inputs) {
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.
 // Only for user-defined identifiers, not plugin-defined.
-const validateIdsPerType = function ({ type, id }) {
+const validateCategoryIds = function ({ type, id }) {
   if (id.trim() === '') {
     throw new UserError(
       `Invalid ${type} "${id}": the identifier must not be empty.`,

@@ -44,21 +44,21 @@ const getIdInfos = function (combination) {
 export const COMBINATION_CATEGORIES = [
   {
     type: 'task',
-    name: 'tasks',
+    propName: 'tasks',
     idName: 'taskId',
     titleName: 'taskTitle',
     rankName: 'taskRank',
   },
   {
     type: 'runner',
-    name: 'runners',
+    propName: 'runners',
     idName: 'runnerId',
     titleName: 'runnerTitle',
     rankName: 'runnerRank',
   },
   {
     type: 'system',
-    name: 'systems',
+    propName: 'systems',
     idName: 'systemId',
     titleName: 'systemTitle',
     rankName: 'systemRank',

@@ -17,7 +17,7 @@ export const addCategoryInfos = function ({ combinations }) {
 
 const addCategoryInfo = function (
   { combinations, ...categories },
-  { name, idName, titleName, rankName },
+  { propName, idName, titleName, rankName },
 ) {
   const category = Object.values(
     groupBy(combinations, idName),
@@ -29,7 +29,7 @@ const addCategoryInfo = function (
   const combinationsB = combinations.map((combination) =>
     addRank({ combination, catgory: categoryA, idName, rankName }),
   )
-  return { combinations: combinationsB, ...categories, [name]: categoryA }
+  return { combinations: combinationsB, ...categories, [propName]: categoryA }
 }
 
 const getCategory = function ({ combinations, idName, titleName }) {
