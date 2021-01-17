@@ -5,11 +5,16 @@ import { joinSystems } from '../system/join.js'
 import { addCollections } from './collections.js'
 
 // Add `result.*` properties based on grouping different combinations
+// This is done twice:
+//  - When loading results, on each of them so this is available in
+//    `report.previous`
+//  - When merging the final result, after merged combinations have been added
+//    to it
 export const groupCombinations = function (results) {
   return results.map(groupResultCombinations)
 }
 
-const groupResultCombinations = function ({
+export const groupResultCombinations = function ({
   combinations,
   systems,
   ...result

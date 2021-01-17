@@ -1,4 +1,5 @@
 import { addCombinationsDiff } from '../compare/diff.js'
+import { groupResultCombinations } from '../normalize/group.js'
 import { isSameCategory } from '../select/ids.js'
 
 // Merge previous results to the last result.
@@ -9,7 +10,8 @@ import { isSameCategory } from '../select/ids.js'
 export const mergeResults = function ([lastResult, ...previous]) {
   const result = previous.reduce(mergePair, lastResult)
   const resultA = addCombinationsDiff(result, previous)
-  return { ...resultA, previous }
+  const resultB = groupResultCombinations(resultA)
+  return { ...resultB, previous }
 }
 
 // `include|exclude` can be used to measure specific combinations, allowing
