@@ -1,4 +1,4 @@
-import { getInputsObj } from '../combination/inputs.js'
+import { toInputsObj } from '../combination/inputs.js'
 import { getServerUrl } from '../server/url.js'
 
 import { spawnProcess } from './spawn.js'
@@ -77,7 +77,7 @@ const getSpawnParams = function ({
   origin,
 }) {
   const serverUrl = getServerUrl(origin, id)
-  const inputsA = getInputsObj(inputs)
+  const inputsA = toInputsObj(inputs)
   return { serverUrl, runnerConfig, taskPath, inputs: inputsA }
 }
 
