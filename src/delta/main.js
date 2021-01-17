@@ -9,6 +9,7 @@ import { timestampFormat } from './formats/timestamp.js'
 
 // Several configuration properties targets a previous results using a delta,
 // which can an integer, date/time, result.id or git commit.
+// Previous results are always first filtered by `include`/`exclude`.
 // This validates and normalizes it to a `deltaQuery` object.
 export const normalizeDelta = function (delta, name) {
   if (delta === '') {
