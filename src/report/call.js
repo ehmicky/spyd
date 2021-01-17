@@ -50,7 +50,7 @@ const cleanResult = function ({
   return { ...resultA, combinations: combinationsA }
 }
 
-const SYSTEM_PROPS = ['systems', 'runners']
+const SYSTEM_PROPS = ['spydVersion', 'systems', 'runners']
 const METADATA_PROPS = ['id', 'timestamp']
 
 const cleanCombination = function ({ stats, ...combination }, showDiff) {
@@ -66,9 +66,8 @@ const DIFF_STATS_PROPS = ['diff']
 const CORE_REPORT_PROPS = [
   'output',
   'insert',
-  'showDiff',
   'colors',
   'showSystem',
   'showMetadata',
-  'link',
+  'showDiff',
 ]

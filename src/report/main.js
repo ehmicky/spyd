@@ -7,16 +7,7 @@ import { printContent } from './print.js'
 // Report results
 export const report = async function (
   result,
-  {
-    reporters,
-    output,
-    insert,
-    colors,
-    showDiff,
-    showSystem,
-    showMetadata,
-    link,
-  },
+  { reporters, output, insert, colors, showDiff, showSystem, showMetadata },
 ) {
   await Promise.all(
     reporters.map(({ report: reportFunc, config: reportConfig }) =>
@@ -30,7 +21,6 @@ export const report = async function (
         showDiff,
         showSystem,
         showMetadata,
-        link,
       }),
     ),
   )
@@ -47,7 +37,6 @@ const useReporter = async function ({
   showDiff,
   showSystem,
   showMetadata,
-  link,
 }) {
   const reportConfigA = handleReportConfig(reportConfig, {
     output,
@@ -56,7 +45,6 @@ const useReporter = async function ({
     showDiff,
     showSystem,
     showMetadata,
-    link,
   })
 
   const content = await callReportFunc({
@@ -70,8 +58,8 @@ const useReporter = async function ({
   }
 
   const { nonInteractiveContent, interactiveContent } = getContents(
-    reportConfigA,
     content,
+    reportConfigA,
   )
   await Promise.all([
     printContent(reportConfigA, nonInteractiveContent, interactiveContent),

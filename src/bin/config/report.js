@@ -15,7 +15,7 @@ Reporter-specific configuration properties can be specified by appending the
 reporter's name: --reportName.prop=value.
 For example: --reportJson.output=path
 The following properties can be set for any reporter: output, insert, colors,
-showSystem, showMetadata, link.
+showSystem, showMetadata.
 For example --reportJson.output is like --output but only for the json reporter.`,
   },
   titles: {
@@ -68,12 +68,6 @@ Default: true for command "show", false otherwise`,
     boolean: true,
     describe: `Show the difference with previous results.
 Default: true if the terminal is interactive.`,
-  },
-  link: {
-    group: REPORT,
-    boolean: true,
-    describe: `Show link to the library's main page.
-Default: true`,
   },
   since: {
     group: REPORT,

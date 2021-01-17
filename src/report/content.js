@@ -8,39 +8,29 @@ import stripAnsi from 'strip-ansi'
 // Interactive output/terminal have different default values for some report
 // config properties, so we compute two different contents: interactive and
 // non-interactive.
-export const getContents = function ({ link, colors }, content) {
-  const nonInteractiveContent = getNonInteractiveContent({
-    content,
-    link,
-    colors,
-  })
-  const interactiveContent = getInteractiveContent({ content, link, colors })
+export const getContents = function (content, { colors }) {
+  const nonInteractiveContent = getNonInteractiveContent(content, colors)
+  const interactiveContent = getInteractiveContent(content, colors)
   return { interactiveContent, nonInteractiveContent }
 }
 
-const getNonInteractiveContent = function ({
-  content,
-  link = true,
-  colors = false,
-}) {
-  return normalizeContent({ content, link, colors })
+const getNonInteractiveContent = function (content, colors = false) {
+  return normalizeContent(content, colors)
 }
 
-const getInteractiveContent = function ({
+const getInteractiveContent = function (
   content,
-  link = false,
   colors = isInteractive(stderr),
-}) {
-  return normalizeContent({ content, link, colors })
+) {
+  return normalizeContent(content, colors)
 }
 
-// Reporters should always assume `link` and `colors` are true, but the core
-// remove those from the returned content if not.
-const normalizeContent = function ({ content, link, colors }) {
+// Reporters should always assume `colors` are true, but the core remove this
+// from the returned content if not.
+const normalizeContent = function (content, colors) {
   const contentA = handleColors(content, colors)
-  const contentB = removeLink(contentA, link)
-  const contentC = trimContent(contentB)
-  return contentC
+  const contentB = trimContent(contentA)
+  return contentB
 }
 
 // Strip colors from reporters output if `colors` config property is false
@@ -51,23 +41,6 @@ const handleColors = function (content, colors) {
 
   return stripAnsi(content)
 }
-
-// Remove link if `link` config property is false
-const removeLink = function (content, link) {
-  if (link) {
-    return content
-  }
-
-  return content.split(UNIX_NEWLINE).filter(hasNoLink).join(UNIX_NEWLINE)
-}
-
-const UNIX_NEWLINE = '\n'
-
-const hasNoLink = function (line) {
-  return !line.includes(LINK)
-}
-
-const LINK = 'ehmicky/spyd'
 
 // Ensure that exactly one newline is before and after the content
 const trimContent = function (content) {

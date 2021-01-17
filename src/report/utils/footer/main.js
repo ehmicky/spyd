@@ -1,17 +1,17 @@
-import { noteColor } from '../colors.js'
-
 import { getSharedSystem, getSystems } from './systems.js'
 
-// Retrieve footer: id, systems, timestamp, git, ci, link
-export const getFooter = function ({ id, systems, timestamp }) {
+// Retrieve footer: id, timestamp, spydVersion, systems
+export const getFooter = function ({ id, timestamp, spydVersion, systems }) {
   return [
-    getSharedSystem(systems),
+    {
+      ...getSharedSystem(systems),
+      'Benchmarked with spyd': spydVersion,
+    },
     getSystems(systems),
     {
       Id: id,
       Timestamp: getTimestamp(timestamp),
     },
-    LINK_FOOTER,
   ]
 }
 
@@ -22,7 +22,3 @@ const getTimestamp = function (timestamp) {
 
   return new Date(timestamp).toLocaleString()
 }
-
-const LINK_FOOTER = noteColor(
-  'Benchmarked with spyd (https://github.com/ehmicky/spyd)',
-)

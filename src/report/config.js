@@ -1,16 +1,15 @@
-// `output`, `insert`, `colors`, `showDiff`, `showSystem`, `showMetadata`,
-// `link` can be set either for specific reporter (--report.REPORTER.output) or
-// for all (--output)
+// `output`, `insert`, `colors`, `showDiff`, `showSystem`, `showMetadata`
+// can be set either for specific reporter (--report.REPORTER.output) or for
+// all (--output)
 export const handleReportConfig = function (
   reportConfig,
-  { output, insert, colors, showDiff, link, showSystem, showMetadata },
+  { output, insert, colors, showDiff, showSystem, showMetadata },
 ) {
   const reportConfigA = {
     output,
     insert,
     colors,
     showDiff,
-    link,
     showSystem,
     showMetadata,
     ...reportConfig,
@@ -29,13 +28,7 @@ const convertBooleans = function (reportConfig) {
   return { ...reportConfig, ...booleanConfig }
 }
 
-const BOOLEAN_PROPS = [
-  'colors',
-  'showDiff',
-  'showSystem',
-  'showMetadata',
-  'link',
-]
+const BOOLEAN_PROPS = ['colors', 'showDiff', 'showSystem', 'showMetadata']
 
 const convertBoolean = function (name, value) {
   if (value === undefined) {

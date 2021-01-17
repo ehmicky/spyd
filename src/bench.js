@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
 
+// eslint-disable-next-line node/no-missing-import, import/no-unresolved
+import { version as spydVersion } from '../../package.json'
+
 import { getCombinations } from './combination/main.js'
 import { measureCombinations } from './measure/main.js'
 import { getStopState } from './measure/stop.js'
@@ -54,7 +57,7 @@ const addResultInfo = function ({ combinations, config }) {
   const id = uuidv4()
   const timestamp = new Date().toISOString()
   const system = getSystem({ combinations, config })
-  const result = { id, timestamp, system, combinations }
+  const result = { id, timestamp, spydVersion, system, combinations }
   const resultA = cleanObject(result)
   return resultA
 }

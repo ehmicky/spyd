@@ -57,7 +57,6 @@ const EXAMPLE_CONFIG = {
   colors: false,
   showDiff: false,
   showMetadata: true,
-  link: false,
   include: optionalArray('task_id'),
   exclude: optionalArray('task_id'),
   delta: VALID_DELTA,
