@@ -21,7 +21,6 @@ export const addInitProps = function (combination) {
     loops: 0,
     times: 0,
     repeat: 1,
-    emptyMeasures: [],
     resolution: 1,
     minLoopDuration: 0,
   }
