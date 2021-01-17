@@ -24,11 +24,11 @@ const addCategoryInfo = function (
   )
   const categoryA = sortOn(category, 'mean')
 
-  const combinationsB = combinations.map((combination) =>
-    addRank({ combination, catgory: categoryA, idName, rankName }),
+  const combinationsA = combinations.map((combination) =>
+    addRank({ combination, category: categoryA, idName, rankName }),
   )
   return {
-    combinations: combinationsB,
+    combinations: combinationsA,
     categories: { ...categories, [propName]: categoryA },
   }
 }
