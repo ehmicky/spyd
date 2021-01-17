@@ -1,11 +1,15 @@
 import { addCombinationsDiff } from '../compare/diff.js'
 import { isSameCategory } from '../select/ids.js'
 
-// Merge previous results to the last result
-export const mergeResults = function ([lastResult, ...results]) {
-  const result = results.reduce(mergePair, lastResult)
-  const resultA = addCombinationsDiff(result, results)
-  return resultA
+// Merge previous results to the last result.
+// We add `result.previous` so that previous results can be reported. This array
+// of results has the same shape as the merged result except for the properties
+// added during merge (`previous` and `combinations[*].stats.diff`). This allows
+// reporters to re-use code when displaying them.
+export const mergeResults = function ([lastResult, ...previous]) {
+  const result = previous.reduce(mergePair, lastResult)
+  const resultA = addCombinationsDiff(result, previous)
+  return { ...resultA, previous }
 }
 
 // `include|exclude` can be used to measure specific combinations, allowing
