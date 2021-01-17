@@ -18,13 +18,13 @@ export const callReportFunc = async function ({
     showDiff = getDefaultShowDiff(output),
   },
 }) {
-  const resultA = cleanResult({
-    result,
+  const resultA = removeTitles(result, showTitles)
+  const resultB = cleanResult({
+    result: resultA,
     showSystem,
     showMetadata,
     showDiff,
   })
-  const resultB = removeTitles(resultA, showTitles)
   const reportFuncProps = omit(reporterConfig, CORE_REPORT_PROPS)
   const content = await reportFunc(resultB, reportFuncProps)
   return content
