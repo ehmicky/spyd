@@ -2,17 +2,11 @@ import { find } from '../store/delta/find.js'
 
 // Retrieve the index of the previous result to compare/diff with
 export const getDiffIndex = function (results, diff) {
-  if (diff === undefined || isInitialDiff(results, diff)) {
+  if (diff === undefined || results.length === 0) {
     return
   }
 
   return find(results, diff)
-}
-
-// We do not error when using the default `--diff` and no results have been
-// saved yet
-const isInitialDiff = function (results, { queryType, queryValue }) {
-  return queryType === 'count' && queryValue === 1 && results.length === 0
 }
 
 // Retrieve the difference of median compared with a previous result

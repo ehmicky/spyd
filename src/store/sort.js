@@ -10,7 +10,8 @@ export const sortResults = function (results) {
   const resultsB = groupBy(resultsA, 'group')
   const resultsC = Object.values(resultsB).map(addTimestamp)
   const resultsD = sortOn(resultsC, 'timestamp')
-  const resultsE = resultsD.flatMap(getResults).map(removeGroup)
+  // eslint-disable-next-line fp/no-mutating-methods
+  const resultsE = resultsD.flatMap(getResults).map(removeGroup).sort()
   return resultsE
 }
 

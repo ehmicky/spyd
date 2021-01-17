@@ -19,6 +19,12 @@ const USER_ID_TYPES = new Set(['task', 'system', 'input'])
 //  - can be used in `include`, `exclude`, `limit`, etc.
 //  - are checked for duplicates
 // As opposed to non-combination identifiers: inputs.
+export const isSameCategory = function (combinationA, combinationB) {
+  return COMBINATION_IDS.every(
+    ({ idName }) => combinationA[idName] === combinationB[idName],
+  )
+}
+
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {

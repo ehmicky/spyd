@@ -1,7 +1,5 @@
 import omit from 'omit.js'
 
-import { getCombinationIds } from '../select/ids.js'
-
 import { getDiffIndex, getDiff } from './diff.js'
 import { addLimits, isSlow } from './limit.js'
 
@@ -13,23 +11,12 @@ import { addLimits, isSlow } from './limit.js'
 //     results removals
 export const compareResults = function (results, { diff, limit }) {
   const diffIndex = getDiffIndex(results, diff)
-  return results.map(addCombinationKeys).map((result, index, resultsA) =>
+  return results.map((result, index, resultsA) =>
     addResultPrevious(result, resultsA.slice(0, index - 1), {
       diffIndex,
       limit,
     }),
   )
-}
-
-// Add stable key describing combinations identity
-const addCombinationKeys = function ({ combinations, ...result }) {
-  const combinationsA = combinations.map(addCombinationKey)
-  return { ...result, combinations: combinationsA }
-}
-
-const addCombinationKey = function (combination) {
-  const key = getCombinationIds(combination).join(' ')
-  return { ...combination, key }
 }
 
 const addResultPrevious = function (
