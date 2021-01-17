@@ -32,14 +32,3 @@ export const getRepeat = function ({
 // `median` can be 0 when the task is too close to `minLoopDuration`.
 // In that case, we multiply the `repeat` with a fixed rate.
 const FAST_MEDIAN_RATE = 10
-
-// If the runner does not support `repeat`, its value is:
-//  - `undefined` in the runner
-//  - always `1` in the parent process
-export const getChildRepeat = function (repeat, runnerRepeats) {
-  if (!runnerRepeats) {
-    return
-  }
-
-  return repeat
-}
