@@ -1,3 +1,4 @@
+import { normalizeSampleMeasures } from './add.js'
 import { aggregateMeasures } from './aggregate.js'
 import { getMeasureDuration } from './measure_duration.js'
 import { getRepeat } from './repeat.js'
@@ -55,7 +56,11 @@ export const handleReturnValue = function (
     newLoops,
   )
 
-  const bufferedMeasuresB = [...bufferedMeasuresA, { sampleMeasures, repeat }]
+  const {
+    sampleMeasures: sampleMeasuresA,
+    sampleMedian,
+  } = normalizeSampleMeasures(sampleMeasures, repeat)
+  const bufferedMeasuresB = [...bufferedMeasuresA, sampleMeasuresA]
   const [
     measuresB,
     bufferedMeasuresC,
@@ -70,7 +75,7 @@ export const handleReturnValue = function (
     repeatInit,
   })
 
-  const repeatA = getRepeat({ repeat, stats: statsA, minLoopDuration })
+  const repeatA = getRepeat({ repeat, sampleMedian, minLoopDuration })
   const repeatInitA = getRepeatInit({ repeatInit, repeat, newRepeat: repeatA })
 
   return {

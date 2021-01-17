@@ -9,11 +9,12 @@
 // It repeats the task without the `measureCost` and perform an arithmetic mean.
 // We purposely avoid using `duration` so that increasing it does not change
 // measures.
-export const getRepeat = function ({
-  repeat,
-  stats: { median },
-  minLoopDuration,
-}) {
+// We use the `sampleMedian` instead of `stats.median`:
+//  - So that `repeat` adjusts to slowdowns of the task (for example due to
+//    competing processes).
+//  - It makes the initial `repeatInit` phase shorter. This leads to more
+//    stable `max` and `deviation` stats.
+export const getRepeat = function ({ repeat, sampleMedian, minLoopDuration }) {
   // If the runner does not supports `repeat`, it is always set to `1`.
   // We should not use a repeat loop when estimating `measureCost` since
   // `measureCost` only happens once per repeat loop
@@ -21,13 +22,13 @@ export const getRepeat = function ({
     return 1
   }
 
-  if (median === 0) {
+  if (sampleMedian === 0) {
     return repeat * FAST_MEDIAN_RATE
   }
 
-  return Math.ceil(minLoopDuration / median)
+  return Math.ceil(minLoopDuration / sampleMedian)
 }
 
-// `median` can be 0 when the task is too close to `minLoopDuration`.
+// `sampleMedian` can be 0 when the task is too close to `minLoopDuration`.
 // In that case, we multiply the `repeat` with a fixed rate.
 const FAST_MEDIAN_RATE = 10

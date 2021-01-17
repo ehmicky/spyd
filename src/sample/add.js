@@ -1,3 +1,4 @@
+import { getMedian } from '../stats/median.js'
 import { mergeSort } from '../stats/merge.js'
 import { sortFloats } from '../stats/sort.js'
 
@@ -6,20 +7,22 @@ import { sortFloats } from '../stats/sort.js'
 // sorting `measures` directly, which would be much slower.
 // The measures are also normalized from sampleMeasures + repeat.
 export const addBufferedMeasures = function (measures, bufferedMeasures) {
-  bufferedMeasures.forEach(({ sampleMeasures, repeat }) => {
-    addMeasures(measures, sampleMeasures, repeat)
+  bufferedMeasures.forEach((sampleMeasures) => {
+    mergeSort(measures, sampleMeasures)
   })
 }
 
-const addMeasures = function (measures, sampleMeasures, repeat) {
-  const newMeasures = normalizeMainMeasures(sampleMeasures, repeat)
-  sortFloats(newMeasures)
-  mergeSort(measures, newMeasures)
+// Normalize `sampleMeasures` by dividing `repeat` and sorting.
+export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
+  const sampleMeasuresA = normalizeRepeat(sampleMeasures, repeat)
+  sortFloats(sampleMeasuresA)
+  const sampleMedian = getMedian(sampleMeasuresA)
+  return { sampleMeasures: sampleMeasuresA, sampleMedian }
 }
 
 // The runner measures loops of the task. This retrieve the mean time to execute
 // the task each time, from the time to execute the whole loop.
-const normalizeMainMeasures = function (sampleMeasures, repeat) {
+const normalizeRepeat = function (sampleMeasures, repeat) {
   if (repeat === 1) {
     return sampleMeasures
   }
