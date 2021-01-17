@@ -20,21 +20,17 @@ const findByCount = function (results, count) {
     return
   }
 
-  return results.length - count
+  return count - 1
 }
 
 const findByTimestamp = function (results, timestamp) {
-  const index = results.findIndex((result) => result.timestamp > timestamp)
+  const index = results.findIndex((result) => result.timestamp <= timestamp)
 
-  if (index === 0) {
+  if (index === -1) {
     return
   }
 
-  if (index === -1) {
-    return results.length - 1
-  }
-
-  return index - 1
+  return index
 }
 
 const QUERIES = {
