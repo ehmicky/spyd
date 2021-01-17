@@ -20,11 +20,11 @@ const eStartCombination = async function (combination) {
 const startCombination = async function (combination) {
   const {
     newCombination,
-    returnValue: { emptyMeasures },
+    returnValue: { calibrations },
   } = await receiveReturnValue(combination)
 
-  const minLoopDuration = getMinLoopDuration(emptyMeasures)
+  const minLoopDuration = getMinLoopDuration(calibrations)
   // If the runner does not support `repeat`, `repeatInit` is always `false`
-  const repeatInit = emptyMeasures.length !== 0
+  const repeatInit = calibrations.length !== 0
   return { ...newCombination, minLoopDuration, repeatInit }
 }

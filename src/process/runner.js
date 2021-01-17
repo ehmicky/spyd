@@ -83,19 +83,19 @@ const getSpawnParams = function ({
     runnerConfig,
     taskPath,
     inputs: inputsA,
-    emptyLength: EMPTY_LENGTH,
+    calibrate: CALIBRATE_LENGTH,
   }
 }
 
-// Length of the `emptyMeasures` array that the runner should return.
+// Length of the `calibration` array that the runner should return.
 // We use a hardcoded number because:
 //  - This avoids differences due to some engines like v8 which optimize the
 //    speed of functions after repeating them a specific amount of times
 //  - This avoid different `duration` impacting the `repeat`
-//  - Computing each `emptyMeasure` should be fast
+//  - Computing each `calibration` should be fast
 //  - The resolution estimation algorithm requires a minimum amount of
-//    `emptyMeasures`
-const EMPTY_LENGTH = 1e4
+//    `calibrations`
+const CALIBRATE_LENGTH = 1e4
 
 // Terminate each runner's process at the end of the benchmark.
 // In general, processes should already have exited thanks to error handling

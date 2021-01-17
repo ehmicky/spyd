@@ -12,7 +12,7 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - Those should not use any `repeat` loop, since that is meant to remove the
 //    time to take timestamps, not the time to spawn processes.
 //  - Also, `measureCost` would be too large, creating very large `repeat`.
-//  - Those return an empty array for `emptyMeasures`, making them not use any
+//  - Those return an empty array of `calibrations`, making them not use any
 //    `repeat` loop.
 // Iterating the `repeat` loop adds a small duration, due to the time to
 // increment the loop counter (e.g. 1 or 2 CPU cycles)
@@ -49,13 +49,14 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - The best way to benchmark those very fast functions is to increase their
 //    complexity. Since the runner already runs those in a "for" loop, the only
 //    thing that a task should do is increase the size of its inputs.
-// `minLoopDuration` is estimated based on an array of `emptyMeasures`:
+// `minLoopDuration` is estimated based on an array of `calibrations`:
+//  - Each `calibration` is the duration to compute timestamps
 //  - This must be computed separately for each combination since they might
 //    vary depending on the task, system or runnerConfig
 //  - This results in more difference between the `repeat` of combinations of a
 //    given result, but in less difference between the average `repeat` of
 //    combinations of several results
-// `emptyMeasures` is computed by the runner at start time because:
+// `calibrations` is computed by the runner at start time because:
 //  - This is simpler to implement for both the runner and the parent
 //  - This prevents its computation from de-optimizing the measured task
 //  - The median more stable as the `config` and tasks change
@@ -63,19 +64,19 @@ import { getUnsortedMedian } from '../stats/median.js'
 //    number of `times` each step is run should be the same regardless of
 //    `repeat`. This is because a lower|higher `repeat` is balanced by
 //    `maxLoops` and `scale`.
-export const getMinLoopDuration = function (emptyMeasures) {
-  if (emptyMeasures.length === 0) {
+export const getMinLoopDuration = function (calibrations) {
+  if (calibrations.length === 0) {
     return 0
   }
 
-  const minMeasureCost = getMinMeasureCost(emptyMeasures)
-  const minResolution = getMinResolution(emptyMeasures)
+  const minMeasureCost = getMinMeasureCost(calibrations)
+  const minResolution = getMinResolution(calibrations)
   return Math.max(minResolution, minMeasureCost)
 }
 
-// This function estimates `measureCost`.based on `emptyMeasures`
-const getMinMeasureCost = function (emptyMeasures) {
-  const measureCost = getUnsortedMedian(emptyMeasures)
+// This function estimates `measureCost` based on `calibrations`
+const getMinMeasureCost = function (calibrations) {
+  const measureCost = getUnsortedMedian(calibrations)
   return measureCost * MIN_MEASURE_COST
 }
 
@@ -96,9 +97,9 @@ const MIN_MEASURE_COST = 1e2
 // We use `time-resolution` to guess the runner's minimum resolution.
 // For example, if a runner can only measure things with 1ms precision, every
 // nanoseconds measures will be a multiple of 1e6.
-// We estimate this using the `emptyMeasures`.
-const getMinResolution = function (emptyMeasures) {
-  const resolution = timeResolution(emptyMeasures)
+// We estimate this using the `calibrations`.
+const getMinResolution = function (calibrations) {
+  const resolution = timeResolution(calibrations)
   return resolution * MIN_RESOLUTION_PRECISION
 }
 

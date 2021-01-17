@@ -40,11 +40,11 @@ const measureCombination = async function ({
   serverUrl,
   spawnParams,
 }) {
-  const { emptyMeasures, ...startState } = await start(spawnParams)
+  const { calibrations, ...startState } = await start(spawnParams)
 
   try {
     await before(startState)
-    await measureSamples({ measure, serverUrl, startState, emptyMeasures })
+    await measureSamples({ measure, serverUrl, startState, calibrations })
   } catch (error) {
     await safeAfter(after, startState)
     throw error
@@ -58,10 +58,10 @@ const measureSamples = async function ({
   measure,
   serverUrl,
   startState,
-  emptyMeasures,
+  calibrations,
 }) {
   // eslint-disable-next-line fp/no-let
-  let returnValue = { emptyMeasures }
+  let returnValue = { calibrations }
 
   // eslint-disable-next-line fp/no-loops
   while (true) {
