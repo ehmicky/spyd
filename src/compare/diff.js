@@ -60,11 +60,11 @@ const getPreviousCombination = function ({ combinations }, combinationA) {
 }
 
 const addDiff = function (
-  { stats: { median, ...stats }, ...combination },
+  { stats, stats: { median }, ...combination },
   { stats: { median: previousMedian } },
 ) {
   const diff = getDiff(median, previousMedian)
-  return { ...combination, stats: { ...stats, median, diff } }
+  return { ...combination, stats: { ...stats, diff } }
 }
 
 const getDiff = function (median, previousMedian) {
