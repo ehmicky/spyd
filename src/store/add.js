@@ -2,12 +2,13 @@ import { UserError } from '../error/main.js'
 import { compressResult } from '../normalize/compress.js'
 import { mergeResults } from '../normalize/merge.js'
 
-import { listStore } from './list.js'
-
 // Add a new result
-export const addToStore = async function ({ result, config, stopped }) {
-  const results = await listStore(config)
-
+export const addToStore = async function ({
+  results,
+  result,
+  config,
+  stopped,
+}) {
   await saveResult({ result, config, stopped })
 
   const resultsA = [...results, result]

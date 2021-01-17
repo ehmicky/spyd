@@ -2,12 +2,9 @@ import { UserError } from '../error/main.js'
 import { mergeResults } from '../normalize/merge.js'
 
 import { find } from './delta/find.js'
-import { listStore } from './list.js'
 
 // Get a previous result by `count` or `timestamp`
-export const getFromStore = async function (delta, config) {
-  const results = await listStore(config)
-
+export const getFromStore = function (results, delta) {
   const resultsA = listResultsByDelta(results, delta)
   const result = mergeResults(resultsA)
   return result

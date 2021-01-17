@@ -5,6 +5,7 @@ import { report } from './report/main.js'
 import { addToStore } from './store/add.js'
 import { endStore } from './store/end.js'
 import { getFromStore } from './store/get.js'
+import { listStore } from './store/list.js'
 import { removeFromStore } from './store/remove.js'
 import { startStore } from './store/start.js'
 
@@ -15,8 +16,14 @@ export const bench = async function (configFlags) {
   const configB = await startStore(configA)
 
   try {
+    const results = await listStore(configB)
     const { result, stopped } = await performBenchmark(configB)
-    const resultA = await addToStore({ result, config: configB, stopped })
+    const resultA = await addToStore({
+      results,
+      result,
+      config: configB,
+      stopped,
+    })
     await report(resultA, configB)
     return resultA
   } finally {
@@ -30,7 +37,8 @@ export const show = async function (configFlags) {
   const configB = await startStore(configA)
 
   try {
-    const result = await getFromStore(delta, configB)
+    const results = await listStore(configB)
+    const result = getFromStore(results, delta)
     await report(result, configB)
     return result
   } finally {
@@ -44,7 +52,8 @@ export const remove = async function (configFlags) {
   const configB = await startStore(configA)
 
   try {
-    const result = await getFromStore(delta, configB)
+    const results = await listStore(configB)
+    const result = getFromStore(results, delta)
     await removeFromStore(result, configB)
   } finally {
     await endStore(configA)
