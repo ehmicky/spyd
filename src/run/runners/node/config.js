@@ -8,8 +8,7 @@ export const normalizeRunConfig = function (runnerConfig) {
 
   validate(runnerConfigB, { exampleConfig: EXAMPLE_CONFIG })
 
-  const runnerConfigC = { ...DEFAULT_CONFIG, ...runnerConfigB }
-  return runnerConfigC
+  return runnerConfigB
 }
 
 const isDefined = function (key, value) {
@@ -22,10 +21,7 @@ const normalizeVersion = function ({ version, ...runnerConfig }) {
   return { ...runnerConfig, version: versionA }
 }
 
-const DEFAULT_CONFIG = {}
-
 const EXAMPLE_CONFIG = {
-  ...DEFAULT_CONFIG,
   tasks: 'tasks.js',
   version: '12',
 }
