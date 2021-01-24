@@ -1,6 +1,7 @@
 import { version as currentVersion } from 'process'
 
-import { normalizeRunConfig } from './config.js'
+import { validate, multipleValidOptions } from 'jest-validate'
+
 import { getNodeVersion } from './version.js'
 
 const MAIN_PATH = `${__dirname}/main.js`
@@ -8,9 +9,9 @@ const MAIN_PATH = `${__dirname}/main.js`
 // Retrieve Node commands. By default it uses the current Node.js.
 // But `runnerNode.version` can be used to spawn a different Node.js version.
 export const launch = async function (runnerConfig) {
-  const runnerConfigA = normalizeRunConfig(runnerConfig)
+  validateConfig(runnerConfig)
 
-  const versionInfo = await getNodeVersion(runnerConfigA)
+  const versionInfo = await getNodeVersion(runnerConfig)
 
   if (versionInfo === undefined) {
     return {
@@ -25,4 +26,15 @@ export const launch = async function (runnerConfig) {
     spawnOptions,
     versions: { Node: version },
   }
+}
+
+// Validate runnerConfig
+const validateConfig = function (runnerConfig) {
+  validate(runnerConfig, { exampleConfig: EXAMPLE_CONFIG })
+}
+
+const EXAMPLE_CONFIG = {
+  tasks: 'tasks.js',
+  // eslint-disable-next-line no-magic-numbers
+  version: multipleValidOptions('12', 12),
 }

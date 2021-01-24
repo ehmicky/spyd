@@ -10,12 +10,18 @@ export const getNodeVersion = async function ({ version }) {
     return
   }
 
+  const versionA = normalizeVersion(version)
   const [versionInfo, allowedVersions] = await Promise.all([
-    getFullVersion(version),
+    getFullVersion(versionA),
     getAllowedVersions(),
   ])
   validateVersion(versionInfo, allowedVersions)
   return versionInfo
+}
+
+// If `version` is `MAJOR` or `MAJOR.MINOR`, yargs will parse it as a number
+const normalizeVersion = function (version) {
+  return typeof version === 'number' ? String(version) : version
 }
 
 // We retrieve the full Node version for validation purpose and for
@@ -27,7 +33,7 @@ const getFullVersion = async function (version) {
     return await nvexeca(version, 'node', { progress: true, dry: true })
   } catch (error) {
     throw new UserError(
-      `In the configuration property 'runnerNode.version': ${error.message}`,
+      `In the configuration property "runnerNode.version"\n${error.message}`,
     )
   }
 }
@@ -46,7 +52,8 @@ const getAllowedVersions = async function () {
 const validateVersion = function ({ versionRange, version }, allowedVersions) {
   if (!satisfies(version, allowedVersions)) {
     throw new UserError(
-      `In the configuration property 'runnerNode.version': version ${versionRange} must be ${allowedVersions}`,
+      `In the configuration property "runnerNode.version"
+Version ${versionRange} is invalid: it must be ${allowedVersions}`,
     )
   }
 }

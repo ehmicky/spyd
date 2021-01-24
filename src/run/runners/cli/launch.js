@@ -1,7 +1,7 @@
-import { validateShell } from './shell.js'
+import { validateConfig } from './validate.js'
 
-export const launch = function ({ shell }) {
-  validateShell(shell)
+export const launch = function (runnerConfig) {
+  validateConfig(runnerConfig)
   return { spawn: ['node', MAIN_PATH], versions: {} }
 }
 
