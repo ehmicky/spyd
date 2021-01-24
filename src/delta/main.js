@@ -62,6 +62,7 @@ const parseDelta = function ({
 export const findByDelta = async function (
   results,
   { type, value, delta, name },
+  cwd,
 ) {
   if (results.length === 0) {
     return -1
@@ -70,7 +71,7 @@ export const findByDelta = async function (
   const { find } = findFormat(type)
 
   try {
-    return await find(results, value)
+    return await find(results, value, cwd)
   } catch (error) {
     throw addDeltaError(error, { type, delta, name })
   }

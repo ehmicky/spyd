@@ -27,8 +27,8 @@ import { mergeLastCombinations } from './last.js'
 //    always involve only two bases (the reported result and the "since" result)
 // Previous results are filtered by `include` and `exclude`. This purposely
 // impacts the resolution of `since`.
-export const applySince = async function (previous, { since }) {
-  const sinceIndex = await findByDelta(previous, since)
+export const applySince = async function (previous, { since, cwd }) {
+  const sinceIndex = await findByDelta(previous, since, cwd)
 
   if (sinceIndex === -1) {
     return []

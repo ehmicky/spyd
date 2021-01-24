@@ -3,6 +3,8 @@ import { promises as fs } from 'fs'
 import pathExists from 'path-exists'
 import writeFileAtomic from 'write-file-atomic'
 
+import { UserError } from '../../../error/main.js'
+
 // Retrieve results from filesystem
 export const getResults = async function (dir) {
   const dataFile = await getDataFile(dir)
@@ -24,8 +26,15 @@ export const setResults = async function (dir, results) {
 }
 
 const getDataFile = async function (dir) {
-  await fs.mkdir(dir, { recursive: true })
+  try {
+    await fs.mkdir(dir, { recursive: true })
+  } catch (error) {
+    throw new UserError(
+      `Could not create history directory "${dir}"\n${error.message}`,
+    )
+  }
+
   return `${dir}/${DATA_FILE}`
 }
 
-const DATA_FILE = 'data.json'
+const DATA_FILE = 'history.json'

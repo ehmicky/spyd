@@ -6,4 +6,4 @@ export const getDir = function ({ cwd, dir = DEFAULT_DIR }) {
   return resolve(cwd, dir)
 }
 
-const DEFAULT_DIR = 'spyd'
+const DEFAULT_DIR = 'benchmark'
