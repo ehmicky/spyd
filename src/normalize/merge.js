@@ -1,5 +1,6 @@
 import { addCombinationsDiff } from '../compare/diff.js'
 import { findByDelta } from '../delta/main.js'
+import { addSharedSystem } from '../system/shared.js'
 
 import { groupResultCombinations } from './group.js'
 import { mergeLastCombinations } from './last.js'
@@ -15,7 +16,8 @@ export const mergeResults = async function (results, since) {
   const previousA = await applySince(previous, since)
   const result = getMergedResult(lastResult, previousA)
   const resultA = addCombinationsDiff(result, previousA)
-  return { ...resultA, previous: previousA }
+  const resultB = addSharedSystem(resultA)
+  return { ...resultB, previous: previousA }
 }
 
 // The `since` configuration property is used to:
