@@ -4,6 +4,7 @@ import { findValue } from '../utils/find.js'
 import { ciFormat } from './formats/ci.js'
 import { commitFormat } from './formats/commit.js'
 import { countFormat } from './formats/count.js'
+import { firstFormat } from './formats/first.js'
 import { idFormat } from './formats/id.js'
 import { tagFormat } from './formats/tag.js'
 import { timestampFormat } from './formats/timestamp.js'
@@ -69,6 +70,7 @@ export const findByDelta = function (results, { type, value, original, name }) {
 // Order matters since the first successful parse() is used
 const FORMATS = [
   countFormat,
+  firstFormat,
   timestampFormat,
   idFormat,
   ciFormat,
