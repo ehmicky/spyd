@@ -13,8 +13,8 @@ import { resolveConfigPaths } from './resolve.js'
 //  - add too many constraints related to naming configuration properties:
 //    case-sensitiveness (due to Windows) and fewer allowed delimiters (due
 //    to underscores only being allowed in Unix)
-export const loadConfig = async function (configFlags) {
-  const configNonFile = await resolveConfigPaths(configFlags, '.')
+export const loadConfig = async function (configFlags, cwd) {
+  const configNonFile = await resolveConfigPaths(configFlags, cwd)
 
   const configPath = await getConfigPath(configNonFile)
   const configFile = await loadConfigFile(configPath)

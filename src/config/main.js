@@ -17,7 +17,7 @@ import { validateConfig } from './validate.js'
 // would expect.
 export const getConfig = async function (command, configFlags = {}) {
   const cwd = getCwd()
-  const config = await loadConfig(configFlags)
+  const config = await loadConfig(configFlags, cwd)
 
   validateConfig(config)
   const envInfo = envCi({ cwd })
