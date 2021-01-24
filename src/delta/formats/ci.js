@@ -1,7 +1,6 @@
 import { UserError } from '../../error/main.js'
 
-// CI-friendly delta.
-// Compare with last CI build.
+// Delta can be "ci", to compare with last CI build.
 const parseCi = function (delta, { buildUrl: ciBuild }) {
   if (typeof delta !== 'string' || delta.toLowerCase() !== CI_DELTA) {
     return

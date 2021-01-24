@@ -1,6 +1,6 @@
 import { UserError } from '../../error/main.js'
 
-// Delta can an integer, to find the {integer}-th last result.
+// Delta can be an integer, to find the {integer}-th last result.
 // Default deltas are 1, i.e. last result.
 const parseCount = function (delta) {
   if (typeof delta !== 'number') {
