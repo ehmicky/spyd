@@ -8,7 +8,9 @@ import { UserError } from '../error/main.js'
 import { validateConfig } from './validate.js'
 
 // Retrieve `spyd.*` absolute file path.
-// `spyd.*` is optional, so this can return `undefined`.
+// `spyd.*` is optional, so this can return `undefined`. This allows
+// benchmarking on-the-fly in a terminal without having to create a
+// configuration file.
 export const getConfigPath = async function ({ config: configPath }, cwd) {
   if (configPath !== undefined) {
     return await getUserConfigPath(configPath, cwd)
@@ -31,15 +33,7 @@ const getUserConfigPath = async function (configPath, cwd) {
 
 // By default, we find the first `benchmark/spyd.*`.
 const getDefaultConfigPath = async function (cwd) {
-  const configPath = await findUp(DEFAULT_CONFIG, { cwd })
-
-  if (configPath === undefined) {
-    throw new UserError(`No configuration file was found. Please either:
-  - create ./benchmark/spyd.{yml,js,cjs,ts} in the repository root directory.
-  - create spyd.{yml,js,cjs,ts} somewhere else then specify its location using the --config flag.`)
-  }
-
-  return configPath
+  return await findUp(DEFAULT_CONFIG, { cwd })
 }
 
 // spyd.yaml is supported but undocumented. spyd.yml is preferred.
