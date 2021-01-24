@@ -31,6 +31,7 @@ export const DEFAULT_CONFIG = {
   showSystem: false,
   include: [],
   exclude: [],
+  runner: ['node'],
   reporter: ['debug'],
   progress: ['debug'],
   store: ['file'],

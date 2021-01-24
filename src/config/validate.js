@@ -49,6 +49,7 @@ const EXAMPLE_CONFIG = {
   config: './benchmark/spyd.yml',
   extend: './shared_spyd.yml',
   tasks: multipleValidOptions({ node: '*.task.js' }, { node: ['*.task.js'] }),
+  runner: optionalArray('node'),
   reporter: optionalArray('debug'),
   progress: optionalArray('debug'),
   store: optionalArray('file'),

@@ -11,7 +11,7 @@ export const PLUGIN_TYPES = [
     // Internal variable name
     varName: 'runners',
     // Configuration property selecting the plugin
-    property: 'tasks.*',
+    property: 'runner',
     // Prefix of the configuration property configuring the plugin
     configPrefix: 'runner',
     // Prefix of the npm package

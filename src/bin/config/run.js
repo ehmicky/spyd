@@ -12,12 +12,16 @@ The task filename (excluding its extension) is used as the task identifier.`,
   },
   runner: {
     group: TASKS,
-    describe: `Runner-specific configuration properties.
-Uses the following notation: --runnerId.prop=value.
-For example: --runnerNode.version=8
-Runners measure tasks for a specific programming language or platform.
+    string: true,
+    array: true,
+    requiresArg: true,
+    describe: `Tasks' programming language or platform.
+Can be specified several times.
 Built-in runners: node, cli.
-Custom runners can be installed from npm.`,
+Custom runners can be installed from npm.
+Runner-specific configuration properties can be specified by appending the runner's identifier: --runnerId.prop=value.
+For example: --runnerNode.version=8
+Default: "node"`,
   },
   inputs: {
     group: TASKS,

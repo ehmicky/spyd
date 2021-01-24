@@ -42,19 +42,11 @@ const getPluginsByType = async function ({
   modulePrefix,
   builtins,
 }) {
-  const ids = selectPlugins(property, config)
+  const ids = config[property]
   const plugins = await loadPlugins({ ids, type, modulePrefix, builtins })
   const pluginsA = addPluginsConfig({ plugins, config, configPrefix })
   validatePlugins(pluginsA, type)
   return [varName, pluginsA]
-}
-
-const selectPlugins = function (property, config) {
-  if (property === 'tasks.*') {
-    return Object.keys(config.tasks)
-  }
-
-  return config[property]
 }
 
 // Remove plugin properties, so only the normalized ones are available
