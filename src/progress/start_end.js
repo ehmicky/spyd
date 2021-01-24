@@ -4,10 +4,18 @@ import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 import isInteractive from 'is-interactive'
 
 import { setDelayedDescription } from './set.js'
-import { updateProgress, clearProgressFinal } from './update.js'
+import {
+  updateProgress,
+  clearProgressInit,
+  clearProgressFinal,
+} from './update.js'
 
 // Start progress reporting
-export const startProgress = function ({ combinations, duration, preview }) {
+export const startProgress = async function ({
+  combinations,
+  duration,
+  preview,
+}) {
   const progressState = {}
 
   if (isSilent(preview)) {
@@ -15,9 +23,10 @@ export const startProgress = function ({ combinations, duration, preview }) {
   }
 
   hideCursor()
+  await clearProgressInit()
 
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
-  const progressId = startUpdate(progressState, benchmarkDuration)
+  const progressId = await startUpdate(progressState, benchmarkDuration)
   setDelayedDescription(progressState, START_DESCRIPTION)
   return { progressState, progressId }
 }
@@ -35,10 +44,10 @@ const getBenchmarkDuration = function (combinations, duration) {
 }
 
 // Update progress at regular interval
-const startUpdate = function (progressState, benchmarkDuration) {
-  updateProgress({ progressState, benchmarkDuration, initial: true })
+const startUpdate = async function (progressState, benchmarkDuration) {
+  await updateProgress(progressState, benchmarkDuration)
   const progressId = setInterval(() => {
-    updateProgress({ progressState, benchmarkDuration, initial: false })
+    updateProgress(progressState, benchmarkDuration)
   }, UPDATE_FREQUENCY)
   return progressId
 }

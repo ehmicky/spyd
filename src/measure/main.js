@@ -12,7 +12,7 @@ export const measureBenchmark = async function (
   { duration, preview = true, cwd, exec = false },
 ) {
   const stopState = getStopState()
-  const { progressState, progressId } = startProgress({
+  const { progressState, progressId } = await startProgress({
     combinations,
     duration,
     preview,
