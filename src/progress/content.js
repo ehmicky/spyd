@@ -1,7 +1,7 @@
-import { noteColor } from '../../report/utils/colors.js'
+import { noteColor } from '../report/utils/colors.js'
 
-// Progress reporter only meant for debugging
-const update = function ({ percentage, time, description }) {
+// Retrieve progress content
+export const getContent = function ({ percentage, time, description }) {
   const percentageStr = getPercentageStr(percentage)
   const descriptionStr = getDescription(description)
   return `  ${time}${percentageStr}${descriptionStr}`
@@ -30,5 +30,3 @@ const getDescription = function (description) {
 
   return `\n\n  ${description}`
 }
-
-export const debug = { update }

@@ -9,13 +9,13 @@ import { getStopState } from './stop.js'
 // Also used when starting combinations to retrieve their tasks and steps.
 export const measureBenchmark = async function (
   combinations,
-  { duration, progresses, cwd, exec = false },
+  { duration, preview = true, cwd, exec = false },
 ) {
   const stopState = getStopState()
-  const { progressState, progressId, onProgressError } = startProgress({
+  const { progressState, progressId } = startProgress({
     combinations,
     duration,
-    progresses,
+    preview,
   })
 
   try {
@@ -27,7 +27,6 @@ export const measureBenchmark = async function (
       exec,
       stopState,
       progressState,
-      onProgressError,
     })
     return { combinations: combinationsB, stopped: stopState.stopped }
   } finally {
@@ -43,7 +42,6 @@ const startServerAndMeasure = async function ({
   exec,
   stopState,
   progressState,
-  onProgressError,
 }) {
   const { server, origin, combinations: combinationsA } = await startServer(
     combinations,
@@ -59,7 +57,6 @@ const startServerAndMeasure = async function ({
       exec,
       stopState,
       progressState,
-      onProgressError,
     })
   } finally {
     await endServer(server)

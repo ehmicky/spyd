@@ -20,7 +20,7 @@ export const execCombination = async function (combination, { cwd }) {
   printCombinationIds(combination)
 
   await measureBenchmark([combination], {
-    progresses: [{ id: 'silent' }],
+    preview: false,
     cwd,
     duration: 1,
     exec: true,

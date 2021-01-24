@@ -2,25 +2,24 @@ import { stderr } from 'process'
 import { cursorTo, clearScreenDown } from 'readline'
 import { promisify } from 'util'
 
+import { getContent } from './content.js'
 import { getDescription } from './set.js'
 import { getTimeProps } from './time_props.js'
 
 const pCursorTo = promisify(cursorTo)
 const pClearScreenDown = promisify(clearScreenDown)
 
-// Call each `reporter.update()`
+// Print progress
 export const updateProgress = async function ({
   progressState,
   combinations,
   duration,
-  progresses,
   initial,
 }) {
   const progressContent = getProgressContent({
     progressState,
     combinations,
     duration,
-    progresses,
   })
 
   await (initial ? clearProgressInit() : clearProgress())
@@ -32,7 +31,6 @@ const getProgressContent = function ({
   progressState,
   combinations,
   duration,
-  progresses,
 }) {
   const { percentage, time } = getTimeProps({
     progressState,
@@ -40,13 +38,8 @@ const getProgressContent = function ({
     duration,
   })
   const description = getDescription(progressState, duration)
-
-  return progresses
-    .map((progress) => progress.update({ percentage, time, description }))
-    .join(PROGRESS_SEPARATOR)
+  return getContent({ percentage, time, description })
 }
-
-const PROGRESS_SEPARATOR = '\n\n'
 
 // At the beginning of the benchmark, we print newlines so that clearing the
 // screen does not remove previous prompts

@@ -19,7 +19,6 @@ export const spawnAndMeasure = async function ({
   exec,
   stopState,
   progressState,
-  onProgressError,
 }) {
   const combinationsA = spawnRunnerProcesses({
     combinations,
@@ -35,7 +34,6 @@ export const spawnAndMeasure = async function ({
       exec,
       stopState,
       progressState,
-      onProgressError,
     })
   } finally {
     terminateRunnerProcesses(combinationsA)
@@ -49,7 +47,6 @@ const stopOrMeasure = async function ({
   exec,
   stopState,
   progressState,
-  onProgressError,
 }) {
   const { onAbort, removeStopHandler } = addStopHandler({
     stopState,
@@ -60,7 +57,6 @@ const stopOrMeasure = async function ({
   try {
     return await Promise.race([
       onAbort,
-      ...onProgressError,
       measureAllCombinations({
         combinations,
         duration,

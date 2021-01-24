@@ -1,66 +1,43 @@
+import { stderr } from 'process'
+
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
+import isInteractive from 'is-interactive'
 
 import { setDelayedDescription } from './set.js'
-import { isSilent } from './silent.js'
 import { updateProgress, clearProgressFinal } from './update.js'
 
-// Start progress reporting using the `progress` configuration property
-export const startProgress = function ({ combinations, duration, progresses }) {
+// Start progress reporting
+export const startProgress = function ({ combinations, duration, preview }) {
   const progressState = {}
 
-  if (isSilent(progresses)) {
-    return { progressState, onProgressError: [] }
+  if (isSilent(preview)) {
+    return { progressState }
   }
 
   hideCursor()
 
-  const { progressId, onProgressError } = startUpdate({
-    progresses,
-    combinations,
-    duration,
-    progressState,
-  })
+  const progressId = startUpdate({ combinations, duration, progressState })
   setDelayedDescription(progressState, START_DESCRIPTION)
-  return { progressState, progressId, onProgressError: [onProgressError] }
+  return { progressState, progressId }
 }
 
-const START_DESCRIPTION = 'Starting...'
+const isSilent = function (preview) {
+  return !preview || !isInteractive(stderr)
+}
 
 // Update progress at regular interval
-const startUpdate = function ({
-  progresses,
-  progressState,
-  combinations,
-  duration,
-}) {
-  // eslint-disable-next-line fp/no-let, init-declarations
-  let progressId
-  // eslint-disable-next-line promise/avoid-new
-  const onProgressError = new Promise((resolve, reject) => {
-    // eslint-disable-next-line fp/no-mutation
-    progressId = setInterval(() => {
-      updateProgress({
-        progressState,
-        combinations,
-        duration,
-        progresses,
-        initial: false,
-      }).catch(reject)
-    }, UPDATE_FREQUENCY)
-
-    updateProgress({
-      progressState,
-      combinations,
-      duration,
-      progresses,
-      initial: true,
-    }).catch(reject)
-  })
-  return { progressId, onProgressError }
+const startUpdate = function ({ progressState, combinations, duration }) {
+  updateProgress({ progressState, combinations, duration, initial: true })
+  const progressId = setInterval(() => {
+    updateProgress({ progressState, combinations, duration, initial: false })
+  }, UPDATE_FREQUENCY)
+  return progressId
 }
 
 // How often (in milliseconds) to update progress
 const UPDATE_FREQUENCY = 1e2
+
+const START_DESCRIPTION = 'Starting...'
 
 // End progress reporting.
 // When stopped, we keep the progress reporting.
