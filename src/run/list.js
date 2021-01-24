@@ -1,3 +1,5 @@
+import { getTaskPath } from './path.js'
+
 // The tasks file for each runner is selected using the `runnerId.tasks`
 // configuration property.
 // The `tasks` can be used to specify a default tasks file for all runners.
@@ -24,13 +26,28 @@
 //     - too implicit/magic
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
-export const listTasks = function (tasks, runners) {
-  return runners.map((runner) => getRunnerTasks(tasks, runner))
+export const listTasks = async function (tasks, runners, cwd) {
+  const tasksA = await Promise.all(
+    runners.map((runner) => getRunnerTasks(tasks, runner, cwd)),
+  )
+  return [].concat(...tasksA)
 }
 
-const getRunnerTasks = function (
+const getRunnerTasks = async function (
   tasks,
-  { runnerId, runnerConfig: { tasks: taskPath = tasks } },
+  { runnerId, runnerConfig, runnerExtensions },
+  cwd,
 ) {
-  return { taskPath, runnerId }
+  try {
+    const taskPath = await getTaskPath({
+      tasks,
+      runnerConfig,
+      runnerExtensions,
+      cwd,
+    })
+    return { taskPath, runnerId }
+  } catch (error) {
+    error.message = `In runner "${runnerId}": ${error.message}`
+    throw error
+  }
 }

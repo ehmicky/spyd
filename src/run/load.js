@@ -13,6 +13,7 @@ const loadRunner = async function ({
   id: runnerId,
   config: runnerConfig,
   launch,
+  extensions: runnerExtensions,
 }) {
   const {
     spawn: runnerSpawn,
@@ -25,6 +26,7 @@ const loadRunner = async function ({
     runnerSpawnOptions,
     runnerVersions,
     runnerConfig,
+    runnerExtensions,
   }
 }
 
