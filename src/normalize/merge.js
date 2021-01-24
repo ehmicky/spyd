@@ -36,7 +36,7 @@ export const applySince = async function (previous, { since }) {
 
   const sinceResult = previous[sinceIndex]
   const sincePrevious = previous.slice(0, sinceIndex)
-  const sinceResultA = getMergedResult(sinceResult, sincePrevious)
+  const sinceResultA = mergeCombinations(sinceResult, sincePrevious)
   return [sinceResultA, ...previous.slice(sinceIndex + 1)]
 }
 
@@ -46,13 +46,13 @@ export const applySince = async function (previous, { since }) {
 // added during merge (`previous` and `combinations[*].stats.diff`). This allows
 // reporters to re-use code when displaying them.
 export const mergeResults = function (result, previous) {
-  const resultA = getMergedResult(result, previous)
+  const resultA = mergeCombinations(result, previous)
   const resultB = addCombinationsDiff(resultA, previous)
   const resultC = addSharedSystem(resultB)
   return { ...resultC, previous }
 }
 
-const getMergedResult = function (result, previous) {
+const mergeCombinations = function (result, previous) {
   const resultA = mergeLastCombinations(result, previous)
   const resultB = groupResultCombinations(resultA)
   return resultB
