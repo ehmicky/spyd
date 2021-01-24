@@ -26,5 +26,6 @@ const DEFAULT_CONFIG = {}
 
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
+  tasks: 'tasks.js',
   version: '12',
 }

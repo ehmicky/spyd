@@ -1,15 +1,16 @@
-import { basename } from 'path'
-
-import { UserError } from '../error/main.js'
-
-// Normalize all tasks into a single array, combining task paths, ids and runner
-// Tasks are selected using the `tasks.{runnerId}` property with an array of
-// globbing patterns.
-// This allows selecting both tasks and runners, since only runners with some
-// tasks are used.
-// This format is simple, explicit, yet allows both multiple tasks per runner
-// and multiple runners per task.
-// Other solutions to specify the runner of each task have problems:
+// The tasks file for each runner is selected using the `runnerId.tasks`
+// configuration property.
+// The `tasks` can be used to specify a default tasks file for all runners.
+// We allow it as a positional CLI flag:
+//  - This is what many users would expect
+//  - This allows users to do on-the-fly benchmarks without pre-existing setup
+// The `tasks` are only needed when measuring them, not reporting them, so not
+// all commands use it.
+// We do not allow specifying several tasks files per runner. This allows making
+// it clearer that only entry files must be specified. Otherwise, confusing
+// errors might happen when users specified non-entry files.
+// Runners are specified using the `runner` configuration property. Other
+// solutions have problems:
 //  - using code comment:
 //     - this requires reading files, which is slow with big files
 //     - transpiling might remove code comments
@@ -23,59 +24,13 @@ import { UserError } from '../error/main.js'
 //     - too implicit/magic
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
-// In principle, `tasks.{runnerId}` is similar to properties like `reporters`,
-// `progresses` and `stores` but for runners. Specifying both runners and task
-// files at the same time gives a simpler syntax.
-export const listTasks = function (tasks) {
-  const tasksA = Object.entries(tasks).flatMap(getRunnerTasks)
-  validateTasks(tasksA)
-  return tasksA
+export const listTasks = function (tasks, runners) {
+  return runners.map((runner) => getRunnerTasks(tasks, runner))
 }
 
-const getRunnerTasks = function ([runnerId, taskPaths]) {
-  return taskPaths.map((taskPath) => getRunnerTask({ taskPath, runnerId }))
-}
-
-const getRunnerTask = function ({ taskPath, runnerId }) {
-  const taskId = getTaskId(taskPath)
-  return { taskId, taskPath, runnerId }
-}
-
-// The task id is the filename excluding any file extension.
-// If several dots are present in the filename, they are all considered part of
-// the file extension.
-// We do this to:
-//  - be able to retrieve task ids statically in a way that's user-friendly
-//  - allow two different task files with the same id but different runners
-const getTaskId = function (taskPath) {
-  return basename(taskPath).replace(TASK_ID_REGEXP, '')
-}
-
-const TASK_ID_REGEXP = /\..*/u
-
-const validateTasks = function (tasks) {
-  if (tasks.length === 0) {
-    throw new UserError('No tasks files were specified or found.')
-  }
-
-  tasks.forEach(validateTaskDuplicate)
-}
-
-// We allow several runners per taskId, several taskIds per runners, but not the
-// same taskId with the same runner. This happens when targetting with the same
-// runner two task files who differ only by their file extension.
-const validateTaskDuplicate = function (
-  { taskId, taskPath, runnerId },
-  index,
+const getRunnerTasks = function (
   tasks,
+  { runnerId, runnerConfig: { tasks: taskPath = tasks } },
 ) {
-  const duplicate = tasks
-    .slice(index + 1)
-    .find((task) => task.taskId === taskId && task.runnerId === runnerId)
-
-  if (duplicate !== undefined) {
-    throw new UserError(`The following tasks must not have both the same runner "${runnerId}" and task identifier "${taskId}":
-  - ${taskPath}
-  - ${duplicate.taskPath}`)
-  }
+  return { taskPath, runnerId }
 }

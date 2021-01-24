@@ -13,7 +13,7 @@ import { getConfigPath } from './path.js'
 //    case-sensitiveness (due to Windows) and fewer allowed delimiters (due
 //    to underscores only being allowed in Unix)
 export const loadConfig = async function (configFlags, processCwd) {
-  const configNonFile = await getConfigNonFile(configFlags, processCwd)
+  const configNonFile = getConfigNonFile(configFlags, processCwd)
   const configPath = await getConfigPath(processCwd, configNonFile)
   const configFile = await getConfigFile(configPath)
   const configA = mergeConfigs(configFile, configNonFile)

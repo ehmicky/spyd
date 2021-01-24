@@ -9,9 +9,9 @@ import { resolveConfigPaths } from './resolve.js'
 import { validateConfig } from './validate.js'
 
 // Load CLI programmatic flags
-export const getConfigNonFile = async function (configFlags, processCwd) {
+export const getConfigNonFile = function (configFlags, processCwd) {
   validateConfig(configFlags)
-  return await resolveConfigPaths(configFlags, processCwd)
+  return resolveConfigPaths(configFlags, processCwd)
 }
 
 // Load `spyd.*` file.
@@ -24,7 +24,7 @@ export const getConfigFile = async function (configPath) {
   const configFile = await loadConfigByPath(configPath)
 
   validateConfig(configFile)
-  return await resolveConfigPaths(configFile, dirname(configPath))
+  return resolveConfigPaths(configFile, dirname(configPath))
 }
 
 const loadConfigByPath = async function (configPath) {

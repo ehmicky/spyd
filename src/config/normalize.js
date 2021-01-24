@@ -1,5 +1,4 @@
 import { normalizeDelta } from '../delta/main.js'
-import { checkEmptyTasks } from '../run/check.js'
 
 import {
   normalizeArray,
@@ -83,7 +82,6 @@ const NORMALIZERS = {
   include: normalizeOptionalArrProp,
   exclude: normalizeOptionalArrProp,
   limit: normalizeOptionalArrProp,
-  tasks: checkEmptyTasks,
   titles: checkTitles,
   inputs: checkInputs,
 }

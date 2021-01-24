@@ -1,6 +1,3 @@
-tasks:
-  node: math_random*
-  # cli: example.yml
 inputs:
   one: 1
   two: 2

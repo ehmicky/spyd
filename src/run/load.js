@@ -1,23 +1,12 @@
 import { UserError, PluginError } from '../error/main.js'
 import { getSystemVersions } from '../system/versions.js'
 
-// Select the runners for the current tasks files, and retrieve their
-// related spawn options using `runner.launch()`
-export const loadRunners = async function (tasks, runners, cwd) {
-  const runnersA = runners.filter(({ id }) => runnerHasTasks(id, tasks))
-  const runnersB = await Promise.all(runnersA.map(loadRunner))
-  const systemVersions = await getSystemVersions(runnersB, cwd)
-  return { runners: runnersB, systemVersions }
-}
-
-// `runner` already includes only `tasks.*`.
-// We have already validated that:
-//  - globbing patterns match at least one file except when using an empty array
-//  - empty arrays were not used on all `tasks.*`
-// So the following is only required when empty arrays were used only one some
-// of `tasks.*`
-const runnerHasTasks = function (id, tasks) {
-  return tasks.some(({ runnerId }) => runnerId === id)
+// Select the runners and retrieve their related spawn options using
+// `runner.launch()`
+export const loadRunners = async function (runners, cwd) {
+  const runnersA = await Promise.all(runners.map(loadRunner))
+  const systemVersions = await getSystemVersions(runnersA, cwd)
+  return { runners: runnersA, systemVersions }
 }
 
 const loadRunner = async function ({

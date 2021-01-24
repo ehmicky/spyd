@@ -3,12 +3,12 @@ import { RUN_CONFIG } from '../config/run.js'
 import { SELECT_CONFIG } from '../config/select.js'
 
 export const EXEC_COMMAND = {
-  command: 'exec',
+  command: 'exec [tasks]',
   describe: 'Execute tasks without benchmarking them',
 
   config: { ...ALL_CONFIG, ...RUN_CONFIG, ...SELECT_CONFIG },
 
-  usage: `$0 exec [flags...]
+  usage: `$0 exec [flags...] [tasks]
 
 Execute each task once without benchmarking them.
 

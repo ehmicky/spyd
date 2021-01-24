@@ -6,7 +6,7 @@ import { SELECT_CONFIG } from '../config/select.js'
 import { STORE_CONFIG } from '../config/store.js'
 
 export const BENCH_COMMAND = {
-  command: ['bench', '*'],
+  command: ['bench [tasks]', '* [tasks]'],
   describe: 'Measure tasks',
 
   config: {
@@ -18,12 +18,13 @@ export const BENCH_COMMAND = {
     ...STORE_CONFIG,
   },
 
-  usage: `$0 [flags...]
+  usage: `$0 [flags...] [tasks]
 
 Measure tasks.`,
 
   examples: [
-    ['$0', 'Measure tasks'],
+    ['$0', 'Measure tasks, using the default specific tasks file'],
+    ['$0 /path/to/tasks.js', 'Measure tasks in a specific tasks file'],
     ['$0 -d 60', 'Measure each task for 60 seconds'],
   ],
 }

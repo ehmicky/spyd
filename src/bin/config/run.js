@@ -4,11 +4,13 @@ import { TASKS } from './groups.js'
 export const RUN_CONFIG = {
   tasks: {
     group: TASKS,
-    describe: `Paths to the task files.
-Globbing patterns can be used.
-The runner must be specified in the name such as
---tasks.node=./path/to/task_file.js when using the "node" runner.
-The task filename (excluding its extension) is used as the task identifier.`,
+    string: true,
+    requiresArg: true,
+    describe: `Path to the tasks file.
+When using multiple runners, each runner can have its own tasks file by using
+--runnerId.tasks=path
+Default: "benchmark/tasks.{extension}" in the current or any parent directory.
+The default file {extension} depends on the runner.`,
   },
   runner: {
     group: TASKS,

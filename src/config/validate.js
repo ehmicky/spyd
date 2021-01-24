@@ -26,7 +26,7 @@ const isStaticKeyProp = function (key) {
 // Configuration properties whose key is dynamic but starts with a known prefix
 const DYNAMIC_KEY_PROPS = ['runner', 'reporter', 'progress', 'store']
 // Object configuration properties whose properties are dynamic
-const DYNAMIC_OBJECT_PROPS = ['tasks', 'titles', 'inputs']
+const DYNAMIC_OBJECT_PROPS = ['titles', 'inputs']
 
 const VALID_TIMESTAMPS = [
   'yyyy-mm-dd',
@@ -48,7 +48,7 @@ const EXAMPLE_CONFIG = {
   cwd: '/path/to/repository',
   config: './benchmark/spyd.yml',
   extend: './shared_spyd.yml',
-  tasks: multipleValidOptions({ node: '*.task.js' }, { node: ['*.task.js'] }),
+  tasks: './benchmark/tasks.js',
   runner: optionalArray('node'),
   reporter: optionalArray('debug'),
   progress: optionalArray('debug'),
