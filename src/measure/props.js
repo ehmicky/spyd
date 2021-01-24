@@ -49,10 +49,5 @@ export const getFinalProps = function ({
     samples,
     minLoopDuration,
   })
-  return {
-    taskId,
-    runnerId,
-    systemId,
-    stats: statsA,
-  }
+  return { taskId, runnerId, systemId, stats: statsA }
 }
