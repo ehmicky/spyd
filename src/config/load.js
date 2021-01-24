@@ -16,7 +16,7 @@ import { resolveConfigPaths } from './resolve.js'
 export const loadConfig = async function (configFlags, cwd) {
   const configNonFile = await resolveConfigPaths(configFlags, cwd)
 
-  const configPath = await getConfigPath(configNonFile)
+  const configPath = await getConfigPath(configNonFile, cwd)
   const configFile = await loadConfigFile(configPath)
   const configA = mergeConfigs(configFile, configNonFile)
   const configB = { ...configA, config: configPath }
