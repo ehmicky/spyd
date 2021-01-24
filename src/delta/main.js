@@ -50,18 +50,29 @@ const parseDelta = function ({
 
 // Get previous results index by result delta.
 // `results` must be sorted from most to least recent.
-export const findByDelta = function (results, { type, value, original, name }) {
+export const findByDelta = async function (
+  results,
+  { type, value, original, name },
+) {
   if (results.length === 0) {
     throw new UserError('No previous results')
   }
 
   const { find, message } = FORMATS.find((format) => format.type === type)
-  const index = find(results, value)
+
+  try {
+    return await findResult(find, results, value)
+  } catch (error) {
+    error.message = `"${name}" configuration property "${original}" (${message}) ${error.message}.`
+    throw error
+  }
+}
+
+const findResult = async function (find, results, value) {
+  const index = await find(results, value)
 
   if (index === -1) {
-    throw new UserError(
-      `Invalid "${name}" configuration property "${original}" (${message}): no matching results.`,
-    )
+    throw new UserError('matches no results')
   }
 
   return index

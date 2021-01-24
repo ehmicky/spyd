@@ -1,3 +1,5 @@
+import { findByGitRef } from './git.js'
+
 // Deltas can be git commits
 const parseCommit = function (delta) {
   if (typeof delta !== 'string' || !GIT_COMMIT_REGEXP.test(delta)) {
@@ -11,10 +13,17 @@ const parseCommit = function (delta) {
 const GIT_COMMIT_REGEXP = /^[\da-f]{8,}$/iu
 
 // If several results match, we use the most recent once
-const findByCommit = function (results, commit) {
-  return results.findIndex(({ system: { git = {} } }) =>
+// We use the most recent result because this is what users most likely want.
+const findByCommit = async function (results, commit) {
+  const index = results.findIndex(({ system: { git = {} } }) =>
     git.commit.startsWith(commit),
   )
+
+  if (index !== -1) {
+    return index
+  }
+
+  return await findByGitRef(results, commit)
 }
 
 export const commitFormat = {

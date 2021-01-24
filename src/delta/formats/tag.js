@@ -1,3 +1,5 @@
+import { findByGitRef } from './git.js'
+
 // Deltas can be git tags or branches.
 const parseTag = function (delta) {
   if (typeof delta !== 'string') {
@@ -8,11 +10,18 @@ const parseTag = function (delta) {
 }
 
 // If several results match, we use the most recent once
-const findByTag = function (results, tagOrBranch) {
-  return results.findIndex(
+// We use the most recent result because this is what users most likely want.
+const findByTag = async function (results, tagOrBranch) {
+  const index = results.findIndex(
     ({ system: { git: { tag, branch } = {} } }) =>
       tag === tagOrBranch || branch === tagOrBranch,
   )
+
+  if (index !== -1) {
+    return index
+  }
+
+  return await findByGitRef(results, tagOrBranch)
 }
 
 export const tagFormat = {

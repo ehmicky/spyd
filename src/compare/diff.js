@@ -14,12 +14,12 @@ import { findValue } from '../utils/find.js'
 // `combination.stats.diff` is not persisted in stores since it can be computed
 // dynamically and depends on the `since` configuration property. Also some
 // results might have been dynamically deleted or filtered out.
-export const addCombinationsDiff = function (
+export const addCombinationsDiff = async function (
   { combinations, ...result },
   results,
   since,
 ) {
-  const sinceIndex = findByDelta(results, since)
+  const sinceIndex = await findByDelta(results, since)
   const previousResults = results.slice(sinceIndex)
   const combinationsA = combinations.map((combination) =>
     addCombinationDiff(combination, previousResults),
