@@ -32,6 +32,10 @@ const parseSpawnParams = function () {
   return { serverUrl, spawnParams }
 }
 
+// `afterAll` is always called, for cleanup.
+// If an error happens in `afterAll`, it is propagated even if another error
+// was thrown in `main`. This is because `afterAll` should gracefully handle
+// any possible interruption, regardless of what's the current global state.
 const measureCombination = async function ({
   start,
   before,
@@ -42,8 +46,9 @@ const measureCombination = async function ({
 }) {
   const { tasks, calibrations, ...startState } = await start(spawnParams)
 
+  await before(startState)
+
   try {
-    await before(startState)
     await measureSamples({
       measure,
       serverUrl,
@@ -51,12 +56,9 @@ const measureCombination = async function ({
       tasks,
       calibrations,
     })
-  } catch (error) {
-    await safeAfter(after, startState)
-    throw error
+  } finally {
+    await after(startState)
   }
-
-  await after(startState)
 }
 
 // Runs a new sample each time the main process asks for it
@@ -83,16 +85,6 @@ const measureSamples = async function ({
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
     returnValue = await measure(params, startState)
   }
-}
-
-// When `beforeAll`, `beforeEach`, `main` or `afterEach` throws, we still run
-// `afterAll` for cleanup. However, `afterAll` might fail if the global state
-// is in an odd state due to the interruption. Therefore, we do not propagate
-// exceptions from `afterAll` then.
-const safeAfter = async function (after, startState) {
-  try {
-    await after(startState)
-  } catch {}
 }
 
 // We use `process.exit()` instead of `process.exitCode` because if some tasks
