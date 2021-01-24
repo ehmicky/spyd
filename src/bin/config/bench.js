@@ -32,6 +32,7 @@ Default: "default_system"`,
     array: true,
     requiresArg: true,
     describe: `Module to report progress.
+Can be specified several times.
 Built-in progress reporters: silent.
 Custom progress reporters can be installed from npm.
 Progress-reporter-specific configuration properties can be specified by
