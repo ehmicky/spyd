@@ -4,8 +4,11 @@ import { UserError } from '../../../../error/main.js'
 import { validateTasks } from '../../common/validate/file.js'
 import { validateString } from '../../common/validate/type.js'
 
-// Validate that tasks file has correct shape
-export const validateFile = function (tasks) {
+import { validateShell } from './shell.js'
+
+// Validate that tasks file and options have correct shape
+export const validate = function (tasks, shell) {
+  validateShell(shell)
   return validateTasks({ tasks, validators, normalizeTask })
 }
 

@@ -4,7 +4,7 @@ import { importJsFile } from '../../../../utils/import.js'
 import { getCalibrations } from './calibrate.js'
 import { addDefaults } from './default.js'
 import { useRequireConfig } from './require_config.js'
-import { validateFile } from './validate.js'
+import { validate } from './validate.js'
 
 // Start the combinations by requiring the task files.
 export const start = async function ({
@@ -17,7 +17,7 @@ export const start = async function ({
   await useRequireConfig(requireConfig)
 
   const tasks = importFile(taskPath)
-  const tasksA = validateFile(tasks)
+  const tasksA = validate(tasks)
   const tasksB = addDefaults(tasksA)
   const task = taskId === undefined ? {} : tasksB[taskId]
 

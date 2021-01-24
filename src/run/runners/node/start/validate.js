@@ -8,7 +8,7 @@ import {
 } from '../../common/validate/type.js'
 
 // Validate that the tasks file has correct shape
-export const validateFile = function (tasks) {
+export const validate = function (tasks) {
   return validateTasks({ tasks, validators, normalizeTask })
 }
 

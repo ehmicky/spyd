@@ -2,17 +2,22 @@ import { UserError } from '../../../../error/main.js'
 import { loadYamlFile } from '../../../../utils/yaml.js'
 
 import { getEnv } from './env.js'
-import { validateFile } from './validate.js'
+import { validate } from './validate.js'
 
 // Import the tasks file
-export const start = async function ({ taskPath, taskId, inputs }) {
+export const start = async function ({
+  runnerConfig: { shell = 'none' },
+  taskPath,
+  taskId,
+  inputs,
+}) {
   const tasks = await importFile(taskPath)
-  const tasksA = validateFile(tasks)
+  const tasksA = validate(tasks, shell)
   const task = taskId === undefined ? {} : tasksA[taskId]
 
   const tasksB = Object.keys(tasksA)
   const env = getEnv(inputs)
-  return { tasks: tasksB, task, env }
+  return { tasks: tasksB, task, env, shell }
 }
 
 const importFile = async function (taskPath) {

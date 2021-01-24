@@ -6,7 +6,7 @@ import { getNodeVersion } from './version.js'
 const MAIN_PATH = `${__dirname}/main.js`
 
 // Retrieve Node commands. By default it uses the current Node.js.
-// But `runner.node.version` can be used to spawn a different Node.js version.
+// But `runnerNode.version` can be used to spawn a different Node.js version.
 export const launch = async function (runConfig) {
   const runConfigA = normalizeRunConfig(runConfig)
 

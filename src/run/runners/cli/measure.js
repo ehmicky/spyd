@@ -2,25 +2,25 @@ import execa from 'execa'
 import now from 'precise-now'
 
 // `beforeAll` and `afterAll`
-export const before = async function ({ task: { beforeAll }, env }) {
-  await performHook(beforeAll, env)
+export const before = async function ({ task: { beforeAll }, env, shell }) {
+  await performHook(beforeAll, { env, shell })
 }
 
-export const after = async function ({ task: { afterAll }, env }) {
-  await performHook(afterAll, env)
+export const after = async function ({ task: { afterAll }, env, shell }) {
+  await performHook(afterAll, { env, shell })
 }
 
 // Measure how long a task takes.
 export const measure = async function (
   { maxLoops },
-  { task: { main, beforeEach, afterEach }, env },
+  { task: { main, beforeEach, afterEach }, env, shell },
 ) {
   const measures = []
 
   // eslint-disable-next-line fp/no-loops
   while (measures.length < maxLoops) {
     // eslint-disable-next-line no-await-in-loop
-    await performLoop({ main, beforeEach, afterEach, env, measures })
+    await performLoop({ main, beforeEach, afterEach, env, shell, measures })
   }
 
   return { measures }
@@ -31,25 +31,26 @@ const performLoop = async function ({
   beforeEach,
   afterEach,
   env,
+  shell,
   measures,
 }) {
-  await performHook(beforeEach, env)
+  await performHook(beforeEach, { env, shell })
   // eslint-disable-next-line fp/no-mutating-methods
-  measures.push(await getDuration(main, env))
-  await performHook(afterEach, env)
+  measures.push(await getDuration(main, { env, shell }))
+  await performHook(afterEach, { env, shell })
 }
 
-const performHook = async function (hook, env) {
+const performHook = async function (hook, { env, shell }) {
   if (hook === undefined) {
     return
   }
 
-  await spawnProcess(hook, env)
+  await spawnProcess(hook, { env, shell })
 }
 
-const getDuration = async function (main, env) {
+const getDuration = async function (main, { env, shell }) {
   const start = now()
-  await spawnProcess(main, env)
+  await spawnProcess(main, { env, shell })
   return now() - start
 }
 
@@ -62,10 +63,15 @@ const getDuration = async function (main, env) {
 // More advanced logic can be achieved by either:
 //  - Using shell features (subshells, variables, etc.)
 //  - Adding the logic to the command internal logic
-const spawnProcess = async function (command, env) {
-  await execa.command(command, {
-    stdio: ['ignore', 'inherit', 'inherit'],
-    env,
-    preferLocal: true,
-  })
+const spawnProcess = async function (command, { env, shell }) {
+  if (shell === 'none') {
+    return await execa.command(command, { ...EXECA_OPTIONS, env })
+  }
+
+  await execa(command, { ...EXECA_OPTIONS, env, shell })
+}
+
+const EXECA_OPTIONS = {
+  stdio: ['ignore', 'inherit', 'inherit'],
+  preferLocal: true,
 }

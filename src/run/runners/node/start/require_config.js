@@ -13,7 +13,7 @@ const normalizeRequireConfig = function (requireConfig = []) {
 
   if (!Array.isArray(requireConfig) || !requireConfig.every(isString)) {
     throw new UserError(
-      `'runner.node.require' configuration property must be an array of strings: ${requireConfig}`,
+      `'runnerNode.require' configuration property must be an array of strings: ${requireConfig}`,
     )
   }
 
@@ -29,7 +29,7 @@ const useRequiredModule = async function (requiredModule) {
     await import(requiredModule)
   } catch (error) {
     throw new UserError(
-      `Could not require 'runner.node.require' configuration property '${requiredModule}'\n\n${error.stack}`,
+      `Could not require 'runnerNode.require' configuration property '${requiredModule}'\n\n${error.stack}`,
     )
   }
 }
