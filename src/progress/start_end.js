@@ -37,7 +37,7 @@ const isSilent = function (preview) {
 
 const getBenchmarkDuration = function (combinations, duration) {
   if (duration === 0 || duration === 1) {
-    return duration
+    return
   }
 
   return combinations.length * duration

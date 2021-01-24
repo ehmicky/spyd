@@ -30,4 +30,6 @@ const normalizeTask = function (task) {
   if (!isPlainObj(task)) {
     throw new UserError(`should be a function or an object not: ${task}`)
   }
+
+  return task
 }
