@@ -1,5 +1,3 @@
-import { splitSharedSystem } from './shared.js'
-
 // When merging results, we report all `systems`. This concatenates them.
 export const startMergeSystems = function ({ system, ...result }) {
   return { ...result, systems: [system] }
@@ -26,9 +24,4 @@ export const mergeSystems = function (systems, { id, ...newSystem }) {
       versions: { ...newSystem.versions, ...systemA.versions },
     },
   ]
-}
-
-export const endMergeSystems = function ({ systems, ...result }) {
-  const systemsA = splitSharedSystem(systems)
-  return { ...result, systems: systemsA }
 }

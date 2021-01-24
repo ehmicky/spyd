@@ -9,13 +9,14 @@ import { SPYD_VERSION_KEY } from './versions.js'
 // `systems[0]` is a collection of all properties shared by other `systems`.
 // Its `id` is `undefined`.
 // This helps avoid duplication when reporting similar systems.
-export const splitSharedSystem = function (systems) {
+export const splitSharedSystem = function ({ systems, ...result }) {
   const [firstSystem, ...otherSystems] = systems
   const sharedSystem = getSharedSystem(firstSystem, otherSystems)
   const systemsA = systems.map((system) =>
     removeSharedSystem(system, sharedSystem),
   )
-  return [sharedSystem, ...systemsA]
+  const systemsB = [sharedSystem, ...systemsA]
+  return { ...result, systems: systemsB }
 }
 
 const getSharedSystem = function (firstSystem, systems) {

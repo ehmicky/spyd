@@ -1,9 +1,6 @@
 import { isSameCategory } from '../combination/ids.js'
-import {
-  startMergeSystems,
-  mergeSystems,
-  endMergeSystems,
-} from '../system/merge.js'
+import { startMergeSystems, mergeSystems } from '../system/merge.js'
+import { splitSharedSystem } from '../system/shared.js'
 
 // `include|exclude` can be used to measure specific combinations, allowing
 // incremental benchmarks. However, when reporting benchmarks, we show all
@@ -33,7 +30,7 @@ export const mergeLastCombinations = function (lastResult, previous) {
   const lastResultA = startMergeSystems(lastResult)
   // eslint-disable-next-line fp/no-mutating-methods
   const lastResultB = previous.slice().reverse().reduce(mergePair, lastResultA)
-  const lastResultC = endMergeSystems(lastResultB)
+  const lastResultC = splitSharedSystem(lastResultB)
   return lastResultC
 }
 
