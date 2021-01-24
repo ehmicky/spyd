@@ -19,6 +19,10 @@ export const addDefaultConfig = function ({
 
 const METADATA_COMMANDS = new Set(['show', 'remove'])
 
+// We default `runner` to `node` only instead of several ones (e.g. `cli`)
+// because this enforces that the `runner` property points to a required tasks
+// file, instead of to an optional one. This makes behavior easier to understand
+// for users and provides with better error messages.
 export const DEFAULT_CONFIG = {
   duration: 1,
   concurrency: 1,
