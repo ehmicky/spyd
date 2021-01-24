@@ -22,6 +22,7 @@ The "delta" argument targets the result. It can be:
   - an integer: {integer}-th last result
   - "first": first result
   - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
+  - a duration: like "1m", "5d", "1 month" or "1y"
   - a result id
   - a git commit, tag or branch
   - "ci": last CI build
@@ -41,6 +42,7 @@ otherwise.`,
       '$0 show 2018-02-01T15:00:00Z',
       'Show the last result before the 1st of February 2018 at 15:00 UTC',
     ],
+    ['$0 show 1y', 'Show the last result before 1 year ago'],
     [
       '$0 show 4209c7d7-721d-4b5b-8465-4e038fa2890c',
       'Show the result with this id',

@@ -1,6 +1,7 @@
 import { ciFormat } from './ci.js'
 import { commitFormat } from './commit.js'
 import { countFormat } from './count.js'
+import { durationFormat } from './duration.js'
 import { firstFormat } from './first.js'
 import { idFormat } from './id.js'
 import { tagFormat } from './tag.js'
@@ -17,6 +18,7 @@ export const FORMATS = [
   timestampFormat,
   idFormat,
   ciFormat,
+  durationFormat,
   commitFormat,
   tagFormat,
 ]
