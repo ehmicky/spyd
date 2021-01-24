@@ -1,15 +1,15 @@
 import filterObj from 'filter-obj'
 import { validate } from 'jest-validate'
 
-// Normalize and validate runConfig
-export const normalizeRunConfig = function (runConfig) {
-  const runConfigA = filterObj(runConfig, isDefined)
-  const runConfigB = normalizeVersion(runConfigA)
+// Normalize and validate runnerConfig
+export const normalizeRunConfig = function (runnerConfig) {
+  const runnerConfigA = filterObj(runnerConfig, isDefined)
+  const runnerConfigB = normalizeVersion(runnerConfigA)
 
-  validate(runConfigB, { exampleConfig: EXAMPLE_CONFIG })
+  validate(runnerConfigB, { exampleConfig: EXAMPLE_CONFIG })
 
-  const runConfigC = { ...DEFAULT_CONFIG, ...runConfigB }
-  return runConfigC
+  const runnerConfigC = { ...DEFAULT_CONFIG, ...runnerConfigB }
+  return runnerConfigC
 }
 
 const isDefined = function (key, value) {
@@ -17,9 +17,9 @@ const isDefined = function (key, value) {
 }
 
 // If `version` is `MAJOR` or `MAJOR.MINOR`, yargs will parse it as a number
-const normalizeVersion = function ({ version, ...runConfig }) {
+const normalizeVersion = function ({ version, ...runnerConfig }) {
   const versionA = typeof version === 'number' ? String(version) : version
-  return { ...runConfig, version: versionA }
+  return { ...runnerConfig, version: versionA }
 }
 
 const DEFAULT_CONFIG = {}

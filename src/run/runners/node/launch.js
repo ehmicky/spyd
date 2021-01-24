@@ -7,10 +7,10 @@ const MAIN_PATH = `${__dirname}/main.js`
 
 // Retrieve Node commands. By default it uses the current Node.js.
 // But `runnerNode.version` can be used to spawn a different Node.js version.
-export const launch = async function (runConfig) {
-  const runConfigA = normalizeRunConfig(runConfig)
+export const launch = async function (runnerConfig) {
+  const runnerConfigA = normalizeRunConfig(runnerConfig)
 
-  const versionInfo = await getNodeVersion(runConfigA)
+  const versionInfo = await getNodeVersion(runnerConfigA)
 
   if (versionInfo === undefined) {
     return {
