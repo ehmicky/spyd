@@ -1,5 +1,6 @@
 import { isSameCategory } from '../combination/ids.js'
 import { findByDelta } from '../delta/main.js'
+import { findValue } from '../utils/find.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
@@ -32,19 +33,15 @@ const getComparedIndex = function (results, compare) {
 }
 
 const addCombinationDiff = function (combination, previousResults) {
-  const previousResultA = previousResults.find(
-    (previousResult) =>
-      getPreviousCombination(previousResult, combination) !== undefined,
+  const previousReturn = findValue(previousResults, (previousResult) =>
+    getPreviousCombination(previousResult, combination),
   )
 
-  if (previousResultA === undefined) {
+  if (previousReturn === undefined) {
     return combination
   }
 
-  const previousCombination = getPreviousCombination(
-    previousResultA,
-    combination,
-  )
+  const [previousCombination] = previousReturn
   const combinationA = addDiff(combination, previousCombination)
   return combinationA
 }
