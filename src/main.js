@@ -6,7 +6,7 @@ import { report } from './report/main.js'
 import { addToStore } from './store/add.js'
 import { endStore } from './store/end.js'
 import { getFromStore } from './store/get.js'
-import { listStore } from './store/list.js'
+import { listAll, listStore } from './store/list.js'
 import { removeFromStore } from './store/remove.js'
 // eslint-disable-next-line import/max-dependencies
 import { startStore } from './store/start.js'
@@ -18,7 +18,7 @@ export const bench = async function (configFlags) {
   const configB = await startStore(configA)
 
   try {
-    const results = await listStore(configB)
+    const results = await listAll(configB)
     const { result, stopped } = await performBenchmark(configB)
     const resultA = await addToStore({
       results,

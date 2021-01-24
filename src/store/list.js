@@ -1,5 +1,15 @@
 import { UserError } from '../error/main.js'
 import { loadResults } from '../normalize/load.js'
+import { applySince } from '../normalize/merge.js'
+
+// List all results and apply `since`.
+// We try to apply `since` as soon as possible so user errors with that
+// configuration property fail early.
+export const listAll = async function (config) {
+  const results = await listStore(config)
+  const resultsA = await applySince(results, config)
+  return resultsA
+}
 
 // List, sort, filter and normalize all results
 // This is performed at the beginning of all commands because this allows:

@@ -1,12 +1,13 @@
 import { getDeltaError } from '../delta/error.js'
 import { findByDelta } from '../delta/main.js'
 import { UserError } from '../error/main.js'
-import { mergeResults } from '../normalize/merge.js'
+import { mergeResults, applySince } from '../normalize/merge.js'
 
 // Get a previous result by `count` or `timestamp`
-export const getFromStore = async function (results, delta, { since }) {
-  const resultsA = await listResultsByDelta(results, delta)
-  const result = await mergeResults(resultsA, since)
+export const getFromStore = async function (results, delta, config) {
+  const { lastResult, previous } = await listResultsByDelta(results, delta)
+  const previousA = await applySince(previous, config)
+  const result = mergeResults(lastResult, previousA)
   return result
 }
 
@@ -22,5 +23,7 @@ const listResultsByDelta = async function (results, delta) {
     throw new UserError(`${deltaError} matches no results.`)
   }
 
-  return results.slice(0, index + 1)
+  const lastResult = results[index]
+  const previous = results.slice(0, index)
+  return { lastResult, previous }
 }

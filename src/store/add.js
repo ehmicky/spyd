@@ -6,13 +6,12 @@ import { mergeResults } from '../normalize/merge.js'
 export const addToStore = async function ({
   results,
   result,
-  config: { save, store, since },
+  config: { save, store },
   stopped,
 }) {
   await saveResult({ result, save, store, stopped })
 
-  const resultsA = [...results, result]
-  const resultA = await mergeResults(resultsA, since)
+  const resultA = mergeResults(result, results)
   return resultA
 }
 
