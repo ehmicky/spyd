@@ -5,7 +5,7 @@ import { shouldSkipStat } from './skip.js'
 export const serializeStat = function ({
   stat,
   name,
-  type,
+  kind,
   scale,
   decimals,
   loops,
@@ -16,16 +16,16 @@ export const serializeStat = function ({
 
   if (Array.isArray(stat)) {
     return stat.map((statA) =>
-      serializeValue({ stat: statA, type, scale, decimals }),
+      serializeValue({ stat: statA, kind, scale, decimals }),
     )
   }
 
-  return serializeValue({ stat, type, scale, decimals })
+  return serializeValue({ stat, kind, scale, decimals })
 }
 
 // Serialize a stat's value
-const serializeValue = function ({ stat, type, scale, decimals }) {
-  return SERIALIZE_STAT[type](stat, { scale, decimals })
+const serializeValue = function ({ stat, kind, scale, decimals }) {
+  return SERIALIZE_STAT[kind](stat, { scale, decimals })
 }
 
 const serializeCount = function (count, { scale, decimals }) {

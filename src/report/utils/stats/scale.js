@@ -1,14 +1,14 @@
 // Divide stats by a scale so they don't show too many digits nor decimals.
-export const getScale = function (combinations, name, type) {
+export const getScale = function (combinations, name, kind) {
   const measures = combinations
-    .map((combination) => getMeasure(combination, name, type))
+    .map((combination) => getMeasure(combination, name, kind))
     .filter(isNotZero)
 
   if (measures.length === 0) {
     return 1
   }
 
-  const scales = SCALES[type]
+  const scales = SCALES[kind]
   const minMeasure = Math.min(...measures)
   const scaleA = scales.find((scale) => minMeasure >= scale)
 
@@ -21,8 +21,8 @@ export const getScale = function (combinations, name, type) {
 
 // The same duration scale is used for all `stats.*Pretty` to make it easier to
 // compare between them.
-const getMeasure = function ({ stats }, name, type) {
-  if (type === 'duration') {
+const getMeasure = function ({ stats }, name, kind) {
+  if (kind === 'duration') {
     return stats.median
   }
 
@@ -35,7 +35,7 @@ const isNotZero = function (measure) {
   return measure !== 0
 }
 
-// Possible scales for each unit type
+// Possible scales for each unit kind.
 /* eslint-disable no-magic-numbers */
 const SCALES = {
   // The maximum scale is seconds:
