@@ -63,8 +63,11 @@ const getRunnerTasks = async function (
   }
 }
 
-// A tasks file might have several tasks. Each task has its own process, in
-// order to prevent them from influencing each other:
+// A tasks file might have several tasks because:
+//  - This is user-friendlier when using small tasks and/or single steps
+//  - This prevents users using steps when they meant to use tasks
+// Each task has its own process, in order to prevent them from influencing
+// each other:
 //  - By modifying the global state
 //  - Or due to the runtime engine being less able to optimize hot paths due
 //    to several tasks competing for optimization in the same process
