@@ -13,6 +13,7 @@ const parseTag = function (delta) {
 
 // If several results match, we use the most recent once
 // We use the most recent result because this is what users most likely want.
+// When none is found in `result.systems`, we try to use `git` instead.
 const findByTag = async function (results, tagOrBranch) {
   const index = findIndexReverse(
     results,

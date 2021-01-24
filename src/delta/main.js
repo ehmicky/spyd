@@ -49,6 +49,16 @@ const parseDelta = function ({
 //     "100" even if there are only 3 results.
 //   - However, few formats look for the last result before the delta instead
 //     since it makes more sense for those.
+// Returns -1 when no delta is found:
+//  - Either because:
+//     - There are no results
+//     - The delta points to a time in the future or to a non-existing reference
+//  - If the delta has a syntax or semantics that we know is always erroneous,
+//    we throw instead
+//  - When this happens with the `show` or `remove` commands, we fail hard
+//    because there is no result to use.
+//  - However, with the `since` configuration property, we silently ignore it
+//    instead, i.e. `showDiff`, `limit` and `previous` are not used.
 export const findByDelta = async function (
   results,
   { type, value, delta, name },
