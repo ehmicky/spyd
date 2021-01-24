@@ -16,11 +16,15 @@ import { groupResultCombinations } from './group.js'
 export const mergeResults = async function (results, since) {
   const lastResult = results[results.length - 1]
   const previous = results.slice(0, -1)
+  const result = await getMergedResult(lastResult, previous, since)
+  return { ...result, previous }
+}
 
-  const result = mergePairs(lastResult, previous)
-  const resultA = await addCombinationsDiff(result, previous, since)
-  const resultB = groupResultCombinations(resultA)
-  return { ...resultB, previous }
+const getMergedResult = async function (result, previous, since) {
+  const resultA = mergePairs(result, previous)
+  const resultB = await addCombinationsDiff(resultA, previous, since)
+  const resultC = groupResultCombinations(resultB)
+  return resultC
 }
 
 // `include|exclude` can be used to measure specific combinations, allowing
