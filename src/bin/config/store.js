@@ -21,8 +21,8 @@ For example: --storeFile.dir=path`,
 configuration properties.
 For reporters showing all previous results, this also defines the first result.
 Can be:
-  - empty: last result
-  - an integer: {integer}-th previous result
+  - an integer: {integer}-th last result
+  - "first": first result
   - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
   - a result id
   - a git commit, tag or branch
