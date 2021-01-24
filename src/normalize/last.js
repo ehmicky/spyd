@@ -28,8 +28,7 @@ import { startMergeSystems, mergeSystems } from '../system/merge.js'
 export const mergeLastCombinations = function (lastResult, previous) {
   const lastResultA = startMergeSystems(lastResult)
   // eslint-disable-next-line fp/no-mutating-methods
-  const lastResultB = previous.slice().reverse().reduce(mergePair, lastResultA)
-  return lastResultB
+  return [...previous].reverse().reduce(mergePair, lastResultA)
 }
 
 const mergePair = function (result, previousResult) {

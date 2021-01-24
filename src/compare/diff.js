@@ -22,7 +22,7 @@ export const addCombinationsDiff = function (
   }
 
   // eslint-disable-next-line fp/no-mutating-methods
-  const previousResults = previous.slice().reverse()
+  const previousResults = [...previous].reverse()
   const combinationsA = combinations.map((combination) =>
     addCombinationDiff(combination, previousResults),
   )
