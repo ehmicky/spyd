@@ -9,8 +9,8 @@ const parseFirst = function (delta) {
 
 const FIRST_DELTA = 'first'
 
-const findByFirst = function (results) {
-  return results.length - 1
+const findByFirst = function () {
+  return 0
 }
 
 export const firstFormat = {

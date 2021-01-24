@@ -7,7 +7,7 @@ export const sortResults = function (results) {
   const resultsGroupsA = resultsGroups.map(addTimestamp)
   const resultsGroupsB = sortOn(resultsGroupsA, 'timestamp')
   // eslint-disable-next-line fp/no-mutating-methods
-  const resultsA = resultsGroupsB.flatMap(getResults).sort().reverse()
+  const resultsA = resultsGroupsB.flatMap(getResults).sort()
   return resultsA
 }
 

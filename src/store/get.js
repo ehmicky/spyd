@@ -10,5 +10,5 @@ export const getFromStore = async function (results, delta, { since }) {
 
 const listResultsByDelta = async function (results, delta) {
   const index = await findByDelta(results, delta)
-  return results.slice(index)
+  return results.slice(0, index + 1)
 }

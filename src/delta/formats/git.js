@@ -3,7 +3,6 @@ import execa from 'execa'
 import { UserError } from '../../error/main.js'
 
 // Find a result by git reference (commit/branch/tag).
-// We use the most recent result because this is what users most likely want.
 export const findByGitRef = async function (results, gitRef) {
   const { stdout } = await execa(
     'git',

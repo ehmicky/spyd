@@ -15,11 +15,13 @@ const parseCount = function (delta) {
 }
 
 const findByCount = function (results, count) {
-  if (count > results.length) {
+  const index = results.length - count
+
+  if (index < 0) {
     return -1
   }
 
-  return count - 1
+  return index
 }
 
 export const countFormat = {

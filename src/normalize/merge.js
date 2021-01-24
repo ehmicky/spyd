@@ -13,7 +13,10 @@ import { groupResultCombinations } from './group.js'
 // of results has the same shape as the merged result except for the properties
 // added during merge (`previous` and `combinations[*].stats.diff`). This allows
 // reporters to re-use code when displaying them.
-export const mergeResults = async function ([lastResult, ...previous], since) {
+export const mergeResults = async function (results, since) {
+  const lastResult = results[results.length - 1]
+  const previous = results.slice(0, -1)
+
   const result = mergePairs(lastResult, previous)
   const resultA = await addCombinationsDiff(result, previous, since)
   const resultB = groupResultCombinations(resultA)
@@ -46,7 +49,8 @@ export const mergeResults = async function ([lastResult, ...previous], since) {
 //    `include`/`exclude` properties. This is explicit and predictable.
 const mergePairs = function (lastResult, previous) {
   const lastResultA = startMergeSystems(lastResult)
-  const lastResultB = previous.reduce(mergePair, lastResultA)
+  // eslint-disable-next-line fp/no-mutating-methods
+  const lastResultB = previous.slice().reverse().reduce(mergePair, lastResultA)
   const lastResultC = endMergeSystems(lastResultB)
   return lastResultC
 }

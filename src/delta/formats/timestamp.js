@@ -4,32 +4,21 @@
 //  - can omit timezone (default to local timezone) but returned date is UTC
 //  - loose parsing
 const parseTimestamp = function (delta) {
-  if (typeof delta !== 'string' || Number.isNaN(Number(new Date(delta)))) {
+  if (typeof delta !== 'string') {
     return
   }
 
-  const deltaA = normalizeDayOnly(delta)
-  const timestamp = new Date(deltaA).toISOString()
-  return timestamp
-}
+  const date = new Date(delta)
 
-// When specifying only the day, we default to the end of the day not the
-// beginning. `new Date()` does the opposite, so we need to fix it.
-const normalizeDayOnly = function (delta) {
-  if (!DAY_REGEXP.test(delta)) {
-    return delta
+  if (Number.isNaN(Number(date))) {
+    return
   }
 
-  return `${delta} 23:59:59.999`
+  return date.toISOString()
 }
 
-// Matches yyyy-mm-dd with any delimiters before yyyy, mm and dd, but no
-// hours/minutes/seconds afterwards. This works with some local formats too
-// such as mm/dd/yyyy
-const DAY_REGEXP = /^[^\d]*\d+[^\d]*\d+[^\d]*\d+[^\d]*$/u
-
 const findByTimestamp = function (results, timestamp) {
-  return results.findIndex((result) => result.timestamp <= timestamp)
+  return results.findIndex((result) => result.timestamp >= timestamp)
 }
 
 export const timestampFormat = {

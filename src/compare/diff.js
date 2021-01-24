@@ -20,7 +20,8 @@ export const addCombinationsDiff = async function (
   since,
 ) {
   const sinceIndex = await findByDelta(results, since)
-  const previousResults = results.slice(sinceIndex)
+  // eslint-disable-next-line fp/no-mutating-methods
+  const previousResults = results.slice(sinceIndex).reverse()
   const combinationsA = combinations.map((combination) =>
     addCombinationDiff(combination, previousResults),
   )
