@@ -1,5 +1,4 @@
-import now from 'precise-now'
-
+import { PluginError } from '../error/main.js'
 import { measureBenchmark } from '../measure/main.js'
 
 import { getTaskPath } from './path.js'
@@ -90,5 +89,25 @@ const getTaskIds = async function ({
     [{ taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] }],
     { progresses: [{ id: 'silent' }], cwd, duration },
   )
+  validateDuplicateTaskIds(taskIds)
   return taskIds
+}
+
+// Runners should enforce that task identifiers are unique. This can be done
+// by using a syntax which does not allow duplicate keys such as plain objects
+// in JavaScript.
+// Using the taskId in different runners is allowed though. This allows
+// comparing the same task across runners.
+const validateDuplicateTaskIds = function (taskIds) {
+  const duplicateTaskId = taskIds.find(isDuplicateTaskId)
+
+  if (duplicateTaskId !== undefined) {
+    throw new PluginError(
+      `Task "${duplicateTaskId}" must not be defined several times.`,
+    )
+  }
+}
+
+const isDuplicateTaskId = function (taskId, index, taskIds) {
+  return taskIds.slice(index + 1).some((taskIdA) => taskId === taskIdA)
 }
