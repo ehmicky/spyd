@@ -58,7 +58,7 @@ const getResult = async function ({
 // Add more information to the final result and normalize/sort it
 const addResultInfo = function ({ combinations, systemVersions, config }) {
   const id = uuidv4()
-  const timestamp = new Date().toISOString()
+  const timestamp = Date.now()
   const system = getSystem({ combinations, systemVersions, config })
   const result = { id, timestamp, system, combinations }
   const resultA = cleanObject(result)

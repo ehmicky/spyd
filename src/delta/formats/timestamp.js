@@ -8,13 +8,13 @@ const parseTimestamp = function (delta) {
     return
   }
 
-  const date = new Date(delta)
+  const timestamp = Number(new Date(delta))
 
-  if (Number.isNaN(Number(date))) {
+  if (Number.isNaN(timestamp)) {
     return
   }
 
-  return date.toISOString()
+  return timestamp
 }
 
 const findByTimestamp = function (results, timestamp) {

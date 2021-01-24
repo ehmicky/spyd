@@ -17,12 +17,13 @@ export const findByGitRef = async function (results, gitRef) {
     ],
     { reject: false, stdin: 'ignore', stderr: 'ignore' },
   )
-  const unixTime = Number(stdout)
+  const timestamp = Number(stdout) * SECS_TO_MSECS
 
-  if (!Number.isInteger(unixTime) || unixTime <= 0) {
+  if (!Number.isInteger(timestamp) || timestamp <= 0) {
     throw new UserError('does not match anything in the git repository')
   }
 
-  const timestamp = new Date(unixTime).toISOString()
   return results.findIndex((result) => result.timestamp >= timestamp)
 }
+
+const SECS_TO_MSECS = 1e3

@@ -1,5 +1,7 @@
 import sortOn from 'sort-on'
 
+import { sortFloats } from '../stats/sort.js'
+
 // Results are sorted by timestamp.
 // However, results of the same CI build are always consecutive.
 export const sortResults = function (results) {
@@ -28,8 +30,8 @@ const getGroup = function ({ system: { ci } }, index) {
 
 // Retrieve the latest result's timestamp
 const addTimestamp = function (results) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  const timestamps = results.map(getTimestamp).sort()
+  const timestamps = results.map(getTimestamp)
+  sortFloats(timestamps)
   const timestamp = timestamps[timestamps.length - 1]
   return { timestamp, results }
 }
