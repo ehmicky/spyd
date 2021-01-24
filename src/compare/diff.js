@@ -46,15 +46,12 @@ const addCombinationDiff = function (combination, previousResults) {
   return combinationA
 }
 
-// When merging results, some combinations are copied. We ensure those are
-// not used for comparison since they are the exact same combination.
-// We use !== which only works because results merging happened just before
-// this logic so we know for sure the combination object did not get mutated.
+// The `previousCombination` might be the same combination, i.e. difference
+// would be 0%. This happens when the combination has not changed since the
+// `previousResult`.
 const getPreviousCombination = function ({ combinations }, combinationA) {
-  return combinations.find(
-    (combinationB) =>
-      combinationA !== combinationB &&
-      isSameCategory(combinationA, combinationB),
+  return combinations.find((combinationB) =>
+    isSameCategory(combinationA, combinationB),
   )
 }
 
