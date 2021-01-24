@@ -33,6 +33,7 @@ import { getNextCombination } from './next.js'
 export const performMeasureLoop = async function ({
   combinations,
   duration,
+  exec,
   progressState,
   stopState,
 }) {
@@ -48,6 +49,7 @@ export const performMeasureLoop = async function ({
     const combination = getNextCombination({
       combinations,
       duration,
+      exec,
       progressState,
       stopState,
     })

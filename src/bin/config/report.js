@@ -76,7 +76,4 @@ Default: true for command "show" and "remove", false otherwise`,
     describe: `Show the difference with previous results.
 Default: true if the terminal is interactive.`,
   },
-  since: {
-    group: REPORT,
-  },
 }

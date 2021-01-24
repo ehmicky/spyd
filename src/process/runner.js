@@ -21,9 +21,14 @@ import { spawnProcess } from './spawn.js'
 //  - Precision is lower due to task cold starts having a higher share of the
 //    total measures.
 // All combinations are spawned in parallel, for performance.
-export const spawnRunnerProcesses = function ({ combinations, origin, cwd }) {
+export const spawnRunnerProcesses = function ({
+  combinations,
+  origin,
+  cwd,
+  exec,
+}) {
   return combinations.map((combination) =>
-    spawnRunnerProcess({ combination, origin, cwd }),
+    spawnRunnerProcess({ combination, origin, cwd, exec }),
   )
 }
 
@@ -46,6 +51,7 @@ export const spawnRunnerProcess = function ({
   },
   origin,
   cwd,
+  exec,
 }) {
   const spawnParams = getSpawnParams({
     id,
@@ -56,11 +62,12 @@ export const spawnRunnerProcess = function ({
     origin,
   })
   const spawnParamsString = JSON.stringify(spawnParams)
+  const stdio = getStdio(exec)
   const childProcess = spawnProcess(
     [file, ...args, spawnParamsString],
     {
       ...runnerSpawnOptions,
-      stdio: 'ignore',
+      stdio,
       reject: false,
       cleanup: true,
       detached: true,
@@ -101,6 +108,17 @@ const getSpawnParams = function ({
 //  - The resolution estimation algorithm requires a minimum amount of
 //    `calibrations`
 const CALIBRATE_LENGTH = 1e4
+
+// The `exec` command prints stdout/stderr. stdin is always ignored.
+// Anything printed during process spawning (e.g. top-level scope in Node.js)
+// might be repeated for each combination. This is good since:
+//  - It makes it clear that each combination has its own process
+//  - Some stdout/stderr might different from process to process
+const getStdio = function (exec) {
+  return exec
+    ? ['ignore', 'inherit', 'inherit']
+    : ['ignore', 'ignore', 'ignore']
+}
 
 // Terminate each runner's process at the end of the benchmark.
 // In general, processes should already have exited thanks to error handling

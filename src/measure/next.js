@@ -11,12 +11,14 @@ import { getSum } from '../stats/sum.js'
 export const getNextCombination = function ({
   combinations,
   duration,
+  exec,
   progressState,
   stopState,
 }) {
   const remainingCombinations = getRemainingCombinations({
     combinations,
     duration,
+    exec,
     stopState,
   })
   updateBenchmarkEnd({ remainingCombinations, progressState, duration })
@@ -47,6 +49,7 @@ export const getNextCombination = function ({
 const getRemainingCombinations = function ({
   combinations,
   duration,
+  exec,
   stopState,
 }) {
   if (shouldEndMeasuring(combinations, stopState)) {
@@ -55,7 +58,12 @@ const getRemainingCombinations = function ({
 
   const combinationMaxLoops = getCombinationMaxLoops(combinations)
   return combinations.filter((combination) =>
-    isRemainingCombination({ combination, duration, combinationMaxLoops }),
+    isRemainingCombination({
+      combination,
+      duration,
+      exec,
+      combinationMaxLoops,
+    }),
   )
 }
 
@@ -76,6 +84,8 @@ const getCombinationMaxLoops = function (combinations) {
 // little more than 1e8 floats.
 const MAX_LOOPS = 1e8
 
+// With the `exec` command, we run each combination exactly once, even if
+// not calibrated.
 const isRemainingCombination = function ({
   combination: {
     totalDuration,
@@ -86,11 +96,13 @@ const isRemainingCombination = function ({
     calibrated,
   },
   duration,
+  exec,
   combinationMaxLoops,
 }) {
   return (
     loops === 0 ||
     (loops < combinationMaxLoops &&
+      !exec &&
       hasTimeLeft({
         duration,
         sampleDurationMean,

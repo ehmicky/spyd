@@ -17,7 +17,7 @@ import { addStopHandler, getStopState } from './stop.js'
 // Also used when starting combinations to retrieve their tasks and steps.
 export const measureBenchmark = async function (
   combinations,
-  { duration, progresses, cwd },
+  { duration, progresses, cwd, exec = false },
 ) {
   const stopState = getStopState()
   const { progressState, progressId, onProgressError } = startProgress({
@@ -32,6 +32,7 @@ export const measureBenchmark = async function (
       combinations: combinationsA,
       duration,
       cwd,
+      exec,
       stopState,
       progressState,
       onProgressError,
@@ -46,6 +47,7 @@ const startServerAndMeasure = async function ({
   combinations,
   duration,
   cwd,
+  exec,
   stopState,
   progressState,
   onProgressError,
@@ -61,6 +63,7 @@ const startServerAndMeasure = async function ({
       origin,
       duration,
       cwd,
+      exec,
       stopState,
       progressState,
       onProgressError,
@@ -75,16 +78,23 @@ const spawnAndMeasure = async function ({
   origin,
   duration,
   cwd,
+  exec,
   stopState,
   progressState,
   onProgressError,
 }) {
-  const combinationsA = spawnRunnerProcesses({ combinations, origin, cwd })
+  const combinationsA = spawnRunnerProcesses({
+    combinations,
+    origin,
+    cwd,
+    exec,
+  })
 
   try {
     return await stopOrMeasure({
       combinations: combinationsA,
       duration,
+      exec,
       stopState,
       progressState,
       onProgressError,
@@ -97,6 +107,7 @@ const spawnAndMeasure = async function ({
 const stopOrMeasure = async function ({
   combinations,
   duration,
+  exec,
   stopState,
   progressState,
   onProgressError,
@@ -114,6 +125,7 @@ const stopOrMeasure = async function ({
       measureAllCombinations({
         combinations,
         duration,
+        exec,
         progressState,
         stopState,
       }),
@@ -127,6 +139,7 @@ const stopOrMeasure = async function ({
 const measureAllCombinations = async function ({
   combinations,
   duration,
+  exec,
   progressState,
   stopState,
 }) {
@@ -134,6 +147,7 @@ const measureAllCombinations = async function ({
   const combinationsB = await performMeasureLoop({
     combinations: combinationsA,
     duration,
+    exec,
     progressState,
     stopState,
   })

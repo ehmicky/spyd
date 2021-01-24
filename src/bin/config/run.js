@@ -1,4 +1,4 @@
-import { TASKS } from './groups.js'
+import { TASKS, STORE } from './groups.js'
 
 // Configuration shared by commands that can run combinations: `bench`, `exec`
 export const RUN_CONFIG = {
@@ -33,5 +33,13 @@ The key uses a dot notation and specifies the input identifier, such as
 When using variations, the variation identifier must be specified too,
 such as --inputs.size.small=5
 The inputs values are passed to tasks as arguments.`,
+  },
+  system: {
+    group: STORE,
+    string: true,
+    requiresArg: true,
+    describe: `Identifier of the current hardware/software system.
+Used to compare different machines or configurations together.
+Default: "default_system"`,
   },
 }

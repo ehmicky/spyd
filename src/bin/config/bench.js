@@ -16,14 +16,6 @@ Can also be 0 which only stops when CTRL-C is typed.`,
     number: true,
     requiresArg: true,
   },
-  system: {
-    group: STORE,
-    string: true,
-    requiresArg: true,
-    describe: `Identifier of the current hardware/software system.
-Used to compare different machines or configurations together.
-Default: "default_system"`,
-  },
   progress: {
     group: PROGRESS,
     string: true,
