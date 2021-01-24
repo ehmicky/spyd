@@ -1,3 +1,7 @@
+import now from 'precise-now'
+
+import { measureBenchmark } from '../measure/main.js'
+
 import { getTaskPath } from './path.js'
 
 // The tasks file for each runner is selected using the `runnerId.tasks`
@@ -26,17 +30,16 @@ import { getTaskPath } from './path.js'
 //     - too implicit/magic
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
-export const listTasks = async function (tasks, runners, cwd) {
+export const listTasks = async function ({ tasks, runners, cwd, duration }) {
   const tasksA = await Promise.all(
-    runners.map((runner) => getRunnerTasks(tasks, runner, cwd)),
+    runners.map((runner) => getRunnerTasks(runner, { tasks, cwd, duration })),
   )
   return [].concat(...tasksA)
 }
 
 const getRunnerTasks = async function (
-  tasks,
-  { runnerId, runnerConfig, runnerExtensions },
-  cwd,
+  { runnerId, runnerSpawn, runnerSpawnOptions, runnerConfig, runnerExtensions },
+  { tasks, cwd, duration },
 ) {
   try {
     const taskPath = await getTaskPath({
@@ -45,9 +48,41 @@ const getRunnerTasks = async function (
       runnerExtensions,
       cwd,
     })
-    return { taskPath, runnerId }
+    const taskIds = await getTaskIds({
+      taskPath,
+      cwd,
+      duration,
+      runnerSpawn,
+      runnerSpawnOptions,
+      runnerConfig,
+    })
+    return taskIds.map((taskId) => ({ taskId, taskPath, runnerId }))
   } catch (error) {
     error.message = `In runner "${runnerId}": ${error.message}`
     throw error
   }
+}
+
+// A tasks file might have several tasks. Each task has its own process, in
+// order to prevent them from influencing each other:
+//  - By modifying the global state
+//  - Or due to the runtime engine being less able to optimize hot paths due
+//    to several tasks competing for optimization in the same process
+// So we spawn a single process for all of them, to retrieve the task and step
+// identifiers.
+const getTaskIds = async function ({
+  taskPath,
+  cwd,
+  duration,
+  runnerSpawn,
+  runnerSpawnOptions,
+  runnerConfig,
+}) {
+  const {
+    combinations: [{ tasks: taskIds }],
+  } = await measureBenchmark(
+    [{ taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] }],
+    { progresses: [{ id: 'silent' }], cwd, duration },
+  )
+  return taskIds
 }

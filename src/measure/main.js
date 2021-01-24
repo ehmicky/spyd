@@ -3,34 +3,43 @@ import {
   spawnRunnerProcesses,
   terminateRunnerProcesses,
 } from '../process/runner.js'
+import { startProgress, endProgress } from '../progress/start_end.js'
 import { startServer, endServer } from '../server/start_end.js'
 
 import { endCombinations } from './end.js'
 import { exitCombinations } from './exit.js'
 import { performMeasureLoop } from './loop.js'
-import { addInitProps, getFinalProps } from './props.js'
+import { addInitProps } from './props.js'
 import { startCombinations } from './start.js'
-import { addStopHandler } from './stop.js'
+import { addStopHandler, getStopState } from './stop.js'
 
-// Measure all combinations and add results to `combinations`
-export const measureCombinations = async function ({
+// Measure all combinations and add results to `combinations`.
+// Also used when starting combinations to retrieve their tasks and steps.
+export const measureBenchmark = async function (
   combinations,
-  config: { duration, cwd },
-  stopState,
-  progressState,
-  onProgressError,
-}) {
-  const combinationsA = combinations.map(addInitProps)
-  const combinationsB = await startServerAndMeasure({
-    combinations: combinationsA,
+  { duration, progresses, cwd },
+) {
+  const stopState = getStopState()
+  const { progressState, progressId, onProgressError } = startProgress({
+    combinations,
     duration,
-    cwd,
-    stopState,
-    progressState,
-    onProgressError,
+    progresses,
   })
-  const combinationsC = combinationsB.map(getFinalProps)
-  return combinationsC
+
+  try {
+    const combinationsA = combinations.map(addInitProps)
+    const combinationsB = await startServerAndMeasure({
+      combinations: combinationsA,
+      duration,
+      cwd,
+      stopState,
+      progressState,
+      onProgressError,
+    })
+    return { combinations: combinationsB, stopped: stopState.stopped }
+  } finally {
+    await endProgress(progressId)
+  }
 }
 
 const startServerAndMeasure = async function ({

@@ -1,15 +1,24 @@
 import { promisify } from 'util'
 
-// Add default values for tasks
-export const normalizeTask = function ({
-  beforeAll,
-  beforeEach,
-  main,
-  afterEach,
-  afterAll,
-  async = isAsyncFunc(main),
-}) {
-  return { beforeAll, beforeEach, main, afterEach, afterAll, async }
+import mapObj from 'map-obj'
+
+// Normalize and add default values for tasks
+export const normalizeTasks = function (tasks) {
+  return mapObj(tasks, normalizeTask)
+}
+
+// Tasks can be directly a function, which is a shortcut for `{ main }`
+const normalizeTask = function (taskId, task) {
+  const taskA = typeof task === 'function' ? { main: task } : task
+  const {
+    beforeAll,
+    beforeEach,
+    main,
+    afterEach,
+    afterAll,
+    async = isAsyncFunc(main),
+  } = taskA
+  return [taskId, { beforeAll, beforeEach, main, afterEach, afterAll, async }]
 }
 
 // Async functions use different measuring logic.

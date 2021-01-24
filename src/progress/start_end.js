@@ -5,7 +5,7 @@ import { isSilent } from './silent.js'
 import { updateProgress, clearProgressFinal } from './update.js'
 
 // Start progress reporting using the `progress` configuration property
-export const startProgress = function (combinations, { duration, progresses }) {
+export const startProgress = function ({ combinations, duration, progresses }) {
   const progressState = {}
 
   if (isSilent(progresses)) {
@@ -64,11 +64,8 @@ const UPDATE_FREQUENCY = 1e2
 
 // End progress reporting.
 // When stopped, we keep the progress reporting.
-export const endProgress = async function ({
-  progressId,
-  config: { progresses },
-}) {
-  if (isSilent(progresses)) {
+export const endProgress = async function (progressId) {
+  if (progressId === undefined) {
     return
   }
 

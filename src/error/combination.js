@@ -30,7 +30,12 @@ export const combinationHasErrored = function ({ error }) {
   return error !== undefined
 }
 
+// taskId is `undefined` during init
 const getCombinationError = function ({ error, taskId }) {
+  if (taskId === undefined) {
+    return error
+  }
+
   const taskPrefix = `In task "${taskId}"`
   error.message = `${taskPrefix}:\n${error.message}`
   return error

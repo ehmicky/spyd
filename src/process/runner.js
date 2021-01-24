@@ -40,6 +40,7 @@ export const spawnRunnerProcess = function ({
     runnerSpawn: [file, ...args],
     runnerSpawnOptions,
     runnerConfig,
+    taskId,
     taskPath,
     inputs,
   },
@@ -49,6 +50,7 @@ export const spawnRunnerProcess = function ({
   const spawnParams = getSpawnParams({
     id,
     runnerConfig,
+    taskId,
     taskPath,
     inputs,
     origin,
@@ -72,18 +74,21 @@ export const spawnRunnerProcess = function ({
 const getSpawnParams = function ({
   id,
   runnerConfig,
+  taskId,
   taskPath,
   inputs,
   origin,
 }) {
   const serverUrl = getServerUrl(origin, id)
   const inputsA = toInputsObj(inputs)
+  const calibrate = taskId === undefined ? 0 : CALIBRATE_LENGTH
   return {
     serverUrl,
     runnerConfig,
+    taskId,
     taskPath,
     inputs: inputsA,
-    calibrate: CALIBRATE_LENGTH,
+    calibrate,
   }
 }
 

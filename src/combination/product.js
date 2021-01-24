@@ -20,8 +20,7 @@ const getCombinationsByRunner = function (runner, tasks) {
 
 const getCombinationByTask = function (
   { runnerId, runnerSpawn, runnerSpawnOptions, runnerConfig },
-  // TODO: remove this default value
-  { taskId = 'tasks', taskPath },
+  { taskId, taskPath },
 ) {
   return {
     taskPath,

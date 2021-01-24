@@ -16,9 +16,7 @@ import { groupBy } from '../utils/group.js'
 export const getSystems = function ({
   combinations: [{ systemId }],
   systemVersions,
-  config: {
-    envInfo: { commit, branch, tag, pr, prBranch, buildUrl },
-  },
+  envInfo: { commit, branch, tag, pr, prBranch, buildUrl },
 }) {
   const machine = getMachine()
   return [

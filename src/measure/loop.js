@@ -36,6 +36,10 @@ export const performMeasureLoop = async function ({
   progressState,
   stopState,
 }) {
+  if (isInit(combinations)) {
+    return combinations
+  }
+
   setBenchmarkStart(progressState, duration)
 
   // eslint-disable-next-line fp/no-loops
@@ -73,6 +77,15 @@ export const performMeasureLoop = async function ({
   delete stopState.combination
 
   return combinations
+}
+
+// Task init, retrieving only task and step identifiers
+const isInit = function (combinations) {
+  return !combinations.some(hasTaskId)
+}
+
+const hasTaskId = function ({ taskId }) {
+  return taskId !== undefined
 }
 
 const eMeasureSample = async function (combination, stopState) {

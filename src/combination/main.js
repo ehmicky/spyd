@@ -15,9 +15,10 @@ export const getCombinations = async function ({
   include,
   exclude,
   cwd,
+  duration,
 }) {
   const { runners: runnersA, systemVersions } = await loadRunners(runners, cwd)
-  const tasksA = await listTasks(tasks, runnersA, cwd)
+  const tasksA = await listTasks({ tasks, runners: runnersA, cwd, duration })
   const inputsA = fromInputsObj(inputs)
 
   const combinations = getCombinationsProduct({
