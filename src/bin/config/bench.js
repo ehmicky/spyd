@@ -1,4 +1,4 @@
-import { TASKS, STORE } from './groups.js'
+import { TASKS, REPORT, STORE } from './groups.js'
 
 // Configuration specific to `bench`
 export const BENCH_CONFIG = {
@@ -10,6 +10,12 @@ export const BENCH_CONFIG = {
     describe: `How many seconds to execute each combination.
 The default is 1 which executes each combination once.
 Can also be 0 which only stops when CTRL-C is typed.`,
+  },
+  preview: {
+    group: REPORT,
+    boolean: true,
+    describe: `Preview the results and display a progress bar.
+Default: true if a reporter is printing to the terminal.`,
   },
   concurrency: {
     group: TASKS,

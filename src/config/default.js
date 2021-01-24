@@ -27,6 +27,7 @@ export const DEFAULT_CONFIG = {
   duration: 1,
   concurrency: 1,
   system: 'default_system',
+  preview: true,
   save: false,
   output: '-',
   limit: [],
