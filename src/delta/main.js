@@ -44,6 +44,11 @@ const parseDelta = function ({
 
 // Get previous results index by result delta.
 // `results` must be sorted from most to least recent.
+// In general, most delta formats look for the first result after the delta.
+//   - This allows users to specify loose deltas without errors, such as
+//     "100" even if there are only 3 results.
+//   - However, few formats look for the last result before the delta instead
+//     since it makes more sense for those.
 export const findByDelta = async function (
   results,
   { type, value, delta, name },
