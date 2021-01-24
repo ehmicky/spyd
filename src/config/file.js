@@ -1,4 +1,4 @@
-import { extname } from 'path'
+import { dirname, extname } from 'path'
 
 import { UserError } from '../error/main.js'
 import { importJsDefault } from '../utils/import.js'
@@ -8,12 +8,13 @@ import { addConfigExtend } from './extend.js'
 import { resolveConfigPaths } from './resolve.js'
 
 // Load `spyd.*` file
-export const loadConfigFile = async function (configPath, cwd) {
+export const loadConfigFile = async function (configPath) {
   if (configPath === undefined) {
     return {}
   }
 
   const configFile = await loadConfigByPath(configPath)
+  const cwd = dirname(configPath)
   const configFileA = await resolveConfigPaths(configFile, cwd)
   return configFileA
 }

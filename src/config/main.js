@@ -1,3 +1,5 @@
+import { cwd as getCwd } from 'process'
+
 import envCi from 'env-ci'
 
 import { addPlugins } from '../plugin/add.js'
@@ -8,17 +10,21 @@ import { normalizeConfig } from './normalize.js'
 import { validateConfig } from './validate.js'
 
 // Retrieve configuration
-// `cwd` and `config` cannot be specified in the configuration file nor in
-// environment variables
+// `cwd` and `config` cannot be specified in the configuration file
+// When resolving configuration relative file paths, the CLI and programmatic
+// flags use the current directory. However, in `spyd.*`, we use the
+// configuration file's directory. We do this since this is probably what users
+// would expect.
 export const getConfig = async function (command, configFlags = {}) {
-  const { config: configA, cwd } = await loadConfig(configFlags)
+  const cwd = getCwd()
+  const config = await loadConfig(configFlags)
 
-  validateConfig(configA)
+  validateConfig(config)
   const envInfo = envCi({ cwd })
-  const configB = addDefaultConfig(configA, command, envInfo)
+  const configA = addDefaultConfig(config, command, envInfo)
 
-  const configC = { ...configB, cwd, envInfo }
-  const configD = normalizeConfig(configC)
-  const configE = await addPlugins(configD)
-  return configE
+  const configB = { ...configA, cwd, envInfo }
+  const configC = normalizeConfig(configB)
+  const configD = await addPlugins(configC)
+  return configD
 }

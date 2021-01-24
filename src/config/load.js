@@ -2,7 +2,7 @@ import { removeEmptyValues } from './empty.js'
 import { loadConfigFile } from './file.js'
 import { mergeConfigs } from './merge.js'
 import { getConfigPath } from './path.js'
-import { getCwd, resolveConfigPaths } from './resolve.js'
+import { resolveConfigPaths } from './resolve.js'
 
 // Load the configuration, shallow merged in priority order:
 //  - any CLI or programmatic flags
@@ -17,11 +17,10 @@ export const loadConfig = async function (configFlags) {
   const configNonFile = await resolveConfigPaths(configFlags, '.')
 
   const configPath = await getConfigPath(configNonFile)
-  const cwd = getCwd(configPath)
-  const configFile = await loadConfigFile(configPath, cwd)
+  const configFile = await loadConfigFile(configPath)
   const configA = mergeConfigs(configFile, configNonFile)
   const configB = { ...configA, config: configPath }
 
   const configC = removeEmptyValues(configB)
-  return { config: configC, cwd }
+  return configC
 }
