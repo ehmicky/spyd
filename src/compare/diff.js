@@ -1,5 +1,4 @@
 import { isSameCategory } from '../combination/ids.js'
-import { findByDelta } from '../delta/main.js'
 import { findValue } from '../utils/find.js'
 
 // Add `combination.stats.diff` which compares each combination with another
@@ -14,18 +13,16 @@ import { findValue } from '../utils/find.js'
 // `combination.stats.diff` is not persisted in stores since it can be computed
 // dynamically and depends on the `since` configuration property. Also some
 // results might have been dynamically deleted or filtered out.
-export const addCombinationsDiff = async function (
+export const addCombinationsDiff = function (
   { combinations, ...result },
-  results,
-  since,
+  previous,
 ) {
-  if (results.length === 0) {
+  if (previous.length === 0) {
     return { ...result, combinations }
   }
 
-  const sinceIndex = await findByDelta(results, since)
   // eslint-disable-next-line fp/no-mutating-methods
-  const previousResults = results.slice(sinceIndex).reverse()
+  const previousResults = previous.slice().reverse()
   const combinationsA = combinations.map((combination) =>
     addCombinationDiff(combination, previousResults),
   )

@@ -18,7 +18,7 @@ const findByCount = function (results, count) {
   const index = results.length - count
 
   if (index < 0) {
-    return -1
+    return 0
   }
 
   return index

@@ -1,13 +1,8 @@
 import { UserError } from '../error/main.js'
 import { findValue } from '../utils/find.js'
 
-import { ciFormat } from './formats/ci.js'
-import { commitFormat } from './formats/commit.js'
-import { countFormat } from './formats/count.js'
-import { firstFormat } from './formats/first.js'
-import { idFormat } from './formats/id.js'
-import { tagFormat } from './formats/tag.js'
-import { timestampFormat } from './formats/timestamp.js'
+import { getDeltaProp, addDeltaError } from './error.js'
+import { FORMATS, findFormat } from './formats/main.js'
 
 // Several configuration properties targets a previous results using a delta,
 // which can an integer, date/time, result.id or git commit.
@@ -15,9 +10,8 @@ import { timestampFormat } from './formats/timestamp.js'
 // This validates and normalizes it to a `deltaQuery` object.
 export const normalizeDelta = function (delta, name, envInfo) {
   if (delta === '') {
-    throw new UserError(
-      `"${name}" configuration property "${delta}" must not be an empty string`,
-    )
+    const deltaProp = getDeltaProp(delta, name)
+    throw new UserError(`${deltaProp} must not be an empty string`)
   }
 
   const deltaReturn = findValue(FORMATS, (format) =>
@@ -25,17 +19,18 @@ export const normalizeDelta = function (delta, name, envInfo) {
   )
 
   if (deltaReturn === undefined) {
+    const deltaProp = getDeltaProp(delta, name)
     throw new UserError(
-      `"${name}" configuration property "${delta}" must be a number, a date, a time, an id or a git commit/tag/branch.`,
+      `${deltaProp} must be a number, a date, a time, an id or a git commit/tag/branch.`,
     )
   }
 
   const [value, { type }] = deltaReturn
-  return { type, value, original: delta, name }
+  return { type, value, delta, name }
 }
 
 const parseDelta = function ({
-  format: { parse, message },
+  format: { parse, type },
   delta,
   name,
   envInfo,
@@ -43,8 +38,7 @@ const parseDelta = function ({
   try {
     return parse(delta, envInfo)
   } catch (error) {
-    error.message = `"${name}" configuration property "${delta}" (${message}) ${error.message}.`
-    throw error
+    throw addDeltaError(error, { type, delta, name })
   }
 }
 
@@ -52,39 +46,17 @@ const parseDelta = function ({
 // `results` must be sorted from most to least recent.
 export const findByDelta = async function (
   results,
-  { type, value, original, name },
+  { type, value, delta, name },
 ) {
   if (results.length === 0) {
-    throw new UserError('No previous results')
+    return -1
   }
 
-  const { find, message } = FORMATS.find((format) => format.type === type)
+  const { find } = findFormat(type)
 
   try {
-    return await findResult(find, results, value)
+    return await find(results, value)
   } catch (error) {
-    error.message = `"${name}" configuration property "${original}" (${message}) ${error.message}.`
-    throw error
+    throw addDeltaError(error, { type, delta, name })
   }
 }
-
-const findResult = async function (find, results, value) {
-  const index = await find(results, value)
-
-  if (index === -1) {
-    throw new UserError('matches no results')
-  }
-
-  return index
-}
-
-// Order matters since the first successful parse() is used
-const FORMATS = [
-  countFormat,
-  firstFormat,
-  timestampFormat,
-  idFormat,
-  ciFormat,
-  commitFormat,
-  tagFormat,
-]
