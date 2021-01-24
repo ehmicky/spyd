@@ -1,7 +1,10 @@
 // Add default configuration properties
-export const addDefaultConfig = function (config, command) {
+export const addDefaultConfig = function (config, command, { isCi }) {
+  const defaultDelta = isCi ? 'ci' : 1
   return {
     ...DEFAULT_CONFIG,
+    delta: defaultDelta,
+    since: defaultDelta,
     showSystem: config.system !== undefined,
     showMetadata: METADATA_COMMANDS.has(command),
     ...config,
@@ -20,8 +23,6 @@ export const DEFAULT_CONFIG = {
   titles: {},
   showTitles: false,
   showSystem: false,
-  delta: 1,
-  since: 1,
   include: [],
   exclude: [],
   reporter: ['debug'],

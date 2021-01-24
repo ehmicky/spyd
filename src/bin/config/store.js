@@ -26,6 +26,7 @@ Can be:
   - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
   - a result id
   - a git commit, tag or branch
-  - "ci": last CI build`,
+  - "ci": last CI build
+Default: the last CI build when in CI, or the last result otherwise.`,
   },
 }

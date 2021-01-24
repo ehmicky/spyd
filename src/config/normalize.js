@@ -46,8 +46,8 @@ const normalizeSystem = function (system) {
   return { systemId: system }
 }
 
-const normalizeDeltaProp = function (delta, propName, { cwd }) {
-  return { [propName]: normalizeDelta(delta, propName, cwd) }
+const normalizeDeltaProp = function (delta, propName, { envInfo }) {
+  return { [propName]: normalizeDelta(delta, propName, envInfo) }
 }
 
 const normalizeOptionalArrProp = function (value, propName) {

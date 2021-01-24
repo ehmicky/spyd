@@ -1,15 +1,11 @@
-import envCi from 'env-ci'
-
 import { UserError } from '../../error/main.js'
 
 // CI-friendly delta.
 // Compare with last CI build.
-const parseCi = function (delta, cwd) {
+const parseCi = function (delta, { buildUrl: ciBuild }) {
   if (typeof delta !== 'string' || delta.toLowerCase() !== CI_DELTA) {
     return
   }
-
-  const { buildUrl: ciBuild } = envCi({ cwd })
 
   if (ciBuild === undefined) {
     throw new UserError('can only be used in CI')

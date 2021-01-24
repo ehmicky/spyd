@@ -1,7 +1,6 @@
 import { cpus as getCpus, totalmem } from 'os'
 
 import { format as formatBytes } from 'bytes'
-import envCi from 'env-ci'
 import osName from 'os-name'
 
 import { groupBy } from '../utils/group.js'
@@ -14,10 +13,11 @@ import { groupBy } from '../utils/group.js'
 export const getSystem = function ({
   combinations: [{ systemId }],
   systemVersions,
-  config: { cwd },
+  config: {
+    envInfo: { commit, branch, tag, pr, prBranch, buildUrl },
+  },
 }) {
   const machine = getMachine()
-  const { commit, branch, tag, pr, prBranch, buildUrl } = envCi({ cwd })
   return {
     id: systemId,
     machine,

@@ -12,7 +12,7 @@ import { timestampFormat } from './formats/timestamp.js'
 // which can an integer, date/time, result.id or git commit.
 // Previous results are always first filtered by `include`/`exclude`.
 // This validates and normalizes it to a `deltaQuery` object.
-export const normalizeDelta = function (delta, name, cwd) {
+export const normalizeDelta = function (delta, name, envInfo) {
   if (delta === '') {
     throw new UserError(
       `"${name}" configuration property "${delta}" must not be an empty string`,
@@ -20,7 +20,7 @@ export const normalizeDelta = function (delta, name, cwd) {
   }
 
   const deltaReturn = findValue(FORMATS, (format) =>
-    parseDelta({ format, delta, name, cwd }),
+    parseDelta({ format, delta, name, envInfo }),
   )
 
   if (deltaReturn === undefined) {
@@ -33,9 +33,14 @@ export const normalizeDelta = function (delta, name, cwd) {
   return { type, value, original: delta, name }
 }
 
-const parseDelta = function ({ format: { parse, message }, delta, name, cwd }) {
+const parseDelta = function ({
+  format: { parse, message },
+  delta,
+  name,
+  envInfo,
+}) {
   try {
-    return parse(delta, cwd)
+    return parse(delta, envInfo)
   } catch (error) {
     error.message = `"${name}" configuration property "${delta}" (${message}) ${error.message}.`
     throw error
