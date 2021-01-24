@@ -1,4 +1,3 @@
-import { PROGRESS_REPORTERS } from '../progress/reporters/main.js'
 import { REPORTERS } from '../report/reporters/main.js'
 import { RUNNERS } from '../run/runners/main.js'
 import { STORES } from '../store/stores/main.js'
@@ -28,14 +27,6 @@ export const PLUGIN_TYPES = [
     builtins: REPORTERS,
   },
   {
-    type: 'progress',
-    varName: 'progresses',
-    property: 'progress',
-    configPrefix: 'progress',
-    modulePrefix: 'spyd-progress-',
-    builtins: PROGRESS_REPORTERS,
-  },
-  {
     type: 'store',
     varName: 'stores',
     property: 'store',
@@ -46,4 +37,4 @@ export const PLUGIN_TYPES = [
 ]
 
 // Configuration properties to remove after loading
-export const PLUGIN_PROP_PREFIXES = ['runner', 'reporter', 'progress', 'store']
+export const PLUGIN_PROP_PREFIXES = ['runner', 'reporter', 'store']

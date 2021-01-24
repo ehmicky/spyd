@@ -1,4 +1,4 @@
-import { TASKS, PROGRESS, STORE } from './groups.js'
+import { TASKS, STORE } from './groups.js'
 
 // Configuration specific to `bench`
 export const BENCH_CONFIG = {
@@ -15,18 +15,6 @@ Can also be 0 which only stops when CTRL-C is typed.`,
     group: TASKS,
     number: true,
     requiresArg: true,
-  },
-  progress: {
-    group: PROGRESS,
-    string: true,
-    array: true,
-    requiresArg: true,
-    describe: `Module to report progress.
-Can be specified several times.
-Built-in progress reporters: silent.
-Custom progress reporters can be installed from npm.
-Progress-reporter-specific configuration properties can be specified by
-appending the progress reporter's name: --progressName.prop=value`,
   },
   save: {
     group: STORE,

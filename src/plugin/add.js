@@ -5,7 +5,7 @@ import { loadPlugins } from './load.js'
 import { PLUGIN_TYPES, PLUGIN_PROP_PREFIXES } from './types.js'
 import { validatePlugins } from './validate.js'
 
-// Several configuration properties (`runner`, `reporter`, `progress`, `store`)
+// Several configuration properties (`runner`, `reporter`, `store`)
 // can be customized with custom modules. This loads them. Each type can specify
 // builtin modules too.
 // Most plugin types need only a single plugin per benchmark, but they still
