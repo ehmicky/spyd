@@ -15,8 +15,10 @@ import { validateConfig } from './validate.js'
 // flags use the current directory. However, in `spyd.*`, we use the
 // configuration file's directory. We do this since this is probably what users
 // would expect.
-export const getConfig = async function (command, configFlags = {}) {
-  const cwd = getCwd()
+export const getConfig = async function (
+  command,
+  { cwd = getCwd(), ...configFlags } = {},
+) {
   const config = await loadConfig(configFlags, cwd)
 
   validateConfig(config)

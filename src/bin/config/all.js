@@ -19,6 +19,17 @@ directory.`,
 This can either a file path or a Node module.
 As opposed to "config", this is used to share configuration between projects.`,
   },
+  cwd: {
+    group: CONFIG,
+    string: true,
+    requiresArg: true,
+    describe: `Current directory when running tasks.
+This is also used when:
+  - Looking for the default "config" file
+  - Resolving CLI flags that are file paths
+  - Looking for the current git commit and branch
+Default: current directory`,
+  },
   debug: {
     group: CONFIG,
     boolean: true,
