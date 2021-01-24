@@ -7,7 +7,7 @@ import { parseLimits } from './parse.js'
 
 // If any `combination.stats.diff` is too slow compared to the `limit`
 // configuration property, we fail.
-// It uses the `compare` configuration property like `showDiff` does.
+// It uses the `since` configuration property like `showDiff` does.
 // Done after reporting.
 // `limit` is only meant to print an error message and change the CLI exit code
 // during measuring (`bench` command). It is not intended to be shown in

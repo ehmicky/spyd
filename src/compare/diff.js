@@ -4,32 +4,27 @@ import { findValue } from '../utils/find.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
-// Which result is being compared depends on the `compare` configuration
-// property. By default, it is the previous result but it can be any earlier
-// result.
+// Which result is being compared depends on the `since` configuration property.
+// By default, it is the previous result but it can be any earlier result.
 // If the compared result does not have the combination to compare, we use the
 // most recent result before it instead.
 // `combination.stats.diff` is always set and is used both by:
 //  - Reporters, unless the `showDiff` configuration property is `false`
 //  - The `limit` configuration property to do performance testing
 // `combination.stats.diff` is not persisted in stores since it can be computed
-// dynamically and depends on the `compare` configuration property. Also some
+// dynamically and depends on the `since` configuration property. Also some
 // results might have been dynamically deleted or filtered out.
 export const addCombinationsDiff = function (
   { combinations, ...result },
   results,
-  compare,
+  since,
 ) {
-  const comparedIndex = getComparedIndex(results, compare)
-  const previousResults = results.slice(comparedIndex)
+  const sinceIndex = findByDelta(results, since)
+  const previousResults = results.slice(sinceIndex)
   const combinationsA = combinations.map((combination) =>
     addCombinationDiff(combination, previousResults),
   )
   return { ...result, combinations: combinationsA }
-}
-
-const getComparedIndex = function (results, compare) {
-  return findByDelta(results, compare)
 }
 
 const addCombinationDiff = function (combination, previousResults) {

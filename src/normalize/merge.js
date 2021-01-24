@@ -13,9 +13,9 @@ import { groupResultCombinations } from './group.js'
 // of results has the same shape as the merged result except for the properties
 // added during merge (`previous` and `combinations[*].stats.diff`). This allows
 // reporters to re-use code when displaying them.
-export const mergeResults = function ([lastResult, ...previous], compare) {
+export const mergeResults = function ([lastResult, ...previous], since) {
   const result = mergePairs(lastResult, previous)
-  const resultA = addCombinationsDiff(result, previous, compare)
+  const resultA = addCombinationsDiff(result, previous, since)
   const resultB = groupResultCombinations(resultA)
   return { ...resultB, previous }
 }

@@ -21,7 +21,7 @@ export const DEFAULT_CONFIG = {
   showTitles: false,
   showSystem: false,
   delta: 1,
-  compare: 1,
+  since: 1,
   include: [],
   exclude: [],
   reporter: ['debug'],

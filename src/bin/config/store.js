@@ -15,10 +15,11 @@ Store-specific configuration properties can be specified by appending the
 store's name: --storeName.prop=value
 For example: --storeFile.dir=path`,
   },
-  compare: {
+  since: {
     group: STORE,
     describe: `Which result to compare to when using the "limit" or "showDiff"
 configuration properties.
+For reporters showing all previous results, this also defines the first result.
 Can be:
   - empty: last result
   - an integer: {integer}-th previous result

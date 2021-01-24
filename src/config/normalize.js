@@ -71,7 +71,7 @@ const NORMALIZERS = {
   duration: normalizeDuration,
   system: normalizeSystem,
   delta: normalizeDeltaProp,
-  compare: normalizeDeltaProp,
+  since: normalizeDeltaProp,
   reporter: normalizeOptionalArrProp,
   progress: normalizeOptionalArrProp,
   store: normalizeOptionalArrProp,
