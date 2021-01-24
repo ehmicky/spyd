@@ -1,4 +1,4 @@
-import { addColors } from './colors.js'
+import { addSuffixColors, addDiffColors } from './colors.js'
 import { getStatsDecimals } from './decimals.js'
 import { getPadding, padValue } from './padding.js'
 import { getScale } from './scale.js'
@@ -84,5 +84,7 @@ const finalizeValue = function ({
 
 const finalizeItem = function ({ stat, statPretty, padding, name }) {
   const statPrettyA = padValue(statPretty, padding)
-  return addColors(stat, statPrettyA, name)
+  const statPrettyB = addSuffixColors(statPrettyA)
+  const statPrettyC = addDiffColors(stat, statPrettyB, name)
+  return statPrettyC
 }
