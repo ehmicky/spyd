@@ -1,6 +1,6 @@
 // Deltas can be git commits
 const parseCommit = function (delta) {
-  if (!GIT_COMMIT_REGEXP.test(delta)) {
+  if (typeof delta !== 'string' || !GIT_COMMIT_REGEXP.test(delta)) {
     return
   }
 

@@ -1,6 +1,7 @@
 import { UserError } from '../error/main.js'
 import { findValue } from '../utils/find.js'
 
+import { ciFormat } from './formats/ci.js'
 import { commitFormat } from './formats/commit.js'
 import { countFormat } from './formats/count.js'
 import { idFormat } from './formats/id.js'
@@ -11,7 +12,7 @@ import { timestampFormat } from './formats/timestamp.js'
 // which can an integer, date/time, result.id or git commit.
 // Previous results are always first filtered by `include`/`exclude`.
 // This validates and normalizes it to a `deltaQuery` object.
-export const normalizeDelta = function (delta, name) {
+export const normalizeDelta = function (delta, name, cwd) {
   if (delta === '') {
     throw new UserError(
       `"${name}" configuration property "${delta}" must not be an empty string`,
@@ -19,7 +20,7 @@ export const normalizeDelta = function (delta, name) {
   }
 
   const deltaReturn = findValue(FORMATS, (format) =>
-    parseDelta(format, delta, name),
+    parseDelta({ format, delta, name, cwd }),
   )
 
   if (deltaReturn === undefined) {
@@ -32,9 +33,9 @@ export const normalizeDelta = function (delta, name) {
   return { type, value, original: delta, name }
 }
 
-const parseDelta = function ({ parse, message }, delta, name) {
+const parseDelta = function ({ format: { parse, message }, delta, name, cwd }) {
   try {
-    return parse(delta)
+    return parse(delta, cwd)
   } catch (error) {
     error.message = `"${name}" configuration property "${delta}" (${message}) ${error.message}.`
     throw error
@@ -65,6 +66,7 @@ const FORMATS = [
   countFormat,
   timestampFormat,
   idFormat,
+  ciFormat,
   commitFormat,
   tagFormat,
 ]

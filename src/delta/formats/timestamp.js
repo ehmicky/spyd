@@ -4,7 +4,7 @@
 //  - can omit timezone (default to local timezone) but returned date is UTC
 //  - loose parsing
 const parseTimestamp = function (delta) {
-  if (Number.isNaN(Number(new Date(delta)))) {
+  if (typeof delta !== 'string' || Number.isNaN(Number(new Date(delta)))) {
     return
   }
 
