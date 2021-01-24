@@ -73,6 +73,9 @@ const getRunnerTasks = async function (
 //    to several tasks competing for optimization in the same process
 // So we spawn a single process for all of them, to retrieve the task and step
 // identifiers.
+// Runners are encouraged to clearly separate task and step identifiers in tasks
+// files. For example, not allowing users to concatenate them into a single
+// identifiers. This makes it clearer for users which is which.
 const getTaskIds = async function ({
   taskPath,
   cwd,
