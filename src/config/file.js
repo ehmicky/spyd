@@ -6,17 +6,25 @@ import { loadYamlFile } from '../utils/yaml.js'
 
 import { addConfigExtend } from './extend.js'
 import { resolveConfigPaths } from './resolve.js'
+import { validateConfig } from './validate.js'
 
-// Load `spyd.*` file
-export const loadConfigFile = async function (configPath) {
+// Load CLI programmatic flags
+export const getConfigNonFile = async function (configFlags, processCwd) {
+  validateConfig(configFlags)
+  return await resolveConfigPaths(configFlags, processCwd)
+}
+
+// Load `spyd.*` file.
+// Any configuration property can be specified in it except `config` itself.
+export const getConfigFile = async function (configPath) {
   if (configPath === undefined) {
     return {}
   }
 
   const configFile = await loadConfigByPath(configPath)
-  const configDir = dirname(configPath)
-  const configFileA = await resolveConfigPaths(configFile, configDir)
-  return configFileA
+
+  validateConfig(configFile)
+  return await resolveConfigPaths(configFile, dirname(configPath))
 }
 
 const loadConfigByPath = async function (configPath) {

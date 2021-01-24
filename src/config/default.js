@@ -1,8 +1,14 @@
 // Add default configuration properties
-export const addDefaultConfig = function (config, command, { isCi }) {
+export const addDefaultConfig = function ({
+  config,
+  command,
+  envInfo: { isCi },
+  processCwd,
+}) {
   const defaultDelta = isCi ? 'ci' : 1
   return {
     ...DEFAULT_CONFIG,
+    cwd: processCwd,
     delta: defaultDelta,
     since: defaultDelta,
     showSystem: config.system !== undefined,

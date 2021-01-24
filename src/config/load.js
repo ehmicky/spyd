@@ -1,8 +1,7 @@
 import { removeEmptyValues } from './empty.js'
-import { loadConfigFile } from './file.js'
+import { getConfigNonFile, getConfigFile } from './file.js'
 import { mergeConfigs } from './merge.js'
 import { getConfigPath } from './path.js'
-import { resolveConfigPaths } from './resolve.js'
 
 // Load the configuration, shallow merged in priority order:
 //  - any CLI or programmatic flags
@@ -13,11 +12,10 @@ import { resolveConfigPaths } from './resolve.js'
 //  - add too many constraints related to naming configuration properties:
 //    case-sensitiveness (due to Windows) and fewer allowed delimiters (due
 //    to underscores only being allowed in Unix)
-export const loadConfig = async function (configFlags, cwd) {
-  const configNonFile = await resolveConfigPaths(configFlags, cwd)
-
-  const configPath = await getConfigPath(configNonFile, cwd)
-  const configFile = await loadConfigFile(configPath)
+export const loadConfig = async function (configFlags, processCwd) {
+  const configNonFile = await getConfigNonFile(configFlags, processCwd)
+  const configPath = await getConfigPath(processCwd, configNonFile)
+  const configFile = await getConfigFile(configPath)
   const configA = mergeConfigs(configFile, configNonFile)
   const configB = { ...configA, config: configPath }
 

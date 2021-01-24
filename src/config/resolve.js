@@ -5,6 +5,11 @@ import mapObj from 'map-obj'
 import { resolveTasks } from '../run/resolve.js'
 
 // Resolve configuration relative file paths to absolute paths
+// When resolving configuration relative file paths:
+//   - The CLI and programmatic flags always use the current directory.
+//     They do not use `--cwd` since it might be confusing.
+//   - The files in `spyd.*` use the configuration file's directory instead.
+//     We do this since this is probably what users would expect.
 export const resolveConfigPaths = async function (config, cwd) {
   const configA = mapObj(config, (propName, value) => [
     propName,
@@ -26,4 +31,4 @@ const resolveConfigProp = function (propName, value, cwd) {
 
 // `extend` can be a Node module and can only be specified in `spyd.*`, so we
 // don't include it here.
-const PATH_CONFIG_PROPS = new Set(['config', 'output', 'insert'])
+const PATH_CONFIG_PROPS = new Set(['cwd', 'config', 'output', 'insert'])

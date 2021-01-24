@@ -1,34 +1,29 @@
-import { resolve } from 'path'
-
 import findUp from 'find-up'
 import { isFile } from 'path-type'
 
 import { UserError } from '../error/main.js'
 
-import { validateConfig } from './validate.js'
-
 // Retrieve `spyd.*` absolute file path.
 // `spyd.*` is optional, so this can return `undefined`. This allows
 // benchmarking on-the-fly in a terminal without having to create a
 // configuration file.
-export const getConfigPath = async function ({ config: configPath }, cwd) {
+export const getConfigPath = async function (
+  processCwd,
+  { config: configPath, cwd = processCwd },
+) {
   if (configPath !== undefined) {
-    return await getUserConfigPath(configPath, cwd)
+    return await getUserConfigPath(configPath)
   }
 
   return await getDefaultConfigPath(cwd)
 }
 
-const getUserConfigPath = async function (configPath, cwd) {
-  validateConfig({ config: configPath })
-
-  const configPathA = resolve(cwd, configPath)
-
-  if (!(await isFile(configPathA))) {
+const getUserConfigPath = async function (configPath) {
+  if (!(await isFile(configPath))) {
     throw new UserError(`"config" file does not exist: ${configPath}`)
   }
 
-  return configPathA
+  return configPath
 }
 
 // By default, we find the first `benchmark/spyd.*`.

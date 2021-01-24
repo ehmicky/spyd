@@ -4,6 +4,7 @@ import { validate, multipleValidOptions } from 'jest-validate'
 import { DEFAULT_CONFIG } from './default.js'
 
 // Validate configuration against user typos.
+// We need to validate twice: for the CLI flags then for the configuration file.
 export const validateConfig = function (config) {
   const configA = ignoreDynamicKeyProps(config)
   validate(configA, {
@@ -44,6 +45,7 @@ const optionalArray = function (value) {
 
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
+  cwd: '/path/to/repository',
   config: './benchmark/spyd.yml',
   extend: './shared_spyd.yml',
   tasks: multipleValidOptions({ node: '*.task.js' }, { node: ['*.task.js'] }),

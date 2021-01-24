@@ -24,10 +24,11 @@ As opposed to "config", this is used to share configuration between projects.`,
     string: true,
     requiresArg: true,
     describe: `Current directory when running tasks.
+
 This is also used when:
-  - Looking for the default "config" file
-  - Resolving CLI flags that are file paths
+  - Looking for the default config and tasks files
   - Looking for the current git commit and branch
+
 Default: current directory`,
   },
   debug: {
