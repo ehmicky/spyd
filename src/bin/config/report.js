@@ -4,7 +4,7 @@ import { REPORT } from './groups.js'
 export const REPORT_CONFIG = {
   reporter: {
     group: REPORT,
-    alias: 'R',
+    alias: 'r',
     string: true,
     array: true,
     requiresArg: true,
