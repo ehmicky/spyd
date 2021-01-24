@@ -58,7 +58,7 @@ export const findByDelta = function (results, { type, value, original, name }) {
   const { find, message } = FORMATS.find((format) => format.type === type)
   const index = find(results, value)
 
-  if (index === undefined) {
+  if (index === -1) {
     throw new UserError(
       `Invalid "${name}" configuration property "${original}" (${message}): no matching results.`,
     )

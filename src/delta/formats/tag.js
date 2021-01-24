@@ -9,7 +9,7 @@ const parseTag = function (delta) {
 
 // If several results match, we use the most recent once
 const findByTag = function (results, tagOrBranch) {
-  return results.find(
+  return results.findIndex(
     ({ system: { git: { tag, branch } = {} } }) =>
       tag === tagOrBranch || branch === tagOrBranch,
   )

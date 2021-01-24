@@ -16,7 +16,7 @@ const parseCount = function (delta) {
 
 const findByCount = function (results, count) {
   if (count > results.length) {
-    return
+    return -1
   }
 
   return count - 1

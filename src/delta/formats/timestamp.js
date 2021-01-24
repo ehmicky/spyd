@@ -29,13 +29,7 @@ const normalizeDayOnly = function (delta) {
 const DAY_REGEXP = /^[^\d]*\d+[^\d]*\d+[^\d]*\d+[^\d]*$/u
 
 const findByTimestamp = function (results, timestamp) {
-  const index = results.findIndex((result) => result.timestamp <= timestamp)
-
-  if (index === -1) {
-    return
-  }
-
-  return index
+  return results.findIndex((result) => result.timestamp <= timestamp)
 }
 
 export const timestampFormat = {

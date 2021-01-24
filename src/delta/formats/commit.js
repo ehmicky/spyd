@@ -12,7 +12,7 @@ const GIT_COMMIT_REGEXP = /^[\da-f]{8,}$/iu
 
 // If several results match, we use the most recent once
 const findByCommit = function (results, commit) {
-  return results.find(({ system: { git = {} } }) =>
+  return results.findIndex(({ system: { git = {} } }) =>
     git.commit.startsWith(commit),
   )
 }

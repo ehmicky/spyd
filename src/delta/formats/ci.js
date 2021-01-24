@@ -16,17 +16,10 @@ const parseCi = function (delta, { buildUrl: ciBuild }) {
 const CI_DELTA = 'ci'
 
 // Find the most recent result with a different CI build.
-// If none is found, falls back to least recent result.
 const findByCi = function (results, ciBuild) {
-  const index = results.findIndex(
+  return results.findIndex(
     ({ system: { ci } }) => ci !== undefined && ci !== ciBuild,
   )
-
-  if (index !== -1) {
-    return index
-  }
-
-  return results.length - 1
 }
 
 export const ciFormat = {

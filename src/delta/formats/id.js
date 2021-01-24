@@ -10,7 +10,7 @@ const parseId = function (delta) {
 }
 
 const findById = function (results, id) {
-  return results.find((result) => result.id === id)
+  return results.findIndex((result) => result.id === id)
 }
 
 export const idFormat = {
