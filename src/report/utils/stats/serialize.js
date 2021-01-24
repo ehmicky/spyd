@@ -6,7 +6,6 @@ export const serializeStat = function ({
   stat,
   name,
   type,
-  unit,
   scale,
   decimals,
   loops,
@@ -17,28 +16,42 @@ export const serializeStat = function ({
 
   if (Array.isArray(stat)) {
     return stat.map((statA) =>
-      serializeValue({ stat: statA, type, scale, unit, decimals }),
+      serializeValue({ stat: statA, type, scale, decimals }),
     )
   }
 
-  return serializeValue({ stat, type, scale, unit, decimals })
+  return serializeValue({ stat, type, scale, decimals })
 }
 
 // Serialize a stat's value
-const serializeValue = function ({ stat, type, scale, unit, decimals }) {
-  return SERIALIZE_STAT[type](stat, { scale, unit, decimals })
+const serializeValue = function ({ stat, type, scale, decimals }) {
+  return SERIALIZE_STAT[type](stat, { scale, decimals })
 }
 
-const serializeCount = function (count) {
-  // Adds thousands separators
-  return count.toLocaleString()
+const serializeCount = function (count, { scale, decimals }) {
+  const scaledCount = roundNumber(count, scale, decimals)
+  const exponent = scale === 1 ? '' : `e${Math.log10(scale)}`
+  return `${scaledCount}${exponent}`
 }
 
-const serializeDuration = function (duration, { scale, unit, decimals }) {
-  const scaledDuration = duration / scale
-  const scaledDurationStr = scaledDuration.toFixed(decimals)
-  return `${scaledDurationStr}${unit}`
+const serializeDuration = function (duration, { scale, decimals }) {
+  const scaledDuration = roundNumber(duration, scale, decimals)
+  const { unit } = DURATION_UNITS.find(({ scale: scaleA }) => scaleA === scale)
+  return `${scaledDuration}${unit}`
 }
+
+const roundNumber = function (number, scale, decimals) {
+  return (number / scale).toFixed(decimals)
+}
+
+const DURATION_UNITS = [
+  { unit: 's', scale: 1e9 },
+  { unit: 'ms', scale: 1e6 },
+  { unit: 'μs', scale: 1e3 },
+  { unit: 'ns', scale: 1 },
+  { unit: 'ps', scale: 1e-3 },
+  { unit: 'fs', scale: 1e-6 },
+]
 
 const SERIALIZE_STAT = {
   count: serializeCount,

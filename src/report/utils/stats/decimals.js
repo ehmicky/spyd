@@ -2,29 +2,23 @@
 // Always show at least 3 significant digits.
 // All combinations use the same number of decimals for each stat, so they are
 // vertically aligned. Padding is used instead of trailing zeros.
-export const getStatsDecimals = function ({ combinations, name, type, scale }) {
-  if (type === 'count') {
-    return 0
-  }
-
+// When every measure is an integer, no decimals are needed.
+export const getStatsDecimals = function (combinations, name, scale) {
   const measures = combinations
     .flatMap(({ stats }) => stats[name])
-    .filter(isNotZero)
+    .map((measure) => measure / scale)
 
-  // When every measure is 0, there are no decimals
-  if (measures.length === 0) {
+  if (measures.every(Number.isInteger)) {
     return 0
   }
 
-  return Math.max(
-    Math.ceil(Math.log10((MIN_PRECISION * scale) / Math.min(...measures))),
-    0,
-  )
+  return getDecimals(measures)
 }
 
-const isNotZero = function (measure) {
-  return measure !== 0
+const getDecimals = function (measures) {
+  const minMeasure = Math.min(...measures)
+  const minPrecision = 10 ** (MAX_DIGITS - 1)
+  return Math.max(Math.ceil(Math.log10(minPrecision / minMeasure)), 0)
 }
 
-// Three siginificant digits
-const MIN_PRECISION = 1e2
+const MAX_DIGITS = 3
