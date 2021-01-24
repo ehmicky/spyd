@@ -2,22 +2,22 @@ import { promisify } from 'util'
 
 import mapObj from 'map-obj'
 
-// Normalize and add default values for tasks
-export const normalizeTasks = function (tasks) {
-  return mapObj(tasks, normalizeTask)
+// Add default values for tasks
+export const addDefaults = function (tasks) {
+  return mapObj(tasks, addDefault)
 }
 
-// Tasks can be directly a function, which is a shortcut for `{ main }`
-const normalizeTask = function (taskId, task) {
-  const taskA = typeof task === 'function' ? { main: task } : task
-  const {
+const addDefault = function (
+  taskId,
+  {
     beforeAll,
     beforeEach,
     main,
     afterEach,
     afterAll,
     async = isAsyncFunc(main),
-  } = taskA
+  },
+) {
   return [taskId, { beforeAll, beforeEach, main, afterEach, afterAll, async }]
 }
 

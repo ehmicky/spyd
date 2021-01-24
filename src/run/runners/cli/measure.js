@@ -1,92 +1,71 @@
+import execa from 'execa'
 import now from 'precise-now'
 
-import { startMeasuring } from '../common/start.js'
+// `beforeAll` and `afterAll`
+export const before = async function ({ task: { beforeAll }, env }) {
+  await performHook(beforeAll, env)
+}
 
-import { spawnProcess } from './spawn.js'
+export const after = async function ({ task: { afterAll }, env }) {
+  await performHook(afterAll, env)
+}
 
 // Measure how long a task takes.
-export const measureTask = async function ({
-  main,
-  beforeEach,
-  afterEach,
-  variables,
-  shell,
-  maxDuration,
-}) {
-  const { mainMeasures, measureEnd } = startMeasuring(maxDuration)
+export const measure = async function (
+  { maxLoops },
+  { task: { main, beforeEach, afterEach }, env },
+) {
+  const measures = []
 
   // eslint-disable-next-line fp/no-loops
-  do {
+  while (measures.length < maxLoops) {
     // eslint-disable-next-line no-await-in-loop
-    await performLoop({
-      main,
-      beforeEach,
-      afterEach,
-      variables,
-      shell,
-      mainMeasures,
-    })
-  } while (now() < measureEnd)
+    await performLoop({ main, beforeEach, afterEach, env, measures })
+  }
 
-  return { mainMeasures }
+  return { measures }
 }
 
 const performLoop = async function ({
   main,
   beforeEach,
   afterEach,
-  variables,
-  shell,
-  mainMeasures,
+  env,
+  measures,
 }) {
-  const variablesA = await performBeforeEach({ beforeEach, variables, shell })
+  await performHook(beforeEach, env)
   // eslint-disable-next-line fp/no-mutating-methods
-  mainMeasures.push(await getDuration({ main, variables: variablesA, shell }))
-  await performAfterEach({ afterEach, variables: variablesA, shell })
+  measures.push(await getDuration(main, env))
+  await performHook(afterEach, env)
 }
 
-// Task `beforeEach`. Performed outside measurements.
-// Its return value is passed as variable {{beforeEach}} to `main` and
-// `afterEach`.
-const performBeforeEach = async function ({ beforeEach, variables, shell }) {
-  if (beforeEach === undefined) {
-    return variables
-  }
-
-  const beforeEachVariable = await spawnProcess(beforeEach, {
-    variables,
-    shell,
-    stdout: 'pipeInherit',
-    stderr: 'inherit',
-  })
-  return { ...variables, beforeEach: beforeEachVariable }
-}
-
-const getDuration = async function ({ main, variables, shell }) {
-  const start = now()
-  await spawnProcess(main, {
-    variables,
-    shell,
-    stdout: 'inherit',
-    stderr: 'inherit',
-  })
-  return now() - start
-}
-
-// Task `afterEach`. Performed outside measurements.
-export const performAfterEach = async function ({
-  afterEach,
-  variables,
-  shell,
-}) {
-  if (afterEach === undefined) {
+const performHook = async function (hook, env) {
+  if (hook === undefined) {
     return
   }
 
-  await spawnProcess(afterEach, {
-    variables,
-    shell,
-    stdout: 'inherit',
-    stderr: 'inherit',
+  await spawnProcess(hook, env)
+}
+
+const getDuration = async function (main, env) {
+  const start = now()
+  await spawnProcess(main, env)
+  return now() - start
+}
+
+// Spawn a process.
+// Errors are propagated.
+// Stdout/stderr are always printed since I/O impacts performance, which we
+// want to capture. Also this is needed for the `exec` command.
+// Steps can communicate to each other using the filesystem.
+// Inputs are passed as environment variables.
+// More advanced logic can be achieved by either:
+//  - Using shell features (subshells, variables, etc.)
+//  - Adding the logic to the command internal logic
+const spawnProcess = async function (command, env) {
+  await execa.command(command, {
+    stdio: ['ignore', 'inherit', 'inherit'],
+    env,
+    preferLocal: true,
   })
 }

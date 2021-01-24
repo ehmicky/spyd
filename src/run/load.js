@@ -18,7 +18,7 @@ const loadRunner = async function ({
   const {
     spawn: runnerSpawn,
     spawnOptions: runnerSpawnOptions = {},
-    versions: runnerVersions = {},
+    versions: runnerVersions,
   } = await launchRunner({ runnerId, runnerConfig, launch })
   return {
     runnerId,

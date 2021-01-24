@@ -35,22 +35,10 @@ const performLoopAsync = async function ({
 }) {
   const taskArgs = getTaskArgs(taskArg, repeat)
 
-  try {
-    await performHookAsync(beforeEach, taskArgs)
-    // eslint-disable-next-line fp/no-mutating-methods
-    measures.push(await getDurationAsync(main, taskArgs))
-  } catch (error) {
-    await silentAfterEachAsync(afterEach, taskArgs)
-    throw error
-  }
-
+  await performHookAsync(beforeEach, taskArgs)
+  // eslint-disable-next-line fp/no-mutating-methods
+  measures.push(await getDurationAsync(main, taskArgs))
   await performHookAsync(afterEach, taskArgs)
-}
-
-const silentAfterEachAsync = async function (afterEach, taskArgs) {
-  try {
-    await performHookAsync(afterEach, taskArgs)
-  } catch {}
 }
 
 // Each `beforeEach`/`afterEach` is executed serially to prevent hitting OS

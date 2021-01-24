@@ -1,3 +1,6 @@
-beforeEach: echo beforeEach
-main: echo main {{input}} {{beforeEach}}
-afterEach: echo afterEach {{input}} {{beforeEach}}
+one:
+  beforeAll: echo beforeAll
+  beforeEach: echo beforeEach
+  main: echo main
+  afterEach: echo afterEach
+  afterAll: echo afterAll

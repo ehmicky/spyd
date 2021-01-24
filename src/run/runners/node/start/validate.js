@@ -1,3 +1,6 @@
+import isPlainObj from 'is-plain-obj'
+
+import { UserError } from '../../../../error/main.js'
 import { validateTasks } from '../../common/validate/file.js'
 import {
   validateBoolean,
@@ -6,7 +9,7 @@ import {
 
 // Validate that the tasks file has correct shape
 export const validateFile = function (tasks) {
-  validateTasks({ tasks, validators, requiredProps })
+  return validateTasks({ tasks, validators, normalizeTask })
 }
 
 const validators = {
@@ -17,4 +20,14 @@ const validators = {
   afterAll: validateFunction,
   async: validateBoolean,
 }
-const requiredProps = ['main']
+
+// Tasks can be directly a function, which is a shortcut for `{ main }`
+const normalizeTask = function (task) {
+  if (typeof task === 'function') {
+    return { main: task }
+  }
+
+  if (!isPlainObj(task)) {
+    throw new UserError(`should be a function or an object not: ${task}`)
+  }
+}

@@ -1,52 +1,44 @@
 import isPlainObj from 'is-plain-obj'
+import mapObj from 'map-obj'
 
 import { UserError } from '../../../../error/main.js'
 
 // Validate that the tasks file has correct shape
-export const validateTasks = function ({ tasks, validators, requiredProps }) {
+export const validateTasks = function ({ tasks, validators, normalizeTask }) {
   if (!isPlainObj(tasks)) {
     throw new UserError(`Tasks file should export an object not: ${tasks}`)
   }
 
-  Object.entries(tasks).forEach(([taskId, task]) => {
-    validateTask({ taskId, task, validators, requiredProps })
-  })
+  return mapObj(tasks, (taskId, task) => [
+    taskId,
+    validateTask({ taskId, task, validators, normalizeTask }),
+  ])
 }
 
-const validateTask = function ({ taskId, task, validators, requiredProps }) {
+const validateTask = function ({ taskId, task, validators, normalizeTask }) {
   try {
-    eValidateTask({ task, validators, requiredProps })
+    return eValidateTask({ task, validators, normalizeTask })
   } catch (error) {
     error.message = `Task "${taskId}" ${error.message}`
     throw error
   }
 }
 
-const eValidateTask = function ({ task, validators, requiredProps }) {
-  if (typeof task === 'function') {
-    return
-  }
+const eValidateTask = function ({ task, validators, normalizeTask }) {
+  const taskA = normalizeTask(task)
 
-  if (!isPlainObj(task)) {
-    throw new UserError(`should be a function or an object not: ${task}`)
-  }
+  validateRequiredMain(taskA)
 
-  validateRequiredProps(task, requiredProps)
-
-  Object.entries(task).forEach(([propName, prop]) => {
+  Object.entries(taskA).forEach(([propName, prop]) => {
     validateProp({ validators, propName, prop })
   })
+
+  return taskA
 }
 
-const validateRequiredProps = function (task, requiredProps) {
-  requiredProps.forEach((requiredProp) => {
-    validateRequiredProp(task, requiredProp)
-  })
-}
-
-const validateRequiredProp = function (task, requiredProp) {
-  if (task[requiredProp] === undefined) {
-    throw new UserError(`must have a '${requiredProp}' property`)
+const validateRequiredMain = function ({ main }) {
+  if (main === undefined) {
+    throw new UserError(`must have a "main" property`)
   }
 }
 
