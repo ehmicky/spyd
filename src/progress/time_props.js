@@ -6,14 +6,10 @@ import { getTime } from './time.js'
 // two modes:
 //  - When `duration` is 0 or 1, `time` goes up and `percentage` is `undefined`
 //  - Otherwise, `time` does down and `percentage` is based on `duration`
-export const getTimeProps = function ({
-  progressState,
-  combinations,
-  duration,
-}) {
-  return duration === 0 || duration === 1
+export const getTimeProps = function (progressState, benchmarkDuration) {
+  return benchmarkDuration === undefined
     ? getStartDurationProps(progressState)
-    : getEndDurationProps({ progressState, combinations, duration })
+    : getEndDurationProps(progressState, benchmarkDuration)
 }
 
 const getStartDurationProps = function ({ benchmarkStart }) {
@@ -31,12 +27,7 @@ const getStartDuration = function (benchmarkStart) {
   return now() - benchmarkStart
 }
 
-const getEndDurationProps = function ({
-  progressState: { benchmarkEnd },
-  combinations,
-  duration,
-}) {
-  const benchmarkDuration = combinations.length * duration
+const getEndDurationProps = function ({ benchmarkEnd }, benchmarkDuration) {
   const timeLeft = getTimeLeft(benchmarkEnd, benchmarkDuration)
   const percentage = 1 - timeLeft / benchmarkDuration
   const time = getTime(timeLeft, benchmarkDuration)

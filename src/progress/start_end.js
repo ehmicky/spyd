@@ -16,7 +16,8 @@ export const startProgress = function ({ combinations, duration, preview }) {
 
   hideCursor()
 
-  const progressId = startUpdate({ combinations, duration, progressState })
+  const benchmarkDuration = getBenchmarkDuration(combinations, duration)
+  const progressId = startUpdate(progressState, benchmarkDuration)
   setDelayedDescription(progressState, START_DESCRIPTION)
   return { progressState, progressId }
 }
@@ -25,11 +26,19 @@ const isSilent = function (preview) {
   return !preview || !isInteractive(stderr)
 }
 
+const getBenchmarkDuration = function (combinations, duration) {
+  if (duration === 0 || duration === 1) {
+    return duration
+  }
+
+  return combinations.length * duration
+}
+
 // Update progress at regular interval
-const startUpdate = function ({ progressState, combinations, duration }) {
-  updateProgress({ progressState, combinations, duration, initial: true })
+const startUpdate = function (progressState, benchmarkDuration) {
+  updateProgress({ progressState, benchmarkDuration, initial: true })
   const progressId = setInterval(() => {
-    updateProgress({ progressState, combinations, duration, initial: false })
+    updateProgress({ progressState, benchmarkDuration, initial: false })
   }, UPDATE_FREQUENCY)
   return progressId
 }

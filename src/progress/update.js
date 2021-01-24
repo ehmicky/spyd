@@ -12,32 +12,19 @@ const pClearScreenDown = promisify(clearScreenDown)
 // Print progress
 export const updateProgress = async function ({
   progressState,
-  combinations,
-  duration,
+  benchmarkDuration,
   initial,
 }) {
-  const progressContent = getProgressContent({
-    progressState,
-    combinations,
-    duration,
-  })
+  const progressContent = getProgressContent(progressState, benchmarkDuration)
 
   await (initial ? clearProgressInit() : clearProgress())
 
   await writeToStderr(progressContent)
 }
 
-const getProgressContent = function ({
-  progressState,
-  combinations,
-  duration,
-}) {
-  const { percentage, time } = getTimeProps({
-    progressState,
-    combinations,
-    duration,
-  })
-  const description = getDescription(progressState, duration)
+const getProgressContent = function (progressState, benchmarkDuration) {
+  const { percentage, time } = getTimeProps(progressState, benchmarkDuration)
+  const description = getDescription(progressState, benchmarkDuration)
   return getContent({ percentage, time, description })
 }
 

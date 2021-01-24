@@ -42,7 +42,7 @@ export const setPriorityDescription = function (
 
 export const getDescription = function (
   { description, priorityDescription },
-  duration,
+  benchmarkDuration,
 ) {
   if (priorityDescription !== undefined) {
     return priorityDescription
@@ -52,7 +52,7 @@ export const getDescription = function (
     return description
   }
 
-  if (duration === 0) {
+  if (benchmarkDuration === 0) {
     return NO_DURATION_DESCRIPTION
   }
 }
