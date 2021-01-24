@@ -72,6 +72,7 @@ const NORMALIZERS = {
   system: normalizeSystem,
   delta: normalizeDeltaProp,
   since: normalizeDeltaProp,
+  runner: normalizeOptionalArrProp,
   reporter: normalizeOptionalArrProp,
   progress: normalizeOptionalArrProp,
   store: normalizeOptionalArrProp,

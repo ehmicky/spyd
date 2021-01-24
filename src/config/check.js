@@ -18,7 +18,7 @@ export const normalizeOptionalArray = function (value, name) {
   }
 
   checkDefinedStringArray(value, name)
-  return value
+  return [...new Set(value)]
 }
 
 export const checkDefinedStringArray = function (value, name) {

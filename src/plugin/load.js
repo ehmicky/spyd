@@ -7,10 +7,8 @@ export const loadPlugins = async function ({
   modulePrefix,
   builtins,
 }) {
-  const idsA = Array.isArray(ids) ? ids : [ids]
-  const idsB = [...new Set(idsA)]
   return await Promise.all(
-    idsB.map((id) => loadPlugin({ id, type, modulePrefix, builtins })),
+    ids.map((id) => loadPlugin({ id, type, modulePrefix, builtins })),
   )
 }
 
