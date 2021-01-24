@@ -11,7 +11,7 @@ import { mergeLastCombinations } from './last.js'
 //    This is useful with time series reporters.
 // We use a single configuration property for both so it is simpler for users.
 // `since` can never point to the reported result, only to previous results.
-// `since` might not be able to be resolved:
+// `since` might not be able to resolve:
 //  - For example, this happens when setting a specific `since` using an
 //    absolute delta format (like `id`) and using the `show` command pointing
 //    to an earlier result.

@@ -25,6 +25,7 @@ import { mergeSystems } from '../system/merge.js'
 //       user intends to stop using each of the previously used systems.
 //  - Instead, we just use any previous combinations matching the current
 //    `include`/`exclude` properties. This is explicit and predictable.
+// If `previous` is empty due to the `since` property, this is noop.
 export const mergeLastCombinations = function (lastResult, previous) {
   // eslint-disable-next-line fp/no-mutating-methods
   return [...previous].reverse().reduce(mergePair, lastResult)

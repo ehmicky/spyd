@@ -13,6 +13,7 @@ import { findValue } from '../utils/find.js'
 // `combination.stats.diff` is not persisted in stores since it can be computed
 // dynamically and depends on the `since` configuration property. Also some
 // results might have been dynamically deleted or filtered out.
+// If `previous` is empty due to the `since` property, this is noop.
 export const addCombinationsDiff = function (
   { combinations, ...result },
   previous,
