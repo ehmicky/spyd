@@ -8,7 +8,7 @@ const parseCount = function (delta) {
   }
 
   if (!Number.isInteger(delta) || delta < 1) {
-    throw new UserError('must be a positive integer')
+    throw new UserError('must be a positive integer.')
   }
 
   return delta

@@ -35,7 +35,7 @@ const checkTimestamp = function ({ timestamp, stderr, message, failed, cwd }) {
   }
 
   if (stderr.includes(UNKNOWN_REV_MESSAGE)) {
-    throw new UserError('does not match any reference in the git repository')
+    throw new UserError('does not match any reference in the git repository.')
   }
 
   if (!isTimestamp(timestamp, failed)) {

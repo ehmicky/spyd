@@ -3,7 +3,7 @@ import { findFormat } from './formats/main.js'
 // Enhances delta error messages
 export const addDeltaError = function (error, { type, delta, name }) {
   const deltaError = getDeltaError({ type, delta, name })
-  error.message = `${deltaError} ${error.message}.`
+  error.message = `${deltaError} ${error.message}`
   return error
 }
 

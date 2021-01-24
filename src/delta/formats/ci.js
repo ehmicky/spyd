@@ -8,7 +8,7 @@ const parseCi = function (delta, { buildUrl: ciBuild }) {
   }
 
   if (ciBuild === undefined) {
-    throw new UserError('can only be used in CI')
+    throw new UserError('can only be used in CI.')
   }
 
   return ciBuild
