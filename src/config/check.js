@@ -11,6 +11,16 @@ export const checkObject = function (value, name) {
   }
 }
 
+export const normalizeArray = function (value, name) {
+  const valueA = normalizeOptionalArray(value, name)
+
+  if (valueA.length === 0) {
+    throw new UserError(`At least one '${name}' must be defined.`)
+  }
+
+  return valueA
+}
+
 export const normalizeOptionalArray = function (value, name) {
   if (typeof value === 'string') {
     checkDefinedString(value, name)

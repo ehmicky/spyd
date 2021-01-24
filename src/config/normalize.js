@@ -2,6 +2,7 @@ import { normalizeDelta } from '../delta/main.js'
 import { checkEmptyTasks } from '../run/check.js'
 
 import {
+  normalizeArray,
   normalizeOptionalArray,
   checkDefinedString,
   checkJson,
@@ -50,9 +51,12 @@ const normalizeDeltaProp = function (delta, propName, { envInfo }) {
   return { [propName]: normalizeDelta(delta, propName, envInfo) }
 }
 
+const normalizeArrayProp = function (value, propName) {
+  return { [propName]: normalizeArray(value, propName) }
+}
+
 const normalizeOptionalArrProp = function (value, propName) {
-  const valueA = normalizeOptionalArray(value, propName)
-  return { [propName]: valueA }
+  return { [propName]: normalizeOptionalArray(value, propName) }
 }
 
 const checkTitles = function (titles, propName) {
@@ -72,7 +76,7 @@ const NORMALIZERS = {
   system: normalizeSystem,
   delta: normalizeDeltaProp,
   since: normalizeDeltaProp,
-  runner: normalizeOptionalArrProp,
+  runner: normalizeArrayProp,
   reporter: normalizeOptionalArrProp,
   progress: normalizeOptionalArrProp,
   store: normalizeOptionalArrProp,
