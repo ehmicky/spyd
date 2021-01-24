@@ -12,7 +12,7 @@ export const start = async function ({
   inputs,
 }) {
   const tasks = await importFile(taskPath)
-  const tasksA = validate(tasks, shell)
+  const tasksA = validate(tasks)
   const task = taskId === undefined ? {} : tasksA[taskId]
 
   const tasksB = Object.keys(tasksA)

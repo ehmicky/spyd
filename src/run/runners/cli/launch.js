@@ -1,4 +1,7 @@
-export const launch = function () {
+import { validateShell } from './shell.js'
+
+export const launch = function ({ shell }) {
+  validateShell(shell)
   return { spawn: ['node', MAIN_PATH], versions: {} }
 }
 
