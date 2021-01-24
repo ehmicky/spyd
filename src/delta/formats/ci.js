@@ -20,7 +20,7 @@ const CI_DELTA = 'ci'
 const findByCi = function (results, ciBuild) {
   return findIndexReverse(
     results,
-    ({ system: { ci } }) => ci !== undefined && ci !== ciBuild,
+    ({ systems: [{ ci }] }) => ci !== undefined && ci !== ciBuild,
   )
 }
 

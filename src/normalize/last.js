@@ -1,5 +1,5 @@
 import { isSameCategory } from '../combination/ids.js'
-import { startMergeSystems, mergeSystems } from '../system/merge.js'
+import { mergeSystems } from '../system/merge.js'
 
 // `include|exclude` can be used to measure specific combinations, allowing
 // incremental benchmarks. However, when reporting benchmarks, we show all
@@ -26,37 +26,21 @@ import { startMergeSystems, mergeSystems } from '../system/merge.js'
 //  - Instead, we just use any previous combinations matching the current
 //    `include`/`exclude` properties. This is explicit and predictable.
 export const mergeLastCombinations = function (lastResult, previous) {
-  const lastResultA = startMergeSystems(lastResult)
   // eslint-disable-next-line fp/no-mutating-methods
-  return [...previous].reverse().reduce(mergePair, lastResultA)
+  return [...previous].reverse().reduce(mergePair, lastResult)
 }
 
 const mergePair = function (result, previousResult) {
-  const newCombinations = getNewCombinations(
+  const previousCombinations = getPreviousCombinations(
     previousResult.combinations,
     result.combinations,
   )
 
-  if (newCombinations.length === 0) {
+  if (previousCombinations.length === 0) {
     return result
   }
 
-  return mergePreviousResult(result, previousResult, newCombinations)
-}
-
-// When merging two results, we keep most of the properties of the latest
-// result. However, we still merge `system` so several systems are reported.
-// This allows comparing different systems.
-// We make sure the latest `combinations` are first in the merged array, so we
-// can prioritize them.
-const mergePreviousResult = function (
-  { combinations, systems, ...result },
-  { system: previousSystem },
-  newCombinations,
-) {
-  const combinationsA = [...combinations, ...newCombinations]
-  const systemsA = mergeSystems(systems, previousSystem)
-  return { ...result, combinations: combinationsA, systems: systemsA }
+  return mergePreviousResult(result, previousResult, previousCombinations)
 }
 
 // For each possible combination, if the last result already has it, we keep it.
@@ -66,14 +50,29 @@ const mergePreviousResult = function (
 // `result.previous`. This is intentional as it allows reporters to clearly
 // display both the merged result and the time each combination was
 // actually measured.
-const getNewCombinations = function (previousCombinations, combinations) {
-  return previousCombinations.filter((combination) =>
-    isNewCombination(combination, combinations),
+const getPreviousCombinations = function (previousCombinations, combinations) {
+  return previousCombinations.filter(
+    (combination) => !isSameCombination(combination, combinations),
   )
 }
 
-const isNewCombination = function (combination, combinations) {
-  return !combinations.some((combinationA) =>
+const isSameCombination = function (combination, combinations) {
+  return combinations.some((combinationA) =>
     isSameCategory(combination, combinationA),
   )
+}
+
+// When merging two results, we keep most of the properties of the latest
+// result. However, we still merge `system` so several systems are reported.
+// This allows comparing different systems.
+// We make sure the latest `combinations` are first in the merged array, so we
+// can prioritize them.
+const mergePreviousResult = function (
+  { combinations, systems, ...result },
+  { systems: previousSystems },
+  previousCombinations,
+) {
+  const combinationsA = [...combinations, ...previousCombinations]
+  const systemsA = mergeSystems(systems, previousSystems)
+  return { ...result, combinations: combinationsA, systems: systemsA }
 }

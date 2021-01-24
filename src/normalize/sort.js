@@ -24,7 +24,7 @@ const isGroup = function (group, result, index) {
 
 // `results` without a CI build use the `index`, i.e. are not grouped
 // with others.
-const getGroup = function ({ system: { ci } }, index) {
+const getGroup = function ({ systems: [{ ci }] }, index) {
   return ci === undefined ? String(index) : ci
 }
 

@@ -57,14 +57,7 @@ const addCategoryTitle = function (category, items, titles) {
   return items.map((item) => addTitle(item, 'id', titles))
 }
 
-// In `previous`, `system` is used.
-// In the last merged result, `systems` is used instead.
-const addSystemsTitles = function ({ systems, system, ...result }, titles) {
-  if (system !== undefined) {
-    const systemA = addSystemTitle(system, titles)
-    return { ...result, system: systemA }
-  }
-
+const addSystemsTitles = function ({ systems, ...result }, titles) {
   const systemsA = systems.map((systemA) => addSystemTitle(systemA, titles))
   return { ...result, systems: systemsA }
 }

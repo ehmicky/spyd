@@ -16,7 +16,7 @@ const parseTag = function (delta) {
 const findByTag = async function (results, tagOrBranch) {
   const index = findIndexReverse(
     results,
-    ({ system: { git: { tag, branch } = {} } }) =>
+    ({ systems: [{ git: { tag, branch } = {} }] }) =>
       tag === tagOrBranch || branch === tagOrBranch,
   )
 

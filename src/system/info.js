@@ -8,9 +8,12 @@ import { groupBy } from '../utils/group.js'
 // Users can specify a `system` configuration property.
 // This is a combination category meant to compare any environment differences,
 // outside of spyd: hardware, OS, git branch, environment variables, etc.
-// All tht information are automatically computed.
+// All that information are automatically computed.
 // The `versions` are computed by runners.
-export const getSystem = function ({
+// A result can only have a single `system`. However, when merging results,
+// this becomes several `systems`. We persist the `systems` array directly so
+// that all results have the same shape in both our logic and reporters' logic.
+export const getSystems = function ({
   combinations: [{ systemId }],
   systemVersions,
   config: {
@@ -18,13 +21,15 @@ export const getSystem = function ({
   },
 }) {
   const machine = getMachine()
-  return {
-    id: systemId,
-    machine,
-    git: { commit, branch, tag, prNumber: pr, prBranch },
-    ci: buildUrl,
-    versions: systemVersions,
-  }
+  return [
+    {
+      id: systemId,
+      machine,
+      git: { commit, branch, tag, prNumber: pr, prBranch },
+      ci: buildUrl,
+      versions: systemVersions,
+    },
+  ]
 }
 
 const getMachine = function () {

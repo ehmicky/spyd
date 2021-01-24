@@ -2,7 +2,7 @@
   {
     "id": "6ff08dd3-561a-4259-90f7-0e8b37798269",
     "timestamp": 1611609801227,
-    "system": {
+    "systems": [{
       "id": "default_system",
       "machine": {
         "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
@@ -17,7 +17,7 @@
         "Node": "15.6.0",
         "Benchmarked with spyd": "0.3.1"
       }
-    },
+    }],
     "combinations": [
       {
         "taskId": "math_random",
@@ -58,7 +58,7 @@
   {
     "id": "35cbf52c-44d1-412f-89cb-39ce4404b0e5",
     "timestamp": 1611609841153,
-    "system": {
+    "systems": [{
       "id": "default_system",
       "machine": {
         "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
@@ -73,7 +73,7 @@
         "Node": "15.6.0",
         "Benchmarked with spyd": "0.3.1"
       }
-    },
+    }],
     "combinations": [
       {
         "taskId": "math_random",
@@ -114,7 +114,7 @@
   {
     "id": "208ab1ec-5f8f-45d6-af14-3778a0620040",
     "timestamp": 1611609843230,
-    "system": {
+    "systems": [{
       "id": "default_system",
       "machine": {
         "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
@@ -129,7 +129,7 @@
         "Node": "15.6.0",
         "Benchmarked with spyd": "0.3.1"
       }
-    },
+    }],
     "combinations": [
       {
         "taskId": "math_random",
@@ -170,7 +170,7 @@
   {
     "id": "c648bd31-ff6e-40b0-a79b-56afcce236cf",
     "timestamp": 1611609844371,
-    "system": {
+    "systems": [{
       "id": "default_system",
       "machine": {
         "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
@@ -185,7 +185,7 @@
         "Node": "15.6.0",
         "Benchmarked with spyd": "0.3.1"
       }
-    },
+    }],
     "combinations": [
       {
         "taskId": "math_random",

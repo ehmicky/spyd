@@ -4,7 +4,7 @@ import { getCombinations } from './combination/main.js'
 import { measureCombinations } from './measure/main.js'
 import { getStopState } from './measure/stop.js'
 import { startProgress, endProgress } from './progress/start_end.js'
-import { getSystem } from './system/info.js'
+import { getSystems } from './system/info.js'
 import { cleanObject } from './utils/clean.js'
 
 // Perform a new benchmark
@@ -59,8 +59,8 @@ const getResult = async function ({
 const addResultInfo = function ({ combinations, systemVersions, config }) {
   const id = uuidv4()
   const timestamp = Date.now()
-  const system = getSystem({ combinations, systemVersions, config })
-  const result = { id, timestamp, system, combinations }
+  const systems = getSystems({ combinations, systemVersions, config })
+  const result = { id, timestamp, systems, combinations }
   const resultA = cleanObject(result)
   return resultA
 }
