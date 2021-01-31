@@ -1,7 +1,6 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
-import { setPreviewReport } from '../measure/preview.js'
-
+import { setPreviewReport } from './report.js'
 import { setDelayedDescription } from './set.js'
 import { updatePreview, clearPreviewInit, clearPreview } from './update.js'
 

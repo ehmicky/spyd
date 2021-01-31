@@ -1,7 +1,6 @@
+import { getFinalResult } from '../measure/init.js'
+import { updateCombinations } from '../measure/update.js'
 import { reportPreview } from '../report/main.js'
-
-import { getFinalResult } from './init.js'
-import { updateCombinations } from './update.js'
 
 // Preview results progressively, as combinations are being measured.
 // Reporters should:
