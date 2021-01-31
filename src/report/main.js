@@ -64,7 +64,7 @@ const useReporter = async function ({
     showDiff,
     showSystem,
     showMetadata,
-    ...reporterConfig,
+    ...cleanObject(reporterConfig),
   })
 
   const content = await callReportFunc({
