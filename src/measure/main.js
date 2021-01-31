@@ -15,7 +15,11 @@ export const measureBenchmark = async function (
   const combinationsA = combinations.map(addInitProps)
 
   const stopState = getStopState()
-  const { previewState, previewId } = await startPreview({
+  const {
+    previewState,
+    previewConfig: previewConfigA,
+    previewId,
+  } = await startPreview({
     combinations: combinationsA,
     duration,
     quiet,
@@ -29,7 +33,7 @@ export const measureBenchmark = async function (
       combinations: combinationsA,
       duration,
       cwd,
-      previewConfig,
+      previewConfig: previewConfigA,
       exec,
       stopState,
       previewState,
