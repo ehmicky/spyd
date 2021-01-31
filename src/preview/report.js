@@ -27,7 +27,20 @@ export const setPreviewReport = async function (
     return
   }
 
+  const reportersA = reporters.filter(isNotQuiet)
+
+  if (reportersA.length === 0) {
+    return
+  }
+
   const { result } = getFinalResult(combinations, initResult, results)
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
   previewState.report = await reportPreview(result, { reporters, titles })
+}
+
+// Reporters can opt-out of previews by defining `reporter.quiet: true`.
+// This is a performance optimization for reporters which should not show
+// results progressively.
+const isNotQuiet = function ({ quiet = false }) {
+  return !quiet
 }

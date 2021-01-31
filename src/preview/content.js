@@ -2,7 +2,7 @@ import { stderr } from 'process'
 
 import { goodColor, separatorColor } from '../report/utils/colors.js'
 
-// Retrieve preview content
+// Retrieve preview content.
 export const getContent = function ({
   percentage,
   time,
@@ -10,11 +10,10 @@ export const getContent = function ({
   report,
 }) {
   const screenWidth = getScreenWidth(stderr)
-  const separator = separatorColor(LINE_CHAR.repeat(screenWidth))
+  const results = getResults(report, screenWidth)
   const progressBar = getProgressBar({ percentage, time, screenWidth })
 
-  return `${report}${separator}
-
+  return `${results}
  ${time}${progressBar}
 
  ${description}
@@ -27,6 +26,16 @@ const getScreenWidth = function ({ columns = DEFAULT_WIDTH }) {
 
 // Used when the output is not a TTY
 const DEFAULT_WIDTH = 80
+
+// `report` is `undefined` when all reporters have `reporter.quiet: true`.
+const getResults = function (report, screenWidth) {
+  if (report === undefined) {
+    return ''
+  }
+
+  const separator = separatorColor(LINE_CHAR.repeat(screenWidth))
+  return `${report}${separator}\n`
+}
 
 const getProgressBar = function ({ percentage, time, screenWidth }) {
   if (percentage === undefined) {
