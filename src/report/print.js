@@ -14,10 +14,6 @@ export const printContent = async function (
   nonInteractiveContent,
   interactiveContent,
 ) {
-  if (output === '') {
-    return
-  }
-
   if (output === '-') {
     return printToTerminal(interactiveContent)
   }

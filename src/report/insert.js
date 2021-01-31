@@ -13,30 +13,30 @@ import { UserError } from '../error/main.js'
 //  - does not require any parsing.
 //  - does not require wrapping inserted content (e.g. in a code block).
 //    This should be done by reporters.
-export const insertContent = async function ({ insert: file }, content) {
-  if (file === undefined) {
+export const insertContent = async function ({ insert }, content) {
+  if (insert === undefined) {
     return
   }
 
-  const fileContent = await getFileContent(file)
-  const fileContentA = insertToFile(fileContent, content, file)
-  await writeFileContent(file, fileContentA)
+  const fileContent = await getFileContent(insert)
+  const fileContentA = insertToFile(fileContent, content, insert)
+  await writeFileContent(insert, fileContentA)
 }
 
-const getFileContent = async function (file) {
+const getFileContent = async function (insert) {
   try {
-    return await fs.readFile(file, 'utf8')
+    return await fs.readFile(insert, 'utf8')
   } catch (error) {
-    throw new UserError(`Could not read file '${file}'\n${error.message}`)
+    throw new UserError(`Could not read file "${insert}"\n${error.message}`)
   }
 }
 
-const insertToFile = function (fileContent, content, file) {
+const insertToFile = function (fileContent, content, insert) {
   const newline = detectNewline.graceful(fileContent)
   const lines = fileContent.split(newline)
 
   const contentA = replaceNewline(content, newline)
-  const linesA = insertToLines(lines, contentA, file)
+  const linesA = insertToLines(lines, contentA, insert)
 
   const fileContentA = linesA.join(newline)
   return fileContentA
@@ -49,9 +49,9 @@ const replaceNewline = function (content, newline) {
 
 const UNIX_NEWLINE = '\n'
 
-const insertToLines = function (lines, content, file) {
-  const startLine = getLineIndex(lines, file, START_LINE_TOKEN)
-  const endLine = getLineIndex(lines, file, END_LINE_TOKEN)
+const insertToLines = function (lines, content, insert) {
+  const startLine = getLineIndex(lines, insert, START_LINE_TOKEN)
+  const endLine = getLineIndex(lines, insert, END_LINE_TOKEN)
 
   const start = lines.slice(0, startLine + 1)
   const end = lines.slice(endLine)
@@ -60,12 +60,12 @@ const insertToLines = function (lines, content, file) {
 
 // We require both delimiters so that user is aware that both should be moved
 // when moving lines around
-const getLineIndex = function (lines, file, token) {
+const getLineIndex = function (lines, insert, token) {
   const lineIndex = lines.findIndex((line) => line.includes(token))
 
   if (lineIndex === -1) {
     throw new UserError(
-      `File '${file}' should contain a line with the words ${token}`,
+      `File "${insert}" should contain a line with the words ${token}`,
     )
   }
 
@@ -75,10 +75,10 @@ const getLineIndex = function (lines, file, token) {
 const START_LINE_TOKEN = 'spyd-start'
 const END_LINE_TOKEN = 'spyd-end'
 
-const writeFileContent = async function (file, fileContent) {
+const writeFileContent = async function (insert, fileContent) {
   try {
-    await writeFileAtomic(file, fileContent)
+    await writeFileAtomic(insert, fileContent)
   } catch (error) {
-    throw new UserError(`Could not write to file '${file}'\n${error.message}`)
+    throw new UserError(`Could not write to file "${insert}"\n${error.message}`)
   }
 }
