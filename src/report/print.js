@@ -7,7 +7,6 @@ import writeFileAtomic from 'write-file-atomic'
 import { UserError } from '../error/main.js'
 
 import { getTtyContents, getNonTtyContents } from './content.js'
-import { addPadding } from './utils/indent.js'
 
 // Print result to file or to terminal based on the `output` configuration
 // property
@@ -44,10 +43,25 @@ const printOutputContents = async function (contents, output) {
   await writeFileContent(contentsA, output)
 }
 
+// Retrieve contents printed in preview.
+// Must be identical to the final contents.
+export const getPreviewReport = function (contents) {
+  const contentsA = contents.filter(hasTerminalOutput)
+
+  if (contentsA.length === 0) {
+    return
+  }
+
+  return getTtyContents(contentsA)
+}
+
+const hasTerminalOutput = function ({ output }) {
+  return output === undefined
+}
+
 const printToTerminal = async function (contents) {
   const ttyContents = getTtyContents(contents)
-  const ttyContentsA = addPadding(ttyContents)
-  await promisify(stdout.write.bind(stdout))(ttyContentsA)
+  await promisify(stdout.write.bind(stdout))(ttyContents)
 }
 
 const writeFileContent = async function (contents, output) {

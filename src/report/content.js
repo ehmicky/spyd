@@ -3,6 +3,8 @@ import { stdout } from 'process'
 import isInteractive from 'is-interactive'
 import stripAnsi from 'strip-ansi'
 
+import { addPadding } from './utils/indent.js'
+
 // Since `report()` might have side effects such as making a HTTP call, we make
 // sure it is called exactly once.
 // Interactive output/terminal have different default values for some report
@@ -12,7 +14,7 @@ export const getNonTtyContents = function (contents) {
 }
 
 export const getTtyContents = function (contents) {
-  return contents.map(getTtyContent).join(CONTENTS_DELIMITER)
+  return addPadding(contents.map(getTtyContent).join(CONTENTS_DELIMITER))
 }
 
 const getNonTtyContent = function ({ content, colors = false }) {

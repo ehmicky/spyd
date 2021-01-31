@@ -16,10 +16,21 @@ export const updatePreview = async function (previewState, benchmarkDuration) {
   await writeToStderr(previewContent)
 }
 
-const getPreviewContent = function (previewState, benchmarkDuration) {
-  const { percentage, time } = getTimeProps(previewState, benchmarkDuration)
-  const description = getDescription(previewState, benchmarkDuration)
-  return getContent({ percentage, time, description })
+const getPreviewContent = function (
+  { benchmarkStart, benchmarkEnd, description, priorityDescription, report },
+  benchmarkDuration,
+) {
+  const { percentage, time } = getTimeProps({
+    benchmarkStart,
+    benchmarkEnd,
+    benchmarkDuration,
+  })
+  const descriptionA = getDescription({
+    description,
+    priorityDescription,
+    benchmarkDuration,
+  })
+  return getContent({ percentage, time, description: descriptionA, report })
 }
 
 // At the beginning of the benchmark, we print newlines so that clearing the

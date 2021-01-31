@@ -40,10 +40,11 @@ export const setPriorityDescription = function (
   previewState.priorityDescription = priorityDescription
 }
 
-export const getDescription = function (
-  { description, priorityDescription },
+export const getDescription = function ({
+  description,
+  priorityDescription,
   benchmarkDuration,
-) {
+}) {
   if (priorityDescription !== undefined) {
     return priorityDescription
   }
