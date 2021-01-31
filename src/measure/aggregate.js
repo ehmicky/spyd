@@ -45,8 +45,7 @@ export const aggregateMeasures = async function ({
   return { ...newCombination, aggregateCountdown: aggregateCountdownA }
 }
 
-// At the end, if there are still some pending `bufferedMeasures`, we aggregate
-// them
+// Performed both incrementally, and once at the end.
 export const aggregateMeasuresEnd = function ({
   measures,
   bufferedMeasures,
