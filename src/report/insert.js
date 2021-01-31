@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs'
 
 import detectNewline from 'detect-newline'
+import { isDirectory } from 'path-type'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
@@ -27,10 +28,16 @@ export const insertContent = async function (content, { insert, colors }) {
 }
 
 const getFileContent = async function (insert) {
+  if (await isDirectory(insert)) {
+    throw new UserError(
+      `Invalid configuration property "insert" "${insert}": it must be a regular file, not a directory.`,
+    )
+  }
+
   try {
     return await fs.readFile(insert, 'utf8')
   } catch (error) {
-    throw new UserError(`Could not read file "${insert}"\n${error.message}`)
+    throw new UserError(`Could not read "insert" "${insert}"\n${error.message}`)
   }
 }
 

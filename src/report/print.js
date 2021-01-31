@@ -1,6 +1,7 @@
 import { stdout } from 'process'
 import { promisify } from 'util'
 
+import { isDirectory } from 'path-type'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
@@ -36,9 +37,17 @@ const printToTerminal = async function (content, colors) {
 const writeFileContent = async function (content, output, colors) {
   const nonInteractiveContent = getNonInteractiveContent(content, colors)
 
+  if (await isDirectory(output)) {
+    throw new UserError(
+      `Invalid configuration property "output" "${output}": it must be a regular file, not a directory.`,
+    )
+  }
+
   try {
     await writeFileAtomic(output, nonInteractiveContent)
   } catch (error) {
-    throw new UserError(`Could not write to file '${output}'\n${error.message}`)
+    throw new UserError(
+      `Could not write to "output" "${output}"\n${error.message}`,
+    )
   }
 }
