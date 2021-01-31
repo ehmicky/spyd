@@ -1,3 +1,7 @@
+import { stderr } from 'process'
+
+import isInteractive from 'is-interactive'
+
 // Add default configuration properties
 export const addDefaultConfig = function ({
   config,
@@ -9,6 +13,7 @@ export const addDefaultConfig = function ({
   return {
     ...DEFAULT_CONFIG,
     cwd: processCwd,
+    preview: isInteractive(stderr),
     delta: defaultDelta,
     since: defaultDelta,
     showSystem: config.system !== undefined,
@@ -27,7 +32,6 @@ export const DEFAULT_CONFIG = {
   duration: 1,
   concurrency: 1,
   system: 'default_system',
-  preview: true,
   save: false,
   output: '-',
   limit: [],

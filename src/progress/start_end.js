@@ -1,7 +1,4 @@
-import { stderr } from 'process'
-
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
-import isInteractive from 'is-interactive'
 
 import { setDelayedDescription } from './set.js'
 import {
@@ -18,7 +15,7 @@ export const startProgress = async function ({
 }) {
   const progressState = {}
 
-  if (isSilent(preview)) {
+  if (!preview) {
     return { progressState }
   }
 
@@ -29,10 +26,6 @@ export const startProgress = async function ({
   const progressId = await startUpdate(progressState, benchmarkDuration)
   setDelayedDescription(progressState, START_DESCRIPTION)
   return { progressState, progressId }
-}
-
-const isSilent = function (preview) {
-  return !preview || !isInteractive(stderr)
 }
 
 const getBenchmarkDuration = function (combinations, duration) {

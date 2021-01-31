@@ -15,7 +15,7 @@ Can also be 0 which only stops when CTRL-C is typed.`,
     group: REPORT,
     boolean: true,
     describe: `Preview the results and display a progress bar.
-Default: true if a reporter is printing to the terminal.`,
+Default: true if the terminal is interactive.`,
   },
   concurrency: {
     group: TASKS,

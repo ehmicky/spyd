@@ -52,6 +52,7 @@ const EXAMPLE_CONFIG = {
   runner: optionalArray('node'),
   reporter: optionalArray('debug'),
   store: optionalArray('file'),
+  preview: false,
   debug: false,
   output: './file.js',
   insert: './README.md',

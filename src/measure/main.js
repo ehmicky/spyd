@@ -9,7 +9,7 @@ import { getStopState } from './stop.js'
 // Also used when starting combinations to retrieve their tasks and steps.
 export const measureBenchmark = async function (
   combinations,
-  { duration, preview = true, cwd, exec = false },
+  { duration, preview, cwd, exec = false },
 ) {
   const stopState = getStopState()
   const { progressState, progressId } = await startProgress({
