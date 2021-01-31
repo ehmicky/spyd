@@ -1,27 +1,39 @@
-import { noteColor } from '../report/utils/colors.js'
+import { stderr } from 'process'
+
+import { goodColor, noteColor } from '../report/utils/colors.js'
 
 // Retrieve progress content
 export const getContent = function ({ percentage, time, description }) {
-  const percentageStr = getPercentageStr(percentage)
+  const progressBar = getProgressBar(percentage, time)
   const descriptionStr = getDescription(description)
-  return `  ${time}${percentageStr}${descriptionStr}`
+  return ` ${time}${progressBar}${descriptionStr}`
 }
 
-const getPercentageStr = function (percentage) {
+const getProgressBar = function (percentage, time) {
   if (percentage === undefined) {
     return ''
   }
 
-  return `  ${noteColor(serializePercentage(percentage))}`
+  const screenWidth = getScreenWidth(stderr)
+  const width = screenWidth - time.length - PADDING_WIDTH
+  const filled = Math.floor(width * percentage)
+  const filledChars = FILL_CHAR.repeat(filled)
+  const voidedChars = VOID_CHAR.repeat(width - filled)
+  return `  ${filledChars}${voidedChars}`
 }
 
-const serializePercentage = function (percentage) {
-  const percentageInt = Math.floor(percentage * FLOAT_TO_PERCENTAGE)
-  return `${percentageInt}%`.padStart(PERCENTAGE_WIDTH)
+const getScreenWidth = function ({ columns = DEFAULT_WIDTH }) {
+  return columns
 }
 
-const FLOAT_TO_PERCENTAGE = 1e2
-const PERCENTAGE_WIDTH = 4
+// Used when the output is not a TTY
+const DEFAULT_WIDTH = 80
+// Pad the left|right of the progress bar with spaces
+const PADDING_WIDTH = 5
+
+// Works on Windows CP437
+const FILL_CHAR = goodColor('\u2588')
+const VOID_CHAR = noteColor('\u2591')
 
 const getDescription = function (description) {
   if (description === undefined) {
