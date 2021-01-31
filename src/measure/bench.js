@@ -1,6 +1,7 @@
-import { getCombinations } from './combination/main.js'
-import { getInitResult, getFinalResult } from './measure/init.js'
-import { measureBenchmark } from './measure/main.js'
+import { getCombinations } from '../combination/main.js'
+
+import { getInitResult, getFinalResult } from './init.js'
+import { measureBenchmark } from './main.js'
 
 // Perform a new benchmark
 export const performBenchmark = async function (config, results) {

@@ -1,7 +1,7 @@
-import { performBenchmark } from './bench.js'
 import { checkLimits } from './compare/limit.js'
 import { getConfig } from './config/main.js'
 import { performExec } from './exec.js'
+import { performBenchmark } from './measure/bench.js'
 import { report } from './report/main.js'
 import { addToStore } from './store/add.js'
 import { endStore } from './store/end.js'
