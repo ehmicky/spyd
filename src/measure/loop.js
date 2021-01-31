@@ -6,6 +6,7 @@ import { measureSample } from '../sample/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { getNextCombination } from './next.js'
+import { updateCombinations } from './update.js'
 
 // Run samples to measure each combination.
 // We ensure combinations are never measured at the same time
@@ -69,11 +70,7 @@ export const performMeasureLoop = async function ({
     const newCombination = await eMeasureSample(combination, stopState)
     const newCombinationA = aggregateMeasures({ combination: newCombination })
 
-    const combinationsA = updateCombinations(
-      combinations,
-      newCombinationA,
-      combination,
-    )
+    const combinationsA = updateCombinations(combinations, newCombinationA)
     // eslint-disable-next-line no-await-in-loop
     await previewCombinations({
       combinations: combinationsA,
@@ -84,11 +81,7 @@ export const performMeasureLoop = async function ({
 
     const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    combinations = updateCombinations(
-      combinations,
-      newCombinationB,
-      combination,
-    )
+    combinations = updateCombinations(combinations, newCombinationB)
   }
 
   const combinationsB = combinations.map(aggregateMeasuresEnd)
@@ -115,22 +108,4 @@ const eMeasureSample = async function (combination, stopState) {
     failOnProcessExit(combination, stopState),
     measureSample(combination),
   ])
-}
-
-const updateCombinations = function (
-  combinations,
-  newCombination,
-  oldCombination,
-) {
-  return combinations.map((combination) =>
-    updateCombination(combination, newCombination, oldCombination),
-  )
-}
-
-const updateCombination = function (
-  combination,
-  newCombination,
-  oldCombination,
-) {
-  return combination === oldCombination ? newCombination : combination
 }
