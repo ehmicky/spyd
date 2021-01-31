@@ -65,8 +65,7 @@ export const performMeasureLoop = async function ({
 
     // eslint-disable-next-line no-await-in-loop
     const newCombination = await eMeasureSample(combination, stopState)
-    const newProps = aggregateMeasures(newCombination)
-    const newCombinationA = { ...newCombination, ...newProps }
+    const newCombinationA = aggregateMeasures({ combination: newCombination })
 
     const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
