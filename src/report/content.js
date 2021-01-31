@@ -1,4 +1,4 @@
-import { stderr } from 'process'
+import { stdout } from 'process'
 
 import isInteractive from 'is-interactive'
 import stripAnsi from 'strip-ansi'
@@ -20,7 +20,7 @@ const getNonInteractiveContent = function (content, colors = false) {
 
 const getInteractiveContent = function (
   content,
-  colors = isInteractive(stderr),
+  colors = isInteractive(stdout),
 ) {
   return normalizeContent(content, colors)
 }

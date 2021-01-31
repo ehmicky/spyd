@@ -1,4 +1,4 @@
-import { stderr } from 'process'
+import { stdout } from 'process'
 
 import isInteractive from 'is-interactive'
 import omit from 'omit.js'
@@ -35,7 +35,7 @@ export const callReportFunc = async function ({
 // Differences are mostly useful during interaction.
 // In results persisted in files, they are mostly confusing.
 const getDefaultShowDiff = function (output) {
-  return output === '-' && isInteractive(stderr)
+  return output === '-' && isInteractive(stdout)
 }
 
 // Remove some result properties unless some reporterConfig properties are
