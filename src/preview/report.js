@@ -41,7 +41,10 @@ export const setPreviewReport = async function ({
   const { result } = getFinalResult(combinations, initResult, results)
   const resultA = { ...result, time, percentage }
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  previewState.report = await reportPreview(resultA, { reporters, titles })
+  previewState.report = await reportPreview(resultA, {
+    reporters: reportersA,
+    titles,
+  })
 }
 
 // Reporters can opt-out of previews by defining `reporter.quiet: true`.
