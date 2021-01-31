@@ -17,7 +17,7 @@ export const startPreview = async function ({
     return { previewState }
   }
 
-  await setPreviewReport(combinations, previewState, previewConfig)
+  await setPreviewReport({ combinations, previewState, previewConfig })
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
 
   hideCursor()

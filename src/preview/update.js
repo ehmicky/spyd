@@ -4,27 +4,24 @@ import { promisify } from 'util'
 
 import { getContent } from './content.js'
 import { getDescription } from './set.js'
-import { getTimeProps } from './time_props.js'
+import { updateTimeProps } from './time_props.js'
 
 const pCursorTo = promisify(cursorTo)
 const pClearScreenDown = promisify(clearScreenDown)
 
 // Print preview
 export const updatePreview = async function (previewState, benchmarkDuration) {
-  await clearPreview()
+  updateTimeProps(previewState, benchmarkDuration)
   const previewContent = getPreviewContent(previewState, benchmarkDuration)
+
+  await clearPreview()
   await writeToStderr(previewContent)
 }
 
 const getPreviewContent = function (
-  { benchmarkStart, benchmarkEnd, description, priorityDescription, report },
+  { percentage, time, description, priorityDescription, report },
   benchmarkDuration,
 ) {
-  const { percentage, time } = getTimeProps({
-    benchmarkStart,
-    benchmarkEnd,
-    benchmarkDuration,
-  })
   const descriptionA = getDescription({
     description,
     priorityDescription,

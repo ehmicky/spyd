@@ -15,14 +15,19 @@ export const previewCombinations = async function ({
   previewConfig,
 }) {
   const combinationsA = updateCombinations(combinations, newCombination)
-  await setPreviewReport(combinationsA, previewState, previewConfig)
+  await setPreviewReport({
+    combinations: combinationsA,
+    previewState,
+    previewConfig,
+  })
 }
 
-export const setPreviewReport = async function (
+export const setPreviewReport = async function ({
   combinations,
   previewState,
-  { initResult, results, quiet, reporters, titles },
-) {
+  previewState: { time, percentage },
+  previewConfig: { initResult, results, quiet, reporters, titles },
+}) {
   if (quiet) {
     return
   }
@@ -34,8 +39,9 @@ export const setPreviewReport = async function (
   }
 
   const { result } = getFinalResult(combinations, initResult, results)
+  const resultA = { ...result, time, percentage }
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  previewState.report = await reportPreview(result, { reporters, titles })
+  previewState.report = await reportPreview(resultA, { reporters, titles })
 }
 
 // Reporters can opt-out of previews by defining `reporter.quiet: true`.
