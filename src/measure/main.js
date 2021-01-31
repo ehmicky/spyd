@@ -9,8 +9,8 @@ import { getStopState } from './stop.js'
 // Also used when starting combinations to retrieve their tasks and steps.
 export const measureBenchmark = async function (
   combinations,
-  { duration, quiet, cwd, previewConfig },
-  { exec, initResult, results },
+  { duration, quiet, cwd },
+  { exec, previewConfig },
 ) {
   const combinationsA = combinations.map(addInitProps)
 
@@ -23,8 +23,6 @@ export const measureBenchmark = async function (
     combinations: combinationsA,
     duration,
     quiet,
-    initResult,
-    results,
     previewConfig,
   })
 

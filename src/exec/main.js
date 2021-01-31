@@ -21,8 +21,8 @@ export const execCombination = async function (combination, { cwd }) {
 
   await measureBenchmark(
     [combination],
-    { quiet: true, cwd, duration: 1, previewConfig: {} },
-    { exec: true },
+    { quiet: true, cwd, duration: 1 },
+    { exec: true, previewConfig: {} },
   )
 }
 

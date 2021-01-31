@@ -9,11 +9,9 @@ export const startPreview = async function ({
   combinations,
   duration,
   quiet,
-  initResult,
-  results,
   previewConfig,
 }) {
-  const previewState = { initResult, results }
+  const previewState = {}
   const previewConfigA = { ...previewConfig, quiet }
 
   if (quiet) {

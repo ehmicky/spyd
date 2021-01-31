@@ -22,8 +22,7 @@ export const setPreviewReport = async function (
   combinations,
   {
     previewState,
-    previewState: { initResult, results },
-    previewConfig: { quiet, ...previewConfig },
+    previewConfig: { initResult, results, quiet, ...previewConfig },
   },
 ) {
   if (quiet) {
