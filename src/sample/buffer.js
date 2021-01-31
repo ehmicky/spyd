@@ -1,12 +1,23 @@
 import { getSortedMedian } from '../stats/median.js'
 import { sortFloats } from '../stats/sort.js'
 
+// Add `sampleMeasures` to `bufferedMeasures`
+export const bufferMeasures = function ({
+  sampleMeasures,
+  bufferedMeasures,
+  repeat,
+}) {
+  const sampleMeasuresA = normalizeSampleMeasures(sampleMeasures, repeat)
+  const bufferedMeasuresA = [...bufferedMeasures, sampleMeasuresA]
+  const sampleMedian = getSortedMedian(sampleMeasuresA)
+  return { bufferedMeasures: bufferedMeasuresA, sampleMedian }
+}
+
 // Normalize `sampleMeasures` by dividing `repeat` and sorting.
-export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
+const normalizeSampleMeasures = function (sampleMeasures, repeat) {
   const sampleMeasuresA = normalizeRepeat(sampleMeasures, repeat)
   sortFloats(sampleMeasuresA)
-  const sampleMedian = getSortedMedian(sampleMeasuresA)
-  return { sampleMeasures: sampleMeasuresA, sampleMedian }
+  return sampleMeasuresA
 }
 
 // The runner measures loops of the task. This retrieve the mean time to execute
