@@ -36,7 +36,7 @@ const HISTOGRAM_SIZE = 1e2
 // `loops` is the number of repeat loops
 // `repeat` is the average number of iterations inside those repeat loops
 // `stats` is `undefined` during preview:
-//   - When not measured yet (`sample` `0`)
+//   - When not measured yet (`samples` `0`)
 //   - On uncalibrated stats because they:
 //      - Are eventually reset, which create confusion for stats like min or max
 //      - Change a lot, creating flicker
