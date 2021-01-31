@@ -7,9 +7,7 @@ import { padTitles } from './padding.js'
 //     For one-dimensional reporters.
 //  - `combination.column`: combines runner and system.
 //     For two-dimensional reporters. `taskTitlePadded` is the row name.
-// We need to do this three times:
-//  - before measuring start because `combination.name` is used by progress
-//    reporters.
+// We need to do this twice:
 //  - after measuring ends and previous results merging because those add
 //    new combinations
 //  - after `diff` has been computed, which has to be after previous results

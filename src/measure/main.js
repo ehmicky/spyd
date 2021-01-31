@@ -12,7 +12,7 @@ export const measureBenchmark = async function (
   { duration, quiet, cwd, exec = false },
 ) {
   const stopState = getStopState()
-  const { previewState, progressId } = await startPreview({
+  const { previewState, previewId } = await startPreview({
     combinations,
     duration,
     quiet,
@@ -30,7 +30,7 @@ export const measureBenchmark = async function (
     })
     return { combinations: combinationsB, stopped: stopState.stopped }
   } finally {
-    await endPreview(progressId)
+    await endPreview(previewId)
   }
 }
 

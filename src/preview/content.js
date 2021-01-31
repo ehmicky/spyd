@@ -2,7 +2,7 @@ import { stderr } from 'process'
 
 import { goodColor, noteColor } from '../report/utils/colors.js'
 
-// Retrieve progress content
+// Retrieve preview content
 export const getContent = function ({ percentage, time, description }) {
   const progressBar = getProgressBar(percentage, time)
   const descriptionStr = getDescription(description)

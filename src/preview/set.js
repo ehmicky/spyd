@@ -14,7 +14,7 @@ export const setDelayedDescription = function (previewState, description) {
 
 const DESCRIPTION_DELAY = 1e3
 
-// Set the progress reporting description
+// Set the preview description
 export const setDescription = function (previewState, description) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.description = description
@@ -31,7 +31,7 @@ const unsetDescriptionTimeout = function (previewState) {
   delete previewState.descriptionTimeout
 }
 
-// Set the progress reporting description, but with higher priority.
+// Set the preview description, but with higher priority.
 export const setPriorityDescription = function (
   previewState,
   priorityDescription,
@@ -60,8 +60,8 @@ export const getDescription = function (
 // Clear instruction when `duration` is 0
 const NO_DURATION_DESCRIPTION = 'Type CTRL-C to stop.'
 
-// Set the progress reporting duration and percentage by setting the expected
-// end of the benchmark
+// Set the preview duration and percentage by setting the expected end of the
+// benchmark
 export const setBenchmarkEnd = function (previewState, benchmarkEnd) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.benchmarkEnd =

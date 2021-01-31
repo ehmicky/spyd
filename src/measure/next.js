@@ -33,12 +33,12 @@ export const getNextCombination = function ({
   return combination
 }
 
-// Update the benchmark end in the progress reporting.
+// Update the benchmark end in preview.
 // When a combination ends, we do not include its remaining duration anymore.
 // This allows `benchmarkEnd` to adjust progressively at the end of the
 // benchmark as each combination ends.
-// This also allows updating the progress duration to `0s` when the benchmark
-// is stopped or errors.
+// This also allows updating the progress bar duration to `0s` when the
+// benchmark is stopped or errors.
 // If a task is slower than its `duration`, `benchmarkEnd` might increase. In
 // that case, we make `benchmarkEnd` freeze for a moment instead of making it
 // jump up.

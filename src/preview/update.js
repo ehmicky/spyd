@@ -12,8 +12,8 @@ const pClearScreenDown = promisify(clearScreenDown)
 // Print preview
 export const updatePreview = async function (previewState, benchmarkDuration) {
   await clearScreen(1)
-  const progressContent = getPreviewContent(previewState, benchmarkDuration)
-  await writeToStderr(progressContent)
+  const previewContent = getPreviewContent(previewState, benchmarkDuration)
+  await writeToStderr(previewContent)
 }
 
 const getPreviewContent = function (previewState, benchmarkDuration) {
@@ -24,13 +24,13 @@ const getPreviewContent = function (previewState, benchmarkDuration) {
 
 // At the beginning of the benchmark, we print newlines so that clearing the
 // screen does not remove previous prompts
-export const clearProgressInit = async function () {
+export const clearPreviewInit = async function () {
   const newlines = '\n'.repeat(stderr.rows - 1)
   await writeToStderr(newlines)
 }
 
 // The final screen cleaning prints one less empty row.
-export const clearProgressFinal = async function () {
+export const clearPreviewFinal = async function () {
   await clearScreen(0)
 }
 

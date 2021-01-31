@@ -1,11 +1,7 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
 import { setDelayedDescription } from './set.js'
-import {
-  updatePreview,
-  clearProgressInit,
-  clearProgressFinal,
-} from './update.js'
+import { updatePreview, clearPreviewInit, clearPreviewFinal } from './update.js'
 
 // Start preview
 export const startPreview = async function ({ combinations, duration, quiet }) {
@@ -16,12 +12,12 @@ export const startPreview = async function ({ combinations, duration, quiet }) {
   }
 
   hideCursor()
-  await clearProgressInit()
+  await clearPreviewInit()
 
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
-  const progressId = await startUpdate(previewState, benchmarkDuration)
+  const previewId = await startUpdate(previewState, benchmarkDuration)
   setDelayedDescription(previewState, START_DESCRIPTION)
-  return { previewState, progressId }
+  return { previewState, previewId }
 }
 
 const getBenchmarkDuration = function (combinations, duration) {
@@ -35,10 +31,10 @@ const getBenchmarkDuration = function (combinations, duration) {
 // Update preview at regular interval
 const startUpdate = async function (previewState, benchmarkDuration) {
   await updatePreview(previewState, benchmarkDuration)
-  const progressId = setInterval(() => {
+  const previewId = setInterval(() => {
     updatePreview(previewState, benchmarkDuration)
   }, UPDATE_FREQUENCY)
-  return progressId
+  return previewId
 }
 
 // How often (in milliseconds) to update preview
@@ -48,12 +44,12 @@ const START_DESCRIPTION = 'Starting...'
 
 // End preview.
 // When stopped, we keep the last preview.
-export const endPreview = async function (progressId) {
-  if (progressId === undefined) {
+export const endPreview = async function (previewId) {
+  if (previewId === undefined) {
     return
   }
 
-  clearInterval(progressId)
-  await clearProgressFinal()
+  clearInterval(previewId)
+  await clearPreviewFinal()
   showCursor()
 }
