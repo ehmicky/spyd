@@ -40,7 +40,7 @@ export const getCalibrated = function ({
   allSamples,
 }) {
   return (
-    allSamples !== 0 && (calibrated || newRepeat / repeat <= MAX_REPEAT_DIFF)
+    allSamples !== 1 && (calibrated || newRepeat / repeat <= MAX_REPEAT_DIFF)
   )
 }
 

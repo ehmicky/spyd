@@ -38,6 +38,7 @@ export const handleReturnValue = function (
   })
 
   const samplesB = samplesA + 1
+  const allSamplesA = allSamples + 1
   const loopsLast = sampleMeasures.length
   const loopsB = loopsA + loopsLast
   const timesB = timesA + loopsLast * repeat
@@ -52,13 +53,14 @@ export const handleReturnValue = function (
     calibrated,
     repeat,
     newRepeat,
-    allSamples,
+    allSamples: allSamplesA,
   })
 
   return {
     measures: measuresA,
     bufferedMeasures: bufferedMeasuresB,
     samples: samplesB,
+    allSamples: allSamplesA,
     loops: loopsB,
     loopsLast,
     times: timesB,

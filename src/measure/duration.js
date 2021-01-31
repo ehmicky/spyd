@@ -12,13 +12,11 @@ export const getSampleStart = function () {
 export const addSampleDuration = function (combination, sampleStart) {
   const sampleDurationLast = now() - sampleStart
   const totalDuration = combination.totalDuration + sampleDurationLast
-  const allSamples = combination.allSamples + 1
-  const sampleDurationMean = totalDuration / allSamples
+  const sampleDurationMean = totalDuration / combination.allSamples
 
   return {
     ...combination,
     totalDuration,
-    allSamples,
     sampleDurationLast,
     sampleDurationMean,
   }
