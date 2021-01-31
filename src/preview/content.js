@@ -1,27 +1,17 @@
 import { stderr } from 'process'
 
-import { goodColor, noteColor } from '../report/utils/colors.js'
+import { goodColor, separatorColor } from '../report/utils/colors.js'
 
 // Retrieve preview content
 export const getContent = function ({ percentage, time, description, report }) {
-  const progressBar = getProgressBar(percentage, time)
-  const descriptionStr = getDescription(description)
-  return [report, ` ${time}${progressBar}${descriptionStr}`]
-    .filter(Boolean)
-    .join('\n\n')
-}
-
-const getProgressBar = function (percentage, time) {
-  if (percentage === undefined) {
-    return ''
-  }
-
   const screenWidth = getScreenWidth(stderr)
-  const width = screenWidth - time.length - PADDING_WIDTH
-  const filled = Math.floor(width * percentage)
-  const filledChars = FILL_CHAR.repeat(filled)
-  const voidedChars = VOID_CHAR.repeat(width - filled)
-  return `  ${filledChars}${voidedChars}`
+  const separator = separatorColor(LINE_CHAR.repeat(screenWidth))
+  const progressBar = getProgressBar({ percentage, time, screenWidth })
+  const descriptionStr = getDescription(description)
+
+  return `${report}${separator}
+
+ ${time}${progressBar}${descriptionStr}`
 }
 
 const getScreenWidth = function ({ columns = DEFAULT_WIDTH }) {
@@ -30,12 +20,26 @@ const getScreenWidth = function ({ columns = DEFAULT_WIDTH }) {
 
 // Used when the output is not a TTY
 const DEFAULT_WIDTH = 80
+
+const getProgressBar = function ({ percentage, time, screenWidth }) {
+  if (percentage === undefined) {
+    return ''
+  }
+
+  const width = screenWidth - time.length - PADDING_WIDTH
+  const filled = Math.floor(width * percentage)
+  const filledChars = FILL_CHAR.repeat(filled)
+  const voidedChars = VOID_CHAR.repeat(width - filled)
+  return `  ${filledChars}${voidedChars}`
+}
+
 // Pad the left|right of the progress bar with spaces
-const PADDING_WIDTH = 5
+const PADDING_WIDTH = 4
 
 // Works on Windows CP437
 const FILL_CHAR = goodColor('\u2588')
-const VOID_CHAR = noteColor('\u2591')
+const VOID_CHAR = separatorColor('\u2591')
+const LINE_CHAR = separatorColor('\u2500')
 
 const getDescription = function (description) {
   if (description === undefined) {
