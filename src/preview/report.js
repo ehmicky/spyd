@@ -1,4 +1,5 @@
 import { getFinalResult } from '../measure/init.js'
+import { updateCombinations } from '../measure/update.js'
 import { reportPreview } from '../report/main.js'
 
 // Preview results progressively, as combinations are being measured.
@@ -17,7 +18,12 @@ export const previewCombinations = async function ({
     return
   }
 
-  await setPreviewReport({ combinations, previewState, previewConfig })
+  const combinationsA = updateCombinations(combinations, newCombination)
+  await setPreviewReport({
+    combinations: combinationsA,
+    previewState,
+    previewConfig,
+  })
 }
 
 // Only create new preview when new stats are available.
