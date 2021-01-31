@@ -13,7 +13,7 @@ export const getNextCombination = function ({
   combinations,
   duration,
   exec,
-  progressState,
+  previewState,
   stopState,
 }) {
   const remainingCombinations = getRemainingCombinations({
@@ -22,7 +22,7 @@ export const getNextCombination = function ({
     exec,
     stopState,
   })
-  updateBenchmarkEnd({ remainingCombinations, progressState, duration })
+  updateBenchmarkEnd({ remainingCombinations, previewState, duration })
 
   if (remainingCombinations.length === 0) {
     return
@@ -44,7 +44,7 @@ export const getNextCombination = function ({
 // jump up.
 const updateBenchmarkEnd = function ({
   remainingCombinations,
-  progressState,
+  previewState,
   duration,
 }) {
   if (duration === 0 || duration === 1) {
@@ -57,7 +57,7 @@ const updateBenchmarkEnd = function ({
     ),
   )
   const benchmarkEnd = now() + remainingDuration
-  setBenchmarkEnd(progressState, benchmarkEnd)
+  setBenchmarkEnd(previewState, benchmarkEnd)
 }
 
 const getRemainingDuration = function ({ totalDuration }, duration) {

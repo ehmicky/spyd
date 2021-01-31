@@ -2,30 +2,26 @@ import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
 import { setDelayedDescription } from './set.js'
 import {
-  updateProgress,
+  updatePreview,
   clearProgressInit,
   clearProgressFinal,
 } from './update.js'
 
-// Start progress reporting
-export const startProgress = async function ({
-  combinations,
-  duration,
-  quiet,
-}) {
-  const progressState = {}
+// Start preview
+export const startPreview = async function ({ combinations, duration, quiet }) {
+  const previewState = {}
 
   if (quiet) {
-    return { progressState }
+    return { previewState }
   }
 
   hideCursor()
   await clearProgressInit()
 
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
-  const progressId = await startUpdate(progressState, benchmarkDuration)
-  setDelayedDescription(progressState, START_DESCRIPTION)
-  return { progressState, progressId }
+  const progressId = await startUpdate(previewState, benchmarkDuration)
+  setDelayedDescription(previewState, START_DESCRIPTION)
+  return { previewState, progressId }
 }
 
 const getBenchmarkDuration = function (combinations, duration) {
@@ -36,23 +32,23 @@ const getBenchmarkDuration = function (combinations, duration) {
   return combinations.length * duration
 }
 
-// Update progress at regular interval
-const startUpdate = async function (progressState, benchmarkDuration) {
-  await updateProgress(progressState, benchmarkDuration)
+// Update preview at regular interval
+const startUpdate = async function (previewState, benchmarkDuration) {
+  await updatePreview(previewState, benchmarkDuration)
   const progressId = setInterval(() => {
-    updateProgress(progressState, benchmarkDuration)
+    updatePreview(previewState, benchmarkDuration)
   }, UPDATE_FREQUENCY)
   return progressId
 }
 
-// How often (in milliseconds) to update progress
+// How often (in milliseconds) to update preview
 const UPDATE_FREQUENCY = 1e2
 
 const START_DESCRIPTION = 'Starting...'
 
-// End progress reporting.
-// When stopped, we keep the progress reporting.
-export const endProgress = async function (progressId) {
+// End preview.
+// When stopped, we keep the last preview.
+export const endPreview = async function (progressId) {
   if (progressId === undefined) {
     return
   }

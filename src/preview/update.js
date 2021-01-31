@@ -9,19 +9,16 @@ import { getTimeProps } from './time_props.js'
 const pCursorTo = promisify(cursorTo)
 const pClearScreenDown = promisify(clearScreenDown)
 
-// Print progress
-export const updateProgress = async function (
-  progressState,
-  benchmarkDuration,
-) {
+// Print preview
+export const updatePreview = async function (previewState, benchmarkDuration) {
   await clearScreen(1)
-  const progressContent = getProgressContent(progressState, benchmarkDuration)
+  const progressContent = getPreviewContent(previewState, benchmarkDuration)
   await writeToStderr(progressContent)
 }
 
-const getProgressContent = function (progressState, benchmarkDuration) {
-  const { percentage, time } = getTimeProps(progressState, benchmarkDuration)
-  const description = getDescription(progressState, benchmarkDuration)
+const getPreviewContent = function (previewState, benchmarkDuration) {
+  const { percentage, time } = getTimeProps(previewState, benchmarkDuration)
+  const description = getDescription(previewState, benchmarkDuration)
   return getContent({ percentage, time, description })
 }
 

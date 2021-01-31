@@ -2,14 +2,13 @@ import now from 'precise-now'
 
 import { getTime } from './time.js'
 
-// Retrieve `percentage` and `time` to show in progress reporting. There are
-// two modes:
+// Retrieve `percentage` and `time` to show in preview. There are two modes:
 //  - When `duration` is 0 or 1, `time` goes up and `percentage` is `undefined`
 //  - Otherwise, `time` does down and `percentage` is based on `duration`
-export const getTimeProps = function (progressState, benchmarkDuration) {
+export const getTimeProps = function (previewState, benchmarkDuration) {
   return benchmarkDuration === 0 || benchmarkDuration === 1
-    ? getStartDurationProps(progressState)
-    : getEndDurationProps(progressState, benchmarkDuration)
+    ? getStartDurationProps(previewState)
+    : getEndDurationProps(previewState, benchmarkDuration)
 }
 
 const getStartDurationProps = function ({ benchmarkStart }) {

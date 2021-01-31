@@ -6,8 +6,8 @@ import { setDelayedDescription } from '../preview/set.js'
 import { sendAndReceive } from '../process/send.js'
 
 // End each combination, i.e. run their cleanup logic
-export const endCombinations = async function (combinations, progressState) {
-  setDelayedDescription(progressState, END_DESCRIPTION)
+export const endCombinations = async function (combinations, previewState) {
+  setDelayedDescription(previewState, END_DESCRIPTION)
   return await Promise.all(combinations.map(eEndCombination))
 }
 

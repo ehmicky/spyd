@@ -36,7 +36,7 @@ const isLongTask = function ({ sampleStart, totalDuration, duration }) {
 //  - measuring the first sample of the task
 // In that case, we leave `benchmarkEnd` as is
 export const setStopBenchmarkEnd = function ({
-  progressState,
+  previewState,
   stopState: { sampleStart, combination: { sampleDurationMean = 0 } = {} },
   duration,
 }) {
@@ -45,5 +45,5 @@ export const setStopBenchmarkEnd = function ({
   }
 
   const benchmarkEnd = sampleStart + sampleDurationMean
-  setBenchmarkEnd(progressState, benchmarkEnd)
+  setBenchmarkEnd(previewState, benchmarkEnd)
 }

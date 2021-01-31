@@ -4,9 +4,9 @@ import { receiveReturnValue } from '../process/receive.js'
 import { getMinLoopDuration } from '../sample/min_loop_duration.js'
 
 // Wait for each combination to start
-export const startCombinations = async function (combinations, progressState) {
+export const startCombinations = async function (combinations, previewState) {
   const combinationsA = await Promise.all(combinations.map(eStartCombination))
-  setDescription(progressState)
+  setDescription(previewState)
   return combinationsA
 }
 

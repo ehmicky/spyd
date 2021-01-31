@@ -1,4 +1,4 @@
-import { startProgress, endProgress } from '../preview/start_end.js'
+import { startPreview, endPreview } from '../preview/start_end.js'
 import { startServer, endServer } from '../server/start_end.js'
 
 import { addInitProps } from './props.js'
@@ -12,7 +12,7 @@ export const measureBenchmark = async function (
   { duration, quiet, cwd, exec = false },
 ) {
   const stopState = getStopState()
-  const { progressState, progressId } = await startProgress({
+  const { previewState, progressId } = await startPreview({
     combinations,
     duration,
     quiet,
@@ -26,11 +26,11 @@ export const measureBenchmark = async function (
       cwd,
       exec,
       stopState,
-      progressState,
+      previewState,
     })
     return { combinations: combinationsB, stopped: stopState.stopped }
   } finally {
-    await endProgress(progressId)
+    await endPreview(progressId)
   }
 }
 
@@ -41,7 +41,7 @@ const startServerAndMeasure = async function ({
   cwd,
   exec,
   stopState,
-  progressState,
+  previewState,
 }) {
   const { server, origin, combinations: combinationsA } = await startServer(
     combinations,
@@ -56,7 +56,7 @@ const startServerAndMeasure = async function ({
       cwd,
       exec,
       stopState,
-      progressState,
+      previewState,
     })
   } finally {
     await endServer(server)
