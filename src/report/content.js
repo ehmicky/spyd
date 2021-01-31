@@ -8,14 +8,22 @@ import stripAnsi from 'strip-ansi'
 // Interactive output/terminal have different default values for some report
 // config properties, so we compute two different contents: interactive and
 // non-interactive.
-export const getNonInteractiveContent = function (content, colors = false) {
+export const getNonInteractiveContents = function (contents) {
+  return contents.map(getNonInteractiveContent).join(CONTENTS_DELIMITER)
+}
+
+export const getInteractiveContents = function (contents) {
+  return contents.map(getInteractiveContent).join(CONTENTS_DELIMITER)
+}
+
+const getNonInteractiveContent = function ({ content, colors = false }) {
   return getContent(content, colors)
 }
 
-export const getInteractiveContent = function (
+const getInteractiveContent = function ({
   content,
   colors = isInteractive(stdout),
-) {
+}) {
   return getContent(content, colors)
 }
 
@@ -44,8 +52,5 @@ const trimContent = function (content) {
 
 const NEWLINE_REGEXP = /(^\n*)|(\n*$)/gu
 
-// A reporter can choose not to return anything, in which case `output` and
-// `insert` are not used.
-export const hasContent = function (content) {
-  return typeof content === 'string' && content.trim() !== ''
-}
+// It is possible to use "output" or "insert" with multiple reporters at once
+const CONTENTS_DELIMITER = '\n'

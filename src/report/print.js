@@ -6,36 +6,52 @@ import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
 
-import {
-  getInteractiveContent,
-  getNonInteractiveContent,
-  hasContent,
-} from './content.js'
+import { getInteractiveContents, getNonInteractiveContents } from './content.js'
 import { addPadding } from './utils/indent.js'
 
 // Print result to file or to terminal based on the `output` configuration
 // property
-export const printContent = async function (content, { output, colors }) {
-  if (!hasContent(content) || output === '') {
-    return
-  }
-
-  if (output === undefined) {
-    await printToTerminal(content, colors)
-    return
-  }
-
-  await writeFileContent(content, output, colors)
+export const printContents = async function (contents) {
+  const outputs = getOutputs(contents)
+  await Promise.all(
+    outputs.map((output) => printOutputContents(contents, output)),
+  )
 }
 
-const printToTerminal = async function (content, colors) {
-  const interactiveContent = getInteractiveContent(content, colors)
+const getOutputs = function (contents) {
+  const outputs = contents.filter(hasOutput).map(getOutput)
+  return [...new Set(outputs)]
+}
+
+// Output with "" is silent. This is useful when using "insert" and no TTY
+// output is wanted.
+const hasOutput = function ({ output }) {
+  return output !== ''
+}
+
+const getOutput = function ({ output }) {
+  return output
+}
+
+const printOutputContents = async function (contents, output) {
+  const contentsA = contents.filter((content) => content.output === output)
+
+  if (output === undefined) {
+    await printToTerminal(contentsA)
+    return
+  }
+
+  await writeFileContent(contentsA, output)
+}
+
+const printToTerminal = async function (contents) {
+  const interactiveContent = getInteractiveContents(contents)
   const interactiveContentA = addPadding(interactiveContent)
   await promisify(stdout.write.bind(stdout))(interactiveContentA)
 }
 
-const writeFileContent = async function (content, output, colors) {
-  const nonInteractiveContent = getNonInteractiveContent(content, colors)
+const writeFileContent = async function (contents, output) {
+  const nonInteractiveContent = getNonInteractiveContents(contents)
 
   if (await isDirectory(output)) {
     throw new UserError(

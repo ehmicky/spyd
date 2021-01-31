@@ -1,32 +1,21 @@
 import { callReportFunc } from './call.js'
-import { insertContent } from './insert.js'
-import { printContent } from './print.js'
+import { insertContents } from './insert.js'
+import { printContents } from './print.js'
 
 // Report results
 export const report = async function (result, { reporters, titles }) {
-  await Promise.all(
+  const contents = await Promise.all(
     reporters.map(({ report: reportFunc, config: reporterConfig }) =>
-      useReporter({ reportFunc, reporterConfig, result, titles }),
+      callReportFunc({ reportFunc, reporterConfig, result, titles }),
     ),
   )
+  const contentsA = contents.filter(hasContent)
+
+  await Promise.all([printContents(contentsA), insertContents(contentsA)])
 }
 
-// Perform each reporter.
-const useReporter = async function ({
-  reportFunc,
-  reporterConfig,
-  result,
-  titles,
-}) {
-  const content = await callReportFunc({
-    reportFunc,
-    result,
-    reporterConfig,
-    titles,
-  })
-
-  await Promise.all([
-    printContent(content, reporterConfig),
-    insertContent(content, reporterConfig),
-  ])
+// A reporter can choose not to return anything, in which case `output` and
+// `insert` are not used.
+const hasContent = function ({ content }) {
+  return typeof content === 'string' && content.trim() !== ''
 }

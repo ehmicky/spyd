@@ -15,6 +15,8 @@ export const callReportFunc = async function ({
     showSystem,
     showMetadata,
     output,
+    insert,
+    colors,
     showTitles,
     showDiff = getDefaultShowDiff(output),
   },
@@ -29,7 +31,7 @@ export const callReportFunc = async function ({
   })
   const reportFuncProps = omit(reporterConfig, CORE_REPORT_PROPS)
   const content = await reportFunc(resultB, reportFuncProps)
-  return content
+  return { content, output, insert, colors }
 }
 
 // Differences are mostly useful during interaction.
