@@ -19,30 +19,35 @@ import { previewCombinations } from './preview.js'
 //  - During calibration to recompute the `stats.median`
 //  - At the beginning, or when `calibrateReset` has just been called, so
 //    that there are some `measures` to compute the `stats.median`
-export const aggregateMeasures = async function ({
-  combination,
-  combination: { measures, aggregateCountdown, sampleDurationLast, calibrated },
+export const aggregatePreview = async function ({
+  newCombination,
+  newCombination: {
+    measures,
+    aggregateCountdown,
+    sampleDurationLast,
+    calibrated,
+  },
   combinations,
   previewState,
   previewConfig,
 }) {
   if (calibrated && aggregateCountdown > 0 && measures.length !== 0) {
     return {
-      ...combination,
+      ...newCombination,
       aggregateCountdown: aggregateCountdown - sampleDurationLast,
     }
   }
 
   const aggregateStart = getAggregateStart()
-  const newCombination = aggregateMeasuresEnd(combination)
+  const newCombinationA = aggregateMeasuresEnd(newCombination)
   await previewCombinations({
     combinations,
-    newCombination,
+    newCombination: newCombinationA,
     previewState,
     previewConfig,
   })
   const aggregateCountdownA = getAggregateCountdown(aggregateStart)
-  return { ...newCombination, aggregateCountdown: aggregateCountdownA }
+  return { ...newCombinationA, aggregateCountdown: aggregateCountdownA }
 }
 
 // Performed both incrementally, and once at the end.
