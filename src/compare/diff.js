@@ -61,8 +61,9 @@ const addDiff = function (
   return { ...combination, stats: { ...stats, diff } }
 }
 
+// `median` can be `undefined` during preview
 const getDiff = function (median, previousMedian) {
-  if (median === 0 || previousMedian === 0) {
+  if (median === undefined || median === 0 || previousMedian === 0) {
     return
   }
 

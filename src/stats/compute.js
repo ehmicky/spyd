@@ -31,17 +31,22 @@ export const computeStats = function (measures) {
 const QUANTILES_SIZE = 1e2
 const HISTOGRAM_SIZE = 1e2
 
-// Get stats not directly related to `measures`
+// Add stats not directly related to `measures`
 // `times` is the number of times `main()` was called
 // `loops` is the number of repeat loops
 // `repeat` is the average number of iterations inside those repeat loops
-export const addSideStats = function ({
+// When `samples` is `0` during preview, `stats` are `undefined`.
+export const getFinalStats = function ({
   stats,
   loops,
   times,
   samples,
   minLoopDuration,
 }) {
+  if (samples === 0) {
+    return {}
+  }
+
   const repeat = Math.round(times / loops)
   return { ...stats, loops, times, repeat, samples, minLoopDuration }
 }

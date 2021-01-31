@@ -13,6 +13,10 @@ const SUFFIX_REGEXP = /^([^a-z%]*)(.*)$/u
 
 // Add colors on `diff`
 export const addDiffColors = function (stat, statPretty, name) {
+  if (stat === undefined) {
+    return statPretty
+  }
+
   const getColor = STAT_COLORS[name]
 
   if (getColor === undefined) {

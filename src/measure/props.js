@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { addSideStats } from '../stats/compute.js'
+import { getFinalStats } from '../stats/compute.js'
 
 // Initialize some combination properties
 export const addInitProps = function (combination) {
@@ -38,6 +38,12 @@ export const getFinalProps = function ({
   samples,
   minLoopDuration,
 }) {
-  const statsA = addSideStats({ stats, loops, times, samples, minLoopDuration })
+  const statsA = getFinalStats({
+    stats,
+    loops,
+    times,
+    samples,
+    minLoopDuration,
+  })
   return { taskId, runnerId, systemId, stats: statsA }
 }

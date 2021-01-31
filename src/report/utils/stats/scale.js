@@ -2,7 +2,7 @@
 export const getScale = function (combinations, name, kind) {
   const measures = combinations
     .map((combination) => getMeasure(combination, name, kind))
-    .filter(isNotZero)
+    .filter(isNotEmpty)
 
   if (measures.length === 0) {
     return 1
@@ -31,8 +31,9 @@ const getMeasure = function ({ stats }, name, kind) {
 
 // Zero measures sometimes indicate a problem with the measure, so are not
 // good indicators for scales.
-const isNotZero = function (measure) {
-  return measure !== 0
+// `undefined` happens in preview mode if not-measured-yet.
+const isNotEmpty = function (measure) {
+  return measure !== 0 && measure !== undefined
 }
 
 // Possible scales for each unit kind.

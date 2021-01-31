@@ -40,12 +40,24 @@ const getCategory = function ({ combinations, id, idName }) {
   const medians = combinations
     .filter((combination) => combination[idName] === id)
     .map(getCombinationMedian)
+    .filter(isDefined)
+
+  if (medians.length === 0) {
+    return { id }
+  }
+
   const mean = getMean(medians)
   return { id, mean }
 }
 
 const getCombinationMedian = function ({ stats: { median } }) {
   return median
+}
+
+// `median` is `undefined` when in preview mode on combinations not measured yet
+// `category.mean` will be `undefined`, which is sorted last.
+const isDefined = function (median) {
+  return median !== undefined
 }
 
 // Add speed rank within each category for each combination

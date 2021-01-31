@@ -6,6 +6,7 @@
 export const getStatsDecimals = function (combinations, name, scale) {
   const measures = combinations
     .flatMap(({ stats }) => stats[name])
+    .filter(isDefined)
     .map((measure) => measure / scale)
 
   if (measures.every(Number.isInteger)) {
@@ -13,6 +14,11 @@ export const getStatsDecimals = function (combinations, name, scale) {
   }
 
   return getDecimals(measures)
+}
+
+// `undefined` happens in preview mode if not-measured-yet.
+const isDefined = function (measure) {
+  return measure !== undefined
 }
 
 const getDecimals = function (measures) {
