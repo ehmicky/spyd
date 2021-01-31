@@ -2,7 +2,7 @@ import { failOnProcessExit } from '../error/combination.js'
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 
-import { aggregatePreview, aggregateMeasuresEnd } from './aggregate.js'
+import { aggregatePreview, aggregateMeasures } from './aggregate.js'
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { getNextCombination } from './next.js'
 import { updateCombinations } from './update.js'
@@ -81,7 +81,7 @@ export const performMeasureLoop = async function ({
     combinations = updateCombinations(combinations, newCombinationB)
   }
 
-  const combinationsB = combinations.map(aggregateMeasuresEnd)
+  const combinationsB = combinations.map(aggregateMeasures)
 
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart

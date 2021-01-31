@@ -39,7 +39,7 @@ export const aggregatePreview = async function ({
   }
 
   const aggregateStart = getAggregateStart()
-  const newCombinationA = aggregateMeasuresEnd(newCombination)
+  const newCombinationA = aggregateMeasures(newCombination)
   await previewCombinations({
     combinations,
     newCombination: newCombinationA,
@@ -51,7 +51,7 @@ export const aggregatePreview = async function ({
 }
 
 // Performed both incrementally, and once at the end.
-export const aggregateMeasuresEnd = function ({
+export const aggregateMeasures = function ({
   measures,
   bufferedMeasures,
   ...combination
