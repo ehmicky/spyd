@@ -2,6 +2,8 @@ import camelcase from 'camelcase'
 
 import { checkObject } from '../config/check.js'
 import { UserError } from '../error/main.js'
+import { cleanObject } from '../utils/clean.js'
+import { pick } from '../utils/pick.js'
 
 // Retrieve plugin configuration object.
 // We separate selecting and configuring plugins to make it easier to
@@ -15,9 +17,17 @@ import { UserError } from '../error/main.js'
 //  - works unescaped with YAML, JSON and JavaScript
 //  - works with CLI flags without confusion
 //  - introduces only one level of indentation
-export const addPluginsConfig = function ({ plugins, config, configPrefix }) {
+// Some configuration properties can be overridden by plugins, depending on the
+// plugin types. For example `output` can be overridden for a specific reporter
+// using `reporterName.output`.
+export const addPluginsConfig = function ({
+  plugins,
+  config,
+  configPrefix,
+  configProps,
+}) {
   return plugins.map((plugin) =>
-    addPluginConfig({ plugin, config, configPrefix }),
+    addPluginConfig({ plugin, config, configPrefix, configProps }),
   )
 }
 
@@ -26,9 +36,11 @@ const addPluginConfig = function ({
   plugin: { id },
   config,
   configPrefix,
+  configProps,
 }) {
   const pluginConfig = getPluginConfig({ id, config, configPrefix })
-  return { ...plugin, config: pluginConfig }
+  const pluginConfigA = mergeTopConfig({ config, pluginConfig, configProps })
+  return { ...plugin, config: pluginConfigA }
 }
 
 const getPluginConfig = function ({ id, config, configPrefix }) {
@@ -57,4 +69,8 @@ const getConfigPropName = function ({ id, config, configPrefix }) {
   }
 
   return configPropName
+}
+
+const mergeTopConfig = function ({ config, pluginConfig, configProps }) {
+  return { ...pick(config, configProps), ...cleanObject(pluginConfig) }
 }

@@ -16,7 +16,15 @@ import { validatePlugins } from './validate.js'
 export const addPlugins = async function (config) {
   const pluginsConfigs = await Promise.all(
     PLUGIN_TYPES.map(
-      ({ type, varName, property, configPrefix, modulePrefix, builtins }) =>
+      ({
+        type,
+        varName,
+        property,
+        configPrefix,
+        modulePrefix,
+        builtins,
+        configProps,
+      }) =>
         getPluginsByType({
           config,
           type,
@@ -25,6 +33,7 @@ export const addPlugins = async function (config) {
           configPrefix,
           modulePrefix,
           builtins,
+          configProps,
         }),
     ),
   )
@@ -41,10 +50,16 @@ const getPluginsByType = async function ({
   configPrefix,
   modulePrefix,
   builtins,
+  configProps,
 }) {
   const ids = config[property]
   const plugins = await loadPlugins({ ids, type, modulePrefix, builtins })
-  const pluginsA = addPluginsConfig({ plugins, config, configPrefix })
+  const pluginsA = addPluginsConfig({
+    plugins,
+    config,
+    configPrefix,
+    configProps,
+  })
   validatePlugins(pluginsA, type)
   return [varName, pluginsA]
 }

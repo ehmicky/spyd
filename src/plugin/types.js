@@ -17,6 +17,8 @@ export const PLUGIN_TYPES = [
     modulePrefix: 'spyd-runner-',
     // Builtin plugins
     builtins: RUNNERS,
+    // Configuration properties which can be overridden by each plugin
+    configProps: ['tasks'],
   },
   {
     type: 'reporter',
@@ -25,6 +27,15 @@ export const PLUGIN_TYPES = [
     configPrefix: 'reporter',
     modulePrefix: 'spyd-reporter-',
     builtins: REPORTERS,
+    configProps: [
+      'output',
+      'insert',
+      'colors',
+      'showTitles',
+      'showDiff',
+      'showSystem',
+      'showMetadata',
+    ],
   },
   {
     type: 'store',
@@ -33,6 +44,7 @@ export const PLUGIN_TYPES = [
     configPrefix: 'store',
     modulePrefix: 'spyd-store-',
     builtins: STORES,
+    configProps: [],
   },
 ]
 

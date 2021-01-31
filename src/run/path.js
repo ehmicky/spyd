@@ -8,13 +8,12 @@ import { UserError } from '../error/main.js'
 // Can also use the default `.../benchmark/tasks.*`.
 // Also validate that the file exists.
 export const getTaskPath = async function ({
-  tasks,
-  runnerConfig: { tasks: taskPath = tasks },
+  runnerConfig: { tasks },
   runnerExtensions,
   cwd,
 }) {
-  if (taskPath !== undefined) {
-    return await getUserTaskPath(taskPath)
+  if (tasks !== undefined) {
+    return await getUserTaskPath(tasks)
   }
 
   const defaultTaskPath = await getDefaultTaskPath(cwd, runnerExtensions)
@@ -26,12 +25,12 @@ export const getTaskPath = async function ({
   return defaultTaskPath
 }
 
-const getUserTaskPath = async function (taskPath) {
-  if (!(await isFile(taskPath))) {
-    throw new UserError(`Tasks file does not exist: ${taskPath}`)
+const getUserTaskPath = async function (tasks) {
+  if (!(await isFile(tasks))) {
+    throw new UserError(`Tasks file does not exist: ${tasks}`)
   }
 
-  return taskPath
+  return tasks
 }
 
 // By default, we find the first `benchmark/tasks.*`.
