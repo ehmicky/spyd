@@ -15,7 +15,7 @@ export const printContent = async function (
   interactiveContent,
 ) {
   if (output === '-') {
-    return printToTerminal(interactiveContent)
+    return await printToTerminal(interactiveContent)
   }
 
   await writeFileContent(output, nonInteractiveContent)
