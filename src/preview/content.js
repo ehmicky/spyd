@@ -3,15 +3,22 @@ import { stderr } from 'process'
 import { goodColor, separatorColor } from '../report/utils/colors.js'
 
 // Retrieve preview content
-export const getContent = function ({ percentage, time, description, report }) {
+export const getContent = function ({
+  percentage,
+  time,
+  description = '',
+  report,
+}) {
   const screenWidth = getScreenWidth(stderr)
   const separator = separatorColor(LINE_CHAR.repeat(screenWidth))
   const progressBar = getProgressBar({ percentage, time, screenWidth })
-  const descriptionStr = getDescription(description)
 
   return `${report}${separator}
 
- ${time}${progressBar}${descriptionStr}`
+ ${time}${progressBar}
+
+ ${description}
+`
 }
 
 const getScreenWidth = function ({ columns = DEFAULT_WIDTH }) {
@@ -40,11 +47,3 @@ const PADDING_WIDTH = 4
 const FILL_CHAR = goodColor('\u2588')
 const VOID_CHAR = separatorColor('\u2591')
 const LINE_CHAR = separatorColor('\u2500')
-
-const getDescription = function (description) {
-  if (description === undefined) {
-    return ''
-  }
-
-  return `\n\n  ${description}`
-}
