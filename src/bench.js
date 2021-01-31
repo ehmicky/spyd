@@ -1,7 +1,6 @@
 import { getCombinations } from './combination/main.js'
 import { getInitResult, getFinalResult } from './measure/init.js'
 import { measureBenchmark } from './measure/main.js'
-import { aggregateMeasuresEnd } from './sample/aggregate.js'
 
 // Perform a new benchmark
 export const performBenchmark = async function (config, results) {
@@ -11,9 +10,8 @@ export const performBenchmark = async function (config, results) {
     combinations,
     config,
   )
-  const combinationsB = combinationsA.map(aggregateMeasuresEnd)
   const { rawResult, result } = getFinalResult(
-    combinationsB,
+    combinationsA,
     initResult,
     results,
   )

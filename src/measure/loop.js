@@ -1,5 +1,6 @@
 import { failOnProcessExit } from '../error/combination.js'
 import { setBenchmarkStart } from '../preview/set.js'
+import { aggregateMeasuresEnd } from '../sample/aggregate.js'
 import { measureSample } from '../sample/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
@@ -73,12 +74,14 @@ export const performMeasureLoop = async function ({
     )
   }
 
+  const combinationsA = combinations.map(aggregateMeasuresEnd)
+
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.combination
 
-  return combinations
+  return combinationsA
 }
 
 // Task init, retrieving only task and step identifiers
