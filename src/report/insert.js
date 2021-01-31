@@ -5,6 +5,8 @@ import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
 
+import { getNonInteractiveContent, hasContent } from './content.js'
+
 // Use the `insert` configuration property to insert content inside a file.
 // We insert between any two lines with the tokens "spyd-start" and "spyd-end".
 // This:
@@ -13,13 +15,14 @@ import { UserError } from '../error/main.js'
 //  - does not require any parsing.
 //  - does not require wrapping inserted content (e.g. in a code block).
 //    This should be done by reporters.
-export const insertContent = async function ({ insert }, content) {
-  if (insert === undefined) {
+export const insertContent = async function (content, { insert, colors }) {
+  if (!hasContent(content) || insert === '') {
     return
   }
 
+  const contentA = getNonInteractiveContent(content, colors)
   const fileContent = await getFileContent(insert)
-  const fileContentA = insertToFile(fileContent, content, insert)
+  const fileContentA = insertToFile(fileContent, contentA, insert)
   await writeFileContent(insert, fileContentA)
 }
 

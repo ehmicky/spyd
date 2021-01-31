@@ -8,26 +8,20 @@ import stripAnsi from 'strip-ansi'
 // Interactive output/terminal have different default values for some report
 // config properties, so we compute two different contents: interactive and
 // non-interactive.
-export const getContents = function (content, { colors }) {
-  const nonInteractiveContent = getNonInteractiveContent(content, colors)
-  const interactiveContent = getInteractiveContent(content, colors)
-  return { interactiveContent, nonInteractiveContent }
+export const getNonInteractiveContent = function (content, colors = false) {
+  return getContent(content, colors)
 }
 
-const getNonInteractiveContent = function (content, colors = false) {
-  return normalizeContent(content, colors)
-}
-
-const getInteractiveContent = function (
+export const getInteractiveContent = function (
   content,
   colors = isInteractive(stdout),
 ) {
-  return normalizeContent(content, colors)
+  return getContent(content, colors)
 }
 
 // Reporters should always assume `colors` are true, but the core remove this
 // from the returned content if not.
-const normalizeContent = function (content, colors) {
+const getContent = function (content, colors) {
   const contentA = handleColors(content, colors)
   const contentB = trimContent(contentA)
   return contentB
@@ -49,3 +43,9 @@ const trimContent = function (content) {
 }
 
 const NEWLINE_REGEXP = /(^\n*)|(\n*$)/gu
+
+// A reporter can choose not to return anything, in which case `output` and
+// `insert` are not used.
+export const hasContent = function (content) {
+  return typeof content === 'string' && content.trim() !== ''
+}

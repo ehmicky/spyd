@@ -5,28 +5,37 @@ import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
 
+import {
+  getInteractiveContent,
+  getNonInteractiveContent,
+  hasContent,
+} from './content.js'
 import { addPadding } from './utils/indent.js'
 
 // Print result to file or to terminal based on the `output` configuration
 // property
-export const printContent = async function (
-  { output },
-  nonInteractiveContent,
-  interactiveContent,
-) {
-  if (output === '-') {
-    return await printToTerminal(interactiveContent)
+export const printContent = async function (content, { output, colors }) {
+  if (!hasContent(content) || output === '') {
+    return
   }
 
-  await writeFileContent(output, nonInteractiveContent)
+  if (output === undefined) {
+    await printToTerminal(content, colors)
+    return
+  }
+
+  await writeFileContent(content, output, colors)
 }
 
-const printToTerminal = async function (interactiveContent) {
+const printToTerminal = async function (content, colors) {
+  const interactiveContent = getInteractiveContent(content, colors)
   const interactiveContentA = addPadding(interactiveContent)
   await promisify(stdout.write.bind(stdout))(interactiveContentA)
 }
 
-const writeFileContent = async function (output, nonInteractiveContent) {
+const writeFileContent = async function (content, output, colors) {
+  const nonInteractiveContent = getNonInteractiveContent(content, colors)
+
   try {
     await writeFileAtomic(output, nonInteractiveContent)
   } catch (error) {

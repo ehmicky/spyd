@@ -18,7 +18,7 @@ export const resolveConfigPaths = function (config, cwd) {
 // Resolve all file path configuration properties.
 // Done recursively since some are objects.
 const resolveConfigProp = function (propName, value, cwd) {
-  if (!PATH_CONFIG_PROPS.has(propName) || value === undefined) {
+  if (!PATH_CONFIG_PROPS.has(propName) || value === undefined || value === '') {
     return value
   }
 

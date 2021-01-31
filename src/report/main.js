@@ -1,5 +1,4 @@
 import { callReportFunc } from './call.js'
-import { getContents } from './content.js'
 import { insertContent } from './insert.js'
 import { printContent } from './print.js'
 
@@ -26,22 +25,8 @@ const useReporter = async function ({
     titles,
   })
 
-  if (!hasContent(content)) {
-    return
-  }
-
-  const { nonInteractiveContent, interactiveContent } = getContents(
-    content,
-    reporterConfig,
-  )
   await Promise.all([
-    printContent(reporterConfig, nonInteractiveContent, interactiveContent),
-    insertContent(reporterConfig, nonInteractiveContent),
+    printContent(content, reporterConfig),
+    insertContent(content, reporterConfig),
   ])
-}
-
-// A reporter can choose not to return anything, in which case `output` and
-// `insert` are not used.
-const hasContent = function (content) {
-  return typeof content === 'string' && content.trim() !== ''
 }

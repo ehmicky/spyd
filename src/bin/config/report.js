@@ -24,7 +24,8 @@ For example --reportJson.output is like --output but only for the json reporter.
     string: true,
     requiresArg: true,
     describe: `Output the result to the specified file.
-Default: "-" (stdout).`,
+Can be "" for silent output.
+Default: print to stdout.`,
   },
   insert: {
     group: REPORT,

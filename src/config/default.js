@@ -35,7 +35,7 @@ export const DEFAULT_CONFIG = {
   save: false,
   limit: [],
   titles: {},
-  output: '-',
+  insert: '',
   showTitles: false,
   include: [],
   exclude: [],
