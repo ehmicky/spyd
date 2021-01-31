@@ -19,11 +19,12 @@ export const performExec = async function (config) {
 export const execCombination = async function (combination, { cwd }) {
   printCombinationIds(combination)
 
-  await measureBenchmark(
-    [combination],
-    { cwd, duration: 1 },
-    { exec: true, previewConfig: { quiet: true } },
-  )
+  await measureBenchmark([combination], {
+    cwd,
+    duration: 1,
+    exec: true,
+    previewConfig: { quiet: true },
+  })
 }
 
 // Print the ids of each combination before running them, so users can

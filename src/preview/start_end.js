@@ -14,7 +14,7 @@ export const startPreview = async function ({
   const previewState = {}
 
   if (quiet) {
-    return { previewState, previewConfig }
+    return { previewState }
   }
 
   await setPreviewReport(combinations, { previewState, previewConfig })
@@ -25,7 +25,7 @@ export const startPreview = async function ({
 
   const previewId = await startUpdate(previewState, benchmarkDuration)
   setDelayedDescription(previewState, START_DESCRIPTION)
-  return { previewState, previewConfig, previewId }
+  return { previewState, previewId }
 }
 
 const getBenchmarkDuration = function (combinations, duration) {
