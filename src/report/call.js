@@ -5,7 +5,8 @@ import omit from 'omit.js'
 
 import { showResultTitles } from '../title/show.js'
 
-// Call `reporter.report()`
+// Call `reporter.report()`.
+// It can be async, including during results preview.
 export const callReportFunc = async function ({
   reportFunc,
   result,
