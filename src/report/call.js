@@ -37,7 +37,7 @@ export const callReportFunc = async function ({
 // Differences are mostly useful during interaction.
 // In results persisted in files, they are mostly confusing.
 const getDefaultShowDiff = function (output) {
-  return output === '-' && isInteractive(stdout)
+  return output === undefined && isInteractive(stdout)
 }
 
 // Remove some result properties unless some reporterConfig properties are
