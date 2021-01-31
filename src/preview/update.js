@@ -11,7 +11,7 @@ const pClearScreenDown = promisify(clearScreenDown)
 
 // Print preview
 export const updatePreview = async function (previewState, benchmarkDuration) {
-  await clearScreen(1)
+  await clearPreview()
   const previewContent = getPreviewContent(previewState, benchmarkDuration)
   await writeToStderr(previewContent)
 }
@@ -40,13 +40,8 @@ export const clearPreviewInit = async function () {
   await writeToStderr(newlines)
 }
 
-// The final screen cleaning prints one less empty row.
-export const clearPreviewFinal = async function () {
-  await clearScreen(0)
-}
-
-const clearScreen = async function (row) {
-  await pCursorTo(stderr, 0, row)
+export const clearPreview = async function () {
+  await pCursorTo(stderr, 0, 0)
   await pClearScreenDown(stderr)
 }
 

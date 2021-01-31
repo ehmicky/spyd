@@ -2,7 +2,7 @@ import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
 import { setPreviewReport } from './report.js'
 import { setDelayedDescription } from './set.js'
-import { updatePreview, clearPreviewInit, clearPreviewFinal } from './update.js'
+import { updatePreview, clearPreviewInit, clearPreview } from './update.js'
 
 // Start preview
 export const startPreview = async function ({
@@ -60,6 +60,6 @@ export const endPreview = async function (previewId) {
   }
 
   clearInterval(previewId)
-  await clearPreviewFinal()
+  await clearPreview()
   showCursor()
 }
