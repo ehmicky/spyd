@@ -1,9 +1,10 @@
 import now from 'precise-now'
 
-import { updateCombinations } from '../measure/update.js'
 import { setPreviewReport } from '../preview/report.js'
 import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
+
+import { updateCombinations } from './update.js'
 
 // Aggregate `bufferedMeasures` to `measures`.
 // The `stats` need a single `measures` array, so they are computed right after.

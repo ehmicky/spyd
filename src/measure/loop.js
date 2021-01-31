@@ -1,8 +1,8 @@
 import { failOnProcessExit } from '../error/combination.js'
 import { setBenchmarkStart } from '../preview/set.js'
-import { aggregateMeasures, aggregateMeasuresEnd } from '../sample/aggregate.js'
 import { measureSample } from '../sample/main.js'
 
+import { aggregateMeasures, aggregateMeasuresEnd } from './aggregate.js'
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { getNextCombination } from './next.js'
 import { updateCombinations } from './update.js'
