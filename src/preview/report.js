@@ -8,12 +8,18 @@ import { reportPreview } from '../report/main.js'
 //  - Try to limit the amount of flicker between previews
 //     - For example, all combinations should be shown even if not measured yet.
 //     - And the size of table should not change between previews.
+// When uncalibrated, we skip it since no stats would be reported anyway.
 export const previewCombinations = async function ({
   combinations,
   newCombination,
+  newCombination: { calibrated },
   previewState,
   previewConfig,
 }) {
+  if (!calibrated) {
+    return
+  }
+
   const combinationsA = updateCombinations(combinations, newCombination)
   await setPreviewReport({
     combinations: combinationsA,
