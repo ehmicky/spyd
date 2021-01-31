@@ -20,23 +20,20 @@ import { mergeSort } from '../stats/merge.js'
 export const aggregateMeasures = function ({
   measures,
   bufferedMeasures,
-  sampleMeasures,
   stats,
   aggregateCountdown,
   sampleDurationLast,
   calibrated,
 }) {
-  const bufferedMeasuresA = [...bufferedMeasures, sampleMeasures]
-
   if (calibrated && aggregateCountdown > 0 && measures.length !== 0) {
     const aggregateCountdownA = aggregateCountdown - sampleDurationLast
-    return [measures, bufferedMeasuresA, stats, aggregateCountdownA]
+    return [measures, bufferedMeasures, stats, aggregateCountdownA]
   }
 
   const aggregateStart = getAggregateStart()
   const { measures: measuresA, stats: statsA } = aggregateBuffer(
     measures,
-    bufferedMeasuresA,
+    bufferedMeasures,
   )
   const aggregateCountdownB = getAggregateCountdown(aggregateStart)
   return [measuresA, [], statsA, aggregateCountdownB]
