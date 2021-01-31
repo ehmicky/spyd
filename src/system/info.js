@@ -14,7 +14,7 @@ import { groupBy } from '../utils/group.js'
 // this becomes several `systems`. We persist the `systems` array directly so
 // that all results have the same shape in both our logic and reporters' logic.
 export const getSystems = function ({
-  combinations: [{ systemId }],
+  systemId,
   systemVersions,
   envInfo: { commit, branch, tag, pr, prBranch, buildUrl },
 }) {
