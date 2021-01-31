@@ -47,11 +47,13 @@ export const aggregateMeasures = async function ({
 
 // At the end, if there are still some pending `bufferedMeasures`, we aggregate
 // them
-export const aggregateMeasuresEnd = function (combination) {
-  const { measures, bufferedMeasures } = combination
-
+export const aggregateMeasuresEnd = function ({
+  measures,
+  bufferedMeasures,
+  ...combination
+}) {
   if (bufferedMeasures.length === 0) {
-    return combination
+    return { ...combination, measures, bufferedMeasures }
   }
 
   addBufferedMeasures(measures, bufferedMeasures)
