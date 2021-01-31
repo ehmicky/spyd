@@ -1,4 +1,5 @@
 import { addSampleMeasures } from './add.js'
+import { aggregateMeasures } from './aggregate.js'
 import { calibrateReset, getCalibrated } from './calibrate.js'
 import { getRepeat } from './repeat.js'
 
@@ -15,6 +16,9 @@ export const handleReturnValue = function (
     repeat,
     calibrated,
     minLoopDuration,
+    aggregateCountdown,
+    sampleDurationLast,
+    stats,
   },
   { measures: sampleMeasures },
 ) {
@@ -56,9 +60,23 @@ export const handleReturnValue = function (
     allSamples: allSamplesA,
   })
 
-  return {
+  const {
+    measures: measuresB,
+    bufferedMeasures: bufferedMeasuresC,
+    aggregateCountdown: aggregateCountdownA,
+    stats: statsA,
+  } = aggregateMeasures({
     measures: measuresA,
     bufferedMeasures: bufferedMeasuresB,
+    aggregateCountdown,
+    stats,
+    sampleDurationLast,
+    calibrated: calibratedA,
+  })
+
+  return {
+    measures: measuresB,
+    bufferedMeasures: bufferedMeasuresC,
     samples: samplesB,
     allSamples: allSamplesA,
     loops: loopsB,
@@ -68,5 +86,7 @@ export const handleReturnValue = function (
     repeatLast: repeat,
     calibrated: calibratedA,
     sampleMedian,
+    aggregateCountdown: aggregateCountdownA,
+    stats: statsA,
   }
 }
