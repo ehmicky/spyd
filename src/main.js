@@ -1,6 +1,6 @@
 import { checkLimits } from './compare/limit.js'
 import { getConfig } from './config/main.js'
-import { performExec } from './exec.js'
+import { performExec } from './exec/main.js'
 import { performBenchmark } from './measure/bench.js'
 import { report } from './report/main.js'
 import { addToStore } from './store/add.js'
