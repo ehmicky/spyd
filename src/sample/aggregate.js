@@ -53,17 +53,15 @@ export const aggregateMeasures = function ({
 
 // At the end, if there are still some pending `bufferedMeasures`, we aggregate
 // them
-export const aggregateMeasuresEnd = function ({
-  measures,
-  bufferedMeasures,
-  stats,
-}) {
+export const aggregateMeasuresEnd = function (combination) {
+  const { measures, bufferedMeasures } = combination
+
   if (bufferedMeasures.length === 0) {
-    return stats
+    return combination
   }
 
-  const { stats: statsA } = aggregateBuffer(measures, bufferedMeasures)
-  return statsA
+  const { stats } = aggregateBuffer(measures, bufferedMeasures)
+  return { ...combination, stats }
 }
 
 const aggregateBuffer = function (measures, bufferedMeasures) {
