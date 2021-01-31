@@ -3,7 +3,6 @@ import now from 'precise-now'
 import { combinationHasErrored } from '../error/combination.js'
 import { sendAndReceive } from '../process/send.js'
 
-import { aggregateMeasures } from './aggregate.js'
 import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
@@ -22,9 +21,7 @@ export const measureSample = async function (combination) {
   }
 
   const newProps = handleReturnValue(newCombination, returnValue)
-  const newCombinationA = { ...newCombination, ...newProps }
-  const newPropsA = aggregateMeasures(newCombinationA)
-  return { ...newCombinationA, ...newPropsA, measureDuration }
+  return { ...newCombination, ...newProps, measureDuration }
 }
 
 // `measureDuration` is how long it takes to get a single sample's results.

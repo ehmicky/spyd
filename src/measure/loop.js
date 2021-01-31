@@ -1,5 +1,6 @@
 import { failOnProcessExit } from '../error/combination.js'
 import { setBenchmarkStart } from '../preview/set.js'
+import { aggregateMeasures } from '../sample/aggregate.js'
 import { measureSample } from '../sample/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
@@ -64,11 +65,14 @@ export const performMeasureLoop = async function ({
 
     // eslint-disable-next-line no-await-in-loop
     const newCombination = await eMeasureSample(combination, stopState)
-    const newCombinationA = addSampleDuration(newCombination, sampleStart)
+    const newProps = aggregateMeasures(newCombination)
+    const newCombinationA = { ...newCombination, ...newProps }
+
+    const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
     combinations = updateCombinations(
       combinations,
-      newCombinationA,
+      newCombinationB,
       combination,
     )
   }

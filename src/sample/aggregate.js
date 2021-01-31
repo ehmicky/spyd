@@ -105,4 +105,4 @@ const getAggregateCountdown = function (aggregateStart) {
 // A lower value spends less duration aggregating, resulting in less responsive
 // preview and less precise `stats.median`.
 const AGGREGATE_PERCENTAGE = 0.1
-const AGGREGATE_TIMES = 1 / AGGREGATE_PERCENTAGE - 1
+const AGGREGATE_TIMES = 1 / AGGREGATE_PERCENTAGE
