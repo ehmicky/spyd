@@ -19,16 +19,14 @@ export const bench = async function (configFlags) {
 
   try {
     const results = await listAll(configB)
-    const { result, stopped } = await performBenchmark(configB)
-    const resultA = await addToStore({
+    const { rawResult, result, stopped } = await performBenchmark(
+      configB,
       results,
-      result,
-      config: configB,
-      stopped,
-    })
-    await report(resultA, configB)
-    checkLimits(resultA, configB)
-    return resultA
+    )
+    await addToStore(rawResult, configB, stopped)
+    await report(result, configB)
+    checkLimits(result, configB)
+    return result
   } finally {
     await endStore(configB)
   }
