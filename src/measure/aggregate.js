@@ -26,11 +26,10 @@ export const aggregatePreview = async function ({
   previewState,
   previewConfig,
 }) {
-  if (!shouldAggregate({ calibrated, aggregateCountdown, measures })) {
-    return {
-      ...newCombination,
-      aggregateCountdown: aggregateCountdown - sampleDurationLast,
-    }
+  const aggregateCountdownA = aggregateCountdown - sampleDurationLast
+
+  if (!shouldAggregate(calibrated, aggregateCountdownA, measures)) {
+    return { ...newCombination, aggregateCountdown: aggregateCountdownA }
   }
 
   const aggregateStart = getAggregateStart()
@@ -41,19 +40,15 @@ export const aggregatePreview = async function ({
     previewState,
     previewConfig,
   })
-  const aggregateCountdownA = getAggregateCountdown(aggregateStart)
-  return { ...newCombinationA, aggregateCountdown: aggregateCountdownA }
+  const aggregateCountdownB = getAggregateCountdown(aggregateStart)
+  return { ...newCombinationA, aggregateCountdown: aggregateCountdownB }
 }
 
 // We always recompute this:
 //  - During calibration to recompute the `stats.median`
 //  - At the beginning, or when `calibrateReset()` has just been called, so
 //    that there are some `measures` to compute the `stats.median`
-const shouldAggregate = function ({
-  calibrated,
-  aggregateCountdown,
-  measures,
-}) {
+const shouldAggregate = function (calibrated, aggregateCountdown, measures) {
   return aggregateCountdown <= 0 || !calibrated || measures.length === 0
 }
 
