@@ -1,7 +1,10 @@
 import { v4 as uuidv4 } from 'uuid'
 
+import { mergeResults } from '../normalize/merge.js'
 import { getSystems } from '../system/info.js'
 import { cleanObject } from '../utils/clean.js'
+
+import { getFinalProps } from './props.js'
 
 // Add metadata information to initial result
 export const getInitResult = function ({
@@ -14,4 +17,12 @@ export const getInitResult = function ({
   const systems = getSystems({ systemId, systemVersions, envInfo })
   const initResult = cleanObject({ id, timestamp, systems })
   return initResult
+}
+
+// Finalize result. Done either at the end, or before each preview.
+export const getFinalResult = function (combinations, initResult, results) {
+  const combinationsA = combinations.map(getFinalProps)
+  const rawResult = { ...initResult, combinations: combinationsA }
+  const result = mergeResults(rawResult, results)
+  return { rawResult, result }
 }
