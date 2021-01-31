@@ -1,4 +1,3 @@
-import { aggregateMeasures } from './aggregate.js'
 import { calibrateReset, getCalibrated } from './calibrate.js'
 import { normalizeSampleMeasures } from './normalize.js'
 import { getRepeat } from './repeat.js'
@@ -16,9 +15,6 @@ export const handleReturnValue = function (
     repeat,
     calibrated,
     minLoopDuration,
-    stats,
-    aggregateCountdown,
-    sampleDurationLast,
   },
   { measures: sampleMeasures },
 ) {
@@ -51,6 +47,7 @@ export const handleReturnValue = function (
     sampleMeasures: sampleMeasuresA,
     sampleMedian,
   } = normalizeSampleMeasures(sampleMeasures, repeat)
+  const bufferedMeasuresB = [...bufferedMeasuresA, sampleMeasuresA]
 
   const newRepeat = getRepeat({ repeat, sampleMedian, minLoopDuration })
   const calibratedA = getCalibrated({
@@ -60,23 +57,8 @@ export const handleReturnValue = function (
     allSamples: allSamplesA,
   })
 
-  const {
-    measures: measuresB,
-    bufferedMeasures: bufferedMeasuresB,
-    aggregateCountdown: aggregateCountdownA,
-    stats: statsA,
-  } = aggregateMeasures({
-    measures: measuresA,
-    bufferedMeasures: bufferedMeasuresA,
-    sampleMeasures: sampleMeasuresA,
-    aggregateCountdown,
-    stats,
-    sampleDurationLast,
-    calibrated: calibratedA,
-  })
-
   return {
-    measures: measuresB,
+    measures: measuresA,
     bufferedMeasures: bufferedMeasuresB,
     samples: samplesB,
     allSamples: allSamplesA,
@@ -87,7 +69,5 @@ export const handleReturnValue = function (
     repeatLast: repeat,
     calibrated: calibratedA,
     sampleMedian,
-    stats: statsA,
-    aggregateCountdown: aggregateCountdownA,
   }
 }

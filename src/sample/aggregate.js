@@ -18,36 +18,34 @@ import { mergeSort } from '../stats/merge.js'
 //  - At the beginning, or when `calibrateReset` has just been called, so
 //    that there are some `measures` to compute the `stats.median`
 export const aggregateMeasures = function ({
-  measures,
-  bufferedMeasures,
-  sampleMeasures,
-  stats,
-  aggregateCountdown,
-  sampleDurationLast,
-  calibrated,
+  combination,
+  combination: {
+    measures,
+    bufferedMeasures,
+    aggregateCountdown,
+    sampleDurationLast,
+    calibrated,
+  },
 }) {
-  const bufferedMeasuresA = [...bufferedMeasures, sampleMeasures]
-
   if (calibrated && aggregateCountdown > 0 && measures.length !== 0) {
     return {
-      measures,
-      bufferedMeasures: bufferedMeasuresA,
+      ...combination,
       aggregateCountdown: aggregateCountdown - sampleDurationLast,
-      stats,
     }
   }
 
   const aggregateStart = getAggregateStart()
-  const { measures: measuresA, stats: statsA } = aggregateBuffer(
+  const { measures: measuresA, stats } = aggregateBuffer(
     measures,
-    bufferedMeasuresA,
+    bufferedMeasures,
   )
   const aggregateCountdownA = getAggregateCountdown(aggregateStart)
   return {
+    ...combination,
     measures: measuresA,
     bufferedMeasures: [],
     aggregateCountdown: aggregateCountdownA,
-    stats: statsA,
+    stats,
   }
 }
 
