@@ -17,12 +17,12 @@ const addTimeUnits = function (secs, totalSecs) {
   const secsA = secs - minutes * SECS_TO_MINUTES
 
   if (totalSecs < SECS_TO_MINUTES * MINUTES_TO_HOURS) {
-    return `${padTime(minutes)}m:${padTime(secsA)}s`
+    return `${padTime(minutes)}m ${padTime(secsA)}s`
   }
 
   const hours = Math.floor(minutes / MINUTES_TO_HOURS)
   const minutesA = minutes - hours * MINUTES_TO_HOURS
-  return `${padTime(hours)}h:${padTime(minutesA)}m:${padTime(secsA)}s`
+  return `${padTime(hours)}h ${padTime(minutesA)}m ${padTime(secsA)}s`
 }
 
 const NANOSECS_TO_SECS = 1e9
