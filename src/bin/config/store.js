@@ -6,7 +6,6 @@ export const STORE_CONFIG = {
     group: STORE,
     string: true,
     array: true,
-    requiresArg: true,
     describe: `Module to save results.
 Can be specified several times.
 Built-in stores: file, http.

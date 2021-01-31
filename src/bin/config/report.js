@@ -7,7 +7,6 @@ export const REPORT_CONFIG = {
     alias: 'r',
     string: true,
     array: true,
-    requiresArg: true,
     describe: `Modules to report the result.
 Can be specified several times.
 Built-in reporters: silent.

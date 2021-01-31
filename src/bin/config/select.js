@@ -8,7 +8,6 @@ export const SELECT_CONFIG = {
     alias: 'n',
     string: true,
     array: true,
-    requiresArg: true,
     describe: `Select only specific combinations.
 The value is a space-separated list of identifiers to select.
 Those can be the identifiers of any task, runner, system or variation.
@@ -48,7 +47,6 @@ By default, all combinations are included.`,
     alias: 'x',
     string: true,
     array: true,
-    requiresArg: true,
     describe: `Exclude specific combinations.
 The syntax is the same as the "include" configuration property.
 "exclude" has priority over "include".

@@ -16,7 +16,6 @@ The default file {extension} depends on the runner.`,
     group: TASKS,
     string: true,
     array: true,
-    requiresArg: true,
     describe: `Tasks' programming language or platform.
 Can be specified several times.
 Built-in runners: node, cli.
