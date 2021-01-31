@@ -16,8 +16,8 @@ export const addSampleDuration = function (combination, sampleStart) {
 
   return {
     ...combination,
-    totalDuration,
     sampleDurationLast,
+    totalDuration,
     sampleDurationMean,
   }
 }
