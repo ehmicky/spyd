@@ -54,17 +54,9 @@ export const aggregateMeasuresEnd = function (combination) {
     return combination
   }
 
-  const { measures: measuresA, stats } = aggregateBuffer(
-    measures,
-    bufferedMeasures,
-  )
-  return { ...combination, measures: measuresA, bufferedMeasures: [], stats }
-}
-
-const aggregateBuffer = function (measures, bufferedMeasures) {
   addBufferedMeasures(measures, bufferedMeasures)
   const stats = computeStats(measures)
-  return { measures, stats }
+  return { ...combination, measures, bufferedMeasures: [], stats }
 }
 
 // Add all not-merged-yet measures from the last samples.
