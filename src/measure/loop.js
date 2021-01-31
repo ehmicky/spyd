@@ -69,6 +69,19 @@ export const performMeasureLoop = async function ({
     const newCombination = await eMeasureSample(combination, stopState)
     const newCombinationA = aggregateMeasures({ combination: newCombination })
 
+    const combinationsA = updateCombinations(
+      combinations,
+      newCombinationA,
+      combination,
+    )
+    // eslint-disable-next-line no-await-in-loop
+    await previewCombinations({
+      combinations: combinationsA,
+      newCombination: newCombinationA,
+      previewState,
+      previewConfig,
+    })
+
     const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
     combinations = updateCombinations(
@@ -76,24 +89,16 @@ export const performMeasureLoop = async function ({
       newCombinationB,
       combination,
     )
-
-    // eslint-disable-next-line no-await-in-loop
-    await previewCombinations({
-      combinations,
-      newCombination: newCombinationB,
-      previewState,
-      previewConfig,
-    })
   }
 
-  const combinationsA = combinations.map(aggregateMeasuresEnd)
+  const combinationsB = combinations.map(aggregateMeasuresEnd)
 
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.combination
 
-  return combinationsA
+  return combinationsB
 }
 
 // Task init, retrieving only task and step identifiers
