@@ -20,12 +20,12 @@ export const startPreview = async function ({
     return { previewState }
   }
 
+  await setPreviewReport(combinations, { previewState, previewConfig })
+  const benchmarkDuration = getBenchmarkDuration(combinations, duration)
+
   hideCursor()
   await clearPreviewInit()
 
-  await setPreviewReport(combinations, { previewState, previewConfig })
-
-  const benchmarkDuration = getBenchmarkDuration(combinations, duration)
   const previewId = await startUpdate(previewState, benchmarkDuration)
   setDelayedDescription(previewState, START_DESCRIPTION)
   return { previewState, previewId }
