@@ -35,11 +35,13 @@ const HISTOGRAM_SIZE = 1e2
 // `times` is the number of times `main()` was called
 // `loops` is the number of repeat loops
 // `repeat` is the average number of iterations inside those repeat loops
-// `stats` is `undefined` during preview:
+// `stats` is `undefined`:
 //   - When not measured yet (`samples` `0`)
 //   - On uncalibrated stats because they:
 //      - Are eventually reset, which create confusion for stats like min or max
 //      - Change a lot, creating flicker
+//   - This happens both during preview or during the final report if measuring
+//     was stopped
 export const getFinalStats = function ({
   stats,
   calibrated,
