@@ -1,5 +1,7 @@
 import now from 'precise-now'
 
+import { updateCombinations } from '../measure/update.js'
+import { setPreviewReport } from '../preview/report.js'
 import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
 
@@ -17,7 +19,7 @@ import { mergeSort } from '../stats/merge.js'
 //  - During calibration to recompute the `stats.median`
 //  - At the beginning, or when `calibrateReset` has just been called, so
 //    that there are some `measures` to compute the `stats.median`
-export const aggregateMeasures = function ({
+export const aggregateMeasures = async function ({
   combination,
   combination: {
     measures,
@@ -26,6 +28,9 @@ export const aggregateMeasures = function ({
     sampleDurationLast,
     calibrated,
   },
+  combinations,
+  previewState,
+  previewConfig,
 }) {
   if (calibrated && aggregateCountdown > 0 && measures.length !== 0) {
     return {
@@ -39,14 +44,20 @@ export const aggregateMeasures = function ({
     measures,
     bufferedMeasures,
   )
-  const aggregateCountdownA = getAggregateCountdown(aggregateStart)
-  return {
+  const newCombination = {
     ...combination,
     measures: measuresA,
     bufferedMeasures: [],
-    aggregateCountdown: aggregateCountdownA,
     stats,
   }
+  await previewCombinations({
+    combinations,
+    newCombination,
+    previewState,
+    previewConfig,
+  })
+  const aggregateCountdownA = getAggregateCountdown(aggregateStart)
+  return { ...newCombination, aggregateCountdown: aggregateCountdownA }
 }
 
 // At the end, if there are still some pending `bufferedMeasures`, we aggregate
@@ -94,3 +105,14 @@ const getAggregateCountdown = function (aggregateStart) {
 // A lower value spends less duration aggregating, resulting in less responsive
 // preview and less precise `stats.median`.
 const AGGREGATE_PERCENTAGE = 0.1
+
+// After each new stats, preview them
+const previewCombinations = async function ({
+  combinations,
+  newCombination,
+  previewState,
+  previewConfig,
+}) {
+  const combinationsA = updateCombinations(combinations, newCombination)
+  await setPreviewReport(combinationsA, { previewState, previewConfig })
+}
