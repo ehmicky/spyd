@@ -2,12 +2,12 @@ import isPlainObj from 'is-plain-obj'
 
 // Deeply remove `undefined` values in an object
 export const cleanObject = function (obj) {
-  if (!isPlainObj(obj)) {
-    return obj
-  }
-
   if (Array.isArray(obj)) {
     return obj.map(cleanObject)
+  }
+
+  if (!isPlainObj(obj)) {
+    return obj
   }
 
   return Object.fromEntries(
