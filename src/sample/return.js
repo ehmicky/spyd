@@ -16,9 +16,9 @@ export const handleReturnValue = function (
     repeat,
     calibrated,
     minLoopDuration,
+    stats,
     aggregateCountdown,
     sampleDurationLast,
-    stats,
   },
   { measures: sampleMeasures },
 ) {
@@ -62,7 +62,7 @@ export const handleReturnValue = function (
 
   const {
     measures: measuresB,
-    bufferedMeasures: bufferedMeasuresC,
+    bufferedMeasures: bufferedMeasuresB,
     aggregateCountdown: aggregateCountdownA,
     stats: statsA,
   } = aggregateMeasures({
@@ -77,7 +77,7 @@ export const handleReturnValue = function (
 
   return {
     measures: measuresB,
-    bufferedMeasures: bufferedMeasuresC,
+    bufferedMeasures: bufferedMeasuresB,
     samples: samplesB,
     allSamples: allSamplesA,
     loops: loopsB,
@@ -87,7 +87,7 @@ export const handleReturnValue = function (
     repeatLast: repeat,
     calibrated: calibratedA,
     sampleMedian,
-    aggregateCountdown: aggregateCountdownA,
     stats: statsA,
+    aggregateCountdown: aggregateCountdownA,
   }
 }

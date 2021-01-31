@@ -21,10 +21,10 @@ export const aggregateMeasures = function ({
   measures,
   bufferedMeasures,
   sampleMeasures,
+  stats,
   aggregateCountdown,
   sampleDurationLast,
   calibrated,
-  stats,
 }) {
   const bufferedMeasuresA = [...bufferedMeasures, sampleMeasures]
 
