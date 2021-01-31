@@ -6,14 +6,12 @@ import { measureBenchmark } from './measure/main.js'
 export const performBenchmark = async function (config, results) {
   const { combinations, systemVersions } = await getCombinations(config)
   const initResult = getInitResult({ combinations, systemVersions, config })
-  const {
-    combinations: combinationsA,
-    stopped,
-  } = await measureBenchmark(combinations, config, {
-    initResult,
-    results,
-    exec: false,
-  })
+  const { quiet, cwd, duration, reporters, titles } = config
+  const { combinations: combinationsA, stopped } = await measureBenchmark(
+    combinations,
+    { quiet, cwd, duration, previewConfig: { reporters, titles } },
+    { initResult, results, exec: false },
+  )
   const { rawResult, result } = getFinalResult(
     combinationsA,
     initResult,

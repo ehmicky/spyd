@@ -16,6 +16,7 @@ export const spawnAndMeasure = async function ({
   origin,
   duration,
   cwd,
+  previewConfig,
   exec,
   stopState,
   previewState,
@@ -31,6 +32,7 @@ export const spawnAndMeasure = async function ({
     return await stopOrMeasure({
       combinations: combinationsA,
       duration,
+      previewConfig,
       exec,
       stopState,
       previewState,
@@ -44,6 +46,7 @@ export const spawnAndMeasure = async function ({
 const stopOrMeasure = async function ({
   combinations,
   duration,
+  previewConfig,
   exec,
   stopState,
   previewState,
@@ -60,6 +63,7 @@ const stopOrMeasure = async function ({
       measureAllCombinations({
         combinations,
         duration,
+        previewConfig,
         exec,
         previewState,
         stopState,
@@ -74,6 +78,7 @@ const stopOrMeasure = async function ({
 const measureAllCombinations = async function ({
   combinations,
   duration,
+  previewConfig,
   exec,
   previewState,
   stopState,
@@ -82,6 +87,7 @@ const measureAllCombinations = async function ({
   const combinationsB = await performMeasureLoop({
     combinations: combinationsA,
     duration,
+    previewConfig,
     exec,
     previewState,
     stopState,

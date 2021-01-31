@@ -5,6 +5,7 @@ import { measureSample } from '../sample/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { getNextCombination } from './next.js'
+import { previewCombinations } from './preview.js'
 
 // Run samples to measure each combination.
 // We ensure combinations are never measured at the same time
@@ -34,6 +35,7 @@ import { getNextCombination } from './next.js'
 export const performMeasureLoop = async function ({
   combinations,
   duration,
+  previewConfig,
   exec,
   previewState,
   stopState,
@@ -72,6 +74,14 @@ export const performMeasureLoop = async function ({
       newCombinationA,
       combination,
     )
+
+    // eslint-disable-next-line no-await-in-loop
+    await previewCombinations({
+      combinations,
+      newCombination: newCombinationA,
+      previewState,
+      previewConfig,
+    })
   }
 
   const combinationsA = combinations.map(aggregateMeasuresEnd)

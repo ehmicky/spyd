@@ -3,14 +3,14 @@ import { insertContents } from './insert.js'
 import { printContents, getPreviewReport } from './print.js'
 
 // Report final results
-export const report = async function (result, config) {
-  const contents = await getContents(result, config)
+export const report = async function (result, { reporters, titles }) {
+  const contents = await getContents(result, { reporters, titles })
   await Promise.all([printContents(contents), insertContents(contents)])
 }
 
 // Report preview results
-export const reportPreview = async function (result, config) {
-  const contents = await getContents(result, config)
+export const reportPreview = async function (result, { reporters, titles }) {
+  const contents = await getContents(result, { reporters, titles })
   const previewReport = getPreviewReport(contents)
   return previewReport
 }

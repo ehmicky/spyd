@@ -9,14 +9,16 @@ import { getStopState } from './stop.js'
 // Also used when starting combinations to retrieve their tasks and steps.
 export const measureBenchmark = async function (
   combinations,
-  { duration, quiet, cwd },
-  { exec },
+  { duration, quiet, cwd, previewConfig },
+  { exec, initResult, results },
 ) {
   const stopState = getStopState()
   const { previewState, previewId } = await startPreview({
     combinations,
     duration,
     quiet,
+    initResult,
+    results,
   })
 
   try {
@@ -25,6 +27,7 @@ export const measureBenchmark = async function (
       combinations: combinationsA,
       duration,
       cwd,
+      previewConfig,
       exec,
       stopState,
       previewState,
@@ -40,6 +43,7 @@ const startServerAndMeasure = async function ({
   combinations,
   duration,
   cwd,
+  previewConfig,
   exec,
   stopState,
   previewState,
@@ -55,6 +59,7 @@ const startServerAndMeasure = async function ({
       origin,
       duration,
       cwd,
+      previewConfig,
       exec,
       stopState,
       previewState,

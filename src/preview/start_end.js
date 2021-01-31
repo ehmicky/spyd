@@ -4,8 +4,14 @@ import { setDelayedDescription } from './set.js'
 import { updatePreview, clearPreviewInit, clearPreviewFinal } from './update.js'
 
 // Start preview
-export const startPreview = async function ({ combinations, duration, quiet }) {
-  const previewState = {}
+export const startPreview = async function ({
+  combinations,
+  duration,
+  quiet,
+  initResult,
+  results,
+}) {
+  const previewState = { initResult, results }
 
   if (quiet) {
     return { previewState }
