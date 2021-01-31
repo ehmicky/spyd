@@ -1,5 +1,6 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
+import { setPreviewReport } from './report.js'
 import { setDelayedDescription } from './set.js'
 import { updatePreview, clearPreviewInit, clearPreviewFinal } from './update.js'
 
@@ -10,6 +11,7 @@ export const startPreview = async function ({
   quiet,
   initResult,
   results,
+  previewConfig,
 }) {
   const previewState = { initResult, results }
 
@@ -19,6 +21,8 @@ export const startPreview = async function ({
 
   hideCursor()
   await clearPreviewInit()
+
+  await setPreviewReport({ combinations, previewState, previewConfig })
 
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
   const previewId = await startUpdate(previewState, benchmarkDuration)
