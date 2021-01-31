@@ -22,7 +22,7 @@ export const setPreviewReport = async function (
   combinations,
   {
     previewState,
-    previewConfig: { initResult, results, quiet, ...previewConfig },
+    previewConfig: { initResult, results, quiet, reporters, titles },
   },
 ) {
   if (quiet) {
@@ -31,5 +31,5 @@ export const setPreviewReport = async function (
 
   const { result } = getFinalResult(combinations, initResult, results)
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  previewState.report = await reportPreview(result, previewConfig)
+  previewState.report = await reportPreview(result, { reporters, titles })
 }
