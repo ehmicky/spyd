@@ -1,10 +1,9 @@
 import now from 'precise-now'
 
-import { setPreviewReport } from '../preview/report.js'
 import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
 
-import { updateCombinations } from './update.js'
+import { previewCombinations } from './preview.js'
 
 // Aggregate `bufferedMeasures` to `measures`.
 // The `stats` need a single `measures` array, so they are computed right after.
@@ -106,14 +105,3 @@ const getAggregateCountdown = function (aggregateStart) {
 // A lower value spends less duration aggregating, resulting in less responsive
 // preview and less precise `stats.median`.
 const AGGREGATE_PERCENTAGE = 0.1
-
-// After each new stats, preview them
-const previewCombinations = async function ({
-  combinations,
-  newCombination,
-  previewState,
-  previewConfig,
-}) {
-  const combinationsA = updateCombinations(combinations, newCombination)
-  await setPreviewReport(combinationsA, { previewState, previewConfig })
-}

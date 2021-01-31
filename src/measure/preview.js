@@ -1,5 +1,7 @@
-import { getFinalResult } from '../measure/init.js'
 import { reportPreview } from '../report/main.js'
+
+import { getFinalResult } from './init.js'
+import { updateCombinations } from './update.js'
 
 // Preview results progressively, as combinations are being measured.
 // Reporters should:
@@ -7,6 +9,16 @@ import { reportPreview } from '../report/main.js'
 //  - Try to limit the amount of flicker between previews
 //     - For example, all combinations should be shown even if not measured yet.
 //     - And the size of table should not change between previews.
+export const previewCombinations = async function ({
+  combinations,
+  newCombination,
+  previewState,
+  previewConfig,
+}) {
+  const combinationsA = updateCombinations(combinations, newCombination)
+  await setPreviewReport(combinationsA, { previewState, previewConfig })
+}
+
 export const setPreviewReport = async function (
   combinations,
   { previewState, previewState: { initResult, results }, previewConfig },
