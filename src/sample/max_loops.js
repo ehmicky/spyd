@@ -12,8 +12,7 @@
 //     this runtime to spread differently between samples due to different
 //     durations.
 //   - It is small enough to ensure that tasks with slow measures aggregation
-//     (due to having lots of measures) do not prevent other tasks' live
-//     reporting
+//     (due to having lots of measures) do not prevent other tasks' previews
 //   - It is large enough to spend enough time measuring as opposed to IPC and
 //     combination orchestration
 //   - It is large enough so cold starts at the beginning of each sample are a

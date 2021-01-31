@@ -103,6 +103,6 @@ const getAggregateCountdown = function (aggregateStart) {
 // How much duration of the benchmark should be spent aggregating.
 // A higher value spends less duration measuring, giving less precise results.
 // A lower value spends less duration aggregating, resulting in less responsive
-// live reporting and less precise `stats.median`.
+// preview and less precise `stats.median`.
 const AGGREGATE_PERCENTAGE = 0.1
 const AGGREGATE_TIMES = 1 / AGGREGATE_PERCENTAGE - 1

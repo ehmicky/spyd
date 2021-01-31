@@ -11,7 +11,7 @@ import { getMean, getDeviation } from './sum.js'
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
 // We do not remove outliers:
-//  - Doing so make min|max|histogram change weirdly during live reporting
+//  - Doing so make min|max|histogram change weirdly during results preview
 //  - It also makes most stats not true representation of the measures
 //  - It complicates stats computation quite a lot
 export const computeStats = function (measures) {
