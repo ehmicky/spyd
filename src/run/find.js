@@ -26,7 +26,7 @@ export const findTasks = async function ({
     combinations: [{ tasks: taskIds }],
   } = await measureBenchmark(
     [{ taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] }],
-    { preview: false, cwd, duration },
+    { quiet: true, cwd, duration },
   )
   validateDuplicateTaskIds(taskIds)
   return taskIds

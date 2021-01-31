@@ -13,7 +13,7 @@ export const addDefaultConfig = function ({
   return {
     ...DEFAULT_CONFIG,
     cwd: processCwd,
-    preview: isInteractive(stderr),
+    quiet: !isInteractive(stderr),
     delta: defaultDelta,
     since: defaultDelta,
     showSystem: config.system !== undefined,

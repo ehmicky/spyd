@@ -11,11 +11,13 @@ export const BENCH_CONFIG = {
 The default is 1 which executes each combination once.
 Can also be 0 which only stops when CTRL-C is typed.`,
   },
-  preview: {
+  quiet: {
     group: REPORT,
+    alias: 'q',
     boolean: true,
     describe: `Preview the results and display a progress bar.
-Default: true if the terminal is interactive.`,
+Reporters are still used.
+Default: false if the terminal is interactive.`,
   },
   concurrency: {
     group: TASKS,

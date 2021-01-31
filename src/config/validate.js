@@ -53,7 +53,7 @@ const EXAMPLE_CONFIG = {
   reporter: optionalArray('debug'),
   store: optionalArray('file'),
   limit: optionalArray('task_id=10'),
-  preview: false,
+  quiet: true,
   debug: false,
   output: './file.js',
   insert: './README.md',

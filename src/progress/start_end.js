@@ -11,11 +11,11 @@ import {
 export const startProgress = async function ({
   combinations,
   duration,
-  preview,
+  quiet,
 }) {
   const progressState = {}
 
-  if (!preview) {
+  if (quiet) {
     return { progressState }
   }
 
