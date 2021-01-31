@@ -1,0 +1,60 @@
+[
+  {
+    "id": "8c23c231-db84-4c29-8bd5-25185fe6a971",
+    "timestamp": 1612204982927,
+    "systems": [
+      {
+        "id": "default_system",
+        "machine": {
+          "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+          "memory": "63GB",
+          "os": "Linux 5.8"
+        },
+        "git": {
+          "commit": "45f109d45608abeaa466742656b239304835a405",
+          "branch": "main"
+        },
+        "versions": {
+          "Node": "15.6.0",
+          "Benchmarked with spyd": "0.3.1"
+        }
+      }
+    ],
+    "combinations": [
+      {
+        "taskId": "one",
+        "runnerId": "node",
+        "systemId": "default_system",
+        "stats": {
+          "median": 8.769886363636363,
+          "mean": 8.204167904535549,
+          "min": 6.382575757575758,
+          "max": 13.834280303030303,
+          "deviation": 0.19541934806925457,
+          "loops": 153,
+          "times": 161568,
+          "repeat": 1056,
+          "samples": 1,
+          "minLoopDuration": 8100
+        }
+      },
+      {
+        "taskId": "two",
+        "runnerId": "node",
+        "systemId": "default_system",
+        "stats": {
+          "median": 7.025992438563327,
+          "mean": 7.914863587595158,
+          "min": 6.322306238185255,
+          "max": 12.888468809073723,
+          "deviation": 0.18413115685070708,
+          "loops": 148,
+          "times": 156584,
+          "repeat": 1058,
+          "samples": 1,
+          "minLoopDuration": 8100
+        }
+      }
+    ]
+  }
+]
