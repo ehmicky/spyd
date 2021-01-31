@@ -15,15 +15,13 @@ export const previewCombinations = async function ({
   previewConfig,
 }) {
   const combinationsA = updateCombinations(combinations, newCombination)
-  await setPreviewReport(combinationsA, { previewState, previewConfig })
+  await setPreviewReport(combinationsA, previewState, previewConfig)
 }
 
 export const setPreviewReport = async function (
   combinations,
-  {
-    previewState,
-    previewConfig: { initResult, results, quiet, reporters, titles },
-  },
+  previewState,
+  { initResult, results, quiet, reporters, titles },
 ) {
   if (quiet) {
     return
