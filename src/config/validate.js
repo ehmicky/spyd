@@ -59,6 +59,7 @@ const EXAMPLE_CONFIG = {
   insert: './README.md',
   colors: false,
   showDiff: false,
+  showSystem: true,
   showMetadata: true,
   include: optionalArray('task_id'),
   exclude: optionalArray('task_id'),
