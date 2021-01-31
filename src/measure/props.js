@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { getFinalStats } from '../sample/aggregate.js'
+import { aggregateMeasuresEnd } from '../sample/aggregate.js'
+import { addSideStats } from '../stats/compute.js'
 
 // Initialize some combination properties
 export const addInitProps = function (combination) {
@@ -40,14 +41,13 @@ export const getFinalProps = function ({
   samples,
   minLoopDuration,
 }) {
-  const statsA = getFinalStats({
-    measures,
-    bufferedMeasures,
-    stats,
+  const statsA = aggregateMeasuresEnd({ measures, bufferedMeasures, stats })
+  const statsB = addSideStats({
+    stats: statsA,
     loops,
     times,
     samples,
     minLoopDuration,
   })
-  return { taskId, runnerId, systemId, stats: statsA }
+  return { taskId, runnerId, systemId, stats: statsB }
 }

@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { computeStats, addSideStats } from '../stats/compute.js'
+import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
 
 // Aggregate `bufferedMeasures` to `measures`.
@@ -53,27 +53,11 @@ export const aggregateMeasures = function ({
 
 // At the end, if there are still some pending `bufferedMeasures`, we aggregate
 // them
-export const getFinalStats = function ({
+export const aggregateMeasuresEnd = function ({
   measures,
   bufferedMeasures,
   stats,
-  loops,
-  times,
-  samples,
-  minLoopDuration,
 }) {
-  const statsA = aggregateMeasuresEnd({ measures, bufferedMeasures, stats })
-  const statsB = addSideStats({
-    stats: statsA,
-    loops,
-    times,
-    samples,
-    minLoopDuration,
-  })
-  return statsB
-}
-
-const aggregateMeasuresEnd = function ({ measures, bufferedMeasures, stats }) {
   if (bufferedMeasures.length === 0) {
     return stats
   }
