@@ -33,6 +33,7 @@ export const getFinalProps = function ({
   runnerId,
   systemId,
   stats,
+  calibrated,
   loops,
   times,
   samples,
@@ -40,6 +41,7 @@ export const getFinalProps = function ({
 }) {
   const statsA = getFinalStats({
     stats,
+    calibrated,
     loops,
     times,
     samples,
