@@ -60,6 +60,11 @@ const hasTerminalOutput = function ({ output }) {
 }
 
 const printToTerminal = async function (contents) {
+  // Happens when piping to `less` then aborting
+  if (stdout.destroyed) {
+    return
+  }
+
   const ttyContents = getTtyContents(contents)
   await promisify(stdout.write.bind(stdout))(ttyContents)
 }
