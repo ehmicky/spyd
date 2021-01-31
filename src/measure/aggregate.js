@@ -15,10 +15,6 @@ import { previewCombinations } from './preview.js'
 // We aim at performing this for a specific percentage of the total duration.
 // We do this by computing how long each aggregation takes, then waiting a
 // specific amount of duration based on that last aggregation duration.
-// We always recompute this:
-//  - During calibration to recompute the `stats.median`
-//  - At the beginning, or when `calibrateReset` has just been called, so
-//    that there are some `measures` to compute the `stats.median`
 export const aggregatePreview = async function ({
   newCombination,
   newCombination: {
@@ -31,7 +27,7 @@ export const aggregatePreview = async function ({
   previewState,
   previewConfig,
 }) {
-  if (calibrated && aggregateCountdown > 0 && measures.length !== 0) {
+  if (!shouldAggregate({ calibrated, aggregateCountdown, measures })) {
     return {
       ...newCombination,
       aggregateCountdown: aggregateCountdown - sampleDurationLast,
@@ -48,6 +44,18 @@ export const aggregatePreview = async function ({
   })
   const aggregateCountdownA = getAggregateCountdown(aggregateStart)
   return { ...newCombinationA, aggregateCountdown: aggregateCountdownA }
+}
+
+// We always recompute this:
+//  - During calibration to recompute the `stats.median`
+//  - At the beginning, or when `calibrateReset()` has just been called, so
+//    that there are some `measures` to compute the `stats.median`
+const shouldAggregate = function ({
+  calibrated,
+  aggregateCountdown,
+  measures,
+}) {
+  return aggregateCountdown <= 0 || !calibrated || measures.length === 0
 }
 
 // Performed both incrementally, and once at the end.
