@@ -21,13 +21,7 @@ import { previewCombinations } from './preview.js'
 //    that there are some `measures` to compute the `stats.median`
 export const aggregateMeasures = async function ({
   combination,
-  combination: {
-    measures,
-    bufferedMeasures,
-    aggregateCountdown,
-    sampleDurationLast,
-    calibrated,
-  },
+  combination: { measures, aggregateCountdown, sampleDurationLast, calibrated },
   combinations,
   previewState,
   previewConfig,
@@ -40,16 +34,7 @@ export const aggregateMeasures = async function ({
   }
 
   const aggregateStart = getAggregateStart()
-  const { measures: measuresA, stats } = aggregateBuffer(
-    measures,
-    bufferedMeasures,
-  )
-  const newCombination = {
-    ...combination,
-    measures: measuresA,
-    bufferedMeasures: [],
-    stats,
-  }
+  const newCombination = aggregateMeasuresEnd(combination)
   await previewCombinations({
     combinations,
     newCombination,
@@ -69,8 +54,11 @@ export const aggregateMeasuresEnd = function (combination) {
     return combination
   }
 
-  const { stats } = aggregateBuffer(measures, bufferedMeasures)
-  return { ...combination, stats }
+  const { measures: measuresA, stats } = aggregateBuffer(
+    measures,
+    bufferedMeasures,
+  )
+  return { ...combination, measures: measuresA, bufferedMeasures: [], stats }
 }
 
 const aggregateBuffer = function (measures, bufferedMeasures) {
