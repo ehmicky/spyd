@@ -1,5 +1,5 @@
 import { failOnProcessExit } from '../error/combination.js'
-import { setBenchmarkStart } from '../progress/set.js'
+import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'

@@ -1,7 +1,7 @@
 import process from 'process'
 
 import { UserError } from '../error/main.js'
-import { setPriorityDescription } from '../progress/set.js'
+import { setPriorityDescription } from '../preview/set.js'
 import {
   createController,
   waitForEvents,

@@ -2,8 +2,8 @@ import {
   combinationHasErrored,
   failOnProcessExit,
 } from '../error/combination.js'
+import { setDelayedDescription } from '../preview/set.js'
 import { sendAndReceive } from '../process/send.js'
-import { setDelayedDescription } from '../progress/set.js'
 
 // End each combination, i.e. run their cleanup logic
 export const endCombinations = async function (combinations, progressState) {

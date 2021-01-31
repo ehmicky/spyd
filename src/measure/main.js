@@ -1,4 +1,4 @@
-import { startProgress, endProgress } from '../progress/start_end.js'
+import { startProgress, endProgress } from '../preview/start_end.js'
 import { startServer, endServer } from '../server/start_end.js'
 
 import { addInitProps } from './props.js'

@@ -1,7 +1,7 @@
 import now from 'precise-now'
 import randomItem from 'random-item'
 
-import { setBenchmarkEnd } from '../progress/set.js'
+import { setBenchmarkEnd } from '../preview/set.js'
 import { getSum } from '../stats/sum.js'
 
 import { getRemainingCombinations } from './remaining.js'

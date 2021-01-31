@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { setBenchmarkEnd } from '../progress/set.js'
+import { setBenchmarkEnd } from '../preview/set.js'
 
 // Tasks that are longer than the `duration` configuration property are likely
 // reasons why users might stop the benchmark. In that case, the task might be

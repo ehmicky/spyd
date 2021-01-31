@@ -1,6 +1,6 @@
 import { failOnProcessExit } from '../error/combination.js'
+import { setDescription } from '../preview/set.js'
 import { receiveReturnValue } from '../process/receive.js'
-import { setDescription } from '../progress/set.js'
 import { getMinLoopDuration } from '../sample/min_loop_duration.js'
 
 // Wait for each combination to start
