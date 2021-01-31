@@ -8,15 +8,15 @@ export const performBenchmark = async function (config, results) {
   const { combinations, systemVersions } = await getCombinations(config)
   const initResult = getInitResult({ combinations, systemVersions, config })
   const { quiet, cwd, duration, reporters, titles } = config
-  const {
-    combinations: combinationsA,
-    stopped,
-  } = await measureBenchmark(combinations, {
-    cwd,
-    duration,
-    previewConfig: { quiet, initResult, results, reporters, titles },
-    exec: false,
-  })
+  const { combinations: combinationsA, stopped } = await measureBenchmark(
+    combinations,
+    {
+      cwd,
+      duration,
+      previewConfig: { quiet, initResult, results, reporters, titles },
+      exec: false,
+    },
+  )
   const { rawResult, result } = getFinalResult(
     combinationsA,
     initResult,
