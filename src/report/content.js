@@ -6,24 +6,20 @@ import stripAnsi from 'strip-ansi'
 // Since `report()` might have side effects such as making a HTTP call, we make
 // sure it is called exactly once.
 // Interactive output/terminal have different default values for some report
-// config properties, so we compute two different contents: interactive and
-// non-interactive.
-export const getNonInteractiveContents = function (contents) {
-  return contents.map(getNonInteractiveContent).join(CONTENTS_DELIMITER)
+// config properties, so we compute two different contents: TTY and not TTY.
+export const getNonTtyContents = function (contents) {
+  return contents.map(getNonTtyContent).join(CONTENTS_DELIMITER)
 }
 
-export const getInteractiveContents = function (contents) {
-  return contents.map(getInteractiveContent).join(CONTENTS_DELIMITER)
+export const getTtyContents = function (contents) {
+  return contents.map(getTtyContent).join(CONTENTS_DELIMITER)
 }
 
-const getNonInteractiveContent = function ({ content, colors = false }) {
+const getNonTtyContent = function ({ content, colors = false }) {
   return getContent(content, colors)
 }
 
-const getInteractiveContent = function ({
-  content,
-  colors = isInteractive(stdout),
-}) {
+const getTtyContent = function ({ content, colors = isInteractive(stdout) }) {
   return getContent(content, colors)
 }
 

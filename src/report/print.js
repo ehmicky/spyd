@@ -6,7 +6,7 @@ import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
 
-import { getInteractiveContents, getNonInteractiveContents } from './content.js'
+import { getTtyContents, getNonTtyContents } from './content.js'
 import { addPadding } from './utils/indent.js'
 
 // Print result to file or to terminal based on the `output` configuration
@@ -45,13 +45,13 @@ const printOutputContents = async function (contents, output) {
 }
 
 const printToTerminal = async function (contents) {
-  const interactiveContent = getInteractiveContents(contents)
-  const interactiveContentA = addPadding(interactiveContent)
-  await promisify(stdout.write.bind(stdout))(interactiveContentA)
+  const ttyContents = getTtyContents(contents)
+  const ttyContentsA = addPadding(ttyContents)
+  await promisify(stdout.write.bind(stdout))(ttyContentsA)
 }
 
 const writeFileContent = async function (contents, output) {
-  const nonInteractiveContent = getNonInteractiveContents(contents)
+  const nonTtyContents = getNonTtyContents(contents)
 
   if (await isDirectory(output)) {
     throw new UserError(
@@ -60,7 +60,7 @@ const writeFileContent = async function (contents, output) {
   }
 
   try {
-    await writeFileAtomic(output, nonInteractiveContent)
+    await writeFileAtomic(output, nonTtyContents)
   } catch (error) {
     throw new UserError(
       `Could not write to "output" "${output}"\n${error.message}`,

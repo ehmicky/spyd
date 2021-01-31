@@ -6,7 +6,7 @@ import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
 
-import { getNonInteractiveContents } from './content.js'
+import { getNonTtyContents } from './content.js'
 
 // Use the `insert` configuration property to insert content inside a file.
 // We insert between any two lines with the tokens "spyd-start" and "spyd-end".
@@ -38,9 +38,9 @@ const getInsert = function ({ insert }) {
 
 const insertOutputContents = async function (contents, insert) {
   const contentsA = contents.filter((content) => content.insert === insert)
-  const contentA = getNonInteractiveContents(contentsA)
+  const nonTtyContents = getNonTtyContents(contentsA)
   const fileContent = await getFileContent(insert)
-  const fileContentA = insertToFile(fileContent, contentA, insert)
+  const fileContentA = insertToFile(fileContent, nonTtyContents, insert)
   await writeFileContent(insert, fileContentA)
 }
 
@@ -58,31 +58,31 @@ const getFileContent = async function (insert) {
   }
 }
 
-const insertToFile = function (fileContent, content, insert) {
+const insertToFile = function (fileContent, contents, insert) {
   const newline = detectNewline.graceful(fileContent)
   const lines = fileContent.split(newline)
 
-  const contentA = replaceNewline(content, newline)
-  const linesA = insertToLines(lines, contentA, insert)
+  const contentsA = replaceNewline(contents, newline)
+  const linesA = insertToLines(lines, contentsA, insert)
 
   const fileContentA = linesA.join(newline)
   return fileContentA
 }
 
-const replaceNewline = function (content, newline) {
-  const contentA = content.split(UNIX_NEWLINE).join(newline)
-  return `${newline}${contentA}`
+const replaceNewline = function (contents, newline) {
+  const contentsA = contents.split(UNIX_NEWLINE).join(newline)
+  return `${newline}${contentsA}`
 }
 
 const UNIX_NEWLINE = '\n'
 
-const insertToLines = function (lines, content, insert) {
+const insertToLines = function (lines, contents, insert) {
   const startLine = getLineIndex(lines, insert, START_LINE_TOKEN)
   const endLine = getLineIndex(lines, insert, END_LINE_TOKEN)
 
   const start = lines.slice(0, startLine + 1)
   const end = lines.slice(endLine)
-  return [...start, content, ...end]
+  return [...start, contents, ...end]
 }
 
 // We require both delimiters so that user is aware that both should be moved
