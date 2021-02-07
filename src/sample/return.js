@@ -22,13 +22,13 @@ export const handleReturnValue = function (
     return {}
   }
 
-  const [
-    measuresA,
-    bufferedMeasuresA,
-    samplesA,
-    loopsA,
-    timesA,
-  ] = calibrateReset({
+  const {
+    measures: measuresA,
+    bufferedMeasures: bufferedMeasuresA,
+    samples: samplesA,
+    loops: loopsA,
+    times: timesA,
+  } = calibrateReset({
     calibrated,
     measures,
     bufferedMeasures,

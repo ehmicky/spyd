@@ -20,10 +20,10 @@ export const calibrateReset = function ({
   times,
 }) {
   if (calibrated) {
-    return [measures, bufferedMeasures, samples, loops, times]
+    return { measures, bufferedMeasures, samples, loops, times }
   }
 
-  return [[], [], 0, 0, 0]
+  return { measures: [], bufferedMeasures: [], samples: 0, loops: 0, times: 0 }
 }
 
 // Decides when calibration has ended.
