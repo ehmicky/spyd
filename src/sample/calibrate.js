@@ -40,11 +40,32 @@ export const getCalibrated = function ({
   repeat,
   newRepeat,
   allSamples,
+  duration,
+  sampleMedian,
+  minLoopDuration,
 }) {
   return (
-    allSamples !== 1 && (calibrated || newRepeat / repeat <= MAX_REPEAT_DIFF)
+    calibrated ||
+    isFastMode({ duration, sampleMedian, minLoopDuration }) ||
+    (allSamples !== 1 && newRepeat / repeat <= MAX_REPEAT_DIFF)
   )
 }
+
+// When `duration` is `1` and combination is slow, we do not calibrate.
+//   - Otherwise, users would perceive that the combination has run twice.
+const isFastMode = function ({ duration, sampleMedian, minLoopDuration }) {
+  return duration === 1 && sampleMedian > minLoopDuration * FAST_MODE_MIN_RATE
+}
+
+// Combinations with a first duration slower than this will stop right away,
+// i.e. their cold start will be reported.
+// We decide what a slow combination is by using a multiple of
+// `minLoopDuration`. This allows not relying on hardcoded durations, making it
+// work on machines of all speed. Also, this ensures that we are not skipping
+// a `repeat` calibration due to a cold start.
+// If the runner does not support repeat loops, `minLoopDuration` will be 0,
+// i.e. cold start will always be included.
+const FAST_MODE_MIN_RATE = 1e2
 
 // To end calibration, `repeat` must vary once less than this percentage.
 // It also ends when `repeat` is not increasing anymore.

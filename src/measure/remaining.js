@@ -55,14 +55,7 @@ const MAX_LOOPS = 1e8
 // With the `exec` command, we run each combination exactly once, even if
 // not calibrated.
 const isRemainingCombination = function ({
-  combination: {
-    totalDuration,
-    sampleDurationMean,
-    sampleMedian,
-    minLoopDuration,
-    loops,
-    calibrated,
-  },
+  combination: { totalDuration, sampleDurationMean, loops, calibrated },
   duration,
   exec,
   combinationMaxLoops,
@@ -71,51 +64,22 @@ const isRemainingCombination = function ({
     loops === 0 ||
     (loops < combinationMaxLoops &&
       !exec &&
-      hasTimeLeft({
-        duration,
-        sampleDurationMean,
-        sampleMedian,
-        minLoopDuration,
-        totalDuration,
-        calibrated,
-      }))
+      hasTimeLeft({ duration, sampleDurationMean, totalDuration, calibrated }))
   )
-}
-
-const hasTimeLeft = function ({
-  duration,
-  sampleDurationMean,
-  sampleMedian,
-  minLoopDuration,
-  totalDuration,
-  calibrated,
-}) {
-  if (duration === 1) {
-    return hasFastTimeLeft({ sampleMedian, minLoopDuration, calibrated })
-  }
-
-  return duration === 0 || totalDuration + sampleDurationMean < duration
 }
 
 // When `duration` is `1`, we run the combination only once.
 // But if the combination is calibrating, we wait for calibration.
 // This includes removing the cold start.
-// However, we do not remove the cold start for slow combinations since the user
-// would be able to perceive that the combination has run twice.
-const hasFastTimeLeft = function ({
-  sampleMedian,
-  minLoopDuration,
+const hasTimeLeft = function ({
+  duration,
+  sampleDurationMean,
+  totalDuration,
   calibrated,
 }) {
-  return !calibrated && sampleMedian < minLoopDuration * FAST_MODE_MIN_RATE
-}
+  if (duration === 1) {
+    return !calibrated
+  }
 
-// Combinations with a first duration slower than this will stop right away,
-// i.e. their cold start will be reported.
-// We decide what a slow combination is by using a multiple of
-// `minLoopDuration`. This allows not relying on hardcoded durations, making it
-// work on machines of all speed. Also, this ensures that we are not skipping
-// a `repeat` calibration due to a cold start.
-// If the runner does not support repeat loops, `minLoopDuration` will be 0,
-// i.e. cold start will always be included.
-const FAST_MODE_MIN_RATE = 1e2
+  return duration === 0 || totalDuration + sampleDurationMean < duration
+}

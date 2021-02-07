@@ -17,6 +17,7 @@ export const handleReturnValue = function (
     minLoopDuration,
   },
   { measures: sampleMeasures },
+  duration,
 ) {
   if (sampleMeasures === undefined) {
     return {}
@@ -55,6 +56,9 @@ export const handleReturnValue = function (
     repeat,
     newRepeat,
     allSamples: allSamplesA,
+    duration,
+    sampleMedian,
+    minLoopDuration,
   })
 
   return {
