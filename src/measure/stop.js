@@ -70,7 +70,7 @@ const handleStop = async function ({
 
   await waitForStopSignals(abortSignal)
 
-  throw new AbortError('Benchmark has been aborted')
+  throw new AbortError('Benchmark has been aborted.')
 }
 
 const setStopState = function ({ previewState, stopState, duration }) {
