@@ -10,13 +10,7 @@ import { printToTty } from './tty.js'
 // property
 export const printContents = async function (contents) {
   const contentsA = contents.filter(hasOutput)
-  const nonTtyContents = contentsA.filter((content) => !isTtyContent(content))
-
-  const outputs = getOutputs(nonTtyContents)
-  await Promise.all(
-    outputs.map((output) => printOutputContents(nonTtyContents, output)),
-  )
-
+  await printOutputsContents(contentsA)
   await printTtyContent(contentsA)
 }
 
@@ -24,6 +18,15 @@ export const printContents = async function (contents) {
 // output is wanted.
 const hasOutput = function ({ output }) {
   return output !== ''
+}
+
+// Write final report to files
+const printOutputsContents = async function (contents) {
+  const nonTtyContents = contents.filter((content) => !isTtyContent(content))
+  const outputs = getOutputs(nonTtyContents)
+  await Promise.all(
+    outputs.map((output) => printOutputContents(nonTtyContents, output)),
+  )
 }
 
 const isTtyContent = function ({ output }) {
@@ -37,6 +40,25 @@ const getOutputs = function (contents) {
 
 const getOutput = function ({ output }) {
   return output
+}
+
+const printOutputContents = async function (contents, output) {
+  const contentsA = contents.filter((content) => content.output === output)
+  const nonTtyContents = getNonTtyContents(contentsA)
+
+  if (await isDirectory(output)) {
+    throw new UserError(
+      `Invalid configuration property "output" "${output}": it must be a regular file, not a directory.`,
+    )
+  }
+
+  try {
+    await writeFileAtomic(output, nonTtyContents)
+  } catch (error) {
+    throw new UserError(
+      `Could not write to "output" "${output}"\n${error.message}`,
+    )
+  }
 }
 
 // Print final report to terminal
@@ -60,24 +82,4 @@ export const computeTtyContents = function (contents) {
   }
 
   return getTtyContents(contentsA)
-}
-
-// Write final report to file
-const printOutputContents = async function (contents, output) {
-  const contentsA = contents.filter((content) => content.output === output)
-  const nonTtyContents = getNonTtyContents(contentsA)
-
-  if (await isDirectory(output)) {
-    throw new UserError(
-      `Invalid configuration property "output" "${output}": it must be a regular file, not a directory.`,
-    )
-  }
-
-  try {
-    await writeFileAtomic(output, nonTtyContents)
-  } catch (error) {
-    throw new UserError(
-      `Could not write to "output" "${output}"\n${error.message}`,
-    )
-  }
 }
