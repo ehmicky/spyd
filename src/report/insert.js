@@ -1,72 +1,51 @@
 import { promises as fs } from 'fs'
 
 import detectNewline from 'detect-newline'
-import { isDirectory } from 'path-type'
+import pathExists from 'path-exists'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
 
-import { getNonTtyContents } from './content.js'
-
-// Use the `insert` configuration property to insert content inside a file.
-// We insert between any two lines with the tokens "spyd-start" and "spyd-end".
+// By default, the `output` configuration property overwrites the file.
+// However, contents can be inserted instead between any two lines with the
+// tokens "spyd-start" and "spyd-end".
 // This:
 //  - works on any file format. User just needs to pick the right reporter.
 //  - works with any comment type: #comment, <!-- comment -->, etc.
 //  - does not require any parsing.
 //  - does not require wrapping inserted content (e.g. in a code block).
 //    This should be done by reporters.
-export const insertContents = async function (contents) {
-  const inserts = getInserts(contents)
-  await Promise.all(
-    inserts.map((insert) => insertOutputContents(contents, insert)),
-  )
-}
-
-const getInserts = function (contents) {
-  const inserts = contents.filter(hasInsert).map(getInsert)
-  return [...new Set(inserts)]
-}
-
-const hasInsert = function ({ insert }) {
-  return insert !== ''
-}
-
-const getInsert = function ({ insert }) {
-  return insert
-}
-
-const insertOutputContents = async function (contents, insert) {
-  const contentsA = contents.filter((content) => content.insert === insert)
-  const nonTtyContents = getNonTtyContents(contentsA)
-  const fileContent = await getFileContent(insert)
-  const fileContentA = insertToFile(fileContent, nonTtyContents, insert)
-  await writeFileContent(insert, fileContentA)
-}
-
-const getFileContent = async function (insert) {
-  if (await isDirectory(insert)) {
-    throw new UserError(
-      `Invalid configuration property "insert" "${insert}": it must be a regular file, not a directory.`,
-    )
+export const detectInsert = async function (output) {
+  if (!(await pathExists(output))) {
+    return
   }
 
+  const fileContent = await getFileContent(output)
+
+  if (!fileContent.includes(START_LINE_TOKEN)) {
+    return
+  }
+
+  return fileContent
+}
+
+const getFileContent = async function (output) {
   try {
-    return await fs.readFile(insert, 'utf8')
+    return await fs.readFile(output, 'utf8')
   } catch (error) {
-    throw new UserError(`Could not read "insert" "${insert}"\n${error.message}`)
+    throw new UserError(`Could not read "output" "${output}"\n${error.message}`)
   }
 }
 
-const insertToFile = function (fileContent, contents, insert) {
+export const insertContents = async function (output, contents, fileContent) {
   const newline = detectNewline.graceful(fileContent)
   const lines = fileContent.split(newline)
 
   const contentsA = replaceNewline(contents, newline)
-  const linesA = insertToLines(lines, contentsA, insert)
+  const linesA = insertToLines(lines, contentsA, output)
 
   const fileContentA = linesA.join(newline)
-  return fileContentA
+  await writeFileContent(output, fileContentA)
 }
 
 const replaceNewline = function (contents, newline) {
@@ -76,36 +55,40 @@ const replaceNewline = function (contents, newline) {
 
 const UNIX_NEWLINE = '\n'
 
-const insertToLines = function (lines, contents, insert) {
-  const startLine = getLineIndex(lines, insert, START_LINE_TOKEN)
-  const endLine = getLineIndex(lines, insert, END_LINE_TOKEN)
+// We require both delimiters so that user is aware that both should be moved
+// when moving lines around
+const insertToLines = function (lines, contents, output) {
+  const startLine = getLineIndex(lines, START_LINE_TOKEN)
+  const endLine = getLineIndex(lines, END_LINE_TOKEN)
+
+  if (endLine === -1) {
+    throw new UserError(
+      `File "${output}" contains a "${START_LINE_TOKEN}" comment but is missing "${END_LINE_TOKEN}".`,
+    )
+  }
+
+  if (endLine < startLine) {
+    throw new UserError(
+      `File "${output}" contains a "${START_LINE_TOKEN}" comment after "${END_LINE_TOKEN}".`,
+    )
+  }
 
   const start = lines.slice(0, startLine + 1)
   const end = lines.slice(endLine)
   return [...start, contents, ...end]
 }
 
-// We require both delimiters so that user is aware that both should be moved
-// when moving lines around
-const getLineIndex = function (lines, insert, token) {
-  const lineIndex = lines.findIndex((line) => line.includes(token))
-
-  if (lineIndex === -1) {
-    throw new UserError(
-      `File "${insert}" should contain a line with the words ${token}`,
-    )
-  }
-
-  return lineIndex
+const getLineIndex = function (lines, token) {
+  return lines.findIndex((line) => line.includes(token))
 }
 
 const START_LINE_TOKEN = 'spyd-start'
 const END_LINE_TOKEN = 'spyd-end'
 
-const writeFileContent = async function (insert, fileContent) {
+const writeFileContent = async function (output, fileContent) {
   try {
-    await writeFileAtomic(insert, fileContent)
+    await writeFileAtomic(output, fileContent)
   } catch (error) {
-    throw new UserError(`Could not write to file "${insert}"\n${error.message}`)
+    throw new UserError(`Could not write to file "${output}"\n${error.message}`)
   }
 }

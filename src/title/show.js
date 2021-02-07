@@ -12,7 +12,7 @@ import { addTitles, addTitle } from './add.js'
 // `showTitles` property because:
 //  - they are more useful for users because they are used for selection
 //  - titles are not meant for user directly but for sharing the reports with
-//    others (e.g. with `insert` and `output`).
+//    others (e.g. with `output`).
 // Titles are specified in the configuration instead of inside task files
 // because this:
 //   - allows starting to report titles without waiting for combination

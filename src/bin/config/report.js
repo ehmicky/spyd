@@ -14,7 +14,7 @@ Custom reporters can also be installed from npm.
 Reporter-specific configuration properties can be specified by appending the
 reporter's name: --reportName.prop=value.
 For example: --reportJson.output=path
-The following properties can be set for any reporter: output, insert, colors,
+The following properties can be set for any reporter: output, colors,
 showSystem, showMetadata.
 For example --reportJson.output is like --output but only for the json reporter.`,
   },
@@ -24,19 +24,11 @@ For example --reportJson.output is like --output but only for the json reporter.
     string: true,
     requiresArg: true,
     describe: `Output the result to the specified file.
-Can be "" for silent output.
+Instead of overwriting the file, the result can be inserted between two lines
+with the words "spyd-start" and "spyd-end" such as <!-- spyd-start --> or
+#spyd-start
+By default, the file is overwritten.
 Default: print to stdout.`,
-  },
-  insert: {
-    group: REPORT,
-    alias: 'i',
-    string: true,
-    requiresArg: true,
-    describe: `Insert the result inside the specified file.
-The file must contain:
-  - a line with the words "spyd-start" such as <!-- spyd-start --> or #spyd-start
-  - a line with the words "spyd-end"
-The result will be inserted between those two lines.`,
   },
   colors: {
     group: REPORT,

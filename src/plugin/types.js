@@ -28,7 +28,6 @@ export const PLUGIN_TYPES = [
     builtins: REPORTERS,
     configProps: [
       'output',
-      'insert',
       'colors',
       'showTitles',
       'showDiff',

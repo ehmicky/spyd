@@ -5,22 +5,15 @@ import { UserError } from '../error/main.js'
 import { groupBy } from '../utils/group.js'
 
 import { getTtyContents, getNonTtyContents } from './content.js'
+import { detectInsert, insertContents } from './insert.js'
 import { printToTty } from './tty.js'
 
 // Print result to file or to terminal based on the `output` configuration
-// property
+// property.
+// If the file contains the spyd-start and spyd-end comments, the content is
+// inserted between them instead.
 export const printContents = async function (contents) {
-  const contentsA = contents.filter(hasOutput)
-  await Promise.all([
-    printTtyContent(contentsA),
-    printOutputsContents(contentsA),
-  ])
-}
-
-// Output with "" is silent. This is useful when using "insert" and no TTY
-// output is wanted.
-const hasOutput = function ({ output }) {
-  return output !== ''
+  await Promise.all([printTtyContent(contents), printOutputsContents(contents)])
 }
 
 // Print final report to terminal.
@@ -61,6 +54,13 @@ const printOutputContents = async function ([output, contents]) {
     throw new UserError(
       `Invalid configuration property "output" "${output}": it must be a regular file, not a directory.`,
     )
+  }
+
+  const fileContent = await detectInsert(output)
+
+  if (fileContent !== undefined) {
+    await insertContents(output, nonTtyContents, fileContent)
+    return
   }
 
   try {

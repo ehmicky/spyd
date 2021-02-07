@@ -33,7 +33,7 @@ export const DEFAULT_CONFIG = {
   save: false,
   limit: [],
   titles: {},
-  insert: '',
+  output: undefined,
   showTitles: false,
   include: [],
   exclude: [],

@@ -55,7 +55,6 @@ const EXAMPLE_CONFIG = {
   quiet: true,
   debug: false,
   output: './file.js',
-  insert: './README.md',
   colors: false,
   showDiff: false,
   showSystem: true,

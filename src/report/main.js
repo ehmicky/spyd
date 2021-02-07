@@ -1,7 +1,6 @@
 import { endPreview } from '../preview/start_end.js'
 
 import { callReportFunc } from './call.js'
-import { insertContents } from './insert.js'
 import { printContents, computeTtyContents } from './print.js'
 import { endReporters } from './start_end.js'
 
@@ -13,7 +12,7 @@ export const report = async function (
   const contents = await getContents(result, { reporters, titles })
   await endReporters(reporters)
   await endPreview(quiet)
-  await Promise.all([printContents(contents), insertContents(contents)])
+  await printContents(contents)
 }
 
 // Report preview results
@@ -33,8 +32,8 @@ const getContents = async function (result, { reporters, titles }) {
   return contentsA
 }
 
-// A reporter can choose not to return anything, in which case `output` and
-// `insert` are not used.
+// A reporter can choose not to return anything, in which case `output` is not
+// used.
 const hasContent = function ({ content }) {
   return typeof content === 'string' && content.trim() !== ''
 }

@@ -48,5 +48,5 @@ const trimContent = function (content) {
 
 const NEWLINE_REGEXP = /(^\n*)|(\n*$)/gu
 
-// It is possible to use "output" or "insert" with multiple reporters at once
+// It is possible to use "output" with multiple reporters at once
 const CONTENTS_DELIMITER = '\n'

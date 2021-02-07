@@ -27,10 +27,4 @@ const resolveConfigProp = function (propName, value, cwd) {
 
 // `extend` can be a Node module and can only be specified in `spyd.*`, so we
 // don't include it here.
-const PATH_CONFIG_PROPS = new Set([
-  'cwd',
-  'config',
-  'output',
-  'insert',
-  'tasks',
-])
+const PATH_CONFIG_PROPS = new Set(['cwd', 'config', 'output', 'tasks'])
