@@ -1,6 +1,5 @@
 import { REPORTERS } from '../report/reporters/main.js'
 import { RUNNERS } from '../run/runners/main.js'
-import { STORES } from '../store/stores/main.js'
 
 // All plugin types
 export const PLUGIN_TYPES = [
@@ -36,15 +35,6 @@ export const PLUGIN_TYPES = [
       'showSystem',
       'showMetadata',
     ],
-  },
-  {
-    type: 'store',
-    varName: 'stores',
-    property: 'store',
-    configPrefix: 'store',
-    modulePrefix: 'spyd-store-',
-    builtins: STORES,
-    configProps: [],
   },
 ]
 

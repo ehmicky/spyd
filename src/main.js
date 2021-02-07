@@ -1,14 +1,14 @@
 import { checkLimits } from './compare/limit.js'
 import { getConfig } from './config/main.js'
 import { performExec } from './exec/main.js'
-import { performBenchmark } from './measure/bench.js'
-import { report } from './report/main.js'
 import {
   addToHistory,
   getFromHistory,
   listHistory,
   removeFromHistoy,
-} from './store/main.js'
+} from './history/main.js'
+import { performBenchmark } from './measure/bench.js'
+import { report } from './report/main.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default command.
