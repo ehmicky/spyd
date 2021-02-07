@@ -10,17 +10,15 @@ export const measureBenchmark = async function (
   combinations,
   { duration, cwd, exec, previewConfig },
 ) {
-  const combinationsA = combinations.map(addInitProps)
-
   const { previewState, previewId } = await startPreview({
-    combinations: combinationsA,
+    combinations,
     duration,
     previewConfig,
   })
 
   try {
     return await startServerAndMeasure({
-      combinations: combinationsA,
+      combinations,
       duration,
       cwd,
       previewConfig,
@@ -41,14 +39,15 @@ const startServerAndMeasure = async function ({
   previewState,
   exec,
 }) {
-  const { server, origin, combinations: combinationsA } = await startServer(
-    combinations,
+  const combinationsA = combinations.map(addInitProps)
+  const { server, origin, combinations: combinationsB } = await startServer(
+    combinationsA,
     duration,
   )
 
   try {
     return await spawnAndMeasure({
-      combinations: combinationsA,
+      combinations: combinationsB,
       origin,
       duration,
       cwd,

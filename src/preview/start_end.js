@@ -1,5 +1,6 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
+import { addInitProps } from '../measure/props.js'
 import { clearScreen } from '../report/tty.js'
 
 import { setPreviewReport } from './report.js'
@@ -19,8 +20,13 @@ export const startPreview = async function ({
     return { previewState }
   }
 
-  await setPreviewReport({ combinations, previewState, previewConfig })
-  const benchmarkDuration = getBenchmarkDuration(combinations, duration)
+  const combinationsA = combinations.map(addInitProps)
+  await setPreviewReport({
+    combinations: combinationsA,
+    previewState,
+    previewConfig,
+  })
+  const benchmarkDuration = getBenchmarkDuration(combinationsA, duration)
 
   hideCursor()
 
