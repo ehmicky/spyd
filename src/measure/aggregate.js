@@ -52,6 +52,10 @@ export const aggregateMeasures = function ({
   bufferedMeasures,
   ...combination
 }) {
+  if (bufferedMeasures.length === 0) {
+    return { ...combination, measures, bufferedMeasures }
+  }
+
   addBufferedMeasures(measures, bufferedMeasures)
   const stats = computeStats(measures)
   return { ...combination, measures, bufferedMeasures: [], stats }
@@ -60,11 +64,17 @@ export const aggregateMeasures = function ({
 // Add all not-merged-yet measures from the last samples.
 // Sort them incrementally to the final `measures` big array, as opposed to
 // sorting `measures` directly, which would be much slower.
-// The measures are also normalized from sampleMeasures + repeat.
-const addBufferedMeasures = function (measures, bufferedMeasures) {
-  bufferedMeasures.forEach((sampleMeasures) => {
-    mergeSort(measures, sampleMeasures)
+const addBufferedMeasures = function (
+  measures,
+  [sampleMeasures, ...bufferedMeasures],
+) {
+  // As time passes, `bufferedMeasures` becomes much smaller than `measures`,
+  // so it is more efficient to sort them together first.
+  bufferedMeasures.forEach((sampleMeasuresA) => {
+    mergeSort(sampleMeasures, sampleMeasuresA)
   })
+
+  mergeSort(measures, sampleMeasures)
 }
 
 const getAggregateStart = function () {
