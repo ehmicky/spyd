@@ -40,7 +40,6 @@ const startServerAndMeasure = async function ({
   previewConfig,
   previewState,
   exec,
-  stopState,
 }) {
   const { server, origin, combinations: combinationsA } = await startServer(
     combinations,
@@ -56,7 +55,6 @@ const startServerAndMeasure = async function ({
       previewConfig,
       previewState,
       exec,
-      stopState,
     })
   } finally {
     await endServer(server)

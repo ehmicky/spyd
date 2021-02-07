@@ -37,8 +37,8 @@ export const performMeasureLoop = async function ({
   duration,
   previewConfig,
   previewState,
-  exec,
   stopState,
+  exec,
 }) {
   if (isInit(combinations)) {
     return combinations
