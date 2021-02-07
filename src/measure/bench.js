@@ -60,7 +60,7 @@ const previewAndMeasure = async function ({
     )
     return { combinations: combinationsA, stopped, results }
   } finally {
-    endPreviewInterval({
+    await endPreviewInterval({
       previewState,
       benchmarkDuration,
       quiet,
