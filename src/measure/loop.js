@@ -81,14 +81,14 @@ export const performMeasureLoop = async function ({
     combinations = updateCombinations(combinations, newCombinationB)
   }
 
-  const combinationsB = combinations.map(aggregateMeasures)
+  const combinationsA = combinations.map(aggregateMeasures)
 
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.combination
 
-  return combinationsB
+  return combinationsA
 }
 
 // Task init, retrieving only task and step identifiers
