@@ -1,22 +1,15 @@
-import { stdout } from 'process'
-import { cursorTo, clearScreenDown } from 'readline'
-import { promisify } from 'util'
-
-import { getScreenHeight, printToTty } from '../report/tty.js'
+import { getScreenHeight, printToTty, clearScreen } from '../report/tty.js'
 
 import { getContent } from './content.js'
 import { getDescription } from './set.js'
 import { updateTimeProps } from './time_props.js'
-
-const pCursorTo = promisify(cursorTo)
-const pClearScreenDown = promisify(clearScreenDown)
 
 // Print preview
 export const updatePreview = async function (previewState, benchmarkDuration) {
   updateTimeProps(previewState, benchmarkDuration)
   const previewContent = getPreviewContent(previewState, benchmarkDuration)
 
-  await clearPreview()
+  await clearScreen()
   await printToTty(previewContent)
 }
 
@@ -38,9 +31,4 @@ export const clearPreviewInit = async function () {
   const screenHeight = getScreenHeight()
   const newlines = '\n'.repeat(screenHeight - 1)
   await printToTty(newlines)
-}
-
-export const clearPreview = async function () {
-  await pCursorTo(stdout, 0, 0)
-  await pClearScreenDown(stdout)
 }

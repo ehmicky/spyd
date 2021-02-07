@@ -1,7 +1,11 @@
 import { stdout } from 'process'
+import { cursorTo, clearScreenDown } from 'readline'
 import { promisify } from 'util'
 
 import isInteractive from 'is-interactive'
+
+const pCursorTo = promisify(cursorTo)
+const pClearScreenDown = promisify(clearScreenDown)
 
 // When stdout is a tty, we use preview by default
 export const isTtyOutput = function () {
@@ -29,4 +33,9 @@ export const printToTty = async function (string) {
   }
 
   await promisify(stdout.write.bind(stdout))(string)
+}
+
+export const clearScreen = async function () {
+  await pCursorTo(stdout, 0, 0)
+  await pClearScreenDown(stdout)
 }
