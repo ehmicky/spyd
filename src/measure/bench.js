@@ -5,9 +5,11 @@ import {
   startPreviewInterval,
   endPreviewInterval,
 } from '../preview/interval.js'
+import { setPreviewReport } from '../preview/report.js'
 
 import { getInitResult, getFinalResult } from './init.js'
 import { measureBenchmark } from './main.js'
+import { addInitProps } from './props.js'
 
 // Perform a new benchmark
 export const performBenchmark = async function (config) {
@@ -32,14 +34,17 @@ const previewAndMeasure = async function ({
   config: { quiet, cwd, duration, reporters, titles },
   initResult,
 }) {
+  const previewState = {}
   const previewConfig = { quiet, initResult, results: [], reporters, titles }
-  const previewState = await initPreview({ combinations, previewConfig })
+
+  await setFirstPreview({ combinations, previewState, previewConfig })
+  await initPreview(previewConfig, previewState)
 
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
   const previewId = await startPreviewInterval({
+    previewConfig,
     previewState,
     benchmarkDuration,
-    quiet,
   })
 
   try {
@@ -59,12 +64,25 @@ const previewAndMeasure = async function ({
     return { combinations: combinationsA, stopped, results }
   } finally {
     await endPreviewInterval({
+      previewConfig,
       previewState,
-      benchmarkDuration,
-      quiet,
       previewId,
+      benchmarkDuration,
     })
   }
+}
+
+const setFirstPreview = async function ({
+  combinations,
+  previewState,
+  previewConfig,
+}) {
+  const combinationsA = combinations.map(addInitProps)
+  await setPreviewReport({
+    combinations: combinationsA,
+    previewState,
+    previewConfig,
+  })
 }
 
 const getBenchmarkDuration = function (combinations, duration) {

@@ -2,9 +2,9 @@ import { updatePreview } from './update.js'
 
 // Update preview at regular interval
 export const startPreviewInterval = async function ({
+  previewConfig: { quiet },
   previewState,
   benchmarkDuration,
-  quiet,
 }) {
   if (quiet) {
     return
@@ -28,10 +28,10 @@ const UPDATE_FREQUENCY = 1e2
 //  - When failing, we clear it
 // Update preview one last time.
 export const endPreviewInterval = async function ({
+  previewConfig: { quiet },
   previewState,
-  benchmarkDuration,
-  quiet,
   previewId,
+  benchmarkDuration,
 }) {
   if (quiet) {
     return
