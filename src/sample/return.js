@@ -50,15 +50,17 @@ export const handleReturnValue = function (
     repeat,
   })
 
-  const newRepeat = getRepeat({ repeat, sampleMedian, minLoopDuration })
+  const { newRepeat, coldStart } = getRepeat({
+    repeat,
+    sampleMedian,
+    minLoopDuration,
+    allSamples,
+  })
   const calibratedA = getCalibrated({
     calibrated,
     repeat,
     newRepeat,
-    allSamples: allSamplesA,
-    duration,
-    sampleMedian,
-    minLoopDuration,
+    coldStart,
   })
 
   return {

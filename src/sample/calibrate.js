@@ -28,44 +28,14 @@ export const calibrateReset = function ({
 
 // Decides when calibration has ended.
 // Based on the difference between `repeat` and `newRepeat`.
-// Also, we always exclude the first sample:
-//  - It always runs the task exactly once. This is the task's cold start, which
-//    is usually much slower due to engine optimization and/or memoization.
-//  - The big difference of performance makes stats very imprecise.
-//  - It hinders `repeat` calibration because it might indicate that the first
-//    sample needs no `repeat` loop (due to being much slower than it really is)
-//    while it actually does.
 export const getCalibrated = function ({
   calibrated,
   repeat,
   newRepeat,
-  allSamples,
-  duration,
-  sampleMedian,
-  minLoopDuration,
+  coldStart,
 }) {
-  return (
-    calibrated ||
-    isFastMode({ duration, sampleMedian, minLoopDuration }) ||
-    (allSamples !== 1 && newRepeat / repeat <= MAX_REPEAT_DIFF)
-  )
+  return calibrated || (!coldStart && newRepeat / repeat <= MAX_REPEAT_DIFF)
 }
-
-// When `duration` is `1` and combination is slow, we do not calibrate.
-//   - Otherwise, users would perceive that the combination has run twice.
-const isFastMode = function ({ duration, sampleMedian, minLoopDuration }) {
-  return duration === 1 && sampleMedian > minLoopDuration * FAST_MODE_MIN_RATE
-}
-
-// Combinations with a first duration slower than this will stop right away,
-// i.e. their cold start will be reported.
-// We decide what a slow combination is by using a multiple of
-// `minLoopDuration`. This allows not relying on hardcoded durations, making it
-// work on machines of all speed. Also, this ensures that we are not skipping
-// a `repeat` calibration due to a cold start.
-// If the runner does not support repeat loops, `minLoopDuration` will be 0,
-// i.e. cold start will always be included.
-const FAST_MODE_MIN_RATE = 1e2
 
 // To end calibration, `repeat` must vary once less than this percentage.
 // It also ends when `repeat` is not increasing anymore.
