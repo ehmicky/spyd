@@ -48,17 +48,13 @@ const printOutputContents = async function (contents, output) {
 // Retrieve contents printed in preview.
 // Must be identical to the final contents.
 export const getPreviewReport = function (contents) {
-  const contentsA = contents.filter(hasTerminalOutput)
+  const contentsA = contents.filter(isTtyContent)
 
   if (contentsA.length === 0) {
     return
   }
 
   return getTtyContents(contentsA)
-}
-
-const hasTerminalOutput = function ({ output }) {
-  return output === undefined
 }
 
 const printTtyContent = async function (contents) {
