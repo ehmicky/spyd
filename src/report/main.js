@@ -5,7 +5,7 @@ import {
   outputContents,
   outputTtyContents,
   computeTtyContents,
-} from './print.js'
+} from './output.js'
 import { endReporters } from './start_end.js'
 
 // Report final results in `bench` command.
