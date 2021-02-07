@@ -110,7 +110,7 @@ const getCalibrated = function ({
 // by indicating that the first sample needs no `repeat` loop (due to being
 // much slower than it really is) while it actually does.
 const isColdStart = function (allSamples, newRepeatFloat) {
-  return allSamples === 1 && newRepeatFloat > MIN_REPEAT_COLD_START
+  return allSamples === 0 && newRepeatFloat > MIN_REPEAT_COLD_START
 }
 
 // When the first sample is that close to using the repeat loop, we continue

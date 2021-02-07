@@ -20,8 +20,6 @@ export const handleReturnValue = function (
     return {}
   }
 
-  const allSamplesA = allSamples + 1
-
   const {
     sampleMeasures: sampleMeasuresA,
     sampleMedian,
@@ -32,16 +30,18 @@ export const handleReturnValue = function (
     repeat,
     sampleMedian,
     minLoopDuration,
-    allSamples: allSamplesA,
+    allSamples,
     calibrated,
   })
   const {
+    allSamples: allSamplesA,
     samples: samplesA,
     loops: loopsA,
     times: timesA,
     bufferedMeasures: bufferedMeasuresA,
   } = bufferMeasures({
     calibrated: calibratedA,
+    allSamples,
     samples,
     loops,
     sampleLoops,
@@ -66,6 +66,7 @@ export const handleReturnValue = function (
 
 const bufferMeasures = function ({
   calibrated,
+  allSamples,
   samples,
   loops,
   sampleLoops,
@@ -74,11 +75,14 @@ const bufferMeasures = function ({
   bufferedMeasures,
   sampleMeasures,
 }) {
+  const allSamplesA = allSamples + 1
+
   if (!calibrated) {
-    return { samples, loops, times, bufferedMeasures }
+    return { allSamples: allSamplesA, samples, loops, times, bufferedMeasures }
   }
 
   return {
+    allSamples: allSamplesA,
     samples: samples + 1,
     loops: loops + sampleLoops,
     times: times + sampleLoops * repeat,
