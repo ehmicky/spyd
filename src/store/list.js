@@ -1,6 +1,7 @@
-import { UserError } from '../error/main.js'
 import { loadResults } from '../normalize/load.js'
 import { applySince } from '../normalize/merge.js'
+
+import { listResults } from './store.js'
 
 // List all results and apply `since`.
 // We try to apply `since` as soon as possible so user errors with that
@@ -15,17 +16,8 @@ export const listAll = async function (config) {
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the store
 //  - Including previous|diff in results preview
-export const listStore = async function ({ store, include, exclude }) {
-  const results = await callList(store)
+export const listStore = async function ({ cwd, include, exclude }) {
+  const results = await listResults(cwd)
   const resultsA = loadResults({ results, include, exclude })
   return resultsA
-}
-
-// Call `store.list()`
-const callList = async function (store) {
-  try {
-    return await store.list()
-  } catch (error) {
-    throw new UserError(`Could not list previous results: ${error.message}`)
-  }
 }
