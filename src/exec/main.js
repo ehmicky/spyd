@@ -24,6 +24,7 @@ export const execCombination = async function (combination, { cwd }) {
     duration: 1,
     exec: true,
     previewConfig: { quiet: true },
+    previewState: {},
   })
 }
 
