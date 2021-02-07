@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { setTimeLeft } from '../preview/set.js'
+import { setBenchmarkEnd } from '../preview/set.js'
 
 // Tasks that are longer than the `duration` configuration property are likely
 // reasons why users might stop the benchmark. In that case, the task might be
@@ -29,13 +29,13 @@ const isLongTask = function ({ sampleStart, totalDuration, duration }) {
   )
 }
 
-// Update `timeLeft` to match the time the currently executing task is expected
-// to last.
+// Update `benchmarkEnd` to match the time the currently executing task is
+// expected to end.
 // Not done if `sampleDurationMean` is `0` meaning either:
 //  - not in measure phase
 //  - measuring the first sample of the task
-// In that case, we leave `timeLeft` as is
-export const setStopTimeLeft = function ({
+// In that case, we leave `benchmarkEnd` as is
+export const setStopBechmarkEnd = function ({
   previewState,
   stopState: { sampleStart, combination: { sampleDurationMean = 0 } = {} },
   duration,
@@ -44,6 +44,6 @@ export const setStopTimeLeft = function ({
     return
   }
 
-  const timeLeft = now() - sampleStart - sampleDurationMean
-  setTimeLeft(previewState, timeLeft)
+  const benchmarkEnd = sampleStart + sampleDurationMean
+  setBenchmarkEnd(previewState, benchmarkEnd)
 }

@@ -61,10 +61,10 @@ export const getDescription = function ({
 // Clear instruction when `duration` is 0
 const NO_DURATION_DESCRIPTION = 'Type CTRL-C to stop.'
 
-// Set the preview duration and percentage by setting the expected time left
-export const setTimeLeft = function (previewState, timeLeft) {
+// Set the preview duration and percentage by setting the expected end
+export const setBenchmarkEnd = function (previewState, benchmarkEnd) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.timeLeft = Math.max(timeLeft, 0)
+  previewState.benchmarkEnd = benchmarkEnd
 }
 
 // When duration is 0 or 1, we count up, not down

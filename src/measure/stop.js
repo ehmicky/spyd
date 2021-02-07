@@ -8,7 +8,7 @@ import {
   waitForDelay,
 } from '../utils/timeout.js'
 
-import { terminateLongTask, setStopTimeLeft } from './long_task.js'
+import { terminateLongTask, setStopBechmarkEnd } from './long_task.js'
 
 // Allow users to stop measuring by using signals like SIGINT (CTRL-C).
 // When this happens, combinations still properly end and exit.
@@ -76,7 +76,7 @@ const handleStop = async function ({
 const setStopState = function ({ previewState, stopState, duration }) {
   terminateLongTask({ stopState, duration })
   setPriorityDescription(previewState, STOP_DESCRIPTION)
-  setStopTimeLeft({ previewState, stopState, duration })
+  setStopBechmarkEnd({ previewState, stopState, duration })
 
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true

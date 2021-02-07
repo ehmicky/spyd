@@ -1,6 +1,7 @@
+import now from 'precise-now'
 import randomItem from 'random-item'
 
-import { setTimeLeft } from '../preview/set.js'
+import { setBenchmarkEnd } from '../preview/set.js'
 import { getSum } from '../stats/sum.js'
 
 import { getRemainingCombinations } from './remaining.js'
@@ -21,7 +22,7 @@ export const getNextCombination = function ({
     exec,
     stopState,
   })
-  updateTimeLeft({ remainingCombinations, previewState, duration })
+  updateBenchmarkEnd({ remainingCombinations, previewState, duration })
 
   if (remainingCombinations.length === 0) {
     return
@@ -34,11 +35,11 @@ export const getNextCombination = function ({
 
 // Update the benchmark end in preview.
 // When a combination ends, we do not include its remaining duration anymore.
-// This allows `timeLeft` to adjust progressively at the end of the benchmark as
-// each combination ends.
+// This allows `benchmarkEnd` to adjust progressively at the end of the
+// benchmark as each combination ends.
 // This also allows updating the progress bar duration to `0s` when the
 // benchmark is stopped or errors.
-const updateTimeLeft = function ({
+const updateBenchmarkEnd = function ({
   remainingCombinations,
   previewState,
   duration,
@@ -52,7 +53,8 @@ const updateTimeLeft = function ({
       getCombinationTimeLeft(combination, duration),
     ),
   )
-  setTimeLeft(previewState, timeLeft)
+  const benchmarkEnd = now() + timeLeft
+  setBenchmarkEnd(previewState, benchmarkEnd)
 }
 
 const getCombinationTimeLeft = function ({ totalDuration }, duration) {
