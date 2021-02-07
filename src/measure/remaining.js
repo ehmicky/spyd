@@ -69,12 +69,10 @@ const isRemainingCombination = function ({
     return allSamples !== 0
   }
 
-  if (loops >= combinationMaxLoops) {
-    return false
-  }
-
   return (
-    loops === 0 || hasTimeLeft({ duration, sampleDurationMean, totalDuration })
+    loops === 0 ||
+    (loops < combinationMaxLoops &&
+      hasTimeLeft({ duration, sampleDurationMean, totalDuration }))
   )
 }
 
