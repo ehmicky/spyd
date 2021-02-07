@@ -2,6 +2,7 @@ import { isDirectory } from 'path-type'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
+import { groupBy } from '../utils/group.js'
 
 import { getTtyContents, getNonTtyContents } from './content.js'
 import { printToTty } from './tty.js'
@@ -22,29 +23,14 @@ const hasOutput = function ({ output }) {
 
 // Write final report to files
 const printOutputsContents = async function (contents) {
-  const nonTtyContents = contents.filter((content) => !isTtyContent(content))
-  const outputs = getOutputs(nonTtyContents)
+  const contentsA = contents.filter((content) => !isTtyContent(content))
   await Promise.all(
-    outputs.map((output) => printOutputContents(nonTtyContents, output)),
+    Object.entries(groupBy(contentsA, 'output')).map(printOutputContents),
   )
 }
 
-const isTtyContent = function ({ output }) {
-  return output === undefined
-}
-
-const getOutputs = function (contents) {
-  const outputs = contents.map(getOutput)
-  return [...new Set(outputs)]
-}
-
-const getOutput = function ({ output }) {
-  return output
-}
-
-const printOutputContents = async function (contents, output) {
-  const contentsA = contents.filter((content) => content.output === output)
-  const nonTtyContents = getNonTtyContents(contentsA)
+const printOutputContents = async function ([output, contents]) {
+  const nonTtyContents = getNonTtyContents(contents)
 
   if (await isDirectory(output)) {
     throw new UserError(
@@ -61,7 +47,7 @@ const printOutputContents = async function (contents, output) {
   }
 }
 
-// Print final report to terminal
+// Print final report to terminal.
 const printTtyContent = async function (contents) {
   const ttyContents = computeTtyContents(contents)
 
@@ -82,4 +68,8 @@ export const computeTtyContents = function (contents) {
   }
 
   return getTtyContents(contentsA)
+}
+
+const isTtyContent = function ({ output }) {
+  return output === undefined
 }
