@@ -39,11 +39,6 @@ const getOutput = function ({ output }) {
   return output
 }
 
-const printOutputContents = async function (contents, output) {
-  const contentsA = contents.filter((content) => content.output === output)
-  await writeFileContent(contentsA, output)
-}
-
 // Print final report to terminal
 const printTtyContent = async function (contents) {
   const ttyContents = computeTtyContents(contents)
@@ -68,8 +63,9 @@ export const computeTtyContents = function (contents) {
 }
 
 // Write final report to file
-const writeFileContent = async function (contents, output) {
-  const nonTtyContents = getNonTtyContents(contents)
+const printOutputContents = async function (contents, output) {
+  const contentsA = contents.filter((content) => content.output === output)
+  const nonTtyContents = getNonTtyContents(contentsA)
 
   if (await isDirectory(output)) {
     throw new UserError(
