@@ -1,3 +1,4 @@
+import { getCombinations } from './combination/main.js'
 import { checkLimits } from './compare/limit.js'
 import { getConfig } from './config/main.js'
 import { performExec } from './exec/main.js'
@@ -13,7 +14,12 @@ import { report } from './report/main.js'
 // Default command.
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
-  const { rawResult, result, stopped } = await performBenchmark(config)
+  const { combinations, systemVersions } = await getCombinations(config)
+  const { rawResult, result, stopped } = await performBenchmark(
+    config,
+    combinations,
+    systemVersions,
+  )
   await Promise.all([
     addToHistory(rawResult, config, stopped),
     report(result, config),
@@ -39,5 +45,6 @@ export const remove = async function (configFlags) {
 // Execute tasks without benchmarking them
 export const exec = async function (configFlags) {
   const config = await getConfig('exec', configFlags)
-  await performExec(config)
+  const { combinations } = await getCombinations({ ...config, duration: 1 })
+  await performExec(config, combinations)
 }

@@ -1,14 +1,11 @@
 import { getCombinationIds } from '../combination/ids.js'
-import { getCombinations } from '../combination/main.js'
 import { measureBenchmark } from '../measure/main.js'
 import { titleColor } from '../report/utils/colors.js'
 import { SEPARATOR_SIGN } from '../report/utils/separator.js'
 
 // Execute tasks without benchmarking them.
 // We run each serially, so the output is not interleaved.
-export const performExec = async function (config) {
-  const { combinations } = await getCombinations({ ...config, duration: 1 })
-
+export const performExec = async function (config, combinations) {
   // eslint-disable-next-line fp/no-loops
   for (const combination of combinations) {
     // eslint-disable-next-line no-await-in-loop

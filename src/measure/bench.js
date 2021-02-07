@@ -1,11 +1,12 @@
-import { getCombinations } from '../combination/main.js'
-
 import { getInitResult, getFinalResult } from './init.js'
 import { previewStartAndMeasure } from './preview_start.js'
 
 // Perform a new benchmark
-export const performBenchmark = async function (config) {
-  const { combinations, systemVersions } = await getCombinations(config)
+export const performBenchmark = async function (
+  config,
+  combinations,
+  systemVersions,
+) {
   const initResult = getInitResult({ combinations, systemVersions, config })
   const {
     combinations: combinationsA,
