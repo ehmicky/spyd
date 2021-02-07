@@ -5,6 +5,7 @@ export const getTime = function (nsecs) {
   const secsA = secs - minutes * SECS_TO_MINUTES
   const hours = Math.floor(minutes / MINUTES_TO_HOURS)
   const minutesA = minutes - hours * MINUTES_TO_HOURS
+
   const hoursStr = hours === 0 ? '' : `${padTime(hours)}:`
   return `${hoursStr}${padTime(minutesA)}:${padTime(secsA)}`
 }
