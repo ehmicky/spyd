@@ -8,15 +8,14 @@ import { updatePreview } from './update.js'
 // Start preview
 export const initPreview = async function ({
   combinations,
-  duration,
   previewConfig,
   previewConfig: { quiet },
+  benchmarkDuration,
 }) {
-  const benchmarkDuration = getBenchmarkDuration(combinations, duration)
   const previewState = {}
 
   if (quiet) {
-    return { previewState, benchmarkDuration }
+    return previewState
   }
 
   await setFirstPreview({ combinations, previewState, previewConfig })
@@ -24,15 +23,7 @@ export const initPreview = async function ({
   await updatePreview(previewState, benchmarkDuration)
 
   setDelayedDescription(previewState, START_DESCRIPTION)
-  return { previewState, benchmarkDuration }
-}
-
-const getBenchmarkDuration = function (combinations, duration) {
-  if (duration === 0 || duration === 1) {
-    return duration
-  }
-
-  return combinations.length * duration
+  return previewState
 }
 
 const setFirstPreview = async function ({
