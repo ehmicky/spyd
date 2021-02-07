@@ -66,7 +66,7 @@ const isRemainingCombination = function ({
   combinationMaxLoops,
 }) {
   if (exec) {
-    return allSamples !== 0
+    return allSamples === 0
   }
 
   return (
