@@ -12,7 +12,8 @@ export const previewStartAndMeasure = async function ({
   config: { quiet },
   initResult,
 }) {
-  const { previewConfig, previewState } = getPreviewConfig(initResult, config)
+  const previewConfig = getPreviewConfig(initResult, config)
+  const previewState = {}
   await setFirstPreview({ combinations, previewConfig, previewState })
   await startPreview(quiet)
 

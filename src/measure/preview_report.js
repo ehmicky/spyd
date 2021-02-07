@@ -10,9 +10,7 @@ export const getPreviewConfig = function (
   initResult,
   { quiet, reporters, titles },
 ) {
-  const previewConfig = { quiet, initResult, results: [], reporters, titles }
-  const previewState = {}
-  return { previewConfig, previewState }
+  return { quiet, initResult, results: [], reporters, titles }
 }
 
 // Preview results progressively, as combinations are being measured.
