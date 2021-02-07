@@ -3,6 +3,7 @@ import { endPreview } from '../preview/start_end.js'
 import { callReportFunc } from './call.js'
 import { insertContents } from './insert.js'
 import { printContents, computeTtyContents } from './print.js'
+import { endReporters } from './start_end.js'
 
 // Report final results
 export const report = async function (
@@ -10,6 +11,7 @@ export const report = async function (
   { reporters, titles, quiet = false },
 ) {
   const contents = await getContents(result, { reporters, titles })
+  await endReporters(reporters)
   await endPreview(quiet)
   await Promise.all([printContents(contents), insertContents(contents)])
 }
