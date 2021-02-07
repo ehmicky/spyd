@@ -7,9 +7,6 @@ const start = function (config) {
   return getDir(config)
 }
 
-// eslint-disable-next-line no-empty-function
-const end = function () {}
-
 const list = async function (dir) {
   const results = await getResults(dir)
   return results
@@ -31,4 +28,4 @@ const remove = async function (id, dir) {
   await setResults(dir, resultsA)
 }
 
-export const file = { start, end, list, add, replace, remove }
+export const file = { start, list, add, replace, remove }
