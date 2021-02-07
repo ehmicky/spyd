@@ -1,5 +1,5 @@
-import { bufferMeasures } from './buffer.js'
 import { calibrateReset } from './calibrate.js'
+import { normalizeSampleMeasures } from './normalize.js'
 import { getRepeat } from './repeat.js'
 
 // Handle return value from the last sample
@@ -37,11 +37,11 @@ export const handleReturnValue = function (
     repeat,
   })
 
-  const { bufferedMeasures: bufferedMeasuresA, sampleMedian } = bufferMeasures({
-    sampleMeasures,
-    bufferedMeasures,
-    repeat,
-  })
+  const {
+    sampleMeasures: sampleMeasuresA,
+    sampleMedian,
+  } = normalizeSampleMeasures(sampleMeasures, repeat)
+  const bufferedMeasuresA = [...bufferedMeasures, sampleMeasuresA]
 
   const { newRepeat, coldStart } = getRepeat({
     repeat,
