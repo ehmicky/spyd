@@ -1,6 +1,4 @@
-import { stdout } from 'process'
-
-import isInteractive from 'is-interactive'
+import { isTtyOutput } from '../report/tty.js'
 
 // Add default configuration properties
 export const addDefaultConfig = function ({
@@ -13,7 +11,7 @@ export const addDefaultConfig = function ({
   return {
     ...DEFAULT_CONFIG,
     cwd: processCwd,
-    quiet: !isInteractive(stdout),
+    quiet: !isTtyOutput(),
     delta: defaultDelta,
     since: defaultDelta,
     showSystem: config.system !== undefined,

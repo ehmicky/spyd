@@ -1,8 +1,6 @@
-import { stdout } from 'process'
-
-import isInteractive from 'is-interactive'
 import stripAnsi from 'strip-ansi'
 
+import { isTtyOutput } from './tty.js'
 import { addPadding } from './utils/indent.js'
 
 // Since `report()` might have side effects such as making a HTTP call, we make
@@ -21,7 +19,7 @@ const getNonTtyContent = function ({ content, colors = false }) {
   return getContent(content, colors)
 }
 
-const getTtyContent = function ({ content, colors = isInteractive(stdout) }) {
+const getTtyContent = function ({ content, colors = isTtyOutput() }) {
   return getContent(content, colors)
 }
 

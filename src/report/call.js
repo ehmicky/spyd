@@ -1,9 +1,8 @@
-import { stdout } from 'process'
-
-import isInteractive from 'is-interactive'
 import omit from 'omit.js'
 
 import { showResultTitles } from '../title/show.js'
+
+import { isTtyOutput } from './tty.js'
 
 // Call `reporter.report()`.
 // It can be async, including during results preview.
@@ -37,7 +36,7 @@ export const callReportFunc = async function ({
 // Differences are mostly useful during interaction.
 // In results persisted in files, they are mostly confusing.
 const getDefaultShowDiff = function (output) {
-  return output === undefined && isInteractive(stdout)
+  return output === undefined && isTtyOutput()
 }
 
 // Remove some result properties unless some reporterConfig properties are
