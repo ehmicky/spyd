@@ -5,9 +5,25 @@ import { showResultTitles } from '../title/show.js'
 import { cleanResult } from './clean.js'
 import { isTtyOutput } from './tty.js'
 
-// Call `reporter.report()`.
+// Call all `reporter.report()`.
 // It can be async, including during results preview.
-export const callReportFunc = async function ({
+export const getContents = async function (result, { reporters, titles }) {
+  const contents = await Promise.all(
+    reporters.map(({ report: reportFunc, config: reporterConfig, startData }) =>
+      getReporterContents({
+        reportFunc,
+        reporterConfig,
+        startData,
+        result,
+        titles,
+      }),
+    ),
+  )
+  const contentsA = contents.filter(hasContent)
+  return contentsA
+}
+
+const getReporterContents = async function ({
   reportFunc,
   result,
   startData,
@@ -50,3 +66,9 @@ const CORE_REPORT_PROPS = [
   'showMetadata',
   'showDiff',
 ]
+
+// A reporter can choose not to return anything, in which case `output` is not
+// used.
+const hasContent = function ({ content }) {
+  return typeof content === 'string' && content.trim() !== ''
+}
