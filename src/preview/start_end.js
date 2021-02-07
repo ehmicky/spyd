@@ -26,26 +26,17 @@ export const startPreview = async function ({
     previewState,
     previewConfig,
   })
-  const benchmarkDuration = getBenchmarkDuration(combinationsA, duration)
+  await firstPreview({ previewState, combinations, duration })
 
-  const previewId = await startUpdate(previewState, benchmarkDuration)
+  const previewId = startUpdate({ previewState, combinations, duration })
   setDelayedDescription(previewState, START_DESCRIPTION)
   return { previewState, previewId }
 }
 
-const getBenchmarkDuration = function (combinations, duration) {
-  if (duration === 0 || duration === 1) {
-    return duration
-  }
-
-  return combinations.length * duration
-}
-
 // Update preview at regular interval
-const startUpdate = async function (previewState, benchmarkDuration) {
-  await firstPreview(previewState, benchmarkDuration)
+const startUpdate = function ({ previewState, combinations, duration }) {
   const previewId = setInterval(() => {
-    updatePreview(previewState, benchmarkDuration)
+    updatePreview({ previewState, combinations, duration })
   }, UPDATE_FREQUENCY)
   return previewId
 }
