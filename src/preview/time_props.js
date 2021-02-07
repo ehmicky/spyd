@@ -13,24 +13,18 @@ import { getTime } from './time.js'
 //    This delay is roughly equal to the time between two `setPreviewReport()`.
 // Those are `undefined` until measuring starts.
 export const updateTimeProps = function (previewState, benchmarkDuration) {
-  const { percentage, time } = getTimeProps({
-    previewState,
-    benchmarkDuration,
-  })
+  const { percentage, time } = getTimeProps(previewState, benchmarkDuration)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, { percentage, time })
 }
 
-const getTimeProps = function ({
-  benchmarkDuration,
-  previewState: { benchmarkStart, benchmarkEnd },
-}) {
+const getTimeProps = function (previewState, benchmarkDuration) {
   return benchmarkDuration === 0 || benchmarkDuration === 1
-    ? getStartDurationProps(benchmarkStart)
-    : getEndDurationProps(benchmarkEnd, benchmarkDuration)
+    ? getStartDurationProps(previewState)
+    : getEndDurationProps(previewState, benchmarkDuration)
 }
 
-const getStartDurationProps = function (benchmarkStart) {
+const getStartDurationProps = function ({ benchmarkStart }) {
   const startDuration = getStartDuration(benchmarkStart)
   const time = getTime(startDuration)
   return { time }
@@ -45,18 +39,28 @@ const getStartDuration = function (benchmarkStart) {
   return now() - benchmarkStart
 }
 
-const getEndDurationProps = function (benchmarkEnd, benchmarkDuration) {
-  const timeLeft = getTimeLeft(benchmarkEnd, benchmarkDuration)
+const getEndDurationProps = function (previewState, benchmarkDuration) {
+  const timeLeft = updateTimeLeft(previewState, benchmarkDuration)
   const percentage = 1 - timeLeft / benchmarkDuration
   const time = getTime(timeLeft, benchmarkDuration)
   return { percentage, time }
 }
 
+// We do not allow `timeLeft` to decrease, only to freeze.
+// This prevents `timeLeft` from jumping up when a combination lasts longer
+// than its allowed `duration`.
+const updateTimeLeft = function (previewState, benchmarkDuration) {
+  const timeLeft = getTimeLeft(previewState, benchmarkDuration)
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.timeLeft = timeLeft
+  return timeLeft
+}
+
 // `benchmarkEnd` is undefined when not started yet
-const getTimeLeft = function (benchmarkEnd, benchmarkDuration) {
+const getTimeLeft = function ({ benchmarkEnd, timeLeft }, benchmarkDuration) {
   if (benchmarkEnd === undefined) {
     return benchmarkDuration
   }
 
-  return Math.max(benchmarkEnd - now(), 0)
+  return Math.min(Math.max(benchmarkEnd - now(), 0), timeLeft)
 }
