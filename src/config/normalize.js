@@ -77,7 +77,6 @@ const NORMALIZERS = {
   since: normalizeDeltaProp,
   runner: normalizeArrayProp,
   reporter: normalizeOptionalArrProp,
-  store: normalizeOptionalArrProp,
   include: normalizeOptionalArrProp,
   exclude: normalizeOptionalArrProp,
   limit: normalizeOptionalArrProp,

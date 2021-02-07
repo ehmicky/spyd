@@ -7,7 +7,7 @@ import { addTitles, addTitle } from './add.js'
 // Allow users to rename identifiers from any combination category: tasks,
 // runners, systems, variations.
 // Shown only in reporters. Computed during reporting, i.e. not persisted in
-// stores.
+// history.
 // We purposely show identifiers by default, i.e. titles need opt-in using the
 // `showTitles` property because:
 //  - they are more useful for users because they are used for selection

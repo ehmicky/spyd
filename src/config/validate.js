@@ -24,7 +24,7 @@ const isStaticKeyProp = function (key) {
 }
 
 // Configuration properties whose key is dynamic but starts with a known prefix
-const DYNAMIC_KEY_PROPS = ['runner', 'reporter', 'store']
+const DYNAMIC_KEY_PROPS = ['runner', 'reporter']
 // Object configuration properties whose properties are dynamic
 const DYNAMIC_OBJECT_PROPS = ['titles', 'inputs']
 
@@ -51,7 +51,6 @@ const EXAMPLE_CONFIG = {
   tasks: './benchmark/tasks.js',
   runner: optionalArray('node'),
   reporter: optionalArray('debug'),
-  store: optionalArray('file'),
   limit: optionalArray('task_id=10'),
   quiet: true,
   debug: false,

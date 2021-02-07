@@ -44,7 +44,7 @@ export const getFromHistory = async function (config) {
 
 // List, sort, filter and normalize all results
 // This is performed at the beginning of all commands because this allows:
-//  - Failing fast if there is a problem with the store
+//  - Failing fast if there is a problem with the history
 //  - Including previous|diff in results preview
 const listNormalizedResults = async function ({ cwd, include, exclude }) {
   const results = await listResults(cwd)

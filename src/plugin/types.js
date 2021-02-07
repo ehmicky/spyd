@@ -39,4 +39,4 @@ export const PLUGIN_TYPES = [
 ]
 
 // Configuration properties to remove after loading
-export const PLUGIN_PROP_PREFIXES = ['runner', 'reporter', 'store']
+export const PLUGIN_PROP_PREFIXES = ['runner', 'reporter']
