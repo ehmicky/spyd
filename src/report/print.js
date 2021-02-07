@@ -11,14 +11,39 @@ import { printToTty } from './tty.js'
 // property
 export const printContents = async function (contents) {
   const contentsA = contents.filter(hasOutput)
-  await printOutputsContents(contentsA)
-  await printTtyContent(contentsA)
+  await Promise.all([
+    printTtyContent(contentsA),
+    printOutputsContents(contentsA),
+  ])
 }
 
 // Output with "" is silent. This is useful when using "insert" and no TTY
 // output is wanted.
 const hasOutput = function ({ output }) {
   return output !== ''
+}
+
+// Print final report to terminal.
+const printTtyContent = async function (contents) {
+  const ttyContents = computeTtyContents(contents)
+
+  if (ttyContents === undefined) {
+    return
+  }
+
+  await printToTty(ttyContents)
+}
+
+// Retrieve contents printed in preview.
+// Must be identical to the final contents.
+export const computeTtyContents = function (contents) {
+  const contentsA = contents.filter(isTtyContent)
+
+  if (contentsA.length === 0) {
+    return
+  }
+
+  return getTtyContents(contentsA)
 }
 
 // Write final report to files
@@ -45,29 +70,6 @@ const printOutputContents = async function ([output, contents]) {
       `Could not write to "output" "${output}"\n${error.message}`,
     )
   }
-}
-
-// Print final report to terminal.
-const printTtyContent = async function (contents) {
-  const ttyContents = computeTtyContents(contents)
-
-  if (ttyContents === undefined) {
-    return
-  }
-
-  await printToTty(ttyContents)
-}
-
-// Retrieve contents printed in preview.
-// Must be identical to the final contents.
-export const computeTtyContents = function (contents) {
-  const contentsA = contents.filter(isTtyContent)
-
-  if (contentsA.length === 0) {
-    return
-  }
-
-  return getTtyContents(contentsA)
 }
 
 const isTtyContent = function ({ output }) {
