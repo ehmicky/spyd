@@ -1,6 +1,6 @@
 import { listHistory } from '../history/main.js'
 import { startPreviewRefresh, endPreviewRefresh } from '../preview/refresh.js'
-import { startPreview } from '../preview/start_end.js'
+import { startPreview, endPreview } from '../preview/start_end.js'
 
 import { measureBenchmark } from './main.js'
 import { getPreviewConfig, setFirstPreview } from './preview_report.js'
@@ -18,12 +18,17 @@ export const previewStartAndMeasure = async function ({
 
   await startPreview(quiet)
 
-  return await previewRefreshAndMeasure({
-    combinations,
-    config,
-    previewConfig,
-    previewState,
-  })
+  try {
+    return await previewRefreshAndMeasure({
+      combinations,
+      config,
+      previewConfig,
+      previewState,
+    })
+  } catch (error) {
+    await handlePreviewError(error, quiet)
+    throw error
+  }
 }
 
 // Start preview refresh then measure benchmark
@@ -72,4 +77,15 @@ const getBenchmarkDuration = function (combinations, duration) {
   }
 
   return combinations.length * duration
+}
+
+// Aborts behave like stops, i.e. last preview remains shown. This allows users
+// to stop a benchmark without losing information.
+// However failures only print the error message, i.e. clear the preview.
+const handlePreviewError = async function (error, quiet) {
+  if (error.name === 'AbortError') {
+    return
+  }
+
+  await endPreview(quiet)
 }
