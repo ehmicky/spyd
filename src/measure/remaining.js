@@ -77,9 +77,13 @@ const hasTimeLeft = function ({
   totalDuration,
   calibrated,
 }) {
+  if (duration === 0) {
+    return true
+  }
+
   if (duration === 1) {
     return !calibrated
   }
 
-  return duration === 0 || totalDuration + sampleDurationMean < duration
+  return totalDuration + sampleDurationMean < duration
 }
