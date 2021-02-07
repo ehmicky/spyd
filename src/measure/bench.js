@@ -8,7 +8,7 @@ import { startPreview } from '../preview/start_end.js'
 
 import { getInitResult, getFinalResult } from './init.js'
 import { measureBenchmark } from './main.js'
-import { setFirstPreview } from './preview.js'
+import { getPreviewConfig, setFirstPreview } from './preview.js'
 
 // Perform a new benchmark
 export const performBenchmark = async function (config) {
@@ -70,23 +70,4 @@ const previewAndMeasure = async function ({
       benchmarkDuration,
     })
   }
-}
-
-const getPreviewConfig = function ({
-  combinations,
-  config: { quiet, duration, reporters, titles },
-  initResult,
-}) {
-  const previewState = {}
-  const previewConfig = { quiet, initResult, results: [], reporters, titles }
-  const benchmarkDuration = getBenchmarkDuration(combinations, duration)
-  return { previewState, previewConfig, benchmarkDuration }
-}
-
-const getBenchmarkDuration = function (combinations, duration) {
-  if (duration === 0 || duration === 1) {
-    return duration
-  }
-
-  return combinations.length * duration
 }
