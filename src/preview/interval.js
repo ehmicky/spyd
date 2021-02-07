@@ -26,10 +26,18 @@ const UPDATE_FREQUENCY = 1e2
 //  - When succeeding, we wait for the final reporter.report() before clearing
 //  - When stopping or aborting, we keep the last preview
 //  - When failing, we clear it
-export const endPreviewInterval = function (previewId) {
-  if (previewId === undefined) {
+// Update preview one last time.
+export const endPreviewInterval = async function ({
+  previewState,
+  combinations,
+  duration,
+  quiet,
+  previewId,
+}) {
+  if (quiet) {
     return
   }
 
   clearInterval(previewId)
+  await updatePreview({ previewState, combinations, duration })
 }

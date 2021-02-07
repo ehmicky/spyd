@@ -1,35 +1,19 @@
-import { addInitProps } from '../measure/props.js'
+import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
-import { initPreview } from './init.js'
-import { setPreviewReport } from './report.js'
-import { setDelayedDescription } from './set.js'
-import { firstPreview } from './update.js'
+import { clearScreen, clearScreenFull } from '../report/tty.js'
 
-// Start preview
-export const startPreview = async function ({
-  combinations,
-  duration,
-  previewConfig,
-  previewConfig: { quiet },
-}) {
-  const previewState = {}
-
-  if (quiet) {
-    return previewState
-  }
-
-  initPreview()
-
-  const combinationsA = combinations.map(addInitProps)
-  await setPreviewReport({
-    combinations: combinationsA,
-    previewState,
-    previewConfig,
-  })
-  await firstPreview({ previewState, combinations: combinationsA, duration })
-
-  setDelayedDescription(previewState, START_DESCRIPTION)
-  return previewState
+// Start clearing the screen
+export const startPreview = async function () {
+  hideCursor()
+  await clearScreenFull()
 }
 
-const START_DESCRIPTION = 'Starting...'
+// Stop clearing the screen
+export const endPreview = async function (quiet) {
+  if (quiet) {
+    return
+  }
+
+  await clearScreen()
+  showCursor()
+}
