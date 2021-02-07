@@ -17,7 +17,7 @@ import { updateCombinations } from './update.js'
 // duration when measures are taken:
 //  - This allows combinations to be previewed at the same time, displaying
 //    them competing with each other
-//  - This allows some parameters to be callibrated (e.g. `repeat`)
+//  - This allows some parameters to be calibrated (e.g. `repeat`)
 //  - This helps when stopping benchmarks by allowing samples to end so tasks
 //    can be cleaned up
 //  - This provides with fast fail if one of the combinations fails
