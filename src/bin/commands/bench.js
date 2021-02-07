@@ -1,9 +1,9 @@
 import { ALL_CONFIG } from '../config/all.js'
 import { BENCH_CONFIG } from '../config/bench.js'
+import { HISTORY_CONFIG } from '../config/history.js'
 import { REPORT_CONFIG } from '../config/report.js'
 import { RUN_CONFIG } from '../config/run.js'
 import { SELECT_CONFIG } from '../config/select.js'
-import { STORE_CONFIG } from '../config/store.js'
 
 export const BENCH_COMMAND = {
   command: ['bench [tasks]', '* [tasks]'],
@@ -15,7 +15,7 @@ export const BENCH_COMMAND = {
     ...SELECT_CONFIG,
     ...BENCH_CONFIG,
     ...REPORT_CONFIG,
-    ...STORE_CONFIG,
+    ...HISTORY_CONFIG,
   },
 
   usage: `$0 [flags...] [tasks]

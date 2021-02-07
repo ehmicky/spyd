@@ -1,4 +1,4 @@
-import { TASKS, STORE } from './groups.js'
+import { TASKS, HISTORY } from './groups.js'
 
 // Configuration shared by commands that can run combinations: `bench`, `exec`
 export const RUN_CONFIG = {
@@ -34,7 +34,7 @@ such as --inputs.size.small=5
 The inputs values are passed to tasks as arguments.`,
   },
   system: {
-    group: STORE,
+    group: HISTORY,
     string: true,
     requiresArg: true,
     describe: `Identifier of the current hardware/software system.

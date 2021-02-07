@@ -1,11 +1,11 @@
 import { ALL_CONFIG } from '../config/all.js'
-import { STORE_CONFIG } from '../config/store.js'
+import { HISTORY_CONFIG } from '../config/history.js'
 
 export const REMOVE_COMMAND = {
   command: 'remove [delta]',
   describe: 'Remove a previous result',
 
-  config: { ...ALL_CONFIG, ...STORE_CONFIG },
+  config: { ...ALL_CONFIG, ...HISTORY_CONFIG },
 
   usage: `$0 [flags...] remove [delta]
 

@@ -1,7 +1,7 @@
 import { ALL_CONFIG } from '../config/all.js'
+import { HISTORY_CONFIG } from '../config/history.js'
 import { REPORT_CONFIG } from '../config/report.js'
 import { SELECT_CONFIG } from '../config/select.js'
-import { STORE_CONFIG } from '../config/store.js'
 
 export const SHOW_COMMAND = {
   command: 'show [delta]',
@@ -11,7 +11,7 @@ export const SHOW_COMMAND = {
     ...ALL_CONFIG,
     ...SELECT_CONFIG,
     ...REPORT_CONFIG,
-    ...STORE_CONFIG,
+    ...HISTORY_CONFIG,
   },
 
   usage: `$0 [flags...] show [delta]

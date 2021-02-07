@@ -1,4 +1,4 @@
-import { TASKS, REPORT, STORE } from './groups.js'
+import { TASKS, REPORT, HISTORY } from './groups.js'
 
 // Configuration specific to `bench`
 export const BENCH_CONFIG = {
@@ -25,14 +25,14 @@ Default: false if the terminal is interactive.`,
     requiresArg: true,
   },
   save: {
-    group: STORE,
+    group: HISTORY,
     alias: 's',
     boolean: true,
     describe: `Save the results.
 Default: false`,
   },
   limit: {
-    group: STORE,
+    group: HISTORY,
     alias: 'l',
     string: true,
     array: true,
