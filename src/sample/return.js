@@ -25,7 +25,7 @@ export const handleReturnValue = function (
   const {
     sampleMeasures: sampleMeasuresA,
     sampleMedian,
-    loopsLast,
+    sampleLoops,
   } = normalizeSampleMeasures(sampleMeasures, repeat)
 
   const { newRepeat, calibrated: calibratedA } = handleRepeat({
@@ -44,7 +44,7 @@ export const handleReturnValue = function (
     calibrated: calibratedA,
     samples,
     loops,
-    loopsLast,
+    sampleLoops,
     times,
     repeat,
     bufferedMeasures,
@@ -56,7 +56,7 @@ export const handleReturnValue = function (
     samples: samplesA,
     allSamples: allSamplesA,
     loops: loopsA,
-    loopsLast,
+    sampleLoops,
     times: timesA,
     repeat: newRepeat,
     repeatLast: repeat,
@@ -68,7 +68,7 @@ const bufferMeasures = function ({
   calibrated,
   samples,
   loops,
-  loopsLast,
+  sampleLoops,
   times,
   repeat,
   bufferedMeasures,
@@ -80,8 +80,8 @@ const bufferMeasures = function ({
 
   return {
     samples: samples + 1,
-    loops: loops + loopsLast,
-    times: times + loopsLast * repeat,
+    loops: loops + sampleLoops,
+    times: times + sampleLoops * repeat,
     bufferedMeasures: [...bufferedMeasures, sampleMeasures],
   }
 }

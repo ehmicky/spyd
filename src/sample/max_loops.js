@@ -26,7 +26,7 @@ export const getMaxLoops = function ({
   measureDuration,
   repeat,
   repeatLast,
-  loopsLast,
+  sampleLoops,
 }) {
   // First sample of the benchmark
   if (measureDuration === 0) {
@@ -34,7 +34,7 @@ export const getMaxLoops = function ({
   }
 
   const repeatGrowth = repeat / repeatLast
-  const measureDurationPerLoop = measureDuration / loopsLast
+  const measureDurationPerLoop = measureDuration / sampleLoops
   const targetMaxLoops = Math.round(
     TARGET_DURATION / (measureDurationPerLoop * repeatGrowth),
   )

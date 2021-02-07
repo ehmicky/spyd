@@ -6,8 +6,8 @@ export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
   const sampleMeasuresA = normalizeRepeat(sampleMeasures, repeat)
   sortFloats(sampleMeasuresA)
   const sampleMedian = getSortedMedian(sampleMeasuresA)
-  const loopsLast = sampleMeasuresA.length
-  return { sampleMeasures: sampleMeasuresA, sampleMedian, loopsLast }
+  const sampleLoops = sampleMeasuresA.length
+  return { sampleMeasures: sampleMeasuresA, sampleMedian, sampleLoops }
 }
 
 // The runner measures loops of the task. This retrieve the mean time to execute

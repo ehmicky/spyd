@@ -5,13 +5,13 @@ export const getParams = function ({
   measureDuration,
   repeat,
   repeatLast,
-  loopsLast,
+  sampleLoops,
 }) {
   const maxLoops = getMaxLoops({
     measureDuration,
     repeat,
     repeatLast,
-    loopsLast,
+    sampleLoops,
   })
   return { maxLoops, repeat }
 }
