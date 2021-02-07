@@ -9,6 +9,7 @@ import { isTtyOutput } from './tty.js'
 export const callReportFunc = async function ({
   reportFunc,
   result,
+  startData,
   reporterConfig,
   reporterConfig: {
     showSystem,
@@ -29,7 +30,7 @@ export const callReportFunc = async function ({
     showDiff,
   })
   const reportFuncProps = omit(reporterConfig, CORE_REPORT_PROPS)
-  const content = await reportFunc(resultB, reportFuncProps)
+  const content = await reportFunc(resultB, reportFuncProps, startData)
   return { content, output, insert, colors }
 }
 

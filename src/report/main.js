@@ -25,8 +25,8 @@ export const reportPreview = async function (result, { reporters, titles }) {
 
 const getContents = async function (result, { reporters, titles }) {
   const contents = await Promise.all(
-    reporters.map(({ report: reportFunc, config: reporterConfig }) =>
-      callReportFunc({ reportFunc, reporterConfig, result, titles }),
+    reporters.map(({ report: reportFunc, config: reporterConfig, startData }) =>
+      callReportFunc({ reportFunc, reporterConfig, startData, result, titles }),
     ),
   )
   const contentsA = contents.filter(hasContent)

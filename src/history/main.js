@@ -19,9 +19,8 @@ export const addToHistory = async function (result, { save, cwd }, stopped) {
 }
 
 // Remove a result
-export const removeFromHistoy = async function (config) {
-  const { id } = await getFromHistory(config)
-  await removeResult(id, config.cwd)
+export const removeFromHistory = async function ({ id }, { cwd }) {
+  await removeResult(id, cwd)
 }
 
 // List all results and apply `since`.
