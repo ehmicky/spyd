@@ -1,25 +1,42 @@
 import { endPreview } from '../preview/start_end.js'
 
 import { callReportFunc } from './call.js'
-import { printContents, computeTtyContents } from './print.js'
+import { printContents, printTtyContent, computeTtyContents } from './print.js'
 import { endReporters } from './start_end.js'
 
-// Report final results
-export const report = async function (
+// Report final results in `bench` command
+export const reportBench = async function (
   result,
-  { reporters, titles, quiet = false },
+  { reporters, titles, quiet },
 ) {
-  const contents = await getContents(result, { reporters, titles })
-  await endReporters(reporters)
+  const contents = await endReport(result, { reporters, titles })
   await endPreview(quiet)
   await printContents(contents)
 }
 
-// Report preview results
+// Report preview results in `bench` command
 export const reportPreview = async function (result, { reporters, titles }) {
   const contents = await getContents(result, { reporters, titles })
   const previewReport = computeTtyContents(contents)
   return previewReport
+}
+
+// Report final results in `show` command
+export const reportShow = async function (result, { reporters, titles }) {
+  const contents = await endReport(result, { reporters, titles })
+  await printContents(contents)
+}
+
+// Report final results in `remove` command
+export const reportRemove = async function (result, { reporters, titles }) {
+  const contents = await endReport(result, { reporters, titles })
+  await printTtyContent(contents)
+}
+
+const endReport = async function (result, { reporters, titles }) {
+  const contents = await getContents(result, { reporters, titles })
+  await endReporters(reporters)
+  return contents
 }
 
 const getContents = async function (result, { reporters, titles }) {

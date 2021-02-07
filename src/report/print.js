@@ -17,7 +17,7 @@ export const printContents = async function (contents) {
 }
 
 // Print final report to terminal.
-const printTtyContent = async function (contents) {
+export const printTtyContent = async function (contents) {
   const ttyContents = computeTtyContents(contents)
 
   if (ttyContents === undefined) {

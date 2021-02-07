@@ -8,7 +8,7 @@ import {
   removeFromHistory,
 } from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
-import { report } from './report/main.js'
+import { reportBench, reportShow, reportRemove } from './report/main.js'
 import { startReporters } from './report/start_end.js'
 
 // Measure code defined in a tasks file and report the results.
@@ -26,7 +26,7 @@ export const bench = async function (configFlags) {
   )
   await Promise.all([
     addToHistory(rawResult, configA, stopped),
-    report(result, configA),
+    reportBench(result, configA),
   ])
   checkLimits(result, configA)
   return result
@@ -39,7 +39,7 @@ export const show = async function (configFlags) {
     getFromHistory(config),
     startReporters(config),
   ])
-  await report(result, configA)
+  await reportShow(result, configA)
   return result
 }
 
@@ -50,7 +50,7 @@ export const remove = async function (configFlags) {
     getFromHistory(config),
     startReporters(config),
   ])
-  await report(result, configA)
+  await reportRemove(result, configA)
   await removeFromHistory(result, configA)
   return result
 }
