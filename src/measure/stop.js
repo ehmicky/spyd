@@ -1,6 +1,6 @@
 import process from 'process'
 
-import { UserError } from '../error/main.js'
+import { AbortError } from '../error/main.js'
 import { setPriorityDescription } from '../preview/set.js'
 import {
   createController,
@@ -70,7 +70,7 @@ const handleStop = async function ({
 
   await waitForStopSignals(abortSignal)
 
-  throw new UserError('Benchmark has been aborted')
+  throw new AbortError('Benchmark has been aborted')
 }
 
 const setStopState = function ({ previewState, stopState, duration }) {
