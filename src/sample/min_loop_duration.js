@@ -60,10 +60,14 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - This is simpler to implement for both the runner and the parent
 //  - This prevents its computation from de-optimizing the measured task
 //  - The median more stable as the `config` and tasks change
-//  - The precision of `minLoopDuration` is not very critical since the total
-//    number of `times` each step is run should be the same regardless of
-//    `repeat`. This is because a lower|higher `repeat` is balanced by
-//    `maxLoops` and `scale`.
+// The precision of `minLoopDuration` is not very critical:
+//  - The total number of `times` each step is run should be the same
+//    regardless of `repeat`. This is because a lower|higher `repeat` is
+//    balanced by `maxLoops` and `scale`.
+//  - The `stats.median` is mostly not impacted by the `minLoopDuration`.
+//  - `stats.mean` is moderately impacted, but not too much.
+//  - `stats.min|max|deviation` are much more impact, but those stats are not
+//    as critical.
 export const getMinLoopDuration = function (calibrations) {
   if (calibrations.length === 0) {
     return 0
