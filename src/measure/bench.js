@@ -1,6 +1,10 @@
 import { getCombinations } from '../combination/main.js'
 import { listHistory } from '../history/main.js'
-import { startPreview, endPreview } from '../preview/start_end.js'
+import {
+  startPreviewInterval,
+  endPreviewInterval,
+} from '../preview/interval.js'
+import { startPreview } from '../preview/start_end.js'
 
 import { getInitResult, getFinalResult } from './init.js'
 import { measureBenchmark } from './main.js'
@@ -29,10 +33,16 @@ const previewAndMeasure = async function ({
   initResult,
 }) {
   const previewConfig = { quiet, initResult, results: [], reporters, titles }
-  const { previewState, previewId } = await startPreview({
+  const previewState = await startPreview({
     combinations,
     duration,
     previewConfig,
+  })
+  const previewId = await startPreviewInterval({
+    previewState,
+    combinations,
+    duration,
+    quiet,
   })
 
   try {
@@ -51,6 +61,6 @@ const previewAndMeasure = async function ({
     )
     return { combinations: combinationsA, stopped, results }
   } finally {
-    endPreview(previewId)
+    endPreviewInterval(previewId)
   }
 }
