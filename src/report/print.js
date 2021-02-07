@@ -1,12 +1,10 @@
-import { stdout } from 'process'
-import { promisify } from 'util'
-
 import { isDirectory } from 'path-type'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
 
 import { getTtyContents, getNonTtyContents } from './content.js'
+import { printToTty } from './tty.js'
 
 // Print result to file or to terminal based on the `output` configuration
 // property
@@ -36,7 +34,7 @@ const printOutputContents = async function (contents, output) {
   const contentsA = contents.filter((content) => content.output === output)
 
   if (output === undefined) {
-    await printToTerminal(contentsA)
+    await printTtyContent(contentsA)
     return
   }
 
@@ -59,14 +57,9 @@ const hasTerminalOutput = function ({ output }) {
   return output === undefined
 }
 
-const printToTerminal = async function (contents) {
-  // Happens when piping to `less` then aborting
-  if (stdout.destroyed) {
-    return
-  }
-
+const printTtyContent = async function (contents) {
   const ttyContents = getTtyContents(contents)
-  await promisify(stdout.write.bind(stdout))(ttyContents)
+  await printToTty(ttyContents)
 }
 
 const writeFileContent = async function (contents, output) {

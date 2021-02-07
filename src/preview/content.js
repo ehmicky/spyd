@@ -1,5 +1,4 @@
-import { stdout } from 'process'
-
+import { getScreenWidth } from '../report/tty.js'
 import { goodColor, separatorColor } from '../report/utils/colors.js'
 
 // Retrieve preview content.
@@ -9,7 +8,7 @@ export const getContent = function ({
   description = '',
   report,
 }) {
-  const screenWidth = getScreenWidth(stdout)
+  const screenWidth = getScreenWidth()
   const results = getResults(report, screenWidth)
   const progressBar = getProgressBar({ percentage, time, screenWidth })
 
@@ -19,13 +18,6 @@ export const getContent = function ({
  ${description}
 `
 }
-
-const getScreenWidth = function ({ columns = DEFAULT_WIDTH }) {
-  return columns
-}
-
-// Used when the output is not a TTY
-const DEFAULT_WIDTH = 80
 
 // `report` is `undefined` when all reporters have `reporter.quiet: true`.
 const getResults = function (report, screenWidth) {
