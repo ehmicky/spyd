@@ -1,12 +1,10 @@
-import { calibrateReset } from './calibrate.js'
 import { normalizeSampleMeasures } from './normalize.js'
-import { getRepeat } from './repeat.js'
+import { handleRepeat } from './repeat.js'
 
 // Handle return value from the last sample
 // eslint-disable-next-line max-lines-per-function
 export const handleReturnValue = function (
   {
-    measures,
     bufferedMeasures,
     allSamples,
     samples,
@@ -22,78 +20,68 @@ export const handleReturnValue = function (
     return {}
   }
 
-  const loopsLast = sampleMeasures.length
-  const {
-    samples: samplesA,
-    allSamples: allSamplesA,
-    loops: loopsA,
-    times: timesA,
-  } = incrementCounts({
-    samples,
-    allSamples,
-    loops,
-    loopsLast,
-    times,
-    repeat,
-  })
+  const allSamplesA = allSamples + 1
 
   const {
     sampleMeasures: sampleMeasuresA,
     sampleMedian,
+    loopsLast,
   } = normalizeSampleMeasures(sampleMeasures, repeat)
-  const bufferedMeasuresA = [...bufferedMeasures, sampleMeasuresA]
 
-  const { newRepeat, coldStart } = getRepeat({
+  const { newRepeat, calibrated: calibratedA } = handleRepeat({
     repeat,
     sampleMedian,
     minLoopDuration,
     allSamples: allSamplesA,
+    calibrated,
   })
   const {
-    calibrated: calibratedA,
-    measures: measuresA,
-    bufferedMeasures: bufferedMeasuresB,
-    samples: samplesB,
-    loops: loopsB,
-    times: timesB,
-  } = calibrateReset({
-    calibrated,
-    repeat,
-    newRepeat,
-    coldStart,
-    measures,
-    bufferedMeasures: bufferedMeasuresA,
     samples: samplesA,
     loops: loopsA,
     times: timesA,
+    bufferedMeasures: bufferedMeasuresA,
+  } = bufferMeasures({
+    calibrated: calibratedA,
+    samples,
+    loops,
+    loopsLast,
+    times,
+    repeat,
+    bufferedMeasures,
+    sampleMeasures: sampleMeasuresA,
   })
 
   return {
-    measures: measuresA,
-    bufferedMeasures: bufferedMeasuresB,
-    samples: samplesB,
+    bufferedMeasures: bufferedMeasuresA,
+    samples: samplesA,
     allSamples: allSamplesA,
-    loops: loopsB,
+    loops: loopsA,
     loopsLast,
-    times: timesB,
+    times: timesA,
     repeat: newRepeat,
     repeatLast: repeat,
     calibrated: calibratedA,
   }
 }
 
-const incrementCounts = function ({
+const bufferMeasures = function ({
+  calibrated,
   samples,
-  allSamples,
   loops,
   loopsLast,
   times,
   repeat,
+  bufferedMeasures,
+  sampleMeasures,
 }) {
+  if (!calibrated) {
+    return { samples, loops, times, bufferedMeasures }
+  }
+
   return {
     samples: samples + 1,
-    allSamples: allSamples + 1,
     loops: loops + loopsLast,
     times: times + loopsLast * repeat,
+    bufferedMeasures: [...bufferedMeasures, sampleMeasures],
   }
 }

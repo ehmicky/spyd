@@ -17,14 +17,14 @@ import { previewCombinations } from './preview_report.js'
 // specific amount of duration based on that last aggregation duration.
 export const aggregatePreview = async function ({
   newCombination,
-  newCombination: { measures, aggregateCountdown, sampleDurationLast },
+  newCombination: { aggregateCountdown, sampleDurationLast, bufferedMeasures },
   combinations,
   previewConfig,
   previewState,
 }) {
   const aggregateCountdownA = aggregateCountdown - sampleDurationLast
 
-  if (!shouldAggregate(aggregateCountdownA, measures)) {
+  if (!shouldAggregate(aggregateCountdownA, bufferedMeasures)) {
     return { ...newCombination, aggregateCountdown: aggregateCountdownA }
   }
 
@@ -40,12 +40,10 @@ export const aggregatePreview = async function ({
   return { ...newCombinationA, aggregateCountdown: aggregateCountdownB }
 }
 
-// We always recompute this:
-//  - During calibration to recompute the `stats.median`
-//  - At the beginning, or when `calibrateReset()` has just been called, so
-//    that there are some `measures` to compute the `stats.median`
-const shouldAggregate = function (aggregateCountdown, measures) {
-  return aggregateCountdown <= 0 || measures.length === 0
+// We do not recompute during calibration or when there are no new buffered
+// measures to aggregate
+const shouldAggregate = function (aggregateCountdown, bufferedMeasures) {
+  return aggregateCountdown <= 0 && bufferedMeasures.length !== 0
 }
 
 // Performed both incrementally, and once at the end.
@@ -54,10 +52,6 @@ export const aggregateMeasures = function ({
   bufferedMeasures,
   ...combination
 }) {
-  if (bufferedMeasures.length === 0) {
-    return { ...combination, measures, bufferedMeasures }
-  }
-
   addBufferedMeasures(measures, bufferedMeasures)
   const stats = computeStats(measures)
   return { ...combination, measures, bufferedMeasures: [], stats }

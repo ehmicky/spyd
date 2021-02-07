@@ -45,14 +45,9 @@ const START_DESCRIPTION = 'Starting...'
 export const previewCombinations = async function ({
   combinations,
   newCombination,
-  newCombination: { loops },
   previewConfig,
   previewState,
 }) {
-  if (loops === 0) {
-    return
-  }
-
   const combinationsA = updateCombinations(combinations, newCombination)
   await setPreviewReport({
     combinations: combinationsA,
