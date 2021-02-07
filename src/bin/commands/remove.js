@@ -1,25 +1,39 @@
 import { ALL_CONFIG } from '../config/all.js'
 import { HISTORY_CONFIG } from '../config/history.js'
+import { REPORT_CONFIG } from '../config/report.js'
+import { SELECT_CONFIG } from '../config/select.js'
 
 export const REMOVE_COMMAND = {
   command: 'remove [delta]',
   describe: 'Remove a previous result',
 
-  config: { ...ALL_CONFIG, ...HISTORY_CONFIG },
+  config: {
+    ...ALL_CONFIG,
+    ...SELECT_CONFIG,
+    ...REPORT_CONFIG,
+    ...HISTORY_CONFIG,
+  },
 
   usage: `$0 [flags...] remove [delta]
 
 Remove a previous result.
 
-The 'delta' argument can be:
-  - nothing: remove the last result
-  - integer: remove the {integer}-th previous result
-  - a date|time: remove the last result before that date|time.
-    Examples of valid values include: 'yyyy-mm-dd', 'yyyy-mm-dd hh:mm:ss'.`,
+The "delta" argument targets the result. It can be:
+  - an integer: {integer}-th last result
+  - "first": first result
+  - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
+  - a duration: like "1m", "5d", "1 month" or "1y"
+  - a result id
+  - a git commit, tag or branch
+  - "ci": last CI build
+
+The default "delta" is the last CI build when in CI, or the last result
+otherwise.`,
 
   examples: [
-    ['$0 remove', 'Remove a previous result'],
+    ['$0 remove', 'Remove the last result'],
     ['$0 remove 2', 'Remove the second-to-last result'],
+    ['$0 remove first', 'Remove the first result'],
     [
       '$0 remove 2018-02-01',
       'Remove the last result before the 1st of February 2018',
@@ -28,5 +42,14 @@ The 'delta' argument can be:
       '$0 remove 2018-02-01T15:00:00Z',
       'Remove the last result before the 1st of February 2018 at 15:00 UTC',
     ],
+    ['$0 remove 1y', 'Remove the last result before 1 year ago'],
+    [
+      '$0 remove 4209c7d7-721d-4b5b-8465-4e038fa2890c',
+      'Remove the result with this id',
+    ],
+    ['$0 remove 4221b22a', 'Remove the last result with this git commit'],
+    ['$0 remove v1.0.1', 'Remove the last result with this git tag'],
+    ['$0 remove feat/users', 'Remove the last result with this git branch'],
+    ['$0 remove ci', 'Remove the last CI build'],
   ],
 }

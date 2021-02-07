@@ -1,6 +1,6 @@
 import { REPORT } from './groups.js'
 
-// Configuration shared by reporting commands: `bench`, `show`
+// Configuration shared by reporting commands: `bench`, `show`, `remove`
 export const REPORT_CONFIG = {
   reporter: {
     group: REPORT,
