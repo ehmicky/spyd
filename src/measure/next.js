@@ -1,7 +1,7 @@
 import now from 'precise-now'
 import randomItem from 'random-item'
 
-import { setBenchmarkEnd } from '../preview/set.js'
+import { setTimeLeft } from '../preview/set.js'
 import { getSum } from '../stats/sum.js'
 
 import { getRemainingCombinations } from './remaining.js'
@@ -22,7 +22,7 @@ export const getNextCombination = function ({
     exec,
     stopState,
   })
-  updateBenchmarkEnd({ remainingCombinations, previewState, duration })
+  updateTimeLeft({ remainingCombinations, previewState, duration })
 
   if (remainingCombinations.length === 0) {
     return
@@ -35,14 +35,11 @@ export const getNextCombination = function ({
 
 // Update the benchmark end in preview.
 // When a combination ends, we do not include its remaining duration anymore.
-// This allows `benchmarkEnd` to adjust progressively at the end of the
-// benchmark as each combination ends.
+// This allows `timeLeft` to adjust progressively at the end of the benchmark as
+// each combination ends.
 // This also allows updating the progress bar duration to `0s` when the
 // benchmark is stopped or errors.
-// If a task is slower than its `duration`, `benchmarkEnd` might increase. In
-// that case, we make `benchmarkEnd` freeze for a moment instead of making it
-// jump up.
-const updateBenchmarkEnd = function ({
+const updateTimeLeft = function ({
   remainingCombinations,
   previewState,
   duration,
@@ -51,16 +48,15 @@ const updateBenchmarkEnd = function ({
     return
   }
 
-  const remainingDuration = getSum(
+  const timeLeft = getSum(
     remainingCombinations.map((combination) =>
-      getRemainingDuration(combination, duration),
+      getCombinationTimeLeft(combination, duration),
     ),
   )
-  const benchmarkEnd = now() + remainingDuration
-  setBenchmarkEnd(previewState, benchmarkEnd)
+  setTimeLeft(previewState, timeLeft)
 }
 
-const getRemainingDuration = function ({ totalDuration }, duration) {
+const getCombinationTimeLeft = function ({ totalDuration }, duration) {
   return Math.max(duration - totalDuration, 0)
 }
 

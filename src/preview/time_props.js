@@ -22,12 +22,12 @@ export const updateTimeProps = function (previewState, benchmarkDuration) {
 }
 
 const getTimeProps = function ({
-  previewState: { benchmarkStart, benchmarkEnd },
   benchmarkDuration,
+  previewState: { benchmarkStart, timeLeft },
 }) {
   return benchmarkDuration === 0 || benchmarkDuration === 1
     ? getStartDurationProps(benchmarkStart)
-    : getEndDurationProps(benchmarkEnd, benchmarkDuration)
+    : getEndDurationProps(benchmarkDuration, timeLeft)
 }
 
 const getStartDurationProps = function (benchmarkStart) {
@@ -36,8 +36,8 @@ const getStartDurationProps = function (benchmarkStart) {
   return { time }
 }
 
+// `benchmarkStart` is undefined when not started yet
 const getStartDuration = function (benchmarkStart) {
-  // Not started yet
   if (benchmarkStart === undefined) {
     return 0
   }
@@ -45,18 +45,12 @@ const getStartDuration = function (benchmarkStart) {
   return now() - benchmarkStart
 }
 
-const getEndDurationProps = function (benchmarkEnd, benchmarkDuration) {
-  const timeLeft = getTimeLeft(benchmarkEnd, benchmarkDuration)
+// `timeLeft` is undefined when not started yet
+const getEndDurationProps = function (
+  benchmarkDuration,
+  timeLeft = benchmarkDuration,
+) {
   const percentage = 1 - timeLeft / benchmarkDuration
   const time = getTime(timeLeft, benchmarkDuration)
   return { percentage, time }
-}
-
-const getTimeLeft = function (benchmarkEnd, benchmarkDuration) {
-  // Not started yet
-  if (benchmarkEnd === undefined) {
-    return benchmarkDuration
-  }
-
-  return Math.max(benchmarkEnd - now(), 0)
 }
