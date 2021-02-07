@@ -30,14 +30,14 @@ export const setFirstPreview = async function ({
     return
   }
 
-  setDelayedDescription(previewState, START_DESCRIPTION)
-
   const combinationsA = combinations.map(addInitProps)
   await setPreviewReport({
     combinations: combinationsA,
     previewConfig,
     previewState,
   })
+
+  setDelayedDescription(previewState, START_DESCRIPTION)
 }
 
 const START_DESCRIPTION = 'Starting...'
