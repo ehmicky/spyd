@@ -1,10 +1,10 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
-import { clearScreen, clearScreenFull } from '../report/tty.js'
+import { clearScreen } from '../report/tty.js'
 
 import { setPreviewReport } from './report.js'
 import { setDelayedDescription } from './set.js'
-import { updatePreview } from './update.js'
+import { initPreview, updatePreview } from './update.js'
 
 // Start preview
 export const startPreview = async function ({
@@ -23,7 +23,6 @@ export const startPreview = async function ({
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
 
   hideCursor()
-  await clearScreenFull()
 
   const previewId = await startUpdate(previewState, benchmarkDuration)
   setDelayedDescription(previewState, START_DESCRIPTION)
@@ -40,7 +39,7 @@ const getBenchmarkDuration = function (combinations, duration) {
 
 // Update preview at regular interval
 const startUpdate = async function (previewState, benchmarkDuration) {
-  await updatePreview(previewState, benchmarkDuration)
+  await initPreview(previewState, benchmarkDuration)
   const previewId = setInterval(() => {
     updatePreview(previewState, benchmarkDuration)
   }, UPDATE_FREQUENCY)

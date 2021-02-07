@@ -1,15 +1,21 @@
-import { printToTty, clearScreen } from '../report/tty.js'
+import { printToTty, clearScreen, clearScreenFull } from '../report/tty.js'
 
 import { getContent } from './content.js'
 import { getDescription } from './set.js'
 import { updateTimeProps } from './time_props.js'
 
-// Print preview
+// Initialize preview terminal
+export const initPreview = async function (previewState, benchmarkDuration) {
+  await clearScreenFull()
+  await updatePreview(previewState, benchmarkDuration)
+}
+
+// Refresh preview
 export const updatePreview = async function (previewState, benchmarkDuration) {
+  await clearScreen()
+
   updateTimeProps(previewState, benchmarkDuration)
   const previewContent = getPreviewContent(previewState, benchmarkDuration)
-
-  await clearScreen()
   await printToTty(previewContent)
 }
 
