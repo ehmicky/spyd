@@ -3,7 +3,7 @@ import now from 'precise-now'
 import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
 
-import { previewCombinations } from './preview.js'
+import { previewCombinations } from './preview_report.js'
 
 // Aggregate `bufferedMeasures` to `measures`.
 // The `stats` need a single `measures` array, so they are computed right after.

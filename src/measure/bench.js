@@ -5,7 +5,7 @@ import { startPreview } from '../preview/start_end.js'
 
 import { getInitResult, getFinalResult } from './init.js'
 import { measureBenchmark } from './main.js'
-import { getPreviewConfig, setFirstPreview } from './preview.js'
+import { getPreviewConfig, setFirstPreview } from './preview_report.js'
 
 // Perform a new benchmark
 export const performBenchmark = async function (config) {
