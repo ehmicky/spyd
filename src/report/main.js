@@ -1,7 +1,11 @@
 import { endPreview } from '../preview/start_end.js'
 
 import { getContents } from './call.js'
-import { printContents, printTtyContent, computeTtyContents } from './print.js'
+import {
+  outputContents,
+  outputTtyContents,
+  computeTtyContents,
+} from './print.js'
 import { endReporters } from './start_end.js'
 
 // Report final results in `bench` command.
@@ -13,7 +17,7 @@ export const reportBench = async function (
 ) {
   const contents = await endReport(result, { reporters, titles })
   await endPreview(quiet)
-  await printContents(contents)
+  await outputContents(contents)
 }
 
 // Report preview results in `bench` command.
@@ -28,7 +32,7 @@ export const reportPreview = async function (result, { reporters, titles }) {
 // Report final results in `show` command.
 export const reportShow = async function (result, { reporters, titles }) {
   const contents = await endReport(result, { reporters, titles })
-  await printContents(contents)
+  await outputContents(contents)
 }
 
 // Report final results in `remove` command.
@@ -37,7 +41,7 @@ export const reportShow = async function (result, { reporters, titles }) {
 // not output|insert files.
 export const reportRemove = async function (result, { reporters, titles }) {
   const contents = await endReport(result, { reporters, titles })
-  await printTtyContent(contents)
+  await outputTtyContents(contents)
 }
 
 const endReport = async function (result, { reporters, titles }) {

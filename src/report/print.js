@@ -12,12 +12,15 @@ import { printToTty } from './tty.js'
 // property.
 // If the file contains the spyd-start and spyd-end comments, the content is
 // inserted between them instead.
-export const printContents = async function (contents) {
-  await Promise.all([printTtyContent(contents), printOutputsContents(contents)])
+export const outputContents = async function (contents) {
+  await Promise.all([
+    outputTtyContents(contents),
+    outputFilesContents(contents),
+  ])
 }
 
 // Print final report to terminal.
-export const printTtyContent = async function (contents) {
+export const outputTtyContents = async function (contents) {
   const ttyContents = computeTtyContents(contents)
 
   if (ttyContents === undefined) {
@@ -40,14 +43,14 @@ export const computeTtyContents = function (contents) {
 }
 
 // Write final report to files
-const printOutputsContents = async function (contents) {
+const outputFilesContents = async function (contents) {
   const contentsA = contents.filter((content) => !isTtyContent(content))
   await Promise.all(
-    Object.entries(groupBy(contentsA, 'output')).map(printOutputContents),
+    Object.entries(groupBy(contentsA, 'output')).map(outputFileContents),
   )
 }
 
-const printOutputContents = async function ([output, contents]) {
+const outputFileContents = async function ([output, contents]) {
   const nonTtyContents = getNonTtyContents(contents)
 
   if (await isDirectory(output)) {
