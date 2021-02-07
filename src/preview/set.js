@@ -75,3 +75,9 @@ export const setBenchmarkStart = function (previewState) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.benchmarkStart = now()
 }
+
+// When duration is 1, we increase the progress bar each time a combination ends
+export const setPercentage = function (previewState, percentage) {
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.percentage = percentage
+}

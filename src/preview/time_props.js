@@ -2,16 +2,17 @@ import now from 'precise-now'
 
 import { getTime } from './time.js'
 
-// Update `percentage` and `time` to show in preview. There are two modes:
-//  - When `duration` is 0 or 1, `time` goes up and `percentage` is `undefined`
-//  - Otherwise, `time` does down and `percentage` is based on `duration`
+// Update `percentage` and `time` to show in preview. There are three modes:
+//  - When `duration` is 0, `time` goes up and an empty progress bar is shown
+//  - When `duration` is 1, `time` goes up and a progress bar shows which
+//    combinations have ended.
+//  - Otherwise, `time` does down and the progress bar is based on `duration`
 // Those are also passed to `reporters` in preview:
 //  - This is meant for reporters not printed in terminal.
 //  - This is not passed to the final report.
 //  - Unlike the progress bar, there is a slight delay since those properties
 //    require another call to `setPreviewReport()` then to `updatePreview()`.
 //    This delay is roughly equal to the time between two `setPreviewReport()`.
-// Those are `undefined` until measuring starts.
 export const updateTimeProps = function (previewState, benchmarkDuration) {
   const { percentage, time } = getTimeProps(previewState, benchmarkDuration)
   // eslint-disable-next-line fp/no-mutating-assign
@@ -24,10 +25,10 @@ const getTimeProps = function (previewState, benchmarkDuration) {
     : getEndDurationProps(previewState, benchmarkDuration)
 }
 
-const getStartDurationProps = function ({ benchmarkStart }) {
+const getStartDurationProps = function ({ benchmarkStart, percentage = 0 }) {
   const startDuration = getStartDuration(benchmarkStart)
   const time = getTime(startDuration)
-  return { time }
+  return { time, percentage }
 }
 
 // `benchmarkStart` is undefined when not started yet

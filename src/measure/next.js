@@ -1,7 +1,7 @@
 import now from 'precise-now'
 import randomItem from 'random-item'
 
-import { setBenchmarkEnd } from '../preview/set.js'
+import { setBenchmarkEnd, setPercentage } from '../preview/set.js'
 import { getSum } from '../stats/sum.js'
 
 import { getRemainingCombinations } from './remaining.js'
@@ -22,7 +22,12 @@ export const getNextCombination = function ({
     exec,
     stopState,
   })
-  updateBenchmarkEnd({ remainingCombinations, previewState, duration })
+  updateBenchmarkEnd({
+    combinations,
+    remainingCombinations,
+    previewState,
+    duration,
+  })
 
   if (remainingCombinations.length === 0) {
     return
@@ -40,11 +45,17 @@ export const getNextCombination = function ({
 // This also allows updating the progress bar duration to `0s` when the
 // benchmark is stopped or errors.
 const updateBenchmarkEnd = function ({
+  combinations,
   remainingCombinations,
   previewState,
   duration,
 }) {
-  if (duration === 0 || duration === 1) {
+  if (duration === 0) {
+    return
+  }
+
+  if (duration === 1) {
+    setBenchmarkPercentage(combinations, remainingCombinations, previewState)
     return
   }
 
@@ -55,6 +66,15 @@ const updateBenchmarkEnd = function ({
   )
   const benchmarkEnd = now() + timeLeft
   setBenchmarkEnd(previewState, benchmarkEnd)
+}
+
+const setBenchmarkPercentage = function (
+  combinations,
+  remainingCombinations,
+  previewState,
+) {
+  const percentage = 1 - remainingCombinations.length / combinations.length
+  setPercentage(previewState, percentage)
 }
 
 const getCombinationTimeLeft = function ({ totalDuration }, duration) {

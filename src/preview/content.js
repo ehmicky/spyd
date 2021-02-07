@@ -30,10 +30,6 @@ const getResults = function (report, screenWidth) {
 }
 
 const getProgressBar = function ({ percentage, time, screenWidth }) {
-  if (percentage === undefined) {
-    return ''
-  }
-
   const width = screenWidth - time.length - PADDING_WIDTH
   const filled = Math.floor(width * percentage)
   const filledChars = FILL_CHAR.repeat(filled)
