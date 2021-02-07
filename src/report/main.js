@@ -4,7 +4,9 @@ import { callReportFunc } from './call.js'
 import { printContents, printTtyContent, computeTtyContents } from './print.js'
 import { endReporters } from './start_end.js'
 
-// Report final results in `bench` command
+// Report final results in `bench` command.
+// This waits for `reporter.report()` and `reporter.end()` to complete before
+// clearing the preview, in case those are slow.
 export const reportBench = async function (
   result,
   { reporters, titles, quiet },
@@ -14,20 +16,25 @@ export const reportBench = async function (
   await printContents(contents)
 }
 
-// Report preview results in `bench` command
+// Report preview results in `bench` command.
+// The report output is not printed right away. Instead, it is printed by the
+// preview refresh function at regular intervals.
 export const reportPreview = async function (result, { reporters, titles }) {
   const contents = await getContents(result, { reporters, titles })
   const previewReport = computeTtyContents(contents)
   return previewReport
 }
 
-// Report final results in `show` command
+// Report final results in `show` command.
 export const reportShow = async function (result, { reporters, titles }) {
   const contents = await endReport(result, { reporters, titles })
   await printContents(contents)
 }
 
-// Report final results in `remove` command
+// Report final results in `remove` command.
+// Reporting is shown so the user can be clear about which result was removed,
+// and provide with confirmation. So we only need to print in the terminal,
+// not output|insert files.
 export const reportRemove = async function (result, { reporters, titles }) {
   const contents = await endReport(result, { reporters, titles })
   await printTtyContent(contents)
