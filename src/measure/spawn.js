@@ -48,17 +48,15 @@ const stopOrMeasure = async function ({
   duration,
   previewConfig,
   exec,
-  stopState,
   previewState,
 }) {
-  const { onAbort, removeStopHandler } = addStopHandler({
-    stopState,
+  const { stopState, onAbort, removeStopHandler } = addStopHandler(
     previewState,
     duration,
-  })
+  )
 
   try {
-    return await Promise.race([
+    const combinationsA = await Promise.race([
       onAbort,
       measureAllCombinations({
         combinations,
@@ -69,6 +67,7 @@ const stopOrMeasure = async function ({
         stopState,
       }),
     ])
+    return { combinations: combinationsA, stopped: stopState.stopped }
   } finally {
     removeStopHandler()
   }

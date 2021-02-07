@@ -3,7 +3,6 @@ import { startServer, endServer } from '../server/start_end.js'
 
 import { addInitProps } from './props.js'
 import { spawnAndMeasure } from './spawn.js'
-import { getStopState } from './stop.js'
 
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
@@ -13,7 +12,6 @@ export const measureBenchmark = async function (
 ) {
   const combinationsA = combinations.map(addInitProps)
 
-  const stopState = getStopState()
   const { previewState, previewId } = await startPreview({
     combinations: combinationsA,
     duration,
@@ -21,16 +19,14 @@ export const measureBenchmark = async function (
   })
 
   try {
-    const combinationsB = await startServerAndMeasure({
+    return await startServerAndMeasure({
       combinations: combinationsA,
       duration,
       cwd,
       previewConfig,
       exec,
-      stopState,
       previewState,
     })
-    return { combinations: combinationsB, stopped: stopState.stopped }
   } finally {
     await endPreview(previewId)
   }
