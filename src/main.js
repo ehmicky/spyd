@@ -33,8 +33,7 @@ export const show = async function (configFlags) {
 // Remove a previous result
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
-  const result = await getFromStore(config)
-  await removeFromStore(result, config)
+  await removeFromStore(config)
 }
 
 // Execute tasks without benchmarking them

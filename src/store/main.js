@@ -7,6 +7,23 @@ import { mergeResults, applySince } from '../normalize/merge.js'
 
 import { addResult, removeResult, listResults } from './store.js'
 
+// Save results so they can be compared or shown later.
+// We do not save stopped benchmarks.
+export const addToStore = async function (result, { save, cwd }, stopped) {
+  if (!save || stopped) {
+    return
+  }
+
+  const resultA = compressResult(result)
+  await addResult(resultA, cwd)
+}
+
+// Remove a result
+export const removeFromStore = async function (config) {
+  const { id } = await getFromStore(config)
+  await removeResult(id, config.cwd)
+}
+
 // List all results and apply `since`.
 // We try to apply `since` as soon as possible so user errors with that
 // configuration property fail early.
@@ -50,20 +67,4 @@ const listResultsByDelta = async function (results, { delta, cwd }) {
   const lastResult = results[index]
   const previous = results.slice(0, index)
   return { lastResult, previous }
-}
-
-// Save results so they can be compared or shown later.
-// We do not save stopped benchmarks.
-export const addToStore = async function (result, { save, cwd }, stopped) {
-  if (!save || stopped) {
-    return
-  }
-
-  const resultA = compressResult(result)
-  await addResult(resultA, cwd)
-}
-
-// Remove a result
-export const removeFromStore = async function ({ id }, { cwd }) {
-  await removeResult(id, cwd)
 }
