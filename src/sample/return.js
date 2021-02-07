@@ -17,7 +17,6 @@ export const handleReturnValue = function (
     minLoopDuration,
   },
   { measures: sampleMeasures },
-  duration,
 ) {
   if (sampleMeasures === undefined) {
     return {}
@@ -54,7 +53,7 @@ export const handleReturnValue = function (
     repeat,
     sampleMedian,
     minLoopDuration,
-    allSamples,
+    allSamples: allSamplesA,
   })
   const calibratedA = getCalibrated({
     calibrated,

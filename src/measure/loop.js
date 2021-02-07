@@ -66,11 +66,7 @@ export const performMeasureLoop = async function ({
     Object.assign(stopState, { sampleStart, combination })
 
     // eslint-disable-next-line no-await-in-loop
-    const newCombination = await eMeasureSample({
-      combination,
-      stopState,
-      duration,
-    })
+    const newCombination = await eMeasureSample(combination, stopState)
 
     // eslint-disable-next-line no-await-in-loop
     const newCombinationA = await aggregatePreview({
@@ -104,9 +100,9 @@ const hasTaskId = function ({ taskId }) {
   return taskId !== undefined
 }
 
-const eMeasureSample = async function ({ combination, stopState, duration }) {
+const eMeasureSample = async function (combination, stopState) {
   return await Promise.race([
     failOnProcessExit(combination, stopState),
-    measureSample(combination, duration),
+    measureSample(combination),
   ])
 }
