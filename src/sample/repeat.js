@@ -21,63 +21,36 @@ export const handleRepeat = function ({
   allSamples,
   calibrated,
 }) {
-  const { newRepeat, coldStart } = getRepeat({
-    repeat,
-    sampleMedian,
-    minLoopDuration,
-    allSamples,
-  })
-  const calibratedA = getCalibrated({
-    calibrated,
-    repeat,
-    newRepeat,
-    coldStart,
-  })
-  return { newRepeat, calibrated: calibratedA }
-}
-
-const getRepeat = function ({
-  repeat,
-  sampleMedian,
-  minLoopDuration,
-  allSamples,
-}) {
   // If the runner does not supports `repeat`, it is always set to `1`.
   // We should not use a repeat loop when estimating `measureCost` since
   // `measureCost` only happens once per repeat loop
   if (minLoopDuration === 0) {
-    return { newRepeat: 1, coldStart: false }
+    return { newRepeat: 1, calibrated: true }
   }
 
-  const firstSample = allSamples === 1
-
+  // `sampleMedian` can be 0 when the task is too close to `minLoopDuration`.
+  // In that case, we multiply the `repeat` with a fixed rate.
   if (sampleMedian === 0) {
-    return { newRepeat: repeat * FAST_MEDIAN_RATE, coldStart: firstSample }
+    return { newRepeat: repeat * FAST_MEDIAN_RATE, calibrated }
   }
 
-  const newRepeat = minLoopDuration / sampleMedian
-  const coldStart = isColdStart(firstSample, newRepeat)
-  const newRepeatA = Math.ceil(newRepeat)
-  return { newRepeat: newRepeatA, coldStart }
+  const newRepeatFloat = minLoopDuration / sampleMedian
+  const newRepeat = Math.ceil(newRepeatFloat)
+
+  if (calibrated) {
+    return { newRepeat, calibrated }
+  }
+
+  const calibratedA = getCalibrated({
+    repeat,
+    newRepeat,
+    newRepeatFloat,
+    allSamples,
+  })
+  return { newRepeat, calibrated: calibratedA }
 }
 
-// `sampleMedian` can be 0 when the task is too close to `minLoopDuration`.
-// In that case, we multiply the `repeat` with a fixed rate.
 const FAST_MEDIAN_RATE = 10
-
-// The first sample (cold start) is usually much slower due to engine
-// optimization and/or memoization. This can make hinder `repeat` calibration
-// by indicating that the first sample needs no `repeat` loop (due to being
-// much slower than it really is) while it actually does.
-const isColdStart = function (firstSample, newRepeat) {
-  return firstSample && newRepeat > MIN_COLD_START
-}
-
-// When the first sample is that close to using the repeat loop, we continue
-// calibrating.
-// A higher number gives more false negatives, while a lower numbers gives more
-// false positives.
-const MIN_COLD_START = 1e-2
 
 // The number of `repeat` loops is estimated using the measures:
 //  - Since those are based on the number of `repeat` loops themselves, there
@@ -88,6 +61,9 @@ const MIN_COLD_START = 1e-2
 // both inaccurate and imprecise.
 //   - Therefore we remove the measures taken during calibration.
 //   - We also do not report them, including in previews.
+// Calibration happens only once, at the beginning:
+//   - `calibrated` is initially `false`
+//   - Once it becomes `true`, it never comes back to `false`
 // We only reset cumulated stats.
 //   - We do not reset stats which only use the last sample when those
 //     cumulated stats are reset, such as `stats` and `repeat`.
@@ -117,9 +93,31 @@ const MIN_COLD_START = 1e-2
 //     - Switching between `duration: 1` and others `duration` should show the
 //       same results when lasting the same amount of time.
 // Calibration is based on the difference between `repeat` and `newRepeat`.
-const getCalibrated = function ({ calibrated, repeat, newRepeat, coldStart }) {
-  return calibrated || (!coldStart && newRepeat / repeat <= MAX_REPEAT_DIFF)
+const getCalibrated = function ({
+  repeat,
+  newRepeat,
+  newRepeatFloat,
+  allSamples,
+}) {
+  return (
+    !isColdStart(allSamples, newRepeatFloat) &&
+    newRepeat / repeat <= MAX_REPEAT_DIFF
+  )
 }
+
+// The first sample (cold start) is usually much slower due to engine
+// optimization and/or memoization. This can make hinder `repeat` calibration
+// by indicating that the first sample needs no `repeat` loop (due to being
+// much slower than it really is) while it actually does.
+const isColdStart = function (allSamples, newRepeatFloat) {
+  return allSamples === 1 && newRepeatFloat > MIN_REPEAT_COLD_START
+}
+
+// When the first sample is that close to using the repeat loop, we continue
+// calibrating.
+// A higher number gives more false negatives, while a lower numbers gives more
+// false positives.
+const MIN_REPEAT_COLD_START = 1e-2
 
 // To end calibration, `repeat` must vary once less than this percentage.
 // It also ends when `repeat` is not increasing anymore.
@@ -127,6 +125,4 @@ const getCalibrated = function ({ calibrated, repeat, newRepeat, coldStart }) {
 // more inaccurate and imprecise.
 // A lower number will make calibration last longer, making combinations with
 // low `duration` most likely to only use one sample.
-// We also need to make sure an increase due to `FAST_MEDIAN_RATE` is below that
-// threshold.
 const MAX_REPEAT_DIFF = 1.1
