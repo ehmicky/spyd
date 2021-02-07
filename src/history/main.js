@@ -5,7 +5,7 @@ import { compressResult } from '../normalize/compress.js'
 import { loadResults } from '../normalize/load.js'
 import { mergeResults, applySince } from '../normalize/merge.js'
 
-import { addResult, removeResult, listResults } from './store.js'
+import { addResult, removeResult, listResults } from './results.js'
 
 // Save results so they can be compared or shown later.
 // We do not save stopped benchmarks.
