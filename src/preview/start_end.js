@@ -5,7 +5,7 @@ import { clearScreen, clearScreenFull } from '../report/tty.js'
 import { setDelayedDescription } from './set.js'
 
 // Start clearing the screen
-export const startPreview = async function ({ quiet }, previewState) {
+export const startPreview = async function (quiet, previewState) {
   if (quiet) {
     return
   }

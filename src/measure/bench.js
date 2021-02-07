@@ -30,18 +30,18 @@ export const performBenchmark = async function (config) {
 const previewAndMeasure = async function ({
   combinations,
   config,
-  config: { cwd, duration },
+  config: { cwd, duration, quiet },
   initResult,
 }) {
   const { previewState, previewConfig } = getPreviewConfig(initResult, config)
   await setFirstPreview({ combinations, previewState, previewConfig })
-  await startPreview(previewConfig, previewState)
+  await startPreview(quiet, previewState)
 
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
   const previewId = await startPreviewInterval({
-    previewConfig,
     previewState,
     benchmarkDuration,
+    quiet,
   })
 
   try {
@@ -61,10 +61,10 @@ const previewAndMeasure = async function ({
     return { combinations: combinationsA, stopped, results }
   } finally {
     await endPreviewInterval({
-      previewConfig,
       previewState,
       previewId,
       benchmarkDuration,
+      quiet,
     })
   }
 }
