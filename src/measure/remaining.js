@@ -68,21 +68,22 @@ const isRemainingCombination = function ({
   )
 }
 
-// When `duration` is `1`, we run the combination only once.
-// But if the combination is calibrating, we wait for calibration.
-// This includes removing the cold start.
 const hasTimeLeft = function ({
   duration,
   sampleDurationMean,
   totalDuration,
   calibrated,
 }) {
+  if (!calibrated) {
+    return true
+  }
+
   if (duration === 0) {
     return true
   }
 
   if (duration === 1) {
-    return !calibrated
+    return false
   }
 
   return totalDuration + sampleDurationMean < duration
