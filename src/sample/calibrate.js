@@ -51,7 +51,7 @@ export const getCalibrated = function ({
 // A higher number will include more uncalibrated measures, making the results
 // more inaccurate and imprecise.
 // A lower number will make calibration last longer, making combinations with
-// low `duration` most likely to only use once sample.
+// low `duration` most likely to only use one sample.
 // We also need to make sure an increase due to `FAST_MEDIAN_RATE` is below that
 // threshold.
 const MAX_REPEAT_DIFF = 1.1
