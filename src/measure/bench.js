@@ -35,7 +35,7 @@ const previewAndMeasure = async function ({
 }) {
   const { previewState, previewConfig } = getPreviewConfig(initResult, config)
   await setFirstPreview({ combinations, previewState, previewConfig })
-  await startPreview(quiet, previewState)
+  await startPreview(quiet)
 
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
   const previewId = await startPreviewInterval({
