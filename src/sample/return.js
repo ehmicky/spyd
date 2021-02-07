@@ -3,7 +3,7 @@ import { calibrateReset } from './calibrate.js'
 import { getRepeat } from './repeat.js'
 
 // Handle return value from the last sample
-// eslint-disable-next-line max-statements, max-lines-per-function
+// eslint-disable-next-line max-lines-per-function
 export const handleReturnValue = function (
   {
     measures,
@@ -22,11 +22,20 @@ export const handleReturnValue = function (
     return {}
   }
 
-  const samplesA = samples + 1
-  const allSamplesA = allSamples + 1
   const loopsLast = sampleMeasures.length
-  const loopsA = loops + loopsLast
-  const timesA = times + loopsLast * repeat
+  const {
+    samples: samplesA,
+    allSamples: allSamplesA,
+    loops: loopsA,
+    times: timesA,
+  } = incrementCounts({
+    samples,
+    allSamples,
+    loops,
+    loopsLast,
+    times,
+    repeat,
+  })
 
   const { bufferedMeasures: bufferedMeasuresA, sampleMedian } = bufferMeasures({
     sampleMeasures,
@@ -70,5 +79,21 @@ export const handleReturnValue = function (
     repeat: newRepeat,
     repeatLast: repeat,
     calibrated: calibratedA,
+  }
+}
+
+const incrementCounts = function ({
+  samples,
+  allSamples,
+  loops,
+  loopsLast,
+  times,
+  repeat,
+}) {
+  return {
+    samples: samples + 1,
+    allSamples: allSamples + 1,
+    loops: loops + loopsLast,
+    times: times + loopsLast * repeat,
   }
 }
