@@ -1,4 +1,4 @@
-import { getScreenHeight, printToTty, clearScreen } from '../report/tty.js'
+import { printToTty, clearScreen } from '../report/tty.js'
 
 import { getContent } from './content.js'
 import { getDescription } from './set.js'
@@ -23,12 +23,4 @@ const getPreviewContent = function (
     benchmarkDuration,
   })
   return getContent({ percentage, time, description: descriptionA, report })
-}
-
-// At the beginning of the benchmark, we print newlines so that clearing the
-// screen does not remove previous prompts
-export const clearPreviewInit = async function () {
-  const screenHeight = getScreenHeight()
-  const newlines = '\n'.repeat(screenHeight - 1)
-  await printToTty(newlines)
 }
