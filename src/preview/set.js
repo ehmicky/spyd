@@ -61,7 +61,10 @@ export const getDescription = function ({
 // Clear instruction when `duration` is 0
 const NO_DURATION_DESCRIPTION = 'Type CTRL-C to stop.'
 
-// Set the preview duration and percentage by setting the expected end
+// Set the preview duration and percentage by setting the expected end.
+// set the expected end instead of the expected time left so that the preview
+// refresh logic can progressively decrease as time passes, even if
+// `setBenchmarkEnd()` is not called again.
 export const setBenchmarkEnd = function (previewState, benchmarkEnd) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.benchmarkEnd = benchmarkEnd
