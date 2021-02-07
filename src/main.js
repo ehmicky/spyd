@@ -14,8 +14,10 @@ import { report } from './report/main.js'
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
   const { rawResult, result, stopped } = await performBenchmark(config)
-  await addToHistory(rawResult, config, stopped)
-  await report(result, config)
+  await Promise.all([
+    addToHistory(rawResult, config, stopped),
+    report(result, config),
+  ])
   checkLimits(result, config)
   return result
 }
