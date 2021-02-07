@@ -36,8 +36,8 @@ export const performMeasureLoop = async function ({
   combinations,
   duration,
   previewConfig,
-  exec,
   previewState,
+  exec,
   stopState,
 }) {
   if (isInit(combinations)) {
@@ -72,8 +72,8 @@ export const performMeasureLoop = async function ({
     const newCombinationA = await aggregatePreview({
       newCombination,
       combinations,
-      previewState,
       previewConfig,
+      previewState,
     })
 
     const newCombinationB = addSampleDuration(newCombinationA, sampleStart)

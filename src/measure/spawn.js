@@ -17,9 +17,9 @@ export const spawnAndMeasure = async function ({
   duration,
   cwd,
   previewConfig,
+  previewState,
   exec,
   stopState,
-  previewState,
 }) {
   const combinationsA = spawnRunnerProcesses({
     combinations,
@@ -33,9 +33,9 @@ export const spawnAndMeasure = async function ({
       combinations: combinationsA,
       duration,
       previewConfig,
+      previewState,
       exec,
       stopState,
-      previewState,
     })
   } finally {
     terminateRunnerProcesses(combinationsA)
@@ -47,8 +47,8 @@ const stopOrMeasure = async function ({
   combinations,
   duration,
   previewConfig,
-  exec,
   previewState,
+  exec,
 }) {
   const { stopState, onAbort, removeStopHandler } = addStopHandler(
     previewState,
@@ -62,8 +62,8 @@ const stopOrMeasure = async function ({
         combinations,
         duration,
         previewConfig,
-        exec,
         previewState,
+        exec,
         stopState,
       }),
     ])
@@ -78,8 +78,8 @@ const measureAllCombinations = async function ({
   combinations,
   duration,
   previewConfig,
-  exec,
   previewState,
+  exec,
   stopState,
 }) {
   const combinationsA = await startCombinations(combinations, previewState)
@@ -87,8 +87,8 @@ const measureAllCombinations = async function ({
     combinations: combinationsA,
     duration,
     previewConfig,
-    exec,
     previewState,
+    exec,
     stopState,
   })
   const combinationsC = await endCombinations(combinationsB, previewState)

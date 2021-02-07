@@ -23,8 +23,8 @@ export const aggregatePreview = async function ({
     calibrated,
   },
   combinations,
-  previewState,
   previewConfig,
+  previewState,
 }) {
   const aggregateCountdownA = aggregateCountdown - sampleDurationLast
 
@@ -37,8 +37,8 @@ export const aggregatePreview = async function ({
   await previewCombinations({
     combinations,
     newCombination: newCombinationA,
-    previewState,
     previewConfig,
+    previewState,
   })
   const aggregateCountdownB = getAggregateCountdown(aggregateStart)
   return { ...newCombinationA, aggregateCountdown: aggregateCountdownB }

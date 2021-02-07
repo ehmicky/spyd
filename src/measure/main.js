@@ -24,8 +24,8 @@ export const measureBenchmark = async function (
       duration,
       cwd,
       previewConfig,
-      exec,
       previewState,
+      exec,
     })
   } finally {
     await endPreview(previewId)
@@ -38,9 +38,9 @@ const startServerAndMeasure = async function ({
   duration,
   cwd,
   previewConfig,
+  previewState,
   exec,
   stopState,
-  previewState,
 }) {
   const { server, origin, combinations: combinationsA } = await startServer(
     combinations,
@@ -54,9 +54,9 @@ const startServerAndMeasure = async function ({
       duration,
       cwd,
       previewConfig,
+      previewState,
       exec,
       stopState,
-      previewState,
     })
   } finally {
     await endServer(server)

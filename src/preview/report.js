@@ -13,8 +13,8 @@ export const previewCombinations = async function ({
   combinations,
   newCombination,
   newCombination: { calibrated },
-  previewState,
   previewConfig,
+  previewState,
 }) {
   if (!calibrated) {
     return
@@ -23,16 +23,16 @@ export const previewCombinations = async function ({
   const combinationsA = updateCombinations(combinations, newCombination)
   await setPreviewReport({
     combinations: combinationsA,
-    previewState,
     previewConfig,
+    previewState,
   })
 }
 
 export const setPreviewReport = async function ({
   combinations,
+  previewConfig: { initResult, results, quiet, reporters, titles },
   previewState,
   previewState: { time, percentage },
-  previewConfig: { initResult, results, quiet, reporters, titles },
 }) {
   if (quiet) {
     return
