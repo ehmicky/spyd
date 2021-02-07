@@ -5,10 +5,10 @@ import { addInitProps } from './props.js'
 import { updateCombinations } from './update.js'
 
 // Retrieve state and configuration for previews
-export const getPreviewConfig = function ({
-  config: { quiet, reporters, titles },
+export const getPreviewConfig = function (
   initResult,
-}) {
+  { quiet, reporters, titles },
+) {
   const previewState = {}
   const previewConfig = { quiet, initResult, results: [], reporters, titles }
   return { previewState, previewConfig }

@@ -33,10 +33,7 @@ const previewAndMeasure = async function ({
   config: { cwd, duration },
   initResult,
 }) {
-  const { previewState, previewConfig } = getPreviewConfig({
-    config,
-    initResult,
-  })
+  const { previewState, previewConfig } = getPreviewConfig(initResult, config)
   await setFirstPreview({ combinations, previewState, previewConfig })
   await startPreview(previewConfig, previewState)
 
