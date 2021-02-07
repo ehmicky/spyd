@@ -9,7 +9,7 @@ import { addResult, removeResult, listResults } from './store.js'
 
 // Save results so they can be compared or shown later.
 // We do not save stopped benchmarks.
-export const addToStore = async function (result, { save, cwd }, stopped) {
+export const addToHistory = async function (result, { save, cwd }, stopped) {
   if (!save || stopped) {
     return
   }
@@ -19,23 +19,23 @@ export const addToStore = async function (result, { save, cwd }, stopped) {
 }
 
 // Remove a result
-export const removeFromStore = async function (config) {
-  const { id } = await getFromStore(config)
+export const removeFromHistoy = async function (config) {
+  const { id } = await getFromHistory(config)
   await removeResult(id, config.cwd)
 }
 
 // List all results and apply `since`.
 // We try to apply `since` as soon as possible so user errors with that
 // configuration property fail early.
-export const listAll = async function (config) {
-  const results = await listStore(config)
+export const listHistory = async function (config) {
+  const results = await listNormalizedResults(config)
   const resultsA = await applySince(results, config)
   return resultsA
 }
 
 // Get a previous result by `count` or `timestamp`
-export const getFromStore = async function (config) {
-  const results = await listStore(config)
+export const getFromHistory = async function (config) {
+  const results = await listNormalizedResults(config)
   const { lastResult, previous } = await listResultsByDelta(results, config)
   const previousA = await applySince(previous, config)
   const result = mergeResults(lastResult, previousA)
@@ -46,7 +46,7 @@ export const getFromStore = async function (config) {
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the store
 //  - Including previous|diff in results preview
-const listStore = async function ({ cwd, include, exclude }) {
+const listNormalizedResults = async function ({ cwd, include, exclude }) {
   const results = await listResults(cwd)
   const resultsA = loadResults({ results, include, exclude })
   return resultsA
