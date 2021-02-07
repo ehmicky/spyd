@@ -1,11 +1,11 @@
 import { getCombinations } from '../combination/main.js'
 import { listHistory } from '../history/main.js'
-import { initPreview } from '../preview/init.js'
 import {
   startPreviewInterval,
   endPreviewInterval,
 } from '../preview/interval.js'
 import { setPreviewReport } from '../preview/report.js'
+import { startPreview } from '../preview/start_end.js'
 
 import { getInitResult, getFinalResult } from './init.js'
 import { measureBenchmark } from './main.js'
@@ -38,7 +38,7 @@ const previewAndMeasure = async function ({
   const previewConfig = { quiet, initResult, results: [], reporters, titles }
 
   await setFirstPreview({ combinations, previewState, previewConfig })
-  await initPreview(previewConfig, previewState)
+  await startPreview(previewConfig, previewState)
 
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
   const previewId = await startPreviewInterval({
