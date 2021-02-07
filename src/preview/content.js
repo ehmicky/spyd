@@ -1,4 +1,4 @@
-import { stderr } from 'process'
+import { stdout } from 'process'
 
 import { goodColor, separatorColor } from '../report/utils/colors.js'
 
@@ -9,7 +9,7 @@ export const getContent = function ({
   description = '',
   report,
 }) {
-  const screenWidth = getScreenWidth(stderr)
+  const screenWidth = getScreenWidth(stdout)
   const results = getResults(report, screenWidth)
   const progressBar = getProgressBar({ percentage, time, screenWidth })
 

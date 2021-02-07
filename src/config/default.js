@@ -1,4 +1,4 @@
-import { stderr } from 'process'
+import { stdout } from 'process'
 
 import isInteractive from 'is-interactive'
 
@@ -13,7 +13,7 @@ export const addDefaultConfig = function ({
   return {
     ...DEFAULT_CONFIG,
     cwd: processCwd,
-    quiet: !isInteractive(stderr),
+    quiet: !isInteractive(stdout),
     delta: defaultDelta,
     since: defaultDelta,
     showSystem: config.system !== undefined,

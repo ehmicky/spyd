@@ -1,4 +1,4 @@
-import { stderr } from 'process'
+import { stdout } from 'process'
 import { cursorTo, clearScreenDown } from 'readline'
 import { promisify } from 'util'
 
@@ -33,15 +33,23 @@ const getPreviewContent = function (
 // At the beginning of the benchmark, we print newlines so that clearing the
 // screen does not remove previous prompts
 export const clearPreviewInit = async function () {
-  const newlines = '\n'.repeat(stderr.rows - 1)
+  const screenHeight = getScreenHeight(stdout)
+  const newlines = '\n'.repeat(screenHeight - 1)
   await writeToStderr(newlines)
 }
 
+const getScreenHeight = function ({ rows = DEFAULT_HEIGHT }) {
+  return rows
+}
+
+// Used when the output is not a TTY
+const DEFAULT_HEIGHT = 25
+
 export const clearPreview = async function () {
-  await pCursorTo(stderr, 0, 0)
-  await pClearScreenDown(stderr)
+  await pCursorTo(stdout, 0, 0)
+  await pClearScreenDown(stdout)
 }
 
 const writeToStderr = async function (string) {
-  await promisify(stderr.write.bind(stderr))(string)
+  await promisify(stdout.write.bind(stdout))(string)
 }
