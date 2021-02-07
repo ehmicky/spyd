@@ -41,8 +41,8 @@ const getStartDuration = function (benchmarkStart) {
 
 const getEndDurationProps = function (previewState, benchmarkDuration) {
   const timeLeft = updateTimeLeft(previewState, benchmarkDuration)
+  const time = getTime(timeLeft)
   const percentage = 1 - timeLeft / benchmarkDuration
-  const time = getTime(timeLeft, benchmarkDuration)
   return { percentage, time }
 }
 
