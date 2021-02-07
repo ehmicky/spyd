@@ -50,6 +50,7 @@ export const remove = async function (configFlags) {
     getFromHistory(config),
     startReporters(config),
   ])
+  await report(result, configA)
   await removeFromHistory(result, configA)
   return result
 }
