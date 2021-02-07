@@ -3,10 +3,13 @@ import { getConfig } from './config/main.js'
 import { performExec } from './exec/main.js'
 import { performBenchmark } from './measure/bench.js'
 import { report } from './report/main.js'
-import { addToStore } from './store/add.js'
-import { getFromStore } from './store/get.js'
-import { listAll, listStore } from './store/list.js'
-import { removeFromStore } from './store/remove.js'
+import {
+  addToStore,
+  getFromStore,
+  listAll,
+  listStore,
+  removeFromStore,
+} from './store/main.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default command.
