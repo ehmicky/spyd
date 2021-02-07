@@ -25,7 +25,7 @@ const bindStartConfig = function (store, startConfig) {
   )
 }
 
-const STORE_METHODS = ['list', 'add', 'replace', 'remove', 'end']
+const STORE_METHODS = ['list', 'add', 'replace', 'remove']
 
 const bindMethod = function (store, method, startConfig) {
   const originalFunc = store[method]
