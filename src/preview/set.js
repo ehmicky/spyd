@@ -68,11 +68,7 @@ export const setTimeLeft = function (previewState, timeLeft) {
 }
 
 // When duration is 0 or 1, we count up, not down
-export const setBenchmarkStart = function (previewState, duration) {
-  if (duration !== 0 && duration !== 1) {
-    return
-  }
-
+export const setBenchmarkStart = function (previewState) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.benchmarkStart = now()
 }

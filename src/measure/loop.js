@@ -44,7 +44,7 @@ export const performMeasureLoop = async function ({
     return combinations
   }
 
-  setBenchmarkStart(previewState, duration)
+  setBenchmarkStart(previewState)
 
   // eslint-disable-next-line fp/no-loops
   while (true) {

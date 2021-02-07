@@ -1,4 +1,3 @@
-import now from 'precise-now'
 import randomItem from 'random-item'
 
 import { setTimeLeft } from '../preview/set.js'
