@@ -4,8 +4,8 @@ import { getContent } from './content.js'
 import { getDescription } from './set.js'
 import { updateTimeProps } from './time_props.js'
 
-// Initialize preview terminal
-export const initPreview = async function (previewState, benchmarkDuration) {
+// Print first preview
+export const firstPreview = async function (previewState, benchmarkDuration) {
   await clearScreenFull()
   await updatePreview(previewState, benchmarkDuration)
 }

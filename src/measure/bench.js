@@ -51,6 +51,6 @@ const previewAndMeasure = async function ({
     )
     return { combinations: combinationsA, stopped, results }
   } finally {
-    await endPreview(previewId)
+    endPreview(previewId)
   }
 }

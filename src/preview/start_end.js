@@ -1,11 +1,9 @@
-import { hide as hideCursor, show as showCursor } from 'cli-cursor'
-
 import { addInitProps } from '../measure/props.js'
-import { clearScreen } from '../report/tty.js'
 
+import { initPreview } from './init.js'
 import { setPreviewReport } from './report.js'
 import { setDelayedDescription } from './set.js'
-import { initPreview, updatePreview } from './update.js'
+import { firstPreview, updatePreview } from './update.js'
 
 // Start preview
 export const startPreview = async function ({
@@ -20,6 +18,8 @@ export const startPreview = async function ({
     return { previewState }
   }
 
+  initPreview()
+
   const combinationsA = combinations.map(addInitProps)
   await setPreviewReport({
     combinations: combinationsA,
@@ -27,8 +27,6 @@ export const startPreview = async function ({
     previewConfig,
   })
   const benchmarkDuration = getBenchmarkDuration(combinationsA, duration)
-
-  hideCursor()
 
   const previewId = await startUpdate(previewState, benchmarkDuration)
   setDelayedDescription(previewState, START_DESCRIPTION)
@@ -45,7 +43,7 @@ const getBenchmarkDuration = function (combinations, duration) {
 
 // Update preview at regular interval
 const startUpdate = async function (previewState, benchmarkDuration) {
-  await initPreview(previewState, benchmarkDuration)
+  await firstPreview(previewState, benchmarkDuration)
   const previewId = setInterval(() => {
     updatePreview(previewState, benchmarkDuration)
   }, UPDATE_FREQUENCY)
@@ -59,12 +57,14 @@ const START_DESCRIPTION = 'Starting...'
 
 // End preview.
 // When stopped, we keep the last preview.
-export const endPreview = async function (previewId) {
+// We do not clear the preview so that we can decide whether to clear later:
+//  - When succeeding, we wait for the final reporter.report() before clearing
+//  - When stopping or aborting, we keep the last preview
+//  - When failing, we clear it
+export const endPreview = function (previewId) {
   if (previewId === undefined) {
     return
   }
 
   clearInterval(previewId)
-  await clearScreen()
-  showCursor()
 }

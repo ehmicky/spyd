@@ -1,10 +1,16 @@
+import { finishPreview } from '../preview/init.js'
+
 import { callReportFunc } from './call.js'
 import { insertContents } from './insert.js'
 import { printContents, computeTtyContents } from './print.js'
 
 // Report final results
-export const report = async function (result, { reporters, titles }) {
+export const report = async function (
+  result,
+  { reporters, titles, quiet = false },
+) {
   const contents = await getContents(result, { reporters, titles })
+  await finishPreview(quiet)
   await Promise.all([printContents(contents), insertContents(contents)])
 }
 
