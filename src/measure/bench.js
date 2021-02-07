@@ -1,9 +1,6 @@
 import { getCombinations } from '../combination/main.js'
 import { listHistory } from '../history/main.js'
-import {
-  startPreviewInterval,
-  endPreviewInterval,
-} from '../preview/interval.js'
+import { startPreviewRefresh, endPreviewRefresh } from '../preview/refresh.js'
 import { startPreview } from '../preview/start_end.js'
 
 import { getInitResult, getFinalResult } from './init.js'
@@ -53,7 +50,7 @@ const previewRefreshAndMeasure = async function ({
   previewState,
 }) {
   const benchmarkDuration = getBenchmarkDuration(combinations, duration)
-  const previewId = await startPreviewInterval({
+  const previewId = await startPreviewRefresh({
     previewState,
     benchmarkDuration,
     quiet,
@@ -75,7 +72,7 @@ const previewRefreshAndMeasure = async function ({
     )
     return { combinations: combinationsA, stopped, results }
   } finally {
-    await endPreviewInterval({
+    await endPreviewRefresh({
       previewState,
       previewId,
       benchmarkDuration,
