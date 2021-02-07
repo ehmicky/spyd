@@ -3,14 +3,12 @@ import { addInitProps } from '../measure/props.js'
 import { setPreviewReport } from './report.js'
 import { setDelayedDescription } from './set.js'
 import { startPreview } from './start_end.js'
-import { updatePreview } from './update.js'
 
 // Start preview
 export const initPreview = async function ({
   combinations,
   previewConfig,
   previewConfig: { quiet },
-  benchmarkDuration,
 }) {
   const previewState = {}
 
@@ -20,7 +18,6 @@ export const initPreview = async function ({
 
   await setFirstPreview({ combinations, previewState, previewConfig })
   await startPreview()
-  await updatePreview(previewState, benchmarkDuration)
 
   setDelayedDescription(previewState, START_DESCRIPTION)
   return previewState

@@ -1,7 +1,7 @@
 import { updatePreview } from './update.js'
 
 // Update preview at regular interval
-export const startPreviewInterval = function ({
+export const startPreviewInterval = async function ({
   previewState,
   benchmarkDuration,
   quiet,
@@ -10,6 +10,7 @@ export const startPreviewInterval = function ({
     return
   }
 
+  await updatePreview(previewState, benchmarkDuration)
   const previewId = setInterval(() => {
     updatePreview(previewState, benchmarkDuration)
   }, UPDATE_FREQUENCY)
