@@ -1,4 +1,5 @@
 import { getFinalResult } from '../measure/init.js'
+import { addInitProps } from '../measure/props.js'
 import { updateCombinations } from '../measure/update.js'
 import { reportPreview } from '../report/main.js'
 
@@ -9,6 +10,19 @@ import { reportPreview } from '../report/main.js'
 //     - For example, all combinations should be shown even if not measured yet.
 //     - And the size of table should not change between previews.
 // When uncalibrated, we skip it since no stats would be reported anyway.
+export const setFirstPreview = async function ({
+  combinations,
+  previewState,
+  previewConfig,
+}) {
+  const combinationsA = combinations.map(addInitProps)
+  await setPreviewReport({
+    combinations: combinationsA,
+    previewState,
+    previewConfig,
+  })
+}
+
 export const previewCombinations = async function ({
   combinations,
   newCombination,
