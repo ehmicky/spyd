@@ -17,13 +17,9 @@ export const listAll = async function (config) {
 }
 
 // Get a previous result by `count` or `timestamp`
-export const getFromStore = async function (delta, config) {
+export const getFromStore = async function (config) {
   const results = await listStore(config)
-  const { lastResult, previous } = await listResultsByDelta(
-    results,
-    delta,
-    config,
-  )
+  const { lastResult, previous } = await listResultsByDelta(results, config)
   const previousA = await applySince(previous, config)
   const result = mergeResults(lastResult, previousA)
   return result
@@ -39,7 +35,7 @@ const listStore = async function ({ cwd, include, exclude }) {
   return resultsA
 }
 
-const listResultsByDelta = async function (results, delta, { cwd }) {
+const listResultsByDelta = async function (results, { delta, cwd }) {
   if (results.length === 0) {
     throw new UserError('No previous results.')
   }

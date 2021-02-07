@@ -24,16 +24,16 @@ export const bench = async function (configFlags) {
 
 // Show a previous result
 export const show = async function (configFlags) {
-  const { delta, ...config } = await getConfig('show', configFlags)
-  const result = await getFromStore(delta, config)
+  const config = await getConfig('show', configFlags)
+  const result = await getFromStore(config)
   await report(result, config)
   return result
 }
 
 // Remove a previous result
 export const remove = async function (configFlags) {
-  const { delta, ...config } = await getConfig('remove', configFlags)
-  const result = await getFromStore(delta, config)
+  const config = await getConfig('remove', configFlags)
+  const result = await getFromStore(config)
   await removeFromStore(result, config)
 }
 
