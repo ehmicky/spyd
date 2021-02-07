@@ -54,33 +54,32 @@ const MAX_LOOPS = 1e8
 
 // With the `exec` command, we run each combination exactly once, even if
 // not calibrated.
-const isRemainingCombination = function ({
-  combination: { totalDuration, sampleDurationMean, loops, calibrated },
-  duration,
-  exec,
-  combinationMaxLoops,
-}) {
-  return (
-    loops === 0 ||
-    (!exec &&
-      loops < combinationMaxLoops &&
-      hasTimeLeft({ duration, sampleDurationMean, totalDuration, calibrated }))
-  )
-}
-
 // We wait for calibration, for any `duration`.
 // We stop, with `duration`:
 //   - `0`: never
 //   - `1`: when calibrated
 //   - others: after a specific duration
-const hasTimeLeft = function ({
+const isRemainingCombination = function ({
+  combination: { totalDuration, sampleDurationMean, loops, allSamples },
   duration,
-  sampleDurationMean,
-  totalDuration,
-  calibrated,
+  exec,
+  combinationMaxLoops,
 }) {
+  if (exec) {
+    return allSamples !== 0
+  }
+
+  if (loops >= combinationMaxLoops) {
+    return false
+  }
+
   return (
-    !calibrated ||
+    loops === 0 || hasTimeLeft({ duration, sampleDurationMean, totalDuration })
+  )
+}
+
+const hasTimeLeft = function ({ duration, sampleDurationMean, totalDuration }) {
+  return (
     duration === 0 ||
     (duration !== 1 && totalDuration + sampleDurationMean < duration)
   )

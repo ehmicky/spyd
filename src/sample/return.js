@@ -1,5 +1,5 @@
 import { bufferMeasures } from './buffer.js'
-import { calibrateReset, getCalibrated } from './calibrate.js'
+import { calibrateReset } from './calibrate.js'
 import { getRepeat } from './repeat.js'
 
 // Handle return value from the last sample
@@ -22,30 +22,15 @@ export const handleReturnValue = function (
     return {}
   }
 
-  const {
-    measures: measuresA,
-    bufferedMeasures: bufferedMeasuresA,
-    samples: samplesA,
-    loops: loopsA,
-    times: timesA,
-  } = calibrateReset({
-    calibrated,
-    measures,
-    bufferedMeasures,
-    samples,
-    loops,
-    times,
-  })
-
-  const samplesB = samplesA + 1
+  const samplesA = samples + 1
   const allSamplesA = allSamples + 1
   const loopsLast = sampleMeasures.length
-  const loopsB = loopsA + loopsLast
-  const timesB = timesA + loopsLast * repeat
+  const loopsA = loops + loopsLast
+  const timesA = times + loopsLast * repeat
 
-  const { bufferedMeasures: bufferedMeasuresB, sampleMedian } = bufferMeasures({
+  const { bufferedMeasures: bufferedMeasuresA, sampleMedian } = bufferMeasures({
     sampleMeasures,
-    bufferedMeasures: bufferedMeasuresA,
+    bufferedMeasures,
     repeat,
   })
 
@@ -55,11 +40,23 @@ export const handleReturnValue = function (
     minLoopDuration,
     allSamples: allSamplesA,
   })
-  const calibratedA = getCalibrated({
+  const {
+    calibrated: calibratedA,
+    measures: measuresA,
+    bufferedMeasures: bufferedMeasuresB,
+    samples: samplesB,
+    loops: loopsB,
+    times: timesB,
+  } = calibrateReset({
     calibrated,
     repeat,
     newRepeat,
     coldStart,
+    measures,
+    bufferedMeasures: bufferedMeasuresA,
+    samples: samplesA,
+    loops: loopsA,
+    times: timesA,
   })
 
   return {

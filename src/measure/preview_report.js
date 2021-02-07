@@ -45,11 +45,11 @@ const START_DESCRIPTION = 'Starting...'
 export const previewCombinations = async function ({
   combinations,
   newCombination,
-  newCombination: { calibrated },
+  newCombination: { loops },
   previewConfig,
   previewState,
 }) {
-  if (!calibrated) {
+  if (loops === 0) {
     return
   }
 

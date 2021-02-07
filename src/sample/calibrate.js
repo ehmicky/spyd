@@ -35,29 +35,47 @@
 //  - Excluding first samples except when `duration: 1`
 //     - Switching between `duration: 1` and others `duration` should show the
 //       same results when lasting the same amount of time.
+// Calibration is based on the difference between `repeat` and `newRepeat`.
 export const calibrateReset = function ({
   calibrated,
+  repeat,
+  newRepeat,
+  coldStart,
   measures,
   bufferedMeasures,
   samples,
   loops,
   times,
 }) {
-  if (calibrated) {
-    return { measures, bufferedMeasures, samples, loops, times }
+  const calibratedA = getCalibrated({
+    calibrated,
+    repeat,
+    newRepeat,
+    coldStart,
+  })
+
+  if (calibratedA) {
+    return {
+      calibrated: calibratedA,
+      measures,
+      bufferedMeasures,
+      samples,
+      loops,
+      times,
+    }
   }
 
-  return { measures: [], bufferedMeasures: [], samples: 0, loops: 0, times: 0 }
+  return {
+    calibrated: calibratedA,
+    measures: [],
+    bufferedMeasures: [],
+    samples: 0,
+    loops: 0,
+    times: 0,
+  }
 }
 
-// Decides when calibration has ended.
-// Based on the difference between `repeat` and `newRepeat`.
-export const getCalibrated = function ({
-  calibrated,
-  repeat,
-  newRepeat,
-  coldStart,
-}) {
+const getCalibrated = function ({ calibrated, repeat, newRepeat, coldStart }) {
   return calibrated || (!coldStart && newRepeat / repeat <= MAX_REPEAT_DIFF)
 }
 
