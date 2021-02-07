@@ -6,22 +6,12 @@ import { updateCombinations } from './update.js'
 
 // Retrieve state and configuration for previews
 export const getPreviewConfig = function ({
-  combinations,
-  config: { quiet, duration, reporters, titles },
+  config: { quiet, reporters, titles },
   initResult,
 }) {
   const previewState = {}
   const previewConfig = { quiet, initResult, results: [], reporters, titles }
-  const benchmarkDuration = getBenchmarkDuration(combinations, duration)
-  return { previewState, previewConfig, benchmarkDuration }
-}
-
-const getBenchmarkDuration = function (combinations, duration) {
-  if (duration === 0 || duration === 1) {
-    return duration
-  }
-
-  return combinations.length * duration
+  return { previewState, previewConfig }
 }
 
 // Preview results progressively, as combinations are being measured.
