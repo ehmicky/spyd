@@ -10,9 +10,9 @@ export const getPreviewConfig = function (
   initResult,
   { quiet, reporters, titles },
 ) {
-  const previewState = {}
   const previewConfig = { quiet, initResult, results: [], reporters, titles }
-  return { previewState, previewConfig }
+  const previewState = {}
+  return { previewConfig, previewState }
 }
 
 // Preview results progressively, as combinations are being measured.
@@ -24,9 +24,9 @@ export const getPreviewConfig = function (
 // When uncalibrated, we skip it since no stats would be reported anyway.
 export const setFirstPreview = async function ({
   combinations,
-  previewState,
   previewConfig,
   previewConfig: { quiet },
+  previewState,
 }) {
   if (quiet) {
     return
@@ -37,8 +37,8 @@ export const setFirstPreview = async function ({
   const combinationsA = combinations.map(addInitProps)
   await setPreviewReport({
     combinations: combinationsA,
-    previewState,
     previewConfig,
+    previewState,
   })
 }
 
