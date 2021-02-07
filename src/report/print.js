@@ -9,15 +9,16 @@ import { printToTty } from './tty.js'
 // Print result to file or to terminal based on the `output` configuration
 // property
 export const printContents = async function (contents) {
-  const outputs = getOutputs(contents)
-  await Promise.all(
-    outputs.map((output) => printOutputContents(contents, output)),
-  )
-}
+  const contentsA = contents.filter(hasOutput)
+  const ttyContents = contentsA.filter(isTtyContent)
+  const nonTtyContents = contentsA.filter((content) => !isTtyContent(content))
 
-const getOutputs = function (contents) {
-  const outputs = contents.filter(hasOutput).map(getOutput)
-  return [...new Set(outputs)]
+  const outputs = getOutputs(nonTtyContents)
+  await Promise.all(
+    outputs.map((output) => printOutputContents(nonTtyContents, output)),
+  )
+
+  await printTtyContent(ttyContents)
 }
 
 // Output with "" is silent. This is useful when using "insert" and no TTY
@@ -26,18 +27,21 @@ const hasOutput = function ({ output }) {
   return output !== ''
 }
 
+const isTtyContent = function ({ output }) {
+  return output === undefined
+}
+
+const getOutputs = function (contents) {
+  const outputs = contents.map(getOutput)
+  return [...new Set(outputs)]
+}
+
 const getOutput = function ({ output }) {
   return output
 }
 
 const printOutputContents = async function (contents, output) {
   const contentsA = contents.filter((content) => content.output === output)
-
-  if (output === undefined) {
-    await printTtyContent(contentsA)
-    return
-  }
-
   await writeFileContent(contentsA, output)
 }
 
@@ -58,6 +62,10 @@ const hasTerminalOutput = function ({ output }) {
 }
 
 const printTtyContent = async function (contents) {
+  if (contents.length === 0) {
+    return
+  }
+
   const ttyContents = getTtyContents(contents)
   await printToTty(ttyContents)
 }
