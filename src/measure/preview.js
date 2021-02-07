@@ -1,7 +1,8 @@
-import { getFinalResult } from '../measure/init.js'
-import { addInitProps } from '../measure/props.js'
-import { updateCombinations } from '../measure/update.js'
 import { reportPreview } from '../report/main.js'
+
+import { getFinalResult } from './init.js'
+import { addInitProps } from './props.js'
+import { updateCombinations } from './update.js'
 
 // Preview results progressively, as combinations are being measured.
 // Reporters should:
@@ -42,7 +43,7 @@ export const previewCombinations = async function ({
   })
 }
 
-export const setPreviewReport = async function ({
+const setPreviewReport = async function ({
   combinations,
   previewConfig: { initResult, results, quiet, reporters, titles },
   previewState,

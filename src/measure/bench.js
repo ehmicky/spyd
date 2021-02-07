@@ -4,11 +4,11 @@ import {
   startPreviewInterval,
   endPreviewInterval,
 } from '../preview/interval.js'
-import { setFirstPreview } from '../preview/report.js'
 import { startPreview } from '../preview/start_end.js'
 
 import { getInitResult, getFinalResult } from './init.js'
 import { measureBenchmark } from './main.js'
+import { setFirstPreview } from './preview.js'
 
 // Perform a new benchmark
 export const performBenchmark = async function (config) {
