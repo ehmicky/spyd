@@ -10,7 +10,6 @@ import { printToTty } from './tty.js'
 // property
 export const printContents = async function (contents) {
   const contentsA = contents.filter(hasOutput)
-  const ttyContents = contentsA.filter(isTtyContent)
   const nonTtyContents = contentsA.filter((content) => !isTtyContent(content))
 
   const outputs = getOutputs(nonTtyContents)
@@ -18,6 +17,7 @@ export const printContents = async function (contents) {
     outputs.map((output) => printOutputContents(nonTtyContents, output)),
   )
 
+  const ttyContents = getPreviewReport(contentsA)
   await printTtyContent(ttyContents)
 }
 
@@ -57,12 +57,11 @@ export const getPreviewReport = function (contents) {
   return getTtyContents(contentsA)
 }
 
-const printTtyContent = async function (contents) {
-  if (contents.length === 0) {
+const printTtyContent = async function (ttyContents) {
+  if (ttyContents === undefined) {
     return
   }
 
-  const ttyContents = getTtyContents(contents)
   await printToTty(ttyContents)
 }
 
