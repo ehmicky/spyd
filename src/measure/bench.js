@@ -33,15 +33,14 @@ const previewAndMeasure = async function ({
   initResult,
 }) {
   const previewConfig = { quiet, initResult, results: [], reporters, titles }
-  const previewState = await initPreview({
+  const { previewState, benchmarkDuration } = await initPreview({
     combinations,
     duration,
     previewConfig,
   })
   const previewId = await startPreviewInterval({
     previewState,
-    combinations,
-    duration,
+    benchmarkDuration,
     quiet,
   })
 
@@ -63,8 +62,7 @@ const previewAndMeasure = async function ({
   } finally {
     endPreviewInterval({
       previewState,
-      combinations,
-      duration,
+      benchmarkDuration,
       quiet,
       previewId,
     })

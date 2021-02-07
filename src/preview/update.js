@@ -5,26 +5,13 @@ import { getDescription } from './set.js'
 import { updateTimeProps } from './time_props.js'
 
 // Refresh preview
-export const updatePreview = async function ({
-  previewState,
-  combinations,
-  duration,
-}) {
+export const updatePreview = async function (previewState, benchmarkDuration) {
   await clearScreen()
 
-  const benchmarkDuration = getBenchmarkDuration(combinations, duration)
   updateTimeProps(previewState, benchmarkDuration)
   const previewContent = getPreviewContent(previewState, benchmarkDuration)
 
   await printToTty(previewContent)
-}
-
-const getBenchmarkDuration = function (combinations, duration) {
-  if (duration === 0 || duration === 1) {
-    return duration
-  }
-
-  return combinations.length * duration
 }
 
 const getPreviewContent = function (

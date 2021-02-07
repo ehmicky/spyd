@@ -3,8 +3,7 @@ import { updatePreview } from './update.js'
 // Update preview at regular interval
 export const startPreviewInterval = function ({
   previewState,
-  combinations,
-  duration,
+  benchmarkDuration,
   quiet,
 }) {
   if (quiet) {
@@ -12,7 +11,7 @@ export const startPreviewInterval = function ({
   }
 
   const previewId = setInterval(() => {
-    updatePreview({ previewState, combinations, duration })
+    updatePreview(previewState, benchmarkDuration)
   }, UPDATE_FREQUENCY)
   return previewId
 }
@@ -29,8 +28,7 @@ const UPDATE_FREQUENCY = 1e2
 // Update preview one last time.
 export const endPreviewInterval = async function ({
   previewState,
-  combinations,
-  duration,
+  benchmarkDuration,
   quiet,
   previewId,
 }) {
@@ -39,5 +37,5 @@ export const endPreviewInterval = async function ({
   }
 
   clearInterval(previewId)
-  await updatePreview({ previewState, combinations, duration })
+  await updatePreview(previewState, benchmarkDuration)
 }
