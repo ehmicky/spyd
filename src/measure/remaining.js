@@ -62,29 +62,26 @@ const isRemainingCombination = function ({
 }) {
   return (
     loops === 0 ||
-    (loops < combinationMaxLoops &&
-      !exec &&
+    (!exec &&
+      loops < combinationMaxLoops &&
       hasTimeLeft({ duration, sampleDurationMean, totalDuration, calibrated }))
   )
 }
 
+// We wait for calibration, for any `duration`.
+// We stop, with `duration`:
+//   - `0`: never
+//   - `1`: when calibrated
+//   - others: after a specific duration
 const hasTimeLeft = function ({
   duration,
   sampleDurationMean,
   totalDuration,
   calibrated,
 }) {
-  if (!calibrated) {
-    return true
-  }
-
-  if (duration === 0) {
-    return true
-  }
-
-  if (duration === 1) {
-    return false
-  }
-
-  return totalDuration + sampleDurationMean < duration
+  return (
+    !calibrated ||
+    duration === 0 ||
+    (duration !== 1 && totalDuration + sampleDurationMean < duration)
+  )
 }
