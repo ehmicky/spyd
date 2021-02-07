@@ -17,8 +17,7 @@ export const printContents = async function (contents) {
     outputs.map((output) => printOutputContents(nonTtyContents, output)),
   )
 
-  const ttyContents = getPreviewReport(contentsA)
-  await printTtyContent(ttyContents)
+  await printTtyContent(contentsA)
 }
 
 // Output with "" is silent. This is useful when using "insert" and no TTY
@@ -45,9 +44,20 @@ const printOutputContents = async function (contents, output) {
   await writeFileContent(contentsA, output)
 }
 
+// Print final report to terminal
+const printTtyContent = async function (contents) {
+  const ttyContents = computeTtyContents(contents)
+
+  if (ttyContents === undefined) {
+    return
+  }
+
+  await printToTty(ttyContents)
+}
+
 // Retrieve contents printed in preview.
 // Must be identical to the final contents.
-export const getPreviewReport = function (contents) {
+export const computeTtyContents = function (contents) {
   const contentsA = contents.filter(isTtyContent)
 
   if (contentsA.length === 0) {
@@ -57,14 +67,7 @@ export const getPreviewReport = function (contents) {
   return getTtyContents(contentsA)
 }
 
-const printTtyContent = async function (ttyContents) {
-  if (ttyContents === undefined) {
-    return
-  }
-
-  await printToTty(ttyContents)
-}
-
+// Write final report to file
 const writeFileContent = async function (contents, output) {
   const nonTtyContents = getNonTtyContents(contents)
 

@@ -1,6 +1,6 @@
 import { callReportFunc } from './call.js'
 import { insertContents } from './insert.js'
-import { printContents, getPreviewReport } from './print.js'
+import { printContents, computeTtyContents } from './print.js'
 
 // Report final results
 export const report = async function (result, { reporters, titles }) {
@@ -11,7 +11,7 @@ export const report = async function (result, { reporters, titles }) {
 // Report preview results
 export const reportPreview = async function (result, { reporters, titles }) {
   const contents = await getContents(result, { reporters, titles })
-  const previewReport = getPreviewReport(contents)
+  const previewReport = computeTtyContents(contents)
   return previewReport
 }
 
