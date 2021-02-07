@@ -4,7 +4,6 @@ import { performExec } from './exec/main.js'
 import {
   addToHistory,
   getFromHistory,
-  listHistory,
   removeFromHistoy,
 } from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
@@ -14,8 +13,7 @@ import { report } from './report/main.js'
 // Default command.
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
-  const results = await listHistory(config)
-  const { rawResult, result, stopped } = await performBenchmark(config, results)
+  const { rawResult, result, stopped } = await performBenchmark(config)
   await addToHistory(rawResult, config, stopped)
   await report(result, config)
   checkLimits(result, config)
