@@ -72,6 +72,5 @@ export const handleReturnValue = function (
     repeat: newRepeat,
     repeatLast: repeat,
     calibrated: calibratedA,
-    sampleMedian,
   }
 }
