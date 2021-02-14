@@ -54,5 +54,5 @@ const validateDuplicateTaskIds = function (taskIds) {
 }
 
 const isDuplicateTaskId = function (taskId, index, taskIds) {
-  return taskIds.slice(index + 1).some((taskIdA) => taskId === taskIdA)
+  return taskIds.slice(index + 1).includes(taskId)
 }
