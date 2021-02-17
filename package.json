@@ -3,9 +3,8 @@
   "version": "0.3.1",
   "main": "build/src/main.js",
   "files": [
-    "build/src",
-    "examples",
-    "!*~"
+    "build/src/**/*.{js,ts,map,json,sh,md}",
+    "examples/**/*.{js,ts,map,json,sh,md}"
   ],
   "bin": {
     "spyd": "build/src/bin/main.js"
