@@ -1,4 +1,6 @@
-import { cyan, gray, red } from 'chalk'
+import colorsOption from 'colors-option'
+
+const { cyan, gray, red } = colorsOption()
 
 export const titleColor = cyan.bold
 export const subtitleColor = cyan
