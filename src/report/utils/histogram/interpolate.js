@@ -36,10 +36,9 @@ const getParts = function (
   const sumA =
     sum +
     getStartPart(previousInteger, previousFraction, integer, fraction, counts)
-  const middlePart = getMiddlePart(previousInteger, integer, counts)
-  const sumB = sumA + getEndPart(previousInteger, integer, fraction, counts)
-  const newParts = middlePart.reduce(getSum, sumB)
-  const partsA = [...parts, newParts]
+  const sumB = sumA + getMiddlePart(previousInteger, integer, counts)
+  const sumC = sumB + getEndPart(previousInteger, integer, fraction, counts)
+  const partsA = [...parts, sumC]
   return [partsA, integer, fraction]
 }
 
@@ -69,13 +68,13 @@ const getMiddlePart = function (previousInteger, integer, counts) {
   const endInteger = integer - 1
 
   if (startInteger > endInteger) {
-    return []
+    return 0
   }
 
   const middleLength = endInteger - startInteger + 1
   return Array.from({ length: middleLength }, (_, index) =>
     getBinPart(index + startInteger, 1, counts),
-  )
+  ).reduce(getSum, 0)
 }
 
 const getEndPart = function (previousInteger, integer, fraction, counts) {
