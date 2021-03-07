@@ -13,7 +13,8 @@ export const getStatsDecimals = function (combinations, name, scale) {
     return 0
   }
 
-  return getDecimals(measures)
+  const minMeasure = Math.min(...measures)
+  return getDecimals(minMeasure)
 }
 
 // `undefined` happens in preview mode if not-measured-yet.
@@ -21,10 +22,9 @@ const isDefined = function (measure) {
   return measure !== undefined
 }
 
-const getDecimals = function (measures) {
-  const minMeasure = Math.min(...measures)
+export const getDecimals = function (measure) {
   const minPrecision = 10 ** (MAX_DIGITS - 1)
-  return Math.max(Math.ceil(Math.log10(minPrecision / minMeasure)), 0)
+  return Math.max(Math.ceil(Math.log10(minPrecision / measure)), 0)
 }
 
 const MAX_DIGITS = 3
