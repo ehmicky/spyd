@@ -3,6 +3,8 @@ import stringWidth from 'string-width'
 
 import { getScreenWidth } from '../../tty.js'
 
+import { resizeHistogram } from './resize.js'
+
 export const getHistograms = function (combinations) {
   return combinations.map(getHistogram)
 }
@@ -23,7 +25,8 @@ const getHistogram = function ({
   const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
   const contentWidth = width - CONTENT_LEFT_PADDING - CONTENT_RIGHT_PADDING
   const frequencies = histogram.map(([, , frequency]) => frequency)
-  const maxFrequency = Math.max(...frequencies)
+  const frequenciesA = resizeHistogram(frequencies, contentWidth)
+  const maxFrequency = Math.max(...frequenciesA)
   const medianPercentage = (median - min) / (max - min)
   const medianIndex =
     Math.round((contentWidth - 1) * medianPercentage) + CONTENT_LEFT_PADDING
