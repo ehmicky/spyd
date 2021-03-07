@@ -94,11 +94,16 @@ const getAbscissa = function ({
   const minPrettyWidth = stringWidth(minPretty)
   const medianPrettyWidth = stringWidth(medianPretty)
   const maxPrettyWidth = stringWidth(maxPretty)
-  const medianBelow =
-    medianIndex < minPrettyWidth + MEDIAN_PADDING ||
-    medianIndex > width - maxPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
 
-  if (medianBelow) {
+  if (
+    isStackedAbscissa({
+      width,
+      medianIndex,
+      minPrettyWidth,
+      medianPrettyWidth,
+      maxPrettyWidth,
+    })
+  ) {
     return getStackedAbscissa({
       minPretty,
       maxPretty,
@@ -121,6 +126,19 @@ const getAbscissa = function ({
     medianPrettyWidth,
     maxPrettyWidth,
   })
+}
+
+const isStackedAbscissa = function ({
+  width,
+  medianIndex,
+  minPrettyWidth,
+  medianPrettyWidth,
+  maxPrettyWidth,
+}) {
+  return (
+    medianIndex < minPrettyWidth + MEDIAN_PADDING ||
+    medianIndex > width - maxPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
+  )
 }
 
 const getStackedAbscissa = function ({
@@ -164,5 +182,4 @@ const getUnstackedAbscissa = function ({
   const rightSpaces = ' '.repeat(rightSpacesWidth)
   return `${minPretty}${leftSpaces}${medianPretty}${rightSpaces}${maxPretty}`
 }
-
 /* eslint-enable max-lines, max-statements */
