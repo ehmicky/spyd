@@ -14,6 +14,7 @@ const getHistogram = function ({
     return
   }
 
+  // TODO: compute both *Pretty and *Padded so this is not needed
   const minPrettyA = minPretty.trim()
   const medianPrettyA = medianPretty.trim()
   const maxPrettyA = maxPretty.trim()
