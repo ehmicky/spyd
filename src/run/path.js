@@ -5,7 +5,7 @@ import { UserError } from '../error/main.js'
 
 // Retrieve the tasks file path.
 // Uses either the `tasks` or `runner{id}.tasks` configuration properties.
-// Can also use the default `.../benchmark/tasks.*`.
+// Can also use the default `...[/benchmark]/tasks.*`.
 // Also validate that the file exists.
 export const getTaskPath = async function ({
   runnerConfig: { tasks },
@@ -36,10 +36,16 @@ const getUserTaskPath = async function (tasks) {
 // By default, we find the first `benchmark/tasks.*`.
 // The file extensions depends on the `runner.extensions`.
 const getDefaultTaskPath = async function (cwd, runnerExtensions) {
-  const defaultTasks = runnerExtensions.map(
-    (runnerExtension) => `${DEFAULT_TASKS}${runnerExtension}`,
-  )
+  const defaultTasks = runnerExtensions.flatMap(getDefaultTaskPathByExt)
   return await findUp(defaultTasks, { cwd })
 }
 
-const DEFAULT_TASKS = './benchmark/tasks.'
+const getDefaultTaskPathByExt = function (runnerExtension) {
+  return DEFAULT_TASKS.map((defaultTask) => `${defaultTask}${runnerExtension}`)
+}
+
+// Allowing `tasks.*` in a `benchmark` directory is useful for grouping
+// benchmark-related files.
+// Allowing `tasks.*` to be in the current directory is useful for on-the-fly
+// benchmarking.
+const DEFAULT_TASKS = ['./benchmark/tasks.', './tasks.']

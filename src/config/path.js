@@ -32,6 +32,9 @@ const getDefaultConfigPath = async function (cwd) {
 }
 
 // spyd.yaml is supported but undocumented. spyd.yml is preferred.
+// A `benchmark` directory is useful for grouping benchmark-related files.
+// Not using one is useful for on-the-fly benchmarking, or for global/shared
+// configuration.
 const DEFAULT_CONFIG = [
   './benchmark/spyd.js',
   './benchmark/spyd.cjs',
