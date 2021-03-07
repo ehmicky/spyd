@@ -1,3 +1,4 @@
+/* eslint-disable max-lines, max-statements */
 import stringWidth from 'string-width'
 
 import { getScreenWidth } from '../../tty.js'
@@ -122,3 +123,4 @@ ${leftSpaces}${medianPretty}${rightSpaces}`
   const rightSpaces = ' '.repeat(rightSpacesWidth)
   return `${minPretty}${leftSpaces}${medianPretty}${rightSpaces}${maxPretty}`
 }
+/* eslint-enable max-lines, max-statements */
