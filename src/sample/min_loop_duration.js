@@ -68,47 +68,32 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - `stats.mean` is moderately impacted, but not too much.
 //  - `stats.min|max|deviation` are much more impact, but those stats are not
 //    as critical.
+// If the minimum resolution is too close to the measures, results will not be
+// precise enough:
+//  - We apply the same `repeat` loop method as for `measureCost` to prevent
+//    this.
+//  - The runner's resolution is the granularity of timestamps and measures.
+//  - This can be different from the OS resolution as the runner (or its
+//    language/platform) might have a lower resolution.
+//  - We use `time-resolution` to guess the runner's minimum resolution.
+//  - For example, if a runner can only measure things with 1ms precision, every
+//    nanoseconds measures will be a multiple of 1e6.
+//  - We estimate this using the `calibrations`.
 export const getMinLoopDuration = function (calibrations) {
   if (calibrations.length === 0) {
     return 0
   }
 
-  const minMeasureCost = getMinMeasureCost(calibrations)
-  const minResolution = getMinResolution(calibrations)
-  return Math.max(minResolution, minMeasureCost)
-}
-
-// This function estimates `measureCost` based on `calibrations`
-const getMinMeasureCost = function (calibrations) {
   const measureCost = getUnsortedMedian(calibrations)
-  return measureCost * MIN_MEASURE_COST
+  const resolution = timeResolution(calibrations)
+  return Math.max(resolution, measureCost) * MIN_LOOP_DURATION_RATIO
 }
 
 // How many times slower each repeat loop iteration must be compared to
-// `measureCost`.
-// Ensure `repeat` is high enough to decrease the impact of `measureCost`.
-// A lower value decreases precision as the lack of precision of `measureCost`
-// contributes more to the overall lack of precision.
+// `measureCost` or `resolution`.
+// Ensure `repeat` is high enough to decrease the impact of `measureCost` or
+// `resolution`.
+// We use a single ratio for both `resolution` and `measureCost`.
+// A lower value decreases precision.
 // A higher value increases the task loop duration, creating fewer loops.
-const MIN_MEASURE_COST = 1e2
-
-// If the minimum resolution is too close to the measures, results will not be
-// precise enough. We apply the same `repeat` loop method as for `measureCost`
-// to prevent this.
-// The runner's resolution is the granularity of timestamps and measures.
-// This can be different from the OS resolution as the runner (or its
-// language/platform) might have a lower resolution.
-// We use `time-resolution` to guess the runner's minimum resolution.
-// For example, if a runner can only measure things with 1ms precision, every
-// nanoseconds measures will be a multiple of 1e6.
-// We estimate this using the `calibrations`.
-const getMinResolution = function (calibrations) {
-  const resolution = timeResolution(calibrations)
-  return resolution * MIN_RESOLUTION_PRECISION
-}
-
-// How many times slower the repeated median must be compared to the resolution.
-// A lower value makes measures closer to the resolution, making them less
-// precise.
-// A higher value increases the task loop duration, creating fewer loops.
-const MIN_RESOLUTION_PRECISION = 1e2
+const MIN_LOOP_DURATION_RATIO = 1e2
