@@ -5,12 +5,12 @@
 // eslint-disable-next-line max-statements, complexity
 export const interpolateHistogram = function (counts, length) {
   const countsLength = counts.length
+  const sums = []
 
   if (length === 0 || countsLength === 0) {
-    return []
+    return sums
   }
 
-  const parts = []
   // eslint-disable-next-line fp/no-let, init-declarations
   let previousInteger
   // eslint-disable-next-line fp/no-let, init-declarations
@@ -22,21 +22,7 @@ export const interpolateHistogram = function (counts, length) {
     const integer = Math.floor(startIndex)
     const fraction = startIndex - integer
 
-    // eslint-disable-next-line max-depth
-    if (previousInteger !== undefined) {
-      const sum =
-        getStartSum(
-          previousInteger,
-          previousFraction,
-          integer,
-          fraction,
-          counts,
-        ) +
-        getMiddleSum(previousInteger, integer, counts) +
-        getEndSum(previousInteger, integer, fraction, counts)
-      // eslint-disable-next-line fp/no-mutating-methods
-      parts.push(sum)
-    }
+    addSum(previousInteger, previousFraction, integer, fraction, counts, sums)
 
     // eslint-disable-next-line fp/no-mutation
     previousInteger = integer
@@ -44,7 +30,31 @@ export const interpolateHistogram = function (counts, length) {
     previousFraction = fraction
   }
 
-  return parts
+  return sums
+}
+
+const addSum = function (
+  previousInteger,
+  previousFraction,
+  integer,
+  fraction,
+  counts,
+  sums,
+) {
+  if (previousInteger !== undefined) {
+    const sum =
+      getStartSum(
+        previousInteger,
+        previousFraction,
+        integer,
+        fraction,
+        counts,
+      ) +
+      getMiddleSum(previousInteger, integer, counts) +
+      getEndSum(previousInteger, integer, fraction, counts)
+    // eslint-disable-next-line fp/no-mutating-methods
+    sums.push(sum)
+  }
 }
 
 const getStartSum = function (
