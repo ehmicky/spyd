@@ -42,7 +42,9 @@ const getParts = function (
   const endPart = getEndPart(previousInteger, integer, fraction)
   const newParts = [startPart, ...middlePart, endPart]
     .filter(Boolean)
-    .map((part) => getBinPart(part, counts))
+    .map(([countIndex, percentage]) =>
+      getBinPart(countIndex, percentage, counts),
+    )
     .reduce(getSum, 0)
   const partsA = [...parts, newParts]
   return [partsA, integer, fraction]
@@ -91,7 +93,7 @@ const getEndPart = function (previousInteger, integer, fraction) {
   return [integer, fraction]
 }
 
-const getBinPart = function ([countIndex, percentage], counts) {
+const getBinPart = function (countIndex, percentage, counts) {
   return counts[countIndex] * percentage
 }
 
