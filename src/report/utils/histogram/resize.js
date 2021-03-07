@@ -2,6 +2,7 @@
 //  - counts.length === length
 //  - counts.length % length === 0
 //  - length % counts.length === 0
+// eslint-disable-next-line max-statements
 export const resizeHistogram = function (counts, newSize) {
   const oldSize = counts.length
 
@@ -15,12 +16,18 @@ export const resizeHistogram = function (counts, newSize) {
   let previousFraction = 0
   const resizeRatio = oldSize / newSize
 
-  return Array.from({ length: newSize }, (_, newIndex) => {
+  // Using `newArray()` and a `for` loop is more efficient
+  // eslint-disable-next-line unicorn/no-new-array
+  const newHistogram = new Array(newSize)
+
+  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
+  for (let newIndex = 0; newIndex < newSize; newIndex += 1) {
     const oldIndex = resizeRatio * (newIndex + 1)
     const integer = Math.ceil(oldIndex - 1)
     const fraction = oldIndex - integer
 
-    const sum = getSum(
+    // eslint-disable-next-line fp/no-mutation
+    newHistogram[newIndex] = getSum(
       previousInteger,
       integer,
       previousFraction,
@@ -32,9 +39,9 @@ export const resizeHistogram = function (counts, newSize) {
     previousInteger = integer
     // eslint-disable-next-line fp/no-mutation
     previousFraction = fraction
+  }
 
-    return sum
-  })
+  return newHistogram
 }
 
 const getSum = function (
