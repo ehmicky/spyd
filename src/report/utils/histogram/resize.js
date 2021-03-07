@@ -17,13 +17,8 @@ export const resizeHistogram = function (counts, newSize) {
 
   return Array.from({ length: newSize }, (_, newIndex) => {
     const oldIndex = resizeRatio * (newIndex + 1)
-    let integer = Math.floor(oldIndex)
-    let fraction = oldIndex - integer
-
-    if (integer === oldIndex) {
-      integer -= 1
-      fraction = 1
-    }
+    const integer = Math.ceil(oldIndex - 1)
+    const fraction = oldIndex - integer
 
     const sum =
       getStartSum(previousInteger, previousFraction, integer, counts) +
