@@ -1,3 +1,3 @@
-import { debug } from './debug/main.js'
+import { debug } from './debug.js'
 
 export const REPORTERS = { debug }
