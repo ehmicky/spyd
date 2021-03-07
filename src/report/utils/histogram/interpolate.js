@@ -38,7 +38,8 @@ const getParts = function (
   )
   const middlePart = getMiddlePart(previousInteger, integer)
   const endPart = getEndPart(previousInteger, integer, fraction)
-  const partsA = [...parts, [startPart, ...middlePart, endPart].filter(Boolean)]
+  const part = [startPart, ...middlePart, endPart].filter(Boolean)
+  const partsA = [...parts, part]
   return [partsA, integer, fraction]
 }
 
