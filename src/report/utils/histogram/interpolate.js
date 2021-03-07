@@ -59,7 +59,7 @@ const getStartPart = function (
   counts,
 ) {
   const startFraction = previousInteger === integer ? fraction : 1
-  return getBinPart(previousInteger, startFraction - previousFraction, counts)
+  return counts[previousInteger] * (startFraction - previousFraction)
 }
 
 const getMiddlePart = function (previousInteger, integer, counts) {
@@ -71,7 +71,7 @@ const getMiddlePart = function (previousInteger, integer, counts) {
   }
 
   return getIndexes(endInteger - startInteger + 1).reduce(
-    (sum, index) => sum + getBinPart(index + startInteger, 1, counts),
+    (sum, index) => sum + counts[index + startInteger],
     0,
   )
 }
@@ -81,11 +81,7 @@ const getEndPart = function (previousInteger, integer, fraction, counts) {
     return 0
   }
 
-  return getBinPart(integer, fraction, counts)
-}
-
-const getBinPart = function (countIndex, percentage, counts) {
-  return counts[countIndex] * percentage
+  return counts[integer] * fraction
 }
 
 const exampleCountsA = [5, 10, 5, 10, 5, 10, 5, 10, 5]
