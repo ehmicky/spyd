@@ -1,13 +1,16 @@
 // TODO: shortcuts for:
-//  - counts.length === length
 //  - counts.length % length === 0
 //  - length % counts.length === 0
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, complexity
 export const resizeHistogram = function (counts, newSize) {
   const oldSize = counts.length
 
   if (newSize === 0 || oldSize === 0) {
     return []
+  }
+
+  if (newSize === oldSize) {
+    return [...counts]
   }
 
   // eslint-disable-next-line fp/no-let
