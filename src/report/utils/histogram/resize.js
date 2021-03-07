@@ -15,11 +15,10 @@ export const resizeHistogram = function (counts, newSize) {
   let previousInteger = 0
   // eslint-disable-next-line fp/no-let
   let previousFraction = 0
-
   const resizeRatio = oldSize / newSize
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = 1; index < newSize + 1; index += 1) {
+  for (let index = 1; index - 1 < newSize; index += 1) {
     const startIndex = resizeRatio * index
     const integer = Math.floor(startIndex)
     const fraction = startIndex - integer
