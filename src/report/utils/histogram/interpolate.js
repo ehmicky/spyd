@@ -12,7 +12,7 @@ export const interpolateHistogram = function (counts, length) {
   const parts = []
   let previousInteger
   let previousFraction
-  getIndexes(length + 1).reduce(([], index) => {
+  getIndexes(length + 1).forEach((index) => {
     const startIndex = (countsLength * index) / length
     const integer = Math.floor(startIndex)
     const fraction = startIndex - integer
@@ -34,8 +34,7 @@ export const interpolateHistogram = function (counts, length) {
 
     previousInteger = integer
     previousFraction = fraction
-    return []
-  }, [])
+  })
   return parts
 }
 
