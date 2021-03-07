@@ -23,8 +23,8 @@ const getHistogram = function ({
   const frequencies = histogram.map(([, , frequency]) => frequency)
   const maxFrequency = Math.max(...frequencies)
   const medianPercentage = (median - min) / (max - min)
-  const medianIndex = Math.round((contentWidth - 1) * medianPercentage)
-  const medianPaddedIndex = medianIndex + CONTENT_LEFT_PADDING
+  const medianIndex =
+    Math.round((contentWidth - 1) * medianPercentage) + CONTENT_LEFT_PADDING
 
   const rows = Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
     getHistogramRow(index, contentWidth),
@@ -34,7 +34,7 @@ const getHistogram = function ({
     minPretty: minPrettyA,
     maxPretty: maxPrettyA,
     width,
-    medianPaddedIndex,
+    medianIndex,
     medianPretty: medianPrettyA,
   })
   return `${rows}
@@ -72,13 +72,14 @@ const getHistogramRow = function (index, contentWidth) {
 }
 
 const getBottomLine = function (width, medianIndex) {
+  const leftLineWidth = medianIndex - TICK_LEFT.length
   const rightLineWidth =
     width -
-    medianIndex -
+    leftLineWidth -
     TICK_LEFT.length -
     TICK_MIDDLE.length -
     TICK_RIGHT.length
-  const leftLine = HORIZONTAL_LINE.repeat(medianIndex)
+  const leftLine = HORIZONTAL_LINE.repeat(leftLineWidth)
   const rightLine = HORIZONTAL_LINE.repeat(rightLineWidth)
   return `${TICK_LEFT}${leftLine}${TICK_MIDDLE}${rightLine}${TICK_RIGHT}`
 }
@@ -87,23 +88,19 @@ const getAbscissa = function ({
   minPretty,
   maxPretty,
   width,
-  medianPaddedIndex,
+  medianIndex,
   medianPretty,
 }) {
   const minPrettyWidth = stringWidth(minPretty)
   const medianPrettyWidth = stringWidth(medianPretty)
   const maxPrettyWidth = stringWidth(maxPretty)
   const medianBelow =
-    medianPaddedIndex < minPrettyWidth + MEDIAN_PADDING ||
-    medianPaddedIndex >
-      width - maxPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
+    medianIndex < minPrettyWidth + MEDIAN_PADDING ||
+    medianIndex > width - maxPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
 
   if (medianBelow) {
     const spacesWidth = width - minPrettyWidth - maxPrettyWidth
-    const leftSpacesWidth = Math.min(
-      medianPaddedIndex,
-      width - medianPrettyWidth,
-    )
+    const leftSpacesWidth = Math.min(medianIndex, width - medianPrettyWidth)
     const rightSpacesWidth = width - leftSpacesWidth - medianPrettyWidth
     const spaces = ' '.repeat(spacesWidth)
     const leftSpaces = ' '.repeat(leftSpacesWidth)
@@ -112,7 +109,7 @@ const getAbscissa = function ({
 ${leftSpaces}${medianPretty}${rightSpaces}`
   }
 
-  const leftSpacesWidth = medianPaddedIndex - minPrettyWidth
+  const leftSpacesWidth = medianIndex - minPrettyWidth
   const rightSpacesWidth =
     width -
     leftSpacesWidth -
