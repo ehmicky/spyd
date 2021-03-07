@@ -41,20 +41,16 @@ const addSum = function (
   counts,
   sums,
 ) {
-  if (previousInteger !== undefined) {
-    const sum =
-      getStartSum(
-        previousInteger,
-        previousFraction,
-        integer,
-        fraction,
-        counts,
-      ) +
-      getMiddleSum(previousInteger, integer, counts) +
-      getEndSum(previousInteger, integer, fraction, counts)
-    // eslint-disable-next-line fp/no-mutating-methods
-    sums.push(sum)
+  if (previousInteger === undefined) {
+    return
   }
+
+  const sum =
+    getStartSum(previousInteger, previousFraction, integer, fraction, counts) +
+    getMiddleSum(previousInteger, integer, counts) +
+    getEndSum(previousInteger, integer, fraction, counts)
+  // eslint-disable-next-line fp/no-mutating-methods
+  sums.push(sum)
 }
 
 const getStartSum = function (
