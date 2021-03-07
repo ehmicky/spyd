@@ -56,18 +56,6 @@ const getDifferentIntegerSum = function (
   fraction,
   counts,
 ) {
-  return (
-    getStartSum(previousInteger, previousFraction, counts) +
-    getMiddleSum(previousInteger, integer, counts) +
-    getEndSum(integer, fraction, counts)
-  )
-}
-
-const getStartSum = function (previousInteger, previousFraction, counts) {
-  return counts[previousInteger] * (1 - previousFraction)
-}
-
-const getMiddleSum = function (previousInteger, integer, counts) {
   // eslint-disable-next-line fp/no-let
   let middleSum = 0
 
@@ -77,11 +65,11 @@ const getMiddleSum = function (previousInteger, integer, counts) {
     middleSum += counts[index]
   }
 
-  return middleSum
-}
-
-const getEndSum = function (integer, fraction, counts) {
-  return counts[integer] * fraction
+  return (
+    middleSum +
+    counts[previousInteger] * (1 - previousFraction) +
+    counts[integer] * fraction
+  )
 }
 
 const exampleCountsA = [5, 10, 5, 10, 5, 10, 5, 10, 5]
