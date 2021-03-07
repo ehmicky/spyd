@@ -3,26 +3,26 @@
 //  - counts.length % length === 0
 //  - length % counts.length === 0
 // eslint-disable-next-line max-statements
-export const resizeHistogram = function (counts, length) {
-  const countsLength = counts.length
+export const resizeHistogram = function (counts, newSize) {
+  const oldSize = counts.length
   const sums = []
 
-  if (length === 0 || countsLength === 0) {
+  if (newSize === 0 || oldSize === 0) {
     return sums
   }
 
-  // eslint-disable-next-line fp/no-let, init-declarations
   // TODO: initialize those instead, and make one less loop, i.e. can remove
   // the `previousInteger === undefined` block
+  // eslint-disable-next-line fp/no-let, init-declarations
   let previousInteger
   // eslint-disable-next-line fp/no-let, init-declarations
   let previousFraction
 
-  const newCountsLength = countsLength / length
+  const resizeRatio = oldSize / newSize
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = 0; index < length + 1; index += 1) {
-    const startIndex = newCountsLength * index
+  for (let index = 0; index < newSize + 1; index += 1) {
+    const startIndex = resizeRatio * index
     const integer = Math.floor(startIndex)
     const fraction = startIndex - integer
 
