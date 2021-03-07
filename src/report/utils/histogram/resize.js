@@ -2,7 +2,6 @@
 //  - counts.length === length
 //  - counts.length % length === 0
 //  - length % counts.length === 0
-// eslint-disable-next-line max-statements
 export const resizeHistogram = function (counts, newSize) {
   const oldSize = counts.length
 
@@ -16,40 +15,29 @@ export const resizeHistogram = function (counts, newSize) {
   let previousFraction = 0
   const resizeRatio = oldSize / newSize
 
-  const indexes = Array.from({ length: newSize }, (_, index) => index)
-  const sums = []
-
-  // eslint-disable-next-line fp/no-loops
-  for (const index of indexes) {
+  return Array.from({ length: newSize }, (_, index) => {
     const startIndex = resizeRatio * (index + 1)
     const integer = Math.floor(startIndex)
     const fraction = startIndex - integer
 
-    addSum(previousInteger, previousFraction, integer, fraction, counts, sums)
+    const sum =
+      getStartSum(
+        previousInteger,
+        previousFraction,
+        integer,
+        fraction,
+        counts,
+      ) +
+      getMiddleSum(previousInteger, integer, counts) +
+      getEndSum(previousInteger, integer, fraction, counts)
 
     // eslint-disable-next-line fp/no-mutation
     previousInteger = integer
     // eslint-disable-next-line fp/no-mutation
     previousFraction = fraction
-  }
 
-  return sums
-}
-
-const addSum = function (
-  previousInteger,
-  previousFraction,
-  integer,
-  fraction,
-  counts,
-  sums,
-) {
-  const sum =
-    getStartSum(previousInteger, previousFraction, integer, fraction, counts) +
-    getMiddleSum(previousInteger, integer, counts) +
-    getEndSum(previousInteger, integer, fraction, counts)
-  // eslint-disable-next-line fp/no-mutating-methods
-  sums.push(sum)
+    return sum
+  })
 }
 
 const getStartSum = function (
