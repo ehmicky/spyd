@@ -70,9 +70,10 @@ const getMiddlePart = function (previousInteger, integer, counts) {
     return 0
   }
 
-  return getIndexes(endInteger - startInteger + 1)
-    .map((index) => getBinPart(index + startInteger, 1, counts))
-    .reduce(getSum, 0)
+  return getIndexes(endInteger - startInteger + 1).reduce(
+    (sum, index) => sum + getBinPart(index + startInteger, 1, counts),
+    0,
+  )
 }
 
 const getEndPart = function (previousInteger, integer, fraction, counts) {
@@ -85,10 +86,6 @@ const getEndPart = function (previousInteger, integer, fraction, counts) {
 
 const getBinPart = function (countIndex, percentage, counts) {
   return counts[countIndex] * percentage
-}
-
-const getSum = function (sum, binPart) {
-  return sum + binPart
 }
 
 const exampleCountsA = [5, 10, 5, 10, 5, 10, 5, 10, 5]
