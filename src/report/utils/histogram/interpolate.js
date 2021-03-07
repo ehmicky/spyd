@@ -2,6 +2,7 @@
 //  - counts.length === length
 //  - counts.length % length === 0
 //  - length % counts.length === 0
+// eslint-disable-next-line max-statements, complexity
 export const interpolateHistogram = function (counts, length) {
   const countsLength = counts.length
 
@@ -10,13 +11,18 @@ export const interpolateHistogram = function (counts, length) {
   }
 
   const parts = []
+  // eslint-disable-next-line fp/no-let, init-declarations
   let previousInteger
+  // eslint-disable-next-line fp/no-let, init-declarations
   let previousFraction
-  getIndexes(length + 1).forEach((index) => {
+
+  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
+  for (let index = 0; index < length + 1; index += 1) {
     const startIndex = (countsLength * index) / length
     const integer = Math.floor(startIndex)
     const fraction = startIndex - integer
 
+    // eslint-disable-next-line max-depth
     if (previousInteger !== undefined) {
       const sum =
         getStartSum(
@@ -32,18 +38,13 @@ export const interpolateHistogram = function (counts, length) {
       parts.push(sum)
     }
 
+    // eslint-disable-next-line fp/no-mutation
     previousInteger = integer
+    // eslint-disable-next-line fp/no-mutation
     previousFraction = fraction
-  })
+  }
+
   return parts
-}
-
-const getIndexes = function (length) {
-  return Array.from({ length }, getIndex)
-}
-
-const getIndex = function (_, index) {
-  return index
 }
 
 const getStartSum = function (
