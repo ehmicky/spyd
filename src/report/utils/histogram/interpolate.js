@@ -37,9 +37,9 @@ const getParts = function (
   }
 
   const sum =
-    getStartPart(previousInteger, previousFraction, integer, fraction, counts) +
-    getMiddlePart(previousInteger, integer, counts) +
-    getEndPart(previousInteger, integer, fraction, counts)
+    getStartSum(previousInteger, previousFraction, integer, fraction, counts) +
+    getMiddleSum(previousInteger, integer, counts) +
+    getEndSum(previousInteger, integer, fraction, counts)
   const partsA = [...parts, sum]
   return [partsA, integer, fraction]
 }
@@ -51,7 +51,7 @@ const getChunk = function (countsLength, length, index) {
   return [integer, fraction]
 }
 
-const getStartPart = function (
+const getStartSum = function (
   previousInteger,
   previousFraction,
   integer,
@@ -64,24 +64,24 @@ const getStartPart = function (
   )
 }
 
-const getMiddlePart = function (previousInteger, integer, counts) {
+const getMiddleSum = function (previousInteger, integer, counts) {
   if (previousInteger + 2 > integer) {
     return 0
   }
 
   // eslint-disable-next-line fp/no-let
-  let sum = 0
+  let middleSum = 0
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = previousInteger + 1; index < integer; index += 1) {
     // eslint-disable-next-line fp/no-mutation
-    sum += counts[index]
+    middleSum += counts[index]
   }
 
-  return sum
+  return middleSum
 }
 
-const getEndPart = function (previousInteger, integer, fraction, counts) {
+const getEndSum = function (previousInteger, integer, fraction, counts) {
   return fraction === 0 || previousInteger === integer
     ? 0
     : counts[integer] * fraction
