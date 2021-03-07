@@ -74,11 +74,9 @@ const getMiddlePart = function (previousInteger, integer, counts) {
 }
 
 const getEndPart = function (previousInteger, integer, fraction, counts) {
-  if (fraction === 0 || previousInteger === integer) {
-    return 0
-  }
-
-  return counts[integer] * fraction
+  return fraction === 0 || previousInteger === integer
+    ? 0
+    : counts[integer] * fraction
 }
 
 const exampleCountsA = [5, 10, 5, 10, 5, 10, 5, 10, 5]
