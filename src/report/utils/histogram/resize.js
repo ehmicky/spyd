@@ -56,6 +56,7 @@ export const resizeHistogram = function (counts, newSize) {
   return newHistogram
 }
 
+// eslint-disable-next-line max-params
 const getSum = function (
   previousInteger,
   integer,
@@ -74,10 +75,12 @@ const getSum = function (
       )
 }
 
+// eslint-disable-next-line max-params
 const getSimpleSum = function (integer, previousFraction, fraction, counts) {
   return counts[integer] * (fraction - previousFraction)
 }
 
+// eslint-disable-next-line max-params
 const getComplexSum = function (
   previousInteger,
   integer,
@@ -100,21 +103,3 @@ const getComplexSum = function (
     counts[integer] * fraction
   )
 }
-
-const exampleCountsA = [5, 10, 5, 10, 5, 10, 5, 10, 5]
-console.log(resizeHistogram(exampleCountsA, 9))
-console.log(resizeHistogram(exampleCountsA, 4))
-console.log(resizeHistogram(exampleCountsA, 3))
-console.log(resizeHistogram(exampleCountsA, 1))
-
-const exampleCountsB = [5, 10, 5]
-console.log(resizeHistogram(exampleCountsB, 6))
-console.log(resizeHistogram(exampleCountsB, 5))
-console.log(resizeHistogram(exampleCountsB, 2))
-
-const exampleCountsC = [5, 10]
-console.log(resizeHistogram(exampleCountsC, 2))
-console.log(resizeHistogram(exampleCountsC, 3))
-
-const exampleCountsD = [5]
-console.log(resizeHistogram(exampleCountsD, 3))
