@@ -1,16 +1,15 @@
 import stringWidth from 'string-width'
 
-import { titleColor, separatorColor, fieldColor } from '../../utils/colors.js'
-import { getFooter } from '../../utils/footer/main.js'
-import { joinSections } from '../../utils/join.js'
-import { padStart } from '../../utils/padding.js'
-import { prettifyValue } from '../../utils/prettify_value.js'
-import { SEPARATOR_SIGN } from '../../utils/separator.js'
-import { STAT_TITLES } from '../../utils/stat_titles.js'
-import { prettifyStats } from '../../utils/stats/main.js'
-import { addTitles } from '../../utils/title/main.js'
-
-import { getHistograms } from './histogram.js'
+import { titleColor, separatorColor, fieldColor } from '../utils/colors.js'
+import { getFooter } from '../utils/footer/main.js'
+import { getHistograms } from '../utils/histogram/main.js'
+import { joinSections } from '../utils/join.js'
+import { padStart } from '../utils/padding.js'
+import { prettifyValue } from '../utils/prettify_value.js'
+import { SEPARATOR_SIGN } from '../utils/separator.js'
+import { STAT_TITLES } from '../utils/stat_titles.js'
+import { prettifyStats } from '../utils/stats/main.js'
+import { addTitles } from '../utils/title/main.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({ id, timestamp, systems, combinations }) {
