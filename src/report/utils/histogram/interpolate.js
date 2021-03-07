@@ -69,10 +69,16 @@ const getMiddlePart = function (previousInteger, integer, counts) {
     return 0
   }
 
-  return getIndexes(integer - previousInteger - 1).reduce(
-    (sum, index) => sum + counts[index + previousInteger + 1],
-    0,
-  )
+  // eslint-disable-next-line fp/no-let
+  let sum = 0
+
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index + previousInteger + 1 < integer; index += 1) {
+    // eslint-disable-next-line fp/no-mutation
+    sum += counts[index + previousInteger + 1]
+  }
+
+  return sum
 }
 
 const getEndPart = function (previousInteger, integer, fraction, counts) {
