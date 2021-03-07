@@ -5,10 +5,9 @@
 // eslint-disable-next-line max-statements
 export const resizeHistogram = function (counts, newSize) {
   const oldSize = counts.length
-  const sums = []
 
   if (newSize === 0 || oldSize === 0) {
-    return sums
+    return []
   }
 
   // eslint-disable-next-line fp/no-let
@@ -18,6 +17,7 @@ export const resizeHistogram = function (counts, newSize) {
   const resizeRatio = oldSize / newSize
 
   const indexes = Array.from({ length: newSize }, (_, index) => index)
+  const sums = []
 
   // eslint-disable-next-line fp/no-loops
   for (const index of indexes) {
