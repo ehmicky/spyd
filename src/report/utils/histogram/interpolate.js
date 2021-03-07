@@ -9,12 +9,15 @@ export const interpolateHistogram = function (counts, length) {
     return []
   }
 
-  return Array.from({ length: length + 1 }, (_, index) =>
-    getChunk(countsLength, length, index),
-  )
+  return Array.from({ length: length + 1 }, getIndex)
+    .map((index) => getChunk(countsLength, length, index))
     .map(getParts)
     .filter(Boolean)
     .map((parts) => getBin(parts, counts))
+}
+
+const getIndex = function (_, index) {
+  return index
 }
 
 const getChunk = function (countsLength, length, index) {
