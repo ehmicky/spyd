@@ -26,7 +26,6 @@ export const resizeHistogram = function (counts, newSize) {
   let previousInteger = 0
   // eslint-disable-next-line fp/no-let
   let previousFraction = 0
-  const resizeRatio = oldSize / newSize
 
   // Using `newArray()` and a `for` loop is more efficient
   // eslint-disable-next-line unicorn/no-new-array
@@ -34,7 +33,7 @@ export const resizeHistogram = function (counts, newSize) {
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let newIndex = 0; newIndex < newSize; newIndex += 1) {
-    const oldIndex = resizeRatio * (newIndex + 1)
+    const oldIndex = oldSize * ((newIndex + 1) / newSize)
     const integer = Math.ceil(oldIndex - 1)
     const fraction = oldIndex - integer
 
