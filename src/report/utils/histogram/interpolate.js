@@ -65,10 +65,6 @@ const getStartSum = function (
 }
 
 const getMiddleSum = function (previousInteger, integer, counts) {
-  if (previousInteger + 2 > integer) {
-    return 0
-  }
-
   // eslint-disable-next-line fp/no-let
   let middleSum = 0
 
