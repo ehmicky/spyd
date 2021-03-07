@@ -24,15 +24,13 @@ const getHistogram = function ({
 
   const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
   const contentWidth = width - CONTENT_LEFT_PADDING - CONTENT_RIGHT_PADDING
-  const frequencies = histogram.map(([, , frequency]) => frequency)
-  const frequenciesA = resizeHistogram(frequencies, contentWidth)
-  const maxFrequency = Math.max(...frequenciesA)
+  const columns = getHistogramColumns(histogram, contentWidth)
   const medianPercentage = (median - min) / (max - min)
   const medianIndex =
     Math.round((contentWidth - 1) * medianPercentage) + CONTENT_LEFT_PADDING
 
   const rows = Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
-    getHistogramRow(index, contentWidth),
+    getHistogramRow(index, columns),
   ).join('\n')
   const bottomLine = getBottomLine(width, medianIndex)
   const abscissa = getAbscissa({
@@ -59,6 +57,8 @@ const HISTOGRAM_CHARS = [
   '\u2587',
   '\u2588',
 ]
+const [EMPTY_HISTOGRAM_CHAR] = HISTOGRAM_CHARS
+const FULL_HISTOGRAM_CHAR = HISTOGRAM_CHARS[HISTOGRAM_CHARS.length - 1]
 const HORIZONTAL_LINE = '\u2500'
 const TICK_LEFT = '\u250C'
 const TICK_MIDDLE = '\u252C'
@@ -69,11 +69,52 @@ const CONTENT_LEFT_PADDING = 1
 const CONTENT_RIGHT_PADDING = 1
 const MEDIAN_PADDING = 1
 
-const getHistogramRow = function (index, contentWidth) {
+const getHistogramColumns = function (histogram, contentWidth) {
+  const frequencies = histogram.map(getFrequency)
+  const frequenciesA = resizeHistogram(frequencies, contentWidth)
+  const maxFrequency = Math.max(...frequenciesA)
+  const frequenciesB = frequenciesA.map(
+    (frequency) => (HISTOGRAM_HEIGHT * frequency) / maxFrequency,
+  )
+  const columns = frequenciesB.map((height) => getHistogramColumn(height))
+  return columns
+}
+
+const getFrequency = function ([, , frequency]) {
+  return frequency
+}
+
+const getHistogramColumn = function (height) {
+  const heightLevel = Math.floor(height)
+  const charIndex = Math.ceil(
+    (height - heightLevel) * (HISTOGRAM_CHARS.length - 1),
+  )
+  return [heightLevel, charIndex]
+}
+
+const getHistogramRow = function (index, columns) {
   const contentLeftPadding = ' '.repeat(CONTENT_LEFT_PADDING)
   const contentRightPadding = ' '.repeat(CONTENT_RIGHT_PADDING)
-  const row = 'o'.repeat(contentWidth)
+  const row = columns
+    .map(([heightLevel, charIndex]) =>
+      getHistogramCell(heightLevel, charIndex, index),
+    )
+    .join('')
   return `${contentLeftPadding}${row}${contentRightPadding}`
+}
+
+const getHistogramCell = function (heightLevel, charIndex, index) {
+  const indexA = HISTOGRAM_HEIGHT - index - 1
+
+  if (heightLevel < indexA) {
+    return EMPTY_HISTOGRAM_CHAR
+  }
+
+  if (heightLevel > indexA) {
+    return FULL_HISTOGRAM_CHAR
+  }
+
+  return HISTOGRAM_CHARS[charIndex]
 }
 
 const getBottomLine = function (width, medianIndex) {
