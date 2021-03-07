@@ -70,7 +70,7 @@ const getMiddlePart = function (previousInteger, integer, counts) {
     return 0
   }
 
-  return getIndexes(endInteger - startInteger + 1).reduce(
+  return getIndexes(integer - previousInteger - 1).reduce(
     (sum, index) => sum + counts[index + startInteger],
     0,
   )
