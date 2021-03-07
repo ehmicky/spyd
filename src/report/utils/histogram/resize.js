@@ -1,6 +1,15 @@
-// TODO: shortcuts for:
-//  - counts.length % length === 0
-//  - length % counts.length === 0
+// TODO: performance shortcuts for the following situations:
+//  - newSize > oldSize:
+//     - the loop in `getComplexSum()` is not needed
+//     - the result of `getSimpleSum()` can be re-used for the next iteration,
+//       unless `integer` changes
+//     - if newSize % oldSize === 0:
+//        - `getComplexSum()` not needed
+//        - `fraction - previousFraction` always same, i.e. can simplify
+//          `integer` and `fraction` computation
+//  - newSize < oldSize:
+//     - `getSimpleSum()` not needed
+//     - if oldSize % newSize === 0, last part of `getComplexSum()` not needed
 // eslint-disable-next-line max-statements, complexity
 export const resizeHistogram = function (counts, newSize) {
   const oldSize = counts.length
