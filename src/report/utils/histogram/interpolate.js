@@ -37,15 +37,11 @@ const getParts = function (
     previousFraction,
     integer,
     fraction,
+    counts,
   )
-  const middlePart = getMiddlePart(previousInteger, integer)
-  const endPart = getEndPart(previousInteger, integer, fraction)
-  const newParts = [startPart, ...middlePart, endPart]
-    .filter(Boolean)
-    .map(([countIndex, percentage]) =>
-      getBinPart(countIndex, percentage, counts),
-    )
-    .reduce(getSum, 0)
+  const middlePart = getMiddlePart(previousInteger, integer, counts)
+  const endPart = getEndPart(previousInteger, integer, fraction, counts)
+  const newParts = [startPart, ...middlePart, endPart].reduce(getSum, 0)
   const partsA = [...parts, newParts]
   return [partsA, integer, fraction]
 }
@@ -62,15 +58,16 @@ const getStartPart = function (
   previousFraction,
   integer,
   fraction,
+  counts,
 ) {
   if (previousInteger === integer) {
-    return [previousInteger, fraction - previousFraction]
+    return getBinPart(previousInteger, fraction - previousFraction, counts)
   }
 
-  return [previousInteger, 1 - previousFraction]
+  return getBinPart(previousInteger, 1 - previousFraction, counts)
 }
 
-const getMiddlePart = function (previousInteger, integer) {
+const getMiddlePart = function (previousInteger, integer, counts) {
   const startInteger = previousInteger + 1
   const endInteger = integer - 1
 
@@ -79,18 +76,17 @@ const getMiddlePart = function (previousInteger, integer) {
   }
 
   const middleLength = endInteger - startInteger + 1
-  return Array.from({ length: middleLength }, (_, index) => [
-    index + startInteger,
-    1,
-  ])
+  return Array.from({ length: middleLength }, (_, index) =>
+    getBinPart(index + startInteger, 1, counts),
+  )
 }
 
-const getEndPart = function (previousInteger, integer, fraction) {
+const getEndPart = function (previousInteger, integer, fraction, counts) {
   if (fraction === 0 || previousInteger === integer) {
-    return
+    return 0
   }
 
-  return [integer, fraction]
+  return getBinPart(integer, fraction, counts)
 }
 
 const getBinPart = function (countIndex, percentage, counts) {
