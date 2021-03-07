@@ -12,6 +12,8 @@ export const interpolateHistogram = function (counts, length) {
   }
 
   // eslint-disable-next-line fp/no-let, init-declarations
+  // TODO: initialize those instead, and make one less loop, i.e. can remove
+  // the `previousInteger === undefined` block
   let previousInteger
   // eslint-disable-next-line fp/no-let, init-declarations
   let previousFraction
