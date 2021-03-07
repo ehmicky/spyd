@@ -11,7 +11,28 @@ export const interpolateHistogram = function (counts, length) {
 
   const parts = []
   getIndexes(length + 1).reduce(
-    getParts.bind(undefined, parts, counts, countsLength, length),
+    ([previousInteger, previousFraction], index) => {
+      const startIndex = (countsLength * index) / length
+      const integer = Math.floor(startIndex)
+      const fraction = startIndex - integer
+
+      if (previousInteger !== undefined) {
+        const sum =
+          getStartSum(
+            previousInteger,
+            previousFraction,
+            integer,
+            fraction,
+            counts,
+          ) +
+          getMiddleSum(previousInteger, integer, counts) +
+          getEndSum(previousInteger, integer, fraction, counts)
+        // eslint-disable-next-line fp/no-mutating-methods
+        parts.push(sum)
+      }
+
+      return [integer, fraction]
+    },
     [],
   )
   return parts
@@ -23,36 +44,6 @@ const getIndexes = function (length) {
 
 const getIndex = function (_, index) {
   return index
-}
-
-const getParts = function (
-  parts,
-  counts,
-  countsLength,
-  length,
-  [previousInteger, previousFraction],
-  index,
-) {
-  const startIndex = (countsLength * index) / length
-  const integer = Math.floor(startIndex)
-  const fraction = startIndex - integer
-
-  if (previousInteger !== undefined) {
-    const sum =
-      getStartSum(
-        previousInteger,
-        previousFraction,
-        integer,
-        fraction,
-        counts,
-      ) +
-      getMiddleSum(previousInteger, integer, counts) +
-      getEndSum(previousInteger, integer, fraction, counts)
-    // eslint-disable-next-line fp/no-mutating-methods
-    parts.push(sum)
-  }
-
-  return [integer, fraction]
 }
 
 const getStartSum = function (
