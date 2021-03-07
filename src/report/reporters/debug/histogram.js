@@ -6,18 +6,24 @@ export const getHistograms = function (combinations) {
   return combinations.map(getHistogram)
 }
 
-const getHistogram = function ({ stats: { histogram, minPretty, maxPretty } }) {
+const getHistogram = function ({
+  stats: { histogram, min, minPretty, max, maxPretty, median, medianPretty },
+}) {
   if (histogram === undefined) {
     return
   }
 
-  const width = getScreenWidth()
+  const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
+  const contentWidth = width - CONTENT_LEFT_PADDING - CONTENT_RIGHT_PADDING
   const frequencies = histogram.map(([, , frequency]) => frequency)
   const maxFrequency = Math.max(...frequencies)
+  const medianPercentage = (median - min) / (max - min)
+  const medianIndex = Math.round(contentWidth * medianPercentage)
+
   const rows = Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
-    getHistogramRow(index, width),
+    getHistogramRow(index, contentWidth),
   ).join('\n')
-  const bottomLine = getBottomLine(width)
+  const bottomLine = getBottomLine(width, medianIndex)
   const abscissa = getAbscissa({ minPretty, maxPretty, width })
   return `${rows}
 ${bottomLine}
@@ -45,37 +51,27 @@ const OUTSIDE_RIGHT_PADDING = 1
 const CONTENT_LEFT_PADDING = 1
 const CONTENT_RIGHT_PADDING = 1
 
-const getHistogramRow = function (index, width) {
+const getHistogramRow = function (index, contentWidth) {
   const contentLeftPadding = ' '.repeat(CONTENT_LEFT_PADDING)
   const contentRightPadding = ' '.repeat(CONTENT_RIGHT_PADDING)
-  const rowWidth =
-    width -
-    OUTSIDE_LEFT_PADDING -
-    OUTSIDE_RIGHT_PADDING -
-    CONTENT_LEFT_PADDING -
-    CONTENT_RIGHT_PADDING
-  const row = 'o'.repeat(rowWidth)
+  const row = 'o'.repeat(contentWidth)
   return `${contentLeftPadding}${row}${contentRightPadding}`
 }
 
-const getBottomLine = function (width) {
-  const mainLineWidth =
+const getBottomLine = function (width, medianIndex) {
+  const rightLineWidth =
     width -
+    medianIndex -
     TICK_LEFT.length -
-    TICK_RIGHT.length -
-    OUTSIDE_LEFT_PADDING -
-    OUTSIDE_RIGHT_PADDING
-  const mainLine = HORIZONTAL_LINE.repeat(mainLineWidth)
-  return `${TICK_LEFT}${mainLine}${TICK_RIGHT}`
+    TICK_MIDDLE.length -
+    TICK_RIGHT.length
+  const leftLine = HORIZONTAL_LINE.repeat(medianIndex)
+  const rightLine = HORIZONTAL_LINE.repeat(rightLineWidth)
+  return `${TICK_LEFT}${leftLine}${TICK_MIDDLE}${rightLine}${TICK_RIGHT}`
 }
 
 const getAbscissa = function ({ minPretty, maxPretty, width }) {
-  const spacesWidth =
-    width -
-    stringWidth(minPretty) -
-    stringWidth(maxPretty) -
-    OUTSIDE_LEFT_PADDING -
-    OUTSIDE_RIGHT_PADDING
+  const spacesWidth = width - stringWidth(minPretty) - stringWidth(maxPretty)
   const spaces = ' '.repeat(spacesWidth)
   return `${minPretty}${spaces}${maxPretty}`
 }
