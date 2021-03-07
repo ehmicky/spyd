@@ -67,9 +67,9 @@ const getMiddlePart = function (previousInteger, integer, counts) {
   }
 
   const middleLength = endInteger - startInteger + 1
-  return Array.from({ length: middleLength }, (_, index) =>
-    getBinPart(index + startInteger, 1, counts),
-  ).reduce(getSum, 0)
+  return Array.from({ length: middleLength }, getIndex)
+    .map((index) => getBinPart(index + startInteger, 1, counts))
+    .reduce(getSum, 0)
 }
 
 const getEndPart = function (previousInteger, integer, fraction, counts) {
