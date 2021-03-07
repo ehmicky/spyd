@@ -20,16 +20,13 @@ export const resizeHistogram = function (counts, newSize) {
     const integer = Math.ceil(oldIndex - 1)
     const fraction = oldIndex - integer
 
-    const sum =
-      integer === previousInteger
-        ? getSameIntegerSum(integer, previousFraction, fraction, counts)
-        : getDifferentIntegerSum(
-            previousInteger,
-            integer,
-            previousFraction,
-            fraction,
-            counts,
-          )
+    const sum = getSum(
+      previousInteger,
+      integer,
+      previousFraction,
+      fraction,
+      counts,
+    )
 
     // eslint-disable-next-line fp/no-mutation
     previousInteger = integer
@@ -40,16 +37,29 @@ export const resizeHistogram = function (counts, newSize) {
   })
 }
 
-const getSameIntegerSum = function (
+const getSum = function (
+  previousInteger,
   integer,
   previousFraction,
   fraction,
   counts,
 ) {
+  return integer === previousInteger
+    ? getSimpleSum(integer, previousFraction, fraction, counts)
+    : getComplexSum(
+        previousInteger,
+        integer,
+        previousFraction,
+        fraction,
+        counts,
+      )
+}
+
+const getSimpleSum = function (integer, previousFraction, fraction, counts) {
   return counts[integer] * (fraction - previousFraction)
 }
 
-const getDifferentIntegerSum = function (
+const getComplexSum = function (
   previousInteger,
   integer,
   previousFraction,
