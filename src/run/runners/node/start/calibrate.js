@@ -4,11 +4,23 @@ import now from 'precise-now'
 // This is used to compute `measureCost` and `resolution`, which are used for
 // `repeat`.
 export const getCalibrations = function (calibrate) {
-  return Array.from({ length: calibrate }, getCalibration)
+  const calibrations = []
+
+  // eslint-disable-next-line fp/no-loops
+  while (calibrations.length !== calibrate) {
+    addCalibration(calibrations)
+  }
+
+  return calibrations
 }
 
 // We use a separate function from `getDuration()` because this must only use
-// the non-repeated part
-const getCalibration = function () {
-  return -now() + now()
+// the non-repeated part.
+const addCalibration = function (calibrations) {
+  const calibration = -now() + now()
+
+  if (calibration !== 0) {
+    // eslint-disable-next-line fp/no-mutating-methods
+    calibrations.push(calibration)
+  }
 }
