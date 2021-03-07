@@ -9,10 +9,14 @@ export const interpolateHistogram = function (counts, length) {
     return []
   }
 
-  return Array.from({ length: length + 1 }, getIndex).reduce(
+  return getIndexes(length + 1).reduce(
     getParts.bind(undefined, counts, countsLength, length),
     [[]],
   )[0]
+}
+
+const getIndexes = function (length) {
+  return Array.from({ length }, getIndex)
 }
 
 const getIndex = function (_, index) {
@@ -66,8 +70,7 @@ const getMiddlePart = function (previousInteger, integer, counts) {
     return 0
   }
 
-  const middleLength = endInteger - startInteger + 1
-  return Array.from({ length: middleLength }, getIndex)
+  return getIndexes(endInteger - startInteger + 1)
     .map((index) => getBinPart(index + startInteger, 1, counts))
     .reduce(getSum, 0)
 }
