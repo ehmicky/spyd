@@ -99,16 +99,60 @@ const getAbscissa = function ({
     medianIndex > width - maxPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
 
   if (medianBelow) {
-    const spacesWidth = width - minPrettyWidth - maxPrettyWidth
-    const leftSpacesWidth = Math.min(medianIndex, width - medianPrettyWidth)
-    const rightSpacesWidth = width - leftSpacesWidth - medianPrettyWidth
-    const spaces = ' '.repeat(spacesWidth)
-    const leftSpaces = ' '.repeat(leftSpacesWidth)
-    const rightSpaces = ' '.repeat(rightSpacesWidth)
-    return `${minPretty}${spaces}${maxPretty}
-${leftSpaces}${medianPretty}${rightSpaces}`
+    return getStackedAbscissa({
+      minPretty,
+      maxPretty,
+      width,
+      medianIndex,
+      medianPretty,
+      minPrettyWidth,
+      medianPrettyWidth,
+      maxPrettyWidth,
+    })
   }
 
+  return getUnstackedAbscissa({
+    minPretty,
+    maxPretty,
+    width,
+    medianIndex,
+    medianPretty,
+    minPrettyWidth,
+    medianPrettyWidth,
+    maxPrettyWidth,
+  })
+}
+
+const getStackedAbscissa = function ({
+  minPretty,
+  maxPretty,
+  width,
+  medianIndex,
+  medianPretty,
+  minPrettyWidth,
+  medianPrettyWidth,
+  maxPrettyWidth,
+}) {
+  const spacesWidth = width - minPrettyWidth - maxPrettyWidth
+  const leftSpacesWidth = Math.min(medianIndex, width - medianPrettyWidth)
+  const rightSpacesWidth = width - leftSpacesWidth - medianPrettyWidth
+  const spaces = ' '.repeat(spacesWidth)
+  const leftSpaces = ' '.repeat(leftSpacesWidth)
+  const rightSpaces = ' '.repeat(rightSpacesWidth)
+  return `${minPretty}${spaces}${maxPretty}
+${leftSpaces}${medianPretty}${rightSpaces}`
+}
+
+const getUnstackedAbscissa = function ({
+  minPretty,
+  maxPretty,
+  width,
+  medianIndex,
+  medianPretty,
+  minPrettyWidth,
+  medianPrettyWidth,
+  maxPrettyWidth,
+}) {
   const leftSpacesWidth = medianIndex - minPrettyWidth
   const rightSpacesWidth =
     width -
@@ -120,4 +164,5 @@ ${leftSpaces}${medianPretty}${rightSpaces}`
   const rightSpaces = ' '.repeat(rightSpacesWidth)
   return `${minPretty}${leftSpaces}${medianPretty}${rightSpaces}${maxPretty}`
 }
+
 /* eslint-enable max-lines, max-statements */
