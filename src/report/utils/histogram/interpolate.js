@@ -37,16 +37,21 @@ const getParts = function (
   const integer = Math.floor(startIndex)
   const fraction = startIndex - integer
 
-  if (previousInteger === undefined) {
-    return [integer, fraction]
+  if (previousInteger !== undefined) {
+    const sum =
+      getStartSum(
+        previousInteger,
+        previousFraction,
+        integer,
+        fraction,
+        counts,
+      ) +
+      getMiddleSum(previousInteger, integer, counts) +
+      getEndSum(previousInteger, integer, fraction, counts)
+    // eslint-disable-next-line fp/no-mutating-methods
+    parts.push(sum)
   }
 
-  const sum =
-    getStartSum(previousInteger, previousFraction, integer, fraction, counts) +
-    getMiddleSum(previousInteger, integer, counts) +
-    getEndSum(previousInteger, integer, fraction, counts)
-  // eslint-disable-next-line fp/no-mutating-methods
-  parts.push(sum)
   return [integer, fraction]
 }
 
