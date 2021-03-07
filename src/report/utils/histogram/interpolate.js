@@ -58,8 +58,10 @@ const getStartPart = function (
   fraction,
   counts,
 ) {
-  const startFraction = previousInteger === integer ? fraction : 1
-  return counts[previousInteger] * (startFraction - previousFraction)
+  return (
+    counts[previousInteger] *
+    ((previousInteger === integer ? fraction : 1) - previousFraction)
+  )
 }
 
 const getMiddlePart = function (previousInteger, integer, counts) {
