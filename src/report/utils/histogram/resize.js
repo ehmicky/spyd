@@ -21,15 +21,9 @@ export const resizeHistogram = function (counts, newSize) {
     const fraction = startIndex - integer
 
     const sum =
-      getStartSum(
-        previousInteger,
-        previousFraction,
-        integer,
-        fraction,
-        counts,
-      ) +
+      getStartSum(previousInteger, previousFraction, integer, counts) +
       getMiddleSum(previousInteger, integer, counts) +
-      getEndSum(previousInteger, integer, fraction, counts)
+      getEndSum(previousInteger, integer, previousFraction, fraction, counts)
 
     // eslint-disable-next-line fp/no-mutation
     previousInteger = integer
@@ -44,13 +38,11 @@ const getStartSum = function (
   previousInteger,
   previousFraction,
   integer,
-  fraction,
   counts,
 ) {
-  return (
-    counts[previousInteger] *
-    ((previousInteger === integer ? fraction : 1) - previousFraction)
-  )
+  return previousInteger === integer
+    ? 0
+    : counts[previousInteger] * (1 - previousFraction)
 }
 
 const getMiddleSum = function (previousInteger, integer, counts) {
@@ -66,9 +58,19 @@ const getMiddleSum = function (previousInteger, integer, counts) {
   return middleSum
 }
 
-const getEndSum = function (previousInteger, integer, fraction, counts) {
-  return fraction === 0 || previousInteger === integer
-    ? 0
+const getEndSum = function (
+  previousInteger,
+  integer,
+  previousFraction,
+  fraction,
+  counts,
+) {
+  if (fraction === 0) {
+    return 0
+  }
+
+  return previousInteger === integer
+    ? counts[integer] * (fraction - previousFraction)
     : counts[integer] * fraction
 }
 
