@@ -63,15 +63,12 @@ const getStartPart = function (
 }
 
 const getMiddlePart = function (previousInteger, integer, counts) {
-  const startInteger = previousInteger + 1
-  const endInteger = integer - 1
-
-  if (startInteger > endInteger) {
+  if (previousInteger + 2 > integer) {
     return 0
   }
 
   return getIndexes(integer - previousInteger - 1).reduce(
-    (sum, index) => sum + counts[index + startInteger],
+    (sum, index) => sum + counts[index + previousInteger + 1],
     0,
   )
 }
