@@ -32,13 +32,11 @@ const getParts = function (
     return [parts, integer, fraction]
   }
 
-  const sum = 0
-  const sumA =
-    sum +
-    getStartPart(previousInteger, previousFraction, integer, fraction, counts)
-  const sumB = sumA + getMiddlePart(previousInteger, integer, counts)
-  const sumC = sumB + getEndPart(previousInteger, integer, fraction, counts)
-  const partsA = [...parts, sumC]
+  const sum =
+    getStartPart(previousInteger, previousFraction, integer, fraction, counts) +
+    getMiddlePart(previousInteger, integer, counts) +
+    getEndPart(previousInteger, integer, fraction, counts)
+  const partsA = [...parts, sum]
   return [partsA, integer, fraction]
 }
 
