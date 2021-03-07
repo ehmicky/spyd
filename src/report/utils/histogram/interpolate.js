@@ -10,8 +10,7 @@ export const interpolateHistogram = function (counts, length) {
   }
 
   return Array.from({ length: length + 1 }, getIndex)
-    .map((index) => getChunk(countsLength, length, index))
-    .reduce(getParts, [[]])[0]
+    .reduce(getParts.bind(undefined, countsLength, length), [[]])[0]
     .map((parts) => getBin(parts, counts))
 }
 
@@ -19,17 +18,14 @@ const getIndex = function (_, index) {
   return index
 }
 
-const getChunk = function (countsLength, length, index) {
-  const startIndex = (countsLength * index) / length
-  const integer = Math.floor(startIndex)
-  const fraction = startIndex - integer
-  return [integer, fraction]
-}
-
 const getParts = function (
+  countsLength,
+  length,
   [parts, previousInteger, previousFraction],
-  [integer, fraction],
+  index,
 ) {
+  const [integer, fraction] = getChunk(countsLength, length, index)
+
   if (previousInteger === undefined) {
     return [parts, integer, fraction]
   }
@@ -44,6 +40,13 @@ const getParts = function (
   const endPart = getEndPart(previousInteger, integer, fraction)
   const partsA = [...parts, [startPart, ...middlePart, endPart].filter(Boolean)]
   return [partsA, integer, fraction]
+}
+
+const getChunk = function (countsLength, length, index) {
+  const startIndex = (countsLength * index) / length
+  const integer = Math.floor(startIndex)
+  const fraction = startIndex - integer
+  return [integer, fraction]
 }
 
 const getStartPart = function (
