@@ -30,7 +30,9 @@ const getParts = function (
   [parts, previousInteger, previousFraction],
   index,
 ) {
-  const [integer, fraction] = getChunk(countsLength, length, index)
+  const startIndex = (countsLength * index) / length
+  const integer = Math.floor(startIndex)
+  const fraction = startIndex - integer
 
   if (previousInteger === undefined) {
     return [parts, integer, fraction]
@@ -42,13 +44,6 @@ const getParts = function (
     getEndSum(previousInteger, integer, fraction, counts)
   const partsA = [...parts, sum]
   return [partsA, integer, fraction]
-}
-
-const getChunk = function (countsLength, length, index) {
-  const startIndex = (countsLength * index) / length
-  const integer = Math.floor(startIndex)
-  const fraction = startIndex - integer
-  return [integer, fraction]
 }
 
 const getStartSum = function (
