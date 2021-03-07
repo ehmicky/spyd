@@ -24,6 +24,7 @@ const getHistogram = function ({
   const maxFrequency = Math.max(...frequencies)
   const medianPercentage = (median - min) / (max - min)
   const medianIndex = Math.round((contentWidth - 1) * medianPercentage)
+  const medianPaddedIndex = medianIndex + CONTENT_LEFT_PADDING
 
   const rows = Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
     getHistogramRow(index, contentWidth),
@@ -33,7 +34,7 @@ const getHistogram = function ({
     minPretty: minPrettyA,
     maxPretty: maxPrettyA,
     width,
-    medianIndex,
+    medianPaddedIndex,
     medianPretty: medianPrettyA,
   })
   return `${rows}
@@ -86,13 +87,12 @@ const getAbscissa = function ({
   minPretty,
   maxPretty,
   width,
-  medianIndex,
+  medianPaddedIndex,
   medianPretty,
 }) {
   const minPrettyWidth = stringWidth(minPretty)
   const medianPrettyWidth = stringWidth(medianPretty)
   const maxPrettyWidth = stringWidth(maxPretty)
-  const medianPaddedIndex = medianIndex + CONTENT_LEFT_PADDING
   const medianBelow =
     medianPaddedIndex < minPrettyWidth + MEDIAN_PADDING ||
     medianPaddedIndex >
