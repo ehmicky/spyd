@@ -16,9 +16,11 @@ export const interpolateHistogram = function (counts, length) {
   // eslint-disable-next-line fp/no-let, init-declarations
   let previousFraction
 
+  const newCountsLength = countsLength / length
+
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = 0; index < length + 1; index += 1) {
-    const startIndex = (countsLength * index) / length
+    const startIndex = newCountsLength * index
     const integer = Math.floor(startIndex)
     const fraction = startIndex - integer
 
