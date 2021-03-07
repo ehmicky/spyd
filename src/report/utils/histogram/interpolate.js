@@ -10,8 +10,8 @@ export const interpolateHistogram = function (counts, length) {
   }
 
   return Array.from({ length: length + 1 }, getIndex)
-    .reduce(getParts.bind(undefined, countsLength, length), [[]])[0]
-    .map((parts) => getBin(parts, counts))
+    .reduce(getParts.bind(undefined, counts, countsLength, length), [[]])[0]
+    .map(getBin)
 }
 
 const getIndex = function (_, index) {
@@ -19,6 +19,7 @@ const getIndex = function (_, index) {
 }
 
 const getParts = function (
+  counts,
   countsLength,
   length,
   [parts, previousInteger, previousFraction],
@@ -38,8 +39,10 @@ const getParts = function (
   )
   const middlePart = getMiddlePart(previousInteger, integer)
   const endPart = getEndPart(previousInteger, integer, fraction)
-  const part = [startPart, ...middlePart, endPart].filter(Boolean)
-  const partsA = [...parts, part]
+  const newParts = [startPart, ...middlePart, endPart]
+    .filter(Boolean)
+    .map((part) => getBinPart(part, counts))
+  const partsA = [...parts, newParts]
   return [partsA, integer, fraction]
 }
 
@@ -86,8 +89,8 @@ const getEndPart = function (previousInteger, integer, fraction) {
   return [integer, fraction]
 }
 
-const getBin = function (parts, counts) {
-  return parts.map((part) => getBinPart(part, counts)).reduce(getSum, 0)
+const getBin = function (parts) {
+  return parts.reduce(getSum, 0)
 }
 
 const getBinPart = function ([countIndex, percentage], counts) {
