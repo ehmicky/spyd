@@ -2,7 +2,7 @@
 //  - counts.length === length
 //  - counts.length % length === 0
 //  - length % counts.length === 0
-// eslint-disable-next-line max-statements, complexity
+// eslint-disable-next-line max-statements
 export const interpolateHistogram = function (counts, length) {
   const countsLength = counts.length
   const sums = []
