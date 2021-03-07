@@ -107,7 +107,9 @@ const getSpawnParams = function ({
 //  - Computing each `calibration` should be fast
 //  - The resolution estimation algorithm requires a minimum amount of
 //    `calibrations`
-const CALIBRATE_LENGTH = 1e4
+// Higher numbers are more likely to be slow when the resolution is low.
+// Lower numbres are less precise.
+const CALIBRATE_LENGTH = 1e2
 
 // The `exec` command prints stdout/stderr. stdin is always ignored.
 // Anything printed during process spawning (e.g. top-level scope in Node.js)
