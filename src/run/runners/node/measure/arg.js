@@ -18,5 +18,15 @@
 //    beforeEach/main/afterEach in batches, not in order, so they cannot modify
 //    some shared global state.
 export const getTaskArgs = function (taskArg, repeat) {
-  return Array.from({ length: repeat }, () => ({ ...taskArg, context: {} }))
+  // eslint-disable-next-line unicorn/no-new-array
+  const taskArgs = new Array(repeat)
+
+  // Using `new Array()` and a `for` loop is the most performant
+  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
+  for (let index = 0; index < repeat; index += 1) {
+    // eslint-disable-next-line fp/no-mutation
+    taskArgs[index] = { ...taskArg, context: {} }
+  }
+
+  return taskArgs
 }
