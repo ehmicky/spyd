@@ -57,16 +57,16 @@ const getDifferentIntegerSum = function (
   counts,
 ) {
   // eslint-disable-next-line fp/no-let
-  let middleSum = 0
+  let sum = 0
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = previousInteger + 1; index < integer; index += 1) {
     // eslint-disable-next-line fp/no-mutation
-    middleSum += counts[index]
+    sum += counts[index]
   }
 
   return (
-    middleSum +
+    sum +
     counts[previousInteger] * (1 - previousFraction) +
     counts[integer] * fraction
   )
