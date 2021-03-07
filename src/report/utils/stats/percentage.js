@@ -39,7 +39,7 @@ const roundPercentage = function (percentage) {
   return Math.round(scalePercentage(percentage))
 }
 
-export const scalePercentage = function (percentage) {
+const scalePercentage = function (percentage) {
   return percentage * PERCENTAGE_SCALE
 }
 

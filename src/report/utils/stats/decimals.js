@@ -22,7 +22,7 @@ const isDefined = function (measure) {
   return measure !== undefined
 }
 
-export const getDecimals = function (measure) {
+const getDecimals = function (measure) {
   const minPrecision = 10 ** (MAX_DIGITS - 1)
   return Math.max(Math.ceil(Math.log10(minPrecision / measure)), 0)
 }
