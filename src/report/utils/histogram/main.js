@@ -73,10 +73,9 @@ const getHistogramColumns = function (histogram, contentWidth) {
   const frequencies = histogram.map(getFrequency)
   const frequenciesA = resizeHistogram(frequencies, contentWidth)
   const maxFrequency = Math.max(...frequenciesA)
-  const frequenciesB = frequenciesA.map(
-    (frequency) => (HISTOGRAM_HEIGHT * frequency) / maxFrequency,
+  const columns = frequenciesA.map((frequency) =>
+    getHistogramColumn(frequency, maxFrequency),
   )
-  const columns = frequenciesB.map((height) => getHistogramColumn(height))
   return columns
 }
 
@@ -84,7 +83,8 @@ const getFrequency = function ([, , frequency]) {
   return frequency
 }
 
-const getHistogramColumn = function (height) {
+const getHistogramColumn = function (frequency, maxFrequency) {
+  const height = (HISTOGRAM_HEIGHT * frequency) / maxFrequency
   const heightLevel = Math.floor(height)
   const charIndex = Math.ceil(
     (height - heightLevel) * (HISTOGRAM_CHARS.length - 1),
@@ -104,13 +104,13 @@ const getHistogramRow = function (index, columns) {
 }
 
 const getHistogramCell = function (heightLevel, charIndex, index) {
-  const indexA = HISTOGRAM_HEIGHT - index - 1
+  const inverseIndex = HISTOGRAM_HEIGHT - index - 1
 
-  if (heightLevel < indexA) {
+  if (heightLevel < inverseIndex) {
     return EMPTY_HISTOGRAM_CHAR
   }
 
-  if (heightLevel > indexA) {
+  if (heightLevel > inverseIndex) {
     return FULL_HISTOGRAM_CHAR
   }
 
