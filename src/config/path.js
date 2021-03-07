@@ -38,4 +38,9 @@ const DEFAULT_CONFIG = [
   './benchmark/spyd.ts',
   './benchmark/spyd.yml',
   './benchmark/spyd.yaml',
+  './spyd.js',
+  './spyd.cjs',
+  './spyd.ts',
+  './spyd.yml',
+  './spyd.yaml',
 ]
