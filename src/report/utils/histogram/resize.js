@@ -11,17 +11,15 @@ export const resizeHistogram = function (counts, newSize) {
     return sums
   }
 
-  // TODO: initialize those instead, and make one less loop, i.e. can remove
-  // the `previousInteger === undefined` block
-  // eslint-disable-next-line fp/no-let, init-declarations
-  let previousInteger
-  // eslint-disable-next-line fp/no-let, init-declarations
-  let previousFraction
+  // eslint-disable-next-line fp/no-let
+  let previousInteger = 0
+  // eslint-disable-next-line fp/no-let
+  let previousFraction = 0
 
   const resizeRatio = oldSize / newSize
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = 0; index < newSize + 1; index += 1) {
+  for (let index = 1; index < newSize + 1; index += 1) {
     const startIndex = resizeRatio * index
     const integer = Math.floor(startIndex)
     const fraction = startIndex - integer
@@ -45,10 +43,6 @@ const addSum = function (
   counts,
   sums,
 ) {
-  if (previousInteger === undefined) {
-    return
-  }
-
   const sum =
     getStartSum(previousInteger, previousFraction, integer, fraction, counts) +
     getMiddleSum(previousInteger, integer, counts) +
