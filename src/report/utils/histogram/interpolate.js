@@ -9,10 +9,12 @@ export const interpolateHistogram = function (counts, length) {
     return []
   }
 
-  return getIndexes(length + 1).reduce(
-    getParts.bind(undefined, counts, countsLength, length),
-    [[]],
-  )[0]
+  const parts = []
+  getIndexes(length + 1).reduce(
+    getParts.bind(undefined, parts, counts, countsLength, length),
+    [],
+  )
+  return parts
 }
 
 const getIndexes = function (length) {
@@ -24,10 +26,11 @@ const getIndex = function (_, index) {
 }
 
 const getParts = function (
+  parts,
   counts,
   countsLength,
   length,
-  [parts, previousInteger, previousFraction],
+  [previousInteger, previousFraction],
   index,
 ) {
   const startIndex = (countsLength * index) / length
@@ -35,15 +38,16 @@ const getParts = function (
   const fraction = startIndex - integer
 
   if (previousInteger === undefined) {
-    return [parts, integer, fraction]
+    return [integer, fraction]
   }
 
   const sum =
     getStartSum(previousInteger, previousFraction, integer, fraction, counts) +
     getMiddleSum(previousInteger, integer, counts) +
     getEndSum(previousInteger, integer, fraction, counts)
-  const partsA = [...parts, sum]
-  return [partsA, integer, fraction]
+  // eslint-disable-next-line fp/no-mutating-methods
+  parts.push(sum)
+  return [integer, fraction]
 }
 
 const getStartSum = function (
