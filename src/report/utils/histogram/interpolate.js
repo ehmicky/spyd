@@ -28,29 +28,39 @@ const getChunk = function (countsLength, length, index) {
 }
 
 const getParts = function ([integer, fraction], chunkIndex, chunks) {
-  if (chunkIndex === chunks.length - 1) {
+  if (chunkIndex === 0) {
     return
   }
 
-  const [nextInteger, nextFraction] = chunks[chunkIndex + 1]
-  const startPart = getStartPart(integer, fraction, nextInteger, nextFraction)
-  const middlePart = getMiddlePart(integer, nextInteger)
-  const endPart = getEndPart(integer, nextInteger, nextFraction)
+  const [previousInteger, previousFraction] = chunks[chunkIndex - 1]
+  const startPart = getStartPart(
+    previousInteger,
+    previousFraction,
+    integer,
+    fraction,
+  )
+  const middlePart = getMiddlePart(previousInteger, integer)
+  const endPart = getEndPart(previousInteger, integer, fraction)
   const parts = [startPart, ...middlePart, endPart].filter(Boolean)
   return parts
 }
 
-const getStartPart = function (integer, fraction, nextInteger, nextFraction) {
-  if (integer === nextInteger) {
-    return [integer, nextFraction - fraction]
+const getStartPart = function (
+  previousInteger,
+  previousFraction,
+  integer,
+  fraction,
+) {
+  if (previousInteger === integer) {
+    return [previousInteger, fraction - previousFraction]
   }
 
-  return [integer, 1 - fraction]
+  return [previousInteger, 1 - previousFraction]
 }
 
-const getMiddlePart = function (integer, nextInteger) {
-  const startInteger = integer + 1
-  const endInteger = nextInteger - 1
+const getMiddlePart = function (previousInteger, integer) {
+  const startInteger = previousInteger + 1
+  const endInteger = integer - 1
 
   if (startInteger > endInteger) {
     return []
@@ -63,12 +73,12 @@ const getMiddlePart = function (integer, nextInteger) {
   ])
 }
 
-const getEndPart = function (integer, nextInteger, nextFraction) {
-  if (nextFraction === 0 || integer === nextInteger) {
+const getEndPart = function (previousInteger, integer, fraction) {
+  if (fraction === 0 || previousInteger === integer) {
     return
   }
 
-  return [nextInteger, nextFraction]
+  return [integer, fraction]
 }
 
 const getBin = function (parts, counts) {
