@@ -54,11 +54,8 @@ const getStartPart = function (
   fraction,
   counts,
 ) {
-  if (previousInteger === integer) {
-    return getBinPart(previousInteger, fraction - previousFraction, counts)
-  }
-
-  return getBinPart(previousInteger, 1 - previousFraction, counts)
+  const startFraction = previousInteger === integer ? fraction : 1
+  return getBinPart(previousInteger, startFraction - previousFraction, counts)
 }
 
 const getMiddlePart = function (previousInteger, integer, counts) {
