@@ -89,12 +89,12 @@ const getEndPart = function (previousInteger, integer, fraction) {
   return [integer, fraction]
 }
 
-const getBin = function (parts) {
-  return parts.reduce(getSum, 0)
-}
-
 const getBinPart = function ([countIndex, percentage], counts) {
   return counts[countIndex] * percentage
+}
+
+const getBin = function (parts) {
+  return parts.reduce(getSum, 0)
 }
 
 const getSum = function (sum, binPart) {
