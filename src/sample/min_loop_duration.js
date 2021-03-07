@@ -60,6 +60,18 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - This is simpler to implement for both the runner and the parent
 //  - This prevents its computation from de-optimizing the measured task
 //  - The median more stable as the `config` and tasks change
+// `calibrations` should filter out any `0`, while still filling a specific
+// length specified by the parent process.
+//  - This prevents computation errors for both time `resolution` and
+//    `measureCost`
+//  - This means the computed `resolution` will never be slower than
+//    `measureCost`. We still compute `resolution` for debugging purpose, or in
+//    case the logic changes.
+//  - If the real `resolution` is slower than `measureCost`, `measureCost` will
+//    equal the real `resolution`, which is ok.
+//  - If the `resolution` is slow, computing the `calibrations` might take
+//    some duration. However, this is fine since this duration will be spent on
+//    each sample anyway due to `minLoopDuration`.
 // The precision of `minLoopDuration` is not very critical:
 //  - The total number of `times` each step is run should be the same
 //    regardless of `repeat`. This is because a lower|higher `repeat` is
@@ -78,7 +90,6 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - We use `time-resolution` to guess the runner's minimum resolution.
 //  - For example, if a runner can only measure things with 1ms precision, every
 //    nanoseconds measures will be a multiple of 1e6.
-//  - We estimate this using the `calibrations`.
 export const getMinLoopDuration = function (calibrations) {
   if (calibrations.length === 0) {
     return 0
