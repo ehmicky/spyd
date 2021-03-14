@@ -1,5 +1,5 @@
 import { getFooter } from '../../utils/footer/main.js'
-import { getHistograms } from '../../utils/histogram/main.js'
+import { serializeHistograms } from '../../utils/histogram/main.js'
 import { joinSections } from '../../utils/join.js'
 import { prettifyValue } from '../../utils/prettify_value.js'
 import { prettifyStats } from '../../utils/stats/main.js'
@@ -14,7 +14,7 @@ const report = function ({ id, timestamp, systems, combinations }) {
   const combinationsB = addTitles(combinationsA)
 
   const table = getTable(combinationsB)
-  const histograms = getHistograms(combinationsB)
+  const histograms = serializeHistograms(combinationsB)
   const footer = prettifyValue(getFooter({ id, timestamp, systems }))
   return joinSections([table, ...histograms, footer])
 }

@@ -7,7 +7,7 @@ import { separatorColor, graphGradientColor } from '../colors.js'
 import { resizeHistogram } from './resize.js'
 import { smoothHistogram } from './smooth.js'
 
-export const getHistograms = function (combinations) {
+export const serializeHistograms = function (combinations) {
   const combinationsA = combinations.filter(hasHistogram)
 
   if (combinationsA.length === 0) {
@@ -15,14 +15,14 @@ export const getHistograms = function (combinations) {
   }
 
   const width = getReportWidth()
-  return combinationsA.map(({ stats }) => getHistogram(stats, width))
+  return combinationsA.map(({ stats }) => serializeHistogram(stats, width))
 }
 
 const hasHistogram = function ({ stats: { histogram } }) {
   return histogram !== undefined
 }
 
-const getHistogram = function (
+const serializeHistogram = function (
   { histogram, low, lowPretty, median, medianPretty, high, highPretty },
   width,
 ) {
