@@ -23,7 +23,7 @@ export const smoothHistogram = function (counts, smoothPercentage) {
   return smoothedCounts
 }
 
-// eslint-disable-next-line complexity, max-params, max-statements
+// eslint-disable-next-line max-params
 const getSmoothedCount = function (
   counts,
   countsLength,
@@ -39,9 +39,13 @@ const getSmoothedCount = function (
   const hasPartialStart = partialStart >= 0
   const hasPartialEnd = partialEnd <= countsLength - 1
 
-  const partialCounts = (hasPartialStart ? 1 : 0) + (hasPartialEnd ? 1 : 0)
-  const fullCounts = fullEnd - fullStart
-  const weight = 1 + fullCounts + partialCounts * partialSmooth
+  const weight = getWeight(
+    partialSmooth,
+    fullStart,
+    fullEnd,
+    hasPartialStart,
+    hasPartialEnd,
+  )
   const partialWeight = weight / partialSmooth
 
   return (
@@ -49,6 +53,19 @@ const getSmoothedCount = function (
     getSum(counts, fullStart, fullEnd) / weight +
     (hasPartialEnd ? counts[partialEnd] / partialWeight : 0)
   )
+}
+
+// eslint-disable-next-line max-params
+const getWeight = function (
+  partialSmooth,
+  fullStart,
+  fullEnd,
+  hasPartialStart,
+  hasPartialEnd,
+) {
+  const partialCounts = (hasPartialStart ? 1 : 0) + (hasPartialEnd ? 1 : 0)
+  const fullCounts = fullEnd - fullStart
+  return 1 + fullCounts + partialCounts * partialSmooth
 }
 
 const getSum = function (array, start, end) {
