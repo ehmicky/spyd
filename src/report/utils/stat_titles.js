@@ -8,6 +8,7 @@ export const STAT_TITLES = {
   high: 'High',
   diff: 'Diff',
   deviation: 'Deviation',
+  moe: 'Error',
   times: 'Times',
   loops: 'Loops',
   repeat: 'Repeat',

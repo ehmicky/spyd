@@ -1,4 +1,8 @@
-import { getDeviation, getStandardError } from './deviation.js'
+import {
+  getStandardDeviation,
+  getRelativeDeviation,
+  getRelativeMarginOfError,
+} from './deviation.js'
 import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
@@ -27,10 +31,26 @@ export const computeStats = function (measures) {
   const histogram = getHistogram(normalizedMeasures, HISTOGRAM_SIZE)
 
   const mean = getMean(measures)
-  const deviation = getDeviation(normalizedMeasures, median)
-  const standardError = getStandardError(normalizedMeasures, deviation)
+  const standardDeviation = getStandardDeviation(normalizedMeasures, median)
+  const deviation = getRelativeDeviation(standardDeviation, median)
+  const moe = getRelativeMarginOfError(
+    normalizedMeasures,
+    standardDeviation,
+    median,
+  )
 
-  return { median, mean, min, max, low, high, deviation, histogram, quantiles }
+  return {
+    median,
+    mean,
+    min,
+    max,
+    low,
+    high,
+    deviation,
+    moe,
+    histogram,
+    quantiles,
+  }
 }
 
 const QUANTILES_SIZE = 1e2

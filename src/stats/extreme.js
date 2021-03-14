@@ -9,7 +9,7 @@ import { getRoundedPosition } from './quantile.js'
 // measures:
 //  - they create a distribution with a very long tail, which is hard to
 //    visualize with `histogram`
-//  - they make `deviation` must less useful
+//  - they make `deviation` and `moe` must less useful
 // For the later cases, we remove those outliers.
 // We also remove the fastest outliers for similar reasons, although they are
 // less frequent.

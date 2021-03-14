@@ -1,15 +1,14 @@
 // Retrieve standard deviation of an array of floats (cannot be NaN/Infinity).
-// In percentage relative to the median.
+// Array must not be empty.
 // We use the median, not the mean, because it is more stable and is privileged
 // in reporting.
-// Array must not be empty.
-export const getDeviation = function (array, median) {
+export const getStandardDeviation = function (array, median) {
   if (median === 0 || array.length < MIN_DEVIATION_LOOPS) {
     return
   }
 
   const variance = getVariance(array, median)
-  return Math.sqrt(variance) / median
+  return Math.sqrt(variance)
 }
 
 // The standard deviation might be very imprecise when there are not enough
@@ -37,11 +36,27 @@ const getSumDeviation = function (array, median) {
   return sum
 }
 
-// Retrieve standard error
-export const getStandardError = function (array, deviation) {
-  if (deviation === undefined) {
+// Retrieve standard deviation, relative to the median.
+export const getRelativeDeviation = function (standardDeviation, median) {
+  if (standardDeviation === undefined) {
     return
   }
 
-  return deviation / Math.sqrt(array.length)
+  return standardDeviation / median
+}
+
+// Retrieve margin of error, relative to the median
+export const getRelativeMarginOfError = function (
+  array,
+  standardDeviation,
+  median,
+) {
+  if (standardDeviation === undefined) {
+    return
+  }
+
+  const standardError = standardDeviation / Math.sqrt(array.length)
+  const marginOfError = standardError * 2
+  const relativeMarginOfError = marginOfError / median
+  return relativeMarginOfError
 }

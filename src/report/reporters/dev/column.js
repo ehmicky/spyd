@@ -11,6 +11,7 @@ export const STAT_COLUMNS = [
   'max',
   'diff',
   'deviation',
+  'moe',
   'times',
   'loops',
   'repeat',
