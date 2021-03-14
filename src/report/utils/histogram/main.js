@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import stringWidth from 'string-width'
 
-import { getScreenWidth } from '../../tty.js'
+import { getReportWidth } from '../../tty.js'
 import { separatorColor, graphGradientColor } from '../colors.js'
 
 import { resizeHistogram } from './resize.js'
@@ -18,7 +18,7 @@ const hasHistogram = function ({ stats: { histogram } }) {
 const getHistogram = function ({
   stats: { histogram, low, lowPretty, median, medianPretty, high, highPretty },
 }) {
-  const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
+  const width = getReportWidth()
   const { medianIndex, medianMaxWidth } = getMedianPosition({
     median,
     low,
@@ -45,9 +45,6 @@ const getHistogram = function ({
 ${bottomLine}
 ${abscissa}`
 }
-
-const OUTSIDE_LEFT_PADDING = 1
-const OUTSIDE_RIGHT_PADDING = 1
 
 // Compute position of the median tick
 const getMedianPosition = function ({ median, low, high, width }) {

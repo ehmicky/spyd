@@ -37,6 +37,13 @@ export const isTtyOutput = function () {
   return isInteractive(stdout)
 }
 
+// Retrieve terminal width, excluding the padding added to reporting
+export const getReportWidth = function () {
+  return getScreenWidth() - REPORT_PADDING
+}
+
+const REPORT_PADDING = 2
+
 // Retrieve terminal width and height
 export const getScreenWidth = function () {
   const { columns = DEFAULT_WIDTH } = stdout
