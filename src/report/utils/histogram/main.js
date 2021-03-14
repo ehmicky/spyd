@@ -134,12 +134,12 @@ const getHistogramColumn = function ({
   const charIndex = Math.ceil(
     (height - heightLevel) * (HISTOGRAM_CHARS.length - 1),
   )
-  const color = getColumnColor({ columnIndex, medianIndex, medianMaxWidth })
+  const color = getColumnColor(columnIndex, medianIndex, medianMaxWidth)
   return { heightLevel, charIndex, color }
 }
 
 // Computes the column gradient color.
-const getColumnColor = function ({ columnIndex, medianIndex, medianMaxWidth }) {
+const getColumnColor = function (columnIndex, medianIndex, medianMaxWidth) {
   const colorPercentage = Math.abs(medianIndex - columnIndex) / medianMaxWidth
   return graphGradientColor(colorPercentage)
 }
