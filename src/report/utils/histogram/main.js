@@ -32,7 +32,6 @@ const getHistogram = function (
     high,
     width,
   })
-
   const columns = getHistogramColumns({
     histogram,
     width,
