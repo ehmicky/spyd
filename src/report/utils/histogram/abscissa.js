@@ -13,13 +13,8 @@ export const getAbscissa = function ({
   const highPrettyWidth = stringWidth(highPretty)
 
   if (
-    isStackedAbscissa({
-      width,
-      medianIndex,
-      lowPrettyWidth,
-      medianPrettyWidth,
-      highPrettyWidth,
-    })
+    medianIndex < lowPrettyWidth + MEDIAN_PADDING ||
+    medianIndex > width - highPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
   ) {
     return getStackedAbscissa({
       lowPretty,
@@ -45,23 +40,10 @@ export const getAbscissa = function ({
   })
 }
 
-// Whether the median is too close to the low|high and should be shown below it
-const isStackedAbscissa = function ({
-  width,
-  medianIndex,
-  lowPrettyWidth,
-  medianPrettyWidth,
-  highPrettyWidth,
-}) {
-  return (
-    medianIndex < lowPrettyWidth + MEDIAN_PADDING ||
-    medianIndex > width - highPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
-  )
-}
-
 // Minimum amount of spaces between the median and the low|high
 const MEDIAN_PADDING = 1
 
+// When the median is too close to the low|high and should be shown below it
 const getStackedAbscissa = function ({
   lowPretty,
   highPretty,
