@@ -274,6 +274,7 @@ const getAbscissa = function ({
   })
 }
 
+// Whether the median is too close to the low|high and should be shown below it
 const isStackedAbscissa = function ({
   width,
   medianIndex,
@@ -287,6 +288,7 @@ const isStackedAbscissa = function ({
   )
 }
 
+// Minimum amount of spaces between the median and the low|high
 const MEDIAN_PADDING = 1
 
 const getStackedAbscissa = function ({
