@@ -33,13 +33,12 @@ const serializeHistogram = function (
     high,
     width,
   })
-  const columns = getHistogramColumns({
+  const rows = getHistogramRows({
     histogram,
     width,
     medianIndex,
     medianMaxWidth,
   })
-  const rows = getHistogramRows(columns)
   const bottomLine = getBottomLine(width, medianIndex)
   const abscissa = getAbscissa({
     lowPretty,
@@ -62,6 +61,24 @@ const getMedianPosition = function ({ median, low, high, width }) {
   const medianIndex = Math.round(indexWidth * medianPercentage)
   const medianMaxWidth = Math.max(medianIndex, indexWidth - medianIndex)
   return { medianIndex, medianMaxWidth }
+}
+
+// Serialize the main part of the histogram, i.e. rows and columns
+const getHistogramRows = function ({
+  histogram,
+  width,
+  medianIndex,
+  medianMaxWidth,
+}) {
+  const columns = getHistogramColumns({
+    histogram,
+    width,
+    medianIndex,
+    medianMaxWidth,
+  })
+  return Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
+    getHistogramRow(index, columns),
+  ).join('\n')
 }
 
 // Computes the terminal height of each column for reporting.
@@ -142,12 +159,6 @@ const getHistogramColumn = function ({
 const getColumnColor = function (columnIndex, medianIndex, medianMaxWidth) {
   const colorPercentage = Math.abs(medianIndex - columnIndex) / medianMaxWidth
   return graphGradientColor(colorPercentage)
-}
-
-const getHistogramRows = function (columns) {
-  return Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
-    getHistogramRow(index, columns),
-  ).join('\n')
 }
 
 const getHistogramRow = function (index, columns) {
