@@ -37,7 +37,7 @@ export const getDeviation = function (array, median) {
 // A higher value makes standard deviation less likely to be computed for very
 // slow tasks.
 // A lower value makes it more likely to use inaccurate standard deviations.
-const MIN_DEVIATION_LOOPS = 10
+const MIN_DEVIATION_LOOPS = 5
 
 const getVariance = function (array, median) {
   return getSumDeviation(array, median) / array.length
