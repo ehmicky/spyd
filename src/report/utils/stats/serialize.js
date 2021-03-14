@@ -1,28 +1,7 @@
 import { serializeRelPercentage, serializeAbsPercentage } from './percentage.js'
 
-// Serialize stat into a prettified string
-export const serializeStat = function ({ stat, kind, scale, decimals }) {
-  if (shouldSkipStat(stat)) {
-    return ''
-  }
-
-  if (Array.isArray(stat)) {
-    return stat.map((statA) =>
-      serializeValue({ stat: statA, kind, scale, decimals }),
-    )
-  }
-
-  return serializeValue({ stat, kind, scale, decimals })
-}
-
-// Statistics are not shown if undefined (e.g. `diff` with no previous results,
-// or not-measure-yet in preview
-const shouldSkipStat = function (stat) {
-  return stat === undefined
-}
-
-// Serialize a stat's value
-const serializeValue = function ({ stat, kind, scale, decimals }) {
+// Scale, round and add decimals, suffixes and prefixes in stats
+export const serializeValue = function ({ stat, kind, scale, decimals }) {
   return SERIALIZE_STAT[kind](stat, { scale, decimals })
 }
 
