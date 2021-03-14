@@ -1,16 +1,8 @@
 import { serializeRelPercentage, serializeAbsPercentage } from './percentage.js'
-import { shouldSkipStat } from './skip.js'
 
 // Serialize stat into a prettified string
-export const serializeStat = function ({
-  stat,
-  name,
-  kind,
-  scale,
-  decimals,
-  loops,
-}) {
-  if (shouldSkipStat({ stat, name, loops })) {
+export const serializeStat = function ({ stat, kind, scale, decimals }) {
+  if (shouldSkipStat(stat)) {
     return ''
   }
 
@@ -21,6 +13,12 @@ export const serializeStat = function ({
   }
 
   return serializeValue({ stat, kind, scale, decimals })
+}
+
+// Statistics are not shown if undefined (e.g. `diff` with no previous results,
+// or not-measure-yet in preview
+const shouldSkipStat = function (stat) {
+  return stat === undefined
 }
 
 // Serialize a stat's value

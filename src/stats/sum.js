@@ -24,13 +24,20 @@ export const getSum = function (array) {
 // in reporting.
 // Array must not be empty.
 export const getDeviation = function (array, median) {
-  if (median === 0) {
-    return 0
+  if (median === 0 || array.length < MIN_DEVIATION_LOOPS) {
+    return
   }
 
   const variance = getVariance(array, median)
   return Math.sqrt(variance) / median
 }
+
+// The standard deviation might be very imprecise when there are not enough
+// values to compute it from.
+// A higher value makes standard deviation less likely to be computed for very
+// slow tasks.
+// A lower value makes it more likely to use inaccurate standard deviations.
+const MIN_DEVIATION_LOOPS = 10
 
 const getVariance = function (array, median) {
   return getSumDeviation(array, median) / array.length

@@ -39,20 +39,13 @@ const prettifyCombinationStat = function ({
   combination,
   combination: {
     stats,
-    stats: { [name]: stat, loops },
+    stats: { [name]: stat },
   },
   kind,
   scale,
   decimals,
 }) {
-  const statPretty = serializeStat({
-    stat,
-    name,
-    kind,
-    scale,
-    decimals,
-    loops,
-  })
+  const statPretty = serializeStat({ stat, kind, scale, decimals })
   return { ...combination, stats: { ...stats, [prettyName]: statPretty } }
 }
 
