@@ -1,9 +1,9 @@
 export const smoothHistogram = function (counts, smoothPercentage) {
   const countsLength = counts.length
 
-  const smoothSize = Math.max((countsLength * smoothPercentage - 1) / 2, 0)
-  const fullSmoothSize = Math.floor(smoothSize)
-  const partialSmoothSize = smoothSize - fullSmoothSize
+  const totalSmooth = Math.max((countsLength * smoothPercentage - 1) / 2, 0)
+  const fullSmooth = Math.floor(totalSmooth)
+  const partialSmooth = totalSmooth - fullSmooth
 
   // eslint-disable-next-line unicorn/no-new-array
   const smoothedCounts = new Array(countsLength)
@@ -15,47 +15,53 @@ export const smoothHistogram = function (counts, smoothPercentage) {
       counts,
       countsLength,
       countIndex,
-      fullSmoothSize,
-      partialSmoothSize,
+      fullSmooth,
+      partialSmooth,
     )
   }
 
   return smoothedCounts
 }
 
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line complexity, max-params, max-statements
 const getSmoothedCount = function (
   counts,
   countsLength,
   countIndex,
-  fullSmoothSize,
-  partialSmoothSize,
+  fullSmooth,
+  partialSmooth,
 ) {
-  const startIndex = countIndex - fullSmoothSize - 1
-  const endIndex = countIndex + fullSmoothSize + 1
-  const startFullIndex = Math.max(startIndex + 1, 0)
-  const endFullIndex = Math.min(endIndex - 1, countsLength - 1)
+  const partialStart = countIndex - fullSmooth - 1
+  const partialEnd = countIndex + fullSmooth + 1
+  const fullStart = Math.max(partialStart + 1, 0)
+  const fullEnd = Math.min(partialEnd - 1, countsLength - 1)
 
-  let smoothedCount = 0
-  let size = 0
+  const hasPartialStart = partialStart >= 0
+  const hasPartialEnd = partialEnd <= countsLength - 1
 
-  if (startIndex >= 0) {
-    smoothedCount += counts[startIndex] * partialSmoothSize
-    size += partialSmoothSize
-  }
+  const partialCounts = (hasPartialStart ? 1 : 0) + (hasPartialEnd ? 1 : 0)
+  const fullCounts = fullEnd - fullStart
+  const weight = 1 + fullCounts + partialCounts * partialSmooth
+  const partialWeight = weight / partialSmooth
+
+  return (
+    (hasPartialStart ? counts[partialStart] / partialWeight : 0) +
+    getSum(counts, fullStart, fullEnd) / weight +
+    (hasPartialEnd ? counts[partialEnd] / partialWeight : 0)
+  )
+}
+
+const getSum = function (array, start, end) {
+  // eslint-disable-next-line fp/no-let
+  let sum = 0
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = startFullIndex; index <= endFullIndex; index += 1) {
-    smoothedCount += counts[index]
-    size += 1
+  for (let index = start; index <= end; index += 1) {
+    // eslint-disable-next-line fp/no-mutation
+    sum += array[index]
   }
 
-  if (endIndex <= countsLength - 1) {
-    smoothedCount += counts[endIndex] * partialSmoothSize
-    size += partialSmoothSize
-  }
-
-  return smoothedCount / size
+  return sum
 }
 
 const histogramExampleA = []
