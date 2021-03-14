@@ -22,6 +22,7 @@ const hasHistogram = function ({ stats: { histogram } }) {
   return histogram !== undefined
 }
 
+// Serialize a combination's histogram for reporting
 const serializeHistogram = function (
   { histogram, low, lowPretty, median, medianPretty, high, highPretty },
   width,
@@ -63,6 +64,9 @@ const getMedianPosition = function ({ median, low, high, width }) {
   return { medianIndex, medianMaxWidth }
 }
 
+// Computes the terminal height of each column for reporting.
+// Smoothes the histogram by adjusting each of those heights.
+// Also resizes the columns to fit in the terminal width.
 const getHistogramColumns = function ({
   histogram,
   width,
@@ -110,6 +114,10 @@ const smoothHistogramEnds = function (frequencies) {
 // look nice and reduce the shakiness.
 const SMOOTH_PERCENTAGE = 0.05
 
+// Retrieve the height of each column.
+// `heightLevel` is the integer part (full character) and `charIndex` is the
+// fractional part (final character on top of column).
+// The column gradient color is also computed.
 const getHistogramColumn = function ({
   frequency,
   maxFrequency,
