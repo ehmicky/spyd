@@ -1,3 +1,5 @@
+import stringWidth from 'string-width'
+
 // Retrieve the maximum length of any measures for each stat
 export const getPadding = function (prettyName, combinations) {
   const statLengths = combinations
@@ -18,5 +20,7 @@ const getLength = function (statPretty) {
 // Pad `*.statsPretty` on the left so they vertically align.
 // Right padding was already performed when setting the number of decimals.
 export const padValue = function (statPretty, padding) {
-  return statPretty.padStart(padding)
+  const length = stringWidth(statPretty)
+  const spaces = ' '.repeat(Math.max(padding - length, 0))
+  return `${spaces}${statPretty}`
 }
