@@ -1,3 +1,3 @@
-import { dev } from './dev.js'
+import { dev } from './dev/main.js'
 
 export const REPORTERS = { dev }
