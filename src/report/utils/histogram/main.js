@@ -2,6 +2,7 @@
 import stringWidth from 'string-width'
 
 import { getScreenWidth } from '../../tty.js'
+import { separatorColor, graphGradientColor } from '../colors.js'
 
 import { resizeHistogram } from './resize.js'
 import { smoothHistogram } from './smooth.js'
@@ -24,11 +25,20 @@ const getHistogram = function ({
 
   const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
   const contentWidth = width - CONTENT_LEFT_PADDING - CONTENT_RIGHT_PADDING
-  const columns = getHistogramColumns(histogram, contentWidth)
   const medianPercentage = getMedianPercentage(median, low, high)
-  const medianIndex =
-    Math.round((contentWidth - 1) * medianPercentage) + CONTENT_LEFT_PADDING
+  const medianContentIndex = Math.round((contentWidth - 1) * medianPercentage)
+  const medianIndex = medianContentIndex + CONTENT_LEFT_PADDING
+  const medianMaxWidth = Math.max(
+    medianContentIndex,
+    contentWidth - medianContentIndex,
+  )
 
+  const columns = getHistogramColumns({
+    histogram,
+    contentWidth,
+    medianContentIndex,
+    medianMaxWidth,
+  })
   const rows = Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
     getHistogramRow(index, columns),
   ).join('\n')
@@ -69,14 +79,25 @@ const CONTENT_LEFT_PADDING = 1
 const CONTENT_RIGHT_PADDING = 1
 const MEDIAN_PADDING = 1
 
-const getHistogramColumns = function (histogram, contentWidth) {
+const getHistogramColumns = function ({
+  histogram,
+  contentWidth,
+  medianContentIndex,
+  medianMaxWidth,
+}) {
   const frequencies = histogram.map(getFrequency)
   const frequenciesA = smoothHistogramEnds(frequencies)
   const frequenciesB = resizeHistogram(frequenciesA, contentWidth)
   const frequenciesC = smoothHistogram(frequenciesB, SMOOTH_PERCENTAGE)
   const maxFrequency = Math.max(...frequenciesC)
-  const columns = frequenciesC.map((frequency) =>
-    getHistogramColumn(frequency, maxFrequency),
+  const columns = frequenciesC.map((frequency, columnIndex) =>
+    getHistogramColumn({
+      frequency,
+      maxFrequency,
+      columnIndex,
+      medianContentIndex,
+      medianMaxWidth,
+    }),
   )
   return columns
 }
@@ -105,13 +126,22 @@ const smoothHistogramEnds = function (frequencies) {
 // look nice and reduce the shakiness.
 const SMOOTH_PERCENTAGE = 0.05
 
-const getHistogramColumn = function (frequency, maxFrequency) {
+const getHistogramColumn = function ({
+  frequency,
+  maxFrequency,
+  columnIndex,
+  medianContentIndex,
+  medianMaxWidth,
+}) {
   const height = (HISTOGRAM_HEIGHT * frequency) / maxFrequency
   const heightLevel = Math.floor(height)
   const charIndex = Math.ceil(
     (height - heightLevel) * (HISTOGRAM_CHARS.length - 1),
   )
-  return [heightLevel, charIndex]
+  const colorPercentage =
+    Math.abs(medianContentIndex - columnIndex) / medianMaxWidth
+  const color = graphGradientColor(colorPercentage)
+  return { heightLevel, charIndex, color }
 }
 
 // When `histogram` has a single item, it is in the first bucket.
@@ -127,14 +157,14 @@ const getHistogramRow = function (index, columns) {
   const contentLeftPadding = ' '.repeat(CONTENT_LEFT_PADDING)
   const contentRightPadding = ' '.repeat(CONTENT_RIGHT_PADDING)
   const row = columns
-    .map(([heightLevel, charIndex]) =>
-      getHistogramCell(heightLevel, charIndex, index),
+    .map(({ heightLevel, charIndex, color }) =>
+      getHistogramCell({ heightLevel, charIndex, color, index }),
     )
     .join('')
   return `${contentLeftPadding}${row}${contentRightPadding}`
 }
 
-const getHistogramCell = function (heightLevel, charIndex, index) {
+const getHistogramCell = function ({ heightLevel, charIndex, color, index }) {
   const inverseIndex = HISTOGRAM_HEIGHT - index - 1
 
   if (heightLevel < inverseIndex) {
@@ -142,10 +172,10 @@ const getHistogramCell = function (heightLevel, charIndex, index) {
   }
 
   if (heightLevel > inverseIndex) {
-    return FULL_HISTOGRAM_CHAR
+    return color(FULL_HISTOGRAM_CHAR)
   }
 
-  return HISTOGRAM_CHARS[charIndex]
+  return color(HISTOGRAM_CHARS[charIndex])
 }
 
 const getBottomLine = function (width, medianIndex) {
@@ -158,7 +188,9 @@ const getBottomLine = function (width, medianIndex) {
     TICK_RIGHT.length
   const leftLine = HORIZONTAL_LINE.repeat(leftLineWidth)
   const rightLine = HORIZONTAL_LINE.repeat(rightLineWidth)
-  return `${TICK_LEFT}${leftLine}${TICK_MIDDLE}${rightLine}${TICK_RIGHT}`
+  return separatorColor(
+    `${TICK_LEFT}${leftLine}${TICK_MIDDLE}${rightLine}${TICK_RIGHT}`,
+  )
 }
 
 const getAbscissa = function ({
