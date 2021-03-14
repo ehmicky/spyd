@@ -1,4 +1,5 @@
 import { getReportWidth } from '../../tty.js'
+import { getCombinationName } from '../title.js'
 
 import { getAbscissa } from './abscissa.js'
 import { getBottomLine } from './bottom_line.js'
@@ -14,7 +15,9 @@ export const serializeHistograms = function (combinations) {
   }
 
   const width = getReportWidth()
-  return combinationsA.map(({ stats }) => serializeHistogram(stats, width))
+  return combinationsA.map((combination) =>
+    serializeHistogram(combination, width),
+  )
 }
 
 const hasHistogram = function ({ stats: { histogram } }) {
@@ -22,9 +25,21 @@ const hasHistogram = function ({ stats: { histogram } }) {
 }
 
 const serializeHistogram = function (
-  { histogram, low, lowPretty, median, medianPretty, high, highPretty },
+  {
+    titles,
+    stats: {
+      histogram,
+      low,
+      lowPretty,
+      median,
+      medianPretty,
+      high,
+      highPretty,
+    },
+  },
   width,
 ) {
+  const name = getCombinationName(titles)
   const { medianIndex, medianMaxWidth } = getMedianPosition({
     median,
     low,
@@ -45,7 +60,9 @@ const serializeHistogram = function (
     medianIndex,
     medianPretty,
   })
-  return `${rows}
+  return `${name}
+
+${rows}
 ${bottomLine}
 ${abscissa}`
 }

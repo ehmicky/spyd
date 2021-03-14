@@ -1,14 +1,14 @@
 import colorsOption from 'colors-option'
 
 const chalk = colorsOption()
-const { cyan, gray, red, level } = chalk
+const { cyanBright, gray, redBright, level } = chalk
 
-export const titleColor = cyan.bold
-export const subtitleColor = cyan
+export const titleColor = cyanBright.bold
+export const subtitleColor = cyanBright
 export const fieldColor = gray.italic
-export const goodColor = cyan
-export const badColor = red
-export const errorColor = red.inverse.bold
+export const goodColor = cyanBright
+export const badColor = redBright
+export const errorColor = redBright.inverse.bold
 export const separatorColor = gray
 export const noteColor = gray
 export const suffixColor = gray
