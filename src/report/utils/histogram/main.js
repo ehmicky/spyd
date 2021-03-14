@@ -24,7 +24,7 @@ const getHistogram = function ({
   const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
   const contentWidth = width - CONTENT_LEFT_PADDING - CONTENT_RIGHT_PADDING
   const columns = getHistogramColumns(histogram, contentWidth)
-  const medianPercentage = (median - low) / (high - low)
+  const medianPercentage = getMedianPercentage(median, low, high)
   const medianIndex =
     Math.round((contentWidth - 1) * medianPercentage) + CONTENT_LEFT_PADDING
 
@@ -89,6 +89,15 @@ const getHistogramColumn = function (frequency, maxFrequency) {
     (height - heightLevel) * (HISTOGRAM_CHARS.length - 1),
   )
   return [heightLevel, charIndex]
+}
+
+// When `histogram` has a single item, it is in the first bucket.
+const getMedianPercentage = function (median, low, high) {
+  if (high === low) {
+    return 0
+  }
+
+  return (median - low) / (high - low)
 }
 
 const getHistogramRow = function (index, columns) {
