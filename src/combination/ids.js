@@ -1,3 +1,5 @@
+import { titleColor, separatorColor } from '../report/utils/colors.js'
+
 import {
   COMBINATION_CATEGORIES,
   NON_COMBINATION_CATEGORY,
@@ -34,6 +36,14 @@ export const getCombinationsIds = function (combinations) {
 // Same but for a single combination
 export const getCombinationIds = function (combination) {
   return getIdInfos(combination).map(getId)
+}
+
+export const getCombinationName = function (combination) {
+  return getIdInfos(combination).map(getCategoryName).join(separatorColor(', '))
+}
+
+const getCategoryName = function ({ category, id }) {
+  return `${separatorColor(category)} ${titleColor(id)}`
 }
 
 const getIdInfos = function (combination) {
