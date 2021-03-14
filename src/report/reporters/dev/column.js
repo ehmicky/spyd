@@ -20,5 +20,4 @@ export const STAT_COLUMNS = [
 ]
 
 // Separators between columns
-export const SEPARATOR = ` ${SEPARATOR_SIGN} `
-export const CELL_SEPARATOR = separatorColor(SEPARATOR)
+export const COLUMN_SEPARATOR = separatorColor(` ${SEPARATOR_SIGN} `)

@@ -4,7 +4,7 @@ import { fieldColor } from '../../utils/colors.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 
 import { getCell } from './cell.js'
-import { STAT_COLUMNS, CELL_SEPARATOR } from './column.js'
+import { STAT_COLUMNS, COLUMN_SEPARATOR } from './column.js'
 import { getEmptyRowName } from './row.js'
 
 // Retrieve the header row
@@ -12,7 +12,7 @@ export const getHeader = function ({ row, stats }) {
   const emptyRowName = getEmptyRowName(row)
   const headerCells = STAT_COLUMNS.map((name) =>
     getHeaderCell(stats, name),
-  ).join(CELL_SEPARATOR)
+  ).join(COLUMN_SEPARATOR)
   return `${emptyRowName} ${headerCells}`
 }
 
