@@ -1,8 +1,9 @@
+import { getDeviation, getStandardError } from './deviation.js'
 import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
 import { getQuantiles } from './quantile.js'
-import { getMean, getDeviation, getStandardError } from './sum.js'
+import { getMean } from './sum.js'
 
 // Retrieve statistics from results.
 // Perform the statistical logic.
