@@ -1,7 +1,5 @@
 import { badColor, goodColor, suffixColor } from '../colors.js'
 
-import { getPercentageDirection } from './percentage.js'
-
 // Add colors to suffixes (units, exponents, %) so they are easy to distinguish
 // from the number they are attached to.
 export const addSuffixColors = function (statPretty) {
@@ -32,12 +30,18 @@ export const addDiffColors = function (stat, statPretty, name) {
   return color(statPretty)
 }
 
-const getRelPercentageColor = function (percentage) {
-  return DIRECTIONS[getPercentageDirection(percentage)]
+const getDiffColor = function (diff) {
+  if (diff > DIFF_COLOR_THRESHOLD) {
+    return badColor
+  }
+
+  if (diff < -DIFF_COLOR_THRESHOLD) {
+    return goodColor
+  }
 }
 
-const DIRECTIONS = { positive: badColor, negative: goodColor }
+const DIFF_COLOR_THRESHOLD = 1e-2
 
 const STAT_COLORS = {
-  diff: getRelPercentageColor,
+  diff: getDiffColor,
 }
