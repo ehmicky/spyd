@@ -78,8 +78,8 @@ import { getUnsortedMedian } from '../stats/median.js'
 //    balanced by `maxLoops` and `scale`.
 //  - The `stats.median` is mostly not impacted by the `minLoopDuration`.
 //  - `stats.mean` is moderately impacted, but not too much.
-//  - `stats.min|max|deviation` are much more impact, but those stats are not
-//    as critical.
+//  - `stats.min|max|low|high|deviation` are much more impacted, but those stats
+//    are not as critical.
 // If the minimum resolution is too close to the measures, results will not be
 // precise enough:
 //  - We apply the same `repeat` loop method as for `measureCost` to prevent

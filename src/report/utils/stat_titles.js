@@ -4,6 +4,8 @@ export const STAT_TITLES = {
   mean: 'Mean',
   min: 'Min',
   max: 'Max',
+  low: 'Low',
+  high: 'High',
   diff: 'Difference',
   deviation: 'Deviation',
   times: 'Times',

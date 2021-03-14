@@ -74,6 +74,8 @@ const STATS = [
   'median',
   'mean',
   'min',
+  'low',
+  'high',
   'max',
   'diff',
   'deviation',
