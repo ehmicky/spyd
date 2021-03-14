@@ -122,7 +122,6 @@ const getMaxHeight = function (frequencies) {
 // Retrieve the height of each column.
 // `heightLevel` is the integer part (full character) and `charIndex` is the
 // fractional part (final character on top of column).
-// The column gradient color is also computed.
 const getHistogramColumn = function ({
   frequency,
   maxHeight,
@@ -135,9 +134,14 @@ const getHistogramColumn = function ({
   const charIndex = Math.ceil(
     (height - heightLevel) * (HISTOGRAM_CHARS.length - 1),
   )
-  const colorPercentage = Math.abs(medianIndex - columnIndex) / medianMaxWidth
-  const color = graphGradientColor(colorPercentage)
+  const color = getColumnColor({ columnIndex, medianIndex, medianMaxWidth })
   return { heightLevel, charIndex, color }
+}
+
+// Computes the column gradient color.
+const getColumnColor = function ({ columnIndex, medianIndex, medianMaxWidth }) {
+  const colorPercentage = Math.abs(medianIndex - columnIndex) / medianMaxWidth
+  return graphGradientColor(colorPercentage)
 }
 
 const getHistogramRows = function (columns) {
