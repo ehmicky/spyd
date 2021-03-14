@@ -10,22 +10,21 @@ export const getHistograms = function (combinations) {
 }
 
 const getHistogram = function ({
-  stats: { histogram, min, minPretty, median, medianPretty, max, maxPretty },
+  stats: { histogram, low, lowPretty, median, medianPretty, high, highPretty },
 }) {
   if (histogram === undefined) {
     return
   }
 
-  // TODO: use histogram min|max instead of stats.min|max
   // TODO: compute both *Pretty and *Padded so this is not needed
-  const minPrettyA = minPretty.trim()
+  const lowPrettyA = lowPretty.trim()
   const medianPrettyA = medianPretty.trim()
-  const maxPrettyA = maxPretty.trim()
+  const highPrettyA = highPretty.trim()
 
   const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
   const contentWidth = width - CONTENT_LEFT_PADDING - CONTENT_RIGHT_PADDING
   const columns = getHistogramColumns(histogram, contentWidth)
-  const medianPercentage = (median - min) / (max - min)
+  const medianPercentage = (median - low) / (high - low)
   const medianIndex =
     Math.round((contentWidth - 1) * medianPercentage) + CONTENT_LEFT_PADDING
 
@@ -34,8 +33,8 @@ const getHistogram = function ({
   ).join('\n')
   const bottomLine = getBottomLine(width, medianIndex)
   const abscissa = getAbscissa({
-    minPretty: minPrettyA,
-    maxPretty: maxPrettyA,
+    lowPretty: lowPrettyA,
+    highPretty: highPrettyA,
     width,
     medianIndex,
     medianPretty: medianPrettyA,
@@ -131,101 +130,101 @@ const getBottomLine = function (width, medianIndex) {
 }
 
 const getAbscissa = function ({
-  minPretty,
-  maxPretty,
+  lowPretty,
+  highPretty,
   width,
   medianIndex,
   medianPretty,
 }) {
-  const minPrettyWidth = stringWidth(minPretty)
+  const lowPrettyWidth = stringWidth(lowPretty)
   const medianPrettyWidth = stringWidth(medianPretty)
-  const maxPrettyWidth = stringWidth(maxPretty)
+  const highPrettyWidth = stringWidth(highPretty)
 
   if (
     isStackedAbscissa({
       width,
       medianIndex,
-      minPrettyWidth,
+      lowPrettyWidth,
       medianPrettyWidth,
-      maxPrettyWidth,
+      highPrettyWidth,
     })
   ) {
     return getStackedAbscissa({
-      minPretty,
-      maxPretty,
+      lowPretty,
+      highPretty,
       width,
       medianIndex,
       medianPretty,
-      minPrettyWidth,
+      lowPrettyWidth,
       medianPrettyWidth,
-      maxPrettyWidth,
+      highPrettyWidth,
     })
   }
 
   return getUnstackedAbscissa({
-    minPretty,
-    maxPretty,
+    lowPretty,
+    highPretty,
     width,
     medianIndex,
     medianPretty,
-    minPrettyWidth,
+    lowPrettyWidth,
     medianPrettyWidth,
-    maxPrettyWidth,
+    highPrettyWidth,
   })
 }
 
 const isStackedAbscissa = function ({
   width,
   medianIndex,
-  minPrettyWidth,
+  lowPrettyWidth,
   medianPrettyWidth,
-  maxPrettyWidth,
+  highPrettyWidth,
 }) {
   return (
-    medianIndex < minPrettyWidth + MEDIAN_PADDING ||
-    medianIndex > width - maxPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
+    medianIndex < lowPrettyWidth + MEDIAN_PADDING ||
+    medianIndex > width - highPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
   )
 }
 
 const getStackedAbscissa = function ({
-  minPretty,
-  maxPretty,
+  lowPretty,
+  highPretty,
   width,
   medianIndex,
   medianPretty,
-  minPrettyWidth,
+  lowPrettyWidth,
   medianPrettyWidth,
-  maxPrettyWidth,
+  highPrettyWidth,
 }) {
-  const spacesWidth = width - minPrettyWidth - maxPrettyWidth
+  const spacesWidth = width - lowPrettyWidth - highPrettyWidth
   const leftSpacesWidth = Math.min(medianIndex, width - medianPrettyWidth)
   const rightSpacesWidth = width - leftSpacesWidth - medianPrettyWidth
   const spaces = ' '.repeat(spacesWidth)
   const leftSpaces = ' '.repeat(leftSpacesWidth)
   const rightSpaces = ' '.repeat(rightSpacesWidth)
-  return `${minPretty}${spaces}${maxPretty}
+  return `${lowPretty}${spaces}${highPretty}
 ${leftSpaces}${medianPretty}${rightSpaces}`
 }
 
 const getUnstackedAbscissa = function ({
-  minPretty,
-  maxPretty,
+  lowPretty,
+  highPretty,
   width,
   medianIndex,
   medianPretty,
-  minPrettyWidth,
+  lowPrettyWidth,
   medianPrettyWidth,
-  maxPrettyWidth,
+  highPrettyWidth,
 }) {
-  const leftSpacesWidth = medianIndex - minPrettyWidth
+  const leftSpacesWidth = medianIndex - lowPrettyWidth
   const rightSpacesWidth =
     width -
     leftSpacesWidth -
-    minPrettyWidth -
+    lowPrettyWidth -
     medianPrettyWidth -
-    maxPrettyWidth
+    highPrettyWidth
   const leftSpaces = ' '.repeat(leftSpacesWidth)
   const rightSpaces = ' '.repeat(rightSpacesWidth)
-  return `${minPretty}${leftSpaces}${medianPretty}${rightSpaces}${maxPretty}`
+  return `${lowPretty}${leftSpaces}${medianPretty}${rightSpaces}${highPretty}`
 }
 /* eslint-enable max-lines, max-statements */
