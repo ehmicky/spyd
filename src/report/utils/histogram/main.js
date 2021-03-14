@@ -211,11 +211,16 @@ const getBottomLine = function (width, medianIndex) {
     TICK_LEFT.length -
     TICK_MIDDLE.length -
     TICK_RIGHT.length
-  const leftLine = HORIZONTAL_LINE.repeat(leftLineWidth)
-  const rightLine = HORIZONTAL_LINE.repeat(rightLineWidth)
+  const tickMiddle = leftLineWidth < 0 || rightLineWidth < 0 ? '' : TICK_MIDDLE
+  const leftLine = getHorizontalLine(leftLineWidth)
+  const rightLine = getHorizontalLine(rightLineWidth)
   return separatorColor(
-    `${TICK_LEFT}${leftLine}${TICK_MIDDLE}${rightLine}${TICK_RIGHT}`,
+    `${TICK_LEFT}${leftLine}${tickMiddle}${rightLine}${TICK_RIGHT}`,
   )
+}
+
+const getHorizontalLine = function (lineWidth) {
+  return HORIZONTAL_LINE.repeat(Math.max(lineWidth, 0))
 }
 
 // Characters to display the horizontal separator, including its ticks
