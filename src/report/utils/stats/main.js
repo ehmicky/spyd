@@ -14,7 +14,7 @@ export const prettifyStats = function (combinations) {
 
 const prettifyCombinationsStat = function (combinations, { name, kind }) {
   const prettyName = `${name}Pretty`
-  const paddedName = `${name}PrettyPadded`
+  const paddedName = `${name}Padded`
   const scale = getScale(combinations, name, kind)
   const decimals = getStatsDecimals(combinations, name, scale)
   const combinationsA = combinations.map((combination) =>
