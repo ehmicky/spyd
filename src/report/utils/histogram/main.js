@@ -7,7 +7,7 @@ import { getMedianPosition } from './median.js'
 import { getHistogramRows } from './rows.js'
 
 // Serialize combinations' histograms for reporting
-export const serializeHistograms = function (combinations) {
+export const serializeHistograms = function (combinations, { height }) {
   const combinationsA = combinations.filter(hasHistogram)
 
   if (combinationsA.length === 0) {
@@ -16,7 +16,7 @@ export const serializeHistograms = function (combinations) {
 
   const width = getReportWidth()
   return combinationsA.map((combination) =>
-    serializeHistogram(combination, width),
+    serializeHistogram(combination, { width, height }),
   )
 }
 
@@ -37,7 +37,7 @@ const serializeHistogram = function (
       highPretty,
     },
   },
-  width,
+  { width, height },
 ) {
   const name = getCombinationName(titles)
   const { medianIndex, medianMaxWidth } = getMedianPosition({
@@ -49,6 +49,7 @@ const serializeHistogram = function (
   const rows = getHistogramRows({
     histogram,
     width,
+    height,
     medianIndex,
     medianMaxWidth,
   })

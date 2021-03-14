@@ -6,23 +6,30 @@ import { getFrequencies } from './frequencies.js'
 export const getHistogramRows = function ({
   histogram,
   width,
+  height,
   medianIndex,
   medianMaxWidth,
 }) {
   const frequencies = getFrequencies(histogram, width)
-  const columns = getHistogramColumns(frequencies, medianIndex, medianMaxWidth)
-  return Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
-    getHistogramRow(index, columns),
+  const columns = getHistogramColumns({
+    frequencies,
+    medianIndex,
+    medianMaxWidth,
+    height,
+  })
+  return Array.from({ length: height }, (_, index) =>
+    getHistogramRow(index, columns, height),
   ).join('\n')
 }
 
 // Computes the terminal height of each column for reporting.
-const getHistogramColumns = function (
+const getHistogramColumns = function ({
   frequencies,
   medianIndex,
   medianMaxWidth,
-) {
-  const maxHeight = getMaxHeight(frequencies)
+  height,
+}) {
+  const maxHeight = getMaxHeight(frequencies, height)
   return frequencies.map(
     getHistogramColumn.bind(undefined, {
       maxHeight,
@@ -33,8 +40,8 @@ const getHistogramColumns = function (
 }
 
 // Retrieve max terminal height of columns
-const getMaxHeight = function (frequencies) {
-  return HISTOGRAM_HEIGHT / Math.max(...frequencies)
+const getMaxHeight = function (frequencies, height) {
+  return height / Math.max(...frequencies)
 }
 
 // Retrieve the height of each column.
@@ -45,10 +52,10 @@ const getHistogramColumn = function (
   frequency,
   columnIndex,
 ) {
-  const height = maxHeight * frequency
-  const heightLevel = Math.floor(height)
+  const columnHeight = maxHeight * frequency
+  const heightLevel = Math.floor(columnHeight)
   const charIndex = Math.ceil(
-    (height - heightLevel) * (HISTOGRAM_CHARS.length - 1),
+    (columnHeight - heightLevel) * (HISTOGRAM_CHARS.length - 1),
   )
   const color = getColumnColor(columnIndex, medianIndex, medianMaxWidth)
   return { heightLevel, charIndex, color }
@@ -61,8 +68,8 @@ const getColumnColor = function (columnIndex, medianIndex, medianMaxWidth) {
 }
 
 // Serialize a single row, i.e. terminal line
-const getHistogramRow = function (index, columns) {
-  const inverseIndex = HISTOGRAM_HEIGHT - index - 1
+const getHistogramRow = function (index, columns, height) {
+  const inverseIndex = height - index - 1
   return columns.map(getHistogramCell.bind(undefined, inverseIndex)).join('')
 }
 
@@ -82,8 +89,6 @@ const getHistogramCell = function (
   return color(HISTOGRAM_CHARS[charIndex])
 }
 
-// Number of terminal lines to display the histogram main content
-const HISTOGRAM_HEIGHT = 8
 // Characters displaying an increasing percentage visually
 const HISTOGRAM_CHARS = [
   ' ',
