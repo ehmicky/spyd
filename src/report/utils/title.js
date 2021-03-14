@@ -14,11 +14,11 @@ const getUniquePropNames = function (combinations) {
   const propNames = TITLE_PROPS.filter((propName) =>
     shouldShowProp(propName, combinations),
   )
-  return propNames.length === 0 ? DEFAULT_TITLE_PROP : propNames
+  return propNames.length === 0 ? DEFAULT_TITLE_PROPS : propNames
 }
 
 const TITLE_PROPS = ['taskTitle', 'runnerTitle', 'systemTitle']
-const DEFAULT_TITLE_PROP = 'taskTitle'
+const DEFAULT_TITLE_PROPS = ['taskTitle']
 
 const shouldShowProp = function (propName, combinations) {
   const titles = combinations.map((combination) => combination[propName])
