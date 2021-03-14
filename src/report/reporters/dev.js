@@ -60,13 +60,12 @@ export const getCells = function (stats) {
 const getCell = function (stats, name) {
   const stat = stats[`${name}Pretty`]
   const headerLength = STAT_TITLES[name].length
-  const padSize = Math.max(COLUMN_MIN_SIZE, headerLength, stringWidth(stat))
+  const padSize = Math.max(headerLength, stringWidth(stat))
 
   const statA = padStart(stat, padSize)
   return statA
 }
 
-const COLUMN_MIN_SIZE = 7
 const SEPARATOR = ` ${SEPARATOR_SIGN} `
 const CELL_SEPARATOR = separatorColor(SEPARATOR)
 
