@@ -229,6 +229,7 @@ const TICK_LEFT = '\u250C'
 const TICK_MIDDLE = '\u252C'
 const TICK_RIGHT = '\u2510'
 
+// Retrieve the abscissa. This displays the low, median and high statistics.
 const getAbscissa = function ({
   lowPretty,
   highPretty,
