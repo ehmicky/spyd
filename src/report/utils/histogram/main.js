@@ -163,14 +163,10 @@ const getColumnColor = function (columnIndex, medianIndex, medianMaxWidth) {
 
 // Serialize a single row, i.e. terminal line
 const getHistogramRow = function (index, columns) {
-  return columns
-    .map(({ heightLevel, charIndex, color }) =>
-      getHistogramCell({ heightLevel, charIndex, color, index }),
-    )
-    .join('')
+  return columns.map(getHistogramCell.bind(undefined, index)).join('')
 }
 
-const getHistogramCell = function ({ heightLevel, charIndex, color, index }) {
+const getHistogramCell = function (index, { heightLevel, charIndex, color }) {
   const inverseIndex = HISTOGRAM_HEIGHT - index - 1
 
   if (heightLevel < inverseIndex) {
