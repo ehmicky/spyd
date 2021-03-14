@@ -1,3 +1,4 @@
+import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
 import { getQuantiles } from './quantile.js'
@@ -15,15 +16,17 @@ import { getMean, getDeviation } from './sum.js'
 //  - It also makes most stats not true representation of the measures
 //  - It complicates stats computation quite a lot
 export const computeStats = function (measures) {
-  const [min] = measures
-  const max = measures[measures.length - 1]
+  const { min, max, lowIndex, highIndex, low, high } = getExtremes(measures)
+
+  // TODO: do not clone array
+  const normalizedMeasures = measures.slice(lowIndex, highIndex + 1)
 
   const median = getSortedMedian(measures)
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
-  const histogram = getHistogram(measures, HISTOGRAM_SIZE)
+  const histogram = getHistogram(normalizedMeasures, HISTOGRAM_SIZE)
 
   const mean = getMean(measures)
-  const deviation = getDeviation(measures, mean)
+  const deviation = getDeviation(normalizedMeasures, mean)
 
   return { median, mean, min, max, deviation, histogram, quantiles }
 }
