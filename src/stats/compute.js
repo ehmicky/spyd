@@ -26,7 +26,7 @@ export const computeStats = function (measures) {
   const histogram = getHistogram(normalizedMeasures, HISTOGRAM_SIZE)
 
   const mean = getMean(measures)
-  const deviation = getDeviation(normalizedMeasures, mean)
+  const deviation = getDeviation(normalizedMeasures, median)
 
   return { median, mean, min, max, low, high, deviation, histogram, quantiles }
 }
