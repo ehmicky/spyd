@@ -1,9 +1,8 @@
 /* eslint-disable max-lines */
-import stringWidth from 'string-width'
-
 import { getReportWidth } from '../../tty.js'
 import { separatorColor, graphGradientColor } from '../colors.js'
 
+import { getAbscissa } from './abscissa.js'
 import { resizeHistogram } from './resize.js'
 import { smoothHistogram } from './smooth.js'
 
@@ -229,107 +228,4 @@ const TICK_LEFT = '\u250C'
 const TICK_MIDDLE = '\u252C'
 const TICK_RIGHT = '\u2510'
 
-// Retrieve the abscissa. This displays the low, median and high statistics.
-const getAbscissa = function ({
-  lowPretty,
-  highPretty,
-  width,
-  medianIndex,
-  medianPretty,
-}) {
-  const lowPrettyWidth = stringWidth(lowPretty)
-  const medianPrettyWidth = stringWidth(medianPretty)
-  const highPrettyWidth = stringWidth(highPretty)
-
-  if (
-    isStackedAbscissa({
-      width,
-      medianIndex,
-      lowPrettyWidth,
-      medianPrettyWidth,
-      highPrettyWidth,
-    })
-  ) {
-    return getStackedAbscissa({
-      lowPretty,
-      highPretty,
-      width,
-      medianIndex,
-      medianPretty,
-      lowPrettyWidth,
-      medianPrettyWidth,
-      highPrettyWidth,
-    })
-  }
-
-  return getUnstackedAbscissa({
-    lowPretty,
-    highPretty,
-    width,
-    medianIndex,
-    medianPretty,
-    lowPrettyWidth,
-    medianPrettyWidth,
-    highPrettyWidth,
-  })
-}
-
-// Whether the median is too close to the low|high and should be shown below it
-const isStackedAbscissa = function ({
-  width,
-  medianIndex,
-  lowPrettyWidth,
-  medianPrettyWidth,
-  highPrettyWidth,
-}) {
-  return (
-    medianIndex < lowPrettyWidth + MEDIAN_PADDING ||
-    medianIndex > width - highPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
-  )
-}
-
-// Minimum amount of spaces between the median and the low|high
-const MEDIAN_PADDING = 1
-
-const getStackedAbscissa = function ({
-  lowPretty,
-  highPretty,
-  width,
-  medianIndex,
-  medianPretty,
-  lowPrettyWidth,
-  medianPrettyWidth,
-  highPrettyWidth,
-}) {
-  const spacesWidth = width - lowPrettyWidth - highPrettyWidth
-  const leftSpacesWidth = Math.min(medianIndex, width - medianPrettyWidth)
-  const rightSpacesWidth = width - leftSpacesWidth - medianPrettyWidth
-  const spaces = ' '.repeat(spacesWidth)
-  const leftSpaces = ' '.repeat(leftSpacesWidth)
-  const rightSpaces = ' '.repeat(rightSpacesWidth)
-  return `${lowPretty}${spaces}${highPretty}
-${leftSpaces}${medianPretty}${rightSpaces}`
-}
-
-const getUnstackedAbscissa = function ({
-  lowPretty,
-  highPretty,
-  width,
-  medianIndex,
-  medianPretty,
-  lowPrettyWidth,
-  medianPrettyWidth,
-  highPrettyWidth,
-}) {
-  const leftSpacesWidth = medianIndex - lowPrettyWidth
-  const rightSpacesWidth =
-    width -
-    leftSpacesWidth -
-    lowPrettyWidth -
-    medianPrettyWidth -
-    highPrettyWidth
-  const leftSpaces = ' '.repeat(leftSpacesWidth)
-  const rightSpaces = ' '.repeat(rightSpacesWidth)
-  return `${lowPretty}${leftSpaces}${medianPretty}${rightSpaces}${highPretty}`
-}
 /* eslint-enable max-lines */
