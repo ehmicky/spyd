@@ -167,6 +167,7 @@ const getHistogramRow = function (index, columns) {
   return columns.map(getHistogramCell.bind(undefined, inverseIndex)).join('')
 }
 
+// Retrieve the character to display for a specific row and column
 const getHistogramCell = function (
   inverseIndex,
   { heightLevel, charIndex, color },
@@ -182,7 +183,9 @@ const getHistogramCell = function (
   return color(HISTOGRAM_CHARS[charIndex])
 }
 
+// Number of terminal lines to display the histogram main content
 const HISTOGRAM_HEIGHT = 8
+// Characters displaying an increasing percentage visually
 const HISTOGRAM_CHARS = [
   ' ',
   '\u2581',
@@ -194,6 +197,7 @@ const HISTOGRAM_CHARS = [
   '\u2587',
   '\u2588',
 ]
+// Characters displaying 0% and 100% visually
 const [EMPTY_HISTOGRAM_CHAR] = HISTOGRAM_CHARS
 const FULL_HISTOGRAM_CHAR = HISTOGRAM_CHARS[HISTOGRAM_CHARS.length - 1]
 
