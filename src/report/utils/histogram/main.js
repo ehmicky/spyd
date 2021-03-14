@@ -8,10 +8,14 @@ import { resizeHistogram } from './resize.js'
 import { smoothHistogram } from './smooth.js'
 
 export const getHistograms = function (combinations) {
+  const combinationsA = combinations.filter(hasHistogram)
+
+  if (combinationsA.length === 0) {
+    return combinationsA
+  }
+
   const width = getReportWidth()
-  return combinations
-    .filter(hasHistogram)
-    .map(({ stats }) => getHistogram(stats, width))
+  return combinationsA.map(({ stats }) => getHistogram(stats, width))
 }
 
 const hasHistogram = function ({ stats: { histogram } }) {
