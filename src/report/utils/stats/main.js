@@ -62,12 +62,12 @@ const finalizeValue = function ({
   },
   padding,
 }) {
-  const statPrettyA = Array.isArray(stat)
-    ? stat.map((statA, index) => finalizeItem(statA, statPretty[index], name))
-    : finalizeItem(stat, statPretty, name)
-  const statPrettyPadded = Array.isArray(statPrettyA)
-    ? statPrettyA.map((statPrettyB) => padValue(statPrettyB, padding))
-    : padValue(statPrettyA, padding)
+  const { statPretty: statPrettyA, statPrettyPadded } = finalizeStat({
+    stat,
+    statPretty,
+    name,
+    padding,
+  })
   return {
     ...combination,
     stats: {
@@ -76,6 +76,22 @@ const finalizeValue = function ({
       [`${prettyName}Padded`]: statPrettyPadded,
     },
   }
+}
+
+const finalizeStat = function ({ stat, statPretty, name, padding }) {
+  if (!Array.isArray(stat)) {
+    const singleStatPretty = finalizeItem(stat, statPretty, name)
+    const singleStatPadded = padValue(singleStatPretty, padding)
+    return { statPretty: singleStatPretty, statPrettyPadded: singleStatPadded }
+  }
+
+  const statPrettyA = stat.map((statA, index) =>
+    finalizeItem(statA, statPretty[index], name),
+  )
+  const statPrettyPadded = statPrettyA.map((statPrettyB) =>
+    padValue(statPrettyB, padding),
+  )
+  return { statPretty: statPrettyA, statPrettyPadded }
 }
 
 const finalizeItem = function (stat, statPretty, name) {
