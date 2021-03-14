@@ -24,19 +24,14 @@ const getHistogram = function ({
   const highPrettyA = highPretty.trim()
 
   const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
-  const contentWidth = width - CONTENT_LEFT_PADDING - CONTENT_RIGHT_PADDING
   const medianPercentage = getMedianPercentage(median, low, high)
-  const medianContentIndex = Math.round((contentWidth - 1) * medianPercentage)
-  const medianIndex = medianContentIndex + CONTENT_LEFT_PADDING
-  const medianMaxWidth = Math.max(
-    medianContentIndex,
-    contentWidth - medianContentIndex,
-  )
+  const medianIndex = Math.round((width - 1) * medianPercentage)
+  const medianMaxWidth = Math.max(medianIndex, width - medianIndex)
 
   const columns = getHistogramColumns({
     histogram,
-    contentWidth,
-    medianContentIndex,
+    width,
+    medianIndex,
     medianMaxWidth,
   })
   const rows = Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
@@ -75,19 +70,17 @@ const TICK_MIDDLE = '\u252C'
 const TICK_RIGHT = '\u2510'
 const OUTSIDE_LEFT_PADDING = 1
 const OUTSIDE_RIGHT_PADDING = 1
-const CONTENT_LEFT_PADDING = 1
-const CONTENT_RIGHT_PADDING = 1
 const MEDIAN_PADDING = 1
 
 const getHistogramColumns = function ({
   histogram,
-  contentWidth,
-  medianContentIndex,
+  width,
+  medianIndex,
   medianMaxWidth,
 }) {
   const frequencies = histogram.map(getFrequency)
   const frequenciesA = smoothHistogramEnds(frequencies)
-  const frequenciesB = resizeHistogram(frequenciesA, contentWidth)
+  const frequenciesB = resizeHistogram(frequenciesA, width)
   const frequenciesC = smoothHistogram(frequenciesB, SMOOTH_PERCENTAGE)
   const maxFrequency = Math.max(...frequenciesC)
   const columns = frequenciesC.map((frequency, columnIndex) =>
@@ -95,7 +88,7 @@ const getHistogramColumns = function ({
       frequency,
       maxFrequency,
       columnIndex,
-      medianContentIndex,
+      medianIndex,
       medianMaxWidth,
     }),
   )
@@ -130,7 +123,7 @@ const getHistogramColumn = function ({
   frequency,
   maxFrequency,
   columnIndex,
-  medianContentIndex,
+  medianIndex,
   medianMaxWidth,
 }) {
   const height = (HISTOGRAM_HEIGHT * frequency) / maxFrequency
@@ -138,8 +131,7 @@ const getHistogramColumn = function ({
   const charIndex = Math.ceil(
     (height - heightLevel) * (HISTOGRAM_CHARS.length - 1),
   )
-  const colorPercentage =
-    Math.abs(medianContentIndex - columnIndex) / medianMaxWidth
+  const colorPercentage = Math.abs(medianIndex - columnIndex) / medianMaxWidth
   const color = graphGradientColor(colorPercentage)
   return { heightLevel, charIndex, color }
 }
@@ -154,14 +146,11 @@ const getMedianPercentage = function (median, low, high) {
 }
 
 const getHistogramRow = function (index, columns) {
-  const contentLeftPadding = ' '.repeat(CONTENT_LEFT_PADDING)
-  const contentRightPadding = ' '.repeat(CONTENT_RIGHT_PADDING)
-  const row = columns
+  return columns
     .map(({ heightLevel, charIndex, color }) =>
       getHistogramCell({ heightLevel, charIndex, color, index }),
     )
     .join('')
-  return `${contentLeftPadding}${row}${contentRightPadding}`
 }
 
 const getHistogramCell = function ({ heightLevel, charIndex, color, index }) {
