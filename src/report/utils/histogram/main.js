@@ -1,4 +1,4 @@
-/* eslint-disable max-lines, max-statements */
+/* eslint-disable max-lines */
 import stringWidth from 'string-width'
 
 import { getScreenWidth } from '../../tty.js'
@@ -19,9 +19,12 @@ const getHistogram = function ({
   }
 
   const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
-  const medianPercentage = getMedianPercentage(median, low, high)
-  const medianIndex = Math.round((width - 1) * medianPercentage)
-  const medianMaxWidth = Math.max(medianIndex, width - medianIndex)
+  const { medianIndex, medianMaxWidth } = getMedianPosition({
+    median,
+    low,
+    high,
+    width,
+  })
 
   const columns = getHistogramColumns({
     histogram,
@@ -66,6 +69,23 @@ const TICK_RIGHT = '\u2510'
 const OUTSIDE_LEFT_PADDING = 1
 const OUTSIDE_RIGHT_PADDING = 1
 const MEDIAN_PADDING = 1
+
+// Compute position of the median tick
+const getMedianPosition = function ({ median, low, high, width }) {
+  const medianPercentage = getMedianPercentage(median, low, high)
+  const medianIndex = Math.round((width - 1) * medianPercentage)
+  const medianMaxWidth = Math.max(medianIndex, width - medianIndex)
+  return { medianIndex, medianMaxWidth }
+}
+
+// When `histogram` has a single item, it is in the first bucket.
+const getMedianPercentage = function (median, low, high) {
+  if (high === low) {
+    return 0
+  }
+
+  return (median - low) / (high - low)
+}
 
 const getHistogramColumns = function ({
   histogram,
@@ -129,15 +149,6 @@ const getHistogramColumn = function ({
   const colorPercentage = Math.abs(medianIndex - columnIndex) / medianMaxWidth
   const color = graphGradientColor(colorPercentage)
   return { heightLevel, charIndex, color }
-}
-
-// When `histogram` has a single item, it is in the first bucket.
-const getMedianPercentage = function (median, low, high) {
-  if (high === low) {
-    return 0
-  }
-
-  return (median - low) / (high - low)
 }
 
 const getHistogramRow = function (index, columns) {
@@ -275,4 +286,4 @@ const getUnstackedAbscissa = function ({
   const rightSpaces = ' '.repeat(rightSpacesWidth)
   return `${lowPretty}${leftSpaces}${medianPretty}${rightSpaces}${highPretty}`
 }
-/* eslint-enable max-lines, max-statements */
+/* eslint-enable max-lines */
