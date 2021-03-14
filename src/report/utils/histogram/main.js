@@ -71,10 +71,11 @@ const MEDIAN_PADDING = 1
 
 const getHistogramColumns = function (histogram, contentWidth) {
   const frequencies = histogram.map(getFrequency)
-  const frequenciesA = resizeHistogram(frequencies, contentWidth)
-  const frequenciesB = smoothHistogram(frequenciesA, SMOOTH_PERCENTAGE)
-  const maxFrequency = Math.max(...frequenciesB)
-  const columns = frequenciesB.map((frequency) =>
+  const frequenciesA = smoothHistogramEnds(frequencies)
+  const frequenciesB = resizeHistogram(frequenciesA, contentWidth)
+  const frequenciesC = smoothHistogram(frequenciesB, SMOOTH_PERCENTAGE)
+  const maxFrequency = Math.max(...frequenciesC)
+  const columns = frequenciesC.map((frequency) =>
     getHistogramColumn(frequency, maxFrequency),
   )
   return columns
@@ -82,6 +83,17 @@ const getHistogramColumns = function (histogram, contentWidth) {
 
 const getFrequency = function ([, , frequency]) {
   return frequency
+}
+
+// We truncate the first|last percentiles of the histogram to remove outliers.
+// However, this means the first|last bucket of the truncated histogram are
+// more likely to be high (or somewhat high) frequency, which gives the
+// impression that the truncation removed more than just a few outliers.
+// This also makes the histogram not go to the bottom on both ends, which make
+// it look incomplete.
+// We fix this by adding `0` buckets on both ends.
+const smoothHistogramEnds = function (frequencies) {
+  return [0, ...frequencies, 0]
 }
 
 // Smooth each bucket, by using an arithmetic mean with the nearby buckets.
