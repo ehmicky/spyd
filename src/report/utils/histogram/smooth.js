@@ -55,12 +55,12 @@ const getSmoothedCount = function (
     hasPartialStart,
     hasPartialEnd,
   )
-  const partialWeight = weight / partialSmooth
 
   return (
-    (hasPartialStart ? counts[partialStart] / partialWeight : 0) +
-    getSum(counts, fullStart, fullEnd) / weight +
-    (hasPartialEnd ? counts[partialEnd] / partialWeight : 0)
+    ((hasPartialStart ? counts[partialStart] * partialSmooth : 0) +
+      getSum(counts, fullStart, fullEnd) +
+      (hasPartialEnd ? counts[partialEnd] * partialSmooth : 0)) /
+    weight
   )
 }
 
