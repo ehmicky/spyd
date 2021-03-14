@@ -8,16 +8,16 @@ import { resizeHistogram } from './resize.js'
 import { smoothHistogram } from './smooth.js'
 
 export const getHistograms = function (combinations) {
-  return combinations.map(getHistogram)
+  return combinations.filter(hasHistogram).map(getHistogram)
+}
+
+const hasHistogram = function ({ stats: { histogram } }) {
+  return histogram !== undefined
 }
 
 const getHistogram = function ({
   stats: { histogram, low, lowPretty, median, medianPretty, high, highPretty },
 }) {
-  if (histogram === undefined) {
-    return
-  }
-
   const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
   const { medianIndex, medianMaxWidth } = getMedianPosition({
     median,
