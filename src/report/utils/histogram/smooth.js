@@ -1,3 +1,12 @@
+// Smoothes histogram. Reasons:
+//  - When the sample size is low, each bucket will have small increase|decrease
+//    compared to when the sample size is higher. Those creates bumpy edges
+//    that are not statically relevant and visually distracting.
+//  - Those bumps vary greatly over time, creating some vertical shakiness on
+//    each bucket.
+//  - This also make the mode shake. Since the mode is used to scale the whole
+//    graph, this creates some additional (but separate) vertical shakiness on
+//    the whole graph.
 export const smoothHistogram = function (counts, smoothPercentage) {
   const countsLength = counts.length
 
