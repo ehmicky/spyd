@@ -161,6 +161,7 @@ const getColumnColor = function (columnIndex, medianIndex, medianMaxWidth) {
   return graphGradientColor(colorPercentage)
 }
 
+// Serialize a single row, i.e. terminal line
 const getHistogramRow = function (index, columns) {
   return columns
     .map(({ heightLevel, charIndex, color }) =>
