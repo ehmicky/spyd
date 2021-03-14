@@ -8,84 +8,81 @@
 //    graph, this creates some additional (but separate) vertical shakiness on
 //    the whole graph.
 export const smoothHistogram = function (counts, smoothPercentage) {
-  const countsLength = counts.length
-
-  const totalSmooth = Math.max((countsLength * smoothPercentage - 1) / 2, 0)
+  const weight = Math.max(counts.length * smoothPercentage, 1)
+  const totalSmooth = (weight - 1) / 2
   const fullSmooth = Math.floor(totalSmooth)
   const partialSmooth = totalSmooth - fullSmooth
 
-  // eslint-disable-next-line unicorn/no-new-array
-  const smoothedCounts = new Array(countsLength)
-
-  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
-  for (let countIndex = 0; countIndex < countsLength; countIndex += 1) {
-    // eslint-disable-next-line fp/no-mutation
-    smoothedCounts[countIndex] = getSmoothedCount(
-      counts,
-      countsLength,
-      countIndex,
-      fullSmooth,
-      partialSmooth,
-    )
-  }
-
-  return smoothedCounts
+  return Array.from({ length: counts.length }, (_, countIndex) =>
+    getSmoothedCount(counts, countIndex, fullSmooth, partialSmooth, weight),
+  )
 }
 
 // eslint-disable-next-line max-params
 const getSmoothedCount = function (
   counts,
-  countsLength,
   countIndex,
   fullSmooth,
   partialSmooth,
+  weight,
 ) {
-  const partialStart = countIndex - fullSmooth - 1
-  const partialEnd = countIndex + fullSmooth + 1
-  const fullStart = Math.max(partialStart + 1, 0)
-  const fullEnd = Math.min(partialEnd - 1, countsLength - 1)
-
-  const hasPartialStart = partialStart >= 0
-  const hasPartialEnd = partialEnd <= countsLength - 1
-
-  const weight = getWeight(
-    partialSmooth,
-    fullStart,
-    fullEnd,
-    hasPartialStart,
-    hasPartialEnd,
-  )
+  const start = countIndex - fullSmooth - 1
+  const end = countIndex + fullSmooth + 1
 
   return (
-    ((hasPartialStart ? counts[partialStart] * partialSmooth : 0) +
-      getSum(counts, fullStart, fullEnd) +
-      (hasPartialEnd ? counts[partialEnd] * partialSmooth : 0)) /
+    (getPartialCounts(counts, start, end, partialSmooth) +
+      getFullCounts(counts, start, end)) /
     weight
   )
 }
 
 // eslint-disable-next-line max-params
-const getWeight = function (
-  partialSmooth,
-  fullStart,
-  fullEnd,
-  hasPartialStart,
-  hasPartialEnd,
-) {
-  const partialCounts = (hasPartialStart ? 1 : 0) + (hasPartialEnd ? 1 : 0)
-  const fullCounts = fullEnd - fullStart
-  return 1 + fullCounts + partialCounts * partialSmooth
+const getPartialCounts = function (counts, start, end, partialSmooth) {
+  return (getCount(counts, start) + getCount(counts, end)) * partialSmooth
 }
 
-const getSum = function (array, start, end) {
+const getFullCounts = function (counts, start, end) {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = start; index <= end; index += 1) {
+  for (let index = start + 1; index < end; index += 1) {
     // eslint-disable-next-line fp/no-mutation
-    sum += array[index]
+    sum += getCount(counts, index)
   }
 
   return sum
+}
+
+// For the counts of both ends of the histogram, we extrapolate additional
+// counts beyond those ends. This keeps the current slope. Otherwise, the ends
+// would always look flat.
+// We do this extrapolation by mirroring the counts near the end, but in the
+// opposite direction, using the end count as pivot.
+const getCount = function (counts, index) {
+  const maxIndex = counts.length - 1
+
+  if (index < MIN_INDEX) {
+    return getOppositeCount(
+      counts,
+      MIN_INDEX,
+      Math.min(MIN_INDEX - index, maxIndex),
+    )
+  }
+
+  if (index > maxIndex) {
+    return getOppositeCount(
+      counts,
+      maxIndex,
+      Math.max(maxIndex * 2 - index, MIN_INDEX),
+    )
+  }
+
+  return counts[index]
+}
+
+const MIN_INDEX = 0
+
+const getOppositeCount = function (counts, pivotIndex, oppositeIndex) {
+  return 2 * counts[pivotIndex] - counts[oppositeIndex]
 }
