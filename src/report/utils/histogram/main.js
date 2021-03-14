@@ -57,8 +57,9 @@ ${abscissa}`
 // When `histogram` has a single item, it is in the first bucket.
 const getMedianPosition = function ({ median, low, high, width }) {
   const medianPercentage = high === low ? 0 : (median - low) / (high - low)
-  const medianIndex = Math.round((width - 1) * medianPercentage)
-  const medianMaxWidth = Math.max(medianIndex, width - medianIndex)
+  const indexWidth = width - 1
+  const medianIndex = Math.round(indexWidth * medianPercentage)
+  const medianMaxWidth = Math.max(medianIndex, indexWidth - medianIndex)
   return { medianIndex, medianMaxWidth }
 }
 
