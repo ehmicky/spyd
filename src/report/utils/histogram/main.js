@@ -46,27 +46,8 @@ ${bottomLine}
 ${abscissa}`
 }
 
-const HISTOGRAM_HEIGHT = 8
-const HISTOGRAM_CHARS = [
-  ' ',
-  '\u2581',
-  '\u2582',
-  '\u2583',
-  '\u2584',
-  '\u2585',
-  '\u2586',
-  '\u2587',
-  '\u2588',
-]
-const [EMPTY_HISTOGRAM_CHAR] = HISTOGRAM_CHARS
-const FULL_HISTOGRAM_CHAR = HISTOGRAM_CHARS[HISTOGRAM_CHARS.length - 1]
-const HORIZONTAL_LINE = '\u2500'
-const TICK_LEFT = '\u250C'
-const TICK_MIDDLE = '\u252C'
-const TICK_RIGHT = '\u2510'
 const OUTSIDE_LEFT_PADDING = 1
 const OUTSIDE_RIGHT_PADDING = 1
-const MEDIAN_PADDING = 1
 
 // Compute position of the median tick
 const getMedianPosition = function ({ median, low, high, width }) {
@@ -177,6 +158,21 @@ const getHistogramCell = function ({ heightLevel, charIndex, color, index }) {
   return color(HISTOGRAM_CHARS[charIndex])
 }
 
+const HISTOGRAM_HEIGHT = 8
+const HISTOGRAM_CHARS = [
+  ' ',
+  '\u2581',
+  '\u2582',
+  '\u2583',
+  '\u2584',
+  '\u2585',
+  '\u2586',
+  '\u2587',
+  '\u2588',
+]
+const [EMPTY_HISTOGRAM_CHAR] = HISTOGRAM_CHARS
+const FULL_HISTOGRAM_CHAR = HISTOGRAM_CHARS[HISTOGRAM_CHARS.length - 1]
+
 const getBottomLine = function (width, medianIndex) {
   const leftLineWidth = medianIndex - TICK_LEFT.length
   const rightLineWidth =
@@ -191,6 +187,11 @@ const getBottomLine = function (width, medianIndex) {
     `${TICK_LEFT}${leftLine}${TICK_MIDDLE}${rightLine}${TICK_RIGHT}`,
   )
 }
+
+const HORIZONTAL_LINE = '\u2500'
+const TICK_LEFT = '\u250C'
+const TICK_MIDDLE = '\u252C'
+const TICK_RIGHT = '\u2510'
 
 const getAbscissa = function ({
   lowPretty,
@@ -248,6 +249,8 @@ const isStackedAbscissa = function ({
     medianIndex > width - highPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
   )
 }
+
+const MEDIAN_PADDING = 1
 
 const getStackedAbscissa = function ({
   lowPretty,
