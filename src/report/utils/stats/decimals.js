@@ -7,7 +7,7 @@ export const getStatsDecimals = function (combinations, name, scale) {
   const measures = combinations
     .flatMap(({ stats }) => stats[name])
     .filter(isDefined)
-    .map((measure) => measure / scale)
+    .map((measure) => Math.abs(measure) / scale)
 
   if (measures.every(Number.isInteger)) {
     return 0
