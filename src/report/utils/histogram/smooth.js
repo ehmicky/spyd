@@ -80,18 +80,3 @@ const getSum = function (array, start, end) {
 
   return sum
 }
-
-const histogramExampleA = []
-console.log(smoothHistogram(histogramExampleA, 0.5))
-const histogramExampleB = [5]
-console.log(smoothHistogram(histogramExampleB, 0.5))
-const histogramExampleC = [5, 10]
-console.log(smoothHistogram(histogramExampleC, 0.5))
-console.log(smoothHistogram(histogramExampleC, 0.75))
-const histogramExampleD = [98, 10, 56, 12, 74, 65, 54, 10, 98, 98]
-console.log(smoothHistogram(histogramExampleD, 1))
-console.log(smoothHistogram(histogramExampleD, 0.4))
-console.log(smoothHistogram(histogramExampleD, 0.35))
-console.log(smoothHistogram(histogramExampleD, 0.2))
-console.log(smoothHistogram(histogramExampleD, 0.05))
-console.log(smoothHistogram(histogramExampleD, 0))
