@@ -201,6 +201,8 @@ const HISTOGRAM_CHARS = [
 const [EMPTY_HISTOGRAM_CHAR] = HISTOGRAM_CHARS
 const FULL_HISTOGRAM_CHAR = HISTOGRAM_CHARS[HISTOGRAM_CHARS.length - 1]
 
+// Retrieve the horizontal line separating the main content and the abscissa.
+// Includes the ticks above each of the following stats: low, median, high
 const getBottomLine = function (width, medianIndex) {
   const leftLineWidth = medianIndex - TICK_LEFT.length
   const rightLineWidth =
