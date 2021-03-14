@@ -12,8 +12,7 @@ import { getRoundedPosition } from './quantile.js'
 //  - they make `deviation` must less useful
 // For the later cases, we remove those outliers.
 // We also remove the fastest outliers for similar reasons, although they are
-// less frequent. Having the same percentage for slow/fast outliers ensures
-// the `median` remains the same.
+// less frequent.
 // We apply those percentage without cloning the `measures` array, for
 // performance and memory reasons.
 export const getExtremes = function (measures) {
@@ -27,5 +26,11 @@ export const getExtremes = function (measures) {
   return { min, max, lowIndex, highIndex, low, high }
 }
 
+// A higher value makes histograms give less information about very low/high
+// values.
+// A lower value makes it more likely for outliers to overtake the histogram,
+// concentrating most of the values into far fewer buckets.
 const LOW_OUTLIERS = 0.05
-const HIGH_OUTLIERS = 0.95
+// Having the same percentage for slow/fast outliers ensures the `median`
+// remains the same.
+const HIGH_OUTLIERS = 1 - LOW_OUTLIERS
