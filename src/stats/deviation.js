@@ -7,7 +7,7 @@ export const getStandardDeviation = function (array, median) {
     return
   }
 
-  const variance = getVariance(array, median)
+  const variance = getSumDeviation(array, median) / (array.length - 1)
   return Math.sqrt(variance)
 }
 
@@ -17,10 +17,6 @@ export const getStandardDeviation = function (array, median) {
 // slow tasks.
 // A lower value makes it more likely to use inaccurate standard deviations.
 const MIN_DEVIATION_LOOPS = 5
-
-const getVariance = function (array, median) {
-  return getSumDeviation(array, median) / array.length
-}
 
 // We use a separate function from `getSum()` because it is much more performant
 const getSumDeviation = function (array, median) {
