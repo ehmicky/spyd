@@ -1,11 +1,12 @@
 import stringWidth from 'string-width'
 
 import { fieldColor } from '../../utils/colors.js'
+import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 import { getCombinationName } from '../../utils/title.js'
 
 import { getCell } from './cell.js'
-import { STAT_COLUMNS, COLUMN_SEPARATOR } from './column.js'
+import { STAT_COLUMNS } from './column.js'
 
 // Retrieve the header row
 export const getHeader = function ({ titles, stats }) {
