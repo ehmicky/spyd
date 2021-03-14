@@ -18,11 +18,6 @@ const getHistogram = function ({
     return
   }
 
-  // TODO: compute both *Pretty and *Padded so this is not needed
-  const lowPrettyA = lowPretty.trim()
-  const medianPrettyA = medianPretty.trim()
-  const highPrettyA = highPretty.trim()
-
   const width = getScreenWidth() - OUTSIDE_LEFT_PADDING - OUTSIDE_RIGHT_PADDING
   const medianPercentage = getMedianPercentage(median, low, high)
   const medianIndex = Math.round((width - 1) * medianPercentage)
@@ -39,11 +34,11 @@ const getHistogram = function ({
   ).join('\n')
   const bottomLine = getBottomLine(width, medianIndex)
   const abscissa = getAbscissa({
-    lowPretty: lowPrettyA,
-    highPretty: highPrettyA,
+    lowPretty,
+    highPretty,
     width,
     medianIndex,
-    medianPretty: medianPrettyA,
+    medianPretty,
   })
   return `${rows}
 ${bottomLine}

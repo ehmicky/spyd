@@ -13,7 +13,7 @@ export const getCells = function (stats) {
 
 // Retrieve a single cell in the table, with a specific stat
 export const getCell = function (stats, name) {
-  const stat = stats[`${name}Pretty`]
+  const stat = stats[`${name}PrettyPadded`]
   const headerLength = STAT_TITLES[name].length
   const padSize = Math.max(headerLength, stringWidth(stat))
 
