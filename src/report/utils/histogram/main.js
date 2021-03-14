@@ -32,9 +32,7 @@ const getHistogram = function ({
     medianIndex,
     medianMaxWidth,
   })
-  const rows = Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
-    getHistogramRow(index, columns),
-  ).join('\n')
+  const rows = getHistogramRows(columns)
   const bottomLine = getBottomLine(width, medianIndex)
   const abscissa = getAbscissa({
     lowPretty,
@@ -149,6 +147,12 @@ const getHistogramColumn = function ({
   const colorPercentage = Math.abs(medianIndex - columnIndex) / medianMaxWidth
   const color = graphGradientColor(colorPercentage)
   return { heightLevel, charIndex, color }
+}
+
+const getHistogramRows = function (columns) {
+  return Array.from({ length: HISTOGRAM_HEIGHT }, (_, index) =>
+    getHistogramRow(index, columns),
+  ).join('\n')
 }
 
 const getHistogramRow = function (index, columns) {
