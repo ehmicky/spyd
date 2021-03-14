@@ -4,6 +4,7 @@ import stringWidth from 'string-width'
 import { getScreenWidth } from '../../tty.js'
 
 import { resizeHistogram } from './resize.js'
+import { smoothHistogram } from './smooth.js'
 
 export const getHistograms = function (combinations) {
   return combinations.map(getHistogram)
@@ -71,8 +72,9 @@ const MEDIAN_PADDING = 1
 const getHistogramColumns = function (histogram, contentWidth) {
   const frequencies = histogram.map(getFrequency)
   const frequenciesA = resizeHistogram(frequencies, contentWidth)
-  const maxFrequency = Math.max(...frequenciesA)
-  const columns = frequenciesA.map((frequency) =>
+  const frequenciesB = smoothHistogram(frequenciesA, SMOOTH_PERCENTAGE)
+  const maxFrequency = Math.max(...frequenciesB)
+  const columns = frequenciesB.map((frequency) =>
     getHistogramColumn(frequency, maxFrequency),
   )
   return columns
@@ -81,6 +83,15 @@ const getHistogramColumns = function (histogram, contentWidth) {
 const getFrequency = function ([, , frequency]) {
   return frequency
 }
+
+// Smooth each bucket, by using an arithmetic mean with the nearby buckets.
+// This is the number of neighbors to use, as a percentage to the total number
+// of buckets.
+// A higher number is more likely to hide significant useful bumps in the
+// histogram.
+// A lower number is less likely to smooth the histogram enough to make it
+// look nice and reduce the shakiness.
+const SMOOTH_PERCENTAGE = 0.05
 
 const getHistogramColumn = function (frequency, maxFrequency) {
   const height = (HISTOGRAM_HEIGHT * frequency) / maxFrequency
