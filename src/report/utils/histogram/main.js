@@ -54,20 +54,12 @@ ${abscissa}`
 }
 
 // Compute position of the median tick
+// When `histogram` has a single item, it is in the first bucket.
 const getMedianPosition = function ({ median, low, high, width }) {
-  const medianPercentage = getMedianPercentage(median, low, high)
+  const medianPercentage = high === low ? 0 : (median - low) / (high - low)
   const medianIndex = Math.round((width - 1) * medianPercentage)
   const medianMaxWidth = Math.max(medianIndex, width - medianIndex)
   return { medianIndex, medianMaxWidth }
-}
-
-// When `histogram` has a single item, it is in the first bucket.
-const getMedianPercentage = function (median, low, high) {
-  if (high === low) {
-    return 0
-  }
-
-  return (median - low) / (high - low)
 }
 
 const getHistogramColumns = function ({
