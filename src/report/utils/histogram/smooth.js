@@ -1,10 +1,9 @@
 export const smoothHistogram = function (counts, smoothPercentage) {
   const countsLength = counts.length
 
-  const smoothSize = Math.max(countsLength * smoothPercentage, 1)
-  const unroundedSmoothSize = (smoothSize - 1) / 2
-  const fullSmoothSize = Math.ceil(unroundedSmoothSize)
-  const partialSmoothSize = unroundedSmoothSize - fullSmoothSize + 1
+  const smoothSize = Math.max((countsLength * smoothPercentage - 1) / 2, 0)
+  const fullSmoothSize = Math.ceil(smoothSize)
+  const partialSmoothSize = smoothSize - fullSmoothSize + 1
 
   // eslint-disable-next-line unicorn/no-new-array
   const smoothedCounts = new Array(countsLength)
