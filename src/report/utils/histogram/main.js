@@ -77,11 +77,11 @@ const getHistogramColumns = function ({
   const frequenciesA = smoothHistogramEnds(frequencies)
   const frequenciesB = resizeHistogram(frequenciesA, width)
   const frequenciesC = smoothHistogram(frequenciesB, SMOOTH_PERCENTAGE)
-  const maxFrequency = Math.max(...frequenciesC)
+  const maxHeight = getMaxHeight(frequenciesC)
   const columns = frequenciesC.map((frequency, columnIndex) =>
     getHistogramColumn({
       frequency,
-      maxFrequency,
+      maxHeight,
       columnIndex,
       medianIndex,
       medianMaxWidth,
@@ -114,18 +114,23 @@ const smoothHistogramEnds = function (frequencies) {
 // look nice and reduce the shakiness.
 const SMOOTH_PERCENTAGE = 0.05
 
+// Retrieve max terminal height of columns
+const getMaxHeight = function (frequencies) {
+  return HISTOGRAM_HEIGHT / Math.max(...frequencies)
+}
+
 // Retrieve the height of each column.
 // `heightLevel` is the integer part (full character) and `charIndex` is the
 // fractional part (final character on top of column).
 // The column gradient color is also computed.
 const getHistogramColumn = function ({
   frequency,
-  maxFrequency,
+  maxHeight,
   columnIndex,
   medianIndex,
   medianMaxWidth,
 }) {
-  const height = (HISTOGRAM_HEIGHT * frequency) / maxFrequency
+  const height = maxHeight * frequency
   const heightLevel = Math.floor(height)
   const charIndex = Math.ceil(
     (height - heightLevel) * (HISTOGRAM_CHARS.length - 1),
