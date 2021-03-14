@@ -218,6 +218,7 @@ const getBottomLine = function (width, medianIndex) {
   )
 }
 
+// Characters to display the horizontal separator, including its ticks
 const HORIZONTAL_LINE = '\u2500'
 const TICK_LEFT = '\u250C'
 const TICK_MIDDLE = '\u252C'
