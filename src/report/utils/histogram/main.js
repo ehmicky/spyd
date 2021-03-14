@@ -8,17 +8,20 @@ import { resizeHistogram } from './resize.js'
 import { smoothHistogram } from './smooth.js'
 
 export const getHistograms = function (combinations) {
-  return combinations.filter(hasHistogram).map(getHistogram)
+  const width = getReportWidth()
+  return combinations
+    .filter(hasHistogram)
+    .map(({ stats }) => getHistogram(stats, width))
 }
 
 const hasHistogram = function ({ stats: { histogram } }) {
   return histogram !== undefined
 }
 
-const getHistogram = function ({
-  stats: { histogram, low, lowPretty, median, medianPretty, high, highPretty },
-}) {
-  const width = getReportWidth()
+const getHistogram = function (
+  { histogram, low, lowPretty, median, medianPretty, high, highPretty },
+  width,
+) {
   const { medianIndex, medianMaxWidth } = getMedianPosition({
     median,
     low,
