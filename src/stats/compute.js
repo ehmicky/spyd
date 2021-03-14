@@ -2,7 +2,7 @@ import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
 import { getQuantiles } from './quantile.js'
-import { getMean, getDeviation } from './sum.js'
+import { getMean, getDeviation, getStandardError } from './sum.js'
 
 // Retrieve statistics from results.
 // Perform the statistical logic.
@@ -27,6 +27,7 @@ export const computeStats = function (measures) {
 
   const mean = getMean(measures)
   const deviation = getDeviation(normalizedMeasures, median)
+  const standardError = getStandardError(normalizedMeasures, deviation)
 
   return { median, mean, min, max, low, high, deviation, histogram, quantiles }
 }

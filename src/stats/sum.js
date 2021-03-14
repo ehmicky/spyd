@@ -56,3 +56,12 @@ const getSumDeviation = function (array, median) {
 
   return sum
 }
+
+// Retrieve standard error
+export const getStandardError = function (array, deviation) {
+  if (deviation === undefined) {
+    return
+  }
+
+  return deviation / Math.sqrt(array.length)
+}
