@@ -14,6 +14,7 @@ export const prettifyStats = function (combinations) {
 
 const prettifyCombinationsStat = function (combinations, { name, kind }) {
   const prettyName = `${name}Pretty`
+  const paddedName = `${name}PrettyPadded`
   const scale = getScale(combinations, name, kind)
   const decimals = getStatsDecimals(combinations, name, scale)
   const combinationsA = combinations.map((combination) =>
@@ -28,7 +29,7 @@ const prettifyCombinationsStat = function (combinations, { name, kind }) {
   )
   const padding = getPadding(prettyName, combinationsA)
   const combinationsB = combinationsA.map((combination) =>
-    finalizeValue({ combination, name, prettyName, padding }),
+    finalizeValue({ combination, name, prettyName, paddedName, padding }),
   )
   return combinationsB
 }
@@ -55,6 +56,7 @@ const prettifyCombinationStat = function ({
 const finalizeValue = function ({
   name,
   prettyName,
+  paddedName,
   combination,
   combination: {
     stats,
@@ -62,7 +64,7 @@ const finalizeValue = function ({
   },
   padding,
 }) {
-  const { statPretty: statPrettyA, statPrettyPadded } = finalizeStat({
+  const { statPretty: statPrettyA, statPadded } = finalizeStat({
     stat,
     statPretty,
     name,
@@ -70,11 +72,7 @@ const finalizeValue = function ({
   })
   return {
     ...combination,
-    stats: {
-      ...stats,
-      [prettyName]: statPrettyA,
-      [`${prettyName}Padded`]: statPrettyPadded,
-    },
+    stats: { ...stats, [prettyName]: statPrettyA, [paddedName]: statPadded },
   }
 }
 
@@ -82,16 +80,14 @@ const finalizeStat = function ({ stat, statPretty, name, padding }) {
   if (!Array.isArray(stat)) {
     const singleStatPretty = finalizeItem(stat, statPretty, name)
     const singleStatPadded = padValue(singleStatPretty, padding)
-    return { statPretty: singleStatPretty, statPrettyPadded: singleStatPadded }
+    return { statPretty: singleStatPretty, statPadded: singleStatPadded }
   }
 
-  const statPrettyA = stat.map((statA, index) =>
-    finalizeItem(statA, statPretty[index], name),
+  const statPrettyA = stat.map((item, index) =>
+    finalizeItem(item, statPretty[index], name),
   )
-  const statPrettyPadded = statPrettyA.map((statPrettyB) =>
-    padValue(statPrettyB, padding),
-  )
-  return { statPretty: statPrettyA, statPrettyPadded }
+  const statPadded = statPrettyA.map((item) => padValue(item, padding))
+  return { statPretty: statPrettyA, statPadded }
 }
 
 const finalizeItem = function (stat, statPretty, name) {
