@@ -1,3 +1,3 @@
-import { debug } from './debug.js'
+import { dev } from './dev.js'
 
-export const REPORTERS = { debug }
+export const REPORTERS = { dev }

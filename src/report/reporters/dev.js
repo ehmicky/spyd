@@ -86,4 +86,4 @@ const STATS = [
   'minLoopDuration',
 ]
 
-export const debug = { report }
+export const dev = { report }

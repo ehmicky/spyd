@@ -38,6 +38,6 @@ export const DEFAULT_CONFIG = {
   include: [],
   exclude: [],
   runner: ['node'],
-  reporter: ['debug'],
+  reporter: ['dev'],
   inputs: {},
 }
