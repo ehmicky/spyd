@@ -10,6 +10,7 @@ export const REPORT_CONFIG = {
     describe: `Modules to report the result.
 Can be specified several times.
 Can be empty, if no reporters should be used.
+Built-in reporters: histogram
 Custom reporters can also be installed from npm.
 Reporter-specific configuration properties can be specified by appending the
 reporter's name: --reportName.prop=value.

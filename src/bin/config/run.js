@@ -18,7 +18,7 @@ The default file {extension} depends on the runner.`,
     array: true,
     describe: `Tasks' programming language or platform.
 Can be specified several times.
-Built-in runners: node, cli.
+Built-in runners: node, cli
 Custom runners can be installed from npm.
 Runner-specific configuration properties can be specified by appending the runner's identifier: --runnerId.prop=value.
 For example: --runnerNode.version=8

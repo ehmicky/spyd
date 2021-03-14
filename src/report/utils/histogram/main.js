@@ -5,6 +5,7 @@ import { getBottomLine } from './bottom_line.js'
 import { getMedianPosition } from './median.js'
 import { getHistogramRows } from './rows.js'
 
+// Serialize combinations' histograms for reporting
 export const serializeHistograms = function (combinations) {
   const combinationsA = combinations.filter(hasHistogram)
 
@@ -20,7 +21,6 @@ const hasHistogram = function ({ stats: { histogram } }) {
   return histogram !== undefined
 }
 
-// Serialize a combination's histogram for reporting
 const serializeHistogram = function (
   { histogram, low, lowPretty, median, medianPretty, high, highPretty },
   width,
