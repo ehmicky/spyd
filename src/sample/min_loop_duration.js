@@ -77,8 +77,7 @@ import { getUnsortedMedian } from '../stats/median.js'
 //    regardless of `repeat`. This is because a lower|higher `repeat` is
 //    balanced by `maxLoops` and `scale`.
 //  - The `stats.median` is mostly not impacted by the `minLoopDuration`.
-//  - `stats.mean|low|high|deviation|moe` are moderately impacted, but not too
-//    much.
+//  - `stats.mean|low|high|stdev|moe` are moderately impacted, but not too much.
 //  - `stats.min|max` are much more impacted, but those stats are not as
 //    critical.
 // If the minimum resolution is too close to the measures, results will not be

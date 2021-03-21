@@ -8,7 +8,7 @@ export const STAT_KINDS = [
   { name: 'low', kind: 'duration' },
   { name: 'high', kind: 'duration' },
   { name: 'diff', kind: 'relativePercentage' },
-  { name: 'deviation', kind: 'absolutePercentage' },
+  { name: 'stdev', kind: 'absolutePercentage' },
   { name: 'moe', kind: 'absolutePercentage' },
   { name: 'times', kind: 'count' },
   { name: 'loops', kind: 'count' },

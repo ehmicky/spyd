@@ -13,7 +13,7 @@
 //  - So that `repeat` adjusts to slowdowns of the task (for example due to
 //    competing processes).
 //  - It makes the initial calibration phase shorter. This leads to more
-//    stable `max` and `deviation` stats.
+//    stable `max` and `stdev` stats.
 export const handleRepeat = function ({
   repeat,
   sampleMedian,
@@ -73,8 +73,8 @@ const FAST_MEDIAN_RATE = 10
 //  - This can make it harder to compare some stats (especially `max`) between
 //    combinations if some have repeat loops while others not.
 //  - However, this problem is more general. Using repeat loops will always
-//    change how the mean, min, max, standard deviation are computed since it
-//    uses an arithmetic mean.
+//    change how the mean, min, max, stdev are computed since it uses an
+//    arithmetic mean.
 // The alternative solutions have bigger problems:
 //  - Excluding all first samples, even without a repeat loop:
 //     - This prevents running the combination only once, which is especially

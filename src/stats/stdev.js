@@ -4,7 +4,7 @@ import { getTvalue } from './tvalue.js'
 // Array must not be empty.
 // We use the median, not the mean, because it is more stable and is privileged
 // in reporting.
-export const getStandardDeviation = function (array, median) {
+export const getStdev = function (array, median) {
   if (median === 0 || array.length < MIN_DEVIATION_LOOPS) {
     return
   }
@@ -35,12 +35,12 @@ const getSumDeviation = function (array, median) {
 }
 
 // Retrieve standard deviation, relative to the median.
-export const getRelativeDeviation = function (standardDeviation, median) {
-  if (standardDeviation === undefined) {
+export const getRelativeStdev = function (stdev, median) {
+  if (stdev === undefined) {
     return
   }
 
-  return standardDeviation / median
+  return stdev / median
 }
 
 // Retrieve margin of error, relative to the median
@@ -74,17 +74,13 @@ export const getRelativeDeviation = function (standardDeviation, median) {
 //       being completely statistically correct
 //     - Removing the slow|fast outliers helps getting closer to a normal
 //       distribution
-export const getRelativeMarginOfError = function (
-  array,
-  standardDeviation,
-  median,
-) {
-  if (standardDeviation === undefined) {
+export const getRelativeMarginOfError = function (array, stdev, median) {
+  if (stdev === undefined) {
     return
   }
 
   const { length } = array
-  const standardError = standardDeviation / Math.sqrt(length)
+  const standardError = stdev / Math.sqrt(length)
   const tvalue = getTvalue(length)
   const marginOfError = standardError * tvalue
   const relativeMarginOfError = marginOfError / median

@@ -7,7 +7,7 @@ export const STAT_COLUMNS = [
   'high',
   'max',
   'diff',
-  'deviation',
+  'stdev',
   'moe',
   'times',
   'loops',

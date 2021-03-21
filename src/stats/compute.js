@@ -1,19 +1,19 @@
-import {
-  getStandardDeviation,
-  getRelativeDeviation,
-  getRelativeMarginOfError,
-} from './deviation.js'
 import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
 import { getQuantiles } from './quantile.js'
+import {
+  getStdev,
+  getRelativeStdev,
+  getRelativeMarginOfError,
+} from './stdev.js'
 import { getMean } from './sum.js'
 
 // Retrieve statistics from results.
 // Perform the statistical logic.
 // Note that when `repeat > 1`, the distribution of the measured function will
 // be modified by the repeat loop and transformed to a bell shape, even if
-// if was not one. This means `quantiles`, `histogram` and `deviation` will
+// if was not one. This means `quantiles`, `histogram` and `stdev` will
 // have a different meaning: they visualize the measurements of the function not
 // function itself.
 // We do not compute the mode because:
@@ -32,13 +32,9 @@ export const computeStats = function (measures) {
   const histogram = getHistogram(normalizedMeasures, HISTOGRAM_SIZE)
 
   const mean = getMean(measures)
-  const standardDeviation = getStandardDeviation(normalizedMeasures, median)
-  const deviation = getRelativeDeviation(standardDeviation, median)
-  const moe = getRelativeMarginOfError(
-    normalizedMeasures,
-    standardDeviation,
-    median,
-  )
+  const stdev = getStdev(normalizedMeasures, median)
+  const relativeStdev = getRelativeStdev(stdev, median)
+  const moe = getRelativeMarginOfError(normalizedMeasures, stdev, median)
 
   return {
     median,
@@ -47,7 +43,7 @@ export const computeStats = function (measures) {
     max,
     low,
     high,
-    deviation,
+    stdev: relativeStdev,
     moe,
     histogram,
     quantiles,
