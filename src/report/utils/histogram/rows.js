@@ -63,7 +63,10 @@ const getHistogramColumn = function (
 
 // Computes the column gradient color.
 const getColumnColor = function (columnIndex, medianIndex, medianMaxWidth) {
-  const colorPercentage = Math.abs(medianIndex - columnIndex) / medianMaxWidth
+  const colorPercentage =
+    medianMaxWidth === 0
+      ? 0
+      : Math.abs(medianIndex - columnIndex) / medianMaxWidth
   return graphGradientColor(colorPercentage)
 }
 

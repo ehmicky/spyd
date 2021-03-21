@@ -54,7 +54,7 @@ const PADDED_PREFIX = 'Padded'
 // Combine titles into a single to display for a given combination
 export const getCombinationName = function (titles) {
   const rowName = titles.join(NAME_MIDDLE_SEPARATOR)
-  return titleColor(`${NAME_LEFT_SEPARATOR}${rowName}${NAME_RIGHT_SEPARATOR} `)
+  return titleColor(`${NAME_LEFT_SEPARATOR}${rowName}${NAME_RIGHT_SEPARATOR}`)
 }
 
 const NAME_MIDDLE_SEPARATOR = ' '

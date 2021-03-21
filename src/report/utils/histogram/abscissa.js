@@ -1,87 +1,31 @@
 import stringWidth from 'string-width'
 
-// Retrieve the abscissa. This displays the low, median and high statistics.
-export const getAbscissa = function ({
-  lowPretty,
-  highPretty,
-  width,
-  medianIndex,
-  medianPretty,
-}) {
-  const lowPrettyWidth = stringWidth(lowPretty)
-  const medianPrettyWidth = stringWidth(medianPretty)
-  const highPrettyWidth = stringWidth(highPretty)
+import { separatorColor } from '../colors.js'
 
-  if (
-    medianIndex < lowPrettyWidth + MEDIAN_PADDING ||
-    medianIndex > width - highPrettyWidth - medianPrettyWidth - MEDIAN_PADDING
-  ) {
-    return getStackedAbscissa({
-      lowPretty,
-      highPretty,
-      width,
-      medianIndex,
-      medianPretty,
-      lowPrettyWidth,
-      medianPrettyWidth,
-      highPrettyWidth,
-    })
-  }
-
-  return getUnstackedAbscissa({
-    lowPretty,
-    highPretty,
+// Retrieve the horizontal line and the abscissa below the main content.
+// Includes the tick below the median.
+export const getAbscissa = function (width, medianIndex, medianPretty) {
+  const bottomLine = getBottomRow(TICK_MIDDLE, HORIZONTAL_LINE, {
     width,
     medianIndex,
-    medianPretty,
-    lowPrettyWidth,
-    medianPrettyWidth,
-    highPrettyWidth,
   })
+  const abscissa = getBottomRow(medianPretty, ' ', { width, medianIndex })
+  return `${bottomLine}
+${abscissa}`
 }
 
-// Minimum amount of spaces between the median and the low|high
-const MEDIAN_PADDING = 1
+// Characters to display the horizontal separator, including its ticks
+const TICK_MIDDLE = separatorColor('\u252C')
+const HORIZONTAL_LINE = separatorColor('\u2500')
 
-// When the median is too close to the low|high and should be shown below it
-const getStackedAbscissa = function ({
-  lowPretty,
-  highPretty,
-  width,
-  medianIndex,
-  medianPretty,
-  lowPrettyWidth,
-  medianPrettyWidth,
-  highPrettyWidth,
-}) {
-  const spacesWidth = width - lowPrettyWidth - highPrettyWidth
-  const leftSpacesWidth = Math.min(medianIndex, width - medianPrettyWidth)
-  const rightSpacesWidth = width - leftSpacesWidth - medianPrettyWidth
-  const spaces = ' '.repeat(spacesWidth)
-  const leftSpaces = ' '.repeat(leftSpacesWidth)
-  const rightSpaces = ' '.repeat(rightSpacesWidth)
-  return `${lowPretty}${spaces}${highPretty}
-${leftSpaces}${medianPretty}${rightSpaces}`
-}
-
-const getUnstackedAbscissa = function ({
-  lowPretty,
-  highPretty,
-  width,
-  medianIndex,
-  medianPretty,
-  lowPrettyWidth,
-  medianPrettyWidth,
-  highPrettyWidth,
-}) {
-  const leftSpacesWidth = medianIndex - lowPrettyWidth
-  const rightSpacesWidth =
-    width -
-    leftSpacesWidth -
-    lowPrettyWidth -
-    medianPrettyWidth -
-    highPrettyWidth
-  const leftSpaces = ' '.repeat(leftSpacesWidth)
-  const rightSpaces = ' '.repeat(rightSpacesWidth)
-  return `${lowPretty}${leftSpaces}${medianPretty}${rightSpaces}${highPretty}`
+const getBottomRow = function (middle, fillCharacter, { width, medianIndex }) {
+  const middleWidth = stringWidth(middle)
+  const leftSpacesWidth = Math.min(
+    medianIndex,
+    Math.max(width - middleWidth, 0),
+  )
+  const rightSpacesWidth = Math.max(width - leftSpacesWidth - middleWidth, 0)
+  const leftSpaces = fillCharacter.repeat(leftSpacesWidth)
+  const rightSpaces = fillCharacter.repeat(rightSpacesWidth)
+  return `${leftSpaces}${middle}${rightSpaces}`
 }

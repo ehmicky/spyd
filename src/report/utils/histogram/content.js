@@ -1,14 +1,12 @@
 import { getAbscissa } from './abscissa.js'
-import { getBottomLine } from './bottom_line.js'
-import { getMedianPosition } from './median.js'
 import { getHistogramRows } from './rows.js'
 
 // Retrieve histogram main content
-export const getContent = function ({
-  stats: { histogram, low, lowPretty, median, medianPretty, high, highPretty },
-  width,
+export const getContent = function (
+  { histogram, low, median, medianPretty, high },
   height,
-}) {
+  width,
+) {
   const { medianIndex, medianMaxWidth } = getMedianPosition({
     median,
     low,
@@ -22,15 +20,18 @@ export const getContent = function ({
     medianIndex,
     medianMaxWidth,
   })
-  const bottomLine = getBottomLine(width, medianIndex)
-  const abscissa = getAbscissa({
-    lowPretty,
-    highPretty,
-    width,
-    medianIndex,
-    medianPretty,
-  })
+  const abscissa = getAbscissa(width, medianIndex, medianPretty)
   return `${rows}
-${bottomLine}
 ${abscissa}`
+}
+
+// Compute position of the median tick.
+// When `histogram` has a single item, it is in the first bucket.
+// Also compute the maximum width between the median and either the start or end
+const getMedianPosition = function ({ median, low, high, width }) {
+  const medianPercentage = high === low ? 0 : (median - low) / (high - low)
+  const indexWidth = width - 1
+  const medianIndex = Math.round(indexWidth * medianPercentage)
+  const medianMaxWidth = Math.max(medianIndex, indexWidth - medianIndex)
+  return { medianIndex, medianMaxWidth }
 }

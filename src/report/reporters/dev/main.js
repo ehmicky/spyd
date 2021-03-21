@@ -27,7 +27,7 @@ const getTable = function (combinations) {
 const getRow = function ({ titles, stats }) {
   const combinationName = getCombinationName(titles)
   const statsStr = getCells(stats)
-  return `${combinationName} ${statsStr}`
+  return `${combinationName}  ${statsStr}`
 }
 
 export const dev = { report }

@@ -12,7 +12,7 @@ import { STAT_COLUMNS } from './column.js'
 export const getHeader = function ({ titles, stats }) {
   const emptyRowName = getEmptyRowName(titles)
   const headerCells = getHeaderCells(stats)
-  return `${emptyRowName} ${headerCells}`
+  return `${emptyRowName}  ${headerCells}`
 }
 
 // Retrieve the spaces left instead of combination name in the header
