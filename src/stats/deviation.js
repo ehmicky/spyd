@@ -1,3 +1,5 @@
+import { getTvalue } from './tvalue.js'
+
 // Retrieve standard deviation of an array of floats (cannot be NaN/Infinity).
 // Array must not be empty.
 // We use the median, not the mean, because it is more stable and is privileged
@@ -51,8 +53,10 @@ export const getRelativeMarginOfError = function (
     return
   }
 
-  const standardError = standardDeviation / Math.sqrt(array.length)
-  const marginOfError = standardError * 2
+  const { length } = array
+  const standardError = standardDeviation / Math.sqrt(length)
+  const tvalue = getTvalue(length)
+  const marginOfError = standardError * tvalue
   const relativeMarginOfError = marginOfError / median
   return relativeMarginOfError
 }
