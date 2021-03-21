@@ -1,5 +1,5 @@
 import { serializeHistograms } from '../utils/histogram/main.js'
-import { joinBigSections } from '../utils/join.js'
+import { joinSections } from '../utils/join.js'
 import { prettifyStats } from '../utils/stats/main.js'
 import { addTitles } from '../utils/title.js'
 
@@ -10,9 +10,9 @@ const report = function ({ combinations }) {
   const histograms = serializeHistograms(combinationsB, {
     height: HISTOGRAM_HEIGHT,
   })
-  return joinBigSections(histograms)
+  return joinSections(histograms)
 }
 
-const HISTOGRAM_HEIGHT = 8
+const HISTOGRAM_HEIGHT = 2
 
 export const histogram = { report }
