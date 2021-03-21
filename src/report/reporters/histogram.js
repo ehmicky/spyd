@@ -9,6 +9,7 @@ const report = function ({ combinations }) {
   const combinationsB = addTitles(combinationsA)
   const histograms = serializeHistograms(combinationsB, {
     height: HISTOGRAM_HEIGHT,
+    showStats: true,
   })
   return joinSections(histograms)
 }

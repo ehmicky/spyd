@@ -2,11 +2,12 @@ import { getAbscissa } from './abscissa.js'
 import { getHistogramRows } from './rows.js'
 
 // Retrieve histogram main content
-export const getContent = function (
-  { histogram, low, median, medianPretty, high },
+export const getContent = function ({
+  stats: { histogram, low, median, medianPretty, high },
   height,
   width,
-) {
+  showStats,
+}) {
   const { medianIndex, medianMaxWidth } = getMedianPosition({
     median,
     low,
@@ -20,6 +21,11 @@ export const getContent = function (
     medianIndex,
     medianMaxWidth,
   })
+
+  if (!showStats) {
+    return rows
+  }
+
   const abscissa = getAbscissa(width, medianIndex, medianPretty)
   return `${rows}
 ${abscissa}`
