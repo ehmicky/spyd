@@ -7,13 +7,10 @@ import { addTitles } from '../utils/title.js'
 const report = function ({ combinations }) {
   const combinationsA = prettifyStats(combinations)
   const combinationsB = addTitles(combinationsA)
-  const histograms = serializeHistograms(combinationsB, {
-    height: HISTOGRAM_HEIGHT,
-    showStats: true,
-  })
+  const histograms = serializeHistograms(combinationsB, HISTOGRAM_OPTS)
   return joinSections(histograms)
 }
 
-const HISTOGRAM_HEIGHT = 2
+const HISTOGRAM_OPTS = { height: 2, showStats: true }
 
 export const histogram = { report }

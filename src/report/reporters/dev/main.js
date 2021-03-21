@@ -1,4 +1,5 @@
 import { getFooter } from '../../utils/footer/main.js'
+import { serializeHistograms } from '../../utils/histogram/main.js'
 import { joinSections } from '../../utils/join.js'
 import { prettifyValue } from '../../utils/prettify_value.js'
 import { prettifyStats } from '../../utils/stats/main.js'
@@ -13,8 +14,9 @@ const report = function ({ id, timestamp, systems, combinations }) {
   const combinationsB = addTitles(combinationsA)
 
   const table = getTable(combinationsB)
+  const histograms = serializeHistograms(combinationsB, HISTOGRAM_OPTS)
   const footer = prettifyValue(getFooter({ id, timestamp, systems }))
-  return joinSections([table, footer])
+  return joinSections([table, ...histograms, footer])
 }
 
 const getTable = function (combinations) {
@@ -29,5 +31,7 @@ const getRow = function ({ titles, stats }) {
   const statsStr = getCells(stats)
   return `${combinationName}  ${statsStr}`
 }
+
+const HISTOGRAM_OPTS = { height: 2, showStats: false }
 
 export const dev = { report }
