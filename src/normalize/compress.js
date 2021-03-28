@@ -40,20 +40,55 @@ const decompressResult = function ({ combinations, ...result }) {
 }
 
 const decompressCombination = function ({
-  stats: { histogram, quantiles = [], ...stats },
+  stats,
+  stats: { histogram, quantiles = [], low, high },
   ...combination
 }) {
-  const histogramA = decompressHistogram(histogram)
+  const histogramA = decompressHistogram(histogram, low, high)
   return {
     ...combination,
     stats: { ...stats, histogram: histogramA, quantiles },
   }
 }
 
-const decompressHistogram = function (histogram) {
-  return histogram.map(decompressBucket)
+const decompressHistogram = function (histogram, low, high) {
+  const bucketCount = histogram.length
+  const bucketSize = (high - low) / bucketCount
+  return histogram.map((bucket, bucketIndex) =>
+    decompressBucket(bucket, {
+      low,
+      high,
+      bucketIndex,
+      bucketCount,
+      bucketSize,
+    }),
+  )
 }
 
-const decompressBucket = function ([start, end, frequency]) {
-  return { start, end, frequency }
+const decompressBucket = function (
+  [, , frequency],
+  { low, high, bucketIndex, bucketCount, bucketSize },
+) {
+  const newStart = getBucketEdge(bucketIndex - 1, {
+    low,
+    high,
+    bucketCount,
+    bucketSize,
+  })
+  const newEnd = getBucketEdge(bucketIndex, {
+    low,
+    high,
+    bucketCount,
+    bucketSize,
+  })
+  return { start: newStart, end: newEnd, frequency }
+}
+
+const getBucketEdge = function (
+  bucketIndex,
+  { low, high, bucketCount, bucketSize },
+) {
+  return bucketIndex + 1 === bucketCount
+    ? high
+    : low + (bucketIndex + 1) * bucketSize
 }
