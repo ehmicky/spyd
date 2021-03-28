@@ -1,7 +1,7 @@
 import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
-import { getRelativeMarginOfError } from './moe.js'
+import { getMoe } from './moe.js'
 import { getQuantiles } from './quantile.js'
 import { getStdev } from './stdev.js'
 import { getMean } from './sum.js'
@@ -30,7 +30,7 @@ export const computeStats = function (measures) {
 
   const mean = getMean(measures)
   const stdev = getStdev(normalizedMeasures, median)
-  const moe = getRelativeMarginOfError(normalizedMeasures, stdev, median)
+  const moe = getMoe(normalizedMeasures, stdev, median)
 
   return {
     median,

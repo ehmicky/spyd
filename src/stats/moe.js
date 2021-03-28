@@ -31,7 +31,7 @@ import { getTvalue } from './tvalue.js'
 //       being completely statistically correct
 //     - Removing the slow|fast outliers helps getting closer to a normal
 //       distribution
-export const getRelativeMarginOfError = function (array, stdev, median) {
+export const getMoe = function (array, stdev, median) {
   if (stdev === undefined) {
     return
   }
