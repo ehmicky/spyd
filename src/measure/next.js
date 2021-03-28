@@ -1,5 +1,4 @@
 import now from 'precise-now'
-import randomItem from 'random-item'
 
 import { setBenchmarkEnd, setPercentage } from '../preview/set.js'
 import { getSum } from '../stats/sum.js'
@@ -9,6 +8,11 @@ import { getRemainingCombinations } from './remaining.js'
 // Retrieve the next combination which should be measured.
 // We do it based on which combination are been measured the least.
 // At the beginning, we pick them randomly, because it looks nicer.
+// The `duration` configuration property is for each combination, not the whole
+// benchmark. Otherwise:
+//  - Adding/removing combinations would change the duration (and results) of
+//    others
+//  - This includes using the `include|exclude` configuration properties
 export const getNextCombination = function ({
   combinations,
   duration,
@@ -28,13 +32,7 @@ export const getNextCombination = function ({
     previewState,
     duration,
   })
-
-  if (remainingCombinations.length === 0) {
-    return
-  }
-
-  const minCombinations = getMinCombinations(remainingCombinations)
-  const combination = randomItem(minCombinations)
+  const [combination] = remainingCombinations
   return combination
 }
 
@@ -75,24 +73,4 @@ const setBenchmarkPercentage = function (
 
 const getCombinationTimeLeft = function ({ totalDuration }, duration) {
   return Math.max(duration - totalDuration, 0)
-}
-
-// The `duration` configuration property is for each combination, not the whole
-// benchmark. Otherwise:
-//  - Adding/removing combinations would change the duration (and results) of
-//    others
-//  - This includes using the `include|exclude` configuration properties
-const getMinCombinations = function (combinations) {
-  const minCombinationDuration = getMinDuration(combinations)
-  return combinations.filter(
-    (combination) => getTotalDuration(combination) === minCombinationDuration,
-  )
-}
-
-const getMinDuration = function (combinations) {
-  return Math.min(...combinations.map(getTotalDuration))
-}
-
-const getTotalDuration = function ({ totalDuration }) {
-  return totalDuration
 }
