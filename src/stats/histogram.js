@@ -26,20 +26,16 @@ export const getHistogram = function ({
 
 const getBucketEdges = function (low, high, bucketCount) {
   const bucketSize = (high - low) / bucketCount
-  return Array.from({ length: bucketCount + 1 }, (value, bucketIndex) =>
-    getBucketEdge({ bucketIndex, low, high, bucketCount, bucketSize }),
+  const bucketEdges = Array.from(
+    { length: bucketCount },
+    (value, bucketIndex) => getBucketEdge(bucketIndex, low, bucketSize),
   )
+  // Avoids float precision roundoff error at the end by using `high` directly
+  return [...bucketEdges, high]
 }
 
-// Avoids float precision roundoff error at the end by using `high` directly
-const getBucketEdge = function ({
-  bucketIndex,
-  low,
-  high,
-  bucketCount,
-  bucketSize,
-}) {
-  return bucketIndex === bucketCount ? high : low + bucketIndex * bucketSize
+const getBucketEdge = function (bucketIndex, low, bucketSize) {
+  return low + bucketIndex * bucketSize
 }
 
 const addBucket = function (
