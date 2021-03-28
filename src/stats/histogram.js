@@ -28,14 +28,10 @@ const getBucketEdges = function (low, high, bucketCount) {
   const bucketSize = (high - low) / bucketCount
   const bucketEdges = Array.from(
     { length: bucketCount },
-    (value, bucketIndex) => getBucketEdge(bucketIndex, low, bucketSize),
+    (value, bucketIndex) => low + bucketIndex * bucketSize,
   )
   // Avoids float precision roundoff error at the end by using `high` directly
   return [...bucketEdges, high]
-}
-
-const getBucketEdge = function (bucketIndex, low, bucketSize) {
-  return low + bucketIndex * bucketSize
 }
 
 const addBucket = function (
