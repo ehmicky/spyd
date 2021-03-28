@@ -30,7 +30,7 @@ export const computeStats = function (measures) {
 
   const mean = getMean(measures)
   const stdev = getStdev({ array: measures, lowIndex, highIndex, median })
-  const moe = getMoe(normalizedMeasures, stdev)
+  const moe = getMoe(lowIndex, highIndex, stdev)
 
   return {
     median,

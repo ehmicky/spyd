@@ -56,12 +56,12 @@ import { getTvalue } from './tvalue.js'
 //  - this can still be added in the future with a reporter showing a list of
 //    too-close-to-compare combinations, using a welch's t-test between each
 //    combination pair
-export const getMoe = function (array, stdev) {
+export const getMoe = function (lowIndex, highIndex, stdev) {
   if (stdev === undefined) {
     return
   }
 
-  const { length } = array
+  const length = highIndex - lowIndex + 1
   const standardError = stdev / Math.sqrt(length)
   const tvalue = getTvalue(length)
   const marginOfError = standardError * tvalue
