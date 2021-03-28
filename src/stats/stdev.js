@@ -2,6 +2,14 @@
 // Array must not be empty.
 // We use the median, not the mean, because it is more stable and is privileged
 // in reporting.
+// We use the absolute standard deviation, as opposed to making it relative to
+// the median (as a percentage)
+//  - It makes it easier to understand:
+//     - the spread of a given combination
+//     - its relation to moe and distribution-related stats such as percentiles
+//       (that are also not percentages)
+//  - On the flipside, it makes it harder to compare combinations (since they
+//    most likely have different medians)
 export const getStdev = function (array, median) {
   if (median === 0 || array.length < MIN_DEVIATION_LOOPS) {
     return
