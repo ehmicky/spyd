@@ -12,11 +12,11 @@ export const getHistogram = function ({
   const low = array[lowIndex]
   const high = array[highIndex]
 
-  const bucketEdges = getBucketEdges(low, high, bucketCount)
-
   const state = { startIndex: lowIndex - 1 }
-  return Array.from({ length: bucketCount }, (value, bucketIndex) =>
-    getBucket({ bucketIndex, array, bucketEdges, highIndex, length, state }),
+
+  const bucketEdges = getBucketEdges(low, high, bucketCount)
+  return bucketEdges.map(({ start, end }) =>
+    getBucket({ start, end, array, highIndex, length, state }),
   )
 }
 
@@ -54,16 +54,14 @@ const getBucketEdge = function (
 }
 
 const getBucket = function ({
-  bucketIndex,
+  start,
+  end,
   array,
   highIndex,
-  bucketEdges,
   length,
   state,
   state: { startIndex },
 }) {
-  const { start, end } = bucketEdges[bucketIndex]
-
   const endIndex = binarySearch(array, end, startIndex, highIndex)
   const frequency = (endIndex - startIndex) / length
 
