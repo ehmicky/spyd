@@ -13,8 +13,7 @@ export const getHistogram = function ({
   const high = array[highIndex]
   const state = { startIndex: lowIndex - 1 }
 
-  const bucketEdges = getBucketEdges(low, high, bucketCount)
-  return bucketEdges.map(([start, end]) =>
+  return getBucketEdges(low, high, bucketCount).map(([start, end]) =>
     getBucket({ start, end, array, highIndex, length, state }),
   )
 }
