@@ -40,7 +40,7 @@ const getProgressBar = function ({ percentage, time, screenWidth }) {
 // Pad the left|right of the progress bar with spaces
 const PADDING_WIDTH = 4
 
-// Works on Windows CP437
+// Works on CP850
 const FILL_CHAR = goodColor('\u2588')
 const VOID_CHAR = separatorColor('\u2591')
 const LINE_CHAR = separatorColor('\u2500')

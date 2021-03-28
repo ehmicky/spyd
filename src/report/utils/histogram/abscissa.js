@@ -15,6 +15,7 @@ ${abscissa}`
 }
 
 // Characters to display the horizontal separator, including its ticks
+// Works on CP850
 const TICK_MIDDLE = separatorColor('\u252C')
 const HORIZONTAL_LINE = separatorColor('\u2500')
 

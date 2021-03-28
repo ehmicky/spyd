@@ -43,6 +43,7 @@ const PADDING_WIDTH = 1
 const PADDING = ' '.repeat(PADDING_WIDTH)
 
 // Characters to display on each end of the horizontal separator
+// Works on CP850
 const TICK_LEFT = separatorColor('\u250C')
 const TICK_RIGHT = separatorColor('\u2510')
 
