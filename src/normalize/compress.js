@@ -14,11 +14,20 @@ const compressCombination = function ({
   ...combination
 }) {
   const statsA = omit(stats, OMITTED_STATS_PROPS)
-  const statsB = { ...statsA, histogram }
+  const histogramA = compressHistogram(histogram)
+  const statsB = { ...statsA, histogram: histogramA }
   return { ...combination, stats: statsB }
 }
 
 const OMITTED_STATS_PROPS = ['quantiles']
+
+const compressHistogram = function (histogram) {
+  return histogram.map(compressBucket)
+}
+
+const compressBucket = function ({ start, end, frequency }) {
+  return [start, end, frequency]
+}
 
 // Restore original results after loading
 export const decompressResults = function (results) {
@@ -34,5 +43,17 @@ const decompressCombination = function ({
   stats: { histogram, quantiles = [], ...stats },
   ...combination
 }) {
-  return { ...combination, stats: { ...stats, histogram, quantiles } }
+  const histogramA = decompressHistogram(histogram)
+  return {
+    ...combination,
+    stats: { ...stats, histogram: histogramA, quantiles },
+  }
+}
+
+const decompressHistogram = function (histogram) {
+  return histogram.map(decompressBucket)
+}
+
+const decompressBucket = function ([start, end, frequency]) {
+  return { start, end, frequency }
 }
