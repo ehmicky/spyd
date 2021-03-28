@@ -8,9 +8,14 @@ export const compressResult = function ({ combinations, ...result }) {
   return { ...result, combinations: combinationsA }
 }
 
-const compressCombination = function ({ stats, ...combination }) {
+const compressCombination = function ({
+  stats,
+  stats: { histogram },
+  ...combination
+}) {
   const statsA = omit(stats, OMITTED_STATS_PROPS)
-  return { ...combination, stats: statsA }
+  const statsB = { ...statsA, histogram }
+  return { ...combination, stats: statsB }
 }
 
 const OMITTED_STATS_PROPS = ['quantiles']
@@ -26,7 +31,7 @@ const decompressResult = function ({ combinations, ...result }) {
 }
 
 const decompressCombination = function ({
-  stats: { histogram = [], quantiles = [], ...stats },
+  stats: { histogram, quantiles = [], ...stats },
   ...combination
 }) {
   return { ...combination, stats: { ...stats, histogram, quantiles } }
