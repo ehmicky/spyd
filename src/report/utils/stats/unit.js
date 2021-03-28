@@ -1,8 +1,6 @@
-// Scale, round and add decimals, suffixes and prefixes in stats
-export const addScaleUnit = function ({ stat, kind, scale, decimals }) {
-  const scaledStat = (stat / scale).toFixed(decimals)
-  const unit = UNITS[kind](scale)
-  return `${scaledStat}${unit}`
+// Retrieve unit shown after the stat, depending on its scale
+export const getUnit = function (kind, scale) {
+  return UNITS[kind](scale)
 }
 
 const getCountUnit = function (scale) {
