@@ -24,14 +24,8 @@ export const getRemainingCombinations = function ({
     return []
   }
 
-  const combinationMaxLoops = getCombinationMaxLoops(combinations)
   return combinations.filter((combination) =>
-    isRemainingCombination({
-      combination,
-      duration,
-      exec,
-      combinationMaxLoops,
-    }),
+    isRemainingCombination(combination, duration, exec),
   )
 }
 
@@ -42,8 +36,26 @@ const shouldEndMeasuring = function (combinations, { stopped }) {
   return stopped || combinations.some(combinationHasErrored)
 }
 
-const getCombinationMaxLoops = function (combinations) {
-  return Math.ceil(MAX_LOOPS / combinations.length)
+// With the `exec` command, we run each combination exactly once, even if
+// not calibrated.
+// We wait for calibration, for any `duration`.
+// We stop, with `duration`:
+//   - `1`: when calibrated
+//   - others: after a specific duration
+const isRemainingCombination = function (
+  { totalDuration, sampleDurationMean, loops, allSamples },
+  duration,
+  exec,
+) {
+  if (exec) {
+    return allSamples === 0
+  }
+
+  return (
+    loops === 0 ||
+    (loops < MAX_LOOPS &&
+      hasTimeLeft(duration, sampleDurationMean, totalDuration))
+  )
 }
 
 // We end running samples when the `measures` is over `MAX_LOOPS`. This
@@ -51,29 +63,6 @@ const getCombinationMaxLoops = function (combinations) {
 // The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
 // little more than 1e8 floats.
 const MAX_LOOPS = 1e8
-
-// With the `exec` command, we run each combination exactly once, even if
-// not calibrated.
-// We wait for calibration, for any `duration`.
-// We stop, with `duration`:
-//   - `1`: when calibrated
-//   - others: after a specific duration
-const isRemainingCombination = function ({
-  combination: { totalDuration, sampleDurationMean, loops, allSamples },
-  duration,
-  exec,
-  combinationMaxLoops,
-}) {
-  if (exec) {
-    return allSamples === 0
-  }
-
-  return (
-    loops === 0 ||
-    (loops < combinationMaxLoops &&
-      hasTimeLeft(duration, sampleDurationMean, totalDuration))
-  )
-}
 
 const hasTimeLeft = function (duration, sampleDurationMean, totalDuration) {
   return duration !== 1 && totalDuration + sampleDurationMean < duration
