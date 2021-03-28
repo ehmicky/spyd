@@ -1,7 +1,6 @@
 import now from 'precise-now'
 
 import { setBenchmarkEnd, setPercentage } from '../preview/set.js'
-import { getSum } from '../stats/sum.js'
 
 import { getRemainingCombinations } from './remaining.js'
 
@@ -20,19 +19,20 @@ export const getNextCombination = function ({
   previewState,
   stopState,
 }) {
-  const remainingCombinations = getRemainingCombinations({
+  const [combination, ...remainingCombinations] = getRemainingCombinations({
     combinations,
     duration,
     exec,
     stopState,
   })
+  const { length: remainingLength } = remainingCombinations
   updateBenchmarkEnd({
+    combination,
     combinations,
-    remainingCombinations,
+    remainingLength,
     previewState,
     duration,
   })
-  const [combination] = remainingCombinations
   return combination
 }
 
@@ -43,34 +43,38 @@ export const getNextCombination = function ({
 // This also allows updating the progress bar duration to `0s` when the
 // benchmark is stopped or errors.
 const updateBenchmarkEnd = function ({
+  combination,
   combinations,
-  remainingCombinations,
+  remainingLength,
   previewState,
   duration,
 }) {
   if (duration === 1) {
-    setBenchmarkPercentage(combinations, remainingCombinations, previewState)
+    setBenchmarkPercentage({
+      combination,
+      combinations,
+      remainingLength,
+      previewState,
+    })
     return
   }
 
-  const timeLeft = getSum(
-    remainingCombinations.map((combination) =>
-      getCombinationTimeLeft(combination, duration),
-    ),
-  )
+  const combinationTimeLeft =
+    combination === undefined
+      ? 0
+      : Math.max(duration - combination.totalDuration, 0)
+  const timeLeft = combinationTimeLeft + remainingLength * duration
   const benchmarkEnd = now() + timeLeft
   setBenchmarkEnd(previewState, benchmarkEnd)
 }
 
-const setBenchmarkPercentage = function (
+const setBenchmarkPercentage = function ({
+  combination,
   combinations,
-  remainingCombinations,
+  remainingLength,
   previewState,
-) {
-  const percentage = 1 - remainingCombinations.length / combinations.length
+}) {
+  const combinationsLeft = combination === undefined ? 0 : remainingLength + 1
+  const percentage = 1 - combinationsLeft / combinations.length
   setPercentage(previewState, percentage)
-}
-
-const getCombinationTimeLeft = function ({ totalDuration }, duration) {
-  return Math.max(duration - totalDuration, 0)
 }
