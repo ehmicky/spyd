@@ -8,13 +8,12 @@ export const getHistogram = function ({
   highIndex,
   bucketCount,
 }) {
-  // TODO: do not clone array
-  const arrayA = array.slice(lowIndex, highIndex + 1)
-
-  const [min] = arrayA
-  const max = arrayA[arrayA.length - 1]
+  const min = array[lowIndex]
+  const max = array[highIndex]
   const bucketSize = (max - min) / bucketCount
 
+  // TODO: do not clone array
+  const arrayA = array.slice(lowIndex, highIndex + 1)
   const bucketIndexes = Array.from({ length: bucketCount }, getBucketIndex)
   const { buckets } = bucketIndexes.reduce(
     addBucket.bind(undefined, {
