@@ -18,7 +18,6 @@
 //    beforeEach/main/afterEach in batches, not in order, so they cannot modify
 //    some shared global state.
 export const getTaskArgs = function (taskArg, repeat) {
-  // eslint-disable-next-line unicorn/no-new-array
   const taskArgs = new Array(repeat)
 
   // Using `new Array()` and a `for` loop is the most performant

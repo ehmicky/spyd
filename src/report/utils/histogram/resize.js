@@ -27,8 +27,7 @@ export const resizeHistogram = function (counts, newSize) {
   // eslint-disable-next-line fp/no-let
   let previousFraction = 0
 
-  // Using `newArray()` and a `for` loop is more efficient
-  // eslint-disable-next-line unicorn/no-new-array
+  // Using `new Array()` and a `for` loop is more efficient
   const newHistogram = new Array(newSize)
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
