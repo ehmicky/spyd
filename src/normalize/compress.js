@@ -1,5 +1,3 @@
-import omit from 'omit.js'
-
 import { getBucketEdges } from '../stats/histogram.js'
 
 // Reduce size of results before saving
@@ -15,13 +13,10 @@ const compressCombination = function ({
   stats: { histogram },
   ...combination
 }) {
-  const statsA = omit(stats, OMITTED_STATS_PROPS)
   const histogramA = compressHistogram(histogram)
-  const statsB = { ...statsA, histogram: histogramA }
-  return { ...combination, stats: statsB }
+  const statsA = { ...stats, histogram: histogramA }
+  return { ...combination, stats: statsA }
 }
-
-const OMITTED_STATS_PROPS = ['quantiles']
 
 const compressHistogram = function (histogram) {
   return histogram.map(compressBucket)
@@ -43,13 +38,13 @@ const decompressResult = function ({ combinations, ...result }) {
 
 const decompressCombination = function ({
   stats,
-  stats: { histogram, quantiles = [], low, high },
+  stats: { histogram, low, high },
   ...combination
 }) {
   const histogramA = decompressHistogram(histogram, low, high)
   return {
     ...combination,
-    stats: { ...stats, histogram: histogramA, quantiles },
+    stats: { ...stats, histogram: histogramA },
   }
 }
 
