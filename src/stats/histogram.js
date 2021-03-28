@@ -24,7 +24,7 @@ export const getHistogram = function ({
       min,
       max,
     }),
-    { buckets: [], startIndex: lowIndex - 1, startValue: min },
+    { buckets: [], startIndex: lowIndex - 1, start: min },
   )
   return buckets
 }
@@ -35,20 +35,20 @@ const getBucketIndex = function (value, index) {
 
 const addBucket = function (
   { array, highIndex, bucketSize, bucketCount, length, min, max },
-  { buckets, startIndex, startValue },
+  { buckets, startIndex, start },
   bucketIndex,
 ) {
   // Avoids float precision roundoff error at the end by using `max` directly
-  const endValue =
+  const end =
     bucketIndex + 1 === bucketCount ? max : min + (bucketIndex + 1) * bucketSize
 
-  const endIndex = binarySearch(array, endValue, startIndex, highIndex)
+  const endIndex = binarySearch(array, end, startIndex, highIndex)
   const bucketsCount = endIndex - startIndex
   const frequency = bucketsCount / length
 
   // Directly mutate for performance
   // eslint-disable-next-line fp/no-mutating-methods
-  buckets.push({ start: startValue, end: endValue, frequency })
+  buckets.push({ start, end, frequency })
 
-  return { buckets, startIndex: endIndex, startValue: endValue }
+  return { buckets, startIndex: endIndex, start: end }
 }
