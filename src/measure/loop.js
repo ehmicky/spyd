@@ -1,11 +1,14 @@
-import { failOnProcessExit } from '../error/combination.js'
+import {
+  failOnProcessExit,
+  combinationHasErrored,
+} from '../error/combination.js'
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 
 import { aggregatePreview, aggregateMeasures } from './aggregate.js'
 import { getSampleStart, addSampleDuration } from './duration.js'
-import { getNextCombination } from './next.js'
-import { updateCombinations } from './update.js'
+import { updatePreviewEnd } from './preview_end.js'
+import { isRemainingCombination } from './remaining.js'
 
 // Run samples to measure each combination.
 // We ensure combinations are never measured at the same time
@@ -31,7 +34,7 @@ import { updateCombinations } from './update.js'
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, complexity
 export const performMeasureLoop = async function ({
   combinations,
   duration,
@@ -46,49 +49,66 @@ export const performMeasureLoop = async function ({
 
   setBenchmarkStart(previewState)
 
-  // eslint-disable-next-line fp/no-loops
-  while (true) {
-    const sampleStart = getSampleStart()
-    const combination = getNextCombination({
-      combinations,
-      duration,
-      exec,
-      previewState,
-      stopState,
-    })
+  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
+  for (let index = 0; index < combinations.length; index += 1) {
+    // eslint-disable-next-line fp/no-let
+    let combination = combinations[index]
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign
+    stopState.combination = combination
+    const combinationsLeft = combinations.length - index
+
+    // eslint-disable-next-line fp/no-loops, max-depth
+    do {
+      const sampleStart = getSampleStart()
+      // eslint-disable-next-line fp/no-mutation, no-param-reassign
+      stopState.sampleStart = sampleStart
+
+      updatePreviewEnd({
+        combination,
+        combinations,
+        combinationsLeft,
+        previewState,
+        duration,
+      })
+
+      // eslint-disable-next-line no-await-in-loop
+      const newCombination = await eMeasureSample(combination, stopState)
+
+      // eslint-disable-next-line no-await-in-loop
+      const newCombinationA = await aggregatePreview({
+        newCombination,
+        combinations,
+        index,
+        previewConfig,
+        previewState,
+      })
+
+      const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
+      // eslint-disable-next-line fp/no-mutation
+      combination = newCombinationB
+
+      // eslint-disable-next-line max-depth
+      if (isStoppedCombination(newCombinationB, stopState)) {
+        break
+      }
+    } while (isRemainingCombination(combination, duration, exec))
+
+    const combinationA = aggregateMeasures(combination)
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign, require-atomic-updates
+    combinations[index] = combinationA
 
     // eslint-disable-next-line max-depth
-    if (combination === undefined) {
+    if (isStoppedCombination(combinationA, stopState)) {
       break
     }
-
-    // eslint-disable-next-line fp/no-mutating-assign
-    Object.assign(stopState, { sampleStart, combination })
-
-    // eslint-disable-next-line no-await-in-loop
-    const newCombination = await eMeasureSample(combination, stopState)
-
-    // eslint-disable-next-line no-await-in-loop
-    const newCombinationA = await aggregatePreview({
-      newCombination,
-      combinations,
-      previewConfig,
-      previewState,
-    })
-
-    const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
-    // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    combinations = updateCombinations(combinations, newCombinationB)
   }
-
-  const combinationsA = combinations.map(aggregateMeasures)
 
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.combination
 
-  return combinationsA
+  return combinations
 }
 
 // Task init, retrieving only task and step identifiers
@@ -98,6 +118,13 @@ const isInit = function (combinations) {
 
 const hasTaskId = function ({ taskId }) {
   return taskId !== undefined
+}
+
+// When any combination errors, we end measuring.
+// We also do this when the user stopped the benchmark (e.g. with CTRL-C).
+// We still perform each combination ends and exits, for cleanup.
+const isStoppedCombination = function (combination, { stopped }) {
+  return stopped || combinationHasErrored(combination)
 }
 
 const eMeasureSample = async function (combination, stopState) {

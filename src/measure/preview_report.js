@@ -3,7 +3,6 @@ import { reportPreview } from '../report/main.js'
 
 import { getFinalResult } from './init.js'
 import { addInitProps } from './props.js'
-import { updateCombinations } from './update.js'
 
 // Retrieve state and configuration for previews
 export const getPreviewConfig = function (
@@ -42,21 +41,7 @@ export const setFirstPreview = async function ({
 
 const START_DESCRIPTION = 'Starting...'
 
-export const previewCombinations = async function ({
-  combinations,
-  newCombination,
-  previewConfig,
-  previewState,
-}) {
-  const combinationsA = updateCombinations(combinations, newCombination)
-  await setPreviewReport({
-    combinations: combinationsA,
-    previewConfig,
-    previewState,
-  })
-}
-
-const setPreviewReport = async function ({
+export const setPreviewReport = async function ({
   combinations,
   previewConfig: { initResult, results, quiet, reporters, titles },
   previewState,
