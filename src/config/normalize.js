@@ -6,7 +6,6 @@ import {
   checkDefinedString,
   checkJson,
   checkPositiveInteger,
-  checkSaveDuration,
 } from './check.js'
 
 // Normalize configuration shape and do custom validation
@@ -25,11 +24,10 @@ const normalizeProp = function (config, [propName, normalizer]) {
   return { ...configA, ...props }
 }
 
-const normalizeDuration = function (duration, propName, { save }) {
+const normalizeDuration = function (duration, propName) {
   checkPositiveInteger(duration, propName)
-  checkSaveDuration(duration, save)
 
-  if (duration === 0 || duration === 1) {
+  if (duration === 1) {
     return
   }
 

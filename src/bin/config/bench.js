@@ -8,8 +8,7 @@ export const BENCH_CONFIG = {
     number: true,
     requiresArg: true,
     describe: `How many seconds to execute each combination.
-The default is 1 which executes each combination once.
-Can also be 0 which only stops when CTRL-C is typed.`,
+The default is 1 which executes each combination once.`,
   },
   quiet: {
     group: REPORT,

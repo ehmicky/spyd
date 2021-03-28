@@ -72,7 +72,7 @@ const previewRefreshAndMeasure = async function ({
 }
 
 const getBenchmarkDuration = function (combinations, duration) {
-  if (duration === 0 || duration === 1) {
+  if (duration === 1) {
     return duration
   }
 

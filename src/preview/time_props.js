@@ -3,7 +3,6 @@ import now from 'precise-now'
 import { getTime } from './time.js'
 
 // Update `percentage` and `time` to show in preview. There are three modes:
-//  - When `duration` is 0, `time` goes up and an empty progress bar is shown
 //  - When `duration` is 1, `time` goes up and a progress bar shows which
 //    combinations have ended.
 //  - Otherwise, `time` does down and the progress bar is based on `duration`
@@ -20,7 +19,7 @@ export const updateTimeProps = function (previewState, benchmarkDuration) {
 }
 
 const getTimeProps = function (previewState, benchmarkDuration) {
-  return benchmarkDuration === 0 || benchmarkDuration === 1
+  return benchmarkDuration === 1
     ? getStartDurationProps(previewState)
     : getEndDurationProps(previewState, benchmarkDuration)
 }

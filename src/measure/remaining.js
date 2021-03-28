@@ -56,7 +56,6 @@ const MAX_LOOPS = 1e8
 // not calibrated.
 // We wait for calibration, for any `duration`.
 // We stop, with `duration`:
-//   - `0`: never
 //   - `1`: when calibrated
 //   - others: after a specific duration
 const isRemainingCombination = function ({
@@ -72,13 +71,10 @@ const isRemainingCombination = function ({
   return (
     loops === 0 ||
     (loops < combinationMaxLoops &&
-      hasTimeLeft({ duration, sampleDurationMean, totalDuration }))
+      hasTimeLeft(duration, sampleDurationMean, totalDuration))
   )
 }
 
-const hasTimeLeft = function ({ duration, sampleDurationMean, totalDuration }) {
-  return (
-    duration === 0 ||
-    (duration !== 1 && totalDuration + sampleDurationMean < duration)
-  )
+const hasTimeLeft = function (duration, sampleDurationMean, totalDuration) {
+  return duration !== 1 && totalDuration + sampleDurationMean < duration
 }

@@ -50,10 +50,6 @@ const updateBenchmarkEnd = function ({
   previewState,
   duration,
 }) {
-  if (duration === 0) {
-    return
-  }
-
   if (duration === 1) {
     setBenchmarkPercentage(combinations, remainingCombinations, previewState)
     return

@@ -40,26 +40,12 @@ export const setPriorityDescription = function (
   previewState.priorityDescription = priorityDescription
 }
 
-export const getDescription = function ({
+export const getDescription = function (
   description,
-  priorityDescription,
-  benchmarkDuration,
-}) {
-  if (priorityDescription !== undefined) {
-    return priorityDescription
-  }
-
-  if (description !== undefined) {
-    return description
-  }
-
-  if (benchmarkDuration === 0) {
-    return NO_DURATION_DESCRIPTION
-  }
+  priorityDescription = description,
+) {
+  return priorityDescription
 }
-
-// Clear instruction when `duration` is 0
-const NO_DURATION_DESCRIPTION = 'Type CTRL-C to stop.'
 
 // Set the preview duration and percentage by setting the expected end.
 // set the expected end instead of the expected time left so that the preview
@@ -70,7 +56,7 @@ export const setBenchmarkEnd = function (previewState, benchmarkEnd) {
   previewState.benchmarkEnd = benchmarkEnd
 }
 
-// When duration is 0 or 1, we count up, not down
+// When duration is 1, we count up, not down
 export const setBenchmarkStart = function (previewState) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.benchmarkStart = now()
