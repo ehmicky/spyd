@@ -32,6 +32,6 @@ const getRow = function ({ titles, stats }) {
   return `${combinationName}  ${statsStr}`
 }
 
-const HISTOGRAM_OPTS = { height: 2, showStats: false }
+const HISTOGRAM_OPTS = { showStats: false }
 
 export const dev = { report }

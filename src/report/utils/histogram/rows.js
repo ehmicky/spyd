@@ -1,5 +1,10 @@
 import { graphGradientColor } from '../colors.js'
 
+import {
+  HISTOGRAM_CHARS,
+  EMPTY_HISTOGRAM_CHAR,
+  FULL_HISTOGRAM_CHAR,
+} from './characters.js'
 import { getFrequencies } from './frequencies.js'
 
 // Serialize the main part of the histogram, i.e. rows and columns
@@ -91,19 +96,3 @@ const getHistogramCell = function (
 
   return color(HISTOGRAM_CHARS[charIndex])
 }
-
-// Characters displaying an increasing percentage visually
-const HISTOGRAM_CHARS = [
-  ' ',
-  '\u2581',
-  '\u2582',
-  '\u2583',
-  '\u2584',
-  '\u2585',
-  '\u2586',
-  '\u2587',
-  '\u2588',
-]
-// Characters displaying 0% and 100% visually
-const [EMPTY_HISTOGRAM_CHAR] = HISTOGRAM_CHARS
-const FULL_HISTOGRAM_CHAR = HISTOGRAM_CHARS[HISTOGRAM_CHARS.length - 1]

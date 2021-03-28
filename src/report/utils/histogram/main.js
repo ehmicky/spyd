@@ -1,6 +1,7 @@
 import { getReportWidth } from '../../tty.js'
 import { concatBlocks } from '../concat.js'
 
+import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
 import {
   getLowBlock,
@@ -11,10 +12,8 @@ import {
 import { getTitleBlock, getTitleWidth } from './title.js'
 
 // Serialize combinations' histograms for reporting
-export const serializeHistograms = function (
-  combinations,
-  { height, showStats },
-) {
+export const serializeHistograms = function (combinations, { showStats }) {
+  const height = DEFAULT_HEIGHT
   const combinationsA = combinations.filter(hasHistogram)
 
   if (combinationsA.length === 0) {
@@ -26,6 +25,8 @@ export const serializeHistograms = function (
     serializeHistogram(combination, { width, height, showStats }),
   )
 }
+
+const DEFAULT_HEIGHT = 2 * EXTRA_HEIGHT
 
 const hasHistogram = function ({ stats: { histogram } }) {
   return histogram !== undefined

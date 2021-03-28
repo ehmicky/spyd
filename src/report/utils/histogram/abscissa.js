@@ -1,6 +1,6 @@
 import stringWidth from 'string-width'
 
-import { separatorColor } from '../colors.js'
+import { TICK_MIDDLE, HORIZONTAL_LINE } from './characters.js'
 
 // Retrieve the horizontal line and the abscissa below the main content.
 // Includes the tick below the median.
@@ -13,11 +13,6 @@ export const getAbscissa = function (width, medianIndex, medianPretty) {
   return `${bottomLine}
 ${abscissa}`
 }
-
-// Characters to display the horizontal separator, including its ticks
-// Works on CP850
-const TICK_MIDDLE = separatorColor('\u252C')
-const HORIZONTAL_LINE = separatorColor('\u2500')
 
 const getBottomRow = function (middle, fillCharacter, { width, medianIndex }) {
   const middleWidth = stringWidth(middle)

@@ -11,6 +11,6 @@ const report = function ({ combinations }) {
   return joinSections(histograms)
 }
 
-const HISTOGRAM_OPTS = { height: 2, showStats: true }
+const HISTOGRAM_OPTS = { showStats: true }
 
 export const histogram = { report }

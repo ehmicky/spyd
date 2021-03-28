@@ -1,6 +1,6 @@
 import stringWidth from 'string-width'
 
-import { separatorColor } from '../colors.js'
+import { TICK_LEFT, TICK_RIGHT } from './characters.js'
 
 // Retrieve the blocks that show the lowest|highest value of the histogram, on
 // the left|right of it
@@ -41,11 +41,6 @@ const getHighStat = function ({ highPadded }) {
 
 const PADDING_WIDTH = 1
 const PADDING = ' '.repeat(PADDING_WIDTH)
-
-// Characters to display on each end of the horizontal separator
-// Works on CP850
-const TICK_LEFT = separatorColor('\u250C')
-const TICK_RIGHT = separatorColor('\u2510')
 
 export const getLowBlock = getBlock.bind(undefined, getLowStat)
 export const getLowBlockWidth = getBlockWidth.bind(undefined, getLowStat)
