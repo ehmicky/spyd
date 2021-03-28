@@ -34,90 +34,79 @@ import { isRemainingCombination } from './remaining.js'
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
-// eslint-disable-next-line max-statements, complexity
+// eslint-disable-next-line max-statements
 export const performMeasureLoop = async function ({
   combinations,
+  combination,
+  index,
   duration,
   previewConfig,
   previewState,
   stopState,
   exec,
 }) {
-  if (isInit(combinations)) {
-    return combinations
+  if (isInit(combination)) {
+    return combination
   }
 
   setBenchmarkStart(previewState)
 
-  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = 0; index < combinations.length; index += 1) {
-    // eslint-disable-next-line fp/no-let
-    let combination = combinations[index]
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  stopState.combination = combination
+  const combinationsLeft = combinations.length - index
+
+  // eslint-disable-next-line fp/no-let
+  let combinationA = combination
+
+  // eslint-disable-next-line fp/no-loops
+  do {
+    const sampleStart = getSampleStart()
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    stopState.combination = combination
-    const combinationsLeft = combinations.length - index
+    stopState.sampleStart = sampleStart
 
-    // eslint-disable-next-line fp/no-loops, max-depth
-    do {
-      const sampleStart = getSampleStart()
-      // eslint-disable-next-line fp/no-mutation, no-param-reassign
-      stopState.sampleStart = sampleStart
+    updatePreviewEnd({
+      combination: combinationA,
+      combinations,
+      combinationsLeft,
+      previewState,
+      duration,
+    })
 
-      updatePreviewEnd({
-        combination,
-        combinations,
-        combinationsLeft,
-        previewState,
-        duration,
-      })
+    // eslint-disable-next-line no-await-in-loop
+    const newCombination = await eMeasureSample(combinationA, stopState)
 
-      // eslint-disable-next-line no-await-in-loop
-      const newCombination = await eMeasureSample(combination, stopState)
+    // eslint-disable-next-line no-await-in-loop
+    const newCombinationA = await aggregatePreview({
+      newCombination,
+      combinations,
+      index,
+      previewConfig,
+      previewState,
+    })
 
-      // eslint-disable-next-line no-await-in-loop
-      const newCombinationA = await aggregatePreview({
-        newCombination,
-        combinations,
-        index,
-        previewConfig,
-        previewState,
-      })
-
-      const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
-      // eslint-disable-next-line fp/no-mutation
-      combination = newCombinationB
-
-      // eslint-disable-next-line max-depth
-      if (isStoppedCombination(newCombinationB, stopState)) {
-        break
-      }
-    } while (isRemainingCombination(combination, duration, exec))
-
-    const combinationA = aggregateMeasures(combination)
-    // eslint-disable-next-line fp/no-mutation, no-param-reassign, require-atomic-updates
-    combinations[index] = combinationA
+    const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
+    // eslint-disable-next-line fp/no-mutation
+    combinationA = newCombinationB
 
     // eslint-disable-next-line max-depth
     if (isStoppedCombination(combinationA, stopState)) {
       break
     }
-  }
+  } while (isRemainingCombination(combinationA, duration, exec))
+
+  const combinationB = aggregateMeasures(combinationA)
 
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.combination
 
-  return combinations
+  return combinationB
 }
 
 // Task init, retrieving only task and step identifiers
-const isInit = function (combinations) {
-  return !combinations.some(hasTaskId)
-}
-
-const hasTaskId = function ({ taskId }) {
-  return taskId !== undefined
+const isInit = function ({ taskId }) {
+  return taskId === undefined
 }
 
 // When any combination errors, we end measuring.

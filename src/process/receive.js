@@ -5,7 +5,6 @@ import getStream from 'get-stream'
 
 import {
   addCombinationError,
-  combinationHasErrored,
   throwOnStreamError,
 } from '../error/combination.js'
 import { PluginError, UserError } from '../error/main.js'
@@ -15,22 +14,17 @@ import { PluginError, UserError } from '../error/main.js'
 //  - Wrong HTTP request URL or body due to bug in runner
 //  - Error/exception in task
 export const receiveReturnValue = async function (combination) {
-  const { req, res, error } = await waitForReturnValue(combination)
+  const { req, res } = await waitForReturnValue(combination)
   const newCombination = { ...combination, res }
+
+  const { returnValue, error } = await parseReturnValue(req)
   const newCombinationA = addCombinationError(newCombination, error)
-
-  if (combinationHasErrored(newCombinationA)) {
-    return { newCombination: newCombinationA }
-  }
-
-  const { returnValue, error: errorA } = await parseReturnValue(req)
-  const newCombinationB = addCombinationError(newCombinationA, errorA)
-  return { newCombination: newCombinationB, returnValue }
+  return { newCombination: newCombinationA, returnValue }
 }
 
 const waitForReturnValue = async function ({ serverChannel }) {
-  const [{ req, res, error }] = await once(serverChannel, 'return')
-  return { req, res, error }
+  const [{ req, res }] = await once(serverChannel, 'return')
+  return { req, res }
 }
 
 // Parse the request's JSON body

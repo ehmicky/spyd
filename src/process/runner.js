@@ -1,5 +1,5 @@
 import { toInputsObj } from '../combination/inputs.js'
-import { getServerUrl } from '../server/url.js'
+import { getServerUrl } from '../server/request.js'
 
 import { spawnProcess } from './spawn.js'
 
@@ -22,18 +22,6 @@ import { spawnProcess } from './spawn.js'
 //    which wastes duration and does not allow runners with long initialization.
 //  - Precision is lower due to task cold starts having a higher share of the
 //    total measures.
-// All combinations are spawned in parallel, for performance.
-export const spawnRunnerProcesses = function ({
-  combinations,
-  origin,
-  cwd,
-  exec,
-}) {
-  return combinations.map((combination) =>
-    spawnRunnerProcess({ combination, origin, cwd, exec }),
-  )
-}
-
 // We use `preferLocal: true` so that locally installed binaries can be used.
 // We use `reject: false` to handle process exit with our own logic, which
 // performs proper cleanup of all combinations.
@@ -124,14 +112,10 @@ const getStdio = function (exec) {
     : ['ignore', 'ignore', 'ignore']
 }
 
-// Terminate each runner's process at the end of the benchmark.
+// Terminate each combination's process after being measured.
 // In general, processes should already have exited thanks to error handling
 // and cleanup logic. However, we terminate those as a safety precaution, for
 // example if there is a bug.
-export const terminateRunnerProcesses = function (combinations) {
-  combinations.forEach(terminateRunnerProcess)
-}
-
-const terminateRunnerProcess = function ({ childProcess }) {
+export const terminateRunnerProcess = function ({ childProcess }) {
   childProcess.kill('SIGKILL')
 }

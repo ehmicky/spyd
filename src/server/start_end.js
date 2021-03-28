@@ -19,11 +19,11 @@ import { handleRequests } from './request.js'
 //    `keepAliveTimeout`
 // We use the default `requestTimeout` since we are using long polling.
 // Keeping the default `headersTimeout` (1 minute) is fine though.
-export const startServer = async function (combinations, duration) {
+export const startServer = async function (combination, duration) {
   const server = createServer()
-  const combinationsA = handleRequests(server, combinations)
+  const combinationA = handleRequests(server, combination)
   const origin = await serverListen(server, duration)
-  return { server, origin, combinations: combinationsA }
+  return { server, origin, combination: combinationA }
 }
 
 // Start listening to requests

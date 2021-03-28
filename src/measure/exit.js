@@ -2,11 +2,7 @@ import { combinationHasErrored } from '../error/combination.js'
 import { sendParams } from '../process/send.js'
 
 // Exit each combination's process
-export const exitCombinations = async function (combinations) {
-  return await Promise.all(combinations.map(exitCombination))
-}
-
-const exitCombination = async function (combination) {
+export const exitCombination = async function (combination) {
   if (processHasExited(combination)) {
     return combination
   }

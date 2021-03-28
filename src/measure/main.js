@@ -1,6 +1,6 @@
 import {
-  spawnRunnerProcesses,
-  terminateRunnerProcesses,
+  spawnRunnerProcess,
+  terminateRunnerProcess,
 } from '../process/runner.js'
 import { startServer, endServer } from '../server/start_end.js'
 
@@ -15,16 +15,54 @@ export const measureBenchmark = async function (
   combinations,
   { duration, cwd, previewConfig, previewState, exec },
 ) {
-  const combinationsA = combinations.map(addInitProps)
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index < combinations.length; index += 1) {
+    const combination = combinations[index]
+    // eslint-disable-next-line no-await-in-loop
+    const { combination: combinationA, stopped } = await measureCombination({
+      combinations,
+      combination,
+      index,
+      duration,
+      cwd,
+      previewConfig,
+      previewState,
+      exec,
+    })
+    // eslint-disable-next-line no-param-reassign, fp/no-mutation, require-atomic-updates
+    combinations[index] = combinationA
 
-  const { server, origin, combinations: combinationsB } = await startServer(
-    combinationsA,
+    // eslint-disable-next-line max-depth
+    if (stopped) {
+      return { combinations, stopped }
+    }
+  }
+
+  return { combinations, stopped: false }
+}
+
+const measureCombination = async function ({
+  combinations,
+  combination,
+  index,
+  duration,
+  cwd,
+  previewConfig,
+  previewState,
+  exec,
+}) {
+  const combinationA = addInitProps(combination)
+
+  const { server, origin, combination: combinationB } = await startServer(
+    combinationA,
     duration,
   )
 
   try {
     return await spawnAndMeasure({
-      combinations: combinationsB,
+      combinations,
+      combination: combinationB,
+      index,
       origin,
       duration,
       cwd,
@@ -40,6 +78,8 @@ export const measureBenchmark = async function (
 // Spawn combination processes, then measure them
 const spawnAndMeasure = async function ({
   combinations,
+  combination,
+  index,
   origin,
   duration,
   cwd,
@@ -47,29 +87,28 @@ const spawnAndMeasure = async function ({
   previewState,
   exec,
 }) {
-  const combinationsA = spawnRunnerProcesses({
-    combinations,
-    origin,
-    cwd,
-    exec,
-  })
+  const combinationA = spawnRunnerProcess({ combination, origin, cwd, exec })
 
   try {
     return await stopOrMeasure({
-      combinations: combinationsA,
+      combinations,
+      combination: combinationA,
+      index,
       duration,
       previewConfig,
       previewState,
       exec,
     })
   } finally {
-    terminateRunnerProcesses(combinationsA)
+    terminateRunnerProcess(combinationA)
   }
 }
 
 // Handle stopping the benchmark
 const stopOrMeasure = async function ({
   combinations,
+  combination,
+  index,
   duration,
   previewConfig,
   previewState,
@@ -81,10 +120,12 @@ const stopOrMeasure = async function ({
   )
 
   try {
-    const combinationsA = await Promise.race([
+    const combinationA = await Promise.race([
       onAbort,
       measureAllCombinations({
         combinations,
+        combination,
+        index,
         duration,
         previewConfig,
         previewState,
@@ -92,7 +133,7 @@ const stopOrMeasure = async function ({
         exec,
       }),
     ])
-    return { combinations: combinationsA, stopped: stopState.stopped }
+    return { combination: combinationA, stopped: stopState.stopped }
   } finally {
     removeStopHandler()
   }

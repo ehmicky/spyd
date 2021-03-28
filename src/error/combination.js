@@ -16,14 +16,12 @@ export const addCombinationError = function (combination, error) {
   return { ...combination, error }
 }
 
-export const handleCombinationError = function (combinations) {
-  const erroredCombination = combinations.find(combinationHasErrored)
-
-  if (erroredCombination === undefined) {
+export const handleCombinationError = function (combination) {
+  if (!combinationHasErrored(combination)) {
     return
   }
 
-  throw getCombinationError(erroredCombination)
+  throw getCombinationError(combination)
 }
 
 export const combinationHasErrored = function ({ error }) {
