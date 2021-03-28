@@ -10,16 +10,21 @@ export const compressResult = function ({ combinations, ...result }) {
 
 const compressCombination = function ({
   stats,
-  stats: { histogram },
+  stats: { histogram, quantiles, median },
   ...combination
 }) {
   const histogramA = compressHistogram(histogram)
-  const statsA = { ...stats, histogram: histogramA }
+  const quantilesA = compressQuantiles(quantiles, median)
+  const statsA = { ...stats, histogram: histogramA, quantiles: quantilesA }
   return { ...combination, stats: statsA }
 }
 
 const compressHistogram = function (histogram) {
   return histogram.map(compressBucket)
+}
+
+const compressQuantiles = function (quantiles, median) {
+  return quantiles.map((quantile) => quantile - median)
 }
 
 const compressBucket = function ({ frequency }) {
@@ -38,13 +43,14 @@ const decompressResult = function ({ combinations, ...result }) {
 
 const decompressCombination = function ({
   stats,
-  stats: { histogram, low, high },
+  stats: { histogram, quantiles, median, low, high },
   ...combination
 }) {
   const histogramA = decompressHistogram(histogram, low, high)
+  const quantilesA = decompressQuantiles(quantiles, median)
   return {
     ...combination,
-    stats: { ...stats, histogram: histogramA },
+    stats: { ...stats, histogram: histogramA, quantiles: quantilesA },
   }
 }
 
@@ -56,4 +62,8 @@ const decompressHistogram = function (histogram, low, high) {
       frequency: histogram[bucketIndex],
     }),
   )
+}
+
+const decompressQuantiles = function (quantiles, median) {
+  return quantiles.map((quantile) => quantile + median)
 }
