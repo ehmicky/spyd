@@ -1,10 +1,17 @@
 // Returns the index of the last element `<= value` using a binary search.
 // `start` must be `< array.length`
 // Use imperative code for performance.
-// eslint-disable-next-line complexity
-export const binarySearch = function (array, value, start = 0) {
+// eslint-disable-next-line complexity, max-params, max-statements
+export const binarySearch = function (
+  array,
+  value,
+  initialStart = 0,
+  initialEnd = array.length,
+) {
   // eslint-disable-next-line fp/no-let
-  let end = array.length
+  let start = initialStart
+  // eslint-disable-next-line fp/no-let
+  let end = initialEnd
 
   // eslint-disable-next-line fp/no-loops
   do {
@@ -25,7 +32,7 @@ export const binarySearch = function (array, value, start = 0) {
         return middle
       }
 
-      // eslint-disable-next-line fp/no-mutation, no-param-reassign
+      // eslint-disable-next-line fp/no-mutation
       start = middle
     }
   } while (true)
