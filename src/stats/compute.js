@@ -21,14 +21,13 @@ import { getMean } from './sum.js'
 export const computeStats = function (measures) {
   const { min, max, lowIndex, highIndex, low, high } = getExtremes(measures)
 
-  // TODO: do not clone array
-  const normalizedMeasures = measures.slice(lowIndex, highIndex + 1)
-
   const median = getSortedMedian(measures)
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
-  const histogram = getHistogram(normalizedMeasures, HISTOGRAM_SIZE)
-
   const mean = getMean(measures)
+
+  // TODO: do not clone array
+  const normalizedMeasures = measures.slice(lowIndex, highIndex + 1)
+  const histogram = getHistogram(normalizedMeasures, HISTOGRAM_SIZE)
   const stdev = getStdev({ array: measures, lowIndex, highIndex, median })
   const moe = getMoe(lowIndex, highIndex, stdev)
 
