@@ -11,7 +11,6 @@ export const getHistogram = function ({
   const length = highIndex - lowIndex + 1
   const low = array[lowIndex]
   const high = array[highIndex]
-
   const state = { startIndex: lowIndex - 1 }
 
   const bucketEdges = getBucketEdges(low, high, bucketCount)
@@ -20,7 +19,8 @@ export const getHistogram = function ({
   )
 }
 
-const getBucketEdges = function (low, high, bucketCount) {
+// Retrieve buckets `start` and `end`
+export const getBucketEdges = function (low, high, bucketCount) {
   const bucketSize = (high - low) / bucketCount
   return Array.from({ length: bucketCount }, (value, bucketIndex) => [
     getBucketEdge(bucketIndex, { low, high, bucketCount, bucketSize }),
@@ -53,4 +53,3 @@ const getBucket = function ({
 
   return { start, end, frequency }
 }
-
