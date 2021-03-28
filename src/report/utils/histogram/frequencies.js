@@ -11,7 +11,7 @@ export const getFrequencies = function (histogram, width) {
   return frequenciesC
 }
 
-const getFrequency = function ([, , frequency]) {
+const getFrequency = function ({ frequency }) {
   return frequency
 }
 

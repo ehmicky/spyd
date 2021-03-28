@@ -48,7 +48,7 @@ const addBucket = function (
 
   // Directly mutate for performance
   // eslint-disable-next-line fp/no-mutating-methods
-  buckets.push([startValue, endValue, frequency])
+  buckets.push({ start: startValue, end: endValue, frequency })
 
   return { buckets, startIndex: endIndex, startValue: endValue }
 }
