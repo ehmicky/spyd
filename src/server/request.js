@@ -13,8 +13,3 @@ export const handleRequests = function (server, combination) {
   })
   return combinationA
 }
-
-// Each combination gets a different endpoint using its `id`
-export const getServerUrl = function (origin, id) {
-  return `${origin}/rpc/${id}`
-}

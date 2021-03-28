@@ -1,5 +1,4 @@
 import { toInputsObj } from '../combination/inputs.js'
-import { getServerUrl } from '../server/request.js'
 
 import { spawnProcess } from './spawn.js'
 
@@ -31,7 +30,6 @@ import { spawnProcess } from './spawn.js'
 export const spawnRunnerProcess = function ({
   combination,
   combination: {
-    id,
     runnerSpawn: [file, ...args],
     runnerSpawnOptions,
     runnerConfig,
@@ -44,7 +42,6 @@ export const spawnRunnerProcess = function ({
   exec,
 }) {
   const spawnParams = getSpawnParams({
-    id,
     runnerConfig,
     taskId,
     taskPath,
@@ -69,18 +66,16 @@ export const spawnRunnerProcess = function ({
 
 // Retrieve params passed to runner processes so they can find the right task
 const getSpawnParams = function ({
-  id,
   runnerConfig,
   taskId,
   taskPath,
   inputs,
   origin,
 }) {
-  const serverUrl = getServerUrl(origin, id)
   const inputsA = toInputsObj(inputs)
   const calibrate = taskId === undefined ? 0 : CALIBRATE_LENGTH
   return {
-    serverUrl,
+    serverUrl: origin,
     runnerConfig,
     taskId,
     taskPath,
