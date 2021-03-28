@@ -22,12 +22,14 @@ export const getScale = function (combinations, name, kind) {
 // The same duration scale is used for all `stats.*Pretty` to make it easier to
 // compare between them.
 const getMeasure = function ({ stats }, name, kind) {
-  if (kind === 'duration') {
+  if (MEDIAN_KINS.has(kind)) {
     return stats.median
   }
 
   return stats[name]
 }
+
+const MEDIAN_KINS = new Set(['duration', 'absoluteDuration'])
 
 // Zero measures sometimes indicate a problem with the measure, so are not
 // good indicators for scales.
@@ -44,6 +46,7 @@ const SCALES = {
   //  - minutes are not base 10 which makes it harder to visually compare
   //  - hours-long tasks are unlikely
   duration: [1e9, 1e6, 1e3, 1, 1e-3, 1e-6],
+  absoluteDuration: [1e9, 1e6, 1e3, 1, 1e-3, 1e-6],
   // Counts use exponential exponents and avoid decimals.
   count: [1e15, 1e12, 1e9, 1e6, 1e3, 1, 1e-3, 1e-6, 1e-9, 1e-12, 1e-15],
   // Percentages per-mil and per-myriad Unicode signs do not show well on

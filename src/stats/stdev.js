@@ -34,15 +34,6 @@ const getSumDeviation = function (array, median) {
   return sum
 }
 
-// Retrieve standard deviation, relative to the median.
-export const getRelativeStdev = function (stdev, median) {
-  if (stdev === undefined) {
-    return
-  }
-
-  return stdev / median
-}
-
 // Retrieve margin of error, relative to the median
 // The standard error:
 //  - Is the standard deviation that would be obtained by repeating the same

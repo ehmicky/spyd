@@ -19,4 +19,4 @@ export const serializeAbsPercentage = function (
 
 // Works on CP437 too
 const PLUS_SIGN = '+'
-const ABS_PERCENTAGE_SIGN = '±'
+export const ABS_PERCENTAGE_SIGN = '±'
