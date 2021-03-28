@@ -29,7 +29,7 @@ const getMeasure = function ({ stats }, name, kind) {
   return stats[name]
 }
 
-const MEDIAN_KINS = new Set(['duration', 'absoluteDuration'])
+const MEDIAN_KINS = new Set(['duration'])
 
 // Zero measures sometimes indicate a problem with the measure, so are not
 // good indicators for scales.
@@ -46,13 +46,11 @@ const SCALES = {
   //  - minutes are not base 10 which makes it harder to visually compare
   //  - hours-long tasks are unlikely
   duration: [1e9, 1e6, 1e3, 1, 1e-3, 1e-6],
-  absoluteDuration: [1e9, 1e6, 1e3, 1, 1e-3, 1e-6],
   // Counts use exponential exponents and avoid decimals.
   count: [1e15, 1e12, 1e9, 1e6, 1e3, 1, 1e-3, 1e-6, 1e-9, 1e-12, 1e-15],
   // Percentages per-mil and per-myriad Unicode signs do not show well on
   // terminals. Units like "pcm" are not well-known. So we always use % instead.
   // We do not use the exponent notation because it is odd to combine it with %.
-  relativePercentage: [1e-2],
-  absolutePercentage: [1e-2],
+  percentage: [1e-2],
 }
 /* eslint-enable no-magic-numbers */

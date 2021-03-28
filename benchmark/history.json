@@ -1,0 +1,46 @@
+[
+  {
+    "id": "a8c50f5a-6da8-462e-9448-04a04d8155a6",
+    "timestamp": 1617104322621,
+    "systems": [
+      {
+        "id": "default_system",
+        "machine": {
+          "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+          "memory": "63GB",
+          "os": "Linux 5.8"
+        },
+        "git": {
+          "commit": "da1cabda961c18969fbc1438efa826f1fa0649a5",
+          "branch": "main"
+        },
+        "versions": {
+          "Node": "15.12.0",
+          "Benchmarked with spyd": "0.3.1"
+        }
+      }
+    ],
+    "combinations": [
+      {
+        "taskId": "random",
+        "runnerId": "node",
+        "systemId": "default_system",
+        "stats": {
+          "median": 6.427094379639448,
+          "mean": 8.754127818591156,
+          "min": 6.194488188976378,
+          "max": 527.3222940226171,
+          "low": 6.272340425531915,
+          "high": 6.736170212765957,
+          "stdev": 0.09141133282245804,
+          "moe": 0.0007358943772404404,
+          "loops": 1595,
+          "times": 6003153,
+          "repeat": 3764,
+          "samples": 28,
+          "minLoopDuration": 24200
+        }
+      }
+    ]
+  }
+]

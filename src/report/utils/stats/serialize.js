@@ -1,9 +1,3 @@
-import {
-  serializeRelPercentage,
-  serializeAbsPercentage,
-  ABS_PERCENTAGE_SIGN,
-} from './percentage.js'
-
 // Scale, round and add decimals, suffixes and prefixes in stats
 export const serializeValue = function ({ stat, kind, scale, decimals }) {
   return SERIALIZE_STAT[kind](stat, { scale, decimals })
@@ -15,15 +9,15 @@ const serializeCount = function (count, { scale, decimals }) {
   return `${scaledCount}${exponent}`
 }
 
+const serializePercentage = function (percentage, { scale, decimals }) {
+  const roundedPercentage = roundNumber(percentage, scale, decimals)
+  return `${roundedPercentage}%`
+}
+
 const serializeDuration = function (duration, { scale, decimals }) {
   const scaledDuration = roundNumber(duration, scale, decimals)
   const { unit } = DURATION_UNITS.find(({ scale: scaleA }) => scaleA === scale)
   return `${scaledDuration}${unit}`
-}
-
-const serializeAbsDuration = function (duration, { scale, decimals }) {
-  const serializedDuration = serializeDuration(duration, { scale, decimals })
-  return `${ABS_PERCENTAGE_SIGN}${serializedDuration}`
 }
 
 const roundNumber = function (number, scale, decimals) {
@@ -41,8 +35,6 @@ const DURATION_UNITS = [
 
 const SERIALIZE_STAT = {
   count: serializeCount,
+  percentage: serializePercentage,
   duration: serializeDuration,
-  absoluteDuration: serializeAbsDuration,
-  relativePercentage: serializeRelPercentage,
-  absolutePercentage: serializeAbsPercentage,
 }

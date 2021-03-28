@@ -11,11 +11,21 @@ export const prettifyStats = function (combinations) {
   return STAT_KINDS.reduce(prettifyCombinationsStat, combinations)
 }
 
-const prettifyCombinationsStat = function (combinations, { name, kind }) {
+const prettifyCombinationsStat = function (
+  combinations,
+  { name, kind, signed },
+) {
   const scale = getScale(combinations, name, kind)
   const decimals = getStatsDecimals(combinations, name, scale)
   const combinationsA = combinations.map((combination) =>
-    prettifyCombinationStats({ name, combination, kind, scale, decimals }),
+    prettifyCombinationStats({
+      name,
+      combination,
+      kind,
+      signed,
+      scale,
+      decimals,
+    }),
   )
   const combinationsB = padCombinations(combinationsA, name)
   return combinationsB
