@@ -43,6 +43,19 @@ import { getTvalue } from './tvalue.js'
 //       being completely statistically correct
 //     - Removing the slow|fast outliers helps getting closer to a normal
 //       distribution
+// We do not report whether each combinations pair is statistically comparable:
+//  - reporting it with some symbol on combination names does not work well:
+//     - when combination name is graphically spread, e.g. when the reporter
+//       is splitting categories as a table
+//     - one combination might be equivalent with two other combinations, but
+//       those two other combinations might not be equivalent between each
+//       other, making ordering complicated
+//  - reporting it on medians does not work either because whether combinations
+//    are comparable must be done for each combinations pair, not only the next
+//    slower combination
+//  - this can still be added in the future with a reporter showing a list of
+//    too-close-to-compare combinations, using a welch's t-test between each
+//    combination pair
 export const getMoe = function (array, stdev) {
   if (stdev === undefined) {
     return
