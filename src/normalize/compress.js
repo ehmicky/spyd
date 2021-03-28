@@ -25,8 +25,8 @@ const compressHistogram = function (histogram) {
   return histogram.map(compressBucket)
 }
 
-const compressBucket = function ({ start, end, frequency }) {
-  return [start, end, frequency]
+const compressBucket = function ({ frequency }) {
+  return frequency
 }
 
 // Restore original results after loading
@@ -54,8 +54,8 @@ const decompressCombination = function ({
 const decompressHistogram = function (histogram, low, high) {
   const bucketCount = histogram.length
   const bucketSize = (high - low) / bucketCount
-  return histogram.map((bucket, bucketIndex) =>
-    decompressBucket(bucket, {
+  return histogram.map((frequency, bucketIndex) =>
+    decompressBucket(frequency, {
       low,
       high,
       bucketIndex,
@@ -66,7 +66,7 @@ const decompressHistogram = function (histogram, low, high) {
 }
 
 const decompressBucket = function (
-  [, , frequency],
+  frequency,
   { low, high, bucketIndex, bucketCount, bucketSize },
 ) {
   const newStart = getBucketEdge(bucketIndex - 1, {
