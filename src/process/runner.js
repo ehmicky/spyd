@@ -37,7 +37,7 @@ export const spawnRunnerProcess = function ({
     taskPath,
     inputs,
   },
-  origin,
+  serverUrl,
   cwd,
   exec,
 }) {
@@ -46,7 +46,7 @@ export const spawnRunnerProcess = function ({
     taskId,
     taskPath,
     inputs,
-    origin,
+    serverUrl,
   })
   const spawnParamsString = JSON.stringify(spawnParams)
   const stdio = getStdio(exec)
@@ -70,12 +70,12 @@ const getSpawnParams = function ({
   taskId,
   taskPath,
   inputs,
-  origin,
+  serverUrl,
 }) {
   const inputsA = toInputsObj(inputs)
   const calibrate = taskId === undefined ? 0 : CALIBRATE_LENGTH
   return {
-    serverUrl: origin,
+    serverUrl,
     runnerConfig,
     taskId,
     taskPath,

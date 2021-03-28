@@ -22,8 +22,8 @@ import { handleRequests } from './request.js'
 export const startServer = async function (combination, duration) {
   const server = createServer()
   const combinationA = handleRequests(server, combination)
-  const origin = await serverListen(server, duration)
-  return { server, origin, combination: combinationA }
+  const serverUrl = await serverListen(server, duration)
+  return { server, serverUrl, combination: combinationA }
 }
 
 // Start listening to requests
@@ -32,8 +32,8 @@ const serverListen = async function (server, duration) {
 
   await promisify(server.listen.bind(server))(HTTP_SERVER_OPTS)
   const { address, port } = server.address()
-  const origin = `http://${address}:${port}`
-  return origin
+  const serverUrl = `http://${address}:${port}`
+  return serverUrl
 }
 
 const setKeepAliveTimeout = function (server, duration) {
