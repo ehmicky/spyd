@@ -34,6 +34,7 @@ const getReporterContents = async function ({
     output,
     colors,
     showTitles,
+    showPrecision,
     showDiff = getDefaultShowDiff(output),
   },
   titles,
@@ -43,6 +44,7 @@ const getReporterContents = async function ({
     result: resultA,
     showSystem,
     showMetadata,
+    showPrecision,
     showDiff,
   })
   const reportFuncProps = omit(reporterConfig, CORE_REPORT_PROPS)
@@ -64,6 +66,7 @@ const CORE_REPORT_PROPS = [
   'showTitles',
   'showSystem',
   'showMetadata',
+  'showPrecision',
   'showDiff',
 ]
 

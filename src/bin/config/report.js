@@ -62,6 +62,12 @@ Default: true when the "system" configuration property is set, false otherwise`,
     describe: `Show metadata such as id, timestamp, commit/branch or CI build.
 Default: true for command "show" and "remove", false otherwise`,
   },
+  showPrecision: {
+    group: REPORT,
+    boolean: true,
+    describe: `Show the results precision.
+Default: false.`,
+  },
   showDiff: {
     group: REPORT,
     boolean: true,

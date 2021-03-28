@@ -30,9 +30,10 @@ export const PLUGIN_TYPES = [
       'output',
       'colors',
       'showTitles',
-      'showDiff',
       'showSystem',
       'showMetadata',
+      'showPrecision',
+      'showDiff',
     ],
   },
 ]

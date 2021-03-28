@@ -35,6 +35,7 @@ export const DEFAULT_CONFIG = {
   titles: {},
   output: undefined,
   showTitles: false,
+  showPrecision: false,
   include: [],
   exclude: [],
   runner: ['node'],

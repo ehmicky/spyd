@@ -9,6 +9,7 @@ export const cleanResult = function ({
   result: { systems, combinations, ...result },
   showMetadata,
   showSystem,
+  showPrecision,
   showDiff,
 }) {
   const resultA = maybeOmit(result, showMetadata, TOP_METADATA_PROPS)
@@ -16,7 +17,7 @@ export const cleanResult = function ({
     cleanSystem(system, showMetadata, showSystem),
   )
   const combinationsA = combinations.map((combination) =>
-    cleanCombination(combination, showDiff),
+    cleanCombination(combination, showDiff, showPrecision),
   )
   return { ...resultA, systems: systemsA, combinations: combinationsA }
 }
@@ -27,9 +28,14 @@ const cleanSystem = function (system, showMetadata, showSystem) {
   return systemB
 }
 
-const cleanCombination = function ({ stats, ...combination }, showDiff) {
+const cleanCombination = function (
+  { stats, ...combination },
+  showDiff,
+  showPrecision,
+) {
   const statsA = maybeOmit(stats, showDiff, DIFF_STATS_PROPS)
-  return { ...combination, stats: statsA }
+  const statsB = maybeOmit(statsA, showPrecision, PRECISION_STATS_PROPS)
+  return { ...combination, stats: statsB }
 }
 
 const maybeOmit = function (obj, showProp, propNames) {
@@ -44,3 +50,4 @@ const TOP_METADATA_PROPS = ['id', 'timestamp']
 const METADATA_SYSTEM_PROPS = ['git', 'ci']
 const SYSTEM_PROPS = ['machine', 'versions']
 const DIFF_STATS_PROPS = ['diff']
+const PRECISION_STATS_PROPS = ['moe']
