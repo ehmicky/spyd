@@ -1,12 +1,9 @@
-import { v4 as uuidv4 } from 'uuid'
-
 import { getFinalStats } from '../stats/compute.js'
 
 // Initialize some combination properties
 export const addInitProps = function (combination) {
   return {
     ...combination,
-    id: uuidv4(),
     totalDuration: 0,
     sampleDurationLast: 0,
     sampleDurationMean: 0,
