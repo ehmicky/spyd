@@ -13,31 +13,27 @@ export const getHistogram = function ({
   const max = array[highIndex]
   const bucketSize = (max - min) / bucketCount
 
-  const bucketIndexes = Array.from({ length: bucketCount }, getBucketIndex)
+  const bucketIndexes = getBucketIndexes({ min, max, bucketCount, bucketSize })
   const { buckets } = bucketIndexes.reduce(
-    addBucket.bind(undefined, {
-      array,
-      highIndex,
-      bucketSize,
-      bucketCount,
-      length,
-      min,
-      max,
-    }),
+    addBucket.bind(undefined, { array, highIndex, length }),
     { buckets: [], startIndex: lowIndex - 1 },
   )
   return buckets
 }
 
-const getBucketIndex = function (value, index) {
-  return index
+const getBucketIndexes = function ({ min, max, bucketCount, bucketSize }) {
+  return Array.from({ length: bucketCount }, (value, bucketIndex) =>
+    getBucketIndex({ bucketIndex, min, max, bucketCount, bucketSize }),
+  )
 }
 
-const addBucket = function (
-  { array, highIndex, bucketSize, bucketCount, length, min, max },
-  { buckets, startIndex },
+const getBucketIndex = function ({
   bucketIndex,
-) {
+  min,
+  max,
+  bucketCount,
+  bucketSize,
+}) {
   const start = getBucketEdge(bucketIndex - 1, {
     min,
     max,
@@ -45,16 +41,7 @@ const addBucket = function (
     bucketSize,
   })
   const end = getBucketEdge(bucketIndex, { min, max, bucketCount, bucketSize })
-
-  const endIndex = binarySearch(array, end, startIndex, highIndex)
-  const bucketsCount = endIndex - startIndex
-  const frequency = bucketsCount / length
-
-  // Directly mutate for performance
-  // eslint-disable-next-line fp/no-mutating-methods
-  buckets.push({ start, end, frequency })
-
-  return { buckets, startIndex: endIndex }
+  return { start, end }
 }
 
 // Avoids float precision roundoff error at the end by using `max` directly
@@ -66,3 +53,20 @@ const getBucketEdge = function (
     ? max
     : min + (bucketIndex + 1) * bucketSize
 }
+
+const addBucket = function (
+  { array, highIndex, length },
+  { buckets, startIndex },
+  { start, end },
+) {
+  const endIndex = binarySearch(array, end, startIndex, highIndex)
+  const bucketsCount = endIndex - startIndex
+  const frequency = bucketsCount / length
+
+  // Directly mutate for performance
+  // eslint-disable-next-line fp/no-mutating-methods
+  buckets.push({ start, end, frequency })
+
+  return { buckets, startIndex: endIndex }
+}
+
