@@ -6,12 +6,12 @@ export const binarySearch = function (
   array,
   value,
   initialStart = 0,
-  initialEnd = array.length,
+  initialEnd = array.length - 1,
 ) {
   // eslint-disable-next-line fp/no-let
   let start = initialStart
   // eslint-disable-next-line fp/no-let
-  let end = initialEnd
+  let end = initialEnd + 1
 
   // eslint-disable-next-line fp/no-loops
   do {

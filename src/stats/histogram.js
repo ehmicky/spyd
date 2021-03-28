@@ -43,7 +43,7 @@ const addBucket = function (
   const high =
     bucketIndex + 1 === bucketCount ? max : min + (bucketIndex + 1) * bucketSize
 
-  const highIndex = binarySearch(array, high, lastHighIndex)
+  const highIndex = binarySearch(array, high, lastHighIndex, array.length - 1)
   const bucketsCount = highIndex - lastHighIndex
   const frequency = bucketsCount / length
 
