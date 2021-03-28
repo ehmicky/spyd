@@ -26,7 +26,7 @@ export const FULL_HISTOGRAM_CHAR = HISTOGRAM_CHARS[HISTOGRAM_CHARS.length - 1]
 export const EXTRA_HEIGHT = platform === 'win32' ? 3 : 1
 
 // Characters to display the horizontal separator, including its ticks
-// Works on CP850
+// Works with all terminals
 export const TICK_LEFT = separatorColor('\u250C')
 export const TICK_MIDDLE = separatorColor('\u252C')
 export const TICK_RIGHT = separatorColor('\u2510')

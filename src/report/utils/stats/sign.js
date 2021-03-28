@@ -26,7 +26,7 @@ const hasMinusSign = function (statPretty) {
   return statPretty.startsWith(MINUS_SIGN)
 }
 
-// Works on CP437 too
+// Works on all terminals
 const PLUS_MINUS_SIGN = '±'
 const PLUS_SIGN = '+'
 const MINUS_SIGN = '-'
