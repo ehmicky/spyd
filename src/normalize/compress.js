@@ -13,7 +13,7 @@ const compressCombination = function ({ stats, ...combination }) {
   return { ...combination, stats: statsA }
 }
 
-const OMITTED_STATS_PROPS = ['histogram', 'quantiles']
+const OMITTED_STATS_PROPS = ['quantiles']
 
 // Restore original results after loading
 export const decompressResults = function (results) {
