@@ -8,6 +8,7 @@ export const getHistogram = function ({
   highIndex,
   bucketCount,
 }) {
+  const length = highIndex - lowIndex + 1
   const min = array[lowIndex]
   const max = array[highIndex]
   const bucketSize = (max - min) / bucketCount
@@ -20,6 +21,7 @@ export const getHistogram = function ({
       array: arrayA,
       bucketSize,
       bucketCount,
+      length,
       min,
       max,
     }),
@@ -33,7 +35,7 @@ const getBucketIndex = function (value, index) {
 }
 
 const addBucket = function (
-  { array, bucketSize, bucketCount, min, max },
+  { array, bucketSize, bucketCount, length, min, max },
   { buckets, lastHighIndex, lastHigh },
   bucketIndex,
 ) {
@@ -43,7 +45,7 @@ const addBucket = function (
 
   const highIndex = binarySearch(array, high, lastHighIndex)
   const bucketsCount = highIndex - lastHighIndex
-  const frequency = bucketsCount / array.length
+  const frequency = bucketsCount / length
 
   // Directly mutate for performance
   // eslint-disable-next-line fp/no-mutating-methods
