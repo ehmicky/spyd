@@ -13,8 +13,12 @@ export const getHistogram = function ({
   const high = array[highIndex]
 
   const bucketIndexes = getBucketIndexes(low, high, bucketCount)
-  const { buckets } = bucketIndexes.reduce(
-    addBucket.bind(undefined, { array, highIndex, length }),
+  const indexes = Array.from(
+    { length: bucketCount },
+    (value, bucketIndex) => bucketIndex,
+  )
+  const { buckets } = indexes.reduce(
+    addBucket.bind(undefined, { array, bucketIndexes, highIndex, length }),
     { buckets: [], startIndex: lowIndex - 1 },
   )
   return buckets
@@ -22,7 +26,7 @@ export const getHistogram = function ({
 
 const getBucketIndexes = function (low, high, bucketCount) {
   const bucketSize = (high - low) / bucketCount
-  return Array.from({ length: bucketCount }, (value, bucketIndex) =>
+  return Array.from({ length: bucketCount + 1 }, (value, bucketIndex) =>
     getBucketIndex({ bucketIndex, low, high, bucketCount, bucketSize }),
   )
 }
@@ -34,14 +38,7 @@ const getBucketIndex = function ({
   bucketCount,
   bucketSize,
 }) {
-  const start = getBucketEdge(bucketIndex - 1, {
-    low,
-    high,
-    bucketCount,
-    bucketSize,
-  })
-  const end = getBucketEdge(bucketIndex, { low, high, bucketCount, bucketSize })
-  return { start, end }
+  return getBucketEdge(bucketIndex - 1, { low, high, bucketCount, bucketSize })
 }
 
 // Avoids float precision roundoff error at the end by using `high` directly
@@ -55,10 +52,12 @@ const getBucketEdge = function (
 }
 
 const addBucket = function (
-  { array, highIndex, length },
+  { array, highIndex, bucketIndexes, length },
   { buckets, startIndex },
-  { start, end },
+  bucketIndex,
 ) {
+  const start = bucketIndexes[bucketIndex]
+  const end = bucketIndexes[bucketIndex + 1]
   const endIndex = binarySearch(array, end, startIndex, highIndex)
   const bucketsCount = endIndex - startIndex
   const frequency = bucketsCount / length
