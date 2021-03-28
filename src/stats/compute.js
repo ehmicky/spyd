@@ -1,8 +1,9 @@
 import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
+import { getRelativeMarginOfError } from './moe.js'
 import { getQuantiles } from './quantile.js'
-import { getStdev, getRelativeMarginOfError } from './stdev.js'
+import { getStdev } from './stdev.js'
 import { getMean } from './sum.js'
 
 // Retrieve statistics from results.
