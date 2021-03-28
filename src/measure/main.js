@@ -15,12 +15,14 @@ export const measureBenchmark = async function (
   combinations,
   { duration, cwd, previewConfig, previewState, exec },
 ) {
+  const combinationsA = combinations.map(addInitProps)
+
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
-  for (let index = 0; index < combinations.length; index += 1) {
-    const combination = combinations[index]
+  for (let index = 0; index < combinationsA.length; index += 1) {
+    const combination = combinationsA[index]
     // eslint-disable-next-line no-await-in-loop
     const { combination: combinationA, stopped } = await measureCombination({
-      combinations,
+      combinations: combinationsA,
       combination,
       index,
       duration,
@@ -29,16 +31,16 @@ export const measureBenchmark = async function (
       previewState,
       exec,
     })
-    // eslint-disable-next-line no-param-reassign, fp/no-mutation, require-atomic-updates
-    combinations[index] = combinationA
+    // eslint-disable-next-line fp/no-mutation
+    combinationsA[index] = combinationA
 
     // eslint-disable-next-line max-depth
     if (stopped) {
-      return { combinations, stopped }
+      return { combinations: combinationsA, stopped }
     }
   }
 
-  return { combinations, stopped: false }
+  return { combinations: combinationsA, stopped: false }
 }
 
 const measureCombination = async function ({
@@ -51,17 +53,15 @@ const measureCombination = async function ({
   previewState,
   exec,
 }) {
-  const combinationA = addInitProps(combination)
-
-  const { server, origin, combination: combinationB } = await startServer(
-    combinationA,
+  const { server, origin, combination: combinationA } = await startServer(
+    combination,
     duration,
   )
 
   try {
     return await spawnAndMeasure({
       combinations,
-      combination: combinationB,
+      combination: combinationA,
       index,
       origin,
       duration,
