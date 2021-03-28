@@ -14,23 +14,13 @@ import { getTitleBlock, getTitleWidth } from './title.js'
 // Serialize combinations' histograms for reporting
 export const serializeHistograms = function (combinations, { showStats }) {
   const height = DEFAULT_HEIGHT
-  const combinationsA = combinations.filter(hasHistogram)
-
-  if (combinationsA.length === 0) {
-    return combinationsA
-  }
-
-  const width = getContentWidth(combinationsA, showStats)
-  return combinationsA.map((combination) =>
+  const width = getContentWidth(combinations, showStats)
+  return combinations.map((combination) =>
     serializeHistogram(combination, { width, height, showStats }),
   )
 }
 
 const DEFAULT_HEIGHT = 2 * EXTRA_HEIGHT
-
-const hasHistogram = function ({ stats: { histogram } }) {
-  return histogram !== undefined
-}
 
 const getContentWidth = function (combinations, showStats) {
   return Math.max(
@@ -43,10 +33,15 @@ const getContentWidth = function (combinations, showStats) {
 }
 
 const serializeHistogram = function (
-  { titles, stats },
+  { titles, stats, stats: { histogram } },
   { width, height, showStats },
 ) {
   const titleBlock = getTitleBlock(titles, height, showStats)
+
+  if (histogram === undefined) {
+    return titleBlock
+  }
+
   const lowBlock = getLowBlock({ stats, height, showStats })
   const content = getContent({ stats, height, width, showStats })
   const highBlock = getHighBlock({ stats, height, showStats })
