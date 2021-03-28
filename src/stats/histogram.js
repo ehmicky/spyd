@@ -38,7 +38,7 @@ const getBucketIndex = function ({
   bucketCount,
   bucketSize,
 }) {
-  return getBucketEdge(bucketIndex - 1, { low, high, bucketCount, bucketSize })
+  return getBucketEdge(bucketIndex, { low, high, bucketCount, bucketSize })
 }
 
 // Avoids float precision roundoff error at the end by using `high` directly
@@ -46,9 +46,7 @@ const getBucketEdge = function (
   bucketIndex,
   { low, high, bucketCount, bucketSize },
 ) {
-  return bucketIndex + 1 === bucketCount
-    ? high
-    : low + (bucketIndex + 1) * bucketSize
+  return bucketIndex === bucketCount ? high : low + bucketIndex * bucketSize
 }
 
 const addBucket = function (
