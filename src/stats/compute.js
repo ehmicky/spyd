@@ -25,9 +25,12 @@ export const computeStats = function (measures) {
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
   const mean = getMean(measures)
 
-  // TODO: do not clone array
-  const normalizedMeasures = measures.slice(lowIndex, highIndex + 1)
-  const histogram = getHistogram(normalizedMeasures, HISTOGRAM_SIZE)
+  const histogram = getHistogram({
+    array: measures,
+    lowIndex,
+    highIndex,
+    bucketCount: HISTOGRAM_SIZE,
+  })
   const stdev = getStdev({ array: measures, lowIndex, highIndex, median })
   const moe = getMoe(lowIndex, highIndex, stdev)
 

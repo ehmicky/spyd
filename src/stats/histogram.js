@@ -2,14 +2,28 @@ import { binarySearch } from './binary_search.js'
 
 // Retrieve histogram of an array of floats.
 // Array must be sorted and not empty.
-export const getHistogram = function (array, bucketCount) {
-  const [min] = array
-  const max = array[array.length - 1]
+export const getHistogram = function ({
+  array,
+  lowIndex,
+  highIndex,
+  bucketCount,
+}) {
+  // TODO: do not clone array
+  const arrayA = array.slice(lowIndex, highIndex + 1)
+
+  const [min] = arrayA
+  const max = arrayA[arrayA.length - 1]
   const bucketSize = (max - min) / bucketCount
 
   const bucketIndexes = Array.from({ length: bucketCount }, getBucketIndex)
   const { buckets } = bucketIndexes.reduce(
-    addBucket.bind(undefined, { array, bucketSize, bucketCount, min, max }),
+    addBucket.bind(undefined, {
+      array: arrayA,
+      bucketSize,
+      bucketCount,
+      min,
+      max,
+    }),
     { buckets: [], lastHighIndex: -1, lastHigh: min },
   )
   return buckets
