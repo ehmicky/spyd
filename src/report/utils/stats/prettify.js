@@ -1,6 +1,6 @@
 import { addSuffixColors, addDiffColors } from './colors.js'
-import { serializeValue } from './serialize.js'
 import { addSign } from './sign.js'
+import { addScaleUnit } from './unit.js'
 
 // Serialize combination stats into a prettified string
 export const prettifyCombinationStats = function ({
@@ -44,7 +44,7 @@ const shouldSkipStat = function (stat) {
 
 // Serialize a stat's value
 const prettifyValue = function ({ stat, name, kind, signed, scale, decimals }) {
-  const statPretty = serializeValue({ stat, kind, scale, decimals })
+  const statPretty = addScaleUnit({ stat, kind, scale, decimals })
   const statPrettyA = addSign(statPretty, signed)
   const statPrettyB = addSuffixColors(statPrettyA)
   const statPrettyC = addDiffColors(stat, statPrettyB, name)
