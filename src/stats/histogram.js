@@ -9,11 +9,10 @@ export const getHistogram = function ({
   bucketCount,
 }) {
   const length = highIndex - lowIndex + 1
-  const min = array[lowIndex]
-  const max = array[highIndex]
-  const bucketSize = (max - min) / bucketCount
+  const low = array[lowIndex]
+  const high = array[highIndex]
 
-  const bucketIndexes = getBucketIndexes({ min, max, bucketCount, bucketSize })
+  const bucketIndexes = getBucketIndexes(low, high, bucketCount)
   const { buckets } = bucketIndexes.reduce(
     addBucket.bind(undefined, { array, highIndex, length }),
     { buckets: [], startIndex: lowIndex - 1 },
@@ -21,37 +20,38 @@ export const getHistogram = function ({
   return buckets
 }
 
-const getBucketIndexes = function ({ min, max, bucketCount, bucketSize }) {
+const getBucketIndexes = function (low, high, bucketCount) {
+  const bucketSize = (high - low) / bucketCount
   return Array.from({ length: bucketCount }, (value, bucketIndex) =>
-    getBucketIndex({ bucketIndex, min, max, bucketCount, bucketSize }),
+    getBucketIndex({ bucketIndex, low, high, bucketCount, bucketSize }),
   )
 }
 
 const getBucketIndex = function ({
   bucketIndex,
-  min,
-  max,
+  low,
+  high,
   bucketCount,
   bucketSize,
 }) {
   const start = getBucketEdge(bucketIndex - 1, {
-    min,
-    max,
+    low,
+    high,
     bucketCount,
     bucketSize,
   })
-  const end = getBucketEdge(bucketIndex, { min, max, bucketCount, bucketSize })
+  const end = getBucketEdge(bucketIndex, { low, high, bucketCount, bucketSize })
   return { start, end }
 }
 
-// Avoids float precision roundoff error at the end by using `max` directly
+// Avoids float precision roundoff error at the end by using `high` directly
 const getBucketEdge = function (
   bucketIndex,
-  { min, max, bucketCount, bucketSize },
+  { low, high, bucketCount, bucketSize },
 ) {
   return bucketIndex + 1 === bucketCount
-    ? max
-    : min + (bucketIndex + 1) * bucketSize
+    ? high
+    : low + (bucketIndex + 1) * bucketSize
 }
 
 const addBucket = function (
