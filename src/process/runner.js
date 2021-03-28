@@ -4,6 +4,8 @@ import { getServerUrl } from '../server/url.js'
 import { spawnProcess } from './spawn.js'
 
 // Each combination is spawned in its own process:
+//  - This ensures combinations are not changing each other through mutating
+//    global memory
 //  - This ensures runtime optimization is bound to each combination
 //  - This allows runners with different programming languages
 // We use a single long process per combination instead of spawning multiple
