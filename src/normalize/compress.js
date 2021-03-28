@@ -1,5 +1,7 @@
 import omit from 'omit.js'
 
+import { getBucketEdges } from '../stats/histogram.js'
+
 // Reduce size of results before saving
 // We try to persist everything, so that `show` report the same information.
 // We try to only persist what cannot be computed runtime.
@@ -52,43 +54,11 @@ const decompressCombination = function ({
 }
 
 const decompressHistogram = function (histogram, low, high) {
-  const bucketCount = histogram.length
-  const bucketSize = (high - low) / bucketCount
-  return histogram.map((frequency, bucketIndex) =>
-    decompressBucket(frequency, {
-      low,
-      high,
-      bucketIndex,
-      bucketCount,
-      bucketSize,
+  return getBucketEdges(low, high, histogram.length).map(
+    ([start, end], bucketIndex) => ({
+      start,
+      end,
+      frequency: histogram[bucketIndex],
     }),
   )
-}
-
-const decompressBucket = function (
-  frequency,
-  { low, high, bucketIndex, bucketCount, bucketSize },
-) {
-  const newStart = getBucketEdge(bucketIndex - 1, {
-    low,
-    high,
-    bucketCount,
-    bucketSize,
-  })
-  const newEnd = getBucketEdge(bucketIndex, {
-    low,
-    high,
-    bucketCount,
-    bucketSize,
-  })
-  return { start: newStart, end: newEnd, frequency }
-}
-
-const getBucketEdge = function (
-  bucketIndex,
-  { low, high, bucketCount, bucketSize },
-) {
-  return bucketIndex + 1 === bucketCount
-    ? high
-    : low + (bucketIndex + 1) * bucketSize
 }
