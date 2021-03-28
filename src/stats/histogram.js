@@ -15,9 +15,8 @@ export const getHistogram = function ({
   const bucketEdges = getBucketEdges(low, high, bucketCount)
   const bucketIndexes = Array.from({ length: bucketCount }, getBucketIndex)
   const state = { startIndex: lowIndex - 1 }
-  const { buckets } = bucketIndexes.reduce(
-    addBucket.bind(undefined, { array, bucketEdges, highIndex, length, state }),
-    { buckets: [] },
+  const buckets = bucketIndexes.map(
+    getBucket.bind(undefined, { array, bucketEdges, highIndex, length, state }),
   )
   return buckets
 }
@@ -36,9 +35,8 @@ const getBucketIndex = function (value, bucketIndex) {
   return bucketIndex
 }
 
-const addBucket = function (
+const getBucket = function (
   { array, highIndex, bucketEdges, length, state, state: { startIndex } },
-  { buckets },
   bucketIndex,
 ) {
   const start = bucketEdges[bucketIndex]
@@ -48,13 +46,9 @@ const addBucket = function (
   const bucketsCount = endIndex - startIndex
   const frequency = bucketsCount / length
 
-  // Directly mutate for performance
-  // eslint-disable-next-line fp/no-mutating-methods
-  buckets.push({ start, end, frequency })
-
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   state.startIndex = endIndex
 
-  return { buckets }
+  return { start, end, frequency }
 }
 
