@@ -10,12 +10,15 @@
 //       (that are also not percentages)
 //  - On the flipside, it makes it harder to compare combinations (since they
 //    most likely have different medians)
-export const getStdev = function (array, median) {
-  if (median === 0 || array.length < MIN_DEVIATION_LOOPS) {
+export const getStdev = function ({ array, lowIndex, highIndex, median }) {
+  const length = highIndex - lowIndex + 1
+
+  if (median === 0 || length < MIN_DEVIATION_LOOPS) {
     return
   }
 
-  const variance = getSumDeviation(array, median) / (array.length - 1)
+  const variance =
+    getSumDeviation({ array, lowIndex, highIndex, median }) / (length - 1)
   return Math.sqrt(variance)
 }
 
@@ -27,14 +30,14 @@ export const getStdev = function (array, median) {
 const MIN_DEVIATION_LOOPS = 5
 
 // We use a separate function from `getSum()` because it is much more performant
-const getSumDeviation = function (array, median) {
+const getSumDeviation = function ({ array, lowIndex, highIndex, median }) {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 
-  // eslint-disable-next-line fp/no-loops
-  for (const element of array) {
+  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
+  for (let index = lowIndex; index <= highIndex; index += 1) {
     // eslint-disable-next-line fp/no-mutation
-    sum += (element - median) ** 2
+    sum += (array[index] - median) ** 2
   }
 
   return sum

@@ -29,7 +29,7 @@ export const computeStats = function (measures) {
   const histogram = getHistogram(normalizedMeasures, HISTOGRAM_SIZE)
 
   const mean = getMean(measures)
-  const stdev = getStdev(normalizedMeasures, median)
+  const stdev = getStdev({ array: measures, lowIndex, highIndex, median })
   const moe = getMoe(normalizedMeasures, stdev)
 
   return {
