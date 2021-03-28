@@ -43,8 +43,7 @@ const getBucket = function ({
   const end = bucketEdges[bucketIndex + 1]
 
   const endIndex = binarySearch(array, end, startIndex, highIndex)
-  const bucketsCount = endIndex - startIndex
-  const frequency = bucketsCount / length
+  const frequency = (endIndex - startIndex) / length
 
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   state.startIndex = endIndex
