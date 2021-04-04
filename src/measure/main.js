@@ -53,7 +53,7 @@ const measureCombination = async function ({
   previewState,
   exec,
 }) {
-  const { server, serverUrl } = await startServer(combination, duration)
+  const { server, serverUrl } = await startServer()
 
   try {
     return await spawnAndMeasure({

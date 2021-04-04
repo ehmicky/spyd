@@ -17,32 +17,20 @@ import { promisify } from 'util'
 //    `keepAliveTimeout`
 // We use the default `requestTimeout` since we are using long polling.
 // Keeping the default `headersTimeout` (1 minute) is fine though.
-export const startServer = async function (combination, duration) {
+export const startServer = async function () {
   const server = createServer()
-  const serverUrl = await serverListen(server, duration)
+  const serverUrl = await serverListen(server)
   return { server, serverUrl }
 }
 
 // Start listening to requests
-const serverListen = async function (server, duration) {
-  setKeepAliveTimeout(server, duration)
-
+const serverListen = async function (server) {
   await promisify(server.listen.bind(server))(HTTP_SERVER_OPTS)
   const { address, port } = server.address()
   const serverUrl = `http://${address}:${port}`
   return serverUrl
 }
 
-const setKeepAliveTimeout = function (server, duration) {
-  if (duration === 1) {
-    return
-  }
-
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  server.keepAliveTimeout = Math.ceil(duration / NANOSECS_TO_MILLISECS)
-}
-
-const NANOSECS_TO_MILLISECS = 1e6
 const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 
 // End the HTTP server
