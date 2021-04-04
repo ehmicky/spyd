@@ -2,7 +2,6 @@ import { setDelayedDescription } from '../preview/set.js'
 import { reportPreview } from '../report/main.js'
 
 import { getFinalResult } from './init.js'
-import { addInitProps } from './props.js'
 
 // Retrieve state and configuration for previews
 export const getPreviewConfig = function (
@@ -29,13 +28,7 @@ export const setFirstPreview = async function ({
     return
   }
 
-  const combinationsA = combinations.map(addInitProps)
-  await setPreviewReport({
-    combinations: combinationsA,
-    previewConfig,
-    previewState,
-  })
-
+  await setPreviewReport({ combinations, previewConfig, previewState })
   setDelayedDescription(previewState, START_DESCRIPTION)
 }
 

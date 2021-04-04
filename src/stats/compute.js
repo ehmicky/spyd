@@ -69,7 +69,7 @@ export const getFinalStats = function ({
   samples,
   minLoopDuration,
 }) {
-  if (loops === 0) {
+  if (loops === 0 || loops === undefined) {
     return {}
   }
 
