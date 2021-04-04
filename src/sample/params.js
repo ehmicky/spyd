@@ -52,7 +52,7 @@ const getMaxLoops = function ({
   const repeatGrowth = repeat / repeatLast
   const measureDurationPerLoop = measureDuration / sampleLoops
   const targetMaxLoops = Math.round(
-    TARGET_DURATION / (measureDurationPerLoop * repeatGrowth),
+    SAMPLE_DURATION / (measureDurationPerLoop * repeatGrowth),
   )
   return Math.max(targetMaxLoops, 1)
 }
@@ -60,4 +60,4 @@ const getMaxLoops = function ({
 // 100ms
 // Small enough to give responsive reporting.
 // Large enough to spend enough time measuring.
-const TARGET_DURATION = 1e8
+export const SAMPLE_DURATION = 1e8

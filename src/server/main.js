@@ -1,6 +1,8 @@
 import { createServer } from 'http'
 import { promisify } from 'util'
 
+import { SAMPLE_DURATION } from '../sample/params.js'
+
 // Start a local HTTP server to communicate with runner processes.
 // We use HTTP instead of other IPC mechanisms:
 //  - Signals and named pipes are not easy to make cross-platform
@@ -19,11 +21,21 @@ import { promisify } from 'util'
 // Keeping the default `headersTimeout` (1 minute) is fine though.
 export const startServer = async function () {
   const server = createServer()
+  // eslint-disable-next-line fp/no-mutation
+  server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT
+
   await promisify(server.listen.bind(server))(HTTP_SERVER_OPTS)
   const { address, port } = server.address()
   const serverUrl = `http://${address}:${port}`
   return { server, serverUrl }
 }
+
+// Try to re-use the TCP socket between samples.
+// Based on the target sample duration. Multiplied by a factor because the
+// target sample duration only includes measuring not the duration spent
+// in the runner inner logic nor doing IPC.
+const KEEP_ALIVE_FACTOR = 10
+const KEEP_ALIVE_TIMEOUT = SAMPLE_DURATION * KEEP_ALIVE_FACTOR
 
 const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 
