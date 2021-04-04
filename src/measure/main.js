@@ -6,7 +6,7 @@ import {
 import { startServer, endServer } from '../server/main.js'
 
 import { measureAllCombinations } from './all.js'
-import { addInitProps } from './props.js'
+import { addInitProps } from './init.js'
 import { addStopHandler } from './stop.js'
 
 // Measure all combinations and add results to `combinations`.

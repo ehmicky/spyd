@@ -64,6 +64,9 @@ export const handleReturnValue = function (
   }
 }
 
+// Uncalibrated stats are removed because they:
+//  - Are eventually reset, which create confusion for stats like min or max
+//  - Change a lot, creating flicker
 const bufferMeasures = function ({
   calibrated,
   allSamples,

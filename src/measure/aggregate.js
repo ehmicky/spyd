@@ -55,7 +55,7 @@ export const aggregateMeasures = function ({
   }
 
   addBufferedMeasures(measures, bufferedMeasures)
-  const stats = computeStats(measures)
+  const stats = computeStats(measures, combination)
   return { ...combination, measures, bufferedMeasures: [], stats }
 }
 
