@@ -25,11 +25,13 @@ import { getMean } from './sum.js'
 //   - This happens when not measured yet or on uncalibrated stats.
 //   - This happens both during preview or during the final report if measuring
 //     was stopped
-export const computeStats = function (
+export const computeStats = function ({
   measures,
-  { loops, times, samples },
+  samples,
+  loops,
+  times,
   minLoopDuration,
-) {
+}) {
   const { min, max, lowIndex, highIndex, low, high } = getExtremes(measures)
 
   const median = getSortedMedian(measures)
