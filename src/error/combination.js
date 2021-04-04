@@ -18,15 +18,10 @@ export const prependTaskPrefix = function (error, { taskId }) {
 //  - The task made the process exit, which is improper since it prevents proper
 //    cleanup and orchestration.
 //  - The runner crashed due to a bug.
-export const failOnProcessExit = async function (
-  combination,
-  childProcess,
-  stopState,
-) {
+export const throwOnProcessExit = async function (childProcess, stopState) {
   const { failed, message } = await childProcess
   const exitMessage = getProcessExitMessage({ failed, message, stopState })
-  const error = new UserError(exitMessage)
-  return { ...combination, error }
+  throw new UserError(exitMessage)
 }
 
 // Replace "Command" by "Task" and remove the runner process spawnParams from

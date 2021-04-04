@@ -1,4 +1,4 @@
-import { failOnProcessExit } from '../error/combination.js'
+import { throwOnProcessExit } from '../error/combination.js'
 import { setDescription } from '../preview/set.js'
 import { receiveReturnValue } from '../process/receive.js'
 import { getMinLoopDuration } from '../sample/min_loop_duration.js'
@@ -21,7 +21,7 @@ export const startCombination = async function ({
 
 const eStartCombination = async function (combination, server, childProcess) {
   return await Promise.race([
-    failOnProcessExit(combination, childProcess),
+    throwOnProcessExit(childProcess),
     startCombinationLogic(combination, server),
   ])
 }

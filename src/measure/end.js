@@ -1,4 +1,4 @@
-import { failOnProcessExit } from '../error/combination.js'
+import { throwOnProcessExit } from '../error/combination.js'
 import { setDelayedDescription } from '../preview/set.js'
 import { sendAndReceive } from '../process/send.js'
 
@@ -17,7 +17,7 @@ const END_DESCRIPTION = 'Ending...'
 
 const eEndCombination = async function (combination, server, childProcess) {
   return await Promise.race([
-    failOnProcessExit(combination, childProcess),
+    throwOnProcessExit(childProcess),
     endCombinationLogic(combination, server),
   ])
 }

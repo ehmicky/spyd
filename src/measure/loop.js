@@ -1,4 +1,4 @@
-import { failOnProcessExit } from '../error/combination.js'
+import { throwOnProcessExit } from '../error/combination.js'
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 
@@ -119,7 +119,7 @@ const eMeasureSample = async function ({
   childProcess,
 }) {
   return await Promise.race([
-    failOnProcessExit(combination, childProcess, stopState),
+    throwOnProcessExit(childProcess, stopState),
     measureSample(combination, server),
   ])
 }
