@@ -6,16 +6,17 @@ import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
 // Measure a new sample for a given combination
-export const measureSample = async function (combination, server) {
+export const measureSample = async function (combination, server, res) {
   const params = getParams(combination)
 
-  const {
-    newCombination,
-    returnValue,
-    measureDuration,
-  } = await measureNewSample(combination, server, params)
-  const newProps = handleReturnValue(newCombination, returnValue)
-  return { ...newCombination, ...newProps, measureDuration }
+  const { returnValue, res: resA, measureDuration } = await measureNewSample(
+    params,
+    server,
+    res,
+  )
+  const newProps = handleReturnValue(combination, returnValue)
+  const combinationA = { ...combination, ...newProps, measureDuration }
+  return { combination: combinationA, res: resA }
 }
 
 // `measureDuration` is how long it takes to get a single sample's results.
@@ -26,13 +27,9 @@ export const measureSample = async function (combination, server) {
 // be slow.
 // We only keep the last `measureDuration` instead of taking the median of all
 // previous ones, so that `measureDuration` quickly adapts to machine slowdowns.
-const measureNewSample = async function (combination, server, params) {
+const measureNewSample = async function (params, server, res) {
   const measureDurationStart = now()
-  const { newCombination, returnValue } = await sendAndReceive(
-    combination,
-    server,
-    params,
-  )
+  const { returnValue, res: resA } = await sendAndReceive(params, server, res)
   const measureDuration = now() - measureDurationStart
-  return { newCombination, returnValue, measureDuration }
+  return { returnValue, res: resA, measureDuration }
 }

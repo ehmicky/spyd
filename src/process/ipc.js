@@ -21,15 +21,15 @@ import { throwOnStreamError } from './error.js'
 //   - The runner sends the return value
 // We are setting up return value listening before sending params to prevent any
 // race condition.
-export const sendAndReceive = async function (combination, server, params) {
-  const [{ newCombination, returnValue }] = await Promise.all([
-    receiveReturnValue(combination, server),
-    sendParams(combination, params),
+export const sendAndReceive = async function (params, server, res) {
+  const [{ returnValue, res: resA }] = await Promise.all([
+    receiveReturnValue(server),
+    sendParams(params, res),
   ])
-  return { newCombination, returnValue }
+  return { returnValue, res: resA }
 }
 
-const sendParams = async function ({ res }, params) {
+const sendParams = async function (params, res) {
   try {
     const paramsString = JSON.stringify(params)
     await Promise.race([
@@ -45,13 +45,12 @@ const sendParams = async function ({ res }, params) {
 // This can fail for several reasons:
 //  - Wrong HTTP request URL or body due to bug in runner
 //  - Error/exception in task
-export const receiveReturnValue = async function (combination, server) {
+export const receiveReturnValue = async function (server) {
   const [req, res] = await once(server, 'request')
-  const newCombination = { ...combination, res }
 
   const returnValue = await parseReturnValue(req)
   throwIfTaskError(returnValue)
-  return { newCombination, returnValue }
+  return { returnValue, res }
 }
 
 // Parse the request's JSON body

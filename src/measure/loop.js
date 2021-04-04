@@ -28,7 +28,7 @@ import { isRemainingCombination } from './remaining.js'
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, max-lines-per-function
 export const performMeasureLoop = async function ({
   combinations,
   combination,
@@ -39,9 +39,10 @@ export const performMeasureLoop = async function ({
   stopState,
   exec,
   server,
+  res,
 }) {
   if (taskId === undefined) {
-    return combination
+    return { combination, res }
   }
 
   setBenchmarkStart(previewState)
@@ -52,6 +53,8 @@ export const performMeasureLoop = async function ({
 
   // eslint-disable-next-line fp/no-let
   let combinationA = combination
+  // eslint-disable-next-line fp/no-let
+  let resA = res
 
   // eslint-disable-next-line fp/no-loops
   while (
@@ -75,7 +78,11 @@ export const performMeasureLoop = async function ({
     })
 
     // eslint-disable-next-line no-await-in-loop
-    const newCombination = await measureSample(combinationA, server)
+    const { combination: newCombination, res: resB } = await measureSample(
+      combinationA,
+      server,
+      resA,
+    )
 
     // eslint-disable-next-line no-await-in-loop
     const newCombinationA = await aggregatePreview({
@@ -88,6 +95,8 @@ export const performMeasureLoop = async function ({
     const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
     // eslint-disable-next-line fp/no-mutation
     combinationA = newCombinationB
+    // eslint-disable-next-line fp/no-mutation
+    resA = resB
   }
 
   const combinationB = aggregateMeasures(combinationA)
@@ -97,5 +106,5 @@ export const performMeasureLoop = async function ({
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.combination
 
-  return combinationB
+  return { combination: combinationB, res: resA }
 }
