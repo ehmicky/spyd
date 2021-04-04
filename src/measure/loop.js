@@ -7,12 +7,8 @@ import { getSampleStart, addSampleDuration } from './duration.js'
 import { updatePreviewEnd } from './preview_end.js'
 import { isRemainingCombination } from './remaining.js'
 
-// Run samples to measure each combination.
-// We ensure combinations are never measured at the same time
-//  - Otherwise, they would compete for memory and CPU, making results less
-//    precise.
-// We also break down each combination into samples, i.e. small units of
-// duration when measures are taken:
+// We break down each combination into samples, i.e. small units of duration
+// when measures are taken:
 //  - This allows combinations to be previewed at the same time, displaying
 //    them competing with each other
 //  - This allows some parameters to be calibrated (e.g. `repeat`)
