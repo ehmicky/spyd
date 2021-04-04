@@ -22,8 +22,12 @@ import { receiveReturnValue } from './receive.js'
 //   - The runner sends the return value
 // We are setting up return value listening before sending params to prevent any
 // race condition.
-export const sendAndReceive = async function (combination, params) {
-  const receiveReturnPromise = receiveReturnValue(combination)
+export const sendAndReceive = async function (
+  combination,
+  serverChannel,
+  params,
+) {
+  const receiveReturnPromise = receiveReturnValue(combination, serverChannel)
   const newCombination = await sendParams(combination, params)
 
   if (combinationHasErrored(newCombination)) {

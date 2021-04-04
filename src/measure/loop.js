@@ -34,7 +34,7 @@ import { isRemainingCombination } from './remaining.js'
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, max-lines-per-function
 export const performMeasureLoop = async function ({
   combinations,
   combination,
@@ -44,6 +44,7 @@ export const performMeasureLoop = async function ({
   previewState,
   stopState,
   exec,
+  serverChannel,
 }) {
   if (isInit(combination)) {
     return combination
@@ -73,7 +74,11 @@ export const performMeasureLoop = async function ({
     })
 
     // eslint-disable-next-line no-await-in-loop
-    const newCombination = await eMeasureSample(combinationA, stopState)
+    const newCombination = await eMeasureSample(
+      combinationA,
+      stopState,
+      serverChannel,
+    )
 
     // eslint-disable-next-line no-await-in-loop
     const newCombinationA = await aggregatePreview({
@@ -116,9 +121,9 @@ const isStoppedCombination = function (combination, { stopped }) {
   return stopped || combinationHasErrored(combination)
 }
 
-const eMeasureSample = async function (combination, stopState) {
+const eMeasureSample = async function (combination, stopState, serverChannel) {
   return await Promise.race([
     failOnProcessExit(combination, stopState),
-    measureSample(combination),
+    measureSample(combination, serverChannel),
   ])
 }

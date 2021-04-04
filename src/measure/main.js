@@ -53,7 +53,7 @@ const measureCombination = async function ({
   previewState,
   exec,
 }) {
-  const { server, serverUrl, combination: combinationA } = await startServer(
+  const { server, serverUrl, serverChannel } = await startServer(
     combination,
     duration,
   )
@@ -61,7 +61,7 @@ const measureCombination = async function ({
   try {
     return await spawnAndMeasure({
       combinations,
-      combination: combinationA,
+      combination,
       index,
       serverUrl,
       duration,
@@ -69,6 +69,7 @@ const measureCombination = async function ({
       previewConfig,
       previewState,
       exec,
+      serverChannel,
     })
   } finally {
     await endServer(server)
@@ -86,6 +87,7 @@ const spawnAndMeasure = async function ({
   previewConfig,
   previewState,
   exec,
+  serverChannel,
 }) {
   const combinationA = spawnRunnerProcess({ combination, serverUrl, cwd, exec })
 
@@ -98,6 +100,7 @@ const spawnAndMeasure = async function ({
       previewConfig,
       previewState,
       exec,
+      serverChannel,
     })
   } finally {
     terminateRunnerProcess(combinationA)
@@ -113,6 +116,7 @@ const stopOrMeasure = async function ({
   previewConfig,
   previewState,
   exec,
+  serverChannel,
 }) {
   const { stopState, onAbort, removeStopHandler } = addStopHandler(
     previewState,
@@ -131,6 +135,7 @@ const stopOrMeasure = async function ({
         previewState,
         stopState,
         exec,
+        serverChannel,
       }),
     ])
     return { combination: combinationA, stopped: stopState.stopped }

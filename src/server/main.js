@@ -21,22 +21,12 @@ import { promisify } from 'util'
 // Keeping the default `headersTimeout` (1 minute) is fine though.
 export const startServer = async function (combination, duration) {
   const server = createServer()
-  const combinationA = handleRequests(server, combination)
   const serverUrl = await serverListen(server, duration)
-  return { server, serverUrl, combination: combinationA }
-}
-
-// Handle HTTP requests coming from runners.
-// Emit a `return` event to communicate it to the proper combination.
-// HTTP server requests use events. We need to create an EventEmitter to
-// propagate each request to the right combintion.
-const handleRequests = function (server, combination) {
   const serverChannel = new EventEmitter()
-  const combinationA = { ...combination, serverChannel }
   server.on('request', (req, res) => {
     serverChannel.emit('return', { req, res })
   })
-  return combinationA
+  return { server, serverUrl, serverChannel }
 }
 
 // Start listening to requests

@@ -7,14 +7,14 @@ import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
 // Measure a new sample for a given combination
-export const measureSample = async function (combination) {
+export const measureSample = async function (combination, serverChannel) {
   const params = getParams(combination)
 
   const {
     newCombination,
     returnValue,
     measureDuration,
-  } = await measureNewSample(combination, params)
+  } = await measureNewSample(combination, serverChannel, params)
 
   if (combinationHasErrored(newCombination)) {
     return newCombination
@@ -32,10 +32,11 @@ export const measureSample = async function (combination) {
 // be slow.
 // We only keep the last `measureDuration` instead of taking the median of all
 // previous ones, so that `measureDuration` quickly adapts to machine slowdowns.
-const measureNewSample = async function (combination, params) {
+const measureNewSample = async function (combination, serverChannel, params) {
   const measureDurationStart = now()
   const { newCombination, returnValue } = await sendAndReceive(
     combination,
+    serverChannel,
     params,
   )
   const measureDuration = now() - measureDurationStart
