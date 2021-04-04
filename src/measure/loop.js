@@ -39,6 +39,7 @@ export const performMeasureLoop = async function ({
   exec,
   server,
   res,
+  minLoopDuration,
 }) {
   if (taskId === undefined) {
     return { combination, res }
@@ -75,17 +76,19 @@ export const performMeasureLoop = async function ({
     })
 
     // eslint-disable-next-line no-await-in-loop
-    const { combination: newCombination, res: resB } = await measureSample(
-      combinationA,
+    const { combination: newCombination, res: resB } = await measureSample({
+      combination: combinationA,
       server,
-      resA,
-    )
+      res: resA,
+      minLoopDuration,
+    })
 
     // eslint-disable-next-line no-await-in-loop
     const newCombinationA = await aggregatePreview({
       newCombination,
       previewConfig,
       previewState,
+      minLoopDuration,
     })
 
     const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
@@ -95,7 +98,7 @@ export const performMeasureLoop = async function ({
     resA = resB
   }
 
-  const combinationB = aggregateMeasures(combinationA)
+  const combinationB = aggregateMeasures(combinationA, minLoopDuration)
 
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart

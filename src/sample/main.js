@@ -6,7 +6,12 @@ import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
 
 // Measure a new sample for a given combination
-export const measureSample = async function (combination, server, res) {
+export const measureSample = async function ({
+  combination,
+  server,
+  res,
+  minLoopDuration,
+}) {
   const params = getParams(combination)
 
   const { returnValue, res: resA, measureDuration } = await measureNewSample(
@@ -14,7 +19,7 @@ export const measureSample = async function (combination, server, res) {
     server,
     res,
   )
-  const newProps = handleReturnValue(combination, returnValue)
+  const newProps = handleReturnValue(combination, returnValue, minLoopDuration)
   const combinationA = { ...combination, ...newProps, measureDuration }
   return { combination: combinationA, res: resA }
 }

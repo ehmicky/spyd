@@ -20,6 +20,7 @@ export const aggregatePreview = async function ({
   newCombination: { aggregateCountdown, sampleDurationLast, bufferedMeasures },
   previewConfig,
   previewState,
+  minLoopDuration,
 }) {
   const aggregateCountdownA = aggregateCountdown - sampleDurationLast
 
@@ -28,7 +29,7 @@ export const aggregatePreview = async function ({
   }
 
   const aggregateStart = getAggregateStart()
-  const newCombinationA = aggregateMeasures(newCombination)
+  const newCombinationA = aggregateMeasures(newCombination, minLoopDuration)
   await updatePreviewReport({
     combination: newCombinationA,
     previewConfig,
@@ -45,17 +46,16 @@ const shouldAggregate = function (aggregateCountdown, bufferedMeasures) {
 }
 
 // Performed both incrementally, and once at the end.
-export const aggregateMeasures = function ({
-  measures,
-  bufferedMeasures,
-  ...combination
-}) {
+export const aggregateMeasures = function (
+  { measures, bufferedMeasures, ...combination },
+  minLoopDuration,
+) {
   if (bufferedMeasures.length === 0) {
     return { ...combination, measures, bufferedMeasures }
   }
 
   addBufferedMeasures(measures, bufferedMeasures)
-  const stats = computeStats(measures, combination)
+  const stats = computeStats(measures, combination, minLoopDuration)
   return { ...combination, measures, bufferedMeasures: [], stats }
 }
 

@@ -2,19 +2,10 @@ import { normalizeSampleMeasures } from './normalize.js'
 import { handleRepeat } from './repeat.js'
 
 // Handle return value from the last sample
-// eslint-disable-next-line max-lines-per-function
 export const handleReturnValue = function (
-  {
-    bufferedMeasures,
-    allSamples,
-    samples,
-    loops,
-    times,
-    repeat,
-    calibrated,
-    minLoopDuration,
-  },
+  { bufferedMeasures, allSamples, samples, loops, times, repeat, calibrated },
   { measures: sampleMeasures },
+  minLoopDuration,
 ) {
   if (sampleMeasures === undefined) {
     return {}

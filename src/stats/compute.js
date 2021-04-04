@@ -27,7 +27,8 @@ import { getMean } from './sum.js'
 //     was stopped
 export const computeStats = function (
   measures,
-  { loops, times, samples, minLoopDuration },
+  { loops, times, samples },
+  minLoopDuration,
 ) {
   const { min, max, lowIndex, highIndex, low, high } = getExtremes(measures)
 
