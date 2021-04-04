@@ -1,14 +1,12 @@
 import process from 'process'
 
 import { AbortError } from '../error/main.js'
-import { setPriorityDescription } from '../preview/set.js'
+import { setBenchmarkEnd, setPriorityDescription } from '../preview/set.js'
 import {
   createController,
   waitForEvents,
   waitForDelay,
 } from '../utils/timeout.js'
-
-import { setStopBechmarkEnd } from './long_task.js'
 
 // Allow users to stop measuring by using signals like SIGINT (CTRL-C).
 // When this happens, combinations still properly end.
@@ -75,10 +73,29 @@ const handleStop = async function ({
 
 const setStopState = function (previewState, stopState, duration) {
   setPriorityDescription(previewState, STOP_DESCRIPTION)
-  setStopBechmarkEnd({ previewState, stopState, duration })
+  setStopBenchmarkEnd(previewState, stopState, duration)
 
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
+}
+
+// Update `benchmarkEnd` to match the time the currently executing task is
+// expected to end.
+// Not done if `sampleDurationMean` is `0` meaning either:
+//  - not in measure phase
+//  - measuring the first sample of the task
+// In that case, we leave `benchmarkEnd` as is
+const setStopBenchmarkEnd = function (
+  previewState,
+  { sampleStart, combination: { sampleDurationMean = 0 } = {} },
+  duration,
+) {
+  if (sampleDurationMean === 0 || duration === 1) {
+    return
+  }
+
+  const benchmarkEnd = sampleStart + sampleDurationMean
+  setBenchmarkEnd(previewState, benchmarkEnd)
 }
 
 const waitForStopSignals = async function (abortSignal) {
