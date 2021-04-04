@@ -6,6 +6,9 @@ import { performMeasureLoop } from './loop.js'
 import { startCombination } from './start.js'
 
 // Measure all combinations, until there is no `duration` left.
+// When any combination errors, we end measuring.
+// We also do this when the user stopped the benchmark (e.g. with CTRL-C).
+// We still perform each combination ends and exits, for cleanup.
 export const measureAllCombinations = async function ({
   combinations,
   combination,

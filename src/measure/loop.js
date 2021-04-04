@@ -9,6 +9,7 @@ import { aggregatePreview, aggregateMeasures } from './aggregate.js'
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { updatePreviewEnd } from './preview_end.js'
 import { isRemainingCombination } from './remaining.js'
+import { isStoppedCombination } from './stop.js'
 
 // Run samples to measure each combination.
 // We ensure combinations are never measured at the same time
@@ -34,7 +35,7 @@ import { isRemainingCombination } from './remaining.js'
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, complexity
 export const performMeasureLoop = async function ({
   combinations,
   combination,
@@ -60,7 +61,11 @@ export const performMeasureLoop = async function ({
   let combinationA = combination
 
   // eslint-disable-next-line fp/no-loops
-  do {
+  while (
+    isRemainingCombination(combinationA, duration, exec) &&
+    !isStoppedCombination(stopState) &&
+    !combinationHasErrored(combinationA)
+  ) {
     const sampleStart = getSampleStart()
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
     stopState.sampleStart = sampleStart
@@ -88,12 +93,7 @@ export const performMeasureLoop = async function ({
     const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
     // eslint-disable-next-line fp/no-mutation
     combinationA = newCombinationB
-
-    // eslint-disable-next-line max-depth
-    if (isStoppedCombination(combinationA, stopState)) {
-      break
-    }
-  } while (isRemainingCombination(combinationA, duration, exec))
+  }
 
   const combinationB = aggregateMeasures(combinationA)
 
@@ -108,13 +108,6 @@ export const performMeasureLoop = async function ({
 // Task init, retrieving only task and step identifiers
 const isInit = function ({ taskId }) {
   return taskId === undefined
-}
-
-// When any combination errors, we end measuring.
-// We also do this when the user stopped the benchmark (e.g. with CTRL-C).
-// We still perform each combination ends and exits, for cleanup.
-const isStoppedCombination = function (combination, { stopped }) {
-  return stopped || combinationHasErrored(combination)
 }
 
 const eMeasureSample = async function (combination, stopState, server) {

@@ -103,3 +103,7 @@ const removeStopHandler = function (abort, signalHandler) {
   abort()
   restoreDefaultHandlers(signalHandler)
 }
+
+export const isStoppedCombination = function ({ stopped }) {
+  return stopped
+}
