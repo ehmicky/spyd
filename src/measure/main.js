@@ -118,7 +118,38 @@ const stopOrMeasure = async function ({
   )
 
   try {
-    const combinationA = await Promise.race([
+    const combinationA = await eMeasureAllCombinations({
+      combinations,
+      combination,
+      duration,
+      previewConfig,
+      previewState,
+      stopState,
+      exec,
+      server,
+      childProcess,
+      onAbort,
+    })
+    return { combination: combinationA, stopped: stopState.stopped }
+  } finally {
+    removeStopHandler()
+  }
+}
+
+const eMeasureAllCombinations = async function ({
+  combinations,
+  combination,
+  duration,
+  previewConfig,
+  previewState,
+  stopState,
+  exec,
+  server,
+  childProcess,
+  onAbort,
+}) {
+  try {
+    return await Promise.race([
       throwOnProcessExit(childProcess),
       onAbort,
       measureAllCombinations({
@@ -132,8 +163,18 @@ const stopOrMeasure = async function ({
         server,
       }),
     ])
-    return { combination: combinationA, stopped: stopState.stopped }
-  } finally {
-    removeStopHandler()
+  } catch (error) {
+    prependTaskPrefix(error, combination)
+    throw error
   }
+}
+
+// taskId is `undefined` during init
+const prependTaskPrefix = function (error, { taskId }) {
+  if (taskId === undefined) {
+    return
+  }
+
+  const taskPrefix = `In task "${taskId}"`
+  error.message = `${taskPrefix}:\n${error.message}`
 }

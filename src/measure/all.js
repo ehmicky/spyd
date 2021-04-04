@@ -16,40 +16,17 @@ export const measureAllCombinations = async function ({
   exec,
   server,
 }) {
-  try {
-    const combinationA = await startCombination(
-      combination,
-      previewState,
-      server,
-    )
-    const combinationB = await performMeasureLoop({
-      combinations,
-      combination: combinationA,
-      duration,
-      previewConfig,
-      previewState,
-      stopState,
-      exec,
-      server,
-    })
-    const combinationC = await endCombination(
-      combinationB,
-      previewState,
-      server,
-    )
-    return combinationC
-  } catch (error) {
-    prependTaskPrefix(error, combination)
-    throw error
-  }
-}
-
-// taskId is `undefined` during init
-const prependTaskPrefix = function (error, { taskId }) {
-  if (taskId === undefined) {
-    return
-  }
-
-  const taskPrefix = `In task "${taskId}"`
-  error.message = `${taskPrefix}:\n${error.message}`
+  const combinationA = await startCombination(combination, previewState, server)
+  const combinationB = await performMeasureLoop({
+    combinations,
+    combination: combinationA,
+    duration,
+    previewConfig,
+    previewState,
+    stopState,
+    exec,
+    server,
+  })
+  const combinationC = await endCombination(combinationB, previewState, server)
+  return combinationC
 }
