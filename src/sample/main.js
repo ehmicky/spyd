@@ -1,6 +1,5 @@
 import now from 'precise-now'
 
-import { combinationHasErrored } from '../error/combination.js'
 import { sendAndReceive } from '../process/send.js'
 
 import { getParams } from './params.js'
@@ -15,11 +14,6 @@ export const measureSample = async function (combination, server) {
     returnValue,
     measureDuration,
   } = await measureNewSample(combination, server, params)
-
-  if (combinationHasErrored(newCombination)) {
-    return newCombination
-  }
-
   const newProps = handleReturnValue(newCombination, returnValue)
   return { ...newCombination, ...newProps, measureDuration }
 }

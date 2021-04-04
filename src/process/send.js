@@ -1,10 +1,6 @@
 import { promisify } from 'util'
 
-import {
-  addCombinationError,
-  combinationHasErrored,
-  throwOnStreamError,
-} from '../error/combination.js'
+import { throwOnStreamError } from '../error/combination.js'
 import { PluginError } from '../error/main.js'
 
 import { receiveReturnValue } from './receive.js'
@@ -24,30 +20,25 @@ import { receiveReturnValue } from './receive.js'
 // race condition.
 export const sendAndReceive = async function (combination, server, params) {
   const receiveReturnPromise = receiveReturnValue(combination, server)
-  const newCombination = await sendParams(combination, params)
 
-  if (combinationHasErrored(newCombination)) {
+  try {
+    await sendParams(combination, params)
+    return await receiveReturnPromise
+  } catch (error) {
     receiveReturnPromise.catch(noop)
-    return { newCombination }
+    throw error
   }
-
-  return await receiveReturnPromise
 }
 
-export const sendParams = async function (combination, params) {
+export const sendParams = async function ({ res }, params) {
   try {
     const paramsString = JSON.stringify(params)
-    const { res } = combination
     await Promise.race([
       throwOnStreamError(res),
       promisify(res.end.bind(res))(paramsString),
     ])
-    return combination
   } catch (error) {
-    const errorA = new PluginError(
-      `Could not send HTTP response: ${error.stack}`,
-    )
-    return addCombinationError(combination, errorA)
+    throw new PluginError(`Could not send HTTP response: ${error.stack}`)
   }
 }
 

@@ -1,5 +1,3 @@
-import { combinationHasErrored } from '../error/combination.js'
-
 // Check if combination should keep being measured.
 // We ensure each combination is measured at least once by checking
 // `loops === 0`
@@ -29,11 +27,7 @@ export const isRemainingCombination = function ({
   exec,
   stopState: { stopped },
 }) {
-  return (
-    !stopped &&
-    !combinationHasErrored(combination) &&
-    hasDurationLeft(combination, duration, exec)
-  )
+  return !stopped && hasDurationLeft(combination, duration, exec)
 }
 
 const hasDurationLeft = function (

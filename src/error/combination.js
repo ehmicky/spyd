@@ -3,40 +3,14 @@ import { once } from 'events'
 
 import { UserError } from './main.js'
 
-// When the logic involving a combination throws, we do not propagate the
-// exception right away. This allows the combination and other combinations
-// to properly end and exit.
-// The latest error has priority over the earliest since errors in cleanup code
-// is harder to debug.
-export const addCombinationError = function (combination, error) {
-  if (error === undefined) {
-    return combination
-  }
-
-  return { ...combination, error }
-}
-
-export const handleCombinationError = function (combination) {
-  if (!combinationHasErrored(combination)) {
-    return
-  }
-
-  throw getCombinationError(combination)
-}
-
-export const combinationHasErrored = function ({ error }) {
-  return error !== undefined
-}
-
 // taskId is `undefined` during init
-const getCombinationError = function ({ error, taskId }) {
+export const prependTaskPrefix = function (error, { taskId }) {
   if (taskId === undefined) {
-    return error
+    return
   }
 
   const taskPrefix = `In task "${taskId}"`
   error.message = `${taskPrefix}:\n${error.message}`
-  return error
 }
 
 // Processes should not exit until the end of the benchmark. If they do, this

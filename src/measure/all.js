@@ -1,4 +1,4 @@
-import { handleCombinationError } from '../error/combination.js'
+import { prependTaskPrefix } from '../error/combination.js'
 
 import { endCombination } from './end.js'
 import { exitCombination } from './exit.js'
@@ -20,30 +20,34 @@ export const measureAllCombinations = async function ({
   server,
   childProcess,
 }) {
-  const combinationA = await startCombination({
-    combination,
-    previewState,
-    server,
-    childProcess,
-  })
-  const combinationB = await performMeasureLoop({
-    combinations,
-    combination: combinationA,
-    duration,
-    previewConfig,
-    previewState,
-    stopState,
-    exec,
-    server,
-    childProcess,
-  })
-  const combinationC = await endCombination({
-    combination: combinationB,
-    previewState,
-    server,
-    childProcess,
-  })
-  const combinationD = await exitCombination(combinationC, childProcess)
-  handleCombinationError(combinationD)
-  return combinationD
+  try {
+    const combinationA = await startCombination({
+      combination,
+      previewState,
+      server,
+      childProcess,
+    })
+    const combinationB = await performMeasureLoop({
+      combinations,
+      combination: combinationA,
+      duration,
+      previewConfig,
+      previewState,
+      stopState,
+      exec,
+      server,
+      childProcess,
+    })
+    const combinationC = await endCombination({
+      combination: combinationB,
+      previewState,
+      server,
+      childProcess,
+    })
+    await exitCombination(combinationC, childProcess)
+    return combinationC
+  } catch (error) {
+    prependTaskPrefix(error, combination)
+    throw error
+  }
 }

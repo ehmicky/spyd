@@ -107,9 +107,11 @@ const getStdio = function (exec) {
 }
 
 // Terminate each combination's process after being measured.
-// In general, processes should already have exited thanks to error handling
-// and cleanup logic. However, we terminate those as a safety precaution, for
-// example if there is a bug.
+// The process should already have exited unless an exception has been thrown,
+// due to either a core bug or a task error.
+// Runners should run `afterAll` (when defined) on task errors.
+//  - If an exception is thrown in afterAll, it should be reported instead since
+//    bugs in error handling logic is more critical.
 export const terminateRunnerProcess = function (childProcess) {
   childProcess.kill('SIGKILL')
 }

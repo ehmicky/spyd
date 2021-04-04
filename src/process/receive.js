@@ -3,10 +3,7 @@ import { once } from 'events'
 
 import getStream from 'get-stream'
 
-import {
-  addCombinationError,
-  throwOnStreamError,
-} from '../error/combination.js'
+import { throwOnStreamError } from '../error/combination.js'
 import { PluginError, UserError } from '../error/main.js'
 
 // Receive the sample's return value by receiving a HTTP long poll request.
@@ -17,9 +14,9 @@ export const receiveReturnValue = async function (combination, server) {
   const [req, res] = await once(server, 'request')
   const newCombination = { ...combination, res }
 
-  const { returnValue, error } = await parseReturnValue(req)
-  const newCombinationA = addCombinationError(newCombination, error)
-  return { newCombination: newCombinationA, returnValue }
+  const returnValue = await parseReturnValue(req)
+  throwIfTaskError(returnValue)
+  return { newCombination, returnValue }
 }
 
 // Parse the request's JSON body
@@ -30,23 +27,19 @@ const parseReturnValue = async function (req) {
       getStream(req),
     ])
     const returnValue = JSON.parse(returnValueString)
-    const error = getTaskError(returnValue)
-    return { returnValue, error }
+    return returnValue
   } catch (error) {
-    const errorA = new PluginError(
-      `Could not receive HTTP request: ${error.stack}`,
-    )
-    return { error: errorA }
+    throw new PluginError(`Could not receive HTTP request: ${error.stack}`)
   }
 }
 
 // When a task throws during any stage, we propagate the error and fail the
 // benchmark. Tasks that throw are unstable and might yield invalid benchmarks,
 // so we fail hard.
-const getTaskError = function ({ error }) {
+const throwIfTaskError = function ({ error }) {
   if (error === undefined) {
     return
   }
 
-  return new UserError(error)
+  throw new UserError(error)
 }

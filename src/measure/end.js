@@ -1,7 +1,4 @@
-import {
-  combinationHasErrored,
-  failOnProcessExit,
-} from '../error/combination.js'
+import { failOnProcessExit } from '../error/combination.js'
 import { setDelayedDescription } from '../preview/set.js'
 import { sendAndReceive } from '../process/send.js'
 
@@ -26,10 +23,6 @@ const eEndCombination = async function (combination, server, childProcess) {
 }
 
 const endCombinationLogic = async function (combination, server) {
-  if (combinationHasErrored(combination)) {
-    return combination
-  }
-
   const { newCombination } = await sendAndReceive(combination, server, {})
   return newCombination
 }
