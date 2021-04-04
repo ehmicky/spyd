@@ -19,18 +19,17 @@ export const measureCombinations = async function (
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = 0; index < combinations.length; index += 1) {
     const combination = combinations[index]
-    const combinationA = { ...combination, index }
     // eslint-disable-next-line no-await-in-loop
-    const { combination: combinationB, stopped } = await measureCombination({
-      combination: combinationA,
+    const { combination: combinationA, stopped } = await measureCombination({
+      combination,
       duration,
       cwd,
-      previewConfig: { ...previewConfig, combinations },
+      previewConfig: { ...previewConfig, combinations, index },
       previewState,
       exec,
     })
     // eslint-disable-next-line fp/no-mutation, require-atomic-updates, no-param-reassign
-    combinations[index] = combinationB
+    combinations[index] = combinationA
 
     // eslint-disable-next-line max-depth
     if (stopped) {

@@ -36,9 +36,8 @@ const START_DESCRIPTION = 'Starting...'
 
 export const updatePreviewReport = async function ({
   combination,
-  combination: { index },
   previewConfig,
-  previewConfig: { quiet, combinations },
+  previewConfig: { quiet, combinations, index },
   previewState,
 }) {
   if (quiet) {
