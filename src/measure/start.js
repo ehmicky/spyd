@@ -1,5 +1,5 @@
 import { setDescription } from '../preview/set.js'
-import { receiveReturnValue } from '../process/receive.js'
+import { receiveReturnValue } from '../process/ipc.js'
 import { getMinLoopDuration } from '../sample/min_loop_duration.js'
 
 // Wait for each combination to start

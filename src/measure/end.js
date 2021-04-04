@@ -1,5 +1,5 @@
 import { setDelayedDescription } from '../preview/set.js'
-import { sendAndReceive } from '../process/send.js'
+import { sendAndReceive } from '../process/ipc.js'
 
 // End each combination, i.e. run their cleanup logic
 export const endCombination = async function (
