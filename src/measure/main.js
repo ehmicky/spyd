@@ -109,7 +109,10 @@ const stopOrMeasure = async function ({
   )
 
   try {
-    const { combination: combinationA, tasks } = await eMeasureAllCombinations({
+    const {
+      combination: combinationA,
+      taskIds,
+    } = await eMeasureAllCombinations({
       combination,
       duration,
       previewConfig,
@@ -120,7 +123,7 @@ const stopOrMeasure = async function ({
       childProcess,
       onAbort,
     })
-    return { combination: combinationA, tasks, stopped: stopState.stopped }
+    return { combination: combinationA, taskIds, stopped: stopState.stopped }
   } finally {
     removeStopHandler()
   }

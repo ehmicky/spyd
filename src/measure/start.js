@@ -10,11 +10,11 @@ export const startCombination = async function (
   server,
 ) {
   const {
-    returnValue: { tasks, calibrations = [] },
+    returnValue: { tasks: taskIds, calibrations = [] },
     res,
   } = await receiveReturnValue(server)
   const minLoopDuration = getMinLoopDuration(calibrations)
   const combinationA = { ...combination, minLoopDuration }
   setDescription(previewState)
-  return { combination: combinationA, res, tasks }
+  return { combination: combinationA, res, taskIds }
 }

@@ -22,7 +22,7 @@ export const findTasks = async function ({
   runnerSpawnOptions,
   runnerConfig,
 }) {
-  const { tasks: taskIds } = await measureCombination(
+  const { taskIds } = await measureCombination(
     { taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] },
     {
       cwd,
