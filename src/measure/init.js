@@ -25,7 +25,6 @@ export const addInitProps = function (combination) {
     sampleDurationLast: 0,
     sampleDurationMean: 0,
     measureDuration: 0,
-    aggregateCountdown: 0,
     sampleMedian: 0,
     stats: {},
     measures: [],

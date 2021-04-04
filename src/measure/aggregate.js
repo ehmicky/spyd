@@ -4,7 +4,6 @@ import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
 
 import { updatePreviewReport } from './preview_report.js'
-import { isRemainingCombination } from './remaining.js'
 
 // Aggregate `bufferedMeasures` to `measures`.
 // The `stats` need a single `measures` array, so they are computed right after.
@@ -18,56 +17,22 @@ import { isRemainingCombination } from './remaining.js'
 // specific amount of duration based on that last aggregation duration.
 export const aggregatePreview = async function ({
   combination,
-  combination: { aggregateCountdown, sampleDurationLast, bufferedMeasures },
+  combination: { sampleDurationLast, bufferedMeasures },
   previewConfig,
   previewState,
   minLoopDuration,
-  duration,
-  exec,
-  stopState,
 }) {
-  const aggregateCountdownA = aggregateCountdown - sampleDurationLast
-
-  if (
-    !shouldAggregate({
-      aggregateCountdown: aggregateCountdownA,
-      bufferedMeasures,
-      combination,
-      duration,
-      exec,
-      stopState,
-    })
-  ) {
-    return { ...combination, aggregateCountdown: aggregateCountdownA }
+  if (bufferedMeasures.length === 0) {
+    return combination
   }
 
-  const aggregateStart = getAggregateStart()
   const combinationA = aggregateMeasures(combination, minLoopDuration)
   await updatePreviewReport({
     combination: combinationA,
     previewConfig,
     previewState,
   })
-  const aggregateCountdownB = getAggregateCountdown(aggregateStart)
-  return { ...combinationA, aggregateCountdown: aggregateCountdownB }
-}
-
-// We do not recompute during calibration or when there are no new buffered
-// measures to aggregate.
-// We also recompute on the last sample.
-const shouldAggregate = function ({
-  aggregateCountdown,
-  bufferedMeasures,
-  combination,
-  duration,
-  exec,
-  stopState,
-}) {
-  return (
-    bufferedMeasures.length !== 0 &&
-    (aggregateCountdown <= 0 ||
-      !isRemainingCombination({ combination, duration, exec, stopState }))
-  )
+  return combinationA
 }
 
 const aggregateMeasures = function (
@@ -82,17 +47,10 @@ const aggregateMeasures = function (
 // Add all not-merged-yet measures from the last samples.
 // Sort them incrementally to the final `measures` big array, as opposed to
 // sorting `measures` directly, which would be much slower.
-const addBufferedMeasures = function (
-  measures,
-  [sampleMeasures, ...bufferedMeasures],
-) {
-  // As time passes, `bufferedMeasures` becomes much smaller than `measures`,
-  // so it is more efficient to sort them together first.
-  bufferedMeasures.forEach((sampleMeasuresA) => {
-    mergeSort(sampleMeasures, sampleMeasuresA)
+const addBufferedMeasures = function (measures, bufferedMeasures) {
+  bufferedMeasures.forEach((sampleMeasures) => {
+    mergeSort(measures, sampleMeasures)
   })
-
-  mergeSort(measures, sampleMeasures)
 }
 
 const getAggregateStart = function () {

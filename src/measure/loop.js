@@ -54,7 +54,6 @@ export const performMeasureLoop = async function ({
     (state) =>
       performSample(state, {
         duration,
-        exec,
         previewConfig,
         previewState,
         stopState,
@@ -73,15 +72,7 @@ export const performMeasureLoop = async function ({
 
 const performSample = async function (
   { combination, res },
-  {
-    duration,
-    exec,
-    previewConfig,
-    previewState,
-    stopState,
-    server,
-    minLoopDuration,
-  },
+  { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
   const sampleStart = getSampleStart()
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
@@ -106,13 +97,10 @@ const performSample = async function (
     previewConfig,
     previewState,
     minLoopDuration,
-    duration,
-    exec,
-    stopState,
   })
 
   const combinationC = addSampleDuration(combinationB, sampleStart)
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign, require-atomic-updates
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.combination = combinationC
 
   return { combination: combinationC, res: resA }
