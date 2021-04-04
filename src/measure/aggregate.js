@@ -10,9 +10,12 @@ import { updatePreviewReport } from './preview_report.js'
 //    aggregation would happen at longer and longer intervals, creating big
 //    and infrequent slowdowns.
 //  - This allows using any `stats` in the sample logic
+// Add all measures from the sample.
+// Sort them incrementally to the final `measures` big array, as opposed to
+// sorting `measures` directly, which would be much slower.
 export const aggregatePreview = async function ({
-  combination,
-  combination: { bufferedMeasure },
+  combination: { measures },
+  combination: { bufferedMeasure, ...combination },
   previewConfig,
   previewState,
   minLoopDuration,
@@ -21,23 +24,13 @@ export const aggregatePreview = async function ({
     return combination
   }
 
-  const combinationA = aggregateMeasures(combination, minLoopDuration)
+  mergeSort(measures, bufferedMeasure)
+  const stats = computeStats(measures, combination, minLoopDuration)
+  const combinationA = { ...combination, measures, stats }
   await updatePreviewReport({
     combination: combinationA,
     previewConfig,
     previewState,
   })
   return combinationA
-}
-
-// Add all measures from the sample.
-// Sort them incrementally to the final `measures` big array, as opposed to
-// sorting `measures` directly, which would be much slower.
-const aggregateMeasures = function (
-  { measures, bufferedMeasure, ...combination },
-  minLoopDuration,
-) {
-  mergeSort(measures, bufferedMeasure)
-  const stats = computeStats(measures, combination, minLoopDuration)
-  return { ...combination, measures, bufferedMeasure: undefined, stats }
 }
