@@ -1,5 +1,6 @@
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
+import { pWhile } from '../utils/p_while.js'
 
 import { aggregatePreview, aggregateMeasures } from './aggregate.js'
 import { getSampleStart, addSampleDuration } from './duration.js'
@@ -28,7 +29,6 @@ import { isRemainingCombination } from './remaining.js'
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
-// eslint-disable-next-line max-statements, max-lines-per-function
 export const performMeasureLoop = async function ({
   combination,
   combination: { taskId },
@@ -47,63 +47,62 @@ export const performMeasureLoop = async function ({
 
   setBenchmarkStart(previewState)
 
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  stopState.combination = combination
+  const { combination: combinationA, res: resA } = await pWhile(
+    (state) => isRemainingCombination(state, { duration, exec, stopState }),
+    (state) =>
+      performSample(state, {
+        duration,
+        previewConfig,
+        previewState,
+        stopState,
+        server,
+        minLoopDuration,
+      }),
+    { combination, res },
+  )
 
-  // eslint-disable-next-line fp/no-let
-  let combinationA = combination
-  // eslint-disable-next-line fp/no-let
-  let resA = res
-
-  // eslint-disable-next-line fp/no-loops
-  while (
-    isRemainingCombination({
-      combination: combinationA,
-      duration,
-      exec,
-      stopState,
-    })
-  ) {
-    const sampleStart = getSampleStart()
-    // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    stopState.sampleStart = sampleStart
-
-    updatePreviewEnd({
-      combination: combinationA,
-      previewConfig,
-      previewState,
-      duration,
-    })
-
-    // eslint-disable-next-line no-await-in-loop
-    const { combination: combinationB, res: resB } = await measureSample({
-      combination: combinationA,
-      server,
-      res: resA,
-      minLoopDuration,
-    })
-
-    // eslint-disable-next-line no-await-in-loop
-    const combinationC = await aggregatePreview({
-      combination: combinationB,
-      previewConfig,
-      previewState,
-      minLoopDuration,
-    })
-
-    const combinationD = addSampleDuration(combinationC, sampleStart)
-    // eslint-disable-next-line fp/no-mutation
-    combinationA = combinationD
-    // eslint-disable-next-line fp/no-mutation
-    resA = resB
-  }
-
-  const combinationE = aggregateMeasures(combinationA, minLoopDuration)
+  const combinationB = aggregateMeasures(combinationA, minLoopDuration)
 
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.combination
 
-  return { combination: combinationE, res: resA }
+  return { combination: combinationB, res: resA }
+}
+
+const performSample = async function (
+  { combination, res },
+  { duration, previewConfig, previewState, stopState, server, minLoopDuration },
+) {
+  const sampleStart = getSampleStart()
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  stopState.sampleStart = sampleStart
+
+  updatePreviewEnd({
+    combination,
+    previewConfig,
+    previewState,
+    duration,
+  })
+
+  const { combination: combinationA, res: resA } = await measureSample({
+    combination,
+    server,
+    res,
+    minLoopDuration,
+  })
+
+  const combinationB = await aggregatePreview({
+    combination: combinationA,
+    previewConfig,
+    previewState,
+    minLoopDuration,
+  })
+
+  const combinationC = addSampleDuration(combinationB, sampleStart)
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  stopState.combination = combinationC
+
+  return { combination: combinationC, res: resA }
 }
