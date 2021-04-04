@@ -2,7 +2,7 @@ import { listHistory } from '../history/main.js'
 import { startPreviewRefresh, endPreviewRefresh } from '../preview/refresh.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
 
-import { measureBenchmark } from './main.js'
+import { measureCombinations } from './main.js'
 import { getPreviewConfig, setFirstPreview } from './preview_report.js'
 
 // Start preview then measure benchmark
@@ -50,7 +50,7 @@ const previewRefreshAndMeasure = async function ({
     const results = await listHistory(config)
     const previewConfigA = { ...previewConfig, results }
 
-    const { combinations: combinationsA, stopped } = await measureBenchmark(
+    const { combinations: combinationsA, stopped } = await measureCombinations(
       combinations,
       {
         duration,

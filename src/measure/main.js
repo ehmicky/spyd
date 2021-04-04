@@ -12,7 +12,7 @@ import { addStopHandler } from './stop.js'
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
 // Start server to communicate with combinations, then measure them.
-export const measureBenchmark = async function (
+export const measureCombinations = async function (
   combinations,
   { duration, cwd, previewConfig, previewState, exec },
 ) {
