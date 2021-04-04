@@ -12,12 +12,12 @@ import { updatePreviewReport } from './preview_report.js'
 //  - This allows using any `stats` in the sample logic
 export const aggregatePreview = async function ({
   combination,
-  combination: { bufferedMeasures },
+  combination: { bufferedMeasure },
   previewConfig,
   previewState,
   minLoopDuration,
 }) {
-  if (bufferedMeasures.length === 0) {
+  if (bufferedMeasure === undefined) {
     return combination
   }
 
@@ -30,20 +30,14 @@ export const aggregatePreview = async function ({
   return combinationA
 }
 
-const aggregateMeasures = function (
-  { measures, bufferedMeasures, ...combination },
-  minLoopDuration,
-) {
-  addBufferedMeasures(measures, bufferedMeasures)
-  const stats = computeStats(measures, combination, minLoopDuration)
-  return { ...combination, measures, bufferedMeasures: [], stats }
-}
-
-// Add all not-merged-yet measures from the last samples.
+// Add all measures from the sample.
 // Sort them incrementally to the final `measures` big array, as opposed to
 // sorting `measures` directly, which would be much slower.
-const addBufferedMeasures = function (measures, bufferedMeasures) {
-  bufferedMeasures.forEach((sampleMeasures) => {
-    mergeSort(measures, sampleMeasures)
-  })
+const aggregateMeasures = function (
+  { measures, bufferedMeasure, ...combination },
+  minLoopDuration,
+) {
+  mergeSort(measures, bufferedMeasure)
+  const stats = computeStats(measures, combination, minLoopDuration)
+  return { ...combination, measures, bufferedMeasure: undefined, stats }
 }

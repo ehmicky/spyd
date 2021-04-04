@@ -3,7 +3,7 @@ import { handleRepeat } from './repeat.js'
 
 // Handle return value from the last sample
 export const handleReturnValue = function (
-  { bufferedMeasures, allSamples, samples, loops, times, repeat, calibrated },
+  { bufferedMeasure, allSamples, samples, loops, times, repeat, calibrated },
   { measures: sampleMeasures },
   minLoopDuration,
 ) {
@@ -29,7 +29,7 @@ export const handleReturnValue = function (
     samples: samplesA,
     loops: loopsA,
     times: timesA,
-    bufferedMeasures: bufferedMeasuresA,
+    bufferedMeasure: bufferedMeasureA,
   } = bufferMeasures({
     calibrated: calibratedA,
     allSamples,
@@ -38,12 +38,12 @@ export const handleReturnValue = function (
     sampleLoops,
     times,
     repeat,
-    bufferedMeasures,
+    bufferedMeasure,
     sampleMeasures: sampleMeasuresA,
   })
 
   return {
-    bufferedMeasures: bufferedMeasuresA,
+    bufferedMeasure: bufferedMeasureA,
     samples: samplesA,
     allSamples: allSamplesA,
     loops: loopsA,
@@ -66,13 +66,12 @@ const bufferMeasures = function ({
   sampleLoops,
   times,
   repeat,
-  bufferedMeasures,
   sampleMeasures,
 }) {
   const allSamplesA = allSamples + 1
 
   if (!calibrated) {
-    return { allSamples: allSamplesA, samples, loops, times, bufferedMeasures }
+    return { allSamples: allSamplesA, samples, loops, times }
   }
 
   return {
@@ -80,6 +79,6 @@ const bufferMeasures = function ({
     samples: samples + 1,
     loops: loops + sampleLoops,
     times: times + sampleLoops * repeat,
-    bufferedMeasures: [...bufferedMeasures, sampleMeasures],
+    bufferedMeasure: sampleMeasures,
   }
 }

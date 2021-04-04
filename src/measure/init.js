@@ -27,7 +27,6 @@ export const addInitProps = function (combination) {
     sampleMedian: 0,
     stats: {},
     measures: [],
-    bufferedMeasures: [],
     allSamples: 0,
     samples: 0,
     loops: 0,
