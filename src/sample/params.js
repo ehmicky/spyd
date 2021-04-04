@@ -57,14 +57,14 @@ const getMaxLoops = function ({
   return Math.max(targetMaxLoops, 1)
 }
 
-// 500ms
+// 100ms
 // Higher value leads to:
 //   - Less frequent previews
 //   - Longer to wait for combinations to stop when user requests it.
 //       - The sample duration should always be less than the abort delay.
 //   - Higher minimum duration for any combination
-//   - More unnecessary are measured on average, once the `precision` threshold
-//     has been reached.
+//   - More unnecessary measures once the `precision` threshold has been reached
+//   - Longer time to calibrate
 // Lower value leads to:
 //   - Higher `stats.stdev` and `stats.high`. This is because new samples have
 //     a small cold start. This is especially true for fast|low-complexity tasks
@@ -73,4 +73,4 @@ const getMaxLoops = function ({
 //   - Due to the above point, the real sample duration is less close to the
 //     target.
 // The value does not impact `stats.median` much though.
-export const SAMPLE_DURATION = 3e8
+export const SAMPLE_DURATION = 1e8
