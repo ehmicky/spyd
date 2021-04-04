@@ -30,6 +30,10 @@ export const getParams = function ({
 //      - This is because some runtime optimization applies as a new sample is
 //        run. We do not want this runtime to spread differently between samples
 //        due to different durations.
+// We use the same target duration whether calibrated or not
+//   - This ensures the calibration samples are measured in the same settings
+//     as the others. Otherwise, the first samples after calibration might be
+//     different from the others, removing the benefits of calibration.
 // Since `maxLoops` aims to last a specific duration, we need the last
 // `measureDuration` to estimate it.
 //   - If the `repeat` changes, we need to take it into account as well, which
