@@ -1,5 +1,3 @@
-import now from 'precise-now'
-
 import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
 
@@ -7,14 +5,11 @@ import { updatePreviewReport } from './preview_report.js'
 
 // Aggregate `bufferedMeasures` to `measures`.
 // The `stats` need a single `measures` array, so they are computed right after.
-// Since this is CPU-heavy, this is done incrementally after one or several
-// samples, as opposed to at the end of the benchmark. This is because:
-//  - Stats are reported in realtime
-//  - This avoids a big slowdown at the end of the benchmark, which would be
-//    perceived by users
-// We aim at performing this for a specific percentage of the total duration.
-// We do this by computing how long each aggregation takes, then waiting a
-// specific amount of duration based on that last aggregation duration.
+// We perform this after each sample, not after several samples because:
+//  - If the number of samples was based on how long aggregation takes,
+//    aggregation would happen at longer and longer intervals, creating big
+//    and infrequent slowdowns.
+//  - This allows using any `stats` in the sample logic
 export const aggregatePreview = async function ({
   combination,
   combination: { sampleDurationLast, bufferedMeasures },
@@ -52,20 +47,3 @@ const addBufferedMeasures = function (measures, bufferedMeasures) {
     mergeSort(measures, sampleMeasures)
   })
 }
-
-const getAggregateStart = function () {
-  return now()
-}
-
-// Retrieve duration that should be spent measuring before doing another
-// aggregate. This increases as the benchmark lasts longer.
-const getAggregateCountdown = function (aggregateStart) {
-  const aggregateDuration = now() - aggregateStart
-  return aggregateDuration / AGGREGATE_PERCENTAGE
-}
-
-// How much duration of the benchmark should be spent aggregating.
-// A higher value spends less duration measuring, giving less precise results.
-// A lower value spends less duration aggregating, resulting in less responsive
-// preview and less precise `stats.median`.
-const AGGREGATE_PERCENTAGE = 0.1
