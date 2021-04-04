@@ -1,4 +1,3 @@
-import { throwOnProcessExit } from '../error/combination.js'
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 
@@ -29,7 +28,7 @@ import { isRemainingCombination } from './remaining.js'
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
-// eslint-disable-next-line max-statements, max-lines-per-function
+// eslint-disable-next-line max-statements
 export const performMeasureLoop = async function ({
   combinations,
   combination,
@@ -40,7 +39,6 @@ export const performMeasureLoop = async function ({
   stopState,
   exec,
   server,
-  childProcess,
 }) {
   if (taskId === undefined) {
     return combination
@@ -77,11 +75,7 @@ export const performMeasureLoop = async function ({
     })
 
     // eslint-disable-next-line no-await-in-loop
-    const newCombination = await eMeasureSample(
-      combinationA,
-      server,
-      childProcess,
-    )
+    const newCombination = await measureSample(combinationA, server)
 
     // eslint-disable-next-line no-await-in-loop
     const newCombinationA = await aggregatePreview({
@@ -104,11 +98,4 @@ export const performMeasureLoop = async function ({
   delete stopState.combination
 
   return combinationB
-}
-
-const eMeasureSample = async function (combination, server, childProcess) {
-  return await Promise.race([
-    throwOnProcessExit(childProcess),
-    measureSample(combination, server),
-  ])
 }

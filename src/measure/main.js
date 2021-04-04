@@ -1,3 +1,4 @@
+import { throwOnProcessExit } from '../process/error.js'
 import {
   spawnRunnerProcess,
   terminateRunnerProcess,
@@ -85,16 +86,18 @@ const spawnAndMeasure = async function ({
   const childProcess = spawnRunnerProcess({ combination, serverUrl, cwd, exec })
 
   try {
-    return await stopOrMeasure({
-      combinations,
-      combination,
-      duration,
-      previewConfig,
-      previewState,
-      exec,
-      server,
-      childProcess,
-    })
+    return await Promise.race([
+      throwOnProcessExit(childProcess),
+      stopOrMeasure({
+        combinations,
+        combination,
+        duration,
+        previewConfig,
+        previewState,
+        exec,
+        server,
+      }),
+    ])
   } finally {
     terminateRunnerProcess(childProcess)
   }
@@ -109,7 +112,6 @@ const stopOrMeasure = async function ({
   previewState,
   exec,
   server,
-  childProcess,
 }) {
   const { stopState, onAbort, removeStopHandler } = addStopHandler(
     previewState,
@@ -128,7 +130,6 @@ const stopOrMeasure = async function ({
         stopState,
         exec,
         server,
-        childProcess,
       }),
     ])
     return { combination: combinationA, stopped: stopState.stopped }

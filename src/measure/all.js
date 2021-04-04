@@ -17,15 +17,13 @@ export const measureAllCombinations = async function ({
   stopState,
   exec,
   server,
-  childProcess,
 }) {
   try {
-    const combinationA = await startCombination({
+    const combinationA = await startCombination(
       combination,
       previewState,
       server,
-      childProcess,
-    })
+    )
     const combinationB = await performMeasureLoop({
       combinations,
       combination: combinationA,
@@ -35,14 +33,12 @@ export const measureAllCombinations = async function ({
       stopState,
       exec,
       server,
-      childProcess,
     })
-    const combinationC = await endCombination({
-      combination: combinationB,
+    const combinationC = await endCombination(
+      combinationB,
       previewState,
       server,
-      childProcess,
-    })
+    )
     return combinationC
   } catch (error) {
     prependTaskPrefix(error, combination)
