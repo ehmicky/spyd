@@ -76,7 +76,7 @@ export const performMeasureLoop = async function ({
     })
 
     // eslint-disable-next-line no-await-in-loop
-    const { combination: newCombination, res: resB } = await measureSample({
+    const { combination: combinationB, res: resB } = await measureSample({
       combination: combinationA,
       server,
       res: resA,
@@ -84,26 +84,26 @@ export const performMeasureLoop = async function ({
     })
 
     // eslint-disable-next-line no-await-in-loop
-    const newCombinationA = await aggregatePreview({
-      newCombination,
+    const combinationC = await aggregatePreview({
+      combination: combinationB,
       previewConfig,
       previewState,
       minLoopDuration,
     })
 
-    const newCombinationB = addSampleDuration(newCombinationA, sampleStart)
+    const combinationD = addSampleDuration(combinationC, sampleStart)
     // eslint-disable-next-line fp/no-mutation
-    combinationA = newCombinationB
+    combinationA = combinationD
     // eslint-disable-next-line fp/no-mutation
     resA = resB
   }
 
-  const combinationB = aggregateMeasures(combinationA, minLoopDuration)
+  const combinationE = aggregateMeasures(combinationA, minLoopDuration)
 
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.combination
 
-  return { combination: combinationB, res: resA }
+  return { combination: combinationE, res: resA }
 }

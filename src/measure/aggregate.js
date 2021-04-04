@@ -16,8 +16,8 @@ import { updatePreviewReport } from './preview_report.js'
 // We do this by computing how long each aggregation takes, then waiting a
 // specific amount of duration based on that last aggregation duration.
 export const aggregatePreview = async function ({
-  newCombination,
-  newCombination: { aggregateCountdown, sampleDurationLast, bufferedMeasures },
+  combination,
+  combination: { aggregateCountdown, sampleDurationLast, bufferedMeasures },
   previewConfig,
   previewState,
   minLoopDuration,
@@ -25,18 +25,18 @@ export const aggregatePreview = async function ({
   const aggregateCountdownA = aggregateCountdown - sampleDurationLast
 
   if (!shouldAggregate(aggregateCountdownA, bufferedMeasures)) {
-    return { ...newCombination, aggregateCountdown: aggregateCountdownA }
+    return { ...combination, aggregateCountdown: aggregateCountdownA }
   }
 
   const aggregateStart = getAggregateStart()
-  const newCombinationA = aggregateMeasures(newCombination, minLoopDuration)
+  const combinationA = aggregateMeasures(combination, minLoopDuration)
   await updatePreviewReport({
-    combination: newCombinationA,
+    combination: combinationA,
     previewConfig,
     previewState,
   })
   const aggregateCountdownB = getAggregateCountdown(aggregateStart)
-  return { ...newCombinationA, aggregateCountdown: aggregateCountdownB }
+  return { ...combinationA, aggregateCountdown: aggregateCountdownB }
 }
 
 // We do not recompute during calibration or when there are no new buffered
