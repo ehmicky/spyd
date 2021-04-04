@@ -2,7 +2,7 @@ import {
   spawnRunnerProcess,
   terminateRunnerProcess,
 } from '../process/runner.js'
-import { startServer, endServer } from '../server/start_end.js'
+import { startServer, endServer } from '../server/main.js'
 
 import { measureAllCombinations } from './all.js'
 import { addInitProps } from './props.js'
