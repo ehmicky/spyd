@@ -14,7 +14,9 @@ export const getPreviewConfig = function (
 
 // Preview results progressively, as combinations are being measured.
 // Reporters should:
-//  - Handle combinations not measured yet, i.e. with `undefined` `stats`
+//  - Handle combinations not measured yet, i.e. with `undefined` `stats`.
+//     - Their titles should be reported so that users know which combinations
+//       are left
 //  - Try to limit the amount of flicker between previews
 //     - For example, all combinations should be shown even if not measured yet.
 //     - And the size of table should not change between previews.
