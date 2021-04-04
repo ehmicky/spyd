@@ -19,15 +19,11 @@ import { receiveReturnValue } from './receive.js'
 // We are setting up return value listening before sending params to prevent any
 // race condition.
 export const sendAndReceive = async function (combination, server, params) {
-  const receiveReturnPromise = receiveReturnValue(combination, server)
-
-  try {
-    await sendParams(combination, params)
-    return await receiveReturnPromise
-  } catch (error) {
-    receiveReturnPromise.catch(noop)
-    throw error
-  }
+  const [combinationA] = await Promise.all([
+    receiveReturnValue(combination, server),
+    sendParams(combination, params),
+  ])
+  return combinationA
 }
 
 export const sendParams = async function ({ res }, params) {
@@ -41,6 +37,3 @@ export const sendParams = async function ({ res }, params) {
     throw new PluginError(`Could not send HTTP response: ${error.stack}`)
   }
 }
-
-// eslint-disable-next-line no-empty-function
-const noop = function () {}
