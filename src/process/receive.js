@@ -3,8 +3,9 @@ import { once } from 'events'
 
 import getStream from 'get-stream'
 
-import { throwOnStreamError } from '../error/combination.js'
 import { PluginError, UserError } from '../error/main.js'
+
+import { throwOnStreamError } from './error.js'
 
 // Receive the sample's return value by receiving a HTTP long poll request.
 // This can fail for several reasons:

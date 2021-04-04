@@ -1,3 +1,6 @@
+// eslint-disable-next-line fp/no-events
+import { once } from 'events'
+
 import { UserError } from '../error/main.js'
 
 // Processes should not exit until the end of the benchmark. If they do, this
@@ -23,3 +26,8 @@ const getProcessExitMessage = function (failed, message) {
 
 const TASK_EXIT_MESSAGE = 'The task must not make the process exit.'
 const EXECA_MESSAGE_REGEXP = /^Command ([^:]+): .*/u
+
+// Make any stream `error` event throw
+export const throwOnStreamError = function (stream) {
+  return once(stream, 'dummy_event')
+}

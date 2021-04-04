@@ -1,8 +1,8 @@
 import { promisify } from 'util'
 
-import { throwOnStreamError } from '../error/combination.js'
 import { PluginError } from '../error/main.js'
 
+import { throwOnStreamError } from './error.js'
 import { receiveReturnValue } from './receive.js'
 
 // Send the next sample's params by responding to the HTTP long poll request.
