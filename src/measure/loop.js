@@ -34,7 +34,7 @@ import { isRemainingCombination } from './remaining.js'
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
-// eslint-disable-next-line max-statements, max-lines-per-function
+// eslint-disable-next-line max-statements
 export const performMeasureLoop = async function ({
   combinations,
   combination,
