@@ -13,11 +13,5 @@ export const addSampleDuration = function (combination, sampleStart) {
   const sampleDurationLast = now() - sampleStart
   const totalDuration = combination.totalDuration + sampleDurationLast
   const sampleDurationMean = totalDuration / combination.allSamples
-
-  return {
-    ...combination,
-    sampleDurationLast,
-    totalDuration,
-    sampleDurationMean,
-  }
+  return { ...combination, totalDuration, sampleDurationMean }
 }

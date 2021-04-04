@@ -12,7 +12,7 @@ import { updatePreviewReport } from './preview_report.js'
 //  - This allows using any `stats` in the sample logic
 export const aggregatePreview = async function ({
   combination,
-  combination: { sampleDurationLast, bufferedMeasures },
+  combination: { bufferedMeasures },
   previewConfig,
   previewState,
   minLoopDuration,

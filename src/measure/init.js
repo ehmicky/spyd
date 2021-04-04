@@ -22,7 +22,6 @@ export const addInitProps = function (combination) {
   return {
     ...combination,
     totalDuration: 0,
-    sampleDurationLast: 0,
     sampleDurationMean: 0,
     measureDuration: 0,
     sampleMedian: 0,
