@@ -22,11 +22,10 @@ export const measureCombinations = async function (
     const combinationA = { ...combination, index }
     // eslint-disable-next-line no-await-in-loop
     const { combination: combinationB, stopped } = await measureCombination({
-      combinations,
       combination: combinationA,
       duration,
       cwd,
-      previewConfig,
+      previewConfig: { ...previewConfig, combinations },
       previewState,
       exec,
     })
@@ -43,7 +42,6 @@ export const measureCombinations = async function (
 }
 
 const measureCombination = async function ({
-  combinations,
   combination,
   duration,
   cwd,
@@ -56,7 +54,6 @@ const measureCombination = async function ({
 
   try {
     return await spawnAndMeasure({
-      combinations,
       combination: combinationA,
       serverUrl,
       duration,
@@ -73,7 +70,6 @@ const measureCombination = async function ({
 
 // Spawn combination processes, then measure them
 const spawnAndMeasure = async function ({
-  combinations,
   combination,
   serverUrl,
   duration,
@@ -87,7 +83,6 @@ const spawnAndMeasure = async function ({
 
   try {
     return await stopOrMeasure({
-      combinations,
       combination,
       duration,
       previewConfig,
@@ -103,7 +98,6 @@ const spawnAndMeasure = async function ({
 
 // Handle stopping the benchmark
 const stopOrMeasure = async function ({
-  combinations,
   combination,
   duration,
   previewConfig,
@@ -119,7 +113,6 @@ const stopOrMeasure = async function ({
 
   try {
     const combinationA = await eMeasureAllCombinations({
-      combinations,
       combination,
       duration,
       previewConfig,
@@ -137,7 +130,6 @@ const stopOrMeasure = async function ({
 }
 
 const eMeasureAllCombinations = async function ({
-  combinations,
   combination,
   duration,
   previewConfig,
@@ -153,7 +145,6 @@ const eMeasureAllCombinations = async function ({
       throwOnProcessExit(childProcess),
       onAbort,
       measureAllCombinations({
-        combinations,
         combination,
         duration,
         previewConfig,

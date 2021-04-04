@@ -7,8 +7,9 @@ import { getFinalResult } from './init.js'
 export const getPreviewConfig = function (
   initResult,
   { quiet, reporters, titles },
+  combinations,
 ) {
-  return { quiet, initResult, results: [], reporters, titles }
+  return { quiet, initResult, results: [], reporters, titles, combinations }
 }
 
 // Preview results progressively, as combinations are being measured.
@@ -19,7 +20,6 @@ export const getPreviewConfig = function (
 //     - And the size of table should not change between previews.
 // When uncalibrated, we skip it since no stats would be reported anyway.
 export const setFirstPreview = async function ({
-  combinations,
   previewConfig,
   previewConfig: { quiet },
   previewState,
@@ -28,22 +28,37 @@ export const setFirstPreview = async function ({
     return
   }
 
-  await setPreviewReport({ combinations, previewConfig, previewState })
+  await setPreviewReport({ previewConfig, previewState })
   setDelayedDescription(previewState, START_DESCRIPTION)
 }
 
 const START_DESCRIPTION = 'Starting...'
 
-export const setPreviewReport = async function ({
-  combinations,
-  previewConfig: { initResult, results, quiet, reporters, titles },
+export const updatePreviewReport = async function ({
+  combination,
+  combination: { index },
+  previewConfig,
+  previewConfig: { quiet, combinations },
   previewState,
-  previewState: { time, percentage },
 }) {
   if (quiet) {
     return
   }
 
+  const combinationsA = [...combinations]
+  // eslint-disable-next-line fp/no-mutation
+  combinationsA[index] = combination
+  await setPreviewReport({
+    previewConfig: { ...previewConfig, combinations: combinationsA },
+    previewState,
+  })
+}
+
+const setPreviewReport = async function ({
+  previewConfig: { initResult, results, reporters, titles, combinations },
+  previewState,
+  previewState: { time, percentage },
+}) {
   const reportersA = reporters.filter(isNotQuiet)
 
   if (reportersA.length === 0) {

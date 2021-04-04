@@ -30,9 +30,8 @@ import { isRemainingCombination } from './remaining.js'
 //  - This can be either hardcoded or using the `inputs` configuration property.
 // eslint-disable-next-line max-statements, max-lines-per-function
 export const performMeasureLoop = async function ({
-  combinations,
   combination,
-  combination: { index, taskId },
+  combination: { taskId },
   duration,
   previewConfig,
   previewState,
@@ -49,7 +48,6 @@ export const performMeasureLoop = async function ({
 
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.combination = combination
-  const combinationsLeft = combinations.length - index
 
   // eslint-disable-next-line fp/no-let
   let combinationA = combination
@@ -71,8 +69,7 @@ export const performMeasureLoop = async function ({
 
     updatePreviewEnd({
       combination: combinationA,
-      combinations,
-      combinationsLeft,
+      previewConfig,
       previewState,
       duration,
     })
@@ -87,7 +84,6 @@ export const performMeasureLoop = async function ({
     // eslint-disable-next-line no-await-in-loop
     const newCombinationA = await aggregatePreview({
       newCombination,
-      combinations,
       previewConfig,
       previewState,
     })

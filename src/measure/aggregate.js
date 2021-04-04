@@ -3,7 +3,7 @@ import now from 'precise-now'
 import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
 
-import { setPreviewReport } from './preview_report.js'
+import { updatePreviewReport } from './preview_report.js'
 
 // Aggregate `bufferedMeasures` to `measures`.
 // The `stats` need a single `measures` array, so they are computed right after.
@@ -17,13 +17,7 @@ import { setPreviewReport } from './preview_report.js'
 // specific amount of duration based on that last aggregation duration.
 export const aggregatePreview = async function ({
   newCombination,
-  newCombination: {
-    aggregateCountdown,
-    sampleDurationLast,
-    bufferedMeasures,
-    index,
-  },
-  combinations,
+  newCombination: { aggregateCountdown, sampleDurationLast, bufferedMeasures },
   previewConfig,
   previewState,
 }) {
@@ -35,9 +29,11 @@ export const aggregatePreview = async function ({
 
   const aggregateStart = getAggregateStart()
   const newCombinationA = aggregateMeasures(newCombination)
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  combinations[index] = newCombinationA
-  await setPreviewReport({ combinations, previewConfig, previewState })
+  await updatePreviewReport({
+    combination: newCombinationA,
+    previewConfig,
+    previewState,
+  })
   const aggregateCountdownB = getAggregateCountdown(aggregateStart)
   return { ...newCombinationA, aggregateCountdown: aggregateCountdownB }
 }
