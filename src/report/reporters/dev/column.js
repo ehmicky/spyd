@@ -9,6 +9,7 @@ export const STAT_COLUMNS = [
   'diff',
   'stdev',
   'moe',
+  'rmoe',
   'times',
   'loops',
   'repeat',

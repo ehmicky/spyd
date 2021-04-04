@@ -67,3 +67,14 @@ export const getMoe = function (lowIndex, highIndex, stdev) {
   const marginOfError = standardError * tvalue
   return marginOfError
 }
+
+// Retrieve margin of error relative to the median.
+// This is more useful than moe when comparing different combinations, or when
+// targetting a specific precision threshold.
+export const getRmoe = function (moe, median) {
+  if (moe === undefined) {
+    return
+  }
+
+  return moe / median
+}

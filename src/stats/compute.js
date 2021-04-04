@@ -1,7 +1,7 @@
 import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
-import { getMoe } from './moe.js'
+import { getMoe, getRmoe } from './moe.js'
 import { getQuantiles } from './quantile.js'
 import { getStdev } from './stdev.js'
 import { getMean } from './sum.js'
@@ -46,6 +46,7 @@ export const computeStats = function ({
   })
   const stdev = getStdev({ array: measures, lowIndex, highIndex, median })
   const moe = getMoe(lowIndex, highIndex, stdev)
+  const rmoe = getRmoe(moe, median)
 
   const repeat = Math.round(times / loops)
 
@@ -58,6 +59,7 @@ export const computeStats = function ({
     high,
     stdev,
     moe,
+    rmoe,
     histogram,
     quantiles,
     loops,
