@@ -15,13 +15,9 @@ export const measureAllCombinations = async function ({
   previewState,
   stopState,
   exec,
-  serverChannel,
+  server,
 }) {
-  const combinationA = await startCombination(
-    combination,
-    previewState,
-    serverChannel,
-  )
+  const combinationA = await startCombination(combination, previewState, server)
   const combinationB = await performMeasureLoop({
     combinations,
     combination: combinationA,
@@ -31,13 +27,9 @@ export const measureAllCombinations = async function ({
     previewState,
     stopState,
     exec,
-    serverChannel,
+    server,
   })
-  const combinationC = await endCombination(
-    combinationB,
-    previewState,
-    serverChannel,
-  )
+  const combinationC = await endCombination(combinationB, previewState, server)
   const combinationD = await exitCombination(combinationC)
   handleCombinationError(combinationD)
   return combinationD

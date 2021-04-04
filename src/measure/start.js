@@ -7,26 +7,26 @@ import { getMinLoopDuration } from '../sample/min_loop_duration.js'
 export const startCombination = async function (
   combination,
   previewState,
-  serverChannel,
+  server,
 ) {
-  const combinationA = await eStartCombination(combination, serverChannel)
+  const combinationA = await eStartCombination(combination, server)
   setDescription(previewState)
   return combinationA
 }
 
-const eStartCombination = async function (combination, serverChannel) {
+const eStartCombination = async function (combination, server) {
   return await Promise.race([
     failOnProcessExit(combination),
-    startCombinationLogic(combination, serverChannel),
+    startCombinationLogic(combination, server),
   ])
 }
 
 // `calibrations` can be `undefined` if an error happened.
-const startCombinationLogic = async function (combination, serverChannel) {
+const startCombinationLogic = async function (combination, server) {
   const {
     newCombination,
     returnValue: { tasks, calibrations = [] },
-  } = await receiveReturnValue(combination, serverChannel)
+  } = await receiveReturnValue(combination, server)
   const minLoopDuration = getMinLoopDuration(calibrations)
   return { ...newCombination, tasks, minLoopDuration }
 }

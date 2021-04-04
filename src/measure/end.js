@@ -9,30 +9,26 @@ import { sendAndReceive } from '../process/send.js'
 export const endCombination = async function (
   combination,
   previewState,
-  serverChannel,
+  server,
 ) {
   setDelayedDescription(previewState, END_DESCRIPTION)
-  return await eEndCombination(combination, serverChannel)
+  return await eEndCombination(combination, server)
 }
 
 const END_DESCRIPTION = 'Ending...'
 
-const eEndCombination = async function (combination, serverChannel) {
+const eEndCombination = async function (combination, server) {
   return await Promise.race([
     failOnProcessExit(combination),
-    endCombinationLogic(combination, serverChannel),
+    endCombinationLogic(combination, server),
   ])
 }
 
-const endCombinationLogic = async function (combination, serverChannel) {
+const endCombinationLogic = async function (combination, server) {
   if (combinationHasErrored(combination)) {
     return combination
   }
 
-  const { newCombination } = await sendAndReceive(
-    combination,
-    serverChannel,
-    {},
-  )
+  const { newCombination } = await sendAndReceive(combination, server, {})
   return newCombination
 }

@@ -1,5 +1,3 @@
-// eslint-disable-next-line fp/no-events
-import { EventEmitter } from 'events'
 import { createServer } from 'http'
 import { promisify } from 'util'
 
@@ -22,11 +20,7 @@ import { promisify } from 'util'
 export const startServer = async function (combination, duration) {
   const server = createServer()
   const serverUrl = await serverListen(server, duration)
-  const serverChannel = new EventEmitter()
-  server.on('request', (req, res) => {
-    serverChannel.emit('return', { req, res })
-  })
-  return { server, serverUrl, serverChannel }
+  return { server, serverUrl }
 }
 
 // Start listening to requests

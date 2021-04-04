@@ -13,8 +13,8 @@ import { PluginError, UserError } from '../error/main.js'
 // This can fail for several reasons:
 //  - Wrong HTTP request URL or body due to bug in runner
 //  - Error/exception in task
-export const receiveReturnValue = async function (combination, serverChannel) {
-  const [{ req, res }] = await once(serverChannel, 'return')
+export const receiveReturnValue = async function (combination, server) {
+  const [req, res] = await once(server, 'request')
   const newCombination = { ...combination, res }
 
   const { returnValue, error } = await parseReturnValue(req)
