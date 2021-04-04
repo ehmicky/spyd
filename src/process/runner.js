@@ -28,7 +28,6 @@ import { spawnProcess } from './spawn.js'
 // library is called programmatically and the caller terminates the parent
 // process.
 export const spawnRunnerProcess = function ({
-  combination,
   combination: {
     runnerSpawn: [file, ...args],
     runnerSpawnOptions,
@@ -61,7 +60,7 @@ export const spawnRunnerProcess = function ({
     },
     cwd,
   )
-  return { ...combination, childProcess }
+  return childProcess
 }
 
 // Retrieve params passed to runner processes so they can find the right task
@@ -111,6 +110,6 @@ const getStdio = function (exec) {
 // In general, processes should already have exited thanks to error handling
 // and cleanup logic. However, we terminate those as a safety precaution, for
 // example if there is a bug.
-export const terminateRunnerProcess = function ({ childProcess }) {
+export const terminateRunnerProcess = function (childProcess) {
   childProcess.kill('SIGKILL')
 }

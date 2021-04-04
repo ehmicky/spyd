@@ -86,21 +86,22 @@ const spawnAndMeasure = async function ({
   exec,
   server,
 }) {
-  const combinationA = spawnRunnerProcess({ combination, serverUrl, cwd, exec })
+  const childProcess = spawnRunnerProcess({ combination, serverUrl, cwd, exec })
 
   try {
     return await stopOrMeasure({
       combinations,
-      combination: combinationA,
+      combination,
       index,
       duration,
       previewConfig,
       previewState,
       exec,
       server,
+      childProcess,
     })
   } finally {
-    terminateRunnerProcess(combinationA)
+    terminateRunnerProcess(childProcess)
   }
 }
 
@@ -114,10 +115,12 @@ const stopOrMeasure = async function ({
   previewState,
   exec,
   server,
+  childProcess,
 }) {
   const { stopState, onAbort, removeStopHandler } = addStopHandler(
     previewState,
     duration,
+    childProcess,
   )
 
   try {
@@ -133,6 +136,7 @@ const stopOrMeasure = async function ({
         stopState,
         exec,
         server,
+        childProcess,
       }),
     ])
     return { combination: combinationA, stopped: stopState.stopped }

@@ -2,8 +2,8 @@ import { combinationHasErrored } from '../error/combination.js'
 import { sendParams } from '../process/send.js'
 
 // Exit each combination's process
-export const exitCombination = async function (combination) {
-  if (processHasExited(combination)) {
+export const exitCombination = async function (combination, childProcess) {
+  if (processHasExited(childProcess, combination)) {
     return combination
   }
 
@@ -13,14 +13,10 @@ export const exitCombination = async function (combination) {
     return newCombination
   }
 
-  await combination.childProcess
+  await childProcess
   return newCombination
 }
 
-const processHasExited = function ({ childProcess, res = {} }) {
-  return (
-    childProcess.exitCode !== null ||
-    childProcess.signalCode !== null ||
-    res.destroyed
-  )
+const processHasExited = function ({ exitCode, signalCode }, { res = {} }) {
+  return exitCode !== null || signalCode !== null || res.destroyed
 }

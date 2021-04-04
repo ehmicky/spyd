@@ -4,19 +4,24 @@ import { receiveReturnValue } from '../process/receive.js'
 import { getMinLoopDuration } from '../sample/min_loop_duration.js'
 
 // Wait for each combination to start
-export const startCombination = async function (
+export const startCombination = async function ({
   combination,
   previewState,
   server,
-) {
-  const combinationA = await eStartCombination(combination, server)
+  childProcess,
+}) {
+  const combinationA = await eStartCombination(
+    combination,
+    server,
+    childProcess,
+  )
   setDescription(previewState)
   return combinationA
 }
 
-const eStartCombination = async function (combination, server) {
+const eStartCombination = async function (combination, server, childProcess) {
   return await Promise.race([
-    failOnProcessExit(combination),
+    failOnProcessExit(combination, childProcess),
     startCombinationLogic(combination, server),
   ])
 }

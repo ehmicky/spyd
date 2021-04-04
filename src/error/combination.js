@@ -44,8 +44,12 @@ const getCombinationError = function ({ error, taskId }) {
 //  - The task made the process exit, which is improper since it prevents proper
 //    cleanup and orchestration.
 //  - The runner crashed due to a bug.
-export const failOnProcessExit = async function (combination, stopState) {
-  const { failed, message } = await combination.childProcess
+export const failOnProcessExit = async function (
+  combination,
+  childProcess,
+  stopState,
+) {
+  const { failed, message } = await childProcess
   const exitMessage = getProcessExitMessage({ failed, message, stopState })
   const error = new UserError(exitMessage)
   return { ...combination, error }

@@ -7,8 +7,9 @@ import { setBenchmarkEnd } from '../preview/set.js'
 // much longer to end, so we do not do any end/exit and directly terminate it.
 export const terminateLongTask = function ({
   stopState,
-  stopState: { sampleStart, combination: { totalDuration, childProcess } = {} },
+  stopState: { sampleStart, combination: { totalDuration } = {} },
   duration,
+  childProcess,
 }) {
   if (!isLongTask({ sampleStart, totalDuration, duration })) {
     return
