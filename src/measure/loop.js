@@ -2,7 +2,6 @@ import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 import { pWhile } from '../utils/p_while.js'
 
-import { aggregatePreview } from './aggregate.js'
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { updatePreviewEnd } from './preview_end.js'
 import { isRemainingCombination } from './remaining.js'
@@ -89,19 +88,14 @@ const performSample = async function (
     combination,
     server,
     res,
-    minLoopDuration,
-  })
-
-  const combinationB = await aggregatePreview({
-    combination: combinationA,
     previewConfig,
     previewState,
     minLoopDuration,
   })
 
-  const combinationC = addSampleDuration(combinationB, sampleStart)
+  const combinationB = addSampleDuration(combinationA, sampleStart)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  stopState.combination = combinationC
+  stopState.combination = combinationB
 
-  return { combination: combinationC, res: resA }
+  return { combination: combinationB, res: resA }
 }

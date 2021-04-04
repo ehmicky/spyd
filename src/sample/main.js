@@ -1,6 +1,9 @@
 import now from 'precise-now'
 
+import { updatePreviewReport } from '../measure/preview_report.js'
 import { sendAndReceive } from '../process/ipc.js'
+import { computeStats } from '../stats/compute.js'
+import { mergeSort } from '../stats/merge.js'
 
 import { getParams } from './params.js'
 import { handleReturnValue } from './return.js'
@@ -10,6 +13,8 @@ export const measureSample = async function ({
   combination,
   server,
   res,
+  previewConfig,
+  previewState,
   minLoopDuration,
 }) {
   const params = getParams(combination)
@@ -21,7 +26,13 @@ export const measureSample = async function ({
   )
   const newProps = handleReturnValue(combination, returnValue, minLoopDuration)
   const combinationA = { ...combination, ...newProps, measureDuration }
-  return { combination: combinationA, res: resA }
+  const combinationB = await aggregatePreview({
+    combination: combinationA,
+    previewConfig,
+    previewState,
+    minLoopDuration,
+  })
+  return { combination: combinationB, res: resA }
 }
 
 // `measureDuration` is how long it takes to get a single sample's results.
@@ -37,4 +48,36 @@ const measureNewSample = async function (params, server, res) {
   const { returnValue, res: resA } = await sendAndReceive(params, server, res)
   const measureDuration = now() - measureDurationStart
   return { returnValue, res: resA, measureDuration }
+}
+
+// Aggregate `bufferedMeasures` to `measures`.
+// The `stats` need a single `measures` array, so they are computed right after.
+// We perform this after each sample, not after several samples because:
+//  - If the number of samples was based on how long aggregation takes,
+//    aggregation would happen at longer and longer intervals, creating big
+//    and infrequent slowdowns.
+//  - This allows using any `stats` in the sample logic
+// Add all measures from the sample.
+// Sort them incrementally to the final `measures` big array, as opposed to
+// sorting `measures` directly, which would be much slower.
+const aggregatePreview = async function ({
+  combination: { measures },
+  combination: { bufferedMeasure, ...combination },
+  previewConfig,
+  previewState,
+  minLoopDuration,
+}) {
+  if (bufferedMeasure === undefined) {
+    return combination
+  }
+
+  mergeSort(measures, bufferedMeasure)
+  const stats = computeStats(measures, combination, minLoopDuration)
+  const combinationA = { ...combination, measures, stats }
+  await updatePreviewReport({
+    combination: combinationA,
+    previewConfig,
+    previewState,
+  })
+  return combinationA
 }
