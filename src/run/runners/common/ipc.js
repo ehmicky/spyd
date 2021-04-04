@@ -1,4 +1,4 @@
-import { argv, exit } from 'process'
+import { argv } from 'process'
 
 import fetch from 'cross-fetch'
 
@@ -91,19 +91,13 @@ const measureSamples = async function ({
 // have some pending macrotasks, we need to abort them not wait for them.
 const successExit = async function (serverUrl) {
   await sendReturnValue({}, serverUrl)
-  exit(0)
 }
 
 // Any error while starting or measuring is most likely a user error, which is
 // sent back to the main process.
 const errorExit = async function (error, serverUrl) {
   const errorProp = error instanceof Error ? error.stack : String(error)
-
-  try {
-    await sendReturnValue({ error: errorProp }, serverUrl)
-  } finally {
-    exit(1)
-  }
+  await sendReturnValue({ error: errorProp }, serverUrl)
 }
 
 // Send a HTTP request to the main process

@@ -107,11 +107,20 @@ const getStdio = function (exec) {
 }
 
 // Terminate each combination's process after being measured.
-// The process should already have exited unless an exception has been thrown,
-// due to either a core bug or a task error.
-// Runners should run `afterAll` (when defined) on task errors.
-//  - If an exception is thrown in afterAll, it should be reported instead since
-//    bugs in error handling logic is more critical.
+// The combination can be in three possible states:
+//  - Success:
+//     - The process should be hanging for a final HTTP response
+//     - We terminate the process with a signal instead of sending the final
+//       response because:
+//        - It allows to assume that process should never exit, which simplifies
+//          handling abnormal process termination.
+//        - It is consistent with the failed combinations termination behavior.
+//  - User error (exception in a task)
+//     - The process should be hanging for a final HTTP response
+//     - Runners should run `afterAll`, when defined
+//        - If an exception is thrown in afterAll, it should be reported instead
+//          since bugs in error handling logic is more critical.
+//  - Core bug
 export const terminateRunnerProcess = function (childProcess) {
   childProcess.kill('SIGKILL')
 }

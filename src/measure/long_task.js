@@ -4,7 +4,7 @@ import { setBenchmarkEnd } from '../preview/set.js'
 
 // Tasks that are longer than the `duration` configuration property are likely
 // reasons why users might stop the benchmark. In that case, the task might be
-// much longer to end, so we do not do any end/exit and directly terminate it.
+// much longer to end, so we do not do any end and directly terminate it.
 export const terminateLongTask = function ({
   stopState,
   stopState: { sampleStart, combination: { totalDuration } = {} },

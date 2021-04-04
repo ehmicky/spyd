@@ -11,7 +11,7 @@ import {
 import { terminateLongTask, setStopBechmarkEnd } from './long_task.js'
 
 // Allow users to stop measuring by using signals like SIGINT (CTRL-C).
-// When this happens, combinations still properly end and exit.
+// When this happens, combinations still properly end.
 // The user can hit the same signal twice to abort immediately instead.
 // When stopping, we do not save results to allow continuing later because this
 // requires spawning processes again, making them go through cold starts again.
