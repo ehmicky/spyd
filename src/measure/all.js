@@ -1,5 +1,3 @@
-import { prependTaskPrefix } from '../error/combination.js'
-
 import { endCombination } from './end.js'
 import { performMeasureLoop } from './loop.js'
 import { startCombination } from './start.js'
@@ -44,4 +42,14 @@ export const measureAllCombinations = async function ({
     prependTaskPrefix(error, combination)
     throw error
   }
+}
+
+// taskId is `undefined` during init
+const prependTaskPrefix = function (error, { taskId }) {
+  if (taskId === undefined) {
+    return
+  }
+
+  const taskPrefix = `In task "${taskId}"`
+  error.message = `${taskPrefix}:\n${error.message}`
 }
