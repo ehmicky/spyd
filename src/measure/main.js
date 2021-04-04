@@ -114,7 +114,6 @@ const stopOrMeasure = async function ({
   const { stopState, onAbort, removeStopHandler } = addStopHandler(
     previewState,
     duration,
-    childProcess,
   )
 
   try {

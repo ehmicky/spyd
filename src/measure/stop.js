@@ -8,7 +8,7 @@ import {
   waitForDelay,
 } from '../utils/timeout.js'
 
-import { terminateLongTask, setStopBechmarkEnd } from './long_task.js'
+import { setStopBechmarkEnd } from './long_task.js'
 
 // Allow users to stop measuring by using signals like SIGINT (CTRL-C).
 // When this happens, combinations still properly end.
@@ -17,8 +17,8 @@ import { terminateLongTask, setStopBechmarkEnd } from './long_task.js'
 // requires spawning processes again, making them go through cold starts again.
 // This would decrease precision and create difference between results depending
 // on how many times the benchmark was stopped/continued.
-export const addStopHandler = function (previewState, duration, childProcess) {
-  const stopState = { stopped: false, longTask: false }
+export const addStopHandler = function (previewState, duration) {
+  const stopState = { stopped: false }
   const noopHandler = removeDefaultHandlers()
   const { abortSignal, abort } = createController()
   const onAbort = handleStop({
@@ -26,7 +26,6 @@ export const addStopHandler = function (previewState, duration, childProcess) {
     previewState,
     abortSignal,
     duration,
-    childProcess,
   })
   const removeStopHandlerA = removeStopHandler.bind(
     undefined,
@@ -61,11 +60,10 @@ const handleStop = async function ({
   previewState,
   abortSignal,
   duration,
-  childProcess,
 }) {
   await waitForStopSignals(abortSignal)
 
-  setStopState({ previewState, stopState, duration, childProcess })
+  setStopState(previewState, stopState, duration)
 
   await waitForDelay(ABORT_DELAY, abortSignal)
   setPriorityDescription(previewState, ABORT_DESCRIPTION)
@@ -75,13 +73,7 @@ const handleStop = async function ({
   throw new AbortError('Benchmark has been aborted.')
 }
 
-const setStopState = function ({
-  previewState,
-  stopState,
-  duration,
-  childProcess,
-}) {
-  terminateLongTask({ stopState, duration, childProcess })
+const setStopState = function (previewState, stopState, duration) {
   setPriorityDescription(previewState, STOP_DESCRIPTION)
   setStopBechmarkEnd({ previewState, stopState, duration })
 

@@ -33,7 +33,7 @@ import { isRemainingCombination } from './remaining.js'
 export const performMeasureLoop = async function ({
   combinations,
   combination,
-  combination: { index },
+  combination: { index, taskId },
   duration,
   previewConfig,
   previewState,
@@ -42,7 +42,7 @@ export const performMeasureLoop = async function ({
   server,
   childProcess,
 }) {
-  if (isInit(combination)) {
+  if (taskId === undefined) {
     return combination
   }
 
@@ -77,12 +77,11 @@ export const performMeasureLoop = async function ({
     })
 
     // eslint-disable-next-line no-await-in-loop
-    const newCombination = await eMeasureSample({
-      combination: combinationA,
-      stopState,
+    const newCombination = await eMeasureSample(
+      combinationA,
       server,
       childProcess,
-    })
+    )
 
     // eslint-disable-next-line no-await-in-loop
     const newCombinationA = await aggregatePreview({
@@ -107,19 +106,9 @@ export const performMeasureLoop = async function ({
   return combinationB
 }
 
-// Task init, retrieving only task and step identifiers
-const isInit = function ({ taskId }) {
-  return taskId === undefined
-}
-
-const eMeasureSample = async function ({
-  combination,
-  stopState,
-  server,
-  childProcess,
-}) {
+const eMeasureSample = async function (combination, server, childProcess) {
   return await Promise.race([
-    throwOnProcessExit(childProcess, stopState),
+    throwOnProcessExit(childProcess),
     measureSample(combination, server),
   ])
 }
