@@ -1,7 +1,4 @@
-import {
-  failOnProcessExit,
-  combinationHasErrored,
-} from '../error/combination.js'
+import { failOnProcessExit } from '../error/combination.js'
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 
@@ -9,7 +6,6 @@ import { aggregatePreview, aggregateMeasures } from './aggregate.js'
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { updatePreviewEnd } from './preview_end.js'
 import { isRemainingCombination } from './remaining.js'
-import { isStoppedCombination } from './stop.js'
 
 // Run samples to measure each combination.
 // We ensure combinations are never measured at the same time
@@ -35,7 +31,7 @@ import { isStoppedCombination } from './stop.js'
 //    one sample.
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
-// eslint-disable-next-line max-statements, complexity
+// eslint-disable-next-line max-statements, max-lines-per-function
 export const performMeasureLoop = async function ({
   combinations,
   combination,
@@ -62,9 +58,12 @@ export const performMeasureLoop = async function ({
 
   // eslint-disable-next-line fp/no-loops
   while (
-    isRemainingCombination(combinationA, duration, exec) &&
-    !isStoppedCombination(stopState) &&
-    !combinationHasErrored(combinationA)
+    isRemainingCombination({
+      combination: combinationA,
+      duration,
+      exec,
+      stopState,
+    })
   ) {
     const sampleStart = getSampleStart()
     // eslint-disable-next-line fp/no-mutation, no-param-reassign

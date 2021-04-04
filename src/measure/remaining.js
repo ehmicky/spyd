@@ -1,3 +1,5 @@
+import { combinationHasErrored } from '../error/combination.js'
+
 // Check if combination should keep being measured.
 // We ensure each combination is measured at least once by checking
 // `loops === 0`
@@ -21,7 +23,20 @@
 //  - Adding/removing combinations would change the duration (and results) of
 //    others
 //  - This includes using the `include|exclude` configuration properties
-export const isRemainingCombination = function (
+export const isRemainingCombination = function ({
+  combination,
+  duration,
+  exec,
+  stopState: { stopped },
+}) {
+  return (
+    !stopped &&
+    !combinationHasErrored(combination) &&
+    hasDurationLeft(combination, duration, exec)
+  )
+}
+
+const hasDurationLeft = function (
   { totalDuration, sampleDurationMean, loops, allSamples },
   duration,
   exec,
