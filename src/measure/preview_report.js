@@ -38,11 +38,12 @@ const START_DESCRIPTION = 'Starting...'
 
 export const updatePreviewReport = async function ({
   combination,
+  combination: { calibrated },
   previewConfig,
   previewConfig: { quiet, combinations, index },
   previewState,
 }) {
-  if (quiet) {
+  if (quiet || !calibrated) {
     return
   }
 

@@ -1,6 +1,5 @@
 import now from 'precise-now'
 
-import { updatePreviewReport } from '../measure/preview_report.js'
 import { sendAndReceive } from '../process/ipc.js'
 import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
@@ -13,8 +12,6 @@ export const measureSample = async function ({
   combination,
   server,
   res,
-  previewConfig,
-  previewState,
   minLoopDuration,
 }) {
   const params = getParams(combination)
@@ -26,10 +23,8 @@ export const measureSample = async function ({
   )
   const newProps = handleReturnValue(combination, returnValue, minLoopDuration)
   const combinationA = { ...combination, ...newProps, measureDuration }
-  const combinationB = await aggregatePreview({
+  const combinationB = aggregatePreview({
     combination: combinationA,
-    previewConfig,
-    previewState,
     minLoopDuration,
   })
   return { combination: combinationB, res: resA }
@@ -60,11 +55,9 @@ const measureNewSample = async function (params, server, res) {
 // Add all measures from the sample.
 // Sort them incrementally to the final `measures` big array, as opposed to
 // sorting `measures` directly, which would be much slower.
-const aggregatePreview = async function ({
+const aggregatePreview = function ({
   combination: { measures },
   combination: { bufferedMeasure, ...combination },
-  previewConfig,
-  previewState,
   minLoopDuration,
 }) {
   if (bufferedMeasure === undefined) {
@@ -74,10 +67,5 @@ const aggregatePreview = async function ({
   mergeSort(measures, bufferedMeasure)
   const stats = computeStats(measures, combination, minLoopDuration)
   const combinationA = { ...combination, measures, stats }
-  await updatePreviewReport({
-    combination: combinationA,
-    previewConfig,
-    previewState,
-  })
   return combinationA
 }

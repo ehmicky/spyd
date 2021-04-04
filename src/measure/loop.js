@@ -4,6 +4,7 @@ import { pWhile } from '../utils/p_while.js'
 
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { updatePreviewEnd } from './preview_end.js'
+import { updatePreviewReport } from './preview_report.js'
 import { isRemainingCombination } from './remaining.js'
 
 // We break down each combination into samples, i.e. small units of duration
@@ -88,9 +89,13 @@ const performSample = async function (
     combination,
     server,
     res,
+    minLoopDuration,
+  })
+
+  await updatePreviewReport({
+    combination: combinationA,
     previewConfig,
     previewState,
-    minLoopDuration,
   })
 
   const combinationB = addSampleDuration(combinationA, sampleStart)
