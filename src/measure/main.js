@@ -20,14 +20,16 @@ export const measureCombinations = async function (
   for (let index = 0; index < combinations.length; index += 1) {
     const combination = combinations[index]
     // eslint-disable-next-line no-await-in-loop
-    const { combination: combinationA, stopped } = await measureCombination({
+    const { combination: combinationA, stopped } = await measureCombination(
       combination,
-      duration,
-      cwd,
-      previewConfig: { ...previewConfig, combinations, index },
-      previewState,
-      exec,
-    })
+      {
+        duration,
+        cwd,
+        previewConfig: { ...previewConfig, combinations, index },
+        previewState,
+        exec,
+      },
+    )
     // eslint-disable-next-line fp/no-mutation, require-atomic-updates, no-param-reassign
     combinations[index] = combinationA
 
@@ -40,14 +42,10 @@ export const measureCombinations = async function (
   return { combinations, stopped: false }
 }
 
-const measureCombination = async function ({
+export const measureCombination = async function (
   combination,
-  duration,
-  cwd,
-  previewConfig,
-  previewState,
-  exec,
-}) {
+  { duration, cwd, previewConfig, previewState, exec },
+) {
   const combinationA = addInitProps(combination)
   const { server, serverUrl } = await startServer()
 
