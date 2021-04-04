@@ -4,6 +4,7 @@ import { computeStats } from '../stats/compute.js'
 import { mergeSort } from '../stats/merge.js'
 
 import { updatePreviewReport } from './preview_report.js'
+import { isRemainingCombination } from './remaining.js'
 
 // Aggregate `bufferedMeasures` to `measures`.
 // The `stats` need a single `measures` array, so they are computed right after.
@@ -21,10 +22,22 @@ export const aggregatePreview = async function ({
   previewConfig,
   previewState,
   minLoopDuration,
+  duration,
+  exec,
+  stopState,
 }) {
   const aggregateCountdownA = aggregateCountdown - sampleDurationLast
 
-  if (!shouldAggregate(aggregateCountdownA, bufferedMeasures)) {
+  if (
+    !shouldAggregate({
+      aggregateCountdown: aggregateCountdownA,
+      bufferedMeasures,
+      combination,
+      duration,
+      exec,
+      stopState,
+    })
+  ) {
     return { ...combination, aggregateCountdown: aggregateCountdownA }
   }
 
@@ -40,20 +53,27 @@ export const aggregatePreview = async function ({
 }
 
 // We do not recompute during calibration or when there are no new buffered
-// measures to aggregate
-const shouldAggregate = function (aggregateCountdown, bufferedMeasures) {
-  return aggregateCountdown <= 0 && bufferedMeasures.length !== 0
+// measures to aggregate.
+// We also recompute on the last sample.
+const shouldAggregate = function ({
+  aggregateCountdown,
+  bufferedMeasures,
+  combination,
+  duration,
+  exec,
+  stopState,
+}) {
+  return (
+    bufferedMeasures.length !== 0 &&
+    (aggregateCountdown <= 0 ||
+      !isRemainingCombination({ combination, duration, exec, stopState }))
+  )
 }
 
-// Performed both incrementally, and once at the end.
-export const aggregateMeasures = function (
+const aggregateMeasures = function (
   { measures, bufferedMeasures, ...combination },
   minLoopDuration,
 ) {
-  if (bufferedMeasures.length === 0) {
-    return { ...combination, measures, bufferedMeasures }
-  }
-
   addBufferedMeasures(measures, bufferedMeasures)
   const stats = computeStats(measures, combination, minLoopDuration)
   return { ...combination, measures, bufferedMeasures: [], stats }

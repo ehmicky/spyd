@@ -21,10 +21,12 @@
 //  - Adding/removing combinations would change the duration (and results) of
 //    others
 //  - This includes using the `include|exclude` configuration properties
-export const isRemainingCombination = function (
-  { combination },
-  { duration, exec, stopState: { stopped } },
-) {
+export const isRemainingCombination = function ({
+  combination,
+  duration,
+  exec,
+  stopState: { stopped },
+}) {
   return !stopped && hasDurationLeft(combination, duration, exec)
 }
 

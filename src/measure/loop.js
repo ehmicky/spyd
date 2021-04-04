@@ -2,7 +2,7 @@ import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 import { pWhile } from '../utils/p_while.js'
 
-import { aggregatePreview, aggregateMeasures } from './aggregate.js'
+import { aggregatePreview } from './aggregate.js'
 import { getSampleStart, addSampleDuration } from './duration.js'
 import { updatePreviewEnd } from './preview_end.js'
 import { isRemainingCombination } from './remaining.js'
@@ -47,11 +47,18 @@ export const performMeasureLoop = async function ({
 
   setBenchmarkStart(previewState)
 
-  const { combination: combinationA, res: resA } = await pWhile(
-    (state) => isRemainingCombination(state, { duration, exec, stopState }),
+  const { combination: combinationB, res: resA } = await pWhile(
+    ({ combination: combinationA }) =>
+      isRemainingCombination({
+        combination: combinationA,
+        duration,
+        exec,
+        stopState,
+      }),
     (state) =>
       performSample(state, {
         duration,
+        exec,
         previewConfig,
         previewState,
         stopState,
@@ -61,19 +68,24 @@ export const performMeasureLoop = async function ({
     { combination, res },
   )
 
-  const combinationB = aggregateMeasures(combinationA, minLoopDuration)
-
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.combination
-
   return { combination: combinationB, res: resA }
 }
 
 const performSample = async function (
   { combination, res },
-  { duration, previewConfig, previewState, stopState, server, minLoopDuration },
+  {
+    duration,
+    exec,
+    previewConfig,
+    previewState,
+    stopState,
+    server,
+    minLoopDuration,
+  },
 ) {
   const sampleStart = getSampleStart()
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
@@ -98,10 +110,13 @@ const performSample = async function (
     previewConfig,
     previewState,
     minLoopDuration,
+    duration,
+    exec,
+    stopState,
   })
 
   const combinationC = addSampleDuration(combinationB, sampleStart)
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign, require-atomic-updates
   stopState.combination = combinationC
 
   return { combination: combinationC, res: resA }
