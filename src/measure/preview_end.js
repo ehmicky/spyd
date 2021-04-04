@@ -13,8 +13,13 @@ export const updatePreviewEnd = function ({
   combinations,
   combinationsLeft,
   previewState,
+  previewState: { quiet },
   duration,
 }) {
+  if (quiet) {
+    return
+  }
+
   if (duration === 1) {
     setPercentage(previewState, 1 - combinationsLeft / combinations.length)
     return
