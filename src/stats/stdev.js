@@ -42,3 +42,14 @@ const getSumDeviation = function ({ array, lowIndex, highIndex, median }) {
 
   return sum
 }
+
+// Retrieve stdev relative to the median.
+// This is more useful than stdev when comparing different combinations, or when
+// targetting a specific precision threshold.
+export const getRstdev = function (stdev, median) {
+  if (stdev === undefined) {
+    return
+  }
+
+  return stdev / median
+}

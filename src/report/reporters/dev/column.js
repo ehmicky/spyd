@@ -8,6 +8,7 @@ export const STAT_COLUMNS = [
   'max',
   'diff',
   'stdev',
+  'rstdev',
   'moe',
   'rmoe',
   'times',

@@ -8,6 +8,7 @@ export const STAT_TITLES = {
   high: 'High',
   diff: 'Diff',
   stdev: 'Stdev',
+  rstdev: 'Rstdev',
   moe: 'Moe',
   rmoe: 'Rmoe',
   times: 'Times',

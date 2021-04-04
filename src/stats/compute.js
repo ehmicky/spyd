@@ -3,7 +3,7 @@ import { getHistogram } from './histogram.js'
 import { getSortedMedian } from './median.js'
 import { getMoe, getRmoe } from './moe.js'
 import { getQuantiles } from './quantile.js'
-import { getStdev } from './stdev.js'
+import { getStdev, getRstdev } from './stdev.js'
 import { getMean } from './sum.js'
 
 // Retrieve statistics from results.
@@ -25,6 +25,7 @@ import { getMean } from './sum.js'
 //   - This happens when not measured yet or on uncalibrated stats.
 //   - This happens both during preview or during the final report if measuring
 //     was stopped
+// eslint-disable-next-line max-statements
 export const computeStats = function ({
   measures,
   samples,
@@ -45,6 +46,7 @@ export const computeStats = function ({
     bucketCount: HISTOGRAM_SIZE,
   })
   const stdev = getStdev({ array: measures, lowIndex, highIndex, median })
+  const rstdev = getRstdev(stdev, median)
   const moe = getMoe(lowIndex, highIndex, stdev)
   const rmoe = getRmoe(moe, median)
 
@@ -58,6 +60,7 @@ export const computeStats = function ({
     low,
     high,
     stdev,
+    rstdev,
     moe,
     rmoe,
     histogram,
