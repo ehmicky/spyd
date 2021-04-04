@@ -17,9 +17,13 @@ import { setPreviewReport } from './preview_report.js'
 // specific amount of duration based on that last aggregation duration.
 export const aggregatePreview = async function ({
   newCombination,
-  newCombination: { aggregateCountdown, sampleDurationLast, bufferedMeasures },
+  newCombination: {
+    aggregateCountdown,
+    sampleDurationLast,
+    bufferedMeasures,
+    index,
+  },
   combinations,
-  index,
   previewConfig,
   previewState,
 }) {

@@ -35,7 +35,7 @@ import { isRemainingCombination } from './remaining.js'
 export const performMeasureLoop = async function ({
   combinations,
   combination,
-  index,
+  combination: { index },
   duration,
   previewConfig,
   previewState,
@@ -90,7 +90,6 @@ export const performMeasureLoop = async function ({
     const newCombinationA = await aggregatePreview({
       newCombination,
       combinations,
-      index,
       previewConfig,
       previewState,
     })

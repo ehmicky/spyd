@@ -24,7 +24,6 @@ export const measureBenchmark = async function (
     const { combination: combinationA, stopped } = await measureCombination({
       combinations: combinationsA,
       combination,
-      index,
       duration,
       cwd,
       previewConfig,
@@ -46,7 +45,6 @@ export const measureBenchmark = async function (
 const measureCombination = async function ({
   combinations,
   combination,
-  index,
   duration,
   cwd,
   previewConfig,
@@ -59,7 +57,6 @@ const measureCombination = async function ({
     return await spawnAndMeasure({
       combinations,
       combination,
-      index,
       serverUrl,
       duration,
       cwd,
@@ -77,7 +74,6 @@ const measureCombination = async function ({
 const spawnAndMeasure = async function ({
   combinations,
   combination,
-  index,
   serverUrl,
   duration,
   cwd,
@@ -92,7 +88,6 @@ const spawnAndMeasure = async function ({
     return await stopOrMeasure({
       combinations,
       combination,
-      index,
       duration,
       previewConfig,
       previewState,
@@ -109,7 +104,6 @@ const spawnAndMeasure = async function ({
 const stopOrMeasure = async function ({
   combinations,
   combination,
-  index,
   duration,
   previewConfig,
   previewState,
@@ -129,7 +123,6 @@ const stopOrMeasure = async function ({
       measureAllCombinations({
         combinations,
         combination,
-        index,
         duration,
         previewConfig,
         previewState,

@@ -1,9 +1,10 @@
 import { getFinalStats } from '../stats/compute.js'
 
 // Initialize some combination properties
-export const addInitProps = function (combination) {
+export const addInitProps = function (combination, index) {
   return {
     ...combination,
+    index,
     totalDuration: 0,
     sampleDurationLast: 0,
     sampleDurationMean: 0,

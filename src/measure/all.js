@@ -12,7 +12,6 @@ import { startCombination } from './start.js'
 export const measureAllCombinations = async function ({
   combinations,
   combination,
-  index,
   duration,
   previewConfig,
   previewState,
@@ -30,7 +29,6 @@ export const measureAllCombinations = async function ({
   const combinationB = await performMeasureLoop({
     combinations,
     combination: combinationA,
-    index,
     duration,
     previewConfig,
     previewState,
