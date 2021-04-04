@@ -19,16 +19,10 @@ import { promisify } from 'util'
 // Keeping the default `headersTimeout` (1 minute) is fine though.
 export const startServer = async function () {
   const server = createServer()
-  const serverUrl = await serverListen(server)
-  return { server, serverUrl }
-}
-
-// Start listening to requests
-const serverListen = async function (server) {
   await promisify(server.listen.bind(server))(HTTP_SERVER_OPTS)
   const { address, port } = server.address()
   const serverUrl = `http://${address}:${port}`
-  return serverUrl
+  return { server, serverUrl }
 }
 
 const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
