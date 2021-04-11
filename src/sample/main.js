@@ -1,6 +1,7 @@
 import now from 'precise-now'
 
 import { sendAndReceive } from '../process/ipc.js'
+import { addStats } from '../stats/add.js'
 
 import { getParams } from './params.js'
 import { getSampleState } from './state.js'
@@ -20,12 +21,12 @@ export const measureSample = async function ({
     res: resA,
     sampleState: sampleStateA,
   } = await measureNewSample({ params, server, res, sampleState })
-  const { stats: statsA, sampleState: sampleStateB } = getSampleState({
-    stats,
+  const sampleStateB = getSampleState({
     sampleState: sampleStateA,
     returnValue,
     minLoopDuration,
   })
+  const statsA = addStats(stats, sampleStateB, minLoopDuration)
   return { res: resA, stats: statsA, sampleState: sampleStateB }
 }
 

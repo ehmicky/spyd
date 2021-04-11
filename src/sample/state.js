@@ -1,4 +1,3 @@
-import { addStats } from '../stats/add.js'
 import { mergeSort } from '../stats/merge.js'
 
 import { normalizeSampleMeasures } from './normalize.js'
@@ -17,7 +16,6 @@ export const getInitialSampleState = function () {
 
 // Update sampleState because on the return value from the last sample
 export const getSampleState = function ({
-  stats,
   sampleState,
   sampleState: { measures, allSamples, repeat, calibrated },
   returnValue: { measures: sampleMeasures },
@@ -45,7 +43,7 @@ export const getSampleState = function ({
     sampleMeasuresA,
     calibratedA,
   )
-  const sampleStateA = {
+  return {
     ...sampleState,
     measures: measuresA,
     allSamples: allSamples + 1,
@@ -55,8 +53,6 @@ export const getSampleState = function ({
     calibrated: calibratedA,
     hasNewMeasures,
   }
-  const statsA = addStats(stats, sampleStateA, minLoopDuration)
-  return { stats: statsA, sampleState: sampleStateA }
 }
 
 const addSampleMeasures = function (measures, sampleMeasures, calibrated) {
