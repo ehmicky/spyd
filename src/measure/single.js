@@ -1,11 +1,10 @@
-import { throwOnProcessExit } from '../process/error.js'
 import {
   spawnRunnerProcess,
   terminateRunnerProcess,
 } from '../process/runner.js'
 import { startServer, endServer } from '../server/main.js'
 
-import { measureAllCombinations } from './all.js'
+import { handleErrorsAndMeasure } from './handle.js'
 import { addStopHandler, throwIfStopped } from './stop.js'
 
 // Measure a single combination.
@@ -78,7 +77,7 @@ const stopOrMeasure = async function ({
   )
 
   try {
-    const returnValue = await eMeasureAllCombinations({
+    const returnValue = await handleErrorsAndMeasure({
       taskId,
       duration,
       previewConfig,
@@ -94,45 +93,4 @@ const stopOrMeasure = async function ({
   } finally {
     removeStopHandler()
   }
-}
-
-const eMeasureAllCombinations = async function ({
-  taskId,
-  duration,
-  previewConfig,
-  previewState,
-  stopState,
-  exec,
-  server,
-  childProcess,
-  onAbort,
-}) {
-  try {
-    return await Promise.race([
-      throwOnProcessExit(childProcess),
-      onAbort,
-      measureAllCombinations({
-        taskId,
-        duration,
-        previewConfig,
-        previewState,
-        stopState,
-        exec,
-        server,
-      }),
-    ])
-  } catch (error) {
-    prependTaskPrefix(error, taskId)
-    throw error
-  }
-}
-
-// taskId is `undefined` during init
-const prependTaskPrefix = function (error, taskId) {
-  if (taskId === undefined) {
-    return
-  }
-
-  const taskPrefix = `In task "${taskId}"`
-  error.message = `${taskPrefix}:\n${error.message}`
 }
