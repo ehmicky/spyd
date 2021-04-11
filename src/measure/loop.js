@@ -45,7 +45,7 @@ export const performMeasureLoop = async function ({
   setBenchmarkStart(previewState)
 
   const initialState = getInitialState(res)
-  const { res: resA, stats } = await pWhile(
+  return await pWhile(
     (state) => isRemainingCombination(state, { duration, exec, stopState }),
     (state) =>
       performSample(state, {
@@ -58,7 +58,6 @@ export const performMeasureLoop = async function ({
       }),
     initialState,
   )
-  return { res: resA, stats }
 }
 
 const getInitialState = function (res) {
