@@ -1,5 +1,10 @@
 import { computeStats } from './compute.js'
 
+// Returns initial `stats`
+export const getInitialStats = function () {
+  return { samples: 0, loops: 0, times: 0 }
+}
+
 // Compute new `stats` based on the `sampleMeasures`.
 // This includes aggregating `sampleMeasures` to `measures`.
 //   - sort them incrementally to the final `measures` big array, as opposed to
@@ -50,9 +55,4 @@ const getCountStats = function ({
     repeat: meanRepeat,
     minLoopDuration,
   }
-}
-
-// Returns initial `stats`
-export const getInitialStats = function () {
-  return { samples: 0, loops: 0, times: 0 }
 }
