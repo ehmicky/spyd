@@ -1,5 +1,4 @@
 import { computeStats } from './compute.js'
-import { mergeSort } from './merge.js'
 
 // Compute new `stats` based on the `sampleMeasures`.
 // This includes aggregating `sampleMeasures` to `measures`.
@@ -16,14 +15,13 @@ import { mergeSort } from './merge.js'
 export const addStats = function ({
   stats,
   measures,
-  sampleMeasures,
   sampleLoops,
   repeat,
   minLoopDuration,
-  calibrated,
+  hasNewMeasures,
 }) {
-  if (!calibrated) {
-    return { stats, measures }
+  if (!hasNewMeasures) {
+    return stats
   }
 
   const countStats = getCountStats(stats, {
@@ -31,12 +29,9 @@ export const addStats = function ({
     repeat,
     minLoopDuration,
   })
-
-  mergeSort(measures, sampleMeasures)
   const computedStats = computeStats(measures)
-
   const statsA = { ...countStats, ...computedStats }
-  return { stats: statsA, measures }
+  return statsA
 }
 
 // Retrieve stats related to sampling itself, not the measures

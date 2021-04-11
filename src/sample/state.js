@@ -1,4 +1,5 @@
 import { addStats } from '../stats/add.js'
+import { mergeSort } from '../stats/merge.js'
 
 import { normalizeSampleMeasures } from './normalize.js'
 import { handleRepeat } from './repeat.js'
@@ -39,15 +40,11 @@ export const getSampleState = function ({
     allSamples,
     calibrated,
   })
-  const { stats: statsA, measures: measuresA } = addStats({
-    stats,
+  const { measures: measuresA, hasNewMeasures } = addSampleMeasures(
     measures,
-    sampleMeasures: sampleMeasuresA,
-    sampleLoops,
-    repeat,
-    minLoopDuration,
-    calibrated: calibratedA,
-  })
+    sampleMeasuresA,
+    calibratedA,
+  )
   const sampleStateA = {
     ...sampleState,
     measures: measuresA,
@@ -57,5 +54,24 @@ export const getSampleState = function ({
     repeatLast: repeat,
     calibrated: calibratedA,
   }
+  const statsA = addStats({
+    stats,
+    measures,
+    sampleLoops,
+    repeat,
+    minLoopDuration,
+    hasNewMeasures,
+  })
   return { stats: statsA, sampleState: sampleStateA }
+}
+
+const addSampleMeasures = function (measures, sampleMeasures, calibrated) {
+  const hasNewMeasures = calibrated
+
+  if (!hasNewMeasures) {
+    return { measures, hasNewMeasures }
+  }
+
+  mergeSort(measures, sampleMeasures)
+  return { measures, hasNewMeasures }
 }
