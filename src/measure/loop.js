@@ -44,12 +44,13 @@ export const performMeasureLoop = async function ({
   setBenchmarkStart(previewState)
 
   return await pWhile(
-    ({ combination: combinationA, totalDuration }) =>
+    ({ combination: combinationA, totalDuration, sampleDurationMean }) =>
       isRemainingCombination({
         combination: combinationA,
         duration,
         exec,
         totalDuration,
+        sampleDurationMean,
         stopState,
       }),
     (state) =>
@@ -66,13 +67,7 @@ export const performMeasureLoop = async function ({
 }
 
 const performSample = async function (
-  {
-    combination,
-    combination: { sampleDurationMean },
-    res,
-    measureDuration,
-    totalDuration,
-  },
+  { combination, res, measureDuration, totalDuration, sampleDurationMean },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
   const sampleStart = getSampleStart()
@@ -105,13 +100,14 @@ const performSample = async function (
     sampleDurationMean: undefined,
   })
   const {
-    combination: combinationB,
     totalDuration: totalDurationA,
+    sampleDurationMean: sampleDurationMeanA,
   } = getSampleDuration(combinationA, sampleStart, totalDuration)
   return {
-    combination: combinationB,
+    combination: combinationA,
     res: resA,
     measureDuration: measureDurationA,
     totalDuration: totalDurationA,
+    sampleDurationMean: sampleDurationMeanA,
   }
 }

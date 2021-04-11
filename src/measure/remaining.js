@@ -26,18 +26,27 @@ export const isRemainingCombination = function ({
   duration,
   exec,
   totalDuration,
+  sampleDurationMean,
   stopState: { stopped },
 }) {
   return (
-    !stopped && hasDurationLeft({ combination, duration, exec, totalDuration })
+    !stopped &&
+    hasDurationLeft({
+      combination,
+      duration,
+      exec,
+      totalDuration,
+      sampleDurationMean,
+    })
   )
 }
 
 const hasDurationLeft = function ({
-  combination: { sampleDurationMean, loops, allSamples },
+  combination: { loops, allSamples },
   duration,
   exec,
   totalDuration,
+  sampleDurationMean,
 }) {
   if (exec) {
     return allSamples === 0
@@ -52,8 +61,8 @@ const hasDurationLeft = function ({
 const hasTimeLeft = function ({
   loops,
   duration,
-  sampleDurationMean,
   totalDuration,
+  sampleDurationMean,
 }) {
   return (
     loops < MAX_LOOPS &&
