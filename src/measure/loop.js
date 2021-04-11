@@ -1,7 +1,7 @@
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 import { getInitialSampleState } from '../sample/state.js'
-import { getInitialStats } from '../stats/add.js'
+import { getInitialStats, addStats } from '../stats/add.js'
 import { pWhile } from '../utils/p_while.js'
 
 import { startSample, endSample } from './duration.js'
@@ -70,17 +70,13 @@ const performSample = async function (
 
   updatePreviewEnd({ previewConfig, previewState, sampleState, duration })
 
-  const {
-    res: resA,
-    stats: statsA,
-    sampleState: sampleStateA,
-  } = await measureSample({
-    stats,
+  const { res: resA, sampleState: sampleStateA } = await measureSample({
     sampleState,
     server,
     res,
     minLoopDuration,
   })
+  const statsA = addStats(stats, sampleStateA, minLoopDuration)
 
   await updatePreviewReport({
     stats: statsA,

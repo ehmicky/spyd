@@ -1,14 +1,12 @@
 import now from 'precise-now'
 
 import { sendAndReceive } from '../process/ipc.js'
-import { addStats } from '../stats/add.js'
 
 import { getParams } from './params.js'
 import { getSampleState } from './state.js'
 
 // Measure a new sample for a given combination
 export const measureSample = async function ({
-  stats,
   sampleState,
   server,
   res,
@@ -26,8 +24,7 @@ export const measureSample = async function ({
     returnValue,
     minLoopDuration,
   })
-  const statsA = addStats(stats, sampleStateB, minLoopDuration)
-  return { res: resA, stats: statsA, sampleState: sampleStateB }
+  return { res: resA, sampleState: sampleStateB }
 }
 
 // `measureDuration` is how long it takes to get a single sample's results.
