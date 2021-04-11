@@ -2,6 +2,7 @@ import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
 import { sendAndReceive } from '../process/ipc.js'
+import { getParams } from '../sample/params.js'
 import { getUnsortedMedian } from '../stats/median.js'
 import { mergeSort } from '../stats/merge.js'
 
@@ -27,22 +28,31 @@ const measureInLoop = async function (server, res) {
   const start = now()
   const allMeasures = []
   // eslint-disable-next-line fp/no-let
-  let loops = 0
+  let sampleLoops = 0
+  // eslint-disable-next-line fp/no-let
+  let measureDuration = 0
   // eslint-disable-next-line fp/no-let
   let resA = res
 
   // eslint-disable-next-line fp/no-loops
   do {
-    const params = getParams(loops, start)
+    const params = getParams(
+      { repeat: 1, repeatLast: 1, sampleLoops },
+      { measureDuration },
+      { minLoopDuration: 0, targetSampleDuration: TARGET_SAMPLE_DURATION },
+    )
+    const measureDurationStart = now()
     const {
       res: resB,
       returnValue: { measures },
       // eslint-disable-next-line no-await-in-loop
     } = await sendAndReceive(params, server, resA)
+    // eslint-disable-next-line fp/no-mutation
+    measureDuration = now() - measureDurationStart
     // eslint-disable-next-line fp/no-mutating-methods
     allMeasures.push(measures)
     // eslint-disable-next-line fp/no-mutation
-    loops += measures.length
+    sampleLoops = measures.length
     // eslint-disable-next-line fp/no-mutation
     resA = resB
   } while (now() - start < TARGET_DURATION)
@@ -50,21 +60,7 @@ const measureInLoop = async function (server, res) {
   return { allMeasures, res: resA }
 }
 
-const getParams = function (loops, start) {
-  const maxLoops = getMaxLoops(loops, start)
-  return { maxLoops, repeat: 0 }
-}
-
-const getMaxLoops = function (loops, start) {
-  if (loops === 0) {
-    return 1
-  }
-
-  const loopDurationMean = (now() - start) / loops
-  return Math.ceil(TARGET_DURATION / (TARGET_SAMPLES * loopDurationMean))
-}
-
-// How long the runner should fill the `measures` array.
+// How long the runner should estimate the `measureCost`.
 // We use a hardcoded duration because:
 //  - This must be as high as possible to make the `minLoopDuration` precise.
 //    The only limit is the user perception of how long this takes, which is
@@ -76,7 +72,8 @@ const getMaxLoops = function (loops, start) {
 //  - This avoids differences due to some engines like v8 which optimize the
 //    speed of functions after repeating them a specific amount of times
 const TARGET_DURATION = 1e8
-const TARGET_SAMPLES = 10
+// Mean duration of each sample
+const TARGET_SAMPLE_DURATION = 1e7
 
 // `measureCost` is the time taken to take a measurement.
 // This includes the time to get the start/end timestamps for example.

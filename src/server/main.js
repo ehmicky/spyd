@@ -1,7 +1,7 @@
 import { createServer } from 'http'
 import { promisify } from 'util'
 
-import { SAMPLE_DURATION } from '../sample/params.js'
+import { TARGET_SAMPLE_DURATION } from '../sample/params.js'
 
 // Start a local HTTP server to communicate with runner processes.
 // We use HTTP instead of other IPC mechanisms:
@@ -35,7 +35,7 @@ export const startServer = async function () {
 // target sample duration only includes measuring not the duration spent
 // in the runner inner logic nor doing IPC.
 const KEEP_ALIVE_FACTOR = 10
-const KEEP_ALIVE_TIMEOUT = SAMPLE_DURATION * KEEP_ALIVE_FACTOR
+const KEEP_ALIVE_TIMEOUT = TARGET_SAMPLE_DURATION * KEEP_ALIVE_FACTOR
 
 const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 

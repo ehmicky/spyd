@@ -2,14 +2,22 @@
 export const getParams = function (
   { repeat, repeatLast, sampleLoops },
   { measureDuration },
+  { minLoopDuration, targetSampleDuration = TARGET_SAMPLE_DURATION },
 ) {
+  const repeatA = getRepeat(repeat, minLoopDuration)
   const maxLoops = getMaxLoops({
     repeat,
     repeatLast,
     sampleLoops,
     measureDuration,
+    targetSampleDuration,
   })
-  return { maxLoops, repeat }
+  return { repeat: repeatA, maxLoops }
+}
+
+// When estimating `measureCost`, we pass `repeat: 0` to the runner
+const getRepeat = function (repeat, minLoopDuration) {
+  return minLoopDuration === 0 ? 0 : repeat
 }
 
 // `maxLoops` is the number of `repeat` loops the sample should measure.
@@ -41,6 +49,7 @@ const getMaxLoops = function ({
   repeatLast,
   sampleLoops,
   measureDuration,
+  targetSampleDuration,
 }) {
   // First sample of the benchmark
   if (measureDuration === undefined) {
@@ -49,10 +58,11 @@ const getMaxLoops = function ({
 
   const repeatGrowth = repeat / repeatLast
   const measureDurationPerLoop = measureDuration / sampleLoops
-  return Math.ceil(SAMPLE_DURATION / (measureDurationPerLoop * repeatGrowth))
+  return Math.ceil(
+    targetSampleDuration / (measureDurationPerLoop * repeatGrowth),
+  )
 }
 
-// 100ms
 // Higher value leads to:
 //   - Less frequent previews
 //   - Longer to wait for combinations to stop when user requests it.
@@ -68,4 +78,4 @@ const getMaxLoops = function ({
 //   - Due to the above point, the real sample duration is less close to the
 //     target.
 // The value does not impact `stats.median` much though.
-export const SAMPLE_DURATION = 1e8
+export const TARGET_SAMPLE_DURATION = 1e8
