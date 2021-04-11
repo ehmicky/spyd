@@ -56,6 +56,9 @@ export const getMinLoopDuration = async function (taskId, server, res) {
 //  - It does not require any additional implementation in the runner
 // `minLoopDuration: 0` is passed so the measuring logic knows `measureCost` is
 // being estimated, and that `repeat: 0` should then be used.
+// Runners should correctly handle `repeat: 0`:
+//  - Every logic should execute except the task itself
+//  - Nothing should be printed to `stdout` nor `stderr`
 const getMeasureCost = async function (server, res) {
   const sampleState = getInitialSampleState()
   const end = now() + TARGET_DURATION
