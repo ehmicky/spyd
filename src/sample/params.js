@@ -4,7 +4,7 @@ export const getParams = function (
   minLoopDuration,
   targetSampleDuration,
 ) {
-  const repeatA = getRepeat(repeat, minLoopDuration)
+  const repeatParam = getRepeatParam(repeat, minLoopDuration)
   const maxLoops = getMaxLoops({
     repeat,
     repeatLast,
@@ -12,11 +12,11 @@ export const getParams = function (
     measureDuration,
     targetSampleDuration,
   })
-  return { repeat: repeatA, maxLoops }
+  return { repeat: repeatParam, maxLoops }
 }
 
 // When estimating `measureCost`, we pass `repeat: 0` to the runner
-const getRepeat = function (repeat, minLoopDuration) {
+const getRepeatParam = function (repeat, minLoopDuration) {
   return minLoopDuration === 0 ? 0 : repeat
 }
 
