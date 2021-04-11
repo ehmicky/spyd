@@ -40,7 +40,7 @@ export const updatePreviewReport = async function ({
   stats: currentStats,
   sampleState: { calibrated },
   previewConfig,
-  previewConfig: { quiet, combinations, index: currentIndex, allStats },
+  previewConfig: { quiet, combinations, index: currentIndex, measuredStats },
   previewState,
 }) {
   if (quiet || !calibrated) {
@@ -48,7 +48,7 @@ export const updatePreviewReport = async function ({
   }
 
   const combinationsA = combinations.map((combination, index) =>
-    addStats({ combination, index, currentIndex, currentStats, allStats }),
+    addStats({ combination, index, currentIndex, currentStats, measuredStats }),
   )
 
   await setPreviewReport({
@@ -66,10 +66,10 @@ const addStats = function ({
   index,
   currentIndex,
   currentStats,
-  allStats,
+  measuredStats,
 }) {
   if (index < currentIndex) {
-    return { ...combination, stats: allStats[index] }
+    return { ...combination, stats: measuredStats[index] }
   }
 
   if (index === currentIndex) {
