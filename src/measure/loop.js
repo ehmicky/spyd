@@ -55,10 +55,13 @@ export const performMeasureLoop = async function ({
         stopState,
         server,
         minLoopDuration,
+        targetSampleDuration: TARGET_SAMPLE_DURATION,
       }),
     initialState,
   )
 }
+
+export const TARGET_SAMPLE_DURATION = 1e8
 
 const getInitialState = function (res) {
   const stats = getInitialStats()
@@ -69,7 +72,15 @@ const getInitialState = function (res) {
 
 const performSample = async function (
   { res, sampleState, stats, durationState },
-  { duration, previewConfig, previewState, stopState, server, minLoopDuration },
+  {
+    duration,
+    previewConfig,
+    previewState,
+    stopState,
+    server,
+    minLoopDuration,
+    targetSampleDuration,
+  },
 ) {
   const sampleStart = startSample(stopState, durationState)
 
@@ -85,6 +96,7 @@ const performSample = async function (
     server,
     res,
     minLoopDuration,
+    targetSampleDuration,
   })
   const statsA = addStats(stats, sampleStateA, minLoopDuration)
 

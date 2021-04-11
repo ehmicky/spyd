@@ -2,7 +2,7 @@
 export const getParams = function (
   { repeat, repeatLast, sampleLoops },
   { measureDuration },
-  { minLoopDuration, targetSampleDuration = TARGET_SAMPLE_DURATION },
+  { minLoopDuration, targetSampleDuration },
 ) {
   const repeatA = getRepeat(repeat, minLoopDuration)
   const maxLoops = getMaxLoops({
@@ -44,6 +44,21 @@ const getRepeat = function (repeat, minLoopDuration) {
 // `measureDuration` to estimate it.
 //   - If the `repeat` changes, we need to take it into account as well, which
 //     is especially important during calibration.
+// Higher value of `targetSampleDuration` leads to:
+//   - Less frequent previews
+//   - Longer to wait for combinations to stop when user requests it.
+//       - The sample duration should always be less than the abort delay.
+//   - Higher minimum duration for any combination
+//   - More unnecessary measures once the `precision` threshold has been reached
+//   - Longer time to calibrate
+// Lower value of `targetSampleDuration` leads to:
+//   - Higher `stats.stdev` and `stats.high`. This is because new samples have
+//     a small cold start. This is especially true for fast|low-complexity tasks
+//   - Less duration measuring as opposed to IPC, runner internal logic, stats
+//     computation and preview reporting
+//   - Due to the above point, the real sample duration is less close to the
+//     target.
+// The value does not impact `stats.median` much though.
 const getMaxLoops = function ({
   repeat,
   repeatLast,
@@ -62,20 +77,3 @@ const getMaxLoops = function ({
     targetSampleDuration / (measureDurationPerLoop * repeatGrowth),
   )
 }
-
-// Higher value leads to:
-//   - Less frequent previews
-//   - Longer to wait for combinations to stop when user requests it.
-//       - The sample duration should always be less than the abort delay.
-//   - Higher minimum duration for any combination
-//   - More unnecessary measures once the `precision` threshold has been reached
-//   - Longer time to calibrate
-// Lower value leads to:
-//   - Higher `stats.stdev` and `stats.high`. This is because new samples have
-//     a small cold start. This is especially true for fast|low-complexity tasks
-//   - Less duration measuring as opposed to IPC, runner internal logic, stats
-//     computation and preview reporting
-//   - Due to the above point, the real sample duration is less close to the
-//     target.
-// The value does not impact `stats.median` much though.
-export const TARGET_SAMPLE_DURATION = 1e8
