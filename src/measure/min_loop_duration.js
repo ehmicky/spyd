@@ -111,7 +111,7 @@ export const getMinLoopDuration = async function (taskId, server, res) {
 }
 
 const measureInLoop = async function (server, res) {
-  const start = now()
+  const end = now() + TARGET_DURATION
   // eslint-disable-next-line fp/no-let
   let sampleState = getInitialSampleState()
   // eslint-disable-next-line fp/no-let
@@ -131,7 +131,7 @@ const measureInLoop = async function (server, res) {
     sampleState = sampleStateA
     // eslint-disable-next-line fp/no-mutation
     resA = resB
-  } while (now() - start < TARGET_DURATION)
+  } while (now() < end)
 
   return { measures: sampleState.measures, res: resA }
 }
