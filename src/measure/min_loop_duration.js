@@ -4,73 +4,12 @@ import timeResolution from 'time-resolution'
 import { measureSample } from '../sample/main.js'
 import { getUnsortedMedian } from '../stats/median.js'
 
-// Computes the duration to retrieve timestamps.
 // This is used to compute `measureCost` and `resolution`, which are used for
 // `repeat`.
 // We run samples with `repeat: 0` because:
 //  - It ensures the same measuring logic is used
 //  - It warms the measuring logic, removing cold starts, which makes it more
 //    precise
-export const getMinLoopDuration = async function (taskId, server, res) {
-  if (taskId === undefined) {
-    return { res }
-  }
-
-  const { measures, res: resA } = await measureInLoop(server, res)
-  const minLoopDuration = computeMinLoopDuration(measures)
-  return { minLoopDuration, res: resA }
-}
-
-const measureInLoop = async function (server, res) {
-  const start = now()
-  // eslint-disable-next-line fp/no-let
-  let sampleState = { measures: [], repeat: 1, repeatLast: 1, sampleLoops: 0 }
-  // eslint-disable-next-line fp/no-let
-  let measureDuration = 0
-  // eslint-disable-next-line fp/no-let
-  let resA = res
-
-  // eslint-disable-next-line fp/no-loops
-  do {
-    const {
-      res: resB,
-      sampleState: sampleStateA,
-      measureDuration: measureDurationA,
-      // eslint-disable-next-line no-await-in-loop
-    } = await measureSample({
-      sampleState,
-      durationState: { measureDuration },
-      server,
-      res: resA,
-      minLoopDuration: 0,
-      targetSampleDuration: TARGET_SAMPLE_DURATION,
-    })
-    // eslint-disable-next-line fp/no-mutation
-    sampleState = sampleStateA
-    // eslint-disable-next-line fp/no-mutation
-    measureDuration = measureDurationA
-    // eslint-disable-next-line fp/no-mutation
-    resA = resB
-  } while (now() - start < TARGET_DURATION)
-
-  return { measures: sampleState.measures, res: resA }
-}
-
-// How long the runner should estimate the `measureCost`.
-// We use a hardcoded duration because:
-//  - This must be as high as possible to make the `minLoopDuration` precise.
-//    The only limit is the user perception of how long this takes, which is
-//    better expressed with a hardcoded duration.
-//  - This works even with high time resolution, providing it is high enough
-//  - This works even when the duration to take each item is very slow,
-//    providing it is high enough
-//  - This avoid different `precision` impacting the `repeat`
-//  - This avoids differences due to some engines like v8 which optimize the
-//    speed of functions after repeating them a specific amount of times
-const TARGET_DURATION = 1e8
-// Mean duration of each sample
-const TARGET_SAMPLE_DURATION = 1e7
-
 // `measureCost` is the time taken to take a measurement.
 // This includes the time to get the start/end timestamps for example.
 // In order to minimize the impact of `measureCost` on measures:
@@ -160,6 +99,66 @@ const TARGET_SAMPLE_DURATION = 1e7
 //  - We use `time-resolution` to guess the runner's minimum resolution.
 //  - For example, if a runner can only measure things with 1ms precision, every
 //    nanoseconds measures will be a multiple of 1e6.
+export const getMinLoopDuration = async function (taskId, server, res) {
+  if (taskId === undefined) {
+    return { res }
+  }
+
+  const { measures, res: resA } = await measureInLoop(server, res)
+  const minLoopDuration = computeMinLoopDuration(measures)
+  return { minLoopDuration, res: resA }
+}
+
+const measureInLoop = async function (server, res) {
+  const start = now()
+  // eslint-disable-next-line fp/no-let
+  let sampleState = { measures: [], repeat: 1, repeatLast: 1, sampleLoops: 0 }
+  // eslint-disable-next-line fp/no-let
+  let measureDuration = 0
+  // eslint-disable-next-line fp/no-let
+  let resA = res
+
+  // eslint-disable-next-line fp/no-loops
+  do {
+    const {
+      res: resB,
+      sampleState: sampleStateA,
+      measureDuration: measureDurationA,
+      // eslint-disable-next-line no-await-in-loop
+    } = await measureSample({
+      sampleState,
+      durationState: { measureDuration },
+      server,
+      res: resA,
+      minLoopDuration: 0,
+      targetSampleDuration: TARGET_SAMPLE_DURATION,
+    })
+    // eslint-disable-next-line fp/no-mutation
+    sampleState = sampleStateA
+    // eslint-disable-next-line fp/no-mutation
+    measureDuration = measureDurationA
+    // eslint-disable-next-line fp/no-mutation
+    resA = resB
+  } while (now() - start < TARGET_DURATION)
+
+  return { measures: sampleState.measures, res: resA }
+}
+
+// How long the runner should estimate the `measureCost`.
+// We use a hardcoded duration because:
+//  - This must be as high as possible to make the `minLoopDuration` precise.
+//    The only limit is the user perception of how long this takes, which is
+//    better expressed with a hardcoded duration.
+//  - This works even with high time resolution, providing it is high enough
+//  - This works even when the duration to take each item is very slow,
+//    providing it is high enough
+//  - This avoid different `precision` impacting the `repeat`
+//  - This avoids differences due to some engines like v8 which optimize the
+//    speed of functions after repeating them a specific amount of times
+const TARGET_DURATION = 1e8
+// Mean duration of each sample
+const TARGET_SAMPLE_DURATION = 1e7
+
 const computeMinLoopDuration = function (measures) {
   const measureCost = getUnsortedMedian(measures)
   const resolution = timeResolution(measures)
