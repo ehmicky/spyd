@@ -13,12 +13,15 @@ import { throwOnStreamError } from './error.js'
 //  - They send their return value with a new HTTP request
 //  - The server keeps the request alive until new params are available, which
 //    are then sent as a response
-// We use long polling instead of real bidirectional procotols because it is
-// simpler to implement in runners.
+// We use long polling instead of starting a server in the runner because it is
+// simpler to implement in runners and has less room for errors, including:
+//  - Server parameters
+//  - Finding a port and communicating it to parent
+//  - Signaling that it is ready to listen to the parent
 // There is only one single endpoint for each runner, meant to run a new
 // measuring sample:
-//   - The server sends some params to indicate how long to run the sample
-//   - The runner sends the return value
+//  - The server sends some params to indicate how long to run the sample
+//  - The runner sends the return value
 // We are setting up return value listening before sending params to prevent any
 // race condition.
 export const sendAndReceive = async function (params, server, res) {
