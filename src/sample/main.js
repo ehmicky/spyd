@@ -20,11 +20,7 @@ export const measureSample = async function ({
     server,
     res,
   )
-  const sampleStateA = getSampleState({
-    sampleState,
-    returnValue,
-    minLoopDuration,
-  })
+  const sampleStateA = getSampleState(sampleState, returnValue, minLoopDuration)
   return { res: resA, sampleState: sampleStateA, measureDuration }
 }
 
