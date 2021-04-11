@@ -14,8 +14,6 @@ export const getCalibrations = function (calibrate) {
   return calibrations
 }
 
-// We use a separate function from `getDuration()` because this must only use
-// the non-repeated part.
 const addCalibration = function (calibrations) {
   const calibration = -now() + now()
 
