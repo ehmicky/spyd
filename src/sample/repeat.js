@@ -21,8 +21,7 @@ export const handleRepeat = function ({
   allSamples,
   calibrated,
 }) {
-  // If the runner does not supports `repeat`, it is always set to `1`.
-  // We should not use a repeat loop when estimating `measureCost` since
+  // When estimating `measureCost`, we should not use a repeat loop since
   // `measureCost` only happens once per repeat loop
   if (minLoopDuration === 0) {
     return { newRepeat: 1, calibrated: true }

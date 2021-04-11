@@ -1,10 +1,8 @@
 import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
-import { sendAndReceive } from '../process/ipc.js'
-import { getParams } from '../sample/params.js'
+import { measureSample } from '../sample/main.js'
 import { getUnsortedMedian } from '../stats/median.js'
-import { mergeSort } from '../stats/merge.js'
 
 // Computes the duration to retrieve timestamps.
 // This is used to compute `measureCost` and `resolution`, which are used for
@@ -18,15 +16,16 @@ export const getMinLoopDuration = async function (taskId, server, res) {
     return { res }
   }
 
-  const { allMeasures, res: resA } = await measureInLoop(server, res)
-  const minLoopDuration = computeMinLoopDuration(allMeasures)
+  const { measures, res: resA } = await measureInLoop(server, res)
+  const minLoopDuration = computeMinLoopDuration(measures)
   return { minLoopDuration, res: resA }
 }
 
 // eslint-disable-next-line max-statements
 const measureInLoop = async function (server, res) {
   const start = now()
-  const allMeasures = []
+  // eslint-disable-next-line fp/no-let
+  let measures = []
   // eslint-disable-next-line fp/no-let
   let sampleLoops = 0
   // eslint-disable-next-line fp/no-let
@@ -36,28 +35,35 @@ const measureInLoop = async function (server, res) {
 
   // eslint-disable-next-line fp/no-loops
   do {
-    const params = getParams(
-      { repeat: 1, repeatLast: 1, sampleLoops },
-      { measureDuration },
-      { minLoopDuration: 0, targetSampleDuration: TARGET_SAMPLE_DURATION },
-    )
-    const measureDurationStart = now()
     const {
       res: resB,
-      returnValue: { measures },
+      sampleState: { measures: measuresA, sampleLoops: sampleLoopsA },
+      measureDuration: measureDurationA,
       // eslint-disable-next-line no-await-in-loop
-    } = await sendAndReceive(params, server, resA)
+    } = await measureSample({
+      sampleState: {
+        measures,
+        repeat: 1,
+        repeatLast: 1,
+        sampleLoops,
+      },
+      durationState: { measureDuration },
+      server,
+      res: resA,
+      minLoopDuration: 0,
+      targetSampleDuration: TARGET_SAMPLE_DURATION,
+    })
     // eslint-disable-next-line fp/no-mutation
-    measureDuration = now() - measureDurationStart
-    // eslint-disable-next-line fp/no-mutating-methods
-    allMeasures.push(measures)
+    sampleLoops = sampleLoopsA
     // eslint-disable-next-line fp/no-mutation
-    sampleLoops = measures.length
+    measures = measuresA
+    // eslint-disable-next-line fp/no-mutation
+    measureDuration = measureDurationA
     // eslint-disable-next-line fp/no-mutation
     resA = resB
   } while (now() - start < TARGET_DURATION)
 
-  return { allMeasures, res: resA }
+  return { measures, res: resA }
 }
 
 // How long the runner should estimate the `measureCost`.
@@ -164,11 +170,7 @@ const TARGET_SAMPLE_DURATION = 1e7
 //  - We use `time-resolution` to guess the runner's minimum resolution.
 //  - For example, if a runner can only measure things with 1ms precision, every
 //    nanoseconds measures will be a multiple of 1e6.
-const computeMinLoopDuration = function (allMeasures) {
-  const measures = []
-  allMeasures.forEach((measuresA) => {
-    mergeSort(measures, measuresA)
-  })
+const computeMinLoopDuration = function (measures) {
   const measureCost = getUnsortedMedian(measures)
   const resolution = timeResolution(measures)
   return Math.max(resolution, measureCost) * MIN_LOOP_DURATION_RATIO
