@@ -34,11 +34,7 @@ export const getSampleState = function ({
     allSamples,
     calibrated,
   })
-  const { measures: measuresA, hasNewMeasures } = addSampleMeasures(
-    measures,
-    sampleMeasuresA,
-    calibratedA,
-  )
+  const measuresA = addSampleMeasures(measures, sampleMeasuresA, calibratedA)
   return {
     ...sampleState,
     measures: measuresA,
@@ -47,15 +43,14 @@ export const getSampleState = function ({
     repeat: newRepeat,
     repeatLast: repeat,
     calibrated: calibratedA,
-    hasNewMeasures,
   }
 }
 
 const addSampleMeasures = function (measures, sampleMeasures, calibrated) {
   if (!calibrated) {
-    return { measures, hasNewMeasures: false }
+    return measures
   }
 
   mergeSort(measures, sampleMeasures)
-  return { measures, hasNewMeasures: true }
+  return measures
 }

@@ -19,10 +19,10 @@ export const getInitialStats = function () {
 //  - Change a lot, creating flicker
 export const addStats = function (
   stats,
-  { measures, hasNewMeasures, sampleLoops, repeatLast },
+  { measures, calibrated, sampleLoops, repeatLast },
   minLoopDuration,
 ) {
-  if (!hasNewMeasures) {
+  if (!calibrated) {
     return stats
   }
 
