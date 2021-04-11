@@ -6,101 +6,35 @@ import { hasMaxMeasures, getInitialSampleState } from '../sample/state.js'
 import { getSortedMedian } from '../stats/quantile.js'
 import { pWhile } from '../utils/p_while.js'
 
-// This is used to compute `measureCost` and `resolution`, which are used for
-// `repeat`.
-// We run samples with `repeat: 0` because:
-//  - It ensures the same measuring logic is used
-//  - It warms the measuring logic, removing cold starts, which makes it more
-//    precise
-// `measureCost` is the time taken to take a measurement.
-// This includes the time to get the start/end timestamps for example.
-// In order to minimize the impact of `measureCost` on measures:
-//  - We run batches of measures at a time in a loop
-//  - The `repeat` size of that loop is automatically guessed
-//  - No loop is used if the task is too slow to be impacted by `measureCost`
-// Some runners take a long time to call each task, e.g. by spawning processes:
-//  - Those should not use any `repeat` loop, since that is meant to remove the
-//    time to take timestamps, not the time to spawn processes.
-//  - Also, `measureCost` would be too large, creating very large `repeat`.
-//  - Those return an empty array of `measures`, making them not use any
-//    `repeat` loop.
-// Iterating the `repeat` loop adds a small duration, due to the time to
-// increment the loop counter (e.g. 1 or 2 CPU cycles)
-//  - We do not subtract that duration because it is variable, so would lower
-//    the overall precision.
-//  - Also measuring that duration is imperfect, which also lowers precision
-//  - Moreover, estimating that duration takes time and adds complexity
-// Runners should minimize that loop counter duration. Using a simple "for" loop
-// should be enough. Loop unrolling is an option but is tricky to get right and
-// is probably not worth the effort:
-//  - Functions with large loop unrolling might be deoptimized by compilers and
-//    runtimes, or even hit memory limits. For example, in JavaScript, functions
-//    with a few hundred statements are deoptimized. Also, `new Function()` body
-//    has a max size.
-//  - Parsing (as opposed to executing) the unrolled code should not be
-//    measured. For example, in JavaScript, `new Function()` should be used,
-//    not `eval()`.
-// Calling each task also adds a small duration due to the time it takes to
-// create a new function stack:
-//  - However, this duration is experienced by end users, so should be kept
-//  - Inlining could be used to remove this, but it is hard to implement:
-//     - The logic can be short-circuited if the task uses things like `return`
-//     - The task might contain reference to outer scopes (with lexical
-//       scoping), which would be broken by inlining
-//  - Estimating that duration is hard since compilers/runtimes would typically
-//    remove that function stack when trying to benchmark an empty task
-// Not using loop unrolling nor subtracting `measureCost` nor the time to
-// iterate the `repeat` loop is better for precision, but worse for accuracy
-// (this is tradeoff).
-// Very fast functions might be optimized by compilers/runtimes:
-//  - For example, simple tasks like `1 + 1` are often simply not executed
-//  - Tricks like returning a value or assigning variables sometimes help
-//    avoiding this
-//  - The best way to benchmark those very fast functions is to increase their
-//    complexity. Since the runner already runs those in a "for" loop, the only
-//    thing that a task should do is increase the size of its inputs.
-// `minLoopDuration` is estimated based on an array of `measures`:
-//  - Each `measure` is the duration to compute timestamps
-//  - This must be computed separately for each combination since they might
-//    vary depending on the task, system or runnerConfig
-//  - This results in more difference between the `repeat` of combinations of a
-//    given result, but in less difference between the average `repeat` of
-//    combinations of several results
-// `measures` is computed by the runner at start time because:
-//  - This is simpler to implement for both the runner and the parent
-//  - This prevents its computation from de-optimizing the measured task
-//  - The median more stable as the `config` and tasks change
-// `measures` should filter out any `0`, while still filling a specific
-// length specified by the parent process.
-//  - This prevents computation errors for both time `resolution` and
-//    `measureCost`
-//  - This means the computed `resolution` will never be slower than
-//    `measureCost`. We still compute `resolution` for debugging purpose, or in
-//    case the logic changes.
-//  - If the real `resolution` is slower than `measureCost`, `measureCost` will
-//    equal the real `resolution`, which is ok.
-//  - If the `resolution` is slow, computing the `measures` might take
-//    some duration. However, this is fine since this duration will be spent on
-//    each sample anyway due to `minLoopDuration`.
-// The precision of `minLoopDuration` is not very critical:
-//  - The total number of `times` each step is run should be the same
-//    regardless of `repeat`. This is because a lower|higher `repeat` is
-//    balanced by `maxLoops` and `scale`.
-//  - The `stats.median` is mostly not impacted by the `minLoopDuration`.
-//  - `stats.mean|low|high|stdev|rstdev|moe|rmoe` are moderately impacted, but
-//    not too much.
-//  - `stats.min|max` are much more impacted, but those stats are not as
-//    critical.
-// If the minimum resolution is too close to the measures, results will not be
-// precise enough:
-//  - We apply the same `repeat` loop method as for `measureCost` to prevent
-//    this.
-//  - The runner's resolution is the granularity of timestamps and measures.
-//  - This can be different from the OS resolution as the runner (or its
-//    language/platform) might have a lower resolution.
-//  - We use `time-resolution` to guess the runner's minimum resolution.
-//  - For example, if a runner can only measure things with 1ms precision, every
-//    nanoseconds measures will be a multiple of 1e6.
+// `measureCost` is the duration spent by the runner performing any benchmarking
+// logic before and after each task such as computing timestamps.
+//  - When the task duration is too close to `measureCost`, it becomes
+//    impossible to distinguish them. The overall stats become both imprecise
+//    and inacurrate.
+//  - We fix this by running a `for` loop so the `measureCost` runs only once
+//    for several task executions.
+//  - Using this `for` loop effectively applies an arithmetic mean, so it
+//    reduces the benefits of using the median. Therefore, we want to minimize
+//    the loop size, while still making sure it is high enough to remove the
+//    problem with the `measureCost`.
+//  - For many tasks, this number might even be 1, i.e. no `repeat` loop.
+//    The `repeat` loop is only useful for very fast tasks.
+// Computing the optimal loop size is done automatically
+//  - This is because it is highly dependent on the current machine speed which
+//    both the user and the runner cannot specify as well as programmatic logic.
+//  - It is passed as as `repeat` parameter to each runner sample.
+//  - This parameter is based on a `minLoopDuration` which is the minimal
+//    duration each `repeat` loop should last.
+//  - `minLoopDuration` is based on `measureCost`.
+// `measureCost` must be computed separately for each combination since it might
+// vary depending on the task, system or runnerConfig.
+// `measureCost` is computed before the combination starts being measured, as
+// opposed to while measuring it:
+//  - This ensures it is accurate when calibrating the sample
+//  - This prevents its computation from influencing the measured task stats,
+//    due to de-optimizing it
+//  - This also prevents the opposite, which means changing the tasks logic
+//    should not impact `measureCost`
 export const getMinLoopDuration = async function (taskId, server, res) {
   if (taskId === undefined) {
     return { res }
@@ -114,10 +48,14 @@ export const getMinLoopDuration = async function (taskId, server, res) {
   return { minLoopDuration, res: resA }
 }
 
-// Repeatedly measure samples with `repeat: 0` in order to estimate the
-// `measureCost`, i.e. the overhead of running a single loop.
-// `minLoopDuration: 0` is passed to signify to the measuring logic that
-// `measureCost` is being estimated.
+// Repeatedly measure samples to estimate `measureCost`
+// We run samples with `repeat: 0` because:
+//  - It ensures the same measuring logic is used
+//  - It warms the measuring logic, removing cold starts, which makes it more
+//    precise
+//  - It does not require any additional implementation in the runner
+// `minLoopDuration: 0` is passed so the measuring logic knows `measureCost` is
+// being estimated, and that `repeat: 0` should then be used.
 const getMeasureCost = async function (server, res) {
   const sampleState = getInitialSampleState()
   const end = now() + TARGET_DURATION
@@ -144,7 +82,7 @@ const shouldKeepMeasuring = function (end, { sampleState }) {
 //  - If `measureCost` gets faster over time due to engine optimization, it
 //    makes the estimation closer to it
 //  - It is better at handling a high time `resolution`
-// The only limit is how long users need to wait.
+// The only limit is how long users should wait.
 // We use a duration because:
 //  - The only limit is the user perception of how long this takes, which is
 //    better expressed with a duration.
@@ -152,8 +90,26 @@ const shouldKeepMeasuring = function (end, { sampleState }) {
 //  - This is better at handling a slow `measureCost`
 // We use a constant value because:
 //  - This avoids different `precision` impacting the `repeat`
-//  - This avoids differences due to some engines like v8 which optimize the
-//    speed of functions after repeating them a specific amount of times
+//  - This avoids differences due to some engines optimizing functions after
+//    repeating them a specific amount of times
+//     - This is often engine/runtime/compiler-specific, not OS-specific
+//     - For example, in Node.js `process.hrtime()` with V8, there are ~3 such
+//       thresholds which trigger at relatively stable amounts of times and
+//       speed up functions a lot
+//     - This means the `moe` might incorrectly look low before the next
+//       threshold is reached. This prevents us from using `moe` instead of
+//       a duration.
+// It is important for the `measureCost` estimate to be precise:
+//  - This is because it determines the `minLoopDuration`, therefore the
+//    `repeat` precision. `repeat` changes a combination's stats
+//  - Stats stabilize around a specific `repeat` range
+//     - Except `max`, which always decreases with higher value
+//     - The lower part of that range has better overall stats, notably `rmoe`
+//  - `rmoe` is very low when `repeat` is very low (1-5) and task is very fast,
+//    due to `measureCost` becoming what's measured instead. However, this
+//    low `rmoe` is not desirable in that case.
+//  - `measureCost` is usually fast and highly optimized, making it very
+//    variable by nature.
 const TARGET_DURATION = 1e8
 // How many samples should be used, approximately
 // Lower values lead to more precise results since it increases the target
@@ -164,15 +120,28 @@ const TARGET_SAMPLE_DURATION = TARGET_DURATION / TARGET_SAMPLE_COUNT
 
 const computeMinLoopDuration = function (measures) {
   const measureCost = getSortedMedian(measures)
-  const resolution = timeResolution(measures)
+  const resolution = getResolution(measures)
   return Math.max(resolution, measureCost) * MIN_LOOP_DURATION_RATIO
 }
 
-// How many times slower each repeat loop iteration must be compared to
-// `measureCost` or `resolution`.
-// Ensure `repeat` is high enough to decrease the impact of `measureCost` or
+// How many times slower each repeat loop must last compared to `measureCost` or
 // `resolution`.
-// We use a single ratio for both `resolution` and `measureCost`.
-// A lower value decreases precision.
-// A higher value increases the task loop duration, creating fewer loops.
+// We purposely use a single ratio for both `resolution` and `measureCost`.
+// A lower value makes loops duration too close to `measureCost`, which
+// decreases the quality and precision of all stats.
+// A higher value makes the metrics rely on the arithmetic mean more than the
+// median, which also decrease the stats quality, although not as much.
+// Therefore, we use the smallest value that removes the `measureCost` influence
+// enough.
 const MIN_LOOP_DURATION_RATIO = 1e2
+
+// Just like `measureCost`, if the task duration is too close to the minimum
+// time resolution, the stats will be imprecise
+//  - Therefore we apply the same logic as `measureCost`.
+// We need to use timestamps/durations computed in the runner, not the parent:
+//  - This is because the runner (or its language/platform) resolution can be
+//    different from the OS
+//  - We re-use the `measures` used for `measureCost` for convenience
+const getResolution = function (measures) {
+  return timeResolution(measures)
+}
