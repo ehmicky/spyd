@@ -12,7 +12,7 @@ export const getInitialSampleState = function () {
 export const getSampleState = function (
   { measures, allSamples, repeat, calibrated },
   { measures: sampleMeasures },
-  minLoopDuration,
+  { minLoopDuration, measureDuration },
 ) {
   const {
     sampleMeasures: sampleMeasuresA,
@@ -34,6 +34,7 @@ export const getSampleState = function (
     repeat: newRepeat,
     repeatLast: repeat,
     calibrated: calibratedA,
+    measureDuration,
   }
 }
 

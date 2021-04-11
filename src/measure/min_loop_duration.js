@@ -114,20 +114,13 @@ const measureInLoop = async function (server, res) {
   // eslint-disable-next-line fp/no-let
   let sampleState = { measures: [], repeat: 1, repeatLast: 1, sampleLoops: 0 }
   // eslint-disable-next-line fp/no-let
-  let measureDuration = 0
-  // eslint-disable-next-line fp/no-let
   let resA = res
 
   // eslint-disable-next-line fp/no-loops
   do {
-    const {
-      res: resB,
-      sampleState: sampleStateA,
-      measureDuration: measureDurationA,
-      // eslint-disable-next-line no-await-in-loop
-    } = await measureSample({
+    // eslint-disable-next-line no-await-in-loop
+    const { res: resB, sampleState: sampleStateA } = await measureSample({
       sampleState,
-      measureDuration,
       server,
       res: resA,
       minLoopDuration: 0,
@@ -135,8 +128,6 @@ const measureInLoop = async function (server, res) {
     })
     // eslint-disable-next-line fp/no-mutation
     sampleState = sampleStateA
-    // eslint-disable-next-line fp/no-mutation
-    measureDuration = measureDurationA
     // eslint-disable-next-line fp/no-mutation
     resA = resB
   } while (now() - start < TARGET_DURATION)
