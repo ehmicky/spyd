@@ -19,7 +19,7 @@ export const execCombination = async function (combination, { cwd }) {
     cwd,
     previewConfig: { quiet: true },
     previewState: {},
-    exec: true,
+    stage: 'exec',
   })
 }
 

@@ -55,7 +55,6 @@ const previewRefreshAndMeasure = async function ({
       cwd,
       previewConfig: previewConfigA,
       previewState,
-      exec: false,
     })
     return { combinations: combinationsA, results }
   } finally {

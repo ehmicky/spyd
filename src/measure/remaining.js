@@ -30,7 +30,7 @@ export const isRemainingCombination = function (
     stats: { loops },
     durationState: { totalDuration, sampleDurationMean },
   },
-  { duration, exec, stopState: { stopped } },
+  { duration, stage, stopState: { stopped } },
 ) {
   return (
     !stopped &&
@@ -39,7 +39,7 @@ export const isRemainingCombination = function (
       loops,
       allSamples,
       duration,
-      exec,
+      stage,
       totalDuration,
       sampleDurationMean,
     })
@@ -51,11 +51,11 @@ const hasDurationLeft = function ({
   loops,
   allSamples,
   duration,
-  exec,
+  stage,
   totalDuration,
   sampleDurationMean,
 }) {
-  if (exec) {
+  if (stage === 'exec') {
     return allSamples === 0
   }
 

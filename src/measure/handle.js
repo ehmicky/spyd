@@ -12,7 +12,7 @@ export const handleErrorsAndMeasure = async function ({
   previewConfig,
   previewState,
   stopState,
-  exec,
+  stage,
   server,
   childProcess,
   onAbort,
@@ -27,12 +27,12 @@ export const handleErrorsAndMeasure = async function ({
         previewConfig,
         previewState,
         stopState,
-        exec,
+        stage,
         server,
       }),
     ])
   } catch (error) {
-    prependTaskPrefix(error, combination)
+    prependTaskPrefix(error, combination, stage)
     throw error
   }
 }
@@ -47,7 +47,7 @@ const measureAllCombinations = async function ({
   previewConfig,
   previewState,
   stopState,
-  exec,
+  stage,
   server,
 }) {
   const res = await waitForCombinationSpawn(server)
@@ -57,19 +57,17 @@ const measureAllCombinations = async function ({
     server,
     res,
   })
-  const { minLoopDuration, res: resB } = await getMinLoopDuration({
-    combination,
+  const { minLoopDuration, res: resB } = await getMinLoopDuration(
     server,
-    res: resA,
-    exec,
-  })
+    resA,
+    stage,
+  )
   const { stats, res: resC } = await performMeasureLoop({
-    combination,
     duration,
     previewConfig,
     previewState,
     stopState,
-    exec,
+    stage,
     server,
     res: resB,
     minLoopDuration,
@@ -78,9 +76,8 @@ const measureAllCombinations = async function ({
   return { stats, taskIds }
 }
 
-// taskId is `undefined` during init
-const prependTaskPrefix = function (error, { taskId }) {
-  if (taskId === undefined) {
+const prependTaskPrefix = function (error, { taskId }, stage) {
+  if (stage === 'init') {
     return
   }
 

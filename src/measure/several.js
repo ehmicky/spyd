@@ -16,7 +16,7 @@ import { measureCombination } from './single.js'
 //    this.
 export const measureCombinations = async function (
   combinations,
-  { duration, cwd, previewConfig, previewState, exec },
+  { duration, cwd, previewConfig, previewState },
 ) {
   return await pReduce(
     combinations,
@@ -29,7 +29,6 @@ export const measureCombinations = async function (
         cwd,
         previewConfig,
         previewState,
-        exec,
       }),
     [],
   )
@@ -43,7 +42,6 @@ const measureCombinationStats = async function ({
   cwd,
   previewConfig,
   previewState,
-  exec,
 }) {
   const previewConfigA = { ...previewConfig, measuredCombinations, index }
   const { stats } = await measureCombination(combination, {
@@ -51,7 +49,7 @@ const measureCombinationStats = async function ({
     cwd,
     previewConfig: previewConfigA,
     previewState,
-    exec,
+    stage: 'main',
   })
   return [...measuredCombinations, { ...combination, stats }]
 }

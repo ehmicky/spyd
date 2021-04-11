@@ -28,17 +28,16 @@ import { isRemainingCombination } from './remaining.js'
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
 export const performMeasureLoop = async function ({
-  combination: { taskId },
   duration,
   previewConfig,
   previewState,
   stopState,
-  exec,
+  stage,
   server,
   res,
   minLoopDuration,
 }) {
-  if (taskId === undefined) {
+  if (stage === 'init') {
     return { res, stats: {} }
   }
 
@@ -46,7 +45,7 @@ export const performMeasureLoop = async function ({
 
   const initialState = getInitialState(res)
   return await pWhile(
-    (state) => isRemainingCombination(state, { duration, exec, stopState }),
+    (state) => isRemainingCombination(state, { duration, stage, stopState }),
     (state) =>
       performSample(state, {
         duration,

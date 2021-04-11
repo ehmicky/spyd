@@ -27,13 +27,13 @@ import { spawnProcess } from './spawn.js'
 // process.
 export const spawnRunnerProcess = function (
   { runnerSpawn: [file, ...args], runnerSpawnOptions },
-  { serverUrl, cwd, exec },
+  { serverUrl, cwd, stage },
 ) {
   return spawnProcess(
     [file, ...args, serverUrl],
     {
       ...runnerSpawnOptions,
-      stdio: getStdio(exec),
+      stdio: getStdio(stage),
       reject: false,
       cleanup: true,
       detached: true,
@@ -47,8 +47,8 @@ export const spawnRunnerProcess = function (
 // might be repeated for each combination. This is good since:
 //  - It makes it clear that each combination has its own process
 //  - Some stdout/stderr might different from process to process
-const getStdio = function (exec) {
-  return exec
+const getStdio = function (stage) {
+  return stage === 'exec'
     ? ['ignore', 'inherit', 'inherit']
     : ['ignore', 'ignore', 'ignore']
 }

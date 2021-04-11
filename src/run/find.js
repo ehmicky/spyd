@@ -29,7 +29,7 @@ export const findTasks = async function ({
       cwd,
       previewConfig: { quiet: true },
       previewState: {},
-      exec: false,
+      stage: 'init',
     },
   )
   validateDuplicateTaskIds(taskIds)

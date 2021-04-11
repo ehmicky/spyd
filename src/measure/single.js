@@ -12,7 +12,7 @@ import { addStopHandler, throwIfStopped } from './stop.js'
 // Start server to communicate with combinations, then measure them.
 export const measureCombination = async function (
   combination,
-  { duration, cwd, previewConfig, previewState, exec },
+  { duration, cwd, previewConfig, previewState, stage },
 ) {
   const { server, serverUrl } = await startServer()
 
@@ -24,7 +24,7 @@ export const measureCombination = async function (
       cwd,
       previewConfig,
       previewState,
-      exec,
+      stage,
       server,
     })
   } finally {
@@ -40,10 +40,14 @@ const spawnAndMeasure = async function ({
   cwd,
   previewConfig,
   previewState,
-  exec,
+  stage,
   server,
 }) {
-  const childProcess = spawnRunnerProcess(combination, { serverUrl, cwd, exec })
+  const childProcess = spawnRunnerProcess(combination, {
+    serverUrl,
+    cwd,
+    stage,
+  })
 
   try {
     return await stopOrMeasure({
@@ -51,7 +55,7 @@ const spawnAndMeasure = async function ({
       duration,
       previewConfig,
       previewState,
-      exec,
+      stage,
       server,
       childProcess,
     })
@@ -66,7 +70,7 @@ const stopOrMeasure = async function ({
   duration,
   previewConfig,
   previewState,
-  exec,
+  stage,
   server,
   childProcess,
 }) {
@@ -82,7 +86,7 @@ const stopOrMeasure = async function ({
       previewConfig,
       previewState,
       stopState,
-      exec,
+      stage,
       server,
       childProcess,
       onAbort,
