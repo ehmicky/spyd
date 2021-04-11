@@ -1,3 +1,5 @@
+import pReduce from 'p-reduce'
+
 import { throwOnProcessExit } from '../process/error.js'
 import {
   spawnRunnerProcess,
@@ -24,26 +26,25 @@ export const measureCombinations = async function (
   combinations,
   { duration, cwd, previewConfig, previewState, exec },
 ) {
-  const allStats = []
-
-  // eslint-disable-next-line fp/no-loops
-  for (const [index, combination] of combinations.entries()) {
-    const previewConfigA = { ...previewConfig, allStats, index }
-    // eslint-disable-next-line no-await-in-loop
-    const { stats } = await measureCombination(combination, {
-      duration,
-      cwd,
-      previewConfig: previewConfigA,
-      previewState,
-      exec,
-    })
-    // eslint-disable-next-line fp/no-mutating-methods
-    allStats.push(stats)
-  }
+  const allStatsA = await pReduce(
+    combinations,
+    async (allStats, combination, index) => {
+      const previewConfigA = { ...previewConfig, allStats, index }
+      const { stats } = await measureCombination(combination, {
+        duration,
+        cwd,
+        previewConfig: previewConfigA,
+        previewState,
+        exec,
+      })
+      return [...allStats, stats]
+    },
+    [],
+  )
 
   return combinations.map((combination, index) => ({
     ...combination,
-    stats: allStats[index],
+    stats: allStatsA[index],
   }))
 }
 
