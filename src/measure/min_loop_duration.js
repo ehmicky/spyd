@@ -1,7 +1,9 @@
+import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
 import { sendAndReceive } from '../process/ipc.js'
 import { getUnsortedMedian } from '../stats/median.js'
+import { mergeSort } from '../stats/merge.js'
 
 // Computes the duration to retrieve timestamps.
 // This is used to compute `measureCost` and `resolution`, which are used for
@@ -15,13 +17,51 @@ export const getMinLoopDuration = async function (taskId, server, res) {
     return { res }
   }
 
-  // TODO: use 100ms duration instead of hardcoded maxLoops
-  const {
-    res: resA,
-    returnValue: { measures },
-  } = await sendAndReceive({ maxLoops: 7e5, repeat: 0 }, server, res)
-  const minLoopDuration = computeMinLoopDuration(measures)
+  const { allMeasures, res: resA } = await measureInLoop(server, res)
+  const minLoopDuration = computeMinLoopDuration(allMeasures)
   return { minLoopDuration, res: resA }
+}
+
+// eslint-disable-next-line max-statements
+const measureInLoop = async function (server, res) {
+  const start = now()
+  const allMeasures = []
+  // eslint-disable-next-line fp/no-let
+  let loops = 0
+  // eslint-disable-next-line fp/no-let
+  let resA = res
+
+  // eslint-disable-next-line fp/no-loops
+  do {
+    const params = getParams(loops, start)
+    const {
+      res: resB,
+      returnValue: { measures },
+      // eslint-disable-next-line no-await-in-loop
+    } = await sendAndReceive(params, server, resA)
+    // eslint-disable-next-line fp/no-mutating-methods
+    allMeasures.push(measures)
+    // eslint-disable-next-line fp/no-mutation
+    loops += measures.length
+    // eslint-disable-next-line fp/no-mutation
+    resA = resB
+  } while (now() - start < TARGET_DURATION)
+
+  return { allMeasures, res: resA }
+}
+
+const getParams = function (loops, start) {
+  const maxLoops = getMaxLoops(loops, start)
+  return { maxLoops, repeat: 0 }
+}
+
+const getMaxLoops = function (loops, start) {
+  if (loops === 0) {
+    return 1
+  }
+
+  const loopDurationMean = (now() - start) / loops
+  return Math.ceil(TARGET_DURATION / (TARGET_SAMPLES * loopDurationMean))
 }
 
 // How long the runner should fill the `measures` array.
@@ -35,7 +75,8 @@ export const getMinLoopDuration = async function (taskId, server, res) {
 //  - This avoid different `precision` impacting the `repeat`
 //  - This avoids differences due to some engines like v8 which optimize the
 //    speed of functions after repeating them a specific amount of times
-const CALIBRATE_DURATION = 1e8
+const TARGET_DURATION = 1e8
+const TARGET_SAMPLES = 10
 
 // `measureCost` is the time taken to take a measurement.
 // This includes the time to get the start/end timestamps for example.
@@ -126,7 +167,11 @@ const CALIBRATE_DURATION = 1e8
 //  - We use `time-resolution` to guess the runner's minimum resolution.
 //  - For example, if a runner can only measure things with 1ms precision, every
 //    nanoseconds measures will be a multiple of 1e6.
-const computeMinLoopDuration = function (measures) {
+const computeMinLoopDuration = function (allMeasures) {
+  const measures = []
+  allMeasures.forEach((measuresA) => {
+    mergeSort(measures, measuresA)
+  })
   const measureCost = getUnsortedMedian(measures)
   const resolution = timeResolution(measures)
   return Math.max(resolution, measureCost) * MIN_LOOP_DURATION_RATIO
