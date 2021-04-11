@@ -2,7 +2,7 @@ import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 import { pWhile } from '../utils/p_while.js'
 
-import { getSampleStart, getSampleDuration } from './duration.js'
+import { startSample, endSample } from './duration.js'
 import { updatePreviewEnd } from './preview_end.js'
 import { updatePreviewReport } from './preview_report.js'
 import { isRemainingCombination } from './remaining.js'
@@ -70,9 +70,7 @@ const performSample = async function (
   { combination, res, measureDuration, totalDuration, sampleDurationMean },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
-  const sampleStart = getSampleStart()
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(stopState, { sampleStart, sampleDurationMean })
+  const sampleStart = startSample(stopState, sampleDurationMean)
 
   updatePreviewEnd({ previewConfig, previewState, duration, totalDuration })
 
@@ -94,15 +92,15 @@ const performSample = async function (
     previewState,
   })
 
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(stopState, {
-    sampleStart: undefined,
-    sampleDurationMean: undefined,
-  })
   const {
     totalDuration: totalDurationA,
     sampleDurationMean: sampleDurationMeanA,
-  } = getSampleDuration(combinationA, sampleStart, totalDuration)
+  } = endSample({
+    stopState,
+    combination: combinationA,
+    sampleStart,
+    totalDuration,
+  })
   return {
     combination: combinationA,
     res: resA,
