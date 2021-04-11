@@ -2,6 +2,7 @@ import { throwOnProcessExit } from '../process/error.js'
 
 import { endCombination } from './end.js'
 import { performMeasureLoop } from './loop.js'
+import { getMinLoopDuration } from './min_loop_duration.js'
 import { startCombination } from './start.js'
 
 // Handle errors during measuring
@@ -49,11 +50,13 @@ const measureAllCombinations = async function ({
   exec,
   server,
 }) {
-  const { res, taskIds, minLoopDuration } = await startCombination(
-    previewState,
+  const { taskIds, res } = await startCombination(previewState, server)
+  const { minLoopDuration, res: resA } = await getMinLoopDuration(
+    taskId,
     server,
+    res,
   )
-  const { stats, res: resA } = await performMeasureLoop({
+  const { stats, res: resB } = await performMeasureLoop({
     taskId,
     duration,
     previewConfig,
@@ -61,10 +64,10 @@ const measureAllCombinations = async function ({
     stopState,
     exec,
     server,
-    res,
+    res: resA,
     minLoopDuration,
   })
-  await endCombination(previewState, server, resA)
+  await endCombination(previewState, server, resB)
   return { stats, taskIds }
 }
 

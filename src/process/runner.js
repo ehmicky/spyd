@@ -38,14 +38,14 @@ export const spawnRunnerProcess = function (
   },
   { serverUrl, cwd, exec },
 ) {
-  const spawnParams = getSpawnParams({
+  const inputsA = toInputsObj(inputs)
+  const spawnParamsString = JSON.stringify({
+    serverUrl,
     runnerConfig,
     taskId,
     taskPath,
-    inputs,
-    serverUrl,
+    inputs: inputsA,
   })
-  const spawnParamsString = JSON.stringify(spawnParams)
   const stdio = getStdio(exec)
   const childProcess = spawnProcess(
     [file, ...args, spawnParamsString],
@@ -60,39 +60,6 @@ export const spawnRunnerProcess = function (
   )
   return childProcess
 }
-
-// Retrieve params passed to runner processes so they can find the right task
-const getSpawnParams = function ({
-  runnerConfig,
-  taskId,
-  taskPath,
-  inputs,
-  serverUrl,
-}) {
-  const inputsA = toInputsObj(inputs)
-  const calibrate = taskId === undefined ? 0 : CALIBRATE_DURATION
-  return {
-    serverUrl,
-    runnerConfig,
-    taskId,
-    taskPath,
-    inputs: inputsA,
-    calibrate,
-  }
-}
-
-// How long the runner should fill the `calibration` array.
-// We use a hardcoded duration because:
-//  - This must be as high as possible to make the `minLoopDuration` precise.
-//    The only limit is the user perception of how long this takes, which is
-//    better expressed with a hardcoded duration.
-//  - This works even with high time resolution, providing it is high enough
-//  - This works even when the duration to take each item is very slow,
-//    providing it is high enough
-//  - This avoid different `precision` impacting the `repeat`
-//  - This avoids differences due to some engines like v8 which optimize the
-//    speed of functions after repeating them a specific amount of times
-const CALIBRATE_DURATION = 1e8
 
 // The `exec` command prints stdout/stderr. stdin is always ignored.
 // Anything printed during process spawning (e.g. top-level scope in Node.js)

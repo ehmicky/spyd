@@ -56,7 +56,7 @@ const performHookAsync = async function (hook, taskArgs) {
   }
 }
 
-export const getDurationAsync = async function (main, taskArgs) {
+const getDurationAsync = async function (main, taskArgs) {
   const start = now()
 
   // eslint-disable-next-line fp/no-loops

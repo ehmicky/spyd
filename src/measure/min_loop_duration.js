@@ -1,6 +1,41 @@
 import timeResolution from 'time-resolution'
 
+import { sendAndReceive } from '../process/ipc.js'
 import { getUnsortedMedian } from '../stats/median.js'
+
+// Computes the duration to retrieve timestamps.
+// This is used to compute `measureCost` and `resolution`, which are used for
+// `repeat`.
+// We run samples with `repeat: 0` because:
+//  - It ensures the same measuring logic is used
+//  - It warms the measuring logic, removing cold starts, which makes it more
+//    precise
+export const getMinLoopDuration = async function (taskId, server, res) {
+  if (taskId === undefined) {
+    return { res }
+  }
+
+  // TODO: use 100ms duration instead of hardcoded maxLoops
+  const {
+    res: resA,
+    returnValue: { measures: calibrations },
+  } = await sendAndReceive({ maxLoops: 7e5, repeat: 0 }, server, res)
+  const minLoopDuration = computeMinLoopDuration(calibrations)
+  return { minLoopDuration, res: resA }
+}
+
+// How long the runner should fill the `calibration` array.
+// We use a hardcoded duration because:
+//  - This must be as high as possible to make the `minLoopDuration` precise.
+//    The only limit is the user perception of how long this takes, which is
+//    better expressed with a hardcoded duration.
+//  - This works even with high time resolution, providing it is high enough
+//  - This works even when the duration to take each item is very slow,
+//    providing it is high enough
+//  - This avoid different `precision` impacting the `repeat`
+//  - This avoids differences due to some engines like v8 which optimize the
+//    speed of functions after repeating them a specific amount of times
+const CALIBRATE_DURATION = 1e8
 
 // `measureCost` is the time taken to take a measurement.
 // This includes the time to get the start/end timestamps for example.
@@ -91,11 +126,7 @@ import { getUnsortedMedian } from '../stats/median.js'
 //  - We use `time-resolution` to guess the runner's minimum resolution.
 //  - For example, if a runner can only measure things with 1ms precision, every
 //    nanoseconds measures will be a multiple of 1e6.
-export const getMinLoopDuration = function (calibrations) {
-  if (calibrations.length === 0) {
-    return 0
-  }
-
+const computeMinLoopDuration = function (calibrations) {
   const measureCost = getUnsortedMedian(calibrations)
   const resolution = timeResolution(calibrations)
   return Math.max(resolution, measureCost) * MIN_LOOP_DURATION_RATIO

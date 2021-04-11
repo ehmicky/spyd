@@ -1,7 +1,6 @@
 import { UserError } from '../../../../error/main.js'
 import { importJsFile } from '../../../../utils/import.js'
 
-import { getCalibrations } from './calibrate.js'
 import { addDefaults } from './default.js'
 import { useRequireConfig } from './require_config.js'
 import { validate } from './validate.js'
@@ -12,7 +11,6 @@ export const start = async function ({
   taskPath,
   taskId,
   inputs,
-  calibrate,
 }) {
   await useRequireConfig(requireConfig)
 
@@ -22,8 +20,7 @@ export const start = async function ({
   const task = taskId === undefined ? {} : tasksB[taskId]
 
   const tasksC = Object.keys(tasksB)
-  const calibrations = await getCalibrations(calibrate, task)
-  return { tasks: tasksC, task, taskArg: inputs, calibrations }
+  return { tasks: tasksC, task, taskArg: inputs }
 }
 
 const importFile = function (taskPath) {
