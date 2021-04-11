@@ -34,13 +34,12 @@ export const performMeasureLoop = async function ({
   stopState,
   stage,
   server,
-  res,
   minLoopDuration,
 }) {
   setBenchmarkStart(previewState)
 
-  const initialState = getInitialState(res)
-  return await pWhile(
+  const initialState = getInitialState()
+  const { stats } = await pWhile(
     (state) => isRemainingCombination(state, { duration, stage, stopState }),
     (state) =>
       performSample(state, {
@@ -54,19 +53,20 @@ export const performMeasureLoop = async function ({
       }),
     initialState,
   )
+  return stats
 }
 
 export const TARGET_SAMPLE_DURATION = 1e8
 
-const getInitialState = function (res) {
+const getInitialState = function () {
   const stats = getInitialStats()
   const sampleState = getInitialSampleState()
   const durationState = getInitialDurationState()
-  return { res, stats, sampleState, durationState }
+  return { stats, sampleState, durationState }
 }
 
 const performSample = async function (
-  { res, sampleState, stats, durationState },
+  { sampleState, stats, durationState },
   {
     duration,
     previewConfig,
@@ -81,9 +81,9 @@ const performSample = async function (
 
   updatePreviewEnd({ previewConfig, previewState, durationState, duration })
 
-  const { res: resA, sampleState: sampleStateA } = await measureSample(
+  const sampleStateA = await measureSample(
     { server, minLoopDuration, targetSampleDuration },
-    { res, sampleState },
+    sampleState,
   )
   const statsA = addStats(stats, sampleStateA, minLoopDuration)
 
@@ -101,7 +101,6 @@ const performSample = async function (
     stopState,
   })
   return {
-    res: resA,
     stats: statsA,
     sampleState: sampleStateA,
     durationState: durationStateA,

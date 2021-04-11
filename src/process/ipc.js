@@ -24,15 +24,15 @@ import { throwOnStreamError } from './error.js'
 //  - The runner sends the return value
 // We are setting up return value listening before sending payload to prevent
 // any race condition.
-export const sendAndReceive = async function (payload, server, res) {
-  const [{ returnValue, res: resA }] = await Promise.all([
+export const sendAndReceive = async function (payload, server) {
+  const [returnValue] = await Promise.all([
     receiveReturnValue(server),
-    sendPayload(payload, res),
+    sendPayload(payload, server),
   ])
-  return { returnValue, res: resA }
+  return returnValue
 }
 
-const sendPayload = async function (payload, res) {
+const sendPayload = async function (payload, { res }) {
   try {
     const payloadString = JSON.stringify(payload)
     await Promise.race([
@@ -48,12 +48,16 @@ const sendPayload = async function (payload, res) {
 // This can fail for several reasons:
 //  - Wrong HTTP request URL or body due to bug in runner
 //  - Error/exception in task
+// We directly mutate `server.res` instead of returning it because it makes
+// code simpler.
 export const receiveReturnValue = async function (server) {
   const [req, res] = await once(server, 'request')
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign, require-atomic-updates
+  server.res = res
 
   const returnValue = await parseReturnValue(req)
   throwIfTaskError(returnValue)
-  return { returnValue, res }
+  return returnValue
 }
 
 // Parse the request's JSON body

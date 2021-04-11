@@ -8,19 +8,18 @@ import { getSampleState } from './state.js'
 // Measure a new sample for a given combination
 export const measureSample = async function (
   { server, minLoopDuration, targetSampleDuration },
-  { res, sampleState },
+  sampleState,
 ) {
   const payload = getPayload(sampleState, minLoopDuration, targetSampleDuration)
-  const { returnValue, res: resA, measureDuration } = await measureNewSample(
+  const { returnValue, measureDuration } = await measureNewSample(
     payload,
     server,
-    res,
   )
   const sampleStateA = getSampleState(sampleState, returnValue, {
     minLoopDuration,
     measureDuration,
   })
-  return { res: resA, sampleState: sampleStateA }
+  return sampleStateA
 }
 
 // `measureDuration` is how long it takes to get a single sample's results.
@@ -31,9 +30,9 @@ export const measureSample = async function (
 // be slow.
 // We only keep the last `measureDuration` instead of taking the median of all
 // previous ones, so that `measureDuration` quickly adapts to machine slowdowns.
-const measureNewSample = async function (payload, server, res) {
+const measureNewSample = async function (payload, server) {
   const measureDurationStart = now()
-  const { returnValue, res: resA } = await sendAndReceive(payload, server, res)
+  const returnValue = await sendAndReceive(payload, server)
   const measureDuration = now() - measureDurationStart
-  return { returnValue, res: resA, measureDuration }
+  return { returnValue, measureDuration }
 }

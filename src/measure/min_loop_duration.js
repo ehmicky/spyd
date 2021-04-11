@@ -35,17 +35,14 @@ import { pWhile } from '../utils/p_while.js'
 //    due to de-optimizing it
 //  - This also prevents the opposite, which means changing the tasks logic
 //    should not impact `measureCost`
-export const getMinLoopDuration = async function (server, res, stage) {
+export const getMinLoopDuration = async function (server, stage) {
   if (stage === 'exec') {
-    return { res }
+    return
   }
 
-  const {
-    sampleState: { measures },
-    res: resA,
-  } = await getMeasureCost(server, res)
+  const { measures } = await getMeasureCost(server)
   const minLoopDuration = computeMinLoopDuration(measures)
-  return { minLoopDuration, res: resA }
+  return minLoopDuration
 }
 
 // Repeatedly measure samples to estimate `measureCost`
@@ -59,7 +56,7 @@ export const getMinLoopDuration = async function (server, res, stage) {
 // Runners should correctly handle `repeat: 0`:
 //  - Every logic should execute except the task itself
 //  - Nothing should be printed to `stdout` nor `stderr`
-const getMeasureCost = async function (server, res) {
+const getMeasureCost = async function (server) {
   const sampleState = getInitialSampleState()
   const end = now() + TARGET_DURATION
   return await pWhile(
@@ -69,11 +66,11 @@ const getMeasureCost = async function (server, res) {
       minLoopDuration: 0,
       targetSampleDuration: TARGET_SAMPLE_DURATION,
     }),
-    { res, sampleState },
+    sampleState,
   )
 }
 
-const shouldKeepMeasuring = function (end, { sampleState }) {
+const shouldKeepMeasuring = function (end, sampleState) {
   return (
     !hasMaxMeasures(sampleState) &&
     !(hasEnoughMeasures(sampleState) && now() >= end)
