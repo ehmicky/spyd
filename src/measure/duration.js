@@ -22,6 +22,7 @@ export const endSample = function ({
   sampleState: { allSamples },
   sampleStart,
   stopState,
+  measureDuration,
 }) {
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
@@ -31,5 +32,5 @@ export const endSample = function ({
   const sampleDurationLast = now() - sampleStart
   const totalDurationA = totalDuration + sampleDurationLast
   const sampleDurationMean = totalDurationA / allSamples
-  return { totalDuration: totalDurationA, sampleDurationMean }
+  return { totalDuration: totalDurationA, sampleDurationMean, measureDuration }
 }

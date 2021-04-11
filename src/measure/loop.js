@@ -76,8 +76,13 @@ const performSample = async function (
 
   updatePreviewEnd({ previewConfig, previewState, durationState, duration })
 
-  const { res: resA, sampleState: sampleStateA } = await measureSample({
+  const {
+    res: resA,
+    sampleState: sampleStateA,
+    measureDuration,
+  } = await measureSample({
     sampleState,
+    durationState,
     server,
     res,
     minLoopDuration,
@@ -96,6 +101,7 @@ const performSample = async function (
     sampleState: sampleStateA,
     sampleStart,
     stopState,
+    measureDuration,
   })
   return {
     res: resA,

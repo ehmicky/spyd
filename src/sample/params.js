@@ -1,10 +1,8 @@
 // Compute params to send to the measuring sample
-export const getParams = function ({
-  repeat,
-  repeatLast,
-  sampleLoops,
-  measureDuration,
-}) {
+export const getParams = function (
+  { repeat, repeatLast, sampleLoops },
+  { measureDuration },
+) {
   const maxLoops = getMaxLoops({
     repeat,
     repeatLast,
