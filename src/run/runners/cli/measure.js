@@ -12,15 +12,22 @@ export const after = async function ({ task: { afterAll }, env, shell }) {
 
 // Measure how long a task takes.
 export const measure = async function (
-  { maxLoops },
+  { repeat, maxLoops },
   { task: { main, beforeEach, afterEach }, env, shell },
 ) {
-  const measures = []
+  const measures = new Array(maxLoops)
 
-  // eslint-disable-next-line fp/no-loops
-  while (measures.length < maxLoops) {
-    // eslint-disable-next-line no-await-in-loop
-    await performLoop({ main, beforeEach, afterEach, env, shell, measures })
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index < measures.length; index += 1) {
+    // eslint-disable-next-line fp/no-mutation, no-await-in-loop
+    measures[index] = await performLoop({
+      main,
+      beforeEach,
+      afterEach,
+      env,
+      shell,
+      repeat,
+    })
   }
 
   return { measures }
@@ -32,26 +39,34 @@ const performLoop = async function ({
   afterEach,
   env,
   shell,
-  measures,
+  repeat,
 }) {
-  await performHook(beforeEach, { env, shell })
-  // eslint-disable-next-line fp/no-mutating-methods
-  measures.push(await getDuration(main, { env, shell }))
-  await performHook(afterEach, { env, shell })
+  await performHook(beforeEach, { repeat, env, shell })
+  const duration = await getDuration(main, { repeat, env, shell })
+  await performHook(afterEach, { repeat, env, shell })
+  return duration
 }
 
-const performHook = async function (hook, { env, shell }) {
+const performHook = async function (hook, { repeat, env, shell }) {
   if (hook === undefined) {
     return
   }
 
-  await spawnProcess(hook, { env, shell })
+  await spawnProcesses(hook, { repeat, env, shell })
 }
 
-const getDuration = async function (main, { env, shell }) {
+const getDuration = async function (main, { repeat, env, shell }) {
   const start = now()
-  await spawnProcess(main, { env, shell })
+  await spawnProcesses(main, { repeat, env, shell })
   return now() - start
+}
+
+const spawnProcesses = async function (command, { repeat, env, shell }) {
+  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
+  for (let index = 0; index < repeat; index += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await spawnProcess(command, { env, shell })
+  }
 }
 
 // Spawn a process.
