@@ -15,11 +15,11 @@ export const execCombination = async function (combination, { cwd }) {
   printCombinationName(combination)
 
   await measureCombination(combination, {
-    cwd,
     duration: 1,
-    exec: true,
+    cwd,
     previewConfig: { quiet: true },
     previewState: {},
+    exec: true,
   })
 }
 
