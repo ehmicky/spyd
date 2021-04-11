@@ -45,7 +45,7 @@ const getMaxLoops = function ({
   sampleLoops,
 }) {
   // First sample of the benchmark
-  if (measureDuration === 0) {
+  if (measureDuration === undefined) {
     return 1
   }
 
