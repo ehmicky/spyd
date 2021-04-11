@@ -26,8 +26,7 @@ export const addStats = function (
     return stats
   }
 
-  const countStats = getCountStats({
-    stats,
+  const countStats = getCountStats(stats, {
     sampleLoops,
     repeatLast,
     minLoopDuration,
@@ -38,12 +37,10 @@ export const addStats = function (
 }
 
 // Retrieve stats related to sampling itself, not the measures
-const getCountStats = function ({
-  stats: { samples, loops, times },
-  sampleLoops,
-  repeatLast,
-  minLoopDuration,
-}) {
+const getCountStats = function (
+  { samples, loops, times },
+  { sampleLoops, repeatLast, minLoopDuration },
+) {
   const samplesA = samples + 1
   const loopsA = loops + sampleLoops
   const timesA = times + sampleLoops * repeatLast
