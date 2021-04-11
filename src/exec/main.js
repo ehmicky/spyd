@@ -1,5 +1,5 @@
 import { getCombinationName } from '../combination/ids.js'
-import { measureCombination } from '../measure/main.js'
+import { measureCombination } from '../measure/single.js'
 
 // Execute tasks without benchmarking them.
 // We run each serially, so the output is not interleaved.

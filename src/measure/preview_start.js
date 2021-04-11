@@ -2,8 +2,8 @@ import { listHistory } from '../history/main.js'
 import { startPreviewRefresh, endPreviewRefresh } from '../preview/refresh.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
 
-import { measureCombinations } from './main.js'
 import { getPreviewConfig, setFirstPreview } from './preview_report.js'
+import { measureCombinations } from './several.js'
 
 // Start preview then measure benchmark
 export const previewStartAndMeasure = async function ({

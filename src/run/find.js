@@ -1,5 +1,5 @@
 import { PluginError } from '../error/main.js'
-import { measureCombination } from '../measure/main.js'
+import { measureCombination } from '../measure/single.js'
 
 // A tasks file might have several tasks because:
 //  - This is user-friendlier when using small tasks and/or single steps
