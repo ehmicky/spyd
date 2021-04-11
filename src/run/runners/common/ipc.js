@@ -64,7 +64,7 @@ const errorExit = async function (error) {
 // Send a HTTP request to the main process
 const sendReturnValue = async function (returnValue) {
   return await got({
-    url: argv[2],
+    url: argv[argv.length - 1],
     method: 'POST',
     json: returnValue,
     responseType: 'json',
