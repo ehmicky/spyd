@@ -2,6 +2,7 @@ import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
 import { measureSample } from '../sample/main.js'
+import { getInitialSampleState } from '../sample/state.js'
 import { getUnsortedMedian } from '../stats/median.js'
 
 // This is used to compute `measureCost` and `resolution`, which are used for
@@ -112,7 +113,7 @@ export const getMinLoopDuration = async function (taskId, server, res) {
 const measureInLoop = async function (server, res) {
   const start = now()
   // eslint-disable-next-line fp/no-let
-  let sampleState = { measures: [], repeat: 1, repeatLast: 1, sampleLoops: 0 }
+  let sampleState = getInitialSampleState()
   // eslint-disable-next-line fp/no-let
   let resA = res
 
