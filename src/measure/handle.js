@@ -1,9 +1,14 @@
 import { throwOnProcessExit } from '../process/error.js'
 
-import { endCombination } from './end.js'
+import {
+  waitForCombinationSpawn,
+  startCombination,
+  beforeCombination,
+  afterCombination,
+  endCombination,
+} from './events.js'
 import { performMeasureLoop } from './loop.js'
 import { getMinLoopDuration } from './min_loop_duration.js'
-import { waitForCombinationSpawn, startCombination } from './start.js'
 
 // Handle errors during measuring
 export const handleErrorsAndMeasure = async function ({
@@ -51,28 +56,29 @@ const measureAllCombinations = async function ({
   server,
 }) {
   const res = await waitForCombinationSpawn(server)
-  const { taskIds, res: resA } = await startCombination({
+  const { taskIds, res: resA } = await startCombination(
     combination,
-    previewState,
     server,
     res,
-  })
-  const { minLoopDuration, res: resB } = await getMinLoopDuration(
+  )
+  const resB = await beforeCombination(previewState, server, resA)
+  const { minLoopDuration, res: resC } = await getMinLoopDuration(
     server,
-    resA,
+    resB,
     stage,
   )
-  const { stats, res: resC } = await performMeasureLoop({
+  const { stats, res: resD } = await performMeasureLoop({
     duration,
     previewConfig,
     previewState,
     stopState,
     stage,
     server,
-    res: resB,
+    res: resC,
     minLoopDuration,
   })
-  await endCombination(previewState, server, resC)
+  const resE = await afterCombination(previewState, server, resD)
+  await endCombination(server, resE)
   return { stats, taskIds }
 }
 
