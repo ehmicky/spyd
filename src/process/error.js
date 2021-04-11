@@ -14,7 +14,7 @@ export const throwOnProcessExit = async function (childProcess) {
   throw new UserError(exitMessage)
 }
 
-// Replace "Command" by "Task" and remove the runner process spawnParams from
+// Replace "Command" by "Task" and remove the runner process argv from
 // the error message
 const getProcessExitMessage = function (failed, message) {
   if (!failed) {

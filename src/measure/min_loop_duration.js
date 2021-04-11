@@ -22,8 +22,8 @@ import { pWhile } from '../utils/p_while.js'
 // Computing the optimal loop size is done automatically
 //  - This is because it is highly dependent on the current machine speed which
 //    both the user and the runner cannot specify as well as programmatic logic.
-//  - It is passed as as `repeat` parameter to each runner sample.
-//  - This parameter is based on a `minLoopDuration` which is the minimal
+//  - It is passed as as `repeat` payload property to each runner sample.
+//  - This payload property is based on a `minLoopDuration` which is the minimal
 //    duration each `repeat` loop should last.
 //  - `minLoopDuration` is based on `measureCost`.
 // `measureCost` must be computed separately for each combination since it might

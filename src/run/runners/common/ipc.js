@@ -12,34 +12,34 @@ import got from 'got'
 export const performRunner = async function (handlers) {
   const state = {}
   // eslint-disable-next-line fp/no-let
-  let request = {}
+  let returnValue = {}
 
   // eslint-disable-next-line fp/no-loops
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const response = await sendRequest(request)
+    const payload = await sendReturnValue(returnValue)
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
-    request = await handleResponse(response, handlers, state)
+    returnValue = await handlePayload(payload, handlers, state)
   }
 }
 
 // Send HTTP request to parent
-const sendRequest = async function (request = {}) {
+const sendReturnValue = async function (returnValue = {}) {
   return await got({
     url: argv[argv.length - 1],
     method: 'POST',
-    json: request,
+    json: returnValue,
     responseType: 'json',
     resolveBodyOnly: true,
   })
 }
 
-// Handle HTTP response from parent
+// Handle HTTP response from parent.
 // Any error while starting or measuring is most likely a user error, which is
 // sent back to the main process.
-const handleResponse = async function (response, handlers, state) {
+const handlePayload = async function (payload, handlers, state) {
   try {
-    return await handlers[response.event](state, response)
+    return await handlers[payload.event](state, payload)
   } catch (error) {
     return { error: error instanceof Error ? error.stack : String(error) }
   }

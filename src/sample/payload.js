@@ -1,10 +1,10 @@
-// Compute params to send to the measuring sample
-export const getParams = function (
+// Compute event payload to send to the measuring sample
+export const getPayload = function (
   { repeat, repeatLast, sampleLoops, measureDuration },
   minLoopDuration,
   targetSampleDuration,
 ) {
-  const repeatParam = getRepeatParam(repeat, minLoopDuration)
+  const repeatPayload = getRepeatPayload(repeat, minLoopDuration)
   const maxLoops = getMaxLoops({
     repeat,
     repeatLast,
@@ -12,11 +12,11 @@ export const getParams = function (
     measureDuration,
     targetSampleDuration,
   })
-  return { event: 'measure', repeat: repeatParam, maxLoops }
+  return { event: 'measure', repeat: repeatPayload, maxLoops }
 }
 
 // When estimating `measureCost`, we pass `repeat: 0` to the runner
-const getRepeatParam = function (repeat, minLoopDuration) {
+const getRepeatPayload = function (repeat, minLoopDuration) {
   return minLoopDuration === 0 ? 0 : repeat
 }
 

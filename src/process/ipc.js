@@ -8,10 +8,10 @@ import { PluginError, UserError } from '../error/main.js'
 
 import { throwOnStreamError } from './error.js'
 
-// Send the next sample's params by responding to the HTTP long poll request.
+// Send the next sample's payload by responding to the HTTP long poll request.
 // Runners use long polling:
 //  - They send their return value with a new HTTP request
-//  - The server keeps the request alive until new params are available, which
+//  - The server keeps the request alive until new payload are available, which
 //    are then sent as a response
 // We use long polling instead of starting a server in the runner because it is
 // simpler to implement in runners and has less room for errors, including:
@@ -20,24 +20,24 @@ import { throwOnStreamError } from './error.js'
 //  - Signaling that it is ready to listen to the parent
 // There is only one single endpoint for each runner, meant to run a new
 // measuring sample:
-//  - The server sends some params to indicate how long to run the sample
+//  - The server sends some payload to indicate how long to run the sample
 //  - The runner sends the return value
-// We are setting up return value listening before sending params to prevent any
-// race condition.
-export const sendAndReceive = async function (params, server, res) {
+// We are setting up return value listening before sending payload to prevent
+// any race condition.
+export const sendAndReceive = async function (payload, server, res) {
   const [{ returnValue, res: resA }] = await Promise.all([
     receiveReturnValue(server),
-    sendParams(params, res),
+    sendPayload(payload, res),
   ])
   return { returnValue, res: resA }
 }
 
-const sendParams = async function (params, res) {
+const sendPayload = async function (payload, res) {
   try {
-    const paramsString = JSON.stringify(params)
+    const payloadString = JSON.stringify(payload)
     await Promise.race([
       throwOnStreamError(res),
-      promisify(res.end.bind(res))(paramsString),
+      promisify(res.end.bind(res))(payloadString),
     ])
   } catch (error) {
     throw new PluginError(`Could not send HTTP response: ${error.stack}`)

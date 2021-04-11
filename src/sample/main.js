@@ -2,7 +2,7 @@ import now from 'precise-now'
 
 import { sendAndReceive } from '../process/ipc.js'
 
-import { getParams } from './params.js'
+import { getPayload } from './payload.js'
 import { getSampleState } from './state.js'
 
 // Measure a new sample for a given combination
@@ -10,9 +10,9 @@ export const measureSample = async function (
   { server, minLoopDuration, targetSampleDuration },
   { res, sampleState },
 ) {
-  const params = getParams(sampleState, minLoopDuration, targetSampleDuration)
+  const payload = getPayload(sampleState, minLoopDuration, targetSampleDuration)
   const { returnValue, res: resA, measureDuration } = await measureNewSample(
-    params,
+    payload,
     server,
     res,
   )
@@ -31,9 +31,9 @@ export const measureSample = async function (
 // be slow.
 // We only keep the last `measureDuration` instead of taking the median of all
 // previous ones, so that `measureDuration` quickly adapts to machine slowdowns.
-const measureNewSample = async function (params, server, res) {
+const measureNewSample = async function (payload, server, res) {
   const measureDurationStart = now()
-  const { returnValue, res: resA } = await sendAndReceive(params, server, res)
+  const { returnValue, res: resA } = await sendAndReceive(payload, server, res)
   const measureDuration = now() - measureDurationStart
   return { returnValue, res: resA, measureDuration }
 }
