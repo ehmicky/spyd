@@ -4,6 +4,7 @@ import timeResolution from 'time-resolution'
 import { measureSample } from '../sample/main.js'
 import { hasMaxMeasures, getInitialSampleState } from '../sample/state.js'
 import { getUnsortedMedian } from '../stats/median.js'
+import { pWhile } from '../utils/p_while.js'
 
 // This is used to compute `measureCost` and `resolution`, which are used for
 // `repeat`.
@@ -105,35 +106,30 @@ export const getMinLoopDuration = async function (taskId, server, res) {
     return { res }
   }
 
-  const { measures, res: resA } = await measureInLoop(server, res)
+  const {
+    sampleState: { measures },
+    res: resA,
+  } = await getMeasureCost(server, res)
   const minLoopDuration = computeMinLoopDuration(measures)
   return { minLoopDuration, res: resA }
 }
 
-const measureInLoop = async function (server, res) {
+const getMeasureCost = async function (server, res) {
+  const sampleState = getInitialSampleState()
   const end = now() + TARGET_DURATION
-  // eslint-disable-next-line fp/no-let
-  let sampleState = getInitialSampleState()
-  // eslint-disable-next-line fp/no-let
-  let resA = res
-
-  // eslint-disable-next-line fp/no-loops
-  do {
-    // eslint-disable-next-line no-await-in-loop
-    const { res: resB, sampleState: sampleStateA } = await measureSample({
-      sampleState,
+  return await pWhile(
+    shouldKeepMeasuring.bind(undefined, end),
+    measureSample.bind(undefined, {
       server,
-      res: resA,
       minLoopDuration: 0,
       targetSampleDuration: TARGET_SAMPLE_DURATION,
-    })
-    // eslint-disable-next-line fp/no-mutation
-    sampleState = sampleStateA
-    // eslint-disable-next-line fp/no-mutation
-    resA = resB
-  } while (now() < end && !hasMaxMeasures(sampleState))
+    }),
+    { res, sampleState },
+  )
+}
 
-  return { measures: sampleState.measures, res: resA }
+const shouldKeepMeasuring = function (end, { sampleState }) {
+  return now() < end && !hasMaxMeasures(sampleState)
 }
 
 // How long the runner should estimate the `measureCost`.
