@@ -56,9 +56,7 @@ export const getSampleState = function ({
   }
   const statsA = addStats({
     stats,
-    measures: measuresA,
-    sampleLoops,
-    repeat,
+    sampleState: sampleStateA,
     minLoopDuration,
     hasNewMeasures,
   })
@@ -66,21 +64,17 @@ export const getSampleState = function ({
 }
 
 const addSampleMeasures = function (measures, sampleMeasures, calibrated) {
-  const hasNewMeasures = calibrated
-
-  if (!hasNewMeasures) {
-    return { measures, hasNewMeasures }
+  if (!calibrated) {
+    return { measures, hasNewMeasures: false }
   }
 
   mergeSort(measures, sampleMeasures)
-  return { measures, hasNewMeasures }
+  return { measures, hasNewMeasures: true }
 }
 
 const addStats = function ({
   stats,
-  measures,
-  sampleLoops,
-  repeat,
+  sampleState,
   minLoopDuration,
   hasNewMeasures,
 }) {
@@ -88,5 +82,5 @@ const addStats = function ({
     return stats
   }
 
-  return getStats({ stats, measures, sampleLoops, repeat, minLoopDuration })
+  return getStats({ stats, sampleState, minLoopDuration })
 }

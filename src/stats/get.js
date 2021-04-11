@@ -14,16 +14,11 @@ import { computeStats } from './compute.js'
 //  - Change a lot, creating flicker
 export const getStats = function ({
   stats,
-  measures,
-  sampleLoops,
-  repeat,
+  sampleState,
+  sampleState: { measures },
   minLoopDuration,
 }) {
-  const countStats = getCountStats(stats, {
-    sampleLoops,
-    repeat,
-    minLoopDuration,
-  })
+  const countStats = getCountStats(stats, sampleState, minLoopDuration)
   const computedStats = computeStats(measures)
   const statsA = { ...countStats, ...computedStats }
   return statsA
@@ -32,11 +27,12 @@ export const getStats = function ({
 // Retrieve stats related to sampling itself, not the measures
 const getCountStats = function (
   { samples, loops, times },
-  { sampleLoops, repeat, minLoopDuration },
+  { sampleLoops, repeatLast },
+  minLoopDuration,
 ) {
   const samplesA = samples + 1
   const loopsA = loops + sampleLoops
-  const timesA = times + sampleLoops * repeat
+  const timesA = times + sampleLoops * repeatLast
   const meanRepeat = Math.round(times / loops)
   return {
     samples: samplesA,
