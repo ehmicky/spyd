@@ -12,27 +12,21 @@ export const measureSample = async function ({
   server,
   res,
   minLoopDuration,
-  measureDuration,
 }) {
-  const params = getParams(sampleState, measureDuration)
+  const params = getParams(sampleState)
 
   const {
     returnValue,
     res: resA,
-    measureDuration: measureDurationA,
-  } = await measureNewSample(params, server, res)
-  const { stats: statsA, sampleState: sampleStateA } = getSampleState({
+    sampleState: sampleStateA,
+  } = await measureNewSample({ params, server, res, sampleState })
+  const { stats: statsA, sampleState: sampleStateB } = getSampleState({
     stats,
-    sampleState,
+    sampleState: sampleStateA,
     returnValue,
     minLoopDuration,
   })
-  return {
-    res: resA,
-    measureDuration: measureDurationA,
-    stats: statsA,
-    sampleState: sampleStateA,
-  }
+  return { res: resA, stats: statsA, sampleState: sampleStateB }
 }
 
 // `measureDuration` is how long it takes to get a single sample's results.
@@ -43,9 +37,10 @@ export const measureSample = async function ({
 // be slow.
 // We only keep the last `measureDuration` instead of taking the median of all
 // previous ones, so that `measureDuration` quickly adapts to machine slowdowns.
-const measureNewSample = async function (params, server, res) {
+const measureNewSample = async function ({ params, server, res, sampleState }) {
   const measureDurationStart = now()
   const { returnValue, res: resA } = await sendAndReceive(params, server, res)
   const measureDuration = now() - measureDurationStart
-  return { returnValue, res: resA, measureDuration }
+  const sampleStateA = { ...sampleState, measureDuration }
+  return { returnValue, res: resA, sampleState: sampleStateA }
 }

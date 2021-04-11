@@ -62,7 +62,7 @@ export const performMeasureLoop = async function ({
 }
 
 const performSample = async function (
-  { res, sampleState, stats, measureDuration },
+  { res, sampleState, stats },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
   const sampleStart = startSample(stopState, sampleState)
@@ -71,7 +71,6 @@ const performSample = async function (
 
   const {
     res: resA,
-    measureDuration: measureDurationA,
     stats: statsA,
     sampleState: sampleStateA,
   } = await measureSample({
@@ -80,7 +79,6 @@ const performSample = async function (
     server,
     res,
     minLoopDuration,
-    measureDuration,
   })
 
   await updatePreviewReport({
@@ -95,10 +93,5 @@ const performSample = async function (
     sampleState: sampleStateA,
     sampleStart,
   })
-  return {
-    res: resA,
-    stats: statsA,
-    sampleState: sampleStateB,
-    measureDuration: measureDurationA,
-  }
+  return { res: resA, stats: statsA, sampleState: sampleStateB }
 }

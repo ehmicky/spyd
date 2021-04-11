@@ -1,13 +1,15 @@
 // Compute params to send to the measuring sample
-export const getParams = function (
-  { repeat, repeatLast, sampleLoops },
+export const getParams = function ({
+  repeat,
+  repeatLast,
+  sampleLoops,
   measureDuration,
-) {
+}) {
   const maxLoops = getMaxLoops({
-    measureDuration,
     repeat,
     repeatLast,
     sampleLoops,
+    measureDuration,
   })
   return { maxLoops, repeat }
 }
@@ -37,10 +39,10 @@ export const getParams = function (
 //   - If the `repeat` changes, we need to take it into account as well, which
 //     is especially important during calibration.
 const getMaxLoops = function ({
-  measureDuration,
   repeat,
   repeatLast,
   sampleLoops,
+  measureDuration,
 }) {
   // First sample of the benchmark
   if (measureDuration === undefined) {
