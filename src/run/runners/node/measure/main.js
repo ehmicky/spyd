@@ -7,8 +7,8 @@ import { performLoopsSync } from './sync.js'
 // can take several microseconds, which does not work when measuring fast
 // synchronous functions.
 export const measure = async function (
-  { repeat, maxLoops },
   { task: { main, beforeEach, afterEach, async }, taskArg },
+  { repeat, maxLoops },
 ) {
   const measures = async
     ? await performLoopsAsync({

@@ -12,7 +12,7 @@ export const getParams = function (
     measureDuration,
     targetSampleDuration,
   })
-  return { repeat: repeatParam, maxLoops }
+  return { event: 'measure', repeat: repeatParam, maxLoops }
 }
 
 // When estimating `measureCost`, we pass `repeat: 0` to the runner

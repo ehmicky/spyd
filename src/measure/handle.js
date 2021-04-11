@@ -57,11 +57,12 @@ const measureAllCombinations = async function ({
     server,
     res,
   })
-  const { minLoopDuration, res: resB } = await getMinLoopDuration(
+  const { minLoopDuration, res: resB } = await getMinLoopDuration({
     combination,
     server,
-    resA,
-  )
+    res: resA,
+    exec,
+  })
   const { stats, res: resC } = await performMeasureLoop({
     combination,
     duration,

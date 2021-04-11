@@ -2,72 +2,45 @@ import { argv } from 'process'
 
 import got from 'got'
 
-// Handles IPC communication with the main process
-export const performRunner = async function ({
-  start,
-  before,
-  measure,
-  after,
-}) {
-  try {
-    await measureCombination({ start, before, measure, after })
-    await sendReturnValue({})
-  } catch (error) {
-    await errorExit(error)
-  }
-}
-
-// `afterAll` is always called, for cleanup.
-// If an error happens in `afterAll`, it is propagated even if another error
-// was thrown in `main`. This is because `afterAll` should gracefully handle
+// TODO
+// `after` is always called, for cleanup.
+// If an error happens in `after`, it is propagated even if another error
+// was thrown in `main`. This is because `after` should gracefully handle
 // any possible interruption, regardless of what's the current global state.
-const measureCombination = async function ({ start, before, measure, after }) {
-  const startParams = await sendReturnValue({})
-  const { tasks, ...startState } = await start(startParams)
 
-  await before(startState)
-
-  try {
-    await measureSamples(measure, startState, tasks)
-  } finally {
-    await after(startState)
-  }
-}
-
-// Runs a new sample each time the main process asks for it
-const measureSamples = async function (measure, startState, tasks) {
+// Handles IPC communication with the parent process
+export const performRunner = async function (handlers) {
+  const state = {}
   // eslint-disable-next-line fp/no-let
-  let returnValue = { tasks }
+  let request = {}
 
   // eslint-disable-next-line fp/no-loops
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const params = await sendReturnValue(returnValue)
-
-    // eslint-disable-next-line max-depth
-    if (params.maxLoops === undefined) {
-      break
-    }
-
+    const response = await sendRequest(request)
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
-    returnValue = await measure(params, startState)
+    request = await handleResponse(response, handlers, state)
   }
 }
 
-// Any error while starting or measuring is most likely a user error, which is
-// sent back to the main process.
-const errorExit = async function (error) {
-  const errorString = error instanceof Error ? error.stack : String(error)
-  await sendReturnValue({ error: errorString })
-}
-
-// Send a HTTP request to the main process
-const sendReturnValue = async function (returnValue) {
+// Send HTTP request to parent
+const sendRequest = async function (request = {}) {
   return await got({
     url: argv[argv.length - 1],
     method: 'POST',
-    json: returnValue,
+    json: request,
     responseType: 'json',
     resolveBodyOnly: true,
   })
+}
+
+// Handle HTTP response from parent
+// Any error while starting or measuring is most likely a user error, which is
+// sent back to the main process.
+const handleResponse = async function (response, handlers, state) {
+  try {
+    return await handlers[response.event](state, response)
+  } catch (error) {
+    return { error: error instanceof Error ? error.stack : String(error) }
+  }
 }

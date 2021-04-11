@@ -20,7 +20,7 @@ export const startCombination = async function ({
     returnValue: { tasks: taskIds },
     res: resA,
   } = await sendAndReceive(
-    { runnerConfig, taskId, taskPath, inputs: inputsA },
+    { event: 'start', runnerConfig, taskId, taskPath, inputs: inputsA },
     server,
     res,
   )

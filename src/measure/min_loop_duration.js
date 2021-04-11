@@ -35,8 +35,13 @@ import { pWhile } from '../utils/p_while.js'
 //    due to de-optimizing it
 //  - This also prevents the opposite, which means changing the tasks logic
 //    should not impact `measureCost`
-export const getMinLoopDuration = async function ({ taskId }, server, res) {
-  if (taskId === undefined) {
+export const getMinLoopDuration = async function ({
+  combination: { taskId },
+  server,
+  res,
+  exec,
+}) {
+  if (taskId === undefined || exec) {
     return { res }
   }
 
