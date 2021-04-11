@@ -70,7 +70,7 @@ const getSpawnParams = function ({
   serverUrl,
 }) {
   const inputsA = toInputsObj(inputs)
-  const calibrate = taskId === undefined ? 0 : CALIBRATE_LENGTH
+  const calibrate = taskId === undefined ? 0 : CALIBRATE_DURATION
   return {
     serverUrl,
     runnerConfig,
@@ -81,17 +81,18 @@ const getSpawnParams = function ({
   }
 }
 
-// Length of the `calibration` array that the runner should return.
-// We use a hardcoded number because:
+// How long the runner should fill the `calibration` array.
+// We use a hardcoded duration because:
+//  - This must be as high as possible to make the `minLoopDuration` precise.
+//    The only limit is the user perception of how long this takes, which is
+//    better expressed with a hardcoded duration.
+//  - This works even with high time resolution, providing it is high enough
+//  - This works even when the duration to take each item is very slow,
+//    providing it is high enough
+//  - This avoid different `precision` impacting the `repeat`
 //  - This avoids differences due to some engines like v8 which optimize the
 //    speed of functions after repeating them a specific amount of times
-//  - This avoid different `duration` impacting the `repeat`
-//  - Computing each `calibration` should be fast
-//  - The resolution estimation algorithm requires a minimum amount of
-//    `calibrations`
-// Higher numbers are more likely to be slow when the resolution is low.
-// Lower numbres are less precise.
-const CALIBRATE_LENGTH = 1e2
+const CALIBRATE_DURATION = 1e8
 
 // The `exec` command prints stdout/stderr. stdin is always ignored.
 // Anything printed during process spawning (e.g. top-level scope in Node.js)
