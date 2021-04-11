@@ -39,15 +39,10 @@ export const getSampleState = function ({
     allSamples,
     calibrated,
   })
-  const {
-    stats: statsA,
-    measures: measuresA,
-    allSamples: allSamplesA,
-  } = addStats({
+  const { stats: statsA, measures: measuresA } = addStats({
     stats,
     measures,
     sampleMeasures: sampleMeasuresA,
-    allSamples,
     sampleLoops,
     repeat,
     minLoopDuration,
@@ -56,7 +51,7 @@ export const getSampleState = function ({
   const sampleStateA = {
     ...sampleState,
     measures: measuresA,
-    allSamples: allSamplesA,
+    allSamples: allSamples + 1,
     sampleLoops,
     repeat: newRepeat,
     repeatLast: repeat,

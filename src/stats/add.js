@@ -17,16 +17,13 @@ export const addStats = function ({
   stats,
   measures,
   sampleMeasures,
-  allSamples,
   sampleLoops,
   repeat,
   minLoopDuration,
   calibrated,
 }) {
-  const allSamplesA = allSamples + 1
-
   if (!calibrated) {
-    return { stats, measures, allSamples: allSamplesA }
+    return { stats, measures }
   }
 
   const countStats = getCountStats(stats, {
@@ -39,7 +36,7 @@ export const addStats = function ({
   const computedStats = computeStats(measures)
 
   const statsA = { ...countStats, ...computedStats }
-  return { stats: statsA, measures, allSamples: allSamplesA }
+  return { stats: statsA, measures }
 }
 
 // Retrieve stats related to sampling itself, not the measures
