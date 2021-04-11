@@ -1,6 +1,6 @@
 import { argv } from 'process'
 
-import fetch from 'cross-fetch'
+import got from 'got'
 
 // Handles IPC communication with the main process
 export const performRunner = async function ({
@@ -95,11 +95,11 @@ const errorExit = async function (error, serverUrl) {
 
 // Send a HTTP request to the main process
 const sendReturnValue = async function (returnValue, serverUrl) {
-  const returnValueString = JSON.stringify(returnValue)
-  const response = await fetch(serverUrl, {
+  return await got({
+    url: serverUrl,
     method: 'POST',
-    body: returnValueString,
+    json: returnValue,
+    responseType: 'json',
+    resolveBodyOnly: true,
   })
-  const params = await response.json()
-  return params
 }
