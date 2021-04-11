@@ -24,22 +24,27 @@ export const measureCombinations = async function (
   combinations,
   { duration, cwd, previewConfig, previewState, exec },
 ) {
-  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
-  for (let index = 0; index < combinations.length; index += 1) {
-    const combination = combinations[index]
+  const allStats = []
+
+  // eslint-disable-next-line fp/no-loops
+  for (const [index, combination] of combinations.entries()) {
+    const previewConfigA = { ...previewConfig, allStats, index }
     // eslint-disable-next-line no-await-in-loop
     const { stats } = await measureCombination(combination, {
       duration,
       cwd,
-      previewConfig: { ...previewConfig, combinations, index },
+      previewConfig: previewConfigA,
       previewState,
       exec,
     })
-    // eslint-disable-next-line fp/no-mutation, require-atomic-updates, no-param-reassign
-    combinations[index] = { ...combination, stats }
+    // eslint-disable-next-line fp/no-mutating-methods
+    allStats.push(stats)
   }
 
-  return combinations
+  return combinations.map((combination, index) => ({
+    ...combination,
+    stats: allStats[index],
+  }))
 }
 
 // Measure a single combination.
