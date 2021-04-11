@@ -21,7 +21,6 @@ export const performLoopsAsync = async function ({
       afterEach,
       taskArg,
       repeat,
-      maxLoops,
     })
   }
 

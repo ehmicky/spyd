@@ -22,7 +22,6 @@ export const performLoopsSync = function ({
       afterEach,
       taskArg,
       repeat,
-      maxLoops,
     })
   }
 
