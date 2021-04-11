@@ -127,7 +127,7 @@ const measureInLoop = async function (server, res) {
       // eslint-disable-next-line no-await-in-loop
     } = await measureSample({
       sampleState,
-      durationState: { measureDuration },
+      measureDuration,
       server,
       res: resA,
       minLoopDuration: 0,

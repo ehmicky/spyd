@@ -70,8 +70,15 @@ const getInitialState = function (res) {
   return { res, stats, sampleState, durationState }
 }
 
+// eslint-disable-next-line max-lines-per-function
 const performSample = async function (
-  { res, sampleState, stats, durationState },
+  {
+    res,
+    sampleState,
+    stats,
+    durationState,
+    durationState: { measureDuration },
+  },
   {
     duration,
     previewConfig,
@@ -89,10 +96,10 @@ const performSample = async function (
   const {
     res: resA,
     sampleState: sampleStateA,
-    measureDuration,
+    measureDuration: measureDurationA,
   } = await measureSample({
     sampleState,
-    durationState,
+    measureDuration,
     server,
     res,
     minLoopDuration,
@@ -112,7 +119,7 @@ const performSample = async function (
     sampleState: sampleStateA,
     sampleStart,
     stopState,
-    measureDuration,
+    measureDuration: measureDurationA,
   })
   return {
     res: resA,
