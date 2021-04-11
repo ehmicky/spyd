@@ -4,7 +4,7 @@ import { getInitialSampleState } from '../sample/state.js'
 import { getInitialStats, addStats } from '../stats/add.js'
 import { pWhile } from '../utils/p_while.js'
 
-import { startSample, endSample } from './duration.js'
+import { getInitialDurationState, startSample, endSample } from './duration.js'
 import { updatePreviewEnd } from './preview_end.js'
 import { updatePreviewReport } from './preview_report.js'
 import { isRemainingCombination } from './remaining.js'
@@ -44,9 +44,8 @@ export const performMeasureLoop = async function ({
 
   setBenchmarkStart(previewState)
 
-  const stats = getInitialStats()
-  const sampleState = getInitialSampleState()
-  const { res: resA, stats: statsA } = await pWhile(
+  const initialState = getInitialState(res)
+  const { res: resA, stats } = await pWhile(
     (state) => isRemainingCombination(state, { duration, exec, stopState }),
     (state) =>
       performSample(state, {
@@ -57,18 +56,25 @@ export const performMeasureLoop = async function ({
         server,
         minLoopDuration,
       }),
-    { res, stats, sampleState },
+    initialState,
   )
-  return { res: resA, stats: statsA }
+  return { res: resA, stats }
+}
+
+const getInitialState = function (res) {
+  const stats = getInitialStats()
+  const sampleState = getInitialSampleState()
+  const durationState = getInitialDurationState()
+  return { res, stats, sampleState, durationState }
 }
 
 const performSample = async function (
-  { res, sampleState, stats },
+  { res, sampleState, stats, durationState },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
-  const sampleStart = startSample(stopState, sampleState)
+  const sampleStart = startSample(stopState, durationState)
 
-  updatePreviewEnd({ previewConfig, previewState, sampleState, duration })
+  updatePreviewEnd({ previewConfig, previewState, durationState, duration })
 
   const { res: resA, sampleState: sampleStateA } = await measureSample({
     sampleState,
@@ -85,10 +91,16 @@ const performSample = async function (
     previewState,
   })
 
-  const sampleStateB = endSample({
-    stopState,
+  const durationStateA = endSample({
+    durationState,
     sampleState: sampleStateA,
     sampleStart,
+    stopState,
   })
-  return { res: resA, stats: statsA, sampleState: sampleStateB }
+  return {
+    res: resA,
+    stats: statsA,
+    sampleState: sampleStateA,
+    durationState: durationStateA,
+  }
 }

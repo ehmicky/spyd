@@ -1,5 +1,10 @@
 import now from 'precise-now'
 
+// Retrieve initial `durationState`
+export const getInitialDurationState = function () {
+  return { totalDuration: 0 }
+}
+
 // We keep track of:
 //  - The total duration spent on each combination, to know whether it should
 //    keep being measured.
@@ -13,10 +18,10 @@ export const startSample = function (stopState, { sampleDurationMean }) {
 }
 
 export const endSample = function ({
-  stopState,
-  sampleState,
-  sampleState: { allSamples, totalDuration },
+  durationState: { totalDuration },
+  sampleState: { allSamples },
   sampleStart,
+  stopState,
 }) {
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete stopState.sampleStart
@@ -26,5 +31,5 @@ export const endSample = function ({
   const sampleDurationLast = now() - sampleStart
   const totalDurationA = totalDuration + sampleDurationLast
   const sampleDurationMean = totalDurationA / allSamples
-  return { ...sampleState, totalDuration: totalDurationA, sampleDurationMean }
+  return { totalDuration: totalDurationA, sampleDurationMean }
 }

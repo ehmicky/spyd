@@ -5,13 +5,7 @@ import { handleRepeat } from './repeat.js'
 
 // Returns initial `sampleState`
 export const getInitialSampleState = function () {
-  return {
-    measures: [],
-    allSamples: 0,
-    repeat: 1,
-    calibrated: false,
-    totalDuration: 0,
-  }
+  return { measures: [], allSamples: 0, repeat: 1, calibrated: false }
 }
 
 // Update sampleState because on the return value from the last sample
