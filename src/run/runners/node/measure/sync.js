@@ -56,7 +56,7 @@ const performHookSync = function (hook, taskArgs) {
   }
 }
 
-const getDurationSync = function (main, taskArgs) {
+export const getDurationSync = function (main, taskArgs) {
   const start = now()
 
   // eslint-disable-next-line fp/no-loops

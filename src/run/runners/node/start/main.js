@@ -22,7 +22,7 @@ export const start = async function ({
   const task = taskId === undefined ? {} : tasksB[taskId]
 
   const tasksC = Object.keys(tasksB)
-  const calibrations = getCalibrations(calibrate)
+  const calibrations = await getCalibrations(calibrate, task)
   return { tasks: tasksC, task, taskArg: inputs, calibrations }
 }
 
