@@ -34,4 +34,4 @@ const getRow = function ({ titles, stats }) {
 
 const HISTOGRAM_OPTS = { showStats: false }
 
-export const dev = { report }
+export const debug = { report }

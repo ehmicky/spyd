@@ -1,4 +1,4 @@
-import { dev } from './dev/main.js'
+import { debug } from './debug/main.js'
 import { histogram } from './histogram.js'
 
-export const REPORTERS = { dev, histogram }
+export const REPORTERS = { debug, histogram }
