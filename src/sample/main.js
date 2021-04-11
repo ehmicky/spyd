@@ -11,17 +11,22 @@ export const measureSample = async function ({
   server,
   res,
   minLoopDuration,
+  measureDuration,
 }) {
-  const params = getParams(combination)
+  const params = getParams(combination, measureDuration)
 
-  const { returnValue, res: resA, measureDuration } = await measureNewSample(
-    params,
-    server,
-    res,
-  )
+  const {
+    returnValue,
+    res: resA,
+    measureDuration: measureDurationA,
+  } = await measureNewSample(params, server, res)
   const newProps = handleReturnValue(combination, returnValue, minLoopDuration)
-  const combinationA = { ...combination, ...newProps, measureDuration }
-  return { combination: combinationA, res: resA }
+  const combinationA = { ...combination, ...newProps }
+  return {
+    combination: combinationA,
+    res: resA,
+    measureDuration: measureDurationA,
+  }
 }
 
 // `measureDuration` is how long it takes to get a single sample's results.

@@ -65,7 +65,7 @@ export const performMeasureLoop = async function ({
 }
 
 const performSample = async function (
-  { combination, combination: { sampleDurationMean }, res },
+  { combination, combination: { sampleDurationMean }, res, measureDuration },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
   const sampleStart = getSampleStart()
@@ -74,11 +74,16 @@ const performSample = async function (
 
   updatePreviewEnd({ combination, previewConfig, previewState, duration })
 
-  const { combination: combinationA, res: resA } = await measureSample({
+  const {
+    combination: combinationA,
+    res: resA,
+    measureDuration: measureDurationA,
+  } = await measureSample({
     combination,
     server,
     res,
     minLoopDuration,
+    measureDuration,
   })
 
   await updatePreviewReport({
@@ -93,5 +98,9 @@ const performSample = async function (
     sampleDurationMean: undefined,
   })
   const combinationB = addSampleDuration(combinationA, sampleStart)
-  return { combination: combinationB, res: resA }
+  return {
+    combination: combinationB,
+    res: resA,
+    measureDuration: measureDurationA,
+  }
 }
