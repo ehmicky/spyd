@@ -35,7 +35,6 @@ export const measureCombination = async function (
 // Spawn combination processes, then measure them
 const spawnAndMeasure = async function ({
   combination,
-  combination: { taskId },
   serverUrl,
   duration,
   cwd,
@@ -48,7 +47,7 @@ const spawnAndMeasure = async function ({
 
   try {
     return await stopOrMeasure({
-      taskId,
+      combination,
       duration,
       previewConfig,
       previewState,
@@ -63,7 +62,7 @@ const spawnAndMeasure = async function ({
 
 // Handle stopping the benchmark
 const stopOrMeasure = async function ({
-  taskId,
+  combination,
   duration,
   previewConfig,
   previewState,
@@ -78,7 +77,7 @@ const stopOrMeasure = async function ({
 
   try {
     const returnValue = await handleErrorsAndMeasure({
-      taskId,
+      combination,
       duration,
       previewConfig,
       previewState,

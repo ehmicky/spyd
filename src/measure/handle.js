@@ -7,7 +7,7 @@ import { startCombination } from './start.js'
 
 // Handle errors during measuring
 export const handleErrorsAndMeasure = async function ({
-  taskId,
+  combination,
   duration,
   previewConfig,
   previewState,
@@ -22,7 +22,7 @@ export const handleErrorsAndMeasure = async function ({
       throwOnProcessExit(childProcess),
       onAbort,
       measureAllCombinations({
-        taskId,
+        combination,
         duration,
         previewConfig,
         previewState,
@@ -32,7 +32,7 @@ export const handleErrorsAndMeasure = async function ({
       }),
     ])
   } catch (error) {
-    prependTaskPrefix(error, taskId)
+    prependTaskPrefix(error, combination)
     throw error
   }
 }
@@ -42,7 +42,7 @@ export const handleErrorsAndMeasure = async function ({
 // We also do this when the user stopped the benchmark (e.g. with CTRL-C).
 // We still perform each combination ends, for cleanup.
 const measureAllCombinations = async function ({
-  taskId,
+  combination,
   duration,
   previewConfig,
   previewState,
@@ -50,14 +50,18 @@ const measureAllCombinations = async function ({
   exec,
   server,
 }) {
-  const { taskIds, res } = await startCombination(previewState, server)
+  const { taskIds, res } = await startCombination(
+    combination,
+    previewState,
+    server,
+  )
   const { minLoopDuration, res: resA } = await getMinLoopDuration(
-    taskId,
+    combination,
     server,
     res,
   )
   const { stats, res: resB } = await performMeasureLoop({
-    taskId,
+    combination,
     duration,
     previewConfig,
     previewState,
@@ -72,7 +76,7 @@ const measureAllCombinations = async function ({
 }
 
 // taskId is `undefined` during init
-const prependTaskPrefix = function (error, taskId) {
+const prependTaskPrefix = function (error, { taskId }) {
   if (taskId === undefined) {
     return
   }

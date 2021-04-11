@@ -9,66 +9,40 @@ export const performRunner = async function ({
   measure,
   after,
 }) {
-  const { serverUrl, spawnParams } = parseSpawnParams()
-
   try {
-    await measureCombination({
-      start,
-      before,
-      measure,
-      after,
-      serverUrl,
-      spawnParams,
-    })
-    await successExit(serverUrl)
+    await measureCombination({ start, before, measure, after })
+    await sendReturnValue({})
   } catch (error) {
-    await errorExit(error, serverUrl)
+    await errorExit(error)
   }
-}
-
-// Retrieve the spawnParams sent by the main process
-const parseSpawnParams = function () {
-  const { serverUrl, ...spawnParams } = JSON.parse(argv[2])
-  return { serverUrl, spawnParams }
 }
 
 // `afterAll` is always called, for cleanup.
 // If an error happens in `afterAll`, it is propagated even if another error
 // was thrown in `main`. This is because `afterAll` should gracefully handle
 // any possible interruption, regardless of what's the current global state.
-const measureCombination = async function ({
-  start,
-  before,
-  measure,
-  after,
-  serverUrl,
-  spawnParams,
-}) {
-  const { tasks, ...startState } = await start(spawnParams)
+const measureCombination = async function ({ start, before, measure, after }) {
+  const startParams = await sendReturnValue({})
+  const { tasks, ...startState } = await start(startParams)
 
   await before(startState)
 
   try {
-    await measureSamples({ measure, serverUrl, startState, tasks })
+    await measureSamples(measure, startState, tasks)
   } finally {
     await after(startState)
   }
 }
 
 // Runs a new sample each time the main process asks for it
-const measureSamples = async function ({
-  measure,
-  serverUrl,
-  startState,
-  tasks,
-}) {
+const measureSamples = async function (measure, startState, tasks) {
   // eslint-disable-next-line fp/no-let
   let returnValue = { tasks }
 
   // eslint-disable-next-line fp/no-loops
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const params = await sendReturnValue(returnValue, serverUrl)
+    const params = await sendReturnValue(returnValue)
 
     // eslint-disable-next-line max-depth
     if (params.maxLoops === undefined) {
@@ -80,23 +54,17 @@ const measureSamples = async function ({
   }
 }
 
-// We use `process.exit()` instead of `process.exitCode` because if some tasks
-// have some pending macrotasks, we need to abort them not wait for them.
-const successExit = async function (serverUrl) {
-  await sendReturnValue({}, serverUrl)
-}
-
 // Any error while starting or measuring is most likely a user error, which is
 // sent back to the main process.
-const errorExit = async function (error, serverUrl) {
-  const errorProp = error instanceof Error ? error.stack : String(error)
-  await sendReturnValue({ error: errorProp }, serverUrl)
+const errorExit = async function (error) {
+  const errorString = error instanceof Error ? error.stack : String(error)
+  await sendReturnValue({ error: errorString })
 }
 
 // Send a HTTP request to the main process
-const sendReturnValue = async function (returnValue, serverUrl) {
+const sendReturnValue = async function (returnValue) {
   return await got({
-    url: serverUrl,
+    url: argv[2],
     method: 'POST',
     json: returnValue,
     responseType: 'json',

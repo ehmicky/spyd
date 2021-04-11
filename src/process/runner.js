@@ -1,5 +1,3 @@
-import { toInputsObj } from '../combination/inputs.js'
-
 import { spawnProcess } from './spawn.js'
 
 // Each combination is spawned in its own process:
@@ -28,37 +26,20 @@ import { spawnProcess } from './spawn.js'
 // library is called programmatically and the caller terminates the parent
 // process.
 export const spawnRunnerProcess = function (
-  {
-    runnerSpawn: [file, ...args],
-    runnerSpawnOptions,
-    runnerConfig,
-    taskId,
-    taskPath,
-    inputs,
-  },
+  { runnerSpawn: [file, ...args], runnerSpawnOptions },
   { serverUrl, cwd, exec },
 ) {
-  const inputsA = toInputsObj(inputs)
-  const spawnParamsString = JSON.stringify({
-    serverUrl,
-    runnerConfig,
-    taskId,
-    taskPath,
-    inputs: inputsA,
-  })
-  const stdio = getStdio(exec)
-  const childProcess = spawnProcess(
-    [file, ...args, spawnParamsString],
+  return spawnProcess(
+    [file, ...args, serverUrl],
     {
       ...runnerSpawnOptions,
-      stdio,
+      stdio: getStdio(exec),
       reject: false,
       cleanup: true,
       detached: true,
     },
     cwd,
   )
-  return childProcess
 }
 
 // The `exec` command prints stdout/stderr. stdin is always ignored.
