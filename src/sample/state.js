@@ -3,15 +3,15 @@ import { addStats } from '../stats/add.js'
 import { normalizeSampleMeasures } from './normalize.js'
 import { handleRepeat } from './repeat.js'
 
+// Returns initial `stats`
+export const getInitialStats = function () {
+  return { samples: 0, loops: 0, times: 0 }
+}
+
 // Returns initial `sampleState`
 export const getInitialSampleState = function () {
-  return {
-    measures: [],
-    stats: { samples: 0, loops: 0, times: 0 },
-    allSamples: 0,
-    repeat: 1,
-    calibrated: false,
-  }
+  const stats = getInitialStats()
+  return { stats, measures: [], allSamples: 0, repeat: 1, calibrated: false }
 }
 
 // Update sampleState because on the return value from the last sample
