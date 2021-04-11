@@ -13,6 +13,17 @@ import { getMean } from './sum.js'
 //  - This means `quantiles`, `histogram` and `stdev` will have a different
 //    meaning: they visualize the measurements of the function not function
 //    itself.
+// Some measures might be `0`:
+//  - This happens when the task is faster than the minimum time resolution
+//  - This is bad because:
+//     - It is confusing to users
+//     - It prevents computing `stdev` and related stats if the `median` is `0`
+//     - It decreases `stdev` if many measures are exactly `0`. This leads to
+//       reaching the target `precision` even though stats are imprecise.
+//  - This is mostly prevented by:
+//     - Including the minimum time resolution in `minLoopDuration`
+//     - Multiplying `repeat` when the `sampleMedian` is `0`, including during
+//       calibration
 // We do not compute the mode because:
 //  - Reporting it together with the median might make it look like it is as
 //    important. However, the median is a far more useful statistic.
