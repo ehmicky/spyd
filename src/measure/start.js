@@ -6,7 +6,7 @@ import { getMinLoopDuration } from '../sample/min_loop_duration.js'
 // `calibrations` can be `undefined` if an error happened.
 export const startCombination = async function (previewState, server) {
   const {
-    returnValue: { tasks: taskIds, calibrations = [] },
+    returnValue: { tasks: taskIds, calibrations },
     res,
   } = await receiveReturnValue(server)
   const minLoopDuration = getMinLoopDuration(calibrations)
