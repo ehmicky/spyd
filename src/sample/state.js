@@ -1,4 +1,4 @@
-import { getStats } from '../stats/get.js'
+import { addStats } from '../stats/add.js'
 import { mergeSort } from '../stats/merge.js'
 
 import { normalizeSampleMeasures } from './normalize.js'
@@ -70,17 +70,4 @@ const addSampleMeasures = function (measures, sampleMeasures, calibrated) {
 
   mergeSort(measures, sampleMeasures)
   return { measures, hasNewMeasures: true }
-}
-
-const addStats = function ({
-  stats,
-  sampleState,
-  minLoopDuration,
-  hasNewMeasures,
-}) {
-  if (!hasNewMeasures) {
-    return stats
-  }
-
-  return getStats({ stats, sampleState, minLoopDuration })
 }
