@@ -10,12 +10,23 @@ export const performLoopsSync = function ({
   taskArg,
   repeat,
   maxLoops,
-  measures,
 }) {
-  // eslint-disable-next-line fp/no-loops
-  while (measures.length < maxLoops) {
-    performLoopSync({ main, beforeEach, afterEach, taskArg, repeat, measures })
+  const measures = new Array(maxLoops)
+
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index < measures.length; index += 1) {
+    // eslint-disable-next-line fp/no-mutation
+    measures[index] = performLoopSync({
+      main,
+      beforeEach,
+      afterEach,
+      taskArg,
+      repeat,
+      maxLoops,
+    })
   }
+
+  return measures
 }
 
 const performLoopSync = function ({
@@ -24,14 +35,13 @@ const performLoopSync = function ({
   afterEach,
   taskArg,
   repeat,
-  measures,
 }) {
   const taskArgs = getTaskArgs(taskArg, repeat)
 
   performHookSync(beforeEach, taskArgs)
-  // eslint-disable-next-line fp/no-mutating-methods
-  measures.push(getDurationSync(main, taskArgs))
+  const duration = getDurationSync(main, taskArgs)
   performHookSync(afterEach, taskArgs)
+  return duration
 }
 
 // Task `beforeEach()`/`afterEach()`. Performed outside measurements.

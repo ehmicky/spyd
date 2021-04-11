@@ -10,16 +10,22 @@ export const measure = async function (
   { repeat, maxLoops },
   { task: { main, beforeEach, afterEach, async }, taskArg },
 ) {
-  const measures = []
-  const performLoopsFunc = async ? performLoopsAsync : performLoopsSync
-  await performLoopsFunc({
-    main,
-    beforeEach,
-    afterEach,
-    taskArg,
-    repeat,
-    maxLoops,
-    measures,
-  })
+  const measures = async
+    ? await performLoopsAsync({
+        main,
+        beforeEach,
+        afterEach,
+        taskArg,
+        repeat,
+        maxLoops,
+      })
+    : performLoopsSync({
+        main,
+        beforeEach,
+        afterEach,
+        taskArg,
+        repeat,
+        maxLoops,
+      })
   return { measures }
 }

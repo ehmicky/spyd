@@ -9,20 +9,23 @@ export const performLoopsAsync = async function ({
   taskArg,
   repeat,
   maxLoops,
-  measures,
 }) {
-  // eslint-disable-next-line fp/no-loops
-  while (measures.length < maxLoops) {
-    // eslint-disable-next-line no-await-in-loop
-    await performLoopAsync({
+  const measures = new Array(maxLoops)
+
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = 0; index < measures.length; index += 1) {
+    // eslint-disable-next-line fp/no-mutation, no-await-in-loop
+    measures[index] = await performLoopAsync({
       main,
       beforeEach,
       afterEach,
       taskArg,
       repeat,
-      measures,
+      maxLoops,
     })
   }
+
+  return measures
 }
 
 const performLoopAsync = async function ({
@@ -31,14 +34,13 @@ const performLoopAsync = async function ({
   afterEach,
   taskArg,
   repeat,
-  measures,
 }) {
   const taskArgs = getTaskArgs(taskArg, repeat)
 
   await performHookAsync(beforeEach, taskArgs)
-  // eslint-disable-next-line fp/no-mutating-methods
-  measures.push(await getDurationAsync(main, taskArgs))
+  const duration = await getDurationAsync(main, taskArgs)
   await performHookAsync(afterEach, taskArgs)
+  return duration
 }
 
 // Each `beforeEach`/`afterEach` is executed serially to prevent hitting OS
