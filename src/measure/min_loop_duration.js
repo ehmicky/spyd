@@ -151,8 +151,12 @@ const shouldKeepMeasuring = function (end, { sampleState }) {
 //  - This avoids differences due to some engines like v8 which optimize the
 //    speed of functions after repeating them a specific amount of times
 const TARGET_DURATION = 1e8
+// How many samples should be used, approximately
+// Lower values lead to more precise results since it increases the target
+// sample duration. However, this precision is lost when the value is too low.
+const TARGET_SAMPLE_COUNT = 10
 // Mean duration of each sample
-const TARGET_SAMPLE_DURATION = 1e7
+const TARGET_SAMPLE_DURATION = TARGET_DURATION / TARGET_SAMPLE_COUNT
 
 const computeMinLoopDuration = function (measures) {
   const measureCost = getUnsortedMedian(measures)
