@@ -147,6 +147,9 @@ const MEASURE_COST_RATIO = 1e2
 //  - This is because the runner (or its language/platform) resolution can be
 //    different from the OS
 //  - We re-use the `measures` used for `measureCost` for convenience
+// If `measureCost` is lower than `resolution`, some measures might be `0`
+//  - However, `resolution` will then be used to compute `minLoopDuration`
+//    thanks to the `Math.max()` logic, so this is not a problem.
 const getMinResolution = function (measures) {
   return timeResolution(measures) * RESOLUTION_RATIO
 }
