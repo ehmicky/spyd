@@ -19,7 +19,7 @@ export const measureAllCombinations = async function ({
     previewState,
     server,
   )
-  const { measureState, res: resA } = await performMeasureLoop({
+  const { sampleState, res: resA } = await performMeasureLoop({
     taskId,
     duration,
     previewConfig,
@@ -31,5 +31,5 @@ export const measureAllCombinations = async function ({
     minLoopDuration,
   })
   await endCombination(previewState, server, resA)
-  return { measureState, taskIds }
+  return { sampleState, taskIds }
 }

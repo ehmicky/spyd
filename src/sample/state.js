@@ -3,8 +3,8 @@ import { addStats } from '../stats/add.js'
 import { normalizeSampleMeasures } from './normalize.js'
 import { handleRepeat } from './repeat.js'
 
-// Returns initial `measureState`
-export const getInitialMeasureState = function () {
+// Returns initial `sampleState`
+export const getInitialSampleState = function () {
   return {
     measures: [],
     stats: {},
@@ -17,9 +17,9 @@ export const getInitialMeasureState = function () {
   }
 }
 
-// Handle return value from the last sample
+// Update sampleState because on the return value from the last sample
 // eslint-disable-next-line max-lines-per-function
-export const getMeasureState = function (
+export const getSampleState = function (
   { measures, stats, allSamples, samples, loops, times, repeat, calibrated },
   { measures: sampleMeasures },
   minLoopDuration,

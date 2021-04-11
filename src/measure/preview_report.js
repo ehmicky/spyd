@@ -37,7 +37,7 @@ export const setFirstPreview = async function ({
 const START_DESCRIPTION = 'Starting...'
 
 export const updatePreviewReport = async function ({
-  measureState: { calibrated, stats },
+  sampleState: { calibrated, stats },
   previewConfig,
   previewConfig: { quiet, combinations, index },
   previewState,

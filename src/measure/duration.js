@@ -14,7 +14,7 @@ export const startSample = function (stopState, sampleDurationMean) {
 
 export const endSample = function ({
   stopState,
-  measureState: { allSamples },
+  sampleState: { allSamples },
   sampleStart,
   totalDuration,
 }) {

@@ -3,32 +3,28 @@ import now from 'precise-now'
 import { sendAndReceive } from '../process/ipc.js'
 
 import { getParams } from './params.js'
-import { getMeasureState } from './state.js'
+import { getSampleState } from './state.js'
 
 // Measure a new sample for a given combination
 export const measureSample = async function ({
-  measureState,
+  sampleState,
   server,
   res,
   minLoopDuration,
   measureDuration,
 }) {
-  const params = getParams(measureState, measureDuration)
+  const params = getParams(sampleState, measureDuration)
 
   const {
     returnValue,
     res: resA,
     measureDuration: measureDurationA,
   } = await measureNewSample(params, server, res)
-  const measureStateA = getMeasureState(
-    measureState,
-    returnValue,
-    minLoopDuration,
-  )
+  const sampleStateA = getSampleState(sampleState, returnValue, minLoopDuration)
   return {
     res: resA,
     measureDuration: measureDurationA,
-    measureState: measureStateA,
+    sampleState: sampleStateA,
   }
 }
 
