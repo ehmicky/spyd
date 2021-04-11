@@ -1,6 +1,7 @@
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
-import { getInitialStats, getInitialSampleState } from '../sample/state.js'
+import { getInitialSampleState } from '../sample/state.js'
+import { getInitialStats } from '../stats/add.js'
 import { pWhile } from '../utils/p_while.js'
 
 import { startSample, endSample } from './duration.js'

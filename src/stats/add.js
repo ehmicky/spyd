@@ -45,3 +45,8 @@ export const addStats = function ({
 
   return { stats: statsA, measures, allSamples: allSamplesA }
 }
+
+// Returns initial `stats`
+export const getInitialStats = function () {
+  return { samples: 0, loops: 0, times: 0 }
+}
