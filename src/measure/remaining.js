@@ -23,8 +23,7 @@
 //  - This includes using the `include|exclude` configuration properties
 export const isRemainingCombination = function (
   {
-    stats: { loops },
-    sampleState: { allSamples },
+    sampleState: { allSamples, measures },
     durationState: { totalDuration, sampleDurationMean },
   },
   { duration, exec, stopState: { stopped } },
@@ -32,8 +31,8 @@ export const isRemainingCombination = function (
   return (
     !stopped &&
     hasDurationLeft({
-      loops,
       allSamples,
+      measures,
       duration,
       exec,
       totalDuration,
@@ -43,8 +42,8 @@ export const isRemainingCombination = function (
 }
 
 const hasDurationLeft = function ({
-  loops,
   allSamples,
+  measures,
   duration,
   exec,
   totalDuration,
@@ -55,19 +54,19 @@ const hasDurationLeft = function ({
   }
 
   return (
-    loops === 0 ||
-    hasTimeLeft({ loops, duration, sampleDurationMean, totalDuration })
+    measures.length === 0 ||
+    hasTimeLeft({ measures, duration, sampleDurationMean, totalDuration })
   )
 }
 
 const hasTimeLeft = function ({
-  loops,
+  measures,
   duration,
   totalDuration,
   sampleDurationMean,
 }) {
   return (
-    loops < MAX_LOOPS &&
+    !hasMaxLoops(measures) &&
     duration !== 1 &&
     totalDuration + sampleDurationMean < duration
   )
@@ -77,4 +76,8 @@ const hasTimeLeft = function ({
 // is meant to prevent memory overflow.
 // The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
 // little more than 1e8 floats.
+const hasMaxLoops = function (measures) {
+  return measures.length >= MAX_LOOPS
+}
+
 const MAX_LOOPS = 1e8
