@@ -80,7 +80,7 @@ const getBenchmarkDuration = function (combinations, duration) {
 // to stop a benchmark without losing information.
 // However failures only print the error message, i.e. clear the preview.
 const handlePreviewError = async function (error, quiet) {
-  if (error.name === 'AbortError') {
+  if (error.name === 'StopError') {
     return
   }
 

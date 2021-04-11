@@ -1,11 +1,11 @@
 // We distinguish between user, plugin and core errors.
 // We also define abort errors, which are user-driven but are not failures.
 // eslint-disable-next-line fp/no-class
-export class AbortError extends Error {
+export class StopError extends Error {
   constructor(...args) {
     super(...args)
     // eslint-disable-next-line fp/no-this, fp/no-mutation
-    this.name = 'AbortError'
+    this.name = 'StopError'
   }
 }
 
@@ -38,7 +38,7 @@ export class CoreError extends Error {
 
 // Error type-specific behavior
 const ERROR_PROPS = {
-  AbortError: { exitCode: 0, printStack: false },
+  StopError: { exitCode: 0, printStack: false },
   UserError: { exitCode: 1, printStack: false },
   PluginError: { exitCode: 2, printStack: true },
   CoreError: { exitCode: 3, printStack: true },
