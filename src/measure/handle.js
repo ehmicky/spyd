@@ -46,6 +46,11 @@ export const handleErrorsAndMeasure = async function ({
 // When any combination errors, we end measuring.
 // We also do this when the user stopped the benchmark (e.g. with CTRL-C).
 // We still perform each combination ends, for cleanup.
+// `end` is always called, for runner-specific cleanup, providing `start`
+// completed.
+//  - If an error happens in `end` itself, it is propagated itself.
+//  - This is because `end` should gracefully handle any possible
+//    interruption, regardless of what's the current global state.
 const measureAllCombinations = async function ({
   combination,
   duration,
@@ -73,6 +78,8 @@ const measureAllCombinations = async function ({
   }
 }
 
+// `after` is always called, for cleanup, providing `before` completed.
+// If an error happens in `after` itself, it is propagated instead.
 const runEvents = async function ({
   duration,
   previewConfig,

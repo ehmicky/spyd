@@ -2,12 +2,6 @@ import { argv } from 'process'
 
 import got from 'got'
 
-// TODO
-// `after` is always called, for cleanup.
-// If an error happens in `after`, it is propagated even if another error
-// was thrown in `main`. This is because `after` should gracefully handle
-// any possible interruption, regardless of what's the current global state.
-
 // Handles IPC communication with the parent process
 export const performRunner = async function (handlers) {
   const state = {}
