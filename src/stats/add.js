@@ -5,10 +5,7 @@ export const getInitialStats = function () {
   return { samples: 0, loops: 0, times: 0 }
 }
 
-// Compute new `stats` based on the `sampleMeasures`.
-// This includes aggregating `sampleMeasures` to `measures`.
-//   - sort them incrementally to the final `measures` big array, as opposed to
-//     sorting `measures` directly, which would be much slower.
+// Compute new `stats` based on the `sampleState`.
 // We perform this after each sample, not after several samples because:
 //  - If the number of samples was based on how long aggregation takes,
 //    aggregation would happen at longer and longer intervals, creating big

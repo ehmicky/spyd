@@ -37,6 +37,9 @@ export const getSampleState = function (
   }
 }
 
+// Aggregates `sampleMeasures` to `measures`.
+// Sort them incrementally to the final `measures` big array, as opposed to
+// sorting `measures` directly, which would be much slower.
 const addSampleMeasures = function (measures, sampleMeasures, calibrated) {
   if (!calibrated) {
     return measures
