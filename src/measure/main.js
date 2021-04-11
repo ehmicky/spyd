@@ -27,10 +27,8 @@ export const measureCombinations = async function (
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = 0; index < combinations.length; index += 1) {
     const combination = combinations[index]
-    const {
-      sampleState: { stats },
-      // eslint-disable-next-line no-await-in-loop
-    } = await measureCombination(combination, {
+    // eslint-disable-next-line no-await-in-loop
+    const { stats } = await measureCombination(combination, {
       duration,
       cwd,
       previewConfig: { ...previewConfig, combinations, index },

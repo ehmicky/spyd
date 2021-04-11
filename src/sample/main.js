@@ -7,6 +7,7 @@ import { getSampleState } from './state.js'
 
 // Measure a new sample for a given combination
 export const measureSample = async function ({
+  stats,
   sampleState,
   server,
   res,
@@ -20,10 +21,16 @@ export const measureSample = async function ({
     res: resA,
     measureDuration: measureDurationA,
   } = await measureNewSample(params, server, res)
-  const sampleStateA = getSampleState(sampleState, returnValue, minLoopDuration)
+  const { stats: statsA, sampleState: sampleStateA } = getSampleState({
+    stats,
+    sampleState,
+    returnValue,
+    minLoopDuration,
+  })
   return {
     res: resA,
     measureDuration: measureDurationA,
+    stats: statsA,
     sampleState: sampleStateA,
   }
 }

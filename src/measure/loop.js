@@ -45,15 +45,21 @@ export const performMeasureLoop = async function ({
 
   const stats = getInitialStats()
   const sampleState = getInitialSampleState()
-  const { res: resA, sampleState: sampleStateB } = await pWhile(
-    ({ sampleState: sampleStateA, totalDuration, sampleDurationMean }) =>
+  const { res: resA, stats: statsB } = await pWhile(
+    ({
+      stats: statsA,
+      sampleState: sampleStateA,
+      totalDuration,
+      sampleDurationMean,
+    }) =>
       isRemainingCombination({
-        sampleState: sampleStateA,
         duration,
         exec,
         totalDuration,
         sampleDurationMean,
         stopState,
+        stats: statsA,
+        sampleState: sampleStateA,
       }),
     (state) =>
       performSample(state, {
@@ -64,13 +70,20 @@ export const performMeasureLoop = async function ({
         server,
         minLoopDuration,
       }),
-    { res, sampleState: { ...sampleState, stats }, totalDuration: 0 },
+    { res, stats, sampleState, totalDuration: 0 },
   )
-  return { res: resA, sampleState: sampleStateB }
+  return { res: resA, stats: statsB }
 }
 
 const performSample = async function (
-  { res, sampleState, measureDuration, totalDuration, sampleDurationMean },
+  {
+    res,
+    sampleState,
+    stats,
+    measureDuration,
+    totalDuration,
+    sampleDurationMean,
+  },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
   const sampleStart = startSample(stopState, sampleDurationMean)
@@ -80,8 +93,10 @@ const performSample = async function (
   const {
     res: resA,
     measureDuration: measureDurationA,
+    stats: statsA,
     sampleState: sampleStateA,
   } = await measureSample({
+    stats,
     sampleState,
     server,
     res,
@@ -90,6 +105,7 @@ const performSample = async function (
   })
 
   await updatePreviewReport({
+    stats: statsA,
     sampleState: sampleStateA,
     previewConfig,
     previewState,
@@ -106,6 +122,7 @@ const performSample = async function (
   })
   return {
     res: resA,
+    stats: statsA,
     sampleState: sampleStateA,
     measureDuration: measureDurationA,
     totalDuration: totalDurationA,

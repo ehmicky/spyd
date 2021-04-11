@@ -27,10 +27,8 @@ export const isRemainingCombination = function ({
   totalDuration,
   sampleDurationMean,
   stopState: { stopped },
-  sampleState: {
-    stats: { loops },
-    allSamples,
-  },
+  stats: { loops },
+  sampleState: { allSamples },
 }) {
   return (
     !stopped &&
