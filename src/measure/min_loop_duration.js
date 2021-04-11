@@ -122,21 +122,23 @@ const TARGET_SAMPLE_COUNT = 10
 const TARGET_SAMPLE_DURATION = TARGET_DURATION / TARGET_SAMPLE_COUNT
 
 const computeMinLoopDuration = function (measures) {
-  const measureCost = getSortedMedian(measures)
-  const resolution = getResolution(measures)
-  return Math.max(resolution, measureCost) * MIN_LOOP_DURATION_RATIO
+  const minMeasureCost = getMinMeasureCost(measures)
+  const minResolution = getMinResolution(measures)
+  return Math.max(minMeasureCost, minResolution)
 }
 
-// How many times slower each repeat loop must last compared to `measureCost` or
-// `resolution`.
-// We purposely use a single ratio for both `resolution` and `measureCost`.
+const getMinMeasureCost = function (measures) {
+  return getSortedMedian(measures) * MEASURE_COST_RATIO
+}
+
+// How many times slower each repeat loop must last compared to `measureCost`.
 // A lower value makes loops duration too close to `measureCost`, which
 // decreases the quality and precision of all stats.
 // A higher value makes the metrics rely on the arithmetic mean more than the
 // median, which also decrease the stats quality, although not as much.
 // Therefore, we use the smallest value that removes the `measureCost` influence
 // enough.
-const MIN_LOOP_DURATION_RATIO = 1e2
+const MEASURE_COST_RATIO = 1e2
 
 // Just like `measureCost`, if the task duration is too close to the minimum
 // time resolution, the stats will be imprecise
@@ -145,6 +147,20 @@ const MIN_LOOP_DURATION_RATIO = 1e2
 //  - This is because the runner (or its language/platform) resolution can be
 //    different from the OS
 //  - We re-use the `measures` used for `measureCost` for convenience
-const getResolution = function (measures) {
-  return timeResolution(measures)
+const getMinResolution = function (measures) {
+  return timeResolution(measures) * RESOLUTION_RATIO
 }
+
+// Like `MEASURE_COST_RATIO` but for `resolution`.
+// We use a higher ratio because:
+//  - `measureCost` influence is proportional to its stdev, not its median.
+//    However, for resolution, the whole unit granularity has an impact.
+//  - When `measureCost` is close to `resolution`, any variation of it is
+//    coarser. For example 2ns +|-1ns is 50% stdev.
+//     - A higher resolution ratio removes that problem when
+//       measureCost * MEASURE_COST_RATIO < resolution * RESOLUTION_RATIO
+//     - I.e. with a `resolution` ratio 10 times higher, a single resolution
+//       unit change in `measureCost` cannot increase|decrease `stdev` by more
+//       than 10%
+//  - This provides with 3 significant digits in reporting
+const RESOLUTION_RATIO = 1e3
