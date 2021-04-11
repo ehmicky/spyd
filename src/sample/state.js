@@ -21,10 +21,6 @@ export const getSampleState = function ({
   returnValue: { measures: sampleMeasures },
   minLoopDuration,
 }) {
-  if (sampleMeasures === undefined) {
-    return {}
-  }
-
   const {
     sampleMeasures: sampleMeasuresA,
     sampleMedian,
