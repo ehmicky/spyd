@@ -24,15 +24,24 @@ import { throwOnStreamError } from './error.js'
 //  - The runner sends the return value
 // We are setting up return value listening before sending payload to prevent
 // any race condition.
+// We ensure that `res` is only used once. For example, if an exception is
+// thrown between `res.end()` and the successful completion of server `request`,
+// `server.res` should not be re-used.
 export const sendAndReceive = async function (payload, server) {
+  const { res } = server
+
+  if (res.destroyed) {
+    return {}
+  }
+
   const [returnValue] = await Promise.all([
     receiveReturnValue(server),
-    sendPayload(payload, server),
+    sendPayload(payload, res),
   ])
   return returnValue
 }
 
-const sendPayload = async function (payload, { res }) {
+const sendPayload = async function (payload, res) {
   try {
     const payloadString = JSON.stringify(payload)
     await Promise.race([
