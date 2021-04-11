@@ -13,6 +13,7 @@ directory.`,
   },
   extend: {
     group: CONFIG,
+    alias: 'e',
     string: true,
     requiresArg: true,
     describe: `Path to a configuration file to extend from.
