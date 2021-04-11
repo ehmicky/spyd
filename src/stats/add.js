@@ -32,7 +32,10 @@ export const addStats = function (
   return { ...countStats, ...computedStats }
 }
 
-// Retrieve stats related to sampling itself, not the measures
+// Retrieve stats related to sampling itself, not the measures.
+// `times` is the number of times `main()` was called
+// `loops` is the number of repeat loops
+// `repeat` is the average number of iterations inside those repeat loops
 const getCountStats = function (
   { samples, loops, times },
   { sampleLoops, repeatLast, minLoopDuration },
