@@ -39,7 +39,7 @@ export const performMeasureLoop = async function ({
   minLoopDuration,
 }) {
   if (taskId === undefined) {
-    return { res, sampleState: {} }
+    return { res, stats: {} }
   }
 
   setBenchmarkStart(previewState)
