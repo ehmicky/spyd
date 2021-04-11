@@ -7,7 +7,7 @@ import { startServer, endServer } from '../server/main.js'
 
 import { measureAllCombinations } from './all.js'
 import { addInitProps } from './init.js'
-import { addStopHandler } from './stop.js'
+import { addStopHandler, throwIfStopped } from './stop.js'
 
 // Measure all combinations and add results to `combinations`.
 // Combinations are measured serially:
@@ -29,7 +29,7 @@ export const measureCombinations = async function (
   for (let index = 0; index < combinations.length; index += 1) {
     const combination = combinations[index]
     // eslint-disable-next-line no-await-in-loop
-    const { combination: combinationA, stopped } = await measureCombination(
+    const { combination: combinationA } = await measureCombination(
       combination,
       {
         duration,
@@ -41,14 +41,9 @@ export const measureCombinations = async function (
     )
     // eslint-disable-next-line fp/no-mutation, require-atomic-updates, no-param-reassign
     combinations[index] = combinationA
-
-    // eslint-disable-next-line max-depth
-    if (stopped) {
-      return { combinations, stopped }
-    }
   }
 
-  return { combinations, stopped: false }
+  return combinations
 }
 
 // Measure a single combination.
@@ -121,10 +116,7 @@ const stopOrMeasure = async function ({
   )
 
   try {
-    const {
-      combination: combinationA,
-      taskIds,
-    } = await eMeasureAllCombinations({
+    const returnValue = await eMeasureAllCombinations({
       combination,
       duration,
       previewConfig,
@@ -135,7 +127,8 @@ const stopOrMeasure = async function ({
       childProcess,
       onAbort,
     })
-    return { combination: combinationA, taskIds, stopped: stopState.stopped }
+    throwIfStopped(stopState)
+    return returnValue
   } finally {
     removeStopHandler()
   }

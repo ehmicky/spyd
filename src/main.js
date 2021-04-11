@@ -19,13 +19,13 @@ export const bench = async function (configFlags) {
     getCombinations(config),
     startReporters(config),
   ])
-  const { rawResult, result, stopped } = await performBenchmark(
+  const { rawResult, result } = await performBenchmark(
     configA,
     combinations,
     systemVersions,
   )
   await Promise.all([
-    addToHistory(rawResult, configA, stopped),
+    addToHistory(rawResult, configA),
     reportBench(result, configA),
   ])
   checkLimits(result, configA)

@@ -68,7 +68,7 @@ const handleStop = async function ({
 
   await waitForStopSignals(abortSignal)
 
-  throw new AbortError('Benchmark has been aborted.')
+  throw new AbortError('Benchmark has been stopped forcefully.')
 }
 
 const setStopState = function (previewState, stopState, duration) {
@@ -107,7 +107,7 @@ const waitForStopSignals = async function (abortSignal) {
 const STOP_SIGNALS = ['SIGINT', 'SIGBREAK', 'SIGHUP', 'SIGTERM', 'SIGQUIT']
 
 const STOP_DESCRIPTION = 'Stopping...'
-const ABORT_DESCRIPTION = 'Stopping... Type CTRL-C to abort graceful exit.'
+const ABORT_DESCRIPTION = 'Stopping... Type CTRL-C to stop forcefully.'
 
 // Users must wait 5 seconds before being able to abort.
 // This promotes proper cleanup.
@@ -120,6 +120,12 @@ const removeStopHandler = function (abort, signalHandler) {
   restoreDefaultHandlers(signalHandler)
 }
 
-export const isStoppedCombination = function ({ stopped }) {
-  return stopped
+// Throws on graceful stops.
+// Not done if a user exception was thrown
+export const throwIfStopped = function ({ stopped }) {
+  if (!stopped) {
+    return
+  }
+
+  throw new AbortError('Benchmark has been stopped.')
 }

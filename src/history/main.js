@@ -9,8 +9,8 @@ import { addResult, removeResult, listResults } from './results.js'
 
 // Save results so they can be compared or shown later.
 // We do not save stopped benchmarks.
-export const addToHistory = async function (result, { save, cwd }, stopped) {
-  if (!save || stopped) {
+export const addToHistory = async function (result, { save, cwd }) {
+  if (!save) {
     return
   }
 
