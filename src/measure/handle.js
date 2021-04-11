@@ -57,16 +57,20 @@ const measureAllCombinations = async function ({
 }) {
   await waitForCombinationSpawn(server)
   const taskIds = await startCombination(combination, server)
-  const stats = await runEvents({
-    duration,
-    previewConfig,
-    previewState,
-    stopState,
-    stage,
-    server,
-  })
-  await endCombination(server)
-  return { stats, taskIds }
+
+  try {
+    const stats = await runEvents({
+      duration,
+      previewConfig,
+      previewState,
+      stopState,
+      stage,
+      server,
+    })
+    return { stats, taskIds }
+  } finally {
+    await endCombination(server)
+  }
 }
 
 const runEvents = async function ({
