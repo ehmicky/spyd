@@ -114,6 +114,10 @@ export const getMinLoopDuration = async function (taskId, server, res) {
   return { minLoopDuration, res: resA }
 }
 
+// Repeatedly measure samples with `repeat: 0` in order to estimate the
+// `measureCost`, i.e. the overhead of running a single loop.
+// `minLoopDuration: 0` is passed to signify to the measuring logic that
+// `measureCost` is being estimated.
 const getMeasureCost = async function (server, res) {
   const sampleState = getInitialSampleState()
   const end = now() + TARGET_DURATION
