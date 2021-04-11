@@ -67,3 +67,11 @@ export const setPercentage = function (previewState, percentage) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.percentage = percentage
 }
+
+// When benchmark ends, make sure progress shows as complete
+export const setFinalPreview = function (previewState) {
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.benchmarkEnd = now()
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.percentage = 1
+}

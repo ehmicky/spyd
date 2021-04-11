@@ -1,3 +1,4 @@
+import { setFinalPreview } from './set.js'
 import { updatePreview } from './update.js'
 
 // Update preview at regular interval
@@ -37,6 +38,7 @@ export const endPreviewRefresh = async function ({
     return
   }
 
+  setFinalPreview(previewState)
   clearInterval(previewId)
   await updatePreview(previewState, benchmarkDuration)
 }

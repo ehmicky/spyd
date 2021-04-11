@@ -43,7 +43,7 @@ export const performMeasureLoop = async function ({
 
   setBenchmarkStart(previewState)
 
-  const { combination: combinationB, res: resA } = await pWhile(
+  return await pWhile(
     ({ combination: combinationA }) =>
       isRemainingCombination({
         combination: combinationA,
@@ -62,28 +62,17 @@ export const performMeasureLoop = async function ({
       }),
     { combination, res },
   )
-
-  // eslint-disable-next-line fp/no-delete, no-param-reassign
-  delete stopState.sampleStart
-  // eslint-disable-next-line fp/no-delete, no-param-reassign
-  delete stopState.combination
-  return { combination: combinationB, res: resA }
 }
 
 const performSample = async function (
-  { combination, res },
+  { combination, combination: { sampleDurationMean }, res },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
   const sampleStart = getSampleStart()
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  stopState.sampleStart = sampleStart
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(stopState, { sampleStart, sampleDurationMean })
 
-  updatePreviewEnd({
-    combination,
-    previewConfig,
-    previewState,
-    duration,
-  })
+  updatePreviewEnd({ combination, previewConfig, previewState, duration })
 
   const { combination: combinationA, res: resA } = await measureSample({
     combination,
@@ -98,9 +87,11 @@ const performSample = async function (
     previewState,
   })
 
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(stopState, {
+    sampleStart: undefined,
+    sampleDurationMean: undefined,
+  })
   const combinationB = addSampleDuration(combinationA, sampleStart)
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  stopState.combination = combinationB
-
   return { combination: combinationB, res: resA }
 }

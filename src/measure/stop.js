@@ -81,16 +81,16 @@ const setStopState = function (previewState, stopState, duration) {
 
 // Update `benchmarkEnd` to match the time the currently executing task is
 // expected to end.
-// Not done if `sampleDurationMean` is `0` meaning either:
+// Not done if `sampleDurationMean` is `undefined` meaning either:
 //  - not in measure phase
 //  - measuring the first sample of the task
 // In that case, we leave `benchmarkEnd` as is
 const setStopBenchmarkEnd = function (
   previewState,
-  { sampleStart, combination: { sampleDurationMean = 0 } = {} },
+  { sampleStart, sampleDurationMean },
   duration,
 ) {
-  if (sampleDurationMean === 0 || duration === 1) {
+  if (sampleStart === undefined || duration === 1) {
     return
   }
 
