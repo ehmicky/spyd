@@ -47,8 +47,9 @@ const performLoop = async function ({
   return duration
 }
 
+// Checking `repeat === 0` is only needed as a performance optimization
 const performHook = async function (hook, { repeat, env, shell }) {
-  if (hook === undefined) {
+  if (hook === undefined || repeat === 0) {
     return
   }
 
