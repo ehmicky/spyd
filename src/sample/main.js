@@ -14,7 +14,6 @@ export const measureSample = async function ({
   minLoopDuration,
 }) {
   const params = getParams(sampleState, durationState)
-
   const { returnValue, res: resA, measureDuration } = await measureNewSample(
     params,
     server,
