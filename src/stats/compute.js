@@ -33,6 +33,8 @@ export const computeStats = function ({
   times,
   minLoopDuration,
 }) {
+  const repeat = Math.round(times / loops)
+
   const { min, max, lowIndex, highIndex, low, high } = getExtremes(measures)
 
   const median = getSortedMedian(measures)
@@ -49,8 +51,6 @@ export const computeStats = function ({
   const rstdev = getRstdev(stdev, median)
   const moe = getMoe(lowIndex, highIndex, stdev)
   const rmoe = getRmoe(moe, median)
-
-  const repeat = Math.round(times / loops)
 
   return {
     median,

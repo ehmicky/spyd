@@ -7,20 +7,16 @@ import { handleRepeat } from './repeat.js'
 export const getInitialSampleState = function () {
   return {
     measures: [],
-    stats: {},
+    stats: { samples: 0, loops: 0, times: 0 },
     allSamples: 0,
-    samples: 0,
-    loops: 0,
-    times: 0,
     repeat: 1,
     calibrated: false,
   }
 }
 
 // Update sampleState because on the return value from the last sample
-// eslint-disable-next-line max-lines-per-function
 export const getSampleState = function (
-  { measures, stats, allSamples, samples, loops, times, repeat, calibrated },
+  { stats, measures, allSamples, repeat, calibrated },
   { measures: sampleMeasures },
   minLoopDuration,
 ) {
@@ -42,34 +38,25 @@ export const getSampleState = function (
     calibrated,
   })
   const {
-    measures: measuresA,
     stats: statsA,
+    measures: measuresA,
     allSamples: allSamplesA,
-    samples: samplesA,
-    loops: loopsA,
-    times: timesA,
   } = addStats({
+    stats,
     measures,
     sampleMeasures: sampleMeasuresA,
-    stats,
     allSamples,
-    samples,
-    loops,
     sampleLoops,
-    times,
     repeat,
     calibrated: calibratedA,
     minLoopDuration,
   })
 
   return {
-    measures: measuresA,
     stats: statsA,
+    measures: measuresA,
     allSamples: allSamplesA,
-    samples: samplesA,
-    loops: loopsA,
     sampleLoops,
-    times: timesA,
     repeat: newRepeat,
     repeatLast: repeat,
     calibrated: calibratedA,

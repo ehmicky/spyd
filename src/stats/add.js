@@ -14,14 +14,12 @@ import { mergeSort } from './merge.js'
 //  - Are eventually reset, which create confusion for stats like min or max
 //  - Change a lot, creating flicker
 export const addStats = function ({
+  stats,
+  stats: { samples, loops, times },
   measures,
   sampleMeasures,
-  stats,
   allSamples,
-  samples,
-  loops,
   sampleLoops,
-  times,
   repeat,
   calibrated,
   minLoopDuration,
@@ -29,7 +27,7 @@ export const addStats = function ({
   const allSamplesA = allSamples + 1
 
   if (!calibrated) {
-    return { measures, stats, allSamples: allSamplesA, samples, loops, times }
+    return { stats, measures, allSamples: allSamplesA }
   }
 
   const samplesA = samples + 1
@@ -45,12 +43,5 @@ export const addStats = function ({
     minLoopDuration,
   })
 
-  return {
-    measures,
-    stats: statsA,
-    allSamples: allSamplesA,
-    samples: samplesA,
-    loops: loopsA,
-    times: timesA,
-  }
+  return { stats: statsA, measures, allSamples: allSamplesA }
 }
