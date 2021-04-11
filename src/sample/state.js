@@ -10,12 +10,19 @@ export const getInitialStats = function () {
 
 // Returns initial `sampleState`
 export const getInitialSampleState = function () {
-  return { measures: [], allSamples: 0, repeat: 1, calibrated: false }
+  return {
+    measures: [],
+    allSamples: 0,
+    repeat: 1,
+    calibrated: false,
+    totalDuration: 0,
+  }
 }
 
 // Update sampleState because on the return value from the last sample
 export const getSampleState = function ({
   stats,
+  sampleState,
   sampleState: { measures, allSamples, repeat, calibrated },
   returnValue: { measures: sampleMeasures },
   minLoopDuration,
@@ -51,16 +58,14 @@ export const getSampleState = function ({
     calibrated: calibratedA,
     minLoopDuration,
   })
-
-  return {
-    stats: statsA,
-    sampleState: {
-      measures: measuresA,
-      allSamples: allSamplesA,
-      sampleLoops,
-      repeat: newRepeat,
-      repeatLast: repeat,
-      calibrated: calibratedA,
-    },
+  const sampleStateA = {
+    ...sampleState,
+    measures: measuresA,
+    allSamples: allSamplesA,
+    sampleLoops,
+    repeat: newRepeat,
+    repeatLast: repeat,
+    calibrated: calibratedA,
   }
+  return { stats: statsA, sampleState: sampleStateA }
 }

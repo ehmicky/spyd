@@ -45,22 +45,8 @@ export const performMeasureLoop = async function ({
 
   const stats = getInitialStats()
   const sampleState = getInitialSampleState()
-  const { res: resA, stats: statsB } = await pWhile(
-    ({
-      stats: statsA,
-      sampleState: sampleStateA,
-      totalDuration,
-      sampleDurationMean,
-    }) =>
-      isRemainingCombination({
-        duration,
-        exec,
-        totalDuration,
-        sampleDurationMean,
-        stopState,
-        stats: statsA,
-        sampleState: sampleStateA,
-      }),
+  const { res: resA, stats: statsA } = await pWhile(
+    (state) => isRemainingCombination(state, { duration, exec, stopState }),
     (state) =>
       performSample(state, {
         duration,
@@ -70,25 +56,18 @@ export const performMeasureLoop = async function ({
         server,
         minLoopDuration,
       }),
-    { res, stats, sampleState, totalDuration: 0 },
+    { res, stats, sampleState },
   )
-  return { res: resA, stats: statsB }
+  return { res: resA, stats: statsA }
 }
 
 const performSample = async function (
-  {
-    res,
-    sampleState,
-    stats,
-    measureDuration,
-    totalDuration,
-    sampleDurationMean,
-  },
+  { res, sampleState, stats, measureDuration },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
-  const sampleStart = startSample(stopState, sampleDurationMean)
+  const sampleStart = startSample(stopState, sampleState)
 
-  updatePreviewEnd({ previewConfig, previewState, duration, totalDuration })
+  updatePreviewEnd({ previewConfig, previewState, sampleState, duration })
 
   const {
     res: resA,
@@ -111,21 +90,15 @@ const performSample = async function (
     previewState,
   })
 
-  const {
-    totalDuration: totalDurationA,
-    sampleDurationMean: sampleDurationMeanA,
-  } = endSample({
+  const sampleStateB = endSample({
     stopState,
     sampleState: sampleStateA,
     sampleStart,
-    totalDuration,
   })
   return {
     res: resA,
     stats: statsA,
-    sampleState: sampleStateA,
+    sampleState: sampleStateB,
     measureDuration: measureDurationA,
-    totalDuration: totalDurationA,
-    sampleDurationMean: sampleDurationMeanA,
   }
 }

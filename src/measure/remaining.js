@@ -21,15 +21,13 @@
 //  - Adding/removing combinations would change the duration (and results) of
 //    others
 //  - This includes using the `include|exclude` configuration properties
-export const isRemainingCombination = function ({
-  duration,
-  exec,
-  totalDuration,
-  sampleDurationMean,
-  stopState: { stopped },
-  stats: { loops },
-  sampleState: { allSamples },
-}) {
+export const isRemainingCombination = function (
+  {
+    stats: { loops },
+    sampleState: { allSamples, totalDuration, sampleDurationMean },
+  },
+  { duration, exec, stopState: { stopped } },
+) {
   return (
     !stopped &&
     hasDurationLeft({

@@ -11,8 +11,8 @@ import { setBenchmarkEnd, setPercentage } from '../preview/set.js'
 export const updatePreviewEnd = function ({
   previewConfig: { quiet, combinations, index },
   previewState,
+  sampleState: { totalDuration },
   duration,
-  totalDuration,
 }) {
   if (quiet) {
     return
