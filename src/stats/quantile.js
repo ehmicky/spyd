@@ -26,3 +26,11 @@ export const getRoundedPosition = function (array, percentage) {
 const getQuantilePosition = function (array, percentage) {
   return (array.length - 1) * percentage
 }
+
+// Retrieve median of an array of floats.
+// Array must be sorted.
+export const getSortedMedian = function (array) {
+  return getQuantile(array, MEDIAN_QUANTILE)
+}
+
+const MEDIAN_QUANTILE = 0.5

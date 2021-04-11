@@ -3,7 +3,7 @@ import timeResolution from 'time-resolution'
 
 import { measureSample } from '../sample/main.js'
 import { hasMaxMeasures, getInitialSampleState } from '../sample/state.js'
-import { getUnsortedMedian } from '../stats/median.js'
+import { getSortedMedian } from '../stats/quantile.js'
 import { pWhile } from '../utils/p_while.js'
 
 // This is used to compute `measureCost` and `resolution`, which are used for
@@ -163,7 +163,7 @@ const TARGET_SAMPLE_COUNT = 10
 const TARGET_SAMPLE_DURATION = TARGET_DURATION / TARGET_SAMPLE_COUNT
 
 const computeMinLoopDuration = function (measures) {
-  const measureCost = getUnsortedMedian(measures)
+  const measureCost = getSortedMedian(measures)
   const resolution = timeResolution(measures)
   return Math.max(resolution, measureCost) * MIN_LOOP_DURATION_RATIO
 }

@@ -1,8 +1,7 @@
 import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
-import { getSortedMedian } from './median.js'
 import { getMoe, getRmoe } from './moe.js'
-import { getQuantiles } from './quantile.js'
+import { getSortedMedian, getQuantiles } from './quantile.js'
 import { getStdev, getRstdev } from './stdev.js'
 import { getMean } from './sum.js'
 
