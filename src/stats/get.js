@@ -12,18 +12,13 @@ import { computeStats } from './compute.js'
 // Uncalibrated stats are removed because they:
 //  - Are eventually reset, which create confusion for stats like min or max
 //  - Change a lot, creating flicker
-export const addStats = function ({
+export const getStats = function ({
   stats,
   measures,
   sampleLoops,
   repeat,
   minLoopDuration,
-  hasNewMeasures,
 }) {
-  if (!hasNewMeasures) {
-    return stats
-  }
-
   const countStats = getCountStats(stats, {
     sampleLoops,
     repeat,
