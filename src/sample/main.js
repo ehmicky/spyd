@@ -3,7 +3,7 @@ import now from 'precise-now'
 import { sendAndReceive } from '../process/ipc.js'
 
 import { getParams } from './params.js'
-import { getMeasureState } from './return.js'
+import { getMeasureState } from './state.js'
 
 // Measure a new sample for a given combination
 export const measureSample = async function ({
