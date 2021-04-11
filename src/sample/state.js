@@ -50,8 +50,8 @@ export const getSampleState = function ({
     allSamples,
     sampleLoops,
     repeat,
-    calibrated: calibratedA,
     minLoopDuration,
+    calibrated: calibratedA,
   })
   const sampleStateA = {
     ...sampleState,

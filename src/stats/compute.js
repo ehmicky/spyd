@@ -25,16 +25,7 @@ import { getMean } from './sum.js'
 //   - This happens when not measured yet or on uncalibrated stats.
 //   - This happens both during preview or during the final report if measuring
 //     was stopped
-// eslint-disable-next-line max-statements
-export const computeStats = function ({
-  measures,
-  samples,
-  loops,
-  times,
-  minLoopDuration,
-}) {
-  const repeat = Math.round(times / loops)
-
+export const computeStats = function (measures) {
   const { min, max, lowIndex, highIndex, low, high } = getExtremes(measures)
 
   const median = getSortedMedian(measures)
@@ -65,11 +56,6 @@ export const computeStats = function ({
     rmoe,
     histogram,
     quantiles,
-    loops,
-    times,
-    repeat,
-    samples,
-    minLoopDuration,
   }
 }
 

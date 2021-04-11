@@ -15,14 +15,13 @@ import { mergeSort } from './merge.js'
 //  - Change a lot, creating flicker
 export const addStats = function ({
   stats,
-  stats: { samples, loops, times },
   measures,
   sampleMeasures,
   allSamples,
   sampleLoops,
   repeat,
-  calibrated,
   minLoopDuration,
+  calibrated,
 }) {
   const allSamplesA = allSamples + 1
 
@@ -30,20 +29,35 @@ export const addStats = function ({
     return { stats, measures, allSamples: allSamplesA }
   }
 
-  const samplesA = samples + 1
-  const loopsA = loops + sampleLoops
-  const timesA = times + sampleLoops * repeat
-
-  mergeSort(measures, sampleMeasures)
-  const statsA = computeStats({
-    measures,
-    samples: samplesA,
-    loops: loopsA,
-    times: timesA,
+  const countStats = getCountStats(stats, {
+    sampleLoops,
+    repeat,
     minLoopDuration,
   })
 
+  mergeSort(measures, sampleMeasures)
+  const computedStats = computeStats(measures)
+
+  const statsA = { ...countStats, ...computedStats }
   return { stats: statsA, measures, allSamples: allSamplesA }
+}
+
+// Retrieve stats related to sampling itself, not the measures
+const getCountStats = function (
+  { samples, loops, times },
+  { sampleLoops, repeat, minLoopDuration },
+) {
+  const samplesA = samples + 1
+  const loopsA = loops + sampleLoops
+  const timesA = times + sampleLoops * repeat
+  const meanRepeat = Math.round(times / loops)
+  return {
+    samples: samplesA,
+    loops: loopsA,
+    times: timesA,
+    repeat: meanRepeat,
+    minLoopDuration,
+  }
 }
 
 // Returns initial `stats`
