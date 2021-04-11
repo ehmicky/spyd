@@ -1,3 +1,5 @@
+import { hasMaxMeasures } from '../sample/params.js'
+
 // Check if combination should keep being measured.
 // We ensure each combination is measured at least once by checking
 // `loops === 0`
@@ -66,18 +68,8 @@ const hasTimeLeft = function ({
   sampleDurationMean,
 }) {
   return (
-    !hasMaxLoops(measures) &&
+    !hasMaxMeasures(measures) &&
     duration !== 1 &&
     totalDuration + sampleDurationMean < duration
   )
 }
-
-// We end running samples when the `measures` is over `MAX_LOOPS`. This
-// is meant to prevent memory overflow.
-// The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
-// little more than 1e8 floats.
-const hasMaxLoops = function (measures) {
-  return measures.length >= MAX_LOOPS
-}
-
-const MAX_LOOPS = 1e8
