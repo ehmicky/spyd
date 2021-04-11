@@ -45,8 +45,7 @@ const measureCombinationStats = async function ({
   previewState,
   exec,
 }) {
-  const measuredStats = measuredCombinations.map(getStats)
-  const previewConfigA = { ...previewConfig, measuredStats, index }
+  const previewConfigA = { ...previewConfig, measuredCombinations, index }
   const { stats } = await measureCombination(combination, {
     duration,
     cwd,
@@ -55,8 +54,4 @@ const measureCombinationStats = async function ({
     exec,
   })
   return [...measuredCombinations, { ...combination, stats }]
-}
-
-const getStats = function ({ stats }) {
-  return stats
 }

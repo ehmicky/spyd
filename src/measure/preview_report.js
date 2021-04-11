@@ -37,19 +37,21 @@ export const setFirstPreview = async function ({
 const START_DESCRIPTION = 'Starting...'
 
 export const updatePreviewReport = async function ({
-  stats: currentStats,
+  stats,
   sampleState: { calibrated },
   previewConfig,
-  previewConfig: { quiet, combinations, index: currentIndex, measuredStats },
+  previewConfig: { quiet, combinations, measuredCombinations, index },
   previewState,
 }) {
   if (quiet || !calibrated) {
     return
   }
 
-  const combinationsA = combinations.map((combination, index) =>
-    addStats({ combination, index, currentIndex, currentStats, measuredStats }),
-  )
+  const combinationsA = [
+    ...measuredCombinations,
+    { ...combinations[index], stats },
+    ...combinations.slice(index + 1).map(addEmptyStats),
+  ]
 
   await setPreviewReport({
     previewConfig: { ...previewConfig, combinations: combinationsA },
@@ -57,25 +59,7 @@ export const updatePreviewReport = async function ({
   })
 }
 
-// Depending on `index` and `currentIndex`, the combination might:
-//  - Already have computed its `stats`
-//  - Be currently computing its `stats`
-//  - Not have started computed its `stats` yet
-const addStats = function ({
-  combination,
-  index,
-  currentIndex,
-  currentStats,
-  measuredStats,
-}) {
-  if (index < currentIndex) {
-    return { ...combination, stats: measuredStats[index] }
-  }
-
-  if (index === currentIndex) {
-    return { ...combination, stats: currentStats }
-  }
-
+const addEmptyStats = function (combination) {
   return { ...combination, stats: {} }
 }
 
