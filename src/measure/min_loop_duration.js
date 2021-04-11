@@ -74,8 +74,32 @@ const getMeasureCost = async function (server, res) {
 }
 
 const shouldKeepMeasuring = function (end, { sampleState }) {
-  return now() < end && !hasMaxMeasures(sampleState)
+  return (
+    !hasMaxMeasures(sampleState) &&
+    !(hasEnoughMeasures(sampleState) && now() >= end)
+  )
 }
+
+// We need enough measures so that both `measureCost` and `resolution` are
+// precise.
+// For `resolution`, the `0` measures are not useful, so we ensure at least
+// `MIN_TIMES` non-`0` measures are available
+//  - Since `measures` is sorted, we can do this by accessing the n-th last
+//    element
+// This check is mostly needed when either:
+//  - The time resolution is very high
+//  - The task is very slow
+const hasEnoughMeasures = function ({ measures }) {
+  return (
+    measures.length >= MIN_TIMES && measures[measures.length - MIN_TIMES] !== 0
+  )
+}
+
+// A higher value makes it more likely for the `measureCost` estimation to last
+// too long.
+// A lower value makes it more likely that `measureCost` or `resolution` would
+// be imprecise if very high.
+const MIN_TIMES = 5
 
 // How long the runner should estimate the `measureCost`.
 // This value should be as high as possible since:
