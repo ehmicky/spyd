@@ -86,18 +86,22 @@ const runEvents = async function ({
   }
 
   await beforeCombination(previewState, server)
-  const minLoopDuration = await getMinLoopDuration(server, stage)
-  const stats = await performMeasureLoop({
-    duration,
-    previewConfig,
-    previewState,
-    stopState,
-    stage,
-    server,
-    minLoopDuration,
-  })
-  await afterCombination(previewState, server)
-  return stats
+
+  try {
+    const minLoopDuration = await getMinLoopDuration(server, stage)
+    const stats = await performMeasureLoop({
+      duration,
+      previewConfig,
+      previewState,
+      stopState,
+      stage,
+      server,
+      minLoopDuration,
+    })
+    return stats
+  } finally {
+    await afterCombination(previewState, server)
+  }
 }
 
 const prependTaskPrefix = function (error, { taskId }, stage) {
