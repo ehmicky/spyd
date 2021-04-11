@@ -18,13 +18,13 @@ export const getMinLoopDuration = async function (taskId, server, res) {
   // TODO: use 100ms duration instead of hardcoded maxLoops
   const {
     res: resA,
-    returnValue: { measures: calibrations },
+    returnValue: { measures },
   } = await sendAndReceive({ maxLoops: 7e5, repeat: 0 }, server, res)
-  const minLoopDuration = computeMinLoopDuration(calibrations)
+  const minLoopDuration = computeMinLoopDuration(measures)
   return { minLoopDuration, res: resA }
 }
 
-// How long the runner should fill the `calibration` array.
+// How long the runner should fill the `measures` array.
 // We use a hardcoded duration because:
 //  - This must be as high as possible to make the `minLoopDuration` precise.
 //    The only limit is the user perception of how long this takes, which is
@@ -47,7 +47,7 @@ const CALIBRATE_DURATION = 1e8
 //  - Those should not use any `repeat` loop, since that is meant to remove the
 //    time to take timestamps, not the time to spawn processes.
 //  - Also, `measureCost` would be too large, creating very large `repeat`.
-//  - Those return an empty array of `calibrations`, making them not use any
+//  - Those return an empty array of `measures`, making them not use any
 //    `repeat` loop.
 // Iterating the `repeat` loop adds a small duration, due to the time to
 // increment the loop counter (e.g. 1 or 2 CPU cycles)
@@ -84,18 +84,18 @@ const CALIBRATE_DURATION = 1e8
 //  - The best way to benchmark those very fast functions is to increase their
 //    complexity. Since the runner already runs those in a "for" loop, the only
 //    thing that a task should do is increase the size of its inputs.
-// `minLoopDuration` is estimated based on an array of `calibrations`:
-//  - Each `calibration` is the duration to compute timestamps
+// `minLoopDuration` is estimated based on an array of `measures`:
+//  - Each `measure` is the duration to compute timestamps
 //  - This must be computed separately for each combination since they might
 //    vary depending on the task, system or runnerConfig
 //  - This results in more difference between the `repeat` of combinations of a
 //    given result, but in less difference between the average `repeat` of
 //    combinations of several results
-// `calibrations` is computed by the runner at start time because:
+// `measures` is computed by the runner at start time because:
 //  - This is simpler to implement for both the runner and the parent
 //  - This prevents its computation from de-optimizing the measured task
 //  - The median more stable as the `config` and tasks change
-// `calibrations` should filter out any `0`, while still filling a specific
+// `measures` should filter out any `0`, while still filling a specific
 // length specified by the parent process.
 //  - This prevents computation errors for both time `resolution` and
 //    `measureCost`
@@ -104,7 +104,7 @@ const CALIBRATE_DURATION = 1e8
 //    case the logic changes.
 //  - If the real `resolution` is slower than `measureCost`, `measureCost` will
 //    equal the real `resolution`, which is ok.
-//  - If the `resolution` is slow, computing the `calibrations` might take
+//  - If the `resolution` is slow, computing the `measures` might take
 //    some duration. However, this is fine since this duration will be spent on
 //    each sample anyway due to `minLoopDuration`.
 // The precision of `minLoopDuration` is not very critical:
@@ -126,9 +126,9 @@ const CALIBRATE_DURATION = 1e8
 //  - We use `time-resolution` to guess the runner's minimum resolution.
 //  - For example, if a runner can only measure things with 1ms precision, every
 //    nanoseconds measures will be a multiple of 1e6.
-const computeMinLoopDuration = function (calibrations) {
-  const measureCost = getUnsortedMedian(calibrations)
-  const resolution = timeResolution(calibrations)
+const computeMinLoopDuration = function (measures) {
+  const measureCost = getUnsortedMedian(measures)
+  const resolution = timeResolution(measures)
   return Math.max(resolution, measureCost) * MIN_LOOP_DURATION_RATIO
 }
 
