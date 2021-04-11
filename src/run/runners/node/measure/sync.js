@@ -8,8 +8,8 @@ export const performLoopsSync = function ({
   beforeEach,
   afterEach,
   taskArg,
-  repeat,
   maxLoops,
+  repeat,
 }) {
   const measures = new Array(maxLoops)
 
