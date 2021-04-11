@@ -26,11 +26,12 @@ export const measureCombinations = async function (
   combinations,
   { duration, cwd, previewConfig, previewState, exec },
 ) {
-  const allStatsA = await pReduce(
+  const { combinations: combinationsB } = await pReduce(
     combinations,
-    (allStats, combination, index) =>
+    ({ allStats, combinations: combinationsA }, combination, index) =>
       measureCombinationStats({
         allStats,
+        combinations: combinationsA,
         combination,
         index,
         duration,
@@ -39,16 +40,14 @@ export const measureCombinations = async function (
         previewState,
         exec,
       }),
-    [],
+    { allStats: [], combinations: [] },
   )
-  return combinations.map((combination, index) => ({
-    ...combination,
-    stats: allStatsA[index],
-  }))
+  return combinationsB
 }
 
 const measureCombinationStats = async function ({
   allStats,
+  combinations,
   combination,
   index,
   duration,
@@ -65,7 +64,9 @@ const measureCombinationStats = async function ({
     previewState,
     exec,
   })
-  return [...allStats, stats]
+  const combinationA = { ...combination, stats }
+  const combinationsA = [...combinations, combinationA]
+  return { allStats: [...allStats, stats], combinations: combinationsA }
 }
 
 // Measure a single combination.
