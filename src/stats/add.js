@@ -32,8 +32,7 @@ export const addStats = function (
     minLoopDuration,
   })
   const computedStats = computeStats(measures)
-  const statsA = { ...countStats, ...computedStats }
-  return statsA
+  return { ...countStats, ...computedStats }
 }
 
 // Retrieve stats related to sampling itself, not the measures
