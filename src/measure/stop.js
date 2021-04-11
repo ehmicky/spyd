@@ -68,7 +68,7 @@ const handleStop = async function ({
 
   await waitForStopSignals(abortSignal)
 
-  throw new AbortError('Benchmark has been stopped forcefully.')
+  throw new AbortError('Benchmark has been aborted.')
 }
 
 const setStopState = function (previewState, stopState, duration) {
@@ -107,7 +107,7 @@ const waitForStopSignals = async function (abortSignal) {
 const STOP_SIGNALS = ['SIGINT', 'SIGBREAK', 'SIGHUP', 'SIGTERM', 'SIGQUIT']
 
 const STOP_DESCRIPTION = 'Stopping...'
-const ABORT_DESCRIPTION = 'Stopping... Type CTRL-C to stop forcefully.'
+const ABORT_DESCRIPTION = 'Stopping... Type CTRL-C to abort graceful exit.'
 
 // Users must wait 5 seconds before being able to abort.
 // This promotes proper cleanup.
