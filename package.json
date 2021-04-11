@@ -68,7 +68,7 @@
     "sort-on": "^4.1.0",
     "string-width": "^4.2.2",
     "strip-ansi": "^6.0.0",
-    "time-resolution": "^0.3.2",
+    "time-resolution": "^0.4.0",
     "ts-node": "^9.1.1",
     "update-notifier": "^5.0.1",
     "uuid": "^8.3.2",
