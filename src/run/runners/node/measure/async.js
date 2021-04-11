@@ -11,9 +11,10 @@ export const performLoopsAsync = async function ({
   maxLoops,
 }) {
   const measures = new Array(maxLoops)
+  const { length } = measures
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
-  for (let index = 0; index < measures.length; index += 1) {
+  for (let index = 0; index < length; index += 1) {
     // eslint-disable-next-line fp/no-mutation, no-await-in-loop
     measures[index] = await performLoopAsync({
       main,
