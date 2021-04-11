@@ -2,8 +2,7 @@ import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
 import { measureSample } from '../sample/main.js'
-import { hasMaxMeasures } from '../sample/params.js'
-import { getInitialSampleState } from '../sample/state.js'
+import { hasMaxMeasures, getInitialSampleState } from '../sample/state.js'
 import { getUnsortedMedian } from '../stats/median.js'
 
 // This is used to compute `measureCost` and `resolution`, which are used for

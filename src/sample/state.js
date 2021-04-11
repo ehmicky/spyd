@@ -49,3 +49,13 @@ const addSampleMeasures = function (measures, sampleMeasures, calibrated) {
   mergeSort(measures, sampleMeasures)
   return measures
 }
+
+// We end running samples when the `measures` is over `MAX_MEASURES`. This
+// is meant to prevent memory overflow.
+// The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
+// little more than 1e8 floats.
+export const hasMaxMeasures = function ({ measures }) {
+  return measures.length >= MAX_MEASURES
+}
+
+const MAX_MEASURES = 1e8

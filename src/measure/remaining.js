@@ -1,4 +1,4 @@
-import { hasMaxMeasures } from '../sample/params.js'
+import { hasMaxMeasures } from '../sample/state.js'
 
 // Check if combination should keep being measured.
 // We ensure each combination is measured at least once by checking
