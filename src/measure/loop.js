@@ -2,7 +2,7 @@ import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 import { pWhile } from '../utils/p_while.js'
 
-import { getSampleStart, addSampleDuration } from './duration.js'
+import { getSampleStart, getSampleDuration } from './duration.js'
 import { updatePreviewEnd } from './preview_end.js'
 import { updatePreviewReport } from './preview_report.js'
 import { isRemainingCombination } from './remaining.js'
@@ -44,11 +44,12 @@ export const performMeasureLoop = async function ({
   setBenchmarkStart(previewState)
 
   return await pWhile(
-    ({ combination: combinationA }) =>
+    ({ combination: combinationA, totalDuration }) =>
       isRemainingCombination({
         combination: combinationA,
         duration,
         exec,
+        totalDuration,
         stopState,
       }),
     (state) =>
@@ -60,19 +61,25 @@ export const performMeasureLoop = async function ({
         server,
         minLoopDuration,
       }),
-    { combination, res },
+    { combination, res, totalDuration: 0 },
   )
 }
 
 const performSample = async function (
-  { combination, combination: { sampleDurationMean }, res, measureDuration },
+  {
+    combination,
+    combination: { sampleDurationMean },
+    res,
+    measureDuration,
+    totalDuration,
+  },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
   const sampleStart = getSampleStart()
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(stopState, { sampleStart, sampleDurationMean })
 
-  updatePreviewEnd({ combination, previewConfig, previewState, duration })
+  updatePreviewEnd({ previewConfig, previewState, duration, totalDuration })
 
   const {
     combination: combinationA,
@@ -97,10 +104,14 @@ const performSample = async function (
     sampleStart: undefined,
     sampleDurationMean: undefined,
   })
-  const combinationB = addSampleDuration(combinationA, sampleStart)
+  const {
+    combination: combinationB,
+    totalDuration: totalDurationA,
+  } = getSampleDuration(combinationA, sampleStart, totalDuration)
   return {
     combination: combinationB,
     res: resA,
     measureDuration: measureDurationA,
+    totalDuration: totalDurationA,
   }
 }

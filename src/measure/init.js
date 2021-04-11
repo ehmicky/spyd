@@ -21,7 +21,6 @@ export const getInitResult = function ({
 export const addInitProps = function (combination) {
   return {
     ...combination,
-    totalDuration: 0,
     sampleMedian: 0,
     measures: [],
     stats: {},

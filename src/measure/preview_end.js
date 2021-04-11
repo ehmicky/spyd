@@ -9,10 +9,10 @@ import { setBenchmarkEnd, setPercentage } from '../preview/set.js'
 // This also allows updating the progress bar duration to `0s` when the
 // benchmark is stopped or errors.
 export const updatePreviewEnd = function ({
-  combination: { totalDuration },
   previewConfig: { quiet, combinations, index },
   previewState,
   duration,
+  totalDuration,
 }) {
   if (quiet) {
     return

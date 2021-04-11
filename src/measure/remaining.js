@@ -25,16 +25,20 @@ export const isRemainingCombination = function ({
   combination,
   duration,
   exec,
+  totalDuration,
   stopState: { stopped },
 }) {
-  return !stopped && hasDurationLeft(combination, duration, exec)
+  return (
+    !stopped && hasDurationLeft({ combination, duration, exec, totalDuration })
+  )
 }
 
-const hasDurationLeft = function (
-  { totalDuration, sampleDurationMean, loops, allSamples },
+const hasDurationLeft = function ({
+  combination: { sampleDurationMean, loops, allSamples },
   duration,
   exec,
-) {
+  totalDuration,
+}) {
   if (exec) {
     return allSamples === 0
   }
