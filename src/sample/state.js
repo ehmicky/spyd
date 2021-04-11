@@ -19,7 +19,6 @@ export const getSampleState = function (
     sampleMedian,
     sampleLoops,
   } = normalizeSampleMeasures(sampleMeasures, repeat)
-
   const { newRepeat, calibrated: calibratedA } = handleRepeat({
     repeat,
     sampleMedian,
