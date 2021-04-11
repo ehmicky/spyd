@@ -133,14 +133,21 @@ const shouldKeepMeasuring = function (end, { sampleState }) {
 }
 
 // How long the runner should estimate the `measureCost`.
-// We use a hardcoded duration because:
-//  - This must be as high as possible to make the `minLoopDuration` precise.
-//    The only limit is the user perception of how long this takes, which is
-//    better expressed with a hardcoded duration.
-//  - This works even with high time resolution, providing it is high enough
-//  - This works even when the duration to take each item is very slow,
-//    providing it is high enough
-//  - This avoid different `precision` impacting the `repeat`
+// This value should be as high as possible since:
+//  - It makes the result more precise, especially reducing the probability of
+//    an abnormally much slower result.
+//  - It warms up the runner logic longer making the main measuring more precise
+//  - If `measureCost` gets faster over time due to engine optimization, it
+//    makes the estimation closer to it
+//  - It is better at handling a high time `resolution`
+// The only limit is how long users need to wait.
+// We use a duration because:
+//  - The only limit is the user perception of how long this takes, which is
+//    better expressed with a duration.
+//  - This is better at handling a high time `resolution`
+//  - This is better at handling a slow `measureCost`
+// We use a constant value because:
+//  - This avoids different `precision` impacting the `repeat`
 //  - This avoids differences due to some engines like v8 which optimize the
 //    speed of functions after repeating them a specific amount of times
 const TARGET_DURATION = 1e8
