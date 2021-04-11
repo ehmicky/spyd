@@ -51,8 +51,8 @@ export const handleReturnValue = function (
   return {
     measures: measuresA,
     stats: statsA,
-    samples: samplesA,
     allSamples: allSamplesA,
+    samples: samplesA,
     loops: loopsA,
     sampleLoops,
     times: timesA,
