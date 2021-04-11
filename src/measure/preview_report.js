@@ -37,8 +37,7 @@ export const setFirstPreview = async function ({
 const START_DESCRIPTION = 'Starting...'
 
 export const updatePreviewReport = async function ({
-  combination,
-  combination: { calibrated },
+  measureState: { calibrated, stats },
   previewConfig,
   previewConfig: { quiet, combinations, index },
   previewState,
@@ -49,7 +48,8 @@ export const updatePreviewReport = async function ({
 
   const combinationsA = [...combinations]
   // eslint-disable-next-line fp/no-mutation
-  combinationsA[index] = combination
+  combinationsA[index] = { ...combinationsA[index], stats }
+
   await setPreviewReport({
     previewConfig: { ...previewConfig, combinations: combinationsA },
     previewState,

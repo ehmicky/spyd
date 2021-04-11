@@ -17,23 +17,6 @@ export const getInitResult = function ({
   return initResult
 }
 
-// Initialize some combination properties
-export const addInitProps = function (combination) {
-  return {
-    ...combination,
-    sampleMedian: 0,
-    measures: [],
-    stats: {},
-    allSamples: 0,
-    samples: 0,
-    loops: 0,
-    sampleLoops: 0,
-    times: 0,
-    repeat: 1,
-    calibrated: false,
-  }
-}
-
 // Finalize result. Done either at the end, or before each preview.
 export const getFinalResult = function (combinations, initResult, results) {
   const combinationsA = combinations.map(getFinalProps)

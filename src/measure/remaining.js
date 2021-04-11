@@ -22,17 +22,18 @@
 //    others
 //  - This includes using the `include|exclude` configuration properties
 export const isRemainingCombination = function ({
-  combination,
   duration,
   exec,
   totalDuration,
   sampleDurationMean,
   stopState: { stopped },
+  measureState: { loops, allSamples },
 }) {
   return (
     !stopped &&
     hasDurationLeft({
-      combination,
+      loops,
+      allSamples,
       duration,
       exec,
       totalDuration,
@@ -42,7 +43,8 @@ export const isRemainingCombination = function ({
 }
 
 const hasDurationLeft = function ({
-  combination: { loops, allSamples },
+  loops,
+  allSamples,
   duration,
   exec,
   totalDuration,

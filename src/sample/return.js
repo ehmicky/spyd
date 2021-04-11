@@ -3,9 +3,23 @@ import { addStats } from '../stats/add.js'
 import { normalizeSampleMeasures } from './normalize.js'
 import { handleRepeat } from './repeat.js'
 
+// Returns initial `measureState`
+export const getInitialMeasureState = function () {
+  return {
+    measures: [],
+    stats: {},
+    allSamples: 0,
+    samples: 0,
+    loops: 0,
+    times: 0,
+    repeat: 1,
+    calibrated: false,
+  }
+}
+
 // Handle return value from the last sample
 // eslint-disable-next-line max-lines-per-function
-export const handleReturnValue = function (
+export const getMeasureState = function (
   { measures, stats, allSamples, samples, loops, times, repeat, calibrated },
   { measures: sampleMeasures },
   minLoopDuration,

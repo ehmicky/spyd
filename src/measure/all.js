@@ -7,7 +7,7 @@ import { startCombination } from './start.js'
 // We also do this when the user stopped the benchmark (e.g. with CTRL-C).
 // We still perform each combination ends, for cleanup.
 export const measureAllCombinations = async function ({
-  combination,
+  taskId,
   duration,
   previewConfig,
   previewState,
@@ -19,8 +19,8 @@ export const measureAllCombinations = async function ({
     previewState,
     server,
   )
-  const { combination: combinationA, res: resA } = await performMeasureLoop({
-    combination,
+  const { measureState, res: resA } = await performMeasureLoop({
+    taskId,
     duration,
     previewConfig,
     previewState,
@@ -31,5 +31,5 @@ export const measureAllCombinations = async function ({
     minLoopDuration,
   })
   await endCombination(previewState, server, resA)
-  return { combination: combinationA, taskIds }
+  return { measureState, taskIds }
 }

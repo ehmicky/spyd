@@ -1,5 +1,6 @@
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
+import { getInitialMeasureState } from '../sample/return.js'
 import { pWhile } from '../utils/p_while.js'
 
 import { startSample, endSample } from './duration.js'
@@ -26,8 +27,7 @@ import { isRemainingCombination } from './remaining.js'
 //  - The user must then ensures the task has some big enough input to process.
 //  - This can be either hardcoded or using the `inputs` configuration property.
 export const performMeasureLoop = async function ({
-  combination,
-  combination: { taskId },
+  taskId,
   duration,
   previewConfig,
   previewState,
@@ -38,15 +38,16 @@ export const performMeasureLoop = async function ({
   minLoopDuration,
 }) {
   if (taskId === undefined) {
-    return { combination, res }
+    return { res, measureState: {} }
   }
 
   setBenchmarkStart(previewState)
 
-  return await pWhile(
-    ({ combination: combinationA, totalDuration, sampleDurationMean }) =>
+  const measureState = getInitialMeasureState()
+  const { res: resA, measureState: measureStateB } = await pWhile(
+    ({ measureState: measureStateA, totalDuration, sampleDurationMean }) =>
       isRemainingCombination({
-        combination: combinationA,
+        measureState: measureStateA,
         duration,
         exec,
         totalDuration,
@@ -62,12 +63,13 @@ export const performMeasureLoop = async function ({
         server,
         minLoopDuration,
       }),
-    { combination, res, totalDuration: 0 },
+    { res, measureState, totalDuration: 0 },
   )
+  return { res: resA, measureState: measureStateB }
 }
 
 const performSample = async function (
-  { combination, res, measureDuration, totalDuration, sampleDurationMean },
+  { res, measureState, measureDuration, totalDuration, sampleDurationMean },
   { duration, previewConfig, previewState, stopState, server, minLoopDuration },
 ) {
   const sampleStart = startSample(stopState, sampleDurationMean)
@@ -75,11 +77,11 @@ const performSample = async function (
   updatePreviewEnd({ previewConfig, previewState, duration, totalDuration })
 
   const {
-    combination: combinationA,
     res: resA,
     measureDuration: measureDurationA,
+    measureState: measureStateA,
   } = await measureSample({
-    combination,
+    measureState,
     server,
     res,
     minLoopDuration,
@@ -87,7 +89,7 @@ const performSample = async function (
   })
 
   await updatePreviewReport({
-    combination: combinationA,
+    measureState: measureStateA,
     previewConfig,
     previewState,
   })
@@ -97,13 +99,13 @@ const performSample = async function (
     sampleDurationMean: sampleDurationMeanA,
   } = endSample({
     stopState,
-    combination: combinationA,
+    measureState: measureStateA,
     sampleStart,
     totalDuration,
   })
   return {
-    combination: combinationA,
     res: resA,
+    measureState: measureStateA,
     measureDuration: measureDurationA,
     totalDuration: totalDurationA,
     sampleDurationMean: sampleDurationMeanA,

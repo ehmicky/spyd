@@ -6,7 +6,6 @@ import {
 import { startServer, endServer } from '../server/main.js'
 
 import { measureAllCombinations } from './all.js'
-import { addInitProps } from './init.js'
 import { addStopHandler, throwIfStopped } from './stop.js'
 
 // Measure all combinations and add results to `combinations`.
@@ -28,19 +27,18 @@ export const measureCombinations = async function (
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = 0; index < combinations.length; index += 1) {
     const combination = combinations[index]
-    // eslint-disable-next-line no-await-in-loop
-    const { combination: combinationA } = await measureCombination(
-      combination,
-      {
-        duration,
-        cwd,
-        previewConfig: { ...previewConfig, combinations, index },
-        previewState,
-        exec,
-      },
-    )
+    const {
+      measureState: { stats },
+      // eslint-disable-next-line no-await-in-loop
+    } = await measureCombination(combination, {
+      duration,
+      cwd,
+      previewConfig: { ...previewConfig, combinations, index },
+      previewState,
+      exec,
+    })
     // eslint-disable-next-line fp/no-mutation, require-atomic-updates, no-param-reassign
-    combinations[index] = combinationA
+    combinations[index] = { ...combination, stats }
   }
 
   return combinations
@@ -53,12 +51,11 @@ export const measureCombination = async function (
   combination,
   { duration, cwd, previewConfig, previewState, exec },
 ) {
-  const combinationA = addInitProps(combination)
   const { server, serverUrl } = await startServer()
 
   try {
     return await spawnAndMeasure({
-      combination: combinationA,
+      combination,
       serverUrl,
       duration,
       cwd,
@@ -75,6 +72,7 @@ export const measureCombination = async function (
 // Spawn combination processes, then measure them
 const spawnAndMeasure = async function ({
   combination,
+  combination: { taskId },
   serverUrl,
   duration,
   cwd,
@@ -87,7 +85,7 @@ const spawnAndMeasure = async function ({
 
   try {
     return await stopOrMeasure({
-      combination,
+      taskId,
       duration,
       previewConfig,
       previewState,
@@ -102,7 +100,7 @@ const spawnAndMeasure = async function ({
 
 // Handle stopping the benchmark
 const stopOrMeasure = async function ({
-  combination,
+  taskId,
   duration,
   previewConfig,
   previewState,
@@ -117,7 +115,7 @@ const stopOrMeasure = async function ({
 
   try {
     const returnValue = await eMeasureAllCombinations({
-      combination,
+      taskId,
       duration,
       previewConfig,
       previewState,
@@ -135,7 +133,7 @@ const stopOrMeasure = async function ({
 }
 
 const eMeasureAllCombinations = async function ({
-  combination,
+  taskId,
   duration,
   previewConfig,
   previewState,
@@ -150,7 +148,7 @@ const eMeasureAllCombinations = async function ({
       throwOnProcessExit(childProcess),
       onAbort,
       measureAllCombinations({
-        combination,
+        taskId,
         duration,
         previewConfig,
         previewState,
@@ -160,13 +158,13 @@ const eMeasureAllCombinations = async function ({
       }),
     ])
   } catch (error) {
-    prependTaskPrefix(error, combination)
+    prependTaskPrefix(error, taskId)
     throw error
   }
 }
 
 // taskId is `undefined` during init
-const prependTaskPrefix = function (error, { taskId }) {
+const prependTaskPrefix = function (error, taskId) {
   if (taskId === undefined) {
     return
   }
