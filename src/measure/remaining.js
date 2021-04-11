@@ -25,7 +25,9 @@ import { hasMaxMeasures } from '../sample/params.js'
 //  - This includes using the `include|exclude` configuration properties
 export const isRemainingCombination = function (
   {
-    sampleState: { allSamples, measures },
+    sampleState,
+    sampleState: { allSamples },
+    stats: { loops },
     durationState: { totalDuration, sampleDurationMean },
   },
   { duration, exec, stopState: { stopped } },
@@ -33,8 +35,9 @@ export const isRemainingCombination = function (
   return (
     !stopped &&
     hasDurationLeft({
+      sampleState,
+      loops,
       allSamples,
-      measures,
       duration,
       exec,
       totalDuration,
@@ -44,8 +47,9 @@ export const isRemainingCombination = function (
 }
 
 const hasDurationLeft = function ({
+  sampleState,
+  loops,
   allSamples,
-  measures,
   duration,
   exec,
   totalDuration,
@@ -56,19 +60,19 @@ const hasDurationLeft = function ({
   }
 
   return (
-    measures.length === 0 ||
-    hasTimeLeft({ measures, duration, sampleDurationMean, totalDuration })
+    loops === 0 ||
+    hasTimeLeft({ sampleState, duration, sampleDurationMean, totalDuration })
   )
 }
 
 const hasTimeLeft = function ({
-  measures,
+  sampleState,
   duration,
   totalDuration,
   sampleDurationMean,
 }) {
   return (
-    !hasMaxMeasures(measures) &&
+    !hasMaxMeasures(sampleState) &&
     duration !== 1 &&
     totalDuration + sampleDurationMean < duration
   )

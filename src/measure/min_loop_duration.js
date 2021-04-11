@@ -2,6 +2,7 @@ import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
 import { measureSample } from '../sample/main.js'
+import { hasMaxMeasures } from '../sample/params.js'
 import { getInitialSampleState } from '../sample/state.js'
 import { getUnsortedMedian } from '../stats/median.js'
 
@@ -131,7 +132,7 @@ const measureInLoop = async function (server, res) {
     sampleState = sampleStateA
     // eslint-disable-next-line fp/no-mutation
     resA = resB
-  } while (now() < end)
+  } while (now() < end && !hasMaxMeasures(sampleState))
 
   return { measures: sampleState.measures, res: resA }
 }

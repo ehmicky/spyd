@@ -82,7 +82,7 @@ const getMaxLoops = function ({
 // is meant to prevent memory overflow.
 // The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
 // little more than 1e8 floats.
-export const hasMaxMeasures = function (measures) {
+export const hasMaxMeasures = function ({ measures }) {
   return measures.length >= MAX_MEASURES
 }
 
