@@ -1,6 +1,6 @@
 import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
-import { getInitialSampleState } from '../sample/state.js'
+import { getInitialStats, getInitialSampleState } from '../sample/state.js'
 import { pWhile } from '../utils/p_while.js'
 
 import { startSample, endSample } from './duration.js'
@@ -43,6 +43,7 @@ export const performMeasureLoop = async function ({
 
   setBenchmarkStart(previewState)
 
+  const stats = getInitialStats()
   const sampleState = getInitialSampleState()
   const { res: resA, sampleState: sampleStateB } = await pWhile(
     ({ sampleState: sampleStateA, totalDuration, sampleDurationMean }) =>
@@ -63,7 +64,7 @@ export const performMeasureLoop = async function ({
         server,
         minLoopDuration,
       }),
-    { res, sampleState, totalDuration: 0 },
+    { res, sampleState: { ...sampleState, stats }, totalDuration: 0 },
   )
   return { res: resA, sampleState: sampleStateB }
 }

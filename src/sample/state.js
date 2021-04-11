@@ -10,8 +10,7 @@ export const getInitialStats = function () {
 
 // Returns initial `sampleState`
 export const getInitialSampleState = function () {
-  const stats = getInitialStats()
-  return { stats, measures: [], allSamples: 0, repeat: 1, calibrated: false }
+  return { measures: [], allSamples: 0, repeat: 1, calibrated: false }
 }
 
 // Update sampleState because on the return value from the last sample
