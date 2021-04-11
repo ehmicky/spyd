@@ -21,13 +21,10 @@ export const getMinLoopDuration = async function (taskId, server, res) {
   return { minLoopDuration, res: resA }
 }
 
-// eslint-disable-next-line max-statements
 const measureInLoop = async function (server, res) {
   const start = now()
   // eslint-disable-next-line fp/no-let
-  let measures = []
-  // eslint-disable-next-line fp/no-let
-  let sampleLoops = 0
+  let sampleState = { measures: [], repeat: 1, repeatLast: 1, sampleLoops: 0 }
   // eslint-disable-next-line fp/no-let
   let measureDuration = 0
   // eslint-disable-next-line fp/no-let
@@ -37,16 +34,11 @@ const measureInLoop = async function (server, res) {
   do {
     const {
       res: resB,
-      sampleState: { measures: measuresA, sampleLoops: sampleLoopsA },
+      sampleState: sampleStateA,
       measureDuration: measureDurationA,
       // eslint-disable-next-line no-await-in-loop
     } = await measureSample({
-      sampleState: {
-        measures,
-        repeat: 1,
-        repeatLast: 1,
-        sampleLoops,
-      },
+      sampleState,
       durationState: { measureDuration },
       server,
       res: resA,
@@ -54,16 +46,14 @@ const measureInLoop = async function (server, res) {
       targetSampleDuration: TARGET_SAMPLE_DURATION,
     })
     // eslint-disable-next-line fp/no-mutation
-    sampleLoops = sampleLoopsA
-    // eslint-disable-next-line fp/no-mutation
-    measures = measuresA
+    sampleState = sampleStateA
     // eslint-disable-next-line fp/no-mutation
     measureDuration = measureDurationA
     // eslint-disable-next-line fp/no-mutation
     resA = resB
   } while (now() - start < TARGET_DURATION)
 
-  return { measures, res: resA }
+  return { measures: sampleState.measures, res: resA }
 }
 
 // How long the runner should estimate the `measureCost`.
