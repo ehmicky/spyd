@@ -10,7 +10,6 @@ export const getInitialSampleState = function () {
 
 // Update sampleState because on the return value from the last sample
 export const getSampleState = function ({
-  sampleState,
   sampleState: { measures, allSamples, repeat, calibrated },
   returnValue: { measures: sampleMeasures },
   minLoopDuration,
@@ -30,7 +29,6 @@ export const getSampleState = function ({
   })
   const measuresA = addSampleMeasures(measures, sampleMeasuresA, calibratedA)
   return {
-    ...sampleState,
     measures: measuresA,
     allSamples: allSamples + 1,
     sampleLoops,
