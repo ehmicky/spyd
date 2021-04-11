@@ -36,7 +36,7 @@ import { pWhile } from '../utils/p_while.js'
 //  - This also prevents the opposite, which means changing the tasks logic
 //    should not impact `measureCost`
 export const getMinLoopDuration = async function (server, res, stage) {
-  if (stage === 'init' || stage === 'exec') {
+  if (stage === 'exec') {
     return { res }
   }
 

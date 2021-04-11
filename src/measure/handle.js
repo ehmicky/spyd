@@ -61,25 +61,50 @@ const measureAllCombinations = async function ({
     server,
     res,
   )
-  const resB = await beforeCombination(previewState, server, resA)
-  const { minLoopDuration, res: resC } = await getMinLoopDuration(
-    server,
-    resB,
-    stage,
-  )
-  const { stats, res: resD } = await performMeasureLoop({
+  const { stats, res: resB } = await runEvents({
     duration,
     previewConfig,
     previewState,
     stopState,
     stage,
     server,
-    res: resC,
+    res: resA,
+  })
+  await endCombination(server, resB)
+  return { stats, taskIds }
+}
+
+const runEvents = async function ({
+  duration,
+  previewConfig,
+  previewState,
+  stopState,
+  stage,
+  server,
+  res,
+}) {
+  if (stage === 'init') {
+    return { res }
+  }
+
+  const resA = await beforeCombination(previewState, server, res)
+  const { minLoopDuration, res: resB } = await getMinLoopDuration(
+    server,
+    resA,
+    stage,
+  )
+  const { stats, res: resC } = await performMeasureLoop({
+    duration,
+    previewConfig,
+    previewState,
+    stopState,
+    stage,
+    server,
+    res: resB,
     minLoopDuration,
   })
-  const resE = await afterCombination(previewState, server, resD)
-  await endCombination(server, resE)
-  return { stats, taskIds }
+  const resD = await afterCombination(previewState, server, resC)
+  return { stats, res: resD }
 }
 
 const prependTaskPrefix = function (error, { taskId }, stage) {

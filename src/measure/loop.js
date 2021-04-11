@@ -37,10 +37,6 @@ export const performMeasureLoop = async function ({
   res,
   minLoopDuration,
 }) {
-  if (stage === 'init') {
-    return { res, stats: {} }
-  }
-
   setBenchmarkStart(previewState)
 
   const initialState = getInitialState(res)
