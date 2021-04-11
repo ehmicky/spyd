@@ -4,11 +4,7 @@ import { getMinLoopDuration } from '../sample/min_loop_duration.js'
 
 // Wait for each combination to start
 // `calibrations` can be `undefined` if an error happened.
-export const startCombination = async function (
-  combination,
-  previewState,
-  server,
-) {
+export const startCombination = async function (previewState, server) {
   const {
     returnValue: { tasks: taskIds, calibrations = [] },
     res,

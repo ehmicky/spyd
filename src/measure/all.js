@@ -16,7 +16,6 @@ export const measureAllCombinations = async function ({
   server,
 }) {
   const { res, taskIds, minLoopDuration } = await startCombination(
-    combination,
     previewState,
     server,
   )
