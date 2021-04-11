@@ -27,8 +27,8 @@ import { spawnProcess } from './spawn.js'
 // We use `cleanup: true` to ensure processes are cleaned up in case this
 // library is called programmatically and the caller terminates the parent
 // process.
-export const spawnRunnerProcess = function ({
-  combination: {
+export const spawnRunnerProcess = function (
+  {
     runnerSpawn: [file, ...args],
     runnerSpawnOptions,
     runnerConfig,
@@ -36,10 +36,8 @@ export const spawnRunnerProcess = function ({
     taskPath,
     inputs,
   },
-  serverUrl,
-  cwd,
-  exec,
-}) {
+  { serverUrl, cwd, exec },
+) {
   const spawnParams = getSpawnParams({
     runnerConfig,
     taskId,

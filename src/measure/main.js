@@ -79,7 +79,7 @@ const spawnAndMeasure = async function ({
   exec,
   server,
 }) {
-  const childProcess = spawnRunnerProcess({ combination, serverUrl, cwd, exec })
+  const childProcess = spawnRunnerProcess(combination, { serverUrl, cwd, exec })
 
   try {
     return await stopOrMeasure({
