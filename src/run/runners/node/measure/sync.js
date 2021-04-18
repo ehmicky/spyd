@@ -1,13 +1,13 @@
 import now from 'precise-now'
 
-import { getTaskArgs } from './arg.js'
+import { addContext } from './context.js'
 
 // Perform measuring loops iteratively
 export const performLoopsSync = function ({
   main,
   beforeEach,
   afterEach,
-  taskArg,
+  inputs,
   maxLoops,
   repeat,
 }) {
@@ -20,7 +20,7 @@ export const performLoopsSync = function ({
       main,
       beforeEach,
       afterEach,
-      taskArg,
+      inputs,
       repeat,
     })
   }
@@ -32,36 +32,36 @@ const performLoopSync = function ({
   main,
   beforeEach,
   afterEach,
-  taskArg,
+  inputs,
   repeat,
 }) {
-  const taskArgs = getTaskArgs(taskArg, repeat)
+  const allInputs = addContext(inputs, repeat)
 
-  performHookSync(beforeEach, taskArgs)
-  const duration = getDurationSync(main, taskArgs)
-  performHookSync(afterEach, taskArgs)
+  performHookSync(beforeEach, allInputs)
+  const duration = getDurationSync(main, allInputs)
+  performHookSync(afterEach, allInputs)
   return duration
 }
 
 // Task `beforeEach()`/`afterEach()`. Performed outside measurements.
 // `beforeEach`, `main` and `afterEach` should communicate using context objects
-const performHookSync = function (hook, taskArgs) {
+const performHookSync = function (hook, allInputs) {
   if (hook === undefined) {
     return
   }
 
   // eslint-disable-next-line fp/no-loops
-  for (const taskArg of taskArgs) {
-    hook(taskArg)
+  for (const inputs of allInputs) {
+    hook(inputs)
   }
 }
 
-const getDurationSync = function (main, taskArgs) {
+const getDurationSync = function (main, allInputs) {
   const start = now()
 
   // eslint-disable-next-line fp/no-loops
-  for (const taskArg of taskArgs) {
-    main(taskArg)
+  for (const inputs of allInputs) {
+    main(inputs)
   }
 
   return now() - start

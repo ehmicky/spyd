@@ -17,15 +17,15 @@
 //    other on the same iteration. This is because repeat loops perform several
 //    beforeEach/main/afterEach in batches, not in order, so they cannot modify
 //    some shared global state.
-export const getTaskArgs = function (taskArg, repeat) {
-  const taskArgs = new Array(repeat)
+export const addContext = function (inputs, repeat) {
+  const allInputs = new Array(repeat)
 
   // Using `new Array()` and a `for` loop is the most performant
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = 0; index < repeat; index += 1) {
     // eslint-disable-next-line fp/no-mutation
-    taskArgs[index] = { ...taskArg, context: {} }
+    allInputs[index] = { ...inputs, context: {} }
   }
 
-  return taskArgs
+  return allInputs
 }

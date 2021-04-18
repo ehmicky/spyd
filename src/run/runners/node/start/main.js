@@ -17,7 +17,7 @@ export const start = async function (
   const tasksB = addDefaults(tasksA)
   const task = taskId === undefined ? {} : tasksB[taskId]
   // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(state, { task, taskArg: inputs })
+  Object.assign(state, { task, inputs })
 
   const tasksC = Object.keys(tasksB)
   return { tasks: tasksC }

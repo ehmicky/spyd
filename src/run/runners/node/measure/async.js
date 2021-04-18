@@ -1,12 +1,12 @@
 import now from 'precise-now'
 
-import { getTaskArgs } from './arg.js'
+import { addContext } from './context.js'
 
 export const performLoopsAsync = async function ({
   main,
   beforeEach,
   afterEach,
-  taskArg,
+  inputs,
   repeat,
   maxLoops,
 }) {
@@ -20,7 +20,7 @@ export const performLoopsAsync = async function ({
       main,
       beforeEach,
       afterEach,
-      taskArg,
+      inputs,
       repeat,
     })
   }
@@ -32,38 +32,38 @@ const performLoopAsync = async function ({
   main,
   beforeEach,
   afterEach,
-  taskArg,
+  inputs,
   repeat,
 }) {
-  const taskArgs = getTaskArgs(taskArg, repeat)
+  const allInputs = addContext(inputs, repeat)
 
-  await performHookAsync(beforeEach, taskArgs)
-  const duration = await getDurationAsync(main, taskArgs)
-  await performHookAsync(afterEach, taskArgs)
+  await performHookAsync(beforeEach, allInputs)
+  const duration = await getDurationAsync(main, allInputs)
+  await performHookAsync(afterEach, allInputs)
   return duration
 }
 
 // Each `beforeEach`/`afterEach` is executed serially to prevent hitting OS
 // resources limits (such as max number of open files)
-const performHookAsync = async function (hook, taskArgs) {
+const performHookAsync = async function (hook, allInputs) {
   if (hook === undefined) {
     return
   }
 
   // eslint-disable-next-line fp/no-loops
-  for (const taskArg of taskArgs) {
+  for (const inputs of allInputs) {
     // eslint-disable-next-line no-await-in-loop
-    await hook(taskArg)
+    await hook(inputs)
   }
 }
 
-const getDurationAsync = async function (main, taskArgs) {
+const getDurationAsync = async function (main, allInputs) {
   const start = now()
 
   // eslint-disable-next-line fp/no-loops
-  for (const taskArg of taskArgs) {
+  for (const inputs of allInputs) {
     // eslint-disable-next-line no-await-in-loop
-    await main(taskArg)
+    await main(inputs)
   }
 
   return now() - start
