@@ -1,8 +1,6 @@
-import { createWriteStream } from 'fs'
 // eslint-disable-next-line node/no-missing-import, import/no-unresolved
 import { open, unlink, mkdir } from 'fs/promises'
 import { dirname } from 'path'
-import { promisify } from 'util'
 
 import { tmpName } from 'tmp-promise'
 
@@ -55,20 +53,6 @@ const LOGS_FILE_FLAGS = 'ax'
 // Delete logs file after each combination
 export const stopLogs = async function (logsPath, logsFd) {
   await Promise.all([logsFd.close(), unlink(logsPath)])
-}
-
-// Start file stream for the runner process to write to
-export const startLogsStream = function (logsFd) {
-  return createWriteStream(undefined, { fd: logsFd })
-}
-
-// Ensure the stream buffer is flushed, i.e. we do not miss the last characters
-export const stopLogsStream = async function (logsStream) {
-  if (!logsStream.writable) {
-    return
-  }
-
-  await promisify(logsStream.end.bind(logsStream))()
 }
 
 // The `exec` command does not need logs because it directly streams

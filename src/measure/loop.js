@@ -1,4 +1,4 @@
-import { truncateLogs } from '../logs/read.js'
+import { truncateLogs } from '../logs/stream.js'
 import { measureSample } from '../sample/main.js'
 import { getInitialSampleState } from '../sample/state.js'
 import { getInitialStats, addStats } from '../stats/add.js'
