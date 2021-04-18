@@ -24,6 +24,8 @@ import { spawnProcess } from './spawn.js'
 // We use:
 //  - `reject: false` to handle process exit with our own logic, which
 //    performs proper cleanup of all combinations.
+//  - `detached: true` so that signals (like `SIGINT`) are not propagated to
+//    the runner process
 //  - `cleanup: true` to ensure processes are cleaned up in case this
 //    library is called programmatically and the caller terminates the parent
 //    process.
@@ -37,8 +39,8 @@ export const spawnRunnerProcess = async function (
       ...runnerSpawnOptions,
       stdio: getStdio(logsStream),
       reject: false,
-      cleanup: true,
       detached: true,
+      cleanup: true,
     },
     cwd,
   )
