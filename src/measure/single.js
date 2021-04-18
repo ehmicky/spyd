@@ -4,8 +4,8 @@ import {
   stopLogsStream,
   stopLogs,
   hasLogs,
-} from '../process/logs_create.js'
-import { addTaskLogs } from '../process/logs_read.js'
+} from '../logs/create.js'
+import { addTaskLogs } from '../logs/read.js'
 import { startServer, endServer } from '../server/main.js'
 
 import { spawnAndMeasure } from './spawn.js'
