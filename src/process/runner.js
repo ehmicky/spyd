@@ -61,9 +61,11 @@ const waitForIpcSetup = async function (childProcess, server) {
 }
 
 const throwOnSpawnError = async function (childProcess) {
-  const { message } = await childProcess
+  const { message = DEFAULT_SPAWN_ERROR } = await childProcess
   throw new PluginError(message)
 }
+
+const DEFAULT_SPAWN_ERROR = 'The runner exited while starting'
 
 // Terminate each combination's process after being measured.
 // The combination can be in three possible states:
