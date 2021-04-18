@@ -63,8 +63,8 @@ const normalizeLogs = function (lastLogs, truncated) {
     return
   }
 
-  const { lastLogs: lastLogsB, newline } = stripPartialLine(lastLogsA)
-  const lastLogsC = truncated ? `...${newline}${lastLogsB}` : lastLogsB
+  const lastLogsB = stripPartialLine(lastLogsA)
+  const lastLogsC = truncated ? `...\n${lastLogsB}` : lastLogsB
   return lastLogsC
 }
 
@@ -72,11 +72,5 @@ const normalizeLogs = function (lastLogs, truncated) {
 // If there is only one line, do not do it.
 const stripPartialLine = function (lastLogs) {
   const newlineIndex = lastLogs.indexOf('\n')
-
-  if (newlineIndex === -1) {
-    return { lastLogs, newline: '' }
-  }
-
-  const lastLogsA = lastLogs.slice(newlineIndex + 1)
-  return { lastLogs: lastLogsA, newline: '\n' }
+  return newlineIndex === -1 ? lastLogs : lastLogs.slice(newlineIndex + 1)
 }
