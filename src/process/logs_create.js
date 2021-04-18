@@ -64,6 +64,10 @@ export const startLogsStream = function (logsFd) {
 
 // Ensure the stream buffer is flushed, i.e. we do not miss the last characters
 export const stopLogsStream = async function (logsStream) {
+  if (!logsStream.writable) {
+    return
+  }
+
   await promisify(logsStream.end.bind(logsStream))()
 }
 
