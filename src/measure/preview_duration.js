@@ -13,7 +13,11 @@ import { getLengthForMoe } from '../stats/moe.js'
 // Done when combination starts
 export const startCombinationPreview = function (previewState, index) {
   // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(previewState, { combinationStart: now(), index })
+  Object.assign(previewState, {
+    combinationStart: now(),
+    combinationEnd: undefined,
+    index,
+  })
 }
 
 // Done when combination's sample starts
