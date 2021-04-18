@@ -40,8 +40,9 @@ const getLogsPath = async function () {
 }
 
 const LOGS_DIR = 'spyd/logs/'
-// TODO: check all possible flag, especially O_DIRECT, O_SYNC, O_DSYNC
-//       If none are used, use 'a+' instead of individual flags.
+// The file is append-only. Not setting that flag would make truncate() fail
+// since new writes would restore the original size due to the cursor position
+// not being reset to 0 by `truncate()`
 const LOGS_FILE_FLAGS =
   // eslint-disable-next-line no-bitwise
   constants.O_APPEND | constants.O_CREAT | constants.O_WRONLY | constants.O_EXCL
