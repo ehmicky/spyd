@@ -11,7 +11,7 @@ import { runMainEvents } from './events.js'
 // completed.
 export const runStartEnd = async function ({
   combination,
-  precision,
+  precisionTarget,
   previewConfig,
   previewState,
   stopState,
@@ -20,7 +20,7 @@ export const runStartEnd = async function ({
 }) {
   const taskIds = await startCombination(combination, server)
   const stats = await eRunMainEvents({
-    precision,
+    precisionTarget,
     previewConfig,
     previewState,
     stopState,
@@ -46,7 +46,7 @@ const startCombination = async function (
 }
 
 const eRunMainEvents = async function ({
-  precision,
+  precisionTarget,
   previewConfig,
   previewState,
   stopState,
@@ -55,7 +55,7 @@ const eRunMainEvents = async function ({
 }) {
   try {
     return await runMainEvents({
-      precision,
+      precisionTarget,
       previewConfig,
       previewState,
       stopState,

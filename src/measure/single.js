@@ -11,7 +11,7 @@ import { stopOrMeasure } from './handle.js'
 // Start server to communicate with combinations, then measure them.
 export const measureCombination = async function (
   combination,
-  { precision, cwd, previewConfig, previewState, stage },
+  { precisionTarget, cwd, previewConfig, previewState, stage },
 ) {
   const { server, serverUrl } = await startServer()
 
@@ -19,7 +19,7 @@ export const measureCombination = async function (
     return await spawnAndMeasure({
       combination,
       serverUrl,
-      precision,
+      precisionTarget,
       cwd,
       previewConfig,
       previewState,
@@ -35,7 +35,7 @@ export const measureCombination = async function (
 const spawnAndMeasure = async function ({
   combination,
   serverUrl,
-  precision,
+  precisionTarget,
   cwd,
   previewConfig,
   previewState,
@@ -52,7 +52,7 @@ const spawnAndMeasure = async function ({
   try {
     return await stopOrMeasure({
       combination,
-      precision,
+      precisionTarget,
       previewConfig,
       previewState,
       stage,

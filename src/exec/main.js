@@ -15,7 +15,7 @@ export const execCombination = async function (combination, { cwd }) {
   printCombinationName(combination)
 
   await measureCombination(combination, {
-    precision: 0,
+    precisionTarget: 0,
     cwd,
     previewConfig: { quiet: true },
     previewState: {},

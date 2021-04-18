@@ -24,7 +24,7 @@ export const findTasks = async function ({
   const { taskIds } = await measureCombination(
     { taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] },
     {
-      precision: 0,
+      precisionTarget: 0,
       cwd,
       previewConfig: { quiet: true },
       previewState: {},

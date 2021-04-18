@@ -23,7 +23,7 @@ import { isRemainingCombination } from './remaining.js'
 // In that case, the task complexity should be increased, for example by using
 // bigger `inputs`.
 export const performMeasureLoop = async function ({
-  precision,
+  precisionTarget,
   previewConfig,
   previewState,
   stopState,
@@ -33,10 +33,11 @@ export const performMeasureLoop = async function ({
 }) {
   const initialState = getInitialState()
   const { stats } = await pWhile(
-    (state) => isRemainingCombination(state, { precision, stage, stopState }),
+    (state) =>
+      isRemainingCombination(state, { precisionTarget, stage, stopState }),
     (state) =>
       performSample(state, {
-        precision,
+        precisionTarget,
         previewConfig,
         previewState,
         stopState,
@@ -61,7 +62,7 @@ const getInitialState = function () {
 const performSample = async function (
   { sampleState, stats, durationState },
   {
-    precision,
+    precisionTarget,
     previewConfig,
     previewState,
     stopState,
@@ -77,7 +78,7 @@ const performSample = async function (
     previewConfig,
     previewState,
     durationState,
-    precision,
+    precisionTarget,
   })
 
   const sampleStateA = await measureSample(

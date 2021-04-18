@@ -3,8 +3,6 @@ import now from 'precise-now'
 import { getLoopsFromLength } from '../stats/extreme.js'
 import { getLengthForMoe } from '../stats/moe.js'
 
-import { RMOE_TARGETS } from './remaining.js'
-
 // Update the combination start and expected end.
 // This is combined with the current timestamp to compute the expected duration
 // left and percentage in previews.
@@ -21,13 +19,13 @@ export const updateCombinationPreview = function ({
   previewConfig: { quiet },
   previewState,
   durationState,
-  precision,
+  precisionTarget,
 }) {
   if (quiet || samples === 0 || moe === undefined) {
     return
   }
 
-  const durationLeft = getDurationLeft(stats, durationState, precision)
+  const durationLeft = getDurationLeft(stats, durationState, precisionTarget)
   updateCombinationEnd(previewState, durationLeft)
 }
 
@@ -36,9 +34,9 @@ export const updateCombinationPreview = function ({
 const getDurationLeft = function (
   { median, stdev, loops, samples },
   { sampleDurationMean },
-  precision,
+  precisionTarget,
 ) {
-  const moeTarget = RMOE_TARGETS[precision] * median
+  const moeTarget = precisionTarget * median
   const lengthTarget = getLengthForMoe(moeTarget, stdev)
   const loopsTarget = getLoopsFromLength(lengthTarget)
   const samplesTarget = getSamplesTarget(loopsTarget, loops, samples)

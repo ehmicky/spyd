@@ -70,18 +70,3 @@ const isJson = function (value) {
     return false
   }
 }
-
-export const checkPrecision = function (value, name) {
-  if (!Number.isInteger(value)) {
-    throw new UserError(`'${name}' must be a positive integer: ${value}`)
-  }
-
-  if (value < MIN_PRECISION || value > MAX_PRECISION) {
-    throw new UserError(
-      `'${name}' must be between ${MIN_PRECISION} and ${MAX_PRECISION}, not ${value}`,
-    )
-  }
-}
-
-const MIN_PRECISION = 0
-const MAX_PRECISION = 4

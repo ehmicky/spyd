@@ -1,11 +1,11 @@
 import { normalizeDelta } from '../delta/main.js'
+import { normalizePrecision } from '../measure/precision.js'
 
 import {
   normalizeArray,
   normalizeOptionalArray,
   checkDefinedString,
   checkJson,
-  checkPrecision,
 } from './check.js'
 
 // Normalize configuration shape and do custom validation
@@ -22,10 +22,6 @@ const normalizeProp = function (config, [propName, normalizer]) {
   }
 
   return { ...configA, ...props }
-}
-
-const normalizePrecision = function (precision, propName) {
-  checkPrecision(precision, propName)
 }
 
 // In order to pass dynamic information, the user should either:
