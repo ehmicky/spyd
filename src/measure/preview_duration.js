@@ -6,6 +6,10 @@ import { getLengthForMoe } from '../stats/moe.js'
 // Update the combination start and expected end.
 // This is combined with the current timestamp to compute the expected duration
 // left and percentage in previews.
+// Reporting the expected duration left is important because this helps:
+//   - Chosing between different `precision`
+//   - With user impatience or with planning other things while measuring is
+//     ongoing
 // Done when combination starts
 export const startCombinationPreview = function (previewState, index) {
   // eslint-disable-next-line fp/no-mutating-assign
