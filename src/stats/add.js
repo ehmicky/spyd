@@ -43,7 +43,7 @@ const getCountStats = function (
   const samplesA = samples + 1
   const loopsA = loops + sampleLoops
   const timesA = times + sampleLoops * repeatLast
-  const meanRepeat = Math.round(times / loops)
+  const meanRepeat = Math.round(timesA / loopsA)
   return {
     samples: samplesA,
     loops: loopsA,
