@@ -2,6 +2,8 @@ import { getScreenWidth } from '../report/tty.js'
 import { goodColor, separatorColor } from '../report/utils/colors.js'
 
 // Retrieve preview content.
+// The `counter` is between `durationLeft` and `progressBar` so that there is
+// no empty space when `durationLeft` is unknown.
 export const getContent = function ({
   durationLeft,
   index,
