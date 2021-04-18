@@ -36,9 +36,10 @@ const checkUpdate = async function () {
 // Print CLI errors and exit, depending on the error type
 const handleCliError = function (error) {
   const errorA = normalizeError(error)
-  const { exitCode, printStack } = getErrorProps(errorA)
+  const { exitCode, printStack, indented } = getErrorProps(errorA)
   const errorMessage = printStack ? errorA.stack : errorA.message
-  console.error(errorMessage)
+  const errorMessageA = indented ? ` ${errorMessage}` : errorMessage
+  console.error(errorMessageA)
   process.exitCode = exitCode
 }
 

@@ -38,10 +38,10 @@ export class CoreError extends Error {
 
 // Error type-specific behavior
 const ERROR_PROPS = {
-  StopError: { exitCode: 0, printStack: false },
-  UserError: { exitCode: 1, printStack: false },
-  PluginError: { exitCode: 2, printStack: true },
-  CoreError: { exitCode: 3, printStack: true },
+  StopError: { exitCode: 0, printStack: false, indented: true },
+  UserError: { exitCode: 1, printStack: false, indented: false },
+  PluginError: { exitCode: 2, printStack: true, indented: false },
+  CoreError: { exitCode: 3, printStack: true, indented: false },
 }
 
 const CORE_ERROR_NAME = 'CoreError'
