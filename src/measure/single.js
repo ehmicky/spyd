@@ -1,3 +1,4 @@
+import { startLogs, stopLogs } from '../process/logs.js'
 import {
   spawnRunnerProcess,
   terminateRunnerProcess,
@@ -16,7 +17,7 @@ export const measureCombination = async function (
   const { server, serverUrl } = await startServer()
 
   try {
-    return await spawnAndMeasure({
+    return await spawnAndLog({
       combination,
       serverUrl,
       precisionTarget,
@@ -31,6 +32,35 @@ export const measureCombination = async function (
   }
 }
 
+const spawnAndLog = async function ({
+  combination,
+  serverUrl,
+  precisionTarget,
+  cwd,
+  previewConfig,
+  previewState,
+  stage,
+  server,
+}) {
+  const { logsPath, logsFd, logsStream } = await startLogs(stage)
+
+  try {
+    return await spawnAndMeasure({
+      combination,
+      serverUrl,
+      precisionTarget,
+      cwd,
+      previewConfig,
+      previewState,
+      stage,
+      server,
+      logsStream,
+    })
+  } finally {
+    await stopLogs(logsPath, logsFd)
+  }
+}
+
 // Spawn combination processes, then measure them
 const spawnAndMeasure = async function ({
   combination,
@@ -41,12 +71,13 @@ const spawnAndMeasure = async function ({
   previewState,
   stage,
   server,
+  logsStream,
 }) {
   const { childProcess } = await spawnRunnerProcess(combination, {
     serverUrl,
     cwd,
-    stage,
     server,
+    logsStream,
   })
 
   try {

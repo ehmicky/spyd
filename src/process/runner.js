@@ -29,13 +29,13 @@ import { spawnProcess } from './spawn.js'
 // process.
 export const spawnRunnerProcess = async function (
   { runnerSpawn: [file, ...args], runnerSpawnOptions },
-  { serverUrl, cwd, stage, server },
+  { serverUrl, cwd, server, logsStream },
 ) {
   const childProcess = spawnProcess(
     [file, ...args, serverUrl],
     {
       ...runnerSpawnOptions,
-      stdio: getStdio(stage),
+      stdio: getStdio(logsStream),
       reject: false,
       cleanup: true,
       detached: true,
@@ -44,6 +44,12 @@ export const spawnRunnerProcess = async function (
   )
   await waitForIpcSetup(childProcess, server)
   return { childProcess }
+}
+
+const getStdio = function (logsStream) {
+  return logsStream === undefined
+    ? ['ignore', 'inherit', 'inherit']
+    : ['ignore', logsStream, logsStream]
 }
 
 // Wait for IPC to be initialized. Throw if process exits before that.
@@ -57,17 +63,6 @@ const waitForIpcSetup = async function (childProcess, server) {
 const throwOnSpawnError = async function (childProcess) {
   const { message } = await childProcess
   throw new PluginError(message)
-}
-
-// The `exec` command prints stdout/stderr. stdin is always ignored.
-// Anything printed during process spawning (e.g. top-level scope in Node.js)
-// might be repeated for each combination. This is good since:
-//  - It makes it clear that each combination has its own process
-//  - Some stdout/stderr might differ from process to process
-const getStdio = function (stage) {
-  return stage === 'exec'
-    ? ['ignore', 'inherit', 'inherit']
-    : ['ignore', 'ignore', 'ignore']
 }
 
 // Terminate each combination's process after being measured.
