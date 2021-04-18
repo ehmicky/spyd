@@ -21,12 +21,12 @@ import { spawnProcess } from './spawn.js'
 //    which wastes duration and does not allow runners with long initialization.
 //  - Precision is lower due to task cold starts having a higher share of the
 //    total measures.
-// We use `preferLocal: true` so that locally installed binaries can be used.
-// We use `reject: false` to handle process exit with our own logic, which
-// performs proper cleanup of all combinations.
-// We use `cleanup: true` to ensure processes are cleaned up in case this
-// library is called programmatically and the caller terminates the parent
-// process.
+// We use:
+//  - `reject: false` to handle process exit with our own logic, which
+//    performs proper cleanup of all combinations.
+//  - `cleanup: true` to ensure processes are cleaned up in case this
+//    library is called programmatically and the caller terminates the parent
+//    process.
 export const spawnRunnerProcess = async function (
   { runnerSpawn: [file, ...args], runnerSpawnOptions },
   { serverUrl, cwd, server, logsStream },
