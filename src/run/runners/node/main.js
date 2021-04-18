@@ -1,8 +1,4 @@
-#!/usr/bin/env node
-import { performRunner } from '../common/ipc.js'
+export { launch } from './launch.js'
 
-import { before, after } from './hooks.js'
-import { measure } from './measure/main.js'
-import { start, end } from './start/main.js'
-
-performRunner({ start, before, measure, after, end })
+export const id = 'node'
+export const extensions = ['cjs', 'js', 'es6']

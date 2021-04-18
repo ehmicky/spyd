@@ -12,8 +12,8 @@ export const after = async function ({ task: { afterAll }, env, shell }) {
 
 // Measure how long a task takes.
 export const measure = async function (
-  { repeat, maxLoops },
   { task: { main, beforeEach, afterEach }, env, shell },
+  { repeat, maxLoops },
 ) {
   const measures = new Array(maxLoops)
 

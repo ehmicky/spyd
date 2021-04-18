@@ -3,7 +3,7 @@ import { argv } from 'process'
 import got from 'got'
 
 // Handles IPC communication with the parent process
-export const performRunner = async function (handlers) {
+export const handleEvents = async function (handlers) {
   const state = {}
   // eslint-disable-next-line fp/no-let
   let returnValue = {}

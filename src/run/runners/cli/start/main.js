@@ -5,19 +5,19 @@ import { getEnv } from './env.js'
 import { validate } from './validate.js'
 
 // Import the tasks file
-export const start = async function ({
-  runnerConfig: { shell = 'none' },
-  taskPath,
-  taskId,
-  inputs,
-}) {
+export const start = async function (
+  state,
+  { runnerConfig: { shell = 'none' }, taskPath, taskId, inputs },
+) {
   const tasks = await importFile(taskPath)
   const tasksA = validate(tasks)
   const task = taskId === undefined ? {} : tasksA[taskId]
+  const env = getEnv(inputs)
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(state, { task, env, shell })
 
   const tasksB = Object.keys(tasksA)
-  const env = getEnv(inputs)
-  return { tasks: tasksB, task, env, shell }
+  return { tasks: tasksB }
 }
 
 const importFile = async function (taskPath) {
@@ -29,3 +29,7 @@ const importFile = async function (taskPath) {
     )
   }
 }
+
+// Revert any state created by `start`
+// eslint-disable-next-line no-empty-function
+export const end = function () {}

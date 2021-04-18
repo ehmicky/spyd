@@ -4,7 +4,7 @@ import { validate, multipleValidOptions } from 'jest-validate'
 
 import { getNodeVersion } from './version.js'
 
-const MAIN_PATH = `${__dirname}/main.js`
+const MAIN_PATH = `${__dirname}/events.js`
 
 // Retrieve Node commands. By default it uses the current Node.js.
 // But `runnerNode.version` can be used to spawn a different Node.js version.

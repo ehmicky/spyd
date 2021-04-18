@@ -6,7 +6,7 @@ export const launch = function (runnerConfig) {
   return { spawn: ['node', MAIN_PATH], versions }
 }
 
-const MAIN_PATH = `${__dirname}/main.js`
+const MAIN_PATH = `${__dirname}/events.js`
 
 const getVersions = function ({ shell = 'none' }) {
   return SHELL_VERSIONS[shell]

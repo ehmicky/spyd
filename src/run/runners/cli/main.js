@@ -1,7 +1,4 @@
-#!/usr/bin/env node
-import { performRunner } from '../common/ipc.js'
+export { launch } from './launch.js'
 
-import { before, measure, after } from './measure.js'
-import { start } from './start/main.js'
-
-performRunner({ start, before, measure, after })
+export const id = 'cli'
+export const extensions = ['yml']
