@@ -5,12 +5,18 @@ import { handleRepeat } from './repeat.js'
 
 // Returns initial `sampleState`
 export const getInitialSampleState = function () {
-  return { measures: [], allSamples: 0, repeat: 1, calibrated: false }
+  return {
+    measures: [],
+    allSamples: 0,
+    previewSamples: 0,
+    repeat: 1,
+    calibrated: false,
+  }
 }
 
 // Update sampleState because on the return value from the last sample
 export const getSampleState = function (
-  { measures, allSamples, repeat, calibrated },
+  { measures, allSamples, previewSamples, repeat, calibrated },
   { measures: sampleMeasures },
   { minLoopDuration, measureDuration },
 ) {
@@ -30,6 +36,7 @@ export const getSampleState = function (
   return {
     measures: measuresA,
     allSamples: allSamples + 1,
+    previewSamples,
     sampleLoops,
     repeat: newRepeat,
     repeatLast: repeat,

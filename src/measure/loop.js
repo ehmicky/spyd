@@ -73,24 +73,25 @@ const performSample = async function (
 ) {
   const sampleStart = startSample(stopState, durationState)
 
-  updateCombinationPreview({
+  const sampleStateA = updateCombinationPreview({
     stats,
     previewConfig,
     previewState,
+    sampleState,
     durationState,
     precisionTarget,
   })
 
-  const sampleStateA = await measureSample(
+  const sampleStateB = await measureSample(
     { server, minLoopDuration, targetSampleDuration },
-    sampleState,
+    sampleStateA,
   )
-  const statsA = addStats(stats, sampleStateA, minLoopDuration)
+  const statsA = addStats(stats, sampleStateB, minLoopDuration)
 
   await Promise.all([
     updatePreviewReport({
       stats: statsA,
-      sampleState: sampleStateA,
+      sampleState: sampleStateB,
       previewConfig,
       previewState,
     }),
@@ -99,13 +100,13 @@ const performSample = async function (
 
   const durationStateA = endSample({
     durationState,
-    sampleState: sampleStateA,
+    sampleState: sampleStateB,
     sampleStart,
     stopState,
   })
   return {
     stats: statsA,
-    sampleState: sampleStateA,
+    sampleState: sampleStateB,
     durationState: durationStateA,
   }
 }
