@@ -2,6 +2,8 @@ import { Buffer } from 'buffer'
 // eslint-disable-next-line node/no-missing-import, import/no-unresolved
 import { open } from 'fs/promises'
 
+import stripFinalNewline from 'strip-final-newline'
+
 // To minimize the size on disk:
 //  - We use a temporary file
 //  - We truncate that file periodically
@@ -55,7 +57,7 @@ const readLogs = async function (logsPath) {
 const ERROR_LOGS_LENGTH = 1e4
 
 const normalizeLogs = function (lastLogs, truncated) {
-  const lastLogsA = lastLogs.trim()
+  const lastLogsA = stripFinalNewline(lastLogs.trim())
 
   if (lastLogsA === '') {
     return
