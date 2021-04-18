@@ -10,7 +10,7 @@ const pClearScreenDown = promisify(clearScreenDown)
 // Print to interactive stdout
 export const printToTty = async function (string) {
   // Happens for example when piping to `less` then aborting
-  if (stdout.destroyed) {
+  if (!stdout.writable) {
     return
   }
 
