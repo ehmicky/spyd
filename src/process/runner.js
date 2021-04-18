@@ -1,3 +1,6 @@
+import { PluginError } from '../error/main.js'
+
+import { receiveReturnValue } from './ipc.js'
 import { spawnProcess } from './spawn.js'
 
 // Each combination is spawned in its own process:
@@ -25,11 +28,11 @@ import { spawnProcess } from './spawn.js'
 // We use `cleanup: true` to ensure processes are cleaned up in case this
 // library is called programmatically and the caller terminates the parent
 // process.
-export const spawnRunnerProcess = function (
+export const spawnRunnerProcess = async function (
   { runnerSpawn: [file, ...args], runnerSpawnOptions },
-  { serverUrl, cwd, stage },
+  { serverUrl, cwd, stage, server },
 ) {
-  return spawnProcess(
+  const childProcess = spawnProcess(
     [file, ...args, serverUrl],
     {
       ...runnerSpawnOptions,
@@ -40,6 +43,21 @@ export const spawnRunnerProcess = function (
     },
     cwd,
   )
+  await waitForIpcSetup(childProcess, server)
+  return { childProcess }
+}
+
+// Wait for IPC to be initialized. Throw if process exits before that.
+const waitForIpcSetup = async function (childProcess, server) {
+  await Promise.race([
+    throwOnSpawnError(childProcess),
+    receiveReturnValue(server),
+  ])
+}
+
+const throwOnSpawnError = async function (childProcess) {
+  const { message } = await childProcess
+  throw new PluginError(message)
 }
 
 // The `exec` command prints stdout/stderr. stdin is always ignored.

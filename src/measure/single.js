@@ -43,10 +43,11 @@ const spawnAndMeasure = async function ({
   stage,
   server,
 }) {
-  const childProcess = spawnRunnerProcess(combination, {
+  const { childProcess } = await spawnRunnerProcess(combination, {
     serverUrl,
     cwd,
     stage,
+    server,
   })
 
   try {

@@ -1,11 +1,6 @@
 import { toInputsObj } from '../combination/inputs.js'
 import { setDescription, setDelayedDescription } from '../preview/set.js'
-import { receiveReturnValue, sendAndReceive } from '../process/ipc.js'
-
-// Wait for each combination to setup its IPC
-export const waitForCombinationSpawn = async function (server) {
-  await receiveReturnValue(server)
-}
+import { sendAndReceive } from '../process/ipc.js'
 
 // Start combination, i.e. make it load the combination and run any
 // runner-defined start logic

@@ -1,7 +1,6 @@
 import { throwOnProcessExit } from '../process/error.js'
 
 import {
-  waitForCombinationSpawn,
   startCombination,
   beforeCombination,
   afterCombination,
@@ -60,7 +59,6 @@ const measureAllCombinations = async function ({
   stage,
   server,
 }) {
-  await waitForCombinationSpawn(server)
   const taskIds = await startCombination(combination, server)
 
   try {
