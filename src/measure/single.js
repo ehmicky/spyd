@@ -4,8 +4,7 @@ import {
 } from '../process/runner.js'
 import { startServer, endServer } from '../server/main.js'
 
-import { handleErrorsAndMeasure } from './handle.js'
-import { addStopHandler, throwIfStopped } from './stop.js'
+import { stopOrMeasure } from './handle.js'
 
 // Measure a single combination.
 // Also used when starting combinations to retrieve their tasks and steps.
@@ -62,39 +61,5 @@ const spawnAndMeasure = async function ({
     })
   } finally {
     terminateRunnerProcess(childProcess)
-  }
-}
-
-// Handle stopping the benchmark
-const stopOrMeasure = async function ({
-  combination,
-  duration,
-  previewConfig,
-  previewState,
-  stage,
-  server,
-  childProcess,
-}) {
-  const { stopState, onAbort, removeStopHandler } = addStopHandler(
-    previewState,
-    duration,
-  )
-
-  try {
-    const returnValue = await handleErrorsAndMeasure({
-      combination,
-      duration,
-      previewConfig,
-      previewState,
-      stopState,
-      stage,
-      server,
-      childProcess,
-      onAbort,
-    })
-    throwIfStopped(stopState)
-    return returnValue
-  } finally {
-    removeStopHandler()
   }
 }

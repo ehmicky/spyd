@@ -1,36 +1,77 @@
-import { toInputsObj } from '../combination/inputs.js'
 import { setDescription, setDelayedDescription } from '../preview/set.js'
 import { sendAndReceive } from '../process/ipc.js'
 
-// Start combination, i.e. make it load the combination and run any
-// runner-defined start logic
-export const startCombination = async function (
-  { runnerConfig, taskId, taskPath, inputs },
+import { performMeasureLoop } from './loop.js'
+import { getMinLoopDuration } from './min_loop_duration.js'
+
+// Run user-defined logic: `before`, `main`, `after`
+export const runMainEvents = async function ({
+  duration,
+  previewConfig,
+  previewState,
+  stopState,
+  stage,
   server,
-) {
-  const inputsA = toInputsObj(inputs)
-  const { tasks: taskIds } = await sendAndReceive(
-    { event: 'start', runnerConfig, taskId, taskPath, inputs: inputsA },
+}) {
+  if (stage === 'init') {
+    return
+  }
+
+  await beforeCombination(previewState, server)
+  const stats = await getCombinationStats({
+    duration,
+    previewConfig,
+    previewState,
+    stopState,
+    stage,
     server,
-  )
-  return taskIds
+  })
+  await afterCombination(previewState, server)
+  return stats
 }
 
 // Run the user-defined `before` hooks
-export const beforeCombination = async function (previewState, server) {
+const beforeCombination = async function (previewState, server) {
   await sendAndReceive({ event: 'before' }, server)
   setDescription(previewState)
 }
 
+const getCombinationStats = async function ({
+  duration,
+  previewConfig,
+  previewState,
+  stopState,
+  stage,
+  server,
+}) {
+  try {
+    const minLoopDuration = await getMinLoopDuration(server, stage)
+    return await performMeasureLoop({
+      duration,
+      previewConfig,
+      previewState,
+      stopState,
+      stage,
+      server,
+      minLoopDuration,
+    })
+  } catch (error) {
+    await silentAfterCombination(previewState, server)
+    throw error
+  }
+}
+
+const silentAfterCombination = async function (previewState, server) {
+  try {
+    await afterCombination(previewState, server)
+  } catch {}
+}
+
 // Run the user-defined `after` hooks
-export const afterCombination = async function (previewState, server) {
+// `after` is always called, for cleanup, providing `before` completed.
+const afterCombination = async function (previewState, server) {
   setDelayedDescription(previewState, END_DESCRIPTION)
   await sendAndReceive({ event: 'after' }, server)
 }
 
 const END_DESCRIPTION = 'Ending...'
-
-// Run the runner-defined end logic
-export const endCombination = async function (server) {
-  await sendAndReceive({ event: 'end' }, server)
-}
