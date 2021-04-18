@@ -15,16 +15,11 @@ import {
 // requires spawning processes again, making them go through cold starts again.
 // This would decrease precision and create difference between results depending
 // on how many times the benchmark was stopped/continued.
-export const addStopHandler = function (previewState, duration) {
+export const addStopHandler = function (previewState) {
   const stopState = { stopped: false }
   const noopHandler = removeDefaultHandlers()
   const { abortSignal, abort } = createController()
-  const onAbort = handleStop({
-    stopState,
-    previewState,
-    abortSignal,
-    duration,
-  })
+  const onAbort = handleStop(stopState, previewState, abortSignal)
   const removeStopHandlerA = removeStopHandler.bind(
     undefined,
     abort,
@@ -53,15 +48,10 @@ const restoreDefaultHandlers = function (signalHandler) {
   })
 }
 
-const handleStop = async function ({
-  stopState,
-  previewState,
-  abortSignal,
-  duration,
-}) {
+const handleStop = async function (stopState, previewState, abortSignal) {
   await waitForStopSignals(abortSignal)
 
-  setStopState(previewState, stopState, duration)
+  setStopState(previewState, stopState)
 
   await waitForDelay(ABORT_DELAY, abortSignal)
   setPriorityDescription(previewState, ABORT_DESCRIPTION)
@@ -71,9 +61,9 @@ const handleStop = async function ({
   throw new StopError('Benchmark has been aborted.')
 }
 
-const setStopState = function (previewState, stopState, duration) {
+const setStopState = function (previewState, stopState) {
   setPriorityDescription(previewState, STOP_DESCRIPTION)
-  setStopCombinationEnd(previewState, stopState, duration)
+  setStopCombinationEnd(previewState, stopState)
 
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
@@ -88,9 +78,8 @@ const setStopState = function (previewState, stopState, duration) {
 const setStopCombinationEnd = function (
   previewState,
   { sampleStart, sampleDurationMean },
-  duration,
 ) {
-  if (sampleDurationMean === undefined || duration === 1) {
+  if (sampleDurationMean === undefined) {
     return
   }
 

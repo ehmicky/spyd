@@ -37,7 +37,7 @@ export const previewStartAndMeasure = async function ({
 const previewRefreshAndMeasure = async function ({
   combinations,
   config,
-  config: { cwd, duration, quiet },
+  config: { cwd, duration, precision = duration, quiet },
   previewConfig,
   previewState,
 }) {
@@ -48,7 +48,7 @@ const previewRefreshAndMeasure = async function ({
     const previewConfigA = { ...previewConfig, results }
 
     const combinationsA = await measureCombinations(combinations, {
-      duration,
+      precision,
       cwd,
       previewConfig: previewConfigA,
       previewState,

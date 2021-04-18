@@ -17,7 +17,6 @@ import { measureCombination } from '../measure/single.js'
 export const findTasks = async function ({
   taskPath,
   cwd,
-  duration,
   runnerSpawn,
   runnerSpawnOptions,
   runnerConfig,
@@ -25,7 +24,7 @@ export const findTasks = async function ({
   const { taskIds } = await measureCombination(
     { taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] },
     {
-      duration,
+      precision: 0,
       cwd,
       previewConfig: { quiet: true },
       previewState: {},

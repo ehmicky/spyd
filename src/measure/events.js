@@ -9,7 +9,7 @@ import { getMinLoopDuration } from './min_loop_duration.js'
 
 // Run user-defined logic: `before`, `main`, `after`
 export const runMainEvents = async function ({
-  duration,
+  precision,
   previewConfig,
   previewState,
   stopState,
@@ -22,7 +22,7 @@ export const runMainEvents = async function ({
 
   await beforeCombination(previewState, server)
   const stats = await getCombinationStats({
-    duration,
+    precision,
     previewConfig,
     previewState,
     stopState,
@@ -40,7 +40,7 @@ const beforeCombination = async function (previewState, server) {
 }
 
 const getCombinationStats = async function ({
-  duration,
+  precision,
   previewConfig,
   previewState,
   stopState,
@@ -50,7 +50,7 @@ const getCombinationStats = async function ({
   try {
     const minLoopDuration = await getMinLoopDuration(server, stage)
     return await performMeasureLoop({
-      duration,
+      precision,
       previewConfig,
       previewState,
       stopState,

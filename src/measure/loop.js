@@ -20,15 +20,10 @@ import { isRemainingCombination } from './remaining.js'
 //  - They rely on underlying continuous process (e.g. sending and receiving
 //    many requests in parallel)
 //  - Their beforeEach|afterEach is very slow
-// In that case, the benchmark should rely on a maximum count/size instead of
-// a maximum duration, as opposed to duration-based samples
-//  - For this type of benchmark, the `duration` can be set to `1` to run only
-//    one sample.
-//  - The user must then ensures the task has some big enough input to process.
-//  - This can be either hardcoded or using the `inputs` configuration property.
+// In that case, the task complexity should be increased, for example by using
+// bigger `inputs`.
 export const performMeasureLoop = async function ({
-  duration,
-  precision = duration,
+  precision,
   previewConfig,
   previewState,
   stopState,

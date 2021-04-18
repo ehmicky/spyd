@@ -6,22 +6,19 @@ import { addStopHandler, throwIfStopped } from './stop.js'
 // Handle stopping the benchmark
 export const stopOrMeasure = async function ({
   combination,
-  duration,
+  precision,
   previewConfig,
   previewState,
   stage,
   server,
   childProcess,
 }) {
-  const { stopState, onAbort, removeStopHandler } = addStopHandler(
-    previewState,
-    duration,
-  )
+  const { stopState, onAbort, removeStopHandler } = addStopHandler(previewState)
 
   try {
     const returnValue = await handleErrorsAndMeasure({
       combination,
-      duration,
+      precision,
       previewConfig,
       previewState,
       stopState,
@@ -40,7 +37,7 @@ export const stopOrMeasure = async function ({
 // Handle errors during measuring
 const handleErrorsAndMeasure = async function ({
   combination,
-  duration,
+  precision,
   previewConfig,
   previewState,
   stopState,
@@ -55,7 +52,7 @@ const handleErrorsAndMeasure = async function ({
       onAbort,
       runStartEnd({
         combination,
-        duration,
+        precision,
         previewConfig,
         previewState,
         stopState,

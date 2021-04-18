@@ -27,16 +27,16 @@ import { getTaskPath } from './path.js'
 //     - too implicit/magic
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
-export const listTasks = async function ({ tasks, runners, cwd, duration }) {
+export const listTasks = async function ({ tasks, runners, cwd }) {
   const tasksA = await Promise.all(
-    runners.map((runner) => getRunnerTasks(runner, { tasks, cwd, duration })),
+    runners.map((runner) => getRunnerTasks(runner, { tasks, cwd })),
   )
   return [].concat(...tasksA)
 }
 
 const getRunnerTasks = async function (
   { runnerId, runnerSpawn, runnerSpawnOptions, runnerConfig, runnerExtensions },
-  { tasks, cwd, duration },
+  { tasks, cwd },
 ) {
   try {
     const taskPath = await getTaskPath({
@@ -48,7 +48,6 @@ const getRunnerTasks = async function (
     const taskIds = await findTasks({
       taskPath,
       cwd,
-      duration,
       runnerSpawn,
       runnerSpawnOptions,
       runnerConfig,
