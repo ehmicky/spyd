@@ -8,8 +8,30 @@ import { tmpName } from 'tmp-promise'
 
 import { readLogs } from './logs_read.js'
 
-// Use a temporary file to log all of the runner's stdout and stderr.
+// Redirect all of the runner's stdout/stderr to a file:
+//  - This is used to print the runner's output when an error is thrown, which
+//    is important for debugging.
+//  - This applies to all errors: core errors, plugin errors, task errors,
+//    except stop errors.
+//  - This works with errors:
+//     - In both the parent and child process
+//     - Due to the child process exiting, including suddently due to a signal.
 // This is unique for each combination.
+// We avoid out-of-memory crashes:
+//  - The child process' output is potentially huge due to the task being looped
+//  - Making the parent buffer that output in memory can crash the parent
+//  - Reading the output (even without buffering it) can crash the child because
+//    it can lead to the parent not being to keep up with the child.
+//     - For example, using `childProcess.stdout.pipe(createWriteStream())` can
+//       crash, as opposed to passing the stream directly to the `stdio` option
+//       of `spawn()`
+//     - This also applies to using the `data` event, or doing interval `read()`
+// To minimize the size on disk:
+//  - We use a temporary file
+//  - We truncate that file after each sample
+// Writing to stdout/stderr in a task has a performance impact which we want to
+// measure:
+//  - Ignoring those streams would lead to inaccurate I/O results
 export const startLogs = async function () {
   const logsPath = await getLogsPath()
   const logsFd = await open(logsPath, LOGS_FILE_FLAGS)
@@ -45,7 +67,7 @@ export const stopLogsStream = async function (logsStream) {
 }
 
 // When an exception is thrown, add the runner's last log lines to the error
-// message to help with debugging.
+// message.
 export const addTaskTaskLogs = async function (logsPath, error) {
   if (error.name === 'StopError') {
     return
