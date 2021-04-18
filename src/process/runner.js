@@ -10,14 +10,13 @@ import { spawnProcess } from './spawn.js'
 //  - This allows runners with different programming languages
 // We use a single long process per combination instead of spawning multiple
 // ones:
-//  - This would require setting a maximum duration or amount of measures. To
-//    estimate those for different types of tasks is hard and brittle:
+//  - This would require setting a duration or amount of measures per process.
+//    To estimate those for different types of tasks is hard and brittle:
 //      - Using hard-coded durations does not work since machines or tasks have
 //        very different speeds
 //      - Using the speed of the machine (by measuring the duration to spawn
 //        process, start tasks, etc.) makes results vary based on non-obvious
 //        factors. It is also hard to calibrate.
-//      - Using the `duration` configuration property does not work when it is 0
 //  - This would require starting both the runner and the task multiple times,
 //    which wastes duration and does not allow runners with long initialization.
 //  - Precision is lower due to task cold starts having a higher share of the

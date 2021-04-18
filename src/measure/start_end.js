@@ -3,7 +3,7 @@ import { sendAndReceive } from '../process/ipc.js'
 
 import { runMainEvents } from './events.js'
 
-// Measure all combinations, until there is no `duration` left.
+// Measure all combinations, until the results are precise enough.
 // When any combination errors, we end measuring.
 // We also do this when the user stopped the benchmark (e.g. with CTRL-C).
 // We still perform each combination ends, for cleanup.

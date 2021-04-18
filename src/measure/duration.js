@@ -8,8 +8,8 @@ export const getInitialDurationState = function () {
 // We keep track of:
 //  - The total duration spent on each combination, to know whether it should
 //    keep being measured.
-//  - The mean duration of a sample, to know whether measuring an additional
-//    sample would fit within the allowed `duration`
+//  - The mean duration of a sample, to estimate the duration left based on
+//    the current `rmoe` and `precision`
 export const startSample = function (stopState, { sampleDurationMean }) {
   const sampleStart = now()
   // eslint-disable-next-line fp/no-mutating-assign

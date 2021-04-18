@@ -5,7 +5,7 @@ import {
   normalizeOptionalArray,
   checkDefinedString,
   checkJson,
-  checkPositiveInteger,
+  checkPrecision,
 } from './check.js'
 
 // Normalize configuration shape and do custom validation
@@ -24,14 +24,8 @@ const normalizeProp = function (config, [propName, normalizer]) {
   return { ...configA, ...props }
 }
 
-const normalizeDuration = function (duration, propName) {
-  checkPositiveInteger(duration, propName)
-
-  if (duration === 1) {
-    return
-  }
-
-  return { [propName]: duration }
+const normalizePrecision = function (precision, propName) {
+  checkPrecision(precision, propName)
 }
 
 // In order to pass dynamic information, the user should either:
@@ -66,7 +60,7 @@ const checkInputs = function (inputs, propName) {
 }
 
 const NORMALIZERS = {
-  duration: normalizeDuration,
+  precision: normalizePrecision,
   system: normalizeSystem,
   delta: normalizeDeltaProp,
   since: normalizeDeltaProp,

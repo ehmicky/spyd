@@ -112,19 +112,20 @@ const FAST_MEDIAN_RATE = 10
 // The alternative solutions have bigger problems:
 //  - Excluding all first samples, even without a repeat loop:
 //     - This prevents running the combination only once, which is especially
-//       problematic with `duration: 1`
+//       problematic with `precision: 0`
 //     - The first sample includes some useful stats since many functions are
 //       only run once in real.
 //     - This makes the first preview take longer to show up even if the
 //       combination does not require any repeat loops.
 //  - Excluding first samples except when there was not enough duration to
 //    measure more:
+//     - This rely on using a `duration` configuration property
 //     - This creates a big difference of stats (especially median and max)
-//       depending on the `duration`
+//       depending on that duration
 //     - This can lead to comparing combinations with and without the cold start
 //       included in their stats
-//  - Excluding first samples except when `duration: 1`
-//     - Switching between `duration: 1` and others `duration` should show the
+//  - Excluding first samples except when `precision: 0`
+//     - Switching between `precision: 0` and others `precision` should show the
 //       same results when lasting the same amount of time.
 // Calibration is based on the difference between `repeat` and `newRepeat`.
 const getCalibrated = function ({

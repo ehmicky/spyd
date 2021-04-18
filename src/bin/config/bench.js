@@ -2,13 +2,14 @@ import { TASKS, REPORT, HISTORY } from './groups.js'
 
 // Configuration specific to `bench`
 export const BENCH_CONFIG = {
-  duration: {
+  precision: {
     group: TASKS,
-    alias: 'd',
+    alias: 'p',
     number: true,
     requiresArg: true,
-    describe: `How many seconds to execute each combination.
-The default is 1 which executes each combination once.`,
+    describe: `Precision level of the results, between 0 and 4.
+The default is 2.
+A higher level increases precision but makes the benchmark last longer.`,
   },
   quiet: {
     group: REPORT,

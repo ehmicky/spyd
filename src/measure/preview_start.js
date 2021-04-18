@@ -37,7 +37,7 @@ export const previewStartAndMeasure = async function ({
 const previewRefreshAndMeasure = async function ({
   combinations,
   config,
-  config: { cwd, duration, precision = duration, quiet },
+  config: { cwd, precision, quiet },
   previewConfig,
   previewState,
 }) {

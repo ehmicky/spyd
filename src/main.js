@@ -58,6 +58,6 @@ export const remove = async function (configFlags) {
 // Execute tasks without benchmarking them
 export const exec = async function (configFlags) {
   const config = await getConfig('exec', configFlags)
-  const { combinations } = await getCombinations({ ...config, duration: 1 })
+  const { combinations } = await getCombinations(config)
   await performExec(config, combinations)
 }
