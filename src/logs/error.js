@@ -2,7 +2,8 @@ import { Buffer } from 'buffer'
 // eslint-disable-next-line node/no-missing-import, import/no-unresolved
 import { open } from 'fs/promises'
 
-import stripFinalNewline from 'strip-final-newline'
+import { getAdditionalMessage } from './additional.js'
+import { normalizeLogs } from './normalize.js'
 
 // When an exception is thrown, add the runner's last log lines to the error
 // message.
@@ -43,49 +44,3 @@ const readLogs = async function (logsPath) {
 
 // Maximum number of bytes to read and print
 const ERROR_LOGS_LENGTH = 1e4
-
-const normalizeLogs = function (lastLogs, truncated) {
-  const lastLogsA = stripFinalNewline(lastLogs.trim())
-
-  if (lastLogsA === '') {
-    return lastLogsA
-  }
-
-  const lastLogsB = stripPartialLine(lastLogsA)
-  const lastLogsC = truncated ? `...\n${lastLogsB}` : lastLogsB
-  return lastLogsC
-}
-
-// Remove the first line if it is incomplete.
-// If there is only one line, do not do it.
-const stripPartialLine = function (lastLogs) {
-  const newlineIndex = lastLogs.indexOf('\n')
-  return newlineIndex === -1 ? lastLogs : lastLogs.slice(newlineIndex + 1)
-}
-
-// Adds an additional error message based on some common errors that can be
-// detected from the tasks logs.
-// Some might be language-specific. We detect those in core instead of inside
-// each runner because some runners:
-//  - Might share the same language, e.g. several runners might use
-//    JavaScript
-//  - Call another language, e.g. the `cli` runner might call `node`
-const getAdditionalMessage = function (taskLogs) {
-  const additionalMessage = ADDITIONAL_MESSAGES.find(({ includes }) =>
-    taskLogs.includes(includes),
-  )
-
-  if (additionalMessage === undefined) {
-    return ''
-  }
-
-  return `${additionalMessage.message}\n`
-}
-
-const ADDITIONAL_MESSAGES = [
-  {
-    includes: 'JavaScript heap out of memory',
-    message:
-      'The task ran out of memory. This is most likely due to a memory leak in the task.',
-  },
-]
