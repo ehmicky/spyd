@@ -3,9 +3,9 @@ import {
   startLogsStream,
   stopLogsStream,
   stopLogs,
-  addTaskTaskLogs,
   hasLogs,
 } from '../process/logs_create.js'
+import { addTaskLogs } from '../process/logs_read.js'
 import { startServer, endServer } from '../server/main.js'
 
 import { spawnAndMeasure } from './spawn.js'
@@ -61,7 +61,7 @@ const logAndMeasure = async function ({
       logsFd,
     })
   } catch (error) {
-    await addTaskTaskLogs(logsPath, error)
+    await addTaskLogs(logsPath, error)
     throw error
   } finally {
     await stopLogs(logsPath, logsFd)

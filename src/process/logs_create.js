@@ -6,8 +6,6 @@ import { promisify } from 'util'
 
 import { tmpName } from 'tmp-promise'
 
-import { readLogs } from './logs_read.js'
-
 // Redirect all of the runner's stdout/stderr to a file:
 //  - This is used to print the runner's output when an error is thrown, which
 //    is important for debugging.
@@ -64,26 +62,6 @@ export const startLogsStream = function (logsFd) {
 // Ensure the stream buffer is flushed, i.e. we do not miss the last characters
 export const stopLogsStream = async function (logsStream) {
   await promisify(logsStream.end.bind(logsStream))()
-}
-
-// When an exception is thrown, add the runner's last log lines to the error
-// message.
-export const addTaskTaskLogs = async function (logsPath, error) {
-  if (error.name === 'StopError') {
-    return
-  }
-
-  const taskLogs = await readLogs(logsPath)
-
-  if (taskLogs === undefined) {
-    return
-  }
-
-  error.message = `${error.message}
-
-Task logs:
-
-${taskLogs}`
 }
 
 // The `exec` command does not need logs because it directly streams

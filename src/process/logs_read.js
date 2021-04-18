@@ -2,8 +2,28 @@ import { Buffer } from 'buffer'
 // eslint-disable-next-line node/no-missing-import, import/no-unresolved
 import { open } from 'fs/promises'
 
+// When an exception is thrown, add the runner's last log lines to the error
+// message.
+export const addTaskLogs = async function (logsPath, error) {
+  if (error.name === 'StopError') {
+    return
+  }
+
+  const taskLogs = await readLogs(logsPath)
+
+  if (taskLogs === undefined) {
+    return
+  }
+
+  error.message = `${error.message}
+
+Task logs:
+
+${taskLogs}`
+}
+
 // Read the last lines from the logs file
-export const readLogs = async function (logsPath) {
+const readLogs = async function (logsPath) {
   const logsReadFd = await open(logsPath, 'r')
 
   try {
