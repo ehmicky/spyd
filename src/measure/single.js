@@ -92,6 +92,7 @@ const logStreamAndMeasure = async function ({
       stage,
       server,
       logsStream,
+      logsFd,
     })
   } finally {
     await stopLogsStream(logsStream)

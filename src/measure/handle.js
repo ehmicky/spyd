@@ -12,6 +12,7 @@ export const handleErrorsAndMeasure = async function ({
   stage,
   server,
   childProcess,
+  logsFd,
   onAbort,
 }) {
   try {
@@ -26,6 +27,7 @@ export const handleErrorsAndMeasure = async function ({
         stopState,
         stage,
         server,
+        logsFd,
       }),
     ])
   } catch (error) {

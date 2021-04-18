@@ -24,9 +24,6 @@ import { tmpName } from 'tmp-promise'
 //       crash, as opposed to passing the stream directly to the `stdio` option
 //       of `spawn()`
 //     - This also applies to using the `data` event, or doing interval `read()`
-// To minimize the size on disk:
-//  - We use a temporary file
-//  - We truncate that file after each sample
 // Writing to stdout/stderr in a task has a performance impact which we want to
 // measure:
 //  - Ignoring those streams would lead to inaccurate I/O results

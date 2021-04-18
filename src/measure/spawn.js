@@ -17,6 +17,7 @@ export const spawnAndMeasure = async function ({
   stage,
   server,
   logsStream,
+  logsFd,
 }) {
   const { childProcess } = await spawnRunnerProcess(combination, {
     serverUrl,
@@ -34,6 +35,7 @@ export const spawnAndMeasure = async function ({
       stage,
       server,
       childProcess,
+      logsFd,
     })
   } finally {
     terminateRunnerProcess(childProcess)
@@ -49,6 +51,7 @@ const stopOrMeasure = async function ({
   stage,
   server,
   childProcess,
+  logsFd,
 }) {
   const { stopState, onAbort, removeStopHandler } = addStopHandler(previewState)
 
@@ -62,6 +65,7 @@ const stopOrMeasure = async function ({
       stage,
       server,
       childProcess,
+      logsFd,
       onAbort,
     })
     throwIfStopped(stopState)

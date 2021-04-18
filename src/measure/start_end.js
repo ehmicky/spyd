@@ -17,6 +17,7 @@ export const runStartEnd = async function ({
   stopState,
   stage,
   server,
+  logsFd,
 }) {
   const taskIds = await startCombination(combination, server)
   const stats = await eRunMainEvents({
@@ -26,6 +27,7 @@ export const runStartEnd = async function ({
     stopState,
     stage,
     server,
+    logsFd,
   })
   await endCombination(server)
   return { stats, taskIds }
@@ -52,6 +54,7 @@ const eRunMainEvents = async function ({
   stopState,
   stage,
   server,
+  logsFd,
 }) {
   try {
     return await runMainEvents({
@@ -61,6 +64,7 @@ const eRunMainEvents = async function ({
       stopState,
       stage,
       server,
+      logsFd,
     })
   } catch (error) {
     await silentEndCombination(server)

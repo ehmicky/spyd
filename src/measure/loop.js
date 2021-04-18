@@ -1,3 +1,4 @@
+import { truncateLogs } from '../process/logs_read.js'
 import { measureSample } from '../sample/main.js'
 import { getInitialSampleState } from '../sample/state.js'
 import { getInitialStats, addStats } from '../stats/add.js'
@@ -29,6 +30,7 @@ export const performMeasureLoop = async function ({
   stopState,
   stage,
   server,
+  logsFd,
   minLoopDuration,
 }) {
   const initialState = getInitialState()
@@ -43,6 +45,7 @@ export const performMeasureLoop = async function ({
         stopState,
         server,
         minLoopDuration,
+        logsFd,
         targetSampleDuration: TARGET_SAMPLE_DURATION,
       }),
     initialState,
@@ -68,6 +71,7 @@ const performSample = async function (
     stopState,
     server,
     minLoopDuration,
+    logsFd,
     targetSampleDuration,
   },
 ) {
@@ -87,12 +91,15 @@ const performSample = async function (
   )
   const statsA = addStats(stats, sampleStateA, minLoopDuration)
 
-  await updatePreviewReport({
-    stats: statsA,
-    sampleState: sampleStateA,
-    previewConfig,
-    previewState,
-  })
+  await Promise.all([
+    updatePreviewReport({
+      stats: statsA,
+      sampleState: sampleStateA,
+      previewConfig,
+      previewState,
+    }),
+    truncateLogs(logsFd),
+  ])
 
   const durationStateA = endSample({
     durationState,

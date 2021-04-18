@@ -15,6 +15,7 @@ export const runMainEvents = async function ({
   stopState,
   stage,
   server,
+  logsFd,
 }) {
   if (stage === 'init') {
     return
@@ -28,6 +29,7 @@ export const runMainEvents = async function ({
     stopState,
     stage,
     server,
+    logsFd,
   })
   await afterCombination(previewState, server)
   return stats
@@ -46,6 +48,7 @@ const getCombinationStats = async function ({
   stopState,
   stage,
   server,
+  logsFd,
 }) {
   try {
     const minLoopDuration = await getMinLoopDuration(server, stage)
@@ -56,6 +59,7 @@ const getCombinationStats = async function ({
       stopState,
       stage,
       server,
+      logsFd,
       minLoopDuration,
     })
   } catch (error) {
