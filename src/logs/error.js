@@ -12,17 +12,18 @@ export const addErrorTaskLogs = async function (logsPath, error) {
     return
   }
 
-  const taskLogs = await readLogs(logsPath)
+  const { taskLogs, truncated } = await readLogs(logsPath)
+  const taskLogsA = normalizeLogs(taskLogs, truncated)
 
-  if (taskLogs === '') {
+  if (taskLogsA === '') {
     return
   }
 
-  const additionalMessage = getAdditionalMessage(taskLogs)
+  const additionalMessage = getAdditionalMessage(taskLogsA)
   error.message = `${error.message}
 ${additionalMessage}
 Task logs:
-${taskLogs}`
+${taskLogsA}`
 }
 
 // Read the last lines from the logs file
@@ -35,8 +36,8 @@ const readLogs = async function (logsPath) {
     const position = size - ERROR_LOGS_LENGTH
     const truncated = size > ERROR_LOGS_LENGTH
     const { bytesRead } = await logsReadFd.read({ buffer, position })
-    const lastLogs = buffer.slice(0, bytesRead).toString()
-    return normalizeLogs(lastLogs, truncated)
+    const taskLogs = buffer.slice(0, bytesRead).toString()
+    return { taskLogs, truncated }
   } finally {
     await logsReadFd.close()
   }
