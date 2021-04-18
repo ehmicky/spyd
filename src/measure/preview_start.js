@@ -1,5 +1,4 @@
 import { listHistory } from '../history/main.js'
-import { startPreviewRefresh, endPreviewRefresh } from '../preview/refresh.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
 
 import { initPreview, setFirstPreview } from './preview_report.js'
@@ -17,10 +16,11 @@ export const previewStartAndMeasure = async function ({
     config,
     combinations,
   )
-  await setFirstPreview({ previewConfig, previewState })
   await startPreview(quiet)
 
   try {
+    await setFirstPreview({ previewConfig, previewState })
+
     return await previewRefreshAndMeasure({
       combinations,
       config,
@@ -37,30 +37,25 @@ export const previewStartAndMeasure = async function ({
 const previewRefreshAndMeasure = async function ({
   combinations,
   config,
-  config: { cwd, precisionTarget, quiet },
+  config: { cwd, precisionTarget },
   previewConfig,
   previewState,
 }) {
-  const previewId = await startPreviewRefresh(previewState, quiet)
+  const results = await listHistory(config)
+  const previewConfigA = { ...previewConfig, results }
 
-  try {
-    const results = await listHistory(config)
-    const previewConfigA = { ...previewConfig, results }
-
-    const combinationsA = await measureCombinations(combinations, {
-      precisionTarget,
-      cwd,
-      previewConfig: previewConfigA,
-      previewState,
-    })
-    return { combinations: combinationsA, results }
-  } finally {
-    await endPreviewRefresh(previewState, previewId, quiet)
-  }
+  const combinationsA = await measureCombinations(combinations, {
+    precisionTarget,
+    cwd,
+    previewConfig: previewConfigA,
+    previewState,
+  })
+  return { combinations: combinationsA, results }
 }
 
-// Aborts behave like stops, i.e. last preview remains shown. This allows users
-// to stop a benchmark without losing information.
+// Aborts behave like stops, i.e. last preview remains shown
+//  - This allows users to stop a benchmark without losing information.
+//  - This is unlike other errors, which clear it
 // However failures only print the error message, i.e. clear the preview.
 const handlePreviewError = async function (error, quiet) {
   if (error.name === 'StopError') {

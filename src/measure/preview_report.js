@@ -1,5 +1,6 @@
 import { EMPTY_DURATION_LEFT } from '../preview/completion.js'
 import { setDelayedDescription } from '../preview/description.js'
+import { updatePreview } from '../preview/update.js'
 import { reportPreview } from '../report/main.js'
 
 import { getFinalResult } from './init.js'
@@ -101,6 +102,7 @@ const setPreviewReport = async function ({
     reporters: reportersA,
     titles,
   })
+  await updatePreview(previewState)
 }
 
 // Reporters can opt-out of previews by defining `reporter.quiet: true`.

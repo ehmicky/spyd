@@ -5,9 +5,8 @@ import now from 'precise-now'
 //  - This is meant for reporters not printed in terminal.
 //  - This is not passed to the final report.
 //  - Unlike the progress bar, there is a slight delay since those properties
-//    require another call to `setPreviewReport()` then to `updatePreview()`.
-//    This delay is roughly equal to the duration between two
-//    `setPreviewReport()`.
+//    require another call to `setPreviewReport()`. This delay is roughly equal
+//    to the duration between two `setPreviewReport()`.
 // `combinationStart` is undefined on the first preview.
 // `combinationEnd` is undefined when a combination has started but has not
 // computed its estimated end yet.

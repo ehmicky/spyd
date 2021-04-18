@@ -13,6 +13,8 @@ export const startPreview = async function (quiet) {
 }
 
 // Stop clearing the screen
+// Unless an error was thrown, we wait for the final reporter.report() before
+// clearing
 export const endPreview = async function (quiet) {
   if (quiet) {
     return

@@ -1,5 +1,6 @@
 import now from 'precise-now'
 
+import { updatePreview } from '../preview/update.js'
 import { getLoopsFromLength } from '../stats/extreme.js'
 import { getLengthForMoe } from '../stats/moe.js'
 
@@ -11,13 +12,14 @@ import { getLengthForMoe } from '../stats/moe.js'
 //   - With user impatience or with planning other things while measuring is
 //     ongoing
 // Done when combination starts
-export const startCombinationPreview = function (previewState, index) {
+export const startCombinationPreview = async function (previewState, index) {
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, {
     combinationStart: now(),
     combinationEnd: undefined,
     index,
   })
+  await updatePreview(previewState)
 }
 
 // Done when combination's sample starts
@@ -58,8 +60,9 @@ const getSamplesTarget = function (loopsTarget, loops, samples) {
 }
 
 // Done when combination ends
-export const endCombinationPreview = function (previewState) {
+export const endCombinationPreview = async function (previewState) {
   updateCombinationEnd(previewState, 0)
+  await updatePreview(previewState)
 }
 
 const updateCombinationEnd = function (previewState, durationLeft) {
