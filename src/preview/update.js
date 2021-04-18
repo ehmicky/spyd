@@ -2,7 +2,7 @@ import { printToTty, clearScreen } from '../report/tty.js'
 
 import { getCompletionProps } from './completion.js'
 import { getContent } from './content.js'
-import { getDescription } from './set.js'
+import { getDescription } from './description.js'
 
 // Refresh preview.
 // Also update `previewState.durationLeft|percentage` for reporters using it.

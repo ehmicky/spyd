@@ -1,5 +1,5 @@
 import { EMPTY_DURATION_LEFT } from '../preview/completion.js'
-import { setDelayedDescription } from '../preview/set.js'
+import { setDelayedDescription } from '../preview/description.js'
 import { reportPreview } from '../report/main.js'
 
 import { getFinalResult } from './init.js'

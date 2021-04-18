@@ -1,4 +1,7 @@
-import { setDescription, setDelayedDescription } from '../preview/set.js'
+import {
+  setDescription,
+  setDelayedDescription,
+} from '../preview/description.js'
 import { sendAndReceive } from '../process/ipc.js'
 
 import { performMeasureLoop } from './loop.js'
