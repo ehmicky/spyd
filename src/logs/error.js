@@ -6,7 +6,7 @@ import stripFinalNewline from 'strip-final-newline'
 
 // When an exception is thrown, add the runner's last log lines to the error
 // message.
-export const addTaskLogs = async function (logsPath, error) {
+export const addErrorTaskLogs = async function (logsPath, error) {
   if (error.name === 'StopError') {
     return
   }
