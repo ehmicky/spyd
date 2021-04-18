@@ -6,13 +6,9 @@ import {
   addTaskTaskLogs,
   hasLogs,
 } from '../process/logs_create.js'
-import {
-  spawnRunnerProcess,
-  terminateRunnerProcess,
-} from '../process/runner.js'
 import { startServer, endServer } from '../server/main.js'
 
-import { stopOrMeasure } from './handle.js'
+import { spawnAndMeasure } from './spawn.js'
 
 // Measure a single combination.
 // Also used when starting combinations to retrieve their tasks and steps.
@@ -24,33 +20,23 @@ export const measureCombination = async function (
   const { server, serverUrl } = await startServer()
 
   try {
-    return hasLogs(stage)
-      ? await spawnAndLog({
-          combination,
-          serverUrl,
-          precisionTarget,
-          cwd,
-          previewConfig,
-          previewState,
-          stage,
-          server,
-        })
-      : await spawnAndMeasure({
-          combination,
-          serverUrl,
-          precisionTarget,
-          cwd,
-          previewConfig,
-          previewState,
-          stage,
-          server,
-        })
+    const nextFunction = hasLogs(stage) ? logAndMeasure : spawnAndMeasure
+    return await nextFunction({
+      combination,
+      serverUrl,
+      precisionTarget,
+      cwd,
+      previewConfig,
+      previewState,
+      stage,
+      server,
+    })
   } finally {
     await endServer(server)
   }
 }
 
-const spawnAndLog = async function ({
+const logAndMeasure = async function ({
   combination,
   serverUrl,
   precisionTarget,
@@ -63,7 +49,7 @@ const spawnAndLog = async function ({
   const { logsPath, logsFd } = await startLogs()
 
   try {
-    return await spawnAndLogStream({
+    return await logStreamAndMeasure({
       combination,
       serverUrl,
       precisionTarget,
@@ -82,7 +68,7 @@ const spawnAndLog = async function ({
   }
 }
 
-const spawnAndLogStream = async function ({
+const logStreamAndMeasure = async function ({
   combination,
   serverUrl,
   precisionTarget,
@@ -109,39 +95,5 @@ const spawnAndLogStream = async function ({
     })
   } finally {
     await stopLogsStream(logsStream)
-  }
-}
-
-// Spawn combination processes, then measure them
-const spawnAndMeasure = async function ({
-  combination,
-  serverUrl,
-  precisionTarget,
-  cwd,
-  previewConfig,
-  previewState,
-  stage,
-  server,
-  logsStream,
-}) {
-  const { childProcess } = await spawnRunnerProcess(combination, {
-    serverUrl,
-    cwd,
-    server,
-    logsStream,
-  })
-
-  try {
-    return await stopOrMeasure({
-      combination,
-      precisionTarget,
-      previewConfig,
-      previewState,
-      stage,
-      server,
-      childProcess,
-    })
-  } finally {
-    terminateRunnerProcess(childProcess)
   }
 }
