@@ -1,5 +1,4 @@
 import { Buffer } from 'buffer'
-// eslint-disable-next-line node/no-missing-import, import/no-unresolved
 import { open } from 'fs/promises'
 
 import { getAdditionalMessage } from './additional.js'

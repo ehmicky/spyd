@@ -1,4 +1,3 @@
-// eslint-disable-next-line node/no-missing-import, import/no-unresolved
 import { open, unlink, mkdir } from 'fs/promises'
 import { dirname } from 'path'
 
