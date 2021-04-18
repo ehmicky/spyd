@@ -33,7 +33,6 @@ export const performMeasureLoop = async function ({
   logsFd,
   minLoopDuration,
 }) {
-  const initialState = getInitialState()
   const { stats } = await pWhile(
     (state) =>
       isRemainingCombination(state, { precisionTarget, stage, stopState }),
@@ -48,19 +47,16 @@ export const performMeasureLoop = async function ({
         logsFd,
         targetSampleDuration: TARGET_SAMPLE_DURATION,
       }),
-    initialState,
+    {
+      stats: getInitialStats(),
+      sampleState: getInitialSampleState(),
+      durationState: getInitialDurationState(),
+    },
   )
   return stats
 }
 
 export const TARGET_SAMPLE_DURATION = 1e8
-
-const getInitialState = function () {
-  const stats = getInitialStats()
-  const sampleState = getInitialSampleState()
-  const durationState = getInitialDurationState()
-  return { stats, sampleState, durationState }
-}
 
 const performSample = async function (
   { sampleState, stats, durationState },
