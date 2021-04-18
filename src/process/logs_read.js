@@ -32,12 +32,13 @@ export const addTaskLogs = async function (logsPath, error) {
 
   const taskLogs = await readLogs(logsPath)
 
-  if (taskLogs === undefined) {
+  if (taskLogs === '') {
     return
   }
 
+  const additionalMessage = getAdditionalMessage(taskLogs)
   error.message = `${error.message}
-
+${additionalMessage}
 Task logs:
 ${taskLogs}`
 }
@@ -66,7 +67,7 @@ const normalizeLogs = function (lastLogs, truncated) {
   const lastLogsA = stripFinalNewline(lastLogs.trim())
 
   if (lastLogsA === '') {
-    return
+    return lastLogsA
   }
 
   const lastLogsB = stripPartialLine(lastLogsA)
@@ -80,3 +81,30 @@ const stripPartialLine = function (lastLogs) {
   const newlineIndex = lastLogs.indexOf('\n')
   return newlineIndex === -1 ? lastLogs : lastLogs.slice(newlineIndex + 1)
 }
+
+// Adds an additional error message based on some common errors that can be
+// detected from the tasks logs.
+// Some might be language-specific. We detect those in core instead of inside
+// each runner because some runners:
+//  - Might share the same language, e.g. several runners might use
+//    JavaScript
+//  - Call another language, e.g. the `cli` runner might call `node`
+const getAdditionalMessage = function (taskLogs) {
+  const additionalMessage = ADDITIONAL_MESSAGES.find(({ includes }) =>
+    taskLogs.includes(includes),
+  )
+
+  if (additionalMessage === undefined) {
+    return ''
+  }
+
+  return `${additionalMessage.message}\n`
+}
+
+const ADDITIONAL_MESSAGES = [
+  {
+    includes: 'JavaScript heap out of memory',
+    message:
+      'The task ran out of memory. This is most likely due to a memory leak in the task.',
+  },
+]
