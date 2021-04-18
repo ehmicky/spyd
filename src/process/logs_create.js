@@ -1,4 +1,4 @@
-import { createWriteStream, constants } from 'fs'
+import { createWriteStream } from 'fs'
 // eslint-disable-next-line node/no-missing-import, import/no-unresolved
 import { open, unlink, mkdir } from 'fs/promises'
 import { dirname } from 'path'
@@ -40,12 +40,17 @@ const getLogsPath = async function () {
 }
 
 const LOGS_DIR = 'spyd/logs/'
-// The file is append-only. Not setting that flag would make truncate() fail
-// since new writes would restore the original size due to the cursor position
-// not being reset to 0 by `truncate()`
-const LOGS_FILE_FLAGS =
-  // eslint-disable-next-line no-bitwise
-  constants.O_APPEND | constants.O_CREAT | constants.O_WRONLY | constants.O_EXCL
+
+// The file is append-only
+//  - not setting that flag would make truncate() fail since new writes would
+//    restore the original size due to the cursor position not being reset to 0.
+// We do not use `O_SYNC` nor `O_DSYNC` because:
+//  - They decrease the precision (stdev) a lot
+//  - They slow down I/O operations, making them not accurate anymore
+// We also do not do `logsFd.sync()` nor `logsFd.datasync()` after each sample:
+//  - This would also decrease the precision a lot
+//  - This is slow, especially when logs are big
+const LOGS_FILE_FLAGS = 'ax'
 
 // Delete logs file after each combination
 export const stopLogs = async function (logsPath, logsFd) {
