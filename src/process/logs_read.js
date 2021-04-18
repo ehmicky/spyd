@@ -18,7 +18,6 @@ export const addTaskLogs = async function (logsPath, error) {
   error.message = `${error.message}
 
 Task logs:
-
 ${taskLogs}`
 }
 
