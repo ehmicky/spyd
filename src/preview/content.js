@@ -3,17 +3,25 @@ import { goodColor, separatorColor } from '../report/utils/colors.js'
 
 // Retrieve preview content.
 export const getContent = function ({
+  durationLeft,
+  index,
+  total,
   percentage,
-  time,
   description = '',
   report,
 }) {
   const screenWidth = getScreenWidth()
   const results = getResults(report, screenWidth)
-  const progressBar = getProgressBar({ percentage, time, screenWidth })
+  const counter = getCounter(index, total)
+  const progressBar = getProgressBar({
+    durationLeft,
+    counter,
+    percentage,
+    screenWidth,
+  })
 
   return `${results}
- ${time}${progressBar}
+ ${durationLeft}${goodColor(counter)}${progressBar}
 
  ${description}
 `
@@ -29,12 +37,25 @@ const getResults = function (report, screenWidth) {
   return `${report}${separator}\n`
 }
 
-const getProgressBar = function ({ percentage, time, screenWidth }) {
-  const width = screenWidth - time.length - PADDING_WIDTH
+const getCounter = function (index, total) {
+  const indexString = String(index)
+  const totalString = String(total)
+  const padding = ' '.repeat(totalString.length - indexString.length)
+  return `  ${padding}(${indexString}/${totalString})  `
+}
+
+const getProgressBar = function ({
+  durationLeft,
+  counter,
+  percentage,
+  screenWidth,
+}) {
+  const width =
+    screenWidth - durationLeft.length - counter.length - PADDING_WIDTH
   const filled = Math.floor(width * percentage)
   const filledChars = FILL_CHAR.repeat(filled)
   const voidedChars = VOID_CHAR.repeat(width - filled)
-  return `  ${filledChars}${voidedChars}`
+  return `${filledChars}${voidedChars}`
 }
 
 // Pad the left|right of the progress bar with spaces

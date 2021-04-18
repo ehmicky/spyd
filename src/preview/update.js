@@ -1,26 +1,38 @@
 import { printToTty, clearScreen } from '../report/tty.js'
 
+import { getCompletionProps } from './completion.js'
 import { getContent } from './content.js'
 import { getDescription } from './set.js'
-import { updateTimeProps } from './time_props.js'
 
-// Refresh preview
-export const updatePreview = async function (previewState, benchmarkDuration) {
+// Refresh preview.
+// Also update `previewState.durationLeft|percentage` for reporters using it.
+export const updatePreview = async function (previewState) {
   await clearScreen()
 
-  updateTimeProps(previewState, benchmarkDuration)
-  const previewContent = getPreviewContent(previewState)
+  const { durationLeft, percentage } = getCompletionProps(previewState)
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(previewState, { durationLeft, percentage })
 
+  const previewContent = getPreviewContent(previewState)
   await printToTty(previewContent)
 }
 
 const getPreviewContent = function ({
+  durationLeft,
+  index,
+  total,
   percentage,
-  time,
   description,
   priorityDescription,
   report,
 }) {
   const descriptionA = getDescription(description, priorityDescription)
-  return getContent({ percentage, time, description: descriptionA, report })
+  return getContent({
+    durationLeft,
+    index,
+    total,
+    percentage,
+    description: descriptionA,
+    report,
+  })
 }

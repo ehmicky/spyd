@@ -1,15 +1,31 @@
+import { EMPTY_DURATION_LEFT } from '../preview/completion.js'
 import { setDelayedDescription } from '../preview/set.js'
 import { reportPreview } from '../report/main.js'
 
 import { getFinalResult } from './init.js'
 
-// Retrieve state and configuration for previews
-export const getPreviewConfig = function (
+// Retrieve initial `previewConfig` (stateless) and `previewState` (stateful).
+// `index` and `total` are used as a 1-based counter in previews.
+export const initPreview = function (
   initResult,
   { quiet, reporters, titles },
   combinations,
 ) {
-  return { quiet, initResult, results: [], reporters, titles, combinations }
+  const previewConfig = {
+    quiet,
+    initResult,
+    results: [],
+    reporters,
+    titles,
+    combinations,
+  }
+  const previewState = {
+    durationLeft: EMPTY_DURATION_LEFT,
+    index: 1,
+    total: combinations.length,
+    percentage: 0,
+  }
+  return { previewConfig, previewState }
 }
 
 // Preview results progressively, as combinations are being measured.
@@ -40,8 +56,9 @@ export const updatePreviewReport = async function ({
   stats,
   sampleState: { calibrated },
   previewConfig,
-  previewConfig: { quiet, combinations, measuredCombinations, index },
+  previewConfig: { quiet, combinations, measuredCombinations },
   previewState,
+  previewState: { index },
 }) {
   if (quiet || !calibrated) {
     return
@@ -49,8 +66,8 @@ export const updatePreviewReport = async function ({
 
   const combinationsA = [
     ...measuredCombinations,
-    { ...combinations[index], stats },
-    ...combinations.slice(index + 1).map(addEmptyStats),
+    { ...combinations[index - 1], stats },
+    ...combinations.slice(index).map(addEmptyStats),
   ]
 
   await setPreviewReport({
@@ -66,7 +83,7 @@ const addEmptyStats = function (combination) {
 const setPreviewReport = async function ({
   previewConfig: { initResult, results, reporters, titles, combinations },
   previewState,
-  previewState: { time, percentage },
+  previewState: { durationLeft, index, total, percentage },
 }) {
   const reportersA = reporters.filter(isNotQuiet)
 
@@ -75,7 +92,10 @@ const setPreviewReport = async function ({
   }
 
   const { result } = getFinalResult(combinations, initResult, results)
-  const resultA = { ...result, time, percentage }
+  const resultA = {
+    ...result,
+    preview: { durationLeft, index, total, percentage },
+  }
   // eslint-disable-next-line no-param-reassign, fp/no-mutation
   previewState.report = await reportPreview(resultA, {
     reporters: reportersA,

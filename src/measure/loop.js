@@ -1,11 +1,10 @@
-import { setBenchmarkStart } from '../preview/set.js'
 import { measureSample } from '../sample/main.js'
 import { getInitialSampleState } from '../sample/state.js'
 import { getInitialStats, addStats } from '../stats/add.js'
 import { pWhile } from '../utils/p_while.js'
 
 import { getInitialDurationState, startSample, endSample } from './duration.js'
-import { updatePreviewEnd } from './preview_end.js'
+import { updateCombinationPreview } from './preview_duration.js'
 import { updatePreviewReport } from './preview_report.js'
 import { isRemainingCombination } from './remaining.js'
 
@@ -36,8 +35,6 @@ export const performMeasureLoop = async function ({
   server,
   minLoopDuration,
 }) {
-  setBenchmarkStart(previewState)
-
   const initialState = getInitialState()
   const { stats } = await pWhile(
     (state) => isRemainingCombination(state, { duration, stage, stopState }),
@@ -79,7 +76,12 @@ const performSample = async function (
 ) {
   const sampleStart = startSample(stopState, durationState)
 
-  updatePreviewEnd({ previewConfig, previewState, durationState, duration })
+  updateCombinationPreview({
+    previewConfig,
+    previewState,
+    durationState,
+    duration,
+  })
 
   const sampleStateA = await measureSample(
     { server, minLoopDuration, targetSampleDuration },

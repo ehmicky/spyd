@@ -1,5 +1,3 @@
-import now from 'precise-now'
-
 // Like `setDescription()` but wait for a specific `delay` first to avoid
 // flickering.
 export const setDelayedDescription = function (previewState, description) {
@@ -45,33 +43,4 @@ export const getDescription = function (
   priorityDescription = description,
 ) {
   return priorityDescription
-}
-
-// Set the preview duration and percentage by setting the expected end.
-// set the expected end instead of the expected time left so that the preview
-// refresh logic can progressively decrease as time passes, even if
-// `setBenchmarkEnd()` is not called again.
-export const setBenchmarkEnd = function (previewState, benchmarkEnd) {
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.benchmarkEnd = benchmarkEnd
-}
-
-// When duration is 1, we count up, not down
-export const setBenchmarkStart = function (previewState) {
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.benchmarkStart = now()
-}
-
-// When duration is 1, we increase the progress bar each time a combination ends
-export const setPercentage = function (previewState, percentage) {
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.percentage = percentage
-}
-
-// When benchmark ends, make sure progress shows as complete
-export const setFinalPreview = function (previewState) {
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.benchmarkEnd = now()
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.percentage = 1
 }

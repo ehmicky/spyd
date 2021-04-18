@@ -1,5 +1,9 @@
 import pReduce from 'p-reduce'
 
+import {
+  startCombinationPreview,
+  endCombinationPreview,
+} from './preview_duration.js'
 import { measureCombination } from './single.js'
 
 // Measure all combinations and add results to `combinations`.
@@ -43,13 +47,19 @@ const measureCombinationStats = async function ({
   previewConfig,
   previewState,
 }) {
-  const previewConfigA = { ...previewConfig, measuredCombinations, index }
-  const { stats } = await measureCombination(combination, {
-    duration,
-    cwd,
-    previewConfig: previewConfigA,
-    previewState,
-    stage: 'main',
-  })
-  return [...measuredCombinations, { ...combination, stats }]
+  startCombinationPreview(previewState, duration, index + 1)
+  const previewConfigA = { ...previewConfig, measuredCombinations }
+
+  try {
+    const { stats } = await measureCombination(combination, {
+      duration,
+      cwd,
+      previewConfig: previewConfigA,
+      previewState,
+      stage: 'main',
+    })
+    return [...measuredCombinations, { ...combination, stats }]
+  } finally {
+    endCombinationPreview(previewState)
+  }
 }

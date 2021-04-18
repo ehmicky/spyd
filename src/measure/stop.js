@@ -1,7 +1,7 @@
 import process from 'process'
 
 import { StopError } from '../error/main.js'
-import { setBenchmarkEnd, setPriorityDescription } from '../preview/set.js'
+import { setPriorityDescription } from '../preview/set.js'
 import {
   createController,
   waitForEvents,
@@ -73,29 +73,29 @@ const handleStop = async function ({
 
 const setStopState = function (previewState, stopState, duration) {
   setPriorityDescription(previewState, STOP_DESCRIPTION)
-  setStopBenchmarkEnd(previewState, stopState, duration)
+  setStopCombinationEnd(previewState, stopState, duration)
 
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
 }
 
-// Update `benchmarkEnd` to match the time the currently executing task is
+// Update `combinationEnd` to match the time the currently executing task is
 // expected to end.
 // Not done if `sampleDurationMean` is `undefined` meaning either:
 //  - not in measure phase
 //  - measuring the first sample of the task
-// In that case, we leave `benchmarkEnd` as is
-const setStopBenchmarkEnd = function (
+// In that case, we leave `combinationEnd` as is
+const setStopCombinationEnd = function (
   previewState,
   { sampleStart, sampleDurationMean },
   duration,
 ) {
-  if (sampleStart === undefined || duration === 1) {
+  if (sampleDurationMean === undefined || duration === 1) {
     return
   }
 
-  const benchmarkEnd = sampleStart + sampleDurationMean
-  setBenchmarkEnd(previewState, benchmarkEnd)
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.combinationEnd = sampleStart + sampleDurationMean
 }
 
 const waitForStopSignals = async function (abortSignal) {

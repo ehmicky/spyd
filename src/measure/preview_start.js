@@ -2,7 +2,7 @@ import { listHistory } from '../history/main.js'
 import { startPreviewRefresh, endPreviewRefresh } from '../preview/refresh.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
 
-import { getPreviewConfig, setFirstPreview } from './preview_report.js'
+import { initPreview, setFirstPreview } from './preview_report.js'
 import { measureCombinations } from './several.js'
 
 // Start preview then measure benchmark
@@ -12,10 +12,12 @@ export const previewStartAndMeasure = async function ({
   config: { quiet },
   initResult,
 }) {
-  const previewConfig = getPreviewConfig(initResult, config, combinations)
-  const previewState = {}
+  const { previewConfig, previewState } = initPreview(
+    initResult,
+    config,
+    combinations,
+  )
   await setFirstPreview({ previewConfig, previewState })
-
   await startPreview(quiet)
 
   try {
@@ -39,12 +41,7 @@ const previewRefreshAndMeasure = async function ({
   previewConfig,
   previewState,
 }) {
-  const benchmarkDuration = getBenchmarkDuration(combinations, duration)
-  const previewId = await startPreviewRefresh({
-    previewState,
-    benchmarkDuration,
-    quiet,
-  })
+  const previewId = await startPreviewRefresh(previewState, quiet)
 
   try {
     const results = await listHistory(config)
@@ -58,21 +55,8 @@ const previewRefreshAndMeasure = async function ({
     })
     return { combinations: combinationsA, results }
   } finally {
-    await endPreviewRefresh({
-      previewState,
-      previewId,
-      benchmarkDuration,
-      quiet,
-    })
+    await endPreviewRefresh(previewState, previewId, quiet)
   }
-}
-
-const getBenchmarkDuration = function (combinations, duration) {
-  if (duration === 1) {
-    return duration
-  }
-
-  return combinations.length * duration
 }
 
 // Aborts behave like stops, i.e. last preview remains shown. This allows users
