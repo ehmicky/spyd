@@ -37,3 +37,8 @@ export const normalizePrecision = function (precision, name) {
 const PRECISION_TARGETS = [0, 5e-2, 1e-2, 5e-3, 1e-3]
 const MIN_PRECISION = 0
 const MAX_PRECISION = PRECISION_TARGETS.length - 1
+
+// `rmoe` is `undefined` when not enough loops are available to compute it.
+export const isPreciseEnough = function (rmoe, precisionTarget) {
+  return rmoe !== undefined && rmoe <= precisionTarget
+}

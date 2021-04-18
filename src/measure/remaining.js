@@ -1,5 +1,7 @@
 import { hasMaxMeasures } from '../sample/state.js'
 
+import { isPreciseEnough } from './precision.js'
+
 // Check if combination should keep being measured.
 // We measure each combination:
 //  - At least once
@@ -37,9 +39,4 @@ export const isRemainingCombination = function (
 //  - There are too many measures, which could lead to memory crash otherwise
 const shouldInterrupt = function (stopped, sampleState) {
   return stopped || hasMaxMeasures(sampleState)
-}
-
-// `rmoe` is `undefined` when not enough loops are available to compute it.
-const isPreciseEnough = function (rmoe, precisionTarget) {
-  return rmoe !== undefined && rmoe <= precisionTarget
 }
