@@ -1,4 +1,11 @@
-import { startLogs, stopLogs } from '../process/logs.js'
+import {
+  startLogs,
+  startLogsStream,
+  stopLogsStream,
+  stopLogs,
+  addTaskTaskLogs,
+  hasLogs,
+} from '../process/logs_create.js'
 import {
   spawnRunnerProcess,
   terminateRunnerProcess,
@@ -17,16 +24,27 @@ export const measureCombination = async function (
   const { server, serverUrl } = await startServer()
 
   try {
-    return await spawnAndLog({
-      combination,
-      serverUrl,
-      precisionTarget,
-      cwd,
-      previewConfig,
-      previewState,
-      stage,
-      server,
-    })
+    return hasLogs(stage)
+      ? await spawnAndLog({
+          combination,
+          serverUrl,
+          precisionTarget,
+          cwd,
+          previewConfig,
+          previewState,
+          stage,
+          server,
+        })
+      : await spawnAndMeasure({
+          combination,
+          serverUrl,
+          precisionTarget,
+          cwd,
+          previewConfig,
+          previewState,
+          stage,
+          server,
+        })
   } finally {
     await endServer(server)
   }
@@ -42,7 +60,40 @@ const spawnAndLog = async function ({
   stage,
   server,
 }) {
-  const { logsPath, logsFd, logsStream } = await startLogs(stage)
+  const { logsPath, logsFd } = await startLogs()
+
+  try {
+    return await spawnAndLogStream({
+      combination,
+      serverUrl,
+      precisionTarget,
+      cwd,
+      previewConfig,
+      previewState,
+      stage,
+      server,
+      logsFd,
+    })
+  } catch (error) {
+    await addTaskTaskLogs(logsPath, error)
+    throw error
+  } finally {
+    await stopLogs(logsPath, logsFd)
+  }
+}
+
+const spawnAndLogStream = async function ({
+  combination,
+  serverUrl,
+  precisionTarget,
+  cwd,
+  previewConfig,
+  previewState,
+  stage,
+  server,
+  logsFd,
+}) {
+  const logsStream = startLogsStream(logsFd)
 
   try {
     return await spawnAndMeasure({
@@ -57,7 +108,7 @@ const spawnAndLog = async function ({
       logsStream,
     })
   } finally {
-    await stopLogs(logsPath, logsFd)
+    await stopLogsStream(logsStream)
   }
 }
 
