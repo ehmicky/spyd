@@ -31,11 +31,8 @@ const normalizeDuration = function (duration, propName) {
     return
   }
 
-  return { [propName]: duration * NANOSECS_TO_SECS }
+  return { [propName]: duration }
 }
-
-// Duration is specified in seconds by the user but we convert it to nanoseconds
-const NANOSECS_TO_SECS = 1e9
 
 // In order to pass dynamic information, the user should either:
 //  - use shell features like subshells and environment variable expansion

@@ -10,9 +10,13 @@
 //       (that are also not percentages)
 //  - On the flipside, it makes it harder to compare combinations (since they
 //    most likely have different medians)
-export const getStdev = function ({ array, lowIndex, highIndex, median }) {
-  const length = highIndex - lowIndex + 1
-
+export const getStdev = function ({
+  array,
+  lowIndex,
+  highIndex,
+  length,
+  median,
+}) {
   if (median === 0 || length < MIN_DEVIATION_LOOPS) {
     return
   }

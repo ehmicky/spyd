@@ -6,9 +6,9 @@ export const getHistogram = function ({
   array,
   lowIndex,
   highIndex,
+  length,
   bucketCount,
 }) {
-  const length = highIndex - lowIndex + 1
   const low = array[lowIndex]
   const high = array[highIndex]
   const state = { startIndex: lowIndex - 1 }

@@ -47,7 +47,7 @@ const measureCombinationStats = async function ({
   previewConfig,
   previewState,
 }) {
-  startCombinationPreview(previewState, duration, index + 1)
+  startCombinationPreview(previewState, index + 1)
   const previewConfigA = { ...previewConfig, measuredCombinations }
 
   try {

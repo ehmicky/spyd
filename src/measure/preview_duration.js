@@ -1,32 +1,54 @@
 import now from 'precise-now'
 
+import { getLoopsFromLength } from '../stats/extreme.js'
+import { getLengthForMoe } from '../stats/moe.js'
+
+import { RMOE_TARGETS } from './remaining.js'
+
 // Update the combination start and expected end.
 // This is combined with the current timestamp to compute the expected duration
 // left and percentage in previews.
 // Done when combination starts
-export const startCombinationPreview = function (
-  previewState,
-  duration,
-  index,
-) {
+export const startCombinationPreview = function (previewState, index) {
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, { combinationStart: now(), index })
-  updateCombinationEnd(previewState, duration)
 }
 
 // Done when combination's sample starts
 export const updateCombinationPreview = function ({
+  stats,
+  stats: { moe, samples },
   previewConfig: { quiet },
   previewState,
-  durationState: { totalDuration },
-  duration,
+  durationState,
+  precision,
 }) {
-  if (quiet) {
+  if (quiet || samples === 0 || moe === undefined) {
     return
   }
 
-  const durationLeft = Math.max(duration - totalDuration, 0)
+  const durationLeft = getDurationLeft(stats, durationState, precision)
   updateCombinationEnd(previewState, durationLeft)
+}
+
+// Estimate how much duration is left to reach the rmoe target for the current
+// `precision`.
+const getDurationLeft = function (
+  { median, stdev, loops, samples },
+  { sampleDurationMean },
+  precision,
+) {
+  const moeTarget = RMOE_TARGETS[precision] * median
+  const lengthTarget = getLengthForMoe(moeTarget, stdev)
+  const loopsTarget = getLoopsFromLength(lengthTarget)
+  const samplesTarget = getSamplesTarget(loopsTarget, loops, samples)
+  return samplesTarget * sampleDurationMean
+}
+
+const getSamplesTarget = function (loopsTarget, loops, samples) {
+  const loopsLeft = Math.max(loopsTarget - loops, 0)
+  const sampleLoopsMean = loops / samples
+  return Math.ceil(loopsLeft / sampleLoopsMean)
 }
 
 // Done when combination ends

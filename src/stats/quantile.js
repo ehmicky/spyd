@@ -19,11 +19,7 @@ export const getQuantile = function (array, percentage) {
   )
 }
 
-export const getRoundedPosition = function (array, percentage) {
-  return Math.round(getQuantilePosition(array, percentage))
-}
-
-const getQuantilePosition = function (array, percentage) {
+export const getQuantilePosition = function (array, percentage) {
   return (array.length - 1) * percentage
 }
 

@@ -28,6 +28,7 @@ import { isRemainingCombination } from './remaining.js'
 //  - This can be either hardcoded or using the `inputs` configuration property.
 export const performMeasureLoop = async function ({
   duration,
+  precision = duration,
   previewConfig,
   previewState,
   stopState,
@@ -37,10 +38,10 @@ export const performMeasureLoop = async function ({
 }) {
   const initialState = getInitialState()
   const { stats } = await pWhile(
-    (state) => isRemainingCombination(state, { duration, stage, stopState }),
+    (state) => isRemainingCombination(state, { precision, stage, stopState }),
     (state) =>
       performSample(state, {
-        duration,
+        precision,
         previewConfig,
         previewState,
         stopState,
@@ -65,7 +66,7 @@ const getInitialState = function () {
 const performSample = async function (
   { sampleState, stats, durationState },
   {
-    duration,
+    precision,
     previewConfig,
     previewState,
     stopState,
@@ -77,10 +78,11 @@ const performSample = async function (
   const sampleStart = startSample(stopState, durationState)
 
   updateCombinationPreview({
+    stats,
     previewConfig,
     previewState,
     durationState,
-    duration,
+    precision,
   })
 
   const sampleStateA = await measureSample(

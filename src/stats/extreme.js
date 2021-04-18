@@ -1,4 +1,4 @@
-import { getRoundedPosition } from './quantile.js'
+import { getQuantilePosition } from './quantile.js'
 
 // Measures usually contain some very slow outliers due to background processes
 // or engine optimization.
@@ -18,12 +18,34 @@ import { getRoundedPosition } from './quantile.js'
 export const getExtremes = function (measures) {
   const [min] = measures
   const max = measures[measures.length - 1]
-
-  const lowIndex = getRoundedPosition(measures, LOW_OUTLIERS)
-  const highIndex = getRoundedPosition(measures, HIGH_OUTLIERS)
+  const { lowIndex, highIndex, length } = getLength(measures)
   const low = measures[lowIndex]
   const high = measures[highIndex]
-  return { min, max, lowIndex, highIndex, low, high }
+  return { min, max, lowIndex, highIndex, length, low, high }
+}
+
+const getLength = function (measures) {
+  const lowIndex = getRoundedPosition(measures, LOW_OUTLIERS)
+  const highIndex = getRoundedPosition(measures, HIGH_OUTLIERS)
+  const length = highIndex - lowIndex + 1
+  return { lowIndex, highIndex, length }
+}
+
+// `Math.round()` rounds towards +Inf, which is what we want:
+//  - This ensures both low and high outliers are not removed at the same time,
+//    which would mean adding one `measure` could potentially remove one from
+//    `length`
+//  - This makes outliers removal start twice faster. For example, with 5%
+//    outliers on each end, this starts after 10 loops, not 20.
+const getRoundedPosition = function (array, percentage) {
+  return Math.round(getQuantilePosition(array, percentage))
+}
+
+// Inverse function of `getLength()`, i.e. retrieves `measures.length` from
+// `length`. Due to the use of multiple `Math.round()`, the result might be
+// 1 higher than the actual result.
+export const getLoopsFromLength = function (length) {
+  return Math.round(length / (HIGH_OUTLIERS - LOW_OUTLIERS))
 }
 
 // A higher value makes histograms give less information about very low/high

@@ -56,12 +56,11 @@ import { getTvalue } from './tvalue.js'
 //  - this can still be added in the future with a reporter showing a list of
 //    too-close-to-compare combinations, using a welch's t-test between each
 //    combination pair
-export const getMoe = function (lowIndex, highIndex, stdev) {
+export const getMoe = function (stdev, length) {
   if (stdev === undefined) {
     return
   }
 
-  const length = highIndex - lowIndex + 1
   const standardError = stdev / Math.sqrt(length)
   const tvalue = getTvalue(length)
   const marginOfError = standardError * tvalue
@@ -78,3 +77,26 @@ export const getRmoe = function (moe, median) {
 
   return moe / median
 }
+
+// Find the `length` that gets a specific `moe` with a given `stdev`.
+// This essentially applies the inverse function of `getMoe()`.
+// Since `length` is used in non-straight-forward ways (due to `getTvalue()`)
+// in `getMoe()`, we need to do an iterative/heuristic search until the value
+// is found.
+export const getLengthForMoe = function (moe, stdev) {
+  const lengths = new Set([])
+  // eslint-disable-next-line fp/no-let
+  let length = INITIAL_LENGTH
+
+  // eslint-disable-next-line fp/no-loops
+  while (!lengths.has(length)) {
+    lengths.add(length)
+    // eslint-disable-next-line fp/no-mutation
+    length = Math.round(((getTvalue(length) * stdev) / moe) ** 2)
+  }
+
+  return length
+}
+
+// Minimal `length` with a defined t-value
+const INITIAL_LENGTH = 2

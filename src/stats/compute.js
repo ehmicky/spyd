@@ -29,7 +29,9 @@ import { getMean } from './sum.js'
 //  - This would create too many statistics for the average, together with the
 //    median and the mean.
 export const computeStats = function (measures) {
-  const { min, max, lowIndex, highIndex, low, high } = getExtremes(measures)
+  const { min, max, lowIndex, highIndex, length, low, high } = getExtremes(
+    measures,
+  )
 
   const median = getSortedMedian(measures)
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
@@ -39,11 +41,18 @@ export const computeStats = function (measures) {
     array: measures,
     lowIndex,
     highIndex,
+    length,
     bucketCount: HISTOGRAM_SIZE,
   })
-  const stdev = getStdev({ array: measures, lowIndex, highIndex, median })
+  const stdev = getStdev({
+    array: measures,
+    lowIndex,
+    highIndex,
+    length,
+    median,
+  })
   const rstdev = getRstdev(stdev, median)
-  const moe = getMoe(lowIndex, highIndex, stdev)
+  const moe = getMoe(stdev, length)
   const rmoe = getRmoe(moe, median)
 
   return {
