@@ -64,7 +64,7 @@ const throwOnSpawnError = async function (childProcess) {
 // Anything printed during process spawning (e.g. top-level scope in Node.js)
 // might be repeated for each combination. This is good since:
 //  - It makes it clear that each combination has its own process
-//  - Some stdout/stderr might different from process to process
+//  - Some stdout/stderr might differ from process to process
 const getStdio = function (stage) {
   return stage === 'exec'
     ? ['ignore', 'inherit', 'inherit']
