@@ -86,7 +86,8 @@ Task logs:
 ${taskLogs}`
 }
 
-// The `exec` command prints stdout/stderr. stdin is always ignored.
+// The `exec` command does not need logs because it directly streams
+// stdout/stderr.
 // Anything printed during process spawning (e.g. top-level scope in Node.js)
 // might be repeated for each combination. This is good since:
 //  - It makes it clear that each combination has its own process
