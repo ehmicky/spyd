@@ -1,5 +1,5 @@
 import { EMPTY_DURATION_LEFT } from '../preview/completion.js'
-import { setDescription, refreshPreviewReport } from '../preview/update.js'
+import { refreshPreviewReport } from '../preview/update.js'
 
 import { getFinalResult } from './init.js'
 import { updateCombinationPreview } from './preview_duration.js'
@@ -30,8 +30,11 @@ export const initPreview = function (
     percentage: 0,
     index: 0,
     total: combinationsA.length,
+    description: START_DESCRIPTION,
   }
 }
+
+const START_DESCRIPTION = 'Starting'
 
 // Reporters can opt-out of previews by defining `reporter.quiet: true`.
 // This is a performance optimization for reporters which should not show
@@ -53,20 +56,6 @@ const addEmptyStats = function (combination) {
 //     - For example, all combinations should be shown even if not measured yet.
 //     - And the size of table should not change between previews.
 // When uncalibrated, we skip it since no stats would be reported anyway.
-export const setFirstPreview = async function (previewConfig) {
-  if (previewConfig.quiet) {
-    return previewConfig
-  }
-
-  const previewConfigA = setDescription(previewConfig, START_DESCRIPTION)
-  const previewConfigB = await setPreviewReport({
-    previewConfig: previewConfigA,
-  })
-  return previewConfigB
-}
-
-const START_DESCRIPTION = 'Starting'
-
 export const updatePreviewReport = async function ({
   stats,
   stats: { samples },
@@ -98,10 +87,14 @@ export const updatePreviewReport = async function ({
   return previewConfigC
 }
 
-const setPreviewReport = async function ({
+export const setPreviewReport = async function ({
   previewConfig,
-  previewConfig: { initResult, results, combinations },
+  previewConfig: { quiet, initResult, results, combinations },
 }) {
+  if (quiet) {
+    return previewConfig
+  }
+
   const { result } = getFinalResult(combinations, initResult, results)
   const previewConfigA = await refreshPreviewReport(previewConfig, result)
   return previewConfigA

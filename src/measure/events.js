@@ -1,4 +1,4 @@
-import { setDescription, updatePreview } from '../preview/update.js'
+import { updateDescription } from '../preview/update.js'
 import { sendAndReceive } from '../process/ipc.js'
 
 import { performMeasureLoop } from './loop.js'
@@ -33,9 +33,7 @@ export const runMainEvents = async function ({
 // Run the user-defined `before` hooks
 const beforeCombination = async function (previewConfig, server) {
   await sendAndReceive({ event: 'before' }, server)
-
-  const previewConfigA = setDescription(previewConfig, '')
-  await updatePreview(previewConfigA)
+  const previewConfigA = await updateDescription(previewConfig, '')
   return previewConfigA
 }
 
@@ -73,13 +71,9 @@ const silentAfterCombination = async function (previewConfig, server) {
 // Run the user-defined `after` hooks
 // `after` is always called, for cleanup, providing `before` completed.
 const afterCombination = async function (previewConfig, server) {
-  const previewConfigA = setDescription(previewConfig, END_DESCRIPTION)
-  await updatePreview(previewConfigA)
-
+  const previewConfigA = await updateDescription(previewConfig, END_DESCRIPTION)
   await sendAndReceive({ event: 'after' }, server)
-
-  const previewConfigB = setDescription(previewConfigA, '')
-  await updatePreview(previewConfigB)
+  const previewConfigB = await updateDescription(previewConfigA, '')
   return previewConfigB
 }
 
