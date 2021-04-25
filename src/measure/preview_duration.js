@@ -18,7 +18,7 @@ export const startCombinationPreview = async function (
   Object.assign(previewState, {
     combinationStart: now(),
     combinationEnd: undefined,
-    index,
+    index: index + 1,
   })
   await updatePreview(previewState)
 }
