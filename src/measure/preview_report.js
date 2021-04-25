@@ -11,6 +11,10 @@ export const initPreview = function (
   { quiet, reporters, titles },
   combinations,
 ) {
+  if (quiet) {
+    return { quiet }
+  }
+
   const combinationsA = combinations.map(addEmptyStats)
   return {
     quiet,

@@ -36,6 +36,10 @@ export const refreshPreviewReport = async function (previewConfig, result) {
 //  - However, this prevents jitter due the `setInterval()` decrease going
 //    against the sample updates
 export const updatePreview = async function (previewConfig) {
+  if (previewConfig.quiet) {
+    return
+  }
+
   const previewConfigA = getCompletionProps(previewConfig)
   await refreshPreview(previewConfigA)
 }
