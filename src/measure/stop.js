@@ -20,11 +20,11 @@ import {
 export const addStopHandler = function (previewState) {
   const stopState = { stopped: false }
   const noopHandler = removeDefaultHandlers()
-  const { abortSignal, abort } = createController()
-  const onAbort = handleStop(stopState, previewState, abortSignal)
+  const { cancelSignal, cancel } = createController()
+  const onAbort = handleStop(stopState, previewState, cancelSignal)
   const removeStopHandlerA = removeStopHandler.bind(
     undefined,
-    abort,
+    cancel,
     noopHandler,
   )
   return { stopState, onAbort, removeStopHandler: removeStopHandlerA }
@@ -50,14 +50,14 @@ const restoreDefaultHandlers = function (signalHandler) {
   })
 }
 
-const handleStop = async function (stopState, previewState, abortSignal) {
-  await waitForStopSignals(abortSignal)
+const handleStop = async function (stopState, previewState, cancelSignal) {
+  await waitForStopSignals(cancelSignal)
   await afterStop(stopState, previewState)
 
-  await waitForDelay(ABORT_DELAY, abortSignal)
+  await waitForDelay(ABORT_DELAY, cancelSignal)
   await beforeAbort(previewState)
 
-  await waitForStopSignals(abortSignal)
+  await waitForStopSignals(cancelSignal)
   await afterAbort(previewState)
 }
 
@@ -79,8 +79,8 @@ const afterAbort = async function (previewState) {
   throw new StopError('Benchmark has been aborted.')
 }
 
-const waitForStopSignals = async function (abortSignal) {
-  await waitForEvents(process, STOP_SIGNALS, abortSignal)
+const waitForStopSignals = async function (cancelSignal) {
+  await waitForEvents(process, STOP_SIGNALS, cancelSignal)
 }
 
 // Signals usually done interactively by user in terminals, cross-platform.
@@ -93,8 +93,8 @@ const STOP_SIGNALS = ['SIGINT', 'SIGBREAK', 'SIGHUP', 'SIGTERM', 'SIGQUIT']
 const ABORT_DELAY = 5e3
 
 // Undo signal handling
-const removeStopHandler = function (abort, signalHandler) {
-  abort()
+const removeStopHandler = function (cancel, signalHandler) {
+  cancel()
   restoreDefaultHandlers(signalHandler)
 }
 

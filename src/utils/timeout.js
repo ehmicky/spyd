@@ -6,8 +6,8 @@ import pEvent from 'p-event'
 export const createController = function () {
   const controller = new AbortController()
   return {
-    abortSignal: controller.signal,
-    abort: controller.abort.bind(controller),
+    cancelSignal: controller.signal,
+    cancel: controller.abort.bind(controller),
   }
 }
 
@@ -15,14 +15,14 @@ export const createController = function () {
 export const waitForEvents = async function (
   eventEmitter,
   signals,
-  abortSignal,
+  cancelSignal,
 ) {
   const promise = pEvent(eventEmitter, signals)
-  abortSignal.addEventListener('abort', promise.cancel)
+  cancelSignal.addEventListener('abort', promise.cancel)
   await promise
 }
 
 // TODO: replace with `timers/promises` after dropping support for Node <15
-export const waitForDelay = async function (duration, abortSignal) {
-  await delay(duration, { signal: abortSignal })
+export const waitForDelay = async function (duration, cancelSignal) {
+  await delay(duration, { signal: cancelSignal })
 }
