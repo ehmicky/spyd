@@ -1,6 +1,7 @@
 import process from 'process'
 
 import { StopError } from '../error/main.js'
+import { noUnhandledRejection } from '../error/unhandled_rejection.js'
 import { addAction, removeAction } from '../preview/action.js'
 import { updateDescription, STOP_DESCRIPTION } from '../preview/description.js'
 import { updatePreview } from '../preview/update.js'
@@ -22,6 +23,7 @@ export const addStopHandler = function (previewState) {
   const noopHandler = removeDefaultHandlers()
   const { cancelSignal, cancel } = createController()
   const onAbort = handleStop(stopState, previewState, cancelSignal)
+  noUnhandledRejection(onAbort)
   const removeStopHandlerA = removeStopHandler.bind(
     undefined,
     cancel,

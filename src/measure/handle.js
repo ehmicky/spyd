@@ -2,7 +2,13 @@ import { throwOnProcessExit } from '../process/error.js'
 
 import { runStartEnd } from './start_end.js'
 
-// Handle errors during measuring
+// Handle errors during measuring.
+// Asynchronous errors (SIGINT, child process exit):
+//  - Are handled as soon as possible
+//  - However, they only throw once all other initializing logic has been
+//    performed
+//  - This ensures that all initializers and finalizers are always called
+//    and in order
 export const handleErrorsAndMeasure = async function ({
   combination,
   precisionTarget,
