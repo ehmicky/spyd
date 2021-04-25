@@ -1,8 +1,9 @@
 import now from 'precise-now'
 
-import { updatePreview } from '../preview/update.js'
 import { getLoopsFromLength } from '../stats/extreme.js'
 import { getLengthForMoe } from '../stats/moe.js'
+
+import { updatePreview } from './update.js'
 
 // Done when combination starts
 export const startCombinationPreview = async function (previewState, index) {

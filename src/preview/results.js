@@ -1,6 +1,6 @@
-import { updateCombinationEnd } from '../measure/preview_duration.js'
 import { getFinalResult } from '../normalize/init.js'
 
+import { updateCombinationEnd } from './duration.js'
 import { updatePreviewReport } from './update.js'
 
 // Preview results progressively, as combinations are being measured.

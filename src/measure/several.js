@@ -3,7 +3,7 @@ import pReduce from 'p-reduce'
 import {
   startCombinationPreview,
   endCombinationPreview,
-} from './preview_duration.js'
+} from '../preview/duration.js'
 import { measureCombination } from './single.js'
 
 // Measure all combinations and add results to `combinations`.
