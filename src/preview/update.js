@@ -20,6 +20,21 @@ const getReport = async function (
   return await reportPreview({ ...result, preview }, { reporters, titles })
 }
 
+// Set the preview description
+export const updateDescription = async function (previewConfig, description) {
+  if (previewConfig.quiet) {
+    return previewConfig
+  }
+
+  const previewConfigA = setDescription(previewConfig, description)
+  await updatePreview(previewConfigA)
+  return previewConfigA
+}
+
+export const setDescription = function (previewConfig, description) {
+  return { ...previewConfig, description }
+}
+
 // Refresh preview.
 // Done:
 //  - At the beginning of the benchmark, to show the report without results yet
@@ -42,19 +57,4 @@ const refreshPreview = async function (previewConfig) {
 
   await clearScreen()
   await printToTty(previewContent)
-}
-
-// Set the preview description
-export const updateDescription = async function (previewConfig, description) {
-  if (previewConfig.quiet) {
-    return previewConfig
-  }
-
-  const previewConfigA = setDescription(previewConfig, description)
-  await updatePreview(previewConfigA)
-  return previewConfigA
-}
-
-export const setDescription = function (previewConfig, description) {
-  return { ...previewConfig, description }
 }
