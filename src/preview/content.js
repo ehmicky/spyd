@@ -1,6 +1,6 @@
 import { getScreenWidth } from '../report/tty.js'
 import { goodColor, separatorColor } from '../report/utils/colors.js'
-import { addPadding } from '../report/utils/indent.js'
+import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 
 // Retrieve preview content.
 // `report` is `undefined` when all reporters have `reporter.quiet: true`.
@@ -48,23 +48,24 @@ const getPreviewLines = function ({
   screenWidth,
 }) {
   const leftWidth = getLeftWidth(durationLeft, total)
-  const counter = getCounter(index, total)
-  const progressBar = getProgressBar({
-    durationLeft,
-    counter,
-    percentage,
-    screenWidth,
-  })
+  const durationLeftA = durationLeft.padEnd(leftWidth)
+  const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
+  const counter = getCounter(index, total).padEnd(leftWidth)
   const descriptionA = getDescription(description)
 
-  return addPadding(`${durationLeft.padEnd(leftWidth)}  ${progressBar}
+  return addPadding(`${durationLeftA}${progressBar}
 
-${counter.padEnd(leftWidth)}  ${combinationName}${descriptionA}`)
+${counter}${combinationName}${descriptionA}`)
 }
 
 const getLeftWidth = function (durationLeft, total) {
-  return Math.max(durationLeft.length, getCounter(total, total).length)
+  return (
+    Math.max(durationLeft.length, getCounter(total, total).length) +
+    LEFT_WIDTH_PADDING
+  )
 }
+
+const LEFT_WIDTH_PADDING = 2
 
 // The `counter` is between `durationLeft` and `progressBar` so that there is
 // no empty space when `durationLeft` is unknown.
@@ -72,22 +73,14 @@ const getCounter = function (index, total) {
   return `(${index + 1}/${total})`
 }
 
-const getProgressBar = function ({
-  durationLeft,
-  counter,
-  percentage,
-  screenWidth,
-}) {
-  const width =
-    screenWidth - durationLeft.length - counter.length - PADDING_WIDTH
-  const filled = Math.floor(width * percentage)
+const getProgressBar = function (durationLeft, percentage, screenWidth) {
+  const progressBarWidth = screenWidth - PADDING_SIZE * 2 - durationLeft.length
+  const filled = Math.floor(progressBarWidth * percentage)
   const filledChars = FILL_CHAR.repeat(filled)
-  const voidedChars = VOID_CHAR.repeat(width - filled)
+  const voidedChars = VOID_CHAR.repeat(progressBarWidth - filled)
   return `${filledChars}${voidedChars}`
 }
 
-// Pad the left|right of the progress bar with spaces
-const PADDING_WIDTH = 4
 // Works with all terminals
 const FILL_CHAR = goodColor('\u2588')
 const VOID_CHAR = separatorColor('\u2591')

@@ -17,4 +17,4 @@ export const addPadding = function (block) {
 // Terminals on Windows adds an additional newline
 const FINAL_NEWLINE = platform === 'win32' ? '' : '\n'
 
-const PADDING_SIZE = 1
+export const PADDING_SIZE = 1
