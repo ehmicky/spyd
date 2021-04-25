@@ -1,7 +1,7 @@
 import { listHistory } from '../history/main.js'
 import { getInitResult, getFinalResult } from '../normalize/init.js'
 import { initPreview } from '../preview/init.js'
-import { updatePreviewResults } from '../preview/results.js'
+import { updatePreviewReport } from '../preview/results.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
 
 import { measureCombinations } from './several.js'
@@ -41,7 +41,7 @@ const previewStartAndMeasure = async function ({
   await startPreview(previewState)
 
   try {
-    await updatePreviewResults(previewState)
+    await updatePreviewReport(previewState)
 
     const {
       combinations: combinationsA,

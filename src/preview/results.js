@@ -37,15 +37,15 @@ export const updatePreviewStats = async function ({
   combinations[index].stats = stats
   setDescriptionIf(previewState, MEASURE_DESCRIPTION, START_DESCRIPTION)
 
-  await updatePreviewResults(previewState)
+  updateCompletion(previewState)
+  await updatePreviewReport(previewState)
 }
 
-export const updatePreviewResults = async function (previewState) {
+export const updatePreviewReport = async function (previewState) {
   if (previewState.quiet) {
     return
   }
 
-  updateCompletion(previewState)
   await updateReport({ previewState })
   await refreshPreview(previewState)
 }
