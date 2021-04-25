@@ -5,11 +5,7 @@ import {
   endCombinationPreview,
 } from '../preview/combination.js'
 import { updateDescription } from '../preview/description.js'
-import {
-  addStopHandler,
-  removeStopHandler,
-  throwIfStopped,
-} from '../stop/main.js'
+import { addStopHandler, removeStopHandler } from '../stop/main.js'
 
 import { measureCombination } from './single.js'
 
@@ -70,7 +66,6 @@ const measureCombinationStats = async function ({
       stopState,
       stage,
     })
-    throwIfStopped(stopState)
     await endCombinationPreview(previewState)
     return { ...combination, stats, taskIds }
   } finally {

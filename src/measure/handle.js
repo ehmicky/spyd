@@ -1,4 +1,5 @@
 import { throwOnProcessExit } from '../process/error.js'
+import { throwIfStopped } from '../stop/main.js'
 
 import { runStartEnd } from './start_end.js'
 
@@ -21,7 +22,7 @@ export const handleErrorsAndMeasure = async function ({
   logsFd,
 }) {
   try {
-    return await Promise.race([
+    const returnValue = await Promise.race([
       throwOnProcessExit(childProcess),
       onAbort,
       runStartEnd({
@@ -34,6 +35,8 @@ export const handleErrorsAndMeasure = async function ({
         logsFd,
       }),
     ])
+    throwIfStopped(stopState)
+    return returnValue
   } catch (error) {
     prependTaskPrefix(error, combination, stage)
     throw error
@@ -41,7 +44,7 @@ export const handleErrorsAndMeasure = async function ({
 }
 
 const prependTaskPrefix = function (error, { taskId }, stage) {
-  if (stage === 'init') {
+  if (stage === 'init' || error.name === 'StopError') {
     return
   }
 
