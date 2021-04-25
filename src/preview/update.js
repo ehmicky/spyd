@@ -16,6 +16,10 @@ import { getPreviewContent } from './content.js'
 //  - However, this prevents jitter due the `setInterval()` decrease going
 //    against the sample updates
 export const updatePreview = async function (previewState) {
+  if (previewState.quiet) {
+    return
+  }
+
   updateCompletion(previewState)
   await refreshPreview(previewState)
 }
