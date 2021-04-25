@@ -173,9 +173,8 @@ const SMOOTH_CLOSENESS = 0.05
 // Done when combination ends
 export const endCombinationPreview = async function ({
   previewState,
-  previewState: { total },
   previewConfig,
-  previewConfig: { quiet },
+  previewConfig: { quiet, total },
 }) {
   if (quiet) {
     return

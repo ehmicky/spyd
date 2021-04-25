@@ -20,11 +20,11 @@ export const initPreview = function (
     titles,
     combinations,
     previewSamples: 0,
+    total: combinations.length,
   }
   const previewState = {
     durationLeft: EMPTY_DURATION_LEFT,
     index: 1,
-    total: combinations.length,
     percentage: 0,
   }
   return { previewConfig, previewState }
@@ -84,9 +84,16 @@ const addEmptyStats = function (combination) {
 
 const setPreviewReport = async function ({
   previewConfig,
-  previewConfig: { initResult, results, reporters, titles, combinations },
+  previewConfig: {
+    initResult,
+    results,
+    reporters,
+    titles,
+    combinations,
+    total,
+  },
   previewState,
-  previewState: { durationLeft, index, total, percentage },
+  previewState: { durationLeft, index, percentage },
 }) {
   const reportersA = reporters.filter(isNotQuiet)
 

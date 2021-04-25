@@ -27,19 +27,14 @@ export const updatePreview = async function (previewState, previewConfig) {
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, { durationLeft, percentage })
 
-  const previewContent = getPreviewContent(previewState)
+  const previewContent = getPreviewContent(previewState, previewConfig)
   await printToTty(previewContent)
 }
 
-const getPreviewContent = function ({
-  durationLeft,
-  index,
-  total,
-  percentage,
-  description,
-  priorityDescription,
-  report,
-}) {
+const getPreviewContent = function (
+  { durationLeft, index, percentage, description, priorityDescription, report },
+  { total },
+) {
   const descriptionA = getDescription(description, priorityDescription)
   return getContent({
     durationLeft,
