@@ -47,7 +47,7 @@ const refreshPreview = async function (previewConfig) {
 // Set the preview description
 export const updateDescription = async function (previewConfig, description) {
   if (previewConfig.quiet) {
-    return
+    return previewConfig
   }
 
   const previewConfigA = setDescription(previewConfig, description)
