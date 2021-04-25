@@ -14,6 +14,7 @@ export const getPreviewContent = function ({
   total,
   combinationName,
   description,
+  actions,
 }) {
   const screenWidth = getScreenWidth()
   const separator = getSeparator(report, screenWidth)
@@ -24,6 +25,7 @@ export const getPreviewContent = function ({
     total,
     combinationName,
     description,
+    actions,
     screenWidth,
   })
   return `${report}${separator}${previewLines}\n`
@@ -47,6 +49,7 @@ const getPreviewLines = function ({
   total,
   combinationName,
   description,
+  actions,
   screenWidth,
 }) {
   const leftWidth = getLeftWidth(durationLeft, total)
@@ -54,12 +57,12 @@ const getPreviewLines = function ({
   const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
   const counter = getCounter(index, total).padEnd(leftWidth)
   const descriptionA = getDescription(description)
-  const actions = getActions(leftWidth)
+  const actionsA = getActions(actions, leftWidth)
 
   const previewLines = [
     `${durationLeftA}${progressBar}`,
     `${counter}${combinationName}${descriptionA}`,
-    actions,
+    actionsA,
   ]
     .filter(Boolean)
     .join('\n\n')

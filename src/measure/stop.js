@@ -1,11 +1,9 @@
 import process from 'process'
 
 import { StopError } from '../error/main.js'
-import {
-  updateDescription,
-  STOP_DESCRIPTION,
-  ABORT_DESCRIPTION,
-} from '../preview/description.js'
+import { addAction, removeAction } from '../preview/action.js'
+import { updateDescription, STOP_DESCRIPTION } from '../preview/description.js'
+import { updatePreview } from '../preview/update.js'
 import {
   createController,
   waitForEvents,
@@ -55,15 +53,20 @@ const restoreDefaultHandlers = function (signalHandler) {
 const handleStop = async function (stopState, previewState, abortSignal) {
   await waitForStopSignals(abortSignal)
 
+  removeAction(previewState, 'stop')
   await updateDescription(previewState, STOP_DESCRIPTION)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
 
   await waitForDelay(ABORT_DELAY, abortSignal)
-  await updateDescription(previewState, ABORT_DESCRIPTION)
+
+  addAction(previewState, 'abort')
+  await updatePreview(previewState)
 
   await waitForStopSignals(abortSignal)
 
+  removeAction(previewState, 'abort')
+  await updatePreview(previewState)
   throw new StopError('Benchmark has been aborted.')
 }
 

@@ -1,3 +1,4 @@
+import { DEFAULT_ACTIONS } from './action.js'
 import { EMPTY_DURATION_LEFT } from './completion.js'
 
 // Retrieve initial `previewState`.
@@ -32,6 +33,7 @@ export const initPreview = function (
     total: combinationsA.length,
     combinationName: '',
     description: START_DESCRIPTION,
+    actions: DEFAULT_ACTIONS,
   }
 }
 
