@@ -25,7 +25,6 @@ export const performBenchmark = async function (
   return { rawResult, result }
 }
 
-// Start preview then measure benchmark
 const previewStartAndMeasure = async function ({
   combinations,
   config,
@@ -40,7 +39,7 @@ const previewStartAndMeasure = async function ({
     const {
       combinations: combinationsA,
       results,
-    } = await previewRefreshAndMeasure({ combinations, config, previewState })
+    } = await listHistoryAndMeasure({ combinations, config, previewState })
     await endPreview(previewState)
     return { combinations: combinationsA, results }
   } catch (error) {
@@ -49,8 +48,7 @@ const previewStartAndMeasure = async function ({
   }
 }
 
-// Start preview refresh then measure benchmark
-const previewRefreshAndMeasure = async function ({
+const listHistoryAndMeasure = async function ({
   combinations,
   config,
   config: { cwd, precisionTarget },
