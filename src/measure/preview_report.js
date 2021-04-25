@@ -55,13 +55,13 @@ const START_DESCRIPTION = 'Starting...'
 
 export const updatePreviewReport = async function ({
   stats,
-  sampleState: { calibrated },
+  stats: { samples },
   previewConfig,
   previewConfig: { quiet, combinations, measuredCombinations },
   previewState,
   previewState: { index },
 }) {
-  if (quiet || !calibrated) {
+  if (quiet || samples === 0) {
     return
   }
 
