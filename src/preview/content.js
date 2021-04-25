@@ -13,6 +13,7 @@ export const getPreviewContent = function ({
   description = '',
 }) {
   const screenWidth = getScreenWidth()
+  const leftWidth = getLeftWidth(durationLeft, total)
   const results = getResults(report, screenWidth)
   const counter = getCounter(index, total)
   const progressBar = getProgressBar({
@@ -23,10 +24,14 @@ export const getPreviewContent = function ({
   })
 
   return `${results}
- ${durationLeft}${goodColor(counter)}${progressBar}
+ ${durationLeft.padEnd(leftWidth)}  ${progressBar}
 
- ${description}
+ ${counter.padEnd(leftWidth)}  ${description}
 `
+}
+
+const getLeftWidth = function (durationLeft, total) {
+  return Math.max(durationLeft.length, getCounter(total, total).length)
 }
 
 // `report` is `undefined` when all reporters have `reporter.quiet: true`.
@@ -40,10 +45,7 @@ const getResults = function (report, screenWidth) {
 }
 
 const getCounter = function (index, total) {
-  const indexString = String(index + 1)
-  const totalString = String(total)
-  const padding = ' '.repeat(totalString.length - indexString.length)
-  return `  ${padding}(${indexString}/${totalString})  `
+  return `(${index + 1}/${total})`
 }
 
 const getProgressBar = function ({
