@@ -31,10 +31,11 @@ export const startServer = async function () {
 }
 
 // Try to re-use the TCP socket between samples.
-// Based on the target sample duration. Multiplied by a factor because the
-// target sample duration only includes measuring not the duration spent
-// in the runner inner logic nor doing IPC.
-const KEEP_ALIVE_FACTOR = 10
+// Based on the target sample duration. Multiplied by a factor because:
+//  - The target sample duration only includes measuring not the duration spent
+//    in the runner inner logic nor doing IPC.
+//  - Samples might last longer if the task is slow
+const KEEP_ALIVE_FACTOR = 1e2
 const KEEP_ALIVE_TIMEOUT = TARGET_SAMPLE_DURATION * KEEP_ALIVE_FACTOR
 
 const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
