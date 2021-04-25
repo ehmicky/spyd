@@ -53,10 +53,10 @@ const previewRefreshAndMeasure = async function ({
   return { combinations: combinationsA, results }
 }
 
-// Aborts behave like stops, i.e. last preview remains shown
-//  - This allows users to stop a benchmark without losing information.
+// The last preview is kept as is when stopping the benchmarking
+//  - This allows users to stop a benchmark without losing information,
+//    including the duration that was left
 //  - This is unlike other errors, which clear it
-// However failures only print the error message, i.e. clear the preview.
 const handlePreviewError = async function (error, quiet) {
   if (error.name === 'StopError') {
     return

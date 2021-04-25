@@ -17,9 +17,6 @@ import { getDescription } from './description.js'
 //    real-time
 //  - However, this prevents jitter due the `setInterval()` decrease going
 //    against the sample updates
-// We keep the preview if the benchmark was interrupted either by:
-//  - An error
-//  - A user stop
 export const updatePreview = async function (previewState) {
   await clearScreen()
 
