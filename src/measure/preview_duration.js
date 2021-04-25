@@ -174,7 +174,7 @@ export const endCombinationPreview = async function (previewConfig) {
   const { quiet, total } = previewConfig
 
   if (quiet) {
-    return
+    return previewConfig
   }
 
   const previewConfigA = {
@@ -183,4 +183,5 @@ export const endCombinationPreview = async function (previewConfig) {
     index: total,
   }
   await updatePreview(previewConfigA)
+  return previewConfigA
 }
