@@ -4,7 +4,6 @@ import {
 } from '../process/runner.js'
 
 import { handleErrorsAndMeasure } from './handle.js'
-import { addStopHandler, throwIfStopped } from './stop.js'
 
 // Spawn combination processes, then measure them
 export const spawnAndMeasure = async function ({
@@ -13,6 +12,8 @@ export const spawnAndMeasure = async function ({
   precisionTarget,
   cwd,
   previewState,
+  stopState,
+  onAbort,
   stage,
   server,
   logsStream,
@@ -26,10 +27,12 @@ export const spawnAndMeasure = async function ({
   })
 
   try {
-    return await stopOrMeasure({
+    return await handleErrorsAndMeasure({
       combination,
       precisionTarget,
       previewState,
+      stopState,
+      onAbort,
       stage,
       server,
       childProcess,
@@ -37,36 +40,5 @@ export const spawnAndMeasure = async function ({
     })
   } finally {
     terminateRunnerProcess(childProcess)
-  }
-}
-
-// Handle stopping the benchmark
-const stopOrMeasure = async function ({
-  combination,
-  precisionTarget,
-  previewState,
-  stage,
-  server,
-  childProcess,
-  logsFd,
-}) {
-  const { stopState, onAbort, removeStopHandler } = addStopHandler(previewState)
-
-  try {
-    const returnValue = await handleErrorsAndMeasure({
-      combination,
-      precisionTarget,
-      previewState,
-      stopState,
-      stage,
-      server,
-      childProcess,
-      logsFd,
-      onAbort,
-    })
-    throwIfStopped(stopState)
-    return returnValue
-  } finally {
-    removeStopHandler()
   }
 }

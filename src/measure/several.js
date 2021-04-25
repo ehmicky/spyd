@@ -7,6 +7,7 @@ import {
 import { updateDescription } from '../preview/description.js'
 
 import { measureCombination } from './single.js'
+import { addStopHandler, throwIfStopped } from './stop.js'
 
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
@@ -25,25 +26,35 @@ export const measureCombinations = async function (
   combinations,
   { precisionTarget, cwd, previewState, stage },
 ) {
-  return await pMapSeries(
-    combinations,
-    (combination, index) =>
-      measureCombinationStats({
-        combination,
-        index,
-        previewState,
-        precisionTarget,
-        cwd,
-        stage,
-      }),
-    [],
-  )
+  const { stopState, onAbort, removeStopHandler } = addStopHandler(previewState)
+
+  try {
+    return await pMapSeries(
+      combinations,
+      (combination, index) =>
+        measureCombinationStats({
+          combination,
+          index,
+          previewState,
+          stopState,
+          onAbort,
+          precisionTarget,
+          cwd,
+          stage,
+        }),
+      [],
+    )
+  } finally {
+    removeStopHandler()
+  }
 }
 
 const measureCombinationStats = async function ({
   combination,
   index,
   previewState,
+  stopState,
+  onAbort,
   precisionTarget,
   cwd,
   stage,
@@ -54,8 +65,11 @@ const measureCombinationStats = async function ({
       precisionTarget,
       cwd,
       previewState,
+      stopState,
+      onAbort,
       stage,
     })
+    throwIfStopped(stopState)
     await endCombinationPreview(previewState)
     return { ...combination, stats, taskIds }
   } finally {

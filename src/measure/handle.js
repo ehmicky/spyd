@@ -14,11 +14,11 @@ export const handleErrorsAndMeasure = async function ({
   precisionTarget,
   previewState,
   stopState,
+  onAbort,
   stage,
   server,
   childProcess,
   logsFd,
-  onAbort,
 }) {
   try {
     return await Promise.race([
