@@ -44,15 +44,15 @@ export const updateCombinationPreview = function ({
   stats: { stdev },
   previewConfig,
   previewConfig: { previewSamples, combinationEnd: previousCombinationEnd },
-  durationState,
+  durationState: { sampleDurationMean },
   precisionTarget,
 }) {
-  if (stdev === undefined || stdev === 0) {
+  if (sampleDurationMean === undefined || stdev === undefined || stdev === 0) {
     return previewConfig
   }
 
   const samplesTarget = getSamplesTarget(stats, precisionTarget)
-  const combinationEnd = getCombinationEnd(samplesTarget, durationState)
+  const combinationEnd = getCombinationEnd(samplesTarget, sampleDurationMean)
   const combinationEndA = smoothCombinationEnd({
     combinationEnd,
     previousCombinationEnd,
@@ -86,7 +86,7 @@ const computeSamplesTarget = function (loopsTarget, loops, samples) {
 }
 
 // Estimate `combinationEnd` based on the current data
-const getCombinationEnd = function (samplesTarget, { sampleDurationMean }) {
+const getCombinationEnd = function (samplesTarget, sampleDurationMean) {
   const durationLeft = samplesTarget * sampleDurationMean
   return now() + durationLeft
 }

@@ -60,18 +60,20 @@ const performSample = async function (
 ) {
   const sampleStart = startSample()
 
-  const previewConfigA = await updatePreviewReport({
-    stats,
-    previewConfig,
-    durationState,
-    precisionTarget,
-  })
   const sampleStateA = await measureSample(
     { server, minLoopDuration, targetSampleDuration },
     sampleState,
   )
   const statsA = addStats(stats, sampleStateA, minLoopDuration)
-  await truncateLogs(logsFd)
+  const [previewConfigA] = await Promise.all([
+    updatePreviewReport({
+      stats: statsA,
+      previewConfig,
+      durationState,
+      precisionTarget,
+    }),
+    truncateLogs(logsFd),
+  ])
 
   const durationStateA = endSample(sampleStart, durationState, statsA)
   return {
