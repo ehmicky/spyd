@@ -33,8 +33,7 @@ export const startCombinationPreview = async function (
 // Done when combination's sample starts
 export const updateCombinationPreview = function ({
   stats,
-  stats: { moe, samples },
-  previewConfig: { quiet },
+  previewConfig,
   previewState,
   previewState: { combinationEnd: previousCombinationEnd },
   sampleState,
@@ -42,7 +41,7 @@ export const updateCombinationPreview = function ({
   durationState,
   precisionTarget,
 }) {
-  if (quiet || samples === 0 || moe === undefined) {
+  if (shouldSkipPreview(previewConfig, stats)) {
     return sampleState
   }
 
@@ -59,10 +58,14 @@ export const updateCombinationPreview = function ({
   return { ...sampleState, previewSamples: previewSamples + 1 }
 }
 
+const shouldSkipPreview = function ({ quiet }, { samples, stdev }) {
+  return quiet || samples === 0 || stdev === undefined || stdev === 0
+}
+
 // Estimate how many samples are left to reach the rmoe target for the current
 // `precision`.
 const getSamplesTarget = function (
-  { median, stdev, loops, samples },
+  { samples, loops, median, stdev },
   precisionTarget,
 ) {
   const moeTarget = precisionTarget * median
