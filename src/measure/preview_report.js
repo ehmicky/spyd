@@ -83,6 +83,7 @@ const addEmptyStats = function (combination) {
 }
 
 const setPreviewReport = async function ({
+  previewConfig,
   previewConfig: { initResult, results, reporters, titles, combinations },
   previewState,
   previewState: { durationLeft, index, total, percentage },
@@ -103,7 +104,7 @@ const setPreviewReport = async function ({
     reporters: reportersA,
     titles,
   })
-  await updatePreview(previewState)
+  await updatePreview(previewState, previewConfig)
 }
 
 // Reporters can opt-out of previews by defining `reporter.quiet: true`.

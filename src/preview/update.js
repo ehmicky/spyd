@@ -17,10 +17,13 @@ import { getDescription } from './description.js'
 //    real-time
 //  - However, this prevents jitter due the `setInterval()` decrease going
 //    against the sample updates
-export const updatePreview = async function (previewState) {
+export const updatePreview = async function (previewState, previewConfig) {
   await clearScreen()
 
-  const { durationLeft, percentage } = getCompletionProps(previewState)
+  const { durationLeft, percentage } = getCompletionProps(
+    previewState,
+    previewConfig,
+  )
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, { durationLeft, percentage })
 

@@ -7,20 +7,19 @@ import { getLengthForMoe } from '../stats/moe.js'
 // Done when combination starts
 export const startCombinationPreview = async function ({
   previewState,
+  previewConfig,
   previewConfig: { quiet },
   index,
 }) {
   if (quiet) {
-    return
+    return previewConfig
   }
 
+  const previewConfigA = { ...previewConfig, combinationStart: now() }
   // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(previewState, {
-    combinationStart: now(),
-    combinationEnd: undefined,
-    index: index + 1,
-  })
-  await updatePreview(previewState)
+  Object.assign(previewState, { combinationEnd: undefined, index: index + 1 })
+  await updatePreview(previewState, previewConfigA)
+  return previewConfigA
 }
 
 // Update the combination start and expected end.
@@ -172,7 +171,11 @@ const ADJUSTED_SMOOTH_PERIOD = SMOOTH_PERIOD * 2
 const SMOOTH_CLOSENESS = 0.05
 
 // Done when combination ends
-export const endCombinationPreview = async function (previewState, { quiet }) {
+export const endCombinationPreview = async function ({
+  previewState,
+  previewConfig,
+  previewConfig: { quiet },
+}) {
   if (quiet) {
     return
   }
@@ -182,5 +185,5 @@ export const endCombinationPreview = async function (previewState, { quiet }) {
     combinationEnd: now(),
     index: previewState.total,
   })
-  await updatePreview(previewState)
+  await updatePreview(previewState, previewConfig)
 }
