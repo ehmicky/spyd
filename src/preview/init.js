@@ -1,5 +1,6 @@
 import { DEFAULT_ACTIONS } from './action.js'
 import { EMPTY_DURATION_LEFT } from './completion.js'
+import { START_DESCRIPTION } from './description.js'
 
 // Retrieve initial `previewState`.
 // This must be directly mutated because it is shared by reference by
@@ -36,8 +37,6 @@ export const initPreview = function (
     actions: DEFAULT_ACTIONS,
   }
 }
-
-const START_DESCRIPTION = 'Starting'
 
 // Reporters can opt-out of previews by defining `reporter.quiet: true`.
 // This is a performance optimization for reporters which should not show
