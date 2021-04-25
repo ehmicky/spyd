@@ -6,7 +6,7 @@ import UpdateNotifier from 'update-notifier'
 
 import { normalizeError, getErrorProps } from '../error/main.js'
 import * as commands from '../main.js'
-import { addLeftPadding } from '../report/utils/indent.js'
+import { addNonTopPadding } from '../report/utils/indent.js'
 
 import { parseCliFlags } from './parse.js'
 import { defineCli } from './top.js'
@@ -39,7 +39,7 @@ const handleCliError = function (error) {
   const errorA = normalizeError(error)
   const { exitCode, printStack, indented } = getErrorProps(errorA)
   const errorMessage = printStack ? errorA.stack : errorA.message
-  const errorMessageA = indented ? addLeftPadding(errorMessage) : errorMessage
+  const errorMessageA = indented ? addNonTopPadding(errorMessage) : errorMessage
   console.error(errorMessageA)
   process.exitCode = exitCode
 }
