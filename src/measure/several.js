@@ -29,23 +29,41 @@ export const measureCombinations = async function (
   const stopState = addStopHandler(previewState)
 
   try {
-    return await pMapSeries(
+    return await measureCombinationsStats({
       combinations,
-      (combination, index) =>
-        measureCombinationStats({
-          combination,
-          index,
-          previewState,
-          stopState,
-          precisionTarget,
-          cwd,
-          stage,
-        }),
-      [],
-    )
+      precisionTarget,
+      cwd,
+      previewState,
+      stopState,
+      stage,
+    })
   } finally {
     removeStopHandler(stopState)
   }
+}
+
+const measureCombinationsStats = async function ({
+  combinations,
+  precisionTarget,
+  cwd,
+  previewState,
+  stopState,
+  stage,
+}) {
+  return await pMapSeries(
+    combinations,
+    (combination, index) =>
+      measureCombinationStats({
+        combination,
+        index,
+        previewState,
+        stopState,
+        precisionTarget,
+        cwd,
+        stage,
+      }),
+    [],
+  )
 }
 
 const measureCombinationStats = async function ({
