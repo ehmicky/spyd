@@ -74,7 +74,7 @@ const performSample = async function (
   )
   const statsA = addStats(stats, sampleStateA, minLoopDuration)
 
-  await Promise.all([
+  const [previewConfigB] = await Promise.all([
     updatePreviewReport({ stats: statsA, previewConfig: previewConfigA }),
     truncateLogs(logsFd),
   ])
@@ -84,6 +84,6 @@ const performSample = async function (
     stats: statsA,
     sampleState: sampleStateA,
     durationState: durationStateA,
-    previewConfig: previewConfigA,
+    previewConfig: previewConfigB,
   }
 }

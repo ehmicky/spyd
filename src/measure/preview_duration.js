@@ -5,19 +5,15 @@ import { getLoopsFromLength } from '../stats/extreme.js'
 import { getLengthForMoe } from '../stats/moe.js'
 
 // Done when combination starts
-export const startCombinationPreview = async function ({
-  previewConfig,
-  previewConfig: { quiet },
-  measuredCombinations,
-  index,
-}) {
+export const startCombinationPreview = async function (previewConfig, index) {
+  const { quiet } = previewConfig
+
   if (quiet) {
     return previewConfig
   }
 
   const previewConfigA = {
     ...previewConfig,
-    measuredCombinations,
     combinationStart: now(),
     index: index + 1,
   }

@@ -10,19 +10,24 @@ export const initPreview = function (
   { quiet, reporters, titles },
   combinations,
 ) {
+  const combinationsA = combinations.map(addEmptyStats)
   return {
     quiet,
     initResult,
     results: [],
     reporters,
     titles,
-    combinations,
+    combinations: combinationsA,
     previewSamples: 0,
     durationLeft: EMPTY_DURATION_LEFT,
     percentage: 0,
     index: 1,
-    total: combinations.length,
+    total: combinationsA.length,
   }
+}
+
+const addEmptyStats = function (combination) {
+  return { ...combination, stats: {} }
 }
 
 // Preview results progressively, as combinations are being measured.
@@ -50,23 +55,21 @@ export const updatePreviewReport = async function ({
   stats,
   stats: { samples },
   previewConfig,
-  previewConfig: { quiet, combinations, measuredCombinations, index },
+  previewConfig: { quiet, combinations, index },
 }) {
   if (quiet || samples === 0) {
-    return
+    return previewConfig
   }
 
   const combinationsA = [
-    ...measuredCombinations,
+    ...combinations.slice(0, index - 1),
     { ...combinations[index - 1], stats },
-    ...combinations.slice(index).map(addEmptyStats),
+    ...combinations.slice(index),
   ]
+  const previewConfigA = { ...previewConfig, combinations: combinationsA }
 
-  await setPreviewReport({ ...previewConfig, combinations: combinationsA })
-}
-
-const addEmptyStats = function (combination) {
-  return { ...combination, stats: {} }
+  const previewConfigB = await setPreviewReport(previewConfigA)
+  return previewConfigB
 }
 
 const setPreviewReport = async function (previewConfig) {
