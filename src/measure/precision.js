@@ -35,6 +35,47 @@ import { UserError } from '../error/main.js'
 //     - In a perfect environment, if the combinations are identical, they would
 //       always be too close to stop measuring.
 //     - This allows computing `precision` independently in each combination
+// There are several types of variation:
+//  - statistical:
+//     - due to low sample size
+//     - reduced by increasing `precision`
+//     - types:
+//        - same combination, same result: `rmoe`
+//        - different combination, same result: compare `moe` ranges
+//           - a Mann-Whitney U-test would be more statistically significant
+//             but harder to report
+//        - same combination, different results: same
+//  - task itself:
+//     - due to non-deterministic logic in the task or use a shared resources
+//       (CPU, memory, etc.)
+//     - measured by: `stdev`, `quantiles|min|low|median|high|max`
+//     - no way (nor strong reason) to reduce it
+//     - only reported by distribution-centric reporters (histogram, box chart),
+//       not most reporters
+//        - reason: simplicity, and putting focus on `median` instead
+//  - engine optimization:
+//     - due to engine optimize code runtime, e.g. JIT
+//     - measured by: `moe`, `stdev`, `quantiles|min|low|median|high|max`
+//     - reduced by increasing `precision`
+//     - only happening in:
+//        - the beginning of the measuring
+//        - very fast tasks
+//     - does not need any specific stats because:
+//        - `moe` already takes care of it
+//           - engine optimization implies slow outliers and bigger `stdev`
+//           - this increases the time required to reach `precisionTarget`
+//        - `repeat` calibration tends to soften it
+//           - since it runs the tasks many times and discard those measures
+//  - environment:
+//     - difference in OS load, hardware, etc.
+//        - multidimensional: CPU, memory, network, i.e. specific to each
+//          combination use of those resources
+//     - measured by `diff` (with same combination)
+//     - reduced by using containers, VM, CI
+//     - users might intentionally compare it, for example to compare different
+//       machines
+//        - this can happen inside the same run (due to previous runs being
+//          merged to current one)
 export const normalizePrecision = function (precision, name) {
   if (!Number.isInteger(precision)) {
     throw new UserError(`'${name}' must be a positive integer: ${precision}`)
