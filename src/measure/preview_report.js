@@ -2,6 +2,7 @@ import { EMPTY_DURATION_LEFT } from '../preview/completion.js'
 import { setDescription, refreshPreviewReport } from '../preview/update.js'
 
 import { getFinalResult } from './init.js'
+import { updateCombinationPreview } from './preview_duration.js'
 
 // Retrieve initial `previewConfig`
 // `index` and `total` are used as a 1-based counter in previews.
@@ -56,20 +57,28 @@ export const updatePreviewReport = async function ({
   stats: { samples },
   previewConfig,
   previewConfig: { quiet, combinations, index },
+  durationState,
+  precisionTarget,
 }) {
   if (quiet || samples === 0) {
     return previewConfig
   }
 
+  const previewConfigA = updateCombinationPreview({
+    stats,
+    previewConfig,
+    durationState,
+    precisionTarget,
+  })
   const combinationsA = [
     ...combinations.slice(0, index - 1),
     { ...combinations[index - 1], stats },
     ...combinations.slice(index),
   ]
-  const previewConfigA = { ...previewConfig, combinations: combinationsA }
+  const previewConfigB = { ...previewConfigA, combinations: combinationsA }
 
-  const previewConfigB = await setPreviewReport(previewConfigA)
-  return previewConfigB
+  const previewConfigC = await setPreviewReport(previewConfigB)
+  return previewConfigC
 }
 
 const setPreviewReport = async function (previewConfig) {

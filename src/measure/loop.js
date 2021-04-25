@@ -5,7 +5,6 @@ import { getInitialStats, addStats } from '../stats/add.js'
 import { pWhile } from '../utils/p_while.js'
 
 import { getInitialDurationState, startSample, endSample } from './duration.js'
-import { updateCombinationPreview } from './preview_duration.js'
 import { updatePreviewReport } from './preview_report.js'
 import { isRemainingCombination } from './remaining.js'
 
@@ -61,17 +60,12 @@ const performSample = async function (
 ) {
   const sampleStart = startSample()
 
-  const previewConfigA = updateCombinationPreview({
+  const previewConfigA = await updatePreviewReport({
     stats,
     previewConfig,
     durationState,
     precisionTarget,
   })
-  const previewConfigB = await updatePreviewReport({
-    stats,
-    previewConfig: previewConfigA,
-  })
-
   const sampleStateA = await measureSample(
     { server, minLoopDuration, targetSampleDuration },
     sampleState,
@@ -84,6 +78,6 @@ const performSample = async function (
     stats: statsA,
     sampleState: sampleStateA,
     durationState: durationStateA,
-    previewConfig: previewConfigB,
+    previewConfig: previewConfigA,
   }
 }

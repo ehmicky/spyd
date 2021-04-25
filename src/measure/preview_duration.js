@@ -31,12 +31,13 @@ export const startCombinationPreview = async function (previewConfig, index) {
 // Done when combination's sample starts
 export const updateCombinationPreview = function ({
   stats,
+  stats: { stdev },
   previewConfig,
   previewConfig: { previewSamples, combinationEnd: previousCombinationEnd },
   durationState,
   precisionTarget,
 }) {
-  if (shouldSkipPreview(previewConfig, stats)) {
+  if (stdev === undefined || stdev === 0) {
     return previewConfig
   }
 
@@ -53,10 +54,6 @@ export const updateCombinationPreview = function ({
     previewSamples: previewSamples + 1,
     combinationEnd: combinationEndA,
   }
-}
-
-const shouldSkipPreview = function ({ quiet }, { samples, stdev }) {
-  return quiet || samples === 0 || stdev === undefined || stdev === 0
 }
 
 // Estimate how many samples are left to reach the rmoe target for the current
