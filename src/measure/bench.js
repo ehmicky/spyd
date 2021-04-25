@@ -35,7 +35,7 @@ const previewStartAndMeasure = async function ({
   await startPreview(previewState)
 
   try {
-    await updatePreviewResults({ previewState })
+    await updatePreviewResults(previewState)
 
     const {
       combinations: combinationsA,

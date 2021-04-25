@@ -1,7 +1,9 @@
 import { getFinalResult } from '../normalize/init.js'
+import { reportPreview } from '../report/main.js'
 
+import { updateCompletion } from './completion.js'
 import { updateCombinationEnd } from './duration.js'
-import { updatePreviewReport } from './update.js'
+import { refreshPreview } from './update.js'
 
 // Preview results progressively, as combinations are being measured.
 // Reporters should:
@@ -41,17 +43,40 @@ export const updatePreviewStats = async function ({
     combinations: combinationsA,
   })
 
-  await updatePreviewResults({ previewState })
+  await updatePreviewResults(previewState)
 }
 
-export const updatePreviewResults = async function ({
-  previewState,
-  previewState: { quiet, initResult, results, combinations },
-}) {
-  if (quiet) {
+export const updatePreviewResults = async function (previewState) {
+  if (previewState.quiet) {
     return
   }
 
+  updateCompletion(previewState)
+  await updateReport({ previewState })
+  await refreshPreview(previewState)
+}
+
+const updateReport = async function ({
+  previewState,
+  previewState: {
+    durationLeft,
+    percentage,
+    index,
+    total,
+    reporters,
+    titles,
+    initResult,
+    results,
+    combinations,
+  },
+}) {
   const { result } = getFinalResult(combinations, initResult, results)
-  await updatePreviewReport(previewState, result)
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.report = await reportPreview(
+    {
+      ...result,
+      preview: { durationLeft, percentage, index: index + 1, total },
+    },
+    { reporters, titles },
+  )
 }

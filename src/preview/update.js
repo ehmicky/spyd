@@ -1,4 +1,3 @@
-import { reportPreview } from '../report/main.js'
 import { printToTty, clearScreen } from '../report/tty.js'
 
 import { updateCompletion } from './completion.js'
@@ -21,27 +20,7 @@ export const updatePreview = async function (previewState) {
   await refreshPreview(previewState)
 }
 
-export const updatePreviewReport = async function (previewState, result) {
-  updateCompletion(previewState)
-  await updateReport({ previewState, result })
-  await refreshPreview(previewState)
-}
-
-const updateReport = async function ({
-  previewState,
-  previewState: { durationLeft, percentage, index, total, reporters, titles },
-  result,
-}) {
-  const preview = { durationLeft, percentage, index: index + 1, total }
-  const report = await reportPreview(
-    { ...result, preview },
-    { reporters, titles },
-  )
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.report = report
-}
-
-const refreshPreview = async function (previewState) {
+export const refreshPreview = async function (previewState) {
   const previewContent = getPreviewContent(previewState)
 
   await clearScreen()
