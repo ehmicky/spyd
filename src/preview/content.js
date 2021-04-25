@@ -39,4 +39,4 @@ const getSeparator = function (report, screenWidth) {
 }
 
 // Works with all terminals
-const LINE_CHAR = separatorColor('\u2500')
+const LINE_CHAR = '\u2500'

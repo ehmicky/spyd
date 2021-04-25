@@ -1,4 +1,4 @@
-import { titleColor, separatorColor } from '../report/utils/colors.js'
+import { titleColor, noteColor } from '../report/utils/colors.js'
 
 import {
   COMBINATION_CATEGORIES,
@@ -39,12 +39,12 @@ export const getCombinationIds = function (combination) {
 }
 
 export const getCombinationName = function (combination) {
-  return getIdInfos(combination).map(getCategoryName).join(separatorColor(', '))
+  return getIdInfos(combination).map(getCategoryName).join(noteColor(', '))
 }
 
 const getCategoryName = function ({ category, id }, index) {
   const categoryA = index === 0 ? titleize(category) : category
-  return `${separatorColor(categoryA)} ${titleColor(id)}`
+  return `${noteColor(categoryA)} ${titleColor(id)}`
 }
 
 const titleize = function (string) {

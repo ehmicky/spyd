@@ -1,4 +1,4 @@
-import { goodColor, separatorColor } from '../report/utils/colors.js'
+import { goodColor, separatorColor, noteColor } from '../report/utils/colors.js'
 import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 
 // Retrieve bottom of preview
@@ -50,21 +50,23 @@ const getCounter = function (index, total) {
 const getProgressBar = function (durationLeft, percentage, screenWidth) {
   const progressBarWidth = screenWidth - PADDING_SIZE * 2 - durationLeft.length
   const filled = Math.floor(progressBarWidth * percentage)
-  const filledChars = FILL_CHAR.repeat(filled)
-  const voidedChars = VOID_CHAR.repeat(progressBarWidth - filled)
+  const filledChars = goodColor(FILL_CHAR.repeat(filled))
+  const voidedChars = separatorColor(
+    VOID_CHAR.repeat(progressBarWidth - filled),
+  )
   return `${filledChars}${voidedChars}`
 }
 
 // Works with all terminals
-const FILL_CHAR = goodColor('\u2588')
-const VOID_CHAR = separatorColor('\u2591')
+const FILL_CHAR = '\u2588'
+const VOID_CHAR = '\u2591'
 
 const getDescription = function (description) {
   if (description === '') {
     return ''
   }
 
-  return separatorColor(`  (${description})`)
+  return noteColor(`  (${description})`)
 }
 
 // Show keys available for user actions in previews
@@ -75,12 +77,12 @@ const getActions = function (actions, leftWidth) {
     return
   }
 
-  const actionsStr = actionValues.map(getAction).join(separatorColor(', '))
+  const actionsStr = actionValues.map(getAction).join(noteColor(', '))
   return `${ACTIONS_LABEL.padEnd(leftWidth)}${actionsStr}`
 }
 
 const getAction = function ({ key, explanation }) {
-  return `${goodColor(key)} ${separatorColor(`(${explanation})`)}`
+  return `${goodColor(key)} ${noteColor(`(${explanation})`)}`
 }
 
 export const ACTIONS_LABEL = 'Actions'
