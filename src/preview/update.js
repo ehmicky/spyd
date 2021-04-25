@@ -20,10 +20,7 @@ import { getDescription } from './description.js'
 export const updatePreview = async function (previewState, previewConfig) {
   await clearScreen()
 
-  const { durationLeft, percentage } = getCompletionProps(
-    previewState,
-    previewConfig,
-  )
+  const { durationLeft, percentage } = getCompletionProps(previewConfig)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, { durationLeft, percentage })
 
@@ -32,8 +29,8 @@ export const updatePreview = async function (previewState, previewConfig) {
 }
 
 const getPreviewContent = function (
-  { durationLeft, index, percentage, description, priorityDescription, report },
-  { total },
+  { durationLeft, percentage, description, priorityDescription, report },
+  { index, total },
 ) {
   const descriptionA = getDescription(description, priorityDescription)
   return getContent({

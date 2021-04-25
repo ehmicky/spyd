@@ -10,10 +10,12 @@ import now from 'precise-now'
 // `combinationStart` is undefined on the first preview.
 // `combinationEnd` is undefined when a combination has started but has not
 // computed its estimated end yet.
-export const getCompletionProps = function (
-  { index },
-  { combinationStart, combinationEnd, total },
-) {
+export const getCompletionProps = function ({
+  combinationStart,
+  combinationEnd,
+  index,
+  total,
+}) {
   const completePercentage = (index - 1) / total
 
   if (combinationStart === undefined || combinationEnd === undefined) {

@@ -20,13 +20,10 @@ export const initPreview = function (
     titles,
     combinations,
     previewSamples: 0,
+    index: 1,
     total: combinations.length,
   }
-  const previewState = {
-    durationLeft: EMPTY_DURATION_LEFT,
-    index: 1,
-    percentage: 0,
-  }
+  const previewState = { durationLeft: EMPTY_DURATION_LEFT, percentage: 0 }
   return { previewConfig, previewState }
 }
 
@@ -58,9 +55,8 @@ export const updatePreviewReport = async function ({
   stats,
   stats: { samples },
   previewConfig,
-  previewConfig: { quiet, combinations, measuredCombinations },
+  previewConfig: { quiet, combinations, measuredCombinations, index },
   previewState,
-  previewState: { index },
 }) {
   if (quiet || samples === 0) {
     return
@@ -90,10 +86,11 @@ const setPreviewReport = async function ({
     reporters,
     titles,
     combinations,
+    index,
     total,
   },
   previewState,
-  previewState: { durationLeft, index, percentage },
+  previewState: { durationLeft, percentage },
 }) {
   const reportersA = reporters.filter(isNotQuiet)
 

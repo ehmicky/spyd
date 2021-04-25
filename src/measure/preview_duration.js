@@ -20,9 +20,8 @@ export const startCombinationPreview = async function ({
     ...previewConfig,
     measuredCombinations,
     combinationStart: now(),
+    index: index + 1,
   }
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.index = index + 1
   await updatePreview(previewState, previewConfigA)
   return previewConfigA
 }
@@ -185,8 +184,10 @@ export const endCombinationPreview = async function ({
     return
   }
 
-  const previewConfigA = { ...previewConfig, combinationEnd: now() }
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.index = total
+  const previewConfigA = {
+    ...previewConfig,
+    combinationEnd: now(),
+    index: total,
+  }
   await updatePreview(previewState, previewConfigA)
 }
