@@ -16,7 +16,7 @@ export const getPreviewBottom = function ({
   const durationLeftA = durationLeft.padEnd(leftWidth)
   const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
   const counter = getCounter(index, total).padEnd(leftWidth)
-  const descriptionA = getDescription(description)
+  const descriptionA = getDescription(description, combinationName)
   const actionsA = getActions(actions, leftWidth)
 
   const bottom = [
@@ -61,12 +61,14 @@ const getProgressBar = function (durationLeft, percentage, screenWidth) {
 const FILL_CHAR = '\u2588'
 const VOID_CHAR = '\u2591'
 
-const getDescription = function (description) {
+const getDescription = function (description, combinationName) {
   if (description === '') {
     return ''
   }
 
-  return noteColor(`  (${description})`)
+  const descriptionA =
+    combinationName === '' ? description : `  (${description})`
+  return noteColor(descriptionA)
 }
 
 // Show keys available for user actions in previews
