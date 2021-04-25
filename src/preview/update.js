@@ -26,14 +26,3 @@ export const refreshPreview = async function (previewState) {
   await clearScreen()
   await printToTty(previewContent)
 }
-
-// Set the preview description
-export const updateDescription = async function (previewState, description) {
-  if (previewState.quiet) {
-    return
-  }
-
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.description = description
-  await updatePreview(previewState)
-}

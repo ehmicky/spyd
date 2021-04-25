@@ -1,5 +1,6 @@
 import pReduce from 'p-reduce'
 
+import { updateDescription } from '../preview/description.js'
 import {
   startCombinationPreview,
   endCombinationPreview,
@@ -46,13 +47,17 @@ const measureCombinationStats = async function ({
   precisionTarget,
   cwd,
 }) {
-  await startCombinationPreview(previewState, index)
-  const { stats } = await measureCombination(combination, {
-    precisionTarget,
-    cwd,
-    previewState,
-    stage: 'main',
-  })
-  await endCombinationPreview(previewState)
-  return [...combinations, { ...combination, stats }]
+  try {
+    await startCombinationPreview(previewState, index)
+    const { stats } = await measureCombination(combination, {
+      precisionTarget,
+      cwd,
+      previewState,
+      stage: 'main',
+    })
+    await endCombinationPreview(previewState)
+    return [...combinations, { ...combination, stats }]
+  } finally {
+    await updateDescription(previewState, '')
+  }
 }

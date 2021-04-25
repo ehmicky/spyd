@@ -3,6 +3,7 @@ import now from 'precise-now'
 import { getLoopsFromLength } from '../stats/extreme.js'
 import { getLengthForMoe } from '../stats/moe.js'
 
+import { START_DESCRIPTION } from './description.js'
 import { updatePreview } from './update.js'
 
 // Done when combination starts
@@ -16,6 +17,7 @@ export const startCombinationPreview = async function (previewState, index) {
     combinationStart: now(),
     combinationEnd: undefined,
     index,
+    description: START_DESCRIPTION,
   })
   await updatePreview(previewState)
 }

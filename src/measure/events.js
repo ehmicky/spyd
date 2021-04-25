@@ -1,4 +1,4 @@
-import { updateDescription } from '../preview/update.js'
+import { updateDescription, END_DESCRIPTION } from '../preview/description.js'
 import { sendAndReceive } from '../process/ipc.js'
 
 import { performMeasureLoop } from './loop.js'
@@ -32,12 +32,8 @@ export const runMainEvents = async function ({
 
 // Run the user-defined `before` hooks
 const beforeCombination = async function (previewState, server) {
-  await updateDescription(previewState, START_DESCRIPTION)
   await sendAndReceive({ event: 'before' }, server)
-  await updateDescription(previewState, '')
 }
-
-const START_DESCRIPTION = 'Starting'
 
 const getCombinationStats = async function ({
   precisionTarget,
@@ -75,7 +71,4 @@ const silentAfterCombination = async function (previewState, server) {
 const afterCombination = async function (previewState, server) {
   await updateDescription(previewState, END_DESCRIPTION)
   await sendAndReceive({ event: 'after' }, server)
-  await updateDescription(previewState, '')
 }
-
-const END_DESCRIPTION = 'Ending'

@@ -2,6 +2,7 @@ import { getFinalResult } from '../normalize/init.js'
 import { reportPreview } from '../report/main.js'
 
 import { updateCompletion } from './completion.js'
+import { removeDescription, START_DESCRIPTION } from './description.js'
 import { updateCombinationEnd } from './duration.js'
 import { refreshPreview } from './update.js'
 
@@ -14,6 +15,7 @@ import { refreshPreview } from './update.js'
 //     - For example, all combinations should be shown even if not measured yet.
 //     - And the size of table should not change between previews.
 // When uncalibrated, we skip it since no stats would be reported anyway.
+// We wait until calibration before removing the start description.
 export const updatePreviewStats = async function ({
   stats,
   stats: { samples },
@@ -29,6 +31,7 @@ export const updatePreviewStats = async function ({
   updateCombinationEnd({ stats, previewState, durationState, precisionTarget })
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   combinations[index].stats = stats
+  removeDescription(previewState, START_DESCRIPTION)
 
   await updatePreviewResults(previewState)
 }

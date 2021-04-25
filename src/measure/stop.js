@@ -1,7 +1,11 @@
 import process from 'process'
 
 import { StopError } from '../error/main.js'
-import { updateDescription } from '../preview/update.js'
+import {
+  updateDescription,
+  STOP_DESCRIPTION,
+  ABORT_DESCRIPTION,
+} from '../preview/description.js'
 import {
   createController,
   waitForEvents,
@@ -70,9 +74,6 @@ const waitForStopSignals = async function (abortSignal) {
 // Signals usually done interactively by user in terminals, cross-platform.
 // We allow non-interactive signals sending too for programmatic usage.
 const STOP_SIGNALS = ['SIGINT', 'SIGBREAK', 'SIGHUP', 'SIGTERM', 'SIGQUIT']
-
-const STOP_DESCRIPTION = 'Stopping'
-const ABORT_DESCRIPTION = 'Stopping. Type CTRL-C to abort graceful exit.'
 
 // Users must wait 5 seconds before being able to abort.
 // This promotes proper cleanup.
