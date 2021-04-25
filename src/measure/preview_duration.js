@@ -9,13 +9,18 @@ export const startCombinationPreview = async function ({
   previewState,
   previewConfig,
   previewConfig: { quiet },
+  measuredCombinations,
   index,
 }) {
   if (quiet) {
     return previewConfig
   }
 
-  const previewConfigA = { ...previewConfig, combinationStart: now() }
+  const previewConfigA = {
+    ...previewConfig,
+    measuredCombinations,
+    combinationStart: now(),
+  }
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.index = index + 1
   await updatePreview(previewState, previewConfigA)
