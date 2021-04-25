@@ -2,8 +2,6 @@ import { getScreenWidth } from '../report/tty.js'
 import { goodColor, separatorColor } from '../report/utils/colors.js'
 import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 
-import { getActions, ACTIONS_LABEL } from './action.js'
-
 // Retrieve preview content.
 // `report` is `undefined` when all reporters have `reporter.quiet: true`.
 export const getPreviewContent = function ({
@@ -106,3 +104,21 @@ const getDescription = function (description) {
 
   return separatorColor(`  (${description})`)
 }
+
+// Show keys available for user actions in previews
+const getActions = function (actions, leftWidth) {
+  const actionValues = Object.values(actions)
+
+  if (actionValues.length === 0) {
+    return
+  }
+
+  const actionsStr = actionValues.map(getAction).join(separatorColor(', '))
+  return `${ACTIONS_LABEL.padEnd(leftWidth)}${actionsStr}`
+}
+
+const getAction = function ({ key, explanation }) {
+  return `${goodColor(key)} ${separatorColor(`(${explanation})`)}`
+}
+
+export const ACTIONS_LABEL = 'Actions'
