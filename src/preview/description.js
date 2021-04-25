@@ -10,14 +10,18 @@ export const updateDescription = async function (previewState, description) {
   await updatePreview(previewState)
 }
 
-// Only remove a specific description.
-// This prevents removing another description (e.g. stop description) by mistake
-export const removeDescription = function (previewState, description) {
-  if (previewState.description !== description) {
+// Only set a specific description if the current matches a specific one.
+// Meant to prevent unsetting an abnormal description like "Stopping"
+export const setDescriptionIf = function (
+  previewState,
+  newDescription,
+  currentDescription,
+) {
+  if (previewState.description !== currentDescription) {
     return
   }
 
-  setDescription(previewState, '')
+  setDescription(previewState, newDescription)
 }
 
 const setDescription = function (previewState, description) {
