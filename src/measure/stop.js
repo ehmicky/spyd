@@ -23,8 +23,7 @@ export const addStopHandler = function (previewState) {
   const { cancelSignal, cancel } = createController()
   const stopState = { stopped: false, signalHandler, cancelSignal, cancel }
   // eslint-disable-next-line fp/no-mutation
-  stopState.onAbort = handleStop(stopState, previewState)
-  noUnhandledRejection(stopState.onAbort)
+  stopState.onAbort = noUnhandledRejection(handleStop(stopState, previewState))
   return stopState
 }
 
