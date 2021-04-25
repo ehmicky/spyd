@@ -17,7 +17,7 @@ export const execCombination = async function (combination, { cwd }) {
   await measureCombination(combination, {
     precisionTarget: 0,
     cwd,
-    previewConfig: { quiet: true },
+    previewState: { quiet: true },
     stage: 'exec',
   })
 }

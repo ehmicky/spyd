@@ -10,7 +10,7 @@ import { spawnAndMeasure } from './spawn.js'
 // Start server to communicate with combinations, then measure them.
 export const measureCombination = async function (
   combination,
-  { precisionTarget, cwd, previewConfig, stage },
+  { precisionTarget, cwd, previewState, stage },
 ) {
   const { server, serverUrl } = await startServer()
 
@@ -21,7 +21,7 @@ export const measureCombination = async function (
       serverUrl,
       precisionTarget,
       cwd,
-      previewConfig,
+      previewState,
       stage,
       server,
     })
@@ -35,7 +35,7 @@ const logAndMeasure = async function ({
   serverUrl,
   precisionTarget,
   cwd,
-  previewConfig,
+  previewState,
   stage,
   server,
 }) {
@@ -47,7 +47,7 @@ const logAndMeasure = async function ({
       serverUrl,
       precisionTarget,
       cwd,
-      previewConfig,
+      previewState,
       stage,
       server,
       logsFd,
@@ -65,7 +65,7 @@ const logStreamAndMeasure = async function ({
   serverUrl,
   precisionTarget,
   cwd,
-  previewConfig,
+  previewState,
   stage,
   server,
   logsFd,
@@ -78,7 +78,7 @@ const logStreamAndMeasure = async function ({
       serverUrl,
       precisionTarget,
       cwd,
-      previewConfig,
+      previewState,
       stage,
       server,
       logsStream,

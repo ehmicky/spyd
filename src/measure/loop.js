@@ -5,7 +5,7 @@ import { getInitialStats, addStats } from '../stats/add.js'
 import { pWhile } from '../utils/p_while.js'
 
 import { getInitialDurationState, startSample, endSample } from './duration.js'
-import { updatePreviewReport } from './preview_report.js'
+import { updatePreviewStats } from './preview_report.js'
 import { isRemainingCombination } from './remaining.js'
 
 // We break down each combination into samples, i.e. small units of duration
@@ -24,18 +24,19 @@ import { isRemainingCombination } from './remaining.js'
 // bigger `inputs`.
 export const performMeasureLoop = async function ({
   precisionTarget,
-  previewConfig,
+  previewState,
   stopState,
   stage,
   server,
   logsFd,
   minLoopDuration,
 }) {
-  const { stats, previewConfig: previewConfigA } = await pWhile(
+  const { stats } = await pWhile(
     (state) =>
       isRemainingCombination(state, { precisionTarget, stage, stopState }),
     (state) =>
       performSample(state, {
+        previewState,
         precisionTarget,
         server,
         minLoopDuration,
@@ -46,17 +47,23 @@ export const performMeasureLoop = async function ({
       stats: getInitialStats(),
       sampleState: getInitialSampleState(),
       durationState: getInitialDurationState(),
-      previewConfig,
     },
   )
-  return { stats, previewConfig: previewConfigA }
+  return stats
 }
 
 export const TARGET_SAMPLE_DURATION = 1e8
 
 const performSample = async function (
-  { sampleState, stats, durationState, previewConfig },
-  { precisionTarget, server, minLoopDuration, logsFd, targetSampleDuration },
+  { sampleState, stats, durationState },
+  {
+    previewState,
+    precisionTarget,
+    server,
+    minLoopDuration,
+    logsFd,
+    targetSampleDuration,
+  },
 ) {
   const sampleStart = startSample()
 
@@ -65,10 +72,10 @@ const performSample = async function (
     sampleState,
   )
   const statsA = addStats(stats, sampleStateA, minLoopDuration)
-  const [previewConfigA] = await Promise.all([
-    updatePreviewReport({
+  await Promise.all([
+    updatePreviewStats({
       stats: statsA,
-      previewConfig,
+      previewState,
       durationState,
       precisionTarget,
     }),
@@ -80,6 +87,5 @@ const performSample = async function (
     stats: statsA,
     sampleState: sampleStateA,
     durationState: durationStateA,
-    previewConfig: previewConfigA,
   }
 }

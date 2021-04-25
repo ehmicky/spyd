@@ -6,7 +6,7 @@ import { runStartEnd } from './start_end.js'
 export const handleErrorsAndMeasure = async function ({
   combination,
   precisionTarget,
-  previewConfig,
+  previewState,
   stopState,
   stage,
   server,
@@ -21,7 +21,7 @@ export const handleErrorsAndMeasure = async function ({
       runStartEnd({
         combination,
         precisionTarget,
-        previewConfig,
+        previewState,
         stopState,
         stage,
         server,

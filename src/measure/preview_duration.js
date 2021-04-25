@@ -5,30 +5,29 @@ import { getLoopsFromLength } from '../stats/extreme.js'
 import { getLengthForMoe } from '../stats/moe.js'
 
 // Done when combination starts
-export const startCombinationPreview = async function (previewConfig, index) {
-  if (previewConfig.quiet) {
-    return previewConfig
+export const startCombinationPreview = async function (previewState, index) {
+  if (previewState.quiet) {
+    return
   }
 
-  const previewConfigA = {
-    ...previewConfig,
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(previewState, {
     combinationStart: now(),
     combinationEnd: undefined,
     index,
-  }
-  await updatePreview(previewConfigA)
-  return previewConfigA
+  })
+  await updatePreview(previewState)
 }
 
 // Done when combination ends
-export const endCombinationPreview = async function (previewConfig) {
-  if (previewConfig.quiet) {
-    return previewConfig
+export const endCombinationPreview = async function (previewState) {
+  if (previewState.quiet) {
+    return
   }
 
-  const previewConfigA = { ...previewConfig, combinationEnd: now() }
-  await updatePreview(previewConfigA)
-  return previewConfigA
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.combinationEnd = now()
+  await updatePreview(previewState)
 }
 
 // Update the combination start and expected end.
@@ -39,16 +38,15 @@ export const endCombinationPreview = async function (previewConfig) {
 //   - With user impatience or with planning other things while measuring is
 //     ongoing
 // Done when combination's sample starts
-export const updateCombinationPreview = function ({
+export const updateCombinationEnd = function ({
   stats,
   stats: { stdev },
-  previewConfig,
-  previewConfig: { previewSamples, combinationEnd: previousCombinationEnd },
+  previewState: { previewSamples, combinationEnd: previousCombinationEnd },
   durationState: { sampleDurationMean },
   precisionTarget,
 }) {
   if (sampleDurationMean === undefined || stdev === undefined || stdev === 0) {
-    return previewConfig
+    return {}
   }
 
   const samplesTarget = getSamplesTarget(stats, precisionTarget)
@@ -59,11 +57,7 @@ export const updateCombinationPreview = function ({
     previewSamples,
     samplesTarget,
   })
-  return {
-    ...previewConfig,
-    previewSamples: previewSamples + 1,
-    combinationEnd: combinationEndA,
-  }
+  return { previewSamples: previewSamples + 1, combinationEnd: combinationEndA }
 }
 
 // Estimate how many samples are left to reach the rmoe target for the current

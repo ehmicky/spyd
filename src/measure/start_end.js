@@ -12,23 +12,23 @@ import { runMainEvents } from './events.js'
 export const runStartEnd = async function ({
   combination,
   precisionTarget,
-  previewConfig,
+  previewState,
   stopState,
   stage,
   server,
   logsFd,
 }) {
   const taskIds = await startCombination(combination, server)
-  const { stats, previewConfig: previewConfigA } = await eRunMainEvents({
+  const stats = await eRunMainEvents({
     precisionTarget,
-    previewConfig,
+    previewState,
     stopState,
     stage,
     server,
     logsFd,
   })
   await endCombination(server)
-  return { stats, previewConfig: previewConfigA, taskIds }
+  return { stats, taskIds }
 }
 
 // Start combination, i.e. make it load the combination and run any
@@ -47,7 +47,7 @@ const startCombination = async function (
 
 const eRunMainEvents = async function ({
   precisionTarget,
-  previewConfig,
+  previewState,
   stopState,
   stage,
   server,
@@ -56,7 +56,7 @@ const eRunMainEvents = async function ({
   try {
     return await runMainEvents({
       precisionTarget,
-      previewConfig,
+      previewState,
       stopState,
       stage,
       server,

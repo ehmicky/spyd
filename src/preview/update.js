@@ -1,39 +1,8 @@
 import { reportPreview } from '../report/main.js'
 import { printToTty, clearScreen } from '../report/tty.js'
 
-import { getCompletionProps } from './completion.js'
+import { updateCompletion } from './completion.js'
 import { getPreviewContent } from './content.js'
-
-export const refreshPreviewReport = async function (previewConfig, result) {
-  const previewConfigA = getCompletionProps({ previewConfig })
-  const report = await getReport(previewConfigA, result)
-  const previewConfigB = { ...previewConfigA, report }
-  await refreshPreview(previewConfigB)
-  return previewConfigB
-}
-
-const getReport = async function (
-  { durationLeft, percentage, index, total, reporters, titles },
-  result,
-) {
-  const preview = { durationLeft, percentage, index: index + 1, total }
-  return await reportPreview({ ...result, preview }, { reporters, titles })
-}
-
-// Set the preview description
-export const updateDescription = async function (previewConfig, description) {
-  if (previewConfig.quiet) {
-    return previewConfig
-  }
-
-  const previewConfigA = setDescription(previewConfig, description)
-  await updatePreview(previewConfigA)
-  return previewConfigA
-}
-
-export const setDescription = function (previewConfig, description) {
-  return { ...previewConfig, description }
-}
 
 // Refresh preview.
 // Done:
@@ -47,14 +16,45 @@ export const setDescription = function (previewConfig, description) {
 //    real-time
 //  - However, this prevents jitter due the `setInterval()` decrease going
 //    against the sample updates
-export const updatePreview = async function (previewConfig) {
-  const previewConfigA = getCompletionProps({ previewConfig })
-  await refreshPreview(previewConfigA)
+export const updatePreview = async function (previewState) {
+  updateCompletion(previewState)
+  await refreshPreview(previewState)
 }
 
-const refreshPreview = async function (previewConfig) {
-  const previewContent = getPreviewContent(previewConfig)
+export const updatePreviewReport = async function (previewState, result) {
+  updateCompletion(previewState)
+  await updateReport({ previewState, result })
+  await refreshPreview(previewState)
+}
+
+const updateReport = async function ({
+  previewState,
+  previewState: { durationLeft, percentage, index, total, reporters, titles },
+  result,
+}) {
+  const preview = { durationLeft, percentage, index: index + 1, total }
+  const report = await reportPreview(
+    { ...result, preview },
+    { reporters, titles },
+  )
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.report = report
+}
+
+const refreshPreview = async function (previewState) {
+  const previewContent = getPreviewContent(previewState)
 
   await clearScreen()
   await printToTty(previewContent)
+}
+
+// Set the preview description
+export const updateDescription = async function (previewState, description) {
+  if (previewState.quiet) {
+    return
+  }
+
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.description = description
+  await updatePreview(previewState)
 }

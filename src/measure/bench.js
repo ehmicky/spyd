@@ -2,7 +2,7 @@ import { listHistory } from '../history/main.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
 
 import { getInitResult, getFinalResult } from './init.js'
-import { initPreview, setPreviewReport } from './preview_report.js'
+import { initPreview, updatePreviewResults } from './preview_report.js'
 import { measureCombinations } from './several.js'
 
 // Perform a new benchmark
@@ -30,24 +30,20 @@ const previewStartAndMeasure = async function ({
   config,
   initResult,
 }) {
-  const previewConfig = initPreview(initResult, config, combinations)
-  await startPreview(previewConfig)
+  const previewState = initPreview(initResult, config, combinations)
+  await startPreview(previewState)
 
   try {
-    const previewConfigA = await setPreviewReport({ previewConfig })
+    await updatePreviewResults({ previewState })
 
     const {
       combinations: combinationsA,
       results,
-    } = await previewRefreshAndMeasure({
-      combinations,
-      config,
-      previewConfig: previewConfigA,
-    })
-    await endPreview(previewConfig)
+    } = await previewRefreshAndMeasure({ combinations, config, previewState })
+    await endPreview(previewState)
     return { combinations: combinationsA, results }
   } catch (error) {
-    await endPreview(previewConfig, error)
+    await endPreview(previewState, error)
     throw error
   }
 }
@@ -57,18 +53,16 @@ const previewRefreshAndMeasure = async function ({
   combinations,
   config,
   config: { cwd, precisionTarget },
-  previewConfig,
+  previewState,
 }) {
   const results = await listHistory(config)
-  const previewConfigA = { ...previewConfig, results }
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.results = results
 
-  const { combinations: combinationsA } = await measureCombinations(
-    combinations,
-    {
-      precisionTarget,
-      cwd,
-      previewConfig: previewConfigA,
-    },
-  )
+  const combinationsA = await measureCombinations(combinations, {
+    precisionTarget,
+    cwd,
+    previewState,
+  })
   return { combinations: combinationsA, results }
 }

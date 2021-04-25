@@ -23,7 +23,7 @@ export const findTasks = async function ({
 }) {
   const { taskIds } = await measureCombination(
     { taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] },
-    { precisionTarget: 0, cwd, previewConfig: { quiet: true }, stage: 'init' },
+    { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
   )
   validateDuplicateTaskIds(taskIds)
   return taskIds

@@ -1,10 +1,15 @@
 import { EMPTY_DURATION_LEFT } from '../preview/completion.js'
-import { refreshPreviewReport } from '../preview/update.js'
+import { updatePreviewReport } from '../preview/update.js'
 
 import { getFinalResult } from './init.js'
-import { updateCombinationPreview } from './preview_duration.js'
+import { updateCombinationEnd } from './preview_duration.js'
 
-// Retrieve initial `previewConfig`
+// Retrieve initial `previewState`.
+// This must be directly mutated because it is shared by reference by
+// event-driven concurrent logic such as the stopping logic or the window
+// resizing logic.
+// When mutating it, it must always be in a consistent state at the end of a
+// microtask since `updatePreview()` could be called by concurrent code.
 // `index` and `total` are used as a 1-based counter in previews.
 export const initPreview = function (
   initResult,
@@ -56,21 +61,21 @@ const addEmptyStats = function (combination) {
 //     - For example, all combinations should be shown even if not measured yet.
 //     - And the size of table should not change between previews.
 // When uncalibrated, we skip it since no stats would be reported anyway.
-export const updatePreviewReport = async function ({
+export const updatePreviewStats = async function ({
   stats,
   stats: { samples },
-  previewConfig,
-  previewConfig: { quiet, combinations, index },
+  previewState,
+  previewState: { quiet, combinations, index },
   durationState,
   precisionTarget,
 }) {
   if (quiet || samples === 0) {
-    return previewConfig
+    return
   }
 
-  const previewConfigA = updateCombinationPreview({
+  const combinationEndProps = updateCombinationEnd({
     stats,
-    previewConfig,
+    previewState,
     durationState,
     precisionTarget,
   })
@@ -79,23 +84,23 @@ export const updatePreviewReport = async function ({
     { ...combinations[index], stats },
     ...combinations.slice(index + 1),
   ]
-  const previewConfigB = { ...previewConfigA, combinations: combinationsA }
-
-  const previewConfigC = await setPreviewReport({
-    previewConfig: previewConfigB,
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(previewState, {
+    ...combinationEndProps,
+    combinations: combinationsA,
   })
-  return previewConfigC
+
+  await updatePreviewResults({ previewState })
 }
 
-export const setPreviewReport = async function ({
-  previewConfig,
-  previewConfig: { quiet, initResult, results, combinations },
+export const updatePreviewResults = async function ({
+  previewState,
+  previewState: { quiet, initResult, results, combinations },
 }) {
   if (quiet) {
-    return previewConfig
+    return
   }
 
   const { result } = getFinalResult(combinations, initResult, results)
-  const previewConfigA = await refreshPreviewReport(previewConfig, result)
-  return previewConfigA
+  await updatePreviewReport(previewState, result)
 }

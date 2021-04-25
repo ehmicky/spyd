@@ -12,7 +12,7 @@ export const spawnAndMeasure = async function ({
   serverUrl,
   precisionTarget,
   cwd,
-  previewConfig,
+  previewState,
   stage,
   server,
   logsStream,
@@ -29,7 +29,7 @@ export const spawnAndMeasure = async function ({
     return await stopOrMeasure({
       combination,
       precisionTarget,
-      previewConfig,
+      previewState,
       stage,
       server,
       childProcess,
@@ -44,21 +44,19 @@ export const spawnAndMeasure = async function ({
 const stopOrMeasure = async function ({
   combination,
   precisionTarget,
-  previewConfig,
+  previewState,
   stage,
   server,
   childProcess,
   logsFd,
 }) {
-  const { stopState, onAbort, removeStopHandler } = addStopHandler(
-    previewConfig,
-  )
+  const { stopState, onAbort, removeStopHandler } = addStopHandler(previewState)
 
   try {
     const returnValue = await handleErrorsAndMeasure({
       combination,
       precisionTarget,
-      previewConfig,
+      previewState,
       stopState,
       stage,
       server,
