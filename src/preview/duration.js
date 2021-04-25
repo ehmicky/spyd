@@ -42,12 +42,13 @@ export const endCombinationPreview = async function (previewState) {
 export const updateCombinationEnd = function ({
   stats,
   stats: { stdev },
+  previewState,
   previewState: { previewSamples, combinationEnd: previousCombinationEnd },
   durationState: { sampleDurationMean },
   precisionTarget,
 }) {
   if (sampleDurationMean === undefined || stdev === undefined || stdev === 0) {
-    return {}
+    return
   }
 
   const samplesTarget = getSamplesTarget(stats, precisionTarget)
@@ -58,7 +59,11 @@ export const updateCombinationEnd = function ({
     previewSamples,
     samplesTarget,
   })
-  return { previewSamples: previewSamples + 1, combinationEnd: combinationEndA }
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(previewState, {
+    previewSamples: previewSamples + 1,
+    combinationEnd: combinationEndA,
+  })
 }
 
 // Estimate how many samples are left to reach the rmoe target for the current

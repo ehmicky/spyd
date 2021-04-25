@@ -26,22 +26,9 @@ export const updatePreviewStats = async function ({
     return
   }
 
-  const combinationEndProps = updateCombinationEnd({
-    stats,
-    previewState,
-    durationState,
-    precisionTarget,
-  })
-  const combinationsA = [
-    ...combinations.slice(0, index),
-    { ...combinations[index], stats },
-    ...combinations.slice(index + 1),
-  ]
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(previewState, {
-    ...combinationEndProps,
-    combinations: combinationsA,
-  })
+  updateCombinationEnd({ stats, previewState, durationState, precisionTarget })
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  combinations[index].stats = stats
 
   await updatePreviewResults(previewState)
 }
