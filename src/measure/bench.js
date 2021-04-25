@@ -58,13 +58,14 @@ const previewRefreshAndMeasure = async function ({
   const results = await listHistory(config)
   const previewConfigA = { ...previewConfig, results }
 
-  const {
-    combinations: combinationsA,
-  } = await measureCombinations(combinations, {
-    precisionTarget,
-    cwd,
-    previewConfig: previewConfigA,
-  })
+  const { combinations: combinationsA } = await measureCombinations(
+    combinations,
+    {
+      precisionTarget,
+      cwd,
+      previewConfig: previewConfigA,
+    },
+  )
   return { combinations: combinationsA, results }
 }
 
