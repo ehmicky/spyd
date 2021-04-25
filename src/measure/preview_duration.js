@@ -178,7 +178,10 @@ export const endCombinationPreview = async function (previewState, { quiet }) {
     return
   }
 
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.combinationEnd = now()
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(previewState, {
+    combinationEnd: now(),
+    index: previewState.total,
+  })
   await updatePreview(previewState)
 }
