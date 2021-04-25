@@ -2,10 +2,9 @@ import { getScreenWidth } from '../report/tty.js'
 import { goodColor, separatorColor } from '../report/utils/colors.js'
 
 // Retrieve preview content.
-// The `counter` is between `durationLeft` and `progressBar` so that there is
-// no empty space when `durationLeft` is unknown.
+// `report` is `undefined` when all reporters have `reporter.quiet: true`.
 export const getPreviewContent = function ({
-  report,
+  report = '',
   durationLeft,
   percentage,
   index,
@@ -14,8 +13,40 @@ export const getPreviewContent = function ({
   description,
 }) {
   const screenWidth = getScreenWidth()
+  const separator = getSeparator(report, screenWidth)
+  const previewLines = getPreviewLines({
+    durationLeft,
+    percentage,
+    index,
+    total,
+    combinationName,
+    description,
+    screenWidth,
+  })
+  return `${report}${separator}${previewLines}\n`
+}
+
+const getSeparator = function (report, screenWidth) {
+  if (report === '') {
+    return '\n'
+  }
+
+  return separatorColor(`${LINE_CHAR.repeat(screenWidth)}\n\n`)
+}
+
+// Works with all terminals
+const LINE_CHAR = separatorColor('\u2500')
+
+const getPreviewLines = function ({
+  durationLeft,
+  percentage,
+  index,
+  total,
+  combinationName,
+  description,
+  screenWidth,
+}) {
   const leftWidth = getLeftWidth(durationLeft, total)
-  const results = getResults(report, screenWidth)
   const counter = getCounter(index, total)
   const progressBar = getProgressBar({
     durationLeft,
@@ -25,35 +56,17 @@ export const getPreviewContent = function ({
   })
   const descriptionA = getDescription(description)
 
-  return `${results}
- ${durationLeft.padEnd(leftWidth)}  ${progressBar}
+  return ` ${durationLeft.padEnd(leftWidth)}  ${progressBar}
 
- ${counter.padEnd(leftWidth)}  ${combinationName}${descriptionA}
-`
-}
-
-const getDescription = function (description) {
-  if (description === '') {
-    return ''
-  }
-
-  return separatorColor(`  (${description})`)
+ ${counter.padEnd(leftWidth)}  ${combinationName}${descriptionA}`
 }
 
 const getLeftWidth = function (durationLeft, total) {
   return Math.max(durationLeft.length, getCounter(total, total).length)
 }
 
-// `report` is `undefined` when all reporters have `reporter.quiet: true`.
-const getResults = function (report, screenWidth) {
-  if (report === undefined) {
-    return ''
-  }
-
-  const separator = separatorColor(LINE_CHAR.repeat(screenWidth))
-  return `${report}${separator}\n`
-}
-
+// The `counter` is between `durationLeft` and `progressBar` so that there is
+// no empty space when `durationLeft` is unknown.
 const getCounter = function (index, total) {
   return `(${index + 1}/${total})`
 }
@@ -74,8 +87,14 @@ const getProgressBar = function ({
 
 // Pad the left|right of the progress bar with spaces
 const PADDING_WIDTH = 4
-
 // Works with all terminals
 const FILL_CHAR = goodColor('\u2588')
 const VOID_CHAR = separatorColor('\u2591')
-const LINE_CHAR = separatorColor('\u2500')
+
+const getDescription = function (description) {
+  if (description === '') {
+    return ''
+  }
+
+  return separatorColor(`  (${description})`)
+}
