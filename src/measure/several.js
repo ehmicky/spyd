@@ -4,6 +4,7 @@ import {
   startCombinationPreview,
   endCombinationPreview,
 } from '../preview/duration.js'
+
 import { measureCombination } from './single.js'
 
 // Measure all combinations and add results to `combinations`.
