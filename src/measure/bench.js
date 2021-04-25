@@ -1,7 +1,7 @@
 import { listHistory } from '../history/main.js'
+import { getInitResult, getFinalResult } from '../normalize/init.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
 
-import { getInitResult, getFinalResult } from './init.js'
 import { initPreview, updatePreviewResults } from './preview_report.js'
 import { measureCombinations } from './several.js'
 

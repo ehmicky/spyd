@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { mergeResults } from '../normalize/merge.js'
 import { getSystems } from '../system/info.js'
 import { cleanObject } from '../utils/clean.js'
+
+import { mergeResults } from './merge.js'
 
 // Add metadata information to initial result
 export const getInitResult = function ({

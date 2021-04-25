@@ -1,7 +1,7 @@
+import { getFinalResult } from '../normalize/init.js'
 import { EMPTY_DURATION_LEFT } from '../preview/completion.js'
 import { updatePreviewReport } from '../preview/update.js'
 
-import { getFinalResult } from './init.js'
 import { updateCombinationEnd } from './preview_duration.js'
 
 // Retrieve initial `previewState`.
