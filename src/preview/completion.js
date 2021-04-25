@@ -38,8 +38,7 @@ const getCompletionProps = function ({
   return { durationLeft, percentage }
 }
 
-const DURATION_LEFT_MIN_LENGTH = 5
-export const EMPTY_DURATION_LEFT = ' '.repeat(DURATION_LEFT_MIN_LENGTH)
+export const EMPTY_DURATION_LEFT = '--:--'
 
 // Retrieve seconds/minutes/hours left in a human-friendly string
 const getDurationLeft = function (nsecs) {
