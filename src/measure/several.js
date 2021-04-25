@@ -1,4 +1,4 @@
-import pReduce from 'p-reduce'
+import pMapSeries from 'p-map-series'
 
 import {
   startCombinationPreview,
@@ -24,11 +24,10 @@ export const measureCombinations = async function (
   combinations,
   { precisionTarget, cwd, previewState },
 ) {
-  return await pReduce(
+  return await pMapSeries(
     combinations,
-    (combinationsA, combination, index) =>
+    (combination, index) =>
       measureCombinationStats({
-        combinations: combinationsA,
         combination,
         index,
         previewState,
@@ -40,7 +39,6 @@ export const measureCombinations = async function (
 }
 
 const measureCombinationStats = async function ({
-  combinations,
   combination,
   index,
   previewState,
@@ -56,7 +54,7 @@ const measureCombinationStats = async function ({
       stage: 'main',
     })
     await endCombinationPreview(previewState)
-    return [...combinations, { ...combination, stats }]
+    return { ...combination, stats }
   } finally {
     await updateDescription(previewState, '')
   }
