@@ -70,6 +70,10 @@ const updateReport = async function ({
     combinations,
   },
 }) {
+  if (reporters.length === 0) {
+    return
+  }
+
   const { result } = getFinalResult(combinations, initResult, results)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.report = await reportPreview(

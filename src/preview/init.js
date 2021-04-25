@@ -12,12 +12,11 @@ export const initPreview = function (
   { quiet, reporters, titles },
   combinations,
 ) {
-  const reportersA = reporters.filter(isNotQuiet)
-
-  if (quiet || reportersA.length === 0) {
-    return { quiet: true }
+  if (quiet) {
+    return { quiet }
   }
 
+  const reportersA = reporters.filter(isNotQuiet)
   const combinationsA = combinations.map(addEmptyStats)
   return {
     quiet,
@@ -40,6 +39,7 @@ const START_DESCRIPTION = 'Starting'
 // Reporters can opt-out of previews by defining `reporter.quiet: true`.
 // This is a performance optimization for reporters which should not show
 // results progressively.
+// This does not disable the progress bar preview though.
 const isNotQuiet = function ({ quiet = false }) {
   return !quiet
 }
