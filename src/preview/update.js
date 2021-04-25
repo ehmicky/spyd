@@ -1,10 +1,29 @@
+import { reportPreview } from '../report/main.js'
 import { printToTty, clearScreen } from '../report/tty.js'
 
 import { getCompletionProps } from './completion.js'
 import { getPreviewContent } from './content.js'
 
+export const refreshPreviewReport = async function (previewConfig, result) {
+  const previewConfigA = getCompletionProps(previewConfig)
+  const {
+    durationLeft,
+    percentage,
+    index,
+    total,
+    reporters,
+    titles,
+  } = previewConfigA
+  const report = await reportPreview(
+    { ...result, preview: { durationLeft, percentage, index, total } },
+    { reporters, titles },
+  )
+  const previewConfigB = { ...previewConfigA, report }
+  await refreshPreview(previewConfigB)
+  return previewConfigB
+}
+
 // Refresh preview.
-// Also update `previewState.durationLeft|percentage` for reporters using it.
 // Done:
 //  - At the beginning of the benchmark, to show the report without results yet
 //  - At the beginning of each combination, to update the `index`
@@ -16,14 +35,15 @@ import { getPreviewContent } from './content.js'
 //    real-time
 //  - However, this prevents jitter due the `setInterval()` decrease going
 //    against the sample updates
-export const updatePreview = async function (previewState, previewConfig) {
+export const updatePreview = async function (previewConfig) {
+  const previewConfigA = getCompletionProps(previewConfig)
+  await refreshPreview(previewConfigA)
+}
+
+const refreshPreview = async function (previewConfig) {
+  const previewContent = getPreviewContent(previewConfig)
+
   await clearScreen()
-
-  const { durationLeft, percentage } = getCompletionProps(previewConfig)
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(previewState, { durationLeft, percentage })
-
-  const previewContent = getPreviewContent(previewState, previewConfig)
   await printToTty(previewContent)
 }
 

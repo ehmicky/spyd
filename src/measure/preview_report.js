@@ -1,17 +1,16 @@
 import { EMPTY_DURATION_LEFT } from '../preview/completion.js'
-import { setDescription, updatePreview } from '../preview/update.js'
-import { reportPreview } from '../report/main.js'
+import { setDescription, refreshPreviewReport } from '../preview/update.js'
 
 import { getFinalResult } from './init.js'
 
-// Retrieve initial `previewConfig` (stateless) and `previewState` (stateful).
+// Retrieve initial `previewConfig`
 // `index` and `total` are used as a 1-based counter in previews.
 export const initPreview = function (
   initResult,
   { quiet, reporters, titles },
   combinations,
 ) {
-  const previewConfig = {
+  return {
     quiet,
     initResult,
     results: [],
@@ -19,11 +18,11 @@ export const initPreview = function (
     titles,
     combinations,
     previewSamples: 0,
+    durationLeft: EMPTY_DURATION_LEFT,
+    percentage: 0,
     index: 1,
     total: combinations.length,
   }
-  const previewState = { durationLeft: EMPTY_DURATION_LEFT, percentage: 0 }
-  return { previewConfig, previewState }
 }
 
 // Preview results progressively, as combinations are being measured.
@@ -35,18 +34,14 @@ export const initPreview = function (
 //     - For example, all combinations should be shown even if not measured yet.
 //     - And the size of table should not change between previews.
 // When uncalibrated, we skip it since no stats would be reported anyway.
-export const setFirstPreview = async function ({
-  previewConfig,
-  previewConfig: { quiet },
-  previewState,
-}) {
-  if (quiet) {
+export const setFirstPreview = async function (previewConfig) {
+  if (previewConfig.quiet) {
     return previewConfig
   }
 
-  await setPreviewReport({ previewConfig, previewState })
   const previewConfigA = setDescription(previewConfig, START_DESCRIPTION)
-  return previewConfigA
+  const previewConfigB = await setPreviewReport(previewConfigA)
+  return previewConfigB
 }
 
 const START_DESCRIPTION = 'Starting'
@@ -56,7 +51,6 @@ export const updatePreviewReport = async function ({
   stats: { samples },
   previewConfig,
   previewConfig: { quiet, combinations, measuredCombinations, index },
-  previewState,
 }) {
   if (quiet || samples === 0) {
     return
@@ -68,47 +62,24 @@ export const updatePreviewReport = async function ({
     ...combinations.slice(index).map(addEmptyStats),
   ]
 
-  await setPreviewReport({
-    previewConfig: { ...previewConfig, combinations: combinationsA },
-    previewState,
-  })
+  await setPreviewReport({ ...previewConfig, combinations: combinationsA })
 }
 
 const addEmptyStats = function (combination) {
   return { ...combination, stats: {} }
 }
 
-const setPreviewReport = async function ({
-  previewConfig,
-  previewConfig: {
-    initResult,
-    results,
-    reporters,
-    titles,
-    combinations,
-    index,
-    total,
-  },
-  previewState,
-  previewState: { durationLeft, percentage },
-}) {
+const setPreviewReport = async function (previewConfig) {
+  const { initResult, results, reporters, combinations } = previewConfig
   const reportersA = reporters.filter(isNotQuiet)
 
   if (reportersA.length === 0) {
-    return
+    return previewConfig
   }
 
   const { result } = getFinalResult(combinations, initResult, results)
-  const resultA = {
-    ...result,
-    preview: { durationLeft, index, total, percentage },
-  }
-  // eslint-disable-next-line no-param-reassign, fp/no-mutation
-  previewState.report = await reportPreview(resultA, {
-    reporters: reportersA,
-    titles,
-  })
-  await updatePreview(previewState, previewConfig)
+  const previewConfigA = await refreshPreviewReport(previewConfig, result)
+  return previewConfigA
 }
 
 // Reporters can opt-out of previews by defining `reporter.quiet: true`.

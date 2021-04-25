@@ -26,7 +26,6 @@ import { isRemainingCombination } from './remaining.js'
 export const performMeasureLoop = async function ({
   precisionTarget,
   previewConfig,
-  previewState,
   stopState,
   stage,
   server,
@@ -39,7 +38,6 @@ export const performMeasureLoop = async function ({
     (state) =>
       performSample(state, {
         precisionTarget,
-        previewState,
         server,
         minLoopDuration,
         logsFd,
@@ -59,14 +57,7 @@ export const TARGET_SAMPLE_DURATION = 1e8
 
 const performSample = async function (
   { sampleState, stats, durationState, previewConfig },
-  {
-    precisionTarget,
-    previewState,
-    server,
-    minLoopDuration,
-    logsFd,
-    targetSampleDuration,
-  },
+  { precisionTarget, server, minLoopDuration, logsFd, targetSampleDuration },
 ) {
   const sampleStart = startSample()
 
@@ -84,11 +75,7 @@ const performSample = async function (
   const statsA = addStats(stats, sampleStateA, minLoopDuration)
 
   await Promise.all([
-    updatePreviewReport({
-      stats: statsA,
-      previewConfig: previewConfigA,
-      previewState,
-    }),
+    updatePreviewReport({ stats: statsA, previewConfig: previewConfigA }),
     truncateLogs(logsFd),
   ])
 

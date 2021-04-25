@@ -8,7 +8,6 @@ import { getMinLoopDuration } from './min_loop_duration.js'
 export const runMainEvents = async function ({
   precisionTarget,
   previewConfig,
-  previewState,
   stopState,
   stage,
   server,
@@ -22,7 +21,6 @@ export const runMainEvents = async function ({
   const { stats, previewConfig: previewConfigB } = await getCombinationStats({
     precisionTarget,
     previewConfig: previewConfigA,
-    previewState,
     stopState,
     stage,
     server,
@@ -42,7 +40,6 @@ const beforeCombination = async function (previewConfig, server) {
 const getCombinationStats = async function ({
   precisionTarget,
   previewConfig,
-  previewState,
   stopState,
   stage,
   server,
@@ -53,7 +50,6 @@ const getCombinationStats = async function ({
     return await performMeasureLoop({
       precisionTarget,
       previewConfig,
-      previewState,
       stopState,
       stage,
       server,
@@ -61,14 +57,14 @@ const getCombinationStats = async function ({
       minLoopDuration,
     })
   } catch (error) {
-    await silentAfterCombination(previewState, server)
+    await silentAfterCombination(previewConfig, server)
     throw error
   }
 }
 
-const silentAfterCombination = async function (previewState, server) {
+const silentAfterCombination = async function (previewConfig, server) {
   try {
-    await afterCombination(previewState, server)
+    await afterCombination(previewConfig, server)
   } catch {}
 }
 

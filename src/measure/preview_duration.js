@@ -6,7 +6,6 @@ import { getLengthForMoe } from '../stats/moe.js'
 
 // Done when combination starts
 export const startCombinationPreview = async function ({
-  previewState,
   previewConfig,
   previewConfig: { quiet },
   measuredCombinations,
@@ -22,7 +21,7 @@ export const startCombinationPreview = async function ({
     combinationStart: now(),
     index: index + 1,
   }
-  await updatePreview(previewState, previewConfigA)
+  await updatePreview(previewConfigA)
   return previewConfigA
 }
 
@@ -175,11 +174,9 @@ const ADJUSTED_SMOOTH_PERIOD = SMOOTH_PERIOD * 2
 const SMOOTH_CLOSENESS = 0.05
 
 // Done when combination ends
-export const endCombinationPreview = async function ({
-  previewState,
-  previewConfig,
-  previewConfig: { quiet, total },
-}) {
+export const endCombinationPreview = async function (previewConfig) {
+  const { quiet, total } = previewConfig
+
   if (quiet) {
     return
   }
@@ -189,5 +186,5 @@ export const endCombinationPreview = async function ({
     combinationEnd: now(),
     index: total,
   }
-  await updatePreview(previewState, previewConfigA)
+  await updatePreview(previewConfigA)
 }

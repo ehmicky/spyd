@@ -31,24 +31,16 @@ const previewStartAndMeasure = async function ({
   config: { quiet },
   initResult,
 }) {
-  const { previewConfig, previewState } = initPreview(
-    initResult,
-    config,
-    combinations,
-  )
+  const previewConfig = initPreview(initResult, config, combinations)
   await startPreview(quiet)
 
   try {
-    const previewConfigA = await setFirstPreview({
-      previewConfig,
-      previewState,
-    })
+    const previewConfigA = await setFirstPreview(previewConfig)
 
     return await previewRefreshAndMeasure({
       combinations,
       config,
       previewConfig: previewConfigA,
-      previewState,
     })
   } catch (error) {
     await handlePreviewError(error, quiet)
@@ -62,7 +54,6 @@ const previewRefreshAndMeasure = async function ({
   config,
   config: { cwd, precisionTarget },
   previewConfig,
-  previewState,
 }) {
   const results = await listHistory(config)
   const previewConfigA = { ...previewConfig, results }
@@ -71,7 +62,6 @@ const previewRefreshAndMeasure = async function ({
     precisionTarget,
     cwd,
     previewConfig: previewConfigA,
-    previewState,
   })
   return { combinations: combinationsA, results }
 }

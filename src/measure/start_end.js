@@ -13,7 +13,6 @@ export const runStartEnd = async function ({
   combination,
   precisionTarget,
   previewConfig,
-  previewState,
   stopState,
   stage,
   server,
@@ -23,7 +22,6 @@ export const runStartEnd = async function ({
   const { stats, previewConfig: previewConfigA } = await eRunMainEvents({
     precisionTarget,
     previewConfig,
-    previewState,
     stopState,
     stage,
     server,
@@ -50,7 +48,6 @@ const startCombination = async function (
 const eRunMainEvents = async function ({
   precisionTarget,
   previewConfig,
-  previewState,
   stopState,
   stage,
   server,
@@ -60,7 +57,6 @@ const eRunMainEvents = async function ({
     return await runMainEvents({
       precisionTarget,
       previewConfig,
-      previewState,
       stopState,
       stage,
       server,

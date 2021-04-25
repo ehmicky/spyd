@@ -20,7 +20,7 @@ import { measureCombination } from './single.js'
 //    this.
 export const measureCombinations = async function (
   combinations,
-  { precisionTarget, cwd, previewConfig, previewState },
+  { precisionTarget, cwd, previewConfig },
 ) {
   return await pReduce(
     combinations,
@@ -32,7 +32,6 @@ export const measureCombinations = async function (
         precisionTarget,
         cwd,
         previewConfig,
-        previewState,
       }),
     [],
   )
@@ -45,10 +44,8 @@ const measureCombinationStats = async function ({
   precisionTarget,
   cwd,
   previewConfig,
-  previewState,
 }) {
   const previewConfigA = await startCombinationPreview({
-    previewState,
     previewConfig,
     index,
     measuredCombinations,
@@ -59,10 +56,9 @@ const measureCombinationStats = async function ({
       precisionTarget,
       cwd,
       previewConfig: previewConfigA,
-      previewState,
       stage: 'main',
     },
   )
-  await endCombinationPreview({ previewState, previewConfig: previewConfigB })
+  await endCombinationPreview(previewConfigB)
   return [...measuredCombinations, { ...combination, stats }]
 }

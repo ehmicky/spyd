@@ -10,16 +10,16 @@ import now from 'precise-now'
 // `combinationStart` is undefined on the first preview.
 // `combinationEnd` is undefined when a combination has started but has not
 // computed its estimated end yet.
-export const getCompletionProps = function ({
-  combinationStart,
-  combinationEnd,
-  index,
-  total,
-}) {
+export const getCompletionProps = function (previewConfig) {
+  const { combinationStart, combinationEnd, index, total } = previewConfig
   const completePercentage = (index - 1) / total
 
   if (combinationStart === undefined || combinationEnd === undefined) {
-    return { durationLeft: EMPTY_DURATION_LEFT, percentage: completePercentage }
+    return {
+      ...previewConfig,
+      durationLeft: EMPTY_DURATION_LEFT,
+      percentage: completePercentage,
+    }
   }
 
   const durationLeftNumber = Math.max(combinationEnd - now(), 0)
@@ -29,7 +29,7 @@ export const getCompletionProps = function ({
   const partialPercentage =
     (1 - durationLeftNumber / combinationDuration) / total
   const percentage = completePercentage + partialPercentage
-  return { durationLeft, percentage }
+  return { ...previewConfig, durationLeft, percentage }
 }
 
 const DURATION_LEFT_MIN_LENGTH = 5
