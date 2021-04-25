@@ -34,6 +34,7 @@ export const runMainEvents = async function ({
 const beforeCombination = async function (previewConfig, server) {
   await sendAndReceive({ event: 'before' }, server)
   const previewConfigA = setDescription(previewConfig, '')
+  await updatePreview(previewConfigA)
   return previewConfigA
 }
 
