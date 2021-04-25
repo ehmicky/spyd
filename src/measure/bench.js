@@ -28,22 +28,26 @@ export const performBenchmark = async function (
 const previewStartAndMeasure = async function ({
   combinations,
   config,
-  config: { quiet },
   initResult,
 }) {
   const previewConfig = initPreview(initResult, config, combinations)
-  await startPreview(quiet)
+  await startPreview(previewConfig)
 
   try {
     const previewConfigA = await setFirstPreview(previewConfig)
 
-    return await previewRefreshAndMeasure({
+    const {
+      combinations: combinationsA,
+      results,
+    } = await previewRefreshAndMeasure({
       combinations,
       config,
       previewConfig: previewConfigA,
     })
+    await endPreview(previewConfig)
+    return { combinations: combinationsA, results }
   } catch (error) {
-    await handlePreviewError(error, quiet)
+    await endPreview(previewConfig, error)
     throw error
   }
 }
@@ -67,16 +71,4 @@ const previewRefreshAndMeasure = async function ({
     },
   )
   return { combinations: combinationsA, results }
-}
-
-// The last preview is kept as is when stopping the benchmarking
-//  - This allows users to stop a benchmark without losing information,
-//    including the duration that was left
-//  - This is unlike other errors, which clear it
-const handlePreviewError = async function (error, quiet) {
-  if (error.name === 'StopError') {
-    return
-  }
-
-  await endPreview(quiet)
 }

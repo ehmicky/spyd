@@ -11,8 +11,10 @@ export const initPreview = function (
   { quiet, reporters, titles },
   combinations,
 ) {
-  if (quiet) {
-    return { quiet }
+  const reportersA = reporters.filter(isNotQuiet)
+
+  if (quiet || reportersA.length === 0) {
+    return { quiet: true }
   }
 
   const combinationsA = combinations.map(addEmptyStats)
@@ -20,7 +22,7 @@ export const initPreview = function (
     quiet,
     initResult,
     results: [],
-    reporters,
+    reporters: reportersA,
     titles,
     combinations: combinationsA,
     previewSamples: 0,
@@ -29,6 +31,13 @@ export const initPreview = function (
     index: 0,
     total: combinationsA.length,
   }
+}
+
+// Reporters can opt-out of previews by defining `reporter.quiet: true`.
+// This is a performance optimization for reporters which should not show
+// results progressively.
+const isNotQuiet = function ({ quiet = false }) {
+  return !quiet
 }
 
 const addEmptyStats = function (combination) {
@@ -50,7 +59,9 @@ export const setFirstPreview = async function (previewConfig) {
   }
 
   const previewConfigA = setDescription(previewConfig, START_DESCRIPTION)
-  const previewConfigB = await setPreviewReport(previewConfigA)
+  const previewConfigB = await setPreviewReport({
+    previewConfig: previewConfigA,
+  })
   return previewConfigB
 }
 
@@ -81,26 +92,17 @@ export const updatePreviewReport = async function ({
   ]
   const previewConfigB = { ...previewConfigA, combinations: combinationsA }
 
-  const previewConfigC = await setPreviewReport(previewConfigB)
+  const previewConfigC = await setPreviewReport({
+    previewConfig: previewConfigB,
+  })
   return previewConfigC
 }
 
-const setPreviewReport = async function (previewConfig) {
-  const { initResult, results, reporters, combinations } = previewConfig
-  const reportersA = reporters.filter(isNotQuiet)
-
-  if (reportersA.length === 0) {
-    return previewConfig
-  }
-
+const setPreviewReport = async function ({
+  previewConfig,
+  previewConfig: { initResult, results, combinations },
+}) {
   const { result } = getFinalResult(combinations, initResult, results)
   const previewConfigA = await refreshPreviewReport(previewConfig, result)
   return previewConfigA
-}
-
-// Reporters can opt-out of previews by defining `reporter.quiet: true`.
-// This is a performance optimization for reporters which should not show
-// results progressively.
-const isNotQuiet = function ({ quiet = false }) {
-  return !quiet
 }

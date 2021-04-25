@@ -1,5 +1,3 @@
-import { endPreview } from '../preview/start_end.js'
-
 import { getContents } from './call.js'
 import {
   outputContents,
@@ -9,14 +7,14 @@ import {
 import { endReporters } from './start_end.js'
 
 // Report final results in `bench` command.
-// This waits for `reporter.report()` and `reporter.end()` to complete before
-// clearing the preview, in case those are slow.
-export const reportBench = async function (
-  result,
-  { reporters, titles, quiet },
-) {
+export const reportBench = async function (result, { reporters, titles }) {
   const contents = await endReport(result, { reporters, titles })
-  await endPreview(quiet)
+  await outputContents(contents)
+}
+
+// Report final results in `show` command.
+export const reportShow = async function (result, { reporters, titles }) {
+  const contents = await endReport(result, { reporters, titles })
   await outputContents(contents)
 }
 
@@ -27,12 +25,6 @@ export const reportPreview = async function (result, { reporters, titles }) {
   const contents = await getContents(result, { reporters, titles })
   const previewReport = computeTtyContents(contents)
   return previewReport
-}
-
-// Report final results in `show` command.
-export const reportShow = async function (result, { reporters, titles }) {
-  const contents = await endReport(result, { reporters, titles })
-  await outputContents(contents)
 }
 
 // Report final results in `remove` command.

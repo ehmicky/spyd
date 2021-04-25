@@ -13,11 +13,11 @@ Can be empty, if no reporters should be used.
 Built-in reporters: histogram
 Custom reporters can also be installed from npm.
 Reporter-specific configuration properties can be specified by appending the
-reporter's name: --reportName.prop=value.
-For example: --reportJson.output=path
+reporter's name: --reporterName.prop=value.
+For example: --reporterJson.output=path
 The following properties can be set for any reporter: output, colors,
 showSystem, showMetadata.
-For example --reportJson.output is like --output but only for the json reporter.`,
+For example --reporterJson.output is like --output but only for the json reporter.`,
   },
   output: {
     group: REPORT,
