@@ -1,7 +1,5 @@
 import { platform } from 'process'
 
-import { separatorColor } from '../colors.js'
-
 // Characters displaying an increasing percentage visually
 export const HISTOGRAM_CHARS =
   platform === 'win32'
@@ -27,7 +25,7 @@ export const EXTRA_HEIGHT = platform === 'win32' ? 3 : 1
 
 // Characters to display the horizontal separator, including its ticks
 // Works with all terminals
-export const TICK_LEFT = separatorColor('\u250C')
-export const TICK_MIDDLE = separatorColor('\u252C')
-export const TICK_RIGHT = separatorColor('\u2510')
-export const HORIZONTAL_LINE = separatorColor('\u2500')
+export const TICK_LEFT = '\u250C'
+export const TICK_MIDDLE = '\u252C'
+export const TICK_RIGHT = '\u2510'
+export const HORIZONTAL_LINE = '\u2500'

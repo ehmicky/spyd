@@ -1,5 +1,7 @@
 import stringWidth from 'string-width'
 
+import { separatorColor } from '../colors.js'
+
 import { TICK_LEFT, TICK_RIGHT } from './characters.js'
 
 // Retrieve the blocks that show the lowest|highest value of the histogram, on
@@ -32,11 +34,11 @@ const getCombinationWidth = function ({ stats }, getStat) {
 }
 
 const getLowStat = function ({ lowPadded }) {
-  return `${PADDING}${lowPadded}${PADDING}${TICK_LEFT}`
+  return `${PADDING}${lowPadded}${PADDING}${separatorColor(TICK_LEFT)}`
 }
 
 const getHighStat = function ({ highPadded }) {
-  return `${TICK_RIGHT}${PADDING}${highPadded}`
+  return `${separatorColor(TICK_RIGHT)}${PADDING}${highPadded}`
 }
 
 const PADDING_WIDTH = 1

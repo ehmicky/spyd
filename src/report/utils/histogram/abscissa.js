@@ -1,4 +1,4 @@
-import stringWidth from 'string-width'
+import { separatorColor } from '../colors.js'
 
 import { TICK_MIDDLE, HORIZONTAL_LINE } from './characters.js'
 
@@ -10,17 +10,16 @@ export const getAbscissa = function (width, medianIndex, medianPretty) {
     medianIndex,
   })
   const abscissa = getBottomRow(medianPretty, ' ', { width, medianIndex })
-  return `${bottomLine}
+  return `${separatorColor(bottomLine)}
 ${abscissa}`
 }
 
 const getBottomRow = function (middle, fillCharacter, { width, medianIndex }) {
-  const middleWidth = stringWidth(middle)
   const leftSpacesWidth = Math.min(
     medianIndex,
-    Math.max(width - middleWidth, 0),
+    Math.max(width - middle.length, 0),
   )
-  const rightSpacesWidth = Math.max(width - leftSpacesWidth - middleWidth, 0)
+  const rightSpacesWidth = Math.max(width - leftSpacesWidth - middle.length, 0)
   const leftSpaces = fillCharacter.repeat(leftSpacesWidth)
   const rightSpaces = fillCharacter.repeat(rightSpacesWidth)
   return `${leftSpaces}${middle}${rightSpaces}`
