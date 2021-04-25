@@ -5,7 +5,7 @@ import { getCompletionProps } from './completion.js'
 import { getPreviewContent } from './content.js'
 
 export const refreshPreviewReport = async function (previewConfig, result) {
-  const previewConfigA = getCompletionProps(previewConfig)
+  const previewConfigA = getCompletionProps({ previewConfig })
   const {
     durationLeft,
     percentage,
@@ -43,7 +43,7 @@ export const updatePreview = async function (previewConfig) {
     return
   }
 
-  const previewConfigA = getCompletionProps(previewConfig)
+  const previewConfigA = getCompletionProps({ previewConfig })
   await refreshPreview(previewConfigA)
 }
 
