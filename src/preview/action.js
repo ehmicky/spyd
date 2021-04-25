@@ -1,23 +1,21 @@
 import { goodColor, separatorColor } from '../report/utils/colors.js'
 
 // Show keys available for user actions in previews
-export const getInsructions = function (leftWidth) {
-  const instructions = [
+export const getActions = function (leftWidth) {
+  const actions = [
     { key: 'Ctrl-C', name: 'Stop' },
     { key: 'Up/Down', name: 'Scroll' },
   ]
 
-  if (instructions.length === 0) {
+  if (actions.length === 0) {
     return
   }
 
-  const instructionsStr = instructions
-    .map(getInsruction)
-    .join(separatorColor(', '))
-  return `${ACTIONS_LABEL.padEnd(leftWidth)}${instructionsStr}`
+  const actionsStr = actions.map(getAction).join(separatorColor(', '))
+  return `${ACTIONS_LABEL.padEnd(leftWidth)}${actionsStr}`
 }
 
-const getInsruction = function ({ key, name }) {
+const getAction = function ({ key, name }) {
   return `${goodColor(key)} ${separatorColor(`(${name})`)}`
 }
 
