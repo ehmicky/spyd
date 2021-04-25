@@ -51,7 +51,9 @@ const restoreDefaultHandlers = function (signalHandler) {
 const handleStop = async function (stopState, previewState, abortSignal) {
   await waitForStopSignals(abortSignal)
 
-  setStopState(previewState, stopState)
+  setPriorityDescription(previewState, STOP_DESCRIPTION)
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  stopState.stopped = true
 
   await waitForDelay(ABORT_DELAY, abortSignal)
   setPriorityDescription(previewState, ABORT_DESCRIPTION)
@@ -59,32 +61,6 @@ const handleStop = async function (stopState, previewState, abortSignal) {
   await waitForStopSignals(abortSignal)
 
   throw new StopError('Benchmark has been aborted.')
-}
-
-const setStopState = function (previewState, stopState) {
-  setPriorityDescription(previewState, STOP_DESCRIPTION)
-  setStopCombinationEnd(previewState, stopState)
-
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  stopState.stopped = true
-}
-
-// Update `combinationEnd` to match the time the currently executing task is
-// expected to end.
-// Not done if `sampleDurationMean` is `undefined` meaning either:
-//  - not in measure phase
-//  - measuring the first sample of the task
-// In that case, we leave `combinationEnd` as is
-const setStopCombinationEnd = function (
-  previewState,
-  { sampleStart, sampleDurationMean },
-) {
-  if (sampleDurationMean === undefined) {
-    return
-  }
-
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.combinationEnd = sampleStart + sampleDurationMean
 }
 
 const waitForStopSignals = async function (abortSignal) {
