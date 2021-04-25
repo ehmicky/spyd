@@ -32,10 +32,16 @@ export const runMainEvents = async function ({
 
 // Run the user-defined `before` hooks
 const beforeCombination = async function (previewConfig, server) {
+  const previewConfigA = await updateDescription(
+    previewConfig,
+    START_DESCRIPTION,
+  )
   await sendAndReceive({ event: 'before' }, server)
-  const previewConfigA = await updateDescription(previewConfig, '')
-  return previewConfigA
+  const previewConfigB = await updateDescription(previewConfigA, '')
+  return previewConfigB
 }
+
+const START_DESCRIPTION = 'Starting'
 
 const getCombinationStats = async function ({
   precisionTarget,
