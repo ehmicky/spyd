@@ -1,5 +1,6 @@
 import { getScreenWidth } from '../report/tty.js'
 import { goodColor, separatorColor } from '../report/utils/colors.js'
+import { addPadding } from '../report/utils/indent.js'
 
 // Retrieve preview content.
 // `report` is `undefined` when all reporters have `reporter.quiet: true`.
@@ -28,10 +29,10 @@ export const getPreviewContent = function ({
 
 const getSeparator = function (report, screenWidth) {
   if (report === '') {
-    return '\n'
+    return ''
   }
 
-  return separatorColor(`${LINE_CHAR.repeat(screenWidth)}\n\n`)
+  return separatorColor(`${LINE_CHAR.repeat(screenWidth)}\n`)
 }
 
 // Works with all terminals
@@ -56,9 +57,9 @@ const getPreviewLines = function ({
   })
   const descriptionA = getDescription(description)
 
-  return ` ${durationLeft.padEnd(leftWidth)}  ${progressBar}
+  return addPadding(`${durationLeft.padEnd(leftWidth)}  ${progressBar}
 
- ${counter.padEnd(leftWidth)}  ${combinationName}${descriptionA}`
+${counter.padEnd(leftWidth)}  ${combinationName}${descriptionA}`)
 }
 
 const getLeftWidth = function (durationLeft, total) {
