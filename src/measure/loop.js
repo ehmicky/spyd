@@ -100,7 +100,7 @@ const performSample = async function (
 
   const durationStateA = endSample({
     durationState,
-    sampleState: sampleStateB,
+    stats: statsA,
     sampleStart,
     stopState,
   })

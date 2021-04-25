@@ -17,9 +17,11 @@ export const startSample = function (stopState, { sampleDurationMean }) {
   return sampleStart
 }
 
+// During calibration (`samples < 2`), `totalDuration` and `sampleDurationMean`
+// can be quite changing, so we only keep the last sample then.
 export const endSample = function ({
   durationState: { totalDuration },
-  sampleState: { allSamples },
+  stats: { samples },
   sampleStart,
   stopState,
 }) {
@@ -29,7 +31,15 @@ export const endSample = function ({
   delete stopState.sampleDurationMean
 
   const sampleDurationLast = now() - sampleStart
+
+  if (samples < 2) {
+    return {
+      totalDuration: sampleDurationLast,
+      sampleDurationMean: sampleDurationLast,
+    }
+  }
+
   const totalDurationA = totalDuration + sampleDurationLast
-  const sampleDurationMean = totalDurationA / allSamples
+  const sampleDurationMean = totalDurationA / samples
   return { totalDuration: totalDurationA, sampleDurationMean }
 }
