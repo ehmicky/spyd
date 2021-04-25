@@ -1,8 +1,9 @@
 import { listHistory } from '../history/main.js'
 import { getInitResult, getFinalResult } from '../normalize/init.js'
+import { initPreview } from '../preview/init.js'
+import { updatePreviewResults } from '../preview/results.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
 
-import { initPreview, updatePreviewResults } from './preview_report.js'
 import { measureCombinations } from './several.js'
 
 // Perform a new benchmark
