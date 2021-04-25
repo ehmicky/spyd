@@ -1,7 +1,7 @@
 import process from 'process'
 
 import { StopError } from '../error/main.js'
-import { setDescription } from '../preview/description.js'
+import { setDescription } from '../preview/update.js'
 import {
   createController,
   waitForEvents,
@@ -15,11 +15,11 @@ import {
 // requires spawning processes again, making them go through cold starts again.
 // This would decrease precision and create difference between results depending
 // on how many times the benchmark was stopped/continued.
-export const addStopHandler = function (previewState) {
+export const addStopHandler = function (previewConfig) {
   const stopState = { stopped: false }
   const noopHandler = removeDefaultHandlers()
   const { abortSignal, abort } = createController()
-  const onAbort = handleStop(stopState, previewState, abortSignal)
+  const onAbort = handleStop(stopState, previewConfig, abortSignal)
   const removeStopHandlerA = removeStopHandler.bind(
     undefined,
     abort,
@@ -48,15 +48,15 @@ const restoreDefaultHandlers = function (signalHandler) {
   })
 }
 
-const handleStop = async function (stopState, previewState, abortSignal) {
+const handleStop = async function (stopState, previewConfig, abortSignal) {
   await waitForStopSignals(abortSignal)
 
-  setDescription(previewState, STOP_DESCRIPTION)
+  const previewConfigA = setDescription(previewConfig, STOP_DESCRIPTION)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
 
   await waitForDelay(ABORT_DELAY, abortSignal)
-  setDescription(previewState, ABORT_DESCRIPTION)
+  setDescription(previewConfigA, ABORT_DESCRIPTION)
 
   await waitForStopSignals(abortSignal)
 

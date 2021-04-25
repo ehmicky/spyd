@@ -1,4 +1,4 @@
-import { setDescription } from '../preview/description.js'
+import { setDescription } from '../preview/update.js'
 import { sendAndReceive } from '../process/ipc.js'
 
 import { performMeasureLoop } from './loop.js'
@@ -18,24 +18,25 @@ export const runMainEvents = async function ({
     return { previewConfig }
   }
 
-  await beforeCombination(previewState, server)
-  const { stats, previewConfig: previewConfigA } = await getCombinationStats({
+  const previewConfigA = await beforeCombination(previewConfig, server)
+  const { stats, previewConfig: previewConfigB } = await getCombinationStats({
     precisionTarget,
-    previewConfig,
+    previewConfig: previewConfigA,
     previewState,
     stopState,
     stage,
     server,
     logsFd,
   })
-  await afterCombination(previewState, server)
-  return { stats, previewConfig: previewConfigA }
+  const previewConfigC = await afterCombination(previewConfigB, server)
+  return { stats, previewConfig: previewConfigC }
 }
 
 // Run the user-defined `before` hooks
-const beforeCombination = async function (previewState, server) {
+const beforeCombination = async function (previewConfig, server) {
   await sendAndReceive({ event: 'before' }, server)
-  setDescription(previewState, '')
+  const previewConfigA = setDescription(previewConfig, '')
+  return previewConfigA
 }
 
 const getCombinationStats = async function ({
@@ -73,9 +74,10 @@ const silentAfterCombination = async function (previewState, server) {
 
 // Run the user-defined `after` hooks
 // `after` is always called, for cleanup, providing `before` completed.
-const afterCombination = async function (previewState, server) {
-  setDescription(previewState, END_DESCRIPTION)
+const afterCombination = async function (previewConfig, server) {
+  const previewConfigA = setDescription(previewConfig, END_DESCRIPTION)
   await sendAndReceive({ event: 'after' }, server)
+  return previewConfigA
 }
 
 const END_DESCRIPTION = 'Ending'

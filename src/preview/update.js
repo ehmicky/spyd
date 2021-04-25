@@ -26,3 +26,8 @@ export const updatePreview = async function (previewState, previewConfig) {
   const previewContent = getPreviewContent(previewState, previewConfig)
   await printToTty(previewContent)
 }
+
+// Set the preview description
+export const setDescription = function (previewConfig, description) {
+  return { ...previewConfig, description }
+}

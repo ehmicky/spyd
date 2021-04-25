@@ -39,12 +39,15 @@ const previewStartAndMeasure = async function ({
   await startPreview(quiet)
 
   try {
-    await setFirstPreview({ previewConfig, previewState })
+    const previewConfigA = await setFirstPreview({
+      previewConfig,
+      previewState,
+    })
 
     return await previewRefreshAndMeasure({
       combinations,
       config,
-      previewConfig,
+      previewConfig: previewConfigA,
       previewState,
     })
   } catch (error) {

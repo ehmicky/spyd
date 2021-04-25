@@ -53,7 +53,9 @@ const stopOrMeasure = async function ({
   childProcess,
   logsFd,
 }) {
-  const { stopState, onAbort, removeStopHandler } = addStopHandler(previewState)
+  const { stopState, onAbort, removeStopHandler } = addStopHandler(
+    previewConfig,
+  )
 
   try {
     const returnValue = await handleErrorsAndMeasure({

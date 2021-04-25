@@ -1,6 +1,5 @@
 import { EMPTY_DURATION_LEFT } from '../preview/completion.js'
-import { setDescription } from '../preview/description.js'
-import { updatePreview } from '../preview/update.js'
+import { setDescription, updatePreview } from '../preview/update.js'
 import { reportPreview } from '../report/main.js'
 
 import { getFinalResult } from './init.js'
@@ -42,11 +41,12 @@ export const setFirstPreview = async function ({
   previewState,
 }) {
   if (quiet) {
-    return
+    return previewConfig
   }
 
   await setPreviewReport({ previewConfig, previewState })
-  setDescription(previewState, START_DESCRIPTION)
+  const previewConfigA = setDescription(previewConfig, START_DESCRIPTION)
+  return previewConfigA
 }
 
 const START_DESCRIPTION = 'Starting'
