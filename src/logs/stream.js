@@ -31,5 +31,9 @@ export const stopLogsStream = async function (logsStream) {
 //  - This function is performed in parallel to preview reporting, which
 //    minimizes its performance cost
 export const truncateLogs = async function (logsFd) {
+  if (logsFd === undefined) {
+    return
+  }
+
   await logsFd.truncate(0)
 }
