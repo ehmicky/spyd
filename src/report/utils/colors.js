@@ -1,7 +1,7 @@
 import colorsOption from 'colors-option'
 
 const chalk = colorsOption()
-const { gray, redBright, level } = chalk
+const { redBright, level } = chalk
 
 // Main color
 const MAIN_HUE = 175
@@ -9,15 +9,20 @@ const MAIN_SATURATION = 75
 const MAIN_LIGHTNESS = 55
 const mainColor = chalk.hsl(MAIN_HUE, MAIN_SATURATION, MAIN_LIGHTNESS)
 
+// Gray shade.
+// Bright enough to be accessible
+const GRAY_LIGHTNESS = 55
+const grayColor = chalk.hsl(0, 0, GRAY_LIGHTNESS)
+
 export const titleColor = mainColor.bold
 export const subtitleColor = mainColor
-export const fieldColor = gray.italic
+export const fieldColor = grayColor.italic
 export const goodColor = mainColor
 export const badColor = redBright
 export const errorColor = redBright.inverse.bold
-export const separatorColor = gray
-export const noteColor = gray
-export const suffixColor = gray
+export const separatorColor = grayColor
+export const noteColor = grayColor
+export const suffixColor = grayColor
 
 // Gradient that works with 1, 4, 8 and 24-bit colors
 export const graphGradientColor = function (percentage) {
