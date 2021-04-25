@@ -52,19 +52,28 @@ const restoreDefaultHandlers = function (signalHandler) {
 
 const handleStop = async function (stopState, previewState, abortSignal) {
   await waitForStopSignals(abortSignal)
+  await afterStop(stopState, previewState)
 
+  await waitForDelay(ABORT_DELAY, abortSignal)
+  await beforeAbort(previewState)
+
+  await waitForStopSignals(abortSignal)
+  await afterAbort(previewState)
+}
+
+const afterStop = async function (stopState, previewState) {
   removeAction(previewState, 'stop')
   await updateDescription(previewState, STOP_DESCRIPTION)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
+}
 
-  await waitForDelay(ABORT_DELAY, abortSignal)
-
+const beforeAbort = async function (previewState) {
   addAction(previewState, 'abort')
   await updatePreview(previewState)
+}
 
-  await waitForStopSignals(abortSignal)
-
+const afterAbort = async function (previewState) {
   removeAction(previewState, 'abort')
   await updatePreview(previewState)
   throw new StopError('Benchmark has been aborted.')
