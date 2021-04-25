@@ -6,14 +6,8 @@ import {
 } from './output.js'
 import { endReporters } from './start_end.js'
 
-// Report final results in `bench` command.
-export const reportBench = async function (result, { reporters, titles }) {
-  const contents = await endReport(result, { reporters, titles })
-  await outputContents(contents)
-}
-
-// Report final results in `show` command.
-export const reportShow = async function (result, { reporters, titles }) {
+// Report final results in `bench` and `show` commands.
+export const reportBenchShow = async function (result, { reporters, titles }) {
   const contents = await endReport(result, { reporters, titles })
   await outputContents(contents)
 }
