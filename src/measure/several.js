@@ -26,7 +26,7 @@ export const measureCombinations = async function (
   combinations,
   { precisionTarget, cwd, previewState, stage },
 ) {
-  const { stopState, onAbort, removeStopHandler } = addStopHandler(previewState)
+  const { stopState, removeStopHandler } = addStopHandler(previewState)
 
   try {
     return await pMapSeries(
@@ -37,7 +37,6 @@ export const measureCombinations = async function (
           index,
           previewState,
           stopState,
-          onAbort,
           precisionTarget,
           cwd,
           stage,
@@ -54,7 +53,6 @@ const measureCombinationStats = async function ({
   index,
   previewState,
   stopState,
-  onAbort,
   precisionTarget,
   cwd,
   stage,
@@ -66,7 +64,6 @@ const measureCombinationStats = async function ({
       cwd,
       previewState,
       stopState,
-      onAbort,
       stage,
     })
     throwIfStopped(stopState)

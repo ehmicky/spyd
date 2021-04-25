@@ -22,14 +22,15 @@ export const addStopHandler = function (previewState) {
   const stopState = { stopped: false }
   const noopHandler = removeDefaultHandlers()
   const { cancelSignal, cancel } = createController()
-  const onAbort = handleStop(stopState, previewState, cancelSignal)
-  noUnhandledRejection(onAbort)
+  // eslint-disable-next-line fp/no-mutation
+  stopState.onAbort = handleStop(stopState, previewState, cancelSignal)
+  noUnhandledRejection(stopState.onAbort)
   const removeStopHandlerA = removeStopHandler.bind(
     undefined,
     cancel,
     noopHandler,
   )
-  return { stopState, onAbort, removeStopHandler: removeStopHandlerA }
+  return { stopState, removeStopHandler: removeStopHandlerA }
 }
 
 // Ensure default handlers for those signals are not used.

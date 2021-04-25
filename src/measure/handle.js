@@ -14,7 +14,7 @@ export const handleErrorsAndMeasure = async function ({
   precisionTarget,
   previewState,
   stopState,
-  onAbort,
+  stopState: { onAbort },
   stage,
   server,
   childProcess,
