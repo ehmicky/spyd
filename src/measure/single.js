@@ -6,7 +6,6 @@ import { startServer, endServer } from '../server/main.js'
 import { spawnAndMeasure } from './spawn.js'
 
 // Measure a single combination.
-// Also used when starting combinations to retrieve their tasks and steps.
 // Start server to communicate with combinations, then measure them.
 export const measureCombination = async function (
   combination,

@@ -1,5 +1,5 @@
 import { getCombinationName } from '../combination/ids.js'
-import { measureCombination } from '../measure/single.js'
+import { measureCombinations } from '../measure/several.js'
 
 // Execute tasks without benchmarking them.
 // We run each serially, so the output is not interleaved.
@@ -14,7 +14,7 @@ export const performExec = async function (config, combinations) {
 export const execCombination = async function (combination, { cwd }) {
   printCombinationName(combination)
 
-  await measureCombination(combination, {
+  await measureCombinations([combination], {
     precisionTarget: 0,
     cwd,
     previewState: { quiet: true },

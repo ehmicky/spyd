@@ -1,5 +1,5 @@
 import { PluginError } from '../error/main.js'
-import { measureCombination } from '../measure/single.js'
+import { measureCombinations } from '../measure/several.js'
 
 // A tasks file might have several tasks because:
 //  - This is user-friendlier when using small tasks and/or single steps
@@ -21,8 +21,8 @@ export const findTasks = async function ({
   runnerSpawnOptions,
   runnerConfig,
 }) {
-  const { taskIds } = await measureCombination(
-    { taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] },
+  const [{ taskIds }] = await measureCombinations(
+    [{ taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] }],
     { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
   )
   validateDuplicateTaskIds(taskIds)

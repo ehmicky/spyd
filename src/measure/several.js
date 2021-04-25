@@ -9,6 +9,7 @@ import { updateDescription } from '../preview/description.js'
 import { measureCombination } from './single.js'
 
 // Measure all combinations and add results to `combinations`.
+// Also used when starting combinations to retrieve their tasks and steps.
 // Combinations are measured serially:
 //  - Running them concurrently decreases the precision due to sharing the same
 //    machine and OS. This is the case even when samples are run one at a time:
@@ -22,7 +23,7 @@ import { measureCombination } from './single.js'
 //    this.
 export const measureCombinations = async function (
   combinations,
-  { precisionTarget, cwd, previewState },
+  { precisionTarget, cwd, previewState, stage },
 ) {
   return await pMapSeries(
     combinations,
@@ -33,6 +34,7 @@ export const measureCombinations = async function (
         previewState,
         precisionTarget,
         cwd,
+        stage,
       }),
     [],
   )
@@ -44,17 +46,18 @@ const measureCombinationStats = async function ({
   previewState,
   precisionTarget,
   cwd,
+  stage,
 }) {
   try {
     await startCombinationPreview(previewState, combination, index)
-    const { stats } = await measureCombination(combination, {
+    const { stats, taskIds } = await measureCombination(combination, {
       precisionTarget,
       cwd,
       previewState,
-      stage: 'main',
+      stage,
     })
     await endCombinationPreview(previewState)
-    return { ...combination, stats }
+    return { ...combination, stats, taskIds }
   } finally {
     await updateDescription(previewState, '')
   }

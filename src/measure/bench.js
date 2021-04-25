@@ -69,6 +69,7 @@ const listHistoryAndMeasure = async function ({
     precisionTarget,
     cwd,
     previewState,
+    stage: 'main',
   })
   return { combinations: combinationsA, results }
 }
