@@ -30,6 +30,7 @@ const setDescription = function (previewState, description) {
 }
 
 export const START_DESCRIPTION = 'Starting'
+export const MEASURE_DESCRIPTION = 'Measuring'
 export const END_DESCRIPTION = 'Ending'
 export const STOP_DESCRIPTION = 'Stopping'
 export const ABORT_DESCRIPTION = 'Stopping. Type CTRL-C to abort graceful exit.'

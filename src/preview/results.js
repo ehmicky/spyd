@@ -2,7 +2,11 @@ import { getFinalResult } from '../normalize/init.js'
 import { reportPreview } from '../report/main.js'
 
 import { updateCompletion } from './completion.js'
-import { setDescriptionIf, START_DESCRIPTION } from './description.js'
+import {
+  setDescriptionIf,
+  START_DESCRIPTION,
+  MEASURE_DESCRIPTION,
+} from './description.js'
 import { updateCombinationEnd } from './duration.js'
 import { refreshPreview } from './update.js'
 
@@ -31,7 +35,7 @@ export const updatePreviewStats = async function ({
   updateCombinationEnd({ stats, previewState, durationState, precisionTarget })
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   combinations[index].stats = stats
-  setDescriptionIf(previewState, '', START_DESCRIPTION)
+  setDescriptionIf(previewState, MEASURE_DESCRIPTION, START_DESCRIPTION)
 
   await updatePreviewResults(previewState)
 }
