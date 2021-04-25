@@ -38,7 +38,7 @@ export const runMainEvents = async function ({
 // Run the user-defined `before` hooks
 const beforeCombination = async function (previewState, server) {
   await sendAndReceive({ event: 'before' }, server)
-  setDescription(previewState)
+  setDescription(previewState, '')
 }
 
 const getCombinationStats = async function ({
@@ -81,4 +81,4 @@ const afterCombination = async function (previewState, server) {
   await sendAndReceive({ event: 'after' }, server)
 }
 
-const END_DESCRIPTION = 'Ending...'
+const END_DESCRIPTION = 'Ending'

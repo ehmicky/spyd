@@ -28,19 +28,3 @@ const unsetDescriptionTimeout = function (previewState) {
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete previewState.descriptionTimeout
 }
-
-// Set the preview description, but with higher priority.
-export const setPriorityDescription = function (
-  previewState,
-  priorityDescription,
-) {
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.priorityDescription = priorityDescription
-}
-
-export const getDescription = function (
-  description,
-  priorityDescription = description,
-) {
-  return priorityDescription
-}

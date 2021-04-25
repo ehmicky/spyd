@@ -4,14 +4,10 @@ import { goodColor, separatorColor } from '../report/utils/colors.js'
 // Retrieve preview content.
 // The `counter` is between `durationLeft` and `progressBar` so that there is
 // no empty space when `durationLeft` is unknown.
-export const getContent = function ({
-  durationLeft,
-  index,
-  total,
-  percentage,
-  description = '',
-  report,
-}) {
+export const getPreviewContent = function (
+  { durationLeft, percentage, description = '', report },
+  { index, total },
+) {
   const screenWidth = getScreenWidth()
   const results = getResults(report, screenWidth)
   const counter = getCounter(index, total)

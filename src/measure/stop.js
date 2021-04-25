@@ -1,7 +1,7 @@
 import process from 'process'
 
 import { StopError } from '../error/main.js'
-import { setPriorityDescription } from '../preview/description.js'
+import { setDescription } from '../preview/description.js'
 import {
   createController,
   waitForEvents,
@@ -51,12 +51,12 @@ const restoreDefaultHandlers = function (signalHandler) {
 const handleStop = async function (stopState, previewState, abortSignal) {
   await waitForStopSignals(abortSignal)
 
-  setPriorityDescription(previewState, STOP_DESCRIPTION)
+  setDescription(previewState, STOP_DESCRIPTION)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
 
   await waitForDelay(ABORT_DELAY, abortSignal)
-  setPriorityDescription(previewState, ABORT_DESCRIPTION)
+  setDescription(previewState, ABORT_DESCRIPTION)
 
   await waitForStopSignals(abortSignal)
 
@@ -71,8 +71,8 @@ const waitForStopSignals = async function (abortSignal) {
 // We allow non-interactive signals sending too for programmatic usage.
 const STOP_SIGNALS = ['SIGINT', 'SIGBREAK', 'SIGHUP', 'SIGTERM', 'SIGQUIT']
 
-const STOP_DESCRIPTION = 'Stopping...'
-const ABORT_DESCRIPTION = 'Stopping... Type CTRL-C to abort graceful exit.'
+const STOP_DESCRIPTION = 'Stopping'
+const ABORT_DESCRIPTION = 'Stopping. Type CTRL-C to abort graceful exit.'
 
 // Users must wait 5 seconds before being able to abort.
 // This promotes proper cleanup.

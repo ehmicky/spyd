@@ -49,7 +49,7 @@ export const setFirstPreview = async function ({
   setDelayedDescription(previewState, START_DESCRIPTION)
 }
 
-const START_DESCRIPTION = 'Starting...'
+const START_DESCRIPTION = 'Starting'
 
 export const updatePreviewReport = async function ({
   stats,

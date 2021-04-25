@@ -1,8 +1,7 @@
 import { printToTty, clearScreen } from '../report/tty.js'
 
 import { getCompletionProps } from './completion.js'
-import { getContent } from './content.js'
-import { getDescription } from './description.js'
+import { getPreviewContent } from './content.js'
 
 // Refresh preview.
 // Also update `previewState.durationLeft|percentage` for reporters using it.
@@ -26,19 +25,4 @@ export const updatePreview = async function (previewState, previewConfig) {
 
   const previewContent = getPreviewContent(previewState, previewConfig)
   await printToTty(previewContent)
-}
-
-const getPreviewContent = function (
-  { durationLeft, percentage, description, priorityDescription, report },
-  { index, total },
-) {
-  const descriptionA = getDescription(description, priorityDescription)
-  return getContent({
-    durationLeft,
-    index,
-    total,
-    percentage,
-    description: descriptionA,
-    report,
-  })
 }
