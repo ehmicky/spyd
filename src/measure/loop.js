@@ -73,7 +73,6 @@ const performSample = async function (
   const previewConfigA = updateCombinationPreview({
     stats,
     previewConfig,
-    previewState,
     durationState,
     precisionTarget,
   })

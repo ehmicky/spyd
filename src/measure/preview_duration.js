@@ -16,8 +16,8 @@ export const startCombinationPreview = async function ({
   }
 
   const previewConfigA = { ...previewConfig, combinationStart: now() }
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(previewState, { combinationEnd: undefined, index: index + 1 })
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.index = index + 1
   await updatePreview(previewState, previewConfigA)
   return previewConfigA
 }
@@ -33,9 +33,7 @@ export const startCombinationPreview = async function ({
 export const updateCombinationPreview = function ({
   stats,
   previewConfig,
-  previewConfig: { previewSamples },
-  previewState,
-  previewState: { combinationEnd: previousCombinationEnd },
+  previewConfig: { previewSamples, combinationEnd: previousCombinationEnd },
   durationState,
   precisionTarget,
 }) {
@@ -51,9 +49,11 @@ export const updateCombinationPreview = function ({
     previewSamples,
     samplesTarget,
   })
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.combinationEnd = combinationEndA
-  return { ...previewConfig, previewSamples: previewSamples + 1 }
+  return {
+    ...previewConfig,
+    previewSamples: previewSamples + 1,
+    combinationEnd: combinationEndA,
+  }
 }
 
 const shouldSkipPreview = function ({ quiet }, { samples, stdev }) {
@@ -173,6 +173,7 @@ const SMOOTH_CLOSENESS = 0.05
 // Done when combination ends
 export const endCombinationPreview = async function ({
   previewState,
+  previewState: { total },
   previewConfig,
   previewConfig: { quiet },
 }) {
@@ -180,10 +181,8 @@ export const endCombinationPreview = async function ({
     return
   }
 
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(previewState, {
-    combinationEnd: now(),
-    index: previewState.total,
-  })
-  await updatePreview(previewState, previewConfig)
+  const previewConfigA = { ...previewConfig, combinationEnd: now() }
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.index = total
+  await updatePreview(previewState, previewConfigA)
 }
