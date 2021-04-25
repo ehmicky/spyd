@@ -42,8 +42,13 @@ export const getCombinationName = function (combination) {
   return getIdInfos(combination).map(getCategoryName).join(separatorColor(', '))
 }
 
-const getCategoryName = function ({ category, id }) {
-  return `${separatorColor(category)} ${titleColor(id)}`
+const getCategoryName = function ({ category, id }, index) {
+  const categoryA = index === 0 ? titleize(category) : category
+  return `${separatorColor(categoryA)} ${titleColor(id)}`
+}
+
+const titleize = function (string) {
+  return `${string.charAt(0).toUpperCase()}${string.slice(1)}`
 }
 
 const getIdInfos = function (combination) {
