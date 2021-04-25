@@ -20,7 +20,7 @@ export const runStartEnd = async function ({
   logsFd,
 }) {
   const taskIds = await startCombination(combination, server)
-  const stats = await eRunMainEvents({
+  const { stats, previewConfig: previewConfigA } = await eRunMainEvents({
     precisionTarget,
     previewConfig,
     previewState,
@@ -30,7 +30,7 @@ export const runStartEnd = async function ({
     logsFd,
   })
   await endCombination(server)
-  return { stats, taskIds }
+  return { stats, previewConfig: previewConfigA, taskIds }
 }
 
 // Start combination, i.e. make it load the combination and run any

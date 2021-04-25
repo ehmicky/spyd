@@ -18,11 +18,11 @@ export const runMainEvents = async function ({
   logsFd,
 }) {
   if (stage === 'init') {
-    return
+    return { previewConfig }
   }
 
   await beforeCombination(previewState, server)
-  const stats = await getCombinationStats({
+  const { stats, previewConfig: previewConfigA } = await getCombinationStats({
     precisionTarget,
     previewConfig,
     previewState,
@@ -32,7 +32,7 @@ export const runMainEvents = async function ({
     logsFd,
   })
   await afterCombination(previewState, server)
-  return stats
+  return { stats, previewConfig: previewConfigA }
 }
 
 // Run the user-defined `before` hooks

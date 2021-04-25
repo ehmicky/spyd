@@ -34,15 +34,14 @@ export const startCombinationPreview = async function (
 export const updateCombinationPreview = function ({
   stats,
   previewConfig,
+  previewConfig: { previewSamples },
   previewState,
   previewState: { combinationEnd: previousCombinationEnd },
-  sampleState,
-  sampleState: { previewSamples },
   durationState,
   precisionTarget,
 }) {
   if (shouldSkipPreview(previewConfig, stats)) {
-    return sampleState
+    return previewConfig
   }
 
   const samplesTarget = getSamplesTarget(stats, precisionTarget)
@@ -55,7 +54,7 @@ export const updateCombinationPreview = function ({
   })
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.combinationEnd = combinationEndA
-  return { ...sampleState, previewSamples: previewSamples + 1 }
+  return { ...previewConfig, previewSamples: previewSamples + 1 }
 }
 
 const shouldSkipPreview = function ({ quiet }, { samples, stdev }) {

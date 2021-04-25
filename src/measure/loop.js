@@ -33,13 +33,12 @@ export const performMeasureLoop = async function ({
   logsFd,
   minLoopDuration,
 }) {
-  const { stats } = await pWhile(
+  const { stats, previewConfig: previewConfigA } = await pWhile(
     (state) =>
       isRemainingCombination(state, { precisionTarget, stage, stopState }),
     (state) =>
       performSample(state, {
         precisionTarget,
-        previewConfig,
         previewState,
         server,
         minLoopDuration,
@@ -50,18 +49,18 @@ export const performMeasureLoop = async function ({
       stats: getInitialStats(),
       sampleState: getInitialSampleState(),
       durationState: getInitialDurationState(),
+      previewConfig,
     },
   )
-  return stats
+  return { stats, previewConfig: previewConfigA }
 }
 
 export const TARGET_SAMPLE_DURATION = 1e8
 
 const performSample = async function (
-  { sampleState, stats, durationState },
+  { sampleState, stats, durationState, previewConfig },
   {
     precisionTarget,
-    previewConfig,
     previewState,
     server,
     minLoopDuration,
@@ -71,30 +70,34 @@ const performSample = async function (
 ) {
   const sampleStart = startSample()
 
-  const sampleStateA = updateCombinationPreview({
+  const previewConfigA = updateCombinationPreview({
     stats,
     previewConfig,
     previewState,
-    sampleState,
     durationState,
     precisionTarget,
   })
 
-  const sampleStateB = await measureSample(
+  const sampleStateA = await measureSample(
     { server, minLoopDuration, targetSampleDuration },
-    sampleStateA,
+    sampleState,
   )
-  const statsA = addStats(stats, sampleStateB, minLoopDuration)
+  const statsA = addStats(stats, sampleStateA, minLoopDuration)
 
   await Promise.all([
-    updatePreviewReport({ stats: statsA, previewConfig, previewState }),
+    updatePreviewReport({
+      stats: statsA,
+      previewConfig: previewConfigA,
+      previewState,
+    }),
     truncateLogs(logsFd),
   ])
 
   const durationStateA = endSample(sampleStart, durationState, statsA)
   return {
     stats: statsA,
-    sampleState: sampleStateB,
+    sampleState: sampleStateA,
     durationState: durationStateA,
+    previewConfig: previewConfigA,
   }
 }

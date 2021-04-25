@@ -50,14 +50,17 @@ const measureCombinationStats = async function ({
   const previewConfigA = { ...previewConfig, measuredCombinations }
   await startCombinationPreview(previewState, previewConfigA, index + 1)
 
-  const { stats } = await measureCombination(combination, {
-    precisionTarget,
-    cwd,
-    previewConfig: previewConfigA,
-    previewState,
-    stage: 'main',
-  })
+  const { stats, previewConfig: previewConfigB } = await measureCombination(
+    combination,
+    {
+      precisionTarget,
+      cwd,
+      previewConfig: previewConfigA,
+      previewState,
+      stage: 'main',
+    },
+  )
 
-  await endCombinationPreview(previewState, previewConfigA)
+  await endCombinationPreview(previewState, previewConfigB)
   return [...measuredCombinations, { ...combination, stats }]
 }

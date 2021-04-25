@@ -19,6 +19,7 @@ export const initPreview = function (
     reporters,
     titles,
     combinations,
+    previewSamples: 0,
   }
   const previewState = {
     durationLeft: EMPTY_DURATION_LEFT,
