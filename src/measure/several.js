@@ -5,9 +5,13 @@ import {
   endCombinationPreview,
 } from '../preview/combination.js'
 import { updateDescription } from '../preview/description.js'
+import {
+  addStopHandler,
+  removeStopHandler,
+  throwIfStopped,
+} from '../stop/main.js'
 
 import { measureCombination } from './single.js'
-import { addStopHandler, removeStopHandler, throwIfStopped } from './stop.js'
 
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
