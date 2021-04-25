@@ -17,6 +17,7 @@ import { getDescription } from './description.js'
 //    real-time
 //  - However, this prevents jitter due the `setInterval()` decrease going
 //    against the sample updates
+// We do not clear preview if an error was thrown.
 export const updatePreview = async function (previewState) {
   await clearScreen()
 
