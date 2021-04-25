@@ -5,41 +5,29 @@ export const getInitialDurationState = function () {
   return { totalDuration: 0 }
 }
 
+export const startSample = function () {
+  return now()
+}
+
 // We keep track of:
 //  - The total duration spent on each combination, to know whether it should
 //    keep being measured.
 //  - The mean duration of a sample, to estimate the duration left based on
 //    the current `rmoe` and `precision`
-export const startSample = function (stopState, { sampleDurationMean }) {
-  const sampleStart = now()
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(stopState, { sampleStart, sampleDurationMean })
-  return sampleStart
-}
-
-// During calibration (`samples < 2`), `totalDuration` and `sampleDurationMean`
-// can be quite changing, so we only keep the last sample then.
-export const endSample = function ({
-  durationState: { totalDuration },
-  stats: { samples },
+// During calibration, `totalDuration` and `sampleDurationMean` can be quite
+// changing, so we only keep the last sample then.
+export const endSample = function (
   sampleStart,
-  stopState,
-}) {
-  // eslint-disable-next-line fp/no-delete, no-param-reassign
-  delete stopState.sampleStart
-  // eslint-disable-next-line fp/no-delete, no-param-reassign
-  delete stopState.sampleDurationMean
+  { totalDuration },
+  { samples },
+) {
+  const sampleDuration = now() - sampleStart
 
-  const sampleDurationLast = now() - sampleStart
-
-  if (samples < 2) {
-    return {
-      totalDuration: sampleDurationLast,
-      sampleDurationMean: sampleDurationLast,
-    }
+  if (samples === 0) {
+    return { totalDuration, sampleDurationMean: sampleDuration }
   }
 
-  const totalDurationA = totalDuration + sampleDurationLast
+  const totalDurationA = totalDuration + sampleDuration
   const sampleDurationMean = totalDurationA / samples
   return { totalDuration: totalDurationA, sampleDurationMean }
 }

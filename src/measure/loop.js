@@ -41,7 +41,6 @@ export const performMeasureLoop = async function ({
         precisionTarget,
         previewConfig,
         previewState,
-        stopState,
         server,
         minLoopDuration,
         logsFd,
@@ -64,14 +63,13 @@ const performSample = async function (
     precisionTarget,
     previewConfig,
     previewState,
-    stopState,
     server,
     minLoopDuration,
     logsFd,
     targetSampleDuration,
   },
 ) {
-  const sampleStart = startSample(stopState, durationState)
+  const sampleStart = startSample()
 
   const sampleStateA = updateCombinationPreview({
     stats,
@@ -93,12 +91,7 @@ const performSample = async function (
     truncateLogs(logsFd),
   ])
 
-  const durationStateA = endSample({
-    durationState,
-    stats: statsA,
-    sampleStart,
-    stopState,
-  })
+  const durationStateA = endSample(sampleStart, durationState, statsA)
   return {
     stats: statsA,
     sampleState: sampleStateB,
