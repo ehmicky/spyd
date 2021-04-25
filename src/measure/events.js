@@ -33,6 +33,7 @@ export const runMainEvents = async function ({
 // Run the user-defined `before` hooks
 const beforeCombination = async function (previewConfig, server) {
   await sendAndReceive({ event: 'before' }, server)
+
   const previewConfigA = setDescription(previewConfig, '')
   await updatePreview(previewConfigA)
   return previewConfigA
@@ -74,8 +75,12 @@ const silentAfterCombination = async function (previewConfig, server) {
 const afterCombination = async function (previewConfig, server) {
   const previewConfigA = setDescription(previewConfig, END_DESCRIPTION)
   await updatePreview(previewConfigA)
+
   await sendAndReceive({ event: 'after' }, server)
-  return previewConfigA
+
+  const previewConfigB = setDescription(previewConfigA, '')
+  await updatePreview(previewConfigB)
+  return previewConfigB
 }
 
 const END_DESCRIPTION = 'Ending'
