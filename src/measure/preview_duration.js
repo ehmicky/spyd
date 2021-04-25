@@ -85,7 +85,7 @@ const getCombinationEnd = function (samplesTarget, { sampleDurationMean }) {
 }
 
 // The `combinationEnd` estimation is based on `stdev`.
-//  - However `stdev` increases and decreases a lot and different rates.
+//  - However `stdev` varies a lot and at different rates.
 //  - This make `combinationEnd` change a lot from sample to sample.
 // This eventually results in issues with `durationLeft` and the progress bar
 // with a poor developer experience. They:
@@ -96,6 +96,14 @@ const getCombinationEnd = function (samplesTarget, { sampleDurationMean }) {
 //  - We blend the previous `combinationEnd` with the new one
 //  - We automatically compute the `smoothRatio` used to know how much those
 //    two should be blended
+// The `stdev` variation:
+//  - Is mostly happening during:
+//     - combination start, because `stdev` is imprecise due to the lower number
+//       of loops
+//     - temporary environment slowdowns
+//  - In both cases, smoothing helps but does not eliminate those, i.e. user
+//    might still experience `durationLeft`/`percentage` stalling or even
+//    going backward
 // `previousCombinationEnd` might be in the past due to that smoothing, so we
 // need to use `Math.max(..., now())` on it.
 const smoothCombinationEnd = function ({
