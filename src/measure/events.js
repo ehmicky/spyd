@@ -1,4 +1,4 @@
-import { setDescription } from '../preview/update.js'
+import { setDescription, updatePreview } from '../preview/update.js'
 import { sendAndReceive } from '../process/ipc.js'
 
 import { performMeasureLoop } from './loop.js'
@@ -72,6 +72,7 @@ const silentAfterCombination = async function (previewConfig, server) {
 // `after` is always called, for cleanup, providing `before` completed.
 const afterCombination = async function (previewConfig, server) {
   const previewConfigA = setDescription(previewConfig, END_DESCRIPTION)
+  await updatePreview(previewConfigA)
   await sendAndReceive({ event: 'after' }, server)
   return previewConfigA
 }

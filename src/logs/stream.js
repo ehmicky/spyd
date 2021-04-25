@@ -28,8 +28,6 @@ export const stopLogsStream = async function (logsStream) {
 // since:
 //  - When logs are low, `stat()` is roughly as slow as `truncate()`
 //  - When logs are high, we most likely want to truncate
-//  - This function is performed in parallel to preview reporting, which
-//    minimizes its performance cost
 export const truncateLogs = async function (logsFd) {
   if (logsFd === undefined) {
     return
