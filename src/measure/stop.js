@@ -64,10 +64,10 @@ const handleStop = async function (stopState, previewState, cancelSignal) {
 }
 
 const afterStop = async function (stopState, previewState) {
-  removeAction(previewState, 'stop')
-  await updateDescription(previewState, STOP_DESCRIPTION)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
+  removeAction(previewState, 'stop')
+  await updateDescription(previewState, STOP_DESCRIPTION)
 }
 
 const beforeAbort = async function (previewState) {
