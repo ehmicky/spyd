@@ -1,5 +1,5 @@
 import { throwOnProcessExit } from '../process/error.js'
-import { throwIfStopped } from '../stop/main.js'
+import { throwIfStopped } from '../stop/error.js'
 
 import { runStartEnd } from './start_end.js'
 
