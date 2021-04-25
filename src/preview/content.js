@@ -11,7 +11,7 @@ export const getPreviewContent = function ({
   index,
   total,
   combinationName,
-  description = '',
+  description,
 }) {
   const screenWidth = getScreenWidth()
   const leftWidth = getLeftWidth(durationLeft, total)
@@ -23,12 +23,21 @@ export const getPreviewContent = function ({
     percentage,
     screenWidth,
   })
+  const descriptionA = getDescription(description)
 
   return `${results}
  ${durationLeft.padEnd(leftWidth)}  ${progressBar}
 
- ${counter.padEnd(leftWidth)}  ${combinationName}  ${description}
+ ${counter.padEnd(leftWidth)}  ${combinationName}${descriptionA}
 `
+}
+
+const getDescription = function (description) {
+  if (description === '') {
+    return ''
+  }
+
+  return separatorColor(`  (${description})`)
 }
 
 const getLeftWidth = function (durationLeft, total) {
