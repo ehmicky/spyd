@@ -8,6 +8,7 @@ import {
   removeFromHistory,
 } from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
+import { printPreviewStarting } from './preview/start_end.js'
 import { reportBenchShow, reportRemove } from './report/main.js'
 import { startReporters } from './report/start_end.js'
 
@@ -15,6 +16,7 @@ import { startReporters } from './report/start_end.js'
 // Default command.
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
+  printPreviewStarting(config)
   const [{ combinations, systemVersions }, configA] = await Promise.all([
     getCombinations(config),
     startReporters(config),

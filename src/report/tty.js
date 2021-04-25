@@ -28,7 +28,7 @@ export const clearScreen = async function () {
 // Should be done first, before switching to using `clearScreen()`.
 export const clearScreenFull = async function () {
   const screenHeight = getScreenHeight()
-  const newlines = '\n'.repeat(screenHeight - 1)
+  const newlines = '\n'.repeat(screenHeight - 2)
   await printToTty(newlines)
 }
 

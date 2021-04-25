@@ -1,6 +1,17 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
-import { clearScreen, clearScreenFull } from '../report/tty.js'
+import { clearScreen, clearScreenFull, printToTty } from '../report/tty.js'
+
+// Loading combinations can be slow if the task is long to load.
+// We print a message so the user knows something is happening.
+// We print it before clearing the screen to avoid a screen flash.
+export const printPreviewStarting = function ({ quiet }) {
+  if (quiet) {
+    return
+  }
+
+  printToTty('Starting...\n')
+}
 
 // Start clearing the screen
 export const startPreview = async function ({ quiet }) {
