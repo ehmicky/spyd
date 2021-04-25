@@ -10,6 +10,7 @@ export const getPreviewContent = function ({
   percentage,
   index,
   total,
+  combinationName,
   description = '',
 }) {
   const screenWidth = getScreenWidth()
@@ -26,7 +27,7 @@ export const getPreviewContent = function ({
   return `${results}
  ${durationLeft.padEnd(leftWidth)}  ${progressBar}
 
- ${counter.padEnd(leftWidth)}  ${description}
+ ${counter.padEnd(leftWidth)}  ${combinationName}  ${description}
 `
 }
 

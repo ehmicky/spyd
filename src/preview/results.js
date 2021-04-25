@@ -53,6 +53,7 @@ const updateReport = async function ({
     percentage,
     index,
     total,
+    combinationName,
     reporters,
     titles,
     initResult,
@@ -69,7 +70,13 @@ const updateReport = async function ({
   previewState.report = await reportPreview(
     {
       ...result,
-      preview: { durationLeft, percentage, index: index + 1, total },
+      preview: {
+        durationLeft,
+        percentage,
+        index: index + 1,
+        total,
+        combinationName,
+      },
     },
     { reporters, titles },
   )

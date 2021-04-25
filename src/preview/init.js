@@ -30,6 +30,7 @@ export const initPreview = function (
     percentage: 0,
     index: 0,
     total: combinationsA.length,
+    combinationName: '',
     description: START_DESCRIPTION,
   }
 }
