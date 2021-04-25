@@ -6,24 +6,18 @@ import { getPreviewContent } from './content.js'
 
 export const refreshPreviewReport = async function (previewConfig, result) {
   const previewConfigA = getCompletionProps({ previewConfig })
-  const {
-    durationLeft,
-    percentage,
-    index,
-    total,
-    reporters,
-    titles,
-  } = previewConfigA
-  const report = await reportPreview(
-    {
-      ...result,
-      preview: { durationLeft, percentage, index: index + 1, total },
-    },
-    { reporters, titles },
-  )
+  const report = await getReport(previewConfigA, result)
   const previewConfigB = { ...previewConfigA, report }
   await refreshPreview(previewConfigB)
   return previewConfigB
+}
+
+const getReport = async function (
+  { durationLeft, percentage, index, total, reporters, titles },
+  result,
+) {
+  const preview = { durationLeft, percentage, index: index + 1, total }
+  return await reportPreview({ ...result, preview }, { reporters, titles })
 }
 
 // Refresh preview.
