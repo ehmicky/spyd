@@ -2,6 +2,8 @@ import { getScreenWidth } from '../report/tty.js'
 import { goodColor, separatorColor } from '../report/utils/colors.js'
 import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 
+import { getInsructions, ACTIONS_LABEL } from './instruction.js'
+
 // Retrieve preview content.
 // `report` is `undefined` when all reporters have `reporter.quiet: true`.
 export const getPreviewContent = function ({
@@ -52,16 +54,25 @@ const getPreviewLines = function ({
   const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
   const counter = getCounter(index, total).padEnd(leftWidth)
   const descriptionA = getDescription(description)
+  const instructions = getInsructions(leftWidth)
 
-  return addPadding(`${durationLeftA}${progressBar}
-
-${counter}${combinationName}${descriptionA}`)
+  const previewLines = [
+    `${durationLeftA}${progressBar}`,
+    `${counter}${combinationName}${descriptionA}`,
+    instructions,
+  ]
+    .filter(Boolean)
+    .join('\n\n')
+  return addPadding(previewLines)
 }
 
 const getLeftWidth = function (durationLeft, total) {
   return (
-    Math.max(durationLeft.length, getCounter(total, total).length) +
-    LEFT_WIDTH_PADDING
+    Math.max(
+      durationLeft.length,
+      getCounter(total, total).length,
+      ACTIONS_LABEL.length,
+    ) + LEFT_WIDTH_PADDING
   )
 }
 
