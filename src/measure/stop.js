@@ -19,29 +19,24 @@ import {
 // This would decrease precision and create difference between results depending
 // on how many times the benchmark was stopped/continued.
 export const addStopHandler = function (previewState) {
-  const stopState = { stopped: false }
-  const noopHandler = removeDefaultHandlers()
+  const signalHandler = removeDefaultHandlers()
   const { cancelSignal, cancel } = createController()
+  const stopState = { stopped: false, signalHandler, cancelSignal, cancel }
   // eslint-disable-next-line fp/no-mutation
-  stopState.onAbort = handleStop(stopState, previewState, cancelSignal)
+  stopState.onAbort = handleStop(stopState, previewState)
   noUnhandledRejection(stopState.onAbort)
-  const removeStopHandlerA = removeStopHandler.bind(
-    undefined,
-    cancel,
-    noopHandler,
-  )
-  return { stopState, removeStopHandler: removeStopHandlerA }
+  return stopState
 }
 
 // Ensure default handlers for those signals are not used.
 // Create a new `noop` function at each call, in case this function is called
 // several times in parallel.
 const removeDefaultHandlers = function () {
-  const noopHandler = noop.bind()
+  const signalHandler = noop.bind()
   STOP_SIGNALS.forEach((signal) => {
-    process.on(signal, noopHandler)
+    process.on(signal, signalHandler)
   })
-  return noopHandler
+  return signalHandler
 }
 
 // eslint-disable-next-line no-empty-function
@@ -53,14 +48,14 @@ const restoreDefaultHandlers = function (signalHandler) {
   })
 }
 
-const handleStop = async function (stopState, previewState, cancelSignal) {
-  await waitForStopSignals(cancelSignal)
+const handleStop = async function (stopState, previewState) {
+  await waitForStopSignals(stopState)
   await afterStop(stopState, previewState)
 
-  await waitForDelay(ABORT_DELAY, cancelSignal)
+  await waitForAbort(stopState)
   await beforeAbort(previewState)
 
-  await waitForStopSignals(cancelSignal)
+  await waitForStopSignals(stopState)
   await afterAbort(previewState)
 }
 
@@ -82,7 +77,7 @@ const afterAbort = async function (previewState) {
   throw new StopError('Benchmark has been aborted.')
 }
 
-const waitForStopSignals = async function (cancelSignal) {
+const waitForStopSignals = async function ({ cancelSignal }) {
   await waitForEvents(process, STOP_SIGNALS, cancelSignal)
 }
 
@@ -93,10 +88,14 @@ const STOP_SIGNALS = ['SIGINT', 'SIGBREAK', 'SIGHUP', 'SIGTERM', 'SIGQUIT']
 // Users must wait 5 seconds before being able to abort.
 // This promotes proper cleanup.
 // Also, this prevents misuse due to users mistakenly hitting the keys twice.
+export const waitForAbort = async function ({ cancelSignal }) {
+  await waitForDelay(ABORT_DELAY, cancelSignal)
+}
+
 const ABORT_DELAY = 5e3
 
 // Undo signal handling
-const removeStopHandler = function (cancel, signalHandler) {
+export const removeStopHandler = function ({ cancel, signalHandler }) {
   cancel()
   restoreDefaultHandlers(signalHandler)
 }
