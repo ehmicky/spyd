@@ -1,7 +1,4 @@
-import {
-  setDescription,
-  setDelayedDescription,
-} from '../preview/description.js'
+import { setDescription } from '../preview/description.js'
 import { sendAndReceive } from '../process/ipc.js'
 
 import { performMeasureLoop } from './loop.js'
@@ -77,7 +74,7 @@ const silentAfterCombination = async function (previewState, server) {
 // Run the user-defined `after` hooks
 // `after` is always called, for cleanup, providing `before` completed.
 const afterCombination = async function (previewState, server) {
-  setDelayedDescription(previewState, END_DESCRIPTION)
+  setDescription(previewState, END_DESCRIPTION)
   await sendAndReceive({ event: 'after' }, server)
 }
 
