@@ -13,6 +13,7 @@ export const startCombinationPreview = async function (previewConfig, index) {
   const previewConfigA = {
     ...previewConfig,
     combinationStart: now(),
+    combinationEnd: undefined,
     index,
   }
   await updatePreview(previewConfigA)
@@ -25,11 +26,7 @@ export const endCombinationPreview = async function (previewConfig) {
     return previewConfig
   }
 
-  const previewConfigA = {
-    ...previewConfig,
-    combinationEnd: now(),
-    index: previewConfig.total - 1,
-  }
+  const previewConfigA = { ...previewConfig, combinationEnd: now() }
   await updatePreview(previewConfigA)
   return previewConfigA
 }
