@@ -5,7 +5,15 @@ import { getLoopsFromLength } from '../stats/extreme.js'
 import { getLengthForMoe } from '../stats/moe.js'
 
 // Done when combination starts
-export const startCombinationPreview = async function (previewState, index) {
+export const startCombinationPreview = async function (
+  previewState,
+  { quiet },
+  index,
+) {
+  if (quiet) {
+    return
+  }
+
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, {
     combinationStart: now(),
@@ -154,7 +162,11 @@ const ADJUSTED_SMOOTH_PERIOD = SMOOTH_PERIOD * 2
 const SMOOTH_CLOSENESS = 0.05
 
 // Done when combination ends
-export const endCombinationPreview = async function (previewState) {
+export const endCombinationPreview = async function (previewState, { quiet }) {
+  if (quiet) {
+    return
+  }
+
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.combinationEnd = now()
   await updatePreview(previewState)
