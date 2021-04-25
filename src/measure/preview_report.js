@@ -26,7 +26,7 @@ export const initPreview = function (
     previewSamples: 0,
     durationLeft: EMPTY_DURATION_LEFT,
     percentage: 0,
-    index: 1,
+    index: 0,
     total: combinationsA.length,
   }
 }
@@ -75,9 +75,9 @@ export const updatePreviewReport = async function ({
     precisionTarget,
   })
   const combinationsA = [
-    ...combinations.slice(0, index - 1),
-    { ...combinations[index - 1], stats },
-    ...combinations.slice(index),
+    ...combinations.slice(0, index),
+    { ...combinations[index], stats },
+    ...combinations.slice(index + 1),
   ]
   const previewConfigB = { ...previewConfigA, combinations: combinationsA }
 

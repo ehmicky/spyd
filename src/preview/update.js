@@ -15,7 +15,10 @@ export const refreshPreviewReport = async function (previewConfig, result) {
     titles,
   } = previewConfigA
   const report = await reportPreview(
-    { ...result, preview: { durationLeft, percentage, index, total } },
+    {
+      ...result,
+      preview: { durationLeft, percentage, index: index + 1, total },
+    },
     { reporters, titles },
   )
   const previewConfigB = { ...previewConfigA, report }

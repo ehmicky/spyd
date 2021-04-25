@@ -12,7 +12,7 @@ import now from 'precise-now'
 // computed its estimated end yet.
 export const getCompletionProps = function (previewConfig) {
   const { combinationStart, combinationEnd, index, total } = previewConfig
-  const completePercentage = (index - 1) / total
+  const completePercentage = index / total
 
   if (combinationStart === undefined || combinationEnd === undefined) {
     return {

@@ -40,7 +40,7 @@ const getResults = function (report, screenWidth) {
 }
 
 const getCounter = function (index, total) {
-  const indexString = String(index)
+  const indexString = String(index + 1)
   const totalString = String(total)
   const padding = ' '.repeat(totalString.length - indexString.length)
   return `  ${padding}(${indexString}/${totalString})  `
