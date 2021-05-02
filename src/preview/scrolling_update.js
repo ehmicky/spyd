@@ -13,8 +13,6 @@ import { BOTTOM_BAR_HEIGHT } from './bottom.js'
 //    size shrinks
 //  - This prevents jittering when the scrolling completely down and the report
 //    size shrinks
-// We do not take into account that one line might take several terminal rows
-// due to wrapping because this makes scrolling faster when lines are long.
 export const updateScrolling = function (previewState, screenHeight) {
   const availableHeight = getAvailableHeight(screenHeight)
   const { report, scrollTop, maxScrollTop } = applyScrolling(
