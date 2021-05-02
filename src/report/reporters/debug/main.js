@@ -5,7 +5,7 @@ import { prettifyValue } from '../../utils/prettify_value.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
-import { getAllColumns } from './columns.js'
+import { getColumnWidth, getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
 import { getRow } from './row.js'
 
@@ -30,13 +30,18 @@ const report = function ({
 }
 
 const getTables = function (combinations, screenWidth) {
-  const allColumns = getAllColumns(combinations[0], screenWidth)
-  return allColumns.map((columns) => getTable(combinations, columns))
+  const columnWidth = getColumnWidth(combinations[0])
+  const allColumns = getAllColumns(combinations[0], screenWidth, columnWidth)
+  return allColumns.map((columns) =>
+    getTable(combinations, columns, columnWidth),
+  )
 }
 
-const getTable = function (combinations, columns) {
-  const header = getHeader(combinations[0], columns)
-  const rows = combinations.map((combination) => getRow(combination, columns))
+const getTable = function (combinations, columns, columnWidth) {
+  const header = getHeader(combinations[0], columns, columnWidth)
+  const rows = combinations.map((combination) =>
+    getRow(combination, columns, columnWidth),
+  )
   return [header, ...rows].join('\n')
 }
 
