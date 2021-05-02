@@ -2,7 +2,7 @@ import { getScreenWidth, getPaddedScreenWidth } from '../report/tty.js'
 import { goodColor, separatorColor, noteColor } from '../report/utils/colors.js'
 import { addPadding } from '../report/utils/indent.js'
 
-import { wrapRows } from './wrap.js'
+import { wrapPaddedRows } from './wrap.js'
 
 // Retrieve elements of bottom bar in preview.
 // Since the scrolling action must be computed twice, this is a performance
@@ -65,7 +65,7 @@ const getCounterRow = function (
 ) {
   const counter = getCounter(index, total).padEnd(leftWidth)
   const descriptionA = getDescription(description, combinationName)
-  return wrapRows(`${counter}${combinationName}${descriptionA}`)
+  return wrapPaddedRows(`${counter}${combinationName}${descriptionA}`)
 }
 
 // The `counter` is between `durationLeft` and `progressBar` so that there is
@@ -107,7 +107,7 @@ const getActions = function (actions, leftWidth) {
   }
 
   const actionsStr = actionValues.map(getAction).join(noteColor(', '))
-  return wrapRows(`${ACTIONS_LABEL.padEnd(leftWidth)}${actionsStr}`)
+  return wrapPaddedRows(`${ACTIONS_LABEL.padEnd(leftWidth)}${actionsStr}`)
 }
 
 const getAction = function ({ key, explanation }) {

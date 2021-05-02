@@ -9,7 +9,7 @@ import {
 } from './description.js'
 import { updateCombinationEnd } from './duration.js'
 import { refreshPreview } from './update.js'
-import { wrapRows } from './wrap.js'
+import { wrapPaddedRows } from './wrap.js'
 
 // Preview results progressively, as combinations are being measured.
 // Reporters should:
@@ -84,7 +84,7 @@ const updateReport = async function ({
     },
     { reporters, titles },
   )
-  const reportA = wrapRows(report)
+  const reportA = wrapPaddedRows(report)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.report = reportA
 }
