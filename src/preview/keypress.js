@@ -6,7 +6,7 @@ import { refreshPreview } from './update.js'
 // Handle user actions through key events.
 // We purposely use `bind()` so that this function can be called several times
 // concurrently.
-export const startHandleKeys = function (previewState) {
+export const startHandleKeypress = function (previewState) {
   if (!shouldHandleKeys(previewState)) {
     return
   }
@@ -21,7 +21,7 @@ export const startHandleKeys = function (previewState) {
   process.stdin.resume()
 }
 
-export const stopHandleKeys = function (previewState) {
+export const stopHandleKeypress = function (previewState) {
   if (!shouldHandleKeys(previewState)) {
     return
   }

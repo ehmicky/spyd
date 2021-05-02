@@ -2,7 +2,7 @@ import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
 import { clearScreen, clearScreenFull, printToTty } from '../report/tty.js'
 
-import { startHandleKeys, stopHandleKeys } from './keys.js'
+import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'
 
 // Loading combinations can be slow if the task is long to load.
@@ -25,7 +25,7 @@ export const startPreview = async function (previewState) {
   hideCursor()
   await clearScreenFull()
   startHandleResize(previewState)
-  startHandleKeys(previewState)
+  startHandleKeypress(previewState)
 }
 
 // Stop clearing the screen.
@@ -40,7 +40,7 @@ export const endPreview = async function (previewState, error = {}) {
     return
   }
 
-  stopHandleKeys(previewState)
+  stopHandleKeypress(previewState)
   stopHandleResize(previewState)
 
   if (error.name !== 'StopError') {
