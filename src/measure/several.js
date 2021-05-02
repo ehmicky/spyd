@@ -9,8 +9,7 @@ import { updateDescription } from '../preview/description.js'
 import { startServer, endServer } from '../server/main.js'
 import { addStopHandler, removeStopHandler } from '../stop/main.js'
 
-import { logAndMeasure } from './single.js'
-import { spawnAndMeasure } from './spawn.js'
+import { logAndMeasure, spawnAndMeasure } from './single.js'
 
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
