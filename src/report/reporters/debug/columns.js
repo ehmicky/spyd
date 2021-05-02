@@ -2,8 +2,8 @@ import stringWidth from 'string-width'
 
 import { SEPARATOR_WIDTH } from '../../utils/separator.js'
 
-import { getFirstCellWidth, getHeaderName } from './header.js'
-import { getStat } from './row.js'
+import { getHeaderName } from './header.js'
+import { getFirstCellWidth, getStat } from './row.js'
 
 // Each column is padded to the same width, so that they align vertically
 export const getColumnWidth = function ({ stats }) {

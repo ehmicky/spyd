@@ -1,20 +1,14 @@
-import stringWidth from 'string-width'
-
 import { fieldColor } from '../../utils/colors.js'
 import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 
-import { getFirstCell } from './row.js'
+import { getFirstCellWidth } from './row.js'
 
 // Retrieve the header row
 export const getHeader = function ({ titles, stats }, columns, columnWidth) {
   const firstColumn = ' '.repeat(getFirstCellWidth(titles))
   const headerCells = getHeaderCells(stats, columns, columnWidth)
   return `${firstColumn}${headerCells}`
-}
-
-export const getFirstCellWidth = function (titles) {
-  return stringWidth(getFirstCell(titles))
 }
 
 const getHeaderCells = function (stats, columns, columnWidth) {

@@ -1,3 +1,5 @@
+import stringWidth from 'string-width'
+
 import { padStart } from '../../utils/padding.js'
 import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { getCombinationName } from '../../utils/title.js'
@@ -7,6 +9,10 @@ export const getRow = function ({ titles, stats }, columns, columnWidth) {
   const firstCell = getFirstCell(titles)
   const cells = getCells(stats, columns, columnWidth)
   return `${firstCell}${cells}`
+}
+
+export const getFirstCellWidth = function (titles) {
+  return stringWidth(getFirstCell(titles))
 }
 
 export const getFirstCell = function (titles) {
