@@ -33,7 +33,7 @@ const reduceAllStateColumns = function (
     }
   }
 
-  if (widthLeft - paddingWidth >= columnWidth + SEPARATOR_WIDTH) {
+  if (widthLeft - paddingWidth - columnWidth >= SEPARATOR_WIDTH) {
     return {
       allStatColumns: [[...statColumns, name], ...previousStatColumns],
       widthLeft: widthLeft - paddingWidth - columnWidth,
