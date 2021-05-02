@@ -33,17 +33,17 @@ const reduceAllStateColumns = function (
     }
   }
 
-  if (widthLeft - paddingWidth - columnWidth >= SEPARATOR_WIDTH) {
+  if (widthLeft - paddingWidth - columnWidth < SEPARATOR_WIDTH) {
     return {
-      allStatColumns: [[...statColumns, name], ...previousStatColumns],
-      widthLeft: widthLeft - paddingWidth - columnWidth,
-      paddingWidth: SEPARATOR_WIDTH,
+      allStatColumns: [[name], statColumns, ...previousStatColumns],
+      widthLeft: availableWidth - columnWidth,
+      paddingWidth: PADDING_WIDTH,
     }
   }
 
   return {
-    allStatColumns: [[name], statColumns, ...previousStatColumns],
-    widthLeft: availableWidth - columnWidth,
-    paddingWidth: PADDING_WIDTH,
+    allStatColumns: [[...statColumns, name], ...previousStatColumns],
+    widthLeft: widthLeft - paddingWidth - columnWidth,
+    paddingWidth: SEPARATOR_WIDTH,
   }
 }
