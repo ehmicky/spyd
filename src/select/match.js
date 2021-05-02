@@ -2,6 +2,11 @@ import { getCombinationIds } from '../combination/ids.js'
 
 // Select combinations according to the `select` or `limit` configuration
 // properties.
+// Each selector:
+//  - Is an intersection of union of identifiers
+//  - Can be negated to exclude instead of including
+//  - Can be combined as a union with other selectors
+//  - This leads to: [not]((id or ...) and (otherId or ...) and ...) or ...
 // This logic:
 //  - Is expressive enough to allow selecting any sets of combinations,
 //    regardless of the number of categories
