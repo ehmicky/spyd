@@ -83,7 +83,7 @@ export const getRmoe = function (moe, median) {
 // Since `length` is used in non-straight-forward ways (due to `getTvalue()`)
 // in `getMoe()`, we need to do an iterative/heuristic search until the value
 // is found.
-export const getLengthForMoe = function (moe, stdev) {
+export const getLengthForMoe = function (moeTarget, stdev) {
   const lengths = new Set([])
   // eslint-disable-next-line fp/no-let
   let length = MIN_LENGTH
@@ -93,7 +93,7 @@ export const getLengthForMoe = function (moe, stdev) {
     lengths.add(length)
     // eslint-disable-next-line fp/no-mutation
     length = Math.max(
-      Math.round(((getTvalue(length) * stdev) / moe) ** 2),
+      Math.round(((getTvalue(length) * stdev) / moeTarget) ** 2),
       MIN_LENGTH,
     )
   }
