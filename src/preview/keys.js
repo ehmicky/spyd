@@ -51,8 +51,13 @@ const handleKeyEvent = function (previewState, keyString, key) {
   keyHandlerA.handler(previewState)
 }
 
-const matchesKeyHandler = function ({ keys }, { name, ctrl }) {
-  return keys.some((key) => key.name === name && Boolean(key.ctrl) === ctrl)
+const matchesKeyHandler = function ({ keys }, { name, ctrl, meta }) {
+  return keys.some(
+    (key) =>
+      key.name === name &&
+      Boolean(key.ctrl) === ctrl &&
+      Boolean(key.meta) === meta,
+  )
 }
 
 const scrollUp = function (previewState) {
@@ -82,6 +87,14 @@ const scroll = function (scrollAmount, previewState) {
   refreshPreview(previewState)
 }
 
+const sigint = function () {
+  process.emit('SIGINT')
+}
+
+const sigbreak = function () {
+  process.emit('SIGBREAK')
+}
+
 const KEY_HANDLERS = [
   {
     handler: scrollUp,
@@ -99,4 +112,8 @@ const KEY_HANDLERS = [
     handler: scrollDownPage,
     keys: [{ name: 'pagedown' }, { name: 'f', ctrl: true }],
   },
+  // Handles some shortcuts which usually send a terminal signal to the process
+  // so that those are handled by the stop logic
+  { handler: sigint, keys: [{ name: 'c', ctrl: true }] },
+  { handler: sigbreak, keys: [{ name: 'pagedown', meta: true }] },
 ]
