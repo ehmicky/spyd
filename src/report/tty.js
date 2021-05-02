@@ -1,4 +1,4 @@
-import { stdout } from 'process'
+import { stdin, stdout } from 'process'
 import { cursorTo, clearScreenDown } from 'readline'
 import { promisify } from 'util'
 
@@ -32,9 +32,15 @@ export const clearScreenFull = async function () {
   await printToTty(newlines)
 }
 
-// When stdout is a tty, we use preview by default
+// When stdin is not a tty, we do not use preview by default.
+// Many preview features depends on interactive input: keypress, scrolling.
+export const isTtyInput = function () {
+  return isInteractive({ stream: stdin })
+}
+
+// When stdout is not a tty, we do not use preview by default
 export const isTtyOutput = function () {
-  return isInteractive(stdout)
+  return isInteractive({ stream: stdout })
 }
 
 // Retrieve terminal width, excluding the padding added to reporting

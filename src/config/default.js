@@ -1,4 +1,4 @@
-import { isTtyOutput } from '../report/tty.js'
+import { isTtyInput, isTtyOutput } from '../report/tty.js'
 
 // Add default configuration properties
 export const addDefaultConfig = function ({
@@ -11,7 +11,7 @@ export const addDefaultConfig = function ({
   return {
     ...DEFAULT_CONFIG,
     cwd: processCwd,
-    quiet: !isTtyOutput(),
+    quiet: !isTtyInput() || !isTtyOutput(),
     delta: defaultDelta,
     since: defaultDelta,
     showSystem: config.system !== undefined,

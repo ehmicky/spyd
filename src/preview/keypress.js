@@ -35,6 +35,8 @@ export const stopHandleKeypress = function (previewState) {
   delete previewState.stdinIsRaw
 }
 
+// Although `quiet` defaults to `false` when stdin is not tty, it can be
+// overridden, and the keypress logic would fail when stdin is not tty.
 const shouldHandleKeypress = function ({ quiet }) {
   return !quiet && process.stdin.isTTY
 }
