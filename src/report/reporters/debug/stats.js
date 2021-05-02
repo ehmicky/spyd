@@ -26,16 +26,25 @@ const reduceAllStateColumns = function (
   const widthLeftA = widthLeft - paddingWidth
   const columnWidth = getColumnWidth(stats, name)
 
-  return statColumns.length === 0 || widthLeftA >= columnWidth + SEPARATOR_WIDTH
-    ? {
-        allStatColumns: [[...statColumns, name], ...previousStatColumns],
-        widthLeft: widthLeftA - columnWidth,
-        paddingWidth:
-          statColumns.length === 0 ? PADDING_WIDTH : SEPARATOR_WIDTH,
-      }
-    : {
-        allStatColumns: [[name], statColumns, ...previousStatColumns],
-        widthLeft: availableWidth - columnWidth,
-        paddingWidth: PADDING_WIDTH,
-      }
+  if (statColumns.length === 0) {
+    return {
+      allStatColumns: [[...statColumns, name], ...previousStatColumns],
+      widthLeft: widthLeftA - columnWidth,
+      paddingWidth: PADDING_WIDTH,
+    }
+  }
+
+  if (widthLeftA >= columnWidth + SEPARATOR_WIDTH) {
+    return {
+      allStatColumns: [[...statColumns, name], ...previousStatColumns],
+      widthLeft: widthLeftA - columnWidth,
+      paddingWidth: SEPARATOR_WIDTH,
+    }
+  }
+
+  return {
+    allStatColumns: [[name], statColumns, ...previousStatColumns],
+    widthLeft: availableWidth - columnWidth,
+    paddingWidth: PADDING_WIDTH,
+  }
 }
