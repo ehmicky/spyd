@@ -64,11 +64,11 @@ const scrollDown = function (previewState) {
 }
 
 const scrollUpPage = function (previewState) {
-  scroll(-getPageAmount(), previewState)
+  scroll(-getPageAmount(previewState), previewState)
 }
 
 const scrollDownPage = function (previewState) {
-  scroll(getPageAmount(), previewState)
+  scroll(getPageAmount(previewState), previewState)
 }
 
 // TODO: take into account bottomBar height
