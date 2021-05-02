@@ -1,5 +1,5 @@
-import { addAction, removeAction } from './action.js'
 import { BOTTOM_BAR_HEIGHT } from './bottom.js'
+import { addScrollAction } from './scrolling_action.js'
 
 // When content is taller than the terminal height, allow user to scroll with
 // up/down. We do this by keeping tracking of `scrollTop` and truncating the
@@ -85,34 +85,3 @@ const sliceReport = function ({
   const bottomIndex = newlineIndexes[bottomRowIndex] + 1
   return report.slice(topIndex, bottomIndex)
 }
-
-// Add/remove action in to the bottom bar indicating whether the user can scroll
-const addScrollAction = function (previewState, scrollTop, maxScrollTop) {
-  const canScrollUp = scrollTop !== 0
-  const canScrollDown = scrollTop !== maxScrollTop
-
-  if (!canScrollUp && !canScrollDown) {
-    removeAction(previewState, SCROLL_ACTION.name)
-    return
-  }
-
-  const action = getScrollAction(canScrollUp, canScrollDown)
-  addAction(previewState, action)
-}
-
-const getScrollAction = function (canScrollUp, canScrollDown) {
-  if (!canScrollUp) {
-    return SCROLL_DOWN_ACTION
-  }
-
-  return canScrollDown ? SCROLL_ACTION : SCROLL_UP_ACTION
-}
-
-const SCROLL_ACTION = {
-  name: 'scroll',
-  key: 'Up/Down',
-  explanation: 'Scroll',
-  order: 1,
-}
-const SCROLL_UP_ACTION = { ...SCROLL_ACTION, key: 'Up' }
-const SCROLL_DOWN_ACTION = { ...SCROLL_ACTION, key: 'Down' }
