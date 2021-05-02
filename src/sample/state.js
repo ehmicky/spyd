@@ -58,4 +58,4 @@ export const hasMaxMeasures = function ({ measures }) {
   return measures.length >= MAX_MEASURES
 }
 
-const MAX_MEASURES = 1e8
+const MAX_MEASURES = 1e7
