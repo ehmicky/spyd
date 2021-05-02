@@ -5,18 +5,10 @@ import { getPreviewBottom } from './bottom.js'
 import { applyScrolling } from './scrolling.js'
 
 // Retrieve preview content.
-// `report` is `undefined` when all reporters have `reporter.quiet: true`.
-export const getPreviewContent = function ({
-  report = '',
-  durationLeft,
-  percentage,
-  index,
-  total,
-  combinationName,
-  description,
-  actions,
-  scrollTop,
-}) {
+// `report` is `undefined` when all reporters either:
+//   - have `reporter.quiet: true`
+//   - return nothing in `reporter.report()
+export const getPreviewContent = function (previewState) {
   const screenWidth = getScreenWidth()
   const screenHeight = getScreenHeight()
   const {
@@ -24,24 +16,15 @@ export const getPreviewContent = function ({
     scrollAction,
     scrollTop: scrollTopA,
     availableHeight,
-  } = applyScrolling(report, scrollTop, screenHeight)
-  const separator = getSeparator(report, screenWidth)
-  const bottom = getPreviewBottom({
-    durationLeft,
-    percentage,
-    index,
-    total,
-    combinationName,
-    description,
-    actions,
-    screenWidth,
-  })
+  } = applyScrolling(previewState, screenHeight)
+  const separator = getSeparator(previewState, screenWidth)
+  const bottom = getPreviewBottom(previewState, screenWidth)
   const previewContent = `${reportA}${separator}${bottom}\n`
   return { previewContent, scrollTop: scrollTopA, availableHeight }
 }
 
-const getSeparator = function (report, screenWidth) {
-  if (report === '') {
+const getSeparator = function ({ report }, screenWidth) {
+  if (report === undefined) {
     return ''
   }
 

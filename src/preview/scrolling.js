@@ -15,10 +15,10 @@ import { BOTTOM_BAR_HEIGHT } from './bottom.js'
 //    size shrinks
 // We do not take into account that one line might take several terminal rows
 // due to wrapping because this makes scrolling faster when lines are long.
-export const applyScrolling = function (report, scrollTop, screenHeight) {
+export const applyScrolling = function ({ report, scrollTop }, screenHeight) {
   const availableHeight = getAvailableHeight(screenHeight)
 
-  if (availableHeight <= 0) {
+  if (availableHeight <= 0 || report === undefined) {
     return { report: '', scrollAction: {}, scrollTop: 0, availableHeight }
   }
 

@@ -6,16 +6,18 @@ import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 export const BOTTOM_BAR_HEIGHT = 8
 
 // Retrieve bottom of preview
-export const getPreviewBottom = function ({
-  durationLeft,
-  percentage,
-  index,
-  total,
-  combinationName,
-  description,
-  actions,
+export const getPreviewBottom = function (
+  {
+    durationLeft,
+    percentage,
+    index,
+    total,
+    combinationName,
+    description,
+    actions,
+  },
   screenWidth,
-}) {
+) {
   const leftWidth = getLeftWidth(durationLeft, total)
   const durationLeftA = durationLeft.padEnd(leftWidth)
   const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
