@@ -13,17 +13,6 @@ import { logAndMeasure, spawnAndMeasure } from './single.js'
 
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
-// Combinations are measured serially:
-//  - Running them concurrently decreases the precision due to sharing the same
-//    machine and OS. This is the case even when samples are run one at a time:
-//     - Roughly doubles stdev
-//     - Changes the distribution of each combination
-//     - Increases `minLoopDuration` due to processes being spawned in parallel
-//  - This lowers the maximum memory usage since only one combination's
-//    `measures` is in memory at a time
-//  - The downside is that users do not get early results of all combinations
-//    at once. However, the `precision` configuration property can be used for
-//    this.
 export const measureCombinations = async function (
   combinations,
   { precisionTarget, cwd, previewState, stage },
@@ -71,6 +60,17 @@ const startServerAndMeasure = async function ({
   }
 }
 
+// Combinations are measured serially:
+//  - Running them concurrently decreases the precision due to sharing the same
+//    machine and OS. This is the case even when samples are run one at a time:
+//     - Roughly doubles stdev
+//     - Changes the distribution of each combination
+//     - Increases `minLoopDuration` due to processes being spawned in parallel
+//  - This lowers the maximum memory usage since only one combination's
+//    `measures` is in memory at a time
+//  - The downside is that users do not get early results of all combinations
+//    at once. However, the `precision` configuration property can be used for
+//    this.
 const measureCombinationsStats = async function ({
   combinations,
   precisionTarget,
