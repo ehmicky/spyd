@@ -20,13 +20,15 @@ const report = function ({
   const combinationsA = prettifyStats(combinations)
   const combinationsB = addTitles(combinationsA)
 
-  const allStatNames = getAllStatNames(combinationsB[0], screenWidth)
-  const tables = allStatNames.map((statNames) =>
-    getTable(combinationsB, statNames),
-  )
+  const tables = getTables(combinationsB, screenWidth)
   const histograms = serializeHistograms(combinationsB, HISTOGRAM_OPTS)
   const footer = prettifyValue(getFooter({ id, timestamp, systems }))
   return joinSections([...tables, ...histograms, footer])
+}
+
+const getTables = function (combinations, screenWidth) {
+  const allStatNames = getAllStatNames(combinations[0], screenWidth)
+  return allStatNames.map((statNames) => getTable(combinations, statNames))
 }
 
 const getTable = function (combinations, statNames) {
