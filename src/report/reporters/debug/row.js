@@ -9,13 +9,12 @@ export const getRow = function ({ titles, stats }, columns, columnWidth) {
   return `${firstCell}${cells}`
 }
 
-const getFirstCell = function (titles) {
+export const getFirstCell = function (titles) {
   const combinationName = getCombinationName(titles)
   return `${combinationName}${FIRST_PADDING}`
 }
 
-// Padding between the name column and the second column
-export const FIRST_PADDING_WIDTH = 2
+const FIRST_PADDING_WIDTH = 2
 const FIRST_PADDING = ' '.repeat(FIRST_PADDING_WIDTH)
 
 // Retrieve a single row, except the row name
