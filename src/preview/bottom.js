@@ -71,7 +71,7 @@ const getCounterRow = function (
 ) {
   const counter = getCounter(index, total).padEnd(leftWidth)
   const descriptionA = getDescription(description, combinationName)
-  return `${counter}${combinationName}${descriptionA}`
+  return wrapRows(`${counter}${combinationName}${descriptionA}`)
 }
 
 // The `counter` is between `durationLeft` and `progressBar` so that there is
@@ -99,7 +99,7 @@ const getPreviewBottom = function ({
 }) {
   const actionsA = getActions(actions, leftWidth)
   const rows = addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
-  return wrapRows(`${separator}${rows}`)
+  return `${separator}${rows}`
 }
 
 // Show keys available for user actions in previews.
@@ -112,7 +112,7 @@ const getActions = function (actions, leftWidth) {
   }
 
   const actionsStr = actionValues.map(getAction).join(noteColor(', '))
-  return `${ACTIONS_LABEL.padEnd(leftWidth)}${actionsStr}`
+  return wrapRows(`${ACTIONS_LABEL.padEnd(leftWidth)}${actionsStr}`)
 }
 
 const getAction = function ({ key, explanation }) {

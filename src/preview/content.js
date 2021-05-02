@@ -19,5 +19,6 @@ export const getPreviewContent = function (previewState) {
     bottomBar,
   )
   addScrollAction({ previewState, maxScrollTop })
-  return `${report}${bottomBar}`
+  const bottomBarA = getBottomBar(previewState, screenWidth)
+  return `${report}${bottomBarA}`
 }
