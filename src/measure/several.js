@@ -22,7 +22,7 @@ const startServerAndMeasure = async function (args) {
   const { server, serverUrl } = await startServer()
 
   try {
-    return await measureCombinationsStats({ ...args, server, serverUrl })
+    return await measureEachCombination({ ...args, server, serverUrl })
   } finally {
     await endServer(server)
   }
@@ -39,7 +39,7 @@ const startServerAndMeasure = async function (args) {
 //  - The downside is that users do not get early results of all combinations
 //    at once. However, the `precision` configuration property can be used for
 //    this.
-const measureCombinationsStats = async function ({ combinations, ...args }) {
+const measureEachCombination = async function ({ combinations, ...args }) {
   return await pMapSeries(
     combinations,
     (combination, index) => measureCombination({ ...args, combination, index }),
