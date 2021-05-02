@@ -27,4 +27,4 @@ export const getStat = function (stats, column) {
 
 // Padding between the name column and the second column
 export const NAME_RIGHT_PADDING_WIDTH = 2
-export const NAME_RIGHT_PADDING = ' '.repeat(NAME_RIGHT_PADDING_WIDTH)
+const NAME_RIGHT_PADDING = ' '.repeat(NAME_RIGHT_PADDING_WIDTH)
