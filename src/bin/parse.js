@@ -6,8 +6,7 @@ import { ALIASES } from './config/aliases.js'
 // Yargs CLI parsing supports setting empty arrays using `--NAME`, `--NAME=` or
 // `--NAME=""`
 //   - This is useful in many cases to remove the default value, for example
-//     with the `reporter`, `select`, `exclude` and `limit` configuration
-//     properties.
+//     with the `reporter`, `select` and `limit` configuration properties.
 //   - This requires not using `requiresArg: true` when `array: true` is used.
 export const parseCliFlags = function (yargs) {
   const {

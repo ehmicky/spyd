@@ -1,18 +1,17 @@
 import { isSameCategory } from '../combination/ids.js'
 import { mergeSystems } from '../system/merge.js'
 
-// `select|exclude` can be used to measure specific combinations, allowing
-// incremental benchmarks. However, when reporting benchmarks, we show all
-// combinations.
+// `select` can be used to measure specific combinations, allowing incremental
+// benchmarks. However, when reporting benchmarks, we show all combinations.
 // We do not want to show previous benchmarks' identifiers that have been
 // intentionally deleted.
 //  - However, we still want to show identifiers that have been only filtered
 //    out.
-//  - We do so by using the `select|exclude` configuration properties to filter
+//  - We do so by using the `select` configuration properties to filter
 //    combinations to show.
 //  - This is done in a previous step while loading results.
-// The set of possible combinations is guessed from the current
-// `select|exclude` properties:
+// The set of possible combinations is guessed from the current `select`
+// properties:
 //  - We do not use the last measured combinations, nor try to guess what the
 //    current set of possible combinations is.
 //  - This is because guessing the current set of possible combinations is
@@ -24,7 +23,7 @@ import { mergeSystems } from '../system/merge.js'
 //       result. It is hard to know where/whether in the results history the
 //       user intends to stop using each of the previously used systems.
 //  - Instead, we just use any previous combinations matching the current
-//    `select|exclude` properties. This is explicit and predictable.
+//    `select` properties. This is explicit and predictable.
 // If `previous` is empty due to the `since` property, this is noop.
 export const mergeLastCombinations = function (lastResult, previous) {
   // eslint-disable-next-line fp/no-mutating-methods

@@ -3,7 +3,7 @@ import { getInputIds } from './inputs.js'
 // Combination identifiers create a new combination category:
 // tasks, systems, variations, runners.
 // They:
-//  - can be used in `select`, `exclude`, `limit`, etc.
+//  - can be used in `select`, `limit`, etc.
 //  - are checked for duplicates
 // As opposed to non-combination identifiers: inputs.
 export const COMBINATION_CATEGORIES = [

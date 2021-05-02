@@ -42,14 +42,4 @@ selects any combinations from:
 
 By default, all combinations are selected.`,
   },
-  exclude: {
-    group: SELECT,
-    alias: 'x',
-    string: true,
-    array: true,
-    describe: `Exclude specific combinations.
-The syntax is the same as the "select" configuration property.
-"exclude" has priority over "select".
-By default, no combinations are excluded.`,
-  },
 }

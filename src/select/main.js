@@ -1,17 +1,10 @@
 import { UserError } from '../error/main.js'
 
 import { filterBySelectors } from './match.js'
-import { parseSelectExclude } from './parse.js'
+import { parseSelect } from './parse.js'
 import { getPrefix } from './prefix.js'
 
-// Select combinations according to the `select` and `exclude` configuration
-// properties.
-// We use two properties instead of a single `select` one because:
-//  - Otherwise, exclusions would be quite verbose in `select`, since they
-//    would need to be added to each selector string.
-//  - This allows overriding `select` in the CLI while keeping `exclude`,
-//    which is most likely what the user might want.
-// `exclude` defaults to excluding nothing.
+// Select combinations according to the `select` configuration properties.
 // `select` defaults to including everything. This applies to when it is either
 // `undefined` or an empty array. Making an empty array including nothing would
 // be more consistent. However, there is little use for it and it most likely
@@ -25,43 +18,30 @@ import { getPrefix } from './prefix.js'
 //     - Only reporting what is being measured is more intuitive and provides
 //       with a stronger focus
 //     - This provides with fewer configuration properties, which is simpler
-//  - If users use `select|exclude` to limit how many combinations are
-//    being measured, but still want to see all combinations, they should
-//    perform two commands: first `bench` then `show`.
-export const selectResults = function (results, { select, exclude }) {
+//  - If users use `select` to limit how many combinations are being measured,
+//    but still want to see all combinations, they should perform two commands:
+//    first `bench` then `show`.
+export const selectResults = function (results, select) {
   return results
-    .map((result) => selectResult(result, { select, exclude }))
+    .map((result) => selectResult(result, select))
     .filter(hasCombinations)
 }
 
-const selectResult = function (
-  { combinations, ...result },
-  { select, exclude },
-) {
-  const { selectSelectors, excludeSelectors } = parseSelectExclude({
-    select,
-    exclude,
-    combinations,
-  })
-  const combinationsA = filterBySelectors(combinations, selectSelectors)
-  const combinationsB = filterBySelectors(combinationsA, excludeSelectors)
-  return { ...result, combinations: combinationsB }
+const selectResult = function ({ combinations, ...result }, select) {
+  const allSelectors = parseSelect(select, combinations)
+  const combinationsA = filterBySelectors(combinations, allSelectors)
+  return { ...result, combinations: combinationsA }
 }
 
-export const selectCombinations = function (combinations, { select, exclude }) {
-  const { selectSelectors, excludeSelectors } = parseSelectExclude({
-    select,
-    exclude,
-    combinations,
-  })
-  const combinationsA = strictSelection(combinations, selectSelectors)
-  const combinationsB = strictSelection(combinationsA, excludeSelectors)
-  return combinationsB
+export const selectCombinations = function (combinations, select) {
+  const allSelectors = parseSelect(select, combinations)
+  const combinationsA = strictSelection(combinations, allSelectors)
+  return combinationsA
 }
 
-// When selecting combinations with `select|exclude`, at least one must
-// match. However, when filtering previous combinations, we silently ignore
-// results with no matching combinations instead.
+// When selecting combinations with `select`, at least one must match.
+// However, when filtering previous combinations, we silently ignore results
+// with no matching combinations instead.
 const strictSelection = function (combinations, allSelectors) {
   const combinationsA = filterBySelectors(combinations, allSelectors)
 

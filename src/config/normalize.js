@@ -63,7 +63,6 @@ const NORMALIZERS = {
   runner: normalizeArrayProp,
   reporter: normalizeOptionalArrProp,
   select: normalizeOptionalArrProp,
-  exclude: normalizeOptionalArrProp,
   limit: normalizeOptionalArrProp,
   titles: checkTitles,
   inputs: checkInputs,

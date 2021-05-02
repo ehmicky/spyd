@@ -45,9 +45,9 @@ export const getFromHistory = async function (config) {
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in results preview
-const listNormalizedResults = async function ({ cwd, select, exclude }) {
+const listNormalizedResults = async function ({ cwd, select }) {
   const results = await listResults(cwd)
-  const resultsA = loadResults({ results, select, exclude })
+  const resultsA = loadResults(results, select)
   return resultsA
 }
 

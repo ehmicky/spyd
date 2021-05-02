@@ -1,7 +1,7 @@
 import { getCombinationIds } from '../combination/ids.js'
 
-// Select combinations according to the `select`, `exclude`, `limit`
-// configuration properties
+// Select combinations according to the `select` or `limit` configuration
+// properties
 export const filterBySelectors = function (combinations, allSelectors) {
   return combinations.filter((combination) =>
     matchSelectors(combination, allSelectors),
