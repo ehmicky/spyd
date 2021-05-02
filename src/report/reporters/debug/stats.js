@@ -25,7 +25,7 @@ const reduceAllStateColumns = function (
 ) {
   const columnWidth = getColumnWidth(stats, name)
 
-  if (statColumns === undefined) {
+  if (allStatColumns.length === 0) {
     return {
       allStatColumns: [[name], ...allStatColumns],
       widthLeft: availableWidth - columnWidth - PADDING_WIDTH,
