@@ -15,7 +15,7 @@ export const getFirstCellWidth = function (titles) {
   return stringWidth(getFirstCell(titles))
 }
 
-export const getFirstCell = function (titles) {
+const getFirstCell = function (titles) {
   const combinationName = getCombinationName(titles)
   return `${combinationName}${FIRST_PADDING}`
 }
