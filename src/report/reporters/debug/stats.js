@@ -16,21 +16,25 @@ export const getAllStatColumns = function ({ titles, stats }, screenWidth) {
 }
 
 const reduceAllStateColumns = function (
-  { allStatColumns: [statColumns, ...previousStatColumns], widthLeft },
+  {
+    allStatColumns,
+    allStatColumns: [statColumns, ...previousStatColumns],
+    widthLeft,
+  },
   { name, stats, availableWidth },
 ) {
   const columnWidth = getColumnWidth(stats, name)
 
   if (statColumns === undefined) {
     return {
-      allStatColumns: [[name], ...previousStatColumns],
+      allStatColumns: [[name], ...allStatColumns],
       widthLeft: availableWidth - columnWidth - PADDING_WIDTH,
     }
   }
 
   if (widthLeft - columnWidth - SEPARATOR_WIDTH < 0) {
     return {
-      allStatColumns: [[name], statColumns, ...previousStatColumns],
+      allStatColumns: [[name], ...allStatColumns],
       widthLeft: availableWidth - columnWidth - PADDING_WIDTH,
     }
   }
