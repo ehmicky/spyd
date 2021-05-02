@@ -3,8 +3,11 @@ import omit from 'omit.js'
 import { showResultTitles } from '../title/show.js'
 
 import { cleanResult } from './clean.js'
-import { isTtyOutput, getScreenWidth, getScreenHeight } from './tty.js'
-import { PADDING_SIZE } from './utils/indent.js'
+import {
+  isTtyOutput,
+  getPaddedScreenWidth,
+  getPaddedScreenHeight,
+} from './tty.js'
 
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
@@ -62,8 +65,8 @@ const getDefaultShowDiff = function (output) {
 
 // Add information about the terminal
 const addTtyInfo = function (result) {
-  const screenWidth = Math.max(getScreenWidth(), 1)
-  const screenHeight = Math.max(getScreenHeight() - PADDING_SIZE, 1)
+  const screenWidth = getPaddedScreenWidth()
+  const screenHeight = getPaddedScreenHeight()
   return { ...result, screenWidth, screenHeight }
 }
 

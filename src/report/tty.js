@@ -52,11 +52,11 @@ export const getReportWidth = function () {
 
 // Retrieve terminal width, excluding the padding added to reporting
 export const getPaddedScreenWidth = function () {
-  return Math.min(getScreenWidth() - PADDING_SIZE * 2, 1)
+  return Math.max(getScreenWidth() - PADDING_SIZE * 2, 1)
 }
 
 export const getPaddedScreenHeight = function () {
-  return Math.min(getScreenHeight() - PADDING_SIZE * 2, 1)
+  return Math.max(getScreenHeight() - PADDING_SIZE * 2, 1)
 }
 
 // Retrieve terminal width and height
