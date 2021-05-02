@@ -29,11 +29,7 @@ export const refreshPreview = async function (previewState) {
     return
   }
 
-  const { previewContent, scrollTop, availableHeight } = getPreviewContent(
-    previewState,
-  )
-  // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(previewState, { scrollTop, availableHeight })
+  const previewContent = getPreviewContent(previewState)
 
   await clearScreen()
   await printToTty(previewContent)
