@@ -32,11 +32,11 @@ export const updateScrolling = function (previewState, screenHeight) {
 // element, i.e. its final newline not only terminates a line but also starts
 // a last empty row.
 const getAvailableHeight = function (screenHeight) {
-  return screenHeight - BOTTOM_BAR_HEIGHT - 1
+  return Math.max(screenHeight - BOTTOM_BAR_HEIGHT - 1, 0)
 }
 
 const applyScrolling = function ({ report = '', scrollTop }, availableHeight) {
-  if (availableHeight <= 0) {
+  if (availableHeight === 0) {
     return { report: '', scrollTop: 0, maxScrollTop: 0 }
   }
 

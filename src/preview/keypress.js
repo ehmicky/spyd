@@ -79,7 +79,7 @@ const scrollDownPage = function (previewState) {
 }
 
 const getPageAmount = function (previewState) {
-  return previewState.availableHeight - 2
+  return Math.max(previewState.availableHeight - 2, 1)
 }
 
 const scroll = function (scrollAmount, previewState) {
