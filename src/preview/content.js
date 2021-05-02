@@ -1,7 +1,8 @@
-import { getScreenWidth } from '../report/tty.js'
+import { getScreenWidth, getScreenHeight } from '../report/tty.js'
 import { separatorColor } from '../report/utils/colors.js'
 
 import { getPreviewBottom } from './bottom.js'
+import { applyScrolling } from './scrolling.js'
 
 // Retrieve preview content.
 // `report` is `undefined` when all reporters have `reporter.quiet: true`.
@@ -14,8 +15,10 @@ export const getPreviewContent = function ({
   combinationName,
   description,
   actions,
+  scrollTop,
 }) {
   const screenWidth = getScreenWidth()
+  const screenHeight = getScreenHeight()
   const separator = getSeparator(report, screenWidth)
   const bottom = getPreviewBottom({
     durationLeft,
@@ -27,7 +30,13 @@ export const getPreviewContent = function ({
     actions,
     screenWidth,
   })
-  return `${report}${separator}${bottom}\n`
+  const previewContent = `${report}${separator}${bottom}\n`
+  const previewContentA = applyScrolling(
+    previewContent,
+    scrollTop,
+    screenHeight,
+  )
+  return previewContentA
 }
 
 const getSeparator = function (report, screenWidth) {

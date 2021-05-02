@@ -50,7 +50,7 @@ export const getScreenWidth = function () {
   return columns
 }
 
-const getScreenHeight = function () {
+export const getScreenHeight = function () {
   const { rows = DEFAULT_HEIGHT } = stdout
   return rows
 }

@@ -23,9 +23,7 @@ export const getPreviewBottom = function ({
     `${durationLeftA}${progressBar}`,
     `${counter}${combinationName}${descriptionA}`,
     actionsA,
-  ]
-    .filter(Boolean)
-    .join('\n\n')
+  ].join('\n\n')
   return addPadding(bottom)
 }
 
@@ -71,12 +69,13 @@ const getDescription = function (description, combinationName) {
   return noteColor(descriptionA)
 }
 
-// Show keys available for user actions in previews
+// Show keys available for user actions in previews.
+// When there are no actions available, we keep an empty line to avoid jitter.
 const getActions = function (actions, leftWidth) {
   const actionValues = Object.values(actions)
 
   if (actionValues.length === 0) {
-    return
+    return ''
   }
 
   const actionsStr = actionValues.map(getAction).join(noteColor(', '))

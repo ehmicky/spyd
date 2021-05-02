@@ -35,6 +35,7 @@ export const initPreview = function (
     combinationName: '',
     description: START_DESCRIPTION,
     actions: DEFAULT_ACTIONS,
+    scrollTop: 0,
   }
 }
 
