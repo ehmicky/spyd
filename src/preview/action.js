@@ -1,3 +1,5 @@
+import sortOn from 'sort-on'
+
 // Add|remove available user actions shown in preview
 export const addAction = function (previewState, action) {
   if (previewState.quiet) {
@@ -5,10 +7,10 @@ export const addAction = function (previewState, action) {
   }
 
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.actions = [
-    ...filterAction(previewState.actions, action.name),
-    action,
-  ]
+  previewState.actions = sortOn(
+    [...filterAction(previewState.actions, action.name), action],
+    'order',
+  )
 }
 
 export const removeAction = function (previewState, name) {

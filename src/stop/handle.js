@@ -51,5 +51,10 @@ const waitForAbort = async function ({ cancelSignal }) {
 
 const ABORT_DELAY = 5e3
 
-export const STOP_ACTION = { name: 'stop', key: 'Ctrl-C', explanation: 'Stop' }
-const ABORT_ACTION = { name: 'stop', key: 'Ctrl-C', explanation: 'Abort' }
+export const STOP_ACTION = {
+  name: 'stop',
+  key: 'Ctrl-C',
+  explanation: 'Stop',
+  order: 2,
+}
+const ABORT_ACTION = { ...STOP_ACTION, explanation: 'Abort' }
