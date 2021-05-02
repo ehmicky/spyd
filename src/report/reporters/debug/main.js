@@ -5,9 +5,9 @@ import { prettifyValue } from '../../utils/prettify_value.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
+import { getAllStatNames } from './columns.js'
 import { getHeader } from './header.js'
 import { getRow } from './row.js'
-import { getAllStatNames } from './stats.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({

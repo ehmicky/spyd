@@ -1,6 +1,5 @@
 import { PADDING_WIDTH, SEPARATOR_WIDTH } from '../../utils/separator.js'
 
-import { STAT_NAMES } from './column.js'
 import { getEmptyRowWidth, getColumnWidth } from './header.js'
 import { NAME_RIGHT_PADDING_WIDTH } from './row.js'
 
@@ -37,3 +36,23 @@ const addStatName = function (
         remainingWidth: availableWidth - columnWidth - PADDING_WIDTH,
       }
 }
+
+// List of columns, with their `stats.*` property
+const STAT_NAMES = [
+  'median',
+  'mean',
+  'min',
+  'low',
+  'high',
+  'max',
+  'diff',
+  'stdev',
+  'rstdev',
+  'moe',
+  'rmoe',
+  'times',
+  'loops',
+  'repeat',
+  'samples',
+  'minLoopDuration',
+]
