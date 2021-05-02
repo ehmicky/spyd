@@ -14,12 +14,12 @@ export const tokenizeSelector = function (rawSelector, propName) {
 // Split around whitespaces.
 const TOKEN_DELIMITER_REGEX = /\s+/gu
 
-// "not" can be prepended to selections to exclude instead of include.
+// "not" can be prepended to selectors to exclude instead of include.
 const usesNegation = function ([firstToken]) {
   return firstToken === NEGATION_SYMBOL
 }
 
-// "not" is only meaningful at the beginning of the selection.
+// "not" is only meaningful at the beginning of the selector.
 //  - However, we explicitly forbid it elsewhere to avoid confusion, in case
 //    users think it can be prepended to any id instead. This provides with a
 //    clearer error message.

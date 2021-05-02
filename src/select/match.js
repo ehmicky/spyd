@@ -8,12 +8,19 @@ import { getCombinationIds } from '../combination/ids.js'
 //  - While still have a small number of complexity, only: list of identifiers,
 //    "not" and top-level array.
 //  - Avoids punctuation or hard-to-remember syntax
-// The following cases can be expressed for example, assuming two categories
-// going from a-z and 0-99:
-//  - inclusion of almost all (but not all) combinations of a category,
-//    e.g. include a1-99 and b-z0
-//  - vice-versa, e.g. include all but a1-99 and b-z0
-//  - inclusion of all but specific combinations, e.g. b2 and o5
+// The array order is significant:
+//  - Only the last matching selector is used for each combination
+//  - Combination with no matching selector are excluded|included depending on
+//    whether the first selector is negated or not
+//  - While this adds complexity, this removes the need for having two
+//    different syntax tokens to express both inversion (of a single identifier)
+//    and exclusion (of a selector), which would be required otherwise to be
+//    able the following cases, for example, assuming two categories going from
+//    a-z and 0-99:
+//     - inclusion of almost all (but not all) combinations of a category,
+//       e.g. include a1-99 and b-z0
+//     - vice-versa, e.g. include all but a1-99 and b-z0
+//     - inclusion of all but specific combinations, e.g. b2 and o5
 export const matchSelectors = function (combination, selectors) {
   if (selectors.length === 0) {
     return true
