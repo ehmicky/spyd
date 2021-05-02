@@ -25,14 +25,10 @@ const reduceAllStateColumns = function (
 ) {
   const columnWidth = getColumnWidth(stats, name)
 
-  if (allStatColumns.length === 0) {
-    return {
-      allStatColumns: [[name], ...allStatColumns],
-      widthLeft: availableWidth - columnWidth - PADDING_WIDTH,
-    }
-  }
-
-  if (widthLeft - columnWidth - SEPARATOR_WIDTH < 0) {
+  if (
+    allStatColumns.length === 0 ||
+    widthLeft - columnWidth - SEPARATOR_WIDTH < 0
+  ) {
     return {
       allStatColumns: [[name], ...allStatColumns],
       widthLeft: availableWidth - columnWidth - PADDING_WIDTH,
