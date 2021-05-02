@@ -1,7 +1,6 @@
 import { getScreenWidth, getScreenHeight } from '../report/tty.js'
-import { separatorColor } from '../report/utils/colors.js'
 
-import { getPreviewBottom } from './bottom.js'
+import { getBottomBar } from './bottom.js'
 import { updateScrolling } from './scrolling.js'
 
 // Retrieve preview content.
@@ -12,18 +11,6 @@ export const getPreviewContent = function (previewState) {
   const screenWidth = getScreenWidth()
   const screenHeight = getScreenHeight()
   const report = updateScrolling(previewState, screenHeight)
-  const separator = getSeparator(previewState, screenWidth)
-  const bottom = getPreviewBottom(previewState, screenWidth)
-  return `${report}${separator}${bottom}`
+  const bottomBar = getBottomBar(previewState, screenWidth)
+  return `${report}${bottomBar}`
 }
-
-const getSeparator = function ({ report }, screenWidth) {
-  if (report === undefined) {
-    return ''
-  }
-
-  return separatorColor(`${LINE_CHAR.repeat(screenWidth)}\n`)
-}
-
-// Works with all terminals
-const LINE_CHAR = '\u2500'

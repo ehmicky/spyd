@@ -5,8 +5,25 @@ import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 // future. This includes the separator and padding.
 export const BOTTOM_BAR_HEIGHT = 7
 
-// Retrieve bottom of preview
-export const getPreviewBottom = function (
+// Retrieve bottom bar of preview
+export const getBottomBar = function (previewState, screenWidth) {
+  const separator = getSeparator(previewState, screenWidth)
+  const bottom = getPreviewBottom(previewState, screenWidth)
+  return `${separator}${bottom}`
+}
+
+const getSeparator = function ({ report }, screenWidth) {
+  if (report === undefined) {
+    return ''
+  }
+
+  return separatorColor(`${LINE_CHAR.repeat(screenWidth)}\n`)
+}
+
+// Works with all terminals
+const LINE_CHAR = '\u2500'
+
+const getPreviewBottom = function (
   {
     durationLeft,
     percentage,
