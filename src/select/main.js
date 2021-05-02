@@ -3,11 +3,18 @@ import { parseSelectors } from './parse.js'
 import { throwValidationError } from './validate.js'
 
 // Select combinations according to the `select` configuration properties.
+// We use a single `select` property for both inclusion and exclusion:
+//  - Selections can be prepended with "not" to exclude
+//  - We do not use two separate `include` and `exclude` properties since it
+//    would require overriding both when using CLI flags.
+//     - For example, if `spyd.yml` was used to `exclude` an id, and we wanted
+//       to `include` it as a CLI flag, this would require setting `exclude` to
+//       an empty string too.
 // `select` defaults to including everything.
-///  - This applies to when it is either `undefined` or an empty array.
-//   - Making an empty array include nothing would be more consistent.
-//     However, there is little use for it and it most likely mean the user
-//     intent was to select everything.
+//  - This applies to when it is either `undefined` or an empty array.
+//  - Making an empty array include nothing would be more consistent.
+//    However, there is little use for it and it most likely mean the user
+//    intent was to select everything.
 // Selection could be meant to select combination either for measuring or
 // reporting:
 //  - In the `show` and `remove` commands, only reporting is happening
