@@ -1,10 +1,9 @@
-import { validate } from 'jest-validate'
-
 import { UserError } from '../../../error/main.js'
+import { validateConfigProps } from '../../../utils/validate.js'
 
 // Validate runnerConfig
 export const validateConfig = function (runnerConfig) {
-  validate(runnerConfig, { exampleConfig: EXAMPLE_CONFIG })
+  validateConfigProps(runnerConfig, { exampleConfig: EXAMPLE_CONFIG })
   validateShell(runnerConfig)
 }
 

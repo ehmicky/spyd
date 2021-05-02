@@ -1,5 +1,7 @@
 import filterObj from 'filter-obj'
-import { validate, multipleValidOptions } from 'jest-validate'
+import { multipleValidOptions } from 'jest-validate'
+
+import { validateConfigProps } from '../utils/validate.js'
 
 import { DEFAULT_CONFIG } from './default.js'
 
@@ -7,7 +9,7 @@ import { DEFAULT_CONFIG } from './default.js'
 // We need to validate twice: for the CLI flags then for the configuration file.
 export const validateConfig = function (config) {
   const configA = ignoreDynamicKeyProps(config)
-  validate(configA, {
+  validateConfigProps(configA, {
     exampleConfig: EXAMPLE_CONFIG,
     recursiveDenylist: DYNAMIC_OBJECT_PROPS,
   })
