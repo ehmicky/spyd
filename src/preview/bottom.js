@@ -3,7 +3,7 @@ import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 
 // At the moment, this is static, but this might need to become dynamic in the
 // future. This includes the separator and padding.
-export const BOTTOM_BAR_HEIGHT = 8
+export const BOTTOM_BAR_HEIGHT = 7
 
 // Retrieve bottom of preview
 export const getPreviewBottom = function (

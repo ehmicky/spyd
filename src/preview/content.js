@@ -14,7 +14,7 @@ export const getPreviewContent = function (previewState) {
   const report = updateScrolling(previewState, screenHeight)
   const separator = getSeparator(previewState, screenWidth)
   const bottom = getPreviewBottom(previewState, screenWidth)
-  return `${report}${separator}${bottom}\n`
+  return `${report}${separator}${bottom}`
 }
 
 const getSeparator = function ({ report }, screenWidth) {
