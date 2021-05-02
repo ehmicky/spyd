@@ -25,11 +25,12 @@ const getFirstCell = function (titles) {
 const FIRST_CELL_PADDING_WIDTH = 2
 const FIRST_CELL_PADDING = ' '.repeat(FIRST_CELL_PADDING_WIDTH)
 
-// Retrieve a single cell in the table, with a specific stat
 const getCell = function (stats, column, columnWidth) {
-  return padStart(getStat(stats, column), columnWidth)
+  const stat = getStat(stats, column)
+  return padStart(stat, columnWidth)
 }
 
+// Retrieve a single cell in the table, with a specific stat
 export const getStat = function (stats, column) {
   return stats[`${column}Padded`]
 }
