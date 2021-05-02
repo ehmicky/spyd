@@ -1,7 +1,6 @@
 import { version as currentVersion } from 'process'
 
-import { validate, multipleValidOptions } from 'jest-validate'
-
+import { validateConfig } from './validate.js'
 import { getNodeVersion } from './version.js'
 
 const MAIN_PATH = `${__dirname}/events.js`
@@ -26,15 +25,4 @@ export const launch = async function (runnerConfig) {
     spawnOptions,
     versions: { Node: version },
   }
-}
-
-// Validate runnerConfig
-const validateConfig = function (runnerConfig) {
-  validate(runnerConfig, { exampleConfig: EXAMPLE_CONFIG })
-}
-
-const EXAMPLE_CONFIG = {
-  tasks: 'tasks.js',
-  // eslint-disable-next-line no-magic-numbers
-  version: multipleValidOptions('12', 12),
 }
