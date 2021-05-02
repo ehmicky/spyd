@@ -72,4 +72,4 @@ export const hasMaxMeasures = function ({ measures }) {
 // The default limit for V8 in Node.js is 1.7GB, which allows measures to hold a
 // little more than 1e8 floats. We use a smaller number since this is not the
 // only variable taking memory.
-const MAX_MEASURES = 1e7
+export const MAX_MEASURES = 1e7

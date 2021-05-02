@@ -1,5 +1,6 @@
 import now from 'precise-now'
 
+import { MAX_MEASURES } from '../sample/state.js'
 import { getLoopsFromLength } from '../stats/extreme.js'
 import { getLengthForMoe } from '../stats/moe.js'
 
@@ -46,7 +47,7 @@ const getSamplesLeft = function (
 ) {
   const moeTarget = precisionTarget * median
   const lengthTarget = getLengthForMoe(moeTarget, stdev)
-  const loopsTarget = getLoopsFromLength(lengthTarget)
+  const loopsTarget = Math.min(getLoopsFromLength(lengthTarget), MAX_MEASURES)
   const samplesLeft = computeSamplesLeft(loopsTarget, loops, samples)
   return samplesLeft
 }
