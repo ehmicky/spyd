@@ -35,6 +35,6 @@ const reduceAllStateColumns = function (
       }
     : {
         allStatColumns: [[name], statColumns, ...previousStatColumns],
-        widthLeft: availableWidth,
+        widthLeft: availableWidth - statWidth,
       }
 }
