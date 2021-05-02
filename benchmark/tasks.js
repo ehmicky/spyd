@@ -18,6 +18,10 @@ module.exports.uniform = async () => {
   await setTimeout(100 * Math.random())
 }
 
+module.exports.exponential = async () => {
+  await setTimeout(2 ** (1 + Math.random() * 6))
+}
+
 let count = 0
 
 module.exports.growing = async () => {

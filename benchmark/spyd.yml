@@ -4,4 +4,5 @@ inputs:
   two: 2
 exclude:
   - uniform
+  - exponential
   - growing
