@@ -1,4 +1,4 @@
-import { hasMaxMeasures } from '../sample/state.js'
+import { hasMaxMeasures } from '../sample/max_measures.js'
 
 import { isPreciseEnough } from './precision.js'
 
