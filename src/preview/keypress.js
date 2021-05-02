@@ -7,7 +7,7 @@ import { refreshPreview } from './update.js'
 // We purposely use `bind()` so that this function can be called several times
 // concurrently.
 export const startHandleKeypress = function (previewState) {
-  if (!shouldHandleKeys(previewState)) {
+  if (!shouldHandleKeypress(previewState)) {
     return
   }
 
@@ -16,32 +16,32 @@ export const startHandleKeypress = function (previewState) {
   process.stdin.setRawMode(true)
   emitKeypressEvents(process.stdin)
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.handleKeyEvent = handleKeyEvent.bind(undefined, previewState)
-  process.stdin.on('keypress', previewState.handleKeyEvent)
+  previewState.handleKeypress = handleKeypress.bind(undefined, previewState)
+  process.stdin.on('keypress', previewState.handleKeypress)
   process.stdin.resume()
 }
 
 export const stopHandleKeypress = function (previewState) {
-  if (!shouldHandleKeys(previewState)) {
+  if (!shouldHandleKeypress(previewState)) {
     return
   }
 
   process.stdin.pause()
-  process.stdin.off('keypress', previewState.handleKeyEvent)
+  process.stdin.off('keypress', previewState.handleKeypress)
   // eslint-disable-next-line fp/no-delete, no-param-reassign
-  delete previewState.handleKeyEvent
+  delete previewState.handleKeypress
   process.stdin.setRawMode(previewState.stdinIsRaw)
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete previewState.stdinIsRaw
 }
 
-const shouldHandleKeys = function ({ quiet }) {
+const shouldHandleKeypress = function ({ quiet }) {
   return !quiet && process.stdin.isTTY
 }
 
-const handleKeyEvent = function (previewState, keyString, key) {
+const handleKeypress = function (previewState, keyString, key) {
   const keyHandlerA = KEY_HANDLERS.find((keyHandler) =>
-    matchesKeyHandler(keyHandler, key),
+    matchesKey(keyHandler, key),
   )
 
   if (keyHandlerA === undefined) {
@@ -51,7 +51,7 @@ const handleKeyEvent = function (previewState, keyString, key) {
   keyHandlerA.handler(previewState)
 }
 
-const matchesKeyHandler = function ({ keys }, { name, ctrl, meta }) {
+const matchesKey = function ({ keys }, { name, ctrl, meta }) {
   return keys.some(
     (key) =>
       key.name === name &&
