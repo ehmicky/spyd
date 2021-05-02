@@ -9,9 +9,9 @@ import { getCell } from './cell.js'
 import { NAME_RIGHT_PADDING } from './column.js'
 
 // Retrieve the header row
-export const getHeader = function ({ titles, stats }, statColumns) {
+export const getHeader = function ({ titles, stats }, statNames) {
   const emptyRowName = getEmptyRowName(titles)
-  const headerCells = getHeaderCells(stats, statColumns)
+  const headerCells = getHeaderCells(stats, statNames)
   return `${emptyRowName}${NAME_RIGHT_PADDING}${headerCells}`
 }
 
@@ -24,8 +24,8 @@ export const getEmptyRowWidth = function (titles) {
   return stringWidth(getCombinationName(titles))
 }
 
-const getHeaderCells = function (stats, statColumns) {
-  return statColumns
+const getHeaderCells = function (stats, statNames) {
+  return statNames
     .map((statName) => getHeaderCell(stats, statName))
     .join(COLUMN_SEPARATOR)
 }

@@ -5,8 +5,8 @@ import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 
 // Retrieve a single row, except the row name
-export const getCells = function (stats, statColumns) {
-  return statColumns
+export const getCells = function (stats, statNames) {
+  return statNames
     .map((statName) => getCell(stats, statName))
     .join(COLUMN_SEPARATOR)
 }

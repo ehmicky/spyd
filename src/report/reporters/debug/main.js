@@ -22,26 +22,24 @@ const report = function ({
   const combinationsB = addTitles(combinationsA)
 
   const allStatNames = getAllStatNames(combinationsB[0], screenWidth)
-  const tables = allStatNames.map((statColumns) =>
-    getTable(combinationsB, statColumns),
+  const tables = allStatNames.map((statNames) =>
+    getTable(combinationsB, statNames),
   )
   const histograms = serializeHistograms(combinationsB, HISTOGRAM_OPTS)
   const footer = prettifyValue(getFooter({ id, timestamp, systems }))
   return joinSections([...tables, ...histograms, footer])
 }
 
-const getTable = function (combinations, statColumns) {
-  const header = getHeader(combinations[0], statColumns)
-  const rows = combinations.map((combination) =>
-    getRow(combination, statColumns),
-  )
+const getTable = function (combinations, statNames) {
+  const header = getHeader(combinations[0], statNames)
+  const rows = combinations.map((combination) => getRow(combination, statNames))
   return [header, ...rows].join('\n')
 }
 
 // Retrieve a single row, including the row name
-const getRow = function ({ titles, stats }, statColumns) {
+const getRow = function ({ titles, stats }, statNames) {
   const combinationName = getCombinationName(titles)
-  const statsStr = getCells(stats, statColumns)
+  const statsStr = getCells(stats, statNames)
   return `${combinationName}${NAME_RIGHT_PADDING}${statsStr}`
 }
 
