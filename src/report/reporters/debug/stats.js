@@ -26,12 +26,11 @@ const reduceAllStateColumns = function (
   { name, stats, separatorWidth, availableWidth },
 ) {
   const statWidth = getColumnWidth(stats, name) + separatorWidth
-  const widthLeftA = widthLeft - statWidth
 
-  return statColumns.length === 0 || widthLeftA >= 0
+  return statColumns.length === 0 || widthLeft >= statWidth
     ? {
         allStatColumns: [[...statColumns, name], ...previousStatColumns],
-        widthLeft: widthLeftA,
+        widthLeft: widthLeft - statWidth,
       }
     : {
         allStatColumns: [[name], statColumns, ...previousStatColumns],
