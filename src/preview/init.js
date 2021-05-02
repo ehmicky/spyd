@@ -33,7 +33,7 @@ export const initPreview = function (
     total: combinationsA.length,
     combinationName: '',
     description: START_DESCRIPTION,
-    actions: {},
+    actions: [],
     scrollTop: 0,
     availableHeight: 0,
   }
