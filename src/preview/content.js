@@ -1,7 +1,7 @@
 import { getScreenWidth, getScreenHeight } from '../report/tty.js'
 
 import { getBottomBar } from './bottom.js'
-import { updateScrolling } from './scrolling.js'
+import { updateScrolling } from './scrolling_update.js'
 
 // Retrieve preview content.
 // `report` is `undefined` when all reporters either:
