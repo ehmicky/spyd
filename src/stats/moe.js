@@ -86,17 +86,20 @@ export const getRmoe = function (moe, median) {
 export const getLengthForMoe = function (moe, stdev) {
   const lengths = new Set([])
   // eslint-disable-next-line fp/no-let
-  let length = INITIAL_LENGTH
+  let length = MIN_LENGTH
 
   // eslint-disable-next-line fp/no-loops
   while (!lengths.has(length)) {
     lengths.add(length)
     // eslint-disable-next-line fp/no-mutation
-    length = Math.round(((getTvalue(length) * stdev) / moe) ** 2)
+    length = Math.max(
+      Math.round(((getTvalue(length) * stdev) / moe) ** 2),
+      MIN_LENGTH,
+    )
   }
 
   return length
 }
 
 // Minimal `length` with a defined t-value
-const INITIAL_LENGTH = 2
+const MIN_LENGTH = 2
