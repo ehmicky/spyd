@@ -9,7 +9,7 @@ export const getAllStatColumns = function ({ titles, stats }, screenWidth) {
   const { allStatColumns } = STAT_COLUMNS.reduce(
     (state, name) =>
       reduceAllStateColumns(state, { name, stats, availableWidth }),
-    { allStatColumns: [] },
+    { allStatColumns: [], widthLeft: 0 },
   )
   // eslint-disable-next-line fp/no-mutating-methods
   return allStatColumns.reverse()
@@ -25,10 +25,7 @@ const reduceAllStateColumns = function (
 ) {
   const columnWidth = getColumnWidth(stats, name)
 
-  if (
-    allStatColumns.length === 0 ||
-    widthLeft - columnWidth - SEPARATOR_WIDTH < 0
-  ) {
+  if (widthLeft - columnWidth - SEPARATOR_WIDTH < 0) {
     return {
       allStatColumns: [[name], ...allStatColumns],
       widthLeft: availableWidth - columnWidth - PADDING_WIDTH,
