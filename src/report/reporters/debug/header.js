@@ -5,8 +5,8 @@ import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 import { getCombinationName } from '../../utils/title.js'
 
-import { getCell } from './cell.js'
 import { NAME_RIGHT_PADDING } from './column.js'
+import { getCell } from './row.js'
 
 // Retrieve the header row
 export const getHeader = function ({ titles, stats }, statNames) {
