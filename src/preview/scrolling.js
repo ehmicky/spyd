@@ -11,6 +11,8 @@
 //    size shrinks
 //  - This prevents jittering when the scrolling completely down and the report
 //    size shrinks
+// We do not take into account that one line might take several terminal rows
+// due to wrapping because this makes scrolling faster when lines are long.
 // eslint-disable-next-line max-statements
 export const applyScrolling = function ({
   report,
