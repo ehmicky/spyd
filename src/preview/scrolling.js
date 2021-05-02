@@ -23,14 +23,14 @@ export const applyScrolling = function ({
   const availableHeight = getAvailableHeight(screenHeight, bottomBar)
 
   if (availableHeight <= 0) {
-    return { report: '', scrollTop: 0 }
+    return { report: '', scrollTop: 0, availableHeight }
   }
 
   const newlineIndexes = getNewlineIndexes(report)
   const contentHeight = newlineIndexes.length
 
   if (contentHeight <= availableHeight) {
-    return { report, scrollTop: 0 }
+    return { report, scrollTop: 0, availableHeight }
   }
 
   const scrollTopA = Math.max(
@@ -42,7 +42,7 @@ export const applyScrolling = function ({
     scrollTopA === 0 ? 0 : newlineIndexes[scrollTopA - 1] + 1,
     newlineIndexes[bottomIndex] + 1,
   )
-  return { report: reportA, scrollTop: scrollTopA }
+  return { report: reportA, scrollTop: scrollTopA, availableHeight }
 }
 
 // We need to subtract one due to the fast that the bottom bar is the last

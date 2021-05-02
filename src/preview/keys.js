@@ -76,9 +76,8 @@ const scrollDownPage = function (previewState) {
   scroll(getPageAmount(previewState), previewState)
 }
 
-// TODO: take into account bottomBar height
 const getPageAmount = function (previewState) {
-  return previewState.screenHeight - 2
+  return previewState.availableHeight - 2
 }
 
 const scroll = function (scrollAmount, previewState) {

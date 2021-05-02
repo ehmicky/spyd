@@ -36,6 +36,7 @@ export const initPreview = function (
     description: START_DESCRIPTION,
     actions: DEFAULT_ACTIONS,
     scrollTop: 0,
+    availableHeight: 0,
   }
 }
 
