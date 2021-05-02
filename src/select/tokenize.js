@@ -1,4 +1,4 @@
-import { throwValidationError } from './prefix.js'
+import { throwValidationError } from './validate.js'
 
 // Tokenize a raw selector string into an an array of objects.
 export const tokenizeSelector = function (rawSelector, propName) {

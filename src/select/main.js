@@ -1,6 +1,6 @@
 import { matchSelectors } from './match.js'
 import { parseSelectors } from './parse.js'
-import { throwValidationError } from './prefix.js'
+import { throwValidationError } from './validate.js'
 
 // Select combinations according to the `select` configuration properties.
 // `select` defaults to including everything.
