@@ -20,8 +20,9 @@ export const measureCombination = async function ({ index, ...args }) {
 
   try {
     await startCombinationPreview(previewState, combination, index)
-    const nextFunction = hasLogs(stage) ? logAndMeasure : spawnAndMeasure
-    const { stats, taskIds } = await nextFunction(args)
+    const { stats, taskIds } = hasLogs(stage)
+      ? await logAndMeasure(args)
+      : await spawnAndMeasure(args)
     await endCombinationPreview(previewState)
     return { ...combination, stats, taskIds }
   } finally {
