@@ -1,5 +1,4 @@
-import { PluginError } from '../error/main.js'
-
+import { throwOnSpawnExit } from './error.js'
 import { receiveReturnValue } from './ipc.js'
 import { spawnProcess } from './spawn.js'
 
@@ -57,17 +56,10 @@ const getStdio = function (logsStream) {
 // Wait for IPC to be initialized. Throw if process exits before that.
 const waitForIpcSetup = async function (childProcess, server) {
   await Promise.race([
-    throwOnSpawnError(childProcess),
+    throwOnSpawnExit(childProcess),
     receiveReturnValue(server),
   ])
 }
-
-const throwOnSpawnError = async function (childProcess) {
-  const { message = DEFAULT_SPAWN_ERROR } = await childProcess
-  throw new PluginError(message)
-}
-
-const DEFAULT_SPAWN_ERROR = 'The runner exited while starting'
 
 // Terminate each combination's process after being measured.
 // The combination can be in three possible states:

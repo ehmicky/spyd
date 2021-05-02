@@ -1,4 +1,4 @@
-import { throwOnProcessExit } from '../process/error.js'
+import { throwOnTaskExit } from '../process/error.js'
 import { throwIfStopped } from '../stop/error.js'
 
 import { runStartEnd } from './start_end.js'
@@ -23,7 +23,7 @@ export const handleErrorsAndMeasure = async function ({
 }) {
   try {
     const returnValue = await Promise.race([
-      throwOnProcessExit(childProcess),
+      throwOnTaskExit(childProcess),
       onAbort,
       runStartEnd({
         combination,

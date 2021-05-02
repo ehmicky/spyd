@@ -1,14 +1,24 @@
 // eslint-disable-next-line fp/no-events
 import { once } from 'events'
 
-import { UserError } from '../error/main.js'
+import { PluginError, UserError } from '../error/main.js'
+
+// Throws when process exit as it spawns.
+// We distinguish it from process exits after spawning, since this is a
+// plugin error, not a user error.
+export const throwOnSpawnExit = async function (childProcess) {
+  const { message = DEFAULT_SPAWN_ERROR } = await childProcess
+  throw new PluginError(message)
+}
+
+const DEFAULT_SPAWN_ERROR = 'The runner exited while starting.'
 
 // Processes should not exit until the end of the benchmark. If they do, this
 // indicates either:
 //  - The task made the process exit, which is improper since it prevents proper
 //    cleanup and orchestration.
 //  - The runner crashed due to a bug.
-export const throwOnProcessExit = async function (childProcess) {
+export const throwOnTaskExit = async function (childProcess) {
   const { failed, message } = await childProcess
   const exitMessage = getProcessExitMessage(failed, message)
   throw new UserError(exitMessage)
