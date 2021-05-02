@@ -2,6 +2,8 @@ import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
 import { clearScreen, clearScreenFull, printToTty } from '../report/tty.js'
 
+import { startHandleResize, stopHandleResize } from './resize.js'
+
 // Loading combinations can be slow if the task is long to load.
 // We print a message so the user knows something is happening.
 // We print it before clearing the screen to avoid a screen flash.
@@ -14,13 +16,14 @@ export const printPreviewStarting = function ({ quiet }) {
 }
 
 // Start clearing the screen
-export const startPreview = async function ({ quiet }) {
-  if (quiet) {
+export const startPreview = async function (previewState) {
+  if (previewState.quiet) {
     return
   }
 
   hideCursor()
   await clearScreenFull()
+  startHandleResize(previewState)
 }
 
 // Stop clearing the screen.
@@ -30,10 +33,12 @@ export const startPreview = async function ({ quiet }) {
 //  - This allows users to stop a benchmark without losing information,
 //    including the duration that was left
 //  - This is unlike other errors, which clear it
-export const endPreview = async function ({ quiet }, error = {}) {
-  if (quiet) {
+export const endPreview = async function (previewState, error = {}) {
+  if (previewState.quiet) {
     return
   }
+
+  stopHandleResize(previewState)
 
   if (error.name !== 'StopError') {
     await clearScreen()
