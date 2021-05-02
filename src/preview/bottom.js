@@ -3,28 +3,10 @@ import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 
 import { wrapRows } from './wrap.js'
 
-// Retrieve bottom bar of preview
-export const getBottomBar = function (previewState, screenWidth) {
-  const {
-    leftWidth,
-    separator,
-    progressRow,
-    counterRow,
-  } = getBottomBarElements(previewState, screenWidth)
-  const bottomBar = getPreviewBottom({
-    previewState,
-    separator,
-    leftWidth,
-    progressRow,
-    counterRow,
-  })
-  return bottomBar
-}
-
 // Retrieve elements of bottom bar in preview.
 // Since the scrolling action must be computed twice, this is a performance
 // optimization to avoid computing those elements twice.
-const getBottomBarElements = function (previewState, screenWidth) {
+export const getBottomBarElements = function (previewState, screenWidth) {
   const leftWidth = getLeftWidth(previewState)
   const separator = getSeparator(previewState, screenWidth)
   const progressRow = getProgressRow(previewState, { screenWidth, leftWidth })
@@ -103,7 +85,8 @@ const getDescription = function (description, combinationName) {
   return noteColor(descriptionA)
 }
 
-const getPreviewBottom = function ({
+// Retrieve bottom bar of preview
+export const getBottomBar = function ({
   previewState: { actions },
   separator,
   leftWidth,
