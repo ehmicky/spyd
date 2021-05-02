@@ -7,18 +7,18 @@ export const BOTTOM_BAR_HEIGHT = 7
 
 // Retrieve bottom bar of preview
 export const getBottomBar = function (previewState, screenWidth) {
-  const separator = getSeparator(previewState, screenWidth)
   const leftWidth = getLeftWidth(previewState)
+  const separator = getSeparator(previewState, screenWidth)
   const progressRow = getProgressRow(previewState, { screenWidth, leftWidth })
   const counterRow = getCounterRow(previewState, leftWidth)
-  const bottom = getPreviewBottom({
+  const bottomBar = getPreviewBottom({
     previewState,
-    screenWidth,
+    separator,
     leftWidth,
     progressRow,
     counterRow,
   })
-  return `${separator}${bottom}`
+  return bottomBar
 }
 
 const getSeparator = function ({ report }, screenWidth) {
@@ -94,12 +94,14 @@ const getDescription = function (description, combinationName) {
 
 const getPreviewBottom = function ({
   previewState: { actions },
+  separator,
   leftWidth,
   progressRow,
   counterRow,
 }) {
   const actionsA = getActions(actions, leftWidth)
-  return addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
+  const rows = addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
+  return `${separator}${rows}`
 }
 
 // Show keys available for user actions in previews.
