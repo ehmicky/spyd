@@ -9,25 +9,10 @@ import { runMainEvents } from './events.js'
 // We still perform each combination ends, for cleanup.
 // `end` is always called, for runner-specific cleanup, providing `start`
 // completed.
-export const runStartEnd = async function ({
-  combination,
-  precisionTarget,
-  previewState,
-  stopState,
-  stage,
-  server,
-  logsFd,
-}) {
-  const taskIds = await startCombination(combination, server)
-  const stats = await eRunMainEvents({
-    precisionTarget,
-    previewState,
-    stopState,
-    stage,
-    server,
-    logsFd,
-  })
-  await endCombination(server)
+export const runStartEnd = async function ({ combination, ...args }) {
+  const taskIds = await startCombination(combination, args.server)
+  const stats = await eRunMainEvents(args)
+  await endCombination(args.server)
   return { stats, taskIds }
 }
 
@@ -45,25 +30,11 @@ const startCombination = async function (
   return taskIds
 }
 
-const eRunMainEvents = async function ({
-  precisionTarget,
-  previewState,
-  stopState,
-  stage,
-  server,
-  logsFd,
-}) {
+const eRunMainEvents = async function (args) {
   try {
-    return await runMainEvents({
-      precisionTarget,
-      previewState,
-      stopState,
-      stage,
-      server,
-      logsFd,
-    })
+    return await runMainEvents(args)
   } catch (error) {
-    await silentEndCombination(server)
+    await silentEndCombination(args.server)
     throw error
   }
 }
