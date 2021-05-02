@@ -5,7 +5,7 @@ import { prettifyValue } from '../../utils/prettify_value.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
-import { getAllStatNames } from './columns.js'
+import { getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
 import { getRow } from './row.js'
 
@@ -27,8 +27,8 @@ const report = function ({
 }
 
 const getTables = function (combinations, screenWidth) {
-  const allStatNames = getAllStatNames(combinations[0], screenWidth)
-  return allStatNames.map((statNames) => getTable(combinations, statNames))
+  const allColumns = getAllColumns(combinations[0], screenWidth)
+  return allColumns.map((statNames) => getTable(combinations, statNames))
 }
 
 const getTable = function (combinations, statNames) {

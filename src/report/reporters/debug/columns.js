@@ -3,42 +3,38 @@ import { PADDING_WIDTH, SEPARATOR_WIDTH } from '../../utils/separator.js'
 import { getEmptyRowWidth, getColumnWidth } from './header.js'
 import { NAME_RIGHT_PADDING_WIDTH } from './row.js'
 
-// Group all stat|column names into several tables so they fit the screen width
-export const getAllStatNames = function ({ titles, stats }, screenWidth) {
+// Group all column names into several tables so they fit the screen width
+export const getAllColumns = function ({ titles, stats }, screenWidth) {
   const availableWidth =
     screenWidth - getEmptyRowWidth(titles) - NAME_RIGHT_PADDING_WIDTH
-  const { allStatNames } = STAT_NAMES.reduce(
-    addStatName.bind(undefined, { stats, availableWidth }),
-    { allStatNames: [], remainingWidth: 0 },
+  const { allColumns } = COLUMNS.reduce(
+    addColumn.bind(undefined, { stats, availableWidth }),
+    { allColumns: [], remainingWidth: 0 },
   )
   // eslint-disable-next-line fp/no-mutating-methods
-  return allStatNames.reverse()
+  return allColumns.reverse()
 }
 
-const addStatName = function (
+const addColumn = function (
   { stats, availableWidth },
-  {
-    allStatNames,
-    allStatNames: [statNames, ...previousStatNames],
-    remainingWidth,
-  },
-  statName,
+  { allColumns, allColumns: [columns, ...previousColumns], remainingWidth },
+  column,
 ) {
-  const columnWidth = getColumnWidth(stats, statName)
+  const columnWidth = getColumnWidth(stats, column)
   const remainingWidthA = remainingWidth - columnWidth - SEPARATOR_WIDTH
   return remainingWidthA >= 0
     ? {
-        allStatNames: [[...statNames, statName], ...previousStatNames],
+        allColumns: [[...columns, column], ...previousColumns],
         remainingWidth: remainingWidthA,
       }
     : {
-        allStatNames: [[statName], ...allStatNames],
+        allColumns: [[column], ...allColumns],
         remainingWidth: availableWidth - columnWidth - PADDING_WIDTH,
       }
 }
 
 // List of columns, with their `stats.*` property
-const STAT_NAMES = [
+const COLUMNS = [
   'median',
   'mean',
   'min',
