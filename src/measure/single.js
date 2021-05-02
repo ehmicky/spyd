@@ -1,6 +1,11 @@
-import { startLogs, stopLogs } from '../logs/create.js'
+import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
+import {
+  startCombinationPreview,
+  endCombinationPreview,
+} from '../preview/combination.js'
+import { updateDescription } from '../preview/description.js'
 import {
   spawnRunnerProcess,
   terminateRunnerProcess,
@@ -9,7 +14,22 @@ import { throwIfStopped } from '../stop/error.js'
 
 import { runStartEnd } from './start_end.js'
 
-export const logAndMeasure = async function (args) {
+// Measure a single combination
+export const measureCombination = async function ({ index, ...args }) {
+  const { previewState, combination, stage } = args
+
+  try {
+    await startCombinationPreview(previewState, combination, index)
+    const nextFunction = hasLogs(stage) ? logAndMeasure : spawnAndMeasure
+    const { stats, taskIds } = await nextFunction(args)
+    await endCombinationPreview(previewState)
+    return { ...combination, stats, taskIds }
+  } finally {
+    await updateDescription(previewState, '')
+  }
+}
+
+const logAndMeasure = async function (args) {
   const { logsPath, logsFd } = await startLogs()
 
   try {

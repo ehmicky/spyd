@@ -1,15 +1,9 @@
 import pMapSeries from 'p-map-series'
 
-import { hasLogs } from '../logs/create.js'
-import {
-  startCombinationPreview,
-  endCombinationPreview,
-} from '../preview/combination.js'
-import { updateDescription } from '../preview/description.js'
 import { startServer, endServer } from '../server/main.js'
 import { addStopHandler, removeStopHandler } from '../stop/main.js'
 
-import { logAndMeasure, spawnAndMeasure } from './single.js'
+import { measureCombination } from './single.js'
 
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
@@ -48,22 +42,7 @@ const startServerAndMeasure = async function (args) {
 const measureCombinationsStats = async function ({ combinations, ...args }) {
   return await pMapSeries(
     combinations,
-    (combination, index) =>
-      measureCombinationStats({ ...args, combination, index }),
+    (combination, index) => measureCombination({ ...args, combination, index }),
     [],
   )
-}
-
-const measureCombinationStats = async function ({ index, ...args }) {
-  const { previewState, combination, stage } = args
-
-  try {
-    await startCombinationPreview(previewState, combination, index)
-    const nextFunction = hasLogs(stage) ? logAndMeasure : spawnAndMeasure
-    const { stats, taskIds } = await nextFunction(args)
-    await endCombinationPreview(previewState)
-    return { ...combination, stats, taskIds }
-  } finally {
-    await updateDescription(previewState, '')
-  }
 }
