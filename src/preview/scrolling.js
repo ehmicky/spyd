@@ -35,8 +35,7 @@ const applyScrolling = function ({ report, scrollTop }, screenHeight) {
   }
 
   const newlineIndexes = getNewlineIndexes(report)
-  const contentHeight = newlineIndexes.length
-  const maxScrollTop = contentHeight - availableHeight
+  const maxScrollTop = newlineIndexes.length - availableHeight
 
   if (maxScrollTop <= 0) {
     return { report, scrollTop: 0, maxScrollTop: 0, availableHeight }
