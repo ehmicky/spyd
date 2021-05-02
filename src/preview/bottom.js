@@ -10,10 +10,12 @@ export const getBottomBar = function (previewState, screenWidth) {
   const separator = getSeparator(previewState, screenWidth)
   const leftWidth = getLeftWidth(previewState)
   const progressRow = getProgressRow(previewState, { screenWidth, leftWidth })
+  const counterRow = getCounterRow(previewState, leftWidth)
   const bottom = getPreviewBottom(previewState, {
     screenWidth,
     leftWidth,
     progressRow,
+    counterRow,
   })
   return `${separator}${bottom}`
 }
@@ -42,13 +44,9 @@ const getLeftWidth = function ({ durationLeft, total }) {
 const LEFT_WIDTH_PADDING = 2
 
 const getPreviewBottom = function (
-  { index, total, combinationName, description, actions },
-  { leftWidth, progressRow },
+  { actions },
+  { leftWidth, progressRow, counterRow },
 ) {
-  const counter = getCounter(index, total).padEnd(leftWidth)
-  const descriptionA = getDescription(description, combinationName)
-  const counterRow = `${counter}${combinationName}${descriptionA}`
-
   const actionsA = getActions(actions, leftWidth)
   return addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
 }
@@ -75,6 +73,15 @@ const getProgressBar = function (durationLeft, percentage, screenWidth) {
 // Works with all terminals
 const FILL_CHAR = '\u2588'
 const VOID_CHAR = '\u2591'
+
+const getCounterRow = function (
+  { index, total, combinationName, description },
+  leftWidth,
+) {
+  const counter = getCounter(index, total).padEnd(leftWidth)
+  const descriptionA = getDescription(description, combinationName)
+  return `${counter}${combinationName}${descriptionA}`
+}
 
 // The `counter` is between `durationLeft` and `progressBar` so that there is
 // no empty space when `durationLeft` is unknown.
