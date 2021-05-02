@@ -1,6 +1,5 @@
 import { getCombinationsIds } from '../combination/ids.js'
 
-import { getPrefix } from './prefix.js'
 import { tokenizeSelector } from './tokenize.js'
 
 // Parse `select`, `limit` user-friendly format (array of strings) to a
@@ -18,8 +17,7 @@ export const parseSelectors = function (rawSelectors, propName, combinations) {
 }
 
 const parseSelector = function (rawSelector, propName, combinations) {
-  const prefix = getPrefix([rawSelector], propName)
-  const { ids, negation } = tokenizeSelector(rawSelector, prefix)
+  const { ids, negation } = tokenizeSelector(rawSelector, propName)
   const intersect = groupByCategory(ids, combinations)
   return { intersect, negation }
 }

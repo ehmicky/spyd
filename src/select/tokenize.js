@@ -1,12 +1,14 @@
 import { UserError } from '../error/main.js'
 
+import { getPrefix } from './prefix.js'
+
 // Tokenize a raw selector string into an an array of objects.
-export const tokenizeSelector = function (rawSelector, prefix) {
+export const tokenizeSelector = function (rawSelector, propName) {
   const tokens = rawSelector.trim().split(TOKEN_DELIMITER_REGEX)
   const negation = usesNegation(tokens)
   const ids = negation ? tokens.slice(1) : tokens
   ids.forEach((id) => {
-    validateId(id, prefix)
+    validateId(id, rawSelector, propName)
   })
   return { ids, negation }
 }
@@ -18,8 +20,9 @@ const usesNegation = function ([firstToken]) {
   return firstToken === NEGATION_SYMBOL
 }
 
-const validateId = function (id, prefix) {
+const validateId = function (id, rawSelector, propName) {
   if (id === NEGATION_SYMBOL) {
+    const prefix = getPrefix([rawSelector], propName)
     throw new UserError(`${prefix}"${id}" can only be used at the start.`)
   }
 }
