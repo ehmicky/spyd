@@ -1,3 +1,5 @@
+import { BOTTOM_BAR_HEIGHT } from './bottom.js'
+
 // When content is taller than the terminal height, allow user to scroll with
 // up/down. We do this by keeping tracking of `scrollTop` and truncating the
 // content to print on the terminal.
@@ -14,13 +16,8 @@
 // We do not take into account that one line might take several terminal rows
 // due to wrapping because this makes scrolling faster when lines are long.
 // eslint-disable-next-line max-statements
-export const applyScrolling = function ({
-  report,
-  bottomBar,
-  scrollTop,
-  screenHeight,
-}) {
-  const availableHeight = getAvailableHeight(screenHeight, bottomBar)
+export const applyScrolling = function (report, scrollTop, screenHeight) {
+  const availableHeight = getAvailableHeight(screenHeight)
 
   if (availableHeight <= 0) {
     return { report: '', scrollTop: 0, availableHeight }
@@ -48,8 +45,8 @@ export const applyScrolling = function ({
 // We need to subtract one due to the fast that the bottom bar is the last
 // element, i.e. its final newline not only terminates a line but also starts
 // a last empty row.
-const getAvailableHeight = function (screenHeight, bottomBar) {
-  return screenHeight - getNewlineIndexes(bottomBar).length - 1
+const getAvailableHeight = function (screenHeight) {
+  return screenHeight - BOTTOM_BAR_HEIGHT - 1
 }
 
 // Uses imperative code for performance

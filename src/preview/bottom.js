@@ -1,6 +1,10 @@
 import { goodColor, separatorColor, noteColor } from '../report/utils/colors.js'
 import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 
+// At the moment, this is static, but this might need to become dynamic in the
+// future. This includes the separator and padding.
+export const BOTTOM_BAR_HEIGHT = 8
+
 // Retrieve bottom of preview
 export const getPreviewBottom = function ({
   durationLeft,
