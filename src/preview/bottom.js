@@ -43,14 +43,6 @@ const getLeftWidth = function ({ durationLeft, total }) {
 
 const LEFT_WIDTH_PADDING = 2
 
-const getPreviewBottom = function (
-  { actions },
-  { leftWidth, progressRow, counterRow },
-) {
-  const actionsA = getActions(actions, leftWidth)
-  return addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
-}
-
 const getProgressRow = function (
   { durationLeft, percentage },
   { screenWidth, leftWidth },
@@ -97,6 +89,14 @@ const getDescription = function (description, combinationName) {
   const descriptionA =
     combinationName === '' ? description : `  (${description})`
   return noteColor(descriptionA)
+}
+
+const getPreviewBottom = function (
+  { actions },
+  { leftWidth, progressRow, counterRow },
+) {
+  const actionsA = getActions(actions, leftWidth)
+  return addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
 }
 
 // Show keys available for user actions in previews.
