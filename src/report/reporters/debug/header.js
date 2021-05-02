@@ -31,6 +31,10 @@ const getHeaderCells = function (stats, columns, columnWidth) {
 
 // Retrieve a cell in the header row
 const getHeaderCell = function (stats, column, columnWidth) {
-  const headerName = STAT_TITLES[column].padStart(columnWidth)
+  const headerName = getHeaderName(column).padStart(columnWidth)
   return fieldColor(headerName)
+}
+
+export const getHeaderName = function (column) {
+  return STAT_TITLES[column]
 }

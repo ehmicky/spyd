@@ -1,9 +1,8 @@
 import stringWidth from 'string-width'
 
 import { SEPARATOR_WIDTH } from '../../utils/separator.js'
-import { STAT_TITLES } from '../../utils/stat_titles.js'
 
-import { getEmptyRowWidth } from './header.js'
+import { getEmptyRowWidth, getHeaderName } from './header.js'
 import { NAME_RIGHT_PADDING_WIDTH } from './row.js'
 
 // Each column is padded to the same width, so that they align vertically
@@ -12,9 +11,9 @@ export const getColumnWidth = function ({ stats }) {
 }
 
 const getColumnSize = function (stats, column) {
-  const stat = stats[`${column}Padded`]
-  const headerLength = STAT_TITLES[column].length
-  return Math.max(headerLength, stringWidth(stat))
+  const statLength = stringWidth(stats[`${column}Padded`])
+  const headerLength = getHeaderName(column).length
+  return Math.max(statLength, headerLength)
 }
 
 // Group all column names into several tables so they fit the screen width
