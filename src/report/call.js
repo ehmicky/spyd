@@ -23,7 +23,7 @@ export const getContents = async function (result, { reporters, titles }) {
       }),
     ),
   )
-  const contentsA = contents.filter(hasContent)
+  const contentsA = contents.filter(Boolean)
   return contentsA
 }
 
@@ -54,7 +54,9 @@ const getReporterContents = async function ({
   const resultC = addTtyInfo(resultB)
   const reportFuncProps = omit(reporterConfig, CORE_REPORT_PROPS)
   const content = await reportFunc(resultC, reportFuncProps, startData)
-  return { content, output, colors }
+  const contentA = normalizeEmptyContent(content)
+  const contentB = trimEnd(contentA)
+  return { content: contentB, output, colors }
 }
 
 // Differences are mostly useful during interaction.
@@ -84,6 +86,21 @@ const CORE_REPORT_PROPS = [
 
 // A reporter can choose not to return anything, in which case `output` is not
 // used.
-const hasContent = function ({ content }) {
+const normalizeEmptyContent = function (content) {
   return typeof content === 'string' && content.trim() !== ''
+    ? content
+    : undefined
+}
+
+// Trim the end of each line to avoid wrapping-related visual bugs
+const trimEnd = function (content) {
+  if (content === undefined) {
+    return
+  }
+
+  return content.split('\n').map(trimEndLine).join('\n')
+}
+
+const trimEndLine = function (line) {
+  return line.trimEnd()
 }
