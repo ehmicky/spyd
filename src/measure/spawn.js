@@ -8,20 +8,20 @@ import { handleErrorsAndMeasure } from './handle.js'
 // Spawn combination processes, then measure them
 export const spawnAndMeasure = async function ({
   combination,
-  serverUrl,
   precisionTarget,
   cwd,
   previewState,
   stopState,
   stage,
   server,
+  serverUrl,
   logsStream,
   logsFd,
 }) {
   const { childProcess } = await spawnRunnerProcess(combination, {
-    serverUrl,
     cwd,
     server,
+    serverUrl,
     logsStream,
   })
 

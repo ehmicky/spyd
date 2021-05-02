@@ -1,13 +1,16 @@
 import pMapSeries from 'p-map-series'
 
+import { hasLogs } from '../logs/create.js'
 import {
   startCombinationPreview,
   endCombinationPreview,
 } from '../preview/combination.js'
 import { updateDescription } from '../preview/description.js'
+import { startServer, endServer } from '../server/main.js'
 import { addStopHandler, removeStopHandler } from '../stop/main.js'
 
-import { measureCombination } from './single.js'
+import { logAndMeasure } from './single.js'
+import { spawnAndMeasure } from './spawn.js'
 
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
@@ -29,7 +32,7 @@ export const measureCombinations = async function (
   const stopState = addStopHandler(previewState)
 
   try {
-    return await measureCombinationsStats({
+    return await startServerAndMeasure({
       combinations,
       precisionTarget,
       cwd,
@@ -42,6 +45,33 @@ export const measureCombinations = async function (
   }
 }
 
+// Start server to communicate with combinations, then measure them.
+const startServerAndMeasure = async function ({
+  combinations,
+  precisionTarget,
+  cwd,
+  previewState,
+  stopState,
+  stage,
+}) {
+  const { server, serverUrl } = await startServer()
+
+  try {
+    return await measureCombinationsStats({
+      combinations,
+      precisionTarget,
+      cwd,
+      previewState,
+      stopState,
+      stage,
+      server,
+      serverUrl,
+    })
+  } finally {
+    await endServer(server)
+  }
+}
+
 const measureCombinationsStats = async function ({
   combinations,
   precisionTarget,
@@ -49,6 +79,8 @@ const measureCombinationsStats = async function ({
   previewState,
   stopState,
   stage,
+  server,
+  serverUrl,
 }) {
   return await pMapSeries(
     combinations,
@@ -61,6 +93,8 @@ const measureCombinationsStats = async function ({
         precisionTarget,
         cwd,
         stage,
+        server,
+        serverUrl,
       }),
     [],
   )
@@ -74,15 +108,21 @@ const measureCombinationStats = async function ({
   precisionTarget,
   cwd,
   stage,
+  server,
+  serverUrl,
 }) {
   try {
     await startCombinationPreview(previewState, combination, index)
-    const { stats, taskIds } = await measureCombination(combination, {
+    const nextFunction = hasLogs(stage) ? logAndMeasure : spawnAndMeasure
+    const { stats, taskIds } = await nextFunction({
+      combination,
       precisionTarget,
       cwd,
       previewState,
       stopState,
       stage,
+      server,
+      serverUrl,
     })
     await endCombinationPreview(previewState)
     return { ...combination, stats, taskIds }

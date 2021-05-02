@@ -31,7 +31,7 @@ import { spawnProcess } from './spawn.js'
 //    process.
 export const spawnRunnerProcess = async function (
   { runnerSpawn: [file, ...args], runnerSpawnOptions },
-  { serverUrl, cwd, server, logsStream },
+  { cwd, server, serverUrl, logsStream },
 ) {
   const childProcess = spawnProcess(
     [file, ...args, serverUrl],

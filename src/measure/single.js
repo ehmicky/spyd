@@ -1,57 +1,31 @@
-import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
+import { startLogs, stopLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
-import { startServer, endServer } from '../server/main.js'
 
 import { spawnAndMeasure } from './spawn.js'
 
-// Measure a single combination.
-// Start server to communicate with combinations, then measure them.
-export const measureCombination = async function (
+export const logAndMeasure = async function ({
   combination,
-  { precisionTarget, cwd, previewState, stopState, stage },
-) {
-  const { server, serverUrl } = await startServer()
-
-  try {
-    const nextFunction = hasLogs(stage) ? logAndMeasure : spawnAndMeasure
-    return await nextFunction({
-      combination,
-      serverUrl,
-      precisionTarget,
-      cwd,
-      previewState,
-      stopState,
-      stage,
-      server,
-    })
-  } finally {
-    await endServer(server)
-  }
-}
-
-const logAndMeasure = async function ({
-  combination,
-  serverUrl,
   precisionTarget,
   cwd,
   previewState,
   stopState,
   stage,
   server,
+  serverUrl,
 }) {
   const { logsPath, logsFd } = await startLogs()
 
   try {
     return await logStreamAndMeasure({
       combination,
-      serverUrl,
       precisionTarget,
       cwd,
       previewState,
       stopState,
       stage,
       server,
+      serverUrl,
       logsFd,
     })
   } catch (error) {
@@ -64,13 +38,13 @@ const logAndMeasure = async function ({
 
 const logStreamAndMeasure = async function ({
   combination,
-  serverUrl,
   precisionTarget,
   cwd,
   previewState,
   stopState,
   stage,
   server,
+  serverUrl,
   logsFd,
 }) {
   const logsStream = startLogsStream(logsFd)
@@ -78,13 +52,13 @@ const logStreamAndMeasure = async function ({
   try {
     return await spawnAndMeasure({
       combination,
-      serverUrl,
       precisionTarget,
       cwd,
       previewState,
       stopState,
       stage,
       server,
+      serverUrl,
       logsStream,
       logsFd,
     })
