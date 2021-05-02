@@ -1,7 +1,8 @@
 import { PADDING_WIDTH, SEPARATOR_WIDTH } from '../../utils/separator.js'
 
-import { NAME_RIGHT_PADDING_WIDTH, STAT_NAMES } from './column.js'
+import { STAT_NAMES } from './column.js'
 import { getEmptyRowWidth, getColumnWidth } from './header.js'
+import { NAME_RIGHT_PADDING_WIDTH } from './row.js'
 
 // Group all stat|column names into several tables so they fit the screen width
 export const getAllStatNames = function ({ titles, stats }, screenWidth) {

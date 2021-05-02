@@ -5,8 +5,6 @@ import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 import { getCombinationName } from '../../utils/title.js'
 
-import { NAME_RIGHT_PADDING } from './column.js'
-
 // Retrieve a single row, including the row name
 export const getRow = function ({ titles, stats }, statNames) {
   const combinationName = getCombinationName(titles)
@@ -30,3 +28,7 @@ export const getCell = function (stats, statName) {
   const statA = padStart(stat, padSize)
   return statA
 }
+
+// Padding between the name column and the second column
+export const NAME_RIGHT_PADDING_WIDTH = 2
+export const NAME_RIGHT_PADDING = ' '.repeat(NAME_RIGHT_PADDING_WIDTH)

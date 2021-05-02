@@ -17,7 +17,3 @@ export const STAT_NAMES = [
   'samples',
   'minLoopDuration',
 ]
-
-// Padding between the name column and the second column
-export const NAME_RIGHT_PADDING_WIDTH = 2
-export const NAME_RIGHT_PADDING = ' '.repeat(NAME_RIGHT_PADDING_WIDTH)
