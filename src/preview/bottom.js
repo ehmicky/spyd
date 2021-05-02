@@ -8,7 +8,8 @@ export const BOTTOM_BAR_HEIGHT = 7
 // Retrieve bottom bar of preview
 export const getBottomBar = function (previewState, screenWidth) {
   const separator = getSeparator(previewState, screenWidth)
-  const bottom = getPreviewBottom(previewState, screenWidth)
+  const leftWidth = getLeftWidth(previewState)
+  const bottom = getPreviewBottom(previewState, { screenWidth, leftWidth })
   return `${separator}${bottom}`
 }
 
@@ -23,6 +24,18 @@ const getSeparator = function ({ report }, screenWidth) {
 // Works with all terminals
 const LINE_CHAR = '\u2500'
 
+const getLeftWidth = function ({ durationLeft, total }) {
+  return (
+    Math.max(
+      durationLeft.length,
+      getCounter(total, total).length,
+      ACTIONS_LABEL.length,
+    ) + LEFT_WIDTH_PADDING
+  )
+}
+
+const LEFT_WIDTH_PADDING = 2
+
 const getPreviewBottom = function (
   {
     durationLeft,
@@ -33,10 +46,8 @@ const getPreviewBottom = function (
     description,
     actions,
   },
-  screenWidth,
+  { screenWidth, leftWidth },
 ) {
-  const leftWidth = getLeftWidth(durationLeft, total)
-
   const durationLeftA = durationLeft.padEnd(leftWidth)
   const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
   const progressRow = `${durationLeftA}${progressBar}`
@@ -48,18 +59,6 @@ const getPreviewBottom = function (
   const actionsA = getActions(actions, leftWidth)
   return addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
 }
-
-const getLeftWidth = function (durationLeft, total) {
-  return (
-    Math.max(
-      durationLeft.length,
-      getCounter(total, total).length,
-      ACTIONS_LABEL.length,
-    ) + LEFT_WIDTH_PADDING
-  )
-}
-
-const LEFT_WIDTH_PADDING = 2
 
 // The `counter` is between `durationLeft` and `progressBar` so that there is
 // no empty space when `durationLeft` is unknown.
