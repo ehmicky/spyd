@@ -70,7 +70,11 @@ const getDescription = function (description, combinationName) {
 }
 
 // Show keys available for user actions in previews.
-// When there are no actions available, we keep an empty line to avoid jitter.
+// When there are no actions available, we keep an empty line to:
+//  - Avoid jitter
+//  - Simplify scrolling logic since remove the actions row might change whether
+//    scrolling can be used, which can show the scrolling action, which can add
+//    that actions row back
 const getActions = function (actions, leftWidth) {
   const actionValues = Object.values(actions)
 
