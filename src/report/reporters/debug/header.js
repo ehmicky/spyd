@@ -8,12 +8,12 @@ import { getFirstCell } from './row.js'
 
 // Retrieve the header row
 export const getHeader = function ({ titles, stats }, columns, columnWidth) {
-  const firstColumn = ' '.repeat(getFirstColumnWidth(titles))
+  const firstColumn = ' '.repeat(getFirstCellWidth(titles))
   const headerCells = getHeaderCells(stats, columns, columnWidth)
   return `${firstColumn}${headerCells}`
 }
 
-export const getFirstColumnWidth = function (titles) {
+export const getFirstCellWidth = function (titles) {
   return stringWidth(getFirstCell(titles))
 }
 
