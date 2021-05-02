@@ -1,24 +1,26 @@
+import { getScreenWidth, getPaddedScreenWidth } from '../report/tty.js'
 import { goodColor, separatorColor, noteColor } from '../report/utils/colors.js'
-import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
+import { addPadding } from '../report/utils/indent.js'
 
 import { wrapRows } from './wrap.js'
 
 // Retrieve elements of bottom bar in preview.
 // Since the scrolling action must be computed twice, this is a performance
 // optimization to avoid computing those elements twice.
-export const getBottomBarElements = function (previewState, screenWidth) {
+export const getBottomBarElements = function (previewState) {
   const leftWidth = getLeftWidth(previewState)
-  const separator = getSeparator(previewState, screenWidth)
-  const progressRow = getProgressRow(previewState, { screenWidth, leftWidth })
+  const separator = getSeparator(previewState)
+  const progressRow = getProgressRow(previewState, leftWidth)
   const counterRow = getCounterRow(previewState, leftWidth)
   return { leftWidth, separator, progressRow, counterRow }
 }
 
-const getSeparator = function ({ report }, screenWidth) {
+const getSeparator = function ({ report }) {
   if (report === undefined) {
     return ''
   }
 
+  const screenWidth = getScreenWidth()
   return separatorColor(`${LINE_CHAR.repeat(screenWidth)}\n`)
 }
 
@@ -37,17 +39,14 @@ const getLeftWidth = function ({ durationLeft, total }) {
 
 const LEFT_WIDTH_PADDING = 2
 
-const getProgressRow = function (
-  { durationLeft, percentage },
-  { screenWidth, leftWidth },
-) {
+const getProgressRow = function ({ durationLeft, percentage }, leftWidth) {
   const durationLeftA = durationLeft.padEnd(leftWidth)
-  const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
+  const progressBar = getProgressBar(durationLeftA, percentage)
   return `${durationLeftA}${progressBar}`
 }
 
-const getProgressBar = function (durationLeft, percentage, screenWidth) {
-  const progressBarWidth = screenWidth - PADDING_SIZE * 2 - durationLeft.length
+const getProgressBar = function (durationLeft, percentage) {
+  const progressBarWidth = getPaddedScreenWidth() - durationLeft.length
   const filled = Math.floor(progressBarWidth * percentage)
   const filledChars = goodColor(FILL_CHAR.repeat(filled))
   const voidedChars = separatorColor(

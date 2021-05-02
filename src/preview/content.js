@@ -1,5 +1,3 @@
-import { getScreenWidth, getScreenHeight } from '../report/tty.js'
-
 import { getBottomBarElements, getBottomBar } from './bottom.js'
 import { addInitialScrollAction, addScrollAction } from './scrolling_action.js'
 import { updateScrolling } from './scrolling_update.js'
@@ -9,15 +7,13 @@ import { updateScrolling } from './scrolling_update.js'
 //   - have `reporter.quiet: true`
 //   - return nothing in `reporter.report()
 export const getPreviewContent = function (previewState) {
-  const screenWidth = getScreenWidth()
-  const screenHeight = getScreenHeight()
   addInitialScrollAction(previewState)
   const {
     leftWidth,
     separator,
     progressRow,
     counterRow,
-  } = getBottomBarElements(previewState, screenWidth)
+  } = getBottomBarElements(previewState)
   const bottomBar = getBottomBar({
     previewState,
     separator,
@@ -25,11 +21,7 @@ export const getPreviewContent = function (previewState) {
     progressRow,
     counterRow,
   })
-  const { report, maxScrollTop } = updateScrolling(
-    previewState,
-    screenHeight,
-    bottomBar,
-  )
+  const { report, maxScrollTop } = updateScrolling(previewState, bottomBar)
   addScrollAction({ previewState, maxScrollTop })
   const bottomBarA = getBottomBar({
     previewState,
