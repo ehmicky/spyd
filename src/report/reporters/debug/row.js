@@ -17,11 +17,11 @@ export const getFirstCellWidth = function (titles) {
 
 const getFirstCell = function (titles) {
   const combinationName = getCombinationName(titles)
-  return `${combinationName}${FIRST_PADDING}`
+  return `${combinationName}${FIRST_CELL_PADDING}`
 }
 
-const FIRST_PADDING_WIDTH = 2
-const FIRST_PADDING = ' '.repeat(FIRST_PADDING_WIDTH)
+const FIRST_CELL_PADDING_WIDTH = 2
+const FIRST_CELL_PADDING = ' '.repeat(FIRST_CELL_PADDING_WIDTH)
 
 // Retrieve a single row, except the row name
 const getCells = function (stats, columns, columnWidth) {
