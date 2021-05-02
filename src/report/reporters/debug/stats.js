@@ -16,11 +16,7 @@ export const getAllStatColumns = function ({ titles, stats }, screenWidth) {
 }
 
 const reduceAllStateColumns = function (
-  {
-    allStatColumns: [statColumns, ...previousStatColumns],
-    widthLeft,
-    paddingWidth,
-  },
+  { allStatColumns: [statColumns, ...previousStatColumns], widthLeft },
   { name, stats, availableWidth },
 ) {
   const columnWidth = getColumnWidth(stats, name)
@@ -28,22 +24,19 @@ const reduceAllStateColumns = function (
   if (statColumns.length === 0) {
     return {
       allStatColumns: [[...statColumns, name], ...previousStatColumns],
-      widthLeft: widthLeft - columnWidth,
-      paddingWidth: PADDING_WIDTH,
+      widthLeft: widthLeft - columnWidth - PADDING_WIDTH,
     }
   }
 
-  if (widthLeft - paddingWidth - columnWidth < SEPARATOR_WIDTH) {
+  if (widthLeft - columnWidth < SEPARATOR_WIDTH) {
     return {
       allStatColumns: [[name], statColumns, ...previousStatColumns],
-      widthLeft: availableWidth - columnWidth,
-      paddingWidth: PADDING_WIDTH,
+      widthLeft: availableWidth - columnWidth - PADDING_WIDTH,
     }
   }
 
   return {
     allStatColumns: [[...statColumns, name], ...previousStatColumns],
-    widthLeft: widthLeft - paddingWidth - columnWidth,
-    paddingWidth: SEPARATOR_WIDTH,
+    widthLeft: widthLeft - columnWidth - SEPARATOR_WIDTH,
   }
 }
