@@ -36,12 +36,12 @@ const applyScrolling = function ({ report, scrollTop }, screenHeight) {
 
   const newlineIndexes = getNewlineIndexes(report)
   const contentHeight = newlineIndexes.length
+  const maxScrollTop = contentHeight - availableHeight
 
-  if (contentHeight <= availableHeight) {
+  if (maxScrollTop <= 0) {
     return { report, scrollTop: 0, maxScrollTop: 0, availableHeight }
   }
 
-  const maxScrollTop = contentHeight - availableHeight
   const scrollTopA = Math.max(Math.min(scrollTop, maxScrollTop), 0)
   const bottomIndex = scrollTopA + availableHeight - 1
   const reportA = report.slice(
@@ -79,6 +79,7 @@ const getNewlineIndexes = function (previewContent) {
   return newlineIndexes
 }
 
+// Add/remove action in to the bottom bar indicating whether the user can scroll
 const addScrollAction = function (previewState, scrollTop, maxScrollTop) {
   const canScrollUp = scrollTop !== 0
   const canScrollDown = scrollTop !== maxScrollTop
