@@ -25,6 +25,10 @@ export const updatePreview = async function (previewState) {
 }
 
 export const refreshPreview = async function (previewState) {
+  if (previewState.quiet) {
+    return
+  }
+
   const previewContent = getPreviewContent(previewState)
 
   await clearScreen()

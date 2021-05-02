@@ -12,13 +12,12 @@ export const removeAction = function (previewState, name) {
 }
 
 // User actions at the beginning
-export const DEFAULT_ACTIONS = {
-  stop: { key: 'Ctrl-C', explanation: 'Stop' },
-}
+export const DEFAULT_ACTIONS = {}
 
 // All Available user actions. Enabled/disabled depending on the context.
 const ACTIONS = {
   ...DEFAULT_ACTIONS,
+  stop: { key: 'Ctrl-C', explanation: 'Stop' },
   abort: { key: 'Ctrl-C', explanation: 'Abort' },
   scrollUp: { key: 'Up', explanation: 'Scroll' },
   scrollDown: { key: 'Down', explanation: 'Scroll' },

@@ -17,7 +17,7 @@ export const measureCombinations = async function (
   combinations,
   { precisionTarget, cwd, previewState, stage },
 ) {
-  const stopState = addStopHandler(previewState)
+  const stopState = await addStopHandler(previewState)
 
   try {
     return await startServerAndMeasure({

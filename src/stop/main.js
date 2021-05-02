@@ -1,4 +1,6 @@
 import { noUnhandledRejection } from '../error/unhandled_rejection.js'
+import { addAction } from '../preview/action.js'
+import { refreshPreview } from '../preview/update.js'
 import { createController } from '../utils/timeout.js'
 
 import { handleStop } from './handle.js'
@@ -11,12 +13,16 @@ import { removeDefaultHandlers, restoreDefaultHandlers } from './signals.js'
 // requires spawning processes again, making them go through cold starts again.
 // This would decrease precision and create difference between results depending
 // on how many times the benchmark was stopped/continued.
-export const addStopHandler = function (previewState) {
+export const addStopHandler = async function (previewState) {
   const signalHandler = removeDefaultHandlers()
   const { cancelSignal, cancel } = createController()
   const stopState = { stopped: false, signalHandler, cancelSignal, cancel }
   // eslint-disable-next-line fp/no-mutation
   stopState.onAbort = noUnhandledRejection(handleStop(stopState, previewState))
+
+  addAction(previewState, 'stop')
+  await refreshPreview(previewState)
+
   return stopState
 }
 
