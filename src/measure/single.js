@@ -16,13 +16,11 @@ import { runEvents } from './events.js'
 
 // Measure a single combination
 export const measureCombination = async function ({ index, ...args }) {
-  const { previewState, combination, stage } = args
+  const { previewState, combination } = args
 
   try {
     await startCombinationPreview(previewState, combination, index)
-    const { stats, taskIds } = hasLogs(stage)
-      ? await logAndMeasure(args)
-      : await spawnAndMeasure(args)
+    const { stats, taskIds } = await logAndMeasure(args)
     await endCombinationPreview(previewState)
     return { ...combination, stats, taskIds }
   } finally {
@@ -31,6 +29,10 @@ export const measureCombination = async function ({ index, ...args }) {
 }
 
 const logAndMeasure = async function (args) {
+  if (!hasLogs(args.stage)) {
+    return await spawnAndMeasure(args)
+  }
+
   const { logsPath, logsFd } = await startLogs()
 
   try {
