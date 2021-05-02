@@ -8,7 +8,7 @@ import { getCombinationName, addTitles } from '../../utils/title.js'
 import { getCells } from './cell.js'
 import { NAME_RIGHT_PADDING } from './column.js'
 import { getHeader } from './header.js'
-import { getAllStatColumns } from './stats.js'
+import { getAllStatNames } from './stats.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({
@@ -21,8 +21,8 @@ const report = function ({
   const combinationsA = prettifyStats(combinations)
   const combinationsB = addTitles(combinationsA)
 
-  const allStatColumns = getAllStatColumns(combinationsB[0], screenWidth)
-  const tables = allStatColumns.map((statColumns) =>
+  const allStatNames = getAllStatNames(combinationsB[0], screenWidth)
+  const tables = allStatNames.map((statColumns) =>
     getTable(combinationsB, statColumns),
   )
   const histograms = serializeHistograms(combinationsB, HISTOGRAM_OPTS)
