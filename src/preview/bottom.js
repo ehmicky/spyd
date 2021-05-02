@@ -1,6 +1,8 @@
 import { goodColor, separatorColor, noteColor } from '../report/utils/colors.js'
 import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 
+import { wrapRows } from './wrap.js'
+
 // At the moment, this is static, but this might need to become dynamic in the
 // future. This includes the separator and padding.
 export const BOTTOM_BAR_HEIGHT = 7
@@ -101,7 +103,7 @@ const getPreviewBottom = function ({
 }) {
   const actionsA = getActions(actions, leftWidth)
   const rows = addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
-  return `${separator}${rows}`
+  return wrapRows(`${separator}${rows}`)
 }
 
 // Show keys available for user actions in previews.
