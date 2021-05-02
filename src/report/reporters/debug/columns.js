@@ -6,7 +6,10 @@ import { NAME_RIGHT_PADDING_WIDTH } from './row.js'
 // Group all column names into several tables so they fit the screen width
 export const getAllColumns = function ({ titles, stats }, screenWidth) {
   const availableWidth =
-    screenWidth - getEmptyRowWidth(titles) - NAME_RIGHT_PADDING_WIDTH
+    screenWidth -
+    getEmptyRowWidth(titles) -
+    NAME_RIGHT_PADDING_WIDTH -
+    FINAL_NEWLINE
   const { allColumns } = COLUMNS.reduce(
     addColumn.bind(undefined, { stats, availableWidth }),
     { allColumns: [], remainingWidth: 0 },
@@ -14,6 +17,8 @@ export const getAllColumns = function ({ titles, stats }, screenWidth) {
   // eslint-disable-next-line fp/no-mutating-methods
   return allColumns.reverse()
 }
+
+const FINAL_NEWLINE = 1
 
 const addColumn = function (
   { stats, availableWidth },
