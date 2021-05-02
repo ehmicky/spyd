@@ -17,9 +17,10 @@ import { BOTTOM_BAR_HEIGHT } from './bottom.js'
 // We do not take into account that one line might take several terminal rows
 // due to wrapping because this makes scrolling faster when lines are long.
 export const updateScrolling = function (previewState, screenHeight) {
-  const { report, scrollTop, maxScrollTop, availableHeight } = applyScrolling(
+  const availableHeight = getAvailableHeight(screenHeight)
+  const { report, scrollTop, maxScrollTop } = applyScrolling(
     previewState,
-    screenHeight,
+    availableHeight,
   )
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, { scrollTop, availableHeight })
@@ -27,39 +28,33 @@ export const updateScrolling = function (previewState, screenHeight) {
   return report
 }
 
-const applyScrolling = function ({ report, scrollTop }, screenHeight) {
-  const availableHeight = getAvailableHeight(screenHeight)
-
-  if (availableHeight <= 0 || report === undefined) {
-    return { report: '', scrollTop: 0, maxScrollTop: 0, availableHeight }
-  }
-
-  const newlineIndexes = getNewlineIndexes(report)
-  const maxScrollTop = newlineIndexes.length - availableHeight
-
-  if (maxScrollTop <= 0) {
-    return { report, scrollTop: 0, maxScrollTop: 0, availableHeight }
-  }
-
-  const scrollTopA = Math.max(Math.min(scrollTop, maxScrollTop), 0)
-  const bottomIndex = scrollTopA + availableHeight - 1
-  const reportA = report.slice(
-    scrollTopA === 0 ? 0 : newlineIndexes[scrollTopA - 1] + 1,
-    newlineIndexes[bottomIndex] + 1,
-  )
-  return {
-    report: reportA,
-    scrollTop: scrollTopA,
-    maxScrollTop,
-    availableHeight,
-  }
-}
-
 // We need to subtract one due to the fast that the bottom bar is the last
 // element, i.e. its final newline not only terminates a line but also starts
 // a last empty row.
 const getAvailableHeight = function (screenHeight) {
   return screenHeight - BOTTOM_BAR_HEIGHT - 1
+}
+
+const applyScrolling = function ({ report = '', scrollTop }, availableHeight) {
+  if (availableHeight <= 0) {
+    return { report: '', scrollTop: 0, maxScrollTop: 0 }
+  }
+
+  const newlineIndexes = getNewlineIndexes(report)
+  const maxScrollTop = Math.max(newlineIndexes.length - availableHeight, 0)
+
+  if (maxScrollTop === 0) {
+    return { report, scrollTop: 0, maxScrollTop }
+  }
+
+  const scrollTopA = Math.max(Math.min(scrollTop, maxScrollTop), 0)
+  const reportA = sliceReport({
+    report,
+    scrollTop: scrollTopA,
+    availableHeight,
+    newlineIndexes,
+  })
+  return { report: reportA, scrollTop: scrollTopA, maxScrollTop }
 }
 
 // Uses imperative code for performance
@@ -76,6 +71,19 @@ const getNewlineIndexes = function (previewContent) {
   }
 
   return newlineIndexes
+}
+
+// Remove rows from report to apply scrolling effect
+const sliceReport = function ({
+  report,
+  scrollTop,
+  availableHeight,
+  newlineIndexes,
+}) {
+  const topIndex = scrollTop === 0 ? 0 : newlineIndexes[scrollTop - 1] + 1
+  const bottomRowIndex = scrollTop + availableHeight - 1
+  const bottomIndex = newlineIndexes[bottomRowIndex] + 1
+  return report.slice(topIndex, bottomIndex)
 }
 
 // Add/remove action in to the bottom bar indicating whether the user can scroll
