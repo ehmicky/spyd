@@ -1,4 +1,6 @@
-import { throwOnSpawnExit } from './error.js'
+import { noUnhandledRejection } from '../error/unhandled_rejection.js'
+
+import { throwOnSpawnExit, throwOnTaskExit } from './error.js'
 import { receiveReturnValue } from './ipc.js'
 import { spawnProcess } from './spawn.js'
 
@@ -44,7 +46,8 @@ export const spawnRunnerProcess = async function (
     cwd,
   )
   await waitForIpcSetup(childProcess, server)
-  return { childProcess }
+  const onTaskExit = noUnhandledRejection(throwOnTaskExit(childProcess))
+  return { childProcess, onTaskExit }
 }
 
 const getStdio = function (logsStream) {

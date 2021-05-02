@@ -84,7 +84,7 @@ export const spawnAndMeasure = async function ({
   logsStream,
   logsFd,
 }) {
-  const { childProcess } = await spawnRunnerProcess(combination, {
+  const { childProcess, onTaskExit } = await spawnRunnerProcess(combination, {
     cwd,
     server,
     serverUrl,
@@ -99,7 +99,7 @@ export const spawnAndMeasure = async function ({
       stopState,
       stage,
       server,
-      childProcess,
+      onTaskExit,
       logsFd,
     })
   } finally {

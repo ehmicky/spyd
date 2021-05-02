@@ -1,11 +1,10 @@
-import { throwOnTaskExit } from '../process/error.js'
 import { throwIfStopped } from '../stop/error.js'
 
 import { runStartEnd } from './start_end.js'
 
 // Handle errors during measuring.
 // Asynchronous errors (SIGINT, child process exit):
-//  - Are handled as soon as possible
+//  - Are listened to as soon as possible
 //  - However, they only throw once all other initializing logic has been
 //    performed
 //  - This ensures that all initializers and finalizers are always called
@@ -18,13 +17,13 @@ export const handleErrorsAndMeasure = async function ({
   stopState: { onAbort },
   stage,
   server,
-  childProcess,
+  onTaskExit,
   logsFd,
 }) {
   try {
     const returnValue = await Promise.race([
-      throwOnTaskExit(childProcess),
       onAbort,
+      onTaskExit,
       runStartEnd({
         combination,
         precisionTarget,
