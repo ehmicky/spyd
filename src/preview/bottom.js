@@ -11,7 +11,8 @@ export const getBottomBar = function (previewState, screenWidth) {
   const leftWidth = getLeftWidth(previewState)
   const progressRow = getProgressRow(previewState, { screenWidth, leftWidth })
   const counterRow = getCounterRow(previewState, leftWidth)
-  const bottom = getPreviewBottom(previewState, {
+  const bottom = getPreviewBottom({
+    previewState,
     screenWidth,
     leftWidth,
     progressRow,
@@ -91,10 +92,12 @@ const getDescription = function (description, combinationName) {
   return noteColor(descriptionA)
 }
 
-const getPreviewBottom = function (
-  { actions },
-  { leftWidth, progressRow, counterRow },
-) {
+const getPreviewBottom = function ({
+  previewState: { actions },
+  leftWidth,
+  progressRow,
+  counterRow,
+}) {
   const actionsA = getActions(actions, leftWidth)
   return addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
 }
