@@ -30,13 +30,10 @@ export const getPreviewContent = function ({
     actions,
     screenWidth,
   })
-  const previewContent = `${report}${separator}${bottom}\n`
-  const previewContentA = applyScrolling(
-    previewContent,
-    scrollTop,
-    screenHeight,
-  )
-  return previewContentA
+  const bottomBar = `${separator}${bottom}\n`
+  const reportA = applyScrolling({ report, bottomBar, scrollTop, screenHeight })
+  const previewContent = `${reportA}${bottomBar}`
+  return previewContent
 }
 
 const getSeparator = function (report, screenWidth) {

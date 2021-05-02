@@ -1,25 +1,33 @@
 // When content is taller than the terminal height, allow user to scroll with
 // up/down. We do this by keeping tracking of `scrollTop` and truncating the
 // content to print on the terminal.
-export const applyScrolling = function (
-  previewContent,
+// Scrolling is applied to the `report`, but not to the bottom bar.
+//  - However, the bottom bar height is taken into account since it takes some
+//    space.
+//  - If the screen height is not high enough to show the bottom bar, the report
+//    will be hidden and the bottom of the bottom bar will be partiall hidden.
+export const applyScrolling = function ({
+  report,
+  bottomBar,
   scrollTop,
   screenHeight,
-) {
-  if (screenHeight === 0) {
+}) {
+  const availableHeight = screenHeight - getNewlineIndexes(bottomBar).length
+
+  if (availableHeight <= 0) {
     return ''
   }
 
-  const newlineIndexes = getNewlineIndexes(previewContent)
+  const newlineIndexes = getNewlineIndexes(report)
   const contentHeight = newlineIndexes.length
 
-  if (contentHeight <= screenHeight) {
-    return previewContent
+  if (contentHeight <= availableHeight) {
+    return report
   }
 
-  const topIndex = Math.min(scrollTop, contentHeight - screenHeight)
-  const bottomIndex = topIndex + screenHeight - 1
-  return previewContent.slice(
+  const topIndex = Math.min(scrollTop, contentHeight - availableHeight)
+  const bottomIndex = topIndex + availableHeight - 1
+  return report.slice(
     topIndex === 0 ? 0 : newlineIndexes[topIndex - 1] + 1,
     newlineIndexes[bottomIndex] + 1,
   )
