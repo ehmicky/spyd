@@ -25,12 +25,11 @@ export const getPreviewBottom = function (
   const descriptionA = getDescription(description, combinationName)
   const actionsA = getActions(actions, leftWidth)
 
-  const bottom = [
-    `${durationLeftA}${progressBar}`,
-    `${counter}${combinationName}${descriptionA}`,
-    actionsA,
-  ].join('\n\n')
-  return addPadding(bottom)
+  return addPadding(`${durationLeftA}${progressBar}
+
+${counter}${combinationName}${descriptionA}
+
+${actionsA}`)
 }
 
 const getLeftWidth = function (durationLeft, total) {
