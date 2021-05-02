@@ -21,7 +21,6 @@ export const matchSelectors = function (combination, selectors) {
   return selectors[0].negation
 }
 
-// Check if a selector matches the ids of a given combination
 const matchIds = function (combinationIds, { intersect }) {
   return intersect.every((ids) => matchGroup(combinationIds, ids))
 }

@@ -19,6 +19,11 @@ const usesNegation = function ([firstToken]) {
   return firstToken === NEGATION_SYMBOL
 }
 
+// "not" is only meaningful at the beginning of the selection.
+//  - However, we explicitly forbid it elsewhere to avoid confusion, in case
+//    users think it can be prepended to any id instead. This provides with a
+//    clearer error message.
+//  - This means it is not possible to select an id named "not"
 const validateId = function (id, rawSelector, propName) {
   if (id === NEGATION_SYMBOL) {
     throwValidationError(
