@@ -28,7 +28,7 @@ const reduceAllStateColumns = function (
     }
   }
 
-  if (widthLeft - columnWidth < SEPARATOR_WIDTH) {
+  if (widthLeft - columnWidth - SEPARATOR_WIDTH < 0) {
     return {
       allStatColumns: [[name], statColumns, ...previousStatColumns],
       widthLeft: availableWidth - columnWidth - PADDING_WIDTH,
