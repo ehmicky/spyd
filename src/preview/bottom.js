@@ -5,10 +5,12 @@ import { wrapRows } from './wrap.js'
 
 // Retrieve bottom bar of preview
 export const getBottomBar = function (previewState, screenWidth) {
-  const leftWidth = getLeftWidth(previewState)
-  const separator = getSeparator(previewState, screenWidth)
-  const progressRow = getProgressRow(previewState, { screenWidth, leftWidth })
-  const counterRow = getCounterRow(previewState, leftWidth)
+  const {
+    leftWidth,
+    separator,
+    progressRow,
+    counterRow,
+  } = getBottomBarElements(previewState, screenWidth)
   const bottomBar = getPreviewBottom({
     previewState,
     separator,
@@ -17,6 +19,17 @@ export const getBottomBar = function (previewState, screenWidth) {
     counterRow,
   })
   return bottomBar
+}
+
+// Retrieve elements of bottom bar in preview.
+// Since the scrolling action must be computed twice, this is a performance
+// optimization to avoid computing those elements twice.
+const getBottomBarElements = function (previewState, screenWidth) {
+  const leftWidth = getLeftWidth(previewState)
+  const separator = getSeparator(previewState, screenWidth)
+  const progressRow = getProgressRow(previewState, { screenWidth, leftWidth })
+  const counterRow = getCounterRow(previewState, leftWidth)
+  return { leftWidth, separator, progressRow, counterRow }
 }
 
 const getSeparator = function ({ report }, screenWidth) {
