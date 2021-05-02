@@ -23,14 +23,14 @@ export const applyScrolling = function ({
   const availableHeight = screenHeight - getNewlineIndexes(bottomBar).length
 
   if (availableHeight <= 0) {
-    return { report: '', scrollTop }
+    return { report: '', scrollTop: 0 }
   }
 
   const newlineIndexes = getNewlineIndexes(report)
   const contentHeight = newlineIndexes.length
 
   if (contentHeight <= availableHeight) {
-    return { report, scrollTop }
+    return { report, scrollTop: 0 }
   }
 
   const scrollTopA = Math.max(
