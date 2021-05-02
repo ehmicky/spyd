@@ -14,6 +14,10 @@ module.exports.fixed = async () => {
   await setTimeout(50)
 }
 
+module.exports.slow = async () => {
+  await setTimeout(1e4)
+}
+
 module.exports.uniform = async () => {
   await setTimeout(100 * Math.random())
 }
