@@ -14,31 +14,37 @@ Those can be the identifiers of any task, runner, system or variation.
 
 When specifying the same category, "or" is used:
   --select="taskOne taskTwo"
-selects any combinations from:
-  taskOne or taskTwo
+selects taskOne or taskTwo
 
 When specifying different categories, "and" is used instead:
   --select="taskOne runnerOne"
-selects any combinations from:
-  taskOne and runnerOne
+selects taskOne and runnerOne
 
 Both can be combined:
   --select="taskOne taskTwo runnerOne"
-selects any combinations from:
-  (taskOne or taskTwo) and runnerOne
+selects (taskOne or taskTwo) and runnerOne
 
-Tildes can be used to exclude specific identifiers ("not"):
-  --select='~taskOne ~taskTwo'
-selects any combinations from:
-  not (taskOne or taskTwo)
-Note: you need to might to use single quotes with your shell.
+"not" can be prepended to exclude combinations instead of selecting them.
+  --select='not taskOne taskTwo'
+selects not (taskOne or taskTwo)
 
-Alternatives ("or") can be set by specifying the configuration property several
-times. Unless alternatives described above, those can be entire selections,
-including between different categories:
+Alternatives ("or") of selections can be specified by setting the configuration
+property several times.
   --select=taskOne --select=runnerOne
-selects any combinations from:
-  either taskOne or runnerOne
+selects taskOne or runnerOne
+
+Later selections have priority over earlier ones.
+  --select="not taskOne" --select=taskOne
+selects taskOne, but:
+  --select=taskOne --select="not taskOne"
+does not select taskOne
+
+Combinations not targeted by any selection are selected or not depending on
+whether the first selection is prepended with "not".
+  --select="not taskOne" --select=taskOne
+selects taskTwo, but:
+  --select=taskOne --select="not taskOne"
+does not select taskTwo
 
 By default, all combinations are selected.`,
   },
