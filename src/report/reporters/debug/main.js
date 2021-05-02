@@ -38,7 +38,7 @@ const getTables = function (combinations, screenWidth) {
 }
 
 const getTable = function (combinations, columns, columnWidth) {
-  const header = getHeader(combinations[0], columns, columnWidth)
+  const header = getHeader(combinations, columns, columnWidth)
   const rows = combinations.map((combination) =>
     getRow(combination, columns, columnWidth),
   )

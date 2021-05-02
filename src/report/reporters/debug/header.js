@@ -5,7 +5,7 @@ import { STAT_TITLES } from '../../utils/stat_titles.js'
 import { getFirstCellWidth } from './row.js'
 
 // Retrieve the header row
-export const getHeader = function ({ titles, stats }, columns, columnWidth) {
+export const getHeader = function ([{ titles, stats }], columns, columnWidth) {
   const firstCell = ' '.repeat(getFirstCellWidth(titles))
   const headerCells = getHeaderCells(stats, columns, columnWidth)
   return `${firstCell}${headerCells}`
