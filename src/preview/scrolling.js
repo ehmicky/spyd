@@ -15,31 +15,34 @@ import { BOTTOM_BAR_HEIGHT } from './bottom.js'
 //    size shrinks
 // We do not take into account that one line might take several terminal rows
 // due to wrapping because this makes scrolling faster when lines are long.
-// eslint-disable-next-line max-statements
 export const applyScrolling = function (report, scrollTop, screenHeight) {
   const availableHeight = getAvailableHeight(screenHeight)
 
   if (availableHeight <= 0) {
-    return { report: '', scrollTop: 0, availableHeight }
+    return { report: '', scrollAction: {}, scrollTop: 0, availableHeight }
   }
 
   const newlineIndexes = getNewlineIndexes(report)
   const contentHeight = newlineIndexes.length
 
   if (contentHeight <= availableHeight) {
-    return { report, scrollTop: 0, availableHeight }
+    return { report, scrollAction: {}, scrollTop: 0, availableHeight }
   }
 
-  const scrollTopA = Math.max(
-    Math.min(scrollTop, contentHeight - availableHeight),
-    0,
-  )
+  const maxScrollTop = contentHeight - availableHeight
+  const scrollTopA = Math.max(Math.min(scrollTop, maxScrollTop), 0)
   const bottomIndex = scrollTopA + availableHeight - 1
   const reportA = report.slice(
     scrollTopA === 0 ? 0 : newlineIndexes[scrollTopA - 1] + 1,
     newlineIndexes[bottomIndex] + 1,
   )
-  return { report: reportA, scrollTop: scrollTopA, availableHeight }
+  const scrollAction = getScrollAction(scrollTopA, maxScrollTop)
+  return {
+    report: reportA,
+    scrollAction,
+    scrollTop: scrollTopA,
+    availableHeight,
+  }
 }
 
 // We need to subtract one due to the fast that the bottom bar is the last
@@ -64,3 +67,22 @@ const getNewlineIndexes = function (previewContent) {
 
   return newlineIndexes
 }
+
+const getScrollAction = function (scrollTop, maxScrollTop) {
+  const canScrollDown = scrollTop !== maxScrollTop
+
+  if (scrollTop === 0) {
+    return canScrollDown ? SCROLL_DOWN_ACTION : {}
+  }
+
+  return canScrollDown ? SCROLL_ACTION : SCROLL_UP_ACTION
+}
+
+const SCROLL_ACTION = {
+  name: 'scroll',
+  key: 'Up/Down',
+  explanation: 'Scroll',
+  order: 1,
+}
+const SCROLL_UP_ACTION = { ...SCROLL_ACTION, key: 'Up' }
+const SCROLL_DOWN_ACTION = { ...SCROLL_ACTION, key: 'Down' }

@@ -21,6 +21,7 @@ export const getPreviewContent = function ({
   const screenHeight = getScreenHeight()
   const {
     report: reportA,
+    scrollAction,
     scrollTop: scrollTopA,
     availableHeight,
   } = applyScrolling(report, scrollTop, screenHeight)
