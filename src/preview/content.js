@@ -11,10 +11,10 @@ import { updateScrolling } from './scrolling.js'
 export const getPreviewContent = function (previewState) {
   const screenWidth = getScreenWidth()
   const screenHeight = getScreenHeight()
-  const reportA = updateScrolling(previewState, screenHeight)
+  const report = updateScrolling(previewState, screenHeight)
   const separator = getSeparator(previewState, screenWidth)
   const bottom = getPreviewBottom(previewState, screenWidth)
-  return `${reportA}${separator}${bottom}\n`
+  return `${report}${separator}${bottom}\n`
 }
 
 const getSeparator = function ({ report }, screenWidth) {
