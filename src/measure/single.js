@@ -12,7 +12,7 @@ import {
 } from '../process/runner.js'
 import { throwIfStopped } from '../stop/error.js'
 
-import { runStartEnd } from './start_end.js'
+import { runEvents } from './events.js'
 
 // Measure a single combination
 export const measureCombination = async function ({ index, ...args }) {
@@ -89,7 +89,7 @@ const handleErrorsAndMeasure = async function ({
     const returnValue = await Promise.race([
       onAbort,
       onTaskExit,
-      runStartEnd({ ...args, stopState }),
+      runEvents({ ...args, stopState }),
     ])
     throwIfStopped(stopState)
     return returnValue
