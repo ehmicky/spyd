@@ -1,5 +1,5 @@
 // List of columns, with their `stats.*` property
-export const STAT_COLUMNS = [
+export const STAT_NAMES = [
   'median',
   'mean',
   'min',

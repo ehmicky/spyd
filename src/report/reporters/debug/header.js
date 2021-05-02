@@ -26,17 +26,17 @@ export const getEmptyRowWidth = function (titles) {
 
 const getHeaderCells = function (stats, statColumns) {
   return statColumns
-    .map((name) => getHeaderCell(stats, name))
+    .map((statName) => getHeaderCell(stats, statName))
     .join(COLUMN_SEPARATOR)
 }
 
 // Retrieve a cell in the header row
-const getHeaderCell = function (stats, name) {
-  const columnWidth = getColumnWidth(stats, name)
-  const headerName = STAT_TITLES[name].padStart(columnWidth)
+const getHeaderCell = function (stats, statName) {
+  const columnWidth = getColumnWidth(stats, statName)
+  const headerName = STAT_TITLES[statName].padStart(columnWidth)
   return fieldColor(headerName)
 }
 
-export const getColumnWidth = function (stats, name) {
-  return stringWidth(getCell(stats, name))
+export const getColumnWidth = function (stats, statName) {
+  return stringWidth(getCell(stats, statName))
 }
