@@ -6,7 +6,7 @@ import { getCombinationName } from '../../utils/title.js'
 export const getRow = function ({ titles, stats }, columns, columnWidth) {
   const combinationName = getCombinationName(titles)
   const cells = getCells(stats, columns, columnWidth)
-  return `${combinationName}${NAME_RIGHT_PADDING}${cells}`
+  return `${combinationName}${FIRST_PADDING}${cells}`
 }
 
 // Retrieve a single row, except the row name
@@ -26,5 +26,5 @@ export const getStat = function (stats, column) {
 }
 
 // Padding between the name column and the second column
-export const NAME_RIGHT_PADDING_WIDTH = 2
-const NAME_RIGHT_PADDING = ' '.repeat(NAME_RIGHT_PADDING_WIDTH)
+export const FIRST_PADDING_WIDTH = 2
+const FIRST_PADDING = ' '.repeat(FIRST_PADDING_WIDTH)

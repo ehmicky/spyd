@@ -5,17 +5,17 @@ import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 import { getCombinationName } from '../../utils/title.js'
 
-import { NAME_RIGHT_PADDING_WIDTH } from './row.js'
+import { FIRST_PADDING_WIDTH } from './row.js'
 
 // Retrieve the header row
 export const getHeader = function ({ titles, stats }, columns, columnWidth) {
-  const emptyRowName = ' '.repeat(getEmptyRowWidth(titles))
+  const firstColumn = ' '.repeat(getFirstColumnWidth(titles))
   const headerCells = getHeaderCells(stats, columns, columnWidth)
-  return `${emptyRowName}${headerCells}`
+  return `${firstColumn}${headerCells}`
 }
 
-export const getEmptyRowWidth = function (titles) {
-  return stringWidth(getCombinationName(titles)) + NAME_RIGHT_PADDING_WIDTH
+export const getFirstColumnWidth = function (titles) {
+  return stringWidth(getCombinationName(titles)) + FIRST_PADDING_WIDTH
 }
 
 const getHeaderCells = function (stats, columns, columnWidth) {
