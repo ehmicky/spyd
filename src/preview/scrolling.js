@@ -6,6 +6,12 @@
 //    space.
 //  - If the screen height is not high enough to show the bottom bar, the report
 //    will be hidden and the bottom of the bottom bar will be partiall hidden.
+// `scrollTop` is adjusted when going beyond the upper|lower boundaries:
+//  - This ensures users does not need to scroll several times when the report
+//    size shrinks
+//  - This prevents jittering when the scrolling completely down and the report
+//    size shrinks
+// eslint-disable-next-line max-statements
 export const applyScrolling = function ({
   report,
   bottomBar,
@@ -15,14 +21,14 @@ export const applyScrolling = function ({
   const availableHeight = screenHeight - getNewlineIndexes(bottomBar).length
 
   if (availableHeight <= 0) {
-    return ''
+    return { report: '', scrollTop }
   }
 
   const newlineIndexes = getNewlineIndexes(report)
   const contentHeight = newlineIndexes.length
 
   if (contentHeight <= availableHeight) {
-    return report
+    return { report, scrollTop }
   }
 
   const scrollTopA = Math.max(
@@ -30,10 +36,11 @@ export const applyScrolling = function ({
     0,
   )
   const bottomIndex = scrollTopA + availableHeight - 1
-  return report.slice(
+  const reportA = report.slice(
     scrollTopA === 0 ? 0 : newlineIndexes[scrollTopA - 1] + 1,
     newlineIndexes[bottomIndex] + 1,
   )
+  return { report: reportA, scrollTop: scrollTopA }
 }
 
 // Uses imperative code for performance
