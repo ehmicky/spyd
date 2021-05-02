@@ -20,6 +20,7 @@ export const startCombinationPreview = async function (
   Object.assign(previewState, {
     combinationStart: now(),
     combinationEnd: undefined,
+    previewSamples: 0,
     index,
     combinationName,
     description: START_DESCRIPTION,
