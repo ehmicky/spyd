@@ -14,6 +14,7 @@ export const tokenizeSelector = function (rawSelector, propName) {
 // Split around whitespaces.
 const TOKEN_DELIMITER_REGEX = /\s+/gu
 
+// "not" can be prepended to selections to exclude instead of include.
 const usesNegation = function ([firstToken]) {
   return firstToken === NEGATION_SYMBOL
 }
@@ -28,8 +29,8 @@ const validateId = function (id, rawSelector, propName) {
   }
 }
 
-// We do not use exclamation marks nor tildes because they need to be escaped
-// in shells.
-// We do not use dashes because they are used in identifiers (which would
-// make it confusing) and in CLI flags.
+// We use a word instead of:
+//  - Exclamation mark or tilde because they need to be escaped in shells.
+//  - Dash because they are used in identifiers (which would make it confusing)
+//    and in CLI flags.
 const NEGATION_SYMBOL = 'not'
