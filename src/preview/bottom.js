@@ -9,7 +9,12 @@ export const BOTTOM_BAR_HEIGHT = 7
 export const getBottomBar = function (previewState, screenWidth) {
   const separator = getSeparator(previewState, screenWidth)
   const leftWidth = getLeftWidth(previewState)
-  const bottom = getPreviewBottom(previewState, { screenWidth, leftWidth })
+  const progressRow = getProgressRow(previewState, { screenWidth, leftWidth })
+  const bottom = getPreviewBottom(previewState, {
+    screenWidth,
+    leftWidth,
+    progressRow,
+  })
   return `${separator}${bottom}`
 }
 
@@ -37,21 +42,9 @@ const getLeftWidth = function ({ durationLeft, total }) {
 const LEFT_WIDTH_PADDING = 2
 
 const getPreviewBottom = function (
-  {
-    durationLeft,
-    percentage,
-    index,
-    total,
-    combinationName,
-    description,
-    actions,
-  },
-  { screenWidth, leftWidth },
+  { index, total, combinationName, description, actions },
+  { leftWidth, progressRow },
 ) {
-  const durationLeftA = durationLeft.padEnd(leftWidth)
-  const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
-  const progressRow = `${durationLeftA}${progressBar}`
-
   const counter = getCounter(index, total).padEnd(leftWidth)
   const descriptionA = getDescription(description, combinationName)
   const counterRow = `${counter}${combinationName}${descriptionA}`
@@ -60,10 +53,13 @@ const getPreviewBottom = function (
   return addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
 }
 
-// The `counter` is between `durationLeft` and `progressBar` so that there is
-// no empty space when `durationLeft` is unknown.
-const getCounter = function (index, total) {
-  return `(${index + 1}/${total})`
+const getProgressRow = function (
+  { durationLeft, percentage },
+  { screenWidth, leftWidth },
+) {
+  const durationLeftA = durationLeft.padEnd(leftWidth)
+  const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
+  return `${durationLeftA}${progressBar}`
 }
 
 const getProgressBar = function (durationLeft, percentage, screenWidth) {
@@ -79,6 +75,12 @@ const getProgressBar = function (durationLeft, percentage, screenWidth) {
 // Works with all terminals
 const FILL_CHAR = '\u2588'
 const VOID_CHAR = '\u2591'
+
+// The `counter` is between `durationLeft` and `progressBar` so that there is
+// no empty space when `durationLeft` is unknown.
+const getCounter = function (index, total) {
+  return `(${index + 1}/${total})`
+}
 
 const getDescription = function (description, combinationName) {
   if (description === '') {
