@@ -21,7 +21,10 @@ const report = function ({
   const combinationsB = addTitles(combinationsA)
 
   const tables = getTables(combinationsB, screenWidth)
-  const histograms = serializeHistograms(combinationsB, HISTOGRAM_OPTS)
+  const histograms = serializeHistograms(combinationsB, {
+    showStats: false,
+    screenWidth,
+  })
   const footer = prettifyValue(getFooter({ id, timestamp, systems }))
   return joinSections([...tables, ...histograms, footer])
 }
@@ -36,7 +39,5 @@ const getTable = function (combinations, columns) {
   const rows = combinations.map((combination) => getRow(combination, columns))
   return [header, ...rows].join('\n')
 }
-
-const HISTOGRAM_OPTS = { showStats: false }
 
 export const debug = { report }

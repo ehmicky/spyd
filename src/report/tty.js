@@ -46,11 +46,6 @@ export const isTtyOutput = function () {
 }
 
 // Retrieve terminal width, excluding the padding added to reporting
-export const getReportWidth = function () {
-  return getScreenWidth() - PADDING_SIZE * 2
-}
-
-// Retrieve terminal width, excluding the padding added to reporting
 export const getPaddedScreenWidth = function () {
   return Math.max(getScreenWidth() - PADDING_SIZE * 2, 1)
 }
