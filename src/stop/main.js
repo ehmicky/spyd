@@ -3,7 +3,7 @@ import { addAction } from '../preview/action.js'
 import { refreshPreview } from '../preview/update.js'
 import { createController } from '../utils/timeout.js'
 
-import { handleStop } from './handle.js'
+import { handleStop, STOP_ACTION } from './handle.js'
 import { removeDefaultHandlers, restoreDefaultHandlers } from './signals.js'
 
 // Allow users to stop measuring by using signals like SIGINT (CTRL-C).
@@ -20,7 +20,7 @@ export const addStopHandler = async function (previewState) {
   // eslint-disable-next-line fp/no-mutation
   stopState.onAbort = noUnhandledRejection(handleStop(stopState, previewState))
 
-  addAction(previewState, 'stop')
+  addAction(previewState, STOP_ACTION)
   await refreshPreview(previewState)
 
   return stopState

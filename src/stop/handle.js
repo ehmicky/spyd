@@ -23,17 +23,17 @@ export const handleStop = async function (stopState, previewState) {
 const afterStop = async function (stopState, previewState) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
-  removeAction(previewState, 'stop')
+  removeAction(previewState, STOP_ACTION.name)
   await updateDescription(previewState, STOP_DESCRIPTION)
 }
 
 const beforeAbort = async function (previewState) {
-  addAction(previewState, 'abort')
+  addAction(previewState, ABORT_ACTION)
   await updatePreview(previewState)
 }
 
 const afterAbort = async function (previewState) {
-  removeAction(previewState, 'abort')
+  removeAction(previewState, ABORT_ACTION.name)
   await updatePreview(previewState)
   throwAbortError()
 }
@@ -50,3 +50,6 @@ const waitForAbort = async function ({ cancelSignal }) {
 }
 
 const ABORT_DELAY = 5e3
+
+export const STOP_ACTION = { name: 'stop', key: 'Ctrl-C', explanation: 'Stop' }
+const ABORT_ACTION = { name: 'stop', key: 'Ctrl-C', explanation: 'Abort' }
