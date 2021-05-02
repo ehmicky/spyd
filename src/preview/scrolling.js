@@ -20,7 +20,7 @@ export const applyScrolling = function ({
   scrollTop,
   screenHeight,
 }) {
-  const availableHeight = screenHeight - getNewlineIndexes(bottomBar).length
+  const availableHeight = getAvailableHeight(screenHeight, bottomBar)
 
   if (availableHeight <= 0) {
     return { report: '', scrollTop: 0 }
@@ -43,6 +43,13 @@ export const applyScrolling = function ({
     newlineIndexes[bottomIndex] + 1,
   )
   return { report: reportA, scrollTop: scrollTopA }
+}
+
+// We need to subtract one due to the fast that the bottom bar is the last
+// element, i.e. its final newline not only terminates a line but also starts
+// a last empty row.
+const getAvailableHeight = function (screenHeight, bottomBar) {
+  return screenHeight - getNewlineIndexes(bottomBar).length - 1
 }
 
 // Uses imperative code for performance
