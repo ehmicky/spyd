@@ -31,10 +31,13 @@ export const startPreview = async function ({ quiet }) {
 //    including the duration that was left
 //  - This is unlike other errors, which clear it
 export const endPreview = async function ({ quiet }, error = {}) {
-  if (quiet || error.name === 'StopError') {
+  if (quiet) {
     return
   }
 
-  await clearScreen()
+  if (error.name !== 'StopError') {
+    await clearScreen()
+  }
+
   showCursor()
 }
