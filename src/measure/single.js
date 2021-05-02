@@ -84,13 +84,13 @@ export const spawnAndMeasure = async function ({
 //  - This ensures that all initializers and finalizers are always called
 //    and in order
 const handleErrorsAndMeasure = async function ({
-  stopState: { onAbort, ...stopState },
+  stopState,
   onTaskExit,
   ...args
 }) {
   try {
     const returnValue = await Promise.race([
-      onAbort,
+      stopState.onAbort,
       onTaskExit,
       runEvents({ ...args, stopState }),
     ])
