@@ -1,4 +1,4 @@
-import { PADDING_WIDTH, SEPARATOR_WIDTH } from '../../utils/separator.js'
+import { SEPARATOR_WIDTH } from '../../utils/separator.js'
 
 import { getEmptyRowWidth, getColumnWidth } from './header.js'
 import { NAME_RIGHT_PADDING_WIDTH } from './row.js'
@@ -29,7 +29,7 @@ const addColumn = function (
       }
     : {
         allColumns: [[column], ...allColumns],
-        remainingWidth: availableWidth - columnWidth - PADDING_WIDTH,
+        remainingWidth: availableWidth - columnWidth,
       }
 }
 
