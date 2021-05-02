@@ -12,26 +12,24 @@ import { tokenizeSelector } from './tokenize.js'
 // the same category use unions while identifiers of different categories use
 // intersection.
 // This also validates the syntax.
-export const parseSelect = function (rawSelectors, combinations) {
-  const propName = 'select'
-  const selectors = rawSelectors.map((rawSelector) =>
+export const parseSelectors = function (rawSelectors, propName, combinations) {
+  return rawSelectors.map((rawSelector) =>
     parseSelector(rawSelector, propName, combinations),
   )
-  return { selectors, inverse: false, rawSelectors, propName }
 }
 
-export const parseSelector = function (rawSelector, propName, combinations) {
-  const prefix = getPrefix({ rawSelectors: [rawSelector], propName })
+const parseSelector = function (rawSelector, propName, combinations) {
+  const prefix = getPrefix([rawSelector], propName)
+  const { ids, negation } = tokenizeSelector(rawSelector, prefix)
+  const intersect = groupByCategory(ids, combinations)
+  return { intersect, negation }
+}
 
-  const tokens = tokenizeSelector(rawSelector, prefix)
-
+const groupByCategory = function (ids, combinations) {
   const combinationsIds = getCombinationsIds(combinations)
-  const tokensA = tokens.map(({ id, inverse }) =>
-    addTokenCategory({ id, inverse, combinationsIds }),
-  )
-  const categories = getSelectorCategories(tokensA)
-  const intersect = categories.map((category) => getGroup(tokensA, category))
-  return { intersect }
+  const tokens = ids.map((id) => addTokenCategory(id, combinationsIds))
+  const categories = getCategories(tokens)
+  return categories.map((category) => getCategoryIds(tokens, category))
 }
 
 // Some `ids` might not be found in combinations. This is because they might:
@@ -41,13 +39,13 @@ export const parseSelector = function (rawSelector, propName, combinations) {
 // Also the `ids` might come from a shared configuration which might not
 // perfectly match the current benchmark's ids.
 // `ids` with unknown categories are grouped together and will never match.
-const addTokenCategory = function ({ id, inverse, combinationsIds }) {
+const addTokenCategory = function (id, combinationsIds) {
   const idInfoA = combinationsIds.find((idInfo) => idInfo.id === id)
   const category = idInfoA === undefined ? 'unknown' : idInfoA.category
-  return { id, inverse, category }
+  return { id, category }
 }
 
-const getSelectorCategories = function (tokens) {
+const getCategories = function (tokens) {
   const categories = tokens.map(getCategory)
   return [...new Set(categories)]
 }
@@ -62,39 +60,10 @@ const getCategory = function ({ category }) {
 // There is no strong reason why a user would want to mix invertion and
 // non-invertion for a specific category. However, we silently support it by
 // trying to reconcile both.
-const getGroup = function (tokens, category) {
-  const { normalIds, invertedIds } = getIdGroups(tokens, category)
-
-  if (normalIds.length !== 0) {
-    return { ids: normalIds, inverse: false }
-  }
-
-  if (invertedIds.length === 0) {
-    return { ids: [], inverse: false }
-  }
-
-  return { ids: invertedIds, inverse: true }
-}
-
-const getIdGroups = function (tokens, category) {
-  const tokensA = tokens.filter((token) => token.category === category)
-  const normalIds = tokensA.filter((token) => !hasInverse(token)).map(getId)
-  const invertedIds = tokensA.filter(hasInverse).map(getId)
-  const commonIds = new Set(normalIds.filter((id) => invertedIds.includes(id)))
-  const normalIdsA = normalIds.filter((id) => !commonIds.has(id))
-  const invertedIdsA = invertedIds.filter((id) => !commonIds.has(id))
-  return { normalIds: normalIdsA, invertedIds: invertedIdsA }
-}
-
-const hasInverse = function ({ inverse }) {
-  return inverse
+const getCategoryIds = function (tokens, category) {
+  return tokens.filter((token) => token.category === category).map(getId)
 }
 
 const getId = function ({ id }) {
   return id
-}
-
-// Retrieve selector which catches everything
-export const getCatchAllSelector = function () {
-  return { intersect: [] }
 }

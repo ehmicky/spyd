@@ -2,4 +2,4 @@ showPrecision: true
 inputs:
   one: 1
   two: 2
-# select: not slow uniform exponential growing
+select: not slow uniform exponential growing

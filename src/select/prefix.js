@@ -1,5 +1,5 @@
 // Serialize `select`, `limit` properties to include in error messages
-export const getPrefix = function ({ rawSelectors, propName }) {
+export const getPrefix = function (rawSelectors, propName) {
   const original = getOriginal(rawSelectors)
   return `The "${propName}" configuration property is invalid: ${original}\n`
 }

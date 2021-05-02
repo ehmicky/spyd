@@ -1,7 +1,7 @@
 import { UserError } from '../error/main.js'
 
-import { filterBySelectors } from './match.js'
-import { parseSelect } from './parse.js'
+import { matchSelectors } from './match.js'
+import { parseSelectors } from './parse.js'
 import { getPrefix } from './prefix.js'
 
 // Select combinations according to the `select` configuration properties.
@@ -28,29 +28,31 @@ export const selectResults = function (results, select) {
 }
 
 const selectResult = function ({ combinations, ...result }, select) {
-  const allSelectors = parseSelect(select, combinations)
-  const combinationsA = filterBySelectors(combinations, allSelectors)
+  const combinationsA = filterBySelectors(combinations, select)
   return { ...result, combinations: combinationsA }
 }
 
 export const selectCombinations = function (combinations, select) {
-  const allSelectors = parseSelect(select, combinations)
-  const combinationsA = strictSelection(combinations, allSelectors)
+  const combinationsA = filterBySelectors(combinations, select)
+  throwOnNoMatches(combinationsA, select)
   return combinationsA
+}
+
+const filterBySelectors = function (combinations, select) {
+  const selectors = parseSelectors(select, 'select', combinations)
+  return combinations.filter((combination) =>
+    matchSelectors(combination, selectors),
+  )
 }
 
 // When selecting combinations with `select`, at least one must match.
 // However, when filtering previous combinations, we silently ignore results
 // with no matching combinations instead.
-const strictSelection = function (combinations, allSelectors) {
-  const combinationsA = filterBySelectors(combinations, allSelectors)
-
-  if (combinationsA.length === 0) {
-    const prefix = getPrefix(allSelectors)
+const throwOnNoMatches = function (combinations, select) {
+  if (combinations.length === 0) {
+    const prefix = getPrefix(select, 'select')
     throw new UserError(`${prefix}No combinations match the selection.`)
   }
-
-  return combinationsA
 }
 
 const hasCombinations = function ({ combinations }) {

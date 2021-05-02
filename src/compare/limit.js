@@ -1,7 +1,7 @@
 import stripAnsi from 'strip-ansi'
 
 import { UserError } from '../error/main.js'
-import { matchSelector } from '../select/match.js'
+import { matchSelectors } from '../select/match.js'
 
 import { parseLimits } from './parse.js'
 
@@ -45,8 +45,8 @@ const checkCombinationLimits = function ({
   },
   limits,
 }) {
-  const limit = limits.find(({ selector }) =>
-    matchSelector(combination, selector),
+  const limit = limits.find(({ selectors }) =>
+    matchSelectors(combination, selectors),
   )
 
   if (limit === undefined) {

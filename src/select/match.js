@@ -2,35 +2,30 @@ import { getCombinationIds } from '../combination/ids.js'
 
 // Select combinations according to the `select` or `limit` configuration
 // properties
-export const filterBySelectors = function (combinations, allSelectors) {
-  return combinations.filter((combination) =>
-    matchSelectors(combination, allSelectors),
-  )
-}
-
-const matchSelectors = function (combination, { selectors, inverse }) {
+export const matchSelectors = function (combination, selectors) {
   if (selectors.length === 0) {
     return true
   }
 
-  const ids = getCombinationIds(combination)
-  const matches = selectors.some((selector) => matchIds(ids, selector))
-  return inverse ? !matches : matches
-}
+  const combinationIds = getCombinationIds(combination)
+  // eslint-disable-next-line fp/no-mutating-methods
+  const matchingSelector = selectors
+    .slice()
+    .reverse()
+    .find((selector) => matchIds(combinationIds, selector))
 
-export const matchSelector = function (combination, selector) {
-  const ids = getCombinationIds(combination)
-  return matchIds(ids, selector)
+  if (matchingSelector !== undefined) {
+    return !matchingSelector.negation
+  }
+
+  return selectors[0].negation
 }
 
 // Check if a selector matches the ids of a given combination
-const matchIds = function (ids, { intersect }) {
-  return intersect.every(({ ids: groupIds, inverse }) =>
-    matchGroup(ids, groupIds, inverse),
-  )
+const matchIds = function (combinationIds, { intersect }) {
+  return intersect.every((ids) => matchGroup(combinationIds, ids))
 }
 
-const matchGroup = function (ids, groupIds, inverse) {
-  const matches = groupIds.some((id) => ids.includes(id))
-  return inverse ? !matches : matches
+const matchGroup = function (combinationIds, ids) {
+  return ids.some((id) => combinationIds.includes(id))
 }

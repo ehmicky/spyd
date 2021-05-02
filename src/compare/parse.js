@@ -1,5 +1,5 @@
 import { UserError } from '../error/main.js'
-import { parseSelector, getCatchAllSelector } from '../select/parse.js'
+import { parseSelectors } from '../select/parse.js'
 
 // Parse the `limit` configuration property.
 // It is an array of strings "threshold selector" where "threshold" is
@@ -17,8 +17,8 @@ const parseLimit = function (singleLimit, combinations) {
     .trim()
     .split(PERCENT_SEPARATOR_REGEXP)
   const threshold = parsePercentage(rawPercentage)
-  const selector = parseLimitSelector(rawGroups, combinations)
-  return { threshold, selector }
+  const selectors = parseLimitSelectors(rawGroups, combinations)
+  return { threshold, selectors }
 }
 
 const PERCENT_SEPARATOR_REGEXP = /\s+/u
@@ -46,14 +46,10 @@ const parsePercentage = function (rawPercentage) {
 const PERCENTAGE_REGEXP = /%$/u
 const PERCENTAGE_RATIO = 1e2
 
-const parseLimitSelector = function (rawGroups, combinations) {
-  if (rawGroups.length === 0) {
-    return getCatchAllSelector()
-  }
-
+const parseLimitSelectors = function (rawGroups, combinations) {
   const rawSelector = rawGroups.join(' ')
-  const selector = parseSelector(rawSelector, 'limit', combinations)
-  return selector
+  const selectors = parseSelectors([rawSelector], 'limit', combinations)
+  return selectors
 }
 
 // Higher threshold are checked for matches first
