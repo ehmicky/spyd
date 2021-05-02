@@ -1,4 +1,3 @@
-import { DEFAULT_ACTIONS } from './action.js'
 import { EMPTY_DURATION_LEFT } from './completion.js'
 import { START_DESCRIPTION } from './description.js'
 
@@ -34,7 +33,7 @@ export const initPreview = function (
     total: combinationsA.length,
     combinationName: '',
     description: START_DESCRIPTION,
-    actions: DEFAULT_ACTIONS,
+    actions: {},
     scrollTop: 0,
     availableHeight: 0,
   }
