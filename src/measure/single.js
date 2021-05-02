@@ -5,33 +5,15 @@ import {
   spawnRunnerProcess,
   terminateRunnerProcess,
 } from '../process/runner.js'
+import { throwIfStopped } from '../stop/error.js'
 
-import { handleErrorsAndMeasure } from './handle.js'
+import { runStartEnd } from './start_end.js'
 
-export const logAndMeasure = async function ({
-  combination,
-  precisionTarget,
-  cwd,
-  previewState,
-  stopState,
-  stage,
-  server,
-  serverUrl,
-}) {
+export const logAndMeasure = async function (args) {
   const { logsPath, logsFd } = await startLogs()
 
   try {
-    return await logStreamAndMeasure({
-      combination,
-      precisionTarget,
-      cwd,
-      previewState,
-      stopState,
-      stage,
-      server,
-      serverUrl,
-      logsFd,
-    })
+    return await logStreamAndMeasure({ ...args, logsFd })
   } catch (error) {
     await addErrorTaskLogs(logsPath, error)
     throw error
@@ -40,32 +22,11 @@ export const logAndMeasure = async function ({
   }
 }
 
-const logStreamAndMeasure = async function ({
-  combination,
-  precisionTarget,
-  cwd,
-  previewState,
-  stopState,
-  stage,
-  server,
-  serverUrl,
-  logsFd,
-}) {
-  const logsStream = startLogsStream(logsFd)
+const logStreamAndMeasure = async function (args) {
+  const logsStream = startLogsStream(args.logsFd)
 
   try {
-    return await spawnAndMeasure({
-      combination,
-      precisionTarget,
-      cwd,
-      previewState,
-      stopState,
-      stage,
-      server,
-      serverUrl,
-      logsStream,
-      logsFd,
-    })
+    return await spawnAndMeasure({ ...args, logsStream })
   } finally {
     await stopLogsStream(logsStream)
   }
@@ -73,36 +34,56 @@ const logStreamAndMeasure = async function ({
 
 // Spawn combination processes, then measure them
 export const spawnAndMeasure = async function ({
-  combination,
-  precisionTarget,
   cwd,
-  previewState,
-  stopState,
-  stage,
-  server,
   serverUrl,
   logsStream,
-  logsFd,
+  ...args
 }) {
-  const { childProcess, onTaskExit } = await spawnRunnerProcess(combination, {
+  const { childProcess, onTaskExit } = await spawnRunnerProcess({
+    ...args,
     cwd,
-    server,
     serverUrl,
     logsStream,
   })
 
   try {
-    return await handleErrorsAndMeasure({
-      combination,
-      precisionTarget,
-      previewState,
-      stopState,
-      stage,
-      server,
-      onTaskExit,
-      logsFd,
-    })
+    return await handleErrorsAndMeasure({ ...args, onTaskExit })
   } finally {
     terminateRunnerProcess(childProcess)
   }
+}
+
+// Handle errors during measuring.
+// Asynchronous errors (SIGINT, child process exit):
+//  - Are listened to as soon as possible
+//  - However, they only throw once all other initializing logic has been
+//    performed
+//  - This ensures that all initializers and finalizers are always called
+//    and in order
+const handleErrorsAndMeasure = async function ({
+  stopState: { onAbort, ...stopState },
+  onTaskExit,
+  ...args
+}) {
+  try {
+    const returnValue = await Promise.race([
+      onAbort,
+      onTaskExit,
+      runStartEnd({ ...args, stopState }),
+    ])
+    throwIfStopped(stopState)
+    return returnValue
+  } catch (error) {
+    prependTaskPrefix(error, args.combination, args.stage)
+    throw error
+  }
+}
+
+const prependTaskPrefix = function (error, { taskId }, stage) {
+  if (stage === 'init' || error.name === 'StopError') {
+    return
+  }
+
+  const taskPrefix = `In task "${taskId}"`
+  error.message = `${taskPrefix}:\n${error.message}`
 }

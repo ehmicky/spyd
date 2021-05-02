@@ -30,10 +30,16 @@ import { spawnProcess } from './spawn.js'
 //  - `cleanup: true` to ensure processes are cleaned up in case this
 //    library is called programmatically and the caller terminates the parent
 //    process.
-export const spawnRunnerProcess = async function (
-  { runnerSpawn: [file, ...args], runnerSpawnOptions },
-  { cwd, server, serverUrl, logsStream },
-) {
+export const spawnRunnerProcess = async function ({
+  combination: {
+    runnerSpawn: [file, ...args],
+    runnerSpawnOptions,
+  },
+  cwd,
+  server,
+  serverUrl,
+  logsStream,
+}) {
   const childProcess = spawnProcess(
     [file, ...args, serverUrl],
     {
