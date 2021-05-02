@@ -6,30 +6,37 @@ import { STAT_TITLES } from '../../utils/stat_titles.js'
 import { getCombinationName } from '../../utils/title.js'
 
 import { getCell } from './cell.js'
-import { STAT_COLUMNS } from './column.js'
+import { NAME_RIGHT_PADDING } from './column.js'
 
 // Retrieve the header row
-export const getHeader = function ({ titles, stats }) {
+export const getHeader = function ({ titles, stats }, statColumns) {
   const emptyRowName = getEmptyRowName(titles)
-  const headerCells = getHeaderCells(stats)
-  return `${emptyRowName}  ${headerCells}`
+  const headerCells = getHeaderCells(stats, statColumns)
+  return `${emptyRowName}${NAME_RIGHT_PADDING}${headerCells}`
 }
 
 // Retrieve the spaces left instead of combination name in the header
 const getEmptyRowName = function (titles) {
-  const combinationName = getCombinationName(titles)
-  return ' '.repeat(stringWidth(combinationName))
+  return ' '.repeat(getEmptyRowWidth(titles))
 }
 
-const getHeaderCells = function (stats) {
-  return STAT_COLUMNS.map((name) => getHeaderCell(stats, name)).join(
-    COLUMN_SEPARATOR,
-  )
+export const getEmptyRowWidth = function (titles) {
+  return stringWidth(getCombinationName(titles))
+}
+
+const getHeaderCells = function (stats, statColumns) {
+  return statColumns
+    .map((name) => getHeaderCell(stats, name))
+    .join(COLUMN_SEPARATOR)
 }
 
 // Retrieve a cell in the header row
 const getHeaderCell = function (stats, name) {
-  const length = stringWidth(getCell(stats, name))
-  const headerName = STAT_TITLES[name].padStart(length)
+  const columnWidth = getColumnWidth(stats, name)
+  const headerName = STAT_TITLES[name].padStart(columnWidth)
   return fieldColor(headerName)
+}
+
+export const getColumnWidth = function (stats, name) {
+  return stringWidth(getCell(stats, name))
 }
