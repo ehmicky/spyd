@@ -9,29 +9,33 @@ export const getAllStatColumns = function ({ titles, stats }, screenWidth) {
   const { allStatColumns } = STAT_COLUMNS.reduce(
     (state, name) =>
       reduceAllStateColumns(state, { name, stats, availableWidth }),
-    { allStatColumns: [[]], widthLeft: availableWidth },
+    { allStatColumns: [[]], widthLeft: availableWidth, paddingWidth: 0 },
   )
   // eslint-disable-next-line fp/no-mutating-methods
   return allStatColumns.reverse()
 }
 
 const reduceAllStateColumns = function (
-  { allStatColumns: [statColumns, ...previousStatColumns], widthLeft },
+  {
+    allStatColumns: [statColumns, ...previousStatColumns],
+    widthLeft,
+    paddingWidth,
+  },
   { name, stats, availableWidth },
 ) {
-  const isFirstColumn = statColumns.length === 0
+  const widthLeftA = widthLeft - paddingWidth
   const columnWidth = getColumnWidth(stats, name)
 
-  return isFirstColumn || widthLeft >= columnWidth + SEPARATOR_WIDTH
+  return statColumns.length === 0 || widthLeftA >= columnWidth + SEPARATOR_WIDTH
     ? {
         allStatColumns: [[...statColumns, name], ...previousStatColumns],
-        widthLeft:
-          widthLeft -
-          columnWidth -
-          (isFirstColumn ? PADDING_WIDTH : SEPARATOR_WIDTH),
+        widthLeft: widthLeftA - columnWidth,
+        paddingWidth:
+          statColumns.length === 0 ? PADDING_WIDTH : SEPARATOR_WIDTH,
       }
     : {
         allStatColumns: [[name], statColumns, ...previousStatColumns],
-        widthLeft: availableWidth - columnWidth - PADDING_WIDTH,
+        widthLeft: availableWidth - columnWidth,
+        paddingWidth: PADDING_WIDTH,
       }
 }
