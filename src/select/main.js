@@ -5,12 +5,13 @@ import { parseSelectors } from './parse.js'
 import { getPrefix } from './prefix.js'
 
 // Select combinations according to the `select` configuration properties.
-// `select` defaults to including everything. This applies to when it is either
-// `undefined` or an empty array. Making an empty array including nothing would
-// be more consistent. However, there is little use for it and it most likely
-// mean the user intent was to select everything.
-// Selection can be meant to filter which combination is being either measured,
-// or reported
+// `select` defaults to including everything.
+///  - This applies to when it is either `undefined` or an empty array.
+//   - Making an empty array include nothing would be more consistent.
+//     However, there is little use for it and it most likely mean the user
+//     intent was to select everything.
+// Selection could be meant to select combination either for measuring or
+// reporting:
 //  - In the `show` and `remove` commands, only reporting is happening
 //  - However, in the `bench` command, we both measure and report.
 //  - We purposely do not provide separate configuration properties for both

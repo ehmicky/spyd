@@ -5,13 +5,12 @@ import { tokenizeSelector } from './tokenize.js'
 
 // Parse `select`, `limit` user-friendly format (array of strings) to a
 // code-friendlier format (objects).
-// Users specify a list of identifiers, some inverted.
+// Users specify a list of identifiers.
 // They do not specify the identifier's category, since we can guess this, in
 // order to simplify the syntax.
 // However, we do need to group identifiers by category since identifiers of
 // the same category use unions while identifiers of different categories use
 // intersection.
-// This also validates the syntax.
 export const parseSelectors = function (rawSelectors, propName, combinations) {
   return rawSelectors.map((rawSelector) =>
     parseSelector(rawSelector, propName, combinations),
