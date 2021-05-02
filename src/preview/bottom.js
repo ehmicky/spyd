@@ -36,17 +36,17 @@ const getPreviewBottom = function (
   screenWidth,
 ) {
   const leftWidth = getLeftWidth(durationLeft, total)
+
   const durationLeftA = durationLeft.padEnd(leftWidth)
   const progressBar = getProgressBar(durationLeftA, percentage, screenWidth)
+  const progressRow = `${durationLeftA}${progressBar}`
+
   const counter = getCounter(index, total).padEnd(leftWidth)
   const descriptionA = getDescription(description, combinationName)
+  const counterRow = `${counter}${combinationName}${descriptionA}`
+
   const actionsA = getActions(actions, leftWidth)
-
-  return addPadding(`${durationLeftA}${progressBar}
-
-${counter}${combinationName}${descriptionA}
-
-${actionsA}`)
+  return addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
 }
 
 const getLeftWidth = function (durationLeft, total) {
