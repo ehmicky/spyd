@@ -36,7 +36,7 @@ export const DEFAULT_CONFIG = {
   output: undefined,
   showTitles: false,
   showPrecision: false,
-  include: [],
+  select: [],
   exclude: [],
   runner: ['node'],
   reporter: ['debug'],

@@ -4,15 +4,4 @@
 // remove aliases after flags parsing.
 // In order not to remove unknown aliases, so they can be validated, we need to
 // keep a list of them.
-export const ALIASES = new Set([
-  'c',
-  'e',
-  'l',
-  'n',
-  'o',
-  'p',
-  'q',
-  'r',
-  's',
-  'x',
-])
+export const ALIASES = new Set(['c', 'e', 'l', 'o', 'p', 'q', 'r', 's', 'x'])

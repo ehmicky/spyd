@@ -6,11 +6,11 @@ import { migrateResults } from './migrate.js'
 import { sortResults } from './sort.js'
 
 // Normalize results on load
-export const loadResults = function ({ results, include, exclude }) {
+export const loadResults = function ({ results, select, exclude }) {
   const resultsA = migrateResults(results)
   const resultsB = decompressResults(resultsA)
   const resultsC = sortResults(resultsB)
-  const resultsD = selectResults(resultsC, { include, exclude })
+  const resultsD = selectResults(resultsC, { select, exclude })
   const resultsE = groupCombinations(resultsD)
   return resultsE
 }

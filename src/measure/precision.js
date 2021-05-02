@@ -20,7 +20,7 @@ import { UserError } from '../error/main.js'
 //  - This makes each combination results independent from each other
 //     - Adding/removing combinations should not change the duration/results of
 //       others
-//        - This includes using the `include|exclude` configuration properties
+//        - This includes using the `select|exclude` configuration properties
 //     - Note: if a `duration` was used instead, this could also be solved by
 //       making it combination-specific
 // We only optimize the `rmoe` of the current combination in the current run.

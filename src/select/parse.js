@@ -3,7 +3,7 @@ import { getCombinationsIds } from '../combination/ids.js'
 import { getPrefix } from './prefix.js'
 import { tokenizeSelector } from './tokenize.js'
 
-// Parse `include`, `exclude`, `limit` user-friendly format (array of strings)
+// Parse `select`, `exclude`, `limit` user-friendly format (array of strings)
 // to a code-friendlier format (objects)
 // Users specify a list of identifiers, some inverted.
 // They do not specify the identifier's category, since we can guess this, in
@@ -12,14 +12,10 @@ import { tokenizeSelector } from './tokenize.js'
 // the same category use unions while identifiers of different categories use
 // intersection.
 // This also validates the syntax.
-export const parseIncludeExclude = function ({
-  include,
-  exclude,
-  combinations,
-}) {
-  const includeSelectors = parseSelectors(include, 'include', combinations)
+export const parseSelectExclude = function ({ select, exclude, combinations }) {
+  const selectSelectors = parseSelectors(select, 'select', combinations)
   const excludeSelectors = parseSelectors(exclude, 'exclude', combinations)
-  return { includeSelectors, excludeSelectors }
+  return { selectSelectors, excludeSelectors }
 }
 
 const parseSelectors = function (rawSelectors, propName, combinations) {

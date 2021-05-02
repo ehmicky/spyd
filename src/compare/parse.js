@@ -4,7 +4,7 @@ import { parseSelector, getCatchAllSelector } from '../select/parse.js'
 // Parse the `limit` configuration property.
 // It is an array of strings "threshold selector" where "threshold" is
 // something like "15%" and "selector" follows the same format as each
-// individual string in the `include` configuration property.
+// individual string in the `select` configuration property.
 export const parseLimits = function (limit, combinations) {
   // eslint-disable-next-line fp/no-mutating-methods
   return limit

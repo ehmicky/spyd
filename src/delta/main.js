@@ -6,7 +6,7 @@ import { FORMATS, findFormat } from './formats/main.js'
 
 // Several configuration properties targets a previous results using a delta,
 // which can an integer, date/time, result.id or git commit.
-// Previous results are always first filtered by `include`/`exclude`.
+// Previous results are always first filtered by `select|exclude`.
 // This validates and normalizes it to a `deltaQuery` object.
 export const normalizeDelta = function (delta, name, envInfo) {
   if (delta === '') {

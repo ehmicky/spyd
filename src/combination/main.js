@@ -12,7 +12,7 @@ export const getCombinations = async function ({
   runners,
   inputs,
   systemId,
-  include,
+  select,
   exclude,
   cwd,
 }) {
@@ -28,6 +28,6 @@ export const getCombinations = async function ({
   })
   validateCombinationsIds(combinations, inputsA)
 
-  const combinationsA = selectCombinations(combinations, { include, exclude })
+  const combinationsA = selectCombinations(combinations, { select, exclude })
   return { combinations: combinationsA, systemVersions }
 }

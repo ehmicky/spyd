@@ -61,7 +61,7 @@ const EXAMPLE_CONFIG = {
   showDiff: false,
   showSystem: true,
   showMetadata: true,
-  include: optionalArray('task_id'),
+  select: optionalArray('task_id'),
   exclude: optionalArray('task_id'),
   delta: VALID_DELTA,
   since: VALID_DELTA,

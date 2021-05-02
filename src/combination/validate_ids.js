@@ -50,7 +50,7 @@ const USER_ID_REGEXP = /^\w[\w-]*$/u
 // category but across combination categories.
 // This allows specifying identifiers without specifying their combination
 // category (task, systems, runners, variations) in many places including:
-// `config.titles`, `config.include|exclude`, reporting.
+// `config.titles`, `config.select|exclude`, reporting.
 // Non-combination identifiers are not checked for duplicates since they are
 // not used for selection, reporting, `config.titles`, etc.
 const validateDuplicateId = function ({ category, id }, index, allIds) {

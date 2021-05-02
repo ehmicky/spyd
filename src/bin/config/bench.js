@@ -26,7 +26,6 @@ Default: false if the terminal is interactive.`,
   },
   save: {
     group: HISTORY,
-    alias: 's',
     boolean: true,
     describe: `Save the results.
 Default: false`,
@@ -39,7 +38,7 @@ Default: false`,
     describe: `Report when the average duration has increased by more than a
 specific percentage such as "50%".
 The limit can be scoped to specific combinations by appending their identifiers
-after the percentage. The syntax is the same as the "include" configuration
+after the percentage. The syntax is the same as the "select" configuration
 property. For example "50% taskOne node" applies only to taskOne when the
 runner is node.
 Several limits can be specified at once.`,

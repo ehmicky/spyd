@@ -1,5 +1,5 @@
-// Serialize `include`, `exclude`, `limit` properties to include in
-// error messages
+// Serialize `select`, `exclude`, `limit` properties to include in error
+// messages
 export const getPrefix = function ({ rawSelectors, propName }) {
   const original = getOriginal(rawSelectors)
   return `The "${propName}" configuration property is invalid: ${original}\n`
