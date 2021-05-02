@@ -13,6 +13,8 @@ export const startHandleResize = function (previewState) {
 
 export const stopHandleResize = function (previewState) {
   process.off('SIGWINCH', previewState.handleResize)
+  // eslint-disable-next-line fp/no-delete, no-param-reassign
+  delete previewState.handleResize
 }
 
 const handleResize = function (previewState) {
