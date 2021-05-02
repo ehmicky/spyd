@@ -25,10 +25,13 @@ export const applyScrolling = function ({
     return report
   }
 
-  const topIndex = Math.min(scrollTop, contentHeight - availableHeight)
-  const bottomIndex = topIndex + availableHeight - 1
+  const scrollTopA = Math.max(
+    Math.min(scrollTop, contentHeight - availableHeight),
+    0,
+  )
+  const bottomIndex = scrollTopA + availableHeight - 1
   return report.slice(
-    topIndex === 0 ? 0 : newlineIndexes[topIndex - 1] + 1,
+    scrollTopA === 0 ? 0 : newlineIndexes[scrollTopA - 1] + 1,
     newlineIndexes[bottomIndex] + 1,
   )
 }
