@@ -1,5 +1,4 @@
 import { BOTTOM_BAR_HEIGHT } from './bottom.js'
-import { addScrollAction } from './scrolling_action.js'
 
 // When content is taller than the terminal height, allow user to scroll with
 // up/down. We do this by keeping tracking of `scrollTop` and truncating the
@@ -24,8 +23,7 @@ export const updateScrolling = function (previewState, screenHeight) {
   )
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, { scrollTop, availableHeight })
-  addScrollAction(previewState, scrollTop, maxScrollTop)
-  return report
+  return { report, maxScrollTop }
 }
 
 // We need to subtract one due to the fast that the bottom bar is the last

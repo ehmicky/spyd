@@ -1,11 +1,11 @@
 import { addAction, removeAction } from './action.js'
 
 // Add/remove action in to the bottom bar indicating whether the user can scroll
-export const addScrollAction = function (
+export const addScrollAction = function ({
   previewState,
-  scrollTop,
+  previewState: { scrollTop },
   maxScrollTop,
-) {
+}) {
   const canScrollUp = scrollTop !== 0
   const canScrollDown = scrollTop !== maxScrollTop
 
