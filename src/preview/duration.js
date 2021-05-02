@@ -91,7 +91,7 @@ const smoothCombinationEnd = function ({
   previewSamples,
   samplesTarget,
 }) {
-  if (previousCombinationEnd === undefined) {
+  if (previewSamples === 0 || samplesTarget === 0) {
     return combinationEnd
   }
 
@@ -124,7 +124,7 @@ const smoothCombinationEnd = function ({
 //     - We track this by incrementing `previewSamples` to excluded non-preview
 //       samples
 const getSmoothRatio = function (previewSamples, samplesTarget) {
-  const samplesToEdge = Math.min(previewSamples + 1, samplesTarget)
+  const samplesToEdge = Math.min(previewSamples, samplesTarget)
   const smoothSamples = samplesToEdge * ADJUSTED_SMOOTH_PERIOD
   return SMOOTH_CLOSENESS ** (1 / smoothSamples)
 }
