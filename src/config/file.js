@@ -8,7 +8,7 @@ import { addConfigExtend } from './extend.js'
 import { resolveConfigPaths } from './resolve.js'
 import { validateConfig } from './validate.js'
 
-// Load CLI programmatic flags
+// Load CLI and programmatic flags
 export const getConfigNonFile = function (configFlags, processCwd) {
   validateConfig(configFlags)
   return resolveConfigPaths(configFlags, processCwd)
