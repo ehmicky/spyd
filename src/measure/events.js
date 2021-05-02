@@ -13,7 +13,7 @@ import { getMinLoopDuration } from './min_loop_duration.js'
 // completed.
 export const runEvents = async function ({ combination, ...args }) {
   const taskIds = await startCombination(combination, args.server)
-  const stats = await eRunMainEvents(args)
+  const stats = await runMainEvents(args)
   await endCombination(args.server)
   return { stats, taskIds }
 }
@@ -32,25 +32,21 @@ const startCombination = async function (
   return taskIds
 }
 
-const eRunMainEvents = async function (args) {
-  try {
-    return await runMainEvents(args)
-  } catch (error) {
-    await silentEndCombination(args.server)
-    throw error
-  }
-}
-
 // Run user-defined logic: `before`, `main`, `after`
 const runMainEvents = async function (args) {
   if (args.stage === 'init') {
     return
   }
 
-  await beforeCombination(args.server)
-  const stats = await getCombinationStats(args)
-  await afterCombination(args)
-  return stats
+  try {
+    await beforeCombination(args.server)
+    const stats = await getCombinationStats(args)
+    await afterCombination(args)
+    return stats
+  } catch (error) {
+    await silentEndCombination(args.server)
+    throw error
+  }
 }
 
 // Run the user-defined `before` hooks
