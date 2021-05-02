@@ -3,15 +3,15 @@ import stringWidth from 'string-width'
 import { SEPARATOR_WIDTH } from '../../utils/separator.js'
 
 import { getEmptyRowWidth, getHeaderName } from './header.js'
-import { NAME_RIGHT_PADDING_WIDTH } from './row.js'
+import { NAME_RIGHT_PADDING_WIDTH, getStat } from './row.js'
 
 // Each column is padded to the same width, so that they align vertically
 export const getColumnWidth = function ({ stats }) {
-  return Math.max(...COLUMNS.map((column) => getColumnSize(stats, column)))
+  return Math.max(...COLUMNS.map((column) => getStatColumnWidth(stats, column)))
 }
 
-const getColumnSize = function (stats, column) {
-  const statLength = stringWidth(stats[`${column}Padded`])
+const getStatColumnWidth = function (stats, column) {
+  const statLength = stringWidth(getStat(stats, column))
   const headerLength = getHeaderName(column).length
   return Math.max(statLength, headerLength)
 }

@@ -18,7 +18,11 @@ const getCells = function (stats, columns, columnWidth) {
 
 // Retrieve a single cell in the table, with a specific stat
 const getCell = function (stats, column, columnWidth) {
-  return padStart(stats[`${column}Padded`], columnWidth)
+  return padStart(getStat(stats, column), columnWidth)
+}
+
+export const getStat = function (stats, column) {
+  return stats[`${column}Padded`]
 }
 
 // Padding between the name column and the second column
