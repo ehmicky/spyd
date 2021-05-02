@@ -4,6 +4,8 @@ import { promisify } from 'util'
 
 import isInteractive from 'is-interactive'
 
+import { PADDING_SIZE } from './utils/indent.js'
+
 const pCursorTo = promisify(cursorTo)
 const pClearScreenDown = promisify(clearScreenDown)
 
@@ -45,10 +47,17 @@ export const isTtyOutput = function () {
 
 // Retrieve terminal width, excluding the padding added to reporting
 export const getReportWidth = function () {
-  return getScreenWidth() - REPORT_PADDING
+  return getScreenWidth() - PADDING_SIZE * 2
 }
 
-const REPORT_PADDING = 2
+// Retrieve terminal width, excluding the padding added to reporting
+export const getPaddedScreenWidth = function () {
+  return Math.min(getScreenWidth() - PADDING_SIZE * 2, 1)
+}
+
+export const getPaddedScreenHeight = function () {
+  return Math.min(getScreenHeight() - PADDING_SIZE * 2, 1)
+}
 
 // Retrieve terminal width and height
 export const getScreenWidth = function () {
