@@ -28,12 +28,12 @@ const report = function ({
 
 const getTables = function (combinations, screenWidth) {
   const allColumns = getAllColumns(combinations[0], screenWidth)
-  return allColumns.map((statNames) => getTable(combinations, statNames))
+  return allColumns.map((columns) => getTable(combinations, columns))
 }
 
-const getTable = function (combinations, statNames) {
-  const header = getHeader(combinations[0], statNames)
-  const rows = combinations.map((combination) => getRow(combination, statNames))
+const getTable = function (combinations, columns) {
+  const header = getHeader(combinations[0], columns)
+  const rows = combinations.map((combination) => getRow(combination, columns))
   return [header, ...rows].join('\n')
 }
 

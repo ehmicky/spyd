@@ -8,9 +8,9 @@ import { getCombinationName } from '../../utils/title.js'
 import { NAME_RIGHT_PADDING, getCell } from './row.js'
 
 // Retrieve the header row
-export const getHeader = function ({ titles, stats }, statNames) {
+export const getHeader = function ({ titles, stats }, columns) {
   const emptyRowName = getEmptyRowName(titles)
-  const headerCells = getHeaderCells(stats, statNames)
+  const headerCells = getHeaderCells(stats, columns)
   return `${emptyRowName}${NAME_RIGHT_PADDING}${headerCells}`
 }
 
@@ -23,19 +23,19 @@ export const getEmptyRowWidth = function (titles) {
   return stringWidth(getCombinationName(titles))
 }
 
-const getHeaderCells = function (stats, statNames) {
-  return statNames
-    .map((statName) => getHeaderCell(stats, statName))
+const getHeaderCells = function (stats, columns) {
+  return columns
+    .map((column) => getHeaderCell(stats, column))
     .join(COLUMN_SEPARATOR)
 }
 
 // Retrieve a cell in the header row
-const getHeaderCell = function (stats, statName) {
-  const columnWidth = getColumnWidth(stats, statName)
-  const headerName = STAT_TITLES[statName].padStart(columnWidth)
+const getHeaderCell = function (stats, column) {
+  const columnWidth = getColumnWidth(stats, column)
+  const headerName = STAT_TITLES[column].padStart(columnWidth)
   return fieldColor(headerName)
 }
 
-export const getColumnWidth = function (stats, statName) {
-  return stringWidth(getCell(stats, statName))
+export const getColumnWidth = function (stats, column) {
+  return stringWidth(getCell(stats, column))
 }
