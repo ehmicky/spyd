@@ -1,3 +1,4 @@
+import { addAction, removeAction } from './action.js'
 import { BOTTOM_BAR_HEIGHT } from './bottom.js'
 
 // When content is taller than the terminal height, allow user to scroll with
@@ -16,12 +17,13 @@ import { BOTTOM_BAR_HEIGHT } from './bottom.js'
 // We do not take into account that one line might take several terminal rows
 // due to wrapping because this makes scrolling faster when lines are long.
 export const updateScrolling = function (previewState, screenHeight) {
-  const { report, scrollAction, scrollTop, availableHeight } = applyScrolling(
+  const { report, scrollTop, maxScrollTop, availableHeight } = applyScrolling(
     previewState,
     screenHeight,
   )
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, { scrollTop, availableHeight })
+  addScrollAction(previewState, scrollTop, maxScrollTop)
   return report
 }
 
@@ -29,14 +31,14 @@ const applyScrolling = function ({ report, scrollTop }, screenHeight) {
   const availableHeight = getAvailableHeight(screenHeight)
 
   if (availableHeight <= 0 || report === undefined) {
-    return { report: '', scrollAction: {}, scrollTop: 0, availableHeight }
+    return { report: '', scrollTop: 0, maxScrollTop: 0, availableHeight }
   }
 
   const newlineIndexes = getNewlineIndexes(report)
   const contentHeight = newlineIndexes.length
 
   if (contentHeight <= availableHeight) {
-    return { report, scrollAction: {}, scrollTop: 0, availableHeight }
+    return { report, scrollTop: 0, maxScrollTop: 0, availableHeight }
   }
 
   const maxScrollTop = contentHeight - availableHeight
@@ -46,11 +48,10 @@ const applyScrolling = function ({ report, scrollTop }, screenHeight) {
     scrollTopA === 0 ? 0 : newlineIndexes[scrollTopA - 1] + 1,
     newlineIndexes[bottomIndex] + 1,
   )
-  const scrollAction = getScrollAction(scrollTopA, maxScrollTop)
   return {
     report: reportA,
-    scrollAction,
     scrollTop: scrollTopA,
+    maxScrollTop,
     availableHeight,
   }
 }
@@ -78,11 +79,22 @@ const getNewlineIndexes = function (previewContent) {
   return newlineIndexes
 }
 
-const getScrollAction = function (scrollTop, maxScrollTop) {
+const addScrollAction = function (previewState, scrollTop, maxScrollTop) {
+  const canScrollUp = scrollTop !== 0
   const canScrollDown = scrollTop !== maxScrollTop
 
-  if (scrollTop === 0) {
-    return canScrollDown ? SCROLL_DOWN_ACTION : {}
+  if (!canScrollUp && !canScrollDown) {
+    removeAction(previewState, SCROLL_ACTION.name)
+    return
+  }
+
+  const action = getScrollAction(canScrollUp, canScrollDown)
+  addAction(previewState, action)
+}
+
+const getScrollAction = function (canScrollUp, canScrollDown) {
+  if (!canScrollUp) {
+    return SCROLL_DOWN_ACTION
   }
 
   return canScrollDown ? SCROLL_ACTION : SCROLL_UP_ACTION
