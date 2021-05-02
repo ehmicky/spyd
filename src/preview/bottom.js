@@ -3,10 +3,6 @@ import { addPadding, PADDING_SIZE } from '../report/utils/indent.js'
 
 import { wrapRows } from './wrap.js'
 
-// At the moment, this is static, but this might need to become dynamic in the
-// future. This includes the separator and padding.
-export const BOTTOM_BAR_HEIGHT = 7
-
 // Retrieve bottom bar of preview
 export const getBottomBar = function (previewState, screenWidth) {
   const leftWidth = getLeftWidth(previewState)

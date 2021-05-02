@@ -1,5 +1,3 @@
-import { BOTTOM_BAR_HEIGHT } from './bottom.js'
-
 // When content is taller than the terminal height, allow user to scroll with
 // up/down. We do this by keeping tracking of `scrollTop` and truncating the
 // content to print on the terminal.
@@ -13,8 +11,12 @@ import { BOTTOM_BAR_HEIGHT } from './bottom.js'
 //    size shrinks
 //  - This prevents jittering when the scrolling completely down and the report
 //    size shrinks
-export const updateScrolling = function (previewState, screenHeight) {
-  const availableHeight = getAvailableHeight(screenHeight)
+export const updateScrolling = function (
+  previewState,
+  screenHeight,
+  bottomBar,
+) {
+  const availableHeight = getAvailableHeight(screenHeight, bottomBar)
   const { report, scrollTop, maxScrollTop } = applyScrolling(
     previewState,
     availableHeight,
@@ -27,8 +29,9 @@ export const updateScrolling = function (previewState, screenHeight) {
 // We need to subtract one due to the fast that the bottom bar is the last
 // element, i.e. its final newline not only terminates a line but also starts
 // a last empty row.
-const getAvailableHeight = function (screenHeight) {
-  return Math.max(screenHeight - BOTTOM_BAR_HEIGHT - 1, 0)
+const getAvailableHeight = function (screenHeight, bottomBar) {
+  const bottomBarHeight = getNewlineIndexes(bottomBar).length
+  return Math.max(screenHeight - bottomBarHeight - 1, 0)
 }
 
 const applyScrolling = function ({ report = '', scrollTop }, availableHeight) {

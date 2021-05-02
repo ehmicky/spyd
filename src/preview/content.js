@@ -13,7 +13,11 @@ export const getPreviewContent = function (previewState) {
   const screenHeight = getScreenHeight()
   addInitialScrollAction(previewState)
   const bottomBar = getBottomBar(previewState, screenWidth)
-  const { report, maxScrollTop } = updateScrolling(previewState, screenHeight)
+  const { report, maxScrollTop } = updateScrolling(
+    previewState,
+    screenHeight,
+    bottomBar,
+  )
   addScrollAction({ previewState, maxScrollTop })
   return `${report}${bottomBar}`
 }
