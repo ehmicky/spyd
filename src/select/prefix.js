@@ -1,10 +1,13 @@
-// Serialize `select`, `limit` properties to include in error messages
-export const getPrefix = function (rawSelectors, propName) {
-  const original = getOriginal(rawSelectors)
-  return `The "${propName}" configuration property is invalid: ${original}\n`
+import { UserError } from '../error/main.js'
+
+// Validation error of `select`, `limit` properties
+export const throwValidationError = function (message, rawSelectors, propName) {
+  const rawSelectorsStr = serializeRawSelectors(rawSelectors)
+  throw new UserError(`The "${propName}" configuration property is invalid: ${rawSelectorsStr}
+${message}`)
 }
 
-const getOriginal = function (rawSelectors) {
+const serializeRawSelectors = function (rawSelectors) {
   if (rawSelectors.length === 0) {
     return '[]'
   }

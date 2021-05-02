@@ -1,8 +1,6 @@
-import { UserError } from '../error/main.js'
-
 import { matchSelectors } from './match.js'
 import { parseSelectors } from './parse.js'
-import { getPrefix } from './prefix.js'
+import { throwValidationError } from './prefix.js'
 
 // Select combinations according to the `select` configuration properties.
 // `select` defaults to including everything.
@@ -51,8 +49,11 @@ const filterBySelectors = function (combinations, select) {
 // with no matching combinations instead.
 const throwOnNoMatches = function (combinations, select) {
   if (combinations.length === 0) {
-    const prefix = getPrefix(select, 'select')
-    throw new UserError(`${prefix}No combinations match the selection.`)
+    throwValidationError(
+      'No combinations match the selection.',
+      select,
+      'select',
+    )
   }
 }
 
