@@ -6,7 +6,7 @@ import { getHeaderName } from './header.js'
 import { getFirstCellWidth, getStat } from './row.js'
 
 // Each column is padded to the same width, so that they align vertically
-export const getColumnWidth = function ({ stats }) {
+export const getColumnWidth = function ([{ stats }]) {
   return Math.max(...COLUMNS.map((column) => getStatColumnWidth(stats, column)))
 }
 
@@ -17,7 +17,7 @@ const getStatColumnWidth = function (stats, column) {
 }
 
 // Group all column names into several tables so they fit the screen width
-export const getAllColumns = function ({ titles }, screenWidth, columnWidth) {
+export const getAllColumns = function ([{ titles }], screenWidth, columnWidth) {
   const availableWidth = screenWidth - getFirstCellWidth(titles)
   const { allColumns } = COLUMNS.reduce(
     addColumn.bind(undefined, { availableWidth, columnWidth }),

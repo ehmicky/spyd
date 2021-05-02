@@ -30,8 +30,8 @@ const report = function ({
 }
 
 const getTables = function (combinations, screenWidth) {
-  const columnWidth = getColumnWidth(combinations[0])
-  const allColumns = getAllColumns(combinations[0], screenWidth, columnWidth)
+  const columnWidth = getColumnWidth(combinations)
+  const allColumns = getAllColumns(combinations, screenWidth, columnWidth)
   return allColumns.map((columns) =>
     getTable(combinations, columns, columnWidth),
   )
