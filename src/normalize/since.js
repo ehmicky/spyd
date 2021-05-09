@@ -25,6 +25,11 @@ import { mergeSystems } from '../system/merge.js'
 //    result)
 // Previous results are filtered by `select`. This purposely impacts the
 // resolution of `since`.
+export const applySince = async function (previous, { since, cwd }) {
+  const sinceIndex = await findByDelta(previous, since, cwd)
+  return sinceIndex === -1 ? [] : previous.slice(sinceIndex)
+}
+
 // Several configuration properties can be used to change the sets of
 // combinations being measured: `select`, `tasks`, `runner`, `inputs`, `system`.
 //  - This can also be used for incremental benchmarks.
@@ -47,15 +52,9 @@ import { mergeSystems } from '../system/merge.js'
 //    the `since` configuration property
 //     - Including when comparing different systems
 // If `previous` is empty due to the `since` property, this is noop.
-export const applySince = async function (result, previous, { since, cwd }) {
-  const sinceIndex = await findByDelta(previous, since, cwd)
-
-  if (sinceIndex === -1) {
-    return result
-  }
-
+export const mergeLastCombinations = function (result, previous) {
   // eslint-disable-next-line fp/no-mutating-methods
-  return previous.slice(sinceIndex).reverse().reduce(mergePair, result)
+  return [...previous].reverse().reduce(mergePair, result)
 }
 
 const mergePair = function (result, previousResult) {

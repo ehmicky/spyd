@@ -6,7 +6,7 @@ import { UserError } from '../error/main.js'
 import { compressResult } from '../normalize/compress.js'
 import { loadResults } from '../normalize/load.js'
 import { mergeResults } from '../normalize/merge.js'
-import { applySince } from '../normalize/since.js'
+import { applySince, mergeLastCombinations } from '../normalize/since.js'
 import { isTtyInput } from '../report/tty.js'
 
 import { addResult, removeResult, listResults } from './results.js'
@@ -42,14 +42,21 @@ const shouldRemoveFromHistory = async function (force) {
   return confirmed
 }
 
+export const listHistory = async function (config) {
+  const previous = await listLoadedResults(config)
+  const history = await applySince(previous, config)
+  return { previous, history }
+}
+
 // Get a previous result by `count` or `timestamp`
 // We try to apply `since` as soon as possible so user errors with that
 // configuration property fail early.
 export const getFromHistory = async function (config) {
-  const results = await listHistory(config)
+  const results = await listLoadedResults(config)
   const { result, previous } = await listResultsByDelta(results, config)
-  const resultA = await applySince(result, previous, config)
-  const resultB = mergeResults(resultA, previous)
+  const history = await applySince(previous, config)
+  const resultA = mergeLastCombinations(result, previous)
+  const resultB = mergeResults(resultA, previous, history)
   return resultB
 }
 
@@ -57,7 +64,7 @@ export const getFromHistory = async function (config) {
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in results preview
-export const listHistory = async function ({ cwd, select }) {
+const listLoadedResults = async function ({ cwd, select }) {
   const results = await listResults(cwd)
   const resultsA = loadResults(results, select)
   return resultsA

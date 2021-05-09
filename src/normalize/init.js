@@ -19,10 +19,15 @@ export const getInitResult = function ({
 }
 
 // Finalize result. Done either at the end, or before each preview.
-export const getFinalResult = function (combinations, initResult, results) {
+export const getFinalResult = function ({
+  combinations,
+  initResult,
+  previous,
+  history,
+}) {
   const combinationsA = combinations.map(getFinalProps)
   const rawResult = { ...initResult, combinations: combinationsA }
-  const result = mergeResults(rawResult, results)
+  const result = mergeResults(rawResult, previous, history)
   return { rawResult, result }
 }
 

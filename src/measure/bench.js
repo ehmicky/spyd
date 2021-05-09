@@ -20,14 +20,17 @@ export const performBenchmark = async function (
   systemVersions,
 ) {
   const initResult = getInitResult({ combinations, systemVersions, config })
-  const { combinations: combinationsA, results } = await previewStartAndMeasure(
-    { combinations, config, initResult },
-  )
-  const { rawResult, result } = getFinalResult(
+  const {
+    combinations: combinationsA,
+    previous,
+    history,
+  } = await previewStartAndMeasure({ combinations, config, initResult })
+  const { rawResult, result } = getFinalResult({
     combinationsA,
     initResult,
-    results,
-  )
+    previous,
+    history,
+  })
   return { rawResult, result }
 }
 
@@ -42,10 +45,13 @@ const previewStartAndMeasure = async function ({
   try {
     await updatePreviewReport(previewState)
 
-    const { combinations: combinationsA, results } =
-      await listHistoryAndMeasure({ combinations, config, previewState })
+    const returnValue = await listHistoryAndMeasure({
+      combinations,
+      config,
+      previewState,
+    })
     await endPreview(previewState)
-    return { combinations: combinationsA, results }
+    return returnValue
   } catch (error) {
     await endPreview(previewState, error)
     throw error
@@ -58,9 +64,9 @@ const listHistoryAndMeasure = async function ({
   config: { cwd, precisionTarget },
   previewState,
 }) {
-  const results = await listHistory(config)
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.results = results
+  const { previous, history } = await listHistory(config)
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(previewState, { previous, history })
 
   const combinationsA = await measureCombinations(combinations, {
     precisionTarget,
@@ -68,5 +74,5 @@ const listHistoryAndMeasure = async function ({
     previewState,
     stage: 'main',
   })
-  return { combinations: combinationsA, results }
+  return { combinations: combinationsA, previous, history }
 }
