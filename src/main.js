@@ -26,10 +26,8 @@ export const bench = async function (configFlags) {
     combinations,
     systemVersions,
   )
-  await Promise.all([
-    addToHistory(rawResult, configA),
-    reportBenchShow(result, configA),
-  ])
+  await reportBenchShow(result, configA)
+  await addToHistory(rawResult, configA)
   checkLimits(result, configA)
   return result
 }
