@@ -1,5 +1,5 @@
 import { Buffer } from 'buffer'
-import { open } from 'fs/promises'
+import { promises as fs } from 'fs'
 
 import { getAdditionalMessage } from './additional.js'
 import { normalizeLogs } from './normalize.js'
@@ -27,7 +27,7 @@ ${taskLogsA}`
 
 // Read the last lines from the logs file
 const readLogs = async function (logsPath) {
-  const logsReadFd = await open(logsPath, 'r')
+  const logsReadFd = await fs.open(logsPath, 'r')
 
   try {
     const { size } = await logsReadFd.stat()
