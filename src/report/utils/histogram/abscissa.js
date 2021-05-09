@@ -25,21 +25,30 @@ const addTick = function (width, bottomLine, { index }) {
 }
 
 const getLabels = function (width, positions) {
-  const labels = positions.reduce(addLabel.bind(undefined, width), '')
-  const labelsA = trimWidth(labels, width)
+  const { labels, labelsLength } = positions.reduce(
+    addLabel.bind(undefined, width),
+    { labelsLength: 0, labels: '' },
+  )
+  const labelsA = trimWidth(labels, labelsLength, width)
   return labelsA
 }
 
 // First label is padded in the opposite direction. This works well with two
 // labels since they are padded in opposite ways which allows them not to take
 // space from the other one.
-const addLabel = function (width, labels, { index, pretty, prettyColor }) {
+const addLabel = function (
+  width,
+  { labelsLength, labels },
+  { index, pretty, prettyColor },
+) {
   const spacesWidth =
-    labels === ''
+    labelsLength === 0
       ? Math.max(index - pretty.length + 1, 0)
-      : Math.max(index - labels.length, 1)
+      : Math.max(index - labelsLength, 1)
+  const labelsLengthA = labelsLength + spacesWidth + pretty.length
   const spaces = ' '.repeat(spacesWidth)
-  return `${labels}${spaces}${prettyColor}`
+  const labelsA = `${labels}${spaces}${prettyColor}`
+  return { labelsLength: labelsLengthA, labels: labelsA }
 }
 
 // When some labels are close to the end, they might go over the maximum width.
@@ -47,9 +56,9 @@ const addLabel = function (width, labels, { index, pretty, prettyColor }) {
 // they fit within the maximum width.
 // Uses imperative code for performance.
 // eslint-disable-next-line complexity, max-statements
-const trimWidth = function (labels, width) {
+const trimWidth = function (labels, labelsLength, width) {
   // eslint-disable-next-line fp/no-let
-  let excessWidth = labels.length - width
+  let excessWidth = labelsLength - width
 
   if (excessWidth <= 0) {
     return labels
