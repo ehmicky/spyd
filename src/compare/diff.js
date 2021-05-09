@@ -72,7 +72,14 @@ const getDiff = function (median, previousMedian) {
   return { diff, diffPrecise }
 }
 
-// Whether `diff` is statistically significant
+// Whether `diff` is statistically significant.
+// We set `diffPrecise: true` when this happens which results in:
+//  - `limit` not being used
+//  - no colors
+//  - an "approximately equal" sign being prepended
+// We do not try to hide or show the `diff` as 0% instead since users might:
+//  - think it is due to a bug
+//  - compute the diff themselves anyway
 const isDiffPrecise = function (diff) {
   return Math.abs(diff) > DIFF_PRECISE_THRESHOLD
 }
