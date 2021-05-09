@@ -50,13 +50,13 @@ const normalizeSelect = function (value, propName) {
   return { [propName]: valueA }
 }
 
-const selectReporter = function (value, propName) {
+const normalizeReporter = function (value, propName) {
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
   return { [propName]: valueA }
 }
 
-const selectLimit = selectReporter
+const normalizeLimit = normalizeReporter
 
 const checkTitles = function (value, propName) {
   Object.entries(value).forEach(([childName, propValue]) => {
@@ -76,9 +76,9 @@ const NORMALIZERS = {
   delta: normalizeDeltaProp,
   since: normalizeDeltaProp,
   runner: normalizeRunner,
-  reporter: selectReporter,
+  reporter: normalizeReporter,
   select: normalizeSelect,
-  limit: selectLimit,
+  limit: normalizeLimit,
   titles: checkTitles,
   inputs: checkInputs,
 }
