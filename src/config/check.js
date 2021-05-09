@@ -27,15 +27,15 @@ export const normalizeOptionalArray = function (value, name) {
     return [value]
   }
 
+  if (value === undefined) {
+    return []
+  }
+
   checkDefinedStringArray(value, name)
   return [...new Set(value)]
 }
 
-export const checkDefinedStringArray = function (value, name) {
-  if (value === undefined) {
-    return
-  }
-
+const checkDefinedStringArray = function (value, name) {
   if (!Array.isArray(value)) {
     throw new UserError(`'${name}' must be an array of strings: ${value}`)
   }
