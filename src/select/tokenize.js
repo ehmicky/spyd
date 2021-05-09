@@ -4,7 +4,7 @@ import { throwValidationError } from './validate.js'
 export const tokenizeSelector = function (rawSelector, propName) {
   const tokens = rawSelector.trim().split(TOKEN_DELIMITER_REGEX)
   const negation = usesNegation(tokens)
-  const ids = negation ? tokens.slice(1) : tokens
+  const ids = negation ? tokens.slice(1) : tokens.filter(Boolean)
   ids.forEach((id) => {
     validateId(id, rawSelector, propName)
   })

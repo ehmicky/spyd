@@ -27,7 +27,7 @@ import { getCombinationIds } from '../combination/ids.js'
 //     - vice-versa, e.g. include all but a1-99 and b-z0
 //     - inclusion of all but specific combinations, e.g. b2 and o5
 export const matchSelectors = function (combination, selectors) {
-  if (selectors.length === 0) {
+  if (isEmpty(selectors)) {
     return true
   }
 
@@ -43,6 +43,18 @@ export const matchSelectors = function (combination, selectors) {
   }
 
   return selectors[0].negation
+}
+
+// `select` defaults to including everything.
+//  - This applies to when it is either `undefined` or an empty array.
+//  - Making an empty array include nothing would be more consistent.
+//    However, there is little use for it and it most likely mean the user
+//    intent was to select everything.
+const isEmpty = function (selectors) {
+  return (
+    selectors.length === 0 ||
+    (selectors.length === 1 && selectors[0].intersect.length === 0)
+  )
 }
 
 const matchIds = function (combinationIds, { intersect }) {

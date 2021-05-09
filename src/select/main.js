@@ -10,11 +10,6 @@ import { throwValidationError } from './validate.js'
 //     - For example, if `spyd.yml` was used to `exclude` an id, and we wanted
 //       to `include` it as a CLI flag, this would require setting `exclude` to
 //       an empty string too.
-// `select` defaults to including everything.
-//  - This applies to when it is either `undefined` or an empty array.
-//  - Making an empty array include nothing would be more consistent.
-//    However, there is little use for it and it most likely mean the user
-//    intent was to select everything.
 // Selection could be meant to select combination either for measuring or
 // reporting:
 //  - In the `show` and `remove` commands, only reporting is happening
