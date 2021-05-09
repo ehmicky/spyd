@@ -5,12 +5,8 @@ import { findByDelta } from '../delta/main.js'
 import { UserError } from '../error/main.js'
 import { compressResult } from '../normalize/compress.js'
 import { loadResults } from '../normalize/load.js'
-import { mergeResults } from '../normalize/merge.js'
-import {
-  applySince,
-  addHistory,
-  mergeLastCombinations,
-} from '../normalize/since.js'
+import { normalizeShowResult } from '../normalize/merge.js'
+import { applySince } from '../normalize/since.js'
 import { isTtyInput } from '../report/tty.js'
 
 import { addResult, removeResult, listResults } from './results.js'
@@ -60,10 +56,8 @@ export const getFromHistory = async function (config) {
   const results = await listLoadedResults(config)
   const { result, previous } = await listResultsByDelta(results, config)
   const history = await applySince(previous, config)
-  const resultA = addHistory(result, history)
-  const resultB = mergeLastCombinations(resultA, history)
-  const resultC = mergeResults(resultB, previous)
-  return resultC
+  const resultA = normalizeShowResult(result, previous, history)
+  return resultA
 }
 
 // List, sort, filter and normalize all results

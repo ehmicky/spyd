@@ -3,8 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { getSystems } from '../system/info.js'
 import { cleanObject } from '../utils/clean.js'
 
-import { mergeResults } from './merge.js'
-import { addHistory } from './since.js'
+import { normalizeBenchResult } from './merge.js'
 
 // Add metadata information to initial result
 export const getInitResult = function ({
@@ -28,9 +27,8 @@ export const getFinalResult = function ({
 }) {
   const combinationsA = combinations.map(getFinalProps)
   const rawResult = { ...initResult, combinations: combinationsA }
-  const result = addHistory(rawResult, history)
-  const resultA = mergeResults(result, previous)
-  return { rawResult, result: resultA }
+  const result = normalizeBenchResult(rawResult, previous, history)
+  return { rawResult, result }
 }
 
 // Retrieve final combination properties used for reporting.
