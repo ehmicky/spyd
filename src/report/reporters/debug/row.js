@@ -26,8 +26,8 @@ const FIRST_CELL_PADDING = ' '.repeat(FIRST_CELL_PADDING_WIDTH)
 
 const getCell = function (stats, column, columnWidth) {
   const stat = getStat(stats, column)
-  const statLength = getStatLength(stats, column)
-  const padding = ' '.repeat(Math.max(0, columnWidth - statLength))
+  const paddingWidth = Math.max(columnWidth - getStatLength(stats, column), 0)
+  const padding = ' '.repeat(paddingWidth)
   return `${padding}${stat}`
 }
 
