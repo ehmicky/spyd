@@ -55,10 +55,10 @@ const parseDelta = function ({
 //     - The delta points to a time in the future or to a non-existing reference
 //  - If the delta has a syntax or semantics that we know is always erroneous,
 //    we throw instead
-//  - When this happens with the `show` or `remove` commands, we fail hard
-//    because there is no result to use.
-//  - However, with the `since` configuration property, we silently ignore it
-//    instead, i.e. `showDiff`, `limit` and `previous` are not used.
+//  - When this happens with:
+//     - `show|remove` delta: we fail hard because there is no result to report
+//     - `since` configuration property: `result.history` is empty
+//     - `diff` configuration property: `stats.diff` is `undefined`
 export const findByDelta = async function (
   results,
   { type, value, delta, name },
