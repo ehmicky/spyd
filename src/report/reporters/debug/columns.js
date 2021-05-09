@@ -1,7 +1,7 @@
 import { SEPARATOR_WIDTH } from '../../utils/separator.js'
 
 import { getHeaderName } from './header.js'
-import { getFirstCellWidth, getStatNoColor } from './row.js'
+import { getFirstCellWidth, getStatLength } from './row.js'
 
 // Each column is padded to the same width, so that they align vertically
 export const getColumnWidth = function ([{ stats }]) {
@@ -9,9 +9,7 @@ export const getColumnWidth = function ([{ stats }]) {
 }
 
 const getStatColumnWidth = function (stats, column) {
-  const statLength = getStatNoColor(stats, column).length
-  const headerLength = getHeaderName(column).length
-  return Math.max(statLength, headerLength)
+  return Math.max(getStatLength(stats, column), getHeaderName(column).length)
 }
 
 // Group all column names into several tables so they fit the screen width

@@ -35,6 +35,6 @@ const getStat = function (stats, column) {
   return stats[column].prettyPaddedColor
 }
 
-export const getStatNoColor = function (stats, column) {
-  return stats[column].prettyPadded
+export const getStatLength = function (stats, column) {
+  return stats[column].prettyPadded.length
 }
