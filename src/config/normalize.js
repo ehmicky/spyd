@@ -2,8 +2,10 @@ import { normalizeDelta } from '../delta/main.js'
 import { normalizePrecision } from '../measure/precision.js'
 
 import {
-  normalizeArray,
   normalizeOptionalArray,
+  checkArrayLength,
+  checkStringArray,
+  checkDefinedStringArray,
   checkDefinedString,
   checkJson,
 } from './check.js'
@@ -35,23 +37,36 @@ const normalizeDeltaProp = function (delta, propName, { envInfo }) {
   return { [propName]: normalizeDelta(delta, propName, envInfo) }
 }
 
-const normalizeArrayProp = function (value, propName) {
-  return { [propName]: normalizeArray(value, propName) }
+const normalizeRunner = function (value, propName) {
+  const valueA = normalizeOptionalArray(value)
+  checkDefinedStringArray(valueA, propName)
+  checkArrayLength(valueA, propName)
+  return { [propName]: valueA }
 }
 
-const normalizeOptionalArrProp = function (value, propName) {
-  return { [propName]: normalizeOptionalArray(value, propName) }
+const normalizeSelect = function (value, propName) {
+  const valueA = normalizeOptionalArray(value)
+  checkStringArray(valueA, propName)
+  return { [propName]: valueA }
 }
 
-const checkTitles = function (titles, propName) {
-  Object.entries(titles).forEach(([childName, value]) => {
-    checkDefinedString(value, `${propName}.${childName}`)
+const selectReporter = function (value, propName) {
+  const valueA = normalizeOptionalArray(value)
+  checkDefinedStringArray(valueA, propName)
+  return { [propName]: valueA }
+}
+
+const selectLimit = selectReporter
+
+const checkTitles = function (value, propName) {
+  Object.entries(value).forEach(([childName, propValue]) => {
+    checkDefinedString(propValue, `${propName}.${childName}`)
   })
 }
 
-const checkInputs = function (inputs, propName) {
-  Object.entries(inputs).forEach(([childName, value]) => {
-    checkJson(value, `${propName}.${childName}`)
+const checkInputs = function (value, propName) {
+  Object.entries(value).forEach(([childName, propValue]) => {
+    checkJson(propValue, `${propName}.${childName}`)
   })
 }
 
@@ -60,10 +75,10 @@ const NORMALIZERS = {
   system: normalizeSystem,
   delta: normalizeDeltaProp,
   since: normalizeDeltaProp,
-  runner: normalizeArrayProp,
-  reporter: normalizeOptionalArrProp,
-  select: normalizeOptionalArrProp,
-  limit: normalizeOptionalArrProp,
+  runner: normalizeRunner,
+  reporter: selectReporter,
+  select: normalizeSelect,
+  limit: selectLimit,
   titles: checkTitles,
   inputs: checkInputs,
 }

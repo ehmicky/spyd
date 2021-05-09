@@ -11,48 +11,45 @@ export const checkObject = function (value, name) {
   }
 }
 
-export const normalizeArray = function (value, name) {
-  const valueA = normalizeOptionalArray(value, name)
+export const normalizeOptionalArray = function (value = []) {
+  return Array.isArray(value) ? [...new Set(value)] : [value]
+}
 
-  if (valueA.length === 0) {
+export const checkArrayLength = function (value, name) {
+  if (value.length === 0) {
     throw new UserError(`At least one '${name}' must be defined.`)
   }
-
-  return valueA
 }
 
-export const normalizeOptionalArray = function (value, name) {
-  if (typeof value === 'string') {
-    checkDefinedString(value, name)
-    return [value]
-  }
-
-  if (value === undefined) {
-    return []
-  }
-
-  checkDefinedStringArray(value, name)
-  return [...new Set(value)]
-}
-
-const checkDefinedStringArray = function (value, name) {
-  if (!Array.isArray(value)) {
-    throw new UserError(`'${name}' must be an array of strings: ${value}`)
-  }
-
-  value.forEach((item, key) => {
-    checkDefinedString(item, `${name}[${key}]`)
+export const checkDefinedStringArray = function (value, name) {
+  value.forEach((item, index) => {
+    checkDefinedString(item, getIndexName(index, name))
   })
 }
 
+export const checkStringArray = function (value, name) {
+  value.forEach((item, index) => {
+    checkString(item, getIndexName(index, name))
+  })
+}
+
+// When `index` is `0`, it is possible that the value was arrified
+const getIndexName = function (index, name) {
+  return index === 0 ? name : `${name}[${index}]`
+}
+
 export const checkDefinedString = function (value, name) {
-  if (!isDefinedString(value)) {
-    throw new UserError(`'${name}' must be a non-empty string: ${value}`)
+  checkString(value, name)
+
+  if (value.trim() === '') {
+    throw new UserError(`'${name}' must not be empty.`)
   }
 }
 
-const isDefinedString = function (value) {
-  return typeof value === 'string' && value.trim() !== ''
+const checkString = function (value, name) {
+  if (typeof value !== 'string') {
+    throw new UserError(`'${name}' must be a string: ${value}`)
+  }
 }
 
 export const checkJson = function (value, name) {
