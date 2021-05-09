@@ -50,6 +50,23 @@ const runMainEvents = async function (args) {
 }
 
 // Run the user-defined `before` hooks
+// As opposed to other steps, `before|after` hooks run only once per task.
+// We do not add a way to share those hooks between tasks because:
+//  - This can be done userland by re-using variables
+//  - Tasks might be in different files which:
+//     - Makes it less obvious to users that all tasks share that logic
+//     - Complicates runners implementation since they would need to load
+//       multiple files
+//  - The logic would only be shareable within a single runner
+// We do not add a way to run some logic once before|after all tasks because:
+//  - This can be achieved userland by running commands before|after running
+//    spyd
+//  - The logic cannot be in the same process as the tasks since they each have
+//    their own process
+//     - i.e. this would require IPC
+//  - Sharing state between tasks creates coupling between them
+//  - This makes the task DX/interface more complex
+//     - For example, this might create confusion with `before|after` hooks
 const beforeCombination = async function (server) {
   await sendAndReceive({ event: 'before' }, server)
 }
