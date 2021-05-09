@@ -45,11 +45,20 @@ export const matchSelectors = function (combination, selectors) {
   return selectors[0].negation
 }
 
-// `select` defaults to including everything.
-//  - This applies to when it is either `undefined` or an empty array.
-//  - Making an empty array include nothing would be more consistent.
-//    However, there is little use for it and it most likely mean the user
-//    intent was to select everything.
+// An empty array selects any combinations:
+//  - In principle, users might expect either any or no combinations to be
+//    selected since the array might be meant as negated or not, which we don't
+//    know without its first element
+//  - In practice, users most likely want to select any combinations since
+//    selecting none is much less useful
+//  - This is the default value of `select`
+// An empty selector string:
+//  - Selects nothing (or anything if prepended with "not") since this follows
+//    logically from the syntax
+//  - However, if the only selector is an empty string, it selects everything
+//    instead.
+//     - While less logical, it is what users most likely mean
+//     - Also, it avoids --select= and --select="" from behaving differently
 const isEmpty = function (selectors) {
   return (
     selectors.length === 0 ||
