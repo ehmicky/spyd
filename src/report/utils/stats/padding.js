@@ -38,14 +38,10 @@ const addItemsPadded = function ({
   padding,
 }) {
   const prettyPadded = Array.isArray(pretty)
-    ? pretty.map((item) => addItemPadded(item, padding))
-    : addItemPadded(pretty, padding)
+    ? pretty.map((item) => item.padStart(padding))
+    : pretty.padStart(padding)
   return {
     ...combination,
     stats: { ...stats, [name]: { ...stat, prettyPadded } },
   }
-}
-
-const addItemPadded = function (pretty, padding) {
-  return pretty.padStart(pretty, padding.length)
 }
