@@ -4,7 +4,7 @@ import { findValue } from '../utils/find.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
-// Which result is being compared depends on the `since` configuration property.
+// Which result is being compared depends on the `diff` configuration property.
 // By default, it is the previous result but it can be any earlier result.
 // If the compared result does not have the combination to compare, we use the
 // most recent result before it instead.
@@ -12,9 +12,9 @@ import { findValue } from '../utils/find.js'
 //  - Reporters, unless the `showDiff` configuration property is `false`
 //  - The `limit` configuration property to do performance testing
 // `combination.stats.diff` is not persisted in history since it can be computed
-// dynamically and depends on the `since` configuration property. Also some
-// results might have been dynamically deleted or filtered out.
-// If `previous` is empty due to the `since` property, this is noop.
+// dynamically.
+//  - Also some results might have been dynamically deleted or filtered out.
+// If `previous` is empty, this is noop.
 export const addCombinationsDiff = function (result, previous) {
   if (previous.length === 0) {
     return result

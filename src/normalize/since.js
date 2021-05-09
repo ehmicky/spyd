@@ -1,6 +1,30 @@
 import { isSameCategory } from '../combination/ids.js'
+import { findByDelta } from '../delta/main.js'
 import { mergeSystems } from '../system/merge.js'
 
+// The `since` configuration property is used to:
+//  - Specify which result to compare to with `showDiff` and `limit`.
+//  - Limit the number of results shown in `previous`.
+//    This is useful with time series reporters.
+// We use a single configuration property for both so it is simpler for users.
+// `since` can never point to the reported result, only to previous results.
+// `since` might not be able to resolve:
+//  - For example, this happens when setting a specific `since` using an
+//    absolute delta format (like `id`) and using the `show` command pointing
+//    to an earlier result.
+//  - When this happens, we ignore `showDiff`, `limit` and leave `previous`
+//    empty.
+//  - However, we still ignore when the `since` is erroneous from a syntax or
+//    semantics standpoint.
+// `since` is relative to the reported result:
+//  - For `bench`, this is the result being created
+//  - For `show` and `remove`, this is the result being reported.
+//    This ensures result reported with `show` are shown the same way as when
+//    when they were measured. This is also simpler to understand since it
+//    always involves only two bases (the reported result and the "since"
+//    result)
+// Previous results are filtered by `select`. This purposely impacts the
+// resolution of `since`.
 // Several configuration properties can be used to change the sets of
 // combinations being measured: `select`, `tasks`, `runner`, `inputs`, `system`.
 //  - This can also be used for incremental benchmarks.
@@ -23,9 +47,15 @@ import { mergeSystems } from '../system/merge.js'
 //    the `since` configuration property
 //     - Including when comparing different systems
 // If `previous` is empty due to the `since` property, this is noop.
-export const mergeLastCombinations = function (lastResult, previous) {
+export const applySince = async function (result, previous, { since, cwd }) {
+  const sinceIndex = await findByDelta(previous, since, cwd)
+
+  if (sinceIndex === -1) {
+    return result
+  }
+
   // eslint-disable-next-line fp/no-mutating-methods
-  return [...previous].reverse().reduce(mergePair, lastResult)
+  return previous.slice(sinceIndex).reverse().reduce(mergePair, result)
 }
 
 const mergePair = function (result, previousResult) {
