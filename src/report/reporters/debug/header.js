@@ -5,20 +5,20 @@ import { STAT_TITLES } from '../../utils/stat_titles.js'
 import { getFirstCellWidth } from './row.js'
 
 // Retrieve the header row
-export const getHeader = function ([{ titles, stats }], columns, columnWidth) {
+export const getHeader = function ([{ titles }], columns, columnWidth) {
   const firstCell = ' '.repeat(getFirstCellWidth(titles))
-  const headerCells = getHeaderCells(stats, columns, columnWidth)
+  const headerCells = getHeaderCells(columns, columnWidth)
   return `${firstCell}${headerCells}`
 }
 
-const getHeaderCells = function (stats, columns, columnWidth) {
+const getHeaderCells = function (columns, columnWidth) {
   return columns
-    .map((column) => getHeaderCell(stats, column, columnWidth))
+    .map((column) => getHeaderCell(column, columnWidth))
     .join(COLUMN_SEPARATOR)
 }
 
 // Retrieve a cell in the header row
-const getHeaderCell = function (stats, column, columnWidth) {
+const getHeaderCell = function (column, columnWidth) {
   const headerName = getHeaderName(column).padStart(columnWidth)
   return fieldColor(headerName)
 }

@@ -32,5 +32,5 @@ const getCell = function (stats, column, columnWidth) {
 
 // Retrieve a single cell in the table, with a specific stat
 export const getStat = function (stats, column) {
-  return stats[`${column}Padded`]
+  return stats[column].prettyPaddedColor
 }
