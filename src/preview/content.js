@@ -8,12 +8,8 @@ import { updateScrolling } from './scrolling_update.js'
 //   - return nothing in `reporter.report()
 export const getPreviewContent = function (previewState) {
   addInitialScrollAction(previewState)
-  const {
-    leftWidth,
-    separator,
-    progressRow,
-    counterRow,
-  } = getBottomBarElements(previewState)
+  const { leftWidth, separator, progressRow, counterRow } =
+    getBottomBarElements(previewState)
   const bottomBar = getBottomBar({
     previewState,
     separator,

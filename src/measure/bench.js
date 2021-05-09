@@ -20,10 +20,9 @@ export const performBenchmark = async function (
   systemVersions,
 ) {
   const initResult = getInitResult({ combinations, systemVersions, config })
-  const {
-    combinations: combinationsA,
-    results,
-  } = await previewStartAndMeasure({ combinations, config, initResult })
+  const { combinations: combinationsA, results } = await previewStartAndMeasure(
+    { combinations, config, initResult },
+  )
   const { rawResult, result } = getFinalResult(
     combinationsA,
     initResult,
@@ -43,10 +42,8 @@ const previewStartAndMeasure = async function ({
   try {
     await updatePreviewReport(previewState)
 
-    const {
-      combinations: combinationsA,
-      results,
-    } = await listHistoryAndMeasure({ combinations, config, previewState })
+    const { combinations: combinationsA, results } =
+      await listHistoryAndMeasure({ combinations, config, previewState })
     await endPreview(previewState)
     return { combinations: combinationsA, results }
   } catch (error) {

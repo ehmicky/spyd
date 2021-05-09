@@ -12,9 +12,8 @@ export const groupCombinations = function (results) {
 }
 
 export const groupResultCombinations = function ({ combinations, ...result }) {
-  const { combinations: combinationsA, categories } = groupCategoryInfos(
-    combinations,
-  )
+  const { combinations: combinationsA, categories } =
+    groupCategoryInfos(combinations)
   const combinationsB = sortCombinations(combinationsA)
   return { ...result, combinations: combinationsB, categories }
 }
