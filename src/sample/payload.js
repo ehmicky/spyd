@@ -1,8 +1,8 @@
-import { MAX_MEASURES } from './max_measures.js'
+import { getMaxMeasuresLeft } from './max_measures.js'
 
 // Compute event payload to send to the measuring sample
 export const getPayload = function (
-  { repeat, repeatLast, sampleLoops, measureDuration },
+  { repeat, repeatLast, measures, sampleLoops, measureDuration },
   minLoopDuration,
   targetSampleDuration,
 ) {
@@ -10,6 +10,7 @@ export const getPayload = function (
   const maxLoops = getMaxLoops({
     repeat,
     repeatLast,
+    measures,
     sampleLoops,
     measureDuration,
     targetSampleDuration,
@@ -64,6 +65,7 @@ const getRepeatPayload = function (repeat, minLoopDuration) {
 const getMaxLoops = function ({
   repeat,
   repeatLast,
+  measures,
   sampleLoops,
   measureDuration,
   targetSampleDuration,
@@ -77,6 +79,6 @@ const getMaxLoops = function ({
   const measureDurationPerLoop = measureDuration / sampleLoops
   return Math.min(
     Math.ceil(targetSampleDuration / (measureDurationPerLoop * repeatGrowth)),
-    MAX_MEASURES,
+    getMaxMeasuresLeft(measures),
   )
 }

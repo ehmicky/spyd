@@ -16,10 +16,10 @@ import { isPreciseEnough } from './precision.js'
 //  - Any timeout might trigger or not depending on the machine speed, which
 //    means a benchmark might succeed or not depending on the machine.
 export const isRemainingCombination = function (
-  { sampleState, sampleState: { allSamples }, stats: { loops, rmoe } },
+  { sampleState: { allSamples, measures }, stats: { loops, rmoe } },
   { precisionTarget, stage, stopState: { stopped } },
 ) {
-  if (shouldInterrupt(stopped, sampleState)) {
+  if (shouldInterrupt(stopped, measures)) {
     return false
   }
 
@@ -37,6 +37,6 @@ export const isRemainingCombination = function (
 // Measuring is interrupted when:
 //  - User manually stopped it
 //  - There are too many measures, which could lead to memory crash otherwise
-const shouldInterrupt = function (stopped, sampleState) {
-  return stopped || hasMaxMeasures(sampleState)
+const shouldInterrupt = function (stopped, measures) {
+  return stopped || hasMaxMeasures(measures)
 }

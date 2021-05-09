@@ -16,8 +16,12 @@
 //     - A combination with hundreds of steps
 //     - A `rstdev` > 100%, which is theoritically possible if the task duration
 //       is exponential based on a random factor
-export const hasMaxMeasures = function ({ measures }) {
-  return measures.length >= MAX_MEASURES
+export const hasMaxMeasures = function (measures) {
+  return getMaxMeasuresLeft(measures) <= 0
+}
+
+export const getMaxMeasuresLeft = function (measures) {
+  return MAX_MEASURES - measures.length
 }
 
 // The two limits we are avoiding are:

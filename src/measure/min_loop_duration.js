@@ -71,10 +71,9 @@ const getMeasureCost = async function (server) {
   )
 }
 
-const shouldKeepMeasuring = function (end, sampleState) {
+const shouldKeepMeasuring = function (end, { measures }) {
   return (
-    !hasMaxMeasures(sampleState) &&
-    !(hasEnoughMeasures(sampleState) && now() >= end)
+    !hasMaxMeasures(measures) && !(hasEnoughMeasures(measures) && now() >= end)
   )
 }
 
@@ -87,7 +86,7 @@ const shouldKeepMeasuring = function (end, sampleState) {
 // This check is mostly needed when either:
 //  - The time resolution is very high
 //  - The task is very slow
-const hasEnoughMeasures = function ({ measures }) {
+const hasEnoughMeasures = function (measures) {
   return (
     measures.length >= MIN_TIMES && measures[measures.length - MIN_TIMES] !== 0
   )
