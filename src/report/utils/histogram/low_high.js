@@ -33,12 +33,14 @@ const getCombinationWidth = function ({ stats }, getStat) {
   return stringWidth(getStat(stats))
 }
 
-const getLowStat = function ({ lowPadded }) {
-  return `${PADDING}${lowPadded}${PADDING}${separatorColor(TICK_LEFT)}`
+const getLowStat = function ({ low }) {
+  return `${PADDING}${low.prettyPaddedColor}${PADDING}${separatorColor(
+    TICK_LEFT,
+  )}`
 }
 
-const getHighStat = function ({ highPadded }) {
-  return `${separatorColor(TICK_RIGHT)}${PADDING}${highPadded}`
+const getHighStat = function ({ high }) {
+  return `${separatorColor(TICK_RIGHT)}${PADDING}${high.prettyPaddedColor}`
 }
 
 const PADDING_WIDTH = 1

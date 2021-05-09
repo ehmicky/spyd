@@ -4,12 +4,12 @@ import { TICK_MIDDLE, HORIZONTAL_LINE } from './characters.js'
 
 // Retrieve the horizontal line and the abscissa below the main content.
 // Includes the tick below the median.
-export const getAbscissa = function (width, medianIndex, medianPretty) {
+export const getAbscissa = function (width, medianIndex, median) {
   const bottomLine = getBottomRow(TICK_MIDDLE, HORIZONTAL_LINE, {
     width,
     medianIndex,
   })
-  const abscissa = getBottomRow(medianPretty, ' ', { width, medianIndex })
+  const abscissa = getBottomRow(median.prettyColor, ' ', { width, medianIndex })
   return `${separatorColor(bottomLine)}
 ${abscissa}`
 }

@@ -3,7 +3,7 @@ import { getHistogramRows } from './rows.js'
 
 // Retrieve histogram main content
 export const getContent = function ({
-  stats: { histogram, low, median, medianPretty, high },
+  stats: { histogram, low, median, high },
   height,
   width,
   showStats,
@@ -26,7 +26,7 @@ export const getContent = function ({
     return rows
   }
 
-  const abscissa = getAbscissa(width, medianIndex, medianPretty)
+  const abscissa = getAbscissa(width, medianIndex, median)
   return `${rows}
 ${abscissa}`
 }
@@ -35,7 +35,8 @@ ${abscissa}`
 // When `histogram` has a single item, it is in the first bucket.
 // Also compute the maximum width between the median and either the start or end
 const getMedianPosition = function ({ median, low, high, width }) {
-  const medianPercentage = high === low ? 0 : (median - low) / (high - low)
+  const medianPercentage =
+    high.raw === low.raw ? 0 : (median.raw - low.raw) / (high.raw - low.raw)
   const indexWidth = width - 1
   const medianIndex = Math.round(indexWidth * medianPercentage)
   const medianMaxWidth = Math.max(medianIndex, indexWidth - medianIndex)
