@@ -7,7 +7,7 @@ export const getMedianPositions = function (
   { median, medianLow, medianHigh, low, high },
   width,
 ) {
-  const stats = median === undefined ? [medianLow, medianHigh] : [median]
+  const stats = median.raw === undefined ? [medianLow, medianHigh] : [median]
   const medianIndexes = stats.map((stat) =>
     getMedianIndex(stat, { low, high, width }),
   )
