@@ -1,4 +1,5 @@
 import { getCombinationIds } from '../combination/ids.js'
+import { findIndexReverse } from '../utils/find.js'
 
 // Select combinations according to the `select` or `limit` configuration
 // properties.
@@ -32,17 +33,15 @@ export const matchSelectors = function (combination, selectors) {
   }
 
   const combinationIds = getCombinationIds(combination)
-  // eslint-disable-next-line fp/no-mutating-methods
-  const matchingSelector = selectors
-    .slice()
-    .reverse()
-    .find((selector) => matchIds(combinationIds, selector))
+  const index = findIndexReverse(selectors, (selector) =>
+    matchIds(combinationIds, selector),
+  )
 
-  if (matchingSelector !== undefined) {
-    return !matchingSelector.negation
+  if (index === -1) {
+    return selectors[0].negation
   }
 
-  return selectors[0].negation
+  return !selectors[index].negation
 }
 
 // An empty array selects any combinations:
