@@ -1,4 +1,5 @@
 import { isSameCategory } from '../combination/ids.js'
+import { isDiffPrecise } from '../stats/welch.js'
 import { findValue } from '../utils/find.js'
 
 // Add `combination.stats.diff` which compares each combination with another
@@ -53,35 +54,29 @@ const getPreviousCombination = function ({ combinations }, combinationA) {
   )
 }
 
-const addDiff = function (
-  { stats, stats: { median }, ...combination },
-  { stats: { median: previousMedian } },
-) {
-  const diffStats = getDiff(median, previousMedian)
-  return { ...combination, stats: { ...stats, ...diffStats } }
+const addDiff = function (combination, previousCombination) {
+  const diffStats = getDiff(combination.stats, previousCombination.stats)
+  return { ...combination, stats: { ...combination.stats, ...diffStats } }
 }
 
 // `median` can be `undefined` during preview
-const getDiff = function (median, previousMedian) {
+// `isDiffPrecise` is whether `diff` is statistically significant.
+//   - We set `diffPrecise: true` when this happens which results in:
+//      - `limit` not being used
+//      - no colors
+//      - an "approximately equal" sign being prepended
+//   - We do not try to hide or show the `diff` as 0% instead since users might:
+//      - think it is due to a bug
+//      - compute the diff themselves anyway
+const getDiff = function (stats, previousStats) {
+  const { median } = stats
+  const { median: previousMedian } = previousStats
+
   if (median === undefined || median === 0 || previousMedian === 0) {
     return {}
   }
 
   const diff = median / previousMedian - 1
-  const diffPrecise = isDiffPrecise(diff)
+  const diffPrecise = isDiffPrecise(stats, previousStats)
   return { diff, diffPrecise }
 }
-
-// Whether `diff` is statistically significant.
-// We set `diffPrecise: true` when this happens which results in:
-//  - `limit` not being used
-//  - no colors
-//  - an "approximately equal" sign being prepended
-// We do not try to hide or show the `diff` as 0% instead since users might:
-//  - think it is due to a bug
-//  - compute the diff themselves anyway
-const isDiffPrecise = function (diff) {
-  return Math.abs(diff) > DIFF_PRECISE_THRESHOLD
-}
-
-const DIFF_PRECISE_THRESHOLD = 1e-2
