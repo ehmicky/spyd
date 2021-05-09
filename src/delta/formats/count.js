@@ -7,7 +7,7 @@ const parseCount = function (delta) {
     return
   }
 
-  if (!Number.isInteger(delta) || delta < 1) {
+  if (!Number.isInteger(delta) || delta < 0) {
     throw new UserError('must be a positive integer.')
   }
 
@@ -15,6 +15,10 @@ const parseCount = function (delta) {
 }
 
 const findByCount = function (results, count) {
+  if (count === 0) {
+    return -1
+  }
+
   const index = results.length - count
 
   if (index < 0) {
