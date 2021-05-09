@@ -14,7 +14,6 @@ import { findValue } from '../utils/find.js'
 // `combination.stats.diff` is not persisted in history since it can be computed
 // dynamically.
 //  - Also some results might have been dynamically deleted or filtered out.
-// If `previous` is empty, this is noop.
 export const addCombinationsDiff = function (result, previous) {
   if (previous.length === 0) {
     return result
