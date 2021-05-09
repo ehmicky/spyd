@@ -55,6 +55,7 @@ const EXAMPLE_CONFIG = {
   reporter: optionalArray('debug'),
   limit: optionalArray('task_id=10'),
   quiet: true,
+  force: true,
   debug: false,
   output: './file.js',
   colors: false,

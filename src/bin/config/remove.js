@@ -7,6 +7,6 @@ export const REMOVE_CONFIG = {
     alias: 'f',
     boolean: true,
     describe: `Do not report the result nor ask for confirmation.
-Default: false if the terminal is interactive.`,
+Default: true unless the terminal is interactive.`,
   },
 }

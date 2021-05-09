@@ -12,6 +12,7 @@ export const addDefaultConfig = function ({
     ...DEFAULT_CONFIG,
     cwd: processCwd,
     quiet: !isTtyInput() || !isTtyOutput(),
+    force: !isTtyInput(),
     delta: defaultDelta,
     since: defaultDelta,
     showSystem: config.system !== undefined,

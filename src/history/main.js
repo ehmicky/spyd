@@ -22,16 +22,16 @@ export const addToHistory = async function (result, { save, cwd }) {
 }
 
 // Remove a result
-export const removeFromHistory = async function ({ id }, { cwd }) {
-  if (!(await shouldRemoveFromHistory())) {
+export const removeFromHistory = async function ({ id }, { cwd, force }) {
+  if (!(await shouldRemoveFromHistory(force))) {
     return
   }
 
   await removeResult(id, cwd)
 }
 
-const shouldRemoveFromHistory = async function () {
-  if (!isTtyInput()) {
+const shouldRemoveFromHistory = async function (force) {
+  if (force || !isTtyInput()) {
     return true
   }
 
