@@ -1,9 +1,12 @@
+import { prompt } from 'inquirer'
+
 import { getDeltaError } from '../delta/error.js'
 import { findByDelta } from '../delta/main.js'
 import { UserError } from '../error/main.js'
 import { compressResult } from '../normalize/compress.js'
 import { loadResults } from '../normalize/load.js'
 import { mergeResults, applySince } from '../normalize/merge.js'
+import { isTtyInput } from '../report/tty.js'
 
 import { addResult, removeResult, listResults } from './results.js'
 
@@ -20,7 +23,22 @@ export const addToHistory = async function (result, { save, cwd }) {
 
 // Remove a result
 export const removeFromHistory = async function ({ id }, { cwd }) {
+  if (!(await shouldRemoveFromHistory())) {
+    return
+  }
+
   await removeResult(id, cwd)
+}
+
+const shouldRemoveFromHistory = async function () {
+  if (!isTtyInput()) {
+    return true
+  }
+
+  const { confirmed } = await prompt([
+    { type: 'confirm', name: 'confirmed', message: 'Remove the result?' },
+  ])
+  return confirmed
 }
 
 // List all results and apply `since`.
