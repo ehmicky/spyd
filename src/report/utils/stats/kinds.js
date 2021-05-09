@@ -9,7 +9,7 @@ export const STAT_KINDS = [
   { name: 'max', kind: 'duration' },
   { name: 'low', kind: 'duration' },
   { name: 'high', kind: 'duration' },
-  { name: 'diff', kind: 'percentage', signed: 'always' },
+  { name: 'diff', kind: 'percentage', signed: 'diff' },
   { name: 'stdev', kind: 'duration', signed: 'never' },
   { name: 'rstdev', kind: 'percentage', signed: 'never' },
   { name: 'moe', kind: 'duration', signed: 'never' },

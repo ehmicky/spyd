@@ -12,7 +12,7 @@ const addNeverSign = function (pretty) {
   return `${PLUS_MINUS_SIGN}${prettyA}`
 }
 
-const addAlwaysSign = function (pretty) {
+const addDiffSign = function (pretty) {
   if (hasMinusSign(pretty)) {
     return pretty
   }
@@ -31,5 +31,5 @@ const MINUS_SIGN = '-'
 
 const SIGN_HANDLERS = {
   never: addNeverSign,
-  always: addAlwaysSign,
+  diff: addDiffSign,
 }
