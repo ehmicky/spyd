@@ -33,8 +33,8 @@ export const checkLimits = function ({ combinations }, { limit }) {
   throw new UserError(limitError)
 }
 
-const hasDiff = function ({ stats: { diff } }) {
-  return diff !== undefined
+const hasDiff = function ({ stats: { diff, diffPrecise } }) {
+  return diff !== undefined && diffPrecise
 }
 
 const checkCombinationLimits = function ({
