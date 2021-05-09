@@ -16,19 +16,13 @@ import { getQuantilePosition } from './quantile.js'
 // We apply those percentage without cloning the `measures` array, for
 // performance and memory reasons.
 export const getExtremes = function (measures) {
+  const loops = measures.length - 1
   const [min] = measures
-  const max = measures[measures.length - 1]
-  const { lowIndex, highIndex, length } = getLength(measures)
+  const max = measures[loops]
+  const { lowIndex, highIndex, length } = getLengthFromLoops(loops)
   const low = measures[lowIndex]
   const high = measures[highIndex]
   return { min, max, lowIndex, highIndex, length, low, high }
-}
-
-const getLength = function (measures) {
-  const lowIndex = getRoundedPosition(measures, LOW_OUTLIERS)
-  const highIndex = getRoundedPosition(measures, HIGH_OUTLIERS)
-  const length = highIndex - lowIndex + 1
-  return { lowIndex, highIndex, length }
 }
 
 // `Math.round()` rounds towards +Inf, which is what we want:
@@ -37,15 +31,18 @@ const getLength = function (measures) {
 //    `length`
 //  - This makes outliers removal start twice faster. For example, with 5%
 //    outliers on each end, this starts after 10 loops, not 20.
-const getRoundedPosition = function (array, percentage) {
-  return Math.round(getQuantilePosition(array, percentage))
+export const getLengthFromLoops = function (loops) {
+  const lowIndex = Math.round(loops * LOW_OUTLIERS)
+  const highIndex = Math.round(loops * HIGH_OUTLIERS)
+  const length = highIndex - lowIndex + 1
+  return { lowIndex, highIndex, length }
 }
 
-// Inverse function of `getLength()`, i.e. retrieves `measures.length` from
+// Inverse function of `getLengthFromLoops()`, i.e. retrieves `loops` from
 // `length`. Due to the use of multiple `Math.round()`, the result might be
-// 1 higher than the actual result.
+// 1 lower|higher than the actual result.
 export const getLoopsFromLength = function (length) {
-  return Math.round(length / (HIGH_OUTLIERS - LOW_OUTLIERS))
+  return Math.round(length / (HIGH_OUTLIERS - LOW_OUTLIERS)) - 1
 }
 
 // A higher value makes histograms give less information about very low/high

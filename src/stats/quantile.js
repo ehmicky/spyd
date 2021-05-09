@@ -7,7 +7,7 @@ export const getQuantiles = function (array, length) {
 }
 
 export const getQuantile = function (array, percentage) {
-  const position = getQuantilePosition(array, percentage)
+  const position = (array.length - 1) * percentage
 
   if (Number.isInteger(position)) {
     return array[position]
@@ -17,10 +17,6 @@ export const getQuantile = function (array, percentage) {
     array[Math.floor(position)] * (Math.ceil(position) - position) +
     array[Math.ceil(position)] * (position - Math.floor(position))
   )
-}
-
-export const getQuantilePosition = function (array, percentage) {
-  return (array.length - 1) * percentage
 }
 
 // Retrieve median of an array of floats.
