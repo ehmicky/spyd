@@ -65,7 +65,7 @@ Default: true for command "show" and "remove", false otherwise`,
   showPrecision: {
     group: REPORT,
     boolean: true,
-    describe: `Show the results precision.
+    describe: `Show the results confidence interval.
 Default: false.`,
   },
   showDiff: {

@@ -35,7 +35,8 @@ const cleanCombination = function (
 ) {
   const statsA = maybeOmit(stats, showDiff, DIFF_STATS_PROPS)
   const statsB = maybeOmit(statsA, showPrecision, PRECISION_STATS_PROPS)
-  return { ...combination, stats: statsB }
+  const statsC = maybeOmit(statsB, !showPrecision, NO_PRECISION_STATS_PROPS)
+  return { ...combination, stats: statsC }
 }
 
 const maybeOmit = function (obj, showProp, propNames) {
@@ -51,3 +52,4 @@ const METADATA_SYSTEM_PROPS = ['git', 'ci']
 const SYSTEM_PROPS = ['machine', 'versions']
 const DIFF_STATS_PROPS = ['diff']
 const PRECISION_STATS_PROPS = ['moe', 'rmoe', 'medianLow', 'medianHigh']
+const NO_PRECISION_STATS_PROPS = ['median']
