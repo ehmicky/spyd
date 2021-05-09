@@ -50,10 +50,10 @@ const normalizeSelect = function (value, propName) {
   return { [propName]: valueA }
 }
 
-const normalizeReporter = function (value, propName) {
+const normalizeReporter = function (value, propName, { force }) {
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
-  return { [propName]: valueA }
+  return force ? { [propName]: [] } : { [propName]: valueA }
 }
 
 const normalizeLimit = normalizeReporter
