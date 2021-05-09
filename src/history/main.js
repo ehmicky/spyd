@@ -56,7 +56,7 @@ export const getFromHistory = async function (config) {
   const results = await listLoadedResults(config)
   const { result, previous } = await listResultsByDelta(results, config)
   const history = await applySince(previous, config)
-  const resultA = mergeLastCombinations(result, previous)
+  const resultA = mergeLastCombinations(result, history)
   const resultB = mergeResults(resultA, previous, history)
   return resultB
 }

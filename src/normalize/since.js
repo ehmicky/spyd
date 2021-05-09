@@ -46,26 +46,26 @@ export const applySince = async function (previous, { since, cwd }) {
 //  - This is especially true for systems. There is always only one system
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
-export const mergeLastCombinations = function (result, previous) {
+export const mergeLastCombinations = function (result, history) {
   // eslint-disable-next-line fp/no-mutating-methods
-  return [...previous].reverse().reduce(mergePair, result)
+  return [...history].reverse().reduce(mergePair, result)
 }
 
-const mergePair = function (result, previousResult) {
-  const previousCombinations = getPreviousCombinations(
-    previousResult.combinations,
+const mergePair = function (result, historyResult) {
+  const historyCombinations = getHistoryCombinations(
+    historyResult.combinations,
     result.combinations,
   )
 
-  if (previousCombinations.length === 0) {
+  if (historyCombinations.length === 0) {
     return result
   }
 
-  return mergePreviousResult(result, previousResult, previousCombinations)
+  return mergeHistoryResult(result, historyResult, historyCombinations)
 }
 
-const getPreviousCombinations = function (previousCombinations, combinations) {
-  return previousCombinations.filter(
+const getHistoryCombinations = function (historyCombinations, combinations) {
+  return historyCombinations.filter(
     (combination) => !isSameCombination(combination, combinations),
   )
 }
@@ -78,9 +78,9 @@ const isSameCombination = function (combination, combinations) {
 
 // For each possible combination, if the last result already has it, we keep it.
 // Otherwise, we copy the most recent one.
-// When copying previous combinations, we do not remove them from the previous
+// When copying history combinations, we do not remove them from the previous
 // result. This means they are present both in the merged result and in
-// `result.previous`. This is intentional as it allows reporters to clearly
+// `result.history`. This is intentional as it allows reporters to clearly
 // display both the merged result and the time each combination was
 // actually measured.
 // When merging two results, we keep most of the properties of the latest
@@ -88,12 +88,12 @@ const isSameCombination = function (combination, combinations) {
 // This allows comparing different systems.
 // We make sure the latest `combinations` are first in the merged array, so we
 // can prioritize them.
-const mergePreviousResult = function (
+const mergeHistoryResult = function (
   { combinations, systems, ...result },
-  { systems: previousSystems },
-  previousCombinations,
+  { systems: historySystems },
+  historyCombinations,
 ) {
-  const combinationsA = [...combinations, ...previousCombinations]
-  const systemsA = mergeSystems(systems, previousSystems)
+  const combinationsA = [...combinations, ...historyCombinations]
+  const systemsA = mergeSystems(systems, historySystems)
   return { ...result, combinations: combinationsA, systems: systemsA }
 }
