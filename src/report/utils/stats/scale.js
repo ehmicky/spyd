@@ -23,10 +23,10 @@ export const getScale = function (combinations, name, kind) {
 // compare between them.
 const getMeasure = function ({ stats }, name, kind) {
   if (MEDIAN_KINS.has(kind)) {
-    return stats.median
+    return stats.median.raw
   }
 
-  return stats[name]
+  return stats[name].raw
 }
 
 const MEDIAN_KINS = new Set(['duration'])

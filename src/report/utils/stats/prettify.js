@@ -19,7 +19,10 @@ const addStatPretty = function ({
   combination,
   combination: {
     stats,
-    stats: { [name]: raw },
+    stats: {
+      [name]: stat,
+      [name]: { raw },
+    },
   },
   signed,
   scale,
@@ -27,7 +30,7 @@ const addStatPretty = function ({
   decimals,
 }) {
   const pretty = addItemsPretty({ raw, signed, scale, unit, decimals })
-  return { ...combination, stats: { ...stats, [name]: { raw, pretty } } }
+  return { ...combination, stats: { ...stats, [name]: { ...stat, pretty } } }
 }
 
 // Statistics are not shown if undefined (e.g. `diff` with no previous results,

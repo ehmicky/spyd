@@ -5,7 +5,7 @@
 // When every measure is an integer, no decimals are needed.
 export const getStatsDecimals = function (combinations, name, scale) {
   const measures = combinations
-    .flatMap(({ stats }) => stats[name])
+    .flatMap(({ stats }) => stats[name].raw)
     .filter(isDefined)
     .map((measure) => Math.abs(measure) / scale)
 
