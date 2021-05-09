@@ -43,6 +43,8 @@ const addColumn = function (
 // List of columns, with their `stats.*` property
 const COLUMNS = [
   'median',
+  'medianLow',
+  'medianHigh',
   'mean',
   'min',
   'low',
