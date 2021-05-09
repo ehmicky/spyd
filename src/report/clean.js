@@ -50,6 +50,6 @@ const maybeOmit = function (obj, showProp, propNames) {
 const TOP_METADATA_PROPS = ['id', 'timestamp']
 const METADATA_SYSTEM_PROPS = ['git', 'ci']
 const SYSTEM_PROPS = ['machine', 'versions']
-const DIFF_STATS_PROPS = ['diff']
+const DIFF_STATS_PROPS = ['diff', 'diffPrecise']
 const PRECISION_STATS_PROPS = ['moe', 'rmoe', 'medianLow', 'medianHigh']
 const NO_PRECISION_STATS_PROPS = ['median']

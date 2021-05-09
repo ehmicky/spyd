@@ -12,27 +12,27 @@ export const addStatColor = function ({
     },
   },
 }) {
-  const prettyColor = addItemsColor(pretty, raw, name)
-  const prettyPaddedColor = addItemsColor(prettyPadded, raw, name)
+  const prettyColor = addItemsColor(pretty, { raw, name, stats })
+  const prettyPaddedColor = addItemsColor(prettyPadded, { raw, name, stats })
   return {
     ...combination,
     stats: { ...stats, [name]: { ...stat, prettyColor, prettyPaddedColor } },
   }
 }
 
-const addItemsColor = function (pretty, raw, name) {
+const addItemsColor = function (pretty, { raw, name, stats }) {
   if (pretty === '') {
     return ''
   }
 
   return Array.isArray(pretty)
-    ? pretty.map((item) => addItemColor(item, raw, name))
-    : addItemColor(pretty, raw, name)
+    ? pretty.map((item) => addItemColor(item, { raw, name, stats }))
+    : addItemColor(pretty, { raw, name, stats })
 }
 
-const addItemColor = function (pretty, raw, name) {
+const addItemColor = function (pretty, { raw, name, stats }) {
   const prettyA = addSuffixColors(pretty)
-  const prettyB = addSpecificColors(prettyA, raw, name)
+  const prettyB = addSpecificColors(prettyA, { raw, name, stats })
   return prettyB
 }
 
@@ -46,7 +46,7 @@ const addSuffixColors = function (pretty) {
 const SUFFIX_REGEXP = /^([^a-z%]*)(.*)$/u
 
 // Add stat-specific colors, e.g. on `diff`
-const addSpecificColors = function (pretty, raw, name) {
+const addSpecificColors = function (pretty, { raw, name, stats }) {
   if (raw === undefined) {
     return pretty
   }
@@ -57,7 +57,7 @@ const addSpecificColors = function (pretty, raw, name) {
     return pretty
   }
 
-  const color = getColor(raw)
+  const color = getColor(raw, stats)
 
   if (color === undefined) {
     return pretty
@@ -66,17 +66,13 @@ const addSpecificColors = function (pretty, raw, name) {
   return color(pretty)
 }
 
-const getDiffColor = function (diff) {
-  if (diff > DIFF_COLOR_THRESHOLD) {
-    return badColor
+const getDiffColor = function (diff, { diffPrecise }) {
+  if (!diffPrecise) {
+    return
   }
 
-  if (diff < -DIFF_COLOR_THRESHOLD) {
-    return goodColor
-  }
+  return diff > 0 ? badColor : goodColor
 }
-
-const DIFF_COLOR_THRESHOLD = 1e-2
 
 const STAT_COLORS = {
   diff: getDiffColor,

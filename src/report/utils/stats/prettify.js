@@ -29,28 +29,35 @@ const addStatPretty = function ({
   unit,
   decimals,
 }) {
-  const pretty = addItemsPretty({ raw, signed, scale, unit, decimals })
+  const pretty = addItemsPretty({ raw, signed, scale, unit, decimals, stats })
   return { ...combination, stats: { ...stats, [name]: { ...stat, pretty } } }
 }
 
 // Statistics are not shown if undefined (e.g. `diff` with no previous results,
 // or not-measure-yet in preview)
-const addItemsPretty = function ({ raw, signed, scale, unit, decimals }) {
+const addItemsPretty = function ({
+  raw,
+  signed,
+  scale,
+  unit,
+  decimals,
+  stats,
+}) {
   if (raw === undefined) {
     return ''
   }
 
   return Array.isArray(raw)
     ? raw.map((item) =>
-        addItemPretty({ raw: item, signed, scale, unit, decimals }),
+        addItemPretty({ raw: item, signed, scale, unit, decimals, stats }),
       )
-    : addItemPretty({ raw, signed, scale, unit, decimals })
+    : addItemPretty({ raw, signed, scale, unit, decimals, stats })
 }
 
-const addItemPretty = function ({ raw, signed, scale, unit, decimals }) {
+const addItemPretty = function ({ raw, signed, scale, unit, decimals, stats }) {
   const scaledRaw = raw / scale
   const roundedRaw = scaledRaw.toFixed(decimals)
   const pretty = `${roundedRaw}${unit}`
-  const prettyA = addSign(pretty, signed)
+  const prettyA = addSign(pretty, signed, stats)
   return prettyA
 }

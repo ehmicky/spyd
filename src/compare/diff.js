@@ -57,15 +57,24 @@ const addDiff = function (
   { stats, stats: { median }, ...combination },
   { stats: { median: previousMedian } },
 ) {
-  const diff = getDiff(median, previousMedian)
-  return { ...combination, stats: { ...stats, diff } }
+  const diffStats = getDiff(median, previousMedian)
+  return { ...combination, stats: { ...stats, ...diffStats } }
 }
 
 // `median` can be `undefined` during preview
 const getDiff = function (median, previousMedian) {
   if (median === undefined || median === 0 || previousMedian === 0) {
-    return
+    return {}
   }
 
-  return median / previousMedian - 1
+  const diff = median / previousMedian - 1
+  const diffPrecise = isDiffPrecise(diff)
+  return { diff, diffPrecise }
 }
+
+// Whether `diff` is statistically significant
+const isDiffPrecise = function (diff) {
+  return Math.abs(diff) > DIFF_PRECISE_THRESHOLD
+}
+
+const DIFF_PRECISE_THRESHOLD = 1e-2
