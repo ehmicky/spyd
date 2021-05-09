@@ -26,7 +26,7 @@ export const performBenchmark = async function (
     history,
   } = await previewStartAndMeasure({ combinations, config, initResult })
   const { rawResult, result } = getFinalResult({
-    combinationsA,
+    combinations: combinationsA,
     initResult,
     previous,
     history,
