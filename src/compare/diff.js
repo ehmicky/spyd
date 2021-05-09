@@ -15,20 +15,17 @@ import { findValue } from '../utils/find.js'
 // dynamically and depends on the `since` configuration property. Also some
 // results might have been dynamically deleted or filtered out.
 // If `previous` is empty due to the `since` property, this is noop.
-export const addCombinationsDiff = function (
-  { combinations, ...result },
-  previous,
-) {
+export const addCombinationsDiff = function (result, previous) {
   if (previous.length === 0) {
-    return { ...result, combinations }
+    return result
   }
 
   // eslint-disable-next-line fp/no-mutating-methods
   const previousResults = [...previous].reverse()
-  const combinationsA = combinations.map((combination) =>
+  const combinations = result.combinations.map((combination) =>
     addCombinationDiff(combination, previousResults),
   )
-  return { ...result, combinations: combinationsA }
+  return { ...result, combinations }
 }
 
 const addCombinationDiff = function (combination, previousResults) {
