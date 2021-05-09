@@ -1,6 +1,5 @@
 import stringWidth from 'string-width'
 
-import { padStart } from '../../utils/padding.js'
 import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { getCombinationName } from '../../utils/title.js'
 
@@ -27,7 +26,9 @@ const FIRST_CELL_PADDING = ' '.repeat(FIRST_CELL_PADDING_WIDTH)
 
 const getCell = function (stats, column, columnWidth) {
   const stat = getStat(stats, column)
-  return padStart(stat, columnWidth)
+  const statLength = getStatLength(stats, column)
+  const padding = ' '.repeat(Math.max(0, columnWidth - statLength))
+  return `${padding}${stat}`
 }
 
 // Retrieve a single cell in the table, with a specific stat
