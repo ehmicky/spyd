@@ -1,5 +1,6 @@
 import { ALL_CONFIG } from '../config/all.js'
 import { HISTORY_CONFIG } from '../config/history.js'
+import { REMOVE_CONFIG } from '../config/remove.js'
 import { REPORT_CONFIG } from '../config/report.js'
 import { SELECT_CONFIG } from '../config/select.js'
 
@@ -11,6 +12,7 @@ export const REMOVE_COMMAND = {
     ...ALL_CONFIG,
     ...SELECT_CONFIG,
     ...REPORT_CONFIG,
+    ...REMOVE_CONFIG,
     ...HISTORY_CONFIG,
   },
 
