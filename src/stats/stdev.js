@@ -17,36 +17,10 @@ export const getStdev = function ({
   length,
   median,
 }) {
-  if (median === 0 || length < MIN_STDEV_LOOPS) {
-    return
-  }
-
   const variance =
     getSumDeviation({ array, lowIndex, highIndex, median }) / (length - 1)
   return Math.sqrt(variance)
 }
-
-// `stdev` might be very imprecise when there are not enough values to compute
-// it from. This is a problem since `stdev` is:
-//  - Used to compute the `moe`, which is used to know whether to stop
-//    measuring. Imprecise `stdev` might lead to stopping measuring too early
-//    resulting in imprecise overall results.
-//  - Used to estimate the duration left in previews. Due to the preview's
-//    smoothing algorithm, imprecise stdev in the first previews have an
-//    impact on the next previews.
-//  - Reported
-// From a statistical standpoint:
-//  - T-values counteract the imprecision brought by the low number of loops
-//  - So `stdev`/`moe` are statistically significant with a 95% confidence
-//    interval even when there are only 2 loops.
-//  - However, the 5% of cases outside of that confidence interval have a bigger
-//    difference (in average) to the real value, when the number of loops is
-//    low. I.e. while the probability of errors is the same, the impact size is
-//    bigger.
-// A higher value makes standard deviation less likely to be computed for very
-// slow tasks.
-// A lower value makes it more likely to use imprecise standard deviations.
-const MIN_STDEV_LOOPS = 5
 
 // We use a separate function from `getSum()` because it is much more performant
 const getSumDeviation = function ({ array, lowIndex, highIndex, median }) {
@@ -66,9 +40,5 @@ const getSumDeviation = function ({ array, lowIndex, highIndex, median }) {
 // This is more useful than stdev when comparing different combinations, or when
 // targetting a specific precision threshold.
 export const getRstdev = function (stdev, median) {
-  if (stdev === undefined) {
-    return
-  }
-
   return stdev / median
 }

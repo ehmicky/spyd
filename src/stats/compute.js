@@ -1,3 +1,4 @@
+import { getConfidenceInterval } from './confidence.js'
 import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getMoe, getRmoe } from './moe.js'
@@ -43,19 +44,23 @@ export const computeStats = function (measures) {
     length,
     bucketCount: HISTOGRAM_SIZE,
   })
-  const stdev = getStdev({
-    array: measures,
-    lowIndex,
-    highIndex,
-    length,
-    median,
-  })
-  const rstdev = getRstdev(stdev, median)
-  const moe = getMoe(stdev, length)
-  const rmoe = getRmoe(moe, median)
+
+  const { stdev, rstdev, moe, rmoe, medianLow, medianHigh } = getPrecisionStats(
+    {
+      measures,
+      lowIndex,
+      highIndex,
+      length,
+      low,
+      high,
+      median,
+    },
+  )
 
   return {
     median,
+    medianLow,
+    medianHigh,
     mean,
     min,
     max,
@@ -72,3 +77,59 @@ export const computeStats = function (measures) {
 
 const QUANTILES_SIZE = 1e2
 const HISTOGRAM_SIZE = 1e2
+
+// Retrieve stats related to `stdev`. Those might be absent if the number of
+// loops is low.
+const getPrecisionStats = function ({
+  measures,
+  lowIndex,
+  highIndex,
+  length,
+  low,
+  high,
+  median,
+}) {
+  if (median === 0 || length < MIN_STDEV_LOOPS) {
+    return {}
+  }
+
+  const stdev = getStdev({
+    array: measures,
+    lowIndex,
+    highIndex,
+    length,
+    median,
+  })
+  const rstdev = getRstdev(stdev, median)
+  const moe = getMoe(stdev, length)
+  const rmoe = getRmoe(moe, median)
+  const { medianLow, medianHigh } = getConfidenceInterval({
+    median,
+    moe,
+    low,
+    high,
+  })
+  return { stdev, rstdev, moe, rmoe, medianLow, medianHigh }
+}
+
+// `stdev` might be very imprecise when there are not enough values to compute
+// it from. This is a problem since `stdev` is:
+//  - Used to compute the `moe`, which is used to know whether to stop
+//    measuring. Imprecise `stdev` might lead to stopping measuring too early
+//    resulting in imprecise overall results.
+//  - Used to estimate the duration left in previews. Due to the preview's
+//    smoothing algorithm, imprecise stdev in the first previews have an
+//    impact on the next previews.
+//  - Reported
+// From a statistical standpoint:
+//  - T-values counteract the imprecision brought by the low number of loops
+//  - So `stdev`/`moe` are statistically significant with a 95% confidence
+//    interval even when there are only 2 loops.
+//  - However, the 5% of cases outside of that confidence interval have a bigger
+//    difference (in average) to the real value, when the number of loops is
+//    low. I.e. while the probability of errors is the same, the impact size is
+//    bigger.
+// A higher value makes standard deviation less likely to be computed for very
+// slow tasks.
+// A lower value makes it more likely to use imprecise standard deviations.
+const MIN_STDEV_LOOPS = 5

@@ -57,10 +57,6 @@ import { getTvalue } from './tvalue.js'
 //    too-close-to-compare combinations, using a welch's t-test between each
 //    combination pair
 export const getMoe = function (stdev, length) {
-  if (stdev === undefined) {
-    return
-  }
-
   const standardError = stdev / Math.sqrt(length)
   const tvalue = getTvalue(length)
   const marginOfError = standardError * tvalue
@@ -71,10 +67,6 @@ export const getMoe = function (stdev, length) {
 // This is more useful than moe when comparing different combinations, or when
 // targetting a specific precision threshold.
 export const getRmoe = function (moe, median) {
-  if (moe === undefined) {
-    return
-  }
-
   return moe / median
 }
 
