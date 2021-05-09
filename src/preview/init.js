@@ -22,7 +22,8 @@ export const initPreview = function (
   return {
     quiet,
     initResult,
-    results: [],
+    previous: [],
+    history: [],
     reporters: reportersA,
     titles,
     combinations: combinationsA,
