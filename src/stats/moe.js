@@ -58,7 +58,7 @@ import { getTvalue } from './tvalue.js'
 //    combination pair
 export const getMoe = function (stdev, length) {
   const standardError = stdev / Math.sqrt(length)
-  const tvalue = getTvalue(length)
+  const tvalue = getTvalue(length - 1)
   const marginOfError = standardError * tvalue
   return marginOfError
 }
@@ -85,7 +85,7 @@ export const getLengthForMoe = function (moeTarget, stdev) {
     lengths.add(length)
     // eslint-disable-next-line fp/no-mutation
     length = Math.max(
-      Math.round(((getTvalue(length) * stdev) / moeTarget) ** 2),
+      Math.round(((getTvalue(length - 1) * stdev) / moeTarget) ** 2),
       MIN_LENGTH,
     )
   }

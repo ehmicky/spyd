@@ -1,8 +1,6 @@
 // Retrieve t-value, using t-distribution, two-tailed, with 95% confidence
 // interval.
-export const getTvalue = function (length) {
-  const degreesOfFreedom = length - 1
-
+export const getTvalue = function (degreesOfFreedom) {
   if (degreesOfFreedom >= T_VALUES.length) {
     return MIN_T_VALUE
   }
