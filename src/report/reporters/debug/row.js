@@ -1,11 +1,10 @@
-import stringWidth from 'string-width'
-
+import { titleColor } from '../../utils/colors.js'
 import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { getCombinationName } from '../../utils/title.js'
 
 // Retrieve a single row, including the row name
 export const getRow = function ({ titles, stats }, columns, columnWidth) {
-  const firstCell = getFirstCell(titles)
+  const firstCell = titleColor(getFirstCell(titles))
   const cells = columns
     .map((column) => getCell(stats, column, columnWidth))
     .join(COLUMN_SEPARATOR)
@@ -13,7 +12,7 @@ export const getRow = function ({ titles, stats }, columns, columnWidth) {
 }
 
 export const getFirstCellWidth = function (titles) {
-  return stringWidth(getFirstCell(titles))
+  return getFirstCell(titles).length
 }
 
 const getFirstCell = function (titles) {

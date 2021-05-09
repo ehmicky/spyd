@@ -1,11 +1,10 @@
-import stringWidth from 'string-width'
-
+import { titleColor } from '../colors.js'
 import { getCombinationName } from '../title.js'
 
 // Retrieve sidebar with the combination name
 export const getTitleBlock = function (titles, height, showStats) {
   const newlines = getNewlines(height, showStats)
-  return `${newlines}${getCombinationTitle(titles, showStats)}`
+  return `${newlines}${titleColor(getCombinationTitle(titles, showStats))}`
 }
 
 const getNewlines = function (height, showStats) {
@@ -15,7 +14,7 @@ const getNewlines = function (height, showStats) {
 }
 
 export const getTitleWidth = function ([{ titles }], showStats) {
-  return stringWidth(getCombinationTitle(titles, showStats))
+  return getCombinationTitle(titles, showStats).length
 }
 
 const getCombinationTitle = function (titles, showStats) {

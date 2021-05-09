@@ -1,5 +1,10 @@
 import { getScreenWidth, getPaddedScreenWidth } from '../report/tty.js'
-import { goodColor, separatorColor, noteColor } from '../report/utils/colors.js'
+import {
+  goodColor,
+  separatorColor,
+  noteColor,
+  titleColor,
+} from '../report/utils/colors.js'
 import { addPadding } from '../report/utils/indent.js'
 
 import { wrapPaddedRows } from './wrap.js'
@@ -65,7 +70,9 @@ const getCounterRow = function (
 ) {
   const counter = getCounter(index, total).padEnd(leftWidth)
   const descriptionA = getDescription(description, combinationName)
-  return wrapPaddedRows(`${counter}${combinationName}${descriptionA}`)
+  return wrapPaddedRows(
+    `${counter}${titleColor(combinationName)}${descriptionA}`,
+  )
 }
 
 // The `counter` is between `durationLeft` and `progressBar` so that there is

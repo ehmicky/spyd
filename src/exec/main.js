@@ -1,5 +1,6 @@
 import { getCombinationName } from '../combination/ids.js'
 import { measureCombinations } from '../measure/several.js'
+import { titleColor } from '../report/utils/colors.js'
 
 // Execute tasks without benchmarking them.
 // We run each serially, so the output is not interleaved.
@@ -25,7 +26,7 @@ export const execCombination = async function (combination, { cwd }) {
 // Print the ids of each combination before running them, so users can
 // visually separate their output
 const printCombinationName = function (combination) {
-  const combinationName = getCombinationName(combination)
+  const combinationName = titleColor(getCombinationName(combination))
   // eslint-disable-next-line no-restricted-globals, no-console
   console.log(combinationName)
 }
