@@ -1,4 +1,5 @@
-import { getBottomBarElements, getBottomBar } from './bottom.js'
+import { getBottomBar } from './bottom_bar.js'
+import { getBottomBarElements } from './bottom_elements.js'
 import { addInitialScrollAction, addScrollAction } from './scrolling_action.js'
 import { updateScrolling } from './scrolling_update.js'
 
