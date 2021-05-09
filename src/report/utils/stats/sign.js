@@ -8,21 +8,17 @@ export const addSign = function (pretty, signed, stats) {
 }
 
 const addNeverSign = function (pretty) {
-  if (hasMinusSign(pretty)) {
-    return `${PLUS_MINUS_SIGN}${pretty.slice(1)}`
-  }
-
-  return `${PLUS_MINUS_SIGN}${pretty}`
+  return hasMinusSign(pretty)
+    ? `${PLUS_MINUS_SIGN}${pretty.slice(1)}`
+    : `${PLUS_MINUS_SIGN}${pretty}`
 }
 
 const addDiffSign = function (pretty, { diffPrecise }) {
-  const impreciseSign = diffPrecise ? '' : DIFF_IMPRECISE_SIGN
+  const impreciseSign = diffPrecise ? '' : IMPRECISE_SIGN
 
-  if (hasMinusSign(pretty)) {
-    return `${DIFF_MINUS_SIGN}${impreciseSign}${pretty.slice(1)}`
-  }
-
-  return `${DIFF_PLUS_SIGN}${impreciseSign}${pretty}`
+  return hasMinusSign(pretty)
+    ? `${impreciseSign}${pretty}`
+    : `${impreciseSign}${PLUS_SIGN}${pretty}`
 }
 
 const hasMinusSign = function (pretty) {
@@ -32,9 +28,8 @@ const hasMinusSign = function (pretty) {
 // Works on all terminals
 const PLUS_MINUS_SIGN = '±'
 const MINUS_SIGN = '-'
-const DIFF_MINUS_SIGN = '\u25BC '
-const DIFF_PLUS_SIGN = '\u25B2 '
-const DIFF_IMPRECISE_SIGN = '\u2248'
+const PLUS_SIGN = '+'
+const IMPRECISE_SIGN = '\u2248'
 
 const SIGN_HANDLERS = {
   never: addNeverSign,
