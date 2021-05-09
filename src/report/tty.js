@@ -30,9 +30,13 @@ export const clearScreen = async function () {
 // Should be done first, before switching to using `clearScreen()`.
 export const clearScreenFull = async function () {
   const screenHeight = getScreenHeight()
-  const newlines = '\n'.repeat(screenHeight - 2)
+  const newlines = '\n'.repeat(screenHeight - CLEAR_SCREEN_ROWS)
   await printToTty(newlines)
 }
+
+// Ensure we don't remove the initial user prompt but still remove the
+// "Starting..." message
+const CLEAR_SCREEN_ROWS = 2
 
 // When stdin is not a tty, we do not use preview by default.
 // Many preview features depends on interactive input: keypress, scrolling.
