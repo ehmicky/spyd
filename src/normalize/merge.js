@@ -24,7 +24,8 @@ import { mergeLastCombinations } from './last.js'
 //  - For `show` and `remove`, this is the result being reported.
 //    This ensures result reported with `show` are shown the same way as when
 //    when they were measured. This is also simpler to understand since it
-//    always involve only two bases (the reported result and the "since" result)
+//    always involves only two bases (the reported result and the "since"
+//    result)
 // Previous results are filtered by `select`. This purposely impacts the
 // resolution of `since`.
 export const applySince = async function (previous, { since, cwd }) {
