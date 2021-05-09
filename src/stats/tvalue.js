@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 // Retrieve t-value, using t-distribution, two-tailed, with 95% confidence
 // interval.
 export const getTvalue = function (length) {
@@ -41,4 +40,3 @@ const T_VALUES = [
   1.9723, 1.9723, 1.9722, 1.9721, 1.9721, 1.972, 1.972, 1.9719,
 ]
 /* eslint-enable no-magic-numbers */
-/* eslint-enable max-lines */
