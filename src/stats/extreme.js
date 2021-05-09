@@ -1,5 +1,3 @@
-import { getQuantilePosition } from './quantile.js'
-
 // Measures usually contain some very slow outliers due to background processes
 // or engine optimization.
 // Those are useful to know as they indicate:
