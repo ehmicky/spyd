@@ -4,6 +4,7 @@ import { getSystems } from '../system/info.js'
 import { cleanObject } from '../utils/clean.js'
 
 import { mergeResults } from './merge.js'
+import { addHistory } from './since.js'
 
 // Add metadata information to initial result
 export const getInitResult = function ({
@@ -27,8 +28,10 @@ export const getFinalResult = function ({
 }) {
   const combinationsA = combinations.map(getFinalProps)
   const rawResult = { ...initResult, combinations: combinationsA }
-  const result = mergeResults(rawResult, previous, history)
-  return { rawResult, result }
+  const rawResultA = addHistory(rawResult, history)
+  const result = mergeResults(rawResultA, previous)
+  // TODO: what's `rawResult` used for?
+  return { rawResult: rawResultA, result }
 }
 
 // Retrieve final combination properties used for reporting.

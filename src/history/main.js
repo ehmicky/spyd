@@ -6,7 +6,11 @@ import { UserError } from '../error/main.js'
 import { compressResult } from '../normalize/compress.js'
 import { loadResults } from '../normalize/load.js'
 import { mergeResults } from '../normalize/merge.js'
-import { applySince, mergeLastCombinations } from '../normalize/since.js'
+import {
+  applySince,
+  addHistory,
+  mergeLastCombinations,
+} from '../normalize/since.js'
 import { isTtyInput } from '../report/tty.js'
 
 import { addResult, removeResult, listResults } from './results.js'
@@ -56,9 +60,10 @@ export const getFromHistory = async function (config) {
   const results = await listLoadedResults(config)
   const { result, previous } = await listResultsByDelta(results, config)
   const history = await applySince(previous, config)
-  const resultA = mergeLastCombinations(result, history)
-  const resultB = mergeResults(resultA, previous, history)
-  return resultB
+  const resultA = addHistory(result, history)
+  const resultB = mergeLastCombinations(resultA, history)
+  const resultC = mergeResults(resultB, previous)
+  return resultC
 }
 
 // List, sort, filter and normalize all results

@@ -8,10 +8,9 @@ import { groupResultCombinations } from './group.js'
 //    `since` filtering
 //  - Add category grouping and ranking
 //  - Add `result.systems[0]` (shared system)
-//  - Add `result.history` pointing to previous results after `since` fitering
-export const mergeResults = function (result, previous, history) {
+export const mergeResults = function (result, previous) {
   const resultA = addCombinationsDiff(result, previous)
   const resultB = groupResultCombinations(resultA)
   const resultC = addSharedSystem(resultB)
-  return { ...resultC, history }
+  return resultC
 }

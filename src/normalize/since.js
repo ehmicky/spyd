@@ -26,6 +26,24 @@ export const applySince = async function (previous, { since, cwd }) {
   return sinceIndex === -1 ? [] : previous.slice(sinceIndex)
 }
 
+// Add `result.history` pointing to previous results after `since` fitering
+// This includes the current result:
+//  - For `show|remove`, this is the result targeted by delta
+//  - For `bench`, this is the currently measured result
+//  - This allows time series reporters to use `result.history`
+//     - Since those should report the current result not normalized,
+//       i.e. before `mergeLastCombinations` with `show|remove`
+//  - We ensure that that result has the same shape as other history results,
+//    i.e. before normalization
+// We do not expose some `combination.history` property
+//  - This would complicate the data model by creating copies of the same
+//    properties.
+//  - Instead, reporters should use logic to retrieve the history of each
+//    combination
+export const addHistory = function (result, history) {
+  return { ...result, history: [...history, result] }
+}
+
 // `show|remove` commands allow reporting several reports at once using the
 // `since` configuration property:
 //  - This reports the most recent combination of each sets of categories
