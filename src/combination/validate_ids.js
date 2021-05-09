@@ -32,6 +32,8 @@ const validateCategoryIds = function ({ category, id }) {
       `Invalid ${category} "${id}": the identifier must contain only letters, digits, - or _`,
     )
   }
+
+  validateReservedIds(id, category)
 }
 
 // We do not allow starting with dash because of CLI flags parsing.
@@ -45,6 +47,19 @@ const USER_ID_INVALID_START = '-'
 // configuration properties.
 // We forbid other characters for forward compatibility.
 const USER_ID_REGEXP = /^\w[\w-]*$/u
+
+const validateReservedIds = function (id, category) {
+  const reservedIdA = RESERVED_IDS.find((reservedId) => id === reservedId)
+
+  if (reservedIdA !== undefined) {
+    throw new UserError(
+      `Invalid ${category} "${id}": "${id}" is a reserved word`,
+    )
+  }
+}
+
+// 'not' is used by `select`
+const RESERVED_IDS = ['not']
 
 // We validate that identifiers are unique not only within their combination
 // category but across combination categories.
