@@ -28,10 +28,9 @@ export const getFinalResult = function ({
 }) {
   const combinationsA = combinations.map(getFinalProps)
   const rawResult = { ...initResult, combinations: combinationsA }
-  const rawResultA = addHistory(rawResult, history)
-  const result = mergeResults(rawResultA, previous)
-  // TODO: what's `rawResult` used for?
-  return { rawResult: rawResultA, result }
+  const result = addHistory(rawResult, history)
+  const resultA = mergeResults(result, previous)
+  return { rawResult, result: resultA }
 }
 
 // Retrieve final combination properties used for reporting.
