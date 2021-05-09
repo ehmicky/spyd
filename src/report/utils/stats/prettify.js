@@ -3,8 +3,8 @@ import { getScale } from './scale.js'
 import { addSign } from './sign.js'
 import { getUnit } from './unit.js'
 
-// Rename `stat` to `stat.raw` and create `stat.pretty` which stringifies,
-// scales, rounds, adds decimals and adds a unit.
+// Create `stat.pretty` which stringifies, scales, rounds, adds decimals and
+// adds a unit.
 export const addStatsPretty = function ({ combinations, name, kind, signed }) {
   const scale = getScale(combinations, name, kind)
   const unit = getUnit(kind, scale)
