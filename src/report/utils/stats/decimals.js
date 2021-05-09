@@ -13,13 +13,17 @@ export const getStatsDecimals = function (combinations, name, scale) {
     return 0
   }
 
-  const minMeasure = Math.min(...measures)
+  const minMeasure = Math.min(...measures.filter(isNotZero))
   return getDecimals(minMeasure)
 }
 
 // `undefined` happens in preview mode if not-measured-yet.
 const isDefined = function (measure) {
   return measure !== undefined
+}
+
+const isNotZero = function (measure) {
+  return measure !== 0
 }
 
 const getDecimals = function (measure) {
