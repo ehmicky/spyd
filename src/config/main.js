@@ -14,15 +14,15 @@ export const getConfig = async function (command, configFlags = {}) {
 
   const config = await loadConfig(configFlags, processCwd)
 
-  const envInfo = getEnvInfo(processCwd, config)
-  const configA = addDefaultConfig({ config, command, envInfo, processCwd })
+  const configA = addDefaultConfig({ config, command, processCwd })
 
-  const configB = { ...configA, envInfo }
+  const configB = addEnvInfo(configA)
   const configC = normalizeConfig(configB)
   const configD = await addPlugins(configC)
   return configD
 }
 
-const getEnvInfo = function (processCwd, { cwd = processCwd }) {
-  return envCi({ cwd })
+const addEnvInfo = function (config) {
+  const envInfo = envCi({ cwd: config.cwd })
+  return { ...config, envInfo }
 }

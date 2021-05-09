@@ -1,20 +1,12 @@
 import { isTtyInput, isTtyOutput } from '../report/tty.js'
 
 // Add default configuration properties
-export const addDefaultConfig = function ({
-  config,
-  command,
-  envInfo: { isCi },
-  processCwd,
-}) {
-  const defaultDelta = isCi ? 'ci' : 1
+export const addDefaultConfig = function ({ config, command, processCwd }) {
   return {
     ...DEFAULT_CONFIG,
     cwd: processCwd,
     quiet: !isTtyInput() || !isTtyOutput(),
     force: !isTtyInput(),
-    delta: defaultDelta,
-    since: defaultDelta,
     showSystem: config.system !== undefined,
     showMetadata: METADATA_COMMANDS.has(command),
     ...config,
@@ -33,6 +25,8 @@ export const DEFAULT_CONFIG = {
   system: 'default_system',
   save: false,
   limit: [],
+  delta: 1,
+  since: 0,
   titles: {},
   output: undefined,
   showTitles: false,
