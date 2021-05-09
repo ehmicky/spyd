@@ -22,15 +22,10 @@ import { addTitles, addTitle } from './add.js'
 // We do this by adding a `title` property for every `id` property.
 export const showResultTitles = function (result, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
-  return addAllTitles(result, titlesA)
-}
-
-const addAllTitles = function (result, titles) {
-  const resultA = addCombinationsTitles(result, titles)
-  const resultB = addCategoriesTitles(resultA, titles)
-  const resultC = addSystemsTitles(resultB, titles)
-  const resultD = addPreviousTitles(resultC, titles)
-  return resultD
+  const resultA = addCombinationsTitles(result, titlesA)
+  const resultB = addCategoriesTitles(resultA, titlesA)
+  const resultC = addSystemsTitles(resultB, titlesA)
+  return resultC
 }
 
 const addCombinationsTitles = function ({ combinations, ...result }, titles) {
@@ -64,16 +59,4 @@ const addSystemsTitles = function ({ systems, ...result }, titles) {
 
 const addSystemTitle = function (system, titles) {
   return addTitle(system, 'id', titles)
-}
-
-// `previous` is `undefined` when recursing over `previous`.
-const addPreviousTitles = function ({ previous, ...result }, titles) {
-  if (previous === undefined) {
-    return result
-  }
-
-  const previousA = previous.map((previousResult) =>
-    addAllTitles(previousResult, titles),
-  )
-  return { ...result, previous: previousA }
 }
