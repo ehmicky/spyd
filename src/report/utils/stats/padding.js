@@ -1,22 +1,18 @@
-import stringWidth from 'string-width'
-
-import { PRETTY_NAME_SUFFIX } from './prettify.js'
-
-// Pad `*.statsPadded` on the left so they vertically align.
+// Create `stat.prettyPadded`, i.e. `stat.pretty` padded on the left so they
+// vertically align.
 // Right padding was already performed when setting the number of decimals.
-export const padCombinations = function (combinations, name) {
-  const prettyName = `${name}${PRETTY_NAME_SUFFIX}`
-  const padding = getPadding(prettyName, combinations)
+export const addStatPadded = function (combinations, name) {
+  const padding = getPadding(combinations, name)
   return combinations.map((combination) =>
-    padCombination({ name, prettyName, combination, padding }),
+    addItemsPadded({ name, combination, padding }),
   )
 }
 
 // Retrieve the maximum length of any measures for each stat
-const getPadding = function (prettyName, combinations) {
+const getPadding = function (combinations, name) {
   const statLengths = combinations
-    .flatMap(({ stats }) => stats[prettyName])
-    .map(stringWidth)
+    .flatMap(({ stats }) => stats[name].pretty)
+    .map(getLength)
 
   if (statLengths.length === 0) {
     return 0
@@ -25,27 +21,31 @@ const getPadding = function (prettyName, combinations) {
   return Math.max(...statLengths)
 }
 
-const padCombination = function ({
+const getLength = function ({ length }) {
+  return length
+}
+
+const addItemsPadded = function ({
   name,
-  prettyName,
   combination,
   combination: {
     stats,
-    stats: { [prettyName]: statPretty },
+    stats: {
+      [name]: stat,
+      [name]: { pretty },
+    },
   },
   padding,
 }) {
-  const paddedName = `${name}${PADDED_NAME_SUFFIX}`
-  const statPadded = Array.isArray(statPretty)
-    ? statPretty.map((item) => padStat(item, padding))
-    : padStat(statPretty, padding)
-  return { ...combination, stats: { ...stats, [paddedName]: statPadded } }
+  const prettyPadded = Array.isArray(pretty)
+    ? pretty.map((item) => addItemPadded(item, padding))
+    : addItemPadded(pretty, padding)
+  return {
+    ...combination,
+    stats: { ...stats, [name]: { ...stat, prettyPadded } },
+  }
 }
 
-const PADDED_NAME_SUFFIX = 'Padded'
-
-const padStat = function (statPretty, padding) {
-  const length = stringWidth(statPretty)
-  const spaces = ' '.repeat(Math.max(padding - length, 0))
-  return `${spaces}${statPretty}`
+const addItemPadded = function (pretty, padding) {
+  return pretty.padStart(pretty, padding.length)
 }

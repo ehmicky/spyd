@@ -1,33 +1,69 @@
 import { badColor, goodColor, suffixColor } from '../colors.js'
 
+// Add `stat.prettyColor` and `stat.prettyPaddedColor`
+export const addStatColor = function ({
+  name,
+  combination,
+  combination: {
+    stats,
+    stats: {
+      [name]: stat,
+      [name]: { raw, pretty, prettyPadded },
+    },
+  },
+}) {
+  const prettyColor = addItemsColor(pretty, raw, name)
+  const prettyPaddedColor = addItemsColor(prettyPadded, raw, name)
+  return {
+    ...combination,
+    stats: { ...stats, [name]: { ...stat, prettyColor, prettyPaddedColor } },
+  }
+}
+
+const addItemsColor = function (pretty, raw, name) {
+  if (pretty === '') {
+    return ''
+  }
+
+  return Array.isArray(pretty)
+    ? pretty.map((item) => addItemColor(item, raw, name))
+    : addItemColor(pretty, raw, name)
+}
+
+const addItemColor = function (pretty, raw, name) {
+  const prettyA = addSuffixColors(pretty)
+  const prettyB = addSpecificColors(prettyA, raw, name)
+  return prettyB
+}
+
 // Add colors to suffixes (units, exponents, %) so they are easy to distinguish
 // from the number they are attached to.
-export const addSuffixColors = function (statPretty) {
-  const [, number, suffix] = SUFFIX_REGEXP.exec(statPretty)
+const addSuffixColors = function (pretty) {
+  const [, number, suffix] = SUFFIX_REGEXP.exec(pretty)
   return `${number}${suffixColor(suffix)}`
 }
 
 const SUFFIX_REGEXP = /^([^a-z%]*)(.*)$/u
 
-// Add colors on `diff`
-export const addDiffColors = function (stat, statPretty, name) {
-  if (stat === undefined) {
-    return statPretty
+// Add stat-specific colors, e.g. on `diff`
+const addSpecificColors = function (pretty, raw, name) {
+  if (raw === undefined) {
+    return pretty
   }
 
   const getColor = STAT_COLORS[name]
 
   if (getColor === undefined) {
-    return statPretty
+    return pretty
   }
 
-  const color = getColor(stat)
+  const color = getColor(raw)
 
   if (color === undefined) {
-    return statPretty
+    return pretty
   }
 
-  return color(statPretty)
+  return color(pretty)
 }
 
 const getDiffColor = function (diff) {

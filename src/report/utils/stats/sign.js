@@ -1,29 +1,27 @@
 // Add positive|negative sign depending on stat type
-export const addSign = function (statPretty, signed) {
+export const addSign = function (pretty, signed) {
   if (signed === undefined) {
-    return statPretty
+    return pretty
   }
 
-  return SIGN_HANDLERS[signed](statPretty)
+  return SIGN_HANDLERS[signed](pretty)
 }
 
-const addNeverSign = function (statPretty) {
-  const statPrettyA = hasMinusSign(statPretty)
-    ? statPretty.slice(1)
-    : statPretty
-  return `${PLUS_MINUS_SIGN}${statPrettyA}`
+const addNeverSign = function (pretty) {
+  const prettyA = hasMinusSign(pretty) ? pretty.slice(1) : pretty
+  return `${PLUS_MINUS_SIGN}${prettyA}`
 }
 
-const addAlwaysSign = function (statPretty) {
-  if (hasMinusSign(statPretty)) {
-    return statPretty
+const addAlwaysSign = function (pretty) {
+  if (hasMinusSign(pretty)) {
+    return pretty
   }
 
-  return `${PLUS_SIGN}${statPretty}`
+  return `${PLUS_SIGN}${pretty}`
 }
 
-const hasMinusSign = function (statPretty) {
-  return statPretty.startsWith(MINUS_SIGN)
+const hasMinusSign = function (pretty) {
+  return pretty.startsWith(MINUS_SIGN)
 }
 
 // Works on all terminals

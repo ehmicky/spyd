@@ -1,9 +1,7 @@
-import { getStatsDecimals } from './decimals.js'
+import { addStatColor } from './colors.js'
 import { STAT_KINDS } from './kinds.js'
-import { padCombinations } from './padding.js'
-import { prettifyCombinationStats } from './prettify.js'
-import { getScale } from './scale.js'
-import { getUnit } from './unit.js'
+import { addStatPadded } from './padding.js'
+import { addStatsPretty } from './prettify.js'
 
 // Add `combination.stats.*Pretty` which is like `combination.stats.*` but
 // serialized and CLI-reporter-friendly. It adds time units, rounding, padding
@@ -16,19 +14,10 @@ const prettifyCombinationsStat = function (
   combinations,
   { name, kind, signed },
 ) {
-  const scale = getScale(combinations, name, kind)
-  const unit = getUnit(kind, scale)
-  const decimals = getStatsDecimals(combinations, name, scale)
-  const combinationsA = combinations.map((combination) =>
-    prettifyCombinationStats({
-      name,
-      combination,
-      signed,
-      scale,
-      unit,
-      decimals,
-    }),
+  const combinationsA = addStatsPretty({ combinations, name, kind, signed })
+  const combinationsB = addStatPadded(combinationsA, name)
+  const combinationsC = combinationsB.map((combination) =>
+    addStatColor({ name, combination }),
   )
-  const combinationsB = padCombinations(combinationsA, name)
-  return combinationsB
+  return combinationsC
 }
