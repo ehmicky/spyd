@@ -65,14 +65,23 @@ export const addHistory = function (result, history) {
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
 export const mergeLastCombinations = function (result, history) {
+  const resultA = addDefaultResultIndexes(result)
   // eslint-disable-next-line fp/no-mutating-methods
-  return [...history].reverse().reduce(mergePair, result)
+  return [...history].reverse().reduce(mergePair, resultA)
 }
 
-const mergePair = function (result, historyResult) {
+const addDefaultResultIndexes = function (result) {
+  const combinationsA = result.combinations.map(
+    addResultIndex.bind(undefined, 0),
+  )
+  return { ...result, combinations: combinationsA }
+}
+
+const mergePair = function (result, historyResult, resultIndex) {
   const historyCombinations = getHistoryCombinations(
     historyResult.combinations,
     result.combinations,
+    resultIndex,
   )
 
   if (historyCombinations.length === 0) {
@@ -82,10 +91,18 @@ const mergePair = function (result, historyResult) {
   return mergeHistoryResult(result, historyResult, historyCombinations)
 }
 
-const getHistoryCombinations = function (historyCombinations, combinations) {
-  return historyCombinations.filter(
-    (combination) => !isSameCombination(combination, combinations),
-  )
+const getHistoryCombinations = function (
+  historyCombinations,
+  combinations,
+  resultIndex,
+) {
+  return historyCombinations
+    .filter((combination) => !isSameCombination(combination, combinations))
+    .map(addResultIndex.bind(undefined, resultIndex + 1))
+}
+
+const addResultIndex = function (resultIndex, combination) {
+  return { ...combination, resultIndex }
 }
 
 const isSameCombination = function (combination, combinations) {
