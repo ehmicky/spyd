@@ -42,15 +42,16 @@ const shouldRemoveFromHistory = async function (force) {
   return confirmed
 }
 
+// Retrieve all results.
+// We try to apply `since` as soon as possible so user errors with that
+// configuration property fail early.
 export const listHistory = async function (config) {
   const previous = await listLoadedResults(config)
   const history = await applySince(previous, config)
   return { previous, history }
 }
 
-// Get a previous result by `count` or `timestamp`
-// We try to apply `since` as soon as possible so user errors with that
-// configuration property fail early.
+// Get a previous result by delta
 export const getFromHistory = async function (config) {
   const results = await listLoadedResults(config)
   const { result, previous } = await listResultsByDelta(results, config)
