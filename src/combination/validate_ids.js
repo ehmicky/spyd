@@ -34,6 +34,7 @@ const validateCategoryIds = function ({ category, id }) {
   }
 }
 
+// We do not allow starting with dash because of CLI flags parsing.
 const USER_ID_INVALID_START = '-'
 // We allow case-sensitiveness and both - and _ so that users can choose their
 // preferred case convention. This also makes it easier to support different
@@ -42,7 +43,6 @@ const USER_ID_INVALID_START = '-'
 // We do not allow empty strings.
 // We do not allow dots because they are used in CLI flags for nested
 // configuration properties.
-// We do not allow starting with dash because of CLI flags parsing.
 // We forbid other characters for forward compatibility.
 const USER_ID_REGEXP = /^\w[\w-]*$/u
 
