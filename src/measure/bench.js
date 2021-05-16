@@ -18,20 +18,20 @@ import { measureCombinations } from './several.js'
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
 export const performBenchmark = async function (config) {
-  const { initResult, newCombinations } = await createResult(config)
-  const previewState = initPreview(initResult, newCombinations, config)
+  const { result, newCombinations } = await createResult(config)
+  const previewState = initPreview(result, newCombinations, config)
   await startPreview(previewState)
 
   try {
     await updatePreviewReport(previewState)
-    const { rawResult, result } = await measureResult({
-      initResult,
+    const { rawResult, result: resultA } = await measureResult({
+      result,
       newCombinations,
       config,
       previewState,
     })
     await endPreview(previewState)
-    return { rawResult, result }
+    return { rawResult, result: resultA }
   } catch (error) {
     await endPreview(previewState, error)
     throw error
@@ -39,7 +39,7 @@ export const performBenchmark = async function (config) {
 }
 
 const measureResult = async function ({
-  initResult,
+  result,
   newCombinations,
   config: { cwd, precisionTarget },
   previewState,
@@ -50,8 +50,8 @@ const measureResult = async function ({
     previewState,
     stage: 'main',
   })
-  const initResultA = addCombinations(initResult, newCombinationsA)
-  const rawResult = normalizeMeasuredResult(initResultA)
-  const result = normalizeReportedResult(rawResult)
-  return { rawResult, result }
+  const resultA = addCombinations(result, newCombinationsA)
+  const rawResult = normalizeMeasuredResult(resultA)
+  const resultB = normalizeReportedResult(rawResult)
+  return { rawResult, result: resultB }
 }

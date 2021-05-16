@@ -9,7 +9,7 @@ import { START_DESCRIPTION } from './description.js'
 // microtask since `updatePreview()` could be called by concurrent code.
 // `index` and `total` are used as a 1-based counter in previews.
 export const initPreview = function (
-  initResult,
+  result,
   newCombinations,
   { quiet, reporters, titles },
 ) {
@@ -20,7 +20,7 @@ export const initPreview = function (
   const reportersA = reporters.filter(isNotQuiet)
   return {
     quiet,
-    initResult,
+    result,
     reporters: reportersA,
     titles,
     previewSamples: 0,

@@ -8,7 +8,6 @@ import {
   removeFromHistory,
 } from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
-import { createResult } from './normalize/init.js'
 import { printPreviewStarting } from './preview/start_end.js'
 import { reportBenchShow, reportRemove } from './report/main.js'
 import { startReporters } from './report/start_end.js'

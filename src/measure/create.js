@@ -7,10 +7,10 @@ import { getSystems } from '../system/info.js'
 // Create a new result to measure
 export const createResult = async function (config) {
   const { combinations, systemVersions } = await getCombinations(config)
-  const initResult = initializeResult(config, combinations, systemVersions)
-  const initResultA = await listHistory(config, initResult)
-  const newCombinations = getNewCombinations(initResultA)
-  return { initResult: initResultA, newCombinations }
+  const result = initializeResult(config, combinations, systemVersions)
+  const resultA = await listHistory(config, result)
+  const newCombinations = getNewCombinations(resultA)
+  return { result: resultA, newCombinations }
 }
 
 const initializeResult = function (
@@ -36,15 +36,15 @@ const getNewCombinations = function ({ combinations, id }) {
 }
 
 // Add measured combinations at the end of the result
-export const addCombinations = function (initResult, newCombinations) {
-  return newCombinations.reduce(addCombination, initResult)
+export const addCombinations = function (result, newCombinations) {
+  return newCombinations.reduce(addCombination, result)
 }
 
-const addCombination = function (initResult, newCombination) {
+const addCombination = function (result, newCombination) {
   const combinations = [
-    ...initResult.combinations.slice(0, newCombination.index),
+    ...result.combinations.slice(0, newCombination.index),
     newCombination,
-    ...initResult.combinations.slice(newCombination.index + 1),
+    ...result.combinations.slice(newCombination.index + 1),
   ]
-  return { ...initResult, combinations }
+  return { ...result, combinations }
 }
