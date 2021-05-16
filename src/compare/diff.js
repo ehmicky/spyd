@@ -1,4 +1,4 @@
-import { isSameCategory } from '../combination/ids.js'
+import { isSameCategory, resultHasCombination } from '../combination/ids.js'
 import { isDiffPrecise } from '../stats/welch.js'
 
 // Add `combination.stats.diff` which compares each combination with another
@@ -30,6 +30,9 @@ export const addCombinationsDiff = function (result) {
 // The `previousCombination` might be the same combination, i.e. difference
 // would be 0%. This happens when the combination has not changed since the
 // `previousResult`.
+// A combination might be in `result` because it was taken from `sinceResult`
+// (the one we're diffing against). In this case, we don't want to diff the
+// combination against itself.
 const addCombinationDiff = function (
   combination,
   { combinations: previousCombinations },
@@ -41,26 +44,13 @@ const addCombinationDiff = function (
 
   if (
     previousCombinationA === undefined ||
-    !hasCombination(afterSince, combination)
+    !resultHasCombination(afterSince, combination)
   ) {
     return combination
   }
 
   const diffStats = getDiff(combination.stats, previousCombinationA.stats)
   return { ...combination, stats: { ...combination.stats, ...diffStats } }
-}
-
-// A combination might be in `result` because it was taken from `sinceResult`
-// (the one we're diffing against). In this case, we don't want to diff the
-// combination against itself.
-const hasCombination = function (results, combination) {
-  return results.some((result) => resultHasCombination(result, combination))
-}
-
-const resultHasCombination = function ({ combinations }, combinationA) {
-  return combinations.some((combinationB) =>
-    isSameCategory(combinationA, combinationB),
-  )
 }
 
 // `median` can be `undefined` during preview

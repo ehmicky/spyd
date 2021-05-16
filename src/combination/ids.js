@@ -29,6 +29,18 @@ export const isSameCategory = function (combinationA, combinationB) {
   )
 }
 
+export const resultHasCombination = function (results, combination) {
+  return results.some((result) =>
+    hasCombination(result.combinations, combination),
+  )
+}
+
+export const hasCombination = function (combinations, combinationA) {
+  return combinations.some((combinationB) =>
+    isSameCategory(combinationA, combinationB),
+  )
+}
+
 // Return all the combinations that are in `results` but not in `result`
 export const getNewIdInfos = function (result, results) {
   const resultIdInfos = getResultIdInfos(result)

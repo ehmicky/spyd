@@ -1,4 +1,4 @@
-import { isSameCategory } from '../combination/ids.js'
+import { hasCombination } from '../combination/ids.js'
 import { findByDelta } from '../delta/main.js'
 
 import { mergeResults } from './merge.js'
@@ -63,13 +63,7 @@ const applyRegularSince = function (result, previous, sinceIndex) {
 
 const removeCombinations = function (result, resultA) {
   const combinations = result.combinations.filter((combination) =>
-    resultHasCombination(resultA, combination),
+    hasCombination(resultA.combinations, combination),
   )
   return { ...result, combinations }
-}
-
-const resultHasCombination = function ({ combinations }, combinationA) {
-  return combinations.some((combinationB) =>
-    isSameCategory(combinationA, combinationB),
-  )
 }
