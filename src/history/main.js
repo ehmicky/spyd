@@ -5,8 +5,8 @@ import { findByDelta } from '../delta/main.js'
 import { UserError } from '../error/main.js'
 import { compressResult } from '../normalize/compress.js'
 import { loadResults } from '../normalize/load.js'
-import { normalizeResult } from '../normalize/merge.js'
-import { mergeHistoryCombinations, applySince } from '../normalize/since.js'
+import { normalizeResult } from '../normalize/result.js'
+import { applySince } from '../normalize/since.js'
 import { isTtyInput } from '../report/tty.js'
 
 import { addResult, removeResult, listResults } from './results.js'
@@ -45,19 +45,18 @@ const shouldRemoveFromHistory = async function (force) {
 // Retrieve all results.
 // We try to apply `since` as soon as possible so user errors with that
 // configuration property fail early.
-export const listHistory = async function (config) {
+export const listHistory = async function (config, result) {
   const previous = await listLoadedResults(config)
-  const history = await applySince(previous, config)
-  return { previous, history }
+  const resultA = await applySince(result, previous, config)
+  return resultA
 }
 
 // Get a previous result by delta
 export const getFromHistory = async function (config) {
   const results = await listLoadedResults(config)
   const { result, previous } = await listResultsByDelta(results, config)
-  const history = await applySince(previous, config)
-  const resultA = mergeHistoryCombinations(result, history)
-  const resultB = normalizeResult(resultA, previous, history)
+  const resultA = await applySince(result, previous, config)
+  const resultB = normalizeResult(resultA)
   return resultB
 }
 

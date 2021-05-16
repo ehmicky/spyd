@@ -1,6 +1,5 @@
 import { isSameCategory } from '../combination/ids.js'
 import { isDiffPrecise } from '../stats/welch.js'
-import { findValue } from '../utils/find.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
@@ -14,45 +13,54 @@ import { findValue } from '../utils/find.js'
 // `combination.stats.diff` is not persisted in history since it can be computed
 // dynamically.
 //  - Also some results might have been dynamically deleted or filtered out.
-export const addCombinationsDiff = function (result, previous) {
-  if (previous.length === 0) {
+export const addCombinationsDiff = function (result) {
+  const { history } = result
+
+  if (history.length <= 1) {
     return result
   }
 
-  // eslint-disable-next-line fp/no-mutating-methods
-  const previousResults = [...previous].reverse()
+  const [sinceResult, ...afterSince] = history
   const combinations = result.combinations.map((combination) =>
-    addCombinationDiff(combination, previousResults),
+    addCombinationDiff(combination, sinceResult, afterSince),
   )
   return { ...result, combinations }
-}
-
-const addCombinationDiff = function (combination, previousResults) {
-  const previousReturn = findValue(previousResults, (previousResult) =>
-    getPreviousCombination(previousResult, combination),
-  )
-
-  if (previousReturn === undefined) {
-    return combination
-  }
-
-  const [previousCombination] = previousReturn
-  const combinationA = addDiff(combination, previousCombination)
-  return combinationA
 }
 
 // The `previousCombination` might be the same combination, i.e. difference
 // would be 0%. This happens when the combination has not changed since the
 // `previousResult`.
-const getPreviousCombination = function ({ combinations }, combinationA) {
-  return combinations.find((combinationB) =>
-    isSameCategory(combinationA, combinationB),
+const addCombinationDiff = function (
+  combination,
+  { combinations: previousCombinations },
+  afterSince,
+) {
+  const previousCombinationA = previousCombinations.find(
+    (previousCombination) => isSameCategory(combination, previousCombination),
   )
+
+  if (
+    previousCombinationA === undefined ||
+    !hasCombination(afterSince, combination)
+  ) {
+    return combination
+  }
+
+  const diffStats = getDiff(combination.stats, previousCombinationA.stats)
+  return { ...combination, stats: { ...combination.stats, ...diffStats } }
 }
 
-const addDiff = function (combination, previousCombination) {
-  const diffStats = getDiff(combination.stats, previousCombination.stats)
-  return { ...combination, stats: { ...combination.stats, ...diffStats } }
+// A combination might be in `result` because it was taken from `sinceResult`
+// (the one we're diffing against). In this case, we don't want to diff the
+// combination against itself.
+const hasCombination = function (results, combination) {
+  return results.some((result) => resultHasCombination(result, combination))
+}
+
+const resultHasCombination = function ({ combinations }, combinationA) {
+  return combinations.some((combinationB) =>
+    isSameCategory(combinationA, combinationB),
+  )
 }
 
 // `median` can be `undefined` during preview

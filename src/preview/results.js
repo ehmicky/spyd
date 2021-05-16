@@ -62,8 +62,6 @@ const updateReport = async function ({
     reporters,
     titles,
     initResult,
-    previous,
-    history,
     combinations,
   },
 }) {
@@ -71,12 +69,7 @@ const updateReport = async function ({
     return
   }
 
-  const { result } = getFinalResult({
-    combinations,
-    initResult,
-    previous,
-    history,
-  })
+  const { result } = getFinalResult(initResult, combinations)
   const report = await reportPreview(
     {
       ...result,
