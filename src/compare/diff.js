@@ -45,7 +45,7 @@ const addCombinationDiff = function (
     (previousCombination) => isSameCategory(combination, previousCombination),
   )
 
-  if (previousCombinationA === undefined || combination.resultId === id) {
+  if (previousCombinationA === undefined) {
     return combination
   }
 
