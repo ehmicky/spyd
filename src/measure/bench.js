@@ -1,5 +1,4 @@
-import { listHistory } from '../history/main.js'
-import { getInitResult, getFinalResult } from '../normalize/init.js'
+import { getFinalResult } from '../normalize/init.js'
 import { initPreview } from '../preview/init.js'
 import { updatePreviewReport } from '../preview/results.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
@@ -17,16 +16,14 @@ import { measureCombinations } from './several.js'
 export const performBenchmark = async function (
   config,
   combinations,
-  systemVersions,
+  initResult,
 ) {
-  const initResult = getInitResult({ combinations, systemVersions, config })
-  const initResultA = await listHistory(config, initResult)
   const combinationsA = await previewStartAndMeasure({
     combinations,
     config,
-    initResult: initResultA,
+    initResult,
   })
-  const { rawResult, result } = getFinalResult(initResultA, combinationsA)
+  const { rawResult, result } = getFinalResult(initResult, combinationsA)
   return { rawResult, result }
 }
 

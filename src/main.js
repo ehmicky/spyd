@@ -6,8 +6,10 @@ import {
   addToHistory,
   getFromHistory,
   removeFromHistory,
+  listHistory,
 } from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
+import { getInitResult } from './normalize/init.js'
 import { printPreviewStarting } from './preview/start_end.js'
 import { reportBenchShow, reportRemove } from './report/main.js'
 import { startReporters } from './report/start_end.js'
@@ -21,10 +23,12 @@ export const bench = async function (configFlags) {
     getCombinations(config),
     startReporters(config),
   ])
+  const initResult = getInitResult({ combinations, systemVersions, config })
+  const initResultA = await listHistory(config, initResult)
   const { rawResult, result } = await performBenchmark(
     configA,
     combinations,
-    systemVersions,
+    initResultA,
   )
   await reportBenchShow(result, configA)
   await addToHistory(rawResult, configA)
