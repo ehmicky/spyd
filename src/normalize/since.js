@@ -48,23 +48,24 @@ const applyDefaultSince = function (result, previous) {
     return { ...result, history: [result] }
   }
 
-  const beforeSince = previous.slice(0, -1)
-  const sinceResult = previous[previous.length - 1]
-  const sinceResultA = mergeResults(sinceResult, beforeSince)
+  const sinceIndex = previous.length - 1
+  const sinceResultA = mergeResults(
+    previous[sinceIndex],
+    previous.slice(0, sinceIndex),
+  )
   const sinceResultB = removeCombinations(sinceResultA, result)
   const history = [sinceResultB, result]
   return { ...result, history }
 }
 
 const applyRegularSince = function (result, previous, sinceIndex) {
-  const beforeSince = previous.slice(0, sinceIndex)
-  const sinceResult = previous[sinceIndex]
-  const afterSince = previous.slice(sinceIndex + 1)
-
-  const mergedResult = mergeResults(result, [sinceResult, ...afterSince])
-  const sinceResultA = mergeResults(sinceResult, beforeSince)
-  const sinceResultB = removeCombinations(sinceResultA, mergedResult)
-  const history = [sinceResultB, ...afterSince, result]
+  const mergedResult = mergeResults(result, previous.slice(sinceIndex))
+  const sinceResult = mergeResults(
+    previous[sinceIndex],
+    previous.slice(0, sinceIndex),
+  )
+  const sinceResultA = removeCombinations(sinceResult, mergedResult)
+  const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
   return { ...mergedResult, history }
 }
 
