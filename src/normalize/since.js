@@ -44,8 +44,15 @@ export const applySince = async function (result, previous, { since, cwd }) {
 }
 
 const applyDefaultSince = function (result, previous) {
+  if (previous.length === 0) {
+    return { ...result, history: [result] }
+  }
+
+  const beforeSince = previous.slice(0, -1)
   const sinceResult = previous[previous.length - 1]
-  const history = sinceResult === undefined ? [result] : [sinceResult, result]
+  const sinceResultA = mergeResults(sinceResult, beforeSince)
+  const sinceResultB = removeCombinations(sinceResultA, result)
+  const history = [sinceResultB, result]
   return { ...result, history }
 }
 
