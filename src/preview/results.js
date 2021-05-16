@@ -56,6 +56,7 @@ const updateResultStats = async function ({
   await updateReport({ previewState })
 }
 
+// Update `previewState.report`, i.e. serialized report for previews
 export const updateReport = async function ({
   previewState,
   previewState: {
