@@ -1,5 +1,4 @@
 import { normalizeMeasuredResult } from '../normalize/result.js'
-import { updatePreviewReport } from '../preview/results.js'
 import {
   startPreview,
   endPreview,
@@ -21,7 +20,6 @@ export const performBenchmark = async function (config) {
   printPreviewStarting(config)
 
   const { result, previous } = await createResult(config)
-
   const { config: configA, previewState } = await startPreview(
     config,
     result,
@@ -29,7 +27,6 @@ export const performBenchmark = async function (config) {
   )
 
   try {
-    await updatePreviewReport(previewState)
     const resultA = await measureResult(result, configA, previewState)
     await endPreview(previewState, configA)
     return { result: resultA, previous }

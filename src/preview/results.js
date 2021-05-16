@@ -56,10 +56,6 @@ const updateResultStats = function ({
 }
 
 export const updatePreviewReport = async function (previewState) {
-  if (previewState.quiet) {
-    return
-  }
-
   await updateReport({ previewState })
   await refreshPreview(previewState)
 }

@@ -5,6 +5,7 @@ import { clearScreen, clearScreenFull, printToTty } from '../report/tty.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'
+import { updatePreviewReport } from './results.js'
 import { getPreviewState } from './state.js'
 
 // Loading combinations can be slow if the task is long to load.
@@ -29,13 +30,14 @@ export const startPreview = async function (config, result, previous) {
     previous,
     config,
   )
-  const previewState = getPreviewState(resultA, config)
+  const previewState = getPreviewState(resultA, configA)
 
   hideCursor()
   await clearScreenFull()
   startHandleResize(previewState)
   startHandleKeypress(previewState)
 
+  await updatePreviewReport(previewState)
   return { config: configA, previewState }
 }
 
