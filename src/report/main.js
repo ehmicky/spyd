@@ -23,12 +23,12 @@ export const reportResult = async function (result, previous, config) {
 // Report preview results in `bench` command.
 // The report output is not printed right away. Instead, it is printed by the
 // preview refresh function at regular intervals.
-export const reportPreviewInit = async function (result, previous, config) {
-  return await applySince(result, previous, config)
-}
-
-export const reportPreviewStart = async function (config) {
-  return await startReporters(config)
+export const reportPreviewStart = async function (result, previous, config) {
+  const [resultA, configA] = await Promise.all([
+    applySince(result, previous, config),
+    startReporters(config),
+  ])
+  return { result: resultA, config: configA }
 }
 
 export const reportPreview = async function (result, config) {

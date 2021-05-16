@@ -1,5 +1,3 @@
-import { reportPreviewInit } from '../report/main.js'
-
 import { EMPTY_DURATION_LEFT } from './completion.js'
 import { START_DESCRIPTION } from './description.js'
 
@@ -10,28 +8,17 @@ import { START_DESCRIPTION } from './description.js'
 // When mutating it, it must always be in a consistent state at the end of a
 // microtask since `updatePreview()` could be called by concurrent code.
 // `index` and `total` are used as a 1-based counter in previews.
-export const initPreview = async function ({
-  result,
-  result: { combinations },
-  previous,
-  config,
-  config: { quiet, reporters, titles },
-}) {
-  if (quiet) {
-    return { quiet }
-  }
-
-  const resultA = await reportPreviewInit(result, previous, config)
+export const getPreviewState = function (result, { reporters, titles }) {
   return {
-    quiet,
-    result: resultA,
+    quiet: false,
+    result,
     reporters: reporters.filter(isNotQuiet),
     titles,
     previewSamples: 0,
     durationLeft: EMPTY_DURATION_LEFT,
     percentage: 0,
     index: 0,
-    total: combinations.length,
+    total: result.combinations.length,
     combinationName: '',
     description: START_DESCRIPTION,
     actions: [],

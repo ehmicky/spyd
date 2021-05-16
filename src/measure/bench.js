@@ -1,5 +1,4 @@
 import { normalizeMeasuredResult } from '../normalize/result.js'
-import { initPreview } from '../preview/init.js'
 import { updatePreviewReport } from '../preview/results.js'
 import {
   startPreview,
@@ -18,14 +17,16 @@ import { measureCombinations } from './several.js'
 //     subsequent editing experience
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
-// eslint-disable-next-line max-statements
 export const performBenchmark = async function (config) {
   printPreviewStarting(config)
 
   const { result, previous } = await createResult(config)
 
-  const previewState = await initPreview({ result, previous, config })
-  const configA = await startPreview(previewState, config)
+  const { config: configA, previewState } = await startPreview(
+    config,
+    result,
+    previous,
+  )
 
   try {
     await updatePreviewReport(previewState)
