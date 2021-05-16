@@ -9,7 +9,7 @@ import {
 } from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
 import { printPreviewStarting } from './preview/start_end.js'
-import { reportBenchShow, reportRemove } from './report/main.js'
+import { reportResult } from './report/main.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default command.
@@ -18,7 +18,7 @@ export const bench = async function (configFlags) {
   printPreviewStarting(config)
   const result = await performBenchmark(config)
   await addToHistory(result, config)
-  const resultA = await reportBenchShow(result, config)
+  const resultA = await reportResult(result, config)
   checkLimits(resultA, config)
   return resultA
 }
@@ -27,7 +27,7 @@ export const bench = async function (configFlags) {
 export const show = async function (configFlags) {
   const config = await getConfig('show', configFlags)
   const result = await getFromHistory(config)
-  const resultA = await reportBenchShow(result, config)
+  const resultA = await reportResult(result, config)
   return resultA
 }
 
@@ -35,7 +35,7 @@ export const show = async function (configFlags) {
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
   const result = await getFromHistory(config)
-  const resultA = await reportRemove(result, config)
+  const resultA = await reportResult(result, config)
   await removeFromHistory(resultA, config)
   return resultA
 }

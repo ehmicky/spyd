@@ -4,8 +4,9 @@ export const normalizePluginsConfig = function (config, command) {
   return configA
 }
 
-// The `remove` command reports before the removal. This is only intended for
-// interactive purpose, i.e. only reporters printing to the terminal are used.
+// Reporting in the `remove` command is shown so the user can be clear about
+// which result was removed, and provide with confirmation.
+// So we only need to print in the terminal, not output|insert files.
 const normalizeReporters = function (config, command) {
   if (command !== 'remove') {
     return config

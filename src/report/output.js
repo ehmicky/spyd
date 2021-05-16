@@ -20,7 +20,7 @@ export const outputContents = async function (contents) {
 }
 
 // Print final report to terminal.
-export const outputTtyContents = async function (contents) {
+const outputTtyContents = async function (contents) {
   const ttyContents = computeTtyContents(contents)
 
   if (ttyContents === undefined) {
