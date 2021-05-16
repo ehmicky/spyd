@@ -54,10 +54,10 @@ const getPreviousCombinations = function (result, previous) {
 // When merging two results, we keep most of the properties of the latest
 // result. However, we still merge `system` so several systems are reported.
 // This allows comparing different systems.
-const mergePreviousCombination = function (previous, result, combination) {
-  const combinations = [...result.combinations, combination]
+const mergePreviousCombination = function (previous, result, newCombination) {
+  const combinations = [...result.combinations, newCombination]
   const previousResultA = previous.find((previousResult) =>
-    previousResult.combinations.includes(combination),
+    previousResult.combinations.includes(newCombination),
   )
   const systems = mergeSystems(result.systems, previousResultA.systems)
   return { ...result, combinations, systems }
