@@ -1,7 +1,11 @@
 import { normalizeMeasuredResult } from '../normalize/result.js'
 import { initPreview } from '../preview/init.js'
 import { updatePreviewReport } from '../preview/results.js'
-import { startPreview, endPreview } from '../preview/start_end.js'
+import {
+  startPreview,
+  endPreview,
+  printPreviewStarting,
+} from '../preview/start_end.js'
 
 import { addCombinations, createResult } from './create.js'
 import { measureCombinations } from './several.js'
@@ -15,7 +19,10 @@ import { measureCombinations } from './several.js'
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
 export const performBenchmark = async function (config) {
+  printPreviewStarting(config)
+
   const { result, newCombinations } = await createResult(config)
+
   const previewState = initPreview(result, newCombinations, config)
   const configA = await startPreview(previewState, config)
 

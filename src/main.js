@@ -8,14 +8,12 @@ import {
   removeFromHistory,
 } from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
-import { printPreviewStarting } from './preview/start_end.js'
 import { reportResult } from './report/main.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default command.
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
-  printPreviewStarting(config)
   const result = await performBenchmark(config)
   await addToHistory(result, config)
   const resultA = await reportResult(result, config)
