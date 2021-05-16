@@ -32,16 +32,16 @@ export const updatePreviewStats = async function ({
     return
   }
 
-  updateResultStats({ previewState, stats })
+  await updateResultStats({ previewState, stats })
 
   updateCombinationEnd({ stats, previewState, durationState, precisionTarget })
   setDescriptionIf(previewState, MEASURE_DESCRIPTION, START_DESCRIPTION)
-
   updateCompletion(previewState)
-  await updatePreviewReport(previewState)
+
+  await refreshPreview(previewState)
 }
 
-const updateResultStats = function ({
+const updateResultStats = async function ({
   previewState,
   previewState: { result, combinationIndex },
   stats,
@@ -53,14 +53,10 @@ const updateResultStats = function ({
   ]
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.result = { ...result, combinations }
-}
-
-export const updatePreviewReport = async function (previewState) {
   await updateReport({ previewState })
-  await refreshPreview(previewState)
 }
 
-const updateReport = async function ({
+export const updateReport = async function ({
   previewState,
   previewState: {
     durationLeft,
