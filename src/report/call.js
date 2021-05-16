@@ -15,37 +15,31 @@ import {
 export const getContents = async function (result, { reporters, titles }) {
   const resultA = normalizeReportedResult(result)
   const contents = await Promise.all(
-    reporters.map(({ report: reportFunc, config: reporterConfig, startData }) =>
-      getReporterContents({
-        reportFunc,
-        reporterConfig,
-        startData,
-        result: resultA,
-        titles,
-      }),
-    ),
+    reporters.map(getReporterContents.bind(undefined, resultA, titles)),
   )
   const contentsA = contents.filter(Boolean)
   return { result: resultA, contents: contentsA }
 }
 
 // Some of this is currently applied only to `result`, not `result.history[*]`
-const getReporterContents = async function ({
-  reportFunc,
+const getReporterContents = async function (
   result,
-  startData,
-  reporterConfig,
-  reporterConfig: {
-    showSystem,
-    showMetadata,
-    output,
-    colors,
-    showTitles,
-    showPrecision,
-    showDiff = getDefaultShowDiff(output),
-  },
   titles,
-}) {
+  {
+    report: reportFunc,
+    config: reporterConfig,
+    config: {
+      showSystem,
+      showMetadata,
+      output,
+      colors,
+      showTitles,
+      showPrecision,
+      showDiff = getDefaultShowDiff(output),
+    },
+    startData,
+  },
+) {
   const resultA = showResultTitles(result, titles, showTitles)
   const resultB = cleanResult({
     result: resultA,
