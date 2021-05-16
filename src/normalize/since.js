@@ -37,36 +37,33 @@ import { mergeResults } from './merge.js'
 //  - Instead, reporters should use logic to retrieve the history of each
 //    combination
 export const applySince = async function (result, previous, { since, cwd }) {
-  const sinceIndex = await findByDelta(previous, since, cwd)
-  return sinceIndex === -1
-    ? applyDefaultSince(result, previous)
-    : applyRegularSince(result, previous, sinceIndex)
-}
-
-const applyDefaultSince = function (result, previous) {
   if (previous.length === 0) {
     return { ...result, history: [result] }
   }
 
-  const sinceIndex = previous.length - 1
-  const sinceResult = mergeResults(
-    previous[sinceIndex],
-    previous.slice(0, sinceIndex),
-  )
-  const sinceResultA = removeCombinations(sinceResult, result)
-  const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
-  return { ...result, history }
+  const sinceIndex = await findByDelta(previous, since, cwd)
+
+  if (sinceIndex === -1) {
+    return {
+      ...result,
+      history: [...getHistory(previous, previous.length - 1, result), result],
+    }
+  }
+
+  const mergedResult = mergeResults(result, previous.slice(sinceIndex))
+  return {
+    ...mergedResult,
+    history: [...getHistory(previous, sinceIndex, mergedResult), result],
+  }
 }
 
-const applyRegularSince = function (result, previous, sinceIndex) {
-  const mergedResult = mergeResults(result, previous.slice(sinceIndex))
+const getHistory = function (previous, sinceIndex, mergedResult) {
   const sinceResult = mergeResults(
     previous[sinceIndex],
     previous.slice(0, sinceIndex),
   )
   const sinceResultA = removeCombinations(sinceResult, mergedResult)
-  const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
-  return { ...mergedResult, history }
+  return [sinceResultA, ...previous.slice(sinceIndex + 1)]
 }
 
 const removeCombinations = function (sinceResult, mergedResult) {
