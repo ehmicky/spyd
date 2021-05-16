@@ -9,7 +9,7 @@ import {
   listHistory,
 } from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
-import { getInitResult } from './normalize/init.js'
+import { createResult } from './normalize/init.js'
 import { printPreviewStarting } from './preview/start_end.js'
 import { reportBenchShow, reportRemove } from './report/main.js'
 import { startReporters } from './report/start_end.js'
@@ -23,7 +23,7 @@ export const bench = async function (configFlags) {
     getCombinations(config),
     startReporters(config),
   ])
-  const initResult = getInitResult({ combinations, systemVersions, config })
+  const initResult = createResult({ combinations, systemVersions, config })
   const initResultA = await listHistory(config, initResult)
   const { rawResult, result } = await performBenchmark(initResultA, configA)
   await reportBenchShow(result, configA)

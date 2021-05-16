@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { getSystems } from '../system/info.js'
 
 // Add metadata information to initial result
-export const getInitResult = function ({
+export const createResult = function ({
   combinations,
   systemVersions,
   config: { envInfo, systemId },
