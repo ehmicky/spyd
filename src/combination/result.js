@@ -1,13 +1,4 @@
-import { isSameCategory, isUniqueCombination } from './ids.js'
-
-// Filter out the `combinations` that are in `result`
-export const getNewCombinations = function (result, combinations) {
-  return combinations
-    .filter(isUniqueCombination)
-    .filter(
-      (resultCombination) => !resultHasCombination(result, resultCombination),
-    )
-}
+import { isSameCategory } from './ids.js'
 
 // Return all combinations in `results`
 export const getResultsCombinations = function (results) {
@@ -32,5 +23,12 @@ export const resultHasCombination = function ({ combinations }, combination) {
 export const getMatchingCombination = function (combinations, combination) {
   return combinations.find((combinationA) =>
     isSameCategory(combinationA, combination),
+  )
+}
+
+// Filter out the `combinations` that are in `result`
+export const getNewCombinations = function (result, combinations) {
+  return combinations.filter(
+    (resultCombination) => !resultHasCombination(result, resultCombination),
   )
 }

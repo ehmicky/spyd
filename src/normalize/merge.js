@@ -1,3 +1,4 @@
+import { isUniqueCombination } from '../combination/ids.js'
 import {
   getResultsCombinations,
   getMatchingCombination,
@@ -43,7 +44,8 @@ export const mergeResults = function (result, previous) {
 // Those are only the combinations with different categories.
 const getPreviousCombinations = function (result, previous) {
   const previousCombinations = getResultsCombinations(previous)
-  const newCombinations = getNewCombinations(result, previousCombinations)
+  const uniqueCombinations = previousCombinations.filter(isUniqueCombination)
+  const newCombinations = getNewCombinations(result, uniqueCombinations)
   return newCombinations.map((newCombination) =>
     getMatchingCombination(previousCombinations, newCombination),
   )
