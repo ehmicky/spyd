@@ -52,21 +52,33 @@ import { mergeResults } from './merge.js'
 //    properties.
 //  - Instead, reporters should use logic to retrieve the history of each
 //    combination
-// eslint-disable-next-line max-statements
 export const applySince = async function (result, previous, { since, cwd }) {
-  const emptyHistoryResult = { combinations: [], systems: [], history: [] }
-
   if (previous.length === 0) {
-    return emptyHistoryResult
+    return applyNoneSince()
   }
 
   const sinceIndex = await findByDelta(previous, since, cwd)
 
   if (sinceIndex === -1) {
-    const sinceResult = getSinceResult(previous, previous.length - 1, result)
-    return { ...emptyHistoryResult, history: [sinceResult] }
+    return applyDefaultSince(previous, result)
   }
 
+  return applyRegularSince(previous, sinceIndex, result)
+}
+
+// When there is no history
+const applyNoneSince = function () {
+  return { combinations: [], systems: [], history: [] }
+}
+
+// When `since` is 0 (default value)
+const applyDefaultSince = function (previous, result) {
+  const sinceResult = getSinceResult(previous, previous.length - 1, result)
+  return { combinations: [], systems: [], history: [sinceResult] }
+}
+
+// When there is a history and a non-default `since`
+const applyRegularSince = function (previous, sinceIndex, result) {
   const historyResult = mergeResults(result, previous.slice(sinceIndex))
   const sinceResultA = getSinceResult(previous, sinceIndex, historyResult)
   const historyA = [sinceResultA, ...previous.slice(sinceIndex + 1)]
@@ -84,9 +96,11 @@ const getSinceResult = function (previous, sinceIndex, result) {
   return mergeResults(sinceResult, beforeSince)
 }
 
-// In principle, we should do both `applySince()` and `mergeHistoryResult()`
-// before reporting. However, `applySince()` is slow, so we perform it only once
-// at the beginning of `bench` with previews, to avoid repeating it.
+// In principle, we should do both `applySince()` and `mergeHistoryResult()` at
+// the same time, before reporting. However, `applySince()` is slow.
+//  - To avoid repeating it before each preview, we compute it only once before
+//    all previews and store its return value as `historyResult`.
+//  - We then merge the latest result during each preview.
 export const mergeHistoryResult = function (result, historyResult) {
   return {
     ...result,
