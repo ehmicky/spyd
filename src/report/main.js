@@ -29,6 +29,7 @@ export const reportResult = async function (result, previous, config) {
   }
 }
 
+// Start reporting
 export const reportStart = async function (result, previous, config) {
   const [resultA, configA] = await Promise.all([
     applySince(result, previous, config),
@@ -46,16 +47,19 @@ export const reportPreview = async function (result, config) {
   return report
 }
 
+// Compute the report contents
 export const reportCompute = async function (result, config) {
   const finalResult = normalizeReportedResult(result)
   const contents = await getContents(finalResult, config)
   return { finalResult, contents }
 }
 
+// Print the report contents to the output
 export const reportPrint = async function (contents) {
   await outputContents(contents)
 }
 
+// End reporting
 export const reportEnd = async function (config) {
   await endReporters(config)
 }
