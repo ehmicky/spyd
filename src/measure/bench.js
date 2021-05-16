@@ -17,15 +17,9 @@ import { measureCombinations } from './several.js'
 //     subsequent editing experience
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
-// eslint-disable-next-line max-statements
 export const performBenchmark = async function (config) {
   const { initResult, newCombinations } = await createResult(config)
-  const { cwd, precisionTarget, quiet, reporters, titles } = config
-  const previewState = initPreview(initResult, newCombinations, {
-    quiet,
-    reporters,
-    titles,
-  })
+  const previewState = initPreview(initResult, newCombinations, config)
   await startPreview(previewState)
 
   try {
@@ -33,8 +27,7 @@ export const performBenchmark = async function (config) {
     const { rawResult, result } = await measureResult({
       initResult,
       newCombinations,
-      cwd,
-      precisionTarget,
+      config,
       previewState,
     })
     await endPreview(previewState)
@@ -48,8 +41,7 @@ export const performBenchmark = async function (config) {
 const measureResult = async function ({
   initResult,
   newCombinations,
-  cwd,
-  precisionTarget,
+  config: { cwd, precisionTarget },
   previewState,
 }) {
   const newCombinationsA = await measureCombinations(newCombinations, {
