@@ -11,12 +11,12 @@ const getCombinations = function ({ combinations }) {
 
 // Filter out the `resultA.combinations` that are not in `resultB`
 export const pickResultCombinations = function (resultA, resultB) {
-  const combinations = keepResultCombinations(resultB, resultA.combinations)
+  const combinations = keepResultCombinations(resultA.combinations, resultB)
   return { ...resultA, combinations }
 }
 
 // Filter out the `combinations` that are not in `result`
-export const keepResultCombinations = function (result, combinations) {
+const keepResultCombinations = function (combinations, result) {
   return combinations.filter((combination) =>
     resultHasCombination(result, combination),
   )
