@@ -4,8 +4,8 @@ import { HISTORY } from './groups.js'
 export const HISTORY_CONFIG = {
   since: {
     group: HISTORY,
-    describe: `Specifies which result to compare to when using the "showDiff" or
-"limit" configuration properties.
+    describe: `Specifies which result to compare with when using the "showDiff"
+or "limit" configuration properties.
 
 That result and all later ones will be shown in the report.
 This allows reporting several previous results at once.

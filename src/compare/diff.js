@@ -30,9 +30,6 @@ export const addCombinationsDiff = function (result) {
   return { ...result, combinations }
 }
 
-// A combination might be in `result` because it was taken from `sinceResult`
-// (the one we're diffing against) instead of `afterSince`.
-// In this case, we don't want to diff the combination against itself.
 const addCombinationDiff = function (
   combination,
   { combinations: previousCombinations },
@@ -43,15 +40,24 @@ const addCombinationDiff = function (
     combination,
   )
 
-  if (
-    previousCombinationA === undefined ||
-    !resultsHaveCombinations(afterSince, combination)
-  ) {
+  if (!shouldAddDiff(previousCombinationA, afterSince)) {
     return combination
   }
 
   const diffStats = getDiff(combination.stats, previousCombinationA.stats)
   return { ...combination, stats: { ...combination.stats, ...diffStats } }
+}
+
+// We only show the `diff` when:
+//  - There is a previous combination to compare with.
+//  - That combination is not the same as the one being compared. This could
+//    happen when merging results and the combination was taken from
+//    `sinceResult` (instead of `afterSince`).
+const shouldAddDiff = function (previousCombination, afterSince) {
+  return (
+    previousCombination !== undefined &&
+    resultsHaveCombinations(afterSince, previousCombination)
+  )
 }
 
 // `median` can be `undefined` during preview
