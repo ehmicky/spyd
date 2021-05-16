@@ -1,5 +1,4 @@
 import { isSameCategory } from '../combination/ids.js'
-import { resultsHaveCombination } from '../combination/result.js'
 import { isDiffPrecise } from '../stats/welch.js'
 
 // Add `combination.stats.diff` which compares each combination with another
@@ -21,9 +20,9 @@ export const addCombinationsDiff = function (result) {
     return result
   }
 
-  const [sinceResult, ...afterSince] = history
+  const [sinceResult] = history
   const combinations = result.combinations.map((combination) =>
-    addCombinationDiff(combination, sinceResult, afterSince),
+    addCombinationDiff(combination, sinceResult),
   )
   return { ...result, combinations }
 }
@@ -36,17 +35,13 @@ export const addCombinationsDiff = function (result) {
 // combination against itself.
 const addCombinationDiff = function (
   combination,
-  { combinations: previousCombinations },
-  afterSince,
+  { id, combinations: previousCombinations },
 ) {
   const previousCombinationA = previousCombinations.find(
     (previousCombination) => isSameCategory(combination, previousCombination),
   )
 
-  if (
-    previousCombinationA === undefined ||
-    !resultsHaveCombination(afterSince, combination)
-  ) {
+  if (previousCombinationA === undefined || combination.resultId === id) {
     return combination
   }
 

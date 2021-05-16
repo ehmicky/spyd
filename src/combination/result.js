@@ -18,11 +18,6 @@ const getCombinations = function ({ combinations }) {
   return combinations
 }
 
-// Return whether one of several results has a specific combination
-export const resultsHaveCombination = function (results, combination) {
-  return results.some((result) => resultHasCombination(result, combination))
-}
-
 // Return whether a result has a specific combination
 export const resultHasCombination = function ({ combinations }, combination) {
   return getMatchingCombination(combinations, combination) !== undefined
