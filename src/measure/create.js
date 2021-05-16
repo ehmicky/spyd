@@ -9,9 +9,7 @@ export const createResult = async function (config) {
   const { combinations, systemVersions } = await getCombinations(config)
   const result = initResult(combinations, systemVersions, config)
   const resultA = await listHistory(config, result)
-  const newCombinations = resultA.combinations
-    .map(addCombinationIndex)
-    .filter(isNewCombination)
+  const newCombinations = combinations.map(addCombinationIndex)
   return { result: resultA, newCombinations }
 }
 
@@ -28,12 +26,6 @@ const initResult = function (
 
 const addCombinationIndex = function (combination, index) {
   return { ...combination, index }
-}
-
-// Retrieve combinations being measured, as opposed to the ones merged to the
-// result due to the `since` configuration property
-const isNewCombination = function ({ resultId }) {
-  return resultId === undefined
 }
 
 // Add measured combinations at the end of the result
