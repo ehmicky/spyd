@@ -64,7 +64,7 @@ export const addHistory = function (result, history) {
 //  - This is especially true for systems. There is always only one system
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
-export const mergeLastCombinations = function (result, history) {
+export const mergeHistoryCombinations = function (result, history) {
   const historyCombinations = getHistoryCombinations(result, history)
   return historyCombinations.reduce(mergeHistoryCombination, result)
 }

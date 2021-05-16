@@ -2,7 +2,7 @@ import { addCombinationsDiff } from '../compare/diff.js'
 import { addSharedSystem } from '../system/shared.js'
 
 import { groupResultCombinations } from './group.js'
-import { addHistory, mergeLastCombinations } from './since.js'
+import { addHistory, mergeHistoryCombinations } from './since.js'
 
 // Normalize the main result of the `bench` command
 export const normalizeBenchResult = function (result, previous, history) {
@@ -14,7 +14,7 @@ export const normalizeBenchResult = function (result, previous, history) {
 // Normalize the main result of the `show|remove` commands
 export const normalizeShowResult = function (result, previous, history) {
   const resultA = addHistory(result, history)
-  const resultB = mergeLastCombinations(resultA, history)
+  const resultB = mergeHistoryCombinations(resultA, history)
   const resultC = mergeResults(resultB, previous)
   return resultC
 }
