@@ -2,7 +2,6 @@ import {
   getResultsCombinations,
   getMatchingCombination,
   getNewCombinations,
-  addResultIds,
 } from '../combination/result.js'
 import { mergeSystems } from '../system/merge.js'
 
@@ -31,9 +30,11 @@ import { mergeSystems } from '../system/merge.js'
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
 export const mergeResults = function (result, previous) {
-  const previousCombinations = getPreviousCombinations(result, previous)
+  // eslint-disable-next-line fp/no-mutating-methods
+  const previousA = [...previous].reverse()
+  const previousCombinations = getPreviousCombinations(result, previousA)
   return previousCombinations.reduce(
-    mergePreviousCombination.bind(undefined, previous),
+    mergePreviousCombination.bind(undefined, previousA),
     result,
   )
 }
@@ -41,10 +42,8 @@ export const mergeResults = function (result, previous) {
 // Retrieve previous combinations the result should be merged with.
 // Those are only the combinations with different categories.
 const getPreviousCombinations = function (result, previous) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  const previousA = [...previous].reverse().map(addResultIds)
-  const previousCombinations = getResultsCombinations(previousA)
-  const newCombinations = getNewCombinations(result, previousA)
+  const previousCombinations = getResultsCombinations(previous)
+  const newCombinations = getNewCombinations(result, previous)
   return newCombinations.map((newCombination) =>
     getMatchingCombination(previousCombinations, newCombination),
   )
@@ -55,7 +54,9 @@ const getPreviousCombinations = function (result, previous) {
 // This allows comparing different systems.
 const mergePreviousCombination = function (previous, result, combination) {
   const combinations = [...result.combinations, combination]
-  const previousResult = previous.find(({ id }) => id === combination.resultId)
-  const systems = mergeSystems(result.systems, previousResult.systems)
+  const previousResultA = previous.find((previousResult) =>
+    previousResult.combinations.includes(combination),
+  )
+  const systems = mergeSystems(result.systems, previousResultA.systems)
   return { ...result, combinations, systems }
 }
