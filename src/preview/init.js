@@ -10,7 +10,7 @@ import { START_DESCRIPTION } from './description.js'
 // `index` and `total` are used as a 1-based counter in previews.
 export const initPreview = function (
   initResult,
-  combinations,
+  newCombinations,
   { quiet, reporters, titles },
 ) {
   if (quiet) {
@@ -27,7 +27,7 @@ export const initPreview = function (
     durationLeft: EMPTY_DURATION_LEFT,
     percentage: 0,
     index: 0,
-    total: combinations.length,
+    total: newCombinations.length,
     combinationName: '',
     description: START_DESCRIPTION,
     actions: [],

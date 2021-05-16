@@ -19,12 +19,9 @@ import { measureCombinations } from './several.js'
 //     specify them with a separate configuration property
 // eslint-disable-next-line max-statements
 export const performBenchmark = async function (config) {
-  const initResult = await createResult(config)
+  const { initResult, newCombinations } = await createResult(config)
   const { cwd, precisionTarget, quiet, reporters, titles } = config
-  const combinations = initResult.combinations.filter(
-    ({ resultId }) => resultId === initResult.id,
-  )
-  const previewState = initPreview(initResult, combinations, {
+  const previewState = initPreview(initResult, newCombinations, {
     quiet,
     reporters,
     titles,
@@ -35,7 +32,7 @@ export const performBenchmark = async function (config) {
     await updatePreviewReport(previewState)
     const { rawResult, result } = await measureResult({
       initResult,
-      combinations,
+      newCombinations,
       cwd,
       precisionTarget,
       previewState,
@@ -50,18 +47,18 @@ export const performBenchmark = async function (config) {
 
 const measureResult = async function ({
   initResult,
-  combinations,
+  newCombinations,
   cwd,
   precisionTarget,
   previewState,
 }) {
-  const combinationsA = await measureCombinations(combinations, {
+  const newCombinationsA = await measureCombinations(newCombinations, {
     precisionTarget,
     cwd,
     previewState,
     stage: 'main',
   })
-  const initResultA = addCombinations(initResult, combinationsA)
+  const initResultA = addCombinations(initResult, newCombinationsA)
   const rawResult = normalizeMeasuredResult(initResultA)
   const result = normalizeReportedResult(rawResult)
   return { rawResult, result }
