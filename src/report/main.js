@@ -8,7 +8,8 @@ import { startReporters, endReporters } from './start_end.js'
 // Report final results in `show` and `remove` commands.
 // The `bench` command needs to perform those steps separately due to previews:
 //  - This allows previews to re-use the same reporting logic
-//  - This ensures slow logic like `applySince()` is only applied once
+//  - This ensures slow logic like `applySince()` and `reporter.start|end` is
+//    only applied once
 //  - This prevents a clear screen flash at the end, by ensuring slow logic like
 //    the final `reportCompute()` is not performed after the preview ended
 //    after clearing the screen
