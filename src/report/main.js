@@ -28,7 +28,7 @@ export const reportRemove = async function (result, config) {
 
   try {
     const { result: resultA, contents } = await getContents(result, config)
-    await outputTtyContents(contents)
+    await outputContents(contents)
     return resultA
   } finally {
     await endReporters(configA)
