@@ -1,5 +1,6 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
+import { reportPreviewStart, reportPreviewEnd } from '../report/main.js'
 import { clearScreen, clearScreenFull, printToTty } from '../report/tty.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
@@ -17,15 +18,19 @@ export const printPreviewStarting = function ({ quiet }) {
 }
 
 // Start clearing the screen
-export const startPreview = async function (previewState) {
+export const startPreview = async function (previewState, config) {
   if (previewState.quiet) {
-    return
+    return config
   }
+
+  const configA = await reportPreviewStart(config)
 
   hideCursor()
   await clearScreenFull()
   startHandleResize(previewState)
   startHandleKeypress(previewState)
+
+  return configA
 }
 
 // Stop clearing the screen.
@@ -35,7 +40,7 @@ export const startPreview = async function (previewState) {
 //  - This allows users to stop a benchmark without losing information,
 //    including the duration that was left
 //  - This is unlike other errors, which clear it
-export const endPreview = async function (previewState, error = {}) {
+export const endPreview = async function (previewState, config, error = {}) {
   if (previewState.quiet) {
     return
   }
@@ -48,4 +53,6 @@ export const endPreview = async function (previewState, error = {}) {
   }
 
   showCursor()
+
+  await reportPreviewEnd(config)
 }

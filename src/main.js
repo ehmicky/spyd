@@ -10,37 +10,33 @@ import {
 import { performBenchmark } from './measure/bench.js'
 import { printPreviewStarting } from './preview/start_end.js'
 import { reportBenchShow, reportRemove } from './report/main.js'
-import { startReporters } from './report/start_end.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default command.
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
   printPreviewStarting(config)
-  const configA = await startReporters(config)
-  const result = await performBenchmark(configA)
-  await addToHistory(result, configA)
-  const resultA = await reportBenchShow(result, configA)
-  checkLimits(resultA, configA)
+  const result = await performBenchmark(config)
+  await addToHistory(result, config)
+  const resultA = await reportBenchShow(result, config)
+  checkLimits(resultA, config)
   return resultA
 }
 
 // Show a previous result
 export const show = async function (configFlags) {
   const config = await getConfig('show', configFlags)
-  const configA = await startReporters(config)
-  const result = await getFromHistory(configA)
-  const resultA = await reportBenchShow(result, configA)
+  const result = await getFromHistory(config)
+  const resultA = await reportBenchShow(result, config)
   return resultA
 }
 
 // Remove a previous result
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
-  const configA = await startReporters(config)
-  const result = await getFromHistory(configA)
-  const resultA = await reportRemove(result, configA)
-  await removeFromHistory(resultA, configA)
+  const result = await getFromHistory(config)
+  const resultA = await reportRemove(result, config)
+  await removeFromHistory(resultA, config)
   return resultA
 }
 

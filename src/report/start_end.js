@@ -14,7 +14,7 @@ const startReporter = async function ({ start, ...reporter }) {
 }
 
 // Call all `reporter.end()`
-export const endReporters = async function (reporters) {
+export const endReporters = async function ({ reporters }) {
   await Promise.all(reporters.map(endReporter))
 }
 

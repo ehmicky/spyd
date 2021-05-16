@@ -17,20 +17,20 @@ import { measureCombinations } from './several.js'
 export const performBenchmark = async function (config) {
   const { result, newCombinations } = await createResult(config)
   const previewState = initPreview(result, newCombinations, config)
-  await startPreview(previewState)
+  const configA = await startPreview(previewState, config)
 
   try {
     await updatePreviewReport(previewState)
     const resultA = await measureResult({
       result,
       newCombinations,
-      config,
+      config: configA,
       previewState,
     })
-    await endPreview(previewState)
+    await endPreview(previewState, configA)
     return resultA
   } catch (error) {
-    await endPreview(previewState, error)
+    await endPreview(previewState, configA, error)
     throw error
   }
 }

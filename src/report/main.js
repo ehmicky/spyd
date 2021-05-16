@@ -4,38 +4,50 @@ import {
   outputTtyContents,
   computeTtyContents,
 } from './output.js'
-import { endReporters } from './start_end.js'
+import { startReporters, endReporters } from './start_end.js'
 
 // Report final results in `bench` and `show` commands.
-export const reportBenchShow = async function (result, { reporters, titles }) {
-  const { result: resultA, contents } = await getContents(result, {
-    reporters,
-    titles,
-  })
-  await endReporters(reporters)
-  await outputContents(contents)
-  return resultA
+export const reportBenchShow = async function (result, config) {
+  const configA = await startReporters(config)
+
+  try {
+    const { result: resultA, contents } = await getContents(result, config)
+    await outputContents(contents)
+    return resultA
+  } finally {
+    await endReporters(configA)
+  }
 }
 
 // Report final results in `remove` command.
 // Reporting is shown so the user can be clear about which result was removed,
 // and provide with confirmation. So we only need to print in the terminal,
 // not output|insert files.
-export const reportRemove = async function (result, { reporters, titles }) {
-  const { result: resultA, contents } = await getContents(result, {
-    reporters,
-    titles,
-  })
-  await endReporters(reporters)
-  await outputTtyContents(contents)
-  return resultA
+export const reportRemove = async function (result, config) {
+  const configA = await startReporters(config)
+
+  try {
+    const { result: resultA, contents } = await getContents(result, config)
+    await outputTtyContents(contents)
+    return resultA
+  } finally {
+    await endReporters(configA)
+  }
 }
 
 // Report preview results in `bench` command.
 // The report output is not printed right away. Instead, it is printed by the
 // preview refresh function at regular intervals.
-export const reportPreview = async function (result, { reporters, titles }) {
-  const { contents } = await getContents(result, { reporters, titles })
-  const previewReport = computeTtyContents(contents)
-  return previewReport
+export const reportPreviewStart = async function (config) {
+  return await startReporters(config)
+}
+
+export const reportPreview = async function (result, config) {
+  const { contents } = await getContents(result, config)
+  const report = computeTtyContents(contents)
+  return report
+}
+
+export const reportPreviewEnd = async function (config) {
+  await endReporters(config)
 }
