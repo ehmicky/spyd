@@ -26,7 +26,6 @@ export const bench = async function (configFlags) {
   const initResult = getInitResult({ combinations, systemVersions, config })
   const initResultA = await listHistory(config, initResult)
   const { rawResult, result } = await performBenchmark({
-    combinations,
     initResult: initResultA,
     config: configA,
   })

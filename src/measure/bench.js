@@ -14,8 +14,8 @@ import { measureCombinations } from './several.js'
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
 export const performBenchmark = async function ({
-  combinations,
   initResult,
+  initResult: { combinations },
   config,
   config: { cwd, precisionTarget },
 }) {
