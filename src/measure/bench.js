@@ -17,13 +17,21 @@ export const performBenchmark = async function (
   initResult,
   { cwd, precisionTarget, quiet, reporters, titles },
 ) {
-  const previewState = initPreview(initResult, { quiet, reporters, titles })
+  const combinations = initResult.combinations.filter(
+    ({ resultId }) => resultId === initResult.id,
+  )
+  const previewState = initPreview(initResult, combinations, {
+    quiet,
+    reporters,
+    titles,
+  })
   await startPreview(previewState)
 
   try {
     await updatePreviewReport(previewState)
     const { rawResult, result } = await measureResult({
       initResult,
+      combinations,
       cwd,
       precisionTarget,
       previewState,
@@ -38,13 +46,11 @@ export const performBenchmark = async function (
 
 const measureResult = async function ({
   initResult,
+  combinations,
   cwd,
   precisionTarget,
   previewState,
 }) {
-  const combinations = initResult.combinations.filter(
-    ({ resultId }) => resultId === initResult.id,
-  )
   const combinationsA = await measureCombinations(combinations, {
     precisionTarget,
     cwd,

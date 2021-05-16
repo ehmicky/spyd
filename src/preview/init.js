@@ -8,13 +8,16 @@ import { START_DESCRIPTION } from './description.js'
 // When mutating it, it must always be in a consistent state at the end of a
 // microtask since `updatePreview()` could be called by concurrent code.
 // `index` and `total` are used as a 1-based counter in previews.
-export const initPreview = function (initResult, { quiet, reporters, titles }) {
+export const initPreview = function (
+  initResult,
+  combinations,
+  { quiet, reporters, titles },
+) {
   if (quiet) {
     return { quiet }
   }
 
   const reportersA = reporters.filter(isNotQuiet)
-  const { combinations } = initResult
   return {
     quiet,
     initResult,
