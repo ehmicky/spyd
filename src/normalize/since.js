@@ -46,21 +46,19 @@ export const applySince = async function (result, previous, { since, cwd }) {
   if (sinceIndex === -1) {
     return {
       ...result,
-      history: [
-        ...getHistory({
-          previous,
-          sinceIndex: previous.length - 1,
-          mergedResult: result,
-          result,
-        }),
-      ],
+      history: getHistory({
+        previous,
+        sinceIndex: previous.length - 1,
+        mergedResult: result,
+        result,
+      }),
     }
   }
 
   const mergedResult = mergeResults(result, previous.slice(sinceIndex))
   return {
     ...mergedResult,
-    history: [...getHistory({ previous, sinceIndex, mergedResult, result })],
+    history: getHistory({ previous, sinceIndex, mergedResult, result }),
   }
 }
 
