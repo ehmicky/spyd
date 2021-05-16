@@ -9,7 +9,7 @@ export const getCombinationsProduct = function ({
 }) {
   return runners
     .flatMap((runner) => getCombinationsByRunner(runner, tasks))
-    .map((combination) => ({ ...combination, inputs, systemId }))
+    .map((combination) => ({ ...combination, inputs, systemId, stats: {} }))
 }
 
 const getCombinationsByRunner = function (runner, tasks) {

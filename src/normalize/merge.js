@@ -40,7 +40,7 @@ const getPreviousCombinations = function (result, previous) {
 
 const getCombinations = function (result) {
   return result.combinations.map((combination) => ({
-    combination: { ...combination, resultId: result.id },
+    combination,
     idInfos: getIdInfos(combination),
     result,
   }))

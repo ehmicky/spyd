@@ -17,7 +17,6 @@ export const getInitResult = function ({
   const systems = getSystems({ systemId, systemVersions, envInfo })
   const combinationsA = combinations.map((combination) => ({
     ...combination,
-    stats: {},
     resultId: id,
   }))
   return { id, timestamp, systems, combinations: combinationsA, history: [] }
