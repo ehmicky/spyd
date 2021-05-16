@@ -29,6 +29,7 @@ export const getContents = async function (result, { reporters, titles }) {
   return { result: resultA, contents: contentsA }
 }
 
+// Some of this is currently applied only to `result`, not `result.history[*]`
 const getReporterContents = async function ({
   reportFunc,
   result,

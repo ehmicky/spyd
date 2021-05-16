@@ -18,6 +18,7 @@ const normalizeCombination = function ({ taskId, runnerId, systemId, stats }) {
 //    `since` filtering
 //  - Add category grouping and ranking
 //  - Add `result.systems[0]` (shared system)
+// This is not currently applied to `result.history[*]`
 export const normalizeReportedResult = function (result) {
   const resultA = addCombinationsDiff(result)
   const resultB = groupResultCombinations(resultA)
