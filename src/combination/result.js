@@ -1,8 +1,7 @@
 import { isSameCategory, isUniqueCombination } from './ids.js'
 
-// Return all the combinations that are in `results` but not in `result`
-export const getNewCombinations = function (result, results) {
-  const combinations = getResultsCombinations(results)
+// Filter out the `combinations` that are in `result`
+export const getNewCombinations = function (result, combinations) {
   return combinations
     .filter(isUniqueCombination)
     .filter(

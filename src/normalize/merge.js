@@ -43,7 +43,7 @@ export const mergeResults = function (result, previous) {
 // Those are only the combinations with different categories.
 const getPreviousCombinations = function (result, previous) {
   const previousCombinations = getResultsCombinations(previous)
-  const newCombinations = getNewCombinations(result, previous)
+  const newCombinations = getNewCombinations(result, previousCombinations)
   return newCombinations.map((newCombination) =>
     getMatchingCombination(previousCombinations, newCombination),
   )
