@@ -61,9 +61,9 @@ const applyRegularSince = function (result, previous, sinceIndex) {
   return { ...mergedResult, history }
 }
 
-const removeCombinations = function (result, resultA) {
-  const combinations = result.combinations.filter((combination) =>
-    resultHasCombination(resultA, combination),
+const removeCombinations = function (sinceResult, mergedResult) {
+  const combinations = sinceResult.combinations.filter((combination) =>
+    resultHasCombination(mergedResult, combination),
   )
-  return { ...result, combinations }
+  return { ...sinceResult, combinations }
 }
