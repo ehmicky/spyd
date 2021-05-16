@@ -1,3 +1,5 @@
+import { normalizeReportedResult } from '../normalize/result.js'
+
 import { getContents } from './call.js'
 import { outputContents, computeTtyContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
@@ -7,7 +9,8 @@ export const reportResult = async function (result, config) {
   const configA = await startReporters(config)
 
   try {
-    const { result: resultA, contents } = await getContents(result, config)
+    const resultA = normalizeReportedResult(result)
+    const contents = await getContents(resultA, config)
     await outputContents(contents)
     return resultA
   } finally {
@@ -23,7 +26,8 @@ export const reportPreviewStart = async function (config) {
 }
 
 export const reportPreview = async function (result, config) {
-  const { contents } = await getContents(result, config)
+  const resultA = normalizeReportedResult(result)
+  const contents = await getContents(resultA, config)
   const report = computeTtyContents(contents)
   return report
 }

@@ -1,6 +1,5 @@
 import omit from 'omit.js'
 
-import { normalizeReportedResult } from '../normalize/result.js'
 import { showResultTitles } from '../title/show.js'
 
 import { cleanResult } from './clean.js'
@@ -13,12 +12,11 @@ import {
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
 export const getContents = async function (result, { reporters, titles }) {
-  const resultA = normalizeReportedResult(result)
   const contents = await Promise.all(
-    reporters.map(getReporterContents.bind(undefined, resultA, titles)),
+    reporters.map(getReporterContents.bind(undefined, result, titles)),
   )
-  const contentsA = contents.filter(Boolean)
-  return { result: resultA, contents: contentsA }
+  const contentsA = contents.filter(hasContent)
+  return contentsA
 }
 
 // Some of this is currently applied only to `result`, not `result.history[*]`
@@ -100,4 +98,8 @@ const trimEnd = function (content) {
 
 const trimEndLine = function (line) {
   return line.trimEnd()
+}
+
+const hasContent = function ({ content }) {
+  return content !== undefined
 }
