@@ -15,17 +15,15 @@ import { measureCombinations } from './several.js'
 //     specify them with a separate configuration property
 export const performBenchmark = async function ({
   initResult,
-  initResult: { combinations },
-  config,
-  config: { cwd, precisionTarget },
+  config: { cwd, precisionTarget, quiet, reporters, titles },
 }) {
-  const previewState = initPreview(initResult, config)
+  const previewState = initPreview(initResult, { quiet, reporters, titles })
   await startPreview(previewState)
 
   try {
     await updatePreviewReport(previewState)
 
-    const combinationsA = await measureCombinations(combinations, {
+    const combinationsA = await measureCombinations(initResult.combinations, {
       precisionTarget,
       cwd,
       previewState,
