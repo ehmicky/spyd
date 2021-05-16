@@ -2,7 +2,11 @@ import { getCombinations } from './combination/main.js'
 import { checkLimits } from './compare/limit.js'
 import { getConfig } from './config/main.js'
 import { performExec } from './exec/main.js'
-import { getFromHistory, removeFromHistory } from './history/main.js'
+import {
+  addToHistory,
+  getFromHistory,
+  removeFromHistory,
+} from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
 import { reportResult } from './report/main.js'
 
@@ -10,7 +14,8 @@ import { reportResult } from './report/main.js'
 // Default command.
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
-  const finalResult = await performBenchmark(config)
+  const { result, finalResult } = await performBenchmark(config)
+  await addToHistory(result, config)
   checkLimits(finalResult, config)
   return finalResult
 }

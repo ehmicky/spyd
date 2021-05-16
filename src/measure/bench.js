@@ -1,4 +1,3 @@
-import { addToHistory } from '../history/main.js'
 import { normalizeMeasuredResult } from '../normalize/result.js'
 import {
   startPreview,
@@ -39,8 +38,8 @@ export const performBenchmark = async function (config) {
       finalResult,
       contents,
     } = await previewAndMeasure(resultA, configA)
-    await Promise.all([reportPrint(contents), addToHistory(resultB, configA)])
-    return finalResult
+    await reportPrint(contents)
+    return { result: resultB, finalResult }
   } finally {
     await reportEnd(configA)
   }
