@@ -1,10 +1,16 @@
+import { addToHistory } from '../history/main.js'
 import { normalizeMeasuredResult } from '../normalize/result.js'
 import {
   startPreview,
   endPreview,
   printPreviewStarting,
 } from '../preview/start_end.js'
-import { reportStart, reportNonPreview, reportEnd } from '../report/main.js'
+import {
+  reportStart,
+  reportCompute,
+  reportPrint,
+  reportEnd,
+} from '../report/main.js'
 
 import { createResult } from './create.js'
 import { measureCombinations } from './several.js'
@@ -28,9 +34,13 @@ export const performBenchmark = async function (config) {
   )
 
   try {
-    const resultB = await previewAndMeasure(resultA, configA)
-    const finalResult = await reportNonPreview(resultB, configA)
-    return { result: resultB, finalResult }
+    const {
+      result: resultB,
+      finalResult,
+      contents,
+    } = await previewAndMeasure(resultA, configA)
+    await Promise.all([reportPrint(contents), addToHistory(resultB, configA)])
+    return finalResult
   } finally {
     await reportEnd(configA)
   }
@@ -41,8 +51,9 @@ const previewAndMeasure = async function (result, config) {
 
   try {
     const resultA = await measureResult(result, config, previewState)
+    const { finalResult, contents } = await reportCompute(resultA, config)
     await endPreview(previewState)
-    return resultA
+    return { result: resultA, finalResult, contents }
   } catch (error) {
     await endPreview(previewState, error)
     throw error

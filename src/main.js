@@ -2,11 +2,7 @@ import { getCombinations } from './combination/main.js'
 import { checkLimits } from './compare/limit.js'
 import { getConfig } from './config/main.js'
 import { performExec } from './exec/main.js'
-import {
-  addToHistory,
-  getFromHistory,
-  removeFromHistory,
-} from './history/main.js'
+import { getFromHistory, removeFromHistory } from './history/main.js'
 import { performBenchmark } from './measure/bench.js'
 import { reportResult } from './report/main.js'
 
@@ -14,8 +10,7 @@ import { reportResult } from './report/main.js'
 // Default command.
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
-  const { result, finalResult } = await performBenchmark(config)
-  await addToHistory(result, config)
+  const finalResult = await performBenchmark(config)
   checkLimits(finalResult, config)
   return finalResult
 }
@@ -24,17 +19,17 @@ export const bench = async function (configFlags) {
 export const show = async function (configFlags) {
   const config = await getConfig('show', configFlags)
   const { result, previous } = await getFromHistory(config)
-  const resultA = await reportResult(result, previous, config)
-  return resultA
+  const finalResult = await reportResult(result, previous, config)
+  return finalResult
 }
 
 // Remove a previous result
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
   const { result, previous } = await getFromHistory(config)
-  const resultA = await reportResult(result, previous, config)
-  await removeFromHistory(resultA, config)
-  return resultA
+  const finalResult = await reportResult(result, previous, config)
+  await removeFromHistory(result, config)
+  return finalResult
 }
 
 // Execute tasks without benchmarking them
