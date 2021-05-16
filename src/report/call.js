@@ -8,6 +8,7 @@ import {
   getPaddedScreenWidth,
   getPaddedScreenHeight,
 } from './tty.js'
+import { wrapRows } from './wrap.js'
 
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
@@ -51,7 +52,8 @@ const getReporterContents = async function (
   const content = await reportFunc(resultC, reportFuncProps, startData)
   const contentA = normalizeEmptyContent(content)
   const contentB = trimEnd(contentA)
-  return { content: contentB, output, colors }
+  const contentC = wrapRows(contentB)
+  return { content: contentC, output, colors }
 }
 
 // Differences are mostly useful during interaction.

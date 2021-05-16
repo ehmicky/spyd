@@ -5,9 +5,9 @@ import {
   noteColor,
   titleColor,
 } from '../report/utils/colors.js'
+import { wrapPaddedRows } from '../report/utils/wrap.js'
 
 import { ACTIONS_LABEL } from './bottom_bar.js'
-import { wrapPaddedRows } from './wrap.js'
 
 // Retrieve elements of bottom bar in preview.
 // Since the scrolling action must be computed twice, this is a performance
