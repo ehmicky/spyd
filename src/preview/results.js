@@ -82,7 +82,8 @@ const updateReport = async function ({
   }
 
   const resultA = normalizeMeasuredResult(result)
-  const report = await reportPreview(
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  previewState.report = await reportPreview(
     {
       ...resultA,
       preview: {
@@ -95,6 +96,4 @@ const updateReport = async function ({
     },
     { reporters, titles },
   )
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.report = report
 }
