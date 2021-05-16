@@ -7,16 +7,16 @@ import { getSystems } from '../system/info.js'
 // Create a new result to measure
 export const createResult = async function (config) {
   const { combinations, systemVersions } = await getCombinations(config)
-  const result = initializeResult(config, combinations, systemVersions)
+  const result = initResult(combinations, systemVersions, config)
   const resultA = await listHistory(config, result)
   const newCombinations = getNewCombinations(resultA)
   return { result: resultA, newCombinations }
 }
 
-const initializeResult = function (
-  { envInfo, systemId },
+const initResult = function (
   combinations,
   systemVersions,
+  { envInfo, systemId },
 ) {
   const id = uuidv4()
   const timestamp = Date.now()
