@@ -70,11 +70,11 @@ export const mergeHistoryCombinations = function (result, history) {
 }
 
 // Retrieve previous combinations the result should be merged with
-const getHistoryCombinations = function (result, results) {
+const getHistoryCombinations = function (result, history) {
   // eslint-disable-next-line fp/no-mutating-methods
-  const resultsA = [...results].reverse()
-  const historyCombinations = resultsA.flatMap(getCombinations)
-  const newIdInfos = getNewIdInfos(result, resultsA)
+  const historyA = [...history].reverse()
+  const historyCombinations = historyA.flatMap(getCombinations)
+  const newIdInfos = getNewIdInfos(result, historyA)
   return newIdInfos.map((idInfos) =>
     getHistoryCombination(historyCombinations, idInfos),
   )
