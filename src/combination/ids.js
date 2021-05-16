@@ -31,14 +31,14 @@ export const isSameCategory = function (combinationA, combinationB) {
 
 // Return all the combinations that are in `results` but not in `result`
 export const getNewIdInfos = function (result, results) {
-  const allIdInfos = getResultsIdInfos(results)
   const resultIdInfos = getResultIdInfos(result)
+  const allIdInfos = getResultsIdInfos(results)
   return allIdInfos.filter((idInfos) =>
     matchesNoIdInfos(idInfos, resultIdInfos),
   )
 }
 
-// Return the unique sets of combinations for several resuls
+// Return the unique sets of combinations for several results
 const getResultsIdInfos = function (results) {
   return results.flatMap(getResultIdInfos).filter(isUniqueCombinationIds)
 }
