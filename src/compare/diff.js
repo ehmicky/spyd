@@ -1,4 +1,7 @@
-import { getMatchingCombination } from '../combination/result.js'
+import {
+  getMatchingCombination,
+  resultsHaveCombinations,
+} from '../combination/result.js'
 import { isDiffPrecise } from '../stats/welch.js'
 
 // Add `combination.stats.diff` which compares each combination with another
@@ -20,30 +23,30 @@ export const addCombinationsDiff = function (result) {
     return result
   }
 
-  const [sinceResult] = history
+  const [sinceResult, ...afterSince] = history
   const combinations = result.combinations.map((combination) =>
-    addCombinationDiff(combination, sinceResult),
+    addCombinationDiff(combination, sinceResult, afterSince),
   )
   return { ...result, combinations }
 }
 
 // A combination might be in `result` because it was taken from `sinceResult`
-// (the one we're diffing against). In this case, we don't want to diff the
-// combination against itself.
+// (the one we're diffing against) instead of `afterSince`.
+// In this case, we don't want to diff the combination against itself.
 const addCombinationDiff = function (
   combination,
-  { id, combinations: previousCombinations },
+  { combinations: previousCombinations },
+  afterSince,
 ) {
-  if (combination.resultId === id) {
-    return combination
-  }
-
   const previousCombinationA = getMatchingCombination(
     previousCombinations,
     combination,
   )
 
-  if (previousCombinationA === undefined) {
+  if (
+    previousCombinationA === undefined ||
+    !resultsHaveCombinations(afterSince, combination)
+  ) {
     return combination
   }
 
