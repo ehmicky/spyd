@@ -5,7 +5,7 @@ import { findByDelta } from '../delta/main.js'
 import { UserError } from '../error/main.js'
 import { compressResult } from '../normalize/compress.js'
 import { loadResults } from '../normalize/load.js'
-import { normalizeResult } from '../normalize/result.js'
+import { normalizeReportedResult } from '../normalize/result.js'
 import { applySince } from '../normalize/since.js'
 import { isTtyInput } from '../report/tty.js'
 
@@ -56,7 +56,7 @@ export const getFromHistory = async function (config) {
   const results = await listLoadedResults(config)
   const { result, previous } = await listResultsByDelta(results, config)
   const resultA = await applySince(result, previous, config)
-  const resultB = normalizeResult(resultA)
+  const resultB = normalizeReportedResult(resultA)
   return resultB
 }
 

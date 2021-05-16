@@ -21,7 +21,6 @@ export const initPreview = function (
   return {
     quiet,
     initResult,
-    combinations,
     reporters: reportersA,
     titles,
     previewSamples: 0,

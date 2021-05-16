@@ -1,4 +1,7 @@
-import { getFinalResult } from '../normalize/init.js'
+import {
+  normalizeMeasuredResult,
+  normalizeReportedResult,
+} from '../normalize/result.js'
 import { reportPreview } from '../report/main.js'
 
 import { updateCompletion } from './completion.js'
@@ -25,7 +28,7 @@ export const updatePreviewStats = async function ({
   stats,
   stats: { samples },
   previewState,
-  previewState: { quiet, combinations, index },
+  previewState: { quiet, initResult, combinationIndex },
   durationState,
   precisionTarget,
 }) {
@@ -33,9 +36,10 @@ export const updatePreviewStats = async function ({
     return
   }
 
-  updateCombinationEnd({ stats, previewState, durationState, precisionTarget })
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  combinations[index].stats = stats
+  initResult.combinations[combinationIndex].stats = stats
+
+  updateCombinationEnd({ stats, previewState, durationState, precisionTarget })
   setDescriptionIf(previewState, MEASURE_DESCRIPTION, START_DESCRIPTION)
 
   updateCompletion(previewState)
@@ -62,17 +66,17 @@ const updateReport = async function ({
     reporters,
     titles,
     initResult,
-    combinations,
   },
 }) {
   if (reporters.length === 0) {
     return
   }
 
-  const { result } = getFinalResult(initResult, combinations)
+  const result = normalizeMeasuredResult(initResult)
+  const resultA = normalizeReportedResult(result)
   const report = await reportPreview(
     {
-      ...result,
+      ...resultA,
       preview: {
         durationLeft,
         percentage,

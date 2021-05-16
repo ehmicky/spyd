@@ -1,4 +1,8 @@
-import { getFinalResult } from '../normalize/init.js'
+import { addCombinations } from '../normalize/init.js'
+import {
+  normalizeMeasuredResult,
+  normalizeReportedResult,
+} from '../normalize/result.js'
 import { initPreview } from '../preview/init.js'
 import { updatePreviewReport } from '../preview/results.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
@@ -57,6 +61,8 @@ const measureResult = async function ({
     previewState,
     stage: 'main',
   })
-  const { rawResult, result } = getFinalResult(initResult, combinationsA)
+  const initResultA = addCombinations(initResult, combinationsA)
+  const rawResult = normalizeMeasuredResult(initResultA)
+  const result = normalizeReportedResult(rawResult)
   return { rawResult, result }
 }

@@ -22,6 +22,7 @@ export const startCombinationPreview = async function (
     combinationEnd: undefined,
     previewSamples: 0,
     index,
+    combinationIndex: combination.index,
     combinationName,
     description: START_DESCRIPTION,
   })

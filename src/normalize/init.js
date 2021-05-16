@@ -1,9 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { isSameCategory } from '../combination/ids.js'
 import { getSystems } from '../system/info.js'
-
-import { normalizeResult } from './result.js'
 
 // Add metadata information to initial result
 export const getInitResult = function ({
@@ -22,28 +19,16 @@ export const getInitResult = function ({
   return { id, timestamp, systems, combinations: combinationsA, history: [] }
 }
 
-// Finalize result. Done either at the end, or before each preview.
-export const getFinalResult = function (initResult, newCombinations) {
-  const rawResult = addCombinations(initResult, newCombinations)
-  const result = normalizeResult(rawResult)
-  return { rawResult, result }
+// Add measured combinations at the end of the result
+export const addCombinations = function (initResult, newCombinations) {
+  return newCombinations.reduce(addCombination, initResult)
 }
 
-const addCombinations = function (initResult, newCombinations) {
-  const combinations = initResult.combinations
-    .map((combination) => addCombination(newCombinations, combination))
-    .map(getFinalCombination)
+const addCombination = function (initResult, newCombination) {
+  const combinations = [
+    ...initResult.combinations.slice(0, newCombination.index),
+    newCombination,
+    ...initResult.combinations.slice(newCombination.index + 1),
+  ]
   return { ...initResult, combinations }
-}
-
-const addCombination = function (combinations, newCombination) {
-  const combinationA = combinations.find((combination) =>
-    isSameCategory(combination, newCombination),
-  )
-  return combinationA === undefined ? newCombination : combinationA
-}
-
-// Retrieve final combination properties used for reporting.
-const getFinalCombination = function ({ taskId, runnerId, systemId, stats }) {
-  return { taskId, runnerId, systemId, stats }
 }
