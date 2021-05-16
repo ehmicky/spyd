@@ -5,7 +5,6 @@ import { findByDelta } from '../delta/main.js'
 import { UserError } from '../error/main.js'
 import { compressResult } from '../normalize/compress.js'
 import { loadResults } from '../normalize/load.js'
-import { applySince } from '../normalize/since.js'
 import { isTtyInput } from '../report/tty.js'
 
 import { addResult, removeResult, listResults } from './results.js'
@@ -41,28 +40,18 @@ const shouldRemoveFromHistory = async function (force) {
   return confirmed
 }
 
-// Retrieve all results.
-// We try to apply `since` as soon as possible so user errors with that
-// configuration property fail early.
-export const listHistory = async function (config, result) {
-  const previous = await listLoadedResults(config)
-  const resultA = await applySince(result, previous, config)
-  return resultA
-}
-
 // Get a previous result by delta
 export const getFromHistory = async function (config) {
-  const results = await listLoadedResults(config)
+  const results = await listHistory(config)
   const { result, previous } = await listResultsByDelta(results, config)
-  const resultA = await applySince(result, previous, config)
-  return resultA
+  return { result, previous }
 }
 
 // List, sort, filter and normalize all results
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in results preview
-const listLoadedResults = async function ({ cwd, select }) {
+export const listHistory = async function ({ cwd, select }) {
   const results = await listResults(cwd)
   const resultsA = loadResults(results, select)
   return resultsA

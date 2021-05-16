@@ -6,11 +6,12 @@ import { getSystems } from '../system/info.js'
 
 // Create a new result to measure
 export const createResult = async function (config) {
-  const { combinations, systemVersions } = await getCombinations(config)
+  const [{ combinations, systemVersions }, previous] = await Promise.all([
+    getCombinations(config),
+    listHistory(config),
+  ])
   const result = initResult(combinations, systemVersions, config)
-  const resultA = await listHistory(config, result)
-  const newCombinations = combinations.map(addNewCombinationIndex)
-  return { result: resultA, newCombinations }
+  return { result, previous }
 }
 
 const initResult = function (
@@ -22,22 +23,4 @@ const initResult = function (
   const timestamp = Date.now()
   const systems = getSystems({ systemId, systemVersions, envInfo })
   return { id, timestamp, systems, combinations }
-}
-
-const addNewCombinationIndex = function (newCombination, index) {
-  return { ...newCombination, index }
-}
-
-// Add measured combinations at the end of the result
-export const addCombinations = function (result, newCombinations) {
-  return newCombinations.reduce(addCombination, result)
-}
-
-const addCombination = function (result, newCombination) {
-  const combinations = [
-    ...result.combinations.slice(0, newCombination.index),
-    newCombination,
-    ...result.combinations.slice(newCombination.index + 1),
-  ]
-  return { ...result, combinations }
 }

@@ -7,7 +7,7 @@ import {
   printPreviewStarting,
 } from '../preview/start_end.js'
 
-import { addCombinations, createResult } from './create.js'
+import { createResult } from './create.js'
 import { measureCombinations } from './several.js'
 
 // Perform a new benchmark.
@@ -22,40 +22,34 @@ import { measureCombinations } from './several.js'
 export const performBenchmark = async function (config) {
   printPreviewStarting(config)
 
-  const { result, newCombinations } = await createResult(config)
+  const { result, previous } = await createResult(config)
 
-  const previewState = initPreview(result, newCombinations, config)
+  const previewState = await initPreview({ result, previous, config })
   const configA = await startPreview(previewState, config)
 
   try {
     await updatePreviewReport(previewState)
-    const resultA = await measureResult({
-      result,
-      newCombinations,
-      config: configA,
-      previewState,
-    })
+    const resultA = await measureResult(result, configA, previewState)
     await endPreview(previewState, configA)
-    return resultA
+    return { result: resultA, previous }
   } catch (error) {
     await endPreview(previewState, configA, error)
     throw error
   }
 }
 
-const measureResult = async function ({
+const measureResult = async function (
   result,
-  newCombinations,
-  config: { cwd, precisionTarget },
+  { cwd, precisionTarget },
   previewState,
-}) {
-  const newCombinationsA = await measureCombinations(newCombinations, {
+) {
+  const combinations = await measureCombinations(result.combinations, {
     precisionTarget,
     cwd,
     previewState,
     stage: 'main',
   })
-  const resultA = addCombinations(result, newCombinationsA)
+  const resultA = { ...result, combinations }
   const resultB = normalizeMeasuredResult(resultA)
   return resultB
 }

@@ -14,9 +14,9 @@ import { reportResult } from './report/main.js'
 // Default command.
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
-  const result = await performBenchmark(config)
+  const { result, previous } = await performBenchmark(config)
   await addToHistory(result, config)
-  const resultA = await reportResult(result, config)
+  const resultA = await reportResult(result, previous, config)
   checkLimits(resultA, config)
   return resultA
 }
@@ -24,16 +24,16 @@ export const bench = async function (configFlags) {
 // Show a previous result
 export const show = async function (configFlags) {
   const config = await getConfig('show', configFlags)
-  const result = await getFromHistory(config)
-  const resultA = await reportResult(result, config)
+  const { result, previous } = await getFromHistory(config)
+  const resultA = await reportResult(result, previous, config)
   return resultA
 }
 
 // Remove a previous result
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
-  const result = await getFromHistory(config)
-  const resultA = await reportResult(result, config)
+  const { result, previous } = await getFromHistory(config)
+  const resultA = await reportResult(result, previous, config)
   await removeFromHistory(resultA, config)
   return resultA
 }
