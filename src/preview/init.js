@@ -17,11 +17,10 @@ export const initPreview = function (
     return { quiet }
   }
 
-  const reportersA = reporters.filter(isNotQuiet)
   return {
     quiet,
     result,
-    reporters: reportersA,
+    reporters: reporters.filter(isNotQuiet),
     titles,
     previewSamples: 0,
     durationLeft: EMPTY_DURATION_LEFT,
