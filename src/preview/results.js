@@ -43,13 +43,13 @@ export const updatePreviewStats = async function ({
 
 const updateResultStats = async function ({
   previewState,
-  previewState: { result, combinationIndex },
+  previewState: { result, index },
   stats,
 }) {
   const combinations = [
-    ...result.combinations.slice(0, combinationIndex),
-    { ...result.combinations[combinationIndex], stats },
-    ...result.combinations.slice(combinationIndex + 1),
+    ...result.combinations.slice(0, index),
+    { ...result.combinations[index], stats },
+    ...result.combinations.slice(index + 1),
   ]
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.result = { ...result, combinations }

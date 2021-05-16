@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { getCombinationName, isSameCategory } from '../combination/ids.js'
+import { getCombinationName } from '../combination/ids.js'
 
 import { START_DESCRIPTION } from './description.js'
 import { updatePreview } from './update.js'
@@ -16,16 +16,12 @@ export const startCombinationPreview = async function (
   }
 
   const combinationName = getCombinationName(combination)
-  const combinationIndex = previewState.result.combinations.findIndex(
-    (combinationA) => isSameCategory(combinationA, combination),
-  )
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, {
     combinationStart: now(),
     combinationEnd: undefined,
     previewSamples: 0,
     index,
-    combinationIndex,
     combinationName,
     description: START_DESCRIPTION,
   })
