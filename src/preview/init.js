@@ -14,13 +14,13 @@ export const initPreview = function (initResult, { quiet, reporters, titles }) {
   }
 
   const reportersA = reporters.filter(isNotQuiet)
-  const combinations = initResult.combinations.map(addEmptyStats)
+  const { combinations } = initResult
   return {
     quiet,
     initResult,
+    combinations,
     reporters: reportersA,
     titles,
-    combinations,
     previewSamples: 0,
     durationLeft: EMPTY_DURATION_LEFT,
     percentage: 0,
@@ -40,8 +40,4 @@ export const initPreview = function (initResult, { quiet, reporters, titles }) {
 // This does not disable the progress bar preview though.
 const isNotQuiet = function ({ quiet = false }) {
   return !quiet
-}
-
-const addEmptyStats = function (combination) {
-  return { ...combination, stats: {} }
 }
