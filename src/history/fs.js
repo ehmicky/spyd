@@ -22,8 +22,28 @@ export const getResults = async function (dir) {
 export const setResults = async function (dir, results) {
   const dataFile = await getDataFile(dir)
   const content = JSON.stringify(results, undefined, 2)
-  await writeFileAtomic(dataFile, `${content}\n`)
+  const contentA = flattenArray(content)
+  await writeFileAtomic(dataFile, `${contentA}\n`)
 }
+
+// Some arrays like `histogram` and `quantiles` are big. `JSON.serialize()`
+// put each item in a separate line. We put those in a single line instead.
+//  - This makes it easier to view the file
+//  - This creates simpler git diffs
+//  - This creates better git stats when it comes to amount of lines changes
+// We only do this for arrays of simple types.
+const flattenArray = function (content) {
+  return content.replace(SIMPLE_ARRAY_REGEXP, flattenArrayItems)
+}
+
+// Matches `[ ... ]` but not `[ { ... } ]`
+const SIMPLE_ARRAY_REGEXP = /\[([^\]{}]+)\]/gmu
+
+const flattenArrayItems = function (_, match) {
+  return `[${match.replace(WHITESPACES_REGEXP, ' ').trim()}]`
+}
+
+const WHITESPACES_REGEXP = /\s+/gmu
 
 const getDataFile = async function (dir) {
   try {
