@@ -29,40 +29,6 @@ export const isSameCategory = function (combinationA, combinationB) {
   )
 }
 
-export const resultHasCombination = function (results, combination) {
-  return results.some((result) =>
-    hasCombination(result.combinations, combination),
-  )
-}
-
-export const hasCombination = function (combinations, combinationA) {
-  return combinations.some((combinationB) =>
-    isSameCategory(combinationA, combinationB),
-  )
-}
-
-// Return all the combinations that are in `results` but not in `result`
-export const getNewIdInfos = function (result, results) {
-  const resultIdInfos = getResultIdInfos(result)
-  const allIdInfos = getResultsIdInfos(results)
-  return allIdInfos.filter((idInfos) =>
-    matchesNoIdInfos(idInfos, resultIdInfos),
-  )
-}
-
-// Return the unique sets of combinations for several results
-const getResultsIdInfos = function (results) {
-  return results.flatMap(getResultIdInfos).filter(isUniqueCombinationIds)
-}
-
-const getResultIdInfos = function ({ combinations }) {
-  return combinations.map(getIdInfos)
-}
-
-const matchesNoIdInfos = function (idInfosA, resultIdInfos) {
-  return !resultIdInfos.some((idInfosB) => isSameIdInfos(idInfosA, idInfosB))
-}
-
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
@@ -114,7 +80,7 @@ const isNotSameCatDuplicate = function ({ category, id }, index, idInfos) {
 }
 
 // Check if a combination is present in other results
-const isUniqueCombinationIds = function (idInfosA, index, allIdInfos) {
+export const isUniqueCombinationIds = function (idInfosA, index, allIdInfos) {
   return !allIdInfos
     .slice(index + 1)
     .some((idInfosB) => isSameIdInfos(idInfosA, idInfosB))

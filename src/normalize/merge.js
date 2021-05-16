@@ -1,4 +1,5 @@
-import { getNewIdInfos, getIdInfos, isSameIdInfos } from '../combination/ids.js'
+import { getIdInfos, isSameIdInfos } from '../combination/ids.js'
+import { getNewIdInfos } from '../combination/result.js'
 import { mergeSystems } from '../system/merge.js'
 
 // `show|remove` commands allow reporting several reports at once using the

@@ -1,4 +1,5 @@
-import { isSameCategory, resultHasCombination } from '../combination/ids.js'
+import { isSameCategory } from '../combination/ids.js'
+import { resultsHaveCombination } from '../combination/result.js'
 import { isDiffPrecise } from '../stats/welch.js'
 
 // Add `combination.stats.diff` which compares each combination with another
@@ -44,7 +45,7 @@ const addCombinationDiff = function (
 
   if (
     previousCombinationA === undefined ||
-    !resultHasCombination(afterSince, combination)
+    !resultsHaveCombination(afterSince, combination)
   ) {
     return combination
   }
