@@ -1,6 +1,6 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
-import { reportPreviewStart, reportPreviewEnd } from '../report/main.js'
+import { reportStart, reportEnd } from '../report/main.js'
 import { clearScreen, clearScreenFull, printToTty } from '../report/tty.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
@@ -42,7 +42,7 @@ export const startPreview = async function (config, result, previous) {
 }
 
 const startPreviewReport = async function (config, result, previous) {
-  const { config: configA, result: resultA } = await reportPreviewStart(
+  const { config: configA, result: resultA } = await reportStart(
     result,
     previous,
     config,
@@ -73,5 +73,5 @@ export const endPreview = async function (previewState, config, error = {}) {
 
   showCursor()
 
-  await reportPreviewEnd(config)
+  await reportEnd(config)
 }
