@@ -13,25 +13,11 @@ import { measureCombinations } from './several.js'
 //     subsequent editing experience
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
-export const performBenchmark = async function (
-  config,
+export const performBenchmark = async function ({
   combinations,
   initResult,
-) {
-  const combinationsA = await previewStartAndMeasure({
-    combinations,
-    config,
-    initResult,
-  })
-  const { rawResult, result } = getFinalResult(initResult, combinationsA)
-  return { rawResult, result }
-}
-
-const previewStartAndMeasure = async function ({
-  combinations,
   config,
   config: { cwd, precisionTarget },
-  initResult,
 }) {
   const previewState = initPreview(initResult, config, combinations)
   await startPreview(previewState)
@@ -45,8 +31,9 @@ const previewStartAndMeasure = async function ({
       previewState,
       stage: 'main',
     })
+    const { rawResult, result } = getFinalResult(initResult, combinationsA)
     await endPreview(previewState)
-    return combinationsA
+    return { rawResult, result }
   } catch (error) {
     await endPreview(previewState, error)
     throw error

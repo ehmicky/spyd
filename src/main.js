@@ -25,11 +25,11 @@ export const bench = async function (configFlags) {
   ])
   const initResult = getInitResult({ combinations, systemVersions, config })
   const initResultA = await listHistory(config, initResult)
-  const { rawResult, result } = await performBenchmark(
-    configA,
+  const { rawResult, result } = await performBenchmark({
     combinations,
-    initResultA,
-  )
+    initResult: initResultA,
+    config: configA,
+  })
   await reportBenchShow(result, configA)
   await addToHistory(rawResult, configA)
   checkLimits(result, configA)
