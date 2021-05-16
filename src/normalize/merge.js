@@ -24,7 +24,10 @@ import { mergeSystems } from '../system/merge.js'
 //    user intends to stop using each of the previously used systems.
 export const mergeResults = function (result, previous) {
   const previousCombinations = getPreviousCombinations(result, previous)
-  return previousCombinations.reduce(mergePreviousCombination, result)
+  return previousCombinations.reduce(
+    mergePreviousCombination.bind(undefined, previous),
+    result,
+  )
 }
 
 // Retrieve previous combinations the result should be merged with
@@ -38,17 +41,13 @@ const getPreviousCombinations = function (result, previous) {
   )
 }
 
-const getCombinations = function (result) {
-  return result.combinations.map((combination) => ({
-    combination,
-    idInfos: getIdInfos(combination),
-    result,
-  }))
+const getCombinations = function ({ combinations }) {
+  return combinations
 }
 
 const getPreviousCombination = function (previousCombinations, idInfos) {
   return previousCombinations.find((previousCombination) =>
-    isSameIdInfos(previousCombination.idInfos, idInfos),
+    isSameIdInfos(getIdInfos(previousCombination), idInfos),
   )
 }
 
@@ -64,11 +63,9 @@ const getPreviousCombination = function (previousCombinations, idInfos) {
 // This allows comparing different systems.
 // We make sure the latest `combinations` are first in the merged array, so we
 // can prioritize them.
-const mergePreviousCombination = function (
-  result,
-  { combination, result: { systems } },
-) {
+const mergePreviousCombination = function (previous, result, combination) {
   const combinations = [...result.combinations, combination]
-  const systemsA = mergeSystems(result.systems, systems)
-  return { ...result, combinations, systems: systemsA }
+  const previousResult = previous.find(({ id }) => id === combination.resultId)
+  const systems = mergeSystems(result.systems, previousResult.systems)
+  return { ...result, combinations, systems }
 }
