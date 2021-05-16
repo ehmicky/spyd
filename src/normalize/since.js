@@ -80,12 +80,16 @@ const getHistoryCombinations = function (result, history) {
 }
 
 const getCombinations = function (result) {
-  return result.combinations.map((combination) => ({ combination, result }))
+  return result.combinations.map((combination) => ({
+    combination,
+    idInfos: getIdInfos(combination),
+    result,
+  }))
 }
 
 const getHistoryCombination = function (historyCombinations, idInfos) {
-  return historyCombinations.find(({ combination }) =>
-    isSameIdInfos(getIdInfos(combination), idInfos),
+  return historyCombinations.find((historyCombination) =>
+    isSameIdInfos(historyCombination.idInfos, idInfos),
   )
 }
 
