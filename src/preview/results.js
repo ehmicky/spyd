@@ -1,7 +1,4 @@
-import {
-  normalizeMeasuredResult,
-  normalizeReportedResult,
-} from '../normalize/result.js'
+import { normalizeMeasuredResult } from '../normalize/result.js'
 import { reportPreview } from '../report/main.js'
 
 import { updateCompletion } from './completion.js'
@@ -73,10 +70,9 @@ const updateReport = async function ({
   }
 
   const resultA = normalizeMeasuredResult(result)
-  const resultB = normalizeReportedResult(resultA)
   const report = await reportPreview(
     {
-      ...resultB,
+      ...resultA,
       preview: {
         durationLeft,
         percentage,

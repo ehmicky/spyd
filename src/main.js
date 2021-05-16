@@ -18,11 +18,11 @@ export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
   printPreviewStarting(config)
   const configA = await startReporters(config)
-  const { rawResult, result } = await performBenchmark(configA)
-  await reportBenchShow(result, configA)
-  await addToHistory(rawResult, configA)
-  checkLimits(result, configA)
-  return result
+  const result = await performBenchmark(configA)
+  await addToHistory(result, configA)
+  const resultA = await reportBenchShow(result, configA)
+  checkLimits(resultA, configA)
+  return resultA
 }
 
 // Show a previous result
@@ -32,8 +32,8 @@ export const show = async function (configFlags) {
     getFromHistory(config),
     startReporters(config),
   ])
-  await reportBenchShow(result, configA)
-  return result
+  const resultA = await reportBenchShow(result, configA)
+  return resultA
 }
 
 // Remove a previous result
@@ -43,9 +43,9 @@ export const remove = async function (configFlags) {
     getFromHistory(config),
     startReporters(config),
   ])
-  await reportRemove(result, configA)
-  await removeFromHistory(result, configA)
-  return result
+  const resultA = await reportRemove(result, configA)
+  await removeFromHistory(resultA, configA)
+  return resultA
 }
 
 // Execute tasks without benchmarking them

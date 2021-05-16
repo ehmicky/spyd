@@ -1,7 +1,4 @@
-import {
-  normalizeMeasuredResult,
-  normalizeReportedResult,
-} from '../normalize/result.js'
+import { normalizeMeasuredResult } from '../normalize/result.js'
 import { initPreview } from '../preview/init.js'
 import { updatePreviewReport } from '../preview/results.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
@@ -24,14 +21,14 @@ export const performBenchmark = async function (config) {
 
   try {
     await updatePreviewReport(previewState)
-    const { rawResult, result: resultA } = await measureResult({
+    const resultA = await measureResult({
       result,
       newCombinations,
       config,
       previewState,
     })
     await endPreview(previewState)
-    return { rawResult, result: resultA }
+    return resultA
   } catch (error) {
     await endPreview(previewState, error)
     throw error
@@ -51,7 +48,6 @@ const measureResult = async function ({
     stage: 'main',
   })
   const resultA = addCombinations(result, newCombinationsA)
-  const rawResult = normalizeMeasuredResult(resultA)
-  const resultB = normalizeReportedResult(rawResult)
-  return { rawResult, result: resultB }
+  const resultB = normalizeMeasuredResult(resultA)
+  return resultB
 }
