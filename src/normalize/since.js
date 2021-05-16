@@ -1,4 +1,4 @@
-import { isSameCategory } from '../combination/ids.js'
+import { getNewIdInfos, getIdInfos, isSameIdInfos } from '../combination/ids.js'
 import { findByDelta } from '../delta/main.js'
 import { mergeSystems } from '../system/merge.js'
 
@@ -65,32 +65,27 @@ export const addHistory = function (result, history) {
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
 export const mergeLastCombinations = function (result, history) {
+  const historyCombinations = getHistoryCombinations(result, history)
+  return historyCombinations.reduce(mergeHistoryCombination, result)
+}
+
+// Retrieve previous combinations the result should be merged with
+const getHistoryCombinations = function (result, history) {
   // eslint-disable-next-line fp/no-mutating-methods
-  return [...history].reverse().reduce(mergePair, result)
-}
-
-const mergePair = function (result, historyResult) {
-  const historyCombinations = getHistoryCombinations(
-    historyResult.combinations,
-    result.combinations,
-  )
-
-  if (historyCombinations.length === 0) {
-    return result
-  }
-
-  return mergeHistoryResult(result, historyResult, historyCombinations)
-}
-
-const getHistoryCombinations = function (historyCombinations, combinations) {
-  return historyCombinations.filter(
-    (combination) => !isSameCombination(combination, combinations),
+  const historyCombinations = history.flatMap(getCombinations).reverse()
+  const newIdInfos = getNewIdInfos(result, history)
+  return newIdInfos.map((idInfos) =>
+    getHistoryCombination(historyCombinations, idInfos),
   )
 }
 
-const isSameCombination = function (combination, combinations) {
-  return combinations.some((combinationA) =>
-    isSameCategory(combination, combinationA),
+const getCombinations = function (result) {
+  return result.combinations.map((combination) => ({ combination, result }))
+}
+
+const getHistoryCombination = function (historyCombinations, idInfos) {
+  return historyCombinations.find(({ combination }) =>
+    isSameIdInfos(getIdInfos(combination), idInfos),
   )
 }
 
@@ -106,12 +101,11 @@ const isSameCombination = function (combination, combinations) {
 // This allows comparing different systems.
 // We make sure the latest `combinations` are first in the merged array, so we
 // can prioritize them.
-const mergeHistoryResult = function (
-  { combinations, systems, ...result },
-  { systems: historySystems },
-  historyCombinations,
+const mergeHistoryCombination = function (
+  result,
+  { combination, result: { systems } },
 ) {
-  const combinationsA = [...combinations, ...historyCombinations]
-  const systemsA = mergeSystems(systems, historySystems)
+  const combinationsA = [...result.combinations, combination]
+  const systemsA = mergeSystems(result.systems, systems)
   return { ...result, combinations: combinationsA, systems: systemsA }
 }

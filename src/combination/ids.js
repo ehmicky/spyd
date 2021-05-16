@@ -1,3 +1,5 @@
+import { isDeepStrictEqual } from 'util'
+
 import { titleColor, noteColor } from '../report/utils/colors.js'
 
 import {
@@ -27,6 +29,28 @@ export const isSameCategory = function (combinationA, combinationB) {
   )
 }
 
+// Return all the combinations that are in `results` but not in `result`
+export const getNewIdInfos = function (result, results) {
+  const allIdInfos = getResultsIdInfos(results)
+  const resultIdInfos = getResultIdInfos(result)
+  return allIdInfos.filter((idInfos) =>
+    matchesNoIdInfos(idInfos, resultIdInfos),
+  )
+}
+
+// Return the unique sets of combinations for several resuls
+const getResultsIdInfos = function (results) {
+  return results.flatMap(getResultIdInfos).filter(isUniqueCombinationIds)
+}
+
+const getResultIdInfos = function ({ combinations }) {
+  return combinations.map(getIdInfos)
+}
+
+const matchesNoIdInfos = function (idInfosA, resultIdInfos) {
+  return !resultIdInfos.some((idInfosB) => isSameIdInfos(idInfosA, idInfosB))
+}
+
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
@@ -51,7 +75,7 @@ const titleize = function (string) {
   return `${string.charAt(0).toUpperCase()}${string.slice(1)}`
 }
 
-const getIdInfos = function (combination) {
+export const getIdInfos = function (combination) {
   return COMBINATION_CATEGORIES.map(getIdInfo.bind(undefined, combination))
 }
 
@@ -64,6 +88,10 @@ const getId = function ({ id }) {
   return id
 }
 
+export const isSameIdInfos = function (idInfosA, idInfosB) {
+  return isDeepStrictEqual(idInfosA, idInfosB)
+}
+
 // Remove duplicate ids with the same category, since this happens due to the
 // cartesian product.
 // Duplicate ids with a different category are validated later.
@@ -71,6 +99,13 @@ const isNotSameCatDuplicate = function ({ category, id }, index, idInfos) {
   return !idInfos
     .slice(index + 1)
     .some((idInfo) => idInfo.category === category && idInfo.id === id)
+}
+
+// Check if a combination is present in other results
+const isUniqueCombinationIds = function (idInfosA, index, allIdInfos) {
+  return !allIdInfos
+    .slice(index + 1)
+    .some((idInfosB) => isSameIdInfos(idInfosA, idInfosB))
 }
 
 // Retrieve non-combination identifiers.
