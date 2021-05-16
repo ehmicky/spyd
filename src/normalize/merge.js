@@ -2,7 +2,7 @@ import { isUniqueCombination } from '../combination/ids.js'
 import {
   getResultsCombinations,
   getMatchingCombination,
-  getNewCombinations,
+  removeResultCombinations,
 } from '../combination/result.js'
 import { mergeSystems } from '../system/merge.js'
 
@@ -45,7 +45,7 @@ export const mergeResults = function (result, previous) {
 const getPreviousCombinations = function (result, previous) {
   const previousCombinations = getResultsCombinations(previous)
   const uniqueCombinations = previousCombinations.filter(isUniqueCombination)
-  const newCombinations = getNewCombinations(result, uniqueCombinations)
+  const newCombinations = removeResultCombinations(result, uniqueCombinations)
   return newCombinations.map((newCombination) =>
     getMatchingCombination(previousCombinations, newCombination),
   )

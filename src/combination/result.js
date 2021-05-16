@@ -9,6 +9,13 @@ const getCombinations = function ({ combinations }) {
   return combinations
 }
 
+// Filter out the `combinations` that are in `result`
+export const removeResultCombinations = function (result, combinations) {
+  return combinations.filter(
+    (combination) => !resultHasCombination(result, combination),
+  )
+}
+
 // Return whether several results have a specific combination
 export const resultsHaveCombinations = function (results, combination) {
   return results.some((result) => resultHasCombination(result, combination))
@@ -23,12 +30,5 @@ export const resultHasCombination = function ({ combinations }, combination) {
 export const getMatchingCombination = function (combinations, combination) {
   return combinations.find((combinationA) =>
     isSameCategory(combinationA, combination),
-  )
-}
-
-// Filter out the `combinations` that are in `result`
-export const getNewCombinations = function (result, combinations) {
-  return combinations.filter(
-    (resultCombination) => !resultHasCombination(result, resultCombination),
   )
 }
