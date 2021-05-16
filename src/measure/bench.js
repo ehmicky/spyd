@@ -1,4 +1,3 @@
-import { addCombinations } from '../normalize/init.js'
 import {
   normalizeMeasuredResult,
   normalizeReportedResult,
@@ -7,6 +6,7 @@ import { initPreview } from '../preview/init.js'
 import { updatePreviewReport } from '../preview/results.js'
 import { startPreview, endPreview } from '../preview/start_end.js'
 
+import { addCombinations, createResult } from './create.js'
 import { measureCombinations } from './several.js'
 
 // Perform a new benchmark.
@@ -17,10 +17,10 @@ import { measureCombinations } from './several.js'
 //     subsequent editing experience
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
-export const performBenchmark = async function (
-  initResult,
-  { cwd, precisionTarget, quiet, reporters, titles },
-) {
+// eslint-disable-next-line max-statements
+export const performBenchmark = async function (config) {
+  const initResult = await createResult(config)
+  const { cwd, precisionTarget, quiet, reporters, titles } = config
   const combinations = initResult.combinations.filter(
     ({ resultId }) => resultId === initResult.id,
   )

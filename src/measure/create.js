@@ -1,21 +1,31 @@
 import { v4 as uuidv4 } from 'uuid'
 
+import { getCombinations } from '../combination/main.js'
+import { listHistory } from '../history/main.js'
 import { getSystems } from '../system/info.js'
 
-// Add metadata information to initial result
-export const createResult = function ({
+// Create a new result to measure
+export const createResult = async function (config) {
+  const { combinations, systemVersions } = await getCombinations(config)
+  const initResult = initializeResult(config, combinations, systemVersions)
+  const initResultA = await listHistory(config, initResult)
+  return initResultA
+}
+
+const initializeResult = function (
+  { envInfo, systemId },
   combinations,
   systemVersions,
-  config: { envInfo, systemId },
-}) {
+) {
   const id = uuidv4()
   const timestamp = Date.now()
   const systems = getSystems({ systemId, systemVersions, envInfo })
-  const combinationsA = combinations.map((combination) => ({
+  const combinationsA = combinations.map((combination, index) => ({
     ...combination,
     resultId: id,
+    index,
   }))
-  return { id, timestamp, systems, combinations: combinationsA, history: [] }
+  return { id, timestamp, systems, combinations: combinationsA }
 }
 
 // Add measured combinations at the end of the result

@@ -28,10 +28,5 @@ export const getCombinations = async function ({
   validateCombinationsIds(combinations, inputsA)
 
   const combinationsA = selectCombinations(combinations, select)
-  const combinationsB = combinationsA.map(addIndex)
-  return { combinations: combinationsB, systemVersions }
-}
-
-const addIndex = function (combination, index) {
-  return { ...combination, index }
+  return { combinations: combinationsA, systemVersions }
 }
