@@ -23,7 +23,7 @@ const keepResultCombinations = function (combinations, result) {
 }
 
 // Filter out the `combinations` that are in `result`
-export const removeResultCombinations = function (result, combinations) {
+export const removeResultCombinations = function (combinations, result) {
   return combinations.filter(
     (combination) => !resultHasCombination(result, combination),
   )

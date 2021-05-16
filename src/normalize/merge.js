@@ -45,7 +45,7 @@ export const mergeResults = function (result, previous) {
 const getPreviousCombinations = function (result, previous) {
   const previousCombinations = getResultsCombinations(previous)
   const uniqueCombinations = previousCombinations.filter(isUniqueCombination)
-  const newCombinations = removeResultCombinations(result, uniqueCombinations)
+  const newCombinations = removeResultCombinations(uniqueCombinations, result)
   return newCombinations.map((newCombination) =>
     getMatchingCombination(previousCombinations, newCombination),
   )
