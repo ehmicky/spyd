@@ -37,6 +37,10 @@ const addCombinationDiff = function (
   combination,
   { id, combinations: previousCombinations },
 ) {
+  if (combination.resultId === id) {
+    return combination
+  }
+
   const previousCombinationA = previousCombinations.find(
     (previousCombination) => isSameCategory(combination, previousCombination),
   )

@@ -1,5 +1,14 @@
 import { isSameCategory, isUniqueCombination } from './ids.js'
 
+// Keep track of combinations' `resultId`
+export const addResultIds = function (result) {
+  const combinations = result.combinations.map((combination) => ({
+    ...combination,
+    resultId: result.id,
+  }))
+  return { ...result, combinations }
+}
+
 // Return all the combinations that are in `results` but not in `result`
 export const getNewCombinations = function (result, results) {
   const combinations = getResultsCombinations(results)
@@ -10,6 +19,7 @@ export const getNewCombinations = function (result, results) {
     )
 }
 
+// Return all combinations in `results`
 export const getResultsCombinations = function (results) {
   return results.flatMap(getCombinations)
 }

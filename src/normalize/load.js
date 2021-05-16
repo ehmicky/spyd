@@ -10,14 +10,5 @@ export const loadResults = function (results, select) {
   const resultsB = decompressResults(resultsA)
   const resultsC = sortResults(resultsB)
   const resultsD = selectResults(resultsC, select)
-  const resultsE = resultsD.map(addResultsIds)
-  return resultsE
-}
-
-const addResultsIds = function (result) {
-  const combinations = result.combinations.map((combination) => ({
-    ...combination,
-    resultId: result.id,
-  }))
-  return { ...result, combinations }
+  return resultsD
 }

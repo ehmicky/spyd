@@ -2,6 +2,7 @@ import {
   getResultsCombinations,
   getMatchingCombination,
   getNewCombinations,
+  addResultIds,
 } from '../combination/result.js'
 import { mergeSystems } from '../system/merge.js'
 
@@ -36,7 +37,7 @@ export const mergeResults = function (result, previous) {
 // Retrieve previous combinations the result should be merged with
 const getPreviousCombinations = function (result, previous) {
   // eslint-disable-next-line fp/no-mutating-methods
-  const previousA = [...previous].reverse()
+  const previousA = [...previous].reverse().map(addResultIds)
   const previousCombinations = getResultsCombinations(previousA)
   const newCombinations = getNewCombinations(result, previousA)
   return newCombinations.map((newCombination) =>
