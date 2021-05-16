@@ -80,10 +80,13 @@ const applyDefaultSince = function (previous, result) {
 // When there is a history and a non-default `since`
 const applyRegularSince = function (previous, sinceIndex, result) {
   const historyResult = mergeResults(result, previous.slice(sinceIndex))
-  const sinceResultA = getSinceResult(previous, sinceIndex, historyResult)
-  const historyA = [sinceResultA, ...previous.slice(sinceIndex + 1)]
-  const historyResultA = omitResultCombinations(historyResult, result)
-  return { ...historyResultA, history: historyA }
+  const sinceResult = getSinceResult(previous, sinceIndex, historyResult)
+  const history = [sinceResult, ...previous.slice(sinceIndex + 1)]
+  const { combinations, systems } = omitResultCombinations(
+    historyResult,
+    result,
+  )
+  return { combinations, systems, history }
 }
 
 const getSinceResult = function (previous, sinceIndex, result) {
