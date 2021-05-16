@@ -32,7 +32,7 @@ export const updatePreviewStats = async function ({
     return
   }
 
-  updateStats({ previewState, stats })
+  updateResultStats({ previewState, stats })
 
   updateCombinationEnd({ stats, previewState, durationState, precisionTarget })
   setDescriptionIf(previewState, MEASURE_DESCRIPTION, START_DESCRIPTION)
@@ -41,7 +41,7 @@ export const updatePreviewStats = async function ({
   await updatePreviewReport(previewState)
 }
 
-const updateStats = function ({
+const updateResultStats = function ({
   previewState,
   previewState: { result, combinationIndex },
   stats,
