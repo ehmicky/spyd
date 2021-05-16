@@ -19,16 +19,14 @@ export const SHOW_COMMAND = {
 Show a previous result.
 
 The "delta" argument targets the result. It can be:
+  - 1 (default): last result
   - an integer: {integer}-th last result
   - "first": first result
   - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
   - a duration: like "1m", "5d", "1 month" or "1y"
   - a result id
   - a git commit, tag or branch
-  - "ci": last CI build
-
-The default "delta" is the last CI build when in CI, or the last result
-otherwise.`,
+  - "ci": last CI build`,
 
   examples: [
     ['$0 show', 'Show the last result'],
