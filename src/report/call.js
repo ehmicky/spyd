@@ -1,5 +1,6 @@
 import omit from 'omit.js'
 
+import { normalizeReportedResult } from '../normalize/result.js'
 import { showResultTitles } from '../title/show.js'
 
 import { cleanResult } from './clean.js'
@@ -12,19 +13,20 @@ import {
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
 export const getContents = async function (result, { reporters, titles }) {
+  const resultA = normalizeReportedResult(result)
   const contents = await Promise.all(
     reporters.map(({ report: reportFunc, config: reporterConfig, startData }) =>
       getReporterContents({
         reportFunc,
         reporterConfig,
         startData,
-        result,
+        result: resultA,
         titles,
       }),
     ),
   )
   const contentsA = contents.filter(Boolean)
-  return contentsA
+  return { result: resultA, contents: contentsA }
 }
 
 const getReporterContents = async function ({

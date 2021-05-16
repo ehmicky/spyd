@@ -1,5 +1,3 @@
-import { normalizeReportedResult } from '../normalize/result.js'
-
 import { getContents } from './call.js'
 import {
   outputContents,
@@ -10,8 +8,10 @@ import { endReporters } from './start_end.js'
 
 // Report final results in `bench` and `show` commands.
 export const reportBenchShow = async function (result, { reporters, titles }) {
-  const resultA = normalizeReportedResult(result)
-  const contents = await getContents(resultA, { reporters, titles })
+  const { result: resultA, contents } = await getContents(result, {
+    reporters,
+    titles,
+  })
   await endReporters(reporters)
   await outputContents(contents)
   return resultA
@@ -22,8 +22,10 @@ export const reportBenchShow = async function (result, { reporters, titles }) {
 // and provide with confirmation. So we only need to print in the terminal,
 // not output|insert files.
 export const reportRemove = async function (result, { reporters, titles }) {
-  const resultA = normalizeReportedResult(result)
-  const contents = await getContents(resultA, { reporters, titles })
+  const { result: resultA, contents } = await getContents(result, {
+    reporters,
+    titles,
+  })
   await endReporters(reporters)
   await outputTtyContents(contents)
   return resultA
@@ -33,8 +35,7 @@ export const reportRemove = async function (result, { reporters, titles }) {
 // The report output is not printed right away. Instead, it is printed by the
 // preview refresh function at regular intervals.
 export const reportPreview = async function (result, { reporters, titles }) {
-  const resultA = normalizeReportedResult(result)
-  const contents = await getContents(resultA, { reporters, titles })
+  const { contents } = await getContents(result, { reporters, titles })
   const previewReport = computeTtyContents(contents)
   return previewReport
 }
