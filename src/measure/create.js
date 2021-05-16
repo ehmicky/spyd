@@ -9,7 +9,9 @@ export const createResult = async function (config) {
   const { combinations, systemVersions } = await getCombinations(config)
   const result = initResult(combinations, systemVersions, config)
   const resultA = await listHistory(config, result)
-  const newCombinations = resultA.combinations.filter(isNewCombination)
+  const newCombinations = resultA.combinations
+    .map(addCombinationIndex)
+    .filter(isNewCombination)
   return { result: resultA, newCombinations }
 }
 
@@ -21,8 +23,7 @@ const initResult = function (
   const id = uuidv4()
   const timestamp = Date.now()
   const systems = getSystems({ systemId, systemVersions, envInfo })
-  const combinationsA = combinations.map(addCombinationIndex)
-  return { id, timestamp, systems, combinations: combinationsA }
+  return { id, timestamp, systems, combinations }
 }
 
 const addCombinationIndex = function (combination, index) {
