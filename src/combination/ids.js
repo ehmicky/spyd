@@ -1,5 +1,3 @@
-import { isDeepStrictEqual } from 'util'
-
 import { titleColor, noteColor } from '../report/utils/colors.js'
 
 import {
@@ -53,7 +51,7 @@ const titleize = function (string) {
   return `${string.charAt(0).toUpperCase()}${string.slice(1)}`
 }
 
-export const getIdInfos = function (combination) {
+const getIdInfos = function (combination) {
   return COMBINATION_CATEGORIES.map(getIdInfo.bind(undefined, combination))
 }
 
@@ -66,10 +64,6 @@ const getId = function ({ id }) {
   return id
 }
 
-export const isSameIdInfos = function (idInfosA, idInfosB) {
-  return isDeepStrictEqual(idInfosA, idInfosB)
-}
-
 // Remove duplicate ids with the same category, since this happens due to the
 // cartesian product.
 // Duplicate ids with a different category are validated later.
@@ -80,10 +74,10 @@ const isNotSameCatDuplicate = function ({ category, id }, index, idInfos) {
 }
 
 // Check if a combination is present in other results
-export const isUniqueCombinationIds = function (idInfosA, index, allIdInfos) {
-  return !allIdInfos
+export const isUniqueCombination = function (combination, index, combinations) {
+  return !combinations
     .slice(index + 1)
-    .some((idInfosB) => isSameIdInfos(idInfosA, idInfosB))
+    .some((combinationA) => isSameCategory(combination, combinationA))
 }
 
 // Retrieve non-combination identifiers.

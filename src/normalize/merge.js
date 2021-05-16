@@ -1,5 +1,8 @@
-import { getIdInfos, isSameIdInfos } from '../combination/ids.js'
-import { getNewIdInfos } from '../combination/result.js'
+import {
+  getResultsCombinations,
+  getMatchingCombination,
+  getNewCombinations,
+} from '../combination/result.js'
 import { mergeSystems } from '../system/merge.js'
 
 // `show|remove` commands allow reporting several reports at once using the
@@ -34,20 +37,10 @@ export const mergeResults = function (result, previous) {
 const getPreviousCombinations = function (result, previous) {
   // eslint-disable-next-line fp/no-mutating-methods
   const previousA = [...previous].reverse()
-  const previousCombinations = previousA.flatMap(getCombinations)
-  const newIdInfos = getNewIdInfos(result, previousA)
-  return newIdInfos.map((idInfos) =>
-    getPreviousCombination(previousCombinations, idInfos),
-  )
-}
-
-const getCombinations = function ({ combinations }) {
-  return combinations
-}
-
-const getPreviousCombination = function (previousCombinations, idInfos) {
-  return previousCombinations.find((previousCombination) =>
-    isSameIdInfos(getIdInfos(previousCombination), idInfos),
+  const previousCombinations = getResultsCombinations(previousA)
+  const newCombinations = getNewCombinations(result, previousA)
+  return newCombinations.map((newCombination) =>
+    getMatchingCombination(previousCombinations, newCombination),
   )
 }
 
