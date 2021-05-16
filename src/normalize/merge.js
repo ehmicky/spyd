@@ -2,31 +2,17 @@ import { addCombinationsDiff } from '../compare/diff.js'
 import { addSharedSystem } from '../system/shared.js'
 
 import { groupResultCombinations } from './group.js'
-import { addHistory, mergeHistoryCombinations } from './since.js'
-
-// Normalize the main result of the `bench` command
-export const normalizeBenchResult = function (result, previous, history) {
-  const resultA = addHistory(result, history)
-  const resultB = mergeResults(resultA, previous)
-  return resultB
-}
-
-// Normalize the main result of the `show|remove` commands
-export const normalizeShowResult = function (result, previous, history) {
-  const resultA = addHistory(result, history)
-  const resultB = mergeHistoryCombinations(resultA, history)
-  const resultC = mergeResults(resultB, previous)
-  return resultC
-}
+import { addHistory } from './since.js'
 
 // Normalize the main result:
 //  - Add `combination.stats.diff[Precise]` based on previous results before
 //    `since` filtering
 //  - Add category grouping and ranking
 //  - Add `result.systems[0]` (shared system)
-const mergeResults = function (result, previous) {
-  const resultA = addCombinationsDiff(result, previous)
-  const resultB = groupResultCombinations(resultA)
-  const resultC = addSharedSystem(resultB)
-  return resultC
+export const normalizeResult = function (result, previous, history) {
+  const resultA = addHistory(result, history)
+  const resultB = addCombinationsDiff(resultA, previous)
+  const resultC = groupResultCombinations(resultB)
+  const resultD = addSharedSystem(resultC)
+  return resultD
 }
