@@ -57,11 +57,13 @@ export const applySince = async function (result, previous, { since, cwd }) {
 }
 
 const addHistory = function ({ previous, sinceIndex, mergedResult, result }) {
-  const sinceResult = mergeResults(
-    previous[sinceIndex],
-    previous.slice(0, sinceIndex),
-  )
-  const sinceResultA = removeCombinations(sinceResult, mergedResult)
+  const sinceResult = removeCombinations(previous[sinceIndex], mergedResult)
+  const beforeSince = previous
+    .slice(0, sinceIndex)
+    .map((beforeSinceResult) =>
+      removeCombinations(beforeSinceResult, mergedResult),
+    )
+  const sinceResultA = mergeResults(sinceResult, beforeSince)
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
   return { ...mergedResult, history }
 }
