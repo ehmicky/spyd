@@ -5,7 +5,7 @@ import { getContents } from './call.js'
 import { outputContents, computeTtyContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
 
-// Report final results in `bench`, `show` and `remove` commands.
+// Report final results in `show` and `remove` commands.
 export const reportResult = async function (result, previous, config) {
   const { result: resultA, config: configA } = await reportStart(
     result,
@@ -28,7 +28,7 @@ export const reportStart = async function (result, previous, config) {
   return { result: resultA, config: configA }
 }
 
-const reportNonPreview = async function (result, config) {
+export const reportNonPreview = async function (result, config) {
   const resultA = normalizeReportedResult(result)
   const contents = await getContents(resultA, config)
   await outputContents(contents)

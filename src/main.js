@@ -14,13 +14,10 @@ import { reportResult } from './report/main.js'
 // Default command.
 export const bench = async function (configFlags) {
   const config = await getConfig('bench', configFlags)
-  const { result, previous } = await performBenchmark(config)
-  const [resultA] = await Promise.all([
-    reportResult(result, previous, config),
-    addToHistory(result, config),
-  ])
-  checkLimits(resultA, config)
-  return resultA
+  const { result, finalResult } = await performBenchmark(config)
+  await addToHistory(result, config)
+  checkLimits(finalResult, config)
+  return finalResult
 }
 
 // Show a previous result

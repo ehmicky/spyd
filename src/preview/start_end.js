@@ -1,6 +1,5 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
-import { reportStart, reportEnd } from '../report/main.js'
 import { clearScreen, clearScreenFull, printToTty } from '../report/tty.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
@@ -21,16 +20,13 @@ export const printPreviewStarting = function ({ quiet }) {
 }
 
 // Start clearing the screen
-export const startPreview = async function (config, result, previous) {
+export const startPreview = async function (result, config) {
   if (config.quiet) {
-    return { config, previewState: { quiet: true } }
+    return { quiet: true }
   }
 
-  const { config: configA, previewState } = await startPreviewReport(
-    config,
-    result,
-    previous,
-  )
+  const previewState = getPreviewState(result, config)
+  await updateReport({ previewState })
 
   hideCursor()
   await clearScreenFull()
@@ -38,18 +34,7 @@ export const startPreview = async function (config, result, previous) {
   startHandleKeypress(previewState)
 
   await refreshPreview(previewState)
-  return { config: configA, previewState }
-}
-
-const startPreviewReport = async function (config, result, previous) {
-  const { config: configA, result: resultA } = await reportStart(
-    result,
-    previous,
-    config,
-  )
-  const previewState = getPreviewState(resultA, configA)
-  await updateReport({ previewState })
-  return { config: configA, previewState }
+  return previewState
 }
 
 // Stop clearing the screen.
@@ -59,7 +44,7 @@ const startPreviewReport = async function (config, result, previous) {
 //  - This allows users to stop a benchmark without losing information,
 //    including the duration that was left
 //  - This is unlike other errors, which clear it
-export const endPreview = async function (previewState, config, error = {}) {
+export const endPreview = async function (previewState, error = {}) {
   if (previewState.quiet) {
     return
   }
@@ -72,6 +57,4 @@ export const endPreview = async function (previewState, config, error = {}) {
   }
 
   showCursor()
-
-  await reportEnd(config)
 }
