@@ -9,6 +9,19 @@ const getCombinations = function ({ combinations }) {
   return combinations
 }
 
+// Filter out the `resultA.combinations` that are not in `resultB`
+export const pickResultCombinations = function (resultA, resultB) {
+  const combinations = keepResultCombinations(resultB, resultA.combinations)
+  return { ...resultA, combinations }
+}
+
+// Filter out the `combinations` that are not in `result`
+export const keepResultCombinations = function (result, combinations) {
+  return combinations.filter((combination) =>
+    resultHasCombination(result, combination),
+  )
+}
+
 // Filter out the `combinations` that are in `result`
 export const removeResultCombinations = function (result, combinations) {
   return combinations.filter(
@@ -22,7 +35,7 @@ export const resultsHaveCombinations = function (results, combination) {
 }
 
 // Return whether a result has a specific combination
-export const resultHasCombination = function ({ combinations }, combination) {
+const resultHasCombination = function ({ combinations }, combination) {
   return getMatchingCombination(combinations, combination) !== undefined
 }
 

@@ -1,4 +1,4 @@
-import { resultHasCombination } from '../combination/result.js'
+import { pickResultCombinations } from '../combination/result.js'
 import { findByDelta } from '../delta/main.js'
 
 import { mergeResults } from './merge.js'
@@ -69,20 +69,13 @@ export const applySince = async function (result, previous, { since, cwd }) {
 }
 
 const addHistory = function ({ previous, sinceIndex, mergedResult, result }) {
-  const sinceResult = removeCombinations(previous[sinceIndex], mergedResult)
+  const sinceResult = pickResultCombinations(previous[sinceIndex], mergedResult)
   const beforeSince = previous
     .slice(0, sinceIndex)
     .map((beforeSinceResult) =>
-      removeCombinations(beforeSinceResult, mergedResult),
+      pickResultCombinations(beforeSinceResult, mergedResult),
     )
   const sinceResultA = mergeResults(sinceResult, beforeSince)
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
   return { ...mergedResult, history }
-}
-
-const removeCombinations = function (sinceResult, mergedResult) {
-  const combinations = sinceResult.combinations.filter((combination) =>
-    resultHasCombination(mergedResult, combination),
-  )
-  return { ...sinceResult, combinations }
 }
