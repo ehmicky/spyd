@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import { getSystems } from '../system/info.js'
-import { cleanObject } from '../utils/clean.js'
 
 import { normalizeResult } from './result.js'
 
@@ -15,7 +14,7 @@ export const getInitResult = function ({
   const id = uuidv4()
   const timestamp = Date.now()
   const systems = getSystems({ systemId, systemVersions, envInfo })
-  const initResult = cleanObject({ id, timestamp, systems })
+  const initResult = { id, timestamp, systems }
   const initResultA = addFinalProps(initResult, combinations)
   return initResultA
 }

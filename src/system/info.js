@@ -3,6 +3,7 @@ import { cpus as getCpus, totalmem } from 'os'
 import { format as formatBytes } from 'bytes'
 import osName from 'os-name'
 
+import { cleanObject } from '../utils/clean.js'
 import { groupBy } from '../utils/group.js'
 
 // Users can specify a `system` configuration property.
@@ -20,13 +21,13 @@ export const getSystems = function ({
 }) {
   const machine = getMachine()
   return [
-    {
+    cleanObject({
       id: systemId,
       machine,
       git: { commit, branch, tag, prNumber: pr, prBranch },
       ci: buildUrl,
       versions: systemVersions,
-    },
+    }),
   ]
 }
 
