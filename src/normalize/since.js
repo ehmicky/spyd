@@ -49,12 +49,12 @@ const applyDefaultSince = function (result, previous) {
   }
 
   const sinceIndex = previous.length - 1
-  const sinceResultA = mergeResults(
+  const sinceResult = mergeResults(
     previous[sinceIndex],
     previous.slice(0, sinceIndex),
   )
-  const sinceResultB = removeCombinations(sinceResultA, result)
-  const history = [sinceResultB, result]
+  const sinceResultA = removeCombinations(sinceResult, result)
+  const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
   return { ...result, history }
 }
 
