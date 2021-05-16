@@ -28,10 +28,8 @@ export const bench = async function (configFlags) {
 // Show a previous result
 export const show = async function (configFlags) {
   const config = await getConfig('show', configFlags)
-  const [result, configA] = await Promise.all([
-    getFromHistory(config),
-    startReporters(config),
-  ])
+  const configA = await startReporters(config)
+  const result = await getFromHistory(configA)
   const resultA = await reportBenchShow(result, configA)
   return resultA
 }
@@ -39,10 +37,8 @@ export const show = async function (configFlags) {
 // Remove a previous result
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
-  const [result, configA] = await Promise.all([
-    getFromHistory(config),
-    startReporters(config),
-  ])
+  const configA = await startReporters(config)
+  const result = await getFromHistory(configA)
   const resultA = await reportRemove(result, configA)
   await removeFromHistory(resultA, configA)
   return resultA
