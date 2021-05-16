@@ -5,9 +5,8 @@ import { getSystems } from '../system/info.js'
 // Add metadata information to initial result
 export const getInitResult = function ({
   combinations,
-  combinations: [{ systemId }],
   systemVersions,
-  config: { envInfo },
+  config: { envInfo, systemId },
 }) {
   const id = uuidv4()
   const timestamp = Date.now()
