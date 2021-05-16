@@ -68,7 +68,7 @@ const mergePreviousCombination = function (
   result,
   { combination, result: { systems } },
 ) {
-  const combinationsA = [...result.combinations, combination]
+  const combinations = [...result.combinations, combination]
   const systemsA = mergeSystems(result.systems, systems)
-  return { ...result, combinations: combinationsA, systems: systemsA }
+  return { ...result, combinations, systems: systemsA }
 }
