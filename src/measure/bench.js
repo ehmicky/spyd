@@ -22,18 +22,35 @@ export const performBenchmark = async function (
 
   try {
     await updatePreviewReport(previewState)
-
-    const combinationsA = await measureCombinations(initResult.combinations, {
-      precisionTarget,
+    const { rawResult, result } = await measureResult({
+      initResult,
       cwd,
+      precisionTarget,
       previewState,
-      stage: 'main',
     })
-    const { rawResult, result } = getFinalResult(initResult, combinationsA)
     await endPreview(previewState)
     return { rawResult, result }
   } catch (error) {
     await endPreview(previewState, error)
     throw error
   }
+}
+
+const measureResult = async function ({
+  initResult,
+  cwd,
+  precisionTarget,
+  previewState,
+}) {
+  const combinations = initResult.combinations.filter(
+    ({ resultId }) => resultId === initResult.id,
+  )
+  const combinationsA = await measureCombinations(combinations, {
+    precisionTarget,
+    cwd,
+    previewState,
+    stage: 'main',
+  })
+  const { rawResult, result } = getFinalResult(initResult, combinationsA)
+  return { rawResult, result }
 }

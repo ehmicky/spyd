@@ -15,12 +15,12 @@ export const getInitResult = function ({
   const id = uuidv4()
   const timestamp = Date.now()
   const systems = getSystems({ systemId, systemVersions, envInfo })
-  const combinationsA = combinations.map(addEmptyStats)
+  const combinationsA = combinations.map((combination) => ({
+    ...combination,
+    stats: {},
+    resultId: id,
+  }))
   return { id, timestamp, systems, combinations: combinationsA, history: [] }
-}
-
-const addEmptyStats = function (combination) {
-  return { ...combination, stats: {} }
 }
 
 // Finalize result. Done either at the end, or before each preview.
