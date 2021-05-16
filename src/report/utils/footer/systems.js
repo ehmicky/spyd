@@ -30,7 +30,7 @@ const getFields = function ({
   machine: { os, cpu, memory } = {},
   git: { commit, tag, branch, prNumber, prBranch } = {},
   ci,
-  versions = {},
+  versions: { Spyd: spydVersion, ...versions } = {},
 }) {
   const fields = {
     OS: os,
@@ -43,5 +43,15 @@ const getFields = function ({
   return {
     ...fields,
     ...omit(versions, Object.keys(fields)),
+    ...getSpydVersion(spydVersion),
   }
+}
+
+// The spyd version is shown after other versions.
+// It has a longer name than just `spyd` to make it clear "spyd" is the tool
+// used for benchmarking.
+const getSpydVersion = function (spydVersion) {
+  return spydVersion === undefined
+    ? {}
+    : { 'Benchmarked with spyd': spydVersion }
 }

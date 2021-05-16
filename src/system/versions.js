@@ -21,9 +21,7 @@ export const getSystemVersions = async function (runners, cwd) {
   const runnerVersions = await Promise.all(
     runners.map((runner) => getRunnerVersions(runner, cwd)),
   )
-  return Object.assign({}, ...runnerVersions, {
-    [SPYD_VERSION_KEY]: spydVersion,
-  })
+  return Object.assign({}, ...runnerVersions, { Spyd: spydVersion })
 }
 
 const getRunnerVersions = async function (
@@ -64,8 +62,3 @@ ${error.message}`,
     )
   }
 }
-
-// The spyd version is shown after other versions.
-// It has a longer name than just `spyd` to make it clear "spyd" is the tool
-// used for benchmarking.
-export const SPYD_VERSION_KEY = 'Benchmarked with spyd'
