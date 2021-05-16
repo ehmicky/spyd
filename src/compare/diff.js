@@ -3,7 +3,7 @@ import { isDiffPrecise } from '../stats/welch.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
-// Which result is being compared depends on the `diff` configuration property.
+// Which result is being compared depends on the `since` configuration property.
 // By default, it is the previous result but it can be any earlier result.
 // If the compared result does not have the combination to compare, we use the
 // most recent result before it instead.
@@ -27,9 +27,6 @@ export const addCombinationsDiff = function (result) {
   return { ...result, combinations }
 }
 
-// The `previousCombination` might be the same combination, i.e. difference
-// would be 0%. This happens when the combination has not changed since the
-// `previousResult`.
 // A combination might be in `result` because it was taken from `sinceResult`
 // (the one we're diffing against). In this case, we don't want to diff the
 // combination against itself.
