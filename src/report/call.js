@@ -8,7 +8,7 @@ import {
   getPaddedScreenWidth,
   getPaddedScreenHeight,
 } from './tty.js'
-import { wrapRows } from './wrap.js'
+import { wrapRows } from './utils/wrap.js'
 
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
