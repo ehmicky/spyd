@@ -1,5 +1,9 @@
-import { pickResultCombinations } from '../combination/result.js'
+import {
+  pickResultCombinations,
+  omitResultCombinations,
+} from '../combination/result.js'
 import { findByDelta } from '../delta/main.js'
+import { mergeSystems } from '../system/merge.js'
 
 import { mergeResults } from './merge.js'
 
@@ -48,34 +52,46 @@ import { mergeResults } from './merge.js'
 //    properties.
 //  - Instead, reporters should use logic to retrieve the history of each
 //    combination
+// eslint-disable-next-line max-statements
 export const applySince = async function (result, previous, { since, cwd }) {
+  const emptyHistoryResult = { combinations: [], systems: [], history: [] }
+
   if (previous.length === 0) {
-    return { ...result, history: [result] }
+    return emptyHistoryResult
   }
 
   const sinceIndex = await findByDelta(previous, since, cwd)
 
   if (sinceIndex === -1) {
-    return addHistory({
-      previous,
-      sinceIndex: previous.length - 1,
-      mergedResult: result,
-      result,
-    })
+    const sinceResult = getSinceResult(previous, previous.length - 1, result)
+    return { ...emptyHistoryResult, history: [sinceResult] }
   }
 
-  const mergedResult = mergeResults(result, previous.slice(sinceIndex))
-  return addHistory({ previous, sinceIndex, mergedResult, result })
+  const historyResult = mergeResults(result, previous.slice(sinceIndex))
+  const sinceResultA = getSinceResult(previous, sinceIndex, historyResult)
+  const historyA = [sinceResultA, ...previous.slice(sinceIndex + 1)]
+  const historyResultA = omitResultCombinations(historyResult, result)
+  return { ...historyResultA, history: historyA }
 }
 
-const addHistory = function ({ previous, sinceIndex, mergedResult, result }) {
-  const sinceResult = pickResultCombinations(previous[sinceIndex], mergedResult)
+const getSinceResult = function (previous, sinceIndex, result) {
+  const sinceResult = pickResultCombinations(previous[sinceIndex], result)
   const beforeSince = previous
     .slice(0, sinceIndex)
     .map((beforeSinceResult) =>
-      pickResultCombinations(beforeSinceResult, mergedResult),
+      pickResultCombinations(beforeSinceResult, result),
     )
-  const sinceResultA = mergeResults(sinceResult, beforeSince)
-  const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
-  return { ...mergedResult, history }
+  return mergeResults(sinceResult, beforeSince)
+}
+
+// In principle, we should do both `applySince()` and `mergeHistoryResult()`
+// before reporting. However, `applySince()` is slow, so we perform it only once
+// at the beginning of `bench` with previews, to avoid repeating it.
+export const mergeHistoryResult = function (result, historyResult) {
+  return {
+    ...result,
+    combinations: [...result.combinations, ...historyResult.combinations],
+    systems: mergeSystems(result.systems, historyResult.systems),
+    history: [...historyResult.history, result],
+  }
 }

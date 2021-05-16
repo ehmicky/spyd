@@ -68,6 +68,7 @@ export const updateReport = async function ({
     reporters,
     titles,
     result,
+    historyResult,
   },
 }) {
   if (reporters.length === 0) {
@@ -87,6 +88,7 @@ export const updateReport = async function ({
         combinationName,
       },
     },
+    historyResult,
     { reporters, titles },
   )
 }

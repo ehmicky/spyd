@@ -22,6 +22,12 @@ const keepResultCombinations = function (combinations, result) {
   )
 }
 
+// Filter out the `resultA.combinations` that are in `resultB`
+export const omitResultCombinations = function (resultA, resultB) {
+  const combinations = removeResultCombinations(resultA.combinations, resultB)
+  return { ...resultA, combinations }
+}
+
 // Filter out the `combinations` that are in `result`
 export const removeResultCombinations = function (combinations, result) {
   return combinations.filter(

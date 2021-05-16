@@ -26,7 +26,7 @@ export const performBenchmark = async function (config) {
   printPreviewStarting(config)
 
   const { result, previous } = await createResult(config)
-  const { config: configA, result: resultA } = await reportStart(
+  const { historyResult, config: configA } = await reportStart(
     result,
     previous,
     config,
@@ -34,23 +34,27 @@ export const performBenchmark = async function (config) {
 
   try {
     const {
-      result: resultB,
+      result: resultA,
       finalResult,
       contents,
-    } = await previewAndMeasure(resultA, configA)
+    } = await previewAndMeasure(result, historyResult, configA)
     await reportPrint(contents)
-    return { result: resultB, finalResult }
+    return { result: resultA, finalResult }
   } finally {
     await reportEnd(configA)
   }
 }
 
-const previewAndMeasure = async function (result, config) {
-  const previewState = await startPreview(result, config)
+const previewAndMeasure = async function (result, historyResult, config) {
+  const previewState = await startPreview(result, historyResult, config)
 
   try {
     const resultA = await measureResult(result, config, previewState)
-    const { finalResult, contents } = await reportCompute(resultA, config)
+    const { finalResult, contents } = await reportCompute(
+      resultA,
+      historyResult,
+      config,
+    )
     await endPreview(previewState)
     return { result: resultA, finalResult, contents }
   } catch (error) {

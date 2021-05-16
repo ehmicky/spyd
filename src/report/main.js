@@ -1,5 +1,5 @@
 import { normalizeReportedResult } from '../normalize/result.js'
-import { applySince } from '../normalize/since.js'
+import { applySince, mergeHistoryResult } from '../normalize/since.js'
 
 import { getContents } from './call.js'
 import { outputContents, computeTtyContents } from './output.js'
@@ -14,14 +14,18 @@ import { startReporters, endReporters } from './start_end.js'
 //    the final `reportCompute()` is not performed after the preview ended
 //    after clearing the screen
 export const reportResult = async function (result, previous, config) {
-  const { result: resultA, config: configA } = await reportStart(
+  const { historyResult, config: configA } = await reportStart(
     result,
     previous,
     config,
   )
 
   try {
-    const { finalResult, contents } = await reportCompute(resultA, configA)
+    const { finalResult, contents } = await reportCompute(
+      result,
+      historyResult,
+      configA,
+    )
     await reportPrint(contents)
     return finalResult
   } finally {
@@ -31,25 +35,26 @@ export const reportResult = async function (result, previous, config) {
 
 // Start reporting
 export const reportStart = async function (result, previous, config) {
-  const [resultA, configA] = await Promise.all([
+  const [historyResult, configA] = await Promise.all([
     applySince(result, previous, config),
     startReporters(config),
   ])
-  return { result: resultA, config: configA }
+  return { historyResult, config: configA }
 }
 
 // Report preview results in `bench` command.
 // The report output is not printed right away. Instead, it is printed by the
 // preview refresh function at regular intervals.
-export const reportPreview = async function (result, config) {
-  const { contents } = await reportCompute(result, config)
+export const reportPreview = async function (result, historyResult, config) {
+  const { contents } = await reportCompute(result, historyResult, config)
   const report = computeTtyContents(contents)
   return report
 }
 
 // Compute the report contents
-export const reportCompute = async function (result, config) {
-  const finalResult = normalizeReportedResult(result)
+export const reportCompute = async function (result, historyResult, config) {
+  const resultA = mergeHistoryResult(result, historyResult)
+  const finalResult = normalizeReportedResult(resultA)
   const contents = await getContents(finalResult, config)
   return { finalResult, contents }
 }
