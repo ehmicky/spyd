@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
+import { isSameCategory } from '../combination/ids.js'
 import { getSystems } from '../system/info.js'
 
 import { normalizeResult } from './result.js'
@@ -14,25 +15,36 @@ export const getInitResult = function ({
   const id = uuidv4()
   const timestamp = Date.now()
   const systems = getSystems({ systemId, systemVersions, envInfo })
-  const initResult = { id, timestamp, systems }
-  const initResultA = addFinalProps(initResult, combinations)
-  return initResultA
+  const combinationsA = combinations.map(addEmptyStats)
+  return { id, timestamp, systems, combinations: combinationsA, history: [] }
+}
+
+const addEmptyStats = function (combination) {
+  return { ...combination, stats: {} }
 }
 
 // Finalize result. Done either at the end, or before each preview.
-export const getFinalResult = function (initResult, combinations) {
-  const rawResult = addFinalProps(initResult, combinations)
+export const getFinalResult = function (initResult, newCombinations) {
+  const rawResult = addCombinations(initResult, newCombinations)
   const result = normalizeResult(rawResult)
   return { rawResult, result }
 }
 
-const addFinalProps = function (initResult, combinations) {
-  const combinationsA = combinations.map(getFinalProps)
-  return { ...initResult, combinations: combinationsA }
+const addCombinations = function (initResult, newCombinations) {
+  const combinations = initResult.combinations
+    .map((combination) => addCombination(newCombinations, combination))
+    .map(getFinalCombination)
+  return { ...initResult, combinations }
+}
+
+const addCombination = function (combinations, newCombination) {
+  const combinationA = combinations.find((combination) =>
+    isSameCategory(combination, newCombination),
+  )
+  return combinationA === undefined ? newCombination : combinationA
 }
 
 // Retrieve final combination properties used for reporting.
-// `stats` is `undefined` during the first preview report.
-const getFinalProps = function ({ taskId, runnerId, systemId, stats = {} }) {
+const getFinalCombination = function ({ taskId, runnerId, systemId, stats }) {
   return { taskId, runnerId, systemId, stats }
 }

@@ -22,7 +22,7 @@ export const performBenchmark = async function (
   const initResult = getInitResult({ combinations, systemVersions, config })
   const { combinations: combinationsA, initResult: initResultA } =
     await previewStartAndMeasure({ combinations, config, initResult })
-  const { rawResult, result } = getFinalResult(combinationsA, initResultA)
+  const { rawResult, result } = getFinalResult(initResultA, combinationsA)
   return { rawResult, result }
 }
 
