@@ -1,7 +1,7 @@
+import { groupCategoryInfos } from '../combination/group.js'
+import { sortCombinations } from '../combination/sort.js'
 import { addCombinationsDiff } from '../compare/diff.js'
 import { addSharedSystem } from '../system/shared.js'
-
-import { groupResultCombinations } from './group.js'
 
 // Normalize the result after measuring
 export const normalizeMeasuredResult = function (result) {
@@ -23,4 +23,12 @@ export const normalizeReportedResult = function (result) {
   const resultB = groupResultCombinations(resultA)
   const resultC = addSharedSystem(resultB)
   return resultC
+}
+
+// Add `result.*` properties based on grouping combinations by category.
+const groupResultCombinations = function ({ combinations, ...result }) {
+  const { combinations: combinationsA, categories } =
+    groupCategoryInfos(combinations)
+  const combinationsB = sortCombinations(combinationsA)
+  return { ...result, combinations: combinationsB, categories }
 }

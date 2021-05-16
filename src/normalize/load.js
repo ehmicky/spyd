@@ -1,7 +1,6 @@
 import { selectResults } from '../select/main.js'
 
 import { decompressResults } from './compress.js'
-import { groupCombinations } from './group.js'
 import { migrateResults } from './migrate.js'
 import { sortResults } from './sort.js'
 
@@ -12,8 +11,7 @@ export const loadResults = function (results, select) {
   const resultsC = sortResults(resultsB)
   const resultsD = selectResults(resultsC, select)
   const resultsE = resultsD.map(addResultsIds)
-  const resultsF = groupCombinations(resultsE)
-  return resultsF
+  return resultsE
 }
 
 const addResultsIds = function (result) {
