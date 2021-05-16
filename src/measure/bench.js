@@ -19,7 +19,7 @@ export const performBenchmark = async function ({
   config,
   config: { cwd, precisionTarget },
 }) {
-  const previewState = initPreview(initResult, config, combinations)
+  const previewState = initPreview(initResult, config)
   await startPreview(previewState)
 
   try {
