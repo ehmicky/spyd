@@ -1,3 +1,5 @@
+import omit from 'omit.js'
+
 import { removeEmptyValues } from './empty.js'
 import { loadConfigFile } from './file.js'
 import { mergeConfigs } from './merge.js'
@@ -20,7 +22,8 @@ export const loadConfig = async function (configFlags) {
   ]
   const configs = configInfosA.map(setConfigAbsolutePaths)
   const config = mergeConfigs(configs)
-  validateConfig(config)
-  const configA = removeEmptyValues(config)
-  return configA
+  const configA = omit(config, 'config')
+  validateConfig(configA)
+  const configB = removeEmptyValues(configA)
+  return configB
 }
