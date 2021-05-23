@@ -31,7 +31,7 @@ export const listTasks = async function (runners, cwd) {
   const tasksA = await Promise.all(
     runners.map((runner) => getRunnerTasks(runner, cwd)),
   )
-  return tasksA.flat()
+  return tasksA.flat().filter(removeDuplicateTaskId)
 }
 
 const getRunnerTasks = async function (
@@ -65,4 +65,13 @@ const getRunnerTasks = async function (
     error.message = `In runner "${runnerId}": ${error.message}`
     throw error
   }
+}
+
+// When two task files export the same task id, we only keep one based on the
+// following priority:
+//  - `config.runner{Runner}.tasks` over `config.tasks`
+//  - `tasks` array order
+// This allows overridding tasks when using shared configurations.
+const removeDuplicateTaskId = function (task, index, tasks) {
+  return tasks.slice(index + 1).every(({ taskId }) => taskId !== task.taskId)
 }

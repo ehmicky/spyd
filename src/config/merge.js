@@ -56,6 +56,8 @@ const isRunnerTasks = function (keys) {
   )
 }
 
+// Order matters since later `tasks` have priority when merging two task files
+// with same task ids.
 const mergeTasks = function (tasksA, tasksB) {
   const tasksArrA = normalizeOptionalArray(tasksA)
   const tasksArrB = normalizeOptionalArray(tasksB)
