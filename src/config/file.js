@@ -33,8 +33,8 @@ const getConfigsInfos = async function (config, base) {
   return configInfos.flat()
 }
 
-const getConfigInfos = async function (config, parentBase) {
-  const configPath = await resolveConfigPath(config, parentBase)
+const getConfigInfos = async function (config, base) {
+  const configPath = await resolveConfigPath(config, base)
 
   if (configPath === undefined) {
     return []
@@ -43,9 +43,9 @@ const getConfigInfos = async function (config, parentBase) {
   const { config: childConfig, ...configContents } = await loadConfigContents(
     configPath,
   )
-  const base = dirname(configPath)
-  const childConfigInfos = await getChildConfigInfos(childConfig, base)
-  return [...childConfigInfos, { configContents, base }]
+  const childBase = dirname(configPath)
+  const childConfigInfos = await getChildConfigInfos(childConfig, childBase)
+  return [...childConfigInfos, { configContents, base: childBase }]
 }
 
 // Configuration files can use shared configuration using the `config` property
@@ -119,8 +119,8 @@ const getConfigInfos = async function (config, parentBase) {
 //  - For most containers (e.g. docker):
 //     - This only runs on Linux
 //     - The consumer might need to set some flags, e.g. for networking
-const getChildConfigInfos = async function (childConfig, base) {
+const getChildConfigInfos = async function (childConfig, childBase) {
   return childConfig === undefined
     ? []
-    : await getConfigsInfos(childConfig, base)
+    : await getConfigsInfos(childConfig, childBase)
 }
