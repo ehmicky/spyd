@@ -5,21 +5,21 @@ import { importJsDefault } from '../utils/import.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
 // Load and parse `spyd.*` file contents
-export const loadConfigContents = async function (config) {
-  const loadFunc = EXTENSIONS[extname(config)]
+export const loadConfigContents = async function (configPath) {
+  const loadFunc = EXTENSIONS[extname(configPath)]
 
   if (loadFunc === undefined) {
     throw new UserError(
-      `The configuration file format is not supported: ${config}
+      `The configuration file format is not supported: ${configPath}
 Please use .yml, .js, .cjs or .ts`,
     )
   }
 
   try {
-    return await loadFunc(config)
+    return await loadFunc(configPath)
   } catch (error) {
     throw new UserError(
-      `Could not load configuration file '${config}': ${error.message}`,
+      `Could not load configuration file '${configPath}': ${error.message}`,
     )
   }
 }
