@@ -9,13 +9,6 @@ import { resolveConfigPath } from './resolve.js'
 // `spyd.*` is optional, so this can return an empty array. This allows
 // benchmarking on-the-fly in a terminal without having to create a
 // configuration file.
-export const loadConfigFile = async function (config = 'default') {
-  const configA = addNpxShortcut(config)
-  return await getConfigsInfos(configA, '.')
-}
-
-// The `config` property can optionally be an array.
-//  - This allow merging a shared configuration with a non-shared one
 // The "default" resolver:
 //  - Is used as the default of the top-level `config` CLI flags
 //  - Is not used when a `config` is specified because:
@@ -24,6 +17,13 @@ export const loadConfigFile = async function (config = 'default') {
 //       unintentionally merged with some local config
 //  - Can be specified explicitely by users. This can be useful when overridding
 //    a `config` property inherited from a child configuration.
+export const loadConfigFile = async function (config = 'default') {
+  const configA = addNpxShortcut(config)
+  return await getConfigsInfos(configA, '.')
+}
+
+// The `config` property can optionally be an array.
+//  - This allow merging a shared configuration with a non-shared one
 const getConfigsInfos = async function (config, base) {
   const configs = normalizeOptionalArray(config)
   checkDefinedStringArray(configs, 'config')

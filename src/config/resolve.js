@@ -9,7 +9,8 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 import { resolveLookup } from './lookup.js'
 
 // Resolve the `config` property to a file path. It can be:
-//  - "default": lookup for any `spyd.*` or `benchmark/spyd.*` file
+//  - "default": lookup for any `spyd.*`, `benchmark/spyd.*` or
+//    `packages/spyd-config-*/spyd.*` file
 //  - a file path
 //  - a Node module name starting with "spyd-config-"
 //  - a "resolver:arg" string which applies resolver-specific logic
