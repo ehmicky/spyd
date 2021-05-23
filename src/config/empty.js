@@ -6,21 +6,25 @@ import mapObj from 'map-obj'
 // shared configurations.
 // We remove `undefined` values so `Object.keys()` does not show them and to
 // make printing configuration nicer.
-export const removeEmptyValues = function (value) {
-  if (isPlainObj(value)) {
-    const valueA = filterObj(value, isNotEmptyPair)
-    return mapObj(valueA, removeEmptyPair)
-  }
-
-  if (Array.isArray(value)) {
-    return value.filter(isNotEmptyValue).map(removeEmptyValues)
-  }
-
-  return value
+export const removeEmptyValues = function (object) {
+  const objectA = removeEmptyChildren(object)
+  return mapObj(objectA, removeEmptyPair, { deep: true })
 }
 
 const removeEmptyPair = function (key, value) {
-  return [key, removeEmptyValues(value)]
+  return [key, removeEmptyChildren(value)]
+}
+
+const removeEmptyChildren = function (value) {
+  if (isPlainObj(value)) {
+    return filterObj(value, isNotEmptyPair)
+  }
+
+  if (Array.isArray(value)) {
+    return value.filter(isNotEmptyValue)
+  }
+
+  return value
 }
 
 const isNotEmptyPair = function (key, value) {
