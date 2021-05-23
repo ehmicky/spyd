@@ -12,9 +12,9 @@ import { validateConfig } from './validate.js'
 export const getConfig = async function (command, configFlags = {}) {
   const { config, configInfos } = await loadConfig(configFlags)
   validateConfig(config)
-  const configA = setConfigAbsolutePaths(config, configInfos)
 
-  const configB = addDefaultConfig(configA, command)
+  const configA = addDefaultConfig(config, command)
+  const configB = setConfigAbsolutePaths(configA, configInfos)
 
   const configC = addEnvInfo(configB)
   const configD = normalizeConfig(configC)

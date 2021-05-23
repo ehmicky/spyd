@@ -30,8 +30,10 @@ import { has, get, set } from 'dot-prop'
 //   - user can opt-out of that behavior by using absolute file paths, for
 //     example using the current file's path (e.g. `__filename|__dirname`)
 export const setConfigAbsolutePaths = function (config, configInfos) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  const configInfosA = [...configInfos].reverse()
   return PATH_CONFIG_PROPS.reduce(
-    setConfigAbsolutePath.bind(undefined, configInfos),
+    setConfigAbsolutePath.bind(undefined, configInfosA),
     config,
   )
 }
@@ -45,11 +47,18 @@ const setConfigAbsolutePath = function (configInfos, config, propName) {
     return config
   }
 
-  const { base } = configInfos.find(({ configContents }) =>
-    has(configContents, propName),
-  )
+  const base = getBase(configInfos, propName)
   const valueA = Array.isArray(value)
     ? value.map((item) => resolve(base, item))
     : resolve(base, value)
   return set(config, propName, valueA)
+}
+
+// Properties assigned as default values do not have corresponding `configInfos`
+// and use process.cwd() as base.
+const getBase = function (configInfos, propName) {
+  const configInfo = configInfos.find(({ configContents }) =>
+    has(configContents, propName),
+  )
+  return configInfo === undefined ? '.' : configInfo.base
 }
