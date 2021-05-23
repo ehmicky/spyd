@@ -16,7 +16,7 @@ export const loadConfigFile = async function ({
   config = 'default',
   cwd = '.',
 }) {
-  validateDefinedString(cwd)
+  validateDefinedString(cwd, 'cwd')
   return await getConfigsInfos(config, cwd)
 }
 
