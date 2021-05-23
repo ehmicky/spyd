@@ -5,21 +5,19 @@ import { addPadding } from './utils/indent.js'
 
 // Since `report()` might have side effects such as making a HTTP call, we make
 // sure it is called exactly once.
-// Interactive output/terminal have different default values for some report
-// config properties, so we compute two different contents: TTY and not TTY.
-export const getNonTtyContents = function (contents) {
-  return contents.map(getNonTtyContent).join(CONTENTS_DELIMITER)
+export const getFileContents = function (contents) {
+  return contents.map(getFileContent).join(CONTENTS_DELIMITER)
 }
 
-export const getTtyContents = function (contents) {
-  return addPadding(contents.map(getTtyContent).join(CONTENTS_DELIMITER))
+export const getStdoutContents = function (contents) {
+  return addPadding(contents.map(getStdoutContent).join(CONTENTS_DELIMITER))
 }
 
-const getNonTtyContent = function ({ content, colors = false }) {
+const getFileContent = function ({ content, colors = false }) {
   return getContent(content, colors)
 }
 
-const getTtyContent = function ({ content, colors = isTtyOutput() }) {
+const getStdoutContent = function ({ content, colors = isTtyOutput() }) {
   return getContent(content, colors)
 }
 

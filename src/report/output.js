@@ -4,9 +4,9 @@ import writeFileAtomic from 'write-file-atomic'
 import { UserError } from '../error/main.js'
 import { groupBy } from '../utils/group.js'
 
-import { getTtyContents, getNonTtyContents } from './content.js'
+import { getStdoutContents, getFileContents } from './content.js'
 import { detectInsert, insertContents } from './insert.js'
-import { printToTty } from './tty.js'
+import { printToStdout } from './tty.js'
 
 // Print result to file or to terminal based on the `output` configuration
 // property.
@@ -14,32 +14,32 @@ import { printToTty } from './tty.js'
 // inserted between them instead.
 export const outputContents = async function (contents) {
   await Promise.all([
-    outputTtyContents(contents),
+    outputStdoutContents(contents),
     outputFilesContents(contents),
   ])
 }
 
 // Print final report to terminal.
-const outputTtyContents = async function (contents) {
-  const ttyContents = computeTtyContents(contents)
+const outputStdoutContents = async function (contents) {
+  const stdoutContents = computeStdoutContents(contents)
 
-  if (ttyContents === undefined) {
+  if (stdoutContents === undefined) {
     return
   }
 
-  await printToTty(ttyContents)
+  await printToStdout(stdoutContents)
 }
 
 // Retrieve contents printed in preview.
 // Must be identical to the final contents.
-export const computeTtyContents = function (contents) {
+export const computeStdoutContents = function (contents) {
   const contentsA = contents.filter(hasStdoutOutput)
 
   if (contentsA.length === 0) {
     return
   }
 
-  return getTtyContents(contentsA)
+  return getStdoutContents(contentsA)
 }
 
 // Write final report to files
@@ -51,7 +51,7 @@ const outputFilesContents = async function (contents) {
 }
 
 const outputFileContents = async function ([output, contents]) {
-  const nonTtyContents = getNonTtyContents(contents)
+  const fileContents = getFileContents(contents)
 
   if (await isDirectory(output)) {
     throw new UserError(
@@ -62,12 +62,12 @@ const outputFileContents = async function ([output, contents]) {
   const fileContent = await detectInsert(output)
 
   if (fileContent !== undefined) {
-    await insertContents(output, nonTtyContents, fileContent)
+    await insertContents(output, fileContents, fileContent)
     return
   }
 
   try {
-    await writeFileAtomic(output, nonTtyContents)
+    await writeFileAtomic(output, fileContents)
   } catch (error) {
     throw new UserError(
       `Could not write to "output" "${output}"\n${error.message}`,

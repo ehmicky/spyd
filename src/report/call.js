@@ -44,7 +44,7 @@ const getReporterContents = async function (
     showPrecision,
     showDiff,
   })
-  const resultC = addTtyInfo(resultB)
+  const resultC = addSizeInfo(resultB)
   const reportFuncProps = omit(reporterConfig, CORE_REPORT_PROPS)
   const content = await reportFunc(resultC, reportFuncProps, startData)
   const contentA = normalizeEmptyContent(content)
@@ -53,8 +53,8 @@ const getReporterContents = async function (
   return { content: contentC, output, colors }
 }
 
-// Add information about the terminal
-const addTtyInfo = function (result) {
+// Add size-related information
+const addSizeInfo = function (result) {
   const screenWidth = getPaddedScreenWidth()
   const screenHeight = getPaddedScreenHeight()
   return { ...result, screenWidth, screenHeight }

@@ -2,7 +2,7 @@ import { normalizeReportedResult } from '../normalize/result.js'
 import { applySince, mergeHistoryResult } from '../normalize/since.js'
 
 import { getContents } from './call.js'
-import { outputContents, computeTtyContents } from './output.js'
+import { outputContents, computeStdoutContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
 
 // Report final results in `show` and `remove` commands.
@@ -47,7 +47,7 @@ export const reportStart = async function (result, previous, config) {
 // preview refresh function at regular intervals.
 export const reportPreview = async function (result, historyResult, config) {
   const { contents } = await reportCompute(result, historyResult, config)
-  const report = computeTtyContents(contents)
+  const report = computeStdoutContents(contents)
   return report
 }
 

@@ -1,6 +1,6 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
-import { clearScreen, clearScreenFull, printToTty } from '../report/tty.js'
+import { clearScreen, clearScreenFull, printToStdout } from '../report/tty.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'
@@ -16,7 +16,7 @@ export const printPreviewStarting = function ({ quiet }) {
     return
   }
 
-  printToTty('Starting...\n')
+  printToStdout('Starting...\n')
 }
 
 // Start clearing the screen

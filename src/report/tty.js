@@ -9,8 +9,8 @@ import { PADDING_SIZE } from './utils/indent.js'
 const pCursorTo = promisify(cursorTo)
 const pClearScreenDown = promisify(clearScreenDown)
 
-// Print to interactive stdout
-export const printToTty = async function (string) {
+// Print to stdout (tty or file)
+export const printToStdout = async function (string) {
   // Happens for example when piping to `less` then aborting
   if (!stdout.writable) {
     return
@@ -31,7 +31,7 @@ export const clearScreen = async function () {
 export const clearScreenFull = async function () {
   const screenHeight = getScreenHeight()
   const newlines = '\n'.repeat(screenHeight - CLEAR_SCREEN_ROWS)
-  await printToTty(newlines)
+  await printToStdout(newlines)
 }
 
 // Ensure we don't remove the initial user prompt but still remove the
