@@ -3,7 +3,6 @@ import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
 
 import { fromInputsObj } from './inputs.js'
-import { getCombinationsProduct } from './product.js'
 import { validateCombinationsIds } from './validate_ids.js'
 
 // Retrieve each combination, i.e. combination of each combination category
@@ -19,7 +18,6 @@ export const getCombinations = async function ({
   const inputsA = fromInputsObj(inputs)
 
   const combinations = getCombinationsProduct({
-    runners: runnersA,
     tasks: tasksA,
     inputs: inputsA,
     systemId,
@@ -28,4 +26,28 @@ export const getCombinations = async function ({
 
   const combinationsA = selectCombinations(combinations, select)
   return { combinations: combinationsA, systemVersions }
+}
+
+// Get cartesian product of all combinations
+const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
+  return tasks.map(
+    ({
+      taskPath,
+      taskId,
+      runnerId,
+      runnerSpawn,
+      runnerSpawnOptions,
+      runnerConfig,
+    }) => ({
+      taskPath,
+      taskId,
+      runnerId,
+      runnerSpawn,
+      runnerSpawnOptions,
+      runnerConfig,
+      inputs,
+      systemId,
+      stats: {},
+    }),
+  )
 }

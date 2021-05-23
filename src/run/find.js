@@ -27,7 +27,14 @@ export const findTasks = async function ({
     { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
   )
   validateDuplicateTaskIds(taskIds)
-  return taskIds.map((taskId) => ({ taskId, taskPath, runnerId }))
+  return taskIds.map((taskId) => ({
+    taskId,
+    taskPath,
+    runnerId,
+    runnerSpawn,
+    runnerSpawnOptions,
+    runnerConfig,
+  }))
 }
 
 // Runners should enforce that task identifiers are unique. This can be done
