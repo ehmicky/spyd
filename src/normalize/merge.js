@@ -37,7 +37,7 @@ export const mergeResults = function (result, previous) {
 // We only merge results when there are some matching combinations
 //  - For example, `result.systems` should only show systems from combinations
 //    that have been merged, i.e. that are reported
-const mergeResult = function (result, previousResult) {
+export const mergeResult = function (result, previousResult) {
   const previousCombinations = removeResultCombinations(
     previousResult.combinations,
     result,

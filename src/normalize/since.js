@@ -3,9 +3,8 @@ import {
   omitResultCombinations,
 } from '../combination/result.js'
 import { findByDelta } from '../delta/main.js'
-import { mergeSystems } from '../system/merge.js'
 
-import { mergeResults } from './merge.js'
+import { mergeResults, mergeResult } from './merge.js'
 
 // The `since` configuration property is used to:
 //  - Limit the number of results shown in `result.history` which is used with
@@ -68,13 +67,13 @@ export const applySince = async function (result, previous, { since, cwd }) {
 
 // When there is no history
 const applyNoneSince = function () {
-  return { combinations: [], systems: [], history: [] }
+  return { history: [] }
 }
 
 // When `since` is 0 (default value)
 const applyDefaultSince = function (previous, result) {
   const sinceResult = getSinceResult(previous, previous.length - 1, result)
-  return { combinations: [], systems: [], history: [sinceResult] }
+  return { history: [sinceResult] }
 }
 
 // When there is a history and a non-default `since`
@@ -82,8 +81,8 @@ const applyRegularSince = function (previous, sinceIndex, result) {
   const mergedResult = mergeResults(result, previous.slice(sinceIndex))
   const sinceResult = getSinceResult(previous, sinceIndex, mergedResult)
   const history = [sinceResult, ...previous.slice(sinceIndex + 1)]
-  const { combinations, systems } = omitResultCombinations(mergedResult, result)
-  return { combinations, systems, history }
+  const mergedResultA = omitResultCombinations(mergedResult, result)
+  return { mergedResult: mergedResultA, history }
 }
 
 const getSinceResult = function (previous, sinceIndex, result) {
@@ -101,11 +100,9 @@ const getSinceResult = function (previous, sinceIndex, result) {
 //  - To avoid repeating it before each preview, we compute it only once before
 //    all previews and store its return value as `historyResult`.
 //  - We then merge the latest result during each preview.
-export const mergeHistoryResult = function (result, historyResult) {
-  return {
-    ...result,
-    combinations: [...result.combinations, ...historyResult.combinations],
-    systems: mergeSystems(result.systems, historyResult.systems),
-    history: [...historyResult.history, result],
-  }
+export const mergeHistoryResult = function (result, { mergedResult, history }) {
+  const resultA = { ...result, history: [...history, result] }
+  return mergedResult === undefined
+    ? resultA
+    : mergeResult(resultA, mergedResult)
 }
