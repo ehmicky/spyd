@@ -1,5 +1,5 @@
 import { isSameCategory } from '../../../combination/ids.js'
-import { getCombinationNameColor } from '../../utils/first.js'
+import { getCombinationNameColor } from '../../utils/name.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 
 // Show `result.history` as a time series

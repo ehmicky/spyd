@@ -1,4 +1,4 @@
-import { getCombinationNameColor } from '../first.js'
+import { getCombinationNameColor } from '../name.js'
 
 // Retrieve sidebar with the combination name
 export const getTitleBlock = function (combination, height, showStats) {

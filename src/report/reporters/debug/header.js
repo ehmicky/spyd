@@ -1,5 +1,5 @@
 import { fieldColor } from '../../utils/colors.js'
-import { getCombinationNameWidth } from '../../utils/first.js'
+import { getCombinationNameWidth } from '../../utils/name.js'
 import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 

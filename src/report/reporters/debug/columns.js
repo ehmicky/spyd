@@ -1,4 +1,4 @@
-import { getCombinationNameWidth } from '../../utils/first.js'
+import { getCombinationNameWidth } from '../../utils/name.js'
 import { SEPARATOR_WIDTH } from '../../utils/separator.js'
 
 import { getHeaderName } from './header.js'

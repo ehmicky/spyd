@@ -1,5 +1,5 @@
 import { concatBlocks } from '../concat.js'
-import { getCombinationNameWidth } from '../first.js'
+import { getCombinationNameWidth } from '../name.js'
 
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
