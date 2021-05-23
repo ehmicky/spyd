@@ -29,19 +29,17 @@ import { mergeSystems } from '../system/merge.js'
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
 export const mergeResults = function (result, previous) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  return [...previous].reverse().reduce(mergeResult, result)
+  return previous.reduceRight(mergeResult, result)
 }
 
 // Merge `previous` results to `result`, but only the combinations that exist
 // in `baseResult`. Used when merging `sinceResult` with its previous results,
 // while only keeping the combinations after `since`.
 export const mergeFilteredResults = function (result, previous, baseResult) {
-  const resultA = pickResultCombinations(result, baseResult)
-  // eslint-disable-next-line fp/no-mutating-methods
-  return [...previous]
-    .reverse()
-    .reduce(mergeFilteredResult.bind(undefined, baseResult), resultA)
+  return previous.reduceRight(
+    mergeFilteredResult.bind(undefined, baseResult),
+    pickResultCombinations(result, baseResult),
+  )
 }
 
 // We short-circuit this function when the number of combinations indicates no
