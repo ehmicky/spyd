@@ -4,6 +4,7 @@ import { TASKS, HISTORY } from './groups.js'
 export const RUN_CONFIG = {
   tasks: {
     group: TASKS,
+    alias: 't',
     array: true,
     string: true,
     requiresArg: true,
