@@ -16,24 +16,19 @@ export const loadConfigFile = async function ({ config = 'default' }) {
   return await getConfigsInfos(config, '.')
 }
 
-const getConfigsInfos = async function (config, base) {
-  const configs = normalizeConfigProp(config)
-  const configInfos = await Promise.all(
-    configs.map((configA) => getConfigInfos(configA, base)),
-  )
-  return configInfos.flat()
-}
-
 // The `config` property can optionally be an array.
 // The "default" resolver:
 //  - Is the default of the top-level `config` CLI flags but not inside
 //    configuration files
 //  - Can be specified explicitely by users. This can be useful when overridding
 //    a `config` property inherited from a child configuration.
-const normalizeConfigProp = function (config) {
+const getConfigsInfos = async function (config, base) {
   const configs = normalizeOptionalArray(config)
   checkDefinedStringArray(configs, 'config')
-  return configs
+  const configInfos = await Promise.all(
+    configs.map((configA) => getConfigInfos(configA, base)),
+  )
+  return configInfos.flat()
 }
 
 const getConfigInfos = async function (config, base) {
