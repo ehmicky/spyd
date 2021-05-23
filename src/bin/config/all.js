@@ -27,9 +27,9 @@ This can be used to share configurations and/or benchmarks.`,
     group: CONFIG,
     string: true,
     requiresArg: true,
-    describe: `Customize the current directory used when:
-  - Running tasks
-  - Looking for the current git commit and branch
+    describe: `Customize the current directory used:
+  - In task files
+  - When looking for the current git commit and branch
 This is not used to resolve configuration properties that are file paths.`,
   },
   debug: {
