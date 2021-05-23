@@ -33,8 +33,8 @@ const getConfigsInfos = async function (config, base) {
   return configInfos.flat()
 }
 
-const getConfigInfos = async function (config, base) {
-  const configPath = await resolveConfigPath(config, base)
+const getConfigInfos = async function (config, parentBase) {
+  const configPath = await resolveConfigPath(config, parentBase)
 
   if (configPath === undefined) {
     return []
@@ -43,7 +43,8 @@ const getConfigInfos = async function (config, base) {
   const { config: childConfig, ...configContents } = await loadConfigContents(
     configPath,
   )
-  const childConfigInfos = await getChildConfigInfos(childConfig, configPath)
+  const base = dirname(configPath)
+  const childConfigInfos = await getChildConfigInfos(childConfig, base)
   return [...childConfigInfos, { configContents, base }]
 }
 
@@ -118,8 +119,8 @@ const getConfigInfos = async function (config, base) {
 //  - For most containers (e.g. docker):
 //     - This only runs on Linux
 //     - The consumer might need to set some flags, e.g. for networking
-const getChildConfigInfos = async function (childConfig, configPath) {
+const getChildConfigInfos = async function (childConfig, base) {
   return childConfig === undefined
     ? []
-    : await getConfigsInfos(childConfig, dirname(configPath))
+    : await getConfigsInfos(childConfig, base)
 }
