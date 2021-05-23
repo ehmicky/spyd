@@ -47,7 +47,7 @@ const setConfigAbsolutePath = function (propName, value, base) {
   return setAbsolutePath(value, base)
 }
 
-const PATH_CONFIG_PROPS = new Set(['cwd', 'config', 'output', 'tasks'])
+const PATH_CONFIG_PROPS = new Set(['cwd', 'output', 'tasks'])
 
 export const setAbsolutePath = function (value, base) {
   return resolve(base, value)
