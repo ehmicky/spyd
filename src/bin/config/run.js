@@ -8,12 +8,13 @@ export const RUN_CONFIG = {
     array: true,
     string: true,
     requiresArg: true,
-    describe: `Path to the tasks main files.
+    describe: `Path to the tasks files.
+This should only specify their main files.
 When using multiple runners, each runner can have its own tasks file by using
 --runnerId.tasks=path
 Can be specified several times.
-Default: "benchmark/tasks.{extension}" in the current or any parent directory.
-The default file {extension} depends on the runner.`,
+Can be a globbing pattern.
+Default: "tasks.*"`,
   },
   runner: {
     group: TASKS,
