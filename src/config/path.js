@@ -13,14 +13,13 @@ import { has, get, set } from 'dot-prop'
 //           would not
 //   - The files in `spyd.*` use the configuration file's directory instead.
 //      - We do this since this is what most users would expect.
+//   - This applies to the `config` and `tasks` configuration properties
+//      - I.e. the default value uses `cwd` since it is not in any file, but
+//        it uses the file's directory otherwise.
 // In contrast, the `cwd` flag:
 //   - is used for:
-//      - file searches:
-//         - `config` flag default value
-//         - `tasks` flag default value
-//         - `.git` directory
-//      - child process execution:
-//         - runner process
+//      - file searches: `.git` directory
+//      - child process execution: runner process
 //   - defaults to the current directory
 //   - reasons:
 //      - This is what most users would expect

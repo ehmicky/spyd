@@ -25,12 +25,10 @@ The following file formats are supported: .yml, .js, .cjs, .ts`,
     group: CONFIG,
     string: true,
     requiresArg: true,
-    describe: `Current directory when running tasks.
-
-This is also used when:
-  - Looking for the default config and tasks files
+    describe: `Current directory when:
+  - Running tasks
   - Looking for the current git commit and branch
-
+This is not used to resolve configuration properties that are file paths.
 Default: current directory`,
   },
   debug: {

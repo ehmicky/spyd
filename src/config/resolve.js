@@ -13,9 +13,9 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 //  - a "resolver:arg" string which applies resolver-specific logic
 // The available resolvers are:
 //  - "npm:name" to load a Node module "spyd-config-name" or "@spyd/config-name"
-export const resolveConfigPath = async function (config, base, cwd) {
+export const resolveConfigPath = async function (config, base) {
   if (config === 'default') {
-    return await resolveDefault(cwd)
+    return await resolveDefault(base)
   }
 
   const result = RESOLVER_REGEXP.exec(config)
@@ -39,8 +39,8 @@ export const resolveConfigPath = async function (config, base, cwd) {
 // A `benchmark` directory is useful for grouping benchmark-related files.
 // Not using one is useful for on-the-fly benchmarking, or for global/shared
 // configuration.
-const resolveDefault = async function (cwd) {
-  return await findUp(DEFAULT_CONFIG, { cwd })
+const resolveDefault = async function (base) {
+  return await findUp(DEFAULT_CONFIG, { cwd: base })
 }
 
 const DEFAULT_CONFIG = [

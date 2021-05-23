@@ -17,7 +17,7 @@ export const loadConfigFile = async function ({
   cwd = '.',
 }) {
   validateDefinedString(cwd, 'cwd')
-  return await getConfigsInfos(config, cwd, cwd)
+  return await getConfigsInfos(config, cwd)
 }
 
 // Load `spyd.*` file.
@@ -25,16 +25,16 @@ export const loadConfigFile = async function ({
 // inside another configure file.
 // This points to a Node module or a local file path.
 // This enables repository-wide, machine-wide or organization-wide configuration
-const getConfigsInfos = async function (config, base, cwd) {
+const getConfigsInfos = async function (config, base) {
   const configs = normalizeConfigProp(config)
   const configInfos = await Promise.all(
-    configs.map((configA) => getConfigInfos(configA, base, cwd)),
+    configs.map((configA) => getConfigInfos(configA, base)),
   )
   return configInfos.flat()
 }
 
-const getConfigInfos = async function (config, base, cwd) {
-  const configPath = await resolveConfigPath(config, base, cwd)
+const getConfigInfos = async function (config, base) {
+  const configPath = await resolveConfigPath(config, base)
 
   if (configPath === undefined) {
     return []
@@ -54,6 +54,6 @@ const getConfigInfos = async function (config, base, cwd) {
     return configInfo
   }
 
-  const childConfigInfos = getConfigsInfos(config, dirname(configPath), cwd)
+  const childConfigInfos = getConfigsInfos(config, dirname(configPath))
   return [...childConfigInfos, configInfo]
 }
