@@ -9,9 +9,6 @@ import { getTaskPaths } from './path.js'
 //  - This allows users to do on-the-fly benchmarks without pre-existing setup
 // The `tasks` are only needed when measuring them, not reporting them, so not
 // all commands use it.
-// We do not allow specifying several tasks files per runner. This allows making
-// it clearer that only entry files must be specified. Otherwise, confusing
-// errors might happen when users specified non-entry files.
 // Runners are specified using the `runner` configuration property. Other
 // solutions have problems:
 //  - using code comment:

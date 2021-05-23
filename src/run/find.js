@@ -12,8 +12,10 @@ import { measureCombinations } from '../measure/several.js'
 // So we spawn a single process for all of them, to retrieve the task and step
 // identifiers.
 // Runners are encouraged to clearly separate task and step identifiers in tasks
-// files. For example, not allowing users to concatenate them into a single
-// identifiers. This makes it clearer for users which is which.
+// files.
+//  - For example, not allowing users to concatenate them into a single
+//    identifiers.
+//  - This makes it clearer for users which is which.
 export const findTasks = async function ({
   taskPath,
   runnerId,
@@ -40,8 +42,9 @@ export const findTasks = async function ({
 // Runners should enforce that task identifiers are unique. This can be done
 // by using a syntax which does not allow duplicate keys such as plain objects
 // in JavaScript.
-// Using the taskId in different runners is allowed though. This allows
-// comparing the same task across runners.
+// Using the same taskId is allowed through in different:
+//  - Runners: to compare the same task across runners
+//  - Task files: to override shared configuration's tasks
 const validateDuplicateTaskIds = function (taskIds) {
   const duplicateTaskId = taskIds.find(isDuplicateTaskId)
 
