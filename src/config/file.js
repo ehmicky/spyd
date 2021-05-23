@@ -6,7 +6,11 @@ import { UserError } from '../error/main.js'
 import { importJsDefault } from '../utils/import.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
-import { normalizeTopConfigProp, normalizeCwdProp } from './normalize_prop.js'
+import {
+  normalizeTopConfigProp,
+  normalizeConfigProp,
+  normalizeCwdProp,
+} from './normalize_prop.js'
 import { resolveConfigPath } from './resolve.js'
 
 // Load `spyd.*` and any child configuration files.
@@ -15,8 +19,8 @@ import { resolveConfigPath } from './resolve.js'
 // configuration file.
 export const loadConfigFile = async function ({ config, cwd }) {
   const configs = normalizeTopConfigProp(config)
-  const cwdA = normalizeCwdProp(cwd)
-  return await getConfigsInfos(configs, cwdA)
+  const base = normalizeCwdProp(cwd)
+  return await getConfigsInfos(configs, base)
 }
 
 // Load `spyd.*` file.
@@ -46,16 +50,15 @@ const getConfigInfos = async function (config, base) {
     )
   }
 
-  const configInfo = { configContents, base }
-  const childConfig = normalizeConfigProp(configContents.config)
+  const childConfigInfos = getChildConfigInfos(configContents)
+  return [...childConfigInfos, { configContents, base }]
+}
 
-  if (childConfig === undefined) {
-    return [configInfo]
-  }
-
-  const childBase = dirname(configPath)
-  const childConfigInfos = getConfigsInfos(childConfigs, childBase)
-  return [...childConfigInfos, configInfo]
+const getChildConfigInfos = function ({ config }, configPath) {
+  const childConfigs = normalizeConfigProp(config)
+  return childConfigs === undefined
+    ? []
+    : getConfigsInfos(childConfigs, dirname(configPath))
 }
 
 const loadConfigContents = async function (config) {

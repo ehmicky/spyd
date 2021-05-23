@@ -13,7 +13,7 @@ export const normalizeTopConfigProp = function (config) {
   return configs === undefined ? DEFAULT_RESOLVER : configs
 }
 
-const normalizeConfigProp = function (config) {
+export const normalizeConfigProp = function (config) {
   if (isDefinedPath(config)) {
     return [config]
   }
