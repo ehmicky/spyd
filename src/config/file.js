@@ -1,9 +1,10 @@
 import { dirname } from 'path'
 
-import isPlainObj from 'is-plain-obj'
-
-import { UserError } from '../error/main.js'
-
+import {
+  checkObject,
+  checkDefinedStringArray,
+  normalizeOptionalArray,
+} from './check.js'
 import { loadConfigContents } from './contents.js'
 import { resolveConfigPath } from './resolve.js'
 
@@ -30,19 +31,9 @@ const getConfigsInfos = async function (config, base) {
 //  - Can be specified explicitely by users. This can be useful when overridding
 //    a `config` property inherited from a child configuration.
 const normalizeConfigProp = function (config) {
-  const configs = Array.isArray(config) ? config : [config]
-  configs.forEach((configA) => {
-    validateConfigString(configA)
-  })
+  const configs = normalizeOptionalArray(config)
+  checkDefinedStringArray(configs, 'config')
   return configs
-}
-
-const validateConfigString = function (value) {
-  if (typeof value !== 'string' || value.trim() === '') {
-    throw new UserError(
-      `The "config" property must be a non-empty string: ${value}`,
-    )
-  }
 }
 
 const getConfigInfos = async function (config, base) {
@@ -53,13 +44,7 @@ const getConfigInfos = async function (config, base) {
   }
 
   const configContents = await loadConfigContents(configPath)
-
-  if (!isPlainObj(configContents)) {
-    throw new UserError(
-      `The configuration file must be an object: ${configPath}`,
-    )
-  }
-
+  checkObject(configContents, 'config')
   const childConfigInfos = getChildConfigInfos(configContents, configPath)
   return [...childConfigInfos, { configContents, base }]
 }

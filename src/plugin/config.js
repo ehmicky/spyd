@@ -38,13 +38,13 @@ const addPluginConfig = function ({
   configPrefix,
   configProps,
 }) {
-  const pluginConfig = getPluginConfig({ id, config, configPrefix })
-  const pluginConfigA = mergeTopConfig({ config, pluginConfig, configProps })
+  const pluginConfig = getPluginConfig(id, config, configPrefix)
+  const pluginConfigA = mergeTopConfig(config, pluginConfig, configProps)
   return { ...plugin, config: pluginConfigA }
 }
 
-const getPluginConfig = function ({ id, config, configPrefix }) {
-  const configPropName = getConfigPropName({ id, config, configPrefix })
+const getPluginConfig = function (id, config, configPrefix) {
+  const configPropName = getConfigPropName(id, config, configPrefix)
   const pluginConfig = config[configPropName]
 
   if (pluginConfig === undefined) {
@@ -58,7 +58,7 @@ const getPluginConfig = function ({ id, config, configPrefix }) {
 // Configuration properties are case-sensitive. Making them case-insensitive
 // would introduce polymorphism, which means we (and any spyd config consumer)
 // need to normalize case each time the configuration is read.
-const getConfigPropName = function ({ id, config, configPrefix }) {
+const getConfigPropName = function (id, config, configPrefix) {
   const configPropName = camelcase([configPrefix, id])
   const invalidPropName = `${configPrefix}${id}`
 
@@ -71,6 +71,6 @@ const getConfigPropName = function ({ id, config, configPrefix }) {
   return configPropName
 }
 
-const mergeTopConfig = function ({ config, pluginConfig, configProps }) {
+const mergeTopConfig = function (config, pluginConfig, configProps) {
   return { ...pick(config, configProps), ...cleanObject(pluginConfig) }
 }
