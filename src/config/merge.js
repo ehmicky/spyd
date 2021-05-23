@@ -1,13 +1,62 @@
-import deepMerge from 'deepmerge'
+import isPlainObj from 'is-plain-obj'
+
+import { normalizeOptionalArray } from './check.js'
 
 // Merge two configuration objects. Used to merge:
 //  - shared `config`
 //  - `spyd.*` with CLI flags
 export const mergeConfigs = function (configs) {
-  return deepMerge.all(configs, { arrayMerge: overrideArray })
+  return configs.reduce(
+    (configA, configB) => mergeObjects(configA, configB, []),
+    {},
+  )
+}
+
+const mergeObjects = function (objectA, objectB, keys) {
+  return Object.entries(objectB).reduce(
+    (object, [key, value]) => ({
+      ...object,
+      [key]: mergeValues(object[key], value, [...keys, key]),
+    }),
+    objectA,
+  )
 }
 
 // Arrays do not merge, they override instead.
-const overrideArray = function (arrayA, arrayB) {
-  return arrayB
+const mergeValues = function (valueA, valueB, keys) {
+  const customMerge = CUSTOM_MERGES.find(({ condition }) => condition(keys))
+
+  if (customMerge !== undefined) {
+    return customMerge.applyFunc(valueA, valueB)
+  }
+
+  if (isPlainObj(valueA) && isPlainObj(valueB)) {
+    return mergeObjects(valueA, valueB, keys)
+  }
+
+  return valueB
 }
+
+// `tasks` or `runnner{Runner}.tasks` are concatenated, not overridden so that
+// shared configurations consumers can add tasks
+const isTasks = function (keys) {
+  return isTopTasks(keys) || isRunnerTasks(keys)
+}
+
+const isTopTasks = function (keys) {
+  return keys.length === 1 && keys[0] === 'tasks'
+}
+
+const isRunnerTasks = function (keys) {
+  return (
+    keys.length === 2 && keys[0].startsWith('runner') && keys[1] === 'tasks'
+  )
+}
+
+const mergeTasks = function (tasksA, tasksB) {
+  const tasksArrA = normalizeOptionalArray(tasksA)
+  const tasksArrB = normalizeOptionalArray(tasksB)
+  return [...tasksArrA, ...tasksArrB]
+}
+
+const CUSTOM_MERGES = [{ condition: isTasks, applyFunc: mergeTasks }]

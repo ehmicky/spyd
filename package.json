@@ -39,7 +39,6 @@
     "colors-option": "^1.0.0",
     "core-js": "^3.10.0",
     "decamelize": "^5.0.0",
-    "deepmerge": "^4.2.2",
     "delay": "^5.0.0",
     "detect-newline": "^3.1.0",
     "dot-prop": "^5.3.0",
