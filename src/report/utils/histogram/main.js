@@ -8,7 +8,7 @@ import {
   getHighBlock,
   getHighBlockWidth,
 } from './low_high.js'
-import { getTitleBlock, getTitleWidth } from './title.js'
+import { getTitleBlock, getFirstCellWidth } from './title.js'
 
 // Serialize combinations' histograms for reporting
 export const serializeHistograms = function (
@@ -27,7 +27,7 @@ const DEFAULT_HEIGHT = 2 * EXTRA_HEIGHT
 const getContentWidth = function (combinations, showStats, screenWidth) {
   return Math.max(
     screenWidth -
-      getTitleWidth(combinations) -
+      getFirstCellWidth(combinations) -
       getLowBlockWidth(combinations, showStats) -
       getHighBlockWidth(combinations, showStats),
     1,

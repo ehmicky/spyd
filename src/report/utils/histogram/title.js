@@ -4,7 +4,7 @@ import { getCombinationName } from '../title.js'
 // Retrieve sidebar with the combination name
 export const getTitleBlock = function (combination, height, showStats) {
   const newlines = getNewlines(height, showStats)
-  return `${newlines}${titleColor(getCombinationTitle(combination))}`
+  return `${newlines}${getFirstCellColor(combination)}`
 }
 
 const getNewlines = function (height, showStats) {
@@ -16,12 +16,17 @@ const getNewlines = function (height, showStats) {
 const STATS_VERTICAL_SHIFT = 0
 const NO_STATS_VERTICAL_SHIFT = 1
 
-export const getTitleWidth = function ([combination]) {
-  return getCombinationTitle(combination).length
+export const getFirstCellWidth = function ([combination]) {
+  return getFirstCell(combination).length
 }
 
-const getCombinationTitle = function ({ titles }) {
-  return `${getCombinationName(titles)}${FIRST_CELL_PADDING}`
+const getFirstCellColor = function (combination) {
+  return titleColor(getFirstCell(combination))
+}
+
+const getFirstCell = function ({ titles }) {
+  const combinationName = getCombinationName(titles)
+  return `${combinationName}${FIRST_CELL_PADDING}`
 }
 
 const FIRST_CELL_PADDING_WIDTH = 2
