@@ -1,4 +1,3 @@
-import { omitResultCombinations } from '../combination/result.js'
 import { findByDelta } from '../delta/main.js'
 
 import { mergeResults, mergeFilteredResults, mergeResult } from './merge.js'
@@ -78,8 +77,7 @@ const applyRegularSince = function (previous, sinceIndex, result) {
   const mergedResult = mergeResults(result, previous.slice(sinceIndex))
   const sinceResult = getSinceResult(previous, sinceIndex, mergedResult)
   const history = [sinceResult, ...previous.slice(sinceIndex + 1)]
-  const mergedResultA = omitResultCombinations(mergedResult, result)
-  return { mergedResult: mergedResultA, history }
+  return { mergedResult, history }
 }
 
 const getSinceResult = function (previous, sinceIndex, result) {
