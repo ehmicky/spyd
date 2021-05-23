@@ -9,7 +9,7 @@ import { resolveConfigPath } from './resolve.js'
 // `spyd.*` is optional, so this can return an empty array. This allows
 // benchmarking on-the-fly in a terminal without having to create a
 // configuration file.
-export const loadConfigFile = async function ({ config = 'default' }) {
+export const loadConfigFile = async function (config = 'default') {
   const configA = addNpxShortcut(config)
   return await getConfigsInfos(configA, '.')
 }
@@ -40,8 +40,10 @@ const getConfigInfos = async function (config, base) {
     return []
   }
 
-  const configContents = await loadConfigContents(configPath)
-  const childConfigInfos = getChildConfigInfos(configContents, configPath)
+  const { config: childConfig, ...configContents } = await loadConfigContents(
+    configPath,
+  )
+  const childConfigInfos = getChildConfigInfos(childConfig, configPath)
   return [...childConfigInfos, { configContents, base }]
 }
 
@@ -116,8 +118,8 @@ const getConfigInfos = async function (config, base) {
 //  - For most containers (e.g. docker):
 //     - This only runs on Linux
 //     - The consumer might need to set some flags, e.g. for networking
-const getChildConfigInfos = function ({ config }, configPath) {
-  return config === undefined
+const getChildConfigInfos = function (childConfig, configPath) {
+  return childConfig === undefined
     ? []
-    : getConfigsInfos(config, dirname(configPath))
+    : getConfigsInfos(childConfig, dirname(configPath))
 }
