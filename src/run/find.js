@@ -4,6 +4,23 @@ import { measureCombinations } from '../measure/several.js'
 // A tasks file might have several tasks because:
 //  - This is user-friendlier when using small tasks and/or single steps
 //  - This prevents users using steps when they meant to use tasks
+// There can optionally be several tasks files per runner because:
+//  - This allows shared configurations' tasks to be overridden
+//     - `select` can be used to exclude those instead
+//  - This allows breaking down tasks files:
+//     - This is faster when some tasks files are slow to load or have many
+//       tasks
+//     - This might be convenient by avoid big files when there are many tasks
+//        - Not every file format can do this (e.g. with re-exports).
+//          For example, this is possible in JavaScript but not in YAML.
+//  - The downside is that users might mistakenly target dependent files instead
+//    of main files. We discourage it by:
+//     - Documenting it
+//     - Not allowing globbing in `tasks`
+// We make the steps vs tasks distinction clear:
+//  - Syntactically by requiring an additional depth level (nested object) for
+//    steps
+//  - We encourage tasks over steps
 // Each task has its own process, in order to prevent them from influencing
 // each other:
 //  - By modifying the global state

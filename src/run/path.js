@@ -3,10 +3,9 @@ import { isFile } from 'path-type'
 
 import { UserError } from '../error/main.js'
 
-// Retrieve the tasks file path.
+// Retrieve the tasks file paths.
+// Also validate that the files exist.
 // Uses either the `tasks` or `runner{id}.tasks` configuration properties.
-// Can also use the default `...[/benchmark]/tasks.*`.
-// Also validate that the file exists.
 // There is no "fast mode" without tasks files. The fastest mode is to create
 // a tasks file in `cwd` then run `spyd`
 //  - This ensures the correct file extension is used which is important due to:
@@ -54,7 +53,7 @@ const validateTask = async function (taskPath) {
   }
 }
 
-// By default, we find the first `benchmark/tasks.*`.
+// By default, we find the first `[benchmark/]tasks.*`.
 // The file extensions depends on the `runner.extensions`.
 const getDefaultTaskPath = async function (cwd, runnerExtensions) {
   const defaultTasks = runnerExtensions.flatMap(getDefaultTaskPathByExt)
