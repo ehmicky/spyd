@@ -16,7 +16,7 @@ const getNewlines = function (height, showStats) {
 const STATS_VERTICAL_SHIFT = 0
 const NO_STATS_VERTICAL_SHIFT = 1
 
-export const getFirstCellWidth = function ([combination]) {
+export const getFirstCellWidth = function (combination) {
   return getFirstCell(combination).length
 }
 

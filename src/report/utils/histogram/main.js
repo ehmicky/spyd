@@ -27,7 +27,7 @@ const DEFAULT_HEIGHT = 2 * EXTRA_HEIGHT
 const getContentWidth = function (combinations, showStats, screenWidth) {
   return Math.max(
     screenWidth -
-      getFirstCellWidth(combinations) -
+      getFirstCellWidth(combinations[0]) -
       getLowBlockWidth(combinations, showStats) -
       getHighBlockWidth(combinations, showStats),
     1,
