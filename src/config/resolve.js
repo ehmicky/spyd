@@ -7,6 +7,12 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
 import { setAbsolutePath } from './path.js'
 
+// Resolve the `config` property to a file path. It can be:
+//  - "default": lookup for any `spyd.*` or `benchmark/spyd.*` file
+//  - a file path
+//  - a "resolver:arg" string which applies resolver-specific logic
+// The available resolvers are:
+//  - "npm:name" to load a Node module "spyd-config-name" or "@spyd/config-name"
 export const resolveConfigPath = async function (config, base) {
   if (config === DEFAULT_RESOLVER) {
     return await resolveDefault(base)
