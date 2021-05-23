@@ -17,6 +17,7 @@ import { measureCombinations } from '../measure/several.js'
 export const findTasks = async function ({
   taskPath,
   cwd,
+  runnerId,
   runnerSpawn,
   runnerSpawnOptions,
   runnerConfig,
@@ -26,7 +27,7 @@ export const findTasks = async function ({
     { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
   )
   validateDuplicateTaskIds(taskIds)
-  return taskIds
+  return taskIds.map((taskId) => ({ taskId, taskPath, runnerId }))
 }
 
 // Runners should enforce that task identifiers are unique. This can be done

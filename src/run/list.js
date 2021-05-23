@@ -47,14 +47,19 @@ const getRunnerTasks = async function (
 ) {
   try {
     const taskPaths = await getTaskPaths(tasks, runnerExtensions, cwd)
-    const taskIds = await findTasks({
-      taskPath: taskPaths,
-      cwd,
-      runnerSpawn,
-      runnerSpawnOptions,
-      runnerConfig,
-    })
-    return taskIds.map((taskId) => ({ taskId, taskPath: taskPaths, runnerId }))
+    const tasksA = await Promise.all(
+      taskPaths.map((taskPath) =>
+        findTasks({
+          taskPath,
+          cwd,
+          runnerId,
+          runnerSpawn,
+          runnerSpawnOptions,
+          runnerConfig,
+        }),
+      ),
+    )
+    return tasksA
   } catch (error) {
     error.message = `In runner "${runnerId}": ${error.message}`
     throw error
