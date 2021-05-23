@@ -24,7 +24,8 @@ const importPlugin = async function ({ id, type, modulePrefix, builtins }) {
     return builtin
   }
 
-  const pluginPath = getPluginPath({ id, modulePrefix, type, base: '.' })
+  const moduleName = `${modulePrefix}${id}`
+  const pluginPath = getPluginPath(moduleName, type, '.')
 
   try {
     return await import(pluginPath)
@@ -42,14 +43,12 @@ const importPlugin = async function ({ id, type, modulePrefix, builtins }) {
 //  - This is simpler for users
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
-export const getPluginPath = function ({ id, modulePrefix, type, base }) {
-  const moduleName = `${modulePrefix}${id}`
-
+export const getPluginPath = function (moduleName, type, base) {
   try {
     return require.resolve(moduleName, { paths: [base] })
   } catch (error) {
-    throw new UserError(`Cannot find ${type} "${id}"
-No Node.js module "${moduleName}" was found, please ensure it is installed.
+    throw new UserError(`Cannot find ${type} "${moduleName}".
+This Node module was not found, please ensure it is installed.
 
 ${error.stack}`)
   }

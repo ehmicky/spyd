@@ -42,7 +42,7 @@ const isNpmResolver = function (config) {
 }
 
 const resolveNpm = function (config, base) {
-  return getPluginPath({ ...CONFIG_PLUGIN_TYPE, id: config, base })
+  return getPluginPath(config, CONFIG_PLUGIN_TYPE.type, base)
 }
 
 const resolveFile = async function (config, base) {
