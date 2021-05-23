@@ -5,20 +5,21 @@ export const ALL_CONFIG = {
   config: {
     group: CONFIG,
     alias: 'c',
+    array: true,
     string: true,
     requiresArg: true,
-    describe: `Path to the configuration file.
-Default: "benchmark/spyd.{yml,js,cjs,ts}" in the current or any parent
-directory.`,
-  },
-  extend: {
-    group: CONFIG,
-    alias: 'e',
-    string: true,
-    requiresArg: true,
-    describe: `Path to a configuration file to extend from.
-This can either a file path or a Node module.
-As opposed to "config", this is used to share configuration between projects.`,
+    describe: `Location or name of the configuration file.
+This can be:
+  - "default": "spyd.*" or "benchmark/spyd.*" in the current or any parent
+    directory.
+  - A file path
+  - A Node module prefixed with "npm:". For example, "npm:example" looks for any
+    Node module named "spyd-config-example" or "@spyd/config-example" and
+    exporting a spyd configuration file.
+Can be specified several times.
+A configuration file can include another one by using this property.
+This can be used to share configurations and/or benchmarks.
+The following file formats are supported: .yml, .js, .cjs, .ts`,
   },
   cwd: {
     group: CONFIG,

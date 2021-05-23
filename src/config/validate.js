@@ -48,8 +48,7 @@ const optionalArray = function (value) {
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   cwd: '/path/to/repository',
-  config: './benchmark/spyd.yml',
-  extend: './shared_spyd.yml',
+  config: optionalArray('./benchmark/spyd.yml'),
   tasks: './benchmark/tasks.js',
   runner: optionalArray('node'),
   reporter: optionalArray('debug'),

@@ -1,5 +1,3 @@
-import { cwd as getProcessCwd } from 'process'
-
 import envCi from 'env-ci'
 
 import { addPlugins } from '../plugin/add.js'
@@ -11,11 +9,9 @@ import { normalizeConfig } from './normalize.js'
 
 // Retrieve configuration
 export const getConfig = async function (command, configFlags = {}) {
-  const processCwd = getProcessCwd()
+  const config = await loadConfig(configFlags)
 
-  const config = await loadConfig(configFlags, processCwd)
-
-  const configA = addDefaultConfig({ config, command, processCwd })
+  const configA = addDefaultConfig(config, command)
 
   const configB = addEnvInfo(configA)
   const configC = normalizeConfig(configB)

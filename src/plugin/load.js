@@ -1,4 +1,4 @@
-import { PluginError } from '../error/main.js'
+import { PluginError, UserError } from '../error/main.js'
 
 // Import plugin's code
 export const loadPlugins = async function ({
@@ -33,4 +33,33 @@ const importPlugin = async function ({ id, type, modulePrefix, builtins }) {
       `Could not load '${type}' module '${moduleName}'\n\n${error.stack}`,
     )
   }
+}
+
+// Find the local file path of a plugin
+// TODO: use this in all plugins
+export const getPluginPath = function ({ id, modulePrefix, type, base }) {
+  const possiblePaths = getPossiblePaths(modulePrefix, id)
+  const resolvedPath = possiblePaths.find((pluginPath) =>
+    tryResolvePluginPath(pluginPath, base),
+  )
+
+  if (resolvedPath === undefined) {
+    const possiblePathsStr = possiblePaths.join(' or ')
+    throw new UserError(`Cannot find ${type}: ${id}
+No Node module ${possiblePathsStr} was found, please ensure it is installed.`)
+  }
+
+  return resolvedPath
+}
+
+// We enforce a naming convention for all plugins.
+// All plugins are Node modules. They can have a scope or not.
+const getPossiblePaths = function (modulePrefix, id) {
+  return [`spyd-${modulePrefix}-${id}`, `@spyd/${modulePrefix}-${id}`]
+}
+
+const tryResolvePluginPath = function (pluginPath, base) {
+  try {
+    return require.resolve(pluginPath, { paths: [base] })
+  } catch {}
 }

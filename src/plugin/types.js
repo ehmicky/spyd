@@ -38,5 +38,12 @@ export const PLUGIN_TYPES = [
   },
 ]
 
+// Shared configurations are plugins when using the npm resolver.
+// They are handled differently, i.e. require a separate type
+export const CONFIG_PLUGIN_TYPE = {
+  type: 'configuration',
+  modulePrefix: 'config',
+}
+
 // Configuration properties to remove after loading
 export const PLUGIN_PROP_PREFIXES = ['runner', 'reporter']

@@ -1,7 +1,7 @@
 import deepMerge from 'deepmerge'
 
 // Merge two configuration objects. Used to merge:
-//  - `extend` configurations
+//  - shared `config`
 //  - `spyd.*` with CLI flags
 export const mergeConfigs = function (configs) {
   return deepMerge.all(configs, { arrayMerge: overrideArray })

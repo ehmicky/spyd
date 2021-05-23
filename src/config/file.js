@@ -1,61 +1,80 @@
 import { dirname, extname } from 'path'
 
+import isPlainObj from 'is-plain-obj'
+
 import { UserError } from '../error/main.js'
 import { importJsDefault } from '../utils/import.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
-import { addConfigExtend } from './extend.js'
-import { resolveConfigPaths } from './resolve.js'
-import { validateConfig } from './validate.js'
+import { normalizeTopConfigProp, normalizeCwdProp } from './normalize_prop.js'
+import { resolveConfigPath } from './resolve.js'
 
-// Load CLI and programmatic flags
-export const getConfigNonFile = function (configFlags, processCwd) {
-  validateConfig(configFlags)
-  return resolveConfigPaths(configFlags, processCwd)
+// Load `spyd.*` and any child configuration files.
+// `spyd.*` is optional, so this can return an empty array. This allows
+// benchmarking on-the-fly in a terminal without having to create a
+// configuration file.
+export const loadConfigFile = async function ({ config, cwd }) {
+  const configs = normalizeTopConfigProp(config)
+  const cwdA = normalizeCwdProp(cwd)
+  return await getConfigsInfos(configs, cwdA)
 }
 
 // Load `spyd.*` file.
-// Any configuration property can be specified in it except `config` itself.
-export const getConfigFile = async function (configPath) {
-  if (configPath === undefined) {
-    return {}
+// Configuration files can use shared configuration using the `config` property
+// inside another configure file.
+// This points to a Node module or a local file path.
+// This enables repository-wide, machine-wide or organization-wide configuration
+const getConfigsInfos = async function (configs, base) {
+  const configInfos = await Promise.all(
+    configs.map((config) => getConfigInfos(config, base)),
+  )
+  return configInfos.flat()
+}
+
+const getConfigInfos = async function (config, base) {
+  // TODO: this might return `undefined` when using "default" and there are no
+  // config file. Fix this.
+  const configPath = resolveConfigPath(config, base)
+  const configContents = await loadConfigContents(configPath)
+
+  if (!isPlainObj(configContents)) {
+    throw new UserError(
+      `The configuration file must be an object: ${configPath}`,
+    )
   }
 
-  const configFile = await loadConfigByPath(configPath)
+  const configInfo = { configContents, base }
+  const childConfig = normalizeConfigProp(configContents.config)
 
-  validateConfig(configFile)
-  return resolveConfigPaths(configFile, dirname(configPath))
+  if (childConfig === undefined) {
+    return [configInfo]
+  }
+
+  const childBase = dirname(configPath)
+  const childConfigInfos = getConfigsInfos(childConfigs, childBase)
+  return [...childConfigInfos, configInfo]
 }
 
-const loadConfigByPath = async function (configPath) {
-  const configContents = await loadConfigContents(configPath)
-  const configContentsA = await addConfigExtend(
-    configContents,
-    configPath,
-    loadConfigByPath,
-  )
-  return configContentsA
-}
-
-const loadConfigContents = async function (configPath) {
-  const loadFunc = EXTENSIONS[extname(configPath)]
+const loadConfigContents = async function (config) {
+  const loadFunc = EXTENSIONS[extname(config)]
 
   if (loadFunc === undefined) {
     throw new UserError(
-      `The configuration file format is not supported: ${configPath}
+      `The configuration file format is not supported: ${config}
 Please use .yml, .js, .cjs or .ts`,
     )
   }
 
   try {
-    return await loadFunc(configPath)
+    return await loadFunc(config)
   } catch (error) {
     throw new UserError(
-      `Could not load configuration file '${configPath}': ${error.message}`,
+      `Could not load configuration file '${config}': ${error.message}`,
     )
   }
 }
 
+// spyd.yaml is supported but undocumented. spyd.yml is preferred.
 const EXTENSIONS = {
   '.yml': loadYamlFile,
   '.yaml': loadYamlFile,
