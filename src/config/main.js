@@ -12,12 +12,13 @@ import { validateConfig } from './validate.js'
 // Retrieve configuration
 export const getConfig = async function (command, configFlags = {}) {
   const { config, configInfos } = await loadConfig(configFlags)
+
   validateConfig(config)
 
   const configA = addDefaultConfig(config, command)
 
-  const configB = setConfigAbsolutePaths(configA, configInfos)
-  const configC = normalizeConfig(configB)
+  const configB = normalizeConfig(configA)
+  const configC = setConfigAbsolutePaths(configB, configInfos)
 
   const configD = await addPlugins(configC, command)
 
