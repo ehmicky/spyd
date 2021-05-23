@@ -9,7 +9,7 @@ import { has, get, set } from 'dot-prop'
 //        confusing:
 //         - `cwd` flag would be relative to the current directory while other
 //           flags would be relative to the `cwd` flag
-//         - while the `cwd` flag would impact other flags, `cwd` in `spyd.*`
+//         - While the `cwd` flag would impact other flags, `cwd` in `spyd.*`
 //           would not
 //   - The files in `spyd.*` use the configuration file's directory instead.
 //      - We do this since this is what most users would expect.
