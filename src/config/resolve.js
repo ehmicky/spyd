@@ -5,7 +5,7 @@ import { UserError } from '../error/main.js'
 import { getPluginPath } from '../plugin/load.js'
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
-import { resolvePath } from './path.js'
+import { setAbsolutePath } from './path.js'
 
 export const resolveConfigPath = async function (config, base) {
   if (config === DEFAULT_RESOLVER) {
@@ -59,7 +59,7 @@ const resolveFile = async function (config, base) {
     throw new UserError(`"config" file does not exist: '${config}'`)
   }
 
-  return resolvePath(config, base)
+  return setAbsolutePath(config, base)
 }
 
 const resolveNpm = function (id, base) {

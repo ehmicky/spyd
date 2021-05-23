@@ -30,26 +30,26 @@ import mapObj from 'map-obj'
 //           repository could be re-used for different cwd
 //   - user can opt-out of that behavior by using absolute file paths, for
 //     example using the current file's path (e.g. `__filename|__dirname`)
-export const resolveConfigPaths = function ({ configContents, base }) {
+export const setConfigAbsolutePaths = function ({ configContents, base }) {
   return mapObj(configContents, (propName, value) => [
     propName,
-    resolveConfigProp(propName, value, base),
+    setConfigAbsolutePath(propName, value, base),
   ])
 }
 
 // Resolve all file path configuration properties.
 // Done recursively since some are objects.
-const resolveConfigProp = function (propName, value, base) {
+const setConfigAbsolutePath = function (propName, value, base) {
   if (!PATH_CONFIG_PROPS.has(propName) || !isDefinedPath(value)) {
     return value
   }
 
-  return resolvePath(value, base)
+  return setAbsolutePath(value, base)
 }
 
 const PATH_CONFIG_PROPS = new Set(['cwd', 'config', 'output', 'tasks'])
 
-export const resolvePath = function (value, base) {
+export const setAbsolutePath = function (value, base) {
   return resolve(base, value)
 }
 

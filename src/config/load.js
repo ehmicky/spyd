@@ -1,7 +1,7 @@
 import { removeEmptyValues } from './empty.js'
 import { loadConfigFile } from './file.js'
 import { mergeConfigs } from './merge.js'
-import { resolveConfigPaths } from './path.js'
+import { setConfigAbsolutePaths } from './path.js'
 import { validateConfig } from './validate.js'
 
 // Load the configuration, shallow merged in priority order:
@@ -18,7 +18,7 @@ export const loadConfig = async function (configFlags) {
     ...configInfos,
     { configContents: configFlags, base: '.' },
   ]
-  const configs = configInfosA.map(resolveConfigPaths)
+  const configs = configInfosA.map(setConfigAbsolutePaths)
   const config = mergeConfigs(configs)
   validateConfig(config)
   const configA = removeEmptyValues(config)
