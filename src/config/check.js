@@ -52,7 +52,14 @@ const checkString = function (value, name) {
   }
 }
 
-export const checkJson = function (value, name) {
+export const checkJsonObject = function (value, name) {
+  checkObject(value, name)
+  Object.entries(value).forEach(([childName, propValue]) => {
+    checkJson(propValue, `${name}.${childName}`)
+  })
+}
+
+const checkJson = function (value, name) {
   if (!isJson(value)) {
     throw new UserError(
       `'${name}' must only contain strings, numbers, booleans, nulls, arrays or plain objects: ${value}`,

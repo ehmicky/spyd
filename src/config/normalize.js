@@ -7,7 +7,7 @@ import {
   checkStringArray,
   checkDefinedStringArray,
   checkDefinedString,
-  checkJson,
+  checkJsonObject,
 } from './check.js'
 
 // Normalize configuration shape and do custom validation
@@ -65,9 +65,7 @@ const checkTitles = function (value, propName) {
 }
 
 const checkInputs = function (value, propName) {
-  Object.entries(value).forEach(([childName, propValue]) => {
-    checkJson(propValue, `${propName}.${childName}`)
-  })
+  checkJsonObject(value, propName)
 }
 
 const NORMALIZERS = {

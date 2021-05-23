@@ -1,6 +1,6 @@
 import camelcase from 'camelcase'
 
-import { checkObject } from '../config/check.js'
+import { checkJsonObject } from '../config/check.js'
 import { UserError } from '../error/main.js'
 import { cleanObject } from '../utils/clean.js'
 import { pick } from '../utils/pick.js'
@@ -51,7 +51,7 @@ const getPluginConfig = function (id, config, configPrefix) {
     return {}
   }
 
-  checkObject(pluginConfig, configPropName)
+  checkJsonObject(pluginConfig, configPropName)
   return pluginConfig
 }
 
