@@ -8,7 +8,7 @@ export const validateConfig = function (runnerConfig) {
 }
 
 const EXAMPLE_CONFIG = {
-  tasks: 'tasks.js',
+  tasks: multipleValidOptions('tasks.js', ['tasks.js']),
   // eslint-disable-next-line no-magic-numbers
   version: multipleValidOptions('12', 12),
 }

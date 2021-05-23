@@ -1,3 +1,5 @@
+import { multipleValidOptions } from 'jest-validate'
+
 import { UserError } from '../../../error/main.js'
 import { validateConfigProps } from '../../../utils/validate.js'
 
@@ -8,7 +10,7 @@ export const validateConfig = function (runnerConfig) {
 }
 
 const EXAMPLE_CONFIG = {
-  tasks: 'tasks.yml',
+  tasks: multipleValidOptions('tasks.yml', ['tasks.yml']),
   shell: 'bash',
 }
 
