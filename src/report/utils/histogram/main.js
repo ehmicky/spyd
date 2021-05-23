@@ -18,7 +18,7 @@ export const serializeHistograms = function (
   const height = DEFAULT_HEIGHT
   const width = getContentWidth(combinations, showStats, screenWidth)
   return combinations.map((combination) =>
-    serializeHistogram(combination, { width, height, showStats }),
+    serializeHistogram({ combination, width, height, showStats }),
   )
 }
 
@@ -34,11 +34,17 @@ const getContentWidth = function (combinations, showStats, screenWidth) {
   )
 }
 
-const serializeHistogram = function (
-  { titles, stats, stats: { histogram } },
-  { width, height, showStats },
-) {
-  const titleBlock = getTitleBlock(titles, height, showStats)
+const serializeHistogram = function ({
+  combination,
+  combination: {
+    stats,
+    stats: { histogram },
+  },
+  width,
+  height,
+  showStats,
+}) {
+  const titleBlock = getTitleBlock(combination, height, showStats)
 
   if (histogram === undefined || hasLowLoops(stats)) {
     return titleBlock
