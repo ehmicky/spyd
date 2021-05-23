@@ -1,7 +1,5 @@
 import { loadConfigFile } from './file.js'
 import { mergeConfigs } from './merge.js'
-import { setConfigAbsolutePaths } from './path.js'
-import { validateConfig } from './validate.js'
 
 // Load the configuration, shallow merged in priority order:
 //  - any CLI or programmatic flags
@@ -20,9 +18,7 @@ export const loadConfig = async function ({ config, ...configFlags }) {
   ]
   const configs = configInfosA.map(getConfigContents)
   const configA = mergeConfigs(configs)
-  validateConfig(configA)
-  const configC = setConfigAbsolutePaths(configA, configInfosA)
-  return configC
+  return { config: configA, configInfos: configInfosA }
 }
 
 const getConfigContents = function ({ configContents }) {
