@@ -105,7 +105,7 @@ const getConfigInfos = async function (config, base) {
 //     - With npm, this translates as either:
 //        - npx --package=spyd-config-{name} spyd ...
 //        - npm install -D spyd-config-{name};
-//          spyd --config=npm:{name}; (or add to config file)
+//          spyd --config=spyd-config-{name}; (or add to config file)
 //          spyd ...
 // The package is resolved to a file path:
 //  - This uses resolver-specific logic

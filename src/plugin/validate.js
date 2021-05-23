@@ -21,4 +21,5 @@ It should only contain lowercase letters and digits.`)
 //  - we want to allow user-defined ids to use _ or -
 //  - avoid mixing delimiters, so it's easier to remember for users
 //  - consistent option name across spyd.yml, CLI flags, programmatic
+// This is purposely not applied to shared configs.
 const PLUGIN_ID_REGEXP = /^[a-z][a-z\d]*$/u

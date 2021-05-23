@@ -14,8 +14,8 @@ This can be:
   - "default": "spyd.*" or "benchmark/spyd.*" in the current or any parent
     directory.
   - A file path
-  - A Node module prefixed with "npm:". For example, "npm:example" looks for any
-    "spyd-config-example" Node module exporting a spyd configuration file.
+  - A Node module exporting a configuration file.
+    The module name must start with "spyd-config-".
 
 The following file formats are supported: .yml, .js, .cjs, .ts
 

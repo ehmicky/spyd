@@ -10,12 +10,15 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 // Resolve the `config` property to a file path. It can be:
 //  - "default": lookup for any `spyd.*` or `benchmark/spyd.*` file
 //  - a file path
+//  - a Node module name starting with "spyd-config-"
 //  - a "resolver:arg" string which applies resolver-specific logic
-// The available resolvers are:
-//  - "npm:name" to load a "spyd-config-name" Node module
 export const resolveConfigPath = async function (config, base) {
   if (config === 'default') {
     return await resolveDefault(base)
+  }
+
+  if (isNpmResolver(config)) {
+    return resolveNpm(config, base)
   }
 
   const result = RESOLVER_REGEXP.exec(config)
@@ -25,15 +28,7 @@ export const resolveConfigPath = async function (config, base) {
   }
 
   const [, resolverName, resolverArg] = result
-  const resolverFunc = RESOLVERS[resolverName]
-
-  if (resolverFunc === undefined) {
-    throw new UserError(
-      `Resolver "${resolverName}" does not exist: "${config}"`,
-    )
-  }
-
-  return await resolverFunc(resolverArg, base)
+  return await useResolver({ config, base, resolverName, resolverArg })
 }
 
 // By default, we find the first `spyd.*` or `benchmark/spyd.*` in the current
@@ -58,7 +53,18 @@ const DEFAULT_CONFIG = [
   './spyd.yaml',
 ]
 
-const RESOLVER_REGEXP = /^([a-z]+):(.*)$/u
+// Configs can be Node modules.
+// They must be named "spyd-config-{name}" to enforce naming convention and
+// allow distinguishing them from file paths.
+// We do not use a shorter id like "npm:{name}" so users do not need two
+// different ids: one for `npm install` and one for the `config` property.
+const isNpmResolver = function (id) {
+  return id.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
+}
+
+const resolveNpm = function (id, base) {
+  return getPluginPath({ ...CONFIG_PLUGIN_TYPE, id, base })
+}
 
 const resolveFile = async function (config, base) {
   if (!(await isFile(config))) {
@@ -68,10 +74,28 @@ const resolveFile = async function (config, base) {
   return resolve(base, config)
 }
 
-const resolveNpm = function (id, base) {
-  return getPluginPath({ ...CONFIG_PLUGIN_TYPE, id, base })
+// Additional resolvers.
+// We don't have any of them yet.
+// Their name must be namespaced with "{resolver}:".
+// We do not use this type of namespaces for the other resolvers since they are
+// more commonly used.
+const useResolver = async function ({
+  config,
+  base,
+  resolverName,
+  resolverArg,
+}) {
+  const resolverFunc = RESOLVERS[resolverName]
+
+  if (resolverFunc === undefined) {
+    throw new UserError(
+      `Resolver "${resolverName}" does not exist: "${config}"`,
+    )
+  }
+
+  return await resolverFunc(resolverArg, base)
 }
 
-const RESOLVERS = {
-  npm: resolveNpm,
-}
+const RESOLVER_REGEXP = /^([a-z]+):(.*)$/u
+
+const RESOLVERS = {}

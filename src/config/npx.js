@@ -5,14 +5,14 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 import { normalizeOptionalArray } from './check.js'
 
 // In principle, users can use `npx` with the "npm" resolver by doing:
-//   npx --package=spyd-config-{name} spyd --config=npm:{name} ...
+//   npx --package=spyd-config-{name} spyd --config=spyd-config-{name} ...
 // As a convenience, we allow this shortcut syntax:
 //   npx --package=spyd-config-{name} spyd ...
 // We do this by:
 //  - Detecting whether `npx --package=spyd-config-{name}` is used
 //     - This detection is based on `npm_*` environment variables injected by
 //       `npx`
-//  - Adding it as `--config=npm:{name}`
+//  - Adding it as `--config=spyd-config-{name}`
 export const addNpxShortcut = function (config) {
   if (!isNpxCall()) {
     return config
@@ -34,14 +34,9 @@ const getNpxConfigs = function () {
     return []
   }
 
-  return npxPackages.split('\n').filter(isSharedConfig).map(getConfigString)
+  return npxPackages.split('\n').filter(isSharedConfig)
 }
 
 const isSharedConfig = function (npxPackage) {
   return npxPackage.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
-}
-
-const getConfigString = function (npxPackage) {
-  const name = npxPackage.replace(CONFIG_PLUGIN_TYPE.modulePrefix, '')
-  return `npm:${name}`
 }
