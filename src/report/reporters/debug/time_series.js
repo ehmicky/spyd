@@ -1,7 +1,7 @@
 import { isSameCategory } from '../../../combination/ids.js'
-import { titleColor } from '../../utils/colors.js'
 import { prettifyStats } from '../../utils/stats/main.js'
-import { getCombinationName } from '../../utils/title.js'
+
+import { getFirstCellColor } from './first.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations) {
@@ -14,13 +14,9 @@ export const getTimeSeries = function (history, combinations) {
 }
 
 const getTimeSerie = function (history, combination) {
-  const title = getTitle(combination)
+  const title = getFirstCellColor(combination)
   const medians = history.map((result) => getMedian(result, combination))
   return { title, medians }
-}
-
-const getTitle = function ({ titles }) {
-  return titleColor(getCombinationName(titles))
 }
 
 const getMedian = function (result, combination) {

@@ -1,29 +1,17 @@
-import { titleColor } from '../../utils/colors.js'
 import { COLUMN_SEPARATOR } from '../../utils/separator.js'
-import { getCombinationName } from '../../utils/title.js'
+
+import { getFirstCellColor } from './first.js'
 
 // Retrieve a single row, including the row name
-export const getRow = function ({ titles, stats }, columns, columnWidth) {
-  const firstCell = titleColor(getFirstCell(titles))
+export const getRow = function (combination, columns, columnWidth) {
+  const firstCell = getFirstCellColor(combination)
   const cells = columns
-    .map((column) => getCell(stats, column, columnWidth))
+    .map((column) => getCell(combination, column, columnWidth))
     .join(COLUMN_SEPARATOR)
   return `${firstCell}${cells}`
 }
 
-export const getFirstCellWidth = function (titles) {
-  return getFirstCell(titles).length
-}
-
-const getFirstCell = function (titles) {
-  const combinationName = getCombinationName(titles)
-  return `${combinationName}${FIRST_CELL_PADDING}`
-}
-
-const FIRST_CELL_PADDING_WIDTH = 2
-const FIRST_CELL_PADDING = ' '.repeat(FIRST_CELL_PADDING_WIDTH)
-
-const getCell = function (stats, column, columnWidth) {
+const getCell = function ({ stats }, column, columnWidth) {
   const stat = getStat(stats, column)
   const paddingWidth = Math.max(columnWidth - getStatLength(stats, column), 0)
   const padding = ' '.repeat(paddingWidth)
