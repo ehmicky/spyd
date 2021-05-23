@@ -9,16 +9,19 @@ export const ALL_CONFIG = {
     string: true,
     requiresArg: true,
     describe: `Location or name of the configuration file.
+
 This can be:
   - "default": "spyd.*" or "benchmark/spyd.*" in the current or any parent
     directory.
   - A file path
   - A Node module prefixed with "npm:". For example, "npm:example" looks for any
     "spyd-config-example" Node module exporting a spyd configuration file.
+
+The following file formats are supported: .yml, .js, .cjs, .ts
+
 Can be specified several times.
 A configuration file can include another one by using this property.
-This can be used to share configurations and/or benchmarks.
-The following file formats are supported: .yml, .js, .cjs, .ts`,
+This can be used to share configurations and/or benchmarks.`,
   },
   cwd: {
     group: CONFIG,
