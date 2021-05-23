@@ -15,16 +15,13 @@ export const mergeSystems = function (systems, previousSystems) {
 
 const mergeSystem = function (systems, previousSystem) {
   const system = systems.find(({ id }) => id === previousSystem.id)
-
-  if (system === undefined) {
-    return previousSystem
-  }
-
-  return {
-    ...previousSystem,
-    ...system,
-    versions: { ...previousSystem.versions, ...system.versions },
-  }
+  return system === undefined
+    ? previousSystem
+    : {
+        ...previousSystem,
+        ...system,
+        versions: { ...previousSystem.versions, ...system.versions },
+      }
 }
 
 const getSystemId = function ({ id }) {
