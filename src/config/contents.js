@@ -25,6 +25,12 @@ Please use .yml, .js, .cjs or .ts`,
 }
 
 // spyd.yaml is supported but undocumented. spyd.yml is preferred.
+// We allow JavaScript files for dynamic configs such as:
+//  - Using environment variables (including checking if is CI) or platform test
+//  - Computing a long list of inputs
+// We use YAML instead of JSON to:
+//  - Allow comments
+//  - Enforce consistency with `cli` runner's `tasks.yml`
 const EXTENSIONS = {
   '.yml': loadYamlFile,
   '.yaml': loadYamlFile,
