@@ -7,7 +7,8 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
 import { CONFIG_EXTENSIONS } from './contents.js'
 
-// By default, we find the first `spyd.*` in the current or parent directories.
+// The default values for `config` and `tasks` look for `spyd.*` and `tasks.*`
+// in the current or parent directories.
 // They can be located in:
 //  - A `packages/spyd-config-*/spyd.*`: for shared configurations using a
 //    monorepo
@@ -15,29 +16,25 @@ import { CONFIG_EXTENSIONS } from './contents.js'
 //  - Any other directory: for on-the-fly benchmarking, or for
 //    global/shared configuration.
 export const resolveLookup = async function (base) {
-  const lookupFiles = await getLookupFiles(base)
+  const lookupDirs = await getLookupDirs(base)
+  const lookupFiles = lookupDirs.flatMap(getLookupFilesByExt)
   return await findUp(lookupFiles, { cwd: base })
 }
 
-const getLookupFiles = async function (base) {
-  const lookupDirs = await addConfigPackageDir(DEFAULT_LOOKUP_DIRS, base)
-  return lookupDirs.flatMap(getLookupFilesByExt)
-}
-
-// Order matters here
-const DEFAULT_LOOKUP_DIRS = ['.', './benchmark']
-
 // `find-up` does not support looking up for multiple files while also looking
 // for patterns like `./packages/spyd-config-*`, so we need to call it twice.
-const addConfigPackageDir = async function (lookupDirs, base) {
+const getLookupDirs = async function (base) {
   const configPackageDir = await findUp(testConfigPackageDir, {
     cwd: base,
     type: 'directory',
   })
   return configPackageDir === undefined
-    ? lookupDirs
-    : [...lookupDirs, configPackageDir]
+    ? DEFAULT_LOOKUP_DIRS
+    : [...DEFAULT_LOOKUP_DIRS, configPackageDir]
 }
+
+// Order matters here
+const DEFAULT_LOOKUP_DIRS = ['.', './benchmark']
 
 const testConfigPackageDir = async function (dir) {
   const packagesDir = `${dir}/packages`
@@ -60,9 +57,9 @@ const isConfigPackageDir = function (filename) {
   return filename.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
 }
 
-const getLookupFilesByExt = function (filePath) {
+const getLookupFilesByExt = function (lookupDir) {
   return CONFIG_EXTENSIONS.map(
-    (extName) => `${filePath}/${DEFAULT_CONFIG_BASENAME}${extName}`,
+    (extName) => `${lookupDir}/${DEFAULT_CONFIG_BASENAME}${extName}`,
   )
 }
 
