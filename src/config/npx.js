@@ -29,12 +29,9 @@ const isNpxCall = function () {
 
 const getNpxConfigs = function () {
   const npxPackages = env.npm_config_package
-
-  if (npxPackages === undefined) {
-    return []
-  }
-
-  return npxPackages.split('\n').filter(isSharedConfig)
+  return npxPackages === undefined
+    ? []
+    : npxPackages.split('\n').filter(isSharedConfig)
 }
 
 const isSharedConfig = function (npxPackage) {
