@@ -4,6 +4,8 @@ import { UserError } from '../error/main.js'
 import { importJsDefault } from '../utils/import.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
+import { checkObject } from './check.js'
+
 // Load and parse `spyd.*` file contents
 export const loadConfigContents = async function (configPath) {
   const loadFunc = EXTENSIONS[extname(configPath)]
@@ -16,7 +18,9 @@ Please use .yml, .js, .cjs or .ts`,
   }
 
   try {
-    return await loadFunc(configPath)
+    const configContents = await loadFunc(configPath)
+    checkObject(configContents, 'config')
+    return configContents
   } catch (error) {
     throw new UserError(
       `Could not load configuration file '${configPath}': ${error.message}`,

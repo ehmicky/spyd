@@ -1,10 +1,6 @@
 import { dirname } from 'path'
 
-import {
-  checkObject,
-  checkDefinedStringArray,
-  normalizeOptionalArray,
-} from './check.js'
+import { checkDefinedStringArray, normalizeOptionalArray } from './check.js'
 import { loadConfigContents } from './contents.js'
 import { addNpxShortcut } from './npx.js'
 import { resolveConfigPath } from './resolve.js'
@@ -45,7 +41,6 @@ const getConfigInfos = async function (config, base) {
   }
 
   const configContents = await loadConfigContents(configPath)
-  checkObject(configContents, 'config')
   const childConfigInfos = getChildConfigInfos(configContents, configPath)
   return [...childConfigInfos, { configContents, base }]
 }
