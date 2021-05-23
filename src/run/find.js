@@ -16,9 +16,8 @@ import { measureCombinations } from '../measure/several.js'
 //        - Not every file format can do this (e.g. with re-exports).
 //          For example, this is possible in JavaScript but not in YAML.
 //  - The downside is that users might mistakenly target dependent files instead
-//    of main files. We discourage it by:
-//     - Documenting it
-//     - Not allowing globbing in `tasks`
+//    of main files. We document against it.
+// Globbing patterns are allowed to help with this.
 // We make the steps vs tasks distinction clear:
 //  - Syntactically by requiring an additional depth level (nested object) for
 //    steps

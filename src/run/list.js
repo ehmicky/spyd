@@ -1,14 +1,35 @@
 import { findTasks } from './find.js'
-import { getTaskPaths } from './path.js'
 
-// The tasks file for each runner is selected using the `runnerId.tasks`
-// configuration property.
+// The tasks file for each runner is selected using either the `tasks` or
+// `runner{id}.tasks` configuration properties.
 // The `tasks` can be used to specify a default tasks file for all runners.
 // We allow it as a positional CLI flag:
 //  - This is what many users would expect
 //  - This allows users to do on-the-fly benchmarks without pre-existing setup
 // The `tasks` are only needed when measuring them, not reporting them, so not
 // all commands use it.
+// There is no "fast mode" without tasks files. The fastest mode is to create
+// a tasks file in `cwd` then run `spyd`
+//  - This ensures the correct file extension is used which is important due to:
+//     - syntax highlighting and IDE features
+//     - runner might handle different file extensions differently
+//       (e.g. *.ts transpiling)
+//  - We do not provide inline `conf.[runnerRUNNER.]inline[.TASK[.STEP]]` "BODY"
+//    since this would:
+//     - Not allow defining content outside function body (e.g. imports) nor
+//       function declaration (e.g. async keyword)
+//        - This would be even more of a problem with some languages that use
+//          more top-level declarations
+//     - Encourage sharing tasks by sharing command lines, instead of using
+//       shareable modules
+//     - Require entering long statements on command line, which is not
+//       ergonomic: no syntax highlighting, linting, autocompletion, etc.
+//     - Be harder to specify file extension
+//  - We do no provide `conf.tasks` "temp", creating a temp file on user behalf
+//    since it would require either:
+//     - Opening editor in a new tab|window, which is hard to do cross-platform
+//     - Using same tab for both edit and benchmark, resulting in a poor
+//       experience
 // Runners are specified using the `runner` configuration property. Other
 // solutions have problems:
 //  - using code comment:
@@ -61,6 +82,11 @@ const getRunnerTasks = async function (
     error.message = `In runner "${runnerId}": ${error.message}`
     throw error
   }
+}
+
+// Apply `tasks` globbing patterns.
+const getTaskPaths = function (tasks) {
+  return tasks
 }
 
 // When two task files export the same task id, we only keep one based on the
