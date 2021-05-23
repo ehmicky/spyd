@@ -17,10 +17,11 @@ export const getConfig = async function (command, configFlags = {}) {
   const configA = addDefaultConfig(config, command)
 
   const configB = setConfigAbsolutePaths(configA, configInfos)
-  const configC = addEnvInfo(configB)
-  const configD = normalizeConfig(configC)
+  const configC = normalizeConfig(configB)
 
-  const configE = await addPlugins(configD, command)
+  const configD = await addPlugins(configC, command)
+
+  const configE = addEnvInfo(configD)
   const configF = normalizeDeltas(configE)
   return configF
 }
