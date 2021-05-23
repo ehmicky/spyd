@@ -16,7 +16,7 @@ Reporter-specific configuration properties can be specified by appending the
 reporter's name: --reporterName.prop=value.
 For example: --reporterJson.output=path
 The following properties can be set for any reporter: output, colors,
-showSystem, showMetadata.
+showTitles, showSystem, showMetadata, showPrecision, showDiff.
 For example --reporterJson.output is like --output but only for the json reporter.`,
   },
   output: {
