@@ -49,34 +49,19 @@ import { mergeResults, mergeFilteredResults, mergeResult } from './merge.js'
 //    combination
 export const applySince = async function (result, previous, { since, cwd }) {
   if (previous.length === 0) {
-    return applyNoneSince()
+    return { history: [] }
   }
 
   const sinceIndex = await findByDelta(previous, since, cwd)
 
   if (sinceIndex === -1) {
-    return applyDefaultSince(previous, result)
+    const sinceResult = getSinceResult(previous, previous.length - 1, result)
+    return { history: [sinceResult] }
   }
 
-  return applyRegularSince(previous, sinceIndex, result)
-}
-
-// When there is no history
-const applyNoneSince = function () {
-  return { history: [] }
-}
-
-// When `since` is 0 (default value)
-const applyDefaultSince = function (previous, result) {
-  const sinceResult = getSinceResult(previous, previous.length - 1, result)
-  return { history: [sinceResult] }
-}
-
-// When there is a history and a non-default `since`
-const applyRegularSince = function (previous, sinceIndex, result) {
   const mergedResult = mergeResults(result, previous.slice(sinceIndex))
-  const sinceResult = getSinceResult(previous, sinceIndex, mergedResult)
-  const history = [sinceResult, ...previous.slice(sinceIndex + 1)]
+  const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
+  const history = [sinceResultA, ...previous.slice(sinceIndex + 1)]
   return { mergedResult, history }
 }
 
