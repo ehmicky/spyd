@@ -47,8 +47,9 @@ const getRunnerTasks = async function (
 ) {
   try {
     const taskPaths = await getTaskPaths(tasks, runnerExtensions, cwd)
+    const taskPathsA = [...new Set(taskPaths)]
     const tasksA = await Promise.all(
-      taskPaths.map((taskPath) =>
+      taskPathsA.map((taskPath) =>
         findTasks({
           taskPath,
           cwd,
