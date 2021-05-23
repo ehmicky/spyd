@@ -3,11 +3,11 @@ import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 
 // Retrieve a single row, including the row name
 export const getRow = function (combination, columns, columnWidth) {
-  const firstCell = getCombinationNameColor(combination)
+  const combinationName = getCombinationNameColor(combination)
   const cells = columns
     .map((column) => getCell(combination, column, columnWidth))
     .join(COLUMN_SEPARATOR)
-  return `${firstCell}${cells}`
+  return `${combinationName}${cells}`
 }
 
 const getCell = function ({ stats }, column, columnWidth) {
