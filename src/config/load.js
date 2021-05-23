@@ -16,7 +16,7 @@ export const loadConfig = async function (configFlags, processCwd) {
   const configNonFile = getConfigNonFile(configFlags, processCwd)
   const configPath = await getConfigPath(processCwd, configNonFile)
   const configFile = await getConfigFile(configPath)
-  const configA = mergeConfigs(configFile, configNonFile)
+  const configA = mergeConfigs([configFile, configNonFile])
   const configB = { ...configA, config: configPath }
 
   const configC = removeEmptyValues(configB)

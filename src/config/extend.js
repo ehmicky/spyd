@@ -30,7 +30,7 @@ export const addConfigExtend = async function (
   }
 
   const extendedConfig = await loadConfigByPath(extendPath)
-  return mergeConfigs(extendedConfig, configContents)
+  return mergeConfigs([extendedConfig, configContents])
 }
 
 const getExtendPath = function (extend, configPath) {
