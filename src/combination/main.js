@@ -1,3 +1,4 @@
+import { UserError } from '../error/main.js'
 import { listTasks } from '../run/list.js'
 import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
@@ -30,6 +31,10 @@ export const getCombinations = async function ({
 
 // Get cartesian product of all combinations
 const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
+  if (tasks.length === 0) {
+    throw new UserError(`Please specify some "tasks".`)
+  }
+
   return tasks.map(
     ({
       taskPath,
