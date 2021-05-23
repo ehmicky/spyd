@@ -9,15 +9,15 @@ import { UserError } from '../error/main.js'
 export const normalizeConfigProp = function (config) {
   const configs = Array.isArray(config) ? config : [config]
   configs.forEach((configA) => {
-    validateDefinedString(configA, 'config')
+    validateConfigString(configA)
   })
   return configs
 }
 
-export const validateDefinedString = function (value, propName) {
+const validateConfigString = function (value) {
   if (typeof value !== 'string' || value.trim() === '') {
     throw new UserError(
-      `The "${propName}" configuration property must be a non-empty string: ${value}`,
+      `The "config" property must be a non-empty string: ${value}`,
     )
   }
 }
