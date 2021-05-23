@@ -44,9 +44,9 @@ const normalizeRunner = function (value, propName) {
   return { [propName]: valueA }
 }
 
-const normalizeSelect = function (value, propName) {
+const normalizeTasks = function (value, propName) {
   const valueA = normalizeOptionalArray(value)
-  checkStringArray(valueA, propName)
+  checkDefinedStringArray(valueA, propName)
   return { [propName]: valueA }
 }
 
@@ -54,6 +54,12 @@ const normalizeReporter = function (value, propName, { force }) {
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
   return force ? { [propName]: [] } : { [propName]: valueA }
+}
+
+const normalizeSelect = function (value, propName) {
+  const valueA = normalizeOptionalArray(value)
+  checkStringArray(valueA, propName)
+  return { [propName]: valueA }
 }
 
 const normalizeLimit = normalizeReporter
@@ -74,6 +80,7 @@ const NORMALIZERS = {
   delta: normalizeDeltaProp,
   since: normalizeDeltaProp,
   runner: normalizeRunner,
+  tasks: normalizeTasks,
   reporter: normalizeReporter,
   select: normalizeSelect,
   limit: normalizeLimit,
