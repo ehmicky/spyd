@@ -1,3 +1,5 @@
+import fastGlob from 'fast-glob'
+
 import { findTasks } from './find.js'
 
 // The tasks file for each runner is selected using either the `tasks` or
@@ -8,6 +10,36 @@ import { findTasks } from './find.js'
 //  - This allows users to do on-the-fly benchmarks without pre-existing setup
 // The `tasks` are only needed when measuring them, not reporting them, so not
 // all commands use it.
+// A tasks file might have several tasks because:
+//  - This is user-friendlier when using small tasks and/or single steps
+//  - This prevents users using steps when they meant to use tasks
+// There can optionally be several tasks files per runner because:
+//  - This allows shared configurations' tasks to be overridden
+//     - `select` can be used to exclude those instead
+//  - This allows breaking down tasks files:
+//     - This is faster when some tasks files are slow to load or have many
+//       tasks
+//     - This might be convenient by avoid big files when there are many tasks
+//        - Not every file format can do this (e.g. with re-exports).
+//          For example, this is possible in JavaScript but not in YAML.
+//  - The downside is that users might mistakenly target dependent files instead
+//    of main files. We document against it.
+// Globbing patterns are allowed to help with this.
+// We make the steps vs tasks distinction clear:
+//  - Syntactically by requiring an additional depth level (nested object) for
+//    steps
+//  - We encourage tasks over steps
+// Runners are encouraged to clearly separate task and step identifiers in tasks
+// files.
+//  - For example, not allowing users to concatenate them into a single
+//    identifiers.
+//  - This makes it clearer for users which is which.
+// Specifying an empty `tasks` array is allowed:
+//  - This is useful when `tasks` is computed dynamically, or when requiring
+//    `tasks` to be overridden by shared configuration's consumer or using CLI
+//    flags
+//  - However, if all runners have no tasks, an error will be thrown since there
+//    won't be any combinations to measure
 // There is no "fast mode" without tasks files. The fastest mode is to create
 // a tasks file in `cwd` then run `spyd`
 //  - This ensures the correct file extension is used which is important due to:
@@ -63,7 +95,7 @@ const getRunnerTasks = async function (
   cwd,
 ) {
   try {
-    const taskPaths = getTaskPaths(tasks)
+    const taskPaths = await fastGlob(tasks)
     const taskPathsA = [...new Set(taskPaths)]
     const tasksA = await Promise.all(
       taskPathsA.map((taskPath) =>
@@ -82,11 +114,6 @@ const getRunnerTasks = async function (
     error.message = `In runner "${runnerId}": ${error.message}`
     throw error
   }
-}
-
-// Apply `tasks` globbing patterns.
-const getTaskPaths = function (tasks) {
-  return tasks
 }
 
 // When two task files export the same task id, we only keep one based on the
