@@ -73,13 +73,6 @@ const isNotSameCatDuplicate = function ({ category, id }, index, idInfos) {
     .some((idInfo) => idInfo.category === category && idInfo.id === id)
 }
 
-// Check if a combination is present in other results
-export const isUniqueCombination = function (combination, index, combinations) {
-  return !combinations
-    .slice(index + 1)
-    .some((combinationA) => isSameCategory(combination, combinationA))
-}
-
 // Retrieve non-combination identifiers.
 const getNonCombinationsIds = function (inputs) {
   return NON_COMBINATION_CATEGORY.flatMap(

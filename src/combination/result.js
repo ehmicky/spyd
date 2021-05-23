@@ -1,14 +1,5 @@
 import { isSameCategory } from './ids.js'
 
-// Return all combinations in `results`
-export const getResultsCombinations = function (results) {
-  return results.flatMap(getCombinations)
-}
-
-const getCombinations = function ({ combinations }) {
-  return combinations
-}
-
 // Filter out the `resultA.combinations` that are not in `resultB`
 export const pickResultCombinations = function (resultA, resultB) {
   const combinations = keepResultCombinations(resultA.combinations, resultB)
