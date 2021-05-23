@@ -68,4 +68,4 @@ const getDefaultTaskPathByExt = function (runnerExtension) {
 // benchmark-related files.
 // Allowing `tasks.*` to be in the current directory is useful for on-the-fly
 // benchmarking.
-const DEFAULT_TASKS = ['./benchmark/tasks.', './tasks.']
+const DEFAULT_TASKS = ['./tasks.', './benchmark/tasks.']
