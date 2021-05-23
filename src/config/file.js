@@ -15,11 +15,6 @@ export const loadConfigFile = async function ({ config = 'default' }) {
   return await getConfigsInfos(config, '.')
 }
 
-// Load `spyd.*` file.
-// Configuration files can use shared configuration using the `config` property
-// inside another configure file.
-// This points to a Node module or a local file path.
-// This enables repository-wide, machine-wide or organization-wide configuration
 const getConfigsInfos = async function (config, base) {
   const configs = normalizeConfigProp(config)
   const configInfos = await Promise.all(
@@ -65,12 +60,15 @@ const getConfigInfos = async function (config, base) {
     )
   }
 
-  const configInfo = { configContents, base }
+  const childConfigInfos = getChildConfigInfos(configContents, configPath)
+  return [...childConfigInfos, { configContents, base }]
+}
 
-  if (configContents.config === undefined) {
-    return configInfo
-  }
-
-  const childConfigInfos = getConfigsInfos(config, dirname(configPath))
-  return [...childConfigInfos, configInfo]
+// Configuration files can use shared configuration using the `config` property
+// inside another configure file.
+// This enables repository-wide, machine-wide or organization-wide configuration
+const getChildConfigInfos = function ({ config }, configPath) {
+  return config === undefined
+    ? []
+    : getConfigsInfos(config, dirname(configPath))
 }
