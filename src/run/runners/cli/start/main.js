@@ -20,6 +20,9 @@ export const start = async function (
   return { tasks: tasksB }
 }
 
+// We use a YAML file (as opposed to JSON) because:
+//  - It has no escaping issues with most of shell syntax such as double quotes
+//  - It allows comments
 const importFile = async function (taskPath) {
   try {
     return await loadYamlFile(taskPath)
