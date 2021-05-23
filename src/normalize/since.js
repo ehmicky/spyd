@@ -1,10 +1,7 @@
-import {
-  pickResultCombinations,
-  omitResultCombinations,
-} from '../combination/result.js'
+import { omitResultCombinations } from '../combination/result.js'
 import { findByDelta } from '../delta/main.js'
 
-import { mergeResults, mergeResult } from './merge.js'
+import { mergeResults, mergeFilteredResults, mergeResult } from './merge.js'
 
 // The `since` configuration property is used to:
 //  - Limit the number of results shown in `result.history` which is used with
@@ -86,13 +83,11 @@ const applyRegularSince = function (previous, sinceIndex, result) {
 }
 
 const getSinceResult = function (previous, sinceIndex, result) {
-  const sinceResult = pickResultCombinations(previous[sinceIndex], result)
-  const beforeSince = previous
-    .slice(0, sinceIndex)
-    .map((beforeSinceResult) =>
-      pickResultCombinations(beforeSinceResult, result),
-    )
-  return mergeResults(sinceResult, beforeSince)
+  return mergeFilteredResults(
+    previous[sinceIndex],
+    previous.slice(0, sinceIndex),
+    result,
+  )
 }
 
 // In principle, we should do both `applySince()` and `mergeHistoryResult()` at

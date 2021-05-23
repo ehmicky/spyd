@@ -1,4 +1,7 @@
-import { removeResultCombinations } from '../combination/result.js'
+import {
+  pickResultCombinations,
+  removeResultCombinations,
+} from '../combination/result.js'
 import { mergeSystems } from '../system/merge.js'
 
 // The `since` configuration property allows reporting several reports at once:
@@ -28,6 +31,29 @@ import { mergeSystems } from '../system/merge.js'
 export const mergeResults = function (result, previous) {
   // eslint-disable-next-line fp/no-mutating-methods
   return [...previous].reverse().reduce(mergeResult, result)
+}
+
+// Merge `previous` results to `result`, but only the combinations that exist
+// in `baseResult`. Used when merging `sinceResult` with its previous results,
+// while only keeping the combinations after `since`.
+export const mergeFilteredResults = function (result, previous, baseResult) {
+  const resultA = pickResultCombinations(result, baseResult)
+  // eslint-disable-next-line fp/no-mutating-methods
+  return [...previous]
+    .reverse()
+    .reduce(mergeFilteredResult.bind(undefined, baseResult), resultA)
+}
+
+// We short-circuit this function when the number of combinations indicates no
+// more merging is possible, as a performance optimization when the number of
+// results is high.
+const mergeFilteredResult = function (baseResult, result, previousResult) {
+  if (baseResult.combinations.length === result.combinations.length) {
+    return result
+  }
+
+  const previousResultA = pickResultCombinations(previousResult, baseResult)
+  return mergeResult(result, previousResultA)
 }
 
 // When merging two results, we keep most of the properties of the latest
