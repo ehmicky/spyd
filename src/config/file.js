@@ -6,6 +6,7 @@ import {
   normalizeOptionalArray,
 } from './check.js'
 import { loadConfigContents } from './contents.js'
+import { addNpxShortcut } from './npx.js'
 import { resolveConfigPath } from './resolve.js'
 
 // Load `spyd.*` and any child configuration files.
@@ -13,7 +14,8 @@ import { resolveConfigPath } from './resolve.js'
 // benchmarking on-the-fly in a terminal without having to create a
 // configuration file.
 export const loadConfigFile = async function ({ config = 'default' }) {
-  return await getConfigsInfos(config, '.')
+  const configA = addNpxShortcut(config)
+  return await getConfigsInfos(configA, '.')
 }
 
 // The `config` property can optionally be an array.

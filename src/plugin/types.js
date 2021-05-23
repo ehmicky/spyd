@@ -42,7 +42,7 @@ export const PLUGIN_TYPES = [
 // They are handled differently, i.e. require a separate type
 export const CONFIG_PLUGIN_TYPE = {
   type: 'configuration',
-  modulePrefix: 'config',
+  modulePrefix: 'spyd-config-',
 }
 
 // Configuration properties to remove after loading
