@@ -3,6 +3,7 @@
 // throwing.
 // To avoid `unhandledRejection` event, we attach a noop error handler.
 export const noUnhandledRejection = function (promise) {
+  // eslint-disable-next-line promise/prefer-await-to-then
   promise.catch(noop)
   return promise
 }
