@@ -41,16 +41,16 @@ const resolveDefault = async function (base) {
 }
 
 const DEFAULT_CONFIG = [
-  './benchmark/spyd.js',
-  './benchmark/spyd.cjs',
-  './benchmark/spyd.ts',
-  './benchmark/spyd.yml',
-  './benchmark/spyd.yaml',
   './spyd.js',
   './spyd.cjs',
   './spyd.ts',
   './spyd.yml',
   './spyd.yaml',
+  './benchmark/spyd.js',
+  './benchmark/spyd.cjs',
+  './benchmark/spyd.ts',
+  './benchmark/spyd.yml',
+  './benchmark/spyd.yaml',
 ]
 
 // Configs can be Node modules.
