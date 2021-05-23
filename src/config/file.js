@@ -54,13 +54,6 @@ const getConfigInfos = async function (config, base) {
   return [...childConfigInfos, { configContents, base }]
 }
 
-const getChildConfigInfos = function ({ config }, configPath) {
-  const childConfigs = normalizeConfigProp(config)
-  return childConfigs === undefined
-    ? []
-    : getConfigsInfos(childConfigs, dirname(configPath))
-}
-
 const loadConfigContents = async function (config) {
   const loadFunc = EXTENSIONS[extname(config)]
 
@@ -87,4 +80,11 @@ const EXTENSIONS = {
   '.js': importJsDefault,
   '.cjs': importJsDefault,
   '.ts': importJsDefault,
+}
+
+const getChildConfigInfos = function ({ config }, configPath) {
+  const childConfigs = normalizeConfigProp(config)
+  return childConfigs === undefined
+    ? []
+    : getConfigsInfos(childConfigs, dirname(configPath))
 }
