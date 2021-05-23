@@ -1,4 +1,3 @@
-import { normalizeDelta } from '../delta/main.js'
 import { normalizePrecision } from '../measure/precision.js'
 
 import {
@@ -31,10 +30,6 @@ const normalizeProp = function (config, [propName, normalizer]) {
 //  - use `SPYD_*` environment variables
 const normalizeSystem = function (system) {
   return { systemId: system }
-}
-
-const normalizeDeltaProp = function (delta, propName, { envInfo }) {
-  return { [propName]: normalizeDelta(delta, propName, envInfo) }
 }
 
 const normalizeRunner = function (value, propName) {
@@ -77,8 +72,6 @@ const checkInputs = function (value, propName) {
 const NORMALIZERS = {
   precision: normalizePrecision,
   system: normalizeSystem,
-  delta: normalizeDeltaProp,
-  since: normalizeDeltaProp,
   runner: normalizeRunner,
   tasks: normalizeTasks,
   reporter: normalizeReporter,
