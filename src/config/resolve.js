@@ -28,7 +28,9 @@ export const resolveConfigPath = async function (config, base) {
   const resolverFunc = RESOLVERS[resolverName]
 
   if (resolverFunc === undefined) {
-    throw new UserError(`Resolver "${resolverName}" does not exist: ${config}`)
+    throw new UserError(
+      `Resolver "${resolverName}" does not exist: "${config}"`,
+    )
   }
 
   return await resolverFunc(resolverArg, base)
@@ -60,7 +62,7 @@ const RESOLVER_REGEXP = /^([a-z]+):(.*)$/u
 
 const resolveFile = async function (config, base) {
   if (!(await isFile(config))) {
-    throw new UserError(`"config" file does not exist: '${config}'`)
+    throw new UserError(`"config" file does not exist: "${config}"`)
   }
 
   return resolve(base, config)

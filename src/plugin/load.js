@@ -43,13 +43,13 @@ const importPlugin = async function ({ id, type, modulePrefix, builtins }) {
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
 export const getPluginPath = function ({ id, modulePrefix, type, base }) {
-  const moduleName = `spyd-${modulePrefix}-${id}`
+  const moduleName = `${modulePrefix}${id}`
 
   try {
     return require.resolve(moduleName, { paths: [base] })
   } catch (error) {
-    throw new UserError(`Cannot find ${type}: ${id}
-No Node module "${moduleName}" was found, please ensure it is installed.
+    throw new UserError(`Cannot find ${type} "${id}"
+No Node.js module "${moduleName}" was found, please ensure it is installed.
 
 ${error.stack}`)
   }
