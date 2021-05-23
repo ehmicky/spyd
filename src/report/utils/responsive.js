@@ -1,4 +1,6 @@
-// Group all column names into several tables so they fit the screen width
+// Fit several `columns` of same width (`columnWidth`) responsively in a
+// terminal of `availableWidth` by putting them into several groups meant to be
+// printed on different lines.
 export const getResponsiveColumns = function ({
   availableWidth,
   columnWidth,
