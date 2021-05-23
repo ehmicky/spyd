@@ -40,7 +40,11 @@ export const setConfigAbsolutePaths = function ({ configContents, base }) {
 // Resolve all file path configuration properties.
 // Done recursively since some are objects.
 const setConfigAbsolutePath = function (propName, value, base) {
-  if (!PATH_CONFIG_PROPS.has(propName) || !isDefinedPath(value)) {
+  if (
+    !PATH_CONFIG_PROPS.has(propName) ||
+    typeof value !== 'string' ||
+    value.trim() === ''
+  ) {
     return value
   }
 
@@ -48,7 +52,3 @@ const setConfigAbsolutePath = function (propName, value, base) {
 }
 
 const PATH_CONFIG_PROPS = new Set(['cwd', 'output', 'tasks'])
-
-const isDefinedPath = function (value) {
-  return typeof value === 'string' && value.trim() !== ''
-}
