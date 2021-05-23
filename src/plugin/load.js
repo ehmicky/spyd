@@ -53,9 +53,13 @@ No Node module ${possiblePathsStr} was found, please ensure it is installed.`)
 }
 
 // We enforce a naming convention for all plugins.
-// All plugins are Node modules. They can have a scope or not.
+// All plugins are Node modules.
+// We do not allow npm @scope because:
+//  - This is simpler for users
+//  - This prevent the confusion (which could be malicious) created by the
+//    ambiguity
 const getPossiblePaths = function (modulePrefix, id) {
-  return [`@spyd/${modulePrefix}-${id}``spyd-${modulePrefix}-${id}`]
+  return `spyd-${modulePrefix}-${id}`
 }
 
 const tryResolvePluginPath = function (pluginPath, base) {

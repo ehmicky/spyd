@@ -14,8 +14,7 @@ This can be:
     directory.
   - A file path
   - A Node module prefixed with "npm:". For example, "npm:example" looks for any
-    Node module named "spyd-config-example" or "@spyd/config-example" and
-    exporting a spyd configuration file.
+    "spyd-config-example" Node module exporting a spyd configuration file.
 Can be specified several times.
 A configuration file can include another one by using this property.
 This can be used to share configurations and/or benchmarks.

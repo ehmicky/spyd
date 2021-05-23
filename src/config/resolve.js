@@ -12,7 +12,7 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 //  - a file path
 //  - a "resolver:arg" string which applies resolver-specific logic
 // The available resolvers are:
-//  - "npm:name" to load a Node module "spyd-config-name" or "@spyd/config-name"
+//  - "npm:name" to load a "spyd-config-name" Node module
 export const resolveConfigPath = async function (config, base) {
   if (config === 'default') {
     return await resolveDefault(base)
