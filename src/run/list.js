@@ -42,7 +42,7 @@ const getRunnerTasks = async function (
   cwd,
 ) {
   try {
-    const taskPaths = await getTaskPaths(tasks)
+    const taskPaths = getTaskPaths(tasks)
     const taskPathsA = [...new Set(taskPaths)]
     const tasksA = await Promise.all(
       taskPathsA.map((taskPath) =>

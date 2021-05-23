@@ -1,4 +1,6 @@
-import { PluginError } from '../error/main.js'
+import { isFile } from 'path-type'
+
+import { PluginError, UserError } from '../error/main.js'
 import { measureCombinations } from '../measure/several.js'
 
 // A tasks file might have several tasks because:
@@ -41,6 +43,7 @@ export const findTasks = async function ({
   runnerConfig,
   cwd,
 }) {
+  await validateTask(taskPath)
   const [{ taskIds }] = await measureCombinations(
     [{ taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] }],
     { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
@@ -54,6 +57,12 @@ export const findTasks = async function ({
     runnerSpawnOptions,
     runnerConfig,
   }))
+}
+
+const validateTask = async function (taskPath) {
+  if (!(await isFile(taskPath))) {
+    throw new UserError(`Tasks file does not exist: ${taskPath}`)
+  }
 }
 
 // Runners should enforce that task identifiers are unique. This can be done

@@ -1,7 +1,3 @@
-import { isFile } from 'path-type'
-
-import { UserError } from '../error/main.js'
-
 // Retrieve the tasks file paths.
 // Also validate that the files exist.
 // Uses either the `tasks` or `runner{id}.tasks` configuration properties.
@@ -27,13 +23,6 @@ import { UserError } from '../error/main.js'
 //     - Opening editor in a new tab|window, which is hard to do cross-platform
 //     - Using same tab for both edit and benchmark, resulting in a poor
 //       experience
-export const getTaskPaths = async function (tasks) {
-  await Promise.all(tasks.map(validateTask))
+export const getTaskPaths = function (tasks) {
   return tasks
-}
-
-const validateTask = async function (taskPath) {
-  if (!(await isFile(taskPath))) {
-    throw new UserError(`Tasks file does not exist: ${taskPath}`)
-  }
 }
