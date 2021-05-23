@@ -37,12 +37,12 @@ export const resolveConfigPath = async function (config, base) {
 // allow distinguishing them from file paths.
 // We do not use a shorter id like "npm:{name}" so users do not need two
 // different ids: one for `npm install` and one for the `config` property.
-const isNpmResolver = function (id) {
-  return id.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
+const isNpmResolver = function (config) {
+  return config.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
 }
 
-const resolveNpm = function (id, base) {
-  return getPluginPath({ ...CONFIG_PLUGIN_TYPE, id, base })
+const resolveNpm = function (config, base) {
+  return getPluginPath({ ...CONFIG_PLUGIN_TYPE, id: config, base })
 }
 
 const resolveFile = async function (config, base) {
