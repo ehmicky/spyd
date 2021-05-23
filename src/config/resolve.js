@@ -14,7 +14,7 @@ import { setAbsolutePath } from './path.js'
 // The available resolvers are:
 //  - "npm:name" to load a Node module "spyd-config-name" or "@spyd/config-name"
 export const resolveConfigPath = async function (config, base) {
-  if (config === DEFAULT_RESOLVER) {
+  if (config === 'default') {
     return await resolveDefault(base)
   }
 
@@ -55,8 +55,6 @@ const DEFAULT_CONFIG = [
   './spyd.yml',
   './spyd.yaml',
 ]
-
-export const DEFAULT_RESOLVER = 'default'
 
 const RESOLVER_REGEXP = /^([a-z]+):(.*)$/u
 

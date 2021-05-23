@@ -5,19 +5,19 @@ import isPlainObj from 'is-plain-obj'
 import { UserError } from '../error/main.js'
 
 import { loadConfigContents } from './contents.js'
-import { normalizeConfigProp, normalizeCwdProp } from './normalize_prop.js'
-import { resolveConfigPath, DEFAULT_RESOLVER } from './resolve.js'
+import { normalizeConfigProp, validateDefinedString } from './normalize_prop.js'
+import { resolveConfigPath } from './resolve.js'
 
 // Load `spyd.*` and any child configuration files.
 // `spyd.*` is optional, so this can return an empty array. This allows
 // benchmarking on-the-fly in a terminal without having to create a
 // configuration file.
 export const loadConfigFile = async function ({
-  config = DEFAULT_RESOLVER,
-  cwd,
+  config = 'default',
+  cwd = '.',
 }) {
-  const base = normalizeCwdProp(cwd)
-  return await getConfigsInfos(config, base)
+  validateDefinedString(cwd)
+  return await getConfigsInfos(config, cwd)
 }
 
 // Load `spyd.*` file.
