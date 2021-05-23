@@ -2,6 +2,7 @@ import filterObj from 'filter-obj'
 
 import { addPluginsConfig } from './config.js'
 import { loadPlugins } from './load.js'
+import { normalizePluginsConfig } from './normalize.js'
 import { PLUGIN_TYPES, PLUGIN_PROP_PREFIXES } from './types.js'
 import { validatePlugins } from './validate.js'
 
@@ -13,7 +14,7 @@ import { validatePlugins } from './validate.js'
 // plugin, selecting plugins:
 //  - can be either a string or an array of strings
 //  - uses a singular property name
-export const addPlugins = async function (config) {
+export const addPlugins = async function (config, command) {
   const pluginsConfigs = await Promise.all(
     PLUGIN_TYPES.map(
       ({
@@ -39,7 +40,9 @@ export const addPlugins = async function (config) {
   )
   const pluginsConfigA = Object.fromEntries(pluginsConfigs)
   const configA = removePluginProps(config)
-  return { ...configA, ...pluginsConfigA }
+  const configB = { ...configA, ...pluginsConfigA }
+  const configC = normalizePluginsConfig(configB, command)
+  return configC
 }
 
 const getPluginsByType = async function ({
