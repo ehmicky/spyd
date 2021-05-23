@@ -20,17 +20,23 @@ export const resolveLookup = async function (base) {
 }
 
 const getLookupFiles = async function (base) {
-  const configPackageDir = await getConfigPackageDir(base)
-  const lookupDirs =
-    configPackageDir === undefined
-      ? DEFAULT_CONFIG
-      : [...DEFAULT_CONFIG, `${configPackageDir}/spyd`]
+  const lookupDirs = await addConfigPackageDir(DEFAULT_LOOKUP_DIRS, base)
   return lookupDirs.flatMap(getLookupFilesByExt)
 }
 
-// We look inside monorepo `packages/spyd-config-*/spyd.*`
-const getConfigPackageDir = async function (base) {
-  return await findUp(testConfigPackageDir, { cwd: base, type: 'directory' })
+// Order matters here
+const DEFAULT_LOOKUP_DIRS = ['.', './benchmark']
+
+// `find-up` does not support looking up for multiple files while also looking
+// for patterns like `./packages/spyd-config-*`, so we need to call it twice.
+const addConfigPackageDir = async function (lookupDirs, base) {
+  const configPackageDir = await findUp(testConfigPackageDir, {
+    cwd: base,
+    type: 'directory',
+  })
+  return configPackageDir === undefined
+    ? lookupDirs
+    : [...lookupDirs, configPackageDir]
 }
 
 const testConfigPackageDir = async function (dir) {
@@ -54,9 +60,10 @@ const isConfigPackageDir = function (filename) {
   return filename.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
 }
 
-// Order matters here
-const DEFAULT_CONFIG = ['./spyd', './benchmark/spyd']
-
 const getLookupFilesByExt = function (filePath) {
-  return CONFIG_EXTENSIONS.map((extName) => `${filePath}${extName}`)
+  return CONFIG_EXTENSIONS.map(
+    (extName) => `${filePath}/${DEFAULT_CONFIG_BASENAME}${extName}`,
+  )
 }
+
+const DEFAULT_CONFIG_BASENAME = 'spyd'
