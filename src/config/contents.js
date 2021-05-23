@@ -8,7 +8,7 @@ import { checkObject } from './check.js'
 
 // Load and parse `spyd.*` file contents
 export const loadConfigContents = async function (configPath) {
-  const loadFunc = EXTENSIONS[extname(configPath)]
+  const loadFunc = CONFIG_EXTENSIONS[extname(configPath)]
 
   if (loadFunc === undefined) {
     throw new UserError(
@@ -36,9 +36,11 @@ Please use .yml, .js, .cjs or .ts`,
 //  - Allow comments
 //  - Enforce consistency with `cli` runner's `tasks.yml`
 const EXTENSIONS = {
-  '.yml': loadYamlFile,
-  '.yaml': loadYamlFile,
   '.js': importJsDefault,
   '.cjs': importJsDefault,
   '.ts': importJsDefault,
+  '.yml': loadYamlFile,
+  '.yaml': loadYamlFile,
 }
+// Order is significant
+export const CONFIG_EXTENSIONS = Object.keys(EXTENSIONS)

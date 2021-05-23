@@ -8,11 +8,11 @@ export const ALL_CONFIG = {
     array: true,
     string: true,
     requiresArg: true,
-    describe: `Location or name of the configuration file.
+    describe: `Configuration file location.
 
 This can be:
-  - "default": "spyd.*" or "benchmark/spyd.*" in the current or any parent
-    directory.
+  - "default": any "spyd.*" file in the current or parent directories.
+    Can be inside a "benchmark" or "packages/spyd-config-*" sub-directory.
   - A file path
   - A Node module exporting a configuration file.
     The module name must start with "spyd-config-".
@@ -27,11 +27,10 @@ This can be used to share configurations and/or benchmarks.`,
     group: CONFIG,
     string: true,
     requiresArg: true,
-    describe: `Current directory when:
+    describe: `Customize the current directory used when:
   - Running tasks
   - Looking for the current git commit and branch
-This is not used to resolve configuration properties that are file paths.
-Default: current directory`,
+This is not used to resolve configuration properties that are file paths.`,
   },
   debug: {
     group: CONFIG,

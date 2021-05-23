@@ -1,11 +1,12 @@
 import { resolve } from 'path'
 
-import findUp from 'find-up'
 import { isFile } from 'path-type'
 
 import { UserError } from '../error/main.js'
 import { getPluginPath } from '../plugin/load.js'
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
+
+import { resolveLookup } from './lookup.js'
 
 // Resolve the `config` property to a file path. It can be:
 //  - "default": lookup for any `spyd.*` or `benchmark/spyd.*` file
@@ -14,7 +15,7 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 //  - a "resolver:arg" string which applies resolver-specific logic
 export const resolveConfigPath = async function (config, base) {
   if (config === 'default') {
-    return await resolveDefault(base)
+    return await resolveLookup(base)
   }
 
   if (isNpmResolver(config)) {
@@ -30,28 +31,6 @@ export const resolveConfigPath = async function (config, base) {
   const [, resolverName, resolverArg] = result
   return await useResolver({ config, base, resolverName, resolverArg })
 }
-
-// By default, we find the first `spyd.*` or `benchmark/spyd.*` in the current
-// or any parent directory.
-// A `benchmark` directory is useful for grouping benchmark-related files.
-// Not using one is useful for on-the-fly benchmarking, or for global/shared
-// configuration.
-const resolveDefault = async function (base) {
-  return await findUp(DEFAULT_CONFIG, { cwd: base })
-}
-
-const DEFAULT_CONFIG = [
-  './spyd.js',
-  './spyd.cjs',
-  './spyd.ts',
-  './spyd.yml',
-  './spyd.yaml',
-  './benchmark/spyd.js',
-  './benchmark/spyd.cjs',
-  './benchmark/spyd.ts',
-  './benchmark/spyd.yml',
-  './benchmark/spyd.yaml',
-]
 
 // Configs can be Node modules.
 // They must be named "spyd-config-{name}" to enforce naming convention and
