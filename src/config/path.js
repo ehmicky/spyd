@@ -1,8 +1,8 @@
 import { resolve } from 'path'
 
-import mapObj from 'map-obj'
+import { has, get, set } from 'dot-prop'
 
-// Resolve configuration relative file paths to absolute paths
+// Resolve configuration relative file paths to absolute paths.
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.
 //      - The `cwd` configuration property is not used since it might be
@@ -30,25 +30,23 @@ import mapObj from 'map-obj'
 //           repository could be re-used for different cwd
 //   - user can opt-out of that behavior by using absolute file paths, for
 //     example using the current file's path (e.g. `__filename|__dirname`)
-export const setConfigAbsolutePaths = function ({ configContents, base }) {
-  return mapObj(configContents, (propName, value) => [
-    propName,
-    setConfigAbsolutePath(propName, value, base),
-  ])
+export const setConfigAbsolutePaths = function (config, configInfos) {
+  return PATH_CONFIG_PROPS.reduce(
+    setConfigAbsolutePath.bind(undefined, configInfos),
+    config,
+  )
 }
 
-// Resolve all file path configuration properties.
-// Done recursively since some are objects.
-const setConfigAbsolutePath = function (propName, value, base) {
-  if (
-    !PATH_CONFIG_PROPS.has(propName) ||
-    typeof value !== 'string' ||
-    value.trim() === ''
-  ) {
-    return value
+const PATH_CONFIG_PROPS = ['cwd', 'output', 'tasks']
+
+const setConfigAbsolutePath = function (configInfos, config, propName) {
+  const value = get(config, propName)
+
+  if (value === undefined) {
+    return config
   }
 
-  return resolve(base, value)
+  const { base } = configInfos.find((configInfo) => has(configInfo, propName))
+  const valueA = resolve(base, value)
+  return set(config, propName, valueA)
 }
-
-const PATH_CONFIG_PROPS = new Set(['cwd', 'output', 'tasks'])

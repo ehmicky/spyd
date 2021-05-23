@@ -20,10 +20,15 @@ export const loadConfig = async function (configFlags) {
     ...configInfos,
     { configContents: configFlags, base: '.' },
   ]
-  const configs = configInfosA.map(setConfigAbsolutePaths)
+  const configs = configInfosA.map(getConfigContents)
   const config = mergeConfigs(configs)
   const configA = removeEmptyValues(config)
   const configB = omit(configA, 'config')
   validateConfig(configB)
-  return configB
+  const configC = setConfigAbsolutePaths(configB, configInfosA)
+  return configC
+}
+
+const getConfigContents = function ({ configContents }) {
+  return configContents
 }
