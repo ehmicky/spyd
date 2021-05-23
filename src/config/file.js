@@ -32,9 +32,12 @@ const getConfigsInfos = async function (configs, base) {
 }
 
 const getConfigInfos = async function (config, base) {
-  // TODO: this might return `undefined` when using "default" and there are no
-  // config file. Fix this.
-  const configPath = resolveConfigPath(config, base)
+  const configPath = await resolveConfigPath(config, base)
+
+  if (configPath === undefined) {
+    return []
+  }
+
   const configContents = await loadConfigContents(configPath)
 
   if (!isPlainObj(configContents)) {
