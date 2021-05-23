@@ -3,11 +3,7 @@ import omit from 'omit.js'
 import { showResultTitles } from '../title/show.js'
 
 import { cleanResult } from './clean.js'
-import {
-  isTtyOutput,
-  getPaddedScreenWidth,
-  getPaddedScreenHeight,
-} from './tty.js'
+import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 import { wrapRows } from './utils/wrap.js'
 
 // Call all `reporter.report()`.
@@ -26,6 +22,7 @@ const getReporterContents = async function (
   titles,
   {
     report: reportFunc,
+    tty,
     config: reporterConfig,
     config: {
       showSystem,
@@ -34,7 +31,7 @@ const getReporterContents = async function (
       colors,
       showTitles,
       showPrecision,
-      showDiff = getDefaultShowDiff(output),
+      showDiff = tty,
     },
     startData,
   },
@@ -54,12 +51,6 @@ const getReporterContents = async function (
   const contentB = trimEnd(contentA)
   const contentC = wrapRows(contentB)
   return { content: contentC, output, colors }
-}
-
-// Differences are mostly useful during interaction.
-// In results persisted in files, they are mostly confusing.
-const getDefaultShowDiff = function (output) {
-  return output === 'stdout' && isTtyOutput()
 }
 
 // Add information about the terminal

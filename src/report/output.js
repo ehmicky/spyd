@@ -33,7 +33,7 @@ const outputTtyContents = async function (contents) {
 // Retrieve contents printed in preview.
 // Must be identical to the final contents.
 export const computeTtyContents = function (contents) {
-  const contentsA = contents.filter(isTtyContent)
+  const contentsA = contents.filter(hasStdoutOutput)
 
   if (contentsA.length === 0) {
     return
@@ -44,7 +44,7 @@ export const computeTtyContents = function (contents) {
 
 // Write final report to files
 const outputFilesContents = async function (contents) {
-  const contentsA = contents.filter((content) => !isTtyContent(content))
+  const contentsA = contents.filter((content) => !hasStdoutOutput(content))
   await Promise.all(
     Object.entries(groupBy(contentsA, 'output')).map(outputFileContents),
   )
@@ -75,6 +75,6 @@ const outputFileContents = async function ([output, contents]) {
   }
 }
 
-const isTtyContent = function ({ output }) {
+const hasStdoutOutput = function ({ output }) {
   return output === 'stdout'
 }

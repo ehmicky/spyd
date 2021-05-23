@@ -54,6 +54,7 @@ const setConfigAbsolutePath = function (configInfos, config, propName) {
   return set(config, propName, valueA)
 }
 
+// Some properties like `output` are not always file paths
 const shouldNotSet = function (value, propName) {
   return value === undefined || (propName === 'output' && value === 'stdout')
 }
