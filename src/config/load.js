@@ -22,8 +22,8 @@ export const loadConfig = async function (configFlags) {
   ]
   const configs = configInfosA.map(setConfigAbsolutePaths)
   const config = mergeConfigs(configs)
-  const configA = omit(config, 'config')
-  validateConfig(configA)
-  const configB = removeEmptyValues(configA)
+  const configA = removeEmptyValues(config)
+  const configB = omit(configA, 'config')
+  validateConfig(configB)
   return configB
 }
