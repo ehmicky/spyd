@@ -1,15 +1,18 @@
 import isPlainObj from 'is-plain-obj'
 
 import { normalizeOptionalArray } from './check.js'
+import { removeEmptyValues } from './empty.js'
 
 // Merge two configuration objects. Used to merge:
 //  - shared `config`
 //  - `spyd.*` with CLI flags
 export const mergeConfigs = function (configs) {
-  return configs.reduce(
+  const configC = configs.reduce(
     (configA, configB) => mergeObjects(configA, configB, []),
     {},
   )
+  const configD = removeEmptyValues(configC)
+  return configD
 }
 
 const mergeObjects = function (objectA, objectB, keys) {

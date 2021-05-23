@@ -1,4 +1,3 @@
-import { removeEmptyValues } from './empty.js'
 import { loadConfigFile } from './file.js'
 import { mergeConfigs } from './merge.js'
 import { setConfigAbsolutePaths } from './path.js'
@@ -21,9 +20,8 @@ export const loadConfig = async function ({ config, ...configFlags }) {
   ]
   const configs = configInfosA.map(getConfigContents)
   const configA = mergeConfigs(configs)
-  const configB = removeEmptyValues(configA)
-  validateConfig(configB)
-  const configC = setConfigAbsolutePaths(configB, configInfosA)
+  validateConfig(configA)
+  const configC = setConfigAbsolutePaths(configA, configInfosA)
   return configC
 }
 

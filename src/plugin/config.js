@@ -1,6 +1,7 @@
 import camelcase from 'camelcase'
 
 import { checkJsonObject } from '../config/check.js'
+import { mergeConfigs } from '../config/merge.js'
 import { UserError } from '../error/main.js'
 import { cleanObject } from '../utils/clean.js'
 import { pick } from '../utils/pick.js'
@@ -52,7 +53,7 @@ const getPluginConfig = function (id, config, configPrefix) {
   }
 
   checkJsonObject(pluginConfig, configPropName)
-  return pluginConfig
+  return cleanObject(pluginConfig)
 }
 
 // Configuration properties are case-sensitive. Making them case-insensitive
@@ -71,6 +72,8 @@ const getConfigPropName = function (id, config, configPrefix) {
   return configPropName
 }
 
+// Merge `config.*` with `config.{plugin}.*` with lower priority
 const mergeTopConfig = function (config, pluginConfig, configProps) {
-  return { ...pick(config, configProps), ...cleanObject(pluginConfig) }
+  const topConfig = pick(config, configProps)
+  return mergeConfigs([topConfig, pluginConfig])
 }
