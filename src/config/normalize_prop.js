@@ -17,7 +17,7 @@ export const normalizeConfigProp = function (config) {
 export const validateDefinedString = function (value, propName) {
   if (typeof value !== 'string' || value.trim() === '') {
     throw new UserError(
-      `The "${propName}" property must be a non-empty string: ${value}`,
+      `The "${propName}" configuration property must be a non-empty string: ${value}`,
     )
   }
 }
