@@ -1,3 +1,4 @@
+import { getCombinationNameWidth } from '../../utils/name.js'
 import { getResponsiveColumns } from '../../utils/responsive.js'
 import { SEPARATOR_WIDTH } from '../../utils/separator.js'
 
@@ -14,9 +15,9 @@ const getStatColumnWidth = function (stats, column) {
 }
 
 export const getAllColumns = function (combinations, screenWidth, columnWidth) {
+  const availableWidth = screenWidth - getCombinationNameWidth(combinations[0])
   return getResponsiveColumns({
-    combinations,
-    screenWidth,
+    availableWidth,
     columnWidth,
     separatorWidth: SEPARATOR_WIDTH,
     columns: COLUMNS,
