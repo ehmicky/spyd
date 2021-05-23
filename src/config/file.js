@@ -17,9 +17,13 @@ export const loadConfigFile = async function ({ config = 'default' }) {
 }
 
 // The `config` property can optionally be an array.
+//  - This allow merging a shared configuration with a non-shared one
 // The "default" resolver:
-//  - Is the default of the top-level `config` CLI flags but not inside
-//    configuration files
+//  - Is used as the default of the top-level `config` CLI flags
+//  - Is not used when a `config` is specified because:
+//     - This would probably not be intended by users
+//     - This might lead to issues when using shared configurations
+//       unintentionally merged with some local config
 //  - Can be specified explicitely by users. This can be useful when overridding
 //    a `config` property inherited from a child configuration.
 const getConfigsInfos = async function (config, base) {
