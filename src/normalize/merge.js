@@ -31,8 +31,12 @@ export const mergeResults = function (result, previous) {
 }
 
 // When merging two results, we keep most of the properties of the latest
-// result. However, we still merge `system` so several systems are reported.
-// This allows comparing different systems.
+// result.
+//  - However, we still merge `system` so several systems are reported.
+//  - This allows comparing different systems.
+// We only merge results when there are some matching combinations
+//  - For example, `result.systems` should only show systems from combinations
+//    that have been merged, i.e. that are reported
 const mergeResult = function (result, previousResult) {
   const previousCombinations = removeResultCombinations(
     previousResult.combinations,
