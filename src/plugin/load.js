@@ -24,46 +24,33 @@ const importPlugin = async function ({ id, type, modulePrefix, builtins }) {
     return builtin
   }
 
-  const moduleName = `${modulePrefix}${id}`
+  const pluginPath = getPluginPath({ id, modulePrefix, type, base: '.' })
 
   try {
-    return await import(moduleName)
+    return await import(pluginPath)
   } catch (error) {
     throw new PluginError(
-      `Could not load '${type}' module '${moduleName}'\n\n${error.stack}`,
+      `Could not load "${type}" module "${id}"\n\n${error.stack}`,
     )
   }
 }
 
-// Find the local file path of a plugin
-// TODO: use this in all plugins
-export const getPluginPath = function ({ id, modulePrefix, type, base }) {
-  const possiblePaths = getPossiblePaths(modulePrefix, id)
-  const resolvedPath = possiblePaths.find((pluginPath) =>
-    tryResolvePluginPath(pluginPath, base),
-  )
-
-  if (resolvedPath === undefined) {
-    const possiblePathsStr = possiblePaths.join(' or ')
-    throw new UserError(`Cannot find ${type}: ${id}
-No Node module ${possiblePathsStr} was found, please ensure it is installed.`)
-  }
-
-  return resolvedPath
-}
-
+// Find the local file path of a plugin.
 // We enforce a naming convention for all plugins.
 // All plugins are Node modules.
 // We do not allow npm @scope because:
 //  - This is simpler for users
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
-const getPossiblePaths = function (modulePrefix, id) {
-  return `spyd-${modulePrefix}-${id}`
-}
+export const getPluginPath = function ({ id, modulePrefix, type, base }) {
+  const moduleName = `spyd-${modulePrefix}-${id}`
 
-const tryResolvePluginPath = function (pluginPath, base) {
   try {
-    return require.resolve(pluginPath, { paths: [base] })
-  } catch {}
+    return require.resolve(moduleName, { paths: [base] })
+  } catch (error) {
+    throw new UserError(`Cannot find ${type}: ${id}
+No Node module "${moduleName}" was found, please ensure it is installed.
+
+${error.stack}`)
+  }
 }
