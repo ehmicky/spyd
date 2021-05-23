@@ -71,6 +71,8 @@ const getConfigInfos = async function (config, base) {
 // This works with both the CLI and programmatic usage.
 // The design encourages users:
 //  - To separate the benchmark package from the library package
+//     - So that the library package does not include any benchmarking code or
+//       dependencies
 //  - While still allowing running benchmark while developing library
 //     - A monorepo setup could sometimes help with this
 // The design encourages publishers to build as much as possible:
