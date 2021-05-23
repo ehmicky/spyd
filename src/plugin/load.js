@@ -55,7 +55,7 @@ No Node module ${possiblePathsStr} was found, please ensure it is installed.`)
 // We enforce a naming convention for all plugins.
 // All plugins are Node modules. They can have a scope or not.
 const getPossiblePaths = function (modulePrefix, id) {
-  return [`spyd-${modulePrefix}-${id}`, `@spyd/${modulePrefix}-${id}`]
+  return [`@spyd/${modulePrefix}-${id}``spyd-${modulePrefix}-${id}`]
 }
 
 const tryResolvePluginPath = function (pluginPath, base) {
