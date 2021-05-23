@@ -8,7 +8,7 @@ import { checkObject } from './check.js'
 
 // Load and parse `spyd.*` file contents
 export const loadConfigContents = async function (configPath) {
-  const loadFunc = CONFIG_EXTENSIONS[extname(configPath)]
+  const loadFunc = EXTENSIONS[extname(configPath)]
 
   if (loadFunc === undefined) {
     throw new UserError(

@@ -46,11 +46,13 @@ const resolveNpm = function (config, base) {
 }
 
 const resolveFile = async function (config, base) {
-  if (!(await isFile(config))) {
-    throw new UserError(`"config" file does not exist: "${config}"`)
+  const configA = resolve(base, config)
+
+  if (!(await isFile(configA))) {
+    throw new UserError(`"config" file does not exist: ${configA}`)
   }
 
-  return resolve(base, config)
+  return configA
 }
 
 // Additional resolvers.
