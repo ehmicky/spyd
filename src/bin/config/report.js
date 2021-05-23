@@ -24,12 +24,12 @@ For example --reporterJson.output is like --output but only for the json reporte
     alias: 'o',
     string: true,
     requiresArg: true,
-    describe: `Output the result to the specified file.
+    describe: `Output the result to "stdout" or to a file path.
 Instead of overwriting the file, the result can be inserted between two lines
 with the words "spyd-start" and "spyd-end" such as <!-- spyd-start --> or
 #spyd-start
-By default, the file is overwritten.
-Default: print to stdout.`,
+Otherwise, the file is overwritten.
+Default: "stdout".`,
   },
   colors: {
     group: REPORT,

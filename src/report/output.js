@@ -76,5 +76,5 @@ const outputFileContents = async function ([output, contents]) {
 }
 
 const isTtyContent = function ({ output }) {
-  return output === undefined
+  return output === 'stdout'
 }

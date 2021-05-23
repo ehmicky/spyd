@@ -17,5 +17,5 @@ const normalizeReporters = function (config, command) {
 }
 
 const hasTtyOutput = function ({ config: { output } }) {
-  return output === undefined
+  return output === 'stdout'
 }

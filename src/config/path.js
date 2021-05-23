@@ -43,7 +43,7 @@ const PATH_CONFIG_PROPS = ['cwd', 'output', 'tasks']
 const setConfigAbsolutePath = function (configInfos, config, propName) {
   const value = get(config, propName)
 
-  if (value === undefined) {
+  if (shouldNotSet(value, propName)) {
     return config
   }
 
@@ -52,6 +52,10 @@ const setConfigAbsolutePath = function (configInfos, config, propName) {
     ? value.map((item) => resolve(base, item))
     : resolve(base, value)
   return set(config, propName, valueA)
+}
+
+const shouldNotSet = function (value, propName) {
+  return value === undefined || (propName === 'output' && value === 'stdout')
 }
 
 // Properties assigned as default values do not have corresponding `configInfos`

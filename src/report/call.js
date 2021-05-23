@@ -59,7 +59,7 @@ const getReporterContents = async function (
 // Differences are mostly useful during interaction.
 // In results persisted in files, they are mostly confusing.
 const getDefaultShowDiff = function (output) {
-  return output === undefined && isTtyOutput()
+  return output === 'stdout' && isTtyOutput()
 }
 
 // Add information about the terminal
