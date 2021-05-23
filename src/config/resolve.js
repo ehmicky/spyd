@@ -1,11 +1,11 @@
+import { resolve } from 'path'
+
 import findUp from 'find-up'
 import { isFile } from 'path-type'
 
 import { UserError } from '../error/main.js'
 import { getPluginPath } from '../plugin/load.js'
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
-
-import { setAbsolutePath } from './path.js'
 
 // Resolve the `config` property to a file path. It can be:
 //  - "default": lookup for any `spyd.*` or `benchmark/spyd.*` file
@@ -63,7 +63,7 @@ const resolveFile = async function (config, base) {
     throw new UserError(`"config" file does not exist: '${config}'`)
   }
 
-  return setAbsolutePath(config, base)
+  return resolve(base, config)
 }
 
 const resolveNpm = function (id, base) {

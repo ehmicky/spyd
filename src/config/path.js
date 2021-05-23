@@ -44,15 +44,11 @@ const setConfigAbsolutePath = function (propName, value, base) {
     return value
   }
 
-  return setAbsolutePath(value, base)
+  return resolve(base, value)
 }
 
 const PATH_CONFIG_PROPS = new Set(['cwd', 'output', 'tasks'])
 
-export const setAbsolutePath = function (value, base) {
-  return resolve(base, value)
-}
-
-export const isDefinedPath = function (value) {
+const isDefinedPath = function (value) {
   return typeof value === 'string' && value.trim() !== ''
 }
