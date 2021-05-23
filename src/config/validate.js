@@ -48,7 +48,7 @@ const optionalArray = function (value) {
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   cwd: '/path/to/repository',
-  tasks: './benchmark/tasks.js',
+  tasks: optionalArray('./benchmark/tasks.js'),
   runner: optionalArray('node'),
   reporter: optionalArray('debug'),
   limit: optionalArray('task_id=10'),
