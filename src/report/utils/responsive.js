@@ -1,4 +1,4 @@
-import { getCombinationNameWidth } from '../../utils/name.js'
+import { getCombinationNameWidth } from './name.js'
 
 // Group all column names into several tables so they fit the screen width
 export const getResponsiveColumns = function ({
