@@ -1,7 +1,6 @@
 import { isSameCategory } from '../../../combination/ids.js'
+import { getFirstCellColor } from '../../utils/first.js'
 import { prettifyStats } from '../../utils/stats/main.js'
-
-import { getFirstCellColor } from './first.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations) {

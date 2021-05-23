@@ -1,6 +1,6 @@
+import { getFirstCellWidth } from '../../utils/first.js'
 import { SEPARATOR_WIDTH } from '../../utils/separator.js'
 
-import { getFirstCellWidth } from './first.js'
 import { getHeaderName } from './header.js'
 import { getStatLength } from './row.js'
 

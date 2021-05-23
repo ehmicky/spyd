@@ -1,6 +1,5 @@
+import { getFirstCellColor } from '../../utils/first.js'
 import { COLUMN_SEPARATOR } from '../../utils/separator.js'
-
-import { getFirstCellColor } from './first.js'
 
 // Retrieve a single row, including the row name
 export const getRow = function (combination, columns, columnWidth) {

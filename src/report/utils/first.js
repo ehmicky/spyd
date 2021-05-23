@@ -1,5 +1,5 @@
-import { titleColor } from '../../utils/colors.js'
-import { getCombinationName } from '../../utils/title.js'
+import { titleColor } from './colors.js'
+import { getCombinationName } from './title.js'
 
 export const getFirstCellWidth = function (combination) {
   return getFirstCell(combination).length

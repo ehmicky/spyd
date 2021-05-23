@@ -1,4 +1,5 @@
 import { concatBlocks } from '../concat.js'
+import { getFirstCellWidth } from '../first.js'
 
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
@@ -8,7 +9,7 @@ import {
   getHighBlock,
   getHighBlockWidth,
 } from './low_high.js'
-import { getTitleBlock, getFirstCellWidth } from './title.js'
+import { getTitleBlock } from './title.js'
 
 // Serialize combinations' histograms for reporting
 export const serializeHistograms = function (

@@ -1,8 +1,7 @@
 import { fieldColor } from '../../utils/colors.js'
+import { getFirstCellWidth } from '../../utils/first.js'
 import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
-
-import { getFirstCellWidth } from './first.js'
 
 // Retrieve the header row
 export const getHeader = function ([combination], columns, columnWidth) {
