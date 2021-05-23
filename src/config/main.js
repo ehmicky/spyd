@@ -14,10 +14,11 @@ export const getConfig = async function (command, configFlags = {}) {
   validateConfig(config)
 
   const configA = addDefaultConfig(config, command)
-  const configB = setConfigAbsolutePaths(configA, configInfos)
 
+  const configB = setConfigAbsolutePaths(configA, configInfos)
   const configC = addEnvInfo(configB)
   const configD = normalizeConfig(configC)
+
   const configE = await addPlugins(configD, command)
   return configE
 }
