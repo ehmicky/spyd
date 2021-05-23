@@ -1,58 +1,87 @@
 import { isSameCategory } from '../../../combination/ids.js'
-import { getCombinationNameColor } from '../../utils/name.js'
+import {
+  getCombinationNameColor,
+  getCombinationNameWidth,
+} from '../../utils/name.js'
+import { getResponsiveColumns } from '../../utils/responsive.js'
+import { SEPARATOR_WIDTH, COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 
 // Show `result.history` as a time series
-export const getTimeSeries = function (history, combinations) {
-  const timeSeries = combinations.map((combination) =>
-    getTimeSerie(history, combination),
+export const getTimeSeries = function (history, combinations, screenWidth) {
+  const columns = history.map((historyResult) =>
+    getColumn(historyResult, combinations),
   )
-  const columnWidth = getColumnWidth(timeSeries)
-  const rows = timeSeries.map((timeSerie) => getRow(timeSerie, columnWidth))
-  return rows
-}
-
-const getTimeSerie = function (history, combination) {
-  const title = getCombinationNameColor(combination)
-  const medians = history.map((result) => getMedian(result, combination))
-  return { title, medians }
-}
-
-const getMedian = function (result, combination) {
-  const combinations = prettifyStats(result.combinations)
-  const combinationB = combinations.find((combinationA) =>
-    isSameCategory(combinationA, combination),
+  const columnWidth = getColumnWidth(columns)
+  const allColumns = getAllColumns({
+    combinations,
+    columns,
+    screenWidth,
+    columnWidth,
+  })
+  return allColumns.map((columnsA) =>
+    getTable(combinations, columnsA, columnWidth),
   )
-
-  if (combinationB === undefined) {
-    return { pretty: '', prettyColor: '' }
-  }
-
-  return combinationB.stats.median
 }
 
-const getColumnWidth = function (timeSeries) {
-  const medians = timeSeries.flatMap(getMediansProp)
-  return Math.max(...medians)
+const getColumn = function (historyResult, combinations) {
+  const historyCombinations = prettifyStats(historyResult.combinations)
+  return combinations.map((combination) =>
+    getCell(historyCombinations, combination),
+  )
 }
 
-const getMediansProp = function ({ medians }) {
-  return medians.map(getLength)
+const getCell = function (historyCombinations, combination) {
+  const historyCombinationA = historyCombinations.find((historyCombination) =>
+    isSameCategory(historyCombination, combination),
+  )
+  return historyCombinationA === undefined
+    ? { pretty: '', prettyColor: '' }
+    : historyCombinationA.stats.median
 }
 
-const getRow = function ({ title, medians }, columnWidth) {
-  const columns = medians
-    .map((median) => getColumn(median, columnWidth))
-    .join(' ')
-  return `${title}  ${columns}`
+const getColumnWidth = function (columns) {
+  const widths = columns.flat().map(getWidth)
+  return Math.max(...widths)
 }
 
-const getColumn = function (median, columnWidth) {
-  const paddingWidth = Math.max(columnWidth - getLength(median), 0)
+const getAllColumns = function ({
+  combinations,
+  columns,
+  screenWidth,
+  columnWidth,
+}) {
+  const availableWidth = screenWidth - getCombinationNameWidth(combinations[0])
+  return getResponsiveColumns({
+    availableWidth,
+    columnWidth,
+    separatorWidth: SEPARATOR_WIDTH,
+    columns,
+  })
+}
+
+const getTable = function (combinations, columns, columnWidth) {
+  return combinations
+    .map((combination, rowIndex) =>
+      getRow({ combination, rowIndex, columns, columnWidth }),
+    )
+    .join('\n')
+}
+
+const getRow = function ({ combination, rowIndex, columns, columnWidth }) {
+  const combinationName = getCombinationNameColor(combination)
+  const cells = columns
+    .map((column) => padCell(column[rowIndex], columnWidth))
+    .join(COLUMN_SEPARATOR)
+  return `${combinationName}${cells}`
+}
+
+const padCell = function (cell, columnWidth) {
+  const paddingWidth = columnWidth - getWidth(cell)
   const padding = ' '.repeat(paddingWidth)
-  return `${padding}${median.prettyColor}`
+  return `${padding}${cell.prettyColor}`
 }
 
-const getLength = function ({ pretty }) {
+const getWidth = function ({ pretty }) {
   return pretty.length
 }

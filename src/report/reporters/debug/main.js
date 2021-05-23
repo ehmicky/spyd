@@ -27,7 +27,7 @@ const report = function ({
     showStats: false,
     screenWidth,
   })
-  const timeSeries = getTimeSeries(history, combinationsB)
+  const timeSeries = getTimeSeries(history, combinationsB, screenWidth)
   const footer = prettifyValue(getFooter({ id, timestamp, systems }))
   return joinSections([...tables, ...histograms, ...timeSeries, footer])
 }
