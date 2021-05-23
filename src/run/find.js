@@ -23,6 +23,12 @@ import { measureCombinations } from '../measure/several.js'
 //  - Syntactically by requiring an additional depth level (nested object) for
 //    steps
 //  - We encourage tasks over steps
+// Specifying an empty `tasks` array is allowed:
+//  - This is useful when `tasks` is computed dynamically, or when requiring
+//    `tasks` to be overridden by shared configuration's consumer or using CLI
+//    flags
+//  - However, if all runners have no tasks, an error will be thrown since there
+//    won't be any combinations to measure
 // Each task has its own process, in order to prevent them from influencing
 // each other:
 //  - By modifying the global state
