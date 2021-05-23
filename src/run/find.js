@@ -16,11 +16,11 @@ import { measureCombinations } from '../measure/several.js'
 // identifiers. This makes it clearer for users which is which.
 export const findTasks = async function ({
   taskPath,
-  cwd,
   runnerId,
   runnerSpawn,
   runnerSpawnOptions,
   runnerConfig,
+  cwd,
 }) {
   const [{ taskIds }] = await measureCombinations(
     [{ taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] }],

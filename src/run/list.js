@@ -52,11 +52,11 @@ const getRunnerTasks = async function (
       taskPathsA.map((taskPath) =>
         findTasks({
           taskPath,
-          cwd,
           runnerId,
           runnerSpawn,
           runnerSpawnOptions,
           runnerConfig,
+          cwd,
         }),
       ),
     )
