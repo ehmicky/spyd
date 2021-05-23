@@ -28,9 +28,9 @@ export const selectResults = function (results, select) {
     .filter(hasCombinations)
 }
 
-const selectResult = function ({ combinations, ...result }, select) {
-  const combinationsA = filterBySelectors(combinations, select)
-  return { ...result, combinations: combinationsA }
+const selectResult = function (result, select) {
+  const combinations = filterBySelectors(result.combinations, select)
+  return { ...result, combinations }
 }
 
 export const selectCombinations = function (combinations, select) {

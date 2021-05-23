@@ -32,11 +32,7 @@ const compressBucket = function ({ frequency }) {
 }
 
 // Restore original results after loading
-export const decompressResults = function (results) {
-  return results.map(decompressResult)
-}
-
-const decompressResult = function ({ combinations, ...result }) {
+export const decompressResult = function ({ combinations, ...result }) {
   const combinationsA = combinations.map(decompressCombination)
   return { ...result, combinations: combinationsA }
 }
