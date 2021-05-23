@@ -1,25 +1,24 @@
+import { UserError } from '../error/main.js'
+
 import { isDefinedPath } from './path.js'
-import { DEFAULT_RESOLVER } from './resolve.js'
 
 // The `config` property can optionally be an array.
-// It is validated later, so if this is invalid, we just ignore it here.
 // The "default" resolver:
 //  - Is the default of the top-level `config` CLI flags but not inside
 //    configuration files
 //  - Can be specified explicitely by users. This can be useful when overridding
 //    a `config` property inherited from a child configuration.
-export const normalizeTopConfigProp = function (config) {
-  const configs = normalizeConfigProp(config)
-  return configs === undefined ? DEFAULT_RESOLVER : configs
+export const normalizeConfigProp = function (config) {
+  const configs = Array.isArray(config) ? config : [config]
+  configs.forEach(validateConfigString)
+  return configs
 }
 
-export const normalizeConfigProp = function (config) {
-  if (isDefinedPath(config)) {
-    return [config]
-  }
-
-  if (Array.isArray(config) && config.every(isDefinedPath)) {
-    return config
+const validateConfigString = function (config) {
+  if (typeof config !== 'string' || config.trim() === '') {
+    throw new UserError(
+      `The "config" property must be a non-empty string: ${config}`,
+    )
   }
 }
 
