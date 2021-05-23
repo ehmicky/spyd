@@ -1,6 +1,4 @@
 // Get cartesian product of all combinations
-// The order of the `runners` configuration property is preserved so it can
-// be used when merging `runnerVersions`.
 export const getCombinationsProduct = function ({
   runners,
   tasks,
