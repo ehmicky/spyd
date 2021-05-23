@@ -1,10 +1,12 @@
+import { cwd as getCwd } from 'process'
+
 import { isTtyInput, isTtyOutput } from '../report/tty.js'
 
 // Add default configuration properties
 export const addDefaultConfig = function (config, command) {
   return {
     ...DEFAULT_CONFIG,
-    cwd: '.',
+    cwd: getCwd(),
     quiet: !isTtyInput() || !isTtyOutput(),
     force: !isTtyInput(),
     showSystem: config.system !== undefined,
@@ -34,5 +36,6 @@ export const DEFAULT_CONFIG = {
   select: [],
   runner: ['node'],
   reporter: ['debug'],
+  tasks: 'tasks.*',
   inputs: {},
 }

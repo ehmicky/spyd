@@ -55,10 +55,22 @@ const setConfigAbsolutePath = function (configInfos, config, propName) {
 }
 
 // Properties assigned as default values do not have corresponding `configInfos`
-// and use process.cwd() as base.
+//  - By default, they use the top-level config file's directory as base
+//  - If none, they use process.cwd() instead
 const getBase = function (configInfos, propName) {
   const configInfo = configInfos.find(({ configContents }) =>
     has(configContents, propName),
   )
-  return configInfo === undefined ? '.' : configInfo.base
+
+  if (configInfo !== undefined) {
+    return configInfo.base
+  }
+
+  const [, topLevelConfigInfo] = configInfos
+
+  if (topLevelConfigInfo !== undefined) {
+    return topLevelConfigInfo.base
+  }
+
+  return '.'
 }
