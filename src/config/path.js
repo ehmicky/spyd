@@ -47,6 +47,8 @@ const setConfigAbsolutePath = function (configInfos, config, propName) {
   }
 
   const { base } = configInfos.find((configInfo) => has(configInfo, propName))
-  const valueA = resolve(base, value)
+  const valueA = Array.isArray(value)
+    ? value.map((item) => resolve(base, item))
+    : resolve(base, value)
   return set(config, propName, valueA)
 }
