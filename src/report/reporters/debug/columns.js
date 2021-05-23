@@ -1,4 +1,4 @@
-import { getFirstCellWidth } from '../../utils/first.js'
+import { getCombinationNameWidth } from '../../utils/first.js'
 import { SEPARATOR_WIDTH } from '../../utils/separator.js'
 
 import { getHeaderName } from './header.js'
@@ -19,7 +19,7 @@ export const getAllColumns = function (
   screenWidth,
   columnWidth,
 ) {
-  const availableWidth = screenWidth - getFirstCellWidth(combination)
+  const availableWidth = screenWidth - getCombinationNameWidth(combination)
   const { allColumns } = COLUMNS.reduce(
     addColumn.bind(undefined, { availableWidth, columnWidth }),
     { allColumns: [], remainingWidth: 0 },

@@ -1,18 +1,18 @@
 import { titleColor } from './colors.js'
 import { getCombinationName } from './title.js'
 
-export const getFirstCellWidth = function (combination) {
-  return getFirstCell(combination).length
+export const getCombinationNameWidth = function (combination) {
+  return getCombinationNamePadded(combination).length
 }
 
-export const getFirstCellColor = function (combination) {
-  return titleColor(getFirstCell(combination))
+export const getCombinationNameColor = function (combination) {
+  return titleColor(getCombinationNamePadded(combination))
 }
 
-const getFirstCell = function ({ titles }) {
+const getCombinationNamePadded = function ({ titles }) {
   const combinationName = getCombinationName(titles)
-  return `${combinationName}${FIRST_CELL_PADDING}`
+  return `${combinationName}${NAME_PADDING}`
 }
 
-const FIRST_CELL_PADDING_WIDTH = 2
-const FIRST_CELL_PADDING = ' '.repeat(FIRST_CELL_PADDING_WIDTH)
+const NAME_PADDING_WIDTH = 2
+const NAME_PADDING = ' '.repeat(NAME_PADDING_WIDTH)

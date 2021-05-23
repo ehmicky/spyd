@@ -1,9 +1,9 @@
-import { getFirstCellColor } from '../first.js'
+import { getCombinationNameColor } from '../first.js'
 
 // Retrieve sidebar with the combination name
 export const getTitleBlock = function (combination, height, showStats) {
   const newlines = getNewlines(height, showStats)
-  return `${newlines}${getFirstCellColor(combination)}`
+  return `${newlines}${getCombinationNameColor(combination)}`
 }
 
 const getNewlines = function (height, showStats) {

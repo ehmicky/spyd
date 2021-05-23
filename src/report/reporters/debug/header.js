@@ -1,11 +1,11 @@
 import { fieldColor } from '../../utils/colors.js'
-import { getFirstCellWidth } from '../../utils/first.js'
+import { getCombinationNameWidth } from '../../utils/first.js'
 import { COLUMN_SEPARATOR } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 
 // Retrieve the header row
 export const getHeader = function ([combination], columns, columnWidth) {
-  const firstCell = ' '.repeat(getFirstCellWidth(combination))
+  const firstCell = ' '.repeat(getCombinationNameWidth(combination))
   const headerCells = getHeaderCells(columns, columnWidth)
   return `${firstCell}${headerCells}`
 }
