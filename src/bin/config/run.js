@@ -4,11 +4,13 @@ import { TASKS, HISTORY } from './groups.js'
 export const RUN_CONFIG = {
   tasks: {
     group: TASKS,
+    array: true,
     string: true,
     requiresArg: true,
-    describe: `Path to the tasks file.
+    describe: `Path to the tasks main files.
 When using multiple runners, each runner can have its own tasks file by using
 --runnerId.tasks=path
+Can be specified several times.
 Default: "benchmark/tasks.{extension}" in the current or any parent directory.
 The default file {extension} depends on the runner.`,
   },
