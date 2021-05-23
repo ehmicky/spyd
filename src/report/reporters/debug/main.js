@@ -8,6 +8,7 @@ import { addTitles } from '../../utils/title.js'
 import { getColumnWidth, getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
 import { getRow } from './row.js'
+import { getTimeSeries } from './time_series.js'
 
 // Debugging reporter only meant for development purpose
 const report = function ({
@@ -16,6 +17,7 @@ const report = function ({
   systems,
   combinations,
   screenWidth,
+  history,
 }) {
   const combinationsA = prettifyStats(combinations)
   const combinationsB = addTitles(combinationsA)
@@ -25,8 +27,9 @@ const report = function ({
     showStats: false,
     screenWidth,
   })
+  const timeSeries = getTimeSeries(history, combinationsB)
   const footer = prettifyValue(getFooter({ id, timestamp, systems }))
-  return joinSections([...tables, ...histograms, footer])
+  return joinSections([...tables, ...histograms, ...timeSeries, footer])
 }
 
 const getTables = function (combinations, screenWidth) {
