@@ -1,5 +1,5 @@
 import { findTasks } from './find.js'
-import { getTaskPath } from './path.js'
+import { getTaskPaths } from './path.js'
 
 // The tasks file for each runner is selected using the `runnerId.tasks`
 // configuration property.
@@ -27,32 +27,34 @@ import { getTaskPath } from './path.js'
 //     - too implicit/magic
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
-export const listTasks = async function ({ tasks, runners, cwd }) {
+export const listTasks = async function (runners, cwd) {
   const tasksA = await Promise.all(
-    runners.map((runner) => getRunnerTasks(runner, { tasks, cwd })),
+    runners.map((runner) => getRunnerTasks(runner, cwd)),
   )
-  return [].concat(...tasksA)
+  return tasksA.flat()
 }
 
 const getRunnerTasks = async function (
-  { runnerId, runnerSpawn, runnerSpawnOptions, runnerConfig, runnerExtensions },
-  { tasks, cwd },
+  {
+    runnerId,
+    runnerSpawn,
+    runnerSpawnOptions,
+    runnerConfig,
+    runnerConfig: { tasks },
+    runnerExtensions,
+  },
+  cwd,
 ) {
   try {
-    const taskPath = await getTaskPath({
-      tasks,
-      runnerConfig,
-      runnerExtensions,
-      cwd,
-    })
+    const taskPaths = await getTaskPaths(tasks, runnerExtensions, cwd)
     const taskIds = await findTasks({
-      taskPath,
+      taskPath: taskPaths,
       cwd,
       runnerSpawn,
       runnerSpawnOptions,
       runnerConfig,
     })
-    return taskIds.map((taskId) => ({ taskId, taskPath, runnerId }))
+    return taskIds.map((taskId) => ({ taskId, taskPath: taskPaths, runnerId }))
   } catch (error) {
     error.message = `In runner "${runnerId}": ${error.message}`
     throw error

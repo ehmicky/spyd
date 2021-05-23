@@ -8,7 +8,6 @@ import { validateCombinationsIds } from './validate_ids.js'
 
 // Retrieve each combination, i.e. combination of each combination category
 export const getCombinations = async function ({
-  tasks,
   runners,
   inputs,
   systemId,
@@ -16,7 +15,7 @@ export const getCombinations = async function ({
   cwd,
 }) {
   const { runners: runnersA, systemVersions } = await loadRunners(runners, cwd)
-  const tasksA = await listTasks({ tasks, runners: runnersA, cwd })
+  const tasksA = await listTasks(runnersA, cwd)
   const inputsA = fromInputsObj(inputs)
 
   const combinations = getCombinationsProduct({

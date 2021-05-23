@@ -29,12 +29,8 @@ import { UserError } from '../error/main.js'
 //     - Opening editor in a new tab|window, which is hard to do cross-platform
 //     - Using same tab for both edit and benchmark, resulting in a poor
 //       experience
-export const getTaskPath = async function ({
-  runnerConfig: { tasks },
-  runnerExtensions,
-  cwd,
-}) {
-  if (tasks !== undefined) {
+export const getTaskPaths = async function (tasks, runnerExtensions, cwd) {
+  if (tasks.length !== 0) {
     return await getUserTaskPath(tasks)
   }
 
@@ -44,15 +40,18 @@ export const getTaskPath = async function ({
     throw new UserError('No tasks file could be found.')
   }
 
-  return defaultTaskPath
+  return [defaultTaskPath]
 }
 
 const getUserTaskPath = async function (tasks) {
-  if (!(await isFile(tasks))) {
-    throw new UserError(`Tasks file does not exist: ${tasks}`)
-  }
-
+  await Promise.all(tasks.map(validateTask))
   return tasks
+}
+
+const validateTask = async function (taskPath) {
+  if (!(await isFile(taskPath))) {
+    throw new UserError(`Tasks file does not exist: ${taskPath}`)
+  }
 }
 
 // By default, we find the first `benchmark/tasks.*`.
