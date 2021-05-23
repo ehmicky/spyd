@@ -9,8 +9,9 @@ import { prettifyStats } from '../../utils/stats/main.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
+  const allCombinations = history.flatMap(getCombinations)
   const columns = history.map((historyResult) =>
-    getColumn(historyResult, combinations),
+    getColumn(historyResult, combinations, allCombinations),
   )
   const columnWidth = getColumnWidth(columns)
   const allColumns = getAllColumns({
@@ -24,8 +25,15 @@ export const getTimeSeries = function (history, combinations, screenWidth) {
   )
 }
 
-const getColumn = function (historyResult, combinations) {
-  const historyCombinations = prettifyStats(historyResult.combinations)
+const getCombinations = function ({ combinations }) {
+  return combinations
+}
+
+const getColumn = function (historyResult, combinations, allCombinations) {
+  const historyCombinations = prettifyStats(
+    historyResult.combinations,
+    allCombinations,
+  )
   return combinations.map((combination) =>
     getCell(historyCombinations, combination),
   )

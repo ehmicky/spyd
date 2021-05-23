@@ -5,8 +5,14 @@ import { getUnit } from './unit.js'
 
 // Create `stat.pretty` which stringifies, scales, rounds, adds decimals and
 // adds a unit.
-export const addStatsPretty = function ({ combinations, name, kind, signed }) {
-  const scale = getScale(combinations, name, kind)
+export const addStatsPretty = function ({
+  combinations,
+  allCombinations,
+  name,
+  kind,
+  signed,
+}) {
+  const scale = getScale(allCombinations, name, kind)
   const unit = getUnit(kind, scale)
   const decimals = getStatsDecimals(combinations, name, scale)
   return combinations.map((combination) =>

@@ -1,6 +1,6 @@
 // Divide stats by a scale so they don't show too many digits nor decimals.
-export const getScale = function (combinations, name, kind) {
-  const measures = combinations
+export const getScale = function (allCombinations, name, kind) {
+  const measures = allCombinations
     .map((combination) => getMeasure(combination, name, kind))
     .filter(isNotEmpty)
 
