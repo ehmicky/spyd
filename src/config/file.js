@@ -5,7 +5,7 @@ import { loadConfigContents } from './contents.js'
 import { addNpxShortcut } from './npx.js'
 import { resolveConfigPath } from './resolve.js'
 
-// Load `spyd.*` and any child configuration files.
+// Load `spyd.*` and any parent configuration files.
 // `spyd.*` is optional, so this can return an empty array. This allows
 // benchmarking on-the-fly in a terminal without having to create a
 // configuration file.
@@ -16,7 +16,7 @@ import { resolveConfigPath } from './resolve.js'
 //     - This might lead to issues when using shared configurations
 //       unintentionally merged with some local config
 //  - Can be specified explicitely by users. This can be useful when overridding
-//    a `config` property inherited from a child configuration.
+//    a `config` property inherited from a parent configuration.
 export const loadConfigFile = async function (config = 'default') {
   const configA = addNpxShortcut(config)
   return await getConfigsInfos(configA, '.')
@@ -40,12 +40,12 @@ const getConfigInfos = async function (config, base) {
     return []
   }
 
-  const { config: childConfig, ...configContents } = await loadConfigContents(
+  const { config: parentConfig, ...configContents } = await loadConfigContents(
     configPath,
   )
-  const childBase = dirname(configPath)
-  const childConfigInfos = await getChildConfigInfos(childConfig, childBase)
-  return [...childConfigInfos, { configContents, base: childBase }]
+  const parentBase = dirname(configPath)
+  const parentConfigInfos = await getParentConfigInfos(parentConfig, parentBase)
+  return [...parentConfigInfos, { configContents, base: parentBase }]
 }
 
 // Configuration files can use shared configuration using the `config` property
@@ -119,8 +119,8 @@ const getConfigInfos = async function (config, base) {
 //  - For most containers (e.g. docker):
 //     - This only runs on Linux
 //     - The consumer might need to set some flags, e.g. for networking
-const getChildConfigInfos = async function (childConfig, childBase) {
-  return childConfig === undefined
+const getParentConfigInfos = async function (parentConfig, parentBase) {
+  return parentConfig === undefined
     ? []
-    : await getConfigsInfos(childConfig, childBase)
+    : await getConfigsInfos(parentConfig, parentBase)
 }
