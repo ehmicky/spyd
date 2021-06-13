@@ -1,5 +1,8 @@
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
+
 import nvexeca from 'nvexeca'
-import readPkgUp from 'read-pkg-up'
+import { readPackageUpAsync } from 'read-pkg-up'
 import { satisfies } from 'semver'
 
 import { UserError } from '../../../error/main.js'
@@ -40,11 +43,13 @@ const getFullVersion = async function (version) {
 
 // We can only allow Node versions that are valid with the runner's code
 const getAllowedVersions = async function () {
+  const cwd = dirname(fileURLToPath(import.meta.url))
+
   const {
     packageJson: {
       engines: { node: allowedVersions },
     },
-  } = await readPkgUp({ cwd: __dirname })
+  } = await readPackageUpAsync({ cwd })
   return allowedVersions
 }
 
