@@ -3,13 +3,13 @@ import { extname } from 'path'
 import { UserError } from '../error/main.js'
 
 export const importJsFile = async function (filePath) {
-  const importfunc = EXTENSIONS[extname(filePath)]
+  const importFunc = EXTENSIONS[extname(filePath)]
 
-  if (importfunc === undefined) {
+  if (importFunc === undefined) {
     throw new UserError(`Invalid file extension: ${filePath}`)
   }
 
-  return await importfunc(filePath)
+  return await importFunc(filePath)
 }
 
 const importJavaScript = async function (configPath) {
