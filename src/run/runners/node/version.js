@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 
 import nvexeca from 'nvexeca'
 import { readPackageUpAsync } from 'read-pkg-up'
-import { satisfies } from 'semver'
+import semver from 'semver'
 
 import { UserError } from '../../../error/main.js'
 
@@ -55,7 +55,7 @@ const getAllowedVersions = async function () {
 
 // We validate the version before starting measuring.
 const validateVersion = function ({ versionRange, version }, allowedVersions) {
-  if (!satisfies(version, allowedVersions)) {
+  if (!semver.satisfies(version, allowedVersions)) {
     throw new UserError(
       `In the configuration property "runnerNode.version"
 Version ${versionRange} is invalid: it must be ${allowedVersions}`,
