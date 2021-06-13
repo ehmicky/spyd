@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 
-import { has, get, set } from 'dot-prop'
+import dotProp from 'dot-prop'
 
 // Resolve configuration relative file paths to absolute paths.
 // When resolving configuration relative file paths:
@@ -41,7 +41,7 @@ export const setConfigAbsolutePaths = function (config, configInfos) {
 const PATH_CONFIG_PROPS = ['cwd', 'output', 'tasks']
 
 const setConfigAbsolutePath = function (configInfos, config, propName) {
-  const value = get(config, propName)
+  const value = dotProp.get(config, propName)
 
   if (shouldNotSet(value, propName)) {
     return config
@@ -51,7 +51,7 @@ const setConfigAbsolutePath = function (configInfos, config, propName) {
   const valueA = Array.isArray(value)
     ? value.map((item) => resolve(base, item))
     : resolve(base, value)
-  return set(config, propName, valueA)
+  return dotProp.set(config, propName, valueA)
 }
 
 // Some properties like `output` are not always file paths
@@ -64,7 +64,7 @@ const shouldNotSet = function (value, propName) {
 //  - If none, they use process.cwd() instead
 const getBase = function (configInfos, propName) {
   const configInfo = configInfos.find(({ configContents }) =>
-    has(configContents, propName),
+    dotProp.has(configContents, propName),
   )
 
   if (configInfo !== undefined) {
