@@ -1,38 +1,43 @@
-const { execFile } = require('child_process')
-const { setTimeout } = require('timers/promises')
-const { promisify } = require('util')
+// eslint-disable-next-line no-shadow, import/no-unresolved, node/no-missing-import
+import { setTimeout } from 'timers/promises'
 
-const pExecFile = promisify(execFile)
-
-module.exports.random = () => {
+export const random = () => {
   Math.random()
 }
 
-module.exports.empty = () => {}
+// eslint-disable-next-line no-empty-function
+export const empty = () => {}
 
-module.exports.fixed = async () => {
+export const fixed = async () => {
+  // eslint-disable-next-line no-magic-numbers
   await setTimeout(50)
 }
 
-module.exports.slow = async () => {
+export const slow = async () => {
+  // eslint-disable-next-line no-magic-numbers
   await setTimeout(1e4)
 }
 
-module.exports.uniform = async () => {
+export const uniform = async () => {
+  // eslint-disable-next-line no-magic-numbers
   await setTimeout(100 * Math.random())
 }
 
-module.exports.exponential = async () => {
+export const exponential = async () => {
+  // eslint-disable-next-line no-magic-numbers
   await setTimeout(2 ** (1 + Math.random() * 6))
 }
 
+// eslint-disable-next-line fp/no-let
 let count = 0
 
-module.exports.growing = async () => {
+export const growing = async () => {
+  // eslint-disable-next-line fp/no-mutation
   count += 1
   await setTimeout(count)
 }
 
-module.exports.real = async () => {
-  await pExecFile('node', [`${__dirname}/..`])
+export const real = async () => {
+  // eslint-disable-next-line import/no-unresolved, node/no-missing-import
+  await import('spyd')
 }
