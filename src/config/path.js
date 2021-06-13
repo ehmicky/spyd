@@ -28,7 +28,7 @@ import { has, get, set } from 'dot-prop'
 //         - For example, a task using a file or using the current git
 //           repository could be re-used for different cwd
 //   - user can opt-out of that behavior by using absolute file paths, for
-//     example using the current file's path (e.g. `__filename|__dirname`)
+//     example using the current file's path (e.g. `import.meta.url`)
 export const setConfigAbsolutePaths = function (config, configInfos) {
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
