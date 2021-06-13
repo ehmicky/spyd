@@ -1,5 +1,8 @@
-// eslint-disable-next-line node/no-missing-import, import/no-unresolved
-import { version as spydVersion } from '../../../package.json'
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+import { readPackageUpAsync } from 'read-pkg-up'
+
 import { PluginError } from '../error/main.js'
 import { spawnProcess } from '../process/spawn.js'
 
@@ -18,10 +21,25 @@ import { spawnProcess } from '../process/spawn.js'
 // priority order in the unlikely case two runners return the properties in
 // `versions`.
 export const getSystemVersions = async function (runners, cwd) {
-  const runnerVersions = await Promise.all(
+  const [runnersVersions, spydVersion] = await Promise.all([
+    getRunnersVersions(runners, cwd),
+    getSpydVersion(),
+  ])
+  return Object.assign({}, ...runnersVersions, { Spyd: spydVersion })
+}
+
+const getSpydVersion = async function () {
+  const cwd = dirname(fileURLToPath(import.meta.url))
+  const {
+    packageJson: { version },
+  } = await readPackageUpAsync({ cwd, normalize: false })
+  return version
+}
+
+const getRunnersVersions = async function (runners, cwd) {
+  return await Promise.all(
     runners.map((runner) => getRunnerVersions(runner, cwd)),
   )
-  return Object.assign({}, ...runnerVersions, { Spyd: spydVersion })
 }
 
 const getRunnerVersions = async function (
