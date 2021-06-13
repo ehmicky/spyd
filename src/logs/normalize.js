@@ -10,7 +10,7 @@ export const normalizeLogs = function (taskLogs, truncated) {
     return taskLogsA
   }
 
-  const taskLogsB = stripPartialLine(taskLogsA)
+  const taskLogsB = stripPartialLine(taskLogsA, truncated)
   const taskLogsC = removeDuplicateLines(taskLogsB)
   const taskLogsD = truncated ? `...\n${taskLogsC}` : taskLogsC
   return taskLogsD
@@ -18,9 +18,18 @@ export const normalizeLogs = function (taskLogs, truncated) {
 
 // Remove the first line if it is incomplete.
 // If there is only one line, do not do it.
-const stripPartialLine = function (taskLogs) {
+const stripPartialLine = function (taskLogs, truncated) {
+  if (!truncated) {
+    return taskLogs
+  }
+
   const newlineIndex = taskLogs.indexOf('\n')
-  return newlineIndex === -1 ? taskLogs : taskLogs.slice(newlineIndex + 1)
+
+  if (newlineIndex === -1) {
+    return taskLogs
+  }
+
+  return taskLogs.slice(newlineIndex + 1)
 }
 
 // Only keep the lines starting from the first non-duplicate lines.
