@@ -28,6 +28,7 @@ export const getSystemVersions = async function (runners, cwd) {
   return Object.assign({}, ...runnersVersions, { Spyd: spydVersion })
 }
 
+// TODO: use static JSON imports once those are possible
 const getSpydVersion = async function () {
   const cwd = dirname(fileURLToPath(import.meta.url))
   const {

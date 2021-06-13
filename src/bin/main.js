@@ -31,6 +31,7 @@ const runCli = async function () {
   }
 }
 
+// TODO: use static JSON imports once those are possible
 const checkUpdate = async function () {
   const cwd = dirname(fileURLToPath(import.meta.url))
   const { packageJson } = await readPackageUpAsync({ cwd, normalize: false })
