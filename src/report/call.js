@@ -45,7 +45,7 @@ const getReporterContents = async function (
     showDiff,
   })
   const resultC = addSizeInfo(resultB)
-  const reportFuncProps = omit(reporterConfig, CORE_REPORT_PROPS)
+  const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
   const content = await reportFunc(resultC, reportFuncProps, startData)
   const contentA = normalizeEmptyContent(content)
   const contentB = trimEnd(contentA)

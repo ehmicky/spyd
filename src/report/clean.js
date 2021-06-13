@@ -44,7 +44,7 @@ const maybeOmit = function (obj, showProp, propNames) {
     return obj
   }
 
-  return omit(obj, propNames)
+  return omit.default(obj, propNames)
 }
 
 const TOP_METADATA_PROPS = ['id', 'timestamp']

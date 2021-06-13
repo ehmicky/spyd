@@ -42,7 +42,7 @@ const getFields = function ({
   }
   return {
     ...fields,
-    ...omit(versions, Object.keys(fields)),
+    ...omit.default(versions, Object.keys(fields)),
     ...getSpydVersion(spydVersion),
   }
 }
