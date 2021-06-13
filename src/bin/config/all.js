@@ -17,7 +17,7 @@ This can be:
   - A Node module exporting a configuration file.
     The module name must start with "spyd-config-".
 
-The following file formats are supported: .yml, .js, .cjs, .ts
+The following file formats are supported: .yml, .js, .mjs, .cjs, .ts
 
 Can be specified several times.
 A configuration file can include another one by using this property.

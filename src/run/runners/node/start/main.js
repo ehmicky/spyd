@@ -12,7 +12,7 @@ export const start = async function (
 ) {
   await useRequireConfig(requireConfig)
 
-  const tasks = importFile(taskPath)
+  const tasks = await importFile(taskPath)
   const tasksA = validate(tasks)
   const tasksB = addDefaults(tasksA)
   const task = taskId === undefined ? {} : tasksB[taskId]
@@ -23,9 +23,9 @@ export const start = async function (
   return { tasks: tasksC }
 }
 
-const importFile = function (taskPath) {
+const importFile = async function (taskPath) {
   try {
-    return importJsFile(taskPath)
+    return await importJsFile(taskPath)
   } catch (error) {
     throw new UserError(
       `Could not import the tasks file ${taskPath}\n${error.stack}`,
