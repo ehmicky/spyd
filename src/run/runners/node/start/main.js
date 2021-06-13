@@ -13,14 +13,15 @@ export const start = async function (
   await useRequireConfig(requireConfig)
 
   const tasks = await importFile(taskPath)
-  const tasksA = validate(tasks)
-  const tasksB = addDefaults(tasksA)
-  const task = taskId === undefined ? {} : tasksB[taskId]
+  const tasksA = convertESM(tasks)
+  const tasksB = validate(tasksA)
+  const tasksC = addDefaults(tasksB)
+  const task = taskId === undefined ? {} : tasksC[taskId]
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(state, { task, inputs })
 
-  const tasksC = Object.keys(tasksB)
-  return { tasks: tasksC }
+  const tasksD = Object.keys(tasksC)
+  return { tasks: tasksD }
 }
 
 const importFile = async function (taskPath) {
@@ -31,6 +32,12 @@ const importFile = async function (taskPath) {
       `Could not import the tasks file ${taskPath}\n${error.stack}`,
     )
   }
+}
+
+// ES modules named imports are not plain objects, but module objects.
+// This converts them to plain objects.
+const convertESM = function (tasks) {
+  return tasks[Symbol.toStringTag] === 'Module' ? { ...tasks } : tasks
 }
 
 // Revert any state created by `start`

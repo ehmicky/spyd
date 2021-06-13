@@ -12,8 +12,11 @@ export const importJsFile = async function (filePath) {
   return await importFunc(filePath)
 }
 
+// We support importing both CommonJS and ES modules.
+// CommonJS are imported as `default` imports when using `import()`.
 const importJavaScript = async function (configPath) {
-  return await import(configPath)
+  const importedValue = await import(configPath)
+  return 'default' in importedValue ? importedValue.default : importedValue
 }
 
 const importTypeScript = async function (configPath) {
