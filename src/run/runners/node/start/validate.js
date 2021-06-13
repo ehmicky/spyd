@@ -11,6 +11,12 @@ import {
 
 // Validate that the tasks file has correct shape
 export const validate = function (tasks) {
+  if (tasks.default !== undefined) {
+    throw new UserError(
+      `Tasks file should use named exports instead of a default export`,
+    )
+  }
+
   return validateTasks({ tasks, validators, normalizeTask })
 }
 

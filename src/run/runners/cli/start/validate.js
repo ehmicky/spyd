@@ -8,6 +8,12 @@ import { validateString } from '../../common/validate/type.js'
 
 // Validate that tasks file has correct shape
 export const validate = function (tasks) {
+  if (!isPlainObj(tasks)) {
+    throw new UserError(
+      `Tasks file should export an object not: ${inspect(tasks)}`,
+    )
+  }
+
   return validateTasks({ tasks, validators, normalizeTask })
 }
 

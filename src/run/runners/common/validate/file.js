@@ -1,18 +1,9 @@
-import { inspect } from 'util'
-
-import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
 import { UserError } from '../../../../error/main.js'
 
 // Validate that the tasks file has correct shape
 export const validateTasks = function ({ tasks, validators, normalizeTask }) {
-  if (!isPlainObj(tasks)) {
-    throw new UserError(
-      `Tasks file should export an object not: ${inspect(tasks)}`,
-    )
-  }
-
   return mapObj(tasks, (taskId, task) => [
     taskId,
     validateTask({ taskId, task, validators, normalizeTask }),
