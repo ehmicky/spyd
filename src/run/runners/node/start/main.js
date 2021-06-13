@@ -1,5 +1,5 @@
 import { UserError } from '../../../../error/main.js'
-import { importJsFile } from '../../../../utils/import.js'
+import { importJsNamed } from '../../../../utils/import.js'
 
 import { addDefaults } from './default.js'
 import { useRequireConfig } from './require_config.js'
@@ -13,31 +13,24 @@ export const start = async function (
   await useRequireConfig(requireConfig)
 
   const tasks = await importFile(taskPath)
-  const tasksA = convertESM(tasks)
-  const tasksB = validate(tasksA)
-  const tasksC = addDefaults(tasksB)
-  const task = taskId === undefined ? {} : tasksC[taskId]
+  const tasksA = validate(tasks)
+  const tasksB = addDefaults(tasksA)
+  const task = taskId === undefined ? {} : tasksB[taskId]
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(state, { task, inputs })
 
-  const tasksD = Object.keys(tasksC)
-  return { tasks: tasksD }
+  const tasksC = Object.keys(tasksB)
+  return { tasks: tasksC }
 }
 
 const importFile = async function (taskPath) {
   try {
-    return await importJsFile(taskPath)
+    return await importJsNamed(taskPath)
   } catch (error) {
     throw new UserError(
       `Could not import the tasks file ${taskPath}\n${error.stack}`,
     )
   }
-}
-
-// ES modules named imports are not plain objects, but module objects.
-// This converts them to plain objects.
-const convertESM = function (tasks) {
-  return tasks[Symbol.toStringTag] === 'Module' ? { ...tasks } : tasks
 }
 
 // Revert any state created by `start`

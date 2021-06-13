@@ -2,7 +2,30 @@ import { extname } from 'path'
 
 import { UserError } from '../error/main.js'
 
-export const importJsFile = async function (filePath) {
+// Import named exports.
+// We support importing both CommonJS and ES modules.
+// CommonJS are imported as `default` imports when using `import()`.
+// ES modules named imports are not plain objects, but module objects.
+// We convert them to plain objects.
+export const importJsNamed = async function (filePath) {
+  const importedValue = await importJsFile(filePath)
+  return 'default' in importedValue
+    ? importedValue.default
+    : { ...importedValue }
+}
+
+// Import default exports.
+export const importJsDefault = async function (filePath) {
+  const importedValue = await importJsFile(filePath)
+
+  if (!('default' in importedValue)) {
+    throw new UserError(`Should use a default export instead of named exports`)
+  }
+
+  return importedValue.default
+}
+
+const importJsFile = async function (filePath) {
   const importFunc = EXTENSIONS[extname(filePath)]
 
   if (importFunc === undefined) {
@@ -12,14 +35,11 @@ export const importJsFile = async function (filePath) {
   return await importFunc(filePath)
 }
 
-// We support importing both CommonJS and ES modules.
-// CommonJS are imported as `default` imports when using `import()`.
-const importJavaScript = async function (configPath) {
-  const importedValue = await import(configPath)
-  return 'default' in importedValue ? importedValue.default : importedValue
+const importJavaScript = async function (filePath) {
+  return await import(filePath)
 }
 
-const importTypeScript = async function (configPath) {
+const importTypeScript = async function (filePath) {
   try {
     await import(TS_NODE)
   } catch (error) {
@@ -29,7 +49,7 @@ ${error.message}`,
     )
   }
 
-  return await import(configPath)
+  return await import(filePath)
 }
 
 const TS_NODE = 'ts-node/esm'

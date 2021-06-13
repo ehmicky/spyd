@@ -1,7 +1,7 @@
 import { extname } from 'path'
 
 import { UserError } from '../error/main.js'
-import { importJsFile } from '../utils/import.js'
+import { importJsDefault } from '../utils/import.js'
 import { loadYamlFile } from '../utils/yaml.js'
 
 import { checkObject } from './check.js'
@@ -36,10 +36,10 @@ Please use .yml, .js, .cjs, .mjs or .ts`,
 //  - Allow comments
 //  - Enforce consistency with `cli` runner's `tasks.yml`
 const EXTENSIONS = {
-  '.js': importJsFile,
-  '.cjs': importJsFile,
-  '.mjs': importJsFile,
-  '.ts': importJsFile,
+  '.js': importJsDefault,
+  '.cjs': importJsDefault,
+  '.mjs': importJsDefault,
+  '.ts': importJsDefault,
   '.yml': loadYamlFile,
   '.yaml': loadYamlFile,
 }
