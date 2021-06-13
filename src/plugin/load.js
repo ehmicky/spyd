@@ -1,3 +1,5 @@
+import { createRequire } from 'module'
+
 import { PluginError, UserError } from '../error/main.js'
 
 // Import plugin's code
@@ -43,9 +45,12 @@ const importPlugin = async function ({ id, type, modulePrefix, builtins }) {
 //  - This is simpler for users
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
+// TODO: use import.meta.resolve() when available
 export const getPluginPath = function (moduleName, type, base) {
+  const { resolve } = createRequire(new URL(base, import.meta.url))
+
   try {
-    return require.resolve(moduleName, { paths: [base] })
+    return resolve(moduleName)
   } catch (error) {
     throw new UserError(`Cannot find ${type} "${moduleName}".
 This Node module was not found, please ensure it is installed.

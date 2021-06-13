@@ -83,8 +83,8 @@ const getConfigInfos = async function (config, base) {
 //        - Using any available resolver, e.g. npm
 //        - The main exported file must be the config file
 //           - On npm, this is the "main" file
-//              - This can be "spyd.yml", since we use `require.resolve()`, not
-//                `require()`
+//              - This can be "spyd.yml", since we use `import.meta.resolve()`,
+//                not `require()`
 //     - Should specify peer pependencies requirements:
 //        - For both `spyd` and runners used by config
 //        - It should do so by using package manager-specific features to
