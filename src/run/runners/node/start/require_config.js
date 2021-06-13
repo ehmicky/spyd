@@ -1,3 +1,5 @@
+import { inspect } from 'util'
+
 import { UserError } from '../../../../error/main.js'
 
 // Use the `require` config
@@ -13,7 +15,9 @@ const normalizeRequireConfig = function (requireConfig = []) {
 
   if (!Array.isArray(requireConfig) || !requireConfig.every(isString)) {
     throw new UserError(
-      `'runnerNode.require' configuration property must be an array of strings: ${requireConfig}`,
+      `'runnerNode.require' configuration property must be an array of strings: ${inspect(
+        requireConfig,
+      )}`,
     )
   }
 

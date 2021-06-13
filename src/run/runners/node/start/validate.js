@@ -1,3 +1,5 @@
+import { inspect } from 'util'
+
 import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../../../error/main.js'
@@ -28,7 +30,9 @@ const normalizeTask = function (task) {
   }
 
   if (!isPlainObj(task)) {
-    throw new UserError(`should be a function or an object not: ${task}`)
+    throw new UserError(
+      `should be a function or an object not: ${inspect(task)}`,
+    )
   }
 
   return task

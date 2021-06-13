@@ -1,4 +1,4 @@
-import { isDeepStrictEqual } from 'util'
+import { isDeepStrictEqual, inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
 
@@ -7,7 +7,9 @@ import { UserError } from '../error/main.js'
 // Configuration validation helper functions
 export const checkObject = function (value, name) {
   if (!isPlainObj(value)) {
-    throw new UserError(`'${name}' value must be a plain object: ${value}`)
+    throw new UserError(
+      `'${name}' value must be a plain object: ${inspect(value)}`,
+    )
   }
 }
 
@@ -48,7 +50,7 @@ export const checkDefinedString = function (value, name) {
 
 const checkString = function (value, name) {
   if (typeof value !== 'string') {
-    throw new UserError(`'${name}' must be a string: ${value}`)
+    throw new UserError(`'${name}' must be a string: ${inspect(value)}`)
   }
 }
 
@@ -62,7 +64,9 @@ export const checkJsonObject = function (value, name) {
 const checkJson = function (value, name) {
   if (!isJson(value)) {
     throw new UserError(
-      `'${name}' must only contain strings, numbers, booleans, nulls, arrays or plain objects: ${value}`,
+      `'${name}' must only contain strings, numbers, booleans, nulls, arrays or plain objects: ${inspect(
+        value,
+      )}`,
     )
   }
 }
