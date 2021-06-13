@@ -1,4 +1,4 @@
-import { prompt } from 'inquirer'
+import inquirer from 'inquirer'
 
 import { getDeltaError } from '../delta/error.js'
 import { findByDelta } from '../delta/main.js'
@@ -34,7 +34,7 @@ const shouldRemoveFromHistory = async function (force) {
     return true
   }
 
-  const { confirmed } = await prompt([
+  const { confirmed } = await inquirer.prompt([
     { type: 'confirm', name: 'confirmed', message: 'Remove the result?' },
   ])
   return confirmed
