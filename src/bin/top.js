@@ -1,11 +1,15 @@
+import { argv } from 'process'
+
 import yargs from 'yargs'
+// eslint-disable-next-line node/file-extension-in-import
+import { hideBin } from 'yargs/helpers'
 
 import { COMMANDS } from './commands/main.js'
 
 // Define all CLI commands and flags
 export const defineCli = function () {
   return (
-    yargs
+    yargs(hideBin(argv))
       .command(COMMANDS.map(getCommand))
       .usage('')
       // Disable the default conversion made by yargs of dasherized CLI flags to
