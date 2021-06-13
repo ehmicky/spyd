@@ -36,11 +36,11 @@ const DURATION_UNITS = {
   d: 864e5,
   day: 864e5,
   days: 864e5,
-  month: 26352e5,
-  months: 26352e5,
-  y: 31536e6,
-  year: 31536e6,
-  years: 31536e6,
+  month: 26_352e5,
+  months: 26_352e5,
+  y: 31_536e6,
+  year: 31_536e6,
+  years: 31_536e6,
 }
 /* eslint-enable id-length */
 
