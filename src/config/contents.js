@@ -13,7 +13,7 @@ export const loadConfigContents = async function (configPath) {
   if (loadFunc === undefined) {
     throw new UserError(
       `The configuration file format is not supported: ${configPath}
-Please use .yml, .js, .cjs or .ts`,
+Please use .yml, .js, .cjs, .mjs or .ts`,
     )
   }
 
