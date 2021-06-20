@@ -66,7 +66,7 @@
     "string-width": "^5.0.0",
     "strip-ansi": "^7.0.0",
     "strip-final-newline": "^3.0.0",
-    "time-resolution": "^0.4.0",
+    "time-resolution": "^0.5.0",
     "tmp-promise": "^3.0.2",
     "update-notifier": "^5.0.1",
     "uuid": "^8.3.2",
