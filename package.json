@@ -48,7 +48,7 @@
     "inquirer": "^8.1.1",
     "is-interactive": "^1.0.0",
     "is-plain-obj": "^4.0.0",
-    "jest-validate": "^26.6.2",
+    "jest-validate": "^27.0.2",
     "js-yaml": "^4.0.0",
     "map-obj": "^4.2.0",
     "moize": "^6.0.3",
