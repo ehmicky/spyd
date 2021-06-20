@@ -39,24 +39,8 @@ const importJavaScript = async function (filePath) {
   return await import(filePath)
 }
 
-const importTypeScript = async function (filePath) {
-  try {
-    await import(TS_NODE)
-  } catch (error) {
-    throw new UserError(
-      `Using *.ts requires 'typescript' to be installed and configured.
-${error.message}`,
-    )
-  }
-
-  return await import(filePath)
-}
-
-const TS_NODE = 'ts-node/esm'
-
 const EXTENSIONS = {
   '.js': importJavaScript,
   '.cjs': importJavaScript,
   '.mjs': importJavaScript,
-  '.ts': importTypeScript,
 }

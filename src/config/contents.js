@@ -13,7 +13,7 @@ export const loadConfigContents = async function (configPath) {
   if (loadFunc === undefined) {
     throw new UserError(
       `The configuration file format is not supported: ${configPath}
-Please use .yml, .js, .cjs, .mjs or .ts`,
+Please use .yml, .js, .mjs or .cjs`,
     )
   }
 
@@ -37,9 +37,8 @@ Please use .yml, .js, .cjs, .mjs or .ts`,
 //  - Enforce consistency with `cli` runner's `tasks.yml`
 const EXTENSIONS = {
   '.js': importJsDefault,
-  '.cjs': importJsDefault,
   '.mjs': importJsDefault,
-  '.ts': importJsDefault,
+  '.cjs': importJsDefault,
   '.yml': loadYamlFile,
   '.yaml': loadYamlFile,
 }

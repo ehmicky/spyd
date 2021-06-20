@@ -74,7 +74,6 @@
     "strip-final-newline": "^2.0.0",
     "time-resolution": "^0.4.0",
     "tmp-promise": "^3.0.2",
-    "ts-node": "^9.1.1",
     "update-notifier": "^5.0.1",
     "uuid": "^8.3.2",
     "wrap-ansi": "^7.0.0",
