@@ -63,7 +63,7 @@
     "read-pkg-up": "^8.0.0",
     "semver": "^7.3.5",
     "sort-on": "^4.1.0",
-    "string-width": "^4.2.2",
+    "string-width": "^5.0.0",
     "strip-ansi": "^7.0.0",
     "strip-final-newline": "^3.0.0",
     "time-resolution": "^0.4.0",
