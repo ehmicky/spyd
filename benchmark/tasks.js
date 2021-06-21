@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-shadow, import/no-unresolved, node/no-missing-import
+// eslint-disable-next-line no-shadow
 import { setTimeout } from 'timers/promises'
 
 export const random = () => {
@@ -38,6 +38,5 @@ export const growing = async () => {
 }
 
 export const real = async () => {
-  // eslint-disable-next-line import/no-unresolved, node/no-missing-import
   await import('spyd')
 }
