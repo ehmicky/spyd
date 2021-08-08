@@ -27,11 +27,11 @@ import { mergeResults, mergeFilteredResults, mergeResult } from './merge.js'
 //     - Makes merging opt-in. This is good since merging results can be
 //       unexpected, especially with `bench` command
 //     - While still showing the `diff` with the last result, which is the most
-//       likely wanted ones
+//       likely wanted one
 // The first item in `result.history` is the `sinceResult`, i.e. the result
 // targeted by `since`:
 //  - It is shown first in time series
-//     - This ensure each combination shows where it started
+//     - This ensures each combination shows where it started
 //     - This allows users to visualize the `diff` by comparing the first and
 //       last item
 // The last item in `result.history` is the current result:
@@ -39,7 +39,7 @@ import { mergeResults, mergeFilteredResults, mergeResult } from './merge.js'
 //  - For `bench`, this is the currently measured result
 //  - This allows time series reporters to use `result.history`
 //     - Since those should report the current result before merging
-//     - This ensure each combination shows where it was last measured
+//     - This ensures each combination shows where it was last measured
 //     - This ensures the time series reflects other reporters when used
 //       together
 // We do not expose some `combination.history` property
