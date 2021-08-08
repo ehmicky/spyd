@@ -55,7 +55,7 @@
     "moize": "^6.0.3",
     "nvexeca": "^7.0.0",
     "omit.js": "^2.0.2",
-    "os-name": "^4.0.0",
+    "os-name": "^5.0.0",
     "p-event": "^4.2.0",
     "p-map-series": "^3.0.0",
     "path-exists": "^4.0.0",
