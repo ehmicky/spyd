@@ -7,7 +7,6 @@ import { removeEmptyValues } from './empty.js'
 //  - shared `config`
 //  - `spyd.*` with CLI flags
 export const mergeConfigs = function (configs) {
-  // eslint-disable-next-line unicorn/prefer-object-from-entries
   const configC = configs.reduce(
     (configA, configB) => mergeObjects(configA, configB, []),
     {},
