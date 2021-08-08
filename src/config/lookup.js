@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 
 import findUp from 'find-up'
-import pathExists from 'path-exists'
+import { pathExists } from 'path-exists'
 
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 

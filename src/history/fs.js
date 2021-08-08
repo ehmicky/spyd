@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 
-import pathExists from 'path-exists'
+import { pathExists } from 'path-exists'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
