@@ -11,7 +11,7 @@ const parseTag = function (delta) {
   return delta
 }
 
-// If several results match, we use the most recent once
+// If several results match, we use the most recent one
 // We use the most recent result because this is what users most likely want.
 // When none is found in `result.systems`, we try to use `git` instead.
 const findByTag = async function (results, tagOrBranch, cwd) {
