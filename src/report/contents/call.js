@@ -1,5 +1,6 @@
 import omit from 'omit.js'
 
+import { getFooter } from '../../system/footer.js'
 import { showResultTitles } from '../../title/show.js'
 import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
@@ -43,8 +44,14 @@ const getReportResult = function (
     showPrecision,
     showDiff,
   })
-  const resultC = addSizeInfo(resultB)
-  return resultC
+  const resultC = addFooter(resultB)
+  const resultD = addSizeInfo(resultC)
+  return resultD
+}
+
+const addFooter = function ({ id, timestamp, systems, ...result }) {
+  const footer = getFooter({ id, timestamp, systems })
+  return { ...result, footer }
 }
 
 // Add size-related information

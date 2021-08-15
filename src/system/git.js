@@ -1,5 +1,5 @@
 // Serialize `git` information for CLI reporters.
-export const prettifyGit = function ({ commit, tag, branch }) {
+export const serializeGit = function ({ commit, tag, branch }) {
   if (commit === undefined && tag === undefined) {
     return
   }
@@ -19,7 +19,7 @@ const getHash = function (commit, tag) {
 
 const COMMIT_SIZE = 8
 
-export const prettifyPr = function ({ prNumber, prBranch }) {
+export const serializePr = function ({ prNumber, prBranch }) {
   if (prNumber === undefined) {
     return
   }
