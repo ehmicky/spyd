@@ -14,8 +14,23 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 //  - A `benchmark` directory: for grouping benchmark-related files.
 //  - Any other directory: for on-the-fly benchmarking, or for
 //    global/shared configuration.
-// We only allow this for the top-level flags not inside configuration files to
-// keep those self-contained.
+// The reasons for that logic are:
+//  - Ensures the same default value behavior and directories between different
+//    configuration properties
+//  - Avoids typing during on-the-fly benchmarking by allowing files to be in
+//    the current directory
+//  - Avoids having to configure file paths most of the time
+//  - Enforces a preferred file structure and naming
+//  - Works with shared `config`
+//     - They might need to explicitly set some properties (especially `tasks`)
+//       to avoid using the default value though, making them self-contained
+//  - Works with multiple config files (thanks to concatenating `tasks` to an
+//    array)
+//  - Works with multiple runners
+//  - Extensible to other future file configuration properties
+// For `config`:
+//  - We only allow this for the top-level flags not inside configuration files
+//    to keep those self-contained.
 export const resolveLookup = async function (isMatchingPath, base) {
   const lookupDirs = await getLookupDirs(base)
   return await findUp(
