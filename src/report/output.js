@@ -13,45 +13,44 @@ import { addPadding } from './utils/indent.js'
 // If the file contains the spyd-start and spyd-end comments, the content is
 // inserted between them instead.
 export const outputContents = async function (contents) {
-  await Promise.all([
-    outputStdoutContents(contents),
-    outputFilesContents(contents),
-  ])
+  await Promise.all(
+    Object.entries(groupBy(contents, 'output')).map(printContents),
+  )
+}
+
+const printContents = async function ([output, contents]) {
+  if (output === 'stdout') {
+    await outputStdoutContents(contents)
+    return
+  }
+
+  await outputFileContents(output, contents)
 }
 
 // Print final report to terminal.
 const outputStdoutContents = async function (contents) {
-  const stdoutContents = computeStdoutContents(contents)
-
-  if (stdoutContents === undefined) {
-    return
-  }
-
+  const stdoutContents = getStdoutContents(contents)
   await printToStdout(stdoutContents)
 }
 
 // Retrieve contents printed in preview.
 // Must be identical to the final contents.
-export const computeStdoutContents = function (contents) {
-  const contentsA = contents.filter(hasStdoutOutput)
+export const getPreviewContents = function (contents) {
+  const stdoutContents = contents.filter(isStdoutContent)
+  return getStdoutContents(stdoutContents)
+}
 
-  if (contentsA.length === 0) {
-    return
-  }
+const isStdoutContent = function ({ output }) {
+  return output === 'stdout'
+}
 
+const getStdoutContents = function (contents) {
   const contentsString = joinContents(contents)
-  return addPadding(contentsString)
+  const stdoutContents = addPadding(contentsString)
+  return stdoutContents
 }
 
-// Write final report to files
-const outputFilesContents = async function (contents) {
-  const contentsA = contents.filter((content) => !hasStdoutOutput(content))
-  await Promise.all(
-    Object.entries(groupBy(contentsA, 'output')).map(outputFileContents),
-  )
-}
-
-const outputFileContents = async function ([output, contents]) {
+const outputFileContents = async function (output, contents) {
   if (await isDirectory(output)) {
     throw new UserError(
       `Invalid configuration property "output" "${output}": it must be a regular file, not a directory.`,
@@ -73,10 +72,6 @@ const outputFileContents = async function ([output, contents]) {
       `Could not write to "output" "${output}"\n${error.message}`,
     )
   }
-}
-
-const hasStdoutOutput = function ({ output }) {
-  return output === 'stdout'
 }
 
 const joinContents = function (contents) {
