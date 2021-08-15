@@ -73,7 +73,7 @@ const spawnProcesses = async function (command, { repeat, env, shell }) {
 // Spawn a process.
 // Errors are propagated.
 // Stdout/stderr are always printed since I/O impacts performance, which we
-// want to capture. Also this is needed for the `exec` command.
+// want to capture. Also this is needed for the `dev` command.
 // Steps can communicate to each other using the filesystem.
 // Inputs are passed as environment variables.
 // More advanced logic can be achieved by either:

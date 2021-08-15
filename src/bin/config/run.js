@@ -1,6 +1,6 @@
 import { TASKS, HISTORY } from './groups.js'
 
-// Configuration shared by commands that can run combinations: `bench`, `exec`
+// Configuration shared by commands that can run combinations: `bench`, `dev`
 export const RUN_CONFIG = {
   tasks: {
     group: TASKS,

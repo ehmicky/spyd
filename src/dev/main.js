@@ -4,22 +4,22 @@ import { titleColor } from '../report/utils/colors.js'
 
 // Execute tasks without benchmarking them.
 // We run each serially, so the output is not interleaved.
-export const performExec = async function (config, combinations) {
+export const performDev = async function (config, combinations) {
   // eslint-disable-next-line fp/no-loops
   for (const combination of combinations) {
     // eslint-disable-next-line no-await-in-loop
-    await execCombination(combination, config)
+    await combinationDev(combination, config)
   }
 }
 
-export const execCombination = async function (combination, { cwd }) {
+export const combinationDev = async function (combination, { cwd }) {
   printCombinationName(combination)
 
   await measureCombinations([combination], {
     precisionTarget: 0,
     cwd,
     previewState: { quiet: true },
-    stage: 'exec',
+    stage: 'dev',
   })
 }
 

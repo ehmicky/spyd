@@ -7,7 +7,7 @@ import { readPackageUpAsync } from 'read-pkg-up'
 import UpdateNotifier from 'update-notifier'
 
 import { normalizeError, getErrorProps } from '../error/main.js'
-import * as commands from '../main.js'
+import { bench, show, remove, dev } from '../main.js'
 import { addNonTopPadding } from '../report/utils/indent.js'
 
 import { parseCliFlags } from './parse.js'
@@ -25,7 +25,7 @@ const runCli = async function () {
 
     const yargs = defineCli()
     const { command, configFlags } = parseCliFlags(yargs)
-    await commands[command](configFlags)
+    await COMMANDS[command](configFlags)
   } catch (error) {
     handleCliError(error)
   }
@@ -37,6 +37,8 @@ const checkUpdate = async function () {
   const { packageJson } = await readPackageUpAsync({ cwd, normalize: false })
   UpdateNotifier({ pkg: packageJson }).notify()
 }
+
+const COMMANDS = { bench, show, remove, dev }
 
 // Print CLI errors and exit, depending on the error type
 const handleCliError = function (error) {

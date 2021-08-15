@@ -54,12 +54,12 @@ export const stopLogs = async function (logsPath, logsFd) {
   await Promise.all([logsFd.close(), fs.unlink(logsPath)])
 }
 
-// The `exec` command does not need logs because it directly streams
+// The `dev` command does not need logs because it directly streams
 // stdout/stderr.
 // Anything printed during process spawning (e.g. top-level scope in Node.js)
 // might be repeated for each combination. This is good since:
 //  - It makes it clear that each combination has its own process
 //  - Some stdout/stderr might differ from process to process
 export const hasLogs = function (stage) {
-  return stage !== 'exec'
+  return stage !== 'dev'
 }
