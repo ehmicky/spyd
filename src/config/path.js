@@ -5,6 +5,7 @@ import dotProp from 'dot-prop'
 // Resolve configuration relative file paths to absolute paths.
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.
+//      - This includes flags' default values, including `config` and `tasks`
 //      - The `cwd` configuration property is not used since it might be
 //        confusing:
 //         - `cwd` flag would be relative to the current directory while other
@@ -13,9 +14,6 @@ import dotProp from 'dot-prop'
 //           would not
 //   - The files in `spyd.*` use the configuration file's directory instead.
 //      - We do this since this is what most users would expect.
-//   - This applies to the `config` and `tasks` configuration properties
-//      - I.e. the default value uses `cwd` since it is not in any file, but
-//        it uses the file's directory otherwise.
 // In contrast, the `cwd` flag:
 //   - is used for:
 //      - file searches: `.git` directory

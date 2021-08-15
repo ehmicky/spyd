@@ -1,7 +1,7 @@
 import { dirname } from 'path'
 
 import { checkDefinedStringArray, normalizeOptionalArray } from './check.js'
-import { loadConfigContents } from './contents.js'
+import { loadConfigContents, getConfigFilenames } from './contents.js'
 import { resolveLookup } from './lookup.js'
 import { addNpxShortcut } from './npx.js'
 import { resolveConfigPath } from './resolve.js'
@@ -21,11 +21,15 @@ const TOP_LEVEL_BASE = '.'
 const getTopConfig = async function (config, base) {
   const configA = addNpxShortcut(config)
 
-  if (configA === undefined) {
-    return await resolveLookup(base)
+  if (configA !== undefined) {
+    return configA
   }
 
-  return configA
+  const defaultConfigFilenames = getConfigFilenames()
+  return await resolveLookup(
+    (filename) => defaultConfigFilenames.includes(filename),
+    base,
+  )
 }
 
 // The `config` property can optionally be an array.

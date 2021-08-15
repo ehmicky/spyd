@@ -35,6 +35,7 @@ Please use .yml, .js, .mjs or .cjs`,
 // We use YAML instead of JSON to:
 //  - Allow comments
 //  - Enforce consistency with `cli` runner's `tasks.yml`
+// Order is significant
 const EXTENSIONS = {
   '.js': importJsDefault,
   '.mjs': importJsDefault,
@@ -42,5 +43,12 @@ const EXTENSIONS = {
   '.yml': loadYamlFile,
   '.yaml': loadYamlFile,
 }
-// Order is significant
-export const CONFIG_EXTENSIONS = Object.keys(EXTENSIONS)
+
+// Return filenames looked up by the default value of the `config` flag
+export const getConfigFilenames = function () {
+  return Object.keys(EXTENSIONS).map(
+    (extName) => `${DEFAULT_CONFIG_BASENAME}${extName}`,
+  )
+}
+
+const DEFAULT_CONFIG_BASENAME = 'spyd'
