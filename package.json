@@ -14,7 +14,7 @@
   "scripts": {
     "test": "gulp test"
   },
-  "description": "Simple and precise benchmarking",
+  "description": "Complete yet simple benchmark runner",
   "keywords": [],
   "license": "Apache-2.0",
   "homepage": "https://git.io/fjRQu",
