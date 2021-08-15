@@ -23,11 +23,12 @@ export const callReportFunc = async function ({
     startData,
   },
 }) {
-  const reportResult = getReportResult(result, titles, reporterConfig)
+  const resultA = getReportResult(result, titles, reporterConfig)
+  const { result: resultB, footer } = addFooter(resultA, format)
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
-  const reporterArgs = [reportResult, reportFuncProps, startData]
+  const reporterArgs = [resultB, reportFuncProps, startData]
   const content = await FORMATS[format].report(reporter, reporterArgs)
-  return { content, output, format, colors }
+  return { content, output, format, colors, footer }
 }
 
 // Normalize the `result` passed to `reporter.report()`
@@ -44,14 +45,8 @@ const getReportResult = function (
     showPrecision,
     showDiff,
   })
-  const resultC = addFooter(resultB)
-  const resultD = addSizeInfo(resultC)
-  return resultD
-}
-
-const addFooter = function ({ id, timestamp, systems, ...result }) {
-  const footer = getFooter({ id, timestamp, systems })
-  return { ...result, footer }
+  const resultC = addSizeInfo(resultB)
+  return resultC
 }
 
 // Add size-related information
@@ -59,6 +54,15 @@ const addSizeInfo = function (result) {
   const screenWidth = getPaddedScreenWidth()
   const screenHeight = getPaddedScreenHeight()
   return { ...result, screenWidth, screenHeight }
+}
+
+// Compute the footer.
+// Depending on format, it is either passed to the reporter or appended by us.
+const addFooter = function ({ id, timestamp, systems, ...result }, format) {
+  const footer = getFooter({ id, timestamp, systems })
+  const resultA =
+    FORMATS[format].footer === undefined ? { ...result, footer } : result
+  return { result: resultA, footer }
 }
 
 // We handle some reporterConfig properties in core, and do not pass those to

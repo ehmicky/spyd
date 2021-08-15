@@ -1,3 +1,5 @@
+import { prettifyValue } from '../../utils/prettify_value.js'
+
 // Format meant for string output which should be output to a terminal or to
 // a file.
 // Used as the fallback format.
@@ -11,5 +13,8 @@ export const TERMINAL_FORMAT = {
     return await reportTerminal(...reporterArgs)
   },
   concat: true,
+  footer(footer) {
+    return prettifyValue(footer)
+  },
   padding: true,
 }

@@ -3,12 +3,18 @@ import stripAnsi from 'strip-ansi'
 import { wrapRows } from '../utils/wrap.js'
 
 // Handle content returned by `reporter.report()`
-export const handleContent = function ({ content, output, format, colors }) {
+export const handleContent = function ({
+  content,
+  output,
+  format,
+  colors,
+  footer,
+}) {
   const contentA = trimEnd(content)
   const contentB = wrapRows(contentA)
   const contentC = handleColors(contentB, colors)
   const contentD = trimContent(contentC)
-  return { content: contentD, output, format }
+  return { content: contentD, output, format, footer }
 }
 
 // Trim the end of each line to avoid wrapping-related visual bugs

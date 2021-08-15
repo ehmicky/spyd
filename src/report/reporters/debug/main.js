@@ -1,6 +1,5 @@
 import { serializeHistograms } from '../../utils/histogram/main.js'
 import { joinSections } from '../../utils/join.js'
-import { prettifyValue } from '../../utils/prettify_value.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
@@ -10,12 +9,7 @@ import { getRow } from './row.js'
 import { getTimeSeries } from './time_series.js'
 
 // Debugging reporter only meant for development purpose
-const reportTerminal = function ({
-  combinations,
-  screenWidth,
-  history,
-  footer,
-}) {
+const reportTerminal = function ({ combinations, screenWidth, history }) {
   const combinationsA = prettifyStats(combinations)
   const combinationsB = addTitles(combinationsA)
 
@@ -25,8 +19,7 @@ const reportTerminal = function ({
     showStats: false,
     screenWidth,
   })
-  const footerString = prettifyValue(footer)
-  return joinSections([...tables, ...timeSeries, ...histograms, footerString])
+  return joinSections([...tables, ...timeSeries, ...histograms])
 }
 
 const getTables = function (combinations, screenWidth) {

@@ -18,6 +18,9 @@ export const EXTERNAL_FORMAT = {
   // Whether it is possible to use two reporters with this format and with the
   // same `output` but with possibly different configurations
   concat: false,
+  // Function normalizing the footer to append.
+  // `undefined` if the `footer` should be passed to the report function instead
+  footer: undefined,
   // Whether top/bottom/left/right padding should be added
   padding: false,
 }
