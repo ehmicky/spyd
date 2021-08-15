@@ -38,7 +38,7 @@ const getReporterContents = async function ({
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
   const reporterArgs = [reportResult, reportFuncProps, startData]
   const content = await FORMATS[format].report(reporter, reporterArgs)
-  return { content, output, colors }
+  return { content, output, format, colors }
 }
 
 // Normalize the `result` passed to `reporter.report()`

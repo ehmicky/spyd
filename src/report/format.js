@@ -48,14 +48,23 @@ const validateFormat = function ({
 // Format meant for reporters without any return value.
 // For example: separate programs, network requests, desktop notifications
 const EXTERNAL_FORMAT = {
+  // Return whether this format should be used, for a given output
   detect(output) {
     return output === 'external'
   },
+  // At least one of the following reporter methods must exist to use this
+  // format
   methods: ['reportExternal'],
+  // Call the reporter's methods and possibly return or manipulate its return
+  // value
   async report({ reportExternal }, reporterArgs) {
     await reportExternal(...reporterArgs)
   },
+  // Whether it is possible to use two reporters with this format and with the
+  // same `output` but with possibly different configurations
   concat: false,
+  // Whether top/bottom/left/right padding should be added
+  padding: false,
 }
 
 // Format meant for string output which should be output to a terminal or to
@@ -70,6 +79,7 @@ const TERMINAL_FORMAT = {
     return await reportTerminal(...reporterArgs)
   },
   concat: true,
+  padding: true,
 }
 
 // Order is significant

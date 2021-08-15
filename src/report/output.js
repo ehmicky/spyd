@@ -7,10 +7,9 @@ import writeFileAtomic from 'write-file-atomic'
 import { UserError } from '../error/main.js'
 import { groupBy } from '../utils/group.js'
 
-import { concatContents } from './concat.js'
 import { detectInsert, insertContents } from './insert.js'
+import { serializeContents } from './serialize.js'
 import { printToStdout } from './tty.js'
-import { addPadding } from './utils/indent.js'
 
 // Print result to file or to terminal based on the `output` configuration
 // property.
@@ -33,24 +32,19 @@ const printContents = async function ([output, contents]) {
 
 // Print final report to terminal.
 const outputStdoutContents = async function (contents) {
-  const contentsString = getContentsString(contents)
+  const contentsString = serializeContents(contents)
   await printToStdout(contentsString)
 }
 
-// Retrieve contents shown in preview.
-// Must be identical to final report printed on stdout.
-export const getPreviewContents = function (contents) {
-  return contents.length === 0 ? '' : getContentsString(contents)
-}
-
 const outputFileContents = async function (output, contents) {
+  const contentsString = serializeContents(contents)
+
   if (await isDirectory(output)) {
     throw new UserError(
       `Invalid configuration property "output" "${output}": it must be a regular file, not a directory.`,
     )
   }
 
-  const contentsString = getContentsString(contents)
   const fileContent = await detectInsert(output)
 
   if (fileContent !== undefined) {
@@ -72,14 +66,4 @@ const overwriteContents = async function (output, contentsString) {
       `Could not write to "output" "${output}"\n${error.message}`,
     )
   }
-}
-
-const getContentsString = function (contents) {
-  const joinedContents = concatContents(contents.map(getContentProperty))
-  const contentsString = addPadding(joinedContents)
-  return contentsString
-}
-
-const getContentProperty = function ({ content }) {
-  return content
 }
