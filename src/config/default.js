@@ -32,7 +32,6 @@ export const DEFAULT_CONFIG = {
   delta: 1,
   since: 0,
   titles: {},
-  output: 'stdout',
   showTitles: false,
   showPrecision: false,
   select: [],
