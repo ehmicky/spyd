@@ -13,11 +13,12 @@ export const ALL_CONFIG = {
     describe: `Configuration file location.
 
 This can be:
-  - "default": any "spyd.*" file in the current or parent directories.
-    Can be inside a "benchmark" or "packages/spyd-config-*" sub-directory.
   - A file path
   - A Node module exporting a configuration file.
     The module name must start with "spyd-config-".
+
+By default, any "spyd.*" file in the current or parent directories is used.
+It can also be inside a "benchmark" or "packages/spyd-config-*" sub-directory.
 
 The following file formats are supported: .yml, .js, .mjs or .cjs
 
