@@ -27,8 +27,7 @@ The "delta" argument targets the result. It can be:
   - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
   - a duration: like "1m", "5d", "1 month" or "1y"
   - a result id
-  - a git commit, tag or branch
-  - "ci": last CI build`,
+  - a git commit, tag or branch`,
 
   examples: [
     ['$0 remove', 'Remove the last result'],
@@ -50,6 +49,5 @@ The "delta" argument targets the result. It can be:
     ['$0 remove 4221b22a', 'Remove the last result with this git commit'],
     ['$0 remove v1.0.1', 'Remove the last result with this git tag'],
     ['$0 remove feat/users', 'Remove the last result with this git branch'],
-    ['$0 remove ci', 'Remove the last CI build'],
   ],
 }

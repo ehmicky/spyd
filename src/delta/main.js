@@ -8,30 +8,30 @@ import { FORMATS, findFormat } from './formats/main.js'
 // which can an integer, date/time, result.id or git commit.
 // Previous results are always first filtered by `select`.
 // This validates and normalizes it to a `deltaQuery` object.
-export const normalizeDeltas = function (config, envInfo) {
-  return DELTA_PROPS.reduce(normalizeDelta.bind(undefined, envInfo), config)
+export const normalizeDeltas = function (config) {
+  return DELTA_PROPS.reduce(normalizeDelta, config)
 }
 
 const DELTA_PROPS = ['delta', 'since']
 
-const normalizeDelta = function (envInfo, config, name) {
+const normalizeDelta = function (config, name) {
   const delta = config[name]
 
   if (delta === undefined) {
     return config
   }
 
-  return { ...config, [name]: normalizeDeltaValue(delta, name, envInfo) }
+  return { ...config, [name]: normalizeDeltaValue(delta, name) }
 }
 
-const normalizeDeltaValue = function (delta, name, envInfo) {
+const normalizeDeltaValue = function (delta, name) {
   if (delta === '') {
     const deltaProp = getDeltaProp(delta, name)
     throw new UserError(`${deltaProp} must not be an empty string`)
   }
 
   const deltaReturn = findValue(FORMATS, (format) =>
-    parseDelta({ format, delta, name, envInfo }),
+    parseDelta({ format, delta, name }),
   )
 
   if (deltaReturn === undefined) {
@@ -45,14 +45,9 @@ const normalizeDeltaValue = function (delta, name, envInfo) {
   return { type, value, delta, name }
 }
 
-const parseDelta = function ({
-  format: { parse, type },
-  delta,
-  name,
-  envInfo,
-}) {
+const parseDelta = function ({ format: { parse, type }, delta, name }) {
   try {
-    return parse(delta, envInfo)
+    return parse(delta)
   } catch (error) {
     throw addDeltaError(error, { type, delta, name })
   }

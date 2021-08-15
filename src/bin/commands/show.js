@@ -25,8 +25,7 @@ The "delta" argument targets the result. It can be:
   - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
   - a duration: like "1m", "5d", "1 month" or "1y"
   - a result id
-  - a git commit, tag or branch
-  - "ci": last CI build`,
+  - a git commit, tag or branch`,
 
   examples: [
     ['$0 show', 'Show the last result'],
@@ -48,6 +47,5 @@ The "delta" argument targets the result. It can be:
     ['$0 show 4221b22a', 'Show the last result with this git commit'],
     ['$0 show v1.0.1', 'Show the last result with this git tag'],
     ['$0 show feat/users', 'Show the last result with this git branch'],
-    ['$0 show ci', 'Show the last CI build'],
   ],
 }

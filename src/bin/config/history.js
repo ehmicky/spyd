@@ -18,7 +18,6 @@ Can be:
   - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
   - a duration: like "1m", "5d", "1 month" or "1y"
   - a result id
-  - a git commit, tag or branch
-  - "ci": last CI build`,
+  - a git commit, tag or branch`,
   },
 }
