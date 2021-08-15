@@ -6,18 +6,11 @@ export const normalizePluginsConfig = function (config, command) {
   return configA
 }
 
-// Reporting in the `remove` command is shown so the user can be clear about
-// which result was removed, and provide with confirmation.
-// So we only need to print in the terminal, not output|insert files.
 const normalizeReporters = function (config, command) {
-  const reporters = config.reporters.map(normalizeReporter)
-
-  if (command !== 'remove') {
-    return { ...config, reporters }
-  }
-
-  const reportersA = reporters.filter(isTty)
-  return { ...config, reporters: reportersA }
+  const reporters = config.reporters
+    .map(normalizeReporter)
+    .filter((reporter) => shouldUseReporter(reporter, command))
+  return { ...config, reporters }
 }
 
 const normalizeReporter = function (reporter) {
@@ -48,6 +41,9 @@ const getTty = function (output) {
   return output === 'stdout' && isTtyOutput()
 }
 
-const isTty = function ({ tty }) {
-  return tty
+// Reporting in the `remove` command is shown so the user can be clear about
+// which result was removed, and provide with confirmation.
+// So we only need to print in the terminal, not output|insert files.
+const shouldUseReporter = function ({ tty }, command) {
+  return command !== 'remove' || tty
 }
