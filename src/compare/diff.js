@@ -16,6 +16,12 @@ import { isDiffPrecise } from '../stats/welch.js'
 // `combination.stats.diff` is not persisted in history since it can be computed
 // dynamically.
 //  - Also some results might have been dynamically deleted or filtered out.
+// We compare to a single result instead of the average of a range of results
+// because:
+//  - This would not allow comparing against a precise result, like a git branch
+//  - The difference might not be due to the current commit but to the previous
+//    one, making it less meaningful
+//  - This would require additional visualization in reporters
 export const addCombinationsDiff = function (result) {
   const { history } = result
 
