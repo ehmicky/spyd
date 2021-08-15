@@ -48,7 +48,7 @@ The default value depends on the reporter`,
     group: REPORT,
     boolean: true,
     describe: `Use colors in output.
-Default: true if the terminal is interactive.`,
+Default: true if the output is an interactive terminal.`,
   },
   titles: {
     group: REPORT,
@@ -85,6 +85,6 @@ Default: false.`,
     group: REPORT,
     boolean: true,
     describe: `Show the difference with previous results.
-Default: true if the terminal is interactive.`,
+Default: true if the output is an interactive terminal.`,
   },
 }

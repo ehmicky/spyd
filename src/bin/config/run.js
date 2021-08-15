@@ -17,7 +17,7 @@ A higher level increases precision but makes the benchmark last longer.`,
     boolean: true,
     describe: `Preview the results and display a progress bar.
 Reporters are still used.
-Default: false if the terminal is interactive.`,
+Default: false if the output is an interactive terminal.`,
   },
   concurrency: {
     group: TASKS,
