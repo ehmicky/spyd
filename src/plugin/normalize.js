@@ -10,9 +10,7 @@ export const normalizePluginsConfig = function (config, command) {
 // which result was removed, and provide with confirmation.
 // So we only need to print in the terminal, not output|insert files.
 const normalizeReporters = function (config, command) {
-  const reporters = config.reporters.map((reporter) =>
-    normalizeReporter(reporter, config),
-  )
+  const reporters = config.reporters.map(normalizeReporter)
 
   if (command !== 'remove') {
     return { ...config, reporters }
@@ -22,8 +20,8 @@ const normalizeReporters = function (config, command) {
   return { ...config, reporters: reportersA }
 }
 
-const normalizeReporter = function (reporter, config) {
-  const output = getOutput({ reporter, config })
+const normalizeReporter = function (reporter) {
+  const output = getOutput(reporter)
   const tty = getTty(output)
   return { ...reporter, config: { ...reporter.config, output }, tty }
 }
@@ -31,17 +29,14 @@ const normalizeReporter = function (reporter, config) {
 // The reporter's output is decided by (in priority order):
 //  - `config.reporterConfig.{reporterId}.output`
 //    (user-defined, reporter-specific)
-//  - `config.output` (user-defined, any reporters)
+//  - `config.output` (user-defined, any reporters): merged in a previous step
 //  - `reporter.defaultOutput` (reporter-defined, reporter-specific)
 //  - "stdout" (system-defined, any reporters)
 // `reporter.defaultOutput` is meant for reporters to define the default format
 // and filename
 const getOutput = function ({
-  reporter: { defaultOutput: reporterDefaultOutput = DEFAULT_OUTPUT },
-  config: { output: topConfigOutput = reporterDefaultOutput },
-  reporter: {
-    config: { output = topConfigOutput },
-  },
+  defaultOutput = DEFAULT_OUTPUT,
+  config: { output = defaultOutput },
 }) {
   return output
 }
