@@ -117,8 +117,11 @@ const getRunnerTasks = async function (
 }
 
 // Default value for `tasks`. Applied on each runner.
-// This only applies when `tasks` is `undefined`. An empty array resolves to
-// no files instead, which can be useful in programmatic usage.
+// This only applies when `tasks` is `undefined`
+// An empty array resolves to no files instead
+//  - This can be useful in programmatic usage
+//  - This is only useful when using several runners. If all runners have no
+//    tasks, the run will fail.
 const resolveDefaultTasks = async function () {
   return [await resolveLookup(isTaskPath, TOP_LEVEL_BASE)]
 }
