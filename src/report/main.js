@@ -46,8 +46,10 @@ export const reportStart = async function (result, previous, config) {
 // The report output is not printed right away. Instead, it is printed by the
 // preview refresh function at regular intervals.
 export const reportPreview = async function (result, historyResult, config) {
-  const { contents } = await reportCompute(result, historyResult, config)
-  return contents.length === 0 ? '' : contents[0].contentsString
+  const {
+    contents: [{ contentsString = '' } = {}],
+  } = await reportCompute(result, historyResult, config)
+  return contentsString
 }
 
 // Compute the report contents
