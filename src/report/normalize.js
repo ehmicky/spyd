@@ -1,3 +1,4 @@
+import { validateConcat } from './concat.js'
 import { getFormat } from './format.js'
 import { isTtyOutput } from './tty.js'
 
@@ -7,6 +8,7 @@ export const normalizeReporters = function (config, command) {
     .map(addOutput)
     .filter((reporter) => shouldUseReporter(reporter, command))
     .map(addDefaultReporterConfig)
+  validateConcat(reporters)
   return { ...config, reporters }
 }
 

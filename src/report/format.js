@@ -33,6 +33,7 @@ const EXTERNAL_FORMAT = {
     assertFormat(reportExternal !== undefined, id, config)
     await reportExternal(...reporterArgs)
   },
+  concat: false,
 }
 
 // Format meant for string output which should be output to a terminal or to
@@ -46,6 +47,7 @@ const TERMINAL_FORMAT = {
     assertFormat(reportTerminal !== undefined, id, config)
     return await reportTerminal(...reporterArgs)
   },
+  concat: true,
 }
 
 const assertFormat = function (condition, id, { output }) {

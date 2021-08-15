@@ -7,6 +7,7 @@ import writeFileAtomic from 'write-file-atomic'
 import { UserError } from '../error/main.js'
 import { groupBy } from '../utils/group.js'
 
+import { concatContents } from './concat.js'
 import { detectInsert, insertContents } from './insert.js'
 import { printToStdout } from './tty.js'
 import { addPadding } from './utils/indent.js'
@@ -80,12 +81,9 @@ const overwriteContents = async function (output, contentsString) {
 }
 
 const joinContents = function (contents) {
-  return contents.map(getContentProperty).join(CONTENTS_DELIMITER)
+  return concatContents(contents.map(getContentProperty))
 }
 
 const getContentProperty = function ({ content }) {
   return content
 }
-
-// It is possible to use "output" with multiple reporters at once
-const CONTENTS_DELIMITER = '\n'
