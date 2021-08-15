@@ -1,19 +1,19 @@
 import { ALL_CONFIG } from '../config/all.js'
-import { BENCH_CONFIG } from '../config/bench.js'
+import { COMBINATIONS_CONFIG } from '../config/combinations.js'
 import { HISTORY_CONFIG } from '../config/history.js'
 import { REPORT_CONFIG } from '../config/report.js'
 import { RUN_CONFIG } from '../config/run.js'
 import { SELECT_CONFIG } from '../config/select.js'
 
-export const BENCH_COMMAND = {
-  command: ['bench [tasks]', '* [tasks]'],
+export const RUN_COMMAND = {
+  command: ['run [tasks]', '* [tasks]'],
   describe: 'Measure tasks',
 
   config: {
     ...ALL_CONFIG,
-    ...RUN_CONFIG,
+    ...COMBINATIONS_CONFIG,
     ...SELECT_CONFIG,
-    ...BENCH_CONFIG,
+    ...RUN_CONFIG,
     ...REPORT_CONFIG,
     ...HISTORY_CONFIG,
   },

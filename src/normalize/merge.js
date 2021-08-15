@@ -8,17 +8,17 @@ import { mergeSystems } from '../system/merge.js'
 //  - This reports the most recent combination of each sets of categories
 //  - This only uses the results up to the result targeted by `since`
 //  - This allows incremental benchmarks
-// This applies not only to the `show|remove` commands but also to `bench`:
-//  - This ensures `bench` and `show` report the same result and behave the
+// This applies not only to the `show|remove` commands but also to `run`:
+//  - This ensures `run` and `show` report the same result and behave the
 //    same way
 //  - This allows users to compare results while measuring, using a single
-//    command as opposed to having to use `bench` then `show`
+//    command as opposed to having to use `run` then `show`
 //  - This focuses `show` command on its main purpose, i.e. historical viewing
 //  - The `select` configuration property can be used if the user wants to diff
 //    with a previous result but does not want adding the combinations of the
 //    results in-between
 //     - If the users want to use `select` to filter measuring but not
-//       reporting, they should call `bench` then `show` instead
+//       reporting, they should call `run` then `show` instead
 // We explicitly avoid trying to guess the current set of categories beyond
 // the current filtering properties because it is difficult.
 //  - Instead, we just rely on the `since` delta

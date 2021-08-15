@@ -22,7 +22,7 @@ import { measureCombinations } from './several.js'
 //     subsequent editing experience
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
-export const performBenchmark = async function (config) {
+export const performRun = async function (config) {
   printPreviewStarting(config)
 
   const { result, previous } = await createResult(config)

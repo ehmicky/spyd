@@ -6,7 +6,7 @@ import { outputContents, computeStdoutContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
 
 // Report final results in `show` and `remove` commands.
-// The `bench` command needs to perform those steps separately due to previews:
+// The `run` command needs to perform those steps separately due to previews:
 //  - This allows previews to re-use the same reporting logic
 //  - This ensures slow logic like `applySince()` and `reporter.start|end` is
 //    only applied once
@@ -42,7 +42,7 @@ export const reportStart = async function (result, previous, config) {
   return { historyResult, config: configA }
 }
 
-// Report preview results in `bench` command.
+// Report preview results in `run` command.
 // The report output is not printed right away. Instead, it is printed by the
 // preview refresh function at regular intervals.
 export const reportPreview = async function (result, historyResult, config) {

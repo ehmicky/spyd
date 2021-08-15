@@ -1,12 +1,12 @@
 import { ALL_CONFIG } from '../config/all.js'
-import { RUN_CONFIG } from '../config/run.js'
+import { COMBINATIONS_CONFIG } from '../config/combinations.js'
 import { SELECT_CONFIG } from '../config/select.js'
 
 export const DEV_COMMAND = {
   command: 'dev [tasks]',
   describe: 'Execute tasks without benchmarking them',
 
-  config: { ...ALL_CONFIG, ...RUN_CONFIG, ...SELECT_CONFIG },
+  config: { ...ALL_CONFIG, ...COMBINATIONS_CONFIG, ...SELECT_CONFIG },
 
   usage: `$0 dev [flags...] [tasks]
 

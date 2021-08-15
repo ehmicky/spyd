@@ -1,6 +1,6 @@
 import test from 'ava'
-import { bench } from 'spyd'
+import { run } from 'spyd'
 
 test('Smoke test', (t) => {
-  t.is(typeof bench, 'function')
+  t.is(typeof run, 'function')
 })

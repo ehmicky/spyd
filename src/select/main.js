@@ -13,7 +13,7 @@ import { throwValidationError } from './validate.js'
 // Selection could be meant to select combination either for measuring or
 // reporting:
 //  - In the `show` and `remove` commands, only reporting is happening
-//  - However, in the `bench` command, we both measure and report.
+//  - However, in the `run` command, we both measure and report.
 //  - We purposely do not provide separate configuration properties for both
 //    cases because:
 //     - Only reporting what is being measured is more intuitive and provides
@@ -21,7 +21,7 @@ import { throwValidationError } from './validate.js'
 //     - This provides with fewer configuration properties, which is simpler
 //  - If users use `select` to limit how many combinations are being measured,
 //    but still want to see all combinations, they should perform two commands:
-//    first `bench` then `show`.
+//    first `run` then `show`.
 export const selectResults = function (results, select) {
   return results
     .map((result) => selectResult(result, select))

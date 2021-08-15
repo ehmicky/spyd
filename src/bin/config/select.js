@@ -1,7 +1,7 @@
 import { SELECT } from './groups.js'
 
 // Configuration shared by commands that can select combinations:
-// `bench`, `dev`, `show`, `remove`
+// `run`, `dev`, `show`, `remove`
 export const SELECT_CONFIG = {
   select: {
     group: SELECT,

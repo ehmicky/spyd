@@ -1,56 +1,48 @@
-import { TASKS, HISTORY } from './groups.js'
+import { TASKS, REPORT, HISTORY } from './groups.js'
 
-// Configuration shared by commands that can run combinations: `bench`, `dev`
+// Configuration specific to `run`
 export const RUN_CONFIG = {
-  tasks: {
+  precision: {
     group: TASKS,
-    alias: 't',
-    array: true,
-    string: true,
+    alias: 'p',
+    number: true,
     requiresArg: true,
-    describe: `Path to the tasks files.
-This should only specify their main files.
-
-When using multiple runners, each runner can have its own tasks file by using
---runnerId.tasks=path
-Can be specified several times.
-Can be a globbing pattern.
-
-Default: "tasks.*"`,
+    describe: `Precision level of the results, between 0 and 4.
+The default is 2.
+A higher level increases precision but makes the benchmark last longer.`,
   },
-  runner: {
+  quiet: {
+    group: REPORT,
+    alias: 'q',
+    boolean: true,
+    describe: `Preview the results and display a progress bar.
+Reporters are still used.
+Default: false if the terminal is interactive.`,
+  },
+  concurrency: {
     group: TASKS,
-    string: true,
-    array: true,
-    describe: `Tasks' programming language or platform.
-
-Can be specified several times.
-
-Built-in runners: node, cli
-Custom runners can be installed from npm.
-
-Runner-specific configuration properties can be specified by appending the runner's identifier: --runnerId.prop=value.
-For example: --runnerNode.version=8
-
-Default: "node"`,
+    number: true,
+    requiresArg: true,
   },
-  inputs: {
-    group: TASKS,
-    describe: `Inputs passed to tasks.
-
-The key uses a dot notation and specifies the input identifier, such as
---inputs.size=5
-When using variations, the variation identifier must be specified too,
-such as --inputs.size.small=5
-
-The inputs values are passed to tasks as arguments.`,
-  },
-  system: {
+  save: {
     group: HISTORY,
+    boolean: true,
+    describe: `Save the results.
+Default: false`,
+  },
+  limit: {
+    group: HISTORY,
+    alias: 'l',
     string: true,
-    requiresArg: true,
-    describe: `Identifier of the current hardware/software system.
-Used to compare different machines or configurations together.
-Default: "default_system"`,
+    array: true,
+    describe: `Report when the average duration has increased by more than a
+specific percentage such as "50%".
+
+The limit can be scoped to specific combinations by appending their identifiers
+after the percentage.
+  - The syntax is the same as the "select" configuration property.
+  - For example "50% taskOne node" applies only to taskOne when the runner is
+    node.
+  - Several limits can be specified at once.`,
   },
 }

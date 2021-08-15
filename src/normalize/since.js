@@ -12,7 +12,7 @@ import { mergeResults, mergeFilteredResults, mergeResult } from './merge.js'
 //  - The `diff` must be earlier than any combination in `result.history`,
 //    i.e. it makes sense to re-use `since`, and it simplifies the configuration
 // `since` is relative to the main result:
-//  - For `bench`, this is the result being created.
+//  - For `run`, this is the result being created.
 //  - For `show|remove`, this is the result being reported.
 //     - This ensures results reported with `show` are shown the same way as
 //       when when they were measured.
@@ -25,7 +25,7 @@ import { mergeResults, mergeFilteredResults, mergeResult } from './merge.js'
 //  - However, we do not merge it
 //  - This allows giving a default behavior with `since: 0` which:
 //     - Makes merging opt-in. This is good since merging results can be
-//       unexpected, especially with `bench` command
+//       unexpected, especially with `run` command
 //     - While still showing the `diff` with the last result, which is the most
 //       likely wanted one
 // The first item in `result.history` is the `sinceResult`, i.e. the result
@@ -36,7 +36,7 @@ import { mergeResults, mergeFilteredResults, mergeResult } from './merge.js'
 //       last item
 // The last item in `result.history` is the current result:
 //  - For `show|remove`, this is the result targeted by delta
-//  - For `bench`, this is the currently measured result
+//  - For `run`, this is the currently measured result
 //  - This allows time series reporters to use `result.history`
 //     - Since those should report the current result before merging
 //     - This ensures each combination shows where it was last measured

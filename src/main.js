@@ -7,14 +7,14 @@ import {
   getFromHistory,
   removeFromHistory,
 } from './history/main.js'
-import { performBenchmark } from './measure/bench.js'
+import { performRun } from './measure/run.js'
 import { reportResult } from './report/main.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default command.
-export const bench = async function (configFlags) {
-  const config = await getConfig('bench', configFlags)
-  const { result, finalResult } = await performBenchmark(config)
+export const run = async function (configFlags) {
+  const config = await getConfig('run', configFlags)
+  const { result, finalResult } = await performRun(config)
   await addToHistory(result, config)
   checkLimits(finalResult, config)
   return finalResult

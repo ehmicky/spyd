@@ -1,6 +1,6 @@
 import { HISTORY } from './groups.js'
 
-// Configuration shared by commands that use history: `bench`, `show`, `remove`
+// Configuration shared by commands that use history: `run`, `show`, `remove`
 export const HISTORY_CONFIG = {
   since: {
     group: HISTORY,

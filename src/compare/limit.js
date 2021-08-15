@@ -10,7 +10,7 @@ import { parseLimits } from './parse.js'
 // It uses the `since` configuration property like `showDiff` does.
 // Done after reporting.
 // `limit` is only meant to print an error message and change the CLI exit code
-// during measuring (`bench` command). It is not intended to be shown in
+// during measuring (`run` command). It is not intended to be shown in
 // reporting. Instead, `showDiff` should be used for similar reporting-focused
 // purposes.
 export const checkLimits = function ({ combinations }, { limit }) {
