@@ -21,10 +21,14 @@ const TOP_LEVEL_BASE = '.'
 const getTopConfig = async function (config, base) {
   const configA = addNpxShortcut(config)
 
-  if (configA !== undefined) {
-    return configA
+  if (configA === undefined) {
+    return await resolveDefaultConfig(base)
   }
 
+  return configA
+}
+
+const resolveDefaultConfig = async function (base) {
   const defaultConfigFilenames = getConfigFilenames()
   return await resolveLookup(
     (filename) => defaultConfigFilenames.includes(filename),
