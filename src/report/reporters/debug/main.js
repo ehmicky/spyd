@@ -23,13 +23,13 @@ const report = function ({
   const combinationsB = addTitles(combinationsA)
 
   const tables = getTables(combinationsB, screenWidth)
+  const timeSeries = getTimeSeries(history, combinationsB, screenWidth)
   const histograms = serializeHistograms(combinationsB, {
     showStats: false,
     screenWidth,
   })
-  const timeSeries = getTimeSeries(history, combinationsB, screenWidth)
   const footer = prettifyValue(getFooter({ id, timestamp, systems }))
-  return joinSections([...tables, ...histograms, ...timeSeries, footer])
+  return joinSections([...tables, ...timeSeries, ...histograms, footer])
 }
 
 const getTables = function (combinations, screenWidth) {
