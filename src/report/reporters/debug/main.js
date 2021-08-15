@@ -1,7 +1,6 @@
 import { getFooter } from '../../utils/footer/main.js'
 import { serializeHistograms } from '../../utils/histogram/main.js'
 import { joinSections } from '../../utils/join.js'
-import { prettifyValue } from '../../utils/prettify_value.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
@@ -28,7 +27,7 @@ const reportTerminal = function ({
     showStats: false,
     screenWidth,
   })
-  const footer = prettifyValue(getFooter({ id, timestamp, systems }))
+  const footer = getFooter({ id, timestamp, systems })
   return joinSections([...tables, ...timeSeries, ...histograms, footer])
 }
 
