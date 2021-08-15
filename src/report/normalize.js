@@ -1,12 +1,7 @@
-import { isTtyOutput } from '../report/tty.js'
+import { isTtyOutput } from './tty.js'
 
-// Normalize plugins configuration
-export const normalizePluginsConfig = function (config, command) {
-  const configA = normalizeReporters(config, command)
-  return configA
-}
-
-const normalizeReporters = function (config, command) {
+// Normalize reporters configuration
+export const normalizeReporters = function (config, command) {
   const reporters = config.reporters
     .map(normalizeReporter)
     .filter((reporter) => shouldUseReporter(reporter, command))

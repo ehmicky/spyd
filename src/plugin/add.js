@@ -1,8 +1,9 @@
 import omit from 'omit.js'
 
+import { normalizeReporters } from '../report/normalize.js'
+
 import { addPluginsConfig } from './config.js'
 import { loadPlugins } from './load.js'
-import { normalizePluginsConfig } from './normalize.js'
 import { PLUGIN_TYPES_ARRAY } from './types.js'
 import { validatePlugins } from './validate.js'
 
@@ -61,4 +62,9 @@ const removePluginProps = function (config) {
 
 const getConfigProp = function ({ selectProp, configProp }) {
   return [selectProp, configProp]
+}
+
+// Normalize plugins configuration
+const normalizePluginsConfig = function (config, command) {
+  return normalizeReporters(config, command)
 }
