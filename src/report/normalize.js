@@ -49,7 +49,8 @@ const shouldUseReporter = function ({ tty }, command) {
 // output is an interactive terminal.
 const addDefaultReporterConfig = function ({
   tty,
-  config: { showDiff = tty, ...config },
+  config,
+  config: { showDiff = tty },
   ...reporter
 }) {
   return { ...reporter, config: { ...config, showDiff } }
