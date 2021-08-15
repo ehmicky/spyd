@@ -1,7 +1,8 @@
 import { promises as fs } from 'fs'
-import { relative, normalize, basename } from 'path'
+import { relative, normalize } from 'path'
 
 import findUp from 'find-up'
+import pLocate from 'p-locate'
 import { pathExists } from 'path-exists'
 
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
@@ -31,12 +32,15 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 // For `config`:
 //  - We only allow this for the top-level flags not inside configuration files
 //    to keep those self-contained.
-export const resolveLookup = async function (isMatchingPath, base) {
+export const lookupFiles = async function (isMatchingPath, base) {
   const lookupDirs = await getLookupDirs(base)
-  return await findUp(
-    (baseA) => findMatchingPath(baseA, lookupDirs, isMatchingPath),
-    { cwd: base },
+  const matchedDir = await findUp(
+    (baseA) => findMatchingDir(baseA, lookupDirs, isMatchingPath),
+    { cwd: base, type: 'directory' },
   )
+  return matchedDir === undefined
+    ? []
+    : await findMatchingPaths(matchedDir, isMatchingPath)
 }
 
 // `find-up` does not support looking up for multiple files while also looking
@@ -75,23 +79,26 @@ const isConfigPackageDir = function (filename) {
   return filename.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
 }
 
-const findMatchingPath = async function (base, lookupDirs, isMatchingPath) {
-  const filePaths = await Promise.all(
-    lookupDirs.map((lookupDir) => listLookupDir(base, lookupDir)),
+const findMatchingDir = async function (base, lookupDirs, isMatchingPath) {
+  const lookupDirsA = lookupDirs.map((lookupDir) => `${base}/${lookupDir}`)
+  return await pLocate(lookupDirsA, (lookupDirA) =>
+    hasMatchingPath(lookupDirA, isMatchingPath),
   )
-  const matchingPath = filePaths
-    .flat()
-    .find((filePath) => isMatchingPath(basename(filePath)))
-  return matchingPath
 }
 
-const listLookupDir = async function (base, lookupDir) {
-  const dirname = `${base}/${lookupDir}`
-
-  if (!(await pathExists(dirname))) {
-    return []
+const hasMatchingPath = async function (lookupDir, isMatchingPath) {
+  if (!(await pathExists(lookupDir))) {
+    return false
   }
 
-  const filenames = await fs.readdir(dirname)
-  return filenames.map((filename) => normalize(`${dirname}/${filename}`))
+  const matchingPaths = await findMatchingPaths(lookupDir, isMatchingPath)
+  return matchingPaths.length !== 0
+}
+
+const findMatchingPaths = async function (lookupDir, isMatchingPath) {
+  const filenames = await fs.readdir(lookupDir)
+  const filePaths = filenames.map((filename) =>
+    normalize(`${lookupDir}/${filename}`),
+  )
+  return filePaths.filter(isMatchingPath)
 }

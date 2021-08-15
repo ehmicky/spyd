@@ -1,8 +1,8 @@
-import { dirname } from 'path'
+import { dirname, basename } from 'path'
 
 import { checkDefinedStringArray, normalizeOptionalArray } from './check.js'
 import { loadConfigContents, getConfigFilenames } from './contents.js'
-import { resolveLookup } from './lookup.js'
+import { lookupFiles } from './lookup.js'
 import { addNpxShortcut } from './npx.js'
 import { resolveConfigPath } from './resolve.js'
 
@@ -30,8 +30,8 @@ const getTopConfig = async function (config, base) {
 
 const resolveDefaultConfig = async function (base) {
   const defaultConfigFilenames = getConfigFilenames()
-  return await resolveLookup(
-    (filename) => defaultConfigFilenames.includes(filename),
+  return await lookupFiles(
+    (filePath) => defaultConfigFilenames.includes(basename(filePath)),
     base,
   )
 }

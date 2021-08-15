@@ -1,4 +1,8 @@
-import { resolveLookup } from '../config/lookup.js'
+import { basename } from 'path'
+
+import { isNotJunk } from 'junk'
+
+import { lookupFiles } from '../config/lookup.js'
 
 import { findTasks } from './find.js'
 
@@ -123,11 +127,12 @@ const getRunnerTasks = async function (
 //  - This is only useful when using several runners. If all runners have no
 //    tasks, the run will fail.
 const resolveDefaultTasks = async function () {
-  return [await resolveLookup(isTaskPath, TOP_LEVEL_BASE)]
+  return await lookupFiles(isTaskPath, TOP_LEVEL_BASE)
 }
 
-const isTaskPath = function (basename) {
-  return basename.startsWith(TASKS_BASENAME)
+const isTaskPath = function (filePath) {
+  const filename = basename(filePath)
+  return filename.startsWith(TASKS_BASENAME) && isNotJunk(filename)
 }
 
 const TASKS_BASENAME = 'tasks.'
