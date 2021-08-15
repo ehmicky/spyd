@@ -3,6 +3,7 @@ import omit from 'omit.js'
 import { showResultTitles } from '../title/show.js'
 
 import { cleanResult } from './clean.js'
+import { FORMATS } from './format.js'
 import { handleContent } from './handle.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 
@@ -10,7 +11,9 @@ import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 // It can be async, including during results preview.
 export const getContents = async function (result, { reporters, titles }) {
   const contents = await Promise.all(
-    reporters.map((reporter) => getReporterContents(result, titles, reporter)),
+    reporters.map((reporter) =>
+      getReporterContents({ result, titles, reporter }),
+    ),
   )
   const contentsA = contents.filter(hasContent)
   const contentsB = contentsA.map(handleContent)
@@ -20,19 +23,21 @@ export const getContents = async function (result, { reporters, titles }) {
 // Some of this is currently applied only to `result`, not `result.history[*]`
 // Since `report()` might have side effects such as making a HTTP call, we make
 // sure it is called exactly once.
-const getReporterContents = async function (
+const getReporterContents = async function ({
   result,
   titles,
-  {
-    report: reportFunc,
+  reporter,
+  reporter: {
+    format,
     config: reporterConfig,
     config: { output, colors },
     startData,
   },
-) {
+}) {
   const reportResult = getReportResult(result, titles, reporterConfig)
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
-  const content = await reportFunc(reportResult, reportFuncProps, startData)
+  const reporterArgs = [reportResult, reportFuncProps, startData]
+  const content = await FORMATS[format].report(reporter, reporterArgs)
   return { content, output, colors }
 }
 

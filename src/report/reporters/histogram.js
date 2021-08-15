@@ -4,7 +4,7 @@ import { prettifyStats } from '../utils/stats/main.js'
 import { addTitles } from '../utils/title.js'
 
 // Reporter showing distribution of measures with a histogram
-const report = function ({ combinations, screenWidth }) {
+const reportTerminal = function ({ combinations, screenWidth }) {
   const combinationsA = prettifyStats(combinations)
   const combinationsB = addTitles(combinationsA)
   const histograms = serializeHistograms(combinationsB, {
@@ -14,4 +14,4 @@ const report = function ({ combinations, screenWidth }) {
   return joinSections(histograms)
 }
 
-export const histogram = { report }
+export const histogram = { reportTerminal }

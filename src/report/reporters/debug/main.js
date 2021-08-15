@@ -11,7 +11,7 @@ import { getRow } from './row.js'
 import { getTimeSeries } from './time_series.js'
 
 // Debugging reporter only meant for development purpose
-const report = function ({
+const reportTerminal = function ({
   id,
   timestamp,
   systems,
@@ -48,4 +48,4 @@ const getTable = function (combinations, columns, columnWidth) {
   return [header, ...rows].join('\n')
 }
 
-export const debug = { report }
+export const debug = { reportTerminal }
