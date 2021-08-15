@@ -1,18 +1,20 @@
+import { getFormat } from './format.js'
 import { isTtyOutput } from './tty.js'
 
 // Normalize reporters configuration
 export const normalizeReporters = function (config, command) {
   const reporters = config.reporters
-    .map(normalizeReporter)
+    .map(addOutput)
     .filter((reporter) => shouldUseReporter(reporter, command))
     .map(addDefaultReporterConfig)
   return { ...config, reporters }
 }
 
-const normalizeReporter = function (reporter) {
+const addOutput = function (reporter) {
   const output = getOutput(reporter)
+  const format = getFormat(output)
   const tty = getTty(output)
-  return { ...reporter, config: { ...reporter.config, output }, tty }
+  return { ...reporter, config: { ...reporter.config, output }, format, tty }
 }
 
 // The reporter's output is decided by (in priority order):

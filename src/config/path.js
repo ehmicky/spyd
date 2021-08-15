@@ -22,10 +22,12 @@ const PATH_CONFIG_PROPS = [
   {
     propName: 'output',
     globbing: false,
-    isPath: (value) => value !== 'stdout',
+    isPath: (value) => !OUTPUT_SPECIAL_VALUES.has(value),
   },
   { propName: 'tasks', globbing: true },
 ]
+
+const OUTPUT_SPECIAL_VALUES = new Set(['stdout', 'external'])
 
 const reduceConfigPath = async function (
   configInfos,
