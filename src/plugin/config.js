@@ -35,6 +35,8 @@ import { pick } from '../utils/pick.js'
 //  - Allows properties to target both:
 //     - All instances, for example `tasks`
 //     - Specific instances, for example `runnerConfig.{runnerId}.tasks`
+//  - Does not rely on top-level configuration properties which name is dynamic
+//    since those make flags parsing and manipulation harder
 //  - Does not rely on case or delimiters
 //     - Which enables using - and _ in user-defined identifiers
 //  - Works unescaped with YAML, JSON and JavaScript
