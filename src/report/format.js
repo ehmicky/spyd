@@ -19,18 +19,40 @@ import { UserError } from '../error/main.js'
 //    `spyd-reporter-{reporter}-{format}` because this:
 //     - Requires uninstalling/installing to change format
 //     - Is harder for publisher
-export const getFormat = function (output) {
-  return Object.entries(FORMATS).find(([, { detect }]) => detect(output))[0]
+export const getFormat = function (reporter, output) {
+  const [format] = Object.entries(FORMATS).find(([, { detect }]) =>
+    detect(output),
+  )
+  validateFormat({ format, reporter, output })
+  return format
 }
 
-// Format meant for reporters without return value.
+// Validate that a reporter supports the format specified by a given `output`
+const validateFormat = function ({
+  format,
+  reporter,
+  reporter: { id },
+  output,
+}) {
+  const hasMethod = FORMATS[format].methods.some(
+    (method) => reporter[method] !== undefined,
+  )
+
+  if (!hasMethod) {
+    throw new UserError(
+      `The reporter "${id}" does not support "output": "${output}"`,
+    )
+  }
+}
+
+// Format meant for reporters without any return value.
 // For example: separate programs, network requests, desktop notifications
 const EXTERNAL_FORMAT = {
   detect(output) {
     return output === 'external'
   },
-  async report({ reportExternal, id, config }, reporterArgs) {
-    assertFormat(reportExternal !== undefined, id, config)
+  methods: ['reportExternal'],
+  async report({ reportExternal }, reporterArgs) {
     await reportExternal(...reporterArgs)
   },
   concat: false,
@@ -43,19 +65,11 @@ const TERMINAL_FORMAT = {
   detect() {
     return true
   },
-  async report({ reportTerminal, id, config }, reporterArgs) {
-    assertFormat(reportTerminal !== undefined, id, config)
+  methods: ['reportTerminal'],
+  async report({ reportTerminal }, reporterArgs) {
     return await reportTerminal(...reporterArgs)
   },
   concat: true,
-}
-
-const assertFormat = function (condition, id, { output }) {
-  if (!condition) {
-    throw new UserError(
-      `The reporter "${id}" does not support "output": "${output}"`,
-    )
-  }
 }
 
 // Order is significant

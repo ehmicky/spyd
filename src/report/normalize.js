@@ -14,7 +14,7 @@ export const normalizeReporters = function (config, command) {
 
 const addOutput = function (reporter) {
   const output = getOutput(reporter)
-  const format = getFormat(output)
+  const format = getFormat(reporter, output)
   const tty = getTty(output)
   return { ...reporter, config: { ...reporter.config, output }, format, tty }
 }
