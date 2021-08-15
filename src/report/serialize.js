@@ -4,14 +4,10 @@ import { addPadding } from './utils/indent.js'
 
 // Serialize `contents` to a string
 export const serializeContents = function (contents) {
-  if (contents.length === 0) {
-    return ''
-  }
-
-  const [{ format }] = contents
+  const [{ output, format }] = contents
   const joinedContents = concatContents(contents.map(getContentProperty))
   const contentsString = padContents(joinedContents, format)
-  return contentsString
+  return { contentsString, output }
 }
 
 const getContentProperty = function ({ content }) {

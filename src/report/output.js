@@ -5,10 +5,8 @@ import { isDirectory } from 'path-type'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
-import { groupBy } from '../utils/group.js'
 
 import { detectInsert, insertContents } from './insert.js'
-import { serializeContents } from './serialize.js'
 import { printToStdout } from './tty.js'
 
 // Print result to file or to terminal based on the `output` configuration
@@ -16,14 +14,10 @@ import { printToStdout } from './tty.js'
 // If the file contains the spyd-start and spyd-end comments, the content is
 // inserted between them instead.
 export const outputContents = async function (contents) {
-  await Promise.all(
-    Object.entries(groupBy(contents, 'output')).map(printContents),
-  )
+  await Promise.all(contents.map(outputContent))
 }
 
-const printContents = async function ([output, contents]) {
-  const contentsString = serializeContents(contents)
-
+const outputContent = async function ({ contentsString, output }) {
   if (output === 'stdout') {
     return await printToStdout(contentsString)
   }

@@ -1,10 +1,12 @@
 import omit from 'omit.js'
 
 import { showResultTitles } from '../title/show.js'
+import { groupBy } from '../utils/group.js'
 
 import { cleanResult } from './clean.js'
 import { FORMATS } from './format.js'
 import { handleContent } from './handle.js'
+import { serializeContents } from './serialize.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 
 // Call all `reporter.report()`.
@@ -15,8 +17,10 @@ export const getContents = async function (result, { reporters, titles }) {
       getReporterContents({ result, titles, reporter }),
     ),
   )
-  const contentsA = contents.filter(hasContent)
-  const contentsB = contentsA.map(handleContent)
+  const contentsA = contents.filter(hasContent).map(handleContent)
+  const contentsB = Object.values(groupBy(contentsA, 'output')).map(
+    serializeContents,
+  )
   return contentsB
 }
 

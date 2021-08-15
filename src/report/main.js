@@ -3,7 +3,6 @@ import { applySince, mergeHistoryResult } from '../normalize/since.js'
 
 import { getContents } from './call.js'
 import { outputContents } from './output.js'
-import { serializeContents } from './serialize.js'
 import { startReporters, endReporters } from './start_end.js'
 
 // Report final results in `show` and `remove` commands.
@@ -48,8 +47,7 @@ export const reportStart = async function (result, previous, config) {
 // preview refresh function at regular intervals.
 export const reportPreview = async function (result, historyResult, config) {
   const { contents } = await reportCompute(result, historyResult, config)
-  const report = serializeContents(contents)
-  return report
+  return contents.length === 0 ? '' : contents[0].contentsString
 }
 
 // Compute the report contents
