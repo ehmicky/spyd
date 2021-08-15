@@ -1,5 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
+import { PLUGIN_TYPES } from '../plugin/types.js'
+
 import { normalizeOptionalArray } from './check.js'
 import { removeEmptyValues } from './empty.js'
 
@@ -40,8 +42,8 @@ const mergeValues = function (valueA, valueB, keys) {
   return valueB
 }
 
-// `tasks` or `runnner{Runner}.tasks` are concatenated, not overridden so that
-// shared configurations consumers can add tasks
+// `tasks` or `runnnerConfig.{runnerId}.tasks` are concatenated, not overridden
+// so that shared configurations consumers can add tasks
 const isTasks = function (keys) {
   return isTopTasks(keys) || isRunnerTasks(keys)
 }
@@ -52,7 +54,9 @@ const isTopTasks = function (keys) {
 
 const isRunnerTasks = function (keys) {
   return (
-    keys.length === 2 && keys[0].startsWith('runner') && keys[1] === 'tasks'
+    keys.length === 3 &&
+    keys[0] === PLUGIN_TYPES.runner.configProp &&
+    keys[2] === 'tasks'
   )
 }
 

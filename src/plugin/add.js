@@ -1,9 +1,9 @@
-import filterObj from 'filter-obj'
+import omit from 'omit.js'
 
 import { addPluginsConfig } from './config.js'
 import { loadPlugins } from './load.js'
 import { normalizePluginsConfig } from './normalize.js'
-import { PLUGIN_TYPES, PLUGIN_PROP_PREFIXES } from './types.js'
+import { PLUGIN_TYPES_ARRAY } from './types.js'
 import { validatePlugins } from './validate.js'
 
 // Several configuration properties (`runner`, `reporter`)
@@ -16,7 +16,7 @@ import { validatePlugins } from './validate.js'
 //  - uses a singular property name
 export const addPlugins = async function (config, command) {
   const pluginsConfigs = await Promise.all(
-    PLUGIN_TYPES.map(getPluginsByType.bind(undefined, config)),
+    PLUGIN_TYPES_ARRAY.map(getPluginsByType.bind(undefined, config)),
   )
   const pluginsConfigA = Object.fromEntries(pluginsConfigs)
   const configA = removePluginProps(config)
@@ -27,33 +27,21 @@ export const addPlugins = async function (config, command) {
 
 const getPluginsByType = async function (
   config,
-  {
-    type,
-    varName,
-    property,
-    configPrefix,
-    modulePrefix,
-    builtins,
-    configProps,
-  },
+  { type, varName, selectProp, configProp, modulePrefix, builtins, topProps },
 ) {
-  const ids = config[property]
+  const ids = config[selectProp]
   const plugins = await loadPlugins({ ids, type, modulePrefix, builtins })
-  const pluginsA = addPluginsConfig({
-    plugins,
-    config,
-    configPrefix,
-    configProps,
-  })
+  const pluginsA = addPluginsConfig({ plugins, config, configProp, topProps })
   validatePlugins(pluginsA, type)
   return [varName, pluginsA]
 }
 
 // Remove plugin properties, so only the normalized ones are available
 const removePluginProps = function (config) {
-  return filterObj(config, isNotPluginProp)
+  const configProps = PLUGIN_TYPES_ARRAY.flatMap(getConfigProp)
+  return omit.default(config, configProps)
 }
 
-const isNotPluginProp = function (key) {
-  return !PLUGIN_PROP_PREFIXES.some((propPrefix) => key.startsWith(propPrefix))
+const getConfigProp = function ({ selectProp, configProp }) {
+  return [selectProp, configProp]
 }

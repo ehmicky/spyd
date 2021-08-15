@@ -8,20 +8,23 @@ export const REPORT_CONFIG = {
     string: true,
     array: true,
     describe: `Modules to report the result.
-
 Can be specified several times.
 Can be empty, if no reporters should be used.
 
 Built-in reporters: histogram
 Custom reporters can also be installed from npm.
+Default: "debug"`,
+  },
+  reporterConfig: {
+    group: REPORT,
+    describe: `Reporters' configuration.
+Each reporter has its own configuration namespaced by its identifier.
+For example: --reporterConfig.json.output=8
 
-Reporter-specific configuration properties can be specified by appending the
-reporter's name: --reporterName.prop=value.
-For example: --reporterJson.output=path
-
-The following properties can be set for any reporter: output, colors,
-showTitles, showSystem, showMetadata, showPrecision, showDiff.
-For example --reporterJson.output is like --output but only for the json reporter.`,
+The following configuration properties can be set for any reporter:
+output, colors, showTitles, showSystem, showMetadata, showPrecision, showDiff.
+For example --reporterConfig.json.output is like --output but only for the json
+reporter.`,
   },
   output: {
     group: REPORT,

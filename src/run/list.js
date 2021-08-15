@@ -7,7 +7,7 @@ import { lookupFiles } from '../config/lookup.js'
 import { findTasks } from './find.js'
 
 // The tasks file for each runner is selected using either the `tasks` or
-// `runner{id}.tasks` configuration properties.
+// `runnerConfig.{runnerId}.tasks` configuration properties.
 // The `tasks` can be used to specify a default tasks file for all runners.
 // We allow it as a positional CLI flag:
 //  - This is what many users would expect
@@ -140,7 +140,7 @@ const TOP_LEVEL_BASE = '.'
 
 // When two task files export the same task id, we only keep one based on the
 // following priority:
-//  - `config.runner{Runner}.tasks` over `config.tasks`
+//  - `config.runnerConfig.{runnerId}.tasks` over `config.tasks`
 //  - `tasks` array order
 // This allows overridding tasks when using shared configurations.
 const removeDuplicateTaskId = function (task, index, tasks) {

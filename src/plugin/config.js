@@ -1,79 +1,70 @@
-import camelcase from 'camelcase'
-
-import { checkJsonObject } from '../config/check.js'
+import { checkJsonDeepObject } from '../config/check.js'
 import { mergeConfigs } from '../config/merge.js'
-import { UserError } from '../error/main.js'
 import { cleanObject } from '../utils/clean.js'
 import { pick } from '../utils/pick.js'
 
 // Retrieve plugin configuration object.
-// We separate selecting and configuring plugins to make it easier to
-// include and exclude specific plugins on-the-fly.
-// We prepend the plugin name to its type, camelCase. This format is chosen
-// because this:
-//  - keeps using a single delimiter character (dot) instead of mixing others
-//    like - or _
-//  - distinguishes between selecting plugins and configuring them
-//  - allows - and _ in user-defined identifiers
-//  - works unescaped with YAML, JSON and JavaScript
-//  - works with CLI flags without confusion
-//  - introduces only one level of indentation
+// Plugins use both:
+//  - An array of strings property for selection, for example `reporter`.
+//     - The name is singular to optimize for the common case.
+//     - This is useful for including|excluding specific plugins on-the-fly.
+//  - A `*Config` object property where each key is the plugin id, for
+//    configuration, for example `reporterConfig.debug.*`.
+// The configuration property is also used by steps and tasks, for consistency.
 // Some configuration properties can be overridden by plugins, depending on the
-// plugin types. For example `output` can be overridden for a specific reporter
-// using `reporterName.output`.
+// plugin types.
+//  - For example `output` can be overridden for a specific reporter using
+//    `reporterConfig.{reporterId}.output`.
+// Reasons for this format:
+//  - Works with all of: CLI flags, programmatic and config file
+//  - Optimized for patching configuration properties as opposed to replacing,
+//    which makes more sense
+//  - Works both for:
+//     - Selection + configuration (reporter|runner)
+//     - Configuration-only (steps|tasks)
+//  - Simple to enable|disable plugins
+//  - Optimized for the common use cases:
+//     - Only one plugin
+//     - No configuration
+//  - Simple merging of those configuration properties:
+//     - Deep merging of objects
+//     - For all of:
+//        - Array of `config`
+//        - Parent and child config files
+//        - CLI|programmatic flags with config file
+//  - Allows properties to target both:
+//     - All instances, for example `tasks`
+//     - Specific instances, for example `runnerConfig.{runnerId}.tasks`
+//  - Does not rely on case or delimiters
+//     - Which enables using - and _ in user-defined identifiers
+//  - Works unescaped with YAML, JSON and JavaScript
 export const addPluginsConfig = function ({
   plugins,
   config,
-  configPrefix,
-  configProps,
+  configProp,
+  topProps,
 }) {
+  const pluginsConfig = config[configProp]
+  checkJsonDeepObject(pluginsConfig, configProp)
   return plugins.map((plugin) =>
-    addPluginConfig({ plugin, config, configPrefix, configProps }),
+    addPluginConfig({ plugin, pluginsConfig, config, topProps }),
   )
 }
 
 const addPluginConfig = function ({
   plugin,
   plugin: { id },
+  pluginsConfig: { [id]: pluginConfig = {} },
   config,
-  configPrefix,
-  configProps,
+  topProps,
 }) {
-  const pluginConfig = getPluginConfig(id, config, configPrefix)
-  const pluginConfigA = mergeTopConfig(config, pluginConfig, configProps)
-  return { ...plugin, config: pluginConfigA }
+  const pluginConfigA = cleanObject(pluginConfig)
+  const pluginConfigB = mergeTopProps(config, pluginConfigA, topProps)
+  return { ...plugin, config: pluginConfigB }
 }
 
-const getPluginConfig = function (id, config, configPrefix) {
-  const configPropName = getConfigPropName(id, config, configPrefix)
-  const pluginConfig = config[configPropName]
-
-  if (pluginConfig === undefined) {
-    return {}
-  }
-
-  checkJsonObject(pluginConfig, configPropName)
-  return cleanObject(pluginConfig)
-}
-
-// Configuration properties are case-sensitive. Making them case-insensitive
-// would introduce polymorphism, which means we (and any spyd config consumer)
-// need to normalize case each time the configuration is read.
-const getConfigPropName = function (id, config, configPrefix) {
-  const configPropName = camelcase([configPrefix, id])
-  const invalidPropName = `${configPrefix}${id}`
-
-  if (config[invalidPropName] !== undefined) {
-    throw new UserError(
-      `Please rename the configuration property "${invalidPropName}" to "${configPropName}".`,
-    )
-  }
-
-  return configPropName
-}
-
-// Merge `config.*` with `config.{plugin}.*` with lower priority
-const mergeTopConfig = function (config, pluginConfig, configProps) {
-  const topConfig = pick(config, configProps)
+// Merge `*Config.*` with `*Config.{id}.*` with lower priority
+const mergeTopProps = function (config, pluginConfig, topProps) {
+  const topConfig = pick(config, topProps)
   return mergeConfigs([topConfig, pluginConfig])
 }

@@ -26,6 +26,8 @@ export const DEFAULT_CONFIG = {
   concurrency: 1,
   system: 'default_system',
   save: false,
+  runnerConfig: {},
+  reporterConfig: {},
   limit: [],
   delta: 1,
   since: 0,

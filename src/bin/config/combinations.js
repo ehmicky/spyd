@@ -24,16 +24,17 @@ Can be a globbing pattern.`,
     string: true,
     array: true,
     describe: `Tasks' programming language or platform.
-
 Can be specified several times.
 
 Built-in runners: node, cli
 Custom runners can be installed from npm.
-
-Runner-specific configuration properties can be specified by appending the runner's identifier: --runnerId.prop=value.
-For example: --runnerNode.version=8
-
 Default: "node"`,
+  },
+  runnerConfig: {
+    group: TASKS,
+    describe: `Runners' configuration.
+Each runner has its own configuration namespaced by its identifier.
+For example: --runnerConfig.node.version=8`,
   },
   inputs: {
     group: TASKS,

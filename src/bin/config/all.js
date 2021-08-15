@@ -7,7 +7,6 @@ export const ALL_CONFIG = {
     alias: 'c',
     array: true,
     string: true,
-    requiresArg: true,
     describe: `Configuration file location.
 
 This can be:
@@ -17,6 +16,7 @@ This can be:
 
 By default, any "spyd.*" file in the current or parent directories is used.
 It can also be inside a "benchmark" or "packages/spyd-config-*" sub-directory.
+This can disabled by setting an empty value.
 
 The following file formats are supported: .yml, .js, .mjs or .cjs
 

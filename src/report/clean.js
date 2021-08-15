@@ -4,7 +4,7 @@ import omit from 'omit.js'
 // passed. Those all start with `show*`. We use one boolean configuration
 // property for each instead of a single array configuration property because it
 // makes it easier to enable/disable each property both in CLI flags and in
-// `reporter{id}.*` properties.
+// `reporterConfig.{reporterId}.*` properties.
 export const cleanResult = function ({
   result: { systems, combinations, ...result },
   showMetadata,
