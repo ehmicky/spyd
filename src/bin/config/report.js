@@ -42,7 +42,7 @@ with the words "spyd-start" and "spyd-end" such as <!-- spyd-start --> or
 #spyd-start
 Otherwise, the file is overwritten.
 
-Default: "stdout".`,
+Default: "stdout"`,
   },
   colors: {
     group: REPORT,
