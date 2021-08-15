@@ -1,3 +1,6 @@
+import { promises as fs } from 'fs'
+import { dirname } from 'path'
+
 import { isDirectory } from 'path-type'
 import writeFileAtomic from 'write-file-atomic'
 
@@ -59,6 +62,13 @@ const outputFileContents = async function (output, contents) {
     await insertContents(output, contentsString, fileContent)
     return
   }
+
+  await overwriteContents(output, contentsString)
+}
+
+const overwriteContents = async function (output, contentsString) {
+  const outputDir = dirname(output)
+  await fs.mkdir(outputDir, { recursive: true })
 
   try {
     await writeFileAtomic(output, contentsString)
