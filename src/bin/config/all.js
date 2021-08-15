@@ -7,9 +7,7 @@ export const ALL_CONFIG = {
     alias: 'c',
     array: true,
     string: true,
-    // Using `--config=` resolves to `[]` which is useful to remove the default
-    // lookup
-    requiresArg: false,
+    requiresArg: true,
     describe: `Configuration file location.
 
 This can be:
