@@ -2,7 +2,7 @@ import { groupBy } from '../utils/group.js'
 
 import { callReportFunc } from './call.js'
 import { handleContent } from './handle.js'
-import { serializeContents } from './serialize.js'
+import { joinContents } from './join.js'
 
 // Retrieve reporter's contents by calling all `reporter.report()` then
 // normalizing their return value and grouping it by `output`.
@@ -12,7 +12,7 @@ export const getContents = async function (result, { reporters, titles }) {
   )
   const contentsA = contents.filter(hasContent).map(handleContent)
   const contentsB = Object.values(groupBy(contentsA, 'output')).map(
-    serializeContents,
+    joinContents,
   )
   return contentsB
 }
