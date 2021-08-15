@@ -1,8 +1,6 @@
 import filterObj from 'filter-obj'
 import mapObj from 'map-obj'
 
-import { ALIASES } from './config/aliases.js'
-
 // Yargs CLI parsing supports setting empty arrays using `--NAME`, `--NAME=` or
 // `--NAME=""`
 //   - This is useful in many cases to remove the default value, for example
@@ -25,7 +23,7 @@ const DEFAULT_COMMAND = 'run'
 // We do not remove dasherized properties because user-defined identifiers can
 // use dashes and we disable yargs' `camel-case-expansion`.
 const isUserProp = function (key, value) {
-  return value !== undefined && !INTERNAL_KEYS.has(key) && !ALIASES.has(key)
+  return value !== undefined && !INTERNAL_KEYS.has(key) && key.length !== 1
 }
 
 // = is due to a bug in Yargs (https://github.com/yargs/yargs/issues/1860)

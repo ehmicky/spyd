@@ -15,6 +15,7 @@ export const defineCli = function () {
       // Disable the default conversion made by yargs of dasherized CLI flags to
       // camelCase because user-defined identifiers can use dashes
       .parserConfiguration({ 'camel-case-expansion': false })
+      .strict()
   )
 }
 
