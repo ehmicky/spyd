@@ -22,7 +22,6 @@ const getReporterContents = async function (
   titles,
   {
     report: reportFunc,
-    tty,
     config: reporterConfig,
     config: {
       showSystem,
@@ -31,7 +30,7 @@ const getReporterContents = async function (
       colors,
       showTitles,
       showPrecision,
-      showDiff = tty,
+      showDiff,
     },
     startData,
   },

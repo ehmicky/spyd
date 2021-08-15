@@ -10,6 +10,7 @@ const normalizeReporters = function (config, command) {
   const reporters = config.reporters
     .map(normalizeReporter)
     .filter((reporter) => shouldUseReporter(reporter, command))
+    .map(addDefaultReporterConfig)
   return { ...config, reporters }
 }
 
@@ -46,4 +47,15 @@ const getTty = function (output) {
 // So we only need to print in the terminal, not output|insert files.
 const shouldUseReporter = function ({ tty }, command) {
   return command !== 'remove' || tty
+}
+
+// Add default values for each reporter's configuration
+// Several reporter's configuration properties default to `true` only when the
+// output is an interactive terminal.
+const addDefaultReporterConfig = function ({
+  tty,
+  config: { showDiff = tty, ...config },
+  ...reporter
+}) {
+  return { ...reporter, config: { ...config, showDiff } }
 }
