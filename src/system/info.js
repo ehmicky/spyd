@@ -2,6 +2,7 @@ import { cpus as getCpus, totalmem } from 'os'
 
 import { format as formatBytes } from 'bytes'
 import osName from 'os-name'
+import { v4 as uuidv4 } from 'uuid'
 
 import { cleanObject } from '../utils/clean.js'
 import { groupBy } from '../utils/group.js'
@@ -14,21 +15,26 @@ import { groupBy } from '../utils/group.js'
 // A result can only have a single `system`. However, when merging results,
 // this becomes several `systems`. We persist the `systems` array directly so
 // that all results have the same shape in both our logic and reporters' logic.
-export const getSystems = function ({
+export const getSystemInfo = function (systemVersions, { systemId, envInfo }) {
+  const id = uuidv4()
+  const timestamp = Date.now()
+  const system = getSystem({ systemId, systemVersions, envInfo })
+  return { id, timestamp, systems: [system] }
+}
+
+const getSystem = function ({
   systemId,
   systemVersions,
   envInfo: { commit, branch, tag, pr, prBranch, buildUrl },
 }) {
   const machine = getMachine()
-  return [
-    cleanObject({
-      id: systemId,
-      machine,
-      git: { commit, branch, tag, prNumber: pr, prBranch },
-      ci: buildUrl,
-      versions: systemVersions,
-    }),
-  ]
+  return cleanObject({
+    id: systemId,
+    machine,
+    git: { commit, branch, tag, prNumber: pr, prBranch },
+    ci: buildUrl,
+    versions: systemVersions,
+  })
 }
 
 const getMachine = function () {
