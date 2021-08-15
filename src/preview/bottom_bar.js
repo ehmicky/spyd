@@ -5,14 +5,13 @@ import { wrapPaddedRows } from '../report/utils/wrap.js'
 // Retrieve bottom bar of preview
 export const getBottomBar = function ({
   previewState: { actions },
-  separator,
   leftWidth,
   progressRow,
   counterRow,
 }) {
   const actionsA = getActions(actions, leftWidth)
   const rows = addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
-  return `${separator}${rows}`
+  return rows
 }
 
 // Show keys available for user actions in previews.

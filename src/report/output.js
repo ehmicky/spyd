@@ -33,7 +33,13 @@ const outputStdoutContents = async function (contents) {
   await printToStdout(stdoutContents)
 }
 
-export const getStdoutContents = function (contents) {
+// Retrieve contents shown in preview.
+// Must be identical to final report printed on stdout.
+export const getPreviewContents = function (contents) {
+  return contents.length === 0 ? '' : getStdoutContents(contents)
+}
+
+const getStdoutContents = function (contents) {
   const contentsString = joinContents(contents)
   const stdoutContents = addPadding(contentsString)
   return stdoutContents
