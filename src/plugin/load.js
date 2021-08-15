@@ -8,32 +8,61 @@ export const loadPlugins = async function ({
   type,
   modulePrefix,
   builtins,
+  isCombinationCategory,
 }) {
   return await Promise.all(
-    ids.map((id) => loadPlugin({ id, type, modulePrefix, builtins })),
+    ids.map((id) =>
+      loadPlugin({ id, type, modulePrefix, builtins, isCombinationCategory }),
+    ),
   )
 }
 
-const loadPlugin = async function ({ id, type, modulePrefix, builtins }) {
-  const plugin = await importPlugin({ id, type, modulePrefix, builtins })
-  return { ...plugin, id }
+const loadPlugin = async function ({
+  id,
+  type,
+  modulePrefix,
+  builtins,
+  isCombinationCategory,
+}) {
+  const moduleId = getModuleId(id, isCombinationCategory)
+  const plugin = await importPlugin({ moduleId, type, modulePrefix, builtins })
+  return { ...plugin, id, moduleId }
 }
 
-const importPlugin = async function ({ id, type, modulePrefix, builtins }) {
-  const builtin = builtins[id]
+// We allow plugin identifiers to be prefixed with an arbitrary string.
+//  - This allows using the same plugin twice but with different configs.
+//  - This is especially useful for using the same reporter but with different
+//    `output`
+// This does not apply to plugins which do not create combinations
+// (e.g. runners) because those should use variations instead.
+// Since the list of plugin module names is unknown, users must indicate using
+// this by the usage of a delimiter character.
+const getModuleId = function (id, isCombinationCategory) {
+  return isCombinationCategory ? id : id.split(CUSTOM_ID_DELIMITER)[0]
+}
+
+const CUSTOM_ID_DELIMITER = '_'
+
+const importPlugin = async function ({
+  moduleId,
+  type,
+  modulePrefix,
+  builtins,
+}) {
+  const builtin = builtins[moduleId]
 
   if (builtin !== undefined) {
     return builtin
   }
 
-  const moduleName = `${modulePrefix}${id}`
+  const moduleName = `${modulePrefix}${moduleId}`
   const pluginPath = getPluginPath(moduleName, type, '.')
 
   try {
     return await import(pluginPath)
   } catch (error) {
     throw new PluginError(
-      `Could not load "${type}" module "${id}"\n\n${error.stack}`,
+      `Could not load "${type}" module "${moduleId}"\n\n${error.stack}`,
     )
   }
 }

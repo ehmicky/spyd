@@ -8,8 +8,12 @@ export const REPORT_CONFIG = {
     string: true,
     array: true,
     describe: `Modules to report the result.
-Can be specified several times.
+
 Can be empty, if no reporters should be used.
+Can be specified several times.
+To use the same reporter several times but with different configurations, append
+an underscore followed by any characters to the identifier.
+For example: --reporter=debug_tty --runner=debug_ci
 
 Built-in reporters: histogram
 Custom reporters can also be installed from npm.

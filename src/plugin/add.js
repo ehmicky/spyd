@@ -16,7 +16,9 @@ import { validatePlugins } from './validate.js'
 //  - uses a singular property name
 export const addPlugins = async function (config, command) {
   const pluginsConfigs = await Promise.all(
-    PLUGIN_TYPES_ARRAY.map(getPluginsByType.bind(undefined, config)),
+    PLUGIN_TYPES_ARRAY.map((pluginTypeInfo) =>
+      getPluginsByType(pluginTypeInfo, config),
+    ),
   )
   const pluginsConfigA = Object.fromEntries(pluginsConfigs)
   const configA = removePluginProps(config)
@@ -26,11 +28,26 @@ export const addPlugins = async function (config, command) {
 }
 
 const getPluginsByType = async function (
+  {
+    type,
+    varName,
+    selectProp,
+    configProp,
+    modulePrefix,
+    builtins,
+    topProps,
+    isCombinationCategory,
+  },
   config,
-  { type, varName, selectProp, configProp, modulePrefix, builtins, topProps },
 ) {
   const ids = config[selectProp]
-  const plugins = await loadPlugins({ ids, type, modulePrefix, builtins })
+  const plugins = await loadPlugins({
+    ids,
+    type,
+    modulePrefix,
+    builtins,
+    isCombinationCategory,
+  })
   const pluginsA = addPluginsConfig({ plugins, config, configProp, topProps })
   validatePlugins(pluginsA, type)
   return [varName, pluginsA]
