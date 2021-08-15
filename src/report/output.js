@@ -33,20 +33,14 @@ const printContents = async function ([output, contents]) {
 
 // Print final report to terminal.
 const outputStdoutContents = async function (contents) {
-  const stdoutContents = getStdoutContents(contents)
-  await printToStdout(stdoutContents)
+  const contentsString = getContentsString(contents)
+  await printToStdout(contentsString)
 }
 
 // Retrieve contents shown in preview.
 // Must be identical to final report printed on stdout.
 export const getPreviewContents = function (contents) {
-  return contents.length === 0 ? '' : getStdoutContents(contents)
-}
-
-const getStdoutContents = function (contents) {
-  const contentsString = joinContents(contents)
-  const stdoutContents = addPadding(contentsString)
-  return stdoutContents
+  return contents.length === 0 ? '' : getContentsString(contents)
 }
 
 const outputFileContents = async function (output, contents) {
@@ -56,7 +50,7 @@ const outputFileContents = async function (output, contents) {
     )
   }
 
-  const contentsString = joinContents(contents)
+  const contentsString = getContentsString(contents)
   const fileContent = await detectInsert(output)
 
   if (fileContent !== undefined) {
@@ -80,8 +74,10 @@ const overwriteContents = async function (output, contentsString) {
   }
 }
 
-const joinContents = function (contents) {
-  return concatContents(contents.map(getContentProperty))
+const getContentsString = function (contents) {
+  const joinedContents = concatContents(contents.map(getContentProperty))
+  const contentsString = addPadding(joinedContents)
+  return contentsString
 }
 
 const getContentProperty = function ({ content }) {

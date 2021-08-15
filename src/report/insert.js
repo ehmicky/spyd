@@ -2,6 +2,7 @@ import { promises as fs } from 'fs'
 
 import detectNewline from 'detect-newline'
 import { pathExists } from 'path-exists'
+import stripFinalNewline from 'strip-final-newline'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
@@ -53,8 +54,7 @@ export const insertContents = async function (
 }
 
 const replaceNewline = function (contentsString, newline) {
-  const contentsStringA = contentsString.split(UNIX_NEWLINE).join(newline)
-  return `${newline}${contentsStringA}`
+  return stripFinalNewline(contentsString.split(UNIX_NEWLINE).join(newline))
 }
 
 const UNIX_NEWLINE = '\n'
