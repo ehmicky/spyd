@@ -4,9 +4,6 @@ import { addInitialScrollAction, addScrollAction } from './scrolling_action.js'
 import { updateScrolling } from './scrolling_update.js'
 
 // Retrieve preview content.
-// `report` is `undefined` when all reporters either:
-//   - have `reporter.quiet: true`
-//   - return nothing in `reporter.report()
 export const getPreviewContent = function (previewState) {
   addInitialScrollAction(previewState)
   const { leftWidth, separator, progressRow, counterRow } =

@@ -71,10 +71,6 @@ export const updateReport = async function ({
     historyResult,
   },
 }) {
-  if (reporters.length === 0) {
-    return
-  }
-
   const resultA = normalizeMeasuredResult(result)
   const preview = {
     durationLeft,

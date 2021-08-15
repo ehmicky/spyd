@@ -33,7 +33,7 @@ const getAvailableHeight = function (bottomBar) {
   return Math.max(screenHeight - bottomBarHeight - 1, 0)
 }
 
-const applyScrolling = function ({ report = '', scrollTop }, availableHeight) {
+const applyScrolling = function ({ report, scrollTop }, availableHeight) {
   if (availableHeight === 0) {
     return { report: '', scrollTop: 0, maxScrollTop: 0 }
   }

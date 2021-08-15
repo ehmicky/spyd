@@ -8,22 +8,17 @@ import { START_DESCRIPTION } from './description.js'
 // When mutating it, it must always be in a consistent state at the end of a
 // microtask since `updatePreview()` could be called by concurrent code.
 // `index` and `total` are used as a 1-based counter in previews.
-export const getPreviewState = function (
-  result,
-  historyResult,
-  { reporters, titles },
-) {
+export const getPreviewState = function ({ reporters, titles }) {
+  const reportersA = reporters.filter(reporterHasPreview)
+  const quiet = reportersA.length === 0
   return {
-    quiet: false,
-    result,
-    historyResult,
-    reporters: reporters.filter(isNotQuiet),
+    quiet,
+    reporters: reportersA,
     titles,
     previewSamples: 0,
     durationLeft: EMPTY_DURATION_LEFT,
     percentage: 0,
     index: 0,
-    total: result.combinations.length,
     combinationName: '',
     description: START_DESCRIPTION,
     actions: [],
@@ -32,10 +27,27 @@ export const getPreviewState = function (
   }
 }
 
-// Reporters can opt-out of previews by defining `reporter.quiet: true`.
-// This is a performance optimization for reporters which should not show
-// results progressively.
-// This does not disable the progress bar preview though.
-const isNotQuiet = function ({ quiet = false }) {
-  return !quiet
+// Each reporter can be set to use previews or not
+//  - using `config.reporterConfig.{reporterId}.quiet`
+//     - which defaults to `config.quiet`
+//  - only if `output` is `stdout`
+// The general preview features (including the progress bar) are only available
+// if at least one reporter uses preview.
+//  - This is kept as `previewState.quiet`
+const reporterHasPreview = function ({ config: { quiet, output } }) {
+  return !quiet && output === 'stdout'
+}
+
+// Add result-related properties to `previewState`
+export const addResultPreviewState = function (
+  previewState,
+  result,
+  historyResult,
+) {
+  return {
+    ...previewState,
+    result,
+    historyResult,
+    total: result.combinations.length,
+  }
 }

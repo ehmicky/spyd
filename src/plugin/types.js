@@ -28,6 +28,7 @@ export const PLUGIN_TYPES = {
     selectProp: 'reporter',
     configProp: 'reporterConfig',
     topProps: [
+      'quiet',
       'output',
       'colors',
       'showTitles',

@@ -4,6 +4,7 @@ import {
   endPreview,
   printPreviewStarting,
 } from '../preview/start_end.js'
+import { getPreviewState } from '../preview/state.js'
 import {
   reportStart,
   reportCompute,
@@ -23,7 +24,8 @@ import { measureCombinations } from './several.js'
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
 export const performRun = async function (config) {
-  printPreviewStarting(config)
+  const previewState = getPreviewState(config)
+  printPreviewStarting(previewState)
 
   const { result, previous } = await createResult(config)
   const { historyResult, config: configA } = await reportStart(
@@ -37,7 +39,12 @@ export const performRun = async function (config) {
       result: resultA,
       finalResult,
       contents,
-    } = await previewAndMeasure(result, historyResult, configA)
+    } = await previewAndMeasure({
+      result,
+      historyResult,
+      previewState,
+      config: configA,
+    })
     await reportPrint(contents)
     return { result: resultA, finalResult }
   } finally {
@@ -45,20 +52,25 @@ export const performRun = async function (config) {
   }
 }
 
-const previewAndMeasure = async function (result, historyResult, config) {
-  const previewState = await startPreview(result, historyResult, config)
+const previewAndMeasure = async function ({
+  result,
+  historyResult,
+  previewState,
+  config,
+}) {
+  const previewStateA = await startPreview(result, historyResult, previewState)
 
   try {
-    const resultA = await measureResult(result, config, previewState)
+    const resultA = await measureResult(result, config, previewStateA)
     const { finalResult, contents } = await reportCompute(
       resultA,
       historyResult,
       config,
     )
-    await endPreview(previewState)
+    await endPreview(previewStateA)
     return { result: resultA, finalResult, contents }
   } catch (error) {
-    await endPreview(previewState, error)
+    await endPreview(previewStateA, error)
     throw error
   }
 }

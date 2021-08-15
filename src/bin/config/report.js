@@ -25,7 +25,7 @@ Default: "debug"`,
 Each reporter has its own configuration namespaced by its identifier.
 For example: --reporterConfig.json.output=8
 
-The following configuration properties can be set for any reporter:
+The following configuration properties can be set for any reporter: quiet,
 output, colors, showTitles, showSystem, showMetadata, showPrecision, showDiff.
 For example --reporterConfig.json.output is like --output but only for the json
 reporter.`,

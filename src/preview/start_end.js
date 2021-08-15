@@ -5,7 +5,7 @@ import { clearScreen, clearScreenFull, printToStdout } from '../report/tty.js'
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'
 import { updateReport } from './results.js'
-import { getPreviewState } from './state.js'
+import { addResultPreviewState } from './state.js'
 import { refreshPreview } from './update.js'
 
 // Loading combinations can be slow if the task is long to load.
@@ -20,21 +20,29 @@ export const printPreviewStarting = function ({ quiet }) {
 }
 
 // Start clearing the screen
-export const startPreview = async function (result, historyResult, config) {
-  if (config.quiet) {
-    return { quiet: true }
+export const startPreview = async function (
+  result,
+  historyResult,
+  previewState,
+) {
+  if (previewState.quiet) {
+    return previewState
   }
 
-  const previewState = getPreviewState(result, historyResult, config)
-  await updateReport({ previewState })
+  const previewStateA = addResultPreviewState(
+    previewState,
+    result,
+    historyResult,
+  )
+  await updateReport({ previewState: previewStateA })
 
   hideCursor()
   await clearScreenFull()
-  startHandleResize(previewState)
-  startHandleKeypress(previewState)
+  startHandleResize(previewStateA)
+  startHandleKeypress(previewStateA)
 
-  await refreshPreview(previewState)
-  return previewState
+  await refreshPreview(previewStateA)
+  return previewStateA
 }
 
 // Stop clearing the screen.

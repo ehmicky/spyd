@@ -1,13 +1,12 @@
 import { cwd as getCwd } from 'process'
 
-import { isTtyInput, isTtyOutput } from '../report/tty.js'
+import { isTtyInput } from '../report/tty.js'
 
 // Add default configuration properties
 export const addDefaultConfig = function (config, command) {
   return {
     ...DEFAULT_CONFIG,
     cwd: getCwd(),
-    quiet: !isTtyInput() || !isTtyOutput(),
     force: !isTtyInput(),
     showSystem: config.system !== undefined,
     showMetadata: METADATA_COMMANDS.has(command),

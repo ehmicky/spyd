@@ -1,13 +1,16 @@
 import process from 'process'
 import { emitKeypressEvents } from 'readline'
 
+import { isTtyInput } from '../report/tty.js'
+
 import { refreshPreview } from './update.js'
 
 // Handle user actions through key events.
 // We purposely use `bind()` so that this function can be called several times
 // concurrently.
+// The keypress logic would fail when stdin is not interactive.
 export const startHandleKeypress = function (previewState) {
-  if (!shouldHandleKeypress(previewState)) {
+  if (!isTtyInput()) {
     return
   }
 
@@ -22,7 +25,7 @@ export const startHandleKeypress = function (previewState) {
 }
 
 export const stopHandleKeypress = function (previewState) {
-  if (!shouldHandleKeypress(previewState)) {
+  if (!isTtyInput()) {
     return
   }
 
@@ -33,12 +36,6 @@ export const stopHandleKeypress = function (previewState) {
   process.stdin.setRawMode(previewState.stdinIsRaw)
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete previewState.stdinIsRaw
-}
-
-// Although `quiet` defaults to `false` when stdin is not tty, it can be
-// overridden, and the keypress logic would fail when stdin is not tty.
-const shouldHandleKeypress = function ({ quiet }) {
-  return !quiet && process.stdin.isTTY
 }
 
 const handleKeypress = function (previewState, keyString, key) {
