@@ -1,8 +1,6 @@
-import { groupBy } from '../utils/group.js'
-
 import { callReportFunc } from './call.js'
 import { handleContent } from './handle.js'
-import { joinContents } from './join.js'
+import { joinByOutput } from './join.js'
 
 // Retrieve reporter's contents by calling all `reporter.report()` then
 // normalizing their return value and grouping it by `output`.
@@ -11,9 +9,7 @@ export const getContents = async function (result, { reporters, titles }) {
     reporters.map((reporter) => callReportFunc({ result, titles, reporter })),
   )
   const contentsA = contents.filter(hasContent).map(handleContent)
-  const contentsB = Object.values(groupBy(contentsA, 'output')).map(
-    joinContents,
-  )
+  const contentsB = joinByOutput(contentsA)
   return contentsB
 }
 
