@@ -19,7 +19,8 @@ export const outputContents = async function (contents) {
 
 const outputContent = async function ({ contentsString, output }) {
   if (output === 'stdout') {
-    return await printToStdout(contentsString)
+    await printToStdout(contentsString)
+    return
   }
 
   if (await isDirectory(output)) {
@@ -31,7 +32,8 @@ const outputContent = async function ({ contentsString, output }) {
   const fileContent = await detectInsert(output)
 
   if (fileContent !== undefined) {
-    return await insertContents(output, contentsString, fileContent)
+    await insertContents(output, contentsString, fileContent)
+    return
   }
 
   await overwriteContents(output, contentsString)
