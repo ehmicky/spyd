@@ -11,7 +11,7 @@ export const findByGitRef = async function (results, gitRef, cwd) {
       '--no-color',
       '--no-patch',
       '--no-notes',
-      '--pretty=%cd',
+      '--pretty=%ad',
       '--date=unix',
       gitRef,
     ],
