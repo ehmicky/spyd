@@ -30,6 +30,8 @@ const getTopConfig = async function (config, base) {
 
 // The `config` property can optionally be an array.
 //  - This allow merging a shared configuration with a non-shared one
+//  - It can be an empty array. This is useful to remove the default value for
+//    the `config` top-level flag programmatically.
 const getConfigsInfos = async function (config, base) {
   const configs = normalizeOptionalArray(config)
   checkDefinedStringArray(configs, 'config')
