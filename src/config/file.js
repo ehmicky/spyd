@@ -2,6 +2,7 @@ import { dirname } from 'path'
 
 import { checkDefinedStringArray, normalizeOptionalArray } from './check.js'
 import { loadConfigContents } from './contents.js'
+import { resolveLookup } from './lookup.js'
 import { addNpxShortcut } from './npx.js'
 import { resolveConfigPath } from './resolve.js'
 
@@ -9,17 +10,22 @@ import { resolveConfigPath } from './resolve.js'
 // `spyd.*` is optional, so this can return an empty array. This allows
 // benchmarking on-the-fly in a terminal without having to create a
 // configuration file.
-// The "default" resolver:
-//  - Is used as the default of the top-level `config` CLI flags
-//  - Is not used when a `config` is specified because:
-//     - This would probably not be intended by users
-//     - This might lead to issues when using shared configurations
-//       unintentionally merged with some local config
-//  - Can be specified explicitely by users. This can be useful when overridding
-//    a `config` property inherited from a parent configuration.
-export const loadConfigFile = async function (config = 'default') {
+export const loadConfigFile = async function (config) {
+  const topConfig = await getTopConfig(config, TOP_LEVEL_BASE)
+  return await getConfigsInfos(topConfig, TOP_LEVEL_BASE)
+}
+
+const TOP_LEVEL_BASE = '.'
+
+// Resolve `config` top-level flag
+const getTopConfig = async function (config, base) {
   const configA = addNpxShortcut(config)
-  return await getConfigsInfos(configA, '.')
+
+  if (configA === undefined) {
+    return await resolveLookup(base)
+  }
+
+  return configA
 }
 
 // The `config` property can optionally be an array.

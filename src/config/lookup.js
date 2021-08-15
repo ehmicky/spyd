@@ -15,6 +15,8 @@ import { CONFIG_EXTENSIONS } from './contents.js'
 //  - A `benchmark` directory: for grouping benchmark-related files.
 //  - Any other directory: for on-the-fly benchmarking, or for
 //    global/shared configuration.
+// We only allow this for the top-level flags not inside configuration files to
+// keep those self-contained.
 export const resolveLookup = async function (base) {
   const lookupDirs = await getLookupDirs(base)
   const lookupFiles = lookupDirs.flatMap(getLookupFilesByExt)

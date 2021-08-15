@@ -6,19 +6,11 @@ import { UserError } from '../error/main.js'
 import { getPluginPath } from '../plugin/load.js'
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
-import { resolveLookup } from './lookup.js'
-
 // Resolve the `config` property to a file path. It can be:
-//  - "default": lookup for any `spyd.*`, `benchmark/spyd.*` or
-//    `packages/spyd-config-*/spyd.*` file
 //  - a file path
 //  - a Node module name starting with "spyd-config-"
 //  - a "resolver:arg" string which applies resolver-specific logic
 export const resolveConfigPath = async function (config, base) {
-  if (config === 'default') {
-    return await resolveLookup(base)
-  }
-
   if (isNpmResolver(config)) {
     return resolveNpm(config, base)
   }
