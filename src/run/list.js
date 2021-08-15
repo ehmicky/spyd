@@ -1,3 +1,5 @@
+import { resolveLookup } from '../config/lookup.js'
+
 import { findTasks } from './find.js'
 
 // The tasks file for each runner is selected using either the `tasks` or
@@ -92,9 +94,11 @@ const getRunnerTasks = async function (
   },
   cwd,
 ) {
+  const tasksA = tasks === undefined ? await resolveDefaultTasks() : tasks
+
   try {
-    const tasksA = await Promise.all(
-      tasks.map((taskPath) =>
+    const tasksB = await Promise.all(
+      tasksA.map((taskPath) =>
         findTasks({
           taskPath,
           runnerId,
@@ -105,12 +109,26 @@ const getRunnerTasks = async function (
         }),
       ),
     )
-    return tasksA.flat()
+    return tasksB.flat()
   } catch (error) {
     error.message = `In runner "${runnerId}": ${error.message}`
     throw error
   }
 }
+
+// Default value for `tasks`. Applied on each runner.
+// This only applies when `tasks` is `undefined`. An empty array resolves to
+// no files instead, which can be useful in programmatic usage.
+const resolveDefaultTasks = async function () {
+  return [await resolveLookup(isTaskPath, TOP_LEVEL_BASE)]
+}
+
+const isTaskPath = function (basename) {
+  return basename.startsWith(TASKS_BASENAME)
+}
+
+const TASKS_BASENAME = 'tasks.'
+const TOP_LEVEL_BASE = '.'
 
 // When two task files export the same task id, we only keep one based on the
 // following priority:

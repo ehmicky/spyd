@@ -36,6 +36,5 @@ export const DEFAULT_CONFIG = {
   select: [],
   runner: ['node'],
   reporter: ['debug'],
-  tasks: 'tasks.*',
   inputs: {},
 }

@@ -11,12 +11,13 @@ export const COMBINATIONS_CONFIG = {
     describe: `Path to the tasks files.
 This should only specify their main files.
 
+By default, any "tasks.*" file in the current or parent directories is used.
+It can also be inside a "benchmark" or "packages/spyd-config-*" sub-directory.
+
 When using multiple runners, each runner can have its own tasks file by using
 --runnerId.tasks=path
 Can be specified several times.
-Can be a globbing pattern.
-
-Default: "tasks.*"`,
+Can be a globbing pattern.`,
   },
   runner: {
     group: TASKS,

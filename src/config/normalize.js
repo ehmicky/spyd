@@ -40,6 +40,10 @@ const normalizeRunner = function (value, propName) {
 }
 
 const normalizeTasks = function (value, propName) {
+  if (value === undefined) {
+    return
+  }
+
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
   return { [propName]: valueA }
