@@ -1,7 +1,7 @@
 import { normalizeReportedResult } from '../normalize/result.js'
 import { applySince, mergeHistoryResult } from '../normalize/since.js'
 
-import { getContents } from './contents.js'
+import { getContents } from './contents/main.js'
 import { outputContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
 

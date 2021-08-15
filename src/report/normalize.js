@@ -1,4 +1,4 @@
-import { validateConcat } from './concat.js'
+import { validateConcat } from './contents/concat.js'
 import { getFormat } from './format.js'
 import { isTtyOutput } from './tty.js'
 

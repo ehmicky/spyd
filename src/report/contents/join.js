@@ -1,8 +1,8 @@
-import { groupBy } from '../utils/group.js'
+import { groupBy } from '../../utils/group.js'
+import { FORMATS } from '../format.js'
+import { addPadding } from '../utils/indent.js'
 
 import { concatContents } from './concat.js'
-import { FORMATS } from './format.js'
-import { addPadding } from './utils/indent.js'
 
 // Join all `contents` with the same `output`
 export const joinByOutput = function (contents) {

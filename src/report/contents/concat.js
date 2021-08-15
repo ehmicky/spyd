@@ -1,7 +1,6 @@
-import { UserError } from '../error/main.js'
-import { groupBy } from '../utils/group.js'
-
-import { FORMATS } from './format.js'
+import { UserError } from '../../error/main.js'
+import { groupBy } from '../../utils/group.js'
+import { FORMATS } from '../format.js'
 
 // It is possible to use "output" with multiple reporters at once.
 // However, only specific formats support this. They declare it using the

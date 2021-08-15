@@ -1,6 +1,6 @@
 import stripAnsi from 'strip-ansi'
 
-import { wrapRows } from './utils/wrap.js'
+import { wrapRows } from '../utils/wrap.js'
 
 // Handle content returned by `reporter.report()`
 export const handleContent = function ({ content, output, format, colors }) {

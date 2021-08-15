@@ -1,10 +1,10 @@
 import omit from 'omit.js'
 
-import { showResultTitles } from '../title/show.js'
+import { showResultTitles } from '../../title/show.js'
+import { FORMATS } from '../format.js'
+import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
 import { cleanResult } from './clean.js'
-import { FORMATS } from './format.js'
-import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
