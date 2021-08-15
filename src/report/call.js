@@ -3,37 +3,44 @@ import omit from 'omit.js'
 import { showResultTitles } from '../title/show.js'
 
 import { cleanResult } from './clean.js'
+import { handleContent } from './handle.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
-import { wrapRows } from './utils/wrap.js'
 
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
 export const getContents = async function (result, { reporters, titles }) {
   const contents = await Promise.all(
-    reporters.map(getReporterContents.bind(undefined, result, titles)),
+    reporters.map((reporter) => getReporterContents(result, titles, reporter)),
   )
   const contentsA = contents.filter(hasContent)
-  return contentsA
+  const contentsB = contentsA.map(handleContent)
+  return contentsB
 }
 
 // Some of this is currently applied only to `result`, not `result.history[*]`
+// Since `report()` might have side effects such as making a HTTP call, we make
+// sure it is called exactly once.
 const getReporterContents = async function (
   result,
   titles,
   {
     report: reportFunc,
     config: reporterConfig,
-    config: {
-      showSystem,
-      showMetadata,
-      output,
-      colors,
-      showTitles,
-      showPrecision,
-      showDiff,
-    },
+    config: { output, colors },
     startData,
   },
+) {
+  const reportResult = getReportResult(result, titles, reporterConfig)
+  const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
+  const content = await reportFunc(reportResult, reportFuncProps, startData)
+  return { content, output, colors }
+}
+
+// Normalize the `result` passed to `reporter.report()`
+const getReportResult = function (
+  result,
+  titles,
+  { showSystem, showMetadata, showTitles, showPrecision, showDiff },
 ) {
   const resultA = showResultTitles(result, titles, showTitles)
   const resultB = cleanResult({
@@ -44,12 +51,7 @@ const getReporterContents = async function (
     showDiff,
   })
   const resultC = addSizeInfo(resultB)
-  const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
-  const content = await reportFunc(resultC, reportFuncProps, startData)
-  const contentA = normalizeEmptyContent(content)
-  const contentB = trimEnd(contentA)
-  const contentC = wrapRows(contentB)
-  return { content: contentC, output, colors }
+  return resultC
 }
 
 // Add size-related information
@@ -73,25 +75,6 @@ const CORE_REPORT_PROPS = [
 
 // A reporter can choose not to return anything, in which case `output` is not
 // used.
-const normalizeEmptyContent = function (content) {
-  return typeof content === 'string' && content.trim() !== ''
-    ? content
-    : undefined
-}
-
-// Trim the end of each line to avoid wrapping-related visual bugs
-const trimEnd = function (content) {
-  if (content === undefined) {
-    return
-  }
-
-  return content.split('\n').map(trimEndLine).join('\n')
-}
-
-const trimEndLine = function (line) {
-  return line.trimEnd()
-}
-
 const hasContent = function ({ content }) {
-  return content !== undefined
+  return typeof content === 'string' && content.trim() !== ''
 }

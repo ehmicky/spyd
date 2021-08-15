@@ -50,8 +50,8 @@ const shouldUseReporter = function ({ tty }, command) {
 const addDefaultReporterConfig = function ({
   tty,
   config,
-  config: { showDiff = tty },
+  config: { showDiff = tty, colors = tty },
   ...reporter
 }) {
-  return { ...reporter, config: { ...config, showDiff } }
+  return { ...reporter, config: { ...config, showDiff, colors } }
 }

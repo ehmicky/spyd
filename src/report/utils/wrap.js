@@ -10,10 +10,6 @@ import { getScreenWidth, getPaddedScreenWidth } from '../tty.js'
 //    would create long lines, while others would not, which can be odd when
 //    mixed together
 export const wrapRows = function (string) {
-  if (string === undefined) {
-    return
-  }
-
   return wrapString(string, getScreenWidth())
 }
 

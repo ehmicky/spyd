@@ -4,9 +4,9 @@ import writeFileAtomic from 'write-file-atomic'
 import { UserError } from '../error/main.js'
 import { groupBy } from '../utils/group.js'
 
-import { getStdoutContents, getFileContents } from './content.js'
 import { detectInsert, insertContents } from './insert.js'
 import { printToStdout } from './tty.js'
+import { addPadding } from './utils/indent.js'
 
 // Print result to file or to terminal based on the `output` configuration
 // property.
@@ -39,7 +39,8 @@ export const computeStdoutContents = function (contents) {
     return
   }
 
-  return getStdoutContents(contentsA)
+  const contentsString = joinContents(contents)
+  return addPadding(contentsString)
 }
 
 // Write final report to files
@@ -51,23 +52,22 @@ const outputFilesContents = async function (contents) {
 }
 
 const outputFileContents = async function ([output, contents]) {
-  const fileContents = getFileContents(contents)
-
   if (await isDirectory(output)) {
     throw new UserError(
       `Invalid configuration property "output" "${output}": it must be a regular file, not a directory.`,
     )
   }
 
+  const contentsString = joinContents(contents)
   const fileContent = await detectInsert(output)
 
   if (fileContent !== undefined) {
-    await insertContents(output, fileContents, fileContent)
+    await insertContents(output, contentsString, fileContent)
     return
   }
 
   try {
-    await writeFileAtomic(output, fileContents)
+    await writeFileAtomic(output, contentsString)
   } catch (error) {
     throw new UserError(
       `Could not write to "output" "${output}"\n${error.message}`,
@@ -78,3 +78,14 @@ const outputFileContents = async function ([output, contents]) {
 const hasStdoutOutput = function ({ output }) {
   return output === 'stdout'
 }
+
+const joinContents = function (contents) {
+  return contents.map(getContentProperty).join(CONTENTS_DELIMITER)
+}
+
+const getContentProperty = function ({ content }) {
+  return content
+}
+
+// It is possible to use "output" with multiple reporters at once
+const CONTENTS_DELIMITER = '\n'
