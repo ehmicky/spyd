@@ -56,6 +56,12 @@ export const spawnRunnerProcess = async function ({
   return { childProcess, onTaskExit }
 }
 
+// The `dev` command directly streams stdout/stderr.
+// This means that it might behave differently from the `run` command since it
+// has a TTY. This might make debugging some TTY-related problems harder.
+// However, the `dev` command is meant to be run in an interactive terminal.
+// Therefore, not using a TTY would impact the developer experience: not
+// printing colors, progress bars, etc.
 const getStdio = function (logsStream) {
   return logsStream === undefined
     ? ['ignore', 'inherit', 'inherit']
