@@ -1,7 +1,7 @@
 import omit from 'omit.js'
 
 import { showResultTitles } from '../../title/show.js'
-import { FORMATS } from '../format.js'
+import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
 import { cleanResult } from './clean.js'

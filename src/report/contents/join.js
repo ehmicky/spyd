@@ -1,5 +1,5 @@
 import { groupBy } from '../../utils/group.js'
-import { FORMATS } from '../format.js'
+import { FORMATS } from '../formats/list.js'
 import { addPadding } from '../utils/indent.js'
 
 import { concatContents } from './concat.js'
