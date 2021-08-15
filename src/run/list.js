@@ -1,5 +1,3 @@
-import fastGlob from 'fast-glob'
-
 import { findTasks } from './find.js'
 
 // The tasks file for each runner is selected using either the `tasks` or
@@ -95,10 +93,8 @@ const getRunnerTasks = async function (
   cwd,
 ) {
   try {
-    const taskPaths = await fastGlob(tasks)
-    const taskPathsA = [...new Set(taskPaths)]
     const tasksA = await Promise.all(
-      taskPathsA.map((taskPath) =>
+      tasks.map((taskPath) =>
         findTasks({
           taskPath,
           runnerId,

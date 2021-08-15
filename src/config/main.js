@@ -6,7 +6,7 @@ import { addPlugins } from '../plugin/add.js'
 import { addDefaultConfig } from './default.js'
 import { loadConfig } from './load.js'
 import { normalizeConfig } from './normalize.js'
-import { setConfigAbsolutePaths } from './path.js'
+import { normalizeConfigPaths } from './path.js'
 import { validateConfig } from './validate.js'
 
 // Retrieve configuration
@@ -18,7 +18,7 @@ export const getConfig = async function (command, configFlags = {}) {
   const configA = addDefaultConfig(config, command)
 
   const configB = normalizeConfig(configA)
-  const configC = setConfigAbsolutePaths(configB, configInfos)
+  const configC = await normalizeConfigPaths(configB, configInfos)
   const configD = normalizeDeltas(configC)
 
   const configE = await addPlugins(configD, command)
