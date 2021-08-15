@@ -8,13 +8,17 @@ export const REPORT_CONFIG = {
     string: true,
     array: true,
     describe: `Modules to report the result.
+
 Can be specified several times.
 Can be empty, if no reporters should be used.
+
 Built-in reporters: histogram
 Custom reporters can also be installed from npm.
+
 Reporter-specific configuration properties can be specified by appending the
 reporter's name: --reporterName.prop=value.
 For example: --reporterJson.output=path
+
 The following properties can be set for any reporter: output, colors,
 showTitles, showSystem, showMetadata, showPrecision, showDiff.
 For example --reporterJson.output is like --output but only for the json reporter.`,
@@ -25,10 +29,12 @@ For example --reporterJson.output is like --output but only for the json reporte
     string: true,
     requiresArg: true,
     describe: `Output the result to "stdout" or to a file path.
+
 Instead of overwriting the file, the result can be inserted between two lines
 with the words "spyd-start" and "spyd-end" such as <!-- spyd-start --> or
 #spyd-start
 Otherwise, the file is overwritten.
+
 Default: "stdout".`,
   },
   colors: {

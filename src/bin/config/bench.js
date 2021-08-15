@@ -37,6 +37,7 @@ Default: false`,
     array: true,
     describe: `Report when the average duration has increased by more than a
 specific percentage such as "50%".
+
 The limit can be scoped to specific combinations by appending their identifiers
 after the percentage.
   - The syntax is the same as the "select" configuration property.
