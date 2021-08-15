@@ -22,22 +22,11 @@ export const outputContents = async function (contents) {
 }
 
 const printContents = async function ([output, contents]) {
+  const contentsString = serializeContents(contents)
+
   if (output === 'stdout') {
-    await outputStdoutContents(contents)
-    return
+    return await printToStdout(contentsString)
   }
-
-  await outputFileContents(output, contents)
-}
-
-// Print final report to terminal.
-const outputStdoutContents = async function (contents) {
-  const contentsString = serializeContents(contents)
-  await printToStdout(contentsString)
-}
-
-const outputFileContents = async function (output, contents) {
-  const contentsString = serializeContents(contents)
 
   if (await isDirectory(output)) {
     throw new UserError(
@@ -48,8 +37,7 @@ const outputFileContents = async function (output, contents) {
   const fileContent = await detectInsert(output)
 
   if (fileContent !== undefined) {
-    await insertContents(output, contentsString, fileContent)
-    return
+    return await insertContents(output, contentsString, fileContent)
   }
 
   await overwriteContents(output, contentsString)
