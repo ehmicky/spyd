@@ -50,9 +50,13 @@ const normalizeTasks = function (value, propName) {
 }
 
 const normalizeReporter = function (value, propName, { force }) {
+  if (force) {
+    return { [propName]: [] }
+  }
+
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
-  return force ? { [propName]: [] } : { [propName]: valueA }
+  return { [propName]: valueA }
 }
 
 const normalizeSelect = function (value, propName) {
