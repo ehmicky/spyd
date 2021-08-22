@@ -18,7 +18,7 @@ import { COMBINATION_DIMENSIONS } from '../../combination/dimensions.js'
 //   - provides a single place for all identifiers, which is simpler
 //   - removes the need for runners to handle this
 // We do this by adding a `title` property for every `id` property.
-export const showResultTitles = function (result, titles, showTitles) {
+export const addResultTitles = function (result, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
   const resultA = addCombinationsTitles(result, titlesA)
   const resultB = addDimensionsTitles(resultA, titlesA)

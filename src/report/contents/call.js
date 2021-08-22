@@ -5,7 +5,7 @@ import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
 import { omitResultProps } from './omit.js'
-import { showResultTitles } from './titles.js'
+import { addResultTitles } from './titles.js'
 
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
@@ -60,7 +60,7 @@ const getReportResult = function (
   titles,
   { showSystem, showMetadata, showTitles, showPrecision, showDiff },
 ) {
-  const resultA = showResultTitles(result, titles, showTitles)
+  const resultA = addResultTitles(result, titles, showTitles)
   const resultB = omitResultProps(resultA, {
     showSystem,
     showMetadata,
