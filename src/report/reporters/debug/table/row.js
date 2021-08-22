@@ -5,13 +5,13 @@ import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
 export const getRow = function (combination, columns, columnWidth) {
   const combinationName = getCombinationNameColor(combination)
   const cells = columns
-    .map((column) => getCell(column, combination, columnWidth))
+    .map((column) => getCell(combination.stats[column], columnWidth))
     .join(COLUMN_SEPARATOR)
   return `${combinationName}${cells}`
 }
 
 // Retrieve a single cell in the table, with a specific stat
-const getCell = function (column, { stats: { [column]: stat } }, columnWidth) {
+const getCell = function (stat, columnWidth) {
   if (stat === undefined) {
     return ' '.repeat(columnWidth)
   }
