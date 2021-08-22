@@ -17,6 +17,10 @@ import { getSystemVersions } from './versions.js'
 // A result can only have a single `system`. However, when merging results,
 // this becomes several `systems`. We persist the `systems` array directly so
 // that all results have the same shape in both our logic and reporters' logic.
+// We purposely keep the data as raw as possible to give flexibility to the
+// reporters on how to serialize it
+//  - For example, this allows changing the reporting without changing the
+//    history results
 export const getSystemInfo = async function (
   combinations,
   { cwd, systemId, envInfo },
