@@ -38,7 +38,7 @@ const isSharedProp = function (key, value, systems) {
 const ALWAYS_SHARED_PROPS = new Set(['Spyd'])
 // Some properties might possibly be common, but should not be shared since
 // they identify systems.
-const NEVER_SHARED_PROPS = new Set(['id'])
+const NEVER_SHARED_PROPS = new Set(['id', 'title'])
 
 const getSharedSystemProp = function (key, value, systems) {
   if (!isPlainObj(value)) {
