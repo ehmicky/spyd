@@ -4,6 +4,7 @@ import { getResponsiveColumns } from '../../../utils/responsive.js'
 import {
   COLUMN_SEPARATOR_WIDTH,
   STATS_SEPARATOR,
+  STATS_SEPARATOR_COLORED,
 } from '../../../utils/separator.js'
 import { prettifyStats } from '../../../utils/stats/main.js'
 
@@ -60,7 +61,7 @@ const getCellStat = function (historyCombinations, combination) {
 
   return {
     pretty: `${medianMin.pretty}${STATS_SEPARATOR}${medianMax.pretty}`,
-    prettyColor: `${medianMin.prettyColor}${STATS_SEPARATOR}${medianMax.prettyColor}`,
+    prettyColor: `${medianMin.prettyColor}${STATS_SEPARATOR_COLORED}${medianMax.prettyColor}`,
   }
 }
 

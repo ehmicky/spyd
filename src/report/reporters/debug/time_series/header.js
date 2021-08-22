@@ -1,6 +1,6 @@
 import { fieldColor } from '../../../utils/colors.js'
 import { getCombinationNameWidth } from '../../../utils/name.js'
-import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
+import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 // Retrieve header name
 export const getHeaderName = function ({ timestamp }) {
@@ -36,7 +36,7 @@ const getHeaderRow = function ({
 }) {
   const headerRow = columns
     .map((column) => getHeaderCell(column, columnWidth, propName))
-    .join(COLUMN_SEPARATOR)
+    .join(COLUMN_SEPARATOR_COLORED)
   return `${combinationNamePadding}${headerRow}`
 }
 

@@ -1,5 +1,5 @@
 import { getCombinationNameColor } from '../../../utils/name.js'
-import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
+import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 // Retrieve a single row, including the row name
 export const getRow = function ({
@@ -11,7 +11,7 @@ export const getRow = function ({
   const combinationName = getCombinationNameColor(combination)
   const cells = columns
     .map(({ cellStats }) => getCell(cellStats[rowIndex], columnWidth))
-    .join(COLUMN_SEPARATOR)
+    .join(COLUMN_SEPARATOR_COLORED)
   return `${combinationName}${cells}`
 }
 

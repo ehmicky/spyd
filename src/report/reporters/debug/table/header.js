@@ -1,6 +1,6 @@
 import { fieldColor } from '../../../utils/colors.js'
 import { getCombinationNameWidth } from '../../../utils/name.js'
-import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
+import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
 import { STAT_TITLES } from '../../../utils/stat_titles.js'
 
@@ -20,7 +20,7 @@ export const getHeader = function ([combination], columns, columnWidth) {
 const getHeaderCells = function (columns, columnWidth) {
   return columns
     .map((column) => getHeaderCell(column, columnWidth))
-    .join(COLUMN_SEPARATOR)
+    .join(COLUMN_SEPARATOR_COLORED)
 }
 
 // Retrieve a cell in the header row
