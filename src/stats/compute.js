@@ -34,7 +34,7 @@ export const computeStats = function (measures) {
 
   const median = getSortedMedian(measures)
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
-  const mean = getMean(measures)
+  const mean = getMean(measures, { minIndex, maxIndex })
 
   const histogram = getHistogram({
     array: measures,
