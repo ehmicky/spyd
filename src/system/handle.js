@@ -44,11 +44,7 @@ const addFooter = function (result, footer, format) {
 }
 
 const stringifyFooter = function (footer, format) {
-  if (footer.length === 0) {
-    return ''
-  }
-
-  return FORMATS[format].footer === undefined
+  return FORMATS[format].footer === undefined || footer.length === 0
     ? ''
     : `\n${FORMATS[format].footer(footer)}\n`
 }
