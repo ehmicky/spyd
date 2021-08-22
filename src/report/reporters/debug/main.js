@@ -38,4 +38,4 @@ const getTable = function (combinations, columns, columnWidth) {
   return [header, ...rows].join('\n')
 }
 
-export const debug = { reportTerminal }
+export const debug = { reportTerminal, debugStats: true }

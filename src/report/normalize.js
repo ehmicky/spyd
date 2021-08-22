@@ -55,7 +55,12 @@ const addDefaultReporterConfig = function ({
   tty,
   config,
   config: { quiet = !tty, showDiff = tty, colors = tty },
+  debugStats = false,
   ...reporter
 }) {
-  return { ...reporter, config: { ...config, quiet, showDiff, colors } }
+  return {
+    ...reporter,
+    config: { ...config, quiet, showDiff, colors },
+    debugStats,
+  }
 }

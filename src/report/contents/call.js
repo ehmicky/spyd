@@ -19,11 +19,29 @@ export const callReportFunc = async function ({
   reporter: {
     format,
     config: reporterConfig,
-    config: { output, colors },
+    config: {
+      output,
+      colors,
+      showSystem,
+      showMetadata,
+      showTitles,
+      showPrecision,
+      showDiff,
+    },
     startData,
+    debugStats,
   },
 }) {
-  const resultA = getReportResult(result, titles, reporterConfig)
+  const resultA = getReportResult({
+    result,
+    titles,
+    showSystem,
+    showMetadata,
+    showTitles,
+    showPrecision,
+    showDiff,
+    debugStats,
+  })
   const { result: resultB, footer } = addFooter(resultA, format)
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
   const reporterArgs = [resultB, reportFuncProps, startData]
@@ -39,33 +57,44 @@ export const callReportFunc = async function ({
 //  - We apply specific some reporter configuration:
 //     - to make sure all properties are available
 //     - not to couple the programmatic result with a specific reporter
-//  - We do not apply properties very specific to reporting such as `footer`
+//  - We do not apply properties:
+//     - Very specific to reporting such as `footer`
+//     - Mostly internals such as debug stats
 // We purposely avoid returning the reporter's `content` programmatically
 //  - The `content` is fit for reporting only, not programmatic usage
 //  - It can still be accessed by outputting it a specific file then read that
 //    file separately
 export const getProgrammaticResult = function (result, { titles }) {
-  return getReportResult(result, titles, {
+  return getReportResult({
+    result,
+    titles,
     showSystem: true,
     showMetadata: true,
     showTitles: true,
     showPrecision: true,
     showDiff: true,
+    debugStats: false,
   })
 }
 
 // Normalize the `result` passed to `reporter.report()`
-const getReportResult = function (
+const getReportResult = function ({
   result,
   titles,
-  { showSystem, showMetadata, showTitles, showPrecision, showDiff },
-) {
+  showSystem,
+  showMetadata,
+  showTitles,
+  showPrecision,
+  showDiff,
+  debugStats,
+}) {
   const resultA = addResultTitles(result, titles, showTitles)
   const resultB = omitResultProps(resultA, {
     showSystem,
     showMetadata,
     showPrecision,
     showDiff,
+    debugStats,
   })
   const resultC = addSizeInfo(resultB)
   return resultC
