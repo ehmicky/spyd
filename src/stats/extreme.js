@@ -1,16 +1,16 @@
-// Measures usually contain some very slow outliers due to background processes
-// or engine optimization.
-// Those are useful to know as they indicate:
-//  - worst-case scenarios (`quantiles`)
-//  - average performance when repeated (`mean`)
-// However, those are not good when determining the normal distribution of
-// measures:
-//  - they create a distribution with a very long tail, which is hard to
-//    visualize with `histogram`
-//  - they make `stdev`, `rstdev`, `moe` and `rmoe` must less useful
-// For the later cases, we remove those outliers.
-// We also remove the fastest outliers for similar reasons, although they are
-// less frequent.
+// Measures usually contain some:
+//  - Very slow outliers due to background processes or engine optimization
+//  - Faster outliers for similar reasons, although they are less frequent
+// We remove both:
+//  - Those are not good when determining the normal distribution of measures:
+//     - They create a distribution with a very long tail, which is hard to
+//       visualize with `histogram`
+//     - They make `stdev`, `rstdev`, `moe` and `rmoe` must less useful
+//  - Using outliers in some stats but not others would lead to inconsistency
+//    and unexpected or ambiguous results
+//  - This would require two sets of `min|max` stats (with and without outliers)
+//  - Despite this, those would be useful to know worst-case scenarios or the
+//    average performance when repeated. We tradeoff simplicity for accuracy.
 // We apply those percentage without cloning the `measures` array, for
 // performance and memory reasons.
 export const getExtremes = function (measures) {
