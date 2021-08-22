@@ -57,9 +57,9 @@ const serializeHistogram = function ({
   return concatBlocks([titleBlock, minBlock, content, maxBlock])
 }
 
-// When using `showPrecision` and not enough loops are available, `median`,
+// When using `showPrecision` and not enough loops are available,
 // `medianMin` and `medianMax` will be `undefined`. In that case, we keep
 // waiting for more loops before doing a full report
 const hasLowLoops = function ({ median, medianMin }) {
-  return median.raw === undefined && medianMin.raw === undefined
+  return median === undefined && medianMin.raw === undefined
 }
