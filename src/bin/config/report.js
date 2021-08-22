@@ -1,4 +1,4 @@
-import { REPORT } from './groups.js'
+import { REPORT, HISTORY } from './groups.js'
 
 // Configuration shared by reporting commands: `run`, `show`, `remove`
 export const REPORT_CONFIG = {
@@ -82,7 +82,7 @@ Default: true for command "show" and "remove", false otherwise`,
 Default: false.`,
   },
   showDiff: {
-    group: REPORT,
+    group: HISTORY,
     boolean: true,
     describe: `Show the difference with previous results.
 Default: true if the output is an interactive terminal.`,
