@@ -2,25 +2,23 @@
   {
     "id": "f0f13513-5267-43a9-a02a-60fdde0332d0",
     "timestamp": 1617479059030,
-    "systems": [
-      {
-        "id": "default_system",
-        "machine": {
-          "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
-          "memory": "63GB",
-          "os": "Linux 5.8"
-        },
-        "git": {
-          "commit": "841b3f32d8a3f3fc3cecfcf1624cb0aeea7e9816",
-          "branch": "main"
-        },
-        "versions": {
-          "Node": "15.13.0",
-          "Spyd": "0.3.1",
-          "Test1": "1.0.0"
-        }
+    "system": {
+      "id": "default_systemm",
+      "machine": {
+        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "memory": 67378192384,
+        "os": "Linux 5.8"
+      },
+      "git": {
+        "commit": "841b3f32d8a3f3fc3cecfcf1624cb0aeea7e9816",
+        "branch": "main"
+      },
+      "versions": {
+        "Node": "15.13.0",
+        "Spyd": "0.3.1",
+        "Test1": "1.0.0"
       }
-    ],
+    },
     "combinations": [
       {
         "taskId": "random",
@@ -71,25 +69,23 @@
   {
     "id": "0037ce27-caa6-4eeb-8534-5036c30b3c44",
     "timestamp": 1620912181813,
-    "systems": [
-      {
-        "id": "default_system",
-        "machine": {
-          "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
-          "memory": "63GB",
-          "os": "Linux 5.8"
-        },
-        "git": {
-          "commit": "783ca73002c023eba702358470dc2a869827b178",
-          "branch": "main"
-        },
-        "versions": {
-          "Node": "16.1.0",
-          "Spyd": "0.3.1",
-          "Test2": "1.0.0"
-        }
+    "system": {
+      "id": "default_systemm",
+      "machine": {
+        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "memory": 67378192384,
+        "os": "Linux 5.8"
+      },
+      "git": {
+        "commit": "783ca73002c023eba702358470dc2a869827b178",
+        "branch": "main"
+      },
+      "versions": {
+        "Node": "16.1.0",
+        "Spyd": "0.3.1",
+        "Test2": "1.0.0"
       }
-    ],
+    },
     "combinations": [
       {
         "taskId": "real",
@@ -120,25 +116,23 @@
   {
     "id": "a037ce27-caa6-4eeb-8534-5036c30b3c43",
     "timestamp": 1620912181814,
-    "systems": [
-      {
-        "id": "default_system",
-        "machine": {
-          "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
-          "memory": "63GB",
-          "os": "Linux 5.8"
-        },
-        "git": {
-          "commit": "783ca73002c023eba702358470dc2a869827b178",
-          "branch": "main"
-        },
-        "versions": {
-          "Node": "16.1.0",
-          "Spyd": "0.3.1",
-          "Test3": "1.0.0"
-        }
+    "system": {
+      "id": "default_system",
+      "machine": {
+        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "memory": 67378192384,
+        "os": "Linux 5.8"
+      },
+      "git": {
+        "commit": "783ca73002c023eba702358470dc2a869827b178",
+        "branch": "main"
+      },
+      "versions": {
+        "Node": "16.1.0",
+        "Spyd": "0.3.1",
+        "Test3": "1.0.0"
       }
-    ],
+    },
     "combinations": [
       {
         "taskId": "random",
@@ -193,25 +187,23 @@
   {
     "id": "37f6f761-b29d-4c65-97ea-12d9efdf3333",
     "timestamp": 1620912369731,
-    "systems": [
-      {
-        "id": "default_system",
-        "machine": {
-          "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
-          "memory": "63GB",
-          "os": "Linux 5.8"
-        },
-        "git": {
-          "commit": "783ca73002c023eba702358470dc2a869827b178",
-          "branch": "main"
-        },
-        "versions": {
-          "Node": "16.1.0",
-          "Spyd": "0.3.1",
-          "Test4": "1.0.0"
-        }
+    "system": {
+      "id": "default_system",
+      "machine": {
+        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "memory": 67378192384,
+        "os": "Linux 5.8"
+      },
+      "git": {
+        "commit": "783ca73002c023eba702358470dc2a869827b178",
+        "branch": "main"
+      },
+      "versions": {
+        "Node": "16.1.0",
+        "Spyd": "0.3.1",
+        "Test4": "1.0.0"
       }
-    ],
+    },
     "combinations": [
       {
         "taskId": "random",
