@@ -94,13 +94,13 @@ const getReportResult = function ({
 }) {
   const resultA = serializeFooter(result, titles, showTitles)
   const resultB = omitFooterProps(resultA, showMetadata, showSystem)
-  const resultC = addResultTitles(resultB, titles, showTitles)
-  const resultD = omitResultProps(resultC, {
+  const { result: resultC, footer } = finalizeFooter(resultB, keepFooter)
+  const resultD = addResultTitles(resultC, titles, showTitles)
+  const resultE = omitResultProps(resultD, {
     showPrecision,
     showDiff,
     debugStats,
   })
-  const { result: resultE, footer } = finalizeFooter(resultD, keepFooter)
   const resultF = addSizeInfo(resultE)
   return { result: resultF, footer }
 }
