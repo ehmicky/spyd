@@ -35,9 +35,18 @@ export const isDiffPrecise = function (
   { median: medianA, stdev: stdevA, loops: loopsA },
   { median: medianB, stdev: stdevB, loops: loopsB },
 ) {
+  if (isMissingPrecision(stdevA, stdevB)) {
+    return false
+  }
+
   const { length: lengthA } = getLengthFromLoops(loopsA)
   const { length: lengthB } = getLengthFromLoops(loopsB)
   return welchTTest({ medianA, stdevA, lengthA, medianB, stdevB, lengthB })
+}
+
+// When the result has not enough measures to compute the standard deviations
+const isMissingPrecision = function (stdevA, stdevB) {
+  return stdevA === undefined || stdevB === undefined
 }
 
 const welchTTest = function ({
