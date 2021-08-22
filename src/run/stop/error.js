@@ -1,4 +1,4 @@
-import { StopError } from '../error/main.js'
+import { StopError } from '../../error/main.js'
 
 // Throws on graceful stops.
 // Not done if a user exception was thrown

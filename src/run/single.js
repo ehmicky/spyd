@@ -10,9 +10,9 @@ import {
   spawnRunnerProcess,
   terminateRunnerProcess,
 } from '../process/runner.js'
-import { throwIfStopped } from '../stop/error.js'
 
 import { runEvents } from './events.js'
+import { throwIfStopped } from './stop/error.js'
 
 // Measure a single combination
 export const measureCombination = async function ({ index, ...args }) {

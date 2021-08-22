@@ -1,9 +1,12 @@
 import process from 'process'
 
-import { addAction, removeAction } from '../preview/action.js'
-import { updateDescription, STOP_DESCRIPTION } from '../preview/description.js'
-import { updatePreview } from '../preview/update.js'
-import { waitForEvents, waitForDelay } from '../utils/timeout.js'
+import { addAction, removeAction } from '../../preview/action.js'
+import {
+  updateDescription,
+  STOP_DESCRIPTION,
+} from '../../preview/description.js'
+import { updatePreview } from '../../preview/update.js'
+import { waitForEvents, waitForDelay } from '../../utils/timeout.js'
 
 import { throwAbortError } from './error.js'
 import { STOP_SIGNALS } from './signals.js'
