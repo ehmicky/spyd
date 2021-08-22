@@ -7,7 +7,9 @@ import { getStatLength } from './row.js'
 
 // Retrieved all `stats.*` properties that are not `undefined`, for the columns.
 export const getColumns = function (combinations) {
-  return COLUMNS.filter((column) => hasColumn(combinations, column))
+  return COLUMNS.filter(
+    (column) => getAnyCombinationColumn(combinations, column) !== undefined,
+  )
 }
 
 // List of columns, with their `stats.*` property.
@@ -30,10 +32,6 @@ const COLUMNS = [
   'samples',
   'minLoopDuration',
 ]
-
-const hasColumn = function (combinations, column) {
-  return getAnyCombinationColumn(combinations, column) !== undefined
-}
 
 // Each column is padded to the same width, so that they align vertically
 export const getColumnWidth = function (combinations, columns) {
