@@ -4,10 +4,11 @@ import { binarySearch } from './binary_search.js'
 // Array must be sorted and not empty.
 export const getHistogram = function (
   array,
-  { minIndex, maxIndex, length, bucketCount },
+  { minIndex, maxIndex, bucketCount },
 ) {
   const min = array[minIndex]
   const max = array[maxIndex]
+  const length = maxIndex - minIndex + 1
   const state = { startIndex: minIndex - 1 }
 
   return getBucketEdges(min, max, bucketCount).map(([start, end]) =>

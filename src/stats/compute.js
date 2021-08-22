@@ -39,7 +39,6 @@ export const computeStats = function (measures) {
   const histogram = getHistogram(measures, {
     minIndex,
     maxIndex,
-    length,
     bucketCount: HISTOGRAM_SIZE,
   })
 
@@ -87,7 +86,7 @@ const getPrecisionStats = function ({
     return {}
   }
 
-  const stdev = getStdev(measures, { minIndex, maxIndex, length, median })
+  const stdev = getStdev(measures, { minIndex, maxIndex, median })
   const rstdev = getRstdev(stdev, median)
   const moe = getMoe(stdev, length)
   const rmoe = getRmoe(moe, median)
