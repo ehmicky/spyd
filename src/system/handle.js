@@ -4,28 +4,29 @@ import { FORMATS } from '../report/formats/list.js'
 
 import { serializeFooter } from './serialize.js'
 
-export const handleFooters = function ({
-  result: { id, timestamp, systems, ...result },
-  titles,
-  reporters,
-}) {
-  const reportersA = reporters.map((reporter) =>
-    handleFooter({ id, timestamp, systems, titles, reporter }),
+export const addFooters = function (
+  { id, timestamp, systems, ...result },
+  config,
+) {
+  const reporters = config.reporters.map((reporter) =>
+    addFooter({ id, timestamp, systems, reporter }, config),
   )
-  return { result, reporters: reportersA }
+  return { result, config: { ...config, reporters } }
 }
 
-const handleFooter = function ({
-  id,
-  timestamp,
-  systems,
-  titles,
-  reporter,
-  reporter: {
-    format,
-    config: { showTitles, showMetadata, showSystem },
+const addFooter = function (
+  {
+    id,
+    timestamp,
+    systems,
+    reporter,
+    reporter: {
+      format,
+      config: { showTitles, showMetadata, showSystem },
+    },
   },
-}) {
+  { titles },
+) {
   const footer = { id, timestamp, systems }
   const footerA = addFooterTitles(footer, titles, showTitles)
   const footerB = omitFooterProps(footerA, showMetadata, showSystem)

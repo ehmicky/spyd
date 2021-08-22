@@ -1,5 +1,6 @@
 import { normalizeReportedResult } from '../normalize/result.js'
 import { applySince, mergeHistoryResult } from '../normalize/since.js'
+import { addFooters } from '../system/handle.js'
 
 import { getContents } from './contents/main.js'
 import { outputContents } from './output.js'
@@ -56,7 +57,8 @@ export const reportPreview = async function (result, historyResult, config) {
 export const reportCompute = async function (result, historyResult, config) {
   const resultA = mergeHistoryResult(result, historyResult)
   const resultB = normalizeReportedResult(resultA)
-  const { programmaticResult, contents } = await getContents(resultB, config)
+  const { result: resultC, config: configA } = addFooters(resultB, config)
+  const { programmaticResult, contents } = await getContents(resultC, configA)
   return { programmaticResult, contents }
 }
 
