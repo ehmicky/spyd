@@ -3,6 +3,7 @@ import { sortCombinations } from '../combination/sort.js'
 import { addCombinationsDiff } from '../compare/diff.js'
 
 import { mergeHistory } from './since.js'
+import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 
 // Add report-specific properties to each `history` result.
 // This is only computed once at the beginning of the command.
@@ -39,11 +40,12 @@ const normalizeHistoryEach = function (history, reporter) {
 // have been performed.
 // This is only computed once at the beginning of the command.
 export const normalizeTargetResult = function (result, config) {
-  const resultA = normalizeNonCombAll(result)
+  const resultA = addSizeInfo(result)
+  const resultB = normalizeNonCombAll(resultA)
   const reporters = config.reporters.map((reporter) =>
-    normalizeTargetResEach(result, reporter),
+    normalizeTargetResEach(resultB, reporter),
   )
-  return { result: resultA, config: { ...config, reporters } }
+  return { result: resultB, config: { ...config, reporters } }
 }
 
 // Add report-specific properties to the target result that are not
@@ -94,6 +96,15 @@ const normalizeComputedResEach = function (
 // reporter-specific
 const normalizeNonCombAll = function (result) {
   return result
+}
+
+// Add screen size-related information.
+// Not added to history results since this does not reflect the screen size when
+// the history result was taken
+const addSizeInfo = function (result) {
+  const screenWidth = getPaddedScreenWidth()
+  const screenHeight = getPaddedScreenHeight()
+  return { ...result, screenWidth, screenHeight }
 }
 
 // Add report-specific properties to a result that are in `combinations` but not

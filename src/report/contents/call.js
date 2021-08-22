@@ -1,7 +1,6 @@
 import omit from 'omit.js'
 
 import { FORMATS } from '../formats/list.js'
-import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
 import { omitResultProps } from './omit.js'
 import { addResultTitles } from './titles.js'
@@ -43,15 +42,7 @@ const getReportResult = function (
     debugStats,
   })
   const resultD = { ...resultC, ...footerParams }
-  const resultE = addSizeInfo(resultD)
-  return resultE
-}
-
-// Add size-related information
-const addSizeInfo = function (result) {
-  const screenWidth = getPaddedScreenWidth()
-  const screenHeight = getPaddedScreenHeight()
-  return { ...result, screenWidth, screenHeight }
+  return resultD
 }
 
 // We handle some reporterConfig properties in core, and do not pass those to
