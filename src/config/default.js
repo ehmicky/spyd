@@ -22,7 +22,6 @@ const METADATA_COMMANDS = new Set(['show', 'remove'])
 // for users and provides with better error messages.
 export const DEFAULT_CONFIG = {
   precision: 2,
-  concurrency: 1,
   system: 'default_system',
   save: false,
   runnerConfig: {},

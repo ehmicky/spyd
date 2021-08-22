@@ -19,11 +19,6 @@ A higher level increases precision but makes the benchmark last longer.`,
 Reporters are still used.
 Default: false if the output is an interactive terminal.`,
   },
-  concurrency: {
-    group: TASKS,
-    number: true,
-    requiresArg: true,
-  },
   save: {
     group: HISTORY,
     boolean: true,

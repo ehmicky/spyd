@@ -33,8 +33,4 @@ This can be used to share configurations and/or benchmarks.`,
   - When looking for the current git commit and branch
 This is not used to resolve configuration properties that are file paths.`,
   },
-  debug: {
-    group: CONFIG,
-    boolean: true,
-  },
 }
