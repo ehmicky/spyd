@@ -26,7 +26,7 @@ export const addStatsPretty = function ({
 //     - `showPrecision` is `false` or `true` (for `median[Min|Max]`)
 //     - `showDiff` is `false` or there is nothing to diff (for `diff`)
 //  - some combinations when:
-//     - `median` is `0` or there are only a few measures
+//     - there are only a few measures
 //       (for all the precision-based stats like `stdev`)
 // Additionally, at the beginning of the preview, all `stats` are `undefined`
 const addStatPretty = function ({

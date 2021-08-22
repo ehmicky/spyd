@@ -74,8 +74,10 @@ export const computeStats = function (measures) {
 const QUANTILES_SIZE = 1e2
 const HISTOGRAM_SIZE = 1e2
 
-// Retrieve stats related to `stdev`. Those might be absent if the number of
-// loops is low.
+// Retrieve stats related to `stdev`.
+// Those might be absent if the number of loops is low.
+// `median: 0` is very unlikely (but possible) after calibration, which would
+// make those stats not compute correctly.
 const getPrecisionStats = function ({
   measures,
   minIndex,
@@ -85,7 +87,7 @@ const getPrecisionStats = function ({
   max,
   median,
 }) {
-  if (median === 0 || length < MIN_STDEV_LOOPS) {
+  if (length < MIN_STDEV_LOOPS || median === 0) {
     return {}
   }
 
