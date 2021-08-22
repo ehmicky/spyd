@@ -2,7 +2,7 @@ import { isSameDimension } from '../../../../combination/ids.js'
 import { getCombinationNameWidth } from '../../../utils/name.js'
 import { getResponsiveColumns } from '../../../utils/responsive.js'
 import {
-  COLUMN_SEPARATOR_WIDTH,
+  COLUMN_SEPARATOR,
   STATS_SEPARATOR,
   STATS_SEPARATOR_COLORED,
 } from '../../../utils/separator.js'
@@ -86,7 +86,7 @@ export const getAllColumns = function ({
   return getResponsiveColumns({
     availableWidth,
     columnWidth,
-    separatorWidth: COLUMN_SEPARATOR_WIDTH,
+    separatorWidth: COLUMN_SEPARATOR.length,
     columns,
   })
 }

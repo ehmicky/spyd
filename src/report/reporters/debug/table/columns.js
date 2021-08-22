@@ -1,6 +1,6 @@
 import { getCombinationNameWidth } from '../../../utils/name.js'
 import { getResponsiveColumns } from '../../../utils/responsive.js'
-import { COLUMN_SEPARATOR_WIDTH } from '../../../utils/separator.js'
+import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
 
 import { getHeaderLength } from './header.js'
 import { getStatLength } from './row.js'
@@ -59,7 +59,7 @@ export const getAllColumns = function ({
   return getResponsiveColumns({
     availableWidth,
     columnWidth,
-    separatorWidth: COLUMN_SEPARATOR_WIDTH,
+    separatorWidth: COLUMN_SEPARATOR.length,
     columns,
   })
 }
