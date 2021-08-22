@@ -1,12 +1,11 @@
 import omit from 'omit.js'
 
-import { finalizeFooter } from '../../system/finalize.js'
-import { serializeFooter } from '../../system/serialize.js'
+import { handleFooter } from '../../system/handle.js'
 import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
-import { omitFooterProps, omitResultProps } from './omit.js'
-import { addSystemsTitles, addResultTitles } from './titles.js'
+import { omitResultProps } from './omit.js'
+import { addResultTitles } from './titles.js'
 
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
@@ -93,7 +92,8 @@ const getReportResult = function ({
   debugStats,
   keepFooter,
 }) {
-  const { result: resultA, footer } = handleFooter(result, {
+  const { result: resultA, footer } = handleFooter({
+    result,
     titles,
     showTitles,
     showMetadata,
@@ -107,17 +107,6 @@ const getReportResult = function ({
     debugStats,
   })
   const resultD = addSizeInfo(resultC)
-  return { result: resultD, footer }
-}
-
-const handleFooter = function (
-  result,
-  { titles, showTitles, showMetadata, showSystem, keepFooter },
-) {
-  const resultA = addSystemsTitles(result, titles, showTitles)
-  const resultB = serializeFooter(resultA, titles, showTitles)
-  const resultC = omitFooterProps(resultB, showMetadata, showSystem)
-  const { result: resultD, footer } = finalizeFooter(resultC, keepFooter)
   return { result: resultD, footer }
 }
 
