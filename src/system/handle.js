@@ -10,7 +10,6 @@ export const handleFooter = function ({
   showTitles,
   showMetadata,
   showSystem,
-  keepFooter,
   format,
 }) {
   const { result: resultA, footer } = initFooter(result)
@@ -18,7 +17,7 @@ export const handleFooter = function ({
   const footerB = serializeFooter(footerA, titles, showTitles)
   const footerC = omitFooterProps(footerB, showMetadata, showSystem)
   const footerD = cleanFooter(footerC)
-  const resultB = addFooter(resultA, footerD, keepFooter)
+  const resultB = addFooter(resultA, footerD, format)
   const footerE = stringifyFooter(footerD, format)
   return { result: resultB, footer: footerE }
 }
@@ -40,8 +39,8 @@ const normalizeDepth = function ({ title, fields }) {
 }
 
 // Depending on format, it is either passed to the reporter or appended by us.
-const addFooter = function (result, footer, keepFooter) {
-  return keepFooter ? { ...result, footer } : result
+const addFooter = function (result, footer, format) {
+  return FORMATS[format].footer === undefined ? { ...result, footer } : result
 }
 
 const stringifyFooter = function (footer, format) {

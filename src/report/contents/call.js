@@ -91,14 +91,12 @@ const getReportResult = function ({
   debugStats,
   format,
 }) {
-  const keepFooter = FORMATS[format].footer === undefined
   const { result: resultA, footer } = handleFooter({
     result,
     titles,
     showTitles,
     showMetadata,
     showSystem,
-    keepFooter,
     format,
   })
   const resultB = addResultTitles(resultA, titles, showTitles)
