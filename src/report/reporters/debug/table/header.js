@@ -1,6 +1,7 @@
 import { fieldColor } from '../../../utils/colors.js'
 import { getCombinationNameWidth } from '../../../utils/name.js'
 import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
+import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
 import { STAT_TITLES } from '../../../utils/stat_titles.js'
 
 // Retrieve the header row
@@ -15,9 +16,6 @@ export const getHeader = function ([combination], columns, columnWidth) {
   const headerCells = getHeaderCells(columns, columnWidth)
   return `${combinationNamePadding}${headerCells}`
 }
-
-// Keep space for the header to avoid jitter due to trimming, while still
-const NON_TRIMMABLE_SPACE = '\u200B'
 
 const getHeaderCells = function (columns, columnWidth) {
   return columns
