@@ -1,6 +1,5 @@
 import { cpus as getCpus, totalmem } from 'os'
 
-import { format as formatBytes } from 'bytes'
 import envCi from 'env-ci'
 import osName from 'os-name'
 import { v4 as uuidv4 } from 'uuid'
@@ -37,7 +36,7 @@ const getSystem = async function ({ systemId, combinations, cwd }) {
 
 const getMachine = function () {
   const cpu = serializeCpus()
-  const memory = getMemory()
+  const memory = totalmem()
   const os = osName()
   return { cpu, memory, os }
 }
@@ -49,11 +48,6 @@ const serializeCpus = function () {
 
 const serializeCpu = function ([name, cores]) {
   return `${cores.length} * ${name}`
-}
-
-const getMemory = function () {
-  const memory = totalmem()
-  return formatBytes(memory, { decimalPlaces: 0 })
 }
 
 const getEnvInfo = function (cwd) {

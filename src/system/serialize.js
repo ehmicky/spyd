@@ -1,3 +1,4 @@
+import { format as formatBytes } from 'bytes'
 import omit from 'omit.js'
 
 import { cleanObject } from '../utils/clean.js'
@@ -22,7 +23,7 @@ const serializeSystem = function ({
   const fields = {
     OS: os,
     CPU: cpu,
-    Memory: memory,
+    Memory: serializeMemory(memory),
     Git: serializeGit({ commit, tag, branch }),
     PR: serializePr({ prNumber, prBranch }),
     CI: ci,
@@ -38,6 +39,12 @@ const serializeSystem = function ({
   }
 
   return title === undefined ? fieldsA : { [title]: fieldsA }
+}
+
+const serializeMemory = function (memory) {
+  return memory === undefined
+    ? undefined
+    : formatBytes(memory, { decimalPlaces: 0 })
 }
 
 // The spyd version is shown after other versions.
