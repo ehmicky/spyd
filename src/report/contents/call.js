@@ -93,7 +93,7 @@ const getReportResult = function ({
   keepFooter,
 }) {
   const resultA = addResultTitles(result, titles, showTitles)
-  const resultB = serializeFooter(resultA)
+  const resultB = serializeFooter(resultA, titles, showTitles)
   const resultC = omitResultProps(resultB, {
     showSystem,
     showMetadata,

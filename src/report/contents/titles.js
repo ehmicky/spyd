@@ -22,8 +22,7 @@ export const addResultTitles = function (result, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
   const resultA = addCombinationsTitles(result, titlesA)
   const resultB = addDimensionsTitles(resultA, titlesA)
-  const resultC = addSystemsTitles(resultB, titlesA)
-  return resultC
+  return resultB
 }
 
 const addCombinationsTitles = function ({ combinations, ...result }, titles) {
@@ -50,9 +49,9 @@ const addDimensionTitle = function (items, titles) {
   return items.map((item) => addTitle(item, 'id', titles))
 }
 
-const addSystemsTitles = function ({ systems, ...result }, titles) {
-  const systemsA = systems.map((systemA) => addSystemTitle(systemA, titles))
-  return { ...result, systems: systemsA }
+export const addSystemsTitles = function (systems, titles, showTitles) {
+  const titlesA = showTitles ? titles : {}
+  return systems.map((systemA) => addSystemTitle(systemA, titlesA))
 }
 
 const addSystemTitle = function (system, titles) {
