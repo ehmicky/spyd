@@ -40,13 +40,18 @@ const getColumn = function (historyResult, combinations, allCombinations) {
 }
 
 const getCell = function (historyCombinations, combination) {
+  const cellStat = getCellStat(historyCombinations, combination)
+  return cellStat === undefined ? { pretty: '', prettyColor: '' } : cellStat
+}
+
+const getCellStat = function (historyCombinations, combination) {
   const historyCombinationA = historyCombinations.find((historyCombination) =>
     isSameDimension(historyCombination, combination),
   )
 
   // No matching previous combination
   if (historyCombinationA === undefined) {
-    return { pretty: '', prettyColor: '' }
+    return
   }
 
   const {
@@ -60,7 +65,7 @@ const getCell = function (historyCombinations, combination) {
 
   // Due to not enough measures
   if (medianMin === undefined) {
-    return { pretty: '', prettyColor: '' }
+    return
   }
 
   return {
