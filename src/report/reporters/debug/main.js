@@ -3,7 +3,7 @@ import { joinSections } from '../../utils/join.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
-import { getTables } from './tables.js'
+import { getTables } from './table/main.js'
 import { getTimeSeries } from './time_series.js'
 
 // Debugging reporter only meant for development purpose

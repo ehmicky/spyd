@@ -1,6 +1,6 @@
-import { getCombinationNameWidth } from '../../utils/name.js'
-import { getResponsiveColumns } from '../../utils/responsive.js'
-import { SEPARATOR_WIDTH } from '../../utils/separator.js'
+import { getCombinationNameWidth } from '../../../utils/name.js'
+import { getResponsiveColumns } from '../../../utils/responsive.js'
+import { SEPARATOR_WIDTH } from '../../../utils/separator.js'
 
 import { getHeaderName } from './header.js'
 import { getStatLength } from './row.js'
