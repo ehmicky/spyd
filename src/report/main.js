@@ -40,12 +40,12 @@ export const reportStart = async function (result, previous, config) {
     applySince(result, previous, config),
     startReporters(config),
   ])
-  const { result: resultB, config: configB } = addFooters({
+  const { result: resultA, config: configB } = addFooters({
     result,
     historyResult,
     config: configA,
   })
-  return { result: resultB, historyResult, config: configB }
+  return { result: resultA, historyResult, config: configB }
 }
 
 // Report preview results in `run` command.
