@@ -1,7 +1,7 @@
 // eslint-disable-next-line fp/no-events
 import { once } from 'events'
 
-import { PluginError, UserError } from '../error/main.js'
+import { PluginError, UserError } from '../../error/main.js'
 
 // Throws when process exit as it spawns.
 // We distinguish it from process exits after spawning, since this is a

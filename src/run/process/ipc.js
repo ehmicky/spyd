@@ -4,7 +4,7 @@ import { promisify } from 'util'
 
 import getStream from 'get-stream'
 
-import { PluginError, UserError } from '../error/main.js'
+import { PluginError, UserError } from '../../error/main.js'
 
 import { throwOnStreamError } from './error.js'
 

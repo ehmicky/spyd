@@ -1,5 +1,5 @@
-import { noUnhandledRejection } from '../error/unhandled_rejection.js'
-import { spawnProcess } from '../utils/spawn.js'
+import { noUnhandledRejection } from '../../error/unhandled_rejection.js'
+import { spawnProcess } from '../../utils/spawn.js'
 
 import { throwOnSpawnExit, throwOnTaskExit } from './error.js'
 import { receiveReturnValue } from './ipc.js'

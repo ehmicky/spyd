@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { sendAndReceive } from '../../process/ipc.js'
+import { sendAndReceive } from '../process/ipc.js'
 
 import { getPayload } from './payload.js'
 import { getSampleState } from './state.js'
