@@ -4,6 +4,10 @@
 // `system` objects should not contain `undefined`, so we can directly merge.
 // `git` and `machine` properties should not be deeply merged since their
 // properties relate to each other. However, `versions` should.
+export const normalizeSystems = function ({ system, ...result }) {
+  return { ...result, systems: [system] }
+}
+
 export const mergeSystems = function (result, previousResult) {
   const previousSystemsA = previousResult.systems.map((previousSystem) =>
     mergeSystem(result.systems, previousSystem),

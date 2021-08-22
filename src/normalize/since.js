@@ -1,4 +1,5 @@
 import { findByDelta } from '../delta/main.js'
+import { normalizeSystems } from '../system/merge.js'
 
 import {
   mergeResults,
@@ -56,13 +57,20 @@ export const applySince = async function (result, previous, { since, cwd }) {
     return { history: [] }
   }
 
-  const sinceIndex = await findByDelta(previous, since, cwd)
+  const resultA = normalizeSystems(result)
+  const previousA = previous.map(normalizeSystems)
+
+  const sinceIndex = await findByDelta(previousA, since, cwd)
 
   if (sinceIndex === -1) {
-    const sinceResult = getSinceResult(previous, previous.length - 1, result)
+    const sinceResult = getSinceResult(previousA, previousA.length - 1, resultA)
     return { history: [sinceResult] }
   }
 
+  return initHistoryResult(resultA, previousA, sinceIndex)
+}
+
+const initHistoryResult = function (result, previous, sinceIndex) {
   const mergedResult = mergeResults(result, previous.slice(sinceIndex))
   const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1)]

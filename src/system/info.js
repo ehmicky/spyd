@@ -24,7 +24,7 @@ export const getSystemInfo = async function (
   const id = uuidv4()
   const timestamp = Date.now()
   const system = await getSystem({ systemId, envInfo, combinations, cwd })
-  return { id, timestamp, systems: [system] }
+  return { id, timestamp, system }
 }
 
 const getSystem = async function ({
