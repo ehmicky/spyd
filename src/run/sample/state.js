@@ -1,4 +1,4 @@
-import { mergeSort } from '../stats/merge.js'
+import { mergeSort } from '../../stats/merge.js'
 
 import { normalizeSampleMeasures } from './normalize.js'
 import { handleRepeat } from './repeat.js'

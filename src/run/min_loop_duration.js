@@ -1,11 +1,12 @@
 import now from 'precise-now'
 import timeResolution from 'time-resolution'
 
-import { measureSample } from '../sample/main.js'
-import { hasMaxMeasures } from '../sample/max_measures.js'
-import { getInitialSampleState } from '../sample/state.js'
 import { getSortedMedian } from '../stats/quantile.js'
 import { pWhile } from '../utils/p_while.js'
+
+import { measureSample } from './sample/main.js'
+import { hasMaxMeasures } from './sample/max_measures.js'
+import { getInitialSampleState } from './sample/state.js'
 
 // `measureCost` is the duration spent by the runner performing any benchmarking
 // logic before and after each task such as computing timestamps.

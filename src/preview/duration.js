@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { MAX_MEASURES } from '../sample/max_measures.js'
+import { MAX_MEASURES } from '../run/sample/max_measures.js'
 import { getLoopsFromLength } from '../stats/extreme.js'
 import { getLengthForMoe } from '../stats/moe.js'
 

@@ -1,5 +1,5 @@
-import { getSortedMedian } from '../stats/quantile.js'
-import { sortFloats } from '../stats/sort.js'
+import { getSortedMedian } from '../../stats/quantile.js'
+import { sortFloats } from '../../stats/sort.js'
 
 // Normalize `sampleMeasures` by dividing `repeat` and sorting.
 export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
