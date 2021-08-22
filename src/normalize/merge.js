@@ -2,7 +2,7 @@ import {
   pickResultCombinations,
   removeResultCombinations,
 } from '../combination/result.js'
-import { mergeSystems } from '../system/merge.js'
+import { mergeResultsSystems } from '../system/merge.js'
 
 // The `since` configuration property allows reporting several reports at once:
 //  - This reports the most recent combination of each sets of dimensions
@@ -71,7 +71,10 @@ export const mergeResult = function (result, previousResult) {
     return result
   }
 
-  const combinations = [...result.combinations, ...previousCombinations]
-  const systems = mergeSystems(result.systems, previousResult.systems)
-  return { ...result, combinations, systems }
+  const resultA = {
+    ...result,
+    combinations: [...result.combinations, ...previousCombinations],
+  }
+  const resultB = mergeResultsSystems(resultA, previousResult)
+  return resultB
 }

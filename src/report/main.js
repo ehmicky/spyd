@@ -55,8 +55,11 @@ export const reportPreview = async function (result, historyResult, config) {
 
 // Compute the report contents
 export const reportCompute = async function (result, historyResult, config) {
-  const resultA = mergeHistoryResult(result, historyResult)
-  const { result: resultB, config: configA } = addFooters(resultA, config)
+  const { result: resultA, config: configA } = addFooters(
+    historyResult.mergedResult,
+    config,
+  )
+  const resultB = mergeHistoryResult(resultA, historyResult)
   const resultC = normalizeReportedResult(resultB)
   const { programmaticResult, contents } = await getContents(resultC, configA)
   return { programmaticResult, contents }
