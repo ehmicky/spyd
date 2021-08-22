@@ -7,20 +7,15 @@ import { cleanObject } from '../utils/clean.js'
 // `systems[0]` is a collection of all properties shared by other `systems`.
 // Its `id` is `undefined`.
 // This helps avoid duplication when reporting similar systems.
-export const addSharedSystem = function ({
-  systems,
-  systems: [firstSystem, ...otherSystems],
-  ...result
-}) {
-  const sharedSystem = getSharedSystem(firstSystem, otherSystems)
+export const addSharedSystem = function (systems) {
+  const sharedSystem = getSharedSystem(systems)
   const systemsA = systems.map((system) =>
     removeSharedSystem(system, sharedSystem),
   )
-  const systemsB = [sharedSystem, ...systemsA]
-  return { ...result, systems: systemsB }
+  return [sharedSystem, ...systemsA]
 }
 
-const getSharedSystem = function (firstSystem, systems) {
+const getSharedSystem = function ([firstSystem, ...systems]) {
   const sharedSystem = filterObj(firstSystem, (key, value) =>
     isSharedProp(key, value, systems),
   )
@@ -51,7 +46,7 @@ const getSharedSystemProp = function (key, value, systems) {
   }
 
   const systemProps = systems.map((system) => system[key])
-  return getSharedSystem(value, systemProps)
+  return getSharedSystem([value, ...systemProps])
 }
 
 const removeSharedSystem = function (system, sharedSystem = {}) {

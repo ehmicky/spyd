@@ -3,13 +3,15 @@ import { addFooterTitles } from '../report/contents/titles.js'
 import { FORMATS } from '../report/formats/list.js'
 
 import { serializeFooter } from './serialize.js'
+import { addSharedSystem } from './shared.js'
 
 export const addFooters = function (
   { id, timestamp, systems, ...result },
   config,
 ) {
+  const systemsA = addSharedSystem(systems)
   const reporters = config.reporters.map((reporter) =>
-    addFooter({ id, timestamp, systems, reporter }, config),
+    addFooter({ id, timestamp, systems: systemsA, reporter }, config),
   )
   return { result, config: { ...config, reporters } }
 }

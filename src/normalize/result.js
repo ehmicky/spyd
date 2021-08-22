@@ -1,7 +1,6 @@
 import { groupDimensionInfos } from '../combination/group.js'
 import { sortCombinations } from '../combination/sort.js'
 import { addCombinationsDiff } from '../compare/diff.js'
-import { addSharedSystem } from '../system/shared.js'
 
 // Normalize the result after measuring
 export const normalizeMeasuredResult = function (result) {
@@ -22,8 +21,7 @@ const normalizeCombination = function ({ taskId, runnerId, systemId, stats }) {
 export const normalizeReportedResult = function (result) {
   const resultA = addCombinationsDiff(result)
   const resultB = groupResultCombinations(resultA)
-  const resultC = addSharedSystem(resultB)
-  return resultC
+  return resultB
 }
 
 // Add `result.*` properties based on grouping combinations by dimension.
