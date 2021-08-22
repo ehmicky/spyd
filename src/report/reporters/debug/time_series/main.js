@@ -1,10 +1,11 @@
 import { getColumns, getColumnWidth, getAllColumns } from './columns.js'
+import { getHeader } from './header.js'
 import { getRow } from './row.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
   const columns = getColumns(history, combinations)
-  const columnWidth = getColumnWidth(columns)
+  const columnWidth = getColumnWidth(combinations, columns)
   const allColumns = getAllColumns({
     combinations,
     columns,
@@ -17,6 +18,12 @@ export const getTimeSeries = function (history, combinations, screenWidth) {
 }
 
 const getTable = function (combinations, columns, columnWidth) {
+  const header = getHeader(combinations, columns, columnWidth)
+  const rows = getRows(combinations, columns, columnWidth)
+  return `${header}\n${rows}`
+}
+
+const getRows = function (combinations, columns, columnWidth) {
   return combinations
     .map((combination, rowIndex) =>
       getRow({ combination, rowIndex, columns, columnWidth }),

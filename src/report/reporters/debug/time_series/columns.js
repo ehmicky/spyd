@@ -4,6 +4,7 @@ import { getResponsiveColumns } from '../../../utils/responsive.js'
 import { SEPARATOR_WIDTH } from '../../../utils/separator.js'
 import { prettifyStats } from '../../../utils/stats/main.js'
 
+import { getHeaderName, getHeaderLengths } from './header.js'
 import { getStatLength } from './row.js'
 
 // Retrieve all columns and their stats
@@ -19,13 +20,15 @@ const getCombinations = function ({ combinations }) {
 }
 
 const getColumn = function (historyResult, combinations, allCombinations) {
+  const headerName = getHeaderName(historyResult)
   const historyCombinations = prettifyStats(
     historyResult.combinations,
     allCombinations,
   )
-  return combinations.map((combination) =>
+  const cellStats = combinations.map((combination) =>
     getCellStat(historyCombinations, combination),
   )
+  return { headerName, cellStats }
 }
 
 const getCellStat = function (historyCombinations, combination) {
@@ -58,9 +61,15 @@ const getCellStat = function (historyCombinations, combination) {
   }
 }
 
-export const getColumnWidth = function (columns) {
-  const widths = columns.flat().filter(Boolean).map(getStatLength)
-  return Math.max(...widths)
+export const getColumnWidth = function (combinations, columns) {
+  return Math.max(
+    ...columns.map((column) => getStatColumnWidth(combinations, column)),
+  )
+}
+
+const getStatColumnWidth = function (combinations, column) {
+  const cellLengths = column.cellStats.filter(Boolean).map(getStatLength)
+  return Math.max(...cellLengths, ...getHeaderLengths(column))
 }
 
 export const getAllColumns = function ({

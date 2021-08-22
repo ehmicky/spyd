@@ -10,7 +10,7 @@ export const getRow = function ({
 }) {
   const combinationName = getCombinationNameColor(combination)
   const cells = columns
-    .map((column) => getCell(column[rowIndex], columnWidth))
+    .map(({ cellStats }) => getCell(cellStats[rowIndex], columnWidth))
     .join(COLUMN_SEPARATOR)
   return `${combinationName}${cells}`
 }
