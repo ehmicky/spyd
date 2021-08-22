@@ -1,7 +1,7 @@
 import process from 'process'
 import { emitKeypressEvents } from 'readline'
 
-import { isTtyInput } from '../report/tty.js'
+import { isTtyInput } from '../../report/tty.js'
 
 import { refreshPreview } from './update.js'
 

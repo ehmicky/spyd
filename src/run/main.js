@@ -1,11 +1,5 @@
 import { normalizeMeasuredResult } from '../normalize/result.js'
 import {
-  startPreview,
-  endPreview,
-  printPreviewStarting,
-} from '../preview/start_end.js'
-import { getPreviewState } from '../preview/state.js'
-import {
   reportStart,
   reportCompute,
   reportPrint,
@@ -13,6 +7,12 @@ import {
 } from '../report/main.js'
 
 import { createResult } from './create.js'
+import {
+  startPreview,
+  endPreview,
+  printPreviewStarting,
+} from './preview/start_end.js'
+import { getPreviewState } from './preview/state.js'
 import { measureCombinations } from './several.js'
 
 // Perform a new benchmark.

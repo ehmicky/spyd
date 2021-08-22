@@ -1,6 +1,10 @@
 import { hide as hideCursor, show as showCursor } from 'cli-cursor'
 
-import { clearScreen, clearScreenFull, printToStdout } from '../report/tty.js'
+import {
+  clearScreen,
+  clearScreenFull,
+  printToStdout,
+} from '../../report/tty.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'

@@ -1,9 +1,9 @@
 import { toInputsObj } from '../combination/inputs.js'
-import { updateDescription, END_DESCRIPTION } from '../preview/description.js'
 import { sendAndReceive } from '../process/ipc.js'
 
 import { performMeasureLoop } from './loop.js'
 import { getMinLoopDuration } from './min_loop_duration.js'
+import { updateDescription, END_DESCRIPTION } from './preview/description.js'
 
 // Measure all combinations, until the results are precise enough.
 // When any combination errors, we end measuring.

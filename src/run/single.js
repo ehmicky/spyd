@@ -2,16 +2,16 @@ import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
 import {
-  startCombinationPreview,
-  endCombinationPreview,
-} from '../preview/combination.js'
-import { updateDescription } from '../preview/description.js'
-import {
   spawnRunnerProcess,
   terminateRunnerProcess,
 } from '../process/runner.js'
 
 import { runEvents } from './events.js'
+import {
+  startCombinationPreview,
+  endCombinationPreview,
+} from './preview/combination.js'
+import { updateDescription } from './preview/description.js'
 import { throwIfStopped } from './stop/error.js'
 
 // Measure a single combination
