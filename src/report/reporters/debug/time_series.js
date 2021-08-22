@@ -58,6 +58,11 @@ const getCell = function (historyCombinations, combination) {
     return median
   }
 
+  // Inital preview report
+  if (combination.stats.medianMin === undefined) {
+    return { pretty: '', prettyColor: '' }
+  }
+
   // Due to not enough measures
   if (medianMin !== undefined) {
     return {
