@@ -19,7 +19,8 @@ export const prettifyStats = function (
   const combinationsA = addCombinationsStatsRaw(combinations, statKinds)
   const allCombinationsA = addCombinationsStatsRaw(allCombinations, statKinds)
   return statKinds.reduce(
-    prettifyCombinationsStat.bind(undefined, allCombinationsA),
+    (combinationsB, statKind) =>
+      prettifyCombinationsStat(statKind, combinationsB, allCombinationsA),
     combinationsA,
   )
 }
@@ -27,11 +28,9 @@ export const prettifyStats = function (
 // Replace `stats.*` string to an object with single property `raw`.
 // This allows adding more properties alongside it: `pretty`, `padded`, etc.
 const addCombinationsStatsRaw = function (combinations, statKinds) {
-  return combinations.map((combination) => addStatsRaw(combination, statKinds))
-}
-
-const addStatsRaw = function (combination, statKinds) {
-  return statKinds.reduce(addStatRaw, combination)
+  return combinations.map((combination) =>
+    statKinds.reduce(addStatRaw, combination),
+  )
 }
 
 const addStatRaw = function (combination, { name }) {
@@ -42,9 +41,9 @@ const addStatRaw = function (combination, { name }) {
 }
 
 const prettifyCombinationsStat = function (
-  allCombinations,
-  combinations,
   { name, kind, signed },
+  combinations,
+  allCombinations,
 ) {
   const combinationsA = addStatsPretty({
     combinations,
