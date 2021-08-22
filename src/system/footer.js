@@ -10,18 +10,11 @@ export const getFooter = function ({ id, timestamp, systems }) {
 }
 
 const serializeSystems = function (systems) {
-  const [sharedSystem, ...nonSharedSystems] = systems
-  const sharedSystemA = serializeFields(sharedSystem)
-  const nonSharedSystemsA = nonSharedSystems.map(serializeSystemFields)
-  return [sharedSystemA, ...nonSharedSystemsA].filter(hasFields)
-}
-
-const serializeSystemFields = function ({ title, ...system }) {
-  const fields = serializeFields(system)
-  return hasFields(fields) ? { [title]: fields } : {}
+  return systems.map(serializeFields).filter(hasFields).map(serializeSystem)
 }
 
 const serializeFields = function ({
+  title,
   machine: { os, cpu, memory } = {},
   git: { commit, tag, branch, prNumber, prBranch } = {},
   ci,
@@ -36,9 +29,12 @@ const serializeFields = function ({
     CI: ci,
   })
   return {
-    ...fields,
-    ...omit.default(versions, Object.keys(fields)),
-    ...serializeSpydVersion(spydVersion),
+    title,
+    fields: {
+      ...fields,
+      ...omit.default(versions, Object.keys(fields)),
+      ...serializeSpydVersion(spydVersion),
+    },
   }
 }
 
@@ -51,10 +47,6 @@ const serializeSpydVersion = function (spydVersion) {
     : { 'Benchmarked with spyd': spydVersion }
 }
 
-const hasFields = function (fields) {
-  return Object.keys(fields).length !== 0
-}
-
 const serializeMetadata = function (id, timestamp) {
   if (id === undefined) {
     return []
@@ -62,4 +54,12 @@ const serializeMetadata = function (id, timestamp) {
 
   const timestampString = new Date(timestamp).toLocaleString()
   return [{ Id: id, Timestamp: timestampString }]
+}
+
+const hasFields = function ({ fields }) {
+  return Object.keys(fields).length !== 0
+}
+
+const serializeSystem = function ({ title, fields }) {
+  return title === undefined ? fields : { [title]: fields }
 }
