@@ -16,14 +16,10 @@ const getCell = function (column, { stats: { [column]: stat } }, columnWidth) {
     return ' '.repeat(columnWidth)
   }
 
-  const statString = getStat(stat)
+  const { prettyPaddedColor } = stat
   const paddingWidth = columnWidth - getStatLength(stat)
   const padding = ' '.repeat(paddingWidth)
-  return `${padding}${statString}`
-}
-
-const getStat = function ({ prettyPaddedColor }) {
-  return prettyPaddedColor
+  return `${padding}${prettyPaddedColor}`
 }
 
 export const getStatLength = function ({ prettyPadded }) {
