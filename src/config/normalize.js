@@ -1,4 +1,4 @@
-import { normalizePrecision } from '../measure/precision.js'
+import { normalizePrecision } from '../run/precision.js'
 
 import {
   normalizeOptionalArray,

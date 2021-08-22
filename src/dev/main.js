@@ -1,5 +1,5 @@
 import { getCombinationName } from '../combination/ids.js'
-import { measureCombinations } from '../measure/several.js'
+import { measureCombinations } from '../run/several.js'
 import { titleColor } from '../report/utils/colors.js'
 
 // Execute tasks without benchmarking them.
