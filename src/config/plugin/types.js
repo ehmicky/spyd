@@ -1,5 +1,5 @@
-import { REPORTERS } from '../report/reporters/main.js'
-import { RUNNERS } from '../runners/main.js'
+import { REPORTERS } from '../../report/reporters/main.js'
+import { RUNNERS } from '../../runners/main.js'
 
 // All plugin types
 export const PLUGIN_TYPES = {

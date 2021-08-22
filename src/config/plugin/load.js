@@ -1,6 +1,6 @@
 import { createRequire } from 'module'
 
-import { PluginError, UserError } from '../error/main.js'
+import { PluginError, UserError } from '../../error/main.js'
 
 // Import plugin's code
 export const loadPlugins = async function ({

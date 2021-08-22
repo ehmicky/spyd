@@ -1,12 +1,12 @@
 import envCi from 'env-ci'
 
 import { normalizeDeltas } from '../delta/main.js'
-import { addPlugins } from '../plugin/add.js'
 
 import { addDefaultConfig } from './default.js'
 import { loadConfig } from './load.js'
 import { normalizeConfig } from './normalize.js'
 import { normalizeConfigPaths } from './path.js'
+import { addPlugins } from './plugin/add.js'
 import { validateConfig } from './validate.js'
 
 // Retrieve configuration

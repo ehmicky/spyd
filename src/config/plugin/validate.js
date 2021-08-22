@@ -1,4 +1,4 @@
-import { PluginError } from '../error/main.js'
+import { PluginError } from '../../error/main.js'
 
 // Validate plugins shape
 export const validatePlugins = function (plugins, type) {

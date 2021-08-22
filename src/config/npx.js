@@ -1,8 +1,7 @@
 import { env } from 'process'
 
-import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
-
 import { normalizeOptionalArray } from './check.js'
+import { CONFIG_PLUGIN_TYPE } from './plugin/types.js'
 
 // In principle, users can use `npx` with the "npm" resolver by doing:
 //   npx --package=spyd-config-{name} spyd --config=spyd-config-{name} ...
