@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isTasks, mergeTasks } from '../run/merge.js'
+import { isTasks, mergeTasks } from '../tasks/merge.js'
 
 import { removeEmptyValues } from './empty.js'
 

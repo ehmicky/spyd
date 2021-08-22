@@ -1,7 +1,7 @@
 import { UserError } from '../error/main.js'
-import { listTasks } from '../run/list.js'
-import { loadRunners } from '../run/load.js'
 import { selectCombinations } from '../select/main.js'
+import { listTasks } from '../tasks/list.js'
+import { loadRunners } from '../tasks/load.js'
 
 import { fromInputsObj } from './inputs.js'
 import { validateCombinationsIds } from './validate_ids.js'
