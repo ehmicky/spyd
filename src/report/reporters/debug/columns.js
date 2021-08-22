@@ -46,7 +46,7 @@ const getStatColumnWidth = function (combinations, column) {
   const { stats } = combinations.find(
     (combination) => combination.stats[column] !== undefined,
   )
-  return Math.max(getStatLength(stats, column), getHeaderName(column).length)
+  return Math.max(getStatLength(stats[column]), getHeaderName(column).length)
 }
 
 export const getAllColumns = function ({
