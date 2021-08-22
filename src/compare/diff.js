@@ -56,8 +56,7 @@ const addCombinationDiff = function (
     return combination
   }
 
-  const diffStats = getDiff(combination.stats, previousCombinationA.stats)
-  return { ...combination, stats: { ...combination.stats, ...diffStats } }
+  return addDiff({ combination, previousCombination: previousCombinationA })
 }
 
 // We only show the `diff` when:
@@ -80,8 +79,18 @@ const shouldAddDiff = function (previousCombination, afterSince) {
 //   - We do not try to hide or show the `diff` as 0% instead since users might:
 //      - think it is due to a bug
 //      - compute the diff themselves anyway
-const getDiff = function (stats, previousStats) {
-  const diff = stats.median / previousStats.median - 1
+const addDiff = function ({
+  combination,
+  combination: {
+    stats,
+    stats: { median },
+  },
+  previousCombination: {
+    stats: previousStats,
+    stats: { median: previousMedian },
+  },
+}) {
+  const diff = median / previousMedian - 1
   const diffPrecise = isDiffPrecise(stats, previousStats)
-  return { diff, diffPrecise }
+  return { ...combination, stats: { ...stats, diff, diffPrecise } }
 }
