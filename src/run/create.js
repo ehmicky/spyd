@@ -8,7 +8,7 @@ export const createResult = async function (config) {
     getCombinations(config),
     listHistory(config),
   ])
-  const { id, timestamp, systems } = await getSystemInfo(combinations, config)
-  const result = { id, timestamp, systems, combinations }
+  const { id, timestamp, system } = await getSystemInfo(combinations, config)
+  const result = { id, timestamp, system, combinations }
   return { result, previous }
 }
