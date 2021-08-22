@@ -59,7 +59,7 @@ const getCell = function (historyCombinations, combination) {
   }
 
   // Due to not enough measures
-  if (medianMin !== undefined && medianMin.pretty !== '') {
+  if (medianMin !== undefined) {
     return {
       pretty: `${medianMin.pretty}-${medianMax.pretty}`,
       prettyColor: `${medianMin.prettyColor}-${medianMax.prettyColor}`,
