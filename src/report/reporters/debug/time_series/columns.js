@@ -40,7 +40,6 @@ const getCellStat = function (historyCombinations, combination) {
     isSameDimension(historyCombination, combination),
   )
 
-  // No matching previous combination
   if (historyCombinationA === undefined) {
     return
   }
@@ -48,21 +47,12 @@ const getCellStat = function (historyCombinations, combination) {
   const {
     stats: { median, medianMin, medianMax },
   } = historyCombinationA
-
-  // `showPrecision` is `false`
-  if (combination.stats.medianMin === undefined) {
-    return median
-  }
-
-  // Due to not enough measures
-  if (medianMin === undefined) {
-    return
-  }
-
-  return {
-    pretty: `${medianMin.pretty}${STATS_SEPARATOR}${medianMax.pretty}`,
-    prettyColor: `${medianMin.prettyColor}${STATS_SEPARATOR_COLORED}${medianMax.prettyColor}`,
-  }
+  return medianMin === undefined
+    ? median
+    : {
+        pretty: `${medianMin.pretty}${STATS_SEPARATOR}${medianMax.pretty}`,
+        prettyColor: `${medianMin.prettyColor}${STATS_SEPARATOR_COLORED}${medianMax.prettyColor}`,
+      }
 }
 
 export const getColumnWidth = function (combinations, columns) {
