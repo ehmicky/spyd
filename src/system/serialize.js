@@ -6,11 +6,9 @@ import { serializeGit, serializePr } from './git.js'
 
 // Serialize info|system-related information as a `footer` for reporters
 export const serializeFooter = function ({ id, timestamp, systems }) {
-  const footer = [
-    ...systems.map(serializeSystem),
-    ...serializeMetadata(id, timestamp),
-  ]
-  return cleanFooter(footer)
+  return [...systems.map(serializeSystem), serializeMetadata(id, timestamp)]
+    .filter(Boolean)
+    .map(normalizeDepth)
 }
 
 const serializeSystem = function ({
@@ -28,14 +26,17 @@ const serializeSystem = function ({
     PR: serializePr({ prNumber, prBranch }),
     CI: ci,
   }
-  return {
-    title,
-    fields: cleanObject({
-      ...fields,
-      ...omit.default(versions, Object.keys(fields)),
-      [SPYD_VERSION_NAME]: spydVersion,
-    }),
+  const fieldsA = cleanObject({
+    ...fields,
+    ...omit.default(versions, Object.keys(fields)),
+    [SPYD_VERSION_NAME]: spydVersion,
+  })
+
+  if (Object.keys(fieldsA).length === 0) {
+    return
   }
+
+  return { title, fields: fieldsA }
 }
 
 // The spyd version is shown after other versions.
@@ -45,19 +46,11 @@ const SPYD_VERSION_NAME = 'Benchmarked with spyd'
 
 const serializeMetadata = function (id, timestamp) {
   if (id === undefined) {
-    return []
+    return
   }
 
   const timestampString = new Date(timestamp).toLocaleString()
-  return [{ fields: { Id: id, Timestamp: timestampString } }]
-}
-
-const cleanFooter = function (footer) {
-  return footer.filter(hasFields).map(normalizeDepth)
-}
-
-const hasFields = function ({ fields }) {
-  return Object.keys(fields).length !== 0
+  return { fields: { Id: id, Timestamp: timestampString } }
 }
 
 const normalizeDepth = function ({ title, fields }) {
