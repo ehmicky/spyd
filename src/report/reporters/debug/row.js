@@ -19,9 +19,9 @@ const getCell = function ({ stats }, column, columnWidth) {
 
 // Retrieve a single cell in the table, with a specific stat
 const getStat = function (stats, column) {
-  return stats[column].prettyPaddedColor
+  return stats[column] === undefined ? '' : stats[column].prettyPaddedColor
 }
 
 export const getStatLength = function (stats, column) {
-  return stats[column].prettyPadded.length
+  return stats[column] === undefined ? '' : stats[column].prettyPadded.length
 }
