@@ -14,7 +14,7 @@ import { hasMaxMeasures } from './sample/max_measures.js'
 //     - Task real median is very close to time resolution
 //     - The `repeat` logic is failing to correct it
 //  - We never stop measuring since `median: 0` is not useful and should not be
-//    saved nor reported
+//    saved nor reported (including in previews)
 // Measuring is interrupted when:
 //  - User manually stopped it
 //  - There are too many measures, which could lead to memory crash otherwise

@@ -19,7 +19,8 @@ import { refreshPreview } from './update.js'
 //     - For example, all combinations should be shown even if not measured yet.
 //     - And the size of table should not change between previews.
 // When uncalibrated, we skip it since no stats would be reported anyway.
-// We wait until calibration before removing the start description.
+//  - We wait until calibration before removing the start description.
+//  - We also never report nor stop measuring when `median` is `0`
 export const updatePreviewStats = async function ({
   stats,
   previewState,
@@ -39,8 +40,8 @@ export const updatePreviewStats = async function ({
   await refreshPreview(previewState)
 }
 
-const shouldSkipPreview = function ({ quiet }, { samples }) {
-  return quiet || samples === 0
+const shouldSkipPreview = function ({ quiet }, { samples, median }) {
+  return quiet || samples === 0 || median === 0
 }
 
 const updateResultStats = async function ({
