@@ -4,7 +4,7 @@ import { serializeFooter, finalizeFooter } from '../../system/footer.js'
 import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
-import { omitResultProps } from './omit.js'
+import { omitFooterProps, omitResultProps } from './omit.js'
 import { addResultTitles } from './titles.js'
 
 // Call all `reporter.report()`.
@@ -94,16 +94,15 @@ const getReportResult = function ({
 }) {
   const resultA = serializeFooter(result, titles, showTitles)
   const resultB = addResultTitles(resultA, titles, showTitles)
-  const resultC = omitResultProps(resultB, {
-    showSystem,
-    showMetadata,
+  const resultC = omitFooterProps(resultB, showMetadata, showSystem)
+  const resultD = omitResultProps(resultC, {
     showPrecision,
     showDiff,
     debugStats,
   })
-  const { result: resultD, footer } = finalizeFooter(resultC, keepFooter)
-  const resultE = addSizeInfo(resultD)
-  return { result: resultE, footer }
+  const { result: resultE, footer } = finalizeFooter(resultD, keepFooter)
+  const resultF = addSizeInfo(resultE)
+  return { result: resultF, footer }
 }
 
 // Add size-related information

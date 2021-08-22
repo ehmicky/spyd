@@ -7,20 +7,22 @@ import { METADATA_SYSTEM_PROPS, MACHINE_PROPS } from '../../system/footer.js'
 // property for each instead of a single array configuration property because it
 // makes it easier to enable/disable each property both in CLI flags and in
 // `reporterConfig.{reporterId}.*` properties.
-export const omitResultProps = function (
-  { footer, combinations, ...result },
-  { showMetadata, showSystem, showPrecision, showDiff, debugStats },
+export const omitFooterProps = function (
+  { footer, ...result },
+  showMetadata,
+  showSystem,
 ) {
   const footerA = footer.map((footerGroup) =>
-    omitFooterProps(footerGroup, showMetadata, showSystem),
+    omitFooterGroupProps(footerGroup, showMetadata, showSystem),
   )
-  const combinationsA = combinations.map((combination) =>
-    omitCombinationProps(combination, { showDiff, showPrecision, debugStats }),
-  )
-  return { ...result, footer: footerA, combinations: combinationsA }
+  return { ...result, footer: footerA }
 }
 
-const omitFooterProps = function ({ title, fields }, showMetadata, showSystem) {
+const omitFooterGroupProps = function (
+  { title, fields },
+  showMetadata,
+  showSystem,
+) {
   const fieldsA = maybeOmit(fields, showMetadata, METADATA_SYSTEM_PROPS)
   const fieldsB = maybeOmit(fieldsA, showSystem, MACHINE_PROPS)
   const versionProps = Object.keys(fieldsB).filter(isVersionProp)
@@ -33,6 +35,16 @@ const isVersionProp = function (fieldName) {
     !METADATA_SYSTEM_PROPS.includes(fieldName) &&
     !MACHINE_PROPS.includes(fieldName)
   )
+}
+
+export const omitResultProps = function (
+  { combinations, ...result },
+  { showPrecision, showDiff, debugStats },
+) {
+  const combinationsA = combinations.map((combination) =>
+    omitCombinationProps(combination, { showDiff, showPrecision, debugStats }),
+  )
+  return { ...result, combinations: combinationsA }
 }
 
 const omitCombinationProps = function (
