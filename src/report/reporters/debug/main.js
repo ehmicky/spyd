@@ -4,7 +4,7 @@ import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
 import { getTables } from './table/main.js'
-import { getTimeSeries } from './time_series.js'
+import { getTimeSeries } from './time_series/main.js'
 
 // Debugging reporter only meant for development purpose
 const reportTerminal = function ({ combinations, screenWidth, history }) {

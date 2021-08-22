@@ -1,11 +1,11 @@
-import { isSameDimension } from '../../../combination/ids.js'
+import { isSameDimension } from '../../../../combination/ids.js'
 import {
   getCombinationNameColor,
   getCombinationNameWidth,
-} from '../../utils/name.js'
-import { getResponsiveColumns } from '../../utils/responsive.js'
-import { SEPARATOR_WIDTH, COLUMN_SEPARATOR } from '../../utils/separator.js'
-import { prettifyStats } from '../../utils/stats/main.js'
+} from '../../../utils/name.js'
+import { getResponsiveColumns } from '../../../utils/responsive.js'
+import { SEPARATOR_WIDTH, COLUMN_SEPARATOR } from '../../../utils/separator.js'
+import { prettifyStats } from '../../../utils/stats/main.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
