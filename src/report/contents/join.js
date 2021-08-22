@@ -9,11 +9,11 @@ export const joinByOutput = function (contents) {
 }
 
 const joinContents = function (contents) {
-  const [{ output, format, footer }] = contents
+  const [{ output, format, footerString }] = contents
   const contentsString = contents
     .map(getContentProperty)
     .join(CONTENTS_DELIMITER)
-  const contentsStringA = `${contentsString}${footer}`
+  const contentsStringA = `${contentsString}${footerString}`
   const contentsStringB = padContents(contentsStringA, format)
   return { contentsString: contentsStringB, output }
 }

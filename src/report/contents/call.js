@@ -1,6 +1,5 @@
 import omit from 'omit.js'
 
-import { handleFooter } from '../../system/handle.js'
 import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
@@ -18,24 +17,24 @@ export const callReportFunc = async function ({
   reporter,
   reporter: {
     format,
+    footerString,
+    startData,
     config: reporterConfig,
     config: { output, colors },
-    startData,
   },
 }) {
-  const { result: resultA, footer } = handleFooter({ result, titles, reporter })
-  const resultB = getReportResult(resultA, titles, reporter)
+  const resultA = getReportResult(result, titles, reporter)
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
-  const reporterArgs = [resultB, reportFuncProps, startData]
+  const reporterArgs = [resultA, reportFuncProps, startData]
   const content = await FORMATS[format].report(reporter, reporterArgs)
-  return { content, result: resultB, output, format, colors, footer }
+  return { content, result: resultA, output, format, colors, footerString }
 }
 
 // Normalize the `result` passed to `reporter.report()`
 const getReportResult = function (
   result,
   titles,
-  { debugStats, config: { showTitles, showPrecision, showDiff } },
+  { debugStats, footerParams, config: { showTitles, showPrecision, showDiff } },
 ) {
   const resultB = addResultTitles(result, titles, showTitles)
   const resultC = omitResultProps(resultB, {
@@ -43,8 +42,9 @@ const getReportResult = function (
     showDiff,
     debugStats,
   })
-  const resultD = addSizeInfo(resultC)
-  return resultD
+  const resultD = { ...resultC, ...footerParams }
+  const resultE = addSizeInfo(resultD)
+  return resultE
 }
 
 // Add size-related information

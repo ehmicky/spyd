@@ -4,34 +4,47 @@ import { FORMATS } from '../report/formats/list.js'
 
 import { serializeFooter } from './serialize.js'
 
-export const handleFooter = function ({
-  result,
+export const handleFooters = function ({
+  result: { id, timestamp, systems, ...result },
   titles,
+  reporters,
+}) {
+  const reportersA = reporters.map((reporter) =>
+    handleFooter({ id, timestamp, systems, titles, reporter }),
+  )
+  return { result, reporters: reportersA }
+}
+
+const handleFooter = function ({
+  id,
+  timestamp,
+  systems,
+  titles,
+  reporter,
   reporter: {
     format,
     config: { showTitles, showMetadata, showSystem },
   },
 }) {
-  const { result: resultA, footer } = initFooter(result)
+  const footer = { id, timestamp, systems }
   const footerA = addFooterTitles(footer, titles, showTitles)
   const footerB = omitFooterProps(footerA, showMetadata, showSystem)
   const footerC = serializeFooter(footerB)
-  const resultB = addFooter(resultA, footerC, format)
-  const footerD = stringifyFooter(footerC, format)
-  return { result: resultB, footer: footerD }
+  const { footerParam, footerString } = applyFooterFormat(footerC, format)
+  return { ...reporter, footerParam, footerString }
 }
 
-const initFooter = function ({ id, timestamp, systems, ...result }) {
-  return { result, footer: { id, timestamp, systems } }
-}
+// Depending on the format, the footer is either:
+//  - Appended as a string to the reporter's contents
+//  - Passed as an array to `reporter.report*()`
+const applyFooterFormat = function (footer, format) {
+  const normalizeFooter = FORMATS[format].footer
 
-// Depending on format, it is either passed to the reporter or appended by us.
-const addFooter = function (result, footer, format) {
-  return FORMATS[format].footer === undefined ? { ...result, footer } : result
-}
+  if (normalizeFooter === undefined) {
+    return { footerParams: { footer }, footerString: '' }
+  }
 
-const stringifyFooter = function (footer, format) {
-  return FORMATS[format].footer === undefined || footer.length === 0
-    ? ''
-    : `\n${FORMATS[format].footer(footer)}\n`
+  const footerString =
+    footer.length === 0 ? '' : `\n${normalizeFooter(footer)}\n`
+  return { footerParams: {}, footerString }
 }

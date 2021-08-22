@@ -8,13 +8,13 @@ export const handleContent = function ({
   output,
   format,
   colors,
-  footer,
+  footerString,
 }) {
   const contentA = trimEnd(content)
   const contentB = wrapRows(contentA)
   const contentC = handleColors(contentB, colors)
   const contentD = trimContent(contentC)
-  return { content: contentD, output, format, footer }
+  return { content: contentD, output, format, footerString }
 }
 
 // Trim the end of each line to avoid wrapping-related visual bugs
