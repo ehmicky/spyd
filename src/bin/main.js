@@ -19,6 +19,19 @@ import { defineCli } from './top.js'
 //    with CLI flags parsing
 //  - This makes it clear that those flags are meant to be nested objects in
 //    the YAML configuration file
+// The programmatic entry points can also be used:
+//  - The configuration is the same:
+//     - This makes it easier for users to get consistent behavior between the
+//       CLI and programmatic interfaces
+//     - But this might require setting some configuration properties which
+//       might make more sense programmatically, depending on the use case,
+//       especially:
+//        - `config: []` or `config: "path"` to remove the default
+//          configuration lookup
+//        - `reporter: []` to remove reporting
+//  - The return value for most methods is a promise which resolves to the same
+//    `result` that would be passed to reporters
+//  - Any exception should be handled
 const runCli = async function () {
   try {
     await checkUpdate()
