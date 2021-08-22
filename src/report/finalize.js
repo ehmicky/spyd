@@ -1,9 +1,22 @@
 import stripAnsi from 'strip-ansi'
 
-import { wrapRows } from '../utils/wrap.js'
+import { joinByOutput } from './join.js'
+import { wrapRows } from './utils/wrap.js'
+
+// Transform `contents` to `contentString`s
+export const finalizeContents = function (contents) {
+  const contentsA = contents.filter(hasContent).map(handleContent)
+  const contentsB = joinByOutput(contentsA)
+  return contentsB
+}
+
+// A reporter can choose not to return anything
+const hasContent = function ({ content }) {
+  return typeof content === 'string' && content.trim() !== ''
+}
 
 // Handle content returned by `reporter.report()`
-export const handleContent = function ({
+const handleContent = function ({
   content,
   output,
   format,

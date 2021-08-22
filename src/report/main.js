@@ -1,4 +1,5 @@
-import { getContents, finalizeContents } from './contents/main.js'
+import { getContents } from './contents.js'
+import { finalizeContents } from './finalize.js'
 import {
   normalizeHistory,
   normalizeTargetResult,
