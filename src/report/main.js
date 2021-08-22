@@ -1,9 +1,9 @@
 import { normalizeReportedResult } from '../normalize/result.js'
-import { applySince, mergeHistoryResult } from '../normalize/since.js'
 import { addFooters } from '../system/footer.js'
 
 import { getContents, finalizeContents } from './contents/main.js'
 import { outputContents } from './output.js'
+import { applySince, mergeHistoryResult } from './since.js'
 import { startReporters, endReporters } from './start_end.js'
 
 // Report final results in `show` and `remove` commands.
