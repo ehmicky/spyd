@@ -70,7 +70,7 @@ const getCellStat = function (historyCombinations, combination) {
 }
 
 const getColumnWidth = function (columns) {
-  const widths = columns.flat().map(getWidth)
+  const widths = columns.flat().filter(Boolean).map(getWidth)
   return Math.max(...widths)
 }
 
@@ -115,6 +115,6 @@ const getCell = function (cell, columnWidth) {
   return `${padding}${cell.prettyColor}`
 }
 
-const getWidth = function (cell) {
-  return cell === undefined ? 0 : cell.pretty.length
+const getWidth = function ({ pretty }) {
+  return pretty.length
 }
