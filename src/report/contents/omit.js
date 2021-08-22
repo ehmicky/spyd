@@ -1,28 +1,38 @@
 import omit from 'omit.js'
 
+import { METADATA_SYSTEM_PROPS, MACHINE_PROPS } from '../../system/footer.js'
+
 // Omit some result properties unless some reporterConfig properties are
 // passed. Those all start with `show*`. We use one boolean configuration
 // property for each instead of a single array configuration property because it
 // makes it easier to enable/disable each property both in CLI flags and in
 // `reporterConfig.{reporterId}.*` properties.
 export const omitResultProps = function (
-  { systems, combinations, ...result },
+  { footer, combinations, ...result },
   { showMetadata, showSystem, showPrecision, showDiff, debugStats },
 ) {
-  const resultA = maybeOmit(result, showMetadata, TOP_METADATA_PROPS)
-  const systemsA = systems.map((system) =>
-    omitSystemProps(system, showMetadata, showSystem),
+  const footerA = footer.map((footerGroup) =>
+    omitFooterProps(footerGroup, showMetadata, showSystem),
   )
   const combinationsA = combinations.map((combination) =>
     omitCombinationProps(combination, { showDiff, showPrecision, debugStats }),
   )
-  return { ...resultA, systems: systemsA, combinations: combinationsA }
+  return { ...result, footer: footerA, combinations: combinationsA }
 }
 
-const omitSystemProps = function (system, showMetadata, showSystem) {
-  const systemA = maybeOmit(system, showMetadata, METADATA_SYSTEM_PROPS)
-  const systemB = maybeOmit(systemA, showSystem, SYSTEM_PROPS)
-  return systemB
+const omitFooterProps = function ({ title, fields }, showMetadata, showSystem) {
+  const fieldsA = maybeOmit(fields, showMetadata, METADATA_SYSTEM_PROPS)
+  const fieldsB = maybeOmit(fieldsA, showSystem, MACHINE_PROPS)
+  const versionProps = Object.keys(fieldsB).filter(isVersionProp)
+  const fieldsC = maybeOmit(fieldsB, showSystem, versionProps)
+  return { title, fields: fieldsC }
+}
+
+const isVersionProp = function (fieldName) {
+  return (
+    !METADATA_SYSTEM_PROPS.includes(fieldName) &&
+    !MACHINE_PROPS.includes(fieldName)
+  )
 }
 
 const omitCombinationProps = function (
@@ -66,9 +76,6 @@ const maybeOmit = function (obj, showProp, propNames) {
   return omit.default(obj, propNames)
 }
 
-const TOP_METADATA_PROPS = ['id', 'timestamp']
-const METADATA_SYSTEM_PROPS = ['git', 'ci']
-const SYSTEM_PROPS = ['machine', 'versions']
 const DIFF_STATS_PROPS = ['diff', 'diffPrecise']
 const PRECISION_STATS_PROPS = ['moe', 'rmoe']
 

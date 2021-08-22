@@ -1,6 +1,6 @@
 import omit from 'omit.js'
 
-import { getFooter } from '../../system/footer.js'
+import { serializeFooter, finalizeFooter } from '../../system/footer.js'
 import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
@@ -32,7 +32,8 @@ export const callReportFunc = async function ({
     debugStats,
   },
 }) {
-  const resultA = getReportResult({
+  const keepFooter = FORMATS[format].footer === undefined
+  const { result: resultA, footer } = getReportResult({
     result,
     titles,
     showSystem,
@@ -41,10 +42,10 @@ export const callReportFunc = async function ({
     showPrecision,
     showDiff,
     debugStats,
+    keepFooter,
   })
-  const { result: resultB, footer } = addFooter(resultA, format)
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
-  const reporterArgs = [resultB, reportFuncProps, startData]
+  const reporterArgs = [resultA, reportFuncProps, startData]
   const content = await FORMATS[format].report(reporter, reporterArgs)
   return { content, output, format, colors, footer }
 }
@@ -65,7 +66,7 @@ export const callReportFunc = async function ({
 //  - It can still be accessed by outputting it a specific file then read that
 //    file separately
 export const getProgrammaticResult = function (result, { titles }) {
-  return getReportResult({
+  const { result: resultA } = getReportResult({
     result,
     titles,
     showSystem: true,
@@ -74,7 +75,9 @@ export const getProgrammaticResult = function (result, { titles }) {
     showPrecision: true,
     showDiff: true,
     debugStats: false,
+    keepFooter: false,
   })
+  return resultA
 }
 
 // Normalize the `result` passed to `reporter.report()`
@@ -87,17 +90,20 @@ const getReportResult = function ({
   showPrecision,
   showDiff,
   debugStats,
+  keepFooter,
 }) {
   const resultA = addResultTitles(result, titles, showTitles)
-  const resultB = omitResultProps(resultA, {
+  const resultB = serializeFooter(resultA)
+  const resultC = omitResultProps(resultB, {
     showSystem,
     showMetadata,
     showPrecision,
     showDiff,
     debugStats,
   })
-  const resultC = addSizeInfo(resultB)
-  return resultC
+  const { result: resultD, footer } = finalizeFooter(resultC, keepFooter)
+  const resultE = addSizeInfo(resultD)
+  return { result: resultE, footer }
 }
 
 // Add size-related information
@@ -105,15 +111,6 @@ const addSizeInfo = function (result) {
   const screenWidth = getPaddedScreenWidth()
   const screenHeight = getPaddedScreenHeight()
   return { ...result, screenWidth, screenHeight }
-}
-
-// Compute the footer.
-// Depending on format, it is either passed to the reporter or appended by us.
-const addFooter = function ({ id, timestamp, systems, ...result }, format) {
-  const footer = getFooter({ id, timestamp, systems })
-  const resultA =
-    FORMATS[format].footer === undefined ? { ...result, footer } : result
-  return { result: resultA, footer }
 }
 
 // We handle some reporterConfig properties in core, and do not pass those to
