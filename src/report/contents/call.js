@@ -2,7 +2,6 @@ import omit from 'omit.js'
 
 import { FORMATS } from '../formats/list.js'
 
-import { omitResultProps } from './omit.js'
 import { addResultTitles } from './titles.js'
 
 // Call all `reporter.report()`.
@@ -15,44 +14,18 @@ export const callReportFunc = async function ({
   reporter: {
     result,
     format,
-    debugStats,
     footerString,
     startData,
     config: reporterConfig,
-    config: { output, colors, showTitles, showPrecision, showDiff },
+    config: { output, colors, showTitles },
   },
   titles,
 }) {
-  const resultA = getReportResult({
-    result,
-    titles,
-    debugStats,
-    showTitles,
-    showPrecision,
-    showDiff,
-  })
+  const resultA = addResultTitles(result, titles, showTitles)
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
   const reporterArgs = [resultA, reportFuncProps, startData]
   const content = await FORMATS[format].report(reporter, reporterArgs)
   return { content, result: resultA, output, format, colors, footerString }
-}
-
-// Normalize the `result` passed to `reporter.report()`
-const getReportResult = function ({
-  result,
-  titles,
-  debugStats,
-  showTitles,
-  showPrecision,
-  showDiff,
-}) {
-  const resultB = addResultTitles(result, titles, showTitles)
-  const resultC = omitResultProps(resultB, {
-    showPrecision,
-    showDiff,
-    debugStats,
-  })
-  return resultC
 }
 
 // We handle some reporterConfig properties in core, and do not pass those to

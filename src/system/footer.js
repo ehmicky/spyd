@@ -1,6 +1,6 @@
-import { omitFooterProps } from '../report/contents/omit.js'
 import { addFooterTitles } from '../report/contents/titles.js'
 import { FORMATS } from '../report/formats/list.js'
+import { omitFooterProps } from '../report/omit.js'
 
 import { serializeFooter } from './serialize.js'
 import { addSharedSystem } from './shared.js'

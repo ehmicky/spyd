@@ -3,6 +3,7 @@ import { sortCombinations } from '../combination/sort.js'
 import { addCombinationsDiff } from '../compare/diff.js'
 import { addFooter } from '../system/footer.js'
 
+import { omitCombinationsProps } from './omit.js'
 import { mergeHistory } from './since.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 
@@ -146,6 +147,14 @@ const normalizeNonCombEach = function (result, reporter) {
 
 // Add report-specific properties to a result that are in `combinations` and
 // reporter-specific
-const normalizeCombEach = function (result, reporter) {
-  return result
+const normalizeCombEach = function (
+  result,
+  { debugStats, config: { showPrecision, showDiff } },
+) {
+  const resultA = omitCombinationsProps(result, {
+    showPrecision,
+    showDiff,
+    debugStats,
+  })
+  return resultA
 }

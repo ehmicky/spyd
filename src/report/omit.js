@@ -23,7 +23,8 @@ const METADATA_FOOTER_PROPS = ['id', 'timestamp']
 const METADATA_SYSTEM_PROPS = ['git', 'ci']
 const MAIN_SYSTEM_PROPS = ['machine', 'versions']
 
-export const omitResultProps = function (
+// Omit result properties only from combinations
+export const omitCombinationsProps = function (
   { combinations, ...result },
   { showPrecision, showDiff, debugStats },
 ) {
