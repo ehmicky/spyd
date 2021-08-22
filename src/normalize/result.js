@@ -16,7 +16,6 @@ const normalizeCombination = function ({ taskId, runnerId, systemId, stats }) {
 //  - Add `combination.stats.diff[Precise]` based on previous results before
 //    `since` filtering
 //  - Add dimension grouping and ranking
-//  - Add `result.systems[0]` (shared system)
 // This is not currently applied to `result.history[*]`
 export const normalizeReportedResult = function (result) {
   const resultA = addCombinationsDiff(result)
