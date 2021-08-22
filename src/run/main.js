@@ -37,7 +37,7 @@ export const performRun = async function (config) {
   try {
     const {
       result: resultA,
-      finalResult,
+      programmaticResult,
       contents,
     } = await previewAndMeasure({
       result,
@@ -46,7 +46,7 @@ export const performRun = async function (config) {
       config: configA,
     })
     await reportPrint(contents)
-    return { result: resultA, finalResult }
+    return { result: resultA, programmaticResult }
   } finally {
     await reportEnd(configA)
   }
@@ -62,13 +62,13 @@ const previewAndMeasure = async function ({
 
   try {
     const resultA = await measureResult(result, config, previewStateA)
-    const { finalResult, contents } = await reportCompute(
+    const { programmaticResult, contents } = await reportCompute(
       resultA,
       historyResult,
       config,
     )
     await endPreview(previewStateA)
-    return { result: resultA, finalResult, contents }
+    return { result: resultA, programmaticResult, contents }
   } catch (error) {
     await endPreview(previewStateA, error)
     throw error

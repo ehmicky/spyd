@@ -31,6 +31,29 @@ export const callReportFunc = async function ({
   return { content, output, format, colors, footer }
 }
 
+// The `run`, `show` and `remove` commands return the result programmatically.
+// We return the same value that is passed to reporters since:
+//  - It has all the information users might need
+//  - This avoids documenting two separate objects
+// However, there are a few differences:
+//  - We apply specific some reporter configuration:
+//     - to make sure all properties are available
+//     - not to couple the programmatic result with a specific reporter
+//  - We do not apply properties very specific to reporting such as `footer`
+// We purposely avoid returning the reporter's `content` programmatically
+//  - The `content` is fit for reporting only, not programmatic usage
+//  - It can still be accessed by outputting it a specific file then read that
+//    file separately
+export const getProgrammaticResult = function (result, { titles }) {
+  return getReportResult(result, titles, {
+    showSystem: true,
+    showMetadata: true,
+    showTitles: true,
+    showPrecision: true,
+    showDiff: true,
+  })
+}
+
 // Normalize the `result` passed to `reporter.report()`
 const getReportResult = function (
   result,

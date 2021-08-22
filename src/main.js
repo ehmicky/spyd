@@ -14,27 +14,27 @@ import { performRun } from './run/main.js'
 // Default command.
 export const run = async function (configFlags) {
   const config = await getConfig('run', configFlags)
-  const { result, finalResult } = await performRun(config)
+  const { result, programmaticResult } = await performRun(config)
   await addToHistory(result, config)
-  checkLimits(finalResult, config)
-  return finalResult
+  checkLimits(programmaticResult, config)
+  return programmaticResult
 }
 
 // Show a previous result
 export const show = async function (configFlags) {
   const config = await getConfig('show', configFlags)
   const { result, previous } = await getFromHistory(config)
-  const finalResult = await reportResult(result, previous, config)
-  return finalResult
+  const programmaticResult = await reportResult(result, previous, config)
+  return programmaticResult
 }
 
 // Remove a previous result
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
   const { result, previous } = await getFromHistory(config)
-  const finalResult = await reportResult(result, previous, config)
+  const programmaticResult = await reportResult(result, previous, config)
   await removeFromHistory(result, config)
-  return finalResult
+  return programmaticResult
 }
 
 // Execute tasks without benchmarking them
