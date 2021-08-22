@@ -1,9 +1,7 @@
 import { isSameDimension } from '../../../../combination/ids.js'
-import { getCombinationNameWidth } from '../../../utils/name.js'
-import { getResponsiveColumns } from '../../../utils/responsive.js'
-import { SEPARATOR_WIDTH } from '../../../utils/separator.js'
 import { prettifyStats } from '../../../utils/stats/main.js'
 
+import { getAllColumns } from './columns.js'
 import { getRow, getStatLength } from './row.js'
 
 // Show `result.history` as a time series
@@ -71,21 +69,6 @@ const getCellStat = function (historyCombinations, combination) {
 const getColumnWidth = function (columns) {
   const widths = columns.flat().filter(Boolean).map(getStatLength)
   return Math.max(...widths)
-}
-
-const getAllColumns = function ({
-  combinations,
-  columns,
-  screenWidth,
-  columnWidth,
-}) {
-  const availableWidth = screenWidth - getCombinationNameWidth(combinations[0])
-  return getResponsiveColumns({
-    availableWidth,
-    columnWidth,
-    separatorWidth: SEPARATOR_WIDTH,
-    columns,
-  })
 }
 
 const getTable = function (combinations, columns, columnWidth) {
