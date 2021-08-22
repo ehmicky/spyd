@@ -22,13 +22,11 @@ import { refreshPreview } from './update.js'
 // We wait until calibration before removing the start description.
 export const updatePreviewStats = async function ({
   stats,
-  stats: { samples },
   previewState,
-  previewState: { quiet },
   durationState,
   precisionTarget,
 }) {
-  if (quiet || samples === 0) {
+  if (shouldSkipPreview(previewState, stats)) {
     return
   }
 
@@ -39,6 +37,10 @@ export const updatePreviewStats = async function ({
   updateCompletion(previewState)
 
   await refreshPreview(previewState)
+}
+
+const shouldSkipPreview = function ({ quiet }, { samples }) {
+  return quiet || samples === 0
 }
 
 const updateResultStats = async function ({
