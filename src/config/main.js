@@ -1,5 +1,3 @@
-import envCi from 'env-ci'
-
 import { normalizeDeltas } from '../delta/main.js'
 
 import { addDefaultConfig } from './default.js'
@@ -22,12 +20,5 @@ export const getConfig = async function (command, configFlags = {}) {
   const configD = normalizeDeltas(configC)
 
   const configE = await addPlugins(configD, command)
-
-  const configF = addEnvInfo(configE)
-  return configF
-}
-
-const addEnvInfo = function (config) {
-  const envInfo = envCi({ cwd: config.cwd })
-  return { ...config, envInfo }
+  return configE
 }

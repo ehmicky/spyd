@@ -1,6 +1,7 @@
 import { cpus as getCpus, totalmem } from 'os'
 
 import { format as formatBytes } from 'bytes'
+import envCi from 'env-ci'
 import osName from 'os-name'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -27,21 +28,11 @@ export const getSystemInfo = async function (
   return { id, timestamp, system }
 }
 
-const getSystem = async function ({
-  systemId,
-  envInfo: { commit, branch, tag, pr, prBranch, buildUrl },
-  combinations,
-  cwd,
-}) {
-  const systemVersions = await getSystemVersions(combinations, cwd)
+const getSystem = async function ({ systemId, combinations, cwd }) {
+  const versions = await getSystemVersions(combinations, cwd)
   const machine = getMachine()
-  return cleanObject({
-    id: systemId,
-    machine,
-    git: { commit, branch, tag, prNumber: pr, prBranch },
-    ci: buildUrl,
-    versions: systemVersions,
-  })
+  const { git, ci } = getEnvInfo(cwd)
+  return cleanObject({ id: systemId, machine, git, ci, versions })
 }
 
 const getMachine = function () {
@@ -63,4 +54,12 @@ const serializeCpu = function ([name, cores]) {
 const getMemory = function () {
   const memory = totalmem()
   return formatBytes(memory, { decimalPlaces: 0 })
+}
+
+const getEnvInfo = function (cwd) {
+  const { commit, branch, tag, pr, prBranch, buildUrl } = envCi({ cwd })
+  return {
+    git: { commit, branch, tag, prNumber: pr, prBranch },
+    ci: buildUrl,
+  }
 }
