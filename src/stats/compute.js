@@ -32,8 +32,11 @@ import { getMean } from './sum.js'
 export const computeStats = function (measures) {
   const { minIndex, maxIndex, length, min, max } = getOutliersStats(measures)
 
-  const median = getSortedMedian(measures)
-  const quantiles = getQuantiles(measures, QUANTILES_SIZE)
+  const median = getSortedMedian(measures, { minIndex, maxIndex })
+  const quantiles = getQuantiles(measures, QUANTILES_SIZE, {
+    minIndex,
+    maxIndex,
+  })
   const mean = getMean(measures, { minIndex, maxIndex })
 
   const histogram = getHistogram(measures, {
