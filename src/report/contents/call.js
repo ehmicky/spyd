@@ -1,6 +1,6 @@
 import omit from 'omit.js'
 
-import { finalizeFooter } from '../../system/footer.js'
+import { finalizeFooter } from '../../system/finalize.js'
 import { serializeFooter } from '../../system/serialize.js'
 import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
