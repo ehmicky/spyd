@@ -1,5 +1,4 @@
 import { titleColor } from './colors.js'
-import { getCombinationName } from './title.js'
 
 // Retrieve the width of the combination name's column
 export const getCombinationNameWidth = function (combination) {
@@ -18,3 +17,13 @@ const getCombinationNamePadded = function ({ titles }) {
 
 const NAME_PADDING_WIDTH = 2
 const NAME_PADDING = ' '.repeat(NAME_PADDING_WIDTH)
+
+// Combine titles into a single to display for a given combination
+const getCombinationName = function (titles) {
+  const rowName = titles.join(NAME_MIDDLE_SEPARATOR)
+  return `${NAME_LEFT_SEPARATOR}${rowName}${NAME_RIGHT_SEPARATOR}`
+}
+
+const NAME_MIDDLE_SEPARATOR = ' '
+const NAME_LEFT_SEPARATOR = '[ '
+const NAME_RIGHT_SEPARATOR = ' ]'
