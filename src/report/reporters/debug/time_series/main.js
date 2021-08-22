@@ -1,15 +1,9 @@
-import { isSameDimension } from '../../../../combination/ids.js'
-import { prettifyStats } from '../../../utils/stats/main.js'
-
-import { getColumnWidth, getAllColumns } from './columns.js'
+import { getColumns, getColumnWidth, getAllColumns } from './columns.js'
 import { getRow } from './row.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
-  const allCombinations = history.flatMap(getCombinations)
-  const columns = history.map((historyResult) =>
-    getColumn(historyResult, combinations, allCombinations),
-  )
+  const columns = getColumns(history, combinations)
   const columnWidth = getColumnWidth(columns)
   const allColumns = getAllColumns({
     combinations,
@@ -20,50 +14,6 @@ export const getTimeSeries = function (history, combinations, screenWidth) {
   return allColumns.map((columnsA) =>
     getTable(combinations, columnsA, columnWidth),
   )
-}
-
-const getCombinations = function ({ combinations }) {
-  return combinations
-}
-
-const getColumn = function (historyResult, combinations, allCombinations) {
-  const historyCombinations = prettifyStats(
-    historyResult.combinations,
-    allCombinations,
-  )
-  return combinations.map((combination) =>
-    getCellStat(historyCombinations, combination),
-  )
-}
-
-const getCellStat = function (historyCombinations, combination) {
-  const historyCombinationA = historyCombinations.find((historyCombination) =>
-    isSameDimension(historyCombination, combination),
-  )
-
-  // No matching previous combination
-  if (historyCombinationA === undefined) {
-    return
-  }
-
-  const {
-    stats: { median, medianMin, medianMax },
-  } = historyCombinationA
-
-  // `showPrecision` is `false`
-  if (combination.stats.medianMin === undefined) {
-    return median
-  }
-
-  // Due to not enough measures
-  if (medianMin === undefined) {
-    return
-  }
-
-  return {
-    pretty: `${medianMin.pretty}-${medianMax.pretty}`,
-    prettyColor: `${medianMin.prettyColor}-${medianMax.prettyColor}`,
-  }
 }
 
 const getTable = function (combinations, columns, columnWidth) {
