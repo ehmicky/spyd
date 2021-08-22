@@ -9,9 +9,8 @@ export const addFooters = function (
   { id, timestamp, systems, ...result },
   config,
 ) {
-  const systemsA = addSharedSystem(systems)
   const reporters = config.reporters.map((reporter) =>
-    addFooter({ id, timestamp, systems: systemsA, reporter }, config),
+    addFooter({ id, timestamp, systems, reporter }, config),
   )
   return { result, config: { ...config, reporters } }
 }
@@ -32,8 +31,9 @@ const addFooter = function (
   const footer = { id, timestamp, systems }
   const footerA = addFooterTitles(footer, titles, showTitles)
   const footerB = omitFooterProps(footerA, showMetadata, showSystem)
-  const footerC = serializeFooter(footerB)
-  const { footerParam, footerString } = applyFooterFormat(footerC, format)
+  const footerC = addSharedSystem(footerB)
+  const footerD = serializeFooter(footerC)
+  const { footerParam, footerString } = applyFooterFormat(footerD, format)
   return { ...reporter, footerParam, footerString }
 }
 
