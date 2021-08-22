@@ -15,14 +15,24 @@ export const callReportFunc = async function ({
   reporter: {
     result,
     format,
+    debugStats,
+    footerParams,
     footerString,
     startData,
     config: reporterConfig,
-    config: { output, colors },
+    config: { output, colors, showTitles, showPrecision, showDiff },
   },
   titles,
 }) {
-  const resultA = getReportResult(result, titles, reporter)
+  const resultA = getReportResult({
+    result,
+    titles,
+    debugStats,
+    footerParams,
+    showTitles,
+    showPrecision,
+    showDiff,
+  })
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
   const reporterArgs = [resultA, reportFuncProps, startData]
   const content = await FORMATS[format].report(reporter, reporterArgs)
@@ -30,11 +40,15 @@ export const callReportFunc = async function ({
 }
 
 // Normalize the `result` passed to `reporter.report()`
-const getReportResult = function (
+const getReportResult = function ({
   result,
   titles,
-  { debugStats, footerParams, config: { showTitles, showPrecision, showDiff } },
-) {
+  debugStats,
+  footerParams,
+  showTitles,
+  showPrecision,
+  showDiff,
+}) {
   const resultB = addResultTitles(result, titles, showTitles)
   const resultC = omitResultProps(resultB, {
     showPrecision,
