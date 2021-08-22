@@ -30,7 +30,7 @@ import { getMean } from './sum.js'
 //  - This would create too many statistics for the average, together with the
 //    median and the mean.
 export const computeStats = function (measures) {
-  const { lowIndex, highIndex, length, low, high } = getExtremes(measures)
+  const { minIndex, maxIndex, length, min, max } = getExtremes(measures)
 
   const median = getSortedMedian(measures)
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
@@ -38,31 +38,29 @@ export const computeStats = function (measures) {
 
   const histogram = getHistogram({
     array: measures,
-    lowIndex,
-    highIndex,
+    minIndex,
+    maxIndex,
     length,
     bucketCount: HISTOGRAM_SIZE,
   })
 
-  const { stdev, rstdev, moe, rmoe, medianLow, medianHigh } = getPrecisionStats(
-    {
-      measures,
-      lowIndex,
-      highIndex,
-      length,
-      low,
-      high,
-      median,
-    },
-  )
+  const { stdev, rstdev, moe, rmoe, medianMin, medianMax } = getPrecisionStats({
+    measures,
+    minIndex,
+    maxIndex,
+    length,
+    min,
+    max,
+    median,
+  })
 
   return {
     median,
-    medianLow,
-    medianHigh,
+    medianMin,
+    medianMax,
     mean,
-    low,
-    high,
+    min,
+    max,
     stdev,
     rstdev,
     moe,
@@ -79,11 +77,11 @@ const HISTOGRAM_SIZE = 1e2
 // loops is low.
 const getPrecisionStats = function ({
   measures,
-  lowIndex,
-  highIndex,
+  minIndex,
+  maxIndex,
   length,
-  low,
-  high,
+  min,
+  max,
   median,
 }) {
   if (median === 0 || length < MIN_STDEV_LOOPS) {
@@ -92,21 +90,21 @@ const getPrecisionStats = function ({
 
   const stdev = getStdev({
     array: measures,
-    lowIndex,
-    highIndex,
+    minIndex,
+    maxIndex,
     length,
     median,
   })
   const rstdev = getRstdev(stdev, median)
   const moe = getMoe(stdev, length)
   const rmoe = getRmoe(moe, median)
-  const { medianLow, medianHigh } = getConfidenceInterval({
+  const { medianMin, medianMax } = getConfidenceInterval({
     median,
     moe,
-    low,
-    high,
+    min,
+    max,
   })
-  return { stdev, rstdev, moe, rmoe, medianLow, medianHigh }
+  return { stdev, rstdev, moe, rmoe, medianMin, medianMax }
 }
 
 // `stdev` might be very imprecise when there are not enough values to compute

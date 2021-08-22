@@ -55,7 +55,7 @@ const getRepeatPayload = function (repeat, minLoopDuration) {
 //   - More unnecessary measures once the `precision` threshold has been reached
 //   - Longer time to calibrate
 // Lower value of `targetSampleDuration` leads to:
-//   - Higher `stats.stdev` and `stats.high`. This is because new samples have
+//   - Higher `stats.stdev` and `stats.max`. This is because new samples have
 //     a small cold start. This is especially true for fast|low-complexity tasks
 //   - Less duration measuring as opposed to IPC, runner internal logic, stats
 //     computation and preview reporting

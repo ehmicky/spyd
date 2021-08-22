@@ -33,20 +33,20 @@ const getCombinationWidth = function ({ stats }, getStat) {
   return stringWidth(getStat(stats))
 }
 
-const getLowStat = function ({ low }) {
-  return `${PADDING}${low.prettyPaddedColor}${PADDING}${separatorColor(
+const getMinStat = function ({ min }) {
+  return `${PADDING}${min.prettyPaddedColor}${PADDING}${separatorColor(
     TICK_LEFT,
   )}`
 }
 
-const getHighStat = function ({ high }) {
-  return `${separatorColor(TICK_RIGHT)}${PADDING}${high.prettyPaddedColor}`
+const getMaxStat = function ({ max }) {
+  return `${separatorColor(TICK_RIGHT)}${PADDING}${max.prettyPaddedColor}`
 }
 
 const PADDING_WIDTH = 1
 const PADDING = ' '.repeat(PADDING_WIDTH)
 
-export const getLowBlock = getBlock.bind(undefined, getLowStat)
-export const getLowBlockWidth = getBlockWidth.bind(undefined, getLowStat)
-export const getHighBlock = getBlock.bind(undefined, getHighStat)
-export const getHighBlockWidth = getBlockWidth.bind(undefined, getHighStat)
+export const getMinBlock = getBlock.bind(undefined, getMinStat)
+export const getMinBlockWidth = getBlockWidth.bind(undefined, getMinStat)
+export const getMaxBlock = getBlock.bind(undefined, getMaxStat)
+export const getMaxBlockWidth = getBlockWidth.bind(undefined, getMaxStat)

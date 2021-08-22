@@ -11,7 +11,7 @@ import { getTvalue } from './tvalue.js'
 //     - Is more complex to implement
 //     - Assumes both combinations have similar distributions
 //     - Is not as good with skewed distributions
-//  - Confidence interval `medianLow|medianHigh` because doing so is less
+//  - Confidence interval `medianMin|medianMax` because doing so is less
 //    statistically accurate
 //     - However, this method should be used by users when comparing two
 //       combinations of the same result because:

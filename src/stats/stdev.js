@@ -12,23 +12,23 @@
 //    most likely have different medians)
 export const getStdev = function ({
   array,
-  lowIndex,
-  highIndex,
+  minIndex,
+  maxIndex,
   length,
   median,
 }) {
   const variance =
-    getSumDeviation({ array, lowIndex, highIndex, median }) / (length - 1)
+    getSumDeviation({ array, minIndex, maxIndex, median }) / (length - 1)
   return Math.sqrt(variance)
 }
 
 // We use a separate function from `getSum()` because it is much more performant
-const getSumDeviation = function ({ array, lowIndex, highIndex, median }) {
+const getSumDeviation = function ({ array, minIndex, maxIndex, median }) {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = lowIndex; index <= highIndex; index += 1) {
+  for (let index = minIndex; index <= maxIndex; index += 1) {
     // eslint-disable-next-line fp/no-mutation
     sum += (array[index] - median) ** 2
   }

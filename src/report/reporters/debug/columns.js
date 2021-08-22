@@ -27,11 +27,11 @@ export const getAllColumns = function (combinations, screenWidth, columnWidth) {
 // List of columns, with their `stats.*` property
 const COLUMNS = [
   'median',
-  'medianLow',
-  'medianHigh',
+  'medianMin',
+  'medianMax',
   'mean',
-  'low',
-  'high',
+  'min',
+  'max',
   'diff',
   'stdev',
   'rstdev',

@@ -1,15 +1,15 @@
 import { getMean } from '../../../stats/sum.js'
 
 // Compute positions of the median ticks.
-// There can be either a single (`median`) or two (`medianLow|medianHigh`).
+// There can be either a single (`median`) or two (`medianMin|medianMax`).
 // Also computes `medianIndex|medianMaxWidth` used for the color gradient.
 export const getMedianPositions = function (
-  { median, medianLow, medianHigh, low, high },
+  { median, medianMin, medianMax, min, max },
   width,
 ) {
-  const stats = median.raw === undefined ? [medianLow, medianHigh] : [median]
+  const stats = median.raw === undefined ? [medianMin, medianMax] : [median]
   const medianIndexes = stats.map((stat) =>
-    getMedianIndex(stat, { low, high, width }),
+    getMedianIndex(stat, { min, max, width }),
   )
   const positions = stats.map((stat, statIndex) => ({
     ...stat,
@@ -22,9 +22,9 @@ export const getMedianPositions = function (
 
 // When `histogram` has a single item, it is in the first bucket.
 // Also compute the maximum width between the median and either the start or end
-const getMedianIndex = function (median, { low, high, width }) {
+const getMedianIndex = function (median, { min, max, width }) {
   const medianPercentage =
-    high.raw === low.raw ? 0 : (median.raw - low.raw) / (high.raw - low.raw)
+    max.raw === min.raw ? 0 : (median.raw - min.raw) / (max.raw - min.raw)
   return Math.round((width - 1) * medianPercentage)
 }
 

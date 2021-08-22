@@ -39,10 +39,10 @@ export const decompressResult = function ({ combinations, ...result }) {
 
 const decompressCombination = function ({
   stats,
-  stats: { histogram, quantiles, median, low, high },
+  stats: { histogram, quantiles, median, min, max },
   ...combination
 }) {
-  const histogramA = decompressHistogram(histogram, low, high)
+  const histogramA = decompressHistogram(histogram, min, max)
   const quantilesA = decompressQuantiles(quantiles, median)
   return {
     ...combination,
@@ -50,8 +50,8 @@ const decompressCombination = function ({
   }
 }
 
-const decompressHistogram = function (histogram, low, high) {
-  return getBucketEdges(low, high, histogram.length).map(
+const decompressHistogram = function (histogram, min, max) {
+  return getBucketEdges(min, max, histogram.length).map(
     ([start, end], bucketIndex) => ({
       start,
       end,

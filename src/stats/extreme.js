@@ -15,10 +15,10 @@
 // performance and memory reasons.
 export const getExtremes = function (measures) {
   const loops = measures.length - 1
-  const { lowIndex, highIndex, length } = getLengthFromLoops(loops)
-  const low = measures[lowIndex]
-  const high = measures[highIndex]
-  return { lowIndex, highIndex, length, low, high }
+  const { minIndex, maxIndex, length } = getLengthFromLoops(loops)
+  const min = measures[minIndex]
+  const max = measures[maxIndex]
+  return { minIndex, maxIndex, length, min, max }
 }
 
 // `Math.round()` rounds towards +Inf, which is what we want:
@@ -28,24 +28,24 @@ export const getExtremes = function (measures) {
 //  - This makes outliers removal start twice faster. For example, with 5%
 //    outliers on each end, this starts after 10 loops, not 20.
 export const getLengthFromLoops = function (loops) {
-  const lowIndex = Math.round(loops * LOW_OUTLIERS)
-  const highIndex = Math.round(loops * HIGH_OUTLIERS)
-  const length = highIndex - lowIndex + 1
-  return { lowIndex, highIndex, length }
+  const minIndex = Math.round(loops * MIN_OUTLIERS)
+  const maxIndex = Math.round(loops * MAX_OUTLIERS)
+  const length = maxIndex - minIndex + 1
+  return { minIndex, maxIndex, length }
 }
 
 // Inverse function of `getLengthFromLoops()`, i.e. retrieves `loops` from
 // `length`. Due to the use of multiple `Math.round()`, the result might be
 // 1 lower|higher than the actual result.
 export const getLoopsFromLength = function (length) {
-  return Math.round(length / (HIGH_OUTLIERS - LOW_OUTLIERS)) - 1
+  return Math.round(length / (MAX_OUTLIERS - MIN_OUTLIERS)) - 1
 }
 
 // A higher value makes histograms give less information about very low/high
 // values.
 // A lower value makes it more likely for outliers to overtake the histogram,
 // concentrating most of the values into far fewer buckets.
-const LOW_OUTLIERS = 0.05
+const MIN_OUTLIERS = 0.05
 // Having the same percentage for slow/fast outliers ensures the `median`
 // remains the same.
-const HIGH_OUTLIERS = 1 - LOW_OUTLIERS
+const MAX_OUTLIERS = 1 - MIN_OUTLIERS

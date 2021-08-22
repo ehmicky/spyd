@@ -1,11 +1,11 @@
 // Canonical titles for each stat
 export const STAT_TITLES = {
   median: 'Median',
-  medianLow: 'Median low',
-  medianHigh: 'Median high',
+  medianMin: 'Median min',
+  medianMax: 'Median max',
   mean: 'Mean',
-  low: 'Low',
-  high: 'High',
+  min: 'Min',
+  max: 'Max',
   diff: 'Diff',
   stdev: 'Stdev',
   rstdev: 'Rstdev',

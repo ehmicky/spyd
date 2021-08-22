@@ -12,7 +12,7 @@ export const getInitialStats = function () {
 //    and infrequent slowdowns.
 //  - This allows using any `stats` in the sample logic
 // Uncalibrated stats are removed because they:
-//  - Are eventually reset, which create confusion for stats like low or high
+//  - Are eventually reset, which create confusion for stats like min|max
 //  - Change a lot, creating flicker
 export const addStats = function (
   stats,

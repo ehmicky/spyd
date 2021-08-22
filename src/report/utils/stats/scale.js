@@ -22,7 +22,7 @@ export const getScale = function (allCombinations, name, kind) {
 // The same duration scale is used for all `stats.*Pretty` to make it easier to
 // compare between them.
 // `median` is `undefined` when `showPrecision: false`
-// `medianLow` is `undefined` when number of loops is low
+// `medianMin` is `undefined` when number of loops is low
 const getMeasure = function ({ stats }, name, kind) {
   if (!MEDIAN_KINS.has(kind)) {
     return stats[name].raw
@@ -32,8 +32,8 @@ const getMeasure = function ({ stats }, name, kind) {
     return stats.median.raw
   }
 
-  if (stats.medianLow.raw !== undefined) {
-    return stats.medianLow.raw
+  if (stats.medianMin.raw !== undefined) {
+    return stats.medianMin.raw
   }
 
   return stats.mean.raw

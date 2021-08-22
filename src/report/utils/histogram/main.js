@@ -4,11 +4,11 @@ import { getCombinationNameWidth } from '../name.js'
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
 import {
-  getLowBlock,
-  getLowBlockWidth,
-  getHighBlock,
-  getHighBlockWidth,
-} from './low_high.js'
+  getMinBlock,
+  getMinBlockWidth,
+  getMaxBlock,
+  getMaxBlockWidth,
+} from './min_max.js'
 import { getTitleBlock } from './title.js'
 
 // Serialize combinations' histograms for reporting
@@ -29,8 +29,8 @@ const getContentWidth = function (combinations, showStats, screenWidth) {
   return Math.max(
     screenWidth -
       getCombinationNameWidth(combinations[0]) -
-      getLowBlockWidth(combinations, showStats) -
-      getHighBlockWidth(combinations, showStats),
+      getMinBlockWidth(combinations, showStats) -
+      getMaxBlockWidth(combinations, showStats),
     1,
   )
 }
@@ -51,15 +51,15 @@ const serializeHistogram = function ({
     return titleBlock
   }
 
-  const lowBlock = getLowBlock({ stats, height, showStats })
+  const minBlock = getMinBlock({ stats, height, showStats })
   const content = getContent({ stats, height, width, showStats })
-  const highBlock = getHighBlock({ stats, height, showStats })
-  return concatBlocks([titleBlock, lowBlock, content, highBlock])
+  const maxBlock = getMaxBlock({ stats, height, showStats })
+  return concatBlocks([titleBlock, minBlock, content, maxBlock])
 }
 
 // When using `showPrecision` and not enough loops are available, `median`,
-// `medianLow` and `medianHigh` will be `undefined`. In that case, we keep
+// `medianMin` and `medianMax` will be `undefined`. In that case, we keep
 // waiting for more loops before doing a full report
-const hasLowLoops = function ({ median, medianLow }) {
-  return median.raw === undefined && medianLow.raw === undefined
+const hasLowLoops = function ({ median, medianMin }) {
+  return median.raw === undefined && medianMin.raw === undefined
 }
