@@ -13,7 +13,7 @@
 //    average performance when repeated. We tradeoff simplicity for accuracy.
 // We apply those percentage without cloning the `measures` array, for
 // performance and memory reasons.
-export const getExtremes = function (measures) {
+export const getOutliersStats = function (measures) {
   const loops = measures.length - 1
   const { minIndex, maxIndex, length } = getLengthFromLoops(loops)
   const min = measures[minIndex]

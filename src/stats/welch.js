@@ -1,4 +1,4 @@
-import { getLengthFromLoops } from './extreme.js'
+import { getLengthFromLoops } from './outliers.js'
 import { getTvalue } from './tvalue.js'
 
 // Check whether two combinations are too close for their `diff` to be

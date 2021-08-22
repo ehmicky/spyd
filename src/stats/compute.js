@@ -1,7 +1,7 @@
 import { getConfidenceInterval } from './confidence.js'
-import { getExtremes } from './extreme.js'
 import { getHistogram } from './histogram.js'
 import { getMoe, getRmoe } from './moe.js'
+import { getOutliersStats } from './outliers.js'
 import { getSortedMedian, getQuantiles } from './quantile.js'
 import { getStdev, getRstdev } from './stdev.js'
 import { getMean } from './sum.js'
@@ -30,7 +30,7 @@ import { getMean } from './sum.js'
 //  - This would create too many statistics for the average, together with the
 //    median and the mean.
 export const computeStats = function (measures) {
-  const { minIndex, maxIndex, length, min, max } = getExtremes(measures)
+  const { minIndex, maxIndex, length, min, max } = getOutliersStats(measures)
 
   const median = getSortedMedian(measures)
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
