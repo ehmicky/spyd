@@ -22,7 +22,7 @@ import { addResultTitles } from './titles.js'
 //  - The `content` is fit for reporting only, not programmatic usage
 //  - It can still be accessed by outputting it a specific file then read that
 //    file separately
-export const getProgrammaticResult = async function (result, { titles }) {
+export const getProgrammaticResult = async function (result, titles) {
   const { result: resultA } = await getReportResult({
     result,
     titles,
