@@ -1,6 +1,6 @@
 import omit from 'omit.js'
 
-import { METADATA_SYSTEM_PROPS, MACHINE_PROPS } from '../../system/footer.js'
+import { METADATA_SYSTEM_PROPS, MACHINE_PROPS } from '../../system/serialize.js'
 
 // Omit some result properties unless some reporterConfig properties are
 // passed. Those all start with `show*`. We use one boolean configuration
