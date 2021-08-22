@@ -6,9 +6,10 @@ import { serializeGit, serializePr } from './git.js'
 
 // Serialize info|system-related information as a `footer` for reporters
 export const serializeFooter = function ({ id, timestamp, systems }) {
-  return [...systems.map(serializeSystem), serializeMetadata(id, timestamp)]
-    .filter(Boolean)
-    .map(normalizeDepth)
+  return [
+    ...systems.map(serializeSystem),
+    serializeMetadata(id, timestamp),
+  ].filter(Boolean)
 }
 
 const serializeSystem = function ({
@@ -36,7 +37,7 @@ const serializeSystem = function ({
     return
   }
 
-  return { title, fields: fieldsA }
+  return title === undefined ? fieldsA : { [title]: fieldsA }
 }
 
 // The spyd version is shown after other versions.
@@ -50,9 +51,5 @@ const serializeMetadata = function (id, timestamp) {
   }
 
   const timestampString = new Date(timestamp).toLocaleString()
-  return { fields: { Id: id, Timestamp: timestampString } }
-}
-
-const normalizeDepth = function ({ title, fields }) {
-  return title === undefined ? fields : { [title]: fields }
+  return { Id: id, Timestamp: timestampString }
 }
