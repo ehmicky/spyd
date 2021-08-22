@@ -1,11 +1,10 @@
 import { isSameDimension } from '../../../../combination/ids.js'
-import {
-  getCombinationNameColor,
-  getCombinationNameWidth,
-} from '../../../utils/name.js'
+import { getCombinationNameWidth } from '../../../utils/name.js'
 import { getResponsiveColumns } from '../../../utils/responsive.js'
-import { SEPARATOR_WIDTH, COLUMN_SEPARATOR } from '../../../utils/separator.js'
+import { SEPARATOR_WIDTH } from '../../../utils/separator.js'
 import { prettifyStats } from '../../../utils/stats/main.js'
+
+import { getRow, getStatLength } from './row.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
@@ -70,7 +69,7 @@ const getCellStat = function (historyCombinations, combination) {
 }
 
 const getColumnWidth = function (columns) {
-  const widths = columns.flat().filter(Boolean).map(getWidth)
+  const widths = columns.flat().filter(Boolean).map(getStatLength)
   return Math.max(...widths)
 }
 
@@ -95,26 +94,4 @@ const getTable = function (combinations, columns, columnWidth) {
       getRow({ combination, rowIndex, columns, columnWidth }),
     )
     .join('\n')
-}
-
-const getRow = function ({ combination, rowIndex, columns, columnWidth }) {
-  const combinationName = getCombinationNameColor(combination)
-  const cells = columns
-    .map((column) => getCell(column[rowIndex], columnWidth))
-    .join(COLUMN_SEPARATOR)
-  return `${combinationName}${cells}`
-}
-
-const getCell = function (cell, columnWidth) {
-  if (cell === undefined) {
-    return ' '.repeat(columnWidth)
-  }
-
-  const paddingWidth = columnWidth - getWidth(cell)
-  const padding = ' '.repeat(paddingWidth)
-  return `${padding}${cell.prettyColor}`
-}
-
-const getWidth = function ({ pretty }) {
-  return pretty.length
 }
