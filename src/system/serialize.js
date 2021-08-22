@@ -1,19 +1,18 @@
 import omit from 'omit.js'
 
-import { addSystemsTitles } from '../report/contents/titles.js'
 import { cleanObject } from '../utils/clean.js'
 
 import { serializeGit, serializePr } from './git.js'
 
 // Serialize info|system-related information as a `footer` for reporters
-export const serializeFooter = function (
-  { id, timestamp, systems, ...result },
-  titles,
-  showTitles,
-) {
-  const systemsA = addSystemsTitles(systems, titles, showTitles)
+export const serializeFooter = function ({
+  id,
+  timestamp,
+  systems,
+  ...result
+}) {
   const footer = [
-    ...systemsA.map(serializeSystem),
+    ...systems.map(serializeSystem),
     serializeMetadata(id, timestamp),
   ]
   return { ...result, footer }

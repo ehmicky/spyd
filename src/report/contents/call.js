@@ -6,7 +6,7 @@ import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
 import { omitFooterProps, omitResultProps } from './omit.js'
-import { addResultTitles } from './titles.js'
+import { addSystemsTitles, addResultTitles } from './titles.js'
 
 // Call all `reporter.report()`.
 // It can be async, including during results preview.
@@ -114,10 +114,11 @@ const handleFooter = function (
   result,
   { titles, showTitles, showMetadata, showSystem, keepFooter },
 ) {
-  const resultA = serializeFooter(result, titles, showTitles)
-  const resultB = omitFooterProps(resultA, showMetadata, showSystem)
-  const { result: resultC, footer } = finalizeFooter(resultB, keepFooter)
-  return { result: resultC, footer }
+  const resultA = addSystemsTitles(result, titles, showTitles)
+  const resultB = serializeFooter(resultA, titles, showTitles)
+  const resultC = omitFooterProps(resultB, showMetadata, showSystem)
+  const { result: resultD, footer } = finalizeFooter(resultC, keepFooter)
+  return { result: resultD, footer }
 }
 
 // Add size-related information
