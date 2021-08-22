@@ -34,13 +34,15 @@ const getCombinationWidth = function ({ stats }, getStat) {
 }
 
 const getMinStat = function ({ min }) {
-  return `${PADDING}${min.prettyPaddedColor}${PADDING}${separatorColor(
-    TICK_LEFT,
-  )}`
+  return min === undefined
+    ? ''
+    : `${PADDING}${min.prettyPaddedColor}${PADDING}${separatorColor(TICK_LEFT)}`
 }
 
 const getMaxStat = function ({ max }) {
-  return `${separatorColor(TICK_RIGHT)}${PADDING}${max.prettyPaddedColor}`
+  return max === undefined
+    ? ''
+    : `${separatorColor(TICK_RIGHT)}${PADDING}${max.prettyPaddedColor}`
 }
 
 const PADDING_WIDTH = 1
