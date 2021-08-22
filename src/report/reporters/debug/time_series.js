@@ -35,13 +35,8 @@ const getColumn = function (historyResult, combinations, allCombinations) {
     allCombinations,
   )
   return combinations.map((combination) =>
-    getCell(historyCombinations, combination),
+    getCellStat(historyCombinations, combination),
   )
-}
-
-const getCell = function (historyCombinations, combination) {
-  const cellStat = getCellStat(historyCombinations, combination)
-  return cellStat === undefined ? { pretty: '', prettyColor: '' } : cellStat
 }
 
 const getCellStat = function (historyCombinations, combination) {
@@ -105,17 +100,21 @@ const getTable = function (combinations, columns, columnWidth) {
 const getRow = function ({ combination, rowIndex, columns, columnWidth }) {
   const combinationName = getCombinationNameColor(combination)
   const cells = columns
-    .map((column) => padCell(column[rowIndex], columnWidth))
+    .map((column) => getCell(column[rowIndex], columnWidth))
     .join(COLUMN_SEPARATOR)
   return `${combinationName}${cells}`
 }
 
-const padCell = function (cell, columnWidth) {
+const getCell = function (cell, columnWidth) {
+  if (cell === undefined) {
+    return ' '.repeat(columnWidth)
+  }
+
   const paddingWidth = columnWidth - getWidth(cell)
   const padding = ' '.repeat(paddingWidth)
   return `${padding}${cell.prettyColor}`
 }
 
-const getWidth = function ({ pretty }) {
-  return pretty.length
+const getWidth = function (cell) {
+  return cell === undefined ? 0 : cell.pretty.length
 }
