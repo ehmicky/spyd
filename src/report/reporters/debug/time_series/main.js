@@ -1,8 +1,8 @@
 import { isSameDimension } from '../../../../combination/ids.js'
 import { prettifyStats } from '../../../utils/stats/main.js'
 
-import { getAllColumns } from './columns.js'
-import { getRow, getStatLength } from './row.js'
+import { getColumnWidth, getAllColumns } from './columns.js'
+import { getRow } from './row.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
@@ -64,11 +64,6 @@ const getCellStat = function (historyCombinations, combination) {
     pretty: `${medianMin.pretty}-${medianMax.pretty}`,
     prettyColor: `${medianMin.prettyColor}-${medianMax.prettyColor}`,
   }
-}
-
-const getColumnWidth = function (columns) {
-  const widths = columns.flat().filter(Boolean).map(getStatLength)
-  return Math.max(...widths)
 }
 
 const getTable = function (combinations, columns, columnWidth) {
