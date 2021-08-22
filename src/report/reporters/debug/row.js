@@ -17,7 +17,7 @@ const getCell = function (column, { stats: { [column]: stat } }, columnWidth) {
   }
 
   const statString = getStat(stat)
-  const paddingWidth = Math.max(columnWidth - getStatLength(stat), 0)
+  const paddingWidth = columnWidth - getStatLength(stat)
   const padding = ' '.repeat(paddingWidth)
   return `${padding}${statString}`
 }
