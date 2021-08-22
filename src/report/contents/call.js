@@ -4,7 +4,7 @@ import { getFooter } from '../../system/footer.js'
 import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
-import { omitResultProps } from './clean.js'
+import { omitResultProps } from './omit.js'
 import { showResultTitles } from './titles.js'
 
 // Call all `reporter.report()`.
