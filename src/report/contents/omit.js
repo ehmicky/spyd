@@ -7,15 +7,10 @@ import { METADATA_SYSTEM_PROPS, MACHINE_PROPS } from '../../system/serialize.js'
 // property for each instead of a single array configuration property because it
 // makes it easier to enable/disable each property both in CLI flags and in
 // `reporterConfig.{reporterId}.*` properties.
-export const omitFooterProps = function (
-  { footer, ...result },
-  showMetadata,
-  showSystem,
-) {
-  const footerA = footer.map((footerGroup) =>
+export const omitFooterProps = function (footer, showMetadata, showSystem) {
+  return footer.map((footerGroup) =>
     omitFooterGroupProps(footerGroup, showMetadata, showSystem),
   )
-  return { ...result, footer: footerA }
 }
 
 const omitFooterGroupProps = function (

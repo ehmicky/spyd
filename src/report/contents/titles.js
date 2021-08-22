@@ -49,14 +49,14 @@ const addDimensionTitle = function (items, titles) {
   return items.map((item) => addTitle(item, 'id', titles))
 }
 
-export const addSystemsTitles = function (
-  { systems, ...result },
+export const addFooterTitles = function (
+  { systems, ...footer },
   titles,
   showTitles,
 ) {
   const titlesA = showTitles ? titles : {}
   const systemsA = systems.map((systemA) => addSystemTitle(systemA, titlesA))
-  return { ...result, systems: systemsA }
+  return { ...footer, systems: systemsA }
 }
 
 const addSystemTitle = function (system, titles) {

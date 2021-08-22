@@ -5,17 +5,8 @@ import { cleanObject } from '../utils/clean.js'
 import { serializeGit, serializePr } from './git.js'
 
 // Serialize info|system-related information as a `footer` for reporters
-export const serializeFooter = function ({
-  id,
-  timestamp,
-  systems,
-  ...result
-}) {
-  const footer = [
-    ...systems.map(serializeSystem),
-    serializeMetadata(id, timestamp),
-  ]
-  return { ...result, footer }
+export const serializeFooter = function ({ id, timestamp, systems }) {
+  return [...systems.map(serializeSystem), serializeMetadata(id, timestamp)]
 }
 
 const serializeSystem = function ({
