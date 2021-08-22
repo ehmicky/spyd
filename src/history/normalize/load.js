@@ -1,6 +1,6 @@
 import sortOn from 'sort-on'
 
-import { selectResults } from '../select/main.js'
+import { selectResults } from '../../select/main.js'
 
 import { decompressResult } from './compress.js'
 import { migrateResults } from './migrate.js'

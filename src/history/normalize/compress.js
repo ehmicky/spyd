@@ -1,4 +1,4 @@
-import { getBucketEdges } from '../stats/histogram.js'
+import { getBucketEdges } from '../../stats/histogram.js'
 
 // Reduce size of results before saving
 // We try to persist everything, so that `show` report the same information.
