@@ -43,9 +43,30 @@ const getCell = function (historyCombinations, combination) {
   const historyCombinationA = historyCombinations.find((historyCombination) =>
     isSameDimension(historyCombination, combination),
   )
-  return historyCombinationA === undefined
-    ? { pretty: '', prettyColor: '' }
-    : historyCombinationA.stats.median
+
+  // No matching previous combination
+  if (historyCombinationA === undefined) {
+    return { pretty: '', prettyColor: '' }
+  }
+
+  const {
+    stats: { median, medianMin, medianMax },
+  } = historyCombinationA
+
+  // `showPrecision` is `false`
+  if (combination.stats.median !== undefined) {
+    return median
+  }
+
+  // Due to not enough measures
+  if (medianMin !== undefined && medianMin.pretty !== '') {
+    return {
+      pretty: `${medianMin.pretty}-${medianMax.pretty}`,
+      prettyColor: `${medianMin.prettyColor}-${medianMax.prettyColor}`,
+    }
+  }
+
+  return { pretty: '', prettyColor: '' }
 }
 
 const getColumnWidth = function (columns) {

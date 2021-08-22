@@ -33,6 +33,7 @@ const STAT_KINDS = [
 //  - some combinations when:
 //     - `median` is `0` or there are only a few measures
 //       (for all the precision-based stats like `stdev`)
-const hasStatKind = function ({ name }, [{ stats }]) {
-  return stats[name] !== undefined
+// Additionally, at the beginning of the preview, all `stats` are `undefined`
+const hasStatKind = function ({ name }, combinations) {
+  return combinations.some(({ stats }) => stats[name] !== undefined)
 }
