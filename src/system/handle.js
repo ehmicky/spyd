@@ -1,5 +1,6 @@
 import { omitFooterProps } from '../report/contents/omit.js'
 import { addFooterTitles } from '../report/contents/titles.js'
+import { FORMATS } from '../report/formats/list.js'
 
 import { serializeFooter } from './serialize.js'
 
@@ -10,6 +11,7 @@ export const handleFooter = function ({
   showMetadata,
   showSystem,
   keepFooter,
+  format,
 }) {
   const { result: resultA, footer } = initFooter(result)
   const footerA = addFooterTitles(footer, titles, showTitles)
@@ -17,7 +19,8 @@ export const handleFooter = function ({
   const footerC = omitFooterProps(footerB, showMetadata, showSystem)
   const footerD = cleanFooter(footerC)
   const resultB = addFooter(resultA, footerD, keepFooter)
-  return { result: resultB, footer: footerD }
+  const footerE = stringifyFooter(footerD, format)
+  return { result: resultB, footer: footerE }
 }
 
 const initFooter = function ({ id, timestamp, systems, ...result }) {
@@ -39,4 +42,14 @@ const normalizeDepth = function ({ title, fields }) {
 // Depending on format, it is either passed to the reporter or appended by us.
 const addFooter = function (result, footer, keepFooter) {
   return keepFooter ? { ...result, footer } : result
+}
+
+const stringifyFooter = function (footer, format) {
+  if (footer.length === 0) {
+    return
+  }
+
+  return FORMATS[format].footer === undefined
+    ? undefined
+    : FORMATS[format].footer(footer)
 }

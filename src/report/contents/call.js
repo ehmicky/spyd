@@ -43,6 +43,7 @@ export const callReportFunc = async function ({
     showDiff,
     debugStats,
     keepFooter,
+    format,
   })
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
   const reporterArgs = [resultA, reportFuncProps, startData]
@@ -76,6 +77,7 @@ export const getProgrammaticResult = function (result, { titles }) {
     showDiff: true,
     debugStats: false,
     keepFooter: false,
+    format: 'external',
   })
   return resultA
 }
@@ -91,6 +93,7 @@ const getReportResult = function ({
   showDiff,
   debugStats,
   keepFooter,
+  format,
 }) {
   const { result: resultA, footer } = handleFooter({
     result,
@@ -99,6 +102,7 @@ const getReportResult = function ({
     showMetadata,
     showSystem,
     keepFooter,
+    format,
   })
   const resultB = addResultTitles(resultA, titles, showTitles)
   const resultC = omitResultProps(resultB, {
