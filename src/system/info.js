@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { cleanObject } from '../utils/clean.js'
 import { groupBy } from '../utils/group.js'
 
+import { getSystemVersions } from './versions.js'
+
 // Users can specify a `system` configuration property.
 // This is a combination dimension meant to compare any environment differences,
 // outside of spyd: hardware, OS, git branch, environment variables, etc.
@@ -15,9 +17,13 @@ import { groupBy } from '../utils/group.js'
 // A result can only have a single `system`. However, when merging results,
 // this becomes several `systems`. We persist the `systems` array directly so
 // that all results have the same shape in both our logic and reporters' logic.
-export const getSystemInfo = function (systemVersions, { systemId, envInfo }) {
+export const getSystemInfo = async function (
+  runners,
+  { cwd, systemId, envInfo },
+) {
   const id = uuidv4()
   const timestamp = Date.now()
+  const systemVersions = await getSystemVersions(runners, cwd)
   const system = getSystem({ systemId, systemVersions, envInfo })
   return { id, timestamp, systems: [system] }
 }

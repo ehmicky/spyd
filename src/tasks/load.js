@@ -1,12 +1,9 @@
 import { UserError, PluginError } from '../error/main.js'
-import { getSystemVersions } from '../system/versions.js'
 
 // Select the runners and retrieve their related spawn options using
 // `runner.launch()`
-export const loadRunners = async function (runners, cwd) {
-  const runnersA = await Promise.all(runners.map(loadRunner))
-  const systemVersions = await getSystemVersions(runnersA, cwd)
-  return { runners: runnersA, systemVersions }
+export const loadRunners = async function (runners) {
+  return await Promise.all(runners.map(loadRunner))
 }
 
 const loadRunner = async function ({

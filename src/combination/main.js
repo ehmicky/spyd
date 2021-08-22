@@ -14,7 +14,7 @@ export const getCombinations = async function ({
   select,
   cwd,
 }) {
-  const { runners: runnersA, systemVersions } = await loadRunners(runners, cwd)
+  const runnersA = await loadRunners(runners)
   const tasksA = await listTasks(runnersA, cwd)
   const inputsA = fromInputsObj(inputs)
 
@@ -26,7 +26,7 @@ export const getCombinations = async function ({
   validateCombinationsIds(combinations, inputsA)
 
   const combinationsA = selectCombinations(combinations, select)
-  return { combinations: combinationsA, systemVersions }
+  return { combinations: combinationsA, runners: runnersA }
 }
 
 // Get cartesian product of all combinations
