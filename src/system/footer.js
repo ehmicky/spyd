@@ -11,10 +11,9 @@ export const getFooter = function ({ id, timestamp, systems }) {
 
 const serializeSystems = function (systems) {
   const [sharedSystem, ...nonSharedSystems] = systems
-  const serializedSharedSystem = serializeFields(sharedSystem)
-  const fields = nonSharedSystems.map(serializeSystemFields)
-  const serializedSystems = Object.assign({}, ...fields)
-  return [serializedSharedSystem, serializedSystems].filter(hasFields)
+  const sharedSystemA = serializeFields(sharedSystem)
+  const nonSharedSystemsA = nonSharedSystems.map(serializeSystemFields)
+  return [sharedSystemA, ...nonSharedSystemsA].filter(hasFields)
 }
 
 const serializeSystemFields = function ({ title, ...system }) {
