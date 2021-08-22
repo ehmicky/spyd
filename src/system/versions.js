@@ -16,7 +16,6 @@ import { spawnProcess } from '../utils/spawn.js'
 // Reported by the `--showSystem` configuration property.
 // Meant to show information about runtime versions, modes (e.g. type of shell)
 // and configuration.
-
 // `combinations` preserve the order of `tasks.*`, i.e. this is used as a
 // priority order in the unlikely case two runners return the properties in
 // `versions`.

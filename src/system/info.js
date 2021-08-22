@@ -23,16 +23,17 @@ export const getSystemInfo = async function (
 ) {
   const id = uuidv4()
   const timestamp = Date.now()
-  const systemVersions = await getSystemVersions(combinations, cwd)
-  const system = getSystem({ systemId, systemVersions, envInfo })
+  const system = await getSystem({ systemId, envInfo, combinations, cwd })
   return { id, timestamp, systems: [system] }
 }
 
-const getSystem = function ({
+const getSystem = async function ({
   systemId,
-  systemVersions,
   envInfo: { commit, branch, tag, pr, prBranch, buildUrl },
+  combinations,
+  cwd,
 }) {
+  const systemVersions = await getSystemVersions(combinations, cwd)
   const machine = getMachine()
   return cleanObject({
     id: systemId,
