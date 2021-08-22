@@ -92,17 +92,31 @@ const getReportResult = function ({
   debugStats,
   keepFooter,
 }) {
-  const resultA = serializeFooter(result, titles, showTitles)
-  const resultB = omitFooterProps(resultA, showMetadata, showSystem)
-  const { result: resultC, footer } = finalizeFooter(resultB, keepFooter)
-  const resultD = addResultTitles(resultC, titles, showTitles)
-  const resultE = omitResultProps(resultD, {
+  const { result: resultA, footer } = handleFooter(result, {
+    titles,
+    showTitles,
+    showMetadata,
+    showSystem,
+    keepFooter,
+  })
+  const resultB = addResultTitles(resultA, titles, showTitles)
+  const resultC = omitResultProps(resultB, {
     showPrecision,
     showDiff,
     debugStats,
   })
-  const resultF = addSizeInfo(resultE)
-  return { result: resultF, footer }
+  const resultD = addSizeInfo(resultC)
+  return { result: resultD, footer }
+}
+
+const handleFooter = function (
+  result,
+  { titles, showTitles, showMetadata, showSystem, keepFooter },
+) {
+  const resultA = serializeFooter(result, titles, showTitles)
+  const resultB = omitFooterProps(resultA, showMetadata, showSystem)
+  const { result: resultC, footer } = finalizeFooter(resultB, keepFooter)
+  return { result: resultC, footer }
 }
 
 // Add size-related information
