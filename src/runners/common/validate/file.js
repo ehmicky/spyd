@@ -3,7 +3,7 @@ import { inspect } from 'util'
 import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
-import { UserError } from '../../../../error/main.js'
+import { UserError } from '../../../error/main.js'
 
 // Validate that the tasks file has correct shape
 export const validateTasks = function ({ tasks, validators, normalizeTask }) {

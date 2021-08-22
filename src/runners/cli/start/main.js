@@ -1,5 +1,5 @@
-import { UserError } from '../../../../error/main.js'
-import { loadYamlFile } from '../../../../utils/yaml.js'
+import { UserError } from '../../../error/main.js'
+import { loadYamlFile } from '../../../utils/yaml.js'
 
 import { getEnv } from './env.js'
 import { validate } from './validate.js'

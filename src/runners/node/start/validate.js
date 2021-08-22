@@ -2,7 +2,7 @@ import { inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
 
-import { UserError } from '../../../../error/main.js'
+import { UserError } from '../../../error/main.js'
 import { validateTasks } from '../../common/validate/file.js'
 import {
   validateBoolean,

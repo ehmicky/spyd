@@ -1,5 +1,5 @@
-import { UserError } from '../../../../error/main.js'
-import { importJsNamed } from '../../../../utils/import.js'
+import { UserError } from '../../../error/main.js'
+import { importJsNamed } from '../../../utils/import.js'
 
 import { addDefaults } from './default.js'
 import { useRequireConfig } from './require_config.js'
