@@ -1,7 +1,10 @@
 import { isSameDimension } from '../../../../combination/ids.js'
 import { getCombinationNameWidth } from '../../../utils/name.js'
 import { getResponsiveColumns } from '../../../utils/responsive.js'
-import { SEPARATOR_WIDTH, STATS_SEPARATOR } from '../../../utils/separator.js'
+import {
+  COLUMN_SEPARATOR_WIDTH,
+  STATS_SEPARATOR,
+} from '../../../utils/separator.js'
 import { prettifyStats } from '../../../utils/stats/main.js'
 
 import { getHeaderName, getHeaderLengths } from './header.js'
@@ -82,7 +85,7 @@ export const getAllColumns = function ({
   return getResponsiveColumns({
     availableWidth,
     columnWidth,
-    separatorWidth: SEPARATOR_WIDTH,
+    separatorWidth: COLUMN_SEPARATOR_WIDTH,
     columns,
   })
 }
