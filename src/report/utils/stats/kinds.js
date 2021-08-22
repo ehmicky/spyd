@@ -5,8 +5,6 @@ export const STAT_KINDS = [
   { name: 'medianLow', kind: 'duration' },
   { name: 'medianHigh', kind: 'duration' },
   { name: 'mean', kind: 'duration' },
-  { name: 'min', kind: 'duration' },
-  { name: 'max', kind: 'duration' },
   { name: 'low', kind: 'duration' },
   { name: 'high', kind: 'duration' },
   { name: 'diff', kind: 'percentage', signed: 'diff' },

@@ -128,7 +128,7 @@ const MIN_TIMES = 5
 //  - This is because it determines the `minLoopDuration`, therefore the
 //    `repeat` precision. `repeat` changes a combination's stats
 //  - Stats stabilize around a specific `repeat` range
-//     - Except `max`, which always decreases with higher value
+//     - Except `high`, which always decreases with higher value
 //     - The lower part of that range has better overall stats, notably `rmoe`
 //  - `rmoe` is very low when `repeat` is very low (1-5) and task is very fast,
 //    due to `measureCost` becoming what's measured instead. However, this

@@ -4,8 +4,6 @@ export const STAT_TITLES = {
   medianLow: 'Median low',
   medianHigh: 'Median high',
   mean: 'Mean',
-  min: 'Min',
-  max: 'Max',
   low: 'Low',
   high: 'High',
   diff: 'Diff',

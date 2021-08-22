@@ -48,14 +48,14 @@ import { UserError } from '../error/main.js'
 //  - task itself:
 //     - due to non-deterministic logic in the task or use a shared resources
 //       (CPU, memory, etc.)
-//     - measured by: `stdev`, `quantiles|min|low|median|high|max`
+//     - measured by: `stdev`, `quantiles|low|median|high`
 //     - no way (nor strong reason) to reduce it
 //     - only reported by distribution-centric reporters (histogram, box chart),
 //       not most reporters
 //        - reason: simplicity, and putting focus on `median` instead
 //  - engine optimization:
 //     - due to engine optimize code runtime, e.g. JIT
-//     - measured by: `moe`, `stdev`, `quantiles|min|low|median|high|max`
+//     - measured by: `moe`, `stdev`, `quantiles|low|median|high`
 //     - reduced by increasing `precision`
 //     - only happening in:
 //        - the beginning of the measuring

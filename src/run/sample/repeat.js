@@ -13,7 +13,7 @@
 //  - So that `repeat` adjusts to slowdowns of the task (for example due to
 //    competing processes).
 //  - It makes the initial calibration phase shorter. This leads to more
-//    stable `max` and `stdev` stats.
+//    stable `high` and `stdev` stats.
 // When estimating `measureCost`, we should not use a repeat loop since
 // `measureCost` only happens once per repeat loop
 // Iterating the `repeat` loop adds a small duration, due to the duration to
@@ -104,10 +104,10 @@ const FAST_MEDIAN_RATE = 10
 // Calibrating will always remove the first sample (cold start):
 //  - A downside is that this means cold starts will be included or not
 //    depending on whether they are fast enough to use repeat loops.
-//  - This can make it harder to compare some stats (especially `max`) between
+//  - This can make it harder to compare some stats (especially `high`) between
 //    combinations if some have repeat loops while others not.
 //  - However, this problem is more general. Using repeat loops will always
-//    change how the mean, min, max, stdev are computed since it uses an
+//    change how the mean, low, high, stdev are computed since it uses an
 //    arithmetic mean.
 // The alternative solutions have bigger problems:
 //  - Excluding all first samples, even without a repeat loop:
@@ -120,7 +120,7 @@ const FAST_MEDIAN_RATE = 10
 //  - Excluding first samples except when there was not enough duration to
 //    measure more:
 //     - This rely on using a `duration` configuration property
-//     - This creates a big difference of stats (especially median and max)
+//     - This creates a big difference of stats (especially median and high)
 //       depending on that duration
 //     - This can lead to comparing combinations with and without the cold start
 //       included in their stats

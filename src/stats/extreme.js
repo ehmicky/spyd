@@ -1,7 +1,7 @@
 // Measures usually contain some very slow outliers due to background processes
 // or engine optimization.
 // Those are useful to know as they indicate:
-//  - worst-case scenarios (`min`, `max`, `quantiles`)
+//  - worst-case scenarios (`quantiles`)
 //  - average performance when repeated (`mean`)
 // However, those are not good when determining the normal distribution of
 // measures:
@@ -15,12 +15,10 @@
 // performance and memory reasons.
 export const getExtremes = function (measures) {
   const loops = measures.length - 1
-  const [min] = measures
-  const max = measures[loops]
   const { lowIndex, highIndex, length } = getLengthFromLoops(loops)
   const low = measures[lowIndex]
   const high = measures[highIndex]
-  return { min, max, lowIndex, highIndex, length, low, high }
+  return { lowIndex, highIndex, length, low, high }
 }
 
 // `Math.round()` rounds towards +Inf, which is what we want:
