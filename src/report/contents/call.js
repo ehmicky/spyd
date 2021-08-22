@@ -93,8 +93,8 @@ const getReportResult = function ({
   keepFooter,
 }) {
   const resultA = serializeFooter(result, titles, showTitles)
-  const resultB = addResultTitles(resultA, titles, showTitles)
-  const resultC = omitFooterProps(resultB, showMetadata, showSystem)
+  const resultB = omitFooterProps(resultA, showMetadata, showSystem)
+  const resultC = addResultTitles(resultB, titles, showTitles)
   const resultD = omitResultProps(resultC, {
     showPrecision,
     showDiff,
