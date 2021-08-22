@@ -57,6 +57,8 @@ export const normalizeTargetResult = function (result, historyResult, config) {
 // Add report-specific properties to the target result that are not
 // `combinations` related but are reporter-specific.
 // This is saved to `reporter.resultProps` and merged later.
+// Footers are only applied to the target result, not the history results, since
+// they are not very useful for those.
 const normalizeTargetResEach = function ({
   result,
   historyResult,
