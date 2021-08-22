@@ -16,7 +16,6 @@ export const callReportFunc = async function ({
     result,
     format,
     debugStats,
-    footerParams,
     footerString,
     startData,
     config: reporterConfig,
@@ -28,7 +27,6 @@ export const callReportFunc = async function ({
     result,
     titles,
     debugStats,
-    footerParams,
     showTitles,
     showPrecision,
     showDiff,
@@ -44,7 +42,6 @@ const getReportResult = function ({
   result,
   titles,
   debugStats,
-  footerParams,
   showTitles,
   showPrecision,
   showDiff,
@@ -55,8 +52,7 @@ const getReportResult = function ({
     showDiff,
     debugStats,
   })
-  const resultD = { ...resultC, ...footerParams }
-  return resultD
+  return resultC
 }
 
 // We handle some reporterConfig properties in core, and do not pass those to

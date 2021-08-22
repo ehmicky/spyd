@@ -96,13 +96,13 @@ export const normalizeComputedResult = function (
 const normalizeComputedResEach = function (
   result,
   unmergedResult,
-  { resultProps, history, ...reporter },
+  { history, resultProps, footerParams, ...reporter },
 ) {
   const resultA = normalizeCombEach(result, reporter)
   const unmergedResultA = normalizeCombEach(unmergedResult, reporter)
   const resultB = { ...resultA, history: [...history, unmergedResultA] }
   const resultC = addCombinationsDiff(resultB)
-  const resultD = { ...resultC, ...resultProps }
+  const resultD = { ...resultC, ...resultProps, ...footerParams }
   return { ...reporter, result: resultD }
 }
 
