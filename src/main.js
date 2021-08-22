@@ -7,8 +7,8 @@ import {
   getFromHistory,
   removeFromHistory,
 } from './history/main.js'
-import { performRun } from './run/main.js'
 import { reportResult } from './report/main.js'
+import { performRun } from './run/main.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default command.
