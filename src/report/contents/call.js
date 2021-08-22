@@ -53,19 +53,21 @@ export const getProgrammaticResult = function (result, { titles }) {
   const { result: resultA } = getReportResult({
     result,
     titles,
-    reporter: {
-      format: 'external',
-      debugStats: false,
-      config: {
-        showSystem: true,
-        showMetadata: true,
-        showTitles: true,
-        showPrecision: true,
-        showDiff: true,
-      },
-    },
+    reporter: PROGRAMMATIC_REPORTER,
   })
   return resultA
+}
+
+const PROGRAMMATIC_REPORTER = {
+  format: 'external',
+  debugStats: false,
+  config: {
+    showSystem: true,
+    showMetadata: true,
+    showTitles: true,
+    showPrecision: true,
+    showDiff: true,
+  },
 }
 
 // Normalize the `result` passed to `reporter.report()`
