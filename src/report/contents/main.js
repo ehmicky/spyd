@@ -5,12 +5,15 @@ import { joinByOutput } from './join.js'
 // Retrieve reporter's contents by calling all `reporter.report()` then
 // normalizing their return value and grouping it by `output`.
 export const getContents = async function (result, { reporters, titles }) {
-  const [{ result: programmaticResult }, ...contents] = await Promise.all(
+  return await Promise.all(
     reporters.map((reporter) => callReportFunc({ result, titles, reporter })),
   )
+}
+
+export const finalizeContents = function (contents) {
   const contentsA = contents.filter(hasContent).map(handleContent)
   const contentsB = joinByOutput(contentsA)
-  return { programmaticResult, contents: contentsB }
+  return contentsB
 }
 
 // A reporter can choose not to return anything

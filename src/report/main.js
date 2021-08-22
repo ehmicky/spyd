@@ -2,7 +2,7 @@ import { normalizeReportedResult } from '../normalize/result.js'
 import { applySince, mergeHistoryResult } from '../normalize/since.js'
 import { addFooters } from '../system/footer.js'
 
-import { getContents } from './contents/main.js'
+import { getContents, finalizeContents } from './contents/main.js'
 import { outputContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
 
@@ -52,18 +52,28 @@ export const reportStart = async function (result, previous, config) {
 // The report output is not printed right away. Instead, it is printed by the
 // preview refresh function at regular intervals.
 export const reportPreview = async function (result, historyResult, config) {
-  const {
-    contents: [{ contentsString = '' } = {}],
-  } = await reportCompute(result, historyResult, config)
-  return contentsString
+  const contents = await computeContents(result, historyResult, config)
+  const contentsA = finalizeContents(contents)
+  return contentsA.length === 0 ? '' : contentsA[0].contentsString
 }
 
-// Compute the report contents
+// Compute the report contents.
+// Unlike `reportPreview`, the first reporter is the programmatic one.
 export const reportCompute = async function (result, historyResult, config) {
+  const [{ result: programmaticResult }, ...contents] = await computeContents(
+    result,
+    historyResult,
+    config,
+  )
+  const contentsA = finalizeContents(contents)
+  return { programmaticResult, contents: contentsA }
+}
+
+const computeContents = async function (result, historyResult, config) {
   const resultA = mergeHistoryResult(result, historyResult)
   const resultB = normalizeReportedResult(resultA)
-  const { programmaticResult, contents } = await getContents(resultB, config)
-  return { programmaticResult, contents }
+  const contents = await getContents(resultB, config)
+  return contents
 }
 
 // Print the report contents to the output

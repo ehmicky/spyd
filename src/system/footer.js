@@ -35,8 +35,8 @@ const addFooter = function (
   const footerB = omitFooterProps(footerA, showMetadata, showSystem)
   const footerC = addSharedSystem(footerB)
   const footerD = serializeFooter(footerC)
-  const { footerParam, footerString } = applyFooterFormat(footerD, format)
-  return { ...reporter, footerParam, footerString }
+  const { footerParams, footerString } = applyFooterFormat(footerD, format)
+  return { ...reporter, footerParams, footerString }
 }
 
 // Depending on the format, the footer is either:
@@ -49,7 +49,6 @@ const applyFooterFormat = function (footer, format) {
     return { footerParams: { footer }, footerString: '' }
   }
 
-  const footerString =
-    footer.length === 0 ? '' : `\n${normalizeFooter(footer)}\n`
+  const footerString = footer.length === 0 ? '' : normalizeFooter(footer)
   return { footerParams: {}, footerString }
 }

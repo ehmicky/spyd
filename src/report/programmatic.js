@@ -12,7 +12,6 @@
 //    file separately
 // The programmatic reporter's configuration ensures:
 //  - All properties users might want are available
-//  - Properties very specific to reporting such as `footer` are not returned
 //  - Internal properties like `debugStats` are not returned
 export const addProgrammaticReporter = function (reporters) {
   return [PROGRAMMATIC_REPORTER, ...reporters]
@@ -24,7 +23,7 @@ const PROGRAMMATIC_REPORTER = {
   debugStats: false,
   config: {
     quiet: true,
-    output: 'programmatic',
+    output: '',
     showSystem: true,
     showMetadata: true,
     showTitles: true,

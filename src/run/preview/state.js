@@ -49,6 +49,7 @@ export const addResultPreviewState = function ({
 // The general preview features (including the progress bar) are only available
 // if at least one reporter uses preview.
 //  - This is kept as `previewState.quiet`
+// Also, the programmatic reporter is never run during previews.
 const reporterHasPreview = function ({ config: { quiet, output } }) {
   return !quiet && output === 'stdout'
 }

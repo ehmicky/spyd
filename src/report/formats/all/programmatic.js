@@ -8,8 +8,6 @@ export const PROGRAMMATIC_FORMAT = {
   // eslint-disable-next-line no-empty-function
   report() {},
   concat: false,
-  footer() {
-    return ''
-  },
+  footer: undefined,
   padding: false,
 }
