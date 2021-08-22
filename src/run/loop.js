@@ -1,8 +1,8 @@
-import { truncateLogs } from '../logs/stream.js'
 import { getInitialStats, addStats } from '../stats/add.js'
 import { pWhile } from '../utils/p_while.js'
 
 import { getInitialDurationState, startSample, endSample } from './duration.js'
+import { truncateLogs } from './logs/stream.js'
 import { updatePreviewStats } from './preview/results.js'
 import { isRemainingCombination } from './remaining.js'
 import { measureSample } from './sample/main.js'

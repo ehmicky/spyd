@@ -1,6 +1,6 @@
 import stripFinalNewline from 'strip-final-newline'
 
-import { findIndexReverse } from '../utils/find.js'
+import { findIndexReverse } from '../../utils/find.js'
 
 // Normalize task logs
 export const normalizeLogs = function (taskLogs, truncated) {

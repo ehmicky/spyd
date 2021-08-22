@@ -1,8 +1,7 @@
-import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
-import { addErrorTaskLogs } from '../logs/error.js'
-import { startLogsStream, stopLogsStream } from '../logs/stream.js'
-
 import { runEvents } from './events.js'
+import { startLogs, stopLogs, hasLogs } from './logs/create.js'
+import { addErrorTaskLogs } from './logs/error.js'
+import { startLogsStream, stopLogsStream } from './logs/stream.js'
 import {
   startCombinationPreview,
   endCombinationPreview,
