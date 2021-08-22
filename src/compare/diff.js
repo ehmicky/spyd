@@ -23,13 +23,11 @@ import { isDiffPrecise } from '../stats/welch.js'
 //    one, making it less meaningful
 //  - This would require additional visualization in reporters
 export const addCombinationsDiff = function (result) {
-  const { history } = result
-
-  if (history.length <= 1) {
+  if (result.history.length <= 1) {
     return result
   }
 
-  const [sinceResult, ...afterSince] = history
+  const [sinceResult, ...afterSince] = result.history
   const combinations = result.combinations.map((combination) =>
     addCombinationDiff(combination, sinceResult, afterSince),
   )
