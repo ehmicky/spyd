@@ -15,6 +15,7 @@ export const findTasks = async function ({
   runnerId,
   runnerSpawn,
   runnerSpawnOptions,
+  runnerVersions,
   runnerConfig,
   cwd,
 }) {
@@ -30,6 +31,7 @@ export const findTasks = async function ({
     runnerId,
     runnerSpawn,
     runnerSpawnOptions,
+    runnerVersions,
     runnerConfig,
   }))
 }

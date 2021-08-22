@@ -18,12 +18,12 @@ import { getSystemVersions } from './versions.js'
 // this becomes several `systems`. We persist the `systems` array directly so
 // that all results have the same shape in both our logic and reporters' logic.
 export const getSystemInfo = async function (
-  runners,
+  combinations,
   { cwd, systemId, envInfo },
 ) {
   const id = uuidv4()
   const timestamp = Date.now()
-  const systemVersions = await getSystemVersions(runners, cwd)
+  const systemVersions = await getSystemVersions(combinations, cwd)
   const system = getSystem({ systemId, systemVersions, envInfo })
   return { id, timestamp, systems: [system] }
 }

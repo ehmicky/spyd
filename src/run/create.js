@@ -4,11 +4,11 @@ import { getSystemInfo } from '../system/info.js'
 
 // Create a new result to measure
 export const createResult = async function (config) {
-  const [{ combinations, runners }, previous] = await Promise.all([
+  const [combinations, previous] = await Promise.all([
     getCombinations(config),
     listHistory(config),
   ])
-  const { id, timestamp, systems } = await getSystemInfo(runners, config)
+  const { id, timestamp, systems } = await getSystemInfo(combinations, config)
   const result = { id, timestamp, systems, combinations }
   return { result, previous }
 }

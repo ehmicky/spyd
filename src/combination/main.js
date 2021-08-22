@@ -26,7 +26,7 @@ export const getCombinations = async function ({
   validateCombinationsIds(combinations, inputsA)
 
   const combinationsA = selectCombinations(combinations, select)
-  return { combinations: combinationsA, runners: runnersA }
+  return combinationsA
 }
 
 // Get cartesian product of all combinations
@@ -42,6 +42,7 @@ const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
       runnerId,
       runnerSpawn,
       runnerSpawnOptions,
+      runnerVersions,
       runnerConfig,
     }) => ({
       taskPath,
@@ -49,6 +50,7 @@ const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
       runnerId,
       runnerSpawn,
       runnerSpawnOptions,
+      runnerVersions,
       runnerConfig,
       inputs,
       systemId,

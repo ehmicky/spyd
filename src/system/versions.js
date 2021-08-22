@@ -20,9 +20,9 @@ import { spawnProcess } from '../utils/spawn.js'
 // `combinations` preserve the order of `tasks.*`, i.e. this is used as a
 // priority order in the unlikely case two runners return the properties in
 // `versions`.
-export const getSystemVersions = async function (runners, cwd) {
+export const getSystemVersions = async function (combinations, cwd) {
   const [runnersVersions, spydVersion] = await Promise.all([
-    getRunnersVersions(runners, cwd),
+    getRunnersVersions(combinations, cwd),
     getSpydVersion(),
   ])
   return Object.assign({}, ...runnersVersions, { Spyd: spydVersion })
@@ -37,16 +37,21 @@ const getSpydVersion = async function () {
   return version
 }
 
-const getRunnersVersions = async function (runners, cwd) {
+const getRunnersVersions = async function (combinations, cwd) {
+  const runnerIds = [...new Set(combinations.map(getRunnerId))]
   return await Promise.all(
-    runners.map((runner) => getRunnerVersions(runner, cwd)),
+    runnerIds.map((runnerId) => getRunnerVersions(runnerId, combinations, cwd)),
   )
 }
 
-const getRunnerVersions = async function (
-  { runnerVersions, runnerId, runnerSpawnOptions },
-  cwd,
-) {
+const getRunnerId = function ({ runnerId }) {
+  return runnerId
+}
+
+const getRunnerVersions = async function (runnerId, combinations, cwd) {
+  const { runnerVersions, runnerSpawnOptions } = combinations.find(
+    (combination) => combination.runnerId === runnerId,
+  )
   const runnerVersionsA = await Promise.all(
     Object.entries(runnerVersions).map(([name, version]) =>
       getRunnerVersion({ name, version, runnerId, runnerSpawnOptions, cwd }),

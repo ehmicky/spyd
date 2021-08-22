@@ -40,6 +40,6 @@ export const remove = async function (configFlags) {
 // Execute tasks without benchmarking them
 export const dev = async function (configFlags) {
   const config = await getConfig('dev', configFlags)
-  const { combinations } = await getCombinations(config)
+  const combinations = await getCombinations(config)
   await performDev(config, combinations)
 }
