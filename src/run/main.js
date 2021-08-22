@@ -28,25 +28,25 @@ export const performRun = async function (config) {
   printPreviewStarting(previewState)
 
   const { result, previous } = await createResult(config)
-  const { historyResult, config: configA } = await reportStart(
-    result,
-    previous,
-    config,
-  )
+  const {
+    result: resultA,
+    historyResult,
+    config: configA,
+  } = await reportStart(result, previous, config)
 
   try {
     const {
-      result: resultA,
+      result: resultB,
       programmaticResult,
       contents,
     } = await previewAndMeasure({
-      result,
+      result: resultA,
       historyResult,
       previewState,
       config: configA,
     })
     await reportPrint(contents)
-    return { result: resultA, programmaticResult }
+    return { result: resultB, programmaticResult }
   } finally {
     await reportEnd(configA)
   }

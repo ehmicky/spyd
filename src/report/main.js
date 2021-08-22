@@ -15,15 +15,15 @@ import { startReporters, endReporters } from './start_end.js'
 //    the final `reportCompute()` is not performed after the preview ended
 //    after clearing the screen
 export const reportResult = async function (result, previous, config) {
-  const { historyResult, config: configA } = await reportStart(
-    result,
-    previous,
-    config,
-  )
+  const {
+    result: resultA,
+    historyResult,
+    config: configA,
+  } = await reportStart(result, previous, config)
 
   try {
     const { programmaticResult, contents } = await reportCompute(
-      result,
+      resultA,
       historyResult,
       configA,
     )
@@ -40,8 +40,12 @@ export const reportStart = async function (result, previous, config) {
     applySince(result, previous, config),
     startReporters(config),
   ])
-  const configB = addFooters({ result, historyResult, config: configA })
-  return { historyResult, config: configB }
+  const { result: resultA, config: configB } = addFooters({
+    result,
+    historyResult,
+    config: configA,
+  })
+  return { result: resultA, historyResult, config: configB }
 }
 
 // Report preview results in `run` command.
