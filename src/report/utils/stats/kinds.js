@@ -25,12 +25,14 @@ const STAT_KINDS = [
   { name: 'quantiles', kind: 'duration' },
 ]
 
-// Some `stats` might be `undefined` when:
-//  - `debugStats` is `false` (for many stats)
-//  - `showPrecision` is `false` or `true` (for `median[Min|Max]`)
-//  - `showDiff` is `false` or there is nothing to diff (for `diff`)
-//  - `median` is `0` or there are only a few measures (for all the
-//    precision-based stats like `stdev`)
+// Some `stats` might be `undefined` for:
+//  - all combinations when:
+//     - `debugStats` is `false` (for many stats)
+//     - `showPrecision` is `false` or `true` (for `median[Min|Max]`)
+//     - `showDiff` is `false` or there is nothing to diff (for `diff`)
+//  - some combinations when:
+//     - `median` is `0` or there are only a few measures
+//       (for all the precision-based stats like `stdev`)
 const hasStatKind = function ({ name }, [{ stats }]) {
   return stats[name] !== undefined
 }
