@@ -1,4 +1,3 @@
-import { normalizeMeasuredResult } from '../normalize/result.js'
 import {
   reportStart,
   reportCompute,
@@ -7,6 +6,7 @@ import {
 } from '../report/main.js'
 
 import { createResult } from './create.js'
+import { normalizeMeasuredResult } from './normalize.js'
 import {
   startPreview,
   endPreview,

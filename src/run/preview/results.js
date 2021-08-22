@@ -1,5 +1,5 @@
-import { normalizeMeasuredResult } from '../../normalize/result.js'
 import { reportPreview } from '../../report/main.js'
+import { normalizeMeasuredResult } from '../normalize.js'
 
 import { updateCompletion } from './completion.js'
 import {
