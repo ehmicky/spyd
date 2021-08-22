@@ -1,9 +1,13 @@
 import { addFooters } from '../system/footer.js'
 
 import { getContents, finalizeContents } from './contents/main.js'
-import { normalizeReportedResult } from './normalize.js'
+import {
+  normalizeHistory,
+  normalizeTargetResult,
+  normalizeComputedResult,
+} from './normalize.js'
 import { outputContents } from './output.js'
-import { applySince, mergeHistoryResult } from './since.js'
+import { applySince } from './since.js'
 import { startReporters, endReporters } from './start_end.js'
 
 // Report final results in `show` and `remove` commands.
@@ -36,16 +40,21 @@ export const reportResult = async function (result, previous, config) {
 
 // Start reporting
 export const reportStart = async function (result, previous, config) {
-  const [historyResult, configA] = await Promise.all([
+  const [{ historyResult, history }, configA] = await Promise.all([
     applySince(result, previous, config),
     startReporters(config),
   ])
-  const { result: resultA, config: configB } = addFooters({
+  const configB = normalizeHistory(history, configA)
+  const { result: resultA, config: configC } = normalizeTargetResult(
     result,
+    configB,
+  )
+  const { result: resultB, config: configD } = addFooters({
+    result: resultA,
     historyResult,
-    config: configA,
+    config: configC,
   })
-  return { result: resultA, historyResult, config: configB }
+  return { result: resultB, historyResult, config: configD }
 }
 
 // Report preview results in `run` command.
@@ -70,9 +79,8 @@ export const reportCompute = async function (result, historyResult, config) {
 }
 
 const computeContents = async function (result, historyResult, config) {
-  const resultA = mergeHistoryResult(result, historyResult)
-  const resultB = normalizeReportedResult(resultA)
-  const contents = await getContents(resultB, config)
+  const configA = normalizeComputedResult(result, historyResult, config)
+  const contents = await getContents(configA)
   return contents
 }
 

@@ -4,7 +4,7 @@ import { normalizeSystems } from '../system/merge.js'
 import {
   mergeResults,
   mergeFilteredResults,
-  mergeMergedResult,
+  mergeHistoryResult,
 } from './merge.js'
 
 // The `since` configuration property is used to:
@@ -67,14 +67,14 @@ export const applySince = async function (result, previous, { since, cwd }) {
     return { history: [sinceResult] }
   }
 
-  return initHistoryResult(resultA, previousA, sinceIndex)
+  return getHistoryResult(resultA, previousA, sinceIndex)
 }
 
-const initHistoryResult = function (result, previous, sinceIndex) {
-  const mergedResult = mergeResults(result, previous.slice(sinceIndex))
-  const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
+const getHistoryResult = function (result, previous, sinceIndex) {
+  const historyResult = mergeResults(result, previous.slice(sinceIndex))
+  const sinceResultA = getSinceResult(previous, sinceIndex, historyResult)
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1)]
-  return { mergedResult, history }
+  return { historyResult, history }
 }
 
 const getSinceResult = function (previous, sinceIndex, result) {
@@ -90,9 +90,11 @@ const getSinceResult = function (previous, sinceIndex, result) {
 //  - To avoid repeating it before each preview, we compute it only once before
 //    all previews and store its return value as `historyResult`.
 //  - We then merge the latest result during each preview.
-export const mergeHistoryResult = function (result, { mergedResult, history }) {
-  const resultA = { ...result, history: [...history, result] }
-  return mergedResult === undefined
-    ? resultA
-    : mergeMergedResult(resultA, mergedResult)
+// We only merge combinations, which allows us to normalize the target result
+// non-combinations related properties at the beginning of the command instead
+// of after merging history (which happens at each preview).
+export const mergeHistory = function (result, historyResult) {
+  return historyResult === undefined
+    ? result
+    : mergeHistoryResult(result, historyResult)
 }

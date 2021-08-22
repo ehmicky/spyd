@@ -9,7 +9,7 @@ import { addSharedSystem } from './shared.js'
 export const addFooters = function ({
   result: { id, timestamp },
   result: { system, ...result },
-  historyResult: { mergedResult: { systems = [system] } = {} },
+  historyResult: { systems = [system] } = {},
   config,
 }) {
   const reporters = config.reporters.map((reporter) =>

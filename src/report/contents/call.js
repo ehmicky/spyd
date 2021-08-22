@@ -12,16 +12,16 @@ import { addResultTitles } from './titles.js'
 // Since `report()` might have side effects such as making a HTTP call, we make
 // sure it is called exactly once.
 export const callReportFunc = async function ({
-  result,
-  titles,
   reporter,
   reporter: {
+    result,
     format,
     footerString,
     startData,
     config: reporterConfig,
     config: { output, colors },
   },
+  titles,
 }) {
   const resultA = getReportResult(result, titles, reporter)
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)

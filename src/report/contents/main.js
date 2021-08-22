@@ -4,9 +4,9 @@ import { joinByOutput } from './join.js'
 
 // Retrieve reporter's contents by calling all `reporter.report()` then
 // normalizing their return value and grouping it by `output`.
-export const getContents = async function (result, { reporters, titles }) {
+export const getContents = async function ({ reporters, titles }) {
   return await Promise.all(
-    reporters.map((reporter) => callReportFunc({ result, titles, reporter })),
+    reporters.map((reporter) => callReportFunc({ reporter, titles })),
   )
 }
 
