@@ -1,8 +1,6 @@
 import mapObj from 'map-obj'
 
-import { COMBINATION_CATEGORIES } from '../combination/categories.js'
-
-import { addTitles, addTitle } from './add.js'
+import { COMBINATION_CATEGORIES } from '../../combination/categories.js'
 
 // Allow users to rename identifiers from any combination category: tasks,
 // runners, systems, variations.
@@ -59,4 +57,29 @@ const addSystemsTitles = function ({ systems, ...result }, titles) {
 
 const addSystemTitle = function (system, titles) {
   return addTitle(system, 'id', titles)
+}
+
+// Add title to object if the corresponding title exists in the `titles`
+// configuration property.
+const addTitles = function (obj, idNames, titles) {
+  return idNames.reduce((objA, idName) => addTitle(objA, idName, titles), obj)
+}
+
+const addTitle = function (obj, idName, titles) {
+  const id = obj[idName]
+  const { [id]: title = id } = titles
+
+  if (title === undefined) {
+    return obj
+  }
+
+  const titleName = TITLE_PROPS[idName]
+  return { ...obj, [titleName]: title }
+}
+
+const TITLE_PROPS = {
+  id: 'title',
+  taskId: 'taskTitle',
+  runnerId: 'runnerTitle',
+  systemId: 'systemTitle',
 }
