@@ -15,14 +15,14 @@ export const serializeFooter = function ({ id, timestamp, systems }) {
 
 const serializeSystem = function ({
   title,
-  machine: { os, cpu, memory } = {},
+  machine: { os, cpus, memory } = {},
   git: { commit, tag, branch, prNumber, prBranch } = {},
   ci,
   versions: { Spyd: spydVersion, ...versions } = {},
 }) {
   const fields = {
     OS: os,
-    CPU: cpu,
+    CPU: serializeCpus(cpus),
     Memory: serializeMemory(memory),
     Git: serializeGit({ commit, tag, branch }),
     PR: serializePr({ prNumber, prBranch }),
@@ -39,6 +39,14 @@ const serializeSystem = function ({
   }
 
   return title === undefined ? fieldsA : { [title]: fieldsA }
+}
+
+const serializeCpus = function (cpus) {
+  return cpus === undefined ? undefined : cpus.map(serializeCpu).join(', ')
+}
+
+const serializeCpu = function ({ cores, model }) {
+  return `${cores} * ${model}`
 }
 
 const serializeMemory = function (memory) {

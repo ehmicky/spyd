@@ -1,3 +1,5 @@
+import { isDeepStrictEqual } from 'util'
+
 import filterObj from 'filter-obj'
 import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
@@ -30,7 +32,8 @@ const isSharedProp = function (key, value, systems) {
   return (
     ALWAYS_SHARED_PROPS.has(key) ||
     (!NEVER_SHARED_PROPS.has(key) &&
-      (isPlainObj(value) || systems.every((system) => system[key] === value)))
+      (isPlainObj(value) ||
+        systems.every((system) => isDeepStrictEqual(system[key], value))))
   )
 }
 
@@ -53,7 +56,8 @@ const removeSharedSystem = function (system, sharedSystem = {}) {
   const systemA = filterObj(
     system,
     (key, value) =>
-      !ALWAYS_SHARED_PROPS.has(key) && value !== sharedSystem[key],
+      !ALWAYS_SHARED_PROPS.has(key) &&
+      !isDeepStrictEqual(sharedSystem[key], value),
   )
   const systemB = mapObj(systemA, (key, value) => [
     key,

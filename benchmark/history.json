@@ -5,7 +5,12 @@
     "system": {
       "id": "default_systemm",
       "machine": {
-        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "cpus": [
+          {
+            "model": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+            "cores": 16
+          }
+        ],
         "memory": 67378192384,
         "os": "Linux 5.8"
       },
@@ -72,7 +77,12 @@
     "system": {
       "id": "default_systemm",
       "machine": {
-        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "cpus": [
+          {
+            "model": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+            "cores": 16
+          }
+        ],
         "memory": 67378192384,
         "os": "Linux 5.8"
       },
@@ -119,7 +129,12 @@
     "system": {
       "id": "default_system",
       "machine": {
-        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "cpus": [
+          {
+            "model": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+            "cores": 16
+          }
+        ],
         "memory": 67378192384,
         "os": "Linux 5.8"
       },
@@ -190,7 +205,12 @@
     "system": {
       "id": "default_system",
       "machine": {
-        "cpu": "16 * Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+        "cpus": [
+          {
+            "model": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+            "cores": 16
+          }
+        ],
         "memory": 67378192384,
         "os": "Linux 5.8"
       },

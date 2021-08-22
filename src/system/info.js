@@ -1,4 +1,4 @@
-import { cpus as getCpus, totalmem } from 'os'
+import { cpus as listCpus, totalmem } from 'os'
 
 import envCi from 'env-ci'
 import osName from 'os-name'
@@ -35,19 +35,19 @@ const getSystem = async function ({ systemId, combinations, cwd }) {
 }
 
 const getMachine = function () {
-  const cpu = serializeCpus()
+  const cpus = getCpus()
   const memory = totalmem()
   const os = osName()
-  return { cpu, memory, os }
+  return { cpus, memory, os }
 }
 
-const serializeCpus = function () {
-  const cpus = getCpus()
-  return Object.entries(groupBy(cpus, 'model')).map(serializeCpu).join(', ')
+const getCpus = function () {
+  const cpus = listCpus()
+  return Object.entries(groupBy(cpus, 'model')).map(getCpu)
 }
 
-const serializeCpu = function ([name, cores]) {
-  return `${cores.length} * ${name}`
+const getCpu = function ([model, cores]) {
+  return { model, cores: cores.length }
 }
 
 const getEnvInfo = function (cwd) {
