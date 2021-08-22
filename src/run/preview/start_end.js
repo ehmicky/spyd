@@ -24,20 +24,22 @@ export const printPreviewStarting = function ({ quiet }) {
 }
 
 // Start clearing the screen
-export const startPreview = async function (
+export const startPreview = async function ({
   result,
   historyResult,
   previewState,
-) {
+  config,
+}) {
   if (previewState.quiet) {
     return previewState
   }
 
-  const previewStateA = addResultPreviewState(
+  const previewStateA = addResultPreviewState({
     previewState,
     result,
     historyResult,
-  )
+    config,
+  })
   await updateReport({ previewState: previewStateA })
 
   hideCursor()

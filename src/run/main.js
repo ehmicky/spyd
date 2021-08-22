@@ -58,7 +58,12 @@ const previewAndMeasure = async function ({
   previewState,
   config,
 }) {
-  const previewStateA = await startPreview(result, historyResult, previewState)
+  const previewStateA = await startPreview({
+    result,
+    historyResult,
+    previewState,
+    config,
+  })
 
   try {
     const resultA = await measureResult(result, config, previewStateA)

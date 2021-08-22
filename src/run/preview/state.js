@@ -9,11 +9,9 @@ import { START_DESCRIPTION } from './description.js'
 // microtask since `updatePreview()` could be called by concurrent code.
 // `index` and `total` are used as a 1-based counter in previews.
 export const getPreviewState = function ({ reporters, titles }) {
-  const reportersA = reporters.filter(reporterHasPreview)
-  const quiet = reportersA.length === 0
+  const quiet = !reporters.some(reporterHasPreview)
   return {
     quiet,
-    reporters: reportersA,
     titles,
     previewSamples: 0,
     durationLeft: EMPTY_DURATION_LEFT,
@@ -27,6 +25,23 @@ export const getPreviewState = function ({ reporters, titles }) {
   }
 }
 
+// Add result-related properties to `previewState`
+export const addResultPreviewState = function ({
+  previewState,
+  result,
+  historyResult,
+  config: { reporters },
+}) {
+  const reportersA = reporters.filter(reporterHasPreview)
+  return {
+    ...previewState,
+    result,
+    historyResult,
+    total: result.combinations.length,
+    reporters: reportersA,
+  }
+}
+
 // Each reporter can be set to use previews or not
 //  - using `config.reporterConfig.{reporterId}.quiet`
 //     - which defaults to `config.quiet`
@@ -36,18 +51,4 @@ export const getPreviewState = function ({ reporters, titles }) {
 //  - This is kept as `previewState.quiet`
 const reporterHasPreview = function ({ config: { quiet, output } }) {
   return !quiet && output === 'stdout'
-}
-
-// Add result-related properties to `previewState`
-export const addResultPreviewState = function (
-  previewState,
-  result,
-  historyResult,
-) {
-  return {
-    ...previewState,
-    result,
-    historyResult,
-    total: result.combinations.length,
-  }
 }
