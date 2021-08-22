@@ -1,8 +1,8 @@
 import pMapSeries from 'p-map-series'
 
-import { startServer, endServer } from '../server/main.js'
 import { addStopHandler, removeStopHandler } from '../stop/main.js'
 
+import { startServer, endServer } from './server.js'
 import { measureCombination } from './single.js'
 
 // Measure all combinations and add results to `combinations`.

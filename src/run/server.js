@@ -1,7 +1,7 @@
 import { createServer } from 'http'
 import { promisify } from 'util'
 
-import { TARGET_SAMPLE_DURATION } from '../run/loop.js'
+import { TARGET_SAMPLE_DURATION } from './loop.js'
 
 // Start a local HTTP server to communicate with runner processes.
 // We use HTTP instead of other IPC mechanisms:
