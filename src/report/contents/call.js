@@ -23,7 +23,7 @@ import { addResultTitles } from './titles.js'
 //  - It can still be accessed by outputting it a specific file then read that
 //    file separately
 export const getProgrammaticResult = async function (result, titles) {
-  return await getReportResult({
+  return await callReportFunc({
     result,
     titles,
     reporter: PROGRAMMATIC_REPORTER,
