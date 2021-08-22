@@ -2,8 +2,6 @@ import { groupBy } from '../../utils/group.js'
 import { FORMATS } from '../formats/list.js'
 import { addPadding } from '../utils/indent.js'
 
-import { concatContents } from './concat.js'
-
 // Join all `contents` with the same `output`.
 // Also add footer and padding.
 export const joinByOutput = function (contents) {
@@ -12,7 +10,9 @@ export const joinByOutput = function (contents) {
 
 const joinContents = function (contents) {
   const [{ output, format, footer }] = contents
-  const contentsString = concatContents(contents.map(getContentProperty))
+  const contentsString = contents
+    .map(getContentProperty)
+    .join(CONTENTS_DELIMITER)
   const contentsStringA = addFooter(contentsString, footer, format)
   const contentsStringB = padContents(contentsStringA, format)
   return { contentsString: contentsStringB, output }
@@ -21,6 +21,8 @@ const joinContents = function (contents) {
 const getContentProperty = function ({ content }) {
   return content
 }
+
+const CONTENTS_DELIMITER = '\n'
 
 const addFooter = function (contentsString, footer, format) {
   const {
