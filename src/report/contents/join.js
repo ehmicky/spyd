@@ -13,7 +13,7 @@ const joinContents = function (contents) {
   const contentsString = contents
     .map(getContentProperty)
     .join(CONTENTS_DELIMITER)
-  const contentsStringA = addFooter(contentsString, footer)
+  const contentsStringA = `${contentsString}${footer}`
   const contentsStringB = padContents(contentsStringA, format)
   return { contentsString: contentsStringB, output }
 }
@@ -23,12 +23,6 @@ const getContentProperty = function ({ content }) {
 }
 
 const CONTENTS_DELIMITER = '\n'
-
-const addFooter = function (contentsString, footer) {
-  return footer === undefined
-    ? contentsString
-    : `${contentsString}\n${footer}\n`
-}
 
 const padContents = function (joinedContents, format) {
   return FORMATS[format].padding ? addPadding(joinedContents) : joinedContents
