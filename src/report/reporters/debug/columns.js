@@ -36,11 +36,16 @@ const hasColumn = function (combinations, column) {
 }
 
 // Each column is padded to the same width, so that they align vertically
-export const getColumnWidth = function ([{ stats }], columns) {
-  return Math.max(...columns.map((column) => getStatColumnWidth(stats, column)))
+export const getColumnWidth = function (combinations, columns) {
+  return Math.max(
+    ...columns.map((column) => getStatColumnWidth(combinations, column)),
+  )
 }
 
-const getStatColumnWidth = function (stats, column) {
+const getStatColumnWidth = function (combinations, column) {
+  const { stats } = combinations.find(
+    (combination) => combination.stats[column] !== undefined,
+  )
   return Math.max(getStatLength(stats, column), getHeaderName(column).length)
 }
 

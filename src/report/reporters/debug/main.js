@@ -41,7 +41,7 @@ const getTables = function (combinations, screenWidth) {
   )
 }
 
-// When no stats are available, we show all possible stats as empty columns.
+// When no stats are available
 const getEmptyTables = function (combinations) {
   const rows = getRows(combinations, [], 0)
   const table = `${NON_TRIMMABLE_SPACE}\n${rows}`
