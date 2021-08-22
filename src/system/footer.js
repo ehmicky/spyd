@@ -7,7 +7,8 @@ import { addSharedSystem } from './shared.js'
 
 // Add each `reporter.footer`
 export const addFooters = function ({
-  result: { id, timestamp, system, ...result },
+  result: { id, timestamp },
+  result: { system, ...result },
   historyResult: { mergedResult: { systems = [system] } = {} },
   config,
 }) {
