@@ -7,10 +7,10 @@ import { serializeFooter } from './serialize.js'
 export const handleFooter = function ({
   result,
   titles,
-  showTitles,
-  showMetadata,
-  showSystem,
-  format,
+  reporter: {
+    format,
+    config: { showTitles, showMetadata, showSystem },
+  },
 }) {
   const { result: resultA, footer } = initFooter(result)
   const footerA = addFooterTitles(footer, titles, showTitles)

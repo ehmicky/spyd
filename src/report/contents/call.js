@@ -23,43 +23,28 @@ export const callReportFunc = async function ({
     startData,
   },
 }) {
-  const { result: resultA, footer } = getReportResult({
-    result,
-    titles,
-    reporter,
-  })
+  const { result: resultA, footer } = handleFooter({ result, titles, reporter })
+  const resultB = getReportResult(resultA, titles, reporter)
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
-  const reporterArgs = [resultA, reportFuncProps, startData]
+  const reporterArgs = [resultB, reportFuncProps, startData]
   const content = await FORMATS[format].report(reporter, reporterArgs)
-  return { content, result: resultA, output, format, colors, footer }
+  return { content, result: resultB, output, format, colors, footer }
 }
 
 // Normalize the `result` passed to `reporter.report()`
-const getReportResult = function ({
+const getReportResult = function (
   result,
   titles,
-  reporter: {
-    format,
-    debugStats,
-    config: { showSystem, showMetadata, showTitles, showPrecision, showDiff },
-  },
-}) {
-  const { result: resultA, footer } = handleFooter({
-    result,
-    titles,
-    showTitles,
-    showMetadata,
-    showSystem,
-    format,
-  })
-  const resultB = addResultTitles(resultA, titles, showTitles)
+  { debugStats, config: { showTitles, showPrecision, showDiff } },
+) {
+  const resultB = addResultTitles(result, titles, showTitles)
   const resultC = omitResultProps(resultB, {
     showPrecision,
     showDiff,
     debugStats,
   })
   const resultD = addSizeInfo(resultC)
-  return { result: resultD, footer }
+  return resultD
 }
 
 // Add size-related information
