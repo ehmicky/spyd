@@ -19,29 +19,14 @@ export const callReportFunc = async function ({
   reporter: {
     format,
     config: reporterConfig,
-    config: {
-      output,
-      colors,
-      showSystem,
-      showMetadata,
-      showTitles,
-      showPrecision,
-      showDiff,
-    },
+    config: { output, colors },
     startData,
-    debugStats,
   },
 }) {
   const { result: resultA, footer } = getReportResult({
     result,
     titles,
-    showSystem,
-    showMetadata,
-    showTitles,
-    showPrecision,
-    showDiff,
-    debugStats,
-    format,
+    reporter,
   })
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
   const reporterArgs = [resultA, reportFuncProps, startData]
@@ -68,13 +53,17 @@ export const getProgrammaticResult = function (result, { titles }) {
   const { result: resultA } = getReportResult({
     result,
     titles,
-    showSystem: true,
-    showMetadata: true,
-    showTitles: true,
-    showPrecision: true,
-    showDiff: true,
-    debugStats: false,
-    format: 'external',
+    reporter: {
+      format: 'external',
+      debugStats: false,
+      config: {
+        showSystem: true,
+        showMetadata: true,
+        showTitles: true,
+        showPrecision: true,
+        showDiff: true,
+      },
+    },
   })
   return resultA
 }
@@ -83,13 +72,11 @@ export const getProgrammaticResult = function (result, { titles }) {
 const getReportResult = function ({
   result,
   titles,
-  showSystem,
-  showMetadata,
-  showTitles,
-  showPrecision,
-  showDiff,
-  debugStats,
-  format,
+  reporter: {
+    format,
+    debugStats,
+    config: { showSystem, showMetadata, showTitles, showPrecision, showDiff },
+  },
 }) {
   const { result: resultA, footer } = handleFooter({
     result,
