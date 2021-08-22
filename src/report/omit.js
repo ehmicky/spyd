@@ -36,13 +36,12 @@ export const omitCombinationsProps = function (
 
 const omitCombinationProps = function (
   { stats, ...combination },
-  { showDiff, showPrecision, debugStats },
+  { showPrecision, debugStats },
 ) {
-  const statsA = maybeOmit(stats, showDiff, DIFF_STATS_PROPS)
+  const statsA = omitMedianProps(stats, showPrecision)
   const statsB = maybeOmit(statsA, showPrecision, PRECISION_STATS_PROPS)
-  const statsC = omitMedianProps(statsB, showPrecision)
-  const statsD = maybeOmit(statsC, debugStats, DEBUG_STATS_PROPS)
-  return { ...combination, stats: statsD }
+  const statsC = maybeOmit(statsB, debugStats, DEBUG_STATS_PROPS)
+  return { ...combination, stats: statsC }
 }
 
 // When `showPrecision` is `true`, we show `medianMin|medianMax` instead of
@@ -67,15 +66,6 @@ const omitMedianProps = function (
   return median === undefined ? stats : { ...stats, median }
 }
 
-const maybeOmit = function (obj, showProp, propNames) {
-  if (showProp) {
-    return obj
-  }
-
-  return omit.default(obj, propNames)
-}
-
-const DIFF_STATS_PROPS = ['diff', 'diffPrecise']
 const PRECISION_STATS_PROPS = ['moe', 'rmoe']
 
 // Some stats are too advanced for most reporters and are only meant for
@@ -107,3 +97,11 @@ const DEBUG_STATS_PROPS = [
   'repeat',
   'minLoopDuration',
 ]
+
+const maybeOmit = function (obj, showProp, propNames) {
+  if (showProp) {
+    return obj
+  }
+
+  return omit.default(obj, propNames)
+}

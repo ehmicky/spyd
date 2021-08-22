@@ -22,12 +22,19 @@ import { isDiffPrecise } from '../stats/welch.js'
 //  - The difference might not be due to the current commit but to the previous
 //    one, making it less meaningful
 //  - This would require additional visualization in reporters
-export const addCombinationsDiff = function (result) {
-  if (result.history.length <= 1) {
+// This is purposely run before:
+//  - `showPrecision` has been applied, so we can use the `median`
+//  - The final history result has been appended to `result.history`
+export const addCombinationsDiff = function (
+  result,
+  history,
+  { config: { showDiff } },
+) {
+  if (!showDiff || history.length === 0) {
     return result
   }
 
-  const [sinceResult, ...afterSince] = result.history
+  const [sinceResult, ...afterSince] = history
   const combinations = result.combinations.map((combination) =>
     addCombinationDiff(combination, sinceResult, afterSince),
   )

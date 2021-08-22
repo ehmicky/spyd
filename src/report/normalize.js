@@ -99,10 +99,10 @@ const normalizeComputedResEach = function (
   unmergedResult,
   { history, resultProps, footerParams, ...reporter },
 ) {
-  const resultA = normalizeCombEach(result, reporter)
+  const resultA = addCombinationsDiff(result, history, reporter)
+  const resultB = normalizeCombEach(resultA, reporter)
   const unmergedResultA = normalizeCombEach(unmergedResult, reporter)
-  const resultB = { ...resultA, history: [...history, unmergedResultA] }
-  const resultC = addCombinationsDiff(resultB)
+  const resultC = { ...resultB, history: [...history, unmergedResultA] }
   const resultD = { ...resultC, ...resultProps, ...footerParams }
   return { ...reporter, result: resultD }
 }
