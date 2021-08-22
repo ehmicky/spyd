@@ -2,6 +2,7 @@ import { getColumns, getColumnWidth, getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
 import { getRow } from './row.js'
 
+// Retrieve all stats shown in tables
 export const getTables = function (combinations, screenWidth) {
   const columns = getColumns(combinations)
 
