@@ -14,7 +14,7 @@
 // We apply those percentage without cloning the `measures` array, for
 // performance and memory reasons.
 export const getOutliersStats = function (measures) {
-  const loops = measures.length - 1
+  const loops = measures.length
   const { minIndex, maxIndex, length } = getLengthFromLoops(loops)
   const min = measures[minIndex]
   const max = measures[maxIndex]
@@ -28,8 +28,8 @@ export const getOutliersStats = function (measures) {
 //  - This makes outliers removal start twice faster. For example, with 5%
 //    outliers on each end, this starts after 10 loops, not 20.
 export const getLengthFromLoops = function (loops) {
-  const minIndex = Math.round(loops * MIN_OUTLIERS)
-  const maxIndex = Math.round(loops * MAX_OUTLIERS)
+  const minIndex = Math.round((loops - 1) * MIN_OUTLIERS)
+  const maxIndex = Math.round((loops - 1) * MAX_OUTLIERS)
   const length = maxIndex - minIndex + 1
   return { minIndex, maxIndex, length }
 }
