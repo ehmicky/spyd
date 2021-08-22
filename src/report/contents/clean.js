@@ -1,34 +1,31 @@
 import omit from 'omit.js'
 
-// Remove some result properties unless some reporterConfig properties are
+// Omit some result properties unless some reporterConfig properties are
 // passed. Those all start with `show*`. We use one boolean configuration
 // property for each instead of a single array configuration property because it
 // makes it easier to enable/disable each property both in CLI flags and in
 // `reporterConfig.{reporterId}.*` properties.
-export const cleanResult = function ({
-  result: { systems, combinations, ...result },
-  showMetadata,
-  showSystem,
-  showPrecision,
-  showDiff,
-}) {
+export const omitResultProps = function (
+  { systems, combinations, ...result },
+  { showMetadata, showSystem, showPrecision, showDiff },
+) {
   const resultA = maybeOmit(result, showMetadata, TOP_METADATA_PROPS)
   const systemsA = systems.map((system) =>
-    cleanSystem(system, showMetadata, showSystem),
+    omitSystemProps(system, showMetadata, showSystem),
   )
   const combinationsA = combinations.map((combination) =>
-    cleanCombination(combination, showDiff, showPrecision),
+    omitCombinationProps(combination, showDiff, showPrecision),
   )
   return { ...resultA, systems: systemsA, combinations: combinationsA }
 }
 
-const cleanSystem = function (system, showMetadata, showSystem) {
+const omitSystemProps = function (system, showMetadata, showSystem) {
   const systemA = maybeOmit(system, showMetadata, METADATA_SYSTEM_PROPS)
   const systemB = maybeOmit(systemA, showSystem, SYSTEM_PROPS)
   return systemB
 }
 
-const cleanCombination = function (
+const omitCombinationProps = function (
   { stats, ...combination },
   showDiff,
   showPrecision,

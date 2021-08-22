@@ -4,7 +4,7 @@ import { getFooter } from '../../system/footer.js'
 import { FORMATS } from '../formats/list.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from '../tty.js'
 
-import { cleanResult } from './clean.js'
+import { omitResultProps } from './clean.js'
 import { showResultTitles } from './titles.js'
 
 // Call all `reporter.report()`.
@@ -61,8 +61,7 @@ const getReportResult = function (
   { showSystem, showMetadata, showTitles, showPrecision, showDiff },
 ) {
   const resultA = showResultTitles(result, titles, showTitles)
-  const resultB = cleanResult({
-    result: resultA,
+  const resultB = omitResultProps(resultA, {
     showSystem,
     showMetadata,
     showPrecision,
