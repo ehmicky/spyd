@@ -1,7 +1,7 @@
 import { isSameDimension } from '../../../../combination/ids.js'
 import { getCombinationNameWidth } from '../../../utils/name.js'
 import { getResponsiveColumns } from '../../../utils/responsive.js'
-import { SEPARATOR_WIDTH } from '../../../utils/separator.js'
+import { SEPARATOR_WIDTH, STATS_SEPARATOR } from '../../../utils/separator.js'
 import { prettifyStats } from '../../../utils/stats/main.js'
 
 import { getHeaderName, getHeaderLengths } from './header.js'
@@ -56,8 +56,8 @@ const getCellStat = function (historyCombinations, combination) {
   }
 
   return {
-    pretty: `${medianMin.pretty}-${medianMax.pretty}`,
-    prettyColor: `${medianMin.prettyColor}-${medianMax.prettyColor}`,
+    pretty: `${medianMin.pretty}${STATS_SEPARATOR}${medianMax.pretty}`,
+    prettyColor: `${medianMin.prettyColor}${STATS_SEPARATOR}${medianMax.prettyColor}`,
   }
 }
 
