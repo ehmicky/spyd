@@ -1,6 +1,7 @@
-import { UserError } from '../../error/main.js'
-import { groupBy } from '../../utils/group.js'
-import { FORMATS } from '../formats/list.js'
+import { UserError } from '../error/main.js'
+import { groupBy } from '../utils/group.js'
+
+import { FORMATS } from './formats/list.js'
 
 // It is possible to use `output` with multiple reporters at once.
 // However, reporters with the same `output` have additional logic, which means

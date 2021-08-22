@@ -1,6 +1,6 @@
-import { validateOutputGroups } from './contents/validate.js'
 import { detectFormat } from './formats/detect.js'
 import { isTtyOutput } from './tty.js'
+import { validateOutputGroups } from './validate.js'
 
 // Normalize reporters configuration
 export const normalizeReporters = function (config, command) {
