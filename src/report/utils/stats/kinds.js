@@ -26,9 +26,11 @@ const STAT_KINDS = [
 ]
 
 // Some `stats` might be `undefined` when:
-//  - `debugStats` is `false`
-//  - `showPrecision` is `false` or `true`
-//  - `showDiff` is `false`
+//  - `debugStats` is `false` (for many stats)
+//  - `showPrecision` is `false` or `true` (for `median[Min|Max]`)
+//  - `showDiff` is `false` or there is nothing to diff (for `diff`)
+//  - `median` is `0` or there are only a few measures (for all the
+//    precision-based stats like `stdev`)
 const hasStatKind = function ({ name }, [{ stats }]) {
-  return name in stats
+  return stats[name] !== undefined
 }
