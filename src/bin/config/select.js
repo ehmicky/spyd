@@ -12,11 +12,11 @@ export const SELECT_CONFIG = {
 The value is a space-separated list of identifiers to select.
 Those can be the identifiers of any task, runner, system or variation.
 
-When specifying the same category, "or" is used:
+When specifying the same dimension, "or" is used:
   --select="taskOne taskTwo"
 selects taskOne or taskTwo
 
-When specifying different categories, "and" is used instead:
+When specifying different dimensions, "and" is used instead:
   --select="taskOne runnerOne"
 selects taskOne and runnerOne
 

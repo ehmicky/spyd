@@ -5,7 +5,7 @@ import {
 import { mergeSystems } from '../system/merge.js'
 
 // The `since` configuration property allows reporting several reports at once:
-//  - This reports the most recent combination of each sets of categories
+//  - This reports the most recent combination of each sets of dimensions
 //  - This only uses the results up to the result targeted by `since`
 //  - This allows incremental benchmarks
 // This applies not only to the `show|remove` commands but also to `run`:
@@ -19,10 +19,10 @@ import { mergeSystems } from '../system/merge.js'
 //    results in-between
 //     - If the users want to use `select` to filter measuring but not
 //       reporting, they should call `run` then `show` instead
-// We explicitly avoid trying to guess the current set of categories beyond
+// We explicitly avoid trying to guess the current set of dimensions beyond
 // the current filtering properties because it is difficult.
 //  - Instead, we just rely on the `since` delta
-//  - All combination categories can be changed dynamically with
+//  - All combination dimensions can be changed dynamically with
 //    configuration properties. We cannot know whether missing combinations
 //    were temporarily or permanently removed.
 //  - This is especially true for systems. There is always only one system

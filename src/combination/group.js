@@ -2,41 +2,41 @@ import sortOn from 'sort-on'
 
 import { getMean } from '../stats/sum.js'
 
-import { COMBINATION_CATEGORIES } from './categories.js'
+import { COMBINATION_DIMENSIONS } from './dimensions.js'
 
-// Group combinations per category.
-// Each category is assigned to a top-level result.categories.* property.
+// Group combinations per dimension.
+// Each dimension is assigned to a top-level result.dimensions.* property.
 // It includes its mean speed and rank.
-export const groupCategoryInfos = function (combinations) {
-  return COMBINATION_CATEGORIES.reduce(addCategoryInfo, {
+export const groupDimensionInfos = function (combinations) {
+  return COMBINATION_DIMENSIONS.reduce(addDimensionInfo, {
     combinations,
-    categories: {},
+    dimensions: {},
   })
 }
 
-const addCategoryInfo = function (
-  { combinations, categories },
+const addDimensionInfo = function (
+  { combinations, dimensions },
   { propName, idName, rankName },
 ) {
-  const ids = getCategoryIds(combinations, idName)
-  const category = ids.map((id) => getCategory({ combinations, id, idName }))
-  const categoryA = sortOn(category, 'mean')
+  const ids = getDimensionIds(combinations, idName)
+  const dimension = ids.map((id) => getDimension({ combinations, id, idName }))
+  const dimensionA = sortOn(dimension, 'mean')
 
   const combinationsA = combinations.map((combination) =>
-    addRank({ combination, category: categoryA, idName, rankName }),
+    addRank({ combination, dimension: dimensionA, idName, rankName }),
   )
   return {
     combinations: combinationsA,
-    categories: { ...categories, [propName]: categoryA },
+    dimensions: { ...dimensions, [propName]: dimensionA },
   }
 }
 
-const getCategoryIds = function (combinations, idName) {
+const getDimensionIds = function (combinations, idName) {
   const ids = combinations.map((combination) => combination[idName])
   return [...new Set(ids)]
 }
 
-const getCategory = function ({ combinations, id, idName }) {
+const getDimension = function ({ combinations, id, idName }) {
   const medians = combinations
     .filter((combination) => combination[idName] === id)
     .map(getCombinationMedian)
@@ -55,13 +55,13 @@ const getCombinationMedian = function ({ stats: { median } }) {
 }
 
 // `median` is `undefined` when in preview mode on combinations not measured yet
-// `category.mean` will be `undefined`, which is sorted last.
+// `dimension.mean` will be `undefined`, which is sorted last.
 const isDefined = function (median) {
   return median !== undefined
 }
 
-// Add speed rank within each category for each combination
-const addRank = function ({ combination, category, idName, rankName }) {
-  const rankValue = category.findIndex(({ id }) => id === combination[idName])
+// Add speed rank within each dimension for each combination
+const addRank = function ({ combination, dimension, idName, rankName }) {
+  const rankValue = dimension.findIndex(({ id }) => id === combination[idName])
   return { ...combination, [rankName]: rankValue }
 }

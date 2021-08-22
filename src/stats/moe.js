@@ -46,7 +46,7 @@ import { getTvalue } from './tvalue.js'
 // We do not report whether each combinations pair is statistically comparable:
 //  - reporting it with some symbol on combination names does not work well:
 //     - when combination name is graphically spread, e.g. when the reporter
-//       is splitting categories as a table
+//       is splitting dimensions as a table
 //     - one combination might be equivalent with two other combinations, but
 //       those two other combinations might not be equivalent between each
 //       other, making ordering complicated

@@ -1,4 +1,4 @@
-import { isSameCategory } from './ids.js'
+import { isSameDimension } from './ids.js'
 
 // Filter out the `resultA.combinations` that are not in `resultB`
 export const pickResultCombinations = function (resultA, resultB) {
@@ -33,6 +33,6 @@ const resultHasCombination = function ({ combinations }, combination) {
 // Return the same combination with the same identifiers
 export const getMatchingCombination = function (combinations, combination) {
   return combinations.find((combinationA) =>
-    isSameCategory(combinationA, combination),
+    isSameDimension(combinationA, combination),
   )
 }

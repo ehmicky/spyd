@@ -8,7 +8,7 @@ import { cleanObject } from '../utils/clean.js'
 import { groupBy } from '../utils/group.js'
 
 // Users can specify a `system` configuration property.
-// This is a combination category meant to compare any environment differences,
+// This is a combination dimension meant to compare any environment differences,
 // outside of spyd: hardware, OS, git branch, environment variables, etc.
 // All that information are automatically computed.
 // The `versions` are computed by runners.

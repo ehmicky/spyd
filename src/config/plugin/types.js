@@ -18,9 +18,9 @@ export const PLUGIN_TYPES = {
     modulePrefix: 'spyd-runner-',
     // Builtin plugins
     builtins: RUNNERS,
-    // Whether this is a combination's category.
+    // Whether this is a combination's dimension.
     // When false, this allows using custom prefixes.
-    isCombinationCategory: true,
+    isCombinationDimension: true,
   },
   reporter: {
     type: 'reporter',
@@ -39,7 +39,7 @@ export const PLUGIN_TYPES = {
     ],
     modulePrefix: 'spyd-reporter-',
     builtins: REPORTERS,
-    isCombinationCategory: false,
+    isCombinationDimension: false,
   },
 }
 export const PLUGIN_TYPES_ARRAY = Object.values(PLUGIN_TYPES)

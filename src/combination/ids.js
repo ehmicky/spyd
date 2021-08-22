@@ -1,9 +1,9 @@
 import { titleColor, noteColor } from '../report/utils/colors.js'
 
 import {
-  COMBINATION_CATEGORIES,
-  NON_COMBINATION_CATEGORY,
-} from './categories.js'
+  COMBINATION_DIMENSIONS,
+  N_COMBINATION_DIMENSIONS,
+} from './dimensions.js'
 
 // Retrieve user-defined identifiers: tasks, systems, variations, inputs
 // They are checked for allowed characters.
@@ -15,14 +15,14 @@ export const getUserIds = function (combinations, inputs) {
   return userIds
 }
 
-const isUserId = function ({ category }) {
-  return USER_ID_CATEGORIES.has(category)
+const isUserId = function ({ dimension }) {
+  return USER_ID_DIMENSIONS.has(dimension)
 }
 
-const USER_ID_CATEGORIES = new Set(['task', 'system', 'input'])
+const USER_ID_DIMENSIONS = new Set(['task', 'system', 'input'])
 
-export const isSameCategory = function (combinationA, combinationB) {
-  return COMBINATION_CATEGORIES.every(
+export const isSameDimension = function (combinationA, combinationB) {
+  return COMBINATION_DIMENSIONS.every(
     ({ idName }) => combinationA[idName] === combinationB[idName],
   )
 }
@@ -30,7 +30,7 @@ export const isSameCategory = function (combinationA, combinationB) {
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
-  return combinations.flatMap(getIdInfos).filter(isNotSameCatDuplicate)
+  return combinations.flatMap(getIdInfos).filter(isNotSameDimDuplicate)
 }
 
 // Same but for a single combination
@@ -39,12 +39,12 @@ export const getCombinationIds = function (combination) {
 }
 
 export const getCombinationName = function (combination) {
-  return getIdInfos(combination).map(getCategoryName).join(noteColor(', '))
+  return getIdInfos(combination).map(getDimensionName).join(noteColor(', '))
 }
 
-const getCategoryName = function ({ category, id }, index) {
-  const categoryA = index === 0 ? titleize(category) : category
-  return `${noteColor(categoryA)} ${titleColor(id)}`
+const getDimensionName = function ({ dimension, id }, index) {
+  const dimensionA = index === 0 ? titleize(dimension) : dimension
+  return `${noteColor(dimensionA)} ${titleColor(id)}`
 }
 
 const titleize = function (string) {
@@ -52,34 +52,34 @@ const titleize = function (string) {
 }
 
 const getIdInfos = function (combination) {
-  return COMBINATION_CATEGORIES.map(getIdInfo.bind(undefined, combination))
+  return COMBINATION_DIMENSIONS.map(getIdInfo.bind(undefined, combination))
 }
 
-const getIdInfo = function (combination, { category, idName }) {
+const getIdInfo = function (combination, { dimension, idName }) {
   const id = combination[idName]
-  return { category, id }
+  return { dimension, id }
 }
 
 const getId = function ({ id }) {
   return id
 }
 
-// Remove duplicate ids with the same category, since this happens due to the
+// Remove duplicate ids with the same dimension, since this happens due to the
 // cartesian product.
-// Duplicate ids with a different category are validated later.
-const isNotSameCatDuplicate = function ({ category, id }, index, idInfos) {
+// Duplicate ids with a different dimension are validated later.
+const isNotSameDimDuplicate = function ({ dimension, id }, index, idInfos) {
   return !idInfos
     .slice(index + 1)
-    .some((idInfo) => idInfo.category === category && idInfo.id === id)
+    .some((idInfo) => idInfo.dimension === dimension && idInfo.id === id)
 }
 
 // Retrieve non-combination identifiers.
 const getNonCombinationsIds = function (inputs) {
-  return NON_COMBINATION_CATEGORY.flatMap(
+  return N_COMBINATION_DIMENSIONS.flatMap(
     getNonCombinationIds.bind(undefined, inputs),
   )
 }
 
-const getNonCombinationIds = function (inputs, { category, getIds }) {
-  return getIds(inputs).map((id) => ({ category, id }))
+const getNonCombinationIds = function (inputs, { dimension, getIds }) {
+  return getIds(inputs).map((id) => ({ dimension, id }))
 }

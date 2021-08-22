@@ -10,7 +10,7 @@ import { findIndexReverse } from '../utils/find.js'
 //  - This leads to: [not]((id or ...) and (otherId or ...) and ...) or ...
 // This logic:
 //  - Is expressive enough to allow selecting any sets of combinations,
-//    regardless of the number of categories
+//    regardless of the number of dimensions
 //  - While still have a small number of complexity, only: list of identifiers,
 //    "not" and top-level array.
 //  - Avoids punctuation or hard-to-remember syntax
@@ -21,9 +21,9 @@ import { findIndexReverse } from '../utils/find.js'
 //  - While this adds complexity, this removes the need for having two
 //    different syntax tokens to express both inversion (of a single identifier)
 //    and exclusion (of a selector), which would be required otherwise to be
-//    able the following cases, for example, assuming two categories going from
+//    able the following cases, for example, assuming two dimensions going from
 //    a-z and 0-99:
-//     - inclusion of almost all (but not all) combinations of a category,
+//     - inclusion of almost all (but not all) combinations of a dimension,
 //       e.g. include a1-99 and b-z0
 //     - vice-versa, e.g. include all but a1-99 and b-z0
 //     - inclusion of all but specific combinations, e.g. b2 and o5

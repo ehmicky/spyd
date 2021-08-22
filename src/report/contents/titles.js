@@ -1,8 +1,8 @@
 import mapObj from 'map-obj'
 
-import { COMBINATION_CATEGORIES } from '../../combination/categories.js'
+import { COMBINATION_DIMENSIONS } from '../../combination/dimensions.js'
 
-// Allow users to rename identifiers from any combination category: tasks,
+// Allow users to rename identifiers from any combination dimension: tasks,
 // runners, systems, variations.
 // Shown only in reporters. Computed during reporting, i.e. not persisted in
 // history.
@@ -21,13 +21,13 @@ import { COMBINATION_CATEGORIES } from '../../combination/categories.js'
 export const showResultTitles = function (result, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
   const resultA = addCombinationsTitles(result, titlesA)
-  const resultB = addCategoriesTitles(resultA, titlesA)
+  const resultB = addDimensionsTitles(resultA, titlesA)
   const resultC = addSystemsTitles(resultB, titlesA)
   return resultC
 }
 
 const addCombinationsTitles = function ({ combinations, ...result }, titles) {
-  const combinationIdNames = COMBINATION_CATEGORIES.map(getIdName)
+  const combinationIdNames = COMBINATION_DIMENSIONS.map(getIdName)
   const combinationsA = combinations.map((combination) =>
     addTitles(combination, combinationIdNames, titles),
   )
@@ -38,15 +38,15 @@ const getIdName = function ({ idName }) {
   return idName
 }
 
-const addCategoriesTitles = function ({ categories, ...result }, titles) {
-  const categoriesA = mapObj(categories, (category, items) => [
-    category,
-    addCategoryTitle(category, items, titles),
+const addDimensionsTitles = function ({ dimensions, ...result }, titles) {
+  const dimensionsA = mapObj(dimensions, (dimension, items) => [
+    dimension,
+    addDimensionTitle(items, titles),
   ])
-  return { ...result, categories: categoriesA }
+  return { ...result, dimensions: dimensionsA }
 }
 
-const addCategoryTitle = function (category, items, titles) {
+const addDimensionTitle = function (items, titles) {
   return items.map((item) => addTitle(item, 'id', titles))
 }
 

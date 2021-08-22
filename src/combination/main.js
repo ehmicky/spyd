@@ -6,7 +6,7 @@ import { loadRunners } from '../tasks/load.js'
 import { fromInputsObj } from './inputs.js'
 import { validateCombinationsIds } from './validate_ids.js'
 
-// Retrieve each combination, i.e. combination of each combination category
+// Retrieve each combination, i.e. combination of each combination dimension
 export const getCombinations = async function ({
   runners,
   inputs,

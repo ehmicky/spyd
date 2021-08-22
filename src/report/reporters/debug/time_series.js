@@ -1,4 +1,4 @@
-import { isSameCategory } from '../../../combination/ids.js'
+import { isSameDimension } from '../../../combination/ids.js'
 import {
   getCombinationNameColor,
   getCombinationNameWidth,
@@ -41,7 +41,7 @@ const getColumn = function (historyResult, combinations, allCombinations) {
 
 const getCell = function (historyCombinations, combination) {
   const historyCombinationA = historyCombinations.find((historyCombination) =>
-    isSameCategory(historyCombination, combination),
+    isSameDimension(historyCombination, combination),
   )
   return historyCombinationA === undefined
     ? { pretty: '', prettyColor: '' }

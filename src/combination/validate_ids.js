@@ -5,7 +5,7 @@ import { getUserIds, getCombinationsIds } from './ids.js'
 // Validate combination identifiers.
 export const validateCombinationsIds = function (combinations, inputs) {
   const userIds = getUserIds(combinations, inputs)
-  userIds.forEach(validateCategoryIds)
+  userIds.forEach(validateDimensionIds)
 
   const combinationsIds = getCombinationsIds(combinations)
   combinationsIds.forEach(validateDuplicateId)
@@ -14,26 +14,26 @@ export const validateCombinationsIds = function (combinations, inputs) {
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.
 // Only for user-defined identifiers, not plugin-defined.
-const validateCategoryIds = function ({ category, id }) {
+const validateDimensionIds = function ({ dimension, id }) {
   if (id.trim() === '') {
     throw new UserError(
-      `Invalid ${category} "${id}": the identifier must not be empty.`,
+      `Invalid ${dimension} "${id}": the identifier must not be empty.`,
     )
   }
 
   if (id.startsWith(USER_ID_INVALID_START)) {
     throw new UserError(
-      `Invalid ${category} "${id}": the identifier must not start with a dash.`,
+      `Invalid ${dimension} "${id}": the identifier must not start with a dash.`,
     )
   }
 
   if (!USER_ID_REGEXP.test(id)) {
     throw new UserError(
-      `Invalid ${category} "${id}": the identifier must contain only letters, digits, - or _`,
+      `Invalid ${dimension} "${id}": the identifier must contain only letters, digits, - or _`,
     )
   }
 
-  validateReservedIds(id, category)
+  validateReservedIds(id, dimension)
 }
 
 // We do not allow starting with dash because of CLI flags parsing.
@@ -48,12 +48,12 @@ const USER_ID_INVALID_START = '-'
 // We forbid other characters for forward compatibility.
 const USER_ID_REGEXP = /^\w[\w-]*$/u
 
-const validateReservedIds = function (id, category) {
+const validateReservedIds = function (id, dimension) {
   const reservedIdA = RESERVED_IDS.find((reservedId) => id === reservedId)
 
   if (reservedIdA !== undefined) {
     throw new UserError(
-      `Invalid ${category} "${id}": "${id}" is a reserved word`,
+      `Invalid ${dimension} "${id}": "${id}" is a reserved word`,
     )
   }
 }
@@ -62,17 +62,17 @@ const validateReservedIds = function (id, category) {
 const RESERVED_IDS = ['not']
 
 // We validate that identifiers are unique not only within their combination
-// category but across combination categories.
+// dimension but across combination dimensions.
 // This allows specifying identifiers without specifying their combination
-// category (task, systems, runners, variations) in many places including:
+// dimension (task, systems, runners, variations) in many places including:
 // `config.titles`, `config.select`, reporting.
 // Non-combination identifiers are not checked for duplicates since they are
 // not used for selection, reporting, `config.titles`, etc.
-const validateDuplicateId = function ({ category, id }, index, allIds) {
+const validateDuplicateId = function ({ dimension, id }, index, allIds) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
   if (duplicateId !== undefined) {
-    throw new UserError(`The identifier "${id}" must not be used both as ${category} and ${duplicateId.category}.
+    throw new UserError(`The identifier "${id}" must not be used both as ${dimension} and ${duplicateId.dimension}.
 Please rename one of them.`)
   }
 }

@@ -1,32 +1,32 @@
 import { getInputIds } from './inputs.js'
 
-// Combination identifiers create a new combination category:
+// Combination identifiers create a new combination dimension:
 // tasks, systems, variations, runners.
 // They:
 //  - can be used in `select`, `limit`, etc.
 //  - are checked for duplicates
 // As opposed to non-combination identifiers: inputs.
-export const COMBINATION_CATEGORIES = [
+export const COMBINATION_DIMENSIONS = [
   {
-    category: 'task',
+    dimension: 'task',
     propName: 'tasks',
     idName: 'taskId',
     rankName: 'taskRank',
   },
   {
-    category: 'runner',
+    dimension: 'runner',
     propName: 'runners',
     idName: 'runnerId',
     rankName: 'runnerRank',
   },
   {
-    category: 'system',
+    dimension: 'system',
     propName: 'systems',
     idName: 'systemId',
     rankName: 'systemRank',
   },
 ]
 
-export const NON_COMBINATION_CATEGORY = [
-  { category: 'input', getIds: getInputIds },
+export const N_COMBINATION_DIMENSIONS = [
+  { dimension: 'input', getIds: getInputIds },
 ]

@@ -8,11 +8,11 @@ export const loadPlugins = async function ({
   type,
   modulePrefix,
   builtins,
-  isCombinationCategory,
+  isCombinationDimension,
 }) {
   return await Promise.all(
     ids.map((id) =>
-      loadPlugin({ id, type, modulePrefix, builtins, isCombinationCategory }),
+      loadPlugin({ id, type, modulePrefix, builtins, isCombinationDimension }),
     ),
   )
 }
@@ -22,9 +22,9 @@ const loadPlugin = async function ({
   type,
   modulePrefix,
   builtins,
-  isCombinationCategory,
+  isCombinationDimension,
 }) {
-  const moduleId = getModuleId(id, isCombinationCategory)
+  const moduleId = getModuleId(id, isCombinationDimension)
   const plugin = await importPlugin({ moduleId, type, modulePrefix, builtins })
   return { ...plugin, id, moduleId }
 }
@@ -37,8 +37,8 @@ const loadPlugin = async function ({
 // (e.g. runners) because those should use variations instead.
 // Since the list of plugin module names is unknown, users must indicate using
 // this by the usage of a delimiter character.
-const getModuleId = function (id, isCombinationCategory) {
-  return isCombinationCategory ? id : id.split(CUSTOM_ID_DELIMITER)[0]
+const getModuleId = function (id, isCombinationDimension) {
+  return isCombinationDimension ? id : id.split(CUSTOM_ID_DELIMITER)[0]
 }
 
 const CUSTOM_ID_DELIMITER = '_'

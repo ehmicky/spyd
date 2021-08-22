@@ -37,7 +37,7 @@ const getPluginsByType = async function (
     modulePrefix,
     builtins,
     topProps,
-    isCombinationCategory,
+    isCombinationDimension,
   },
   config,
 ) {
@@ -47,7 +47,7 @@ const getPluginsByType = async function (
     type,
     modulePrefix,
     builtins,
-    isCombinationCategory,
+    isCombinationDimension,
   })
   const pluginsA = addPluginsConfig({ plugins, config, configProp, topProps })
   validatePlugins(pluginsA, type)
