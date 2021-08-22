@@ -36,11 +36,17 @@ export const addCombinationsDiff = function (result) {
   return { ...result, combinations }
 }
 
+// `median` can only be `undefined` for combinations not measured yet in
+// previews.
 const addCombinationDiff = function (
   combination,
   { combinations: previousCombinations },
   afterSince,
 ) {
+  if (combination.stats.median === undefined) {
+    return combination
+  }
+
   const previousCombinationA = getMatchingCombination(
     previousCombinations,
     combination,
@@ -66,7 +72,6 @@ const shouldAddDiff = function (previousCombination, afterSince) {
   )
 }
 
-// `median` can be `undefined` during preview
 // `isDiffPrecise` is whether `diff` is statistically significant.
 //   - We set `diffPrecise: true` when this happens which results in:
 //      - `limit` not being used
@@ -76,10 +81,6 @@ const shouldAddDiff = function (previousCombination, afterSince) {
 //      - think it is due to a bug
 //      - compute the diff themselves anyway
 const getDiff = function (stats, previousStats) {
-  if (stats.median === undefined) {
-    return {}
-  }
-
   const diff = stats.median / previousStats.median - 1
   const diffPrecise = isDiffPrecise(stats, previousStats)
   return { diff, diffPrecise }
