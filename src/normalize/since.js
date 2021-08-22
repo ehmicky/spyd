@@ -1,6 +1,10 @@
 import { findByDelta } from '../delta/main.js'
 
-import { mergeResults, mergeFilteredResults, mergeResult } from './merge.js'
+import {
+  mergeResults,
+  mergeFilteredResults,
+  mergeMergedResult,
+} from './merge.js'
 
 // The `since` configuration property is used to:
 //  - Limit the number of results shown in `result.history` which is used with
@@ -82,5 +86,5 @@ export const mergeHistoryResult = function (result, { mergedResult, history }) {
   const resultA = { ...result, history: [...history, result] }
   return mergedResult === undefined
     ? resultA
-    : mergeResult(resultA, mergedResult)
+    : mergeMergedResult(resultA, mergedResult)
 }

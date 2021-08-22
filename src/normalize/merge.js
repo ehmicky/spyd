@@ -2,7 +2,7 @@ import {
   pickResultCombinations,
   removeResultCombinations,
 } from '../combination/result.js'
-import { mergeResultsSystems } from '../system/merge.js'
+import { mergeSystems } from '../system/merge.js'
 
 // The `since` configuration property allows reporting several reports at once:
 //  - This reports the most recent combination of each sets of dimensions
@@ -29,7 +29,7 @@ import { mergeResultsSystems } from '../system/merge.js'
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
 export const mergeResults = function (result, previous) {
-  return previous.reduceRight(mergeResult, result)
+  return previous.reduceRight(mergePreviousResult, result)
 }
 
 // Merge `previous` results to `result`, but only the combinations that exist
@@ -51,7 +51,7 @@ const mergeFilteredResult = function (baseResult, result, previousResult) {
   }
 
   const previousResultA = pickResultCombinations(previousResult, baseResult)
-  return mergeResult(result, previousResultA)
+  return mergePreviousResult(result, previousResultA)
 }
 
 // When merging two results, we keep most of the properties of the latest
@@ -61,20 +61,26 @@ const mergeFilteredResult = function (baseResult, result, previousResult) {
 // We only merge results when there are some matching combinations
 //  - For example, `result.systems` should only show systems from combinations
 //    that have been merged, i.e. that are reported
-export const mergeResult = function (result, previousResult) {
+const mergePreviousResult = function (result, previousResult) {
+  const { result: resultA, previousCombinations } = mergeResult(
+    result,
+    previousResult,
+  )
+  return previousCombinations.length === 0
+    ? resultA
+    : mergeSystems(resultA, previousResult)
+}
+
+export const mergeMergedResult = function (result, mergedResult) {
+  const { result: resultA } = mergeResult(result, mergedResult)
+  return resultA
+}
+
+const mergeResult = function (result, previousResult) {
   const previousCombinations = removeResultCombinations(
     previousResult.combinations,
     result,
   )
-
-  if (previousCombinations.length === 0) {
-    return result
-  }
-
-  const resultA = {
-    ...result,
-    combinations: [...result.combinations, ...previousCombinations],
-  }
-  const resultB = mergeResultsSystems(resultA, previousResult)
-  return resultB
+  const combinations = [...result.combinations, ...previousCombinations]
+  return { result: { ...result, combinations }, previousCombinations }
 }

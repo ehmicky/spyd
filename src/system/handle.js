@@ -5,14 +5,17 @@ import { FORMATS } from '../report/formats/list.js'
 import { serializeFooter } from './serialize.js'
 import { addSharedSystem } from './shared.js'
 
-export const addFooters = function (
-  { id, timestamp, systems, ...result },
+// TODO: remove id|timestamp|systems from reported result object
+export const addFooters = function ({
+  result,
+  result: { id, timestamp },
+  historyResult: { mergedResult: { systems } = result },
   config,
-) {
+}) {
   const reporters = config.reporters.map((reporter) =>
     addFooter({ id, timestamp, systems, reporter }, config),
   )
-  return { result, config: { ...config, reporters } }
+  return { ...config, reporters }
 }
 
 const addFooter = function (

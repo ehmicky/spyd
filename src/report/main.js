@@ -40,7 +40,8 @@ export const reportStart = async function (result, previous, config) {
     applySince(result, previous, config),
     startReporters(config),
   ])
-  return { historyResult, config: configA }
+  const configB = addFooters({ result, historyResult, config: configA })
+  return { historyResult, config: configB }
 }
 
 // Report preview results in `run` command.
@@ -55,13 +56,9 @@ export const reportPreview = async function (result, historyResult, config) {
 
 // Compute the report contents
 export const reportCompute = async function (result, historyResult, config) {
-  const { result: resultA, config: configA } = addFooters(
-    historyResult.mergedResult,
-    config,
-  )
-  const resultB = mergeHistoryResult(resultA, historyResult)
-  const resultC = normalizeReportedResult(resultB)
-  const { programmaticResult, contents } = await getContents(resultC, configA)
+  const resultA = mergeHistoryResult(result, historyResult)
+  const resultB = normalizeReportedResult(resultA)
+  const { programmaticResult, contents } = await getContents(resultB, config)
   return { programmaticResult, contents }
 }
 
