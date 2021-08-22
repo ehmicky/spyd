@@ -1,6 +1,6 @@
 import omit from 'omit.js'
 
-import { normalizeReporters } from '../../report/normalize.js'
+import { normalizeReporters } from '../../report/config.js'
 
 import { addPluginsConfig } from './config.js'
 import { loadPlugins } from './load.js'
