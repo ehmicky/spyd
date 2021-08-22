@@ -76,14 +76,11 @@ const shouldAddDiff = function (previousCombination, afterSince) {
 //      - think it is due to a bug
 //      - compute the diff themselves anyway
 const getDiff = function (stats, previousStats) {
-  const { median } = stats
-  const { median: previousMedian } = previousStats
-
-  if (median === undefined || median === 0 || previousMedian === 0) {
+  if (stats.median === undefined) {
     return {}
   }
 
-  const diff = median / previousMedian - 1
+  const diff = stats.median / previousStats.median - 1
   const diffPrecise = isDiffPrecise(stats, previousStats)
   return { diff, diffPrecise }
 }
