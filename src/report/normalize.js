@@ -1,6 +1,7 @@
 import { groupDimensionInfos } from '../combination/group.js'
 import { sortCombinations } from '../combination/sort.js'
 import { addCombinationsDiff } from '../compare/diff.js'
+import { addFooter } from '../system/footer.js'
 
 import { mergeHistory } from './since.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
@@ -39,11 +40,16 @@ const normalizeHistoryEach = function (history, reporter) {
 // `combinations` since this is applied before measuring and history merging
 // have been performed.
 // This is only computed once at the beginning of the command.
-export const normalizeTargetResult = function (result, config) {
+export const normalizeTargetResult = function (result, historyResult, config) {
   const resultA = addSizeInfo(result)
   const resultB = normalizeNonCombAll(resultA)
   const reporters = config.reporters.map((reporter) =>
-    normalizeTargetResEach(resultB, reporter),
+    normalizeTargetResEach({
+      result: resultB,
+      historyResult,
+      reporter,
+      config,
+    }),
   )
   return { result: resultB, config: { ...config, reporters } }
 }
@@ -51,9 +57,15 @@ export const normalizeTargetResult = function (result, config) {
 // Add report-specific properties to the target result that are not
 // `combinations` related but are reporter-specific.
 // This is saved to `reporter.resultProps` and merged later.
-const normalizeTargetResEach = function (result, reporter) {
+const normalizeTargetResEach = function ({
+  result,
+  historyResult,
+  reporter,
+  config,
+}) {
   const resultProps = normalizeNonCombEach(result, reporter)
-  return { ...reporter, resultProps }
+  const reporterA = addFooter({ result, historyResult, reporter, config })
+  return { ...reporterA, resultProps }
 }
 
 // Add report-specific properties to the target result, but only for

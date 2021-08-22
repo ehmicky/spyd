@@ -6,31 +6,16 @@ import { serializeFooter } from './serialize.js'
 import { addSharedSystem } from './shared.js'
 
 // Add each `reporter.footer`
-export const addFooters = function ({
-  result: { id, timestamp },
-  result: { system, ...result },
+export const addFooter = function ({
+  result: { id, timestamp, system },
   historyResult: { systems = [system] } = {},
-  config,
-}) {
-  const reporters = config.reporters.map((reporter) =>
-    addFooter({ id, timestamp, systems, reporter }, config),
-  )
-  return { result, config: { ...config, reporters } }
-}
-
-const addFooter = function (
-  {
-    id,
-    timestamp,
-    systems,
-    reporter,
-    reporter: {
-      format,
-      config: { showTitles, showMetadata, showSystem },
-    },
+  reporter,
+  reporter: {
+    format,
+    config: { showTitles, showMetadata, showSystem },
   },
-  { titles },
-) {
+  config: { titles },
+}) {
   const footer = { id, timestamp, systems }
   const footerA = addFooterTitles(footer, titles, showTitles)
   const footerB = omitFooterProps(footerA, showMetadata, showSystem)

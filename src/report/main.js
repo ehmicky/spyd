@@ -1,5 +1,3 @@
-import { addFooters } from '../system/footer.js'
-
 import { getContents, finalizeContents } from './contents/main.js'
 import {
   normalizeHistory,
@@ -47,14 +45,10 @@ export const reportStart = async function (result, previous, config) {
   const configB = normalizeHistory(history, configA)
   const { result: resultA, config: configC } = normalizeTargetResult(
     result,
+    historyResult,
     configB,
   )
-  const { result: resultB, config: configD } = addFooters({
-    result: resultA,
-    historyResult,
-    config: configC,
-  })
-  return { result: resultB, historyResult, config: configD }
+  return { result: resultA, historyResult, config: configC }
 }
 
 // Report preview results in `run` command.
