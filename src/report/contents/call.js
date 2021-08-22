@@ -35,8 +35,7 @@ export const callReportFunc = async function ({
 }
 
 // Normalize the `result` passed to `reporter.report()`
-// Also used for the programmatic result
-export const getReportResult = function ({
+const getReportResult = function ({
   result,
   titles,
   reporter: {

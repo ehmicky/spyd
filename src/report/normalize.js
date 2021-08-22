@@ -1,4 +1,5 @@
 import { detectFormat } from './formats/detect.js'
+import { addProgrammaticReporter } from './programmatic.js'
 import { isTtyOutput } from './tty.js'
 import { validateOutputGroups } from './validate.js'
 
@@ -9,7 +10,8 @@ export const normalizeReporters = function (config, command) {
     .filter((reporter) => shouldUseReporter(reporter, command))
     .map(addDefaultReporterConfig)
   validateOutputGroups(reporters)
-  return { ...config, reporters }
+  const reportersA = addProgrammaticReporter(reporters)
+  return { ...config, reporters: reportersA }
 }
 
 const addOutput = function (reporter) {
