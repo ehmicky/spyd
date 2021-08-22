@@ -25,8 +25,9 @@ const reportTerminal = function ({ combinations, screenWidth, history }) {
 const getTables = function (combinations, screenWidth) {
   const columns = getColumns(combinations)
 
+  // When no stats are available
   if (columns.length === 0) {
-    return getEmptyTables(combinations)
+    return [getTable(combinations, [], 0)]
   }
 
   const columnWidth = getColumnWidth(combinations, columns)
@@ -40,16 +41,6 @@ const getTables = function (combinations, screenWidth) {
     getTable(combinations, columnsA, columnWidth),
   )
 }
-
-// When no stats are available
-const getEmptyTables = function (combinations) {
-  const rows = getRows(combinations, [], 0)
-  const table = `${NON_TRIMMABLE_SPACE}\n${rows}`
-  return [table]
-}
-
-// Keep space for the header to avoid jitter due to trimming, while still
-const NON_TRIMMABLE_SPACE = '\u200B'
 
 const getTable = function (combinations, columns, columnWidth) {
   const header = getHeader(combinations, columns, columnWidth)

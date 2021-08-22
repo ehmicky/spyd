@@ -5,12 +5,19 @@ import { STAT_TITLES } from '../../utils/stat_titles.js'
 
 // Retrieve the header row
 export const getHeader = function ([combination], columns, columnWidth) {
+  if (columns.length === 0) {
+    return NON_TRIMMABLE_SPACE
+  }
+
   const combinationNamePadding = ' '.repeat(
     getCombinationNameWidth(combination),
   )
   const headerCells = getHeaderCells(columns, columnWidth)
   return `${combinationNamePadding}${headerCells}`
 }
+
+// Keep space for the header to avoid jitter due to trimming, while still
+const NON_TRIMMABLE_SPACE = '\u200B'
 
 const getHeaderCells = function (columns, columnWidth) {
   return columns
