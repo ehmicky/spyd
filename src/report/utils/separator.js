@@ -1,7 +1,7 @@
 import { separatorColor } from './colors.js'
 
 // Separator between columns
-// Works with all terminals
+// Works on all terminals
 const COLUMN_SEPARATOR_SIGN = '\u2502'
 const COLUMN_PADDING_WIDTH = 1
 const COLUMN_PADDING = ' '.repeat(COLUMN_PADDING_WIDTH)
