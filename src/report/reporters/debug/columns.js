@@ -48,9 +48,7 @@ const getStatColumnWidth = function (combinations, column) {
 }
 
 const getAnyCombinationColumn = function (combinations, column) {
-  return combinations
-    .map((combination) => combination.stats[column])
-    .find(Boolean)
+  return combinations.map(({ stats }) => stats[column]).find(Boolean)
 }
 
 export const getAllColumns = function ({
