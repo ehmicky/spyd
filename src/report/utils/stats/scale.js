@@ -1,7 +1,7 @@
 // Divide stats by a scale so they don't show too many digits nor decimals.
 export const getScale = function (allCombinations, name, kind) {
   const measures = allCombinations
-    .map((combination) => getMeasure(name, combination, kind))
+    .map((combination) => getMeasure(name, kind, combination))
     .filter(isNotEmpty)
 
   if (measures.length === 0) {
@@ -25,29 +25,29 @@ export const getScale = function (allCombinations, name, kind) {
 // `medianMin` is `undefined` when number of loops is low
 const getMeasure = function (
   name,
-  { stats: { [name]: stat, median = {}, medianMin = {}, mean = {} } },
   kind,
+  { stats: { [name]: stat, median, medianMin, mean } },
 ) {
   if (!MEDIAN_KINDS.has(kind)) {
-    return stat.raw
+    return stat
   }
 
-  if (median.raw !== undefined) {
-    return median.raw
+  if (median !== undefined) {
+    return median
   }
 
-  if (medianMin.raw !== undefined) {
-    return medianMin.raw
+  if (medianMin !== undefined) {
+    return medianMin
   }
 
-  return mean.raw
+  return mean
 }
 
 const MEDIAN_KINDS = new Set(['duration'])
 
 // Zero measures sometimes indicate a problem with the measure, so are not
 // good indicators for scales.
-// `undefined` happens in preview mode if not-measured-yet.
+// `undefined` happens when there was not enough measures.
 const isNotEmpty = function (measure) {
   return measure !== 0 && measure !== undefined
 }

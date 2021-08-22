@@ -1,5 +1,5 @@
 import { addStatColor } from './colors.js'
-import { getStatKinds } from './kinds.js'
+import { STAT_KINDS } from './kinds.js'
 import { addStatPadded } from './padding.js'
 import { addStatsPretty } from './prettify.js'
 
@@ -15,29 +15,11 @@ export const prettifyStats = function (
   combinations,
   allCombinations = combinations,
 ) {
-  const statKinds = getStatKinds(combinations)
-  const combinationsA = addCombinationsStatsRaw(combinations, statKinds)
-  const allCombinationsA = addCombinationsStatsRaw(allCombinations, statKinds)
-  return statKinds.reduce(
-    (combinationsB, statKind) =>
-      prettifyCombinationsStat(statKind, combinationsB, allCombinationsA),
-    combinationsA,
+  return STAT_KINDS.reduce(
+    (combinationsA, statKind) =>
+      prettifyCombinationsStat(statKind, combinationsA, allCombinations),
+    combinations,
   )
-}
-
-// Replace `stats.*` string to an object with single property `raw`.
-// This allows adding more properties alongside it: `pretty`, `padded`, etc.
-const addCombinationsStatsRaw = function (combinations, statKinds) {
-  return combinations.map((combination) =>
-    statKinds.reduce(addStatRaw, combination),
-  )
-}
-
-const addStatRaw = function (combination, { name }) {
-  return {
-    ...combination,
-    stats: { ...combination.stats, [name]: { raw: combination.stats[name] } },
-  }
 }
 
 const prettifyCombinationsStat = function (

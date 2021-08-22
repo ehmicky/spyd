@@ -11,7 +11,8 @@ export const addStatPadded = function (combinations, name) {
 // Retrieve the maximum length of any measures for each stat
 const getPadding = function (combinations, name) {
   const statLengths = combinations
-    .flatMap(({ stats }) => stats[name].pretty)
+    .flatMap(({ stats }) => stats[name])
+    .filter(Boolean)
     .map(getLength)
 
   if (statLengths.length === 0) {
@@ -21,8 +22,8 @@ const getPadding = function (combinations, name) {
   return Math.max(...statLengths)
 }
 
-const getLength = function ({ length }) {
-  return length
+const getLength = function ({ pretty }) {
+  return pretty.length
 }
 
 const addItemsPadded = function ({
@@ -30,13 +31,15 @@ const addItemsPadded = function ({
   combination,
   combination: {
     stats,
-    stats: {
-      [name]: stat,
-      [name]: { pretty },
-    },
+    stats: { [name]: stat },
   },
   padding,
 }) {
+  if (stat === undefined) {
+    return combination
+  }
+
+  const { pretty } = stat
   const prettyPadded = Array.isArray(pretty)
     ? pretty.map((item) => item.padStart(padding))
     : pretty.padStart(padding)

@@ -5,7 +5,7 @@
 // When every measure is an integer, no decimals are needed.
 export const getStatsDecimals = function (combinations, name, scale) {
   const measures = combinations
-    .flatMap(({ stats }) => stats[name].raw)
+    .flatMap(({ stats }) => stats[name])
     .filter(isDefined)
     .map((measure) => Math.abs(measure) / scale)
 
@@ -17,7 +17,7 @@ export const getStatsDecimals = function (combinations, name, scale) {
   return getDecimals(minMeasure)
 }
 
-// `undefined` happens in preview mode if not-measured-yet.
+// `undefined` happens when there was not enough measures.
 const isDefined = function (measure) {
   return measure !== undefined
 }

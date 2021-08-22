@@ -20,44 +20,37 @@ export const addStatsPretty = function ({
   )
 }
 
+// Some `stats` might be `undefined` for:
+//  - all combinations when:
+//     - `debugStats` is `false` (for many stats)
+//     - `showPrecision` is `false` or `true` (for `median[Min|Max]`)
+//     - `showDiff` is `false` or there is nothing to diff (for `diff`)
+//  - some combinations when:
+//     - `median` is `0` or there are only a few measures
+//       (for all the precision-based stats like `stdev`)
+// Additionally, at the beginning of the preview, all `stats` are `undefined`
 const addStatPretty = function ({
   name,
   combination,
   combination: {
     stats,
-    stats: {
-      [name]: stat,
-      [name]: { raw },
-    },
+    stats: { [name]: raw },
   },
   signed,
   scale,
   unit,
   decimals,
 }) {
-  const pretty = addItemsPretty({ raw, signed, scale, unit, decimals, stats })
-  return { ...combination, stats: { ...stats, [name]: { ...stat, pretty } } }
-}
-
-// Statistics are not shown if undefined (e.g. `diff` with no previous results,
-// or not-measure-yet in preview)
-const addItemsPretty = function ({
-  raw,
-  signed,
-  scale,
-  unit,
-  decimals,
-  stats,
-}) {
   if (raw === undefined) {
-    return ''
+    return combination
   }
 
-  return Array.isArray(raw)
+  const pretty = Array.isArray(raw)
     ? raw.map((item) =>
         addItemPretty({ raw: item, signed, scale, unit, decimals, stats }),
       )
     : addItemPretty({ raw, signed, scale, unit, decimals, stats })
+  return { ...combination, stats: { ...stats, [name]: { raw, pretty } } }
 }
 
 const addItemPretty = function ({ raw, signed, scale, unit, decimals, stats }) {

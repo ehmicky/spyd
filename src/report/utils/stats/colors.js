@@ -6,12 +6,14 @@ export const addStatColor = function ({
   combination,
   combination: {
     stats,
-    stats: {
-      [name]: stat,
-      [name]: { raw, pretty, prettyPadded },
-    },
+    stats: { [name]: stat },
   },
 }) {
+  if (stat === undefined) {
+    return combination
+  }
+
+  const { raw, pretty, prettyPadded } = stat
   const prettyColor = addItemsColor(pretty, { raw, name, stats })
   const prettyPaddedColor = addItemsColor(prettyPadded, { raw, name, stats })
   return {
