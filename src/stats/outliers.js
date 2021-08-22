@@ -21,15 +21,16 @@ export const getOutliersStats = function (measures) {
   return { minIndex, maxIndex, length, min, max }
 }
 
-// `Math.round()` rounds towards +Inf, which is what we want:
+// `Math.round()` rounds towards +Inf:
+//  - This makes outliers removal start twice faster. For example, with 5%
+//    outliers on each end, this starts after 10 loops, not 20.
+// We remove 1 from `loops` when computing the number of max outliers:
 //  - This ensures both low and high outliers are not removed at the same time,
 //    which would mean adding one `measure` could potentially remove one from
 //    `length`
-//  - This makes outliers removal start twice faster. For example, with 5%
-//    outliers on each end, this starts after 10 loops, not 20.
 export const getLengthFromLoops = function (loops) {
-  const minIndex = Math.round((loops - 1) * MIN_OUTLIERS)
-  const maxIndex = Math.round((loops - 1) * MAX_OUTLIERS)
+  const minIndex = Math.round(loops * MIN_OUTLIERS)
+  const maxIndex = loops - 1 - Math.round((loops - 1) * MAX_OUTLIERS)
   const length = maxIndex - minIndex + 1
   return { minIndex, maxIndex, length }
 }
@@ -38,7 +39,7 @@ export const getLengthFromLoops = function (loops) {
 // `length`. Due to the use of multiple `Math.round()`, the result might be
 // 1 lower|higher than the actual result.
 export const getLoopsFromLength = function (length) {
-  return Math.round(length / (MAX_OUTLIERS - MIN_OUTLIERS)) - 1
+  return Math.round(length / (1 - MAX_OUTLIERS - MIN_OUTLIERS))
 }
 
 // A higher value makes histograms give less information about very low/high
@@ -48,4 +49,4 @@ export const getLoopsFromLength = function (length) {
 const MIN_OUTLIERS = 0.05
 // Having the same percentage for slow/fast outliers ensures the `median`
 // remains the same.
-const MAX_OUTLIERS = 1 - MIN_OUTLIERS
+const MAX_OUTLIERS = MIN_OUTLIERS
