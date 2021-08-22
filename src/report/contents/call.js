@@ -92,8 +92,8 @@ const getReportResult = function ({
   debugStats,
   keepFooter,
 }) {
-  const resultA = addResultTitles(result, titles, showTitles)
-  const resultB = serializeFooter(resultA, titles, showTitles)
+  const resultA = serializeFooter(result, titles, showTitles)
+  const resultB = addResultTitles(resultA, titles, showTitles)
   const resultC = omitResultProps(resultB, {
     showSystem,
     showMetadata,
