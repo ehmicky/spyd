@@ -45,8 +45,15 @@ const getMeasure = function (
 
 const MEDIAN_KINDS = new Set(['duration'])
 
-// Zero measures sometimes indicate a problem with the measure, so are not
-// good indicators for scales.
+// Some measures might be `0`:
+//  - `medianMin` when the confidence interval is large
+//  - `diff` and `rmoe|rstdev` although this is very unlikely
+// The following measures cannot be `0`:
+//  - `median|times|loops|samples` since we do not report then
+//  - `mean` since it cannot be `0` if `median` is not
+//  - `repeat`
+// We do not use `0` measures here since they are not a good indicator of
+// minimum precision for scales.
 // `undefined` happens when there was not enough measures.
 const isNotEmpty = function (measure) {
   return measure !== 0 && measure !== undefined
