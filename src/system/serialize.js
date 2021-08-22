@@ -6,7 +6,11 @@ import { serializeGit, serializePr } from './git.js'
 
 // Serialize info|system-related information as a `footer` for reporters
 export const serializeFooter = function ({ id, timestamp, systems }) {
-  return [...systems.map(serializeSystem), ...serializeMetadata(id, timestamp)]
+  const footer = [
+    ...systems.map(serializeSystem),
+    ...serializeMetadata(id, timestamp),
+  ]
+  return cleanFooter(footer)
 }
 
 const serializeSystem = function ({
@@ -46,4 +50,16 @@ const serializeMetadata = function (id, timestamp) {
 
   const timestampString = new Date(timestamp).toLocaleString()
   return [{ fields: { Id: id, Timestamp: timestampString } }]
+}
+
+const cleanFooter = function (footer) {
+  return footer.filter(hasFields).map(normalizeDepth)
+}
+
+const hasFields = function ({ fields }) {
+  return Object.keys(fields).length !== 0
+}
+
+const normalizeDepth = function ({ title, fields }) {
+  return title === undefined ? fields : { [title]: fields }
 }
