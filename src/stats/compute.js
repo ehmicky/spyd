@@ -36,8 +36,7 @@ export const computeStats = function (measures) {
   const quantiles = getQuantiles(measures, QUANTILES_SIZE)
   const mean = getMean(measures, { minIndex, maxIndex })
 
-  const histogram = getHistogram({
-    array: measures,
+  const histogram = getHistogram(measures, {
     minIndex,
     maxIndex,
     length,
@@ -88,13 +87,7 @@ const getPrecisionStats = function ({
     return {}
   }
 
-  const stdev = getStdev({
-    array: measures,
-    minIndex,
-    maxIndex,
-    length,
-    median,
-  })
+  const stdev = getStdev(measures, { minIndex, maxIndex, length, median })
   const rstdev = getRstdev(stdev, median)
   const moe = getMoe(stdev, length)
   const rmoe = getRmoe(moe, median)

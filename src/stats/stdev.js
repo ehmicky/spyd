@@ -10,13 +10,10 @@
 //       (that are also not percentages)
 //  - On the flipside, it makes it harder to compare combinations (since they
 //    most likely have different medians)
-export const getStdev = function ({
+export const getStdev = function (
   array,
-  minIndex,
-  maxIndex,
-  length,
-  median,
-}) {
+  { minIndex, maxIndex, length, median },
+) {
   const variance =
     getSumDeviation({ array, minIndex, maxIndex, median }) / (length - 1)
   return Math.sqrt(variance)
