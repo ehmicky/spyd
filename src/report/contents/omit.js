@@ -1,36 +1,27 @@
 import omit from 'omit.js'
 
-import { METADATA_SYSTEM_PROPS, MACHINE_PROPS } from '../../system/serialize.js'
-
 // Omit some result properties unless some reporterConfig properties are
 // passed. Those all start with `show*`. We use one boolean configuration
 // property for each instead of a single array configuration property because it
 // makes it easier to enable/disable each property both in CLI flags and in
 // `reporterConfig.{reporterId}.*` properties.
 export const omitFooterProps = function (footer, showMetadata, showSystem) {
-  return footer.map((footerGroup) =>
-    omitFooterGroupProps(footerGroup, showMetadata, showSystem),
+  const footerA = maybeOmit(footer, showMetadata, METADATA_FOOTER_PROPS)
+  const systems = footerA.systems.map((system) =>
+    omitSystemProps(system, showMetadata, showSystem),
   )
+  return { ...footerA, systems }
 }
 
-const omitFooterGroupProps = function (
-  { title, fields },
-  showMetadata,
-  showSystem,
-) {
-  const fieldsA = maybeOmit(fields, showMetadata, METADATA_SYSTEM_PROPS)
-  const fieldsB = maybeOmit(fieldsA, showSystem, MACHINE_PROPS)
-  const versionProps = Object.keys(fieldsB).filter(isVersionProp)
-  const fieldsC = maybeOmit(fieldsB, showSystem, versionProps)
-  return { title, fields: fieldsC }
+const omitSystemProps = function (system, showMetadata, showSystem) {
+  const systemA = maybeOmit(system, showMetadata, METADATA_SYSTEM_PROPS)
+  const systemB = maybeOmit(systemA, showSystem, MAIN_SYSTEM_PROPS)
+  return systemB
 }
 
-const isVersionProp = function (fieldName) {
-  return (
-    !METADATA_SYSTEM_PROPS.includes(fieldName) &&
-    !MACHINE_PROPS.includes(fieldName)
-  )
-}
+const METADATA_FOOTER_PROPS = ['id', 'timestamp']
+const METADATA_SYSTEM_PROPS = ['git', 'ci']
+const MAIN_SYSTEM_PROPS = ['machine', 'versions']
 
 export const omitResultProps = function (
   { combinations, ...result },

@@ -14,8 +14,8 @@ export const handleFooter = function ({
 }) {
   const { result: resultA, footer } = initFooter(result)
   const footerA = addFooterTitles(footer, titles, showTitles)
-  const footerB = serializeFooter(footerA, titles, showTitles)
-  const footerC = omitFooterProps(footerB, showMetadata, showSystem)
+  const footerB = omitFooterProps(footerA, showMetadata, showSystem)
+  const footerC = serializeFooter(footerB, titles, showTitles)
   const footerD = cleanFooter(footerC)
   const resultB = addFooter(resultA, footerD, format)
   const footerE = stringifyFooter(footerD, format)
