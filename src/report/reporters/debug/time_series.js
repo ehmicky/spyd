@@ -54,24 +54,19 @@ const getCell = function (historyCombinations, combination) {
   } = historyCombinationA
 
   // `showPrecision` is `false`
-  if (combination.stats.median !== undefined) {
+  if (combination.stats.medianMin === undefined) {
     return median
   }
 
-  // Inital preview report
-  if (combination.stats.medianMin === undefined) {
+  // Due to not enough measures
+  if (medianMin === undefined) {
     return { pretty: '', prettyColor: '' }
   }
 
-  // Due to not enough measures
-  if (medianMin !== undefined) {
-    return {
-      pretty: `${medianMin.pretty}-${medianMax.pretty}`,
-      prettyColor: `${medianMin.prettyColor}-${medianMax.prettyColor}`,
-    }
+  return {
+    pretty: `${medianMin.pretty}-${medianMax.pretty}`,
+    prettyColor: `${medianMin.prettyColor}-${medianMax.prettyColor}`,
   }
-
-  return { pretty: '', prettyColor: '' }
 }
 
 const getColumnWidth = function (columns) {

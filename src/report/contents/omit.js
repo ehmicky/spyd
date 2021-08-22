@@ -31,9 +31,31 @@ const omitCombinationProps = function (
 ) {
   const statsA = maybeOmit(stats, showDiff, DIFF_STATS_PROPS)
   const statsB = maybeOmit(statsA, showPrecision, PRECISION_STATS_PROPS)
-  const statsC = maybeOmit(statsB, !showPrecision, NO_PRECISION_STATS_PROPS)
+  const statsC = omitMedianProps(statsB, showPrecision)
   const statsD = maybeOmit(statsC, debugStats, DEBUG_STATS_PROPS)
   return { ...combination, stats: statsD }
+}
+
+// When `showPrecision` is `true`, we show `medianMin|medianMax` instead of
+// `median`. However, we fall back to `median` when those are not available due
+// to either:
+//  - `precision: 0`
+//  - Not enough measures
+// `median` might also be `undefined` when a combination has not been measured
+// yet.
+//  - This does not apply to `history.results`
+// This means reporters should assume that:
+//  - Either|both properties might be `undefined`
+//  - This might differ for combinations of the same result
+const omitMedianProps = function (
+  { median, medianMin, medianMax, ...stats },
+  showPrecision,
+) {
+  if (showPrecision && medianMin !== undefined) {
+    return { ...stats, medianMin, medianMax }
+  }
+
+  return median === undefined ? stats : { ...stats, median }
 }
 
 const maybeOmit = function (obj, showProp, propNames) {
@@ -48,8 +70,7 @@ const TOP_METADATA_PROPS = ['id', 'timestamp']
 const METADATA_SYSTEM_PROPS = ['git', 'ci']
 const SYSTEM_PROPS = ['machine', 'versions']
 const DIFF_STATS_PROPS = ['diff', 'diffPrecise']
-const PRECISION_STATS_PROPS = ['moe', 'rmoe', 'medianMin', 'medianMax']
-const NO_PRECISION_STATS_PROPS = ['median']
+const PRECISION_STATS_PROPS = ['moe', 'rmoe']
 
 // Some stats are too advanced for most reporters and are only meant for
 // debugging. Reporters must explicitly set `debugStats: true` to use those.
