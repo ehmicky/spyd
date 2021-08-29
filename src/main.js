@@ -1,4 +1,4 @@
-import { listCombinations } from './combination/list.js'
+import { listCombinations } from './combination/list/main.js'
 import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
 import { checkLimits } from './history/compare/limit.js'

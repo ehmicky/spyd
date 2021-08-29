@@ -1,4 +1,4 @@
-import { listCombinations } from '../combination/list.js'
+import { listCombinations } from '../combination/list/main.js'
 import { listHistory } from '../history/data/main.js'
 import { createSystemInfo } from '../system/create/main.js'
 

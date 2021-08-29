@@ -2,7 +2,7 @@ import { basename } from 'path'
 
 import { isNotJunk } from 'junk'
 
-import { lookupFiles } from '../config/lookup.js'
+import { lookupFiles } from '../../../config/lookup.js'
 
 import { findTasks } from './find.js'
 
