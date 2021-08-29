@@ -7,6 +7,18 @@ import { omitCombinationsProps } from './omit.js'
 import { mergeHistory } from './since.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 
+// Normalize as many properties as possible at the beginning of the reporting
+// (once) as opposed to later on (repeatedly)
+export const normalizeEarlyResult = function (result, historyInfo, config) {
+  const configA = normalizeHistory(historyInfo, config)
+  const { result: resultA, config: configB } = normalizeTargetResult(
+    result,
+    historyInfo,
+    configA,
+  )
+  return { result: resultA, config: configB }
+}
+
 // Add report-specific properties to each `history` result.
 // This is only computed once at the beginning of the command.
 export const normalizeHistory = function (
@@ -14,8 +26,8 @@ export const normalizeHistory = function (
   config,
 ) {
   const historyA = history
-    .map(normalizeHistoryAll)
     .map((result) => normalizeCombAllUnmerged(result, sinceResult))
+    .map(normalizeHistoryAll)
     .map(normalizeNonCombAll)
     .map(normalizeCombAll)
   const reporters = config.reporters.map((reporter) =>

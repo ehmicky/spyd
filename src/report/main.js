@@ -1,10 +1,6 @@
 import { getContents } from './contents.js'
 import { finalizeContents } from './finalize.js'
-import {
-  normalizeHistory,
-  normalizeTargetResult,
-  normalizeComputedResult,
-} from './normalize.js'
+import { normalizeEarlyResult, normalizeComputedResult } from './normalize.js'
 import { outputContents } from './output.js'
 import { applySince } from './since.js'
 import { startReporters, endReporters } from './start_end.js'
@@ -43,13 +39,12 @@ export const reportStart = async function (result, previous, config) {
     applySince(result, previous, config),
     startReporters(config),
   ])
-  const configB = normalizeHistory(historyInfo, configA)
-  const { result: resultA, config: configC } = normalizeTargetResult(
+  const { result: resultA, config: configB } = normalizeEarlyResult(
     result,
     historyInfo,
-    configB,
+    configA,
   )
-  return { result: resultA, historyInfo, config: configC }
+  return { result: resultA, historyInfo, config: configB }
 }
 
 // Report preview results in `run` command.
