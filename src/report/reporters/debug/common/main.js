@@ -3,7 +3,12 @@ import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 import { getAllColumns } from './columns.js'
 
-export const getTables = function (firstColumn, columns, screenWidth) {
+export const getTables = function ({
+  firstColumn,
+  columns,
+  headerHeight,
+  screenWidth,
+}) {
   const { allColumns, columnsWidth, firstColumnWidth } = getAllColumns(
     firstColumn,
     columns,

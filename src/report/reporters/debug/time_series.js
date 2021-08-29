@@ -13,7 +13,7 @@ export const getTimeSeries = function (history, combinations, screenWidth) {
   const columns = historyA.map((historyResult) =>
     getColumn(historyResult, combinations),
   )
-  return getTables(firstColumn, columns, screenWidth)
+  return getTables({ firstColumn, columns, headersHeight: 3, screenWidth })
 }
 
 // Prettify the stats of `result.history`

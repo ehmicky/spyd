@@ -9,7 +9,7 @@ import { getTables } from './common/main.js'
 export const getStatTables = function (combinations, screenWidth) {
   const firstColumn = combinations.map(getCombinationNameColor)
   const columns = getColumns(combinations)
-  return getTables(firstColumn, columns, screenWidth)
+  return getTables({ firstColumn, columns, headerHeight: 1, screenWidth })
 }
 
 // Retrieved all `stats.*` properties that are not `undefined`, for the columns.
