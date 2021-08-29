@@ -1,6 +1,6 @@
 import mapObj from 'map-obj'
 
-import { COMBINATION_DIMENSIONS } from '../combination/dimensions.js'
+import { COMBINATION_DIMENSIONS } from '../../combination/dimensions.js'
 
 // Allow users to rename identifiers from any combination dimension: tasks,
 // runners, systems, variations.
