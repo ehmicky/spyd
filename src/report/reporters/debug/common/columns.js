@@ -6,7 +6,7 @@ import { getStatLength } from './row.js'
 
 // Each column is padded to the same width, so that they align vertically
 export const getColumnWidth = function (columns) {
-  return Math.max(...columns.map((column) => getStatColumnWidth(column)))
+  return Math.max(...columns.map(getStatColumnWidth))
 }
 
 const getStatColumnWidth = function ({ cellStats, headerNames }) {
