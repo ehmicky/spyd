@@ -12,11 +12,13 @@ import { measureCombinations } from '../../../run/measure/main.js'
 // identifiers.
 export const findTasks = async function ({
   taskPath,
-  runnerId,
-  runnerSpawn,
-  runnerSpawnOptions,
-  runnerVersions,
-  runnerConfig,
+  runner: {
+    runnerId,
+    runnerSpawn,
+    runnerSpawnOptions,
+    runnerVersions,
+    runnerConfig,
+  },
   cwd,
 }) {
   await validateTask(taskPath)

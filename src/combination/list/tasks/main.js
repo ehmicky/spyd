@@ -90,29 +90,16 @@ export const listTasks = async function (runners, cwd) {
 }
 
 const getRunnerTasks = async function (runner, cwd) {
+  const runnerA = await loadRunner(runner)
   const {
     runnerId,
-    runnerSpawn,
-    runnerSpawnOptions,
-    runnerVersions,
-    runnerConfig,
     runnerConfig: { tasks },
-  } = await loadRunner(runner)
+  } = runnerA
   const tasksA = tasks === undefined ? await resolveDefaultTasks() : tasks
 
   try {
     const tasksB = await Promise.all(
-      tasksA.map((taskPath) =>
-        findTasks({
-          taskPath,
-          runnerId,
-          runnerSpawn,
-          runnerSpawnOptions,
-          runnerVersions,
-          runnerConfig,
-          cwd,
-        }),
-      ),
+      tasksA.map((taskPath) => findTasks({ taskPath, runnerA, cwd })),
     )
     return tasksB.flat()
   } catch (error) {
