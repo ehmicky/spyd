@@ -43,7 +43,7 @@ const validateTask = async function (taskPath) {
 }
 
 // Runners should enforce that task identifiers are unique. This can be done
-// by using a syntax which does not allow duplicate keys such as plain objects
+// by using a syntax which does not allow duplicate keys such as exports
 // in JavaScript.
 // Using the same taskId is allowed through in different:
 //  - Runners: to compare the same task across runners
