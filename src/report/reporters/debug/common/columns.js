@@ -17,9 +17,7 @@ export const getAllColumns = function (firstColumn, columns, screenWidth) {
 
 // Each column is padded to the same width, so that they align vertically
 const getColumnWidth = function ({ cellStats, headerNames }) {
-  const cellLengths = cellStats.map(stringWidth)
-  const headerLengths = headerNames.map(stringWidth)
-  return Math.max(...cellLengths, ...headerLengths)
+  return Math.max(...[...cellStats, ...headerNames].map(stringWidth))
 }
 
 // Fit several `columns` of same width (`columnsWidth`) responsively in a
