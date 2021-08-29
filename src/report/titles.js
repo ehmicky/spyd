@@ -18,17 +18,15 @@ import { COMBINATION_DIMENSIONS } from '../combination/dimensions.js'
 //   - provides a single place for all identifiers, which is simpler
 //   - removes the need for runners to handle this
 // We do this by adding a `title` property for every `id` property.
-export const addResultTitles = function (result, titles, showTitles) {
+export const addCombinationsTitles = function (
+  { combinations, ...result },
+  titles,
+  showTitles,
+) {
   const titlesA = showTitles ? titles : {}
-  const resultA = addCombinationsTitles(result, titlesA)
-  const resultB = addDimensionsTitles(resultA, titlesA)
-  return resultB
-}
-
-const addCombinationsTitles = function ({ combinations, ...result }, titles) {
   const combinationIdNames = COMBINATION_DIMENSIONS.map(getIdName)
   const combinationsA = combinations.map((combination) =>
-    addTitles(combination, combinationIdNames, titles),
+    addTitles(combination, combinationIdNames, titlesA),
   )
   return { ...result, combinations: combinationsA }
 }
@@ -37,10 +35,15 @@ const getIdName = function ({ idName }) {
   return idName
 }
 
-const addDimensionsTitles = function ({ dimensions, ...result }, titles) {
+export const addDimensionsTitles = function (
+  { dimensions, ...result },
+  titles,
+  showTitles,
+) {
+  const titlesA = showTitles ? titles : {}
   const dimensionsA = mapObj(dimensions, (dimension, items) => [
     dimension,
-    addDimensionTitle(items, titles),
+    addDimensionTitle(items, titlesA),
   ])
   return { ...result, dimensions: dimensionsA }
 }
