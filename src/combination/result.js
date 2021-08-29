@@ -2,12 +2,12 @@ import { isSameDimension } from './ids.js'
 
 // Filter out the `resultA.combinations` that are not in `resultB`
 export const pickResultCombinations = function (resultA, resultB) {
-  const combinations = keepResultCombinations(resultA.combinations, resultB)
+  const combinations = keepResultCombinations(resultA, resultB)
   return { ...resultA, combinations }
 }
 
 // Filter out the `combinations` that are not in `result`
-const keepResultCombinations = function (combinations, result) {
+export const keepResultCombinations = function ({ combinations }, result) {
   return combinations.filter((combination) =>
     resultHasCombination(result, combination),
   )

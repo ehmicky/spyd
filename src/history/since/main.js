@@ -1,4 +1,4 @@
-import { pickResultCombinations } from '../../combination/result.js'
+import { keepResultCombinations } from '../../combination/result.js'
 import { findByDelta } from '../delta/main.js'
 
 import { getMergedResult, getSinceResult, mergeCombinations } from './merge.js'
@@ -70,7 +70,7 @@ export const applySince = async function (result, previous, { since, cwd }) {
 // However, that history result should be normalized like the others, so we
 // merge them then.
 export const mergeLastResult = function (lastResult, result) {
-  const { combinations } = pickResultCombinations(result, lastResult)
+  const combinations = keepResultCombinations(result, lastResult)
   return { ...lastResult, combinations }
 }
 
