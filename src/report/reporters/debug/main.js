@@ -3,7 +3,7 @@ import { joinSections } from '../../utils/join.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
-import { getTables } from './table/main.js'
+import { getStatTables } from './stats/main.js'
 import { getTimeSeries } from './time_series/main.js'
 
 // Debugging reporter only meant for development purpose
@@ -11,7 +11,7 @@ const reportTerminal = function ({ combinations, screenWidth, history }) {
   const combinationsA = prettifyStats(combinations)
   const combinationsB = addTitles(combinationsA)
 
-  const tables = getTables(combinationsB, screenWidth)
+  const tables = getStatTables(combinationsB, screenWidth)
   const timeSeries = getTimeSeries(history, combinationsB, screenWidth)
   const histograms = serializeHistograms(combinationsB, {
     showStats: false,
