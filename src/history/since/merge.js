@@ -60,7 +60,8 @@ const mergeFilteredResult = function (baseResult, result, previousResult) {
   }
 
   const previousResultA = pickResultCombinations(previousResult, baseResult)
-  return mergePreviousResult(result, previousResultA)
+  const resultA = mergeCombinations(result, previousResultA)
+  return resultA
 }
 
 // When merging two results, we keep most of the properties of the latest
