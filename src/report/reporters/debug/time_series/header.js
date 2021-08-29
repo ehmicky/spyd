@@ -1,6 +1,7 @@
 import { fieldColor } from '../../../utils/colors.js'
 import { getCombinationNameWidth } from '../../../utils/name.js'
 import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
+import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
 
 // Retrieve header name
 export const getHeaderNames = function ({ timestamp }) {
@@ -15,6 +16,10 @@ export const getHeaderLength = function (headerName) {
 
 // Retrieve the header rows
 export const getHeader = function ([combination], columns, columnWidth) {
+  if (columns.length === 0) {
+    return NON_TRIMMABLE_SPACE
+  }
+
   const combinationNamePadding = ' '.repeat(
     getCombinationNameWidth(combination),
   )
