@@ -1,21 +1,29 @@
-import { getColumnsWidth, getAllColumns } from './columns.js'
+import { getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
 import { getRow } from './row.js'
 
 export const getTables = function (firstColumn, columns, screenWidth) {
-  const columnsWidth = getColumnsWidth(columns)
-  const allColumns = getAllColumns({
+  const { allColumns, columnsWidth, firstColumnWidth } = getAllColumns(
     firstColumn,
     columns,
     screenWidth,
-    columnsWidth,
-  })
+  )
   return allColumns.map((columnsA) =>
-    getTable(firstColumn, columnsA, columnsWidth),
+    getTable({
+      firstColumn,
+      columns: columnsA,
+      columnsWidth,
+      firstColumnWidth,
+    }),
   )
 }
 
-const getTable = function (firstColumn, columns, columnsWidth) {
+const getTable = function ({
+  firstColumn,
+  columns,
+  columnsWidth,
+  firstColumnWidth,
+}) {
   const header = getHeader(firstColumn, columns, columnsWidth)
   const rows = getRows(firstColumn, columns, columnsWidth)
   return `${header}\n${rows}`
