@@ -49,7 +49,9 @@ const normalizeHistoryAll = function (result) {
 // Those are saved in `reporter.history` and merged later.
 const normalizeHistoryEach = function (history, reporter, config) {
   const historyA = history
-    .map((result) => ({ ...result, ...normalizeNonCombEach(result, reporter) }))
+    .map((result) =>
+      mergeResultProps(result, normalizeNonCombEach(result, reporter)),
+    )
     .map((result) => normalizeCombEach(result, reporter, config))
   return { ...reporter, history: historyA }
 }
@@ -121,8 +123,9 @@ const normalizeComputedEach = function ({
   const resultA = normalizeCombEach(result, reporter, config)
   const unmergedResultA = normalizeCombEach(unmergedResult, reporter, config)
   const resultB = { ...resultA, history: [...history, unmergedResultA] }
-  const resultC = { ...resultB, ...resultProps, ...footerParams }
-  return { ...reporter, result: resultC }
+  const resultC = mergeResultProps(resultB, resultProps)
+  const resultD = { ...resultC, ...footerParams }
+  return { ...reporter, result: resultD }
 }
 
 // Add report-specific properties to a result that are not in `combinations` nor
@@ -165,7 +168,12 @@ const groupResultCombinations = function ({ combinations, ...result }) {
 // Add report-specific properties to a result that are not in `combinations` but
 // are reporter-specific
 const normalizeNonCombEach = function (result, reporter) {
-  return {}
+  const resultProps = {}
+  return resultProps
+}
+
+const mergeResultProps = function (result, resultProps) {
+  return { ...result, ...resultProps }
 }
 
 // Add report-specific properties to a result that are in `combinations` and
