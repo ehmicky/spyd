@@ -28,15 +28,7 @@ const omitCombinationProps = function (
 
 // When `showPrecision` is `true`, we show `medianMin|medianMax` instead of
 // `median`. However, we fall back to `median` when those are not available due
-// to either:
-//  - `precision: 0`
-//  - Not enough measures
-// `median` might also be `undefined` when a combination has not been measured
-// yet.
-//  - This does not apply to `history.results`
-// This means reporters should assume that:
-//  - Either|both properties might be `undefined`
-//  - This might differ for combinations of the same result
+// to not enough measures.
 const omitMedianProps = function (
   { median, medianMin, medianMax, ...stats },
   showPrecision,

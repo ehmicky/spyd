@@ -14,6 +14,32 @@ export const getInitialStats = function () {
 // Uncalibrated stats are removed because they:
 //  - Are eventually reset, which create confusion for stats like min|max
 //  - Change a lot, creating flicker
+// Some stats can be `undefined`:
+//   - all: in combinations not measured yet, nor saved
+//   - mean, rstdev, moe, rmoe, samples, loops, times, repeat, minLoopDuration:
+//     when `reporter.debugStats` is false
+//   - median: when `showPrecision` is true
+//   - moe, rmoe, medianMin, medianMax: when `showPrecision` is false
+//   - stdev, rstdev, moe, rmoe, medianMin, medianMax: when loops < 5
+//      - This means both median and medianMin|medianMax might be `undefined`
+//        while other stats are not
+//      - This might differ between combinations of the same result
+//   - diff, diffPrecise: when either `showDiff` is false or there is no
+//     previous combination
+// Stat types:
+//   - samples, loops, times, repeat, minLoopDuration: integer
+//   - min, max, median, mean, stdev, rstdev, moe, rmoe, medianMin, medianMax,
+//     diff: float
+//   - diffPrecise: boolean
+//   - quantiles: array of floats
+//   - histogram: array of objects
+//      - histogram[*].start|end|frequency: float
+// Stat constraints:
+//   - samples, loops, times, repeat, minLoopDuration, histogram[*].end: >0
+//   - min, max, median, mean, stdev, rstdev, moe, rmoe, medianMin, medianMax,
+//     diff, quantiles[*], histogram[*].start|frequency: >=0
+//      - median 0 is unlikely and impossible in saved results
+//   - histogram[*].end: <=1
 export const addStats = function (
   stats,
   { measures, sampleLoops, repeatLast },
