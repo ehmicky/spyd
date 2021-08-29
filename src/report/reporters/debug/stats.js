@@ -1,6 +1,5 @@
 import { fieldColor } from '../../utils/colors.js'
 import { getCombinationNameColor } from '../../utils/name.js'
-import { NON_TRIMMABLE_SPACE } from '../../utils/space.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 
 import { getTables } from './common/main.js'
@@ -14,10 +13,9 @@ export const getStatTables = function (combinations, screenWidth) {
 
 // Retrieved all `stats.*` properties that are not `undefined`, for the columns.
 const getColumns = function (combinations) {
-  const columns = STAT_NAMES.map((statName) =>
-    getColumn(statName, combinations),
-  ).filter(columnHasAnyStat)
-  return columns.length === 0 ? EMPTY_COLUMNS : columns
+  return STAT_NAMES.map((statName) => getColumn(statName, combinations)).filter(
+    columnHasAnyStat,
+  )
 }
 
 // List of columns, with their `stats.*` property.
@@ -52,5 +50,3 @@ const getColumn = function (statName, combinations) {
 const columnHasAnyStat = function ({ cellStats }) {
   return cellStats.some(Boolean)
 }
-
-const EMPTY_COLUMNS = [{ headerNames: [NON_TRIMMABLE_SPACE], cellStats: [] }]
