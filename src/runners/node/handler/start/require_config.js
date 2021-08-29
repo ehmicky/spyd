@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 
-import { UserError } from '../../../error/main.js'
+import { UserError } from '../../../../error/main.js'
 
 // Use the `require` config
 export const useRequireConfig = async function (requireConfig) {

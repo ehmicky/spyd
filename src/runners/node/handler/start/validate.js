@@ -2,12 +2,12 @@ import { inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
 
-import { UserError } from '../../../error/main.js'
-import { validateTasks } from '../../common/validate/file.js'
+import { UserError } from '../../../../error/main.js'
+import { validateTasks } from '../../../common/validate/file.js'
 import {
   validateBoolean,
   validateFunction,
-} from '../../common/validate/type.js'
+} from '../../../common/validate/type.js'
 
 // Validate that the tasks file has correct shape
 export const validate = function (tasks) {
