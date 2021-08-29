@@ -1,5 +1,4 @@
-import stringWidth from 'string-width'
-
+import { padString } from '../../../utils/pad.js'
 import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 // Retrieve a single row, including the row name
@@ -21,7 +20,5 @@ const getCell = function (stat, columnsWidth) {
     return ' '.repeat(columnsWidth)
   }
 
-  const paddingWidth = columnsWidth - stringWidth(stat)
-  const padding = ' '.repeat(paddingWidth)
-  return `${padding}${stat}`
+  return padString(stat, columnsWidth)
 }
