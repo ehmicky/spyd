@@ -1,6 +1,7 @@
-import { detectFormat } from './formats/detect.js'
+import { detectFormat } from '../formats/detect.js'
+import { isTtyOutput } from '../tty.js'
+
 import { addProgrammaticReporter } from './programmatic.js'
-import { isTtyOutput } from './tty.js'
 import { validateOutputGroups } from './validate.js'
 
 // Normalize reporters configuration
