@@ -4,6 +4,11 @@ import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
 import { STAT_TITLES } from '../../../utils/stat_titles.js'
 
+// Retrieve the header name
+export const getHeaderName = function (statName) {
+  return STAT_TITLES[statName]
+}
+
 // Retrieve the header row
 export const getHeader = function ([combination], columns, columnWidth) {
   if (columns.length === 0) {
@@ -24,15 +29,10 @@ const getHeaderCells = function (columns, columnWidth) {
 }
 
 // Retrieve a cell in the header row
-const getHeaderCell = function (column, columnWidth) {
-  const headerName = getHeaderName(column).padStart(columnWidth)
-  return fieldColor(headerName)
+const getHeaderCell = function ({ headerName }, columnWidth) {
+  return fieldColor(headerName.padStart(columnWidth))
 }
 
-export const getHeaderLength = function (column) {
-  return getHeaderName(column).length
-}
-
-const getHeaderName = function ({ statName }) {
-  return STAT_TITLES[statName]
+export const getHeaderLength = function ({ headerName }) {
+  return headerName.length
 }
