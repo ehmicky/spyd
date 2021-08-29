@@ -24,9 +24,7 @@ export const updateScrolling = function (previewState, bottomBar) {
   return { report, maxScrollTop }
 }
 
-// We need to subtract one due to the fact that the bottom bar is the last
-// element, i.e. its final newline not only terminates a line but also starts
-// a last empty row.
+// The height of a element is its number of newlines minus 1.
 const getAvailableHeight = function (bottomBar) {
   const screenHeight = getScreenHeight()
   const bottomBarHeight = getNewlineIndexes(bottomBar).length
