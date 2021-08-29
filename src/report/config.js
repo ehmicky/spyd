@@ -55,13 +55,13 @@ const shouldUseReporter = function ({ tty }, command) {
 // output is an interactive terminal.
 const addDefaultReporterConfig = function ({
   tty,
-  config,
-  config: { quiet = !tty, showDiff = tty, colors = tty },
+  config: { quiet = !tty, showDiff = tty, colors = tty, ...config },
   debugStats = false,
   ...reporter
 }) {
   return {
     ...reporter,
+    tty,
     config: { ...config, quiet, showDiff, colors },
     debugStats,
   }

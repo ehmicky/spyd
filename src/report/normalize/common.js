@@ -1,6 +1,7 @@
 import { groupResultCombinations } from '../../combination/group.js'
 import { addCombinationsDiff } from '../../history/compare/diff.js'
 import { omitSystemProps } from '../../system/omit.js'
+import { normalizeTimestamp } from '../../system/timestamp.js'
 
 import { omitCombinationsProps } from './omit.js'
 import { addCombinationsTitles, addDimensionsTitles } from './titles.js'
@@ -42,9 +43,9 @@ export const normalizeCombAllMerged = function (result) {
 
 // Add report-specific properties to a result that are not in `combinations` but
 // are reporter-specific
-export const normalizeNonCombEach = function () {
-  const resultProps = {}
-  return resultProps
+export const normalizeNonCombEach = function (result, { tty }) {
+  const timestamp = normalizeTimestamp(result, tty)
+  return { timestamp }
 }
 
 export const mergeResultProps = function (result, resultProps) {

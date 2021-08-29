@@ -65,6 +65,5 @@ const serializeMetadata = function (id, timestamp) {
     return
   }
 
-  const timestampString = new Date(timestamp).toLocaleString()
-  return { Id: id, Timestamp: timestampString }
+  return { Id: id, Timestamp: timestamp }
 }

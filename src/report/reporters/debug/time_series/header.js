@@ -4,18 +4,9 @@ import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 // Retrieve header name
 export const getHeaderName = function ({ timestamp }) {
-  const date = new Date(timestamp)
-  const day = [date.getFullYear(), date.getMonth(), date.getDate()]
-    .map(padZeros)
-    .join('-')
-  const time = [date.getHours(), date.getMinutes(), date.getSeconds()]
-    .map(padZeros)
-    .join(':')
+  const [day, ...timeAndTimezone] = timestamp.split(' ')
+  const time = timeAndTimezone.join(' ')
   return { day, time }
-}
-
-const padZeros = function (integer) {
-  return String(integer).padStart(2, '0')
 }
 
 // Retrieve the header row

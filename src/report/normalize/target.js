@@ -30,6 +30,12 @@ const normalizeTargetEach = function ({
   config,
 }) {
   const resultProps = normalizeNonCombEach(result, reporter)
-  const reporterA = addFooter({ result, mergedResult, reporter, config })
+  const reporterA = addFooter({
+    result,
+    resultProps,
+    mergedResult,
+    reporter,
+    config,
+  })
   return { ...reporterA, resultProps }
 }

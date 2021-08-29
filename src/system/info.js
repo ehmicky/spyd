@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { cleanObject } from '../utils/clean.js'
 import { groupBy } from '../utils/group.js'
 
+import { getTimestamp } from './timestamp.js'
 import { getSystemVersions } from './versions.js'
 
 // Users can specify a `system` configuration property.
@@ -26,7 +27,7 @@ export const getSystemInfo = async function (
   { cwd, systemId, envInfo },
 ) {
   const id = uuidv4()
-  const timestamp = Date.now()
+  const timestamp = getTimestamp()
   const system = await getSystem({ systemId, envInfo, combinations, cwd })
   return { id, timestamp, system }
 }
