@@ -3,7 +3,7 @@ import { getHeader } from './header.js'
 import { getRow } from './row.js'
 
 export const getTables = function (combinations, columns, screenWidth) {
-  const columnWidth = getColumnWidth(combinations, columns)
+  const columnWidth = getColumnWidth(columns)
   const allColumns = getAllColumns({
     combinations,
     columns,
