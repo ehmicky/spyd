@@ -2,11 +2,7 @@ import { UserError, PluginError } from '../../../error/main.js'
 
 // Select the runners and retrieve their related spawn options using
 // `runner.launch()`
-export const loadRunners = async function (runners) {
-  return await Promise.all(runners.map(loadRunner))
-}
-
-const loadRunner = async function ({
+export const loadRunner = async function ({
   id: runnerId,
   config: runnerConfig,
   launch,

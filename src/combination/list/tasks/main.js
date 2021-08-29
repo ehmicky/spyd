@@ -5,7 +5,7 @@ import { isNotJunk } from 'junk'
 import { lookupFiles } from '../../../config/lookup.js'
 
 import { findTasks } from './find.js'
-import { loadRunners } from './load.js'
+import { loadRunner } from './load.js'
 
 // The tasks file for each runner is selected using either the `tasks` or
 // `runnerConfig.{runnerId}.tasks` configuration properties.
@@ -83,24 +83,21 @@ import { loadRunners } from './load.js'
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
 export const listTasks = async function (runners, cwd) {
-  const runnersA = await loadRunners(runners)
   const tasksA = await Promise.all(
-    runnersA.map((runner) => getRunnerTasks(runner, cwd)),
+    runners.map((runner) => getRunnerTasks(runner, cwd)),
   )
   return tasksA.flat().filter(removeDuplicateTaskId)
 }
 
-const getRunnerTasks = async function (
-  {
+const getRunnerTasks = async function (runner, cwd) {
+  const {
     runnerId,
     runnerSpawn,
     runnerSpawnOptions,
     runnerVersions,
     runnerConfig,
     runnerConfig: { tasks },
-  },
-  cwd,
-) {
+  } = await loadRunner(runner)
   const tasksA = tasks === undefined ? await resolveDefaultTasks() : tasks
 
   try {
