@@ -2,10 +2,8 @@ import { applySince } from '../history/since/main.js'
 
 import { getContents } from './contents.js'
 import { finalizeContents } from './finalize.js'
-import {
-  normalizeEarlyResult,
-  normalizeComputedResult,
-} from './normalize/main.js'
+import { normalizeComputedResult } from './normalize/computed.js'
+import { normalizeEarlyResult } from './normalize/early.js'
 import { outputContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
 
