@@ -1,5 +1,5 @@
-import { normalizeOptionalArray } from './check.js'
-import { PLUGIN_TYPES } from './plugin/types.js'
+import { normalizeOptionalArray } from '../check.js'
+import { PLUGIN_TYPES } from '../plugin/types.js'
 
 // Custom merging logic for tasks.
 // `tasks` or `runnnerConfig.{runnerId}.tasks` are concatenated, not overridden
