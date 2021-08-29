@@ -9,6 +9,10 @@ export const getHeaderName = function ({ timestamp }) {
   return { day, time }
 }
 
+export const getHeaderLengths = function ({ headerName }) {
+  return HEADER_PROP_NAMES.map((propName) => headerName[propName].length)
+}
+
 // Retrieve the header row
 export const getHeader = function ([combination], columns, columnWidth) {
   const combinationNamePadding = ' '.repeat(
@@ -39,10 +43,6 @@ const getHeaderCell = function (column, columnWidth, propName) {
 
   const headerName = column.headerName[propName].padStart(columnWidth)
   return fieldColor(headerName)
-}
-
-export const getHeaderLengths = function ({ headerName }) {
-  return HEADER_PROP_NAMES.map((propName) => headerName[propName].length)
 }
 
 const HEADER_PROP_NAMES = ['day', 'time']
