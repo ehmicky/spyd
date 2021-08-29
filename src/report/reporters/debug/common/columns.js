@@ -3,7 +3,6 @@ import stringWidth from 'string-width'
 import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
 
 import { getResponsiveColumns } from './responsive.js'
-import { getStatLength } from './row.js'
 
 export const getAllColumns = function (firstColumn, columns, screenWidth) {
   const columnsWidth = Math.max(...columns.map(getColumnWidth))
@@ -20,7 +19,7 @@ export const getAllColumns = function (firstColumn, columns, screenWidth) {
 
 // Each column is padded to the same width, so that they align vertically
 const getColumnWidth = function ({ cellStats, headerNames }) {
-  const cellLengths = cellStats.filter(Boolean).map(getStatLength)
+  const cellLengths = cellStats.filter(Boolean).map(stringWidth)
   const headerLengths = headerNames.map(stringWidth)
   return Math.max(...cellLengths, ...headerLengths)
 }
