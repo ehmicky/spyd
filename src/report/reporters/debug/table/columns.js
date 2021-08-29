@@ -35,9 +35,8 @@ const STAT_NAMES = [
 
 const getColumn = function (statName, combinations) {
   const headerNames = getHeaderNames(statName)
-  const headerLengths = headerNames.map(getHeaderLength)
   const cellStats = combinations.map(({ stats }) => stats[statName])
-  return { headerNames, headerLengths, cellStats }
+  return { headerNames, cellStats }
 }
 
 const columnHasAnyStat = function ({ cellStats }) {

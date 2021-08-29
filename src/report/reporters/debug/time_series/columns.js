@@ -17,11 +17,10 @@ export const getColumns = function (history, combinations) {
 
 const getColumn = function (historyResult, combinations) {
   const headerNames = getHeaderNames(historyResult)
-  const headerLengths = headerNames.map(getHeaderLength)
   const cellStats = combinations.map((combination) =>
     getCellStat(historyResult, combination),
   )
-  return { headerNames, headerLengths, cellStats }
+  return { headerNames, cellStats }
 }
 
 const getCellStat = function (historyResult, combination) {
