@@ -13,11 +13,11 @@ export const listCombinations = async function ({
   select,
   cwd,
 }) {
-  const tasksA = await listTasks(runners, cwd)
+  const tasks = await listTasks(runners, cwd)
   const inputsA = fromInputsObj(inputs)
 
   const combinations = getCombinationsProduct({
-    tasks: tasksA,
+    tasks,
     inputs: inputsA,
     systemId,
   })
