@@ -12,6 +12,10 @@ export const getColumns = function (combinations) {
   )
 }
 
+const getAnyCombinationColumn = function (combinations, column) {
+  return combinations.map(({ stats }) => stats[column]).find(Boolean)
+}
+
 // List of columns, with their `stats.*` property.
 // Order is significant as it is displayed in that order.
 const COLUMNS = [
@@ -41,12 +45,11 @@ export const getColumnWidth = function (combinations, columns) {
 }
 
 const getStatColumnWidth = function (combinations, column) {
-  const stat = getAnyCombinationColumn(combinations, column)
-  return Math.max(getStatLength(stat), getHeaderLength(column))
-}
-
-const getAnyCombinationColumn = function (combinations, column) {
-  return combinations.map(({ stats }) => stats[column]).find(Boolean)
+  const cellLengths = combinations
+    .map(({ stats }) => stats[column])
+    .filter(Boolean)
+    .map(getStatLength)
+  return Math.max(...cellLengths, getHeaderLength(column))
 }
 
 export const getAllColumns = function ({

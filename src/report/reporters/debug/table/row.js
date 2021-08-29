@@ -18,9 +18,9 @@ const getCell = function (stat, columnWidth) {
 
   const paddingWidth = columnWidth - getStatLength(stat)
   const padding = ' '.repeat(paddingWidth)
-  return `${padding}${stat.prettyPaddedColor}`
+  return `${padding}${stat.prettyColor}`
 }
 
-export const getStatLength = function ({ prettyPadded }) {
-  return prettyPadded.length
+export const getStatLength = function ({ pretty }) {
+  return pretty.length
 }
