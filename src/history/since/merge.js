@@ -33,6 +33,23 @@ export const getMergedResult = function (result, previous) {
   return previous.reduceRight(mergePreviousResult, result)
 }
 
+// When merging two results, we keep most of the properties of the latest
+// result.
+//  - However, we still merge `system` so several systems are reported.
+//  - This allows comparing different systems.
+// We only merge results when there are some matching combinations
+//  - For example, `result.systems` should only show systems from combinations
+//    that have been merged, i.e. that are reported
+const mergePreviousResult = function (result, previousResult) {
+  if (hasSameCombinations(previousResult, result)) {
+    return result
+  }
+
+  const resultA = mergeCombinations(result, previousResult)
+  const resultB = mergeSystems(resultA, previousResult)
+  return resultB
+}
+
 export const getSinceResult = function (previous, sinceIndex, result) {
   return mergeFilteredResults(
     previous[sinceIndex],
@@ -63,23 +80,6 @@ const mergeFilteredResult = function (result, previousResult, baseResult) {
   const previousResultA = pickResultCombinations(previousResult, baseResult)
   const resultA = mergeCombinations(result, previousResultA)
   return resultA
-}
-
-// When merging two results, we keep most of the properties of the latest
-// result.
-//  - However, we still merge `system` so several systems are reported.
-//  - This allows comparing different systems.
-// We only merge results when there are some matching combinations
-//  - For example, `result.systems` should only show systems from combinations
-//    that have been merged, i.e. that are reported
-const mergePreviousResult = function (result, previousResult) {
-  if (hasSameCombinations(previousResult, result)) {
-    return result
-  }
-
-  const resultA = mergeCombinations(result, previousResult)
-  const resultB = mergeSystems(resultA, previousResult)
-  return resultB
 }
 
 export const mergeCombinations = function (result, previousResult) {
