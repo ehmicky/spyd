@@ -1,7 +1,7 @@
 import stripAnsi from 'strip-ansi'
 
-import { UserError } from '../error/main.js'
-import { matchSelectors } from '../select/match.js'
+import { UserError } from '../../error/main.js'
+import { matchSelectors } from '../../select/match.js'
 
 import { parseLimits } from './parse.js'
 

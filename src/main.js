@@ -1,7 +1,7 @@
 import { getCombinations } from './combination/main.js'
-import { checkLimits } from './compare/limit.js'
 import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
+import { checkLimits } from './history/compare/limit.js'
 import {
   addToHistory,
   getFromHistory,

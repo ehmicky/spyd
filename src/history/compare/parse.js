@@ -1,5 +1,5 @@
-import { UserError } from '../error/main.js'
-import { parseSelectors } from '../select/parse.js'
+import { UserError } from '../../error/main.js'
+import { parseSelectors } from '../../select/parse.js'
 
 // Parse the `limit` configuration property.
 // It is an array of strings "threshold selector" where "threshold" is

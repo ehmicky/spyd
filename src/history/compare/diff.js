@@ -1,5 +1,5 @@
-import { getMatchingCombination } from '../combination/result.js'
-import { isDiffPrecise } from '../stats/welch.js'
+import { getMatchingCombination } from '../../combination/result.js'
+import { isDiffPrecise } from '../../stats/welch.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.

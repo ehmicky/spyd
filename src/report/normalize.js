@@ -1,6 +1,6 @@
 import { groupDimensionInfos } from '../combination/group.js'
 import { sortCombinations } from '../combination/sort.js'
-import { addCombinationsDiff } from '../compare/diff.js'
+import { addCombinationsDiff } from '../history/compare/diff.js'
 import { mergeHistory } from '../history/since/main.js'
 import { addFooter } from '../system/footer.js'
 
