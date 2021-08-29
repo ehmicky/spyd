@@ -7,7 +7,7 @@ import {
   STATS_SEPARATOR_COLORED,
 } from '../../../utils/separator.js'
 
-import { getHeaderNames, getHeaderLength } from './header.js'
+import { getHeaderNames } from './header.js'
 import { getStatLength } from './row.js'
 
 // Retrieve all columns and their stats
@@ -50,12 +50,14 @@ export const getColumnWidth = function (combinations, columns) {
   )
 }
 
-const getStatColumnWidth = function (
-  combinations,
-  { cellStats, headerLengths },
-) {
+const getStatColumnWidth = function (combinations, { cellStats, headerNames }) {
   const cellLengths = cellStats.filter(Boolean).map(getStatLength)
+  const headerLengths = headerNames.map(getHeaderLength)
   return Math.max(...cellLengths, ...headerLengths)
+}
+
+const getHeaderLength = function ({ length }) {
+  return length
 }
 
 export const getAllColumns = function ({

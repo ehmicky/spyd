@@ -9,10 +9,6 @@ export const getHeaderNames = function (statName) {
   return [STAT_TITLES[statName]]
 }
 
-export const getHeaderLength = function (headerName) {
-  return headerName.length
-}
-
 // Retrieve the header rows
 export const getHeader = function ([combination], columns, columnWidth) {
   if (columns.length === 0) {
