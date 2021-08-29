@@ -8,8 +8,6 @@ import {
 } from '../../../utils/separator.js'
 import { getStatLength } from '../common/row.js'
 
-import { getHeaderNames } from './header.js'
-
 // Retrieve all columns and their stats
 export const getColumns = function (history, combinations) {
   return history.map((historyResult) => getColumn(historyResult, combinations))
@@ -21,6 +19,12 @@ const getColumn = function (historyResult, combinations) {
     getCellStat(historyResult, combination),
   )
   return { headerNames, cellStats }
+}
+
+const getHeaderNames = function ({ timestamp }) {
+  const [day, ...timeAndTimezone] = timestamp.split(' ')
+  const time = timeAndTimezone.join(' ')
+  return [day, time, '']
 }
 
 const getCellStat = function (historyResult, combination) {
