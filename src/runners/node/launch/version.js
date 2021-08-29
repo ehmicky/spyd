@@ -5,7 +5,7 @@ import nvexeca from 'nvexeca'
 import { readPackageUpAsync } from 'read-pkg-up'
 import semver from 'semver'
 
-import { UserError } from '../../error/main.js'
+import { UserError } from '../../../error/main.js'
 
 // Normalize the node `version` config
 export const getNodeVersion = async function ({ version }) {
