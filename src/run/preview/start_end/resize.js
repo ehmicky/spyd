@@ -1,6 +1,6 @@
 import process from 'process'
 
-import { refreshPreview } from '../update.js'
+import { refreshPreview } from '../update/refresh.js'
 
 // Refresh the preview when the terminal window is resized.
 // We use SIGWINCH instead of `stream.on('resize')` because it does the same

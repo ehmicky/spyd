@@ -1,8 +1,8 @@
 import now from 'precise-now'
 
-import { getLengthForMoe } from '../../stats/moe.js'
-import { getLoopsFromLength } from '../../stats/outliers.js'
-import { MAX_MEASURES } from '../sample/max_measures.js'
+import { getLengthForMoe } from '../../../stats/moe.js'
+import { getLoopsFromLength } from '../../../stats/outliers.js'
+import { MAX_MEASURES } from '../../sample/max_measures.js'
 
 // Update the combination start and expected end.
 // This is combined with the current timestamp to compute the expected duration

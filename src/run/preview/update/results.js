@@ -1,14 +1,14 @@
-import { reportPreview } from '../../report/main.js'
-import { normalizeMeasuredResult } from '../normalize.js'
-
-import { updateCompletion } from './completion.js'
+import { reportPreview } from '../../../report/main.js'
+import { normalizeMeasuredResult } from '../../normalize.js'
 import {
   setDescriptionIf,
   START_DESCRIPTION,
   MEASURE_DESCRIPTION,
-} from './description.js'
+} from '../description.js'
+
+import { updateCompletion } from './completion.js'
 import { updateCombinationEnd } from './duration.js'
-import { refreshPreview } from './update.js'
+import { refreshPreview } from './refresh.js'
 
 // Preview results progressively, as combinations are being measured.
 // Reporters should:

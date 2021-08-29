@@ -1,7 +1,7 @@
 import { noUnhandledRejection } from '../../error/unhandled_rejection.js'
 import { createController } from '../../utils/timeout.js'
 import { addAction } from '../preview/action.js'
-import { refreshPreview } from '../preview/update.js'
+import { refreshPreview } from '../preview/update/refresh.js'
 
 import { handleStop, STOP_ACTION } from './handle.js'
 import { removeDefaultHandlers, restoreDefaultHandlers } from './signals.js'
