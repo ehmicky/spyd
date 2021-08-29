@@ -1,8 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isTasks, mergeTasks } from '../tasks/merge.js'
-
 import { removeEmptyValues } from './empty.js'
+import { isTasks, mergeTasks } from './tasks.js'
 
 // Merge two configuration objects. Used to merge:
 //  - shared `config`
