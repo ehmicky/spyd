@@ -2,10 +2,13 @@
 //  - `combination.task|runner|systemTitlePadded`: like
 //     `combination.*Title` but padded so all combinations vertically align
 //  - `combination.titles`: combines all *TitlePadded
-export const addTitles = function (combinations) {
+export const addFakeTitles = function ({ result, result: { combinations } }) {
   const propNames = getUniquePropNames(combinations)
   const paddings = getPaddings(combinations, propNames)
-  return combinations.map((combination) => addPadding(combination, paddings))
+  const combinationsA = combinations.map((combination) =>
+    addPadding(combination, paddings),
+  )
+  return { ...result, combinations: combinationsA }
 }
 
 const getUniquePropNames = function (combinations) {
