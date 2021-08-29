@@ -37,10 +37,10 @@ const getTable = function ({
 
 // Retrieve the header rows
 const getHeader = function (columns, columnsWidth, firstColumnWidth) {
-  const combinationNamePadding = ' '.repeat(firstColumnWidth)
+  const firstColumnPadding = ' '.repeat(firstColumnWidth)
   const { length } = columns[0].headerNames
   return Array.from({ length }, (_, rowIndex) =>
-    getHeaderRow({ columns, columnsWidth, rowIndex, combinationNamePadding }),
+    getHeaderRow({ columns, columnsWidth, rowIndex, firstColumnPadding }),
   ).join('\n')
 }
 
@@ -48,12 +48,12 @@ const getHeaderRow = function ({
   columns,
   columnsWidth,
   rowIndex,
-  combinationNamePadding,
+  firstColumnPadding,
 }) {
   const headerCells = columns
     .map(({ headerNames }) => padString(headerNames[rowIndex], columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
-  return `${combinationNamePadding}${headerCells}`
+  return `${firstColumnPadding}${headerCells}`
 }
 
 const getRows = function (firstColumn, columns, columnsWidth) {
