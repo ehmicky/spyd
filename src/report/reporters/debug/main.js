@@ -19,4 +19,7 @@ const reportTerminal = function ({ combinations, screenWidth, history }) {
   return [statsTables, timeSeries, histograms].join('\n\n')
 }
 
-export const debug = { reportTerminal, debugStats: true }
+export const debug = {
+  reportTerminal,
+  capabilities: { debugStats: true },
+}

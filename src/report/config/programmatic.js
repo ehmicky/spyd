@@ -21,7 +21,9 @@ const PROGRAMMATIC_REPORTER = {
   id: 'programmatic',
   moduleId: 'programmatic',
   format: 'programmatic',
-  debugStats: false,
+  capabilities: {
+    debugStats: false,
+  },
   tty: false,
   config: {
     quiet: true,

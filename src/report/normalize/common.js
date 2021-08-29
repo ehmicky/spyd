@@ -56,7 +56,10 @@ export const mergeResultProps = function (result, resultProps) {
 // reporter-specific
 export const normalizeCombEach = function (
   result,
-  { debugStats, config: { showPrecision, showDiff, showTitles } },
+  {
+    capabilities: { debugStats },
+    config: { showPrecision, showDiff, showTitles },
+  },
   { titles },
 ) {
   const resultA = addDimensionsTitles(result, titles, showTitles)

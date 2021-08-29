@@ -17,7 +17,7 @@ export const getInitialStats = function () {
 // Some stats can be `undefined`:
 //   - all: in combinations not measured yet, nor saved
 //   - mean, rstdev, moe, rmoe, samples, loops, times, repeat, minLoopDuration:
-//     when `reporter.debugStats` is false
+//     when `reporter.capabilities.debugStats` is false
 //   - median: when `showPrecision` is true
 //   - moe, rmoe, medianMin, medianMax: when `showPrecision` is false
 //   - stdev, rstdev, moe, rmoe, medianMin, medianMax: when loops < 5
