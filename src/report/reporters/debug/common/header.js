@@ -17,14 +17,15 @@ const getHeaderRow = function ({
   combinationNamePadding,
 }) {
   const headerCells = columns
-    .map((column) => getHeaderCell(column, rowIndex, columnsWidth))
+    .map(({ headerNames }) =>
+      getHeaderCell(headerNames[rowIndex], columnsWidth),
+    )
     .join(COLUMN_SEPARATOR_COLORED)
   return `${combinationNamePadding}${headerCells}`
 }
 
 // Retrieve a cell in the header row
-const getHeaderCell = function ({ headerNames }, rowIndex, columnsWidth) {
-  const headerName = headerNames[rowIndex]
+const getHeaderCell = function (headerName, columnsWidth) {
   const paddingWidth = columnsWidth - headerName.length
   const padding = ' '.repeat(paddingWidth)
   return fieldColor(`${padding}${headerName}`)
