@@ -29,8 +29,8 @@ import { mergeSystems } from '../../system/merge.js'
 //  - This is especially true for systems. There is always only one system
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
-export const getMergedResult = function (result, previous) {
-  return previous.reduceRight(mergePreviousResult, result)
+export const getMergedResult = function (result, history) {
+  return history.reduceRight(mergeHistoryResult, result)
 }
 
 // When merging two results, we keep most of the properties of the latest
@@ -40,21 +40,21 @@ export const getMergedResult = function (result, previous) {
 // We only merge results when there are some matching combinations
 //  - For example, `result.systems` should only show systems from combinations
 //    that have been merged, i.e. that are reported
-const mergePreviousResult = function (result, previousResult) {
-  if (hasSameCombinations(previousResult, result)) {
-    return result
+const mergeHistoryResult = function (mergedResult, historyResult) {
+  if (hasSameCombinations(historyResult, mergedResult)) {
+    return mergedResult
   }
 
-  const resultA = mergeCombinations(result, previousResult)
-  const resultB = mergeSystems(resultA, previousResult)
-  return resultB
+  const mergeResultA = mergeCombinations(mergedResult, historyResult)
+  const mergedResultB = mergeSystems(mergeResultA, historyResult)
+  return mergedResultB
 }
 
-export const getSinceResult = function (previous, sinceIndex, result) {
+export const getSinceResult = function (previous, sinceIndex, mergedResult) {
   return mergeFilteredResults(
     previous[sinceIndex],
     previous.slice(0, sinceIndex),
-    result,
+    mergedResult,
   )
 }
 
@@ -64,7 +64,7 @@ export const getSinceResult = function (previous, sinceIndex, result) {
 const mergeFilteredResults = function (result, previous, baseResult) {
   return previous.reduceRight(
     (resultA, previousResult) =>
-      mergeFilteredResult(resultA, previousResult, baseResult),
+      mergeBeforeSinceResult(resultA, previousResult, baseResult),
     pickResultCombinations(result, baseResult),
   )
 }
@@ -72,14 +72,21 @@ const mergeFilteredResults = function (result, previous, baseResult) {
 // We short-circuit this function when the number of combinations indicates no
 // more merging is possible, as a performance optimization when the number of
 // results is high.
-const mergeFilteredResult = function (result, previousResult, baseResult) {
-  if (baseResult.combinations.length === result.combinations.length) {
-    return result
+const mergeBeforeSinceResult = function (
+  sinceResult,
+  beforeSinceResult,
+  mergedResult,
+) {
+  if (mergedResult.combinations.length === sinceResult.combinations.length) {
+    return sinceResult
   }
 
-  const previousResultA = pickResultCombinations(previousResult, baseResult)
-  const resultA = mergeCombinations(result, previousResultA)
-  return resultA
+  const beforeSinceResultA = pickResultCombinations(
+    beforeSinceResult,
+    mergedResult,
+  )
+  const sinceResultA = mergeCombinations(sinceResult, beforeSinceResultA)
+  return sinceResultA
 }
 
 export const mergeCombinations = function (result, previousResult) {
