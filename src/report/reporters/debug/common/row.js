@@ -9,16 +9,7 @@ export const getRow = function ({
   columnsWidth,
 }) {
   const cells = columns
-    .map(({ cellStats }) => getCell(cellStats[rowIndex], columnsWidth))
+    .map(({ cellStats }) => padString(cellStats[rowIndex], columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
   return `${firstCell}${cells}`
-}
-
-// Retrieve a single cell in the table, with a specific stat
-const getCell = function (stat, columnsWidth) {
-  if (stat === undefined) {
-    return ' '.repeat(columnsWidth)
-  }
-
-  return padString(stat, columnsWidth)
 }

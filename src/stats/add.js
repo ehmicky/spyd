@@ -38,7 +38,8 @@ export const getInitialStats = function () {
 //   - samples, loops, times, repeat, minLoopDuration, histogram[*].end: >0
 //   - min, max, median, mean, stdev, rstdev, moe, rmoe, medianMin, medianMax,
 //     diff, quantiles[*], histogram[*].start|frequency: >=0
-//      - median 0 is unlikely and impossible in saved results
+//      - median 0 is unlikely and impossible in saved results (except the
+//        last/current result)
 //   - histogram[*].end: <=1
 export const addStats = function (
   stats,

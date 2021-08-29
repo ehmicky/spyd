@@ -43,8 +43,8 @@ const STAT_NAMES = [
 
 const getColumn = function (statName, combinations) {
   const headerNames = [fieldColor(STAT_TITLES[statName])]
-  const cellStats = combinations.map(({ stats }) =>
-    stats[statName] === undefined ? undefined : stats[statName].prettyColor,
+  const cellStats = combinations.map(
+    ({ stats: { [statName]: { prettyColor = '' } = {} } }) => prettyColor,
   )
   return { headerNames, cellStats }
 }
