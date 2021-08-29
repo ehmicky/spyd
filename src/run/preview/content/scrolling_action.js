@@ -1,4 +1,4 @@
-import { addAction, removeAction } from './action.js'
+import { addAction, removeAction } from '../action.js'
 
 // The scrolling logic relies on knowing the height of the bottom bar.
 // The height of the bottom bar might depend on whether a scrolling action is

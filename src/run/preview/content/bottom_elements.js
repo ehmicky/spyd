@@ -1,11 +1,11 @@
-import { getScreenWidth, getPaddedScreenWidth } from '../../report/tty.js'
+import { getScreenWidth, getPaddedScreenWidth } from '../../../report/tty.js'
 import {
   goodColor,
   separatorColor,
   noteColor,
   titleColor,
-} from '../../report/utils/colors.js'
-import { wrapPaddedRows } from '../../report/utils/wrap.js'
+} from '../../../report/utils/colors.js'
+import { wrapPaddedRows } from '../../../report/utils/wrap.js'
 
 import { ACTIONS_LABEL } from './bottom_bar.js'
 

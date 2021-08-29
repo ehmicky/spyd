@@ -1,6 +1,6 @@
-import { goodColor, noteColor } from '../../report/utils/colors.js'
-import { addPadding } from '../../report/utils/indent.js'
-import { wrapPaddedRows } from '../../report/utils/wrap.js'
+import { goodColor, noteColor } from '../../../report/utils/colors.js'
+import { addPadding } from '../../../report/utils/indent.js'
+import { wrapPaddedRows } from '../../../report/utils/wrap.js'
 
 // Retrieve bottom bar of preview
 export const getBottomBar = function ({
