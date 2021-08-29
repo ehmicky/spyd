@@ -3,8 +3,7 @@ import { fieldColor } from '../../utils/colors.js'
 import { getCombinationNameColor } from '../../utils/name.js'
 import { STATS_SEPARATOR_COLORED } from '../../utils/separator.js'
 import { prettifyStats } from '../../utils/stats/main.js'
-
-import { getTables } from './common/main.js'
+import { getTables } from '../../utils/table/main.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {

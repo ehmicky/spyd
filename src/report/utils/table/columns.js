@@ -1,6 +1,6 @@
 import stringWidth from 'string-width'
 
-import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
+import { COLUMN_SEPARATOR } from '../separator.js'
 
 export const getAllColumns = function (firstColumn, columns, screenWidth) {
   const firstColumnWidth = Math.max(...firstColumn.map(stringWidth))

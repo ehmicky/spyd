@@ -1,6 +1,6 @@
-import { padString } from '../../../utils/pad.js'
-import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
-import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
+import { padString } from '../pad.js'
+import { COLUMN_SEPARATOR_COLORED } from '../separator.js'
+import { NON_TRIMMABLE_SPACE } from '../space.js'
 
 import { getAllColumns } from './columns.js'
 
