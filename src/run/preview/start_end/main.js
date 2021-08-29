@@ -12,6 +12,7 @@ import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'
 import { getPreviewState, addResultPreviewState } from './state.js'
 
+// Initialize the preview before the result has been loaded.
 export const initPreview = function (config) {
   const previewState = getPreviewState(config)
   printPreviewStarting(previewState)
@@ -29,7 +30,7 @@ const printPreviewStarting = function ({ quiet }) {
   printToStdout('Starting...\n')
 }
 
-// Start clearing the screen
+// Start the preview mode once the result has been loaded
 export const startPreview = async function ({
   result,
   historyInfo,
@@ -57,7 +58,7 @@ export const startPreview = async function ({
   return previewStateA
 }
 
-// Stop clearing the screen.
+// Stop the preview mode.
 // Unless an error was thrown, we wait for the final reporter.report() before
 // clearing.
 // The last preview is kept as is when stopping the benchmarking
