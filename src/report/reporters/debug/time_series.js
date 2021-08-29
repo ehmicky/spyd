@@ -27,21 +27,24 @@ const getCombinations = function ({ combinations }) {
 }
 
 const getHeaderRows = function (history) {
+  const timestamps = history.map(getTimestamp)
   return [
-    ['', ...history.map(getResultDay)],
-    ['', ...history.map(getResultTime)],
+    ['', ...timestamps.map(getResultDay)],
+    ['', ...timestamps.map(getResultTime)],
     [],
   ]
 }
 
-const getResultDay = function ({ timestamp }) {
-  const [day] = timestamp.split(' ')
+const getTimestamp = function ({ timestamp }) {
+  return timestamp.split(' ')
+}
+
+const getResultDay = function ([day]) {
   return fieldColor(day)
 }
 
-const getResultTime = function ({ timestamp }) {
-  const time = timestamp.split(' ').slice(1).join(' ')
-  return fieldColor(time)
+const getResultTime = function ([, ...time]) {
+  return fieldColor(time.join(' '))
 }
 
 const getBodyRows = function (combinations, history) {
