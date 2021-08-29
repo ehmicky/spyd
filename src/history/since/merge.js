@@ -1,6 +1,7 @@
 import {
   pickResultCombinations,
   removeResultCombinations,
+  hasSameCombinations,
 } from '../../combination/result.js'
 import { mergeSystems } from '../../system/merge.js'
 
@@ -70,6 +71,10 @@ const mergeFilteredResult = function (baseResult, result, previousResult) {
 //  - For example, `result.systems` should only show systems from combinations
 //    that have been merged, i.e. that are reported
 const mergePreviousResult = function (result, previousResult) {
+  if (hasSameCombinations(previousResult, result)) {
+    return result
+  }
+
   const { result: resultA, previousCombinations } = mergeCombinations(
     result,
     previousResult,

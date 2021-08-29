@@ -20,6 +20,13 @@ export const removeResultCombinations = function (combinations, result) {
   )
 }
 
+// Return whether a result combinations is a subset of another
+export const hasSameCombinations = function ({ combinations }, result) {
+  return combinations.every((combination) =>
+    resultHasCombination(result, combination),
+  )
+}
+
 // Return whether a result has a specific combination
 const resultHasCombination = function ({ combinations }, combination) {
   return getMatchingCombination(combinations, combination) !== undefined
