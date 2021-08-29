@@ -1,12 +1,12 @@
-import { getInitialStats, addStats } from '../stats/add.js'
-import { pWhile } from '../utils/p_while.js'
+import { getInitialStats, addStats } from '../../stats/add.js'
+import { pWhile } from '../../utils/p_while.js'
+import { truncateLogs } from '../logs/stream.js'
+import { updatePreviewStats } from '../preview/results.js'
+import { measureSample } from '../sample/main.js'
+import { getInitialSampleState } from '../sample/state.js'
 
 import { getInitialDurationState, startSample, endSample } from './duration.js'
-import { truncateLogs } from './logs/stream.js'
-import { updatePreviewStats } from './preview/results.js'
 import { isRemainingCombination } from './remaining.js'
-import { measureSample } from './sample/main.js'
-import { getInitialSampleState } from './sample/state.js'
 
 // We break down each combination into samples, i.e. small units of duration
 // when measures are taken:

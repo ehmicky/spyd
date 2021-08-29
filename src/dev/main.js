@@ -1,6 +1,6 @@
 import { getCombinationName } from '../combination/ids.js'
 import { titleColor } from '../report/utils/colors.js'
-import { measureCombinations } from '../run/several.js'
+import { measureCombinations } from '../run/measure/main.js'
 
 // Execute tasks without benchmarking them.
 // We run each serially, so the output is not interleaved.

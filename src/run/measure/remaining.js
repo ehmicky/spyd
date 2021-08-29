@@ -1,5 +1,5 @@
-import { isPreciseEnough } from './precision.js'
-import { hasMaxMeasures } from './sample/max_measures.js'
+import { isPreciseEnough } from '../precision.js'
+import { hasMaxMeasures } from '../sample/max_measures.js'
 
 // Check if combination should keep being measured.
 // We measure each combination:

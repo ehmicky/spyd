@@ -6,6 +6,7 @@ import {
 } from '../report/main.js'
 
 import { createResult } from './create.js'
+import { measureCombinations } from './measure/main.js'
 import { normalizeMeasuredResult } from './normalize.js'
 import {
   startPreview,
@@ -13,7 +14,6 @@ import {
   printPreviewStarting,
 } from './preview/start_end.js'
 import { getPreviewState } from './preview/state.js'
-import { measureCombinations } from './several.js'
 
 // Perform a new benchmark.
 // There is no watch mode because:

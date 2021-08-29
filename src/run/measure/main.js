@@ -1,8 +1,9 @@
 import pMapSeries from 'p-map-series'
 
+import { addStopHandler, removeStopHandler } from '../stop/main.js'
+
 import { startServer, endServer } from './server.js'
 import { measureCombination } from './single.js'
-import { addStopHandler, removeStopHandler } from './stop/main.js'
 
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
