@@ -14,27 +14,24 @@ import { addStatsPretty } from './prettify.js'
 // This is not format specific since most formats benefit from it.
 // When prettifying history results, we adjust the scale based on all history
 // results, i.e. we need to also pass those as `allCombinations`.
-export const prettifyHistoryStats = function (result, history) {
+export const prettifyHistoryStats = function (history) {
   const allCombinations = history.flatMap(getCombinations)
-  const combinations = prettifyStats(result.combinations, allCombinations)
-  return { ...result, combinations }
+  return history.map((historyResult) =>
+    prettifyStats(historyResult, allCombinations),
+  )
 }
 
 const getCombinations = function ({ combinations }) {
   return combinations
 }
 
-export const prettifyTargetStats = function (result) {
-  const combinations = prettifyStats(result.combinations, result.combinations)
-  return { ...result, combinations }
-}
-
-const prettifyStats = function (combinations, allCombinations) {
-  return STAT_KINDS.reduce(
+export const prettifyStats = function (result, allCombinations) {
+  const combinations = STAT_KINDS.reduce(
     (combinationsA, statKind) =>
       prettifyCombinationsStat(statKind, combinationsA, allCombinations),
-    combinations,
+    result.combinations,
   )
+  return { ...result, combinations }
 }
 
 const prettifyCombinationsStat = function (

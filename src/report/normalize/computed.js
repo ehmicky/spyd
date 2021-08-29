@@ -7,7 +7,7 @@ import {
   mergeResultProps,
   normalizeCombEach,
 } from './common.js'
-import { prettifyTargetStats } from './stats/main.js'
+import { prettifyStats } from './stats/main.js'
 
 // Add report-specific properties to the target result, but only for
 // `combinations`. This is applied after measuring and history merging have
@@ -24,7 +24,7 @@ export const normalizeComputedResult = function (
   const resultA = normalizeCombAllUnmerged(result, sinceResult)
   const resultB = mergeHistory(resultA, mergedResult)
   const resultC = normalizeCombAllMerged(resultB)
-  const resultD = prettifyTargetStats(resultC)
+  const resultD = prettifyStats(resultC, resultC.combinations)
   const resultE = addScreenInfo(resultD)
   const reporters = config.reporters.map((reporter) =>
     normalizeComputedEach({ result: resultE, reporter, config }),
