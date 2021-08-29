@@ -1,6 +1,5 @@
 import stringWidth from 'string-width'
 
-import { titleColor } from '../../../utils/colors.js'
 import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 // Retrieve a single row, including the row name
@@ -13,7 +12,7 @@ export const getRow = function ({
   const cells = columns
     .map(({ cellStats }) => getCell(cellStats[rowIndex], columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
-  return `${titleColor(firstCell)}${cells}`
+  return `${firstCell}${cells}`
 }
 
 // Retrieve a single cell in the table, with a specific stat

@@ -1,6 +1,6 @@
 import { isSameDimension } from '../../../combination/ids.js'
 import { fieldColor } from '../../utils/colors.js'
-import { getCombinationNamePadded } from '../../utils/name.js'
+import { getCombinationNameColor } from '../../utils/name.js'
 import {
   STATS_SEPARATOR,
   STATS_SEPARATOR_COLORED,
@@ -11,7 +11,7 @@ import { getTables } from './common/main.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
-  const firstColumn = combinations.map(getCombinationNamePadded)
+  const firstColumn = combinations.map(getCombinationNameColor)
   const historyA = prettifyHistoryResults(history)
   const columns = historyA.map((historyResult) =>
     getColumn(historyResult, combinations),

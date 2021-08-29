@@ -1,5 +1,5 @@
 import { fieldColor } from '../../utils/colors.js'
-import { getCombinationNamePadded } from '../../utils/name.js'
+import { getCombinationNameColor } from '../../utils/name.js'
 import { NON_TRIMMABLE_SPACE } from '../../utils/space.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 
@@ -7,7 +7,7 @@ import { getTables } from './common/main.js'
 
 // Retrieve all stats shown in tables
 export const getStatTables = function (combinations, screenWidth) {
-  const firstColumn = combinations.map(getCombinationNamePadded)
+  const firstColumn = combinations.map(getCombinationNameColor)
   const columns = getColumns(combinations)
   return getTables(firstColumn, columns, screenWidth)
 }
