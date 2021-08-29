@@ -5,8 +5,14 @@ import { omitSystemProps } from '../../system/omit.js'
 import { omitCombinationsProps } from './omit.js'
 import { addCombinationsTitles, addDimensionsTitles } from './titles.js'
 
-// Add report-specific properties to a result that are in `combinations` and
-// but are not reporter-specific and must be applied for history is merged
+// Add report-specific properties to a result that are not in `combinations` nor
+// reporter-specific
+export const normalizeNonCombAll = function (result) {
+  return result
+}
+
+// Add report-specific properties to a result that are in `combinations`, are
+// not reporter-specific and must be applied before the history is merged.
 // In principle:
 //  - We should have different logic for `sinceResult` and other history results
 //    because `sinceResult` is used for the diff logic.
@@ -18,15 +24,9 @@ export const normalizeCombAllUnmerged = function (result, sinceResult) {
   return resultA
 }
 
-// Add report-specific properties to a result that are not in `combinations` nor
-// reporter-specific
-export const normalizeNonCombAll = function (result) {
-  return result
-}
-
-// Add report-specific properties to a result that are in `combinations` but not
-// reporter-specific.
-export const normalizeCombAll = function (result) {
+// Add report-specific properties to a result that are in `combinations`, are
+// not reporter-specific and must be applied after the history is merged.
+export const normalizeCombAllMerged = function (result) {
   const resultA = groupResultCombinations(result)
   const resultB = omitSystemProps(resultA)
   return resultB

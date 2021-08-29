@@ -1,7 +1,7 @@
 import {
   normalizeNonCombAll,
   normalizeCombAllUnmerged,
-  normalizeCombAll,
+  normalizeCombAllMerged,
   normalizeNonCombEach,
   mergeResultProps,
   normalizeCombEach,
@@ -28,10 +28,10 @@ export const normalizeEarlyResult = function (
 // This is only computed once at the beginning of the command.
 const normalizeHistory = function (history, sinceResult, config) {
   const historyA = history
-    .map((result) => normalizeCombAllUnmerged(result, sinceResult))
     .map(normalizeHistoryAll)
     .map(normalizeNonCombAll)
-    .map(normalizeCombAll)
+    .map((result) => normalizeCombAllUnmerged(result, sinceResult))
+    .map(normalizeCombAllMerged)
   const reporters = config.reporters.map((reporter) =>
     normalizeHistoryEach(historyA, reporter, config),
   )

@@ -2,7 +2,7 @@ import { mergeHistory, mergeLastResult } from '../../history/since/main.js'
 
 import {
   normalizeCombAllUnmerged,
-  normalizeCombAll,
+  normalizeCombAllMerged,
   mergeResultProps,
   normalizeCombEach,
 } from './common.js'
@@ -21,7 +21,7 @@ export const normalizeComputedResult = function (
 ) {
   const resultA = normalizeCombAllUnmerged(result, sinceResult)
   const resultB = mergeHistory(resultA, mergedResult)
-  const resultC = normalizeCombAll(resultB)
+  const resultC = normalizeCombAllMerged(resultB)
   const reporters = config.reporters.map((reporter) =>
     normalizeComputedEach({
       result: resultC,
@@ -56,5 +56,6 @@ const addLastResult = function (result, history, sinceResult) {
   const historyA = history.slice(0, -1)
   const lastResultA = mergeLastResult(lastResult, result)
   const lastResultB = normalizeCombAllUnmerged(lastResultA, sinceResult)
-  return { ...result, history: [...historyA, lastResultB] }
+  const lastResultC = normalizeCombAllMerged(lastResultB)
+  return { ...result, history: [...historyA, lastResultC] }
 }
