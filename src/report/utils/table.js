@@ -8,7 +8,6 @@ import {
   COLUMN_SEPARATOR,
   COLUMN_SEPARATOR_COLORED,
 } from './separator.js'
-import { NON_TRIMMABLE_SPACE } from './space.js'
 
 // Serialize a matrix of strings to a table.
 // Rows might have different array lengths, including 0.
@@ -101,6 +100,5 @@ const getRow = function ({ row, leftCell, leftWidth, columnsWidth }) {
   const rowA = row
     .map((cell) => padString(cell, columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
-  const rowB = `${leftCellA}${NAME_SEPARATOR_COLORED}${rowA}`
-  return rowB.trim() === '' ? NON_TRIMMABLE_SPACE : rowB
+  return `${leftCellA}${NAME_SEPARATOR_COLORED}${rowA}`
 }
