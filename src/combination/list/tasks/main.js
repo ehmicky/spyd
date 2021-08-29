@@ -93,15 +93,14 @@ const getRunnerTasks = async function (runner, cwd) {
   const runnerA = await loadRunner(runner)
   const {
     runnerId,
-    runnerConfig: { tasks },
+    runnerConfig: { tasks = await resolveDefaultTasks() },
   } = runnerA
-  const tasksA = tasks === undefined ? await resolveDefaultTasks() : tasks
 
   try {
-    const tasksB = await Promise.all(
-      tasksA.map((taskPath) => findTasks(taskPath, cwd, runnerA)),
+    const tasksA = await Promise.all(
+      tasks.map((taskPath) => findTasks(taskPath, cwd, runnerA)),
     )
-    return tasksB.flat()
+    return tasksA.flat()
   } catch (error) {
     error.message = `In runner "${runnerId}": ${error.message}`
     throw error
