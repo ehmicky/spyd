@@ -98,11 +98,12 @@ export const normalizeComputedResult = function (
   { mergedResult, history: [sinceResult] },
   config,
 ) {
-  const resultA = mergeHistory(result, mergedResult)
-  const resultB = normalizeCombAll(resultA)
+  const resultA = normalizeCombAllUnmerged(result, sinceResult)
+  const resultB = mergeHistory(resultA, mergedResult)
+  const resultC = normalizeCombAll(resultB)
   const reporters = config.reporters.map((reporter) =>
     normalizeComputedEach({
-      result: resultB,
+      result: resultC,
       sinceResult,
       reporter,
       config,
