@@ -2,7 +2,6 @@ import { mergeHistory, mergeLastResult } from '../../history/since/main.js'
 import { addScreenInfo } from '../tty.js'
 
 import {
-  normalizeCombAll,
   normalizeCombAllUnmerged,
   normalizeCombAllMerged,
   mergeResultProps,
@@ -26,12 +25,7 @@ export const normalizeComputedResult = function (
   const resultC = normalizeCombAllMerged(resultB)
   const resultD = addScreenInfo(resultC)
   const reporters = config.reporters.map((reporter) =>
-    normalizeComputedEach({
-      result: resultD,
-      sinceResult,
-      reporter,
-      config,
-    }),
+    normalizeComputedEach({ result: resultD, reporter, config }),
   )
   return { ...config, reporters }
 }
@@ -40,7 +34,6 @@ export const normalizeComputedResult = function (
 // related and reporter-specific.
 const normalizeComputedEach = function ({
   result,
-  sinceResult,
   reporter: {
     capabilities: { history: hasHistory },
   },
@@ -48,12 +41,7 @@ const normalizeComputedEach = function ({
   config,
 }) {
   const resultA = normalizeCombEach(result, reporter, config)
-  const resultB = addLastResult({
-    result: resultA,
-    history,
-    sinceResult,
-    hasHistory,
-  })
+  const resultB = addLastResult(resultA, history, hasHistory)
   const resultC = mergeResultProps(resultB, resultProps)
   const resultD = { ...resultC, ...footerParams }
   return { ...reporter, result: resultD }
@@ -63,7 +51,7 @@ const normalizeComputedEach = function ({
 //  - It must use history result's normalization, not target result
 //  - Its combinations do not include `mergeResult`
 // We also apply `capabilities.history: false`, which omits `result.history`.
-const addLastResult = function ({ result, history, sinceResult, hasHistory }) {
+const addLastResult = function (result, history, hasHistory) {
   if (!hasHistory) {
     return result
   }
@@ -71,6 +59,5 @@ const addLastResult = function ({ result, history, sinceResult, hasHistory }) {
   const lastResult = history[history.length - 1]
   const historyA = history.slice(0, -1)
   const lastResultA = mergeLastResult(lastResult, result)
-  const lastResultB = normalizeCombAll(lastResultA, sinceResult)
-  return { ...result, history: [...historyA, lastResultB] }
+  return { ...result, history: [...historyA, lastResultA] }
 }
