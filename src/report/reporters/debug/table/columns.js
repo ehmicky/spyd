@@ -2,9 +2,9 @@ import { getCombinationNameWidth } from '../../../utils/name.js'
 import { getResponsiveColumns } from '../../../utils/responsive.js'
 import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
 import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
+import { getStatLength } from '../common/row.js'
 
 import { getHeaderNames } from './header.js'
-import { getStatLength } from './row.js'
 
 // Retrieved all `stats.*` properties that are not `undefined`, for the columns.
 export const getColumns = function (combinations) {

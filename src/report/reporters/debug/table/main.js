@@ -1,6 +1,7 @@
+import { getRow } from '../common/row.js'
+
 import { getColumns, getColumnWidth, getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
-import { getRow } from './row.js'
 
 // Retrieve all stats shown in tables
 export const getTables = function (combinations, screenWidth) {

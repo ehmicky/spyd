@@ -6,9 +6,9 @@ import {
   STATS_SEPARATOR,
   STATS_SEPARATOR_COLORED,
 } from '../../../utils/separator.js'
+import { getStatLength } from '../common/row.js'
 
 import { getHeaderNames } from './header.js'
-import { getStatLength } from './row.js'
 
 // Retrieve all columns and their stats
 export const getColumns = function (history, combinations) {
