@@ -12,7 +12,7 @@ import {
   startPreview,
   endPreview,
   printPreviewStarting,
-} from './preview/start_end.js'
+} from './preview/start_end/main.js'
 import { getPreviewState } from './preview/state.js'
 
 // Perform a new benchmark.

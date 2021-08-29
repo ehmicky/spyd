@@ -1,9 +1,8 @@
 import process from 'process'
 import { emitKeypressEvents } from 'readline'
 
-import { isTtyInput } from '../../report/tty.js'
-
-import { refreshPreview } from './update.js'
+import { isTtyInput } from '../../../report/tty.js'
+import { refreshPreview } from '../update.js'
 
 // Handle user actions through key events.
 // We purposely use `bind()` so that this function can be called several times
