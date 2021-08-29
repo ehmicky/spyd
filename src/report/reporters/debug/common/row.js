@@ -1,3 +1,5 @@
+import stringWidth from 'string-width'
+
 import { titleColor } from '../../../utils/colors.js'
 import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
@@ -25,6 +27,6 @@ const getCell = function (stat, columnsWidth) {
   return `${padding}${stat.prettyColor}`
 }
 
-export const getStatLength = function ({ pretty }) {
-  return pretty.length
+export const getStatLength = function ({ prettyColor }) {
+  return stringWidth(prettyColor)
 }
