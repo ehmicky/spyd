@@ -48,6 +48,7 @@
     "inquirer": "^8.1.2",
     "is-interactive": "^2.0.0",
     "is-plain-obj": "^4.0.0",
+    "is-unicode-supported": "^1.1.0",
     "jest-validate": "^27.0.6",
     "js-yaml": "^4.0.0",
     "junk": "^4.0.0",
