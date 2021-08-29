@@ -16,20 +16,26 @@ export const findTasks = async function (
   { runnerId, runnerSpawn, runnerSpawnOptions, runnerVersions, runnerConfig },
 ) {
   await validateTask(taskPath)
-  const [{ taskIds }] = await measureCombinations(
-    [{ taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] }],
-    { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
-  )
-  validateDuplicateTaskIds(taskIds)
-  return taskIds.map((taskId) => ({
-    taskId,
-    taskPath,
-    runnerId,
-    runnerSpawn,
-    runnerSpawnOptions,
-    runnerVersions,
-    runnerConfig,
-  }))
+
+  try {
+    const [{ taskIds }] = await measureCombinations(
+      [{ taskPath, runnerSpawn, runnerSpawnOptions, runnerConfig, inputs: [] }],
+      { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
+    )
+    validateDuplicateTaskIds(taskIds)
+    return taskIds.map((taskId) => ({
+      taskId,
+      taskPath,
+      runnerId,
+      runnerSpawn,
+      runnerSpawnOptions,
+      runnerVersions,
+      runnerConfig,
+    }))
+  } catch (error) {
+    error.message = `In tasks file "${taskPath}" (runner "${runnerId}")\n${error.message}`
+    throw error
+  }
 }
 
 const validateTask = async function (taskPath) {
