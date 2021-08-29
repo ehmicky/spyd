@@ -12,7 +12,7 @@ import { getInitialSampleState } from './sample/state.js'
 // logic before and after each task such as computing timestamps.
 //  - When the task duration is too close to `measureCost`, it becomes
 //    impossible to distinguish them. The overall stats become both imprecise
-//    and inacurrate.
+//    and inaccurate.
 //  - We fix this by running a `for` loop so the `measureCost` runs only once
 //    for several task executions.
 //  - Using this `for` loop effectively applies an arithmetic mean, so it
