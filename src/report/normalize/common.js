@@ -3,9 +3,9 @@ import { addCombinationsDiff } from '../../history/compare/diff.js'
 import { omitSystemProps } from '../../system/omit.js'
 import { normalizeTimestamp } from '../../system/timestamp.js'
 
-import { addFakeTitles } from './fake_titles.js'
 import { omitCombinationsProps } from './omit.js'
-import { addCombinationsTitles, addDimensionsTitles } from './titles.js'
+import { addCombinationsTitles, addDimensionsTitles } from './titles_add.js'
+import { padTitles } from './titles_pad.js'
 
 // Add report-specific properties to a result that are not in `combinations` nor
 // reporter-specific
@@ -65,7 +65,7 @@ export const normalizeCombEach = function (
 ) {
   const resultA = addDimensionsTitles(result, titles, showTitles)
   const resultB = addCombinationsTitles(resultA, titles, showTitles)
-  const resultC = addFakeTitles({ result: resultB })
+  const resultC = padTitles({ result: resultB })
   const resultD = omitCombinationsProps(resultC, {
     showPrecision,
     showDiff,
