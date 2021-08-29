@@ -6,11 +6,11 @@ import {
   printToStdout,
 } from '../../../report/tty.js'
 import { updateReport } from '../results.js'
-import { addResultPreviewState } from '../state.js'
 import { refreshPreview } from '../update.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'
+import { addResultPreviewState } from './state.js'
 
 // Loading combinations can be slow if the task is long to load.
 // We print a message so the user knows something is happening.

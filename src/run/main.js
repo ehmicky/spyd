@@ -13,7 +13,7 @@ import {
   endPreview,
   printPreviewStarting,
 } from './preview/start_end/main.js'
-import { getPreviewState } from './preview/state.js'
+import { getPreviewState } from './preview/start_end/state.js'
 
 // Perform a new benchmark.
 // There is no watch mode because:

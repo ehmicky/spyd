@@ -1,5 +1,5 @@
-import { EMPTY_DURATION_LEFT } from './completion.js'
-import { START_DESCRIPTION } from './description.js'
+import { EMPTY_DURATION_LEFT } from '../completion.js'
+import { START_DESCRIPTION } from '../description.js'
 
 // Retrieve initial `previewState`.
 // This must be directly mutated because it is shared by reference by
