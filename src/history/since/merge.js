@@ -80,12 +80,7 @@ const mergePreviousResult = function (result, previousResult) {
   return resultB
 }
 
-export const mergeMergedResult = function (result, mergedResult) {
-  const resultA = mergeCombinations(result, mergedResult)
-  return resultA
-}
-
-const mergeCombinations = function (result, previousResult) {
+export const mergeCombinations = function (result, previousResult) {
   const previousCombinations = removeResultCombinations(
     previousResult.combinations,
     result,
