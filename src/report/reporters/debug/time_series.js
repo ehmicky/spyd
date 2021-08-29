@@ -63,8 +63,6 @@ const getCellStat = function (historyResult, combination) {
     stats: { median, medianMin, medianMax },
   } = historyCombinationA
   return medianMin === undefined
-    ? median
-    : {
-        prettyColor: `${medianMin.prettyColor}${STATS_SEPARATOR_COLORED}${medianMax.prettyColor}`,
-      }
+    ? median.prettyColor
+    : `${medianMin.prettyColor}${STATS_SEPARATOR_COLORED}${medianMax.prettyColor}`
 }
