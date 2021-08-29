@@ -11,11 +11,17 @@ import { wrapRows } from './utils/wrap.js'
 // lines will be eventually filled (e.g. when combinations stats become
 // available).
 export const handleContent = function ({ content, output, format, colors }) {
+  const padding = FORMATS[format].padding !== undefined
+  const contentA = handleContentString({ content, padding, colors })
+  return { content: contentA, output }
+}
+
+export const handleContentString = function ({ content, padding, colors }) {
   const contentA = handleColors(content, colors)
   const contentB = trimEnd(contentA)
   const contentC = wrapRows(contentB)
-  const contentD = padContents(contentC, format)
-  return { content: contentD, output }
+  const contentD = padContents(contentC, padding)
+  return contentD
 }
 
 // Reporters should always assume `colors` are true, but the core remove this
@@ -33,8 +39,8 @@ const trimEndLine = function (line) {
   return line.trimEnd()
 }
 
-const padContents = function (joinedContents, format) {
-  if (FORMATS[format].padding === undefined) {
+const padContents = function (joinedContents, padding) {
+  if (!padding) {
     return joinedContents
   }
 

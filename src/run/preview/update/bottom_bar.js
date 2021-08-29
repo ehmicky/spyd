@@ -1,17 +1,28 @@
+import stripFinalNewline from 'strip-final-newline'
+
+import { handleContentString } from '../../../report/handle.js'
 import { goodColor, noteColor } from '../../../report/utils/colors.js'
-import { addPadding } from '../../../report/utils/indent.js'
 import { wrapPaddedRows } from '../../../report/utils/wrap.js'
 
 // Retrieve bottom bar of preview
 export const getBottomBar = function ({
-  previewState: { actions },
+  previewState: {
+    actions,
+    reporters: [
+      {
+        config: { colors },
+      },
+    ],
+  },
   leftWidth,
   progressRow,
   counterRow,
 }) {
   const actionsA = getActions(actions, leftWidth)
-  const rows = addPadding(`${progressRow}\n\n${counterRow}\n\n${actionsA}`)
-  return rows
+  const content = `${progressRow}\n\n${counterRow}\n\n${actionsA}`
+  const bottomBar = handleContentString({ content, padding: true, colors })
+  const bottomBarA = stripFinalNewline(bottomBar)
+  return bottomBarA
 }
 
 // Show keys available for user actions in previews.
