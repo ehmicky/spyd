@@ -1,7 +1,8 @@
+import { getColumnWidth, getAllColumns } from '../common/columns.js'
 import { getHeader } from '../common/header.js'
 import { getRow } from '../common/row.js'
 
-import { getColumns, getColumnWidth, getAllColumns } from './columns.js'
+import { getColumns } from './columns.js'
 import { prettifyHistoryResults } from './history.js'
 
 // Show `result.history` as a time series
