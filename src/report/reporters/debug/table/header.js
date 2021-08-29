@@ -33,6 +33,6 @@ const getHeaderCell = function ({ headerName }, columnWidth) {
   return fieldColor(headerName.padStart(columnWidth))
 }
 
-export const getHeaderLength = function ({ headerName }) {
-  return headerName.length
+export const getHeaderLengths = function ({ headerName }) {
+  return [headerName.length]
 }
