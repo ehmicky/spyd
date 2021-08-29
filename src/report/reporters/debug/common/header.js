@@ -1,5 +1,4 @@
-import stringWidth from 'string-width'
-
+import { padString } from '../../../utils/pad.js'
 import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 // Retrieve the header rows
@@ -18,16 +17,7 @@ const getHeaderRow = function ({
   combinationNamePadding,
 }) {
   const headerCells = columns
-    .map(({ headerNames }) =>
-      getHeaderCell(headerNames[rowIndex], columnsWidth),
-    )
+    .map(({ headerNames }) => padString(headerNames[rowIndex], columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
   return `${combinationNamePadding}${headerCells}`
-}
-
-// Retrieve a cell in the header row
-const getHeaderCell = function (headerName, columnsWidth) {
-  const paddingWidth = columnsWidth - stringWidth(headerName)
-  const padding = ' '.repeat(paddingWidth)
-  return `${padding}${headerName}`
 }
