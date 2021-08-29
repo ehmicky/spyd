@@ -6,38 +6,26 @@ import {
   STATS_SEPARATOR,
   STATS_SEPARATOR_COLORED,
 } from '../../../utils/separator.js'
-import { prettifyStats } from '../../../utils/stats/main.js'
 
 import { getHeaderName, getHeaderLengths } from './header.js'
 import { getStatLength } from './row.js'
 
 // Retrieve all columns and their stats
 export const getColumns = function (history, combinations) {
-  const allCombinations = history.flatMap(getCombinations)
-  return history.map((historyResult) =>
-    getColumn(historyResult, combinations, allCombinations),
-  )
+  return history.map((historyResult) => getColumn(historyResult, combinations))
 }
 
-const getCombinations = function ({ combinations }) {
-  return combinations
-}
-
-const getColumn = function (historyResult, combinations, allCombinations) {
+const getColumn = function (historyResult, combinations) {
   const headerName = getHeaderName(historyResult)
-  const historyCombinations = prettifyStats(
-    historyResult.combinations,
-    allCombinations,
-  )
   const cellStats = combinations.map((combination) =>
-    getCellStat(historyCombinations, combination),
+    getCellStat(historyResult, combination),
   )
   return { headerName, cellStats }
 }
 
-const getCellStat = function (historyCombinations, combination) {
-  const historyCombinationA = historyCombinations.find((historyCombination) =>
-    isSameDimension(historyCombination, combination),
+const getCellStat = function (historyResult, combination) {
+  const historyCombinationA = historyResult.combinations.find(
+    (historyCombination) => isSameDimension(historyCombination, combination),
   )
 
   if (historyCombinationA === undefined) {

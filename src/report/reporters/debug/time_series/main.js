@@ -1,10 +1,12 @@
 import { getColumns, getColumnWidth, getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
+import { prettifyHistoryResults } from './history.js'
 import { getRow } from './row.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
-  const columns = getColumns(history, combinations)
+  const historyA = prettifyHistoryResults(history)
+  const columns = getColumns(historyA, combinations)
   const columnWidth = getColumnWidth(combinations, columns)
   const allColumns = getAllColumns({
     combinations,
