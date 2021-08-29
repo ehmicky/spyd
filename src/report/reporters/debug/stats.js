@@ -4,7 +4,7 @@ import { STAT_TITLES } from '../../utils/stat_titles.js'
 import { getTables } from '../../utils/table.js'
 
 // Retrieve all stats shown in tables
-export const getStatTables = function (combinations, screenWidth) {
+export const getStatsTables = function (combinations, screenWidth) {
   const statNames = getStatNames(combinations)
   const headerRow = getHeaderRow(statNames)
   const bodyRows = getBodyRows(combinations, statNames)
