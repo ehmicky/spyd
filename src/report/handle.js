@@ -1,22 +1,16 @@
 import stripAnsi from 'strip-ansi'
 import stripFinalNewline from 'strip-final-newline'
 
-import { FORMATS } from './formats/list.js'
 import { addPadding } from './utils/indent.js'
 import { wrapRows } from './utils/wrap.js'
 
 // Handle content returned by `reporter.report()`.
+// Also used on the preview bottom bar.
 // We purposely do not remove empty lines before/after the `content` since those
 // might be used to avoid vertical jitter when the reporter knows those empty
 // lines will be eventually filled (e.g. when combinations stats become
 // available).
-export const handleContent = function ({ content, output, format, colors }) {
-  const padding = FORMATS[format].padding !== undefined
-  const contentA = handleContentString({ content, padding, colors })
-  return { content: contentA, output }
-}
-
-export const handleContentString = function ({ content, padding, colors }) {
+export const handleContent = function ({ content, padding, colors }) {
   const contentA = handleColors(content, colors)
   const contentB = trimEnd(contentA)
   const contentC = wrapRows(contentB)

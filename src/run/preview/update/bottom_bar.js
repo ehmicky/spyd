@@ -1,6 +1,6 @@
 import stripFinalNewline from 'strip-final-newline'
 
-import { handleContentString } from '../../../report/handle.js'
+import { handleContent } from '../../../report/handle.js'
 import { goodColor, noteColor } from '../../../report/utils/colors.js'
 import { wrapPaddedRows } from '../../../report/utils/wrap.js'
 
@@ -20,7 +20,7 @@ export const getBottomBar = function ({
 }) {
   const actionsA = getActions(actions, leftWidth)
   const content = `${progressRow}\n\n${counterRow}\n\n${actionsA}`
-  const bottomBar = handleContentString({ content, padding: true, colors })
+  const bottomBar = handleContent({ content, colors, padding: true })
   const bottomBarA = stripFinalNewline(bottomBar)
   return bottomBarA
 }
