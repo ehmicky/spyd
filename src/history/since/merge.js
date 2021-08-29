@@ -30,8 +30,10 @@ import { mergeSystems } from '../../system/merge.js'
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
 export const getMergedResult = function (previous, sinceIndex, result) {
-  const history = previous.slice(sinceIndex)
-  return history.reduceRight(mergeHistoryResult, result)
+  return previous
+    .slice(sinceIndex)
+    .filter((historyResult) => !hasSameCombinations(historyResult, result))
+    .reduceRight(mergeHistoryResult, result)
 }
 
 // When merging two results, we keep most of the properties of the latest
@@ -42,10 +44,6 @@ export const getMergedResult = function (previous, sinceIndex, result) {
 //  - For example, `result.systems` should only show systems from combinations
 //    that have been merged, i.e. that are reported
 const mergeHistoryResult = function (mergedResult, historyResult) {
-  if (hasSameCombinations(historyResult, mergedResult)) {
-    return mergedResult
-  }
-
   const mergeResultA = mergeCombinations(mergedResult, historyResult)
   const mergedResultB = mergeSystems(mergeResultA, historyResult)
   return mergedResultB
