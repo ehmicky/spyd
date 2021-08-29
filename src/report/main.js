@@ -1,8 +1,9 @@
+import { applySince } from '../history/since/main.js'
+
 import { getContents } from './contents.js'
 import { finalizeContents } from './finalize.js'
 import { normalizeEarlyResult, normalizeComputedResult } from './normalize.js'
 import { outputContents } from './output.js'
-import { applySince } from './since.js'
 import { startReporters, endReporters } from './start_end.js'
 
 // Report final results in `show` and `remove` commands.

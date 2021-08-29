@@ -1,10 +1,10 @@
 import { groupDimensionInfos } from '../combination/group.js'
 import { sortCombinations } from '../combination/sort.js'
 import { addCombinationsDiff } from '../compare/diff.js'
+import { mergeHistory } from '../history/since/main.js'
 import { addFooter } from '../system/footer.js'
 
 import { omitCombinationsProps } from './omit.js'
-import { mergeHistory } from './since.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 
 // Normalize as many properties as possible at the beginning of the reporting

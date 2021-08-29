@@ -1,5 +1,5 @@
-import { findByDelta } from '../delta/main.js'
-import { normalizeSystems } from '../system/merge.js'
+import { findByDelta } from '../../delta/main.js'
+import { normalizeSystems } from '../../system/merge.js'
 
 import {
   mergeResults,

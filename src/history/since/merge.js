@@ -1,8 +1,8 @@
 import {
   pickResultCombinations,
   removeResultCombinations,
-} from '../combination/result.js'
-import { mergeSystems } from '../system/merge.js'
+} from '../../combination/result.js'
+import { mergeSystems } from '../../system/merge.js'
 
 // The `since` configuration property allows reporting several reports at once:
 //  - This reports the most recent combination of each sets of dimensions
