@@ -16,7 +16,7 @@ import {
 // `normalizeTargetResult()`
 export const normalizeComputedResult = function (
   result,
-  { mergedResult, history: [sinceResult] },
+  { history: [sinceResult], mergedResult },
   config,
 ) {
   const resultA = normalizeCombAllUnmerged(result, sinceResult)
