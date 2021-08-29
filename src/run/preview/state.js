@@ -29,14 +29,14 @@ export const getPreviewState = function ({ reporters, titles }) {
 export const addResultPreviewState = function ({
   previewState,
   result,
-  historyResult,
+  historyInfo,
   config: { reporters },
 }) {
   const reportersA = reporters.filter(reporterHasPreview)
   return {
     ...previewState,
     result,
-    historyResult,
+    historyInfo,
     total: result.combinations.length,
     reporters: reportersA,
   }

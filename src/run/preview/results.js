@@ -71,7 +71,7 @@ export const updateReport = async function ({
     reporters,
     titles,
     result,
-    historyResult,
+    historyInfo,
   },
 }) {
   const resultA = normalizeMeasuredResult(result)
@@ -84,7 +84,7 @@ export const updateReport = async function ({
   }
   const resultB = { ...resultA, preview }
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.report = await reportPreview(resultB, historyResult, {
+  previewState.report = await reportPreview(resultB, historyInfo, {
     reporters,
     titles,
   })

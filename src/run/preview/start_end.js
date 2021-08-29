@@ -26,7 +26,7 @@ export const printPreviewStarting = function ({ quiet }) {
 // Start clearing the screen
 export const startPreview = async function ({
   result,
-  historyResult,
+  historyInfo,
   previewState,
   config,
 }) {
@@ -37,7 +37,7 @@ export const startPreview = async function ({
   const previewStateA = addResultPreviewState({
     previewState,
     result,
-    historyResult,
+    historyInfo,
     config,
   })
   await updateReport({ previewState: previewStateA })

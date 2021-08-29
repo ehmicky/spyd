@@ -30,7 +30,7 @@ export const performRun = async function (config) {
   const { result, previous } = await createResult(config)
   const {
     result: resultA,
-    historyResult,
+    historyInfo,
     config: configA,
   } = await reportStart(result, previous, config)
 
@@ -41,7 +41,7 @@ export const performRun = async function (config) {
       contents,
     } = await previewAndMeasure({
       result: resultA,
-      historyResult,
+      historyInfo,
       previewState,
       config: configA,
     })
@@ -54,13 +54,13 @@ export const performRun = async function (config) {
 
 const previewAndMeasure = async function ({
   result,
-  historyResult,
+  historyInfo,
   previewState,
   config,
 }) {
   const previewStateA = await startPreview({
     result,
-    historyResult,
+    historyInfo,
     previewState,
     config,
   })
@@ -69,7 +69,7 @@ const previewAndMeasure = async function ({
     const resultA = await measureResult(result, config, previewStateA)
     const { programmaticResult, contents } = await reportCompute(
       resultA,
-      historyResult,
+      historyInfo,
       config,
     )
     await endPreview(previewStateA)
