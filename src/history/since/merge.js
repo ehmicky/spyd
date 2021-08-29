@@ -28,7 +28,7 @@ import { mergeSystems } from '../../system/merge.js'
 //  - This is especially true for systems. There is always only one system
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
-export const mergeResults = function (result, previous) {
+export const getMergedResult = function (result, previous) {
   return previous.reduceRight(mergePreviousResult, result)
 }
 

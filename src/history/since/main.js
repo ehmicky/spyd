@@ -2,7 +2,7 @@ import { normalizeSystems } from '../../system/merge.js'
 import { findByDelta } from '../delta/main.js'
 
 import {
-  mergeResults,
+  getMergedResult,
   mergeFilteredResults,
   mergeMergedResult,
 } from './merge.js'
@@ -71,7 +71,7 @@ export const applySince = async function (result, previous, { since, cwd }) {
 }
 
 const getHistoryResult = function (result, previous, sinceIndex) {
-  const mergedResult = mergeResults(result, previous.slice(sinceIndex))
+  const mergedResult = getMergedResult(result, previous.slice(sinceIndex))
   const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1)]
   return { mergedResult, history }
