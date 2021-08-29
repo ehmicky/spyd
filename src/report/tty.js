@@ -49,12 +49,21 @@ export const isTtyOutput = function () {
   return isInteractive({ stream: stdout })
 }
 
+// Add screen size-related information.
+// Not added to history results since this does not reflect the screen size when
+// the history result was taken
+export const addScreenInfo = function (result) {
+  const screenWidth = getPaddedScreenWidth()
+  const screenHeight = getPaddedScreenHeight()
+  return { ...result, screenWidth, screenHeight }
+}
+
 // Retrieve terminal width, excluding the padding added to reporting
 export const getPaddedScreenWidth = function () {
   return Math.max(getScreenWidth() - PADDING_SIZE * 2, 1)
 }
 
-export const getPaddedScreenHeight = function () {
+const getPaddedScreenHeight = function () {
   return Math.max(getScreenHeight() - PADDING_SIZE * 2, 1)
 }
 

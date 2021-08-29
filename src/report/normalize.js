@@ -7,7 +7,7 @@ import { omitMetadataProps, omitSystemProps } from '../system/omit.js'
 
 import { omitCombinationsProps } from './omit.js'
 import { addCombinationsTitles, addDimensionsTitles } from './titles.js'
-import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
+import { addScreenInfo } from './tty.js'
 
 // Normalize as many properties as possible at the beginning of the reporting
 // (once) as opposed to later on (repeatedly)
@@ -67,7 +67,7 @@ const normalizeTargetResult = function (result, { mergedResult }, config) {
     normalizeTargetEach({ result: resultA, mergedResult, reporter, config }),
   )
   const resultB = omitMetadataProps(resultA)
-  const resultC = addSizeInfo(resultB)
+  const resultC = addScreenInfo(resultB)
   return { result: resultC, config: { ...config, reporters } }
 }
 
@@ -136,15 +136,6 @@ const normalizeComputedEach = function ({
 // reporter-specific
 const normalizeNonCombAll = function (result) {
   return result
-}
-
-// Add screen size-related information.
-// Not added to history results since this does not reflect the screen size when
-// the history result was taken
-const addSizeInfo = function (result) {
-  const screenWidth = getPaddedScreenWidth()
-  const screenHeight = getPaddedScreenHeight()
-  return { ...result, screenWidth, screenHeight }
 }
 
 // Add report-specific properties to a result that are in `combinations` and
