@@ -5,9 +5,13 @@ import { getTables } from '../../utils/table/main.js'
 
 // Retrieve all stats shown in tables
 export const getStatTables = function (combinations, screenWidth) {
-  const firstColumn = combinations.map(getCombinationNameColor)
+  const firstColumn = getFirstColumn(combinations)
   const columns = getColumns(combinations)
   return getTables({ firstColumn, columns, headerHeight: 1, screenWidth })
+}
+
+const getFirstColumn = function (combinations) {
+  return combinations.map(getCombinationNameColor)
 }
 
 // Retrieved all `stats.*` properties that are not `undefined`, for the columns.

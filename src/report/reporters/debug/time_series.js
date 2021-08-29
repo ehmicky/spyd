@@ -7,7 +7,7 @@ import { getTables } from '../../utils/table/main.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
-  const firstColumn = combinations.map(getCombinationNameColor)
+  const firstColumn = getFirstColumn(combinations)
   const historyA = prettifyHistoryResults(history)
   const columns = historyA.map((historyResult) =>
     getColumn(historyResult, combinations),
@@ -33,6 +33,10 @@ const prettifyHistoryResult = function (historyResult, allCombinations) {
     allCombinations,
   )
   return { ...historyResult, combinations }
+}
+
+const getFirstColumn = function (combinations) {
+  return combinations.map(getCombinationNameColor)
 }
 
 const getColumn = function (historyResult, combinations) {
