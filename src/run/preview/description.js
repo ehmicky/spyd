@@ -1,4 +1,4 @@
-import { updatePreview } from './update/refresh.js'
+import { updatePreview } from './update/main.js'
 
 // Set the preview description
 export const updateDescription = async function (previewState, description) {

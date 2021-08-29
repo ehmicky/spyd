@@ -5,7 +5,7 @@ import {
   START_DESCRIPTION,
   MEASURE_DESCRIPTION,
 } from '../description.js'
-import { updatePreview } from '../update/refresh.js'
+import { updatePreview } from '../update/main.js'
 
 import { updateCombinationEnd } from './duration.js'
 
