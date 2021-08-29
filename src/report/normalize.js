@@ -5,7 +5,7 @@ import { mergeHistory } from '../history/since/main.js'
 import { addFooter } from '../system/footer.js'
 
 import { omitCombinationsProps } from './omit.js'
-import { addDimensionsTitles } from './titles.js'
+import { addCombinationsTitles, addDimensionsTitles } from './titles.js'
 import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 
 // Normalize as many properties as possible at the beginning of the reporting
@@ -176,10 +176,11 @@ const normalizeCombEach = function (
   { titles },
 ) {
   const resultA = addDimensionsTitles(result, titles, showTitles)
-  const resultB = omitCombinationsProps(resultA, {
+  const resultB = addCombinationsTitles(resultA, titles, showTitles)
+  const resultC = omitCombinationsProps(resultB, {
     showPrecision,
     showDiff,
     debugStats,
   })
-  return resultB
+  return resultC
 }

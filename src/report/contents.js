@@ -1,13 +1,12 @@
 import omit from 'omit.js'
 
 import { FORMATS } from './formats/list.js'
-import { addCombinationsTitles } from './titles.js'
 
 // Retrieve reporter's contents by calling all `reporter.report()` then
 // normalizing their return value and grouping it by `output`.
-export const getContents = async function ({ reporters, titles }) {
+export const getContents = async function ({ reporters }) {
   return await Promise.all(
-    reporters.map((reporter) => callReportFunc({ reporter, titles })),
+    reporters.map((reporter) => callReportFunc({ reporter })),
   )
 }
 
@@ -24,20 +23,23 @@ const callReportFunc = async function ({
     footerString,
     startData,
     config: reporterConfig,
-    config: { output, colors, showTitles },
+    config: { output, colors },
   },
-  titles,
 }) {
-  const resultA = addCombinationsTitles(result, titles, showTitles)
-  const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
-  const reporterArgs = [resultA, reportFuncProps, startData]
-  const content = await FORMATS[format].report(reporter, reporterArgs)
-  return { content, result: resultA, output, format, colors, footerString }
+  const reporterSpecificConfig = omit.default(
+    reporterConfig,
+    CORE_REPORTER_PROPS,
+  )
+  const content = await FORMATS[format].report(reporter, [
+    result,
+    reporterSpecificConfig,
+    startData,
+  ])
+  return { content, result, format, footerString, output, colors }
 }
 
-// We handle some reporterConfig properties in core, and do not pass those to
-// reporters.
-const CORE_REPORT_PROPS = [
+// We only pass reporter-specific properties, not core ones
+const CORE_REPORTER_PROPS = [
   'output',
   'colors',
   'showTitles',
