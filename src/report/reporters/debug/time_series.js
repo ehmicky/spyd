@@ -2,28 +2,13 @@ import { isSameDimension } from '../../../combination/ids.js'
 import { fieldColor } from '../../utils/colors.js'
 import { getCombinationNameColor } from '../../utils/name.js'
 import { STATS_SEPARATOR_COLORED } from '../../utils/separator.js'
-import { prettifyStats } from '../../utils/stats/main.js'
 import { getTables } from '../../utils/table.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
-  const historyA = prettifyHistoryResults(history)
-  const headerRows = getHeaderRows(historyA)
-  const bodyRows = getBodyRows(combinations, historyA)
+  const headerRows = getHeaderRows(history)
+  const bodyRows = getBodyRows(combinations, history)
   return getTables([...headerRows, ...bodyRows], screenWidth)
-}
-
-// Prettify the stats of `result.history`
-const prettifyHistoryResults = function (history) {
-  const allCombinations = history.flatMap(getCombinations)
-  return history.map((historyResult) => ({
-    ...historyResult,
-    combinations: prettifyStats(historyResult.combinations, allCombinations),
-  }))
-}
-
-const getCombinations = function ({ combinations }) {
-  return combinations
 }
 
 const getHeaderRows = function (history) {

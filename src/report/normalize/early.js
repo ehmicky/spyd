@@ -1,3 +1,5 @@
+import { prettifyHistoryStats } from '../utils/stats/main.js'
+
 import {
   normalizeNonCombAll,
   normalizeCombAll,
@@ -34,8 +36,11 @@ const normalizeHistory = function (history, sinceResult, config) {
     .map(normalizeHistoryAll)
     .map(normalizeNonCombAll)
     .map((result) => normalizeCombAll(result, sinceResult))
+  const historyB = historyA.map((result) =>
+    prettifyHistoryStats(result, historyA),
+  )
   const reporters = config.reporters.map((reporter) =>
-    normalizeHistoryEach(historyA, reporter, config),
+    normalizeHistoryEach(historyB, reporter, config),
   )
   return { ...config, reporters }
 }
