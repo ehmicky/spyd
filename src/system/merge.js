@@ -16,16 +16,17 @@ export const mergeSystems = function (result, previousResult) {
 }
 
 const appendSystem = function ({ systems }, { system: previousSystem }) {
-  return systems.some(({ id }) => id === previousSystem.id)
-    ? systems.map((system) => mergePreviousSystem(system, previousSystem))
-    : [...systems, previousSystem]
+  const systemIndex = systems.findIndex(({ id }) => id === previousSystem.id)
+  return systemIndex === -1
+    ? [...systems, previousSystem]
+    : [
+        ...systems.slice(0, systemIndex),
+        mergePreviousSystem(systems[systemIndex], previousSystem),
+        ...systems.slice(systemIndex + 1),
+      ]
 }
 
 const mergePreviousSystem = function (system, previousSystem) {
-  if (system.id !== previousSystem.id) {
-    return system
-  }
-
   return {
     ...previousSystem,
     ...system,
