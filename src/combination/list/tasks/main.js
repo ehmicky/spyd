@@ -91,14 +91,16 @@ export const listTasks = async function (runners, cwd) {
 
 const getRunnerTasks = async function (runner, cwd) {
   const runnerA = await loadRunner(runner)
-  const {
-    runnerConfig: { tasks = await resolveDefaultTasks() },
-  } = runnerA
-
+  const tasks = await getLoadedTasks(runnerA)
   const tasksA = await Promise.all(
     tasks.map((taskPath) => findTasks(taskPath, cwd, runnerA)),
   )
   return tasksA.flat()
+}
+
+const getLoadedTasks = async function ({ runnerConfig }) {
+  const { tasks = await resolveDefaultTasks() } = runnerConfig
+  return tasks
 }
 
 // Default value for `tasks`. Applied on each runner.
