@@ -1,7 +1,7 @@
 import { groupDimensionInfos } from '../combination/group.js'
 import { sortCombinations } from '../combination/sort.js'
 import { addCombinationsDiff } from '../history/compare/diff.js'
-import { mergeHistory } from '../history/since/main.js'
+import { mergeHistory, getLastResult } from '../history/since/main.js'
 import { addFooter } from '../system/footer.js'
 import { omitMetadataProps, omitSystemProps } from '../system/omit.js'
 
@@ -66,7 +66,9 @@ const normalizeTargetResult = function (result, { mergedResult }, config) {
   const reporters = config.reporters.map((reporter) =>
     normalizeTargetEach({ result: resultA, mergedResult, reporter, config }),
   )
-  return { result: resultA, config: { ...config, reporters } }
+  const resultB = omitMetadataProps(resultA)
+  const resultC = addSizeInfo(resultB)
+  return { result: resultC, config: { ...config, reporters } }
 }
 
 // Add report-specific properties to the target result that are not
@@ -93,20 +95,16 @@ const normalizeTargetEach = function ({
 // beginning of the command in `normalizeHistory()` and
 // `normalizeTargetResult()`
 export const normalizeComputedResult = function (
-  unmergedResult,
+  result,
   { mergedResult, history: [sinceResult] },
   config,
 ) {
-  const unmergedResultA = normalizeCombAllUnmerged(unmergedResult, sinceResult)
-  const result = mergeHistory(unmergedResultA, mergedResult)
-  const unmergedResultB = normalizeCombAll(unmergedResultA)
-  const resultA = normalizeCombAll(result)
-  const resultB = omitMetadataProps(resultA)
-  const resultC = addSizeInfo(resultB)
+  const resultA = mergeHistory(result, mergedResult)
+  const resultB = normalizeCombAll(resultA)
   const reporters = config.reporters.map((reporter) =>
     normalizeComputedEach({
-      result: resultC,
-      unmergedResult: unmergedResultB,
+      result: resultB,
+      sinceResult,
       reporter,
       config,
     }),
@@ -118,13 +116,17 @@ export const normalizeComputedResult = function (
 // related and reporter-specific.
 const normalizeComputedEach = function ({
   result,
-  unmergedResult,
+  sinceResult,
   reporter: { history, resultProps, footerParams, ...reporter },
   config,
 }) {
   const resultA = normalizeCombEach(result, reporter, config)
-  const unmergedResultA = normalizeCombEach(unmergedResult, reporter, config)
-  const resultB = { ...resultA, history: [...history, unmergedResultA] }
+  const lastResult = getLastResult(history, resultA)
+  const lastResultA = normalizeCombAllUnmerged(lastResult, sinceResult)
+  const resultB = {
+    ...resultA,
+    history: [...history.slice(0, -1), lastResultA],
+  }
   const resultC = mergeResultProps(resultB, resultProps)
   const resultD = { ...resultC, ...footerParams }
   return { ...reporter, result: resultD }

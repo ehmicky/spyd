@@ -1,3 +1,4 @@
+import { pickResultCombinations } from '../../combination/result.js'
 import { findByDelta } from '../delta/main.js'
 
 import { getMergedResult, getSinceResult, mergeCombinations } from './merge.js'
@@ -49,20 +50,29 @@ import { getMergedResult, getSinceResult, mergeCombinations } from './merge.js'
 //    combination
 export const applySince = async function (result, previous, { since, cwd }) {
   if (previous.length === 0) {
-    return { history: [] }
+    return { history: [result] }
   }
 
   const sinceIndex = await findByDelta(previous, since, cwd)
 
   if (sinceIndex === -1) {
     const sinceResult = getSinceResult(previous, previous.length - 1, result)
-    return { history: [sinceResult] }
+    return { history: [sinceResult, result] }
   }
 
   const mergedResult = getMergedResult(previous, sinceIndex, result)
   const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
-  const history = [sinceResultA, ...previous.slice(sinceIndex + 1)]
+  const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
   return { mergedResult, history }
+}
+
+// `history[last]` is updated with the final combinations during reporting.
+// However, that history result should be normalized like the others, so we
+// merge them then.
+export const getLastResult = function (history, result) {
+  const lastResult = history[history.length - 1]
+  const { combinations } = pickResultCombinations(result, lastResult)
+  return { ...lastResult, combinations }
 }
 
 // In principle, we should do both `applySince()` and `mergeHistory()` at
