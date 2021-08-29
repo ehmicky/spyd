@@ -1,10 +1,7 @@
 import { isSameDimension } from '../../../combination/ids.js'
 import { fieldColor } from '../../utils/colors.js'
 import { getCombinationNameColor } from '../../utils/name.js'
-import {
-  STATS_SEPARATOR,
-  STATS_SEPARATOR_COLORED,
-} from '../../utils/separator.js'
+import { STATS_SEPARATOR_COLORED } from '../../utils/separator.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 
 import { getTables } from './common/main.js'
@@ -68,7 +65,6 @@ const getCellStat = function (historyResult, combination) {
   return medianMin === undefined
     ? median
     : {
-        pretty: `${medianMin.pretty}${STATS_SEPARATOR}${medianMax.pretty}`,
         prettyColor: `${medianMin.prettyColor}${STATS_SEPARATOR_COLORED}${medianMax.prettyColor}`,
       }
 }
