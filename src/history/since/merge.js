@@ -46,7 +46,8 @@ export const getSinceResult = function (previous, sinceIndex, result) {
 // while only keeping the combinations after `since`.
 const mergeFilteredResults = function (result, previous, baseResult) {
   return previous.reduceRight(
-    mergeFilteredResult.bind(undefined, baseResult),
+    (resultA, previousResult) =>
+      mergeFilteredResult(resultA, previousResult, baseResult),
     pickResultCombinations(result, baseResult),
   )
 }
@@ -54,7 +55,7 @@ const mergeFilteredResults = function (result, previous, baseResult) {
 // We short-circuit this function when the number of combinations indicates no
 // more merging is possible, as a performance optimization when the number of
 // results is high.
-const mergeFilteredResult = function (baseResult, result, previousResult) {
+const mergeFilteredResult = function (result, previousResult, baseResult) {
   if (baseResult.combinations.length === result.combinations.length) {
     return result
   }
