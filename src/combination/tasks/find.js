@@ -1,7 +1,7 @@
 import { isFile } from 'path-type'
 
-import { PluginError, UserError } from '../../../error/main.js'
-import { measureCombinations } from '../../../run/measure/main.js'
+import { PluginError, UserError } from '../../error/main.js'
+import { measureCombinations } from '../../run/measure/main.js'
 
 // Each task has its own process, in order to prevent them from influencing
 // each other:

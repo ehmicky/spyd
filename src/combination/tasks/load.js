@@ -1,4 +1,4 @@
-import { UserError, PluginError } from '../../../error/main.js'
+import { UserError, PluginError } from '../../error/main.js'
 
 // Select the runners and retrieve their related spawn options using
 // `runner.launch()`

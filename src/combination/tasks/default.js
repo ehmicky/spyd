@@ -2,7 +2,7 @@ import { basename } from 'path'
 
 import { isNotJunk } from 'junk'
 
-import { lookupFiles } from '../../../config/lookup.js'
+import { lookupFiles } from '../../config/lookup.js'
 
 // Apply default value for `tasks`. Applied on each runner.
 // This only applies when `tasks` is `undefined`
