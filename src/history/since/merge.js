@@ -51,11 +51,9 @@ const mergeHistoryResult = function (mergedResult, historyResult) {
 }
 
 export const getSinceResult = function (previous, sinceIndex, mergedResult) {
-  return mergeFilteredResults(
-    previous[sinceIndex],
-    previous.slice(0, sinceIndex),
-    mergedResult,
-  )
+  const sinceResult = previous[sinceIndex]
+  const beforeSinceResults = previous.slice(0, sinceIndex)
+  return mergeFilteredResults(sinceResult, beforeSinceResults, mergedResult)
 }
 
 // Merge `previous` results to `result`, but only the combinations that exist
