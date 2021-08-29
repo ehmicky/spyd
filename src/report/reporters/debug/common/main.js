@@ -1,6 +1,8 @@
+import { padString } from '../../../utils/pad.js'
+import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
+
 import { getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
-import { getRow } from './row.js'
 
 export const getTables = function (firstColumn, columns, screenWidth) {
   const { allColumns, columnsWidth, firstColumnWidth } = getAllColumns(
@@ -35,4 +37,12 @@ const getRows = function (firstColumn, columns, columnsWidth) {
       getRow({ firstCell, rowIndex, columns, columnsWidth }),
     )
     .join('\n')
+}
+
+// Retrieve a single row, including the row name
+const getRow = function ({ firstCell, rowIndex, columns, columnsWidth }) {
+  const cells = columns
+    .map(({ cellStats }) => padString(cellStats[rowIndex] || '', columnsWidth))
+    .join(COLUMN_SEPARATOR_COLORED)
+  return `${firstCell}${cells}`
 }
