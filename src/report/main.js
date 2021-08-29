@@ -55,7 +55,7 @@ export const reportStart = async function (result, previous, config) {
 export const reportPreview = async function (result, historyInfo, config) {
   const contents = await computeContents(result, historyInfo, config)
   const contentsA = finalizeContents(contents)
-  return contentsA.length === 0 ? '' : contentsA[0].contentsString
+  return contentsA.length === 0 ? '' : contentsA[0].content
 }
 
 // Compute the report contents.

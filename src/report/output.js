@@ -17,9 +17,9 @@ export const outputContents = async function (contents) {
   await Promise.all(contents.map(outputContent))
 }
 
-const outputContent = async function ({ contentsString, output }) {
+const outputContent = async function ({ content, output }) {
   if (output === 'stdout') {
-    await printToStdout(contentsString)
+    await printToStdout(content)
     return
   }
 
@@ -32,19 +32,19 @@ const outputContent = async function ({ contentsString, output }) {
   const fileContent = await detectInsert(output)
 
   if (fileContent !== undefined) {
-    await insertContents(output, contentsString, fileContent)
+    await insertContents(output, content, fileContent)
     return
   }
 
-  await overwriteContents(output, contentsString)
+  await overwriteContents(output, content)
 }
 
-const overwriteContents = async function (output, contentsString) {
+const overwriteContents = async function (output, content) {
   const outputDir = dirname(output)
   await fs.mkdir(outputDir, { recursive: true })
 
   try {
-    await writeFileAtomic(output, contentsString)
+    await writeFileAtomic(output, content)
   } catch (error) {
     throw new UserError(
       `Could not write to "output" "${output}"\n${error.message}`,

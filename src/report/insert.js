@@ -38,30 +38,26 @@ const getFileContent = async function (output) {
   }
 }
 
-export const insertContents = async function (
-  output,
-  contentsString,
-  fileContent,
-) {
+export const insertContents = async function (output, content, fileContent) {
   const newline = detectNewline.graceful(fileContent)
   const lines = fileContent.split(newline)
 
-  const contentsStringA = replaceNewline(contentsString, newline)
-  const linesA = insertToLines(lines, contentsStringA, output)
+  const contentA = replaceNewline(content, newline)
+  const linesA = insertToLines(lines, contentA, output)
 
-  const contentsStringB = linesA.join(newline)
-  await writeFileContent(output, contentsStringB)
+  const contentB = linesA.join(newline)
+  await writeFileContent(output, contentB)
 }
 
-const replaceNewline = function (contentsString, newline) {
-  return stripFinalNewline(contentsString.split(UNIX_NEWLINE).join(newline))
+const replaceNewline = function (content, newline) {
+  return stripFinalNewline(content.split(UNIX_NEWLINE).join(newline))
 }
 
 const UNIX_NEWLINE = '\n'
 
 // We require both delimiters so that user is aware that both should be moved
 // when moving lines around
-const insertToLines = function (lines, contentsString, output) {
+const insertToLines = function (lines, content, output) {
   const startLine = getLineIndex(lines, START_LINE_TOKEN)
   const endLine = getLineIndex(lines, END_LINE_TOKEN)
 
@@ -79,7 +75,7 @@ const insertToLines = function (lines, contentsString, output) {
 
   const start = lines.slice(0, startLine + 1)
   const end = lines.slice(endLine)
-  return [...start, contentsString, ...end]
+  return [...start, content, ...end]
 }
 
 const getLineIndex = function (lines, token) {

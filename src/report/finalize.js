@@ -25,10 +25,10 @@ const hasContent = function ({ content }) {
 // Also add footer and padding.
 const joinContents = function (contents) {
   const [{ output, format, colors, footerString }] = contents
-  const contentsString = contents.map(getContentProperty).join('\n')
-  const contentsStringA = `${contentsString}${footerString}`
-  const contentsStringB = handleContent(contentsStringA, format, colors)
-  return { contentsString: contentsStringB, output }
+  const content = contents.map(getContentProperty).join('\n')
+  const contentA = `${content}${footerString}`
+  const contentB = handleContent(contentA, format, colors)
+  return { content: contentB, output }
 }
 
 const getContentProperty = function ({ content }) {
