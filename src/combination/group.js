@@ -3,11 +3,21 @@ import sortOn from 'sort-on'
 import { getMean } from '../stats/sum.js'
 
 import { COMBINATION_DIMENSIONS } from './dimensions.js'
+import { sortCombinations } from './sort.js'
 
 // Group combinations per dimension.
 // Each dimension is assigned to a top-level result.dimensions.* property.
 // It includes its mean speed and rank.
-export const groupDimensionInfos = function (combinations) {
+// Add `result.*` properties based on grouping combinations by dimension.
+export const groupResultCombinations = function (result) {
+  const { combinations: combinationsA, dimensions } = groupDimensionInfos(
+    result.combinations,
+  )
+  const combinationsB = sortCombinations(combinationsA)
+  return { ...result, combinations: combinationsB, dimensions }
+}
+
+const groupDimensionInfos = function (combinations) {
   return COMBINATION_DIMENSIONS.reduce(addDimensionInfo, {
     combinations,
     dimensions: {},

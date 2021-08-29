@@ -1,5 +1,4 @@
-import { groupDimensionInfos } from '../combination/group.js'
-import { sortCombinations } from '../combination/sort.js'
+import { groupResultCombinations } from '../combination/group.js'
 import { addCombinationsDiff } from '../history/compare/diff.js'
 import { mergeHistory, getLastResult } from '../history/since/main.js'
 import { addFooter } from '../system/footer.js'
@@ -151,14 +150,6 @@ const normalizeCombAll = function (result) {
   const resultA = groupResultCombinations(result)
   const resultB = omitSystemProps(resultA)
   return resultB
-}
-
-// Add `result.*` properties based on grouping combinations by dimension.
-const groupResultCombinations = function ({ combinations, ...result }) {
-  const { combinations: combinationsA, dimensions } =
-    groupDimensionInfos(combinations)
-  const combinationsB = sortCombinations(combinationsA)
-  return { ...result, combinations: combinationsB, dimensions }
 }
 
 // Add report-specific properties to a result that are not in `combinations` but
