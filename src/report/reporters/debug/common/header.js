@@ -24,6 +24,8 @@ const getHeaderRow = function ({
 
 // Retrieve a cell in the header row
 const getHeaderCell = function ({ headerNames }, rowIndex, columnsWidth) {
-  const headerName = headerNames[rowIndex].padStart(columnsWidth)
-  return fieldColor(headerName)
+  const headerName = headerNames[rowIndex]
+  const paddingWidth = columnsWidth - headerName.length
+  const padding = ' '.repeat(paddingWidth)
+  return fieldColor(`${padding}${headerName}`)
 }
