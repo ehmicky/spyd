@@ -3,7 +3,6 @@ import sortOn from 'sort-on'
 import { getMean } from '../stats/sum.js'
 
 import { COMBINATION_DIMENSIONS } from './dimensions.js'
-import { sortCombinations } from './sort.js'
 
 // Group combinations per dimension.
 // Each dimension is assigned to a top-level result.dimensions.* property.
@@ -75,3 +74,11 @@ const addRank = function ({ combination, dimension, idName, rankName }) {
   const rankValue = dimension.findIndex(({ id }) => id === combination[idName])
   return { ...combination, [rankName]: rankValue }
 }
+
+// Sort combinations so the fastest tasks will be first, then the fastest
+// combinations within each task (regardless of column)
+const sortCombinations = function (combinations) {
+  return sortOn(combinations, SORT_ORDER)
+}
+
+const SORT_ORDER = ['taskRank', 'runnerRank', 'systemRank']
