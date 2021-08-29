@@ -87,3 +87,8 @@ const trimWidth = function (labels, labelsLength, width) {
 
   return labelsA
 }
+
+// How many terminal lines the bottom line takes
+export const ABSCISSA_BOTTOM_HEIGHT = 1
+// How many terminal lines the labels take
+export const ABSCISSA_LABELS_HEIGHT = 1

@@ -1,5 +1,5 @@
 import { serializeHistograms } from '../../utils/histogram/main.js'
-import { joinSections } from '../../utils/join.js'
+import { joinSections, joinSubSections } from '../../utils/join.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
@@ -17,7 +17,8 @@ const reportTerminal = function ({ combinations, screenWidth, history }) {
     showStats: false,
     screenWidth,
   })
-  return joinSections([tables, timeSeries, ...histograms])
+  const histogram = joinSubSections(histograms)
+  return joinSections([tables, timeSeries, histogram])
 }
 
 export const debug = { reportTerminal, debugStats: true }
