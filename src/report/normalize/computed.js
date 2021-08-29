@@ -1,6 +1,7 @@
 import { mergeHistory, mergeLastResult } from '../../history/since/main.js'
 
 import {
+  normalizeCombAll,
   normalizeCombAllUnmerged,
   normalizeCombAllMerged,
   mergeResultProps,
@@ -55,7 +56,6 @@ const addLastResult = function (result, history, sinceResult) {
   const lastResult = history[history.length - 1]
   const historyA = history.slice(0, -1)
   const lastResultA = mergeLastResult(lastResult, result)
-  const lastResultB = normalizeCombAllUnmerged(lastResultA, sinceResult)
-  const lastResultC = normalizeCombAllMerged(lastResultB)
-  return { ...result, history: [...historyA, lastResultC] }
+  const lastResultB = normalizeCombAll(lastResultA, sinceResult)
+  return { ...result, history: [...historyA, lastResultB] }
 }

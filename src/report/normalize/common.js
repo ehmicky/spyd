@@ -12,6 +12,14 @@ export const normalizeNonCombAll = function (result) {
 }
 
 // Add report-specific properties to a result that are in `combinations`, are
+// not reporter-specific
+export const normalizeCombAll = function (result, sinceResult) {
+  const resultA = normalizeCombAllUnmerged(result, sinceResult)
+  const resultB = normalizeCombAllMerged(resultA)
+  return resultB
+}
+
+// Add report-specific properties to a result that are in `combinations`, are
 // not reporter-specific and must be applied before the history is merged.
 // In principle:
 //  - We should have different logic for `sinceResult` and other history results

@@ -1,7 +1,6 @@
 import {
   normalizeNonCombAll,
-  normalizeCombAllUnmerged,
-  normalizeCombAllMerged,
+  normalizeCombAll,
   normalizeNonCombEach,
   mergeResultProps,
   normalizeCombEach,
@@ -30,8 +29,7 @@ const normalizeHistory = function (history, sinceResult, config) {
   const historyA = history
     .map(normalizeHistoryAll)
     .map(normalizeNonCombAll)
-    .map((result) => normalizeCombAllUnmerged(result, sinceResult))
-    .map(normalizeCombAllMerged)
+    .map((result) => normalizeCombAll(result, sinceResult))
   const reporters = config.reporters.map((reporter) =>
     normalizeHistoryEach(historyA, reporter, config),
   )
