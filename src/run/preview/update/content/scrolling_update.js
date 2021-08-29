@@ -1,4 +1,4 @@
-import { getScreenHeight } from '../../../report/tty.js'
+import { getScreenHeight } from '../../../../report/tty.js'
 
 // When content is taller than the terminal height, allow user to scroll with
 // up/down. We do this by keeping tracking of `scrollTop` and truncating the

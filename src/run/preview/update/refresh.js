@@ -1,7 +1,7 @@
 import { printToStdout, clearScreen } from '../../../report/tty.js'
-import { getPreviewContent } from '../content/main.js'
 
 import { updateCompletion } from './completion.js'
+import { getPreviewContent } from './content/main.js'
 
 // Refresh preview.
 // Done:
