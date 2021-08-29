@@ -6,9 +6,8 @@ import {
   MEASURE_DESCRIPTION,
 } from '../description.js'
 
-import { updateCompletion } from './completion.js'
 import { updateCombinationEnd } from './duration.js'
-import { refreshPreview } from './refresh.js'
+import { updatePreview } from './refresh.js'
 
 // Preview results progressively, as combinations are being measured.
 // Reporters should:
@@ -35,9 +34,8 @@ export const updatePreviewStats = async function ({
 
   updateCombinationEnd({ stats, previewState, durationState, precisionTarget })
   setDescriptionIf(previewState, MEASURE_DESCRIPTION, START_DESCRIPTION)
-  updateCompletion(previewState)
 
-  await refreshPreview(previewState)
+  await updatePreview(previewState)
 }
 
 const shouldSkipPreview = function ({ quiet }, { samples, median }) {
