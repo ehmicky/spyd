@@ -67,9 +67,9 @@ export const applySince = async function (result, previous, { since, cwd }) {
 }
 
 const getHistoryResult = function (result, previous, sinceIndex) {
-  const mergedResult = getMergedResult(result, previous.slice(sinceIndex))
-  const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
-  const history = [sinceResultA, ...previous.slice(sinceIndex + 1)]
+  const mergedResult = getMergedResult(previous, sinceIndex, result)
+  const sinceResult = getSinceResult(previous, sinceIndex, mergedResult)
+  const history = [sinceResult, ...previous.slice(sinceIndex + 1)]
   return { mergedResult, history }
 }
 
