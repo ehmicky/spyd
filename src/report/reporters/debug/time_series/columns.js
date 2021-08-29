@@ -7,7 +7,7 @@ import {
   STATS_SEPARATOR_COLORED,
 } from '../../../utils/separator.js'
 
-import { getHeaderName, getHeaderLengths } from './header.js'
+import { getHeaderNames, getHeaderLengths } from './header.js'
 import { getStatLength } from './row.js'
 
 // Retrieve all columns and their stats
@@ -16,12 +16,12 @@ export const getColumns = function (history, combinations) {
 }
 
 const getColumn = function (historyResult, combinations) {
-  const headerName = getHeaderName(historyResult)
-  const headerLengths = getHeaderLengths(headerName)
+  const headerNames = getHeaderNames(historyResult)
+  const headerLengths = getHeaderLengths(headerNames)
   const cellStats = combinations.map((combination) =>
     getCellStat(historyResult, combination),
   )
-  return { headerName, headerLengths, cellStats }
+  return { headerNames, headerLengths, cellStats }
 }
 
 const getCellStat = function (historyResult, combination) {

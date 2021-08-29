@@ -3,47 +3,41 @@ import { getCombinationNameWidth } from '../../../utils/name.js'
 import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 // Retrieve header name
-export const getHeaderName = function ({ timestamp }) {
+export const getHeaderNames = function ({ timestamp }) {
   const [day, ...timeAndTimezone] = timestamp.split(' ')
   const time = timeAndTimezone.join(' ')
-  return { day, time }
+  return [day, time, '']
 }
 
-export const getHeaderLengths = function (headerName) {
-  return HEADER_PROP_NAMES.map((propName) => headerName[propName].length)
+export const getHeaderLengths = function (headerNames) {
+  return headerNames.map((headerName) => headerName.length)
 }
 
-// Retrieve the header row
+// Retrieve the header rows
 export const getHeader = function ([combination], columns, columnWidth) {
   const combinationNamePadding = ' '.repeat(
     getCombinationNameWidth(combination),
   )
-  return FULL_HEADER_PROP_NAMES.map((propName) =>
-    getHeaderRow({ columns, columnWidth, propName, combinationNamePadding }),
+  const { length } = columns[0].headerNames
+  return Array.from({ length }, (_, rowIndex) =>
+    getHeaderRow({ columns, columnWidth, rowIndex, combinationNamePadding }),
   ).join('\n')
 }
 
 const getHeaderRow = function ({
   columns,
   columnWidth,
-  propName,
+  rowIndex,
   combinationNamePadding,
 }) {
-  const headerRow = columns
-    .map((column) => getHeaderCell(column, columnWidth, propName))
+  const headerCells = columns
+    .map((column) => getHeaderCell(column, rowIndex, columnWidth))
     .join(COLUMN_SEPARATOR_COLORED)
-  return `${combinationNamePadding}${headerRow}`
+  return `${combinationNamePadding}${headerCells}`
 }
 
 // Retrieve a cell in the header row
-const getHeaderCell = function (column, columnWidth, propName) {
-  if (propName === '') {
-    return ' '.repeat(columnWidth)
-  }
-
-  const headerName = column.headerName[propName].padStart(columnWidth)
+const getHeaderCell = function ({ headerNames }, rowIndex, columnWidth) {
+  const headerName = headerNames[rowIndex].padStart(columnWidth)
   return fieldColor(headerName)
 }
-
-const HEADER_PROP_NAMES = ['day', 'time']
-const FULL_HEADER_PROP_NAMES = [...HEADER_PROP_NAMES, '']
