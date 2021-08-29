@@ -1,6 +1,5 @@
 import { mergeHistory, mergeLastResult } from '../../history/since/main.js'
 import { addScreenInfo } from '../tty.js'
-import { prettifyTargetStats } from '../utils/stats/main.js'
 
 import {
   normalizeCombAllUnmerged,
@@ -8,6 +7,7 @@ import {
   mergeResultProps,
   normalizeCombEach,
 } from './common.js'
+import { prettifyTargetStats } from './stats/main.js'
 
 // Add report-specific properties to the target result, but only for
 // `combinations`. This is applied after measuring and history merging have

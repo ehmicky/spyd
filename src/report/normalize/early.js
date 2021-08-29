@@ -1,5 +1,3 @@
-import { prettifyHistoryStats } from '../utils/stats/main.js'
-
 import {
   normalizeNonCombAll,
   normalizeCombAll,
@@ -7,6 +5,7 @@ import {
   mergeResultProps,
   normalizeCombEach,
 } from './common.js'
+import { prettifyHistoryStats } from './stats/main.js'
 import { normalizeTargetResult } from './target.js'
 
 // Normalize as many properties as possible at the beginning of the reporting

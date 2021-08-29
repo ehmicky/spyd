@@ -1,4 +1,4 @@
-import { badColor, goodColor, suffixColor } from '../colors.js'
+import { badColor, goodColor, suffixColor } from '../../utils/colors.js'
 
 // Add `stat.prettyColor` and `stat.prettyPaddedColor`
 export const addStatColor = function ({
