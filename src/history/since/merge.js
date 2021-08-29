@@ -70,7 +70,7 @@ const mergeFilteredResult = function (baseResult, result, previousResult) {
 //  - For example, `result.systems` should only show systems from combinations
 //    that have been merged, i.e. that are reported
 const mergePreviousResult = function (result, previousResult) {
-  const { result: resultA, previousCombinations } = mergeResult(
+  const { result: resultA, previousCombinations } = mergeCombinations(
     result,
     previousResult,
   )
@@ -80,11 +80,11 @@ const mergePreviousResult = function (result, previousResult) {
 }
 
 export const mergeMergedResult = function (result, mergedResult) {
-  const { result: resultA } = mergeResult(result, mergedResult)
+  const { result: resultA } = mergeCombinations(result, mergedResult)
   return resultA
 }
 
-const mergeResult = function (result, previousResult) {
+const mergeCombinations = function (result, previousResult) {
   const previousCombinations = removeResultCombinations(
     previousResult.combinations,
     result,
