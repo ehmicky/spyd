@@ -1,23 +1,24 @@
 import stringWidth from 'string-width'
 
 import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
-import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
 
 export const getAllColumns = function (firstColumn, columns, screenWidth) {
-  const columnsA = columns.length === 0 ? EMPTY_COLUMNS : columns
-  const columnsWidth = Math.max(...columnsA.map(getColumnWidth))
   const firstColumnWidth = Math.max(...firstColumn.map(stringWidth))
+
+  if (columns.length === 0) {
+    return { allColumns: [[]], columnsWidth: 0, firstColumnWidth }
+  }
+
+  const columnsWidth = Math.max(...columns.map(getColumnWidth))
   const availableWidth = screenWidth - firstColumnWidth
   const allColumns = getResponsiveColumns({
     availableWidth,
     columnsWidth,
     separatorWidth: COLUMN_SEPARATOR.length,
-    columns: columnsA,
+    columns,
   })
   return { allColumns, columnsWidth, firstColumnWidth }
 }
-
-const EMPTY_COLUMNS = [{ headerNames: [NON_TRIMMABLE_SPACE], cellStats: [] }]
 
 // Each column is padded to the same width, so that they align vertically
 const getColumnWidth = function ({ cellStats, headerNames }) {

@@ -1,5 +1,6 @@
 import { padString } from '../../../utils/pad.js'
 import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
+import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
 
 import { getAllColumns } from './columns.js'
 
@@ -18,6 +19,7 @@ export const getTables = function ({
     getTable({
       firstColumn,
       columns: columnsA,
+      headerHeight,
       columnsWidth,
       firstColumnWidth,
     }),
@@ -27,19 +29,29 @@ export const getTables = function ({
 const getTable = function ({
   firstColumn,
   columns,
+  headerHeight,
   columnsWidth,
   firstColumnWidth,
 }) {
-  const header = getHeader(columns, columnsWidth, firstColumnWidth)
+  const header = getHeader({
+    columns,
+    headerHeight,
+    columnsWidth,
+    firstColumnWidth,
+  })
   const rows = getRows(firstColumn, columns, columnsWidth)
   return `${header}\n${rows}`
 }
 
 // Retrieve the header rows
-const getHeader = function (columns, columnsWidth, firstColumnWidth) {
+const getHeader = function ({
+  columns,
+  headerHeight,
+  columnsWidth,
+  firstColumnWidth,
+}) {
   const firstColumnPadding = ' '.repeat(firstColumnWidth)
-  const { length } = columns[0].headerNames
-  return Array.from({ length }, (_, rowIndex) =>
+  return Array.from({ length: headerHeight }, (_, rowIndex) =>
     getHeaderRow({ columns, columnsWidth, rowIndex, firstColumnPadding }),
   ).join('\n')
 }
@@ -50,6 +62,10 @@ const getHeaderRow = function ({
   rowIndex,
   firstColumnPadding,
 }) {
+  if (columns.length === 0) {
+    return NON_TRIMMABLE_SPACE
+  }
+
   const headerCells = columns
     .map(({ headerNames }) => padString(headerNames[rowIndex], columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
