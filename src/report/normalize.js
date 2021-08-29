@@ -1,6 +1,6 @@
 import { groupResultCombinations } from '../combination/group.js'
 import { addCombinationsDiff } from '../history/compare/diff.js'
-import { mergeHistory, getLastResult } from '../history/since/main.js'
+import { mergeHistory, mergeLastResult } from '../history/since/main.js'
 import { addFooter } from '../system/footer.js'
 import { omitMetadataProps, omitSystemProps } from '../system/omit.js'
 
@@ -120,11 +120,12 @@ const normalizeComputedEach = function ({
   config,
 }) {
   const resultA = normalizeCombEach(result, reporter, config)
-  const lastResult = getLastResult(history, resultA)
-  const lastResultA = normalizeCombAllUnmerged(lastResult, sinceResult)
+  const lastResult = history[history.length - 1]
+  const lastResultA = mergeLastResult(lastResult, resultA)
+  const lastResultB = normalizeCombAllUnmerged(lastResultA, sinceResult)
   const resultB = {
     ...resultA,
-    history: [...history.slice(0, -1), lastResultA],
+    history: [...history.slice(0, -1), lastResultB],
   }
   const resultC = mergeResultProps(resultB, resultProps)
   const resultD = { ...resultC, ...footerParams }

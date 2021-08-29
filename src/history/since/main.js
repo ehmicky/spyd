@@ -69,8 +69,7 @@ export const applySince = async function (result, previous, { since, cwd }) {
 // `history[last]` is updated with the final combinations during reporting.
 // However, that history result should be normalized like the others, so we
 // merge them then.
-export const getLastResult = function (history, result) {
-  const lastResult = history[history.length - 1]
+export const mergeLastResult = function (lastResult, result) {
   const { combinations } = pickResultCombinations(result, lastResult)
   return { ...lastResult, combinations }
 }
