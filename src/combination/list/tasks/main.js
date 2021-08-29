@@ -99,7 +99,7 @@ const getRunnerTasks = async function (runner, cwd) {
 
   try {
     const tasksB = await Promise.all(
-      tasksA.map((taskPath) => findTasks({ taskPath, runnerA, cwd })),
+      tasksA.map((taskPath) => findTasks(taskPath, cwd, runnerA)),
     )
     return tasksB.flat()
   } catch (error) {
