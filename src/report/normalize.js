@@ -21,7 +21,7 @@ export const normalizeEarlyResult = function (result, historyInfo, config) {
 
 // Add report-specific properties to each `history` result.
 // This is only computed once at the beginning of the command.
-export const normalizeHistory = function (
+const normalizeHistory = function (
   { history, history: [sinceResult] },
   config,
 ) {
@@ -57,11 +57,7 @@ const normalizeHistoryEach = function (history, reporter) {
 // `combinations` since this is applied before measuring and history merging
 // have been performed.
 // This is only computed once at the beginning of the command.
-export const normalizeTargetResult = function (
-  result,
-  { mergedResult },
-  config,
-) {
+const normalizeTargetResult = function (result, { mergedResult }, config) {
   const resultA = addSizeInfo(result)
   const resultB = normalizeNonCombAll(resultA)
   const reporters = config.reporters.map((reporter) =>
