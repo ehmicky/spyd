@@ -1,5 +1,5 @@
 import { concatBlocks } from '../concat.js'
-import { getCombinationNameWidth } from '../name.js'
+import { getCombinationNamePadded } from '../name.js'
 
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
@@ -28,7 +28,7 @@ const DEFAULT_HEIGHT = 2 * EXTRA_HEIGHT
 const getContentWidth = function (combinations, showStats, screenWidth) {
   return Math.max(
     screenWidth -
-      getCombinationNameWidth(combinations[0]) -
+      getCombinationNamePadded(combinations[0]).length -
       getMinBlockWidth(combinations, showStats) -
       getMaxBlockWidth(combinations, showStats),
     1,
