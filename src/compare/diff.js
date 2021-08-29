@@ -19,13 +19,6 @@ import { isDiffPrecise } from '../stats/welch.js'
 //  - The difference might not be due to the current commit but to the previous
 //    one, making it less meaningful
 //  - This would require additional visualization in reporters
-// This must be run before:
-//  - `showDiff` has been applied
-//  - `showPrecision` has been applied, so we can use the `median`
-//  - Combinations have been merged to the target result. Otherwise, those would
-//    have `diff: 0`
-//  - Using `history` before it's been normalized, to ensure `showPrecision`
-//    was not applied
 export const addCombinationsDiff = function (result, sinceResult) {
   if (sinceResult === undefined) {
     return result

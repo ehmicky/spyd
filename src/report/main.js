@@ -39,11 +39,11 @@ export const reportResult = async function (result, previous, config) {
 
 // Start reporting
 export const reportStart = async function (result, previous, config) {
-  const [{ historyResult, history }, configA] = await Promise.all([
+  const [historyResult, configA] = await Promise.all([
     applySince(result, previous, config),
     startReporters(config),
   ])
-  const configB = normalizeHistory(history, configA)
+  const configB = normalizeHistory(historyResult, configA)
   const { result: resultA, config: configC } = normalizeTargetResult(
     result,
     historyResult,

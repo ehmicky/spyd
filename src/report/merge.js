@@ -71,8 +71,8 @@ const mergePreviousResult = function (result, previousResult) {
     : mergeSystems(resultA, previousResult)
 }
 
-export const mergeHistoryResult = function (result, historyResult) {
-  const { result: resultA } = mergeResult(result, historyResult)
+export const mergeMergedResult = function (result, mergedResult) {
+  const { result: resultA } = mergeResult(result, mergedResult)
   return resultA
 }
 

@@ -9,9 +9,13 @@ import { getPaddedScreenWidth, getPaddedScreenHeight } from './tty.js'
 
 // Add report-specific properties to each `history` result.
 // This is only computed once at the beginning of the command.
-export const normalizeHistory = function (history, config) {
+export const normalizeHistory = function (
+  { history, history: [sinceResult] },
+  config,
+) {
   const historyA = history
-    .map(normalizeHistoryResult)
+    .map(normalizeHistoryAll)
+    .map((result) => normalizeCombAllUnmerged(result, sinceResult))
     .map(normalizeNonCombAll)
     .map(normalizeCombAll)
   const reporters = config.reporters.map((reporter) =>
@@ -23,7 +27,7 @@ export const normalizeHistory = function (history, config) {
 // Add report-specific properties that only apply to `history` results
 // History should only be accessed at the target result level. We set an empty
 // array of history results for monomorphism.
-const normalizeHistoryResult = function (result) {
+const normalizeHistoryAll = function (result) {
   return { ...result, history: [] }
 }
 
@@ -41,16 +45,15 @@ const normalizeHistoryEach = function (history, reporter) {
 // `combinations` since this is applied before measuring and history merging
 // have been performed.
 // This is only computed once at the beginning of the command.
-export const normalizeTargetResult = function (result, historyResult, config) {
+export const normalizeTargetResult = function (
+  result,
+  { mergedResult },
+  config,
+) {
   const resultA = addSizeInfo(result)
   const resultB = normalizeNonCombAll(resultA)
   const reporters = config.reporters.map((reporter) =>
-    normalizeTargetResEach({
-      result: resultB,
-      historyResult,
-      reporter,
-      config,
-    }),
+    normalizeTargetEach({ result: resultB, mergedResult, reporter, config }),
   )
   return { result: resultB, config: { ...config, reporters } }
 }
@@ -60,14 +63,14 @@ export const normalizeTargetResult = function (result, historyResult, config) {
 // This is saved to `reporter.resultProps` and merged later.
 // Footers are only applied to the target result, not the history results, since
 // they are not very useful for those.
-const normalizeTargetResEach = function ({
+const normalizeTargetEach = function ({
   result,
-  historyResult,
+  mergedResult,
   reporter,
   config,
 }) {
   const resultProps = normalizeNonCombEach(result, reporter)
-  const reporterA = addFooter({ result, historyResult, reporter, config })
+  const reporterA = addFooter({ result, mergedResult, reporter, config })
   return { ...reporterA, resultProps }
 }
 
@@ -80,25 +83,22 @@ const normalizeTargetResEach = function ({
 // `normalizeTargetResult()`
 export const normalizeComputedResult = function (
   unmergedResult,
-  historyResult,
+  { mergedResult, history: [sinceResult] },
   config,
 ) {
-  const unmergedResultA = addCombinationsDiff(
-    unmergedResult,
-    config.reporters[0].history[0],
-  )
-  const result = mergeHistory(unmergedResultA, historyResult)
+  const unmergedResultA = normalizeCombAllUnmerged(unmergedResult, sinceResult)
+  const result = mergeHistory(unmergedResultA, mergedResult)
   const unmergedResultB = normalizeCombAll(unmergedResultA)
   const resultA = normalizeCombAll(result)
   const reporters = config.reporters.map((reporter) =>
-    normalizeComputedResEach(resultA, unmergedResultB, reporter),
+    normalizeComputedEach(resultA, unmergedResultB, reporter),
   )
   return { ...config, reporters }
 }
 
 // Add report-specific properties to the target result that are `combinations`
 // related and reporter-specific.
-const normalizeComputedResEach = function (
+const normalizeComputedEach = function (
   result,
   unmergedResult,
   { history, resultProps, footerParams, ...reporter },
@@ -125,10 +125,15 @@ const addSizeInfo = function (result) {
   return { ...result, screenWidth, screenHeight }
 }
 
+// Add report-specific properties to a result that are in `combinations` and
+// but are not reporter-specific and must be applied for history is merged
+const normalizeCombAllUnmerged = function (result, sinceResult) {
+  const resultA = addCombinationsDiff(result, sinceResult)
+  return resultA
+}
+
 // Add report-specific properties to a result that are in `combinations` but not
 // reporter-specific.
-// We exclude `diff[Precise]` since it relies on `history`, which makes it hard
-// to handle. Also, we do not need it inside history result
 const normalizeCombAll = function (result) {
   const resultB = groupResultCombinations(result)
   return resultB

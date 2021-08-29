@@ -4,7 +4,7 @@ import { normalizeSystems } from '../system/merge.js'
 import {
   mergeResults,
   mergeFilteredResults,
-  mergeHistoryResult,
+  mergeMergedResult,
 } from './merge.js'
 
 // The `since` configuration property is used to:
@@ -71,10 +71,10 @@ export const applySince = async function (result, previous, { since, cwd }) {
 }
 
 const getHistoryResult = function (result, previous, sinceIndex) {
-  const historyResult = mergeResults(result, previous.slice(sinceIndex))
-  const sinceResultA = getSinceResult(previous, sinceIndex, historyResult)
+  const mergedResult = mergeResults(result, previous.slice(sinceIndex))
+  const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1)]
-  return { historyResult, history }
+  return { mergedResult, history }
 }
 
 const getSinceResult = function (previous, sinceIndex, result) {
@@ -85,16 +85,16 @@ const getSinceResult = function (previous, sinceIndex, result) {
   )
 }
 
-// In principle, we should do both `applySince()` and `mergeHistoryResult()` at
+// In principle, we should do both `applySince()` and `mergeHistory()` at
 // the same time, before reporting. However, `applySince()` is slow.
 //  - To avoid repeating it before each preview, we compute it only once before
-//    all previews and store its return value as `historyResult`.
+//    all previews and store its return value as `mergedResult`.
 //  - We then merge the latest result during each preview.
 // We only merge combinations, which allows us to normalize the target result
 // non-combinations related properties at the beginning of the command instead
 // of after merging history (which happens at each preview).
-export const mergeHistory = function (result, historyResult) {
-  return historyResult === undefined
+export const mergeHistory = function (result, mergedResult) {
+  return mergedResult === undefined
     ? result
-    : mergeHistoryResult(result, historyResult)
+    : mergeMergedResult(result, mergedResult)
 }
