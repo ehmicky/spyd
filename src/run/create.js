@@ -1,5 +1,5 @@
 import { getCombinations } from '../combination/main.js'
-import { listHistory } from '../history/main.js'
+import { listHistory } from '../history/data/main.js'
 import { createSystemInfo } from '../system/create/main.js'
 
 // Create a new result to measure

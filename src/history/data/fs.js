@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 import { pathExists } from 'path-exists'
 import writeFileAtomic from 'write-file-atomic'
 
-import { UserError } from '../error/main.js'
+import { UserError } from '../../error/main.js'
 
 // Retrieve results from filesystem
 export const getResults = async function (dir) {

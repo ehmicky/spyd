@@ -1,12 +1,12 @@
 import inquirer from 'inquirer'
 
-import { UserError } from '../error/main.js'
-import { isTtyInput } from '../report/tty.js'
+import { UserError } from '../../error/main.js'
+import { isTtyInput } from '../../report/tty.js'
+import { getDeltaError } from '../delta/error.js'
+import { findByDelta } from '../delta/main.js'
+import { compressResult } from '../normalize/compress.js'
+import { loadResults } from '../normalize/load.js'
 
-import { getDeltaError } from './delta/error.js'
-import { findByDelta } from './delta/main.js'
-import { compressResult } from './normalize/compress.js'
-import { loadResults } from './normalize/load.js'
 import { addResult, removeResult, listResults } from './results.js'
 
 // Save results so they can be compared or shown later.

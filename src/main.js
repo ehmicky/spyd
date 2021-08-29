@@ -6,7 +6,7 @@ import {
   addToHistory,
   getFromHistory,
   removeFromHistory,
-} from './history/main.js'
+} from './history/data/main.js'
 import { reportResult } from './report/main.js'
 import { performRun } from './run/main.js'
 
