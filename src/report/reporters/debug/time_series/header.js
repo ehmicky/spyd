@@ -9,7 +9,7 @@ export const getHeaderName = function ({ timestamp }) {
   return { day, time }
 }
 
-export const getHeaderLengths = function ({ headerName }) {
+export const getHeaderLengths = function (headerName) {
   return HEADER_PROP_NAMES.map((propName) => headerName[propName].length)
 }
 

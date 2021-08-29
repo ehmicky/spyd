@@ -17,10 +17,11 @@ export const getColumns = function (history, combinations) {
 
 const getColumn = function (historyResult, combinations) {
   const headerName = getHeaderName(historyResult)
+  const headerLengths = getHeaderLengths(headerName)
   const cellStats = combinations.map((combination) =>
     getCellStat(historyResult, combination),
   )
-  return { headerName, cellStats }
+  return { headerName, headerLengths, cellStats }
 }
 
 const getCellStat = function (historyResult, combination) {
@@ -49,9 +50,12 @@ export const getColumnWidth = function (combinations, columns) {
   )
 }
 
-const getStatColumnWidth = function (combinations, column) {
-  const cellLengths = column.cellStats.filter(Boolean).map(getStatLength)
-  return Math.max(...cellLengths, ...getHeaderLengths(column))
+const getStatColumnWidth = function (
+  combinations,
+  { cellStats, headerLengths },
+) {
+  const cellLengths = cellStats.filter(Boolean).map(getStatLength)
+  return Math.max(...cellLengths, ...headerLengths)
 }
 
 export const getAllColumns = function ({
