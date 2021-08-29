@@ -24,7 +24,7 @@ export const updateScrolling = function (previewState, bottomBar) {
   return { report, maxScrollTop }
 }
 
-// We need to subtract one due to the fast that the bottom bar is the last
+// We need to subtract one due to the fact that the bottom bar is the last
 // element, i.e. its final newline not only terminates a line but also starts
 // a last empty row.
 const getAvailableHeight = function (bottomBar) {
