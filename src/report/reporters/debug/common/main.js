@@ -24,7 +24,7 @@ const getTable = function ({
   columnsWidth,
   firstColumnWidth,
 }) {
-  const header = getHeader(firstColumn, columns, columnsWidth)
+  const header = getHeader(columns, columnsWidth, firstColumnWidth)
   const rows = getRows(firstColumn, columns, columnsWidth)
   return `${header}\n${rows}`
 }
