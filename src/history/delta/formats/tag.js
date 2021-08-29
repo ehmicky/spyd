@@ -1,4 +1,4 @@
-import { findIndexReverse } from '../../utils/find.js'
+import { findIndexReverse } from '../../../utils/find.js'
 
 import { findByGitRef } from './git.js'
 

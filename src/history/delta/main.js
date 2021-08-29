@@ -1,5 +1,5 @@
-import { UserError } from '../error/main.js'
-import { findValue } from '../utils/find.js'
+import { UserError } from '../../error/main.js'
+import { findValue } from '../../utils/find.js'
 
 import { getDeltaProp, addDeltaError } from './error.js'
 import { FORMATS, findFormat } from './formats/main.js'

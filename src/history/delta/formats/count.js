@@ -1,4 +1,4 @@
-import { UserError } from '../../error/main.js'
+import { UserError } from '../../../error/main.js'
 
 // Delta can be an integer, to find the {integer}-th last result.
 // Default deltas are 1, i.e. last result.

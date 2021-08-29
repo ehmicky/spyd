@@ -1,6 +1,6 @@
 import execa from 'execa'
 
-import { UserError } from '../../error/main.js'
+import { UserError } from '../../../error/main.js'
 
 // Find a result by git reference (commit/branch/tag).
 export const findByGitRef = async function (results, gitRef, cwd) {
