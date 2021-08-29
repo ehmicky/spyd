@@ -1,11 +1,8 @@
-import { getCombinationNamePadded } from '../../../utils/name.js'
-
 import { getColumnsWidth, getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
 import { getRow } from './row.js'
 
-export const getTables = function (combinations, columns, screenWidth) {
-  const firstColumn = combinations.map(getCombinationNamePadded)
+export const getTables = function (firstColumn, columns, screenWidth) {
   const columnsWidth = getColumnsWidth(columns)
   const allColumns = getAllColumns({
     firstColumn,
