@@ -59,11 +59,16 @@ export const getSinceResult = function (previous, sinceIndex, mergedResult) {
 // Merge `previous` results to `result`, but only the combinations that exist
 // in `baseResult`. Used when merging `sinceResult` with its previous results,
 // while only keeping the combinations after `since`.
-const mergeFilteredResults = function (result, previous, baseResult) {
-  return previous.reduceRight(
-    (resultA, previousResult) =>
-      mergeBeforeSinceResult(resultA, previousResult, baseResult),
-    pickResultCombinations(result, baseResult),
+const mergeFilteredResults = function (
+  sinceResult,
+  beforeSinceResults,
+  mergedResult,
+) {
+  const sinceResultA = pickResultCombinations(sinceResult, mergedResult)
+  return beforeSinceResults.reduceRight(
+    (sinceResultB, previousResult) =>
+      mergeBeforeSinceResult(sinceResultB, previousResult, mergedResult),
+    sinceResultA,
   )
 }
 
