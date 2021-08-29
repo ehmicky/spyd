@@ -1,16 +1,18 @@
 import { fieldColor } from '../../../utils/colors.js'
-import { getCombinationNameWidth } from '../../../utils/name.js'
 import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 // Retrieve the header rows
-export const getHeader = function ([combination], columns, columnsWidth) {
-  const combinationNamePadding = ' '.repeat(
-    getCombinationNameWidth(combination),
-  )
+export const getHeader = function (firstColumn, columns, columnsWidth) {
+  const firstColumnWidth = Math.max(...firstColumn.map(getLength))
+  const combinationNamePadding = ' '.repeat(firstColumnWidth)
   const { length } = columns[0].headerNames
   return Array.from({ length }, (_, rowIndex) =>
     getHeaderRow({ columns, columnsWidth, rowIndex, combinationNamePadding }),
   ).join('\n')
+}
+
+const getLength = function ({ length }) {
+  return length
 }
 
 const getHeaderRow = function ({

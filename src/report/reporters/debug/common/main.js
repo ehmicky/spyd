@@ -14,12 +14,12 @@ export const getTables = function (combinations, columns, screenWidth) {
     columnsWidth,
   })
   return allColumns.map((columnsA) =>
-    getTable(combinations, columnsA, columnsWidth),
+    getTable(firstColumn, combinations, columnsA, columnsWidth),
   )
 }
 
-const getTable = function (combinations, columns, columnsWidth) {
-  const header = getHeader(combinations, columns, columnsWidth)
+const getTable = function (firstColumn, combinations, columns, columnsWidth) {
+  const header = getHeader(firstColumn, columns, columnsWidth)
   const rows = getRows(combinations, columns, columnsWidth)
   return `${header}\n${rows}`
 }
