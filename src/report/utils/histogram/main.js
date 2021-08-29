@@ -17,9 +17,11 @@ export const serializeHistograms = function (
 ) {
   const height = DEFAULT_HEIGHT
   const width = getContentWidth(combinations, showStats, screenWidth)
-  return combinations.map((combination) =>
-    serializeHistogram({ combination, width, height, showStats }),
-  )
+  return combinations
+    .map((combination) =>
+      serializeHistogram({ combination, width, height, showStats }),
+    )
+    .join('\n')
 }
 
 const DEFAULT_HEIGHT = 2 * EXTRA_HEIGHT

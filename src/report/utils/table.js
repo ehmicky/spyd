@@ -1,6 +1,5 @@
 import stringWidth from 'string-width'
 
-import { joinSections } from './join.js'
 import { padString } from './pad.js'
 import {
   NAME_SEPARATOR,
@@ -25,10 +24,11 @@ export const getTables = function (rows, screenWidth) {
   const columnsWidth = Math.max(...rowsRight.flat().map(stringWidth))
   const availableWidth = screenWidth - leftWidth - NAME_SEPARATOR.length
   const tablesRows = getTablesRows(rowsRight, availableWidth, columnsWidth)
-  const sections = tablesRows.map((tableRows) =>
-    getTable({ tableRows, rowsLeft, leftWidth, columnsWidth }),
-  )
-  return joinSections(sections)
+  return tablesRows
+    .map((tableRows) =>
+      getTable({ tableRows, rowsLeft, leftWidth, columnsWidth }),
+    )
+    .join('\n\n')
 }
 
 const getRowLeft = function ([leftCell = '']) {

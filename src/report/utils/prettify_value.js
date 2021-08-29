@@ -2,7 +2,6 @@ import isPlainObj from 'is-plain-obj'
 
 import { subtitleColor } from './colors.js'
 import { indentBlock } from './indent.js'
-import { joinSections, joinSubSections } from './join.js'
 
 // Prettify a value by highlighting keys and indenting it
 export const prettifyValue = function (value) {
@@ -23,15 +22,15 @@ export const prettifyValue = function (value) {
 
 const prettifyArray = function (array) {
   const prettifiedArray = array.map(prettifyValue).filter(Boolean)
-  return array.some(isComplex)
-    ? joinSections(prettifiedArray)
-    : joinSubSections(prettifiedArray)
+  const newlines = array.some(isComplex) ? '\n\n' : '\n'
+  return prettifiedArray.join(newlines)
 }
 
 const prettifyObject = function (object) {
-  return joinSubSections(
-    Object.entries(object).map(prettifyObjectPair).filter(Boolean),
-  )
+  return Object.entries(object)
+    .map(prettifyObjectPair)
+    .filter(Boolean)
+    .join('\n')
 }
 
 const prettifyObjectPair = function ([name, value]) {
