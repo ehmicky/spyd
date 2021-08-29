@@ -22,7 +22,7 @@ import { getSystemVersions } from './versions.js'
 // reporters on how to serialize it
 //  - For example, this allows changing the reporting without changing the
 //    history results
-export const getSystemInfo = async function (
+export const createSystemInfo = async function (
   combinations,
   { cwd, systemId, envInfo },
 ) {
