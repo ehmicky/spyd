@@ -1,4 +1,4 @@
-import { addFooter } from '../../system/footer.js'
+import { addFooter } from '../../system/footer/main.js'
 import { omitMetadataProps } from '../../system/omit.js'
 import { addScreenInfo } from '../tty.js'
 

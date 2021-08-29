@@ -4,7 +4,7 @@ import filterObj from 'filter-obj'
 import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
-import { cleanObject } from '../utils/clean.js'
+import { cleanObject } from '../../utils/clean.js'
 
 // `systems[0]` is a collection of all properties shared by other `systems`.
 // Its `id` is `undefined`.

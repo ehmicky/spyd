@@ -1,7 +1,7 @@
 import { format as formatBytes } from 'bytes'
 import omit from 'omit.js'
 
-import { cleanObject } from '../utils/clean.js'
+import { cleanObject } from '../../utils/clean.js'
 
 import { serializeGit, serializePr } from './git.js'
 
