@@ -83,10 +83,10 @@ import { loadRunner } from './load.js'
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
 export const listTasks = async function (runners, cwd) {
-  const tasksA = await Promise.all(
+  const tasks = await Promise.all(
     runners.map((runner) => getRunnerTasks(runner, cwd)),
   )
-  return tasksA.flat().filter(removeDuplicateTaskId)
+  return tasks.flat().filter(removeDuplicateTaskId)
 }
 
 const getRunnerTasks = async function (runner, cwd) {
