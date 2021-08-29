@@ -5,8 +5,8 @@ import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
 import { STAT_TITLES } from '../../../utils/stat_titles.js'
 
 // Retrieve the header name
-export const getHeaderName = function (statName) {
-  return STAT_TITLES[statName]
+export const getHeaderNames = function (statName) {
+  return [STAT_TITLES[statName]]
 }
 
 export const getHeaderLength = function (headerName) {
@@ -33,6 +33,6 @@ const getHeaderCells = function (columns, columnWidth) {
 }
 
 // Retrieve a cell in the header row
-const getHeaderCell = function ({ headerName }, columnWidth) {
-  return fieldColor(headerName.padStart(columnWidth))
+const getHeaderCell = function ({ headerNames }, columnWidth) {
+  return fieldColor(headerNames[0].padStart(columnWidth))
 }

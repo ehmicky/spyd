@@ -2,7 +2,7 @@ import { getCombinationNameWidth } from '../../../utils/name.js'
 import { getResponsiveColumns } from '../../../utils/responsive.js'
 import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
 
-import { getHeaderName, getHeaderLength } from './header.js'
+import { getHeaderNames, getHeaderLength } from './header.js'
 import { getStatLength } from './row.js'
 
 // Retrieved all `stats.*` properties that are not `undefined`, for the columns.
@@ -34,10 +34,10 @@ const STAT_NAMES = [
 ]
 
 const getColumn = function (statName, combinations) {
-  const headerName = getHeaderName(statName)
-  const headerLengths = [getHeaderLength(headerName)]
+  const headerNames = getHeaderNames(statName)
+  const headerLengths = headerNames.map(getHeaderLength)
   const cellStats = combinations.map(({ stats }) => stats[statName])
-  return { headerName, headerLengths, cellStats }
+  return { headerNames, headerLengths, cellStats }
 }
 
 const columnHasAnyStat = function ({ cellStats }) {

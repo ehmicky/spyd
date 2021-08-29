@@ -9,8 +9,8 @@ export const getHeaderNames = function ({ timestamp }) {
   return [day, time, '']
 }
 
-export const getHeaderLengths = function (headerNames) {
-  return headerNames.map((headerName) => headerName.length)
+export const getHeaderLength = function (headerName) {
+  return headerName.length
 }
 
 // Retrieve the header rows
