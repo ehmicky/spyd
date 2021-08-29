@@ -1,10 +1,6 @@
 // Add positive|negative sign depending on stat type
 export const addSign = function (pretty, signed, stats) {
-  if (signed === undefined) {
-    return pretty
-  }
-
-  return SIGN_HANDLERS[signed](pretty, stats)
+  return signed === undefined ? pretty : SIGN_HANDLERS[signed](pretty, stats)
 }
 
 const addNeverSign = function (pretty) {
