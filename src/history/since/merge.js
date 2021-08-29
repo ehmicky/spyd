@@ -50,9 +50,8 @@ const mergeHistoryResult = function (mergedResult, historyResult) {
   return mergedResultB
 }
 
-// Merge `previous` results to `result`, but only the combinations that exist
-// in `baseResult`. Used when merging `sinceResult` with its previous results,
-// while only keeping the combinations after `since`.
+// Retrieve `sinceResult`. Merge any combinations missing from `sinceResult`
+// but present both after and before it, so those can be used for `diff`.
 export const getSinceResult = function (previous, sinceIndex, mergedResult) {
   const sinceResult = previous[sinceIndex]
   const sinceResultA = pickResultCombinations(sinceResult, mergedResult)
