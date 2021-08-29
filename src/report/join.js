@@ -1,3 +1,5 @@
+import stripFinalNewline from 'strip-final-newline'
+
 import { groupBy } from '../utils/group.js'
 
 import { FORMATS } from './formats/list.js'
@@ -26,5 +28,10 @@ const getContentProperty = function ({ content }) {
 const CONTENTS_DELIMITER = '\n'
 
 const padContents = function (joinedContents, format) {
-  return FORMATS[format].padding ? addPadding(joinedContents) : joinedContents
+  if (FORMATS[format].padding === undefined) {
+    return joinedContents
+  }
+
+  const joinedContentsA = `${stripFinalNewline(joinedContents)}\n`
+  return addPadding(joinedContentsA)
 }

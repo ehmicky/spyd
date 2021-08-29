@@ -15,7 +15,11 @@ const hasContent = function ({ content }) {
   return typeof content === 'string' && content.trim() !== ''
 }
 
-// Handle content returned by `reporter.report()`
+// Handle content returned by `reporter.report()`.
+// We purposely do not remove empty lines before/after the `content` since those
+// might be used to avoid vertical jitter when the reporter knows those empty
+// lines will be eventually filled (e.g. when combinations stats become
+// available).
 const handleContent = function ({
   content,
   output,
@@ -26,8 +30,7 @@ const handleContent = function ({
   const contentA = trimEnd(content)
   const contentB = wrapRows(contentA)
   const contentC = handleColors(contentB, colors)
-  const contentD = trimContent(contentC)
-  return { content: contentD, output, format, footerString }
+  return { content: contentC, output, format, footerString }
 }
 
 // Trim the end of each line to avoid wrapping-related visual bugs
@@ -44,11 +47,3 @@ const trimEndLine = function (line) {
 const handleColors = function (content, colors) {
   return colors ? content : stripAnsi(content)
 }
-
-// Ensure that exactly one newline is before and after the content
-const trimContent = function (content) {
-  const contentA = content.replace(NEWLINE_REGEXP, '')
-  return `${contentA}\n`
-}
-
-const NEWLINE_REGEXP = /(^\n*)|(\n*$)/gu
