@@ -9,11 +9,10 @@ import { createResult } from './create.js'
 import { measureCombinations } from './measure/main.js'
 import { normalizeMeasuredResult } from './normalize.js'
 import {
+  initPreview,
   startPreview,
   endPreview,
-  printPreviewStarting,
 } from './preview/start_end/main.js'
-import { getPreviewState } from './preview/start_end/state.js'
 
 // Perform a new benchmark.
 // There is no watch mode because:
@@ -24,8 +23,7 @@ import { getPreviewState } from './preview/start_end/state.js'
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
 export const performRun = async function (config) {
-  const previewState = getPreviewState(config)
-  printPreviewStarting(previewState)
+  const previewState = initPreview(config)
 
   const { result, previous } = await createResult(config)
   const {

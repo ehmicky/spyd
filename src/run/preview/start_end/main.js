@@ -10,12 +10,18 @@ import { refreshPreview } from '../update.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'
-import { addResultPreviewState } from './state.js'
+import { getPreviewState, addResultPreviewState } from './state.js'
+
+export const initPreview = function (config) {
+  const previewState = getPreviewState(config)
+  printPreviewStarting(previewState)
+  return previewState
+}
 
 // Loading combinations can be slow if the task is long to load.
 // We print a message so the user knows something is happening.
 // We print it before clearing the screen to avoid a screen flash.
-export const printPreviewStarting = function ({ quiet }) {
+const printPreviewStarting = function ({ quiet }) {
   if (quiet) {
     return
   }
