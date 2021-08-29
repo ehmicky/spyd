@@ -1,5 +1,5 @@
 const joinLines = function (delimiter, lines) {
-  return lines.filter(Boolean).join(delimiter)
+  return lines.join(delimiter)
 }
 
 // Join related subsections together

@@ -22,14 +22,16 @@ export const prettifyValue = function (value) {
 }
 
 const prettifyArray = function (array) {
-  const prettifiedArray = array.map(prettifyValue)
+  const prettifiedArray = array.map(prettifyValue).filter(Boolean)
   return array.some(isComplex)
     ? joinSections(prettifiedArray)
     : joinSubSections(prettifiedArray)
 }
 
 const prettifyObject = function (object) {
-  return joinSubSections(Object.entries(object).map(prettifyObjectPair))
+  return joinSubSections(
+    Object.entries(object).map(prettifyObjectPair).filter(Boolean),
+  )
 }
 
 const prettifyObjectPair = function ([name, value]) {
