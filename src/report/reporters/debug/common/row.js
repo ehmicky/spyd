@@ -9,7 +9,7 @@ export const getRow = function ({
   columnsWidth,
 }) {
   const cells = columns
-    .map(({ cellStats }) => padString(cellStats[rowIndex], columnsWidth))
+    .map(({ cellStats }) => padString(cellStats[rowIndex] || '', columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
   return `${firstCell}${cells}`
 }
