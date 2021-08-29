@@ -3,6 +3,7 @@ import { sortCombinations } from '../combination/sort.js'
 import { addCombinationsDiff } from '../history/compare/diff.js'
 import { mergeHistory } from '../history/since/main.js'
 import { addFooter } from '../system/footer.js'
+import { omitMetadataProps, omitSystemProps } from '../system/omit.js'
 
 import { omitCombinationsProps } from './omit.js'
 import { addCombinationsTitles, addDimensionsTitles } from './titles.js'
@@ -101,9 +102,10 @@ export const normalizeComputedResult = function (
   const result = mergeHistory(unmergedResultA, mergedResult)
   const unmergedResultB = normalizeCombAll(unmergedResultA)
   const resultA = normalizeCombAll(result)
+  const resultB = omitMetadataProps(resultA)
   const reporters = config.reporters.map((reporter) =>
     normalizeComputedEach({
-      result: resultA,
+      result: resultB,
       unmergedResult: unmergedResultB,
       reporter,
       config,
@@ -153,7 +155,8 @@ const normalizeCombAllUnmerged = function (result, sinceResult) {
 // Add report-specific properties to a result that are in `combinations` but not
 // reporter-specific.
 const normalizeCombAll = function (result) {
-  const resultB = groupResultCombinations(result)
+  const resultA = groupResultCombinations(result)
+  const resultB = omitSystemProps(resultA)
   return resultB
 }
 
