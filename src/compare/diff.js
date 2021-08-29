@@ -26,7 +26,7 @@ import { isDiffPrecise } from '../stats/welch.js'
 //    have `diff: 0`
 //  - Using `history` before it's been normalized, to ensure `showPrecision`
 //    was not applied
-export const addCombinationsDiff = function (result, [sinceResult]) {
+export const addCombinationsDiff = function (result, sinceResult) {
   if (sinceResult === undefined) {
     return result
   }

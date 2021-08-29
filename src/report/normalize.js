@@ -85,8 +85,7 @@ export const normalizeComputedResult = function (
 ) {
   const unmergedResultA = addCombinationsDiff(
     unmergedResult,
-    // TODO: this must be the original history, before any normalization
-    config.reporters[0].history,
+    config.reporters[0].history[0],
   )
   const result = mergeHistory(unmergedResultA, historyResult)
   const unmergedResultB = normalizeCombAll(unmergedResultA)
