@@ -54,12 +54,13 @@ const mergeHistoryResult = function (mergedResult, historyResult) {
 export const getSinceResult = function (previous, sinceIndex, mergedResult) {
   const sinceResult = previous[sinceIndex]
   const sinceResultA = pickResultCombinations(sinceResult, mergedResult)
-  const beforeSinceResults = previous.slice(0, sinceIndex)
-  return beforeSinceResults.reduceRight(
-    (sinceResultB, previousResult) =>
-      mergeBeforeSinceResult(sinceResultB, previousResult, mergedResult),
-    sinceResultA,
-  )
+  return previous
+    .slice(0, sinceIndex)
+    .reduceRight(
+      (sinceResultB, previousResult) =>
+        mergeBeforeSinceResult(sinceResultB, previousResult, mergedResult),
+      sinceResultA,
+    )
 }
 
 // We short-circuit this function when the number of combinations indicates no
