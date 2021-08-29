@@ -3,8 +3,8 @@ import { joinSections } from '../../utils/join.js'
 import { prettifyStats } from '../../utils/stats/main.js'
 import { addTitles } from '../../utils/title.js'
 
-import { getStatTables } from './stats/main.js'
-import { getTimeSeries } from './time_series/main.js'
+import { getStatTables } from './stats.js'
+import { getTimeSeries } from './time_series.js'
 
 // Debugging reporter only meant for development purpose
 const reportTerminal = function ({ combinations, screenWidth, history }) {
