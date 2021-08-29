@@ -32,7 +32,7 @@ export const getTables = function (rows, screenWidth) {
   return joinSections(sections)
 }
 
-const getRowLeft = function ([leftCell]) {
+const getRowLeft = function ([leftCell = '']) {
   return leftCell
 }
 
@@ -51,7 +51,7 @@ const getTablesRows = function (rows, availableWidth, columnsWidth) {
   const rowsMaxLength = Math.max(...rows.map(getRowLength))
   const tablesCount = Math.max(Math.ceil(rowsMaxLength / columnsCount), 1)
   return Array.from({ length: tablesCount }, (_, tableIndex) =>
-    getTableRows(rows, tableIndex, columnsCount),
+    getTableRows({ rows, rowsMaxLength, tableIndex, columnsCount }),
   )
 }
 
@@ -59,12 +59,33 @@ const getRowLength = function ({ length }) {
   return length
 }
 
-const getTableRows = function (rows, tableIndex, columnsCount) {
-  return rows.map((row) => getTableRow(row, tableIndex, columnsCount))
+const getTableRows = function ({
+  rows,
+  rowsMaxLength,
+  tableIndex,
+  columnsCount,
+}) {
+  const tableColumnsCount = Math.min(
+    columnsCount,
+    rowsMaxLength - columnsCount * tableIndex,
+  )
+  return rows.map((row) =>
+    getTableRow({ row, tableIndex, columnsCount, tableColumnsCount }),
+  )
 }
 
-const getTableRow = function (row, tableIndex, columnsCount) {
-  return row.slice(columnsCount * tableIndex, columnsCount * (tableIndex + 1))
+const getTableRow = function ({
+  row,
+  tableIndex,
+  columnsCount,
+  tableColumnsCount,
+}) {
+  const tableRow = row.slice(
+    columnsCount * tableIndex,
+    columnsCount * (tableIndex + 1),
+  )
+  const emptyCells = new Array(tableColumnsCount - tableRow.length).fill('')
+  return [...tableRow, ...emptyCells]
 }
 
 const getTable = function ({ tableRows, rowsLeft, leftWidth, columnsWidth }) {
@@ -75,15 +96,11 @@ const getTable = function ({ tableRows, rowsLeft, leftWidth, columnsWidth }) {
     .join('\n')
 }
 
-// Empty rows use a non
 const getRow = function ({ row, leftCell, leftWidth, columnsWidth }) {
-  if (leftCell === undefined) {
-    return NON_TRIMMABLE_SPACE
-  }
-
   const leftCellA = padString(leftCell, leftWidth)
   const rowA = row
     .map((cell) => padString(cell, columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
-  return `${leftCellA}${NAME_SEPARATOR_COLORED}${rowA}`
+  const rowB = `${leftCellA}${NAME_SEPARATOR_COLORED}${rowA}`
+  return rowB.trim() === '' ? NON_TRIMMABLE_SPACE : rowB
 }
