@@ -1,9 +1,20 @@
+import stringWidth from 'string-width'
+
 import { getCombinationNameColor } from '../name.js'
+import { NAME_SEPARATOR_COLORED } from '../separator.js'
 
 // Retrieve sidebar with the combination name
 export const getTitleBlock = function (combination, height, showStats) {
   const newlines = getNewlines(height, showStats)
-  return `${newlines}${getCombinationNameColor(combination)}`
+  return `${newlines}${getTitleBlockContents(combination)}`
+}
+
+export const getTitleBlockWidth = function ([combination]) {
+  return stringWidth(getTitleBlockContents(combination))
+}
+
+const getTitleBlockContents = function (combination) {
+  return `${getCombinationNameColor(combination)}${NAME_SEPARATOR_COLORED}`
 }
 
 const getNewlines = function (height, showStats) {

@@ -17,7 +17,7 @@ const reportTerminal = function ({ combinations, screenWidth, history }) {
     showStats: false,
     screenWidth,
   })
-  return joinSections([...tables, ...timeSeries, ...histograms])
+  return joinSections([tables, timeSeries, ...histograms])
 }
 
 export const debug = { reportTerminal, debugStats: true }

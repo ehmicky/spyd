@@ -1,7 +1,4 @@
-import stringWidth from 'string-width'
-
 import { concatBlocks } from '../concat.js'
-import { getCombinationNameColor } from '../name.js'
 
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
@@ -11,7 +8,7 @@ import {
   getMaxBlock,
   getMaxBlockWidth,
 } from './min_max.js'
-import { getTitleBlock } from './title.js'
+import { getTitleBlock, getTitleBlockWidth } from './title.js'
 
 // Serialize combinations' histograms for reporting
 export const serializeHistograms = function (
@@ -30,7 +27,7 @@ const DEFAULT_HEIGHT = 2 * EXTRA_HEIGHT
 const getContentWidth = function (combinations, showStats, screenWidth) {
   return Math.max(
     screenWidth -
-      stringWidth(getCombinationNameColor(combinations[0])) -
+      getTitleBlockWidth(combinations) -
       getMinBlockWidth(combinations, showStats) -
       getMaxBlockWidth(combinations, showStats),
     1,

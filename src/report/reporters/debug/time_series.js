@@ -3,57 +3,60 @@ import { fieldColor } from '../../utils/colors.js'
 import { getCombinationNameColor } from '../../utils/name.js'
 import { STATS_SEPARATOR_COLORED } from '../../utils/separator.js'
 import { prettifyStats } from '../../utils/stats/main.js'
-import { getTables } from '../../utils/table/main.js'
+import { getTables } from '../../utils/table.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
-  const firstColumn = getFirstColumn(combinations)
   const historyA = prettifyHistoryResults(history)
-  const columns = historyA.map((historyResult) =>
-    getColumn(historyResult, combinations),
-  )
-  return getTables({ firstColumn, columns, headersHeight: 3, screenWidth })
+  const headerRows = getHeaderRows(historyA)
+  const bodyRows = getBodyRows(combinations, historyA)
+  return getTables([...headerRows, ...bodyRows], screenWidth)
 }
 
 // Prettify the stats of `result.history`
 const prettifyHistoryResults = function (history) {
   const allCombinations = history.flatMap(getCombinations)
-  return history.map((historyResult) =>
-    prettifyHistoryResult(historyResult, allCombinations),
-  )
+  return history.map((historyResult) => ({
+    ...historyResult,
+    combinations: prettifyStats(historyResult.combinations, allCombinations),
+  }))
 }
 
 const getCombinations = function ({ combinations }) {
   return combinations
 }
 
-const prettifyHistoryResult = function (historyResult, allCombinations) {
-  const combinations = prettifyStats(
-    historyResult.combinations,
-    allCombinations,
+const getHeaderRows = function (history) {
+  return [
+    ['', ...history.map(getResultDay)],
+    ['', ...history.map(getResultTime)],
+    [],
+  ]
+}
+
+const getResultDay = function ({ timestamp }) {
+  const [day] = timestamp.split(' ')
+  return fieldColor(day)
+}
+
+const getResultTime = function ({ timestamp }) {
+  const time = timestamp.split(' ').slice(1).join(' ')
+  return fieldColor(time)
+}
+
+const getBodyRows = function (combinations, history) {
+  return combinations.map((combination) => getBodyRow(combination, history))
+}
+
+const getBodyRow = function (combination, history) {
+  const leftCell = getCombinationNameColor(combination)
+  const rightCells = history.map((historyResult) =>
+    getCell(historyResult, combination),
   )
-  return { ...historyResult, combinations }
+  return [leftCell, ...rightCells]
 }
 
-const getFirstColumn = function (combinations) {
-  return combinations.map(getCombinationNameColor)
-}
-
-const getColumn = function (historyResult, combinations) {
-  const headerNames = getHeaderNames(historyResult)
-  const cellStats = combinations.map((combination) =>
-    getCellStat(historyResult, combination),
-  )
-  return { headerNames, cellStats }
-}
-
-const getHeaderNames = function ({ timestamp }) {
-  const [day, ...timeAndTimezone] = timestamp.split(' ')
-  const time = timeAndTimezone.join(' ')
-  return [fieldColor(day), fieldColor(time), '']
-}
-
-const getCellStat = function (historyResult, combination) {
+const getCell = function (historyResult, combination) {
   const historyCombinationA = historyResult.combinations.find(
     (historyCombination) => isSameDimension(historyCombination, combination),
   )

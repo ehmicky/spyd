@@ -1,27 +1,22 @@
 import { fieldColor } from '../../utils/colors.js'
 import { getCombinationNameColor } from '../../utils/name.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
-import { getTables } from '../../utils/table/main.js'
+import { getTables } from '../../utils/table.js'
 
 // Retrieve all stats shown in tables
 export const getStatTables = function (combinations, screenWidth) {
-  const firstColumn = getFirstColumn(combinations)
-  const columns = getColumns(combinations)
-  return getTables({ firstColumn, columns, headerHeight: 1, screenWidth })
+  const statNames = getStatNames(combinations)
+  const headerRow = getHeaderRow(statNames)
+  const bodyRows = getBodyRows(combinations, statNames)
+  return getTables([headerRow, ...bodyRows], screenWidth)
 }
 
-const getFirstColumn = function (combinations) {
-  return combinations.map(getCombinationNameColor)
+// Retrieve the list of columns, each corresponding to a stat.
+// Empty columns are not displayed.
+const getStatNames = function (combinations) {
+  return STAT_NAMES.filter((statName) => hasStat(combinations, statName))
 }
 
-// Retrieved all `stats.*` properties that are not `undefined`, for the columns.
-const getColumns = function (combinations) {
-  return STAT_NAMES.map((statName) => getColumn(statName, combinations)).filter(
-    columnHasAnyStat,
-  )
-}
-
-// List of columns, with their `stats.*` property.
 // Order is significant as it is displayed in that order.
 const STAT_NAMES = [
   'median',
@@ -42,14 +37,33 @@ const STAT_NAMES = [
   'minLoopDuration',
 ]
 
-const getColumn = function (statName, combinations) {
-  const headerNames = [fieldColor(STAT_TITLES[statName])]
-  const cellStats = combinations.map(
-    ({ stats: { [statName]: { prettyColor = '' } = {} } }) => prettyColor,
+const hasStat = function (combinations, statName) {
+  return combinations.some(
+    (combination) => getCell(statName, combination) !== '',
   )
-  return { headerNames, cellStats }
 }
 
-const columnHasAnyStat = function ({ cellStats }) {
-  return cellStats.some(Boolean)
+const getHeaderRow = function (statNames) {
+  return statNames.length === 0 ? [] : ['', ...statNames.map(getHeaderName)]
+}
+
+const getHeaderName = function (statName) {
+  return fieldColor(STAT_TITLES[statName])
+}
+
+const getBodyRows = function (combinations, statNames) {
+  return combinations.map((combination) => getBodyRow(combination, statNames))
+}
+
+const getBodyRow = function (combination, statNames) {
+  const leftCell = getCombinationNameColor(combination)
+  const rightCells = statNames.map((statName) => getCell(statName, combination))
+  return [leftCell, ...rightCells]
+}
+
+const getCell = function (
+  statName,
+  { stats: { [statName]: { prettyColor = '' } = {} } },
+) {
+  return prettyColor
 }

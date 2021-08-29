@@ -1,5 +1,12 @@
 import { separatorColor } from './colors.js'
 
+// Separator between first column and others
+const NAME_SEPARATOR_SIGN = ''
+const NAME_PADDING_WIDTH = 2
+const NAME_PADDING = ' '.repeat(NAME_PADDING_WIDTH)
+export const NAME_SEPARATOR = `${NAME_SEPARATOR_SIGN}${NAME_PADDING}`
+export const NAME_SEPARATOR_COLORED = NAME_SEPARATOR
+
 // Separator between columns
 // Works on all terminals
 const COLUMN_SEPARATOR_SIGN = '\u2502'
