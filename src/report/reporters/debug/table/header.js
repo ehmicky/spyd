@@ -9,8 +9,8 @@ export const getHeaderName = function (statName) {
   return STAT_TITLES[statName]
 }
 
-export const getHeaderLengths = function ({ headerName }) {
-  return [headerName.length]
+export const getHeaderLength = function (headerName) {
+  return headerName.length
 }
 
 // Retrieve the header row
