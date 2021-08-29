@@ -75,13 +75,9 @@ const mergePreviousResult = function (result, previousResult) {
     return result
   }
 
-  const { result: resultA, previousCombinations } = mergeCombinations(
-    result,
-    previousResult,
-  )
-  return previousCombinations.length === 0
-    ? resultA
-    : mergeSystems(resultA, previousResult)
+  const { result: resultA } = mergeCombinations(result, previousResult)
+  const resultB = mergeSystems(resultA, previousResult)
+  return resultB
 }
 
 export const mergeMergedResult = function (result, mergedResult) {
