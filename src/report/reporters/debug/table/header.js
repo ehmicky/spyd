@@ -9,6 +9,10 @@ export const getHeaderName = function (statName) {
   return STAT_TITLES[statName]
 }
 
+export const getHeaderLengths = function ({ headerName }) {
+  return [headerName.length]
+}
+
 // Retrieve the header row
 export const getHeader = function ([combination], columns, columnWidth) {
   if (columns.length === 0) {
@@ -31,8 +35,4 @@ const getHeaderCells = function (columns, columnWidth) {
 // Retrieve a cell in the header row
 const getHeaderCell = function ({ headerName }, columnWidth) {
   return fieldColor(headerName.padStart(columnWidth))
-}
-
-export const getHeaderLengths = function ({ headerName }) {
-  return [headerName.length]
 }
