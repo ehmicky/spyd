@@ -1,7 +1,7 @@
 import omit from 'omit.js'
 
 import { FORMATS } from './formats/list.js'
-import { addCombinationsTitles, addDimensionsTitles } from './titles.js'
+import { addCombinationsTitles } from './titles.js'
 
 // Retrieve reporter's contents by calling all `reporter.report()` then
 // normalizing their return value and grouping it by `output`.
@@ -29,11 +29,10 @@ const callReportFunc = async function ({
   titles,
 }) {
   const resultA = addCombinationsTitles(result, titles, showTitles)
-  const resultB = addDimensionsTitles(resultA, titles, showTitles)
   const reportFuncProps = omit.default(reporterConfig, CORE_REPORT_PROPS)
-  const reporterArgs = [resultB, reportFuncProps, startData]
+  const reporterArgs = [resultA, reportFuncProps, startData]
   const content = await FORMATS[format].report(reporter, reporterArgs)
-  return { content, result: resultB, output, format, colors, footerString }
+  return { content, result: resultA, output, format, colors, footerString }
 }
 
 // We handle some reporterConfig properties in core, and do not pass those to
