@@ -14,20 +14,20 @@ export const getTables = function (combinations, columns, screenWidth) {
     columnsWidth,
   })
   return allColumns.map((columnsA) =>
-    getTable(firstColumn, combinations, columnsA, columnsWidth),
+    getTable(firstColumn, columnsA, columnsWidth),
   )
 }
 
-const getTable = function (firstColumn, combinations, columns, columnsWidth) {
+const getTable = function (firstColumn, columns, columnsWidth) {
   const header = getHeader(firstColumn, columns, columnsWidth)
-  const rows = getRows(combinations, columns, columnsWidth)
+  const rows = getRows(firstColumn, columns, columnsWidth)
   return `${header}\n${rows}`
 }
 
-const getRows = function (combinations, columns, columnsWidth) {
-  return combinations
-    .map((combination, rowIndex) =>
-      getRow({ combination, rowIndex, columns, columnsWidth }),
+const getRows = function (firstColumn, columns, columnsWidth) {
+  return firstColumn
+    .map((firstCell, rowIndex) =>
+      getRow({ firstCell, rowIndex, columns, columnsWidth }),
     )
     .join('\n')
 }
