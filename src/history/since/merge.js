@@ -31,10 +31,7 @@ import { mergeSystems, normalizeSystems } from '../../system/merge.js'
 //    user intends to stop using each of the previously used systems.
 export const getMergedResult = function (previous, sinceIndex, result) {
   const resultA = normalizeSystems(result)
-  return previous
-    .slice(sinceIndex)
-    .filter((historyResult) => !hasSameCombinations(historyResult, resultA))
-    .reduceRight(mergeHistoryResult, resultA)
+  return previous.slice(sinceIndex).reduceRight(mergeHistoryResult, resultA)
 }
 
 // When merging two results, we keep most of the properties of the latest
@@ -45,6 +42,10 @@ export const getMergedResult = function (previous, sinceIndex, result) {
 //  - For example, `result.systems` should only show systems from combinations
 //    that have been merged, i.e. that are reported
 const mergeHistoryResult = function (mergedResult, historyResult) {
+  if (hasSameCombinations(historyResult, mergedResult)) {
+    return mergedResult
+  }
+
   const mergeResultA = mergeCombinations(mergedResult, historyResult)
   const mergedResultB = mergeSystems(mergeResultA, historyResult)
   return mergedResultB
