@@ -13,7 +13,7 @@ export const getHeaderLength = function (headerName) {
   return headerName.length
 }
 
-// Retrieve the header row
+// Retrieve the header rows
 export const getHeader = function ([combination], columns, columnWidth) {
   if (columns.length === 0) {
     return NON_TRIMMABLE_SPACE
@@ -22,17 +22,26 @@ export const getHeader = function ([combination], columns, columnWidth) {
   const combinationNamePadding = ' '.repeat(
     getCombinationNameWidth(combination),
   )
-  const headerCells = getHeaderCells(columns, columnWidth)
+  const { length } = columns[0].headerNames
+  return Array.from({ length }, (_, rowIndex) =>
+    getHeaderRow({ columns, columnWidth, rowIndex, combinationNamePadding }),
+  ).join('\n')
+}
+
+const getHeaderRow = function ({
+  columns,
+  columnWidth,
+  rowIndex,
+  combinationNamePadding,
+}) {
+  const headerCells = columns
+    .map((column) => getHeaderCell(column, rowIndex, columnWidth))
+    .join(COLUMN_SEPARATOR_COLORED)
   return `${combinationNamePadding}${headerCells}`
 }
 
-const getHeaderCells = function (columns, columnWidth) {
-  return columns
-    .map((column) => getHeaderCell(column, columnWidth))
-    .join(COLUMN_SEPARATOR_COLORED)
-}
-
 // Retrieve a cell in the header row
-const getHeaderCell = function ({ headerNames }, columnWidth) {
-  return fieldColor(headerNames[0].padStart(columnWidth))
+const getHeaderCell = function ({ headerNames }, rowIndex, columnWidth) {
+  const headerName = headerNames[rowIndex].padStart(columnWidth)
+  return fieldColor(headerName)
 }
