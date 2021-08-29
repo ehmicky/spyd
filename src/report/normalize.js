@@ -120,16 +120,21 @@ const normalizeComputedEach = function ({
   config,
 }) {
   const resultA = normalizeCombEach(result, reporter, config)
-  const lastResult = history[history.length - 1]
-  const lastResultA = mergeLastResult(lastResult, resultA)
-  const lastResultB = normalizeCombAllUnmerged(lastResultA, sinceResult)
-  const resultB = {
-    ...resultA,
-    history: [...history.slice(0, -1), lastResultB],
-  }
+  const resultB = addLastResult(resultA, history, sinceResult)
   const resultC = mergeResultProps(resultB, resultProps)
   const resultD = { ...resultC, ...footerParams }
   return { ...reporter, result: resultD }
+}
+
+// The last history result is identical to the target result except:
+//  - It must use history result's normalization, not target result
+//  - Its combinations do not include `mergeResult`
+const addLastResult = function (result, history, sinceResult) {
+  const lastResult = history[history.length - 1]
+  const historyA = history.slice(0, -1)
+  const lastResultA = mergeLastResult(lastResult, result)
+  const lastResultB = normalizeCombAllUnmerged(lastResultA, sinceResult)
+  return { ...result, history: [...historyA, lastResultB] }
 }
 
 // Add report-specific properties to a result that are not in `combinations` nor
