@@ -53,8 +53,8 @@ const validatePropsGroup = function (output, reporters) {
   })
 }
 
-// Those properties must have default values. Otherwise `undefined` might match.
-const GROUP_SAME_PROPS = ['showSystem', 'showMetadata']
+// Those properties must have default value for a given output.
+const GROUP_SAME_PROPS = ['colors', 'showSystem', 'showMetadata']
 
 const validatePropGroup = function (
   propName,
