@@ -5,8 +5,8 @@ import {
   clearScreenFull,
   printToStdout,
 } from '../../../report/tty.js'
+import { updateReport } from '../results/main.js'
 import { refreshPreview } from '../update/refresh.js'
-import { updateReport } from '../update/results.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'

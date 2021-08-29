@@ -1,7 +1,7 @@
 import { getInitialStats, addStats } from '../../stats/add.js'
 import { pWhile } from '../../utils/p_while.js'
 import { truncateLogs } from '../logs/stream.js'
-import { updatePreviewStats } from '../preview/update/results.js'
+import { updatePreviewStats } from '../preview/results/main.js'
 import { measureSample } from '../sample/main.js'
 import { getInitialSampleState } from '../sample/state.js'
 

@@ -5,9 +5,9 @@ import {
   START_DESCRIPTION,
   MEASURE_DESCRIPTION,
 } from '../description.js'
+import { updatePreview } from '../update/refresh.js'
 
 import { updateCombinationEnd } from './duration.js'
-import { updatePreview } from './refresh.js'
 
 // Preview results progressively, as combinations are being measured.
 // Reporters should:
