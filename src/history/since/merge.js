@@ -46,8 +46,7 @@ export const getMergedResult = function (previous, sinceIndex, result) {
 //    that have been merged, i.e. that are reported
 const mergeHistoryResult = function (mergedResult, historyResult) {
   const mergeResultA = mergeCombinations(mergedResult, historyResult)
-  const historyResultA = normalizeSystems(historyResult)
-  const mergedResultB = mergeSystems(mergeResultA, historyResultA)
+  const mergedResultB = mergeSystems(mergeResultA, historyResult)
   return mergedResultB
 }
 
