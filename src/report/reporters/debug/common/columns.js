@@ -1,7 +1,7 @@
 import { getCombinationNameWidth } from '../../../utils/name.js'
-import { getResponsiveColumns } from '../../../utils/responsive.js'
 import { COLUMN_SEPARATOR } from '../../../utils/separator.js'
 
+import { getResponsiveColumns } from './responsive.js'
 import { getStatLength } from './row.js'
 
 // Each column is padded to the same width, so that they align vertically
