@@ -1,4 +1,5 @@
 import { mergeHistory, mergeLastResult } from '../../history/since/main.js'
+import { addScreenInfo } from '../tty.js'
 
 import {
   normalizeCombAll,
@@ -23,9 +24,10 @@ export const normalizeComputedResult = function (
   const resultA = normalizeCombAllUnmerged(result, sinceResult)
   const resultB = mergeHistory(resultA, mergedResult)
   const resultC = normalizeCombAllMerged(resultB)
+  const resultD = addScreenInfo(resultC)
   const reporters = config.reporters.map((reporter) =>
     normalizeComputedEach({
-      result: resultC,
+      result: resultD,
       sinceResult,
       reporter,
       config,

@@ -1,6 +1,5 @@
 import { addFooter } from '../../system/footer/main.js'
 import { omitMetadataProps } from '../../system/omit.js'
-import { addScreenInfo } from '../tty.js'
 
 import { normalizeNonCombAll, normalizeNonCombEach } from './common.js'
 
@@ -14,8 +13,7 @@ export const normalizeTargetResult = function (result, mergedResult, config) {
     normalizeTargetEach({ result: resultA, mergedResult, reporter, config }),
   )
   const resultB = omitMetadataProps(resultA)
-  const resultC = addScreenInfo(resultB)
-  return { result: resultC, config: { ...config, reporters } }
+  return { result: resultB, config: { ...config, reporters } }
 }
 
 // Add report-specific properties to the target result that are not
