@@ -62,12 +62,11 @@ const normalizeHistoryEach = function (history, reporter, config) {
 // have been performed.
 // This is only computed once at the beginning of the command.
 const normalizeTargetResult = function (result, { mergedResult }, config) {
-  const resultA = addSizeInfo(result)
-  const resultB = normalizeNonCombAll(resultA)
+  const resultA = normalizeNonCombAll(result)
   const reporters = config.reporters.map((reporter) =>
-    normalizeTargetEach({ result: resultB, mergedResult, reporter, config }),
+    normalizeTargetEach({ result: resultA, mergedResult, reporter, config }),
   )
-  return { result: resultB, config: { ...config, reporters } }
+  return { result: resultA, config: { ...config, reporters } }
 }
 
 // Add report-specific properties to the target result that are not
@@ -103,9 +102,10 @@ export const normalizeComputedResult = function (
   const unmergedResultB = normalizeCombAll(unmergedResultA)
   const resultA = normalizeCombAll(result)
   const resultB = omitMetadataProps(resultA)
+  const resultC = addSizeInfo(resultB)
   const reporters = config.reporters.map((reporter) =>
     normalizeComputedEach({
-      result: resultB,
+      result: resultC,
       unmergedResult: unmergedResultB,
       reporter,
       config,
