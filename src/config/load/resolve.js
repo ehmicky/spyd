@@ -2,10 +2,9 @@ import { resolve } from 'path'
 
 import { isFile } from 'path-type'
 
-import { UserError } from '../error/main.js'
-
-import { getPluginPath } from './plugin/load.js'
-import { CONFIG_PLUGIN_TYPE } from './plugin/types.js'
+import { UserError } from '../../error/main.js'
+import { getPluginPath } from '../plugin/load.js'
+import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
 // Resolve the `config` property to a file path. It can be:
 //  - a file path

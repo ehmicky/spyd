@@ -1,5 +1,6 @@
+import { mergeConfigs } from '../merge/main.js'
+
 import { loadConfigFile } from './file.js'
-import { mergeConfigs } from './merge/main.js'
 
 // Load the configuration, shallow merged in priority order:
 //  - any CLI or programmatic flags

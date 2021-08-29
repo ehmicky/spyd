@@ -1,8 +1,9 @@
 import { dirname, basename } from 'path'
 
-import { checkDefinedStringArray, normalizeOptionalArray } from './check.js'
+import { checkDefinedStringArray, normalizeOptionalArray } from '../check.js'
+import { lookupFiles } from '../lookup.js'
+
 import { loadConfigContents, getConfigFilenames } from './contents.js'
-import { lookupFiles } from './lookup.js'
 import { addNpxShortcut } from './npx.js'
 import { resolveConfigPath } from './resolve.js'
 

@@ -1,7 +1,7 @@
 import { normalizeDeltas } from '../history/delta/main.js'
 
 import { addDefaultConfig } from './default.js'
-import { loadConfig } from './load.js'
+import { loadConfig } from './load/main.js'
 import { normalizeConfig } from './normalize.js'
 import { normalizeConfigPaths } from './path.js'
 import { addPlugins } from './plugin/add.js'
