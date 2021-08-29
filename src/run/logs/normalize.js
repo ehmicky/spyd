@@ -46,5 +46,8 @@ const removeDuplicateLines = function (taskLogs) {
 }
 
 const isDuplicateLine = function (line, index, lines) {
-  return lines.some((lineA, indexA) => indexA < index && lineA === line)
+  return (
+    line.trim() !== '' &&
+    lines.some((lineA, indexA) => indexA < index && lineA === line)
+  )
 }
