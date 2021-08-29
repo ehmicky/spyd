@@ -163,9 +163,8 @@ const groupResultCombinations = function ({ combinations, ...result }) {
 
 // Add report-specific properties to a result that are not in `combinations` but
 // are reporter-specific
-const normalizeNonCombEach = function (result, reporter) {
-  const resultProps = {}
-  return resultProps
+const normalizeNonCombEach = function () {
+  return {}
 }
 
 const mergeResultProps = function (result, resultProps) {
