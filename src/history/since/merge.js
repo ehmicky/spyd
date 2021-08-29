@@ -75,13 +75,13 @@ const mergePreviousResult = function (result, previousResult) {
     return result
   }
 
-  const { result: resultA } = mergeCombinations(result, previousResult)
+  const resultA = mergeCombinations(result, previousResult)
   const resultB = mergeSystems(resultA, previousResult)
   return resultB
 }
 
 export const mergeMergedResult = function (result, mergedResult) {
-  const { result: resultA } = mergeCombinations(result, mergedResult)
+  const resultA = mergeCombinations(result, mergedResult)
   return resultA
 }
 
@@ -91,5 +91,5 @@ const mergeCombinations = function (result, previousResult) {
     result,
   )
   const combinations = [...result.combinations, ...previousCombinations]
-  return { result: { ...result, combinations }, previousCombinations }
+  return { ...result, combinations }
 }
