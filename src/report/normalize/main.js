@@ -1,12 +1,11 @@
-import { groupResultCombinations } from '../combination/group.js'
-import { addCombinationsDiff } from '../history/compare/diff.js'
-import { mergeHistory, mergeLastResult } from '../history/since/main.js'
-import { addFooter } from '../system/footer.js'
-import { omitMetadataProps, omitSystemProps } from '../system/omit.js'
-
-import { omitCombinationsProps } from './omit.js'
-import { addCombinationsTitles, addDimensionsTitles } from './titles.js'
-import { addScreenInfo } from './tty.js'
+import { groupResultCombinations } from '../../combination/group.js'
+import { addCombinationsDiff } from '../../history/compare/diff.js'
+import { mergeHistory, mergeLastResult } from '../../history/since/main.js'
+import { addFooter } from '../../system/footer.js'
+import { omitMetadataProps, omitSystemProps } from '../../system/omit.js'
+import { omitCombinationsProps } from '../omit.js'
+import { addCombinationsTitles, addDimensionsTitles } from '../titles.js'
+import { addScreenInfo } from '../tty.js'
 
 // Normalize as many properties as possible at the beginning of the reporting
 // (once) as opposed to later on (repeatedly)
