@@ -31,6 +31,8 @@ const getTable = function (combinations, columns, columnWidth) {
 
 const getRows = function (combinations, columns, columnWidth) {
   return combinations
-    .map((combination) => getRow(combination, columns, columnWidth))
+    .map((combination, rowIndex) =>
+      getRow({ combination, rowIndex, columns, columnWidth }),
+    )
     .join('\n')
 }

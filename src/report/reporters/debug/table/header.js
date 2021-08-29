@@ -33,6 +33,6 @@ export const getHeaderLength = function (column) {
   return getHeaderName(column).length
 }
 
-const getHeaderName = function (column) {
-  return STAT_TITLES[column]
+const getHeaderName = function ({ statName }) {
+  return STAT_TITLES[statName]
 }

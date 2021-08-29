@@ -7,18 +7,14 @@ import { getStatLength } from './row.js'
 
 // Retrieved all `stats.*` properties that are not `undefined`, for the columns.
 export const getColumns = function (combinations) {
-  return COLUMNS.filter(
-    (column) => getAnyCombinationColumn(combinations, column) !== undefined,
+  return STAT_NAMES.map((statName) => getColumn(statName, combinations)).filter(
+    columnHasAnyStat,
   )
-}
-
-const getAnyCombinationColumn = function (combinations, column) {
-  return combinations.map(({ stats }) => stats[column]).find(Boolean)
 }
 
 // List of columns, with their `stats.*` property.
 // Order is significant as it is displayed in that order.
-const COLUMNS = [
+const STAT_NAMES = [
   'median',
   'medianMin',
   'medianMax',
@@ -37,6 +33,15 @@ const COLUMNS = [
   'minLoopDuration',
 ]
 
+const getColumn = function (statName, combinations) {
+  const cellStats = combinations.map(({ stats }) => stats[statName])
+  return { statName, cellStats }
+}
+
+const columnHasAnyStat = function ({ cellStats }) {
+  return cellStats.some(Boolean)
+}
+
 // Each column is padded to the same width, so that they align vertically
 export const getColumnWidth = function (combinations, columns) {
   return Math.max(
@@ -45,10 +50,7 @@ export const getColumnWidth = function (combinations, columns) {
 }
 
 const getStatColumnWidth = function (combinations, column) {
-  const cellLengths = combinations
-    .map(({ stats }) => stats[column])
-    .filter(Boolean)
-    .map(getStatLength)
+  const cellLengths = column.cellStats.filter(Boolean).map(getStatLength)
   return Math.max(...cellLengths, getHeaderLength(column))
 }
 
