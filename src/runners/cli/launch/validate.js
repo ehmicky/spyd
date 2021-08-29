@@ -1,7 +1,7 @@
 import { multipleValidOptions } from 'jest-validate'
 
-import { UserError } from '../../error/main.js'
-import { validateConfigProps } from '../../utils/validate.js'
+import { UserError } from '../../../error/main.js'
+import { validateConfigProps } from '../../../utils/validate.js'
 
 // Validate runnerConfig
 export const validateConfig = function (runnerConfig) {
