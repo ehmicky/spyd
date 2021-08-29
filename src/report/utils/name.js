@@ -10,7 +10,7 @@ export const getCombinationNameColor = function (combination) {
   return titleColor(getCombinationNamePadded(combination))
 }
 
-const getCombinationNamePadded = function ({ titles }) {
+export const getCombinationNamePadded = function ({ titles }) {
   const combinationName = getCombinationName(titles)
   return `${combinationName}${NAME_PADDING}`
 }
