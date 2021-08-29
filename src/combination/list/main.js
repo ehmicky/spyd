@@ -2,7 +2,7 @@ import { UserError } from '../../error/main.js'
 import { selectCombinations } from '../../select/main.js'
 import { fromInputsObj } from '../inputs.js'
 
-import { listTasks } from './tasks/list.js'
+import { listTasks } from './tasks/main.js'
 import { validateCombinationsIds } from './validate_ids.js'
 
 // Retrieve each combination, i.e. combination of each combination dimension
