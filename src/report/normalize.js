@@ -145,6 +145,12 @@ const normalizeNonCombAll = function (result) {
 
 // Add report-specific properties to a result that are in `combinations` and
 // but are not reporter-specific and must be applied for history is merged
+// In principle:
+//  - We should have different logic for `sinceResult` and other history results
+//    because `sinceResult` is used for the diff logic.
+//     - For example the diff logic requires `median` to be available
+//  - However, keeping track of an earlier version of it as
+//    `historyResult.sinceResult` is a shortcut that is enough for the moment.
 const normalizeCombAllUnmerged = function (result, sinceResult) {
   const resultA = addCombinationsDiff(result, sinceResult)
   return resultA
