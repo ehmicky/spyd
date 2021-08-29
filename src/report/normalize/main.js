@@ -1,12 +1,16 @@
-import { groupResultCombinations } from '../../combination/group.js'
-import { addCombinationsDiff } from '../../history/compare/diff.js'
 import { mergeHistory, mergeLastResult } from '../../history/since/main.js'
 import { addFooter } from '../../system/footer.js'
-import { omitMetadataProps, omitSystemProps } from '../../system/omit.js'
+import { omitMetadataProps } from '../../system/omit.js'
 import { addScreenInfo } from '../tty.js'
 
-import { omitCombinationsProps } from './omit.js'
-import { addCombinationsTitles, addDimensionsTitles } from './titles.js'
+import {
+  normalizeNonCombAll,
+  normalizeCombAllUnmerged,
+  normalizeCombAll,
+  normalizeNonCombEach,
+  mergeResultProps,
+  normalizeCombEach,
+} from './common.js'
 
 // Normalize as many properties as possible at the beginning of the reporting
 // (once) as opposed to later on (repeatedly)
@@ -136,58 +140,4 @@ const addLastResult = function (result, history, sinceResult) {
   const lastResultA = mergeLastResult(lastResult, result)
   const lastResultB = normalizeCombAllUnmerged(lastResultA, sinceResult)
   return { ...result, history: [...historyA, lastResultB] }
-}
-
-// Add report-specific properties to a result that are not in `combinations` nor
-// reporter-specific
-const normalizeNonCombAll = function (result) {
-  return result
-}
-
-// Add report-specific properties to a result that are in `combinations` and
-// but are not reporter-specific and must be applied for history is merged
-// In principle:
-//  - We should have different logic for `sinceResult` and other history results
-//    because `sinceResult` is used for the diff logic.
-//     - For example the diff logic requires `median` to be available
-//  - However, keeping track of an earlier version of it as
-//    `historyResult.sinceResult` is a shortcut that is enough for the moment.
-const normalizeCombAllUnmerged = function (result, sinceResult) {
-  const resultA = addCombinationsDiff(result, sinceResult)
-  return resultA
-}
-
-// Add report-specific properties to a result that are in `combinations` but not
-// reporter-specific.
-const normalizeCombAll = function (result) {
-  const resultA = groupResultCombinations(result)
-  const resultB = omitSystemProps(resultA)
-  return resultB
-}
-
-// Add report-specific properties to a result that are not in `combinations` but
-// are reporter-specific
-const normalizeNonCombEach = function () {
-  return {}
-}
-
-const mergeResultProps = function (result, resultProps) {
-  return { ...result, ...resultProps }
-}
-
-// Add report-specific properties to a result that are in `combinations` and
-// reporter-specific
-const normalizeCombEach = function (
-  result,
-  { debugStats, config: { showPrecision, showDiff, showTitles } },
-  { titles },
-) {
-  const resultA = addDimensionsTitles(result, titles, showTitles)
-  const resultB = addCombinationsTitles(resultA, titles, showTitles)
-  const resultC = omitCombinationsProps(resultB, {
-    showPrecision,
-    showDiff,
-    debugStats,
-  })
-  return resultC
 }
