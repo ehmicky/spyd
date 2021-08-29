@@ -18,6 +18,8 @@ import { COMBINATION_DIMENSIONS } from '../combination/dimensions.js'
 //   - provides a single place for all identifiers, which is simpler
 //   - removes the need for runners to handle this
 // We do this by adding a `title` property for every `id` property.
+
+// Add `result.combinations[*].taskTitle|...`
 export const addCombinationsTitles = function (
   { combinations, ...result },
   titles,
@@ -35,6 +37,7 @@ const getIdName = function ({ idName }) {
   return idName
 }
 
+// Add `result.dimensions.*.title`
 export const addDimensionsTitles = function (
   { dimensions, ...result },
   titles,
@@ -52,6 +55,7 @@ const addDimensionTitle = function (items, titles) {
   return items.map((item) => addTitle(item, 'id', titles))
 }
 
+// Add `footer.systems[*].title`
 export const addFooterTitles = function (
   { systems, ...footer },
   titles,
