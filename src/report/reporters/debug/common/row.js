@@ -6,22 +6,22 @@ export const getRow = function ({
   combination,
   rowIndex,
   columns,
-  columnWidth,
+  columnsWidth,
 }) {
   const combinationName = getCombinationNameColor(combination)
   const cells = columns
-    .map(({ cellStats }) => getCell(cellStats[rowIndex], columnWidth))
+    .map(({ cellStats }) => getCell(cellStats[rowIndex], columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
   return `${combinationName}${cells}`
 }
 
 // Retrieve a single cell in the table, with a specific stat
-const getCell = function (stat, columnWidth) {
+const getCell = function (stat, columnsWidth) {
   if (stat === undefined) {
-    return ' '.repeat(columnWidth)
+    return ' '.repeat(columnsWidth)
   }
 
-  const paddingWidth = columnWidth - getStatLength(stat)
+  const paddingWidth = columnsWidth - getStatLength(stat)
   const padding = ' '.repeat(paddingWidth)
   return `${padding}${stat.prettyColor}`
 }

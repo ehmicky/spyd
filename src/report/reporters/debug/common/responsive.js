@@ -1,14 +1,14 @@
-// Fit several `columns` of same width (`columnWidth`) responsively in a
+// Fit several `columns` of same width (`columnsWidth`) responsively in a
 // terminal of `availableWidth` by putting them into several groups meant to be
 // printed on different lines.
 export const getResponsiveColumns = function ({
   availableWidth,
-  columnWidth,
+  columnsWidth,
   separatorWidth,
   columns,
 }) {
   const { allColumns } = columns.reduce(
-    addColumn.bind(undefined, { availableWidth, columnWidth, separatorWidth }),
+    addColumn.bind(undefined, { availableWidth, columnsWidth, separatorWidth }),
     { allColumns: [], remainingWidth: 0 },
   )
   // eslint-disable-next-line fp/no-mutating-methods
@@ -16,11 +16,11 @@ export const getResponsiveColumns = function ({
 }
 
 const addColumn = function (
-  { availableWidth, columnWidth, separatorWidth },
+  { availableWidth, columnsWidth, separatorWidth },
   { allColumns, allColumns: [columns, ...previousColumns], remainingWidth },
   column,
 ) {
-  const remainingWidthA = remainingWidth - columnWidth - separatorWidth
+  const remainingWidthA = remainingWidth - columnsWidth - separatorWidth
   return remainingWidthA >= 0
     ? {
         allColumns: [[...columns, column], ...previousColumns],
@@ -28,6 +28,6 @@ const addColumn = function (
       }
     : {
         allColumns: [[column], ...allColumns],
-        remainingWidth: availableWidth - columnWidth,
+        remainingWidth: availableWidth - columnsWidth,
       }
 }

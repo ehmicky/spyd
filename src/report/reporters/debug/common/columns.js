@@ -5,11 +5,11 @@ import { getResponsiveColumns } from './responsive.js'
 import { getStatLength } from './row.js'
 
 // Each column is padded to the same width, so that they align vertically
-export const getColumnWidth = function (columns) {
-  return Math.max(...columns.map(getStatColumnWidth))
+export const getColumnsWidth = function (columns) {
+  return Math.max(...columns.map(getColumnWidth))
 }
 
-const getStatColumnWidth = function ({ cellStats, headerNames }) {
+const getColumnWidth = function ({ cellStats, headerNames }) {
   const cellLengths = cellStats.filter(Boolean).map(getStatLength)
   const headerLengths = headerNames.map(getHeaderLength)
   return Math.max(...cellLengths, ...headerLengths)
@@ -23,12 +23,12 @@ export const getAllColumns = function ({
   combinations,
   columns,
   screenWidth,
-  columnWidth,
+  columnsWidth,
 }) {
   const availableWidth = screenWidth - getCombinationNameWidth(combinations[0])
   return getResponsiveColumns({
     availableWidth,
-    columnWidth,
+    columnsWidth,
     separatorWidth: COLUMN_SEPARATOR.length,
     columns,
   })

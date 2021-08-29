@@ -1,30 +1,30 @@
-import { getColumnWidth, getAllColumns } from './columns.js'
+import { getColumnsWidth, getAllColumns } from './columns.js'
 import { getHeader } from './header.js'
 import { getRow } from './row.js'
 
 export const getTables = function (combinations, columns, screenWidth) {
-  const columnWidth = getColumnWidth(columns)
+  const columnsWidth = getColumnsWidth(columns)
   const allColumns = getAllColumns({
     combinations,
     columns,
     screenWidth,
-    columnWidth,
+    columnsWidth,
   })
   return allColumns.map((columnsA) =>
-    getTable(combinations, columnsA, columnWidth),
+    getTable(combinations, columnsA, columnsWidth),
   )
 }
 
-const getTable = function (combinations, columns, columnWidth) {
-  const header = getHeader(combinations, columns, columnWidth)
-  const rows = getRows(combinations, columns, columnWidth)
+const getTable = function (combinations, columns, columnsWidth) {
+  const header = getHeader(combinations, columns, columnsWidth)
+  const rows = getRows(combinations, columns, columnsWidth)
   return `${header}\n${rows}`
 }
 
-const getRows = function (combinations, columns, columnWidth) {
+const getRows = function (combinations, columns, columnsWidth) {
   return combinations
     .map((combination, rowIndex) =>
-      getRow({ combination, rowIndex, columns, columnWidth }),
+      getRow({ combination, rowIndex, columns, columnsWidth }),
     )
     .join('\n')
 }
