@@ -26,6 +26,10 @@ export const normalizeEarlyResult = function (
 // Add report-specific properties to each `history` result.
 // This is only computed once at the beginning of the command.
 const normalizeHistory = function (history, sinceResult, config) {
+  if (!config.reporters.some(reporterHasHistory)) {
+    return config
+  }
+
   const historyA = history
     .map(normalizeHistoryAll)
     .map(normalizeNonCombAll)
@@ -47,10 +51,20 @@ const normalizeHistoryAll = function (result) {
 // reporter-specific.
 // Those are saved in `reporter.history` and merged later.
 const normalizeHistoryEach = function (history, reporter, config) {
+  if (!reporterHasHistory(reporter)) {
+    return reporter
+  }
+
   const historyA = history
     .map((result) =>
       mergeResultProps(result, normalizeNonCombEach(result, reporter)),
     )
     .map((result) => normalizeCombEach(result, reporter, config))
   return { ...reporter, history: historyA }
+}
+
+// As a performance optimization, reporters which do not use `history` do not
+// normalize it
+const reporterHasHistory = function ({ capabilities: { history } }) {
+  return history
 }

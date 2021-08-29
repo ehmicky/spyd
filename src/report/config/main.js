@@ -57,13 +57,13 @@ const shouldUseReporter = function ({ tty }, command) {
 const addDefaultReporterConfig = function ({
   tty,
   config: { quiet = !tty, showDiff = tty, colors = tty, ...config },
-  capabilities: { debugStats = false } = {},
+  capabilities: { debugStats = false, history = false } = {},
   ...reporter
 }) {
   return {
     ...reporter,
     tty,
     config: { ...config, quiet, showDiff, colors },
-    capabilities: { debugStats },
+    capabilities: { debugStats, history },
   }
 }

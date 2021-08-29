@@ -41,11 +41,19 @@ export const normalizeComputedResult = function (
 const normalizeComputedEach = function ({
   result,
   sinceResult,
+  reporter: {
+    capabilities: { history: hasHistory },
+  },
   reporter: { history, resultProps, footerParams, ...reporter },
   config,
 }) {
   const resultA = normalizeCombEach(result, reporter, config)
-  const resultB = addLastResult(resultA, history, sinceResult)
+  const resultB = addLastResult({
+    result: resultA,
+    history,
+    sinceResult,
+    hasHistory,
+  })
   const resultC = mergeResultProps(resultB, resultProps)
   const resultD = { ...resultC, ...footerParams }
   return { ...reporter, result: resultD }
@@ -54,7 +62,12 @@ const normalizeComputedEach = function ({
 // The last history result is identical to the target result except:
 //  - It must use history result's normalization, not target result
 //  - Its combinations do not include `mergeResult`
-const addLastResult = function (result, history, sinceResult) {
+// We also apply `capabilities.history: false`, which omits `result.history`.
+const addLastResult = function ({ result, history, sinceResult, hasHistory }) {
+  if (!hasHistory) {
+    return result
+  }
+
   const lastResult = history[history.length - 1]
   const historyA = history.slice(0, -1)
   const lastResultA = mergeLastResult(lastResult, result)

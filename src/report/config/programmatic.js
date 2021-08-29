@@ -23,6 +23,7 @@ const PROGRAMMATIC_REPORTER = {
   format: 'programmatic',
   capabilities: {
     debugStats: false,
+    history: true,
   },
   tty: false,
   config: {

@@ -21,5 +21,5 @@ const reportTerminal = function ({ combinations, screenWidth, history }) {
 
 export const debug = {
   reportTerminal,
-  capabilities: { debugStats: true },
+  capabilities: { debugStats: true, history: true },
 }
