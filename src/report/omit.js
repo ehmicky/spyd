@@ -1,29 +1,10 @@
 import omit from 'omit.js'
 
-// Omit some result properties unless some reporterConfig properties are
-// passed. Those all start with `show*`. We use one boolean configuration
-// property for each instead of a single array configuration property because it
-// makes it easier to enable/disable each property both in CLI flags and in
-// `reporterConfig.{reporterId}.*` properties.
-export const omitFooterProps = function (footer, showMetadata, showSystem) {
-  const footerA = maybeOmit(footer, showMetadata, METADATA_FOOTER_PROPS)
-  const systems = footerA.systems.map((system) =>
-    omitSystemProps(system, showMetadata, showSystem),
-  )
-  return { ...footerA, systems }
-}
-
-const omitSystemProps = function (system, showMetadata, showSystem) {
-  const systemA = maybeOmit(system, showMetadata, METADATA_SYSTEM_PROPS)
-  const systemB = maybeOmit(systemA, showSystem, MAIN_SYSTEM_PROPS)
-  return systemB
-}
-
-const METADATA_FOOTER_PROPS = ['id', 'timestamp']
-const METADATA_SYSTEM_PROPS = ['git', 'ci']
-const MAIN_SYSTEM_PROPS = ['machine', 'versions']
-
-// Omit result properties only from combinations
+// Some combination properties can be toggled using `showPrecision` and
+// `showDiff`.
+// We use one boolean configuration property for each instead of a single array
+// configuration property because it makes it easier to enable/disable each
+// property both in CLI flags and in `reporterConfig.{reporterId}.*` properties.
 export const omitCombinationsProps = function (
   { combinations, ...result },
   { showPrecision, showDiff, debugStats },
@@ -73,7 +54,6 @@ const DIFF_STAT_PROPS = ['diff', 'diffPrecise']
 // Some stats are too advanced for most reporters and are only meant for
 // debugging. Reporters must explicitly set `debugStats: true` to use those.
 // This is undocumented.
-//
 const DEBUG_STATS_PROPS = [
   // Median is the main statistic which should be used for averages since it is:
   //  - More precise
@@ -101,9 +81,5 @@ const DEBUG_STATS_PROPS = [
 ]
 
 const maybeOmit = function (obj, showProp, propNames) {
-  if (showProp) {
-    return obj
-  }
-
-  return omit.default(obj, propNames)
+  return showProp ? obj : omit.default(obj, propNames)
 }
