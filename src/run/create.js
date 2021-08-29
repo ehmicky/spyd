@@ -1,11 +1,11 @@
-import { getCombinations } from '../combination/main.js'
+import { listCombinations } from '../combination/list.js'
 import { listHistory } from '../history/data/main.js'
 import { createSystemInfo } from '../system/create/main.js'
 
 // Create a new result to measure
 export const createResult = async function (config) {
   const [combinations, previous] = await Promise.all([
-    getCombinations(config),
+    listCombinations(config),
     listHistory(config),
   ])
   const { id, timestamp, system } = await createSystemInfo(combinations, config)

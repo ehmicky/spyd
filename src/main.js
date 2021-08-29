@@ -1,4 +1,4 @@
-import { getCombinations } from './combination/main.js'
+import { listCombinations } from './combination/list.js'
 import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
 import { checkLimits } from './history/compare/limit.js'
@@ -40,6 +40,6 @@ export const remove = async function (configFlags) {
 // Execute tasks without benchmarking them
 export const dev = async function (configFlags) {
   const config = await getConfig('dev', configFlags)
-  const combinations = await getCombinations(config)
+  const combinations = await listCombinations(config)
   await performDev(config, combinations)
 }

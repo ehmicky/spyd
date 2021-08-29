@@ -7,7 +7,7 @@ import { fromInputsObj } from './inputs.js'
 import { validateCombinationsIds } from './validate_ids.js'
 
 // Retrieve each combination, i.e. combination of each combination dimension
-export const getCombinations = async function ({
+export const listCombinations = async function ({
   runners,
   inputs,
   systemId,
