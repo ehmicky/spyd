@@ -1,6 +1,7 @@
-import { NON_TRIMMABLE_SPACE } from '../../../utils/space.js'
-import { STAT_TITLES } from '../../../utils/stat_titles.js'
-import { getTables } from '../common/main.js'
+import { NON_TRIMMABLE_SPACE } from '../../utils/space.js'
+import { STAT_TITLES } from '../../utils/stat_titles.js'
+
+import { getTables } from './common/main.js'
 
 // Retrieve all stats shown in tables
 export const getStatTables = function (combinations, screenWidth) {
