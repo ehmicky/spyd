@@ -4,10 +4,10 @@ import envCi from 'env-ci'
 import osName from 'os-name'
 import { v4 as uuidv4 } from 'uuid'
 
-import { cleanObject } from '../utils/clean.js'
-import { groupBy } from '../utils/group.js'
+import { cleanObject } from '../../utils/clean.js'
+import { groupBy } from '../../utils/group.js'
+import { getTimestamp } from '../timestamp.js'
 
-import { getTimestamp } from './timestamp.js'
 import { getSystemVersions } from './versions.js'
 
 // Users can specify a `system` configuration property.
