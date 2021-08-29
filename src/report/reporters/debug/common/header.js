@@ -1,6 +1,5 @@
 import stringWidth from 'string-width'
 
-import { fieldColor } from '../../../utils/colors.js'
 import { COLUMN_SEPARATOR_COLORED } from '../../../utils/separator.js'
 
 // Retrieve the header rows
@@ -30,5 +29,5 @@ const getHeaderRow = function ({
 const getHeaderCell = function (headerName, columnsWidth) {
   const paddingWidth = columnsWidth - stringWidth(headerName)
   const padding = ' '.repeat(paddingWidth)
-  return fieldColor(`${padding}${headerName}`)
+  return `${padding}${headerName}`
 }

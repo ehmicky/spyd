@@ -1,4 +1,5 @@
 import { isSameDimension } from '../../../combination/ids.js'
+import { fieldColor } from '../../utils/colors.js'
 import { getCombinationNamePadded } from '../../utils/name.js'
 import {
   STATS_SEPARATOR,
@@ -49,7 +50,7 @@ const getColumn = function (historyResult, combinations) {
 const getHeaderNames = function ({ timestamp }) {
   const [day, ...timeAndTimezone] = timestamp.split(' ')
   const time = timeAndTimezone.join(' ')
-  return [day, time, '']
+  return [fieldColor(day), fieldColor(time), '']
 }
 
 const getCellStat = function (historyResult, combination) {

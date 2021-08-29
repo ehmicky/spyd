@@ -1,3 +1,4 @@
+import { fieldColor } from '../../utils/colors.js'
 import { getCombinationNamePadded } from '../../utils/name.js'
 import { NON_TRIMMABLE_SPACE } from '../../utils/space.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
@@ -41,7 +42,7 @@ const STAT_NAMES = [
 ]
 
 const getColumn = function (statName, combinations) {
-  const headerNames = [STAT_TITLES[statName]]
+  const headerNames = [fieldColor(STAT_TITLES[statName])]
   const cellStats = combinations.map(({ stats }) => stats[statName])
   return { headerNames, cellStats }
 }
