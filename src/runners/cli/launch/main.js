@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 import { validateConfig } from './validate.js'
 
 const HANDLER_MAIN_PATH = fileURLToPath(
-  new URL('../handler.js', import.meta.url),
+  new URL('../handler/main.js', import.meta.url),
 )
 
 export const launch = function (runnerConfig) {
