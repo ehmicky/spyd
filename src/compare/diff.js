@@ -1,7 +1,4 @@
-import {
-  getMatchingCombination,
-  resultsHaveCombinations,
-} from '../combination/result.js'
+import { getMatchingCombination } from '../combination/result.js'
 import { isDiffPrecise } from '../stats/welch.js'
 
 // Add `combination.stats.diff` which compares each combination with another
@@ -22,21 +19,20 @@ import { isDiffPrecise } from '../stats/welch.js'
 //  - The difference might not be due to the current commit but to the previous
 //    one, making it less meaningful
 //  - This would require additional visualization in reporters
-// This is purposely run before:
+// This must be run before:
+//  - `showDiff` has been applied
 //  - `showPrecision` has been applied, so we can use the `median`
-//  - The final history result has been appended to `result.history`
-export const addCombinationsDiff = function (
-  result,
-  history,
-  { config: { showDiff } },
-) {
-  if (!showDiff || history.length === 0) {
+//  - Combinations have been merged to the target result. Otherwise, those would
+//    have `diff: 0`
+//  - Using `history` before it's been normalized, to ensure `showPrecision`
+//    was not applied
+export const addCombinationsDiff = function (result, [sinceResult]) {
+  if (sinceResult === undefined) {
     return result
   }
 
-  const [sinceResult, ...afterSince] = history
   const combinations = result.combinations.map((combination) =>
-    addCombinationDiff(combination, sinceResult, afterSince),
+    addCombinationDiff(combination, sinceResult),
   )
   return { ...result, combinations }
 }
@@ -46,34 +42,21 @@ export const addCombinationsDiff = function (
 const addCombinationDiff = function (
   combination,
   { combinations: previousCombinations },
-  afterSince,
 ) {
   if (combination.stats.median === undefined) {
     return combination
   }
 
-  const previousCombinationA = getMatchingCombination(
+  const previousCombination = getMatchingCombination(
     previousCombinations,
     combination,
   )
 
-  if (!shouldAddDiff(previousCombinationA, afterSince)) {
+  if (previousCombination === undefined) {
     return combination
   }
 
-  return addDiff({ combination, previousCombination: previousCombinationA })
-}
-
-// We only show the `diff` when:
-//  - There is a previous combination to compare with.
-//  - That combination is not the same as the one being compared. This could
-//    happen when merging results and the combination was taken from
-//    `sinceResult` (instead of `afterSince`).
-const shouldAddDiff = function (previousCombination, afterSince) {
-  return (
-    previousCombination !== undefined &&
-    resultsHaveCombinations(afterSince, previousCombination)
-  )
+  return addDiff({ combination, previousCombination })
 }
 
 // `isDiffPrecise` is whether `diff` is statistically significant.

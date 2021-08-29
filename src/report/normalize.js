@@ -83,11 +83,16 @@ export const normalizeComputedResult = function (
   historyResult,
   config,
 ) {
-  const resultA = mergeHistory(unmergedResult, historyResult)
-  const unmergedResultA = normalizeCombAll(unmergedResult)
-  const resultB = normalizeCombAll(resultA)
+  const unmergedResultA = addCombinationsDiff(
+    unmergedResult,
+    // TODO: this must be the original history, before any normalization
+    config.reporters[0].history,
+  )
+  const result = mergeHistory(unmergedResultA, historyResult)
+  const unmergedResultB = normalizeCombAll(unmergedResultA)
+  const resultA = normalizeCombAll(result)
   const reporters = config.reporters.map((reporter) =>
-    normalizeComputedResEach(resultB, unmergedResultA, reporter),
+    normalizeComputedResEach(resultA, unmergedResultB, reporter),
   )
   return { ...config, reporters }
 }
@@ -99,12 +104,11 @@ const normalizeComputedResEach = function (
   unmergedResult,
   { history, resultProps, footerParams, ...reporter },
 ) {
-  const resultA = addCombinationsDiff(result, history, reporter)
-  const resultB = normalizeCombEach(resultA, reporter)
+  const resultA = normalizeCombEach(result, reporter)
   const unmergedResultA = normalizeCombEach(unmergedResult, reporter)
-  const resultC = { ...resultB, history: [...history, unmergedResultA] }
-  const resultD = { ...resultC, ...resultProps, ...footerParams }
-  return { ...reporter, result: resultD }
+  const resultB = { ...resultA, history: [...history, unmergedResultA] }
+  const resultC = { ...resultB, ...resultProps, ...footerParams }
+  return { ...reporter, result: resultC }
 }
 
 // Add report-specific properties to a result that are not in `combinations` nor

@@ -20,11 +20,6 @@ export const removeResultCombinations = function (combinations, result) {
   )
 }
 
-// Return whether several results have a specific combination
-export const resultsHaveCombinations = function (results, combination) {
-  return results.some((result) => resultHasCombination(result, combination))
-}
-
 // Return whether a result has a specific combination
 const resultHasCombination = function ({ combinations }, combination) {
   return getMatchingCombination(combinations, combination) !== undefined
