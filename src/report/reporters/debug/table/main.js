@@ -5,12 +5,6 @@ import { getRow } from './row.js'
 // Retrieve all stats shown in tables
 export const getTables = function (combinations, screenWidth) {
   const columns = getColumns(combinations)
-
-  // When no stats are available
-  if (columns.length === 0) {
-    return [getTable(combinations, [], 0)]
-  }
-
   const columnWidth = getColumnWidth(combinations, columns)
   const allColumns = getAllColumns({
     combinations,
