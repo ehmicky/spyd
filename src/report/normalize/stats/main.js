@@ -12,8 +12,11 @@ import { addStatsPretty } from './prettify.js'
 //    combinations. This ensures results are all printed with the same scale.
 //  - This is used when printing `result.history`
 // This is not format specific since most formats benefit from it.
-// When prettifying history results, we adjust the scale based on all history
-// results, i.e. we need to also pass those as `allCombinations`.
+// Prettifying history results:
+//  - We adjust the scale based on all history results, i.e. we need to also
+//    pass those as `allCombinations`.
+//  - Must be done on each history result during each preview since the target
+//    result might change the scale of all history results
 export const prettifyHistoryStats = function (history) {
   const allCombinations = history.flatMap(getCombinations)
   return history.map((historyResult) =>

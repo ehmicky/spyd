@@ -5,7 +5,6 @@ import {
   mergeResultProps,
   normalizeCombEach,
 } from './common.js'
-import { prettifyHistoryStats } from './stats/main.js'
 import { normalizeTargetResult } from './target.js'
 
 // Normalize as many properties as possible at the beginning of the reporting
@@ -35,9 +34,8 @@ const normalizeHistory = function (history, sinceResult, config) {
     .map(normalizeHistoryAll)
     .map(normalizeNonCombAll)
     .map((result) => normalizeCombAll(result, sinceResult))
-  const historyB = prettifyHistoryStats(historyA)
   const reporters = config.reporters.map((reporter) =>
-    normalizeHistoryEach(historyB, reporter, config),
+    normalizeHistoryEach(historyA, reporter, config),
   )
   return { ...config, reporters }
 }

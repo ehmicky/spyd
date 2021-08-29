@@ -7,7 +7,7 @@ export const pickResultCombinations = function (resultA, resultB) {
 }
 
 // Filter out the `combinations` that are not in `result`
-export const keepResultCombinations = function ({ combinations }, result) {
+const keepResultCombinations = function ({ combinations }, result) {
   return combinations.filter((combination) =>
     resultHasCombination(result, combination),
   )
