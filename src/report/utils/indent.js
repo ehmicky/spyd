@@ -2,11 +2,7 @@ import indentString from 'indent-string'
 
 // Add left|top|bottom padding to terminal content
 export const addPadding = function (block) {
-  return `\n${addNonTopPadding(block)}`
-}
-
-export const addNonTopPadding = function (block) {
-  return `${indentBlock(block, PADDING_SIZE)}\n`
+  return `\n${indentBlock(block, PADDING_SIZE)}\n`
 }
 
 export const PADDING_SIZE = 1

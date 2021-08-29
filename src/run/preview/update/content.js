@@ -10,12 +10,15 @@ export const getPreviewContent = function (previewState) {
     getBottomBarElements(previewState)
   const bottomBar = getBottomBar({
     previewState,
-    separator,
     leftWidth,
     progressRow,
     counterRow,
   })
-  const { report, maxScrollTop } = updateScrolling(previewState, bottomBar)
+  const { report, maxScrollTop } = updateScrolling(
+    previewState,
+    bottomBar,
+    separator,
+  )
   addScrollAction({ previewState, maxScrollTop })
   const separatorA = report === '' ? '' : separator
   const bottomBarA = getBottomBar({
