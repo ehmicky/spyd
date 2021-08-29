@@ -3,7 +3,7 @@ import {
   removeResultCombinations,
   hasSameCombinations,
 } from '../../combination/result.js'
-import { mergeSystems } from '../../system/merge.js'
+import { mergeSystems, normalizeSystems } from '../../system/merge.js'
 
 // The `since` configuration property allows reporting several reports at once:
 //  - This reports the most recent combination of each sets of dimensions
@@ -30,10 +30,11 @@ import { mergeSystems } from '../../system/merge.js'
 //    per result. It is hard to know where/whether in the results history the
 //    user intends to stop using each of the previously used systems.
 export const getMergedResult = function (previous, sinceIndex, result) {
+  const resultA = normalizeSystems(result)
   return previous
     .slice(sinceIndex)
-    .filter((historyResult) => !hasSameCombinations(historyResult, result))
-    .reduceRight(mergeHistoryResult, result)
+    .filter((historyResult) => !hasSameCombinations(historyResult, resultA))
+    .reduceRight(mergeHistoryResult, resultA)
 }
 
 // When merging two results, we keep most of the properties of the latest
@@ -45,7 +46,8 @@ export const getMergedResult = function (previous, sinceIndex, result) {
 //    that have been merged, i.e. that are reported
 const mergeHistoryResult = function (mergedResult, historyResult) {
   const mergeResultA = mergeCombinations(mergedResult, historyResult)
-  const mergedResultB = mergeSystems(mergeResultA, historyResult)
+  const historyResultA = normalizeSystems(historyResult)
+  const mergedResultB = mergeSystems(mergeResultA, historyResultA)
   return mergedResultB
 }
 
