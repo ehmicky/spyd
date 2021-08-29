@@ -1,10 +1,11 @@
-import { isSameDimension } from '../../../../combination/ids.js'
+import { isSameDimension } from '../../../combination/ids.js'
 import {
   STATS_SEPARATOR,
   STATS_SEPARATOR_COLORED,
-} from '../../../utils/separator.js'
-import { prettifyStats } from '../../../utils/stats/main.js'
-import { getTables } from '../common/main.js'
+} from '../../utils/separator.js'
+import { prettifyStats } from '../../utils/stats/main.js'
+
+import { getTables } from './common/main.js'
 
 // Show `result.history` as a time series
 export const getTimeSeries = function (history, combinations, screenWidth) {
