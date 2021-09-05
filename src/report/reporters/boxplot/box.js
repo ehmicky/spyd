@@ -7,13 +7,21 @@ export const getBox = function ({
   combinationTitles,
   mini,
 }) {
+  // Empty space before the box plot
   const leftSpace = getLeftSpace(min, minBlockWidth, mini)
+  // `min` stat number
   const minPadded = getPaddedStat(min.prettyColor, mini)
+  // Line on the start of the box plot
   const minLine = separatorColor(getMinLine(min, q1))
+  // First half of the inter-quartile range
   const q1Box = fillCharacter(BOX_CHARACTER, q1, median)
+  // Single character for the median
   const medianCharacter = goodColor(MEDIAN_CHARACTER)
+  // Second half of the inter-quartile range
   const q3Box = fillCharacter(BOX_CHARACTER, median, q3)
+  // Line on the end of the box plot
   const maxLine = separatorColor(getMaxLine(q3, max))
+  // `max` stat number
   const maxPadded = getPaddedStat(max.prettyColor, mini)
   return `${combinationTitles}${leftSpace}${minPadded}${minLine}${q1Box}${medianCharacter}${q3Box}${maxLine}${maxPadded}\n`
 }
