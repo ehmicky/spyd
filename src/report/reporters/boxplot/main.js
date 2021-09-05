@@ -178,7 +178,10 @@ const getPosition = function ({
 
 // eslint-disable-next-line complexity, max-statements
 const getBox = function ({ min, q1, median, q3, max }, minBlockWidth) {
-  const leftSpaceWidth = minBlockWidth + min.index - min.length - PADDING_WIDTH
+  const leftSpaceWidth = Math.max(
+    minBlockWidth + min.index - min.length - PADDING_WIDTH,
+    0,
+  )
   const leftSpace = ' '.repeat(leftSpaceWidth)
   const minPadded = addPadding(min.prettyColor)
   const minCharacter = min.index === q1.index ? '' : MIN_CHARACTER
