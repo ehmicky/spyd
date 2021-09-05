@@ -1,8 +1,9 @@
 import { getCombNamePaddedColor } from '../../utils/name.js'
 
-import { getPositions, getBox, getLabels } from './content.js'
+import { getBox, getLabels } from './content.js'
 import { getMinMaxAll } from './min_max.js'
 import { normalizeQuantiles } from './normalize.js'
+import { getPositions } from './position.js'
 import { getWidths } from './width.js'
 
 // Reporter showing boxplot of measures (min, q1, median, q3, max)
