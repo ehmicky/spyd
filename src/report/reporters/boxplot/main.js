@@ -3,7 +3,7 @@ import { getCombNamePaddedColor } from '../../utils/name.js'
 import { getBox } from './box.js'
 import { getLabels } from './labels.js'
 import { getMinMaxAll } from './min_max.js'
-import { normalizeQuantiles } from './normalize.js'
+import { normalizeQuantiles, isMeasuredCombination } from './normalize.js'
 import { getPositions } from './position.js'
 import { getWidths } from './width.js'
 
@@ -40,7 +40,6 @@ const reportTerminal = function (
 
 const serializeCombination = function ({
   combination,
-  combination: { quantiles },
   minAll,
   maxAll,
   titlesWidth,
@@ -50,11 +49,11 @@ const serializeCombination = function ({
 }) {
   const combinationTitles = getCombNamePaddedColor(combination)
 
-  if (quantiles === undefined) {
+  if (!isMeasuredCombination(combination)) {
     return getEmptyCombination(combinationTitles, mini)
   }
 
-  const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
+  const positions = getPositions({ combination, minAll, maxAll, contentWidth })
   const box = getBox({ positions, minBlockWidth, combinationTitles, mini })
   const labels = mini
     ? ''

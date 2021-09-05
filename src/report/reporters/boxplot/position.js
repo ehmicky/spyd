@@ -2,7 +2,7 @@ import mapObj from 'map-obj'
 
 // Compute the horizontal position on the screen of each quantile
 export const getPositions = function ({
-  quantiles,
+  combination: { quantiles },
   minAll,
   maxAll,
   contentWidth,
