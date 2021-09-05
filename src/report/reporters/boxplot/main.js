@@ -145,6 +145,27 @@ const serializeBoxPlot = function ({
     return titleBlock
   }
 
+  const blocks = getBlocks({
+    quantiles,
+    minAll,
+    maxAll,
+    minBlockWidth,
+    contentWidth,
+    maxBlockWidth,
+    mini,
+  })
+  return concatBlocks([titleBlock, ...blocks])
+}
+
+const getBlocks = function ({
+  quantiles,
+  minAll,
+  maxAll,
+  minBlockWidth,
+  contentWidth,
+  maxBlockWidth,
+  mini,
+}) {
   if (mini) {
     const miniContent = getMiniContent({
       quantiles,
@@ -152,7 +173,7 @@ const serializeBoxPlot = function ({
       maxAll,
       contentWidth,
     })
-    return concatBlocks([titleBlock, miniContent])
+    return [miniContent]
   }
 
   const minBlock = getMinMaxBlock(quantiles, minBlockWidth, 'min')
@@ -163,7 +184,7 @@ const serializeBoxPlot = function ({
     contentWidth,
   })
   const maxBlock = getMinMaxBlock(quantiles, maxBlockWidth, 'max')
-  return concatBlocks([titleBlock, minBlock, fullContent, maxBlock])
+  return [minBlock, fullContent, maxBlock]
 }
 
 const getTitleBlockWidth = function ([combination]) {
