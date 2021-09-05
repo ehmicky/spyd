@@ -77,10 +77,10 @@ const getWidths = function (combinations, screenWidth, mini) {
   const titleBlockWidth = stringWidth(getTitleBlockContents(combinations[0]))
   const minBlockWidth = mini
     ? 0
-    : Math.max(getMinHeader().length, getMinBlockWidth(combinations))
+    : Math.max(getMinHeader().length, getMinMaxBlockWidth(combinations, 'min'))
   const maxBlockWidth = mini
     ? 0
-    : Math.max(getMaxHeader().length, getMaxBlockWidth(combinations))
+    : Math.max(getMaxHeader().length, getMinMaxBlockWidth(combinations, 'max'))
   const contentWidth = Math.max(
     screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
     1,
@@ -137,9 +137,9 @@ const serializeBoxPlot = function ({
     return titleBlock
   }
 
-  const minBlock = getMinBlock(quantiles, mini)
+  const minBlock = getMinMaxBlock(quantiles, 'min', mini)
   const content = getContent({ quantiles, minAll, maxAll, mini, contentWidth })
-  const maxBlock = getMaxBlock(quantiles, mini)
+  const maxBlock = getMinMaxBlock(quantiles, 'max', mini)
   return concatBlocks([titleBlock, minBlock, content, maxBlock])
 }
 
@@ -166,34 +166,29 @@ const getBottomNewlines = function (mini) {
 
 const LABELS_HEIGHT = 1
 
-// Retrieve the blocks that show the lowest|highest value of the histogram, on
-// the left|right of it
-const getBlock = function (getStat, quantiles, mini) {
-  return mini ? '' : getStat(quantiles)
+// Retrieve the blocks that show the min|max on the left|right
+const getMinMaxBlock = function (quantiles, statName, mini) {
+  return mini ? '' : getStat(quantiles, statName)
 }
 
 // Retrieve the width of those blocks
-const getBlockWidth = function (getStat, combinations) {
+const getMinMaxBlockWidth = function (combinations, statName) {
   const combinationsA = combinations.filter(isMeasuredCombination)
   return combinationsA.length === 0
     ? 0
     : Math.max(
         ...combinationsA.map((combination) =>
-          getCombinationWidth(combination, getStat),
+          getCombinationWidth(combination, statName),
         ),
       )
 }
 
-const getCombinationWidth = function ({ quantiles }, getStat) {
-  return stringWidth(getStat(quantiles))
+const getCombinationWidth = function ({ quantiles }, statName) {
+  return stringWidth(getStat(quantiles, statName))
 }
 
-const getMinStat = function ({ min: { prettyPaddedColor } }) {
-  return addPadding(prettyPaddedColor)
-}
-
-const getMaxStat = function ({ max: { prettyPaddedColor } }) {
-  return addPadding(prettyPaddedColor)
+const getStat = function (quantiles, statName) {
+  return addPadding(quantiles[statName].prettyPaddedColor)
 }
 
 const PADDING_WIDTH = 1
@@ -202,11 +197,6 @@ const PADDING = ' '.repeat(PADDING_WIDTH)
 const addPadding = function (string) {
   return `${PADDING}${string}${PADDING}`
 }
-
-const getMinBlock = getBlock.bind(undefined, getMinStat)
-const getMinBlockWidth = getBlockWidth.bind(undefined, getMinStat)
-const getMaxBlock = getBlock.bind(undefined, getMaxStat)
-const getMaxBlockWidth = getBlockWidth.bind(undefined, getMaxStat)
 
 const getContent = function ({
   quantiles,
