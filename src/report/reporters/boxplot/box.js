@@ -47,7 +47,7 @@ const getMaxLine = function (q3, max) {
   const maxCharacter = q3.index === max.index ? '' : MAX_CHARACTER
   const rightLineWidth = Math.max(max.index - q3.index - maxCharacter.length, 0)
   const rightLine = LINE_CHARACTER.repeat(rightLineWidth)
-  return `${maxCharacter}${rightLine}`
+  return `${rightLine}${maxCharacter}`
 }
 
 // Works on most terminals
