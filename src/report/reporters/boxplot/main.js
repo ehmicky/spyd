@@ -7,8 +7,10 @@ import { getCombinationNameColor } from '../../utils/name.js'
 import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
 
 // Reporter showing boxplot of measures (min, p25, median, p75, max)
-const reportTerminal = function ({ combinations, screenWidth }) {
-  const mini = false
+const reportTerminal = function (
+  { combinations, screenWidth },
+  { mini = false },
+) {
   const width = getContentWidth(combinations, mini, screenWidth)
   const { minAll, maxAll } = getMinMaxAll(combinations)
   return combinations.map((combination) =>
