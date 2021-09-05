@@ -13,26 +13,26 @@ export const getWidths = function ({
   maxAll,
 }) {
   const titlesWidth = getCombinationPaddedName(combinations[0]).length
-  const postTitlesWidth = Math.max(screenWidth - titlesWidth, 1)
+  const contentWidth = Math.max(screenWidth - titlesWidth, 1)
   const minBlockWidth = getMinMaxBlockWidth({
     statName: 'min',
     combinations,
     mini,
     minAll,
     maxAll,
-    contentWidth: postTitlesWidth,
+    contentWidth,
   })
-  const postMinBlockWidth = Math.max(postTitlesWidth - minBlockWidth, 1)
+  const contentWidthA = Math.max(contentWidth - minBlockWidth, 1)
   const maxBlockWidth = getMinMaxBlockWidth({
     statName: 'max',
     combinations,
     mini,
     minAll,
     maxAll,
-    contentWidth: postMinBlockWidth,
+    contentWidth: contentWidthA,
   })
-  const contentWidth = Math.max(postMinBlockWidth - maxBlockWidth, 1)
-  return { titlesWidth, minBlockWidth, contentWidth }
+  const contentWidthB = Math.max(contentWidthA - maxBlockWidth, 1)
+  return { titlesWidth, minBlockWidth, contentWidth: contentWidthB }
 }
 
 // Finds the smallest `minBlockWidth`/`maxBlockWidth` that fits all `min`/`max`
