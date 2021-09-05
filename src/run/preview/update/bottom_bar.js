@@ -1,5 +1,5 @@
 import { handleContent } from '../../../report/handle.js'
-import { getLineSeparator } from '../../../report/utils/line.js'
+import { getFullLineSeparator } from '../../../report/utils/line.js'
 
 import { getActions, ACTIONS_LABEL } from './actions.js'
 import { getCounterRow, getCounter } from './counter.js'
@@ -32,13 +32,17 @@ export const getBottomBar = function ({
     leftWidth,
   })
   const actionsA = getActions(actions, leftWidth)
-  const content = `${separator}${progressRow}\n${counterRow}\n${actionsA}`
+  const content = `${progressRow}\n${counterRow}\n${actionsA}`
   const bottomBar = handleContent({ content, colors, padding: true })
-  return bottomBar
+  return `${separator}${bottomBar}`
 }
 
+// The separator is only present when there is some `report` to separate from.
+// It has bottom padding to separate it from the `bottomBar` but no top padding
+// to separate it from the `report`, to make it clear the `bottomBar` overlays
+// it.
 const getSeparator = function (report) {
-  return report === '' ? '' : `${getLineSeparator()}\n`
+  return report === '' ? '' : getFullLineSeparator()
 }
 
 const getLeftWidth = function ({ durationLeft, total }) {
