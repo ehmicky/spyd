@@ -145,7 +145,7 @@ const getSingleMinMaxWidth = function (quantiles, statName) {
 }
 
 const getPaddedMinMaxWidth = function (quantiles, statName) {
-  return addPadding(quantiles[statName].pretty).length
+  return quantiles[statName].pretty.length + PADDING_LENGTH
 }
 
 const getEmptyCombination = function (combinationTitles, mini) {
@@ -184,7 +184,7 @@ const getBox = function ({
   combinationTitles,
 }) {
   const leftSpaceWidth = Math.max(
-    minBlockWidth + min.index - min.length - PADDING_WIDTH,
+    minBlockWidth + min.index - min.length - PADDING_LENGTH,
     0,
   )
   const leftSpace = ' '.repeat(leftSpaceWidth)
@@ -214,6 +214,7 @@ const MEDIAN_CHARACTER = '\u2588'
 const MAX_CHARACTER = '\u2524'
 
 const PADDING_WIDTH = 1
+const PADDING_LENGTH = PADDING_WIDTH * 2
 const PADDING = ' '.repeat(PADDING_WIDTH)
 
 const addPadding = function (string) {
