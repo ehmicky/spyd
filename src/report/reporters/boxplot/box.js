@@ -34,13 +34,16 @@ const getMinLine = function (min, q1) {
 }
 
 const getQ1Box = function (q1, median) {
-  const q1BoxWidth = Math.max(median.index - q1.index, 0)
-  return BOX_CHARACTER.repeat(q1BoxWidth)
+  return fillCharacter(BOX_CHARACTER, q1, median)
 }
 
 const getQ3Box = function (median, q3) {
-  const q3BoxWidth = Math.max(q3.index - median.index, 0)
-  return BOX_CHARACTER.repeat(q3BoxWidth)
+  return fillCharacter(BOX_CHARACTER, median, q3)
+}
+
+const fillCharacter = function (character, start, end) {
+  const width = Math.max(end.index - start.index, 0)
+  return character.repeat(width)
 }
 
 const getMaxLine = function (q3, max) {
