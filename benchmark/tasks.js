@@ -10,7 +10,7 @@ export const empty = () => {}
 
 export const fixed = async () => {
   // eslint-disable-next-line no-magic-numbers
-  await setTimeout(50)
+  await setTimeout(0)
 }
 
 export const slow = async () => {
