@@ -11,6 +11,8 @@ import {
 import { getTitleBlock, getTitleBlockWidth } from './title.js'
 
 // Reporter showing distribution of measures with a histogram
+// Configuration properties:
+//  - `mini` (default: false): hide `min`, `median` and `max` labels
 const reportTerminal = function (
   { combinations, screenWidth },
   { mini = false },
