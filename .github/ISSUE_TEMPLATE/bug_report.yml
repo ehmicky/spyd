@@ -51,6 +51,15 @@ body:
         ```
     validations:
       required: true
+  - type: textarea
+    attributes:
+      label: Terminal
+      description: Which terminal do you use?
+      placeholder: |
+        Example: Gnome terminal, VSCode, Windows CMD, Git for Windows,
+        Powershell, WSL, mintty, cmder, macOS Terminal.app, iTerm2, etc.
+    validations:
+      required: true
   - type: checkboxes
     attributes:
       label: Pull request (optional)
