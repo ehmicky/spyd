@@ -77,10 +77,16 @@ const getWidths = function (combinations, screenWidth, mini) {
   const titleBlockWidth = stringWidth(getTitleBlockContents(combinations[0]))
   const minBlockWidth = mini
     ? 0
-    : Math.max(getMinHeader().length, getMinMaxBlockWidth(combinations, 'min'))
+    : Math.max(
+        getHeaderName('min').length,
+        getMinMaxBlockWidth(combinations, 'min'),
+      )
   const maxBlockWidth = mini
     ? 0
-    : Math.max(getMaxHeader().length, getMinMaxBlockWidth(combinations, 'max'))
+    : Math.max(
+        getHeaderName('max').length,
+        getMinMaxBlockWidth(combinations, 'max'),
+      )
   const contentWidth = Math.max(
     screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
     1,
@@ -100,22 +106,14 @@ const getHeader = function ({
   }
 
   const titleHeader = ' '.repeat(titleBlockWidth)
-  const minHeader = padHeaderField(getMinHeader(), minBlockWidth)
-  const boxHeader = padHeaderField(getMedianHeader(), contentWidth)
-  const maxHeader = padHeaderField(getMaxHeader(), maxBlockWidth)
+  const minHeader = padHeaderField(getHeaderName('min'), minBlockWidth)
+  const boxHeader = padHeaderField(getHeaderName('median'), contentWidth)
+  const maxHeader = padHeaderField(getHeaderName('max'), maxBlockWidth)
   return [`${titleHeader}${minHeader}${boxHeader}${maxHeader}`]
 }
 
-const getMinHeader = function () {
-  return addPadding(STAT_TITLES.min)
-}
-
-const getMedianHeader = function () {
-  return addPadding(STAT_TITLES.median)
-}
-
-const getMaxHeader = function () {
-  return addPadding(STAT_TITLES.max)
+const getHeaderName = function (statName) {
+  return addPadding(STAT_TITLES[statName])
 }
 
 const padHeaderField = function (headerName, headerWidth) {
