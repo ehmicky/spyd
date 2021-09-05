@@ -40,14 +40,17 @@ const getContentWidth = function (combinations, mini, screenWidth) {
 
 const serializeHistogram = function ({
   combination,
-  combination: { stats },
+  combination: {
+    stats,
+    stats: { median },
+  },
   width,
   height,
   mini,
 }) {
   const titleBlock = getTitleBlock(combination, height, mini)
 
-  if (hasLowLoops(stats)) {
+  if (median === undefined) {
     return titleBlock
   }
 
@@ -57,9 +60,4 @@ const serializeHistogram = function ({
   return concatBlocks([titleBlock, minBlock, content, maxBlock])
 }
 
-// When using `showPrecision` and not enough loops are available.
-const hasLowLoops = function ({ mean, meanMin }) {
-  return mean === undefined && meanMin === undefined
-}
-
-export const histogram = { reportTerminal }
+export const histogram = { reportTerminal, capabilities: { debugStats: true } }

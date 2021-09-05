@@ -3,7 +3,7 @@ import { separatorColor } from '../../utils/colors.js'
 import { TICK_MIDDLE, HORIZONTAL_LINE } from './characters.js'
 
 // Retrieve the horizontal line and the abscissa below the main content.
-// Includes the tick above the mean positions and their labels.
+// Includes the tick above the median and its label.
 export const getAbscissa = function (width, positions) {
   const bottomLine = getBottomLine(width, positions)
   const labels = getLabels(width, positions)
