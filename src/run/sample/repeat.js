@@ -15,7 +15,7 @@
 //  - It makes the initial calibration phase shorter. This leads to more
 //    stable `max` and `stdev` stats.
 // When estimating `measureCost`, we should not use a repeat loop since
-// `measureCost` only happens once per repeat loop
+// `measureCost` only happens once per repeat loop.
 // Iterating the `repeat` loop adds a small duration, due to the duration to
 // increment the loop counter (e.g. 1 or 2 CPU cycles)
 //  - We do not subtract that duration because it is variable, so would lower
