@@ -14,10 +14,12 @@ import { getInitialSampleState } from '../sample/state.js'
 //    and inaccurate.
 //  - We fix this by running a `for` loop so the `measureCost` runs only once
 //    for several task executions.
-//  - Using this `for` loop effectively applies an arithmetic mean, so it
-//    reduces the benefits of using the median. Therefore, we want to minimize
-//    the loop size, while still making sure it is high enough to remove the
-//    problem with the `measureCost`.
+//  - Using this `for` loop decreases the number of samples:
+//     - This decreases the accuracy of most statistics including `median`,
+//       `stdev`, `moe`, `histogram`, `quantiles`, `min`, `max`
+//     - This reduces the benefits of outliers removal
+//     - Therefore, we want to minimize the loop size, while still making sure
+//       it is high enough to remove the problem with the `measureCost`.
 //  - For many tasks, this number might even be 1, i.e. no `repeat` loop.
 //    The `repeat` loop is only useful for very fast tasks.
 // Computing the optimal loop size is done automatically
