@@ -1,6 +1,6 @@
 import { getCombinationPaddedName } from '../../utils/name.js'
 
-import { addStatPadding } from './box.js'
+import { getPaddedStat } from './box.js'
 
 // Retrieve the width of all blocks, in order:
 //  - Combination titles
@@ -19,19 +19,15 @@ export const getWidths = function (combinations, screenWidth, mini) {
 }
 
 const getMinMaxBlockWidth = function (combinations, mini, statName) {
-  if (mini) {
-    return 0
-  }
-
   return Math.max(
     ...combinations.map(({ quantiles }) =>
-      getSingleMinMaxWidth(quantiles, statName),
+      getSingleMinMaxWidth(quantiles, mini, statName),
     ),
   )
 }
 
-const getSingleMinMaxWidth = function (quantiles, statName) {
+const getSingleMinMaxWidth = function (quantiles, mini, statName) {
   return quantiles === undefined
     ? 0
-    : addStatPadding(quantiles[statName].pretty).length
+    : getPaddedStat(quantiles[statName].pretty, mini).length
 }

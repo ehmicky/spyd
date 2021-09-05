@@ -8,19 +8,19 @@ export const getBox = function ({
   mini,
 }) {
   const leftSpace = getLeftSpace(min, minBlockWidth, mini)
-  const minPadded = mini ? '' : addStatPadding(min.prettyColor)
+  const minPadded = getPaddedStat(min.prettyColor, mini)
   const minLine = getMinLine(min, q1)
   const q1Box = getQ1Box(q1, median)
   const medianCharacter = goodColor(MEDIAN_CHARACTER)
   const q3Box = getQ3Box(median, q3)
   const maxLine = getMaxLine(q3, max)
-  const maxPadded = mini ? '' : addStatPadding(max.prettyColor)
+  const maxPadded = getPaddedStat(max.prettyColor, mini)
   return `${combinationTitles}${leftSpace}${minPadded}${minLine}${q1Box}${medianCharacter}${q3Box}${maxLine}${maxPadded}\n`
 }
 
 const getLeftSpace = function (min, minBlockWidth, mini) {
   const leftSpaceWidth = Math.max(
-    minBlockWidth + min.index - (mini ? 0 : addStatPadding(min.pretty).length),
+    minBlockWidth + min.index - getPaddedStat(min.pretty, mini).length,
     0,
   )
   return ' '.repeat(leftSpaceWidth)
@@ -58,8 +58,8 @@ const MEDIAN_CHARACTER = '\u2588'
 const MAX_CHARACTER = '\u2524'
 
 // Surround stats with padding
-export const addStatPadding = function (string) {
-  return `${STAT_PADDING}${string}${STAT_PADDING}`
+export const getPaddedStat = function (string, mini) {
+  return mini ? '' : `${STAT_PADDING}${string}${STAT_PADDING}`
 }
 
 const STAT_PADDING_WIDTH = 1
