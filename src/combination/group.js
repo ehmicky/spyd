@@ -46,27 +46,27 @@ const getDimensionIds = function (combinations, idName) {
 }
 
 const getDimension = function ({ combinations, id, idName }) {
-  const medians = combinations
+  const means = combinations
     .filter((combination) => combination[idName] === id)
-    .map(getCombinationMedian)
+    .map(getCombinationMean)
     .filter(isDefined)
 
-  if (medians.length === 0) {
+  if (means.length === 0) {
     return { id }
   }
 
-  const mean = getMean(medians)
+  const mean = getMean(means)
   return { id, mean }
 }
 
-const getCombinationMedian = function ({ stats: { median } }) {
-  return median
+const getCombinationMean = function ({ stats: { mean } }) {
+  return mean
 }
 
-// `median` is `undefined` when in preview mode on combinations not measured yet
+// `mean` is `undefined` when in preview mode on combinations not measured yet
 // `dimension.mean` will be `undefined`, which is sorted last.
-const isDefined = function (median) {
-  return median !== undefined
+const isDefined = function (mean) {
+  return mean !== undefined
 }
 
 // Add speed rank within each dimension for each combination
