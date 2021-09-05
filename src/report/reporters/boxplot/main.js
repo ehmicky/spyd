@@ -179,28 +179,23 @@ const getBottomNewlines = function (mini) {
 
 const LABELS_HEIGHT = 1
 
-// Retrieve the blocks that show the min|max on the left|right
-const getMinMaxBlock = function (quantiles, statName) {
-  return getStat(quantiles, statName)
-}
-
 // Retrieve the width of those blocks
 const getMinMaxBlockWidth = function (combinations, statName) {
-  const combinationsA = combinations.filter(isMeasuredCombination)
-  return combinationsA.length === 0
+  return Math.max(
+    ...combinations.map((combination) =>
+      getSingleMinMaxWidth(combination, statName),
+    ),
+  )
+}
+
+const getSingleMinMaxWidth = function ({ quantiles }, statName) {
+  return quantiles === undefined
     ? 0
-    : Math.max(
-        ...combinationsA.map((combination) =>
-          getCombinationWidth(combination, statName),
-        ),
-      )
+    : addPadding(quantiles[statName].prettyPadded).length
 }
 
-const getCombinationWidth = function ({ quantiles }, statName) {
-  return stringWidth(getStat(quantiles, statName))
-}
-
-const getStat = function (quantiles, statName) {
+// Retrieve the blocks that show the min|max on the left|right
+const getMinMaxBlock = function (quantiles, statName) {
   return addPadding(quantiles[statName].prettyPaddedColor)
 }
 
