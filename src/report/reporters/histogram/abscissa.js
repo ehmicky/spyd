@@ -28,16 +28,20 @@ export const getAbscissa = function ({
   return `${combinationTitles}${paddedMin}${bottomLine}${paddedMax}\n${titlesSpace}${minSpace}${label}\n`
 }
 
-export const getPaddedMin = function ({ prettyPaddedColor }) {
+const getPaddedMin = function ({ prettyPaddedColor }) {
   return `${STAT_PADDING}${prettyPaddedColor}${STAT_PADDING}${separatorColor(
     TICK_LEFT,
   )}`
 }
 
-export const getPaddedMax = function ({ prettyPaddedColor }) {
+const getPaddedMax = function ({ prettyPaddedColor }) {
   return `${separatorColor(
     TICK_RIGHT,
   )}${STAT_PADDING}${prettyPaddedColor}${STAT_PADDING}`
+}
+
+export const getPaddedStatLength = function ({ prettyPadded }) {
+  return prettyPadded.length + STAT_PADDING_WIDTH * 2 + TICK_LEFT.length
 }
 
 const STAT_PADDING_WIDTH = 1
