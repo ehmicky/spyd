@@ -1,7 +1,11 @@
 import { separatorColor } from '../../utils/colors.js'
 
-import { TICK_MIDDLE, HORIZONTAL_LINE } from './characters.js'
-import { padMinStat, padMaxStat } from './min_max.js'
+import {
+  TICK_LEFT,
+  TICK_RIGHT,
+  TICK_MIDDLE,
+  HORIZONTAL_LINE,
+} from './characters.js'
 
 // Retrieve the horizontal line and the abscissa below the main content.
 // Includes the tick above the median and its label.
@@ -17,12 +21,27 @@ export const getAbscissa = function ({
 }) {
   const titlesSpace = ' '.repeat(titlesWidth)
   const minSpace = ' '.repeat(minBlockWidth)
-  const paddedMin = padMinStat(min)
-  const paddedMax = padMaxStat(max)
+  const paddedMin = getPaddedMin(min)
+  const paddedMax = getPaddedMax(max)
   const bottomLine = separatorColor(getBottomLine(contentWidth, medianIndex))
   const label = getLabel(contentWidth, median, medianIndex)
   return `${combinationTitles}${paddedMin}${bottomLine}${paddedMax}\n${titlesSpace}${minSpace}${label}\n`
 }
+
+export const getPaddedMin = function ({ prettyPaddedColor }) {
+  return `${STAT_PADDING}${prettyPaddedColor}${STAT_PADDING}${separatorColor(
+    TICK_LEFT,
+  )}`
+}
+
+export const getPaddedMax = function ({ prettyPaddedColor }) {
+  return `${separatorColor(
+    TICK_RIGHT,
+  )}${STAT_PADDING}${prettyPaddedColor}${STAT_PADDING}`
+}
+
+const STAT_PADDING_WIDTH = 1
+const STAT_PADDING = ' '.repeat(STAT_PADDING_WIDTH)
 
 const getBottomLine = function (contentWidth, medianIndex) {
   const startPadding = HORIZONTAL_LINE.repeat(medianIndex)
