@@ -52,25 +52,17 @@ const getMinMaxAll = function (combinations) {
     return {}
   }
 
-  const minAll = Math.min(...combinationsA.map(getMinQuantile))
-  const maxAll = Math.max(...combinationsA.map(getMaxQuantile))
+  const minAll = Math.min(
+    ...combinationsA.map((combination) => getQuantile(combination, 'min')),
+  )
+  const maxAll = Math.max(
+    ...combinationsA.map((combination) => getQuantile(combination, 'max')),
+  )
   return { minAll, maxAll }
 }
 
-const getMinQuantile = function ({
-  quantiles: {
-    min: { raw },
-  },
-}) {
-  return raw
-}
-
-const getMaxQuantile = function ({
-  quantiles: {
-    max: { raw },
-  },
-}) {
-  return raw
+const getQuantile = function ({ quantiles }, statName) {
+  return quantiles[statName].raw
 }
 
 const getWidths = function (combinations, screenWidth, mini) {
