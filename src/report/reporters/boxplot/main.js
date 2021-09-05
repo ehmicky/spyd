@@ -1,10 +1,15 @@
 /* eslint-disable max-lines */
 import mapObj from 'map-obj'
-import stringWidth from 'string-width'
 
 import { goodColor } from '../../utils/colors.js'
-import { getCombinationNameColor } from '../../utils/name.js'
-import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
+import {
+  getCombinationName,
+  getCombinationNameColor,
+} from '../../utils/name.js'
+import {
+  NAME_SEPARATOR,
+  NAME_SEPARATOR_COLORED,
+} from '../../utils/separator.js'
 
 // Reporter showing boxplot of measures (min, q1, median, q3, max)
 const reportTerminal = function (
@@ -120,7 +125,7 @@ const serializeBoxPlot = function ({
 }
 
 const getTitlesWidth = function ([combination]) {
-  return stringWidth(getCombinationTitles(combination))
+  return `${getCombinationName(combination)}${NAME_SEPARATOR}`.length
 }
 
 const getCombinationTitles = function (combination) {
