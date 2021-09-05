@@ -52,7 +52,7 @@ import { UserError } from '../error/main.js'
 //     - no way (nor strong reason) to reduce it
 //     - only reported by distribution-centric reporters (histogram, box chart),
 //       not most reporters
-//        - reason: simplicity, and putting focus on `median` instead
+//        - reason: simplicity, and putting focus on `mean` instead
 //  - engine optimization:
 //     - due to engine optimize code runtime, e.g. JIT
 //     - measured by: `moe`, `stdev`, `quantiles|min|median|max`
@@ -108,7 +108,7 @@ const MAX_PRECISION = PRECISION_TARGETS.length - 1
 //  - Any benchmark must run a minimum amount:
 //     - This prevents against early exits due to imprecise `stdev` at the
 //       beginning
-//     - This ensures cold starts do not impact median too much
+//     - This ensures cold starts do not impact mean too much
 //     - Exception: when using `precision: 0`
 //  - Until reaching that threshold:
 //     - The following are not reported:
