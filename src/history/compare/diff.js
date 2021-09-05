@@ -30,13 +30,13 @@ export const addCombinationsDiff = function (result, sinceResult) {
   return { ...result, combinations }
 }
 
-// `median` can only be `undefined` for combinations not measured yet in
+// `mean` can only be `undefined` for combinations not measured yet in
 // previews.
 const addCombinationDiff = function (
   combination,
   { combinations: previousCombinations },
 ) {
-  if (combination.stats.median === undefined) {
+  if (combination.stats.mean === undefined) {
     return combination
   }
 
@@ -64,14 +64,14 @@ const addDiff = function ({
   combination,
   combination: {
     stats,
-    stats: { median },
+    stats: { mean },
   },
   previousCombination: {
     stats: previousStats,
-    stats: { median: previousMedian },
+    stats: { mean: previousMean },
   },
 }) {
-  const diff = median / previousMedian - 1
+  const diff = mean / previousMean - 1
   const diffPrecise = isDiffPrecise(stats, previousStats)
   return { ...combination, stats: { ...stats, diff, diffPrecise } }
 }
