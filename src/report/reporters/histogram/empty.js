@@ -1,6 +1,6 @@
 import { getCombNamePaddedColor } from '../../utils/name.js'
 
-// Shown when there is the combination has not been measured yet
+// Shown when a combination has not been measured yet
 export const getEmptyCombination = function (combination, height, mini) {
   const histogramLines = getHistogramLines(height, mini)
   const labelsLines = getLabelsLines(mini)
