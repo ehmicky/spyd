@@ -3,7 +3,6 @@ import mapObj from 'map-obj'
 import stringWidth from 'string-width'
 
 import { goodColor } from '../../utils/colors.js'
-import { concatBlocks } from '../../utils/concat.js'
 import { getCombinationNameColor } from '../../utils/name.js'
 import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
 
@@ -96,44 +95,29 @@ const serializeBoxPlot = function ({
   contentWidth,
   mini,
 }) {
-  const titleBlock = getTitleBlock(combination, mini)
+  const combinationTitles = getCombinationTitles(combination)
 
   if (quantiles === undefined) {
-    return titleBlock
+    return getEmptyCombination(combinationTitles, mini)
   }
 
   const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
-  const box = getBox(positions, minBlockWidth)
+  const box = getBox({ positions, minBlockWidth, combinationTitles })
 
   if (mini) {
-    return concatBlocks([titleBlock, box])
+    return box
   }
 
-  const content = addLabels({ positions, minBlockWidth, contentWidth, box })
-  return concatBlocks([titleBlock, content])
+  return addLabels({ positions, minBlockWidth, contentWidth, box })
 }
 
 const getTitleBlockWidth = function ([combination]) {
-  return stringWidth(getTitleBlockContents(combination))
+  return stringWidth(getCombinationTitles(combination))
 }
 
-// Retrieve sidebar with the combination name
-const getTitleBlock = function (combination, mini) {
-  const titleBlockContents = getTitleBlockContents(combination)
-  const bottomNewlines = getBottomNewlines(mini)
-  return `${titleBlockContents}\n${bottomNewlines}`
-}
-
-const getTitleBlockContents = function (combination) {
+const getCombinationTitles = function (combination) {
   return `${getCombinationNameColor(combination)}${NAME_SEPARATOR_COLORED}`
 }
-
-const getBottomNewlines = function (mini) {
-  const bottomNewlinesHeight = mini ? 0 : LABELS_HEIGHT
-  return '\n'.repeat(bottomNewlinesHeight)
-}
-
-const LABELS_HEIGHT = 1
 
 const getMinMaxBlockWidth = function (combinations, statName) {
   return Math.max(
@@ -149,6 +133,10 @@ const getSingleMinMaxWidth = function (quantiles, statName) {
 
 const getPaddedMinMaxWidth = function (quantiles, statName) {
   return addPadding(quantiles[statName].pretty).length
+}
+
+const getEmptyCombination = function (combinationTitles, mini) {
+  return mini ? `${combinationTitles}\n` : `${combinationTitles}\n\n`
 }
 
 const getPositions = function ({ quantiles, minAll, maxAll, contentWidth }) {
@@ -177,7 +165,11 @@ const getPosition = function ({
 }
 
 // eslint-disable-next-line complexity, max-statements
-const getBox = function ({ min, q1, median, q3, max }, minBlockWidth) {
+const getBox = function ({
+  positions: { min, q1, median, q3, max },
+  minBlockWidth,
+  combinationTitles,
+}) {
   const leftSpaceWidth = Math.max(
     minBlockWidth + min.index - min.length - PADDING_WIDTH,
     0,
@@ -198,7 +190,7 @@ const getBox = function ({ min, q1, median, q3, max }, minBlockWidth) {
   const rightLine =
     rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
   const maxPadded = addPadding(max.prettyColor)
-  return `${leftSpace}${minPadded}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${maxPadded}`
+  return `${combinationTitles}${leftSpace}${minPadded}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${maxPadded}`
 }
 
 // Works on most terminals
