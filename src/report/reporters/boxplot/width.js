@@ -20,13 +20,13 @@ export const getWidths = function (combinations, screenWidth, mini) {
 
 const getMinMaxBlockWidth = function (combinations, mini, statName) {
   return Math.max(
-    ...combinations.map(({ quantiles }) =>
-      getSingleMinMaxWidth(quantiles, mini, statName),
+    ...combinations.map((combination) =>
+      getSingleMinMaxWidth(combination, mini, statName),
     ),
   )
 }
 
-const getSingleMinMaxWidth = function (quantiles, mini, statName) {
+const getSingleMinMaxWidth = function ({ quantiles }, mini, statName) {
   return quantiles === undefined
     ? 0
     : getPaddedStat(quantiles[statName].pretty, mini).length
