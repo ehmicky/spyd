@@ -13,26 +13,28 @@ export const addStatColor = function ({
     return combination
   }
 
-  const { raw, pretty, prettyPadded } = stat
-  const prettyColor = addItemsColor(pretty, { raw, name, stats })
-  const prettyPaddedColor = addItemsColor(prettyPadded, { raw, name, stats })
-  return {
-    ...combination,
-    stats: { ...stats, [name]: { ...stat, prettyColor, prettyPaddedColor } },
-  }
+  const statA = Array.isArray(stat)
+    ? stat.map((singleStat) => addItemsColor({ stat: singleStat, name, stats }))
+    : addItemsColor({ stat })
+  return { ...combination, stats: { ...stats, [name]: statA } }
 }
 
-const addItemsColor = function (pretty, { raw, name, stats }) {
+const addItemsColor = function ({
+  stat,
+  stat: { raw, pretty, prettyPadded },
+  name,
+  stats,
+}) {
+  const prettyColor = addItemColor(pretty, { raw, name, stats })
+  const prettyPaddedColor = addItemColor(prettyPadded, { raw, name, stats })
+  return { ...stat, prettyColor, prettyPaddedColor }
+}
+
+const addItemColor = function (pretty, { raw, name, stats }) {
   if (pretty === '') {
     return ''
   }
 
-  return Array.isArray(pretty)
-    ? pretty.map((item) => addItemColor(item, { raw, name, stats }))
-    : addItemColor(pretty, { raw, name, stats })
-}
-
-const addItemColor = function (pretty, { raw, name, stats }) {
   const prettyA = addSuffixColors(pretty)
   const prettyB = addSpecificColors(prettyA, { raw, name, stats })
   return prettyB

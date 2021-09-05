@@ -45,12 +45,12 @@ const addStatPretty = function ({
     return combination
   }
 
-  const pretty = Array.isArray(raw)
+  const stat = Array.isArray(raw)
     ? raw.map((item) =>
         addItemPretty({ raw: item, signed, scale, unit, decimals, stats }),
       )
     : addItemPretty({ raw, signed, scale, unit, decimals, stats })
-  return { ...combination, stats: { ...stats, [name]: { raw, pretty } } }
+  return { ...combination, stats: { ...stats, [name]: stat } }
 }
 
 const addItemPretty = function ({ raw, signed, scale, unit, decimals, stats }) {
@@ -58,5 +58,5 @@ const addItemPretty = function ({ raw, signed, scale, unit, decimals, stats }) {
   const roundedRaw = scaledRaw.toFixed(decimals)
   const pretty = `${roundedRaw}${unit}`
   const prettyA = addSign(pretty, signed, stats)
-  return prettyA
+  return { raw, pretty: prettyA }
 }

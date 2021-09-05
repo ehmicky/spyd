@@ -39,12 +39,13 @@ const addItemsPadded = function ({
     return combination
   }
 
-  const { pretty } = stat
-  const prettyPadded = Array.isArray(pretty)
-    ? pretty.map((item) => item.padStart(padding))
-    : pretty.padStart(padding)
-  return {
-    ...combination,
-    stats: { ...stats, [name]: { ...stat, prettyPadded } },
-  }
+  const statA = Array.isArray(stat)
+    ? stat.map((singleStat) => addItemPadded(singleStat, padding))
+    : addItemPadded(stat, padding)
+  return { ...combination, stats: { ...stats, [name]: statA } }
+}
+
+const addItemPadded = function (stat, padding) {
+  const prettyPadded = stat.pretty.padStart(padding)
+  return { ...stat, prettyPadded }
 }
