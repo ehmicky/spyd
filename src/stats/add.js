@@ -18,17 +18,17 @@ export const getInitialStats = function () {
 //   - all: in combinations not measured yet, nor saved
 //   - mean, rstdev, moe, rmoe, samples, loops, times, repeat, minLoopDuration:
 //     when `reporter.capabilities.debugStats` is false
-//   - median: when `showPrecision` is true
-//   - moe, rmoe, medianMin, medianMax: when `showPrecision` is false
-//   - stdev, rstdev, moe, rmoe, medianMin, medianMax: when loops < 5
-//      - This means both median and medianMin|medianMax might be `undefined`
-//        while other stats are not
+//   - mean: when `showPrecision` is true
+//   - moe, rmoe, meanMin, meanMax: when `showPrecision` is false
+//   - stdev, rstdev, moe, rmoe, meanMin, meanMax: when loops < 5
+//      - This means both mean and meanMin|meanMax might be `undefined` while
+//        other stats are not
 //      - This might differ between combinations of the same result
 //   - diff, diffPrecise: when either `showDiff` is false or there is no
 //     previous combination
 // Stat types:
 //   - samples, loops, times, repeat, minLoopDuration: integer
-//   - min, max, median, mean, stdev, rstdev, moe, rmoe, medianMin, medianMax,
+//   - min, max, median, mean, stdev, rstdev, moe, rmoe, meanMin, meanMax,
 //     diff: float
 //   - diffPrecise: boolean
 //   - quantiles: array of floats
@@ -36,9 +36,9 @@ export const getInitialStats = function () {
 //      - histogram[*].start|end|frequency: float
 // Stat constraints:
 //   - samples, loops, times, repeat, minLoopDuration, histogram[*].end: >0
-//   - min, max, median, mean, stdev, rstdev, moe, rmoe, medianMin, medianMax,
+//   - min, max, median, mean, stdev, rstdev, moe, rmoe, meanMin, meanMax,
 //     diff, quantiles[*], histogram[*].start|frequency: >=0
-//      - median 0 is unlikely and impossible in saved results (except the
+//      - mean 0 is unlikely and impossible in saved results (except the
 //        last/current result)
 //   - histogram[*].end: <=1
 export const addStats = function (

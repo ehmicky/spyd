@@ -56,10 +56,10 @@ export const computeStats = function (measures) {
   })
 
   return {
-    median,
-    medianMin: meanMin,
-    medianMax: meanMax,
     mean,
+    meanMin,
+    meanMax,
+    median,
     min,
     max,
     stdev,

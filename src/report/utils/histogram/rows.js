@@ -12,14 +12,14 @@ export const getHistogramRows = function ({
   histogram,
   width,
   height,
-  medianIndex,
-  medianMaxWidth,
+  meanIndex,
+  meanMaxWidth,
 }) {
   const frequencies = getFrequencies(histogram, width)
   const columns = getHistogramColumns({
     frequencies,
-    medianIndex,
-    medianMaxWidth,
+    meanIndex,
+    meanMaxWidth,
     height,
   })
   return Array.from({ length: height }, (_, index) =>
@@ -30,17 +30,13 @@ export const getHistogramRows = function ({
 // Computes the terminal height of each column for reporting.
 const getHistogramColumns = function ({
   frequencies,
-  medianIndex,
-  medianMaxWidth,
+  meanIndex,
+  meanMaxWidth,
   height,
 }) {
   const maxHeight = getMaxHeight(frequencies, height)
   return frequencies.map(
-    getHistogramColumn.bind(undefined, {
-      maxHeight,
-      medianIndex,
-      medianMaxWidth,
-    }),
+    getHistogramColumn.bind(undefined, { maxHeight, meanIndex, meanMaxWidth }),
   )
 }
 
@@ -53,7 +49,7 @@ const getMaxHeight = function (frequencies, height) {
 // `heightLevel` is the integer part (full character) and `charIndex` is the
 // fractional part (final character on top of column).
 const getHistogramColumn = function (
-  { maxHeight, medianIndex, medianMaxWidth },
+  { maxHeight, meanIndex, meanMaxWidth },
   frequency,
   columnIndex,
 ) {
@@ -62,16 +58,14 @@ const getHistogramColumn = function (
   const charIndex = Math.ceil(
     (columnHeight - heightLevel) * (HISTOGRAM_CHARS.length - 1),
   )
-  const color = getColumnColor(columnIndex, medianIndex, medianMaxWidth)
+  const color = getColumnColor(columnIndex, meanIndex, meanMaxWidth)
   return { heightLevel, charIndex, color }
 }
 
 // Computes the column gradient color.
-const getColumnColor = function (columnIndex, medianIndex, medianMaxWidth) {
+const getColumnColor = function (columnIndex, meanIndex, meanMaxWidth) {
   const colorPercentage =
-    medianMaxWidth === 0
-      ? 0
-      : Math.abs(medianIndex - columnIndex) / medianMaxWidth
+    meanMaxWidth === 0 ? 0 : Math.abs(meanIndex - columnIndex) / meanMaxWidth
   return graphGradientColor(colorPercentage)
 }
 

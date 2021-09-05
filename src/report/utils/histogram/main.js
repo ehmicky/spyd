@@ -56,6 +56,6 @@ const serializeHistogram = function ({
 }
 
 // When using `showPrecision` and not enough loops are available.
-const hasLowLoops = function ({ median, medianMin }) {
-  return median === undefined && medianMin === undefined
+const hasLowLoops = function ({ mean, meanMin }) {
+  return mean === undefined && meanMin === undefined
 }

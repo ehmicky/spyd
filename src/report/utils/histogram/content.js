@@ -10,7 +10,7 @@ export const getContent = function ({
   width,
   showStats,
 }) {
-  const { positions, medianIndex, medianMaxWidth } = getMedianPositions(
+  const { positions, meanIndex, meanMaxWidth } = getMedianPositions(
     stats,
     width,
   )
@@ -18,8 +18,8 @@ export const getContent = function ({
     histogram,
     width,
     height,
-    medianIndex,
-    medianMaxWidth,
+    meanIndex,
+    meanMaxWidth,
   })
 
   if (!showStats) {

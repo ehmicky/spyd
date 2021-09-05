@@ -19,10 +19,10 @@ const getStatNames = function (combinations) {
 
 // Order is significant as it is displayed in that order.
 const STAT_NAMES = [
-  'median',
-  'medianMin',
-  'medianMax',
   'mean',
+  'meanMin',
+  'meanMax',
+  'median',
   'min',
   'max',
   'diff',

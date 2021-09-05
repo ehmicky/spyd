@@ -3,25 +3,25 @@ import { getTvalue } from './tvalue.js'
 
 // Check whether two combinations are too close for their `diff` to be
 // statistically significant.
-// We do this using a median-based Welch's t-test instead of:
+// We do this using a mean-based Welch's t-test instead of:
 //  - Student's t-test because it assumes variances are the same
 //  - Mann-Whitney u-test because it:
-//     - Compares the distributions, not just the means/medians
+//     - Compares the distributions, not just the means
 //     - Has a slower time complexity O(n^2)
 //     - Is more complex to implement
 //     - Assumes both combinations have similar distributions
 //     - Is not as good with skewed distributions
-//  - Confidence interval `medianMin|medianMax` because doing so is less
+//  - Confidence interval `meanMin|meanMax` because doing so is less
 //    statistically accurate
 //     - However, this method should be used by users when comparing two
 //       combinations of the same result because:
 //        - It can be easily done visually
 //        - Doing a Welch's t-test between each pair of combinations would
 //          be hard to report
-// In a nutshell, this is is based on the medians difference, number of loops
+// In a nutshell, this is is based on the means difference, number of loops
 // and standard deviations:
 //  - The t-value improves proportionally with a:
-//     - higher difference of medians (O(n))
+//     - higher difference of means (O(n))
 //     - lower stdev (O(n**1/2))
 //     - higher length (O(n**1/4))
 //  - The degrees of freedom improve proportionally with a:
@@ -32,8 +32,8 @@ import { getTvalue } from './tvalue.js'
 //       current combination might make its diff imprecise. However, the
 //       variation is minimal.
 export const isDiffPrecise = function (
-  { median: medianA, stdev: stdevA, loops: loopsA },
-  { median: medianB, stdev: stdevB, loops: loopsB },
+  { mean: meanA, stdev: stdevA, loops: loopsA },
+  { mean: meanB, stdev: stdevB, loops: loopsB },
 ) {
   if (isMissingPrecision(stdevA, stdevB)) {
     return false
@@ -41,7 +41,7 @@ export const isDiffPrecise = function (
 
   const { length: lengthA } = getLengthFromLoops(loopsA)
   const { length: lengthB } = getLengthFromLoops(loopsB)
-  return welchTTest({ medianA, stdevA, lengthA, medianB, stdevB, lengthB })
+  return welchTTest({ meanA, stdevA, lengthA, meanB, stdevB, lengthB })
 }
 
 // When the result has not enough measures to compute the standard deviations
@@ -50,10 +50,10 @@ const isMissingPrecision = function (stdevA, stdevB) {
 }
 
 const welchTTest = function ({
-  medianA,
+  meanA,
   stdevA,
   lengthA,
-  medianB,
+  meanB,
   stdevB,
   lengthB,
 }) {
@@ -64,7 +64,7 @@ const welchTTest = function ({
   const errorSquaredA = getErrorSquared(stdevA, lengthA)
   const errorSquaredB = getErrorSquared(stdevB, lengthB)
   const tStat = Math.abs(
-    (medianA - medianB) / Math.sqrt(errorSquaredA + errorSquaredB),
+    (meanA - meanB) / Math.sqrt(errorSquaredA + errorSquaredB),
   )
   const degreesOfFreedom =
     (errorSquaredA + errorSquaredB) ** 2 /

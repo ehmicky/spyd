@@ -1,10 +1,10 @@
 // All `stats.*` properties to prettify
 // `histogram` does not need to be prettified.
 export const STAT_KINDS = [
-  { name: 'median', kind: 'duration' },
-  { name: 'medianMin', kind: 'duration' },
-  { name: 'medianMax', kind: 'duration' },
   { name: 'mean', kind: 'duration' },
+  { name: 'meanMin', kind: 'duration' },
+  { name: 'meanMax', kind: 'duration' },
+  { name: 'median', kind: 'duration' },
   { name: 'min', kind: 'duration' },
   { name: 'max', kind: 'duration' },
   { name: 'diff', kind: 'percentage', signed: 'diff' },

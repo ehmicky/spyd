@@ -19,25 +19,25 @@ const omitCombinationProps = function (
   { stats, ...combination },
   { showPrecision, showDiff, debugStats },
 ) {
-  const statsA = omitMedianProps(stats, showPrecision)
+  const statsA = omitMeanProps(stats, showPrecision)
   const statsB = maybeOmit(statsA, showPrecision, PRECISION_STATS_PROPS)
   const statsC = maybeOmit(statsB, showDiff, DIFF_STAT_PROPS)
   const statsD = maybeOmit(statsC, debugStats, DEBUG_STATS_PROPS)
   return { ...combination, stats: statsD }
 }
 
-// When `showPrecision` is `true`, we show `medianMin|medianMax` instead of
-// `median`. However, we fall back to `median` when those are not available due
-// to not enough measures.
-const omitMedianProps = function (
-  { median, medianMin, medianMax, ...stats },
+// When `showPrecision` is `true`, we show `meanMin|meanMax` instead of `mean`.
+// However, we fall back to `mean` when those are not available due to not
+// enough measures.
+const omitMeanProps = function (
+  { mean, meanMin, meanMax, ...stats },
   showPrecision,
 ) {
-  if (showPrecision && medianMin !== undefined) {
-    return { ...stats, medianMin, medianMax }
+  if (showPrecision && meanMin !== undefined) {
+    return { ...stats, meanMin, meanMax }
   }
 
-  return median === undefined ? stats : { ...stats, median }
+  return mean === undefined ? stats : { ...stats, mean }
 }
 
 const PRECISION_STATS_PROPS = ['moe', 'rmoe']
@@ -47,14 +47,13 @@ const DIFF_STAT_PROPS = ['diff', 'diffPrecise']
 // debugging. Reporters must explicitly set `debugStats: true` to use those.
 // This is undocumented.
 const DEBUG_STATS_PROPS = [
-  // Median is the main statistic which should be used for averages since it is:
-  //  - More precise
+  // Mean is the main statistic which should be used for averages since it is:
   //  - Consistent with the other statistics which are based on it such as stdev
   //  - Consistent with the other reporters
   //  - Used to sort combinations
-  'mean',
-  // `medianMin|medianMax` is better than those statistics since they make it
-  // easy for users to visualize:
+  'median',
+  // `meanMin|meanMax` is better than those statistics since they make it easy
+  // for users to visualize:
   //  - The confidence interval
   //  - Whether two combinations confidence intervals overlap
   'rstdev',
