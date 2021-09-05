@@ -7,7 +7,7 @@ export const getActions = function (actions, leftWidth) {
     return ''
   }
 
-  const actionsStr = actions.map(getAction).join(noteColor(', '))
+  const actionsStr = actions.map(getAction).join(noteColor(ACTION_SEPARATOR))
   return `${ACTIONS_LABEL.padEnd(leftWidth)}${actionsStr}`
 }
 
@@ -15,4 +15,5 @@ const getAction = function ({ key, explanation }) {
   return `${goodColor(key)} ${noteColor(`(${explanation})`)}`
 }
 
+const ACTION_SEPARATOR = ', '
 export const ACTIONS_LABEL = 'Actions'
