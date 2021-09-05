@@ -108,7 +108,8 @@ const serializeBoxPlot = function ({
     return box
   }
 
-  return addLabels({ positions, minBlockWidth, contentWidth, box })
+  const labels = getLabels(positions, minBlockWidth, contentWidth)
+  return `${box}${labels}\n`
 }
 
 const getTitleBlockWidth = function ([combination]) {
@@ -207,17 +208,7 @@ const addPadding = function (string) {
   return `${PADDING}${string}${PADDING}`
 }
 
-const addLabels = function ({
-  positions: { median },
-  minBlockWidth,
-  contentWidth,
-  box,
-}) {
-  const labels = getLabels(median, minBlockWidth, contentWidth)
-  return `${box}${labels}\n`
-}
-
-const getLabels = function (median, minBlockWidth, contentWidth) {
+const getLabels = function ({ median }, minBlockWidth, contentWidth) {
   const leftShift = Math.max(Math.floor((median.length - 1) / 2), 0)
   const medianLabelIndex =
     Math.min(
