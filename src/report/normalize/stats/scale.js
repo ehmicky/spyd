@@ -28,7 +28,7 @@ const getMeasure = function (
   kind,
   { stats: { [name]: stat, mean, meanMin, median } },
 ) {
-  if (!MEDIAN_KINDS.has(kind)) {
+  if (!MEAN_KINDS.has(kind)) {
     return stat
   }
 
@@ -43,7 +43,7 @@ const getMeasure = function (
   return median
 }
 
-const MEDIAN_KINDS = new Set(['duration'])
+const MEAN_KINDS = new Set(['duration'])
 
 // Some measures might be `0`, although unlikely. We do not them since they are
 // not a good indicator of minimum precision for scales.
