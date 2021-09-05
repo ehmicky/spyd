@@ -69,6 +69,11 @@ const getMinMaxAll = function (combinations) {
   return { minAll, maxAll }
 }
 
+// When the combination has not been measured yet
+const isMeasuredCombination = function ({ quantiles }) {
+  return quantiles !== undefined
+}
+
 const getQuantile = function ({ quantiles }, statName) {
   return quantiles[statName].raw
 }
@@ -136,7 +141,7 @@ const serializeBoxPlot = function ({
 }) {
   const titleBlock = getTitleBlock(combination, mini)
 
-  if (!isMeasuredCombination(combination)) {
+  if (quantiles === undefined) {
     return titleBlock
   }
 
@@ -159,11 +164,6 @@ const serializeBoxPlot = function ({
   })
   const maxBlock = getMinMaxBlock(quantiles, maxBlockWidth, 'max')
   return concatBlocks([titleBlock, minBlock, fullContent, maxBlock])
-}
-
-// When the combination has not been measured yet
-const isMeasuredCombination = function ({ quantiles }) {
-  return quantiles !== undefined
 }
 
 const getTitleBlockWidth = function ([combination]) {
