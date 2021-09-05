@@ -190,7 +190,7 @@ const getBox = function ({
   const rightLine =
     rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
   const maxPadded = addPadding(max.prettyColor)
-  return `${combinationTitles}${leftSpace}${minPadded}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${maxPadded}`
+  return `${combinationTitles}${leftSpace}${minPadded}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${maxPadded}\n`
 }
 
 // Works on most terminals
@@ -214,7 +214,7 @@ const addLabels = function ({
   box,
 }) {
   const labels = getLabels(median, minBlockWidth, contentWidth)
-  return `${box}\n${labels}`
+  return `${box}${labels}\n`
 }
 
 const getLabels = function (median, minBlockWidth, contentWidth) {
