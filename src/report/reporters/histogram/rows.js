@@ -11,7 +11,7 @@ import { getFrequencies } from './frequencies.js'
 export const getHistogramRows = function ({
   histogram,
   combinationTitles,
-  titleBlockWidth,
+  titlesWidth,
   minBlockWidth,
   contentWidth,
   height,
@@ -30,7 +30,7 @@ export const getHistogramRows = function ({
       index,
       columns,
       combinationTitles,
-      titleBlockWidth,
+      titlesWidth,
       minBlockWidth,
       height,
       mini,
@@ -92,15 +92,13 @@ const getHistogramRow = function ({
   index,
   columns,
   combinationTitles,
-  titleBlockWidth,
+  titlesWidth,
   minBlockWidth,
   height,
   mini,
 }) {
   const titlesSpace =
-    mini && index === height - 1
-      ? combinationTitles
-      : ' '.repeat(titleBlockWidth)
+    mini && index === height - 1 ? combinationTitles : ' '.repeat(titlesWidth)
   const minSpace = ' '.repeat(minBlockWidth)
   const inverseIndex = height - index - 1
   const row = columns

@@ -14,7 +14,7 @@ const reportTerminal = function (
   { mini = false },
 ) {
   const height = 2 * EXTRA_HEIGHT
-  const { titleBlockWidth, minBlockWidth, contentWidth } = getWidths(
+  const { titlesWidth, minBlockWidth, contentWidth } = getWidths(
     combinations,
     mini,
     screenWidth,
@@ -23,7 +23,7 @@ const reportTerminal = function (
     .map((combination) =>
       serializeHistogram({
         combination,
-        titleBlockWidth,
+        titlesWidth,
         minBlockWidth,
         contentWidth,
         height,
@@ -38,7 +38,7 @@ const serializeHistogram = function ({
   combination: {
     stats: { histogram, median, min, max },
   },
-  titleBlockWidth,
+  titlesWidth,
   minBlockWidth,
   contentWidth,
   height,
@@ -54,7 +54,7 @@ const serializeHistogram = function ({
   const rows = getHistogramRows({
     histogram,
     combinationTitles,
-    titleBlockWidth,
+    titlesWidth,
     minBlockWidth,
     contentWidth,
     height,
@@ -65,7 +65,7 @@ const serializeHistogram = function ({
     ? ''
     : getAbscissa({
         combinationTitles,
-        titleBlockWidth,
+        titlesWidth,
         minBlockWidth,
         contentWidth,
         median,

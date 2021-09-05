@@ -7,7 +7,7 @@ import { padMinStat, padMaxStat } from './min_max.js'
 // Includes the tick above the median and its label.
 export const getAbscissa = function ({
   combinationTitles,
-  titleBlockWidth,
+  titlesWidth,
   minBlockWidth,
   contentWidth,
   median,
@@ -15,7 +15,7 @@ export const getAbscissa = function ({
   min,
   max,
 }) {
-  const titlesSpace = ' '.repeat(titleBlockWidth)
+  const titlesSpace = ' '.repeat(titlesWidth)
   const minSpace = ' '.repeat(minBlockWidth)
   const paddedMin = padMinStat(min)
   const paddedMax = padMaxStat(max)

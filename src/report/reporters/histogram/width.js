@@ -8,12 +8,12 @@ import { getMinBlockWidth, getMaxBlockWidth } from './min_max.js'
 //  - Content, i.e. box plot and their labels
 //  - Padding space reserved for the rightmost `max`
 export const getWidths = function (combinations, mini, screenWidth) {
-  const titleBlockWidth = getCombinationPaddedName(combinations[0]).length
+  const titlesWidth = getCombinationPaddedName(combinations[0]).length
   const minBlockWidth = getMinBlockWidth(combinations, mini)
   const maxBlockWidth = getMaxBlockWidth(combinations, mini)
   const contentWidth = Math.max(
-    screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
+    screenWidth - titlesWidth - minBlockWidth - maxBlockWidth,
     1,
   )
-  return { titleBlockWidth, minBlockWidth, contentWidth }
+  return { titlesWidth, minBlockWidth, contentWidth }
 }
