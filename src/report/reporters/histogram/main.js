@@ -3,9 +3,9 @@ import {
   getCombinationPaddedName,
 } from '../../utils/name.js'
 
-import { ABSCISSA_BOTTOM_HEIGHT, ABSCISSA_LABELS_HEIGHT } from './abscissa.js'
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
+import { getEmptyCombination } from './empty.js'
 import { getMinBlockWidth, getMaxBlockWidth } from './min_max.js'
 
 // Reporter showing distribution of measures with a histogram
@@ -73,23 +73,6 @@ const serializeHistogram = function ({
     contentWidth,
     mini,
   })
-}
-
-const getEmptyCombination = function (combination, height, mini) {
-  const histogramLines = getHistogramLines(height, mini)
-  const labelsLines = getLabelsLines(mini)
-  const combinationTitles = getCombNamePaddedColor(combination)
-  return `${histogramLines}${combinationTitles}\n${labelsLines}`
-}
-
-const getHistogramLines = function (height, mini) {
-  const topNewlinesHeight = height - (mini ? ABSCISSA_BOTTOM_HEIGHT : 0)
-  return '\n'.repeat(topNewlinesHeight)
-}
-
-const getLabelsLines = function (mini) {
-  const bottomNewlinesHeight = mini ? 0 : ABSCISSA_LABELS_HEIGHT
-  return '\n'.repeat(bottomNewlinesHeight)
 }
 
 export const histogram = { reportTerminal, capabilities: { debugStats: true } }
