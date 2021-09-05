@@ -2,6 +2,7 @@
 import mapObj from 'map-obj'
 import stringWidth from 'string-width'
 
+import { goodColor } from '../../utils/colors.js'
 import { concatBlocks } from '../../utils/concat.js'
 import { getCombinationNameColor } from '../../utils/name.js'
 import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
@@ -11,26 +12,56 @@ const reportTerminal = function (
   { combinations, screenWidth },
   { mini = false },
 ) {
-  const { minAll, maxAll } = getMinMaxAll(combinations)
-  const width = getContentWidth(combinations, mini, screenWidth)
-  return combinations.map((combination) =>
-    serializeBoxPlot({ combination, minAll, maxAll, width, mini }),
-  )
+  const combinationsA = combinations.map(normalizeQuantiles)
+  const { minAll, maxAll } = getMinMaxAll(combinationsA)
+  const width = getContentWidth(combinationsA, mini, screenWidth)
+  return combinationsA
+    .map((combination) =>
+      serializeBoxPlot({ combination, minAll, maxAll, width, mini }),
+    )
+    .join('\n')
 }
+
+const normalizeQuantiles = function ({ titles, stats: { quantiles } }) {
+  if (quantiles === undefined) {
+    return { titles }
+  }
+
+  const quantilesA = mapObj(QUANTILES, (name, quantileIndex) => [
+    name,
+    quantiles[quantileIndex],
+  ])
+  return { titles, quantiles: quantilesA }
+}
+
+const QUANTILES = { min: 0, p25: 25, median: 50, p75: 75, max: 100 }
 
 const getMinMaxAll = function (combinations) {
   const combinationsA = combinations.filter(isMeasuredCombination)
+
+  if (combinationsA.length === 0) {
+    return {}
+  }
+
   const minAll = Math.min(...combinationsA.map(getMinQuantile))
-  const maxAll = Math.min(...combinationsA.map(getMaxQuantile))
+  const maxAll = Math.max(...combinationsA.map(getMaxQuantile))
   return { minAll, maxAll }
 }
 
-const getMinQuantile = function ({ stats: { quantiles } }) {
-  return quantiles[QUANTILES.min].raw
+const getMinQuantile = function ({
+  quantiles: {
+    min: { raw },
+  },
+}) {
+  return raw
 }
 
-const getMaxQuantile = function ({ stats: { quantiles } }) {
-  return quantiles[QUANTILES.max].raw
+const getMaxQuantile = function ({
+  quantiles: {
+    max: { raw },
+  },
+}) {
+  return raw
 }
 
 const getContentWidth = function (combinations, mini, screenWidth) {
@@ -45,9 +76,7 @@ const getContentWidth = function (combinations, mini, screenWidth) {
 
 const serializeBoxPlot = function ({
   combination,
-  combination: {
-    stats: { quantiles },
-  },
+  combination: { quantiles },
   minAll,
   maxAll,
   width,
@@ -66,7 +95,7 @@ const serializeBoxPlot = function ({
 }
 
 // When the combination has not been measured yet
-const isMeasuredCombination = function ({ stats: { quantiles } }) {
+const isMeasuredCombination = function ({ quantiles }) {
   return quantiles !== undefined
 }
 
@@ -109,18 +138,16 @@ const getBlockWidth = function (getStat, combinations, mini) {
       )
 }
 
-const getCombinationWidth = function ({ stats: { quantiles } }, getStat) {
+const getCombinationWidth = function ({ quantiles }, getStat) {
   return stringWidth(getStat(quantiles))
 }
 
-const getMinStat = function (quantiles) {
-  const min = quantiles[QUANTILES.min]
-  return `${PADDING}${min.prettyPaddedColor}${PADDING}`
+const getMinStat = function ({ min: { prettyPaddedColor } }) {
+  return `${PADDING}${prettyPaddedColor}${PADDING}`
 }
 
-const getMaxStat = function (quantiles) {
-  const max = quantiles[QUANTILES.max]
-  return `${PADDING}${max.prettyPaddedColor}${PADDING}`
+const getMaxStat = function ({ max: { prettyPaddedColor } }) {
+  return `${PADDING}${prettyPaddedColor}${PADDING}`
 }
 
 const PADDING_WIDTH = 1
@@ -139,32 +166,30 @@ const getContent = function ({ quantiles, minAll, maxAll, width, mini }) {
     return box
   }
 
-  const labels = getLabels(positions)
+  const labels = getLabels(positions, width)
   return `${box}
 ${labels}`
 }
 
 const getPositions = function ({ quantiles, minAll, maxAll, width }) {
-  return mapObj(QUANTILES, (name, quantileIndex) =>
-    getPosition({ quantiles, quantileIndex, name, minAll, maxAll, width }),
+  return mapObj(quantiles, (name, stat) =>
+    getPosition({ name, stat, minAll, maxAll, width }),
   )
 }
 
 const getPosition = function ({
-  quantiles,
-  quantileIndex,
   name,
+  stat: {
+    raw,
+    pretty: { length },
+    prettyColor,
+  },
   minAll,
   maxAll,
   width,
 }) {
-  const {
-    raw,
-    pretty: { length },
-    prettyColor,
-  } = quantiles[quantileIndex]
-  const percentage = (maxAll - minAll) / (raw - minAll)
-  const index = Math.min(Math.ceil(percentage * width), width - 1)
+  const percentage = (raw - minAll) / (maxAll - minAll)
+  const index = Math.min(Math.floor(percentage * width), width - 1)
   return [name, { prettyColor, length, index }]
 }
 
@@ -173,42 +198,40 @@ const getBox = function ({ min, p25, median, p75, max }, width) {
   const leftSpaceWidth = min.index
   const leftSpace = ' '.repeat(leftSpaceWidth)
   const minCharacter = min.index === p25.index ? '' : MIN_CHARACTER
-  const leftLineWidth = p25.index - min.index - 1
+  const leftLineWidth = p25.index - min.index - minCharacter.length
   const leftLine =
     leftLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(leftLineWidth)
-  const p25BoxWidth = median.index - p25.index - 1
+  const p25BoxWidth = median.index - p25.index
   const p25Box = p25BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(p25BoxWidth)
-  const p75BoxWidth = p75.index - median.index - 1
+  const medianCharacter = goodColor(MEDIAN_CHARACTER)
+  const p75BoxWidth = p75.index - median.index
   const p75Box = p75BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(p75BoxWidth)
-  const rightLineWidth = max.index - p75.index - 1
+  const maxCharacter = p75.index === max.index ? '' : MAX_CHARACTER
+  const rightLineWidth = max.index - p75.index - maxCharacter.length
   const rightLine =
     rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
-  const maxCharacter = p75.index === max.index ? '' : MAX_CHARACTER
-  const rightSpaceWidth = width - p75.index - 1
+  const rightSpaceWidth = width - max.index - 1
   const rightSpace = ' '.repeat(rightSpaceWidth)
-  return `${leftSpace}${minCharacter}${leftLine}${p25Box}${MEDIAN_CHARACTER}${p75Box}${rightLine}${maxCharacter}${rightSpace}`
+  return `${leftSpace}${minCharacter}${leftLine}${p25Box}${medianCharacter}${p75Box}${rightLine}${maxCharacter}${rightSpace}`
 }
 
 // Works on most terminals
-const MIN_CHARACTER = '\u9500'
-const LINE_CHARACTER = '\u9472'
-const BOX_CHARACTER = '\u9617'
-const MEDIAN_CHARACTER = '\u9608'
-const MAX_CHARACTER = '\u9508'
+const MIN_CHARACTER = '\u251C'
+const LINE_CHARACTER = '\u2500'
+const BOX_CHARACTER = '\u2591'
+const MEDIAN_CHARACTER = '\u2588'
+const MAX_CHARACTER = '\u2524'
 
-const getLabels = function ({ median }) {
-  const medianLabelIndex =
-    median.index - Math.max(Math.floor((median.length - 1) / 2), 0)
-  const medianLabelLeft = ' '.repeat(medianLabelIndex - 1)
+const getLabels = function ({ median }, width) {
+  const medianLabelIndex = Math.min(
+    Math.max(
+      median.index - Math.max(Math.floor((median.length - 1) / 2), 0),
+      0,
+    ),
+    width - median.length,
+  )
+  const medianLabelLeft = ' '.repeat(medianLabelIndex)
   return `${medianLabelLeft}${median.prettyColor}`
-}
-
-const QUANTILES = {
-  min: 0,
-  p25: 25,
-  median: 50,
-  p75: 75,
-  max: 100,
 }
 
 export const boxplot = { reportTerminal }
