@@ -21,7 +21,7 @@ const reportTerminal = function (
   )
   return combinations
     .map((combination) =>
-      serializeHistogram({
+      serializeCombination({
         combination,
         titlesWidth,
         minBlockWidth,
@@ -33,7 +33,7 @@ const reportTerminal = function (
     .join('\n')
 }
 
-const serializeHistogram = function ({
+const serializeCombination = function ({
   combination,
   combination: {
     stats: { histogram, median, min, max },
