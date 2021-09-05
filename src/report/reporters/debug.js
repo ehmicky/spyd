@@ -1,10 +1,10 @@
-import { fieldColor } from '../../utils/colors.js'
-import { getCombinationNameColor } from '../../utils/name.js'
-import { STAT_TITLES } from '../../utils/stat_titles.js'
-import { getTables } from '../../utils/table.js'
+import { fieldColor } from '../utils/colors.js'
+import { getCombinationNameColor } from '../utils/name.js'
+import { STAT_TITLES } from '../utils/stat_titles.js'
+import { getTables } from '../utils/table.js'
 
-// Retrieve all stats shown in tables
-export const getStatsTables = function (combinations, screenWidth) {
+// Debugging reporter only meant for development purpose
+const reportTerminal = function ({ combinations, screenWidth }) {
   const statNames = getStatNames(combinations)
   const headerRow = getHeaderRow(statNames)
   const bodyRows = getBodyRows(combinations, statNames)
@@ -67,3 +67,5 @@ const getCell = function (
 ) {
   return prettyColor
 }
+
+export const debug = { reportTerminal, capabilities: { debugStats: true } }
