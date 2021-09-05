@@ -23,7 +23,7 @@ export const addStatsPretty = function ({
 // Some `stats` might be `undefined` for:
 //  - all combinations when:
 //     - `capabilities.debugStats` is `false` (for many stats)
-//     - `showPrecision` is `false` or `true` (for `median[Min|Max]`)
+//     - `showPrecision` is `false` or `true` (for `mean[Min|Max]`)
 //     - `showDiff` is `false` or there is nothing to diff (for `diff`)
 //  - some combinations when:
 //     - there are only a few measures
