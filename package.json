@@ -58,7 +58,7 @@
     "omit.js": "^2.0.2",
     "os-name": "^5.0.0",
     "p-event": "^4.2.0",
-    "p-locate": "^5.0.0",
+    "p-locate": "^6.0.0",
     "p-map-series": "^3.0.0",
     "p-reduce": "^3.0.0",
     "path-exists": "^5.0.0",
