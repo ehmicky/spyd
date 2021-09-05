@@ -78,13 +78,13 @@ const getWidths = function (combinations, screenWidth, mini) {
   const minBlockWidth = mini
     ? 0
     : Math.max(
-        getHeaderName('min').length,
+        getHeaderNameWidth('min'),
         getMinMaxBlockWidth(combinations, 'min'),
       )
   const maxBlockWidth = mini
     ? 0
     : Math.max(
-        getHeaderName('max').length,
+        getHeaderNameWidth('max'),
         getMinMaxBlockWidth(combinations, 'max'),
       )
   const contentWidth = Math.max(
@@ -110,6 +110,10 @@ const getHeader = function ({
   const boxHeader = padHeaderField(getHeaderName('median'), contentWidth)
   const maxHeader = padHeaderField(getHeaderName('max'), maxBlockWidth)
   return [`${titleHeader}${minHeader}${boxHeader}${maxHeader}`]
+}
+
+const getHeaderNameWidth = function (statName) {
+  return getHeaderName(statName).length
 }
 
 const getHeaderName = function (statName) {
