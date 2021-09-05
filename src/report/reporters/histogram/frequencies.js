@@ -3,10 +3,10 @@ import { smoothHistogram } from './smooth.js'
 
 // Smoothes the histogram by adjusting each of those heights.
 // Also resizes the columns to fit in the terminal width.
-export const getFrequencies = function (histogram, width) {
+export const getFrequencies = function (histogram, contentWidth) {
   const frequencies = histogram.map(getFrequency)
   const frequenciesA = smoothHistogramEnds(frequencies)
-  const frequenciesB = resizeHistogram(frequenciesA, width)
+  const frequenciesB = resizeHistogram(frequenciesA, contentWidth)
   const frequenciesC = smoothHistogram(frequenciesB, SMOOTH_PERCENTAGE)
   return frequenciesC
 }

@@ -10,19 +10,19 @@ import { getFrequencies } from './frequencies.js'
 // Serialize the main part of the histogram, i.e. rows and columns
 export const getHistogramRows = function ({
   histogram,
-  width,
+  contentWidth,
   height,
   medianIndex,
 }) {
-  const frequencies = getFrequencies(histogram, width)
+  const frequencies = getFrequencies(histogram, contentWidth)
   const columns = getHistogramColumns({
     frequencies,
     medianIndex,
-    width,
+    contentWidth,
     height,
   })
   return Array.from({ length: height }, (_, index) =>
-    getHistogramRow(index, columns, height),
+    getHistogramRow({ index, columns, height }),
   ).join('\n')
 }
 
@@ -30,10 +30,10 @@ export const getHistogramRows = function ({
 const getHistogramColumns = function ({
   frequencies,
   medianIndex,
-  width,
+  contentWidth,
   height,
 }) {
-  const medianMaxWidth = Math.max(medianIndex, width - 1 - medianIndex)
+  const medianMaxWidth = Math.max(medianIndex, contentWidth - 1 - medianIndex)
   const maxHeight = getMaxHeight(frequencies, height)
   return frequencies.map(
     getHistogramColumn.bind(undefined, {
@@ -76,9 +76,12 @@ const getColumnColor = function (columnIndex, medianIndex, medianMaxWidth) {
 }
 
 // Serialize a single row, i.e. terminal line
-const getHistogramRow = function (index, columns, height) {
+const getHistogramRow = function ({ index, columns, height }) {
   const inverseIndex = height - index - 1
-  return columns.map(getHistogramCell.bind(undefined, inverseIndex)).join('')
+  const row = columns
+    .map(getHistogramCell.bind(undefined, inverseIndex))
+    .join('')
+  return row
 }
 
 // Retrieve the character to display for a specific row and column

@@ -18,22 +18,23 @@ const reportTerminal = function (
   { mini = false },
 ) {
   const height = 2 * EXTRA_HEIGHT
-  const width = getContentWidth(combinations, mini, screenWidth)
+  const contentWidth = getWidths(combinations, mini, screenWidth)
   return combinations
     .map((combination) =>
-      serializeHistogram({ combination, width, height, mini }),
+      serializeHistogram({ combination, contentWidth, height, mini }),
     )
     .join('\n')
 }
 
-const getContentWidth = function (combinations, mini, screenWidth) {
-  return Math.max(
+const getWidths = function (combinations, mini, screenWidth) {
+  const contentWidth = Math.max(
     screenWidth -
       getTitleBlockWidth(combinations) -
       getMinBlockWidth(combinations, mini) -
       getMaxBlockWidth(combinations, mini),
     1,
   )
+  return contentWidth
 }
 
 const serializeHistogram = function ({
@@ -42,7 +43,7 @@ const serializeHistogram = function ({
     stats,
     stats: { median },
   },
-  width,
+  contentWidth,
   height,
   mini,
 }) {
@@ -53,7 +54,7 @@ const serializeHistogram = function ({
   }
 
   const minBlock = getMinBlock({ stats, height, mini })
-  const content = getContent({ stats, height, width, mini })
+  const content = getContent({ stats, height, contentWidth, mini })
   const maxBlock = getMaxBlock({ stats, height, mini })
   return concatBlocks([titleBlock, minBlock, content, maxBlock])
 }
