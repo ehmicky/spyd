@@ -129,10 +129,11 @@ const getBlock = function (getStat, quantiles, mini) {
 
 // Retrieve the width of those blocks
 const getBlockWidth = function (getStat, combinations, mini) {
-  return mini
+  const combinationsA = combinations.filter(isMeasuredCombination)
+  return mini || combinationsA.length === 0
     ? 0
     : Math.max(
-        ...combinations.map((combination) =>
+        ...combinationsA.map((combination) =>
           getCombinationWidth(combination, getStat),
         ),
       )
