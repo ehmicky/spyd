@@ -27,10 +27,11 @@ const getLeftSpace = function (min, minBlockWidth, mini) {
 }
 
 const getMinLine = function (min, q1) {
-  const minCharacter = min.index === q1.index ? '' : MIN_CHARACTER
-  const leftLineWidth = Math.max(q1.index - min.index - minCharacter.length, 0)
+  const leftLineWidth = Math.max(q1.index - min.index, 0)
   const leftLine = LINE_CHARACTER.repeat(leftLineWidth)
-  return separatorColor(`${minCharacter}${leftLine}`)
+  const leftLineA =
+    leftLine === '' ? leftLine : MIN_CHARACTER + leftLine.slice(1)
+  return separatorColor(leftLineA)
 }
 
 const getQ1Box = function (q1, median) {
@@ -47,10 +48,11 @@ const fillCharacter = function (character, start, end) {
 }
 
 const getMaxLine = function (q3, max) {
-  const maxCharacter = q3.index === max.index ? '' : MAX_CHARACTER
-  const rightLineWidth = Math.max(max.index - q3.index - maxCharacter.length, 0)
+  const rightLineWidth = Math.max(max.index - q3.index, 0)
   const rightLine = LINE_CHARACTER.repeat(rightLineWidth)
-  return separatorColor(`${rightLine}${maxCharacter}`)
+  const rightLineA =
+    rightLine === '' ? rightLine : rightLine.slice(0, -1) + MAX_CHARACTER
+  return separatorColor(rightLineA)
 }
 
 // Works on most terminals
