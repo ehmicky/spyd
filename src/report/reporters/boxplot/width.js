@@ -1,12 +1,14 @@
 import { getCombinationPaddedName } from '../../utils/name.js'
 
-import { getPaddedStat } from './box.js'
+import { getPaddedStatLength } from './box.js'
 
-// Retrieve the width of all blocks, in order:
-//  - Combination titles
-//  - Padding space reserved for the leftmost `min`
-//  - Content, i.e. box plot and their labels
-//  - Padding space reserved for the rightmost `max`
+// Compute the width of each column for reporters which show the following ones
+// for each combination:
+//  - Title
+//  - Min
+//  - Main content
+//  - Max
+// This is used for example by the `histogram` and `boxplot` reporters.
 export const getWidths = function (combinations, mini, screenWidth) {
   const titlesWidth = getCombinationPaddedName(combinations[0]).length
   const minBlockWidth = getMinMaxBlockWidth(combinations, mini, 'min')
@@ -19,15 +21,19 @@ export const getWidths = function (combinations, mini, screenWidth) {
 }
 
 const getMinMaxBlockWidth = function (combinations, mini, statName) {
+  if (mini) {
+    return 0
+  }
+
   return Math.max(
     ...combinations.map((combination) =>
-      getSingleMinMaxWidth(combination, mini, statName),
+      getSingleMinMaxWidth(combination, statName),
     ),
   )
 }
 
-const getSingleMinMaxWidth = function ({ quantiles }, mini, statName) {
+const getSingleMinMaxWidth = function ({ quantiles }, statName) {
   return quantiles === undefined
     ? 0
-    : getPaddedStat(quantiles[statName].pretty, mini).length
+    : getPaddedStatLength(quantiles[statName].pretty)
 }

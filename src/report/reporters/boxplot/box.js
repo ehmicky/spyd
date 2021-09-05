@@ -59,8 +59,12 @@ const MEDIAN_CHARACTER = '\u2588'
 const MAX_CHARACTER = '\u2524'
 
 // Surround stats with padding
-export const getPaddedStat = function (string, mini) {
+const getPaddedStat = function (string, mini) {
   return mini ? '' : `${STAT_PADDING}${string}${STAT_PADDING}`
+}
+
+export const getPaddedStatLength = function (string) {
+  return string.length + STAT_PADDING_WIDTH * 2
 }
 
 const STAT_PADDING_WIDTH = 1

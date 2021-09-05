@@ -2,11 +2,13 @@ import { getCombinationPaddedName } from '../../utils/name.js'
 
 import { getPaddedStatLength } from './abscissa.js'
 
-// Retrieve the width of all blocks, in order:
-//  - Combination titles
-//  - Padding space reserved for the leftmost `min`
-//  - Content, i.e. box plot and their labels
-//  - Padding space reserved for the rightmost `max`
+// Compute the width of each columns for reporters which show the following ones
+// for each combination:
+//  - Title
+//  - Min
+//  - Main content
+//  - Max
+// This is used for example by the `histogram` and `boxplot` reporters.
 export const getWidths = function (combinations, mini, screenWidth) {
   const titlesWidth = getCombinationPaddedName(combinations[0]).length
   const minBlockWidth = getMinMaxBlockWidth(combinations, mini, 'min')
@@ -19,15 +21,19 @@ export const getWidths = function (combinations, mini, screenWidth) {
 }
 
 const getMinMaxBlockWidth = function (combinations, mini, statName) {
+  if (mini) {
+    return 0
+  }
+
   return Math.max(
     ...combinations.map((combination) =>
-      getSingleMinMaxWidth(combination, mini, statName),
+      getSingleMinMaxWidth(combination, statName),
     ),
   )
 }
 
-const getSingleMinMaxWidth = function ({ stats }, mini, statName) {
-  return mini || stats[statName] === undefined
+const getSingleMinMaxWidth = function ({ stats }, statName) {
+  return stats[statName] === undefined
     ? 0
     : getPaddedStatLength(stats[statName])
 }
