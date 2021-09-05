@@ -1,4 +1,4 @@
-import { graphGradientColor } from '../colors.js'
+import { graphGradientColor } from '../../utils/colors.js'
 
 import {
   HISTOGRAM_CHARS,

@@ -1,7 +1,7 @@
 import stringWidth from 'string-width'
 
-import { getCombinationNameColor } from '../name.js'
-import { NAME_SEPARATOR_COLORED } from '../separator.js'
+import { getCombinationNameColor } from '../../utils/name.js'
+import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
 
 import { ABSCISSA_BOTTOM_HEIGHT, ABSCISSA_LABELS_HEIGHT } from './abscissa.js'
 

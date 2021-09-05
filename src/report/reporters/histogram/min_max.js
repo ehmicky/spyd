@@ -1,6 +1,6 @@
 import stringWidth from 'string-width'
 
-import { separatorColor } from '../colors.js'
+import { separatorColor } from '../../utils/colors.js'
 
 import { TICK_LEFT, TICK_RIGHT } from './characters.js'
 

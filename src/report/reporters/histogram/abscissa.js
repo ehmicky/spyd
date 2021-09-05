@@ -1,4 +1,4 @@
-import { separatorColor } from '../colors.js'
+import { separatorColor } from '../../utils/colors.js'
 
 import { TICK_MIDDLE, HORIZONTAL_LINE } from './characters.js'
 

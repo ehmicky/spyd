@@ -1,4 +1,4 @@
-import { concatBlocks } from '../concat.js'
+import { concatBlocks } from '../../utils/concat.js'
 
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
@@ -10,10 +10,10 @@ import {
 } from './min_max.js'
 import { getTitleBlock, getTitleBlockWidth } from './title.js'
 
-// Serialize combinations' histograms for reporting
-export const serializeHistograms = function (
-  combinations,
-  { mini, screenWidth },
+// Reporter showing distribution of measures with a histogram
+const reportTerminal = function (
+  { combinations, screenWidth },
+  { mini = false },
 ) {
   const height = DEFAULT_HEIGHT
   const width = getContentWidth(combinations, mini, screenWidth)
@@ -59,3 +59,5 @@ const serializeHistogram = function ({
 const hasLowLoops = function ({ mean, meanMin }) {
   return mean === undefined && meanMin === undefined
 }
+
+export const histogram = { reportTerminal }
