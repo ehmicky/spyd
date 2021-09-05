@@ -109,7 +109,7 @@ const serializeBoxPlot = function ({
   }
 
   const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
-  const box = getBox({ positions, minBlockWidth, combinationTitles })
+  const box = getBox({ positions, minBlockWidth, combinationTitles, mini })
 
   if (mini) {
     return box
@@ -182,13 +182,14 @@ const getBox = function ({
   positions: { min, q1, median, q3, max },
   minBlockWidth,
   combinationTitles,
+  mini,
 }) {
   const leftSpaceWidth = Math.max(
-    minBlockWidth + min.index - min.length - PADDING_LENGTH,
+    minBlockWidth + min.index - (mini ? 0 : min.length + PADDING_LENGTH),
     0,
   )
   const leftSpace = ' '.repeat(leftSpaceWidth)
-  const minPadded = addPadding(min.prettyColor)
+  const minPadded = mini ? '' : addPadding(min.prettyColor)
   const minCharacter = min.index === q1.index ? '' : MIN_CHARACTER
   const leftLineWidth = q1.index - min.index - minCharacter.length
   const leftLine =
@@ -202,7 +203,7 @@ const getBox = function ({
   const rightLineWidth = max.index - q3.index - maxCharacter.length
   const rightLine =
     rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
-  const maxPadded = addPadding(max.prettyColor)
+  const maxPadded = mini ? '' : addPadding(max.prettyColor)
   return `${combinationTitles}${leftSpace}${minPadded}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${maxPadded}\n`
 }
 
