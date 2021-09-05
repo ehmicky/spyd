@@ -8,7 +8,7 @@ const reportTerminal = function ({ combinations, screenWidth, history }) {
   const statsTables = getStatsTables(combinations, screenWidth)
   const timeSeries = getTimeSeries(history, combinations, screenWidth)
   const histograms = serializeHistograms(combinations, {
-    showStats: false,
+    mini: true,
     screenWidth,
   })
   return [statsTables, timeSeries, histograms].join('\n\n')

@@ -13,25 +13,25 @@ import { getTitleBlock, getTitleBlockWidth } from './title.js'
 // Serialize combinations' histograms for reporting
 export const serializeHistograms = function (
   combinations,
-  { showStats, screenWidth },
+  { mini, screenWidth },
 ) {
   const height = DEFAULT_HEIGHT
-  const width = getContentWidth(combinations, showStats, screenWidth)
+  const width = getContentWidth(combinations, mini, screenWidth)
   return combinations
     .map((combination) =>
-      serializeHistogram({ combination, width, height, showStats }),
+      serializeHistogram({ combination, width, height, mini }),
     )
     .join('\n')
 }
 
 const DEFAULT_HEIGHT = 2 * EXTRA_HEIGHT
 
-const getContentWidth = function (combinations, showStats, screenWidth) {
+const getContentWidth = function (combinations, mini, screenWidth) {
   return Math.max(
     screenWidth -
       getTitleBlockWidth(combinations) -
-      getMinBlockWidth(combinations, showStats) -
-      getMaxBlockWidth(combinations, showStats),
+      getMinBlockWidth(combinations, mini) -
+      getMaxBlockWidth(combinations, mini),
     1,
   )
 }
@@ -41,17 +41,17 @@ const serializeHistogram = function ({
   combination: { stats },
   width,
   height,
-  showStats,
+  mini,
 }) {
-  const titleBlock = getTitleBlock(combination, height, showStats)
+  const titleBlock = getTitleBlock(combination, height, mini)
 
   if (hasLowLoops(stats)) {
     return titleBlock
   }
 
-  const minBlock = getMinBlock({ stats, height, showStats })
-  const content = getContent({ stats, height, width, showStats })
-  const maxBlock = getMaxBlock({ stats, height, showStats })
+  const minBlock = getMinBlock({ stats, height, mini })
+  const content = getContent({ stats, height, width, mini })
+  const maxBlock = getMaxBlock({ stats, height, mini })
   return concatBlocks([titleBlock, minBlock, content, maxBlock])
 }
 

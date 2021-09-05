@@ -6,8 +6,8 @@ import { TICK_LEFT, TICK_RIGHT } from './characters.js'
 
 // Retrieve the blocks that show the lowest|highest value of the histogram, on
 // the left|right of it
-const getBlock = function (getStat, { stats, height, showStats }) {
-  if (!showStats) {
+const getBlock = function (getStat, { stats, height, mini }) {
+  if (mini) {
     return ''
   }
 
@@ -17,8 +17,8 @@ const getBlock = function (getStat, { stats, height, showStats }) {
 }
 
 // Retrieve the width of those blocks
-const getBlockWidth = function (getStat, combinations, showStats) {
-  if (!showStats) {
+const getBlockWidth = function (getStat, combinations, mini) {
+  if (mini) {
     return 0
   }
 

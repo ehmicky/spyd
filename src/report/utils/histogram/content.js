@@ -8,7 +8,7 @@ export const getContent = function ({
   stats: { histogram },
   height,
   width,
-  showStats,
+  mini,
 }) {
   const { positions, meanIndex, meanMaxWidth } = getMeanPositions(stats, width)
   const rows = getHistogramRows({
@@ -19,7 +19,7 @@ export const getContent = function ({
     meanMaxWidth,
   })
 
-  if (!showStats) {
+  if (mini) {
     return rows
   }
 

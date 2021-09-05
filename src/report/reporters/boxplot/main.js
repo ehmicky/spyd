@@ -8,11 +8,11 @@ import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
 
 // Reporter showing boxplot of measures (min, p25, median, p75, max)
 const reportTerminal = function ({ combinations, screenWidth }) {
-  const showStats = true
-  const width = getContentWidth(combinations, showStats, screenWidth)
+  const mini = false
+  const width = getContentWidth(combinations, mini, screenWidth)
   const { minAll, maxAll } = getMinMaxAll(combinations)
   return combinations.map((combination) =>
-    serializeBoxPlot({ combination, minAll, maxAll, width, showStats }),
+    serializeBoxPlot({ combination, minAll, maxAll, width, mini }),
   )
 }
 
@@ -20,12 +20,12 @@ const getMinMaxAll = function (combinations) {
   combinations.filter(isMeasuredCombination)
 }
 
-const getContentWidth = function (combinations, showStats, screenWidth) {
+const getContentWidth = function (combinations, mini, screenWidth) {
   return Math.max(
     screenWidth -
       getTitleBlockWidth(combinations) -
-      getMinBlockWidth(combinations, showStats) -
-      getMaxBlockWidth(combinations, showStats),
+      getMinBlockWidth(combinations, mini) -
+      getMaxBlockWidth(combinations, mini),
     1,
   )
 }
@@ -38,17 +38,17 @@ const serializeBoxPlot = function ({
   minAll,
   maxAll,
   width,
-  showStats,
+  mini,
 }) {
-  const titleBlock = getTitleBlock(combination, showStats)
+  const titleBlock = getTitleBlock(combination, mini)
 
   if (!isMeasuredCombination(combination)) {
     return titleBlock
   }
 
-  const minBlock = getMinBlock(quantiles, showStats)
-  const content = getContent({ quantiles, minAll, maxAll, showStats, width })
-  const maxBlock = getMaxBlock(quantiles, showStats)
+  const minBlock = getMinBlock(quantiles, mini)
+  const content = getContent({ quantiles, minAll, maxAll, mini, width })
+  const maxBlock = getMaxBlock(quantiles, mini)
   return concatBlocks([titleBlock, minBlock, content, maxBlock])
 }
 
@@ -58,9 +58,9 @@ const isMeasuredCombination = function ({ stats: { quantiles } }) {
 }
 
 // Retrieve sidebar with the combination name
-const getTitleBlock = function (combination, showStats) {
+const getTitleBlock = function (combination, mini) {
   const titleBlockContents = getTitleBlockContents(combination)
-  const bottomNewlines = getBottomNewlines(showStats)
+  const bottomNewlines = getBottomNewlines(mini)
   return `${titleBlockContents}\n${bottomNewlines}`
 }
 
@@ -72,8 +72,8 @@ const getTitleBlockContents = function (combination) {
   return `${getCombinationNameColor(combination)}${NAME_SEPARATOR_COLORED}`
 }
 
-const getBottomNewlines = function (showStats) {
-  const bottomNewlinesHeight = showStats ? LABELS_HEIGHT : 0
+const getBottomNewlines = function (mini) {
+  const bottomNewlinesHeight = mini ? 0 : LABELS_HEIGHT
   return '\n'.repeat(bottomNewlinesHeight)
 }
 
@@ -81,19 +81,19 @@ const LABELS_HEIGHT = 1
 
 // Retrieve the blocks that show the lowest|highest value of the histogram, on
 // the left|right of it
-const getBlock = function (getStat, quantiles, showStats) {
-  return showStats ? getStat(quantiles) : ''
+const getBlock = function (getStat, quantiles, mini) {
+  return mini ? '' : getStat(quantiles)
 }
 
 // Retrieve the width of those blocks
-const getBlockWidth = function (getStat, combinations, showStats) {
-  return showStats
-    ? Math.max(
+const getBlockWidth = function (getStat, combinations, mini) {
+  return mini
+    ? 0
+    : Math.max(
         ...combinations.map((combination) =>
           getCombinationWidth(combination, getStat),
         ),
       )
-    : 0
 }
 
 const getCombinationWidth = function ({ stats: { quantiles } }, getStat) {
@@ -118,11 +118,11 @@ const getMinBlockWidth = getBlockWidth.bind(undefined, getMinStat)
 const getMaxBlock = getBlock.bind(undefined, getMaxStat)
 const getMaxBlockWidth = getBlockWidth.bind(undefined, getMaxStat)
 
-const getContent = function ({ quantiles, minAll, maxAll, width, showStats }) {
+const getContent = function ({ quantiles, minAll, maxAll, width, mini }) {
   const positions = getPositions({ quantiles, minAll, maxAll, width })
   const box = getBox(positions, width)
 
-  if (!showStats) {
+  if (mini) {
     return box
   }
 
