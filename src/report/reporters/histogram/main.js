@@ -1,9 +1,12 @@
-import { getCombNamePaddedColor } from '../../utils/name.js'
+import {
+  getCombNamePaddedColor,
+  getCombinationPaddedName,
+} from '../../utils/name.js'
 
+import { ABSCISSA_BOTTOM_HEIGHT, ABSCISSA_LABELS_HEIGHT } from './abscissa.js'
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
 import { getMinBlockWidth, getMaxBlockWidth } from './min_max.js'
-import { getTitleBlock, getTitleBlockWidth } from './title.js'
 
 // Reporter showing distribution of measures with a histogram
 // Configuration properties:
@@ -33,7 +36,7 @@ const reportTerminal = function (
 }
 
 const getWidths = function (combinations, mini, screenWidth) {
-  const titleBlockWidth = getTitleBlockWidth(combinations)
+  const titleBlockWidth = getCombinationPaddedName(combinations[0]).length
   const minBlockWidth = getMinBlockWidth(combinations, mini)
   const maxBlockWidth = getMaxBlockWidth(combinations, mini)
   const contentWidth = Math.max(
@@ -56,10 +59,9 @@ const serializeHistogram = function ({
   mini,
 }) {
   const combinationTitles = getCombNamePaddedColor(combination)
-  const titleBlock = getTitleBlock(combination, height, mini)
 
   if (median === undefined) {
-    return titleBlock
+    return getEmptyCombination(combination, height, mini)
   }
 
   return getContent({
@@ -71,6 +73,23 @@ const serializeHistogram = function ({
     contentWidth,
     mini,
   })
+}
+
+const getEmptyCombination = function (combination, height, mini) {
+  const topNewlines = getTopNewlines(height, mini)
+  const bottomNewlines = getBottomNewlines(mini)
+  const combinationTitles = getCombNamePaddedColor(combination)
+  return `${topNewlines}${combinationTitles}\n${bottomNewlines}`
+}
+
+const getTopNewlines = function (height, mini) {
+  const topNewlinesHeight = height - (mini ? ABSCISSA_BOTTOM_HEIGHT : 0)
+  return '\n'.repeat(topNewlinesHeight)
+}
+
+const getBottomNewlines = function (mini) {
+  const bottomNewlinesHeight = mini ? 0 : ABSCISSA_LABELS_HEIGHT
+  return '\n'.repeat(bottomNewlinesHeight)
 }
 
 export const histogram = { reportTerminal, capabilities: { debugStats: true } }
