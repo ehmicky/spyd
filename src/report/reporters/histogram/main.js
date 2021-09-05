@@ -1,13 +1,8 @@
-import { concatBlocks } from '../../utils/concat.js'
+import { getCombNamePaddedColor } from '../../utils/name.js'
 
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
-import {
-  getMinBlock,
-  getMinBlockWidth,
-  getMaxBlock,
-  getMaxBlockWidth,
-} from './min_max.js'
+import { getMinBlockWidth, getMaxBlockWidth } from './min_max.js'
 import { getTitleBlock, getTitleBlockWidth } from './title.js'
 
 // Reporter showing distribution of measures with a histogram
@@ -18,23 +13,34 @@ const reportTerminal = function (
   { mini = false },
 ) {
   const height = 2 * EXTRA_HEIGHT
-  const contentWidth = getWidths(combinations, mini, screenWidth)
+  const { titleBlockWidth, minBlockWidth, contentWidth } = getWidths(
+    combinations,
+    mini,
+    screenWidth,
+  )
   return combinations
     .map((combination) =>
-      serializeHistogram({ combination, contentWidth, height, mini }),
+      serializeHistogram({
+        combination,
+        titleBlockWidth,
+        minBlockWidth,
+        contentWidth,
+        height,
+        mini,
+      }),
     )
     .join('\n')
 }
 
 const getWidths = function (combinations, mini, screenWidth) {
+  const titleBlockWidth = getTitleBlockWidth(combinations)
+  const minBlockWidth = getMinBlockWidth(combinations, mini)
+  const maxBlockWidth = getMaxBlockWidth(combinations, mini)
   const contentWidth = Math.max(
-    screenWidth -
-      getTitleBlockWidth(combinations) -
-      getMinBlockWidth(combinations, mini) -
-      getMaxBlockWidth(combinations, mini),
+    screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
     1,
   )
-  return contentWidth
+  return { titleBlockWidth, minBlockWidth, contentWidth }
 }
 
 const serializeHistogram = function ({
@@ -43,20 +49,28 @@ const serializeHistogram = function ({
     stats,
     stats: { median },
   },
+  titleBlockWidth,
+  minBlockWidth,
   contentWidth,
   height,
   mini,
 }) {
+  const combinationTitles = getCombNamePaddedColor(combination)
   const titleBlock = getTitleBlock(combination, height, mini)
 
   if (median === undefined) {
     return titleBlock
   }
 
-  const minBlock = getMinBlock({ stats, height, mini })
-  const content = getContent({ stats, height, contentWidth, mini })
-  const maxBlock = getMaxBlock({ stats, height, mini })
-  return concatBlocks([titleBlock, minBlock, content, maxBlock])
+  return getContent({
+    stats,
+    height,
+    combinationTitles,
+    titleBlockWidth,
+    minBlockWidth,
+    contentWidth,
+    mini,
+  })
 }
 
 export const histogram = { reportTerminal, capabilities: { debugStats: true } }

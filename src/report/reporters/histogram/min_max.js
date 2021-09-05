@@ -4,18 +4,6 @@ import { separatorColor } from '../../utils/colors.js'
 
 import { TICK_LEFT, TICK_RIGHT } from './characters.js'
 
-// Retrieve the blocks that show the lowest|highest value of the histogram, on
-// the left|right of it
-const getBlock = function (getStat, { stats, height, mini }) {
-  if (mini) {
-    return ''
-  }
-
-  const newlines = '\n'.repeat(height)
-  const statPadded = getStat(stats)
-  return `${newlines}${statPadded}`
-}
-
 // Retrieve the width of those blocks
 const getBlockWidth = function (getStat, combinations, mini) {
   if (mini) {
@@ -34,23 +22,27 @@ const getCombinationWidth = function ({ stats }, getStat) {
 }
 
 const getMinStat = function ({ min }) {
-  return min === undefined
-    ? ''
-    : `${PADDING}${min.prettyPaddedColor}${PADDING}${separatorColor(TICK_LEFT)}`
+  return min === undefined ? '' : padMinStat(min)
 }
 
 const getMaxStat = function ({ max }) {
-  return max === undefined
-    ? ''
-    : `${separatorColor(TICK_RIGHT)}${PADDING}${
-        max.prettyPaddedColor
-      }${PADDING}`
+  return max === undefined ? '' : padMaxStat(max)
+}
+
+export const padMinStat = function (min) {
+  return `${PADDING}${min.prettyPaddedColor}${PADDING}${separatorColor(
+    TICK_LEFT,
+  )}`
+}
+
+export const padMaxStat = function (max) {
+  return `${separatorColor(TICK_RIGHT)}${PADDING}${
+    max.prettyPaddedColor
+  }${PADDING}`
 }
 
 const PADDING_WIDTH = 1
 const PADDING = ' '.repeat(PADDING_WIDTH)
 
-export const getMinBlock = getBlock.bind(undefined, getMinStat)
 export const getMinBlockWidth = getBlockWidth.bind(undefined, getMinStat)
-export const getMaxBlock = getBlock.bind(undefined, getMaxStat)
 export const getMaxBlockWidth = getBlockWidth.bind(undefined, getMaxStat)

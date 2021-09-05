@@ -10,9 +10,13 @@ import { getFrequencies } from './frequencies.js'
 // Serialize the main part of the histogram, i.e. rows and columns
 export const getHistogramRows = function ({
   histogram,
+  combinationTitles,
+  titleBlockWidth,
+  minBlockWidth,
   contentWidth,
   height,
   medianIndex,
+  mini,
 }) {
   const frequencies = getFrequencies(histogram, contentWidth)
   const columns = getHistogramColumns({
@@ -22,7 +26,15 @@ export const getHistogramRows = function ({
     height,
   })
   return Array.from({ length: height }, (_, index) =>
-    getHistogramRow({ index, columns, height }),
+    getHistogramRow({
+      index,
+      columns,
+      combinationTitles,
+      titleBlockWidth,
+      minBlockWidth,
+      height,
+      mini,
+    }),
   ).join('\n')
 }
 
@@ -76,12 +88,25 @@ const getColumnColor = function (columnIndex, medianIndex, medianMaxWidth) {
 }
 
 // Serialize a single row, i.e. terminal line
-const getHistogramRow = function ({ index, columns, height }) {
+const getHistogramRow = function ({
+  index,
+  columns,
+  combinationTitles,
+  titleBlockWidth,
+  minBlockWidth,
+  height,
+  mini,
+}) {
+  const titlesSpace =
+    mini && index === height - 1
+      ? combinationTitles
+      : ' '.repeat(titleBlockWidth)
+  const minSpace = ' '.repeat(minBlockWidth)
   const inverseIndex = height - index - 1
   const row = columns
     .map(getHistogramCell.bind(undefined, inverseIndex))
     .join('')
-  return row
+  return `${titlesSpace}${minSpace}${row}`
 }
 
 // Retrieve the character to display for a specific row and column

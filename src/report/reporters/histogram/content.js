@@ -5,22 +5,38 @@ import { getHistogramRows } from './rows.js'
 export const getContent = function ({
   stats: { histogram, median, min, max },
   height,
+  combinationTitles,
+  titleBlockWidth,
+  minBlockWidth,
   contentWidth,
   mini,
 }) {
   const medianIndex = getMedianIndex({ median, min, max, contentWidth })
   const rows = getHistogramRows({
     histogram,
+    combinationTitles,
+    titleBlockWidth,
+    minBlockWidth,
     contentWidth,
     height,
     medianIndex,
+    mini,
   })
 
   if (mini) {
     return rows
   }
 
-  const abscissa = getAbscissa(contentWidth, median, medianIndex)
+  const abscissa = getAbscissa({
+    combinationTitles,
+    titleBlockWidth,
+    minBlockWidth,
+    contentWidth,
+    median,
+    medianIndex,
+    min,
+    max,
+  })
   return `${rows}\n${abscissa}`
 }
 
