@@ -21,7 +21,7 @@ const reportTerminal = function (
   )
   return combinationsA
     .map((combination) =>
-      serializeBoxPlot({
+      serializeCombination({
         combination,
         minAll,
         maxAll,
@@ -34,7 +34,7 @@ const reportTerminal = function (
     .join('\n')
 }
 
-const serializeBoxPlot = function ({
+const serializeCombination = function ({
   combination,
   combination: { quantiles },
   minAll,
