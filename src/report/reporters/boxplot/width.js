@@ -13,10 +13,11 @@ export const getWidths = function ({
   maxAll,
 }) {
   const titlesWidth = getCombinationPaddedName(combinations[0]).length
+  const combinationsA = combinations.filter(isMeasuredCombination)
   const contentWidth = subtractToContentWidth(screenWidth, titlesWidth)
   const minBlockWidth = getMinMaxBlockWidth({
     statName: 'min',
-    combinations,
+    combinations: combinationsA,
     mini,
     minAll,
     maxAll,
@@ -25,7 +26,7 @@ export const getWidths = function ({
   const contentWidthA = subtractToContentWidth(contentWidth, minBlockWidth)
   const maxBlockWidth = getMinMaxBlockWidth({
     statName: 'max',
-    combinations,
+    combinations: combinationsA,
     mini,
     minAll,
     maxAll,
@@ -44,7 +45,6 @@ const subtractToContentWidth = function (contentWidth, columnWidth) {
 // combination's `min`/`max`. However, this in turns depends on `minBlockWidth`
 // and `maxBlockWidth` since those change `contentWidth`. Therefore, we compute
 // it iteratively until the final number stabilizes.
-// eslint-disable-next-line max-statements
 const getMinMaxBlockWidth = function ({
   statName,
   combinations,
@@ -53,17 +53,13 @@ const getMinMaxBlockWidth = function ({
   maxAll,
   contentWidth,
 }) {
-  if (mini) {
+  if (mini || combinations.length === 0) {
     return 0
   }
 
-  const combinationsQuantiles = combinations
-    .filter(isMeasuredCombination)
-    .map(({ quantiles }) => quantiles[statName])
-
-  if (combinationsQuantiles.length === 0) {
-    return 0
-  }
+  const combinationsQuantiles = combinations.map(
+    ({ quantiles }) => quantiles[statName],
+  )
 
   // eslint-disable-next-line fp/no-let
   let minMaxWidth = 0
