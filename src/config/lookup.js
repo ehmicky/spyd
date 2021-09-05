@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 import { relative, normalize } from 'path'
 
-import findUp from 'find-up'
+import { findUp } from 'find-up'
 import pLocate from 'p-locate'
 import { pathExists } from 'path-exists'
 
