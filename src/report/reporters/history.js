@@ -1,11 +1,11 @@
-import { isSameDimension } from '../../../combination/ids.js'
-import { fieldColor } from '../../utils/colors.js'
-import { getCombinationNameColor } from '../../utils/name.js'
-import { STATS_SEPARATOR_COLORED } from '../../utils/separator.js'
-import { getTables } from '../../utils/table.js'
+import { isSameDimension } from '../../combination/ids.js'
+import { fieldColor } from '../utils/colors.js'
+import { getCombinationNameColor } from '../utils/name.js'
+import { STATS_SEPARATOR_COLORED } from '../utils/separator.js'
+import { getTables } from '../utils/table.js'
 
-// Show `result.history` as a time series
-export const getTimeSeries = function (history, combinations, screenWidth) {
+// Show `result.history` as a table
+const reportTerminal = function ({ combinations, history, screenWidth }) {
   const headerRows = getHeaderRows(history)
   const bodyRows = getBodyRows(combinations, history)
   return getTables([...headerRows, ...bodyRows], screenWidth)
@@ -66,4 +66,9 @@ const getCell = function (historyResult, combination) {
   }
 
   return ''
+}
+
+export const historyReporter = {
+  reportTerminal,
+  capabilities: { history: true },
 }
