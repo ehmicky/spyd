@@ -10,7 +10,7 @@ export const getHistogramColumns = function ({
   height,
 }) {
   const medianMaxWidth = Math.max(medianIndex, contentWidth - 1 - medianIndex)
-  const maxHeight = getMaxHeight(frequencies, height)
+  const maxHeight = height / Math.max(...frequencies)
   return frequencies.map((frequency, columnIndex) =>
     getHistogramColumn({
       frequency,
@@ -20,11 +20,6 @@ export const getHistogramColumns = function ({
       medianMaxWidth,
     }),
   )
-}
-
-// Retrieve max terminal height of columns
-const getMaxHeight = function (frequencies, height) {
-  return height / Math.max(...frequencies)
 }
 
 // Retrieve the height of each column.
