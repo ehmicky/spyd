@@ -2,8 +2,6 @@ import mapObj from 'map-obj'
 
 import { goodColor } from '../../utils/colors.js'
 
-import { addStatPadding } from './pad.js'
-
 // Compute the horizontal position on the screen of each quantile
 export const getPositions = function ({
   quantiles,
@@ -68,6 +66,14 @@ const LINE_CHARACTER = '\u2500'
 const BOX_CHARACTER = '\u2591'
 const MEDIAN_CHARACTER = '\u2588'
 const MAX_CHARACTER = '\u2524'
+
+// Surround stats with padding
+export const addStatPadding = function (string) {
+  return `${STAT_PADDING}${string}${STAT_PADDING}`
+}
+
+const STAT_PADDING_WIDTH = 1
+const STAT_PADDING = ' '.repeat(STAT_PADDING_WIDTH)
 
 // Retrieve the median label line shown below the box plot
 export const getLabels = function ({

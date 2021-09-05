@@ -1,6 +1,6 @@
 import { getCombinationPaddedName } from '../../utils/name.js'
 
-import { addStatPadding } from './pad.js'
+import { addStatPadding } from './content.js'
 
 // Retrieve the width of all blocks, in order:
 //  - Combination titles
