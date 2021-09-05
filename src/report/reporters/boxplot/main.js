@@ -182,13 +182,13 @@ const LABELS_HEIGHT = 1
 // Retrieve the width of those blocks
 const getMinMaxBlockWidth = function (combinations, statName) {
   return Math.max(
-    ...combinations.map((combination) =>
-      getSingleMinMaxWidth(combination, statName),
+    ...combinations.map(({ quantiles }) =>
+      getSingleMinMaxWidth(quantiles, statName),
     ),
   )
 }
 
-const getSingleMinMaxWidth = function ({ quantiles }, statName) {
+const getSingleMinMaxWidth = function (quantiles, statName) {
   return quantiles === undefined
     ? 0
     : addPadding(quantiles[statName].prettyPadded).length
