@@ -49,17 +49,9 @@ const serializeBoxPlot = function ({
 
   const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
   const box = getBox({ positions, minBlockWidth, combinationTitles, mini })
-
-  if (mini) {
-    return box
-  }
-
-  const labels = getLabels({
-    positions,
-    titlesWidth,
-    minBlockWidth,
-    contentWidth,
-  })
+  const labels = mini
+    ? ''
+    : getLabels({ positions, titlesWidth, minBlockWidth, contentWidth })
   return `${box}${labels}`
 }
 
