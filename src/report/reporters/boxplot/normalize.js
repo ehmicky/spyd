@@ -2,16 +2,19 @@ import mapObj from 'map-obj'
 
 // Normalize combinations, including turning the `quantiles` array instead an
 // object with only the quantiles we need
-export const normalizeQuantiles = function ({ titles, stats: { quantiles } }) {
+export const normalizeQuantiles = function ({
+  stats: { quantiles },
+  ...combination
+}) {
   if (quantiles === undefined) {
-    return { titles }
+    return combination
   }
 
   const quantilesA = mapObj(QUANTILES, (name, quantileIndex) => [
     name,
     quantiles[quantileIndex],
   ])
-  return { titles, quantiles: quantilesA }
+  return { ...combination, quantiles: quantilesA }
 }
 
 // List of quantiles shown by the reporter
