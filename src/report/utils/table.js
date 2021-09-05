@@ -28,7 +28,7 @@ export const getTables = function (rows, screenWidth) {
     .map((tableRows) =>
       getTable({ tableRows, rowsLeft, leftWidth, columnsWidth }),
     )
-    .join('\n\n')
+    .join('\n')
 }
 
 const getRowLeft = function ([leftCell = '']) {

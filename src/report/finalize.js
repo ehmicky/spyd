@@ -22,7 +22,7 @@ const hasContent = function ({ content }) {
 // Also add footer and padding.
 const joinContents = function (contents) {
   const [{ output, format, colors, footerString }] = contents
-  const content = contents.map(getContentProperty).join('\n')
+  const content = contents.map(getContentProperty).join('\n\n')
   const contentA = `${content}${footerString}`
   return { content: contentA, output, format, colors }
 }

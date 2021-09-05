@@ -14,7 +14,7 @@ export const TERMINAL_FORMAT = {
   },
   concat: true,
   footer(footer) {
-    return `\n${prettifyValue(footer)}\n`
+    return `\n\n${prettifyValue(footer)}\n`
   },
   padding: true,
 }
