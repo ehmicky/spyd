@@ -150,6 +150,10 @@ const computeMinLoopDuration = function (measures) {
   return Math.max(minMeasureCost, minResolution)
 }
 
+// We use a median instead of a mean because:
+//  - It is more precise by being more resistent against slow outliers
+//  - The "typical" `measureCost` per loop is more important than the worst
+//    case ones
 const getMinMeasureCost = function (measures) {
   return getSortedMedian(measures) * MEASURE_COST_RATIO
 }
