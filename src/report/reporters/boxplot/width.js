@@ -57,10 +57,6 @@ const getMinMaxBlockWidth = function ({
     return 0
   }
 
-  const combinationsQuantiles = combinations.map(
-    ({ quantiles }) => quantiles[statName],
-  )
-
   // eslint-disable-next-line fp/no-let
   let minMaxWidth = 0
   // eslint-disable-next-line fp/no-let
@@ -73,10 +69,10 @@ const getMinMaxBlockWidth = function ({
     const currentContentWidth = contentWidth - currentMinMaxWidth
     // eslint-disable-next-line fp/no-mutation
     minMaxWidth = Math.max(
-      ...combinationsQuantiles.map((quantile) =>
+      ...combinations.map((combination) =>
         getMinMaxWidth({
           statName,
-          quantile,
+          combination,
           minAll,
           maxAll,
           contentWidth: currentContentWidth,
@@ -94,7 +90,11 @@ const getMinMaxBlockWidth = function ({
 // combination's `min` or `max` label does not display beyond its borders.
 const getMinMaxWidth = function ({
   statName,
-  quantile: { raw, pretty },
+  combination: {
+    quantiles: {
+      [statName]: { raw, pretty },
+    },
+  },
   minAll,
   maxAll,
   contentWidth,
