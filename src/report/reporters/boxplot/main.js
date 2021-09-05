@@ -13,7 +13,7 @@ const reportTerminal = function (
 ) {
   const combinationsA = combinations.map(normalizeQuantiles)
   const { minAll, maxAll } = getMinMaxAll(combinationsA)
-  const { minBlockWidth, contentWidth } = getWidths(
+  const { titlesWidth, minBlockWidth, contentWidth } = getWidths(
     combinationsA,
     screenWidth,
     mini,
@@ -24,6 +24,7 @@ const reportTerminal = function (
         combination,
         minAll,
         maxAll,
+        titlesWidth,
         minBlockWidth,
         contentWidth,
         mini,
@@ -72,14 +73,14 @@ const getQuantile = function ({ quantiles }, statName) {
 }
 
 const getWidths = function (combinations, screenWidth, mini) {
-  const titleBlockWidth = getTitleBlockWidth(combinations)
+  const titlesWidth = getTitlesWidth(combinations)
   const minBlockWidth = getMinMaxFullWidth(combinations, mini, 'min')
   const maxBlockWidth = getMinMaxFullWidth(combinations, mini, 'max')
   const contentWidth = Math.max(
-    screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
+    screenWidth - titlesWidth - minBlockWidth - maxBlockWidth,
     1,
   )
-  return { minBlockWidth, contentWidth }
+  return { titlesWidth, minBlockWidth, contentWidth }
 }
 
 const getMinMaxFullWidth = function (combinations, mini, statName) {
@@ -91,6 +92,7 @@ const serializeBoxPlot = function ({
   combination: { quantiles },
   minAll,
   maxAll,
+  titlesWidth,
   minBlockWidth,
   contentWidth,
   mini,
@@ -108,11 +110,16 @@ const serializeBoxPlot = function ({
     return box
   }
 
-  const labels = getLabels(positions, minBlockWidth, contentWidth)
+  const labels = getLabels({
+    positions,
+    titlesWidth,
+    minBlockWidth,
+    contentWidth,
+  })
   return `${box}${labels}`
 }
 
-const getTitleBlockWidth = function ([combination]) {
+const getTitlesWidth = function ([combination]) {
   return stringWidth(getCombinationTitles(combination))
 }
 
@@ -208,15 +215,19 @@ const addPadding = function (string) {
   return `${PADDING}${string}${PADDING}`
 }
 
-const getLabels = function ({ median }, minBlockWidth, contentWidth) {
+const getLabels = function ({
+  positions: { median },
+  titlesWidth,
+  minBlockWidth,
+  contentWidth,
+}) {
   const leftShift = Math.max(Math.floor((median.length - 1) / 2), 0)
-  const medianLabelIndex =
-    Math.min(
-      Math.max(median.index - leftShift, 0),
-      contentWidth - median.length,
-    ) + minBlockWidth
-  const medianLabelLeft = ' '.repeat(medianLabelIndex)
-  return `${medianLabelLeft}${median.prettyColor}\n`
+  const shiftedIndex = median.index - leftShift
+  const maxContentIndex = contentWidth - median.length
+  const contentIndex = Math.min(Math.max(shiftedIndex, 0), maxContentIndex)
+  const labelIndex = contentIndex + titlesWidth + minBlockWidth
+  const labelLeft = ' '.repeat(labelIndex)
+  return `${labelLeft}${median.prettyColor}\n`
 }
 
 export const boxplot = { reportTerminal }
