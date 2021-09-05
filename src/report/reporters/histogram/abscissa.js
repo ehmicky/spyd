@@ -4,29 +4,30 @@ import { TICK_MIDDLE, HORIZONTAL_LINE } from './characters.js'
 
 // Retrieve the horizontal line and the abscissa below the main content.
 // Includes the tick above the median and its label.
-export const getAbscissa = function (width, position) {
-  const bottomLine = getBottomLine(width, position)
-  const labels = getLabels(width, position)
+export const getAbscissa = function (width, median, medianIndex) {
+  const bottomLine = getBottomLine(width, medianIndex)
+  const labels = getLabels(width, median, medianIndex)
   return `${separatorColor(bottomLine)}
 ${labels}`
 }
 
-const getBottomLine = function (width, position) {
-  return addTick(width, '', position).padEnd(width, HORIZONTAL_LINE)
+const getBottomLine = function (width, medianIndex) {
+  return addTick(width, '', medianIndex).padEnd(width, HORIZONTAL_LINE)
 }
 
-const addTick = function (width, bottomLine, { index }) {
-  const lineWidth = index - bottomLine.length
+const addTick = function (width, bottomLine, medianIndex) {
+  const lineWidth = medianIndex - bottomLine.length
   return lineWidth < 0
     ? bottomLine
     : `${bottomLine}${HORIZONTAL_LINE.repeat(lineWidth)}${TICK_MIDDLE}`
 }
 
-const getLabels = function (width, position) {
+const getLabels = function (width, median, medianIndex) {
   const { labels, labelsLength } = addLabel(
     width,
     { labelsLength: 0, labels: '' },
-    position,
+    median,
+    medianIndex,
   )
   const labelsA = trimWidth(labels, labelsLength, width)
   return labelsA
@@ -38,12 +39,13 @@ const getLabels = function (width, position) {
 const addLabel = function (
   width,
   { labelsLength, labels },
-  { index, pretty, prettyColor },
+  { pretty, prettyColor },
+  medianIndex,
 ) {
   const spacesWidth =
     labelsLength === 0
-      ? Math.max(index - pretty.length + 1, 0)
-      : Math.max(index - labelsLength, 1)
+      ? Math.max(medianIndex - pretty.length + 1, 0)
+      : Math.max(medianIndex - labelsLength, 1)
   const labelsLengthA = labelsLength + spacesWidth + pretty.length
   const spaces = ' '.repeat(spacesWidth)
   const labelsA = `${labels}${spaces}${prettyColor}`
