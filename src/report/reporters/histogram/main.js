@@ -76,18 +76,18 @@ const serializeHistogram = function ({
 }
 
 const getEmptyCombination = function (combination, height, mini) {
-  const topNewlines = getTopNewlines(height, mini)
-  const bottomNewlines = getBottomNewlines(mini)
+  const histogramLines = getHistogramLines(height, mini)
+  const labelsLines = getLabelsLines(mini)
   const combinationTitles = getCombNamePaddedColor(combination)
-  return `${topNewlines}${combinationTitles}\n${bottomNewlines}`
+  return `${histogramLines}${combinationTitles}\n${labelsLines}`
 }
 
-const getTopNewlines = function (height, mini) {
+const getHistogramLines = function (height, mini) {
   const topNewlinesHeight = height - (mini ? ABSCISSA_BOTTOM_HEIGHT : 0)
   return '\n'.repeat(topNewlinesHeight)
 }
 
-const getBottomNewlines = function (mini) {
+const getLabelsLines = function (mini) {
   const bottomNewlinesHeight = mini ? 0 : ABSCISSA_LABELS_HEIGHT
   return '\n'.repeat(bottomNewlinesHeight)
 }
