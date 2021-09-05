@@ -75,18 +75,8 @@ const getMaxQuantile = function ({
 
 const getWidths = function (combinations, screenWidth, mini) {
   const titleBlockWidth = getTitleBlockWidth(combinations)
-  const minBlockWidth = mini
-    ? 0
-    : Math.max(
-        getHeaderNameWidth('min'),
-        getMinMaxBlockWidth(combinations, 'min'),
-      )
-  const maxBlockWidth = mini
-    ? 0
-    : Math.max(
-        getHeaderNameWidth('max'),
-        getMinMaxBlockWidth(combinations, 'max'),
-      )
+  const minBlockWidth = getMinMaxFullWidth(combinations, mini, 'min')
+  const maxBlockWidth = getMinMaxFullWidth(combinations, mini, 'max')
   const contentWidth = Math.max(
     screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
     1,
@@ -110,6 +100,15 @@ const getHeader = function ({
   const boxHeader = padHeaderField(getHeaderName('median'), contentWidth)
   const maxHeader = padHeaderField(getHeaderName('max'), maxBlockWidth)
   return [`${titleHeader}${minHeader}${boxHeader}${maxHeader}`]
+}
+
+const getMinMaxFullWidth = function (combinations, mini, statName) {
+  return mini
+    ? 0
+    : Math.max(
+        getHeaderNameWidth(statName),
+        getMinMaxBlockWidth(combinations, statName),
+      )
 }
 
 const getHeaderNameWidth = function (statName) {
