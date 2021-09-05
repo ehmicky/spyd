@@ -1,7 +1,9 @@
 import { printToStdout, clearScreen } from '../../../report/tty.js'
 
+import { getBottomBar } from './bottom_bar.js'
 import { updateCompletion } from './completion.js'
-import { getPreviewContent } from './content.js'
+import { addInitialScrollAction, addScrollAction } from './scrolling_action.js'
+import { updateScrolling } from './scrolling_update.js'
 
 // Refresh preview.
 // Done:
@@ -33,4 +35,13 @@ export const refreshPreview = async function (previewState) {
 
   await clearScreen()
   await printToStdout(previewContent)
+}
+
+// Retrieve preview content.
+const getPreviewContent = function (previewState) {
+  addInitialScrollAction(previewState)
+  const bottomBar = getBottomBar(previewState)
+  const { report, maxScrollTop } = updateScrolling(previewState, bottomBar)
+  addScrollAction({ previewState, maxScrollTop })
+  return `${report}${bottomBar}`
 }
