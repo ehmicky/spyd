@@ -11,15 +11,26 @@ const reportTerminal = function (
   { combinations, screenWidth },
   { mini = false },
 ) {
-  const width = getContentWidth(combinations, mini, screenWidth)
   const { minAll, maxAll } = getMinMaxAll(combinations)
+  const width = getContentWidth(combinations, mini, screenWidth)
   return combinations.map((combination) =>
     serializeBoxPlot({ combination, minAll, maxAll, width, mini }),
   )
 }
 
 const getMinMaxAll = function (combinations) {
-  combinations.filter(isMeasuredCombination)
+  const combinationsA = combinations.filter(isMeasuredCombination)
+  const minAll = Math.min(...combinationsA.map(getMinQuantile))
+  const maxAll = Math.min(...combinationsA.map(getMaxQuantile))
+  return { minAll, maxAll }
+}
+
+const getMinQuantile = function ({ stats: { quantiles } }) {
+  return quantiles[QUANTILES.min].raw
+}
+
+const getMaxQuantile = function ({ stats: { quantiles } }) {
+  return quantiles[QUANTILES.max].raw
 }
 
 const getContentWidth = function (combinations, mini, screenWidth) {
