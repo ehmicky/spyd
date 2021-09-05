@@ -19,7 +19,7 @@ const getPosition = function ({
   maxAll,
   contentWidth,
 }) {
-  const percentage = (raw - minAll) / (maxAll - minAll)
+  const percentage = maxAll === minAll ? 0 : (raw - minAll) / (maxAll - minAll)
   const index = Math.min(
     Math.floor(percentage * contentWidth),
     contentWidth - 1,
