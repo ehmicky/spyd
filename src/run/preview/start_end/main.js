@@ -1,4 +1,4 @@
-import { hide as hideCursor, show as showCursor } from 'cli-cursor'
+import cliCursor from 'cli-cursor'
 
 import {
   clearScreen,
@@ -49,7 +49,7 @@ export const startPreview = async function ({
   })
   await updateReport({ previewState: previewStateA })
 
-  hideCursor()
+  cliCursor.hide()
   await clearScreenFull()
   startHandleResize(previewStateA)
   startHandleKeypress(previewStateA)
@@ -77,5 +77,5 @@ export const endPreview = async function (previewState, error = {}) {
     await clearScreen()
   }
 
-  showCursor()
+  cliCursor.show()
 }
