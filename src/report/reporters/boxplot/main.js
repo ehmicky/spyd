@@ -63,6 +63,7 @@ const serializeBoxPlot = function ({
   return `${box}${labels}`
 }
 
+// Shown when a combination has not been measured yet
 const getEmptyCombination = function (combinationTitles, mini) {
   const labelsLine = mini ? '' : '\n'
   return `${combinationTitles}\n${labelsLine}`
