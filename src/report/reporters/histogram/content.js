@@ -22,21 +22,18 @@ export const getContent = function ({
     medianIndex,
     mini,
   })
-
-  if (mini) {
-    return rows
-  }
-
-  const abscissa = getAbscissa({
-    combinationTitles,
-    titleBlockWidth,
-    minBlockWidth,
-    contentWidth,
-    median,
-    medianIndex,
-    min,
-    max,
-  })
+  const abscissa = mini
+    ? ''
+    : getAbscissa({
+        combinationTitles,
+        titleBlockWidth,
+        minBlockWidth,
+        contentWidth,
+        median,
+        medianIndex,
+        min,
+        max,
+      })
   return `${rows}${abscissa}`
 }
 
