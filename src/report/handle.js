@@ -1,5 +1,4 @@
 import stripAnsi from 'strip-ansi'
-import stripFinalNewline from 'strip-final-newline'
 
 import { addPadding } from './utils/indent.js'
 import { wrapRows } from './utils/wrap.js'
@@ -34,10 +33,5 @@ const trimEndLine = function (line) {
 }
 
 const padContents = function (joinedContents, padding) {
-  if (!padding) {
-    return joinedContents
-  }
-
-  const joinedContentsA = `${stripFinalNewline(joinedContents)}\n`
-  return addPadding(joinedContentsA)
+  return padding ? addPadding(joinedContents) : joinedContents
 }

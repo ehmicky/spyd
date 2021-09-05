@@ -92,7 +92,7 @@ const getTable = function ({ tableRows, rowsLeft, leftWidth, columnsWidth }) {
     .map((row, rowIndex) =>
       getRow({ row, leftCell: rowsLeft[rowIndex], leftWidth, columnsWidth }),
     )
-    .join('\n')
+    .join('')
 }
 
 const getRow = function ({ row, leftCell, leftWidth, columnsWidth }) {
@@ -100,5 +100,5 @@ const getRow = function ({ row, leftCell, leftWidth, columnsWidth }) {
   const rowA = row
     .map((cell) => padString(cell, columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
-  return `${leftCellA}${NAME_SEPARATOR_COLORED}${rowA}`
+  return `${leftCellA}${NAME_SEPARATOR_COLORED}${rowA}\n`
 }
