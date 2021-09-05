@@ -80,10 +80,11 @@ const getLabelLine = function ({
   median,
   medianIndex,
 }) {
-  const labelPaddingWidth = Math.min(
-    medianIndex,
-    contentWidth - median.pretty.length,
-  )
-  const leftSpace = ' '.repeat(titlesWidth + minBlockWidth + labelPaddingWidth)
-  return `${leftSpace}${median.prettyColor}\n`
+  const leftShift = Math.max(Math.floor((median.pretty.length - 1) / 2), 0)
+  const shiftedIndex = medianIndex - leftShift
+  const maxContentIndex = contentWidth - median.pretty.length
+  const contentIndex = Math.min(Math.max(shiftedIndex, 0), maxContentIndex)
+  const labelIndex = contentIndex + titlesWidth + minBlockWidth
+  const labelLeft = ' '.repeat(labelIndex)
+  return `${labelLeft}${median.prettyColor}\n`
 }
