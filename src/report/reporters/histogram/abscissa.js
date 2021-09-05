@@ -5,10 +5,9 @@ import { TICK_MIDDLE, HORIZONTAL_LINE } from './characters.js'
 // Retrieve the horizontal line and the abscissa below the main content.
 // Includes the tick above the median and its label.
 export const getAbscissa = function (width, median, medianIndex) {
-  const bottomLine = getBottomLine(width, medianIndex)
+  const bottomLine = separatorColor(getBottomLine(width, medianIndex))
   const labels = getLabels(width, median, medianIndex)
-  return `${separatorColor(bottomLine)}
-${labels}`
+  return `${bottomLine}\n${labels}`
 }
 
 const getBottomLine = function (width, medianIndex) {
