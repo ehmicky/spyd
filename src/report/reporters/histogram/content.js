@@ -22,7 +22,7 @@ export const getContent = function ({
 // Compute the position of the median tick on the screen.
 // When `histogram` has a single item, it is in the first bucket.
 const getMedianIndex = function ({ median, min, max, width }) {
-  const medianPercentage =
+  const percentage =
     max.raw === min.raw ? 0 : (median.raw - min.raw) / (max.raw - min.raw)
-  return Math.round((width - 1) * medianPercentage)
+  return Math.min(Math.floor(percentage * width), width - 1)
 }
