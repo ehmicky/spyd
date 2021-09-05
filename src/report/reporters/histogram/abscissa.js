@@ -12,14 +12,11 @@ ${labels}`
 }
 
 const getBottomLine = function (width, medianIndex) {
-  return addTick(width, '', medianIndex).padEnd(width, HORIZONTAL_LINE)
-}
-
-const addTick = function (width, bottomLine, medianIndex) {
-  const lineWidth = medianIndex - bottomLine.length
-  return lineWidth < 0
-    ? bottomLine
-    : `${bottomLine}${HORIZONTAL_LINE.repeat(lineWidth)}${TICK_MIDDLE}`
+  const startPadding = medianIndex + TICK_MIDDLE.length
+  return TICK_MIDDLE.padStart(startPadding, HORIZONTAL_LINE).padEnd(
+    width,
+    HORIZONTAL_LINE,
+  )
 }
 
 const getLabels = function (width, median, medianIndex) {
