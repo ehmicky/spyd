@@ -1,6 +1,7 @@
 import { getCombNamePaddedColor } from '../../utils/name.js'
 
-import { getBox, getLabels } from './content.js'
+import { getBox } from './content.js'
+import { getLabels } from './labels.js'
 import { getMinMaxAll } from './min_max.js'
 import { normalizeQuantiles } from './normalize.js'
 import { getPositions } from './position.js'
