@@ -1,38 +1,19 @@
-import { getCombinationPaddedName } from '../../utils/name.js'
+import { getColWidths } from '../../utils/width.js'
 
 import { getPaddedStatLength } from './abscissa.js'
 
-// Compute the width of each columns for reporters which show the following ones
-// for each combination:
-//  - Title
-//  - Min
-//  - Main content
-//  - Max
-// This is used for example by the `histogram` and `boxplot` reporters.
+// Compute the width of each column.
 export const getWidths = function (combinations, mini, screenWidth) {
-  const titlesWidth = getCombinationPaddedName(combinations[0]).length
-  const minBlockWidth = getMinMaxBlockWidth(combinations, mini, 'min')
-  const maxBlockWidth = getMinMaxBlockWidth(combinations, mini, 'max')
-  const contentWidth = Math.max(
-    screenWidth - titlesWidth - minBlockWidth - maxBlockWidth,
-    1,
+  const minWidths = combinations.map(
+    getHistogramColWidth.bind(undefined, 'min'),
   )
-  return { titlesWidth, minBlockWidth, contentWidth }
+  const maxWidths = combinations.map(
+    getHistogramColWidth.bind(undefined, 'max'),
+  )
+  return getColWidths({ combinations, minWidths, maxWidths, mini, screenWidth })
 }
 
-const getMinMaxBlockWidth = function (combinations, mini, statName) {
-  if (mini) {
-    return 0
-  }
-
-  return Math.max(
-    ...combinations.map((combination) =>
-      getSingleMinMaxWidth(combination, statName),
-    ),
-  )
-}
-
-const getSingleMinMaxWidth = function ({ stats }, statName) {
+const getHistogramColWidth = function (statName, { stats }) {
   return stats[statName] === undefined
     ? 0
     : getPaddedStatLength(stats[statName])
