@@ -42,7 +42,9 @@ const getMinStat = function ({ min }) {
 const getMaxStat = function ({ max }) {
   return max === undefined
     ? ''
-    : `${separatorColor(TICK_RIGHT)}${PADDING}${max.prettyPaddedColor}`
+    : `${separatorColor(TICK_RIGHT)}${PADDING}${
+        max.prettyPaddedColor
+      }${PADDING}`
 }
 
 const PADDING_WIDTH = 1
