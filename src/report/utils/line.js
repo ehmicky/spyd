@@ -9,7 +9,7 @@ export const getLineSeparator = function () {
 }
 
 // Works with all terminals
-const HORIZONTAL_LINE = '\u2500'
+const HORIZONTAL_LINE = '\u2013'
 
 // Separator above the preview bottom bar
 export const getFullLineSeparator = function () {
