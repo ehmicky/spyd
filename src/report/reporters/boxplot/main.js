@@ -135,10 +135,25 @@ const serializeBoxPlot = function ({
     return titleBlock
   }
 
-  const minBlock = getMinMaxBlock(quantiles, 'min', mini)
-  const content = getContent({ quantiles, minAll, maxAll, mini, contentWidth })
-  const maxBlock = getMinMaxBlock(quantiles, 'max', mini)
-  return concatBlocks([titleBlock, minBlock, content, maxBlock])
+  if (mini) {
+    const miniContent = getMiniContent({
+      quantiles,
+      minAll,
+      maxAll,
+      contentWidth,
+    })
+    return concatBlocks([titleBlock, miniContent])
+  }
+
+  const minBlock = getMinMaxBlock(quantiles, 'min')
+  const fullContent = getFullContent({
+    quantiles,
+    minAll,
+    maxAll,
+    contentWidth,
+  })
+  const maxBlock = getMinMaxBlock(quantiles, 'max')
+  return concatBlocks([titleBlock, minBlock, fullContent, maxBlock])
 }
 
 // When the combination has not been measured yet
@@ -165,8 +180,8 @@ const getBottomNewlines = function (mini) {
 const LABELS_HEIGHT = 1
 
 // Retrieve the blocks that show the min|max on the left|right
-const getMinMaxBlock = function (quantiles, statName, mini) {
-  return mini ? '' : getStat(quantiles, statName)
+const getMinMaxBlock = function (quantiles, statName) {
+  return getStat(quantiles, statName)
 }
 
 // Retrieve the width of those blocks
@@ -196,23 +211,18 @@ const addPadding = function (string) {
   return `${PADDING}${string}${PADDING}`
 }
 
-const getContent = function ({
-  quantiles,
-  minAll,
-  maxAll,
-  contentWidth,
-  mini,
-}) {
+const getFullContent = function ({ quantiles, minAll, maxAll, contentWidth }) {
   const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
   const box = getBox(positions, contentWidth)
-
-  if (mini) {
-    return box
-  }
-
   const labels = getLabels(positions, contentWidth)
   return `${box}
 ${labels}`
+}
+
+const getMiniContent = function ({ quantiles, minAll, maxAll, contentWidth }) {
+  const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
+  const box = getBox(positions, contentWidth)
+  return box
 }
 
 const getPositions = function ({ quantiles, minAll, maxAll, contentWidth }) {
