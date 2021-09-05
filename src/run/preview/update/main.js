@@ -43,5 +43,6 @@ const getPreviewContent = function (previewState) {
   const bottomBar = getBottomBar(previewState)
   const { report, maxScrollTop } = updateScrolling(previewState, bottomBar)
   addScrollAction({ previewState, maxScrollTop })
-  return `${report}${bottomBar}`
+  const bottomBarA = getBottomBar(previewState)
+  return `${report}${bottomBarA}`
 }
