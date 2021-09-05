@@ -19,8 +19,9 @@ export const getBox = function ({
 }
 
 const getLeftSpace = function (min, minBlockWidth, mini) {
+  const minPaddedLength = getPaddedStat(min.pretty, mini).length
   const leftSpaceWidth = Math.max(
-    minBlockWidth + min.index - getPaddedStat(min.pretty, mini).length,
+    minBlockWidth + min.index - minPaddedLength,
     0,
   )
   return ' '.repeat(leftSpaceWidth)
