@@ -80,10 +80,9 @@ const getLabelLine = function ({
   median,
   medianIndex,
 }) {
-  const titlesSpace = ' '.repeat(titlesWidth)
-  const minSpace = ' '.repeat(minBlockWidth)
+  const leftSpace = ' '.repeat(titlesWidth + minBlockWidth)
   const label = getLabel(contentWidth, median, medianIndex)
-  return `${titlesSpace}${minSpace}${label}\n`
+  return `${leftSpace}${label}\n`
 }
 
 const getLabel = function (contentWidth, median, medianIndex) {
