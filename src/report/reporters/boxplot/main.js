@@ -141,11 +141,9 @@ const getMinMaxBlockWidth = function (combinations, mini, statName) {
 }
 
 const getSingleMinMaxWidth = function (quantiles, statName) {
-  return quantiles === undefined ? 0 : getPaddedMinMaxWidth(quantiles, statName)
-}
-
-const getPaddedMinMaxWidth = function (quantiles, statName) {
-  return quantiles[statName].pretty.length + PADDING_LENGTH
+  return quantiles === undefined
+    ? 0
+    : addStatPadding(quantiles[statName].pretty).length
 }
 
 const getEmptyCombination = function (combinationTitles, mini) {
@@ -160,11 +158,7 @@ const getPositions = function ({ quantiles, minAll, maxAll, contentWidth }) {
 
 const getPosition = function ({
   name,
-  stat: {
-    raw,
-    pretty: { length },
-    prettyColor,
-  },
+  stat: { raw, pretty, prettyColor },
   minAll,
   maxAll,
   contentWidth,
@@ -174,7 +168,7 @@ const getPosition = function ({
     Math.floor(percentage * contentWidth),
     contentWidth - 1,
   )
-  return [name, { prettyColor, length, index }]
+  return [name, { pretty, prettyColor, index }]
 }
 
 // eslint-disable-next-line complexity, max-statements
@@ -185,11 +179,11 @@ const getBox = function ({
   mini,
 }) {
   const leftSpaceWidth = Math.max(
-    minBlockWidth + min.index - (mini ? 0 : min.length + PADDING_LENGTH),
+    minBlockWidth + min.index - (mini ? 0 : addStatPadding(min.pretty).length),
     0,
   )
   const leftSpace = ' '.repeat(leftSpaceWidth)
-  const minPadded = mini ? '' : addPadding(min.prettyColor)
+  const minPadded = mini ? '' : addStatPadding(min.prettyColor)
   const minCharacter = min.index === q1.index ? '' : MIN_CHARACTER
   const leftLineWidth = q1.index - min.index - minCharacter.length
   const leftLine =
@@ -203,7 +197,7 @@ const getBox = function ({
   const rightLineWidth = max.index - q3.index - maxCharacter.length
   const rightLine =
     rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
-  const maxPadded = mini ? '' : addPadding(max.prettyColor)
+  const maxPadded = mini ? '' : addStatPadding(max.prettyColor)
   return `${combinationTitles}${leftSpace}${minPadded}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${maxPadded}\n`
 }
 
@@ -214,13 +208,12 @@ const BOX_CHARACTER = '\u2591'
 const MEDIAN_CHARACTER = '\u2588'
 const MAX_CHARACTER = '\u2524'
 
-const PADDING_WIDTH = 1
-const PADDING_LENGTH = PADDING_WIDTH * 2
-const PADDING = ' '.repeat(PADDING_WIDTH)
-
-const addPadding = function (string) {
-  return `${PADDING}${string}${PADDING}`
+const addStatPadding = function (string) {
+  return `${STAT_PADDING}${string}${STAT_PADDING}`
 }
+
+const STAT_PADDING_WIDTH = 1
+const STAT_PADDING = ' '.repeat(STAT_PADDING_WIDTH)
 
 const getLabels = function ({
   positions: { median },
@@ -228,9 +221,9 @@ const getLabels = function ({
   minBlockWidth,
   contentWidth,
 }) {
-  const leftShift = Math.max(Math.floor((median.length - 1) / 2), 0)
+  const leftShift = Math.max(Math.floor((median.pretty.length - 1) / 2), 0)
   const shiftedIndex = median.index - leftShift
-  const maxContentIndex = contentWidth - median.length
+  const maxContentIndex = contentWidth - median.pretty.length
   const contentIndex = Math.min(Math.max(shiftedIndex, 0), maxContentIndex)
   const labelIndex = contentIndex + titlesWidth + minBlockWidth
   const labelLeft = ' '.repeat(labelIndex)
