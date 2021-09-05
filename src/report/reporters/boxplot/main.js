@@ -1,15 +1,8 @@
-/* eslint-disable max-lines */
-import mapObj from 'map-obj'
-
-import { goodColor } from '../../utils/colors.js'
-import {
-  getCombinationName,
-  getCombinationNameColor,
-} from '../../utils/name.js'
-import {
-  NAME_SEPARATOR,
-  NAME_SEPARATOR_COLORED,
-} from '../../utils/separator.js'
+import { getPositions, getBox, getLabels } from './content.js'
+import { getMinMaxAll } from './min_max.js'
+import { normalizeQuantiles } from './normalize.js'
+import { getCombinationTitles } from './titles.js'
+import { getWidths } from './width.js'
 
 // Reporter showing boxplot of measures (min, q1, median, q3, max)
 const reportTerminal = function (
@@ -36,56 +29,6 @@ const reportTerminal = function (
       }),
     )
     .join('\n')
-}
-
-const normalizeQuantiles = function ({ titles, stats: { quantiles } }) {
-  if (quantiles === undefined) {
-    return { titles }
-  }
-
-  const quantilesA = mapObj(QUANTILES, (name, quantileIndex) => [
-    name,
-    quantiles[quantileIndex],
-  ])
-  return { titles, quantiles: quantilesA }
-}
-
-const QUANTILES = { min: 0, q1: 25, median: 50, q3: 75, max: 100 }
-
-const getMinMaxAll = function (combinations) {
-  const combinationsA = combinations.filter(isMeasuredCombination)
-
-  if (combinationsA.length === 0) {
-    return {}
-  }
-
-  const minAll = Math.min(
-    ...combinationsA.map((combination) => getQuantile(combination, 'min')),
-  )
-  const maxAll = Math.max(
-    ...combinationsA.map((combination) => getQuantile(combination, 'max')),
-  )
-  return { minAll, maxAll }
-}
-
-// When the combination has not been measured yet
-const isMeasuredCombination = function ({ quantiles }) {
-  return quantiles !== undefined
-}
-
-const getQuantile = function ({ quantiles }, statName) {
-  return quantiles[statName].raw
-}
-
-const getWidths = function (combinations, screenWidth, mini) {
-  const titlesWidth = getTitlesWidth(combinations)
-  const minBlockWidth = getMinMaxBlockWidth(combinations, mini, 'min')
-  const maxBlockWidth = getMinMaxBlockWidth(combinations, mini, 'max')
-  const contentWidth = Math.max(
-    screenWidth - titlesWidth - minBlockWidth - maxBlockWidth,
-    1,
-  )
-  return { titlesWidth, minBlockWidth, contentWidth }
 }
 
 const serializeBoxPlot = function ({
@@ -120,115 +63,9 @@ const serializeBoxPlot = function ({
   return `${box}${labels}`
 }
 
-const getTitlesWidth = function ([combination]) {
-  return `${getCombinationName(combination)}${NAME_SEPARATOR}`.length
-}
-
-const getCombinationTitles = function (combination) {
-  return `${getCombinationNameColor(combination)}${NAME_SEPARATOR_COLORED}`
-}
-
-const getMinMaxBlockWidth = function (combinations, mini, statName) {
-  if (mini) {
-    return 0
-  }
-
-  return Math.max(
-    ...combinations.map(({ quantiles }) =>
-      getSingleMinMaxWidth(quantiles, statName),
-    ),
-  )
-}
-
-const getSingleMinMaxWidth = function (quantiles, statName) {
-  return quantiles === undefined
-    ? 0
-    : addStatPadding(quantiles[statName].pretty).length
-}
-
 const getEmptyCombination = function (combinationTitles, mini) {
   const labelsLine = mini ? '' : '\n'
   return `${combinationTitles}\n${labelsLine}`
-}
-
-const getPositions = function ({ quantiles, minAll, maxAll, contentWidth }) {
-  return mapObj(quantiles, (name, stat) =>
-    getPosition({ name, stat, minAll, maxAll, contentWidth }),
-  )
-}
-
-const getPosition = function ({
-  name,
-  stat: { raw, pretty, prettyColor },
-  minAll,
-  maxAll,
-  contentWidth,
-}) {
-  const percentage = (raw - minAll) / (maxAll - minAll)
-  const index = Math.min(
-    Math.floor(percentage * contentWidth),
-    contentWidth - 1,
-  )
-  return [name, { pretty, prettyColor, index }]
-}
-
-// eslint-disable-next-line complexity, max-statements
-const getBox = function ({
-  positions: { min, q1, median, q3, max },
-  minBlockWidth,
-  combinationTitles,
-  mini,
-}) {
-  const leftSpaceWidth = Math.max(
-    minBlockWidth + min.index - (mini ? 0 : addStatPadding(min.pretty).length),
-    0,
-  )
-  const leftSpace = ' '.repeat(leftSpaceWidth)
-  const minPadded = mini ? '' : addStatPadding(min.prettyColor)
-  const minCharacter = min.index === q1.index ? '' : MIN_CHARACTER
-  const leftLineWidth = q1.index - min.index - minCharacter.length
-  const leftLine =
-    leftLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(leftLineWidth)
-  const q1BoxWidth = median.index - q1.index
-  const q1Box = q1BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(q1BoxWidth)
-  const medianCharacter = goodColor(MEDIAN_CHARACTER)
-  const q3BoxWidth = q3.index - median.index
-  const q3Box = q3BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(q3BoxWidth)
-  const maxCharacter = q3.index === max.index ? '' : MAX_CHARACTER
-  const rightLineWidth = max.index - q3.index - maxCharacter.length
-  const rightLine =
-    rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
-  const maxPadded = mini ? '' : addStatPadding(max.prettyColor)
-  return `${combinationTitles}${leftSpace}${minPadded}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${maxPadded}\n`
-}
-
-// Works on most terminals
-const MIN_CHARACTER = '\u251C'
-const LINE_CHARACTER = '\u2500'
-const BOX_CHARACTER = '\u2591'
-const MEDIAN_CHARACTER = '\u2588'
-const MAX_CHARACTER = '\u2524'
-
-const addStatPadding = function (string) {
-  return `${STAT_PADDING}${string}${STAT_PADDING}`
-}
-
-const STAT_PADDING_WIDTH = 1
-const STAT_PADDING = ' '.repeat(STAT_PADDING_WIDTH)
-
-const getLabels = function ({
-  positions: { median },
-  titlesWidth,
-  minBlockWidth,
-  contentWidth,
-}) {
-  const leftShift = Math.max(Math.floor((median.pretty.length - 1) / 2), 0)
-  const shiftedIndex = median.index - leftShift
-  const maxContentIndex = contentWidth - median.pretty.length
-  const contentIndex = Math.min(Math.max(shiftedIndex, 0), maxContentIndex)
-  const labelIndex = contentIndex + titlesWidth + minBlockWidth
-  const labelLeft = ' '.repeat(labelIndex)
-  return `${labelLeft}${median.prettyColor}\n`
 }
 
 export const boxplot = { reportTerminal }
