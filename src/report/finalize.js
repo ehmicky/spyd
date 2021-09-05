@@ -1,3 +1,5 @@
+import stripFinalNewline from 'strip-final-newline'
+
 import { groupBy } from '../utils/group.js'
 
 import { FORMATS } from './formats/list.js'
@@ -26,7 +28,7 @@ const joinContents = function (contents) {
 }
 
 const getContentProperty = function ({ content }) {
-  return content
+  return `${stripFinalNewline(content)}\n`
 }
 
 const handleOutputContent = function ({ content, output, format, colors }) {
