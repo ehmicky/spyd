@@ -52,15 +52,15 @@ const getHistogramRow = function ({
   const minSpace = ' '.repeat(minBlockWidth)
   const inverseIndex = height - index - 1
   const row = columns
-    .map(getHistogramCell.bind(undefined, inverseIndex))
+    .map((column) => getHistogramCell(column, inverseIndex))
     .join('')
   return `${titlesSpace}${minSpace}${row}\n`
 }
 
 // Retrieve the character to display for a specific row and column
 const getHistogramCell = function (
-  inverseIndex,
   { heightLevel, charIndex, color },
+  inverseIndex,
 ) {
   if (heightLevel < inverseIndex) {
     return EMPTY_HISTOGRAM_CHAR
