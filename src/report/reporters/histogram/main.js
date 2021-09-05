@@ -42,7 +42,7 @@ const reportTerminal = function (
 const serializeCombination = function ({
   combination,
   combination: {
-    stats: { histogram, median, min, max },
+    stats: { histogram, quantiles, min, max },
   },
   titlesWidth,
   minBlockWidth,
@@ -56,6 +56,7 @@ const serializeCombination = function ({
     return getEmptyCombination(combination, height, mini)
   }
 
+  const median = quantiles[MEDIAN_QUANTILE]
   const medianIndex = getMedianIndex({ median, min, max, contentWidth })
   const rows = getHistogramRows({
     histogram,
@@ -82,6 +83,10 @@ const serializeCombination = function ({
   return `${rows}${abscissa}`
 }
 
+// `median` is discouraged by `debugStats`.
+// Distribution reporters should use `quantiles` if they do need it.
+const MEDIAN_QUANTILE = 50
+
 // Compute the position of the median tick on the screen.
 // When `histogram` has a single item, it is in the first bucket.
 const getMedianIndex = function ({ median, min, max, contentWidth }) {
@@ -90,7 +95,4 @@ const getMedianIndex = function ({ median, min, max, contentWidth }) {
   return Math.min(Math.floor(percentage * contentWidth), contentWidth - 1)
 }
 
-export const histogramReporter = {
-  reportTerminal,
-  capabilities: { debugStats: true },
-}
+export const histogramReporter = { reportTerminal }
