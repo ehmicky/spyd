@@ -74,7 +74,7 @@ const getMaxQuantile = function ({
 }
 
 const getWidths = function (combinations, screenWidth, mini) {
-  const titleBlockWidth = stringWidth(getTitleBlockContents(combinations[0]))
+  const titleBlockWidth = getTitleBlockWidth(combinations)
   const minBlockWidth = mini
     ? 0
     : Math.max(
@@ -161,6 +161,10 @@ const isMeasuredCombination = function ({ quantiles }) {
   return quantiles !== undefined
 }
 
+const getTitleBlockWidth = function ([combination]) {
+  return stringWidth(getTitleBlockContents(combination))
+}
+
 // Retrieve sidebar with the combination name
 const getTitleBlock = function (combination, mini) {
   const titleBlockContents = getTitleBlockContents(combination)
@@ -179,7 +183,6 @@ const getBottomNewlines = function (mini) {
 
 const LABELS_HEIGHT = 1
 
-// Retrieve the width of those blocks
 const getMinMaxBlockWidth = function (combinations, statName) {
   return Math.max(
     ...combinations.map(({ quantiles }) =>
