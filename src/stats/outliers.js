@@ -47,6 +47,6 @@ export const getLoopsFromLength = function (length) {
 // A lower value makes it more likely for outliers to overtake the histogram,
 // concentrating most of the values into far fewer buckets.
 const MIN_OUTLIERS = 0.05
-// Having the same percentage for slow/fast outliers ensures the `median`
+// Having the same percentage for slow/fast outliers ensures the `mean`
 // remains the same.
 const MAX_OUTLIERS = MIN_OUTLIERS

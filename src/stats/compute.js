@@ -17,7 +17,7 @@ import { getMean } from './sum.js'
 //  - This happens when the task is faster than the minimum time resolution
 //  - This is bad because:
 //     - It is confusing to users
-//     - It prevents computing `stdev` and related stats if the `median` is `0`
+//     - It prevents computing `stdev` and related stats if the `mean` is `0`
 //     - It decreases `stdev` if many measures are exactly `0`. This leads to
 //       reaching the target `precision` even though stats are imprecise.
 //  - This is mostly prevented by:
@@ -25,10 +25,10 @@ import { getMean } from './sum.js'
 //     - Multiplying `repeat` when the `sampleMedian` is `0`, including during
 //       calibration
 // We do not compute the mode because:
-//  - Reporting it together with the median might make it look like it is as
-//    important. However, the median is a far more useful statistic.
+//  - Reporting it together with the mean might make it look like it is as
+//    important. However, the mean is a far more useful statistic.
 //  - This would create too many statistics for the average, together with the
-//    median and the mean.
+//    mean and the median.
 export const computeStats = function (measures) {
   const { minIndex, maxIndex, length, min, max } = getOutliersStats(measures)
 
@@ -45,20 +45,20 @@ export const computeStats = function (measures) {
     bucketCount: HISTOGRAM_SIZE,
   })
 
-  const { stdev, rstdev, moe, rmoe, medianMin, medianMax } = getPrecisionStats({
+  const { stdev, rstdev, moe, rmoe, meanMin, meanMax } = getPrecisionStats({
     measures,
     minIndex,
     maxIndex,
     length,
     min,
     max,
-    median,
+    mean,
   })
 
   return {
     median,
-    medianMin,
-    medianMax,
+    medianMin: meanMin,
+    medianMax: meanMax,
     mean,
     min,
     max,
@@ -76,7 +76,7 @@ const HISTOGRAM_SIZE = 1e2
 
 // Retrieve stats related to `stdev`.
 // Those might be absent if the number of loops is low.
-// `median: 0` is very unlikely (but possible) after calibration, which would
+// `mean: 0` is very unlikely (but possible) after calibration, which would
 // make those stats not compute correctly.
 const getPrecisionStats = function ({
   measures,
@@ -85,23 +85,18 @@ const getPrecisionStats = function ({
   length,
   min,
   max,
-  median,
+  mean,
 }) {
-  if (length < MIN_STDEV_LOOPS || median === 0) {
+  if (length < MIN_STDEV_LOOPS || mean === 0) {
     return {}
   }
 
-  const stdev = getStdev(measures, { minIndex, maxIndex, median })
-  const rstdev = getRstdev(stdev, median)
+  const stdev = getStdev(measures, { minIndex, maxIndex, mean })
+  const rstdev = getRstdev(stdev, mean)
   const moe = getMoe(stdev, length)
-  const rmoe = getRmoe(moe, median)
-  const { medianMin, medianMax } = getConfidenceInterval({
-    median,
-    moe,
-    min,
-    max,
-  })
-  return { stdev, rstdev, moe, rmoe, medianMin, medianMax }
+  const rmoe = getRmoe(moe, mean)
+  const { meanMin, meanMax } = getConfidenceInterval({ mean, moe, min, max })
+  return { stdev, rstdev, moe, rmoe, meanMin, meanMax }
 }
 
 // `stdev` might be very imprecise when there are not enough values to compute

@@ -1,26 +1,26 @@
 import { getTvalue } from './tvalue.js'
 
-// Retrieve margin of error, relative to the median
+// Retrieve margin of error, relative to the mean
 // The standard error:
 //  - Is the standard deviation that would be obtained by repeating the same
 //    benchmark
 //  - This is providing the underlying distribution remained the same. In
 //    practice, there is always a variation due to the environment. So it is
 //    more accurately described as the maximum difference between the current
-//    median and the future median if we kept measuring forever.
-//  - In other terms, it measures the precision of the current median, but not
-//    the potential variation with the next median
-//     - I.e. this does not measure the possible range of median in future
+//    mean and the future mean if we kept measuring forever.
+//  - In other terms, it measures the precision of the current mean, but not
+//    the potential variation with the next mean
+//     - I.e. this does not measure the possible range of mean in future
 //       measures
 //     - For example, variation might come from the environment (such as machine
 //       load)
 // The margin of error:
-//  - Computes a range around the median where there is 95% of probability that
-//    the real median (if we kept measuring forever) would fall.
+//  - Computes a range around the mean where there is 95% of probability that
+//    the real mean (if we kept measuring forever) would fall.
 //  - It uses time duration, which is easier when considering a single
 //    combination precision
 // The moe is meant to be reported:
-//  - by median-focused reporters (not distribution-focused)
+//  - by mean-focused reporters (not distribution-focused)
 //  - either graphically (stats.moe) or as a duration (stats.moePretty)
 // The moe is useful:
 //  - both for:
@@ -30,7 +30,7 @@ import { getTvalue } from './tvalue.js'
 //        - this is statistically imperfect, i.e. just an approximation
 //        - the proper way would be to use a welch's t-test
 //  - for those reasons, using the moe as an absolute duration is more useful in
-//    reporting than using the moe relative to the median (percentage)
+//    reporting than using the moe relative to the mean (percentage)
 // This all relies on measures following a normal distribution
 //  - In practice, this is rarely the case:
 //     - Several distributions are usually summed, i.e. producing several modes.
@@ -50,7 +50,7 @@ import { getTvalue } from './tvalue.js'
 //     - one combination might be equivalent with two other combinations, but
 //       those two other combinations might not be equivalent between each
 //       other, making ordering complicated
-//  - reporting it on medians does not work either because whether combinations
+//  - reporting it on means does not work either because whether combinations
 //    are comparable must be done for each combinations pair, not only the next
 //    slower combination
 //  - this can still be added in the future with a reporter showing a list of
@@ -63,11 +63,11 @@ export const getMoe = function (stdev, length) {
   return marginOfError
 }
 
-// Retrieve margin of error relative to the median.
+// Retrieve margin of error relative to the mean.
 // This is more useful than moe when comparing different combinations, or when
 // targetting a specific precision threshold.
-export const getRmoe = function (moe, median) {
-  return moe / median
+export const getRmoe = function (moe, mean) {
+  return moe / mean
 }
 
 // Find the `length` that gets a specific `moe` with a given `stdev`.
