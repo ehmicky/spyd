@@ -1,45 +1,54 @@
-import stripFinalNewline from 'strip-final-newline'
-
 import { handleContent } from '../../../report/handle.js'
-import { goodColor, noteColor } from '../../../report/utils/colors.js'
-import { wrapPaddedRows } from '../../../report/utils/wrap.js'
+import { getLineSeparator } from '../../../report/utils/line.js'
+
+import { getActions, ACTIONS_LABEL } from './actions.js'
+import { getCounterRow, getCounter } from './counter.js'
+import { getProgressRow } from './progress.js'
 
 // Retrieve bottom bar of preview
 export const getBottomBar = function ({
-  previewState: {
-    actions,
-    reporters: [
-      {
-        config: { colors },
-      },
-    ],
-  },
-  leftWidth,
-  progressRow,
-  counterRow,
+  actions,
+  durationLeft,
+  percentage,
+  report,
+  index,
+  total,
+  combinationName,
+  description,
+  reporters: [
+    {
+      config: { colors },
+    },
+  ],
 }) {
+  const separator = getSeparator(report)
+  const leftWidth = getLeftWidth({ durationLeft, total })
+  const progressRow = getProgressRow({ durationLeft, percentage, leftWidth })
+  const counterRow = getCounterRow({
+    index,
+    total,
+    combinationName,
+    description,
+    leftWidth,
+  })
   const actionsA = getActions(actions, leftWidth)
-  const content = `${progressRow}\n\n${counterRow}\n\n${actionsA}`
+  const content = `${separator}${progressRow}\n${counterRow}\n${actionsA}`
   const bottomBar = handleContent({ content, colors, padding: true })
-  const bottomBarA = stripFinalNewline(bottomBar)
-  return bottomBarA
+  return bottomBar
 }
 
-// Show keys available for user actions in previews.
-// When there are no actions available, we keep an empty line to avoid jitter.
-const getActions = function (actions, leftWidth) {
-  const actionValues = Object.values(actions)
-
-  if (actionValues.length === 0) {
-    return ''
-  }
-
-  const actionsStr = actionValues.map(getAction).join(noteColor(', '))
-  return wrapPaddedRows(`${ACTIONS_LABEL.padEnd(leftWidth)}${actionsStr}`)
+const getSeparator = function (report) {
+  return report === '' ? '' : `${getLineSeparator()}\n`
 }
 
-const getAction = function ({ key, explanation }) {
-  return `${goodColor(key)} ${noteColor(`(${explanation})`)}`
+const getLeftWidth = function ({ durationLeft, total }) {
+  return (
+    Math.max(
+      durationLeft.length,
+      getCounter(total, total).length,
+      ACTIONS_LABEL.length,
+    ) + LEFT_WIDTH_PADDING
+  )
 }
 
-export const ACTIONS_LABEL = 'Actions'
+const LEFT_WIDTH_PADDING = 2

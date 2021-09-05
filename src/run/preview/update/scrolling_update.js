@@ -13,8 +13,8 @@ import { getScreenHeight } from '../../../report/tty.js'
 //    size shrinks
 //  - This prevents jittering when the scrolling completely down and the report
 //    size shrinks
-export const updateScrolling = function (previewState, bottomBar, separator) {
-  const availableHeight = getAvailableHeight(bottomBar, separator)
+export const updateScrolling = function (previewState, bottomBar) {
+  const availableHeight = getAvailableHeight(bottomBar)
   const { report, scrollTop, maxScrollTop } = applyScrolling(
     previewState,
     availableHeight,
@@ -25,11 +25,10 @@ export const updateScrolling = function (previewState, bottomBar, separator) {
 }
 
 // Terminals print the row after the last newline, i.e. we need to subtract 1
-const getAvailableHeight = function (bottomBar, separator) {
+const getAvailableHeight = function (bottomBar) {
   const screenHeight = getScreenHeight()
-  const separatorHeight = getNewlineIndexes(separator).length
   const bottomBarHeight = getNewlineIndexes(bottomBar).length
-  return Math.max(screenHeight - separatorHeight - bottomBarHeight - 1, 0)
+  return Math.max(screenHeight - bottomBarHeight - 1, 0)
 }
 
 const applyScrolling = function ({ report, scrollTop }, availableHeight) {
