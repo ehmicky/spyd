@@ -2,10 +2,12 @@
 import mapObj from 'map-obj'
 import stringWidth from 'string-width'
 
-import { goodColor } from '../../utils/colors.js'
+import { padCenter } from '../../../utils/pad.js'
+import { goodColor, fieldColor } from '../../utils/colors.js'
 import { concatBlocks } from '../../utils/concat.js'
 import { getCombinationNameColor } from '../../utils/name.js'
 import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
+import { STAT_TITLES } from '../../utils/stat_titles.js'
 
 // Reporter showing boxplot of measures (min, p25, median, p75, max)
 const reportTerminal = function (
@@ -14,12 +16,19 @@ const reportTerminal = function (
 ) {
   const combinationsA = combinations.map(normalizeQuantiles)
   const { minAll, maxAll } = getMinMaxAll(combinationsA)
-  const width = getContentWidth(combinationsA, mini, screenWidth)
-  return combinationsA
-    .map((combination) =>
-      serializeBoxPlot({ combination, minAll, maxAll, width, mini }),
-    )
-    .join('\n')
+  const { titleBlockWidth, minBlockWidth, contentWidth, maxBlockWidth } =
+    getWidths(combinationsA, screenWidth, mini)
+  const header = getHeader({
+    mini,
+    titleBlockWidth,
+    minBlockWidth,
+    contentWidth,
+    maxBlockWidth,
+  })
+  const rows = combinationsA.map((combination) =>
+    serializeBoxPlot({ combination, minAll, maxAll, contentWidth, mini }),
+  )
+  return [...header, ...rows].join('\n')
 }
 
 const normalizeQuantiles = function ({ titles, stats: { quantiles } }) {
@@ -64,14 +73,54 @@ const getMaxQuantile = function ({
   return raw
 }
 
-const getContentWidth = function (combinations, mini, screenWidth) {
-  return Math.max(
-    screenWidth -
-      getTitleBlockWidth(combinations) -
-      getMinBlockWidth(combinations, mini) -
-      getMaxBlockWidth(combinations, mini),
+const getWidths = function (combinations, screenWidth, mini) {
+  const titleBlockWidth = stringWidth(getTitleBlockContents(combinations[0]))
+  const minBlockWidth = mini
+    ? 0
+    : Math.max(getMinHeader().length, getMinBlockWidth(combinations))
+  const maxBlockWidth = mini
+    ? 0
+    : Math.max(getMaxHeader().length, getMaxBlockWidth(combinations))
+  const contentWidth = Math.max(
+    screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
     1,
   )
+  return { titleBlockWidth, minBlockWidth, contentWidth, maxBlockWidth }
+}
+
+const getHeader = function ({
+  mini,
+  titleBlockWidth,
+  minBlockWidth,
+  contentWidth,
+  maxBlockWidth,
+}) {
+  if (mini) {
+    return []
+  }
+
+  const titleHeader = ' '.repeat(titleBlockWidth)
+  const minHeader = padHeaderField(getMinHeader(), minBlockWidth)
+  const boxHeader = padHeaderField(getMedianHeader(), contentWidth)
+  const maxHeader = padHeaderField(getMaxHeader(), maxBlockWidth)
+  return [`${titleHeader}${minHeader}${boxHeader}${maxHeader}`]
+}
+
+const getMinHeader = function () {
+  return addPadding(STAT_TITLES.min)
+}
+
+const getMedianHeader = function () {
+  return addPadding(STAT_TITLES.median)
+}
+
+const getMaxHeader = function () {
+  return addPadding(STAT_TITLES.max)
+}
+
+const padHeaderField = function (headerName, headerWidth) {
+  const paddedHeader = padCenter(headerName, headerWidth)
+  return fieldColor(paddedHeader)
 }
 
 const serializeBoxPlot = function ({
@@ -79,7 +128,7 @@ const serializeBoxPlot = function ({
   combination: { quantiles },
   minAll,
   maxAll,
-  width,
+  contentWidth,
   mini,
 }) {
   const titleBlock = getTitleBlock(combination, mini)
@@ -89,7 +138,7 @@ const serializeBoxPlot = function ({
   }
 
   const minBlock = getMinBlock(quantiles, mini)
-  const content = getContent({ quantiles, minAll, maxAll, mini, width })
+  const content = getContent({ quantiles, minAll, maxAll, mini, contentWidth })
   const maxBlock = getMaxBlock(quantiles, mini)
   return concatBlocks([titleBlock, minBlock, content, maxBlock])
 }
@@ -104,10 +153,6 @@ const getTitleBlock = function (combination, mini) {
   const titleBlockContents = getTitleBlockContents(combination)
   const bottomNewlines = getBottomNewlines(mini)
   return `${titleBlockContents}\n${bottomNewlines}`
-}
-
-const getTitleBlockWidth = function ([combination]) {
-  return stringWidth(getTitleBlockContents(combination))
 }
 
 const getTitleBlockContents = function (combination) {
@@ -128,9 +173,9 @@ const getBlock = function (getStat, quantiles, mini) {
 }
 
 // Retrieve the width of those blocks
-const getBlockWidth = function (getStat, combinations, mini) {
+const getBlockWidth = function (getStat, combinations) {
   const combinationsA = combinations.filter(isMeasuredCombination)
-  return mini || combinationsA.length === 0
+  return combinationsA.length === 0
     ? 0
     : Math.max(
         ...combinationsA.map((combination) =>
@@ -144,37 +189,47 @@ const getCombinationWidth = function ({ quantiles }, getStat) {
 }
 
 const getMinStat = function ({ min: { prettyPaddedColor } }) {
-  return `${PADDING}${prettyPaddedColor}${PADDING}`
+  return addPadding(prettyPaddedColor)
 }
 
 const getMaxStat = function ({ max: { prettyPaddedColor } }) {
-  return `${PADDING}${prettyPaddedColor}${PADDING}`
+  return addPadding(prettyPaddedColor)
 }
 
 const PADDING_WIDTH = 1
 const PADDING = ' '.repeat(PADDING_WIDTH)
+
+const addPadding = function (string) {
+  return `${PADDING}${string}${PADDING}`
+}
 
 const getMinBlock = getBlock.bind(undefined, getMinStat)
 const getMinBlockWidth = getBlockWidth.bind(undefined, getMinStat)
 const getMaxBlock = getBlock.bind(undefined, getMaxStat)
 const getMaxBlockWidth = getBlockWidth.bind(undefined, getMaxStat)
 
-const getContent = function ({ quantiles, minAll, maxAll, width, mini }) {
-  const positions = getPositions({ quantiles, minAll, maxAll, width })
-  const box = getBox(positions, width)
+const getContent = function ({
+  quantiles,
+  minAll,
+  maxAll,
+  contentWidth,
+  mini,
+}) {
+  const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
+  const box = getBox(positions, contentWidth)
 
   if (mini) {
     return box
   }
 
-  const labels = getLabels(positions, width)
+  const labels = getLabels(positions, contentWidth)
   return `${box}
 ${labels}`
 }
 
-const getPositions = function ({ quantiles, minAll, maxAll, width }) {
+const getPositions = function ({ quantiles, minAll, maxAll, contentWidth }) {
   return mapObj(quantiles, (name, stat) =>
-    getPosition({ name, stat, minAll, maxAll, width }),
+    getPosition({ name, stat, minAll, maxAll, contentWidth }),
   )
 }
 
@@ -187,15 +242,18 @@ const getPosition = function ({
   },
   minAll,
   maxAll,
-  width,
+  contentWidth,
 }) {
   const percentage = (raw - minAll) / (maxAll - minAll)
-  const index = Math.min(Math.floor(percentage * width), width - 1)
+  const index = Math.min(
+    Math.floor(percentage * contentWidth),
+    contentWidth - 1,
+  )
   return [name, { prettyColor, length, index }]
 }
 
 // eslint-disable-next-line complexity, max-statements
-const getBox = function ({ min, p25, median, p75, max }, width) {
+const getBox = function ({ min, p25, median, p75, max }, contentWidth) {
   const leftSpaceWidth = min.index
   const leftSpace = ' '.repeat(leftSpaceWidth)
   const minCharacter = min.index === p25.index ? '' : MIN_CHARACTER
@@ -211,7 +269,7 @@ const getBox = function ({ min, p25, median, p75, max }, width) {
   const rightLineWidth = max.index - p75.index - maxCharacter.length
   const rightLine =
     rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
-  const rightSpaceWidth = width - max.index - 1
+  const rightSpaceWidth = contentWidth - max.index - 1
   const rightSpace = ' '.repeat(rightSpaceWidth)
   return `${leftSpace}${minCharacter}${leftLine}${p25Box}${medianCharacter}${p75Box}${rightLine}${maxCharacter}${rightSpace}`
 }
@@ -223,13 +281,13 @@ const BOX_CHARACTER = '\u2591'
 const MEDIAN_CHARACTER = '\u2588'
 const MAX_CHARACTER = '\u2524'
 
-const getLabels = function ({ median }, width) {
+const getLabels = function ({ median }, contentWidth) {
   const medianLabelIndex = Math.min(
     Math.max(
       median.index - Math.max(Math.floor((median.length - 1) / 2), 0),
       0,
     ),
-    width - median.length,
+    contentWidth - median.length,
   )
   const medianLabelLeft = ' '.repeat(medianLabelIndex)
   return `${medianLabelLeft}${median.prettyColor}`
