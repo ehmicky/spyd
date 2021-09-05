@@ -9,7 +9,7 @@ export const getContent = function ({
   width,
   mini,
 }) {
-  const { positions, medianIndex, medianMaxWidth } = getMedianPositions(
+  const { position, medianIndex, medianMaxWidth } = getMedianPositions(
     stats,
     width,
   )
@@ -25,7 +25,7 @@ export const getContent = function ({
     return rows
   }
 
-  const abscissa = getAbscissa(width, positions)
+  const abscissa = getAbscissa(width, position)
   return `${rows}
 ${abscissa}`
 }
@@ -38,7 +38,7 @@ const getMedianPositions = function ({ median, min, max }, width) {
   const medianPercentage =
     max.raw === min.raw ? 0 : (median.raw - min.raw) / (max.raw - min.raw)
   const medianIndex = Math.round((width - 1) * medianPercentage)
-  const positions = [{ ...median, index: medianIndex }]
+  const position = { ...median, index: medianIndex }
   const medianMaxWidth = Math.max(medianIndex, width - 1 - medianIndex)
-  return { positions, medianIndex, medianMaxWidth }
+  return { position, medianIndex, medianMaxWidth }
 }

@@ -4,17 +4,15 @@ import { TICK_MIDDLE, HORIZONTAL_LINE } from './characters.js'
 
 // Retrieve the horizontal line and the abscissa below the main content.
 // Includes the tick above the median and its label.
-export const getAbscissa = function (width, positions) {
-  const bottomLine = getBottomLine(width, positions)
-  const labels = getLabels(width, positions)
+export const getAbscissa = function (width, position) {
+  const bottomLine = getBottomLine(width, position)
+  const labels = getLabels(width, position)
   return `${separatorColor(bottomLine)}
 ${labels}`
 }
 
-const getBottomLine = function (width, positions) {
-  return positions
-    .reduce(addTick.bind(undefined, width), '')
-    .padEnd(width, HORIZONTAL_LINE)
+const getBottomLine = function (width, position) {
+  return addTick(width, '', position).padEnd(width, HORIZONTAL_LINE)
 }
 
 const addTick = function (width, bottomLine, { index }) {
@@ -24,10 +22,11 @@ const addTick = function (width, bottomLine, { index }) {
     : `${bottomLine}${HORIZONTAL_LINE.repeat(lineWidth)}${TICK_MIDDLE}`
 }
 
-const getLabels = function (width, positions) {
-  const { labels, labelsLength } = positions.reduce(
-    addLabel.bind(undefined, width),
+const getLabels = function (width, position) {
+  const { labels, labelsLength } = addLabel(
+    width,
     { labelsLength: 0, labels: '' },
+    position,
   )
   const labelsA = trimWidth(labels, labelsLength, width)
   return labelsA
