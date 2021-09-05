@@ -61,8 +61,6 @@ tasks is much slower than the later ones.
 _Solution_: Measures that are extremely slow compared to the others are
 discarded.
 
-Also, medians are used instead of arithmetic means.
-
 ## Measuring cost
 
 _Problem_: Measuring typically requires retrieving timestamps. Doing so
