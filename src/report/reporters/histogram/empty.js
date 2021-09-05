@@ -1,7 +1,5 @@
 import { getCombNamePaddedColor } from '../../utils/name.js'
 
-import { ABSCISSA_BOTTOM_HEIGHT, ABSCISSA_LABELS_HEIGHT } from './abscissa.js'
-
 // Shown when there is the combination has not been measured yet
 export const getEmptyCombination = function (combination, height, mini) {
   const histogramLines = getHistogramLines(height, mini)
@@ -15,7 +13,13 @@ const getHistogramLines = function (height, mini) {
   return '\n'.repeat(topNewlinesHeight)
 }
 
+// How many terminal lines the bottom line takes
+const ABSCISSA_BOTTOM_HEIGHT = 1
+
 const getLabelsLines = function (mini) {
   const bottomNewlinesHeight = mini ? 0 : ABSCISSA_LABELS_HEIGHT
   return '\n'.repeat(bottomNewlinesHeight)
 }
+
+// How many terminal lines the labels take
+const ABSCISSA_LABELS_HEIGHT = 1

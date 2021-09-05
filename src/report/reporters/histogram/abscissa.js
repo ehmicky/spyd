@@ -19,13 +19,34 @@ export const getAbscissa = function ({
   min,
   max,
 }) {
-  const titlesSpace = ' '.repeat(titlesWidth)
-  const minSpace = ' '.repeat(minBlockWidth)
+  const bottomFullLine = getBottomFullLine({
+    combinationTitles,
+    contentWidth,
+    medianIndex,
+    min,
+    max,
+  })
+  const labelLine = getLabelLine({
+    titlesWidth,
+    minBlockWidth,
+    contentWidth,
+    median,
+    medianIndex,
+  })
+  return `${bottomFullLine}${labelLine}`
+}
+
+const getBottomFullLine = function ({
+  combinationTitles,
+  contentWidth,
+  medianIndex,
+  min,
+  max,
+}) {
   const paddedMin = getPaddedMin(min)
-  const paddedMax = getPaddedMax(max)
   const bottomLine = separatorColor(getBottomLine(contentWidth, medianIndex))
-  const label = getLabel(contentWidth, median, medianIndex)
-  return `${combinationTitles}${paddedMin}${bottomLine}${paddedMax}\n${titlesSpace}${minSpace}${label}\n`
+  const paddedMax = getPaddedMax(max)
+  return `${combinationTitles}${paddedMin}${bottomLine}${paddedMax}\n`
 }
 
 const getPaddedMin = function ({ prettyPaddedColor }) {
@@ -52,6 +73,19 @@ const getBottomLine = function (contentWidth, medianIndex) {
   return `${startPadding}${TICK_MIDDLE}`.padEnd(contentWidth, HORIZONTAL_LINE)
 }
 
+const getLabelLine = function ({
+  titlesWidth,
+  minBlockWidth,
+  contentWidth,
+  median,
+  medianIndex,
+}) {
+  const titlesSpace = ' '.repeat(titlesWidth)
+  const minSpace = ' '.repeat(minBlockWidth)
+  const label = getLabel(contentWidth, median, medianIndex)
+  return `${titlesSpace}${minSpace}${label}\n`
+}
+
 const getLabel = function (contentWidth, median, medianIndex) {
   const labelPaddingWidth = Math.min(
     medianIndex,
@@ -60,8 +94,3 @@ const getLabel = function (contentWidth, median, medianIndex) {
   const labelPadding = ' '.repeat(labelPaddingWidth)
   return `${labelPadding}${median.prettyColor}`
 }
-
-// How many terminal lines the bottom line takes
-export const ABSCISSA_BOTTOM_HEIGHT = 1
-// How many terminal lines the labels take
-export const ABSCISSA_LABELS_HEIGHT = 1
