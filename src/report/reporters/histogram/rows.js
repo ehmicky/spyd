@@ -47,8 +47,10 @@ const getHistogramColumns = function ({
 }) {
   const medianMaxWidth = Math.max(medianIndex, contentWidth - 1 - medianIndex)
   const maxHeight = getMaxHeight(frequencies, height)
-  return frequencies.map(
-    getHistogramColumn.bind(undefined, {
+  return frequencies.map((frequency, columnIndex) =>
+    getHistogramColumn({
+      frequency,
+      columnIndex,
       maxHeight,
       medianIndex,
       medianMaxWidth,
@@ -64,11 +66,13 @@ const getMaxHeight = function (frequencies, height) {
 // Retrieve the height of each column.
 // `heightLevel` is the integer part (full character) and `charIndex` is the
 // fractional part (final character on top of column).
-const getHistogramColumn = function (
-  { maxHeight, medianIndex, medianMaxWidth },
+const getHistogramColumn = function ({
   frequency,
   columnIndex,
-) {
+  maxHeight,
+  medianIndex,
+  medianMaxWidth,
+}) {
   const columnHeight = maxHeight * frequency
   const heightLevel = Math.floor(columnHeight)
   const charIndex = Math.ceil(
