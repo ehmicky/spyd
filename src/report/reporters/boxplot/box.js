@@ -27,14 +27,14 @@ const getLeftSpace = function (min, minBlockWidth, mini) {
 const getMinLine = function (min, q1) {
   const leftLine = fillCharacter(LINE_CHARACTER, min, q1)
   const leftLineA =
-    leftLine === '' ? leftLine : MIN_CHARACTER + leftLine.slice(1)
+    leftLine === '' ? leftLine : `${MIN_CHARACTER}${leftLine.slice(1)}`
   return separatorColor(leftLineA)
 }
 
 const getMaxLine = function (q3, max) {
   const rightLine = fillCharacter(LINE_CHARACTER, q3, max)
   const rightLineA =
-    rightLine === '' ? rightLine : rightLine.slice(0, -1) + MAX_CHARACTER
+    rightLine === '' ? rightLine : `${rightLine.slice(0, -1)}${MAX_CHARACTER}`
   return separatorColor(rightLineA)
 }
 
