@@ -9,7 +9,7 @@ import { getCombinationNameColor } from '../../utils/name.js'
 import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 
-// Reporter showing boxplot of measures (min, p25, median, p75, max)
+// Reporter showing boxplot of measures (min, q1, median, q3, max)
 const reportTerminal = function (
   { combinations, screenWidth },
   { mini = false },
@@ -51,7 +51,7 @@ const normalizeQuantiles = function ({ titles, stats: { quantiles } }) {
   return { titles, quantiles: quantilesA }
 }
 
-const QUANTILES = { min: 0, p25: 25, median: 50, p75: 75, max: 100 }
+const QUANTILES = { min: 0, q1: 25, median: 50, q3: 75, max: 100 }
 
 const getMinMaxAll = function (combinations) {
   const combinationsA = combinations.filter(isMeasuredCombination)
@@ -283,25 +283,25 @@ const getPosition = function ({
 }
 
 // eslint-disable-next-line complexity, max-statements
-const getBox = function ({ min, p25, median, p75, max }, contentWidth) {
+const getBox = function ({ min, q1, median, q3, max }, contentWidth) {
   const leftSpaceWidth = min.index
   const leftSpace = ' '.repeat(leftSpaceWidth)
-  const minCharacter = min.index === p25.index ? '' : MIN_CHARACTER
-  const leftLineWidth = p25.index - min.index - minCharacter.length
+  const minCharacter = min.index === q1.index ? '' : MIN_CHARACTER
+  const leftLineWidth = q1.index - min.index - minCharacter.length
   const leftLine =
     leftLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(leftLineWidth)
-  const p25BoxWidth = median.index - p25.index
-  const p25Box = p25BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(p25BoxWidth)
+  const q1BoxWidth = median.index - q1.index
+  const q1Box = q1BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(q1BoxWidth)
   const medianCharacter = goodColor(MEDIAN_CHARACTER)
-  const p75BoxWidth = p75.index - median.index
-  const p75Box = p75BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(p75BoxWidth)
-  const maxCharacter = p75.index === max.index ? '' : MAX_CHARACTER
-  const rightLineWidth = max.index - p75.index - maxCharacter.length
+  const q3BoxWidth = q3.index - median.index
+  const q3Box = q3BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(q3BoxWidth)
+  const maxCharacter = q3.index === max.index ? '' : MAX_CHARACTER
+  const rightLineWidth = max.index - q3.index - maxCharacter.length
   const rightLine =
     rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
   const rightSpaceWidth = contentWidth - max.index - 1
   const rightSpace = ' '.repeat(rightSpaceWidth)
-  return `${leftSpace}${minCharacter}${leftLine}${p25Box}${medianCharacter}${p75Box}${rightLine}${maxCharacter}${rightSpace}`
+  return `${leftSpace}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${rightSpace}`
 }
 
 // Works on most terminals
