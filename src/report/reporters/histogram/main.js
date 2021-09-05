@@ -7,6 +7,12 @@ import { getHistogramRows } from './rows.js'
 import { getWidths } from './width.js'
 
 // Reporter showing distribution of measures with a histogram
+// We show the `min`, `max` and `median`.
+// The `median` is shown instead of the `mean` because:
+//  - This reporter is meant to see the distribution, not to compare
+//    combinations' means
+//  - This shows consistent results with other distribution-based reporters
+//    such as `boxplot`
 // Configuration properties:
 //  - `mini` (default: false): hide `min`, `median` and `max` labels
 const reportTerminal = function (
