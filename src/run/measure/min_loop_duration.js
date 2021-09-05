@@ -161,8 +161,7 @@ const getMinMeasureCost = function (measures) {
 // How many times slower each repeat loop must last compared to `measureCost`.
 // A lower value makes loops duration too close to `measureCost`, which
 // decreases the quality and precision of all stats.
-// A higher value makes the metrics rely on the arithmetic mean more than the
-// median, which also decrease the stats quality, although not as much.
+// A higher value decrease the stats quality, although not as much.
 // Therefore, we use the smallest value that removes the `measureCost` influence
 // enough.
 const MEASURE_COST_RATIO = 1e2
@@ -183,7 +182,7 @@ const getMinResolution = function (measures) {
 
 // Like `MEASURE_COST_RATIO` but for `resolution`.
 // We use a higher ratio because:
-//  - `measureCost` influence is proportional to its stdev, not its median.
+//  - `measureCost` influence is proportional to its stdev, not its mean.
 //    However, for resolution, the whole unit granularity has an impact.
 //  - When `measureCost` is close to `resolution`, any variation of it is
 //    coarser. For example 2ns +|-1ns is 50% stdev.
