@@ -24,6 +24,24 @@ import { getMean } from './sum.js'
 //     - Including the minimum time resolution in `minLoopDuration`
 //     - Multiplying `repeat` when the `sampleMedian` is `0`, including during
 //       calibration
+// The main central tendency statistic meant to be reported is the arithmetic
+// mean, not the median because:
+//  - Users are likely to repeat a task in real code, i.e. are interested in the
+//    long tail of slower durations.
+//  - This works better with small integer measures, e.g. with the `manual` mode
+//  - This discourages users to manually loop inside their tasks, since we
+//    already do it for them.
+//  - The `stdev` and `moe` formulas are different and more complex for `median`
+//  - Other benchmark tools tend to use the arithmetic mean, so using it too
+//    results in:
+//     - Less potential for debate about tools' statistical choice
+//     - Less unexpected change of results when switching from another tool
+//       to this one
+//  - Since we remove outliers, the `mean` ends up having a similar `stdev` as
+//    the `median` most of the times
+//     - Except for very skewed distributions
+//     - However, since we use a `rmoe` threshold, this only increases the
+//       benchmark's duration, not its precision
 // We do not compute the mode because:
 //  - Reporting it together with the mean might make it look like it is as
 //    important. However, the mean is a far more useful statistic.
