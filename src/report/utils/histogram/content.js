@@ -1,5 +1,5 @@
 import { getAbscissa } from './abscissa.js'
-import { getMedianPositions } from './positions.js'
+import { getMeanPositions } from './positions.js'
 import { getHistogramRows } from './rows.js'
 
 // Retrieve histogram main content
@@ -10,10 +10,7 @@ export const getContent = function ({
   width,
   showStats,
 }) {
-  const { positions, meanIndex, meanMaxWidth } = getMedianPositions(
-    stats,
-    width,
-  )
+  const { positions, meanIndex, meanMaxWidth } = getMeanPositions(stats, width)
   const rows = getHistogramRows({
     histogram,
     width,

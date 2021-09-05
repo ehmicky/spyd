@@ -3,7 +3,7 @@ import { getMean } from '../../../stats/sum.js'
 // Compute positions of the mean ticks.
 // There can be either a single (`mean`) or two (`meanMin|meanMax`).
 // Also computes `meanIndex|meanMaxWidth` used for the color gradient.
-export const getMedianPositions = function (
+export const getMeanPositions = function (
   { mean, meanMin, meanMax, min, max },
   width,
 ) {
