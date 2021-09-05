@@ -9,11 +9,11 @@ export const getBox = function ({
 }) {
   const leftSpace = getLeftSpace(min, minBlockWidth, mini)
   const minPadded = getPaddedStat(min.prettyColor, mini)
-  const minLine = getMinLine(min, q1)
+  const minLine = separatorColor(getMinLine(min, q1))
   const q1Box = fillCharacter(BOX_CHARACTER, q1, median)
   const medianCharacter = goodColor(MEDIAN_CHARACTER)
   const q3Box = fillCharacter(BOX_CHARACTER, median, q3)
-  const maxLine = getMaxLine(q3, max)
+  const maxLine = separatorColor(getMaxLine(q3, max))
   const maxPadded = getPaddedStat(max.prettyColor, mini)
   return `${combinationTitles}${leftSpace}${minPadded}${minLine}${q1Box}${medianCharacter}${q3Box}${maxLine}${maxPadded}\n`
 }
@@ -25,16 +25,14 @@ const getLeftSpace = function (min, minBlockWidth, mini) {
 
 const getMinLine = function (min, q1) {
   const leftLine = fillCharacter(LINE_CHARACTER, min, q1)
-  const leftLineA =
-    leftLine === '' ? leftLine : `${MIN_CHARACTER}${leftLine.slice(1)}`
-  return separatorColor(leftLineA)
+  return leftLine === '' ? leftLine : `${MIN_CHARACTER}${leftLine.slice(1)}`
 }
 
 const getMaxLine = function (q3, max) {
   const rightLine = fillCharacter(LINE_CHARACTER, q3, max)
-  const rightLineA =
-    rightLine === '' ? rightLine : `${rightLine.slice(0, -1)}${MAX_CHARACTER}`
-  return separatorColor(rightLineA)
+  return rightLine === ''
+    ? rightLine
+    : `${rightLine.slice(0, -1)}${MAX_CHARACTER}`
 }
 
 const fillCharacter = function (character, start, end) {
