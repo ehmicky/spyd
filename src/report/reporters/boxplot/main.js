@@ -109,7 +109,7 @@ const serializeBoxPlot = function ({
   }
 
   const labels = getLabels(positions, minBlockWidth, contentWidth)
-  return `${box}${labels}\n`
+  return `${box}${labels}`
 }
 
 const getTitleBlockWidth = function ([combination]) {
@@ -216,7 +216,7 @@ const getLabels = function ({ median }, minBlockWidth, contentWidth) {
       contentWidth - median.length,
     ) + minBlockWidth
   const medianLabelLeft = ' '.repeat(medianLabelIndex)
-  return `${medianLabelLeft}${median.prettyColor}`
+  return `${medianLabelLeft}${median.prettyColor}\n`
 }
 
 export const boxplot = { reportTerminal }
