@@ -13,13 +13,12 @@ export const getHistogramRows = function ({
   width,
   height,
   medianIndex,
-  medianMaxWidth,
 }) {
   const frequencies = getFrequencies(histogram, width)
   const columns = getHistogramColumns({
     frequencies,
     medianIndex,
-    medianMaxWidth,
+    width,
     height,
   })
   return Array.from({ length: height }, (_, index) =>
@@ -31,9 +30,10 @@ export const getHistogramRows = function ({
 const getHistogramColumns = function ({
   frequencies,
   medianIndex,
-  medianMaxWidth,
+  width,
   height,
 }) {
+  const medianMaxWidth = Math.max(medianIndex, width - 1 - medianIndex)
   const maxHeight = getMaxHeight(frequencies, height)
   return frequencies.map(
     getHistogramColumn.bind(undefined, {
