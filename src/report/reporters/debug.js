@@ -6,9 +6,9 @@ import { getTables } from '../utils/table.js'
 // Debugging reporter only meant for development purpose
 const reportTerminal = function ({ combinations, screenWidth }) {
   const statNames = getStatNames(combinations)
-  const headerRow = getHeaderRow(statNames)
+  const headerRows = getHeaderRow(statNames)
   const bodyRows = getBodyRows(combinations, statNames)
-  return getTables([headerRow, ...bodyRows], screenWidth)
+  return getTables([...headerRows, ...bodyRows], screenWidth)
 }
 
 // Retrieve the list of columns, each corresponding to a stat.
@@ -44,7 +44,9 @@ const hasStat = function (combinations, statName) {
 }
 
 const getHeaderRow = function (statNames) {
-  return statNames.length === 0 ? [] : ['', ...statNames.map(getHeaderName)]
+  const firstRow =
+    statNames.length === 0 ? [] : ['', ...statNames.map(getHeaderName)]
+  return [firstRow, []]
 }
 
 const getHeaderName = function (statName) {
