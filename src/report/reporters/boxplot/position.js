@@ -7,22 +7,21 @@ export const getPositions = function ({
   maxAll,
   contentWidth,
 }) {
-  return mapObj(quantiles, (name, stat) =>
-    getPosition({ name, stat, minAll, maxAll, contentWidth }),
-  )
+  return mapObj(quantiles, (name, stat) => [
+    name,
+    getPosition(stat, { minAll, maxAll, contentWidth }),
+  ])
 }
 
-const getPosition = function ({
-  name,
-  stat: { raw, pretty, prettyColor },
-  minAll,
-  maxAll,
-  contentWidth,
-}) {
+const getPosition = function (
+  { raw, pretty, prettyColor },
+  { minAll, maxAll, contentWidth },
+) {
+  const index = getIndex({ raw, minAll, maxAll, contentWidth })
+  return { pretty, prettyColor, index }
+}
+
+const getIndex = function ({ raw, minAll, maxAll, contentWidth }) {
   const percentage = maxAll === minAll ? 0 : (raw - minAll) / (maxAll - minAll)
-  const index = Math.min(
-    Math.floor(percentage * contentWidth),
-    contentWidth - 1,
-  )
-  return [name, { pretty, prettyColor, index }]
+  return Math.min(Math.floor(percentage * contentWidth), contentWidth - 1)
 }
