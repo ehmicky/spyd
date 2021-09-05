@@ -19,7 +19,7 @@ import { updateCombinationEnd } from './duration.js'
 //     - And the size of table should not change between previews.
 // When uncalibrated, we skip it since no stats would be reported anyway.
 //  - We wait until calibration before removing the start description.
-//  - We also never report nor stop measuring when `median` is `0`
+//  - We also never report nor stop measuring when `mean` is `0`
 export const updatePreviewStats = async function ({
   stats,
   previewState,
@@ -38,8 +38,8 @@ export const updatePreviewStats = async function ({
   await updatePreview(previewState)
 }
 
-const shouldSkipPreview = function ({ quiet }, { samples, median }) {
-  return quiet || samples === 0 || median === 0
+const shouldSkipPreview = function ({ quiet }, { samples, mean }) {
+  return quiet || samples === 0 || mean === 0
 }
 
 const updateResultStats = async function ({
