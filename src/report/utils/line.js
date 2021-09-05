@@ -18,4 +18,4 @@ export const getFullLineSeparator = function () {
 }
 
 // Works with all terminals
-const FULL_HORIZONTAL_LINE = '\u2500'
+const FULL_HORIZONTAL_LINE = '\u2501'
