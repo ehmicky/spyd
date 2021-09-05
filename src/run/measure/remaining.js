@@ -8,12 +8,12 @@ import { hasMaxMeasures } from '../sample/max_measures.js'
 //  - Until a specific `rmoe` (as defined by `precision`) has been reached
 //    otherwise
 // We always wait for calibration, except with the `dev` command.
-// `median: 0`:
+// `mean: 0`:
 //  - Should very rarely happen after calibration since it requires all of:
 //     - Very important change of performance between samples
-//     - Task real median is very close to time resolution
+//     - Task real mean is very close to time resolution
 //     - The `repeat` logic is failing to correct it
-//  - We never stop measuring since `median: 0` is not useful and should not be
+//  - We never stop measuring since `mean: 0` is not useful and should not be
 //    saved nor reported (including in previews)
 // Measuring is interrupted when:
 //  - User manually stopped it
@@ -25,7 +25,7 @@ import { hasMaxMeasures } from '../sample/max_measures.js'
 //  - Any timeout might trigger or not depending on the machine speed, which
 //    means a benchmark might succeed or not depending on the machine.
 export const isRemainingCombination = function (
-  { sampleState: { allSamples, measures }, stats: { median, loops, rmoe } },
+  { sampleState: { allSamples, measures }, stats: { mean, loops, rmoe } },
   { precisionTarget, stage, stopState: { stopped } },
 ) {
   if (stopped) {
@@ -36,7 +36,7 @@ export const isRemainingCombination = function (
     return allSamples === 0
   }
 
-  if (median === 0) {
+  if (mean === 0) {
     return true
   }
 
