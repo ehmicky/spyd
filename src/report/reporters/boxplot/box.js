@@ -20,8 +20,7 @@ export const getBox = function ({
 
 const getLeftSpace = function (min, minBlockWidth, mini) {
   const minWidth = getPaddedStat(min.pretty, mini).length
-  const leftSpaceWidth = Math.max(minBlockWidth + min.index - minWidth, 0)
-  return ' '.repeat(leftSpaceWidth)
+  return repeatCharacter(' ', minBlockWidth + min.index - minWidth)
 }
 
 const getMinLine = function (min, q1) {
@@ -39,8 +38,11 @@ const getMaxLine = function (q3, max) {
 }
 
 const fillCharacter = function (character, start, end) {
-  const width = Math.max(end.index - start.index, 0)
-  return character.repeat(width)
+  return repeatCharacter(character, end.index - start.index)
+}
+
+const repeatCharacter = function (character, width) {
+  return character.repeat(Math.max(width, 0))
 }
 
 // Works on most terminals
