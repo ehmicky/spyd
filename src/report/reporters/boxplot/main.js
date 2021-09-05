@@ -26,7 +26,15 @@ const reportTerminal = function (
     maxBlockWidth,
   })
   const rows = combinationsA.map((combination) =>
-    serializeBoxPlot({ combination, minAll, maxAll, contentWidth, mini }),
+    serializeBoxPlot({
+      combination,
+      minAll,
+      maxAll,
+      minBlockWidth,
+      contentWidth,
+      maxBlockWidth,
+      mini,
+    }),
   )
   return [...header, ...rows].join('\n')
 }
@@ -121,7 +129,9 @@ const serializeBoxPlot = function ({
   combination: { quantiles },
   minAll,
   maxAll,
+  minBlockWidth,
   contentWidth,
+  maxBlockWidth,
   mini,
 }) {
   const titleBlock = getTitleBlock(combination, mini)
@@ -140,14 +150,14 @@ const serializeBoxPlot = function ({
     return concatBlocks([titleBlock, miniContent])
   }
 
-  const minBlock = getMinMaxBlock(quantiles, 'min')
+  const minBlock = getMinMaxBlock(quantiles, minBlockWidth, 'min')
   const fullContent = getFullContent({
     quantiles,
     minAll,
     maxAll,
     contentWidth,
   })
-  const maxBlock = getMinMaxBlock(quantiles, 'max')
+  const maxBlock = getMinMaxBlock(quantiles, maxBlockWidth, 'max')
   return concatBlocks([titleBlock, minBlock, fullContent, maxBlock])
 }
 
@@ -193,8 +203,14 @@ const getSingleMinMaxWidth = function (quantiles, statName) {
 }
 
 // Retrieve the blocks that show the min|max on the left|right
-const getMinMaxBlock = function (quantiles, statName) {
-  return addPadding(quantiles[statName].prettyPaddedColor)
+const getMinMaxBlock = function (quantiles, blockWidth, statName) {
+  const paddingWidth = Math.max(
+    blockWidth - getSingleMinMaxWidth(quantiles, statName),
+    0,
+  )
+  const padding = ' '.repeat(paddingWidth)
+  const statValue = addPadding(quantiles[statName].prettyPaddedColor)
+  return `${padding}${statValue}`
 }
 
 const PADDING_WIDTH = 1
