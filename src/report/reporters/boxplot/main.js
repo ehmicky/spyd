@@ -14,7 +14,7 @@ const reportTerminal = function (
 ) {
   const combinationsA = combinations.map(normalizeQuantiles)
   const { minAll, maxAll } = getMinMaxAll(combinationsA)
-  const { minBlockWidth, contentWidth, maxBlockWidth } = getWidths(
+  const { minBlockWidth, contentWidth } = getWidths(
     combinationsA,
     screenWidth,
     mini,
@@ -27,7 +27,6 @@ const reportTerminal = function (
         maxAll,
         minBlockWidth,
         contentWidth,
-        maxBlockWidth,
         mini,
       }),
     )
@@ -81,7 +80,7 @@ const getWidths = function (combinations, screenWidth, mini) {
     screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
     1,
   )
-  return { minBlockWidth, contentWidth, maxBlockWidth }
+  return { minBlockWidth, contentWidth }
 }
 
 const getMinMaxFullWidth = function (combinations, mini, statName) {
@@ -95,7 +94,6 @@ const serializeBoxPlot = function ({
   maxAll,
   minBlockWidth,
   contentWidth,
-  maxBlockWidth,
   mini,
 }) {
   const titleBlock = getTitleBlock(combination, mini)
@@ -104,46 +102,15 @@ const serializeBoxPlot = function ({
     return titleBlock
   }
 
-  const blocks = getBlocks({
-    quantiles,
-    minAll,
-    maxAll,
-    minBlockWidth,
-    contentWidth,
-    maxBlockWidth,
-    mini,
-  })
-  return concatBlocks([titleBlock, ...blocks])
-}
+  const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
+  const box = getBox(positions, minBlockWidth)
 
-const getBlocks = function ({
-  quantiles,
-  minAll,
-  maxAll,
-  minBlockWidth,
-  contentWidth,
-  maxBlockWidth,
-  mini,
-}) {
   if (mini) {
-    const miniContent = getMiniContent({
-      quantiles,
-      minAll,
-      maxAll,
-      contentWidth,
-    })
-    return [miniContent]
+    return concatBlocks([titleBlock, box])
   }
 
-  const minBlock = getMinMaxBlock(quantiles, minBlockWidth, 'min')
-  const fullContent = getFullContent({
-    quantiles,
-    minAll,
-    maxAll,
-    contentWidth,
-  })
-  const maxBlock = getMinMaxBlock(quantiles, maxBlockWidth, 'max')
-  return [minBlock, fullContent, maxBlock]
+  const content = addLabels({ positions, minBlockWidth, contentWidth, box })
+  return concatBlocks([titleBlock, content])
 }
 
 const getTitleBlockWidth = function ([combination]) {
@@ -181,39 +148,7 @@ const getSingleMinMaxWidth = function (quantiles, statName) {
 }
 
 const getPaddedMinMaxWidth = function (quantiles, statName) {
-  return addPadding(quantiles[statName].prettyPadded).length
-}
-
-// Retrieve the blocks that show the min|max on the left|right
-const getMinMaxBlock = function (quantiles, blockWidth, statName) {
-  const paddingWidth = Math.max(
-    blockWidth - getPaddedMinMaxWidth(quantiles, statName),
-    0,
-  )
-  const padding = ' '.repeat(paddingWidth)
-  const statValue = addPadding(quantiles[statName].prettyPaddedColor)
-  return `${padding}${statValue}`
-}
-
-const PADDING_WIDTH = 1
-const PADDING = ' '.repeat(PADDING_WIDTH)
-
-const addPadding = function (string) {
-  return `${PADDING}${string}${PADDING}`
-}
-
-const getFullContent = function ({ quantiles, minAll, maxAll, contentWidth }) {
-  const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
-  const box = getBox(positions, contentWidth)
-  const labels = getLabels(positions, contentWidth)
-  return `${box}
-${labels}`
-}
-
-const getMiniContent = function ({ quantiles, minAll, maxAll, contentWidth }) {
-  const positions = getPositions({ quantiles, minAll, maxAll, contentWidth })
-  const box = getBox(positions, contentWidth)
-  return box
+  return addPadding(quantiles[statName].pretty).length
 }
 
 const getPositions = function ({ quantiles, minAll, maxAll, contentWidth }) {
@@ -242,9 +177,10 @@ const getPosition = function ({
 }
 
 // eslint-disable-next-line complexity, max-statements
-const getBox = function ({ min, q1, median, q3, max }, contentWidth) {
-  const leftSpaceWidth = min.index
+const getBox = function ({ min, q1, median, q3, max }, minBlockWidth) {
+  const leftSpaceWidth = minBlockWidth + min.index - min.length - PADDING_WIDTH
   const leftSpace = ' '.repeat(leftSpaceWidth)
+  const minPadded = addPadding(min.prettyColor)
   const minCharacter = min.index === q1.index ? '' : MIN_CHARACTER
   const leftLineWidth = q1.index - min.index - minCharacter.length
   const leftLine =
@@ -258,9 +194,8 @@ const getBox = function ({ min, q1, median, q3, max }, contentWidth) {
   const rightLineWidth = max.index - q3.index - maxCharacter.length
   const rightLine =
     rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
-  const rightSpaceWidth = contentWidth - max.index - 1
-  const rightSpace = ' '.repeat(rightSpaceWidth)
-  return `${leftSpace}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${rightSpace}`
+  const maxPadded = addPadding(max.prettyColor)
+  return `${leftSpace}${minPadded}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${maxPadded}`
 }
 
 // Works on most terminals
@@ -270,14 +205,30 @@ const BOX_CHARACTER = '\u2591'
 const MEDIAN_CHARACTER = '\u2588'
 const MAX_CHARACTER = '\u2524'
 
-const getLabels = function ({ median }, contentWidth) {
-  const medianLabelIndex = Math.min(
-    Math.max(
-      median.index - Math.max(Math.floor((median.length - 1) / 2), 0),
-      0,
-    ),
-    contentWidth - median.length,
-  )
+const PADDING_WIDTH = 1
+const PADDING = ' '.repeat(PADDING_WIDTH)
+
+const addPadding = function (string) {
+  return `${PADDING}${string}${PADDING}`
+}
+
+const addLabels = function ({
+  positions: { median },
+  minBlockWidth,
+  contentWidth,
+  box,
+}) {
+  const labels = getLabels(median, minBlockWidth, contentWidth)
+  return `${box}\n${labels}`
+}
+
+const getLabels = function (median, minBlockWidth, contentWidth) {
+  const leftShift = Math.max(Math.floor((median.length - 1) / 2), 0)
+  const medianLabelIndex =
+    Math.min(
+      Math.max(median.index - leftShift, 0),
+      contentWidth - median.length,
+    ) + minBlockWidth
   const medianLabelLeft = ' '.repeat(medianLabelIndex)
   return `${medianLabelLeft}${median.prettyColor}`
 }
