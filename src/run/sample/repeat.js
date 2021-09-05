@@ -9,11 +9,6 @@
 // It repeats the task without the `measureCost` and performs an arithmetic mean
 // We purposely avoid using the expected duration left so that increasing it
 // does not change measures.
-// We use the `sampleMedian` instead of `stats.median`:
-//  - So that `repeat` adjusts to slowdowns of the task (for example due to
-//    competing processes).
-//  - It makes the initial calibration phase shorter. This leads to more
-//    stable `max` and `stdev` stats.
 // When estimating `measureCost`, we should not use a repeat loop since
 // `measureCost` only happens once per repeat loop.
 // Iterating the `repeat` loop adds a small duration, due to the duration to

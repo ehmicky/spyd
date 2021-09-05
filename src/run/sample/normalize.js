@@ -2,6 +2,17 @@ import { getSortedMedian } from '../../stats/quantile.js'
 import { sortFloats } from '../../stats/sort.js'
 
 // Normalize `sampleMeasures` by dividing `repeat` and sorting.
+// We use the `sampleMedian` instead of `stats.median`:
+//  - So that `repeat` adjusts to slowdowns of the task (for example due to
+//    competing processes).
+//  - It makes the initial calibration phase shorter. This leads to more
+//    stable `max` and `stdev` stats.
+// We use the `sampleMedian` instead of the `sampleMean` because:
+//  - The duration of faster measures is more important than slower here when
+//    it comes to `repeat` callibration, since those are the ones being fixed
+//    by it.
+//  - It is more stable
+//  - It is faster to compute since we need to sort `sampleMeasures` anyway
 export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
   const sampleMeasuresA = normalizeRepeat(sampleMeasures, repeat)
   sortFloats(sampleMeasuresA)
