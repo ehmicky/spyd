@@ -4,6 +4,7 @@ import { groupBy } from '../utils/group.js'
 
 import { FORMATS } from './formats/list.js'
 import { handleContent } from './handle.js'
+import { getLineSeparator } from './utils/line.js'
 
 // Remove empty contents, join them by output, fix colors and whitespaces
 export const finalizeContents = function (contents) {
@@ -22,7 +23,8 @@ const hasContent = function ({ content }) {
 // Also add footer and padding.
 const joinContents = function (contents) {
   const [{ output, format, colors, footerString }] = contents
-  const content = contents.map(getContentProperty).join('\n\n')
+  const joinSeparator = `\n${getLineSeparator()}\n`
+  const content = contents.map(getContentProperty).join(joinSeparator)
   const contentA = `${content}${footerString}`
   return { content: contentA, output, format, colors }
 }

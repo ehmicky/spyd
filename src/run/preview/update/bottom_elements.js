@@ -1,10 +1,12 @@
-import { getScreenWidth, getPaddedScreenWidth } from '../../../report/tty.js'
+import { getPaddedScreenWidth } from '../../../report/tty.js'
 import {
   goodColor,
   separatorColor,
   noteColor,
   titleColor,
 } from '../../../report/utils/colors.js'
+import { PADDING_SIZE } from '../../../report/utils/indent.js'
+import { getLineSeparator } from '../../../report/utils/line.js'
 import { wrapPaddedRows } from '../../../report/utils/wrap.js'
 
 import { ACTIONS_LABEL } from './bottom_bar.js'
@@ -25,12 +27,9 @@ const getSeparator = function ({ report }) {
     return ''
   }
 
-  const screenWidth = getScreenWidth()
-  return `${separatorColor(LINE_CHAR.repeat(screenWidth))}\n`
+  const padding = ' '.repeat(PADDING_SIZE)
+  return `${padding}${getLineSeparator()}`
 }
-
-// Works with all terminals
-const LINE_CHAR = '\u2500'
 
 const getLeftWidth = function ({ durationLeft, total }) {
   return (

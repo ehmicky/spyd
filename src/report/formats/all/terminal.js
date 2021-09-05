@@ -1,3 +1,4 @@
+import { getLineSeparator } from '../../utils/line.js'
 import { prettifyValue } from '../../utils/prettify_value.js'
 
 // Format meant for string output which should be output to a terminal or to
@@ -14,7 +15,7 @@ export const TERMINAL_FORMAT = {
   },
   concat: true,
   footer(footer) {
-    return `\n\n${prettifyValue(footer)}\n`
+    return `\n${getLineSeparator()}\n${prettifyValue(footer)}\n`
   },
   padding: true,
 }
