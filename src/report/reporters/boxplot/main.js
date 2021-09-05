@@ -197,15 +197,17 @@ const getMinMaxBlockWidth = function (combinations, statName) {
 }
 
 const getSingleMinMaxWidth = function (quantiles, statName) {
-  return quantiles === undefined
-    ? 0
-    : addPadding(quantiles[statName].prettyPadded).length
+  return quantiles === undefined ? 0 : getPaddedMinMaxWidth(quantiles, statName)
+}
+
+const getPaddedMinMaxWidth = function (quantiles, statName) {
+  return addPadding(quantiles[statName].prettyPadded).length
 }
 
 // Retrieve the blocks that show the min|max on the left|right
 const getMinMaxBlock = function (quantiles, blockWidth, statName) {
   const paddingWidth = Math.max(
-    blockWidth - getSingleMinMaxWidth(quantiles, statName),
+    blockWidth - getPaddedMinMaxWidth(quantiles, statName),
     0,
   )
   const padding = ' '.repeat(paddingWidth)
