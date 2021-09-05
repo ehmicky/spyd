@@ -1,3 +1,5 @@
+import { isMeasuredCombination } from './normalize.js'
+
 // Return the minimum|maximum value of all combinations.
 // This is used as the extreme values of all box plots since they share the
 // same abscissa so they can be vertically compared.
@@ -15,10 +17,6 @@ export const getMinMaxAll = function (combinations) {
     ...combinationsA.map((combination) => getQuantile(combination, 'max')),
   )
   return { minAll, maxAll }
-}
-
-const isMeasuredCombination = function ({ quantiles }) {
-  return quantiles !== undefined
 }
 
 const getQuantile = function ({ quantiles }, statName) {

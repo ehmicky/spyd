@@ -19,3 +19,7 @@ export const normalizeQuantiles = function ({
 
 // List of quantiles shown by the reporter
 const QUANTILES = { min: 0, q1: 25, median: 50, q3: 75, max: 100 }
+
+export const isMeasuredCombination = function ({ quantiles }) {
+  return quantiles !== undefined
+}

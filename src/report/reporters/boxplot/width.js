@@ -1,6 +1,7 @@
 import { getCombinationPaddedName } from '../../utils/name.js'
 
 import { getPaddedStatLength } from './box.js'
+import { isMeasuredCombination } from './normalize.js'
 import { getIndex } from './position.js'
 
 // Compute the width of each column.
@@ -52,7 +53,9 @@ const getMinMaxBlockWidth = function ({
     return 0
   }
 
-  const combinationsQuantiles = getCombinationsQuantiles(combinations, statName)
+  const combinationsQuantiles = combinations
+    .filter(isMeasuredCombination)
+    .map(({ quantiles }) => quantiles[statName])
 
   if (combinationsQuantiles.length === 0) {
     return 0
@@ -85,16 +88,6 @@ const getMinMaxBlockWidth = function ({
   } while (minMaxWidth !== currentMinMaxWidth)
 
   return minMaxWidth
-}
-
-const getCombinationsQuantiles = function (combinations, statName) {
-  return combinations
-    .filter(isMeasuredCombination)
-    .map((combination) => combination.quantiles[statName])
-}
-
-const isMeasuredCombination = function ({ quantiles }) {
-  return quantiles !== undefined
 }
 
 // Computes the minimum size for `minWidth`/`maxWidth` where a given
