@@ -1,12 +1,9 @@
-import {
-  getCombNamePaddedColor,
-  getCombinationPaddedName,
-} from '../../utils/name.js'
+import { getCombNamePaddedColor } from '../../utils/name.js'
 
 import { EXTRA_HEIGHT } from './characters.js'
 import { getContent } from './content.js'
 import { getEmptyCombination } from './empty.js'
-import { getMinBlockWidth, getMaxBlockWidth } from './min_max.js'
+import { getWidths } from './width.js'
 
 // Reporter showing distribution of measures with a histogram
 // Configuration properties:
@@ -33,17 +30,6 @@ const reportTerminal = function (
       }),
     )
     .join('\n')
-}
-
-const getWidths = function (combinations, mini, screenWidth) {
-  const titleBlockWidth = getCombinationPaddedName(combinations[0]).length
-  const minBlockWidth = getMinBlockWidth(combinations, mini)
-  const maxBlockWidth = getMaxBlockWidth(combinations, mini)
-  const contentWidth = Math.max(
-    screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
-    1,
-  )
-  return { titleBlockWidth, minBlockWidth, contentWidth }
 }
 
 const serializeHistogram = function ({
