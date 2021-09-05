@@ -2,12 +2,10 @@
 import mapObj from 'map-obj'
 import stringWidth from 'string-width'
 
-import { padCenter } from '../../../utils/pad.js'
-import { goodColor, fieldColor } from '../../utils/colors.js'
+import { goodColor } from '../../utils/colors.js'
 import { concatBlocks } from '../../utils/concat.js'
 import { getCombinationNameColor } from '../../utils/name.js'
 import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
-import { STAT_TITLES } from '../../utils/stat_titles.js'
 
 // Reporter showing boxplot of measures (min, q1, median, q3, max)
 const reportTerminal = function (
@@ -16,27 +14,24 @@ const reportTerminal = function (
 ) {
   const combinationsA = combinations.map(normalizeQuantiles)
   const { minAll, maxAll } = getMinMaxAll(combinationsA)
-  const { titleBlockWidth, minBlockWidth, contentWidth, maxBlockWidth } =
-    getWidths(combinationsA, screenWidth, mini)
-  const header = getHeader({
+  const { minBlockWidth, contentWidth, maxBlockWidth } = getWidths(
+    combinationsA,
+    screenWidth,
     mini,
-    titleBlockWidth,
-    minBlockWidth,
-    contentWidth,
-    maxBlockWidth,
-  })
-  const rows = combinationsA.map((combination) =>
-    serializeBoxPlot({
-      combination,
-      minAll,
-      maxAll,
-      minBlockWidth,
-      contentWidth,
-      maxBlockWidth,
-      mini,
-    }),
   )
-  return [...header, ...rows].join('\n')
+  return combinationsA
+    .map((combination) =>
+      serializeBoxPlot({
+        combination,
+        minAll,
+        maxAll,
+        minBlockWidth,
+        contentWidth,
+        maxBlockWidth,
+        mini,
+      }),
+    )
+    .join('\n')
 }
 
 const normalizeQuantiles = function ({ titles, stats: { quantiles } }) {
@@ -86,47 +81,11 @@ const getWidths = function (combinations, screenWidth, mini) {
     screenWidth - titleBlockWidth - minBlockWidth - maxBlockWidth,
     1,
   )
-  return { titleBlockWidth, minBlockWidth, contentWidth, maxBlockWidth }
-}
-
-const getHeader = function ({
-  mini,
-  titleBlockWidth,
-  minBlockWidth,
-  contentWidth,
-  maxBlockWidth,
-}) {
-  if (mini) {
-    return []
-  }
-
-  const titleHeader = ' '.repeat(titleBlockWidth)
-  const minHeader = padHeaderField(getHeaderName('min'), minBlockWidth)
-  const boxHeader = padHeaderField(getHeaderName('median'), contentWidth)
-  const maxHeader = padHeaderField(getHeaderName('max'), maxBlockWidth)
-  return [`${titleHeader}${minHeader}${boxHeader}${maxHeader}`]
+  return { minBlockWidth, contentWidth, maxBlockWidth }
 }
 
 const getMinMaxFullWidth = function (combinations, mini, statName) {
-  return mini
-    ? 0
-    : Math.max(
-        getHeaderNameWidth(statName),
-        getMinMaxBlockWidth(combinations, statName),
-      )
-}
-
-const getHeaderNameWidth = function (statName) {
-  return getHeaderName(statName).length
-}
-
-const getHeaderName = function (statName) {
-  return addPadding(STAT_TITLES[statName])
-}
-
-const padHeaderField = function (headerName, headerWidth) {
-  const paddedHeader = padCenter(headerName, headerWidth)
-  return fieldColor(paddedHeader)
+  return mini ? 0 : getMinMaxBlockWidth(combinations, statName)
 }
 
 const serializeBoxPlot = function ({
