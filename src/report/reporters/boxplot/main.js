@@ -147,7 +147,8 @@ const getSingleMinMaxWidth = function (quantiles, statName) {
 }
 
 const getEmptyCombination = function (combinationTitles, mini) {
-  return mini ? `${combinationTitles}\n` : `${combinationTitles}\n\n`
+  const labelsLine = mini ? '' : '\n'
+  return `${combinationTitles}\n${labelsLine}`
 }
 
 const getPositions = function ({ quantiles, minAll, maxAll, contentWidth }) {
