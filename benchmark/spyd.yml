@@ -3,3 +3,7 @@ inputs:
   two: 2
 select: not slow uniform exponential growing
 tasks: tasks.js
+reporter: [debug, history, histogram]
+reporterConfig:
+  histogram:
+    mini: true
