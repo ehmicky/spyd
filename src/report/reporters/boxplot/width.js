@@ -7,7 +7,7 @@ import { getPaddedStat } from './box.js'
 //  - Padding space reserved for the leftmost `min`
 //  - Content, i.e. box plot and their labels
 //  - Padding space reserved for the rightmost `max`
-export const getWidths = function (combinations, screenWidth, mini) {
+export const getWidths = function (combinations, mini, screenWidth) {
   const titlesWidth = getCombinationPaddedName(combinations[0]).length
   const minBlockWidth = getMinMaxBlockWidth(combinations, mini, 'min')
   const maxBlockWidth = getMinMaxBlockWidth(combinations, mini, 'max')

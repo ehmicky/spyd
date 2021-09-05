@@ -18,8 +18,8 @@ const reportTerminal = function (
   const { minAll, maxAll } = getMinMaxAll(combinationsA)
   const { titlesWidth, minBlockWidth, contentWidth } = getWidths(
     combinationsA,
-    screenWidth,
     mini,
+    screenWidth,
   )
   return combinationsA
     .map((combination) =>
