@@ -17,14 +17,14 @@ const getBlock = function (getStat, { stats, height, showStats }) {
 }
 
 // Retrieve the width of those blocks
-const getBlockWidth = function (padStat, combinations, showStats) {
+const getBlockWidth = function (getStat, combinations, showStats) {
   if (!showStats) {
     return 0
   }
 
   return Math.max(
     ...combinations.map((combination) =>
-      getCombinationWidth(combination, padStat),
+      getCombinationWidth(combination, getStat),
     ),
   )
 }
