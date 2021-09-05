@@ -17,7 +17,7 @@ const reportTerminal = function (
   { combinations, screenWidth },
   { mini = false },
 ) {
-  const height = DEFAULT_HEIGHT
+  const height = 2 * EXTRA_HEIGHT
   const width = getContentWidth(combinations, mini, screenWidth)
   return combinations
     .map((combination) =>
@@ -25,8 +25,6 @@ const reportTerminal = function (
     )
     .join('\n')
 }
-
-const DEFAULT_HEIGHT = 2 * EXTRA_HEIGHT
 
 const getContentWidth = function (combinations, mini, screenWidth) {
   return Math.max(
