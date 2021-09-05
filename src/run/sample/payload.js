@@ -61,7 +61,7 @@ const getRepeatPayload = function (repeat, minLoopDuration) {
 //     computation and preview reporting
 //   - Due to the above point, the real sample duration is less close to the
 //     target.
-// The value does not impact `stats.median` much though.
+// The value does not impact `stats.mean` much though.
 const getMaxLoops = function ({
   repeat,
   repeatLast,

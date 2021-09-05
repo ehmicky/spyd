@@ -28,7 +28,7 @@ export const measureSample = async function (
 // This includes the duration to perform each step and doing IPC so that the
 // actual sample duration does not deviate too much if one of those happened to
 // be slow.
-// We only keep the last `measureDuration` instead of taking the median of all
+// We only keep the last `measureDuration` instead of taking the mean of all
 // previous ones, so that `measureDuration` quickly adapts to machine slowdowns.
 const measureNewSample = async function (payload, server) {
   const measureDurationStart = now()

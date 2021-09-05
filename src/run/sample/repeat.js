@@ -120,7 +120,7 @@ const FAST_MEDIAN_RATE = 10
 //  - Excluding first samples except when there was not enough duration to
 //    measure more:
 //     - This rely on using a `duration` configuration property
-//     - This creates a big difference of stats (especially median and max)
+//     - This creates a big difference of stats (especially mean and max)
 //       depending on that duration
 //     - This can lead to comparing combinations with and without the cold start
 //       included in their stats
