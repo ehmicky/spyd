@@ -36,8 +36,7 @@ const reportTerminal = function (
 const serializeHistogram = function ({
   combination,
   combination: {
-    stats,
-    stats: { median },
+    stats: { histogram, median, min, max },
   },
   titleBlockWidth,
   minBlockWidth,
@@ -47,31 +46,10 @@ const serializeHistogram = function ({
 }) {
   const combinationTitles = getCombNamePaddedColor(combination)
 
-  if (median === undefined) {
+  if (histogram === undefined) {
     return getEmptyCombination(combination, height, mini)
   }
 
-  return getContent({
-    stats,
-    height,
-    combinationTitles,
-    titleBlockWidth,
-    minBlockWidth,
-    contentWidth,
-    mini,
-  })
-}
-
-// Retrieve histogram main content
-const getContent = function ({
-  stats: { histogram, median, min, max },
-  height,
-  combinationTitles,
-  titleBlockWidth,
-  minBlockWidth,
-  contentWidth,
-  mini,
-}) {
   const medianIndex = getMedianIndex({ median, min, max, contentWidth })
   const rows = getHistogramRows({
     histogram,
