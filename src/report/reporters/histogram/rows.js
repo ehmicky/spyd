@@ -35,7 +35,7 @@ export const getHistogramRows = function ({
       height,
       mini,
     }),
-  ).join('\n')
+  ).join('')
 }
 
 // Computes the terminal height of each column for reporting.
@@ -106,7 +106,7 @@ const getHistogramRow = function ({
   const row = columns
     .map(getHistogramCell.bind(undefined, inverseIndex))
     .join('')
-  return `${titlesSpace}${minSpace}${row}`
+  return `${titlesSpace}${minSpace}${row}\n`
 }
 
 // Retrieve the character to display for a specific row and column

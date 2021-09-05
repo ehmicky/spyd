@@ -37,7 +37,7 @@ export const getContent = function ({
     min,
     max,
   })
-  return `${rows}\n${abscissa}`
+  return `${rows}${abscissa}`
 }
 
 // Compute the position of the median tick on the screen.

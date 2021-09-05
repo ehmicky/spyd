@@ -21,7 +21,7 @@ export const getAbscissa = function ({
   const paddedMax = padMaxStat(max)
   const bottomLine = separatorColor(getBottomLine(contentWidth, medianIndex))
   const label = getLabel(contentWidth, median, medianIndex)
-  return `${combinationTitles}${paddedMin}${bottomLine}${paddedMax}\n${titlesSpace}${minSpace}${label}`
+  return `${combinationTitles}${paddedMin}${bottomLine}${paddedMax}\n${titlesSpace}${minSpace}${label}\n`
 }
 
 const getBottomLine = function (contentWidth, medianIndex) {
