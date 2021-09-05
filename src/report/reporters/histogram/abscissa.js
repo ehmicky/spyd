@@ -20,12 +20,7 @@ const getBottomLine = function (width, medianIndex) {
 }
 
 const getLabels = function (width, median, medianIndex) {
-  const { labels, labelsLength } = addLabel(
-    width,
-    { labelsLength: 0, labels: '' },
-    median,
-    medianIndex,
-  )
+  const { labels, labelsLength } = addLabel(width, median, medianIndex)
   const labelsA = trimWidth(labels, labelsLength, width)
   return labelsA
 }
@@ -33,20 +28,12 @@ const getLabels = function (width, median, medianIndex) {
 // First label is padded in the opposite direction. This works well with two
 // labels since they are padded in opposite ways which allows them not to take
 // space from the other one.
-const addLabel = function (
-  width,
-  { labelsLength, labels },
-  { pretty, prettyColor },
-  medianIndex,
-) {
-  const spacesWidth =
-    labelsLength === 0
-      ? Math.max(medianIndex - pretty.length + 1, 0)
-      : Math.max(medianIndex - labelsLength, 1)
-  const labelsLengthA = labelsLength + spacesWidth + pretty.length
+const addLabel = function (width, { pretty, prettyColor }, medianIndex) {
+  const spacesWidth = Math.max(medianIndex - pretty.length + 1, 0)
+  const labelsLength = spacesWidth + pretty.length
   const spaces = ' '.repeat(spacesWidth)
-  const labelsA = `${labels}${spaces}${prettyColor}`
-  return { labelsLength: labelsLengthA, labels: labelsA }
+  const labels = `${spaces}${prettyColor}`
+  return { labelsLength, labels }
 }
 
 // When some labels are close to the end, they might go over the maximum width.
