@@ -1,3 +1,4 @@
+import { centerString } from '../../utils/center.js'
 import { separatorColor } from '../../utils/colors.js'
 
 import {
@@ -80,11 +81,11 @@ const getLabelLine = function ({
   median,
   medianIndex,
 }) {
-  const leftShift = Math.max(Math.floor((median.pretty.length - 1) / 2), 0)
-  const shiftedIndex = medianIndex - leftShift
-  const maxContentIndex = contentWidth - median.pretty.length
-  const contentIndex = Math.min(Math.max(shiftedIndex, 0), maxContentIndex)
-  const labelIndex = contentIndex + titlesWidth + minBlockWidth
-  const labelLeft = ' '.repeat(labelIndex)
-  return `${labelLeft}${median.prettyColor}\n`
+  const centeredMedian = centerString(
+    median.prettyColor,
+    medianIndex,
+    contentWidth,
+  )
+  const initialSpace = ' '.repeat(titlesWidth + minBlockWidth)
+  return `${initialSpace}${centeredMedian}\n`
 }
