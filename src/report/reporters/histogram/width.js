@@ -18,7 +18,6 @@ export const getWidths = function (combinations, mini, screenWidth) {
   return { titlesWidth, minBlockWidth, contentWidth }
 }
 
-// Retrieve the width of those blocks
 const getMinMaxBlockWidth = function (combinations, mini, statName) {
   return Math.max(
     ...combinations.map((combination) =>
