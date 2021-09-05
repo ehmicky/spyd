@@ -32,12 +32,12 @@ const getLeftSpace = function (min, minBlockWidth, mini) {
 }
 
 const getMinLine = function (min, q1) {
-  const leftLine = fillCharacter(LINE_CHARACTER, min, q1)
+  const leftLine = fillCharacter(HORIZONTAL_LINE, min, q1)
   return leftLine === '' ? leftLine : `${MIN_CHARACTER}${leftLine.slice(1)}`
 }
 
 const getMaxLine = function (q3, max) {
-  const rightLine = fillCharacter(LINE_CHARACTER, q3, max)
+  const rightLine = fillCharacter(HORIZONTAL_LINE, q3, max)
   return rightLine === ''
     ? rightLine
     : `${rightLine.slice(0, -1)}${MAX_CHARACTER}`
@@ -53,7 +53,7 @@ const repeatCharacter = function (character, width) {
 
 // Works on most terminals
 const MIN_CHARACTER = '\u251C'
-const LINE_CHARACTER = '\u2500'
+const HORIZONTAL_LINE = '\u2500'
 const BOX_CHARACTER = '\u2591'
 const MEDIAN_CHARACTER = '\u2588'
 const MAX_CHARACTER = '\u2524'

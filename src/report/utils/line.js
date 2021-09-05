@@ -5,8 +5,8 @@ import { separatorColor } from './colors.js'
 // Separator between different reporters and/or preview elements
 export const getLineSeparator = function () {
   const paddedScreenWidth = getPaddedScreenWidth()
-  return `${separatorColor(LINE_CHAR.repeat(paddedScreenWidth))}\n`
+  return `${separatorColor(HORIZONTAL_LINE.repeat(paddedScreenWidth))}\n`
 }
 
 // Works with all terminals
-const LINE_CHAR = '\u2500'
+const HORIZONTAL_LINE = '\u2500'
