@@ -15,7 +15,7 @@ export const addStatColor = function ({
 
   const statA = Array.isArray(stat)
     ? stat.map((singleStat) => addItemsColor({ stat: singleStat, name, stats }))
-    : addItemsColor({ stat })
+    : addItemsColor({ stat, name, stats })
   return { ...combination, stats: { ...stats, [name]: statA } }
 }
 
