@@ -1,7 +1,7 @@
-import stringWidth from 'string-width'
-
-import { getCombinationNameColor } from '../../utils/name.js'
-import { NAME_SEPARATOR_COLORED } from '../../utils/separator.js'
+import {
+  getCombinationPaddedName,
+  getCombNamePaddedColor,
+} from '../../utils/name.js'
 
 import { ABSCISSA_BOTTOM_HEIGHT, ABSCISSA_LABELS_HEIGHT } from './abscissa.js'
 
@@ -9,16 +9,12 @@ import { ABSCISSA_BOTTOM_HEIGHT, ABSCISSA_LABELS_HEIGHT } from './abscissa.js'
 export const getTitleBlock = function (combination, height, mini) {
   const topNewlines = getTopNewlines(height, mini)
   const bottomNewlines = getBottomNewlines(mini)
-  const titleBlockContents = getTitleBlockContents(combination)
+  const titleBlockContents = getCombNamePaddedColor(combination)
   return `${topNewlines}${titleBlockContents}\n${bottomNewlines}`
 }
 
-export const getTitleBlockWidth = function ([combination]) {
-  return stringWidth(getTitleBlockContents(combination))
-}
-
-const getTitleBlockContents = function (combination) {
-  return `${getCombinationNameColor(combination)}${NAME_SEPARATOR_COLORED}`
+export const getTitleBlockWidth = function (combinations) {
+  return getCombinationPaddedName(combinations[0]).length
 }
 
 const getTopNewlines = function (height, mini) {
