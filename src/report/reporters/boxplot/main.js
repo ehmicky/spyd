@@ -79,17 +79,13 @@ const getQuantile = function ({ quantiles }, statName) {
 
 const getWidths = function (combinations, screenWidth, mini) {
   const titlesWidth = getTitlesWidth(combinations)
-  const minBlockWidth = getMinMaxFullWidth(combinations, mini, 'min')
-  const maxBlockWidth = getMinMaxFullWidth(combinations, mini, 'max')
+  const minBlockWidth = getMinMaxBlockWidth(combinations, mini, 'min')
+  const maxBlockWidth = getMinMaxBlockWidth(combinations, mini, 'max')
   const contentWidth = Math.max(
     screenWidth - titlesWidth - minBlockWidth - maxBlockWidth,
     1,
   )
   return { titlesWidth, minBlockWidth, contentWidth }
-}
-
-const getMinMaxFullWidth = function (combinations, mini, statName) {
-  return mini ? 0 : getMinMaxBlockWidth(combinations, statName)
 }
 
 const serializeBoxPlot = function ({
@@ -132,7 +128,11 @@ const getCombinationTitles = function (combination) {
   return `${getCombinationNameColor(combination)}${NAME_SEPARATOR_COLORED}`
 }
 
-const getMinMaxBlockWidth = function (combinations, statName) {
+const getMinMaxBlockWidth = function (combinations, mini, statName) {
+  if (mini) {
+    return 0
+  }
+
   return Math.max(
     ...combinations.map(({ quantiles }) =>
       getSingleMinMaxWidth(quantiles, statName),
