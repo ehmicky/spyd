@@ -16,11 +16,13 @@ const reportTerminal = function (
 ) {
   const combinationsA = combinations.map(normalizeQuantiles)
   const { minAll, maxAll } = getMinMaxAll(combinationsA)
-  const { titlesWidth, minBlockWidth, contentWidth } = getWidths(
-    combinationsA,
+  const { titlesWidth, minBlockWidth, contentWidth } = getWidths({
+    combinations: combinationsA,
     mini,
     screenWidth,
-  )
+    minAll,
+    maxAll,
+  })
   return combinationsA
     .map((combination) =>
       serializeCombination({

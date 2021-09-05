@@ -21,7 +21,8 @@ const getPosition = function (
   return { pretty, prettyColor, index }
 }
 
-const getIndex = function ({ raw, minAll, maxAll, contentWidth }) {
+// Compute the horizontal position on the screen of a specific quantile
+export const getIndex = function ({ raw, minAll, maxAll, contentWidth }) {
   const percentage = maxAll === minAll ? 0 : (raw - minAll) / (maxAll - minAll)
   return Math.min(Math.floor(percentage * contentWidth), contentWidth - 1)
 }
