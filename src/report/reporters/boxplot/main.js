@@ -1,7 +1,8 @@
+import { getCombNamePaddedColor } from '../../utils/name.js'
+
 import { getPositions, getBox, getLabels } from './content.js'
 import { getMinMaxAll } from './min_max.js'
 import { normalizeQuantiles } from './normalize.js'
-import { getCombinationTitles } from './titles.js'
 import { getWidths } from './width.js'
 
 // Reporter showing boxplot of measures (min, q1, median, q3, max)
@@ -41,7 +42,7 @@ const serializeBoxPlot = function ({
   contentWidth,
   mini,
 }) {
-  const combinationTitles = getCombinationTitles(combination)
+  const combinationTitles = getCombNamePaddedColor(combination)
 
   if (quantiles === undefined) {
     return getEmptyCombination(combinationTitles, mini)

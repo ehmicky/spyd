@@ -1,5 +1,6 @@
+import { getCombinationPaddedName } from '../../utils/name.js'
+
 import { addStatPadding } from './pad.js'
-import { getTitlesWidth } from './titles.js'
 
 // Retrieve the width of all blocks, in order:
 //  - Combination titles
@@ -7,7 +8,7 @@ import { getTitlesWidth } from './titles.js'
 //  - Content, i.e. box plot and their labels
 //  - Padding space reserved for the rightmost `max`
 export const getWidths = function (combinations, screenWidth, mini) {
-  const titlesWidth = getTitlesWidth(combinations)
+  const titlesWidth = getCombinationPaddedName(combinations[0]).length
   const minBlockWidth = getMinMaxBlockWidth(combinations, mini, 'min')
   const maxBlockWidth = getMinMaxBlockWidth(combinations, mini, 'max')
   const contentWidth = Math.max(
