@@ -15,18 +15,16 @@ export const getBox = function ({
   const leftSpace = ' '.repeat(leftSpaceWidth)
   const minPadded = mini ? '' : addStatPadding(min.prettyColor)
   const minCharacter = min.index === q1.index ? '' : MIN_CHARACTER
-  const leftLineWidth = q1.index - min.index - minCharacter.length
-  const leftLine =
-    leftLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(leftLineWidth)
-  const q1BoxWidth = median.index - q1.index
-  const q1Box = q1BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(q1BoxWidth)
+  const leftLineWidth = Math.max(q1.index - min.index - minCharacter.length, 0)
+  const leftLine = LINE_CHARACTER.repeat(leftLineWidth)
+  const q1BoxWidth = Math.max(median.index - q1.index, 0)
+  const q1Box = BOX_CHARACTER.repeat(q1BoxWidth)
   const medianCharacter = goodColor(MEDIAN_CHARACTER)
-  const q3BoxWidth = q3.index - median.index
-  const q3Box = q3BoxWidth <= 0 ? '' : BOX_CHARACTER.repeat(q3BoxWidth)
+  const q3BoxWidth = Math.max(q3.index - median.index, 0)
+  const q3Box = BOX_CHARACTER.repeat(q3BoxWidth)
   const maxCharacter = q3.index === max.index ? '' : MAX_CHARACTER
-  const rightLineWidth = max.index - q3.index - maxCharacter.length
-  const rightLine =
-    rightLineWidth <= 0 ? '' : LINE_CHARACTER.repeat(rightLineWidth)
+  const rightLineWidth = Math.max(max.index - q3.index - maxCharacter.length, 0)
+  const rightLine = LINE_CHARACTER.repeat(rightLineWidth)
   const maxPadded = mini ? '' : addStatPadding(max.prettyColor)
   return `${combinationTitles}${leftSpace}${minPadded}${minCharacter}${leftLine}${q1Box}${medianCharacter}${q3Box}${rightLine}${maxCharacter}${maxPadded}\n`
 }
