@@ -45,6 +45,10 @@ const getSamplesLeft = function (
   { samples, loops, mean, stdev },
   precisionTarget,
 ) {
+  if (mean === 0) {
+    return 0
+  }
+
   const moeTarget = precisionTarget * mean
   const lengthTarget = getLengthForMoe(moeTarget, stdev)
   const loopsTarget = Math.min(getLoopsFromLength(lengthTarget), MAX_MEASURES)
