@@ -1,8 +1,6 @@
-// Combination identifiers create a new combination dimension:
-// tasks, systems, variations, runners.
-// They:
-//  - can be used in `select`, `limit`, etc.
-//  - are checked for duplicates
+// All dimensions. They:
+//  - create dimensions in runs using a cartesian product
+//  - can be used in `select|limit`
 // The order is significant as it defines:
 //  - The sorting order of combinations in reporters
 //  - The order of dimensions when printing combinationName in reporters,
