@@ -54,14 +54,14 @@ const getRunnerId = function ({
 const getRunnerVersions = async function (id, combinations, cwd) {
   const {
     dimensions: {
-      runner: { runnerVersions, runnerSpawnOptions },
+      runner: { runnerVersions, spawnOptions },
     },
   } = combinations.find(
     (combination) => combination.dimensions.runner.id === id,
   )
   const runnerVersionsA = await Promise.all(
     Object.entries(runnerVersions).map(([name, version]) =>
-      getRunnerVersion({ name, version, id, runnerSpawnOptions, cwd }),
+      getRunnerVersion({ name, version, id, spawnOptions, cwd }),
     ),
   )
   return Object.assign({}, ...runnerVersionsA)
@@ -71,7 +71,7 @@ const getRunnerVersion = async function ({
   name,
   version,
   id,
-  runnerSpawnOptions,
+  spawnOptions,
   cwd,
 }) {
   if (typeof version === 'string') {
@@ -81,7 +81,7 @@ const getRunnerVersion = async function ({
   try {
     const { stdout } = await spawnProcess(
       version,
-      { ...runnerSpawnOptions, stdin: 'ignore' },
+      { ...spawnOptions, stdin: 'ignore' },
       cwd,
     )
     return { [name]: stdout }

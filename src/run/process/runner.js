@@ -35,7 +35,7 @@ export const spawnRunnerProcess = async function ({
     dimensions: {
       runner: {
         runnerSpawn: [file, ...args],
-        runnerSpawnOptions,
+        spawnOptions,
       },
     },
   },
@@ -47,7 +47,7 @@ export const spawnRunnerProcess = async function ({
   const childProcess = spawnProcess(
     [file, ...args, serverUrl],
     {
-      ...runnerSpawnOptions,
+      ...spawnOptions,
       stdio: getStdio(logsStream),
       reject: false,
       detached: true,
