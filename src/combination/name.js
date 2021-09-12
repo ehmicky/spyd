@@ -8,14 +8,16 @@ import { getCombinationIds } from './ids.js'
 //    report time
 //  - `combinationName` uses ids, which is more useful at `run`-time
 //    (`dev`, preview bottom bar) since users might use those on the next run
-export const getCombinationName = function (combination) {
+export const getCombinationNameColor = function (combination) {
   return getCombinationIds(combination)
     .map(getCombinationNamePart)
-    .join(noteColor(', '))
+    .join(NAME_SEPARATOR_COLOR)
 }
 
 const getCombinationNamePart = function ({ dimension: { messageName }, id }) {
-  return `${noteColor(messageName)} ${QUOTE}${titleColor(id)}${QUOTE}`
+  const idColor = titleColor(id)
+  return `${noteColor(messageName)} ${QUOTE_COLOR}${idColor}${QUOTE_COLOR}`
 }
 
-const QUOTE = noteColor('"')
+const NAME_SEPARATOR_COLOR = noteColor(', ')
+const QUOTE_COLOR = noteColor('"')

@@ -1,4 +1,4 @@
-import { getCombinationName } from '../combination/name.js'
+import { getCombinationNameColor } from '../combination/name.js'
 import { measureCombinations } from '../run/measure/main.js'
 
 // Execute tasks without benchmarking them.
@@ -25,7 +25,7 @@ export const combinationDev = async function (combination, { cwd }) {
 // Print the ids of each combination before running them, so users can
 // visually separate their output
 const printCombinationName = function (combination) {
-  const combinationName = getCombinationName(combination)
+  const combinationNameColor = getCombinationNameColor(combination)
   // eslint-disable-next-line no-restricted-globals, no-console
-  console.log(combinationName)
+  console.log(combinationNameColor)
 }

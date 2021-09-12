@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { getCombinationName } from '../../combination/name.js'
+import { getCombinationNameColor } from '../../combination/name.js'
 
 import { START_DESCRIPTION } from './description.js'
 import { updatePreview } from './update/main.js'
@@ -15,7 +15,7 @@ export const startCombinationPreview = async function (
     return
   }
 
-  const combinationName = getCombinationName(combination)
+  const combinationName = getCombinationNameColor(combination)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, {
     combinationStart: now(),
