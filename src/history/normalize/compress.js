@@ -1,5 +1,3 @@
-import { getBucketEdges } from '../../stats/histogram.js'
-
 // Reduce size of results before saving
 // We try to persist everything, so that `show` report the same information.
 // We try to only persist what cannot be computed runtime.
@@ -13,22 +11,22 @@ const compressCombination = function ({
   stats: { histogram, quantiles, mean },
   ...combination
 }) {
-  const histogramA = compressHistogram(histogram)
+  const histogramA = compressHistogram(histogram, mean)
   const quantilesA = compressQuantiles(quantiles, mean)
   const statsA = { ...stats, histogram: histogramA, quantiles: quantilesA }
   return { ...combination, stats: statsA }
 }
 
-const compressHistogram = function (histogram) {
-  return histogram.map(compressBucket)
+const compressHistogram = function (histogram, mean) {
+  return histogram.map((bucket) => compressBucket(bucket, mean))
 }
 
 const compressQuantiles = function (quantiles, mean) {
   return quantiles.map((quantile) => quantile - mean)
 }
 
-const compressBucket = function ({ frequency }) {
-  return frequency
+const compressBucket = function ({ start, end, frequency }, mean) {
+  return [start - mean, end - mean, frequency]
 }
 
 // Restore original results after loading
@@ -39,10 +37,10 @@ export const decompressResult = function ({ combinations, ...result }) {
 
 const decompressCombination = function ({
   stats,
-  stats: { histogram, quantiles, mean, min, max },
+  stats: { histogram, quantiles, mean },
   ...combination
 }) {
-  const histogramA = decompressHistogram(histogram, min, max)
+  const histogramA = decompressHistogram(histogram, mean)
   const quantilesA = decompressQuantiles(quantiles, mean)
   return {
     ...combination,
@@ -50,14 +48,14 @@ const decompressCombination = function ({
   }
 }
 
-const decompressHistogram = function (histogram, min, max) {
-  return getBucketEdges(min, max, histogram.length).map(
-    ([start, end], bucketIndex) => ({
-      start,
-      end,
-      frequency: histogram[bucketIndex],
-    }),
-  )
+const decompressHistogram = function (histogram, mean) {
+  return histogram === undefined
+    ? undefined
+    : histogram.map((bucket) => decompressBucket(bucket, mean))
+}
+
+const decompressBucket = function ([start, end, frequency], mean) {
+  return { start: start + mean, end: end + mean, frequency }
 }
 
 const decompressQuantiles = function (quantiles, mean) {
