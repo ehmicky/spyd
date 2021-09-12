@@ -19,7 +19,7 @@ const getCombinationNamePart = function (
   index,
 ) {
   const dimension = index === 0 ? titleize(messageName) : messageName
-  return `${noteColor(dimension)} ${titleColor(id)}`
+  return `${noteColor(dimension)} "${titleColor(id)}"`
 }
 
 const titleize = function (string) {
