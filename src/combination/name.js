@@ -14,14 +14,6 @@ export const getCombinationName = function (combination) {
     .join(noteColor(', '))
 }
 
-const getCombinationNamePart = function (
-  { dimension: { messageName }, id },
-  index,
-) {
-  const dimension = index === 0 ? titleize(messageName) : messageName
-  return `${noteColor(dimension)} "${titleColor(id)}"`
-}
-
-const titleize = function (string) {
-  return `${string.charAt(0).toUpperCase()}${string.slice(1)}`
+const getCombinationNamePart = function ({ dimension: { messageName }, id }) {
+  return `${noteColor(messageName)} "${titleColor(id)}"`
 }
