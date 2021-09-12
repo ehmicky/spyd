@@ -1,3 +1,4 @@
+import { getCombinationName } from '../../combination/name.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
@@ -102,11 +103,11 @@ const handleErrorsAndMeasure = async function ({
   }
 }
 
-const prependTaskPrefix = function (error, { dimensions }, stage) {
+const prependTaskPrefix = function (error, combination, stage) {
   if (stage === 'init' || error.name === 'StopError') {
     return
   }
 
-  const taskPrefix = `In task "${dimensions.task.id}"`
-  error.message = `${taskPrefix}:\n${error.message}`
+  const combinationName = getCombinationName(combination)
+  error.message = `In ${combinationName}\n${error.message}`
 }
