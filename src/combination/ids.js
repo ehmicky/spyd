@@ -3,7 +3,7 @@ import { titleColor, noteColor } from '../report/utils/colors.js'
 import { DIMENSIONS, USER_DIMENSIONS } from './dimensions.js'
 import { getInputIds } from './inputs.js'
 
-export const isSameDimension = function (combinationA, combinationB) {
+export const hasSameCombinationIds = function (combinationA, combinationB) {
   return DIMENSIONS.every(
     ({ idName }) => combinationA[idName] === combinationB[idName],
   )

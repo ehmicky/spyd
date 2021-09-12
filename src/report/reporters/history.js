@@ -1,4 +1,4 @@
-import { isSameDimension } from '../../combination/ids.js'
+import { hasSameCombinationIds } from '../../combination/ids.js'
 import { fieldColor } from '../utils/colors.js'
 import { getCombinationNameColor } from '../utils/name.js'
 import { STATS_SEPARATOR_COLORED } from '../utils/separator.js'
@@ -46,7 +46,8 @@ const getBodyRow = function (combination, history) {
 
 const getCell = function (historyResult, combination) {
   const historyCombinationA = historyResult.combinations.find(
-    (historyCombination) => isSameDimension(historyCombination, combination),
+    (historyCombination) =>
+      hasSameCombinationIds(historyCombination, combination),
   )
 
   if (historyCombinationA === undefined) {
