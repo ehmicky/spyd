@@ -34,10 +34,12 @@ const titleize = function (string) {
 }
 
 const getIdInfos = function (combination) {
-  return DIMENSIONS.map(getIdInfo.bind(undefined, combination))
+  return DIMENSIONS.map(({ dimension, idName }) =>
+    getIdInfo({ combination, dimension, idName }),
+  )
 }
 
-const getIdInfo = function (combination, { dimension, idName }) {
+const getIdInfo = function ({ combination, dimension, idName }) {
   const id = combination[idName]
   return { dimension, id }
 }
