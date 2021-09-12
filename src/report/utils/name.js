@@ -28,6 +28,6 @@ const getTitlePadded = function ({ titlePadded }) {
   return titlePadded
 }
 
-const NAME_MIDDLE = ' '
+const NAME_MIDDLE = ' | '
 const NAME_START = '[ '
 const NAME_END = ' ]'
