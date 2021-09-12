@@ -13,8 +13,8 @@ export const addStatsPretty = function ({
   signed,
 }) {
   const scale = getScale(allCombinations, name, kind)
-  const unit = getUnit(kind, scale)
   const decimals = getStatsDecimals(combinations, name, scale)
+  const unit = getUnit(kind, scale)
   return combinations.map((combination) =>
     addStatPretty({ name, combination, signed, scale, unit, decimals }),
   )
