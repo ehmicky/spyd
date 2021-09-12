@@ -17,7 +17,7 @@ export const getCombinationsIds = function (combinations) {
 
 // Same but for a single combination
 export const getCombinationIds = function (combination) {
-  return getIdInfos(combination).map(getId)
+  return getIdInfos(combination)
 }
 
 export const getCombinationName = function (combination) {
@@ -38,10 +38,6 @@ const getIdInfos = function (combination) {
     dimension,
     id: combination[idName],
   }))
-}
-
-const getId = function ({ id }) {
-  return id
 }
 
 // Remove duplicate ids with the same dimension, since this happens due to the
