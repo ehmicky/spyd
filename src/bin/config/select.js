@@ -12,26 +12,30 @@ export const SELECT_CONFIG = {
 The value is a space-separated list of identifiers to select.
 Those can be the identifiers of any task, runner, system or variation.
 
-When specifying the same dimension, "or" is used:
+The selection is case-insensitive:
+  --select=taskone
+can select: taskOne
+
+It can also be partial:
+  --select=one
+can select: taskOne
+
+Any identifier from the list matches:
   --select="taskOne taskTwo"
-selects taskOne or taskTwo
+selects: taskOne or taskTwo
 
-When specifying different dimensions, "and" is used instead:
-  --select="taskOne runnerOne"
-selects taskOne and runnerOne
-
-Both can be combined:
-  --select="taskOne taskTwo runnerOne"
-selects (taskOne or taskTwo) and runnerOne
+"and" can be used to separate groups of identifiers:
+  --select="taskOne taskTwo and runnerOne"
+selects: (taskOne or taskTwo) and runnerOne
 
 "not" can be prepended to exclude combinations instead of selecting them.
-  --select='not taskOne taskTwo'
-selects not (taskOne or taskTwo)
+  --select='not taskOne taskTwo and runnerOne'
+selects: not ((taskOne or taskTwo) nor runnerOne)
 
 Alternatives ("or") of selections can be specified by setting the configuration
 property several times.
-  --select=taskOne --select=runnerOne
-selects taskOne or runnerOne
+  --select='not taskOne taskTwo and runnerOne' --select=runnerTwo
+selects: (not ((taskOne or taskTwo) nor runnerOne)) or (runnerTwo)
 
 Later selections have priority over earlier ones.
   --select="not taskOne" --select=taskOne
