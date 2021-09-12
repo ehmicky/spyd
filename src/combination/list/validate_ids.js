@@ -15,26 +15,26 @@ export const validateCombinationsIds = function (combinations, inputs) {
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.
 // Only for user-defined identifiers, not plugin-defined.
-const validateUserIds = function ({ mainName, id }) {
+const validateUserIds = function ({ messageName, id }) {
   if (id.trim() === '') {
     throw new UserError(
-      `Invalid ${mainName} "${id}": the identifier must not be empty.`,
+      `Invalid ${messageName} "${id}": the identifier must not be empty.`,
     )
   }
 
   if (id.startsWith(USER_ID_INVALID_START)) {
     throw new UserError(
-      `Invalid ${mainName} "${id}": the identifier must not start with a dash.`,
+      `Invalid ${messageName} "${id}": the identifier must not start with a dash.`,
     )
   }
 
   if (!USER_ID_REGEXP.test(id)) {
     throw new UserError(
-      `Invalid ${mainName} "${id}": the identifier must contain only letters, digits, - or _`,
+      `Invalid ${messageName} "${id}": the identifier must contain only letters, digits, - or _`,
     )
   }
 
-  validateReservedIds(id, mainName)
+  validateReservedIds(id, messageName)
 }
 
 // We do not allow starting with dash because of CLI flags parsing.
@@ -49,12 +49,12 @@ const USER_ID_INVALID_START = '-'
 // We forbid other characters for forward compatibility.
 const USER_ID_REGEXP = /^\w[\w-]*$/u
 
-const validateReservedIds = function (id, mainName) {
+const validateReservedIds = function (id, messageName) {
   const reservedIdA = RESERVED_IDS.find((reservedId) => id === reservedId)
 
   if (reservedIdA !== undefined) {
     throw new UserError(
-      `Invalid ${mainName} "${id}": "${id}" is a reserved word`,
+      `Invalid ${messageName} "${id}": "${id}" is a reserved word`,
     )
   }
 }
@@ -70,14 +70,14 @@ const RESERVED_IDS = ['not']
 // Non-combination identifiers are not checked for duplicates since they are
 // not used for selection, reporting, `config.titles`, etc.
 const validateDuplicateId = function (
-  { dimension: { mainName }, id },
+  { dimension: { messageName }, id },
   index,
   allIds,
 ) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
   if (duplicateId !== undefined) {
-    throw new UserError(`The identifier "${id}" must not be used both as ${mainName} and ${duplicateId.dimension}.
+    throw new UserError(`The identifier "${id}" must not be used both as ${messageName} and ${duplicateId.dimension}.
 Please rename one of them.`)
   }
 }

@@ -14,8 +14,8 @@ const isUserId = function ({ dimension: { createdByUser } }) {
   return createdByUser
 }
 
-const getCombinationUserId = function ({ dimension: { mainName }, id }) {
-  return { mainName, id }
+const getCombinationUserId = function ({ dimension: { messageName }, id }) {
+  return { messageName, id }
 }
 
 // Identifiers that do not relate to dimensions/combinations
@@ -25,9 +25,9 @@ const getNonCombinationsIds = function (inputs) {
   )
 }
 
-const listNonCombinationIds = function (mainName, getIds, inputs) {
+const listNonCombinationIds = function (messageName, getIds, inputs) {
   const ids = getIds(inputs)
-  return ids.map((id) => ({ mainName, id }))
+  return ids.map((id) => ({ messageName, id }))
 }
 
 const NON_COMBINATION_IDS = {

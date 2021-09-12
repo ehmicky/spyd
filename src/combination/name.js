@@ -11,10 +11,10 @@ export const getCombinationName = function (combination) {
 }
 
 const getCombinationNamePart = function (
-  { dimension: { mainName }, id },
+  { dimension: { messageName }, id },
   index,
 ) {
-  const dimension = index === 0 ? titleize(mainName) : mainName
+  const dimension = index === 0 ? titleize(messageName) : messageName
   return `${noteColor(dimension)} ${titleColor(id)}`
 }
 
