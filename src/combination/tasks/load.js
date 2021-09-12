@@ -10,9 +10,9 @@ export const loadRunner = async function ({
   const {
     spawn,
     spawnOptions = {},
-    versions: runnerVersions,
+    versions,
   } = await launchRunner({ id, runnerConfig, launch })
-  return { id, spawn, spawnOptions, runnerVersions, runnerConfig }
+  return { id, spawn, spawnOptions, versions, runnerConfig }
 }
 
 // Fire `runner.launch()`

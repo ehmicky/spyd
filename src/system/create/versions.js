@@ -20,11 +20,11 @@ import { spawnProcess } from '../../utils/spawn.js'
 // priority order in the unlikely case two runners return the properties in
 // `versions`.
 export const getSystemVersions = async function (combinations, cwd) {
-  const [runnersVersions, spydVersion] = await Promise.all([
+  const [versions, spydVersion] = await Promise.all([
     getRunnersVersions(combinations, cwd),
     getSpydVersion(),
   ])
-  return Object.assign({}, ...runnersVersions, { Spyd: spydVersion })
+  return Object.assign({}, ...versions, { Spyd: spydVersion })
 }
 
 // TODO: use static JSON imports once those are possible
@@ -54,17 +54,17 @@ const getRunnerId = function ({
 const getRunnerVersions = async function (id, combinations, cwd) {
   const {
     dimensions: {
-      runner: { runnerVersions, spawnOptions },
+      runner: { versions, spawnOptions },
     },
   } = combinations.find(
     (combination) => combination.dimensions.runner.id === id,
   )
-  const runnerVersionsA = await Promise.all(
-    Object.entries(runnerVersions).map(([name, version]) =>
+  const versionsA = await Promise.all(
+    Object.entries(versions).map(([name, version]) =>
       getRunnerVersion({ name, version, id, spawnOptions, cwd }),
     ),
   )
-  return Object.assign({}, ...runnerVersionsA)
+  return Object.assign({}, ...versionsA)
 }
 
 const getRunnerVersion = async function ({
