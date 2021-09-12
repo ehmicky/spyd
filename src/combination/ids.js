@@ -1,22 +1,7 @@
 import { titleColor, noteColor } from '../report/utils/colors.js'
 
-import {
-  COMBINATION_DIMENSIONS,
-  N_COMBINATION_DIMENSIONS,
-  USER_DIMENSIONS,
-} from './dimensions.js'
-
-// Retrieve user-defined identifiers
-export const getUserIds = function (combinations, inputs) {
-  const combinationsIds = getCombinationsIds(combinations)
-  const nonCombinationIds = getNonCombinationsIds(inputs)
-  const userIds = [...combinationsIds, ...nonCombinationIds].filter(isUserId)
-  return userIds
-}
-
-const isUserId = function ({ dimension }) {
-  return USER_DIMENSIONS.has(dimension)
-}
+import { COMBINATION_DIMENSIONS, USER_DIMENSIONS } from './dimensions.js'
+import { getInputIds } from './inputs.js'
 
 export const isSameDimension = function (combinationA, combinationB) {
   return COMBINATION_DIMENSIONS.every(
@@ -70,13 +55,31 @@ const isNotSameDimDuplicate = function ({ dimension, id }, index, idInfos) {
     .some((idInfo) => idInfo.dimension === dimension && idInfo.id === id)
 }
 
-// Retrieve non-combination identifiers.
+// Retrieve user-defined identifiers
+export const getUserIds = function (combinations, inputs) {
+  const combinationsUserIds = getCombinationsIds(combinations).filter(isUserId)
+  const nonCombinationsIds = getNonCombinationsIds(inputs)
+  return [...combinationsUserIds, ...nonCombinationsIds]
+}
+
+const isUserId = function ({ dimension }) {
+  return USER_DIMENSIONS.has(dimension)
+}
+
+// Identifiers that do not relate to dimensions/combinations
 const getNonCombinationsIds = function (inputs) {
-  return N_COMBINATION_DIMENSIONS.flatMap(
-    getNonCombinationIds.bind(undefined, inputs),
+  return NON_COMBINATION_IDS.flatMap(({ dimension, getIds }) =>
+    listNonCombinationIds(dimension, getIds, inputs),
   )
 }
 
-const getNonCombinationIds = function (inputs, { dimension, getIds }) {
+const NON_COMBINATION_IDS = [
+  {
+    dimension: 'input',
+    getIds: getInputIds,
+  },
+]
+
+const listNonCombinationIds = function (dimension, getIds, inputs) {
   return getIds(inputs).map((id) => ({ dimension, id }))
 }
