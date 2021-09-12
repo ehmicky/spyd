@@ -24,7 +24,7 @@ const startCombination = async function (
   {
     dimensions: {
       task: { id, path },
-      runner: { runnerConfig },
+      runner: { config },
     },
     inputs,
   },
@@ -34,7 +34,7 @@ const startCombination = async function (
   const { tasks: taskIds } = await sendAndReceive(
     {
       event: 'start',
-      runnerConfig,
+      runnerConfig: config,
       taskId: id,
       taskPath: path,
       inputs: inputsObj,

@@ -10,8 +10,8 @@ import { lookupFiles } from '../../config/lookup.js'
 //  - This can be useful in programmatic usage
 //  - This is only useful when using several runners. If all runners have no
 //    tasks, the run will fail.
-export const applyDefaultTasks = async function ({ runnerConfig }) {
-  const { tasks = await resolveDefaultTasks() } = runnerConfig
+export const applyDefaultTasks = async function ({ config }) {
+  const { tasks = await resolveDefaultTasks() } = config
   return tasks
 }
 
