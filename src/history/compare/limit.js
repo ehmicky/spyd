@@ -28,7 +28,7 @@ export const checkLimits = function ({ combinations }, { limit }) {
     return
   }
 
-  const limits = parseLimits(limit, combinations)
+  const limits = parseLimits(limit)
   const limitErrors = combinationsWithDiff
     .map((combination) => checkCombinationLimits({ combination, limits }))
     .filter(Boolean)

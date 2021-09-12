@@ -40,7 +40,7 @@ export const selectCombinations = function (combinations, select) {
 }
 
 const filterBySelectors = function (combinations, select) {
-  const selectors = parseSelectors(select, 'select', combinations)
+  const selectors = parseSelectors(select, 'select')
   return combinations.filter((combination) =>
     matchSelectors(combination, selectors),
   )

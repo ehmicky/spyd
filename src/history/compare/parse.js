@@ -5,23 +5,23 @@ import { parseSelectors } from '../../select/parse.js'
 // It is an array of strings "threshold selector" where "threshold" is
 // something like "15%" and "selector" follows the same format as each
 // individual string in the `select` configuration property.
-export const parseLimits = function (limit, combinations) {
+export const parseLimits = function (limit) {
   // eslint-disable-next-line fp/no-mutating-methods
-  return limit
-    .map((singleLimit) => parseLimit(singleLimit, combinations))
-    .sort(sortByThreshold)
+  return limit.map(parseLimit).sort(sortByThreshold)
 }
 
-const parseLimit = function (singleLimit, combinations) {
-  const [rawPercentage, ...rawGroups] = singleLimit
-    .trim()
-    .split(PERCENT_SEPARATOR_REGEXP)
+const parseLimit = function (singleLimit) {
+  const [rawPercentage, ...rawGroups] = tokenizeLimit(singleLimit)
   const { threshold, higher } = parsePercentage(rawPercentage)
-  const selectors = parseLimitSelectors(rawGroups, combinations)
+  const selectors = parseLimitSelectors(rawGroups)
   return { threshold, higher, selectors }
 }
 
-const PERCENT_SEPARATOR_REGEXP = /\s+/u
+const tokenizeLimit = function (singleLimit) {
+  return singleLimit.trim().split(TOKEN_DELIMITER_REGEX)
+}
+
+const TOKEN_DELIMITER_REGEX = /\s+/gu
 
 const parsePercentage = function (rawPercentage) {
   const percentage = rawPercentage.replace(PERCENTAGE_REGEXP, '')
@@ -48,9 +48,9 @@ const parsePercentage = function (rawPercentage) {
 const PERCENTAGE_REGEXP = /%$/u
 const PERCENTAGE_RATIO = 1e2
 
-const parseLimitSelectors = function (rawGroups, combinations) {
+const parseLimitSelectors = function (rawGroups) {
   const rawSelector = rawGroups.join(' ')
-  const selectors = parseSelectors([rawSelector], 'limit', combinations)
+  const selectors = parseSelectors([rawSelector], 'limit')
   return selectors
 }
 
