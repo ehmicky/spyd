@@ -65,7 +65,11 @@ const normalizeSelect = function (value, propName) {
   return { [propName]: valueA }
 }
 
-const normalizeLimit = normalizeReporter
+const normalizeLimit = function (value, propName) {
+  const valueA = normalizeOptionalArray(value)
+  checkDefinedStringArray(valueA, propName)
+  return { [propName]: valueA }
+}
 
 const checkTitles = function (value, propName) {
   Object.entries(value).forEach(([childName, propValue]) => {
