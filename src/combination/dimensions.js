@@ -6,6 +6,9 @@ import { getInputIds } from './inputs.js'
 //  - can be used in `select`, `limit`, etc.
 //  - are checked for duplicates
 // As opposed to non-combination identifiers: inputs.
+// The order is significant as it defines:
+//  - The sorting order in reporters
+//  - The order when printing combinationName in previews and `dev`
 export const COMBINATION_DIMENSIONS = [
   {
     dimension: 'task',

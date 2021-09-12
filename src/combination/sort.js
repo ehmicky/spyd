@@ -1,0 +1,46 @@
+import mapObj from 'map-obj'
+import sortOn from 'sort-on'
+
+import { getMean } from '../stats/sum.js'
+import { groupBy } from '../utils/group.js'
+
+import { COMBINATION_DIMENSIONS } from './dimensions.js'
+
+// Sort combinations based on their `stats.mean`.
+// Combinations with the same dimension are grouped together in the sorting
+// order.
+export const sortCombinations = function (result) {
+  const sortFunctions = COMBINATION_DIMENSIONS.map(({ idName }) =>
+    getSortFunction(idName, result.combinations),
+  )
+  const combinations = sortOn(result.combinations, sortFunctions)
+  return { ...result, combinations }
+}
+
+// Retrieve a function used to compare combinations for a specific dimension
+const getSortFunction = function (idName, combinations) {
+  const meansOfMeans = mapObj(groupBy(combinations, idName), getMeanOfMeans)
+  return getCombinationOrder.bind(undefined, idName, meansOfMeans)
+}
+
+// Retrieve the mean of all `stat.mean` for a specific dimension and id.
+// `undefined` means are omitted. Ids with all means undefined are sorted last.
+const getMeanOfMeans = function (id, combinations) {
+  const means = combinations.map(getCombinationMean).filter(isDefined)
+  const meanOfMeans =
+    means.length === 0 ? Number.POSITIVE_INFINITY : getMean(means)
+  return [id, meanOfMeans]
+}
+
+const getCombinationMean = function ({ stats: { mean } }) {
+  return mean
+}
+
+const isDefined = function (mean) {
+  return mean !== undefined
+}
+
+const getCombinationOrder = function (idName, meansOfMeans, combination) {
+  const id = combination[idName]
+  return meansOfMeans[id]
+}

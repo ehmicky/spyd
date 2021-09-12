@@ -1,4 +1,4 @@
-import { groupResultCombinations } from '../../combination/group.js'
+import { sortCombinations } from '../../combination/sort.js'
 import { addCombinationsDiff } from '../../history/compare/diff.js'
 import { omitSystemProps } from '../../system/omit.js'
 import { normalizeTimestamp } from '../../system/timestamp.js'
@@ -37,7 +37,7 @@ export const normalizeCombAllUnmerged = function (result, sinceResult) {
 // Add report-specific properties to a result that are in `combinations`, are
 // not reporter-specific and must be applied after the history is merged.
 export const normalizeCombAllMerged = function (result) {
-  const resultA = groupResultCombinations(result)
+  const resultA = sortCombinations(result)
   const resultB = omitSystemProps(resultA)
   return resultB
 }
