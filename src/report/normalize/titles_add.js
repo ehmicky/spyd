@@ -1,12 +1,15 @@
 import { COMBINATION_DIMENSIONS } from '../../combination/dimensions.js'
 
+import { padTitles } from './titles_pad.js'
+
 // Add `result.combinations[*].taskTitle|...`
 export const addCombinationsTitles = function (result, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
   const combinations = result.combinations.map((combination) =>
     addCombinationTitles(combination, titlesA),
   )
-  return { ...result, combinations }
+  const combinationsA = padTitles(combinations)
+  return { ...result, combinations: combinationsA }
 }
 
 const addCombinationTitles = function (combination, titles) {

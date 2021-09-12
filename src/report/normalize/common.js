@@ -5,7 +5,6 @@ import { normalizeTimestamp } from '../../system/timestamp.js'
 
 import { omitCombinationsProps } from './omit.js'
 import { addCombinationsTitles } from './titles_add.js'
-import { padTitles } from './titles_pad.js'
 
 // Add report-specific properties to a result that are not in `combinations` nor
 // reporter-specific
@@ -64,11 +63,10 @@ export const normalizeCombEach = function (
   { titles },
 ) {
   const resultA = addCombinationsTitles(result, titles, showTitles)
-  const resultB = padTitles({ result: resultA })
-  const resultC = omitCombinationsProps(resultB, {
+  const resultB = omitCombinationsProps(resultA, {
     showPrecision,
     showDiff,
     debugStats,
   })
-  return resultC
+  return resultB
 }
