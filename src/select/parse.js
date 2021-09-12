@@ -30,10 +30,20 @@ const parseSelector = function (rawSelector, propName) {
 
 // Tokenize a selector string in an array of token strings
 const tokenizeSelector = function (rawSelector) {
-  return rawSelector.trim().split(TOKEN_DELIMITER_REGEX).filter(Boolean)
+  return rawSelector
+    .trim()
+    .split(TOKEN_DELIMITER_REGEX)
+    .filter(Boolean)
+    .map(removeTokenCase)
 }
 
 const TOKEN_DELIMITER_REGEX = /\s+/gu
+
+// Matching is case-insensitive to make it faster to type on the CLI.
+// We directly do this during tokenization.
+const removeTokenCase = function (token) {
+  return token.toLowerCase()
+}
 
 // Parse token strings into an object format
 const parseTokens = function (tokens, rawSelector, propName) {

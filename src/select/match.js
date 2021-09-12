@@ -31,7 +31,9 @@ export const matchSelectors = function (combination, selectors) {
     return true
   }
 
-  const combinationIds = getCombinationIds(combination)
+  const combinationIds = getCombinationIds(combination).map(
+    removeCombinationIdCase,
+  )
   const index = findIndexReverse(selectors, (selector) =>
     matchIds(combinationIds, selector),
   )
@@ -41,6 +43,11 @@ export const matchSelectors = function (combination, selectors) {
   }
 
   return !selectors[index].negation
+}
+
+// Matching is case-insensitive
+const removeCombinationIdCase = function (combinationId) {
+  return combinationId.toLowerCase()
 }
 
 // An empty array selects any combinations:
