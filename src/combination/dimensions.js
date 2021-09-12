@@ -15,16 +15,19 @@ export const COMBINATION_DIMENSIONS = [
     dimension: 'task',
     idName: 'taskId',
     titleName: 'taskTitle',
+    createdByUser: true,
   },
   {
     dimension: 'runner',
     idName: 'runnerId',
     titleName: 'runnerTitle',
+    createdByUser: false,
   },
   {
     dimension: 'system',
     idName: 'systemId',
     titleName: 'systemTitle',
+    createdByUser: true,
   },
 ]
 
@@ -32,8 +35,25 @@ export const N_COMBINATION_DIMENSIONS = [
   {
     dimension: 'input',
     getIds: getInputIds,
+    createdByUser: true,
   },
 ]
 
 // Dimensions created by users, not by plugins
-export const USER_DIMENSIONS = new Set(['task', 'system', 'input'])
+const getUserDimensions = function () {
+  return new Set(
+    [...COMBINATION_DIMENSIONS, ...N_COMBINATION_DIMENSIONS]
+      .filter(isUserDimension)
+      .map(getDimensionName),
+  )
+}
+
+const isUserDimension = function ({ createdByUser }) {
+  return createdByUser
+}
+
+const getDimensionName = function ({ dimension }) {
+  return dimension
+}
+
+export const USER_DIMENSIONS = getUserDimensions()
