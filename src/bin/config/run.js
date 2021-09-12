@@ -38,8 +38,8 @@ Negative percentages like "-50%" can be used for decreases instead.
 The limit can be scoped to specific combinations by appending their identifiers
 after the percentage.
   - The syntax is the same as the "select" configuration property.
-  - For example "50% taskOne node" applies only to taskOne when the runner is
-    node.
+  - For example "50% taskOne and node" applies only to taskOne when the runner
+    is node.
   - Several limits can be specified at once.`,
   },
 }
