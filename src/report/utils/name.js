@@ -17,7 +17,7 @@ export const getCombinationNameColor = function (combination) {
   return titleColor(combinationName)
 }
 
-export const getCombinationName = function ({ dimensions }) {
+const getCombinationName = function ({ dimensions }) {
   const combinationName = Object.values(dimensions)
     .map(getTitlePadded)
     .join(NAME_MIDDLE)
