@@ -1,4 +1,4 @@
-import { getCombTitleColorPad } from '../../utils/name.js'
+import { getCombTitleColorPad } from '../../utils/combination_title.js'
 
 // Shown when a combination has not been measured yet
 export const getEmptyCombination = function (combination, height, mini) {

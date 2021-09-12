@@ -1,5 +1,5 @@
 import { fieldColor } from '../utils/colors.js'
-import { getCombinationTitleColor } from '../utils/name.js'
+import { getCombinationTitleColor } from '../utils/combination_title.js'
 import { STAT_TITLES } from '../utils/stat_titles.js'
 import { getTables } from '../utils/table.js'
 

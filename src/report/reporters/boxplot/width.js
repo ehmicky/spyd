@@ -1,4 +1,4 @@
-import { getCombinationTitlePad } from '../../utils/name.js'
+import { getCombinationTitlePad } from '../../utils/combination_title.js'
 
 import { getPaddedStatLength } from './box.js'
 import { isMeasuredCombination } from './normalize.js'

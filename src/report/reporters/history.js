@@ -1,6 +1,6 @@
 import { hasSameCombinationIds } from '../../combination/ids.js'
 import { fieldColor } from '../utils/colors.js'
-import { getCombinationTitleColor } from '../utils/name.js'
+import { getCombinationTitleColor } from '../utils/combination_title.js'
 import { STATS_SEPARATOR_COLORED } from '../utils/separator.js'
 import { getTables } from '../utils/table.js'
 

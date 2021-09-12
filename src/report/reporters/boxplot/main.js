@@ -1,4 +1,4 @@
-import { getCombTitleColorPad } from '../../utils/name.js'
+import { getCombTitleColorPad } from '../../utils/combination_title.js'
 
 import { getBox } from './box.js'
 import { getLabels } from './labels.js'
