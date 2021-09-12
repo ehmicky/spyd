@@ -45,7 +45,10 @@ const addCombinationDiff = function (
     combination,
   )
 
-  if (previousCombination === undefined) {
+  if (
+    previousCombination === undefined ||
+    previousCombination.stats.mean === 0
+  ) {
     return combination
   }
 

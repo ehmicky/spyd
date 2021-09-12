@@ -93,9 +93,6 @@ const QUANTILES_SIZE = 1e2
 const HISTOGRAM_SIZE = 1e2
 
 // Retrieve stats related to `stdev`.
-// Those might be absent if the number of loops is low.
-// `mean: 0` is very unlikely (but possible) after calibration, which would
-// make those stats not compute correctly.
 const getPrecisionStats = function ({
   measures,
   minIndex,
@@ -105,8 +102,12 @@ const getPrecisionStats = function ({
   max,
   mean,
 }) {
-  if (length < MIN_STDEV_LOOPS || mean === 0) {
+  if (length < MIN_STDEV_LOOPS) {
     return {}
+  }
+
+  if (mean === 0) {
+    return getPerfectPrecisionStats(mean)
   }
 
   const stdev = getStdev(measures, { minIndex, maxIndex, mean })
@@ -115,6 +116,18 @@ const getPrecisionStats = function ({
   const rmoe = getRmoe(moe, mean)
   const { meanMin, meanMax } = getConfidenceInterval({ mean, moe, min, max })
   return { stdev, rstdev, moe, rmoe, meanMin, meanMax }
+}
+
+// We allow means to be 0 since some tasks might really return always the same
+// measure.
+// We handle those the same way as if all measures were 0s:
+//  - Because this is almost always the case
+//  - Although the contrary is possible in principle if some measures are close
+//    to `Number.EPSILON`
+// We make sure this is only returned after `length` is high enough, since
+// mean might be 0 due to a low sample size
+const getPerfectPrecisionStats = function (mean) {
+  return { stdev: 0, rstdev: 0, moe: 0, rmoe: 0, meanMin: mean, meanMax: mean }
 }
 
 // `stdev` might be very imprecise when there are not enough values to compute
