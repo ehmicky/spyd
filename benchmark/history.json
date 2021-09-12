@@ -26,9 +26,11 @@
     },
     "combinations": [
       {
-        "taskId": "random",
-        "runnerId": "node",
-        "systemId": "default_system",
+        "dimensions": {
+          "task": "random",
+          "runner": "node",
+          "system": "default_system"
+        },
         "stats": {
           "median": 6.55279933481153,
           "mean": 6.699839477087952,
@@ -45,9 +47,11 @@
         }
       },
       {
-        "taskId": "empty",
-        "runnerId": "node",
-        "systemId": "default_system",
+        "dimensions": {
+          "task": "empty",
+          "runner": "node",
+          "system": "default_system"
+        },
         "stats": {
           "samples": 66,
           "loops": 2368,
@@ -96,9 +100,11 @@
     },
     "combinations": [
       {
-        "taskId": "real",
-        "runnerId": "node",
-        "systemId": "default_system",
+        "dimensions": {
+          "task": "real",
+          "runner": "node",
+          "system": "default_system"
+        },
         "stats": {
           "samples": 123,
           "loops": 123,
@@ -147,9 +153,11 @@
     },
     "combinations": [
       {
-        "taskId": "random",
-        "runnerId": "node",
-        "systemId": "default_system",
+        "dimensions": {
+          "task": "random",
+          "runner": "node",
+          "system": "default_system"
+        },
         "stats": {
           "samples": 7,
           "loops": 1707,
@@ -170,9 +178,11 @@
         }
       },
       {
-        "taskId": "fixed",
-        "runnerId": "node",
-        "systemId": "default_system",
+        "dimensions": {
+          "task": "fixed",
+          "runner": "node",
+          "system": "default_system"
+        },
         "stats": {
           "samples": 6,
           "loops": 11,
@@ -221,9 +231,11 @@
     },
     "combinations": [
       {
-        "taskId": "random",
-        "runnerId": "node",
-        "systemId": "default_system",
+        "dimensions": {
+          "task": "random",
+          "runner": "node",
+          "system": "default_system"
+        },
         "stats": {
           "samples": 195,
           "loops": 64351,
@@ -244,9 +256,11 @@
         }
       },
       {
-        "taskId": "real",
-        "runnerId": "node",
-        "systemId": "default_system",
+        "dimensions": {
+          "task": "real",
+          "runner": "node",
+          "system": "default_system"
+        },
         "stats": {
           "samples": 123,
           "loops": 123,

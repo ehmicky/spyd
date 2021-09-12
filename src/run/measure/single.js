@@ -102,11 +102,11 @@ const handleErrorsAndMeasure = async function ({
   }
 }
 
-const prependTaskPrefix = function (error, { taskId }, stage) {
+const prependTaskPrefix = function (error, { dimensions }, stage) {
   if (stage === 'init' || error.name === 'StopError') {
     return
   }
 
-  const taskPrefix = `In task "${taskId}"`
+  const taskPrefix = `In task "${dimensions.tasks.taskId}"`
   error.message = `${taskPrefix}:\n${error.message}`
 }

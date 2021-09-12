@@ -4,7 +4,7 @@ import sortOn from 'sort-on'
 import { getMean } from '../stats/sum.js'
 import { groupBy } from '../utils/group.js'
 
-import { getCombinationsIds } from './ids.js'
+import { getCombinationsIds, getDimensionId } from './ids.js'
 
 // Sort `result.combinations` based on their `stats.mean`.
 // Combinations with the same dimension are grouped together in the sorting
@@ -19,22 +19,25 @@ import { getCombinationsIds } from './ids.js'
 export const sortCombinations = function (result) {
   const { combinations } = result
   const combinationsIds = getCombinationsIds(combinations)
-  const idNames = [...new Set(combinationsIds.map(getIdName))]
-  const sortFunctions = idNames.map((idName) =>
-    getSortFunction(idName, combinations),
+  const dimensions = [...new Set(combinationsIds.map(getDimension))]
+  const sortFunctions = dimensions.map((dimension) =>
+    getSortFunction(dimension, combinations),
   )
   const combinationsA = sortOn(combinations, sortFunctions)
   return { ...result, combinations: combinationsA }
 }
 
-const getIdName = function ({ dimension: { idName } }) {
-  return idName
+const getDimension = function ({ dimension: { propName } }) {
+  return propName
 }
 
 // Retrieve a function used to compare combinations for a specific dimension
-const getSortFunction = function (idName, combinations) {
-  const meansOfMeans = mapObj(groupBy(combinations, idName), getMeanOfMeans)
-  return getCombinationOrder.bind(undefined, idName, meansOfMeans)
+const getSortFunction = function (dimension, combinations) {
+  const meansOfMeans = mapObj(
+    groupBy(combinations, getDimensionId.bind(undefined, dimension)),
+    getMeanOfMeans,
+  )
+  return getCombinationOrder.bind(undefined, dimension, meansOfMeans)
 }
 
 // Retrieve the mean of all `stat.mean` for a specific dimension and id.
@@ -54,7 +57,7 @@ const isDefined = function (mean) {
   return mean !== undefined
 }
 
-const getCombinationOrder = function (idName, meansOfMeans, combination) {
-  const id = combination[idName]
+const getCombinationOrder = function (dimension, meansOfMeans, combination) {
+  const id = getDimensionId(dimension, combination)
   return meansOfMeans[id]
 }

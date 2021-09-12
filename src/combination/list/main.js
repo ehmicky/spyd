@@ -33,26 +33,9 @@ const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
     throw new UserError(`Please specify some "tasks".`)
   }
 
-  return tasks.map(
-    ({
-      taskPath,
-      taskId,
-      runnerId,
-      runnerSpawn,
-      runnerSpawnOptions,
-      runnerVersions,
-      runnerConfig,
-    }) => ({
-      taskPath,
-      taskId,
-      runnerId,
-      runnerSpawn,
-      runnerSpawnOptions,
-      runnerVersions,
-      runnerConfig,
-      inputs,
-      systemId,
-      stats: {},
-    }),
-  )
+  return tasks.map(({ taskId, taskPath, runner }) => ({
+    dimensions: { task: { taskId, taskPath }, runner, system: { systemId } },
+    inputs,
+    stats: {},
+  }))
 }

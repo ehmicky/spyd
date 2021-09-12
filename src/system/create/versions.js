@@ -43,13 +43,21 @@ const getRunnersVersions = async function (combinations, cwd) {
   )
 }
 
-const getRunnerId = function ({ runnerId }) {
+const getRunnerId = function ({
+  dimensions: {
+    runner: { runnerId },
+  },
+}) {
   return runnerId
 }
 
 const getRunnerVersions = async function (runnerId, combinations, cwd) {
-  const { runnerVersions, runnerSpawnOptions } = combinations.find(
-    (combination) => combination.runnerId === runnerId,
+  const {
+    dimensions: {
+      runner: { runnerVersions, runnerSpawnOptions },
+    },
+  } = combinations.find(
+    (combination) => combination.dimensions.runner.runnerId === runnerId,
   )
   const runnerVersionsA = await Promise.all(
     Object.entries(runnerVersions).map(([name, version]) =>

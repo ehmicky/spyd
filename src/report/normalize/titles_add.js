@@ -15,10 +15,27 @@ export const addCombinationsTitles = function (result, titles, showTitles) {
 const addCombinationTitles = function (combination, titles) {
   const combinationIds = getCombinationIds(combination)
   return combinationIds.reduce(
-    (combinationA, { dimension: { idName, titleName } }) =>
-      addTitle(combinationA, { idName, titleName, titles }),
+    (combinationA, { dimension }) =>
+      addCombinationTitle({ combination: combinationA, dimension, titles }),
     combination,
   )
+}
+
+const addCombinationTitle = function ({
+  combination,
+  combination: { dimensions },
+  dimension: { propName, idName, titleName },
+  titles,
+}) {
+  const dimension = addTitle(dimensions[propName], {
+    idName,
+    titleName,
+    titles,
+  })
+  return {
+    ...combination,
+    dimensions: { ...dimensions, [propName]: dimension },
+  }
 }
 
 // Add `footer.systems[*].title`

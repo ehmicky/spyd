@@ -2,19 +2,31 @@
 // We try to persist everything, so that `show` report the same information.
 // We try to only persist what cannot be computed runtime.
 export const compressResult = function ({ combinations, ...result }) {
-  const combinationsA = combinations.map(compressCombination)
+  const combinationsA = combinations.map((combination) =>
+    compressCombination({ combination }),
+  )
   return { ...result, combinations: combinationsA }
 }
 
 const compressCombination = function ({
-  stats,
-  stats: { histogram, quantiles, mean },
-  ...combination
+  combination,
+  combination: {
+    dimensions: {
+      task: { taskId },
+      runner: { runnerId },
+      system: { systemId },
+    },
+    stats,
+    stats: { histogram, quantiles, mean },
+  },
 }) {
   const histogramA = compressHistogram(histogram, mean)
   const quantilesA = compressQuantiles(quantiles, mean)
-  const statsA = { ...stats, histogram: histogramA, quantiles: quantilesA }
-  return { ...combination, stats: statsA }
+  return {
+    ...combination,
+    dimensions: { task: taskId, runner: runnerId, system: systemId },
+    stats: { ...stats, histogram: histogramA, quantiles: quantilesA },
+  }
 }
 
 const compressHistogram = function (histogram, mean) {
@@ -30,20 +42,30 @@ const compressBucket = function ({ start, end, frequency }, mean) {
 }
 
 // Restore original results after loading
-export const decompressResult = function ({ combinations, ...result }) {
-  const combinationsA = combinations.map(decompressCombination)
-  return { ...result, combinations: combinationsA }
+export const decompressResult = function (result) {
+  const combinations = result.combinations.map((combination) =>
+    decompressCombination({ combination }),
+  )
+  return { ...result, combinations }
 }
 
 const decompressCombination = function ({
-  stats,
-  stats: { histogram, quantiles, mean },
-  ...combination
+  combination,
+  combination: {
+    dimensions: { task, runner, system },
+    stats,
+    stats: { histogram, quantiles, mean },
+  },
 }) {
   const histogramA = decompressHistogram(histogram, mean)
   const quantilesA = decompressQuantiles(quantiles, mean)
   return {
     ...combination,
+    dimensions: {
+      task: { taskId: task },
+      runner: { runnerId: runner },
+      system: { systemId: system },
+    },
     stats: { ...stats, histogram: histogramA, quantiles: quantilesA },
   }
 }

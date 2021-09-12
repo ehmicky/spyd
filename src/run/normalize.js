@@ -4,6 +4,20 @@ export const normalizeMeasuredResult = function (result) {
   return { ...result, combinations }
 }
 
-const normalizeCombination = function ({ taskId, runnerId, systemId, stats }) {
-  return { taskId, runnerId, systemId, stats }
+const normalizeCombination = function ({
+  dimensions: {
+    task: { taskId },
+    runner: { runnerId },
+    system: { systemId },
+  },
+  stats,
+}) {
+  return {
+    dimensions: {
+      task: { taskId },
+      runner: { runnerId },
+      system: { systemId },
+    },
+    stats,
+  }
 }

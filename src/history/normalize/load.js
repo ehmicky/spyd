@@ -8,8 +8,8 @@ import { migrateResults } from './migrate.js'
 // Normalize results on load
 export const loadResults = function (results, select) {
   const resultsA = migrateResults(results)
-  const resultsB = selectResults(resultsA, select)
-  const resultsC = resultsB.map(decompressResult)
+  const resultsB = resultsA.map(decompressResult)
+  const resultsC = selectResults(resultsB, select)
   const resultsD = sortResults(resultsC)
   return resultsD
 }

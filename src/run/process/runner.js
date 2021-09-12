@@ -32,8 +32,12 @@ import { receiveReturnValue } from './ipc.js'
 //    process.
 export const spawnRunnerProcess = async function ({
   combination: {
-    runnerSpawn: [file, ...args],
-    runnerSpawnOptions,
+    dimensions: {
+      runner: {
+        runnerSpawn: [file, ...args],
+        runnerSpawnOptions,
+      },
+    },
   },
   cwd,
   server,
