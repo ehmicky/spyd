@@ -1,4 +1,5 @@
-import { DIMENSIONS } from '../../combination/dimensions.js'
+import { getCombinationsIds } from '../../combination/ids.js'
+import { groupBy } from '../../utils/group.js'
 
 // Add:
 //  - `combination.task|runner|systemTitlePadded`: like
@@ -11,22 +12,28 @@ export const padTitles = function (combinations) {
 }
 
 const getUniqueTitleNames = function (combinations) {
-  const titleNames = DIMENSIONS.map(getTitleName).filter((titleName) =>
-    shouldShowProp(titleName, combinations),
+  const combinationsIds = getCombinationsIds(combinations)
+  const titleNames = Object.entries(
+    groupBy(combinationsIds, getDimensionTitleName),
   )
+    .filter(shouldShowProp)
+    .map(getTitleName)
   return titleNames.length === 0 ? DEFAULT_TITLE_NAMES : titleNames
 }
 
-const getTitleName = function ({ titleName }) {
+const getDimensionTitleName = function ({ dimension: { titleName } }) {
+  return titleName
+}
+
+const shouldShowProp = function ([, titleNames]) {
+  return titleNames.length !== 1
+}
+
+const getTitleName = function ([titleName]) {
   return titleName
 }
 
 const DEFAULT_TITLE_NAMES = ['taskTitle']
-
-const shouldShowProp = function (titleName, combinations) {
-  const titles = combinations.map((combination) => combination[titleName])
-  return [...new Set(titles)].length !== 1
-}
 
 const getPaddings = function (combinations, titleNames) {
   return titleNames.map((titleName) => getPadding(combinations, titleName))
