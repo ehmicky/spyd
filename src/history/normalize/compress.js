@@ -1,3 +1,5 @@
+import mapObj from 'map-obj'
+
 // Reduce size of results before saving
 // We try to persist everything, so that `show` report the same information.
 // We try to only persist what cannot be computed runtime.
@@ -11,22 +13,23 @@ export const compressResult = function ({ combinations, ...result }) {
 const compressCombination = function ({
   combination,
   combination: {
-    dimensions: {
-      task: { id: task },
-      runner: { id: runner },
-      system: { id: system },
-    },
+    dimensions,
     stats,
     stats: { histogram, quantiles, mean },
   },
 }) {
+  const dimensionsA = mapObj(dimensions, compressDimension)
   const histogramA = compressHistogram(histogram, mean)
   const quantilesA = compressQuantiles(quantiles, mean)
   return {
     ...combination,
-    dimensions: { task, runner, system },
+    dimensions: dimensionsA,
     stats: { ...stats, histogram: histogramA, quantiles: quantilesA },
   }
+}
+
+const compressDimension = function (dimension, { id }) {
+  return [dimension, id]
 }
 
 const compressHistogram = function (histogram, mean) {
@@ -52,22 +55,23 @@ export const decompressResult = function (result) {
 const decompressCombination = function ({
   combination,
   combination: {
-    dimensions: { task, runner, system },
+    dimensions,
     stats,
     stats: { histogram, quantiles, mean },
   },
 }) {
+  const dimensionsA = mapObj(dimensions, decompressDimension)
   const histogramA = decompressHistogram(histogram, mean)
   const quantilesA = decompressQuantiles(quantiles, mean)
   return {
     ...combination,
-    dimensions: {
-      task: { id: task },
-      runner: { id: runner },
-      system: { id: system },
-    },
+    dimensions: dimensionsA,
     stats: { ...stats, histogram: histogramA, quantiles: quantilesA },
   }
+}
+
+const decompressDimension = function (dimension, id) {
+  return [dimension, { id }]
 }
 
 const decompressHistogram = function (histogram, mean) {
