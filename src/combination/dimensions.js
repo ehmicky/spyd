@@ -7,7 +7,7 @@
 // The order is significant as it defines:
 //  - The sorting order of combinations in reporters
 //  - The order of dimensions when printing:
-//     - combinationName in previews and `dev`
+//     - combinationName in previews, `dev` and error messages
 //     - combinationTitle in reporters
 export const DIMENSIONS = [
   {
