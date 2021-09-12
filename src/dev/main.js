@@ -1,4 +1,4 @@
-import { getCombinationName } from '../combination/ids.js'
+import { getCombinationName } from '../combination/name.js'
 import { titleColor } from '../report/utils/colors.js'
 import { measureCombinations } from '../run/measure/main.js'
 

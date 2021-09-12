@@ -1,22 +1,5 @@
-import { titleColor, noteColor } from '../report/utils/colors.js'
-
 import { DIMENSIONS, USER_DIMENSIONS } from './dimensions.js'
 import { getInputIds } from './inputs.js'
-
-export const getCombinationName = function (combination) {
-  return getCombinationIds(combination)
-    .map(getCombinationNamePart)
-    .join(noteColor(', '))
-}
-
-const getCombinationNamePart = function ({ dimension, id }, index) {
-  const dimensionA = index === 0 ? titleize(dimension) : dimension
-  return `${noteColor(dimensionA)} ${titleColor(id)}`
-}
-
-const titleize = function (string) {
-  return `${string.charAt(0).toUpperCase()}${string.slice(1)}`
-}
 
 // Retrieve user-defined identifiers
 export const getUserIds = function (combinations, inputs) {
