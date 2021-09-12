@@ -6,9 +6,16 @@ import { groupBy } from '../utils/group.js'
 
 import { COMBINATION_DIMENSIONS } from './dimensions.js'
 
-// Sort combinations based on their `stats.mean`.
+// Sort `result.combinations` based on their `stats.mean`.
 // Combinations with the same dimension are grouped together in the sorting
 // order.
+// This sorting order should be used by reporters to sort their rows.
+// When grouping dimensions (e.g. using tables columns), some combinations
+// of specific ids might be missing
+//  - This can happen due to:
+//     - `select` configuration property
+//     - Variations being runner-specific
+//  - Those should be filtered out, as opposed to showing empty rows|columns
 export const sortCombinations = function (result) {
   const sortFunctions = COMBINATION_DIMENSIONS.map(({ idName }) =>
     getSortFunction(idName, result.combinations),
