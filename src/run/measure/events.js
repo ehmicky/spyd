@@ -28,11 +28,11 @@ const startCombination = async function (
       runner: { config },
     },
     taskPath,
-    inputs: inputsArr,
+    inputs: inputsList,
   },
   server,
 ) {
-  const inputs = toInputsObj(inputsArr)
+  const inputs = toInputsObj(inputsList)
   const { tasks: taskIds } = await sendAndReceive(
     {
       event: 'start',

@@ -12,8 +12,8 @@ const getInput = function ([inputId, inputValue]) {
   return { inputId, inputValue }
 }
 
-export const toInputsObj = function (inputsArr) {
-  return Object.assign({}, ...inputsArr.map(getInputPair))
+export const toInputsObj = function (inputsList) {
+  return Object.assign({}, ...inputsList.map(getInputPair))
 }
 
 const getInputPair = function ({ inputId, inputValue }) {
@@ -21,8 +21,8 @@ const getInputPair = function ({ inputId, inputValue }) {
 }
 
 // Retrieve all inputs identifiers
-export const getInputIds = function (inputsArr) {
-  return inputsArr.map(getInputId)
+export const getInputIds = function (inputsList) {
+  return inputsList.map(getInputId)
 }
 
 const getInputId = function ({ inputId }) {
