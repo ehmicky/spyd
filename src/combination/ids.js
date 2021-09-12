@@ -12,16 +12,13 @@ export const hasSameCombinationIds = function (combinationA, combinationB) {
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
-  return combinations.flatMap(getIdInfos).filter(isNotSameDimDuplicate)
-}
-
-// Same but for a single combination
-export const getCombinationIds = function (combination) {
-  return getIdInfos(combination)
+  return combinations.flatMap(getCombinationIds).filter(isNotSameDimDuplicate)
 }
 
 export const getCombinationName = function (combination) {
-  return getIdInfos(combination).map(getDimensionName).join(noteColor(', '))
+  return getCombinationIds(combination)
+    .map(getDimensionName)
+    .join(noteColor(', '))
 }
 
 const getDimensionName = function ({ dimension, id }, index) {
@@ -33,7 +30,7 @@ const titleize = function (string) {
   return `${string.charAt(0).toUpperCase()}${string.slice(1)}`
 }
 
-const getIdInfos = function (combination) {
+export const getCombinationIds = function (combination) {
   return DIMENSIONS.map(({ dimension, idName }) => ({
     dimension,
     id: combination[idName],
