@@ -69,5 +69,25 @@ const matchIds = function (combinationIds, { intersect }) {
 }
 
 const matchGroup = function (combinationIds, ids) {
-  return ids.some((id) => combinationIds.includes(id))
+  return ids.some((id) => anyMatchId(combinationIds, id))
+}
+
+const anyMatchId = function (combinationIds, id) {
+  return combinationIds.some((combinationId) => matchId(combinationId, id))
+}
+
+// We allow partial substring matching:
+//  - Use cases:
+//     - Allows selecting a group of related tasks
+//     - Faster to type on the CLI
+//  - Simpler yet as useful as globbing or regular expressions
+//  - Guessing if a selector is meant to target a default id might fail when
+//    using a substring, but this is not a problem because:
+//     - Only impacts variations and systems (only if multiple system
+//       dimensions) since the other default ids are persisted
+//     - Most substrings matching "primary|main_*" would match all of the other
+//       ids of the dimension, making the selectors not useful for users,
+//       i.e. unlikely
+const matchId = function (combinationId, id) {
+  return combinationId.includes(id)
 }
