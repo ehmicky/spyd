@@ -1,3 +1,4 @@
+import { parseLimits } from '../history/compare/parse.js'
 import { normalizePrecision } from '../run/precision.js'
 
 import {
@@ -68,7 +69,8 @@ const normalizeSelect = function (value, propName) {
 const normalizeLimit = function (value, propName) {
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
-  return { [propName]: valueA }
+  const limits = parseLimits(valueA)
+  return { limits }
 }
 
 const checkTitles = function (value, propName) {

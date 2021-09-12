@@ -3,8 +3,6 @@ import stripAnsi from 'strip-ansi'
 import { UserError } from '../../error/main.js'
 import { matchSelectors } from '../../select/match.js'
 
-import { parseLimits } from './parse.js'
-
 // If any `combination.stats.diff` is too slow compared to the `limit`
 // configuration property, we fail.
 // It uses the `since` configuration property like `showDiff` does.
@@ -21,14 +19,13 @@ import { parseLimits } from './parse.js'
 //  - Some units do not have directions, i.e. one cannot know programmatically
 //    whether an increase or a decrease is more desirable. This means users must
 //    explicitly specify it.
-export const checkLimits = function ({ combinations }, { limit }) {
+export const checkLimits = function ({ combinations }, { limits }) {
   const combinationsWithDiff = combinations.filter(hasDiff)
 
   if (combinationsWithDiff.length === 0) {
     return
   }
 
-  const limits = parseLimits(limit)
   const limitErrors = combinationsWithDiff
     .map((combination) => checkCombinationLimits({ combination, limits }))
     .filter(Boolean)
