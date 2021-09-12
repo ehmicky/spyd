@@ -2,7 +2,7 @@ import { getCombinationIds } from '../../combination/ids.js'
 
 import { padTitles } from './titles_pad.js'
 
-// Add `result.combinations[*].taskTitle|...`
+// Add `result.combinations[*].dimensions[*].title`
 export const addCombinationsTitles = function (result, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
   const combinations = result.combinations.map((combination) =>
@@ -24,10 +24,10 @@ const addCombinationTitles = function (combination, titles) {
 const addCombinationTitle = function ({
   combination,
   combination: { dimensions },
-  dimension: { propName, titleName },
+  dimension: { propName },
   titles,
 }) {
-  const dimension = addTitle(dimensions[propName], { titleName, titles })
+  const dimension = addTitle(dimensions[propName], titles)
   return {
     ...combination,
     dimensions: { ...dimensions, [propName]: dimension },
@@ -37,9 +37,7 @@ const addCombinationTitle = function ({
 // Add `footer.systems[*].title`
 export const addFooterTitles = function (footer, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
-  const systems = footer.systems.map((system) =>
-    addTitle(system, { titleName: 'title', titles: titlesA }),
-  )
+  const systems = footer.systems.map((system) => addTitle(system, titlesA))
   return { ...footer, systems }
 }
 
@@ -59,8 +57,8 @@ export const addFooterTitles = function (footer, titles, showTitles) {
 //   - provides a single place for all identifiers, which is simpler
 //   - removes the need for runners to handle this
 // We do this by adding a `title` property for every `id` property.
-const addTitle = function (obj, { titleName, titles }) {
+const addTitle = function (obj, titles) {
   const { id } = obj
   const { [id]: title = id } = titles
-  return title === undefined ? obj : { ...obj, [titleName]: title }
+  return title === undefined ? obj : { ...obj, title }
 }

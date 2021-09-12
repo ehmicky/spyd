@@ -17,9 +17,15 @@ export const getCombinationNameColor = function (combination) {
   return titleColor(combinationName)
 }
 
-export const getCombinationName = function ({ titles }) {
-  const rowName = titles.join(NAME_MIDDLE)
-  return `${NAME_START}${rowName}${NAME_END}`
+export const getCombinationName = function ({ dimensions }) {
+  const combinationName = Object.values(dimensions)
+    .map(getTitlePadded)
+    .join(NAME_MIDDLE)
+  return `${NAME_START}${combinationName}${NAME_END}`
+}
+
+const getTitlePadded = function ({ titlePadded }) {
+  return titlePadded
 }
 
 const NAME_MIDDLE = ' '

@@ -14,21 +14,17 @@ export const DIMENSIONS = [
     propName: 'task',
     // Name used in output and error messages
     messageName: 'task',
-    // Property name for the title
-    titleName: 'taskTitle',
     // Whether dimension was created by users or by plugins
     createdByUser: true,
   },
   {
     propName: 'runner',
     messageName: 'runner',
-    titleName: 'runnerTitle',
     createdByUser: false,
   },
   {
     propName: 'system',
     messageName: 'system',
-    titleName: 'systemTitle',
     createdByUser: true,
   },
 ]
