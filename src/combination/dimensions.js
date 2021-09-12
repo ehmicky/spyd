@@ -11,7 +11,7 @@
 export const DIMENSIONS = [
   {
     // Name used internally or in error messages
-    dimension: 'task',
+    mainName: 'task',
     // Property name for the identifier
     idName: 'taskId',
     // Property name for the title
@@ -20,13 +20,13 @@ export const DIMENSIONS = [
     createdByUser: true,
   },
   {
-    dimension: 'runner',
+    mainName: 'runner',
     idName: 'runnerId',
     titleName: 'runnerTitle',
     createdByUser: false,
   },
   {
-    dimension: 'system',
+    mainName: 'system',
     idName: 'systemId',
     titleName: 'systemTitle',
     createdByUser: true,

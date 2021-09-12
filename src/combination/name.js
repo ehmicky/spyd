@@ -10,9 +10,12 @@ export const getCombinationName = function (combination) {
     .join(noteColor(', '))
 }
 
-const getCombinationNamePart = function ({ dimension, id }, index) {
-  const dimensionA = index === 0 ? titleize(dimension) : dimension
-  return `${noteColor(dimensionA)} ${titleColor(id)}`
+const getCombinationNamePart = function (
+  { dimension: { mainName }, id },
+  index,
+) {
+  const dimension = index === 0 ? titleize(mainName) : mainName
+  return `${noteColor(dimension)} ${titleColor(id)}`
 }
 
 const titleize = function (string) {

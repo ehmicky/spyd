@@ -15,26 +15,26 @@ export const validateCombinationsIds = function (combinations, inputs) {
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.
 // Only for user-defined identifiers, not plugin-defined.
-const validateUserIds = function ({ dimension, id }) {
+const validateUserIds = function ({ mainName, id }) {
   if (id.trim() === '') {
     throw new UserError(
-      `Invalid ${dimension} "${id}": the identifier must not be empty.`,
+      `Invalid ${mainName} "${id}": the identifier must not be empty.`,
     )
   }
 
   if (id.startsWith(USER_ID_INVALID_START)) {
     throw new UserError(
-      `Invalid ${dimension} "${id}": the identifier must not start with a dash.`,
+      `Invalid ${mainName} "${id}": the identifier must not start with a dash.`,
     )
   }
 
   if (!USER_ID_REGEXP.test(id)) {
     throw new UserError(
-      `Invalid ${dimension} "${id}": the identifier must contain only letters, digits, - or _`,
+      `Invalid ${mainName} "${id}": the identifier must contain only letters, digits, - or _`,
     )
   }
 
-  validateReservedIds(id, dimension)
+  validateReservedIds(id, mainName)
 }
 
 // We do not allow starting with dash because of CLI flags parsing.
@@ -49,12 +49,12 @@ const USER_ID_INVALID_START = '-'
 // We forbid other characters for forward compatibility.
 const USER_ID_REGEXP = /^\w[\w-]*$/u
 
-const validateReservedIds = function (id, dimension) {
+const validateReservedIds = function (id, mainName) {
   const reservedIdA = RESERVED_IDS.find((reservedId) => id === reservedId)
 
   if (reservedIdA !== undefined) {
     throw new UserError(
-      `Invalid ${dimension} "${id}": "${id}" is a reserved word`,
+      `Invalid ${mainName} "${id}": "${id}" is a reserved word`,
     )
   }
 }
@@ -69,11 +69,15 @@ const RESERVED_IDS = ['not']
 // `config.titles`, `config.select`, reporting.
 // Non-combination identifiers are not checked for duplicates since they are
 // not used for selection, reporting, `config.titles`, etc.
-const validateDuplicateId = function ({ dimension, id }, index, allIds) {
+const validateDuplicateId = function (
+  { dimension: { mainName }, id },
+  index,
+  allIds,
+) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
   if (duplicateId !== undefined) {
-    throw new UserError(`The identifier "${id}" must not be used both as ${dimension} and ${duplicateId.dimension}.
+    throw new UserError(`The identifier "${id}" must not be used both as ${mainName} and ${duplicateId.dimension}.
 Please rename one of them.`)
   }
 }
