@@ -4,13 +4,14 @@ import { getMean } from '../stats/sum.js'
 
 import { COMBINATION_DIMENSIONS } from './dimensions.js'
 
-// Add `combination.*Rank` then sort combinations based on it.
+// Add `combination.*Rank` for each dimension based on `stat.mean`.
+// Then sort combinations based on it.
 export const groupResultCombinations = function (result) {
   const combinations = COMBINATION_DIMENSIONS.reduce(
     addDimensionInfo,
     result.combinations,
   )
-  const combinationsA = sortCombinations(combinations)
+  const combinationsA = sortOn(combinations, SORT_ORDER)
   return { ...result, combinations: combinationsA }
 }
 
@@ -56,12 +57,6 @@ const isDefined = function (mean) {
 const addRank = function ({ combination, dimension, idName, rankName }) {
   const rankValue = dimension.findIndex(({ id }) => id === combination[idName])
   return { ...combination, [rankName]: rankValue }
-}
-
-// Sort combinations so the fastest tasks will be first, then the fastest
-// combinations within each task (regardless of column)
-const sortCombinations = function (combinations) {
-  return sortOn(combinations, SORT_ORDER)
 }
 
 const SORT_ORDER = ['taskRank', 'runnerRank', 'systemRank']
