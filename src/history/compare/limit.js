@@ -76,7 +76,8 @@ const getLimitError = function ({ diff, threshold, higher, combination }) {
   const thresholdStr = threshold * PERCENTAGE_RATIO
   const diffStr = serializeDiff(diff)
   const higherStr = higher ? 'higher' : 'lower'
-  return `The ${combinationName} should be at most ${thresholdStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
+  return `In ${combinationName}:
+The combination should be at most ${thresholdStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
 }
 
 const serializeDiff = function (diff) {
