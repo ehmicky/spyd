@@ -28,13 +28,16 @@ export const listCombinations = async function ({
 }
 
 // Get cartesian product of all combinations
+// `taskPath` is not set in `dimensions.task.path` because it used by the `init`
+// stage before task dimension ids are known.
 const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
   if (tasks.length === 0) {
     throw new UserError(`Please specify some "tasks".`)
   }
 
-  return tasks.map(({ id, path, runner }) => ({
-    dimensions: { task: { id, path }, runner, system: { id: systemId } },
+  return tasks.map(({ id, taskPath, runner }) => ({
+    dimensions: { task: { id }, runner, system: { id: systemId } },
+    taskPath,
     inputs,
     stats: {},
   }))

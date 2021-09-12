@@ -100,18 +100,18 @@ const handleErrorsAndMeasure = async function ({
     throwIfStopped(stopState)
     return returnValue
   } catch (error) {
-    prependCombinationPrefix(error, args.combination, args.stage)
+    prependCombinationPrefix(error, args.combination)
     throw error
   }
 }
 
-const prependCombinationPrefix = function (error, combination, stage) {
-  if (stage === 'init' || error.name === 'StopError') {
+const prependCombinationPrefix = function (error, combination) {
+  if (error.name === 'StopError') {
     return
   }
 
   const combinationPrefix = getCombinationPrefix(combination)
-  error.message = `In ${combinationPrefix}\n${error.message}`
+  error.message = `In ${combinationPrefix}:\n${error.message}`
 }
 
 const getCombinationPrefix = function (combination) {

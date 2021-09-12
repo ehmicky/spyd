@@ -19,13 +19,15 @@ export const runEvents = async function ({ combination, ...args }) {
 }
 
 // Start combination, i.e. make it load the combination and run any
-// runner-defined start logic
+// runner-defined start logic.
+// `task.id` is `undefined` during `init` stage.
 const startCombination = async function (
   {
     dimensions: {
-      task: { id, path },
+      task: { id } = {},
       runner: { config },
     },
+    taskPath,
     inputs,
   },
   server,
@@ -36,7 +38,7 @@ const startCombination = async function (
       event: 'start',
       runnerConfig: config,
       taskId: id,
-      taskPath: path,
+      taskPath,
       inputs: inputsObj,
     },
     server,
