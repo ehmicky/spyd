@@ -8,7 +8,7 @@ const normalizeCombination = function ({
   dimensions: {
     task: { id: taskId },
     runner: { id: runnerId },
-    system: { systemId },
+    system: { id: systemId },
   },
   stats,
 }) {
@@ -16,7 +16,7 @@ const normalizeCombination = function ({
     dimensions: {
       task: { id: taskId },
       runner: { id: runnerId },
-      system: { systemId },
+      system: { id: systemId },
     },
     stats,
   }

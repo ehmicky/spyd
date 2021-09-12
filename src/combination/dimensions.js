@@ -31,7 +31,7 @@ export const DIMENSIONS = [
   {
     propName: 'system',
     messageName: 'system',
-    idName: 'systemId',
+    idName: 'id',
     titleName: 'systemTitle',
     createdByUser: true,
   },

@@ -34,7 +34,7 @@ const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
   }
 
   return tasks.map(({ id, taskPath, runner }) => ({
-    dimensions: { task: { id, taskPath }, runner, system: { systemId } },
+    dimensions: { task: { id, taskPath }, runner, system: { id: systemId } },
     inputs,
     stats: {},
   }))
