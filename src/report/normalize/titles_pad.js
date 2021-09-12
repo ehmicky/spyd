@@ -6,7 +6,9 @@ import { getCombinationsIds } from '../../combination/ids.js'
 export const padTitles = function (combinations) {
   const dimensions = getDimensions(combinations)
   const paddings = getPaddings(combinations, dimensions)
-  return combinations.map((combination) => addPadding(combination, paddings))
+  return combinations.map((combination) =>
+    addTitlesPadded(combination, paddings),
+  )
 }
 
 const getDimensions = function (combinations) {
@@ -31,15 +33,15 @@ const getPadding = function (combinations, dimension) {
   return { dimension, padding }
 }
 
-const addPadding = function (combination, paddings) {
+const addTitlesPadded = function (combination, paddings) {
   return paddings.reduce(
     (combinationA, { dimension, padding }) =>
-      padProp(combinationA, dimension, padding),
+      addTitlePadded(combinationA, dimension, padding),
     combination,
   )
 }
 
-const padProp = function (combination, dimension, padding) {
+const addTitlePadded = function (combination, dimension, padding) {
   const dimensionProps = combination.dimensions[dimension]
   const titlePadded = dimensionProps.title.padEnd(padding)
   return {
