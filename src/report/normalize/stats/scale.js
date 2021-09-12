@@ -32,24 +32,14 @@ const getMeasure = function (
     return stat
   }
 
-  if (mean !== undefined) {
-    return mean
-  }
-
-  if (meanMin !== undefined) {
-    return meanMin
-  }
-
-  return median
+  return [mean, meanMin, median].find(isNotEmpty)
 }
 
 const MEAN_KINDS = new Set(['duration'])
 
-// Some measures might be `0`, although unlikely. We do not them since they are
-// not a good indicator of minimum precision for scales.
-// `undefined` happens when there was not enough measures.
+// Measures that are `0`are not a good indicator of minimum precision for scale.
 const isNotEmpty = function (measure) {
-  return measure !== 0 && measure !== undefined
+  return measure !== undefined && measure !== 0
 }
 
 // Possible scales for each unit kind.
