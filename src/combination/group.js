@@ -4,29 +4,20 @@ import { getMean } from '../stats/sum.js'
 
 import { COMBINATION_DIMENSIONS } from './dimensions.js'
 
-// Group combinations per dimension.
-// Each dimension is assigned to a top-level result.dimensions.* property.
-// It includes its mean speed and rank.
-// Add `result.*` properties based on grouping combinations by dimension.
+// Add `combination.*Rank` then sort combinations based on it.
 export const groupResultCombinations = function (result) {
-  const { combinations: combinationsA, dimensions } = groupDimensionInfos(
+  const { combinations: combinationsA } = groupDimensionInfos(
     result.combinations,
   )
   const combinationsB = sortCombinations(combinationsA)
-  return { ...result, combinations: combinationsB, dimensions }
+  return { ...result, combinations: combinationsB }
 }
 
 const groupDimensionInfos = function (combinations) {
-  return COMBINATION_DIMENSIONS.reduce(addDimensionInfo, {
-    combinations,
-    dimensions: {},
-  })
+  return COMBINATION_DIMENSIONS.reduce(addDimensionInfo, { combinations })
 }
 
-const addDimensionInfo = function (
-  { combinations, dimensions },
-  { propName, idName, rankName },
-) {
+const addDimensionInfo = function ({ combinations }, { idName, rankName }) {
   const ids = getDimensionIds(combinations, idName)
   const dimension = ids.map((id) => getDimension({ combinations, id, idName }))
   const dimensionA = sortOn(dimension, 'mean')
@@ -34,10 +25,7 @@ const addDimensionInfo = function (
   const combinationsA = combinations.map((combination) =>
     addRank({ combination, dimension: dimensionA, idName, rankName }),
   )
-  return {
-    combinations: combinationsA,
-    dimensions: { ...dimensions, [propName]: dimensionA },
-  }
+  return { combinations: combinationsA }
 }
 
 const getDimensionIds = function (combinations, idName) {

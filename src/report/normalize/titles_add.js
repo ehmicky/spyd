@@ -1,5 +1,3 @@
-import mapObj from 'map-obj'
-
 import { COMBINATION_DIMENSIONS } from '../../combination/dimensions.js'
 
 // Allow users to rename identifiers from any combination dimension: tasks,
@@ -35,24 +33,6 @@ export const addCombinationsTitles = function (
 
 const getIdName = function ({ idName }) {
   return idName
-}
-
-// Add `result.dimensions.*.title`
-export const addDimensionsTitles = function (
-  { dimensions, ...result },
-  titles,
-  showTitles,
-) {
-  const titlesA = showTitles ? titles : {}
-  const dimensionsA = mapObj(dimensions, (dimension, items) => [
-    dimension,
-    addDimensionTitle(items, titlesA),
-  ])
-  return { ...result, dimensions: dimensionsA }
-}
-
-const addDimensionTitle = function (items, titles) {
-  return items.map((item) => addTitle(item, 'id', titles))
 }
 
 // Add `footer.systems[*].title`

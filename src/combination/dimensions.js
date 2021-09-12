@@ -9,24 +9,24 @@ import { getInputIds } from './inputs.js'
 export const COMBINATION_DIMENSIONS = [
   {
     dimension: 'task',
-    propName: 'tasks',
     idName: 'taskId',
     rankName: 'taskRank',
   },
   {
     dimension: 'runner',
-    propName: 'runners',
     idName: 'runnerId',
     rankName: 'runnerRank',
   },
   {
     dimension: 'system',
-    propName: 'systems',
     idName: 'systemId',
     rankName: 'systemRank',
   },
 ]
 
 export const N_COMBINATION_DIMENSIONS = [
-  { dimension: 'input', getIds: getInputIds },
+  {
+    dimension: 'input',
+    getIds: getInputIds,
+  },
 ]
