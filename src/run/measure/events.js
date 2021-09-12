@@ -1,4 +1,4 @@
-import { toInputsObj } from '../../combination/inputs.js'
+import { toInputsObject } from '../../combination/inputs.js'
 import { updateDescription, END_DESCRIPTION } from '../preview/description.js'
 import { sendAndReceive } from '../process/ipc.js'
 
@@ -28,11 +28,11 @@ const startCombination = async function (
       runner: { config },
     },
     taskPath,
-    inputs: inputsList,
+    inputsList,
   },
   server,
 ) {
-  const inputs = toInputsObj(inputsList)
+  const inputs = toInputsObject(inputsList)
   const { tasks: taskIds } = await sendAndReceive(
     {
       event: 'start',

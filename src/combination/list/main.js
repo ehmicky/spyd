@@ -1,6 +1,6 @@
 import { UserError } from '../../error/main.js'
 import { selectCombinations } from '../../select/main.js'
-import { toInputsArr } from '../inputs.js'
+import { toInputsList } from '../inputs.js'
 import { listTasks } from '../tasks/main.js'
 
 import { validateCombinationsIds } from './validate_ids.js'
@@ -14,14 +14,14 @@ export const listCombinations = async function ({
   cwd,
 }) {
   const tasks = await listTasks(runners, cwd)
-  const inputsA = toInputsArr(inputs)
+  const inputsList = toInputsList(inputs)
 
   const combinations = getCombinationsProduct({
     tasks,
-    inputs: inputsA,
+    inputsList,
     systemId,
   })
-  validateCombinationsIds(combinations, inputsA)
+  validateCombinationsIds(combinations, inputsList)
 
   const combinationsA = selectCombinations(combinations, select)
   return combinationsA
@@ -30,7 +30,7 @@ export const listCombinations = async function ({
 // Get cartesian product of all combinations
 // `taskPath` is not set in `dimensions.task.path` because it used by the `init`
 // stage before task dimension ids are known.
-const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
+const getCombinationsProduct = function ({ tasks, inputsList, systemId }) {
   if (tasks.length === 0) {
     throw new UserError(`Please specify some "tasks".`)
   }
@@ -38,7 +38,7 @@ const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
   return tasks.map(({ id, taskPath, runner }) => ({
     dimensions: { task: { id }, runner, system: { id: systemId } },
     taskPath,
-    inputs,
+    inputsList,
     stats: {},
   }))
 }
