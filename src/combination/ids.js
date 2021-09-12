@@ -47,6 +47,15 @@ const listNonCombinationIds = function (dimension, getIds, inputs) {
   return getIds(inputs).map((id) => ({ dimension, id }))
 }
 
+// Check if two combinations have same identifiers for all dimensions
+export const hasSameCombinationIds = function (combinationA, combinationB) {
+  const combinationIdsA = getCombinationIds(combinationA)
+  const combinationIdsB = getCombinationIds(combinationB)
+  return combinationIdsA.every(
+    ({ id }, index) => combinationIdsB[index].id === id,
+  )
+}
+
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
@@ -67,10 +76,4 @@ const isNotSameDimDuplicate = function ({ dimension, id }, index, idInfos) {
   return !idInfos
     .slice(index + 1)
     .some((idInfo) => idInfo.dimension === dimension && idInfo.id === id)
-}
-
-export const hasSameCombinationIds = function (combinationA, combinationB) {
-  return DIMENSIONS.every(
-    ({ idName }) => combinationA[idName] === combinationB[idName],
-  )
 }
