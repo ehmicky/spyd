@@ -11,7 +11,7 @@ export const performDev = async function (config, combinations) {
   }
 }
 
-export const combinationDev = async function (combination, { cwd }) {
+const combinationDev = async function (combination, { cwd }) {
   printCombinationName(combination)
 
   await measureCombinations([combination], {
