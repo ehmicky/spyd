@@ -2,8 +2,8 @@ import stringWidth from 'string-width'
 
 import { padString } from './pad.js'
 import {
-  NAME_SEPARATOR,
-  NAME_SEPARATOR_COLORED,
+  TITLE_SEPARATOR,
+  TITLE_SEPARATOR_COLORED,
   COLUMN_SEPARATOR,
   COLUMN_SEPARATOR_COLORED,
 } from './separator.js'
@@ -22,7 +22,7 @@ export const getTables = function (rows, screenWidth) {
   const rowsRight = rows.map(getRowRight)
   const leftWidth = Math.max(...rowsLeft.map(stringWidth))
   const columnsWidth = Math.max(...rowsRight.flat().map(stringWidth))
-  const availableWidth = screenWidth - leftWidth - NAME_SEPARATOR.length
+  const availableWidth = screenWidth - leftWidth - TITLE_SEPARATOR.length
   const tablesRows = getTablesRows(rowsRight, availableWidth, columnsWidth)
   return tablesRows
     .map((tableRows) =>
@@ -100,5 +100,5 @@ const getRow = function ({ row, leftCell, leftWidth, columnsWidth }) {
   const rowA = row
     .map((cell) => padString(cell, columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
-  return `${leftCellA}${NAME_SEPARATOR_COLORED}${rowA}\n`
+  return `${leftCellA}${TITLE_SEPARATOR_COLORED}${rowA}\n`
 }

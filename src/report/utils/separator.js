@@ -1,11 +1,11 @@
 import { separatorColor } from './colors.js'
 
-// Separator between first column and others
-const NAME_SEPARATOR_SIGN = ''
-const NAME_PADDING_WIDTH = 2
-const NAME_PADDING = ' '.repeat(NAME_PADDING_WIDTH)
-export const NAME_SEPARATOR = `${NAME_SEPARATOR_SIGN}${NAME_PADDING}`
-export const NAME_SEPARATOR_COLORED = NAME_SEPARATOR
+// Separator between combination title (first column) and rest
+const TITLE_SEPARATOR_SIGN = ''
+const TITLE_PADDING_WIDTH = 2
+const TITLE_PADDING = ' '.repeat(TITLE_PADDING_WIDTH)
+export const TITLE_SEPARATOR = `${TITLE_SEPARATOR_SIGN}${TITLE_PADDING}`
+export const TITLE_SEPARATOR_COLORED = TITLE_SEPARATOR
 
 // Separator between columns
 // Works on all terminals
