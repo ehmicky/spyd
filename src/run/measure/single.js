@@ -1,3 +1,5 @@
+import filterObj from 'filter-obj'
+
 import { getCombinationName } from '../../combination/name.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
@@ -98,16 +100,27 @@ const handleErrorsAndMeasure = async function ({
     throwIfStopped(stopState)
     return returnValue
   } catch (error) {
-    prependTaskPrefix(error, args.combination, args.stage)
+    prependCombinationPrefix(error, args.combination, args.stage)
     throw error
   }
 }
 
-const prependTaskPrefix = function (error, combination, stage) {
+const prependCombinationPrefix = function (error, combination, stage) {
   if (stage === 'init' || error.name === 'StopError') {
     return
   }
 
-  const combinationName = getCombinationName(combination)
-  error.message = `In ${combinationName}\n${error.message}`
+  const combinationPrefix = getCombinationPrefix(combination)
+  error.message = `In ${combinationPrefix}\n${error.message}`
+}
+
+const getCombinationPrefix = function (combination) {
+  const dimensions = filterObj(combination.dimensions, shouldKeepDimension)
+  return getCombinationName({ ...combination, dimensions })
+}
+
+// Some dimensions are always the same during a given run, i.e. are not useful
+// in error messages
+const shouldKeepDimension = function (dimension) {
+  return !dimension.startsWith('system')
 }
