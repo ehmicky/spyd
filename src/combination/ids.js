@@ -18,10 +18,13 @@ export const getCombinationsIds = function (combinations) {
 // Remove duplicate ids with the same dimension, since this happens due to the
 // cartesian product.
 // Duplicate ids with a different dimension are validated later.
-const isNotDuplicate = function ({ dimension, id }, index, idInfos) {
-  return !idInfos
+const isNotDuplicate = function ({ dimension, id }, index, combinationIds) {
+  return !combinationIds
     .slice(index + 1)
-    .some((idInfo) => idInfo.dimension === dimension && idInfo.id === id)
+    .some(
+      (combinationId) =>
+        combinationId.dimension === dimension && combinationId.id === id,
+    )
 }
 
 export const getCombinationIds = function (combination) {

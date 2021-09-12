@@ -9,9 +9,10 @@ export const getUserIds = function (combinations, inputs) {
   return [...combinationsUserIds, ...nonCombinationsIds]
 }
 
-const isUserId = function (idInfo) {
-  return DIMENSIONS.find(({ dimension }) => idInfo.dimension === dimension)
-    .createdByUser
+const isUserId = function (combinationId) {
+  return DIMENSIONS.find(
+    ({ dimension }) => combinationId.dimension === dimension,
+  ).createdByUser
 }
 
 // Identifiers that do not relate to dimensions/combinations
