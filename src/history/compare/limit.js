@@ -1,5 +1,4 @@
-import stripAnsi from 'strip-ansi'
-
+import { getCombinationName } from '../../combination/name.js'
 import { UserError } from '../../error/main.js'
 import { matchSelectors } from '../../select/match.js'
 
@@ -45,7 +44,6 @@ const hasDiff = function ({ stats: { diff, diffPrecise } }) {
 const checkCombinationLimits = function ({
   combination,
   combination: {
-    name,
     stats: {
       diff: { raw: diff },
     },
@@ -66,19 +64,19 @@ const checkCombinationLimits = function ({
     return
   }
 
-  return getLimitError({ name, diff, threshold, higher })
+  return getLimitError({ diff, threshold, higher, combination })
 }
 
 const isBelowThreshold = function (diff, threshold, higher) {
   return higher ? diff <= threshold : diff >= threshold
 }
 
-const getLimitError = function ({ name = 'oo', diff, threshold, higher }) {
-  const nameA = stripAnsi(name)
+const getLimitError = function ({ diff, threshold, higher, combination }) {
+  const combinationName = getCombinationName(combination)
   const thresholdStr = threshold * PERCENTAGE_RATIO
   const diffStr = serializeDiff(diff)
   const higherStr = higher ? 'higher' : 'lower'
-  return `${nameA} should be at most ${thresholdStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
+  return `The ${combinationName} should be at most ${thresholdStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
 }
 
 const serializeDiff = function (diff) {
