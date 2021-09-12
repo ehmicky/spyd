@@ -1,6 +1,9 @@
 // All dimensions. They:
 //  - create dimensions in runs using a cartesian product
 //  - can be used in `select|limit`
+//  - are printed when naming the combination
+//     - in reporters, preview bottom bar, `dev`, error messages
+//     - in some of those cases, `titles` are applied too
 // The order is significant as it defines:
 //  - The sorting order of combinations in reporters
 //  - The order of dimensions when printing combinationName in reporters,
