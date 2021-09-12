@@ -1,50 +1,55 @@
+import { COMBINATION_DIMENSIONS } from '../../combination/dimensions.js'
+
 // Add:
 //  - `combination.task|runner|systemTitlePadded`: like
 //     `combination.*Title` but padded so all combinations vertically align
 //  - `combination.titles`: combines all *TitlePadded
 export const padTitles = function (combinations) {
-  const propNames = getUniquePropNames(combinations)
-  const paddings = getPaddings(combinations, propNames)
+  const titleNames = getUniqueTitleNames(combinations)
+  const paddings = getPaddings(combinations, titleNames)
   return combinations.map((combination) => addPadding(combination, paddings))
 }
 
-const getUniquePropNames = function (combinations) {
-  const propNames = TITLE_PROPS.filter((propName) =>
-    shouldShowProp(propName, combinations),
+const getUniqueTitleNames = function (combinations) {
+  const titleNames = COMBINATION_DIMENSIONS.map(getTitleName).filter(
+    (titleName) => shouldShowProp(titleName, combinations),
   )
-  return propNames.length === 0 ? DEFAULT_TITLE_PROPS : propNames
+  return titleNames.length === 0 ? DEFAULT_TITLE_NAMES : titleNames
 }
 
-const TITLE_PROPS = ['taskTitle', 'runnerTitle', 'systemTitle']
-const DEFAULT_TITLE_PROPS = ['taskTitle']
+const getTitleName = function ({ titleName }) {
+  return titleName
+}
 
-const shouldShowProp = function (propName, combinations) {
-  const titles = combinations.map((combination) => combination[propName])
+const DEFAULT_TITLE_NAMES = ['taskTitle']
+
+const shouldShowProp = function (titleName, combinations) {
+  const titles = combinations.map((combination) => combination[titleName])
   return [...new Set(titles)].length !== 1
 }
 
-const getPaddings = function (combinations, propNames) {
-  return propNames.map((propName) => getPadding(combinations, propName))
+const getPaddings = function (combinations, titleNames) {
+  return titleNames.map((titleName) => getPadding(combinations, titleName))
 }
 
-const getPadding = function (combinations, propName) {
-  const lengths = combinations.map(({ [propName]: value }) => value.length)
+const getPadding = function (combinations, titleName) {
+  const lengths = combinations.map(({ [titleName]: value }) => value.length)
   const padding = Math.max(...lengths)
-  return { propName, padding }
+  return { titleName, padding }
 }
 
 const addPadding = function (combination, paddings) {
-  const titles = paddings.map(({ propName, padding }) =>
-    padProp(combination[propName], padding, propName),
+  const titles = paddings.map(({ titleName, padding }) =>
+    padProp(combination[titleName], padding, titleName),
   )
   const titlesA = Object.fromEntries(titles)
   const titlesProp = Object.values(titlesA)
   return { ...combination, ...titlesA, titles: titlesProp }
 }
 
-const padProp = function (title, padding, propName) {
+const padProp = function (title, padding, titleName) {
   const titleA = title.padEnd(padding)
-  return [`${propName}${PADDED_PREFIX}`, titleA]
+  return [`${titleName}${PADDED_PREFIX}`, titleA]
 }
 
 const PADDED_PREFIX = 'Padded'

@@ -7,8 +7,9 @@ import { getInputIds } from './inputs.js'
 //  - are checked for duplicates
 // As opposed to non-combination identifiers: inputs.
 // The order is significant as it defines:
-//  - The sorting order in reporters
-//  - The order when printing combinationName in previews and `dev`
+//  - The sorting order of combinations in reporters
+//  - The order of dimensions when printing combinationName in reporters,
+//    previews and `dev`
 export const COMBINATION_DIMENSIONS = [
   {
     dimension: 'task',
