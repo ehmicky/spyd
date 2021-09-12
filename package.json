@@ -68,7 +68,7 @@
     "semver": "^7.3.5",
     "sort-on": "^4.1.0",
     "string-width": "^5.0.0",
-    "strip-ansi": "^7.0.0",
+    "strip-ansi": "^7.0.1",
     "strip-final-newline": "^3.0.0",
     "time-resolution": "^0.5.1",
     "tmp-promise": "^3.0.2",
