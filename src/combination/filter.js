@@ -1,3 +1,13 @@
+// Like `listNoDimensions` but using combinations
+export const getNoDimensions = function (combinations) {
+  const dimensionsArray = combinations.map(getCombinationDimensions)
+  return listNoDimensions(dimensionsArray)
+}
+
+const getCombinationDimensions = function ({ dimensions }) {
+  return dimensions
+}
+
 // Retrieve `noDimensions`, i.e. dimensions that have the same ids across all
 // combinations. Those are not reported, since they are redundant for users.
 export const listNoDimensions = function (dimensionsArray) {
