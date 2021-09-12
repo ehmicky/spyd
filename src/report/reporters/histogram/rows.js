@@ -16,8 +16,9 @@ export const getHistogramRows = function ({
   height,
   medianIndex,
   mini,
+  smooth,
 }) {
-  const frequencies = getFrequencies(histogram, contentWidth)
+  const frequencies = getFrequencies(histogram, contentWidth, smooth)
   const columns = getHistogramColumns({
     frequencies,
     medianIndex,

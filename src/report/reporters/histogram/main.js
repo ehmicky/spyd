@@ -15,9 +15,10 @@ import { getWidths } from './width.js'
 //    such as `boxplot`
 // Configuration properties:
 //  - `mini` (default: false): hide `min`, `median` and `max` labels
+//  - `smooth` (default: true): smooth the histogram values
 const reportTerminal = function (
   { combinations, screenWidth },
-  { mini = false },
+  { mini = false, smooth = true },
 ) {
   const height = 2 * EXTRA_HEIGHT
   const { titlesWidth, minBlockWidth, contentWidth } = getWidths(
@@ -34,6 +35,7 @@ const reportTerminal = function (
         contentWidth,
         height,
         mini,
+        smooth,
       }),
     )
     .join('\n')
@@ -49,6 +51,7 @@ const serializeCombination = function ({
   contentWidth,
   height,
   mini,
+  smooth,
 }) {
   const combinationTitles = getCombNamePaddedColor(combination)
 
@@ -67,6 +70,7 @@ const serializeCombination = function ({
     height,
     medianIndex,
     mini,
+    smooth,
   })
   const abscissa = mini
     ? ''
