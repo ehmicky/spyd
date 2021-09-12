@@ -24,7 +24,7 @@ export const DIMENSIONS = [
   {
     propName: 'runner',
     messageName: 'runner',
-    idName: 'runnerId',
+    idName: 'id',
     titleName: 'runnerTitle',
     createdByUser: false,
   },

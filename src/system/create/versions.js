@@ -37,31 +37,31 @@ const getSpydVersion = async function () {
 }
 
 const getRunnersVersions = async function (combinations, cwd) {
-  const runnerIds = [...new Set(combinations.map(getRunnerId))]
+  const ids = [...new Set(combinations.map(getRunnerId))]
   return await Promise.all(
-    runnerIds.map((runnerId) => getRunnerVersions(runnerId, combinations, cwd)),
+    ids.map((id) => getRunnerVersions(id, combinations, cwd)),
   )
 }
 
 const getRunnerId = function ({
   dimensions: {
-    runner: { runnerId },
+    runner: { id },
   },
 }) {
-  return runnerId
+  return id
 }
 
-const getRunnerVersions = async function (runnerId, combinations, cwd) {
+const getRunnerVersions = async function (id, combinations, cwd) {
   const {
     dimensions: {
       runner: { runnerVersions, runnerSpawnOptions },
     },
   } = combinations.find(
-    (combination) => combination.dimensions.runner.runnerId === runnerId,
+    (combination) => combination.dimensions.runner.id === id,
   )
   const runnerVersionsA = await Promise.all(
     Object.entries(runnerVersions).map(([name, version]) =>
-      getRunnerVersion({ name, version, runnerId, runnerSpawnOptions, cwd }),
+      getRunnerVersion({ name, version, id, runnerSpawnOptions, cwd }),
     ),
   )
   return Object.assign({}, ...runnerVersionsA)
@@ -70,7 +70,7 @@ const getRunnerVersions = async function (runnerId, combinations, cwd) {
 const getRunnerVersion = async function ({
   name,
   version,
-  runnerId,
+  id,
   runnerSpawnOptions,
   cwd,
 }) {
@@ -87,7 +87,7 @@ const getRunnerVersion = async function ({
     return { [name]: stdout }
   } catch (error) {
     throw new PluginError(
-      `Could not start runner "${runnerId}"
+      `Could not start runner "${id}"
 Retrieving runner versions failed: ${version.join(' ')}
 ${error.message}`,
     )

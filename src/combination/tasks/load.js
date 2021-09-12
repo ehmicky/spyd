@@ -3,7 +3,7 @@ import { UserError, PluginError } from '../../error/main.js'
 // Select the runners and retrieve their related spawn options using
 // `runner.launch()`
 export const loadRunner = async function ({
-  id: runnerId,
+  id,
   config: runnerConfig,
   launch,
 }) {
@@ -11,9 +11,9 @@ export const loadRunner = async function ({
     spawn: runnerSpawn,
     spawnOptions: runnerSpawnOptions = {},
     versions: runnerVersions,
-  } = await launchRunner({ runnerId, runnerConfig, launch })
+  } = await launchRunner({ id, runnerConfig, launch })
   return {
-    runnerId,
+    id,
     runnerSpawn,
     runnerSpawnOptions,
     runnerVersions,
@@ -22,20 +22,18 @@ export const loadRunner = async function ({
 }
 
 // Fire `runner.launch()`
-const launchRunner = async function ({ runnerId, runnerConfig, launch }) {
+const launchRunner = async function ({ id, runnerConfig, launch }) {
   try {
     return await launch(runnerConfig)
   } catch (error) {
-    throw getLaunchError(error, runnerId)
+    throw getLaunchError(error, id)
   }
 }
 
-const getLaunchError = function (error, runnerId) {
+const getLaunchError = function (error, id) {
   if (error instanceof UserError) {
-    return new UserError(`In runner '${runnerId}': ${error.message}`)
+    return new UserError(`In runner '${id}': ${error.message}`)
   }
 
-  return new PluginError(
-    `In runner '${runnerId}', internal error: ${error.stack}`,
-  )
+  return new PluginError(`In runner '${id}', internal error: ${error.stack}`)
 }
