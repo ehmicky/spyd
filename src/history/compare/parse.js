@@ -16,9 +16,9 @@ const parseLimit = function (singleLimit, combinations) {
   const [rawPercentage, ...rawGroups] = singleLimit
     .trim()
     .split(PERCENT_SEPARATOR_REGEXP)
-  const threshold = parsePercentage(rawPercentage)
+  const { threshold, higher } = parsePercentage(rawPercentage)
   const selectors = parseLimitSelectors(rawGroups, combinations)
-  return { threshold, selectors }
+  return { threshold, higher, selectors }
 }
 
 const PERCENT_SEPARATOR_REGEXP = /\s+/u
@@ -34,13 +34,15 @@ const parsePercentage = function (rawPercentage) {
 
   const threshold = Number(percentage)
 
-  if (!Number.isInteger(threshold) || threshold < 0) {
+  if (!Number.isInteger(threshold)) {
     throw new UserError(
-      `The 'limit' configuration property's percentage must be a positive integer: ${rawPercentage}`,
+      `The 'limit' configuration property's percentage must be an integer: ${rawPercentage}`,
     )
   }
 
-  return threshold / PERCENTAGE_RATIO
+  const higher = threshold > 0
+  const thresholdA = Math.abs(threshold) / PERCENTAGE_RATIO
+  return { threshold: thresholdA, higher }
 }
 
 const PERCENTAGE_REGEXP = /%$/u

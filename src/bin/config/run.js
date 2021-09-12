@@ -33,6 +33,8 @@ Default: false`,
     describe: `Report when the average duration has increased by more than a
 specific percentage such as "50%".
 
+Negative percentages like "-50%" can be used for decreases instead.
+
 The limit can be scoped to specific combinations by appending their identifiers
 after the percentage.
   - The syntax is the same as the "select" configuration property.
