@@ -17,18 +17,16 @@ const isUserId = function (combinationId) {
 
 // Identifiers that do not relate to dimensions/combinations
 const getNonCombinationsIds = function (inputs) {
-  return NON_COMBINATION_IDS.flatMap(({ dimension, getIds }) =>
+  return Object.entries(NON_COMBINATION_IDS).flatMap(([dimension, getIds]) =>
     listNonCombinationIds(dimension, getIds, inputs),
   )
 }
 
-const NON_COMBINATION_IDS = [
-  {
-    dimension: 'input',
-    getIds: getInputIds,
-  },
-]
-
 const listNonCombinationIds = function (dimension, getIds, inputs) {
-  return getIds(inputs).map((id) => ({ dimension, id }))
+  const ids = getIds(inputs)
+  return ids.map((id) => ({ dimension, id }))
+}
+
+const NON_COMBINATION_IDS = {
+  input: getInputIds,
 }
