@@ -52,10 +52,5 @@ const addSystemTitle = function (system, titles) {
 const addTitle = function (obj, { idName, titleName, titles }) {
   const id = obj[idName]
   const { [id]: title = id } = titles
-
-  if (title === undefined) {
-    return obj
-  }
-
-  return { ...obj, [titleName]: title }
+  return title === undefined ? obj : { ...obj, [titleName]: title }
 }
