@@ -86,11 +86,11 @@ export const listTasks = async function (runners, cwd) {
 
 const getRunnerTasks = async function (runner, cwd) {
   const runnerA = await loadRunner(runner)
-  const tasks = await applyDefaultTasks(runnerA)
-  const tasksA = await Promise.all(
-    tasks.map((taskPath) => findTasks(taskPath, cwd, runnerA)),
+  const taskPaths = await applyDefaultTasks(runnerA)
+  const tasks = await Promise.all(
+    taskPaths.map((taskPath) => findTasks(taskPath, cwd, runnerA)),
   )
-  return tasksA.flat()
+  return tasks.flat()
 }
 
 // When two task files export the same task id, we only keep one based on the
