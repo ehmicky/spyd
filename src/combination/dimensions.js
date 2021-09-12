@@ -13,17 +13,14 @@ export const COMBINATION_DIMENSIONS = [
   {
     dimension: 'task',
     idName: 'taskId',
-    rankName: 'taskRank',
   },
   {
     dimension: 'runner',
     idName: 'runnerId',
-    rankName: 'runnerRank',
   },
   {
     dimension: 'system',
     idName: 'systemId',
-    rankName: 'systemRank',
   },
 ]
 
