@@ -18,6 +18,6 @@ export const listNoDimensions = function (dimensionsArray) {
 }
 
 const isNoDimensions = function (dimensionsArray, propName) {
-  const ids = dimensionsArray.map((dimensions) => dimensions[propName])
+  const ids = dimensionsArray.map((dimensions) => dimensions[propName].id)
   return [...new Set(ids)].length === 1
 }
