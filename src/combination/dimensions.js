@@ -34,3 +34,6 @@ export const N_COMBINATION_DIMENSIONS = [
     getIds: getInputIds,
   },
 ]
+
+// Dimensions created by users, not by plugins
+export const USER_DIMENSIONS = new Set(['task', 'system', 'input'])

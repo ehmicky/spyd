@@ -3,11 +3,10 @@ import { titleColor, noteColor } from '../report/utils/colors.js'
 import {
   COMBINATION_DIMENSIONS,
   N_COMBINATION_DIMENSIONS,
+  USER_DIMENSIONS,
 } from './dimensions.js'
 
-// Retrieve user-defined identifiers: tasks, systems, variations, inputs
-// They are checked for allowed characters.
-// As opposed to plugin-defined identifiers: runners
+// Retrieve user-defined identifiers
 export const getUserIds = function (combinations, inputs) {
   const combinationsIds = getCombinationsIds(combinations)
   const nonCombinationIds = getNonCombinationsIds(inputs)
@@ -16,10 +15,8 @@ export const getUserIds = function (combinations, inputs) {
 }
 
 const isUserId = function ({ dimension }) {
-  return USER_ID_DIMENSIONS.has(dimension)
+  return USER_DIMENSIONS.has(dimension)
 }
-
-const USER_ID_DIMENSIONS = new Set(['task', 'system', 'input'])
 
 export const isSameDimension = function (combinationA, combinationB) {
   return COMBINATION_DIMENSIONS.every(
