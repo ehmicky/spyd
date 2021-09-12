@@ -107,6 +107,6 @@ const prependTaskPrefix = function (error, { dimensions }, stage) {
     return
   }
 
-  const taskPrefix = `In task "${dimensions.tasks.taskId}"`
+  const taskPrefix = `In task "${dimensions.task.id}"`
   error.message = `${taskPrefix}:\n${error.message}`
 }

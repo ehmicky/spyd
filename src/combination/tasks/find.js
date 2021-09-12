@@ -18,7 +18,7 @@ export const findTasks = async function (
   await validateTask(taskPath)
 
   try {
-    const [{ taskIds }] = await measureCombinations(
+    const [{ taskIds: ids }] = await measureCombinations(
       [
         {
           dimensions: {
@@ -30,9 +30,9 @@ export const findTasks = async function (
       ],
       { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
     )
-    validateDuplicateTaskIds(taskIds)
-    return taskIds.map((taskId) => ({
-      taskId,
+    validateDuplicateTaskIds(ids)
+    return ids.map((id) => ({
+      id,
       taskPath,
       runner: {
         runnerId,
@@ -57,19 +57,19 @@ const validateTask = async function (taskPath) {
 // Runners should enforce that task identifiers are unique. This can be done
 // by using a syntax which does not allow duplicate keys such as exports
 // in JavaScript.
-// Using the same taskId is allowed through in different:
+// Using the same task id is allowed through in different:
 //  - Runners: to compare the same task across runners
 //  - Task files: to override shared configuration's tasks
-const validateDuplicateTaskIds = function (taskIds) {
-  const duplicateTaskId = taskIds.find(isDuplicateTaskId)
+const validateDuplicateTaskIds = function (ids) {
+  const duplicateId = ids.find(isDuplicateId)
 
-  if (duplicateTaskId !== undefined) {
+  if (duplicateId !== undefined) {
     throw new PluginError(
-      `Task "${duplicateTaskId}" must not be defined several times.`,
+      `Task "${duplicateId}" must not be defined several times.`,
     )
   }
 }
 
-const isDuplicateTaskId = function (taskId, index, taskIds) {
-  return taskIds.slice(index + 1).includes(taskId)
+const isDuplicateId = function (id, index, ids) {
+  return ids.slice(index + 1).includes(id)
 }

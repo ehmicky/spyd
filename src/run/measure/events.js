@@ -23,7 +23,7 @@ export const runEvents = async function ({ combination, ...args }) {
 const startCombination = async function (
   {
     dimensions: {
-      task: { taskId, taskPath },
+      task: { id, taskPath },
       runner: { runnerConfig },
     },
     inputs,
@@ -32,7 +32,7 @@ const startCombination = async function (
 ) {
   const inputsA = toInputsObj(inputs)
   const { tasks: taskIds } = await sendAndReceive(
-    { event: 'start', runnerConfig, taskId, taskPath, inputs: inputsA },
+    { event: 'start', runnerConfig, taskId: id, taskPath, inputs: inputsA },
     server,
   )
   return taskIds

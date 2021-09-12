@@ -6,18 +6,14 @@ export const normalizeMeasuredResult = function (result) {
 
 const normalizeCombination = function ({
   dimensions: {
-    task: { taskId },
+    task: { id },
     runner: { runnerId },
     system: { systemId },
   },
   stats,
 }) {
   return {
-    dimensions: {
-      task: { taskId },
-      runner: { runnerId },
-      system: { systemId },
-    },
+    dimensions: { task: { id }, runner: { runnerId }, system: { systemId } },
     stats,
   }
 }

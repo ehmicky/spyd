@@ -12,7 +12,7 @@ const compressCombination = function ({
   combination,
   combination: {
     dimensions: {
-      task: { taskId },
+      task: { id },
       runner: { runnerId },
       system: { systemId },
     },
@@ -24,7 +24,7 @@ const compressCombination = function ({
   const quantilesA = compressQuantiles(quantiles, mean)
   return {
     ...combination,
-    dimensions: { task: taskId, runner: runnerId, system: systemId },
+    dimensions: { task: id, runner: runnerId, system: systemId },
     stats: { ...stats, histogram: histogramA, quantiles: quantilesA },
   }
 }
@@ -62,7 +62,7 @@ const decompressCombination = function ({
   return {
     ...combination,
     dimensions: {
-      task: { taskId: task },
+      task: { id: task },
       runner: { runnerId: runner },
       system: { systemId: system },
     },

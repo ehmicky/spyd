@@ -99,5 +99,5 @@ const getRunnerTasks = async function (runner, cwd) {
 //  - `tasks` array order
 // This allows overridding tasks when using shared configurations.
 const removeDuplicateTaskId = function (task, index, tasks) {
-  return tasks.slice(index + 1).every(({ taskId }) => taskId !== task.taskId)
+  return tasks.slice(index + 1).every(({ id }) => id !== task.id)
 }

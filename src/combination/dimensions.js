@@ -15,7 +15,7 @@ export const DIMENSIONS = [
     // Name used in output and error messages
     messageName: 'task',
     // Property name for the identifier
-    idName: 'taskId',
+    idName: 'id',
     // Property name for the title
     titleName: 'taskTitle',
     // Whether dimension was created by users or by plugins
