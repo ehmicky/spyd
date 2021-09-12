@@ -1,8 +1,7 @@
 import { getCombinationIds } from '../combination/ids.js'
 import { findIndexReverse } from '../utils/find.js'
 
-// Select combinations according to the `select` or `limit` configuration
-// properties.
+// Select combinations according to the `select|limit` configuration properties.
 // Each selector:
 //  - Is an intersection of union of identifiers
 //  - Can be negated to exclude instead of including

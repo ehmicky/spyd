@@ -2,7 +2,7 @@ import { getCombinationsIds } from '../combination/ids.js'
 
 import { tokenizeSelector } from './tokenize.js'
 
-// Parse `select`, `limit` user-friendly format (array of strings) to a
+// Parse `select|limit` user-friendly format (array of strings) to a
 // code-friendlier format (objects).
 // Users specify a list of identifiers.
 export const parseSelectors = function (rawSelectors, propName, combinations) {
