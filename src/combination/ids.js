@@ -3,18 +3,6 @@ import { titleColor, noteColor } from '../report/utils/colors.js'
 import { DIMENSIONS, USER_DIMENSIONS } from './dimensions.js'
 import { getInputIds } from './inputs.js'
 
-export const hasSameCombinationIds = function (combinationA, combinationB) {
-  return DIMENSIONS.every(
-    ({ idName }) => combinationA[idName] === combinationB[idName],
-  )
-}
-
-// Retrieve all unique combinations identifiers.
-// For all combinations of a given result.
-export const getCombinationsIds = function (combinations) {
-  return combinations.flatMap(getCombinationIds).filter(isNotSameDimDuplicate)
-}
-
 export const getCombinationName = function (combination) {
   return getCombinationIds(combination)
     .map(getCombinationNamePart)
@@ -28,22 +16,6 @@ const getCombinationNamePart = function ({ dimension, id }, index) {
 
 const titleize = function (string) {
   return `${string.charAt(0).toUpperCase()}${string.slice(1)}`
-}
-
-export const getCombinationIds = function (combination) {
-  return DIMENSIONS.map(({ dimension, idName }) => ({
-    dimension,
-    id: combination[idName],
-  }))
-}
-
-// Remove duplicate ids with the same dimension, since this happens due to the
-// cartesian product.
-// Duplicate ids with a different dimension are validated later.
-const isNotSameDimDuplicate = function ({ dimension, id }, index, idInfos) {
-  return !idInfos
-    .slice(index + 1)
-    .some((idInfo) => idInfo.dimension === dimension && idInfo.id === id)
 }
 
 // Retrieve user-defined identifiers
@@ -73,4 +45,32 @@ const NON_COMBINATION_IDS = [
 
 const listNonCombinationIds = function (dimension, getIds, inputs) {
   return getIds(inputs).map((id) => ({ dimension, id }))
+}
+
+// Retrieve all unique combinations identifiers.
+// For all combinations of a given result.
+export const getCombinationsIds = function (combinations) {
+  return combinations.flatMap(getCombinationIds).filter(isNotSameDimDuplicate)
+}
+
+export const getCombinationIds = function (combination) {
+  return DIMENSIONS.map(({ dimension, idName }) => ({
+    dimension,
+    id: combination[idName],
+  }))
+}
+
+// Remove duplicate ids with the same dimension, since this happens due to the
+// cartesian product.
+// Duplicate ids with a different dimension are validated later.
+const isNotSameDimDuplicate = function ({ dimension, id }, index, idInfos) {
+  return !idInfos
+    .slice(index + 1)
+    .some((idInfo) => idInfo.dimension === dimension && idInfo.id === id)
+}
+
+export const hasSameCombinationIds = function (combinationA, combinationB) {
+  return DIMENSIONS.every(
+    ({ idName }) => combinationA[idName] === combinationB[idName],
+  )
 }
