@@ -4,6 +4,7 @@ export const normalizeMeasuredResult = function (result) {
   return { ...result, combinations }
 }
 
+// Only keep the properties we need for reporting
 const normalizeCombination = function ({
   dimensions: {
     task: { id: taskId },
