@@ -34,6 +34,7 @@ export const spawnRunnerProcess = async function ({
   combination: {
     dimensions: {
       runner: {
+        id,
         spawn: [file, ...args],
         spawnOptions,
       },
@@ -44,20 +45,25 @@ export const spawnRunnerProcess = async function ({
   serverUrl,
   logsStream,
 }) {
-  const childProcess = spawnProcess(
-    [file, ...args, serverUrl],
-    {
-      ...spawnOptions,
-      stdio: getStdio(logsStream),
-      reject: false,
-      detached: true,
-      cleanup: true,
-    },
-    cwd,
-  )
-  await waitForIpcSetup(childProcess, server)
-  const onTaskExit = noUnhandledRejection(throwOnTaskExit(childProcess))
-  return { childProcess, onTaskExit }
+  try {
+    const childProcess = spawnProcess(
+      [file, ...args, serverUrl],
+      {
+        ...spawnOptions,
+        stdio: getStdio(logsStream),
+        reject: false,
+        detached: true,
+        cleanup: true,
+      },
+      cwd,
+    )
+    await waitForIpcSetup(childProcess, server)
+    const onTaskExit = noUnhandledRejection(throwOnTaskExit(childProcess))
+    return { childProcess, onTaskExit }
+  } catch (error) {
+    error.message = `In runner "${id}":\n${error.message}`
+    throw error
+  }
 }
 
 // The `dev` command directly streams stdout/stderr.
