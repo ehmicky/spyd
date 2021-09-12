@@ -13,6 +13,25 @@ import { sortFloats } from '../../stats/sort.js'
 //    by it.
 //  - It is more stable
 //  - It is faster to compute since we need to sort `sampleMeasures` anyway
+// Some durations might be 0:
+//  - This happens due when the task duration is too close to either:
+//     - The runner's time resolution (on a given machine)
+//     - The runner's duration to take a timestamp
+//  - So durations being 0 are not actually 0 but instead:
+//     - Unknown durations
+//     - Lower than any duration not 0
+//  - Unlike measures being 0, they are not desirable
+//     - We try to reduce their occurences using the `repeat` loop
+//     - But they can still occur due to:
+//        - Wrong `measureCost` estimation
+//        - Wrong `timeResolution` estimation
+//        - Task being too slow during calibration, ending calibration too soon
+//  - As an unknown lowest duration, they are still useful and kept in the
+//   following cases:
+//     - `sampleMedian` computation
+//     - Measures of unit "auto"
+//  - However, with the unit group "mixed", they do not make sense and are
+//    filtered out
 export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
   const sampleMeasuresA = normalizeRepeat(sampleMeasures, repeat)
   sortFloats(sampleMeasuresA)
