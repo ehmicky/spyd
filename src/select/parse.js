@@ -40,6 +40,7 @@ const tokenizeSelector = function (rawSelector) {
 const TOKEN_DELIMITER_REGEX = /\s+/gu
 
 // Matching is case-insensitive to make it faster to type on the CLI.
+// This applies also to special tokens "and"/"not".
 // We directly do this during tokenization.
 const removeTokenCase = function (token) {
   return token.toLowerCase()
