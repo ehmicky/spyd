@@ -6,26 +6,21 @@ import { COMBINATION_DIMENSIONS } from './dimensions.js'
 
 // Add `combination.*Rank` then sort combinations based on it.
 export const groupResultCombinations = function (result) {
-  const { combinations: combinationsA } = groupDimensionInfos(
+  const combinations = COMBINATION_DIMENSIONS.reduce(
+    addDimensionInfo,
     result.combinations,
   )
-  const combinationsB = sortCombinations(combinationsA)
-  return { ...result, combinations: combinationsB }
+  const combinationsA = sortCombinations(combinations)
+  return { ...result, combinations: combinationsA }
 }
 
-const groupDimensionInfos = function (combinations) {
-  return COMBINATION_DIMENSIONS.reduce(addDimensionInfo, { combinations })
-}
-
-const addDimensionInfo = function ({ combinations }, { idName, rankName }) {
+const addDimensionInfo = function (combinations, { idName, rankName }) {
   const ids = getDimensionIds(combinations, idName)
   const dimension = ids.map((id) => getDimension({ combinations, id, idName }))
   const dimensionA = sortOn(dimension, 'mean')
-
-  const combinationsA = combinations.map((combination) =>
+  return combinations.map((combination) =>
     addRank({ combination, dimension: dimensionA, idName, rankName }),
   )
-  return { combinations: combinationsA }
 }
 
 const getDimensionIds = function (combinations, idName) {
