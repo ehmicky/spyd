@@ -1,6 +1,3 @@
-import filterObj from 'filter-obj'
-
-import { getCombinationName } from '../../combination/name.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
@@ -15,6 +12,7 @@ import {
 } from '../process/runner.js'
 import { throwIfStopped } from '../stop/error.js'
 
+import { prependMeasureError } from './error.js'
 import { runEvents } from './events.js'
 
 // Measure a single combination
@@ -99,25 +97,7 @@ const handleErrorsAndMeasure = async function ({ onTaskExit, ...args }) {
   try {
     return await Promise.race([onTaskExit, runEvents(args)])
   } catch (error) {
-    prependCombinationPrefix(error, args.combination)
+    prependMeasureError(error, args.combination)
     throw error
   }
-}
-
-// When an error happens while a measuring a specific combination, display its
-// dimensions in the error message
-const prependCombinationPrefix = function (error, combination) {
-  const combinationPrefix = getCombinationPrefix(combination)
-  error.message = `In ${combinationPrefix}:\n${error.message}`
-}
-
-const getCombinationPrefix = function (combination) {
-  const dimensions = filterObj(combination.dimensions, shouldKeepDimension)
-  return getCombinationName({ ...combination, dimensions })
-}
-
-// Some dimensions are always the same during a given run, i.e. are not useful
-// in error messages
-const shouldKeepDimension = function (dimension) {
-  return !dimension.startsWith('system')
 }
