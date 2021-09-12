@@ -2,32 +2,43 @@ import { throwValidationError } from './validate.js'
 
 // Tokenize a raw selector string into an an array of objects.
 export const tokenizeSelector = function (rawSelector, propName) {
-  const tokens = rawSelector.trim().split(TOKEN_DELIMITER_REGEX)
-  const negation = usesNegation(tokens)
-  const ids = negation ? tokens.slice(1) : tokens.filter(Boolean)
-  ids.forEach((id) => {
-    validateId(id, rawSelector, propName)
-  })
-  return { ids, negation }
+  return rawSelector
+    .trim()
+    .split(TOKEN_DELIMITER_REGEX)
+    .filter(Boolean)
+    .reduce(
+      (memo, token, index) =>
+        parseToken(memo, { token, index, rawSelector, propName }),
+      { ids: [], negation: false },
+    )
 }
 
 // Split around whitespaces.
 const TOKEN_DELIMITER_REGEX = /\s+/gu
 
-// "not" can be prepended to selectors to exclude instead of include.
-const usesNegation = function ([firstToken]) {
-  return firstToken === NEGATION_SYMBOL
+const parseToken = function (
+  { ids, negation },
+  { token, index, rawSelector, propName },
+) {
+  if (token === NEGATION_SYMBOL) {
+    validateNegation(index, rawSelector, propName)
+    return { ids, negation: true }
+  }
+
+  const idsA = [...ids, token]
+  return { ids: idsA, negation }
 }
 
+// "not" can be prepended to selectors to exclude instead of include.
 // "not" is only meaningful at the beginning of the selector.
 //  - However, we explicitly forbid it elsewhere to avoid confusion, in case
 //    users think it can be prepended to any id instead. This provides with a
 //    clearer error message.
 //  - This means it is not possible to select an id named "not"
-const validateId = function (id, rawSelector, propName) {
-  if (id === NEGATION_SYMBOL) {
+const validateNegation = function (index, rawSelector, propName) {
+  if (index !== 0) {
     throwValidationError(
-      `"${id}" can only be used at the start.`,
+      `"${NEGATION_SYMBOL}" can only be used at the start.`,
       [rawSelector],
       propName,
     )
