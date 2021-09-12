@@ -18,21 +18,20 @@ import { COMBINATION_DIMENSIONS } from '../../combination/dimensions.js'
 // We do this by adding a `title` property for every `id` property.
 
 // Add `result.combinations[*].taskTitle|...`
-export const addCombinationsTitles = function (
-  { combinations, ...result },
-  titles,
-  showTitles,
-) {
+export const addCombinationsTitles = function (result, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
-  const combinationIdNames = COMBINATION_DIMENSIONS.map(getIdName)
-  const combinationsA = combinations.map((combination) =>
-    addTitles(combination, combinationIdNames, titlesA),
+  const combinations = result.combinations.map((combination) =>
+    addCombinationTitles(combination, titlesA),
   )
-  return { ...result, combinations: combinationsA }
+  return { ...result, combinations }
 }
 
-const getIdName = function ({ idName }) {
-  return idName
+const addCombinationTitles = function (combination, titles) {
+  return COMBINATION_DIMENSIONS.reduce(
+    (combinationA, { idName, titleName }) =>
+      addTitle(combinationA, { idName, titleName, titles }),
+    combination,
+  )
 }
 
 // Add `footer.systems[*].title`
@@ -47,16 +46,10 @@ export const addFooterTitles = function (
 }
 
 const addSystemTitle = function (system, titles) {
-  return addTitle(system, 'id', titles)
+  return addTitle(system, { idName: 'id', titleName: 'title', titles })
 }
 
-// Add title to object if the corresponding title exists in the `titles`
-// configuration property.
-const addTitles = function (obj, idNames, titles) {
-  return idNames.reduce((objA, idName) => addTitle(objA, idName, titles), obj)
-}
-
-const addTitle = function (obj, idName, titles) {
+const addTitle = function (obj, { idName, titleName, titles }) {
   const id = obj[idName]
   const { [id]: title = id } = titles
 
@@ -64,13 +57,5 @@ const addTitle = function (obj, idName, titles) {
     return obj
   }
 
-  const titleName = TITLE_PROPS[idName]
   return { ...obj, [titleName]: title }
-}
-
-const TITLE_PROPS = {
-  id: 'title',
-  taskId: 'taskTitle',
-  runnerId: 'runnerTitle',
-  systemId: 'systemTitle',
 }
