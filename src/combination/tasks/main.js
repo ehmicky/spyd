@@ -1,3 +1,5 @@
+import { listNoDimensions } from '../filter.js'
+
 import { applyDefaultTasks } from './default.js'
 import { findTasks } from './find.js'
 import { loadRunner } from './load.js'
@@ -78,13 +80,19 @@ import { loadRunner } from './load.js'
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
 export const listTasks = async function (runners, cwd) {
+  const dimensionsArray = runners.map(getDimension)
+  const noDimensions = listNoDimensions(dimensionsArray)
   const tasks = await Promise.all(
-    runners.map((runner) => getRunnerTasks(runner, cwd)),
+    dimensionsArray.map((dimensions) => getDimensionsTasks(dimensions, cwd)),
   )
   return tasks.flat().filter(removeDuplicateTaskId)
 }
 
-const getRunnerTasks = async function (runner, cwd) {
+const getDimension = function (runner) {
+  return { runner }
+}
+
+const getDimensionsTasks = async function ({ runner }, cwd) {
   const runnerA = await loadRunner(runner)
   const taskPaths = await applyDefaultTasks(runnerA)
   const tasks = await Promise.all(
