@@ -1,6 +1,6 @@
 import { binarySearch } from './binary_search.js'
 
-// Retrieve histogram of an array of floats.
+// Retrieve histogram of an array of floats or integers.
 // Array must be sorted and not empty.
 export const getHistogram = function (
   array,
@@ -21,12 +21,12 @@ export const getHistogram = function (
 // When the array has only integers, bucket edges are rounded to integers
 const arrayHasIntegers = function (array, minIndex, length) {
   const strideLength = length / INTEGER_CHECK_LENGTH
-  const integerIndexes = Array.from(
+  const strideIndexes = Array.from(
     { length: INTEGER_CHECK_LENGTH },
-    (_, index) => getIntegerIndex(index, minIndex, strideLength),
+    (_, index) => getStrideIndex(index, minIndex, strideLength),
   )
-  return integerIndexes.every((integerIndex) =>
-    Number.isInteger(array[integerIndex]),
+  return strideIndexes.every((strideIndex) =>
+    Number.isInteger(array[strideIndex]),
   )
 }
 
@@ -34,7 +34,7 @@ const arrayHasIntegers = function (array, minIndex, length) {
 // integers
 const INTEGER_CHECK_LENGTH = 100
 
-const getIntegerIndex = function (index, minIndex, strideLength) {
+const getStrideIndex = function (index, minIndex, strideLength) {
   return Math.floor(minIndex + index * strideLength)
 }
 
