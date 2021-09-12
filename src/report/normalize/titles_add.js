@@ -1,4 +1,4 @@
-import { COMBINATION_DIMENSIONS } from '../../combination/dimensions.js'
+import { DIMENSIONS } from '../../combination/dimensions.js'
 
 import { padTitles } from './titles_pad.js'
 
@@ -13,7 +13,7 @@ export const addCombinationsTitles = function (result, titles, showTitles) {
 }
 
 const addCombinationTitles = function (combination, titles) {
-  return COMBINATION_DIMENSIONS.reduce(
+  return DIMENSIONS.reduce(
     (combinationA, { idName, titleName }) =>
       addTitle(combinationA, { idName, titleName, titles }),
     combination,

@@ -1,10 +1,10 @@
 import { titleColor, noteColor } from '../report/utils/colors.js'
 
-import { COMBINATION_DIMENSIONS, USER_DIMENSIONS } from './dimensions.js'
+import { DIMENSIONS, USER_DIMENSIONS } from './dimensions.js'
 import { getInputIds } from './inputs.js'
 
 export const isSameDimension = function (combinationA, combinationB) {
-  return COMBINATION_DIMENSIONS.every(
+  return DIMENSIONS.every(
     ({ idName }) => combinationA[idName] === combinationB[idName],
   )
 }
@@ -34,7 +34,7 @@ const titleize = function (string) {
 }
 
 const getIdInfos = function (combination) {
-  return COMBINATION_DIMENSIONS.map(getIdInfo.bind(undefined, combination))
+  return DIMENSIONS.map(getIdInfo.bind(undefined, combination))
 }
 
 const getIdInfo = function (combination, { dimension, idName }) {

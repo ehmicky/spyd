@@ -1,4 +1,4 @@
-import { COMBINATION_DIMENSIONS } from '../../combination/dimensions.js'
+import { DIMENSIONS } from '../../combination/dimensions.js'
 
 // Add:
 //  - `combination.task|runner|systemTitlePadded`: like
@@ -11,8 +11,8 @@ export const padTitles = function (combinations) {
 }
 
 const getUniqueTitleNames = function (combinations) {
-  const titleNames = COMBINATION_DIMENSIONS.map(getTitleName).filter(
-    (titleName) => shouldShowProp(titleName, combinations),
+  const titleNames = DIMENSIONS.map(getTitleName).filter((titleName) =>
+    shouldShowProp(titleName, combinations),
   )
   return titleNames.length === 0 ? DEFAULT_TITLE_NAMES : titleNames
 }

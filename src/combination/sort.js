@@ -4,7 +4,7 @@ import sortOn from 'sort-on'
 import { getMean } from '../stats/sum.js'
 import { groupBy } from '../utils/group.js'
 
-import { COMBINATION_DIMENSIONS } from './dimensions.js'
+import { DIMENSIONS } from './dimensions.js'
 
 // Sort `result.combinations` based on their `stats.mean`.
 // Combinations with the same dimension are grouped together in the sorting
@@ -17,7 +17,7 @@ import { COMBINATION_DIMENSIONS } from './dimensions.js'
 //     - Variations being runner-specific
 //  - Those should be filtered out, as opposed to showing empty rows|columns
 export const sortCombinations = function (result) {
-  const sortFunctions = COMBINATION_DIMENSIONS.map(({ idName }) =>
+  const sortFunctions = DIMENSIONS.map(({ idName }) =>
     getSortFunction(idName, result.combinations),
   )
   const combinations = sortOn(result.combinations, sortFunctions)

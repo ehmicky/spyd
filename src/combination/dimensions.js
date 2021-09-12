@@ -7,7 +7,7 @@
 //  - The sorting order of combinations in reporters
 //  - The order of dimensions when printing combinationName in reporters,
 //    previews and `dev`
-export const COMBINATION_DIMENSIONS = [
+export const DIMENSIONS = [
   {
     dimension: 'task',
     idName: 'taskId',
@@ -30,9 +30,7 @@ export const COMBINATION_DIMENSIONS = [
 
 // Dimensions created by users, not by plugins
 const getUserDimensions = function () {
-  return new Set(
-    COMBINATION_DIMENSIONS.filter(isUserDimension).map(getDimensionName),
-  )
+  return new Set(DIMENSIONS.filter(isUserDimension).map(getDimensionName))
 }
 
 const isUserDimension = function ({ createdByUser }) {
