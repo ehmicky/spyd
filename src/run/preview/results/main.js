@@ -64,7 +64,7 @@ export const updateReport = async function ({
     percentage,
     index,
     total,
-    combinationName,
+    combinationNameColor,
     reporters,
     titles,
     result,
@@ -77,7 +77,7 @@ export const updateReport = async function ({
     percentage,
     index: index + 1,
     total,
-    combinationName,
+    combinationNameColor,
   }
   const resultB = { ...resultA, preview }
   // eslint-disable-next-line fp/no-mutation, no-param-reassign

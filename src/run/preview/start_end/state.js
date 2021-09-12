@@ -17,7 +17,7 @@ export const getPreviewState = function ({ reporters, titles }) {
     durationLeft: EMPTY_DURATION_LEFT,
     percentage: 0,
     index: 0,
-    combinationName: '',
+    combinationNameColor: '',
     description: START_DESCRIPTION,
     actions: [],
     scrollTop: 0,

@@ -13,7 +13,7 @@ export const getBottomBar = function ({
   report,
   index,
   total,
-  combinationName,
+  combinationNameColor,
   description,
   reporters: [
     {
@@ -27,7 +27,7 @@ export const getBottomBar = function ({
   const counterRow = getCounterRow({
     index,
     total,
-    combinationName,
+    combinationNameColor,
     description,
     leftWidth,
   })

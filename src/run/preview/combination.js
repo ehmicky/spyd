@@ -15,14 +15,14 @@ export const startCombinationPreview = async function (
     return
   }
 
-  const combinationName = getCombinationNameColor(combination)
+  const combinationNameColor = getCombinationNameColor(combination)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, {
     combinationStart: now(),
     combinationEnd: undefined,
     previewSamples: 0,
     index,
-    combinationName,
+    combinationNameColor,
     description: START_DESCRIPTION,
   })
   await updatePreview(previewState)
