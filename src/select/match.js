@@ -65,7 +65,7 @@ const getCombinationId = function ({ id }) {
 const isEmpty = function (selectors) {
   return (
     selectors.length === 0 ||
-    (selectors.length === 1 && selectors[0].intersect.length === 0)
+    (selectors.length === 1 && selectors[0].intersect.flat().length === 0)
   )
 }
 
