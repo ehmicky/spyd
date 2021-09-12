@@ -1,6 +1,7 @@
 import { UserError } from '../../error/main.js'
 import { getCombinationsIds } from '../ids.js'
-import { getUserIds } from '../user_ids.js'
+
+import { getUserIds } from './user_ids.js'
 
 // Validate combination identifiers.
 export const validateCombinationsIds = function (combinations, inputs) {

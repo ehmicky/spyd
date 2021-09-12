@@ -1,6 +1,6 @@
-import { DIMENSIONS } from './dimensions.js'
-import { getCombinationsIds } from './ids.js'
-import { getInputIds } from './inputs.js'
+import { DIMENSIONS } from '../dimensions.js'
+import { getCombinationsIds } from '../ids.js'
+import { getInputIds } from '../inputs.js'
 
 // Retrieve user-defined identifiers
 export const getUserIds = function (combinations, inputs) {
