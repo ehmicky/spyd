@@ -17,11 +17,11 @@ export const getCombinationsIds = function (combinations) {
 
 export const getCombinationName = function (combination) {
   return getCombinationIds(combination)
-    .map(getDimensionName)
+    .map(getCombinationNamePart)
     .join(noteColor(', '))
 }
 
-const getDimensionName = function ({ dimension, id }, index) {
+const getCombinationNamePart = function ({ dimension, id }, index) {
   const dimensionA = index === 0 ? titleize(dimension) : dimension
   return `${noteColor(dimensionA)} ${titleColor(id)}`
 }
