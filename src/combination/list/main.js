@@ -1,6 +1,6 @@
 import { UserError } from '../../error/main.js'
 import { selectCombinations } from '../../select/main.js'
-import { fromInputsObj } from '../inputs.js'
+import { toInputsArr } from '../inputs.js'
 import { listTasks } from '../tasks/main.js'
 
 import { validateCombinationsIds } from './validate_ids.js'
@@ -14,7 +14,7 @@ export const listCombinations = async function ({
   cwd,
 }) {
   const tasks = await listTasks(runners, cwd)
-  const inputsA = fromInputsObj(inputs)
+  const inputsA = toInputsArr(inputs)
 
   const combinations = getCombinationsProduct({
     tasks,
