@@ -73,7 +73,7 @@ const spawnAndMeasure = async function ({
   })
 
   try {
-    return await handleErrorsAndMeasure({ ...args, onTaskExit })
+    return await handleStopAndMeasure({ ...args, onTaskExit })
   } finally {
     terminateRunnerProcess(childProcess)
   }
@@ -86,30 +86,27 @@ const spawnAndMeasure = async function ({
 //    performed
 //  - This ensures that all initializers and finalizers are always called
 //    and in order
-const handleErrorsAndMeasure = async function ({
-  stopState,
-  onTaskExit,
-  ...args
-}) {
+const handleStopAndMeasure = async function (args) {
+  const returnValue = await Promise.race([
+    args.stopState.onAbort,
+    handleErrorsAndMeasure(args),
+  ])
+  throwIfStopped(args.stopState)
+  return returnValue
+}
+
+const handleErrorsAndMeasure = async function ({ onTaskExit, ...args }) {
   try {
-    const returnValue = await Promise.race([
-      stopState.onAbort,
-      onTaskExit,
-      runEvents({ ...args, stopState }),
-    ])
-    throwIfStopped(stopState)
-    return returnValue
+    return await Promise.race([onTaskExit, runEvents(args)])
   } catch (error) {
     prependCombinationPrefix(error, args.combination)
     throw error
   }
 }
 
+// When an error happens while a measuring a specific combination, display its
+// dimensions in the error message
 const prependCombinationPrefix = function (error, combination) {
-  if (error.name === 'StopError') {
-    return
-  }
-
   const combinationPrefix = getCombinationPrefix(combination)
   error.message = `In ${combinationPrefix}:\n${error.message}`
 }
