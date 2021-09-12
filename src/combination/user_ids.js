@@ -1,4 +1,4 @@
-import { USER_DIMENSIONS } from './dimensions.js'
+import { DIMENSIONS } from './dimensions.js'
 import { getCombinationsIds } from './ids.js'
 import { getInputIds } from './inputs.js'
 
@@ -9,8 +9,9 @@ export const getUserIds = function (combinations, inputs) {
   return [...combinationsUserIds, ...nonCombinationsIds]
 }
 
-const isUserId = function ({ dimension }) {
-  return USER_DIMENSIONS.has(dimension)
+const isUserId = function (idInfo) {
+  return DIMENSIONS.find(({ dimension }) => idInfo.dimension === dimension)
+    .createdByUser
 }
 
 // Identifiers that do not relate to dimensions/combinations

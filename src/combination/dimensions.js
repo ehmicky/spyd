@@ -10,9 +10,13 @@
 //    previews and `dev`
 export const DIMENSIONS = [
   {
+    // Name used internally or in error messages
     dimension: 'task',
+    // Property name for the identifier
     idName: 'taskId',
+    // Property name for the title
     titleName: 'taskTitle',
+    // Whether dimension was created by users or by plugins
     createdByUser: true,
   },
   {
@@ -28,18 +32,3 @@ export const DIMENSIONS = [
     createdByUser: true,
   },
 ]
-
-// Dimensions created by users, not by plugins
-const getUserDimensions = function () {
-  return new Set(DIMENSIONS.filter(isUserDimension).map(getDimensionName))
-}
-
-const isUserDimension = function ({ createdByUser }) {
-  return createdByUser
-}
-
-const getDimensionName = function ({ dimension }) {
-  return dimension
-}
-
-export const USER_DIMENSIONS = getUserDimensions()
