@@ -15,5 +15,7 @@ export const getCombinationName = function (combination) {
 }
 
 const getCombinationNamePart = function ({ dimension: { messageName }, id }) {
-  return `${noteColor(messageName)} "${titleColor(id)}"`
+  return `${noteColor(messageName)} ${QUOTE}${titleColor(id)}${QUOTE}`
 }
+
+const QUOTE = noteColor('"')
