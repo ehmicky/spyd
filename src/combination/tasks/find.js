@@ -10,40 +10,23 @@ import { measureCombinations } from '../../run/measure/main.js'
 //    to several tasks competing for optimization in the same process
 // So we spawn a single process for all of them, to retrieve the task and step
 // identifiers.
-export const findTasks = async function (
-  taskPath,
-  cwd,
-  { runnerId, runnerSpawn, runnerSpawnOptions, runnerVersions, runnerConfig },
-) {
+export const findTasks = async function (taskPath, cwd, runner) {
   await validateTask(taskPath)
 
   try {
     const [{ taskIds: ids }] = await measureCombinations(
       [
         {
-          dimensions: {
-            task: { taskPath },
-            runner: { runnerSpawn, runnerSpawnOptions, runnerConfig },
-          },
+          dimensions: { task: { taskPath }, runner },
           inputs: [],
         },
       ],
       { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
     )
     validateDuplicateTaskIds(ids)
-    return ids.map((id) => ({
-      id,
-      taskPath,
-      runner: {
-        runnerId,
-        runnerSpawn,
-        runnerSpawnOptions,
-        runnerVersions,
-        runnerConfig,
-      },
-    }))
+    return ids.map((id) => ({ id, taskPath, runner }))
   } catch (error) {
-    error.message = `In tasks file "${taskPath}" (runner "${runnerId}")\n${error.message}`
+    error.message = `In tasks file "${taskPath}" (runner "${runner.id}")\n${error.message}`
     throw error
   }
 }
