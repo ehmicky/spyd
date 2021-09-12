@@ -24,14 +24,10 @@ const addCombinationTitles = function (combination, titles) {
 const addCombinationTitle = function ({
   combination,
   combination: { dimensions },
-  dimension: { propName, idName, titleName },
+  dimension: { propName, titleName },
   titles,
 }) {
-  const dimension = addTitle(dimensions[propName], {
-    idName,
-    titleName,
-    titles,
-  })
+  const dimension = addTitle(dimensions[propName], { titleName, titles })
   return {
     ...combination,
     dimensions: { ...dimensions, [propName]: dimension },
@@ -42,7 +38,7 @@ const addCombinationTitle = function ({
 export const addFooterTitles = function (footer, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
   const systems = footer.systems.map((system) =>
-    addTitle(system, { idName: 'id', titleName: 'title', titles: titlesA }),
+    addTitle(system, { titleName: 'title', titles: titlesA }),
   )
   return { ...footer, systems }
 }
@@ -63,8 +59,8 @@ export const addFooterTitles = function (footer, titles, showTitles) {
 //   - provides a single place for all identifiers, which is simpler
 //   - removes the need for runners to handle this
 // We do this by adding a `title` property for every `id` property.
-const addTitle = function (obj, { idName, titleName, titles }) {
-  const id = obj[idName]
+const addTitle = function (obj, { titleName, titles }) {
+  const { id } = obj
   const { [id]: title = id } = titles
   return title === undefined ? obj : { ...obj, [titleName]: title }
 }
