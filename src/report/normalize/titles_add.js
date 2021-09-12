@@ -37,14 +37,10 @@ const addCombinationTitles = function (combination, titles) {
 // Add `footer.systems[*].title`
 export const addFooterTitles = function (footer, titles, showTitles) {
   const titlesA = showTitles ? titles : {}
-  const systems = footer.systems.map((systemA) =>
-    addSystemTitle(systemA, titlesA),
+  const systems = footer.systems.map((system) =>
+    addTitle(system, { idName: 'id', titleName: 'title', titles: titlesA }),
   )
   return { ...footer, systems }
-}
-
-const addSystemTitle = function (system, titles) {
-  return addTitle(system, { idName: 'id', titleName: 'title', titles })
 }
 
 const addTitle = function (obj, { idName, titleName, titles }) {
