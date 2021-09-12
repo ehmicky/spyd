@@ -33,7 +33,7 @@ export const checkLimits = function ({ combinations }, { limits }) {
     return
   }
 
-  const limitError = limitErrors.join('\n')
+  const limitError = limitErrors.join('\n\n')
   throw new UserError(limitError)
 }
 
