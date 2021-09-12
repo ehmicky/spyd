@@ -33,8 +33,8 @@ const getCombinationsProduct = function ({ tasks, inputs, systemId }) {
     throw new UserError(`Please specify some "tasks".`)
   }
 
-  return tasks.map(({ id, taskPath, runner }) => ({
-    dimensions: { task: { id, taskPath }, runner, system: { id: systemId } },
+  return tasks.map(({ id, path, runner }) => ({
+    dimensions: { task: { id, path }, runner, system: { id: systemId } },
     inputs,
     stats: {},
   }))
