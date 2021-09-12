@@ -59,7 +59,7 @@ export const hasSameCombinationIds = function (combinationA, combinationB) {
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
-  return combinations.flatMap(getCombinationIds).filter(isNotSameDimDuplicate)
+  return combinations.flatMap(getCombinationIds).filter(isNotDuplicate)
 }
 
 export const getCombinationIds = function (combination) {
@@ -72,7 +72,7 @@ export const getCombinationIds = function (combination) {
 // Remove duplicate ids with the same dimension, since this happens due to the
 // cartesian product.
 // Duplicate ids with a different dimension are validated later.
-const isNotSameDimDuplicate = function ({ dimension, id }, index, idInfos) {
+const isNotDuplicate = function ({ dimension, id }, index, idInfos) {
   return !idInfos
     .slice(index + 1)
     .some((idInfo) => idInfo.dimension === dimension && idInfo.id === id)
