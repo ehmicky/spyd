@@ -1,10 +1,8 @@
 import { getCombinationsIds } from '../../combination/ids.js'
 
-// Add:
-//  - `combination.dimensions[*].titlePadded`: like
-//    `combination.dimensions[*].title` but padded so all combinations
-//     vertically align
-//  - `combination.titles`: combines all *TitlePadded
+// Add `combination.dimensions[*].titlePadded`
+// It is like `combination.dimensions[*].title` but padded so all combinations
+// vertically align
 export const padTitles = function (combinations) {
   const dimensions = getDimensions(combinations)
   const paddings = getPaddings(combinations, dimensions)
