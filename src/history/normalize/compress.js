@@ -53,12 +53,12 @@ export const decompressResult = function (result) {
 }
 
 const decompressCombination = function ({
-  combination,
   combination: {
     dimensions,
     stats,
     stats: { histogram, quantiles, mean },
   },
+  combination,
 }) {
   const dimensionsA = mapObj(dimensions, decompressDimension)
   const histogramA = decompressHistogram(histogram, mean)
