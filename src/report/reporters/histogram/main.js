@@ -1,4 +1,4 @@
-import { getCombNamePaddedColor } from '../../utils/name.js'
+import { getCombTitleColorPad } from '../../utils/name.js'
 
 import { getAbscissa } from './abscissa.js'
 import { EXTRA_HEIGHT } from './characters.js'
@@ -55,7 +55,7 @@ const serializeCombination = function ({
   mini,
   smooth,
 }) {
-  const combinationTitles = getCombNamePaddedColor(combination)
+  const combinationTitles = getCombTitleColorPad(combination)
 
   if (histogram === undefined) {
     return getEmptyCombination(combination, height, mini)

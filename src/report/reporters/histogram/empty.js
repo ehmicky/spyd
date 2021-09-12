@@ -1,10 +1,10 @@
-import { getCombNamePaddedColor } from '../../utils/name.js'
+import { getCombTitleColorPad } from '../../utils/name.js'
 
 // Shown when a combination has not been measured yet
 export const getEmptyCombination = function (combination, height, mini) {
   const histogramLines = getHistogramLines(height, mini)
   const labelsLines = getLabelsLines(mini)
-  const combinationTitles = getCombNamePaddedColor(combination)
+  const combinationTitles = getCombTitleColorPad(combination)
   return `${histogramLines}${combinationTitles}\n${labelsLines}`
 }
 

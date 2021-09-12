@@ -1,4 +1,4 @@
-import { getCombNamePaddedColor } from '../../utils/name.js'
+import { getCombTitleColorPad } from '../../utils/name.js'
 
 import { getBox } from './box.js'
 import { getLabels } from './labels.js'
@@ -47,7 +47,7 @@ const serializeCombination = function ({
   contentWidth,
   mini,
 }) {
-  const combinationTitles = getCombNamePaddedColor(combination)
+  const combinationTitles = getCombTitleColorPad(combination)
 
   if (!isMeasuredCombination(combination)) {
     return getEmptyCombination(combinationTitles, mini)

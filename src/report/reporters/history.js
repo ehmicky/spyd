@@ -1,6 +1,6 @@
 import { hasSameCombinationIds } from '../../combination/ids.js'
 import { fieldColor } from '../utils/colors.js'
-import { getCombinationNameColor } from '../utils/name.js'
+import { getCombinationTitleColor } from '../utils/name.js'
 import { STATS_SEPARATOR_COLORED } from '../utils/separator.js'
 import { getTables } from '../utils/table.js'
 
@@ -37,7 +37,7 @@ const getBodyRows = function (combinations, history) {
 }
 
 const getBodyRow = function (combination, history) {
-  const leftCell = getCombinationNameColor(combination)
+  const leftCell = getCombinationTitleColor(combination)
   const rightCells = history.map((historyResult) =>
     getCell(historyResult, combination),
   )

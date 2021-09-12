@@ -1,5 +1,5 @@
 import { fieldColor } from '../utils/colors.js'
-import { getCombinationNameColor } from '../utils/name.js'
+import { getCombinationTitleColor } from '../utils/name.js'
 import { STAT_TITLES } from '../utils/stat_titles.js'
 import { getTables } from '../utils/table.js'
 
@@ -58,7 +58,7 @@ const getBodyRows = function (combinations, statNames) {
 }
 
 const getBodyRow = function (combination, statNames) {
-  const leftCell = getCombinationNameColor(combination)
+  const leftCell = getCombinationTitleColor(combination)
   const rightCells = statNames.map((statName) => getCell(statName, combination))
   return [leftCell, ...rightCells]
 }

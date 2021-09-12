@@ -1,4 +1,4 @@
-import { getCombinationPaddedName } from '../../utils/name.js'
+import { getCombinationTitlePad } from '../../utils/name.js'
 
 import { getPaddedStatLength } from './box.js'
 import { isMeasuredCombination } from './normalize.js'
@@ -12,7 +12,7 @@ export const getWidths = function ({
   minAll,
   maxAll,
 }) {
-  const titlesWidth = getCombinationPaddedName(combinations[0]).length
+  const titlesWidth = getCombinationTitlePad(combinations[0]).length
   const combinationsA = combinations.filter(isMeasuredCombination)
   const contentWidth = subtractToContentWidth(screenWidth, titlesWidth)
   const minBlockWidth = getMinMaxBlockWidth({

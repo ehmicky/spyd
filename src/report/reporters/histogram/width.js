@@ -1,10 +1,10 @@
-import { getCombinationPaddedName } from '../../utils/name.js'
+import { getCombinationTitlePad } from '../../utils/name.js'
 
 import { getPaddedStatLength } from './abscissa.js'
 
 // Compute the width of each column.
 export const getWidths = function (combinations, mini, screenWidth) {
-  const titlesWidth = getCombinationPaddedName(combinations[0]).length
+  const titlesWidth = getCombinationTitlePad(combinations[0]).length
   const minBlockWidth = getMinMaxBlockWidth(combinations, mini, 'min')
   const maxBlockWidth = getMinMaxBlockWidth(combinations, mini, 'max')
   const contentWidth = Math.max(
