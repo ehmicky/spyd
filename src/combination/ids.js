@@ -35,10 +35,6 @@ export const getCombinationIds = function ({ dimensions }) {
   }))
 }
 
-export const getDimensionId = function (propName, { dimensions }) {
-  return dimensions[propName].id
-}
-
 export const getDimensionTitle = function (propName, { dimensions }) {
   const { titleName } = DIMENSIONS.find(
     (dimension) => dimension.propName === propName,

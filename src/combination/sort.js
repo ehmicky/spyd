@@ -4,7 +4,7 @@ import sortOn from 'sort-on'
 import { getMean } from '../stats/sum.js'
 import { groupBy } from '../utils/group.js'
 
-import { getCombinationsIds, getDimensionId } from './ids.js'
+import { getCombinationsIds } from './ids.js'
 
 // Sort `result.combinations` based on their `stats.mean`.
 // Combinations with the same dimension are grouped together in the sorting
@@ -34,7 +34,7 @@ const getDimension = function ({ dimension: { propName } }) {
 // Retrieve a function used to compare combinations for a specific dimension
 const getSortFunction = function (dimension, combinations) {
   const meansOfMeans = mapObj(
-    groupBy(combinations, getDimensionId.bind(undefined, dimension)),
+    groupBy(combinations, ({ dimensions }) => dimensions[dimension].id),
     getMeanOfMeans,
   )
   return getCombinationOrder.bind(undefined, dimension, meansOfMeans)
@@ -57,7 +57,7 @@ const isDefined = function (mean) {
   return mean !== undefined
 }
 
-const getCombinationOrder = function (dimension, meansOfMeans, combination) {
-  const id = getDimensionId(dimension, combination)
+const getCombinationOrder = function (dimension, meansOfMeans, { dimensions }) {
+  const { id } = dimensions[dimension]
   return meansOfMeans[id]
 }
