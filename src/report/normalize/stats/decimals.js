@@ -8,12 +8,13 @@ export const getStatsDecimals = function (combinations, name, scale) {
     .flatMap(({ stats }) => stats[name])
     .filter(isDefined)
     .map((measure) => Math.abs(measure) / scale)
+    .filter(isNotZero)
 
   if (measures.every(Number.isInteger)) {
     return 0
   }
 
-  const minMeasure = Math.min(...measures.filter(isNotZero))
+  const minMeasure = Math.min(...measures)
   return getDecimals(minMeasure)
 }
 
@@ -22,6 +23,7 @@ const isDefined = function (measure) {
   return measure !== undefined
 }
 
+// `0` is excluded since decimals cannot be inferred from it.
 const isNotZero = function (measure) {
   return measure !== 0
 }
