@@ -1,4 +1,4 @@
-import { applySince } from '../history/since/main.js'
+import { applySince, addNoDimensions } from '../history/since/main.js'
 
 import { getContents } from './contents.js'
 import { finalizeContents } from './finalize.js'
@@ -41,12 +41,13 @@ export const reportStart = async function (result, previous, config) {
     applySince(result, previous, config),
     startReporters(config),
   ])
+  const historyInfoA = addNoDimensions(historyInfo)
   const { result: resultA, config: configB } = normalizeEarlyResult(
     result,
-    historyInfo,
+    historyInfoA,
     configA,
   )
-  return { result: resultA, historyInfo, config: configB }
+  return { result: resultA, historyInfo: historyInfoA, config: configB }
 }
 
 // Report preview results in `run` command.

@@ -1,3 +1,4 @@
+import { getNoDimensions } from '../../combination/filter.js'
 import { findByDelta } from '../delta/main.js'
 
 import { getMergedResult, getSinceResult, mergeCombinations } from './merge.js'
@@ -63,6 +64,18 @@ export const applySince = async function (result, previous, { since, cwd }) {
   const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
   return { mergedResult, history }
+}
+
+// Add `historyInfo.noDimensions`, used to filter out redundant dimensions
+export const addNoDimensions = function (historyInfo) {
+  const { combinations } = getMergedCombinations(historyInfo)
+  const noDimensions = getNoDimensions(combinations)
+  return { ...historyInfo, noDimensions }
+}
+
+// Retrieve list of combinations with all dimensions of the result after merging
+const getMergedCombinations = function ({ history, mergedResult }) {
+  return mergedResult === undefined ? history[history.length - 1] : mergedResult
 }
 
 // In principle, we should do both `applySince()` and `mergeHistory()` at
