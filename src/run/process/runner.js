@@ -34,7 +34,7 @@ export const spawnRunnerProcess = async function ({
   combination: {
     dimensions: {
       runner: {
-        runnerSpawn: [file, ...args],
+        spawn: [file, ...args],
         spawnOptions,
       },
     },
