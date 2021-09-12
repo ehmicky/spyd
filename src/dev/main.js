@@ -1,9 +1,12 @@
+import { getNoDimensions } from '../combination/filter.js'
 import { getCombinationNameColor } from '../combination/name.js'
 import { measureCombinations } from '../run/measure/main.js'
 
 // Execute tasks without benchmarking them.
 // We run each serially, so the output is not interleaved.
 export const performDev = async function (config, combinations) {
+  const noDimensions = getNoDimensions(combinations)
+
   // eslint-disable-next-line fp/no-loops
   for (const combination of combinations) {
     // eslint-disable-next-line no-await-in-loop
