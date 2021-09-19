@@ -3,12 +3,12 @@ import omit from 'omit.js'
 // Filter `noDimensions` from result, during reporting
 export const omitNoDimensions = function (result, noDimensions) {
   const combinations = result.combinations.map((combination) =>
-    filterCombination(combination, noDimensions),
+    omitCombNoDimensions(combination, noDimensions),
   )
   return { ...result, combinations }
 }
 
-const filterCombination = function (combination, noDimensions) {
+const omitCombNoDimensions = function (combination, noDimensions) {
   const dimensions = omit.default(combination.dimensions, noDimensions)
   return { ...combination, dimensions }
 }
