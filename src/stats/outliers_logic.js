@@ -68,13 +68,13 @@ const getOutliersPercentage = function (quantiles, minIndex, length) {
     newMaxIndex = findMaxIndex(quantiles, maxIndex, minIndex)
   } while (newMaxIndex !== undefined)
 
-  // console.log(`Final: ${maxIndex} ${maxIndex / length}`)
-  // console.log('')
+  console.log(`Final: ${maxIndex} ${maxIndex / length}`)
+  console.log('')
 
   return maxIndex / length
 }
 
-// eslint-disable-next-line max-statements, complexity
+// eslint-disable-next-line max-statements
 const findMaxIndex = function (quantiles, maxIndex, minIndex) {
   const max = quantiles[maxIndex]
   const min = quantiles[minIndex]
