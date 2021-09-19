@@ -4,6 +4,8 @@ import { promises as fs } from 'fs'
 // eslint-disable-next-line no-shadow
 import { setTimeout } from 'timers/promises'
 
+const CURRENT_URL = new URL(import.meta.url)
+
 // The fastest possible task
 // eslint-disable-next-line no-empty-function
 export const snappy = () => {}
@@ -35,7 +37,7 @@ let fileContent
 export const cpu = {
   async beforeAll() {
     // eslint-disable-next-line fp/no-mutation
-    fileContent = await fs.readFile(new URL(import.meta.url), 'utf8')
+    fileContent = await fs.readFile(CURRENT_URL, 'utf8')
   },
   beforeEach({ context }) {
     // eslint-disable-next-line no-param-reassign, fp/no-mutation
@@ -45,6 +47,11 @@ export const cpu = {
     hash.update(fileContent)
     hash.digest('hex')
   },
+}
+
+// IO-bound read task
+export const read = async function () {
+  await fs.readFile(CURRENT_URL)
 }
 
 // Task with a high complexity mimicking real tasks
