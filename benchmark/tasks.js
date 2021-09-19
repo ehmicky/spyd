@@ -99,7 +99,7 @@ export const uniform = async () => {
   await setTimeout(100 * Math.random())
 }
 
-// Task with an exponiential distribution
+// Task with an exponential distribution
 export const exponential = async () => {
   await setTimeout(2 ** (1 + Math.random() * 6))
 }
