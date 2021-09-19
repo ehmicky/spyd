@@ -1,3 +1,4 @@
+import { getCombinationName } from '../../combination/name.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
@@ -12,15 +13,19 @@ import {
 } from '../process/runner.js'
 import { throwIfStopped } from '../stop/error.js'
 
-import { prependMeasureError } from './error.js'
 import { runEvents } from './events.js'
 
 // Measure a single combination
 export const measureCombination = async function ({ index, ...args }) {
-  const { previewState, combination } = args
+  const { previewState, combination, noDimensions } = args
 
   try {
-    await startCombinationPreview(previewState, combination, index)
+    await startCombinationPreview({
+      previewState,
+      combination,
+      index,
+      noDimensions,
+    })
     const { stats, taskIds } = await logAndMeasure(args)
     await endCombinationPreview(previewState)
     return { ...combination, stats, taskIds }
@@ -93,11 +98,22 @@ const handleStopAndMeasure = async function (args) {
   return returnValue
 }
 
-const handleErrorsAndMeasure = async function ({ onTaskExit, ...args }) {
+const handleErrorsAndMeasure = async function ({
+  onTaskExit,
+  noDimensions,
+  ...args
+}) {
   try {
     return await Promise.race([onTaskExit, runEvents(args)])
   } catch (error) {
-    prependMeasureError(error, args.combination)
+    prependMeasureError(error, args.combination, noDimensions)
     throw error
   }
+}
+
+// When an error happens while a measuring a specific combination, display its
+// dimensions in the error message
+const prependMeasureError = function (error, combination, noDimensions) {
+  const combinationPrefix = getCombinationName(combination, noDimensions)
+  error.message = `In ${combinationPrefix}:\n${error.message}`
 }

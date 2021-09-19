@@ -1,5 +1,6 @@
 import { titleColor, noteColor } from '../report/utils/colors.js'
 
+import { omitCombNoDimensions } from './filter.js'
 import { getCombinationIds } from './ids.js'
 
 // Retrieve string with each combination's dimension id.
@@ -8,14 +9,16 @@ import { getCombinationIds } from './ids.js'
 //    report time
 //  - `combinationName*` uses ids, which is more useful at `run`-time
 //    (`dev`, preview bottom bar) since users might use those on the next run
-export const getCombinationNameColor = function (combination) {
-  return getCombinationIds(combination)
+export const getCombinationNameColor = function (combination, noDimensions) {
+  const combinationA = omitCombNoDimensions(combination, noDimensions)
+  return getCombinationIds(combinationA)
     .map(getNameColorPart)
     .join(NAME_SEPARATOR_COLOR)
 }
 
-export const getCombinationName = function (combination) {
-  return getCombinationIds(combination).map(getNamePart).join(NAME_SEPARATOR)
+export const getCombinationName = function (combination, noDimensions) {
+  const combinationA = omitCombNoDimensions(combination, noDimensions)
+  return getCombinationIds(combinationA).map(getNamePart).join(NAME_SEPARATOR)
 }
 
 const getNameColorPart = function ({ dimension: { messageName }, id }) {

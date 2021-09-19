@@ -53,6 +53,7 @@ export const performRun = async function (config) {
 const previewAndMeasure = async function ({
   result,
   historyInfo,
+  historyInfo: { noDimensions },
   previewState,
   config,
 }) {
@@ -64,7 +65,12 @@ const previewAndMeasure = async function ({
   })
 
   try {
-    const resultA = await measureResult(result, config, previewStateA)
+    const resultA = await measureResult({
+      result,
+      config,
+      previewState: previewStateA,
+      noDimensions,
+    })
     const { programmaticResult, contents } = await reportCompute(
       resultA,
       historyInfo,
@@ -78,16 +84,18 @@ const previewAndMeasure = async function ({
   }
 }
 
-const measureResult = async function (
+const measureResult = async function ({
   result,
-  { cwd, precisionTarget },
+  config: { cwd, precisionTarget },
   previewState,
-) {
+  noDimensions,
+}) {
   const combinations = await measureCombinations(result.combinations, {
     precisionTarget,
     cwd,
     previewState,
     stage: 'main',
+    noDimensions,
   })
   const resultA = { ...result, combinations }
   const resultB = normalizeMeasuredResult(resultA)

@@ -10,13 +10,24 @@ import { measureCombinations } from '../../run/measure/main.js'
 //    to several tasks competing for optimization in the same process
 // So we spawn a single process for all of them, to retrieve the task and step
 // identifiers.
-export const findTasks = async function (taskPath, cwd, runner) {
+export const findTasks = async function ({
+  taskPath,
+  runner,
+  noDimensions,
+  cwd,
+}) {
   await validateTask(taskPath)
 
   try {
     const [{ taskIds: ids }] = await measureCombinations(
       [{ dimensions: { runner }, taskPath, inputsList: [] }],
-      { precisionTarget: 0, cwd, previewState: { quiet: true }, stage: 'init' },
+      {
+        precisionTarget: 0,
+        cwd,
+        previewState: { quiet: true },
+        stage: 'init',
+        noDimensions,
+      },
     )
     validateDuplicateTaskIds(ids)
     return ids.map((id) => ({ id, taskPath, runner }))

@@ -6,16 +6,20 @@ import { START_DESCRIPTION } from './description.js'
 import { updatePreview } from './update/main.js'
 
 // Done when combination starts
-export const startCombinationPreview = async function (
+export const startCombinationPreview = async function ({
   previewState,
   combination,
   index,
-) {
+  noDimensions,
+}) {
   if (previewState.quiet) {
     return
   }
 
-  const combinationNameColor = getCombinationNameColor(combination)
+  const combinationNameColor = getCombinationNameColor(
+    combination,
+    noDimensions,
+  )
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, {
     combinationStart: now(),

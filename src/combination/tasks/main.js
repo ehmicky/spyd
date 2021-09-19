@@ -83,7 +83,9 @@ export const listTasks = async function (runners, cwd) {
   const dimensionsArray = runners.map(getDimension)
   const noDimensions = getCombNoDimensions(dimensionsArray)
   const tasks = await Promise.all(
-    dimensionsArray.map((dimensions) => getDimensionsTasks(dimensions, cwd)),
+    dimensionsArray.map((dimensions) =>
+      getDimensionsTasks(dimensions, noDimensions, cwd),
+    ),
   )
   return tasks.flat().filter(removeDuplicateTaskId)
 }
@@ -92,11 +94,13 @@ const getDimension = function (runner) {
   return { runner }
 }
 
-const getDimensionsTasks = async function ({ runner }, cwd) {
+const getDimensionsTasks = async function ({ runner }, noDimensions, cwd) {
   const runnerA = await loadRunner(runner)
   const taskPaths = await applyDefaultTasks(runnerA)
   const tasks = await Promise.all(
-    taskPaths.map((taskPath) => findTasks(taskPath, cwd, runnerA)),
+    taskPaths.map((taskPath) =>
+      findTasks({ taskPath, runner: runnerA, noDimensions, cwd }),
+    ),
   )
   return tasks.flat()
 }

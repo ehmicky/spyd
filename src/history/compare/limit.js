@@ -71,8 +71,10 @@ const isBelowThreshold = function (diff, threshold, higher) {
   return higher ? diff <= threshold : diff >= threshold
 }
 
+// `getCombinationName` passes an empty `noDimensions` since `dimensions` are
+// already filtered out `programmaticResult`.
 const getLimitError = function ({ diff, threshold, higher, combination }) {
-  const combinationName = getCombinationName(combination)
+  const combinationName = getCombinationName(combination, [])
   const thresholdStr = threshold * PERCENTAGE_RATIO
   const diffStr = serializeDiff(diff)
   const higherStr = higher ? 'higher' : 'lower'
