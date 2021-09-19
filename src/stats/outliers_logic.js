@@ -10,22 +10,31 @@ import { getQuantiles } from './quantile.js'
 //    distribution. Otherwise, the max-min range might flicker when the
 //    threshold is close a big outlier.
 // This is applied separately on max and min outliers.
+// eslint-disable-next-line max-statements
 export const getOutliersPercentages = function (measures) {
   const length = OUTLIERS_GRANULARITY
   const quantiles = getQuantiles(measures, length)
   const width = quantiles[length] - quantiles[0]
+  const limitQuantile = Math.floor(length * OUTLIERS_LIMIT)
 
-  if (width === 0) {
+  if (width === 0 || limitQuantile === 0) {
     return { outliersMin: 0, outliersMax: 0 }
   }
 
-  const outliersMin = getOutliersPercentage(
-    // eslint-disable-next-line fp/no-mutating-methods
-    [...quantiles].reverse().map((quantile) => quantiles[length] - quantile),
-    length,
-    width,
-  )
-  const outliersMax = getOutliersPercentage(quantiles, length, width)
+  const limitIndex = length / 2
+  const minLimitIndex = Math.floor(limitIndex)
+  // eslint-disable-next-line fp/no-mutating-methods
+  const minQuantiles = quantiles
+    .slice(0, minLimitIndex + 1)
+    .reverse()
+    .map((quantile) => quantiles[minLimitIndex] - quantile)
+  const maxLimitIndex = Math.ceil(limitIndex)
+  const maxQuantiles = quantiles
+    .slice(maxLimitIndex)
+    .map((quantile) => quantile - quantiles[0])
+
+  const outliersMin = getOutliersPercentage(minQuantiles, length, limitQuantile)
+  const outliersMax = getOutliersPercentage(maxQuantiles, length, limitQuantile)
   return { outliersMin, outliersMax }
 }
 
@@ -38,32 +47,21 @@ export const getOutliersPercentages = function (measures) {
 const OUTLIERS_GRANULARITY = 1e3
 
 // Return outliers percentage based on a specific outlier quantile
-const getOutliersPercentage = function (quantiles, length, width) {
-  const quantileRatios = Array.from({ length }, (_, index) =>
-    getQuantileRatio({ index, quantiles, length, width }),
+const getOutliersPercentage = function (
+  [median, ...quantiles],
+  length,
+  limitQuantile,
+) {
+  const quantileRatios = quantiles.map(
+    (quantile, index) => (quantile - median) / (index + 1) ** OUTLIERS_COST,
   )
-  const outliersIndex = getOutliersIndex(quantileRatios)
-  return outliersIndex === -1 ? 0 : (length - outliersIndex) / length
+  const minQuantileRatio = Math.min(...quantileRatios.slice(-limitQuantile))
+  const quantileIndex = quantileRatios.lastIndexOf(minQuantileRatio)
+  return (quantiles.length - quantileIndex) / length
 }
 
-const getQuantileRatio = function ({ index, quantiles, length, width }) {
-  const widthPercentage = (quantiles[length] - quantiles[index]) / width
-  const quantilePercentage = 1 - index / length
-  return widthPercentage / quantilePercentage
-}
-
-// Find the highest quantile index where a majority of the remaining quantiles
-// are outliers.
-// This method works well with:
-//  - Unsmoothed distributions where some outlier quantiles might be narrower
-//    due to statistical imprecision
-//  - Both fat and slim outliers tails
-//  - Removing small aggregate of outliers, while still keeping much bigger ones
-const getOutliersIndex = function (quantileRatios) {
-  return quantileRatios.findIndex(
-    (quantileRatio) => quantileRatio >= MIN_OUTLIER_WIDTH,
-  )
-}
+const OUTLIERS_COST = 6
+const OUTLIERS_LIMIT = 0.25
 
 // Width threshold where a given quantile is considered an outlier.
 // For example, `2` means that any quantile with twice the width of an average
