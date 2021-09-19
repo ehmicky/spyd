@@ -3,6 +3,12 @@ import { titleColor, noteColor } from '../report/utils/colors.js'
 import { omitCombNoDimensions } from './filter.js'
 import { getCombinationIds } from './ids.js'
 
+// Retrieve error message prefix showing a combination's dimension ids
+export const getCombinationPrefix = function (combination, noDimensions) {
+  const combinationName = getCombinationName(combination, noDimensions)
+  return combinationName === '' ? '' : `In ${combinationName}:\n`
+}
+
 // Retrieve string with each combination's dimension id.
 // This is in contrast with `combinationTitle`:
 //  - `combinationTitle*` uses dimensions titles, which is more useful at

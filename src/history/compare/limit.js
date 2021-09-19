@@ -1,4 +1,4 @@
-import { getCombinationName } from '../../combination/name.js'
+import { getCombinationPrefix } from '../../combination/name.js'
 import { UserError } from '../../error/main.js'
 import { matchSelectors } from '../../select/match.js'
 
@@ -74,12 +74,11 @@ const isBelowThreshold = function (diff, threshold, higher) {
 // `getCombinationName` passes an empty `noDimensions` since `dimensions` are
 // already filtered out `programmaticResult`.
 const getLimitError = function ({ diff, threshold, higher, combination }) {
-  const combinationName = getCombinationName(combination, [])
+  const combinationPrefix = getCombinationPrefix(combination, [])
   const thresholdStr = threshold * PERCENTAGE_RATIO
   const diffStr = serializeDiff(diff)
   const higherStr = higher ? 'higher' : 'lower'
-  return `In ${combinationName}:
-The combination should be at most ${thresholdStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
+  return `${combinationPrefix}The combination should be at most ${thresholdStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
 }
 
 const serializeDiff = function (diff) {
