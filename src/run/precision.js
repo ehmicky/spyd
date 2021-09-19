@@ -97,7 +97,7 @@ export const normalizePrecision = function (precision, name) {
 // We use a limited number of levels to represent "medium"/"high"/"very high"
 // levels on each side (2/1/0 for speed and 2/3/4 for precision).
 // eslint-disable-next-line no-magic-numbers
-const PRECISION_TARGETS = [0, 5e-2, 1e-2, 5e-3, 1e-3]
+const PRECISION_TARGETS = [0, 1e-1, 1e-2, 1e-3, 1e-4]
 const MIN_PRECISION = 0
 const MAX_PRECISION = PRECISION_TARGETS.length - 1
 
