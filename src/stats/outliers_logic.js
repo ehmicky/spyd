@@ -5,6 +5,11 @@ import { sortFloats } from './sort.js'
 // This tries to find the best percentage which:
 //  - Minimizes the max-min difference, to increase precision
 //  - Without removing too many outliers, to keep accuracy
+// Computing it based on the measures distribution is much better than
+// hardcoding specific outliers thresholds.
+//  - For example, the threshold automatically adapts to the measures
+//    distribution. Otherwise, the max-min range might flicker when the
+//    threshold is close a big outlier.
 // This is applied separately on max and min outliers.
 export const getOutliersPercentages = function (measures) {
   const length = OUTLIERS_GRANULARITY
