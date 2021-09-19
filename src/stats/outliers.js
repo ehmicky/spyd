@@ -1,4 +1,4 @@
-import { getOutliersPercentage } from './outliers_logic.js'
+import { getOutliersPercentages } from './outliers_logic.js'
 
 // Measures usually contain some:
 //  - Very slow outliers due to background processes or engine optimization
@@ -17,9 +17,7 @@ import { getOutliersPercentage } from './outliers_logic.js'
 // performance and memory reasons.
 export const getOutliersStats = function (measures) {
   const loops = measures.length
-  const outliersPercentage = getOutliersPercentage(measures)
-  const outliersMin = OUTLIERS_MIN
-  const outliersMax = OUTLIERS_MAX
+  const { outliersMin, outliersMax } = getOutliersPercentages(measures)
   const { minIndex, maxIndex, length } = getLengthFromLoops(
     loops,
     outliersMin,
@@ -29,12 +27,6 @@ export const getOutliersStats = function (measures) {
   const max = measures[maxIndex]
   return { outliersMin, outliersMax, minIndex, maxIndex, length, min, max }
 }
-
-// A higher value is less accurate as more information is trimmed.
-// A lower value is less precise as outliers will have a higher impact on the
-// mean. It also results in poorer histograms.
-const OUTLIERS_MIN = 0.05
-const OUTLIERS_MAX = 0.05
 
 // `Math.round()` rounds towards +Inf:
 //  - This makes outliers removal start twice faster. For example, with 5%

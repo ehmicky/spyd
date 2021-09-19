@@ -6,12 +6,12 @@ import { sortFloats } from './sort.js'
 //  - Minimizes the max-min difference, to increase precision
 //  - Without removing too many outliers, to keep accuracy
 // This is applied separately on max and min outliers.
-export const getOutliersPercentage = function (measures) {
+export const getOutliersPercentages = function (measures) {
   const length = OUTLIERS_GRANULARITY
   const quantiles = getQuantiles(measures, length)
 
   if (quantiles[0] === quantiles[length]) {
-    return 0
+    return { outliersMin: 0, outliersMax: 0 }
   }
 
   const quantileWidths = Array.from({ length }, (_, index) =>
@@ -21,8 +21,13 @@ export const getOutliersPercentage = function (measures) {
   const outliersChecks = quantileWidths.map(
     (quantileWidth) => quantileWidth > outlierWidth,
   )
-  const outliersIndex = getOutliersIndex(outliersChecks, length)
-  return outliersIndex === undefined ? 0 : (length - outliersIndex) / length
+  const outliersMin = getOutliersPercentage(
+    // eslint-disable-next-line fp/no-mutating-methods
+    [...outliersChecks].reverse(),
+    length,
+  )
+  const outliersMax = getOutliersPercentage(outliersChecks, length)
+  return { outliersMin, outliersMax }
 }
 
 // Granularity of the outliers percentage.
@@ -67,6 +72,12 @@ const hasWidth = function (quantileWidth) {
 // A higher value is less precise as outliers will have a higher impact on the
 // mean. It also results in poorer histograms.
 const MIN_OUTLIER_WIDTH = 3
+
+// Return outliers percentage based on a specific outlier quantile
+const getOutliersPercentage = function (outliersChecks, length) {
+  const outliersIndex = getOutliersIndex(outliersChecks, length)
+  return outliersIndex === undefined ? 0 : (length - outliersIndex) / length
+}
 
 // Find the highest quantile index where a majority of the remaining quantiles
 // are outliers.
