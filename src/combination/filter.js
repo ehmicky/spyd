@@ -16,7 +16,7 @@ const omitCombNoDimensions = function (combination, noDimensions) {
 // Like `listNoDimensions` but using combinations
 export const getNoDimensions = function (combinations) {
   const dimensionsArray = combinations.map(getCombinationDimensions)
-  return listNoDimensions(dimensionsArray)
+  return getCombNoDimensions(dimensionsArray)
 }
 
 const getCombinationDimensions = function ({ dimensions }) {
@@ -25,7 +25,7 @@ const getCombinationDimensions = function ({ dimensions }) {
 
 // Retrieve `noDimensions`, i.e. dimensions that have the same ids across all
 // combinations. Those are not reported, since they are redundant for users.
-export const listNoDimensions = function (dimensionsArray) {
+export const getCombNoDimensions = function (dimensionsArray) {
   const propNames = Object.keys(dimensionsArray[0])
   return propNames.filter((propName) =>
     isNoDimensions(dimensionsArray, propName),

@@ -1,4 +1,4 @@
-import { listNoDimensions } from '../filter.js'
+import { getCombNoDimensions } from '../filter.js'
 
 import { applyDefaultTasks } from './default.js'
 import { findTasks } from './find.js'
@@ -81,7 +81,7 @@ import { loadRunner } from './load.js'
 //     - this does not work well with bundled runners
 export const listTasks = async function (runners, cwd) {
   const dimensionsArray = runners.map(getDimension)
-  const noDimensions = listNoDimensions(dimensionsArray)
+  const noDimensions = getCombNoDimensions(dimensionsArray)
   const tasks = await Promise.all(
     dimensionsArray.map((dimensions) => getDimensionsTasks(dimensions, cwd)),
   )
