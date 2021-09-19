@@ -16,6 +16,11 @@ export const fixed = async () => {
   await setTimeout(0)
 }
 
+// Task with a high complexity mimicking real tasks
+export const real = async () => {
+  await import('spyd')
+}
+
 // Very slow task
 export const slow = async () => {
   await setTimeout(1e4)
@@ -39,9 +44,4 @@ export const growing = async () => {
   // eslint-disable-next-line fp/no-mutation
   count += 1
   await setTimeout(count)
-}
-
-// Task with a high complexity mimicking real tasks
-export const real = async () => {
-  await import('spyd')
 }
