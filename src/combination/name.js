@@ -9,6 +9,10 @@ import { getCombinationIds } from './ids.js'
 //    report time
 //  - `combinationName*` uses ids, which is more useful at `run`-time
 //    (`dev`, preview bottom bar) since users might use those on the next run
+// This might return an empty string when all dimensions are filtered out:
+//  - This happens when benchmarking a single combination
+//  - This can also happen during the `init` stage, since it misses the tasks
+//    and steps dimensions
 export const getCombinationNameColor = function (combination, noDimensions) {
   const combinationA = omitCombNoDimensions(combination, noDimensions)
   return getCombinationIds(combinationA)
