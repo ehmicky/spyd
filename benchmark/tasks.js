@@ -13,17 +13,14 @@ export const fixed = async () => {
 }
 
 export const slow = async () => {
-  // eslint-disable-next-line no-magic-numbers
   await setTimeout(1e4)
 }
 
 export const uniform = async () => {
-  // eslint-disable-next-line no-magic-numbers
   await setTimeout(100 * Math.random())
 }
 
 export const exponential = async () => {
-  // eslint-disable-next-line no-magic-numbers
   await setTimeout(2 ** (1 + Math.random() * 6))
 }
 
