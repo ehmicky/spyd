@@ -12,30 +12,22 @@ import { getQuantiles } from './quantile.js'
 // This is applied separately on max and min outliers.
 export const getOutliersPercentages = function (measures) {
   const length = Math.ceil(1 / OUTLIERS_GRANULARITY)
-  const minIndex = Math.floor(length * OUTLIERS_MAX)
-
-  if (minIndex === 0) {
-    return { outliersMin: 0, outliersMax: 0 }
-  }
-
   const quantiles = getQuantiles(measures, length)
 
   // console.log(
   //   quantiles.map((number) => number.toFixed(3).padStart(10)).join('\n'),
   // )
 
-  const outliersMin = getOutliersPercentage(quantiles, minIndex, length)
+  const outliersMin = getOutliersPercentage(quantiles, length, length)
   const outliersMax = getOutliersPercentage(
     // eslint-disable-next-line fp/no-mutating-methods
     [...quantiles].reverse(),
-    minIndex,
+    length,
     length,
   )
   return { outliersMin, outliersMax }
 }
 
-// Maximum amount of outliers on each tail
-const OUTLIERS_MAX = 0.5
 // Minimum increment between two outliers percentages.
 // For example, 1e-3 means the granularity is 0.1%.
 // A higher value makes it slower to compute.
