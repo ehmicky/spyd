@@ -1,18 +1,5 @@
 import omit from 'omit.js'
 
-// Filter `noDimensions` from result, during reporting
-export const omitNoDimensions = function (result, noDimensions) {
-  const combinations = result.combinations.map((combination) =>
-    omitCombNoDimensions(combination, noDimensions),
-  )
-  return { ...result, combinations }
-}
-
-const omitCombNoDimensions = function (combination, noDimensions) {
-  const dimensions = omit.default(combination.dimensions, noDimensions)
-  return { ...combination, dimensions }
-}
-
 // Like `listNoDimensions` but using combinations
 export const getNoDimensions = function (combinations) {
   const dimensionsArray = combinations.map(getCombinationDimensions)
@@ -35,4 +22,17 @@ export const getCombNoDimensions = function (dimensionsArray) {
 const isNoDimensions = function (dimensionsArray, propName) {
   const ids = dimensionsArray.map((dimensions) => dimensions[propName].id)
   return [...new Set(ids)].length === 1
+}
+
+// Filter `noDimensions` from result, during reporting
+export const omitNoDimensions = function (result, noDimensions) {
+  const combinations = result.combinations.map((combination) =>
+    omitCombNoDimensions(combination, noDimensions),
+  )
+  return { ...result, combinations }
+}
+
+const omitCombNoDimensions = function (combination, noDimensions) {
+  const dimensions = omit.default(combination.dimensions, noDimensions)
+  return { ...combination, dimensions }
 }
