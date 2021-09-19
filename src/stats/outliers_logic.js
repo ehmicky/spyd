@@ -10,66 +10,119 @@ import { getQuantiles } from './quantile.js'
 //    distribution. Otherwise, the max-min range might flicker when the
 //    threshold is close a big outlier.
 // This is applied separately on max and min outliers.
-// eslint-disable-next-line max-statements
 export const getOutliersPercentages = function (measures) {
   const length = OUTLIERS_GRANULARITY
-  const quantiles = getQuantiles(measures, length)
-  const width = quantiles[length] - quantiles[0]
-  const limitQuantile = Math.floor(length * OUTLIERS_LIMIT)
+  const medianIndex = Math.floor(length * OUTLIERS_MAX)
 
-  if (width === 0 || limitQuantile === 0) {
+  if (medianIndex === 0) {
     return { outliersMin: 0, outliersMax: 0 }
   }
 
-  const limitIndex = length / 2
-  const minLimitIndex = Math.floor(limitIndex)
-  // eslint-disable-next-line fp/no-mutating-methods
-  const minQuantiles = quantiles
-    .slice(0, minLimitIndex + 1)
-    .reverse()
-    .map((quantile) => quantiles[minLimitIndex] - quantile)
-  const maxLimitIndex = Math.ceil(limitIndex)
-  const maxQuantiles = quantiles
-    .slice(maxLimitIndex)
-    .map((quantile) => quantile - quantiles[0])
+  const quantiles = getQuantiles(measures, length)
 
-  const outliersMin = getOutliersPercentage(minQuantiles, length, limitQuantile)
-  const outliersMax = getOutliersPercentage(maxQuantiles, length, limitQuantile)
+  // console.log(
+  //   quantiles.map((number) => number.toFixed(3).padStart(10)).join('\n'),
+  // )
+
+  const outliersMin = getOutliersPercentage(quantiles, medianIndex, length)
+  const outliersMax = getOutliersPercentage(
+    // eslint-disable-next-line fp/no-mutating-methods
+    [...quantiles].reverse(),
+    medianIndex,
+    length,
+  )
   return { outliersMin, outliersMax }
 }
 
+// Maximum amount of outliers on each tail
+const OUTLIERS_MAX = 0.25
 // Granularity of the outliers percentage.
 // For example, 1e3 means the granularity is 0.1%.
-// The granularity is also multiplied by 2 due to `outliersIndex` being always
-// an even number (due to its internal logic).
 // A higher value makes it slower to compute.
 // A lower value makes the value less accurate.
 const OUTLIERS_GRANULARITY = 1e3
 
 // Return outliers percentage based on a specific outlier quantile
-const getOutliersPercentage = function (
-  [median, ...quantiles],
-  length,
-  limitQuantile,
-) {
-  const quantileRatios = quantiles.map(
-    (quantile, index) => (quantile - median) / (index + 1) ** OUTLIERS_COST,
-  )
-  const minQuantileRatio = Math.min(...quantileRatios.slice(-limitQuantile))
-  const quantileIndex = quantileRatios.lastIndexOf(minQuantileRatio)
-  return (quantiles.length - quantileIndex) / length
+const getOutliersPercentage = function (quantiles, medianIndex, length) {
+  // console.log('')
+  // console.log(
+  //   quantiles
+  //     .slice(0, medianIndex + 1)
+  //     .map((number) => number.toFixed(3).padStart(10))
+  //     .join('\n'),
+  // )
+
+  // eslint-disable-next-line fp/no-let, init-declarations
+  let quantileIndex
+  // eslint-disable-next-line fp/no-let
+  let newQuantileIndex = 0
+
+  // eslint-disable-next-line fp/no-loops
+  do {
+    // console.log('')
+    // console.log(`${quantileIndex} -> ${newQuantileIndex}`)
+
+    // eslint-disable-next-line fp/no-mutation
+    quantileIndex = newQuantileIndex
+    // eslint-disable-next-line fp/no-mutation
+    newQuantileIndex = findQuantileIndex(quantiles, medianIndex, quantileIndex)
+  } while (newQuantileIndex !== undefined)
+
+  // console.log(`Final: ${quantileIndex} ${quantileIndex / length}`)
+  // console.log('')
+
+  return quantileIndex / length
 }
 
-const OUTLIERS_COST = 6
-const OUTLIERS_LIMIT = 0.25
+// eslint-disable-next-line max-statements, complexity
+const findQuantileIndex = function (quantiles, medianIndex, quantileIndex) {
+  const max = quantiles[quantileIndex]
+  const median = quantiles[medianIndex]
+  // console.log(max, median)
 
-// Width threshold where a given quantile is considered an outlier.
-// For example, `2` means that any quantile with twice the width of an average
-// quantile is considered an outlier.
-// Since distribution tend to be lognormal, this number is exponential, i.e.
-// decreasing it by a given number has more impact than increasing it by the
-// same number.
-// A lower value is less accurate as more information is trimmed.
-// A higher value is less precise as outliers will have a higher impact on the
+  if (max === median) {
+    return
+  }
+
+  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
+  for (let index = quantileIndex + 1; index < medianIndex; index += 1) {
+    const quantile = quantiles[index]
+    const widthPercentage = (quantile - median) / (max - median)
+
+    // The quantiles computation can have rounding errors leading some quantiles
+    // very close to each other (difference close to `Number.EPSILON`) to be
+    // sorted in the wrong order. This can lead to negative `quantile - median`
+    // eslint-disable-next-line max-depth
+    if (widthPercentage <= 0) {
+      return
+    }
+
+    const quantilePercentage =
+      (index - quantileIndex) / (medianIndex - quantileIndex)
+    const quantileRatio = -Math.log(widthPercentage) / quantilePercentage
+    // const line = [
+    //   quantile,
+    //   index,
+    //   widthPercentage,
+    //   quantilePercentage,
+    //   quantileRatio,
+    // ]
+    //   .map((number) => number.toFixed(3).padStart(10))
+    //   .join(' ')
+    // console.log(line)
+
+    // eslint-disable-next-line max-depth
+    if (quantileRatio > OUTLIERS_THRESHOLD) {
+      return index
+    }
+  }
+}
+
+// How much width should a 1% quantile contain to be considered an outlier
+// A higher value is less accurate as more information is trimmed.
+// A lower value is less precise as outliers will have a higher impact on the
 // mean. It also results in poorer histograms.
-const MIN_OUTLIER_WIDTH = 10
+const OUTLIERS_1P_WIDTH = 0.08
+// Computes based on a 1% quantile
+const OUTLIERS_1P = 0.01
+const OUTLIERS_THRESHOLD = -Math.log(1 - OUTLIERS_1P_WIDTH) / OUTLIERS_1P
