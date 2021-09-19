@@ -1,10 +1,14 @@
 // This is an example of tasks, used mostly for debugging
+import { execFile } from 'child_process'
 import { randomInt, createHash } from 'crypto'
 import { promises as fs } from 'fs'
 // eslint-disable-next-line no-shadow
 import { setTimeout } from 'timers/promises'
+import { promisify } from 'util'
 
 import { tmpName } from 'tmp-promise'
+
+const pExecFile = promisify(execFile)
 
 const CURRENT_URL = new URL(import.meta.url)
 
@@ -72,6 +76,11 @@ export const write = {
   async afterEach({ context: { tmpPath } }) {
     await fs.unlink(tmpPath)
   },
+}
+
+// Process-spawning-bound task
+export const spawn = async function () {
+  await pExecFile('node', ['--version'])
 }
 
 // Task with a high complexity mimicking real tasks
