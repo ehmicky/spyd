@@ -6,6 +6,7 @@ import { promises as fs } from 'fs'
 import { setTimeout } from 'timers/promises'
 import { promisify } from 'util'
 
+import got from 'got'
 import { tmpName } from 'tmp-promise'
 
 const pExecFile = promisify(execFile)
@@ -81,6 +82,11 @@ export const write = {
 // Process-spawning-bound task
 export const spawn = async function () {
   await pExecFile('node', ['--version'])
+}
+
+// Network-bound task
+export const network = async function () {
+  await got('https://example.com')
 }
 
 // Task with a high complexity mimicking real tasks
