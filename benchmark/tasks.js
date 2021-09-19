@@ -104,6 +104,13 @@ export const exponential = async () => {
   await setTimeout(1.1 ** (1 + Math.random() * 60))
 }
 
+// Task with a U-shaped distribution
+export const ushaped = async () => {
+  const duration = 1.1 ** (1 + Math.random() * 60)
+  const durationA = Math.random() < 0.5 ? duration : 1.1 ** 61 - duration
+  await setTimeout(durationA)
+}
+
 // eslint-disable-next-line fp/no-let
 let count = 0
 
