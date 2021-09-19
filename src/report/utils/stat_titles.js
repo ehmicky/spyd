@@ -11,6 +11,8 @@ export const STAT_TITLES = {
   rstdev: 'Rstdev',
   moe: 'Moe',
   rmoe: 'Rmoe',
+  outliersMin: 'Outliers min',
+  outliersMax: 'Outliers max',
   times: 'Times',
   loops: 'Loops',
   repeat: 'Repeat',

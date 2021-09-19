@@ -27,7 +27,7 @@
     "combinations": [
       {
         "dimensions": {
-          "task": "random",
+          "task": "fast",
           "runner": "node",
           "system": "default_system"
         },
@@ -74,6 +74,8 @@
             0.3316130820399108, 0.34893847006651857, 0.7703824833703035,
             3.953303769401339, 7.136225055432373
           ],
+          "outliersMin": 0.05,
+          "outliersMax": 0.05,
           "loops": 48,
           "times": 173184,
           "repeat": 3608,
@@ -83,12 +85,14 @@
       },
       {
         "dimensions": {
-          "task": "empty",
+          "task": "snappy",
           "runner": "node",
           "system": "default_system"
         },
         "stats": {
           "samples": 66,
+          "outliersMin": 0.05,
+          "outliersMax": 0.05,
           "loops": 2368,
           "times": 11550018,
           "repeat": 4878,
@@ -171,12 +175,14 @@
     "combinations": [
       {
         "dimensions": {
-          "task": "real",
+          "task": "complex",
           "runner": "node",
           "system": "default_system"
         },
         "stats": {
           "samples": 123,
+          "outliersMin": 0.05,
+          "outliersMax": 0.05,
           "loops": 123,
           "times": 123,
           "repeat": 1,
@@ -258,12 +264,14 @@
     "combinations": [
       {
         "dimensions": {
-          "task": "random",
+          "task": "fast",
           "runner": "node",
           "system": "default_system"
         },
         "stats": {
           "samples": 7,
+          "outliersMin": 0.05,
+          "outliersMax": 0.05,
           "loops": 1707,
           "times": 1166951,
           "repeat": 684,
@@ -318,12 +326,14 @@
       },
       {
         "dimensions": {
-          "task": "fixed",
+          "task": "precise",
           "runner": "node",
           "system": "default_system"
         },
         "stats": {
           "samples": 6,
+          "outliersMin": 0.05,
+          "outliersMax": 0.05,
           "loops": 11,
           "times": 11,
           "repeat": 1,
@@ -399,12 +409,14 @@
     "combinations": [
       {
         "dimensions": {
-          "task": "random",
+          "task": "fast",
           "runner": "node",
           "system": "default_system"
         },
         "stats": {
           "samples": 195,
+          "outliersMin": 0.05,
+          "outliersMax": 0.05,
           "loops": 64351,
           "times": 32236244,
           "repeat": 501,
@@ -459,12 +471,14 @@
       },
       {
         "dimensions": {
-          "task": "real",
+          "task": "complex",
           "runner": "node",
           "system": "default_system"
         },
         "stats": {
           "samples": 123,
+          "outliersMin": 0.05,
+          "outliersMax": 0.05,
           "loops": 123,
           "times": 123,
           "repeat": 1,

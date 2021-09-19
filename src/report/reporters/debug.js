@@ -30,6 +30,8 @@ const STAT_NAMES = [
   'rstdev',
   'moe',
   'rmoe',
+  'outliersMin',
+  'outliersMax',
   'times',
   'loops',
   'repeat',

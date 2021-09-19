@@ -16,10 +16,11 @@ export const getInitialStats = function () {
 //  - Change a lot, creating flicker
 // Some stats can be `undefined`:
 //   - all: in combinations not measured yet, nor saved
-//   - mean, rstdev, moe, rmoe, samples, loops, times, repeat, minLoopDuration:
-//     when `reporter.capabilities.debugStats` is false
+//   - mean, rstdev, moe, rmoe, outliersMin, outliersMax, samples, loops, times,
+//     repeat, minLoopDuration: when `reporter.capabilities.debugStats` is false
 //   - mean: when `showPrecision` is true
-//   - moe, rmoe, meanMin, meanMax: when `showPrecision` is false
+//   - moe, rmoe, meanMin, meanMax, outliersMin, outliersMax: when
+//    `showPrecision` is false
 //   - stdev, rstdev, moe, rmoe, meanMin, meanMax: when loops < 5
 //      - This means both mean and meanMin|meanMax might be `undefined` while
 //        other stats are not
@@ -28,8 +29,8 @@ export const getInitialStats = function () {
 //     previous combination
 // Stat types:
 //   - samples, loops, times, repeat, minLoopDuration: integer
-//   - min, max, median, mean, stdev, rstdev, moe, rmoe, meanMin, meanMax,
-//     diff: float
+//   - min, max, median, mean, meanMin, meanMax, stdev, rstdev, moe, rmoe,
+//     outliersMin, outliersMax, diff: float
 //   - diffPrecise: boolean
 //   - quantiles: array of floats
 //   - histogram: array of objects
@@ -40,6 +41,7 @@ export const getInitialStats = function () {
 //     diff, quantiles[*], histogram[*].start|frequency: >=0
 //      - mean 0 is unlikely and impossible in saved results (except the
 //        last/current result)
+//   - outliersMin, outliersMax: >=0 <=1
 //   - histogram[*].end: <=1
 export const addStats = function (
   stats,

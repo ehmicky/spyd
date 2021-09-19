@@ -42,7 +42,7 @@ export const updateCombinationEnd = function ({
 // Estimate how many samples are left to reach the rmoe target for the current
 // `precision`.
 const getSamplesLeft = function (
-  { samples, loops, mean, stdev },
+  { samples, loops, mean, stdev, outliersMin, outliersMax },
   precisionTarget,
 ) {
   if (mean === 0) {
@@ -51,7 +51,10 @@ const getSamplesLeft = function (
 
   const moeTarget = precisionTarget * mean
   const lengthTarget = getLengthForMoe(moeTarget, stdev)
-  const loopsTarget = Math.min(getLoopsFromLength(lengthTarget), MAX_MEASURES)
+  const loopsTarget = Math.min(
+    getLoopsFromLength(lengthTarget, outliersMin, outliersMax),
+    MAX_MEASURES,
+  )
   const samplesLeft = computeSamplesLeft(loopsTarget, loops, samples)
   return samplesLeft
 }

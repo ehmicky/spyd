@@ -15,11 +15,23 @@
 // performance and memory reasons.
 export const getOutliersStats = function (measures) {
   const loops = measures.length
-  const { minIndex, maxIndex, length } = getLengthFromLoops(loops)
+  const outliersMin = OUTLIERS_MIN
+  const outliersMax = OUTLIERS_MAX
+  const { minIndex, maxIndex, length } = getLengthFromLoops(
+    loops,
+    outliersMin,
+    outliersMax,
+  )
   const min = measures[minIndex]
   const max = measures[maxIndex]
-  return { minIndex, maxIndex, length, min, max }
+  return { outliersMin, outliersMax, minIndex, maxIndex, length, min, max }
 }
+
+// A higher value is less accurate as more information is trimmed.
+// A lower value is less precise as outliers will have a higher impact on the
+// mean. It also results in poorer histograms.
+const OUTLIERS_MIN = 0.05
+const OUTLIERS_MAX = 0.05
 
 // `Math.round()` rounds towards +Inf:
 //  - This makes outliers removal start twice faster. For example, with 5%
@@ -28,9 +40,9 @@ export const getOutliersStats = function (measures) {
 //  - This ensures both low and high outliers are not removed at the same time,
 //    which would mean adding one `measure` could potentially remove one from
 //    `length`
-export const getLengthFromLoops = function (loops) {
-  const minIndex = Math.round(loops * MIN_OUTLIERS)
-  const maxIndex = loops - 1 - Math.round((loops - 1) * MAX_OUTLIERS)
+const getLengthFromLoops = function (loops, outliersMin, outliersMax) {
+  const minIndex = Math.round(loops * outliersMin)
+  const maxIndex = loops - 1 - Math.round((loops - 1) * outliersMax)
   const length = maxIndex - minIndex + 1
   return { minIndex, maxIndex, length }
 }
@@ -38,12 +50,6 @@ export const getLengthFromLoops = function (loops) {
 // Inverse function of `getLengthFromLoops()`, i.e. retrieves `loops` from
 // `length`. Due to the use of multiple `Math.round()`, the result might be
 // 1 lower|higher than the actual result.
-export const getLoopsFromLength = function (length) {
-  return Math.round(length / (1 - MAX_OUTLIERS - MIN_OUTLIERS))
+export const getLoopsFromLength = function (length, outliersMin, outliersMax) {
+  return Math.round(length / (1 - outliersMax - outliersMin))
 }
-
-// A higher value is less accurate as more information is trimmed.
-// A lower value is less precise as outliers will have a higher impact on the
-// mean. It also results in poorer histograms.
-const MIN_OUTLIERS = 0.05
-const MAX_OUTLIERS = 0.05

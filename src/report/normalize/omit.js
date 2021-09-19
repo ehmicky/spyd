@@ -40,7 +40,7 @@ const omitMeanProps = function (
   return mean === undefined ? stats : { ...stats, mean }
 }
 
-const PRECISION_STATS_PROPS = ['moe', 'rmoe']
+const PRECISION_STATS_PROPS = ['moe', 'rmoe', 'outliersMin', 'outliersMax']
 const DIFF_STAT_PROPS = ['diff', 'diffPrecise']
 
 // Some stats are too advanced for most reporters and are only meant for
@@ -65,6 +65,8 @@ const DEBUG_STATS_PROPS = [
   //    like that
   'times',
   // Those statistics are internal to how we measure tasks
+  'outliersMin',
+  'outliersMax',
   'samples',
   'loops',
   'repeat',
