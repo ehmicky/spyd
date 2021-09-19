@@ -33,6 +33,11 @@ const printCombinationName = function (combination, noDimensions) {
     combination,
     noDimensions,
   )
+
+  if (combinationNameColor === '') {
+    return
+  }
+
   // eslint-disable-next-line no-restricted-globals, no-console
   console.log(combinationNameColor)
 }
