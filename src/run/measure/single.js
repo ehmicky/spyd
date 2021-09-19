@@ -1,4 +1,4 @@
-import { getCombinationName } from '../../combination/name.js'
+import { getCombinationPrefix } from '../../combination/name.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
@@ -98,6 +98,8 @@ const handleStopAndMeasure = async function (args) {
   return returnValue
 }
 
+// When an error happens while a measuring a specific combination, display its
+// dimensions in the error message
 const handleErrorsAndMeasure = async function ({
   onTaskExit,
   noDimensions,
@@ -106,14 +108,11 @@ const handleErrorsAndMeasure = async function ({
   try {
     return await Promise.race([onTaskExit, runEvents(args)])
   } catch (error) {
-    prependMeasureError(error, args.combination, noDimensions)
+    const combinationPrefix = getCombinationPrefix(
+      args.combination,
+      noDimensions,
+    )
+    error.message = `${combinationPrefix}${error.message}`
     throw error
   }
-}
-
-// When an error happens while a measuring a specific combination, display its
-// dimensions in the error message
-const prependMeasureError = function (error, combination, noDimensions) {
-  const combinationPrefix = getCombinationName(combination, noDimensions)
-  error.message = `In ${combinationPrefix}:\n${error.message}`
 }
