@@ -1,5 +1,6 @@
 // This is an example of tasks, used mostly for debugging
-import { randomInt } from 'crypto'
+import { randomInt, createHash } from 'crypto'
+import { promises as fs } from 'fs'
 // eslint-disable-next-line no-shadow
 import { setTimeout } from 'timers/promises'
 
@@ -25,6 +26,25 @@ export const precise = async () => {
 // Very imprecise task
 export const imprecise = function () {
   randomInt(2)
+}
+
+// eslint-disable-next-line fp/no-let, init-declarations
+let fileContent
+
+// CPU-bound task
+export const cpu = {
+  async beforeAll() {
+    // eslint-disable-next-line fp/no-mutation
+    fileContent = await fs.readFile(new URL(import.meta.url), 'utf8')
+  },
+  beforeEach({ context }) {
+    // eslint-disable-next-line no-param-reassign, fp/no-mutation
+    context.hash = createHash('sha256')
+  },
+  main({ context: { hash } }) {
+    hash.update(fileContent)
+    hash.digest('hex')
+  },
 }
 
 // Task with a high complexity mimicking real tasks
