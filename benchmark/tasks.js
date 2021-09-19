@@ -1,29 +1,35 @@
 // This is an example of tasks, used mostly for debugging
+import { randomInt } from 'crypto'
 // eslint-disable-next-line no-shadow
 import { setTimeout } from 'timers/promises'
 
-// Very fast task
-export const random = () => {
-  Math.random()
-}
-
 // The fastest possible task
 // eslint-disable-next-line no-empty-function
-export const empty = () => {}
+export const snappy = () => {}
 
-// Very precise task
-export const fixed = async () => {
-  await setTimeout(0)
-}
-
-// Task with a high complexity mimicking real tasks
-export const real = async () => {
-  await import('spyd')
+// Very fast task
+export const fast = () => {
+  Math.random()
 }
 
 // Very slow task
 export const slow = async () => {
   await setTimeout(1e4)
+}
+
+// Very precise task
+export const precise = async () => {
+  await setTimeout(0)
+}
+
+// Very imprecise task
+export const imprecise = function () {
+  randomInt(2)
+}
+
+// Task with a high complexity mimicking real tasks
+export const complex = async () => {
+  await import('spyd')
 }
 
 // Task with a uniform distribution
