@@ -52,8 +52,8 @@ const getOutliersPercentage = function (quantiles, medianIndex, length) {
   //     .join('\n'),
   // )
 
-  // eslint-disable-next-line fp/no-let, init-declarations
-  let quantileIndex
+  // eslint-disable-next-line fp/no-let
+  let quantileIndex = 0
   // eslint-disable-next-line fp/no-let
   let newQuantileIndex = 0
 
