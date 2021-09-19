@@ -4,6 +4,8 @@ import { promises as fs } from 'fs'
 // eslint-disable-next-line no-shadow
 import { setTimeout } from 'timers/promises'
 
+import { tmpName } from 'tmp-promise'
+
 const CURRENT_URL = new URL(import.meta.url)
 
 // The fastest possible task
@@ -52,6 +54,24 @@ export const cpu = {
 // IO-bound read task
 export const read = async function () {
   await fs.readFile(CURRENT_URL)
+}
+
+// IO-bound write task
+export const write = {
+  async beforeAll() {
+    // eslint-disable-next-line fp/no-mutation
+    fileContent = await fs.readFile(CURRENT_URL, 'utf8')
+  },
+  async beforeEach({ context }) {
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign
+    context.tmpPath = await tmpName()
+  },
+  async main({ context: { tmpPath } }) {
+    await fs.writeFile(tmpPath, fileContent)
+  },
+  async afterEach({ context: { tmpPath } }) {
+    await fs.unlink(tmpPath)
+  },
 }
 
 // Task with a high complexity mimicking real tasks
