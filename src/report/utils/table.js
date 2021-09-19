@@ -17,12 +17,13 @@ import {
 //  - It is repeated in each table
 //  - It does not use a column separator
 //  - It has its own width
+//  - It is omitted if only filled with empty strings
 export const getTables = function (rows, screenWidth) {
   const rowsLeft = rows.map(getRowLeft)
   const rowsRight = rows.map(getRowRight)
   const leftWidth = Math.max(...rowsLeft.map(stringWidth))
   const columnsWidth = Math.max(...rowsRight.flat().map(stringWidth))
-  const availableWidth = screenWidth - leftWidth - TITLE_SEPARATOR.length
+  const availableWidth = getAvailableWidth(screenWidth, leftWidth)
   const tablesRows = getTablesRows(rowsRight, availableWidth, columnsWidth)
   return tablesRows
     .map((tableRows) =>
@@ -39,14 +40,17 @@ const getRowRight = function ([, ...rightCells]) {
   return rightCells
 }
 
+const getAvailableWidth = function (screenWidth, leftWidth) {
+  return leftWidth === 0
+    ? screenWidth
+    : screenWidth - leftWidth - TITLE_SEPARATOR.length
+}
+
 const getTablesRows = function (rows, availableWidth, columnsWidth) {
   const separatorWidth = COLUMN_SEPARATOR.length
-  const columnsCount = Math.max(
-    Math.floor(
-      (availableWidth + separatorWidth) / (columnsWidth + separatorWidth),
-    ),
-    1,
-  )
+  const columnsCountFloat =
+    (availableWidth + separatorWidth) / (columnsWidth + separatorWidth)
+  const columnsCount = Math.max(Math.floor(columnsCountFloat), 1)
   const rowsMaxLength = Math.max(...rows.map(getRowLength))
   const tablesCount = Math.max(Math.ceil(rowsMaxLength / columnsCount), 1)
   return Array.from({ length: tablesCount }, (_, tableIndex) =>
@@ -96,9 +100,10 @@ const getTable = function ({ tableRows, rowsLeft, leftWidth, columnsWidth }) {
 }
 
 const getRow = function ({ row, leftCell, leftWidth, columnsWidth }) {
-  const leftCellA = padString(leftCell, leftWidth)
   const rowA = row
     .map((cell) => padString(cell, columnsWidth))
     .join(COLUMN_SEPARATOR_COLORED)
-  return `${leftCellA}${TITLE_SEPARATOR_COLORED}${rowA}\n`
+  return leftWidth === 0
+    ? `${rowA}\n`
+    : `${padString(leftCell, leftWidth)}${TITLE_SEPARATOR_COLORED}${rowA}\n`
 }
