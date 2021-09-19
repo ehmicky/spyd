@@ -37,9 +37,11 @@ export const getOutliersPercentages = function (measures) {
 
 // Granularity of the outliers percentage.
 // For example, 1e3 means the granularity is 0.1%.
+// The granularity is also multiplied by 2 due to `outliersIndex` being always
+// an even number (due to its internal logic).
 // A higher value makes it slower to compute.
 // A lower value makes the value less accurate.
-const OUTLIERS_GRANULARITY = 1e3
+const OUTLIERS_GRANULARITY = 2e3
 
 const getQuantileWidth = function (index, quantiles) {
   return quantiles[index + 1] - quantiles[index]
