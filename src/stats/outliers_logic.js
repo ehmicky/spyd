@@ -87,16 +87,16 @@ const findQuantileIndex = function (quantiles, medianIndex, quantileIndex) {
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = quantileIndex + 1; index < medianIndex; index += 1) {
     const quantile = quantiles[index]
-    const widthPercentage = (quantile - median) / (max - median)
 
     // The quantiles computation can have rounding errors leading some quantiles
     // very close to each other (difference close to `Number.EPSILON`) to be
     // sorted in the wrong order. This can lead to negative `quantile - median`
     // eslint-disable-next-line max-depth
-    if (widthPercentage <= 0) {
+    if (max <= quantile) {
       return
     }
 
+    const widthPercentage = (max - quantile) / (max - median)
     const quantilePercentage =
       (index - quantileIndex) / (medianIndex - quantileIndex)
     const quantileRatio = getQuantileRatio(widthPercentage, quantilePercentage)
@@ -119,7 +119,7 @@ const findQuantileIndex = function (quantiles, medianIndex, quantileIndex) {
 }
 
 const getQuantileRatio = function (widthPercentage, quantilePercentage) {
-  return Math.log(widthPercentage) / Math.log(1 - quantilePercentage)
+  return Math.log(1 - widthPercentage) / Math.log(1 - quantilePercentage)
 }
 
 // How much width should a 1% quantile contain to be considered an outlier
@@ -129,4 +129,4 @@ const getQuantileRatio = function (widthPercentage, quantilePercentage) {
 const OUTLIERS_1P_WIDTH = 0.08
 // Computes based on a 1% quantile
 const OUTLIERS_1P = 0.01
-const OUTLIERS_THRESHOLD = getQuantileRatio(1 - OUTLIERS_1P_WIDTH, OUTLIERS_1P)
+const OUTLIERS_THRESHOLD = getQuantileRatio(OUTLIERS_1P_WIDTH, OUTLIERS_1P)
