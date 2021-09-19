@@ -1,4 +1,5 @@
-import { getQuantiles } from './quantile.js'
+import { getQuantiles, getSortedMedian } from './quantile.js'
+import { sortFloats } from './sort.js'
 
 // Compute the best percentage of outliers to remove.
 // This tries to find the best percentage which:
@@ -8,17 +9,20 @@ import { getQuantiles } from './quantile.js'
 export const getOutliersPercentage = function (measures) {
   const length = OUTLIERS_GRANULARITY
   const quantiles = getQuantiles(measures, length)
-  const width = quantiles[length] - quantiles[0]
 
-  if (width === 0) {
+  if (quantiles[0] === quantiles[length]) {
     return 0
   }
 
-  const outliersChecks = Array.from({ length }, (_, index) =>
-    checkOutliers({ index, quantiles, length, width }),
+  const quantileWidths = Array.from({ length }, (_, index) =>
+    getQuantileWidth(index, quantiles),
+  )
+  const outlierWidth = getOutlierWidth(quantileWidths)
+  const outliersChecks = quantileWidths.map(
+    (quantileWidth) => quantileWidth > outlierWidth,
   )
   const outliersIndex = getOutliersIndex(outliersChecks, length)
-  return outliersIndex === undefined ? 0 : 1 - outliersIndex / length
+  return outliersIndex === undefined ? 0 : (length - outliersIndex) / length
 }
 
 // Granularity of the outliers percentage.
@@ -27,11 +31,30 @@ export const getOutliersPercentage = function (measures) {
 // A lower value makes the value less accurate.
 const OUTLIERS_GRANULARITY = 1e3
 
-const checkOutliers = function ({ index, quantiles, length, width }) {
-  return (
-    ((quantiles[index + 1] - quantiles[index]) * length) / width >
-    MIN_OUTLIER_WIDTH
-  )
+const getQuantileWidth = function (index, quantiles) {
+  return quantiles[index + 1] - quantiles[index]
+}
+
+// Retrieve the average width of a quantile. We use a median to avoid big
+// outliers from increasing the average width, which would reduce the number
+// of outliers.
+const getOutlierWidth = function (quantileWidths) {
+  const quantileWidthsA = quantileWidths.filter(hasWidth)
+
+  if (quantileWidthsA.length === 0) {
+    return 0
+  }
+
+  sortFloats(quantileWidthsA)
+  const medianWidth = getSortedMedian(quantileWidthsA)
+  return medianWidth * MIN_OUTLIER_WIDTH
+}
+
+// If measures are integers, the distribution might have quantiles without any
+// widths. If there is a majority of them, the median width would be 0. This
+// would create too many outliers, so we remove it.
+const hasWidth = function (quantileWidth) {
+  return quantileWidth !== 0
 }
 
 // Width threshold where a given quantile is considered an outlier.
@@ -43,9 +66,7 @@ const checkOutliers = function ({ index, quantiles, length, width }) {
 // A lower value is less accurate as more information is trimmed.
 // A higher value is less precise as outliers will have a higher impact on the
 // mean. It also results in poorer histograms.
-// TODO: big outliers makes it less likely that other quantiles would be
-// marked as outliers, since the `width` would be very high???
-const MIN_OUTLIER_WIDTH = 2
+const MIN_OUTLIER_WIDTH = 3
 
 // Find the highest quantile index where a majority of the remaining quantiles
 // are outliers.
