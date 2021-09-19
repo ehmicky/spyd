@@ -42,11 +42,8 @@ export const getLoopsFromLength = function (length) {
   return Math.round(length / (1 - MAX_OUTLIERS - MIN_OUTLIERS))
 }
 
-// A higher value makes histograms give less information about very low/high
-// values.
-// A lower value makes it more likely for outliers to overtake the histogram,
-// concentrating most of the values into far fewer buckets.
+// A higher value is less accurate as more information is trimmed.
+// A lower value is less precise as outliers will have a higher impact on the
+// mean. It also results in poorer histograms.
 const MIN_OUTLIERS = 0.05
-// Having the same percentage for slow/fast outliers ensures the `mean`
-// remains the same.
-const MAX_OUTLIERS = MIN_OUTLIERS
+const MAX_OUTLIERS = 0.05
