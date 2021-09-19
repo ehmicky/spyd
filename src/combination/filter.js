@@ -1,6 +1,7 @@
 import omit from 'omit.js'
 
-// Like `listNoDimensions` but using combinations
+// Retrieve `noDimensions`, i.e. dimensions that have the same ids across all
+// combinations. Those are not reported, since they are redundant for users.
 export const getNoDimensions = function (combinations) {
   const dimensionsArray = combinations.map(getCombinationDimensions)
   return getCombNoDimensions(dimensionsArray)
@@ -10,8 +11,6 @@ const getCombinationDimensions = function ({ dimensions }) {
   return dimensions
 }
 
-// Retrieve `noDimensions`, i.e. dimensions that have the same ids across all
-// combinations. Those are not reported, since they are redundant for users.
 export const getCombNoDimensions = function (dimensionsArray) {
   const propNames = Object.keys(dimensionsArray[0])
   return propNames.filter((propName) =>
@@ -24,7 +23,11 @@ const isNoDimensions = function (dimensionsArray, propName) {
   return [...new Set(ids)].length === 1
 }
 
-// Filter `noDimensions` from result, during reporting
+// Filter `noDimensions` from result, during reporting.
+// This is split from `getNoDimensions()` for performance reason:
+//   - Retrieving `noDimensions` can be performed once per run
+//   - But applying `noDimensions` might be repeated on many results or many
+//     previews
 export const omitNoDimensions = function (result, noDimensions) {
   const combinations = result.combinations.map((combination) =>
     omitCombNoDimensions(combination, noDimensions),
