@@ -65,7 +65,7 @@ const getOutliersPercentage = function (quantiles, minIndex, length) {
     // eslint-disable-next-line fp/no-mutation
     maxIndex = newMaxIndex
     // eslint-disable-next-line fp/no-mutation
-    newMaxIndex = findMaxIndex(quantiles, minIndex, maxIndex)
+    newMaxIndex = findMaxIndex(quantiles, maxIndex, minIndex)
   } while (newMaxIndex !== undefined)
 
   // console.log(`Final: ${maxIndex} ${maxIndex / length}`)
@@ -75,7 +75,7 @@ const getOutliersPercentage = function (quantiles, minIndex, length) {
 }
 
 // eslint-disable-next-line max-statements, complexity
-const findMaxIndex = function (quantiles, minIndex, maxIndex) {
+const findMaxIndex = function (quantiles, maxIndex, minIndex) {
   const max = quantiles[maxIndex]
   const min = quantiles[minIndex]
   // console.log(max, min)
