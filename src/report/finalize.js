@@ -16,7 +16,7 @@ export const finalizeContents = function (contents) {
 
 // A reporter can choose not to return anything
 const hasContent = function ({ content }) {
-  return typeof content === 'string' && content.trim() !== ''
+  return typeof content === 'string' && content !== ''
 }
 
 // Join all `contents` with the same `output`.
