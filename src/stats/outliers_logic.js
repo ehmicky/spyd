@@ -13,18 +13,7 @@ import { getQuantiles } from './quantile.js'
 export const getOutliersPercentages = function (measures) {
   const length = Math.ceil(1 / OUTLIERS_GRANULARITY)
   const quantiles = getQuantiles(measures, length)
-
-  // console.log(
-  //   quantiles.map((number) => number.toFixed(3).padStart(10)).join('\n'),
-  // )
-
-  const outliersMin = getOutliersPercentage(quantiles, length, length)
-  const outliersMax = getOutliersPercentage(
-    // eslint-disable-next-line fp/no-mutating-methods
-    [...quantiles].reverse(),
-    length,
-    length,
-  )
+  const { outliersMin, outliersMax } = getOutliers(quantiles, length)
   return { outliersMin, outliersMax }
 }
 
@@ -34,46 +23,54 @@ export const getOutliersPercentages = function (measures) {
 // A lower value makes the value less accurate.
 const OUTLIERS_GRANULARITY = 1e-3
 
-// Return outliers percentage based on a specific outlier quantile
-const getOutliersPercentage = function (quantiles, minIndex, length) {
-  // console.log('')
-  // console.log(
-  //   quantiles
-  //     .slice(0, minIndex + 1)
-  //     .map((number) => number.toFixed(3).padStart(10))
-  //     .join('\n'),
-  // )
-
+// eslint-disable-next-line max-statements
+const getOutliers = function (quantiles, length) {
+  // eslint-disable-next-line fp/no-let, init-declarations
+  let outliersMinIndex
+  // eslint-disable-next-line fp/no-let, init-declarations
+  let outliersMaxIndex
   // eslint-disable-next-line fp/no-let
-  let maxIndex = 0
+  let newOutliersMinIndex = 0
   // eslint-disable-next-line fp/no-let
-  let newMaxIndex = 0
+  let newOutliersMaxIndex = 0
+  // eslint-disable-next-line fp/no-mutating-methods
+  const reversedQuantiles = [...quantiles].reverse()
 
   // eslint-disable-next-line fp/no-loops
   do {
-    // console.log('')
-    // console.log(`${maxIndex} -> ${newMaxIndex}`)
-
     // eslint-disable-next-line fp/no-mutation
-    maxIndex = newMaxIndex
+    outliersMinIndex = newOutliersMinIndex
     // eslint-disable-next-line fp/no-mutation
-    newMaxIndex = findMaxIndex(quantiles, maxIndex, minIndex)
-  } while (newMaxIndex !== undefined)
+    outliersMaxIndex = newOutliersMaxIndex
+    // eslint-disable-next-line fp/no-mutation
+    newOutliersMaxIndex = getNextOutliersIndex(
+      reversedQuantiles,
+      outliersMaxIndex,
+      length - outliersMinIndex,
+    )
+    // eslint-disable-next-line fp/no-mutation
+    newOutliersMinIndex = getNextOutliersIndex(
+      quantiles,
+      outliersMinIndex,
+      length - newOutliersMaxIndex,
+    )
+  } while (
+    outliersMinIndex !== newOutliersMinIndex ||
+    outliersMaxIndex !== newOutliersMaxIndex
+  )
 
-  console.log(`Final: ${maxIndex} ${maxIndex / length}`)
-  console.log('')
-
-  return maxIndex / length
+  const outliersMin = outliersMinIndex / length
+  const outliersMax = outliersMaxIndex / length
+  return { outliersMin, outliersMax }
 }
 
 // eslint-disable-next-line max-statements
-const findMaxIndex = function (quantiles, maxIndex, minIndex) {
+const getNextOutliersIndex = function (quantiles, maxIndex, minIndex) {
   const max = quantiles[maxIndex]
   const min = quantiles[minIndex]
-  // console.log(max, min)
 
   if (max === min) {
-    return
+    return maxIndex
   }
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
@@ -82,22 +79,14 @@ const findMaxIndex = function (quantiles, maxIndex, minIndex) {
     const widthPercentage = (max - quantile) / (max - min)
     const quantilePercentage = (index - maxIndex) / (minIndex - maxIndex)
     const quantileRatio = getQuantileRatio(widthPercentage, quantilePercentage)
-    // const line = [
-    //   quantile,
-    //   index,
-    //   widthPercentage,
-    //   quantilePercentage,
-    //   quantileRatio,
-    // ]
-    //   .map((number) => number.toFixed(3).padStart(10))
-    //   .join(' ')
-    // console.log(line)
 
     // eslint-disable-next-line max-depth
     if (quantileRatio > OUTLIERS_THRESHOLD) {
       return index
     }
   }
+
+  return maxIndex
 }
 
 const getQuantileRatio = function (widthPercentage, quantilePercentage) {
