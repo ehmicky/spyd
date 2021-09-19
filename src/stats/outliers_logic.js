@@ -35,7 +35,7 @@ export const getOutliersPercentages = function (measures) {
 }
 
 // Maximum amount of outliers on each tail
-const OUTLIERS_MAX = 0.25
+const OUTLIERS_MAX = 0.5
 // Granularity of the outliers percentage.
 // For example, 1e3 means the granularity is 0.1%.
 // A higher value makes it slower to compute.
@@ -99,7 +99,7 @@ const findQuantileIndex = function (quantiles, medianIndex, quantileIndex) {
 
     const quantilePercentage =
       (index - quantileIndex) / (medianIndex - quantileIndex)
-    const quantileRatio = -Math.log(widthPercentage) / quantilePercentage
+    const quantileRatio = getQuantileRatio(widthPercentage, quantilePercentage)
     // const line = [
     //   quantile,
     //   index,
@@ -118,6 +118,10 @@ const findQuantileIndex = function (quantiles, medianIndex, quantileIndex) {
   }
 }
 
+const getQuantileRatio = function (widthPercentage, quantilePercentage) {
+  return Math.log(widthPercentage) / Math.log(1 - quantilePercentage)
+}
+
 // How much width should a 1% quantile contain to be considered an outlier
 // A higher value is less accurate as more information is trimmed.
 // A lower value is less precise as outliers will have a higher impact on the
@@ -125,4 +129,4 @@ const findQuantileIndex = function (quantiles, medianIndex, quantileIndex) {
 const OUTLIERS_1P_WIDTH = 0.08
 // Computes based on a 1% quantile
 const OUTLIERS_1P = 0.01
-const OUTLIERS_THRESHOLD = -Math.log(1 - OUTLIERS_1P_WIDTH) / OUTLIERS_1P
+const OUTLIERS_THRESHOLD = getQuantileRatio(1 - OUTLIERS_1P_WIDTH, OUTLIERS_1P)
