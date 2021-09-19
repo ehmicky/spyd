@@ -18,18 +18,19 @@ import { prettifyStats, prettifyHistoryStats } from './stats/main.js'
 // `normalizeTargetResult()`
 export const normalizeComputedResult = function (
   unmergedResult,
-  { history: [sinceResult], mergedResult },
+  { history: [sinceResult], mergedResult, noDimensions },
   config,
 ) {
   const unmergedResultA = normalizeCombAllUnmerged(unmergedResult, sinceResult)
   const result = mergeHistory(unmergedResultA, mergedResult)
-  const resultA = normalizeCombAllMerged(result)
+  const resultA = normalizeCombAllMerged(result, noDimensions)
   const resultB = prettifyStats(resultA, resultA.combinations)
   const resultC = addScreenInfo(resultB)
   const reporters = config.reporters.map((reporter) =>
     normalizeComputedEach({
       result: resultC,
       unmergedResult: unmergedResultA,
+      noDimensions,
       reporter,
       config,
     }),
@@ -42,12 +43,14 @@ export const normalizeComputedResult = function (
 const normalizeComputedEach = function ({
   result,
   unmergedResult,
+  noDimensions,
   reporter: { history, resultProps, footerParams, ...reporter },
   config,
 }) {
   const resultA = addLastResult({
     result,
     unmergedResult,
+    noDimensions,
     history,
     reporter,
     config,
@@ -65,6 +68,7 @@ const normalizeComputedEach = function ({
 const addLastResult = function ({
   result,
   unmergedResult: { combinations },
+  noDimensions,
   history,
   reporter,
   reporter: { capabilities },
@@ -77,7 +81,7 @@ const addLastResult = function ({
   const lastResult = history[history.length - 1]
   const historyA = history.slice(0, -1)
   const lastResultA = { ...lastResult, combinations }
-  const lastResultB = normalizeCombAllMerged(lastResultA)
+  const lastResultB = normalizeCombAllMerged(lastResultA, noDimensions)
   const lastResultC = normalizeCombEach(lastResultB, reporter, config)
   const historyB = [...historyA, lastResultC]
   const historyC = prettifyHistoryStats(historyB)

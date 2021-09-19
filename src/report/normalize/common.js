@@ -1,3 +1,4 @@
+import { omitNoDimensions } from '../../combination/filter.js'
 import { sortCombinations } from '../../combination/sort.js'
 import { addCombinationsDiff } from '../../history/compare/diff.js'
 import { omitSystemProps } from '../../system/omit.js'
@@ -14,9 +15,9 @@ export const normalizeNonCombAll = function (result) {
 
 // Add report-specific properties to a result that are in `combinations`, are
 // not reporter-specific
-export const normalizeCombAll = function (result, sinceResult) {
+export const normalizeCombAll = function (result, sinceResult, noDimensions) {
   const resultA = normalizeCombAllUnmerged(result, sinceResult)
-  const resultB = normalizeCombAllMerged(resultA)
+  const resultB = normalizeCombAllMerged(resultA, noDimensions)
   return resultB
 }
 
@@ -35,10 +36,11 @@ export const normalizeCombAllUnmerged = function (result, sinceResult) {
 
 // Add report-specific properties to a result that are in `combinations`, are
 // not reporter-specific and must be applied after the history is merged.
-export const normalizeCombAllMerged = function (result) {
-  const resultA = sortCombinations(result)
-  const resultB = omitSystemProps(resultA)
-  return resultB
+export const normalizeCombAllMerged = function (result, noDimensions) {
+  const resultA = omitNoDimensions(result, noDimensions)
+  const resultB = sortCombinations(resultA)
+  const resultC = omitSystemProps(resultB)
+  return resultC
 }
 
 // Add report-specific properties to a result that are not in `combinations` but
