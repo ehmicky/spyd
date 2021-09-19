@@ -9,7 +9,6 @@ export const random = () => {
 export const empty = () => {}
 
 export const fixed = async () => {
-  // eslint-disable-next-line no-magic-numbers
   await setTimeout(0)
 }
 
