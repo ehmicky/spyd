@@ -87,15 +87,6 @@ const findMaxIndex = function (quantiles, maxIndex, minIndex) {
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = maxIndex + 1; index < minIndex; index += 1) {
     const quantile = quantiles[index]
-
-    // Happens when the quantiles computation has rounding errors leading some
-    // quantiles very close to each other (difference close to `Number.EPSILON`)
-    // to be sorted in the wrong order.
-    // eslint-disable-next-line max-depth
-    if (max < quantile) {
-      return
-    }
-
     const widthPercentage = (max - quantile) / (max - min)
     const quantilePercentage = (index - maxIndex) / (minIndex - maxIndex)
     const quantileRatio = getQuantileRatio(widthPercentage, quantilePercentage)
