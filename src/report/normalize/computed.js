@@ -18,7 +18,7 @@ import { prettifyStats, prettifyHistoryStats } from './stats/main.js'
 // `normalizeTargetResult()`
 export const normalizeComputedResult = function (
   unmergedResult,
-  { history: [sinceResult], mergedResult, noDimensions },
+  { sinceResult, mergedResult, noDimensions },
   config,
 ) {
   const unmergedResultA = normalizeCombAllUnmerged(unmergedResult, sinceResult)

@@ -11,7 +11,7 @@ import { normalizeTargetResult } from './target.js'
 // (once) as opposed to later on (repeatedly)
 export const normalizeEarlyResult = function (
   result,
-  { history, history: [sinceResult], mergedResult, noDimensions },
+  { history, sinceResult, mergedResult, noDimensions },
   config,
 ) {
   const configA = normalizeHistory({

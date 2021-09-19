@@ -57,13 +57,13 @@ export const applySince = async function (result, previous, { since, cwd }) {
 
   if (sinceIndex === -1) {
     const sinceResult = getSinceResult(previous, previous.length - 1, result)
-    return { history: [sinceResult, result] }
+    return { history: [sinceResult, result], sinceResult }
   }
 
   const mergedResult = getMergedResult(previous, sinceIndex, result)
   const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
-  return { mergedResult, history }
+  return { mergedResult, history, sinceResult: sinceResultA }
 }
 
 // Add `historyInfo.noDimensions`, used to filter out redundant dimensions
