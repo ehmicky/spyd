@@ -88,9 +88,11 @@ const findQuantileIndex = function (quantiles, medianIndex, quantileIndex) {
   for (let index = quantileIndex + 1; index < medianIndex; index += 1) {
     const quantile = quantiles[index]
 
-    // The quantiles computation can have rounding errors leading some quantiles
-    // very close to each other (difference close to `Number.EPSILON`) to be
-    // sorted in the wrong order. This can lead to negative `quantile - median`
+    // `max === quantile` happens when several consecutive quantiles have the
+    // same value which happens when a specific measure is repeated many times.
+    // `max < quantile` happens when the quantiles computation has rounding
+    // errors leading some quantiles very close to each other (difference close
+    // to `Number.EPSILON`) to be sorted in the wrong order.
     // eslint-disable-next-line max-depth
     if (max <= quantile) {
       return
