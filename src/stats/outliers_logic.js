@@ -122,11 +122,15 @@ const getQuantileRatio = function (widthPercentage, quantilePercentage) {
   return Math.log(1 - widthPercentage) / Math.log(1 - quantilePercentage)
 }
 
-// How much width should a 1% quantile contain to be considered an outlier
+// If the following amount of measures leads to >= 50% width reduction, they
+// are considered outliers.
 // A higher value is less accurate as more information is trimmed.
 // A lower value is less precise as outliers will have a higher impact on the
 // mean. It also results in poorer histograms.
-const OUTLIERS_1P_WIDTH = 0.08
-// Computes based on a 1% quantile
-const OUTLIERS_1P = 0.01
-const OUTLIERS_THRESHOLD = getQuantileRatio(OUTLIERS_1P_WIDTH, OUTLIERS_1P)
+const OUTLIERS_BASE_AMOUNT = 0.08
+// Computes based on a 50% width reduction
+const OUTLIERS_BASE_WIDTH = 0.5
+const OUTLIERS_THRESHOLD = getQuantileRatio(
+  OUTLIERS_BASE_WIDTH,
+  OUTLIERS_BASE_AMOUNT,
+)
