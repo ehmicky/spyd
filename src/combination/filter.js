@@ -1,7 +1,17 @@
 import omit from 'omit.js'
 
 // Retrieve `noDimensions`, i.e. dimensions that have the same ids across all
-// combinations. Those are not reported, since they are redundant for users.
+// combinations.
+// Those are not reported, since they are redundant for users.
+// We only filter those just before reporting|printing:
+//  - `noDimensions` are always kept otherwise because lots of logic relies on
+//    all dimensions, even redundant, to be present: select, limit,
+//    id validation
+//  - We also keep all dimensions in result files since history merging and
+//   `select` might add|remove redundant dimensions
+//  - We do filter `noDimensions` inside the `result` passed to reporters though
+//     - So they do not have to
+//     - To ensure they do not report them
 export const getNoDimensions = function (combinations) {
   const dimensionsArray = combinations.map(getCombinationDimensions)
   return getCombNoDimensions(dimensionsArray)
