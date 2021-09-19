@@ -1,6 +1,10 @@
 // Retrieve quantiles of an array of floats.
 // Array must be sorted and not empty.
-export const getQuantiles = function (array, length, { minIndex, maxIndex }) {
+export const getQuantiles = function (
+  array,
+  length,
+  { minIndex = 0, maxIndex = array.length - 1 } = {},
+) {
   return Array.from({ length: length + 1 }, (value, index) =>
     getQuantile(array, index / length, { minIndex, maxIndex }),
   )

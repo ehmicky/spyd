@@ -1,3 +1,5 @@
+import { getOutliersPercentage } from './outliers_logic.js'
+
 // Measures usually contain some:
 //  - Very slow outliers due to background processes or engine optimization
 //  - Faster outliers for similar reasons, although they are less frequent
@@ -15,6 +17,7 @@
 // performance and memory reasons.
 export const getOutliersStats = function (measures) {
   const loops = measures.length
+  const outliersPercentage = getOutliersPercentage(measures)
   const outliersMin = OUTLIERS_MIN
   const outliersMax = OUTLIERS_MAX
   const { minIndex, maxIndex, length } = getLengthFromLoops(
