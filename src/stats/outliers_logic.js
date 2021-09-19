@@ -53,30 +53,30 @@ const getOutliersPercentage = function (quantiles, minIndex, length) {
   // )
 
   // eslint-disable-next-line fp/no-let
-  let quantileIndex = 0
+  let maxIndex = 0
   // eslint-disable-next-line fp/no-let
-  let newQuantileIndex = 0
+  let newMaxIndex = 0
 
   // eslint-disable-next-line fp/no-loops
   do {
     // console.log('')
-    // console.log(`${quantileIndex} -> ${newQuantileIndex}`)
+    // console.log(`${maxIndex} -> ${newMaxIndex}`)
 
     // eslint-disable-next-line fp/no-mutation
-    quantileIndex = newQuantileIndex
+    maxIndex = newMaxIndex
     // eslint-disable-next-line fp/no-mutation
-    newQuantileIndex = findQuantileIndex(quantiles, minIndex, quantileIndex)
-  } while (newQuantileIndex !== undefined)
+    newMaxIndex = findMaxIndex(quantiles, minIndex, maxIndex)
+  } while (newMaxIndex !== undefined)
 
-  // console.log(`Final: ${quantileIndex} ${quantileIndex / length}`)
+  // console.log(`Final: ${maxIndex} ${maxIndex / length}`)
   // console.log('')
 
-  return quantileIndex / length
+  return maxIndex / length
 }
 
 // eslint-disable-next-line max-statements, complexity
-const findQuantileIndex = function (quantiles, minIndex, quantileIndex) {
-  const max = quantiles[quantileIndex]
+const findMaxIndex = function (quantiles, minIndex, maxIndex) {
+  const max = quantiles[maxIndex]
   const min = quantiles[minIndex]
   // console.log(max, min)
 
@@ -85,7 +85,7 @@ const findQuantileIndex = function (quantiles, minIndex, quantileIndex) {
   }
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = quantileIndex + 1; index < minIndex; index += 1) {
+  for (let index = maxIndex + 1; index < minIndex; index += 1) {
     const quantile = quantiles[index]
 
     // `max === quantile` happens when several consecutive quantiles have the
@@ -99,8 +99,7 @@ const findQuantileIndex = function (quantiles, minIndex, quantileIndex) {
     }
 
     const widthPercentage = (max - quantile) / (max - min)
-    const quantilePercentage =
-      (index - quantileIndex) / (minIndex - quantileIndex)
+    const quantilePercentage = (index - maxIndex) / (minIndex - maxIndex)
     const quantileRatio = getQuantileRatio(widthPercentage, quantilePercentage)
     // const line = [
     //   quantile,
