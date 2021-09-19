@@ -12,9 +12,9 @@ import { getQuantiles } from './quantile.js'
 // This is applied separately on max and min outliers.
 export const getOutliersPercentages = function (measures) {
   const length = Math.ceil(1 / OUTLIERS_GRANULARITY)
-  const medianIndex = Math.floor(length * OUTLIERS_MAX)
+  const minIndex = Math.floor(length * OUTLIERS_MAX)
 
-  if (medianIndex === 0) {
+  if (minIndex === 0) {
     return { outliersMin: 0, outliersMax: 0 }
   }
 
@@ -24,11 +24,11 @@ export const getOutliersPercentages = function (measures) {
   //   quantiles.map((number) => number.toFixed(3).padStart(10)).join('\n'),
   // )
 
-  const outliersMin = getOutliersPercentage(quantiles, medianIndex, length)
+  const outliersMin = getOutliersPercentage(quantiles, minIndex, length)
   const outliersMax = getOutliersPercentage(
     // eslint-disable-next-line fp/no-mutating-methods
     [...quantiles].reverse(),
-    medianIndex,
+    minIndex,
     length,
   )
   return { outliersMin, outliersMax }
@@ -43,11 +43,11 @@ const OUTLIERS_MAX = 0.5
 const OUTLIERS_GRANULARITY = 1e-3
 
 // Return outliers percentage based on a specific outlier quantile
-const getOutliersPercentage = function (quantiles, medianIndex, length) {
+const getOutliersPercentage = function (quantiles, minIndex, length) {
   // console.log('')
   // console.log(
   //   quantiles
-  //     .slice(0, medianIndex + 1)
+  //     .slice(0, minIndex + 1)
   //     .map((number) => number.toFixed(3).padStart(10))
   //     .join('\n'),
   // )
@@ -65,7 +65,7 @@ const getOutliersPercentage = function (quantiles, medianIndex, length) {
     // eslint-disable-next-line fp/no-mutation
     quantileIndex = newQuantileIndex
     // eslint-disable-next-line fp/no-mutation
-    newQuantileIndex = findQuantileIndex(quantiles, medianIndex, quantileIndex)
+    newQuantileIndex = findQuantileIndex(quantiles, minIndex, quantileIndex)
   } while (newQuantileIndex !== undefined)
 
   // console.log(`Final: ${quantileIndex} ${quantileIndex / length}`)
@@ -75,17 +75,17 @@ const getOutliersPercentage = function (quantiles, medianIndex, length) {
 }
 
 // eslint-disable-next-line max-statements, complexity
-const findQuantileIndex = function (quantiles, medianIndex, quantileIndex) {
+const findQuantileIndex = function (quantiles, minIndex, quantileIndex) {
   const max = quantiles[quantileIndex]
-  const median = quantiles[medianIndex]
-  // console.log(max, median)
+  const min = quantiles[minIndex]
+  // console.log(max, min)
 
-  if (max === median) {
+  if (max === min) {
     return
   }
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = quantileIndex + 1; index < medianIndex; index += 1) {
+  for (let index = quantileIndex + 1; index < minIndex; index += 1) {
     const quantile = quantiles[index]
 
     // `max === quantile` happens when several consecutive quantiles have the
@@ -98,9 +98,9 @@ const findQuantileIndex = function (quantiles, medianIndex, quantileIndex) {
       return
     }
 
-    const widthPercentage = (max - quantile) / (max - median)
+    const widthPercentage = (max - quantile) / (max - min)
     const quantilePercentage =
-      (index - quantileIndex) / (medianIndex - quantileIndex)
+      (index - quantileIndex) / (minIndex - quantileIndex)
     const quantileRatio = getQuantileRatio(widthPercentage, quantilePercentage)
     // const line = [
     //   quantile,
