@@ -78,7 +78,7 @@ const hasWidth = function (quantileWidth) {
 // A lower value is less accurate as more information is trimmed.
 // A higher value is less precise as outliers will have a higher impact on the
 // mean. It also results in poorer histograms.
-const MIN_OUTLIER_WIDTH = 3
+const MIN_OUTLIER_WIDTH = 40
 
 // Return outliers percentage based on a specific outlier quantile
 const getOutliersPercentage = function (outliersChecks, length) {
