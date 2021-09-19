@@ -90,28 +90,20 @@ const spawnAndMeasure = async function ({
 //  - This ensures that all initializers and finalizers are always called
 //    and in order
 const handleStopAndMeasure = async function (args) {
-  const returnValue = await Promise.race([
-    args.stopState.onAbort,
-    handleErrorsAndMeasure(args),
-  ])
-  throwIfStopped(args.stopState)
+  const { stopState } = args
+  const returnValue = await Promise.race([stopState.onAbort, handleError(args)])
+  throwIfStopped(stopState)
   return returnValue
 }
 
 // When an error happens while a measuring a specific combination, display its
 // dimensions in the error message
-const handleErrorsAndMeasure = async function ({
-  onTaskExit,
-  noDimensions,
-  ...args
-}) {
+const handleError = async function ({ onTaskExit, noDimensions, ...args }) {
   try {
     return await Promise.race([onTaskExit, runEvents(args)])
   } catch (error) {
-    const combinationPrefix = getCombinationPrefix(
-      args.combination,
-      noDimensions,
-    )
+    const { combination } = args
+    const combinationPrefix = getCombinationPrefix(combination, noDimensions)
     error.message = `${combinationPrefix}${error.message}`
     throw error
   }
