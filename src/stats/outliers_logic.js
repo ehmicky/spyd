@@ -11,7 +11,7 @@ import { getQuantiles } from './quantile.js'
 //    threshold is close a big outlier.
 // This is applied separately on max and min outliers.
 export const getOutliersPercentages = function (measures) {
-  const length = OUTLIERS_GRANULARITY
+  const length = Math.ceil(1 / OUTLIERS_GRANULARITY)
   const medianIndex = Math.floor(length * OUTLIERS_MAX)
 
   if (medianIndex === 0) {
@@ -36,11 +36,11 @@ export const getOutliersPercentages = function (measures) {
 
 // Maximum amount of outliers on each tail
 const OUTLIERS_MAX = 0.5
-// Granularity of the outliers percentage.
-// For example, 1e3 means the granularity is 0.1%.
+// Minimum increment between two outliers percentages.
+// For example, 1e-3 means the granularity is 0.1%.
 // A higher value makes it slower to compute.
 // A lower value makes the value less accurate.
-const OUTLIERS_GRANULARITY = 1e3
+const OUTLIERS_GRANULARITY = 1e-3
 
 // Return outliers percentage based on a specific outlier quantile
 const getOutliersPercentage = function (quantiles, medianIndex, length) {
