@@ -1,4 +1,5 @@
-one:
+# This is an example of tasks, used mostly for debugging
+echo:
   beforeAll: echo beforeAll
   beforeEach: echo beforeEach
   main: echo main
