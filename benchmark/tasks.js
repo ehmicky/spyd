@@ -101,7 +101,7 @@ export const uniform = async () => {
 
 // Task with an exponential distribution
 export const exponential = async () => {
-  await setTimeout(2 ** (1 + Math.random() * 6))
+  await setTimeout(1.1 ** (1 + Math.random() * 60))
 }
 
 // eslint-disable-next-line fp/no-let
