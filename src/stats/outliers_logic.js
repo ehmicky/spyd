@@ -88,13 +88,11 @@ const findMaxIndex = function (quantiles, maxIndex, minIndex) {
   for (let index = maxIndex + 1; index < minIndex; index += 1) {
     const quantile = quantiles[index]
 
-    // `max === quantile` happens when several consecutive quantiles have the
-    // same value which happens when a specific measure is repeated many times.
-    // `max < quantile` happens when the quantiles computation has rounding
-    // errors leading some quantiles very close to each other (difference close
-    // to `Number.EPSILON`) to be sorted in the wrong order.
+    // Happens when the quantiles computation has rounding errors leading some
+    // quantiles very close to each other (difference close to `Number.EPSILON`)
+    // to be sorted in the wrong order.
     // eslint-disable-next-line max-depth
-    if (max <= quantile) {
+    if (max < quantile) {
       return
     }
 
