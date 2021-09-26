@@ -15,7 +15,7 @@ const CURRENT_URL = new URL(import.meta.url)
 
 // The fastest possible task
 // eslint-disable-next-line no-empty-function
-export const snappy = () => {}
+export const noop = () => {}
 
 // Very fast task
 export const fast = () => {
