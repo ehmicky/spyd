@@ -81,15 +81,21 @@ const getQuantilesCount = function (measures) {
   return Math.min(Math.ceil(1 / OUTLIERS_GRANULARITY), measures.length - 1)
 }
 
-// Minimum increment between two outliers percentages.
-// For example, 1e-3 means the granularity is 0.1%.
+// Number of quantiles to use to find outliersMin|outliersMax.
 // The algorithm is chosen so that changing the granularity does not
 // significantly change the final result.
-// A higher value it slower to compute.
+// A higher value it slower to compute
+//  - The time complexity is roughly linear
 // A lower value makes the value:
+//  - Less granular, i.e. outlier percentages changes from samples to samples
+//    will be higher
+//     - The minimum change is determined by both OUTLIERS_GRANULARITY and
+//       THRESHOLDS_COUNT
+//     - For example, with OUTLIERS_GRANULARITY 5e-4 and THRESHOLDS_COUNT 10,
+//       outliersMin|outliersMax granularity is 0.005%
 //  - Less accurate
-//  - More variable, making it sometimes flicker
-const OUTLIERS_GRANULARITY = 1e-4
+//  - More variable
+const OUTLIERS_GRANULARITY = 5e-4
 
 const getThresholdsIndexes = function (quantiles, quantilesCount) {
   // eslint-disable-next-line fp/no-mutating-methods
