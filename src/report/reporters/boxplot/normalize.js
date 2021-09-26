@@ -1,24 +1,30 @@
-import mapObj from 'map-obj'
-
 // Normalize combinations, including turning the `quantiles` array instead an
 // object with only the quantiles we need
+// We use min|max instead of quantiles so it vertically aligns with other
+// reporters such as `histogram`.
 export const normalizeQuantiles = function ({
-  stats: { quantiles },
+  stats: { min, max, quantiles },
   ...combination
 }) {
-  if (quantiles === undefined) {
+  if (![min, max, quantiles].every(Boolean)) {
     return combination
   }
 
-  const quantilesA = mapObj(QUANTILES, (name, quantileIndex) => [
-    name,
-    quantiles[quantileIndex],
-  ])
-  return { ...combination, quantiles: quantilesA }
+  return {
+    ...combination,
+    quantiles: {
+      min,
+      q1: quantiles[Q1_QUANTILE],
+      median: quantiles[MEDIAN_QUANTILE],
+      q3: quantiles[Q3_QUANTILE],
+      max,
+    },
+  }
 }
 
-// List of quantiles shown by the reporter
-const QUANTILES = { min: 0, q1: 25, median: 50, q3: 75, max: 100 }
+const Q1_QUANTILE = 25
+const MEDIAN_QUANTILE = 50
+const Q3_QUANTILE = 75
 
 export const isMeasuredCombination = function ({ quantiles }) {
   return quantiles !== undefined
