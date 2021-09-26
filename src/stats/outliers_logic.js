@@ -19,8 +19,10 @@ export const getOutliersPercentages = function (measures) {
 
 // Minimum increment between two outliers percentages.
 // For example, 1e-3 means the granularity is 0.1%.
-// A higher value makes it slower to compute.
-// A lower value makes the value less accurate.
+// A higher value it slower to compute.
+// A lower value:
+//  - Makes the value less accurate
+//  - Makes the value more variable, making it sometimes flicker
 const OUTLIERS_GRANULARITY = 1e-4
 
 // eslint-disable-next-line max-statements
