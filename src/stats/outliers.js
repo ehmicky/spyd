@@ -250,12 +250,12 @@ const getNextOutliersIndex = function (
   }
 
   const quantilesCount = endIndex - startIndex
-  const initIndex = startIndex + 1
-  const limitIndex = startIndex + Math.floor(quantilesCount / 2)
+  const finalIndex = Math.floor(quantilesCount / 2)
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = initIndex; index < limitIndex; index += 1) {
-    const widthPercentage = (start - quantiles[index]) / width
+  for (let index = 1; index < finalIndex; index += 1) {
+    const quantile = quantiles[startIndex + index]
+    const widthPercentage = (start - quantile) / width
 
     // Edge case: this happens when half of measures are identical
     // eslint-disable-next-line max-depth
@@ -263,7 +263,7 @@ const getNextOutliersIndex = function (
       return 0
     }
 
-    const quantilePercentage = (index - startIndex) / quantilesCount
+    const quantilePercentage = index / quantilesCount
     const outliersLikelihood = getOutliersLikelihood(
       widthPercentage,
       quantilePercentage,
@@ -271,7 +271,7 @@ const getNextOutliersIndex = function (
 
     // eslint-disable-next-line max-depth
     if (outliersLikelihood > outliersThreshold) {
-      return index - startIndex
+      return index
     }
   }
 
