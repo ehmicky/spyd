@@ -9,6 +9,24 @@ import { getQuantiles } from './quantile.js'
 //       visualize with `histogram`
 //     - They make `stdev`, `rstdev`, `moe` and `rmoe` must less useful
 //  - Those impact the `mean`
+// While trimming outliers is usually bad statistical practice, it makes the
+// most sense here since:
+//  - Most extreme values are actual outliers, not significant data
+//     - Those are influenced by environmental factors unrelated to the task,
+//       such as background processes
+//  - We cannot use statistics robust to outliers as we need all of those:
+//     - The arithmetic mean is what makes most sense as a benchmark's average
+//       value considering a task is likely to be repeated and the sum of each
+//       iteration's duration would be what matters to users
+//        - As opposed to the median, which is more robust but less useful in
+//          that context
+//     - The min|max is useful as worst|best-case but are highly sensitive to
+//       outliers
+//     - The `stdev` is not robust to outliers, which has an impact on:
+//        - The duration to run benchmark
+//        - `meanMin|meanMax`
+//        - `diffPrecise`
+//     - The histogram
 // We remove them from the measures, i.e. from all stats:
 //  - Using outliers in some stats but not others would lead to inconsistency
 //    and unexpected or ambiguous results
@@ -16,9 +34,13 @@ import { getQuantiles } from './quantile.js'
 // We try to find the best percentage of outliers to remove which:
 //  - Minimizes the max-min difference, to increase precision
 //  - Without removing too many outliers, to keep accuracy
-// We compute it based on the actual measures distribution instead of using a
-// fixed, hardcoded value which might trim too much or not enough for a given
-// array of measures.
+// We do not:
+//  - Use a fixed, hardcoded value since it might trim too much or not enough
+//    for a given distribution.
+//  - Use an existing outliers statistical methods since most assume a
+//    specific distribution (usually normal) while in our case it is usually:
+//     - Lognormal, sometimes normal, or even different
+//     - Multimodal
 // The logic satisfies the following constaints:
 //  - It should work with a very big left|right tail
 //     - For example, widening the first|last quantile should not change the
@@ -120,7 +142,17 @@ const getOutliers = function (quantiles, reversedQuantiles, quantilesCount) {
 // A lower value reduces the benefits of outliers removal.
 const OUTLIERS_LIMIT = 0.05
 
-// We only go through half of the quantiles:
+// Regardless of the direction, we use the whole range of quantiles to compute
+// the `outliersLikelihood`, as opposed to using only one half of it because:
+//  - Finding the right "middle" is difficult:
+//     - The mode would make more sense than the median
+//        - Especially for highly skewed or exponential distributions
+//        - But the mode is hard to compute both precisely and accurately when
+//          using only samples
+//     - For multimodal distributions, especially with big gaps in-between modes
+//  - What really matters is the total width and amount of measures, not each
+//    individual half
+// However, we stop searching after computing it for half of the quantiles:
 //  - This is because the closer widthPercentage is to 100%, the more imprecise
 //    it is.
 //  - This can lead to quantileRatio being much higher than it should just
