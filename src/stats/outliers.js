@@ -84,12 +84,48 @@ const getQuantilesCount = function (measures) {
 
 // Minimum increment between two outliers percentages.
 // For example, 1e-3 means the granularity is 0.1%.
+// The algorithm is chosen so that changing the granularity does not
+// significantly change the final result.
 // A higher value it slower to compute.
 // A lower value makes the value:
 //  - Less accurate
 //  - More variable, making it sometimes flicker
 const OUTLIERS_GRANULARITY = 1e-4
 
+// Computes the index where outliers start on each side.
+// The main criteria to consider whether a quantile is likely to be an outlier
+// or not is:
+//  - Removing a group of {number} quantiles would divide the width (difference
+//    between max and min) by {number2}
+//  - The {number}/{number2} ratio is computed for each quantile. When higher
+//    than a given fixed threshold, the quantile is considered an outlier.
+// Outlier quantiles are removed incrementally:
+//  - Their width is not taken into account anymore after removal
+//     - This ensures the final result is the same no matter how wide the
+//       first|last quantile is
+//  - Removing two quantiles one after the other should have the same result as
+//    removing both at once
+//     - This ensures the final result does not change when:
+//        - Changing `OUTLIERS_GRANULARITY`
+//        - More or less iterations are happening due to slight changes to
+//          quantiles as more samples are added
+// This results in the following algorithm:
+//  - For a given {number} and {number2}, a quantile is considered an outlier
+//    regardless of {number3} when it divides the:
+//     - Max-min width by {number} * {number3}
+//     - Amount of measures by {number2} * {number3}
+//  - So, for any {number3}, the result is same when using
+//    `widthPercentage ** {number3}` and `quantilePercentage ** {number3}`
+//     - For example, if removing 10% of measures to remove 50% of width is ok,
+//       then so is doing twice, i.e. 19% of measures for 75% of width
+//  - `outlierLikehood` computes this by dividing the inverse function of each
+//     side
+// Another way to look at it, this is like:
+//  1. Trace an exponential curve on the measures' cdf (cumulative distribution
+//     function)
+//  2. Pick the first quantile over it
+//      - A higher `OUTLIER_THRESHOLD` creates steeper curves
+//  3. Repeat
 // eslint-disable-next-line max-statements
 const getOutliersIndexes = function (
   quantiles,
