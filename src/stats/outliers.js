@@ -165,6 +165,7 @@ const OUTLIERS_LIMIT = 0.05
 //  2. Pick the first quantile over it
 //      - A higher `OUTLIER_THRESHOLD` creates steeper curves
 //  3. Repeat
+// eslint-disable-next-line max-statements
 const getThresholdIndexes = function (
   {
     outliersMinIndex,
@@ -175,17 +176,17 @@ const getThresholdIndexes = function (
   },
   { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
 ) {
+  // eslint-disable-next-line fp/no-let, init-declarations
+  let newOutliersMinIndex
+  // eslint-disable-next-line fp/no-let, init-declarations
+  let newOutliersMaxIndex
   // eslint-disable-next-line fp/no-let
-  let newOutliersMinIndex = outliersMinIndex
+  let outliersMinIndexChanged = false
   // eslint-disable-next-line fp/no-let
-  let newOutliersMaxIndex = outliersMaxIndex
+  let outliersMaxIndexChanged = false
 
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    outliersMinIndex = newOutliersMinIndex
-    // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    outliersMaxIndex = newOutliersMaxIndex
     // eslint-disable-next-line fp/no-mutation
     newOutliersMaxIndex = getNextOutliersIndex(
       reversedQuantiles,
@@ -195,17 +196,23 @@ const getThresholdIndexes = function (
       outliersThreshold,
     )
     // eslint-disable-next-line fp/no-mutation
+    outliersMaxIndexChanged = newOutliersMaxIndex !== outliersMaxIndex
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign
+    outliersMaxIndex = newOutliersMaxIndex
+
+    // eslint-disable-next-line fp/no-mutation
     newOutliersMinIndex = getNextOutliersIndex(
       quantiles,
       outliersMinIndex,
-      quantilesCount - newOutliersMaxIndex,
+      quantilesCount - outliersMaxIndex,
       outliersLimit,
       outliersThreshold,
     )
-  } while (
-    outliersMinIndex !== newOutliersMinIndex ||
-    outliersMaxIndex !== newOutliersMaxIndex
-  )
+    // eslint-disable-next-line fp/no-mutation
+    outliersMinIndexChanged = newOutliersMinIndex !== outliersMinIndex
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign
+    outliersMinIndex = newOutliersMinIndex
+  } while (outliersMinIndexChanged || outliersMaxIndexChanged)
 
   return {
     outliersMinIndex,
