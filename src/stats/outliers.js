@@ -95,8 +95,10 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
   // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
   const outliersLimit = Math.floor(quantilesCount * OUTLIERS_LIMIT)
+
   const outliersThreshold = getInitOutliersThreshold()
-  return new Array(THRESHOLDS_COUNT).fill().reduce(
+  const thresholdsArray = new Array(THRESHOLDS_COUNT).fill()
+  return thresholdsArray.reduce(
     (thresholdsIndexes) =>
       getThresholdIndexes(thresholdsIndexes, {
         quantiles,
