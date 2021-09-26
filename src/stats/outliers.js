@@ -249,8 +249,8 @@ const getNextOutliersIndex = function (
     return 0
   }
 
-  const quantilesCount = endIndex - startIndex
-  const finalIndex = Math.floor(quantilesCount / 2)
+  const quantilesGap = endIndex - startIndex
+  const finalIndex = Math.floor(quantilesGap / 2)
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = 1; index < finalIndex; index += 1) {
@@ -263,7 +263,7 @@ const getNextOutliersIndex = function (
       return 0
     }
 
-    const quantilePercentage = index / quantilesCount
+    const quantilePercentage = index / quantilesGap
     const outliersLikelihood = getOutliersLikelihood(
       widthPercentage,
       quantilePercentage,
