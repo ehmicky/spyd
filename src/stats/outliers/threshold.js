@@ -4,12 +4,9 @@
 export const isOutlier = function (
   widthPercentage,
   quantilePercentage,
-  outliersThreshold,
+  threshold,
 ) {
-  return (
-    getOutliersLikelihood(widthPercentage, quantilePercentage) >
-    outliersThreshold
-  )
+  return getOutliersLikelihood(widthPercentage, quantilePercentage) > threshold
 }
 
 // `quantilePercentage` should not be 1 or 0.
@@ -62,7 +59,7 @@ const getThresholdsFactor = function () {
 
 const THRESHOLDS_FACTOR = getThresholdsFactor()
 
-// Retrieve each `outliersThreshold`.
+// Retrieve each threshold.
 // Each next one is divided by THRESHOLDS_SPREAD.
 // There are THRESHOLDS_COUNT of them in total.
 // Their center value is OUTLIERS_BASE_THRESHOLD.

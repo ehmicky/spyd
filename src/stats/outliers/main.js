@@ -134,8 +134,8 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
   const outliersLimit = getOutliersLimit(quantilesCount)
 
   return THRESHOLDS.reduce(
-    (thresholdsIndexes, outliersThreshold) =>
-      getThresholdIndexes(thresholdsIndexes, outliersThreshold, {
+    (thresholdsIndexes, threshold) =>
+      getThresholdIndexes(thresholdsIndexes, threshold, {
         quantiles,
         reversedQuantiles,
         quantilesCount,
@@ -212,7 +212,7 @@ const getThresholdIndexes = function (
     outliersMaxIndexSum,
     outliersMinIndexSum,
   },
-  outliersThreshold,
+  threshold,
   { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
 ) {
   let outliersMaxIncrement = 0
@@ -224,7 +224,7 @@ const getThresholdIndexes = function (
       outliersMaxIndex,
       quantilesCount - outliersMinIndex,
       outliersLimit,
-      outliersThreshold,
+      threshold,
     )
     outliersMaxIndex += outliersMaxIncrement
 
@@ -233,7 +233,7 @@ const getThresholdIndexes = function (
       outliersMinIndex,
       quantilesCount - outliersMaxIndex,
       outliersLimit,
-      outliersThreshold,
+      threshold,
     )
     outliersMinIndex += outliersMinIncrement
   } while (outliersMaxIncrement !== 0 || outliersMinIncrement !== 0)
@@ -273,7 +273,7 @@ const getOutliersIncrement = function (
   startIndex,
   endIndex,
   outliersLimit,
-  outliersThreshold,
+  threshold,
 ) {
   if (startIndex >= outliersLimit) {
     return 0
@@ -305,7 +305,7 @@ const getOutliersIncrement = function (
     const quantilePercentage = index / quantilesAmount
 
     // eslint-disable-next-line max-depth
-    if (isOutlier(widthPercentage, quantilePercentage, outliersThreshold)) {
+    if (isOutlier(widthPercentage, quantilePercentage, threshold)) {
       return index
     }
   }
