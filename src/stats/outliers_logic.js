@@ -93,8 +93,8 @@ const getQuantileRatio = function (widthPercentage, quantilePercentage) {
   return Math.log(1 - widthPercentage) / Math.log(1 - quantilePercentage)
 }
 
-// If the following amount of measures leads to >= 50% width reduction, they
-// are considered outliers.
+// If the following minimum amount of measures leads to >= 50% width reduction,
+// they are considered outliers.
 // A higher value is less accurate as more information is trimmed.
 // A lower value is less precise as outliers will have a higher impact on the
 // mean. It also results in poorer histograms.
