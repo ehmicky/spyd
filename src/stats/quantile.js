@@ -18,19 +18,18 @@ export const getSortedMedian = function (array, { minIndex, maxIndex } = {}) {
 
 const MEDIAN_QUANTILE = 0.5
 
+// This logic is avoiding floating rounding errors which could otherwise happen
+// with consecutive identical measures, leading to a quantile having a slightly
+// (Number.EPSILON) higher value than the previous one.
 const getQuantile = function (
   array,
   percentage,
   { minIndex = 0, maxIndex = array.length - 1 },
 ) {
   const position = minIndex + (maxIndex - minIndex) * percentage
-
-  if (Number.isInteger(position)) {
-    return array[position]
-  }
-
-  return (
-    array[Math.floor(position)] * (Math.ceil(position) - position) +
-    array[Math.ceil(position)] * (position - Math.floor(position))
-  )
+  const lowerPosition = Math.floor(position)
+  const higherPosition = Math.ceil(position)
+  const lowerValue = array[lowerPosition]
+  const higherValue = array[higherPosition]
+  return lowerValue + (higherValue - lowerValue) * (position - lowerPosition)
 }
