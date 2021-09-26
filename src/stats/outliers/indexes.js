@@ -158,10 +158,6 @@ const getOutliersIncrement = function (
   outliersLimit,
   threshold,
 ) {
-  if (startIndex >= outliersLimit) {
-    return 0
-  }
-
   const start = quantiles[startIndex]
   const end = quantiles[endIndex]
   const width = start - end
@@ -172,7 +168,10 @@ const getOutliersIncrement = function (
   }
 
   const quantilesAmount = endIndex - startIndex
-  const finalIndex = Math.floor(quantilesAmount / 2)
+  const finalIndex = Math.min(
+    Math.floor(quantilesAmount / 2),
+    outliersLimit - startIndex,
+  )
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = 1; index <= finalIndex; index += 1) {
