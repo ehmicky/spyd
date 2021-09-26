@@ -1,3 +1,4 @@
+import { OUTLIERS_LIMIT } from './constants.js'
 import { THRESHOLDS, isOutlier } from './threshold.js'
 
 // When using a single outliers threshold:
@@ -48,17 +49,6 @@ export const getThresholdsIndexes = function (quantiles, quantilesCount) {
     },
   )
 }
-
-// Maximum percentage of min|max outliers.
-// This is applied independently on outliersMax and outliersMin so they do not
-// influence each other.
-// A higher value:
-//  - Is more likely to result in very high outlier percentages on some edge
-//    cases, for example on a distribution with a continuous, very exponential
-//    slope.
-//  - Is more likely to include significant data instead of outliers only.
-// A lower value reduces the benefits of outliers removal.
-const OUTLIERS_LIMIT = 0.05
 
 // Computes the index where outliers start on each side.
 // The main criteria to consider whether a quantile is likely to be an outlier

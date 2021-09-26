@@ -1,5 +1,6 @@
 import { getQuantiles } from '../quantile.js'
 
+import { OUTLIERS_GRANULARITY } from './constants.js'
 import { getThresholdsIndexes } from './indexes.js'
 import { THRESHOLDS } from './threshold.js'
 
@@ -85,22 +86,6 @@ export const getOutliersPercentages = function (measures) {
 const getQuantilesCount = function (measures) {
   return Math.min(OUTLIERS_GRANULARITY, measures.length - 1)
 }
-
-// Number of quantiles to use to find outliersMin|outliersMax.
-// The algorithm is chosen so that changing the granularity does not
-// significantly change the final result.
-// A higher value it slower to compute
-//  - The time complexity is roughly linear
-// A lower value makes the value:
-//  - Less granular, i.e. outlier percentages changes from samples to samples
-//    will be higher
-//     - The minimum change is determined by
-//       1 / (OUTLIERS_GRANULARITY * THRESHOLDS_COUNT)
-//     - For example, with OUTLIERS_GRANULARITY 2e3 and THRESHOLDS_COUNT 10,
-//       outliersMin|outliersMax granularity is 0.005%
-//  - Less accurate
-//  - More variable
-const OUTLIERS_GRANULARITY = 2e3
 
 // Compute the final outliersMin|outliersMax percentage
 const computePercentage = function (outliersIndexSum, quantilesCount) {
