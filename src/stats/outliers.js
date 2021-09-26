@@ -165,7 +165,6 @@ const OUTLIERS_LIMIT = 0.05
 //  2. Pick the first quantile over it
 //      - A higher `OUTLIER_THRESHOLD` creates steeper curves
 //  3. Repeat
-// eslint-disable-next-line max-statements
 const getThresholdIndexes = function (
   {
     outliersMinIndex,
@@ -176,43 +175,35 @@ const getThresholdIndexes = function (
   },
   { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
 ) {
-  // eslint-disable-next-line fp/no-let, init-declarations
-  let newOutliersMinIndex
-  // eslint-disable-next-line fp/no-let, init-declarations
-  let newOutliersMaxIndex
   // eslint-disable-next-line fp/no-let
-  let outliersMinIndexChanged = false
+  let outliersMinIncrement = 0
   // eslint-disable-next-line fp/no-let
-  let outliersMaxIndexChanged = false
+  let outliersMaxIncrement = 0
 
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line fp/no-mutation
-    newOutliersMaxIndex = getNextOutliersIndex(
+    outliersMaxIncrement = getNextOutliersIndex(
       reversedQuantiles,
       outliersMaxIndex,
       quantilesCount - outliersMinIndex,
       outliersLimit,
       outliersThreshold,
     )
-    // eslint-disable-next-line fp/no-mutation
-    outliersMaxIndexChanged = newOutliersMaxIndex !== outliersMaxIndex
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    outliersMaxIndex = newOutliersMaxIndex
+    outliersMaxIndex += outliersMaxIncrement
 
     // eslint-disable-next-line fp/no-mutation
-    newOutliersMinIndex = getNextOutliersIndex(
+    outliersMinIncrement = getNextOutliersIndex(
       quantiles,
       outliersMinIndex,
       quantilesCount - outliersMaxIndex,
       outliersLimit,
       outliersThreshold,
     )
-    // eslint-disable-next-line fp/no-mutation
-    outliersMinIndexChanged = newOutliersMinIndex !== outliersMinIndex
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
-    outliersMinIndex = newOutliersMinIndex
-  } while (outliersMinIndexChanged || outliersMaxIndexChanged)
+    outliersMinIndex += outliersMinIncrement
+  } while (outliersMaxIncrement !== 0 || outliersMinIncrement !== 0)
 
   return {
     outliersMinIndex,
@@ -247,7 +238,7 @@ const getNextOutliersIndex = function (
   outliersThreshold,
 ) {
   if (startIndex >= outliersLimit) {
-    return startIndex
+    return 0
   }
 
   const start = quantiles[startIndex]
@@ -255,7 +246,7 @@ const getNextOutliersIndex = function (
   const width = start - end
 
   if (width === 0) {
-    return startIndex
+    return 0
   }
 
   const quantilesCount = endIndex - startIndex
@@ -269,7 +260,7 @@ const getNextOutliersIndex = function (
     // Edge case: this happens when half of measures are identical
     // eslint-disable-next-line max-depth
     if (widthPercentage === 1) {
-      return startIndex
+      return 0
     }
 
     const quantilePercentage = (index - startIndex) / quantilesCount
@@ -280,11 +271,11 @@ const getNextOutliersIndex = function (
 
     // eslint-disable-next-line max-depth
     if (outliersLikelihood > outliersThreshold) {
-      return index
+      return index - startIndex
     }
   }
 
-  return startIndex
+  return 0
 }
 
 const getOutliersLikelihood = function (widthPercentage, quantilePercentage) {
