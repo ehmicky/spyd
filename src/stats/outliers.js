@@ -42,7 +42,7 @@ import { getQuantiles } from './quantile.js'
 //    specific distribution (usually normal) while in our case it is usually:
 //     - Lognormal, sometimes normal, or even different
 //     - Multimodal
-// The logic satisfies the following constaints:
+// The logic satisfies the following constraints:
 //  - It should work with a very big left|right tail
 //     - For example, widening the first|last quantile should not change the
 //       result
@@ -56,10 +56,12 @@ import { getQuantiles } from './quantile.js'
 //     - Exponential with a high, continuous slope
 //     - Uniform
 //     - U-shaped
-//  - OutliersMin|Max 0 should be possible
 //  - It should work with integer measures
 //  - It should work with consecutive identical measures
-//  - It should work with very low sample size, including 1
+//  - It should work with a very low sample size, including 0, 1 or 2
+//  - outliersMin|Max 0 should be possible
+//  - Making only slight changes to the measures should not result in big
+//    changes of outliersMin|Max
 export const getOutliersPercentages = function (measures) {
   if (measures.length <= 2) {
     return { outliersMin: 0, outliersMax: 0 }
@@ -77,6 +79,7 @@ export const getOutliersPercentages = function (measures) {
   return { outliersMin, outliersMax }
 }
 
+// Retrieve number of quantiles to use
 const getQuantilesCount = function (measures) {
   return Math.min(OUTLIERS_GRANULARITY, measures.length - 1)
 }
