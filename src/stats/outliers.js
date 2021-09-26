@@ -128,8 +128,7 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
   const reversedQuantiles = [...quantiles].reverse()
   const outliersLimit = getOutliersLimit(quantilesCount)
 
-  const outliersThresholds = getOutliersThresholds()
-  return outliersThresholds.reduce(
+  return OUTLIERS_THRESHOLDS.reduce(
     (thresholdsIndexes, outliersThreshold) =>
       getThresholdIndexes(thresholdsIndexes, outliersThreshold, {
         quantiles,
@@ -381,6 +380,8 @@ const getOutliersThreshold = function (_, index) {
   const thresholdExponent = (THRESHOLDS_COUNT - 1) / 2 - index
   return THRESHOLDS_BASE * THRESHOLDS_FACTOR ** thresholdExponent
 }
+
+const OUTLIERS_THRESHOLDS = getOutliersThresholds()
 
 // Compute the final outliersMin|outliersMax percentage
 const computePercentage = function (outliersIndexSum, quantilesCount) {
