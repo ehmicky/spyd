@@ -125,34 +125,6 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
 // A lower value reduces the benefits of outliers removal.
 const OUTLIERS_LIMIT = 0.05
 
-const getThresholdIndexes = function (
-  {
-    initOutliersMinIndex,
-    initOutliersMaxIndex,
-    outliersMinIndexSum,
-    outliersMaxIndexSum,
-    outliersThreshold,
-  },
-  { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
-) {
-  const { outliersMinIndex, outliersMaxIndex } = getOutliersIndexes({
-    quantiles,
-    reversedQuantiles,
-    quantilesCount,
-    outliersLimit,
-    outliersThreshold,
-    initOutliersMinIndex,
-    initOutliersMaxIndex,
-  })
-  return {
-    initOutliersMinIndex: outliersMinIndex,
-    initOutliersMaxIndex: outliersMaxIndex,
-    outliersMinIndexSum: outliersMinIndexSum + outliersMinIndex,
-    outliersMaxIndexSum: outliersMaxIndexSum + outliersMaxIndex,
-    outliersThreshold: outliersThreshold / THRESHOLDS_SPREAD,
-  }
-}
-
 // Computes the index where outliers start on each side.
 // The main criteria to consider whether a quantile is likely to be an outlier
 // or not is:
@@ -187,15 +159,16 @@ const getThresholdIndexes = function (
 //  2. Pick the first quantile over it
 //      - A higher `OUTLIER_THRESHOLD` creates steeper curves
 //  3. Repeat
-const getOutliersIndexes = function ({
-  quantiles,
-  reversedQuantiles,
-  quantilesCount,
-  outliersLimit,
-  outliersThreshold,
-  initOutliersMinIndex,
-  initOutliersMaxIndex,
-}) {
+const getThresholdIndexes = function (
+  {
+    initOutliersMinIndex,
+    initOutliersMaxIndex,
+    outliersMinIndexSum,
+    outliersMaxIndexSum,
+    outliersThreshold,
+  },
+  { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
+) {
   // eslint-disable-next-line fp/no-let, init-declarations
   let outliersMinIndex
   // eslint-disable-next-line fp/no-let, init-declarations
@@ -232,7 +205,13 @@ const getOutliersIndexes = function ({
     outliersMaxIndex !== newOutliersMaxIndex
   )
 
-  return { outliersMinIndex, outliersMaxIndex }
+  return {
+    initOutliersMinIndex: outliersMinIndex,
+    initOutliersMaxIndex: outliersMaxIndex,
+    outliersMinIndexSum: outliersMinIndexSum + outliersMinIndex,
+    outliersMaxIndexSum: outliersMaxIndexSum + outliersMaxIndex,
+    outliersThreshold: outliersThreshold / THRESHOLDS_SPREAD,
+  }
 }
 
 // Regardless of the direction, we use the whole range of quantiles to compute
