@@ -73,12 +73,12 @@ export const getOutliersPercentages = function (measures) {
   const quantilesCount = getQuantilesCount(measures)
   const quantiles = getQuantiles(measures, quantilesCount)
 
-  const { outliersMinIndexSum, outliersMaxIndexSum } = getThresholdsIndexes(
+  const { minIndexSum, maxIndexSum } = getThresholdsIndexes(
     quantiles,
     quantilesCount,
   )
-  const outliersMin = computePercentage(outliersMinIndexSum, quantilesCount)
-  const outliersMax = computePercentage(outliersMaxIndexSum, quantilesCount)
+  const outliersMin = computePercentage(minIndexSum, quantilesCount)
+  const outliersMax = computePercentage(maxIndexSum, quantilesCount)
   return { outliersMin, outliersMax }
 }
 
@@ -88,7 +88,7 @@ const getQuantilesCount = function (measures) {
 }
 
 // Compute the final outliersMin|outliersMax percentage
-const computePercentage = function (outliersIndexSum, quantilesCount) {
-  const outliersIndexMean = outliersIndexSum / THRESHOLDS.length
-  return outliersIndexMean / quantilesCount
+const computePercentage = function (indexSum, quantilesCount) {
+  const indexMean = indexSum / THRESHOLDS.length
+  return indexMean / quantilesCount
 }

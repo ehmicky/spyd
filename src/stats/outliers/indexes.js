@@ -41,12 +41,7 @@ export const getThresholdsIndexes = function (quantiles, quantilesCount) {
         quantilesCount,
         outliersLimit,
       }),
-    {
-      outliersMaxIndex: 0,
-      outliersMinIndex: 0,
-      outliersMaxIndexSum: 0,
-      outliersMinIndexSum: 0,
-    },
+    { maxIndex: 0, minIndex: 0, maxIndexSum: 0, minIndexSum: 0 },
   )
 }
 
@@ -94,42 +89,37 @@ const getOutliersLimit = function (quantilesCount) {
 // We use imperative code for performance.
 /* eslint-disable fp/no-let, fp/no-loops, fp/no-mutation, no-param-reassign */
 const getThresholdIndexes = function (
-  {
-    outliersMaxIndex,
-    outliersMinIndex,
-    outliersMaxIndexSum,
-    outliersMinIndexSum,
-  },
+  { maxIndex, minIndex, maxIndexSum, minIndexSum },
   { threshold, quantiles, reversedQuantiles, quantilesCount, outliersLimit },
 ) {
-  let outliersMaxIncrement = 0
-  let outliersMinIncrement = 0
+  let maxIncrement = 0
+  let minIncrement = 0
 
   do {
-    outliersMaxIncrement = getOutliersIncrement(
+    maxIncrement = getOutliersIncrement(
       reversedQuantiles,
-      outliersMaxIndex,
-      quantilesCount - outliersMinIndex,
+      maxIndex,
+      quantilesCount - minIndex,
       outliersLimit,
       threshold,
     )
-    outliersMaxIndex += outliersMaxIncrement
+    maxIndex += maxIncrement
 
-    outliersMinIncrement = getOutliersIncrement(
+    minIncrement = getOutliersIncrement(
       quantiles,
-      outliersMinIndex,
-      quantilesCount - outliersMaxIndex,
+      minIndex,
+      quantilesCount - maxIndex,
       outliersLimit,
       threshold,
     )
-    outliersMinIndex += outliersMinIncrement
-  } while (outliersMaxIncrement !== 0 || outliersMinIncrement !== 0)
+    minIndex += minIncrement
+  } while (maxIncrement !== 0 || minIncrement !== 0)
 
   return {
-    outliersMaxIndex,
-    outliersMinIndex,
-    outliersMaxIndexSum: outliersMaxIndexSum + outliersMaxIndex,
-    outliersMinIndexSum: outliersMinIndexSum + outliersMinIndex,
+    maxIndex,
+    minIndex,
+    maxIndexSum: maxIndexSum + maxIndex,
+    minIndexSum: minIndexSum + minIndex,
   }
 }
 /* eslint-enable fp/no-let, fp/no-loops, fp/no-mutation, no-param-reassign */
