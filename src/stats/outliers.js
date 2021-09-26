@@ -291,12 +291,13 @@ const getOutliersLikelihood = function (widthPercentage, quantilePercentage) {
 // A lower value:
 //  - Is less precise as outliers will have a higher impact on the mean.
 //  - Results in wider quantiles, i.e. poorer histograms
-const OUTLIERS_BASE_AMOUNT = 0.01
+const THRESHOLDS_BASE_AMOUNT = 0.01
 // Computes based on a 50% width reduction
-const OUTLIERS_BASE_WIDTH = 0.5
-const OUTLIERS_BASE_THRESHOLD = getOutliersLikelihood(
-  OUTLIERS_BASE_WIDTH,
-  OUTLIERS_BASE_AMOUNT,
+const THRESHOLDS_BASE_WIDTH = 0.5
+// Average outliers threshold
+const THRESHOLDS_BASE = getOutliersLikelihood(
+  THRESHOLDS_BASE_WIDTH,
+  THRESHOLDS_BASE_AMOUNT,
 )
 
 // Number of different outliers thresholds to use.
@@ -326,7 +327,7 @@ const THRESHOLDS_FACTOR = getThresholdsFactor()
 // Their center value is OUTLIERS_BASE_THRESHOLD.
 const getInitOutliersThreshold = function () {
   const baseExponent = (THRESHOLDS_COUNT - 1) / 2
-  return OUTLIERS_BASE_THRESHOLD * THRESHOLDS_FACTOR ** baseExponent
+  return THRESHOLDS_BASE * THRESHOLDS_FACTOR ** baseExponent
 }
 
 const computePercentage = function (outliersIndexSum, quantilesCount) {
