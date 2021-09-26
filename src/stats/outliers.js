@@ -210,7 +210,7 @@ const getThresholdIndexes = function (
     outliersMaxIndex,
     outliersMinIndexSum: outliersMinIndexSum + outliersMinIndex,
     outliersMaxIndexSum: outliersMaxIndexSum + outliersMaxIndex,
-    outliersThreshold: outliersThreshold / THRESHOLDS_SPREAD,
+    outliersThreshold: outliersThreshold / THRESHOLDS_FACTOR,
   }
 }
 
@@ -298,17 +298,27 @@ const OUTLIERS_BASE_THRESHOLD = getOutliersLikelihood(
   OUTLIERS_BASE_WIDTH,
   OUTLIERS_BASE_AMOUNT,
 )
+
 // Number of different outliers thresholds to use.
 // A higher value is slower to compute.
 //  - This follows a logarithmic time complexity since each threshold re-uses
 //    the outliers removal from the previous threshold
 // A lower value decreases the smoothing effect.
 const THRESHOLDS_COUNT = 10
-// Multiplying factor between each outlier threshold. Must be > 1.
+// Multiplying factor between the base threshold and the min|max ones.
 // A higher value decreases the accuracy of the outliers removal, making it more
 // likely to trim too many or not enough outliers.
 // A lower value decreases the smoothing effect.
-const THRESHOLDS_SPREAD = 1.2
+const THRESHOLDS_SPREAD = 2
+
+// Computes the multiplying factor between each outlier threshold, so that they
+// respect both THRESHOLDS_COUNT and THRESHOLDS_MAX_SPREAD.
+const getThresholdsFactor = function () {
+  const baseExponent = (THRESHOLDS_COUNT - 1) / 2
+  return THRESHOLDS_SPREAD ** (1 / baseExponent)
+}
+
+const THRESHOLDS_FACTOR = getThresholdsFactor()
 
 // Retrieve the first `outliersThreshold`.
 // Each next one is divided by THRESHOLDS_SPREAD.
@@ -316,7 +326,7 @@ const THRESHOLDS_SPREAD = 1.2
 // Their center value is OUTLIERS_BASE_THRESHOLD.
 const getInitOutliersThreshold = function () {
   const baseExponent = (THRESHOLDS_COUNT - 1) / 2
-  return OUTLIERS_BASE_THRESHOLD * THRESHOLDS_SPREAD ** baseExponent
+  return OUTLIERS_BASE_THRESHOLD * THRESHOLDS_FACTOR ** baseExponent
 }
 
 const computePercentage = function (outliersIndexSum, quantilesCount) {
