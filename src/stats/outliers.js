@@ -246,6 +246,10 @@ const getThresholdIndexes = function (
   }
 }
 
+// Return a number of the next quantiles are outliers.
+//  - This is 0 when there are no more outliers
+//  - This might be lower than the total amount of outliers, i.e. must be
+//    repeated
 // Regardless of the direction, we use the whole range of quantiles to compute
 // the `outliersLikelihood`, as opposed to using only one half of it because:
 //  - Finding the right "middle" is difficult:
