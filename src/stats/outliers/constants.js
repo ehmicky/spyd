@@ -19,6 +19,9 @@ export const OUTLIERS_GRANULARITY = 2e3
 // Maximum percentage of min|max outliers.
 // This is applied independently on outliersMax and outliersMin so they do not
 // influence each other.
+// When the sample size is very low, we allow 1 outlier on each side:
+//  - This ensures cold starts are removed
+//  - This might result in higher outlier percentages than allowed below
 // A higher value:
 //  - Is more likely to result in very high outlier percentages on some edge
 //    cases, for example on a distribution with a continuous, very exponential
