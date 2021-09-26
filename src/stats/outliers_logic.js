@@ -40,6 +40,8 @@ const OUTLIERS_GRANULARITY = 1e-4
 
 // eslint-disable-next-line max-statements
 const getOutliers = function (quantiles, reversedQuantiles, length) {
+  const outliersLimit = Math.floor(length * OUTLIERS_LIMIT)
+
   // eslint-disable-next-line fp/no-let, init-declarations
   let outliersMinIndex
   // eslint-disable-next-line fp/no-let, init-declarations
@@ -60,12 +62,14 @@ const getOutliers = function (quantiles, reversedQuantiles, length) {
       reversedQuantiles,
       outliersMaxIndex,
       length - outliersMinIndex,
+      outliersLimit,
     )
     // eslint-disable-next-line fp/no-mutation
     newOutliersMinIndex = getNextOutliersIndex(
       quantiles,
       outliersMinIndex,
       length - newOutliersMaxIndex,
+      outliersLimit,
     )
   } while (
     outliersMinIndex !== newOutliersMinIndex ||
@@ -77,6 +81,8 @@ const getOutliers = function (quantiles, reversedQuantiles, length) {
   return { outliersMin, outliersMax }
 }
 
+const OUTLIERS_LIMIT = 0.05
+
 // We only increment the index by 1, even if the `for` loop used several
 // quantiles. Otherwise, when there is a bump on the outliers tail close the
 // exclusion threshold, the task might flicker between inclusion and exclusion,
@@ -86,8 +92,17 @@ const getOutliers = function (quantiles, reversedQuantiles, length) {
 //    it is.
 //  - This can lead to quantileRatio to be much higher than it should just
 //    because the measures close to `minIndex` happen to be close to each other.
-// eslint-disable-next-line max-statements, complexity
-const getNextOutliersIndex = function (quantiles, maxIndex, minIndex) {
+// eslint-disable-next-line max-statements, complexity, max-params
+const getNextOutliersIndex = function (
+  quantiles,
+  maxIndex,
+  minIndex,
+  outliersLimit,
+) {
+  if (maxIndex >= outliersLimit) {
+    return maxIndex
+  }
+
   const max = quantiles[maxIndex]
   const min = quantiles[minIndex]
   const width = max - min
