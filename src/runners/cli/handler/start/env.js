@@ -2,7 +2,7 @@ import decamelize from 'decamelize'
 import mapObj from 'map-obj'
 
 // Inputs are passed as environment variables.
-// For example, input `thisExample` would be `SPYD_INPUT_THIS_EXAMPLE`.
+// For example, input `thisExample` would be `SPYD_INPUTS_THIS_EXAMPLE`.
 // Any non-string JSON value is serialized.
 export const getEnv = function (inputs) {
   return mapObj(inputs, getEnvVar)
@@ -16,4 +16,4 @@ const getEnvVar = function (inputId, inputValue) {
   return [name, value]
 }
 
-const ENV_PREFIX = 'SPYD_INPUT_'
+const ENV_PREFIX = 'SPYD_INPUTS_'
