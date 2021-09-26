@@ -21,7 +21,7 @@ export const getOutliersPercentages = function (measures) {
 // For example, 1e-3 means the granularity is 0.1%.
 // A higher value makes it slower to compute.
 // A lower value makes the value less accurate.
-const OUTLIERS_GRANULARITY = 1e-3
+const OUTLIERS_GRANULARITY = 1e-4
 
 // eslint-disable-next-line max-statements
 const getOutliers = function (quantiles, length) {
@@ -95,9 +95,13 @@ const getQuantileRatio = function (widthPercentage, quantilePercentage) {
 
 // If the following minimum amount of measures leads to >= 50% width reduction,
 // they are considered outliers.
-// A higher value is less accurate as more information is trimmed.
-// A lower value is less precise as outliers will have a higher impact on the
-// mean. It also results in poorer histograms.
+// A higher value:
+//  - Is less accurate as more information is trimmed
+//  - Is more likely to oscillate between bigger outlier threshold values,
+//    making the mean, stdev and histogram flicker between different values.
+// A lower value:
+//  - Is less precise as outliers will have a higher impact on the mean.
+//  - Results in wider quantiles, i.e. poorer histograms
 const OUTLIERS_BASE_AMOUNT = 0.01
 // Computes based on a 50% width reduction
 const OUTLIERS_BASE_WIDTH = 0.5
