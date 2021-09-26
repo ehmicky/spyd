@@ -78,7 +78,7 @@ export const getOutliersPercentages = function (measures) {
 }
 
 const getQuantilesCount = function (measures) {
-  return Math.min(Math.ceil(1 / OUTLIERS_GRANULARITY), measures.length - 1)
+  return Math.min(OUTLIERS_GRANULARITY, measures.length - 1)
 }
 
 // Number of quantiles to use to find outliersMin|outliersMax.
@@ -89,13 +89,13 @@ const getQuantilesCount = function (measures) {
 // A lower value makes the value:
 //  - Less granular, i.e. outlier percentages changes from samples to samples
 //    will be higher
-//     - The minimum change is determined by both OUTLIERS_GRANULARITY and
-//       THRESHOLDS_COUNT
-//     - For example, with OUTLIERS_GRANULARITY 5e-4 and THRESHOLDS_COUNT 10,
+//     - The minimum change is determined by
+//       1 / (OUTLIERS_GRANULARITY * THRESHOLDS_COUNT)
+//     - For example, with OUTLIERS_GRANULARITY 2e3 and THRESHOLDS_COUNT 10,
 //       outliersMin|outliersMax granularity is 0.005%
 //  - Less accurate
 //  - More variable
-const OUTLIERS_GRANULARITY = 5e-4
+const OUTLIERS_GRANULARITY = 2e3
 
 const getThresholdsIndexes = function (quantiles, quantilesCount) {
   // eslint-disable-next-line fp/no-mutating-methods
