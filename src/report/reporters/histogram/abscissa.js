@@ -81,12 +81,11 @@ const getLabelLine = function ({
   median,
   medianIndex,
 }) {
-  const tickLength = getTickLength()
   const centeredMedian = centerString(
     median.prettyColor,
     medianIndex,
-    contentWidth + tickLength * 2,
+    contentWidth,
   )
-  const initialSpace = ' '.repeat(titlesWidth + minBlockWidth - tickLength)
+  const initialSpace = ' '.repeat(titlesWidth + minBlockWidth)
   return `${initialSpace}${centeredMedian}\n`
 }
