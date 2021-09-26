@@ -97,6 +97,32 @@ const getQuantilesCount = function (measures) {
 //  - More variable
 const OUTLIERS_GRANULARITY = 2e3
 
+// When using a single outliers threshold:
+//  - When there is a small aggregate of measures close to each other in the
+//    tail
+//     - As opposed to all measures' frequency increasing progressively as they
+//       get closer to the mean
+//  - Then the outliers search either stops or passes that point, depending on
+//    whether there is a relative lack of outliers after it
+//  - This creates "stop points" that outliersMin|outliersMax are more likely
+//    to use
+//  - This means small changes in measures might lead to high changes in
+//    outliersMin|outliersMax
+//     - Those lead to high changes in other stats, especially stdev, mean,
+//       min and max.
+//     - This can happen in both directions, for both outliersMin|outliersMax
+// We solve this by computing outliersMin|outliersMax with multiple outliers
+// thresholds (THRESHOLDS_COUNT) and using their arithmetic mean:
+//  - Since each outliers threshold reaches those "stop points" at different
+//    times, using more outliers thresholds softens the problem above
+//  - We use a "base" outliers threshold (THRESHOLDS_BASE) as average
+//     - The other outliers thresholds are increasingly higher|lower than it,
+//       using a constant multiplying factor (THRESHOLDS_FACTOR)
+//  - The main downside is: wider ranges of outliers thresholds
+//    (THRESHOLDS_SPREAD) make that "average" less accurate
+//     - This results in outliersMin|outliersMax being too high or too low
+//  - On the other side, if the range is too narrow, it will only work with
+//    smaller "stop points"
 const getThresholdsIndexes = function (quantiles, quantilesCount) {
   // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
