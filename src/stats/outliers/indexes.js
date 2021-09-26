@@ -30,7 +30,7 @@ import { THRESHOLDS, isOutlier } from './threshold.js'
 export const getThresholdsIndexes = function (quantiles, quantilesCount) {
   // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
-  const outliersLimit = Math.max(Math.floor(quantilesCount * OUTLIERS_LIMIT), 1)
+  const outliersLimit = getOutliersLimit(quantilesCount)
 
   return THRESHOLDS.reduce(
     (thresholdsIndexes, threshold) =>
@@ -48,6 +48,10 @@ export const getThresholdsIndexes = function (quantiles, quantilesCount) {
       outliersMinIndexSum: 0,
     },
   )
+}
+
+const getOutliersLimit = function (quantilesCount) {
+  return Math.max(Math.floor(quantilesCount * OUTLIERS_LIMIT), 1)
 }
 
 // Computes the index where outliers start on each side.
