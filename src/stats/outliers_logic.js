@@ -66,6 +66,10 @@ const getOutliers = function (quantiles, length) {
   return { outliersMin, outliersMax }
 }
 
+// We only increment the index by 1, even if the `for` loop used several
+// quantiles. Otherwise, when there is a bump on the outliers tail close the
+// exclusion threshold, the task might flicker between inclusion and exclusion,
+// creating big jumps for stdev, mean, min|max and histogram.
 // eslint-disable-next-line max-statements
 const getNextOutliersIndex = function (quantiles, maxIndex, minIndex) {
   const max = quantiles[maxIndex]
@@ -84,7 +88,7 @@ const getNextOutliersIndex = function (quantiles, maxIndex, minIndex) {
 
     // eslint-disable-next-line max-depth
     if (quantileRatio > OUTLIERS_THRESHOLD) {
-      return index
+      return maxIndex + 1
     }
   }
 
