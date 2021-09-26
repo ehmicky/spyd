@@ -95,16 +95,21 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
   // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
   const outliersLimit = Math.floor(quantilesCount * OUTLIERS_LIMIT)
-  return OUTLIERS_THRESHOLDS.reduce(
-    (memo, outliersThreshold) =>
-      getThresholdIndexes(memo, {
-        outliersThreshold,
+  const outliersThreshold = getInitOutliersThreshold()
+  return new Array(THRESHOLDS_COUNT).fill().reduce(
+    (thresholdsIndexes) =>
+      getThresholdIndexes(thresholdsIndexes, {
         quantiles,
         reversedQuantiles,
         quantilesCount,
         outliersLimit,
       }),
-    { outliersIndexes: [], initOutliersMinIndex: 0, initOutliersMaxIndex: 0 },
+    {
+      outliersIndexes: [],
+      initOutliersMinIndex: 0,
+      initOutliersMaxIndex: 0,
+      outliersThreshold,
+    },
   )
 }
 
@@ -120,14 +125,13 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
 const OUTLIERS_LIMIT = 0.05
 
 const getThresholdIndexes = function (
-  { outliersIndexes, initOutliersMinIndex, initOutliersMaxIndex },
   {
+    outliersIndexes,
+    initOutliersMinIndex,
+    initOutliersMaxIndex,
     outliersThreshold,
-    quantiles,
-    reversedQuantiles,
-    quantilesCount,
-    outliersLimit,
   },
+  { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
 ) {
   const { outliersMinIndex, outliersMaxIndex } = getOutliersIndexes({
     quantiles,
@@ -138,6 +142,7 @@ const getThresholdIndexes = function (
     initOutliersMinIndex,
     initOutliersMaxIndex,
   })
+  const outliersThresholdA = outliersThreshold / THRESHOLDS_SPREAD
   return {
     outliersIndexes: [
       ...outliersIndexes,
@@ -145,6 +150,7 @@ const getThresholdIndexes = function (
     ],
     initOutliersMinIndex: outliersMinIndex,
     initOutliersMaxIndex: outliersMaxIndex,
+    outliersThreshold: outliersThresholdA,
   }
 }
 
@@ -314,40 +320,26 @@ const OUTLIERS_BASE_THRESHOLD = getOutliersLikelihood(
   OUTLIERS_BASE_WIDTH,
   OUTLIERS_BASE_AMOUNT,
 )
-
-const getOutliersThresholds = function (thresholdsCount, thresholdsSpread) {
-  const thresholdsCenter = (thresholdsCount - 1) / 2
-  const thresholdsFactor = thresholdsSpread + 1
-  return Array.from({ length: thresholdsCount }, (_, index) =>
-    getOutliersThreshold(index, thresholdsCenter, thresholdsFactor),
-  )
-}
-
-const getOutliersThreshold = function (
-  index,
-  thresholdsCenter,
-  thresholdsFactor,
-) {
-  return (
-    OUTLIERS_BASE_THRESHOLD / thresholdsFactor ** (index - thresholdsCenter)
-  )
-}
-
 // Number of different outliers thresholds to use.
 // A higher value is slower to compute.
 //  - This follows a logarithmic time complexity since each threshold re-uses
 //    the outliers removal from the previous threshold
 // A lower value decreases the smoothing effect.
 const THRESHOLDS_COUNT = 10
-// Difference between each outlier threshold.
+// Multiplying factor between each outlier threshold. Must be > 1.
 // A higher value decreases the accuracy of the outliers removal, making it more
 // likely to trim too many or not enough outliers.
 // A lower value decreases the smoothing effect.
-const THRESHOLDS_SPREAD = 0.2
-const OUTLIERS_THRESHOLDS = getOutliersThresholds(
-  THRESHOLDS_COUNT,
-  THRESHOLDS_SPREAD,
-)
+const THRESHOLDS_SPREAD = 1.2
+
+// Retrieve the first `outliersThreshold`.
+// Each next one is divided by THRESHOLDS_SPREAD.
+// There are THRESHOLDS_COUNT of them in total.
+// Their center value is OUTLIERS_BASE_THRESHOLD.
+const getInitOutliersThreshold = function () {
+  const baseExponent = (THRESHOLDS_COUNT - 1) / 2
+  return OUTLIERS_BASE_THRESHOLD * THRESHOLDS_SPREAD ** baseExponent
+}
 
 const getOutliersMinMax = function (outliersIndexes, quantilesCount) {
   const outliersMin = getOutliersMean(
