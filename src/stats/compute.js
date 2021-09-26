@@ -59,7 +59,7 @@ export const computeStats = function (measures) {
   const min = measures[minIndex]
   const max = measures[maxIndex]
   const median = getSortedMedian(measures, { minIndex, maxIndex })
-  const quantiles = getQuantiles(measures, QUANTILES_SIZE, {
+  const quantiles = getQuantiles(measures, QUANTILES_COUNT, {
     minIndex,
     maxIndex,
   })
@@ -100,7 +100,7 @@ export const computeStats = function (measures) {
   }
 }
 
-const QUANTILES_SIZE = 1e2
+const QUANTILES_COUNT = 1e2
 const HISTOGRAM_SIZE = 1e2
 
 // Retrieve stats related to `stdev`.

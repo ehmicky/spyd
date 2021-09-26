@@ -8,51 +8,49 @@ import { getQuantiles } from './quantile.js'
 //     - They create a distribution with a very long tail, which is hard to
 //       visualize with `histogram`
 //     - They make `stdev`, `rstdev`, `moe` and `rmoe` must less useful
+//  - Those impact the `mean`
+// We remove them from the measures, i.e. from all stats:
 //  - Using outliers in some stats but not others would lead to inconsistency
 //    and unexpected or ambiguous results
 //  - This would require two sets of `min|max` stats (with and without outliers)
-//  - Despite this, those would be useful to know worst-case scenarios or the
-//    average performance when repeated. We tradeoff simplicity for accuracy.
-// This tries to find the best percentage of outliers to remove which:
+// We try to find the best percentage of outliers to remove which:
 //  - Minimizes the max-min difference, to increase precision
 //  - Without removing too many outliers, to keep accuracy
-// Computing it based on the measures distribution is much better than
-// hardcoding specific outliers thresholds.
-//  - For example, the threshold automatically adapts to the measures
-//    distribution. Otherwise, the max-min range might flicker when the
-//    threshold is close a big outlier.
-// This is applied separately on max and min outliers.
+// We compute it based on the actual measures distribution instead of using a
+// fixed, hardcoded value which might trim too much or not enough for a given
+// array of measures.
 export const getOutliersPercentages = function (measures) {
   if (measures.length <= 2) {
     return { outliersMin: 0, outliersMax: 0 }
   }
 
-  const length = Math.min(
-    Math.ceil(1 / OUTLIERS_GRANULARITY),
-    measures.length - 1,
-  )
-  const quantiles = getQuantiles(measures, length)
+  const quantilesCount = getQuantilesCount(measures)
+  const quantiles = getQuantiles(measures, quantilesCount)
   // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
   const { outliersMin, outliersMax } = getOutliers(
     quantiles,
     reversedQuantiles,
-    length,
+    quantilesCount,
   )
   return { outliersMin, outliersMax }
+}
+
+const getQuantilesCount = function (measures) {
+  return Math.min(Math.ceil(1 / OUTLIERS_GRANULARITY), measures.length - 1)
 }
 
 // Minimum increment between two outliers percentages.
 // For example, 1e-3 means the granularity is 0.1%.
 // A higher value it slower to compute.
-// A lower value:
-//  - Makes the value less accurate
-//  - Makes the value more variable, making it sometimes flicker
+// A lower value makes the value:
+//  - Less accurate
+//  - More variable, making it sometimes flicker
 const OUTLIERS_GRANULARITY = 1e-4
 
 // eslint-disable-next-line max-statements
-const getOutliers = function (quantiles, reversedQuantiles, length) {
-  const outliersLimit = Math.floor(length * OUTLIERS_LIMIT)
+const getOutliers = function (quantiles, reversedQuantiles, quantilesCount) {
+  const outliersLimit = Math.floor(quantilesCount * OUTLIERS_LIMIT)
 
   // eslint-disable-next-line fp/no-let, init-declarations
   let outliersMinIndex
@@ -73,14 +71,14 @@ const getOutliers = function (quantiles, reversedQuantiles, length) {
     newOutliersMaxIndex = getNextOutliersIndex(
       reversedQuantiles,
       outliersMaxIndex,
-      length - outliersMinIndex,
+      quantilesCount - outliersMinIndex,
       outliersLimit,
     )
     // eslint-disable-next-line fp/no-mutation
     newOutliersMinIndex = getNextOutliersIndex(
       quantiles,
       outliersMinIndex,
-      length - newOutliersMaxIndex,
+      quantilesCount - newOutliersMaxIndex,
       outliersLimit,
     )
   } while (
@@ -88,8 +86,8 @@ const getOutliers = function (quantiles, reversedQuantiles, length) {
     outliersMaxIndex !== newOutliersMaxIndex
   )
 
-  const outliersMin = outliersMinIndex / length
-  const outliersMax = outliersMaxIndex / length
+  const outliersMin = outliersMinIndex / quantilesCount
+  const outliersMax = outliersMaxIndex / quantilesCount
   return { outliersMin, outliersMax }
 }
 
@@ -107,7 +105,7 @@ const OUTLIERS_LIMIT = 0.05
 // We only go through half of the quantiles:
 //  - This is because the closer widthPercentage is to 100%, the more imprecise
 //    it is.
-//  - This can lead to quantileRatio to be much higher than it should just
+//  - This can lead to quantileRatio being much higher than it should just
 //    because the measures close to `minIndex` happen to be close to each other.
 // eslint-disable-next-line max-statements, complexity, max-params
 const getNextOutliersIndex = function (
@@ -136,16 +134,20 @@ const getNextOutliersIndex = function (
   for (let index = startIndex; index < endIndex; index += 1) {
     const widthPercentage = (max - quantiles[index]) / width
 
+    // Edge case: this happens when half of measures are identical
     // eslint-disable-next-line max-depth
     if (widthPercentage === 1) {
       return maxIndex
     }
 
     const quantilePercentage = (index - maxIndex) / quantilesCount
-    const quantileRatio = getQuantileRatio(widthPercentage, quantilePercentage)
+    const outliersLikelihood = getOutliersLikelihood(
+      widthPercentage,
+      quantilePercentage,
+    )
 
     // eslint-disable-next-line max-depth
-    if (quantileRatio > OUTLIERS_THRESHOLD) {
+    if (outliersLikelihood > OUTLIERS_THRESHOLD) {
       return index
     }
   }
@@ -153,7 +155,7 @@ const getNextOutliersIndex = function (
   return maxIndex
 }
 
-const getQuantileRatio = function (widthPercentage, quantilePercentage) {
+const getOutliersLikelihood = function (widthPercentage, quantilePercentage) {
   return Math.log(1 - widthPercentage) / Math.log(1 - quantilePercentage)
 }
 
@@ -169,7 +171,7 @@ const getQuantileRatio = function (widthPercentage, quantilePercentage) {
 const OUTLIERS_BASE_AMOUNT = 0.01
 // Computes based on a 50% width reduction
 const OUTLIERS_BASE_WIDTH = 0.5
-const OUTLIERS_THRESHOLD = getQuantileRatio(
+const OUTLIERS_THRESHOLD = getOutliersLikelihood(
   OUTLIERS_BASE_WIDTH,
   OUTLIERS_BASE_AMOUNT,
 )

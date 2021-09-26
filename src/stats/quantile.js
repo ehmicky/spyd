@@ -2,11 +2,11 @@
 // Array must be sorted and not empty.
 export const getQuantiles = function (
   array,
-  length,
+  quantilesCount,
   { minIndex = 0, maxIndex = array.length - 1 } = {},
 ) {
-  return Array.from({ length: length + 1 }, (value, index) =>
-    getQuantile(array, index / length, { minIndex, maxIndex }),
+  return Array.from({ length: quantilesCount + 1 }, (value, index) =>
+    getQuantile(array, index / quantilesCount, { minIndex, maxIndex }),
   )
 }
 
