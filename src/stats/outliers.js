@@ -292,8 +292,12 @@ const getOutliersLikelihood = function (widthPercentage, quantilePercentage) {
 //  - Is less precise as outliers will have a higher impact on the mean.
 //  - Results in wider quantiles, i.e. poorer histograms
 const THRESHOLDS_BASE_AMOUNT = 0.01
+
 // Computes based on a 50% width reduction
+// Should be kept as is. THRESHOLDS_BASE_AMOUNT should be changed to
+// increase|decrease outliers instead.
 const THRESHOLDS_BASE_WIDTH = 0.5
+
 // Average outliers threshold
 const THRESHOLDS_BASE = getOutliersLikelihood(
   THRESHOLDS_BASE_WIDTH,
@@ -306,6 +310,7 @@ const THRESHOLDS_BASE = getOutliersLikelihood(
 //    the outliers removal from the previous threshold
 // A lower value decreases the smoothing effect.
 const THRESHOLDS_COUNT = 10
+
 // Multiplying factor between the base threshold and the min|max ones.
 // A higher value decreases the accuracy of the outliers removal, making it more
 // likely to trim too many or not enough outliers.
