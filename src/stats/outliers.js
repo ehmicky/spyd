@@ -68,7 +68,7 @@ export const getOutliersPercentages = function (measures) {
   const quantiles = getQuantiles(measures, quantilesCount)
   // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
-  const { outliersMinIndex, outliersMaxIndex } = getOutliers(
+  const { outliersMinIndex, outliersMaxIndex } = getOutliersIndexes(
     quantiles,
     reversedQuantiles,
     quantilesCount,
@@ -91,7 +91,11 @@ const getQuantilesCount = function (measures) {
 const OUTLIERS_GRANULARITY = 1e-4
 
 // eslint-disable-next-line max-statements
-const getOutliers = function (quantiles, reversedQuantiles, quantilesCount) {
+const getOutliersIndexes = function (
+  quantiles,
+  reversedQuantiles,
+  quantilesCount,
+) {
   const outliersLimit = Math.floor(quantilesCount * OUTLIERS_LIMIT)
 
   // eslint-disable-next-line fp/no-let, init-declarations
