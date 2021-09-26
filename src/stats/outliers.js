@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
 import { getQuantiles } from './quantile.js'
-import { getMean } from './sum.js'
 
 // Measures usually contain some:
 //  - Very slow outliers due to background processes or engine optimization
@@ -69,11 +68,12 @@ export const getOutliersPercentages = function (measures) {
   const quantilesCount = getQuantilesCount(measures)
   const quantiles = getQuantiles(measures, quantilesCount)
 
-  const { outliersIndexes } = getThresholdsIndexes(quantiles, quantilesCount)
-  const { outliersMin, outliersMax } = getOutliersMinMax(
-    outliersIndexes,
+  const { outliersMinIndexSum, outliersMaxIndexSum } = getThresholdsIndexes(
+    quantiles,
     quantilesCount,
   )
+  const outliersMin = computePercentage(outliersMinIndexSum, quantilesCount)
+  const outliersMax = computePercentage(outliersMaxIndexSum, quantilesCount)
   return { outliersMin, outliersMax }
 }
 
@@ -105,9 +105,10 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
         outliersLimit,
       }),
     {
-      outliersIndexes: [],
       initOutliersMinIndex: 0,
       initOutliersMaxIndex: 0,
+      outliersMinIndexSum: 0,
+      outliersMaxIndexSum: 0,
       outliersThreshold,
     },
   )
@@ -126,9 +127,10 @@ const OUTLIERS_LIMIT = 0.05
 
 const getThresholdIndexes = function (
   {
-    outliersIndexes,
     initOutliersMinIndex,
     initOutliersMaxIndex,
+    outliersMinIndexSum,
+    outliersMaxIndexSum,
     outliersThreshold,
   },
   { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
@@ -142,15 +144,12 @@ const getThresholdIndexes = function (
     initOutliersMinIndex,
     initOutliersMaxIndex,
   })
-  const outliersThresholdA = outliersThreshold / THRESHOLDS_SPREAD
   return {
-    outliersIndexes: [
-      ...outliersIndexes,
-      { outliersMinIndex, outliersMaxIndex },
-    ],
     initOutliersMinIndex: outliersMinIndex,
     initOutliersMaxIndex: outliersMaxIndex,
-    outliersThreshold: outliersThresholdA,
+    outliersMinIndexSum: outliersMinIndexSum + outliersMinIndex,
+    outliersMaxIndexSum: outliersMaxIndexSum + outliersMaxIndex,
+    outliersThreshold: outliersThreshold / THRESHOLDS_SPREAD,
   }
 }
 
@@ -341,27 +340,7 @@ const getInitOutliersThreshold = function () {
   return OUTLIERS_BASE_THRESHOLD * THRESHOLDS_SPREAD ** baseExponent
 }
 
-const getOutliersMinMax = function (outliersIndexes, quantilesCount) {
-  const outliersMin = getOutliersMean(
-    outliersIndexes.map(getOutliersMinIndex),
-    quantilesCount,
-  )
-  const outliersMax = getOutliersMean(
-    outliersIndexes.map(getOutliersMaxIndex),
-    quantilesCount,
-  )
-  return { outliersMin, outliersMax }
-}
-
-const getOutliersMinIndex = function ({ outliersMinIndex }) {
-  return outliersMinIndex
-}
-
-const getOutliersMaxIndex = function ({ outliersMaxIndex }) {
-  return outliersMaxIndex
-}
-
-const getOutliersMean = function (outliersIndexes, quantilesCount) {
-  return getMean(outliersIndexes) / quantilesCount
+const computePercentage = function (outliersIndexSum, quantilesCount) {
+  return outliersIndexSum / (THRESHOLDS_COUNT * quantilesCount)
 }
 /* eslint-enable max-lines */
