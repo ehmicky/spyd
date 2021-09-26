@@ -19,6 +19,24 @@ import { getQuantiles } from './quantile.js'
 // We compute it based on the actual measures distribution instead of using a
 // fixed, hardcoded value which might trim too much or not enough for a given
 // array of measures.
+// The logic satisfies the following constaints:
+//  - It should work with a very big left|right tail
+//     - For example, widening the first|last quantile should not change the
+//       result
+//  - It should work with both fat and slim tails
+//  - Small bumps (aggregate of values) in the tail should be ignored providing
+//    they are either small and/or far in the tail.
+//     - This includes small bumps due to the sample size being low.
+//  - For distributions with multiple modes of similar enough size, each mode
+//    should be kept, even if far from each other
+//  - It should work with the following distributions:
+//     - Exponential with a high, continuous slope
+//     - Uniform
+//     - U-shaped
+//  - OutliersMin|Max 0 should be possible
+//  - It should work with integer measures
+//  - It should work with consecutive identical measures
+//  - It should work with very low sample size, including 1
 export const getOutliersPercentages = function (measures) {
   if (measures.length <= 2) {
     return { outliersMin: 0, outliersMax: 0 }
