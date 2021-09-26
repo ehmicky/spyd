@@ -102,14 +102,13 @@ const getNextOutliersIndex = function (quantiles, maxIndex, minIndex) {
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = startIndex; index < endIndex; index += 1) {
-    const quantile = quantiles[index]
+    const widthPercentage = (max - quantiles[index]) / width
 
     // eslint-disable-next-line max-depth
-    if (quantile === max) {
+    if (widthPercentage === 1) {
       return maxIndex
     }
 
-    const widthPercentage = (max - quantile) / width
     const quantilePercentage = (index - maxIndex) / quantilesCount
     const quantileRatio = getQuantileRatio(widthPercentage, quantilePercentage)
 
