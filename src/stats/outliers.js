@@ -94,7 +94,7 @@ const OUTLIERS_GRANULARITY = 1e-4
 const getThresholdsIndexes = function (quantiles, quantilesCount) {
   // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
-  const outliersLimit = Math.floor(quantilesCount * OUTLIERS_LIMIT)
+  const outliersLimit = getOutliersLimit(quantilesCount)
 
   const outliersThreshold = getInitOutliersThreshold()
   const thresholdsArray = new Array(THRESHOLDS_COUNT).fill()
@@ -114,6 +114,10 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
       outliersThreshold,
     },
   )
+}
+
+const getOutliersLimit = function (quantilesCount) {
+  return Math.floor(quantilesCount * OUTLIERS_LIMIT)
 }
 
 // Maximum percentage of min|max outliers.
