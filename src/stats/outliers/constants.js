@@ -42,11 +42,12 @@ export const THRESHOLDS_BASE_AMOUNT = 0.01
 // A higher value is slower to compute.
 //  - This follows a logarithmic time complexity since each threshold re-uses
 //    the outliers removal from the previous threshold
-// A lower value decreases the smoothing effect.
+// A lower value decreases the general smoothing effect.
 export const THRESHOLDS_COUNT = 10
 
 // Multiplying factor between the base threshold and the min|max ones.
 // A higher value decreases the accuracy of the outliers removal, making it more
 // likely to trim too many or not enough outliers.
-// A lower value decreases the smoothing effect.
+// A lower value decreases the maximum size of "stop points" that can benefit
+// from the smoothing effect.
 export const THRESHOLDS_SPREAD = 2
