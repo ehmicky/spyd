@@ -5,7 +5,6 @@ export const ALL_CONFIG = {
   config: {
     group: CONFIG,
     alias: 'c',
-    array: true,
     string: true,
     describe: `Configuration file location.
 

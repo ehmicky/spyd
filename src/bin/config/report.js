@@ -6,7 +6,6 @@ export const REPORT_CONFIG = {
     group: REPORT,
     alias: 'r',
     string: true,
-    array: true,
     describe: `Modules to report the result.
 
 Can be empty, if no reporters should be used.

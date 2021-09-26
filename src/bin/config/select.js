@@ -7,7 +7,6 @@ export const SELECT_CONFIG = {
     group: SELECT,
     alias: 's',
     string: true,
-    array: true,
     describe: `Select only specific combinations.
 The value is a space-separated list of identifiers to select.
 Those can be the identifiers of any task, runner, system or variation.

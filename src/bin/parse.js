@@ -1,13 +1,6 @@
 import filterObj from 'filter-obj'
 import mapObj from 'map-obj'
 
-// Yargs CLI parsing supports setting empty arrays using `--NAME` or `--NAME ""`
-//   - This is useful in many cases to remove the default value, for example
-//     with the `config`, `reporter`, `select` and `limit` configuration
-//     properties.
-//   - This requires not using `requiresArg: true` when `array: true` is used.
-//   - Unforutnately, `--NAME=` or `--NAME=""` do not work due to a bug in Yargs
-//     (https://github.com/yargs/yargs/issues/1860)
 export const parseCliFlags = function (yargs) {
   const {
     _: [command = DEFAULT_COMMAND],
@@ -29,15 +22,21 @@ const isUserProp = function (key, value) {
 
 const INTERNAL_KEYS = new Set(['help', 'version', '_', '$0'])
 
-// Due to a bug in Yargs (https://github.com/yargs/yargs/issues/1859)
+// Some configuration properties can optionally be arrays.
+// We support setting empty arrays on those using `--NAME` or `--NAME ""`
+//   - This is useful in many cases to remove the default value, for example
+//     with the `config`, `reporter`, `select` and `limit` configuration
+//     properties.
+//   - This requires not using `requiresArg: true`
 const handleEmptyArr = function (key, value) {
-  if (!Array.isArray(value)) {
-    return [key, value]
-  }
-
-  return [key, value.filter(isNotEmptyString)]
+  return value === '' && ARRAY_PROPERTIES.has(key) ? [key, []] : [key, value]
 }
 
-const isNotEmptyString = function (value) {
-  return value !== ''
-}
+const ARRAY_PROPERTIES = new Set([
+  'reporter',
+  'select',
+  'tasks',
+  'runner',
+  'limit',
+  'config',
+])

@@ -29,7 +29,6 @@ Default: false`,
     group: HISTORY,
     alias: 'l',
     string: true,
-    array: true,
     describe: `Report when the average duration has increased by more than a
 specific percentage such as "50%".
 
