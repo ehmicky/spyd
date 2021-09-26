@@ -3,6 +3,7 @@ inputs:
   two: 2
 select: not network slow uniform exponential growing
 tasks: tasks.js
+showPrecision: true
 reporter: [debug, history, histogram, boxplot]
 reporterConfig:
   histogram:
