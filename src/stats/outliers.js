@@ -318,6 +318,8 @@ const isOutlier = function (
   )
 }
 
+// `quantilePercentage` should not be 1 or 0.
+// `widthPercentage` should not be 1.
 const getOutliersLikelihood = function (widthPercentage, quantilePercentage) {
   return Math.log(1 - widthPercentage) / Math.log(1 - quantilePercentage)
 }
