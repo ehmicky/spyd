@@ -41,8 +41,7 @@ import { getTvalue } from './tvalue.js'
 //  - However, this is fine for practical purpose:
 //     - This is close enough to a normal distribution to be useful, while not
 //       being completely statistically correct
-//     - Removing the slow|fast outliers helps getting closer to a normal
-//       distribution
+//     - Removing outliers helps getting closer to a normal distribution
 // We do not report whether each combinations pair is statistically comparable:
 //  - reporting it with some symbol on combination names does not work well:
 //     - when combination name is graphically spread, e.g. when the reporter

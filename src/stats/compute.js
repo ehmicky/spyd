@@ -142,23 +142,35 @@ const getPerfectPrecisionStats = function (mean) {
 }
 
 // `stdev` might be very imprecise when there are not enough values to compute
-// it from. This is a problem since `stdev` is:
-//  - Used to compute the `moe`, which is used to know whether to stop
-//    measuring. Imprecise `stdev` might lead to stopping measuring too early
-//    resulting in imprecise overall results.
-//  - Used to estimate the duration left in previews. Due to the preview's
-//    smoothing algorithm, imprecise stdev in the first previews have an
-//    impact on the next previews.
+// it from.
+//  - This follows a chi-squared distribution
+// Since we use a t-distribution with 95% significance level:
+//  - For 95% of runs, `moe` will contain the real `mean` providing:
+//     - measures are normally distributed
+//     - the specific environment and load remain the same
+//  - This applies even when sample size is very low, even 2, thanks to the
+//    t-value
+// However, for the 5% remaining runs, the average ratio between what `moe` is
+// and what it should have been is much higher when sample size is very low:
+//  - That ratio follows a chi-squared distribution, just like `stdev` itself
+//     - Using a single tail
+//     - For example, for 97.5% of those 5% remaining runs, moe will be at most
+//       that many times higher for sample sizes 2, 3, 4 and 5: 31.9, 6.26,
+//       3.73, 2.87, 2.45
+//  - That ratio improves less and less as sample size increases, with most
+//    of the gain being when sample size goes from 2 to 5
+//  - With sample size 4, when moe was invalid, the difference ratio is 1.6x
+//    in average, 2.5x 90% of times, 5x 99% of times and 10x 99.9% of times
+// A higher value:
+//  - Makes tasks with very low `rstdev` last longer that they should
+//  - Delays when `stdev`, `moe` and expected duration are first reported in
+//    previews
+// A lower value makes it more likely to use imprecise `stdev` and `moe` which
+// is a problem since it is:
+//  - Used to know whether to stop measuring
+//     - This might lead to stopping measuring too early with imprecise results.
+//  - Used to estimate the duration left in previews.
+//     - Due to the preview's smoothing algorithm, imprecise stdev in the first
+//       previews have an impact on the next previews.
 //  - Reported
-// From a statistical standpoint:
-//  - T-values counteract the imprecision brought by the low number of loops
-//  - So `stdev`/`moe` are statistically significant with a 95% confidence
-//    interval even when there are only 2 loops.
-//  - However, the 5% of cases outside of that confidence interval have a bigger
-//    difference (in average) to the real value, when the number of loops is
-//    low. I.e. while the probability of errors is the same, the impact size is
-//    bigger.
-// A higher value makes standard deviation less likely to be computed for very
-// slow tasks.
-// A lower value makes it more likely to use imprecise standard deviations.
-const MIN_STDEV_LOOPS = 5
+const MIN_STDEV_LOOPS = 4

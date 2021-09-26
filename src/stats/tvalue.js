@@ -1,5 +1,5 @@
-// Retrieve t-value, using t-distribution, two-tailed, with 95% confidence
-// interval.
+// Retrieve t-value, using t-distribution, two-tailed, with 95% significance
+// level.
 export const getTvalue = function (degreesOfFreedom) {
   if (degreesOfFreedom >= T_VALUES.length) {
     return MIN_T_VALUE
