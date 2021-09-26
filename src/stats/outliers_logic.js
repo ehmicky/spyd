@@ -98,7 +98,7 @@ const getQuantileRatio = function (widthPercentage, quantilePercentage) {
 // A higher value is less accurate as more information is trimmed.
 // A lower value is less precise as outliers will have a higher impact on the
 // mean. It also results in poorer histograms.
-const OUTLIERS_BASE_AMOUNT = 0.06
+const OUTLIERS_BASE_AMOUNT = 0.01
 // Computes based on a 50% width reduction
 const OUTLIERS_BASE_WIDTH = 0.5
 const OUTLIERS_THRESHOLD = getQuantileRatio(
