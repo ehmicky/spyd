@@ -277,6 +277,7 @@ const getOutliersIncrement = function (
   const end = quantiles[endIndex]
   const width = start - end
 
+  // Edge case: this happens when most measures are identical
   if (width === 0) {
     return 0
   }
