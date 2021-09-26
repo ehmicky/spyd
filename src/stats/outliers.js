@@ -145,13 +145,14 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
   )
 }
 
+// Retrieve maximum amount of outlier quantiles.
+// This is applied independently on outliersMax and outliersMin so they do not
+// influence each other.
 const getOutliersLimit = function (quantilesCount) {
   return Math.floor(quantilesCount * OUTLIERS_LIMIT)
 }
 
 // Maximum percentage of min|max outliers.
-// This is done independently for outliersMax|Min so they do not influence each
-// other.
 // A higher value:
 //  - Is more likely to result in very high outlier percentages on some edge
 //    cases, for example on a distribution with a continuous, very exponential
