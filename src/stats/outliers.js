@@ -286,7 +286,7 @@ const getOutliersIncrement = function (
   const finalIndex = Math.floor(quantilesAmount / 2)
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = 1; index < finalIndex; index += 1) {
+  for (let index = 1; index <= finalIndex; index += 1) {
     const quantile = quantiles[startIndex + index]
     const widthPercentage = (start - quantile) / width
 
