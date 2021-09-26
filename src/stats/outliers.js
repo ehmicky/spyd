@@ -297,18 +297,25 @@ const getOutliersIncrement = function (
     }
 
     const quantilePercentage = index / quantilesAmount
-    const outliersLikelihood = getOutliersLikelihood(
-      widthPercentage,
-      quantilePercentage,
-    )
 
     // eslint-disable-next-line max-depth
-    if (outliersLikelihood > outliersThreshold) {
+    if (isOutlier(widthPercentage, quantilePercentage, outliersThreshold)) {
       return index
     }
   }
 
   return 0
+}
+
+const isOutlier = function (
+  widthPercentage,
+  quantilePercentage,
+  outliersThreshold,
+) {
+  return (
+    getOutliersLikelihood(widthPercentage, quantilePercentage) >
+    outliersThreshold
+  )
 }
 
 const getOutliersLikelihood = function (widthPercentage, quantilePercentage) {
