@@ -81,7 +81,7 @@ const getOutliers = function (quantiles, reversedQuantiles, length) {
 // quantiles. Otherwise, when there is a bump on the outliers tail close the
 // exclusion threshold, the task might flicker between inclusion and exclusion,
 // creating big jumps for stdev, mean, min|max and histogram.
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, complexity
 const getNextOutliersIndex = function (quantiles, maxIndex, minIndex) {
   const max = quantiles[maxIndex]
   const min = quantiles[minIndex]
@@ -94,6 +94,12 @@ const getNextOutliersIndex = function (quantiles, maxIndex, minIndex) {
   for (let index = maxIndex + 1; index < minIndex; index += 1) {
     const quantile = quantiles[index]
     const widthPercentage = (max - quantile) / (max - min)
+
+    // eslint-disable-next-line max-depth
+    if (widthPercentage === 1) {
+      return maxIndex
+    }
+
     const quantilePercentage = (index - maxIndex) / (minIndex - maxIndex)
     const quantileRatio = getQuantileRatio(widthPercentage, quantilePercentage)
 
