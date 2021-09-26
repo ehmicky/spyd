@@ -39,7 +39,7 @@ export const OUTLIERS_LIMIT = 0.05
 // A lower value:
 //  - Is less precise as outliers will have a higher impact on the mean.
 //  - Results in wider quantiles, i.e. poorer histograms
-export const THRESHOLDS_BASE_AMOUNT = 0.01
+export const THRESHOLDS_BASE_AMOUNT = 0.02
 
 // Number of different outliers thresholds to use.
 // A higher value is slower to compute.
