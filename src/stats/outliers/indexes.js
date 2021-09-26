@@ -33,7 +33,8 @@ export const getThresholdsIndexes = function (quantiles, quantilesCount) {
 
   return THRESHOLDS.reduce(
     (thresholdsIndexes, threshold) =>
-      getThresholdIndexes(thresholdsIndexes, threshold, {
+      getThresholdIndexes(thresholdsIndexes, {
+        threshold,
         quantiles,
         reversedQuantiles,
         quantilesCount,
@@ -105,8 +106,7 @@ const getThresholdIndexes = function (
     outliersMaxIndexSum,
     outliersMinIndexSum,
   },
-  threshold,
-  { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
+  { threshold, quantiles, reversedQuantiles, quantilesCount, outliersLimit },
 ) {
   let outliersMaxIncrement = 0
   let outliersMinIncrement = 0
