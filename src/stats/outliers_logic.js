@@ -92,10 +92,6 @@ const getOutliers = function (quantiles, reversedQuantiles, length) {
 // A lower value reduces the benefits of outliers removal.
 const OUTLIERS_LIMIT = 0.05
 
-// We only increment the index by 1, even if the `for` loop used several
-// quantiles. Otherwise, when there is a bump on the outliers tail close the
-// exclusion threshold, the task might flicker between inclusion and exclusion,
-// creating big jumps for stdev, mean, min|max and histogram.
 // We only go through half of the quantiles:
 //  - This is because the closer widthPercentage is to 100%, the more imprecise
 //    it is.
@@ -138,7 +134,7 @@ const getNextOutliersIndex = function (
 
     // eslint-disable-next-line max-depth
     if (quantileRatio > OUTLIERS_THRESHOLD) {
-      return maxIndex + 1
+      return index
     }
   }
 
