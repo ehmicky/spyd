@@ -22,6 +22,10 @@ export const resizeHistogram = function (counts, newSize) {
     return [...counts]
   }
 
+  if (oldSize === 1) {
+    return [counts[0], ...new Array(newSize - 1).fill(0)]
+  }
+
   // eslint-disable-next-line fp/no-let
   let previousInteger = 0
   // eslint-disable-next-line fp/no-let
