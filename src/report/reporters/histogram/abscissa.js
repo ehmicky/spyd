@@ -44,34 +44,34 @@ const getBottomFullLine = function ({
   min,
   max,
 }) {
-  const paddedMin = getPaddedMin(min)
+  const paddedMin = getPaddedStat(min)
   const bottomLine = separatorColor(getBottomLine(contentWidth, medianIndex))
-  const paddedMax = getPaddedMax(max)
+  const paddedMax = getPaddedStat(max)
   return `${combinationTitles}${paddedMin}${bottomLine}${paddedMax}\n`
 }
 
-const getPaddedMin = function ({ prettyPaddedColor }) {
-  return `${STAT_PADDING}${prettyPaddedColor}${STAT_PADDING}${separatorColor(
-    TICK_LEFT,
-  )}`
-}
-
-const getPaddedMax = function ({ prettyPaddedColor }) {
-  return `${separatorColor(
-    TICK_RIGHT,
-  )}${STAT_PADDING}${prettyPaddedColor}${STAT_PADDING}`
+const getPaddedStat = function ({ prettyPaddedColor }) {
+  return `${STAT_PADDING}${prettyPaddedColor}${STAT_PADDING}`
 }
 
 export const getPaddedStatLength = function ({ prettyPadded }) {
-  return prettyPadded.length + STAT_PADDING_WIDTH * 2 + TICK_LEFT.length
+  return prettyPadded.length + STAT_PADDING_WIDTH * 2
 }
 
 const STAT_PADDING_WIDTH = 1
 const STAT_PADDING = ' '.repeat(STAT_PADDING_WIDTH)
 
+export const getTickLength = function () {
+  return TICK_LEFT.length
+}
+
 const getBottomLine = function (contentWidth, medianIndex) {
   const startPadding = HORIZONTAL_LINE.repeat(medianIndex)
-  return `${startPadding}${TICK_MIDDLE}`.padEnd(contentWidth, HORIZONTAL_LINE)
+  const bottomLine = `${startPadding}${TICK_MIDDLE}`.padEnd(
+    contentWidth,
+    HORIZONTAL_LINE,
+  )
+  return `${TICK_LEFT}${bottomLine}${TICK_RIGHT}`
 }
 
 const getLabelLine = function ({
@@ -81,11 +81,12 @@ const getLabelLine = function ({
   median,
   medianIndex,
 }) {
+  const tickLength = getTickLength()
   const centeredMedian = centerString(
     median.prettyColor,
     medianIndex,
-    contentWidth,
+    contentWidth + tickLength * 2,
   )
-  const initialSpace = ' '.repeat(titlesWidth + minBlockWidth)
+  const initialSpace = ' '.repeat(titlesWidth + minBlockWidth - tickLength)
   return `${initialSpace}${centeredMedian}\n`
 }
