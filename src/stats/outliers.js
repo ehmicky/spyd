@@ -16,10 +16,9 @@ import { getOutliersPercentages } from './outliers_logic.js'
 // We apply those percentage without cloning the `measures` array, for
 // performance and memory reasons.
 export const getOutliersStats = function (measures) {
-  const loops = measures.length
   const { outliersMin, outliersMax } = getOutliersPercentages(measures)
   const { minIndex, maxIndex, length } = getLengthFromLoops(
-    loops,
+    measures.length,
     outliersMin,
     outliersMax,
   )
