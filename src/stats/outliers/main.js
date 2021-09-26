@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { getQuantiles } from './quantile.js'
+import { getQuantiles } from '../quantile.js'
 
 // Measures usually contain some:
 //  - Very slow outliers due to background processes or engine optimization
