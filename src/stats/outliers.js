@@ -1,4 +1,6 @@
+/* eslint-disable max-lines */
 import { getQuantiles } from './quantile.js'
+import { getMean } from './sum.js'
 
 // Measures usually contain some:
 //  - Very slow outliers due to background processes or engine optimization
@@ -65,18 +67,13 @@ export const getOutliersPercentages = function (measures) {
   }
 
   const quantilesCount = getQuantilesCount(measures)
-  const outliersLimit = Math.floor(quantilesCount * OUTLIERS_LIMIT)
   const quantiles = getQuantiles(measures, quantilesCount)
-  // eslint-disable-next-line fp/no-mutating-methods
-  const reversedQuantiles = [...quantiles].reverse()
-  const { outliersMinIndex, outliersMaxIndex } = getOutliersIndexes(
-    quantiles,
-    reversedQuantiles,
+
+  const { outliersIndexes } = getThresholdsIndexes(quantiles, quantilesCount)
+  const { outliersMin, outliersMax } = getOutliersMinMax(
+    outliersIndexes,
     quantilesCount,
-    outliersLimit,
   )
-  const outliersMin = outliersMinIndex / quantilesCount
-  const outliersMax = outliersMaxIndex / quantilesCount
   return { outliersMin, outliersMax }
 }
 
@@ -94,6 +91,23 @@ const getQuantilesCount = function (measures) {
 //  - More variable, making it sometimes flicker
 const OUTLIERS_GRANULARITY = 1e-4
 
+const getThresholdsIndexes = function (quantiles, quantilesCount) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  const reversedQuantiles = [...quantiles].reverse()
+  const outliersLimit = Math.floor(quantilesCount * OUTLIERS_LIMIT)
+  return OUTLIERS_THRESHOLDS.reduce(
+    (memo, outliersThreshold) =>
+      getThresholdIndexes(memo, {
+        outliersThreshold,
+        quantiles,
+        reversedQuantiles,
+        quantilesCount,
+        outliersLimit,
+      }),
+    { outliersIndexes: [], initOutliersMinIndex: 0, initOutliersMaxIndex: 0 },
+  )
+}
+
 // Maximum percentage of min|max outliers.
 // This is done independently for outliersMax|Min so they do not influence each
 // other.
@@ -104,6 +118,35 @@ const OUTLIERS_GRANULARITY = 1e-4
 //  - Is more likely to include significant data instead of outliers only.
 // A lower value reduces the benefits of outliers removal.
 const OUTLIERS_LIMIT = 0.05
+
+const getThresholdIndexes = function (
+  { outliersIndexes, initOutliersMinIndex, initOutliersMaxIndex },
+  {
+    outliersThreshold,
+    quantiles,
+    reversedQuantiles,
+    quantilesCount,
+    outliersLimit,
+  },
+) {
+  const { outliersMinIndex, outliersMaxIndex } = getOutliersIndexes({
+    quantiles,
+    reversedQuantiles,
+    quantilesCount,
+    outliersLimit,
+    outliersThreshold,
+    initOutliersMinIndex,
+    initOutliersMaxIndex,
+  })
+  return {
+    outliersIndexes: [
+      ...outliersIndexes,
+      { outliersMinIndex, outliersMaxIndex },
+    ],
+    initOutliersMinIndex: outliersMinIndex,
+    initOutliersMaxIndex: outliersMaxIndex,
+  }
+}
 
 // Computes the index where outliers start on each side.
 // The main criteria to consider whether a quantile is likely to be an outlier
@@ -139,21 +182,23 @@ const OUTLIERS_LIMIT = 0.05
 //  2. Pick the first quantile over it
 //      - A higher `OUTLIER_THRESHOLD` creates steeper curves
 //  3. Repeat
-// eslint-disable-next-line max-params
-const getOutliersIndexes = function (
+const getOutliersIndexes = function ({
   quantiles,
   reversedQuantiles,
   quantilesCount,
   outliersLimit,
-) {
+  outliersThreshold,
+  initOutliersMinIndex,
+  initOutliersMaxIndex,
+}) {
   // eslint-disable-next-line fp/no-let, init-declarations
   let outliersMinIndex
   // eslint-disable-next-line fp/no-let, init-declarations
   let outliersMaxIndex
   // eslint-disable-next-line fp/no-let
-  let newOutliersMinIndex = 0
+  let newOutliersMinIndex = initOutliersMinIndex
   // eslint-disable-next-line fp/no-let
-  let newOutliersMaxIndex = 0
+  let newOutliersMaxIndex = initOutliersMaxIndex
 
   // eslint-disable-next-line fp/no-loops
   do {
@@ -167,6 +212,7 @@ const getOutliersIndexes = function (
       outliersMaxIndex,
       quantilesCount - outliersMinIndex,
       outliersLimit,
+      outliersThreshold,
     )
     // eslint-disable-next-line fp/no-mutation
     newOutliersMinIndex = getNextOutliersIndex(
@@ -174,6 +220,7 @@ const getOutliersIndexes = function (
       outliersMinIndex,
       quantilesCount - newOutliersMaxIndex,
       outliersLimit,
+      outliersThreshold,
     )
   } while (
     outliersMinIndex !== newOutliersMinIndex ||
@@ -204,6 +251,7 @@ const getNextOutliersIndex = function (
   startIndex,
   endIndex,
   outliersLimit,
+  outliersThreshold,
 ) {
   if (startIndex >= outliersLimit) {
     return startIndex
@@ -238,7 +286,7 @@ const getNextOutliersIndex = function (
     )
 
     // eslint-disable-next-line max-depth
-    if (outliersLikelihood > OUTLIERS_THRESHOLD) {
+    if (outliersLikelihood > outliersThreshold) {
       return index
     }
   }
@@ -262,7 +310,66 @@ const getOutliersLikelihood = function (widthPercentage, quantilePercentage) {
 const OUTLIERS_BASE_AMOUNT = 0.01
 // Computes based on a 50% width reduction
 const OUTLIERS_BASE_WIDTH = 0.5
-const OUTLIERS_THRESHOLD = getOutliersLikelihood(
+const OUTLIERS_BASE_THRESHOLD = getOutliersLikelihood(
   OUTLIERS_BASE_WIDTH,
   OUTLIERS_BASE_AMOUNT,
 )
+
+const getOutliersThresholds = function (thresholdsCount, thresholdsSpread) {
+  const thresholdsCenter = (thresholdsCount - 1) / 2
+  const thresholdsFactor = thresholdsSpread + 1
+  return Array.from({ length: thresholdsCount }, (_, index) =>
+    getOutliersThreshold(index, thresholdsCenter, thresholdsFactor),
+  )
+}
+
+const getOutliersThreshold = function (
+  index,
+  thresholdsCenter,
+  thresholdsFactor,
+) {
+  return (
+    OUTLIERS_BASE_THRESHOLD / thresholdsFactor ** (index - thresholdsCenter)
+  )
+}
+
+// Number of different outliers thresholds to use.
+// A higher value is slower to compute.
+//  - This follows a logarithmic time complexity since each threshold re-uses
+//    the outliers removal from the previous threshold
+// A lower value decreases the smoothing effect.
+const THRESHOLDS_COUNT = 10
+// Difference between each outlier threshold.
+// A higher value decreases the accuracy of the outliers removal, making it more
+// likely to trim too many or not enough outliers.
+// A lower value decreases the smoothing effect.
+const THRESHOLDS_SPREAD = 0.2
+const OUTLIERS_THRESHOLDS = getOutliersThresholds(
+  THRESHOLDS_COUNT,
+  THRESHOLDS_SPREAD,
+)
+
+const getOutliersMinMax = function (outliersIndexes, quantilesCount) {
+  const outliersMin = getOutliersMean(
+    outliersIndexes.map(getOutliersMinIndex),
+    quantilesCount,
+  )
+  const outliersMax = getOutliersMean(
+    outliersIndexes.map(getOutliersMaxIndex),
+    quantilesCount,
+  )
+  return { outliersMin, outliersMax }
+}
+
+const getOutliersMinIndex = function ({ outliersMinIndex }) {
+  return outliersMinIndex
+}
+
+const getOutliersMaxIndex = function ({ outliersMaxIndex }) {
+  return outliersMaxIndex
+}
+
+const getOutliersMean = function (outliersIndexes, quantilesCount) {
+  return getMean(outliersIndexes) / quantilesCount
+}
+/* eslint-enable max-lines */
