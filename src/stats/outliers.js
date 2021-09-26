@@ -23,9 +23,7 @@ export const getOutliersStats = function (measures) {
     outliersMin,
     outliersMax,
   )
-  const min = measures[minIndex]
-  const max = measures[maxIndex]
-  return { outliersMin, outliersMax, minIndex, maxIndex, length, min, max }
+  return { outliersMin, outliersMax, minIndex, maxIndex, length }
 }
 
 // `Math.round()` rounds towards +Inf:

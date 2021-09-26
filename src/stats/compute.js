@@ -48,14 +48,17 @@ import { getMean } from './sum.js'
 //  - This would create too many statistics for the average, together with the
 //    mean and the median.
 export const computeStats = function (measures) {
-  const { outliersMin, outliersMax, minIndex, maxIndex, length, min, max } =
+  const { outliersMin, outliersMax, minIndex, maxIndex, length } =
     getOutliersStats(measures)
 
+  const min = measures[minIndex]
+  const max = measures[maxIndex]
   const median = getSortedMedian(measures, { minIndex, maxIndex })
   const quantiles = getQuantiles(measures, QUANTILES_SIZE, {
     minIndex,
     maxIndex,
   })
+
   const mean = getMean(measures, { minIndex, maxIndex })
 
   const histogram = getHistogram(measures, {
