@@ -11,7 +11,14 @@ import { getQuantiles } from './quantile.js'
 //    threshold is close a big outlier.
 // This is applied separately on max and min outliers.
 export const getOutliersPercentages = function (measures) {
-  const length = Math.ceil(1 / OUTLIERS_GRANULARITY)
+  if (measures.length <= 2) {
+    return { outliersMin: 0, outliersMax: 0 }
+  }
+
+  const length = Math.min(
+    Math.ceil(1 / OUTLIERS_GRANULARITY),
+    measures.length - 1,
+  )
   const quantiles = getQuantiles(measures, length)
   const { outliersMin, outliersMax } = getOutliers(quantiles, length)
   return { outliersMin, outliersMax }
