@@ -183,7 +183,7 @@ const getThresholdIndexes = function (
   // eslint-disable-next-line fp/no-loops
   do {
     // eslint-disable-next-line fp/no-mutation
-    outliersMaxIncrement = getNextOutliersIndex(
+    outliersMaxIncrement = getOutliersIncrement(
       reversedQuantiles,
       outliersMaxIndex,
       quantilesCount - outliersMinIndex,
@@ -194,7 +194,7 @@ const getThresholdIndexes = function (
     outliersMaxIndex += outliersMaxIncrement
 
     // eslint-disable-next-line fp/no-mutation
-    outliersMinIncrement = getNextOutliersIndex(
+    outliersMinIncrement = getOutliersIncrement(
       quantiles,
       outliersMinIndex,
       quantilesCount - outliersMaxIndex,
@@ -230,7 +230,7 @@ const getThresholdIndexes = function (
 //  - This can lead to quantileRatio being much higher than it should just
 //    because the measures close to `minIndex` happen to be close to each other.
 // eslint-disable-next-line max-statements, complexity, max-params
-const getNextOutliersIndex = function (
+const getOutliersIncrement = function (
   quantiles,
   startIndex,
   endIndex,
