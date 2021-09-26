@@ -261,6 +261,7 @@ const getThresholdIndexes = function (
 //    it is.
 //  - This can lead to quantileRatio being much higher than it should just
 //    because the measures close to `minIndex` happen to be close to each other.
+// We use imperative code and positional arguments for performance.
 // eslint-disable-next-line max-statements, complexity, max-params
 const getOutliersIncrement = function (
   quantiles,
