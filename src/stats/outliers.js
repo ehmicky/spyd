@@ -128,11 +128,10 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
   const reversedQuantiles = [...quantiles].reverse()
   const outliersLimit = getOutliersLimit(quantilesCount)
 
-  const outliersThreshold = getInitOutliersThreshold()
-  const thresholdsArray = new Array(THRESHOLDS_COUNT).fill()
-  return thresholdsArray.reduce(
-    (thresholdsIndexes) =>
-      getThresholdIndexes(thresholdsIndexes, {
+  const outliersThresholds = getOutliersThresholds()
+  return outliersThresholds.reduce(
+    (thresholdsIndexes, outliersThreshold) =>
+      getThresholdIndexes(thresholdsIndexes, outliersThreshold, {
         quantiles,
         reversedQuantiles,
         quantilesCount,
@@ -143,7 +142,6 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
       outliersMinIndex: 0,
       outliersMaxIndexSum: 0,
       outliersMinIndexSum: 0,
-      outliersThreshold,
     },
   )
 }
@@ -208,8 +206,8 @@ const getThresholdIndexes = function (
     outliersMinIndex,
     outliersMaxIndexSum,
     outliersMinIndexSum,
-    outliersThreshold,
   },
+  outliersThreshold,
   { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
 ) {
   let outliersMaxIncrement = 0
@@ -240,7 +238,6 @@ const getThresholdIndexes = function (
     outliersMinIndex,
     outliersMaxIndexSum: outliersMaxIndexSum + outliersMaxIndex,
     outliersMinIndexSum: outliersMinIndexSum + outliersMinIndex,
-    outliersThreshold: outliersThreshold / THRESHOLDS_FACTOR,
   }
 }
 /* eslint-enable fp/no-let, fp/no-loops, fp/no-mutation, no-param-reassign */
@@ -372,13 +369,17 @@ const getThresholdsFactor = function () {
 
 const THRESHOLDS_FACTOR = getThresholdsFactor()
 
-// Retrieve the first `outliersThreshold`.
+// Retrieve each `outliersThreshold`.
 // Each next one is divided by THRESHOLDS_SPREAD.
 // There are THRESHOLDS_COUNT of them in total.
 // Their center value is OUTLIERS_BASE_THRESHOLD.
-const getInitOutliersThreshold = function () {
-  const maxExponent = (THRESHOLDS_COUNT - 1) / 2
-  return THRESHOLDS_BASE * THRESHOLDS_FACTOR ** maxExponent
+const getOutliersThresholds = function () {
+  return Array.from({ length: THRESHOLDS_COUNT }, getOutliersThreshold)
+}
+
+const getOutliersThreshold = function (_, index) {
+  const thresholdExponent = (THRESHOLDS_COUNT - 1) / 2 - index
+  return THRESHOLDS_BASE * THRESHOLDS_FACTOR ** thresholdExponent
 }
 
 // Compute the final outliersMin|outliersMax percentage
