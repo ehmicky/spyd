@@ -107,8 +107,8 @@ const getThresholdsIndexes = function (quantiles, quantilesCount) {
         outliersLimit,
       }),
     {
-      initOutliersMinIndex: 0,
-      initOutliersMaxIndex: 0,
+      outliersMinIndex: 0,
+      outliersMaxIndex: 0,
       outliersMinIndexSum: 0,
       outliersMaxIndexSum: 0,
       outliersThreshold,
@@ -167,28 +167,24 @@ const OUTLIERS_LIMIT = 0.05
 //  3. Repeat
 const getThresholdIndexes = function (
   {
-    initOutliersMinIndex,
-    initOutliersMaxIndex,
+    outliersMinIndex,
+    outliersMaxIndex,
     outliersMinIndexSum,
     outliersMaxIndexSum,
     outliersThreshold,
   },
   { quantiles, reversedQuantiles, quantilesCount, outliersLimit },
 ) {
-  // eslint-disable-next-line fp/no-let, init-declarations
-  let outliersMinIndex
-  // eslint-disable-next-line fp/no-let, init-declarations
-  let outliersMaxIndex
   // eslint-disable-next-line fp/no-let
-  let newOutliersMinIndex = initOutliersMinIndex
+  let newOutliersMinIndex = outliersMinIndex
   // eslint-disable-next-line fp/no-let
-  let newOutliersMaxIndex = initOutliersMaxIndex
+  let newOutliersMaxIndex = outliersMaxIndex
 
   // eslint-disable-next-line fp/no-loops
   do {
-    // eslint-disable-next-line fp/no-mutation
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign
     outliersMinIndex = newOutliersMinIndex
-    // eslint-disable-next-line fp/no-mutation
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign
     outliersMaxIndex = newOutliersMaxIndex
     // eslint-disable-next-line fp/no-mutation
     newOutliersMaxIndex = getNextOutliersIndex(
@@ -212,8 +208,8 @@ const getThresholdIndexes = function (
   )
 
   return {
-    initOutliersMinIndex: outliersMinIndex,
-    initOutliersMaxIndex: outliersMaxIndex,
+    outliersMinIndex,
+    outliersMaxIndex,
     outliersMinIndexSum: outliersMinIndexSum + outliersMinIndex,
     outliersMaxIndexSum: outliersMaxIndexSum + outliersMaxIndex,
     outliersThreshold: outliersThreshold / THRESHOLDS_SPREAD,
