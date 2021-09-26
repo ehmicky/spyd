@@ -340,7 +340,7 @@ const getOutliersLikelihood = function (widthPercentage, quantilePercentage) {
 //  - Results in wider quantiles, i.e. poorer histograms
 const THRESHOLDS_BASE_AMOUNT = 0.01
 
-// Computes based on a 50% width reduction
+// Computes THRESHOLDS_BASE based on a 50% width reduction.
 // Should be kept as is. THRESHOLDS_BASE_AMOUNT should be changed to
 // increase|decrease outliers instead.
 const THRESHOLDS_BASE_WIDTH = 0.5
@@ -367,8 +367,8 @@ const THRESHOLDS_SPREAD = 2
 // Computes the multiplying factor between each outlier threshold, so that they
 // respect both THRESHOLDS_COUNT and THRESHOLDS_MAX_SPREAD.
 const getThresholdsFactor = function () {
-  const baseExponent = (THRESHOLDS_COUNT - 1) / 2
-  return THRESHOLDS_SPREAD ** (1 / baseExponent)
+  const maxExponent = (THRESHOLDS_COUNT - 1) / 2
+  return THRESHOLDS_SPREAD ** (1 / maxExponent)
 }
 
 const THRESHOLDS_FACTOR = getThresholdsFactor()
@@ -378,11 +378,13 @@ const THRESHOLDS_FACTOR = getThresholdsFactor()
 // There are THRESHOLDS_COUNT of them in total.
 // Their center value is OUTLIERS_BASE_THRESHOLD.
 const getInitOutliersThreshold = function () {
-  const baseExponent = (THRESHOLDS_COUNT - 1) / 2
-  return THRESHOLDS_BASE * THRESHOLDS_FACTOR ** baseExponent
+  const maxExponent = (THRESHOLDS_COUNT - 1) / 2
+  return THRESHOLDS_BASE * THRESHOLDS_FACTOR ** maxExponent
 }
 
+// Compute the final outliersMin|outliersMax percentage
 const computePercentage = function (outliersIndexSum, quantilesCount) {
-  return outliersIndexSum / (THRESHOLDS_COUNT * quantilesCount)
+  const outliersIndexMean = outliersIndexSum / THRESHOLDS_COUNT
+  return outliersIndexMean / quantilesCount
 }
 /* eslint-enable max-lines */
