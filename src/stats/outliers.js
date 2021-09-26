@@ -65,6 +65,7 @@ export const getOutliersPercentages = function (measures) {
   }
 
   const quantilesCount = getQuantilesCount(measures)
+  const outliersLimit = Math.floor(quantilesCount * OUTLIERS_LIMIT)
   const quantiles = getQuantiles(measures, quantilesCount)
   // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
@@ -72,6 +73,7 @@ export const getOutliersPercentages = function (measures) {
     quantiles,
     reversedQuantiles,
     quantilesCount,
+    outliersLimit,
   )
   const outliersMin = outliersMinIndex / quantilesCount
   const outliersMax = outliersMaxIndex / quantilesCount
@@ -91,6 +93,17 @@ const getQuantilesCount = function (measures) {
 //  - Less accurate
 //  - More variable, making it sometimes flicker
 const OUTLIERS_GRANULARITY = 1e-4
+
+// Maximum percentage of min|max outliers.
+// This is done independently for outliersMax|Min so they do not influence each
+// other.
+// A higher value:
+//  - Is more likely to result in very high outlier percentages on some edge
+//    cases, for example on a distribution with a continuous, very exponential
+//    slope.
+//  - Is more likely to include significant data instead of outliers only.
+// A lower value reduces the benefits of outliers removal.
+const OUTLIERS_LIMIT = 0.05
 
 // Computes the index where outliers start on each side.
 // The main criteria to consider whether a quantile is likely to be an outlier
@@ -126,14 +139,13 @@ const OUTLIERS_GRANULARITY = 1e-4
 //  2. Pick the first quantile over it
 //      - A higher `OUTLIER_THRESHOLD` creates steeper curves
 //  3. Repeat
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-params
 const getOutliersIndexes = function (
   quantiles,
   reversedQuantiles,
   quantilesCount,
+  outliersLimit,
 ) {
-  const outliersLimit = Math.floor(quantilesCount * OUTLIERS_LIMIT)
-
   // eslint-disable-next-line fp/no-let, init-declarations
   let outliersMinIndex
   // eslint-disable-next-line fp/no-let, init-declarations
@@ -170,17 +182,6 @@ const getOutliersIndexes = function (
 
   return { outliersMinIndex, outliersMaxIndex }
 }
-
-// Maximum percentage of min|max outliers.
-// This is done independently for outliersMax|Min so they do not influence each
-// other.
-// A higher value:
-//  - Is more likely to result in very high outlier percentages on some edge
-//    cases, for example on a distribution with a continuous, very exponential
-//    slope.
-//  - Is more likely to include significant data instead of outliers only.
-// A lower value reduces the benefits of outliers removal.
-const OUTLIERS_LIMIT = 0.05
 
 // Regardless of the direction, we use the whole range of quantiles to compute
 // the `outliersLikelihood`, as opposed to using only one half of it because:
