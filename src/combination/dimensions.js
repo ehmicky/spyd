@@ -44,8 +44,8 @@ const haveDimension = function (combinations, dimension) {
   )
 }
 
-export const combinationHasDimension = function ({ dimensions }, { propName }) {
-  return dimensions[propName] !== undefined
+export const combinationHasDimension = function (combination, dimension) {
+  return combination.dimensions[dimension.propName] !== undefined
 }
 
 const getDimensionPropName = function ({ propName }) {
