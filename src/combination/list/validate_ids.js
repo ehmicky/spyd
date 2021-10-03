@@ -59,8 +59,8 @@ const validateReservedIds = function (id, messageName) {
   }
 }
 
-// 'not' is used by `select`
-const RESERVED_IDS = ['not']
+// 'not' and 'and' are used by `select`
+const RESERVED_IDS = ['not', 'and']
 
 // We validate that identifiers are unique not only within their combination
 // dimension but across combination dimensions.
