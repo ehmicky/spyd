@@ -69,15 +69,24 @@ const RESERVED_IDS = ['not']
 // `config.titles`, `config.select`, reporting.
 // Non-combination identifiers are not checked for duplicates since they are
 // not used for selection, reporting, `config.titles`, etc.
-const validateDuplicateId = function (
-  { dimension: { messageName }, id },
-  index,
-  allIds,
-) {
+const validateDuplicateId = function ({ dimension, id }, index, allIds) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
-  if (duplicateId !== undefined) {
-    throw new UserError(`The identifier "${id}" must not be used both as ${messageName} and ${duplicateId.dimension.messageName}.
-Please rename one of them.`)
+  if (duplicateId === undefined) {
+    return
   }
+
+  const userDimensions = [dimension, duplicateId.dimension].filter(
+    isUserDimension,
+  )
+  const errorSuffix =
+    userDimensions.length === 1
+      ? `Please rename the ${userDimensions[0].messageName}.`
+      : `Please rename one of them.`
+  throw new UserError(`The identifier "${id}" must not be used both as ${dimension.messageName} and ${duplicateId.dimension.messageName}.
+${errorSuffix}`)
+}
+
+const isUserDimension = function ({ createdByUser }) {
+  return createdByUser
 }
