@@ -46,6 +46,7 @@ export const omitNoDimensions = function (result, noDimensions) {
   return { ...result, combinations }
 }
 
+// Same for a single combination
 export const omitCombNoDimensions = function (combination, noDimensions) {
   const dimensions = omit.default(combination.dimensions, noDimensions)
   return { ...combination, dimensions }
