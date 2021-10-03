@@ -11,7 +11,8 @@
 //     - combinationTitle in reporters
 export const DIMENSIONS = {
   task: {
-    // Name used as property internally and when saving
+    // Name used as property internally and when saving.
+    // Must match the above property name.
     propName: 'task',
     // Name used in output and error messages
     messageName: 'task',
