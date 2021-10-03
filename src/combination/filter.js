@@ -21,6 +21,7 @@ const getCombinationDimensions = function ({ dimensions }) {
   return dimensions
 }
 
+// Same for a single combination
 export const getCombNoDimensions = function (dimensionsArray) {
   const dimensionNames = Object.keys(dimensionsArray[0])
   return dimensionNames.filter((dimensionName) =>
