@@ -1,7 +1,7 @@
 import { titleColor, noteColor } from '../report/utils/colors.js'
 
 import { omitCombNoDimensions } from './filter.js'
-import { getDimensionsIds } from './ids.js'
+import { getDimensionIds } from './ids.js'
 
 // Retrieve error message prefix showing a combination's dimension ids
 export const getCombinationPrefix = function (combination, noDimensions) {
@@ -21,14 +21,14 @@ export const getCombinationPrefix = function (combination, noDimensions) {
 //    and steps dimensions
 export const getCombinationNameColor = function (combination, noDimensions) {
   const combinationA = omitCombNoDimensions(combination, noDimensions)
-  return getDimensionsIds(combinationA)
+  return getDimensionIds(combinationA)
     .map(getNameColorPart)
     .join(NAME_SEPARATOR_COLOR)
 }
 
 export const getCombinationName = function (combination, noDimensions) {
   const combinationA = omitCombNoDimensions(combination, noDimensions)
-  return getDimensionsIds(combinationA).map(getNamePart).join(NAME_SEPARATOR)
+  return getDimensionIds(combinationA).map(getNamePart).join(NAME_SEPARATOR)
 }
 
 const getNameColorPart = function ({ dimension: { messageName }, id }) {
