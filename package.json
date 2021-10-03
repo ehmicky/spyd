@@ -41,7 +41,7 @@
     "execa": "^5.1.1",
     "fast-glob": "^3.2.5",
     "filter-obj": "^3.0.0",
-    "find-up": "^6.0.0",
+    "find-up": "^6.1.0",
     "get-stream": "^6.0.0",
     "got": "^11.8.1",
     "indent-string": "^5.0.0",
