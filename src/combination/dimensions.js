@@ -9,8 +9,8 @@
 //  - The order of dimensions when printing:
 //     - combinationName in previews, `dev` and error messages
 //     - combinationTitle in reporters
-const DIMENSIONS_ARRAY = [
-  {
+export const DIMENSIONS = {
+  task: {
     // Name used as property internally and when saving
     propName: 'task',
     // Name used in output and error messages
@@ -18,25 +18,14 @@ const DIMENSIONS_ARRAY = [
     // Whether dimension was created by users or by plugins
     createdByUser: true,
   },
-  {
+  runner: {
     propName: 'runner',
     messageName: 'runner',
     createdByUser: false,
   },
-  {
+  system: {
     propName: 'system',
     messageName: 'system',
     createdByUser: true,
   },
-]
-
-// Turn dimensions array into an object
-const getDimensions = function () {
-  return Object.fromEntries(DIMENSIONS_ARRAY.map(getDimensionPair))
 }
-
-const getDimensionPair = function (dimension) {
-  return [dimension.propName, dimension]
-}
-
-export const DIMENSIONS = getDimensions()
