@@ -2,10 +2,10 @@ import { getCombDimensions } from './dimensions.js'
 
 // Check if two combinations have same identifiers for all dimensions
 export const hasSameCombinationIds = function (combinationA, combinationB) {
-  const dimensionsIdsA = getDimensionIds(combinationA)
-  const dimensionsIdsB = getDimensionIds(combinationB)
-  return dimensionsIdsA.every(
-    ({ id }, index) => dimensionsIdsB[index].id === id,
+  const combinationIdsA = getCombinationIds(combinationA)
+  const combinationIdsB = getCombinationIds(combinationB)
+  return combinationIdsA.every((combinationId) =>
+    combinationIdsB.includes(combinationId),
   )
 }
 
