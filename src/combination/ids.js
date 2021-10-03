@@ -36,7 +36,7 @@ export const getCombinationIds = function (combination) {
   ).map((dimension) => getCombinationId(combination, dimension))
 }
 
-const getCombinationId = function ({ dimensions }, dimension) {
-  const { id } = dimensions[dimension.propName]
+const getCombinationId = function (combination, dimension) {
+  const { id } = combination.dimensions[dimension.propName]
   return { id, dimension }
 }
