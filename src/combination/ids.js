@@ -9,14 +9,24 @@ export const hasSameCombinationIds = function (combinationA, combinationB) {
   )
 }
 
+// Retrieve combinations' dimensions.
+// Follows `DIMENSIONS` array order
 export const getDimensions = function (combinations) {
-  const combinationsIds = getCombinationsIds(combinations)
-  const dimensions = combinationsIds.map(getDimensionPropName)
-  return [...new Set(dimensions)]
+  return Object.values(DIMENSIONS)
+    .map(getDimensionPropName)
+    .filter((propName) => haveDimension(combinations, propName))
 }
 
-const getDimensionPropName = function ({ dimension: { propName } }) {
+const getDimensionPropName = function ({ propName }) {
   return propName
+}
+
+const haveDimension = function (combinations, propName) {
+  return combinations.some((combination) => hasDimension(combination, propName))
+}
+
+const hasDimension = function ({ dimensions }, propName) {
+  return dimensions[propName] !== undefined
 }
 
 // Retrieve all unique combinations identifiers.
