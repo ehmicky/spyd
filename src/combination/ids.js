@@ -2,17 +2,17 @@ import { getCombDimensions } from './dimensions.js'
 
 // Check if two combinations have same identifiers for all dimensions
 export const hasSameCombinationIds = function (combinationA, combinationB) {
-  const combinationIdsA = getCombinationIds(combinationA)
-  const combinationIdsB = getCombinationIds(combinationB)
-  return combinationIdsA.every(
-    ({ id }, index) => combinationIdsB[index].id === id,
+  const dimensionsIdsA = getDimensionsIds(combinationA)
+  const dimensionsIdsB = getDimensionsIds(combinationB)
+  return dimensionsIdsA.every(
+    ({ id }, index) => dimensionsIdsB[index].id === id,
   )
 }
 
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
-  return combinations.flatMap(getCombinationIds).filter(isNotDuplicateId)
+  return combinations.flatMap(getDimensionsIds).filter(isNotDuplicateId)
 }
 
 // Remove duplicate ids with the same dimension, since this happens due to the
@@ -30,7 +30,7 @@ const isNotDuplicateId = function ({ dimension, id }, index, combinationIds) {
 
 // Retrieve each dimension's id of a given combination
 // Follows `DIMENSIONS` array order.
-export const getCombinationIds = function (combination) {
+export const getDimensionsIds = function (combination) {
   const dimensions = getCombDimensions(combination)
   return dimensions.map((dimension) => getCombinationId(combination, dimension))
 }
