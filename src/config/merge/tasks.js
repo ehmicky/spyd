@@ -3,7 +3,7 @@ import { PLUGIN_TYPES } from '../plugin/types.js'
 
 // Custom merging logic for tasks.
 // `tasks` or `runnnerConfig.{runnerId}.tasks` are concatenated, not overridden
-// so that shared configurations consumers can add tasks
+// so that shared configurations consumers can add tasks.
 export const isTasks = function (keys) {
   return isTopTasks(keys) || isRunnerTasks(keys)
 }

@@ -108,7 +108,7 @@ const getDimensionsTasks = async function ({ runner }, noDimensions, cwd) {
 // When two task files export the same task id, we only keep one based on the
 // following priority:
 //  - `config.runnerConfig.{runnerId}.tasks` over `config.tasks`
-//  - `tasks` array order
+//  - `tasks` array order (last has priority)
 // This allows overridding tasks when using shared configurations.
 const hasUniqueTaskId = function (task, index, tasks) {
   return tasks.slice(index + 1).every(({ id }) => id !== task.id)
