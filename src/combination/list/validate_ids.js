@@ -1,5 +1,5 @@
 import { UserError } from '../../error/main.js'
-import { getCombinationsIds } from '../ids.js'
+import { getAllDimensionIds } from '../ids.js'
 
 import { getUserIds } from './user_ids.js'
 
@@ -8,8 +8,8 @@ export const validateCombinationsIds = function (combinations, inputsList) {
   const userIds = getUserIds(combinations, inputsList)
   userIds.forEach(validateUserIds)
 
-  const combinationsIds = getCombinationsIds(combinations)
-  combinationsIds.forEach(validateDuplicateId)
+  const allDimensionIds = getAllDimensionIds(combinations)
+  allDimensionIds.forEach(validateDuplicateId)
 }
 
 // Validate that identifiers don't use characters that we are using for parsing

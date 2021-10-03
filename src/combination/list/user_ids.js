@@ -1,13 +1,13 @@
-import { getCombinationsIds } from '../ids.js'
+import { getAllDimensionIds } from '../ids.js'
 import { getInputIds } from '../inputs.js'
 
 // Retrieve user-defined identifiers
 export const getUserIds = function (combinations, inputsList) {
-  const combinationsUserIds = getCombinationsIds(combinations)
+  const allDimensionIds = getAllDimensionIds(combinations)
     .filter(isUserId)
     .map(getCombinationUserId)
   const nonCombinationsIds = getNonCombinationsIds(inputsList)
-  return [...combinationsUserIds, ...nonCombinationsIds]
+  return [...allDimensionIds, ...nonCombinationsIds]
 }
 
 const isUserId = function ({ dimension: { createdByUser } }) {

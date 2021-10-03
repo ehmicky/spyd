@@ -2,7 +2,7 @@ import { getCombDimensions } from './dimensions.js'
 
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
-export const getCombinationsIds = function (combinations) {
+export const getAllDimensionIds = function (combinations) {
   return combinations.flatMap(getDimensionIds).filter(isNotDuplicateId)
 }
 
