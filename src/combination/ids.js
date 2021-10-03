@@ -23,7 +23,8 @@ const isNotDuplicateId = function ({ dimension, id }, index, combinationIds) {
     .slice(index + 1)
     .some(
       (combinationId) =>
-        combinationId.dimension === dimension && combinationId.id === id,
+        combinationId.dimension.propName === dimension.propName &&
+        combinationId.id === id,
     )
 }
 
