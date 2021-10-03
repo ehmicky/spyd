@@ -77,7 +77,7 @@ const validateDuplicateId = function (
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
   if (duplicateId !== undefined) {
-    throw new UserError(`The identifier "${id}" must not be used both as ${messageName} and ${duplicateId.dimension}.
+    throw new UserError(`The identifier "${id}" must not be used both as ${messageName} and ${duplicateId.dimension.messageName}.
 Please rename one of them.`)
   }
 }
