@@ -29,8 +29,10 @@ const isNotDuplicate = function ({ dimension, id }, index, combinationIds) {
 
 // Retrieve each dimension's id of a given combination
 export const getCombinationIds = function ({ dimensions }) {
-  return Object.entries(dimensions).map(([propName, { id }]) => ({
-    id,
-    dimension: DIMENSIONS[propName],
-  }))
+  return Object.entries(dimensions).map(getCombinationId)
+}
+
+const getCombinationId = function ([dimensionName, { id }]) {
+  const dimension = DIMENSIONS[dimensionName]
+  return { id, dimension }
 }
