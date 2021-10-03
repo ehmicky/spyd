@@ -9,7 +9,7 @@
 //  - The order of dimensions when printing:
 //     - combinationName in previews, `dev` and error messages
 //     - combinationTitle in reporters
-export const DIMENSIONS = [
+const DIMENSIONS = [
   {
     // Name used as property internally and when saving.
     propName: 'task',
