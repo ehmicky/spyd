@@ -1,4 +1,4 @@
-import { getCombinationsIds } from '../../combination/ids.js'
+import { getDimensions } from '../../combination/ids.js'
 
 // Add `combination.dimensions[*].titlePadded`
 // It is like `combination.dimensions[*].title` but padded so all combinations
@@ -9,16 +9,6 @@ export const padTitles = function (combinations) {
   return combinations.map((combination) =>
     addTitlesPadded(combination, paddings),
   )
-}
-
-const getDimensions = function (combinations) {
-  const combinationsIds = getCombinationsIds(combinations)
-  const dimensions = combinationsIds.map(getDimensionPropName)
-  return [...new Set(dimensions)]
-}
-
-const getDimensionPropName = function ({ dimension: { propName } }) {
-  return propName
 }
 
 const getPaddings = function (combinations, dimensions) {

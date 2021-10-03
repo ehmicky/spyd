@@ -9,6 +9,16 @@ export const hasSameCombinationIds = function (combinationA, combinationB) {
   )
 }
 
+export const getDimensions = function (combinations) {
+  const combinationsIds = getCombinationsIds(combinations)
+  const dimensions = combinationsIds.map(getDimensionPropName)
+  return [...new Set(dimensions)]
+}
+
+const getDimensionPropName = function ({ dimension: { propName } }) {
+  return propName
+}
+
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {

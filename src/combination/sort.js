@@ -4,7 +4,7 @@ import sortOn from 'sort-on'
 import { getMean } from '../stats/sum.js'
 import { groupBy } from '../utils/group.js'
 
-import { getCombinationsIds } from './ids.js'
+import { getDimensions } from './ids.js'
 
 // Sort `result.combinations` based on their `stats.mean`.
 // Combinations with the same dimension are grouped together in the sorting
@@ -18,17 +18,12 @@ import { getCombinationsIds } from './ids.js'
 //  - Those should be filtered out, as opposed to showing empty rows|columns
 export const sortCombinations = function (result) {
   const { combinations } = result
-  const combinationsIds = getCombinationsIds(combinations)
-  const dimensions = [...new Set(combinationsIds.map(getDimension))]
+  const dimensions = getDimensions(combinations)
   const sortFunctions = dimensions.map((dimension) =>
     getSortFunction(dimension, combinations),
   )
   const combinationsA = sortOn(combinations, sortFunctions)
   return { ...result, combinations: combinationsA }
-}
-
-const getDimension = function ({ dimension: { propName } }) {
-  return propName
 }
 
 // Retrieve a function used to compare combinations for a specific dimension
