@@ -29,3 +29,25 @@ export const DIMENSIONS = [
     createdByUser: true,
   },
 ]
+
+// Retrieve combinations' dimensions.
+// Follows `DIMENSIONS` array order.
+export const getDimensions = function (combinations) {
+  return DIMENSIONS.filter((dimension) =>
+    haveDimension(combinations, dimension),
+  ).map(getDimensionPropName)
+}
+
+const haveDimension = function (combinations, dimension) {
+  return combinations.some((combination) =>
+    combinationHasDimension(combination, dimension),
+  )
+}
+
+export const combinationHasDimension = function ({ dimensions }, { propName }) {
+  return dimensions[propName] !== undefined
+}
+
+const getDimensionPropName = function ({ propName }) {
+  return propName
+}

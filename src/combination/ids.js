@@ -1,4 +1,4 @@
-import { DIMENSIONS } from './dimensions.js'
+import { DIMENSIONS, combinationHasDimension } from './dimensions.js'
 
 // Check if two combinations have same identifiers for all dimensions
 export const hasSameCombinationIds = function (combinationA, combinationB) {
@@ -32,33 +32,11 @@ const isNotDuplicateId = function ({ dimension, id }, index, combinationIds) {
 // Follows `DIMENSIONS` array order.
 export const getCombinationIds = function (combination) {
   return DIMENSIONS.filter((dimension) =>
-    hasDimension(combination, dimension),
+    combinationHasDimension(combination, dimension),
   ).map((dimension) => getCombinationId(combination, dimension))
 }
 
 const getCombinationId = function ({ dimensions }, dimension) {
   const { id } = dimensions[dimension.propName]
   return { id, dimension }
-}
-
-// Retrieve combinations' dimensions.
-// Follows `DIMENSIONS` array order.
-export const getDimensions = function (combinations) {
-  return DIMENSIONS.filter((dimension) =>
-    haveDimension(combinations, dimension),
-  ).map(getDimensionPropName)
-}
-
-const haveDimension = function (combinations, dimension) {
-  return combinations.some((combination) =>
-    hasDimension(combination, dimension),
-  )
-}
-
-const hasDimension = function ({ dimensions }, { propName }) {
-  return dimensions[propName] !== undefined
-}
-
-const getDimensionPropName = function ({ propName }) {
-  return propName
 }

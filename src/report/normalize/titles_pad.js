@@ -1,4 +1,4 @@
-import { getDimensions } from '../../combination/ids.js'
+import { getDimensions } from '../../combination/dimensions.js'
 
 // Add `combination.dimensions[*].titlePadded`
 // It is like `combination.dimensions[*].title` but padded so all combinations
