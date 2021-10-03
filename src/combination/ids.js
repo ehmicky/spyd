@@ -12,13 +12,13 @@ export const hasSameCombinationIds = function (combinationA, combinationB) {
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
-  return combinations.flatMap(getCombinationIds).filter(isNotDuplicate)
+  return combinations.flatMap(getCombinationIds).filter(isNotDuplicateId)
 }
 
 // Remove duplicate ids with the same dimension, since this happens due to the
 // cartesian product.
 // Duplicate ids with a different dimension are validated later.
-const isNotDuplicate = function ({ dimension, id }, index, combinationIds) {
+const isNotDuplicateId = function ({ dimension, id }, index, combinationIds) {
   return !combinationIds
     .slice(index + 1)
     .some(
