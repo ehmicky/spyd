@@ -1,6 +1,6 @@
 // Retrieve argument passed to `beforeEach`, `main` and `afterEach`.
 // This includes a `context` object for information passing.
-// Contexts are meant to be modified. We do thise instead of using a functional
+// Contexts are meant to be modified. We do this instead of using a functional
 // approach such as returning a value in hooks because:
 //  - Direct mutation is easier for many users
 //  - This does not require any deep merging, which can be slow and fail if the
