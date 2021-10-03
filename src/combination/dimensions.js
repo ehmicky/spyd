@@ -30,12 +30,12 @@ export const DIMENSIONS = [
   },
 ]
 
-// Retrieve combinations' dimensions.
+// Retrieve several combinations' dimensions.
 // Follows `DIMENSIONS` array order.
-export const getDimensions = function (combinations) {
+export const getCombsDimensions = function (combinations) {
   return DIMENSIONS.filter((dimension) =>
     haveDimension(combinations, dimension),
-  ).map(getDimensionPropName)
+  )
 }
 
 const haveDimension = function (combinations, dimension) {
@@ -44,11 +44,14 @@ const haveDimension = function (combinations, dimension) {
   )
 }
 
-// Retrieve whether a specific combination has a given dimension
-export const combinationHasDimension = function (combination, dimension) {
-  return combination.dimensions[dimension.propName] !== undefined
+// Retrieve one combination's dimensions.
+// Follows `DIMENSIONS` array order.
+export const getCombDimensions = function (combination) {
+  return DIMENSIONS.filter((dimension) =>
+    combinationHasDimension(combination, dimension),
+  )
 }
 
-const getDimensionPropName = function ({ propName }) {
-  return propName
+const combinationHasDimension = function (combination, dimension) {
+  return combination.dimensions[dimension.propName] !== undefined
 }
