@@ -44,6 +44,7 @@ const haveDimension = function (combinations, dimension) {
   )
 }
 
+// Retrieve whether a specific combination has a given dimension
 export const combinationHasDimension = function (combination, dimension) {
   return combination.dimensions[dimension.propName] !== undefined
 }
