@@ -5,14 +5,12 @@ import { getDimensions } from '../../combination/ids.js'
 // vertically align
 export const padTitles = function (combinations) {
   const dimensions = getDimensions(combinations)
-  const paddings = getPaddings(combinations, dimensions)
+  const paddings = dimensions.map((dimension) =>
+    getPadding(combinations, dimension),
+  )
   return combinations.map((combination) =>
     addTitlesPadded(combination, paddings),
   )
-}
-
-const getPaddings = function (combinations, dimensions) {
-  return dimensions.map((dimension) => getPadding(combinations, dimension))
 }
 
 const getPadding = function (combinations, dimension) {
