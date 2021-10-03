@@ -9,26 +9,6 @@ export const hasSameCombinationIds = function (combinationA, combinationB) {
   )
 }
 
-// Retrieve combinations' dimensions.
-// Follows `DIMENSIONS` array order
-export const getDimensions = function (combinations) {
-  return Object.values(DIMENSIONS)
-    .map(getDimensionPropName)
-    .filter((propName) => haveDimension(combinations, propName))
-}
-
-const getDimensionPropName = function ({ propName }) {
-  return propName
-}
-
-const haveDimension = function (combinations, propName) {
-  return combinations.some((combination) => hasDimension(combination, propName))
-}
-
-const hasDimension = function ({ dimensions }, propName) {
-  return dimensions[propName] !== undefined
-}
-
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 export const getCombinationsIds = function (combinations) {
@@ -49,11 +29,36 @@ const isNotDuplicateId = function ({ dimension, id }, index, combinationIds) {
 }
 
 // Retrieve each dimension's id of a given combination
-export const getCombinationIds = function ({ dimensions }) {
-  return Object.entries(dimensions).map(getCombinationId)
+// Follows `DIMENSIONS` array order.
+export const getCombinationIds = function (combination) {
+  return Object.values(DIMENSIONS)
+    .filter((dimension) => hasDimension(combination, dimension))
+    .map((dimension) => getCombinationId(combination, dimension))
 }
 
-const getCombinationId = function ([propName, { id }]) {
-  const dimension = DIMENSIONS[propName]
+const getCombinationId = function ({ dimensions }, dimension) {
+  const { id } = dimensions[dimension.propName]
   return { id, dimension }
+}
+
+// Retrieve combinations' dimensions.
+// Follows `DIMENSIONS` array order.
+export const getDimensions = function (combinations) {
+  return Object.values(DIMENSIONS)
+    .filter((dimension) => haveDimension(combinations, dimension))
+    .map(getDimensionPropName)
+}
+
+const haveDimension = function (combinations, dimension) {
+  return combinations.some((combination) =>
+    hasDimension(combination, dimension),
+  )
+}
+
+const hasDimension = function ({ dimensions }, { propName }) {
+  return dimensions[propName] !== undefined
+}
+
+const getDimensionPropName = function ({ propName }) {
+  return propName
 }
