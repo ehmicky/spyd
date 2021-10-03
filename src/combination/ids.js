@@ -31,9 +31,9 @@ const isNotDuplicateId = function ({ dimension, id }, index, combinationIds) {
 // Retrieve each dimension's id of a given combination
 // Follows `DIMENSIONS` array order.
 export const getCombinationIds = function (combination) {
-  return Object.values(DIMENSIONS)
-    .filter((dimension) => hasDimension(combination, dimension))
-    .map((dimension) => getCombinationId(combination, dimension))
+  return DIMENSIONS.filter((dimension) =>
+    hasDimension(combination, dimension),
+  ).map((dimension) => getCombinationId(combination, dimension))
 }
 
 const getCombinationId = function ({ dimensions }, dimension) {
@@ -44,9 +44,9 @@ const getCombinationId = function ({ dimensions }, dimension) {
 // Retrieve combinations' dimensions.
 // Follows `DIMENSIONS` array order.
 export const getDimensions = function (combinations) {
-  return Object.values(DIMENSIONS)
-    .filter((dimension) => haveDimension(combinations, dimension))
-    .map(getDimensionPropName)
+  return DIMENSIONS.filter((dimension) =>
+    haveDimension(combinations, dimension),
+  ).map(getDimensionPropName)
 }
 
 const haveDimension = function (combinations, dimension) {

@@ -9,24 +9,23 @@
 //  - The order of dimensions when printing:
 //     - combinationName in previews, `dev` and error messages
 //     - combinationTitle in reporters
-export const DIMENSIONS = {
-  task: {
+export const DIMENSIONS = [
+  {
     // Name used as property internally and when saving.
-    // Must match the above property name.
     propName: 'task',
     // Name used in output and error messages
     messageName: 'task',
     // Whether dimension was created by users or by plugins
     createdByUser: true,
   },
-  runner: {
+  {
     propName: 'runner',
     messageName: 'runner',
     createdByUser: false,
   },
-  system: {
+  {
     propName: 'system',
     messageName: 'system',
     createdByUser: true,
   },
-}
+]
