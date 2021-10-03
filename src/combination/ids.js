@@ -41,11 +41,10 @@ export const hasSameCombinationIds = function (combinationA, combinationB) {
 }
 
 // Retrieve each dimension's id of a given combination
-// Does not follow `DIMENSIONS` array order.
+// Follows `DIMENSIONS` array order.
 export const getCombinationIds = function (combination) {
-  return Object.values(combination.dimensions).map(getCombinationId)
-}
-
-const getCombinationId = function ({ id }) {
-  return id
+  const dimensions = getCombDimensions(combination)
+  return dimensions.map(
+    (dimension) => combination.dimensions[dimension.propName].id,
+  )
 }
