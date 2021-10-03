@@ -34,13 +34,13 @@ const DIMENSIONS = [
 // Follows `DIMENSIONS` array order.
 export const getCombsDimensions = function (combinations) {
   return DIMENSIONS.filter((dimension) =>
-    haveDimension(combinations, dimension),
+    combsHaveDimension(combinations, dimension),
   )
 }
 
-const haveDimension = function (combinations, dimension) {
+const combsHaveDimension = function (combinations, dimension) {
   return combinations.some((combination) =>
-    combinationHasDimension(combination, dimension),
+    combHasDimension(combination, dimension),
   )
 }
 
@@ -48,10 +48,10 @@ const haveDimension = function (combinations, dimension) {
 // Follows `DIMENSIONS` array order.
 export const getCombDimensions = function (combination) {
   return DIMENSIONS.filter((dimension) =>
-    combinationHasDimension(combination, dimension),
+    combHasDimension(combination, dimension),
   )
 }
 
-const combinationHasDimension = function (combination, dimension) {
+const combHasDimension = function (combination, dimension) {
   return combination.dimensions[dimension.propName] !== undefined
 }
