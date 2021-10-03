@@ -87,7 +87,7 @@ export const listTasks = async function (runners, cwd) {
       getDimensionsTasks(dimensions, noDimensions, cwd),
     ),
   )
-  return tasks.flat().filter(isUniqueTaskId)
+  return tasks.flat().filter(hasUniqueTaskId)
 }
 
 const getDimension = function (runner) {
@@ -110,6 +110,6 @@ const getDimensionsTasks = async function ({ runner }, noDimensions, cwd) {
 //  - `config.runnerConfig.{runnerId}.tasks` over `config.tasks`
 //  - `tasks` array order
 // This allows overridding tasks when using shared configurations.
-const isUniqueTaskId = function (task, index, tasks) {
+const hasUniqueTaskId = function (task, index, tasks) {
   return tasks.slice(index + 1).every(({ id }) => id !== task.id)
 }
