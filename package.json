@@ -49,7 +49,7 @@
     "is-interactive": "^2.0.0",
     "is-plain-obj": "^4.0.0",
     "is-unicode-supported": "^1.1.0",
-    "jest-validate": "^27.2.0",
+    "jest-validate": "^27.2.4",
     "js-yaml": "^4.0.0",
     "junk": "^4.0.0",
     "map-obj": "^4.3.0",
