@@ -12,7 +12,7 @@ export const hasSameCombinationIds = function (combinationA, combinationB) {
 // Retrieve each dimension's id of a given combination
 // Follows `DIMENSIONS` array order.
 export const getCombinationIds = function (combination) {
-  return getDimensionIds(combination).map(getCombinationId)
+  return getCombDimensionsIds(combination).map(getCombinationId)
 }
 
 const getCombinationId = function ({ id }) {
@@ -22,31 +22,36 @@ const getCombinationId = function ({ id }) {
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
 // Follows `DIMENSIONS` array order.
-export const getAllDimensionIds = function (combinations) {
+export const getCombsDimensionsIds = function (combinations) {
   const dimensions = getCombsDimensions(combinations)
   return dimensions
-    .flatMap((dimension) =>
-      combinations.map((combination) => getDimensionId(combination, dimension)),
-    )
+    .flatMap((dimension) => getCombsDimensionIds(combinations, dimension))
     .filter(isNotDuplicateId)
+}
+
+// Retrieve a dimension and its id for a given dimension
+const getCombsDimensionIds = function (combinations, dimension) {
+  return combinations.map((combination) =>
+    getDimensionId(combination, dimension),
+  )
 }
 
 // Remove duplicate ids with the same dimension, since this happens due to the
 // cartesian product.
 // Duplicate ids with a different dimension are validated later.
-const isNotDuplicateId = function ({ dimension, id }, index, combinationIds) {
-  return !combinationIds
+const isNotDuplicateId = function ({ dimension, id }, index, dimensionsIds) {
+  return !dimensionsIds
     .slice(0, index)
     .some(
-      (combinationId) =>
-        combinationId.dimension.propName === dimension.propName &&
-        combinationId.id === id,
+      (dimensionsId) =>
+        dimensionsId.dimension.propName === dimension.propName &&
+        dimensionsId.id === id,
     )
 }
 
-// Retrieve each dimension and its for a given combination
+// Retrieve each dimension and its id for a given combination
 // Follows `DIMENSIONS` array order.
-export const getDimensionIds = function (combination) {
+export const getCombDimensionsIds = function (combination) {
   const dimensions = getCombDimensions(combination)
   return dimensions.map((dimension) => getDimensionId(combination, dimension))
 }
