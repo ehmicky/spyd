@@ -32,7 +32,7 @@ export const getCombinationIds = function ({ dimensions }) {
   return Object.entries(dimensions).map(getCombinationId)
 }
 
-const getCombinationId = function ([dimensionName, { id }]) {
-  const dimension = DIMENSIONS[dimensionName]
+const getCombinationId = function ([propName, { id }]) {
+  const dimension = DIMENSIONS[propName]
   return { id, dimension }
 }

@@ -23,14 +23,14 @@ const getCombinationDimensions = function ({ dimensions }) {
 
 // Same for a single combination
 export const getCombNoDimensions = function (dimensionsArray) {
-  const dimensionNames = Object.keys(dimensionsArray[0])
-  return dimensionNames.filter((dimensionName) =>
-    isNoDimensions(dimensionsArray, dimensionName),
+  const propNames = Object.keys(dimensionsArray[0])
+  return propNames.filter((propName) =>
+    isNoDimensions(dimensionsArray, propName),
   )
 }
 
-const isNoDimensions = function (dimensionsArray, dimensionName) {
-  const ids = dimensionsArray.map((dimensions) => dimensions[dimensionName].id)
+const isNoDimensions = function (dimensionsArray, propName) {
+  const ids = dimensionsArray.map((dimensions) => dimensions[propName].id)
   return [...new Set(ids)].length === 1
 }
 
