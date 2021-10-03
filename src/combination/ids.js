@@ -1,9 +1,15 @@
-import { getCombDimensions } from './dimensions.js'
+import { getCombsDimensions, getCombDimensions } from './dimensions.js'
 
 // Retrieve all unique combinations identifiers.
 // For all combinations of a given result.
+// Follows `DIMENSIONS` array order.
 export const getAllDimensionIds = function (combinations) {
-  return combinations.flatMap(getDimensionIds).filter(isNotDuplicateId)
+  const dimensions = getCombsDimensions(combinations)
+  return dimensions
+    .flatMap((dimension) =>
+      combinations.map((combination) => getDimensionId(combination, dimension)),
+    )
+    .filter(isNotDuplicateId)
 }
 
 // Remove duplicate ids with the same dimension, since this happens due to the
@@ -11,7 +17,7 @@ export const getAllDimensionIds = function (combinations) {
 // Duplicate ids with a different dimension are validated later.
 const isNotDuplicateId = function ({ dimension, id }, index, combinationIds) {
   return !combinationIds
-    .slice(index + 1)
+    .slice(0, index)
     .some(
       (combinationId) =>
         combinationId.dimension.propName === dimension.propName &&
