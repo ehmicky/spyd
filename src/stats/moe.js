@@ -1,4 +1,4 @@
-import { getTvalue } from './critical_values/student_t.js'
+import { getStudentTValue } from './critical_values/student_t.js'
 
 // Retrieve margin of error, relative to the mean
 // The standard error:
@@ -57,7 +57,7 @@ import { getTvalue } from './critical_values/student_t.js'
 //    combination pair
 export const getMoe = function (stdev, length) {
   const standardError = stdev / Math.sqrt(length)
-  const tvalue = getTvalue(length - 1)
+  const tvalue = getStudentTValue(length - 1)
   const marginOfError = standardError * tvalue
   return marginOfError
 }
@@ -84,7 +84,7 @@ export const getLengthForMoe = function (moeTarget, stdev) {
     lengths.add(length)
     // eslint-disable-next-line fp/no-mutation
     length = Math.max(
-      Math.round(((getTvalue(length - 1) * stdev) / moeTarget) ** 2),
+      Math.round(((getStudentTValue(length - 1) * stdev) / moeTarget) ** 2),
       MIN_LENGTH,
     )
   }

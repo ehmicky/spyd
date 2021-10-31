@@ -1,4 +1,4 @@
-import { getTvalue } from './critical_values/student_t.js'
+import { getStudentTValue } from './critical_values/student_t.js'
 
 // Check whether two combinations are too close for their `diff` to be
 // statistically significant.
@@ -61,7 +61,7 @@ const welchTTest = function ({ meanA, stdevA, loopsA, meanB, stdevB, loopsB }) {
   const degreesOfFreedom =
     (errorSquaredA + errorSquaredB) ** 2 /
     (errorSquaredA ** 2 / (loopsA - 1) + errorSquaredB ** 2 / (loopsB - 1))
-  const tValue = getTvalue(Math.floor(degreesOfFreedom))
+  const tValue = getStudentTValue(Math.floor(degreesOfFreedom))
   return tStat >= tValue
 }
 

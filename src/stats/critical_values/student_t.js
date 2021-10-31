@@ -1,6 +1,6 @@
 // Retrieve t-value, using t-distribution, two-tailed, with 95% significance
 // level.
-export const getTvalue = function (degreesOfFreedom) {
+export const getStudentTValue = function (degreesOfFreedom) {
   if (degreesOfFreedom >= T_VALUES.length) {
     return MIN_T_VALUE
   }
