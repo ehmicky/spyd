@@ -1,8 +1,7 @@
 /* eslint-disable max-lines */
+import { getChiSquaredValue } from '../critical_values/chi_squared.js'
 import { getVariance } from '../stdev.js'
 import { getMean, getSum } from '../sum.js'
-
-import { getChiSquaredValue } from './chi_squared_value.js'
 
 export const getEnvDev = function (
   samples,

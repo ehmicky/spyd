@@ -1,4 +1,4 @@
-import { getCriticalValue, getCriticalValuesMap } from './critical_values.js'
+import { getCriticalValue, getCriticalValuesMap } from './map.js'
 
 /* eslint-disable max-lines */
 // Return critical value of the chi-squared distribution, for a given
