@@ -85,14 +85,11 @@ const getImpreciseValue = function (impreciseEntries, degreesOfFreedom) {
   const [bottomDegreesOfFreedom, bottomValue] =
     impreciseEntries[impreciseEntryIndex - 1]
   const [topDegreesOfFreedom, topValue] = impreciseEntries[impreciseEntryIndex]
-  const weightedTopValue =
-    topValue * (degreesOfFreedom - bottomDegreesOfFreedom)
-  const weightedBottomValue =
-    bottomValue * (topDegreesOfFreedom - degreesOfFreedom)
-  return (
-    (weightedTopValue + weightedBottomValue) /
-    (topDegreesOfFreedom - bottomDegreesOfFreedom)
-  )
+  const topWeight = degreesOfFreedom - bottomDegreesOfFreedom
+  const bottomWeight = topDegreesOfFreedom - degreesOfFreedom
+  const topWeightedValue = topValue * topWeight
+  const bottomWeightedValue = bottomValue * bottomWeight
+  return (topWeightedValue + bottomWeightedValue) / (topWeight + bottomWeight)
 }
 
 // Round a number to a specific number of decimals
