@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 
-import detectNewline from 'detect-newline'
+import { detectNewlineGraceful } from 'detect-newline'
 import { pathExists } from 'path-exists'
 import stripFinalNewline from 'strip-final-newline'
 import writeFileAtomic from 'write-file-atomic'
@@ -39,7 +39,7 @@ const getFileContent = async function (output) {
 }
 
 export const insertContents = async function (output, content, fileContent) {
-  const newline = detectNewline.graceful(fileContent)
+  const newline = detectNewlineGraceful(fileContent)
   const lines = fileContent.split(newline)
 
   const contentA = replaceNewline(content, newline)
