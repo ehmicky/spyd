@@ -1,9 +1,10 @@
 /* eslint-disable max-lines */
 import { getCriticalValue, getCriticalValuesMap } from './map.js'
 
-// Retrieve t-value, using t-distribution, two-tailed
+// Retrieve critical value of the Student's t distribution, two-tailed, for a
+// given degrees of freedom
 export const getStudentTValue = function (degreesOfFreedom) {
-  const singleSignificanteRate = (1 + SIGNIFICANCE_RATE) / 2
+  const singleSignificanteRate = (1 - SIGNIFICANCE_RATE) / 2
   return getCriticalValue(
     STUDENT_T_MAP,
     degreesOfFreedom,
@@ -15,7 +16,7 @@ const SIGNIFICANCE_RATE = 0.95
 
 const STUDENT_T_RAW = [
   {
-    significanceRate: 0.975,
+    significanceRate: 0.025,
     getMaxValue() {
       return MAX_T_VALUE
     },
@@ -220,6 +221,9 @@ const STUDENT_T_RAW = [
       198: 1.972,
       199: 1.972,
       200: 1.9719,
+      250: 1.969,
+      500: 1.965,
+      1000: 1.962,
     },
   },
 ]
