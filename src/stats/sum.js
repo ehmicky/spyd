@@ -9,7 +9,7 @@ export const getMean = function (
 }
 
 // Retrieve sum of array of floats.
-const getSum = function (array, minIndex, maxIndex) {
+export const getSum = function (array, minIndex, maxIndex) {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 

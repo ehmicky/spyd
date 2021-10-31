@@ -9,10 +9,16 @@
 //  - On the flipside, it makes it harder to compare combinations (since they
 //    most likely have different means)
 export const getStdev = function (array, { minIndex, maxIndex, mean }) {
-  const length = maxIndex - minIndex + 1
-  const variance =
-    getSumDeviation({ array, minIndex, maxIndex, mean }) / (length - 1)
+  const variance = getVariance(array, { minIndex, maxIndex, mean })
   return Math.sqrt(variance)
+}
+
+export const getVariance = function (
+  array,
+  { minIndex = 0, maxIndex = array.length - 1, mean },
+) {
+  const length = maxIndex - minIndex + 1
+  return getSumDeviation({ array, minIndex, maxIndex, mean }) / (length - 1)
 }
 
 // We use a separate function from `getSum()` because it is much more performant

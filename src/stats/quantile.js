@@ -21,7 +21,7 @@ const MEDIAN_QUANTILE = 0.5
 // This logic is avoiding floating rounding errors which could otherwise happen
 // with consecutive identical measures, leading to a quantile having a slightly
 // (Number.EPSILON) higher value than the previous one.
-const getQuantile = function (
+export const getQuantile = function (
   array,
   percentage,
   { minIndex = 0, maxIndex = array.length - 1 },
