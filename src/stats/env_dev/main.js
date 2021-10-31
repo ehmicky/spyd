@@ -116,6 +116,11 @@ const getClusters = function (previousClusters, groupSize) {
 //         - Instead, consumers can correct this bias themselves, if needed
 //           (which is most likely not the case)
 //      - This is simpler implementation-wise
+// `varianceRatio` is:
+//  - accurate for any `groupSize`, i.e. its average value is correct
+//  - imprecise with lower `groupSize`, i.e. its confidence interval is wider
+// We take the imprecision into account, so that groups of low `groupSize` are
+// not picked more often than they should.
 const getGroup = function ({
   clusters,
   clusterSize,
