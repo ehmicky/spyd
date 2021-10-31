@@ -1,8 +1,9 @@
 import { getCriticalValue, getCriticalValuesMap } from './map.js'
 
 /* eslint-disable max-lines */
-// Return critical value of the chi-squared distribution, for a given
-// significance rate and size.
+// Return number to multiply variance with in order to get its confidence
+// interval for a given significance rate and size.
+// Uses the chi-squared distribution's critical value.
 export const getChiSquaredValue = function (size, significanceRate) {
   const degreesOfFreedom = size - 1
   const criticalValue = getCriticalValue(
