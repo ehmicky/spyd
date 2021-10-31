@@ -52,7 +52,7 @@
     "jest-validate": "^27.3.1",
     "js-yaml": "^4.0.0",
     "junk": "^4.0.0",
-    "map-obj": "^4.3.0",
+    "map-obj": "^5.0.0",
     "moize": "^6.1.0",
     "nvexeca": "^7.0.0",
     "omit.js": "^2.0.2",
