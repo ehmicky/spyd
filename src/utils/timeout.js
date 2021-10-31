@@ -2,7 +2,7 @@
 // eslint-disable-next-line no-shadow
 import AbortController from 'abort-controller'
 import delay from 'delay'
-import pEvent from 'p-event'
+import { pEvent } from 'p-event'
 
 // TODO: replace with `timers` after dropping support for Node <15
 export const createController = function () {
