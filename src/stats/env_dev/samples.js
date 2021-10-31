@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-params
 export const getSamples = function (
   length,
   period,
@@ -13,8 +14,9 @@ export const getSamples = function (
     const secondValue = getNormalRandom(stdevB, meanB)
     const endIndex = Math.min(index + period, length)
 
-    // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+    // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let, max-depth
     for (let secondIndex = index; secondIndex < endIndex; secondIndex += 1) {
+      // eslint-disable-next-line fp/no-mutation
       samples[secondIndex] = secondValue * getNormalRandom(stdevA, meanA)
     }
   }
