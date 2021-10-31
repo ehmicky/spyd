@@ -40,8 +40,8 @@ const normalizeKey = function ([key, value]) {
 
 // Retrieve the last entry which can used as `preciseMap`
 const isLastPreciseKey = function ([key], index, entries) {
-  const [nextKey] = entries[index + 1]
-  return key !== nextKey - 1
+  const nextEntry = entries[index + 1]
+  return nextEntry === undefined || key !== nextEntry[0] - 1
 }
 
 // Retrieve a critical value given a specific degrees of freedom and
