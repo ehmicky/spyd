@@ -2,7 +2,7 @@ import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 import nvexeca from 'nvexeca'
-import { readPackageUpAsync } from 'read-pkg-up'
+import { readPackageUp } from 'read-pkg-up'
 import semver from 'semver'
 
 import { UserError } from '../../../error/main.js'
@@ -49,7 +49,7 @@ const getAllowedVersions = async function () {
     packageJson: {
       engines: { node: allowedVersions },
     },
-  } = await readPackageUpAsync({ cwd })
+  } = await readPackageUp({ cwd })
   return allowedVersions
 }
 

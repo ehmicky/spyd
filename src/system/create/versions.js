@@ -1,7 +1,7 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
-import { readPackageUpAsync } from 'read-pkg-up'
+import { readPackageUp } from 'read-pkg-up'
 
 import { PluginError } from '../../error/main.js'
 import { spawnProcess } from '../../utils/spawn.js'
@@ -32,7 +32,7 @@ const getSpydVersion = async function () {
   const cwd = dirname(fileURLToPath(import.meta.url))
   const {
     packageJson: { version },
-  } = await readPackageUpAsync({ cwd, normalize: false })
+  } = await readPackageUp({ cwd, normalize: false })
   return version
 }
 
