@@ -15,7 +15,7 @@ import { CONFIG_PLUGIN_TYPE } from './plugin/types.js'
 //  - A `benchmark` directory: for grouping benchmark-related files.
 //  - Any other directory: for on-the-fly benchmarking, or for
 //    global/shared configuration.
-// The reasons for that logic are:
+// The reasons for that logic is that it:
 //  - Ensures the same default value behavior and directories between different
 //    configuration properties
 //  - Avoids typing during on-the-fly benchmarking by allowing files to be in
@@ -28,7 +28,7 @@ import { CONFIG_PLUGIN_TYPE } from './plugin/types.js'
 //  - Works with multiple config files (thanks to concatenating `tasks` to an
 //    array)
 //  - Works with multiple runners
-//  - Extensible to other future file configuration properties
+//  - Is extensible to other future file configuration properties
 // For `config`:
 //  - We only allow this for the top-level flags not inside configuration files
 //    to keep those self-contained.
