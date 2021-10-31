@@ -1,4 +1,4 @@
-import { getTvalue } from './tvalue.js'
+import { getTvalue } from './critical_values/student_t.js'
 
 // Retrieve margin of error, relative to the mean
 // The standard error:

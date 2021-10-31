@@ -1,4 +1,4 @@
-import { getTvalue } from './tvalue.js'
+import { getTvalue } from './critical_values/student_t.js'
 
 // Check whether two combinations are too close for their `diff` to be
 // statistically significant.
