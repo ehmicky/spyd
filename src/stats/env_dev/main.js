@@ -60,7 +60,6 @@ export const CLUSTER_FACTOR = 2
 
 // This is optimized for performance, which explains the imperative code.
 // This is also optimized for memory, avoiding creating intermediary arrays.
-// eslint-disable-next-line max-statements
 const computeGroups = function ({
   samples,
   samples: { length },
@@ -74,11 +73,26 @@ const computeGroups = function ({
   const groups = clusterSizesA.map((clusterSize) =>
     initGroup(clusterSize, mean),
   )
-  const [firstGroup] = groups
+  iterateOnGroups({ groups, samples, length })
+  return groups
+    .slice(0, -1)
+    .map((groupA) => finalizeGroup(groupA, length, variance))
+}
 
+const initGroup = function (clusterSize, mean) {
+  const groupMean = mean * clusterSize
+  return { clusterSize, groupMean, sum: 0, deviationSum: 0 }
+}
+
+const iterateOnGroups = function ({
+  groups,
+  groups: [firstGroup],
+  samples,
+  length,
+}) {
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = 0; index < length; index += 1) {
-    // eslint-disable-next-line fp/no-mutation
+    // eslint-disable-next-line fp/no-mutation, no-param-reassign
     firstGroup.sum += samples[index]
 
     // eslint-disable-next-line fp/no-loops, max-depth
@@ -100,15 +114,6 @@ const computeGroups = function ({
       group.sum = 0
     }
   }
-
-  return groups
-    .slice(0, -1)
-    .map((groupA) => finalizeGroup(groupA, length, variance))
-}
-
-const initGroup = function (clusterSize, mean) {
-  const groupMean = mean * clusterSize
-  return { clusterSize, groupMean, sum: 0, deviationSum: 0 }
 }
 
 // `varianceRatio` follows a chi-squared distribution with `groupSize - 1`
