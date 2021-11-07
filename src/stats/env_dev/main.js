@@ -5,24 +5,43 @@ import { getMean, getSum } from '../sum.js'
 
 export const getEnvDev = function (
   samples,
-  { mean = getMean(samples), variance = getVariance(samples, { mean }) } = {},
+  {
+    mean = getMean(samples),
+    variance = getVariance(samples, { mean }),
+    filter = returnTrue,
+  } = {},
 ) {
-  const groupsCount = getGroupsCount(samples)
+  const groupsCount = getGroupsCount(samples.length)
 
   if (groupsCount <= 0) {
     return { meanStdevRatio: MIN_VARIANCE_RATIO, groups: [] }
   }
 
   const clusterSizes = getClusterSizes(groupsCount)
-  const groups = computeGroups({ samples, clusterSizes, mean, variance })
+  const groups = computeGroups({
+    samples,
+    clusterSizes,
+    mean,
+    variance,
+    filter,
+  })
+
+  if (groups.length === 0) {
+    return { meanStdevRatio: MIN_VARIANCE_RATIO, groups: [] }
+  }
+
   const meanRatio = computeMeanRatio(groups)
   const meanStdevRatio = Math.sqrt(meanRatio)
   return { meanStdevRatio, groups }
 }
 
-const getGroupsCount = function (samples) {
+const returnTrue = function () {
+  return true
+}
+
+const getGroupsCount = function (length) {
   return Math.floor(
-    Math.log(samples.length / MIN_GROUP_SIZE) / Math.log(CLUSTER_FACTOR),
+    Math.log(length / MIN_GROUP_SIZE) / Math.log(CLUSTER_FACTOR),
   )
 }
 
@@ -55,15 +74,16 @@ export const CLUSTER_FACTOR = 2
 
 const computeGroups = function ({
   samples,
-  samples: { length },
   clusterSizes,
   mean,
   variance,
+  filter,
 }) {
   const groups = getInitGroups(clusterSizes, mean)
-  iterateOnGroups({ groups, samples, length })
+  const length = iterateOnGroups({ groups, samples, filter })
+  const filteredGroupsCount = getGroupsCount(length)
   return groups
-    .slice(0, -1)
+    .slice(0, filteredGroupsCount)
     .map((group) => getFinalGroup(group, length, variance))
 }
 
@@ -81,20 +101,31 @@ const getInitGroup = function (clusterSize, mean) {
 
 // This is optimized for performance, which explains the imperative code.
 // This is also optimized for memory, avoiding creating intermediary arrays.
-/* eslint-disable fp/no-mutation, fp/no-let, fp/no-loops, no-param-reassign */
+/* eslint-disable fp/no-mutation, fp/no-let, fp/no-loops, no-param-reassign,
+   max-depth, no-continue */
+// eslint-disable-next-line max-statements
 const iterateOnGroups = function ({
   groups,
   groups: [firstGroup],
   samples,
-  length,
+  samples: { length },
+  filter,
 }) {
-  for (let index = 0; index < length; index += 1) {
-    firstGroup.sum += samples[index]
+  let valueIndex = 0
 
-    // eslint-disable-next-line max-depth
+  for (let index = 0; index < length; index += 1) {
+    const value = samples[index]
+
+    if (!filter(value)) {
+      continue
+    }
+
+    firstGroup.sum += value
+    valueIndex += 1
+
     for (
       let groupIndex = 0, parentGroup = firstGroup;
-      (index + 1) % parentGroup.clusterSize === 0;
+      valueIndex % parentGroup.clusterSize === 0;
       groupIndex += 1
     ) {
       const group = parentGroup
@@ -104,8 +135,11 @@ const iterateOnGroups = function ({
       group.sum = 0
     }
   }
+
+  return valueIndex
 }
-/* eslint-enable fp/no-mutation, fp/no-let, fp/no-loops, no-param-reassign */
+/* eslint-enable fp/no-mutation, fp/no-let, fp/no-loops, no-param-reassign,
+   max-depth, no-continue */
 
 // `varianceRatio` follows a chi-squared distribution with `groupSize - 1`
 // degrees of freedom
