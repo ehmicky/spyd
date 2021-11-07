@@ -58,8 +58,6 @@ const MIN_GROUP_SIZE = 2
 // Using an integer >= 2 allows several implementation performance optimizations
 export const CLUSTER_FACTOR = 2
 
-// This is optimized for performance, which explains the imperative code.
-// This is also optimized for memory, avoiding creating intermediary arrays.
 const computeGroups = function ({
   samples,
   samples: { length },
@@ -86,6 +84,8 @@ const getInitGroup = function (clusterSize, mean) {
   return { clusterSize, groupMean, sum: 0, deviationSum: 0 }
 }
 
+// This is optimized for performance, which explains the imperative code.
+// This is also optimized for memory, avoiding creating intermediary arrays.
 const iterateOnGroups = function ({
   groups,
   groups: [firstGroup],
