@@ -69,7 +69,7 @@ const computeGroups = function ({
   iterateOnGroups({ groups, samples, length })
   return groups
     .slice(0, -1)
-    .map((groupA) => getFinalGroup(groupA, length, variance))
+    .map((group) => getFinalGroup(group, length, variance))
 }
 
 // The final `clusterSize` is a performance optimization so that the actual last
