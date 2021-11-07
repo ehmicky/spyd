@@ -33,7 +33,7 @@ const THRESHOLDS_BASE = getOutliersLikelihood(
 )
 
 // Computes the multiplying factor between each outlier threshold, so that they
-// respect both THRESHOLDS_COUNT and THRESHOLDS_MAX_SPREAD.
+// respect both THRESHOLDS_COUNT and THRESHOLDS_SPREAD.
 const getThresholdsFactor = function () {
   const maxExponent = (THRESHOLDS_COUNT - 1) / 2
   return THRESHOLDS_SPREAD ** (1 / maxExponent)
