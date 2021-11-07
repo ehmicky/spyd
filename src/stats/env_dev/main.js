@@ -7,32 +7,27 @@ export const getEnvDev = function (
   samples,
   { mean = getMean(samples), variance = getVariance(samples, { mean }) } = {},
 ) {
-  const clusterSizes = getClusterSizes(samples)
+  const groupsCount = getGroupsCount(samples)
 
-  if (clusterSizes.length === 0) {
+  if (groupsCount <= 0) {
     return { meanStdevRatio: MIN_VARIANCE_RATIO, groups: [] }
   }
 
+  const clusterSizes = getClusterSizes(groupsCount)
   const groups = computeGroups({ samples, clusterSizes, mean, variance })
   const meanRatio = computeMeanRatio(groups)
   const meanStdevRatio = Math.sqrt(meanRatio)
   return { meanStdevRatio, groups }
 }
 
-const getClusterSizes = function (samples) {
-  const groupsCount = getGroupsCount(samples)
-
-  if (groupsCount <= 0) {
-    return []
-  }
-
-  return Array.from({ length: groupsCount }, getClusterSize)
-}
-
 const getGroupsCount = function (samples) {
   return Math.floor(
     Math.log(samples.length / MIN_GROUP_SIZE) / Math.log(CLUSTER_FACTOR),
   )
+}
+
+const getClusterSizes = function (groupsCount) {
+  return Array.from({ length: groupsCount }, getClusterSize)
 }
 
 const getClusterSize = function (_, index) {
