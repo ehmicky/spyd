@@ -67,19 +67,21 @@ const computeGroups = function ({
   mean,
   variance,
 }) {
-  // The `clusterSize` is a performance optimization so that the actual last
-  // group can assign `parentGroup.sum` without checking if it is `undefined`.
-  const clusterSizesA = [...clusterSizes, 0]
-  const groups = clusterSizesA.map((clusterSize) =>
-    initGroup(clusterSize, mean),
-  )
+  const groups = getInitGroups(clusterSizes, mean)
   iterateOnGroups({ groups, samples, length })
   return groups
     .slice(0, -1)
-    .map((groupA) => finalizeGroup(groupA, length, variance))
+    .map((groupA) => getFinalGroup(groupA, length, variance))
 }
 
-const initGroup = function (clusterSize, mean) {
+// The final `clusterSize` is a performance optimization so that the actual last
+// group can assign `parentGroup.sum` without checking if it is `undefined`.
+const getInitGroups = function (clusterSizes, mean) {
+  const clusterSizesA = [...clusterSizes, 0]
+  return clusterSizesA.map((clusterSize) => getInitGroup(clusterSize, mean))
+}
+
+const getInitGroup = function (clusterSize, mean) {
   const groupMean = mean * clusterSize
   return { clusterSize, groupMean, sum: 0, deviationSum: 0 }
 }
@@ -141,7 +143,7 @@ const iterateOnGroups = function ({
 //  - imprecise with lower `groupSize`, i.e. its confidence interval is wider
 // We take the imprecision into account, so that groups of low `groupSize` are
 // not picked more often than they should.
-const finalizeGroup = function (
+const getFinalGroup = function (
   { clusterSize, deviationSum },
   length,
   variance,
