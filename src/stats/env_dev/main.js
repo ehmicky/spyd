@@ -13,8 +13,7 @@ export const getEnvDev = function (
     return { meanStdevRatio: MIN_VARIANCE_RATIO, groups: [] }
   }
 
-  const { groups } = computeGroups({ samples, clusterSizes, mean, variance })
-
+  const groups = computeGroups({ samples, clusterSizes, mean, variance })
   const meanRatio = computeMeanRatio(groups)
   const meanStdevRatio = Math.sqrt(meanRatio)
   return { meanStdevRatio, groups }
@@ -59,40 +58,49 @@ const MIN_GROUP_SIZE = 2
 // Using an integer >= 2 allows several implementation performance optimizations
 export const CLUSTER_FACTOR = 2
 
-const computeGroups = function ({ samples, clusterSizes, mean, variance }) {
-  return clusterSizes.reduce(computeGroup.bind(undefined, { mean, variance }), {
-    groups: [],
-    previousClusters: samples,
-  })
-}
+// This is optimized for performance, which explains the imperative code.
+// This is also optimized for memory, avoiding creating intermediary arrays.
+// eslint-disable-next-line max-statements
+const computeGroups = function ({
+  samples,
+  samples: { length },
+  clusterSizes,
+  mean,
+  variance,
+}) {
+  // The `clusterSize` is a performance optimization so that the actual last
+  // group can assign `parentGroup.sum` without checking if it is `undefined`.
+  const clusterSizesA = [...clusterSizes, 0]
+  const groups = clusterSizesA.map((clusterSize) =>
+    initGroup(clusterSize, mean),
+  )
+  const [firstGroup] = groups
 
-const computeGroup = function (
-  { mean, variance },
-  { groups, previousClusters },
-  clusterSize,
-) {
-  const groupSize = Math.floor(previousClusters.length / CLUSTER_FACTOR)
-  const clusters = getClusters(previousClusters, groupSize, clusterSize)
-  const group = getGroup({ clusters, clusterSize, groupSize, mean, variance })
-  return { groups: [...groups, group], previousClusters: clusters }
-}
+  // eslint-disable-next-line
+  for (let index = 0; index < length; index += 1) {
+    firstGroup.sum += samples[index]
 
-const getClusters = function (previousClusters, groupSize) {
-  const clusters = new Array(groupSize)
-  // eslint-disable-next-line fp/no-let
-  let startIndex = 0
-  const maxIndex = groupSize - 1
-
-  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let groupIndex = 0; groupIndex <= maxIndex; groupIndex += 1) {
-    const endIndex = startIndex + CLUSTER_FACTOR - 1
-    // eslint-disable-next-line fp/no-mutation
-    clusters[groupIndex] = getSum(previousClusters, startIndex, endIndex)
-    // eslint-disable-next-line fp/no-mutation
-    startIndex += CLUSTER_FACTOR
+    for (
+      let groupIndex = 0, parentGroup = firstGroup;
+      (index + 1) % parentGroup.clusterSize === 0;
+      groupIndex += 1
+    ) {
+      const group = parentGroup
+      parentGroup = groups[groupIndex + 1]
+      parentGroup.sum += group.sum
+      group.deviationSum += (group.sum - group.groupMean) ** 2
+      group.sum = 0
+    }
   }
 
-  return clusters
+  return groups
+    .slice(0, -1)
+    .map((groupA) => finalizeGroup(groupA, length, variance))
+}
+
+const initGroup = function (clusterSize, mean) {
+  const groupMean = mean * clusterSize
+  return { clusterSize, groupMean, sum: 0, deviationSum: 0 }
 }
 
 // `varianceRatio` follows a chi-squared distribution with `groupSize - 1`
@@ -120,15 +128,13 @@ const getClusters = function (previousClusters, groupSize) {
 //  - imprecise with lower `groupSize`, i.e. its confidence interval is wider
 // We take the imprecision into account, so that groups of low `groupSize` are
 // not picked more often than they should.
-const getGroup = function ({
-  clusters,
-  clusterSize,
-  groupSize,
-  mean,
+const finalizeGroup = function (
+  { clusterSize, deviationSum },
+  length,
   variance,
-}) {
-  const groupMean = mean * clusterSize
-  const groupVariance = getVariance(clusters, { mean: groupMean })
+) {
+  const groupSize = Math.floor(length / clusterSize)
+  const groupVariance = deviationSum / (groupSize - 1)
   const expectedVariance = variance * clusterSize
   const varianceRatio = groupVariance / expectedVariance
   const varianceMin =
@@ -137,13 +143,7 @@ const getGroup = function ({
   const varianceMax =
     groupVariance * getChiSquaredValue(groupSize, SIGNIFICANCE_LEVEL_MAX)
   const varianceRatioMax = varianceMax / expectedVariance
-  return {
-    clusterSize,
-    groupSize,
-    varianceRatioMin,
-    varianceRatio,
-    varianceRatioMax,
-  }
+  return { varianceRatioMin, varianceRatio, varianceRatioMax }
 }
 
 // The `varianceRatio` tends to increase with lower `groupSize`
