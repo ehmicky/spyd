@@ -44,7 +44,7 @@ const THRESHOLDS_FACTOR = getThresholdsFactor()
 // Retrieve each threshold.
 // Each next one is divided by THRESHOLDS_SPREAD.
 // There are THRESHOLDS_COUNT of them in total.
-// Their center value is OUTLIERS_BASE_THRESHOLD.
+// Their center value is THRESHOLDS_BASE.
 const getThresholds = function () {
   return Array.from({ length: THRESHOLDS_COUNT }, getThreshold)
 }
