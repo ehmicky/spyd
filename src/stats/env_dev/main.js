@@ -76,19 +76,27 @@ const computeGroups = function ({
   )
   const [firstGroup] = groups
 
-  // eslint-disable-next-line
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let index = 0; index < length; index += 1) {
+    // eslint-disable-next-line fp/no-mutation
     firstGroup.sum += samples[index]
 
+    // eslint-disable-next-line fp/no-loops, max-depth
     for (
+      // eslint-disable-next-line fp/no-let
       let groupIndex = 0, parentGroup = firstGroup;
       (index + 1) % parentGroup.clusterSize === 0;
+      // eslint-disable-next-line fp/no-mutation
       groupIndex += 1
     ) {
       const group = parentGroup
+      // eslint-disable-next-line fp/no-mutation
       parentGroup = groups[groupIndex + 1]
+      // eslint-disable-next-line fp/no-mutation
       parentGroup.sum += group.sum
+      // eslint-disable-next-line fp/no-mutation
       group.deviationSum += (group.sum - group.groupMean) ** 2
+      // eslint-disable-next-line fp/no-mutation
       group.sum = 0
     }
   }
