@@ -14,6 +14,16 @@
 //  - This allows `stats.min|max` to be used in reporting as extreme boundaries
 // This takes into account both the statistical variance (`moe`) and the
 // environmental one (`envDev`).
+// However, `envDev` is not used for the `rmoe` used to compute the overall
+// benchmark duration:
+//  - Reasons:
+//     - `envDev` varies too much betweeen runs
+//        - This creates very different benchmark durations, resulting in very
+//          different stats
+//     - `envDev` is always lower at the beginning of the run, which can result
+//       in unexpectedly early exits
+//  - As a downside, this means combinations with higher `envDev` are not run
+//    longer, i.e. have lower precision at the end
 export const getConfidenceInterval = function ({
   mean,
   moe,
