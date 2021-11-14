@@ -1,6 +1,6 @@
 import { getQuantile } from '../quantile.js'
-import { getVariance } from '../stdev.js'
 import { getMean } from '../sum.js'
+import { getVariance } from '../variance.js'
 
 import { getEnvDev, CLUSTER_FACTOR } from './main.js'
 import { getSamples } from './samples.js'

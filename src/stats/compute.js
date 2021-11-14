@@ -5,8 +5,8 @@ import { getLengthFromLoops } from './length.js'
 import { getMoe, getRmoe } from './moe.js'
 import { getOutliersPercentages } from './outliers/main.js'
 import { getSortedMedian, getQuantiles } from './quantile.js'
-import { getVariance, getStdev, getRstdev } from './stdev.js'
 import { getMean } from './sum.js'
+import { getVariance, getStdev, getRstdev } from './variance.js'
 
 // Aggregate measures into discrete statistics.
 // Note that when `repeat > 1`:
