@@ -1,8 +1,11 @@
+import { appendArray } from './append.js'
+
 // Merges two sorted arrays.
 // For better performance, the bigger array should be first.
 // The first array is directly mutated. The second is not mutated.
 // This is faster than just doing `Array.concat()` then `Array.sort()` and has
 // a `O(n)` time complexity.
+// For performance, if `bigArray` is empty, we just copy `smallArray` over.
 export const mergeSort = function (bigArray, smallArray) {
   if (bigArray.length === 0) {
     appendArray(bigArray, smallArray)
@@ -15,17 +18,6 @@ export const mergeSort = function (bigArray, smallArray) {
 
   resizeArray(bigArray, smallArray)
   mergeValues(bigArray, smallArray)
-}
-
-// For performance, if `bigArray` is empty, we just copy `smallArray` over.
-const appendArray = function (bigArray, smallArray) {
-  const smallArrayLength = smallArray.length
-
-  // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
-  for (let index = 0; index !== smallArrayLength; index += 1) {
-    // eslint-disable-next-line fp/no-mutating-methods
-    bigArray.push(smallArray[index])
-  }
 }
 
 // Resize `bigArray` so it can receive the new elements from `smallArray`.
