@@ -4,14 +4,14 @@ import { getMean, getSum } from '../sum.js'
 import { getVariance } from '../variance.js'
 
 export const getEnvDev = function (
-  samples,
+  array,
   {
-    mean = getMean(samples),
-    variance = getVariance(samples, { mean }),
+    mean = getMean(array),
+    variance = getVariance(array, { mean }),
     filter = returnTrue,
   } = {},
 ) {
-  const groupsCount = getGroupsCount(samples.length)
+  const groupsCount = getGroupsCount(array.length)
 
   if (groupsCount <= 0) {
     return { envDev: MIN_ENV_DEV, groups: [] }
@@ -19,7 +19,7 @@ export const getEnvDev = function (
 
   const clusterSizes = getClusterSizes(groupsCount)
   const groups = computeGroups({
-    samples,
+    array,
     clusterSizes,
     mean,
     variance,
@@ -56,8 +56,8 @@ const getClusterSize = function (_, index) {
 // Minimum `groupSize`
 // A higher value lowers accuracy:
 //  - The result `envDev` will be lower than the real value
-//  - This is because more `samples` are required to reach the `period` with
-//    the highest `varianceRatio`
+//  - This is because more `array` elements are required to reach the `period`
+//    with the highest `varianceRatio`
 //  - This means multiplying this constant by `n` requires running the benchmark
 //    `n` times longer to get the same `envDev`
 // A lower value lowers precision:
@@ -78,24 +78,24 @@ const MIN_GROUP_SIZE = 2
 //  - Leads to an overall slightly worse accuracy
 // A higher value:
 //  - Leads to much poorer accuracy and precision when the `period` is close to
-// the `samples.length`
-//     - Specifically when `period` > `samples.length` / (CLUSTER_FACTOR ** 2)
+//    the `array.length`
+//     - Specifically when `period` > `array.length` / (CLUSTER_FACTOR ** 2)
 // We must also ensure that CLUSTER_FACTOR ** MAX_ARGUMENTS >= MAX_SAMPLES
 //  - MAX_ARGUMENTS is the maximum number of arguments to Math.max(): 123182
-//  - MAX_SAMPLES is the maximum number of samples: 123182
+//  - MAX_SAMPLES is the maximum number of array elements: 123182
 //  - Otherwise, `Math.max(...groups)` would crash
 // Using an integer >= 2 allows several implementation performance optimizations
 export const CLUSTER_FACTOR = 2
 
 const computeGroups = function ({
-  samples,
+  array,
   clusterSizes,
   mean,
   variance,
   filter,
 }) {
   const groups = getInitGroups(clusterSizes, mean)
-  const length = iterateOnGroups({ groups, samples, filter })
+  const length = iterateOnGroups({ groups, array, filter })
   const filteredGroupsCount = getGroupsCount(length)
   return groups
     .slice(0, filteredGroupsCount)
@@ -122,14 +122,14 @@ const getInitGroup = function (clusterSize, mean) {
 const iterateOnGroups = function ({
   groups,
   groups: [firstGroup],
-  samples,
-  samples: { length },
+  array,
+  array: { length },
   filter,
 }) {
   let valueIndex = 0
 
   for (let index = 0; index < length; index += 1) {
-    const value = samples[index]
+    const value = array[index]
 
     if (!filter(value)) {
       continue
@@ -218,7 +218,7 @@ const getFinalGroup = function (
 //        collection
 //      - In particular, we do not use an average of several of likely "optimal"
 //        groups
-// Since `samples` are an estimate of the population, so is each group's
+// Since `array` are an estimate of the population, so is each group's
 // variance
 //   - Each group's variance's estimation follows a chi-squared distribution
 //   - Therefore, the sample's group with the maximum `varianceRatio` might be
@@ -331,7 +331,7 @@ const MIN_ENV_DEV = 1
 // Significance level when computing the confidence interval of each group's
 // variance.
 // A lower value decrease precision and accuracy.
-// A higher value decreases accuracy when `period` is close to `samples.length`
+// A higher value decreases accuracy when `period` is close to `array.length`
 const SIGNIFICANCE_LEVEL = 0.95
 const SIGNIFICANCE_LEVEL_INV = 1 - SIGNIFICANCE_LEVEL
 const SIGNIFICANCE_LEVEL_MIN = (1 - SIGNIFICANCE_LEVEL) / 2
