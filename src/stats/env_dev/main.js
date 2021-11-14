@@ -62,8 +62,15 @@ const getClusterSize = function (_, index) {
 //    `n` times longer to get the same `envDev`
 // A lower value lowers precision:
 //  - This is because groups with a lower groupSize are less precise
+//  - This is especially visible in preview mode, especially when a new group
+//    is added
+//     - This is because the last group are less precise.
+//     - Also, new groups generally have higher `varianceRatio` if the `period`
+//       has not reached yet, so each new group will make `envDev` increase
+//       until it reaches its optimal value.
 // In our case, `envDev` is already generally too low, so we favor accuracy over
 // precision.
+// However, this does mean `envDev` tends to vary quite a lot between runs.
 const MIN_GROUP_SIZE = 2
 // A lower value:
 //  - Is slower to compute
