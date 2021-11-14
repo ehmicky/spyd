@@ -17,7 +17,7 @@ export const getEnvDev = function (
   const groupsCount = getGroupsCount(array.length)
 
   if (groupsCount <= 0) {
-    return { envDev: MIN_ENV_DEV, groups: [] }
+    return MIN_ENV_DEV
   }
 
   const clusterSizes = getClusterSizes(groupsCount)
@@ -30,12 +30,12 @@ export const getEnvDev = function (
   })
 
   if (groups.length === 0) {
-    return { envDev: MIN_ENV_DEV, groups: [] }
+    return MIN_ENV_DEV
   }
 
   const optimalVarianceRatio = getOptimalVarianceRatio(groups)
   const envDev = computeEnvDev(optimalVarianceRatio)
-  return { envDev, groups }
+  return envDev
 }
 
 const defaultFilter = function () {

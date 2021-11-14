@@ -28,7 +28,7 @@ export const getPrecisionStats = function ({
     mean,
   })
 
-  const { envDev } = getEnvDev(unsortedMeasures, {
+  const envDev = getEnvDev(unsortedMeasures, {
     mean,
     variance,
     filter: filterOutliers.bind(undefined, min, max),
