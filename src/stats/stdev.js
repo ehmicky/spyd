@@ -1,18 +1,13 @@
-// Retrieve standard deviation of an array of floats (cannot be NaN/Infinity).
+// Retrieve variance of an array of floats (cannot be NaN/Infinity).
 // Array must not be empty.
-// We use the absolute standard deviation, as opposed to making it relative to
-// the mean (as a percentage)
+// We use the absolute variance, as opposed to making it relative to the mean
+// (as a percentage)
 //  - It makes it easier to understand:
 //     - the spread of a given combination
 //     - its relation to moe and distribution-related stats such as percentiles
 //       (that are also not percentages)
 //  - On the flipside, it makes it harder to compare combinations (since they
 //    most likely have different means)
-export const getStdev = function (array, { minIndex, maxIndex, mean }) {
-  const variance = getVariance(array, { minIndex, maxIndex, mean })
-  return Math.sqrt(variance)
-}
-
 export const getVariance = function (
   array,
   { minIndex = 0, maxIndex = array.length - 1, mean },
@@ -33,6 +28,11 @@ const getSumDeviation = function ({ array, minIndex, maxIndex, mean }) {
   }
 
   return sum
+}
+
+// Retrieve standard deviation
+export const getStdev = function (variance) {
+  return Math.sqrt(variance)
 }
 
 // Retrieve stdev relative to the mean.

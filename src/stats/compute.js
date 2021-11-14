@@ -4,7 +4,7 @@ import { getLengthFromLoops } from './length.js'
 import { getMoe, getRmoe } from './moe.js'
 import { getOutliersPercentages } from './outliers/main.js'
 import { getSortedMedian, getQuantiles } from './quantile.js'
-import { getStdev, getRstdev } from './stdev.js'
+import { getVariance, getStdev, getRstdev } from './stdev.js'
 import { getMean } from './sum.js'
 
 // Aggregate measures into discrete statistics.
@@ -121,7 +121,8 @@ const getPrecisionStats = function ({
     return getPerfectPrecisionStats(mean)
   }
 
-  const stdev = getStdev(measures, { minIndex, maxIndex, mean })
+  const variance = getVariance(measures, { minIndex, maxIndex, mean })
+  const stdev = getStdev(variance)
   const rstdev = getRstdev(stdev, mean)
   const moe = getMoe(stdev, length)
   const rmoe = getRmoe(moe, mean)
