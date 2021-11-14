@@ -55,4 +55,4 @@ const MIN_GROUP_SIZE = 2
 //  - MAX_SAMPLES is the maximum number of array elements: 123182
 //  - Otherwise, `Math.max(...groups)` would crash
 // Using an integer >= 2 allows several implementation performance optimizations
-export const CLUSTER_FACTOR = 2
+const CLUSTER_FACTOR = 2
