@@ -289,6 +289,7 @@ const getVarianceRatioMean = function (groups, varianceRatios, maxIndex) {
     const collLength = maxIndex + 1 - minIndex
     const varianceRatioMean = varianceRatioSum / collLength
 
+    // eslint-disable-next-line max-depth
     if (areSimilarGroups(groups, varianceRatioMean, maxIndex, minIndex)) {
       return varianceRatioMean
     }
@@ -307,6 +308,7 @@ const getVarianceRatioMean = function (groups, varianceRatios, maxIndex) {
 //    much
 //  - However, we require each end of the collection of groups to fit, since
 //    having wrong ends does not make sense
+// eslint-disable-next-line max-params
 const areSimilarGroups = function (
   groups,
   varianceRatioMean,
@@ -320,6 +322,7 @@ const areSimilarGroups = function (
   )
 }
 
+// eslint-disable-next-line max-params
 const areSimilarMidGroups = function (
   groups,
   varianceRatioMean,
@@ -332,10 +335,13 @@ const areSimilarMidGroups = function (
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let collIndex = minIndex + 1; collIndex < maxIndex; collIndex += 1) {
+    // eslint-disable-next-line max-depth
     if (!isSimilarGroup(groups[collIndex], varianceRatioMean)) {
+      // eslint-disable-next-line fp/no-mutation
       invalidMax -= 1
     }
 
+    // eslint-disable-next-line max-depth
     if (invalidMax === -1) {
       return false
     }
