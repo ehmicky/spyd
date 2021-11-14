@@ -12,8 +12,15 @@
 //     - The number of loops is very low
 //     - `stats.rstdev` is very high, i.e. the distribution is very skewed
 //  - This allows `stats.min|max` to be used in reporting as extreme boundaries
-export const getConfidenceInterval = function ({ mean, moe, min, max }) {
-  const meanMin = Math.max(mean - moe, min, 0)
-  const meanMax = Math.min(mean + moe, max)
+export const getConfidenceInterval = function ({
+  mean,
+  moe,
+  envDev,
+  min,
+  max,
+}) {
+  const realMoe = envDev * moe
+  const meanMin = Math.max(mean - realMoe, min, 0)
+  const meanMax = Math.min(mean + realMoe, max)
   return { meanMin, meanMax }
 }

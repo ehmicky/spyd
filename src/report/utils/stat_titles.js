@@ -17,6 +17,7 @@ export const STAT_TITLES = {
   loops: 'Loops',
   repeat: 'Repeat',
   samples: 'Samples',
+  envDev: 'Env dev',
   minLoopDuration: 'Min loop',
   histogram: 'Histogram',
   quantiles: 'Quantiles',

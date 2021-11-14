@@ -19,5 +19,6 @@ export const STAT_KINDS = [
   { name: 'loops', kind: 'count' },
   { name: 'repeat', kind: 'count' },
   { name: 'samples', kind: 'count' },
+  { name: 'envDev', kind: 'count' },
   { name: 'minLoopDuration', kind: 'duration' },
 ]

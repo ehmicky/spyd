@@ -36,6 +36,7 @@ const STAT_NAMES = [
   'loops',
   'repeat',
   'samples',
+  'envDev',
   'minLoopDuration',
 ]
 

@@ -1,4 +1,5 @@
 import { getConfidenceInterval } from './confidence.js'
+import { getEnvDev } from './env_dev/main.js'
 import { getHistogram } from './histogram.js'
 import { getLengthFromLoops } from './length.js'
 import { getMoe, getRmoe } from './moe.js'
@@ -48,7 +49,7 @@ import { getMean } from './sum.js'
 //    important. However, the mean is a far more useful statistic.
 //  - This would create too many statistics for the average, together with the
 //    mean and the median.
-export const computeStats = function (measures) {
+export const computeStats = function (measures, unsortedMeasures) {
   const { outliersMin, outliersMax } = getOutliersPercentages(measures)
   const { minIndex, maxIndex, length } = getLengthFromLoops(
     measures.length,
@@ -72,15 +73,17 @@ export const computeStats = function (measures) {
     bucketCount: HISTOGRAM_SIZE,
   })
 
-  const { stdev, rstdev, moe, rmoe, meanMin, meanMax } = getPrecisionStats({
-    measures,
-    minIndex,
-    maxIndex,
-    length,
-    min,
-    max,
-    mean,
-  })
+  const { stdev, rstdev, moe, rmoe, meanMin, meanMax, envDev } =
+    getPrecisionStats({
+      measures,
+      unsortedMeasures,
+      minIndex,
+      maxIndex,
+      length,
+      min,
+      max,
+      mean,
+    })
 
   return {
     mean,
@@ -97,6 +100,7 @@ export const computeStats = function (measures) {
     quantiles,
     outliersMin,
     outliersMax,
+    envDev,
   }
 }
 
@@ -106,6 +110,7 @@ const HISTOGRAM_SIZE = 1e2
 // Retrieve stats related to `stdev`.
 const getPrecisionStats = function ({
   measures,
+  unsortedMeasures,
   minIndex,
   maxIndex,
   length,
@@ -124,22 +129,23 @@ const getPrecisionStats = function ({
   const variance = getVariance(measures, { minIndex, maxIndex, mean })
   const stdev = getStdev(variance)
   const rstdev = getRstdev(stdev, mean)
+
+  const { envDev } = getEnvDev(unsortedMeasures, {
+    mean,
+    variance,
+    filter: filterOutliers.bind(undefined, min, max),
+  })
+
   const moe = getMoe(stdev, length)
   const rmoe = getRmoe(moe, mean)
-  const { meanMin, meanMax } = getConfidenceInterval({ mean, moe, min, max })
-  return { stdev, rstdev, moe, rmoe, meanMin, meanMax }
-}
-
-// We allow means to be 0 since some tasks might really return always the same
-// measure.
-// We handle those the same way as if all measures were 0s:
-//  - Because this is almost always the case
-//  - Although the contrary is possible in principle if some measures are close
-//    to `Number.EPSILON`
-// We make sure this is only returned after `length` is high enough, since
-// mean might be 0 due to a low sample size
-const getPerfectPrecisionStats = function (mean) {
-  return { stdev: 0, rstdev: 0, moe: 0, rmoe: 0, meanMin: mean, meanMax: mean }
+  const { meanMin, meanMax } = getConfidenceInterval({
+    mean,
+    moe,
+    envDev,
+    min,
+    max,
+  })
+  return { stdev, rstdev, moe, rmoe, meanMin, meanMax, envDev }
 }
 
 // `stdev` might be very imprecise when there are not enough values to compute
@@ -175,3 +181,33 @@ const getPerfectPrecisionStats = function (mean) {
 //       previews have an impact on the next previews.
 //  - Reported
 const MIN_STDEV_LOOPS = 4
+
+// We allow means to be 0 since some tasks might really return always the same
+// measure.
+// We handle those the same way as if all measures were 0s:
+//  - Because this is almost always the case
+//  - Although the contrary is possible in principle if some measures are close
+//    to `Number.EPSILON`
+// We make sure this is only returned after `length` is high enough, since
+// mean might be 0 due to a low sample size
+const getPerfectPrecisionStats = function (mean) {
+  return {
+    stdev: 0,
+    rstdev: 0,
+    moe: 0,
+    rmoe: 0,
+    meanMin: mean,
+    meanMax: mean,
+    envDev: 0,
+  }
+}
+
+// Filter outliers.
+// For sorted `measures`, this is inefficient since outliers are at the
+// start/end so `minIndex|maxIndex` can be used.
+// However, unsorted `unsortedMeasures` cannot do this and require filtering
+// each measure. This cannot be incrementally since outliers thresholds change
+// between samples
+const filterOutliers = function (min, max, value) {
+  return value >= min && value <= max
+}

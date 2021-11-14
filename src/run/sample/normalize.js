@@ -33,11 +33,19 @@ import { sortFloats } from '../../stats/sort.js'
 //  - However, with the unit group "mixed", they do not make sense and are
 //    filtered out
 export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
-  const sampleMeasuresA = normalizeRepeat(sampleMeasures, repeat)
-  sortFloats(sampleMeasuresA)
-  const sampleMedian = getSortedMedian(sampleMeasuresA)
-  const sampleLoops = sampleMeasuresA.length
-  return { sampleMeasures: sampleMeasuresA, sampleMedian, sampleLoops }
+  const sampleUnsortedMeasures = normalizeRepeat(sampleMeasures, repeat)
+  const sampleLoops = sampleUnsortedMeasures.length
+
+  const sampleSortedMeasures = [...sampleUnsortedMeasures]
+  sortFloats(sampleSortedMeasures)
+  const sampleMedian = getSortedMedian(sampleSortedMeasures)
+
+  return {
+    sampleSortedMeasures,
+    sampleUnsortedMeasures,
+    sampleMedian,
+    sampleLoops,
+  }
 }
 
 // The runner measures loops of the task. This retrieve the mean time to execute

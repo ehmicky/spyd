@@ -37,4 +37,6 @@ export const getMaxMeasuresLeft = function (measures) {
 //          be slower
 //        - Note: doubles are often much smaller than 25 bytes when JSON
 //          serialized
-export const MAX_MEASURES = 1e7
+// We also divide this number by 2 since measures are added to 2 arrays
+// `measures` and `unsortedMeasures`
+export const MAX_MEASURES = 5e6

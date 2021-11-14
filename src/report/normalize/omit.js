@@ -70,6 +70,7 @@ const DEBUG_STATS_PROPS = [
   'samples',
   'loops',
   'repeat',
+  'envDev',
   'minLoopDuration',
 ]
 

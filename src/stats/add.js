@@ -45,7 +45,7 @@ export const getInitialStats = function () {
 //   - histogram[*].end: <=1
 export const addStats = function (
   stats,
-  { measures, sampleLoops, repeatLast },
+  { measures, unsortedMeasures, sampleLoops, repeatLast },
   minLoopDuration,
 ) {
   if (measures.length === 0) {
@@ -57,7 +57,7 @@ export const addStats = function (
     repeatLast,
     minLoopDuration,
   })
-  const computedStats = computeStats(measures)
+  const computedStats = computeStats(measures, unsortedMeasures)
   return { ...countStats, ...computedStats }
 }
 
