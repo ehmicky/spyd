@@ -54,8 +54,16 @@ const getClusterSize = function (_, index) {
 }
 
 // Minimum `groupSize`
-// Thanks to using confidence intervals, we can use all possible groupSizes up
-// to the lowest possible one (2)
+// A higher value lowers accuracy:
+//  - The result `envDev` will be lower than the real value
+//  - This is because more `samples` are required to reach the `period` with
+//    the highest `varianceRatio`
+//  - This means multiplying this constant by `n` requires running the benchmark
+//    `n` times longer to get the same `envDev`
+// A lower value lowers precision:
+//  - This is because groups with a lower groupSize are less precise
+// In our case, `envDev` is already generally too low, so we favor accuracy over
+// precision.
 const MIN_GROUP_SIZE = 2
 // A lower value:
 //  - Is slower to compute
