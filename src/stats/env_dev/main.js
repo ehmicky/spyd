@@ -5,7 +5,24 @@ import { computeGroups } from './groups.js'
 import { getOptimalVarianceRatio } from './optimal.js'
 import { getGroupsCount, getClusterSizes } from './size.js'
 
-// Compute `envDev`
+// Margin of errors depend on the central limit theorem which requires each
+// sample value to be independent from each other.
+// However, it is common for array of measures not to be fully independent.
+//  - In particular, for nearby measures to be more likely to have similar
+//    values
+// When this happens, aggregating nearby measures removes this dependency.
+// This logic guesses the optimal aggregation size (`envDev`):
+//  - High enough to make measures independent from each other
+//  - But still as low as possible to keep the sample size high
+// This works by grouping the `array` with different `envDev` and comparing the
+// resulting variance with what it is expected to be, if the resulting array
+// measures were fully independent.
+// Consumers can use the result (`envDev`) by multiplying it to `stdev` before
+// performing statistical computation that rely on measures independence such
+// as margin of errors.
+// This requires `array` to be at least as high as the optimal aggregation size:
+//  - I.e. the `precision` configuration property should be high enough.
+// The time complexity is `O(log n)` but very close to `O(n)`
 export const getEnvDev = function (
   array,
   {
