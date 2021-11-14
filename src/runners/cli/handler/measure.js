@@ -1,4 +1,4 @@
-import execa from 'execa'
+import { execa, execaCommand } from 'execa'
 import now from 'precise-now'
 
 // `beforeAll` and `afterAll`
@@ -81,7 +81,7 @@ const spawnProcesses = async function (command, { repeat, env, shell }) {
 //  - Adding the logic to the command internal logic
 const spawnProcess = async function (command, { env, shell }) {
   if (shell === 'none') {
-    return await execa.command(command, { ...EXECA_OPTIONS, env })
+    return await execaCommand(command, { ...EXECA_OPTIONS, env })
   }
 
   await execa(command, { ...EXECA_OPTIONS, env, shell })

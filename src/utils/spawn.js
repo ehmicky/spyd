@@ -1,4 +1,4 @@
-import execa from 'execa'
+import { execa } from 'execa'
 
 // Spawn a child process
 // We use `preferLocal: true` so that locally installed binaries can be used.
