@@ -33,6 +33,12 @@ import { getGroupsCount, getClusterSizes } from './size.js'
 //     - This is also dependent on time
 // Due to each of those being roughly normal, the resulting distribution tends
 // to be lognormal.
+// The environment variation can have many causes:
+//  - Small changes due to OS optimization and caching
+//  - Bigger temporary slowdowns due to recurring OS background processes
+//  - Temporary slowdowns due to other programs on the machine either:
+//     - Left in background
+//     - Interacted with by user while benchmark is running
 // The environment also depends on some global state which can arbitrarly change
 //  - For example: OS upgrades, different machines, etc.
 //  - This cannot be fixed with `envDev` but instead by:
