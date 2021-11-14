@@ -5,12 +5,13 @@ import { computeGroups } from './groups.js'
 import { getOptimalVarianceRatio } from './optimal.js'
 import { getGroupsCount, getClusterSizes } from './size.js'
 
+// Compute `envDev`
 export const getEnvDev = function (
   array,
   {
     mean = getMean(array),
     variance = getVariance(array, { mean }),
-    filter = returnTrue,
+    filter = defaultFilter,
   } = {},
 ) {
   const groupsCount = getGroupsCount(array.length)
@@ -37,7 +38,7 @@ export const getEnvDev = function (
   return { envDev, groups }
 }
 
-const returnTrue = function () {
+const defaultFilter = function () {
   return true
 }
 
