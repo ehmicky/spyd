@@ -30,8 +30,7 @@ export const getEnvDev = function (
     return { envDev: MIN_ENV_DEV, groups: [] }
   }
 
-  const meanRatio = computeMeanRatio(groups)
-  const envDev = Math.sqrt(meanRatio)
+  const envDev = computeEnvDev(groups)
   return { envDev, groups }
 }
 
@@ -39,12 +38,18 @@ const returnTrue = function () {
   return true
 }
 
+// Retrieve the number of groups to compute.
+// Groups are divided into clusters of elements.
+// Each group has `CLUSTER_FACTOR` more elements per cluster than the previous
+// one.
 const getGroupsCount = function (length) {
   return Math.floor(
     Math.log(length / MIN_GROUP_SIZE) / Math.log(CLUSTER_FACTOR),
   )
 }
 
+// Retrieve the `clusterSize`, i.e. number of elements per cluster, of each
+// group.
 const getClusterSizes = function (groupsCount) {
   return Array.from({ length: groupsCount }, getClusterSize)
 }
@@ -57,7 +62,6 @@ const getClusterSize = function (_, index) {
 // A higher value lowers accuracy:
 //  - The result `envDev` will be lower than the real value
 //  - This is because more `array` elements are required to reach the `period`
-//    with the highest `varianceRatio`
 //  - This means multiplying this constant by `n` requires running the benchmark
 //    `n` times longer to get the same `envDev`
 // A lower value lowers precision:
@@ -66,12 +70,16 @@ const getClusterSize = function (_, index) {
 //    is added
 //     - This is because the last group are less precise.
 //     - Also, new groups generally have higher `varianceRatio` if the `period`
-//       has not reached yet, so each new group will make `envDev` increase
+//       has not been reached yet, so each new group will make `envDev` increase
 //       until it reaches its optimal value.
-// In our case, `envDev` is already generally too low, so we favor accuracy over
+// In general, `envDev` tends to be generally too low, so we favor accuracy over
 // precision.
-// However, this does mean `envDev` tends to vary quite a lot between runs.
+// However, this does mean `envDev` tends to vary quite a lot between different
+// `array`.
 const MIN_GROUP_SIZE = 2
+
+// Each group has `CLUSTER_FACTOR` more elements per cluster than the previous
+// one.
 // A lower value:
 //  - Is slower to compute
 //     - Using `CLUSTER_FACTOR ** n` divides the time complexity by `sqrt(n)`
@@ -80,13 +88,17 @@ const MIN_GROUP_SIZE = 2
 //  - Leads to much poorer accuracy and precision when the `period` is close to
 //    the `array.length`
 //     - Specifically when `period` > `array.length` / (CLUSTER_FACTOR ** 2)
-// We must also ensure that CLUSTER_FACTOR ** MAX_ARGUMENTS >= MAX_SAMPLES
+// We must also ensure that `CLUSTER_FACTOR ** MAX_ARGUMENTS >= MAX_SAMPLES`
 //  - MAX_ARGUMENTS is the maximum number of arguments to Math.max(): 123182
 //  - MAX_SAMPLES is the maximum number of array elements: 123182
 //  - Otherwise, `Math.max(...groups)` would crash
 // Using an integer >= 2 allows several implementation performance optimizations
 export const CLUSTER_FACTOR = 2
 
+// For each group, slice `array` into several clusters containing exactly
+// `clusterSize` elements. Each group has a specific `clusterSize`.
+// Then, sum the elements of each cluster and compute the variance of all
+// clusters within each group.
 const computeGroups = function ({
   array,
   clusterSizes,
@@ -95,13 +107,14 @@ const computeGroups = function ({
   filter,
 }) {
   const groups = getInitGroups(clusterSizes, mean)
-  const length = iterateOnGroups({ groups, array, filter })
-  const filteredGroupsCount = getGroupsCount(length)
+  const filteredLength = iterateOnGroups({ groups, array, filter })
+  const filteredGroupsCount = getGroupsCount(filteredLength)
   return groups
     .slice(0, filteredGroupsCount)
-    .map((group) => getFinalGroup(group, length, variance))
+    .map((group) => getFinalGroup(group, filteredLength, variance))
 }
 
+// Initialize `groups`.
 // The final `clusterSize` is a performance optimization so that the actual last
 // group can assign `parentGroup.sum` without checking if it is `undefined`.
 const getInitGroups = function (clusterSizes, mean) {
@@ -109,6 +122,7 @@ const getInitGroups = function (clusterSizes, mean) {
   return clusterSizesA.map((clusterSize) => getInitGroup(clusterSize, mean))
 }
 
+// `groupMean` is the mean of all clusters of this group
 const getInitGroup = function (clusterSize, mean) {
   const groupMean = mean * clusterSize
   return { clusterSize, groupMean, sum: 0, deviationSum: 0 }
@@ -156,47 +170,72 @@ const iterateOnGroups = function ({
 /* eslint-enable fp/no-mutation, fp/no-let, fp/no-loops, no-param-reassign,
    max-depth, no-continue */
 
-// `varianceRatio` follows a chi-squared distribution with `groupSize - 1`
-// degrees of freedom
-//   - `varianceMin|varianceMax` confidence interval is computed accordingly
+// Compute the `varianceRatio` of each group.
+//  - This is the ratio between what the clusters variance:
+//     - Actually is (`groupVariance`)
+//     - And should be (`expectedVariance`), if the `array` elements were fully
+//       independent from each other
+//  - In other words, this computes the amount of dependence of `array` elements
+//    with each other.
 // We purposely use variances and not standard deviations:
-//   - Standard deviation estimation has a slight bias when the size is low
-//     See https://en.wikipedia.org/wiki/Unbiased_estimation_of_standard_deviation
-//   - This would be important here since bigger groups would be more likely to
-//     be selected
+//  - Standard deviation estimation has a slight bias when the size is low.
+//    See https://en.wikipedia.org/wiki/Unbiased_estimation_of_standard_deviation
+//  - This would be important here since bigger groups would be more likely to
+//    be selected
 // However, we return the final ratio as a standard deviation:
-//   - Since it is easier to relate to for humans
-//   - Even though it has a slight bias if the group sizes were low because:
-//      - The bias is:
-//         - Smaller when multiple groups have been selected
-//         - Smaller when selected groups have a higher size
-//         - Small even in none of the above applies
-//      - Correcting the bias for standard deviations would create a bias for
-//        variances
-//         - Instead, consumers can correct this bias themselves, if needed
-//           (which is most likely not the case)
-//      - This is simpler implementation-wise
-// `varianceRatio` is:
-//  - accurate for any `groupSize`, i.e. its average value is correct
-//  - imprecise with lower `groupSize`, i.e. its confidence interval is wider
-// We take the imprecision into account, so that groups of low `groupSize` are
-// not picked more often than they should.
+//  - Since it is easier to relate to for humans
+//  - Even though it has a slight bias if the group sizes were low because:
+//     - The bias is:
+//        - Smaller when multiple groups have been selected
+//        - Smaller when selected groups have a higher size
+//        - Small even in none of the above applies
+//     - Correcting the bias for standard deviations would create a bias for
+//       variances
+//        - Instead, consumers can correct this bias themselves, if needed
+//          (which is most likely not the case)
+//     - This is simpler implementation-wise
+// In general, `varianceRatio` increases as `clusterSize` increases up until a
+// point, which we call the `period`.
+//  - The `varianceRatio` for that `period` is the value we want to find and
+//    return as `envDev`.
 const getFinalGroup = function (
   { clusterSize, deviationSum },
-  length,
+  filteredLength,
   variance,
 ) {
-  const groupSize = Math.floor(length / clusterSize)
+  const groupSize = Math.floor(filteredLength / clusterSize)
   const groupVariance = deviationSum / (groupSize - 1)
   const expectedVariance = variance * clusterSize
   const varianceRatio = groupVariance / expectedVariance
+  const { varianceRatioMin, varianceRatioMax } = getConfidenceInterval(
+    groupSize,
+    groupVariance,
+    expectedVariance,
+  )
+  return { varianceRatioMin, varianceRatio, varianceRatioMax }
+}
+
+// `varianceRatio` does not have any accuracy bias, for any `groupSize`
+//  - i.e. its average value is correct
+// However, it is imprecise:
+//  - We compute the confidence interval `varianceRatioMin|Max`
+//  - Groups with a lower `groupSize` are less precise.
+//     - We take this into account, so that groups of low `groupSize` are not
+//       picked more often than they should.
+//  - This follows a chi-squared distribution with `groupSize - 1` degrees of
+//    freedom
+const getConfidenceInterval = function (
+  groupSize,
+  groupVariance,
+  expectedVariance,
+) {
   const varianceMin =
     groupVariance * getChiSquaredValue(groupSize, SIGNIFICANCE_LEVEL_MIN)
   const varianceRatioMin = varianceMin / expectedVariance
   const varianceMax =
     groupVariance * getChiSquaredValue(groupSize, SIGNIFICANCE_LEVEL_MAX)
   const varianceRatioMax = varianceMax / expectedVariance
-  return { varianceRatioMin, varianceRatio, varianceRatioMax }
+  return { varianceRatioMin, varianceRatioMax }
 }
 
 // The `varianceRatio` tends to increase with lower `groupSize`
@@ -241,7 +280,7 @@ const getFinalGroup = function (
 //   - We only look for contiguous groups with higher `groupSize`s
 //      - Because groups with lower `groupSize` do not improve accuracy nor
 //        precision
-const computeMeanRatio = function (groups) {
+const computeEnvDev = function (groups) {
   const varianceRatios = groups.map(getGroupVarianceRatio)
   const maxVarianceRatio = Math.max(...varianceRatios)
   const maxIndex = varianceRatios.indexOf(maxVarianceRatio)
@@ -250,7 +289,8 @@ const computeMeanRatio = function (groups) {
     varianceRatios,
     maxIndex,
   )
-  return Math.max(varianceRatioMean, MIN_ENV_DEV)
+  const envDevSquared = Math.max(varianceRatioMean, MIN_ENV_DEV)
+  return Math.sqrt(envDevSquared)
 }
 
 const getGroupVarianceRatio = function ({ varianceRatio }) {
@@ -320,12 +360,12 @@ const isValidGroup = function (
   )
 }
 
-// All varianceRatios might be <1 if either:
-//   - The number of elements is smaller than CLUSTER_FACTOR * MIN_GROUP_SIZE,
-//     i.e. no groups can be used
-//   - When the distribution measures are fully independent from each other
-//   - In some rare cases with odd distributions
-// In those cases, we default to returning 1
+// Minimum value, returned when:
+//  - The number of elements is smaller than CLUSTER_FACTOR * MIN_GROUP_SIZE,
+//    i.e. no groups can be used
+//  - All varianceRatios are very low due to either:
+//     - The `array` elements being fully independent from each other
+//     - Some odd distribution, in some rare cases
 const MIN_ENV_DEV = 1
 
 // Significance level when computing the confidence interval of each group's
