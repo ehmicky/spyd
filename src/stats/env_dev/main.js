@@ -61,7 +61,8 @@ const getClusterSize = function (_, index) {
 // Minimum `groupSize`
 // A higher value lowers accuracy:
 //  - The result `envDev` will be lower than the real value
-//  - This is because more `array` elements are required to reach the `period`
+//  - This is because more `array` elements are required to reach the "optimal"
+//    size.
 //  - This means multiplying this constant by `n` requires running the benchmark
 //    `n` times longer to get the same `envDev`
 // A lower value lowers precision:
@@ -69,9 +70,9 @@ const getClusterSize = function (_, index) {
 //  - This is especially visible in preview mode, especially when a new group
 //    is added
 //     - This is because the last group are less precise.
-//     - Also, new groups generally have higher `varianceRatio` if the `period`
-//       has not been reached yet, so each new group will make `envDev` increase
-//       until it reaches its optimal value.
+//     - Also, new groups generally have higher `varianceRatio` if the "optimal"
+//       size has not been reached yet, so each new group will make `envDev`
+//       increase until it reaches its optimal value.
 // In general, `envDev` tends to be generally too low, so we favor accuracy over
 // precision.
 // However, this does mean `envDev` tends to vary quite a lot between different
@@ -85,9 +86,10 @@ const MIN_GROUP_SIZE = 2
 //     - Using `CLUSTER_FACTOR ** n` divides the time complexity by `sqrt(n)`
 //  - Leads to an overall slightly worse accuracy
 // A higher value:
-//  - Leads to much poorer accuracy and precision when the `period` is close to
-//    the `array.length`
-//     - Specifically when `period` > `array.length` / (CLUSTER_FACTOR ** 2)
+//  - Leads to much poorer accuracy and precision when the "optimal" size is
+//    close to the `array.length`
+//     - Specifically when that "optimal" size is higher than
+//       `array.length` / (CLUSTER_FACTOR ** 2)
 // We must also ensure that `CLUSTER_FACTOR ** MAX_ARGUMENTS >= MAX_SAMPLES`
 //  - MAX_ARGUMENTS is the maximum number of arguments to Math.max(): 123182
 //  - MAX_SAMPLES is the maximum number of array elements: 123182
@@ -194,10 +196,6 @@ const iterateOnGroups = function ({
 //        - Instead, consumers can correct this bias themselves, if needed
 //          (which is most likely not the case)
 //     - This is simpler implementation-wise
-// In general, `varianceRatio` increases as `clusterSize` increases up until a
-// point, which we call the `period`.
-//  - The `varianceRatio` for that `period` is the value we want to find and
-//    return as `envDev`.
 const getFinalGroup = function (
   { clusterSize, deviationSum },
   filteredLength,
@@ -239,47 +237,32 @@ const getConfidenceInterval = function (
 }
 
 // The `varianceRatio` tends to increase with lower `groupSize`
-//   - It eventually somewhat stabilizes after reaching a maximum value
+//   - It eventually somewhat stabilizes at a specific `groupSize`
+//     (the "optimal" size) after reaching a maximum value
 //   - That maximum value is the one we want to return
-//   - The `groupSize` which tends to give it is "optimal"
-// However, the population's "optimal" `groupSize` might differ from the
-// sample's
+// However, the population's "optimal" size might differ from the sample's
 //   - i.e. it must be estimated with both accuracy and precision
-// Groups with `groupSize`:
-//   - Higher than the "optimal" one have lower `varianceRatio`
-//      - i.e. should be avoided as they would return inaccurate results
-//      - Therefore, we use a collection of groups with the highest
-//        `varianceRatio`s
-//   - Lower than the "optimal" one are less precise
-//      - i.e. should be avoided as they would make the return value less
-//        precise as well
-//      - Therefore, we only use the group with the maximum `groupSize` in that
-//        collection
-//      - In particular, we do not use an average of several of likely "optimal"
-//        groups
-// Since `array` are an estimate of the population, so is each group's
-// variance
-//   - Each group's variance's estimation follows a chi-squared distribution
-//   - Therefore, the sample's group with the maximum `varianceRatio` might be
-//     due to the imprecision of that group's variance
-// We correct this by finding a collection of contiguous groups with maximum
-// `varianceRatio` instead
-//   - Each group in the collection must have roughly the same `variationRatio`,
-//     after taking their precision into account
-//      - We compute the collection's mean `variationRatio` and ensure it is
-//        within each group's confidence interval
-//   - We allow a small percentage of groups to not fit, based on the confidence
-//     interval
-//      - This ensures changing the CLUSTER_FACTOR does not change the result
-//        too much
-//      - However, we require each end of the collection of groups to fit,
-//        since having wrong ends does not make sense
-// We try to find the largest collection with contiguous groups:
-//   - We look for contiguous groups with the same `varianceRatio` as the
-//     maximum `varianceRatio`
-//   - We only look for contiguous groups with higher `groupSize`s
-//      - Because groups with lower `groupSize` do not improve accuracy nor
-//        precision
+// We want to ignore groups with a `groupSize` either:
+//   - Higher than the "optimal" one since they have lower `varianceRatio` and
+//     would return inaccurate results
+//   - Lower than the "optimal" one since they are less precise and would make
+//     the return value less precise as well
+//      - In particular, their lack of precision makes them more likely to
+//        contain both very low and high `varianceRatios`
+//      - Therefore, the sample's group with the maximum `varianceRatio` might
+//        be due to the imprecision of that group
+// We fix this by:
+//   - Finding the group with the highest `varianceRatio`
+//   - Finding any contiguous lower groups with roughly the same `varianceRatio`
+//      - According to chi-squared distribution confidence intervals
+//      - We allow a small percentage of groups to not fit
+//         - This ensures changing the CLUSTER_FACTOR does not change the result
+//           too much
+//         - However, we require each end of the collection of groups to fit,
+//           since having wrong ends does not make sense
+//      - We do not look for contiguous higher groups since they do not improve
+//        accuracy nor precision
+//   - Taking their arithmetic mean
 const computeEnvDev = function (groups) {
   const varianceRatios = groups.map(getGroupVarianceRatio)
   const maxVarianceRatio = Math.max(...varianceRatios)
@@ -371,7 +354,8 @@ const MIN_ENV_DEV = 1
 // Significance level when computing the confidence interval of each group's
 // variance.
 // A lower value decrease precision and accuracy.
-// A higher value decreases accuracy when `period` is close to `array.length`
+// A higher value decreases accuracy when the "optimal" size is close to
+// `array.length`
 const SIGNIFICANCE_LEVEL = 0.95
 const SIGNIFICANCE_LEVEL_INV = 1 - SIGNIFICANCE_LEVEL
 const SIGNIFICANCE_LEVEL_MIN = (1 - SIGNIFICANCE_LEVEL) / 2
