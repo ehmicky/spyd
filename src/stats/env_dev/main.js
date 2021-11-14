@@ -255,11 +255,6 @@ const getConfidenceInterval = function (
 //   - Finding the group with the highest `varianceRatio`
 //   - Finding any contiguous lower groups with roughly the same `varianceRatio`
 //      - According to chi-squared distribution confidence intervals
-//      - We allow a small percentage of groups to not fit
-//         - This ensures changing the CLUSTER_FACTOR does not change the result
-//           too much
-//         - However, we require each end of the collection of groups to fit,
-//           since having wrong ends does not make sense
 //      - We do not look for contiguous higher groups since they do not improve
 //        accuracy nor precision
 //   - Taking their arithmetic mean
@@ -280,6 +275,10 @@ const getGroupVarianceRatio = function ({ varianceRatio }) {
   return varianceRatio
 }
 
+// Look for groups contiguous to the group at `maxIndex` with the same
+// `varianceRatio`, according to confidence intervals, then take their mean.
+// This uses imperative logic for performance reasons.
+//  - This includes performing the mean incrementally
 const getVarianceRatioMean = function (groups, varianceRatios, maxIndex) {
   const startIndex = 0
   // eslint-disable-next-line fp/no-let
@@ -290,7 +289,7 @@ const getVarianceRatioMean = function (groups, varianceRatios, maxIndex) {
     const collLength = maxIndex + 1 - minIndex
     const varianceRatioMean = varianceRatioSum / collLength
 
-    if (isValidColl(groups, varianceRatioMean, maxIndex, minIndex)) {
+    if (areSimilarGroups(groups, varianceRatioMean, maxIndex, minIndex)) {
       return varianceRatioMean
     }
 
@@ -301,15 +300,27 @@ const getVarianceRatioMean = function (groups, varianceRatios, maxIndex) {
   return groups[maxIndex].varianceRatio
 }
 
-const isValidColl = function (groups, varianceRatioMean, maxIndex, minIndex) {
+// Check whether the group has roughly the same `varianceRatio` as the other
+// groups of the collection.
+// We allow a small percentage of groups to not fit (`invalidMax`):
+//  - This ensures changing the `CLUSTER_FACTOR` does not change the result too
+//    much
+//  - However, we require each end of the collection of groups to fit, since
+//    having wrong ends does not make sense
+const areSimilarGroups = function (
+  groups,
+  varianceRatioMean,
+  maxIndex,
+  minIndex,
+) {
   return (
-    isValidGroup(groups[maxIndex], varianceRatioMean) &&
-    isValidGroup(groups[minIndex], varianceRatioMean) &&
-    isValidMidGroups(groups, varianceRatioMean, maxIndex, minIndex)
+    isSimilarGroup(groups[maxIndex], varianceRatioMean) &&
+    isSimilarGroup(groups[minIndex], varianceRatioMean) &&
+    areSimilarMidGroups(groups, varianceRatioMean, maxIndex, minIndex)
   )
 }
 
-const isValidMidGroups = function (
+const areSimilarMidGroups = function (
   groups,
   varianceRatioMean,
   maxIndex,
@@ -321,7 +332,7 @@ const isValidMidGroups = function (
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
   for (let collIndex = minIndex + 1; collIndex < maxIndex; collIndex += 1) {
-    if (!isValidGroup(groups[collIndex], varianceRatioMean)) {
+    if (!isSimilarGroup(groups[collIndex], varianceRatioMean)) {
       invalidMax -= 1
     }
 
@@ -333,7 +344,8 @@ const isValidMidGroups = function (
   return true
 }
 
-const isValidGroup = function (
+// Check confidence interval of `varianceRatio` against a specific group
+const isSimilarGroup = function (
   { varianceRatioMin, varianceRatioMax },
   varianceRatioMean,
 ) {
