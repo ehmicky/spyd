@@ -2,8 +2,9 @@ import { getQuantile } from '../quantile.js'
 import { getMean } from '../sum.js'
 import { getVariance } from '../variance.js'
 
-import { getEnvDev, CLUSTER_FACTOR } from './main.js'
+import { getEnvDev } from './main.js'
 import { getSamples } from './samples.js'
+import { CLUSTER_FACTOR } from './size.js'
 
 const sortNumbers = function (numA, numB) {
   return numA - numB
