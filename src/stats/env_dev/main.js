@@ -39,6 +39,14 @@ import { getGroupsCount, getClusterSizes } from './size.js'
 //  - Temporary slowdowns due to other programs on the machine either:
 //     - Left in background
 //     - Interacted with by user while benchmark is running
+// `envDev` is only a best effort. The environment variation is hard to measure
+// precisely because:
+//  - Its frequency is hard to predict: it does not follow clear patterns, and
+//    is partially user-driven
+//  - Its amplitude is variable: it alternates between periods of high and low
+//    precision
+//  - Its amplitude is unbounded: it can be arbitrarily high
+//  - It continuously shifts
 // The environment also depends on some global state which can arbitrarly change
 //  - For example: OS upgrades, different machines, etc.
 //  - This cannot be fixed with `envDev` but instead by:
