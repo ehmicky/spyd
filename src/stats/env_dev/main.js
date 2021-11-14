@@ -23,6 +23,25 @@ import { getGroupsCount, getClusterSizes } from './size.js'
 // This requires `array` to be at least as high as the optimal aggregation size:
 //  - I.e. the `precision` configuration property should be high enough.
 // The time complexity is `O(log n)` but very close to `O(n)`
+// Measures dependency is common when benchmarking tasks.
+//  - In principle, the duration of each task's measure is independent.
+//  - However, that duration is multipled by the environment it is running on,
+//    both hardware and software
+//     - This is stateful, i.e. dependent on time
+//  - It is also multiplied by engine optimization
+//     - I.e. running a task more tends to make it fast
+//     - This is also dependent on time
+// Due to each of those being roughly normal, the resulting distribution tends
+// to be lognormal.
+// The environment also depends on some global state which can arbitrarly change
+//  - For example: OS upgrades, different machines, etc.
+//  - This cannot be fixed with `envDev` but instead by:
+//     - Using different `system` configuration property to signify environment
+//       differences
+//     - Keeping the machine load as constant as possible
+//        - During the run, e.g. by not using other applications while waiting
+//          for the benchmark to end
+//        - Between runs, e.g. by using some CI or container
 export const getEnvDev = function (
   array,
   {
