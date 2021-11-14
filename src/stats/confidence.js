@@ -12,6 +12,8 @@
 //     - The number of loops is very low
 //     - `stats.rstdev` is very high, i.e. the distribution is very skewed
 //  - This allows `stats.min|max` to be used in reporting as extreme boundaries
+// This takes into account both the statistical variance (`moe`) and the
+// environmental one (`envDev`).
 export const getConfidenceInterval = function ({
   mean,
   moe,
