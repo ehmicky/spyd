@@ -58,8 +58,8 @@ import { getStudentTValue } from './critical_values/student_t.js'
 export const getMoe = function (stdev, length) {
   const standardError = stdev / Math.sqrt(length)
   const tvalue = getStudentTValue(length - 1)
-  const marginOfError = standardError * tvalue
-  return marginOfError
+  const moe = standardError * tvalue
+  return moe
 }
 
 // Retrieve margin of error relative to the mean.
