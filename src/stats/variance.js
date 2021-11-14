@@ -1,3 +1,14 @@
+// Retrieve all variance-related stats.
+// Rstdev is stdev relative to the mean.
+// This is more useful than stdev when comparing different combinations, or when
+// targetting a specific precision threshold.
+export const getVarianceStats = function (array, { minIndex, maxIndex, mean }) {
+  const variance = getVariance(array, { minIndex, maxIndex, mean })
+  const stdev = Math.sqrt(variance)
+  const rstdev = stdev / mean
+  return { variance, stdev, rstdev }
+}
+
 // Retrieve variance of an array of floats (cannot be NaN/Infinity).
 // Array must not be empty.
 // We use the absolute variance, as opposed to making it relative to the mean
@@ -28,16 +39,4 @@ const getSumDeviation = function ({ array, minIndex, maxIndex, mean }) {
   }
 
   return sum
-}
-
-// Retrieve standard deviation
-export const getStdev = function (variance) {
-  return Math.sqrt(variance)
-}
-
-// Retrieve stdev relative to the mean.
-// This is more useful than stdev when comparing different combinations, or when
-// targetting a specific precision threshold.
-export const getRstdev = function (stdev, mean) {
-  return stdev / mean
 }

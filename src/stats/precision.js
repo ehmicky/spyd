@@ -1,7 +1,7 @@
 import { getConfidenceInterval } from './confidence.js'
 import { getEnvDev } from './env_dev/main.js'
 import { getMoe, getRmoe } from './moe.js'
-import { getVariance, getStdev, getRstdev } from './variance.js'
+import { getVarianceStats } from './variance.js'
 
 // Retrieve stats related to `stdev` and precision.
 export const getPrecisionStats = function ({
@@ -22,9 +22,11 @@ export const getPrecisionStats = function ({
     return getPerfectPrecisionStats(mean)
   }
 
-  const variance = getVariance(measures, { minIndex, maxIndex, mean })
-  const stdev = getStdev(variance)
-  const rstdev = getRstdev(stdev, mean)
+  const { variance, stdev, rstdev } = getVarianceStats(measures, {
+    minIndex,
+    maxIndex,
+    mean,
+  })
 
   const { envDev } = getEnvDev(unsortedMeasures, {
     mean,
