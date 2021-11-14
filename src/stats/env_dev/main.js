@@ -31,6 +31,15 @@ import { getGroupsCount, getClusterSizes } from './size.js'
 //  - It is also multiplied by engine optimization
 //     - I.e. running a task more tends to make it fast
 //     - This is also dependent on time
+// The statistical variation only applies to the duration of the task itself,
+// not to the environment variation nor engine optimization
+//  - I.e. computing the margin of errors without `envDev` is inaccurate
+//  - Also, lowering the statistical margin of error does not reduce the
+//    environment variation nor engine optimization in itself.
+//  - However, a higher sample size does help by:
+//     - Aggregating more different environment performance profiles together
+//       into a single distribution.
+//     - Making unoptimized measures be a smaller percentage of the whole array
 // Due to each of those being roughly normal, the resulting distribution tends
 // to be lognormal.
 // The environment variation can have many causes:
