@@ -5,6 +5,7 @@ import { parseSelectors } from '../../select/parse.js'
 // It is an array of strings "threshold selector" where "threshold" is
 // something like "15%" and "selector" follows the same format as each
 // individual string in the `select` configuration property.
+// Negative values can be used, including "-0", to invert the direction.
 export const parseLimits = function (limit) {
   // eslint-disable-next-line fp/no-mutating-methods
   return limit.map(parseLimit).sort(sortByThreshold)
@@ -40,7 +41,7 @@ const parsePercentage = function (rawPercentage) {
     )
   }
 
-  const higher = threshold > 0
+  const higher = threshold > 0 || Object.is(threshold, 0)
   const thresholdA = Math.abs(threshold) / PERCENTAGE_RATIO
   return { threshold: thresholdA, higher }
 }

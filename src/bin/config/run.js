@@ -32,6 +32,7 @@ Default: false`,
     describe: `Report when the average duration has increased by more than a
 specific percentage such as "50%".
 
+"0%" can be used to report any increase.
 Negative percentages like "-50%" can be used for decreases instead.
 
 The limit can be scoped to specific combinations by appending their identifiers
