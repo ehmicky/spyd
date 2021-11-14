@@ -19,8 +19,8 @@ const samplesCount = 1e3
 
 const realPeriods = new Set([])
 const maxRealPeriodBase = Math.log(realLength) / Math.log(CLUSTER_FACTOR)
-const meanRatiosAccuracies = []
-const meanRatiosRstdevs = []
+const envDevsAccuracies = []
+const envDevsRstdevs = []
 
 // eslint-disable-next-line fp/no-loops
 for (
@@ -50,7 +50,7 @@ for (
 
     realPeriods.add(realPeriod)
 
-    const meanRatiosProps = Array.from({ length: samplesCount }, () => {
+    const envDevsProps = Array.from({ length: samplesCount }, () => {
       const samples = getSamples(
         realLength,
         realPeriod,
@@ -61,10 +61,8 @@ for (
       )
       return getEnvDev(samples)
     })
-    const meanRatios = meanRatiosProps.map(
-      ({ meanStdevRatio }) => meanStdevRatio,
-    )
-    const allGroups = meanRatiosProps.map(({ groups }) =>
+    const envDevs = envDevsProps.map(({ envDev }) => envDev)
+    const allGroups = envDevsProps.map(({ groups }) =>
       // eslint-disable-next-line max-nested-callbacks
       groups.map(({ varianceRatio }) => Math.sqrt(varianceRatio)),
     )
@@ -83,23 +81,22 @@ for (
         return groupMedian
       },
     )
-    const realMeanRatio = Math.max(...groupMedians)
-    const meanRatiosMean = getMean(meanRatios)
-    const meanRatiosMedian = getQuantile(
+    const realEnvDev = Math.max(...groupMedians)
+    const envDevsMean = getMean(envDevs)
+    const envDevsMedian = getQuantile(
       // eslint-disable-next-line fp/no-mutating-methods
-      [...meanRatios].sort(sortNumbers),
+      [...envDevs].sort(sortNumbers),
       // eslint-disable-next-line no-magic-numbers
       0.5,
       {},
     )
-    const meanRatiosRstdev =
-      Math.sqrt(getVariance(meanRatios, { mean: meanRatiosMean })) /
-      meanRatiosMedian
-    const meanRatiosAccuracy = meanRatiosMedian / realMeanRatio
+    const envDevsRstdev =
+      Math.sqrt(getVariance(envDevs, { mean: envDevsMean })) / envDevsMedian
+    const envDevsAccuracy = envDevsMedian / realEnvDev
     // eslint-disable-next-line fp/no-mutating-methods
-    meanRatiosAccuracies.push(meanRatiosAccuracy)
+    envDevsAccuracies.push(envDevsAccuracy)
     // eslint-disable-next-line fp/no-mutating-methods
-    meanRatiosRstdevs.push(meanRatiosRstdev)
+    envDevsRstdevs.push(envDevsRstdev)
   }
 }
 
@@ -110,9 +107,9 @@ console.log(`${[...realPeriods]
   .join(' ')}
 ${
   // eslint-disable-next-line no-magic-numbers
-  meanRatiosAccuracies.map((float) => float.toFixed(2).padStart(5)).join(' ')
+  envDevsAccuracies.map((float) => float.toFixed(2).padStart(5)).join(' ')
 }
 ${
   // eslint-disable-next-line no-magic-numbers
-  meanRatiosRstdevs.map((float) => float.toFixed(2).padStart(5)).join(' ')
+  envDevsRstdevs.map((float) => float.toFixed(2).padStart(5)).join(' ')
 }`)

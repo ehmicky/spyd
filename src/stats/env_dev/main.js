@@ -14,7 +14,7 @@ export const getEnvDev = function (
   const groupsCount = getGroupsCount(samples.length)
 
   if (groupsCount <= 0) {
-    return { meanStdevRatio: MIN_VARIANCE_RATIO, groups: [] }
+    return { envDev: MIN_ENV_DEV, groups: [] }
   }
 
   const clusterSizes = getClusterSizes(groupsCount)
@@ -27,12 +27,12 @@ export const getEnvDev = function (
   })
 
   if (groups.length === 0) {
-    return { meanStdevRatio: MIN_VARIANCE_RATIO, groups: [] }
+    return { envDev: MIN_ENV_DEV, groups: [] }
   }
 
   const meanRatio = computeMeanRatio(groups)
-  const meanStdevRatio = Math.sqrt(meanRatio)
-  return { meanStdevRatio, groups }
+  const envDev = Math.sqrt(meanRatio)
+  return { envDev, groups }
 }
 
 const returnTrue = function () {
@@ -250,7 +250,7 @@ const computeMeanRatio = function (groups) {
     varianceRatios,
     maxIndex,
   )
-  return Math.max(varianceRatioMean, MIN_VARIANCE_RATIO)
+  return Math.max(varianceRatioMean, MIN_ENV_DEV)
 }
 
 const getGroupVarianceRatio = function ({ varianceRatio }) {
@@ -326,7 +326,7 @@ const isValidGroup = function (
 //   - When the distribution measures are fully independent from each other
 //   - In some rare cases with odd distributions
 // In those cases, we default to returning 1
-const MIN_VARIANCE_RATIO = 1
+const MIN_ENV_DEV = 1
 
 // Significance level when computing the confidence interval of each group's
 // variance.
