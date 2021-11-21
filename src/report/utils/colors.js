@@ -1,18 +1,24 @@
+import colorConvert from 'color-convert'
 import colorsOption from 'colors-option'
 
 const chalk = colorsOption()
 const { redBright, level } = chalk
 
+const hslToChalk = function (hue, saturation, lightness) {
+  const [red, green, blue] = colorConvert.hsl.rgb([hue, saturation, lightness])
+  return chalk.rgb(red, green, blue)
+}
+
 // Main color
 const MAIN_HUE = 175
 const MAIN_SATURATION = 75
 const MAIN_LIGHTNESS = 55
-const mainColor = chalk.hsl(MAIN_HUE, MAIN_SATURATION, MAIN_LIGHTNESS)
+const mainColor = hslToChalk(MAIN_HUE, MAIN_SATURATION, MAIN_LIGHTNESS)
 
 // Gray shade.
 // Bright enough to be accessible
 const GRAY_LIGHTNESS = 55
-const grayColor = chalk.hsl(0, 0, GRAY_LIGHTNESS)
+const grayColor = hslToChalk(0, 0, GRAY_LIGHTNESS)
 
 export const titleColor = mainColor.bold
 export const subtitleColor = mainColor
@@ -28,7 +34,7 @@ export const suffixColor = grayColor
 export const graphGradientColor = function (percentage) {
   const percentageA = level < 3 ? 0 : percentage
   const lightness = MAX_GRAPH_LIGHTNESS - percentageA * MAX_GRAPH_SHADE
-  return chalk.hsl(MAIN_HUE, MAIN_SATURATION, lightness)
+  return hslToChalk(MAIN_HUE, MAIN_SATURATION, lightness)
 }
 
 // Choosen to work well in 4, 8 and 24-bit colors
