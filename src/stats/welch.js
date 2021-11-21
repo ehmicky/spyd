@@ -49,7 +49,7 @@ const hasPreciseStdev = function (stdevA, stdevB) {
 // Welch's t-test does not work with extremely low `length`, but those would
 // indicate that diff is most likely imprecise anyway.
 const hasPreciseLoops = function (loopsA, loopsB) {
-  return loopsA > 1 && loopsB > 1
+  return loopsA >= 2 && loopsB >= 2
 }
 
 const welchTTest = function ({ meanA, stdevA, loopsA, meanB, stdevB, loopsB }) {
