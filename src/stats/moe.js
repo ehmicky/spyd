@@ -1,5 +1,11 @@
 import { getStudentTValue } from './critical_values/student_t.js'
 
+// Like `getMoe()` but taking `envDev` into account
+export const getAdjustedMoe = function (stdev, length, envDev) {
+  const adjustedLength = Math.max(Math.round(length / envDev ** 2), MIN_LENGTH)
+  return getMoe(stdev, adjustedLength)
+}
+
 // Retrieve margin of error, relative to the mean
 // The standard error:
 //  - Is the standard deviation that would be obtained by repeating the same

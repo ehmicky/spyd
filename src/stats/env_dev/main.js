@@ -17,9 +17,9 @@ import { getGroupsCount, getClusterSizes } from './size.js'
 // This works by grouping the `array` with different `envDev` and comparing the
 // resulting variance with what it is expected to be, if the resulting array
 // measures were fully independent.
-// Consumers can use the result (`envDev`) by multiplying it to `stdev` before
-// performing statistical computation that rely on measures independence such
-// as margin of errors.
+// Consumers can use the result (`envDev`) by dividing it to `sqrt(loops)`
+// before performing statistical computation that rely on measures independence
+// such as margin of errors.
 // This requires `array` to be at least as high as the optimal aggregation size:
 //  - I.e. the `precision` configuration property should be high enough.
 // The time complexity is `O(log n)` but very close to `O(n)`

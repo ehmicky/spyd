@@ -26,13 +26,11 @@
 //    longer, i.e. have lower precision at the end
 export const getConfidenceInterval = function ({
   mean,
-  moe,
-  envDev,
+  adjustedMoe,
   min,
   max,
 }) {
-  const realMoe = envDev * moe
-  const meanMin = Math.max(mean - realMoe, min, 0)
-  const meanMax = Math.min(mean + realMoe, max)
+  const meanMin = Math.max(mean - adjustedMoe, min, 0)
+  const meanMax = Math.min(mean + adjustedMoe, max)
   return { meanMin, meanMax }
 }
