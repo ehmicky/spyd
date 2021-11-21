@@ -4,7 +4,6 @@ import { getAdjustedMoe, getMoe, getRmoe } from './moe.js'
 import { getVarianceStats } from './variance.js'
 
 // Retrieve stats related to `stdev` and precision.
-// eslint-disable-next-line max-statements
 export const getPrecisionStats = function ({
   measures,
   unsortedMeasures,
@@ -28,21 +27,18 @@ export const getPrecisionStats = function ({
     maxIndex,
     mean,
   })
-
   const envDev = getEnvDev(unsortedMeasures, {
     mean,
     variance,
     filter: filterOutliers.bind(undefined, min, max),
   })
-
-  const adjustedMoe = getAdjustedMoe(stdev, length, envDev)
-  const moe = getMoe(stdev, length)
-  const rmoe = getRmoe(moe, mean)
-  const { meanMin, meanMax } = getConfidenceInterval({
-    mean,
-    adjustedMoe,
+  const { moe, rmoe, meanMin, meanMax } = getMoeStats({
+    stdev,
+    envDev,
+    length,
     min,
     max,
+    mean,
   })
   return { stdev, rstdev, moe, rmoe, meanMin, meanMax, envDev }
 }
@@ -109,4 +105,17 @@ const getPerfectPrecisionStats = function (mean) {
 // between samples
 const filterOutliers = function (min, max, value) {
   return value >= min && value <= max
+}
+
+const getMoeStats = function ({ stdev, envDev, length, min, max, mean }) {
+  const adjustedMoe = getAdjustedMoe(stdev, length, envDev)
+  const moe = getMoe(stdev, length)
+  const rmoe = getRmoe(moe, mean)
+  const { meanMin, meanMax } = getConfidenceInterval({
+    mean,
+    adjustedMoe,
+    min,
+    max,
+  })
+  return { moe, rmoe, meanMin, meanMax }
 }
