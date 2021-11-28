@@ -47,6 +47,20 @@ const startCombination = async function (
   return taskIds
 }
 
+// `after` and `end` are called on exceptions.
+// If an exception happens inside those themselves, it is ignored because it
+// might be due to the runner being in a bad state due to the first exception.
+const silentEndCombination = async function (server) {
+  try {
+    await endCombination(server)
+  } catch {}
+}
+
+// Run the runner-defined end logic
+const endCombination = async function (server) {
+  await sendAndReceive({ event: 'end' }, server)
+}
+
 // Run user-defined logic: `before`, `main`, `after`
 const runMainEvents = async function (args) {
   if (args.stage === 'init') {
@@ -66,6 +80,15 @@ const runMainEvents = async function (args) {
     return endRunDuration(startStat, stats)
   } catch (error) {
     await silentEndCombination(args.server)
+    throw error
+  }
+}
+
+const getCombinationStats = async function (args) {
+  try {
+    return await performMeasureLoop(args)
+  } catch (error) {
+    await silentAfterCombination(args)
     throw error
   }
 }
@@ -92,15 +115,6 @@ const beforeCombination = async function (server) {
   await sendAndReceive({ event: 'before' }, server)
 }
 
-const getCombinationStats = async function (args) {
-  try {
-    return await performMeasureLoop(args)
-  } catch (error) {
-    await silentAfterCombination(args)
-    throw error
-  }
-}
-
 const silentAfterCombination = async function (args) {
   try {
     await afterCombination(args)
@@ -112,18 +126,4 @@ const silentAfterCombination = async function (args) {
 const afterCombination = async function ({ server, previewState }) {
   await updateDescription(previewState, END_DESCRIPTION)
   await sendAndReceive({ event: 'after' }, server)
-}
-
-// `after` and `end` are called on exceptions.
-// If an exception happens inside those themselves, it is ignored because it
-// might be due to the runner being in a bad state due to the first exception.
-const silentEndCombination = async function (server) {
-  try {
-    await endCombination(server)
-  } catch {}
-}
-
-// Run the runner-defined end logic
-const endCombination = async function (server) {
-  await sendAndReceive({ event: 'end' }, server)
 }
