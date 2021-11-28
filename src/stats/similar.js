@@ -1,5 +1,6 @@
 import { getStudentTValue } from './critical_values/student_t.js'
 import { applyImpreciseEnvDev } from './env_dev/apply.js'
+import { getLengthFromLoops } from './length.js'
 
 // Check whether two combinations are too close for their difference to be
 // statistically significant.
@@ -32,27 +33,51 @@ import { applyImpreciseEnvDev } from './env_dev/apply.js'
 //       current combination might make its diff imprecise. However, the
 //       variation is minimal.
 export const haveSimilarMeans = function (
-  { mean: meanA, stdev: stdevA, envDev: envDevA, loops: loopsA },
-  { mean: meanB, stdev: stdevB, envDev: envDevB, loops: loopsB },
+  {
+    mean: meanA,
+    stdev: stdevA,
+    envDev: envDevA,
+    loops: loopsA,
+    outliersMin: outliersMinA,
+    outliersMax: outliersMaxA,
+  },
+  {
+    mean: meanB,
+    stdev: stdevB,
+    envDev: envDevB,
+    loops: loopsB,
+    outliersMin: outliersMinB,
+    outliersMax: outliersMaxB,
+  },
 ) {
   if (hasImpreciseStdev(stdevA, stdevB)) {
     return
   }
 
-  const adjustedLoopsA = adjustLoops(loopsA, envDevA)
-  const adjustedLoopsB = adjustLoops(loopsB, envDevB)
+  const lengthA = getLength({
+    loops: loopsA,
+    envDev: envDevA,
+    outliersMin: outliersMinA,
+    outliersMax: outliersMaxA,
+  })
+  const lengthB = getLength({
+    loops: loopsB,
+    envDev: envDevB,
+    outliersMin: outliersMinB,
+    outliersMax: outliersMaxB,
+  })
 
-  if (hasImpreciseLoops(adjustedLoopsA, adjustedLoopsB)) {
+  if (hasImpreciseLengths(lengthA, lengthB)) {
     return
   }
 
   return welchTTest({
     meanA,
     stdevA,
-    loopsA: adjustedLoopsA,
+    lengthA,
     meanB,
     stdevB,
-    loopsB: adjustedLoopsB,
+    lengthB,
   })
 }
 
@@ -66,9 +91,11 @@ const hasImpreciseStdev = function (stdevA, stdevB) {
   )
 }
 
-// We take `envDev` into account
-const adjustLoops = function (loops, envDev) {
-  return applyImpreciseEnvDev(loops, envDev, ENV_DEV_IMPRECISION)
+// Retrieve the `length` of measures from `loops`.
+// We take `envDev` into account.
+const getLength = function ({ loops, envDev, outliersMin, outliersMax }) {
+  const { length } = getLengthFromLoops(loops, outliersMin, outliersMax)
+  return applyImpreciseEnvDev(length, envDev, ENV_DEV_IMPRECISION)
 }
 
 // A higher value creates more false negatives.
@@ -79,19 +106,26 @@ const ENV_DEV_IMPRECISION = 5
 
 // Welch's t-test does not work with extremely low `length`, but those would
 // indicate that diff is most likely imprecise anyway.
-const hasImpreciseLoops = function (loopsA, loopsB) {
-  return loopsA < 2 || loopsB < 2
+const hasImpreciseLengths = function (lengthA, lengthB) {
+  return lengthA < 2 || lengthB < 2
 }
 
-const welchTTest = function ({ meanA, stdevA, loopsA, meanB, stdevB, loopsB }) {
-  const errorSquaredA = getErrorSquared(stdevA, loopsA)
-  const errorSquaredB = getErrorSquared(stdevB, loopsB)
+const welchTTest = function ({
+  meanA,
+  stdevA,
+  lengthA,
+  meanB,
+  stdevB,
+  lengthB,
+}) {
+  const errorSquaredA = getErrorSquared(stdevA, lengthA)
+  const errorSquaredB = getErrorSquared(stdevB, lengthB)
   const tStat = Math.abs(
     (meanA - meanB) / Math.sqrt(errorSquaredA + errorSquaredB),
   )
   const degreesOfFreedom =
     (errorSquaredA + errorSquaredB) ** 2 /
-    (errorSquaredA ** 2 / (loopsA - 1) + errorSquaredB ** 2 / (loopsB - 1))
+    (errorSquaredA ** 2 / (lengthA - 1) + errorSquaredB ** 2 / (lengthB - 1))
   const tValue = getStudentTValue(Math.floor(degreesOfFreedom))
   return tStat < tValue
 }
