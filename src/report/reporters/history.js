@@ -2,7 +2,7 @@ import { hasSameCombinationIds } from '../../combination/ids.js'
 import { fieldColor } from '../utils/colors.js'
 import { getCombinationTitleColor } from '../utils/combination_title.js'
 import { STATS_SEPARATOR_COLORED } from '../utils/separator.js'
-import { getTables } from '../utils/table.js'
+import { getTables } from '../utils/table/main.js'
 
 // Show `result.history` as a table
 const reportTerminal = function ({ combinations, history, screenWidth }) {

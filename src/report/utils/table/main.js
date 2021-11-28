@@ -1,12 +1,12 @@
 import stringWidth from 'string-width'
 
-import { padString } from './pad.js'
+import { padString } from '../pad.js'
 import {
   TITLE_SEPARATOR,
   TITLE_SEPARATOR_COLORED,
   getColSeparator,
   getColSeparatorColored,
-} from './separator.js'
+} from '../separator.js'
 
 // Serialize a matrix of strings to a table.
 // Rows might have different array lengths, including 0.
