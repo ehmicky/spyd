@@ -1,7 +1,7 @@
 import { getStudentTValue } from './critical_values/student_t.js'
 import { applyImpreciseEnvDev } from './env_dev/apply.js'
 
-// Check whether two combinations are too close for their `diff` to be
+// Check whether two combinations are too close for their difference to be
 // statistically significant.
 // We do this using a mean-based Welch's t-test instead of:
 //  - Student's t-test because it assumes variances are the same
