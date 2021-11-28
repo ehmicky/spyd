@@ -9,7 +9,7 @@ import { loadRawResults } from '../normalize/load.js'
 
 import { addRawResult, removeRawResult, listRawResults } from './results.js'
 
-// Save results so they can be compared or shown later.
+// Save rawResults so they can be compared or shown later.
 // We do not save stopped benchmarks.
 export const addToHistory = async function (rawResult, { save, cwd }) {
   if (!save) {
@@ -20,7 +20,7 @@ export const addToHistory = async function (rawResult, { save, cwd }) {
   await addRawResult(rawResultA, cwd)
 }
 
-// Remove a result
+// Remove a rawResult
 export const removeFromHistory = async function ({ id }, { cwd, force }) {
   if (!(await shouldRemoveFromHistory(force))) {
     return
@@ -40,17 +40,17 @@ const shouldRemoveFromHistory = async function (force) {
   return confirmed
 }
 
-// Get a previous result by delta
+// Get a previous rawResult by delta
 export const getFromHistory = async function (config) {
   const rawResults = await listHistory(config)
   const { rawResult, previous } = await listResultsByDelta(rawResults, config)
   return { rawResult, previous }
 }
 
-// List, sort, filter and normalize all results
+// List, sort, filter and normalize all rawResults
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the history
-//  - Including previous|diff in results preview
+//  - Including previous|diff in rawResults preview
 export const listHistory = async function ({ cwd, select }) {
   const rawResults = await listRawResults(cwd)
   const rawResultsA = loadRawResults(rawResults, select)

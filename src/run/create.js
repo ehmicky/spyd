@@ -2,7 +2,7 @@ import { listCombinations } from '../combination/list/main.js'
 import { listHistory } from '../history/data/main.js'
 import { createSystemInfo } from '../system/create/main.js'
 
-// Create a new result to measure
+// Create a new rawResult to measure
 export const createResult = async function (config) {
   const [combinations, previous] = await Promise.all([
     listCombinations(config),

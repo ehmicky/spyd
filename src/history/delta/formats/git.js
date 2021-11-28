@@ -2,8 +2,8 @@ import { execa } from 'execa'
 
 import { UserError } from '../../../error/main.js'
 
-// Find a result by git reference (commit/branch/tag).
-export const findByGitRef = async function (results, gitRef, cwd) {
+// Find a rawResult by git reference (commit/branch/tag).
+export const findByGitRef = async function (rawResults, gitRef, cwd) {
   const { stdout, stderr, message, failed } = await execa(
     'git',
     [
@@ -21,7 +21,7 @@ export const findByGitRef = async function (results, gitRef, cwd) {
   const timestamp = Number(stdout) * SECS_TO_MSECS
   checkTimestamp({ timestamp, stderr, message, failed, cwd })
 
-  return results.findIndex((result) => result.timestamp >= timestamp)
+  return rawResults.findIndex((rawResult) => rawResult.timestamp >= timestamp)
 }
 
 const SECS_TO_MSECS = 1e3

@@ -1,6 +1,6 @@
 import { validate as isUuid } from 'uuid'
 
-// Deltas can be the `result.id`
+// Deltas can be the `rawResult.id`
 const parseId = function (delta) {
   if (!isUuid(delta)) {
     return

@@ -11,9 +11,9 @@ const parseTag = function (delta) {
   return delta
 }
 
-// If several results match, we use the most recent one because this is what
+// If several rawResults match, we use the most recent one because this is what
 // users most likely want.
-// When none is found in `result.systems`, we try to use `git` instead.
+// When none is found in `rawResult.systems`, we try to use `git` instead.
 const findByTag = async function (rawResults, tagOrBranch, cwd) {
   const index = findIndexReverse(
     rawResults,

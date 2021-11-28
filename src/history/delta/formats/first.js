@@ -1,4 +1,4 @@
-// Delta can be "first" to compare with the least recent result.
+// Delta can be "first" to compare with the least recent rawResult.
 const parseFirst = function (delta) {
   if (delta !== FIRST_DELTA) {
     return
