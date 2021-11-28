@@ -34,8 +34,11 @@ export const isDiffPrecise = function (
   { mean: meanA, stdev: stdevA, loops: loopsA },
   { mean: meanB, stdev: stdevB, loops: loopsB },
 ) {
+  if (!hasPreciseStdev(stdevA, stdevB)) {
+    return false
+  }
+
   return (
-    hasPreciseStdev(stdevA, stdevB) &&
     hasPreciseLoops(loopsA, loopsB) &&
     welchTTest({ meanA, stdevA, loopsA, meanB, stdevB, loopsB })
   )
