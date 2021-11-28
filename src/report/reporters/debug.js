@@ -4,21 +4,23 @@ import { STAT_TITLES } from '../utils/stat_titles.js'
 import { getTables } from '../utils/table.js'
 
 // Debugging reporter only meant for development purpose
-const reportTerminal = function ({ combinations, screenWidth }) {
-  const statNames = getStatNames(combinations)
-  const headerRows = getHeaderRow(statNames)
-  const bodyRows = getBodyRows(combinations, statNames)
-  return getTables([...headerRows, ...bodyRows], screenWidth)
-}
-
-// Retrieve the list of columns, each corresponding to a stat.
-// Empty columns are not displayed.
-const getStatNames = function (combinations) {
-  return STAT_NAMES.filter((statName) => hasStat(combinations, statName))
+const reportTerminal = function (
+  { combinations, screenWidth },
+  {
+    mini = false,
+    sparse = false,
+    header = true,
+    stats: statNames = DEFAULT_STAT_NAMES,
+  },
+) {
+  const statNamesA = getStatNames(combinations, statNames, sparse)
+  const headerRows = getHeaderRow(statNamesA, mini, header)
+  const bodyRows = getBodyRows(combinations, statNamesA)
+  return getTables([...headerRows, ...bodyRows], screenWidth, mini)
 }
 
 // Order is significant as it is displayed in that order.
-const STAT_NAMES = [
+const DEFAULT_STAT_NAMES = [
   'mean',
   'meanMin',
   'meanMax',
@@ -40,16 +42,28 @@ const STAT_NAMES = [
   'minLoopDuration',
 ]
 
+// Retrieve the list of columns, each corresponding to a stat.
+// Empty columns are not displayed.
+const getStatNames = function (combinations, statNames, sparse) {
+  return sparse
+    ? statNames
+    : statNames.filter((statName) => hasStat(combinations, statName))
+}
+
 const hasStat = function (combinations, statName) {
   return combinations.some(
     (combination) => getCell(statName, combination) !== '',
   )
 }
 
-const getHeaderRow = function (statNames) {
+const getHeaderRow = function (statNames, mini, header) {
+  if (!header) {
+    return []
+  }
+
   const firstRow =
     statNames.length === 0 ? [] : ['', ...statNames.map(getHeaderName)]
-  return [firstRow, []]
+  return mini ? [firstRow] : [firstRow, []]
 }
 
 const getHeaderName = function (statName) {
