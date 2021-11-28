@@ -44,9 +44,9 @@ const DURATION_UNITS = {
 }
 /* eslint-enable id-length */
 
-const findByDuration = function (results, duration) {
+const findByDuration = function (rawResults, duration) {
   const timestamp = Date.now() - duration
-  return results.findIndex((result) => result.timestamp >= timestamp)
+  return rawResults.findIndex((rawResult) => rawResult.timestamp >= timestamp)
 }
 
 export const durationFormat = {

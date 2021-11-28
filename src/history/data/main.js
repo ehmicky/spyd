@@ -4,20 +4,20 @@ import { UserError } from '../../error/main.js'
 import { isTtyInput } from '../../report/tty.js'
 import { getDeltaError } from '../delta/error.js'
 import { findByDelta } from '../delta/main.js'
-import { compressResult } from '../normalize/compress.js'
-import { loadResults } from '../normalize/load.js'
+import { compressRawResult } from '../normalize/compress.js'
+import { loadRawResults } from '../normalize/load.js'
 
-import { addResult, removeResult, listResults } from './results.js'
+import { addRawResult, removeRawResult, listRawResults } from './results.js'
 
 // Save results so they can be compared or shown later.
 // We do not save stopped benchmarks.
-export const addToHistory = async function (result, { save, cwd }) {
+export const addToHistory = async function (rawResult, { save, cwd }) {
   if (!save) {
     return
   }
 
-  const resultA = compressResult(result)
-  await addResult(resultA, cwd)
+  const rawResultA = compressRawResult(rawResult)
+  await addRawResult(rawResultA, cwd)
 }
 
 // Remove a result
@@ -26,7 +26,7 @@ export const removeFromHistory = async function ({ id }, { cwd, force }) {
     return
   }
 
-  await removeResult(id, cwd)
+  await removeRawResult(id, cwd)
 }
 
 const shouldRemoveFromHistory = async function (force) {
@@ -42,9 +42,9 @@ const shouldRemoveFromHistory = async function (force) {
 
 // Get a previous result by delta
 export const getFromHistory = async function (config) {
-  const results = await listHistory(config)
-  const { result, previous } = await listResultsByDelta(results, config)
-  return { result, previous }
+  const rawResults = await listHistory(config)
+  const { rawResult, previous } = await listResultsByDelta(rawResults, config)
+  return { rawResult, previous }
 }
 
 // List, sort, filter and normalize all results
@@ -52,24 +52,24 @@ export const getFromHistory = async function (config) {
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in results preview
 export const listHistory = async function ({ cwd, select }) {
-  const results = await listResults(cwd)
-  const resultsA = loadResults(results, select)
-  return resultsA
+  const rawResults = await listRawResults(cwd)
+  const rawResultsA = loadRawResults(rawResults, select)
+  return rawResultsA
 }
 
-const listResultsByDelta = async function (results, { delta, cwd }) {
-  if (results.length === 0) {
+const listResultsByDelta = async function (rawResults, { delta, cwd }) {
+  if (rawResults.length === 0) {
     throw new UserError('No previous results.')
   }
 
-  const index = await findByDelta(results, delta, cwd)
+  const index = await findByDelta(rawResults, delta, cwd)
 
   if (index === -1) {
     const deltaError = getDeltaError(delta)
     throw new UserError(`${deltaError} matches no results.`)
   }
 
-  const result = results[index]
-  const previous = results.slice(0, index)
-  return { result, previous }
+  const rawResult = rawResults[index]
+  const previous = rawResults.slice(0, index)
+  return { rawResult, previous }
 }

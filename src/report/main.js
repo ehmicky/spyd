@@ -15,16 +15,16 @@ import { startReporters, endReporters } from './start_end.js'
 //  - This prevents a clear screen flash at the end, by ensuring slow logic like
 //    the final `reportCompute()` is not performed after the preview ended
 //    after clearing the screen
-export const reportResult = async function (result, previous, config) {
+export const reportResult = async function (rawResult, previous, config) {
   const {
-    result: resultA,
+    result,
     historyInfo,
     config: configA,
-  } = await reportStart(result, previous, config)
+  } = await reportStart(rawResult, previous, config)
 
   try {
     const { programmaticResult, contents } = await reportCompute(
-      resultA,
+      result,
       historyInfo,
       configA,
     )
@@ -36,18 +36,18 @@ export const reportResult = async function (result, previous, config) {
 }
 
 // Start reporting
-export const reportStart = async function (result, previous, config) {
+export const reportStart = async function (rawResult, previous, config) {
   const [historyInfo, configA] = await Promise.all([
-    applySince(result, previous, config),
+    applySince(rawResult, previous, config),
     startReporters(config),
   ])
   const historyInfoA = addNoDimensions(historyInfo)
-  const { result: resultA, config: configB } = normalizeEarlyResult(
-    result,
+  const { result, config: configB } = normalizeEarlyResult(
+    rawResult,
     historyInfoA,
     configA,
   )
-  return { result: resultA, historyInfo: historyInfoA, config: configB }
+  return { result, historyInfo: historyInfoA, config: configB }
 }
 
 // Report preview results in `run` command.

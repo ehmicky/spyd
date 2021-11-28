@@ -1,25 +1,25 @@
 import { resolve } from 'path'
 
-import { getResults, setResults } from './fs.js'
+import { getRawResults, setRawResults } from './fs.js'
 
-export const listResults = async function (cwd) {
+export const listRawResults = async function (cwd) {
   const dir = getDir(cwd)
-  const results = await getResults(dir)
-  return results
+  const rawResults = await getRawResults(dir)
+  return rawResults
 }
 
-export const addResult = async function (result, cwd) {
+export const addRawResult = async function (rawResult, cwd) {
   const dir = getDir(cwd)
-  const results = await getResults(dir)
-  const resultsA = [...results, result]
-  await setResults(dir, resultsA)
+  const rawResults = await getRawResults(dir)
+  const rawResultsA = [...rawResults, rawResult]
+  await setRawResults(dir, rawResultsA)
 }
 
-export const removeResult = async function (id, cwd) {
+export const removeRawResult = async function (id, cwd) {
   const dir = getDir(cwd)
-  const results = await getResults(dir)
-  const resultsA = results.filter((result) => result.id !== id)
-  await setResults(dir, resultsA)
+  const rawResults = await getRawResults(dir)
+  const rawResultsA = rawResults.filter((rawResult) => rawResult.id !== id)
+  await setRawResults(dir, rawResultsA)
 }
 
 const getDir = function (cwd) {

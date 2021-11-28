@@ -22,15 +22,15 @@ import { throwValidationError } from './validate.js'
 //  - If users use `select` to limit how many combinations are being measured,
 //    but still want to see all combinations, they should perform two commands:
 //    first `run` then `show`.
-export const selectResults = function (results, select) {
-  return results
-    .map((result) => selectResult(result, select))
+export const selectRawResults = function (rawResults, select) {
+  return rawResults
+    .map((rawResult) => selectRawResult(rawResult, select))
     .filter(hasCombinations)
 }
 
-const selectResult = function (result, select) {
-  const combinations = filterBySelectors(result.combinations, select)
-  return { ...result, combinations }
+const selectRawResult = function (rawResult, select) {
+  const combinations = filterBySelectors(rawResult.combinations, select)
+  return { ...rawResult, combinations }
 }
 
 export const selectCombinations = function (combinations, select) {

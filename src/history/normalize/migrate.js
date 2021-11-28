@@ -1,10 +1,10 @@
-// Migrate results, i.e. modify them for backward compatibility
-export const migrateResults = function (results) {
-  return MIGRATIONS.reduce(runMigration, results)
+// Migrate rawResults, i.e. modify them for backward compatibility
+export const migrateRawResults = function (rawResults) {
+  return MIGRATIONS.reduce(runMigration, rawResults)
 }
 
-const runMigration = function (results, migration) {
-  return results.map((result) => migration(result))
+const runMigration = function (rawResults, migration) {
+  return rawResults.map((rawResult) => migration(rawResult))
 }
 
 // No backward compatibility migrations defined yet

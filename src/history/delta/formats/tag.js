@@ -14,9 +14,9 @@ const parseTag = function (delta) {
 // If several results match, we use the most recent one because this is what
 // users most likely want.
 // When none is found in `result.systems`, we try to use `git` instead.
-const findByTag = async function (results, tagOrBranch, cwd) {
+const findByTag = async function (rawResults, tagOrBranch, cwd) {
   const index = findIndexReverse(
-    results,
+    rawResults,
     ({ systems: [{ git: { tag, branch } = {} }] }) =>
       tag === tagOrBranch || branch === tagOrBranch,
   )
@@ -25,7 +25,7 @@ const findByTag = async function (results, tagOrBranch, cwd) {
     return index
   }
 
-  return await findByGitRef(results, tagOrBranch, cwd)
+  return await findByGitRef(rawResults, tagOrBranch, cwd)
 }
 
 export const tagFormat = {

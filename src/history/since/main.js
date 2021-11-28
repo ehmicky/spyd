@@ -48,21 +48,21 @@ import { getMergedResult, getSinceResult, mergeCombinations } from './merge.js'
 //    properties.
 //  - Instead, reporters should use logic to retrieve the history of each
 //    combination
-export const applySince = async function (result, previous, { since, cwd }) {
+export const applySince = async function (rawResult, previous, { since, cwd }) {
   if (previous.length === 0) {
-    return { history: [result] }
+    return { history: [rawResult] }
   }
 
   const sinceIndex = await findByDelta(previous, since, cwd)
 
   if (sinceIndex === -1) {
-    const sinceResult = getSinceResult(previous, previous.length - 1, result)
-    return { history: [sinceResult, result], sinceResult }
+    const sinceResult = getSinceResult(previous, previous.length - 1, rawResult)
+    return { history: [sinceResult, rawResult], sinceResult }
   }
 
-  const mergedResult = getMergedResult(previous, sinceIndex, result)
+  const mergedResult = getMergedResult(previous, sinceIndex, rawResult)
   const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
-  const history = [sinceResultA, ...previous.slice(sinceIndex + 1), result]
+  const history = [sinceResultA, ...previous.slice(sinceIndex + 1), rawResult]
   return { mergedResult, history, sinceResult: sinceResultA }
 }
 

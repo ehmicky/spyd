@@ -5,8 +5,8 @@ import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../../error/main.js'
 
-// Retrieve results from filesystem
-export const getResults = async function (dir) {
+// Retrieve rawResults from filesystem
+export const getRawResults = async function (dir) {
   const dataFile = await getDataFile(dir)
 
   if (!(await pathExists(dataFile))) {
@@ -14,14 +14,14 @@ export const getResults = async function (dir) {
   }
 
   const content = await fs.readFile(dataFile, 'utf8')
-  const results = JSON.parse(content)
-  return results
+  const rawResults = JSON.parse(content)
+  return rawResults
 }
 
-// Persist results from filesystem
-export const setResults = async function (dir, results) {
+// Persist rawResults from filesystem
+export const setRawResults = async function (dir, rawResults) {
   const dataFile = await getDataFile(dir)
-  const content = JSON.stringify(results, undefined, 2)
+  const content = JSON.stringify(rawResults, undefined, 2)
   const contentA = flattenArray(content)
   await writeFileAtomic(dataFile, `${contentA}\n`)
 }

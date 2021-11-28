@@ -14,8 +14,8 @@ import { performRun } from './run/main.js'
 // Default command.
 export const run = async function (configFlags) {
   const config = await getConfig('run', configFlags)
-  const { result, programmaticResult } = await performRun(config)
-  await addToHistory(result, config)
+  const { rawResult, programmaticResult } = await performRun(config)
+  await addToHistory(rawResult, config)
   checkLimits(programmaticResult, config)
   return programmaticResult
 }
@@ -23,17 +23,17 @@ export const run = async function (configFlags) {
 // Show a previous result
 export const show = async function (configFlags) {
   const config = await getConfig('show', configFlags)
-  const { result, previous } = await getFromHistory(config)
-  const programmaticResult = await reportResult(result, previous, config)
+  const { rawResult, previous } = await getFromHistory(config)
+  const programmaticResult = await reportResult(rawResult, previous, config)
   return programmaticResult
 }
 
 // Remove a previous result
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
-  const { result, previous } = await getFromHistory(config)
-  const programmaticResult = await reportResult(result, previous, config)
-  await removeFromHistory(result, config)
+  const { rawResult, previous } = await getFromHistory(config)
+  const programmaticResult = await reportResult(rawResult, previous, config)
+  await removeFromHistory(rawResult, config)
   return programmaticResult
 }
 

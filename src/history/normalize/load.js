@@ -1,19 +1,19 @@
 import sortOn from 'sort-on'
 
-import { selectResults } from '../../select/main.js'
+import { selectRawResults } from '../../select/main.js'
 
-import { decompressResult } from './compress.js'
-import { migrateResults } from './migrate.js'
+import { decompressRawResult } from './compress.js'
+import { migrateRawResults } from './migrate.js'
 
-// Normalize results on load
-export const loadResults = function (results, select) {
-  const resultsA = migrateResults(results)
-  const resultsB = resultsA.map(decompressResult)
-  const resultsC = selectResults(resultsB, select)
-  const resultsD = sortResults(resultsC)
-  return resultsD
+// Normalize rawResults on load
+export const loadRawResults = function (rawResults, select) {
+  const rawResultsA = migrateRawResults(rawResults)
+  const rawResultsB = rawResultsA.map(decompressRawResult)
+  const rawResultsC = selectRawResults(rawResultsB, select)
+  const rawResultsD = sortResults(rawResultsC)
+  return rawResultsD
 }
 
-const sortResults = function (results) {
-  return sortOn(results, 'timestamp')
+const sortResults = function (rawResults) {
+  return sortOn(rawResults, 'timestamp')
 }

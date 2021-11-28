@@ -1,13 +1,13 @@
 import mapObj from 'map-obj'
 
-// Reduce size of results before saving
+// Reduce size of rawResults before saving
 // We try to persist everything, so that `show` report the same information.
 // We try to only persist what cannot be computed runtime.
-export const compressResult = function ({ combinations, ...result }) {
+export const compressRawResult = function ({ combinations, ...rawResult }) {
   const combinationsA = combinations.map((combination) =>
     compressCombination({ combination }),
   )
-  return { ...result, combinations: combinationsA }
+  return { ...rawResult, combinations: combinationsA }
 }
 
 const compressCombination = function ({
@@ -44,12 +44,12 @@ const compressBucket = function ({ start, end, frequency }, mean) {
   return [start - mean, end - mean, frequency]
 }
 
-// Restore original results after loading
-export const decompressResult = function (result) {
-  const combinations = result.combinations.map((combination) =>
+// Restore original rawResults after loading
+export const decompressRawResult = function (rawResult) {
+  const combinations = rawResult.combinations.map((combination) =>
     decompressCombination({ combination }),
   )
-  return { ...result, combinations }
+  return { ...rawResult, combinations }
 }
 
 const decompressCombination = function ({

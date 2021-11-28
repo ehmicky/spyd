@@ -17,8 +17,8 @@ const GIT_COMMIT_REGEXP = /^[\da-f]{7,}$/iu
 // If several results match, we use the most recent one because this is what
 // users most likely want.
 // When none is found in `result.systems`, we try to use `git` instead.
-const findByCommit = async function (results, commit, cwd) {
-  const index = findIndexReverse(results, ({ systems: [{ git = {} }] }) =>
+const findByCommit = async function (rawResults, commit, cwd) {
+  const index = findIndexReverse(rawResults, ({ systems: [{ git = {} }] }) =>
     git.commit.startsWith(commit),
   )
 
@@ -26,7 +26,7 @@ const findByCommit = async function (results, commit, cwd) {
     return index
   }
 
-  return await findByGitRef(results, commit, cwd)
+  return await findByGitRef(rawResults, commit, cwd)
 }
 
 export const commitFormat = {
