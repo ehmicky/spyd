@@ -1,4 +1,5 @@
 import { getStudentTValue } from './critical_values/student_t.js'
+import { applyEnvDev } from './env_dev/apply.js'
 
 // Check whether two combinations are too close for their `diff` to be
 // statistically significant.
@@ -70,7 +71,7 @@ const hasPreciseStdev = function (stdevA, stdevB) {
 //    algorithm
 const adjustLoops = function (loops, envDev) {
   const adjustedEnvDev = (envDev - 1) * ENV_DEV_IMPRECISION + 1
-  return loops / adjustedEnvDev ** 2
+  return applyEnvDev(loops, adjustedEnvDev)
 }
 
 // A higher value creates more false negatives.
