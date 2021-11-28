@@ -31,27 +31,29 @@ import { applyImpreciseEnvDev } from './env_dev/apply.js'
 //     - this means, at some point, increasing the number of loops of the
 //       current combination might make its diff imprecise. However, the
 //       variation is minimal.
-export const isDiffPrecise = function (
+export const haveSimilarMeans = function (
   { mean: meanA, stdev: stdevA, envDev: envDevA, loops: loopsA },
   { mean: meanB, stdev: stdevB, envDev: envDevB, loops: loopsB },
 ) {
   if (!hasPreciseStdev(stdevA, stdevB)) {
-    return false
+    return true
   }
 
   const adjustedLoopsA = adjustLoops(loopsA, envDevA)
   const adjustedLoopsB = adjustLoops(loopsB, envDevB)
-  return (
-    hasPreciseLoops(adjustedLoopsA, adjustedLoopsB) &&
-    welchTTest({
-      meanA,
-      stdevA,
-      loopsA: adjustedLoopsA,
-      meanB,
-      stdevB,
-      loopsB: adjustedLoopsB,
-    })
-  )
+
+  if (!hasPreciseLoops(adjustedLoopsA, adjustedLoopsB)) {
+    return true
+  }
+
+  return !welchTTest({
+    meanA,
+    stdevA,
+    loopsA: adjustedLoopsA,
+    meanB,
+    stdevB,
+    loopsB: adjustedLoopsB,
+  })
 }
 
 // When the result does not have enough measures, `stdev` and `envDev` are both

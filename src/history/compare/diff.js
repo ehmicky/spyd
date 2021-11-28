@@ -1,5 +1,5 @@
 import { getMatchingCombination } from '../../combination/result.js'
-import { isDiffPrecise } from '../../stats/welch.js'
+import { haveSimilarMeans } from '../../stats/welch.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
@@ -55,14 +55,14 @@ const addCombinationDiff = function (
   return addDiff({ combination, previousCombination })
 }
 
-// `isDiffPrecise` is whether `diff` is statistically significant.
-//   - We set `diffPrecise: true` when this happens which results in:
-//      - `limit` not being used
-//      - no colors
-//      - an "approximately equal" sign being prepended
-//   - We do not try to hide or show the `diff` as 0% instead since users might:
-//      - think it is due to a bug
-//      - compute the diff themselves anyway
+// `diffPrecise` is whether `diff` is statistically significant.
+// This results in:
+//  - `limit` not being used
+//  - no colors
+//  - an "approximately equal" sign being prepended
+// We do not try to hide or show the `diff` as 0% instead since users might:
+//  - think it is due to a bug
+//  - compute the diff themselves anyway
 const addDiff = function ({
   combination,
   combination: {
@@ -75,6 +75,6 @@ const addDiff = function ({
   },
 }) {
   const diff = mean / previousMean - 1
-  const diffPrecise = isDiffPrecise(stats, previousStats)
+  const diffPrecise = !haveSimilarMeans(stats, previousStats)
   return { ...combination, stats: { ...stats, diff, diffPrecise } }
 }
