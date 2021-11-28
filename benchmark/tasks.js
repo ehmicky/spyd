@@ -24,7 +24,7 @@ export const fast = () => {
 
 // Very slow task
 export const slow = async () => {
-  await setTimeout(1e4)
+  await setTimeout(1e3)
 }
 
 // Very precise task
