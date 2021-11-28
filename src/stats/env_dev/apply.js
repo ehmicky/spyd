@@ -4,12 +4,12 @@
 //    algorithm
 // In some cases, `envDev` is too much of a problem, so we multiply it.
 export const applyImpreciseEnvDev = function (
-  loops,
+  length,
   envDev,
   envDevImprecision,
 ) {
   const adjustedEnvDev = (envDev - 1) * envDevImprecision + 1
-  return applyEnvDev(loops, adjustedEnvDev)
+  return applyEnvDev(length, adjustedEnvDev)
 }
 
 // Correct the `length` of an array of measures according to `envDev`
