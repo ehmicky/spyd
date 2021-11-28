@@ -39,16 +39,8 @@ export const isDiffPrecise = function (
     return false
   }
 
-  const adjustedLoopsA = applyImpreciseEnvDev(
-    loopsA,
-    envDevA,
-    ENV_DEV_IMPRECISION,
-  )
-  const adjustedLoopsB = applyImpreciseEnvDev(
-    loopsB,
-    envDevB,
-    ENV_DEV_IMPRECISION,
-  )
+  const adjustedLoopsA = adjustLoops(loopsA, envDevA)
+  const adjustedLoopsB = adjustLoops(loopsB, envDevB)
   return (
     hasPreciseLoops(adjustedLoopsA, adjustedLoopsB) &&
     welchTTest({
@@ -70,6 +62,11 @@ const hasPreciseStdev = function (stdevA, stdevB) {
     stdevB !== undefined &&
     (stdevA !== 0 || stdevB !== 0)
   )
+}
+
+// We take `envDev` into account
+const adjustLoops = function (loops, envDev) {
+  return applyImpreciseEnvDev(loops, envDev, ENV_DEV_IMPRECISION)
 }
 
 // A higher value creates more false negatives.
