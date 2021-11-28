@@ -12,6 +12,7 @@ export const applyImpreciseEnvDev = function (
   return applyEnvDev(loops, adjustedEnvDev)
 }
 
+// Correct the `length` of an array of measures according to `envDev`
 export const applyEnvDev = function (length, envDev) {
   return length / envDev ** 2
 }
