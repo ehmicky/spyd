@@ -41,9 +41,14 @@ export const isDiffPrecise = function (
   )
 }
 
-// When the result has not enough measures to compute the standard deviations
+// When the result does not have enough measures, `stdev` and `envDev` are both
+// `undefined`.
 const hasPreciseStdev = function (stdevA, stdevB) {
-  return stdevA !== undefined && stdevB !== undefined && stdevA + stdevB !== 0
+  return (
+    stdevA !== undefined &&
+    stdevB !== undefined &&
+    (stdevA !== 0 || stdevB !== 0)
+  )
 }
 
 // Welch's t-test does not work with extremely low `length`, but those would
