@@ -1,4 +1,5 @@
 import { toInputsObject } from '../../combination/inputs.js'
+import { safeFinally } from '../../utils/finally.js'
 import { updateDescription, END_DESCRIPTION } from '../preview/description.js'
 import { sendAndReceive } from '../process/ipc.js'
 
@@ -12,10 +13,15 @@ import { getMinLoopDuration } from './min_loop_duration.js'
 // We still perform each combination ends, for cleanup.
 // `end` is always called, for runner-specific cleanup, providing `start`
 // completed.
+// `after` and `end` are called on exceptions.
+// If an exception happens inside those themselves, it is ignored because it
+// might be due to the runner being in a bad state due to the first exception.
 export const runEvents = async function ({ combination, ...args }) {
   const taskIds = await startCombination(combination, args.server)
-  const stats = await runMainEvents(args)
-  await endCombination(args.server)
+  const stats = await safeFinally(
+    runMainEvents.bind(undefined, args),
+    endCombination.bind(undefined, args.server),
+  )
   return { stats, taskIds }
 }
 
@@ -47,15 +53,6 @@ const startCombination = async function (
   return taskIds
 }
 
-// `after` and `end` are called on exceptions.
-// If an exception happens inside those themselves, it is ignored because it
-// might be due to the runner being in a bad state due to the first exception.
-const silentEndCombination = async function (server) {
-  try {
-    await endCombination(server)
-  } catch {}
-}
-
 // Run the runner-defined end logic
 const endCombination = async function (server) {
   await sendAndReceive({ event: 'end' }, server)
@@ -67,30 +64,16 @@ const runMainEvents = async function (args) {
     return
   }
 
-  try {
-    const minLoopDuration = await getMinLoopDuration(args)
-    const startStat = startRunDuration()
-    await beforeCombination(args.server)
-    const stats = await getCombinationStats({
-      ...args,
-      startStat,
-      minLoopDuration,
-    })
-    await afterCombination(args)
-    return endRunDuration(startStat, stats)
-  } catch (error) {
-    await silentEndCombination(args.server)
-    throw error
-  }
-}
+  const minLoopDuration = await getMinLoopDuration(args)
 
-const getCombinationStats = async function (args) {
-  try {
-    return await performMeasureLoop(args)
-  } catch (error) {
-    await silentAfterCombination(args)
-    throw error
-  }
+  const startStat = startRunDuration()
+  await beforeCombination(args.server)
+  const stats = await safeFinally(
+    performMeasureLoop.bind(undefined, { ...args, startStat, minLoopDuration }),
+    afterCombination.bind(undefined, args),
+  )
+  const statsA = endRunDuration(startStat, stats)
+  return statsA
 }
 
 // Run the user-defined `before` hooks
@@ -113,12 +96,6 @@ const getCombinationStats = async function (args) {
 //     - For example, this might create confusion with `before|after` hooks
 const beforeCombination = async function (server) {
   await sendAndReceive({ event: 'before' }, server)
-}
-
-const silentAfterCombination = async function (args) {
-  try {
-    await afterCombination(args)
-  } catch {}
 }
 
 // Run the user-defined `after` hooks
