@@ -28,7 +28,7 @@ export const slow = async () => {
 }
 
 // Very precise task
-export const precise = async () => {
+export const veryPrecise = async () => {
   await setTimeout(0)
 }
 
