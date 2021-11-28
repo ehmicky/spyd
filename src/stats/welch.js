@@ -71,7 +71,7 @@ const adjustLoops = function (loops, envDev) {
 
 // A higher value creates more false negatives.
 // A lower value creates more false positives.
-// False positives are more disruptives to the user experience, so we prefer
+// False positives are more disruptive to the user experience, so we prefer
 // erring towards false negatives.
 const ENV_DEV_IMPRECISION = 5
 
