@@ -35,18 +35,18 @@ export const haveSimilarMeans = function (
   { mean: meanA, stdev: stdevA, envDev: envDevA, loops: loopsA },
   { mean: meanB, stdev: stdevB, envDev: envDevB, loops: loopsB },
 ) {
-  if (!hasPreciseStdev(stdevA, stdevB)) {
+  if (hasImpreciseStdev(stdevA, stdevB)) {
     return true
   }
 
   const adjustedLoopsA = adjustLoops(loopsA, envDevA)
   const adjustedLoopsB = adjustLoops(loopsB, envDevB)
 
-  if (!hasPreciseLoops(adjustedLoopsA, adjustedLoopsB)) {
+  if (hasImpreciseLoops(adjustedLoopsA, adjustedLoopsB)) {
     return true
   }
 
-  return !welchTTest({
+  return welchTTest({
     meanA,
     stdevA,
     loopsA: adjustedLoopsA,
@@ -58,11 +58,11 @@ export const haveSimilarMeans = function (
 
 // When the result does not have enough measures, `stdev` and `envDev` are both
 // `undefined`.
-const hasPreciseStdev = function (stdevA, stdevB) {
+const hasImpreciseStdev = function (stdevA, stdevB) {
   return (
-    stdevA !== undefined &&
-    stdevB !== undefined &&
-    (stdevA !== 0 || stdevB !== 0)
+    stdevA === undefined ||
+    stdevB === undefined ||
+    (stdevA === 0 && stdevB === 0)
   )
 }
 
@@ -79,8 +79,8 @@ const ENV_DEV_IMPRECISION = 5
 
 // Welch's t-test does not work with extremely low `length`, but those would
 // indicate that diff is most likely imprecise anyway.
-const hasPreciseLoops = function (loopsA, loopsB) {
-  return loopsA >= 2 && loopsB >= 2
+const hasImpreciseLoops = function (loopsA, loopsB) {
+  return loopsA < 2 || loopsB < 2
 }
 
 const welchTTest = function ({ meanA, stdevA, loopsA, meanB, stdevB, loopsB }) {
@@ -93,7 +93,7 @@ const welchTTest = function ({ meanA, stdevA, loopsA, meanB, stdevB, loopsB }) {
     (errorSquaredA + errorSquaredB) ** 2 /
     (errorSquaredA ** 2 / (loopsA - 1) + errorSquaredB ** 2 / (loopsB - 1))
   const tValue = getStudentTValue(Math.floor(degreesOfFreedom))
-  return tStat >= tValue
+  return tStat < tValue
 }
 
 const getErrorSquared = function (stdev, length) {
