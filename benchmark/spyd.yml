@@ -10,3 +10,22 @@ reporterConfig:
     mini: true
   boxplot:
     mini: true
+  # debug:
+  #   mini: true
+  #   header: false
+  #   stats:
+  #     - mean
+  #     - meanMin
+  #     - meanMax
+  #     - median
+  #     - min
+  #     - max
+  #     - rstdev
+  #     - rmoe
+  #     - outliersMin
+  #     - outliersMax
+  #     - loops
+  #     - repeat
+  #     - samples
+  #     - envDev
+  #     - minLoopDuration
