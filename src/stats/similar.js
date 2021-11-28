@@ -36,14 +36,14 @@ export const haveSimilarMeans = function (
   { mean: meanB, stdev: stdevB, envDev: envDevB, loops: loopsB },
 ) {
   if (hasImpreciseStdev(stdevA, stdevB)) {
-    return true
+    return
   }
 
   const adjustedLoopsA = adjustLoops(loopsA, envDevA)
   const adjustedLoopsB = adjustLoops(loopsB, envDevB)
 
   if (hasImpreciseLoops(adjustedLoopsA, adjustedLoopsB)) {
-    return true
+    return
   }
 
   return welchTTest({

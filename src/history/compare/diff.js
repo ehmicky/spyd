@@ -56,10 +56,10 @@ const addCombinationDiff = function (
 }
 
 // `diffPrecise` is whether `diff` is statistically significant.
-// This results in:
-//  - `limit` not being used
-//  - no colors
-//  - an "approximately equal" sign being prepended
+// If `false`:
+//  - `limit` is not used
+//  - an "approximately equal" sign is prepended on `diff`
+//  - no colors are shown on `diff`
 // We do not try to hide or show the `diff` as 0% instead since users might:
 //  - think it is due to a bug
 //  - compute the diff themselves anyway
@@ -75,6 +75,7 @@ const addDiff = function ({
   },
 }) {
   const diff = mean / previousMean - 1
-  const diffPrecise = !haveSimilarMeans(stats, previousStats)
+  const similarMeans = haveSimilarMeans(stats, previousStats)
+  const diffPrecise = similarMeans === undefined ? false : !similarMeans
   return { ...combination, stats: { ...stats, diff, diffPrecise } }
 }
