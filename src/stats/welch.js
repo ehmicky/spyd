@@ -1,5 +1,5 @@
 import { getStudentTValue } from './critical_values/student_t.js'
-import { applyEnvDev } from './env_dev/apply.js'
+import { applyImpreciseEnvDev } from './env_dev/apply.js'
 
 // Check whether two combinations are too close for their `diff` to be
 // statistically significant.
@@ -70,16 +70,6 @@ const hasPreciseStdev = function (stdevA, stdevB) {
     stdevB !== undefined &&
     (stdevA !== 0 || stdevB !== 0)
   )
-}
-
-// We take `envDev` into account.
-// However, we multiply its value because it tends to be too low:
-//  - When benchmark ended too early, `stdev` or `envDev` tends to be too low
-//  - `envDev` tends to be lower than real value in general with the current
-//    algorithm
-const applyImpreciseEnvDev = function (loops, envDev, envDevImprecision) {
-  const adjustedEnvDev = (envDev - 1) * envDevImprecision + 1
-  return applyEnvDev(loops, adjustedEnvDev)
 }
 
 // A higher value creates more false negatives.
