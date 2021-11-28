@@ -1,12 +1,13 @@
 import stringWidth from 'string-width'
 
-import { padString } from '../pad.js'
 import {
   TITLE_SEPARATOR,
-  TITLE_SEPARATOR_COLORED,
   getColSeparator,
   getColSeparatorColored,
 } from '../separator.js'
+
+import { getTablesRows } from './rows.js'
+import { getSingleTable } from './single.js'
 
 // Serialize a matrix of strings to a table.
 // Rows might have different array lengths, including 0.
@@ -34,7 +35,7 @@ export const getTables = function (rows, screenWidth, mini = false) {
   })
   return tablesRows
     .map((tableRows) =>
-      getTable({
+      getSingleTable({
         tableRows,
         rowsLeft,
         leftWidth,
@@ -57,89 +58,4 @@ const getAvailableWidth = function (screenWidth, leftWidth) {
   return leftWidth === 0
     ? screenWidth
     : screenWidth - leftWidth - TITLE_SEPARATOR.length
-}
-
-const getTablesRows = function ({
-  rows,
-  availableWidth,
-  columnsWidth,
-  columnSeparator,
-}) {
-  const separatorWidth = columnSeparator.length
-  const columnsCountFloat =
-    (availableWidth + separatorWidth) / (columnsWidth + separatorWidth)
-  const columnsCount = Math.max(Math.floor(columnsCountFloat), 1)
-  const rowsMaxLength = Math.max(...rows.map(getRowLength))
-  const tablesCount = Math.max(Math.ceil(rowsMaxLength / columnsCount), 1)
-  return Array.from({ length: tablesCount }, (_, tableIndex) =>
-    getTableRows({ rows, rowsMaxLength, tableIndex, columnsCount }),
-  )
-}
-
-const getRowLength = function ({ length }) {
-  return length
-}
-
-const getTableRows = function ({
-  rows,
-  rowsMaxLength,
-  tableIndex,
-  columnsCount,
-}) {
-  const tableColumnsCount = Math.min(
-    columnsCount,
-    rowsMaxLength - columnsCount * tableIndex,
-  )
-  return rows.map((row) =>
-    getTableRow({ row, tableIndex, columnsCount, tableColumnsCount }),
-  )
-}
-
-const getTableRow = function ({
-  row,
-  tableIndex,
-  columnsCount,
-  tableColumnsCount,
-}) {
-  const tableRow = row.slice(
-    columnsCount * tableIndex,
-    columnsCount * (tableIndex + 1),
-  )
-  const emptyCells = new Array(tableColumnsCount - tableRow.length).fill('')
-  return [...tableRow, ...emptyCells]
-}
-
-const getTable = function ({
-  tableRows,
-  rowsLeft,
-  leftWidth,
-  columnsWidth,
-  columnSeparatorColored,
-}) {
-  return tableRows
-    .map((row, rowIndex) =>
-      getRow({
-        row,
-        leftCell: rowsLeft[rowIndex],
-        leftWidth,
-        columnsWidth,
-        columnSeparatorColored,
-      }),
-    )
-    .join('')
-}
-
-const getRow = function ({
-  row,
-  leftCell,
-  leftWidth,
-  columnsWidth,
-  columnSeparatorColored,
-}) {
-  const rowA = row
-    .map((cell) => padString(cell, columnsWidth))
-    .join(columnSeparatorColored)
-  return leftWidth === 0
-    ? `${rowA}\n`
-    : `${padString(leftCell, leftWidth)}${TITLE_SEPARATOR_COLORED}${rowA}\n`
 }
