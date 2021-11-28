@@ -54,9 +54,14 @@ const runMainEvents = async function (args) {
   }
 
   try {
+    const minLoopDuration = await getMinLoopDuration(args)
     const startStat = startRunDuration()
     await beforeCombination(args.server)
-    const stats = await getCombinationStats({ ...args, startStat })
+    const stats = await getCombinationStats({
+      ...args,
+      startStat,
+      minLoopDuration,
+    })
     await afterCombination(args)
     return endRunDuration(startStat, stats)
   } catch (error) {
@@ -89,8 +94,7 @@ const beforeCombination = async function (server) {
 
 const getCombinationStats = async function (args) {
   try {
-    const minLoopDuration = await getMinLoopDuration(args)
-    return await performMeasureLoop({ ...args, minLoopDuration })
+    return await performMeasureLoop(args)
   } catch (error) {
     await silentAfterCombination(args)
     throw error
