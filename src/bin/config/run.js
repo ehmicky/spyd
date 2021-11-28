@@ -7,8 +7,8 @@ export const RUN_CONFIG = {
     alias: 'p',
     number: true,
     requiresArg: true,
-    describe: `Precision level of the results, between 0 and 4.
-The default is 2.
+    describe: `Precision level of the results, between 0 and 10.
+The default is 5.
 A higher level increases precision but makes the benchmark last longer.`,
   },
   quiet: {

@@ -94,10 +94,15 @@ export const normalizePrecision = function (precision, name) {
 
 // Associates `precision` (using array index) to the minimum `rmoe` each
 // combination must reach.
-// We use a limited number of levels to represent "medium"/"high"/"very high"
-// levels on each side (2/1/0 for speed and 2/3/4 for precision).
-// eslint-disable-next-line no-magic-numbers
-const PRECISION_TARGETS = [0, 1e-1, 1e-2, 1e-3, 1e-4]
+// The number of values must be:
+//  - High enough so that users can find a perfect value close enough
+//  - Low enough for simplicity
+// The lowest and highest are the extreme, with `0` having special semantics.
+// The middle one is the default.
+const PRECISION_TARGETS = [
+  // eslint-disable-next-line no-magic-numbers
+  0, 1, 2e-1, 5e-2, 2e-2, 1e-2, 3e-3, 1e-3, 3e-4, 1e-4, 1e-5,
+]
 const MIN_PRECISION = 0
 const MAX_PRECISION = PRECISION_TARGETS.length - 1
 

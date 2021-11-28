@@ -21,7 +21,7 @@ const METADATA_COMMANDS = new Set(['show', 'remove'])
 // file, instead of to an optional one. This makes behavior easier to understand
 // for users and provides with better error messages.
 export const DEFAULT_CONFIG = {
-  precision: 2,
+  precision: 5,
   system: 'default_system',
   save: false,
   runnerConfig: {},
