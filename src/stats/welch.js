@@ -39,8 +39,16 @@ export const isDiffPrecise = function (
     return false
   }
 
-  const adjustedLoopsA = adjustLoops(loopsA, envDevA)
-  const adjustedLoopsB = adjustLoops(loopsB, envDevB)
+  const adjustedLoopsA = applyImpreciseEnvDev(
+    loopsA,
+    envDevA,
+    ENV_DEV_IMPRECISION,
+  )
+  const adjustedLoopsB = applyImpreciseEnvDev(
+    loopsB,
+    envDevB,
+    ENV_DEV_IMPRECISION,
+  )
   return (
     hasPreciseLoops(adjustedLoopsA, adjustedLoopsB) &&
     welchTTest({
@@ -69,8 +77,8 @@ const hasPreciseStdev = function (stdevA, stdevB) {
 //  - When benchmark ended too early, `stdev` or `envDev` tends to be too low
 //  - `envDev` tends to be lower than real value in general with the current
 //    algorithm
-const adjustLoops = function (loops, envDev) {
-  const adjustedEnvDev = (envDev - 1) * ENV_DEV_IMPRECISION + 1
+const applyImpreciseEnvDev = function (loops, envDev, envDevImprecision) {
+  const adjustedEnvDev = (envDev - 1) * envDevImprecision + 1
   return applyEnvDev(loops, adjustedEnvDev)
 }
 
