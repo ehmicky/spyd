@@ -16,14 +16,35 @@
 // environmental one (`envDev`).
 // However, `envDev` is not used for the `rmoe` used to compute the overall
 // benchmark duration:
-//  - Reasons:
-//     - `envDev` varies too much betweeen runs
-//        - This creates very different benchmark durations, resulting in very
-//          different stats
-//     - `envDev` is always lower at the beginning of the run, which can result
-//       in unexpectedly early exits
-//  - As a downside, this means combinations with higher `envDev` are not run
-//    longer, i.e. have lower precision at the end
+//  - In principle, we should use `envDev` to compute `moe|rmoe`
+//     - Otherwise, combinations with different `envDev` have different real
+//       `rmoe` (taking `envDev` into account) at the end of the benchmark
+//     - I.e. the logic makes the statistical variation difference (due to the
+//       difference of `rstdev`) of all combinations equal, but not the
+//       environmental variation
+//  - However, there are several implementation problems which prevents
+//    doing so:
+//     - The benchmark might never reach the target `rmoe`
+//        - This is because `envDev` eventually reaches a point where it grows
+//          at the same pace as `Math.sqrt(samples.length)`
+//        - I.e. `rmoe` does not decrease anymore even with more samples
+//        - We should stop the benchmark when when this happens, but this is
+//          difficult due to:
+//           - `envDev` fluctuating a lot even when stabilized
+//           - `envDev` sometimes appears to be stable for many measures, but is
+//             actually still not
+//           - We need to take into account that `rmoe` is also influenced by
+//             `rstdev`, which changes and is also imprecise, especially at the
+//             beginning
+//     - This makes the benchmark end too early sometimes
+//        - This is because `envDev / Math.sqrt(samples.length)` tends to be
+//          too small when the number of samples is too slow
+//     - This results in different stats between runs
+//        - This is because `envDev` currently has a high variance,
+//          i.e. different runs of the same combinations might have very
+//          different durations
+//     - This results in big jumps of the preview duration through the run
+//        - `envDev` currently varies a lot through the run
 export const getConfidenceInterval = function ({
   mean,
   adjustedMoe,
