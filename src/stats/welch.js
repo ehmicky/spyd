@@ -31,16 +31,25 @@ import { getStudentTValue } from './critical_values/student_t.js'
 //       current combination might make its diff imprecise. However, the
 //       variation is minimal.
 export const isDiffPrecise = function (
-  { mean: meanA, stdev: stdevA, loops: loopsA },
-  { mean: meanB, stdev: stdevB, loops: loopsB },
+  { mean: meanA, stdev: stdevA, envDev: envDevA, loops: loopsA },
+  { mean: meanB, stdev: stdevB, envDev: envDevB, loops: loopsB },
 ) {
   if (!hasPreciseStdev(stdevA, stdevB)) {
     return false
   }
 
+  const adjustedLoopsA = adjustLoops(loopsA, envDevA)
+  const adjustedLoopsB = adjustLoops(loopsB, envDevB)
   return (
-    hasPreciseLoops(loopsA, loopsB) &&
-    welchTTest({ meanA, stdevA, loopsA, meanB, stdevB, loopsB })
+    hasPreciseLoops(adjustedLoopsA, adjustedLoopsB) &&
+    welchTTest({
+      meanA,
+      stdevA,
+      loopsA: adjustedLoopsA,
+      meanB,
+      stdevB,
+      loopsB: adjustedLoopsB,
+    })
   )
 }
 
@@ -53,6 +62,22 @@ const hasPreciseStdev = function (stdevA, stdevB) {
     (stdevA !== 0 || stdevB !== 0)
   )
 }
+
+// We take `envDev` into account.
+// However, we multiply its value because it tends to be too low:
+//  - When benchmark ended too early, `stdev` or `envDev` tends to be too low
+//  - `envDev` tends to be lower than real value in general with the current
+//    algorithm
+const adjustLoops = function (loops, envDev) {
+  const adjustedEnvDev = (envDev - 1) * ENV_DEV_IMPRECISION + 1
+  return loops / adjustedEnvDev ** 2
+}
+
+// A higher value creates more false negatives.
+// A lower value creates more false positives.
+// False positives are more disruptives to the user experience, so we prefer
+// erring towards false negatives.
+const ENV_DEV_IMPRECISION = 5
 
 // Welch's t-test does not work with extremely low `length`, but those would
 // indicate that diff is most likely imprecise anyway.
