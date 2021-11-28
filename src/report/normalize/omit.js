@@ -72,6 +72,7 @@ const DEBUG_STATS_PROPS = [
   'repeat',
   'envDev',
   'minLoopDuration',
+  'runDuration',
 ]
 
 const maybeOmit = function (obj, showProp, propNames) {

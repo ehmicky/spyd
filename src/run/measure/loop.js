@@ -5,7 +5,12 @@ import { updatePreviewStats } from '../preview/results/main.js'
 import { measureSample } from '../sample/main.js'
 import { getInitialSampleState } from '../sample/state.js'
 
-import { getInitialDurationState, startSample, endSample } from './duration.js'
+import {
+  getInitialDurationState,
+  startSample,
+  endSample,
+  endRunDuration,
+} from './duration.js'
 import { isRemainingCombination } from './remaining.js'
 
 // We break down each combination into samples, i.e. small units of duration
@@ -30,6 +35,7 @@ export const performMeasureLoop = async function ({
   server,
   logsFd,
   minLoopDuration,
+  startStat,
 }) {
   const { stats } = await pWhile(
     (state) =>
@@ -42,6 +48,7 @@ export const performMeasureLoop = async function ({
         minLoopDuration,
         logsFd,
         targetSampleDuration: TARGET_SAMPLE_DURATION,
+        startStat,
       }),
     {
       stats: getInitialStats(),
@@ -63,6 +70,7 @@ const performSample = async function (
     minLoopDuration,
     logsFd,
     targetSampleDuration,
+    startStat,
   },
 ) {
   const sampleStart = startSample()
@@ -72,9 +80,10 @@ const performSample = async function (
     sampleState,
   )
   const statsA = addStats(stats, sampleStateA, minLoopDuration)
+  const statsB = endRunDuration(startStat, statsA)
   await Promise.all([
     updatePreviewStats({
-      stats: statsA,
+      stats: statsB,
       previewState,
       durationState,
       precisionTarget,
@@ -82,9 +91,9 @@ const performSample = async function (
     truncateLogs(logsFd),
   ])
 
-  const durationStateA = endSample(sampleStart, durationState, statsA)
+  const durationStateA = endSample(sampleStart, durationState, statsB)
   return {
-    stats: statsA,
+    stats: statsB,
     sampleState: sampleStateA,
     durationState: durationStateA,
   }

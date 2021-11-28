@@ -1,7 +1,7 @@
 // Divide stats by a scale so they don't show too many digits nor decimals.
-export const getScale = function (allCombinations, name, kind) {
+export const getScale = function ({ allCombinations, name, kind, ownScale }) {
   const measures = allCombinations
-    .map((combination) => getMeasure(name, kind, combination))
+    .map((combination) => getMeasure({ name, kind, ownScale, combination }))
     .filter(isNotEmpty)
 
   if (measures.length === 0) {
@@ -23,12 +23,15 @@ export const getScale = function (allCombinations, name, kind) {
 // compare between them.
 // `mean` is `undefined` when `showPrecision: false`
 // `meanMin` is `undefined` when number of loops is low
-const getMeasure = function (
+const getMeasure = function ({
   name,
   kind,
-  { stats: { [name]: stat, mean, meanMin, median } },
-) {
-  if (!MEAN_KINDS.has(kind)) {
+  ownScale,
+  combination: {
+    stats: { [name]: stat, mean, meanMin, median },
+  },
+}) {
+  if (!MEAN_KINDS.has(kind) || ownScale) {
     return stat
   }
 

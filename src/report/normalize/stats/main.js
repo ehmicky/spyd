@@ -38,7 +38,7 @@ export const prettifyStats = function (result, allCombinations) {
 }
 
 const prettifyCombinationsStat = function (
-  { name, kind, signed },
+  { name, kind, signed, ownScale },
   combinations,
   allCombinations,
 ) {
@@ -48,6 +48,7 @@ const prettifyCombinationsStat = function (
     name,
     kind,
     signed,
+    ownScale,
   })
   const combinationsB = addStatPadded(combinationsA, name)
   const combinationsC = combinationsB.map((combination) =>

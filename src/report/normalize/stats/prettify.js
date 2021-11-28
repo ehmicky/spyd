@@ -11,8 +11,9 @@ export const addStatsPretty = function ({
   name,
   kind,
   signed,
+  ownScale,
 }) {
-  const scale = getScale(allCombinations, name, kind)
+  const scale = getScale({ allCombinations, name, kind, ownScale })
   const decimals = getStatsDecimals(combinations, name, scale)
   const unit = getUnit(kind, scale)
   return combinations.map((combination) =>

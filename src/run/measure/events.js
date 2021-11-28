@@ -2,6 +2,7 @@ import { toInputsObject } from '../../combination/inputs.js'
 import { updateDescription, END_DESCRIPTION } from '../preview/description.js'
 import { sendAndReceive } from '../process/ipc.js'
 
+import { startRunDuration, endRunDuration } from './duration.js'
 import { performMeasureLoop } from './loop.js'
 import { getMinLoopDuration } from './min_loop_duration.js'
 
@@ -53,10 +54,11 @@ const runMainEvents = async function (args) {
   }
 
   try {
+    const startStat = startRunDuration()
     await beforeCombination(args.server)
-    const stats = await getCombinationStats(args)
+    const stats = await getCombinationStats({ ...args, startStat })
     await afterCombination(args)
-    return stats
+    return endRunDuration(startStat, stats)
   } catch (error) {
     await silentEndCombination(args.server)
     throw error

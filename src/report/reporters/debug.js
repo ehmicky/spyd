@@ -40,6 +40,7 @@ const DEFAULT_STAT_NAMES = [
   'samples',
   'envDev',
   'minLoopDuration',
+  'runDuration',
 ]
 
 // Retrieve the list of columns, each corresponding to a stat.

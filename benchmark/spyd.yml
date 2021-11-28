@@ -29,3 +29,4 @@ reporterConfig:
   #     - samples
   #     - envDev
   #     - minLoopDuration
+  #     - runDuration

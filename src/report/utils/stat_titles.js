@@ -19,6 +19,7 @@ export const STAT_TITLES = {
   samples: 'Samples',
   envDev: 'Env dev',
   minLoopDuration: 'Min loop',
+  runDuration: 'Duration',
   histogram: 'Histogram',
   quantiles: 'Quantiles',
 }
