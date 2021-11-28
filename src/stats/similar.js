@@ -71,14 +71,7 @@ export const haveSimilarMeans = function (
     return
   }
 
-  return welchTTest({
-    meanA,
-    stdevA,
-    lengthA,
-    meanB,
-    stdevB,
-    lengthB,
-  })
+  return welchTTest({ meanA, stdevA, lengthA, meanB, stdevB, lengthB })
 }
 
 // When the result does not have enough measures, `stdev` and `envDev` are both
