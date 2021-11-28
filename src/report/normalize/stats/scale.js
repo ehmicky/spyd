@@ -40,7 +40,7 @@ const getMeasure = function ({
 
 const MEAN_KINDS = new Set(['duration'])
 
-// Measures that are `0`are not a good indicator of minimum precision for scale.
+// Measures that are `0` are not a good indicator of minimum precision for scale
 const isNotEmpty = function (measure) {
   return measure !== undefined && measure !== 0
 }
