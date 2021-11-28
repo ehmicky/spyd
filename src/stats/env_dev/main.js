@@ -25,7 +25,7 @@ import { getGroupsCount, getClusterSizes } from './size.js'
 // The time complexity is `O(log n)` but very close to `O(n)`
 // Measures dependency is common when benchmarking tasks.
 //  - In principle, the duration of each task's measure is independent.
-//  - However, that duration is multipled by the environment it is running on,
+//  - However, that duration is multiplied by the environment it is running on,
 //    both hardware and software
 //     - This is stateful, i.e. dependent on time
 //  - It is also multiplied by engine optimization
