@@ -1,5 +1,5 @@
 import { getMatchingCombination } from '../../combination/result.js'
-import { haveSimilarMeans } from '../../stats/welch.js'
+import { haveSimilarMeans } from '../../stats/similar.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
