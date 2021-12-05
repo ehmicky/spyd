@@ -35,6 +35,7 @@ import { sortFloats } from '../../stats/sort.js'
 export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
   const sampleUnsortedMeasures = normalizeRepeat(sampleMeasures, repeat)
   const sampleLoops = sampleUnsortedMeasures.length
+  const sampleTimes = sampleLoops * repeat
 
   const sampleSortedMeasures = [...sampleUnsortedMeasures]
   sortFloats(sampleSortedMeasures)
@@ -45,6 +46,7 @@ export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
     sampleUnsortedMeasures,
     sampleMedian,
     sampleLoops,
+    sampleTimes,
   }
 }
 

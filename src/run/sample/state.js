@@ -27,6 +27,7 @@ export const getSampleState = function (
     sampleUnsortedMeasures,
     sampleMedian,
     sampleLoops,
+    sampleTimes,
   } = normalizeSampleMeasures(sampleMeasures, repeat)
   const { newRepeat, calibrated: calibratedA } = handleRepeat({
     repeat,
@@ -44,10 +45,9 @@ export const getSampleState = function (
       calibrated,
     })
   const maxLoops = getMaxLoops({
-    repeat: newRepeat,
-    repeatLast: repeat,
+    newRepeat,
     measures: measuresA,
-    sampleLoops,
+    sampleTimes,
     measureDuration,
     targetSampleDuration,
   })
@@ -56,8 +56,8 @@ export const getSampleState = function (
     unsortedMeasures: unsortedMeasuresA,
     allSamples: allSamples + 1,
     sampleLoops,
+    sampleTimes,
     repeat: newRepeat,
-    repeatLast: repeat,
     maxLoops,
     calibrated: calibratedA,
   }
@@ -124,16 +124,15 @@ const addSampleMeasures = function ({
 //     target.
 // The value does not impact `stats.mean` much though.
 const getMaxLoops = function ({
-  repeat,
-  repeatLast,
+  newRepeat,
   measures,
-  sampleLoops,
+  sampleTimes,
   measureDuration,
   targetSampleDuration,
 }) {
-  const measureDurationPerTime = measureDuration / (sampleLoops * repeatLast)
+  const measureDurationPerTime = measureDuration / sampleTimes
   return Math.min(
-    Math.ceil(targetSampleDuration / (measureDurationPerTime * repeat)),
+    Math.ceil(targetSampleDuration / (measureDurationPerTime * newRepeat)),
     getMaxMeasuresLeft(measures),
   )
 }

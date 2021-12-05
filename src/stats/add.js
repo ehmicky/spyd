@@ -45,7 +45,7 @@ export const getInitialStats = function () {
 //   - histogram[*].end: <=1
 export const addStats = function (
   stats,
-  { measures, unsortedMeasures, sampleLoops, repeatLast },
+  { measures, unsortedMeasures, sampleLoops, sampleTimes },
   minLoopDuration,
 ) {
   if (measures.length === 0) {
@@ -54,7 +54,7 @@ export const addStats = function (
 
   const countStats = getCountStats(stats, {
     sampleLoops,
-    repeatLast,
+    sampleTimes,
     minLoopDuration,
   })
   const computedStats = computeStats(measures, unsortedMeasures)
@@ -67,11 +67,11 @@ export const addStats = function (
 // `repeat` is the average number of iterations inside those repeat loops
 const getCountStats = function (
   { samples, loops, times },
-  { sampleLoops, repeatLast, minLoopDuration },
+  { sampleLoops, sampleTimes, minLoopDuration },
 ) {
   const samplesA = samples + 1
   const loopsA = loops + sampleLoops
-  const timesA = times + sampleLoops * repeatLast
+  const timesA = times + sampleTimes
   const meanRepeat = Math.round(timesA / loopsA)
   return {
     samples: samplesA,
