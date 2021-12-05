@@ -21,6 +21,7 @@ const combinationDev = async function (combination, noDimensions, { cwd }) {
     precisionTarget: 0,
     cwd,
     previewState: { quiet: true },
+    outliers: true,
     stage: 'dev',
     noDimensions,
   })

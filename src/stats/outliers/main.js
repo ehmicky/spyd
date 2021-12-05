@@ -65,8 +65,25 @@ import { THRESHOLDS } from './threshold.js'
 //  - outliersMin|Max 0 should be possible
 //  - Making only slight changes to the measures should not result in big
 //    changes of outliersMin|Max
-export const getOutliersPercentages = function (measures) {
-  if (measures.length <= 2) {
+// Outliers removal can be skipped by using the `outliers: true` configuration
+// property:
+//  - This is discouraged because:
+//     - Outliers performance is usually unrelated to the task itself,
+//       i.e. they decrease accuracy.
+//     - In many cases, this increases `stdev` a lot, which makes runs much
+//       longer.
+//     - It makes the `envDev` logic not work well.
+//  - However, there are a few cases where outliers are useful:
+//     - When a task is a mix of multiple distributions with very different
+//      speed, but are all significant, such as:
+//        - When a task slows down due to memory allocation but only at
+//          specific thresholds
+//           - `Array.push()` is an example of this
+//        - Tasks with custom units
+//     - When real `min|max` is important
+//     - When debugging
+export const getOutliersPercentage = function (measures, outliers) {
+  if (measures.length <= 2 || outliers) {
     return { outliersMin: 0, outliersMax: 0 }
   }
 

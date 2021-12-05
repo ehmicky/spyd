@@ -42,4 +42,20 @@ after the percentage.
     is node.
   - Several limits can be specified at once.`,
   },
+  outliers: {
+    group: TASKS,
+    boolean: true,
+    describe: `Some measures can be extremely slower than others.
+Most of the times, those outliers are due to concurrent logic unrelated to
+your tasks such as garbage collection or OS background processes.
+
+Outliers lower accuracy and significantly slow down benchmarks.
+Therefore, they are ignored by default.
+They can be kept by setting this configuration property to "true" instead.
+
+We recommend keeping the default behavior unless you are confident those
+measures are important for the benchmark's results.
+
+Default: false`,
+  },
 }

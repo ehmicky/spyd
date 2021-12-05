@@ -24,6 +24,7 @@ export const DEFAULT_CONFIG = {
   precision: 5,
   system: 'default_system',
   save: false,
+  outliers: false,
   runnerConfig: {},
   reporterConfig: {},
   limit: [],

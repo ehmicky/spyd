@@ -1,6 +1,6 @@
 import { getHistogram } from './histogram.js'
 import { getLengthFromLoops } from './length.js'
-import { getOutliersPercentages } from './outliers/main.js'
+import { getOutliersPercentage } from './outliers/main.js'
 import { getPrecisionStats } from './precision.js'
 import { getSortedMedian, getQuantiles } from './quantile.js'
 import { getMean } from './sum.js'
@@ -46,8 +46,8 @@ import { getMean } from './sum.js'
 //    important. However, the mean is a far more useful statistic.
 //  - This would create too many statistics for the average, together with the
 //    mean and the median.
-export const computeStats = function (measures, unsortedMeasures) {
-  const { outliersMin, outliersMax } = getOutliersPercentages(measures)
+export const computeStats = function (measures, unsortedMeasures, outliers) {
+  const { outliersMin, outliersMax } = getOutliersPercentage(measures, outliers)
   const { minIndex, maxIndex, length } = getLengthFromLoops(
     measures.length,
     outliersMin,

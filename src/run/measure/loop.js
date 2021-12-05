@@ -32,6 +32,7 @@ export const performMeasureLoop = async function ({
   previewState,
   stopState,
   stage,
+  outliers,
   server,
   logsFd,
   minLoopDuration,
@@ -44,6 +45,7 @@ export const performMeasureLoop = async function ({
       performSample(state, {
         previewState,
         precisionTarget,
+        outliers,
         server,
         minLoopDuration,
         logsFd,
@@ -66,6 +68,7 @@ const performSample = async function (
   {
     previewState,
     precisionTarget,
+    outliers,
     server,
     minLoopDuration,
     logsFd,
@@ -79,7 +82,12 @@ const performSample = async function (
     { server, minLoopDuration, targetSampleDuration },
     sampleState,
   )
-  const statsA = addStats(stats, sampleStateA, minLoopDuration)
+  const statsA = addStats({
+    stats,
+    sampleState: sampleStateA,
+    minLoopDuration,
+    outliers,
+  })
   const statsB = endRunDuration(startStat, statsA)
   await Promise.all([
     updatePreviewStats({

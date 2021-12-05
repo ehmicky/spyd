@@ -86,7 +86,7 @@ const previewAndMeasure = async function ({
 
 const measureResult = async function ({
   result,
-  config: { cwd, precisionTarget },
+  config: { cwd, precisionTarget, outliers },
   previewState,
   noDimensions,
 }) {
@@ -94,6 +94,7 @@ const measureResult = async function ({
     precisionTarget,
     cwd,
     previewState,
+    outliers,
     stage: 'main',
     noDimensions,
   })

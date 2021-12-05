@@ -25,6 +25,7 @@ export const findTasks = async function ({
         precisionTarget: 0,
         cwd,
         previewState: { quiet: true },
+        outliers: true,
         stage: 'init',
         noDimensions,
       },

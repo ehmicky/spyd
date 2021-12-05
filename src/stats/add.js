@@ -43,11 +43,12 @@ export const getInitialStats = function () {
 //        last/current result)
 //   - outliersMin, outliersMax: >=0 <=1
 //   - histogram[*].end: <=1
-export const addStats = function (
+export const addStats = function ({
   stats,
-  { measures, unsortedMeasures, sampleLoops, sampleTimes },
+  sampleState: { measures, unsortedMeasures, sampleLoops, sampleTimes },
   minLoopDuration,
-) {
+  outliers,
+}) {
   if (measures.length === 0) {
     return stats
   }
@@ -57,7 +58,7 @@ export const addStats = function (
     sampleTimes,
     minLoopDuration,
   })
-  const computedStats = computeStats(measures, unsortedMeasures)
+  const computedStats = computeStats(measures, unsortedMeasures, outliers)
   return { ...countStats, ...computedStats }
 }
 
