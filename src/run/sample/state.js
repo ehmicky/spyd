@@ -1,10 +1,10 @@
 import { appendArray } from '../../stats/append.js'
 import { mergeSort } from '../../stats/merge.js'
-import { getMean } from '../../stats/sum.js'
 
 import { getMaxMeasuresLeft } from './max_measures.js'
 import { normalizeSampleMeasures } from './normalize.js'
 import { handleRepeat } from './repeat.js'
+import { getTimeDuration } from './time_duration.js'
 
 // Returns initial `sampleState`
 export const getInitialSampleState = function () {
@@ -91,31 +91,6 @@ const addSampleMeasures = function ({
   appendArray(unsortedMeasures, sampleUnsortedMeasures)
   return { measures, unsortedMeasures }
 }
-
-const getTimeDuration = function ({
-  timeDurations,
-  measureDuration,
-  sampleTimes,
-  calibrated,
-}) {
-  const timeDuration = measureDuration / sampleTimes
-  const timeDurationsA = getTimeDurations(timeDurations, calibrated)
-  const timeDurationsB = [...timeDurationsA, timeDuration]
-  const timeDurationMean = getMean(timeDurationsB)
-  return { timeDurations: timeDurationsB, timeDurationMean }
-}
-
-const getTimeDurations = function (timeDurations, calibrated) {
-  if (!calibrated) {
-    return []
-  }
-
-  return timeDurations.length === MEASURE_DURATIONS_MAX
-    ? timeDurations.slice(1)
-    : timeDurations
-}
-
-const MEASURE_DURATIONS_MAX = 3
 
 // `maxLoops` is the number of `repeat` loops the sample should measure.
 // Each sample needs to perform a specific amount of measures (`maxLoops`).
