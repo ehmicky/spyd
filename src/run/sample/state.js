@@ -38,14 +38,13 @@ export const getSampleState = function (
     allSamples,
     calibrated,
   })
-  const { measures: measuresA, unsortedMeasures: unsortedMeasuresA } =
-    addSampleMeasures({
-      measures,
-      unsortedMeasures,
-      sampleSortedMeasures,
-      sampleUnsortedMeasures,
-      calibrated,
-    })
+  const [measuresA, unsortedMeasuresA] = addSampleMeasures({
+    measures,
+    unsortedMeasures,
+    sampleSortedMeasures,
+    sampleUnsortedMeasures,
+    calibrated,
+  })
   const { timeDurations: timeDurationsA, timeDurationMean } = getTimeDuration({
     timeDurations,
     measureDuration,
@@ -84,10 +83,10 @@ const addSampleMeasures = function ({
   calibrated,
 }) {
   if (!calibrated) {
-    return { measures, unsortedMeasures }
+    return [measures, unsortedMeasures]
   }
 
   mergeSort(measures, sampleSortedMeasures)
   appendArray(unsortedMeasures, sampleUnsortedMeasures)
-  return { measures, unsortedMeasures }
+  return [measures, unsortedMeasures]
 }
