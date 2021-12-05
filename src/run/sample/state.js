@@ -131,10 +131,9 @@ const getMaxLoops = function ({
   measureDuration,
   targetSampleDuration,
 }) {
-  const repeatGrowth = repeat / repeatLast
-  const measureDurationPerLoop = measureDuration / sampleLoops
+  const measureDurationPerTime = measureDuration / (sampleLoops * repeatLast)
   return Math.min(
-    Math.ceil(targetSampleDuration / (measureDurationPerLoop * repeatGrowth)),
+    Math.ceil(targetSampleDuration / (measureDurationPerTime * repeat)),
     getMaxMeasuresLeft(measures),
   )
 }
