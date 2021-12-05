@@ -14,20 +14,13 @@ export const getInitialSampleState = function () {
     allSamples: 0,
     repeat: 1,
     calibrated: false,
-    timeMeasureDurations: [],
+    timeDurations: [],
   }
 }
 
 // Update sampleState because on the return value from the last sample
 export const getSampleState = function (
-  {
-    measures,
-    unsortedMeasures,
-    allSamples,
-    repeat,
-    calibrated,
-    timeMeasureDurations,
-  },
+  { measures, unsortedMeasures, allSamples, repeat, calibrated, timeDurations },
   { measures: sampleMeasures },
   { minLoopDuration, measureDuration, targetSampleDuration },
 ) {
@@ -53,11 +46,8 @@ export const getSampleState = function (
       sampleUnsortedMeasures,
       calibrated,
     })
-  const {
-    timeMeasureDurations: timeMeasureDurationsA,
-    timeMeasureDurationMean,
-  } = getTimeMeasureDuration({
-    timeMeasureDurations,
+  const { timeDurations: timeDurationsA, timeDurationMean } = getTimeDuration({
+    timeDurations,
     measureDuration,
     sampleTimes,
     calibrated: calibratedA,
@@ -65,7 +55,7 @@ export const getSampleState = function (
   const maxLoops = getMaxLoops({
     newRepeat,
     measures: measuresA,
-    timeMeasureDurationMean,
+    timeDurationMean,
     targetSampleDuration,
   })
   return {
@@ -77,7 +67,7 @@ export const getSampleState = function (
     repeat: newRepeat,
     maxLoops,
     calibrated: calibratedA,
-    timeMeasureDurations: timeMeasureDurationsA,
+    timeDurations: timeDurationsA,
   }
 }
 
@@ -102,33 +92,27 @@ const addSampleMeasures = function ({
   return { measures, unsortedMeasures }
 }
 
-const getTimeMeasureDuration = function ({
-  timeMeasureDurations,
+const getTimeDuration = function ({
+  timeDurations,
   measureDuration,
   sampleTimes,
   calibrated,
 }) {
-  const timeMeasureDuration = measureDuration / sampleTimes
-  const timeMeasureDurationsA = getTimeMeasureDurations(
-    timeMeasureDurations,
-    calibrated,
-  )
-  const timeMeasureDurationsB = [...timeMeasureDurationsA, timeMeasureDuration]
-  const timeMeasureDurationMean = getMean(timeMeasureDurationsB)
-  return {
-    timeMeasureDurations: timeMeasureDurationsB,
-    timeMeasureDurationMean,
-  }
+  const timeDuration = measureDuration / sampleTimes
+  const timeDurationsA = getTimeDurations(timeDurations, calibrated)
+  const timeDurationsB = [...timeDurationsA, timeDuration]
+  const timeDurationMean = getMean(timeDurationsB)
+  return { timeDurations: timeDurationsB, timeDurationMean }
 }
 
-const getTimeMeasureDurations = function (timeMeasureDurations, calibrated) {
+const getTimeDurations = function (timeDurations, calibrated) {
   if (!calibrated) {
     return []
   }
 
-  return timeMeasureDurations.length === MEASURE_DURATIONS_MAX
-    ? timeMeasureDurations.slice(1)
-    : timeMeasureDurations
+  return timeDurations.length === MEASURE_DURATIONS_MAX
+    ? timeDurations.slice(1)
+    : timeDurations
 }
 
 const MEASURE_DURATIONS_MAX = 3
@@ -175,11 +159,11 @@ const MEASURE_DURATIONS_MAX = 3
 const getMaxLoops = function ({
   newRepeat,
   measures,
-  timeMeasureDurationMean,
+  timeDurationMean,
   targetSampleDuration,
 }) {
   return Math.min(
-    Math.ceil(targetSampleDuration / (timeMeasureDurationMean * newRepeat)),
+    Math.ceil(targetSampleDuration / (timeDurationMean * newRepeat)),
     getMaxMeasuresLeft(measures),
   )
 }
