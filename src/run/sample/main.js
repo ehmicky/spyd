@@ -2,7 +2,6 @@ import now from 'precise-now'
 
 import { sendAndReceive } from '../process/ipc.js'
 
-import { getPayload } from './payload.js'
 import { getSampleState } from './state.js'
 
 // Measure a new sample for a given combination
@@ -10,7 +9,7 @@ export const measureSample = async function (
   { server, minLoopDuration, targetSampleDuration },
   sampleState,
 ) {
-  const payload = getPayload(sampleState, minLoopDuration, targetSampleDuration)
+  const payload = getPayload(sampleState, minLoopDuration)
   const { returnValue, measureDuration } = await measureNewSample(
     payload,
     server,
@@ -18,8 +17,16 @@ export const measureSample = async function (
   const sampleStateA = getSampleState(sampleState, returnValue, {
     minLoopDuration,
     measureDuration,
+    targetSampleDuration,
   })
   return sampleStateA
+}
+
+// Compute event payload to send to the measuring sample
+// When estimating `measureCost`, we pass `repeat: 0` to the runner
+const getPayload = function ({ repeat, maxLoops }, minLoopDuration) {
+  const repeatPayload = minLoopDuration === 0 ? 0 : repeat
+  return { event: 'measure', repeat: repeatPayload, maxLoops }
 }
 
 // `measureDuration` is how long it takes to get a single sample's results.
