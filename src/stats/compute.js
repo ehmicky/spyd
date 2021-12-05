@@ -1,5 +1,7 @@
+import { getCold } from './cold.js'
 import { getHistogram } from './histogram.js'
 import { getLengthFromLoops } from './length.js'
+import { filterOutliers } from './outliers/filter.js'
 import { getOutliersPercentage } from './outliers/main.js'
 import { getPrecisionStats } from './precision.js'
 import { getSortedMedian, getQuantiles } from './quantile.js'
@@ -63,6 +65,11 @@ export const computeStats = function (measures, unsortedMeasures, outliers) {
   })
 
   const mean = getMean(measures, { minIndex, maxIndex })
+  const cold = getCold(unsortedMeasures, {
+    mean,
+    filter: filterOutliers.bind(undefined, min, max),
+    length,
+  })
 
   const histogram = getHistogram(measures, {
     minIndex,
@@ -93,6 +100,7 @@ export const computeStats = function (measures, unsortedMeasures, outliers) {
     rstdev,
     moe,
     rmoe,
+    cold,
     histogram,
     quantiles,
     outliersMin,

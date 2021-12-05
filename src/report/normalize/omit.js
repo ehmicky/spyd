@@ -71,6 +71,7 @@ const DEBUG_STATS_PROPS = [
   'loops',
   'repeat',
   'envDev',
+  'cold',
   'minLoopDuration',
   'runDuration',
 ]

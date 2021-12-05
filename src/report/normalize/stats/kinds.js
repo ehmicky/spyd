@@ -12,6 +12,7 @@ export const STAT_KINDS = [
   { name: 'rstdev', kind: 'percentage', signed: 'never' },
   { name: 'moe', kind: 'duration', signed: 'never' },
   { name: 'rmoe', kind: 'percentage', signed: 'never' },
+  { name: 'cold', kind: 'percentage', signed: 'never' },
   { name: 'quantiles', kind: 'duration' },
   { name: 'outliersMin', kind: 'percentage' },
   { name: 'outliersMax', kind: 'percentage' },

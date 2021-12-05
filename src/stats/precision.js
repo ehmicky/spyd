@@ -1,6 +1,7 @@
 import { getConfidenceInterval } from './confidence.js'
 import { getEnvDev } from './env_dev/main.js'
 import { getAdjustedMoe, getMoe, getRmoe } from './moe.js'
+import { filterOutliers } from './outliers/filter.js'
 import { getVarianceStats } from './variance.js'
 
 // Retrieve stats related to `stdev` and precision.
@@ -95,16 +96,6 @@ const getPerfectPrecisionStats = function (mean) {
     meanMax: mean,
     envDev: 0,
   }
-}
-
-// Filter outliers.
-// For sorted `measures`, this is inefficient since outliers are at the
-// start/end so `minIndex|maxIndex` can be used.
-// However, unsorted `unsortedMeasures` cannot do this and require filtering
-// each measure. This cannot be incrementally since outliers thresholds change
-// between samples
-const filterOutliers = function (min, max, value) {
-  return value >= min && value <= max
 }
 
 const getMoeStats = function ({ stdev, envDev, length, min, max, mean }) {

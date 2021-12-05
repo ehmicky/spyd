@@ -32,6 +32,7 @@ const DEFAULT_STAT_NAMES = [
   'rstdev',
   'moe',
   'rmoe',
+  'cold',
   'outliersMin',
   'outliersMax',
   'times',
