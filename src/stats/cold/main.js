@@ -74,6 +74,7 @@ const getCold = function (array, { mean, filter, length }) {
 //    because of an increase in the total mean.
 //     - Therefore, at the end of the preview, the estimated duration goes
 //       abruptly to 0.
+//  - `coldLoopsTarget` is quite unstable
 // Those limitations are due to the impredictability of the task optimization.
 // However, this value is still useful because:
 //  - When cold, it indicates that the benchmark is not done yet
