@@ -145,7 +145,7 @@ const findClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
       continue
     }
 
-    if (filteredIndex === maxIndex) {
+    if (filteredIndex > maxIndex) {
       break
     }
 
