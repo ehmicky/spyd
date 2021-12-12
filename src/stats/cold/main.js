@@ -120,9 +120,6 @@ const COLD_MAX_PERCENTAGE = 0.6
 // Memory complexity is `O(1)` and very low by using a streaming logic.
 // This is optimized for performance, which explains the usage of imperative
 // programming patterns.
-// This function is also used to find the first `incrementalMean` between
-// `incrementalMeanMin` and `incrementalMax`
-//  - This behavior is toggled by using `mean: undefined`
 /* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
 const findClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
@@ -159,6 +156,8 @@ const findClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
   return closestMean
 }
 
+// Find the index of the first `incrementalMean` between `incrementalMeanMin`
+// and `incrementalMax`.
 const findHotIndex = function (
   array,
   { minIndex, filter, incrementalMeanMin, incrementalMeanMax },
