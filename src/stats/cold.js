@@ -187,7 +187,7 @@ const findHotIndex = function (
       incrementalMean >= incrementalMeanMin &&
       incrementalMean <= incrementalMeanMax
     ) {
-      return filteredIndex - 1
+      break
     }
   }
 
