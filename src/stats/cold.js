@@ -129,10 +129,7 @@ const COLD_MAX_PERCENTAGE = 0.6
 //  - This behavior is toggled by using `mean: undefined`
 /* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
-const findClosestMean = function (
-  array,
-  { mean, minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
-) {
+const findClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
   let closestMean = 0
   let closestMeanDiff = Number.POSITIVE_INFINITY
   let sum = 0
@@ -155,19 +152,11 @@ const findClosestMean = function (
     }
 
     const incrementalMean = sum / filteredIndex
+    const meanDiff = Math.abs(mean - incrementalMean)
 
-    if (mean !== undefined) {
-      const meanDiff = Math.abs(mean - incrementalMean)
-
-      if (closestMeanDiff > meanDiff) {
-        closestMeanDiff = meanDiff
-        closestMean = incrementalMean
-      }
-    } else if (
-      incrementalMean >= incrementalMeanMin &&
-      incrementalMean <= incrementalMeanMax
-    ) {
-      return
+    if (closestMeanDiff > meanDiff) {
+      closestMeanDiff = meanDiff
+      closestMean = incrementalMean
     }
   }
 
