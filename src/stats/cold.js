@@ -44,7 +44,7 @@ const defaultFilter = function () {
 const getCold = function (array, { mean, filter, length }) {
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const maxIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
-  const { closestMean } = findIncrementalMean(array, {
+  const { closestMean } = findClosestMean(array, {
     mean,
     minIndex,
     maxIndex,
@@ -64,7 +64,7 @@ const getColdLoopsTarget = function (
   const incrementalMeanMax = mean * (1 + precisionTarget)
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const maxIndex = length - 1
-  const { filteredIndex } = findIncrementalMean(array, {
+  const { filteredIndex } = findHotIndex(array, {
     minIndex,
     maxIndex,
     filter,
@@ -129,7 +129,52 @@ const COLD_MAX_PERCENTAGE = 0.6
 //  - This behavior is toggled by using `mean: undefined`
 /* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
-const findIncrementalMean = function (
+const findClosestMean = function (
+  array,
+  { mean, minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
+) {
+  let closestMean = 0
+  let closestMeanDiff = Number.POSITIVE_INFINITY
+  let sum = 0
+  let index = -1
+  let filteredIndex = 0
+
+  while (filteredIndex <= maxIndex) {
+    index += 1
+    const value = array[index]
+
+    if (!filter(value)) {
+      continue
+    }
+
+    filteredIndex += 1
+    sum += value
+
+    if (filteredIndex <= minIndex) {
+      continue
+    }
+
+    const incrementalMean = sum / filteredIndex
+
+    if (mean !== undefined) {
+      const meanDiff = Math.abs(mean - incrementalMean)
+
+      if (closestMeanDiff > meanDiff) {
+        closestMeanDiff = meanDiff
+        closestMean = incrementalMean
+      }
+    } else if (
+      incrementalMean >= incrementalMeanMin &&
+      incrementalMean <= incrementalMeanMax
+    ) {
+      return { filteredIndex }
+    }
+  }
+
+  return { closestMean, filteredIndex }
+}
+
+const findHotIndex = function (
   array,
   { mean, minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
 ) {
