@@ -71,17 +71,17 @@ export const haveSimilarMeans = function (
     return
   }
 
+  if (isPerfectStdev(stdevA, stdevB)) {
+    return meanA === meanB
+  }
+
   return welchTTest({ meanA, stdevA, lengthA, meanB, stdevB, lengthB })
 }
 
 // When the result does not have enough measures, `stdev` and `envDev` are both
 // `undefined`.
 const hasImpreciseStdev = function (stdevA, stdevB) {
-  return (
-    stdevA === undefined ||
-    stdevB === undefined ||
-    (stdevA === 0 && stdevB === 0)
-  )
+  return stdevA === undefined || stdevB === undefined
 }
 
 // Retrieve the `length` of measures from `loops`.
@@ -101,6 +101,10 @@ const ENV_DEV_IMPRECISION = 5
 // indicate that diff is most likely imprecise anyway.
 const hasImpreciseLengths = function (lengthA, lengthB) {
   return lengthA < 2 || lengthB < 2
+}
+
+const isPerfectStdev = function (stdevA, stdevB) {
+  return stdevA === 0 && stdevB === 0
 }
 
 const welchTTest = function ({
