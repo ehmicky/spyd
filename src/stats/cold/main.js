@@ -78,8 +78,7 @@ const getCold = function (array, { mean, filter, length }) {
 // Those limitations are due to the impredictability of the task optimization.
 // However, this value is still useful because:
 //  - When cold, it indicates that the benchmark is not done yet
-//  - Most of the time, the `moeLoopsTarget` is larger than `coldLoopsTarget`,
-//    so the above behavior is rather exceptional.
+//  - Most of the time, the `moeLoopsTarget` is larger than `coldLoopsTarget`
 const getColdLoopsTarget = function (
   array,
   { precisionTarget, mean, filter, length },
