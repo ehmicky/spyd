@@ -69,10 +69,8 @@ const getColdLoopsTarget = function (
     incrementalMeanMin,
     incrementalMeanMax,
   })
-  const coldLengthTarget = Math.max(
-    getLengthFromIndex(COLD_MAX_PERCENTAGE, hotIndex) - length,
-    0,
-  )
+  const hotLength = getLengthFromIndex(COLD_MAX_PERCENTAGE, hotIndex)
+  const coldLengthTarget = Math.max(hotLength - length, 0)
   const filterRatio = array.length / length
   const coldLoopsTarget = Math.round(coldLengthTarget * filterRatio)
   return coldLoopsTarget
