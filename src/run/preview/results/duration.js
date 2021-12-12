@@ -50,11 +50,13 @@ const getSamplesLeft = function (
   }
 
   const moeTarget = precisionTarget * mean
-  const lengthTarget = getLengthForMoe(moeTarget, stdev)
-  const loopsTarget = Math.min(
-    getLoopsFromLength(lengthTarget, outliersMin, outliersMax),
-    MAX_MEASURES,
+  const moeLengthTarget = getLengthForMoe(moeTarget, stdev)
+  const moeLoopsTarget = getLoopsFromLength(
+    moeLengthTarget,
+    outliersMin,
+    outliersMax,
   )
+  const loopsTarget = Math.min(moeLoopsTarget, MAX_MEASURES)
   const samplesLeft = computeSamplesLeft(loopsTarget, loops, samples)
   return samplesLeft
 }
