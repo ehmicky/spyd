@@ -1,45 +1,8 @@
 // Divide stats by a scale so they don't show too many digits nor decimals.
-export const getScale = function ({ allCombinations, name, kind, ownScale }) {
-  const minMeasure = getMinMeasure({ allCombinations, name, kind, ownScale })
-
+export const getScale = function (minMeasure, kind) {
   const scales = SCALES[kind]
   const scaleA = scales.find((scale) => minMeasure >= scale)
   return scaleA === undefined ? scales[scales.length - 1] : scaleA
-}
-
-// Retrieve the smallest measure of a given stat, across all combinations.
-// Used to compute the scale and unit.
-const getMinMeasure = function ({ allCombinations, name, kind, ownScale }) {
-  const measures = allCombinations
-    .map((combination) => getMeasure({ name, kind, ownScale, combination }))
-    .filter(isNotEmpty)
-  return measures.length === 0 ? 1 : Math.min(...measures)
-}
-
-// The same duration scale is used for all `stats.*Pretty` to make it easier to
-// compare between them.
-// `mean` is `undefined` when `showPrecision: false`
-// `meanMin` is `undefined` when number of loops is low
-const getMeasure = function ({
-  name,
-  kind,
-  ownScale,
-  combination: {
-    stats: { [name]: stat, mean, meanMin, median },
-  },
-}) {
-  if (!MEAN_KINDS.has(kind) || ownScale) {
-    return stat
-  }
-
-  return [mean, meanMin, median].find(isNotEmpty)
-}
-
-const MEAN_KINDS = new Set(['duration'])
-
-// Measures that are `0` are not a good indicator of minimum precision for scale
-const isNotEmpty = function (measure) {
-  return measure !== undefined && measure !== 0
 }
 
 // Possible scales for each unit kind.
