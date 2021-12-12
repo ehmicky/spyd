@@ -56,14 +56,11 @@ export const computeStats = function (measures, unsortedMeasures, outliers) {
     outliersMax,
   )
 
-  const min = measures[minIndex]
-  const max = measures[maxIndex]
-  const median = getSortedMedian(measures, { minIndex, maxIndex })
-  const quantiles = getQuantiles(measures, QUANTILES_COUNT, {
+  const { min, max, median, quantiles } = getQuantileStats(
+    measures,
     minIndex,
     maxIndex,
-  })
-
+  )
   const mean = getMean(measures, { minIndex, maxIndex })
   const cold = getCold(unsortedMeasures, {
     mean,
@@ -107,6 +104,17 @@ export const computeStats = function (measures, unsortedMeasures, outliers) {
     outliersMax,
     envDev,
   }
+}
+
+const getQuantileStats = function (measures, minIndex, maxIndex) {
+  const min = measures[minIndex]
+  const max = measures[maxIndex]
+  const median = getSortedMedian(measures, { minIndex, maxIndex })
+  const quantiles = getQuantiles(measures, QUANTILES_COUNT, {
+    minIndex,
+    maxIndex,
+  })
+  return { min, max, median, quantiles }
 }
 
 const QUANTILES_COUNT = 1e2
