@@ -128,10 +128,10 @@ const COLD_MAX_PERCENTAGE = 0.6
 /* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
 const findClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
-  let closestMean = 0
-  let closestMeanDiff = Number.POSITIVE_INFINITY
   let sum = 0
   let filteredIndex = 0
+  let closestMean = 0
+  let closestMeanDiff = Number.POSITIVE_INFINITY
 
   for (const value of array) {
     if (!filter(value)) {
