@@ -1,4 +1,5 @@
 import { getStatsDecimals } from './decimals.js'
+import { getSingleKind } from './kinds.js'
 import { getMinMeasure } from './min_measure.js'
 import { getScale } from './scale.js'
 import { addSign } from './sign.js'
@@ -15,9 +16,10 @@ export const addStatsPretty = function ({
   ownScale,
 }) {
   const minMeasure = getMinMeasure({ allCombinations, name, kind, ownScale })
-  const scale = getScale(minMeasure, kind)
+  const kindA = getSingleKind(minMeasure, kind)
+  const scale = getScale(minMeasure, kindA)
   const decimals = getStatsDecimals(combinations, name, scale)
-  const unit = getUnit(kind, scale)
+  const unit = getUnit(kindA, scale)
   return combinations.map((combination) =>
     addStatPretty({ name, combination, signed, scale, unit, decimals }),
   )

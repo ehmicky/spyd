@@ -12,7 +12,7 @@ export const STAT_KINDS = [
   { name: 'rstdev', kind: 'percentage', signed: 'never' },
   { name: 'moe', kind: 'duration', signed: 'never' },
   { name: 'rmoe', kind: 'percentage', signed: 'never' },
-  { name: 'cold', kind: 'percentage', signed: 'never' },
+  { name: 'cold', kind: 'percentageCount', signed: 'never' },
   { name: 'quantiles', kind: 'duration' },
   { name: 'outliersMin', kind: 'percentage' },
   { name: 'outliersMax', kind: 'percentage' },
@@ -24,3 +24,24 @@ export const STAT_KINDS = [
   { name: 'minLoopDuration', kind: 'duration' },
   { name: 'runDuration', kind: 'duration', ownScale: true },
 ]
+
+// Some stats have multiple kinds, depending on their scale.
+// This is useful to show when a different scale|unit is more proper depending
+// on how low|high the value is.
+export const getSingleKind = function (minMeasure, kind) {
+  const getKind = MULTIPLE_KINDS[kind]
+  return getKind === undefined ? kind : getKind(minMeasure)
+}
+
+const getPercentageCountKind = function (minMeasure) {
+  return minMeasure >= PERCENTAGE_MIN_VALUE ? 'percentage' : 'count'
+}
+
+// Chosen so that `cold` can represent the threshold of the highest `precision`
+// as percentage, but represent anything lower as count, to avoid showing too
+// many zeroes.
+const PERCENTAGE_MIN_VALUE = 1e-5
+
+const MULTIPLE_KINDS = {
+  percentageCount: getPercentageCountKind,
+}
