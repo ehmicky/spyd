@@ -138,15 +138,15 @@ const findClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
       continue
     }
 
+    if (filteredIndex > maxIndex) {
+      break
+    }
+
     filteredIndex += 1
     sum += value
 
     if (filteredIndex <= minIndex) {
       continue
-    }
-
-    if (filteredIndex > maxIndex) {
-      break
     }
 
     const incrementalMean = sum / filteredIndex
