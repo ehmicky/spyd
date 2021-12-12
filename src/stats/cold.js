@@ -44,7 +44,7 @@ const defaultFilter = function () {
 const getCold = function (array, { mean, filter, length }) {
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const maxIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
-  const { closestMean } = findClosestMean(array, {
+  const closestMean = findClosestMean(array, {
     mean,
     minIndex,
     maxIndex,
@@ -167,11 +167,11 @@ const findClosestMean = function (
       incrementalMean >= incrementalMeanMin &&
       incrementalMean <= incrementalMeanMax
     ) {
-      return { filteredIndex }
+      return
     }
   }
 
-  return { closestMean, filteredIndex }
+  return closestMean
 }
 
 const findHotIndex = function (
