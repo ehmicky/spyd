@@ -31,7 +31,6 @@ export const getColdStats = function (
 ) {
   const cold = getCold(array, { mean, filter, length })
   const coldLoopsTarget = getColdLoopsTarget(array, {
-    cold,
     precisionTarget,
     mean,
     filter,
@@ -61,12 +60,8 @@ const getCold = function (array, { mean, filter, length }) {
 // Used to estimate the duration of the benchmark in previews.
 const getColdLoopsTarget = function (
   array,
-  { cold, precisionTarget, mean, filter, length },
+  { precisionTarget, mean, filter, length },
 ) {
-  if (cold <= precisionTarget) {
-    return 0
-  }
-
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const incrementalMeanMin = mean * (1 - precisionTarget)
   const incrementalMeanMax = mean * (1 + precisionTarget)
@@ -76,10 +71,10 @@ const getColdLoopsTarget = function (
     incrementalMeanMin,
     incrementalMeanMax,
   })
-  const hotLength = getLengthFromIndex(COLD_MAX_PERCENTAGE, hotIndex)
-  const coldLengthTarget = Math.max(hotLength - length, 0)
+  const coldLengthTarget = getLengthFromIndex(COLD_MAX_PERCENTAGE, hotIndex)
   const filterRatio = array.length / length
-  return Math.round(coldLengthTarget * filterRatio)
+  const coldLoopsTarget = Math.round(coldLengthTarget * filterRatio)
+  return coldLoopsTarget
 }
 
 const getIndexFromLength = function (percentage, length) {

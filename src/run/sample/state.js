@@ -15,6 +15,7 @@ export const getInitialSampleState = function () {
     repeat: 1,
     calibrated: false,
     timeDurations: [],
+    coldLoopsTarget: 0,
   }
 }
 

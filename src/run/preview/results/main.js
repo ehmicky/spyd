@@ -23,6 +23,7 @@ export const updatePreviewStats = async function ({
   stats,
   previewState,
   durationState,
+  sampleState,
   precisionTarget,
 }) {
   if (shouldSkipPreview(previewState, stats)) {
@@ -31,7 +32,13 @@ export const updatePreviewStats = async function ({
 
   await updateResultStats({ previewState, stats })
 
-  updateCombinationEnd({ stats, previewState, durationState, precisionTarget })
+  updateCombinationEnd({
+    stats,
+    previewState,
+    durationState,
+    sampleState,
+    precisionTarget,
+  })
   setDescriptionIf(previewState, MEASURE_DESCRIPTION, START_DESCRIPTION)
 
   await updatePreview(previewState)

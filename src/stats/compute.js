@@ -106,6 +106,7 @@ export const computeStats = function ({
     moe,
     rmoe,
     cold,
+    coldLoopsTarget,
     histogram,
     quantiles,
     outliersMin,

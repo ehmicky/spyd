@@ -45,13 +45,14 @@ export const getInitialStats = function () {
 //   - histogram[*].end: <=1
 export const addStats = function ({
   stats,
+  sampleState,
   sampleState: { measures, unsortedMeasures, sampleLoops, sampleTimes },
   minLoopDuration,
   outliers,
   precisionTarget,
 }) {
   if (measures.length === 0) {
-    return stats
+    return { stats, sampleState }
   }
 
   const countStats = getCountStats(stats, {
@@ -59,13 +60,16 @@ export const addStats = function ({
     sampleTimes,
     minLoopDuration,
   })
-  const computedStats = computeStats({
+  const { coldLoopsTarget, ...computedStats } = computeStats({
     measures,
     unsortedMeasures,
     outliers,
     precisionTarget,
   })
-  return { ...countStats, ...computedStats }
+  return {
+    stats: { ...countStats, ...computedStats },
+    sampleState: { ...sampleState, coldLoopsTarget },
+  }
 }
 
 // Retrieve stats related to sampling itself, not the measures.

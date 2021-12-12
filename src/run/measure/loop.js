@@ -82,7 +82,7 @@ const performSample = async function (
     { server, minLoopDuration, targetSampleDuration },
     sampleState,
   )
-  const statsA = addStats({
+  const { stats: statsA, sampleState: sampleStateB } = addStats({
     stats,
     sampleState: sampleStateA,
     minLoopDuration,
@@ -95,6 +95,7 @@ const performSample = async function (
       stats: statsB,
       previewState,
       durationState,
+      sampleState: sampleStateB,
       precisionTarget,
     }),
     truncateLogs(logsFd),
@@ -103,7 +104,7 @@ const performSample = async function (
   const durationStateA = endSample(sampleStart, durationState, statsB)
   return {
     stats: statsB,
-    sampleState: sampleStateA,
+    sampleState: sampleStateB,
     durationState: durationStateA,
   }
 }
