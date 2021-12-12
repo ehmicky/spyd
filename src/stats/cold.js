@@ -62,7 +62,7 @@ const getColdLoopsTarget = function (
 ) {
   const incrementalMeanMin = mean * (1 - precisionTarget)
   const incrementalMeanMax = mean * (1 + precisionTarget)
-  const minIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
+  const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const maxIndex = length - 1
   const { filteredIndex } = findIncrementalMean(array, {
     minIndex,
