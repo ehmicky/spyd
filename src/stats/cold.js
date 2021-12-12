@@ -28,7 +28,7 @@ export const getCold = function (
 ) {
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const maxIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
-  const { closestMean } = getClosestMean(array, {
+  const { closestMean } = findIncrementalMean(array, {
     mean,
     minIndex,
     maxIndex,
@@ -52,7 +52,7 @@ export const getColdLoopsLeft = function (
   const incrementalMeanMax = mean * (1 + precisionTarget)
   const minIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
   const maxIndex = length - 1
-  const { index } = getClosestMeanIndex(array, {
+  const { index } = findIncrementalMean(array, {
     minIndex,
     maxIndex,
     filter,
@@ -111,9 +111,15 @@ const COLD_MAX_PERCENTAGE = 0.6
 // Memory complexity is `O(1)` and very low by using a streaming logic.
 // This is optimized for performance, which explains the usage of imperative
 // programming patterns.
+// This function is also used to find the first `incrementalMean` between
+// `incrementalMeanMin` and `incrementalMax`
+//  - This behavior is toggled by using `mean: undefined`
 /* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
-const getClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
+const findIncrementalMean = function (
+  array,
+  { mean, minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
+) {
   let closestMean = 0
   let closestMeanDiff = Number.POSITIVE_INFINITY
   let sum = 0
@@ -136,47 +142,15 @@ const getClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
     }
 
     const incrementalMean = sum / filteredIndex
-    const meanDiff = Math.abs(mean - incrementalMean)
 
-    if (closestMeanDiff > meanDiff) {
-      closestMeanDiff = meanDiff
-      closestMean = incrementalMean
-    }
-  }
+    if (mean !== undefined) {
+      const meanDiff = Math.abs(mean - incrementalMean)
 
-  return { closestMean }
-}
-/* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
-   fp/no-mutation, max-depth, no-continue */
-
-/* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
-   fp/no-mutation, max-depth, no-continue */
-const getClosestMeanIndex = function (
-  array,
-  { minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
-) {
-  let sum = 0
-  let index = -1
-  let filteredIndex = 0
-
-  while (filteredIndex <= maxIndex) {
-    index += 1
-    const value = array[index]
-
-    if (!filter(value)) {
-      continue
-    }
-
-    filteredIndex += 1
-    sum += value
-
-    if (filteredIndex <= minIndex) {
-      continue
-    }
-
-    const incrementalMean = sum / filteredIndex
-
-    if (
+      if (closestMeanDiff > meanDiff) {
+        closestMeanDiff = meanDiff
+        closestMean = incrementalMean
+      }
+    } else if (
       incrementalMean >= incrementalMeanMin &&
       incrementalMean <= incrementalMeanMax
     ) {
@@ -184,7 +158,7 @@ const getClosestMeanIndex = function (
     }
   }
 
-  return { index: maxIndex }
+  return { closestMean, index: maxIndex }
 }
 /* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
