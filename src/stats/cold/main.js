@@ -1,4 +1,4 @@
-import { getMean } from './sum.js'
+import { getMean } from '../sum.js'
 
 // Tasks usually get faster as they repeat
 //  - This is due to optimization at the enginer or OS level.

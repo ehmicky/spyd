@@ -1,4 +1,4 @@
-import { getColdStats } from './cold.js'
+import { getColdStats } from './cold/main.js'
 import { getHistogram } from './histogram.js'
 import { getLengthFromLoops } from './length.js'
 import { filterOutliers } from './outliers/filter.js'
