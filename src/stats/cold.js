@@ -20,11 +20,15 @@ import { getMean } from './sum.js'
 //    as the one used by `stats.rmoe`.
 export const getCold = function (
   array,
-  { mean = getMean(array), filter, length = array.filter(filter).length },
+  {
+    mean = getMean(array),
+    filter = defaultFilter,
+    length = array.filter(filter).length,
+  },
 ) {
   const minIndex = getIndex(COLD_MIN_PERCENTAGE, length)
   const maxIndex = getIndex(COLD_MAX_PERCENTAGE, length)
-  const { closestMean } = getClosestMean(array, {
+  const closestMean = getClosestMean(array, {
     mean,
     minIndex,
     maxIndex,
@@ -33,6 +37,76 @@ export const getCold = function (
   const cold = Math.abs(mean - closestMean) / mean
   return cold
 }
+
+// Approximate the number of loops left for `cold` to be below `precisionTarget`
+export const getColdLoopsLeft = function (
+  array,
+  {
+    precisionTarget,
+    mean = getMean(array),
+    filter = defaultFilter,
+    length = array.filter(filter).length,
+  },
+) {
+  const incrementalMeanMin = mean * (1 - precisionTarget)
+  const incrementalMeanMax = mean * (1 + precisionTarget)
+  const minIndex = getIndex(COLD_MAX_PERCENTAGE, length)
+  const maxIndex = length - 1
+  const closestMeanIndex = getClosestMeanIndex(array, {
+    minIndex,
+    maxIndex,
+    filter,
+    incrementalMeanMin,
+    incrementalMeanMax,
+  })
+  const coldLoopsLeft =
+    Math.ceil(closestMeanIndex / COLD_MAX_PERCENTAGE) + 1 - length
+  return coldLoopsLeft
+}
+
+const defaultFilter = function () {
+  return true
+}
+
+/* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
+   fp/no-mutation, max-depth, no-continue */
+const getClosestMeanIndex = function (
+  array,
+  { minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
+) {
+  let sum = 0
+  let index = -1
+  let filteredIndex = 0
+
+  while (filteredIndex <= maxIndex) {
+    index += 1
+    const value = array[index]
+
+    if (!filter(value)) {
+      continue
+    }
+
+    filteredIndex += 1
+    sum += value
+
+    if (filteredIndex <= minIndex) {
+      continue
+    }
+
+    const incrementalMean = sum / filteredIndex
+
+    if (
+      incrementalMean >= incrementalMeanMin &&
+      incrementalMean <= incrementalMeanMax
+    ) {
+      return index
+    }
+  }
+
+  return maxIndex
+}
+/* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
+   fp/no-mutation, max-depth, no-continue */
 
 const getIndex = function (percentage, length) {
   return Math.floor(percentage * (length - 1))
@@ -77,7 +151,6 @@ const COLD_MAX_PERCENTAGE = 0.6
 /* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
 const getClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
-  let closestMeanIndex = -1
   let closestMean = 0
   let closestMeanDiff = Number.POSITIVE_INFINITY
   let sum = 0
@@ -104,12 +177,11 @@ const getClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
 
     if (closestMeanDiff > meanDiff) {
       closestMeanDiff = meanDiff
-      closestMeanIndex = index
       closestMean = incrementalMean
     }
   }
 
-  return { closestMeanIndex, closestMean }
+  return closestMean
 }
 /* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
