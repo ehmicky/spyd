@@ -7,6 +7,8 @@ export const getScale = function ({ allCombinations, name, kind, ownScale }) {
   return scaleA === undefined ? scales[scales.length - 1] : scaleA
 }
 
+// Retrieve the smallest measure of a given stat, across all combinations.
+// Used to compute the scale and unit.
 const getMinMeasure = function ({ allCombinations, name, kind, ownScale }) {
   const measures = allCombinations
     .map((combination) => getMeasure({ name, kind, ownScale, combination }))
