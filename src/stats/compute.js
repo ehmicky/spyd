@@ -1,4 +1,4 @@
-import { getCold } from './cold.js'
+import { getColdStats } from './cold.js'
 import { getHistogram } from './histogram.js'
 import { getLengthFromLoops } from './length.js'
 import { filterOutliers } from './outliers/filter.js'
@@ -48,7 +48,13 @@ import { getMean } from './sum.js'
 //    important. However, the mean is a far more useful statistic.
 //  - This would create too many statistics for the average, together with the
 //    mean and the median.
-export const computeStats = function (measures, unsortedMeasures, outliers) {
+// eslint-disable-next-line max-lines-per-function
+export const computeStats = function ({
+  measures,
+  unsortedMeasures,
+  outliers,
+  precisionTarget,
+}) {
   const { outliersMin, outliersMax } = getOutliersPercentage(measures, outliers)
   const { minIndex, maxIndex, length } = getLengthFromLoops(
     measures.length,
@@ -62,7 +68,12 @@ export const computeStats = function (measures, unsortedMeasures, outliers) {
     maxIndex,
   )
   const mean = getMean(measures, { minIndex, maxIndex })
-  const cold = getCold(unsortedMeasures, { mean, filter, length })
+  const { cold, coldLoopsTarget } = getColdStats(unsortedMeasures, {
+    precisionTarget,
+    mean,
+    filter,
+    length,
+  })
 
   const histogram = getHistogram(measures, {
     minIndex,

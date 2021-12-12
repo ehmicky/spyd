@@ -18,14 +18,30 @@ import { getMean } from './sum.js'
 //    the `mean` was approximately halfway through the run.
 //  - The benchmark only ends when this percentage is below the same threshold
 //    as the one used by `stats.rmoe`.
-export const getCold = function (
+export const getColdStats = function (
   array,
   {
+    precisionTarget,
     mean = getMean(array),
     filter = defaultFilter,
     length = array.filter(filter).length,
   },
 ) {
+  const cold = getCold(array, { mean, filter, length })
+  const coldLoopsTarget = getColdLoopsTarget(array, {
+    precisionTarget,
+    mean,
+    filter,
+    length,
+  })
+  return { cold, coldLoopsTarget }
+}
+
+const defaultFilter = function () {
+  return true
+}
+
+const getCold = function (array, { mean, filter, length }) {
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const maxIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
   const { closestMean } = findIncrementalMean(array, {
@@ -39,14 +55,10 @@ export const getCold = function (
 }
 
 // Approximate the number of loops left for `cold` to be below `precisionTarget`
-export const getColdLoopsLeft = function (
+// Used to estimate the duration of the benchmark in previews.
+const getColdLoopsTarget = function (
   array,
-  {
-    precisionTarget,
-    mean = getMean(array),
-    filter = defaultFilter,
-    length = array.filter(filter).length,
-  },
+  { precisionTarget, mean, filter, length },
 ) {
   const incrementalMeanMin = mean * (1 - precisionTarget)
   const incrementalMeanMax = mean * (1 + precisionTarget)
@@ -59,12 +71,9 @@ export const getColdLoopsLeft = function (
     incrementalMeanMin,
     incrementalMeanMax,
   })
-  const coldLoopsLeft = getLengthFromIndex(COLD_MAX_PERCENTAGE, index) - length
-  return coldLoopsLeft
-}
-
-const defaultFilter = function () {
-  return true
+  const coldLoopsTarget =
+    getLengthFromIndex(COLD_MAX_PERCENTAGE, index) - length
+  return coldLoopsTarget
 }
 
 const getIndexFromLength = function (percentage, length) {

@@ -48,6 +48,7 @@ export const addStats = function ({
   sampleState: { measures, unsortedMeasures, sampleLoops, sampleTimes },
   minLoopDuration,
   outliers,
+  precisionTarget,
 }) {
   if (measures.length === 0) {
     return stats
@@ -58,7 +59,12 @@ export const addStats = function ({
     sampleTimes,
     minLoopDuration,
   })
-  const computedStats = computeStats(measures, unsortedMeasures, outliers)
+  const computedStats = computeStats({
+    measures,
+    unsortedMeasures,
+    outliers,
+    precisionTarget,
+  })
   return { ...countStats, ...computedStats }
 }
 

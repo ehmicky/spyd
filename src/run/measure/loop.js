@@ -87,6 +87,7 @@ const performSample = async function (
     sampleState: sampleStateA,
     minLoopDuration,
     outliers,
+    precisionTarget,
   })
   const statsB = endRunDuration(startStat, statsA)
   await Promise.all([
