@@ -58,6 +58,27 @@ const getCold = function (array, { mean, filter, length }) {
 
 // Approximate the number of loops left for `cold` to be below `precisionTarget`
 // Used to estimate the duration of the benchmark in previews.
+// This is based on the assumption that:
+//  - The total mean is stable
+//  - If `cold` is still too high, there might be an `incrementalMean` close
+//    enough to `mean` after `COLD_MAX_PERCENTAGE`
+//  - Therefore, we need to wait for that `incrementalMean` to reach the index
+//    of `COLD_MAX_PERCENTAGE`
+// In practice, this does not work so well because:
+//  - For most of the benchmark, the total mean is not stable.
+//     - So the `hotIndex` remains close to the end of the `array` during that
+//       time.
+//     - Therefore, in most of the preview, the estimated duration does not
+//       decrease nor increase.
+//  - `cold` usually becomes low enough not due to the above scenario, but
+//    because of an increase in the total mean.
+//     - Therefore, at the end of the preview, the estimated duration goes
+//       abruptly to 0.
+// Those limitations are due to the impredictability of the task optimization.
+// However, this value is still useful because:
+//  - When cold, it indicates that the benchmark is not done yet
+//  - Most of the time, the `moeLoopsTarget` is larger than `coldLoopsTarget`,
+//    so the above behavior is rather exceptional.
 const getColdLoopsTarget = function (
   array,
   { precisionTarget, mean, filter, length },
