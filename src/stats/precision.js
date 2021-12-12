@@ -1,7 +1,6 @@
 import { getConfidenceInterval } from './confidence.js'
 import { getEnvDev } from './env_dev/main.js'
 import { getAdjustedMoe, getMoe, getRmoe } from './moe.js'
-import { filterOutliers } from './outliers/filter.js'
 import { getVarianceStats } from './variance.js'
 
 // Retrieve stats related to `stdev` and precision.
@@ -13,6 +12,7 @@ export const getPrecisionStats = function ({
   length,
   min,
   max,
+  filter,
   mean,
 }) {
   if (length < MIN_STDEV_LOOPS) {
@@ -28,11 +28,7 @@ export const getPrecisionStats = function ({
     maxIndex,
     mean,
   })
-  const envDev = getEnvDev(unsortedMeasures, {
-    mean,
-    variance,
-    filter: filterOutliers.bind(undefined, min, max),
-  })
+  const envDev = getEnvDev(unsortedMeasures, { mean, variance, filter })
   const { moe, rmoe, meanMin, meanMax } = getMoeStats({
     stdev,
     envDev,

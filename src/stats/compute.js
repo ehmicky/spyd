@@ -56,17 +56,13 @@ export const computeStats = function (measures, unsortedMeasures, outliers) {
     outliersMax,
   )
 
-  const { min, max, median, quantiles } = getQuantileStats(
+  const { min, max, median, quantiles, filter } = getQuantileStats(
     measures,
     minIndex,
     maxIndex,
   )
   const mean = getMean(measures, { minIndex, maxIndex })
-  const cold = getCold(unsortedMeasures, {
-    mean,
-    filter: filterOutliers.bind(undefined, min, max),
-    length,
-  })
+  const cold = getCold(unsortedMeasures, { mean, filter, length })
 
   const histogram = getHistogram(measures, {
     minIndex,
@@ -83,6 +79,7 @@ export const computeStats = function (measures, unsortedMeasures, outliers) {
       length,
       min,
       max,
+      filter,
       mean,
     })
 
@@ -114,7 +111,8 @@ const getQuantileStats = function (measures, minIndex, maxIndex) {
     minIndex,
     maxIndex,
   })
-  return { min, max, median, quantiles }
+  const filter = filterOutliers.bind(undefined, min, max)
+  return { min, max, median, quantiles, filter }
 }
 
 const QUANTILES_COUNT = 1e2
