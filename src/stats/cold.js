@@ -70,7 +70,7 @@ const getColdLoopsTarget = function (
     incrementalMeanMax,
   })
   const coldLengthTarget = Math.max(
-    getLengthFromIndex(COLD_MAX_PERCENTAGE, hotIndex - 1) - length,
+    getLengthFromIndex(COLD_MAX_PERCENTAGE, hotIndex) - length,
     0,
   )
   const filterRatio = array.length / length
@@ -187,11 +187,11 @@ const findHotIndex = function (
       incrementalMean >= incrementalMeanMin &&
       incrementalMean <= incrementalMeanMax
     ) {
-      return filteredIndex
+      return filteredIndex - 1
     }
   }
 
-  return filteredIndex
+  return filteredIndex - 1
 }
 /* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
