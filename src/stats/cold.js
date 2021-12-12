@@ -131,13 +131,9 @@ const findClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
   let closestMean = 0
   let closestMeanDiff = Number.POSITIVE_INFINITY
   let sum = 0
-  let index = -1
   let filteredIndex = 0
 
-  while (filteredIndex !== maxIndex) {
-    index += 1
-    const value = array[index]
-
+  for (const value of array) {
     if (!filter(value)) {
       continue
     }
@@ -147,6 +143,10 @@ const findClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
 
     if (filteredIndex <= minIndex) {
       continue
+    }
+
+    if (filteredIndex === maxIndex) {
+      break
     }
 
     const incrementalMean = sum / filteredIndex
