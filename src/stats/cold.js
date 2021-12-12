@@ -63,10 +63,8 @@ const getColdLoopsTarget = function (
   const incrementalMeanMin = mean * (1 - precisionTarget)
   const incrementalMeanMax = mean * (1 + precisionTarget)
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
-  const maxIndex = length - 1
   const hotIndex = findHotIndex(array, {
     minIndex,
-    maxIndex,
     filter,
     incrementalMeanMin,
     incrementalMeanMax,
@@ -165,7 +163,7 @@ const findClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
 
 const findHotIndex = function (
   array,
-  { minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
+  { minIndex, filter, incrementalMeanMin, incrementalMeanMax },
 ) {
   let sum = 0
   let filteredIndex = 0
@@ -173,7 +171,7 @@ const findHotIndex = function (
 
   for (
     let index = 0;
-    filteredIndex !== maxIndex &&
+    index !== array.length &&
     (filteredIndex <= minIndex ||
       incrementalMean < incrementalMeanMin ||
       incrementalMean > incrementalMeanMax);
