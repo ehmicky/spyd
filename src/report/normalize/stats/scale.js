@@ -1,18 +1,17 @@
 // Divide stats by a scale so they don't show too many digits nor decimals.
 export const getScale = function ({ allCombinations, name, kind, ownScale }) {
+  const minMeasure = getMinMeasure({ allCombinations, name, kind, ownScale })
+
+  const scales = SCALES[kind]
+  const scaleA = scales.find((scale) => minMeasure >= scale)
+  return scaleA === undefined ? scales[scales.length - 1] : scaleA
+}
+
+const getMinMeasure = function ({ allCombinations, name, kind, ownScale }) {
   const measures = allCombinations
     .map((combination) => getMeasure({ name, kind, ownScale, combination }))
     .filter(isNotEmpty)
-
-  const scales = SCALES[kind]
-  const minMeasure = measures.length === 0 ? 1 : Math.min(...measures)
-  const scaleA = scales.find((scale) => minMeasure >= scale)
-
-  if (scaleA === undefined) {
-    return scales[scales.length - 1]
-  }
-
-  return scaleA
+  return measures.length === 0 ? 1 : Math.min(...measures)
 }
 
 // The same duration scale is used for all `stats.*Pretty` to make it easier to
