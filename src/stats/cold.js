@@ -28,7 +28,7 @@ export const getCold = function (
 ) {
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const maxIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
-  const closestMean = getClosestMean(array, {
+  const { closestMean } = getClosestMean(array, {
     mean,
     minIndex,
     maxIndex,
@@ -52,15 +52,14 @@ export const getColdLoopsLeft = function (
   const incrementalMeanMax = mean * (1 + precisionTarget)
   const minIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
   const maxIndex = length - 1
-  const closestMeanIndex = getClosestMeanIndex(array, {
+  const { index } = getClosestMeanIndex(array, {
     minIndex,
     maxIndex,
     filter,
     incrementalMeanMin,
     incrementalMeanMax,
   })
-  const coldLoopsLeft =
-    getLengthFromIndex(COLD_MAX_PERCENTAGE, closestMeanIndex) - length
+  const coldLoopsLeft = getLengthFromIndex(COLD_MAX_PERCENTAGE, index) - length
   return coldLoopsLeft
 }
 
@@ -145,7 +144,7 @@ const getClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
     }
   }
 
-  return closestMean
+  return { closestMean }
 }
 /* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
@@ -181,11 +180,11 @@ const getClosestMeanIndex = function (
       incrementalMean >= incrementalMeanMin &&
       incrementalMean <= incrementalMeanMax
     ) {
-      return index
+      return { index }
     }
   }
 
-  return maxIndex
+  return { index: maxIndex }
 }
 /* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
