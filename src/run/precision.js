@@ -120,6 +120,13 @@ const MAX_PRECISION = PRECISION_TARGETS.length - 1
 //        - `stdev` and related stats
 //        - Preview `durationLeft`
 //     - This also means those are never reported if `precision: 0`
-export const isPreciseEnough = function (rmoe, precisionTarget) {
-  return rmoe !== undefined && rmoe <= precisionTarget
+// We also check that performance optimization has ended
+//  - We compare `cold` to the same threshold to do so.
+export const isPreciseEnough = function (rmoe, cold, precisionTarget) {
+  return (
+    rmoe !== undefined &&
+    rmoe <= precisionTarget &&
+    cold !== undefined &&
+    cold <= precisionTarget
+  )
 }
