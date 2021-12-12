@@ -22,8 +22,8 @@ export const getCold = function (
   array,
   { mean = getMean(array), filter, length = array.filter(filter).length },
 ) {
-  const minIndex = Math.floor(COLD_MIN_PERCENTAGE * (length - 1))
-  const maxIndex = Math.floor(COLD_MAX_PERCENTAGE * (length - 1))
+  const minIndex = getIndex(COLD_MIN_PERCENTAGE, length)
+  const maxIndex = getIndex(COLD_MAX_PERCENTAGE, length)
   const { closestMean } = getClosestMean(array, {
     mean,
     minIndex,
@@ -32,6 +32,10 @@ export const getCold = function (
   })
   const cold = Math.abs(mean - closestMean) / mean
   return cold
+}
+
+const getIndex = function (percentage, length) {
+  return Math.floor(percentage * (length - 1))
 }
 
 // The very first measures are sometimes abnormally fast.
