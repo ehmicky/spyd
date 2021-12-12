@@ -4,12 +4,8 @@ export const getScale = function ({ allCombinations, name, kind, ownScale }) {
     .map((combination) => getMeasure({ name, kind, ownScale, combination }))
     .filter(isNotEmpty)
 
-  if (measures.length === 0) {
-    return 1
-  }
-
   const scales = SCALES[kind]
-  const minMeasure = Math.min(...measures)
+  const minMeasure = measures.length === 0 ? 1 : Math.min(...measures)
   const scaleA = scales.find((scale) => minMeasure >= scale)
 
   if (scaleA === undefined) {
