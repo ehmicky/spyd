@@ -79,9 +79,9 @@ export const getRmoe = function (moe, mean) {
 
 // Find the `length` that gets a specific `moe` with a given `stdev`.
 // This essentially applies the inverse function of `getMoe()`.
-// Since `length` is used in non-straight-forward ways (due to `getTvalue()`)
-// in `getMoe()`, we need to do an iterative/heuristic search until the value
-// is found.
+// Since `length` is used in non-straight-forward ways (due to
+// `getStudentTvalue()`) in `getMoe()`, we need to do an iterative/heuristic
+// search until the value is found.
 export const getLengthForMoe = function (moeTarget, stdev) {
   const lengths = new Set([])
   // eslint-disable-next-line fp/no-let
