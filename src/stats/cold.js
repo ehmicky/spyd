@@ -26,8 +26,8 @@ export const getCold = function (
     length = array.filter(filter).length,
   },
 ) {
-  const minIndex = getIndex(COLD_MIN_PERCENTAGE, length)
-  const maxIndex = getIndex(COLD_MAX_PERCENTAGE, length)
+  const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
+  const maxIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
   const closestMean = getClosestMean(array, {
     mean,
     minIndex,
@@ -50,7 +50,7 @@ export const getColdLoopsLeft = function (
 ) {
   const incrementalMeanMin = mean * (1 - precisionTarget)
   const incrementalMeanMax = mean * (1 + precisionTarget)
-  const minIndex = getIndex(COLD_MAX_PERCENTAGE, length)
+  const minIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
   const maxIndex = length - 1
   const closestMeanIndex = getClosestMeanIndex(array, {
     minIndex,
@@ -60,7 +60,7 @@ export const getColdLoopsLeft = function (
     incrementalMeanMax,
   })
   const coldLoopsLeft =
-    Math.ceil(closestMeanIndex / COLD_MAX_PERCENTAGE) + 1 - length
+    getLengthFromIndex(COLD_MAX_PERCENTAGE, closestMeanIndex) - length
   return coldLoopsLeft
 }
 
@@ -108,8 +108,12 @@ const getClosestMeanIndex = function (
 /* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
 
-const getIndex = function (percentage, length) {
+const getIndexFromLength = function (percentage, length) {
   return Math.floor(percentage * (length - 1))
+}
+
+const getLengthFromIndex = function (percentage, index) {
+  return Math.ceil(index / percentage) + 1
 }
 
 // The very first measures are sometimes abnormally fast.
