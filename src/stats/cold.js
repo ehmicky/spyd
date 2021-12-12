@@ -68,46 +68,6 @@ const defaultFilter = function () {
   return true
 }
 
-/* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
-   fp/no-mutation, max-depth, no-continue */
-const getClosestMeanIndex = function (
-  array,
-  { minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
-) {
-  let sum = 0
-  let index = -1
-  let filteredIndex = 0
-
-  while (filteredIndex <= maxIndex) {
-    index += 1
-    const value = array[index]
-
-    if (!filter(value)) {
-      continue
-    }
-
-    filteredIndex += 1
-    sum += value
-
-    if (filteredIndex <= minIndex) {
-      continue
-    }
-
-    const incrementalMean = sum / filteredIndex
-
-    if (
-      incrementalMean >= incrementalMeanMin &&
-      incrementalMean <= incrementalMeanMax
-    ) {
-      return index
-    }
-  }
-
-  return maxIndex
-}
-/* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
-   fp/no-mutation, max-depth, no-continue */
-
 const getIndexFromLength = function (percentage, length) {
   return Math.floor(percentage * (length - 1))
 }
@@ -186,6 +146,46 @@ const getClosestMean = function (array, { mean, minIndex, maxIndex, filter }) {
   }
 
   return closestMean
+}
+/* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
+   fp/no-mutation, max-depth, no-continue */
+
+/* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
+   fp/no-mutation, max-depth, no-continue */
+const getClosestMeanIndex = function (
+  array,
+  { minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
+) {
+  let sum = 0
+  let index = -1
+  let filteredIndex = 0
+
+  while (filteredIndex <= maxIndex) {
+    index += 1
+    const value = array[index]
+
+    if (!filter(value)) {
+      continue
+    }
+
+    filteredIndex += 1
+    sum += value
+
+    if (filteredIndex <= minIndex) {
+      continue
+    }
+
+    const incrementalMean = sum / filteredIndex
+
+    if (
+      incrementalMean >= incrementalMeanMin &&
+      incrementalMean <= incrementalMeanMax
+    ) {
+      return index
+    }
+  }
+
+  return maxIndex
 }
 /* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
