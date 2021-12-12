@@ -16,7 +16,7 @@ export const getCold = function (
   return cold
 }
 
-const COLD_MIN_PERCENTAGE = 0.2
+const COLD_MIN_PERCENTAGE = 0.1
 const COLD_MAX_PERCENTAGE = 0.5
 
 /* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
