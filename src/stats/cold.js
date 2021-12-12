@@ -139,7 +139,7 @@ const findClosestMean = function (
   let index = -1
   let filteredIndex = 0
 
-  while (filteredIndex <= maxIndex) {
+  while (filteredIndex !== maxIndex) {
     index += 1
     const value = array[index]
 
@@ -181,8 +181,14 @@ const findHotIndex = function (
   let sum = 0
   let index = -1
   let filteredIndex = 0
+  let incrementalMean = 0
 
-  while (filteredIndex <= maxIndex) {
+  while (
+    filteredIndex !== maxIndex &&
+    (filteredIndex <= minIndex ||
+      incrementalMean < incrementalMeanMin ||
+      incrementalMean > incrementalMeanMax)
+  ) {
     index += 1
     const value = array[index]
 
@@ -192,19 +198,7 @@ const findHotIndex = function (
 
     filteredIndex += 1
     sum += value
-
-    if (filteredIndex <= minIndex) {
-      continue
-    }
-
-    const incrementalMean = sum / filteredIndex
-
-    if (
-      incrementalMean >= incrementalMeanMin &&
-      incrementalMean <= incrementalMeanMax
-    ) {
-      return filteredIndex
-    }
+    incrementalMean = sum / filteredIndex
   }
 
   return filteredIndex
