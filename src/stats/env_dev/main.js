@@ -75,7 +75,7 @@ export const getEnvDev = function (
 ) {
   const groupsCount = getGroupsCount(array.length)
 
-  if (groupsCount <= 0) {
+  if (groupsCount <= 0 || variance === 0) {
     return MIN_ENV_DEV
   }
 
