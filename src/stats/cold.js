@@ -64,7 +64,7 @@ const getColdLoopsTarget = function (
   const incrementalMeanMax = mean * (1 + precisionTarget)
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const maxIndex = length - 1
-  const { filteredIndex } = findHotIndex(array, {
+  const hotIndex = findHotIndex(array, {
     minIndex,
     maxIndex,
     filter,
@@ -72,7 +72,7 @@ const getColdLoopsTarget = function (
     incrementalMeanMax,
   })
   const coldLengthTarget = Math.max(
-    getLengthFromIndex(COLD_MAX_PERCENTAGE, filteredIndex - 1) - length,
+    getLengthFromIndex(COLD_MAX_PERCENTAGE, hotIndex - 1) - length,
     0,
   )
   const filterRatio = array.length / length
@@ -178,7 +178,6 @@ const findHotIndex = function (
   array,
   { mean, minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
 ) {
-  let closestMean = 0
   let closestMeanDiff = Number.POSITIVE_INFINITY
   let sum = 0
   let index = -1
@@ -206,17 +205,16 @@ const findHotIndex = function (
 
       if (closestMeanDiff > meanDiff) {
         closestMeanDiff = meanDiff
-        closestMean = incrementalMean
       }
     } else if (
       incrementalMean >= incrementalMeanMin &&
       incrementalMean <= incrementalMeanMax
     ) {
-      return { filteredIndex }
+      return filteredIndex
     }
   }
 
-  return { closestMean, filteredIndex }
+  return filteredIndex
 }
 /* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
