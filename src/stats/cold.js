@@ -176,9 +176,8 @@ const findClosestMean = function (
 
 const findHotIndex = function (
   array,
-  { mean, minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
+  { minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
 ) {
-  let closestMeanDiff = Number.POSITIVE_INFINITY
   let sum = 0
   let index = -1
   let filteredIndex = 0
@@ -200,13 +199,7 @@ const findHotIndex = function (
 
     const incrementalMean = sum / filteredIndex
 
-    if (mean !== undefined) {
-      const meanDiff = Math.abs(mean - incrementalMean)
-
-      if (closestMeanDiff > meanDiff) {
-        closestMeanDiff = meanDiff
-      }
-    } else if (
+    if (
       incrementalMean >= incrementalMeanMin &&
       incrementalMean <= incrementalMeanMax
     ) {
