@@ -168,17 +168,17 @@ const findHotIndex = function (
   { minIndex, maxIndex, filter, incrementalMeanMin, incrementalMeanMax },
 ) {
   let sum = 0
-  let index = -1
   let filteredIndex = 0
   let incrementalMean = 0
 
-  while (
+  for (
+    let index = 0;
     filteredIndex !== maxIndex &&
     (filteredIndex <= minIndex ||
       incrementalMean < incrementalMeanMin ||
-      incrementalMean > incrementalMeanMax)
-  ) {
+      incrementalMean > incrementalMeanMax);
     index += 1
+  ) {
     const value = array[index]
 
     if (!filter(value)) {
