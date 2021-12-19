@@ -20,10 +20,12 @@ const DIMENSIONS = [
     createdByUser: false,
   },
   {
-    isDimension: (propName) => propName.startsWith('system'),
+    isDimension: (propName) => propName.startsWith(SYSTEM_PREFIX),
     createdByUser: true,
   },
 ]
+
+export const SYSTEM_PREFIX = 'system.'
 
 // Retrieve several combinations' dimensions.
 export const getCombsDimensions = function (combinations) {

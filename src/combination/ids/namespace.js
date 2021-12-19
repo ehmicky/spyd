@@ -1,8 +1,11 @@
 import { setArrayElement } from '../../utils/set.js'
 
-import { getCombsDimensionsIds, getCombDimensionsIds } from './get.js'
+import {
+  getCombsDimensionsIds,
+  getCombDimensionsIds,
+  setDimensionId,
+} from './get.js'
 import { isSameDimension, hasCrossDimensionsIds, findSameId } from './has.js'
-import { setDimensionId, syncDimensionIds } from './set.js'
 
 // When a result is created, we ensure that two dimensions do not have the
 // same ids, by throwing errors.
@@ -37,7 +40,10 @@ const namespaceRawResultIds = function (
     namespaceDimensionsIds.bind(undefined, dimensionsIds),
     rawResult.combinations,
   )
-  const rawResultA = updateRawResult(rawResult, combinations)
+  const rawResultA =
+    rawResult.combinations === combinations
+      ? rawResult
+      : { ...rawResult, combinations }
   return setArrayElement(rawResults, index, rawResultA)
 }
 
@@ -102,10 +108,4 @@ const addDimensionId = function (dimensionsIds, combDimensionId) {
   }
 
   return similarDimensionId
-}
-
-const updateRawResult = function (rawResult, combinations) {
-  return rawResult.combinations === combinations
-    ? rawResult
-    : syncDimensionIds({ ...rawResult, combinations })
 }

@@ -24,19 +24,19 @@ import { getSystemVersions } from './versions.js'
 //    history results
 export const createSystemInfo = async function (
   combinations,
-  { cwd, systemId, envInfo },
+  { cwd, system: dimensions, envInfo },
 ) {
   const id = uuidv4()
   const timestamp = getTimestamp()
-  const system = await getSystem({ systemId, envInfo, combinations, cwd })
+  const system = await getSystem({ dimensions, envInfo, combinations, cwd })
   return { id, timestamp, system }
 }
 
-const getSystem = async function ({ systemId, combinations, cwd }) {
+const getSystem = async function ({ dimensions, combinations, cwd }) {
   const versions = await getSystemVersions(combinations, cwd)
   const machine = getMachine()
   const { git, ci } = getEnvInfo(cwd)
-  return cleanObject({ id: systemId, machine, git, ci, versions })
+  return cleanObject({ dimensions, machine, git, ci, versions })
 }
 
 const getMachine = function () {
