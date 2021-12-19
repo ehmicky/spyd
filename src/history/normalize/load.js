@@ -1,5 +1,6 @@
 import sortOn from 'sort-on'
 
+import { namespaceDimensionIds } from '../../combination/ids/namespace.js'
 import { selectRawResults } from '../../select/main.js'
 
 import { decompressRawResult } from './compress.js'
@@ -9,9 +10,10 @@ import { migrateRawResults } from './migrate.js'
 export const loadRawResults = function (rawResults, select) {
   const rawResultsA = migrateRawResults(rawResults)
   const rawResultsB = rawResultsA.map(decompressRawResult)
-  const rawResultsC = selectRawResults(rawResultsB, select)
-  const rawResultsD = sortResults(rawResultsC)
-  return rawResultsD
+  const rawResultsC = namespaceDimensionIds(rawResultsB)
+  const rawResultsD = selectRawResults(rawResultsC, select)
+  const rawResultsE = sortResults(rawResultsD)
+  return rawResultsE
 }
 
 const sortResults = function (rawResults) {
