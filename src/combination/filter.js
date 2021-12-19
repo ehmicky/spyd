@@ -14,15 +14,15 @@ import omit from 'omit.js'
 //     - To ensure they do not report them
 export const getNoDimensions = function (combinations) {
   const dimensionsArray = combinations.map(getCombinationDimensions)
-  return getCombNoDimensions(dimensionsArray)
+  return getCombsNoDimensions(dimensionsArray)
 }
 
 const getCombinationDimensions = function ({ dimensions }) {
   return dimensions
 }
 
-// Same for a single combination
-export const getCombNoDimensions = function (dimensionsArray) {
+// Same with already computed dimensions
+export const getCombsNoDimensions = function (dimensionsArray) {
   const propNames = Object.keys(dimensionsArray[0])
   return propNames.filter((propName) =>
     isNoDimensions(dimensionsArray, propName),
