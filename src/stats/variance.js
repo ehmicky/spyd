@@ -23,8 +23,8 @@ export const getVariance = function (
   array,
   { minIndex = 0, maxIndex = array.length - 1, mean },
 ) {
-  const length = maxIndex - minIndex + 1
-  return getSumDeviation({ array, minIndex, maxIndex, mean }) / (length - 1)
+  const sumDeviation = getSumDeviation({ array, minIndex, maxIndex, mean })
+  return computeVariance(sumDeviation, minIndex, maxIndex)
 }
 
 // We use a separate function from `getSum()` because it is much more performant
@@ -39,4 +39,9 @@ const getSumDeviation = function ({ array, minIndex, maxIndex, mean }) {
   }
 
   return sum
+}
+
+const computeVariance = function (sumDeviation, minIndex, maxIndex) {
+  const length = maxIndex - minIndex + 1
+  return sumDeviation / (length - 1)
 }
