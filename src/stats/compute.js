@@ -49,6 +49,11 @@ import { getMean } from './sum.js'
 //    important. However, the mean is a far more useful statistic.
 //  - This would create too many statistics for the average, together with the
 //    mean and the median.
+// All of the following stats work well with precise floats, rounded floats and
+// integers:
+//  - The latter two can happen due to:
+//     - Low time resolution
+//     - Custom units returning integers or already rounded measures
 // eslint-disable-next-line max-lines-per-function
 export const computeStats = function ({
   measures,
