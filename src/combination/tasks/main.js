@@ -48,7 +48,8 @@ import { loadRunner } from './load.js'
 //     - syntax highlighting and IDE features
 //     - runner might handle different file extensions differently
 //       (e.g. *.ts transpiling)
-//  - We do not provide inline `conf.[runnerRUNNER.]inline[.TASK[.STEP]]` "BODY"
+//  - We do not provide inline
+//    `conf.[runnerConfig.{runnerId}.]inline[.{taskId}[.{stepId}]]` "BODY"
 //    since this would:
 //     - Not allow defining content outside function body (e.g. imports) nor
 //       function declaration (e.g. async keyword)
