@@ -112,7 +112,13 @@ export const getRmoe = function (moe, mean) {
 // Since `length` is used in non-straight-forward ways (due to
 // `getStudentTvalue()`) in `getMoe()`, we need to do an iterative/heuristic
 // search until the value is found.
-export const getLengthForMoe = function (moeTarget, stdev) {
+export const getLengthForMoe = function ({ mean, stdev, precisionTarget }) {
+  const invertLength = invertLengthNormal.bind(undefined, {
+    mean,
+    stdev,
+    precisionTarget,
+  })
+
   const lengths = new Set([])
   // eslint-disable-next-line fp/no-let
   let length = MIN_LENGTH
@@ -122,13 +128,14 @@ export const getLengthForMoe = function (moeTarget, stdev) {
     lengths.add(length)
     const tValue = getTvalue(length)
     // eslint-disable-next-line fp/no-mutation
-    length = Math.max(
-      Math.round(((tValue * stdev) / moeTarget) ** 2),
-      MIN_LENGTH,
-    )
+    length = Math.max(Math.ceil(invertLength(tValue)), MIN_LENGTH)
   }
 
   return length
+}
+
+const invertLengthNormal = function ({ mean, stdev, precisionTarget }, tValue) {
+  return ((tValue * stdev) / (precisionTarget * mean)) ** 2
 }
 
 // Minimal `length` with a defined t-value

@@ -51,8 +51,7 @@ const getSamplesLeft = function (
     return 0
   }
 
-  const moeTarget = precisionTarget * mean
-  const moeLengthTarget = getLengthForMoe(moeTarget, stdev)
+  const moeLengthTarget = getLengthForMoe({ mean, stdev, precisionTarget })
   const moeLoopsTarget = getLoopsFromLength(
     moeLengthTarget,
     outliersMin,
