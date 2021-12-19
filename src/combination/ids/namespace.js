@@ -75,8 +75,7 @@ const renameDimensionId = function (
   combination,
   combDimensionId,
 ) {
-  const id = getNamespacedId(combDimensionId)
-  const combDimensionIdA = { ...combDimensionId, id }
+  const combDimensionIdA = addNamespace(combDimensionId)
   const sameDimensionId = dimensionsIds.find(
     (dimensionId) =>
       isSameId(combDimensionIdA, dimensionId) &&
@@ -92,8 +91,10 @@ const renameDimensionId = function (
   return combinationA
 }
 
-const getNamespacedId = function ({ id, dimension: { propName } }) {
-  return `${propName}_${id}`
+const addNamespace = function (combDimensionId) {
+  const prefix = `${combDimensionId.dimension.propName}_`
+  const id = `${prefix}${combDimensionId.id}`
+  return { ...combDimensionId, id }
 }
 
 const updateRawResult = function (rawResult, combinations) {
