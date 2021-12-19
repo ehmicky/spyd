@@ -16,7 +16,7 @@ export const findValue = function (iterable, func) {
 // TODO: replace with `Array.findLast()` once this is supported by all
 // supported Node.js versions.
 // Use imperative code for performance.
-export const findReverse = function (array, testFunc) {
+export const findLast = function (array, testFunc) {
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = array.length - 1; index >= 0; index -= 1) {
     const value = array[index]

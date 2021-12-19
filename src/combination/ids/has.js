@@ -1,4 +1,4 @@
-import { findReverse } from '../../utils/find.js'
+import { findLast } from '../../utils/find.js'
 
 // Remove duplicate ids with the same dimension, since this happens due to the
 // cartesian product.
@@ -26,7 +26,7 @@ const hasSameDimensionsIds = function (dimensionsIdsA, dimensionsIdB) {
 //    the same and another dimension.
 //  - Matching ids are more likely towards the end of `dimensionsIdsA`.
 export const hasCrossDimensionsIds = function (dimensionsIdsA, dimensionIdB) {
-  const similarDimensionId = findReverse(dimensionsIdsA, (dimensionIdA) =>
+  const similarDimensionId = findLast(dimensionsIdsA, (dimensionIdA) =>
     isSameId(dimensionIdA, dimensionIdB),
   )
   return (
