@@ -82,13 +82,13 @@ const renameDimensionId = function (
   combDimensionId,
 ) {
   const combDimensionIdA = addNamespace(combDimensionId, dimensionsIds)
-  const sameDimensionId = dimensionsIds.find(
+  const hasCombDimensionId = dimensionsIds.some(
     (dimensionId) =>
       isSameId(combDimensionIdA, dimensionId) &&
       isSameDimension(combDimensionIdA, dimensionId),
   )
 
-  if (sameDimensionId === undefined) {
+  if (!hasCombDimensionId) {
     // eslint-disable-next-line fp/no-mutating-methods
     dimensionsIds.push(combDimensionIdA)
   }
