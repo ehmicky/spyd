@@ -120,13 +120,10 @@ export const getLengthForMoe = function (moeTarget, stdev) {
   // eslint-disable-next-line fp/no-loops
   while (!lengths.has(length)) {
     lengths.add(length)
+    const tValue = getStudentTValue(length - 1, SIGNIFICANCE_LEVEL)
     // eslint-disable-next-line fp/no-mutation
     length = Math.max(
-      Math.round(
-        ((getStudentTValue(length - 1, SIGNIFICANCE_LEVEL) * stdev) /
-          moeTarget) **
-          2,
-      ),
+      Math.round(((tValue * stdev) / moeTarget) ** 2),
       MIN_LENGTH,
     )
   }
