@@ -2,7 +2,7 @@ import { setArrayElement } from '../../utils/set.js'
 import { getCombDimensions } from '../dimensions.js'
 
 import { getDimensionId, setDimensionId } from './get.js'
-import { isSameId, isSameDimension } from './has.js'
+import { isSameId, isSameDimension, hasCrossDimensionsIds } from './has.js'
 
 // We previously ensured that each `id` is unique within each dimension.
 // This logic ensures each `id` is also unique across dimensions.
@@ -75,7 +75,7 @@ const renameDimensionId = function (
   combination,
   combDimensionId,
 ) {
-  const combDimensionIdA = addNamespace(combDimensionId)
+  const combDimensionIdA = addNamespace(combDimensionId, dimensionsIds)
   const sameDimensionId = dimensionsIds.find(
     (dimensionId) =>
       isSameId(combDimensionIdA, dimensionId) &&
@@ -91,10 +91,17 @@ const renameDimensionId = function (
   return combinationA
 }
 
-const addNamespace = function (combDimensionId) {
-  const prefix = `${combDimensionId.dimension.propName}_`
-  const id = `${prefix}${combDimensionId.id}`
-  return { ...combDimensionId, id }
+const addNamespace = function (
+  combDimensionId,
+  dimensionsIds,
+  separators = '_',
+) {
+  const { id, dimension } = combDimensionId
+  const idA = `${dimension.propName}${separators}${id}`
+  const combDimensionIdA = { id: idA, dimension }
+  return hasCrossDimensionsIds(dimensionsIds, combDimensionIdA)
+    ? addNamespace(combDimensionId, dimensionsIds, `${separators}_`)
+    : combDimensionIdA
 }
 
 const updateRawResult = function (rawResult, combinations) {
