@@ -45,7 +45,7 @@ const defaultFilter = function () {
 
 const getCold = function (array, { mean, filter, length }) {
   if (mean === 0) {
-    return 1
+    return 0
   }
 
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
