@@ -42,7 +42,7 @@ const shouldRemoveFromHistory = async function (force) {
 
 // Get a previous rawResult by delta
 export const getFromHistory = async function (config) {
-  const rawResults = await listHistory(config)
+  const rawResults = await listHistory(config, [])
   const { rawResult, previous } = await listResultsByDelta(rawResults, config)
   return { rawResult, previous }
 }
@@ -51,9 +51,9 @@ export const getFromHistory = async function (config) {
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in rawResults preview
-export const listHistory = async function ({ cwd, select }) {
+export const listHistory = async function ({ cwd, select }, newCombinations) {
   const rawResults = await listRawResults(cwd)
-  const rawResultsA = loadRawResults(rawResults, select)
+  const rawResultsA = loadRawResults(rawResults, select, newCombinations)
   return rawResultsA
 }
 

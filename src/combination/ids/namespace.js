@@ -1,6 +1,6 @@
 import { setArrayElement } from '../../utils/set.js'
 
-import { getCombDimensionsIds } from './get.js'
+import { getCombsDimensionsIds, getCombDimensionsIds } from './get.js'
 import { isSameDimension, hasCrossDimensionsIds, findSameId } from './has.js'
 import { setDimensionId, syncDimensionIds } from './set.js'
 
@@ -18,9 +18,10 @@ import { setDimensionId, syncDimensionIds } from './set.js'
 //  - We try to avoid creating new objects and arrays unless a mutation is
 //    actually needed, i.e. some id needs to be namespaced
 //  - We directly mutate the list of `dimensionsIds`
-export const namespaceDimensionIds = function (rawResults) {
+export const namespaceDimensionIds = function (rawResults, newCombinations) {
+  const dimensionsIds = getCombsDimensionsIds(newCombinations)
   return rawResults.reduceRight(
-    namespaceRawResultIds.bind(undefined, []),
+    namespaceRawResultIds.bind(undefined, dimensionsIds),
     rawResults,
   )
 }

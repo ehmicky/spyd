@@ -4,10 +4,8 @@ import { createSystemInfo } from '../system/create/main.js'
 
 // Create a new rawResult to measure
 export const createResult = async function (config) {
-  const [combinations, previous] = await Promise.all([
-    listCombinations(config),
-    listHistory(config),
-  ])
+  const combinations = await listCombinations(config)
+  const previous = await listHistory(config, combinations)
   const { id, timestamp, system } = await createSystemInfo(combinations, config)
   const rawResult = { id, timestamp, system, combinations }
   return { rawResult, previous }

@@ -7,10 +7,10 @@ import { decompressRawResult } from './compress.js'
 import { migrateRawResults } from './migrate.js'
 
 // Normalize rawResults on load
-export const loadRawResults = function (rawResults, select) {
+export const loadRawResults = function (rawResults, select, newCombinations) {
   const rawResultsA = migrateRawResults(rawResults)
   const rawResultsB = rawResultsA.map(decompressRawResult)
-  const rawResultsC = namespaceDimensionIds(rawResultsB)
+  const rawResultsC = namespaceDimensionIds(rawResultsB, newCombinations)
   const rawResultsD = selectRawResults(rawResultsC, select)
   const rawResultsE = sortResults(rawResultsD)
   return rawResultsE
