@@ -1,5 +1,6 @@
-import { getCombsDimensionsIds } from '../ids/get.js'
 import { getInputIds } from '../inputs.js'
+
+import { getCombsDimensionsIds } from './get.js'
 
 // Retrieve user-defined identifiers
 export const getUserIds = function (combinations, inputsList) {
