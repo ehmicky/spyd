@@ -20,7 +20,7 @@ const getCombinationUserId = function ({ dimension: { messageName }, id }) {
 
 // Identifiers that do not relate to dimensions/combinations
 const getNonCombinationsIds = function (inputsList) {
-  return Object.entries(NON_COMBINATION_IDS).flatMap(([messageName, getIds]) =>
+  return NON_COMBINATION_IDS.flatMap(({ messageName, getIds }) =>
     listNonCombinationIds(messageName, getIds, inputsList),
   )
 }
@@ -30,6 +30,4 @@ const listNonCombinationIds = function (messageName, getIds, inputsList) {
   return ids.map((id) => ({ messageName, id }))
 }
 
-const NON_COMBINATION_IDS = {
-  input: getInputIds,
-}
+const NON_COMBINATION_IDS = [{ messageName: 'input', getIds: getInputIds }]
