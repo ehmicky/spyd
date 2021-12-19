@@ -1,8 +1,9 @@
-import { UserError } from '../../error/main.js'
-import { selectCombinations } from '../../select/main.js'
-import { validateCombinationsIds } from '../ids/validate.js'
-import { toInputsList } from '../inputs.js'
-import { listTasks } from '../tasks/main.js'
+import { UserError } from '../error/main.js'
+import { selectCombinations } from '../select/main.js'
+
+import { validateCombinationsIds } from './ids/validate.js'
+import { toInputsList } from './inputs.js'
+import { listTasks } from './tasks/main.js'
 
 // Retrieve each combination, i.e. combination of each combination dimension
 // of a new `run` or `dev`.
