@@ -9,47 +9,50 @@
 //  - The order of dimensions when printed
 const DIMENSIONS = [
   {
-    // Name used as property internally and when saving
-    propName: 'task',
+    // Dimension test using its internal persisted property name.
+    // Some dimensions are dynamic, i.e. can have multiple sub-dimensions.
+    isDimension: (propName) => propName === 'task',
     // Name used in output and error messages
     messageName: 'task',
     // Whether dimension's id was created by users or by plugins
     createdByUser: true,
   },
   {
-    propName: 'runner',
+    isDimension: (propName) => propName === 'runner',
     messageName: 'runner',
     createdByUser: false,
   },
   {
-    propName: 'system',
+    isDimension: (propName) => propName.startsWith('system'),
     messageName: 'system',
     createdByUser: true,
   },
 ]
 
 // Retrieve several combinations' dimensions.
-// Follows `DIMENSIONS` array order.
 export const getCombsDimensions = function (combinations) {
-  return DIMENSIONS.filter((dimension) =>
-    combsHaveDimension(combinations, dimension),
-  )
+  return combinations.flatMap(getCombDimensions).filter(isUniqueCombDimension)
 }
 
-const combsHaveDimension = function (combinations, dimension) {
-  return combinations.some((combination) =>
-    combHasDimension(combination, dimension),
-  )
+const isUniqueCombDimension = function (combDimension, index, combDimensions) {
+  return combDimensions
+    .slice(index + 1)
+    .every(({ propName }) => combDimension.propName !== propName)
 }
 
 // Retrieve one combination's dimensions.
-// Follows `DIMENSIONS` array order.
+// Array order follows:
+//  - `DIMENSIONS` order
+//  - For dynamic dimensions, lexicographic order of the dimension name
 export const getCombDimensions = function (combination) {
-  return DIMENSIONS.filter((dimension) =>
-    combHasDimension(combination, dimension),
-  )
+  return DIMENSIONS.flatMap((dimension) => getDimension(combination, dimension))
 }
 
-const combHasDimension = function (combination, dimension) {
-  return combination.dimensions[dimension.propName] !== undefined
+const getDimension = function (
+  { dimensions },
+  { isDimension, messageName, createdByUser },
+) {
+  return Object.keys(dimensions)
+    .filter(isDimension)
+    .map((propName) => ({ propName, messageName, createdByUser }))
 }
