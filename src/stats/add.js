@@ -40,7 +40,7 @@ export const getInitialStats = function () {
 //   - min, max, median, mean, stdev, rstdev, moe, rmoe, meanMin, meanMax,
 //     diff, quantiles[*], histogram[*].start|frequency: >=0
 //      - mean 0 is unlikely and impossible in saved results (except the
-//        last/current result)
+//        last/current result and if the unit is `boolean`)
 //   - outliersMin, outliersMax: >=0 <=1
 //   - histogram[*].end: <=1
 export const addStats = function ({
