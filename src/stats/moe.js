@@ -1,6 +1,6 @@
 import { getStudentTValue } from './critical_values/student_t.js'
 import { applyEnvDev } from './env_dev/apply.js'
-import { IDENTICAL_VARIANCE_SHIFT } from './variance.js'
+import { IDENTICAL_VARIANCE_SHIFT, areIdenticalMeasures } from './variance.js'
 
 // Like `getMoe()` but taking `envDev` into account
 export const getAdjustedMoe = function (stdev, length, envDev) {
@@ -120,10 +120,9 @@ export const getLengthForMoe = function ({
   max,
   precisionTarget,
 }) {
-  const invertLength =
-    min === max
-      ? invertLengthIdentical.bind(undefined, precisionTarget)
-      : invertLengthNormal.bind(undefined, { mean, stdev, precisionTarget })
+  const invertLength = areIdenticalMeasures(min, max)
+    ? invertLengthIdentical.bind(undefined, precisionTarget)
+    : invertLengthNormal.bind(undefined, { mean, stdev, precisionTarget })
 
   const lengths = new Set([])
   // eslint-disable-next-line fp/no-let

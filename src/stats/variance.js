@@ -24,7 +24,7 @@ const getVarianceStat = function (
   array,
   { minIndex, maxIndex, min, max, mean },
 ) {
-  if (min === max) {
+  if (areIdenticalMeasures(min, max)) {
     return {
       variance: getIdenticalVariance({ minIndex, maxIndex, mean }),
       realVariance: 0,
@@ -56,8 +56,11 @@ const getVarianceStat = function (
 //       magnitude
 //     - It works well with floats
 // Outliers are excluded from this logic, i.e. they might not match the
-// identical measures
-//  - Therefore, we detect this situation with `min === max`
+// identical measures.
+export const areIdenticalMeasures = function (min, max) {
+  return min === max
+}
+
 const getIdenticalVariance = function ({ minIndex, maxIndex, mean }) {
   const sumDeviation = getIdenticalSumDeviation(mean)
   return computeVariance(sumDeviation, minIndex, maxIndex + 1)
