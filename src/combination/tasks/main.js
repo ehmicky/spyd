@@ -6,7 +6,6 @@ import { loadRunner } from './load.js'
 
 // The tasks file for each runner is selected using either the `tasks` or
 // `runnerConfig.{runnerId}.tasks` configuration properties.
-// The `tasks` can be used to specify a default tasks file for all runners.
 // We allow it as a positional CLI flag:
 //  - This is what many users would expect
 //  - This allows users to do on-the-fly benchmarks without pre-existing setup
@@ -111,6 +110,9 @@ const getDimensionsTasks = async function ({ runner }, noDimensions, cwd) {
 //  - `config.runnerConfig.{runnerId}.tasks` over `config.tasks`
 //  - `tasks` array order (last has priority)
 // This allows overridding tasks when using shared configurations.
+// This only applies when the task files are using the same runner.
 const hasUniqueTaskId = function (task, index, tasks) {
-  return tasks.slice(index + 1).every(({ id }) => id !== task.id)
+  return tasks
+    .slice(index + 1)
+    .every(({ id, runner }) => id !== task.id || runner.id !== task.runner.id)
 }
