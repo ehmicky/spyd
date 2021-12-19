@@ -6,13 +6,33 @@ export const getVarianceStats = function (
   array,
   { minIndex, maxIndex, min, max, mean },
 ) {
-  const variance =
-    min === max
-      ? getIdenticalVariance({ minIndex, maxIndex, mean })
-      : getVariance(array, { minIndex, maxIndex, mean })
+  const { variance, realVariance } = getVarianceStat(array, {
+    minIndex,
+    maxIndex,
+    min,
+    max,
+    mean,
+  })
   const stdev = Math.sqrt(variance)
   const rstdev = stdev / mean
-  return { variance, stdev, rstdev }
+  return { realVariance, stdev, rstdev }
+}
+
+// On identical measures, we keep the `realVariance` as `0` so we can pass it
+// to `envDev` since it should be based on it, making it be `1`.
+const getVarianceStat = function (
+  array,
+  { minIndex, maxIndex, min, max, mean },
+) {
+  if (min === max) {
+    return {
+      variance: getIdenticalVariance({ minIndex, maxIndex, mean }),
+      realVariance: 0,
+    }
+  }
+
+  const variance = getVariance(array, { minIndex, maxIndex, mean })
+  return { variance, realVariance: variance }
 }
 
 // All measures are sometimes identical due to:

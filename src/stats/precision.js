@@ -23,14 +23,18 @@ export const getPrecisionStats = function ({
     return getPerfectPrecisionStats(mean)
   }
 
-  const { variance, stdev, rstdev } = getVarianceStats(measures, {
+  const { realVariance, stdev, rstdev } = getVarianceStats(measures, {
     minIndex,
     maxIndex,
     min,
     max,
     mean,
   })
-  const envDev = getEnvDev(unsortedMeasures, { mean, variance, filter })
+  const envDev = getEnvDev(unsortedMeasures, {
+    mean,
+    variance: realVariance,
+    filter,
+  })
   const { moe, rmoe, meanMin, meanMax } = getMoeStats({
     stdev,
     envDev,
