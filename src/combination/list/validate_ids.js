@@ -63,7 +63,7 @@ const validateReservedIds = function (id, messageName) {
 const RESERVED_IDS = ['not', 'and']
 
 // We validate that identifiers are unique not only within their combination
-// dimension but across combination dimensions.
+// dimension but also across combination dimensions.
 // This allows specifying identifiers without specifying their combination
 // dimension (task, systems, runners, variations) in many places including:
 // `config.titles`, `config.select`, reporting.
