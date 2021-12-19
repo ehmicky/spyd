@@ -34,13 +34,13 @@ export const hasCrossDimensionsIds = function (dimensionsIdsA, dimensionIdB) {
 
 // Find any `dimensionsIdA` with same `id` as `dimensionIdB`.
 // Since matching ids are more likely towards the end, use `findLast()`.
-const findSameId = function (dimensionsIdsA, dimensionIdB) {
+export const findSameId = function (dimensionsIdsA, dimensionIdB) {
   return findLast(dimensionsIdsA, (dimensionIdA) =>
     isSameId(dimensionIdA, dimensionIdB),
   )
 }
 
-export const isSameId = function (dimensionsIdA, dimensionsIdB) {
+const isSameId = function (dimensionsIdA, dimensionsIdB) {
   return dimensionsIdA.id === dimensionsIdB.id
 }
 

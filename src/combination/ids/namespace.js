@@ -1,7 +1,7 @@
 import { setArrayElement } from '../../utils/set.js'
 
 import { getCombDimensionsIds } from './get.js'
-import { isSameId, isSameDimension, hasCrossDimensionsIds } from './has.js'
+import { isSameDimension, hasCrossDimensionsIds, findSameId } from './has.js'
 import { setDimensionId, syncDimensionIds } from './set.js'
 
 // When a result is created, we ensure that two dimensions do not have the
@@ -60,9 +60,7 @@ const namespaceDimensionId = function (
   combination,
   combDimensionId,
 ) {
-  const similarDimensionId = dimensionsIds.find((dimensionId) =>
-    isSameId(combDimensionId, dimensionId),
-  )
+  const similarDimensionId = findSameId(dimensionsIds, combDimensionId)
 
   if (similarDimensionId === undefined) {
     // eslint-disable-next-line fp/no-mutating-methods
@@ -84,11 +82,9 @@ const renameDimensionId = function (
 ) {
   const combDimensionIdA = addNamespace(combDimensionId, dimensionsIds)
 
-  const hasCombDimensionId = dimensionsIds.some((dimensionId) =>
-    isSameId(combDimensionIdA, dimensionId),
-  )
+  const similarDimensionId = findSameId(dimensionsIds, combDimensionIdA)
 
-  if (!hasCombDimensionId) {
+  if (similarDimensionId === undefined) {
     // eslint-disable-next-line fp/no-mutating-methods
     dimensionsIds.push(combDimensionIdA)
   }
