@@ -82,7 +82,7 @@ const validateDuplicateId = function ({ dimension, id }, index, allIds) {
     userDimensions.length === 1
       ? `Please rename the ${userDimensions[0].messageName}.`
       : `Please rename one of them.`
-  throw new UserError(`The identifier "${id}" must not be used both as ${dimension.messageName} and ${duplicateDimension.messageName}.
+  throw new UserError(`The identifier "${id}" must not be used both as a ${dimension.messageName} and as a ${duplicateDimension.messageName}.
 ${errorSuffix}`)
 }
 
