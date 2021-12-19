@@ -1,4 +1,4 @@
-import { hasSameCombinationIds } from './ids/get.js'
+import { getCombinationIds } from './ids/get.js'
 
 // Filter out the `resultA.combinations` that are not in `resultB`
 export const pickResultCombinations = function (resultA, resultB) {
@@ -36,5 +36,14 @@ const resultHasCombination = function ({ combinations }, combination) {
 export const getMatchingCombination = function (combinations, combination) {
   return combinations.find((combinationA) =>
     hasSameCombinationIds(combinationA, combination),
+  )
+}
+
+// Check if two combinations have same identifiers for all dimensions
+export const hasSameCombinationIds = function (combinationA, combinationB) {
+  const combinationIdsA = getCombinationIds(combinationA)
+  const combinationIdsB = getCombinationIds(combinationB)
+  return combinationIdsA.every((combinationId) =>
+    combinationIdsB.includes(combinationId),
   )
 }
