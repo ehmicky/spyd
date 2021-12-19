@@ -12,19 +12,15 @@ const DIMENSIONS = [
     // Dimension test using its internal persisted property name.
     // Some dimensions are dynamic, i.e. can have multiple sub-dimensions.
     isDimension: (propName) => propName === 'task',
-    // Name used in output and error messages
-    messageName: 'task',
     // Whether dimension's id was created by users or by plugins
     createdByUser: true,
   },
   {
     isDimension: (propName) => propName === 'runner',
-    messageName: 'runner',
     createdByUser: false,
   },
   {
     isDimension: (propName) => propName.startsWith('system'),
-    messageName: 'system',
     createdByUser: true,
   },
 ]
@@ -49,11 +45,12 @@ export const getCombDimensions = function (combination) {
   return DIMENSIONS.flatMap((dimension) => getDimension(combination, dimension))
 }
 
-const getDimension = function (
-  { dimensions },
-  { isDimension, messageName, createdByUser },
-) {
+// We dissociate:
+//  - `propName`: used internally and when saving
+//  - `messageName`: used in output and error messages
+// However, those are currently identical for the sets of dimensions.
+const getDimension = function ({ dimensions }, { isDimension, createdByUser }) {
   return Object.keys(dimensions)
     .filter(isDimension)
-    .map((propName) => ({ propName, messageName, createdByUser }))
+    .map((propName) => ({ propName, messageName: propName, createdByUser }))
 }
