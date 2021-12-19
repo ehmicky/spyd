@@ -3,13 +3,13 @@ import { isFile } from 'path-type'
 import { PluginError, UserError } from '../../error/main.js'
 import { measureCombinations } from '../../run/measure/main.js'
 
-// Each task has its own process, in order to prevent them from influencing
-// each other:
+// Each combination has its own process, in order to prevent them from
+// influencing each other:
 //  - By modifying the global state
 //  - Or due to the runtime engine being less able to optimize hot paths due
-//    to several tasks competing for optimization in the same process
-// So we spawn a single process for all of them, to retrieve the task and step
-// identifiers.
+//    to several combinations competing for optimization in the same process
+// Before spawning those, we spawn a single process per task to retrieve the
+// task and step identifiers.
 export const findTasks = async function ({
   taskPath,
   runner,
