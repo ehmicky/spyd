@@ -3,7 +3,9 @@
     "id": "f0f13513-5267-43a9-a02a-60fdde0332d0",
     "timestamp": 1617479059030,
     "system": {
-      "id": "primary_machine",
+      "dimensions": {
+        "machine": "primary_machine"
+      },
       "machine": {
         "cpus": [
           {
@@ -153,7 +155,9 @@
     "id": "0037ce27-caa6-4eeb-8534-5036c30b3c44",
     "timestamp": 1620912181813,
     "system": {
-      "id": "primary_machine",
+      "dimensions": {
+        "machine": "primary_machine"
+      },
       "machine": {
         "cpus": [
           {
@@ -243,7 +247,9 @@
     "id": "a037ce27-caa6-4eeb-8534-5036c30b3c43",
     "timestamp": 1620912181814,
     "system": {
-      "id": "primary_machine",
+      "dimensions": {
+        "machine": "primary_machine"
+      },
       "machine": {
         "cpus": [
           {
@@ -390,7 +396,9 @@
     "id": "37f6f761-b29d-4c65-97ea-12d9efdf3333",
     "timestamp": 1620912369731,
     "system": {
-      "id": "primary_machine",
+      "dimensions": {
+        "machine": "primary_machine"
+      },
       "machine": {
         "cpus": [
           {
