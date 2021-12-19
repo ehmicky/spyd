@@ -13,7 +13,7 @@ const DIMENSIONS = [
     propName: 'task',
     // Name used in output and error messages
     messageName: 'task',
-    // Whether dimension was created by users or by plugins
+    // Whether dimension's id was created by users or by plugins
     createdByUser: true,
   },
   {
