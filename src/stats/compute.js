@@ -29,7 +29,8 @@ import { getMean } from './sum.js'
 // mean, not the median because:
 //  - Users are likely to repeat a task in real code, i.e. are interested in the
 //    long tail of slower durations.
-//  - This works better with small integer measures, e.g. with the `manual` mode
+//  - This is more robust for strongly multimodal distributions
+//     - including with small integer measures, e.g. with the `manual` mode
 //  - This discourages users to manually loop inside their tasks, since we
 //    already do it for them.
 //  - The `stdev` and `moe` formulas are different and more complex for `median`
