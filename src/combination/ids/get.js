@@ -38,7 +38,7 @@ export const getCombDimensionsIds = function (combination) {
 }
 
 // Retrieve a dimensionId for a given combination's dimension
-export const getDimensionId = function (combination, dimension) {
+const getDimensionId = function (combination, dimension) {
   const { id } = combination.dimensions[dimension.propName]
   return { id, dimension }
 }

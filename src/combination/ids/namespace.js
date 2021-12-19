@@ -1,7 +1,6 @@
 import { setArrayElement } from '../../utils/set.js'
-import { getCombDimensions } from '../dimensions.js'
 
-import { getDimensionId, setDimensionId } from './get.js'
+import { getCombDimensionsIds, setDimensionId } from './get.js'
 import { isSameId, isSameDimension, hasCrossDimensionsIds } from './has.js'
 
 // When a result is created, we ensure that two dimensions do not have the
@@ -47,16 +46,19 @@ const namespaceDimensionsIds = function (
   combination,
   index,
 ) {
-  const dimensions = getCombDimensions(combination)
-  const combinationA = dimensions.reduce(
+  const comDimensionsIds = getCombDimensionsIds(combination)
+  const combinationA = comDimensionsIds.reduce(
     namespaceDimensionId.bind(undefined, dimensionsIds),
     combination,
   )
   return setArrayElement(combinations, index, combinationA)
 }
 
-const namespaceDimensionId = function (dimensionsIds, combination, dimension) {
-  const combDimensionId = getDimensionId(combination, dimension)
+const namespaceDimensionId = function (
+  dimensionsIds,
+  combination,
+  combDimensionId,
+) {
   const similarDimensionId = dimensionsIds.find((dimensionId) =>
     isSameId(combDimensionId, dimensionId),
   )
