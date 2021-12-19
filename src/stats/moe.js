@@ -76,8 +76,8 @@ export const getAdjustedMoe = function (stdev, length, envDev) {
 //    combination pair
 export const getMoe = function (stdev, length) {
   const standardError = stdev / Math.sqrt(length)
-  const tvalue = getTvalue(length)
-  const moe = standardError * tvalue
+  const tValue = getTvalue(length)
+  const moe = standardError * tValue
   return moe
 }
 
