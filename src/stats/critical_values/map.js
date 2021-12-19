@@ -4,7 +4,7 @@
 // computing the real value with their underlying function. This is much faster
 // but less precise.
 // The pre-computed table is an array of objects with properties:
-//  - `significanceRate` {float}: from 0 to 1
+//  - `significanceLevel` {float}: from 0 to 1
 //  - `values` {object}:
 //     - keys are the degrees of freedom
 //     - values are the critical values
@@ -17,7 +17,7 @@ export const getCriticalValuesMap = function (criticalValuesRaw) {
 }
 
 const getCriticalValueEntry = function ({
-  significanceRate,
+  significanceLevel,
   getMaxValue,
   criticalValues,
 }) {
@@ -29,7 +29,7 @@ const getCriticalValueEntry = function ({
   const [impreciseEntriesMaxIndex] =
     impreciseEntries[impreciseEntries.length - 1]
   return [
-    roundDecimals(significanceRate),
+    roundDecimals(significanceLevel),
     { preciseMap, impreciseEntries, impreciseEntriesMaxIndex, getMaxValue },
   ]
 }
@@ -45,7 +45,7 @@ const isLastPreciseKey = function ([key], index, entries) {
 }
 
 // Retrieve a critical value given a specific degrees of freedom and
-// significance rate.
+// significance level.
 // There are three levels of precision depending on how high the numbers of
 // degrees of freedom are, since the pre-computed table cannot hard code all
 // possible values:
@@ -55,14 +55,14 @@ const isLastPreciseKey = function ([key], index, entries) {
 export const getCriticalValue = function (
   criticalValuesMap,
   degreesOfFreedom,
-  significanceRate,
+  significanceLevel,
 ) {
   const {
     preciseMap,
     impreciseEntries,
     impreciseEntriesMaxIndex,
     getMaxValue,
-  } = criticalValuesMap.get(roundDecimals(significanceRate))
+  } = criticalValuesMap.get(roundDecimals(significanceLevel))
 
   if (degreesOfFreedom > impreciseEntriesMaxIndex) {
     return getMaxValue(degreesOfFreedom)

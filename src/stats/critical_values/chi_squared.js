@@ -2,25 +2,25 @@ import { getCriticalValue, getCriticalValuesMap } from './map.js'
 
 /* eslint-disable max-lines */
 // Return number to multiply variance with in order to get its confidence
-// interval for a given significance rate and size.
+// interval for a given significance level and size.
 // Uses the chi-squared distribution's critical value.
-export const getChiSquaredValue = function (size, significanceRate) {
+export const getChiSquaredValue = function (size, significanceLevel) {
   const degreesOfFreedom = size - 1
   const criticalValue = getCriticalValue(
     CHI_SQUARED_MAP,
     degreesOfFreedom,
-    significanceRate,
+    significanceLevel,
   )
   return degreesOfFreedom / criticalValue
 }
 
-// Chi-squared critical values, with specific significance rate, single-sided
+// Chi-squared critical values, with specific significance level, single-sided
 // TODO: more digits of precision
 // TODO: more values
 /* eslint-disable unicorn/numeric-separators-style */
 const CHI_SQUARED_RAW = [
   {
-    significanceRate: 0.025,
+    significanceLevel: 0.025,
     getMaxValue(degreesOfFreedom) {
       return degreesOfFreedom + 1
     },
@@ -296,7 +296,7 @@ const CHI_SQUARED_RAW = [
     },
   },
   {
-    significanceRate: 0.975,
+    significanceLevel: 0.975,
     getMaxValue(degreesOfFreedom) {
       return degreesOfFreedom - 1
     },
