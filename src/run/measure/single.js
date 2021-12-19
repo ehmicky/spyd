@@ -1,4 +1,4 @@
-import { getCombinationPrefix } from '../../combination/name.js'
+import { getCombinationPrefix } from '../../combination/ids/name.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'

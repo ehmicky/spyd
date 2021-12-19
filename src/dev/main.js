@@ -1,5 +1,5 @@
 import { getNoDimensions } from '../combination/filter.js'
-import { getCombinationNameColor } from '../combination/name.js'
+import { getCombinationNameColor } from '../combination/ids/name.js'
 import { measureCombinations } from '../run/measure/main.js'
 
 // Execute tasks without benchmarking them.

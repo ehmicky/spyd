@@ -1,6 +1,6 @@
 import now from 'precise-now'
 
-import { getCombinationNameColor } from '../../combination/name.js'
+import { getCombinationNameColor } from '../../combination/ids/name.js'
 
 import { START_DESCRIPTION } from './description.js'
 import { updatePreview } from './update/main.js'

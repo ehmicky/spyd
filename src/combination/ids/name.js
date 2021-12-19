@@ -1,7 +1,7 @@
-import { titleColor, noteColor } from '../report/utils/colors.js'
+import { titleColor, noteColor } from '../../report/utils/colors.js'
+import { omitCombNoDimensions } from '../filter.js'
 
-import { omitCombNoDimensions } from './filter.js'
-import { getCombDimensionsIds } from './ids/get.js'
+import { getCombDimensionsIds } from './get.js'
 
 // Retrieve error message prefix showing a combination's dimension ids
 export const getCombinationPrefix = function (combination, noDimensions) {

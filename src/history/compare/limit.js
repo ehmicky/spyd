@@ -1,4 +1,4 @@
-import { getCombinationPrefix } from '../../combination/name.js'
+import { getCombinationPrefix } from '../../combination/ids/name.js'
 import { UserError } from '../../error/main.js'
 import { matchSelectors } from '../../select/match.js'
 
