@@ -26,6 +26,8 @@ export const getPrecisionStats = function ({
   const { variance, stdev, rstdev } = getVarianceStats(measures, {
     minIndex,
     maxIndex,
+    min,
+    max,
     mean,
   })
   const envDev = getEnvDev(unsortedMeasures, { mean, variance, filter })

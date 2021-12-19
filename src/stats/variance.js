@@ -2,12 +2,29 @@
 // Rstdev is stdev relative to the mean.
 // This is more useful than stdev when comparing different combinations, or when
 // targetting a specific precision threshold.
-export const getVarianceStats = function (array, { minIndex, maxIndex, mean }) {
-  const variance = getVariance(array, { minIndex, maxIndex, mean })
+export const getVarianceStats = function (
+  array,
+  { minIndex, maxIndex, min, max, mean },
+) {
+  const variance =
+    min === max
+      ? getIdenticalVariance({ minIndex, maxIndex, mean })
+      : getVariance(array, { minIndex, maxIndex, mean })
   const stdev = Math.sqrt(variance)
   const rstdev = stdev / mean
   return { variance, stdev, rstdev }
 }
+
+const getIdenticalVariance = function ({ minIndex, maxIndex, mean }) {
+  const sumDeviation = getIdenticalSumDeviation(mean)
+  return computeVariance(sumDeviation, minIndex, maxIndex + 1)
+}
+
+const getIdenticalSumDeviation = function (mean) {
+  return (mean * IDENTICAL_VARIANCE_SHIFT) ** 2
+}
+
+const IDENTICAL_VARIANCE_SHIFT = 1e-2
 
 // Retrieve variance of an array of floats (cannot be NaN/Infinity).
 // Array must not be empty.
