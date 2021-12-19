@@ -28,10 +28,11 @@ export const sortCombinations = function (result) {
 
 // Retrieve a function used to compare combinations for a specific dimension
 const getSortFunction = function ({ propName }, combinations) {
-  const meansOfMeans = mapObj(
-    groupBy(combinations, ({ dimensions }) => dimensions[propName].id),
-    getMeanOfMeans,
+  const combinationsGroups = groupBy(
+    combinations,
+    ({ dimensions }) => dimensions[propName].id,
   )
+  const meansOfMeans = mapObj(combinationsGroups, getMeanOfMeans)
   return getCombinationOrder.bind(undefined, propName, meansOfMeans)
 }
 
