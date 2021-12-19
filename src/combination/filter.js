@@ -4,9 +4,9 @@ import omit from 'omit.js'
 // combinations.
 // Those are not reported, since they are redundant for users.
 // We only filter those just before reporting|printing:
-//  - `noDimensions` are always kept otherwise because lots of logic relies on
-//    all dimensions, even redundant, to be present: select, limit,
-//    id validation
+//  - `noDimensions` are always kept otherwise
+//     - Some logic relies on all dimensions, even redundant, to be present:
+//       select, limit, id validation
 //  - We also keep all dimensions in result files since history merging and
 //   `select` might add|remove redundant dimensions
 //  - We do filter `noDimensions` inside the `result` passed to reporters though
