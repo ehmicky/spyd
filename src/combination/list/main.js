@@ -27,7 +27,7 @@ export const listCombinations = async function ({
   return combinationsA
 }
 
-// Get cartesian product of all combinations
+// Get cartesian product of all combinations.
 // `taskPath` is not set in `dimensions.task.path` because it used by the `init`
 // stage before task dimension ids are known.
 const getCombinationsProduct = function ({ tasks, inputsList, systemId }) {
