@@ -1,37 +1,22 @@
 // Serialize `git` information for CLI reporters.
 export const serializeGit = function ({ commit, tag, branch }) {
-  if (commit === undefined && tag === undefined) {
-    return
-  }
-
-  const hash = getHash(commit, tag)
-  const branchA = getBranch(branch)
-  return `${hash}${branchA}`
+  return commit === undefined && tag === undefined
+    ? undefined
+    : `${getHash(commit, tag)}${getBranch(branch)}`
 }
 
 const getHash = function (commit, tag) {
-  if (tag !== undefined) {
-    return tag
-  }
-
-  return commit.slice(0, COMMIT_SIZE)
+  return tag === undefined ? commit.slice(0, COMMIT_SIZE) : tag
 }
 
 const COMMIT_SIZE = 8
 
 export const serializePr = function ({ prNumber, prBranch }) {
-  if (prNumber === undefined) {
-    return
-  }
-
-  const prBranchA = getBranch(prBranch)
-  return `#${prNumber}${prBranchA}`
+  return prNumber === undefined
+    ? undefined
+    : `#${prNumber}${getBranch(prBranch)}`
 }
 
 const getBranch = function (branch) {
-  if (branch === undefined) {
-    return ''
-  }
-
-  return ` (${branch})`
+  return branch === undefined ? '' : ` (${branch})`
 }
