@@ -65,6 +65,16 @@ import { THRESHOLDS } from './threshold.js'
 //  - outliersMin|Max 0 should be possible
 //  - Making only slight changes to the measures should not result in big
 //    changes of outliersMin|Max
+// In practice, tasks tend to have the following patterns:
+//  - Most have 0-5% slow outliers which are due to both:
+//     - Lognormal long tail
+//     - Engine optimization, OS background processes, etc.
+//  - Many (but not all) have a very small amount of fast outliers (0-0.5%)
+//  - A few have a large amount 5-30% of slow outliers which are due to either:
+//     - Distribution having multiple modes
+//     - Engine optimization, i.e. slow outliers are less frequent as sample
+//       size increases
+//  - Rarely, there is a large amount of outliers
 // Outliers removal can be skipped by using the `outliers: true` configuration
 // property:
 //  - This is discouraged because:
