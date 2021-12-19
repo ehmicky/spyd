@@ -111,11 +111,7 @@ const addNamespace = function (
 }
 
 const updateRawResult = function (rawResult, combinations) {
-  if (rawResult.combinations === combinations) {
-    return rawResult
-  }
-
-  const rawResultA = { ...rawResult, combinations }
-  const rawResultB = syncDimensionIds(rawResultA)
-  return rawResultB
+  return rawResult.combinations === combinations
+    ? rawResult
+    : syncDimensionIds({ ...rawResult, combinations })
 }
