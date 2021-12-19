@@ -12,7 +12,9 @@ export const findValue = function (iterable, func) {
   }
 }
 
-// Like `Array.find()` but reversed.
+// Like `Array.findLast()`.
+// TODO: replace with `Array.findLast()` once this is supported by all
+// supported Node.js versions.
 // Use imperative code for performance.
 export const findReverse = function (array, testFunc) {
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
@@ -26,7 +28,9 @@ export const findReverse = function (array, testFunc) {
   }
 }
 
-// Like `Array.findIndex()` but reversed.
+// Like `Array.findLastIndex()`.
+// TODO: replace with `Array.findLastIndex()` once this is supported by all
+// supported Node.js versions.
 // Use imperative code for performance.
 export const findIndexReverse = function (array, testFunc) {
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
