@@ -39,6 +39,8 @@ import { UserError } from '../error/main.js'
 //  - statistical:
 //     - due to low sample size
 //     - reduced by increasing `precision`
+//        - users should increase `precision` up until a satisfactory precision
+//          or a duration too slow
 //     - types:
 //        - same combination, same result: `rmoe`
 //        - different combination, same result: compare `moe` ranges
@@ -48,29 +50,25 @@ import { UserError } from '../error/main.js'
 //  - task itself:
 //     - due to non-deterministic logic in the task or use a shared resources
 //       (CPU, memory, etc.)
-//     - measured by: `stdev`, `quantiles|min|median|max`
-//     - no way (nor strong reason) to reduce it
+//     - measured by `stdev` and `quantiles|min|median|max`
+//     - no way (nor reason) to reduce it
 //     - only reported by distribution-centric reporters (histogram, box chart),
 //       not most reporters
 //        - reason: simplicity, and putting focus on `mean` instead
 //  - engine optimization:
 //     - due to engine optimize code runtime, e.g. JIT
-//     - measured by: `moe`, `stdev`, `quantiles|min|median|max`
+//     - measured by `cold`
 //     - reduced by increasing `precision`
 //     - only happening in:
 //        - the beginning of the measuring
 //        - very fast tasks
-//     - does not need any specific stats because:
-//        - `moe` already takes care of it
-//           - engine optimization implies slow outliers and bigger `stdev`
-//           - this increases the time required to reach `precisionTarget`
-//        - `repeat` calibration tends to soften it
-//           - since it runs the tasks many times and discard those measures
 //  - environment:
 //     - difference in OS load, hardware, etc.
 //        - multidimensional: CPU, memory, network, i.e. specific to each
 //          combination use of those resources
-//     - measured by `diff` (with same combination)
+//     - measured by:
+//        - `envDev`: within a specific run
+//        - `diff`: between runs
 //     - reduced by using containers, VM, CI
 //     - users might intentionally compare it, for example to compare different
 //       machines
