@@ -80,7 +80,7 @@ import { loadRunner } from './load.js'
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
 export const listTasks = async function (runners, cwd) {
-  const dimensionsArray = runners.map(getDimension)
+  const dimensionsArray = runners.map(getDimensions)
   const noDimensions = getCombsNoDimensions(dimensionsArray)
   const tasks = await Promise.all(
     dimensionsArray.map((dimensions) =>
@@ -90,7 +90,7 @@ export const listTasks = async function (runners, cwd) {
   return tasks.flat().filter(hasUniqueTaskId)
 }
 
-const getDimension = function (runner) {
+const getDimensions = function (runner) {
   return { runner }
 }
 
