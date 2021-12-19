@@ -44,6 +44,10 @@ const defaultFilter = function () {
 }
 
 const getCold = function (array, { mean, filter, length }) {
+  if (mean === 0) {
+    return 1
+  }
+
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const maxIndex = getIndexFromLength(COLD_MAX_PERCENTAGE, length)
   const closestMean = findClosestMean(array, {
