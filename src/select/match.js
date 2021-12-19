@@ -1,4 +1,4 @@
-import { getCombinationIds } from '../combination/ids.js'
+import { getCombinationIds } from '../combination/ids/get.js'
 import { findIndexReverse } from '../utils/find.js'
 
 // Select combinations according to the `select|limit` configuration properties.

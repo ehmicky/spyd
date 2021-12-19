@@ -1,4 +1,4 @@
-import { getCombsDimensionsIds } from '../ids.js'
+import { getCombsDimensionsIds } from '../ids/get.js'
 import { getInputIds } from '../inputs.js'
 
 // Retrieve user-defined identifiers

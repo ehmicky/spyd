@@ -1,4 +1,4 @@
-import { hasSameCombinationIds } from './ids.js'
+import { hasSameCombinationIds } from './ids/get.js'
 
 // Filter out the `resultA.combinations` that are not in `resultB`
 export const pickResultCombinations = function (resultA, resultB) {

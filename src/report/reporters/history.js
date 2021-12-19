@@ -1,4 +1,4 @@
-import { hasSameCombinationIds } from '../../combination/ids.js'
+import { hasSameCombinationIds } from '../../combination/ids/get.js'
 import { fieldColor } from '../utils/colors.js'
 import { getCombinationTitleColor } from '../utils/combination_title.js'
 import { STATS_SEPARATOR_COLORED } from '../utils/separator.js'

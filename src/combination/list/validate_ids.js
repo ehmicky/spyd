@@ -1,5 +1,5 @@
 import { UserError } from '../../error/main.js'
-import { getCombsDimensionsIds } from '../ids.js'
+import { getCombsDimensionsIds } from '../ids/get.js'
 
 import { getUserIds } from './user_ids.js'
 
