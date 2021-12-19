@@ -11,15 +11,10 @@ const isNotDuplicateId = function (dimensionsIdA, index, dimensionsIds) {
 }
 
 const hasSameDimensionsIds = function (dimensionsIdsA, dimensionsIdB) {
-  return dimensionsIdsA.some((dimensionsIdA) =>
-    isSameDimensionsId(dimensionsIdA, dimensionsIdB),
-  )
-}
-
-const isSameDimensionsId = function (dimensionsIdA, dimensionsIdB) {
-  return (
-    isSameId(dimensionsIdA, dimensionsIdB) &&
-    isSameDimension(dimensionsIdA, dimensionsIdB)
+  return dimensionsIdsA.some(
+    (dimensionsIdA) =>
+      isSameId(dimensionsIdA, dimensionsIdB) &&
+      isSameDimension(dimensionsIdA, dimensionsIdB),
   )
 }
 
