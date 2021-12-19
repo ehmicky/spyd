@@ -1,7 +1,8 @@
 import { setArrayElement } from '../../utils/set.js'
 
-import { getCombDimensionsIds, setDimensionId } from './get.js'
+import { getCombDimensionsIds } from './get.js'
 import { isSameId, isSameDimension, hasCrossDimensionsIds } from './has.js'
+import { setDimensionId, syncDimensionIds } from './set.js'
 
 // When a result is created, we ensure that two dimensions do not have the
 // same ids, by throwing errors.
@@ -115,16 +116,6 @@ const updateRawResult = function (rawResult, combinations) {
   }
 
   const rawResultA = { ...rawResult, combinations }
-  const rawResultB = renameSystemIds(rawResultA)
+  const rawResultB = syncDimensionIds(rawResultA)
   return rawResultB
-}
-
-// System ids are persisted in two places: `rawResult.system.id` and
-// `rawResult.combinations[*].dimensions.system`.
-// We need to update the former.
-const renameSystemIds = function (rawResult) {
-  const { id } = rawResult.combinations[0].dimensions.system
-  return rawResult.system.id === id
-    ? rawResult
-    : { ...rawResult, system: { ...rawResult.system, id } }
 }
