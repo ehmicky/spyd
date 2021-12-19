@@ -74,7 +74,7 @@ const getIdenticalSumDeviation = function (mean) {
 // one.
 // A higher value makes identical measures end too early.
 // A lower value makes benchmarks slower.
-export const IDENTICAL_VARIANCE_SHIFT = 1e-2
+export const IDENTICAL_VARIANCE_SHIFT = 5e-2
 
 // Retrieve variance of an array of floats (cannot be NaN/Infinity).
 // Array must not be empty.
