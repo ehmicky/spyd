@@ -37,7 +37,22 @@ export const getCombDimensionsIds = function (combination) {
   return dimensions.map((dimension) => getDimensionId(combination, dimension))
 }
 
-const getDimensionId = function (combination, dimension) {
+// Retrieve a dimensionId for a given combination's dimension
+export const getDimensionId = function (combination, dimension) {
   const { id } = combination.dimensions[dimension.propName]
   return { id, dimension }
+}
+
+// Rename the `id` of a dimensionId for a given combination's dimension
+export const setDimensionId = function (
+  combination,
+  { id, dimension: { propName } },
+) {
+  return {
+    ...combination,
+    dimensions: {
+      ...combination.dimensions,
+      [propName]: { ...combination.dimensions[propName], id },
+    },
+  }
 }

@@ -23,10 +23,10 @@ const isSameDimensionsId = function (dimensionsIdA, dimensionsIdB) {
   )
 }
 
-const isSameId = function (dimensionsIdA, dimensionsIdB) {
+export const isSameId = function (dimensionsIdA, dimensionsIdB) {
   return dimensionsIdA.id === dimensionsIdB.id
 }
 
-const isSameDimension = function (dimensionsIdA, dimensionsIdB) {
+export const isSameDimension = function (dimensionsIdA, dimensionsIdB) {
   return dimensionsIdA.dimension.propName === dimensionsIdB.dimension.propName
 }
