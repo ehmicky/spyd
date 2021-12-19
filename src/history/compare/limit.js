@@ -72,7 +72,7 @@ const isBelowThreshold = function (diff, threshold, higher) {
 }
 
 // `getCombinationName` passes an empty `noDimensions` since `dimensions` are
-// already filtered out `programmaticResult`.
+// already filtered out in `programmaticResult`.
 const getLimitError = function ({ diff, threshold, higher, combination }) {
   const combinationPrefix = getCombinationPrefix(combination, [])
   const thresholdStr = threshold * PERCENTAGE_RATIO
