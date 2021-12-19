@@ -76,7 +76,7 @@ export const getAdjustedMoe = function (stdev, length, envDev) {
 //    combination pair
 export const getMoe = function (stdev, length) {
   const standardError = stdev / Math.sqrt(length)
-  const tvalue = getStudentTValue(length - 1, SIGNIFICANCE_LEVEL)
+  const tvalue = getTvalue(length)
   const moe = standardError * tvalue
   return moe
 }
@@ -120,7 +120,7 @@ export const getLengthForMoe = function (moeTarget, stdev) {
   // eslint-disable-next-line fp/no-loops
   while (!lengths.has(length)) {
     lengths.add(length)
-    const tValue = getStudentTValue(length - 1, SIGNIFICANCE_LEVEL)
+    const tValue = getTvalue(length)
     // eslint-disable-next-line fp/no-mutation
     length = Math.max(
       Math.round(((tValue * stdev) / moeTarget) ** 2),
@@ -133,5 +133,9 @@ export const getLengthForMoe = function (moeTarget, stdev) {
 
 // Minimal `length` with a defined t-value
 const MIN_LENGTH = 2
+
+const getTvalue = function (length) {
+  return getStudentTValue(length - 1, SIGNIFICANCE_LEVEL)
+}
 
 const SIGNIFICANCE_LEVEL = 0.95
