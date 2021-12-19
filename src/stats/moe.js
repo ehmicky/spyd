@@ -83,7 +83,26 @@ export const getMoe = function (stdev, length) {
 
 // Retrieve margin of error relative to the mean.
 // This is more useful than moe when comparing different combinations, or when
-// targetting a specific precision threshold.
+// targetting a specific `precisionTarget`.
+// Confidence interval:
+//  - Unlike `moe`, `rmoe` can be impacted by the mean's inaccuracy (due to
+//    being estimated)
+//     - This can make run end earlier than expected
+//  - It would be more accurate to use a confidence interval, i.e. `rmoeMin|Max`
+//    instead of `rmoe`
+//     - using `moe / meanMin|Max` instead of `moe / mean`
+//     - `rmoeMax` would be used like `rmoe`, i.e. mostly to check to see if
+//        combination should end
+//  - While it would be more accurate, we do not use a confidence interval
+//    because:
+//     - The difference with `rmoe` is:
+//        - Too low to be worth the added complexity
+//        - Constant for a given `precision`, i.e. could be considered part of
+//          the `precisionTarget` itself
+//           - e.g. 10% `precisionTarget` is actually always `[9.1%, 11.1%]`
+//     - It is not a problem even when mean inaccuracy is high
+//        - Because that is only likely when rstdev is high and sample size low
+//        - Which is proportional to a higher `moe|rmoe`
 export const getRmoe = function (moe, mean) {
   return moe / mean
 }
