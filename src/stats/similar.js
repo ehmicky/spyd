@@ -123,10 +123,15 @@ const welchTTest = function ({
   const degreesOfFreedom =
     (errorSquaredA + errorSquaredB) ** 2 /
     (errorSquaredA ** 2 / (lengthA - 1) + errorSquaredB ** 2 / (lengthB - 1))
-  const tValue = getStudentTValue(Math.floor(degreesOfFreedom))
+  const tValue = getStudentTValue(
+    Math.floor(degreesOfFreedom),
+    SIGNIFICANCE_LEVEL,
+  )
   return tStat < tValue
 }
 
 const getErrorSquared = function (stdev, length) {
   return (stdev / Math.sqrt(length)) ** 2
 }
+
+const SIGNIFICANCE_LEVEL = 0.95

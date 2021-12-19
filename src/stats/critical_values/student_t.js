@@ -3,16 +3,14 @@ import { getCriticalValue, getCriticalValuesMap } from './map.js'
 
 // Retrieve critical value of the Student's t distribution, two-tailed, for a
 // given degrees of freedom
-export const getStudentTValue = function (degreesOfFreedom) {
-  const singleSignificanteLevel = (1 - SIGNIFICANCE_LEVEL) / 2
+export const getStudentTValue = function (degreesOfFreedom, significanceLevel) {
+  const singleSignificanteLevel = (1 - significanceLevel) / 2
   return getCriticalValue(
     STUDENT_T_MAP,
     degreesOfFreedom,
     singleSignificanteLevel,
   )
 }
-
-const SIGNIFICANCE_LEVEL = 0.95
 
 const STUDENT_T_RAW = [
   {
