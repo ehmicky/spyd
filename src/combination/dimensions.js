@@ -9,7 +9,7 @@
 //  - The order of dimensions when printed
 const DIMENSIONS = [
   {
-    // Name used as property internally and when saving.
+    // Name used as property internally and when saving
     propName: 'task',
     // Name used in output and error messages
     messageName: 'task',
