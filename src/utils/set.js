@@ -11,10 +11,3 @@ export const setArrayElement = function (array, index, element) {
   arrayCopy[index] = element
   return arrayCopy
 }
-
-// Same for an object
-export const setObjectElement = function (object, propName, element) {
-  return object[propName] === element
-    ? object
-    : { ...object, [propName]: element }
-}

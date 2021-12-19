@@ -1,4 +1,4 @@
-import { setArrayElement, setObjectElement } from '../../utils/set.js'
+import { setArrayElement } from '../../utils/set.js'
 import { getCombDimensions } from '../dimensions.js'
 
 import { getDimensionId, setDimensionId } from './get.js'
@@ -32,7 +32,7 @@ const namespaceRawResultIds = function (
     namespaceDimensionsIds.bind(undefined, dimensionsIds),
     rawResult.combinations,
   )
-  const rawResultA = setObjectElement(rawResult, 'combinations', combinations)
+  const rawResultA = updateRawResult(rawResult, combinations)
   return setArrayElement(rawResults, index, rawResultA)
 }
 
@@ -94,4 +94,24 @@ const renameDimensionId = function (
 
 const getNamespacedId = function ({ id, dimension: { propName } }) {
   return `${propName}_${id}`
+}
+
+const updateRawResult = function (rawResult, combinations) {
+  if (rawResult.combinations === combinations) {
+    return rawResult
+  }
+
+  const rawResultA = { ...rawResult, combinations }
+  const rawResultB = renameSystemIds(rawResultA)
+  return rawResultB
+}
+
+// System ids are persisted in two places: `rawResult.system.id` and
+// `rawResult.combinations[*].dimensions.system`.
+// We need to update the former.
+const renameSystemIds = function (rawResult) {
+  const { id } = rawResult.combinations[0].dimensions.system
+  return rawResult.system.id === id
+    ? rawResult
+    : { ...rawResult, system: { ...rawResult.system, id } }
 }
