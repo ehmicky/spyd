@@ -1,5 +1,5 @@
 import { getCombinationIds } from '../combination/ids/get.js'
-import { findIndexReverse } from '../utils/find.js'
+import { findLastIndex } from '../utils/find.js'
 
 // Select combinations according to the `select|limit` configuration properties.
 // Each selector:
@@ -34,7 +34,7 @@ export const matchSelectors = function (combination, selectors) {
   const combinationIds = getCombinationIds(combination).map(
     normalizeCombinationId,
   )
-  const index = findIndexReverse(selectors, (selector) =>
+  const index = findLastIndex(selectors, (selector) =>
     matchIds(combinationIds, selector),
   )
 

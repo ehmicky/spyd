@@ -1,4 +1,4 @@
-import { findIndexReverse } from '../../../utils/find.js'
+import { findLastIndex } from '../../../utils/find.js'
 
 import { findByGitRef } from './git.js'
 
@@ -18,7 +18,7 @@ const GIT_COMMIT_REGEXP = /^[\da-f]{7,}$/iu
 // users most likely want.
 // When none is found in `rawResult.systems`, we try to use `git` instead.
 const findByCommit = async function (rawResults, commit, cwd) {
-  const index = findIndexReverse(rawResults, ({ systems: [{ git = {} }] }) =>
+  const index = findLastIndex(rawResults, ({ systems: [{ git = {} }] }) =>
     git.commit.startsWith(commit),
   )
 

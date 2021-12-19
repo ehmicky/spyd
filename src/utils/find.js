@@ -32,7 +32,7 @@ export const findLast = function (array, testFunc) {
 // TODO: replace with `Array.findLastIndex()` once this is supported by all
 // supported Node.js versions.
 // Use imperative code for performance.
-export const findIndexReverse = function (array, testFunc) {
+export const findLastIndex = function (array, testFunc) {
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = array.length - 1; index >= 0; index -= 1) {
     // eslint-disable-next-line max-depth

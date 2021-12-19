@@ -1,4 +1,4 @@
-import { findIndexReverse } from '../../../utils/find.js'
+import { findLastIndex } from '../../../utils/find.js'
 
 import { findByGitRef } from './git.js'
 
@@ -15,7 +15,7 @@ const parseTag = function (delta) {
 // users most likely want.
 // When none is found in `rawResult.systems`, we try to use `git` instead.
 const findByTag = async function (rawResults, tagOrBranch, cwd) {
-  const index = findIndexReverse(
+  const index = findLastIndex(
     rawResults,
     ({ systems: [{ git: { tag, branch } = {} }] }) =>
       tag === tagOrBranch || branch === tagOrBranch,
