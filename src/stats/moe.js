@@ -138,4 +138,9 @@ const getTvalue = function (length) {
   return getStudentTValue(length - 1, SIGNIFICANCE_LEVEL)
 }
 
+// Significance level when computing the `moe`.
+// A lower value:
+//  - Makes measures outside the confidence interval more frequent
+//  - Requires a higher `MIN_STDEV_LOOPS`
+// A higher value slows benchmarks.
 const SIGNIFICANCE_LEVEL = 0.95
