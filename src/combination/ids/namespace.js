@@ -82,6 +82,7 @@ const renameDimensionId = function (
   combDimensionId,
 ) {
   const combDimensionIdA = addNamespace(combDimensionId, dimensionsIds)
+
   const hasCombDimensionId = dimensionsIds.some((dimensionId) =>
     isSameId(combDimensionIdA, dimensionId),
   )
