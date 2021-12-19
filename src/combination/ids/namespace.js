@@ -60,35 +60,17 @@ const namespaceDimensionId = function (
   combination,
   combDimensionId,
 ) {
-  const similarDimensionId = findSameId(dimensionsIds, combDimensionId)
+  const similarDimensionId = addDimensionId(dimensionsIds, combDimensionId)
 
-  if (similarDimensionId === undefined) {
-    // eslint-disable-next-line fp/no-mutating-methods
-    dimensionsIds.push(combDimensionId)
+  if (
+    similarDimensionId === undefined ||
+    isSameDimension(combDimensionId, similarDimensionId)
+  ) {
     return combination
   }
 
-  if (isSameDimension(combDimensionId, similarDimensionId)) {
-    return combination
-  }
-
-  return renameDimensionId(dimensionsIds, combination, combDimensionId)
-}
-
-const renameDimensionId = function (
-  dimensionsIds,
-  combination,
-  combDimensionId,
-) {
   const combDimensionIdA = addNamespace(combDimensionId, dimensionsIds)
-
-  const similarDimensionId = findSameId(dimensionsIds, combDimensionIdA)
-
-  if (similarDimensionId === undefined) {
-    // eslint-disable-next-line fp/no-mutating-methods
-    dimensionsIds.push(combDimensionIdA)
-  }
-
+  addDimensionId(dimensionsIds, combDimensionIdA)
   const combinationA = setDimensionId(combination, combDimensionIdA)
   return combinationA
 }
@@ -104,6 +86,17 @@ const addNamespace = function (
   return hasCrossDimensionsIds(dimensionsIds, combDimensionIdA)
     ? addNamespace(combDimensionId, dimensionsIds, `${separators}_`)
     : combDimensionIdA
+}
+
+const addDimensionId = function (dimensionsIds, combDimensionId) {
+  const similarDimensionId = findSameId(dimensionsIds, combDimensionId)
+
+  if (similarDimensionId === undefined) {
+    // eslint-disable-next-line fp/no-mutating-methods
+    dimensionsIds.push(combDimensionId)
+  }
+
+  return similarDimensionId
 }
 
 const updateRawResult = function (rawResult, combinations) {
