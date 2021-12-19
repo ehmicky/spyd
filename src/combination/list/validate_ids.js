@@ -62,13 +62,25 @@ const validateReservedIds = function (id, messageName) {
 // 'not' and 'and' are used by `select`
 const RESERVED_IDS = ['not', 'and']
 
-// We validate that identifiers are unique not only within their combination
-// dimension but also across combination dimensions.
+// For each dimension of the new result, we previously ensured that each
+// identifier of that dimension is unique.
+// We validate there that identifiers across dimensions are also unique.
 // This allows specifying identifiers without specifying their combination
-// dimension (task, systems, runners, variations) in many places including:
-// `config.titles`, `config.select`, reporting.
+// dimension in many places including: `config.titles`, `config.select`,
+// reporting.
 // Non-combination identifiers are not checked for duplicates since they are
 // not used for selection, reporting, `config.titles`, etc.
+// Identifier of previous results (which might be eventually merged to the new
+// result, for reporting) are not checked for duplicate ids:
+//  - Instead, they are namespaced with a prefix
+//  - Reasons:
+//     - This would depend on `since`, making validation fail or not depending
+//       on that configuration property
+//     - Since `since` defaults to `0`, it would not be useful most of the times
+//     - This would not work when:
+//        - Using results across multiple git branches results, since we do not
+//          load all results from all branches
+//        - Result files are manually edited
 const validateDuplicateId = function ({ dimension, id }, index, allIds) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
