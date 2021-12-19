@@ -30,8 +30,8 @@ export const getCombsNoDimensions = function (dimensionsArray) {
 }
 
 const isNoDimensions = function (dimensionsArray, propName) {
-  const ids = dimensionsArray.map((dimensions) => dimensions[propName].id)
-  return [...new Set(ids)].length === 1
+  const { id } = dimensionsArray[0][propName]
+  return dimensionsArray.every((dimensions) => dimensions[propName].id === id)
 }
 
 // Filter `noDimensions` from result, during reporting.
