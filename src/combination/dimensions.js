@@ -6,9 +6,7 @@
 //     - in some of those cases, `titles` are applied too
 // The order is significant as it defines:
 //  - The sorting order of combinations in reporters
-//  - The order of dimensions when printing:
-//     - combinationName in previews, `dev` and error messages
-//     - combinationTitle in reporters
+//  - The order of dimensions when printed
 const DIMENSIONS = [
   {
     // Name used as property internally and when saving.
