@@ -21,17 +21,22 @@ const hasSameDimensionsIds = function (dimensionsIdsA, dimensionsIdB) {
 }
 
 // Checks if any `dimensionsIdsA` have the same `id` but a different dimension.
-// As a performance optimization, this relies on two assumptions:
-//  - It is not possible for `dimensionsIdsA` to contain the same id both in
-//    the same and another dimension.
-//  - Matching ids are more likely towards the end of `dimensionsIdsA`.
+// As a performance optimization, this relies on the following assumption:
+// it is not possible for `dimensionsIdsA` to contain the same `id` both in the
+// same and another dimension.
 export const hasCrossDimensionsIds = function (dimensionsIdsA, dimensionIdB) {
-  const similarDimensionId = findLast(dimensionsIdsA, (dimensionIdA) =>
-    isSameId(dimensionIdA, dimensionIdB),
-  )
+  const similarDimensionId = findSameId(dimensionsIdsA, dimensionIdB)
   return (
     similarDimensionId !== undefined &&
     !isSameDimension(similarDimensionId, dimensionIdB)
+  )
+}
+
+// Find any `dimensionsIdA` with same `id` as `dimensionIdB`.
+// Since matching ids are more likely towards the end, use `findLast()`.
+const findSameId = function (dimensionsIdsA, dimensionIdB) {
+  return findLast(dimensionsIdsA, (dimensionIdA) =>
+    isSameId(dimensionIdA, dimensionIdB),
   )
 }
 
