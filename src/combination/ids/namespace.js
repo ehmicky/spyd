@@ -4,12 +4,13 @@ import { getCombDimensions } from '../dimensions.js'
 import { getDimensionId, setDimensionId } from './get.js'
 import { isSameId, isSameDimension, hasCrossDimensionsIds } from './has.js'
 
-// We previously ensured that each `id` is unique across dimensions of a given
-// result, when the result is created
-// This logic ensures each `id` is also unique across dimensions of all results.
-// We do this by prefixing the dimension's name to the `id` when we find
+// When a result is created, we ensure that two dimensions do not have the
+// same ids, by throwing errors.
+// When loading previous results, we also ensure that each id is unique
+// across dimensions of those results.
+// We do this by prefixing the dimension's name to the id when we find
 // cross-dimensions duplicates.
-//  - If the prefixed `id` is still a duplicate, which is very unlikely, we add
+//  - If the prefixed id is still a duplicate, which is very unlikely, we add
 //    additional prefixes until it stops being a duplicate.
 // We only do so on the previous result's id, not on the most recent, so those
 // ids look simpler to users.
