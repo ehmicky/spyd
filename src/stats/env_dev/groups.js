@@ -143,7 +143,7 @@ const getConfidenceInterval = function (
 
 // Significance level when computing the confidence interval of each group's
 // variance.
-// A lower value decrease precision and accuracy.
+// A lower value decreases precision and accuracy.
 // A higher value decreases accuracy when the "optimal" size is close to
 // `array.length`
 export const SIGNIFICANCE_LEVEL = 0.95
