@@ -62,10 +62,7 @@ const namespaceDimensionId = function (
 ) {
   const similarDimensionId = addDimensionId(dimensionsIds, combDimensionId)
 
-  if (
-    similarDimensionId === undefined ||
-    isSameDimension(combDimensionId, similarDimensionId)
-  ) {
+  if (!shouldNamespace(similarDimensionId, combDimensionId)) {
     return combination
   }
 
@@ -73,6 +70,13 @@ const namespaceDimensionId = function (
   addDimensionId(dimensionsIds, combDimensionIdA)
   const combinationA = setDimensionId(combination, combDimensionIdA)
   return combinationA
+}
+
+const shouldNamespace = function (similarDimensionId, combDimensionId) {
+  return (
+    similarDimensionId !== undefined &&
+    !isSameDimension(combDimensionId, similarDimensionId)
+  )
 }
 
 const addNamespace = function (
