@@ -134,4 +134,8 @@ const getErrorSquared = function (stdev, length) {
   return (stdev / Math.sqrt(length)) ** 2
 }
 
+// Significance level when computing the welch t-test.
+// A higher value increases the false positives
+//   - i.e. `diffPrecise: false` but is actually `true`
+// A lower value increases the false negatives (inverse).
 const SIGNIFICANCE_LEVEL = 0.95
