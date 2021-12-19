@@ -40,16 +40,27 @@ export const getAdjustedMoe = function (stdev, length, envDev) {
 //  - for those reasons, using the moe as an absolute duration is more useful in
 //    reporting than using the moe relative to the mean (percentage)
 // This all relies on measures following a normal distribution
-//  - In practice, this is rarely the case:
-//     - Several distributions are usually summed, i.e. producing several modes.
-//       For example, if a background process (like garbage collection) operates
-//       at regular intervals, it will add its own distribution.
-//     - Distributions tend to be lognormal, with a longer tail for slow
-//       durations
-//  - However, this is fine for practical purpose:
-//     - This is close enough to a normal distribution to be useful, while not
-//       being completely statistically correct
-//     - Removing outliers helps getting closer to a normal distribution
+//  - In practice:
+//     - Distributions tend to be normal-to-lognormal:
+//        - Most of the times (but not always) longer tail are on the slow side
+//        - Can also be more uniform when using randomness as input
+//     - Distribution often have multiple modes
+//        - Due to:
+//           - Engine optimization
+//              - Ehis is because optimization is sometimes triggered at
+//                specific thresholds, as opposed to progressively
+//              - This means the earlier modes decrease in frequency as run
+//                continues
+//           - The `repeat` loop
+//           - Performing specific operations at regular thresholds such as:
+//              - Memory allocation on a growing array
+//                 - e.g. `Array.push()` does this, leading to its duration to
+//                   be very fast most of the times, and much slower rarely
+//              - Background processes
+//                 - The outliers logic helps removing most of them though
+//           - Logic using randomness
+//        - This is less common for logic with higher complexity
+//  - However, this is fine thanks to the Central limit theorem
 // We do not report whether each combinations pair is statistically comparable:
 //  - reporting it with some symbol on combination names does not work well:
 //     - when combination name is graphically spread, e.g. when the reporter
