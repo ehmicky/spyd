@@ -53,9 +53,10 @@ const getUniquePropEntries = function (uniquePropNames, systems) {
 }
 
 const getUniquePropEntry = function (propName, systems) {
-  return [...new Set(systems.map(({ props }) => props[propName]))].map(
-    (propValue) => [propName, propValue],
-  )
+  const uniquePropValues = [
+    ...new Set(systems.map(({ props }) => props[propName])),
+  ]
+  return uniquePropValues.map((propValue) => [propName, propValue])
 }
 
 const getPropDimension = function (propName, propValue, systems) {
