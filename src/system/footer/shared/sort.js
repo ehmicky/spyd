@@ -33,6 +33,9 @@ const addPropOrder = function ({ propName, propValue }) {
   return { propName, propValue, propOrder }
 }
 
+// Order where each property should be shown in the footer
+const PROP_ORDER = ['aa', 'ff', 'bb', 'cc', 'dd', 'ee', 'gg', 'hh']
+
 const removeSortProps = function ({ propEntries, dimensionsArray }) {
   const propEntriesA = propEntries.map(removePropOrder)
   const dimensionsArrayA = dimensionsArray.map(Object.fromEntries)
@@ -186,6 +189,3 @@ const comparePropEntries = function (propEntryA, propEntryB) {
 
   return 0
 }
-
-// Order where each property should be shown in the footer
-const PROP_ORDER = ['aa', 'ff', 'bb', 'cc', 'dd', 'ee', 'gg', 'hh']
