@@ -1,11 +1,12 @@
 import { sortDimensionsArray } from './dimensions.js'
+import { getDimensionNames } from './dimensions_names.js'
 import { addPropOrder, sortPropEntries, removePropOrder } from './props.js'
 import { compareSystems } from './systems.js'
 
 // Sort systems deeply so they are shown in a user-friendly and predictable way
 // in the footer
-export const sortSystems = function (footer, { dimensions }) {
-  const dimensionNames = Object.keys(dimensions)
+export const sortSystems = function (footer, firstSystem) {
+  const dimensionNames = getDimensionNames(firstSystem, footer.systems)
   // eslint-disable-next-line fp/no-mutating-methods
   const systems = footer.systems
     .map((system) => addSortProps(system, dimensionNames))

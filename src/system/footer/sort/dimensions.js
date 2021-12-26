@@ -8,12 +8,6 @@ export const sortDimensionsArray = function (dimensionsArray, dimensionNames) {
 }
 
 // Sort each dimension within a given `dimensions` by its dimension name.
-//  - Instead of using lexicographic order, we use the order of dimensions as
-//    specified by the user in the `system` configuration property
-//  - This is persisted in results and we ensure it does not change until it
-//    reaches this logic
-//  - We only use a single system for this, for consistency, and we use the
-//    one from the target result.
 // Then sort each dimension value's array item.
 const sortDimensionsEntries = function (dimensionNames, dimensionsEntries) {
   const dimensionsEntriesA = dimensionsEntries.map((dimensionsEntry) =>
