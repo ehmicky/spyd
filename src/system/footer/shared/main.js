@@ -6,13 +6,13 @@ import { addTopSystem } from './top.js'
 // Split `systems` into several so that:
 //  - Shared properties are shown under the same system titles
 //  - As few systems as possible are shown
-export const addSharedSystems = function (systems) {
-  const propEntries = listPropEntries(systems)
+export const addSharedSystems = function (footer) {
+  const propEntries = listPropEntries(footer.systems)
   const propGroups = getPropGroups(propEntries)
-  const propGroupsA = simplifyPropGroups(propGroups, systems)
+  const propGroupsA = simplifyPropGroups(propGroups, footer.systems)
   const propGroupsB = addTopSystem(propGroupsA)
-  const systemsA = finalizeSystems(propGroupsB)
-  return systemsA
+  const systems = finalizeSystems(propGroupsB)
+  return { ...footer, systems }
 }
 
 // Transform `propGroups` back to `systems`

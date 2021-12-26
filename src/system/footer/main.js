@@ -3,7 +3,7 @@ import { addFooterTitles } from '../../report/normalize/titles_add.js'
 import { omitFooterProps } from '../omit.js'
 
 import { serializeFooter } from './serialize.js'
-import { addSharedSystem } from './shared.js'
+import { addSharedSystems } from './shared/main.js'
 
 // Add each `reporter.footer`
 // TODO:
@@ -32,7 +32,7 @@ export const addFooter = function ({
   const footer = { id, timestamp, systems }
   const footerA = addFooterTitles(footer, titles, showTitles)
   const footerB = omitFooterProps(footerA, showMetadata, showSystem)
-  const footerC = addSharedSystem(footerB)
+  const footerC = addSharedSystems(footerB)
   const footerD = serializeFooter(footerC)
   const { footerParams, footerString } = applyFooterFormat(footerD, format)
   return { ...reporter, footerParams, footerString }
