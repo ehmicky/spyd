@@ -195,11 +195,13 @@ const appendValues = function (allDimensions) {
 }
 
 const addTopSharedSystem = function (reducedPropDimensions) {
-  return reducedPropDimensions.some(
-    ([, allDimensions]) => allDimensions.length === 0,
-  )
+  return reducedPropDimensions.some(isTopSharedSystem)
     ? reducedPropDimensions
     : [[[], []], ...reducedPropDimensions]
+}
+
+const isTopSharedSystem = function ([, allDimensions]) {
+  return allDimensions.length === 0
 }
 
 const sortSystems = function (finalPropDimensions) {
