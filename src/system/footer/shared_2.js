@@ -60,16 +60,13 @@ const addPropEntryDimensions = function ({ propName, propValue }, systems) {
 }
 
 const getPropGroups = function (propEntries) {
-  const dimensionsArrays = getUniqueDimensions(propEntries)
+  const dimensionsArrays = uniqueDeepUnordered(
+    propEntries.map(getPropEntryDimensions),
+  )
   const propGroups = dimensionsArrays.map((dimensionsArray) =>
     getPropGroup(dimensionsArray, propEntries),
   )
   return propGroups
-}
-
-const getUniqueDimensions = function (propEntries) {
-  const dimensionsArrays = propEntries.map(getPropEntryDimensions)
-  return uniqueDeepUnordered(dimensionsArrays)
 }
 
 const getPropEntryDimensions = function ({ dimensionsArray }) {
