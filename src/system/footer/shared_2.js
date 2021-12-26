@@ -107,7 +107,6 @@ const reduceOneOnePropDimensions = function (
   const matching = systems.filter((system) =>
     isReducibleSystem({ system, allDimensionsB, index, dimensionName }),
   )
-
   return matching.length === allDimensionsB.length
     ? [
         ...allDimensionsB.slice(0, index),
