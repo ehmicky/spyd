@@ -66,8 +66,12 @@ const groupPropDimension = function (allDimensions, propDimensions) {
     .filter(([, , allDimensionsB]) =>
       isSameArray(allDimensions, allDimensionsB),
     )
-    .map(([propName, propValue]) => [propName, propValue])
+    .map(getGroupedDimension)
   return [propEntries, allDimensions]
+}
+
+const getGroupedDimension = function ([propName, propValue]) {
+  return [propName, propValue]
 }
 
 const reducePropDimensions = function (groupedPropDimensions, systems) {
