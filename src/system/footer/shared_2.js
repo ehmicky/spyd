@@ -7,11 +7,8 @@ import sortOn from 'sort-on'
 /* eslint-disable max-nested-callbacks, max-lines-per-function, complexity, max-lines, fp/no-loops, max-statements, max-depth, no-unreachable-loop */
 const mainLogic = function (systems) {
   const propEntries = listPropEntries(systems)
-  const groupedPropDimensions = groupPropEntries(propEntries)
-  const reducedPropDimensions = reducePropDimensions(
-    groupedPropDimensions,
-    systems,
-  )
+  const propGroups = getPropGroups(propEntries)
+  const reducedPropDimensions = reducePropDimensions(propGroups, systems)
   const finalPropDimensions = addTopSharedSystem(reducedPropDimensions)
   const sortedGroupedPropDimensions = sortSystems(finalPropDimensions)
   const systemsA = finalizeSystems(sortedGroupedPropDimensions)
@@ -59,12 +56,12 @@ const addPropEntryDimensions = function ({ propName, propValue }, systems) {
   return { propName, propValue, dimensionsArray }
 }
 
-const groupPropEntries = function (propEntries) {
+const getPropGroups = function (propEntries) {
   const dimensionsArrays = getUniqueDimensions(propEntries)
-  const groupedPropDimensions = dimensionsArrays.map((dimensionsArray) =>
-    groupPropDimension(dimensionsArray, propEntries),
+  const propGroups = dimensionsArrays.map((dimensionsArray) =>
+    getPropGroup(dimensionsArray, propEntries),
   )
-  return groupedPropDimensions
+  return propGroups
 }
 
 const getUniqueDimensions = function (propEntries) {
@@ -87,7 +84,7 @@ const isUniqueDimensionsArray = function (
     )
 }
 
-const groupPropDimension = function (dimensionsArray, propEntries) {
+const getPropGroup = function (dimensionsArray, propEntries) {
   const propEntriesMany = propEntries
     .filter(({ dimensionsArray: dimensionsArrayB }) =>
       isSameArray(dimensionsArray, dimensionsArrayB),
@@ -100,15 +97,14 @@ const getGroupedDimension = function ({ propName, propValue }) {
   return [propName, propValue]
 }
 
-const reducePropDimensions = function (groupedPropDimensions, systems) {
-  return groupedPropDimensions.map(([propEntries, allDimensions]) =>
-    reduceEachPropDimensions(propEntries, allDimensions, systems),
+const reducePropDimensions = function (propGroups, systems) {
+  return propGroups.map((propGroup) =>
+    reduceEachPropDimensions(propGroup, systems),
   )
 }
 
 const reduceEachPropDimensions = function (
-  propEntries,
-  allDimensions,
+  [propEntries, allDimensions],
   systems,
 ) {
   const allDimensionsC = reduceAllPropDimensions(allDimensions, systems)
