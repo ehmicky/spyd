@@ -23,12 +23,9 @@ const mainLogic = function (systems) {
 
 const getPropDimensions = function (systems) {
   const normalizedSystems = systems.map(normalizeSystemProps)
-  const uniquePropNames = getUniquePropNames(normalizedSystems)
-  const uniquePropEntries = getUniquePropEntries(
-    uniquePropNames,
-    normalizedSystems,
-  )
-  const propDimensions = uniquePropEntries.map(([propName, propValue]) =>
+  const propNames = getUniquePropNames(normalizedSystems)
+  const propEntries = getUniquePropEntries(propNames, normalizedSystems)
+  const propDimensions = propEntries.map(([propName, propValue]) =>
     getPropDimension(propName, propValue, normalizedSystems),
   )
   return propDimensions
