@@ -371,10 +371,12 @@ const finalizeSystems = function (sortedGroupedPropDimensions) {
 }
 
 const finalizeSystem = function ({ propEntries, allDimensions }) {
-  const props = Object.fromEntries(
-    propEntries.map(({ propName, propValue }) => [propName, propValue]),
-  )
+  const props = Object.fromEntries(propEntries.map(getDimensionEntry))
   return { dimensions: allDimensions, ...props }
+}
+
+const getDimensionEntry = function ({ propName, propValue }) {
+  return [propName, propValue]
 }
 
 const isSameArray = function (arrayA, arrayB) {
