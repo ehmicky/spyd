@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import mapObj from 'map-obj'
 import omit from 'omit.js'
 import sortOn from 'sort-on'
@@ -7,7 +8,6 @@ import { findIndexFrom } from '../../utils/find.js'
 import { setArray } from '../../utils/set.js'
 import { uniqueDeep, uniqueDeepUnordered } from '../../utils/unique.js'
 
-/* eslint-disable max-nested-callbacks, max-lines-per-function, complexity, max-lines, fp/no-loops, max-statements, max-depth, no-unreachable-loop */
 const mainLogic = function (systems) {
   const propEntries = listPropEntries(systems)
   const propGroups = getPropGroups(propEntries)
@@ -394,6 +394,7 @@ const addPropOrder = function ({ propName, propValue }) {
   return { propName, propValue, propOrder }
 }
 
+// eslint-disable-next-line complexity
 const compareSystems = function (
   { isTopSystem: isTopSystemA, propEntries: propEntriesA },
   { isTopSystem: isTopSystemB, propEntries: propEntriesB },
@@ -406,10 +407,11 @@ const compareSystems = function (
     return 1
   }
 
-  // eslint-disable-next-line unicorn/no-for-loop, fp/no-let, fp/no-mutation
+  // eslint-disable-next-line unicorn/no-for-loop, fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = 0; index < propEntriesA.length; index += 1) {
     const result = comparePropEntries(propEntriesA[index], propEntriesB[index])
 
+    // eslint-disable-next-line max-depth
     if (result !== 0) {
       return result
     }
@@ -418,6 +420,7 @@ const compareSystems = function (
   return 0
 }
 
+// eslint-disable-next-line complexity, max-statements
 const comparePropEntries = function (propEntryA, propEntryB) {
   if (propEntryB === undefined) {
     return 1
