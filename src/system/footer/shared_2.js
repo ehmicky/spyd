@@ -25,8 +25,8 @@ const getPropDimensions = function (systems) {
   const normalizedSystems = systems.map(normalizeSystemProps)
   const propNames = getUniquePropNames(normalizedSystems)
   const propEntries = getUniquePropEntries(propNames, normalizedSystems)
-  const propDimensions = propEntries.map(([propName, propValue]) =>
-    getPropDimension(propName, propValue, normalizedSystems),
+  const propDimensions = propEntries.map((propEntry) =>
+    getPropDimension(propEntry, normalizedSystems),
   )
   return propDimensions
 }
@@ -49,10 +49,10 @@ const getUniquePropEntries = function (propNames, systems) {
 
 const getUniquePropEntry = function (propName, systems) {
   const propValues = [...new Set(systems.map(({ props }) => props[propName]))]
-  return propValues.map((propValue) => [propName, propValue])
+  return propValues.map((propValue) => ({ propName, propValue }))
 }
 
-const getPropDimension = function (propName, propValue, systems) {
+const getPropDimension = function ({ propName, propValue }, systems) {
   const allDimensions = systems
     .filter(({ props }) => props[propName] === propValue)
     .map(({ dimensions }) => dimensions)
