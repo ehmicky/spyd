@@ -307,7 +307,7 @@ const compareSystems = function (
     return 1
   }
 
-  // eslint-disable-next-line
+  // eslint-disable-next-line unicorn/no-for-loop, fp/no-let, fp/no-mutation
   for (let index = 0; index < propEntriesA.length; index += 1) {
     const result = comparePropEntries(propEntriesA[index], propEntriesB[index])
 
