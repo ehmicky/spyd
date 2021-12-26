@@ -207,10 +207,10 @@ const sortSystems = function (finalPropDimensions) {
       const hasNoDimensions = allDimensions.length === 0
       const fullPropEntries = propEntries.map(([propName, propValue]) => {
         const propOrder = PROP_ORDER.indexOf(propName)
-        return [propName, propValue, propOrder]
+        return { propName, propValue, propOrder }
       })
       const propEntriesA = fullPropEntries.sort(
-        ([, , propOrderA], [, , propOrderB]) =>
+        ({ propOrder: propOrderA }, { propOrder: propOrderB }) =>
           propOrderA > propOrderB ? 1 : -1,
       )
       return { hasNoDimensions, propEntries: propEntriesA, allDimensions }
@@ -237,8 +237,8 @@ const sortSystems = function (finalPropDimensions) {
           }
 
           const propEntryA = propEntriesA[index]
-          const propOrderA = propEntryA[2]
-          const propOrderB = propEntryB[2]
+          const propOrderA = propEntryA.propOrder
+          const propOrderB = propEntryB.propOrder
 
           if (propOrderA > propOrderB) {
             return 1
@@ -248,8 +248,8 @@ const sortSystems = function (finalPropDimensions) {
             return -1
           }
 
-          const valueA = propEntryA[1]
-          const valueB = propEntryB[1]
+          const valueA = propEntryA.propValue
+          const valueB = propEntryB.propValue
 
           if (valueA > valueB) {
             return 1
@@ -267,7 +267,9 @@ const sortSystems = function (finalPropDimensions) {
 
 const finalizeSystems = function (sortedGroupedPropDimensions) {
   return sortedGroupedPropDimensions.map(({ propEntries, allDimensions }) => {
-    const props = Object.fromEntries(propEntries)
+    const props = Object.fromEntries(
+      propEntries.map(({ propName, propValue }) => [propName, propValue]),
+    )
     return { dimensions: allDimensions, ...props }
   })
 }
