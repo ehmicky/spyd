@@ -110,6 +110,7 @@ const skipRedundantInfo = function (dimensionsArray, systems) {
   )
 }
 
+// eslint-disable-next-line max-params
 const skipRedundantDimensions = function (
   systems,
   dimensionsArray,
@@ -134,8 +135,8 @@ const skipRedundantDimension = function (
   }
 
   const dimensions = dimensionsArray[index]
-  const reducedDimensions = omit.default(dimensions, [dimensionName])
-  return setArray(dimensionsArray, index, reducedDimensions)
+  const dimensionsA = omit.default(dimensions, [dimensionName])
+  return setArray(dimensionsArray, index, dimensionsA)
 }
 
 const isRedundantDimension = function ({
