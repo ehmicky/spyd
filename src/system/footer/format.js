@@ -15,6 +15,12 @@ export const applyFooterFormat = function (footer, format) {
   return { footerParams: {}, footerString }
 }
 
+// Turn footer into an array of objects:
+//  - Each object is meant to be visually separate from the other, for example
+//    with a newline
+//  - Each object has either one or two depth levels and the values are strings
+// This format means the `footer()` method of each format does not need to
+// know the meaning of the footer, only how to print this simple structure.
 const arrifyFooter = function ({ Id, Timestamp, systems }) {
   const systemsA = systems.map(addTitle)
   return Id === undefined ? systemsA : [...systemsA, { Id, Timestamp }]
