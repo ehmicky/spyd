@@ -52,17 +52,21 @@ const groupPropDimensions = function (propDimensions) {
 }
 
 const getUniqueAllDimensions = function (propDimensions) {
-  return propDimensions
-    .map(getAllDimensionsProp)
-    .filter((allDimensions, index, allAllDimensions) =>
-      allAllDimensions
-        .slice(index + 1)
-        .every((allDimensionsB) => !isSameArray(allDimensions, allDimensionsB)),
-    )
+  return propDimensions.map(getAllDimensionsProp).filter(isUniqueAllDimensions)
 }
 
 const getAllDimensionsProp = function ([, , allDimensions]) {
   return allDimensions
+}
+
+const isUniqueAllDimensions = function (
+  allDimensions,
+  index,
+  allAllDimensions,
+) {
+  return allAllDimensions
+    .slice(index + 1)
+    .every((allDimensionsB) => !isSameArray(allDimensions, allDimensionsB))
 }
 
 const groupPropDimension = function (allDimensions, propDimensions) {
