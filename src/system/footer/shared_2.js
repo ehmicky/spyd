@@ -215,45 +215,54 @@ const sortSystems = function (finalPropDimensions) {
       )
       return { hasNoDimensions, propEntries: propEntriesA, allDimensions }
     })
-    .sort((first, second) => {
-      if (first.hasNoDimensions) {
-        return -1
-      }
+    .sort(
+      (
+        { hasNoDimensions: hasNoDimensionsA, propEntries: propEntriesA },
+        { hasNoDimensions: hasNoDimensionsB, propEntries: propEntriesB },
+      ) => {
+        if (hasNoDimensionsA) {
+          return -1
+        }
 
-      if (second.hasNoDimensions) {
+        if (hasNoDimensionsB) {
+          return 1
+        }
+
+        // eslint-disable-next-line
+        for (let index = 0; index < propEntriesA.length; index += 1) {
+          const propEntryB = propEntriesB[index]
+
+          if (propEntryB === undefined) {
+            return 1
+          }
+
+          const propEntryA = propEntriesA[index]
+          const propOrderA = propEntryA[2]
+          const propOrderB = propEntryB[2]
+
+          if (propOrderA > propOrderB) {
+            return 1
+          }
+
+          if (propOrderA < propOrderB) {
+            return -1
+          }
+
+          const valueA = propEntryA[1]
+          const valueB = propEntryB[1]
+
+          if (valueA > valueB) {
+            return 1
+          }
+
+          if (valueA < valueB) {
+            return -1
+          }
+        }
+
         return 1
-      }
-
-      for (let index = 0; index < first.propEntries.length; index += 1) {
-        if (second.propEntries[index] === undefined) {
-          return 1
-        }
-
-        const propOrderA = first.propEntries[index][2]
-        const propOrderB = second.propEntries[index][2]
-
-        if (propOrderA > propOrderB) {
-          return 1
-        }
-
-        if (propOrderA < propOrderB) {
-          return -1
-        }
-
-        const firstValue = first.propEntries[index][1]
-        const secondValue = second.propEntries[index][1]
-
-        if (firstValue > secondValue) {
-          return 1
-        }
-
-        if (firstValue < secondValue) {
-          return -1
-        }
-      }
-
-      return 1
-    })
+      },
+    )
 }
 
 const finalizeSystems = function (sortedGroupedPropDimensions) {
