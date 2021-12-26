@@ -309,9 +309,7 @@ const compareSystems = function (
 
   // eslint-disable-next-line
   for (let index = 0; index < propEntriesA.length; index += 1) {
-    const propEntryA = propEntriesA[index]
-    const propEntryB = propEntriesB[index]
-    const result = comparePropEntries(propEntryA, propEntryB)
+    const result = comparePropEntries(propEntriesA[index], propEntriesB[index])
 
     if (result !== 0) {
       return result
