@@ -382,10 +382,13 @@ const getDimensionEntry = function ({ propName, propValue }) {
 const isSameArray = function (arrayA, arrayB) {
   return (
     arrayA.length === arrayB.length &&
-    arrayA.every((valueA) =>
-      arrayB.some((valueB) => isDeepStrictEqual(valueA, valueB)),
-    )
+    arrayA.every((value) => hasArrayValue(arrayB, value))
   )
+}
+
+// Like `Array.includes()` but using deep comparison
+const hasArrayValue = function (array, valueA) {
+  return array.some((valueB) => isDeepStrictEqual(valueA, valueB))
 }
 
 const PROP_ORDER = ['aa', 'ff', 'bb', 'cc', 'dd', 'ee', 'gg', 'hh']
