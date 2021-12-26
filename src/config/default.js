@@ -1,5 +1,7 @@
 import { cwd as getCwd } from 'process'
 
+import isPlainObj from 'is-plain-obj'
+
 import { isTtyInput } from '../report/tty.js'
 
 // Add default configuration properties
@@ -8,10 +10,14 @@ export const addDefaultConfig = function (config, command) {
     ...DEFAULT_CONFIG,
     cwd: getCwd(),
     force: !isTtyInput(),
-    showSystem: config.system !== undefined,
+    showSystem: getDefaultShowSystem(config),
     showMetadata: METADATA_COMMANDS.has(command),
     ...config,
   }
+}
+
+const getDefaultShowSystem = function ({ system = {} }) {
+  return isPlainObj(system) && Object.keys(system).length !== 0
 }
 
 const METADATA_COMMANDS = new Set(['show', 'remove'])
@@ -22,7 +28,7 @@ const METADATA_COMMANDS = new Set(['show', 'remove'])
 // for users and provides with better error messages.
 export const DEFAULT_CONFIG = {
   precision: 5,
-  system: 'default_system',
+  system: {},
   save: false,
   outliers: false,
   runnerConfig: {},
