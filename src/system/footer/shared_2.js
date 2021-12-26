@@ -4,6 +4,8 @@ import mapObj from 'map-obj'
 import omit from 'omit.js'
 import sortOn from 'sort-on'
 
+import { uniqueDeep } from '../../utils/unique.js'
+
 /* eslint-disable max-nested-callbacks, max-lines-per-function, complexity, max-lines, fp/no-loops, max-statements, max-depth, no-unreachable-loop */
 const mainLogic = function (systems) {
   const propEntries = listPropEntries(systems)
@@ -201,13 +203,7 @@ const isReducibleDimension = function ({
 }
 
 const removeDuplicateDimensions = function (dimensionsArray) {
-  return dimensionsArray.filter(isUniqueDimensions)
-}
-
-const isUniqueDimensions = function (dimensions, index, dimensionsArray) {
-  return dimensionsArray
-    .slice(index + 1)
-    .every((dimensionsB) => !isDeepStrictEqual(dimensions, dimensionsB))
+  return uniqueDeep(dimensionsArray)
 }
 
 const normalizeTopSystem = function (dimensionsArray) {
