@@ -2,6 +2,7 @@ import { FORMATS } from '../../report/formats/list.js'
 import { addFooterTitles } from '../../report/normalize/titles_add.js'
 import { omitFooterProps } from '../omit.js'
 
+import { arrifyFooter } from './arrify.js'
 import { serializeFooter } from './serialize.js'
 import { addSharedSystems } from './shared/main.js'
 import { sortSystems } from './sort/main.js'
@@ -31,7 +32,8 @@ export const addFooter = function ({
   const footerD = sortSystems(footerC)
   const footerE = addFooterTitles(footerD, titles, showTitles)
   const footerF = addSystemsTitles(footerE)
-  const { footerParams, footerString } = applyFooterFormat(footerF, format)
+  const footerG = arrifyFooter(footerF)
+  const { footerParams, footerString } = applyFooterFormat(footerG, format)
   return { ...reporter, footerParams, footerString }
 }
 

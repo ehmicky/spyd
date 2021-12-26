@@ -6,21 +6,28 @@ import { cleanObject } from '../../utils/clean.js'
 import { serializeGit, serializePr } from './git.js'
 
 // Serialize info|system-related information as a `footer` for reporters
-export const serializeFooter = function ({ id, timestamp, systems }) {
-  return [
-    ...systems.map(serializeSystem),
-    serializeMetadata(id, timestamp),
-  ].filter(Boolean)
+export const serializeFooter = function ({
+  id,
+  timestamp,
+  systems,
+  ...footer
+}) {
+  const metadata = serializeMetadata(id, timestamp)
+  const systemsA = systems.map(serializeSystem).filter(hasProps)
+  return { ...footer, ...metadata, systems: systemsA }
+}
+
+const serializeMetadata = function (id, timestamp) {
+  return cleanObject({ Id: id, Timestamp: timestamp })
 }
 
 const serializeSystem = function ({
-  title,
   machine: { os, cpus, memory } = {},
   git: { commit, tag, branch, prNumber, prBranch } = {},
   ci,
   versions: { Spyd: spydVersion, ...versions } = {},
 }) {
-  const fields = {
+  const props = {
     OS: os,
     CPU: serializeCpus(cpus),
     Memory: serializeMemory(memory),
@@ -28,17 +35,11 @@ const serializeSystem = function ({
     PR: serializePr({ prNumber, prBranch }),
     CI: ci,
   }
-  const fieldsA = cleanObject({
-    ...fields,
-    ...omit.default(versions, Object.keys(fields)),
+  return cleanObject({
+    ...props,
+    ...omit.default(versions, Object.keys(props)),
     [SPYD_VERSION_NAME]: spydVersion,
   })
-
-  if (Object.keys(fieldsA).length === 0) {
-    return
-  }
-
-  return title === undefined ? fieldsA : { [title]: fieldsA }
 }
 
 const serializeCpus = function (cpus) {
@@ -60,10 +61,6 @@ const serializeMemory = function (memory) {
 // used for benchmarking.
 const SPYD_VERSION_NAME = 'Benchmarked with spyd'
 
-const serializeMetadata = function (id, timestamp) {
-  if (id === undefined) {
-    return
-  }
-
-  return { Id: id, Timestamp: timestamp }
+const hasProps = function (props) {
+  return Object.keys(props).length !== 0
 }
