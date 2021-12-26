@@ -261,12 +261,14 @@ const compareSystems = function (
 }
 
 const finalizeSystems = function (sortedGroupedPropDimensions) {
-  return sortedGroupedPropDimensions.map(({ propEntries, allDimensions }) => {
-    const props = Object.fromEntries(
-      propEntries.map(({ propName, propValue }) => [propName, propValue]),
-    )
-    return { dimensions: allDimensions, ...props }
-  })
+  return sortedGroupedPropDimensions.map(finalizeSystem)
+}
+
+const finalizeSystem = function ({ propEntries, allDimensions }) {
+  const props = Object.fromEntries(
+    propEntries.map(({ propName, propValue }) => [propName, propValue]),
+  )
+  return { dimensions: allDimensions, ...props }
 }
 
 const isSameArray = function (arrayA, arrayB) {
