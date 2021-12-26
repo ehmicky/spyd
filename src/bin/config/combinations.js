@@ -47,10 +47,11 @@ The inputs values are passed to tasks as arguments.`,
   },
   system: {
     group: HISTORY,
-    string: true,
     requiresArg: true,
-    describe: `Identifier of the current hardware/software system.
+    describe: `Identifiers of the current hardware/software system.
 Used to compare different machines or configurations together.
-Default: "default_system"`,
+Both the identifier and its type must be specified, such as --system.os=linux or
+--system.node_version=16
+Default: none`,
   },
 }
