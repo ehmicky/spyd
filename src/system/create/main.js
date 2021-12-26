@@ -33,6 +33,14 @@ import { getSystemVersions } from './versions.js'
 //        - Including for temporary system dimensions
 //     - Leads to easier mistakes from users, using wrong indexes
 //  - It would be harder to define default ids
+// We do not provide with a string short notation (as opposed to object) with
+// a default system dimension because:
+//  - Monomorphism is simpler
+//     - Especially as multiple system dimensions are likely
+//  - It encourages using multiple system dimensions instead of putting them
+//    inside multiple system ids
+//  - It removes need for a default system dimension, and allows the default
+//    `system` to be an empty object
 export const createSystemInfo = async function (
   combinations,
   { cwd, system: dimensions, envInfo },
