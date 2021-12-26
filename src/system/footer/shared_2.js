@@ -26,9 +26,7 @@ const getPropDimensions = function (systems) {
     dimensions,
     props,
   }))
-  const uniquePropNames = [
-    ...new Set(systemsA.flatMap(({ props }) => Object.keys(props))),
-  ]
+  const uniquePropNames = getUniquePropNames(systemsA)
   const uniquePropEntries = uniquePropNames.flatMap((propName) =>
     [...new Set(systemsA.map(({ props }) => props[propName]))].map(
       (propValue) => [propName, propValue],
@@ -41,6 +39,10 @@ const getPropDimensions = function (systems) {
     return [propName, propValue, allDimensions]
   })
   return propDimensions
+}
+
+const getUniquePropNames = function (systems) {
+  return [...new Set(systems.flatMap(({ props }) => Object.keys(props)))]
 }
 
 const groupPropDimensions = function (propDimensions) {
