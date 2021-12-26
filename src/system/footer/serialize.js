@@ -3,8 +3,6 @@ import omit from 'omit.js'
 
 import { cleanObject } from '../../utils/clean.js'
 
-import { serializeGit, serializePr } from './git.js'
-
 // Serialize info|system-related information as a `footer` for reporters
 export const serializeFooter = function ({
   id,
@@ -54,6 +52,29 @@ const serializeMemory = function (memory) {
   return memory === undefined
     ? undefined
     : formatBytes(memory, { decimalPlaces: 0 })
+}
+
+// Serialize `git` information for CLI reporters.
+const serializeGit = function ({ commit, tag, branch }) {
+  return commit === undefined && tag === undefined
+    ? undefined
+    : `${getHash(commit, tag)}${getBranch(branch)}`
+}
+
+const getHash = function (commit, tag) {
+  return tag === undefined ? commit.slice(0, COMMIT_SIZE) : tag
+}
+
+const COMMIT_SIZE = 8
+
+const serializePr = function ({ prNumber, prBranch }) {
+  return prNumber === undefined
+    ? undefined
+    : `#${prNumber}${getBranch(prBranch)}`
+}
+
+const getBranch = function (branch) {
+  return branch === undefined ? '' : ` (${branch})`
 }
 
 // The spyd version is shown after other versions.
