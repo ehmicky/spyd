@@ -13,12 +13,12 @@ const addSharedSystems = function (systems) {
   const propGroups = getPropGroups(propEntries)
   const propGroupsA = simplifyPropGroups(propGroups, systems)
   const propGroupsB = addTopSystem(propGroupsA)
-  const propGroupsC = sortSystems(propGroupsB)
-  const systemsA = finalizeSystems(propGroupsC)
-  systemsA.forEach(({ dimensions, ...props }) => {
+  const systemsA = finalizeSystems(propGroupsB)
+  const systemsB = sortSystems(systemsA)
+  systemsB.forEach(({ dimensions, ...props }) => {
     console.log(props, dimensions)
   })
-  return systemsA
+  return systemsB
 }
 
 // Transform `propGroups` back to `systems`
