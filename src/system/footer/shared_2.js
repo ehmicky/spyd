@@ -108,10 +108,10 @@ const reduceEachPropDimensions = function (
   systems,
 ) {
   const dimensionsArrayA = reduceAllPropDimensions(dimensionsArray, systems)
-  const allDimensionsE = removeDuplicateDimensions(dimensionsArrayA)
-  const allDimensionsF = normalizeTopSystem(allDimensionsE)
-  const allDimensionsG = appendValues(allDimensionsF)
-  return [propEntriesArray, allDimensionsG]
+  const dimensionsArrayB = removeDuplicateDimensions(dimensionsArrayA)
+  const dimensionsArrayC = normalizeTopSystem(dimensionsArrayB)
+  const dimensionsArrayD = appendValues(dimensionsArrayC)
+  return [propEntriesArray, dimensionsArrayD]
 }
 
 const reduceAllPropDimensions = function (dimensionsArray, systems) {
@@ -210,16 +210,16 @@ const isUniqueDimensions = function (dimensions, index, dimensionsArray) {
     .every((dimensionsB) => !isDeepStrictEqual(dimensions, dimensionsB))
 }
 
-const normalizeTopSystem = function (allDimensions) {
-  return allDimensions.filter(isNotEmptyDimensions)
+const normalizeTopSystem = function (dimensionsArray) {
+  return dimensionsArray.filter(isNotEmptyDimensions)
 }
 
 const isNotEmptyDimensions = function (dimensions) {
   return Object.keys(dimensions).length !== 0
 }
 
-const appendValues = function (allDimensions) {
-  let allDimensionsA = allDimensions.map((dimensions) =>
+const appendValues = function (dimensionsArray) {
+  let dimensionsArrayA = dimensionsArray.map((dimensions) =>
     mapObj(dimensions, (dimensionName, dimensionValue) => [
       dimensionName,
       [dimensionValue],
@@ -233,18 +233,18 @@ const appendValues = function (allDimensions) {
 
     for (
       let firstIndex = 0;
-      clean && firstIndex < allDimensionsA.length - 1;
+      clean && firstIndex < dimensionsArrayA.length - 1;
       firstIndex += 1
     ) {
-      const firstDimensions = allDimensionsA[firstIndex]
+      const firstDimensions = dimensionsArrayA[firstIndex]
       const dimensionNames = Object.keys(firstDimensions)
 
       for (
         let secondIndex = firstIndex + 1;
-        clean && secondIndex < allDimensionsA.length;
+        clean && secondIndex < dimensionsArrayA.length;
         secondIndex += 1
       ) {
-        const secondDimensions = allDimensionsA[secondIndex]
+        const secondDimensions = dimensionsArrayA[secondIndex]
         const secondDimensionNames = Object.keys(secondDimensions)
 
         if (!isSameArray(dimensionNames, secondDimensionNames)) {
@@ -277,7 +277,7 @@ const appendValues = function (allDimensions) {
               : dimensionValue,
           ],
         )
-        allDimensionsA = allDimensionsA
+        dimensionsArrayA = dimensionsArrayA
           .map((dimensions, index) =>
             index === firstIndex ? newDimensions : dimensions,
           )
@@ -287,7 +287,7 @@ const appendValues = function (allDimensions) {
     }
   } while (!clean)
 
-  return allDimensionsA
+  return dimensionsArrayA
 }
 
 const addTopSharedSystem = function (reducedPropDimensions) {
