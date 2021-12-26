@@ -4,10 +4,10 @@ import { omitFooterProps } from '../omit.js'
 
 import { serializeFooter } from './serialize.js'
 import { addSharedSystems } from './shared/main.js'
+import { sortSystems } from './sort/main.js'
 
 // Add each `reporter.footer`
 // TODO:
-//  - use `addSharedSystems()` then `sortSystems()`
 //  - this logic should come after `serialize.js`, i.e. there are no deep
 //    properties and all properties values are strings
 //     - However, the `system.title` logic should be moved after it
@@ -33,8 +33,9 @@ export const addFooter = function ({
   const footerA = addFooterTitles(footer, titles, showTitles)
   const footerB = omitFooterProps(footerA, showMetadata, showSystem)
   const footerC = addSharedSystems(footerB)
-  const footerD = serializeFooter(footerC)
-  const { footerParams, footerString } = applyFooterFormat(footerD, format)
+  const footerD = sortSystems(footerC)
+  const footerE = serializeFooter(footerD)
+  const { footerParams, footerString } = applyFooterFormat(footerE, format)
   return { ...reporter, footerParams, footerString }
 }
 
