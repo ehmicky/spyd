@@ -6,6 +6,6 @@ export const addTopSystem = function (propGroups) {
     : [{ propEntries: [], dimensionsArray: [] }, ...propGroups]
 }
 
-export const isTopPropGroup = function ({ dimensionsArray }) {
+const isTopPropGroup = function ({ dimensionsArray }) {
   return dimensionsArray.length === 0
 }
