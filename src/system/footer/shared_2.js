@@ -89,11 +89,11 @@ const getPropGroup = function (dimensionsArray, propEntries) {
     .filter(({ dimensionsArray: dimensionsArrayB }) =>
       isSameArray(dimensionsArray, dimensionsArrayB),
     )
-    .map(getGroupedDimension)
+    .map(removeDimensionsArray)
   return [propEntriesMany, dimensionsArray]
 }
 
-const getGroupedDimension = function ({ propName, propValue }) {
+const removeDimensionsArray = function ({ propName, propValue }) {
   return [propName, propValue]
 }
 
