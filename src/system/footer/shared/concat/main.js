@@ -1,6 +1,6 @@
 import mapObj from 'map-obj'
 
-import { loopFirstDimensions } from './concat_loop.js'
+import { loopFirstDimensions } from './loop.js'
 
 // A system prop might match two sets of dimensions identical except for one
 // dimension. In that case, we merge both.

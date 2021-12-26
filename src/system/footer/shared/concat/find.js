@@ -1,5 +1,5 @@
-import { isSameArray } from '../../../utils/equal.js'
-import { findIndexFrom } from '../../../utils/find.js'
+import { isSameArray } from '../../../../utils/equal.js'
+import { findIndexFrom } from '../../../../utils/find.js'
 
 // Find another `dimensions` with the same names and exactly 1 different value.
 // eslint-disable-next-line max-params

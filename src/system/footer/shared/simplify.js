@@ -1,6 +1,6 @@
 import { uniqueDeep } from '../../../utils/unique.js'
 
-import { concatDimensionsValues } from './concat.js'
+import { concatDimensionsValues } from './concat/main.js'
 import { skipRedundantInfo } from './redundant.js'
 
 // Reduce the amount of system dimensions and properties so the system footer

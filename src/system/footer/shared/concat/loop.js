@@ -1,4 +1,4 @@
-import { findConcatDimension } from './concat_find.js'
+import { findConcatDimension } from './find.js'
 
 export const loopFirstDimensions = function (dimensionsArray) {
   // eslint-disable-next-line fp/no-loops
