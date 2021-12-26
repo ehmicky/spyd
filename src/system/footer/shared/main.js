@@ -49,9 +49,7 @@ const getSystemTitle = function (allDimensions) {
 
 // TODO:
 //  - sort `dimensionsArray` too, in each system
-//  - refactor whole file
 //  - debug the whole file, checking if each statement works
-//  - break down file into several files
 //  - this logic should come after `serialize.js`, i.e. there are no deep
 //    properties and all properties values are strings
 //     - However, the `system.title` logic should be moved after it
