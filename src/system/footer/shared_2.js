@@ -8,10 +8,10 @@ import sortOn from 'sort-on'
 const mainLogic = function (systems) {
   const propEntries = listPropEntries(systems)
   const propGroups = getPropGroups(propEntries)
-  const reducedPropDimensions = reducePropDimensions(propGroups, systems)
-  const finalPropDimensions = addTopSharedSystem(reducedPropDimensions)
-  const sortedGroupedPropDimensions = sortSystems(finalPropDimensions)
-  const systemsA = finalizeSystems(sortedGroupedPropDimensions)
+  const propGroupsA = reducePropDimensions(propGroups, systems)
+  const propGroupsB = addTopSharedSystem(propGroupsA)
+  const propGroupsC = sortSystems(propGroupsB)
+  const systemsA = finalizeSystems(propGroupsC)
   systemsA.forEach(({ dimensions, ...props }) => {
     console.log(props, dimensions)
   })
@@ -111,7 +111,7 @@ const reduceEachPropDimensions = function (
   const dimensionsArrayB = removeDuplicateDimensions(dimensionsArrayA)
   const dimensionsArrayC = normalizeTopSystem(dimensionsArrayB)
   const dimensionsArrayD = appendValues(dimensionsArrayC)
-  return [propEntriesArray, dimensionsArrayD]
+  return { propEntriesArray, dimensionsArray: dimensionsArrayD }
 }
 
 const reduceAllPropDimensions = function (dimensionsArray, systems) {
@@ -290,25 +290,28 @@ const appendValues = function (dimensionsArray) {
   return dimensionsArrayA
 }
 
-const addTopSharedSystem = function (reducedPropDimensions) {
-  return reducedPropDimensions.some(isTopSharedSystem)
-    ? reducedPropDimensions
-    : [[[], []], ...reducedPropDimensions]
+const addTopSharedSystem = function (propGroups) {
+  if (propGroups.some(isTopSharedSystem)) {
+    return propGroups
+  }
+
+  const topPropGroup = { propEntriesArray: [], dimensionsArray: [] }
+  return [topPropGroup, ...propGroups]
 }
 
-const isTopSharedSystem = function ([, allDimensions]) {
-  return allDimensions.length === 0
+const isTopSharedSystem = function ({ dimensionsArray }) {
+  return dimensionsArray.length === 0
 }
 
-const sortSystems = function (finalPropDimensions) {
-  return finalPropDimensions.map(addSortProps).sort(compareSystems)
+const sortSystems = function (propGroups) {
+  return propGroups.map(addSortProps).sort(compareSystems)
 }
 
-const addSortProps = function ([propEntries, allDimensions]) {
-  const hasNoDimensions = allDimensions.length === 0
-  const propEntriesA = propEntries.map(addPropOrder)
+const addSortProps = function ({ propEntriesArray, dimensionsArray }) {
+  const hasNoDimensions = dimensionsArray.length === 0
+  const propEntriesA = propEntriesArray.map(addPropOrder)
   const propEntriesB = sortOn(propEntriesA, ['propOrder'])
-  return { hasNoDimensions, propEntries: propEntriesB, allDimensions }
+  return { hasNoDimensions, propEntries: propEntriesB, dimensionsArray }
 }
 
 const addPropOrder = function ({ propName, propValue }) {
@@ -358,13 +361,13 @@ const compareSystems = function (
   return 1
 }
 
-const finalizeSystems = function (sortedGroupedPropDimensions) {
-  return sortedGroupedPropDimensions.map(finalizeSystem)
+const finalizeSystems = function (propGroups) {
+  return propGroups.map(finalizeSystem)
 }
 
-const finalizeSystem = function ({ propEntries, allDimensions }) {
+const finalizeSystem = function ({ propEntries, dimensionsArray }) {
   const props = Object.fromEntries(propEntries.map(getDimensionEntry))
-  return { dimensions: allDimensions, ...props }
+  return { dimensions: dimensionsArray, ...props }
 }
 
 const getDimensionEntry = function ({ propName, propValue }) {
