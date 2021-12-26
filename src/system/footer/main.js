@@ -8,8 +8,6 @@ import { sortSystems } from './sort/main.js'
 import { addSystemsTitles } from './title.js'
 
 // Add each `reporter.footer`
-// TODO:
-//  - Debug through this function, one step at a time
 export const addFooter = function ({
   result: { id, system },
   resultProps: { timestamp },
