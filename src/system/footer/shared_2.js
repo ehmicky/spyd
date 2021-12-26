@@ -6,8 +6,8 @@ import sortOn from 'sort-on'
 
 /* eslint-disable max-nested-callbacks, max-lines-per-function, complexity, max-lines, fp/no-loops, max-statements, max-depth, no-unreachable-loop */
 const mainLogic = function (systems) {
-  const propDimensions = getPropDimensions(systems)
-  const groupedPropDimensions = groupPropDimensions(propDimensions)
+  const propEntries = listPropEntries(systems)
+  const groupedPropDimensions = groupPropDimensions(propEntries)
   const reducedPropDimensions = reducePropDimensions(
     groupedPropDimensions,
     systems,
@@ -21,14 +21,14 @@ const mainLogic = function (systems) {
   return systemsA
 }
 
-const getPropDimensions = function (systems) {
+const listPropEntries = function (systems) {
   const normalizedSystems = systems.map(normalizeSystemProps)
   const propNames = getUniquePropNames(normalizedSystems)
   const propEntries = getUniquePropEntries(propNames, normalizedSystems)
-  const propDimensions = propEntries.map((propEntry) =>
+  const propEntriesA = propEntries.map((propEntry) =>
     addPropEntryDimensions(propEntry, normalizedSystems),
   )
-  return propDimensions
+  return propEntriesA
 }
 
 const normalizeSystemProps = function ({ dimensions, ...props }) {
