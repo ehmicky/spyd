@@ -204,15 +204,7 @@ const addTopSharedSystem = function (reducedPropDimensions) {
 
 const sortSystems = function (finalPropDimensions) {
   return finalPropDimensions
-    .map(([propEntries, allDimensions]) => {
-      const hasNoDimensions = allDimensions.length === 0
-      const propEntriesA = propEntries.map(([propName, propValue]) => {
-        const propOrder = PROP_ORDER.indexOf(propName)
-        return { propName, propValue, propOrder }
-      })
-      const propEntriesB = sortOn(propEntriesA, ['propOrder'])
-      return { hasNoDimensions, propEntries: propEntriesB, allDimensions }
-    })
+    .map(addSortProps)
     .sort(
       (
         { hasNoDimensions: hasNoDimensionsA, propEntries: propEntriesA },
@@ -261,6 +253,16 @@ const sortSystems = function (finalPropDimensions) {
         return 1
       },
     )
+}
+
+const addSortProps = function ([propEntries, allDimensions]) {
+  const hasNoDimensions = allDimensions.length === 0
+  const propEntriesA = propEntries.map(([propName, propValue]) => {
+    const propOrder = PROP_ORDER.indexOf(propName)
+    return { propName, propValue, propOrder }
+  })
+  const propEntriesB = sortOn(propEntriesA, ['propOrder'])
+  return { hasNoDimensions, propEntries: propEntriesB, allDimensions }
 }
 
 const finalizeSystems = function (sortedGroupedPropDimensions) {
