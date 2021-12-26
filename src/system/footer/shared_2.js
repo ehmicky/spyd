@@ -291,12 +291,9 @@ const appendValues = function (dimensionsArray) {
 }
 
 const addTopSystem = function (propGroups) {
-  if (propGroups.some(isTopSystem)) {
-    return propGroups
-  }
-
-  const topPropGroup = { propEntriesArray: [], dimensionsArray: [] }
-  return [topPropGroup, ...propGroups]
+  return propGroups.some(isTopSystem)
+    ? propGroups
+    : [{ propEntriesArray: [], dimensionsArray: [] }, ...propGroups]
 }
 
 const isTopSystem = function ({ dimensionsArray }) {
