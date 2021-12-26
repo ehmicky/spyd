@@ -43,3 +43,19 @@ export const findLastIndex = function (array, testFunc) {
 
   return -1
 }
+
+// Like `Array.findIndex(condition)` but can specify the start index.
+// Uses imperative code for performance.
+export const findIndexFrom = function (array, condition, startIndex) {
+  // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
+  for (let index = startIndex; index < array.length; index += 1) {
+    const value = array[index]
+
+    // eslint-disable-next-line max-depth
+    if (condition(value, index, array)) {
+      return index
+    }
+  }
+
+  return -1
+}

@@ -1,10 +1,9 @@
-import { isDeepStrictEqual } from 'util'
-
 import mapObj from 'map-obj'
 import omit from 'omit.js'
 import sortOn from 'sort-on'
 
 import { isSameArray } from '../../utils/equal.js'
+import { findIndexFrom } from '../../utils/find.js'
 import { uniqueDeep, uniqueDeepUnordered } from '../../utils/unique.js'
 
 /* eslint-disable max-nested-callbacks, max-lines-per-function, complexity, max-lines, fp/no-loops, max-statements, max-depth, no-unreachable-loop */
@@ -99,7 +98,7 @@ const reduceEachPropDimensions = function (
   const dimensionsArrayA = reduceAllPropDimensions(dimensionsArray, systems)
   const dimensionsArrayB = uniqueDeep(dimensionsArrayA)
   const dimensionsArrayC = normalizeTopSystem(dimensionsArrayB)
-  const dimensionsArrayD = appendValues(dimensionsArrayC)
+  const dimensionsArrayD = concatDimensionsValues(dimensionsArrayC)
   return { propEntries, dimensionsArray: dimensionsArrayD }
 }
 
@@ -197,76 +196,167 @@ const isNotEmptyDimensions = function (dimensions) {
   return Object.keys(dimensions).length !== 0
 }
 
-const appendValues = function (dimensionsArray) {
-  let dimensionsArrayA = dimensionsArray.map((dimensions) =>
-    mapObj(dimensions, (dimensionName, dimensionValue) => [
-      dimensionName,
-      [dimensionValue],
-    ]),
+const concatDimensionsValues = function (dimensionsArray) {
+  const dimensionsArrayA = dimensionsArray.map(normalizeDimensions)
+
+  // eslint-disable-next-line fp/no-let
+  let dimensionsCount = 0
+
+  // eslint-disable-next-line fp/no-loops
+  while (dimensionsCount !== dimensionsArrayA.length) {
+    // eslint-disable-next-line fp/no-mutation
+    dimensionsCount = dimensionsArrayA.length
+    loopFirstDimensions(dimensionsArrayA)
+  }
+
+  const dimensionsArrayB = dimensionsArrayA.map(denormalizeDimensions)
+  return dimensionsArrayB
+}
+
+const normalizeDimensions = function (dimensions) {
+  const dimensionNames = Object.keys(dimensions)
+  const dimensionsA = mapObj(dimensions, normalizeDimension)
+  return { dimensionNames, dimensions: dimensionsA }
+}
+
+const normalizeDimension = function (dimensionName, dimensionValue) {
+  return [dimensionName, [dimensionValue]]
+}
+
+const denormalizeDimensions = function ({ dimensions }) {
+  return dimensions
+}
+
+const loopFirstDimensions = function (dimensionsArray) {
+  // eslint-disable-next-line fp/no-loops
+  for (
+    // eslint-disable-next-line fp/no-let
+    let firstIndex = 0;
+    firstIndex < dimensionsArray.length - 1;
+    // eslint-disable-next-line fp/no-mutation
+    firstIndex += 1
+  ) {
+    const { dimensions: firstDimensions, dimensionNames } =
+      dimensionsArray[firstIndex]
+    loopSecondDimensions(
+      dimensionsArray,
+      firstIndex,
+      firstDimensions,
+      dimensionNames,
+    )
+  }
+}
+
+// eslint-disable-next-line max-params
+const loopSecondDimensions = function (
+  dimensionsArray,
+  firstIndex,
+  firstDimensions,
+  dimensionNames,
+) {
+  // eslint-disable-next-line fp/no-loops
+  for (
+    // eslint-disable-next-line fp/no-let
+    let secondIndex = firstIndex + 1;
+    secondIndex < dimensionsArray.length;
+    // eslint-disable-next-line fp/no-mutation
+    secondIndex += 1
+  ) {
+    const {
+      dimensions: secondDimensions,
+      dimensionNames: secondDimensionNames,
+    } = dimensionsArray[secondIndex]
+    const concatDimensionName = findConcatDimension(
+      firstDimensions,
+      dimensionNames,
+      secondDimensions,
+      secondDimensionNames,
+    )
+
+    // eslint-disable-next-line max-depth
+    if (concatDimensionName !== undefined) {
+      // eslint-disable-next-line fp/no-mutation
+      secondIndex = concatValues(
+        dimensionsArray,
+        firstDimensions,
+        secondDimensions,
+        concatDimensionName,
+        secondIndex,
+      )
+    }
+  }
+}
+
+// eslint-disable-next-line max-params
+const findConcatDimension = function (
+  firstDimensions,
+  dimensionNames,
+  secondDimensions,
+  secondDimensionNames,
+) {
+  if (!isSameArray(dimensionNames, secondDimensionNames)) {
+    return
+  }
+
+  const differentDimensionIndexA = findDifferentDimension(
+    dimensionNames,
+    firstDimensions,
+    secondDimensions,
+    0,
   )
 
-  let clean = true
+  if (differentDimensionIndexA === -1) {
+    return
+  }
 
-  do {
-    clean = true
+  const differentDimensionIndexB = findDifferentDimension(
+    dimensionNames,
+    firstDimensions,
+    secondDimensions,
+    differentDimensionIndexA + 1,
+  )
 
-    for (
-      let firstIndex = 0;
-      clean && firstIndex < dimensionsArrayA.length - 1;
-      firstIndex += 1
-    ) {
-      const firstDimensions = dimensionsArrayA[firstIndex]
-      const dimensionNames = Object.keys(firstDimensions)
+  if (differentDimensionIndexB !== -1) {
+    return
+  }
 
-      for (
-        let secondIndex = firstIndex + 1;
-        clean && secondIndex < dimensionsArrayA.length;
-        secondIndex += 1
-      ) {
-        const secondDimensions = dimensionsArrayA[secondIndex]
-        const secondDimensionNames = Object.keys(secondDimensions)
+  return dimensionNames[differentDimensionIndexA]
+}
 
-        if (!isSameArray(dimensionNames, secondDimensionNames)) {
-          continue
-        }
+// eslint-disable-next-line max-params
+const findDifferentDimension = function (
+  dimensionNames,
+  firstDimensions,
+  secondDimensions,
+  startIndex,
+) {
+  return findIndexFrom(
+    dimensionNames,
+    (dimensionName) =>
+      !isSameArray(
+        firstDimensions[dimensionName],
+        secondDimensions[dimensionName],
+      ),
+    startIndex,
+  )
+}
 
-        const differentDimensionNames = dimensionNames.filter(
-          (dimensionName) =>
-            !isSameArray(
-              firstDimensions[dimensionName],
-              secondDimensions[dimensionName],
-            ),
-        )
-
-        if (differentDimensionNames.length !== 1) {
-          continue
-        }
-
-        const [differentDimensionName] = differentDimensionNames
-        const newDimensionValue = [
-          ...firstDimensions[differentDimensionName],
-          ...secondDimensions[differentDimensionName],
-        ]
-        const newDimensions = mapObj(
-          firstDimensions,
-          (dimensionName, dimensionValue) => [
-            dimensionName,
-            dimensionName === differentDimensionName
-              ? newDimensionValue
-              : dimensionValue,
-          ],
-        )
-        dimensionsArrayA = dimensionsArrayA
-          .map((dimensions, index) =>
-            index === firstIndex ? newDimensions : dimensions,
-          )
-          .filter((dimensions, index) => index !== secondIndex)
-        clean = false
-      }
-    }
-  } while (!clean)
-
-  return dimensionsArrayA
+// eslint-disable-next-line max-params
+const concatValues = function (
+  dimensionsArray,
+  firstDimensions,
+  secondDimensions,
+  concatDimensionName,
+  secondIndex,
+) {
+  // eslint-disable-next-line fp/no-mutation, no-param-reassign
+  firstDimensions[concatDimensionName] = [
+    ...firstDimensions[concatDimensionName],
+    ...secondDimensions[concatDimensionName],
+  ]
+  // eslint-disable-next-line fp/no-mutating-methods
+  dimensionsArray.splice(secondIndex, 1)
+  return secondIndex - 1
 }
 
 const addTopSystem = function (propGroups) {
