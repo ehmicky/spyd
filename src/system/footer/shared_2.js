@@ -59,19 +59,19 @@ const addPropEntryDimensions = function ({ propName, propValue }, systems) {
   return [propName, propValue, allDimensions]
 }
 
-const groupPropDimensions = function (propDimensions) {
-  const uniqueAllDimensions = getUniqueAllDimensions(propDimensions)
+const groupPropDimensions = function (propEntries) {
+  const uniqueAllDimensions = getUniqueAllDimensions(propEntries)
   const groupedPropDimensions = uniqueAllDimensions.map((allDimensions) =>
-    groupPropDimension(allDimensions, propDimensions),
+    groupPropDimension(allDimensions, propEntries),
   )
   return groupedPropDimensions
 }
 
-const getUniqueAllDimensions = function (propDimensions) {
-  return propDimensions.map(getAllDimensionsProp).filter(isUniqueAllDimensions)
+const getUniqueAllDimensions = function (propEntries) {
+  return propEntries.map(getPropEntryDimensions).filter(isUniqueAllDimensions)
 }
 
-const getAllDimensionsProp = function ([, , allDimensions]) {
+const getPropEntryDimensions = function ([, , allDimensions]) {
   return allDimensions
 }
 
