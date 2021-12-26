@@ -31,6 +31,8 @@ Please use .yml, .js, .mjs or .cjs`,
 // We allow JavaScript files for dynamic configs such as:
 //  - Using environment variables (including checking if is CI) or platform test
 //  - Computing a long list of inputs
+// On the CLI, shell features such as subshells and variable expansion can also
+// be used for dynamic configs.
 // We use YAML instead of JSON to:
 //  - Allow comments
 //  - Enforce consistency with `cli` runner's `tasks.yml`

@@ -26,9 +26,6 @@ const normalizeProp = function (config, [propName, normalizer]) {
   return { ...configA, ...props }
 }
 
-// In order to pass dynamic information, the user should either:
-//  - use shell features like subshells and environment variable expansion
-//  - use `SPYD_*` environment variables
 const normalizeSystem = function (system) {
   return { systemId: system }
 }
