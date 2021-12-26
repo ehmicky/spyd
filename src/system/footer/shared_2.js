@@ -143,19 +143,19 @@ const canRemoveDimension = function ({
   index,
 }) {
   const { length } = systems.filter((system) =>
-    isReducibleSystem({ system, dimensionsArray, index, dimensionName }),
+    dimensionsArrayMatches({ system, dimensionsArray, index, dimensionName }),
   )
   return length === dimensionsArray.length
 }
 
-const isReducibleSystem = function ({
+const dimensionsArrayMatches = function ({
   system,
   dimensionsArray,
   index,
   dimensionName,
 }) {
   return dimensionsArray.some((dimensions, indexB) =>
-    isReducibleDimensions({
+    dimensionsMatches({
       system,
       dimensions,
       index,
@@ -165,7 +165,7 @@ const isReducibleSystem = function ({
   )
 }
 
-const isReducibleDimensions = function ({
+const dimensionsMatches = function ({
   system,
   dimensions,
   index,
@@ -173,7 +173,7 @@ const isReducibleDimensions = function ({
   dimensionName,
 }) {
   return Object.entries(dimensions).every(([dimensionNameB, dimensionValueB]) =>
-    isReducibleDimension({
+    dimensionMatches({
       system,
       index,
       indexB,
@@ -184,7 +184,7 @@ const isReducibleDimensions = function ({
   )
 }
 
-const isReducibleDimension = function ({
+const dimensionMatches = function ({
   system,
   index,
   indexB,
