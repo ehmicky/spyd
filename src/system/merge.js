@@ -24,12 +24,25 @@ const appendSystem = function ({ systems }, { system: previousSystem }) {
     isDeepStrictEqual(dimensions, previousSystem.dimensions),
   )
   return systemIndex === -1
-    ? [...systems, previousSystem]
+    ? [...systems, setCommonProps(systems[0], previousSystem)]
     : setArray(
         systems,
         systemIndex,
         mergePreviousSystem(systems[systemIndex], previousSystem),
       )
+}
+
+// Some properties are common, i.e. only the most recent value of them is
+// ever shown.
+const setCommonProps = function (system, previousSystem) {
+  if (system === undefined) {
+    return previousSystem
+  }
+
+  return {
+    ...previousSystem,
+    versions: { ...previousSystem.versions, Spyd: system.versions.Spyd },
+  }
 }
 
 const mergePreviousSystem = function (system, previousSystem) {
