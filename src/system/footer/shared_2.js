@@ -9,7 +9,7 @@ const mainLogic = function (systems) {
   const propEntries = listPropEntries(systems)
   const propGroups = getPropGroups(propEntries)
   const propGroupsA = reducePropDimensions(propGroups, systems)
-  const propGroupsB = addTopSharedSystem(propGroupsA)
+  const propGroupsB = addTopSystem(propGroupsA)
   const propGroupsC = sortSystems(propGroupsB)
   const systemsA = finalizeSystems(propGroupsC)
   systemsA.forEach(({ dimensions, ...props }) => {
@@ -290,8 +290,8 @@ const appendValues = function (dimensionsArray) {
   return dimensionsArrayA
 }
 
-const addTopSharedSystem = function (propGroups) {
-  if (propGroups.some(isTopSharedSystem)) {
+const addTopSystem = function (propGroups) {
+  if (propGroups.some(isTopSystem)) {
     return propGroups
   }
 
@@ -299,7 +299,7 @@ const addTopSharedSystem = function (propGroups) {
   return [topPropGroup, ...propGroups]
 }
 
-const isTopSharedSystem = function ({ dimensionsArray }) {
+const isTopSystem = function ({ dimensionsArray }) {
   return dimensionsArray.length === 0
 }
 
