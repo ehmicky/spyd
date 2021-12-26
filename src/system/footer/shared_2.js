@@ -127,17 +127,25 @@ const reduceOneOnePropDimensions = function (
   dimensionsArray,
   dimensionName,
 ) {
-  const { length } = systems.filter((system) =>
-    isReducibleSystem({ system, dimensionsArray, index, dimensionName }),
-  )
-
-  if (length !== dimensionsArray.length) {
+  if (!canRemoveDimension({ systems, dimensionsArray, dimensionName, index })) {
     return dimensionsArray
   }
 
   const dimensions = dimensionsArray[index]
   const reducedDimensions = omit.default(dimensions, [dimensionName])
   return setArray(dimensionsArray, index, reducedDimensions)
+}
+
+const canRemoveDimension = function ({
+  systems,
+  dimensionsArray,
+  dimensionName,
+  index,
+}) {
+  const { length } = systems.filter((system) =>
+    isReducibleSystem({ system, dimensionsArray, index, dimensionName }),
+  )
+  return length === dimensionsArray.length
 }
 
 const isReducibleSystem = function ({
