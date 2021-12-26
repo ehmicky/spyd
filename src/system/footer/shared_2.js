@@ -39,10 +39,10 @@ const normalizeSystemProps = function ({ dimensions, ...props }) {
 }
 
 const getUniquePropNames = function (systems) {
-  return [...new Set(systems.flatMap(getSystemPropsKeys))]
+  return [...new Set(systems.flatMap(getPropNames))]
 }
 
-const getSystemPropsKeys = function ({ props }) {
+const getPropNames = function ({ props }) {
   return Object.keys(props)
 }
 
