@@ -1,4 +1,4 @@
-import { SYSTEM_PREFIX } from '../combination/dimensions.js'
+import { hasPrefix, removePrefix } from '../combination/prefix.js'
 
 // Some logic updates `rawResult.combinations[*].dimensions[*].id`.
 // System ids are persisted in two places: `rawResult.system.dimensions` and
@@ -16,11 +16,11 @@ const renameSystemIds = function (rawResult) {
 }
 
 const isSystemDimension = function ([propName]) {
-  return propName.startsWith(SYSTEM_PREFIX)
+  return hasPrefix(propName, 'system')
 }
 
 const renameSystemId = function (rawResult, [propName, { id }]) {
-  const propNameA = unprefixPropName(propName)
+  const propNameA = removePrefix(propName, 'system')
   return rawResult.system.dimensions[propNameA] === id
     ? rawResult
     : {
@@ -30,8 +30,4 @@ const renameSystemId = function (rawResult, [propName, { id }]) {
           dimensions: { ...rawResult.system.dimensions, [propNameA]: id },
         },
       }
-}
-
-const unprefixPropName = function (propName) {
-  return propName.slice(SYSTEM_PREFIX.length)
 }

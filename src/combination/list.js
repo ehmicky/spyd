@@ -3,9 +3,9 @@ import mapObj from 'map-obj'
 import { UserError } from '../error/main.js'
 import { selectCombinations } from '../select/main.js'
 
-import { SYSTEM_PREFIX } from './dimensions.js'
 import { validateCombinationsIds } from './ids/validate.js'
 import { toInputsList } from './inputs.js'
+import { addPrefix } from './prefix.js'
 import { listTasks } from './tasks/main.js'
 
 // Retrieve each combination, i.e. combination of each combination dimension
@@ -45,5 +45,5 @@ const getCombinationsProduct = function ({ tasks, inputsList, system }) {
 }
 
 const getSystemDimension = function (propName, id) {
-  return [`${SYSTEM_PREFIX}${propName}`, { id }]
+  return [addPrefix(propName, 'system'), { id }]
 }

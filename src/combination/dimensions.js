@@ -1,4 +1,4 @@
-export const SYSTEM_PREFIX = 'system.'
+import { hasPrefix, removePrefix } from './prefix.js'
 
 // All dimensions. They:
 //  - create dimensions in runs using a cartesian product
@@ -23,8 +23,8 @@ const DIMENSIONS = [
   },
   {
     // Some dimensions are dynamic, i.e. can have multiple sub-dimensions.
-    // Instead of a `propName`, those have a common `propPrefix`.
-    propPrefix: SYSTEM_PREFIX,
+    // Instead of a `propName`, those have a common `prefixName`.
+    prefixName: 'system',
     createdByUser: true,
   },
 ]
@@ -52,26 +52,27 @@ export const getCombDimensions = function (combination) {
 // We dissociate:
 //  - `propName`: used internally and when saving
 //  - `messageName`: used in output and error messages
-// However, those are currently identical for the sets of dimensions.
 const getDimension = function (
   { dimensions },
-  { propName: dimensionPropName, propPrefix, createdByUser },
+  { propName: dimensionPropName, prefixName, createdByUser },
 ) {
   return Object.keys(dimensions)
-    .filter((propName) => isDimension(propName, dimensionPropName, propPrefix))
+    .filter((propName) => isDimension(propName, dimensionPropName, prefixName))
     .map((propName) => ({
       propName,
-      messageName: getMessageName(propName, propPrefix),
+      messageName: getMessageName(propName, prefixName),
       createdByUser,
     }))
 }
 
-const isDimension = function (propName, dimensionPropName, propPrefix) {
-  return propPrefix === undefined
+const isDimension = function (propName, dimensionPropName, prefixName) {
+  return prefixName === undefined
     ? propName === dimensionPropName
-    : propName.startsWith(propPrefix)
+    : hasPrefix(propName, prefixName)
 }
 
-const getMessageName = function (propName, propPrefix) {
-  return propPrefix === undefined ? propName : propName.slice(propPrefix.length)
+const getMessageName = function (propName, prefixName) {
+  return prefixName === undefined
+    ? propName
+    : removePrefix(propName, prefixName)
 }
