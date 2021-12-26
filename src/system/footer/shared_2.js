@@ -48,9 +48,13 @@ const getSystemPropsKeys = function ({ props }) {
 
 const getUniquePropEntries = function (uniquePropNames, systems) {
   return uniquePropNames.flatMap((propName) =>
-    [...new Set(systems.map(({ props }) => props[propName]))].map(
-      (propValue) => [propName, propValue],
-    ),
+    getUniquePropEntry(propName, systems),
+  )
+}
+
+const getUniquePropEntry = function (propName, systems) {
+  return [...new Set(systems.map(({ props }) => props[propName]))].map(
+    (propValue) => [propName, propValue],
   )
 }
 
