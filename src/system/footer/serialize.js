@@ -54,7 +54,6 @@ const serializeMemory = function (memory) {
     : formatBytes(memory, { decimalPlaces: 0 })
 }
 
-// Serialize `git` information for CLI reporters.
 const serializeGit = function ({ commit, tag, branch }) {
   return commit === undefined && tag === undefined
     ? undefined
