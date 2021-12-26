@@ -96,38 +96,40 @@ const reduceEachPropDimensions = function (
   { propEntries, dimensionsArray },
   systems,
 ) {
-  const dimensionsArrayA = reduceAllPropDimensions(dimensionsArray, systems)
+  const dimensionsArrayA = skipRedundantInfo(dimensionsArray, systems)
   const dimensionsArrayB = uniqueDeep(dimensionsArrayA)
   const dimensionsArrayC = normalizeTopSystem(dimensionsArrayB)
   const dimensionsArrayD = concatDimensionsValues(dimensionsArrayC)
   return { propEntries, dimensionsArray: dimensionsArrayD }
 }
 
-const reduceAllPropDimensions = function (dimensionsArray, systems) {
+const skipRedundantInfo = function (dimensionsArray, systems) {
   return dimensionsArray.reduce(
-    reduceOnePropDimensions.bind(undefined, systems),
+    skipRedundantDimensions.bind(undefined, systems),
     dimensionsArray,
   )
 }
 
-const reduceOnePropDimensions = function (
+const skipRedundantDimensions = function (
   systems,
   dimensionsArray,
   dimensions,
   index,
 ) {
   return Object.keys(dimensions).reduceRight(
-    reduceOneOnePropDimensions.bind(undefined, { systems, index }),
+    skipRedundantDimension.bind(undefined, { systems, index }),
     dimensionsArray,
   )
 }
 
-const reduceOneOnePropDimensions = function (
+const skipRedundantDimension = function (
   { systems, index },
   dimensionsArray,
   dimensionName,
 ) {
-  if (!canRemoveDimension({ systems, dimensionsArray, dimensionName, index })) {
+  if (
+    !isRedundantDimension({ systems, dimensionsArray, dimensionName, index })
+  ) {
     return dimensionsArray
   }
 
@@ -136,7 +138,7 @@ const reduceOneOnePropDimensions = function (
   return setArray(dimensionsArray, index, reducedDimensions)
 }
 
-const canRemoveDimension = function ({
+const isRedundantDimension = function ({
   systems,
   dimensionsArray,
   dimensionName,
