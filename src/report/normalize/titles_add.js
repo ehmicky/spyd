@@ -46,11 +46,29 @@ export const addFooterTitles = function (footer, titles, showTitles) {
 }
 
 const addSystemTitles = function (system, titles) {
-  const dimensions = mapObj(system.dimensions, (propName, dimension) => [
-    propName,
-    addTitle(dimension, titles),
-  ])
-  return { ...system, dimensions }
+  const dimensionsA = system.dimensions.map((dimensions) =>
+    addDimensionsTitles(dimensions, titles),
+  )
+  return { ...system, dimensions: dimensionsA }
+}
+
+const addDimensionsTitles = function (dimensions, titles) {
+  return mapObj(dimensions, (dimensionName, dimensionValueArray) =>
+    addDimensionTitles(dimensionName, dimensionValueArray, titles),
+  )
+}
+
+const addDimensionTitles = function (
+  dimensionName,
+  dimensionValueArray,
+  titles,
+) {
+  return [
+    dimensionName,
+    dimensionValueArray.map((dimensionValue) =>
+      addTitle(dimensionValue, titles),
+    ),
+  ]
 }
 
 // Allow users to rename identifiers from any combination dimension: tasks,
