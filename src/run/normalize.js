@@ -13,5 +13,5 @@ const normalizeCombination = function ({ dimensions, stats }) {
 }
 
 const getIdProp = function (propName, { id }) {
-  return { id }
+  return [propName, { id }]
 }

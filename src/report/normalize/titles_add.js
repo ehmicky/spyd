@@ -46,9 +46,10 @@ export const addFooterTitles = function (footer, titles, showTitles) {
 }
 
 const addSystemTitles = function (system, titles) {
-  const dimensions = mapObj(system.dimensions, (propName, dimension) =>
+  const dimensions = mapObj(system.dimensions, (propName, dimension) => [
+    propName,
     addTitle(dimension, titles),
-  )
+  ])
   return { ...system, dimensions }
 }
 
