@@ -43,10 +43,8 @@ const getPropNames = function ({ props }) {
   return Object.keys(props)
 }
 
-const getUniquePropEntries = function (uniquePropNames, systems) {
-  return uniquePropNames.flatMap((propName) =>
-    getUniquePropEntry(propName, systems),
-  )
+const getUniquePropEntries = function (propNames, systems) {
+  return propNames.flatMap((propName) => getUniquePropEntry(propName, systems))
 }
 
 const getUniquePropEntry = function (propName, systems) {
