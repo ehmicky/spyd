@@ -1,3 +1,5 @@
+export const SYSTEM_PREFIX = 'system.'
+
 // All dimensions. They:
 //  - create dimensions in runs using a cartesian product
 //  - can be used in `select|limit`
@@ -9,23 +11,23 @@
 //  - The order of dimensions when printed
 const DIMENSIONS = [
   {
-    // Dimension test using its internal persisted property name.
-    // Some dimensions are dynamic, i.e. can have multiple sub-dimensions.
-    isDimension: (propName) => propName === 'task',
+    // Internal persisted property name.
+    // Also used to compute the `messageName`.
+    propName: 'task',
     // Whether dimension's id was created by users or by plugins
     createdByUser: true,
   },
   {
-    isDimension: (propName) => propName === 'runner',
+    propName: 'runner',
     createdByUser: false,
   },
   {
-    isDimension: (propName) => propName.startsWith(SYSTEM_PREFIX),
+    // Some dimensions are dynamic, i.e. can have multiple sub-dimensions.
+    // Instead of a `propName`, those have a common `propPrefix`.
+    propPrefix: SYSTEM_PREFIX,
     createdByUser: true,
   },
 ]
-
-export const SYSTEM_PREFIX = 'system.'
 
 // Retrieve several combinations' dimensions.
 export const getCombsDimensions = function (combinations) {
@@ -51,8 +53,25 @@ export const getCombDimensions = function (combination) {
 //  - `propName`: used internally and when saving
 //  - `messageName`: used in output and error messages
 // However, those are currently identical for the sets of dimensions.
-const getDimension = function ({ dimensions }, { isDimension, createdByUser }) {
+const getDimension = function (
+  { dimensions },
+  { propName: dimensionPropName, propPrefix, createdByUser },
+) {
   return Object.keys(dimensions)
-    .filter(isDimension)
-    .map((propName) => ({ propName, messageName: propName, createdByUser }))
+    .filter((propName) => isDimension(propName, dimensionPropName, propPrefix))
+    .map((propName) => ({
+      propName,
+      messageName: getMessageName(propName, propPrefix),
+      createdByUser,
+    }))
+}
+
+const isDimension = function (propName, dimensionPropName, propPrefix) {
+  return propPrefix === undefined
+    ? propName === dimensionPropName
+    : propName.startsWith(propPrefix)
+}
+
+const getMessageName = function (propName, propPrefix) {
+  return propPrefix === undefined ? propName : propName.slice(propPrefix.length)
 }
