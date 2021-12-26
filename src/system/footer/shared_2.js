@@ -4,6 +4,7 @@ import sortOn from 'sort-on'
 
 import { isSameArray } from '../../utils/equal.js'
 import { findIndexFrom } from '../../utils/find.js'
+import { setArray } from '../../utils/set.js'
 import { uniqueDeep, uniqueDeepUnordered } from '../../utils/unique.js'
 
 /* eslint-disable max-nested-callbacks, max-lines-per-function, complexity, max-lines, fp/no-loops, max-statements, max-depth, no-unreachable-loop */
@@ -126,16 +127,17 @@ const reduceOneOnePropDimensions = function (
   dimensionsArray,
   dimensionName,
 ) {
-  const matching = systems.filter((system) =>
+  const { length } = systems.filter((system) =>
     isReducibleSystem({ system, dimensionsArray, index, dimensionName }),
   )
-  return matching.length === dimensionsArray.length
-    ? [
-        ...dimensionsArray.slice(0, index),
-        omit.default(dimensionsArray[index], [dimensionName]),
-        ...dimensionsArray.slice(index + 1),
-      ]
-    : dimensionsArray
+
+  if (length !== dimensionsArray.length) {
+    return dimensionsArray
+  }
+
+  const dimensions = dimensionsArray[index]
+  const reducedDimensions = omit.default(dimensions, [dimensionName])
+  return setArray(dimensionsArray, index, reducedDimensions)
 }
 
 const isReducibleSystem = function ({
