@@ -306,9 +306,9 @@ const sortSystems = function (propGroups) {
 
 const addSortProps = function ({ propEntriesArray, dimensionsArray }) {
   const isTopSystem = dimensionsArray.length === 0
-  const propEntriesA = propEntriesArray.map(addPropOrder)
-  const propEntriesB = sortOn(propEntriesA, ['propOrder'])
-  return { isTopSystem, propEntries: propEntriesB, dimensionsArray }
+  const propEntriesArrayA = propEntriesArray.map(addPropOrder)
+  const propEntriesArrayB = sortOn(propEntriesArrayA, ['propOrder'])
+  return { isTopSystem, propEntriesArray: propEntriesArrayB, dimensionsArray }
 }
 
 const addPropOrder = function ({ propName, propValue }) {
@@ -317,8 +317,8 @@ const addPropOrder = function ({ propName, propValue }) {
 }
 
 const compareSystems = function (
-  { isTopSystem: isTopSystemA, propEntries: propEntriesA },
-  { isTopSystem: isTopSystemB, propEntries: propEntriesB },
+  { isTopSystem: isTopSystemA, propEntriesArray: propEntriesArrayA },
+  { isTopSystem: isTopSystemB, propEntriesArray: propEntriesArrayB },
 ) {
   if (isTopSystemA) {
     return -1
@@ -329,14 +329,14 @@ const compareSystems = function (
   }
 
   // eslint-disable-next-line
-  for (let index = 0; index < propEntriesA.length; index += 1) {
-    const propEntryB = propEntriesB[index]
+  for (let index = 0; index < propEntriesArrayA.length; index += 1) {
+    const propEntryB = propEntriesArrayB[index]
 
     if (propEntryB === undefined) {
       return 1
     }
 
-    const propEntryA = propEntriesA[index]
+    const propEntryA = propEntriesArrayA[index]
 
     if (propEntryA.propOrder > propEntryB.propOrder) {
       return 1
@@ -362,12 +362,12 @@ const finalizeSystems = function (propGroups) {
   return propGroups.map(finalizeSystem)
 }
 
-const finalizeSystem = function ({ propEntries, dimensionsArray }) {
-  const props = Object.fromEntries(propEntries.map(getDimensionEntry))
+const finalizeSystem = function ({ propEntriesArray, dimensionsArray }) {
+  const props = Object.fromEntries(propEntriesArray.map(getPropEntry))
   return { dimensions: dimensionsArray, ...props }
 }
 
-const getDimensionEntry = function ({ propName, propValue }) {
+const getPropEntry = function ({ propName, propValue }) {
   return [propName, propValue]
 }
 
