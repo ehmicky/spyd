@@ -206,12 +206,12 @@ const sortSystems = function (finalPropDimensions) {
   return finalPropDimensions
     .map(([propEntries, allDimensions]) => {
       const hasNoDimensions = allDimensions.length === 0
-      const fullPropEntries = propEntries.map(([propName, propValue]) => {
+      const propEntriesA = propEntries.map(([propName, propValue]) => {
         const propOrder = PROP_ORDER.indexOf(propName)
         return { propName, propValue, propOrder }
       })
-      const propEntriesA = sortOn(fullPropEntries, ['propOrder'])
-      return { hasNoDimensions, propEntries: propEntriesA, allDimensions }
+      const propEntriesB = sortOn(propEntriesA, ['propOrder'])
+      return { hasNoDimensions, propEntries: propEntriesB, allDimensions }
     })
     .sort(
       (
