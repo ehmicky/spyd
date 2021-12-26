@@ -276,6 +276,7 @@ const addTopSystem = function (propGroups) {
 }
 
 const sortSystems = function (propGroups) {
+  // eslint-disable-next-line fp/no-mutating-methods
   return propGroups.map(addSortProps).sort(compareSystems)
 }
 
