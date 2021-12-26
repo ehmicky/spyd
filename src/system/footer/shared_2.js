@@ -270,13 +270,9 @@ const appendValues = function (dimensionsArray) {
 }
 
 const addTopSystem = function (propGroups) {
-  return propGroups.some(isTopSystem)
+  return propGroups.some(isTopPropGroup)
     ? propGroups
     : [{ propEntries: [], dimensionsArray: [] }, ...propGroups]
-}
-
-const isTopSystem = function ({ dimensionsArray }) {
-  return dimensionsArray.length === 0
 }
 
 const sortSystems = function (propGroups) {
@@ -284,10 +280,14 @@ const sortSystems = function (propGroups) {
 }
 
 const addSortProps = function ({ propEntries, dimensionsArray }) {
-  const isTopSystem = dimensionsArray.length === 0
+  const isTopSystem = isTopPropGroup({ dimensionsArray })
   const propEntriesA = propEntries.map(addPropOrder)
   const propEntriesB = sortOn(propEntriesA, ['propOrder'])
   return { isTopSystem, propEntries: propEntriesB, dimensionsArray }
+}
+
+const isTopPropGroup = function ({ dimensionsArray }) {
+  return dimensionsArray.length === 0
 }
 
 const addPropOrder = function ({ propName, propValue }) {
