@@ -11,7 +11,7 @@ import { uniqueDeep, uniqueDeepUnordered } from '../../utils/unique.js'
 const mainLogic = function (systems) {
   const propEntries = listPropEntries(systems)
   const propGroups = getPropGroups(propEntries)
-  const propGroupsA = reducePropDimensions(propGroups, systems)
+  const propGroupsA = simplifyPropGroups(propGroups, systems)
   const propGroupsB = addTopSystem(propGroupsA)
   const propGroupsC = sortSystems(propGroupsB)
   const systemsA = finalizeSystems(propGroupsC)
@@ -86,16 +86,11 @@ const removeDimensionsArray = function ({ propName, propValue }) {
   return { propName, propValue }
 }
 
-const reducePropDimensions = function (propGroups, systems) {
-  return propGroups.map((propGroup) =>
-    reduceEachPropDimensions(propGroup, systems),
-  )
+const simplifyPropGroups = function (propGroups, systems) {
+  return propGroups.map((propGroup) => simplifyPropGroup(propGroup, systems))
 }
 
-const reduceEachPropDimensions = function (
-  { propEntries, dimensionsArray },
-  systems,
-) {
+const simplifyPropGroup = function ({ propEntries, dimensionsArray }, systems) {
   const dimensionsArrayA = skipRedundantInfo(dimensionsArray, systems)
   const dimensionsArrayB = uniqueDeep(dimensionsArrayA)
   const dimensionsArrayC = normalizeTopSystem(dimensionsArrayB)
