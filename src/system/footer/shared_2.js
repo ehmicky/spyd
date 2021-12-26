@@ -85,12 +85,12 @@ const isUniqueDimensionsArray = function (
 }
 
 const getPropGroup = function (dimensionsArray, propEntries) {
-  const propEntriesArray = propEntries
+  const propEntriesA = propEntries
     .filter(({ dimensionsArray: dimensionsArrayB }) =>
       isSameArray(dimensionsArray, dimensionsArrayB),
     )
     .map(removeDimensionsArray)
-  return { propEntriesArray, dimensionsArray }
+  return { propEntries: propEntriesA, dimensionsArray }
 }
 
 const removeDimensionsArray = function ({ propName, propValue }) {
@@ -104,14 +104,14 @@ const reducePropDimensions = function (propGroups, systems) {
 }
 
 const reduceEachPropDimensions = function (
-  { propEntriesArray, dimensionsArray },
+  { propEntries, dimensionsArray },
   systems,
 ) {
   const dimensionsArrayA = reduceAllPropDimensions(dimensionsArray, systems)
   const dimensionsArrayB = removeDuplicateDimensions(dimensionsArrayA)
   const dimensionsArrayC = normalizeTopSystem(dimensionsArrayB)
   const dimensionsArrayD = appendValues(dimensionsArrayC)
-  return { propEntriesArray, dimensionsArray: dimensionsArrayD }
+  return { propEntries, dimensionsArray: dimensionsArrayD }
 }
 
 const reduceAllPropDimensions = function (dimensionsArray, systems) {
@@ -293,7 +293,7 @@ const appendValues = function (dimensionsArray) {
 const addTopSystem = function (propGroups) {
   return propGroups.some(isTopSystem)
     ? propGroups
-    : [{ propEntriesArray: [], dimensionsArray: [] }, ...propGroups]
+    : [{ propEntries: [], dimensionsArray: [] }, ...propGroups]
 }
 
 const isTopSystem = function ({ dimensionsArray }) {
@@ -304,11 +304,11 @@ const sortSystems = function (propGroups) {
   return propGroups.map(addSortProps).sort(compareSystems)
 }
 
-const addSortProps = function ({ propEntriesArray, dimensionsArray }) {
+const addSortProps = function ({ propEntries, dimensionsArray }) {
   const isTopSystem = dimensionsArray.length === 0
-  const propEntriesArrayA = propEntriesArray.map(addPropOrder)
-  const propEntriesArrayB = sortOn(propEntriesArrayA, ['propOrder'])
-  return { isTopSystem, propEntriesArray: propEntriesArrayB, dimensionsArray }
+  const propEntriesA = propEntries.map(addPropOrder)
+  const propEntriesB = sortOn(propEntriesA, ['propOrder'])
+  return { isTopSystem, propEntries: propEntriesB, dimensionsArray }
 }
 
 const addPropOrder = function ({ propName, propValue }) {
@@ -317,8 +317,8 @@ const addPropOrder = function ({ propName, propValue }) {
 }
 
 const compareSystems = function (
-  { isTopSystem: isTopSystemA, propEntriesArray: propEntriesArrayA },
-  { isTopSystem: isTopSystemB, propEntriesArray: propEntriesArrayB },
+  { isTopSystem: isTopSystemA, propEntries: propEntriesA },
+  { isTopSystem: isTopSystemB, propEntries: propEntriesB },
 ) {
   if (isTopSystemA) {
     return -1
@@ -329,14 +329,14 @@ const compareSystems = function (
   }
 
   // eslint-disable-next-line
-  for (let index = 0; index < propEntriesArrayA.length; index += 1) {
-    const propEntryB = propEntriesArrayB[index]
+  for (let index = 0; index < propEntriesA.length; index += 1) {
+    const propEntryB = propEntriesB[index]
 
     if (propEntryB === undefined) {
       return 1
     }
 
-    const propEntryA = propEntriesArrayA[index]
+    const propEntryA = propEntriesA[index]
 
     if (propEntryA.propOrder > propEntryB.propOrder) {
       return 1
@@ -362,8 +362,8 @@ const finalizeSystems = function (propGroups) {
   return propGroups.map(finalizeSystem)
 }
 
-const finalizeSystem = function ({ propEntriesArray, dimensionsArray }) {
-  const props = Object.fromEntries(propEntriesArray.map(getPropEntry))
+const finalizeSystem = function ({ propEntries, dimensionsArray }) {
+  const props = Object.fromEntries(propEntries.map(getPropEntry))
   return { dimensions: dimensionsArray, ...props }
 }
 
