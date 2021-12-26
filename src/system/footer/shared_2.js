@@ -126,11 +126,27 @@ const isReducibleSystem = function ({
   dimensionName,
 }) {
   return allDimensionsB.some((dimensionsB, indexB) =>
-    Object.entries(dimensionsB).every(
-      ([dimensionNameB, dimensionValueB]) =>
-        system.dimensions[dimensionNameB] === dimensionValueB ||
-        (indexB === index && dimensionNameB === dimensionName),
-    ),
+    isReducibleDimensions({
+      system,
+      dimensionsB,
+      index,
+      indexB,
+      dimensionName,
+    }),
+  )
+}
+
+const isReducibleDimensions = function ({
+  system,
+  dimensionsB,
+  index,
+  indexB,
+  dimensionName,
+}) {
+  return Object.entries(dimensionsB).every(
+    ([dimensionNameB, dimensionValueB]) =>
+      system.dimensions[dimensionNameB] === dimensionValueB ||
+      (indexB === index && dimensionNameB === dimensionName),
   )
 }
 
