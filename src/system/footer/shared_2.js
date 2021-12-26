@@ -105,13 +105,7 @@ const reduceOneOnePropDimensions = function (
   dimensionName,
 ) {
   const matching = systems.filter((system) =>
-    allDimensionsB.some((dimensionsB, indexB) =>
-      Object.entries(dimensionsB).every(
-        ([dimensionNameB, dimensionValueB]) =>
-          system.dimensions[dimensionNameB] === dimensionValueB ||
-          (indexB === index && dimensionNameB === dimensionName),
-      ),
-    ),
+    isReducibleSystem({ system, allDimensionsB, index, dimensionName }),
   )
 
   if (matching.length !== allDimensionsB.length) {
@@ -123,6 +117,21 @@ const reduceOneOnePropDimensions = function (
     omit.default(allDimensionsB[index], [dimensionName]),
     ...allDimensionsB.slice(index + 1),
   ]
+}
+
+const isReducibleSystem = function ({
+  system,
+  allDimensionsB,
+  index,
+  dimensionName,
+}) {
+  return allDimensionsB.some((dimensionsB, indexB) =>
+    Object.entries(dimensionsB).every(
+      ([dimensionNameB, dimensionValueB]) =>
+        system.dimensions[dimensionNameB] === dimensionValueB ||
+        (indexB === index && dimensionNameB === dimensionName),
+    ),
+  )
 }
 
 const removeDuplicateDimensions = function (allDimensions) {
