@@ -13,6 +13,7 @@ import { addSystemsTitles } from './title.js'
 //     - dynamic properties should be sorted normally
 //  - [SPYD_VERSION_NAME] should always be in shared system, using the latest
 //    system's value
+//  - Debug through this function, one step at a time
 export const addFooter = function ({
   result: { id, system },
   resultProps: { timestamp },
