@@ -44,13 +44,7 @@ const getPropDimensions = function (systems) {
 }
 
 const groupPropDimensions = function (propDimensions) {
-  const uniqueAllDimensions = propDimensions
-    .map(([, , allDimensions]) => allDimensions)
-    .filter((allDimensions, index, allAllDimensions) =>
-      allAllDimensions
-        .slice(index + 1)
-        .every((allDimensionsB) => !isSameArray(allDimensions, allDimensionsB)),
-    )
+  const uniqueAllDimensions = getUniqueAllDimensions(propDimensions)
   const groupedPropDimensions = uniqueAllDimensions.map((allDimensions) => {
     const propEntries = propDimensions
       .filter(([, , allDimensionsB]) =>
@@ -60,6 +54,16 @@ const groupPropDimensions = function (propDimensions) {
     return [propEntries, allDimensions]
   })
   return groupedPropDimensions
+}
+
+const getUniqueAllDimensions = function (propDimensions) {
+  return propDimensions
+    .map(([, , allDimensions]) => allDimensions)
+    .filter((allDimensions, index, allAllDimensions) =>
+      allAllDimensions
+        .slice(index + 1)
+        .every((allDimensionsB) => !isSameArray(allDimensions, allDimensionsB)),
+    )
 }
 
 const reducePropDimensions = function (groupedPropDimensions, systems) {
