@@ -1,3 +1,5 @@
+import mapObj from 'map-obj'
+
 // Normalize the result after measuring
 export const normalizeMeasuredResult = function (result) {
   const combinations = result.combinations.map(normalizeCombination)
@@ -5,20 +7,11 @@ export const normalizeMeasuredResult = function (result) {
 }
 
 // Only keep the properties we need for reporting
-const normalizeCombination = function ({
-  dimensions: {
-    task: { id: taskId },
-    runner: { id: runnerId },
-    system: { id: systemId },
-  },
-  stats,
-}) {
-  return {
-    dimensions: {
-      task: { id: taskId },
-      runner: { id: runnerId },
-      system: { id: systemId },
-    },
-    stats,
-  }
+const normalizeCombination = function ({ dimensions, stats }) {
+  const dimensionsA = mapObj(dimensions, getIdProp)
+  return { dimensions: dimensionsA, stats }
+}
+
+const getIdProp = function (propName, { id }) {
+  return { id }
 }
