@@ -1,4 +1,4 @@
-// Add `system.title` which is a string representation of `system.dimension`
+// Add `system.title` which is a string representation of `system.dimensions`
 // to be shown as header in the footer
 export const addSystemsTitles = function (footer) {
   const systems = footer.systems.map(addSystemTitle)
