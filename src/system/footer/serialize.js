@@ -23,7 +23,7 @@ const serializeSystem = function ({
   machine: { os, cpus, memory } = {},
   git: { commit, tag, branch, prNumber, prBranch } = {},
   ci,
-  versions: { Spyd: spydVersion, ...versions } = {},
+  versions = {},
 }) {
   const props = {
     OS: os,
@@ -35,8 +35,7 @@ const serializeSystem = function ({
   }
   return cleanObject({
     ...props,
-    ...omit.default(versions, Object.keys(props)),
-    [SPYD_VERSION_NAME]: spydVersion,
+    ...serializeVersions(versions, props),
   })
 }
 
@@ -74,6 +73,13 @@ const serializePr = function (prNumber, prBranch) {
 
 const getBranch = function (branch) {
   return branch === undefined ? '' : ` (${branch})`
+}
+
+const serializeVersions = function ({ Spyd: spydVersion, ...versions }, props) {
+  return {
+    ...omit.default(versions, Object.keys(props)),
+    [SPYD_VERSION_NAME]: spydVersion,
+  }
 }
 
 // The spyd version is shown after other versions.
