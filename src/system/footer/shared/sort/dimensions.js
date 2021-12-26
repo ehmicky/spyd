@@ -8,8 +8,18 @@ export const sortDimensionsArray = function (dimensionsArray) {
 }
 
 // Sort each dimension within a given `dimensions` by its dimension name
+// Then sort each dimension value's array item
 const sortDimensionsEntries = function (dimensionsEntries) {
-  return sortOn(dimensionsEntries, [0])
+  const dimensionsEntriesA = sortOn(dimensionsEntries, [0])
+  return dimensionsEntriesA.map(sortDimensionValueArray)
+}
+
+const sortDimensionValueArray = function ([
+  dimensionName,
+  dimensionValueArray,
+]) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  return [dimensionName, [...dimensionValueArray].sort()]
 }
 
 // Sort the `dimensions` in each system's title, when it has several:
