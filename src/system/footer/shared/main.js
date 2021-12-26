@@ -3,10 +3,10 @@ import mapObj from 'map-obj'
 import omit from 'omit.js'
 import sortOn from 'sort-on'
 
-import { isSameArray } from '../../utils/equal.js'
-import { findIndexFrom } from '../../utils/find.js'
-import { setArray } from '../../utils/set.js'
-import { uniqueDeep, uniqueDeepUnordered } from '../../utils/unique.js'
+import { isSameArray } from '../../../utils/equal.js'
+import { findIndexFrom } from '../../../utils/find.js'
+import { setArray } from '../../../utils/set.js'
+import { uniqueDeep, uniqueDeepUnordered } from '../../../utils/unique.js'
 
 // Split `systems` into several so that:
 //  - Shared properties are shown under the same system titles
