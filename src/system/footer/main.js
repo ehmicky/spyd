@@ -9,8 +9,6 @@ import { addSystemsTitles } from './title.js'
 
 // Add each `reporter.footer`
 // TODO:
-//  - fix `PROP_ORDER` with real order (use one from `serialize.js`)
-//     - dynamic properties should be sorted normally
 //  - [SPYD_VERSION_NAME] should always be in shared system, using the latest
 //    system's value
 //  - Debug through this function, one step at a time
