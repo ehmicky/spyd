@@ -156,10 +156,10 @@ const isReducibleSystem = function ({
   index,
   dimensionName,
 }) {
-  return dimensionsArray.some((dimensionsB, indexB) =>
+  return dimensionsArray.some((dimensions, indexB) =>
     isReducibleDimensions({
       system,
-      dimensionsB,
+      dimensions,
       index,
       indexB,
       dimensionName,
@@ -169,21 +169,20 @@ const isReducibleSystem = function ({
 
 const isReducibleDimensions = function ({
   system,
-  dimensionsB,
+  dimensions,
   index,
   indexB,
   dimensionName,
 }) {
-  return Object.entries(dimensionsB).every(
-    ([dimensionNameB, dimensionValueB]) =>
-      isReducibleDimension({
-        system,
-        index,
-        indexB,
-        dimensionName,
-        dimensionNameB,
-        dimensionValueB,
-      }),
+  return Object.entries(dimensions).every(([dimensionNameB, dimensionValueB]) =>
+    isReducibleDimension({
+      system,
+      index,
+      indexB,
+      dimensionName,
+      dimensionNameB,
+      dimensionValueB,
+    }),
   )
 }
 
