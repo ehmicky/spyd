@@ -29,8 +29,8 @@ const serializeSystem = function ({
     OS: os,
     CPU: serializeCpus(cpus),
     Memory: serializeMemory(memory),
-    Git: serializeGit({ commit, tag, branch }),
-    PR: serializePr({ prNumber, prBranch }),
+    Git: serializeGit(commit, tag, branch),
+    PR: serializePr(prNumber, prBranch),
     CI: ci,
   }
   return cleanObject({
@@ -54,7 +54,7 @@ const serializeMemory = function (memory) {
     : formatBytes(memory, { decimalPlaces: 0 })
 }
 
-const serializeGit = function ({ commit, tag, branch }) {
+const serializeGit = function (commit, tag, branch) {
   return commit === undefined && tag === undefined
     ? undefined
     : `${getHash(commit, tag)}${getBranch(branch)}`
@@ -66,7 +66,7 @@ const getHash = function (commit, tag) {
 
 const COMMIT_SIZE = 8
 
-const serializePr = function ({ prNumber, prBranch }) {
+const serializePr = function (prNumber, prBranch) {
   return prNumber === undefined
     ? undefined
     : `#${prNumber}${getBranch(prBranch)}`
