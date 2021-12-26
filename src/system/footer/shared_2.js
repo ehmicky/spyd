@@ -237,25 +237,20 @@ const compareSystems = function (
     }
 
     const propEntryA = propEntriesA[index]
-    const propOrderA = propEntryA.propOrder
-    const propOrderB = propEntryB.propOrder
 
-    if (propOrderA > propOrderB) {
+    if (propEntryA.propOrder > propEntryB.propOrder) {
       return 1
     }
 
-    if (propOrderA < propOrderB) {
+    if (propEntryA.propOrder < propEntryB.propOrder) {
       return -1
     }
 
-    const valueA = propEntryA.propValue
-    const valueB = propEntryB.propValue
-
-    if (valueA > valueB) {
+    if (propEntryA.propValue > propEntryB.propValue) {
       return 1
     }
 
-    if (valueA < valueB) {
+    if (propEntryA.propValue < propEntryB.propValue) {
       return -1
     }
   }
