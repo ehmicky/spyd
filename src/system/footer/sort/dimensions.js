@@ -1,25 +1,45 @@
 import sortOn from 'sort-on'
 
-export const sortDimensionsArray = function (dimensionsArray) {
+export const sortDimensionsArray = function (dimensionsArray, dimensionNames) {
   // eslint-disable-next-line fp/no-mutating-methods
   return dimensionsArray
-    .map(sortDimensionsEntries)
+    .map(sortDimensionsEntries.bind(undefined, dimensionNames))
     .sort(compareDimensionsEntries)
 }
 
-// Sort each dimension within a given `dimensions` by its dimension name
-// Then sort each dimension value's array item
-const sortDimensionsEntries = function (dimensionsEntries) {
-  const dimensionsEntriesA = sortOn(dimensionsEntries, [0])
-  return dimensionsEntriesA.map(sortDimensionValueArray)
+// Sort each dimension within a given `dimensions` by its dimension name.
+//  - Instead of using lexicographic order, we use the order of dimensions as
+//    specified by the user in the `system` configuration property
+//  - This is persisted in results and we ensure it does not change until it
+//    reaches this logic
+//  - We only use a single system for this, for consistency, and we use the
+//    one from the target result.
+// Then sort each dimension value's array item.
+const sortDimensionsEntries = function (dimensionNames, dimensionsEntries) {
+  const dimensionsEntriesA = dimensionsEntries.map((dimensionsEntry) =>
+    addDimensionNameOrder(dimensionsEntry, dimensionNames),
+  )
+  const dimensionsEntriesB = sortOn(dimensionsEntriesA, [2])
+  return dimensionsEntriesB.map(sortDimensionValueArray)
+}
+
+const addDimensionNameOrder = function (
+  [dimensionName, dimensionValueArray],
+  dimensionNames,
+) {
+  const dimensionNameIndex = dimensionNames.indexOf(dimensionName)
+  const dimensionNameOrder =
+    dimensionNameIndex === -1 ? Number.POSITIVE_INFINITY : dimensionNameIndex
+  return [dimensionName, dimensionValueArray, dimensionNameOrder]
 }
 
 const sortDimensionValueArray = function ([
   dimensionName,
   dimensionValueArray,
+  dimensionNameOrder,
 ]) {
   // eslint-disable-next-line fp/no-mutating-methods
-  return [dimensionName, [...dimensionValueArray].sort()]
+  return [dimensionName, [...dimensionValueArray].sort(), dimensionNameOrder]
 }
 
 // Sort the `dimensions` in each system's title, when it has several:
@@ -57,14 +77,14 @@ const compareDimensionsEntries = function (
 
 // eslint-disable-next-line complexity
 const compareDimensionsEntry = function (
-  [dimensionNameA, dimensionValueArrayA],
-  [dimensionNameB, dimensionValueArrayB],
+  [, dimensionValueArrayA, dimensionNameOrderA],
+  [, dimensionValueArrayB, dimensionNameOrderB],
 ) {
-  if (dimensionNameA > dimensionNameB) {
+  if (dimensionNameOrderA > dimensionNameOrderB) {
     return 1
   }
 
-  if (dimensionNameA < dimensionNameB) {
+  if (dimensionNameOrderA < dimensionNameOrderB) {
     return -1
   }
 
