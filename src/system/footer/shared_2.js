@@ -8,7 +8,10 @@ import { findIndexFrom } from '../../utils/find.js'
 import { setArray } from '../../utils/set.js'
 import { uniqueDeep, uniqueDeepUnordered } from '../../utils/unique.js'
 
-const mainLogic = function (systems) {
+// Split `systems` into several so that:
+//  - Shared properties are shown under the same system titles
+//  - As few systems as possible are shown
+const addSharedSystems = function (systems) {
   const propEntries = listPropEntries(systems)
   const propGroups = getPropGroups(propEntries)
   const propGroupsA = simplifyPropGroups(propGroups, systems)
@@ -21,8 +24,9 @@ const mainLogic = function (systems) {
   return systemsA
 }
 
+// List all `propEntries`, i.e. unique sets of system props names + values.
 const listPropEntries = function (systems) {
-  const normalizedSystems = systems.map(normalizeSystemProps)
+  const normalizedSystems = systems.map(separateSystemProps)
   const propNames = getUniquePropNames(normalizedSystems)
   const propEntries = getUniquePropEntries(propNames, normalizedSystems)
   const propEntriesA = propEntries.map((propEntry) =>
@@ -31,10 +35,11 @@ const listPropEntries = function (systems) {
   return propEntriesA
 }
 
-const normalizeSystemProps = function ({ dimensions, ...props }) {
+const separateSystemProps = function ({ dimensions, ...props }) {
   return { dimensions, props }
 }
 
+// List all unique system props names
 const getUniquePropNames = function (systems) {
   return [...new Set(systems.flatMap(getPropNames))]
 }
@@ -43,6 +48,7 @@ const getPropNames = function ({ props }) {
   return Object.keys(props)
 }
 
+// List all unique system props names + values
 const getUniquePropEntries = function (propNames, systems) {
   return propNames.flatMap((propName) => getUniquePropEntry(propName, systems))
 }
@@ -52,6 +58,7 @@ const getUniquePropEntry = function (propName, systems) {
   return propValues.map((propValue) => ({ propName, propValue }))
 }
 
+// For each `propEntry`, add the list of matching dimensions
 const addPropEntryDimensions = function ({ propName, propValue }, systems) {
   const dimensionsArray = systems
     .filter(({ props }) => props[propName] === propValue)
@@ -59,6 +66,9 @@ const addPropEntryDimensions = function ({ propName, propValue }, systems) {
   return { propName, propValue, dimensionsArray }
 }
 
+// Group `propEntries` together if they share the same `dimensionsArray`.
+// Like this, system properties applying to the same dimensions are shown
+// together.
 const getPropGroups = function (propEntries) {
   const dimensionsArrays = uniqueDeepUnordered(
     propEntries.map(getPropEntryDimensions),
@@ -86,6 +96,8 @@ const removeDimensionsArray = function ({ propName, propValue }) {
   return { propName, propValue }
 }
 
+// Reduce the amount of system dimensions and properties so the system footer
+// looks simpler
 const simplifyPropGroups = function (propGroups, systems) {
   return propGroups.map((propGroup) => simplifyPropGroup(propGroup, systems))
 }
@@ -98,6 +110,15 @@ const simplifyPropGroup = function ({ propEntries, dimensionsArray }, systems) {
   return { propEntries, dimensionsArray: dimensionsArrayD }
 }
 
+// Some dimensions are redundant, i.e. removing them does change which systems
+// are matched because either:
+//  - The prop is matched by several dimensions in `dimensionsArray`
+//  - The systems are missing some dimensions
+// For example, if a prop applies to all systems, its `dimensionsArray` will
+// list each possible `dimensions`. This logic would reduce it to an empty
+// `dimensionArray`.
+// We do this by iterating through each dimension, checking if it can be
+// removed, then removing it.
 const skipRedundantInfo = function (dimensionsArray, systems) {
   return dimensionsArray.reduce(
     skipRedundantDimensions.bind(undefined, systems),
@@ -105,6 +126,11 @@ const skipRedundantInfo = function (dimensionsArray, systems) {
   )
 }
 
+// Sometimes, removing dimensions can result in several equivalent but different
+// result depending on the order in which dimensions are iterated.
+//  - We iterate from the last to the first dimensions, so that the last
+//    dimensions are removed instead of the first ones, since the first ones
+//    are more likely to be more significant for users.
 // eslint-disable-next-line max-params
 const skipRedundantDimensions = function (
   systems,
@@ -134,6 +160,8 @@ const skipRedundantDimension = function (
   return setArray(dimensionsArray, index, dimensionsA)
 }
 
+// Check if removing the dimension would result in a different count of matching
+// systems
 const isRedundantDimension = function ({
   systems,
   dimensionsArray,
@@ -196,6 +224,8 @@ const dimensionMatches = function ({
   )
 }
 
+// Properties which apply to all systems result in a `dimensionsArray` with a
+// single empty object. We normalize it to an empty array.
 const normalizeTopSystem = function (dimensionsArray) {
   return dimensionsArray.filter(isNotEmptyDimensions)
 }
@@ -204,6 +234,13 @@ const isNotEmptyDimensions = function (dimensions) {
   return Object.keys(dimensions).length !== 0
 }
 
+// A system prop might match two sets of dimensions identical except for one
+// dimension. In that case, we merge both.
+//  - For example, if a system prop applies to A+Red, B+Green, A+Green, B+Red,
+//    we simplify it to A/B+Red/Green
+// We do so by iterating through every combination of dimensions
+//  - If only one dimension differs, we merge them
+//  - We repeat until no more dimension has been merged
 const concatDimensionsValues = function (dimensionsArray) {
   const dimensionsArrayA = dimensionsArray.map(normalizeDimensions)
 
@@ -227,6 +264,7 @@ const normalizeDimensions = function (dimensions) {
   return { dimensionNames, dimensions: dimensionsA }
 }
 
+// Dimension values are now array of alternatives
 const normalizeDimension = function (dimensionName, dimensionValue) {
   return [dimensionName, [dimensionValue]]
 }
@@ -295,6 +333,7 @@ const loopSecondDimensions = function (
   }
 }
 
+// Find another `dimensions` with the same names and exactly 1 different value.
 // eslint-disable-next-line max-params
 const findConcatDimension = function (
   firstDimensions,
@@ -349,6 +388,7 @@ const findDifferentDimension = function (
   )
 }
 
+// Merge the values of two `dimensions`
 // eslint-disable-next-line max-params
 const concatValues = function (
   dimensionsArray,
@@ -367,17 +407,28 @@ const concatValues = function (
   return secondIndex - 1
 }
 
+// The first system is always for props matching all systems.
+// If it has not been added yet, we do it here.
 const addTopSystem = function (propGroups) {
   return propGroups.some(isTopPropGroup)
     ? propGroups
     : [{ propEntries: [], dimensionsArray: [] }, ...propGroups]
 }
 
+// Sort `propGroups` so that systems are shown in a good order in the footer:
+//  - Top-level system first
+//  - Then sorted to follow a specific order for the props
+//  - If a prop has several values, the values are sorted too
+// We sort all of:
+//  - The systems
+//  - The dimensions in each system's title
+//  - The properties in each system
 const sortSystems = function (propGroups) {
   // eslint-disable-next-line fp/no-mutating-methods
   return propGroups.map(addSortProps).sort(compareSystems)
 }
 
+// Add properties used during sorting so they are only computed once
 const addSortProps = function ({ propEntries, dimensionsArray }) {
   const isTopSystem = isTopPropGroup({ dimensionsArray })
   const propEntriesA = propEntries.map(addPropOrder)
@@ -445,6 +496,7 @@ const comparePropEntries = function (propEntryA, propEntryB) {
   return 0
 }
 
+// Transform `propGroups` back to `systems`
 const finalizeSystems = function (propGroups) {
   return propGroups.map(finalizeSystem)
 }
@@ -458,6 +510,7 @@ const getPropEntry = function ({ propName, propValue }) {
   return [propName, propValue]
 }
 
+// Order where each property should be shown in the footer
 const PROP_ORDER = ['aa', 'ff', 'bb', 'cc', 'dd', 'ee', 'gg', 'hh']
 
 const getSystemTitle = function (allDimensions) {
@@ -473,7 +526,10 @@ const getSystemTitle = function (allDimensions) {
 }
 
 // TODO:
+//  - sort `dimensionsArray` too, in each system
 //  - refactor whole file
+//  - debug the whole file, checking if each statement works
+//  - break down file into several files
 //  - this logic should come after `serialize.js`, i.e. there are no deep
 //    properties and all properties values are strings
 //     - However, the `system.title` logic should be moved after it
@@ -576,4 +632,4 @@ const SYSTEMS = [
     gg: 30,
   },
 ]
-mainLogic(SYSTEMS)
+addSharedSystems(SYSTEMS)
