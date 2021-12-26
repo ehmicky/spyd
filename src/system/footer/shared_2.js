@@ -219,9 +219,11 @@ const removeDuplicateDimensions = function (allDimensions) {
 }
 
 const normalizeTopSystem = function (allDimensions) {
-  return allDimensions.filter(
-    (dimensions) => Object.keys(dimensions).length !== 0,
-  )
+  return allDimensions.filter(isNotEmptyDimensions)
+}
+
+const isNotEmptyDimensions = function (dimensions) {
+  return Object.keys(dimensions).length !== 0
 }
 
 const appendValues = function (allDimensions) {
