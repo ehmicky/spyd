@@ -2,6 +2,7 @@ import { isDeepStrictEqual } from 'util'
 
 import mapObj from 'map-obj'
 import omit from 'omit.js'
+import sortOn from 'sort-on'
 
 /* eslint-disable max-nested-callbacks, max-lines-per-function, complexity, max-lines, fp/no-loops, max-statements, max-depth, no-unreachable-loop */
 const mainLogic = function (systems) {
@@ -209,10 +210,7 @@ const sortSystems = function (finalPropDimensions) {
         const propOrder = PROP_ORDER.indexOf(propName)
         return { propName, propValue, propOrder }
       })
-      const propEntriesA = fullPropEntries.sort(
-        ({ propOrder: propOrderA }, { propOrder: propOrderB }) =>
-          propOrderA > propOrderB ? 1 : -1,
-      )
+      const propEntriesA = sortOn(fullPropEntries, ['propOrder'])
       return { hasNoDimensions, propEntries: propEntriesA, allDimensions }
     })
     .sort(
