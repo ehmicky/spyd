@@ -316,7 +316,7 @@ const compareSystems = function (
     }
   }
 
-  return 1
+  return 0
 }
 
 const comparePropEntries = function (propEntryA, propEntryB) {
