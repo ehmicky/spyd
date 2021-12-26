@@ -205,11 +205,14 @@ const sortSystems = function (finalPropDimensions) {
   return finalPropDimensions
     .map(([propEntries, allDimensions]) => {
       const hasNoDimensions = allDimensions.length === 0
-      const propEntriesA = propEntries.sort(([propNameA], [propNameB]) => {
-        const propOrderA = PROP_ORDER.indexOf(propNameA)
-        const propOrderB = PROP_ORDER.indexOf(propNameB)
-        return propOrderA > propOrderB ? 1 : -1
+      const fullPropEntries = propEntries.map(([propName, propValue]) => {
+        const propOrder = PROP_ORDER.indexOf(propName)
+        return [propName, propValue, propOrder]
       })
+      const propEntriesA = fullPropEntries.sort(
+        ([, , propOrderA], [, , propOrderB]) =>
+          propOrderA > propOrderB ? 1 : -1,
+      )
       return { hasNoDimensions, propEntries: propEntriesA, allDimensions }
     })
     .sort((first, second) => {
@@ -226,8 +229,8 @@ const sortSystems = function (finalPropDimensions) {
           return 1
         }
 
-        const propOrderA = PROP_ORDER.indexOf(first.propEntries[index][0])
-        const propOrderB = PROP_ORDER.indexOf(second.propEntries[index][0])
+        const propOrderA = first.propEntries[index][2]
+        const propOrderB = second.propEntries[index][2]
 
         if (propOrderA > propOrderB) {
           return 1
