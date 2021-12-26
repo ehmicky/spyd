@@ -6,6 +6,8 @@ import { addTopSystem } from './top.js'
 // Split `systems` into several so that:
 //  - Shared properties are shown under the same system titles
 //  - As few systems as possible are shown
+// The logic relies on all system properties values being strings, which is
+// done by the serialization logic previously applied.
 export const addSharedSystems = function (footer) {
   const propEntries = listPropEntries(footer.systems)
   const propGroups = getPropGroups(propEntries)

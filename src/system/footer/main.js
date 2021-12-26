@@ -5,15 +5,10 @@ import { omitFooterProps } from '../omit.js'
 import { serializeFooter } from './serialize.js'
 import { addSharedSystems } from './shared/main.js'
 import { sortSystems } from './sort/main.js'
+import { addSystemsTitles } from './title.js'
 
 // Add each `reporter.footer`
 // TODO:
-//  - this logic should come after `serialize.js`, i.e. there are no deep
-//    properties and all properties values are strings
-//     - However, the `system.title` logic should be moved after it
-//  - fix `title` logic:
-//     - transform each id string into { id: string, title: string }
-//     - add `system.title`
 //  - fix `PROP_ORDER` with real order (use one from `serialize.js`)
 //     - dynamic properties should be sorted normally
 //  - [SPYD_VERSION_NAME] should always be in shared system, using the latest
@@ -30,12 +25,13 @@ export const addFooter = function ({
   config: { titles },
 }) {
   const footer = { id, timestamp, systems }
-  const footerA = addFooterTitles(footer, titles, showTitles)
-  const footerB = omitFooterProps(footerA, showMetadata, showSystem)
+  const footerA = omitFooterProps(footer, showMetadata, showSystem)
+  const footerB = serializeFooter(footerA)
   const footerC = addSharedSystems(footerB)
   const footerD = sortSystems(footerC)
-  const footerE = serializeFooter(footerD)
-  const { footerParams, footerString } = applyFooterFormat(footerE, format)
+  const footerE = addFooterTitles(footerD, titles, showTitles)
+  const footerF = addSystemsTitles(footerE)
+  const { footerParams, footerString } = applyFooterFormat(footerF, format)
   return { ...reporter, footerParams, footerString }
 }
 
