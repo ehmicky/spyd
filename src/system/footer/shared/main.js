@@ -2,7 +2,7 @@
 import { getPropGroups } from './group.js'
 import { listPropEntries } from './list.js'
 import { simplifyPropGroups } from './simplify.js'
-import { sortSystems } from './sort.js'
+import { sortSystems } from './sort/main.js'
 import { addTopSystem } from './top.js'
 
 // Split `systems` into several so that:
