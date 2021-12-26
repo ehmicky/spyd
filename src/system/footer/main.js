@@ -6,6 +6,18 @@ import { serializeFooter } from './serialize.js'
 import { addSharedSystem } from './shared.js'
 
 // Add each `reporter.footer`
+// TODO:
+//  - use `addSharedSystems()` then `sortSystems()`
+//  - this logic should come after `serialize.js`, i.e. there are no deep
+//    properties and all properties values are strings
+//     - However, the `system.title` logic should be moved after it
+//  - fix `title` logic:
+//     - transform each id string into { id: string, title: string }
+//     - add `system.title`
+//  - fix `PROP_ORDER` with real order (use one from `serialize.js`)
+//     - dynamic properties should be sorted normally
+//  - [SPYD_VERSION_NAME] should always be in shared system, using the latest
+//    system's value
 export const addFooter = function ({
   result: { id, system },
   resultProps: { timestamp },
