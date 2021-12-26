@@ -145,8 +145,28 @@ const isReducibleDimensions = function ({
 }) {
   return Object.entries(dimensionsB).every(
     ([dimensionNameB, dimensionValueB]) =>
-      system.dimensions[dimensionNameB] === dimensionValueB ||
-      (indexB === index && dimensionNameB === dimensionName),
+      isReducibleDimension({
+        system,
+        index,
+        indexB,
+        dimensionName,
+        dimensionNameB,
+        dimensionValueB,
+      }),
+  )
+}
+
+const isReducibleDimension = function ({
+  system,
+  index,
+  indexB,
+  dimensionName,
+  dimensionNameB,
+  dimensionValueB,
+}) {
+  return (
+    system.dimensions[dimensionNameB] === dimensionValueB ||
+    (indexB === index && dimensionNameB === dimensionName)
   )
 }
 
