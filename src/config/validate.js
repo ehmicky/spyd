@@ -45,7 +45,7 @@ const EXAMPLE_CONFIG = {
   runnerConfig: { node: { version: '8' } },
   reporter: optionalArray('debug'),
   reporterConfig: { debug: { property: true } },
-  system: { os: 'linux', node_version: '8' },
+  system: { os: 'linux', node_version: 'node_8' },
   limit: optionalArray('task_id=10'),
   quiet: true,
   force: true,

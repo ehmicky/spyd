@@ -51,7 +51,7 @@ The inputs values are passed to tasks as arguments.`,
     describe: `Identifiers of the current hardware/software system.
 Used to compare different machines or configurations together.
 Both the identifier and its type must be specified, such as --system.os=linux or
---system.node_version=16
+--system.node_version=node_16
 Default: none`,
   },
 }
