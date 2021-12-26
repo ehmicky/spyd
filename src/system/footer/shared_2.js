@@ -107,8 +107,8 @@ const reduceEachPropDimensions = function (
   { propEntriesArray, dimensionsArray },
   systems,
 ) {
-  const allDimensionsC = reduceAllPropDimensions(dimensionsArray, systems)
-  const allDimensionsE = removeDuplicateDimensions(allDimensionsC)
+  const dimensionsArrayA = reduceAllPropDimensions(dimensionsArray, systems)
+  const allDimensionsE = removeDuplicateDimensions(dimensionsArrayA)
   const allDimensionsF = normalizeTopSystem(allDimensionsE)
   const allDimensionsG = appendValues(allDimensionsF)
   return [propEntriesArray, allDimensionsG]
@@ -200,9 +200,9 @@ const isReducibleDimension = function ({
   )
 }
 
-const removeDuplicateDimensions = function (allDimensions) {
-  return allDimensions.filter((dimensions, index, allDimensionsA) =>
-    allDimensionsA
+const removeDuplicateDimensions = function (dimensionsArray) {
+  return dimensionsArray.filter((dimensions, index, dimensionsArrayA) =>
+    dimensionsArrayA
       .slice(index + 1)
       .every((dimensionsB) => !isDeepStrictEqual(dimensions, dimensionsB)),
   )
