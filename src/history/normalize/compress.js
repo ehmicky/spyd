@@ -53,7 +53,7 @@ const compressBucket = function ({ start, end, frequency }, mean) {
 
 // Restore original rawResults after loading
 export const decompressRawResult = function (rawResult) {
-  const system = decompressSystem(rawResult)
+  const system = decompressSystem(rawResult.system)
   const combinations = rawResult.combinations.map((combination) =>
     decompressCombination({ combination }),
   )
