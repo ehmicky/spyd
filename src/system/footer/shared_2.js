@@ -201,11 +201,13 @@ const isReducibleDimension = function ({
 }
 
 const removeDuplicateDimensions = function (dimensionsArray) {
-  return dimensionsArray.filter((dimensions, index, dimensionsArrayA) =>
-    dimensionsArrayA
-      .slice(index + 1)
-      .every((dimensionsB) => !isDeepStrictEqual(dimensions, dimensionsB)),
-  )
+  return dimensionsArray.filter(isUniqueDimensions)
+}
+
+const isUniqueDimensions = function (dimensions, index, dimensionsArray) {
+  return dimensionsArray
+    .slice(index + 1)
+    .every((dimensionsB) => !isDeepStrictEqual(dimensions, dimensionsB))
 }
 
 const normalizeTopSystem = function (allDimensions) {
