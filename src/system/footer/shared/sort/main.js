@@ -15,11 +15,12 @@ export const sortSystems = function (propGroups) {
 const addSortProps = function ({ propEntries, dimensionsArray }) {
   const isTopSystem = isTopPropGroup({ dimensionsArray })
   const propEntriesA = sortPropEntries(propEntries)
-  const dimensionsArrayA = sortDimensionsArray(dimensionsArray)
+  const dimensionsArrayA = dimensionsArray.map(Object.entries)
+  const dimensionsArrayB = sortDimensionsArray(dimensionsArrayA)
   return {
     isTopSystem,
     propEntries: propEntriesA,
-    dimensionsArray: dimensionsArrayA,
+    dimensionsArray: dimensionsArrayB,
   }
 }
 

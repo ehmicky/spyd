@@ -2,12 +2,13 @@ import sortOn from 'sort-on'
 
 export const sortDimensionsArray = function (dimensionsArray) {
   // eslint-disable-next-line fp/no-mutating-methods
-  return dimensionsArray.map(sortDimensions).sort(compareDimensionsEntries)
+  return dimensionsArray
+    .map(sortDimensionsEntries)
+    .sort(compareDimensionsEntries)
 }
 
 // Sort each dimension within a given `dimensions` by its dimension name
-const sortDimensions = function (dimensions) {
-  const dimensionsEntries = Object.entries(dimensions)
+const sortDimensionsEntries = function (dimensionsEntries) {
   return sortOn(dimensionsEntries, [0])
 }
 
