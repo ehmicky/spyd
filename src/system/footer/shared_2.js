@@ -56,7 +56,7 @@ const addPropEntryDimensions = function ({ propName, propValue }, systems) {
   const allDimensions = systems
     .filter(({ props }) => props[propName] === propValue)
     .map(({ dimensions }) => dimensions)
-  return [propName, propValue, allDimensions]
+  return { propName, propValue, allDimensions }
 }
 
 const groupPropDimensions = function (propEntries) {
@@ -71,7 +71,7 @@ const getUniqueAllDimensions = function (propEntries) {
   return propEntries.map(getPropEntryDimensions).filter(isUniqueAllDimensions)
 }
 
-const getPropEntryDimensions = function ([, , allDimensions]) {
+const getPropEntryDimensions = function ({ allDimensions }) {
   return allDimensions
 }
 
@@ -85,16 +85,16 @@ const isUniqueAllDimensions = function (
     .every((allDimensionsB) => !isSameArray(allDimensions, allDimensionsB))
 }
 
-const groupPropDimension = function (allDimensions, propDimensions) {
-  const propEntries = propDimensions
-    .filter(([, , allDimensionsB]) =>
+const groupPropDimension = function (allDimensions, propEntries) {
+  const propEntriesMany = propEntries
+    .filter(({ allDimensions: allDimensionsB }) =>
       isSameArray(allDimensions, allDimensionsB),
     )
     .map(getGroupedDimension)
-  return [propEntries, allDimensions]
+  return [propEntriesMany, allDimensions]
 }
 
-const getGroupedDimension = function ([propName, propValue]) {
+const getGroupedDimension = function ({ propName, propValue }) {
   return [propName, propValue]
 }
 
