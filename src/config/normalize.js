@@ -2,6 +2,7 @@ import { parseLimits } from '../history/compare/parse.js'
 import { normalizePrecision } from '../run/precision.js'
 
 import {
+  checkStringsObject,
   normalizeOptionalArray,
   checkArrayLength,
   checkStringArray,
@@ -27,7 +28,7 @@ const normalizeProp = function (config, [propName, normalizer]) {
 }
 
 const normalizeSystem = function (system) {
-  return { systemId: system }
+  checkStringsObject(system, 'system')
 }
 
 const normalizeRunner = function (value, propName) {
