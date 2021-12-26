@@ -82,29 +82,40 @@ const reduceEachPropDimensions = function (
 
 const reduceAllPropDimensions = function (allDimensions, systems) {
   return allDimensions.reduce(
-    (allDimensionsA, dimensions, index) =>
-      Object.keys(dimensions).reduceRight((allDimensionsB, dimensionName) => {
-        const matching = systems.filter((system) =>
-          allDimensionsB.some((dimensionsB, indexB) =>
-            Object.entries(dimensionsB).every(
-              ([dimensionNameB, dimensionValueB]) =>
-                system.dimensions[dimensionNameB] === dimensionValueB ||
-                (indexB === index && dimensionNameB === dimensionName),
-            ),
-          ),
-        )
-
-        if (matching.length !== allDimensionsB.length) {
-          return allDimensionsB
-        }
-
-        return [
-          ...allDimensionsB.slice(0, index),
-          omit.default(allDimensionsB[index], [dimensionName]),
-          ...allDimensionsB.slice(index + 1),
-        ]
-      }, allDimensionsA),
+    reduceOnePropDimensions.bind(undefined, systems),
     allDimensions,
+  )
+}
+
+const reduceOnePropDimensions = function (
+  systems,
+  allDimensionsA,
+  dimensions,
+  index,
+) {
+  return Object.keys(dimensions).reduceRight(
+    (allDimensionsB, dimensionName) => {
+      const matching = systems.filter((system) =>
+        allDimensionsB.some((dimensionsB, indexB) =>
+          Object.entries(dimensionsB).every(
+            ([dimensionNameB, dimensionValueB]) =>
+              system.dimensions[dimensionNameB] === dimensionValueB ||
+              (indexB === index && dimensionNameB === dimensionName),
+          ),
+        ),
+      )
+
+      if (matching.length !== allDimensionsB.length) {
+        return allDimensionsB
+      }
+
+      return [
+        ...allDimensionsB.slice(0, index),
+        omit.default(allDimensionsB[index], [dimensionName]),
+        ...allDimensionsB.slice(index + 1),
+      ]
+    },
+    allDimensionsA,
   )
 }
 
