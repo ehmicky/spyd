@@ -38,6 +38,7 @@ const getPropEntry = function ({ propName, propValue }) {
 
 // TODO:
 //  - debug the whole file, checking if each statement works
+//  - call to `sortSystems()` should be separate from `addSharedSystems()`
 //  - this logic should come after `serialize.js`, i.e. there are no deep
 //    properties and all properties values are strings
 //     - However, the `system.title` logic should be moved after it
