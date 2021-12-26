@@ -22,16 +22,20 @@ const mainLogic = function (systems) {
 }
 
 const getPropDimensions = function (systems) {
-  const systemsA = systems.map(({ dimensions, ...props }) => ({
-    dimensions,
-    props,
-  }))
-  const uniquePropNames = getUniquePropNames(systemsA)
-  const uniquePropEntries = getUniquePropEntries(uniquePropNames, systemsA)
+  const normalizedSystems = systems.map(normalizeSystemProps)
+  const uniquePropNames = getUniquePropNames(normalizedSystems)
+  const uniquePropEntries = getUniquePropEntries(
+    uniquePropNames,
+    normalizedSystems,
+  )
   const propDimensions = uniquePropEntries.map(([propName, propValue]) =>
-    getPropDimension(propName, propValue, systemsA),
+    getPropDimension(propName, propValue, normalizedSystems),
   )
   return propDimensions
+}
+
+const normalizeSystemProps = function ({ dimensions, ...props }) {
+  return { dimensions, props }
 }
 
 const getUniquePropNames = function (systems) {
