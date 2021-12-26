@@ -26,6 +26,13 @@ import { getSystemVersions } from './versions.js'
 //  - Looks nicer to separate those and sort them individually in reporting
 //  - Is easier for selection with `select|limit`
 //  - Is easier to configure titles
+// Users specify those multiple system dimensions using an object, as opposed to
+// either an array of strings or an underscore-separated string because:
+//  - Comparing dimensions index-wise instead of name-wise:
+//     - Makes it harder to remove dimensions
+//        - Including for temporary system dimensions
+//     - Leads to easier mistakes from users, using wrong indexes
+//  - It would be harder to define default ids
 export const createSystemInfo = async function (
   combinations,
   { cwd, system: dimensions, envInfo },
