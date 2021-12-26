@@ -22,6 +22,10 @@ import { getSystemVersions } from './versions.js'
 // reporters on how to serialize it
 //  - For example, this allows changing the reporting without changing the
 //    history results
+// We allow multiple system dimensions because it:
+//  - Looks nicer to separate those and sort them individually in reporting
+//  - Is easier for selection with `select|limit`
+//  - Is easier to configure titles
 export const createSystemInfo = async function (
   combinations,
   { cwd, system: dimensions, envInfo },
