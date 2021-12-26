@@ -41,6 +41,10 @@ import { getSystemVersions } from './versions.js'
 //    inside multiple system ids
 //  - It removes need for a default system dimension, and allows the default
 //    `system` to be an empty object
+// By default, there are no system dimensions:
+//  - I.e. `system` is an empty object
+//  - Result without system dimensions still persist their system information
+//    and show them in the footer.
 export const createSystemInfo = async function (
   combinations,
   { cwd, system: dimensions, envInfo },
