@@ -47,8 +47,7 @@ const skipRedundantDimension = function (
     return dimensionsArray
   }
 
-  const dimensions = dimensionsArray[index]
-  const dimensionsA = omit.default(dimensions, [dimensionName])
+  const dimensionsA = omit.default(dimensionsArray[index], [dimensionName])
   return setArray(dimensionsArray, index, dimensionsA)
 }
 
