@@ -1,5 +1,7 @@
 import { isDeepStrictEqual } from 'util'
 
+import { setArray } from '../utils/set.js'
+
 // When merging results, we report all `systems`. This concatenates them.
 // Systems with all dimensions equal are merged, with the most recent result
 // having priority.
@@ -23,11 +25,11 @@ const appendSystem = function ({ systems }, { system: previousSystem }) {
   )
   return systemIndex === -1
     ? [...systems, previousSystem]
-    : [
-        ...systems.slice(0, systemIndex),
+    : setArray(
+        systems,
+        systemIndex,
         mergePreviousSystem(systems[systemIndex], previousSystem),
-        ...systems.slice(systemIndex + 1),
-      ]
+      )
 }
 
 const mergePreviousSystem = function (system, previousSystem) {
