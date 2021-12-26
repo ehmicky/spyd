@@ -90,3 +90,16 @@ const SPYD_VERSION_NAME = 'Benchmarked with spyd'
 const hasProps = function (props) {
   return Object.keys(props).length !== 0
 }
+
+// Order where each property should be shown in the footer.
+// The empty string stands for dynamic properties like versions.
+export const PROP_ORDER = [
+  'OS',
+  'CPU',
+  'Memory',
+  'Git',
+  'PR',
+  'CI',
+  '',
+  SPYD_VERSION_NAME,
+]
