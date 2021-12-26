@@ -1,7 +1,7 @@
 import { isTopPropGroup } from '../top.js'
 
 import { sortDimensionsArray } from './dimensions.js'
-import { sortPropEntries } from './props.js'
+import { addPropOrder, sortPropEntries, removePropOrder } from './props.js'
 import { compareSystems } from './systems.js'
 
 // Sort systems deeply so they are shown in a user-friendly and predictable way
@@ -14,13 +14,14 @@ export const sortSystems = function (propGroups) {
 // Add properties used during sorting so they are only computed once
 const addSortProps = function ({ propEntries, dimensionsArray }) {
   const isTopSystem = isTopPropGroup({ dimensionsArray })
-  const propEntriesA = sortPropEntries(propEntries)
-  const dimensionsArrayA = dimensionsArray.map(Object.entries)
-  const dimensionsArrayB = sortDimensionsArray(dimensionsArrayA)
+  const propEntriesA = sortPropEntries(propEntries.map(addPropOrder))
+  const dimensionsArrayA = sortDimensionsArray(
+    dimensionsArray.map(Object.entries),
+  )
   return {
     isTopSystem,
     propEntries: propEntriesA,
-    dimensionsArray: dimensionsArrayB,
+    dimensionsArray: dimensionsArrayA,
   }
 }
 
@@ -28,8 +29,4 @@ const removeSortProps = function ({ propEntries, dimensionsArray }) {
   const propEntriesA = propEntries.map(removePropOrder)
   const dimensionsArrayA = dimensionsArray.map(Object.fromEntries)
   return { propEntries: propEntriesA, dimensionsArray: dimensionsArrayA }
-}
-
-const removePropOrder = function ({ propName, propValue }) {
-  return { propName, propValue }
 }
