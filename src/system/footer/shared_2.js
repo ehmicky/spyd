@@ -85,16 +85,16 @@ const isUniqueDimensionsArray = function (
 }
 
 const getPropGroup = function (dimensionsArray, propEntries) {
-  const propEntriesMany = propEntries
+  const propEntriesArray = propEntries
     .filter(({ dimensionsArray: dimensionsArrayB }) =>
       isSameArray(dimensionsArray, dimensionsArrayB),
     )
     .map(removeDimensionsArray)
-  return [propEntriesMany, dimensionsArray]
+  return [propEntriesArray, dimensionsArray]
 }
 
 const removeDimensionsArray = function ({ propName, propValue }) {
-  return [propName, propValue]
+  return { propName, propValue }
 }
 
 const reducePropDimensions = function (propGroups, systems) {
@@ -104,14 +104,14 @@ const reducePropDimensions = function (propGroups, systems) {
 }
 
 const reduceEachPropDimensions = function (
-  [propEntries, allDimensions],
+  [propEntriesArray, dimensionsArray],
   systems,
 ) {
-  const allDimensionsC = reduceAllPropDimensions(allDimensions, systems)
+  const allDimensionsC = reduceAllPropDimensions(dimensionsArray, systems)
   const allDimensionsE = removeDuplicateDimensions(allDimensionsC)
   const allDimensionsF = normalizeTopSystem(allDimensionsE)
   const allDimensionsG = appendValues(allDimensionsF)
-  return [propEntries, allDimensionsG]
+  return [propEntriesArray, allDimensionsG]
 }
 
 const reduceAllPropDimensions = function (allDimensions, systems) {
@@ -310,7 +310,7 @@ const addSortProps = function ([propEntries, allDimensions]) {
   return { hasNoDimensions, propEntries: propEntriesB, allDimensions }
 }
 
-const addPropOrder = function ([propName, propValue]) {
+const addPropOrder = function ({ propName, propValue }) {
   const propOrder = PROP_ORDER.indexOf(propName)
   return { propName, propValue, propOrder }
 }
