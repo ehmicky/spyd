@@ -114,49 +114,49 @@ const reduceEachPropDimensions = function (
   return [propEntriesArray, allDimensionsG]
 }
 
-const reduceAllPropDimensions = function (allDimensions, systems) {
-  return allDimensions.reduce(
+const reduceAllPropDimensions = function (dimensionsArray, systems) {
+  return dimensionsArray.reduce(
     reduceOnePropDimensions.bind(undefined, systems),
-    allDimensions,
+    dimensionsArray,
   )
 }
 
 const reduceOnePropDimensions = function (
   systems,
-  allDimensionsA,
+  dimensionsArray,
   dimensions,
   index,
 ) {
   return Object.keys(dimensions).reduceRight(
     reduceOneOnePropDimensions.bind(undefined, { systems, index }),
-    allDimensionsA,
+    dimensionsArray,
   )
 }
 
 const reduceOneOnePropDimensions = function (
   { systems, index },
-  allDimensionsB,
+  dimensionsArray,
   dimensionName,
 ) {
   const matching = systems.filter((system) =>
-    isReducibleSystem({ system, allDimensionsB, index, dimensionName }),
+    isReducibleSystem({ system, dimensionsArray, index, dimensionName }),
   )
-  return matching.length === allDimensionsB.length
+  return matching.length === dimensionsArray.length
     ? [
-        ...allDimensionsB.slice(0, index),
-        omit.default(allDimensionsB[index], [dimensionName]),
-        ...allDimensionsB.slice(index + 1),
+        ...dimensionsArray.slice(0, index),
+        omit.default(dimensionsArray[index], [dimensionName]),
+        ...dimensionsArray.slice(index + 1),
       ]
-    : allDimensionsB
+    : dimensionsArray
 }
 
 const isReducibleSystem = function ({
   system,
-  allDimensionsB,
+  dimensionsArray,
   index,
   dimensionName,
 }) {
-  return allDimensionsB.some((dimensionsB, indexB) =>
+  return dimensionsArray.some((dimensionsB, indexB) =>
     isReducibleDimensions({
       system,
       dimensionsB,
