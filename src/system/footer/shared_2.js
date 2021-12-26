@@ -108,15 +108,13 @@ const reduceOneOnePropDimensions = function (
     isReducibleSystem({ system, allDimensionsB, index, dimensionName }),
   )
 
-  if (matching.length !== allDimensionsB.length) {
-    return allDimensionsB
-  }
-
-  return [
-    ...allDimensionsB.slice(0, index),
-    omit.default(allDimensionsB[index], [dimensionName]),
-    ...allDimensionsB.slice(index + 1),
-  ]
+  return matching.length === allDimensionsB.length
+    ? [
+        ...allDimensionsB.slice(0, index),
+        omit.default(allDimensionsB[index], [dimensionName]),
+        ...allDimensionsB.slice(index + 1),
+      ]
+    : allDimensionsB
 }
 
 const isReducibleSystem = function ({
