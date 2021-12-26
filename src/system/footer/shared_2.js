@@ -4,7 +4,8 @@ import mapObj from 'map-obj'
 import omit from 'omit.js'
 import sortOn from 'sort-on'
 
-import { uniqueDeep } from '../../utils/unique.js'
+import { isSameArray } from '../../utils/equal.js'
+import { uniqueDeep, uniqueDeepUnordered } from '../../utils/unique.js'
 
 /* eslint-disable max-nested-callbacks, max-lines-per-function, complexity, max-lines, fp/no-loops, max-statements, max-depth, no-unreachable-loop */
 const mainLogic = function (systems) {
@@ -67,23 +68,12 @@ const getPropGroups = function (propEntries) {
 }
 
 const getUniqueDimensions = function (propEntries) {
-  return propEntries.map(getPropEntryDimensions).filter(isUniqueDimensionsArray)
+  const dimensionsArrays = propEntries.map(getPropEntryDimensions)
+  return uniqueDeepUnordered(dimensionsArrays)
 }
 
 const getPropEntryDimensions = function ({ dimensionsArray }) {
   return dimensionsArray
-}
-
-const isUniqueDimensionsArray = function (
-  dimensionsArray,
-  index,
-  dimensionsArrays,
-) {
-  return dimensionsArrays
-    .slice(index + 1)
-    .every(
-      (dimensionsArrayB) => !isSameArray(dimensionsArray, dimensionsArrayB),
-    )
 }
 
 const getPropGroup = function (dimensionsArray, propEntries) {
@@ -110,7 +100,7 @@ const reduceEachPropDimensions = function (
   systems,
 ) {
   const dimensionsArrayA = reduceAllPropDimensions(dimensionsArray, systems)
-  const dimensionsArrayB = removeDuplicateDimensions(dimensionsArrayA)
+  const dimensionsArrayB = uniqueDeep(dimensionsArrayA)
   const dimensionsArrayC = normalizeTopSystem(dimensionsArrayB)
   const dimensionsArrayD = appendValues(dimensionsArrayC)
   return { propEntries, dimensionsArray: dimensionsArrayD }
@@ -200,10 +190,6 @@ const isReducibleDimension = function ({
     system.dimensions[dimensionNameB] === dimensionValueB ||
     (indexB === index && dimensionNameB === dimensionName)
   )
-}
-
-const removeDuplicateDimensions = function (dimensionsArray) {
-  return uniqueDeep(dimensionsArray)
 }
 
 const normalizeTopSystem = function (dimensionsArray) {
@@ -365,18 +351,6 @@ const finalizeSystem = function ({ propEntries, dimensionsArray }) {
 
 const getPropEntry = function ({ propName, propValue }) {
   return [propName, propValue]
-}
-
-const isSameArray = function (arrayA, arrayB) {
-  return (
-    arrayA.length === arrayB.length &&
-    arrayA.every((value) => hasArrayValue(arrayB, value))
-  )
-}
-
-// Like `Array.includes()` but using deep comparison
-const hasArrayValue = function (array, valueA) {
-  return array.some((valueB) => isDeepStrictEqual(valueA, valueB))
 }
 
 const PROP_ORDER = ['aa', 'ff', 'bb', 'cc', 'dd', 'ee', 'gg', 'hh']
