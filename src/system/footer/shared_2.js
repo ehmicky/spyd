@@ -203,56 +203,7 @@ const addTopSharedSystem = function (reducedPropDimensions) {
 }
 
 const sortSystems = function (finalPropDimensions) {
-  return finalPropDimensions
-    .map(addSortProps)
-    .sort(
-      (
-        { hasNoDimensions: hasNoDimensionsA, propEntries: propEntriesA },
-        { hasNoDimensions: hasNoDimensionsB, propEntries: propEntriesB },
-      ) => {
-        if (hasNoDimensionsA) {
-          return -1
-        }
-
-        if (hasNoDimensionsB) {
-          return 1
-        }
-
-        // eslint-disable-next-line
-        for (let index = 0; index < propEntriesA.length; index += 1) {
-          const propEntryB = propEntriesB[index]
-
-          if (propEntryB === undefined) {
-            return 1
-          }
-
-          const propEntryA = propEntriesA[index]
-          const propOrderA = propEntryA.propOrder
-          const propOrderB = propEntryB.propOrder
-
-          if (propOrderA > propOrderB) {
-            return 1
-          }
-
-          if (propOrderA < propOrderB) {
-            return -1
-          }
-
-          const valueA = propEntryA.propValue
-          const valueB = propEntryB.propValue
-
-          if (valueA > valueB) {
-            return 1
-          }
-
-          if (valueA < valueB) {
-            return -1
-          }
-        }
-
-        return 1
-      },
-    )
+  return finalPropDimensions.map(addSortProps).sort(compareSystems)
 }
 
 const addSortProps = function ([propEntries, allDimensions]) {
@@ -263,6 +214,53 @@ const addSortProps = function ([propEntries, allDimensions]) {
   })
   const propEntriesB = sortOn(propEntriesA, ['propOrder'])
   return { hasNoDimensions, propEntries: propEntriesB, allDimensions }
+}
+
+const compareSystems = function (
+  { hasNoDimensions: hasNoDimensionsA, propEntries: propEntriesA },
+  { hasNoDimensions: hasNoDimensionsB, propEntries: propEntriesB },
+) {
+  if (hasNoDimensionsA) {
+    return -1
+  }
+
+  if (hasNoDimensionsB) {
+    return 1
+  }
+
+  // eslint-disable-next-line
+  for (let index = 0; index < propEntriesA.length; index += 1) {
+    const propEntryB = propEntriesB[index]
+
+    if (propEntryB === undefined) {
+      return 1
+    }
+
+    const propEntryA = propEntriesA[index]
+    const propOrderA = propEntryA.propOrder
+    const propOrderB = propEntryB.propOrder
+
+    if (propOrderA > propOrderB) {
+      return 1
+    }
+
+    if (propOrderA < propOrderB) {
+      return -1
+    }
+
+    const valueA = propEntryA.propValue
+    const valueB = propEntryB.propValue
+
+    if (valueA > valueB) {
+      return 1
+    }
+
+    if (valueA < valueB) {
+      return -1
+    }
+  }
+
+  return 1
 }
 
 const finalizeSystems = function (sortedGroupedPropDimensions) {
