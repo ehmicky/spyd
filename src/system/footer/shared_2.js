@@ -90,7 +90,7 @@ const getPropGroup = function (dimensionsArray, propEntries) {
       isSameArray(dimensionsArray, dimensionsArrayB),
     )
     .map(removeDimensionsArray)
-  return [propEntriesArray, dimensionsArray]
+  return { propEntriesArray, dimensionsArray }
 }
 
 const removeDimensionsArray = function ({ propName, propValue }) {
@@ -104,7 +104,7 @@ const reducePropDimensions = function (propGroups, systems) {
 }
 
 const reduceEachPropDimensions = function (
-  [propEntriesArray, dimensionsArray],
+  { propEntriesArray, dimensionsArray },
   systems,
 ) {
   const allDimensionsC = reduceAllPropDimensions(dimensionsArray, systems)
