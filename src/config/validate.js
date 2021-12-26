@@ -17,6 +17,7 @@ export const validateConfig = function (config) {
 const DYNAMIC_OBJECT_PROPS = [
   'runnerConfig',
   'reporterConfig',
+  'system',
   'titles',
   'inputs',
 ]
@@ -44,6 +45,7 @@ const EXAMPLE_CONFIG = {
   runnerConfig: { node: { version: '8' } },
   reporter: optionalArray('debug'),
   reporterConfig: { debug: { property: true } },
+  system: { os: 'linux', node_version: '8' },
   limit: optionalArray('task_id=10'),
   quiet: true,
   force: true,
