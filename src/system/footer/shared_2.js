@@ -308,10 +308,10 @@ const sortSystems = function (propGroups) {
 }
 
 const addSortProps = function ({ propEntriesArray, dimensionsArray }) {
-  const hasNoDimensions = dimensionsArray.length === 0
+  const isTopSystem = dimensionsArray.length === 0
   const propEntriesA = propEntriesArray.map(addPropOrder)
   const propEntriesB = sortOn(propEntriesA, ['propOrder'])
-  return { hasNoDimensions, propEntries: propEntriesB, dimensionsArray }
+  return { isTopSystem, propEntries: propEntriesB, dimensionsArray }
 }
 
 const addPropOrder = function ({ propName, propValue }) {
@@ -320,14 +320,14 @@ const addPropOrder = function ({ propName, propValue }) {
 }
 
 const compareSystems = function (
-  { hasNoDimensions: hasNoDimensionsA, propEntries: propEntriesA },
-  { hasNoDimensions: hasNoDimensionsB, propEntries: propEntriesB },
+  { isTopSystem: isTopSystemA, propEntries: propEntriesA },
+  { isTopSystem: isTopSystemB, propEntries: propEntriesB },
 ) {
-  if (hasNoDimensionsA) {
+  if (isTopSystemA) {
     return -1
   }
 
-  if (hasNoDimensionsB) {
+  if (isTopSystemB) {
     return 1
   }
 
