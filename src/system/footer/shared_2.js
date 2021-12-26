@@ -94,29 +94,35 @@ const reduceOnePropDimensions = function (
   index,
 ) {
   return Object.keys(dimensions).reduceRight(
-    (allDimensionsB, dimensionName) => {
-      const matching = systems.filter((system) =>
-        allDimensionsB.some((dimensionsB, indexB) =>
-          Object.entries(dimensionsB).every(
-            ([dimensionNameB, dimensionValueB]) =>
-              system.dimensions[dimensionNameB] === dimensionValueB ||
-              (indexB === index && dimensionNameB === dimensionName),
-          ),
-        ),
-      )
-
-      if (matching.length !== allDimensionsB.length) {
-        return allDimensionsB
-      }
-
-      return [
-        ...allDimensionsB.slice(0, index),
-        omit.default(allDimensionsB[index], [dimensionName]),
-        ...allDimensionsB.slice(index + 1),
-      ]
-    },
+    reduceOneOnePropDimensions.bind(undefined, { systems, index }),
     allDimensionsA,
   )
+}
+
+const reduceOneOnePropDimensions = function (
+  { systems, index },
+  allDimensionsB,
+  dimensionName,
+) {
+  const matching = systems.filter((system) =>
+    allDimensionsB.some((dimensionsB, indexB) =>
+      Object.entries(dimensionsB).every(
+        ([dimensionNameB, dimensionValueB]) =>
+          system.dimensions[dimensionNameB] === dimensionValueB ||
+          (indexB === index && dimensionNameB === dimensionName),
+      ),
+    ),
+  )
+
+  if (matching.length !== allDimensionsB.length) {
+    return allDimensionsB
+  }
+
+  return [
+    ...allDimensionsB.slice(0, index),
+    omit.default(allDimensionsB[index], [dimensionName]),
+    ...allDimensionsB.slice(index + 1),
+  ]
 }
 
 const removeDuplicateDimensions = function (allDimensions) {
