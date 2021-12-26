@@ -309,32 +309,40 @@ const compareSystems = function (
 
   // eslint-disable-next-line
   for (let index = 0; index < propEntriesA.length; index += 1) {
-    const propEntryB = propEntriesB[index]
-
-    if (propEntryB === undefined) {
-      return 1
-    }
-
     const propEntryA = propEntriesA[index]
+    const propEntryB = propEntriesB[index]
+    const result = comparePropEntries(propEntryA, propEntryB)
 
-    if (propEntryA.propOrder > propEntryB.propOrder) {
-      return 1
-    }
-
-    if (propEntryA.propOrder < propEntryB.propOrder) {
-      return -1
-    }
-
-    if (propEntryA.propValue > propEntryB.propValue) {
-      return 1
-    }
-
-    if (propEntryA.propValue < propEntryB.propValue) {
-      return -1
+    if (result !== 0) {
+      return result
     }
   }
 
   return 1
+}
+
+const comparePropEntries = function (propEntryA, propEntryB) {
+  if (propEntryB === undefined) {
+    return 1
+  }
+
+  if (propEntryA.propOrder > propEntryB.propOrder) {
+    return 1
+  }
+
+  if (propEntryA.propOrder < propEntryB.propOrder) {
+    return -1
+  }
+
+  if (propEntryA.propValue > propEntryB.propValue) {
+    return 1
+  }
+
+  if (propEntryA.propValue < propEntryB.propValue) {
+    return -1
+  }
+
+  return 0
 }
 
 const finalizeSystems = function (propGroups) {
