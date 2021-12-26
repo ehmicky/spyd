@@ -53,45 +53,47 @@ const getUniquePropEntry = function (propName, systems) {
 }
 
 const addPropEntryDimensions = function ({ propName, propValue }, systems) {
-  const allDimensions = systems
+  const dimensionsArray = systems
     .filter(({ props }) => props[propName] === propValue)
     .map(({ dimensions }) => dimensions)
-  return { propName, propValue, allDimensions }
+  return { propName, propValue, dimensionsArray }
 }
 
 const groupPropDimensions = function (propEntries) {
-  const uniqueAllDimensions = getUniqueAllDimensions(propEntries)
-  const groupedPropDimensions = uniqueAllDimensions.map((allDimensions) =>
-    groupPropDimension(allDimensions, propEntries),
+  const dimensionsArrays = getUniqueDimensions(propEntries)
+  const groupedPropDimensions = dimensionsArrays.map((dimensionsArray) =>
+    groupPropDimension(dimensionsArray, propEntries),
   )
   return groupedPropDimensions
 }
 
-const getUniqueAllDimensions = function (propEntries) {
-  return propEntries.map(getPropEntryDimensions).filter(isUniqueAllDimensions)
+const getUniqueDimensions = function (propEntries) {
+  return propEntries.map(getPropEntryDimensions).filter(isUniqueDimensionsArray)
 }
 
-const getPropEntryDimensions = function ({ allDimensions }) {
-  return allDimensions
+const getPropEntryDimensions = function ({ dimensionsArray }) {
+  return dimensionsArray
 }
 
-const isUniqueAllDimensions = function (
-  allDimensions,
+const isUniqueDimensionsArray = function (
+  dimensionsArray,
   index,
-  allAllDimensions,
+  dimensionsArrays,
 ) {
-  return allAllDimensions
+  return dimensionsArrays
     .slice(index + 1)
-    .every((allDimensionsB) => !isSameArray(allDimensions, allDimensionsB))
+    .every(
+      (dimensionsArrayB) => !isSameArray(dimensionsArray, dimensionsArrayB),
+    )
 }
 
-const groupPropDimension = function (allDimensions, propEntries) {
+const groupPropDimension = function (dimensionsArray, propEntries) {
   const propEntriesMany = propEntries
-    .filter(({ allDimensions: allDimensionsB }) =>
-      isSameArray(allDimensions, allDimensionsB),
+    .filter(({ dimensionsArray: dimensionsArrayB }) =>
+      isSameArray(dimensionsArray, dimensionsArrayB),
     )
     .map(getGroupedDimension)
-  return [propEntriesMany, allDimensions]
+  return [propEntriesMany, dimensionsArray]
 }
 
 const getGroupedDimension = function ({ propName, propValue }) {
