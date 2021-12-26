@@ -35,22 +35,6 @@ const getPropEntry = function ({ propName, propValue }) {
   return [propName, propValue]
 }
 
-const getSystemTitle = function (dimensionsArray) {
-  return dimensionsArray.map(getDimensionsTitle).join(', ')
-}
-
-const getDimensionsTitle = function (dimensions) {
-  return Object.values(dimensions).map(getDimensionValuesTitle).join(' ')
-}
-
-const getDimensionValuesTitle = function (dimensionValues) {
-  return dimensionValues.map(getDimensionValueTitle).join('/')
-}
-
-const getDimensionValueTitle = function ({ title }) {
-  return title
-}
-
 // TODO:
 //  - debug the whole file, checking if each statement works
 //  - this logic should come after `serialize.js`, i.e. there are no deep
