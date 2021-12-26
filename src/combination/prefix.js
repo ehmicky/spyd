@@ -5,7 +5,7 @@ export const hasPrefix = function (propName, prefixName) {
 
 // Add a specific prefix to a dimension's name
 export const addPrefix = function (propName, prefixName) {
-  return propName.slice(PREFIXES[prefixName].length)
+  return `${PREFIXES[prefixName]}${propName}`
 }
 
 // Remove a specific prefix to a dimension's name
