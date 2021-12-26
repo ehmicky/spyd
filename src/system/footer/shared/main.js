@@ -48,7 +48,6 @@ const getSystemTitle = function (allDimensions) {
 }
 
 // TODO:
-//  - sort `dimensionsArray` too, in each system
 //  - debug the whole file, checking if each statement works
 //  - this logic should come after `serialize.js`, i.e. there are no deep
 //    properties and all properties values are strings
@@ -57,6 +56,7 @@ const getSystemTitle = function (allDimensions) {
 //     - transform each id string into { id: string, title: string }
 //     - add `system.title`
 //  - fix `PROP_ORDER` with real order (use one from `serialize.js`)
+//     - dynamic properties should be sorted normally
 //  - [SPYD_VERSION_NAME] should always be in shared system, using the latest
 //    system's value
 const SYSTEMS = [
