@@ -1,6 +1,7 @@
 import { listCombinations } from '../combination/list.js'
 import { listHistory } from '../history/data/main.js'
 import { normalizeRawResults } from '../history/normalize/load.js'
+import { validateMatches } from '../select/validate.js'
 import { createSystemInfo } from '../system/create.js'
 import { addSystemVersions } from '../system/versions.js'
 
@@ -15,6 +16,7 @@ export const createResult = async function (config) {
     history,
     config,
   )
+  validateMatches(rawResultA, config)
   const rawResultB = await addSystemVersions(rawResultA, config)
   return { rawResult: rawResultB, history: historyA }
 }

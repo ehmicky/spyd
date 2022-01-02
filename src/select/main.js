@@ -1,6 +1,5 @@
 import { matchSelectors } from './match.js'
 import { parseSelectors } from './parse.js'
-import { throwValidationError } from './validate.js'
 
 // Select combinations according to the `select` configuration properties.
 // We use a single `select` property for both inclusion and exclusion:
@@ -30,32 +29,9 @@ import { throwValidationError } from './validate.js'
 //       confusing
 //     - This does not require loading files before resolving deltas
 export const selectRawResult = function (rawResult, select) {
-  const combinations = filterBySelectors(rawResult.combinations, select)
-  return { ...rawResult, combinations }
-}
-
-export const selectCombinations = function (combinations, select) {
-  const combinationsA = filterBySelectors(combinations, select)
-  throwOnNoMatches(combinationsA, select)
-  return combinationsA
-}
-
-const filterBySelectors = function (combinations, select) {
   const selectors = parseSelectors(select, 'select')
-  return combinations.filter((combination) =>
+  const combinations = rawResult.combinations.filter((combination) =>
     matchSelectors(combination, selectors),
   )
-}
-
-// When selecting combinations with `select`, at least one must match.
-// However, when filtering previous combinations, we silently ignore results
-// with no matching combinations instead.
-const throwOnNoMatches = function (combinations, select) {
-  if (combinations.length === 0) {
-    throwValidationError(
-      'No combinations match the selection.',
-      select,
-      'select',
-    )
-  }
+  return { ...rawResult, combinations }
 }
