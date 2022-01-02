@@ -1,18 +1,5 @@
 import { getCombinationIds } from './ids/get.js'
 
-// Filter out the `resultA.combinations` that are not in `resultB`
-export const pickResultCombinations = function (resultA, resultB) {
-  const combinations = keepResultCombinations(resultA, resultB)
-  return { ...resultA, combinations }
-}
-
-// Filter out the `combinations` that are not in `result`
-const keepResultCombinations = function ({ combinations }, result) {
-  return combinations.filter((combination) =>
-    resultHasCombination(result, combination),
-  )
-}
-
 // Filter out the `combinations` that are in `result`
 export const removeResultCombinations = function (combinations, result) {
   return combinations.filter(

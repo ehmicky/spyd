@@ -1,5 +1,4 @@
 import {
-  pickResultCombinations,
   removeResultCombinations,
   hasSameCombinations,
 } from '../../combination/result.js'
@@ -49,40 +48,6 @@ const mergeHistoryResult = function (mergedResult, historyResult) {
   const mergeResultA = mergeCombinations(mergedResult, historyResult)
   const mergedResultB = mergeSystems(mergeResultA, historyResult)
   return mergedResultB
-}
-
-// Retrieve `sinceResult`. Merge any combinations missing from `sinceResult`
-// but present both after and before it, so those can be used for `diff`.
-export const getSinceResult = function (previous, sinceIndex, mergedResult) {
-  const sinceResult = previous[sinceIndex]
-  const sinceResultA = pickResultCombinations(sinceResult, mergedResult)
-  return previous
-    .slice(0, sinceIndex)
-    .reduceRight(
-      (sinceResultB, previousResult) =>
-        mergeBeforeSinceResult(sinceResultB, previousResult, mergedResult),
-      sinceResultA,
-    )
-}
-
-// We short-circuit this function when the number of combinations indicates no
-// more merging is possible, as a performance optimization when the number of
-// results is high.
-const mergeBeforeSinceResult = function (
-  sinceResult,
-  beforeSinceResult,
-  mergedResult,
-) {
-  if (mergedResult.combinations.length === sinceResult.combinations.length) {
-    return sinceResult
-  }
-
-  const beforeSinceResultA = pickResultCombinations(
-    beforeSinceResult,
-    mergedResult,
-  )
-  const sinceResultA = mergeCombinations(sinceResult, beforeSinceResultA)
-  return sinceResultA
 }
 
 export const mergeCombinations = function (result, previousResult) {

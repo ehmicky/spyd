@@ -1,7 +1,7 @@
 import { getNoDimensions } from '../../combination/filter.js'
 import { findByDelta } from '../delta/main.js'
 
-import { getMergedResult, getSinceResult, mergeCombinations } from './merge.js'
+import { getMergedResult, mergeCombinations } from './merge.js'
 
 // The `since` configuration property is used to:
 //  - Limit the number of results shown in `result.history` which is used with
@@ -56,12 +56,12 @@ export const applySince = async function (rawResult, previous, { since, cwd }) {
   const sinceIndex = await findByDelta(previous, since, cwd)
 
   if (sinceIndex === -1) {
-    const sinceResult = getSinceResult(previous, previous.length - 1, rawResult)
+    const sinceResult = previous[previous.length - 1]
     return { history: [sinceResult, rawResult], sinceResult }
   }
 
   const mergedResult = getMergedResult(previous, sinceIndex, rawResult)
-  const sinceResultA = getSinceResult(previous, sinceIndex, mergedResult)
+  const sinceResultA = previous[sinceIndex]
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1), rawResult]
   return { mergedResult, history, sinceResult: sinceResultA }
 }
