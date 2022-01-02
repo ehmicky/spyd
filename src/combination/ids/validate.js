@@ -9,7 +9,7 @@ export const validateCombinationsIds = function (combinations, inputsList) {
   userIds.forEach(validateUserIds)
 
   const dimensionsIds = getCombsDimensionsIds(combinations)
-  dimensionsIds.forEach(validateDuplicateId)
+  dimensionsIds.forEach(validateDimensionId)
 }
 
 // Validate that identifiers don't use characters that we are using for parsing
@@ -62,6 +62,10 @@ const validateReservedIds = function (id, messageName) {
 // 'not' and 'and' are used by `select`
 const RESERVED_IDS = ['not', 'and']
 
+const validateDimensionId = function ({ dimension, id }, index, allIds) {
+  validateDuplicateId({ dimension, id, index, allIds })
+}
+
 // For each dimension of the new result, we previously ensured that each
 // identifier of that dimension is unique.
 // We validate there that identifiers across dimensions are also unique.
@@ -72,7 +76,7 @@ const RESERVED_IDS = ['not', 'and']
 // not used for selection, reporting, `config.titles`, etc.
 // Identifier of previous results do not need to be checked for duplicate ids
 // since only their combinations matching the target result are kept.
-const validateDuplicateId = function ({ dimension, id }, index, allIds) {
+const validateDuplicateId = function ({ dimension, id, index, allIds }) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
   if (duplicateId === undefined) {
