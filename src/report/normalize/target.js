@@ -22,7 +22,7 @@ export const normalizeTargetResult = function (result, config) {
 // Footers are only applied to the target result, not the history results, since
 // they are not very useful for those.
 const normalizeTargetEach = function (result, reporter, config) {
-  const resultProps = normalizeNonCombEach(result, reporter)
-  const reporterA = addFooter({ result, resultProps, reporter, config })
+  const { timestamp, ...resultProps } = normalizeNonCombEach(result, reporter)
+  const reporterA = addFooter({ result, timestamp, reporter, config })
   return { ...reporterA, resultProps }
 }
