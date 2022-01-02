@@ -1,5 +1,5 @@
 import { omitNoDimensions } from '../../combination/filter.js'
-import { sortCombinations } from '../../combination/sort.js'
+import { sortCombinations } from '../../combination/sort_combinations.js'
 import { sortDimensions } from '../../combination/sort_dimensions.js'
 import { addCombinationsDiff } from '../../history/compare/diff.js'
 import { omitSystemProps } from '../../system/omit.js'
