@@ -5,7 +5,7 @@ import { isTtyInput } from '../../report/tty.js'
 import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
 import { compressRawResult } from '../normalize/compress.js'
-import { loadRawResults } from '../normalize/load.js'
+import { loadRawResults, normalizeRawResults } from '../normalize/load.js'
 
 import {
   addRawResult,
@@ -54,8 +54,13 @@ export const getFromHistory = async function (config) {
   const metadataC = await applySinceDelta(metadataB, config)
   const metadataD = [...metadataC, targetMetadata]
   const history = await fetchHistory(metadataD, config)
-  const [historyA, rawResult] = pickLast(history)
-  return { rawResult, history: historyA }
+  const [historyA, targetResult] = pickLast(history)
+  const { targetResult: rawResult, history: historyB } = normalizeRawResults(
+    targetResult,
+    historyA,
+    config,
+  )
+  return { rawResult, history: historyB }
 }
 
 // List all history results, after applying the `since` delta.
@@ -76,8 +81,8 @@ const listSortedMetadata = async function ({ cwd }) {
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in rawResults preview
-const fetchHistory = async function (metadata, { cwd, select }) {
+const fetchHistory = async function (metadata, { cwd }) {
   const rawResults = await fetchRawResults(metadata, cwd)
-  const history = loadRawResults(rawResults, select)
+  const history = loadRawResults(rawResults)
   return history
 }

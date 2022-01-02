@@ -29,13 +29,7 @@ import { throwValidationError } from './validate.js'
 //     - Changing `select` does not change the history start|end, which is less
 //       confusing
 //     - This does not require loading files before resolving deltas
-export const selectRawResults = function (rawResults, select) {
-  return rawResults
-    .map((rawResult) => selectRawResult(rawResult, select))
-    .filter(hasCombinations)
-}
-
-const selectRawResult = function (rawResult, select) {
+export const selectRawResult = function (rawResult, select) {
   const combinations = filterBySelectors(rawResult.combinations, select)
   return { ...rawResult, combinations }
 }
@@ -64,8 +58,4 @@ const throwOnNoMatches = function (combinations, select) {
       'select',
     )
   }
-}
-
-const hasCombinations = function ({ combinations }) {
-  return combinations.length !== 0
 }
