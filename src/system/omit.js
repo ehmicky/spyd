@@ -17,7 +17,7 @@ const omitFooterSystemProps = function (system, showMetadata, showSystem) {
   return systemB
 }
 
-const METADATA_FOOTER_PROPS = ['id', 'timestamp']
+const METADATA_FOOTER_PROPS = ['id', 'mergeId', 'timestamp']
 const METADATA_SYSTEM_PROPS = ['git', 'ci']
 const MAIN_SYSTEM_PROPS = ['machine', 'versions']
 
@@ -37,5 +37,5 @@ export const omitSystemProps = function (historyResult) {
   return omit.default(historyResult, SYSTEM_PROPS)
 }
 
-const METADATA_PROPS = ['id', 'timestamp']
+const METADATA_PROPS = ['id', 'mergeId', 'timestamp']
 const SYSTEM_PROPS = ['systems']

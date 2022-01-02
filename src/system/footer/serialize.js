@@ -6,17 +6,18 @@ import { cleanObject } from '../../utils/clean.js'
 // Serialize info|system-related information as a `footer` for reporters
 export const serializeFooter = function ({
   id,
+  mergeId,
   timestamp,
   systems,
   ...footer
 }) {
-  const metadata = serializeMetadata(id, timestamp)
+  const metadata = serializeMetadata(id, mergeId, timestamp)
   const systemsA = systems.map(serializeSystem).filter(hasProps)
   return { ...footer, ...metadata, systems: systemsA }
 }
 
-const serializeMetadata = function (id, timestamp) {
-  return cleanObject({ Id: id, Timestamp: timestamp })
+const serializeMetadata = function (id, mergeId, timestamp) {
+  return cleanObject({ Id: id, Merge: mergeId, Timestamp: timestamp })
 }
 
 const serializeSystem = function ({

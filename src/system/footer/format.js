@@ -22,8 +22,8 @@ export const applyFooterFormat = function (footer, format) {
 //  - Each object has either one or two depth levels and the values are strings
 // This format means the `footer()` method of each format does not need to
 // know the meaning of the footer, only how to print this simple structure.
-const arrifyFooter = function ({ Id, Timestamp, systems }) {
-  return [...systems.map(addTitle), { Id, Timestamp }]
+const arrifyFooter = function ({ Id, Merge, Timestamp, systems }) {
+  return [...systems.map(addTitle), { Id, Merge, Timestamp }]
     .map(cleanObject)
     .filter(hasProps)
 }
