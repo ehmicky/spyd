@@ -58,6 +58,7 @@ const previewAndMeasure = async function ({
   noDimensions,
   previewState,
   config,
+  config: { cwd, precisionTarget, outliers },
 }) {
   const previewStateA = await startPreview({
     result,
@@ -68,12 +69,15 @@ const previewAndMeasure = async function ({
   })
 
   try {
-    const resultA = await measureResult({
-      result,
-      config,
+    const combinations = await measureCombinations(result.combinations, {
+      precisionTarget,
+      cwd,
       previewState: previewStateA,
+      outliers,
+      stage: 'main',
       noDimensions,
     })
+    const resultA = normalizeMeasuredResult({ ...result, combinations })
     const { programmaticResult, contents } = await reportCompute({
       result: resultA,
       history,
@@ -86,23 +90,4 @@ const previewAndMeasure = async function ({
     await endPreview(previewStateA, error)
     throw error
   }
-}
-
-const measureResult = async function ({
-  result,
-  config: { cwd, precisionTarget, outliers },
-  previewState,
-  noDimensions,
-}) {
-  const combinations = await measureCombinations(result.combinations, {
-    precisionTarget,
-    cwd,
-    previewState,
-    outliers,
-    stage: 'main',
-    noDimensions,
-  })
-  const resultA = { ...result, combinations }
-  const resultB = normalizeMeasuredResult(resultA)
-  return resultB
 }
