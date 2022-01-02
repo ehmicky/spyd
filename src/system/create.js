@@ -51,6 +51,9 @@ export const createSystemInfo = function (config) {
 
 // `result.mergeId` defaults to `result.id`. This allows merging to previous
 // results even when the user did not previously intend to.
+// The value is an opaque identifier.
+// In order to inject values to, shell variables or JavaScript configuration
+// files can be used.
 const getMergeId = function (id, { merge = id }) {
   return merge
 }
