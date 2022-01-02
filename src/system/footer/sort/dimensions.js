@@ -103,6 +103,7 @@ const compareDimensionsEntry = function (
   return 0
 }
 
+// `dimensionValueA|B` might be `undefined`, but this logic still works
 const compareDimensionsValue = function (dimensionValueA, dimensionValueB) {
   if (dimensionValueA < dimensionValueB) {
     return -1
