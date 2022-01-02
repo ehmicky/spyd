@@ -20,13 +20,8 @@ import { haveSimilarMeans } from '../../stats/similar.js'
 //    one, making it less meaningful
 //  - This would require additional visualization in reporters
 export const addCombinationsDiff = function (result, history) {
-  if (history.length === 1) {
-    return result
-  }
-
-  const [sinceResult] = history
   const combinations = result.combinations.map((combination) =>
-    addCombinationDiff(combination, sinceResult),
+    addCombinationDiff(combination, history[0]),
   )
   return { ...result, combinations }
 }

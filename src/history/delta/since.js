@@ -16,8 +16,7 @@ import { findByDelta } from './find.js'
 //       bases (the main result and the "since" result)
 // When `since` does not target any valid result, we do not show any previous
 // results nor diff.
-// The first item in `result.history` is the `sinceResult`, i.e. the result
-// targeted by `since`:
+// The first item in `result.history` is the result targeted by `since`:
 //  - It is shown first in time series
 //     - This ensures each combination shows where it started
 //     - This allows users to visualize the `diff` by comparing the first and
