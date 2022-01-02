@@ -69,6 +69,6 @@ export const checkHistoryDir = async function (historyDir) {
 // Ensure that a history file is valid
 export const checkHistoryFile = async function (path) {
   if (!(await isFile(path))) {
-    throw new UserError(`History files must be regular files: ${path}`)
+    throw new UserError(`History file must be a regular file: ${path}`)
   }
 }
