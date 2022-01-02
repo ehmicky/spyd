@@ -2,6 +2,8 @@ import { addDefaultIds } from '../../combination/default.js'
 import { keepResultCombinations } from '../../combination/result.js'
 import { selectRawResult } from '../../select/main.js'
 import { validateSelectMatches } from '../../select/validate.js'
+import { mergeResults } from '../../system/merge/results.js'
+import { pickLast } from '../../utils/last.js'
 
 import { decompressRawResult } from './compress.js'
 import { migrateRawResults } from './migrate.js'
@@ -16,13 +18,15 @@ export const loadRawResults = function (rawResults) {
 // Normalize the history and target results after load, once the target result
 // is known
 export const normalizeRawResults = function (targetResult, history, config) {
-  const historyA = addDefaultIds(history, targetResult)
-  const historyB = filterUnusedCombinations(historyA, targetResult)
-  const [targetResultA, ...historyC] = [targetResult, ...historyB].map(
+  const historyA = mergeResults([...history, targetResult])
+  const [historyB, targetResultA] = pickLast(historyA)
+  const historyC = addDefaultIds(historyB, targetResultA)
+  const historyD = filterUnusedCombinations(historyC, targetResultA)
+  const [targetResultB, ...historyE] = [targetResultA, ...historyD].map(
     (rawResult) => normalizeRawResult(rawResult, config),
   )
-  validateSelectMatches(targetResultA, config)
-  return { targetResult: targetResultA, history: historyC }
+  validateSelectMatches(targetResultB, config)
+  return { targetResult: targetResultB, history: historyE }
 }
 
 // We ignore the combinations from history results that do not exist in the
