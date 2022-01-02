@@ -14,7 +14,9 @@ import { findFormat } from './formats/main.js'
 // Deltas are either absolute (e.g. timestamps) or relative (e.g. duration)
 //  - When relative, the main delta is relative to the end of the history,
 //   while the `since` delta is relative to the main delta.
-// The metadata and history are sorted from most to least recent.
+// The metadata and history are:
+//  - Sorted from most to least recent
+//  - Grouped according to `merge`
 // When a delta is approximative, the first rawResult after (not before) the
 // delta is usually used
 //  - This allows users to specify loose deltas without errors, such as
@@ -31,19 +33,19 @@ import { findFormat } from './formats/main.js'
 //     - The history being empty
 //     - The delta points to a time in the future or to a non-existing reference
 // This is in contrast to syntactical or semantical errors which always throw.
-export const applyMainDelta = async function (metadata, { delta, cwd }) {
-  if (metadata.length === 0) {
+export const applyMainDelta = async function (metadataGroups, { delta, cwd }) {
+  if (metadataGroups.length === 0) {
     throw new UserError('No previous results.')
   }
 
-  const index = await findByDelta(metadata, delta, cwd)
+  const index = await findByDelta(metadataGroups, delta, cwd)
 
   if (index === -1) {
     const deltaError = getDeltaError(delta)
     throw new UserError(`${deltaError} matches no results.`)
   }
 
-  return metadata.slice(0, index + 1)
+  return metadataGroups.slice(0, index + 1)
 }
 
 // The `since` configuration property is used to limit the number of results
@@ -79,29 +81,29 @@ export const applyMainDelta = async function (metadata, { delta, cwd }) {
 //    properties.
 //  - Instead, reporters should use logic to retrieve the history of each
 //    combination
-export const applySinceDelta = async function (metadata, { since, cwd }) {
-  if (metadata.length === 0) {
+export const applySinceDelta = async function (metadataGroups, { since, cwd }) {
+  if (metadataGroups.length === 0) {
     return []
   }
 
-  const index = await findByDelta(metadata, since, cwd)
+  const index = await findByDelta(metadataGroups, since, cwd)
 
   if (index === -1) {
     return []
   }
 
-  return metadata.slice(index)
+  return metadataGroups.slice(index)
 }
 
 const findByDelta = async function (
-  metadata,
+  metadataGroups,
   { type, value, delta, name },
   cwd,
 ) {
   const format = findFormat(type)
 
   try {
-    return await format.find(metadata, value, cwd)
+    return await format.find(metadataGroups, value, cwd)
   } catch (error) {
     throw addDeltaError(error, { type, delta, name })
   }
