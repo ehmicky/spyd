@@ -1,4 +1,5 @@
 import { getCombsDimensions, isDimension, DIMENSIONS } from './dimensions.js'
+import { removePrefix } from './prefix.js'
 
 // The target result defines which combinations are reported.
 // A history result might miss one of them:
@@ -50,11 +51,14 @@ const addCombDefaultIds = function (combination, targetDimensions) {
   return { ...combination, dimensions }
 }
 
-const getNewDimension = function ({ propName, getDefaultId }, dimensions) {
+const getNewDimension = function (
+  { propName, prefixName, defaultIdPrefix },
+  dimensions,
+) {
   const id =
     propName in dimensions
       ? dimensions[propName]
-      : { id: getDefaultId(propName) }
+      : { id: getDefaultId(propName, prefixName, defaultIdPrefix) }
   return [propName, id]
 }
 
@@ -76,10 +80,19 @@ const isInvalidDimensionId = function (id, propName, dimension) {
 const isDimensionDefaultId = function (
   id,
   propName,
-  { propName: dimensionPropName, prefixName, getDefaultId },
+  { propName: dimensionPropName, prefixName, defaultIdPrefix },
 ) {
   return (
     isDimension(propName, dimensionPropName, prefixName) &&
-    id === getDefaultId(propName)
+    id === getDefaultId(propName, prefixName, defaultIdPrefix)
   )
 }
+
+// Retrieve the default id of a dimension
+const getDefaultId = function (propName, prefixName, defaultIdPrefix) {
+  const propNameA = removePrefix(propName, prefixName)
+  const propNameB = propNameA.replace(DOT_REGEXP, '_')
+  return `${defaultIdPrefix}${propNameB}`
+}
+
+const DOT_REGEXP = /\./gu
