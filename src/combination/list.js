@@ -44,8 +44,6 @@ const getCombinationsProduct = function ({ tasks, inputsList, system }) {
   }))
 }
 
-// We make sure the property order of system dimensions is unchanged since it
-// is used for sorting
 const getSystemDimension = function (propName, id) {
   return [addPrefix(propName, 'system'), { id }]
 }
