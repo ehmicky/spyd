@@ -3,29 +3,31 @@ import mapObj from 'map-obj'
 // Reduce size of rawResults before saving
 // We try to persist everything, so that `show` report the same information.
 // We try to only persist what cannot be computed runtime.
-export const compressRawResult = function (rawResult) {
-  const rawResultA = compressSystem(rawResult)
-  const combinations = rawResultA.combinations.map((combination) =>
-    compressCombination({ combination }),
-  )
-  return { ...rawResultA, combinations }
-}
-
-const compressSystem = function ({
-  systems: [{ dimensions, ...system }],
+// We ensure the keys are persisted in a specific order
+export const compressRawResult = function ({
+  systems,
+  combinations,
   ...rawResult
 }) {
-  const systemA =
-    Object.keys(dimensions).length === 0 ? system : { dimensions, ...system }
-  return { ...rawResult, system: systemA }
+  const system = compressSystem(systems)
+  const combinationsA = combinations.map((combination) =>
+    compressCombination({ combination }),
+  )
+  return { ...rawResult, system, combinations: combinationsA }
+}
+
+const compressSystem = function ([{ dimensions, ...system }]) {
+  return Object.keys(dimensions).length === 0
+    ? system
+    : { dimensions, ...system }
 }
 
 const compressCombination = function ({
-  combination,
   combination: {
     dimensions,
     stats,
     stats: { histogram, quantiles, mean },
+    ...combination
   },
 }) {
   const dimensionsA = mapObj(dimensions, compressDimension)
