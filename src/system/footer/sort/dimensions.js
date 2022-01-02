@@ -13,7 +13,7 @@ const sortDimensionsEntries = function (dimensionNames, dimensionsEntries) {
   const dimensionsEntriesA = dimensionsEntries.map((dimensionsEntry) =>
     addDimensionNameOrder(dimensionsEntry, dimensionNames),
   )
-  const dimensionsEntriesB = sortOn(dimensionsEntriesA, [2])
+  const dimensionsEntriesB = sortOn(dimensionsEntriesA, ['2'])
   return dimensionsEntriesB.map(sortDimensionValueArray)
 }
 
