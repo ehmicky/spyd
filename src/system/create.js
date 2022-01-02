@@ -43,9 +43,14 @@ import { getTimestamp } from './timestamp.js'
 //    and show them in the footer.
 export const createSystemInfo = function (config) {
   const id = uuidv4()
+  const mergeId = getMergeId(id, config)
   const timestamp = getTimestamp()
   const systems = getSystems(config)
-  return { id, timestamp, systems }
+  return { id, mergeId, timestamp, systems }
+}
+
+const getMergeId = function (id, { merge = id }) {
+  return merge
 }
 
 const getSystems = function ({ cwd, system: dimensions }) {

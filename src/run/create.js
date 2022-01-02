@@ -21,6 +21,6 @@ export const createResult = async function (config) {
 
 const createRawResult = async function (config) {
   const combinations = await listCombinations(config)
-  const { id, timestamp, systems } = createSystemInfo(config)
-  return { id, timestamp, systems, combinations }
+  const { id, mergeId, timestamp, systems } = createSystemInfo(config)
+  return { id, mergeId, timestamp, systems, combinations }
 }
