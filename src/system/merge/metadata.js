@@ -2,6 +2,9 @@ import sortOn from 'sort-on'
 
 import { groupBy } from '../../utils/group.js'
 
+// Results with the same `mergeId` should be handled like a single result by
+// the delta logic. Therefore, we group metadata before applying deltas, then
+// ungroup them before fetching results' contents.
 export const groupMetadata = function (metadata) {
   const metadataA = sortOn(metadata, 'timestamp')
   const metadataGroups = Object.values(groupBy(metadataA, getMetadatumGroup))
