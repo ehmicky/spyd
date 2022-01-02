@@ -27,5 +27,5 @@ const arrifyFooter = function ({ Id, Timestamp, systems }) {
 }
 
 const addTitle = function ({ title, props }) {
-  return title === undefined ? props : { [title]: props }
+  return title === '' ? props : { [title]: props }
 }
