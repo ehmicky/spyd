@@ -24,7 +24,13 @@ const getUniquePropEntries = function (propNames, systems) {
 
 const getUniquePropEntry = function (propName, systems) {
   const propValues = [...new Set(systems.map(({ props }) => props[propName]))]
-  return propValues.map((propValue) => ({ propName, propValue }))
+  return propValues
+    .filter(isDefined)
+    .map((propValue) => ({ propName, propValue }))
+}
+
+const isDefined = function (propValue) {
+  return propValue !== undefined
 }
 
 // For each `propEntry`, add the list of matching dimensions
