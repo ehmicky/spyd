@@ -4,8 +4,8 @@
     "timestamp": 1617479059030,
     "system": {
       "dimensions": {
-        "machine": "one",
-        "cluster": "blue"
+        "machine": "two",
+        "cluster": "red"
       },
       "machine": {
         "cpus": [
@@ -32,8 +32,8 @@
         "dimensions": {
           "task": "fast",
           "runner": "node",
-          "system.machine": "one",
-          "system.cluster": "blue"
+          "system.machine": "two",
+          "system.cluster": "red"
         },
         "stats": {
           "median": 6.55279933481153,
@@ -92,8 +92,8 @@
         "dimensions": {
           "task": "snappy",
           "runner": "node",
-          "system.machine": "one",
-          "system.cluster": "blue"
+          "system.machine": "two",
+          "system.cluster": "red"
         },
         "stats": {
           "samples": 66,
@@ -160,7 +160,7 @@
     "system": {
       "dimensions": {
         "machine": "one",
-        "cluster": "blue"
+        "cluster": "red"
       },
       "machine": {
         "cpus": [
@@ -188,7 +188,7 @@
           "task": "complex",
           "runner": "node",
           "system.machine": "one",
-          "system.cluster": "blue"
+          "system.cluster": "red"
         },
         "stats": {
           "samples": 123,
@@ -253,7 +253,7 @@
     "timestamp": 1620912181814,
     "system": {
       "dimensions": {
-        "machine": "one",
+        "machine": "two",
         "cluster": "blue"
       },
       "machine": {
@@ -273,7 +273,8 @@
       "versions": {
         "Node": "16.1.0",
         "Spyd": "0.3.1",
-        "Test3": "1.0.0"
+        "Test3": "1.0.0",
+        "Test4": "1.0.0"
       }
     },
     "combinations": [
@@ -281,7 +282,7 @@
         "dimensions": {
           "task": "fast",
           "runner": "node",
-          "system.machine": "one",
+          "system.machine": "two",
           "system.cluster": "blue"
         },
         "stats": {
@@ -345,7 +346,7 @@
         "dimensions": {
           "task": "precise",
           "runner": "node",
-          "system.machine": "one",
+          "system.machine": "two",
           "system.cluster": "blue"
         },
         "stats": {
@@ -406,7 +407,7 @@
     "system": {
       "dimensions": {
         "machine": "one",
-        "cluster": "blue"
+        "cluster": "purple"
       },
       "machine": {
         "cpus": [
@@ -434,7 +435,7 @@
           "task": "fast",
           "runner": "node",
           "system.machine": "one",
-          "system.cluster": "blue"
+          "system.cluster": "purple"
         },
         "stats": {
           "samples": 195,
@@ -498,7 +499,7 @@
           "task": "complex",
           "runner": "node",
           "system.machine": "one",
-          "system.cluster": "blue"
+          "system.cluster": "purple"
         },
         "stats": {
           "samples": 123,
