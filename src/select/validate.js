@@ -4,7 +4,7 @@ import { UserError } from '../error/main.js'
 // When this happens:
 //  - For new results with `run|dev`, we fail since it would not make sense
 //  - For history results, we ignore and just report empty results
-export const validateMatches = function (rawResult, { select }) {
+export const validateSelectMatches = function (rawResult, { select }) {
   if (rawResult.combinations.length === 0) {
     throwValidationError(
       'No combinations match the selection.',
