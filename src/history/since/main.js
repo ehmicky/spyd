@@ -50,9 +50,9 @@ export const applySince = async function (rawResult, previous, { since, cwd }) {
   }
 
   const mergedResult = normalizeSystems(rawResult)
-  const sinceResultA = previous[sinceIndex]
+  const sinceResult = previous[sinceIndex]
   const history = [...previous.slice(sinceIndex), rawResult]
-  return { mergedResult, history, sinceResult: sinceResultA }
+  return { mergedResult, history, sinceResult }
 }
 
 // Add `historyInfo.noDimensions`, used to filter out redundant dimensions
