@@ -3,8 +3,8 @@ import { cpus as listCpus, totalmem } from 'os'
 import envCi from 'env-ci'
 import osName from 'os-name'
 
-import { cleanObject } from '../utils/clean.js'
-import { groupBy } from '../utils/group.js'
+import { cleanObject } from '../../utils/clean.js'
+import { groupBy } from '../../utils/group.js'
 
 // Users can specify a `system` configuration property.
 // This is a combination dimension meant to compare any environment differences,
