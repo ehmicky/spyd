@@ -1,9 +1,8 @@
-import { mergeHistory } from '../../history/since/main.js'
+import { setArray } from '../../utils/set.js'
 import { addScreenInfo } from '../tty.js'
 
 import {
-  normalizeCombAllUnmerged,
-  normalizeCombAllMerged,
+  normalizeCombAll,
   mergeResultProps,
   normalizeCombEach,
 } from './common.js'
@@ -17,19 +16,17 @@ import { prettifyStats, prettifyHistoryStats } from './stats/main.js'
 // beginning of the command in `normalizeHistory()` and
 // `normalizeTargetResult()`
 export const normalizeComputedResult = function (
-  unmergedResult,
-  { sinceResult, mergedResult, noDimensions },
+  initialResult,
+  { history, noDimensions },
   config,
 ) {
-  const unmergedResultA = normalizeCombAllUnmerged(unmergedResult, sinceResult)
-  const result = mergeHistory(unmergedResultA, mergedResult)
-  const resultA = normalizeCombAllMerged(result, noDimensions)
-  const resultB = prettifyStats(resultA, resultA.combinations)
-  const resultC = addScreenInfo(resultB)
+  const result = normalizeCombAll(initialResult, history, noDimensions)
+  const resultA = prettifyStats(result, result.combinations)
+  const resultB = addScreenInfo(resultA)
   const reporters = config.reporters.map((reporter) =>
     normalizeComputedEach({
-      result: resultC,
-      unmergedResult: unmergedResultA,
+      result: resultB,
+      initialResult,
       noDimensions,
       reporter,
       config,
@@ -42,14 +39,14 @@ export const normalizeComputedResult = function (
 // related and reporter-specific.
 const normalizeComputedEach = function ({
   result,
-  unmergedResult,
+  initialResult,
   noDimensions,
   reporter: { history, resultProps, footerParams, ...reporter },
   config,
 }) {
   const resultA = addLastResult({
     result,
-    unmergedResult,
+    initialResult,
     noDimensions,
     history,
     reporter,
@@ -61,13 +58,12 @@ const normalizeComputedEach = function ({
   return { ...reporter, result: resultD }
 }
 
-// The last history result is identical to the target result except:
-//  - It must use history result's normalization, not target result
-//  - Its combinations do not include `mergeResult`
-// We also apply `capabilities.history: false`, which omits `result.history`.
+// The last history result is identical to the target result except it uses
+// history result's normalization, not target result.
+// Therefore, we need to merge the combinations of the target result.
 const addLastResult = function ({
   result,
-  unmergedResult: { combinations },
+  initialResult: { combinations },
   noDimensions,
   history,
   reporter,
@@ -79,11 +75,10 @@ const addLastResult = function ({
   }
 
   const lastResult = history[history.length - 1]
-  const historyA = history.slice(0, -1)
   const lastResultA = { ...lastResult, combinations }
-  const lastResultB = normalizeCombAllMerged(lastResultA, noDimensions)
+  const lastResultB = normalizeCombAll(lastResultA, history, noDimensions)
   const lastResultC = normalizeCombEach(lastResultB, reporter, config)
-  const historyB = [...historyA, lastResultC]
-  const historyC = prettifyHistoryStats(historyB)
-  return { ...result, history: historyC }
+  const historyA = setArray(history, history.length - 1, lastResultC)
+  const historyB = prettifyHistoryStats(historyA)
+  return { ...result, history: historyB }
 }

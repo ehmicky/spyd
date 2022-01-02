@@ -9,9 +9,8 @@ import { addSystemsTitles } from './title.js'
 
 // Add each `reporter.footer`
 export const addFooter = function ({
-  result: { id, system },
+  result: { id, systems },
   resultProps: { timestamp },
-  mergedResult: { systems = [system] } = {},
   reporter,
   reporter: {
     format,

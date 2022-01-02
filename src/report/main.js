@@ -1,4 +1,5 @@
-import { applySince, addNoDimensions } from '../history/since/main.js'
+import { getNoDimensions } from '../combination/filter.js'
+import { applySince } from '../history/since/main.js'
 
 import { getContents } from './contents.js'
 import { finalizeContents } from './finalize.js'
@@ -37,17 +38,18 @@ export const reportResult = async function (rawResult, previous, config) {
 
 // Start reporting
 export const reportStart = async function (rawResult, previous, config) {
-  const [historyInfo, configA] = await Promise.all([
+  const [history, configA] = await Promise.all([
     applySince(rawResult, previous, config),
     startReporters(config),
   ])
-  const historyInfoA = addNoDimensions(historyInfo)
+  const noDimensions = getNoDimensions(rawResult.combinations)
+  const historyInfo = { history, noDimensions }
   const { result, config: configB } = normalizeEarlyResult(
     rawResult,
-    historyInfoA,
+    historyInfo,
     configA,
   )
-  return { result, historyInfo: historyInfoA, config: configB }
+  return { result, historyInfo, config: configB }
 }
 
 // Report preview results in `run` command.

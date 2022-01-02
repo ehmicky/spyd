@@ -16,33 +16,13 @@ export const normalizeNonCombAll = function (result) {
 
 // Add report-specific properties to a result that are in `combinations`, are
 // not reporter-specific
-export const normalizeCombAll = function (result, sinceResult, noDimensions) {
-  const resultA = normalizeCombAllUnmerged(result, sinceResult)
-  const resultB = normalizeCombAllMerged(resultA, noDimensions)
-  return resultB
-}
-
-// Add report-specific properties to a result that are in `combinations`, are
-// not reporter-specific and must be applied before the history is merged.
-// In principle:
-//  - We should have different logic for `sinceResult` and other history results
-//    because `sinceResult` is used for the diff logic.
-//     - For example the diff logic requires `mean` to be available
-//  - However, keeping track of an earlier version of it as
-//    `historyResult.sinceResult` is a shortcut that is enough for the moment.
-export const normalizeCombAllUnmerged = function (result, sinceResult) {
-  const resultA = addCombinationsDiff(result, sinceResult)
-  return resultA
-}
-
-// Add report-specific properties to a result that are in `combinations`, are
-// not reporter-specific and must be applied after the history is merged.
-export const normalizeCombAllMerged = function (result, noDimensions) {
-  const resultA = omitNoDimensions(result, noDimensions)
-  const resultB = sortDimensions(resultA)
-  const resultC = sortCombinations(resultB)
-  const resultD = omitSystemProps(resultC)
-  return resultD
+export const normalizeCombAll = function (result, history, noDimensions) {
+  const resultA = addCombinationsDiff(result, history)
+  const resultB = omitNoDimensions(resultA, noDimensions)
+  const resultC = sortDimensions(resultB)
+  const resultD = sortCombinations(resultC)
+  const resultE = omitSystemProps(resultD)
+  return resultE
 }
 
 // Add report-specific properties to a result that are not in `combinations` but

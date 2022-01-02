@@ -22,17 +22,17 @@ import { mergeSystems } from '../../system/merge.js'
 // When an older result does not have any new combinations to merge, it is
 // ignored
 //  - When this happens, we do not merge its systems
-const mergeResult = function (mergedResult, historyResult) {
-  if (hasSameCombinations(historyResult, mergedResult)) {
-    return mergedResult
+const mergeResult = function (result, previousResult) {
+  if (hasSameCombinations(previousResult, result)) {
+    return result
   }
 
-  const mergeResultA = mergeCombinations(mergedResult, historyResult)
-  const mergedResultB = mergeSystems(mergeResultA, historyResult)
-  return mergedResultB
+  const resultA = mergeCombinations(result, previousResult)
+  const resultB = mergeSystems(resultA, previousResult)
+  return resultB
 }
 
-export const mergeCombinations = function (result, previousResult) {
+const mergeCombinations = function (result, previousResult) {
   const previousCombinations = removeResultCombinations(
     previousResult.combinations,
     result,

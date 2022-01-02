@@ -1,7 +1,4 @@
-import { getNoDimensions } from '../../combination/filter.js'
 import { findByDelta } from '../delta/main.js'
-
-import { mergeCombinations } from './merge.js'
 
 // The `since` configuration property is used to limit the number of results
 // shown in `result.history` which is used with time series reporters.
@@ -38,43 +35,15 @@ import { mergeCombinations } from './merge.js'
 //  - Instead, reporters should use logic to retrieve the history of each
 //    combination
 export const applySince = async function (rawResult, previous, { since, cwd }) {
+  const history = await getHistory(previous, since, cwd)
+  return [...history, rawResult]
+}
+
+const getHistory = async function (previous, since, cwd) {
   if (previous.length === 0) {
-    return { history: [rawResult] }
+    return []
   }
 
   const sinceIndex = await findByDelta(previous, since, cwd)
-
-  if (sinceIndex === -1) {
-    return { history: [rawResult] }
-  }
-
-  const sinceResult = previous[sinceIndex]
-  const history = [...previous.slice(sinceIndex), rawResult]
-  return { mergedResult: rawResult, history, sinceResult }
-}
-
-// Add `historyInfo.noDimensions`, used to filter out redundant dimensions
-export const addNoDimensions = function (historyInfo) {
-  const { combinations } = getMergedCombinations(historyInfo)
-  const noDimensions = getNoDimensions(combinations)
-  return { ...historyInfo, noDimensions }
-}
-
-// Retrieve list of combinations with all dimensions of the result after merging
-const getMergedCombinations = function ({ history, mergedResult }) {
-  return mergedResult === undefined ? history[history.length - 1] : mergedResult
-}
-
-// In principle, we should do both `applySince()` and `mergeHistory()` at
-// the same time, before reporting. However, `applySince()` is slow.
-//  - To avoid repeating it before each preview, we compute it only once before
-//    all previews and store its return value as `mergedResult`.
-//  - We then merge the latest result during each preview.
-// We only merge combinations, which allows us to normalize the target result
-// non-combinations related properties at the beginning of the command instead
-// of after merging history (which happens at each preview).
-export const mergeHistory = function (result, mergedResult) {
-  return mergedResult === undefined
-    ? result
-    : mergeCombinations(result, mergedResult)
+  return sinceIndex === -1 ? [] : previous.slice(sinceIndex)
 }
