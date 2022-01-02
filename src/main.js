@@ -1,4 +1,3 @@
-import { listCombinations } from './combination/list.js'
 import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
 import { checkLimits } from './history/compare/limit.js'
@@ -8,6 +7,7 @@ import {
   removeFromHistory,
 } from './history/data/main.js'
 import { reportResult } from './report/main.js'
+import { createResult } from './run/create.js'
 import { performRun } from './run/main.js'
 
 // Measure code defined in a tasks file and report the results.
@@ -40,6 +40,6 @@ export const remove = async function (configFlags) {
 // Execute tasks without benchmarking them
 export const dev = async function (configFlags) {
   const config = await getConfig('dev', configFlags)
-  const combinations = await listCombinations(config)
-  await performDev(config, combinations)
+  const { rawResult } = await createResult(config)
+  await performDev(rawResult, config)
 }
