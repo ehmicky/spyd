@@ -1,12 +1,11 @@
 import { getNoDimensions } from '../../combination/filter.js'
+import { normalizeSystems } from '../../system/merge.js'
 import { findByDelta } from '../delta/main.js'
 
-import { getMergedResult, mergeCombinations } from './merge.js'
+import { mergeCombinations } from './merge.js'
 
-// The `since` configuration property is used to:
-//  - Limit the number of results shown in `result.history` which is used with
-//    time series reporters.
-//  - Specify which previous reports should be merged to the main result
+// The `since` configuration property is used to limit the number of results
+// shown in `result.history` which is used with time series reporters.
 // `since` is used to target both the first result in time series and the one
 // used for `diff` because:
 //  - If is simpler to understand
@@ -19,16 +18,8 @@ import { getMergedResult, mergeCombinations } from './merge.js'
 //       when when they were measured.
 //     - This is also simpler to understand since it always involves only two
 //       bases (the main result and the "since" result)
-// Previous results are filtered by `select`
-//  - This purposely impacts the resolution of `since`.
-// When `since` does not target any valid result:
-//  - We use the most recent result as `sinceResult` (if any)
-//  - However, we do not merge it
-//  - This allows giving a default behavior with `since: 0` which:
-//     - Makes merging opt-in. This is good since merging results can be
-//       unexpected, especially with `run` command
-//     - While still showing the `diff` with the last result, which is the most
-//       likely wanted one
+// When `since` does not target any valid result, we do not show any previous
+// results nor diff.
 // The first item in `result.history` is the `sinceResult`, i.e. the result
 // targeted by `since`:
 //  - It is shown first in time series
@@ -39,8 +30,7 @@ import { getMergedResult, mergeCombinations } from './merge.js'
 //  - For `show|remove`, this is the result targeted by delta
 //  - For `run`, this is the currently measured result
 //  - This allows time series reporters to use `result.history`
-//     - Since those should report the current result before merging
-//     - This ensures each combination shows where it was last measured
+//     - This ensures each combination shows when it was last measured
 //     - This ensures the time series reflects other reporters when used
 //       together
 // We do not expose some `combination.history` property
@@ -60,7 +50,7 @@ export const applySince = async function (rawResult, previous, { since, cwd }) {
     return { history: [sinceResult, rawResult], sinceResult }
   }
 
-  const mergedResult = getMergedResult(previous, sinceIndex, rawResult)
+  const mergedResult = normalizeSystems(rawResult)
   const sinceResultA = previous[sinceIndex]
   const history = [sinceResultA, ...previous.slice(sinceIndex + 1), rawResult]
   return { mergedResult, history, sinceResult: sinceResultA }
