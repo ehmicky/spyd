@@ -1,5 +1,4 @@
-import { getCombsDimensions } from './dimensions.js'
-import { removePrefix } from './prefix.js'
+import { getCombsDimensions, isDimension, DIMENSIONS } from './dimensions.js'
 
 // The target result defines which combinations are reported.
 // A history result might miss one of them:
@@ -51,21 +50,36 @@ const addCombDefaultIds = function (combination, targetDimensions) {
   return { ...combination, dimensions }
 }
 
-const getNewDimension = function (targetDimension, dimensions) {
-  const { propName } = targetDimension
+const getNewDimension = function ({ propName, getDefaultId }, dimensions) {
   const id =
     propName in dimensions
       ? dimensions[propName]
-      : getDimensionDefaultId(targetDimension)
+      : { id: getDefaultId(propName) }
   return [propName, id]
 }
 
-const getDimensionDefaultId = function ({
+// Find whether an id matches the default id pattern of a dimension.
+export const isInvalidDefaultId = function (id, { propName }) {
+  return DIMENSIONS.some((dimension) =>
+    isInvalidDimensionId(id, propName, dimension),
+  )
+}
+
+const isInvalidDimensionId = function (id, propName, dimension) {
+  return (
+    dimension.defaultIdPrefix !== undefined &&
+    id.startsWith(dimension.defaultIdPrefix) &&
+    !isDimensionDefaultId(id, propName, dimension)
+  )
+}
+
+const isDimensionDefaultId = function (
+  id,
   propName,
-  prefixName,
-  getDefaultId,
-}) {
-  const propNameA = removePrefix(propName, prefixName)
-  const id = getDefaultId(propNameA)
-  return { id }
+  { propName: dimensionPropName, prefixName, getDefaultId },
+) {
+  return (
+    isDimension(propName, dimensionPropName, prefixName) &&
+    id === getDefaultId(propName)
+  )
 }

@@ -1,32 +1,5 @@
 import { hasPrefix, removePrefix } from './prefix.js'
 
-// All dimensions. They:
-//  - create dimensions in runs using a cartesian product
-//  - can be used in `select|limit`
-//  - are printed when naming the combination
-//     - in reporters, preview bottom bar, `dev`, error messages
-//     - in some of those cases, `titles` are applied too
-const DIMENSIONS = [
-  {
-    // Internal persisted property name.
-    // Also used to compute the `messageName`.
-    propName: 'task',
-    // Whether dimension's id was created by users or by plugins
-    createdByUser: true,
-  },
-  {
-    propName: 'runner',
-    createdByUser: false,
-  },
-  {
-    // Some dimensions are dynamic, i.e. can have multiple sub-dimensions.
-    // Instead of a `propName`, those have a common `prefixName`.
-    prefixName: 'system',
-    getDefaultId: (propName) => `main_system_${propName}`,
-    createdByUser: true,
-  },
-]
-
 // Find a dimension's order
 export const findDimensionIndex = function (propName) {
   return DIMENSIONS.findIndex((dimension) =>
@@ -68,14 +41,13 @@ const getDimension = function (
     .sort()
     .map((propName) => ({
       propName,
-      prefixName,
       messageName: getMessageName(propName, prefixName),
       getDefaultId,
       createdByUser,
     }))
 }
 
-const isDimension = function (propName, dimensionPropName, prefixName) {
+export const isDimension = function (propName, dimensionPropName, prefixName) {
   return prefixName === undefined
     ? propName === dimensionPropName
     : hasPrefix(propName, prefixName)
@@ -86,3 +58,32 @@ const getMessageName = function (propName, prefixName) {
     ? propName
     : removePrefix(propName, prefixName)
 }
+
+// All dimensions. They:
+//  - create dimensions in runs using a cartesian product
+//  - can be used in `select|limit`
+//  - are printed when naming the combination
+//     - in reporters, preview bottom bar, `dev`, error messages
+//     - in some of those cases, `titles` are applied too
+export const DIMENSIONS = [
+  {
+    // Internal persisted property name.
+    // Also used to compute the `messageName`.
+    propName: 'task',
+    // Whether dimension's id was created by users or by plugins
+    createdByUser: true,
+  },
+  {
+    propName: 'runner',
+    createdByUser: false,
+  },
+  {
+    // Some dimensions are dynamic, i.e. can have multiple sub-dimensions.
+    // Instead of a `propName`, those have a common `prefixName`.
+    prefixName: 'system',
+    getDefaultId: (propName) =>
+      `main_system_${removePrefix(propName, 'system')}`,
+    defaultIdPrefix: 'main_system_',
+    createdByUser: true,
+  },
+]

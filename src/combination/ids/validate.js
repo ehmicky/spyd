@@ -1,4 +1,5 @@
 import { UserError } from '../../error/main.js'
+import { isInvalidDefaultId } from '../default.js'
 
 import { getCombsDimensionsIds } from './get.js'
 import { getUserIds } from './user.js'
@@ -62,8 +63,19 @@ const validateReservedIds = function (id, messageName) {
 // 'not' and 'and' are used by `select`
 const RESERVED_IDS = ['not', 'and']
 
-const validateDimensionId = function ({ dimension, id }, index, allIds) {
-  validateDuplicateId({ dimension, id, index, allIds })
+const validateDimensionId = function ({ id, dimension }, index, allIds) {
+  validateDefaultId(id, dimension)
+  validateDuplicateId({ id, dimension, index, allIds })
+}
+
+// Since ids must not be duplicate across dimensions, we need to forbid any
+// id which might be used as a dimension's default id.
+const validateDefaultId = function (id, dimension) {
+  if (isInvalidDefaultId(id, dimension)) {
+    throw new UserError(
+      `The identifier "${id}" is reserved as a default value.`,
+    )
+  }
 }
 
 // For each dimension of the new result, we previously ensured that each
@@ -76,7 +88,7 @@ const validateDimensionId = function ({ dimension, id }, index, allIds) {
 // not used for selection, reporting, `config.titles`, etc.
 // Identifier of previous results do not need to be checked for duplicate ids
 // since only their combinations matching the target result are kept.
-const validateDuplicateId = function ({ dimension, id, index, allIds }) {
+const validateDuplicateId = function ({ id, dimension, index, allIds }) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
   if (duplicateId === undefined) {
