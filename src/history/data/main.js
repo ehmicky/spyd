@@ -51,16 +51,16 @@ export const getFromHistory = async function (config) {
   const metadataB = metadataA.slice(0, -1)
   const metadataC = await applySinceDelta(metadataB, config)
   const metadataD = [...metadataC, targetMetadata]
-  const history = await listHistory(metadataD, config)
+  const history = await fetchHistory(metadataD, config)
   const rawResult = history[history.length - 1]
   const historyA = history.slice(0, -1)
   return { rawResult, history: historyA }
 }
 
-export const listHistoryForRun = async function (config) {
+export const listHistory = async function (config) {
   const metadata = await listMetadata(config.cwd)
   const metadataA = await applySinceDelta(metadata, config)
-  const history = await listHistory(metadataA, config)
+  const history = await fetchHistory(metadataA, config)
   return history
 }
 
@@ -69,7 +69,7 @@ export const listHistoryForRun = async function (config) {
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in rawResults preview
-const listHistory = async function (metadata, { cwd, select }) {
+const fetchHistory = async function (metadata, { cwd, select }) {
   const ids = metadata.map(getMetadatumId)
   const rawResults = await fetchResults(ids, cwd)
   const history = loadRawResults(rawResults, select)
