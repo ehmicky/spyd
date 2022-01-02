@@ -9,6 +9,7 @@ import { getCombsDimensions } from './dimensions.js'
 // Sort `result.combinations` based on their `stats.mean`.
 // Combinations with the same dimension are grouped together in the sorting
 // order.
+// The dimensions are ordered too.
 // This sorting order should be used by reporters to sort their rows.
 // When grouping dimensions (e.g. using tables columns), some combinations
 // of specific ids might be missing

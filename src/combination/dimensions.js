@@ -30,6 +30,7 @@ const DIMENSIONS = [
 ]
 
 // Retrieve several combinations' dimensions.
+// Array order follows same order as `getCombDimensions()`
 export const getCombsDimensions = function (combinations) {
   return combinations.flatMap(getCombDimensions).filter(isUniqueCombDimension)
 }
