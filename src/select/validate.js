@@ -3,7 +3,8 @@ import { UserError } from '../error/main.js'
 // When selecting combinations with `select`, all combinations might be excluded
 // When this happens:
 //  - For new results with `run|dev`, we fail since it would not make sense
-//  - For history results, we ignore and just report empty results
+//  - For history results, we ignore and just report results without any
+//    combinations
 export const validateSelectMatches = function (rawResult, { select }) {
   if (rawResult.combinations.length === 0) {
     throwValidationError(
