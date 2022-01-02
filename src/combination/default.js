@@ -24,40 +24,34 @@ import { removePrefix } from './prefix.js'
 //  - Reported nicely
 //  - Selectable with `select`
 export const addDefaultIds = function (history, targetResult) {
-  const targetDimensions = getCombsDimensions(targetResult.combinations)
+  const defaultDimensions = getDefaultDimensions(targetResult)
   return history.map((rawResult) =>
-    addRawResultDefaultIds(rawResult, targetDimensions),
+    addRawResultDefaultIds(rawResult, defaultDimensions),
   )
 }
 
-// We make sure the new dimensions follow the same order as `targetDimensions`
-const addRawResultDefaultIds = function (rawResult, targetDimensions) {
-  const combinations = rawResult.combinations.map((combination) =>
-    addCombDefaultIds(combination, targetDimensions),
+const getDefaultDimensions = function ({ combinations }) {
+  const targetDimensions = getCombsDimensions(combinations)
+  return Object.fromEntries(
+    targetDimensions.filter(hasDefaultId).map(getDefaultDimension),
   )
+}
+
+const hasDefaultId = function ({ defaultIdPrefix }) {
+  return defaultIdPrefix !== undefined
+}
+
+const getDefaultDimension = function (dimension) {
+  const id = getDefaultId(dimension.propName, dimension)
+  return [dimension.propName, { id }]
+}
+
+const addRawResultDefaultIds = function (rawResult, defaultDimensions) {
+  const combinations = rawResult.combinations.map((combination) => ({
+    ...combination,
+    dimensions: { ...defaultDimensions, ...combination.dimensions },
+  }))
   return { ...rawResult, combinations }
-}
-
-// We ensure that all combinations' dimensions objects keys are sorted in the
-// same order.
-//  - This consistency can be helpful to reporters, although our internal logic
-//    does not rely on it
-const addCombDefaultIds = function (combination, targetDimensions) {
-  const dimensions = Object.fromEntries(
-    targetDimensions.map((targetDimension) =>
-      getNewDimension(targetDimension, combination.dimensions),
-    ),
-  )
-  return { ...combination, dimensions }
-}
-
-const getNewDimension = function (targetDimension, dimensions) {
-  const { propName } = targetDimension
-  const id =
-    propName in dimensions
-      ? dimensions[propName]
-      : { id: getDefaultId(propName, targetDimension) }
-  return [propName, id]
 }
 
 // Find whether an id matches the default id pattern of a dimension.
