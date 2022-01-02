@@ -28,6 +28,7 @@ export const normalizeComputedResult = function ({
     normalizeComputedEach({
       result: resultB,
       initialResult,
+      topHistory: history,
       noDimensions,
       reporter,
       config,
@@ -41,6 +42,7 @@ export const normalizeComputedResult = function ({
 const normalizeComputedEach = function ({
   result,
   initialResult,
+  topHistory,
   noDimensions,
   reporter: { history, resultProps, footerParams, ...reporter },
   config,
@@ -48,6 +50,7 @@ const normalizeComputedEach = function ({
   const resultA = addLastResult({
     result,
     initialResult,
+    topHistory,
     noDimensions,
     history,
     reporter,
@@ -65,6 +68,7 @@ const normalizeComputedEach = function ({
 const addLastResult = function ({
   result,
   initialResult: { combinations },
+  topHistory,
   noDimensions,
   history,
   reporter,
@@ -77,7 +81,7 @@ const addLastResult = function ({
 
   const lastResult = history[history.length - 1]
   const lastResultA = { ...lastResult, combinations }
-  const lastResultB = normalizeCombAll(lastResultA, history, noDimensions)
+  const lastResultB = normalizeCombAll(lastResultA, topHistory, noDimensions)
   const lastResultC = normalizeCombEach(lastResultB, reporter, config)
   const historyA = setArray(history, history.length - 1, lastResultC)
   const historyB = prettifyHistoryStats(historyA)

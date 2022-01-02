@@ -16,6 +16,8 @@ export const normalizeNonCombAll = function (result) {
 
 // Add report-specific properties to a result that are in `combinations`, are
 // not reporter-specific
+// `history` results should not have performed `normalizeCombEach()` yet
+//  - For example, `diff` logic relies on `mean` not to have been omitted
 export const normalizeCombAll = function (result, history, noDimensions) {
   const resultA = addCombinationsDiff(result, history)
   const resultB = omitNoDimensions(resultA, noDimensions)
