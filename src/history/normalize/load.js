@@ -2,6 +2,7 @@ import { selectRawResult } from '../../select/main.js'
 
 import { decompressRawResult } from './compress.js'
 import { migrateRawResults } from './migrate.js'
+import { filterUnusedCombinations } from './unused.js'
 
 // Normalize rawResults on load
 export const loadRawResults = function (rawResults) {
@@ -17,10 +18,11 @@ export const normalizeRawResults = function (
   history,
   { select },
 ) {
-  const [targetResultA, ...historyA] = [targetResult, ...history].map(
+  const historyA = filterUnusedCombinations(history, targetResult)
+  const [targetResultA, ...historyB] = [targetResult, ...historyA].map(
     (rawResult) => normalizeRawResult(rawResult, select),
   )
-  return { targetResult: targetResultA, history: historyA }
+  return { targetResult: targetResultA, history: historyB }
 }
 
 const normalizeRawResult = function (rawResult, select) {
