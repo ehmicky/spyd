@@ -1,16 +1,11 @@
 // List all `propEntries`, i.e. unique sets of system props names + values.
 export const listPropEntries = function (systems) {
-  const normalizedSystems = systems.map(separateSystemProps)
-  const propNames = getUniquePropNames(normalizedSystems)
-  const propEntries = getUniquePropEntries(propNames, normalizedSystems)
+  const propNames = getUniquePropNames(systems)
+  const propEntries = getUniquePropEntries(propNames, systems)
   const propEntriesA = propEntries.map((propEntry) =>
-    addPropEntryDimensions(propEntry, normalizedSystems),
+    addPropEntryDimensions(propEntry, systems),
   )
   return propEntriesA
-}
-
-const separateSystemProps = function ({ dimensions, ...props }) {
-  return { dimensions, props }
 }
 
 // List all unique system props names

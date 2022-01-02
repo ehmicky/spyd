@@ -24,7 +24,7 @@ const finalizeSystems = function (propGroups) {
 
 const finalizeSystem = function ({ propEntries, dimensionsArray }) {
   const props = Object.fromEntries(propEntries.map(getPropEntry))
-  return { dimensions: dimensionsArray, ...props }
+  return { dimensions: dimensionsArray, props }
 }
 
 const getPropEntry = function ({ propName, propValue }) {

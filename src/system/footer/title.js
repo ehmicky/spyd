@@ -5,9 +5,9 @@ export const addSystemsTitles = function (footer) {
   return { ...footer, systems }
 }
 
-const addSystemTitle = function ({ dimensions, ...system }) {
+const addSystemTitle = function ({ dimensions, props }) {
   const title = dimensions.map(getDimensionsTitle).join(', ')
-  return { ...system, title }
+  return { title, props }
 }
 
 const getDimensionsTitle = function (dimensions) {

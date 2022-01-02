@@ -26,6 +26,6 @@ const arrifyFooter = function ({ Id, Timestamp, systems }) {
   return Id === undefined ? systemsA : [...systemsA, { Id, Timestamp }]
 }
 
-const addTitle = function ({ title, ...system }) {
-  return title === undefined ? system : { [title]: system }
+const addTitle = function ({ title, props }) {
+  return title === undefined ? props : { [title]: props }
 }

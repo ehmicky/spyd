@@ -17,7 +17,7 @@ export const sortSystems = function (footer, firstSystem) {
 
 // Add properties used during sorting so they are only computed once
 const addSortProps = function (
-  { dimensions: dimensionsArray, ...props },
+  { dimensions: dimensionsArray, props },
   dimensionNames,
 ) {
   const isTopSystem = dimensionsArray.length === 0
@@ -37,5 +37,5 @@ const addSortProps = function (
 const removeSortProps = function ({ propEntries, dimensionsArray }) {
   const props = Object.fromEntries(propEntries.map(removePropOrder))
   const dimensions = dimensionsArray.map(Object.fromEntries)
-  return { dimensions, ...props }
+  return { dimensions, props }
 }

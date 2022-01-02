@@ -20,6 +20,7 @@ const serializeMetadata = function (id, timestamp) {
 }
 
 const serializeSystem = function ({
+  dimensions,
   machine: { os, cpus, memory } = {},
   git: { commit, tag, branch, prNumber, prBranch } = {},
   ci,
@@ -33,10 +34,11 @@ const serializeSystem = function ({
     PR: serializePr(prNumber, prBranch),
     CI: ci,
   }
-  return cleanObject({
+  const propsA = cleanObject({
     ...props,
     ...serializeVersions(versions, props),
   })
+  return { dimensions, props: propsA }
 }
 
 const serializeCpus = function (cpus) {
