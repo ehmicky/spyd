@@ -18,15 +18,15 @@ export const loadRawResults = function (rawResults) {
 // Normalize the history and target results after load, once the target result
 // is known
 export const normalizeRawResults = function (targetResult, history, config) {
-  const historyA = mergeResults([...history, targetResult])
-  const [historyB, targetResultA] = pickLast(historyA)
-  const historyC = addDefaultIds(historyB, targetResultA)
-  const historyD = filterUnusedCombinations(historyC, targetResultA)
-  const [targetResultB, ...historyE] = [targetResultA, ...historyD].map(
+  const rawResults = mergeResults([...history, targetResult])
+  const [historyA, targetResultA] = pickLast(rawResults)
+  const historyB = addDefaultIds(historyA, targetResultA)
+  const historyC = filterUnusedCombinations(historyB, targetResultA)
+  const [targetResultB, ...historyD] = [targetResultA, ...historyC].map(
     (rawResult) => normalizeRawResult(rawResult, config),
   )
   validateSelectMatches(targetResultB, config)
-  return { targetResult: targetResultB, history: historyE }
+  return { targetResult: targetResultB, history: historyD }
 }
 
 // We ignore the combinations from history results that do not exist in the
