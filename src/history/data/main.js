@@ -1,6 +1,7 @@
 import inquirer from 'inquirer'
 
 import { isTtyInput } from '../../report/tty.js'
+import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
 import { compressRawResult } from '../normalize/compress.js'
 import { loadRawResults } from '../normalize/load.js'
@@ -47,13 +48,11 @@ const shouldRemoveFromHistory = async function (force) {
 export const getFromHistory = async function (config) {
   const metadata = await listMetadata(config.cwd)
   const metadataA = await applyMainDelta(metadata, config)
-  const targetMetadata = metadataA[metadataA.length - 1]
-  const metadataB = metadataA.slice(0, -1)
+  const [metadataB, targetMetadata] = pickLast(metadataA)
   const metadataC = await applySinceDelta(metadataB, config)
   const metadataD = [...metadataC, targetMetadata]
   const history = await fetchHistory(metadataD, config)
-  const rawResult = history[history.length - 1]
-  const historyA = history.slice(0, -1)
+  const [historyA, rawResult] = pickLast(history)
   return { rawResult, history: historyA }
 }
 
