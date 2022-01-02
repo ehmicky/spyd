@@ -29,7 +29,8 @@ export const listMetadata = async function (cwd) {
 }
 
 // Retrieve the contents of specific rawResults, stored on the filesystem,
-// by using their metadata
+// by using their metadata.
+// Order must be preserved.
 export const fetchRawResults = async function (metadata, cwd) {
   const historyDir = await getReadHistoryDir(cwd)
 

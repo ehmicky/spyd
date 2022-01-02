@@ -1,4 +1,5 @@
 import inquirer from 'inquirer'
+import sortOn from 'sort-on'
 
 import { isTtyInput } from '../../report/tty.js'
 import { pickLast } from '../../utils/last.js'
@@ -47,7 +48,7 @@ const shouldRemoveFromHistory = async function (force) {
 // Find the target result using the main delta.
 // Then, list all history results, after applying the `since` delta.
 export const getFromHistory = async function (config) {
-  const metadata = await listMetadata(config.cwd)
+  const metadata = await listSortedMetadata(config)
   const metadataA = await applyMainDelta(metadata, config)
   const [metadataB, targetMetadata] = pickLast(metadataA)
   const metadataC = await applySinceDelta(metadataB, config)
@@ -59,10 +60,15 @@ export const getFromHistory = async function (config) {
 
 // List all history results, after applying the `since` delta.
 export const listHistory = async function (config) {
-  const metadata = await listMetadata(config.cwd)
+  const metadata = await listSortedMetadata(config)
   const metadataA = await applySinceDelta(metadata, config)
   const history = await fetchHistory(metadataA, config)
   return history
+}
+
+const listSortedMetadata = async function ({ cwd }) {
+  const metadata = await listMetadata(cwd)
+  return sortOn(metadata, 'timestamp')
 }
 
 // List, sort, filter and normalize the history rawResults.
