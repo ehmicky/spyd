@@ -4,10 +4,10 @@ import {
   removeResultCombinations,
   hasSameCombinations,
 } from '../../combination/result.js'
+import { mergeSystems } from '../../system/merge.js'
 import { cleanObject } from '../../utils/clean.js'
 import { groupBy } from '../../utils/group.js'
 import { pickLast } from '../../utils/last.js'
-import { mergeSystems } from '../merge.js'
 
 // Merge all results with the same `mergeId`.
 // The `merge` configuration property can be used to merge several results.

@@ -1,9 +1,9 @@
 import inquirer from 'inquirer'
 
 import { isTtyInput } from '../../report/tty.js'
-import { groupMetadata, ungroupMetadata } from '../../system/merge/metadata.js'
 import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
+import { groupMetadata, ungroupMetadata } from '../merge/metadata.js'
 import { compressRawResult } from '../normalize/compress.js'
 import { loadRawResults, normalizeRawResults } from '../normalize/load.js'
 

@@ -4,10 +4,10 @@ import envCi from 'env-ci'
 import osName from 'os-name'
 import { v4 as uuidv4 } from 'uuid'
 
+import { getMergeIdProp } from '../history/merge/id.js'
 import { cleanObject } from '../utils/clean.js'
 import { groupBy } from '../utils/group.js'
 
-import { getMergeIdProp } from './merge/id.js'
 import { getTimestamp } from './timestamp.js'
 
 // Users can specify a `system` configuration property.
