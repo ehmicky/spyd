@@ -4,7 +4,7 @@ import {
   removeResultCombinations,
   hasSameCombinations,
 } from '../../combination/result.js'
-import { mergeSystems } from '../../system/system/merge.js'
+import { mergeSystems } from '../../top/system/merge.js'
 import { cleanObject } from '../../utils/clean.js'
 import { groupBy } from '../../utils/group.js'
 import { pickLast } from '../../utils/last.js'

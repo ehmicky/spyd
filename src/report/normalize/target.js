@@ -1,5 +1,5 @@
-import { addFooter } from '../../system/footer/main.js'
-import { omitMetadataProps } from '../../system/omit.js'
+import { addFooter } from '../../top/footer/main.js'
+import { omitMetadataProps } from '../../top/omit.js'
 
 import { normalizeNonCombAll, normalizeNonCombEach } from './common.js'
 
