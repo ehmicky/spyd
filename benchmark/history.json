@@ -3,6 +3,10 @@
     "id": "f0f13513-5267-43a9-a02a-60fdde0332d0",
     "timestamp": 1617479059030,
     "system": {
+      "dimensions": {
+        "machine": "one",
+        "cluster": "blue"
+      },
       "machine": {
         "cpus": [
           {
@@ -27,7 +31,9 @@
       {
         "dimensions": {
           "task": "fast",
-          "runner": "node"
+          "runner": "node",
+          "system.machine": "one",
+          "system.cluster": "blue"
         },
         "stats": {
           "median": 6.55279933481153,
@@ -85,7 +91,9 @@
       {
         "dimensions": {
           "task": "snappy",
-          "runner": "node"
+          "runner": "node",
+          "system.machine": "one",
+          "system.cluster": "blue"
         },
         "stats": {
           "samples": 66,
@@ -150,6 +158,10 @@
     "id": "0037ce27-caa6-4eeb-8534-5036c30b3c44",
     "timestamp": 1620912181813,
     "system": {
+      "dimensions": {
+        "machine": "one",
+        "cluster": "blue"
+      },
       "machine": {
         "cpus": [
           {
@@ -174,7 +186,9 @@
       {
         "dimensions": {
           "task": "complex",
-          "runner": "node"
+          "runner": "node",
+          "system.machine": "one",
+          "system.cluster": "blue"
         },
         "stats": {
           "samples": 123,
@@ -238,6 +252,10 @@
     "id": "a037ce27-caa6-4eeb-8534-5036c30b3c43",
     "timestamp": 1620912181814,
     "system": {
+      "dimensions": {
+        "machine": "one",
+        "cluster": "blue"
+      },
       "machine": {
         "cpus": [
           {
@@ -262,7 +280,9 @@
       {
         "dimensions": {
           "task": "fast",
-          "runner": "node"
+          "runner": "node",
+          "system.machine": "one",
+          "system.cluster": "blue"
         },
         "stats": {
           "samples": 7,
@@ -324,7 +344,9 @@
       {
         "dimensions": {
           "task": "precise",
-          "runner": "node"
+          "runner": "node",
+          "system.machine": "one",
+          "system.cluster": "blue"
         },
         "stats": {
           "samples": 6,
@@ -382,6 +404,10 @@
     "id": "37f6f761-b29d-4c65-97ea-12d9efdf3333",
     "timestamp": 1620912369731,
     "system": {
+      "dimensions": {
+        "machine": "one",
+        "cluster": "blue"
+      },
       "machine": {
         "cpus": [
           {
@@ -406,7 +432,9 @@
       {
         "dimensions": {
           "task": "fast",
-          "runner": "node"
+          "runner": "node",
+          "system.machine": "one",
+          "system.cluster": "blue"
         },
         "stats": {
           "samples": 195,
@@ -468,7 +496,9 @@
       {
         "dimensions": {
           "task": "complex",
-          "runner": "node"
+          "runner": "node",
+          "system.machine": "one",
+          "system.cluster": "blue"
         },
         "stats": {
           "samples": 123,
