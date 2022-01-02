@@ -1,5 +1,13 @@
 import { getCombinationIds } from './ids/get.js'
 
+// Filter out the `combinations` that are not in `result`
+export const keepResultCombinations = function (rawResult, result) {
+  const combinations = rawResult.combinations.filter((combination) =>
+    resultHasCombination(result, combination),
+  )
+  return { ...rawResult, combinations }
+}
+
 // Filter out the `combinations` that are in `result`
 export const removeResultCombinations = function (combinations, result) {
   return combinations.filter(

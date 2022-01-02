@@ -1,8 +1,8 @@
+import { keepResultCombinations } from '../../combination/result.js'
 import { selectRawResult } from '../../select/main.js'
 
 import { decompressRawResult } from './compress.js'
 import { migrateRawResults } from './migrate.js'
-import { filterUnusedCombinations } from './unused.js'
 
 // Normalize rawResults on load
 export const loadRawResults = function (rawResults) {
@@ -23,6 +23,15 @@ export const normalizeRawResults = function (
     (rawResult) => normalizeRawResult(rawResult, select),
   )
   return { targetResult: targetResultA, history: historyB }
+}
+
+// We ignore the combinations from history results that do not exist in the
+// target result.
+// This simplifies both the implementation and the user experience.
+const filterUnusedCombinations = function (history, targetResult) {
+  return history.map((rawResult) =>
+    keepResultCombinations(rawResult, targetResult),
+  )
 }
 
 const normalizeRawResult = function (rawResult, select) {
