@@ -38,4 +38,4 @@ export const omitSystemProps = function (historyResult) {
 }
 
 const METADATA_PROPS = ['id', 'timestamp']
-const SYSTEM_PROPS = ['system']
+const SYSTEM_PROPS = ['systems']
