@@ -39,10 +39,14 @@ export const getCombsDimensions = function (combinations) {
   return combinations.flatMap(getCombDimensions).filter(isUniqueCombDimension)
 }
 
-const isUniqueCombDimension = function (combDimension, index, combDimensions) {
+const isUniqueCombDimension = function (combDimensionA, index, combDimensions) {
   return combDimensions
     .slice(index + 1)
-    .every(({ propName }) => combDimension.propName !== propName)
+    .every((combDimensionB) => !isSameDimension(combDimensionA, combDimensionB))
+}
+
+const isSameDimension = function (dimensionA, dimensionB) {
+  return dimensionA.propName === dimensionB.propName
 }
 
 // Retrieve one combination's dimensions.
