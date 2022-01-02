@@ -28,7 +28,8 @@ export const performRun = async function (config) {
   const { rawResult, previous } = await createResult(config)
   const {
     result,
-    historyInfo,
+    history,
+    noDimensions,
     config: configA,
   } = await reportStart(rawResult, previous, config)
 
@@ -39,7 +40,8 @@ export const performRun = async function (config) {
       contents,
     } = await previewAndMeasure({
       result,
-      historyInfo,
+      history,
+      noDimensions,
       previewState,
       config: configA,
     })
@@ -52,14 +54,15 @@ export const performRun = async function (config) {
 
 const previewAndMeasure = async function ({
   result,
-  historyInfo,
-  historyInfo: { noDimensions },
+  history,
+  noDimensions,
   previewState,
   config,
 }) {
   const previewStateA = await startPreview({
     result,
-    historyInfo,
+    history,
+    noDimensions,
     previewState,
     config,
   })
@@ -71,11 +74,12 @@ const previewAndMeasure = async function ({
       previewState: previewStateA,
       noDimensions,
     })
-    const { programmaticResult, contents } = await reportCompute(
-      resultA,
-      historyInfo,
+    const { programmaticResult, contents } = await reportCompute({
+      result: resultA,
+      history,
+      noDimensions,
       config,
-    )
+    })
     await endPreview(previewStateA)
     return { result: resultA, programmaticResult, contents }
   } catch (error) {

@@ -15,11 +15,12 @@ import { prettifyStats, prettifyHistoryStats } from './stats/main.js'
 // performing anything which can be initially computing only once at the
 // beginning of the command in `normalizeHistory()` and
 // `normalizeTargetResult()`
-export const normalizeComputedResult = function (
-  initialResult,
-  { history, noDimensions },
+export const normalizeComputedResult = function ({
+  result: initialResult,
+  history,
+  noDimensions,
   config,
-) {
+}) {
   const result = normalizeCombAll(initialResult, history, noDimensions)
   const resultA = prettifyStats(result, result.combinations)
   const resultB = addScreenInfo(resultA)

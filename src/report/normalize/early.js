@@ -9,17 +9,15 @@ import { normalizeTargetResult } from './target.js'
 
 // Normalize as many properties as possible at the beginning of the reporting
 // (once) as opposed to later on (repeatedly)
-export const normalizeEarlyResult = function (
-  result,
-  { history, noDimensions },
+export const normalizeEarlyResult = function ({
+  rawResult,
+  history,
+  noDimensions,
   config,
-) {
+}) {
   const configA = normalizeHistory(history, noDimensions, config)
-  const { result: resultA, config: configB } = normalizeTargetResult(
-    result,
-    configA,
-  )
-  return { result: resultA, config: configB }
+  const { result, config: configB } = normalizeTargetResult(rawResult, configA)
+  return { result, config: configB }
 }
 
 // Add report-specific properties to each `history` result.
