@@ -5,9 +5,9 @@
 //    reaches this logic
 //  - We use the most recent results in priority
 export const getDimensionNames = function (firstSystem, systems) {
-  const firstDimensionNames = getSystemDimensionNames(firstSystem)
+  const firstDimensionNames = Object.keys(getSystemDimensions(firstSystem))
   const uniqueDimensionNames = [
-    ...new Set(systems.flatMap(getSystemDimensionNames)),
+    ...new Set(systems.flatMap(getSystemDimensions).flatMap(Object.keys)),
   ]
   const otherDimensionNames = uniqueDimensionNames.filter(
     (dimensionName) => !firstDimensionNames.includes(dimensionName),
@@ -15,6 +15,6 @@ export const getDimensionNames = function (firstSystem, systems) {
   return [...firstDimensionNames, ...otherDimensionNames]
 }
 
-const getSystemDimensionNames = function ({ dimensions }) {
-  return Object.keys(dimensions)
+const getSystemDimensions = function ({ dimensions }) {
+  return dimensions
 }
