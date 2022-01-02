@@ -1,7 +1,7 @@
 inputs:
   one: 1
   two: 2
-select: not network slow uniform exponential growing
+select: not network slow uniform exponential ushaped growing
 tasks: tasks.js
 showPrecision: true
 showSystem: false
