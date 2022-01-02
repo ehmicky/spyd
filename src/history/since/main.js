@@ -1,5 +1,4 @@
 import { getNoDimensions } from '../../combination/filter.js'
-import { normalizeSystems } from '../../system/merge.js'
 import { findByDelta } from '../delta/main.js'
 
 import { mergeCombinations } from './merge.js'
@@ -49,10 +48,9 @@ export const applySince = async function (rawResult, previous, { since, cwd }) {
     return { history: [rawResult] }
   }
 
-  const mergedResult = normalizeSystems(rawResult)
   const sinceResult = previous[sinceIndex]
   const history = [...previous.slice(sinceIndex), rawResult]
-  return { mergedResult, history, sinceResult }
+  return { mergedResult: rawResult, history, sinceResult }
 }
 
 // Add `historyInfo.noDimensions`, used to filter out redundant dimensions
