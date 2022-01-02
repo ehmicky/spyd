@@ -44,9 +44,11 @@ const DURATION_UNITS = {
 }
 /* eslint-enable id-length */
 
-const findByDuration = function (metadata, duration) {
+const findByDuration = function (metadataGroups, duration) {
   const timestamp = Date.now() - duration
-  return metadata.findIndex((metadatum) => metadatum.timestamp >= timestamp)
+  return metadataGroups.findIndex(
+    (metadata) => metadata[metadata.length - 1].timestamp >= timestamp,
+  )
 }
 
 export const durationFormat = {

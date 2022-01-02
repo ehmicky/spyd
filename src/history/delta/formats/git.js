@@ -12,7 +12,7 @@ const parseGit = function (delta) {
 }
 
 // Find a rawResult by git reference (commit/branch/tag).
-const findByGit = async function (metadata, gitRef, cwd) {
+const findByGit = async function (metadataGroups, gitRef, cwd) {
   const { stdout, stderr, message, failed } = await execa(
     'git',
     [
@@ -30,7 +30,9 @@ const findByGit = async function (metadata, gitRef, cwd) {
   const timestamp = Number(stdout) * SECS_TO_MSECS
   checkTimestamp({ timestamp, stderr, message, failed, cwd })
 
-  return metadata.findIndex((metadatum) => metadatum.timestamp >= timestamp)
+  return metadataGroups.findIndex(
+    (metadata) => metadata[metadata.length - 1].timestamp >= timestamp,
+  )
 }
 
 const SECS_TO_MSECS = 1e3

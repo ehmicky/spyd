@@ -9,8 +9,12 @@ const parseId = function (delta) {
   return delta
 }
 
-const findById = function (metadata, id) {
-  return metadata.findIndex((metadatum) => metadatum.id === id)
+const findById = function (metadataGroups, id) {
+  return metadataGroups.findIndex((metadata) => metadataHasId(metadata, id))
+}
+
+const metadataHasId = function (metadata, id) {
+  return metadata.some((metadatum) => metadatum.id === id)
 }
 
 export const idFormat = {

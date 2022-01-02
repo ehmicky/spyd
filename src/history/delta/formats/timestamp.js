@@ -17,8 +17,10 @@ const parseTimestamp = function (delta) {
   return timestamp
 }
 
-const findByTimestamp = function (metadata, timestamp) {
-  return metadata.findIndex((metadatum) => metadatum.timestamp >= timestamp)
+const findByTimestamp = function (metadataGroups, timestamp) {
+  return metadataGroups.findIndex(
+    (metadata) => metadata[metadata.length - 1].timestamp >= timestamp,
+  )
 }
 
 export const timestampFormat = {
