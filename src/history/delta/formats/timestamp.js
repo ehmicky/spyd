@@ -1,3 +1,5 @@
+import { findByTime } from './find.js'
+
 // Deltas can be dates or times.
 // We use `new Date()` which means:
 //  - can specify only the date, or both date and time
@@ -18,9 +20,7 @@ const parseTimestamp = function (delta) {
 }
 
 const findByTimestamp = function (metadataGroups, timestamp) {
-  return metadataGroups.findIndex(
-    (metadata) => metadata[metadata.length - 1].timestamp >= timestamp,
-  )
+  return findByTime(metadataGroups, timestamp)
 }
 
 export const timestampFormat = {

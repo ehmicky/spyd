@@ -2,6 +2,8 @@ import { execa } from 'execa'
 
 import { UserError } from '../../../error/main.js'
 
+import { findByTime } from './find.js'
+
 // Deltas can be git commits, tags or branches.
 const parseGit = function (delta) {
   if (typeof delta !== 'string') {
@@ -26,13 +28,9 @@ const findByGit = async function (metadataGroups, gitRef, cwd) {
     ],
     { cwd, reject: false, stdin: 'ignore' },
   )
-
   const timestamp = Number(stdout) * SECS_TO_MSECS
   checkTimestamp({ timestamp, stderr, message, failed, cwd })
-
-  return metadataGroups.findIndex(
-    (metadata) => metadata[metadata.length - 1].timestamp >= timestamp,
-  )
+  return findByTime(metadataGroups, timestamp)
 }
 
 const SECS_TO_MSECS = 1e3
