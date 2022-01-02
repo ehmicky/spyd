@@ -10,12 +10,12 @@ import { setArray } from '../utils/set.js'
 // `system` objects should not contain `undefined`, so we can directly merge.
 // `git` and `machine` properties should not be deeply merged since their
 // properties relate to each other. However, `versions` should.
-export const mergeSystems = function (result, previousResult) {
-  const systems = appendSystem(result, previousResult)
-  return { ...result, systems }
+export const mergeSystems = function (rawResult, previousRawResult) {
+  const systems = appendSystem(rawResult, previousRawResult)
+  return { ...rawResult, systems }
 }
 
-const appendSystem = function ({ systems }, { system: previousSystem }) {
+const appendSystem = function ({ systems }, { systems: [previousSystem] }) {
   const systemIndex = systems.findIndex(({ dimensions }) =>
     isDeepStrictEqual(dimensions, previousSystem.dimensions),
   )
