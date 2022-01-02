@@ -46,13 +46,12 @@ export const applySince = async function (rawResult, previous, { since, cwd }) {
   const sinceIndex = await findByDelta(previous, since, cwd)
 
   if (sinceIndex === -1) {
-    const sinceResult = previous[previous.length - 1]
-    return { history: [sinceResult, rawResult], sinceResult }
+    return { history: [rawResult] }
   }
 
   const mergedResult = normalizeSystems(rawResult)
   const sinceResultA = previous[sinceIndex]
-  const history = [sinceResultA, ...previous.slice(sinceIndex + 1), rawResult]
+  const history = [...previous.slice(sinceIndex), rawResult]
   return { mergedResult, history, sinceResult: sinceResultA }
 }
 
