@@ -22,6 +22,13 @@ import { throwValidationError } from './validate.js'
 //  - If users use `select` to limit how many combinations are being measured,
 //    but still want to see all combinations, they should perform two commands:
 //    first `run` then `show`.
+// Selection happens after delta resolution:
+//  - This means the `count` delta format targets results regardless of whether
+//    they are selected
+//  - This is because:
+//     - Changing `select` does not change the history start|end, which is less
+//       confusing
+//     - This does not require loading files before resolving deltas
 export const selectRawResults = function (rawResults, select) {
   return rawResults
     .map((rawResult) => selectRawResult(rawResult, select))
