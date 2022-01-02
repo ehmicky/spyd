@@ -2,7 +2,6 @@ import inquirer from 'inquirer'
 import sortOn from 'sort-on'
 
 import { isTtyInput } from '../../report/tty.js'
-import { validateMatches } from '../../select/validate.js'
 import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
 import { compressRawResult } from '../normalize/compress.js'
@@ -61,7 +60,6 @@ export const getFromHistory = async function (config) {
     historyA,
     config,
   )
-  validateMatches(rawResult, config)
   return { rawResult, history: historyB }
 }
 
