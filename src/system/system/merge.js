@@ -1,6 +1,6 @@
 import { isDeepStrictEqual } from 'util'
 
-import { setArray } from '../utils/set.js'
+import { setArray } from '../../utils/set.js'
 
 // When merging results, we report all `systems`. This concatenates them.
 // Systems with all dimensions equal are merged, with the most recent result
