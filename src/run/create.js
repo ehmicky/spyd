@@ -1,7 +1,8 @@
 import { listCombinations } from '../combination/list.js'
 import { listHistory } from '../history/data/main.js'
 import { normalizeRawResults } from '../history/normalize/load.js'
-import { createSystemInfo } from '../system/create/main.js'
+import { createSystemInfo } from '../system/create.js'
+import { addSystemVersions } from '../system/versions.js'
 
 // Create a new rawResult to measure
 export const createResult = async function (config) {
@@ -9,19 +10,17 @@ export const createResult = async function (config) {
     createRawResult(config),
     listHistory(config),
   ])
-  const { targetResult, history: historyA } = normalizeRawResults(
+  const { targetResult: rawResultA, history: historyA } = normalizeRawResults(
     rawResult,
     history,
     config,
   )
-  return { rawResult: targetResult, history: historyA }
+  const rawResultB = await addSystemVersions(rawResultA, config)
+  return { rawResult: rawResultB, history: historyA }
 }
 
 const createRawResult = async function (config) {
   const combinations = await listCombinations(config)
-  const { id, timestamp, systems } = await createSystemInfo(
-    combinations,
-    config,
-  )
+  const { id, timestamp, systems } = createSystemInfo(config)
   return { id, timestamp, systems, combinations }
 }

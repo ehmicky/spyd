@@ -3,10 +3,10 @@ import { fileURLToPath } from 'url'
 
 import { readPackageUp } from 'read-pkg-up'
 
-import { PluginError } from '../../error/main.js'
-import { spawnProcess } from '../../utils/spawn.js'
+import { PluginError } from '../error/main.js'
+import { spawnProcess } from '../utils/spawn.js'
 
-// Runtime versions for this runner, returned as `versions` from
+// Add runtime versions for this runner, returned as `versions` from
 // `runner.launch()`. This is an object where:
 //  - the key is runtime name (e.g. 'Node')
 //  - the value is its version (e.g. '12.0.0').
@@ -17,9 +17,14 @@ import { spawnProcess } from '../../utils/spawn.js'
 // Meant to show information about runtime versions, modes (e.g. type of shell)
 // and configuration.
 // `combinations` preserve the order of `tasks.*`, i.e. this is used as a
-// priority order in the unlikely case two runners return the properties in
+// priority order in the unlikely case two runners return the same properties in
 // `versions`.
-export const getSystemVersions = async function (combinations, cwd) {
+export const addSystemVersions = async function (rawResult, { cwd }) {
+  const versions = await getSystemVersions(rawResult.combinations, cwd)
+  return { ...rawResult, systems: [{ ...rawResult.systems[0], versions }] }
+}
+
+const getSystemVersions = async function (combinations, cwd) {
   const [versions, spydVersion] = await Promise.all([
     getRunnersVersions(combinations, cwd),
     getSpydVersion(),

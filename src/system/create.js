@@ -4,11 +4,10 @@ import envCi from 'env-ci'
 import osName from 'os-name'
 import { v4 as uuidv4 } from 'uuid'
 
-import { cleanObject } from '../../utils/clean.js'
-import { groupBy } from '../../utils/group.js'
-import { getTimestamp } from '../timestamp.js'
+import { cleanObject } from '../utils/clean.js'
+import { groupBy } from '../utils/group.js'
 
-import { getSystemVersions } from './versions.js'
+import { getTimestamp } from './timestamp.js'
 
 // Users can specify a `system` configuration property.
 // This is a combination dimension meant to compare any environment differences,
@@ -42,21 +41,17 @@ import { getSystemVersions } from './versions.js'
 //  - I.e. `system` is an empty object
 //  - Results without system dimensions still persist their system information
 //    and show them in the footer.
-export const createSystemInfo = async function (
-  combinations,
-  { cwd, system: dimensions, envInfo },
-) {
+export const createSystemInfo = function (config) {
   const id = uuidv4()
   const timestamp = getTimestamp()
-  const systems = await getSystems({ dimensions, envInfo, combinations, cwd })
+  const systems = getSystems(config)
   return { id, timestamp, systems }
 }
 
-const getSystems = async function ({ dimensions, combinations, cwd }) {
-  const versions = await getSystemVersions(combinations, cwd)
+const getSystems = function ({ cwd, system: dimensions }) {
   const machine = getMachine()
   const { git, ci } = getEnvInfo(cwd)
-  const system = cleanObject({ dimensions, machine, git, ci, versions })
+  const system = cleanObject({ dimensions, machine, git, ci })
   return [system]
 }
 
