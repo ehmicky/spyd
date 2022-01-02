@@ -22,6 +22,7 @@ const DIMENSIONS = [
     // Some dimensions are dynamic, i.e. can have multiple sub-dimensions.
     // Instead of a `propName`, those have a common `prefixName`.
     prefixName: 'system',
+    getDefaultId: (propName) => `main_system_${propName}`,
     createdByUser: true,
   },
 ]
@@ -59,7 +60,7 @@ export const getCombDimensions = function (combination) {
 //  - `messageName`: used in output and error messages
 const getDimension = function (
   { dimensions },
-  { propName: dimensionPropName, prefixName, createdByUser },
+  { propName: dimensionPropName, prefixName, getDefaultId, createdByUser },
 ) {
   // eslint-disable-next-line fp/no-mutating-methods
   return Object.keys(dimensions)
@@ -67,7 +68,9 @@ const getDimension = function (
     .sort()
     .map((propName) => ({
       propName,
+      prefixName,
       messageName: getMessageName(propName, prefixName),
+      getDefaultId,
       createdByUser,
     }))
 }
