@@ -1,43 +1,83 @@
-import { resolve } from 'path'
+import pMap from 'p-map'
 
-import { getRawResults, setRawResults } from './fs.js'
+import { parseRawResult, serializeRawResult } from './contents.js'
+import { getReadHistoryDir, getWriteHistoryDir } from './dir.js'
+import {
+  listFilenames,
+  readRawResult,
+  writeRawResult,
+  deleteRawResult,
+  checkHistoryFile,
+} from './fs.js'
+import {
+  getRawResultFilename,
+  parseFilename,
+  serializeFilename,
+} from './metadata.js'
 
+// Retrieve all rawResults' metadata, which are stored in the filenames
 export const listMetadata = async function (cwd) {
-  const dir = getDir(cwd)
-  const rawResults = await getRawResults(dir)
-  return rawResults.map(getMetadatum)
+  const historyDir = await getReadHistoryDir(cwd)
+
+  if (historyDir === undefined) {
+    return []
+  }
+
+  const filenames = await listFilenames(historyDir)
+  const metadata = filenames.map(parseFilename).filter(Boolean)
+  return metadata
 }
 
-const getMetadatum = function ({ id, timestamp }) {
-  return { id, timestamp }
+// Retrieve the contents of specific rawResults, stored on the filesystem,
+// by using their metadata
+export const fetchRawResults = async function (metadata, cwd) {
+  const historyDir = await getReadHistoryDir(cwd)
+
+  if (historyDir === undefined) {
+    return []
+  }
+
+  const rawResults = await pMap(
+    metadata,
+    (metadatum) => fetchRawResult(metadatum, historyDir),
+    { concurrency: MAX_CONCURRENCY },
+  )
+  return rawResults
 }
 
-export const fetchResults = async function (ids, cwd) {
-  const dir = getDir(cwd)
-  const rawResults = await getRawResults(dir)
-  return ids.map((id) => fetchResult(rawResults, id))
+// How many results can be read at once.
+// A lower value is slower.
+// A higher value is more likely to crash on some machines.
+const MAX_CONCURRENCY = 100
+
+// Retrieve the contents of a rawResult, by using its metadatum
+const fetchRawResult = async function (metadatum, historyDir) {
+  const filename = serializeFilename(metadatum)
+  const path = `${historyDir}/${filename}`
+  await checkHistoryFile(path)
+  const contents = await readRawResult(path)
+  const rawResult = parseRawResult(contents)
+  return rawResult
 }
 
-const fetchResult = function (rawResults, id) {
-  return rawResults.find((rawResult) => rawResult.id === id)
-}
-
+// Save a new rawResult
 export const addRawResult = async function (rawResult, cwd) {
-  const dir = getDir(cwd)
-  const rawResults = await getRawResults(dir)
-  const rawResultsA = [...rawResults, rawResult]
-  await setRawResults(dir, rawResultsA)
+  const historyDir = await getWriteHistoryDir(cwd)
+  const filename = getRawResultFilename(rawResult)
+  const path = `${historyDir}/${filename}`
+  const contents = serializeRawResult(rawResult)
+  await writeRawResult(path, contents)
 }
 
-export const removeRawResult = async function (id, cwd) {
-  const dir = getDir(cwd)
-  const rawResults = await getRawResults(dir)
-  const rawResultsA = rawResults.filter((rawResult) => rawResult.id !== id)
-  await setRawResults(dir, rawResultsA)
-}
+// Remove a rawResult from the filesystem
+export const removeRawResult = async function (rawResult, cwd) {
+  const historyDir = await getReadHistoryDir(cwd)
 
-const getDir = function (cwd) {
-  return resolve(cwd, DIR_LOCATION)
-}
+  if (historyDir === undefined) {
+    return
+  }
 
-const DIR_LOCATION = 'benchmark'
+  const filename = getRawResultFilename(rawResult)
+  const path = `${historyDir}/${filename}`
+  await deleteRawResult(path)
+}

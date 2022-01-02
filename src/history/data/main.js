@@ -10,7 +10,7 @@ import {
   addRawResult,
   removeRawResult,
   listMetadata,
-  fetchResults,
+  fetchRawResults,
 } from './results.js'
 
 // Save rawResults so they can be compared or shown later.
@@ -25,12 +25,12 @@ export const addToHistory = async function (rawResult, { save, cwd }) {
 }
 
 // Remove a rawResult
-export const removeFromHistory = async function ({ id }, { cwd, force }) {
+export const removeFromHistory = async function (rawResult, { cwd, force }) {
   if (!(await shouldRemoveFromHistory(force))) {
     return
   }
 
-  await removeRawResult(id, cwd)
+  await removeRawResult(rawResult, cwd)
 }
 
 const shouldRemoveFromHistory = async function (force) {
@@ -71,12 +71,7 @@ export const listHistory = async function (config) {
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in rawResults preview
 const fetchHistory = async function (metadata, { cwd, select }) {
-  const ids = metadata.map(getMetadatumId)
-  const rawResults = await fetchResults(ids, cwd)
+  const rawResults = await fetchRawResults(metadata, cwd)
   const history = loadRawResults(rawResults, select)
   return history
-}
-
-const getMetadatumId = function ({ id }) {
-  return id
 }

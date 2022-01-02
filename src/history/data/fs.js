@@ -1,60 +1,74 @@
-import { promises as fs } from 'fs'
+import { readdir, readFile, writeFile, unlink, mkdir } from 'fs/promises'
 
 import { pathExists } from 'path-exists'
-import writeFileAtomic from 'write-file-atomic'
+import { isDirectory, isFile } from 'path-type'
 
 import { UserError } from '../../error/main.js'
 
-// Retrieve rawResults from filesystem
-export const getRawResults = async function (dir) {
-  const dataFile = await getDataFile(dir)
+// Find all filenames of the history directory
+export const listFilenames = async function (historyDir) {
+  return await readdir(historyDir)
+}
 
-  if (!(await pathExists(dataFile))) {
-    return []
+// Read a rawResult's contents
+export const readRawResult = async function (path) {
+  try {
+    return await readFile(path, 'utf8')
+  } catch (error) {
+    throw new UserError(`History file could not be read: ${error.message}`)
+  }
+}
+
+// Write a rawResult's contents
+export const writeRawResult = async function (path, contents) {
+  try {
+    return await writeFile(path, contents)
+  } catch (error) {
+    throw new UserError(`History file could not be written: ${error.message}`)
+  }
+}
+
+// Delete a rawResult from the filesystem
+export const deleteRawResult = async function (path) {
+  try {
+    await unlink(path)
+  } catch (error) {
+    throw new UserError(`History file could not be deleted: ${error.message}`)
+  }
+}
+
+// Check if a rawResult is on the filesystem
+export const hasHistoryDir = async function (historyDir) {
+  return await pathExists(historyDir)
+}
+
+// Ensure that the history directory exists on the filesystem
+export const ensureHistoryDir = async function (historyDir) {
+  if (await pathExists(historyDir)) {
+    return
   }
 
-  const content = await fs.readFile(dataFile, 'utf8')
-  const rawResults = JSON.parse(content)
-  return rawResults
-}
-
-// Persist rawResults from filesystem
-export const setRawResults = async function (dir, rawResults) {
-  const dataFile = await getDataFile(dir)
-  const content = JSON.stringify(rawResults, undefined, 2)
-  const contentA = flattenArray(content)
-  await writeFileAtomic(dataFile, `${contentA}\n`)
-}
-
-// Some arrays like `histogram` and `quantiles` are big. `JSON.serialize()`
-// put each item in a separate line. We put those in a single line instead.
-//  - This makes it easier to view the file
-//  - This creates simpler git diffs
-//  - This creates better git stats when it comes to amount of lines changes
-// We only do this for arrays of simple types.
-const flattenArray = function (content) {
-  return content.replace(SIMPLE_ARRAY_REGEXP, flattenArrayItems)
-}
-
-// Matches `[ ... ]` but not `[ { ... } ]`
-const SIMPLE_ARRAY_REGEXP = /\[([^\]{}]+)\]/gmu
-
-const flattenArrayItems = function (_, match) {
-  return `[${match.replace(WHITESPACES_REGEXP, ' ').trim()}]`
-}
-
-const WHITESPACES_REGEXP = /\s+/gmu
-
-const getDataFile = async function (dir) {
   try {
-    await fs.mkdir(dir, { recursive: true })
+    await mkdir(historyDir, { recursive: true })
   } catch (error) {
     throw new UserError(
-      `Could not create history directory "${dir}"\n${error.message}`,
+      `Could not create history directory "${historyDir}"\n${error.message}`,
     )
   }
-
-  return `${dir}/${DATA_FILE}`
 }
 
-const DATA_FILE = 'history.json'
+// Ensure that the history directory is valid
+export const checkHistoryDir = async function (historyDir) {
+  if (!(await isDirectory(historyDir))) {
+    throw new UserError(
+      `The history location must be a directory, not a regular file: ${historyDir}`,
+    )
+  }
+}
+
+// Ensure that a history file is valid
+export const checkHistoryFile = async function (path) {
+  if (!(await isFile(path))) {
+    throw new UserError(`History files must be regular files: ${path}`)
+  }
+}
