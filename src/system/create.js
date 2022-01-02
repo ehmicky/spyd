@@ -49,6 +49,8 @@ export const createSystemInfo = function (config) {
   return { id, mergeId, timestamp, systems }
 }
 
+// `result.mergeId` defaults to `result.id`. This allows merging to previous
+// results even when the user did not previously intend to.
 const getMergeId = function (id, { merge = id }) {
   return merge
 }
