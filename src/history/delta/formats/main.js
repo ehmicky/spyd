@@ -1,9 +1,8 @@
-import { commitFormat } from './commit.js'
 import { countFormat } from './count.js'
 import { durationFormat } from './duration.js'
 import { firstFormat } from './first.js'
+import { gitFormat } from './git.js'
 import { idFormat } from './id.js'
-import { tagFormat } from './tag.js'
 import { timestampFormat } from './timestamp.js'
 
 export const findFormat = function (type) {
@@ -17,6 +16,5 @@ export const FORMATS = [
   timestampFormat,
   idFormat,
   durationFormat,
-  commitFormat,
-  tagFormat,
+  gitFormat,
 ]

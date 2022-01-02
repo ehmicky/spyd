@@ -1,37 +1,107 @@
-import { addDeltaError } from './error.js'
+import { UserError } from '../../error/main.js'
+
+import { getDeltaError, addDeltaError } from './error.js'
 import { findFormat } from './formats/main.js'
 
-// Get previous rawResults index by rawResult delta.
-// `rawResults` must be sorted from most to least recent.
-// In general, most delta formats look for the first rawResult after the delta.
-//   - This allows users to specify loose deltas without errors, such as
-//     "100" even if there are only 3 rawResults.
-//   - However, few formats look for the last rawResult before the delta instead
-//     since it makes more sense for those.
-// Returns -1 when no delta is found:
-//  - Either because:
-//     - There are no rawResults
+// We use deltas to locate specific rawResults in the history for either:
+//  - The main delta used to target the result, which is also the end of the
+//    history, with the `show|remove` command
+//  - The delta used by the `since` configuration property to limit the start
+//    of the history
+// Deltas are resolved based on results metadata, not contents
+//  - This allows only loading the contents of results which are actually needed
+//    by the command, which is much more performant
+// Deltas are either absolute (e.g. timestamps) or relative (e.g. duration)
+//  - When relative, the main delta is relative to the end of the history,
+//   while the `since` delta is relative to the main delta.
+// The metadata and history are sorted from most to least recent.
+// When a delta is approximative, the first rawResult after (not before) the
+// delta is usually used
+//  - This allows users to specify loose deltas without errors, such as
+//    "100" even if there are only 3 rawResults.
+//  - However, few formats look for the last rawResult before the delta instead
+//    since it makes more sense for those.
+// The delta might not find any result:
+//  - This:
+//     - Fails with the main delta since the show|remove command would not
+//       make sense then
+//     - Does not fail with the `since` delta: the history is just empty
+//        - This also mean `stats.diff` is undefined
+//  - This can be due to:
+//     - The history being empty
 //     - The delta points to a time in the future or to a non-existing reference
-//  - If the delta has a syntax or semantics that we know is always erroneous,
-//    we throw instead
-//  - When this happens with:
-//     - `show|remove` delta: we fail hard because there is no rawResult to
-//        report
-//     - `since` configuration property: `rawResult.history` is empty
-//     - `diff` configuration property: `stats.diff` is `undefined`
-export const findByDelta = async function (
-  rawResults,
+// This is in contrast to syntactical or semantical errors which always throw.
+export const applyMainDelta = async function (metadata, { delta, cwd }) {
+  if (metadata.length === 0) {
+    throw new UserError('No previous results.')
+  }
+
+  const index = await findByDelta(metadata, delta, cwd)
+
+  if (index === -1) {
+    const deltaError = getDeltaError(delta)
+    throw new UserError(`${deltaError} matches no results.`)
+  }
+
+  return metadata.slice(0, index + 1)
+}
+
+// The `since` configuration property is used to limit the number of results
+// shown in `result.history` which is used with time series reporters.
+// `since` is used to target both the first result in time series and the one
+// used for `diff` because:
+//  - If is simpler to understand
+//  - The `diff` must be earlier than any combination in `result.history`,
+//    i.e. it makes sense to re-use `since`, and it simplifies the configuration
+// `since` is relative to the main result:
+//  - For `run`, this is the result being created.
+//  - For `show|remove`, this is the result being reported.
+//     - This ensures results reported with `show` are shown the same way as
+//       when when they were measured.
+//     - This is also simpler to understand since it always involves only two
+//       bases (the main result and the "since" result)
+// When `since` does not target any valid result, we do not show any previous
+// results nor diff.
+// The first item in `result.history` is the result targeted by `since`:
+//  - It is shown first in time series
+//     - This ensures each combination shows where it started
+//     - This allows users to visualize the `diff` by comparing the first and
+//       last item
+// The last item in `result.history` is the current result:
+//  - For `show|remove`, this is the result targeted by delta
+//  - For `run`, this is the currently measured result
+//  - This allows time series reporters to use `result.history`
+//     - This ensures each combination shows when it was last measured
+//     - This ensures the time series reflects other reporters when used
+//       together
+// We do not expose some `combination.history` property
+//  - This would complicate the data model by creating copies of the same
+//    properties.
+//  - Instead, reporters should use logic to retrieve the history of each
+//    combination
+export const applySinceDelta = async function (metadata, { since, cwd }) {
+  if (metadata.length === 0) {
+    return []
+  }
+
+  const index = await findByDelta(metadata, since, cwd)
+
+  if (index === -1) {
+    return []
+  }
+
+  return metadata.slice(index)
+}
+
+const findByDelta = async function (
+  metadata,
   { type, value, delta, name },
   cwd,
 ) {
-  if (rawResults.length === 0) {
-    return -1
-  }
-
-  const { find } = findFormat(type)
+  const format = findFormat(type)
 
   try {
-    return await find(rawResults, value, cwd)
+    return await format.find(metadata, value, cwd)
   } catch (error) {
     throw addDeltaError(error, { type, delta, name })
   }

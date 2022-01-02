@@ -7,8 +7,7 @@ export const HISTORY_CONFIG = {
     describe: `Specifies which result to compare with when using the "showDiff"
 or "limit" configuration properties.
 
-That result and all later ones will be shown in the report.
-This allows reporting several previous results at once.
+Also specifies the first result shown in the history.
 
 Can be:
   - 1 (default): last result

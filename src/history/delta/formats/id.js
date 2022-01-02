@@ -9,8 +9,8 @@ const parseId = function (delta) {
   return delta
 }
 
-const findById = function (rawResults, id) {
-  return rawResults.findIndex((rawResult) => rawResult.id === id)
+const findById = function (metadata, id) {
+  return metadata.findIndex((metadatum) => metadatum.id === id)
 }
 
 export const idFormat = {

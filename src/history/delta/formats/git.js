@@ -2,8 +2,17 @@ import { execa } from 'execa'
 
 import { UserError } from '../../../error/main.js'
 
+// Deltas can be git commits, tags or branches.
+const parseGit = function (delta) {
+  if (typeof delta !== 'string') {
+    return
+  }
+
+  return delta
+}
+
 // Find a rawResult by git reference (commit/branch/tag).
-export const findByGitRef = async function (rawResults, gitRef, cwd) {
+const findByGit = async function (metadata, gitRef, cwd) {
   const { stdout, stderr, message, failed } = await execa(
     'git',
     [
@@ -21,7 +30,7 @@ export const findByGitRef = async function (rawResults, gitRef, cwd) {
   const timestamp = Number(stdout) * SECS_TO_MSECS
   checkTimestamp({ timestamp, stderr, message, failed, cwd })
 
-  return rawResults.findIndex((rawResult) => rawResult.timestamp >= timestamp)
+  return metadata.findIndex((metadatum) => metadatum.timestamp >= timestamp)
 }
 
 const SECS_TO_MSECS = 1e3
@@ -50,4 +59,11 @@ const UNKNOWN_REV_MESSAGE = 'unknown revision'
 
 const isTimestamp = function (timestamp, failed) {
   return !failed && Number.isInteger(timestamp) && timestamp > 0
+}
+
+export const gitFormat = {
+  type: 'git',
+  message: 'git commit, tag or branch',
+  parse: parseGit,
+  find: findByGit,
 }

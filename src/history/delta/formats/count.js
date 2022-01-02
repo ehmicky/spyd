@@ -15,12 +15,12 @@ const parseCount = function (delta) {
   return delta
 }
 
-const findByCount = function (rawResults, count) {
+const findByCount = function (metadata, count) {
   if (count === 0) {
     return -1
   }
 
-  const index = rawResults.length - count
+  const index = metadata.length - count
 
   if (index < 0) {
     return 0
