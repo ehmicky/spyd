@@ -11,7 +11,7 @@ export const compressRawResult = function ({
 }) {
   const system = compressSystem(systems)
   const combinationsA = combinations.map((combination) =>
-    compressCombination({ combination }),
+    compressCombination(combination),
   )
   return { ...rawResult, system, combinations: combinationsA }
 }
@@ -23,12 +23,10 @@ const compressSystem = function ([{ dimensions, ...system }]) {
 }
 
 const compressCombination = function ({
-  combination: {
-    dimensions,
-    stats,
-    stats: { histogram, quantiles, mean },
-    ...combination
-  },
+  dimensions,
+  stats,
+  stats: { histogram, quantiles, mean },
+  ...combination
 }) {
   const dimensionsA = mapObj(dimensions, compressDimension)
   const histogramA = compressHistogram(histogram, mean)
