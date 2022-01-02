@@ -7,7 +7,12 @@ import { findByDelta } from '../delta/find.js'
 import { compressRawResult } from '../normalize/compress.js'
 import { loadRawResults } from '../normalize/load.js'
 
-import { addRawResult, removeRawResult, listRawResults } from './results.js'
+import {
+  addRawResult,
+  removeRawResult,
+  listMetadata,
+  fetchResults,
+} from './results.js'
 
 // Save rawResults so they can be compared or shown later.
 // We do not save stopped benchmarks.
@@ -52,7 +57,9 @@ export const getFromHistory = async function (config) {
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in rawResults preview
 export const listHistory = async function ({ cwd, select }) {
-  const rawResults = await listRawResults(cwd)
+  const metadata = await listMetadata(cwd)
+  const ids = metadata.map(({ id }) => id)
+  const rawResults = await fetchResults(ids, cwd)
   const rawResultsA = loadRawResults(rawResults, select)
   return rawResultsA
 }

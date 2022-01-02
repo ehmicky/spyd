@@ -2,10 +2,24 @@ import { resolve } from 'path'
 
 import { getRawResults, setRawResults } from './fs.js'
 
-export const listRawResults = async function (cwd) {
+export const listMetadata = async function (cwd) {
   const dir = getDir(cwd)
   const rawResults = await getRawResults(dir)
-  return rawResults
+  return rawResults.map(getMetadatum)
+}
+
+const getMetadatum = function ({ id, timestamp }) {
+  return { id, timestamp }
+}
+
+export const fetchResults = async function (ids, cwd) {
+  const dir = getDir(cwd)
+  const rawResults = await getRawResults(dir)
+  return ids.map((id) => fetchResult(rawResults, id))
+}
+
+const fetchResult = function (rawResults, id) {
+  return rawResults.find((rawResult) => rawResult.id === id)
 }
 
 export const addRawResult = async function (rawResult, cwd) {
