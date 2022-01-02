@@ -42,19 +42,3 @@ const getDimensionId = function (combination, dimension) {
   const { id } = combination.dimensions[dimension.propName]
   return { id, dimension }
 }
-
-// Rename the `id` of a dimensionId for a given combination's dimension.
-// We ensure the property order in `dimensions` does not change, since sorting
-// of some dimensions (like systems) depend on it.
-export const setDimensionId = function (
-  combination,
-  { id, dimension: { propName } },
-) {
-  return {
-    ...combination,
-    dimensions: {
-      ...combination.dimensions,
-      [propName]: { ...combination.dimensions[propName], id },
-    },
-  }
-}

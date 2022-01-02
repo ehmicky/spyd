@@ -70,17 +70,8 @@ const RESERVED_IDS = ['not', 'and']
 // reporting.
 // Non-combination identifiers are not checked for duplicates since they are
 // not used for selection, reporting, `config.titles`, etc.
-// Identifier of previous results (which might be eventually merged to the new
-// result, for reporting) are not checked for duplicate ids:
-//  - Instead, they are namespaced with a prefix
-//  - Reasons:
-//     - This would depend on `since`, making validation fail or not depending
-//       on that configuration property
-//     - Since `since` defaults to `0`, it would not be useful most of the times
-//     - This would not work when:
-//        - Using results across multiple git branches results, since we do not
-//          load all results from all branches
-//        - Result files are manually edited
+// Identifier of previous results do not need to be checked for duplicate ids
+// since only their combinations matching the target result are kept.
 const validateDuplicateId = function ({ dimension, id }, index, allIds) {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
