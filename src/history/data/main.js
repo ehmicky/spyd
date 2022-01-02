@@ -3,7 +3,7 @@ import inquirer from 'inquirer'
 import { UserError } from '../../error/main.js'
 import { isTtyInput } from '../../report/tty.js'
 import { getDeltaError } from '../delta/error.js'
-import { findByDelta } from '../delta/main.js'
+import { findByDelta } from '../delta/find.js'
 import { compressRawResult } from '../normalize/compress.js'
 import { loadRawResults } from '../normalize/load.js'
 

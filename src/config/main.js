@@ -1,4 +1,4 @@
-import { normalizeDeltas } from '../history/delta/main.js'
+import { normalizeDeltas } from '../history/delta/normalize.js'
 
 import { addDefaultConfig } from './default.js'
 import { loadConfig } from './load/main.js'
