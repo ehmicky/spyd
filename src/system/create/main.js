@@ -16,8 +16,7 @@ import { getSystemVersions } from './versions.js'
 // All that information are automatically computed.
 // The `versions` are computed by runners.
 // A result can only have a single `system`. However, when merging results,
-// this becomes several `systems`. We persist the `systems` array directly so
-// that all results have the same shape in both our logic and reporters' logic.
+// this becomes several `systems`.
 // We purposely keep the data as raw as possible to give flexibility to the
 // reporters on how to serialize it
 //  - For example, this allows changing the reporting without changing the
@@ -49,15 +48,16 @@ export const createSystemInfo = async function (
 ) {
   const id = uuidv4()
   const timestamp = getTimestamp()
-  const system = await getSystem({ dimensions, envInfo, combinations, cwd })
-  return { id, timestamp, system }
+  const systems = await getSystems({ dimensions, envInfo, combinations, cwd })
+  return { id, timestamp, systems }
 }
 
-const getSystem = async function ({ dimensions, combinations, cwd }) {
+const getSystems = async function ({ dimensions, combinations, cwd }) {
   const versions = await getSystemVersions(combinations, cwd)
   const machine = getMachine()
   const { git, ci } = getEnvInfo(cwd)
-  return cleanObject({ dimensions, machine, git, ci, versions })
+  const system = cleanObject({ dimensions, machine, git, ci, versions })
+  return [system]
 }
 
 const getMachine = function () {

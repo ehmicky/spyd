@@ -6,7 +6,10 @@ import { createSystemInfo } from '../system/create/main.js'
 export const createResult = async function (config) {
   const combinations = await listCombinations(config)
   const previous = await listHistory(config)
-  const { id, timestamp, system } = await createSystemInfo(combinations, config)
-  const rawResult = { id, timestamp, system, combinations }
+  const { id, timestamp, systems } = await createSystemInfo(
+    combinations,
+    config,
+  )
+  const rawResult = { id, timestamp, systems, combinations }
   return { rawResult, previous }
 }

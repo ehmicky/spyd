@@ -10,10 +10,6 @@ import { setArray } from '../utils/set.js'
 // `system` objects should not contain `undefined`, so we can directly merge.
 // `git` and `machine` properties should not be deeply merged since their
 // properties relate to each other. However, `versions` should.
-export const normalizeSystems = function ({ system, ...rawResult }) {
-  return { ...rawResult, systems: [system] }
-}
-
 export const mergeSystems = function (result, previousResult) {
   const systems = appendSystem(result, previousResult)
   return { ...result, systems }
