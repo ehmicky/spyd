@@ -51,14 +51,12 @@ const addCombDefaultIds = function (combination, targetDimensions) {
   return { ...combination, dimensions }
 }
 
-const getNewDimension = function (
-  { propName, prefixName, defaultIdPrefix },
-  dimensions,
-) {
+const getNewDimension = function (targetDimension, dimensions) {
+  const { propName } = targetDimension
   const id =
     propName in dimensions
       ? dimensions[propName]
-      : { id: getDefaultId(propName, prefixName, defaultIdPrefix) }
+      : { id: getDefaultId(propName, targetDimension) }
   return [propName, id]
 }
 
@@ -77,19 +75,15 @@ const isInvalidDimensionId = function (id, propName, dimension) {
   )
 }
 
-const isDimensionDefaultId = function (
-  id,
-  propName,
-  { propName: dimensionPropName, prefixName, defaultIdPrefix },
-) {
+const isDimensionDefaultId = function (id, propName, dimension) {
   return (
-    isDimension(propName, dimensionPropName, prefixName) &&
-    id === getDefaultId(propName, prefixName, defaultIdPrefix)
+    isDimension(propName, dimension.propName, dimension.prefixName) &&
+    id === getDefaultId(propName, dimension)
   )
 }
 
 // Retrieve the default id of a dimension
-const getDefaultId = function (propName, prefixName, defaultIdPrefix) {
+const getDefaultId = function (propName, { prefixName, defaultIdPrefix }) {
   const propNameA = removePrefix(propName, prefixName)
   const propNameB = propNameA.replace(DOT_REGEXP, '_')
   return `${defaultIdPrefix}${propNameB}`
