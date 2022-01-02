@@ -44,7 +44,8 @@ const shouldRemoveFromHistory = async function (force) {
   return confirmed
 }
 
-// Get a previous rawResult by delta
+// Find the target result using the main delta.
+// Then, list all history results, after applying the `since` delta.
 export const getFromHistory = async function (config) {
   const metadata = await listMetadata(config.cwd)
   const metadataA = await applyMainDelta(metadata, config)
@@ -56,6 +57,7 @@ export const getFromHistory = async function (config) {
   return { rawResult, history: historyA }
 }
 
+// List all history results, after applying the `since` delta.
 export const listHistory = async function (config) {
   const metadata = await listMetadata(config.cwd)
   const metadataA = await applySinceDelta(metadata, config)
