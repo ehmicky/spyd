@@ -3,8 +3,8 @@ import { fileURLToPath } from 'url'
 
 import { readPackageUp } from 'read-pkg-up'
 
-import { PluginError } from '../error/main.js'
-import { spawnProcess } from '../utils/spawn.js'
+import { PluginError } from '../../error/main.js'
+import { spawnProcess } from '../../utils/spawn.js'
 
 // Add runtime versions for this runner, returned as `versions` from
 // `runner.launch()`. This is an object where:
