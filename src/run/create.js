@@ -5,7 +5,7 @@ import { createSystemInfo } from '../system/create/main.js'
 // Create a new rawResult to measure
 export const createResult = async function (config) {
   const combinations = await listCombinations(config)
-  const previous = await listHistory(config, combinations)
+  const previous = await listHistory(config)
   const { id, timestamp, system } = await createSystemInfo(combinations, config)
   const rawResult = { id, timestamp, system, combinations }
   return { rawResult, previous }

@@ -7,7 +7,7 @@ import { decompressRawResult } from './compress.js'
 import { migrateRawResults } from './migrate.js'
 
 // Normalize rawResults on load
-export const loadRawResults = function (rawResults, select, newCombinations) {
+export const loadRawResults = function (rawResults, select) {
   const rawResultsA = migrateRawResults(rawResults)
   const rawResultsB = rawResultsA.map(decompressRawResult).map(normalizeSystems)
   const rawResultsC = selectRawResults(rawResultsB, select)
