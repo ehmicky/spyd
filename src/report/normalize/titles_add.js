@@ -65,9 +65,7 @@ const addDimensionTitles = function (
 ) {
   return [
     dimensionName,
-    dimensionValueArray.map((dimensionValue) =>
-      addTitle(dimensionValue, titles),
-    ),
+    dimensionValueArray.map((id) => addTitle({ id }, titles)),
   ]
 }
 
