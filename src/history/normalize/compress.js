@@ -4,17 +4,20 @@ import mapObj from 'map-obj'
 // We try to persist everything, so that `show` report the same information.
 // We try to only persist what cannot be computed runtime.
 export const compressRawResult = function (rawResult) {
-  const system = compressSystem(rawResult.systems)
-  const combinations = rawResult.combinations.map((combination) =>
+  const rawResultA = compressSystem(rawResult)
+  const combinations = rawResultA.combinations.map((combination) =>
     compressCombination({ combination }),
   )
-  return { ...rawResult, system, combinations }
+  return { ...rawResultA, combinations }
 }
 
-const compressSystem = function ([{ dimensions, ...system }]) {
-  return Object.keys(dimensions).length === 0
-    ? system
-    : { dimensions, ...system }
+const compressSystem = function ({
+  systems: [{ dimensions, ...system }],
+  ...rawResult
+}) {
+  const systemA =
+    Object.keys(dimensions).length === 0 ? system : { dimensions, ...system }
+  return { ...rawResult, system: systemA }
 }
 
 const compressCombination = function ({
@@ -53,15 +56,19 @@ const compressBucket = function ({ start, end, frequency }, mean) {
 
 // Restore original rawResults after loading
 export const decompressRawResult = function (rawResult) {
-  const systems = decompressSystem(rawResult.system)
-  const combinations = rawResult.combinations.map((combination) =>
+  const rawResultA = decompressSystem(rawResult)
+  const combinations = rawResultA.combinations.map((combination) =>
     decompressCombination({ combination }),
   )
-  return { ...rawResult, systems, combinations }
+  return { ...rawResultA, combinations }
 }
 
-const decompressSystem = function ({ dimensions = {}, ...system }) {
-  return [{ ...system, dimensions }]
+const decompressSystem = function ({
+  system,
+  system: { dimensions = {} },
+  ...rawResult
+}) {
+  return { ...rawResult, systems: [{ ...system, dimensions }] }
 }
 
 const decompressCombination = function ({
