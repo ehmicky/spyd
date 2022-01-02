@@ -92,12 +92,17 @@ const addNamespace = function (
   separators = '_',
 ) {
   const { id, dimension } = combDimensionId
-  const idA = `${dimension.propName}${separators}${id}`
+  const propName = dimension.propName.replace(DOTS_REGEXP, '_')
+  const idA = `${propName}${separators}${id}`
   const combDimensionIdA = { id: idA, dimension }
   return hasCrossDimensionsIds(dimensionsIds, combDimensionIdA)
     ? addNamespace(combDimensionId, dimensionsIds, `${separators}_`)
     : combDimensionIdA
 }
+
+// We do not allow dots because they are used in CLI flags for nested
+// configuration properties.
+const DOTS_REGEXP = /\./gu
 
 const addDimensionId = function (dimensionsIds, combDimensionId) {
   const similarDimensionId = findSameId(dimensionsIds, combDimensionId)
