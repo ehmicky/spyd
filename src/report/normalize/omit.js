@@ -6,24 +6,24 @@ import omit from 'omit.js'
 // configuration property because it makes it easier to enable/disable each
 // property both in CLI flags and in `reporterConfig.{reporterId}.*` properties.
 export const omitCombinationsProps = function (
-  { combinations, ...result },
+  result,
   { showPrecision, showDiff, debugStats },
 ) {
-  const combinationsA = combinations.map((combination) =>
+  const combinations = result.combinations.map((combination) =>
     omitCombinationProps(combination, { showDiff, showPrecision, debugStats }),
   )
-  return { ...result, combinations: combinationsA }
+  return { ...result, combinations }
 }
 
 const omitCombinationProps = function (
-  { stats, ...combination },
+  combination,
   { showPrecision, showDiff, debugStats },
 ) {
-  const statsA = omitMeanProps(stats, showPrecision)
-  const statsB = maybeOmit(statsA, showPrecision, PRECISION_STATS_PROPS)
-  const statsC = maybeOmit(statsB, showDiff, DIFF_STAT_PROPS)
-  const statsD = maybeOmit(statsC, debugStats, DEBUG_STATS_PROPS)
-  return { ...combination, stats: statsD }
+  const stats = omitMeanProps(combination.stats, showPrecision)
+  const statsA = maybeOmit(stats, showPrecision, PRECISION_STATS_PROPS)
+  const statsB = maybeOmit(statsA, showDiff, DIFF_STAT_PROPS)
+  const statsC = maybeOmit(statsB, debugStats, DEBUG_STATS_PROPS)
+  return { ...combination, stats: statsC }
 }
 
 // When `showPrecision` is `true`, we show `meanMin|meanMax` instead of `mean`.
