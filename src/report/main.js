@@ -17,24 +17,14 @@ import { startReporters, endReporters } from './start_end.js'
 //    the final `reportCompute()` is not performed after the preview ended
 //    after clearing the screen
 export const reportResult = async function (rawResult, previous, config) {
-  const {
-    result,
-    history,
-    noDimensions,
-    config: configA,
-  } = await reportStart(rawResult, previous, config)
+  const startProps = await reportStart(rawResult, previous, config)
 
   try {
-    const { programmaticResult, contents } = await reportCompute({
-      result,
-      history,
-      noDimensions,
-      config: configA,
-    })
+    const { programmaticResult, contents } = await reportCompute(startProps)
     await reportPrint(contents)
     return programmaticResult
   } finally {
-    await reportEnd(configA)
+    await reportEnd(startProps.config)
   }
 }
 
@@ -57,53 +47,25 @@ export const reportStart = async function (rawResult, previous, config) {
 // Report preview results in `run` command.
 // The report output is not printed right away. Instead, it is printed by the
 // preview refresh function at regular intervals.
-export const reportPreview = async function ({
-  result,
-  history,
-  noDimensions,
-  config,
-}) {
-  const contents = await computeContents({
-    result,
-    history,
-    noDimensions,
-    config,
-  })
+export const reportPreview = async function (startProps) {
+  const contents = await computeContents(startProps)
   const contentsA = finalizeContents(contents)
   return contentsA.length === 0 ? '' : contentsA[0].content
 }
 
 // Compute the report contents.
 // Unlike `reportPreview`, the first reporter is the programmatic one.
-export const reportCompute = async function ({
-  result,
-  history,
-  noDimensions,
-  config,
-}) {
-  const [{ result: programmaticResult }, ...contents] = await computeContents({
-    result,
-    history,
-    noDimensions,
-    config,
-  })
+export const reportCompute = async function (startProps) {
+  const [{ result: programmaticResult }, ...contents] = await computeContents(
+    startProps,
+  )
   const contentsA = finalizeContents(contents)
   return { programmaticResult, contents: contentsA }
 }
 
-const computeContents = async function ({
-  result,
-  history,
-  noDimensions,
-  config,
-}) {
-  const configA = normalizeComputedResult({
-    result,
-    history,
-    noDimensions,
-    config,
-  })
-  const contents = await getContents(configA)
+const computeContents = async function (startProps) {
+  const config = normalizeComputedResult(startProps)
+  const contents = await getContents(config)
   return contents
 }
 
