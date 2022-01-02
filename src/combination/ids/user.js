@@ -1,13 +1,14 @@
+import { getMergeIdsArray } from '../../system/merge/id.js'
 import { getInputIds } from '../inputs.js'
 
 import { getCombsDimensionsIds } from './get.js'
 
 // Retrieve user-defined identifiers
-export const getUserIds = function (combinations, inputsList) {
+export const getUserIds = function (combinations, inputsList, merge) {
   const dimensionsIds = getCombsDimensionsIds(combinations)
     .filter(isUserId)
     .map(getCombinationUserId)
-  const nonCombinationsIds = getNonCombinationsIds(inputsList)
+  const nonCombinationsIds = getNonCombinationsIds(inputsList, merge)
   return [...dimensionsIds, ...nonCombinationsIds]
 }
 
@@ -20,15 +21,23 @@ const getCombinationUserId = function ({ dimension: { messageName }, id }) {
 }
 
 // Identifiers that do not relate to dimensions/combinations
-const getNonCombinationsIds = function (inputsList) {
+const getNonCombinationsIds = function (inputsList, merge) {
   return NON_COMBINATION_IDS.flatMap(({ messageName, getIds }) =>
-    listNonCombinationIds(messageName, getIds, inputsList),
+    listNonCombinationIds({ messageName, getIds, inputsList, merge }),
   )
 }
 
-const listNonCombinationIds = function (messageName, getIds, inputsList) {
-  const ids = getIds(inputsList)
+const listNonCombinationIds = function ({
+  messageName,
+  getIds,
+  inputsList,
+  merge,
+}) {
+  const ids = getIds({ inputsList, merge })
   return ids.map((id) => ({ messageName, id }))
 }
 
-const NON_COMBINATION_IDS = [{ messageName: 'input', getIds: getInputIds }]
+const NON_COMBINATION_IDS = [
+  { messageName: 'input', getIds: getInputIds },
+  { messageName: '"merge" configuration property', getIds: getMergeIdsArray },
+]

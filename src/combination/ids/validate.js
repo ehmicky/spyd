@@ -5,8 +5,12 @@ import { getCombsDimensionsIds } from './get.js'
 import { getUserIds } from './user.js'
 
 // Validate combination identifiers.
-export const validateCombinationsIds = function (combinations, inputsList) {
-  const userIds = getUserIds(combinations, inputsList)
+export const validateCombinationsIds = function (
+  combinations,
+  inputsList,
+  merge,
+) {
+  const userIds = getUserIds(combinations, inputsList, merge)
   userIds.forEach(validateUserIds)
 
   const dimensionsIds = getCombsDimensionsIds(combinations)
@@ -47,7 +51,9 @@ const USER_ID_INVALID_START = '-'
 // We do not allow empty strings.
 // We do not allow dots because they are used in CLI flags for nested
 // configuration properties.
-// We forbid other characters for forward compatibility.
+// We forbid other characters:
+//  - For forward compatibility
+//  - To use them as filenames (e.g. "merge" identifiers)
 const USER_ID_REGEXP = /^\w[\w-]*$/u
 
 const validateReservedIds = function (id, messageName) {

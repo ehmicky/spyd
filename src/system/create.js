@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { cleanObject } from '../utils/clean.js'
 import { groupBy } from '../utils/group.js'
 
+import { getMergeIdProp } from './merge/id.js'
 import { getTimestamp } from './timestamp.js'
 
 // Users can specify a `system` configuration property.
@@ -43,17 +44,10 @@ import { getTimestamp } from './timestamp.js'
 //    and show them in the footer.
 export const createSystemInfo = function (config) {
   const id = uuidv4()
-  const mergeId = getMergeId(config)
+  const mergeId = getMergeIdProp(config)
   const timestamp = getTimestamp()
   const systems = getSystems(config)
   return { id, ...mergeId, timestamp, systems }
-}
-
-// The value is an opaque identifier.
-// In order to inject values to, shell variables or JavaScript configuration
-// files can be used.
-const getMergeId = function ({ merge }) {
-  return merge === undefined ? {} : { mergeId: merge }
 }
 
 const getSystems = function ({ cwd, system: dimensions }) {
