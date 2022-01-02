@@ -1,4 +1,5 @@
 import { FORMATS } from '../../report/formats/list.js'
+import { cleanObject } from '../../utils/clean.js'
 
 // Depending on the format, the footer is either:
 //  - Appended as a string to the reporter's contents
@@ -22,10 +23,15 @@ export const applyFooterFormat = function (footer, format) {
 // This format means the `footer()` method of each format does not need to
 // know the meaning of the footer, only how to print this simple structure.
 const arrifyFooter = function ({ Id, Timestamp, systems }) {
-  const systemsA = systems.map(addTitle)
-  return Id === undefined ? systemsA : [...systemsA, { Id, Timestamp }]
+  return [...systems.map(addTitle), { Id, Timestamp }]
+    .map(cleanObject)
+    .filter(hasProps)
 }
 
 const addTitle = function ({ title, props }) {
   return title === '' ? props : { [title]: props }
+}
+
+const hasProps = function (props) {
+  return Object.keys(props).length !== 0
 }
