@@ -23,16 +23,16 @@ export const run = async function (configFlags) {
 // Show a previous result
 export const show = async function (configFlags) {
   const config = await getConfig('show', configFlags)
-  const { rawResult, previous } = await getFromHistory(config)
-  const programmaticResult = await reportResult(rawResult, previous, config)
+  const { rawResult, history } = await getFromHistory(config)
+  const programmaticResult = await reportResult(rawResult, history, config)
   return programmaticResult
 }
 
 // Remove a previous result
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
-  const { rawResult, previous } = await getFromHistory(config)
-  const programmaticResult = await reportResult(rawResult, previous, config)
+  const { rawResult, history } = await getFromHistory(config)
+  const programmaticResult = await reportResult(rawResult, history, config)
   await removeFromHistory(rawResult, config)
   return programmaticResult
 }

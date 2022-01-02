@@ -1,5 +1,4 @@
 import { getNoDimensions } from '../combination/filter.js'
-import { applySince } from '../history/delta/since.js'
 
 import { getContents } from './contents.js'
 import { finalizeContents } from './finalize.js'
@@ -16,8 +15,8 @@ import { startReporters, endReporters } from './start_end.js'
 //  - This prevents a clear screen flash at the end, by ensuring slow logic like
 //    the final `reportCompute()` is not performed after the preview ended
 //    after clearing the screen
-export const reportResult = async function (rawResult, previous, config) {
-  const startProps = await reportStart(rawResult, previous, config)
+export const reportResult = async function (rawResult, history, config) {
+  const startProps = await reportStart(rawResult, history, config)
 
   try {
     const { programmaticResult, contents } = await reportCompute(startProps)
@@ -29,19 +28,17 @@ export const reportResult = async function (rawResult, previous, config) {
 }
 
 // Start reporting
-export const reportStart = async function (rawResult, previous, config) {
-  const [history, configA] = await Promise.all([
-    applySince(rawResult, previous, config),
-    startReporters(config),
-  ])
+export const reportStart = async function (rawResult, history, config) {
+  const configA = await startReporters(config)
+  const historyA = [...history, rawResult]
   const noDimensions = getNoDimensions(rawResult.combinations)
   const { result, config: configB } = normalizeEarlyResult({
     rawResult,
-    history,
+    history: historyA,
     noDimensions,
     config: configA,
   })
-  return { result, history, noDimensions, config: configB }
+  return { result, history: historyA, noDimensions, config: configB }
 }
 
 // Report preview results in `run` command.

@@ -25,13 +25,13 @@ import {
 export const performRun = async function (config) {
   const previewState = initPreview(config)
 
-  const { rawResult, previous } = await createResult(config)
+  const { rawResult, history } = await createResult(config)
   const {
     result,
-    history,
+    history: historyA,
     noDimensions,
     config: configA,
-  } = await reportStart(rawResult, previous, config)
+  } = await reportStart(rawResult, history, config)
 
   try {
     const {
@@ -40,7 +40,7 @@ export const performRun = async function (config) {
       contents,
     } = await previewAndMeasure({
       result,
-      history,
+      history: historyA,
       noDimensions,
       previewState,
       config: configA,
