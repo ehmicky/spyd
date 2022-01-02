@@ -65,11 +65,6 @@ export const getFromHistory = async function (config) {
 
 // List all history results, after applying the `since` delta.
 export const listHistory = async function (config) {
-  // Performance optimization
-  if (config.since === 0) {
-    return []
-  }
-
   const metadata = await listSortedMetadata(config)
   const metadataA = await applySinceDelta(metadata, config)
   const history = await fetchHistory(metadataA, config)
@@ -87,11 +82,6 @@ const listSortedMetadata = async function ({ cwd }) {
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in rawResults preview
 const fetchHistory = async function (metadata, { cwd }) {
-  // Performance optimization
-  if (metadata.length === 0) {
-    return []
-  }
-
   const rawResults = await fetchRawResults(metadata, cwd)
   const history = loadRawResults(rawResults)
   return history
