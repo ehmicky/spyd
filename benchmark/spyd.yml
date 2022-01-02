@@ -4,6 +4,7 @@ inputs:
 select: not network slow uniform exponential growing
 tasks: tasks.js
 showPrecision: true
+showSystem: false
 system:
   machine: one
   cluster: blue
