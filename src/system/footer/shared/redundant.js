@@ -18,11 +18,6 @@ export const skipRedundantInfo = function (dimensionsArray, systems) {
   )
 }
 
-// Sometimes, removing dimensions can result in several equivalent but different
-// result depending on the order in which dimensions are iterated.
-//  - We iterate from the last to the first dimensions, so that the last
-//    dimensions are removed instead of the first ones, since the first ones
-//    are more likely to be more significant for users.
 // eslint-disable-next-line max-params
 const skipRedundantDimensions = function (
   systems,
@@ -30,7 +25,7 @@ const skipRedundantDimensions = function (
   dimensions,
   index,
 ) {
-  return Object.keys(dimensions).reduceRight(
+  return Object.keys(dimensions).reduce(
     skipRedundantDimension.bind(undefined, { systems, index }),
     dimensionsArray,
   )

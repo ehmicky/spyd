@@ -1,39 +1,25 @@
 import sortOn from 'sort-on'
 
-export const sortDimensionsArray = function (dimensionsArray, dimensionNames) {
+export const sortDimensionsArray = function (dimensionsArray) {
   // eslint-disable-next-line fp/no-mutating-methods
   return dimensionsArray
-    .map(sortDimensionsEntries.bind(undefined, dimensionNames))
+    .map(sortDimensionsEntries)
     .sort(compareDimensionsEntries)
 }
 
 // Sort each dimension within a given `dimensions` by its dimension name.
 // Then sort each dimension value's array item.
-const sortDimensionsEntries = function (dimensionNames, dimensionsEntries) {
-  const dimensionsEntriesA = dimensionsEntries.map((dimensionsEntry) =>
-    addDimensionNameOrder(dimensionsEntry, dimensionNames),
-  )
-  const dimensionsEntriesB = sortOn(dimensionsEntriesA, ['2'])
-  return dimensionsEntriesB.map(sortDimensionValueArray)
-}
-
-const addDimensionNameOrder = function (
-  [dimensionName, dimensionValueArray],
-  dimensionNames,
-) {
-  const dimensionNameIndex = dimensionNames.indexOf(dimensionName)
-  const dimensionNameOrder =
-    dimensionNameIndex === -1 ? Number.POSITIVE_INFINITY : dimensionNameIndex
-  return [dimensionName, dimensionValueArray, dimensionNameOrder]
+const sortDimensionsEntries = function (dimensionsEntries) {
+  const dimensionsEntriesA = sortOn(dimensionsEntries, ['0'])
+  return dimensionsEntriesA.map(sortDimensionValueArray)
 }
 
 const sortDimensionValueArray = function ([
   dimensionName,
   dimensionValueArray,
-  dimensionNameOrder,
 ]) {
   // eslint-disable-next-line fp/no-mutating-methods
-  return [dimensionName, [...dimensionValueArray].sort(), dimensionNameOrder]
+  return [dimensionName, [...dimensionValueArray].sort()]
 }
 
 // Sort the `dimensions` in each system's title, when it has several:
@@ -71,14 +57,14 @@ const compareDimensionsEntries = function (
 
 // eslint-disable-next-line complexity
 const compareDimensionsEntry = function (
-  [, dimensionValueArrayA, dimensionNameOrderA],
-  [, dimensionValueArrayB, dimensionNameOrderB],
+  [dimensionNameA, dimensionValueArrayA],
+  [dimensionNameB, dimensionValueArrayB],
 ) {
-  if (dimensionNameOrderA > dimensionNameOrderB) {
+  if (dimensionNameA > dimensionNameB) {
     return 1
   }
 
-  if (dimensionNameOrderA < dimensionNameOrderB) {
+  if (dimensionNameA < dimensionNameB) {
     return -1
   }
 

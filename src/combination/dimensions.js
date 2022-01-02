@@ -44,8 +44,9 @@ const isUniqueCombDimension = function (combDimension, index, combDimensions) {
 // Retrieve one combination's dimensions.
 // Array order follows:
 //  - `DIMENSIONS` order
-//  - For dynamic dimensions, property order, i.e. user order specified in
-//    configuration
+//  - For dynamic dimensions, property order by lexicographic order
+//     - We do not use the configuration property order because it is too hard
+//       to implement
 export const getCombDimensions = function (combination) {
   return DIMENSIONS.flatMap((dimension) => getDimension(combination, dimension))
 }
@@ -57,8 +58,10 @@ const getDimension = function (
   { dimensions },
   { propName: dimensionPropName, prefixName, createdByUser },
 ) {
+  // eslint-disable-next-line fp/no-mutating-methods
   return Object.keys(dimensions)
     .filter((propName) => isDimension(propName, dimensionPropName, prefixName))
+    .sort()
     .map((propName) => ({
       propName,
       messageName: getMessageName(propName, prefixName),
