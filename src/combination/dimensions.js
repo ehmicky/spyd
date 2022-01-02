@@ -6,9 +6,6 @@ import { hasPrefix, removePrefix } from './prefix.js'
 //  - are printed when naming the combination
 //     - in reporters, preview bottom bar, `dev`, error messages
 //     - in some of those cases, `titles` are applied too
-// The order is significant as it defines:
-//  - The sorting order of combinations in reporters
-//  - The order of dimensions when printed
 const DIMENSIONS = [
   {
     // Internal persisted property name.
@@ -29,6 +26,13 @@ const DIMENSIONS = [
   },
 ]
 
+// Find a dimension's order
+export const findDimensionIndex = function (propName) {
+  return DIMENSIONS.findIndex((dimension) =>
+    isDimension(propName, dimension.propName, dimension.prefixName),
+  )
+}
+
 // Retrieve several combinations' dimensions.
 // Array order follows same order as `getCombDimensions()`
 export const getCombsDimensions = function (combinations) {
@@ -42,11 +46,6 @@ const isUniqueCombDimension = function (combDimension, index, combDimensions) {
 }
 
 // Retrieve one combination's dimensions.
-// Array order follows:
-//  - `DIMENSIONS` order
-//  - For dynamic dimensions, property order by lexicographic order
-//     - We do not use the configuration property order because it is too hard
-//       to implement
 export const getCombDimensions = function (combination) {
   return DIMENSIONS.flatMap((dimension) => getDimension(combination, dimension))
 }
