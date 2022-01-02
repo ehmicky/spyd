@@ -10,6 +10,15 @@ import { groupBy } from '../utils/group.js'
 
 import { getTimestamp } from './timestamp.js'
 
+// Create the top properties of a new result
+export const createTopProps = function (config) {
+  const id = uuidv4()
+  const mergeId = getMergeIdProp(config)
+  const timestamp = getTimestamp()
+  const system = listSystem(config)
+  return { id, ...mergeId, timestamp, systems: [system] }
+}
+
 // Users can specify a `system` configuration property.
 // This is a combination dimension meant to compare any environment differences,
 // outside of spyd: hardware, OS, git branch, environment variables, etc.
@@ -42,19 +51,11 @@ import { getTimestamp } from './timestamp.js'
 //  - I.e. `system` is an empty object
 //  - Results without system dimensions still persist their system information
 //    and show them in the footer.
-export const createSystemInfo = function (config) {
-  const id = uuidv4()
-  const mergeId = getMergeIdProp(config)
-  const timestamp = getTimestamp()
-  const systems = getSystems(config)
-  return { id, ...mergeId, timestamp, systems }
-}
-
-const getSystems = function ({ cwd, system: dimensions }) {
+const listSystem = function ({ cwd, system: dimensions }) {
   const machine = getMachine()
   const { git, ci } = getEnvInfo(cwd)
   const system = cleanObject({ dimensions, machine, git, ci })
-  return [system]
+  return system
 }
 
 const getMachine = function () {

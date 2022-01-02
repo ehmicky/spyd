@@ -1,7 +1,7 @@
 import { listCombinations } from '../combination/list.js'
 import { listHistory } from '../history/data/main.js'
 import { normalizeRawResults } from '../history/normalize/load.js'
-import { createSystemInfo } from '../system/create.js'
+import { createTopProps } from '../system/create.js'
 import { addSystemVersions } from '../system/versions.js'
 
 // Create a new rawResult to measure
@@ -21,6 +21,6 @@ export const createResult = async function (config) {
 
 const createRawResult = async function (config) {
   const combinations = await listCombinations(config)
-  const { id, mergeId, timestamp, systems } = createSystemInfo(config)
-  return { id, mergeId, timestamp, systems, combinations }
+  const topProps = createTopProps(config)
+  return { ...topProps, combinations }
 }
