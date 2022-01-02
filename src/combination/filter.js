@@ -23,15 +23,25 @@ const getCombinationDimensions = function ({ dimensions }) {
 
 // Same with already computed dimensions
 export const getCombsNoDimensions = function (dimensionsArray) {
-  const propNames = Object.keys(dimensionsArray[0])
-  return propNames.filter((propName) =>
-    isNoDimensions(dimensionsArray, propName),
+  const dimensionNames = [...new Set(dimensionsArray.flatMap(Object.keys))]
+  return dimensionNames.filter((dimensionName) =>
+    isNoDimensions(dimensionsArray, dimensionName),
   )
 }
 
-const isNoDimensions = function (dimensionsArray, propName) {
-  const { id } = dimensionsArray[0][propName]
-  return dimensionsArray.every((dimensions) => dimensions[propName].id === id)
+const isNoDimensions = function (dimensionsArray, dimensionName) {
+  const isSparseDimension = dimensionsArray.some(
+    (dimensions) => dimensions[dimensionName] === undefined,
+  )
+
+  if (isSparseDimension) {
+    return false
+  }
+
+  const { id } = dimensionsArray[0][dimensionName]
+  return dimensionsArray.every(
+    (dimensions) => dimensions[dimensionName].id === id,
+  )
 }
 
 // Filter `noDimensions` from result, during reporting.
