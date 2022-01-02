@@ -43,19 +43,21 @@ import { getTimestamp } from './timestamp.js'
 //    and show them in the footer.
 export const createSystemInfo = function (config) {
   const id = uuidv4()
-  const mergeId = getMergeId(id, config)
+  const mergeId = getMergeId(config)
   const timestamp = getTimestamp()
   const systems = getSystems(config)
-  return { id, mergeId, timestamp, systems }
+  return { id, ...mergeId, timestamp, systems }
 }
 
-// `result.mergeId` defaults to `result.id`. This allows merging to previous
-// results even when the user did not previously intend to.
+// `result.mergeId` defaults to `result.id`.
+//  - This allows merging to previous results even when the user did not
+//    previously intend to
+//  - However, the default value is assigned at load time, it is not persisted
 // The value is an opaque identifier.
 // In order to inject values to, shell variables or JavaScript configuration
 // files can be used.
-const getMergeId = function (id, { merge = id }) {
-  return merge
+const getMergeId = function ({ merge }) {
+  return merge === undefined ? {} : { mergeId: merge }
 }
 
 const getSystems = function ({ cwd, system: dimensions }) {
