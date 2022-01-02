@@ -11,10 +11,10 @@ That result and all later ones will be shown in the report.
 This allows reporting several previous results at once.
 
 Can be:
-  - 0 (default): compare with last result but do not report any previous results
-  - 1: last result
+  - 1 (default): last result
   - an integer: {integer}-th last result
   - "first": first result
+  - 0: no result
   - a date|time: like "yyyy-mm-dd" or "yyyy-mm-dd hh:mm:ss"
   - a duration: like "1m", "5d", "1 month" or "1y"
   - a result id

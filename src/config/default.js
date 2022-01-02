@@ -35,7 +35,7 @@ export const DEFAULT_CONFIG = {
   reporterConfig: {},
   limit: [],
   delta: 1,
-  since: 0,
+  since: 1,
   titles: {},
   showTitles: false,
   showPrecision: false,
