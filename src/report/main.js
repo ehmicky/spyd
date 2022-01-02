@@ -1,5 +1,5 @@
 import { getNoDimensions } from '../combination/filter.js'
-import { applySince } from '../history/since/main.js'
+import { applySince } from '../history/delta/since.js'
 
 import { getContents } from './contents.js'
 import { finalizeContents } from './finalize.js'

@@ -1,4 +1,4 @@
-import { findByDelta } from '../delta/main.js'
+import { findByDelta } from './main.js'
 
 // The `since` configuration property is used to limit the number of results
 // shown in `result.history` which is used with time series reporters.
