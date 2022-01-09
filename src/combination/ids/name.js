@@ -26,7 +26,7 @@ export const getCombinationNameColor = function (combination, noDimensions) {
     .join(NAME_SEPARATOR_COLOR)
 }
 
-const getCombinationName = function (combination, noDimensions) {
+export const getCombinationName = function (combination, noDimensions) {
   const combinationA = omitCombNoDimensions(combination, noDimensions)
   return getCombDimensionsIds(combinationA)
     .map(getNamePart)

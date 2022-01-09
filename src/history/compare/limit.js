@@ -1,5 +1,6 @@
-import { getCombinationPrefix } from '../../combination/ids/name.js'
+import { getCombinationName } from '../../combination/ids/name.js'
 import { UserError } from '../../error/main.js'
+import { groupBy } from '../../utils/group.js'
 
 import { isPositiveLimit } from './parse.js'
 
@@ -38,40 +39,39 @@ export const checkLimits = function ({ combinations }) {
   throw new UserError(limitErrors)
 }
 
-const isOverLimit = function ({ stats: { diffLimit } }) {
-  return diffLimit !== undefined
+const isOverLimit = function (combination) {
+  return getDiffLimit(combination) !== undefined
 }
 
 const getLimitErrors = function (combinations) {
-  return combinations
-    .map((combination) => getLimitError({ combination }))
-    .join('\n\n')
+  const combinationsGroups = Object.values(groupBy(combinations, getDiffLimit))
+  return combinationsGroups.map(getLimitError).join('\n')
+}
+
+const getLimitError = function (combinations) {
+  const diffLimit = getDiffLimit(combinations[0])
+  const diffLimitStr = Math.abs(diffLimit) * PERCENTAGE_RATIO
+  const signStr = isPositiveLimit(diffLimit) ? 'slower' : 'faster'
+  const combinationLimits = combinations.map(getCombinationLimit).join(', ')
+  return `The following must be at most ${diffLimitStr}% ${signStr}: ${combinationLimits}`
+}
+
+const getDiffLimit = function ({ stats: { diffLimit } }) {
+  return diffLimit
 }
 
 // `getCombinationName` passes an empty `noDimensions` since `dimensions` are
 // already filtered out in `programmaticResult`.
-const getLimitError = function ({
-  combination,
-  combination: {
-    stats: { diff, diffLimit },
-  },
-}) {
-  const combinationPrefix = getCombinationPrefix(combination, [])
-  const diffLimitStr = Math.abs(diffLimit) * PERCENTAGE_RATIO
-  const diffStr = serializeDiff(diff.raw)
-  const higherStr = isPositiveLimit(diffLimit) ? 'higher' : 'lower'
-  return `${combinationPrefix}The duration should be at most ${diffLimitStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
+const getCombinationLimit = function (combination) {
+  const combinationName = getCombinationName(combination, [])
+  const diffStr = serializeDiff(combination.stats.diff.raw)
+  return `${combinationName} (${diffStr}%)`
 }
 
 const serializeDiff = function (diff) {
   const percentage = Math.abs(diff) * PERCENTAGE_RATIO
-  return percentage
-    .toPrecision(PERCENTAGE_PRECISION)
-    .replace(ONLY_ZEROS_REGEXP, '')
-    .replace(TRAILING_ZEROS_REGEXP, '$1')
+  return percentage.toFixed(PERCENTAGE_PRECISION)
 }
 
 const PERCENTAGE_RATIO = 1e2
-const PERCENTAGE_PRECISION = 2
-const ONLY_ZEROS_REGEXP = /\.0+/gu
-const TRAILING_ZEROS_REGEXP = /(\.\d*)0+$/gu
+const PERCENTAGE_PRECISION = 1
