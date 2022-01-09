@@ -17,24 +17,33 @@ const mergeVersionsProp = function (versions, previousVersions, propName) {
   const value = mergeVersionsValue(
     versions[propName],
     previousVersions[propName],
+    propName,
   )
   return [propName, value]
 }
 
-const mergeVersionsValue = function (values, previousValue) {
+const mergeVersionsValue = function (values, previousValue, propName) {
+  if (NO_CONCAT_VERSIONS.has(propName) || previousValue === undefined) {
+    return values
+  }
+
   if (values === undefined) {
     return previousValue
   }
 
-  if (previousValue === undefined) {
-    return values
-  }
+  return mergeValues(values, previousValue)
+}
 
+const mergeValues = function (values, previousValue) {
   const valuesArray = values.split(VERSIONS_VALUE_SEPARATOR)
   return valuesArray.includes(previousValue)
     ? values
     : // eslint-disable-next-line fp/no-mutating-methods
       [...valuesArray, previousValue].sort().join(VERSIONS_VALUE_SEPARATOR)
 }
+
+// Some versions are too verbose when concatenated, so only keep the most
+// recent value
+const NO_CONCAT_VERSIONS = new Set(['Spyd'])
 
 export const VERSIONS_VALUE_SEPARATOR = ', '
