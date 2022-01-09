@@ -2,6 +2,40 @@ import omit from 'omit.js'
 
 import { pick } from '../utils/pick.js'
 
+// We only expose specific properties to reporters.
+// For example, we do not expose subId.
+export const pickTopProps = function (result) {
+  return pick(result, REPORTED_TOP_PROPS)
+}
+
+const REPORTED_TOP_PROPS = [
+  'id',
+  'timestamp',
+  'combinations',
+  'history',
+  'screenWidth',
+  'screenHeight',
+]
+
+// Same as `pickToProps()` but for combinations
+export const pickCombProps = function (result) {
+  const combinations = result.combinations.map((combination) =>
+    pick(combination, REPORTED_COMB_PROPS),
+  )
+  return { ...result, combinations }
+}
+
+const REPORTED_COMB_PROPS = ['dimensions', 'stats']
+
+// Systems/footers are only used in the target result, not the history results,
+// since they are not very useful for those.
+//  - History results keep their metadata properties since they are useful to
+//    display as header in time series.
+//  - The target result does not not, since the footer should be used instead
+export const omitMetadataFooterProps = function (result) {
+  return omit.default(result, METADATA_FOOTER_PROPS)
+}
+
 // Some footer information can be toggled using `showSystem` and `showMetadata`.
 // This only impacts the footer, not the properties of the target result nor
 // history results.
@@ -26,34 +60,3 @@ const MAIN_SYSTEM_PROPS = ['machine', 'versions']
 const maybeOmit = function (obj, showProp, propNames) {
   return showProp ? obj : omit.default(obj, propNames)
 }
-
-// We only expose specific properties to reporters.
-// In particular, we do not expose subId.
-export const pickTopProps = function (result) {
-  return pick(result, REPORTED_TOP_PROPS)
-}
-
-const REPORTED_TOP_PROPS = [
-  'id',
-  'timestamp',
-  'systems',
-  'combinations',
-  'history',
-  'screenWidth',
-  'screenHeight',
-]
-
-// The target result should not include any properties which should be shown
-// with the footer instead.
-// However, history results should keep metadata properties which are useful
-// to display as header in time series.
-export const omitMetadataProps = function (result) {
-  return omit.default(result, METADATA_PROPS)
-}
-
-export const omitSystemProps = function (historyResult) {
-  return omit.default(historyResult, SYSTEM_PROPS)
-}
-
-const METADATA_PROPS = ['id', 'timestamp']
-const SYSTEM_PROPS = ['systems']

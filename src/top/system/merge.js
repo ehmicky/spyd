@@ -1,48 +1,62 @@
-import { isDeepStrictEqual } from 'util'
+import filterObj from 'filter-obj'
+import mapObj from 'map-obj'
 
-import { setArray } from '../../utils/set.js'
+import { hasPrefix, removePrefix } from '../../combination/prefix.js'
+import { groupBy } from '../../utils/group.js'
 
-// When merging results, we report all `systems`. This concatenates them.
+// A result can only have a single `system`.
+//  - However, when merging results, this becomes several `systems`.
+//  - We handle this by making systems combination-specific, set to
+//    `combinations[*].system`
+//  - When reporting a result, we merge all `combinations[*].system` to an
+//    array of `systems`.
 // Systems with all dimensions equal are merged, with the most recent result
 // having priority.
+// We ensure this is performed after:
+//  - The `select` logic, so that excluded combinations do not report their
+//    systems
+//  - Default ids, to correctly handle system default ids
+export const mergeSystems = function ({ combinations }) {
+  const systems = combinations.map(getCombinationSystem)
+  const systemsGroups = Object.values(groupBy(systems, getSystemDimensionsKey))
+  return systemsGroups.map(mergeSystemsGroup)
+}
+
+const getCombinationSystem = function ({ dimensions, system }) {
+  const dimensionsA = filterObj(dimensions, isSystemDimension)
+  const dimensionsB = mapObj(dimensionsA, removeSystemPrefix)
+  return { ...system, dimensions: dimensionsB }
+}
+
+const isSystemDimension = function (dimensionName) {
+  return hasPrefix(dimensionName, 'system')
+}
+
+const removeSystemPrefix = function (dimensionName, systemId) {
+  const dimensionNameA = removePrefix(dimensionName, 'system')
+  return [dimensionNameA, systemId]
+}
+
+const getSystemDimensionsKey = function ({ dimensions }) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  const dimensionNames = Object.keys(dimensions).sort()
+  return dimensionNames
+    .map((dimensionName) => `${dimensionName}=${dimensions[dimensionName].id}`)
+    .join(' ')
+}
+
 // Order matters: we show more recent systems first, i.e. they must be first
 // in the array.
+// We rely on `systems` being sorted from most to least recent result, which
+// is based on `combinations` being sorted like this during results merging.
+const mergeSystemsGroup = function ([mostRecentSystem, ...previousSystems]) {
+  return previousSystems.reduce(mergeSystemsPair, mostRecentSystem)
+}
+
 // `system` objects should not contain `undefined`, so we can directly merge.
 // `git` and `machine` properties should not be deeply merged since their
 // properties relate to each other. However, `versions` should.
-export const mergeSystems = function (rawResult, previousRawResult) {
-  const systems = appendSystem(rawResult, previousRawResult)
-  return { ...rawResult, systems }
-}
-
-const appendSystem = function ({ systems }, { systems: [previousSystem] }) {
-  const systemIndex = systems.findIndex(({ dimensions }) =>
-    isDeepStrictEqual(dimensions, previousSystem.dimensions),
-  )
-  return systemIndex === -1
-    ? [...systems, setCommonProps(systems[0], previousSystem)]
-    : setArray(
-        systems,
-        systemIndex,
-        mergePreviousSystem(systems[systemIndex], previousSystem),
-      )
-}
-
-// Some properties are common, i.e. only the most recent value of them is
-// ever shown.
-const setCommonProps = function (system, previousSystem) {
-  if (system === undefined) {
-    return previousSystem
-  }
-
-  return {
-    ...previousSystem,
-    versions: { ...previousSystem.versions, Spyd: system.versions.Spyd },
-  }
-}
-
-// Other properties are merged
-const mergePreviousSystem = function (system, previousSystem) {
+const mergeSystemsPair = function (system, previousSystem) {
   return {
     ...previousSystem,
     ...system,

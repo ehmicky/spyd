@@ -6,7 +6,6 @@ import {
   removeSameCombinations,
   hasSameCombinations,
 } from '../../combination/result.js'
-import { mergeSystems } from '../../top/system/merge.js'
 import { groupBy } from '../../utils/group.js'
 import { pickLast } from '../../utils/last.js'
 
@@ -101,8 +100,7 @@ const mergeResultsPair = function (rawResult, previousRawResult) {
   }
 
   const rawResultB = mergeCombinations(rawResultA, previousRawResultA)
-  const rawResultC = mergeSystems(rawResultB, previousRawResultA)
-  return rawResultC
+  return rawResultB
 }
 
 // Either rawResult might be missing some dimensions from the other one

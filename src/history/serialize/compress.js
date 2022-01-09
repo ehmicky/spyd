@@ -12,10 +12,9 @@ export const compressRawResult = function ({
   id,
   subId,
   timestamp,
-  systems,
   combinations,
 }) {
-  const system = compressSystem(systems)
+  const system = compressSystem(combinations)
   const combinationsA = combinations.map(compressCombination)
   return cleanObject({
     id,
@@ -28,28 +27,30 @@ export const compressRawResult = function ({
 
 const compressSystem = function ([
   {
-    dimensions,
-    machine: { os, cpus, memory },
-    git: { branch, tag, commit, prNumber, prBranch },
-    ci,
-    versions,
+    system: {
+      machine: { os, cpus, memory },
+      git: { branch, tag, commit, prNumber, prBranch },
+      ci,
+      versions,
+    },
   },
 ]) {
-  const system = {
+  return {
     machine: { os, cpus, memory },
     git: { branch, tag, commit, prNumber, prBranch },
     ci,
     versions,
   }
-  return Object.keys(dimensions).length === 0
-    ? system
-    : { dimensions, ...system }
 }
 
 const compressCombination = function ({ dimensions, stats }) {
   const dimensionsA = mapObj(dimensions, compressDimension)
   const statsA = compressStats(stats)
   return { dimensions: dimensionsA, stats: statsA }
+}
+
+const compressDimension = function (dimension, { id }) {
+  return [dimension, id]
 }
 
 const compressStats = function (stats) {
@@ -79,10 +80,6 @@ const compressStats = function (stats) {
     quantiles: quantilesA,
     histogram: histogramA,
   }
-}
-
-const compressDimension = function (dimension, { id }) {
-  return [dimension, id]
 }
 
 const compressQuantiles = function (quantiles, mean) {

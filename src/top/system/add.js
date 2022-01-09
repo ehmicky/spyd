@@ -11,8 +11,6 @@ import { groupBy } from '../../utils/group.js'
 // outside of spyd: hardware, OS, git branch, environment variables, etc.
 // All that information are automatically computed.
 // The `versions` are computed by runners.
-// A result can only have a single `system`. However, when merging results,
-// this becomes several `systems`.
 // We purposely keep the data as raw as possible to give flexibility to the
 // reporters on how to serialize it
 //  - For example, this allows changing the reporting without changing the
@@ -38,10 +36,15 @@ import { groupBy } from '../../utils/group.js'
 //  - I.e. `system` is an empty object
 //  - Results without system dimensions still persist their system information
 //    and show them in the footer.
-export const listSystem = function (system, cwd) {
+export const addSystem = function (combinations, { cwd }) {
+  const system = getSystem(cwd)
+  return combinations.map((combination) => ({ ...combination, system }))
+}
+
+const getSystem = function (cwd) {
   const machine = getMachine()
   const { git, ci } = getEnvInfo(cwd)
-  return cleanObject({ dimensions: system, machine, git, ci })
+  return cleanObject({ machine, git, ci })
 }
 
 const getMachine = function () {

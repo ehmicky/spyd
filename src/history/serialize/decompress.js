@@ -1,24 +1,23 @@
 import mapObj from 'map-obj'
 
 // Restore original rawResults after loading
-export const decompressRawResult = function (rawResult) {
-  const rawResultA = decompressSystem(rawResult)
-  const combinations = rawResultA.combinations.map(decompressCombination)
-  return { ...rawResultA, combinations }
-}
-
-const decompressSystem = function ({
+export const decompressRawResult = function ({
+  id,
+  subId,
+  timestamp,
   system,
-  system: { dimensions = {} },
-  ...rawResult
+  combinations,
 }) {
-  return { ...rawResult, systems: [{ ...system, dimensions }] }
+  const combinationsA = combinations.map((combination) =>
+    decompressCombination(combination, system),
+  )
+  return { id, subId, timestamp, combinations: combinationsA }
 }
 
-const decompressCombination = function (combination) {
-  const dimensions = mapObj(combination.dimensions, decompressDimension)
-  const stats = decompressStats(combination.stats)
-  return { ...combination, dimensions, stats }
+const decompressCombination = function ({ dimensions, stats }, system) {
+  const dimensionsA = mapObj(dimensions, decompressDimension)
+  const statsA = decompressStats(stats)
+  return { dimensions: dimensionsA, stats: statsA, system }
 }
 
 const decompressDimension = function (dimension, id) {

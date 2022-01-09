@@ -10,9 +10,9 @@ export const normalizeNewResult = function (newResult) {
   return { ...newResult, combinations }
 }
 
-const normalizeNewCombination = function ({ dimensions, stats }) {
+const normalizeNewCombination = function ({ dimensions, stats, system }) {
   const dimensionsA = mapObj(dimensions, getIdProp)
-  return { dimensions: dimensionsA, stats }
+  return { dimensions: dimensionsA, stats, system }
 }
 
 const getIdProp = function (propName, { id }) {

@@ -3,10 +3,6 @@
   "subId": "3216a8d5f96e",
   "timestamp": 1617479059030,
   "system": {
-    "dimensions": {
-      "machine": "two",
-      "cluster": "red"
-    },
     "machine": {
       "cpus": [
         {
