@@ -1,4 +1,4 @@
-import { isValidId } from '../../merge/id.js'
+import { isValidId, stripUuidDashes } from '../../merge/id.js'
 
 // Deltas can be the `rawResult.id`
 const parseId = function (delta) {
@@ -11,8 +11,9 @@ const parseId = function (delta) {
 
 // Some stores shorten `id` and only keep the last 12 characters.
 const findById = function (metadataGroups, id) {
+  const idA = stripUuidDashes(id)
   return metadataGroups.findIndex(([firstMetadatum]) =>
-    id.endsWith(firstMetadatum.id),
+    idA.startsWith(firstMetadatum.id),
   )
 }
 

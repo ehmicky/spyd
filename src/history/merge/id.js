@@ -37,14 +37,13 @@ export const getDefaultId = function () {
   return uuidv4()
 }
 
-// We only keep the last characters of the `result.id` in the filename.
+// We only keep the first characters of the `result.id` in the filename.
 // This is to keep filenames short since some systems impose a limit.
 // We keep it high enough to prevent collisions though.
 //  - 12 hexadecimal characters is 48 bits of entropy, which has a 50%
-//    probability of collision after 2e7 results with the same `id`, which is
-//    very unlikely
+//    probability of collision after 2e7 results
 export const shortenId = function (id) {
-  return id.slice(-ID_LENGTH)
+  return getUuidFirstChars(id, ID_LENGTH)
 }
 
 const ID_LENGTH = 12
@@ -55,10 +54,21 @@ const ID_LENGTH = 12
 // history results filenames are unique even when their `id` and `timestamp`
 // are the same (which is fairly unlikely).
 export const createSubId = function () {
-  const subId = uuidv4()
-  return subId.slice(-SUBID_LENGTH)
+  return getUuidFirstChars(uuidv4(), SUBID_LENGTH)
 }
 
 // This must be low enough to keep filenames short, but high enough to prevent
 // collisions
 const SUBID_LENGTH = 12
+
+const getUuidFirstChars = function (uuid, length) {
+  return stripUuidDashes(uuid).slice(0, length)
+}
+
+// Dashes are stripped from UUID to keep filenames short
+export const stripUuidDashes = function (uuid) {
+  return uuid.replace(DASH_REGEXP, '')
+}
+
+// TODO: use `String.replaceAll()` instead after dropping support for Node 14
+const DASH_REGEXP = /-/gu
