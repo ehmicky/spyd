@@ -23,14 +23,12 @@ import { removePrefix } from './prefix.js'
 //  - Comparable in the history
 //  - Reported nicely
 //  - Selectable with `select`
-export const addDefaultIds = function (history, targetResult) {
-  const defaultDimensions = getDefaultDimensions(targetResult)
-  return history.map((historyResult) =>
-    addResultDefaultIds(historyResult, defaultDimensions),
-  )
+export const addDefaultIds = function (results, combinations) {
+  const defaultDimensions = getDefaultDimensions(combinations)
+  return results.map((result) => addResultDefaultIds(result, defaultDimensions))
 }
 
-const getDefaultDimensions = function ({ combinations }) {
+const getDefaultDimensions = function (combinations) {
   const targetDimensions = getCombsDimensions(combinations)
   return Object.fromEntries(
     targetDimensions.filter(hasDefaultId).map(getDefaultDimension),

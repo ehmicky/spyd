@@ -1,6 +1,7 @@
 import omit from 'omit.js'
 import sortOn from 'sort-on'
 
+import { addDefaultIds } from '../../combination/default.js'
 import {
   removeResultCombinations,
   hasSameCombinations,
@@ -90,13 +91,29 @@ const UNMERGED_PROPS = ['subId']
 //     - It is too verbose
 //     - Users might mistake it for the benchmark's duration
 const mergeResultsPair = function (rawResult, previousRawResult) {
-  if (hasSameCombinations(previousRawResult, rawResult)) {
-    return rawResult
+  const [rawResultA, previousRawResultA] = mergeDimensions(
+    rawResult,
+    previousRawResult,
+  )
+
+  if (hasSameCombinations(previousRawResultA, rawResultA)) {
+    return rawResultA
   }
 
-  const rawResultA = mergeCombinations(rawResult, previousRawResult)
-  const rawResultB = mergeSystems(rawResultA, previousRawResult)
-  return rawResultB
+  const rawResultB = mergeCombinations(rawResultA, previousRawResultA)
+  const rawResultC = mergeSystems(rawResultB, previousRawResultA)
+  return rawResultC
+}
+
+// Either rawResult might be missing some dimensions from the other one
+// We add default ids to ensure:
+//  - Both results' combinations can be compared
+//  - The merged result has all dimensions
+const mergeDimensions = function (rawResult, previousRawResult) {
+  return addDefaultIds(
+    [rawResult, previousRawResult],
+    [...rawResult.combinations, ...previousRawResult.combinations],
+  )
 }
 
 const mergeCombinations = function (rawResult, previousRawResult) {

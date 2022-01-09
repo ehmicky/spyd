@@ -36,7 +36,7 @@ export const normalizeReportedResults = function (
     targetResult,
   )
   const targetResultB = selectResult(targetResultA, select)
-  const historyB = addDefaultIds(historyA, targetResultB)
+  const historyB = addDefaultIds(historyA, targetResultB.combinations)
   const historyC = filterUnusedCombinations(historyB, targetResultB)
   const noDimensions = getNoDimensions(targetResultB.combinations)
   return { result: targetResultB, history: historyC, noDimensions }
