@@ -36,3 +36,15 @@ const LAST_ID = 'last'
 export const getDefaultId = function () {
   return uuidv4()
 }
+
+// We only keep the last characters of the `result.id` in the filename.
+// This is to keep filenames short since some systems impose a limit.
+// We keep it high enough to prevent collisions though.
+//  - 12 hexadecimal characters is 48 bits of entropy, which has a 50%
+//    probability of collision after 2e7 results with the same `id`, which is
+//    very unlikely
+export const shortenId = function (id) {
+  return id.length <= ID_LENGTH ? id : id.slice(0, -ID_LENGTH)
+}
+
+const ID_LENGTH = 12

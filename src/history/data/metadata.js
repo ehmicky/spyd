@@ -1,3 +1,5 @@
+import { shortenId } from '../merge/id.js'
+
 // Retrieve filename from a rawResult
 export const getRawResultFilename = function (rawResult) {
   const { id, timestamp } = rawResult
@@ -10,18 +12,6 @@ export const serializeFilename = function ({ id, timestamp }) {
   const timestampStr = serializeTimestamp(timestamp)
   return `${timestampStr}_${idStr}.json`
 }
-
-// We only keep the last characters of the `result.id` in the filename.
-// This is to keep filenames short since some systems impose a limit.
-// We keep it high enough to prevent collisions though.
-//  - 12 hexadecimal characters is 48 bits of entropy, which has a 50%
-//    probability of collision after 2e7 results with the same `id`, which is
-//    very unlikely
-const shortenId = function (id) {
-  return id.length <= ID_LENGTH ? id : id.slice(0, -ID_LENGTH)
-}
-
-const ID_LENGTH = 12
 
 const serializeTimestamp = function (timestamp) {
   const date = new Date(timestamp)
