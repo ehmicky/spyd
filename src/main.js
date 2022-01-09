@@ -2,11 +2,7 @@ import { listCombinations } from './combination/list.js'
 import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
 import { checkLimits } from './history/compare/limit.js'
-import {
-  addToHistory,
-  getFromHistory,
-  removeFromHistory,
-} from './history/data/main.js'
+import { getFromHistory, removeFromHistory } from './history/data/main.js'
 import { reportResult } from './report/main.js'
 import { performRun } from './run/main.js'
 
@@ -14,8 +10,7 @@ import { performRun } from './run/main.js'
 // Default command.
 export const run = async function (configFlags) {
   const config = await getConfig('run', configFlags)
-  const { rawResult, programmaticResult } = await performRun(config)
-  await addToHistory(rawResult, config)
+  const programmaticResult = await performRun(config)
   checkLimits(programmaticResult, config)
   return programmaticResult
 }

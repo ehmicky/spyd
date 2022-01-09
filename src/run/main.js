@@ -1,3 +1,4 @@
+import { addToHistory } from '../history/data/main.js'
 import { normalizeNewResults } from '../history/normalize/load.js'
 import {
   reportStart,
@@ -55,7 +56,8 @@ export const performRun = async function (config) {
       config: configA,
     })
     await reportPrint(contents)
-    return { rawResult: rawResultA, programmaticResult }
+    await addToHistory(rawResultA, config)
+    return programmaticResult
   } finally {
     await reportEnd(configA)
   }
