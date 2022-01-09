@@ -39,14 +39,6 @@ const getRunnersVersions = async function (combinations, cwd) {
   )
 }
 
-const getRunnerId = function ({
-  dimensions: {
-    runner: { id },
-  },
-}) {
-  return id
-}
-
 const getRunnerVersions = async function (id, combinations, cwd) {
   const {
     dimensions: {
@@ -59,6 +51,14 @@ const getRunnerVersions = async function (id, combinations, cwd) {
     ),
   )
   return Object.assign({}, ...versionsA)
+}
+
+const getRunnerId = function ({
+  dimensions: {
+    runner: { id },
+  },
+}) {
+  return id
 }
 
 const getRunnerVersion = async function ({
