@@ -1,6 +1,7 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
+import pProps from 'p-props'
 import { readPackageUp } from 'read-pkg-up'
 
 import { PluginError } from '../../error/main.js'
@@ -10,15 +11,12 @@ import { spawnProcess } from '../../utils/spawn.js'
 // `runner.launch()`. This is an object where:
 //  - the key is runtime name (e.g. 'Node')
 //  - the value is its version (e.g. '12.0.0').
-//    Runners should try to omit the leading 'v'.
+//    Runners should try to omit the leading 'v', for consistency.
 //    The value can either be a string (direct value) or an array of strings
 //    (command to retrieve the version).
 // Reported by the `--showSystem` configuration property.
 // Meant to show information about runtime versions, modes (e.g. type of shell)
 // and configuration.
-// `combinations` preserve the order of `tasks.*`, i.e. this is used as a
-// priority order in the unlikely case two runners return the same properties in
-// `versions`.
 export const addSystemVersions = async function (rawResult, { cwd }) {
   const versions = await getSystemVersions(rawResult.combinations, cwd)
   return { ...rawResult, systems: [{ ...rawResult.systems[0], versions }] }
@@ -46,27 +44,18 @@ const getRunnerVersions = async function (id, runners, cwd) {
   const { versions, spawnOptions } = runners.find(
     (runner) => getRunnerId(runner) === id,
   )
-  const versionsA = await Promise.all(
-    Object.entries(versions).map(([name, version]) =>
-      getRunnerVersion({ name, version, id, spawnOptions, cwd }),
-    ),
+  return await pProps(versions, (version) =>
+    getRunnerVersion({ version, id, spawnOptions, cwd }),
   )
-  return Object.assign({}, ...versionsA)
 }
 
 const getRunnerId = function ({ id }) {
   return id
 }
 
-const getRunnerVersion = async function ({
-  name,
-  version,
-  id,
-  spawnOptions,
-  cwd,
-}) {
+const getRunnerVersion = async function ({ version, id, spawnOptions, cwd }) {
   if (typeof version === 'string') {
-    return { [name]: version }
+    return version
   }
 
   try {
@@ -75,7 +64,7 @@ const getRunnerVersion = async function ({
       { ...spawnOptions, stdin: 'ignore' },
       cwd,
     )
-    return { [name]: stdout }
+    return stdout
   } catch (error) {
     throw new PluginError(
       `Could not start runner "${id}"
