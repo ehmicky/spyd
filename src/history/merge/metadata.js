@@ -1,6 +1,6 @@
 import sortOn from 'sort-on'
 
-import { groupByMergeId } from './group.js'
+import { groupByMergeId } from './id.js'
 
 // Results with the same `mergeId` should be handled like a single result by
 // the delta logic. Therefore, we group metadata before applying deltas.

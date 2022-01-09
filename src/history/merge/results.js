@@ -8,7 +8,7 @@ import { mergeSystems } from '../../top/system/merge.js'
 import { cleanObject } from '../../utils/clean.js'
 import { pickLast } from '../../utils/last.js'
 
-import { groupByMergeId } from './group.js'
+import { groupByMergeId } from './id.js'
 
 // Merge all results with the same `mergeId`.
 // The `merge` configuration property can be used to merge several results.
