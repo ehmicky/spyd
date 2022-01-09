@@ -1,7 +1,10 @@
 import pMap from 'p-map'
 
+import { shortenId } from '../merge/id.js'
+
 import { parseRawResult, serializeRawResult } from './contents.js'
 import { getReadHistoryDir, getWriteHistoryDir } from './dir.js'
+import { parseFilename, serializeFilename } from './filename.js'
 import {
   listFilenames,
   readRawResult,
@@ -9,11 +12,6 @@ import {
   deleteRawResult,
   checkHistoryFile,
 } from './fs.js'
-import {
-  getRawResultFilename,
-  parseFilename,
-  serializeFilename,
-} from './metadata.js'
 
 // Retrieve all rawResults' metadata, which are stored in the filenames
 export const listMetadata = async function (cwd) {
@@ -63,8 +61,9 @@ const fetchRawResult = async function (metadatum, historyDir) {
 
 // Save a new rawResult
 export const addRawResult = async function (rawResult, cwd) {
+  const metadatum = getRawResultMetadatum(rawResult)
   const historyDir = await getWriteHistoryDir(cwd)
-  const filename = getRawResultFilename(rawResult)
+  const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
   const contents = serializeRawResult(rawResult)
   await writeRawResult(path, contents)
@@ -72,13 +71,20 @@ export const addRawResult = async function (rawResult, cwd) {
 
 // Remove a rawResult from the filesystem
 export const removeRawResult = async function (rawResult, cwd) {
+  const metadatum = getRawResultMetadatum(rawResult)
   const historyDir = await getReadHistoryDir(cwd)
 
   if (historyDir === undefined) {
     return
   }
 
-  const filename = getRawResultFilename(rawResult)
+  const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
   await deleteRawResult(path)
+}
+
+// Retrieve the metadatum of a rawResult
+const getRawResultMetadatum = function ({ id, subId, timestamp }) {
+  const idA = shortenId(id)
+  return { id: idA, subId, timestamp }
 }
