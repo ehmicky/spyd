@@ -32,16 +32,16 @@ const isSystemDimension = function (dimensionName) {
   return hasPrefix(dimensionName, 'system')
 }
 
-const removeSystemPrefix = function (dimensionName, systemId) {
+const removeSystemPrefix = function (dimensionName, { id }) {
   const dimensionNameA = removePrefix(dimensionName, 'system')
-  return [dimensionNameA, systemId]
+  return [dimensionNameA, id]
 }
 
 const getSystemDimensionsKey = function ({ dimensions }) {
   // eslint-disable-next-line fp/no-mutating-methods
   const dimensionNames = Object.keys(dimensions).sort()
   return dimensionNames
-    .map((dimensionName) => `${dimensionName}=${dimensions[dimensionName].id}`)
+    .map((dimensionName) => `${dimensionName}=${dimensions[dimensionName]}`)
     .join(' ')
 }
 
