@@ -7,17 +7,12 @@ import {
   reportEnd,
 } from '../report/main.js'
 
-import { createResult } from './create.js'
 import { measureCombinations } from './measure/main.js'
 import {
   normalizeMeasuredResult,
   updateCombinationsStats,
 } from './normalize.js'
-import {
-  initPreview,
-  startPreview,
-  endPreview,
-} from './preview/start_end/main.js'
+import { startPreview, endPreview } from './preview/start_end/main.js'
 
 // Perform a new benchmark.
 // There is no watch mode because:
@@ -27,10 +22,12 @@ import {
 //     subsequent editing experience
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
-export const performRun = async function (config) {
-  const previewState = initPreview(config)
-
-  const { rawResult, history } = await createResult(config)
+export const performRun = async function ({
+  rawResult,
+  history,
+  previewState,
+  config,
+}) {
   const { targetResult: result, history: historyA } = normalizeNewResults(
     normalizeMeasuredResult(rawResult),
     history,

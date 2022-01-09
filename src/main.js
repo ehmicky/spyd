@@ -4,13 +4,22 @@ import { performDev } from './dev/main.js'
 import { checkLimits } from './history/compare/limit.js'
 import { getFromHistory, removeFromHistory } from './history/data/main.js'
 import { reportResult } from './report/main.js'
+import { createResult } from './run/create.js'
 import { performRun } from './run/main.js'
+import { initPreview } from './run/preview/start_end/main.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default command.
 export const run = async function (configFlags) {
   const config = await getConfig('run', configFlags)
-  const programmaticResult = await performRun(config)
+  const previewState = initPreview(config)
+  const { rawResult, history } = await createResult(config)
+  const programmaticResult = await performRun({
+    rawResult,
+    history,
+    previewState,
+    config,
+  })
   checkLimits(programmaticResult, config)
   return programmaticResult
 }
