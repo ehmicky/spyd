@@ -1,6 +1,7 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
+import mapObj from 'map-obj'
 import pProps from 'p-props'
 import { readPackageUp } from 'read-pkg-up'
 
@@ -40,10 +41,25 @@ export const computeRunnerVersions = async function ({
   spawnOptions,
   cwd,
 }) {
-  const versionsA = await pProps(versions, (version) =>
+  const dedupedVersions = mapObj(versions, dedupeVersion)
+  const dedupedVersionsA = await pProps(dedupedVersions, (version) =>
     computeRunnerVersion({ version, id, spawnOptions, cwd }),
   )
+  const versionsA = mapObj(versions, (name, version) => [
+    name,
+    dedupedVersionsA[serializeVersion(version)],
+  ])
   return { ...versionsA, ...commonVersions }
+}
+
+// If two versions have the same command array, dedupe it so it is performed
+// only once, for performance and consistency
+const dedupeVersion = function (name, version) {
+  return [serializeVersion(version), version]
+}
+
+const serializeVersion = function (version) {
+  return Array.isArray(version) ? version.join(' ') : version
 }
 
 const computeRunnerVersion = async function ({
