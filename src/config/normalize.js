@@ -18,14 +18,8 @@ export const normalizeConfig = function (config) {
 }
 
 const normalizeProp = function (config, [propName, normalizer]) {
-  const { [propName]: value, ...configA } = config
-  const props = normalizer(value, propName, configA)
-
-  if (props === undefined) {
-    return config
-  }
-
-  return { ...configA, ...props }
+  const value = normalizer(config[propName], propName, config)
+  return value === undefined ? config : { ...config, [propName]: value }
 }
 
 const normalizeSystem = function (system) {
@@ -36,7 +30,7 @@ const normalizeRunner = function (value, propName) {
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
   checkArrayLength(valueA, propName)
-  return { [propName]: valueA }
+  return valueA
 }
 
 const normalizeTasks = function (value, propName) {
@@ -46,32 +40,31 @@ const normalizeTasks = function (value, propName) {
 
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
-  return { [propName]: valueA }
+  return valueA
 }
 
 const normalizeReporter = function (value, propName, { force }) {
   if (force) {
-    return { [propName]: [] }
+    return []
   }
 
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
-  return { [propName]: valueA }
+  return valueA
 }
 
 const normalizeSelect = function (value, propName) {
   const valueA = normalizeOptionalArray(value)
   checkStringArray(valueA, propName)
-  return { [propName]: valueA }
+  return valueA
 }
 
-const normalizeLimit = function (value, propName) {
+const normalizeLimit = function (value) {
   if (value === undefined) {
     return
   }
 
-  const valueA = parseLimit(value)
-  return { [propName]: valueA }
+  return parseLimit(value)
 }
 
 const checkTitles = function (value, propName) {

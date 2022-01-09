@@ -89,7 +89,7 @@ export const normalizePrecision = function (precision, propName) {
     )
   }
 
-  return { [propName]: precisionA }
+  return precisionA
 }
 
 // Associates `precision` (using array index) to the minimum `rmoe` each
