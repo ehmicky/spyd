@@ -4,6 +4,8 @@ import pProps from 'p-props'
 import { PluginError } from '../../../error/main.js'
 import { spawnProcess } from '../../../utils/spawn.js'
 
+import { VERSIONS_VALUE_SEPARATOR } from './merge.js'
+
 // Get runtime versions for this runner, returned as `versions` from
 // `runner.launch()`. This is an object where:
 //  - the key is runtime name (e.g. 'Node')
@@ -22,8 +24,8 @@ export const computeRunnerVersions = async function ({
   cwd,
 }) {
   const dedupedVersions = mapObj(versions, dedupeVersion)
-  const dedupedVersionsA = await pProps(dedupedVersions, (version) =>
-    computeRunnerVersion({ version, id, spawnOptions, cwd }),
+  const dedupedVersionsA = await pProps(dedupedVersions, ({ name, version }) =>
+    computeRunnerVersion({ name, version, id, spawnOptions, cwd }),
   )
   const versionsA = mapObj(versions, (name, version) => [
     name,
@@ -41,7 +43,7 @@ export const computeRunnerVersions = async function ({
 //    parallelization of retrieving task paths, which is much slower
 //  - Runners have different `id` to report in the error message
 const dedupeVersion = function (name, version) {
-  return [serializeVersion(version), version]
+  return [serializeVersion(version), { name, version }]
 }
 
 const serializeVersion = function (version) {
@@ -49,11 +51,18 @@ const serializeVersion = function (version) {
 }
 
 const computeRunnerVersion = async function ({
+  name,
   version,
   id,
   spawnOptions,
   cwd,
 }) {
+  const versionA = await getRunnerVersion({ version, id, spawnOptions, cwd })
+  validateVersion(versionA, name, id)
+  return versionA
+}
+
+const getRunnerVersion = async function ({ version, id, spawnOptions, cwd }) {
   if (typeof version === 'string') {
     return version
   }
@@ -67,9 +76,21 @@ const computeRunnerVersion = async function ({
     return stdout
   } catch (error) {
     throw new PluginError(
-      `Could not start runner "${id}"
+      `Could not start runner "${id}".
 Retrieving runner versions failed: ${version.join(' ')}
 ${error.message}`,
+    )
+  }
+}
+
+// When merging runners and results with different values of the same version
+// property, we concatenate them. This becomes ambiguous if the version value
+// contains the same separator.
+const validateVersion = function (version, name, id) {
+  if (version.includes(VERSIONS_VALUE_SEPARATOR)) {
+    throw new PluginError(
+      `Could not start runner "${id}".
+Computing runner's "${name}" version failed because it cannot contain "${VERSIONS_VALUE_SEPARATOR}": "${version}"`,
     )
   }
 }

@@ -37,4 +37,4 @@ const mergeVersionsValue = function (values, previousValue) {
       [...valuesArray, previousValue].sort().join(VERSIONS_VALUE_SEPARATOR)
 }
 
-const VERSIONS_VALUE_SEPARATOR = ', '
+export const VERSIONS_VALUE_SEPARATOR = ', '
