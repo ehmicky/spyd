@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile, unlink, mkdir } from 'fs/promises'
+import { promises as fs } from 'fs'
 
 import { pathExists } from 'path-exists'
 import { isDirectory, isFile } from 'path-type'
@@ -7,13 +7,13 @@ import { UserError } from '../../error/main.js'
 
 // Find all filenames of the history directory
 export const listFilenames = async function (historyDir) {
-  return await readdir(historyDir)
+  return await fs.readdir(historyDir)
 }
 
 // Read a rawResult's contents
 export const readRawResult = async function (path) {
   try {
-    return await readFile(path, 'utf8')
+    return await fs.readFile(path, 'utf8')
   } catch (error) {
     throw new UserError(`History file could not be read: ${error.message}`)
   }
@@ -22,7 +22,7 @@ export const readRawResult = async function (path) {
 // Write a rawResult's contents
 export const writeRawResult = async function (path, rawResultStr) {
   try {
-    return await writeFile(path, rawResultStr)
+    return await fs.writeFile(path, rawResultStr)
   } catch (error) {
     throw new UserError(`History file could not be written: ${error.message}`)
   }
@@ -31,7 +31,7 @@ export const writeRawResult = async function (path, rawResultStr) {
 // Delete a rawResult from the filesystem
 export const deleteRawResult = async function (path) {
   try {
-    await unlink(path)
+    await fs.unlink(path)
   } catch (error) {
     throw new UserError(`History file could not be deleted: ${error.message}`)
   }
@@ -49,7 +49,7 @@ export const ensureHistoryDir = async function (historyDir) {
   }
 
   try {
-    await mkdir(historyDir, { recursive: true })
+    await fs.mkdir(historyDir, { recursive: true })
   } catch (error) {
     throw new UserError(
       `Could not create history directory "${historyDir}"\n${error.message}`,
