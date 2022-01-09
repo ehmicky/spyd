@@ -32,15 +32,6 @@ const getSystemVersions = async function (combinations, cwd) {
   return Object.assign({}, ...versions, { Spyd: spydVersion })
 }
 
-// TODO: use static JSON imports once those are possible
-const getSpydVersion = async function () {
-  const cwd = dirname(fileURLToPath(import.meta.url))
-  const {
-    packageJson: { version },
-  } = await readPackageUp({ cwd, normalize: false })
-  return version
-}
-
 const getRunnersVersions = async function (combinations, cwd) {
   const ids = [...new Set(combinations.map(getRunnerId))]
   return await Promise.all(
@@ -97,4 +88,13 @@ Retrieving runner versions failed: ${version.join(' ')}
 ${error.message}`,
     )
   }
+}
+
+// TODO: use static JSON imports once those are possible
+const getSpydVersion = async function () {
+  const cwd = dirname(fileURLToPath(import.meta.url))
+  const {
+    packageJson: { version },
+  } = await readPackageUp({ cwd, normalize: false })
+  return version
 }
