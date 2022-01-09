@@ -15,7 +15,7 @@ export const createResult = async function (config) {
     history,
     config,
   )
-  const rawResultB = await addSystemVersions(rawResultA)
+  const rawResultB = addSystemVersions(rawResultA)
   return { rawResult: rawResultB, history: historyA }
 }
 

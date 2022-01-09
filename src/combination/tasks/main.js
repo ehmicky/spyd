@@ -1,3 +1,4 @@
+import { getCommonVersions } from '../../top/system/versions.js'
 import { getCombsNoDimensions } from '../filter.js'
 
 import { applyDefaultTasks } from './default.js'
@@ -80,11 +81,12 @@ import { loadRunner } from './load.js'
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
 export const listTasks = async function (runners, cwd) {
+  const commonVersions = await getCommonVersions()
   const dimensionsArray = runners.map(getDimensions)
   const noDimensions = getCombsNoDimensions(dimensionsArray)
   const tasks = await Promise.all(
     dimensionsArray.map((dimensions) =>
-      getDimensionsTasks(dimensions, noDimensions, cwd),
+      getDimensionsTasks({ dimensions, noDimensions, cwd, commonVersions }),
     ),
   )
   return tasks.flat().filter(hasUniqueTaskId)
@@ -94,8 +96,13 @@ const getDimensions = function (runner) {
   return { runner }
 }
 
-const getDimensionsTasks = async function ({ runner }, noDimensions, cwd) {
-  const runnerA = await loadRunner(runner, cwd)
+const getDimensionsTasks = async function ({
+  dimensions: { runner },
+  noDimensions,
+  cwd,
+  commonVersions,
+}) {
+  const runnerA = await loadRunner(runner, cwd, commonVersions)
   const taskPaths = await applyDefaultTasks(runnerA)
   const tasks = await Promise.all(
     taskPaths.map((taskPath) =>

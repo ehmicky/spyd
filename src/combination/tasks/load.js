@@ -3,13 +3,18 @@ import { computeRunnerVersions } from '../../top/system/versions.js'
 
 // Select the runners and retrieve their related spawn options using
 // `runner.launch()`
-export const loadRunner = async function ({ id, config, launch }, cwd) {
+export const loadRunner = async function (
+  { id, config, launch },
+  cwd,
+  commonVersions,
+) {
   const {
     spawn,
     spawnOptions = {},
     versions,
   } = await launchRunner({ id, config, launch })
   const versionsA = await computeRunnerVersions({
+    commonVersions,
     versions,
     id,
     spawnOptions,

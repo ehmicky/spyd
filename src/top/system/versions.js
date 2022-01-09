@@ -8,6 +8,21 @@ import { PluginError } from '../../error/main.js'
 import { groupBy } from '../../utils/group.js'
 import { spawnProcess } from '../../utils/spawn.js'
 
+// Retrieve runtime versions common to all runneres
+export const getCommonVersions = async function () {
+  return await getSpydVersion()
+}
+
+// Store the `spyd` version on each result
+// TODO: use static JSON imports once those are possible
+const getSpydVersion = async function () {
+  const cwd = dirname(fileURLToPath(import.meta.url))
+  const {
+    packageJson: { version },
+  } = await readPackageUp({ cwd, normalize: false })
+  return { Spyd: version }
+}
+
 // Get runtime versions for this runner, returned as `versions` from
 // `runner.launch()`. This is an object where:
 //  - the key is runtime name (e.g. 'Node')
@@ -19,14 +34,16 @@ import { spawnProcess } from '../../utils/spawn.js'
 // Meant to show information about runtime versions, modes (e.g. type of shell)
 // and configuration.
 export const computeRunnerVersions = async function ({
+  commonVersions,
   versions,
   id,
   spawnOptions,
   cwd,
 }) {
-  return await pProps(versions, (version) =>
+  const versionsA = await pProps(versions, (version) =>
     computeRunnerVersion({ version, id, spawnOptions, cwd }),
   )
+  return { ...versionsA, ...commonVersions }
 }
 
 const computeRunnerVersion = async function ({
@@ -57,20 +74,17 @@ ${error.message}`,
 
 // Merge `result.combinations[*].dimensions.runner.versions` into a single
 // `result.systems[0].versions`.
-export const addSystemVersions = async function (rawResult) {
-  const versions = await getSystemVersions(rawResult)
+export const addSystemVersions = function (rawResult) {
+  const versions = getSystemVersions(rawResult)
   return { ...rawResult, systems: [{ ...rawResult.systems[0], versions }] }
 }
 
-const getSystemVersions = async function ({ combinations }) {
-  const versions = getRunnersVersions(combinations)
-  const spydVersion = await getSpydVersion()
-  return Object.assign({}, ...versions, { Spyd: spydVersion })
-}
-
-const getRunnersVersions = function (combinations) {
+const getSystemVersions = function ({ combinations }) {
   const runners = combinations.map(getRunner)
-  return Object.values(groupBy(runners, 'id')).map(getRunnerVersions)
+  const versionsArray = Object.values(groupBy(runners, 'id')).map(
+    getRunnerVersions,
+  )
+  return Object.assign({}, ...versionsArray)
 }
 
 const getRunner = function ({ dimensions: { runner } }) {
@@ -79,13 +93,4 @@ const getRunner = function ({ dimensions: { runner } }) {
 
 const getRunnerVersions = function ([{ versions }]) {
   return versions
-}
-
-// TODO: use static JSON imports once those are possible
-const getSpydVersion = async function () {
-  const cwd = dirname(fileURLToPath(import.meta.url))
-  const {
-    packageJson: { version },
-  } = await readPackageUp({ cwd, normalize: false })
-  return version
 }
