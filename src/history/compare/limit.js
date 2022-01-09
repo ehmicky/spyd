@@ -57,7 +57,7 @@ const getLimitError = function ({
   const diffLimitStr = Math.abs(diffLimit) * PERCENTAGE_RATIO
   const diffStr = serializeDiff(diff.raw)
   const higherStr = isPositiveLimit(diffLimit) ? 'higher' : 'lower'
-  return `${combinationPrefix}The combination should be at most ${diffLimitStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
+  return `${combinationPrefix}The duration should be at most ${diffLimitStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
 }
 
 const serializeDiff = function (diff) {
