@@ -9,7 +9,7 @@ import { addSystemsTitles } from './title.js'
 
 // Add each `reporter.footer`
 export const addFooter = function ({
-  result: { id, mergeId, systems },
+  result: { id, systems },
   timestamp,
   reporter,
   reporter: {
@@ -18,7 +18,7 @@ export const addFooter = function ({
   },
   config: { titles },
 }) {
-  const footer = { id, mergeId, timestamp, systems }
+  const footer = { id, timestamp, systems }
   const footerA = omitFooterProps(footer, showMetadata, showSystem)
   const footerB = serializeFooter(footerA)
   const footerC = addSharedSystems(footerB)

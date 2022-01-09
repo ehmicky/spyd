@@ -1,4 +1,5 @@
 import { parseLimits } from '../history/compare/parse.js'
+import { normalizeMerge } from '../history/merge/id.js'
 import { normalizePrecision } from '../run/precision.js'
 
 import {
@@ -9,7 +10,6 @@ import {
   checkDefinedStringArray,
   checkDefinedString,
   checkJsonObject,
-  checkUuid,
 } from './check.js'
 
 // Normalize configuration shape and do custom validation
@@ -70,10 +70,6 @@ const normalizeLimit = function (value, propName) {
   checkDefinedStringArray(valueA, propName)
   const limits = parseLimits(valueA)
   return { limits }
-}
-
-const normalizeMerge = function (value, propName) {
-  checkUuid(value, propName)
 }
 
 const checkTitles = function (value, propName) {

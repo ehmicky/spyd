@@ -2,6 +2,7 @@ import { cwd as getCwd } from 'process'
 
 import isPlainObj from 'is-plain-obj'
 
+import { getDefaultId } from '../history/merge/id.js'
 import { isTtyInput } from '../report/tty.js'
 import { cleanObject } from '../utils/clean.js'
 
@@ -11,6 +12,7 @@ export const addDefaultConfig = function (config, command) {
     ...DEFAULT_CONFIG,
     cwd: getCwd(),
     force: !isTtyInput(),
+    merge: getDefaultId(),
     showSystem: getDefaultShowSystem(config),
     showMetadata: METADATA_COMMANDS.has(command),
     ...config,
@@ -53,11 +55,9 @@ const FORCED_CONFIG = {
   show: {},
   remove: {},
   dev: {
-    // `dev` does not require history.
-    // As a performance optimization, we use `since: 0` so it is not loaded.
+    // `dev` does not use history.
     delta: 0,
     since: 0,
-    // Merging results does not make with `dev` since the history is not used.
     merge: undefined,
   },
 }

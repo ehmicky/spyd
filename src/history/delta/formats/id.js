@@ -1,8 +1,8 @@
-import { validate as isUuid } from 'uuid'
+import { isValidId } from '../../merge/id.js'
 
 // Deltas can be the `rawResult.id`
 const parseId = function (delta) {
-  if (!isUuid(delta)) {
+  if (!isValidId(delta)) {
     return
   }
 
@@ -10,11 +10,9 @@ const parseId = function (delta) {
 }
 
 const findById = function (metadataGroups, id) {
-  return metadataGroups.findIndex((metadata) => metadataHasId(metadata, id))
-}
-
-const metadataHasId = function (metadata, id) {
-  return metadata.some((metadatum) => metadatum.id === id)
+  return metadataGroups.findIndex(
+    ([firstMetadatum]) => firstMetadatum.id === id,
+  )
 }
 
 export const idFormat = {

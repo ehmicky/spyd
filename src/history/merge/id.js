@@ -1,36 +1,38 @@
-import { groupBy } from '../../utils/group.js'
+import { inspect } from 'util'
 
-// `merge` can be "last", which refers to the previous result's mergeId:
-//  - If there are no previous results, the current result's id is used
-//  - If the previous result has no mergeId, its id is used
-// The new value is persisted in results.
-export const normalizeMergeId = function (targetResult, history) {
-  return targetResult.mergeId === LAST_MERGE_ID
-    ? { ...targetResult, mergeId: replaceMergeIdLast(targetResult, history) }
-    : targetResult
+import { v4 as uuidv4, validate as isUuid } from 'uuid'
+
+import { UserError } from '../../error/main.js'
+
+// Validate `merge` property
+export const normalizeMerge = function (value, name) {
+  if (!isValidId(value) && value !== LAST_ID) {
+    throw new UserError(
+      `'${name}' must be "${LAST_ID}" or a UUID: ${inspect(value)}`,
+    )
+  }
 }
 
-const LAST_MERGE_ID = 'last'
+// Validate `result.id`.
+// "last" is not persisted since it is normalized first.
+export const isValidId = function (value) {
+  return isUuid(value)
+}
 
-const replaceMergeIdLast = function (targetResult, history) {
-  if (history.length === 0) {
-    return targetResult.id
+// `merge` can be "last", which refers to the previous result's id.
+// If there are no previous results, a new UUIDv4 is generated.
+export const normalizeId = function (targetResult, history) {
+  if (targetResult.id !== LAST_ID) {
+    return targetResult
   }
 
-  const { id, mergeId = id } = history[history.length - 1]
-  return mergeId
+  const id =
+    history.length === 0 ? getDefaultId() : history[history.length - 1].id
+  return { ...targetResult, id }
 }
 
-// Group either metadata or rawResults by mergeId:
-//  - They must both have the following properties: `id`, `mergeId`
-// `result.mergeId` defaults to `result.id`
-//  - This allows merging to previous results even when the user did not
-//    previously intend to
-//  - However, the default value is assigned at load time, it is not persisted
-export const groupByMergeId = function (metadataOrRawResults) {
-  return Object.values(groupBy(metadataOrRawResults, getMergeId))
-}
+const LAST_ID = 'last'
 
-const getMergeId = function ({ id, mergeId = id }) {
-  return mergeId
+export const getDefaultId = function () {
+  return uuidv4()
 }

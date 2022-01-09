@@ -5,17 +5,30 @@ import {
   hasSameCombinations,
 } from '../../combination/result.js'
 import { mergeSystems } from '../../top/system/merge.js'
-import { cleanObject } from '../../utils/clean.js'
+import { groupBy } from '../../utils/group.js'
 import { pickLast } from '../../utils/last.js'
 
-import { normalizeMergeId, groupByMergeId } from './id.js'
+import { normalizeId } from './id.js'
 
-// Merge all results with the same `mergeId`.
-// The `merge` configuration property can be used to merge several results.
+// Merge all results with the same `id`.
+// The `merge` configuration property sets the result's `id`, which can be used
+// to merge several results.
 // This allows incremental benchmarks which is useful:
 //  - When the benchmark uses different machines, e.g. in CI
 //  - When the benchmark duration is long
-// We ask users to specify the mergeId:
+// Either:
+//  - The result's id is from an already measured result, in which case it can
+//    be reported to users by `run|show`
+//  - Several results are run in parallel, e.g. in CI
+//     - In that case, a UUID v3|v5 based on the CI build's information can be
+//       used.
+//     - Alternatively, a UUID v4 can be passed to all CI jobs, but this
+//       requires message passing.
+// We re-use the result's `id`:
+//  - Which is already used to identify a result for deltas
+//  - As opposed to using a separate identifier, because this is simpler to
+//    understand
+// We ask users to specify the `id` if they want to merge results:
 //  - Instead of guessing it
 //     - E.g. by merging combinations of previous results with lower priority
 //  - Reasons:
@@ -33,7 +46,6 @@ import { normalizeMergeId, groupByMergeId } from './id.js'
 //  - This allows users to see the merged result while measuring, using a single
 //    command as opposed to having to use `run` then `show`
 //  - This focuses `show` command on its main purpose, i.e. historical viewing
-//  - The `select` configuration property can be used to tweak this behavior
 // When merging two results, we keep most of the properties of the latest
 // result.
 //  - However, we still merge systems so several systems are reported.
@@ -45,8 +57,10 @@ import { normalizeMergeId, groupByMergeId } from './id.js'
 //  - However, grouping can remove this sorting order, so we sort again to
 //    ensure the last result is still the target result
 export const mergeResults = function (history, targetResult) {
-  const targetResultA = normalizeMergeId(targetResult, history)
-  const resultsGroups = groupByMergeId([...history, targetResultA])
+  const targetResultA = normalizeId(targetResult, history)
+  const resultsGroups = Object.values(
+    groupBy([...history, targetResultA], 'id'),
+  )
   const rawResultsA = resultsGroups.map(mergeResultsGroup)
   const rawResultsB = sortOn(rawResultsA, 'timestamp')
   const [historyA, targetResultB] = pickLast(rawResultsB)
@@ -58,36 +72,7 @@ const mergeResultsGroup = function (rawResults) {
   return rawResultsA.reduceRight(mergeResultsPair, lastRawResult)
 }
 
-const mergeResultsPair = function (rawResult, previousRawResult) {
-  if (hasSameCombinations(previousRawResult, rawResult)) {
-    return rawResult
-  }
-
-  const rawResultA = mergeCombinations(rawResult, previousRawResult)
-  const rawResultB = mergeSystems(rawResultA, previousRawResult)
-  const rawResultC = mergeTopProps(rawResultB, previousRawResult)
-  return rawResultC
-}
-
-const mergeCombinations = function (rawResult, previousRawResult) {
-  const previousCombinations = removeResultCombinations(
-    previousRawResult.combinations,
-    rawResult,
-  )
-  const combinations = [...rawResult.combinations, ...previousCombinations]
-  return { ...rawResult, combinations }
-}
-
-// `mergeId` are not persisted.
-//  - If a group has at least one, the final group keeps it
-//  - Otherwise, it remains undefined
-// Unlike other properties, the oldest result has priority for `id`
-//  - Like this, when merging a new result, the `id` of the group remains stable
-//  - We do no not need to report multiple ids since users interact with the
-//    whole group as if it was a single result with a single id
-//  - However, the mergeId is still reported since users might want to know the
-//    value for merging purpose
-// For timestamps, we only keep the most recent one:
+// When merging timestamps, we only keep the most recent one:
 //  - I.e. when merging a new result, the timestamp of the group is updated
 //  - This is what most users would expect
 //  - The delta logic also follows this behavior
@@ -97,9 +82,21 @@ const mergeCombinations = function (rawResult, previousRawResult) {
 //  - Multiple timestamps because:
 //     - It is too verbose
 //     - Users might mistake it for the benchmark's duration
-const mergeTopProps = function (
-  rawResult,
-  { id, mergeId = rawResult.mergeId },
-) {
-  return cleanObject({ ...rawResult, id, mergeId })
+const mergeResultsPair = function (rawResult, previousRawResult) {
+  if (hasSameCombinations(previousRawResult, rawResult)) {
+    return rawResult
+  }
+
+  const rawResultA = mergeCombinations(rawResult, previousRawResult)
+  const rawResultB = mergeSystems(rawResultA, previousRawResult)
+  return rawResultB
+}
+
+const mergeCombinations = function (rawResult, previousRawResult) {
+  const previousCombinations = removeResultCombinations(
+    previousRawResult.combinations,
+    rawResult,
+  )
+  const combinations = [...rawResult.combinations, ...previousCombinations]
+  return { ...rawResult, combinations }
 }

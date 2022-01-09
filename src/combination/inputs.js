@@ -21,7 +21,7 @@ const getInputPair = function ({ inputId, inputValue }) {
 }
 
 // Retrieve all inputs identifiers
-export const getInputIds = function ({ inputsList }) {
+export const getInputIds = function (inputsList) {
   return inputsList.map(getInputId)
 }
 

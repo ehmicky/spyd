@@ -14,13 +14,12 @@ export const listCombinations = async function ({
   inputs,
   system,
   cwd,
-  merge,
 }) {
   const tasks = await listTasks(runners, cwd)
   const inputsList = toInputsList(inputs)
 
   const combinations = getCombinationsProduct({ tasks, inputsList, system })
-  validateCombinationsIds(combinations, inputsList, merge)
+  validateCombinationsIds(combinations, inputsList)
   return combinations
 }
 

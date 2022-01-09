@@ -38,11 +38,10 @@ import { groupBy } from '../../utils/group.js'
 //  - I.e. `system` is an empty object
 //  - Results without system dimensions still persist their system information
 //    and show them in the footer.
-export const listSystem = function ({ cwd, system: dimensions }) {
+export const listSystem = function (system, cwd) {
   const machine = getMachine()
   const { git, ci } = getEnvInfo(cwd)
-  const system = cleanObject({ dimensions, machine, git, ci })
-  return system
+  return cleanObject({ dimensions: system, machine, git, ci })
 }
 
 const getMachine = function () {

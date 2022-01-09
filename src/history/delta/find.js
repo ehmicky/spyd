@@ -16,7 +16,7 @@ import { findFormat } from './formats/main.js'
 //   while the `since` delta is relative to the main delta.
 // The metadata and history are:
 //  - Sorted from most to least recent
-//  - Grouped according to `merge`
+//  - Grouped by `id`
 // When a delta is approximative, the first rawResult after (not before) the
 // delta is usually used
 //  - This allows users to specify loose deltas without errors, such as

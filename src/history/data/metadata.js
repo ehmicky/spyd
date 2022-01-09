@@ -2,17 +2,14 @@ import { cleanObject } from '../../utils/clean.js'
 
 // Retrieve filename from a rawResult
 export const getRawResultFilename = function (rawResult) {
-  const { id, mergeId, timestamp } = rawResult
-  const filename = serializeFilename({ id, mergeId, timestamp })
-  return filename
+  const { id, timestamp } = rawResult
+  return serializeFilename({ id, timestamp })
 }
 
 // Retrieve filename from a metadatum
-export const serializeFilename = function ({ id, mergeId, timestamp }) {
-  const mergeIdStr = mergeId === undefined ? '' : `--${mergeId}`
+export const serializeFilename = function ({ id, timestamp }) {
   const timestampStr = serializeTimestamp(timestamp)
-  const filename = `${timestampStr}${mergeIdStr}--${id}.json`
-  return filename
+  return `${timestampStr}--${id}.json`
 }
 
 const serializeTimestamp = function (timestamp) {
@@ -38,9 +35,9 @@ export const parseFilename = function (filename) {
     return
   }
 
-  const { id, mergeId } = result.groups
+  const { id } = result.groups
   const timestamp = parseTimestamp(result.groups)
-  return cleanObject({ id, mergeId, timestamp })
+  return cleanObject({ id, timestamp })
 }
 
 const parseTimestamp = function ({
@@ -58,4 +55,4 @@ const parseTimestamp = function ({
 }
 
 const RESULT_FILENAME_REGEXP =
-  /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})--(?<hours>\d{2})-(?<minutes>\d{2})-(?<seconds>\d{2})(--(?<mergeId>[\w-]+))?--(?<id>[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})\.json$/u
+  /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})--(?<hours>\d{2})-(?<minutes>\d{2})-(?<seconds>\d{2})--(?<id>[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})\.json$/u
