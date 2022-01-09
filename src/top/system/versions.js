@@ -72,8 +72,8 @@ ${error.message}`,
   }
 }
 
-// Merge `result.combinations[*].dimensions.runner.versions` into a single
-// `result.systems[0].versions`.
+// Merge `result.combinations[*].dimensions.runner.versions` into
+// `result.systems[*].versions`.
 export const mergeSystemVersions = function (rawResult) {
   const versions = getSystemVersions(rawResult)
   return { ...rawResult, systems: [{ ...rawResult.systems[0], versions }] }
