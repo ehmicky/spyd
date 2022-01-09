@@ -8,7 +8,7 @@ import { PluginError } from '../../error/main.js'
 import { groupBy } from '../../utils/group.js'
 import { spawnProcess } from '../../utils/spawn.js'
 
-// Retrieve runtime versions common to all runneres
+// Retrieve runtime versions common to all runners
 export const getCommonVersions = async function () {
   return await getSpydVersion()
 }
