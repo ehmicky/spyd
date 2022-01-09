@@ -5,7 +5,7 @@ import { v4 as uuidv4, validate as isUuid } from 'uuid'
 import { UserError } from '../../error/main.js'
 
 // Validate `merge` property
-export const normalizeMerge = function (value, name) {
+export const validateMerge = function (value, name) {
   if (!isValidId(value) && value !== LAST_ID) {
     throw new UserError(
       `'${name}' must be "${LAST_ID}" or a UUID: ${inspect(value)}`,

@@ -1,5 +1,5 @@
 import { parseLimit } from '../history/compare/parse.js'
-import { normalizeMerge } from '../history/merge/id.js'
+import { validateMerge } from '../history/merge/id.js'
 import { normalizePrecision } from '../run/precision.js'
 
 import {
@@ -92,7 +92,7 @@ const NORMALIZERS = {
   reporter: normalizeReporter,
   select: normalizeSelect,
   limit: normalizeLimit,
-  merge: normalizeMerge,
+  merge: validateMerge,
   titles: checkTitles,
   inputs: checkInputs,
 }
