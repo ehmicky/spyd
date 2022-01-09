@@ -41,6 +41,7 @@ const setCommonProps = function (system, previousSystem) {
   }
 }
 
+// Other properties are merged
 const mergePreviousSystem = function (system, previousSystem) {
   return {
     ...previousSystem,
