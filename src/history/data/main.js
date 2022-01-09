@@ -3,6 +3,7 @@ import inquirer from 'inquirer'
 import { isTtyInput } from '../../report/tty.js'
 import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
+import { shortenId } from '../merge/id.js'
 import { groupMetadata, ungroupMetadata } from '../merge/metadata.js'
 import { compressRawResult } from '../normalize/compress.js'
 import { loadRawResults, normalizePreviousResults } from '../normalize/load.js'
@@ -22,7 +23,8 @@ export const addToHistory = async function (rawResult, { save, cwd }) {
   }
 
   const rawResultA = compressRawResult(rawResult)
-  await addRawResult(rawResultA, cwd)
+  const metadatum = getRawResultMetadatum(rawResultA)
+  await addRawResult(metadatum, rawResultA, cwd)
 }
 
 // Remove a rawResult
@@ -31,7 +33,14 @@ export const removeFromHistory = async function (rawResult, { cwd, force }) {
     return
   }
 
-  await removeRawResult(rawResult, cwd)
+  const metadatum = getRawResultMetadatum(rawResult)
+  await removeRawResult(metadatum, cwd)
+}
+
+// Retrieve the metadatum of a rawResult
+const getRawResultMetadatum = function ({ id, subId, timestamp }) {
+  const idA = shortenId(id)
+  return { id: idA, subId, timestamp }
 }
 
 const shouldRemoveFromHistory = async function (force) {

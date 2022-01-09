@@ -1,7 +1,5 @@
 import pMap from 'p-map'
 
-import { shortenId } from '../merge/id.js'
-
 import { parseRawResult, serializeRawResult } from './contents.js'
 import { getReadHistoryDir, getWriteHistoryDir } from './dir.js'
 import { parseFilename, serializeFilename } from './filename.js'
@@ -60,8 +58,7 @@ const fetchRawResult = async function (metadatum, historyDir) {
 }
 
 // Save a new rawResult
-export const addRawResult = async function (rawResult, cwd) {
-  const metadatum = getRawResultMetadatum(rawResult)
+export const addRawResult = async function (metadatum, rawResult, cwd) {
   const historyDir = await getWriteHistoryDir(cwd)
   const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
@@ -70,8 +67,7 @@ export const addRawResult = async function (rawResult, cwd) {
 }
 
 // Remove a rawResult from the filesystem
-export const removeRawResult = async function (rawResult, cwd) {
-  const metadatum = getRawResultMetadatum(rawResult)
+export const removeRawResult = async function (metadatum, cwd) {
   const historyDir = await getReadHistoryDir(cwd)
 
   if (historyDir === undefined) {
@@ -81,10 +77,4 @@ export const removeRawResult = async function (rawResult, cwd) {
   const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
   await deleteRawResult(path)
-}
-
-// Retrieve the metadatum of a rawResult
-const getRawResultMetadatum = function ({ id, subId, timestamp }) {
-  const idA = shortenId(id)
-  return { id: idA, subId, timestamp }
 }
