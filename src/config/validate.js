@@ -47,7 +47,7 @@ const EXAMPLE_CONFIG = {
   reporterConfig: { debug: { property: true } },
   system: { os: 'linux', node_version: 'node_8' },
   merge: 'f0f13513-5267-43a9-a02a-60fdde0332d0',
-  limit: optionalArray('task_id=10'),
+  limit: 10,
   quiet: true,
   force: true,
   output: './file.js',

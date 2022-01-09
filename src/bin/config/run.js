@@ -2,10 +2,10 @@ import { TASKS, REPORT, HISTORY } from './groups.js'
 
 // Configuration specific to `run`
 export const RUN_CONFIG = {
+  // We do not use `number: true` to avoid parsing invalid numbers as NaN
   precision: {
     group: TASKS,
     alias: 'p',
-    number: true,
     requiresArg: true,
     describe: `Precision level of the results, between 0 and 10.
 The default is 5.
@@ -36,22 +36,19 @@ It no previous result with the identifier is found, this sets the new result's
 identifier instead. This allows merging several benchmarks running in parallel.
 Default: none`,
   },
+  // We do not use `number: true` to avoid parsing invalid numbers as NaN
   limit: {
     group: HISTORY,
     alias: 'l',
-    string: true,
+    requiresArg: true,
     describe: `Report when the average duration has increased by more than a
-specific percentage such as "50%".
+specific percentage.
 
-"0%" can be used to report any increase.
-Negative percentages like "-50%" can be used for decreases instead.
+For example, "50" reports any increase of at least 50%.
+Negative numbers like "-50" can be used for decreases instead.
+"0" can be used to report any increase.
 
-The limit can be scoped to specific combinations by appending their identifiers
-after the percentage.
-  - The syntax is the same as the "select" configuration property.
-  - For example "50% taskOne and node" applies only to taskOne when the runner
-    is node.
-  - Several limits can be specified at once.`,
+Default: none`,
   },
   outliers: {
     group: TASKS,

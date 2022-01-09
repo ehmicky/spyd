@@ -1,4 +1,4 @@
-import { parseLimits } from '../history/compare/parse.js'
+import { parseLimit } from '../history/compare/parse.js'
 import { normalizeMerge } from '../history/merge/id.js'
 import { normalizePrecision } from '../run/precision.js'
 
@@ -66,10 +66,12 @@ const normalizeSelect = function (value, propName) {
 }
 
 const normalizeLimit = function (value, propName) {
-  const valueA = normalizeOptionalArray(value)
-  checkDefinedStringArray(valueA, propName)
-  const limits = parseLimits(valueA)
-  return { limits }
+  if (value === undefined) {
+    return
+  }
+
+  const valueA = parseLimit(value)
+  return { [propName]: valueA }
 }
 
 const checkTitles = function (value, propName) {

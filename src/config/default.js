@@ -36,7 +36,6 @@ export const DEFAULT_CONFIG = {
   outliers: false,
   runnerConfig: {},
   reporterConfig: {},
-  limit: [],
   delta: 1,
   since: 1,
   titles: {},

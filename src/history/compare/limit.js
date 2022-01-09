@@ -1,6 +1,5 @@
 import { getCombinationPrefix } from '../../combination/ids/name.js'
 import { UserError } from '../../error/main.js'
-import { matchSelectors } from '../../select/match.js'
 
 // If any `combination.stats.diff` is too slow compared to the `limit`
 // configuration property, we fail.
@@ -18,16 +17,14 @@ import { matchSelectors } from '../../select/match.js'
 //  - Some units do not have directions, i.e. one cannot know programmatically
 //    whether an increase or a decrease is more desirable. This means users must
 //    explicitly specify it.
-export const checkLimits = function ({ combinations }, { limits }) {
-  const combinationsWithDiff = combinations.filter(hasDiff)
-
-  if (combinationsWithDiff.length === 0) {
+export const checkLimits = function ({ combinations }, { limit }) {
+  if (limit === undefined) {
     return
   }
 
-  const limitErrors = combinationsWithDiff
-    .map((combination) => checkCombinationLimits({ combination, limits }))
-    .filter(Boolean)
+  const limitErrors = combinations
+    .filter((combination) => isOverLimit(combination, limit))
+    .map((combination) => getLimitError(combination, limit))
 
   if (limitErrors.length === 0) {
     return
@@ -37,46 +34,20 @@ export const checkLimits = function ({ combinations }, { limits }) {
   throw new UserError(limitError)
 }
 
-const hasDiff = function ({ stats: { diff, diffPrecise } }) {
-  return diff !== undefined && diffPrecise
+const isOverLimit = function ({ stats: { diff, diffPrecise } }, limit) {
+  return diff !== undefined && diffPrecise && isAboveThreshold(diff.raw, limit)
 }
 
-const checkCombinationLimits = function ({
-  combination,
-  combination: {
-    stats: {
-      diff: { raw: diff },
-    },
-  },
-  limits,
-}) {
-  const limit = limits.find(({ selectors }) =>
-    matchSelectors(combination, selectors),
-  )
-
-  if (limit === undefined) {
-    return
-  }
-
-  const { threshold, higher } = limit
-
-  if (isBelowThreshold(diff, threshold, higher)) {
-    return
-  }
-
-  return getLimitError({ diff, threshold, higher, combination })
-}
-
-const isBelowThreshold = function (diff, threshold, higher) {
-  return higher ? diff <= threshold : diff >= threshold
+const isAboveThreshold = function (diff, { threshold, higher }) {
+  return higher ? diff > threshold : diff < threshold
 }
 
 // `getCombinationName` passes an empty `noDimensions` since `dimensions` are
 // already filtered out in `programmaticResult`.
-const getLimitError = function ({ diff, threshold, higher, combination }) {
+const getLimitError = function (combination, { threshold, higher }) {
   const combinationPrefix = getCombinationPrefix(combination, [])
-  const thresholdStr = threshold * PERCENTAGE_RATIO
-  const diffStr = serializeDiff(diff)
+  const thresholdStr = Math.abs(threshold) * PERCENTAGE_RATIO
+  const diffStr = serializeDiff(combination.stats.diff.raw)
   const higherStr = higher ? 'higher' : 'lower'
   return `${combinationPrefix}The combination should be at most ${thresholdStr}% ${higherStr} but it is ${diffStr}% ${higherStr}.`
 }
