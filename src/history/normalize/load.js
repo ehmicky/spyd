@@ -4,7 +4,7 @@ import { selectRawResult } from '../../select/main.js'
 import { validateSelectMatches } from '../../select/validate.js'
 import { mergeResults } from '../merge/results.js'
 
-import { decompressRawResult } from './compress.js'
+import { decompressRawResult } from './decompress.js'
 import { migrateRawResults } from './migrate.js'
 
 // Normalize rawResults on load
