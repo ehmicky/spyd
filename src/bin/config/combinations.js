@@ -54,13 +54,4 @@ Both the identifier and its type must be specified, such as --system.os=linux or
 --system.node_version=node_16
 Default: none`,
   },
-  merge: {
-    group: HISTORY,
-    string: true,
-    requiresArg: true,
-    describe: `Merge this result with previous ones.
-The value is an identifier. Results with the same identifier are merged.
-It can be "last" to refer to merge to the last result.
-Default: same as result's identifier`,
-  },
 }

@@ -25,6 +25,15 @@ Default: false if the output is an interactive terminal.`,
     describe: `Save the results.
 Default: false`,
   },
+  merge: {
+    group: HISTORY,
+    string: true,
+    requiresArg: true,
+    describe: `Merge this result with previous ones.
+The value is an identifier. Results with the same identifier are merged.
+It can be "last" to refer to merge to the last result.
+Default: same as result's identifier`,
+  },
   limit: {
     group: HISTORY,
     alias: 'l',
