@@ -3,10 +3,11 @@ import { cwd as getCwd } from 'process'
 import isPlainObj from 'is-plain-obj'
 
 import { isTtyInput } from '../report/tty.js'
+import { cleanObject } from '../utils/clean.js'
 
 // Add default configuration properties
 export const addDefaultConfig = function (config, command) {
-  return {
+  return cleanObject({
     ...DEFAULT_CONFIG,
     cwd: getCwd(),
     force: !isTtyInput(),
@@ -14,7 +15,7 @@ export const addDefaultConfig = function (config, command) {
     showMetadata: METADATA_COMMANDS.has(command),
     ...config,
     ...FORCED_CONFIG[command],
-  }
+  })
 }
 
 const getDefaultShowSystem = function ({ system = {} }) {
@@ -52,9 +53,11 @@ const FORCED_CONFIG = {
   show: {},
   remove: {},
   dev: {
-    // Some commands do not require history.
+    // `dev` does not require history.
     // As a performance optimization, we use `since: 0` so it is not loaded.
     delta: 0,
     since: 0,
+    // Merging results does not make with `dev` since the history is not used.
+    merge: undefined,
   },
 }
