@@ -1,5 +1,3 @@
-import { cleanObject } from '../../utils/clean.js'
-
 // Retrieve filename from a rawResult
 export const getRawResultFilename = function (rawResult) {
   const { id, timestamp } = rawResult
@@ -9,7 +7,7 @@ export const getRawResultFilename = function (rawResult) {
 // Retrieve filename from a metadatum
 export const serializeFilename = function ({ id, timestamp }) {
   const timestampStr = serializeTimestamp(timestamp)
-  return `${timestampStr}--${id}.json`
+  return `${timestampStr}_${id}.json`
 }
 
 const serializeTimestamp = function (timestamp) {
@@ -20,7 +18,7 @@ const serializeTimestamp = function (timestamp) {
   const hours = padTimeField(date.getUTCHours())
   const minutes = padTimeField(date.getUTCMinutes())
   const seconds = padTimeField(date.getUTCSeconds())
-  return `${year}-${month}-${day}--${hours}-${minutes}-${seconds}`
+  return `${year}_${month}_${day}_${hours}_${minutes}_${seconds}`
 }
 
 const padTimeField = function (timeField) {
@@ -37,7 +35,7 @@ export const parseFilename = function (filename) {
 
   const { id } = result.groups
   const timestamp = parseTimestamp(result.groups)
-  return cleanObject({ id, timestamp })
+  return { id, timestamp }
 }
 
 const parseTimestamp = function ({
@@ -55,4 +53,4 @@ const parseTimestamp = function ({
 }
 
 const RESULT_FILENAME_REGEXP =
-  /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})--(?<hours>\d{2})-(?<minutes>\d{2})-(?<seconds>\d{2})--(?<id>[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})\.json$/u
+  /^(?<year>\d{4})_(?<month>\d{2})_(?<day>\d{2})_(?<hours>\d{2})_(?<minutes>\d{2})_(?<seconds>\d{2})_(?<id>[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})\.json$/u
