@@ -33,18 +33,19 @@ const getSystemVersions = async function (combinations, cwd) {
 }
 
 const getRunnersVersions = async function (combinations, cwd) {
-  const ids = [...new Set(combinations.map(getRunnerId))]
-  return await Promise.all(
-    ids.map((id) => getRunnerVersions(id, combinations, cwd)),
-  )
+  const runners = combinations.map(getRunner)
+  const ids = [...new Set(runners.map(getRunnerId))]
+  return await Promise.all(ids.map((id) => getRunnerVersions(id, runners, cwd)))
 }
 
-const getRunnerVersions = async function (id, combinations, cwd) {
-  const {
-    dimensions: {
-      runner: { versions, spawnOptions },
-    },
-  } = combinations.find((combination) => getRunnerId(combination) === id)
+const getRunner = function ({ dimensions: { runner } }) {
+  return runner
+}
+
+const getRunnerVersions = async function (id, runners, cwd) {
+  const { versions, spawnOptions } = runners.find(
+    (runner) => getRunnerId(runner) === id,
+  )
   const versionsA = await Promise.all(
     Object.entries(versions).map(([name, version]) =>
       getRunnerVersion({ name, version, id, spawnOptions, cwd }),
@@ -53,11 +54,7 @@ const getRunnerVersions = async function (id, combinations, cwd) {
   return Object.assign({}, ...versionsA)
 }
 
-const getRunnerId = function ({
-  dimensions: {
-    runner: { id },
-  },
-}) {
+const getRunnerId = function ({ id }) {
   return id
 }
 
