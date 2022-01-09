@@ -9,6 +9,15 @@ import { UserError } from '../../error/main.js'
 // during measuring (`run` command). It is not intended to be shown in
 // reporting. Instead, `showDiff` should be used for similar reporting-focused
 // purposes.
+// Even when a limit is hit, we still `save` (if the flag is present):
+//  - This avoids losing information, e.g.:
+//     - We can make a silent `run` checking only for limits, and still `show`
+//       the result afterwards if the limit is hit
+//     - We can fail a CI job if a limit is hit, while still `show`ing the
+//       result afterwards
+//  - This makes `limit` orthogonal with `save`
+//  - If a limit is hit, it fails only once, not repeatedly, since the new
+//    result will adjust the value
 // The `limit` can check either for increase or decrease depending on whether
 // its percentage is positive or not. This is because:
 //  - A decrease percentage is the inverse from an increase percentage
