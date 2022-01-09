@@ -1,3 +1,4 @@
+import omit from 'omit.js'
 import sortOn from 'sort-on'
 
 import {
@@ -68,9 +69,18 @@ export const mergeResults = function (history, targetResult) {
 }
 
 const mergeResultsGroup = function (rawResults) {
-  const [rawResultsA, lastRawResult] = pickLast(rawResults)
-  return rawResultsA.reduceRight(mergeResultsPair, lastRawResult)
+  const rawResultsA = rawResults.map(omitUnmergedProps)
+  const [rawResultsB, lastRawResult] = pickLast(rawResultsA)
+  return rawResultsB.reduceRight(mergeResultsPair, lastRawResult)
 }
+
+// `subId` should be merged as an array of `subIds`. However, since it is not
+// used except for filenames at the moment, we just omit it.
+const omitUnmergedProps = function (rawResult) {
+  return omit.default(rawResult, UNMERGED_PROPS)
+}
+
+const UNMERGED_PROPS = ['subId']
 
 // When merging timestamps, we only keep the most recent one:
 //  - I.e. when merging a new result, the timestamp of the group is updated
