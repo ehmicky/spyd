@@ -1,4 +1,4 @@
-import { getCommonVersions } from '../../top/system/versions.js'
+import { getCommonVersions } from '../../top/system/versions/common.js'
 import { getCombsNoDimensions } from '../filter.js'
 
 import { applyDefaultTasks } from './default.js'

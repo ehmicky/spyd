@@ -1,28 +1,8 @@
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-
 import mapObj from 'map-obj'
 import pProps from 'p-props'
-import { readPackageUp } from 'read-pkg-up'
 
-import { PluginError } from '../../error/main.js'
-import { groupBy } from '../../utils/group.js'
-import { spawnProcess } from '../../utils/spawn.js'
-
-// Retrieve runtime versions common to all runners
-export const getCommonVersions = async function () {
-  return await getSpydVersion()
-}
-
-// Store the `spyd` version on each result
-// TODO: use static JSON imports once those are possible
-const getSpydVersion = async function () {
-  const cwd = dirname(fileURLToPath(import.meta.url))
-  const {
-    packageJson: { version },
-  } = await readPackageUp({ cwd, normalize: false })
-  return { Spyd: version }
-}
+import { PluginError } from '../../../error/main.js'
+import { spawnProcess } from '../../../utils/spawn.js'
 
 // Get runtime versions for this runner, returned as `versions` from
 // `runner.launch()`. This is an object where:
@@ -86,27 +66,4 @@ Retrieving runner versions failed: ${version.join(' ')}
 ${error.message}`,
     )
   }
-}
-
-// Merge `result.combinations[*].dimensions.runner.versions` into
-// `result.systems[*].versions`.
-export const mergeSystemVersions = function (rawResult) {
-  const versions = getSystemVersions(rawResult)
-  return { ...rawResult, systems: [{ ...rawResult.systems[0], versions }] }
-}
-
-const getSystemVersions = function ({ combinations }) {
-  const runners = combinations.map(getRunner)
-  const versionsArray = Object.values(groupBy(runners, 'id')).map(
-    getRunnerVersions,
-  )
-  return Object.assign({}, ...versionsArray)
-}
-
-const getRunner = function ({ dimensions: { runner } }) {
-  return runner
-}
-
-const getRunnerVersions = function ([{ versions }]) {
-  return versions
 }

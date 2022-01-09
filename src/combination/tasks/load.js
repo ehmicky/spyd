@@ -1,5 +1,5 @@
 import { UserError, PluginError } from '../../error/main.js'
-import { computeRunnerVersions } from '../../top/system/versions.js'
+import { computeRunnerVersions } from '../../top/system/versions/compute.js'
 
 // Select the runners and retrieve their related spawn options using
 // `runner.launch()`

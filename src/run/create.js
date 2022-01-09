@@ -2,7 +2,7 @@ import { listCombinations } from '../combination/list.js'
 import { listHistory } from '../history/data/main.js'
 import { normalizeRawResults } from '../history/normalize/load.js'
 import { createTopProps } from '../top/create.js'
-import { mergeSystemVersions } from '../top/system/versions.js'
+import { mergeSystemVersions } from '../top/system/versions/merge.js'
 
 // Create a new rawResult to measure
 export const createResult = async function (config) {
