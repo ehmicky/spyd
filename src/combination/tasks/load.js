@@ -1,14 +1,21 @@
 import { UserError, PluginError } from '../../error/main.js'
+import { computeRunnerVersions } from '../../top/system/versions.js'
 
 // Select the runners and retrieve their related spawn options using
 // `runner.launch()`
-export const loadRunner = async function ({ id, config, launch }) {
+export const loadRunner = async function ({ id, config, launch }, cwd) {
   const {
     spawn,
     spawnOptions = {},
     versions,
   } = await launchRunner({ id, config, launch })
-  return { id, spawn, spawnOptions, versions, config }
+  const versionsA = await computeRunnerVersions({
+    versions,
+    id,
+    spawnOptions,
+    cwd,
+  })
+  return { id, spawn, spawnOptions, versions: versionsA, config }
 }
 
 // Fire `runner.launch()`

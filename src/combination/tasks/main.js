@@ -95,7 +95,7 @@ const getDimensions = function (runner) {
 }
 
 const getDimensionsTasks = async function ({ runner }, noDimensions, cwd) {
-  const runnerA = await loadRunner(runner)
+  const runnerA = await loadRunner(runner, cwd)
   const taskPaths = await applyDefaultTasks(runnerA)
   const tasks = await Promise.all(
     taskPaths.map((taskPath) =>

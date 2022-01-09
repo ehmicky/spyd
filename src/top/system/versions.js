@@ -5,9 +5,10 @@ import pProps from 'p-props'
 import { readPackageUp } from 'read-pkg-up'
 
 import { PluginError } from '../../error/main.js'
+import { groupBy } from '../../utils/group.js'
 import { spawnProcess } from '../../utils/spawn.js'
 
-// Add runtime versions for this runner, returned as `versions` from
+// Get runtime versions for this runner, returned as `versions` from
 // `runner.launch()`. This is an object where:
 //  - the key is runtime name (e.g. 'Node')
 //  - the value is its version (e.g. '12.0.0').
@@ -17,43 +18,23 @@ import { spawnProcess } from '../../utils/spawn.js'
 // Reported by the `--showSystem` configuration property.
 // Meant to show information about runtime versions, modes (e.g. type of shell)
 // and configuration.
-export const addSystemVersions = async function (rawResult, { cwd }) {
-  const versions = await getSystemVersions(rawResult.combinations, cwd)
-  return { ...rawResult, systems: [{ ...rawResult.systems[0], versions }] }
-}
-
-const getSystemVersions = async function (combinations, cwd) {
-  const [versions, spydVersion] = await Promise.all([
-    getRunnersVersions(combinations, cwd),
-    getSpydVersion(),
-  ])
-  return Object.assign({}, ...versions, { Spyd: spydVersion })
-}
-
-const getRunnersVersions = async function (combinations, cwd) {
-  const runners = combinations.map(getRunner)
-  const ids = [...new Set(runners.map(getRunnerId))]
-  return await Promise.all(ids.map((id) => getRunnerVersions(id, runners, cwd)))
-}
-
-const getRunner = function ({ dimensions: { runner } }) {
-  return runner
-}
-
-const getRunnerVersions = async function (id, runners, cwd) {
-  const { versions, spawnOptions } = runners.find(
-    (runner) => getRunnerId(runner) === id,
-  )
+export const computeRunnerVersions = async function ({
+  versions,
+  id,
+  spawnOptions,
+  cwd,
+}) {
   return await pProps(versions, (version) =>
-    getRunnerVersion({ version, id, spawnOptions, cwd }),
+    computeRunnerVersion({ version, id, spawnOptions, cwd }),
   )
 }
 
-const getRunnerId = function ({ id }) {
-  return id
-}
-
-const getRunnerVersion = async function ({ version, id, spawnOptions, cwd }) {
+const computeRunnerVersion = async function ({
+  version,
+  id,
+  spawnOptions,
+  cwd,
+}) {
   if (typeof version === 'string') {
     return version
   }
@@ -72,6 +53,32 @@ Retrieving runner versions failed: ${version.join(' ')}
 ${error.message}`,
     )
   }
+}
+
+// Merge `result.combinations[*].dimensions.runner.versions` into a single
+// `result.systems[0].versions`.
+export const addSystemVersions = async function (rawResult) {
+  const versions = await getSystemVersions(rawResult)
+  return { ...rawResult, systems: [{ ...rawResult.systems[0], versions }] }
+}
+
+const getSystemVersions = async function ({ combinations }) {
+  const versions = getRunnersVersions(combinations)
+  const spydVersion = await getSpydVersion()
+  return Object.assign({}, ...versions, { Spyd: spydVersion })
+}
+
+const getRunnersVersions = function (combinations) {
+  const runners = combinations.map(getRunner)
+  return Object.values(groupBy(runners, 'id')).map(getRunnerVersions)
+}
+
+const getRunner = function ({ dimensions: { runner } }) {
+  return runner
+}
+
+const getRunnerVersions = function ([{ versions }]) {
+  return versions
 }
 
 // TODO: use static JSON imports once those are possible
