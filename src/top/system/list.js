@@ -45,10 +45,10 @@ export const listSystem = function (system, cwd) {
 }
 
 const getMachine = function () {
+  const os = osName()
   const cpus = getCpus()
   const memory = totalmem()
-  const os = osName()
-  return { cpus, memory, os }
+  return { os, cpus, memory }
 }
 
 const getCpus = function () {
@@ -61,9 +61,9 @@ const getCpu = function ([model, cores]) {
 }
 
 const getEnvInfo = function (cwd) {
-  const { commit, branch, tag, pr, prBranch, buildUrl } = envCi({ cwd })
+  const { branch, tag, commit, pr, prBranch, buildUrl } = envCi({ cwd })
   return {
-    git: { commit, branch, tag, prNumber: pr, prBranch },
+    git: { branch, tag, commit, prNumber: pr, prBranch },
     ci: buildUrl,
   }
 }
