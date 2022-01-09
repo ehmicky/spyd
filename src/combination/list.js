@@ -35,11 +35,12 @@ const getCombinationsProduct = function (tasks, inputsList, system) {
   }
 
   const systemDimensions = mapObj(system, getSystemDimension)
-  return tasks.map(({ id, taskPath, runner }) => ({
+  return tasks.map(({ id, taskPath, runner: { versions, ...runner } }) => ({
     dimensions: { task: { id }, runner, ...systemDimensions },
     taskPath,
     inputsList,
     stats: {},
+    versions,
   }))
 }
 

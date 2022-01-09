@@ -4,6 +4,8 @@ import mapObj from 'map-obj'
 import { hasPrefix, removePrefix } from '../../combination/prefix.js'
 import { groupBy } from '../../utils/group.js'
 
+import { mergeVersions } from './versions/merge.js'
+
 // A result can only have a single `system`.
 //  - However, when merging results, this becomes several `systems`.
 //  - We handle this by making systems combination-specific, set to
@@ -22,10 +24,10 @@ export const mergeSystems = function ({ combinations }) {
   return systemsGroups.map(mergeSystemsGroup)
 }
 
-const getCombinationSystem = function ({ dimensions, system }) {
+const getCombinationSystem = function ({ dimensions, system, versions }) {
   const dimensionsA = filterObj(dimensions, isSystemDimension)
   const dimensionsB = mapObj(dimensionsA, removeSystemPrefix)
-  return { ...system, dimensions: dimensionsB }
+  return { ...system, versions, dimensions: dimensionsB }
 }
 
 const isSystemDimension = function (dimensionName) {
@@ -57,9 +59,6 @@ const mergeSystemsGroup = function ([mostRecentSystem, ...previousSystems]) {
 // `git` and `machine` properties should not be deeply merged since their
 // properties relate to each other. However, `versions` should.
 const mergeSystemsPair = function (system, previousSystem) {
-  return {
-    ...previousSystem,
-    ...system,
-    versions: { ...previousSystem.versions, ...system.versions },
-  }
+  const versions = mergeVersions(system.versions, previousSystem.versions)
+  return { ...previousSystem, ...system, versions }
 }

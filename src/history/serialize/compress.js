@@ -43,10 +43,10 @@ const compressSystem = function ([
   }
 }
 
-const compressCombination = function ({ dimensions, stats }) {
+const compressCombination = function ({ dimensions, versions, stats }) {
   const dimensionsA = mapObj(dimensions, compressDimension)
   const statsA = compressStats(stats)
-  return { dimensions: dimensionsA, stats: statsA }
+  return { dimensions: dimensionsA, versions, stats: statsA }
 }
 
 const compressDimension = function (dimension, { id }) {

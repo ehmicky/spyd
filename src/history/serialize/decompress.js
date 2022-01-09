@@ -14,10 +14,13 @@ export const decompressRawResult = function ({
   return { id, subId, timestamp, combinations: combinationsA }
 }
 
-const decompressCombination = function ({ dimensions, stats }, system) {
+const decompressCombination = function (
+  { dimensions, stats, versions },
+  system,
+) {
   const dimensionsA = mapObj(dimensions, decompressDimension)
   const statsA = decompressStats(stats)
-  return { dimensions: dimensionsA, stats: statsA, system }
+  return { dimensions: dimensionsA, stats: statsA, system, versions }
 }
 
 const decompressDimension = function (dimension, id) {
