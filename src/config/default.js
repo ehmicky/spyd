@@ -16,7 +16,6 @@ export const addDefaultConfig = function (config, command) {
     showSystem: getDefaultShowSystem(config),
     showMetadata: METADATA_COMMANDS.has(command),
     ...config,
-    ...FORCED_CONFIG[command],
   })
 }
 
@@ -47,17 +46,4 @@ export const DEFAULT_CONFIG = {
   runner: ['node'],
   reporter: ['debug'],
   inputs: {},
-}
-
-// Some configuration properties values are forced for some commands
-const FORCED_CONFIG = {
-  run: {},
-  show: {},
-  remove: {},
-  dev: {
-    // `dev` does not use history.
-    delta: 0,
-    since: 0,
-    merge: undefined,
-  },
 }

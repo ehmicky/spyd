@@ -4,7 +4,7 @@ import { measureCombinations } from '../run/measure/main.js'
 
 // Execute tasks without benchmarking them.
 // We run each serially, so the output is not interleaved.
-export const performDev = async function ({ combinations }, config) {
+export const performDev = async function (combinations, config) {
   const noDimensions = getNoDimensions(combinations)
 
   // eslint-disable-next-line fp/no-loops
