@@ -20,7 +20,7 @@ export const listCombinations = async function ({
   const tasks = await listTasks(runners, cwd)
   const inputsList = toInputsList(inputs)
 
-  const combinations = getCombinationsProduct({ tasks, inputsList, system })
+  const combinations = getCombinationsProduct(tasks, inputsList, system)
   validateCombinationsIds(combinations, inputsList)
   const combinationsA = selectCombinations(combinations, select)
   return combinationsA
@@ -29,7 +29,7 @@ export const listCombinations = async function ({
 // Get cartesian product of all combinations.
 // `taskPath` is not set in `dimensions.task.path` because it used by the `init`
 // stage before task dimension ids are known.
-const getCombinationsProduct = function ({ tasks, inputsList, system }) {
+const getCombinationsProduct = function (tasks, inputsList, system) {
   if (tasks.length === 0) {
     throw new UserError(`Please specify some "tasks".`)
   }
