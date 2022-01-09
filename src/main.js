@@ -30,6 +30,7 @@ export const show = async function (configFlags) {
   const config = await getConfig('show', configFlags)
   const { rawResult, history } = await getFromHistory(config)
   const programmaticResult = await reportResult(rawResult, history, config)
+  checkLimits(programmaticResult)
   return programmaticResult
 }
 
