@@ -21,14 +21,14 @@ export const isValidId = function (value) {
 
 // `merge` can be "last", which refers to the previous result's id.
 // If there are no previous results, a new UUIDv4 is generated.
-export const normalizeId = function (targetResult, history) {
-  if (targetResult.id !== LAST_ID) {
-    return targetResult
+export const normalizeId = function (newResult, history) {
+  if (newResult.id !== LAST_ID) {
+    return newResult
   }
 
   const id =
     history.length === 0 ? getDefaultId() : history[history.length - 1].id
-  return { ...targetResult, id }
+  return { ...newResult, id }
 }
 
 const LAST_ID = 'last'

@@ -1,5 +1,6 @@
 import { listCombinations } from '../combination/list.js'
 import { listHistory } from '../history/data/main.js'
+import { normalizeId } from '../history/merge/id.js'
 import { createTopProps } from '../top/create.js'
 
 // Create a newResult to measure
@@ -8,7 +9,8 @@ export const createResult = async function (config) {
     createNewResult(config),
     listHistory(config),
   ])
-  return { newResult, history }
+  const newResultA = normalizeId(newResult, history)
+  return { newResult: newResultA, history }
 }
 
 const createNewResult = async function (config) {

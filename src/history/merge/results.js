@@ -9,8 +9,6 @@ import { mergeSystems } from '../../top/system/merge.js'
 import { groupBy } from '../../utils/group.js'
 import { pickLast } from '../../utils/last.js'
 
-import { normalizeId } from './id.js'
-
 // Merge all rawResults with the same `id`.
 // The `merge` configuration property sets the result's `id`, which can be used
 // to merge several results.
@@ -58,9 +56,8 @@ import { normalizeId } from './id.js'
 //  - However, grouping can remove this sorting order, so we sort again to
 //    ensure the last result is still the target result
 export const mergeResults = function (history, targetResult) {
-  const targetResultA = normalizeId(targetResult, history)
   const rawResultsGroups = Object.values(
-    groupBy([...history, targetResultA], 'id'),
+    groupBy([...history, targetResult], 'id'),
   )
   const results = rawResultsGroups.map(mergeRawResultsGroup)
   const resultsA = sortOn(results, 'timestamp')
