@@ -2,15 +2,15 @@ import { shortenId } from '../merge/id.js'
 
 // Retrieve filename from a rawResult
 export const getRawResultFilename = function (rawResult) {
-  const { id, timestamp } = rawResult
-  return serializeFilename({ id, timestamp })
+  const { id, subId, timestamp } = rawResult
+  return serializeFilename({ id, subId, timestamp })
 }
 
 // Retrieve filename from a metadatum
-export const serializeFilename = function ({ id, timestamp }) {
+export const serializeFilename = function ({ id, subId, timestamp }) {
   const idStr = shortenId(id)
   const timestampStr = serializeTimestamp(timestamp)
-  return `${timestampStr}_${idStr}.json`
+  return `${timestampStr}_${idStr}_${subId}.json`
 }
 
 const serializeTimestamp = function (timestamp) {
@@ -36,9 +36,9 @@ export const parseFilename = function (filename) {
     return
   }
 
-  const { id } = result.groups
+  const { id, subId } = result.groups
   const timestamp = parseTimestamp(result.groups)
-  return { id, timestamp }
+  return { id, subId, timestamp }
 }
 
 const parseTimestamp = function ({
@@ -56,4 +56,4 @@ const parseTimestamp = function ({
 }
 
 const RESULT_FILENAME_REGEXP =
-  /^(?<year>\d{4})_(?<month>\d{2})_(?<day>\d{2})_(?<hours>\d{2})_(?<minutes>\d{2})_(?<seconds>\d{2})_(?<id>[\da-f]{12})\.json$/u
+  /^(?<year>\d{4})_(?<month>\d{2})_(?<day>\d{2})_(?<hours>\d{2})_(?<minutes>\d{2})_(?<seconds>\d{2})_(?<id>[\da-f]{12})_(?<subId>[\da-f]{12})\.json$/u
