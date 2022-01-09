@@ -1,5 +1,5 @@
 import { addToHistory } from '../history/data/main.js'
-import { normalizeNewResults } from '../history/normalize/load.js'
+import { normalizeRawResults } from '../history/normalize/load.js'
 import {
   reportStart,
   reportCompute,
@@ -28,9 +28,10 @@ export const performRun = async function ({
   previewState,
   config,
 }) {
-  const { targetResult: result, history: historyA } = normalizeNewResults(
+  const { targetResult: result, history: historyA } = normalizeRawResults(
     normalizeMeasuredResult(rawResult),
     history,
+    [],
   )
   const {
     result: resultA,

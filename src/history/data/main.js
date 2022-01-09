@@ -6,7 +6,7 @@ import { applyMainDelta, applySinceDelta } from '../delta/find.js'
 import { shortenId } from '../merge/id.js'
 import { groupMetadata, ungroupMetadata } from '../merge/metadata.js'
 import { compressRawResult } from '../normalize/compress.js'
-import { loadRawResults, normalizePreviousResults } from '../normalize/load.js'
+import { loadRawResults, normalizeRawResults } from '../normalize/load.js'
 
 import { parseRawResult, serializeRawResult } from './contents.js'
 import {
@@ -66,8 +66,11 @@ export const getFromHistory = async function (config) {
   const metadataGroupsD = [...metadataGroupsC, targetMetadataGroup]
   const history = await fetchHistory(metadataGroupsD, config)
   const [historyA, rawResult] = pickLast(history)
-  const { targetResult: rawResultA, history: historyB } =
-    normalizePreviousResults(rawResult, historyA, config)
+  const { targetResult: rawResultA, history: historyB } = normalizeRawResults(
+    rawResult,
+    historyA,
+    config.select,
+  )
   return { rawResult: rawResultA, history: historyB }
 }
 
