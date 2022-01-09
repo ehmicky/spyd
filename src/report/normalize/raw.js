@@ -25,7 +25,11 @@ import { selectRawResult } from '../../select/main.js'
 //       measured combinations are expected to be reported
 //  - The core issue is due to `select` having two purposes with the `run`
 //    command: restricting measuring and reporting
-export const normalizeRawResults = function (targetResult, history, select) {
+export const normalizeReportedResults = function (
+  targetResult,
+  history,
+  select,
+) {
   const { history: historyA, targetResult: targetResultA } = mergeResults(
     history,
     targetResult,
@@ -33,7 +37,7 @@ export const normalizeRawResults = function (targetResult, history, select) {
   const targetResultB = selectRawResult(targetResultA, select)
   const historyB = addDefaultIds(historyA, targetResultB)
   const historyC = filterUnusedCombinations(historyB, targetResultB)
-  return { targetResult: targetResultB, history: historyC }
+  return { result: targetResultB, history: historyC }
 }
 
 // We ignore the combinations from history results that do not exist in the

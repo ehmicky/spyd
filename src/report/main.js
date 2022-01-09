@@ -4,6 +4,7 @@ import { getContents } from './contents.js'
 import { finalizeContents } from './finalize.js'
 import { normalizeComputedResult } from './normalize/computed.js'
 import { normalizeEarlyResult } from './normalize/early.js'
+import { normalizeReportedResults } from './normalize/raw.js'
 import { outputContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
 
@@ -30,18 +31,23 @@ export const reportResult = async function (rawResult, history, config) {
 // Start reporting
 export const reportStart = async function (rawResult, history, config) {
   const configA = await startReporters(config)
-  const noDimensions = getNoDimensions(rawResult.combinations)
+  const { result, history: historyA } = normalizeReportedResults(
+    rawResult,
+    history,
+    configA.select,
+  )
+  const noDimensions = getNoDimensions(result.combinations)
   const {
-    result,
+    result: resultA,
     sinceResult,
     config: configB,
   } = normalizeEarlyResult({
-    rawResult,
-    history,
+    result,
+    history: historyA,
     noDimensions,
     config: configA,
   })
-  return { result, sinceResult, noDimensions, config: configB }
+  return { result: resultA, sinceResult, noDimensions, config: configB }
 }
 
 // Report preview results in `run` command.

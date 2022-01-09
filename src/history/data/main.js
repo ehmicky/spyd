@@ -1,6 +1,5 @@
 import inquirer from 'inquirer'
 
-import { normalizeRawResults } from '../../report/normalize/raw.js'
 import { isTtyInput } from '../../report/tty.js'
 import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
@@ -67,12 +66,7 @@ export const getFromHistory = async function (config) {
   const metadataGroupsD = [...metadataGroupsC, targetMetadataGroup]
   const history = await fetchHistory(metadataGroupsD, config)
   const [historyA, rawResult] = pickLast(history)
-  const { targetResult: rawResultA, history: historyB } = normalizeRawResults(
-    rawResult,
-    historyA,
-    config.select,
-  )
-  return { rawResult: rawResultA, history: historyB }
+  return { rawResult, history: historyA }
 }
 
 // List all history results, after applying the `since` delta.

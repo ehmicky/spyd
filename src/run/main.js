@@ -5,7 +5,6 @@ import {
   reportPrint,
   reportEnd,
 } from '../report/main.js'
-import { normalizeRawResults } from '../report/normalize/raw.js'
 
 import { measureCombinations } from './measure/main.js'
 import { normalizeNewResult, updateCombinationsStats } from './normalize.js'
@@ -26,17 +25,12 @@ export const performRun = async function ({
   config,
 }) {
   const rawResult = normalizeNewResult(newResult)
-  const { targetResult: result, history: historyA } = normalizeRawResults(
-    rawResult,
-    history,
-    [],
-  )
   const {
     result: resultA,
     sinceResult,
     noDimensions,
     config: configA,
-  } = await reportStart(result, historyA, config)
+  } = await reportStart(rawResult, history, { ...config, select: [] })
 
   try {
     const { programmaticResult, contents } = await previewAndMeasure({
