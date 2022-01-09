@@ -33,7 +33,13 @@ export const computeRunnerVersions = async function ({
 }
 
 // If two versions have the same command array, dedupe it so it is performed
-// only once, for performance and consistency
+// only once, for performance and consistency.
+// This can happen when using runnerConfig variations.
+// We do this separately for each runner since:
+//  - Having the same command array + `spawnOptions` is quite unlikely
+//  - The performance benefit is minimal, since it would reduce the
+//    parallelization of retrieving task paths, which is much slower
+//  - Runners have different `id` to report in the error message
 const dedupeVersion = function (name, version) {
   return [serializeVersion(version), version]
 }
