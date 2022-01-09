@@ -23,7 +23,7 @@ import { findClosestMean, findHotIndex } from './find.js'
 export const getColdStats = function (
   array,
   {
-    precisionTarget,
+    precision,
     mean = getMean(array),
     filter = defaultFilter,
     length = array.filter(filter).length,
@@ -31,7 +31,7 @@ export const getColdStats = function (
 ) {
   const cold = getCold(array, { mean, filter, length })
   const coldLoopsTarget = getColdLoopsTarget(array, {
-    precisionTarget,
+    precision,
     mean,
     filter,
     length,
@@ -60,7 +60,7 @@ const getCold = function (array, { mean, filter, length }) {
   return cold
 }
 
-// Approximate the number of loops left for `cold` to be below `precisionTarget`
+// Approximate the number of loops left for `cold` to be below `precision`.
 // Used to estimate the duration of the benchmark in previews.
 // This is based on the assumption that:
 //  - The total mean is stable
@@ -85,11 +85,11 @@ const getCold = function (array, { mean, filter, length }) {
 //  - Most of the time, the `moeLoopsTarget` is larger than `coldLoopsTarget`
 const getColdLoopsTarget = function (
   array,
-  { precisionTarget, mean, filter, length },
+  { precision, mean, filter, length },
 ) {
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
-  const incrementalMeanMin = mean * (1 - precisionTarget)
-  const incrementalMeanMax = mean * (1 + precisionTarget)
+  const incrementalMeanMin = mean * (1 - precision)
+  const incrementalMeanMax = mean * (1 + precision)
   const hotIndex = findHotIndex(array, {
     minIndex,
     filter,

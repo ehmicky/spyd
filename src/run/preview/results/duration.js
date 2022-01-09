@@ -19,13 +19,13 @@ export const updateCombinationEnd = function ({
   previewState: { previewSamples, combinationEnd: previousCombinationEnd },
   durationState: { sampleDurationMean },
   sampleState: { coldLoopsTarget },
-  precisionTarget,
+  precision,
 }) {
   if (sampleDurationMean === undefined || stdev === undefined || stdev === 0) {
     return
   }
 
-  const samplesLeft = getSamplesLeft(stats, precisionTarget, coldLoopsTarget)
+  const samplesLeft = getSamplesLeft(stats, precision, coldLoopsTarget)
   const combinationEnd = getCombinationEnd(samplesLeft, sampleDurationMean)
   const combinationEndA = smoothCombinationEnd({
     combinationEnd,
@@ -44,7 +44,7 @@ export const updateCombinationEnd = function ({
 // `precision`.
 const getSamplesLeft = function (
   { samples, loops, mean, stdev, min, max, outliersMin, outliersMax },
-  precisionTarget,
+  precision,
   coldLoopsTarget,
 ) {
   const moeLengthTarget = getLengthForMoe({
@@ -52,7 +52,7 @@ const getSamplesLeft = function (
     stdev,
     min,
     max,
-    precisionTarget,
+    precision,
   })
   const moeLoopsTarget = getLoopsFromLength(
     moeLengthTarget,

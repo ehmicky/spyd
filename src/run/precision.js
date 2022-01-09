@@ -1,9 +1,9 @@
 import { UserError } from '../error/main.js'
 
-// Replaces `precision` configuration property by `precisionTarget`.
+// Normalize `precision` configuration property value.
 // Also validates it.
-// For each of those `precision` values, each combination stops once its `rmoe`
-// reached the corresponding `precisionTarget`.
+// For each of those `precision` original value, each combination stops once
+// its `rmoe` reached the corresponding `precision` normalized value.
 // There are several advantages in using `precision` instead of a `duration`:
 //  - A `duration` makes the precision (`rmoe`) machine-dependent or
 //    hardward load-dependent
@@ -79,15 +79,15 @@ export const normalizePrecision = function (precision, name) {
     throw new UserError(`'${name}' must be a positive integer: ${precision}`)
   }
 
-  const precisionTarget = PRECISION_TARGETS[precision]
+  const precisionA = PRECISION_TARGETS[precision]
 
-  if (precisionTarget === undefined) {
+  if (precisionA === undefined) {
     throw new UserError(
       `'${name}' must be between ${MIN_PRECISION} and ${MAX_PRECISION}, not ${precision}`,
     )
   }
 
-  return { precisionTarget }
+  return { precision: precisionA }
 }
 
 // Associates `precision` (using array index) to the minimum `rmoe` each
@@ -120,11 +120,11 @@ const MAX_PRECISION = PRECISION_TARGETS.length - 1
 //     - This also means those are never reported if `precision: 0`
 // We also check that performance optimization has ended
 //  - We compare `cold` to the same threshold to do so.
-export const isPreciseEnough = function (rmoe, cold, precisionTarget) {
+export const isPreciseEnough = function (rmoe, cold, precision) {
   return (
     rmoe !== undefined &&
-    rmoe <= precisionTarget &&
+    rmoe <= precision &&
     cold !== undefined &&
-    cold <= precisionTarget
+    cold <= precision
   )
 }

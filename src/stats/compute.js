@@ -59,7 +59,7 @@ export const computeStats = function ({
   measures,
   unsortedMeasures,
   outliers,
-  precisionTarget,
+  precision,
 }) {
   const { outliersMin, outliersMax } = getOutliersPercentage(measures, outliers)
   const { minIndex, maxIndex, length } = getLengthFromLoops(
@@ -75,7 +75,7 @@ export const computeStats = function ({
   )
   const mean = getMean(measures, { minIndex, maxIndex })
   const { cold, coldLoopsTarget } = getColdStats(unsortedMeasures, {
-    precisionTarget,
+    precision,
     mean,
     filter,
     length,

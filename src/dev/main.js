@@ -18,7 +18,7 @@ const combinationDev = async function (combination, noDimensions, { cwd }) {
   printCombinationName(combination, noDimensions)
 
   await measureCombinations([combination], {
-    precisionTarget: 0,
+    precision: 0,
     cwd,
     previewState: { quiet: true },
     outliers: true,

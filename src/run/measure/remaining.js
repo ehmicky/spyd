@@ -19,7 +19,7 @@ import { hasMaxMeasures } from '../sample/max_measures.js'
 //    means a benchmark might succeed or not depending on the machine.
 export const isRemainingCombination = function (
   { sampleState: { allSamples, measures }, stats: { loops, rmoe, cold } },
-  { precisionTarget, stage, stopState: { stopped } },
+  { precision, stage, stopState: { stopped } },
 ) {
   if (stopped) {
     return false
@@ -29,7 +29,7 @@ export const isRemainingCombination = function (
     return allSamples === 0
   }
 
-  return shouldKeepRunning({ measures, loops, rmoe, cold, precisionTarget })
+  return shouldKeepRunning({ measures, loops, rmoe, cold, precision })
 }
 
 const shouldKeepRunning = function ({
@@ -37,15 +37,15 @@ const shouldKeepRunning = function ({
   loops,
   rmoe,
   cold,
-  precisionTarget,
+  precision,
 }) {
   if (hasMaxMeasures(measures)) {
     return false
   }
 
-  if (precisionTarget === 0) {
+  if (precision === 0) {
     return loops === 0
   }
 
-  return !isPreciseEnough(rmoe, cold, precisionTarget)
+  return !isPreciseEnough(rmoe, cold, precision)
 }

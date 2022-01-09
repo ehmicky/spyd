@@ -84,7 +84,7 @@ export const getMoe = function (stdev, length) {
 
 // Retrieve margin of error relative to the mean.
 // This is more useful than moe when comparing different combinations, or when
-// targetting a specific `precisionTarget`.
+// targetting a specific `precision`.
 // Confidence interval:
 //  - Unlike `moe`, `rmoe` can be impacted by the mean's inaccuracy (due to
 //    being estimated)
@@ -99,8 +99,8 @@ export const getMoe = function (stdev, length) {
 //     - The difference with `rmoe` is:
 //        - Too low to be worth the added complexity
 //        - Constant for a given `precision`, i.e. could be considered part of
-//          the `precisionTarget` itself
-//           - e.g. 10% `precisionTarget` is actually always `[9.1%, 11.1%]`
+//          the `precision` itself
+//           - e.g. 10% `precision` is actually always `[9.1%, 11.1%]`
 //     - It is not a problem even when mean inaccuracy is high
 //        - Because that is only likely when rstdev is high and sample size low
 //        - Which is proportional to a higher `moe|rmoe`
@@ -113,16 +113,10 @@ export const getRmoe = function (moe, mean) {
 // Since `length` is used in non-straight-forward ways (due to
 // `getStudentTvalue()`) in `getMoe()`, we need to do an iterative/heuristic
 // search until the value is found.
-export const getLengthForMoe = function ({
-  mean,
-  stdev,
-  min,
-  max,
-  precisionTarget,
-}) {
+export const getLengthForMoe = function ({ mean, stdev, min, max, precision }) {
   const invertLength = areIdenticalMeasures(min, max)
-    ? invertLengthIdentical.bind(undefined, precisionTarget)
-    : invertLengthNormal.bind(undefined, { mean, stdev, precisionTarget })
+    ? invertLengthIdentical.bind(undefined, precision)
+    : invertLengthNormal.bind(undefined, { mean, stdev, precision })
 
   const lengths = new Set([])
   // eslint-disable-next-line fp/no-let
@@ -139,12 +133,12 @@ export const getLengthForMoe = function ({
   return length
 }
 
-const invertLengthIdentical = function (precisionTarget, tValue) {
-  return (tValue * IDENTICAL_VARIANCE_SHIFT) / precisionTarget
+const invertLengthIdentical = function (precision, tValue) {
+  return (tValue * IDENTICAL_VARIANCE_SHIFT) / precision
 }
 
-const invertLengthNormal = function ({ mean, stdev, precisionTarget }, tValue) {
-  return ((tValue * stdev) / (precisionTarget * mean)) ** 2
+const invertLengthNormal = function ({ mean, stdev, precision }, tValue) {
+  return ((tValue * stdev) / (precision * mean)) ** 2
 }
 
 // Minimal `length` with a defined t-value

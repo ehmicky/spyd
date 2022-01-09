@@ -49,7 +49,7 @@ export const addStats = function ({
   sampleState: { measures, unsortedMeasures, sampleLoops, sampleTimes },
   minLoopDuration,
   outliers,
-  precisionTarget,
+  precision,
 }) {
   if (measures.length === 0) {
     return { stats, sampleState }
@@ -64,7 +64,7 @@ export const addStats = function ({
     measures,
     unsortedMeasures,
     outliers,
-    precisionTarget,
+    precision,
   })
   return {
     stats: { ...countStats, ...computedStats },
