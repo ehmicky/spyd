@@ -11,7 +11,7 @@ import { pickLast } from '../../utils/last.js'
 
 import { normalizeId } from './id.js'
 
-// Merge all results with the same `id`.
+// Merge all rawResults with the same `id`.
 // The `merge` configuration property sets the result's `id`, which can be used
 // to merge several results.
 // This allows incremental benchmarks which is useful:
@@ -59,16 +59,16 @@ import { normalizeId } from './id.js'
 //    ensure the last result is still the target result
 export const mergeResults = function (history, targetResult) {
   const targetResultA = normalizeId(targetResult, history)
-  const resultsGroups = Object.values(
+  const rawResultsGroups = Object.values(
     groupBy([...history, targetResultA], 'id'),
   )
-  const rawResultsA = resultsGroups.map(mergeResultsGroup)
-  const rawResultsB = sortOn(rawResultsA, 'timestamp')
-  const [historyA, targetResultB] = pickLast(rawResultsB)
+  const results = rawResultsGroups.map(mergeRawResultsGroup)
+  const resultsA = sortOn(results, 'timestamp')
+  const [historyA, targetResultB] = pickLast(resultsA)
   return { history: historyA, targetResult: targetResultB }
 }
 
-const mergeResultsGroup = function (rawResults) {
+const mergeRawResultsGroup = function (rawResults) {
   const rawResultsA = rawResults.map(omitUnmergedProps)
   const [rawResultsB, lastRawResult] = pickLast(rawResultsA)
   return rawResultsB.reduceRight(mergeResultsPair, lastRawResult)
