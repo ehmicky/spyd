@@ -9,6 +9,7 @@ import {
   checkDefinedStringArray,
   checkDefinedString,
   checkJsonObject,
+  checkUuid,
 } from './check.js'
 
 // Normalize configuration shape and do custom validation
@@ -71,6 +72,10 @@ const normalizeLimit = function (value, propName) {
   return { limits }
 }
 
+const normalizeMerge = function (value, propName) {
+  checkUuid(value, propName)
+}
+
 const checkTitles = function (value, propName) {
   Object.entries(value).forEach(([childName, propValue]) => {
     checkDefinedString(propValue, `${propName}.${childName}`)
@@ -89,6 +94,7 @@ const NORMALIZERS = {
   reporter: normalizeReporter,
   select: normalizeSelect,
   limit: normalizeLimit,
+  merge: normalizeMerge,
   titles: checkTitles,
   inputs: checkInputs,
 }

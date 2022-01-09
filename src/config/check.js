@@ -1,6 +1,7 @@
 import { isDeepStrictEqual, inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
+import { validate as isUuid } from 'uuid'
 
 import { UserError } from '../error/main.js'
 
@@ -93,5 +94,11 @@ const isJson = function (value) {
     return isDeepStrictEqual(JSON.parse(JSON.stringify(value)), value)
   } catch {
     return false
+  }
+}
+
+export const checkUuid = function (value, name) {
+  if (!isUuid(value)) {
+    throw new UserError(`'${name}' must be a UUID: ${inspect(value)}`)
   }
 }
