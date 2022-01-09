@@ -1,4 +1,4 @@
-import { getMergeIdsArray } from '../../history/merge/id.js'
+import { getMergeIdsArray } from '../../history/merge/prop.js'
 import { getInputIds } from '../inputs.js'
 
 import { getCombsDimensionsIds } from './get.js'

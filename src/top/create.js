@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { getMergeIdProp } from '../history/merge/id.js'
+import { getMergeIdProp } from '../history/merge/prop.js'
 
 import { listSystem } from './system/list.js'
 import { getTimestamp } from './timestamp.js'
