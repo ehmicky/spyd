@@ -29,10 +29,12 @@ Default: false`,
     group: HISTORY,
     string: true,
     requiresArg: true,
-    describe: `Merge this result with previous ones.
-The value is an identifier. Results with the same identifier are merged.
+    describe: `Merge this result with a previous one.
+The value is the previous result's identifier.
 It can be "last" to refer to merge to the last result.
-Default: same as result's identifier`,
+It no previous result with the identifier is found, this sets the new result's
+identifier instead. This allows merging several benchmarks running in parallel.
+Default: none`,
   },
   limit: {
     group: HISTORY,
