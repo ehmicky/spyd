@@ -16,11 +16,6 @@
     "git": {
       "commit": "841b3f32d8a3f3fc3cecfcf1624cb0aeea7e9816",
       "branch": "main"
-    },
-    "versions": {
-      "Node": "15.13.0",
-      "Spyd": "0.3.1",
-      "Test1": "1.0.0"
     }
   },
   "combinations": [
@@ -30,6 +25,11 @@
         "runner": "node",
         "system.machine": "two",
         "system.cluster": "red"
+      },
+      "versions": {
+        "Node": "15.13.0",
+        "Spyd": "0.3.1",
+        "Test1": "1.0.0"
       },
       "stats": {
         "median": 6.55279933481153,
@@ -90,6 +90,11 @@
         "runner": "node",
         "system.machine": "two",
         "system.cluster": "red"
+      },
+      "versions": {
+        "Node": "15.13.0",
+        "Spyd": "0.3.1",
+        "Test1": "1.0.0"
       },
       "stats": {
         "samples": 66,
