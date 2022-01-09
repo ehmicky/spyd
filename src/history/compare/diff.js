@@ -22,7 +22,7 @@ import { haveSimilarMeans } from '../../stats/similar.js'
 export const addCombinationsDiff = function (result, history) {
   const [sinceResult] = history
 
-  if (result.id === sinceResult.id) {
+  if (result.id === sinceResult.id || history.length === 1) {
     return result
   }
 
