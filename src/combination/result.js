@@ -1,29 +1,29 @@
 import { getCombinationIds } from './ids/get.js'
 
-// Filter out the `combinations` that are not in `result`
-export const keepResultCombinations = function (resultA, resultB) {
-  const combinations = resultA.combinations.filter((combination) =>
-    resultHasCombination(resultB, combination),
+// Filter out the `result.combinations` that are not in `combinations`
+export const keepResultCombinations = function (result, combinations) {
+  const combinationsA = result.combinations.filter((combination) =>
+    hasCombination(combinations, combination),
   )
-  return { ...resultA, combinations }
+  return { ...result, combinations: combinationsA }
 }
 
-// Filter out the `combinations` that are in `result`
-export const removeResultCombinations = function (combinations, result) {
-  return combinations.filter(
-    (combination) => !resultHasCombination(result, combination),
+// Filter out the `combinationsA` that are in `combinationsB`
+export const removeSameCombinations = function (combinationsA, combinations) {
+  return combinationsA.filter(
+    (combination) => !hasCombination(combinations, combination),
   )
 }
 
 // Return whether a result combinations is a subset of another
-export const hasSameCombinations = function ({ combinations }, result) {
-  return combinations.every((combination) =>
-    resultHasCombination(result, combination),
+export const hasSameCombinations = function (resultA, resultB) {
+  return resultA.combinations.every((combination) =>
+    hasCombination(resultB.combinations, combination),
   )
 }
 
 // Return whether a result has a specific combination
-const resultHasCombination = function ({ combinations }, combination) {
+const hasCombination = function (combinations, combination) {
   return getMatchingCombination(combinations, combination) !== undefined
 }
 

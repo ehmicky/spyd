@@ -36,17 +36,18 @@ export const normalizeReportedResults = function (
     targetResult,
   )
   const targetResultB = selectResult(targetResultA, select)
-  const historyB = addDefaultIds(historyA, targetResultB.combinations)
-  const historyC = filterUnusedCombinations(historyB, targetResultB)
-  const noDimensions = getNoDimensions(targetResultB.combinations)
+  const { combinations } = targetResultB
+  const historyB = addDefaultIds(historyA, combinations)
+  const historyC = filterUnusedCombinations(historyB, combinations)
+  const noDimensions = getNoDimensions(combinations)
   return { result: targetResultB, history: historyC, noDimensions }
 }
 
 // We ignore the combinations from history results that do not exist in the
 // target result.
 // This simplifies both the implementation and the user experience.
-const filterUnusedCombinations = function (history, targetResult) {
+const filterUnusedCombinations = function (history, combinations) {
   return history.map((historyResult) =>
-    keepResultCombinations(historyResult, targetResult),
+    keepResultCombinations(historyResult, combinations),
   )
 }

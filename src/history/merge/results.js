@@ -3,7 +3,7 @@ import sortOn from 'sort-on'
 
 import { addDefaultIds } from '../../combination/default.js'
 import {
-  removeResultCombinations,
+  removeSameCombinations,
   hasSameCombinations,
 } from '../../combination/result.js'
 import { mergeSystems } from '../../top/system/merge.js'
@@ -117,9 +117,9 @@ const mergeDimensions = function (rawResult, previousRawResult) {
 }
 
 const mergeCombinations = function (rawResult, previousRawResult) {
-  const previousCombinations = removeResultCombinations(
+  const previousCombinations = removeSameCombinations(
     previousRawResult.combinations,
-    rawResult,
+    rawResult.combinations,
   )
   const combinations = [...rawResult.combinations, ...previousCombinations]
   return { ...rawResult, combinations }
