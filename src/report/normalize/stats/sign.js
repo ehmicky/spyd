@@ -9,12 +9,13 @@ const addNeverSign = function (pretty) {
     : `${PLUS_MINUS_SIGN}${pretty}`
 }
 
-const addDiffSign = function (pretty, { diffPrecise }) {
+const addDiffSign = function (pretty, { diffPrecise, diffLimit }) {
   const impreciseSign = diffPrecise ? '' : IMPRECISE_SIGN
+  const limitSign = diffLimit === undefined ? '' : ' \u203C'
 
   return hasMinusSign(pretty)
-    ? `${impreciseSign}${pretty}`
-    : `${impreciseSign}${PLUS_SIGN}${pretty}`
+    ? `${impreciseSign}${pretty}${limitSign}`
+    : `${impreciseSign}${PLUS_SIGN}${pretty}${limitSign}`
 }
 
 const hasMinusSign = function (pretty) {
