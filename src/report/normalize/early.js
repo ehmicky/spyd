@@ -1,3 +1,5 @@
+import { getNoDimensions } from '../../combination/filter.js'
+
 import {
   normalizeNonCombAll,
   normalizeCombAll,
@@ -5,19 +7,20 @@ import {
   mergeResultProps,
   normalizeCombEach,
 } from './common.js'
+import { normalizeReportedResults } from './raw.js'
 import { normalizeTargetResult } from './target.js'
 
 // Normalize as many properties as possible at the beginning of the reporting
 // (once) as opposed to later on (repeatedly)
-export const normalizeEarlyResult = function ({
-  result,
-  history,
-  history: [sinceResult],
-  noDimensions,
-  config,
-}) {
+export const normalizeEarlyResult = function (rawResult, history, config) {
+  const {
+    result,
+    history: historyA,
+    history: [sinceResult],
+  } = normalizeReportedResults(rawResult, history, config)
+  const noDimensions = getNoDimensions(result.combinations)
   const configA = normalizeHistory({
-    history,
+    history: historyA,
     result,
     sinceResult,
     noDimensions,
@@ -27,7 +30,7 @@ export const normalizeEarlyResult = function ({
     result,
     configA,
   )
-  return { result: resultA, sinceResult, config: configB }
+  return { result: resultA, sinceResult, noDimensions, config: configB }
 }
 
 // Add report-specific properties to each `history` result.

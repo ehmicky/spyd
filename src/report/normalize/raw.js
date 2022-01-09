@@ -28,7 +28,7 @@ import { selectRawResult } from '../../select/main.js'
 export const normalizeReportedResults = function (
   targetResult,
   history,
-  select,
+  { select },
 ) {
   const { history: historyA, targetResult: targetResultA } = mergeResults(
     history,

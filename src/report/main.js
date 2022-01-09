@@ -1,10 +1,7 @@
-import { getNoDimensions } from '../combination/filter.js'
-
 import { getContents } from './contents.js'
 import { finalizeContents } from './finalize.js'
 import { normalizeComputedResult } from './normalize/computed.js'
 import { normalizeEarlyResult } from './normalize/early.js'
-import { normalizeReportedResults } from './normalize/raw.js'
 import { outputContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
 
@@ -31,22 +28,12 @@ export const reportResult = async function (rawResult, history, config) {
 // Start reporting
 export const reportStart = async function (rawResult, history, config) {
   const configA = await startReporters(config)
-  const { result, history: historyA } = normalizeReportedResults(
-    rawResult,
-    history,
-    configA.select,
-  )
-  const noDimensions = getNoDimensions(result.combinations)
   const {
     result: resultA,
     sinceResult,
-    config: configB,
-  } = normalizeEarlyResult({
-    result,
-    history: historyA,
     noDimensions,
-    config: configA,
-  })
+    config: configB,
+  } = normalizeEarlyResult(rawResult, history, configA)
   return { result: resultA, sinceResult, noDimensions, config: configB }
 }
 
