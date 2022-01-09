@@ -60,6 +60,7 @@ Default: none`,
     requiresArg: true,
     describe: `Merge this result with previous ones.
 The value is an identifier. Results with the same identifier are merged.
+It can be "last" to refer to merge to the last result.
 Default: same as result's identifier`,
   },
 }

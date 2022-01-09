@@ -2,7 +2,6 @@ import { addDefaultIds } from '../../combination/default.js'
 import { keepResultCombinations } from '../../combination/result.js'
 import { selectRawResult } from '../../select/main.js'
 import { validateSelectMatches } from '../../select/validate.js'
-import { pickLast } from '../../utils/last.js'
 import { mergeResults } from '../merge/results.js'
 
 import { decompressRawResult } from './compress.js'
@@ -18,8 +17,10 @@ export const loadRawResults = function (rawResults) {
 // Normalize the history and target results after load, once the target result
 // is known
 export const normalizeRawResults = function (targetResult, history, config) {
-  const rawResults = mergeResults([...history, targetResult])
-  const [historyA, targetResultA] = pickLast(rawResults)
+  const { history: historyA, targetResult: targetResultA } = mergeResults(
+    history,
+    targetResult,
+  )
   const historyB = addDefaultIds(historyA, targetResultA)
   const historyC = filterUnusedCombinations(historyB, targetResultA)
   const [targetResultB, ...historyD] = [targetResultA, ...historyC].map(
