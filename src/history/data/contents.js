@@ -1,9 +1,11 @@
 import { UserError } from '../../error/main.js'
 
-// Parse the contents of a rawResult
-export const parseRawResult = function (contents) {
+// Parse the contents of a rawResult.
+// Parsing/serializing rawResults is abstracted away from the main store logic,
+// so that stores only need to deal with metadata objects and blob strings.
+export const parseRawResult = function (rawResultStr) {
   try {
-    return JSON.parse(contents)
+    return JSON.parse(rawResultStr)
   } catch (error) {
     throw new UserError(`History files is invalid JSON: ${error.message}`)
   }
@@ -11,9 +13,9 @@ export const parseRawResult = function (contents) {
 
 // Serialize the contents of a rawResult
 export const serializeRawResult = function (rawResult) {
-  const contents = JSON.stringify(rawResult, undefined, 2)
-  const contentsA = flattenArray(contents)
-  return `${contentsA}\n`
+  const rawResultStr = JSON.stringify(rawResult, undefined, 2)
+  const rawResultStrA = flattenArray(rawResultStr)
+  return `${rawResultStrA}\n`
 }
 
 // Some arrays like `histogram` and `quantiles` are big. `JSON.serialize()`
@@ -22,8 +24,8 @@ export const serializeRawResult = function (rawResult) {
 //  - This creates simpler git diffs
 //  - This creates better git stats when it comes to amount of lines changes
 // We only do this for arrays of simple types.
-const flattenArray = function (content) {
-  return content.replace(SIMPLE_ARRAY_REGEXP, flattenArrayItems)
+const flattenArray = function (rawResultStr) {
+  return rawResultStr.replace(SIMPLE_ARRAY_REGEXP, flattenArrayItems)
 }
 
 // Matches `[...]` but not `[{ ... }]` nor `[[...]]`

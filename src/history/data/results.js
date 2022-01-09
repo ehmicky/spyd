@@ -1,6 +1,5 @@
 import pMap from 'p-map'
 
-import { parseRawResult, serializeRawResult } from './contents.js'
 import { getReadHistoryDir, getWriteHistoryDir } from './dir.js'
 import { parseFilename, serializeFilename } from './filename.js'
 import {
@@ -34,12 +33,12 @@ export const fetchRawResults = async function (metadata, cwd) {
     return []
   }
 
-  const rawResults = await pMap(
+  const rawResultStrs = await pMap(
     metadata,
     (metadatum) => fetchRawResult(metadatum, historyDir),
     { concurrency: MAX_CONCURRENCY },
   )
-  return rawResults
+  return rawResultStrs
 }
 
 // How many results can be read at once.
@@ -52,18 +51,16 @@ const fetchRawResult = async function (metadatum, historyDir) {
   const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
   await checkHistoryFile(path)
-  const contents = await readRawResult(path)
-  const rawResult = parseRawResult(contents)
-  return rawResult
+  const rawResultStr = await readRawResult(path)
+  return rawResultStr
 }
 
 // Save a new rawResult
-export const addRawResult = async function (metadatum, rawResult, cwd) {
+export const addRawResult = async function (metadatum, rawResultStr, cwd) {
   const historyDir = await getWriteHistoryDir(cwd)
   const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
-  const contents = serializeRawResult(rawResult)
-  await writeRawResult(path, contents)
+  await writeRawResult(path, rawResultStr)
 }
 
 // Remove a rawResult from the filesystem

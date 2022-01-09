@@ -8,6 +8,7 @@ import { groupMetadata, ungroupMetadata } from '../merge/metadata.js'
 import { compressRawResult } from '../normalize/compress.js'
 import { loadRawResults, normalizePreviousResults } from '../normalize/load.js'
 
+import { parseRawResult, serializeRawResult } from './contents.js'
 import {
   addRawResult,
   removeRawResult,
@@ -24,7 +25,8 @@ export const addToHistory = async function (rawResult, { save, cwd }) {
 
   const rawResultA = compressRawResult(rawResult)
   const metadatum = getRawResultMetadatum(rawResultA)
-  await addRawResult(metadatum, rawResultA, cwd)
+  const rawResultStr = serializeRawResult(rawResultA)
+  await addRawResult(metadatum, rawResultStr, cwd)
 }
 
 // Remove a rawResult
@@ -90,7 +92,8 @@ const listSortedMetadata = async function ({ cwd }) {
 //  - Including previous|diff in rawResults preview
 const fetchHistory = async function (metadataGroups, { cwd }) {
   const metadata = ungroupMetadata(metadataGroups)
-  const rawResults = await fetchRawResults(metadata, cwd)
+  const rawResultsStrs = await fetchRawResults(metadata, cwd)
+  const rawResults = rawResultsStrs.map(parseRawResult)
   const history = loadRawResults(rawResults)
   return history
 }

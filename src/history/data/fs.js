@@ -20,9 +20,9 @@ export const readRawResult = async function (path) {
 }
 
 // Write a rawResult's contents
-export const writeRawResult = async function (path, contents) {
+export const writeRawResult = async function (path, rawResultStr) {
   try {
-    return await writeFile(path, contents)
+    return await writeFile(path, rawResultStr)
   } catch (error) {
     throw new UserError(`History file could not be written: ${error.message}`)
   }
