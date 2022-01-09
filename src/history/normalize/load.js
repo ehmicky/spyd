@@ -13,11 +13,18 @@ export const loadRawResults = function (rawResults) {
   return rawResultsB
 }
 
-// Normalize the history and target results after the target result is known,
-// as reporting starts.
-// The result is only used by the reporting logic, not the measuring logic,
-// and it is not persisted in result files.
-// We separate into two functions: this one is for new results with `run`.
+// Transform:
+//  - A `rawResult`:
+//     - Used by the measuring logic and persisted in result files
+//  - To a `result`:
+//     - Used by the reporting logic
+// We make sure the two are not mixed
+//  - For example, merged combinations should be reported, but not measured,
+//    previewed nor saved
+//  - And merged systems and default ids should not be saved
+// Also apply history normalization logic which depends on knowing all possible
+// combinations of the target result.
+// This is applied on any new result created by the `run` command.
 export const normalizeNewResults = function (targetResult, history) {
   const { history: historyA, targetResult: targetResultA } = mergeResults(
     history,
@@ -27,7 +34,20 @@ export const normalizeNewResults = function (targetResult, history) {
   return { targetResult: targetResultA, history: historyB }
 }
 
-// Same but for previous results with `show|remove`.
+// Same but applies to results loaded exclusively from the history by the
+// `show|remove` commands.
+// We apply `select` on all combinations of the target result.
+//  - Unlike the `new` command, which applies it only on the new combinations,
+//    not the ones merged to the target result
+//     - Otherwise, `select` would most likely filter out all of those
+//       merged combinations
+//     - This would be bad as:
+//        - This would require a separate `show` command to see the merged
+//          result
+//        - Merging is meant as a continuation of the same result, i.e. already
+//          measured combinations are expected to be reported
+//     - The core issue is due to `select` having two purposes with the `run`
+//       command: restricting measuring and reporting
 export const normalizePreviousResults = function (
   targetResult,
   history,
