@@ -13,9 +13,9 @@ import { initPreview } from './run/preview/start_end/main.js'
 export const run = async function (configFlags) {
   const config = await getConfig('run', configFlags)
   const previewState = initPreview(config)
-  const { rawResult, history } = await createResult(config)
+  const { newResult, history } = await createResult(config)
   const programmaticResult = await performRun({
-    rawResult,
+    newResult,
     history,
     previewState,
     config,

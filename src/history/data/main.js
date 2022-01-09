@@ -1,14 +1,16 @@
 import inquirer from 'inquirer'
 
+import { normalizeRawResults } from '../../report/normalize/raw.js'
 import { isTtyInput } from '../../report/tty.js'
 import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
 import { shortenId } from '../merge/id.js'
 import { groupMetadata, ungroupMetadata } from '../merge/metadata.js'
-import { compressRawResult } from '../normalize/compress.js'
-import { loadRawResults, normalizeRawResults } from '../normalize/load.js'
+import {
+  normalizeRawResultSave,
+  normalizeRawResultLoad,
+} from '../serialize/main.js'
 
-import { parseRawResult, serializeRawResult } from './contents.js'
 import {
   addRawResult,
   removeRawResult,
@@ -23,9 +25,8 @@ export const addToHistory = async function (rawResult, { save, cwd }) {
     return
   }
 
-  const rawResultA = compressRawResult(rawResult)
-  const metadatum = getRawResultMetadatum(rawResultA)
-  const rawResultStr = serializeRawResult(rawResultA)
+  const metadatum = getRawResultMetadatum(rawResult)
+  const rawResultStr = normalizeRawResultSave(rawResult)
   await addRawResult(metadatum, rawResultStr, cwd)
 }
 
@@ -96,7 +97,6 @@ const listSortedMetadata = async function ({ cwd }) {
 const fetchHistory = async function (metadataGroups, { cwd }) {
   const metadata = ungroupMetadata(metadataGroups)
   const rawResultsStrs = await fetchRawResults(metadata, cwd)
-  const rawResults = rawResultsStrs.map(parseRawResult)
-  const history = loadRawResults(rawResults)
+  const history = rawResultsStrs.map(normalizeRawResultLoad)
   return history
 }

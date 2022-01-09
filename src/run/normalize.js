@@ -2,14 +2,15 @@ import mapObj from 'map-obj'
 
 import { setArray } from '../utils/set.js'
 
-// Normalize the rawResult after measuring
-export const normalizeMeasuredResult = function (rawResult) {
-  const combinations = rawResult.combinations.map(normalizeCombination)
-  return { ...rawResult, combinations }
+// Transform:
+//  - A `newResult`: used by the measuring logic
+//  - To a `rawResult`: persisted in result files
+export const normalizeNewResult = function (newResult) {
+  const combinations = newResult.combinations.map(normalizeNewCombination)
+  return { ...newResult, combinations }
 }
 
-// Only keep the properties we need when saving to the history file
-const normalizeCombination = function ({ dimensions, stats }) {
+const normalizeNewCombination = function ({ dimensions, stats }) {
   const dimensionsA = mapObj(dimensions, getIdProp)
   return { dimensions: dimensionsA, stats }
 }
@@ -19,10 +20,18 @@ const getIdProp = function (propName, { id }) {
 }
 
 // Update:
-//  - `result.combinations[index].stats` (after reporting-related normalization)
-//  - Based on `rawResult.combinations[index].stats` (before it)
-// This assumes that the reporting-related normalization logic does not change
-// `result.combinations` array order, except for appending new ones.
+//  - `result`'s stats
+//  - Based on `newResult`'s stats
+// In principle, previews should do their own `reportStart()`, so that previews
+// and non-previews can both follow the same `newResult -> rawResult -> result`
+// order.
+//  - However, we make them share the same `reportStart()` so it is called only
+//    once, as a performance optimization
+//  - This means `result` must be updated with new `stats` from `rawResult`
+//  - We do it too before each preview, due to them calling reporting many
+//    times, so that `reportStart()` is only called once
+// This assumes that the newResult -> rawResult -> result normalization logic
+// does not change `combinations` array order, except for appending new ones.
 // Done after measuring all combinations.
 export const updateCombinationsStats = function (result, combinations) {
   return combinations

@@ -1,24 +1,13 @@
 import { addDefaultIds } from '../../combination/default.js'
 import { keepResultCombinations } from '../../combination/result.js'
+import { mergeResults } from '../../history/merge/results.js'
 import { selectRawResult } from '../../select/main.js'
-import { mergeResults } from '../merge/results.js'
-
-import { decompressRawResult } from './decompress.js'
-import { migrateRawResults } from './migrate.js'
-
-// Normalize rawResults after they have been loaded from result files.
-export const loadRawResults = function (rawResults) {
-  const rawResultsA = migrateRawResults(rawResults)
-  const rawResultsB = rawResultsA.map(decompressRawResult)
-  return rawResultsB
-}
 
 // Transform:
-//  - A `rawResult`:
-//     - Used by the measuring logic and persisted in result files
-//  - To a `result`:
-//     - Used by the reporting logic
-// We make sure the two are not mixed
+//  - A `rawResult`: persisted in result files
+//  - To a `result`: used by the reporting logic
+// Applied to several rawResults: targetResult and history.
+// We make sure the two are not mixed:
 //  - For example, merged combinations should be reported, but not measured,
 //    previewed nor saved
 //  - And merged systems and default ids should not be saved

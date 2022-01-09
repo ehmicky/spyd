@@ -1,17 +1,14 @@
 import { addToHistory } from '../history/data/main.js'
-import { normalizeRawResults } from '../history/normalize/load.js'
 import {
   reportStart,
   reportCompute,
   reportPrint,
   reportEnd,
 } from '../report/main.js'
+import { normalizeRawResults } from '../report/normalize/raw.js'
 
 import { measureCombinations } from './measure/main.js'
-import {
-  normalizeMeasuredResult,
-  updateCombinationsStats,
-} from './normalize.js'
+import { normalizeNewResult, updateCombinationsStats } from './normalize.js'
 import { startPreview, endPreview } from './preview/start_end/main.js'
 
 // Perform a new benchmark.
@@ -23,13 +20,14 @@ import { startPreview, endPreview } from './preview/start_end/main.js'
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
 export const performRun = async function ({
-  rawResult,
+  newResult,
   history,
   previewState,
   config,
 }) {
+  const rawResult = normalizeNewResult(newResult)
   const { targetResult: result, history: historyA } = normalizeRawResults(
-    normalizeMeasuredResult(rawResult),
+    rawResult,
     history,
     [],
   )
@@ -42,7 +40,7 @@ export const performRun = async function ({
 
   try {
     const { programmaticResult, contents } = await previewAndMeasure({
-      rawResult,
+      newResult,
       result: resultA,
       sinceResult,
       noDimensions,
@@ -57,7 +55,7 @@ export const performRun = async function ({
 }
 
 const previewAndMeasure = async function ({
-  rawResult,
+  newResult,
   result,
   sinceResult,
   noDimensions,
@@ -66,7 +64,7 @@ const previewAndMeasure = async function ({
   config: { cwd, precisionTarget, outliers },
 }) {
   const previewStateA = await startPreview({
-    rawResult,
+    newResult,
     result,
     sinceResult,
     noDimensions,
@@ -75,7 +73,7 @@ const previewAndMeasure = async function ({
   })
 
   try {
-    const combinations = await measureCombinations(rawResult.combinations, {
+    const combinations = await measureCombinations(newResult.combinations, {
       precisionTarget,
       cwd,
       previewState: previewStateA,
@@ -83,8 +81,9 @@ const previewAndMeasure = async function ({
       stage: 'main',
       noDimensions,
     })
-    const rawResultA = normalizeMeasuredResult({ ...rawResult, combinations })
-    await addToHistory(rawResultA, config)
+    const newResultA = { ...newResult, combinations }
+    const rawResult = normalizeNewResult(newResultA)
+    await addToHistory(rawResult, config)
     const resultA = updateCombinationsStats(result, combinations)
     const { programmaticResult, contents } = await reportCompute({
       result: resultA,

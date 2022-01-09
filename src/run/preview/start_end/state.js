@@ -28,7 +28,7 @@ export const getPreviewState = function ({ reporters, titles }) {
 // Add result-related properties to `previewState`
 export const addResultPreviewState = function ({
   previewState,
-  rawResult: { combinations },
+  newResult: { combinations },
   result,
   sinceResult,
   noDimensions,

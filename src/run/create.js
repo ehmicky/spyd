@@ -2,16 +2,16 @@ import { listCombinations } from '../combination/list.js'
 import { listHistory } from '../history/data/main.js'
 import { createTopProps } from '../top/create.js'
 
-// Create a new rawResult to measure
+// Create a newResult to measure
 export const createResult = async function (config) {
-  const [rawResult, history] = await Promise.all([
-    createRawResult(config),
+  const [newResult, history] = await Promise.all([
+    createNewResult(config),
     listHistory(config),
   ])
-  return { rawResult, history }
+  return { newResult, history }
 }
 
-const createRawResult = async function (config) {
+const createNewResult = async function (config) {
   const combinations = await listCombinations(config)
   const topProps = createTopProps(config)
   return { ...topProps, combinations }
