@@ -7,7 +7,7 @@ showPrecision: true
 showSystem: false
 system:
   machine: one
-  cluster: blue
+  cluster: purple
 reporter: [debug, history, histogram, boxplot]
 reporterConfig:
   histogram:
