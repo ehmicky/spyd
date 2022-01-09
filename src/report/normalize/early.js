@@ -15,9 +15,10 @@ export const normalizeEarlyResult = function ({
   noDimensions,
   config,
 }) {
-  const configA = normalizeHistory(history, noDimensions, config)
+  const historyA = [...history, rawResult]
+  const configA = normalizeHistory(historyA, noDimensions, config)
   const { result, config: configB } = normalizeTargetResult(rawResult, configA)
-  return { result, config: configB }
+  return { result, history: historyA, config: configB }
 }
 
 // Add report-specific properties to each `history` result.

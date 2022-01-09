@@ -30,11 +30,14 @@ export const reportResult = async function (rawResult, history, config) {
 // Start reporting
 export const reportStart = async function (rawResult, history, config) {
   const configA = await startReporters(config)
-  const historyA = [...history, rawResult]
   const noDimensions = getNoDimensions(rawResult.combinations)
-  const { result, config: configB } = normalizeEarlyResult({
-    rawResult,
+  const {
+    result,
     history: historyA,
+    config: configB,
+  } = normalizeEarlyResult({
+    rawResult,
+    history,
     noDimensions,
     config: configA,
   })
