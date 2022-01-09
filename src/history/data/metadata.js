@@ -2,15 +2,19 @@ import { shortenId } from '../merge/id.js'
 
 // Retrieve filename from a rawResult
 export const getRawResultFilename = function (rawResult) {
-  const { id, subId, timestamp } = rawResult
-  return serializeFilename({ id, subId, timestamp })
+  const metadatum = rawResultToMetadatum(rawResult)
+  return serializeFilename(metadatum)
+}
+
+const rawResultToMetadatum = function ({ id, subId, timestamp }) {
+  const idA = shortenId(id)
+  return { id: idA, subId, timestamp }
 }
 
 // Retrieve filename from a metadatum
 export const serializeFilename = function ({ id, subId, timestamp }) {
-  const idStr = shortenId(id)
   const timestampStr = serializeTimestamp(timestamp)
-  return `${timestampStr}_${idStr}_${subId}.json`
+  return `${timestampStr}_${id}_${subId}.json`
 }
 
 const serializeTimestamp = function (timestamp) {
