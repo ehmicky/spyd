@@ -1,4 +1,5 @@
 import { addDefaultIds } from '../../combination/default.js'
+import { getNoDimensions } from '../../combination/filter.js'
 import { keepResultCombinations } from '../../combination/result.js'
 import { mergeResults } from '../../history/merge/results.js'
 import { selectRawResult } from '../../select/main.js'
@@ -37,7 +38,8 @@ export const normalizeReportedResults = function (
   const targetResultB = selectRawResult(targetResultA, select)
   const historyB = addDefaultIds(historyA, targetResultB)
   const historyC = filterUnusedCombinations(historyB, targetResultB)
-  return { result: targetResultB, history: historyC }
+  const noDimensions = getNoDimensions(targetResultB.combinations)
+  return { result: targetResultB, history: historyC, noDimensions }
 }
 
 // We ignore the combinations from history results that do not exist in the

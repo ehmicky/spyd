@@ -1,5 +1,3 @@
-import { getNoDimensions } from '../../combination/filter.js'
-
 import {
   normalizeNonCombAll,
   normalizeCombAll,
@@ -17,8 +15,8 @@ export const normalizeEarlyResult = function (rawResult, history, config) {
     result,
     history: historyA,
     history: [sinceResult],
+    noDimensions,
   } = normalizeReportedResults(rawResult, history, config)
-  const noDimensions = getNoDimensions(result.combinations)
   const configA = normalizeHistory({
     history: historyA,
     result,
