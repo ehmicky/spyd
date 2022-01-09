@@ -13,7 +13,7 @@ export const addDefaultConfig = function (config, command) {
     showSystem: getDefaultShowSystem(config),
     showMetadata: METADATA_COMMANDS.has(command),
     ...config,
-    ...getForcedConfig(command),
+    ...FORCED_CONFIG[command],
   }
 }
 
@@ -47,11 +47,14 @@ export const DEFAULT_CONFIG = {
 }
 
 // Some configuration properties values are forced for some commands
-const getForcedConfig = function (command) {
-  return NO_HISTORY_COMMANDS.has(command) ? NO_HISTORY_CONFIG : {}
+const FORCED_CONFIG = {
+  run: {},
+  show: {},
+  remove: {},
+  dev: {
+    // Some commands do not require history.
+    // As a performance optimization, we use `since: 0` so it is not loaded.
+    delta: 0,
+    since: 0,
+  },
 }
-
-// Some commands do not require history.
-// As a performance optimization, we use `since: 0` so it is not loaded.
-const NO_HISTORY_COMMANDS = new Set(['dev'])
-const NO_HISTORY_CONFIG = { delta: 0, since: 0 }
