@@ -27,7 +27,7 @@ import { normalizeMergeId, groupByMergeId } from './id.js'
 //        - Especially the first and last results in the history
 //     - This would require loading files before resolving deltas
 //     - This complicates the implementation
-// Merging applies not only to the `show|remove` commands but also to `run|dev`:
+// Merging applies not only to the `show|remove` commands but also to `run`:
 //  - This ensures `run` and `show` report the same result and behave the
 //    same way
 //  - This allows users to see the merged result while measuring, using a single
