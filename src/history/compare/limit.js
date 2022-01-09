@@ -4,11 +4,7 @@ import { UserError } from '../../error/main.js'
 // If any `combination.stats.diff` is too slow compared to the `limit`
 // configuration property, we fail.
 // It uses the `since` configuration property like `showDiff` does.
-// Done after reporting.
-// `limit` is only meant to print an error message and change the CLI exit code
-// during measuring (`run` command). It is not intended to be shown in
-// reporting. Instead, `showDiff` should be used for similar reporting-focused
-// purposes.
+// Done after reporting, to ensure a report is always shown.
 // Even when a limit is hit, we still `save` (if the flag is present):
 //  - This avoids losing information, e.g.:
 //     - We can make a silent `run` checking only for limits, and still `show`
