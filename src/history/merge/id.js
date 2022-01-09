@@ -44,7 +44,21 @@ export const getDefaultId = function () {
 //    probability of collision after 2e7 results with the same `id`, which is
 //    very unlikely
 export const shortenId = function (id) {
-  return id.length <= ID_LENGTH ? id : id.slice(0, -ID_LENGTH)
+  return id.slice(-ID_LENGTH)
 }
 
 const ID_LENGTH = 12
+
+// Since several results can have the same `id`, we use a second `subId` to
+// keep them unique.
+// At the moment, this is not exposed to users and is only used to ensure
+// history results filenames are unique even when their `id` and `timestamp`
+// are the same (which is fairly unlikely).
+export const createSubId = function () {
+  const subId = uuidv4()
+  return subId.slice(-SUBID_LENGTH)
+}
+
+// This must be low enough to keep filenames short, but high enough to prevent
+// collisions
+const SUBID_LENGTH = 12
