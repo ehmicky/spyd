@@ -12,7 +12,7 @@ import {
 
 import {
   addRawResult,
-  removeRawResult,
+  removeRawResults,
   listMetadata,
   fetchRawResults,
 } from './results.js'
@@ -30,13 +30,13 @@ export const addToHistory = async function (rawResult, { save, cwd }) {
 }
 
 // Remove a rawResult
-export const removeFromHistory = async function (rawResult, { cwd, force }) {
+export const removeFromHistory = async function (rawResults, { cwd, force }) {
   if (!(await shouldRemoveFromHistory(force))) {
     return
   }
 
-  const metadatum = getRawResultMetadatum(rawResult)
-  await removeRawResult(metadatum, cwd)
+  const metadata = rawResults.map(getRawResultMetadatum)
+  await removeRawResults(metadata, cwd)
 }
 
 // Retrieve the metadatum of a rawResult

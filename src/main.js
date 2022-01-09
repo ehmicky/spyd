@@ -3,6 +3,7 @@ import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
 import { checkLimits } from './history/compare/limit.js'
 import { getFromHistory, removeFromHistory } from './history/data/main.js'
+import { getTargetRawResults } from './history/merge/results.js'
 import { reportResult } from './report/main.js'
 import { createResult } from './run/create.js'
 import { performRun } from './run/main.js'
@@ -36,8 +37,9 @@ export const show = async function (configFlags) {
 export const remove = async function (configFlags) {
   const config = await getConfig('remove', configFlags)
   const { rawResult, history } = await getFromHistory(config)
+  const targetRawResults = getTargetRawResults(rawResult, history)
   const programmaticResult = await reportResult(rawResult, history, config)
-  await removeFromHistory(rawResult, config)
+  await removeFromHistory(targetRawResults, config)
   return programmaticResult
 }
 

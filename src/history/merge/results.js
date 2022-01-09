@@ -110,3 +110,9 @@ const mergeCombinations = function (rawResult, previousRawResult) {
   const combinations = [...rawResult.combinations, ...previousCombinations]
   return { ...rawResult, combinations }
 }
+
+// Retrieve all rawResults part of the merged targetResult
+export const getTargetRawResults = function (targetResult, history) {
+  const historyA = history.filter(({ id }) => id === targetResult.id)
+  return [...historyA, targetResult]
+}

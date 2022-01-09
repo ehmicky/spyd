@@ -64,13 +64,19 @@ export const addRawResult = async function (metadatum, rawResultStr, cwd) {
 }
 
 // Remove a rawResult from the filesystem
-export const removeRawResult = async function (metadatum, cwd) {
+export const removeRawResults = async function (metadata, cwd) {
   const historyDir = await getReadHistoryDir(cwd)
 
   if (historyDir === undefined) {
     return
   }
 
+  await Promise.all(
+    metadata.map((metadatum) => removeRawResult(metadatum, historyDir)),
+  )
+}
+
+const removeRawResult = async function (metadatum, historyDir) {
   const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
   await deleteRawResult(path)
