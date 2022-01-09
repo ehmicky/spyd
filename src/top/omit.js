@@ -1,5 +1,7 @@
 import omit from 'omit.js'
 
+import { pick } from '../utils/pick.js'
+
 // Some footer information can be toggled using `showSystem` and `showMetadata`.
 // This only impacts the footer, not the properties of the target result nor
 // history results.
@@ -24,6 +26,22 @@ const MAIN_SYSTEM_PROPS = ['machine', 'versions']
 const maybeOmit = function (obj, showProp, propNames) {
   return showProp ? obj : omit.default(obj, propNames)
 }
+
+// We only expose specific properties to reporters.
+// In particular, we do not expose subId.
+export const pickTopProps = function (result) {
+  return pick(result, REPORTED_TOP_PROPS)
+}
+
+const REPORTED_TOP_PROPS = [
+  'id',
+  'timestamp',
+  'systems',
+  'combinations',
+  'history',
+  'screenWidth',
+  'screenHeight',
+]
 
 // The target result should not include any properties which should be shown
 // with the footer instead.

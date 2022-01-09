@@ -2,7 +2,7 @@ import { omitNoDimensions } from '../../combination/filter.js'
 import { sortCombinations } from '../../combination/sort_combinations.js'
 import { sortDimensions } from '../../combination/sort_dimensions.js'
 import { addCombinationsDiff } from '../../history/compare/diff.js'
-import { omitSystemProps } from '../../top/omit.js'
+import { omitSystemProps, pickTopProps } from '../../top/omit.js'
 import { normalizeTimestamp } from '../../top/timestamp.js'
 
 import { omitCombinationsProps } from './omit.js'
@@ -11,7 +11,7 @@ import { addCombinationsTitles } from './titles_add.js'
 // Add report-specific properties to a result that are not in `combinations` nor
 // reporter-specific
 export const normalizeNonCombAll = function (result) {
-  return result
+  return pickTopProps(result)
 }
 
 // Add report-specific properties to a result that are in `combinations`, are
