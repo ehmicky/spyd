@@ -9,9 +9,10 @@ const parseId = function (delta) {
   return delta
 }
 
+// Some stores shorten `id` and only keep the last 12 characters.
 const findById = function (metadataGroups, id) {
-  return metadataGroups.findIndex(
-    ([firstMetadatum]) => firstMetadatum.id === id,
+  return metadataGroups.findIndex(([firstMetadatum]) =>
+    id.endsWith(firstMetadatum.id),
   )
 }
 
