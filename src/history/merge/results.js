@@ -6,8 +6,9 @@ import {
 } from '../../combination/result.js'
 import { mergeSystems } from '../../top/system/merge.js'
 import { cleanObject } from '../../utils/clean.js'
-import { groupBy } from '../../utils/group.js'
 import { pickLast } from '../../utils/last.js'
+
+import { groupByMergeId } from './group.js'
 
 // Merge all results with the same `mergeId`.
 // The `merge` configuration property can be used to merge several results.
@@ -44,14 +45,10 @@ import { pickLast } from '../../utils/last.js'
 //  - However, grouping can remove this sorting order, so we sort again to
 //    ensure the last result is still the target result
 export const mergeResults = function (rawResults) {
-  const resultsGroups = Object.values(groupBy(rawResults, getRawResultGroup))
+  const resultsGroups = groupByMergeId(rawResults)
   const rawResultsA = resultsGroups.map(mergeResultsGroup)
   const rawResultsB = sortOn(rawResultsA, 'timestamp')
   return rawResultsB
-}
-
-const getRawResultGroup = function ({ id, mergeId = id }) {
-  return mergeId
 }
 
 const mergeResultsGroup = function (rawResults) {
