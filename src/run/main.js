@@ -75,12 +75,10 @@ const previewAndMeasure = async function ({
       stage: 'main',
       noDimensions,
     })
-    const newResultA = { ...newResult, combinations }
-    const rawResult = normalizeNewResult(newResultA)
+    const rawResult = normalizeNewResult({ ...newResult, combinations })
     await addToHistory(rawResult, config)
-    const resultA = updateCombinationsStats(result, combinations)
     const { programmaticResult, contents } = await reportCompute({
-      result: resultA,
+      result: updateCombinationsStats(result, combinations),
       sinceResult,
       noDimensions,
       config,
