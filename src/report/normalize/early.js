@@ -12,28 +12,40 @@ import { normalizeTargetResult } from './target.js'
 export const normalizeEarlyResult = function ({
   rawResult,
   history,
+  history: [sinceResult],
   noDimensions,
   config,
 }) {
-  const historyA = [...history, rawResult]
-  const configA = normalizeHistory(historyA, noDimensions, config)
+  const configA = normalizeHistory({
+    history,
+    rawResult,
+    sinceResult,
+    noDimensions,
+    config,
+  })
   const { result, config: configB } = normalizeTargetResult(rawResult, configA)
-  return { result, history: historyA, config: configB }
+  return { result, sinceResult, config: configB }
 }
 
 // Add report-specific properties to each `history` result.
 // This is only computed once at the beginning of the command.
-const normalizeHistory = function (history, noDimensions, config) {
+const normalizeHistory = function ({
+  history,
+  rawResult,
+  sinceResult,
+  noDimensions,
+  config,
+}) {
   if (!config.reporters.some(reporterHasHistory)) {
     return config
   }
 
-  const historyA = history.map(normalizeHistoryAll).map(normalizeNonCombAll)
-  const historyB = historyA.map((result) =>
-    normalizeCombAll(result, historyA, noDimensions),
-  )
+  const historyA = [...history, rawResult]
+    .map(normalizeHistoryAll)
+    .map(normalizeNonCombAll)
+    .map((result) => normalizeCombAll(result, sinceResult, noDimensions))
   const reporters = config.reporters.map((reporter) =>
-    normalizeHistoryEach(historyB, reporter, config),
+    normalizeHistoryEach(historyA, reporter, config),
   )
   return { ...config, reporters }
 }

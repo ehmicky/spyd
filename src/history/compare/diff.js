@@ -19,10 +19,8 @@ import { haveSimilarMeans } from '../../stats/similar.js'
 //  - The difference might not be due to the current commit but to the previous
 //    one, making it less meaningful
 //  - This would require additional visualization in reporters
-export const addCombinationsDiff = function (result, history) {
-  const [sinceResult] = history
-
-  if (result.id === sinceResult.id || history.length === 1) {
+export const addCombinationsDiff = function (result, sinceResult) {
+  if (sinceResult === undefined || result.id === sinceResult.id) {
     return result
   }
 

@@ -33,7 +33,7 @@ export const reportStart = async function (rawResult, history, config) {
   const noDimensions = getNoDimensions(rawResult.combinations)
   const {
     result,
-    history: historyA,
+    sinceResult,
     config: configB,
   } = normalizeEarlyResult({
     rawResult,
@@ -41,7 +41,7 @@ export const reportStart = async function (rawResult, history, config) {
     noDimensions,
     config: configA,
   })
-  return { result, history: historyA, noDimensions, config: configB }
+  return { result, sinceResult, noDimensions, config: configB }
 }
 
 // Report preview results in `run` command.

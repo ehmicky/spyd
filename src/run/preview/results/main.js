@@ -75,7 +75,7 @@ export const updateReport = async function ({
     reporters,
     titles,
     result,
-    history,
+    sinceResult,
     noDimensions,
   },
 }) {
@@ -91,7 +91,7 @@ export const updateReport = async function ({
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.report = await reportPreview({
     result: resultB,
-    history,
+    sinceResult,
     noDimensions,
     config: { reporters, titles },
   })

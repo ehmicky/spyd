@@ -29,7 +29,7 @@ export const getPreviewState = function ({ reporters, titles }) {
 export const addResultPreviewState = function ({
   previewState,
   result,
-  history,
+  sinceResult,
   noDimensions,
   config: { reporters },
 }) {
@@ -37,7 +37,7 @@ export const addResultPreviewState = function ({
   return {
     ...previewState,
     result,
-    history,
+    sinceResult,
     noDimensions,
     total: result.combinations.length,
     reporters: reportersA,
