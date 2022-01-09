@@ -18,9 +18,10 @@ const getIdProp = function (propName, { id }) {
   return [propName, { id }]
 }
 
-// Update post-reporting-normalization `result.combinations[index].stats` based
-// on pre-reporting-normalization `rawResult.combinations[index].stats`.
-// This assumes that the early reporting normalization logic does not change
+// Update:
+//  - `result.combinations[index].stats` (after reporting-related normalization)
+//  - Based on `rawResult.combinations[index].stats` (before it)
+// This assumes that the reporting-related normalization logic does not change
 // `result.combinations` array order, except for appending new ones.
 // Done after measuring all combinations.
 export const updateCombinationsStats = function (result, combinations) {
