@@ -48,7 +48,7 @@ const normalizeHistory = function ({
     .map(normalizeHistoryAll)
     .map(normalizeNonCombAll)
     .map((historyResult) =>
-      normalizeCombAll(historyResult, sinceResult, noDimensions),
+      normalizeCombAll(historyResult, { sinceResult, noDimensions, config }),
     )
   const reporters = config.reporters.map((reporter) =>
     normalizeHistoryEach(historyA, reporter, config),

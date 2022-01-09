@@ -21,7 +21,11 @@ export const normalizeComputedResult = function ({
   noDimensions,
   config,
 }) {
-  const result = normalizeCombAll(initialResult, sinceResult, noDimensions)
+  const result = normalizeCombAll(initialResult, {
+    sinceResult,
+    noDimensions,
+    config,
+  })
   const resultA = prettifyStats(result, result.combinations)
   const resultB = addScreenInfo(resultA)
   const reporters = config.reporters.map((reporter) =>
@@ -81,7 +85,11 @@ const addLastResult = function ({
 
   const lastResult = history[history.length - 1]
   const lastResultA = { ...lastResult, combinations }
-  const lastResultB = normalizeCombAll(lastResultA, sinceResult, noDimensions)
+  const lastResultB = normalizeCombAll(lastResultA, {
+    sinceResult,
+    noDimensions,
+    config,
+  })
   const lastResultC = normalizeCombEach(lastResultB, reporter, config)
   const historyA = setArray(history, history.length - 1, lastResultC)
   const historyB = prettifyHistoryStats(historyA)

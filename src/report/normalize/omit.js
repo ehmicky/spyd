@@ -41,7 +41,7 @@ const omitMeanProps = function (
 }
 
 const PRECISION_STATS_PROPS = ['moe', 'rmoe', 'outliersMin', 'outliersMax']
-const DIFF_STAT_PROPS = ['diff', 'diffPrecise']
+const DIFF_STAT_PROPS = ['diff', 'diffPrecise', 'diffLimit']
 
 // Some stats are too advanced for most reporters and are only meant for
 // debugging. Reporters must explicitly set `debugStats: true` to use those.

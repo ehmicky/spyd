@@ -21,7 +21,7 @@ export const run = async function (configFlags) {
     previewState,
     config,
   })
-  checkLimits(programmaticResult, config)
+  checkLimits(programmaticResult)
   return programmaticResult
 }
 

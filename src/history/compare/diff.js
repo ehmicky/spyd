@@ -1,6 +1,8 @@
 import { getMatchingCombination } from '../../combination/result.js'
 import { haveSimilarMeans } from '../../stats/similar.js'
 
+import { isPositiveLimit } from './parse.js'
+
 // Add `combination.stats.diff` which compares each combination with another
 // result.
 // Which result is being compared depends on the `since` configuration property.
@@ -19,13 +21,13 @@ import { haveSimilarMeans } from '../../stats/similar.js'
 //  - The difference might not be due to the current commit but to the previous
 //    one, making it less meaningful
 //  - This would require additional visualization in reporters
-export const addCombinationsDiff = function (result, sinceResult) {
+export const addCombinationsDiff = function (result, sinceResult, { limit }) {
   if (sinceResult === undefined || result.id === sinceResult.id) {
     return result
   }
 
   const combinations = result.combinations.map((combination) =>
-    addCombinationDiff(combination, sinceResult),
+    addCombinationDiff(combination, sinceResult, limit),
   )
   return { ...result, combinations }
 }
@@ -35,6 +37,7 @@ export const addCombinationsDiff = function (result, sinceResult) {
 const addCombinationDiff = function (
   combination,
   { combinations: previousCombinations },
+  limit,
 ) {
   if (combination.stats.mean === undefined) {
     return combination
@@ -52,7 +55,7 @@ const addCombinationDiff = function (
     return combination
   }
 
-  return addDiff({ combination, previousCombination })
+  return addDiff({ combination, previousCombination, limit })
 }
 
 // `diffPrecise` is whether `diff` is statistically significant.
@@ -73,9 +76,21 @@ const addDiff = function ({
     stats: previousStats,
     stats: { mean: previousMean },
   },
+  limit,
 }) {
   const diff = mean / previousMean - 1
-  const similarMeans = haveSimilarMeans(stats, previousStats)
-  const diffPrecise = similarMeans === undefined ? false : !similarMeans
-  return { ...combination, stats: { ...stats, diff, diffPrecise } }
+  const diffPrecise = haveSimilarMeans(stats, previousStats) === false
+  const diffLimit = getDiffLimit(diff, diffPrecise, limit)
+  return {
+    ...combination,
+    stats: { ...stats, diff, diffPrecise, ...diffLimit },
+  }
+}
+
+const getDiffLimit = function (diff, diffPrecise, limit) {
+  return diffPrecise && isOverLimit(diff, limit) ? { diffLimit: limit } : {}
+}
+
+const isOverLimit = function (diff, limit) {
+  return isPositiveLimit(limit) ? diff > limit : diff < limit
 }

@@ -28,7 +28,7 @@ export const getInitialStats = function () {
 //   - diff, diffPrecise: when either `showDiff` is false or there is no
 //     previous combination
 // Stat types:
-//   - samples, loops, times, repeat, minLoopDuration: integer
+//   - samples, loops, times, repeat, minLoopDuration, diffLimit: integer
 //   - min, max, median, mean, meanMin, meanMax, stdev, rstdev, moe, rmoe,
 //     outliersMin, outliersMax, diff: float
 //   - diffPrecise: boolean

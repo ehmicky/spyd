@@ -1,4 +1,10 @@
-import { badColor, goodColor, suffixColor } from '../../utils/colors.js'
+import {
+  badColor,
+  badHighlightColor,
+  goodColor,
+  goodHighlightColor,
+  suffixColor,
+} from '../../utils/colors.js'
 
 // Add `stat.prettyColor` and `stat.prettyPaddedColor`
 export const addStatColor = function ({
@@ -70,12 +76,23 @@ const addSpecificColors = function (pretty, { raw, name, stats }) {
   return color(pretty)
 }
 
-const getDiffColor = function (diff, { diffPrecise }) {
+const getDiffColor = function (diff, { diffPrecise, diffLimit }) {
   if (!diffPrecise) {
     return
   }
 
-  return diff > 0 ? badColor : goodColor
+  const hasDiffLimit = diffLimit !== undefined
+  return diff > 0
+    ? getBadDiffColor(hasDiffLimit)
+    : getGoodDiffColor(hasDiffLimit)
+}
+
+const getBadDiffColor = function (hasDiffLimit) {
+  return hasDiffLimit ? badHighlightColor : badColor
+}
+
+const getGoodDiffColor = function (hasDiffLimit) {
+  return hasDiffLimit ? goodHighlightColor : goodColor
 }
 
 const STAT_COLORS = {

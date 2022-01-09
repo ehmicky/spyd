@@ -16,9 +16,12 @@ export const normalizeNonCombAll = function (result) {
 
 // Add report-specific properties to a result that are in `combinations`, are
 // not reporter-specific
-export const normalizeCombAll = function (result, sinceResult, noDimensions) {
+export const normalizeCombAll = function (
+  result,
+  { sinceResult, noDimensions, config },
+) {
   const resultA = pickCombProps(result)
-  const resultB = addCombinationsDiff(resultA, sinceResult)
+  const resultB = addCombinationsDiff(resultA, sinceResult, config)
   const resultC = omitNoDimensions(resultB, noDimensions)
   const resultD = sortDimensions(resultC)
   const resultE = sortCombinations(resultD)
