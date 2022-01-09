@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { REPORT, HISTORY } from './groups.js'
 
 // Configuration shared by reporting commands: `run`, `show`, `remove`
@@ -86,4 +87,19 @@ Default: false.`,
     describe: `Show the difference with previous results.
 Default: true if the output is an interactive terminal.`,
   },
+  // We do not use `number: true` to avoid parsing invalid numbers as NaN
+  limit: {
+    group: HISTORY,
+    alias: 'l',
+    requiresArg: true,
+    describe: `Report when the average duration has increased by more than a
+specific percentage.
+
+For example, "50" reports any increase of at least 50%.
+Negative numbers like "-50" can be used for decreases instead.
+"0" can be used to report any increase.
+
+Default: none`,
+  },
 }
+/* eslint-enable max-lines */

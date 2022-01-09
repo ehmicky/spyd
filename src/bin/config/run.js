@@ -36,20 +36,6 @@ It no previous result with the identifier is found, this sets the new result's
 identifier instead. This allows merging several benchmarks running in parallel.
 Default: none`,
   },
-  // We do not use `number: true` to avoid parsing invalid numbers as NaN
-  limit: {
-    group: HISTORY,
-    alias: 'l',
-    requiresArg: true,
-    describe: `Report when the average duration has increased by more than a
-specific percentage.
-
-For example, "50" reports any increase of at least 50%.
-Negative numbers like "-50" can be used for decreases instead.
-"0" can be used to report any increase.
-
-Default: none`,
-  },
   outliers: {
     group: TASKS,
     boolean: true,
