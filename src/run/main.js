@@ -40,11 +40,7 @@ export const performRun = async function ({
   } = await reportStart(result, historyA, config)
 
   try {
-    const {
-      rawResult: rawResultA,
-      programmaticResult,
-      contents,
-    } = await previewAndMeasure({
+    const { programmaticResult, contents } = await previewAndMeasure({
       rawResult,
       result: resultA,
       sinceResult,
@@ -53,7 +49,6 @@ export const performRun = async function ({
       config: configA,
     })
     await reportPrint(contents)
-    await addToHistory(rawResultA, config)
     return programmaticResult
   } finally {
     await reportEnd(configA)
@@ -88,6 +83,7 @@ const previewAndMeasure = async function ({
       noDimensions,
     })
     const rawResultA = normalizeMeasuredResult({ ...rawResult, combinations })
+    await addToHistory(rawResultA, config)
     const resultA = updateCombinationsStats(result, combinations)
     const { programmaticResult, contents } = await reportCompute({
       result: resultA,
@@ -96,7 +92,7 @@ const previewAndMeasure = async function ({
       config,
     })
     await endPreview(previewStateA)
-    return { rawResult: rawResultA, programmaticResult, contents }
+    return { programmaticResult, contents }
   } catch (error) {
     await endPreview(previewStateA, error)
     throw error
