@@ -74,20 +74,22 @@ import { UserError } from '../error/main.js'
 //       machines
 //        - this can happen inside the same run (due to previous runs being
 //          merged to current one)
-export const normalizePrecision = function (precision, name) {
+export const normalizePrecision = function (precision, propName) {
   if (!Number.isInteger(precision)) {
-    throw new UserError(`'${name}' must be a positive integer: ${precision}`)
+    throw new UserError(
+      `'${propName}' must be a positive integer: ${precision}`,
+    )
   }
 
   const precisionA = PRECISION_TARGETS[precision]
 
   if (precisionA === undefined) {
     throw new UserError(
-      `'${name}' must be between ${MIN_PRECISION} and ${MAX_PRECISION}, not ${precision}`,
+      `'${propName}' must be between ${MIN_PRECISION} and ${MAX_PRECISION}, not ${precision}`,
     )
   }
 
-  return { precision: precisionA }
+  return { [propName]: precisionA }
 }
 
 // Associates `precision` (using array index) to the minimum `rmoe` each
