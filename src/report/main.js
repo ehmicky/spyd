@@ -29,12 +29,12 @@ export const reportResult = async function (rawResult, history, config) {
 export const reportStart = async function (rawResult, history, config) {
   const configA = await startReporters(config)
   const {
-    result: resultA,
+    result,
     sinceResult,
     noDimensions,
     config: configB,
   } = normalizeEarlyResult(rawResult, history, configA)
-  return { result: resultA, sinceResult, noDimensions, config: configB }
+  return { result, sinceResult, noDimensions, config: configB }
 }
 
 // Report preview results in `run` command.
