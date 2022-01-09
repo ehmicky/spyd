@@ -1,6 +1,7 @@
 import mapObj from 'map-obj'
 
 import { UserError } from '../error/main.js'
+import { selectCombinations } from '../select/main.js'
 
 import { validateCombinationsIds } from './ids/validate.js'
 import { toInputsList } from './inputs.js'
@@ -14,13 +15,15 @@ export const listCombinations = async function ({
   inputs,
   system,
   cwd,
+  select,
 }) {
   const tasks = await listTasks(runners, cwd)
   const inputsList = toInputsList(inputs)
 
   const combinations = getCombinationsProduct({ tasks, inputsList, system })
   validateCombinationsIds(combinations, inputsList)
-  return combinations
+  const combinationsA = selectCombinations(combinations, select)
+  return combinationsA
 }
 
 // Get cartesian product of all combinations.

@@ -5,7 +5,7 @@ import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
 import { groupMetadata, ungroupMetadata } from '../merge/metadata.js'
 import { compressRawResult } from '../normalize/compress.js'
-import { loadRawResults, normalizeRawResults } from '../normalize/load.js'
+import { loadRawResults, normalizePreviousResults } from '../normalize/load.js'
 
 import {
   addRawResult,
@@ -54,13 +54,10 @@ export const getFromHistory = async function (config) {
   const metadataGroupsC = await applySinceDelta(metadataGroupsB, config)
   const metadataGroupsD = [...metadataGroupsC, targetMetadataGroup]
   const history = await fetchHistory(metadataGroupsD, config)
-  const [historyA, targetResult] = pickLast(history)
-  const { targetResult: rawResult, history: historyB } = normalizeRawResults(
-    targetResult,
-    historyA,
-    config,
-  )
-  return { rawResult, history: historyB }
+  const [historyA, rawResult] = pickLast(history)
+  const { targetResult: rawResultA, history: historyB } =
+    normalizePreviousResults(rawResult, historyA, config)
+  return { rawResult: rawResultA, history: historyB }
 }
 
 // List all history results, after applying the `since` delta.

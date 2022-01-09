@@ -32,6 +32,7 @@ const printPreviewStarting = function ({ quiet }) {
 
 // Start the preview mode once the result has been loaded
 export const startPreview = async function ({
+  rawResult,
   result,
   sinceResult,
   noDimensions,
@@ -44,6 +45,7 @@ export const startPreview = async function ({
 
   const previewStateA = addResultPreviewState({
     previewState,
+    rawResult,
     result,
     sinceResult,
     noDimensions,

@@ -1,5 +1,5 @@
 import { reportPreview } from '../../../report/main.js'
-import { normalizeMeasuredResult } from '../../normalize.js'
+import { updateCombinationStats } from '../../normalize.js'
 import {
   setDescriptionIf,
   START_DESCRIPTION,
@@ -30,7 +30,7 @@ export const updatePreviewStats = async function ({
     return
   }
 
-  await updateResultStats({ previewState, stats })
+  await updateResultStats(previewState, stats)
 
   updateCombinationEnd({
     stats,
@@ -48,18 +48,13 @@ const shouldSkipPreview = function ({ quiet }, { samples }) {
   return quiet || samples === 0
 }
 
-const updateResultStats = async function ({
-  previewState,
-  previewState: { result, index },
-  stats,
-}) {
-  const combinations = [
-    ...result.combinations.slice(0, index),
-    { ...result.combinations[index], stats },
-    ...result.combinations.slice(index + 1),
-  ]
+const updateResultStats = async function (previewState, stats) {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
-  previewState.result = { ...result, combinations }
+  previewState.result = updateCombinationStats(
+    previewState.result,
+    stats,
+    previewState.index,
+  )
   await updateReport({ previewState })
 }
 
@@ -79,7 +74,6 @@ export const updateReport = async function ({
     noDimensions,
   },
 }) {
-  const resultA = normalizeMeasuredResult(result)
   const preview = {
     durationLeft,
     percentage,
@@ -87,10 +81,10 @@ export const updateReport = async function ({
     total,
     combinationNameColor,
   }
-  const resultB = { ...resultA, preview }
+  const resultA = { ...result, preview }
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.report = await reportPreview({
-    result: resultB,
+    result: resultA,
     sinceResult,
     noDimensions,
     config: { reporters, titles },
