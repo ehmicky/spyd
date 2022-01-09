@@ -2,7 +2,7 @@ import { addDefaultIds } from '../../combination/default.js'
 import { getNoDimensions } from '../../combination/filter.js'
 import { keepResultCombinations } from '../../combination/result.js'
 import { mergeResults } from '../../history/merge/results.js'
-import { selectRawResult } from '../../select/main.js'
+import { selectResult } from '../../select/main.js'
 
 // Transform:
 //  - A `rawResult`: persisted in result files
@@ -35,7 +35,7 @@ export const normalizeReportedResults = function (
     history,
     targetResult,
   )
-  const targetResultB = selectRawResult(targetResultA, select)
+  const targetResultB = selectResult(targetResultA, select)
   const historyB = addDefaultIds(historyA, targetResultB)
   const historyC = filterUnusedCombinations(historyB, targetResultB)
   const noDimensions = getNoDimensions(targetResultB.combinations)
@@ -46,7 +46,7 @@ export const normalizeReportedResults = function (
 // target result.
 // This simplifies both the implementation and the user experience.
 const filterUnusedCombinations = function (history, targetResult) {
-  return history.map((rawResult) =>
-    keepResultCombinations(rawResult, targetResult),
+  return history.map((historyResult) =>
+    keepResultCombinations(historyResult, targetResult),
   )
 }

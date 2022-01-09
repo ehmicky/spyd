@@ -29,9 +29,9 @@ import { validateSelectMatches } from './validate.js'
 //     - Changing `select` does not change the history start|end, which is less
 //       confusing
 //     - This does not require loading files before resolving deltas
-export const selectRawResult = function (rawResult, select) {
-  const combinations = selectCombinations(rawResult.combinations, select)
-  return { ...rawResult, combinations }
+export const selectResult = function (result, select) {
+  const combinations = selectCombinations(result.combinations, select)
+  return { ...result, combinations }
 }
 
 export const selectCombinations = function (combinations, select) {

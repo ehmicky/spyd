@@ -1,11 +1,11 @@
 import { getCombinationIds } from './ids/get.js'
 
 // Filter out the `combinations` that are not in `result`
-export const keepResultCombinations = function (rawResult, result) {
-  const combinations = rawResult.combinations.filter((combination) =>
-    resultHasCombination(result, combination),
+export const keepResultCombinations = function (resultA, resultB) {
+  const combinations = resultA.combinations.filter((combination) =>
+    resultHasCombination(resultB, combination),
   )
-  return { ...rawResult, combinations }
+  return { ...resultA, combinations }
 }
 
 // Filter out the `combinations` that are in `result`

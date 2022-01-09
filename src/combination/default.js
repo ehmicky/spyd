@@ -25,8 +25,8 @@ import { removePrefix } from './prefix.js'
 //  - Selectable with `select`
 export const addDefaultIds = function (history, targetResult) {
   const defaultDimensions = getDefaultDimensions(targetResult)
-  return history.map((rawResult) =>
-    addRawResultDefaultIds(rawResult, defaultDimensions),
+  return history.map((historyResult) =>
+    addResultDefaultIds(historyResult, defaultDimensions),
   )
 }
 
@@ -46,12 +46,12 @@ const getDefaultDimension = function (dimension) {
   return [dimension.propName, { id }]
 }
 
-const addRawResultDefaultIds = function (rawResult, defaultDimensions) {
-  const combinations = rawResult.combinations.map((combination) => ({
+const addResultDefaultIds = function (result, defaultDimensions) {
+  const combinations = result.combinations.map((combination) => ({
     ...combination,
     dimensions: { ...defaultDimensions, ...combination.dimensions },
   }))
-  return { ...rawResult, combinations }
+  return { ...result, combinations }
 }
 
 // Find whether an id matches the default id pattern of a dimension.
