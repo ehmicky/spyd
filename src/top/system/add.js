@@ -17,7 +17,7 @@ import { groupBy } from '../../utils/group.js'
 //    history results
 // We allow multiple system dimensions because it:
 //  - Looks nicer to separate those and sort them individually in reporting
-//  - Is easier for selection with `select|limit`
+//  - Is easier for selection with `select` and config selectors
 //  - Is easier to configure titles
 // Users specify those multiple system dimensions using an object, as opposed to
 // either an array of strings or an underscore-separated string because:

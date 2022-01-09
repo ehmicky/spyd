@@ -15,7 +15,7 @@ export const validateSelectMatches = function (combinations, select) {
   }
 }
 
-// Validation error of `select`, `limit` properties
+// Validation error of `select` and config selectors
 export const throwValidationError = function (message, rawSelectors, propName) {
   const rawSelectorsStr = serializeRawSelectors(rawSelectors)
   throw new UserError(`The "${propName}" configuration property is invalid: ${rawSelectorsStr}

@@ -62,7 +62,7 @@ const getMessageName = function (propName, prefixName) {
 
 // All dimensions. They:
 //  - create dimensions in runs using a cartesian product
-//  - can be used in `select|limit`
+//  - can be used in `select` and config selectors
 //  - are printed when naming the combination
 //     - in reporters, preview bottom bar, `dev`, error messages
 //     - in some of those cases, `titles` are applied too

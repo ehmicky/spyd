@@ -1,7 +1,7 @@
 import { throwValidationError } from './validate.js'
 
-// Parse `select|limit` user-friendly format (array of strings) to a
-// code-friendlier format (objects).
+// Parse `select` and config selectors user-friendly format (array of strings)
+// to a code-friendlier format (objects).
 // Syntax:
 //  - Most tokens are ids, except "and" or "not" which cannot be used as ids
 //  - Spaces between ids are meant as "or"
