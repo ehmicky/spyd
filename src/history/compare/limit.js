@@ -7,6 +7,9 @@ import { isPositiveLimit } from './parse.js'
 // configuration property, we fail.
 // It uses the `since` configuration property like `showDiff` does.
 // Done after reporting, to ensure a report is always shown.
+// It can be done during benchmark (`run`) and after it (`show`)
+//  - It cannot be done during `remove` since this does not make sense
+//  - However, `remove` still report `diff`, `diffPrecise` and `diffLimit`
 // Even when a limit is hit, we still `save` (if the flag is present):
 //  - This avoids losing information, e.g.:
 //     - We can make a silent `run` checking only for limits, and still `show`
