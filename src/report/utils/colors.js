@@ -25,7 +25,6 @@ export const subtitleColor = mainColor
 export const fieldColor = grayColor.italic
 export const goodColor = mainColor
 export const badColor = redBright
-export const errorColor = redBright.inverse.bold
 export const separatorColor = grayColor
 export const noteColor = grayColor
 export const suffixColor = grayColor
