@@ -18,6 +18,18 @@
       "branch": "main"
     }
   },
+  "runners": [
+    {
+      "dimensions": {
+        "runner": "node"
+      },
+      "versions": {
+        "Node": "16.1.0",
+        "Spyd": "0.3.1",
+        "Test2": "1.0.0"
+      }
+    }
+  ],
   "combinations": [
     {
       "dimensions": {
@@ -25,11 +37,6 @@
         "runner": "node",
         "system.machine": "one",
         "system.cluster": "red"
-      },
-      "versions": {
-        "Node": "16.1.0",
-        "Spyd": "0.3.1",
-        "Test2": "1.0.0"
       },
       "stats": {
         "samples": 123,

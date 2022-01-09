@@ -1,10 +1,14 @@
 import mapObj from 'map-obj'
 
 import { cleanObject } from '../../utils/clean.js'
+import { groupBy } from '../../utils/group.js'
 
-// Reduce size of rawResults before saving
-// We try to persist everything, so that `show` report the same information.
-// We try to only persist what cannot be computed runtime.
+// Reduce size of rawResults before saving.
+// We persist everything so that:
+//  - `show` reports the same information as `run`
+//  - We do not lose any information
+// We only persist what cannot be computed runtime.
+// We avoid duplicating information inside the same rawResult.
 // We also ensure:
 //  - No additional unknown keys is persisted
 //  - The keys are persisted in a specific order
@@ -14,15 +18,27 @@ export const compressRawResult = function ({
   timestamp,
   combinations,
 }) {
-  const system = compressSystem(combinations)
-  const combinationsA = combinations.map(compressCombination)
+  const combinationsA = combinations.map(compressDimensions)
+  const system = compressSystem(combinationsA)
+  const runners = compressRunners(combinationsA)
+  const combinationsB = combinationsA.map(compressCombination)
   return cleanObject({
     id,
     subId,
     timestamp,
     system,
-    combinations: combinationsA,
+    runners,
+    combinations: combinationsB,
   })
+}
+
+const compressDimensions = function ({ dimensions, stats, system, versions }) {
+  const dimensionsA = mapObj(dimensions, compressDimension)
+  return { dimensions: dimensionsA, stats, system, versions }
+}
+
+const compressDimension = function (dimension, { id }) {
+  return [dimension, id]
 }
 
 const compressSystem = function ([
@@ -43,14 +59,27 @@ const compressSystem = function ([
   }
 }
 
-const compressCombination = function ({ dimensions, versions, stats }) {
-  const dimensionsA = mapObj(dimensions, compressDimension)
-  const statsA = compressStats(stats)
-  return { dimensions: dimensionsA, versions, stats: statsA }
+const compressRunners = function (combinations) {
+  const combinationsGroups = Object.values(groupBy(combinations, getRunnerKey))
+  return combinationsGroups.map(compressRunner)
 }
 
-const compressDimension = function (dimension, { id }) {
-  return [dimension, id]
+const getRunnerKey = function ({ dimensions: { runner } }) {
+  return runner
+}
+
+const compressRunner = function ([
+  {
+    dimensions: { runner },
+    versions,
+  },
+]) {
+  return { dimensions: { runner }, versions }
+}
+
+const compressCombination = function ({ dimensions, stats }) {
+  const statsA = compressStats(stats)
+  return { dimensions, stats: statsA }
 }
 
 const compressStats = function (stats) {

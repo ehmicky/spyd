@@ -18,6 +18,18 @@
       "branch": "main"
     }
   },
+  "runners": [
+    {
+      "dimensions": {
+        "runner": "node"
+      },
+      "versions": {
+        "Node": "15.13.0",
+        "Spyd": "0.3.1",
+        "Test1": "1.0.0"
+      }
+    }
+  ],
   "combinations": [
     {
       "dimensions": {
@@ -25,11 +37,6 @@
         "runner": "node",
         "system.machine": "two",
         "system.cluster": "red"
-      },
-      "versions": {
-        "Node": "15.13.0",
-        "Spyd": "0.3.1",
-        "Test1": "1.0.0"
       },
       "stats": {
         "median": 6.55279933481153,
@@ -90,11 +97,6 @@
         "runner": "node",
         "system.machine": "two",
         "system.cluster": "red"
-      },
-      "versions": {
-        "Node": "15.13.0",
-        "Spyd": "0.3.1",
-        "Test1": "1.0.0"
       },
       "stats": {
         "samples": 66,
