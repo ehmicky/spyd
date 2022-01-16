@@ -1,5 +1,5 @@
 import { loadConfig } from './load/main.js'
-import { normalizeConfig } from './normalize.js'
+import { normalizeConfig } from './normalize/main.js'
 import { addPlugins } from './plugin/add.js'
 
 // Retrieve configuration

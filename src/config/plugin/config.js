@@ -1,7 +1,7 @@
 import { cleanObject } from '../../utils/clean.js'
 import { pick } from '../../utils/pick.js'
-import { checkObjectProps, checkJson } from '../check.js'
 import { mergeConfigs } from '../merge/main.js'
+import { checkObjectProps, checkJson } from '../normalize/check.js'
 
 // Retrieve plugin configuration object.
 // Plugins use both:

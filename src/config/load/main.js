@@ -1,5 +1,5 @@
 import { mergeConfigs } from '../merge/main.js'
-import { CLI_FLAGS_BASE } from '../path.js'
+import { CLI_FLAGS_BASE } from '../normalize/path.js'
 
 import { getConfigsInfos } from './info.js'
 import { addNpxShortcut } from './npx.js'

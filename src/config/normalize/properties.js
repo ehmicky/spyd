@@ -1,12 +1,14 @@
 /* eslint-disable max-lines */
 import { cwd as getCwd } from 'process'
 
-import { normalizeLimit } from '../history/compare/normalize.js'
-import { normalizeDelta } from '../history/delta/normalize.js'
-import { getDefaultId, validateMerge } from '../history/merge/id.js'
-import { isOutputPath } from '../report/output.js'
-import { isTtyInput } from '../report/tty.js'
-import { normalizePrecision } from '../run/precision.js'
+import { normalizeLimit } from '../../history/compare/normalize.js'
+import { normalizeDelta } from '../../history/delta/normalize.js'
+import { getDefaultId, validateMerge } from '../../history/merge/id.js'
+import { isOutputPath } from '../../report/output.js'
+import { isTtyInput } from '../../report/tty.js'
+import { normalizePrecision } from '../../run/precision.js'
+import { getDefaultConfig } from '../load/default.js'
+import { recurseConfigSelectors } from '../select/normalize.js'
 
 import {
   checkBoolean,
@@ -19,10 +21,8 @@ import {
   checkDefinedString,
   checkJson,
 } from './check.js'
-import { getDefaultConfig } from './load/default.js'
-import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
 // eslint-disable-next-line import/max-dependencies
-import { recurseConfigSelectors } from './select/normalize.js'
+import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
 
 const METADATA_COMMANDS = new Set(['show', 'remove'])
 

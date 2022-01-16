@@ -1,4 +1,4 @@
-import { normalizeOptionalArray } from '../check.js'
+import { normalizeOptionalArray } from '../normalize/check.js'
 import { PLUGIN_TYPES } from '../plugin/types.js'
 
 // Custom merging logic for tasks.

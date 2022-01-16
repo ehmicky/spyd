@@ -1,4 +1,4 @@
-import { mapValues } from '../utils/map.js'
+import { mapValues } from '../../utils/map.js'
 
 import { runNormalizer } from './check.js'
 import { runDag } from './dag/run.js'

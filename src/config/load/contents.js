@@ -3,7 +3,7 @@ import { extname } from 'path'
 import { UserError } from '../../error/main.js'
 import { importJsDefault } from '../../utils/import.js'
 import { loadYamlFile } from '../../utils/yaml.js'
-import { checkObject } from '../check.js'
+import { checkObject } from '../normalize/check.js'
 
 // Load and parse `spyd.*` file contents
 export const loadConfigContents = async function (configPath) {

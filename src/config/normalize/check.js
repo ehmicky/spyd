@@ -3,7 +3,7 @@ import { isDeepStrictEqual, inspect } from 'util'
 import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
-import { UserError } from '../error/main.js'
+import { UserError } from '../../error/main.js'
 
 // A normalizing function transforms a value by returning.
 // It can return `undefined` to leave the value as is.

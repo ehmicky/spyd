@@ -1,7 +1,7 @@
 import { basename } from 'path'
 
 import { lookupFiles } from '../lookup.js'
-import { CLI_FLAGS_BASE } from '../path.js'
+import { CLI_FLAGS_BASE } from '../normalize/path.js'
 
 import { getConfigFilenames } from './contents.js'
 import { isNpxCall } from './npx.js'
