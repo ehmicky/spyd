@@ -38,27 +38,33 @@ export const checkArrayLength = function (value, name) {
   }
 }
 
-export const checkDefinedStringArray = function (value, name) {
-  value.forEach((item, index) => {
-    checkString(value, name)
-    checkDefinedString(item, getIndexName(index, name))
+export const checkArrayItems = function (checkers, value, name) {
+  checkArray(value, name)
+  return value.map((item, index) => {
+    const newItem = checkArrayItem({
+      value: item,
+      index,
+      length: value.length,
+      name,
+      checkers,
+    })
+    return newItem === undefined ? item : newItem
   })
 }
 
-export const checkStringArray = function (value, name) {
-  value.forEach((item, index) => {
-    checkString(item, getIndexName(index, name))
-  })
+const checkArray = function (value, name) {
+  if (!Array.isArray(value)) {
+    throw new UserError(`'${name}' must be an array: ${inspect(value)}`)
+  }
 }
 
 // When `index` is `0`, it is possible that the value was arrified
-const getIndexName = function (index, name) {
-  return index === 0 ? name : `${name}[${index}]`
-}
+const checkArrayItem = function ({ value, index, length, name, checkers }) {
+  const indexName = length === 1 ? name : `${name}[${index}]`
 
-export const checkDefinedString = function (value, name) {
-  if (value.trim() === '') {
-    throw new UserError(`'${name}' must not be empty.`)
+  // eslint-disable-next-line fp/no-loops
+  for (const checker of checkers) {
+    checker(value, indexName)
   }
 }
 
@@ -67,6 +73,19 @@ export const checkString = function (value, name) {
     throw new UserError(`'${name}' must be a string: ${inspect(value)}`)
   }
 }
+
+export const checkStringArray = checkArrayItems.bind(undefined, [checkString])
+
+export const checkDefinedString = function (value, name) {
+  if (value.trim() === '') {
+    throw new UserError(`'${name}' must not be empty.`)
+  }
+}
+
+export const checkDefinedStringArray = checkArrayItems.bind(undefined, [
+  checkString,
+  checkDefinedString,
+])
 
 export const checkStringsObject = function (value, name) {
   Object.entries(value).forEach(([childName, propValue]) => {
