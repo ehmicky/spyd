@@ -1,5 +1,5 @@
 import { getCombinationPrefix } from '../../combination/ids/name.js'
-import { applyConfigSelectors } from '../../config/select/apply.js'
+import { useConfigSelectors } from '../../config/select/use.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
@@ -19,7 +19,7 @@ import { runEvents } from './events.js'
 // Measure a single combination
 export const measureCombination = async function ({ index, config, ...args }) {
   const { previewState, combination, noDimensions } = args
-  const configA = applyConfigSelectors(combination, config)
+  const configA = useConfigSelectors(combination, config)
 
   try {
     await startCombinationPreview({

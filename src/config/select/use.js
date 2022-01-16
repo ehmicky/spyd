@@ -9,7 +9,7 @@ import { SELECTABLE_PROPS } from './normalize.js'
 // value, based on which selector matches a given combination.
 // We iterate by object key order.
 //  - If no selector matches, we use the last one as a fallback
-export const applyConfigSelectors = function (combination, config) {
+export const useConfigSelectors = function (combination, config) {
   return mapObj(config, (name, configValue) => [
     name,
     applyConfigPropSelectors(combination, configValue, name),
