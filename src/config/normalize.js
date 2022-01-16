@@ -19,19 +19,24 @@ export const normalizeConfig = function (config, command, configInfos) {
 
 const normalizePropConfig = function (
   { config, name, command, configInfos },
-  { commands, normalize },
+  { commands, default: defaultValue, normalize },
 ) {
-  const value = config[name]
-
-  if (value === undefined || !commandHasProp(commands, command)) {
+  if (!commandHasProp(commands, command)) {
     return omit.default(config, [name])
   }
 
-  const newValue =
-    normalize === undefined
-      ? value
-      : runNormalizer(normalize, value, name, { configInfos, config })
-  return { ...config, [name]: newValue }
+  const value = config[name]
+  const args = [name, { configInfos, config }]
+
+  const valueA = addDefaultValue(value, defaultValue, args)
+
+  if (valueA === undefined) {
+    return config
+  }
+
+  const valueB =
+    normalize === undefined ? valueA : runNormalizer(normalize, valueA, ...args)
+  return { ...config, [name]: valueB }
 }
 
 // All config properties can be specified in `spyd.yml` (unlike CLI flags), for
@@ -59,4 +64,14 @@ const COMMAND_GROUPS = {
   run: ['run'],
   // Commands that can select combinations
   select: ['dev', 'remove', 'run', 'show'],
+}
+
+const addDefaultValue = function (value, defaultValue, args) {
+  if (value !== undefined) {
+    return value
+  }
+
+  return typeof defaultValue === 'function'
+    ? defaultValue(...args)
+    : defaultValue
 }

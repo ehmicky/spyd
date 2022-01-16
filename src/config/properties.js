@@ -35,6 +35,7 @@ export const CONFIG_PROPS = {
   },
   delta: {
     commands: 'delta',
+    default: 1,
     normalize(value, name) {
       return normalizeDelta(value, name)
     },
@@ -47,6 +48,7 @@ export const CONFIG_PROPS = {
   },
   inputs: {
     commands: 'combinations',
+    default: {},
     normalize(value, name) {
       checkObjectProps(value, name, (childValue, childName) => {
         checkJson(childValue, childName)
@@ -80,6 +82,7 @@ export const CONFIG_PROPS = {
   },
   outliers: {
     commands: 'run',
+    default: false,
     normalize(value, name) {
       recurseConfigSelectors(value, name, (childValue, childName) => {
         checkBoolean(childValue, childName)
@@ -88,6 +91,7 @@ export const CONFIG_PROPS = {
   },
   precision: {
     commands: 'run',
+    default: 5,
     normalize(value, name) {
       return recurseConfigSelectors(value, name, (childValue, childName) => {
         checkInteger(childValue, childName)
@@ -103,6 +107,7 @@ export const CONFIG_PROPS = {
   },
   reporter: {
     commands: 'report',
+    default: ['debug'],
     normalize(value, name, { config: { force } }) {
       if (force) {
         return []
@@ -117,9 +122,15 @@ export const CONFIG_PROPS = {
   },
   reporterConfig: {
     commands: 'report',
+    default: {},
   },
+  // We default `runner` to `node` only instead of several ones (e.g. `cli`)
+  // because this enforces that the `runner` property points to a required tasks
+  // file, instead of to an optional one. This makes behavior easier to
+  // understand for users and provides with better error messages.
   runner: {
     commands: 'combinations',
+    default: ['node'],
     normalize(value, name) {
       const valueA = normalizeOptionalArray(value)
       checkArrayLength(valueA, name)
@@ -131,15 +142,18 @@ export const CONFIG_PROPS = {
   },
   runnerConfig: {
     commands: 'combinations',
+    default: {},
   },
   save: {
     commands: 'run',
+    default: false,
     normalize(value, name) {
       checkBoolean(value, name)
     },
   },
   select: {
     commands: 'select',
+    default: [],
     normalize(value, name) {
       const valueA = normalizeOptionalArray(value)
       checkArrayItems(valueA, name, (childValue, childName) => {
@@ -164,6 +178,7 @@ export const CONFIG_PROPS = {
   },
   showPrecision: {
     commands: 'report',
+    default: false,
     normalize(value, name) {
       recurseConfigSelectors(value, name, (childValue, childName) => {
         checkBoolean(childValue, childName)
@@ -178,6 +193,7 @@ export const CONFIG_PROPS = {
   },
   showTitles: {
     commands: 'report',
+    default: false,
     normalize(value, name) {
       recurseConfigSelectors(value, name, (childValue, childName) => {
         checkBoolean(childValue, childName)
@@ -186,12 +202,14 @@ export const CONFIG_PROPS = {
   },
   since: {
     commands: 'history',
+    default: 1,
     normalize(value, name) {
       return normalizeDelta(value, name)
     },
   },
   system: {
     commands: 'combinations',
+    default: {},
     normalize(value, name) {
       checkObjectProps(value, name, (childValue, childName) => {
         checkDefinedString(childValue, childName)
@@ -210,6 +228,7 @@ export const CONFIG_PROPS = {
   },
   titles: {
     commands: 'report',
+    default: {},
     normalize(value, name) {
       checkObjectProps(value, name, (childValue, childName) => {
         checkDefinedString(childValue, childName)
