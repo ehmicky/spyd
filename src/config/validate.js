@@ -1,5 +1,3 @@
-import { multipleValidOptions } from 'jest-validate'
-
 import { validateConfigProps } from '../utils/validate.js'
 
 import { DEFAULT_CONFIG } from './default.js'
@@ -22,19 +20,11 @@ const DYNAMIC_OBJECT_PROPS = [
   'inputs',
 ]
 
-const optionalArray = function (value) {
-  return multipleValidOptions(value, [value])
-}
-
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   inputs: { inputId: 'inputValue' },
-  reporter: optionalArray('debug'),
   reporterConfig: { debug: { property: true } },
-  runner: optionalArray('node'),
   runnerConfig: { node: { version: '8' } },
-  select: optionalArray('task_id'),
   system: { os: 'linux', node_version: 'node_8' },
-  tasks: optionalArray('./benchmark/tasks.js'),
   titles: { taskId: 'taskTitle' },
 }
