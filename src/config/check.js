@@ -8,10 +8,10 @@ import { curry, runNormalizer } from '../utils/functional.js'
 
 // Configuration validation helper functions
 // eslint-disable-next-line max-params
-export const checkArrayItems = function (checkers, value, name, ...args) {
+export const checkArrayItems = function (checker, value, name, ...args) {
   checkArray(value, name)
   return value.flatMap((item, index) =>
-    applyCheckers(checkers, item, getIndexName(name, index, value), ...args),
+    runNormalizer(checker, item, getIndexName(name, index, value), ...args),
   )
 }
 
@@ -23,22 +23,15 @@ const getIndexName = function (name, index, value) {
 }
 
 // eslint-disable-next-line max-params
-export const checkObjectProps = function (checkers, value, name, ...args) {
+export const checkObjectProps = function (checker, value, name, ...args) {
   checkObject(value, name)
   return mapObj(value, (childName, childValue) => [
     childName,
-    applyCheckers(checkers, childValue, `${name}.${childName}`, ...args),
+    runNormalizer(checker, childValue, `${name}.${childName}`, ...args),
   ])
 }
 
 export const cCheckObjectProps = curry(checkObjectProps)
-
-const applyCheckers = function (checkers, value, ...args) {
-  return checkers.reduce(
-    (valueA, checker) => runNormalizer(checker, valueA, ...args),
-    value,
-  )
-}
 
 export const checkBoolean = function (value, name) {
   if (typeof value !== 'boolean') {

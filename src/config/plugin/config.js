@@ -47,7 +47,7 @@ export const addPluginsConfig = function ({
   topProps,
 }) {
   const pluginsConfig = config[configProp]
-  checkObjectProps(checkObjectProps([checkJson], pluginsConfig, configProp))
+  checkObjectProps(checkObjectProps(checkJson, pluginsConfig, configProp))
   return plugins.map((plugin) =>
     addPluginConfig({ plugin, pluginsConfig, config, topProps }),
   )

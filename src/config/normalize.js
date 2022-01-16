@@ -48,7 +48,7 @@ const NORMALIZERS = {
   cwd: composeNormalizers(checkDefinedString, normalizeConfigPath),
   delta: normalizeDelta,
   force: checkBoolean,
-  inputs: cCheckObjectProps([checkJson]),
+  inputs: cCheckObjectProps(checkJson),
   limit: cRecurseConfigSelectors(
     composeNormalizers(checkInteger, normalizeLimit),
   ),
@@ -64,17 +64,17 @@ const NORMALIZERS = {
   quiet: checkBoolean,
   reporter: composeNormalizers(
     normalizeOptionalArray,
-    cCheckArrayItems([checkDefinedString]),
+    cCheckArrayItems(checkDefinedString),
   ),
   runner: composeNormalizers(
     normalizeOptionalArray,
     checkArrayLength,
-    cCheckArrayItems([checkDefinedString]),
+    cCheckArrayItems(checkDefinedString),
   ),
   save: checkBoolean,
   select: composeNormalizers(
     normalizeOptionalArray,
-    cCheckArrayItems([checkString]),
+    cCheckArrayItems(checkString),
   ),
   showDiff: cRecurseConfigSelectors(checkBoolean),
   showMetadata: checkBoolean,
@@ -82,12 +82,12 @@ const NORMALIZERS = {
   showSystem: checkBoolean,
   showTitles: cRecurseConfigSelectors(checkBoolean),
   since: normalizeDelta,
-  system: cCheckObjectProps([checkDefinedString]),
+  system: cCheckObjectProps(checkDefinedString),
   tasks: composeNormalizers(
     normalizeOptionalArray,
-    cCheckArrayItems([
+    cCheckArrayItems(
       composeNormalizers(checkDefinedString, normalizeConfigGlob),
-    ]),
+    ),
   ),
-  titles: cCheckObjectProps([checkDefinedString]),
+  titles: cCheckObjectProps(checkDefinedString),
 }
