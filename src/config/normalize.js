@@ -20,18 +20,18 @@ export const normalizeConfig = function (config) {
 }
 
 const normalizePropEntry = function (name, value) {
-  const valueA = normalizePropValue(value)
+  const valueA = normalizePropValue(value, name)
   return [name, valueA]
 }
 
-const normalizePropValue = function (value, name, config) {
+const normalizePropValue = function (value, name) {
   const normalizer = NORMALIZERS[name]
 
   if (normalizer === undefined) {
     return value
   }
 
-  const newValue = normalizer(value, name, config)
+  const newValue = normalizer(value, name)
   return newValue === undefined ? value : newValue
 }
 
