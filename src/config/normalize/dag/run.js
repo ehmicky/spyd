@@ -29,7 +29,7 @@ export const runDag = async function (tasks) {
   const tasksPromises = mapValues(tasks, createTaskPromise)
   const allTasksArgs = mapValues(
     tasks,
-    getTasksArgs.bind(undefined, dag, tasksPromises),
+    getTasksArgs.bind(undefined, dag, Object.entries(tasksPromises)),
   )
   const tasksReturns = await pProps(tasks, (taskFunc, taskName) =>
     runTask(taskFunc, tasksPromises[taskName], allTasksArgs[taskName]),
@@ -67,57 +67,60 @@ const createPromise = function () {
 const noop = function () {}
 
 // Each task receive a `tasksArgs` object which is a copy of `tasksPromises`
-// except it is wrapped in proxies.
-// Each sets of proxies keeps track of the `parentTaskName` it is associated
+// except it is wrapped in getters.
+// Each sets of getters keeps track of the `parentTaskName` it is associated
 // with, which allows knowing which task references which.
+// We use getters for convenience.
 // eslint-disable-next-line max-params
-const getTasksArgs = function (dag, tasksPromises, _, parentTaskName) {
-  return mapValues(
-    tasksPromises,
-    getTaskArg.bind(undefined, { dag, parentTaskName }),
-  )
+const getTasksArgs = function (dag, tasksPromisesEntries, _, parentTaskName) {
+  const tasksArgs = {}
+
+  // eslint-disable-next-line fp/no-loops
+  for (const [childTaskName, taskPromise] of tasksPromisesEntries) {
+    setTaskArgGetter({
+      dag,
+      tasksArgs,
+      parentTaskName,
+      childTaskName,
+      taskPromise,
+    })
+  }
+
+  return tasksArgs
 }
 
-const getTaskArg = function (
-  { dag, parentTaskName },
-  taskPromise,
+const setTaskArgGetter = function ({
+  dag,
+  tasksArgs,
+  parentTaskName,
   childTaskName,
-) {
-  // eslint-disable-next-line fp/no-proxy
-  return new Proxy(taskPromise.promise, {
-    get: proxyTaskArgMethod.bind(undefined, {
+  taskPromise,
+}) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  Object.defineProperty(tasksArgs, childTaskName, {
+    get: getTaskArg.bind(undefined, {
       dag,
       parentTaskName,
       childTaskName,
+      taskPromise,
     }),
+    // `tasksArgs` should not be iterated since it would call the getter,
+    // including with object spreading.
+    enumerable: false,
+    // Those values are only intended to be read, not write
+    configurable: false,
   })
 }
 
-// Proxies `Promise.then|catch|finally()` so that when a task is using another
-// one's return value, we ensure there are no cycles.
-// eslint-disable-next-line max-params
-const proxyTaskArgMethod = function (
-  { dag, parentTaskName, childTaskName },
-  taskArg,
-  propName,
-  receiver,
-) {
-  const propValue = taskArg[propName]
-
-  if (!isPromiseFollowMethod(propName, propValue)) {
-    return Reflect.get(taskArg, propName, receiver)
-  }
-
+const getTaskArg = function ({
+  dag,
+  parentTaskName,
+  childTaskName,
+  taskPromise,
+}) {
   addDagEdge(dag, parentTaskName, childTaskName)
-  return propValue.bind(taskArg)
+  return taskPromise.promise
 }
-
-// We only proxy the methods which need to be
-const isPromiseFollowMethod = function (propName, propValue) {
-  return typeof propValue === 'function' && PROMISE_FOLLOW_METHODS.has(propName)
-}
-
-const PROMISE_FOLLOW_METHODS = new Set(['then', 'catch', 'finally'])
 
 // Run a single task function and resolve|reject its associated promise
 const runTask = async function (taskFunc, { resolve, reject }, tasksArgs) {
