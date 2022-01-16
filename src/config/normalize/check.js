@@ -1,9 +1,9 @@
 import { isDeepStrictEqual, inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
-import mapObj from 'map-obj'
 
 import { UserError } from '../../error/main.js'
+import { mapValues } from '../../utils/map.js'
 
 // A normalizing function transforms a value by returning.
 // It can return `undefined` to leave the value as is.
@@ -27,10 +27,9 @@ const getIndexName = function (name, index, value) {
 
 export const checkObjectProps = function (value, name, checker) {
   checkObject(value, name)
-  return mapObj(value, (childName, childValue) => [
-    childName,
+  return mapValues(value, (childValue, childName) =>
     runNormalizer(checker, childValue, `${name}.${childName}`),
-  ])
+  )
 }
 
 export const checkBoolean = function (value, name) {

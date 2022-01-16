@@ -1,8 +1,8 @@
-import mapObj from 'map-obj'
 import sortOn from 'sort-on'
 
 import { getMean } from '../stats/sum.js'
 import { groupBy } from '../utils/group.js'
+import { mapValues } from '../utils/map.js'
 
 import { getCombsDimensions } from './dimensions.js'
 
@@ -33,17 +33,15 @@ const getSortFunction = function ({ propName }, combinations) {
     combinations,
     ({ dimensions }) => dimensions[propName].id,
   )
-  const meansOfMeans = mapObj(combinationsGroups, getMeanOfMeans)
+  const meansOfMeans = mapValues(combinationsGroups, getMeanOfMeans)
   return getCombinationOrder.bind(undefined, propName, meansOfMeans)
 }
 
 // Retrieve the mean of all `stat.mean` for a specific dimension and id.
 // `undefined` means are omitted. Ids with all means undefined are sorted last.
-const getMeanOfMeans = function (id, combinations) {
+const getMeanOfMeans = function (combinations) {
   const means = combinations.map(getCombinationMean).filter(isDefined)
-  const meanOfMeans =
-    means.length === 0 ? Number.POSITIVE_INFINITY : getMean(means)
-  return [id, meanOfMeans]
+  return means.length === 0 ? Number.POSITIVE_INFINITY : getMean(means)
 }
 
 const getCombinationMean = function ({ stats: { mean } }) {

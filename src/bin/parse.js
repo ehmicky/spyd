@@ -1,5 +1,6 @@
 import filterObj from 'filter-obj'
-import mapObj from 'map-obj'
+
+import { mapValues } from '../utils/map.js'
 
 // We do not use yargs types as it conflicts with our own validation and
 // normalization logic, e.g.:
@@ -14,7 +15,7 @@ export const parseCliFlags = function (yargs) {
     ...configFlags
   } = yargs.parse()
   const configFlagsA = filterObj(configFlags, isUserProp)
-  const configFlagsB = mapObj(configFlagsA, handleEmptyArr)
+  const configFlagsB = mapValues(configFlagsA, handleEmptyArr)
   return { command, configFlags: configFlagsB }
 }
 
@@ -35,8 +36,8 @@ const INTERNAL_KEYS = new Set(['help', 'version', '_', '$0'])
 //     with the `config`, `reporter`, `select` and `limit` configuration
 //     properties.
 //   - This requires not using `requiresArg: true`
-const handleEmptyArr = function (key, value) {
-  return value === '' && ARRAY_PROPERTIES.has(key) ? [key, []] : [key, value]
+const handleEmptyArr = function (value, key) {
+  return value === '' && ARRAY_PROPERTIES.has(key) ? [] : value
 }
 
 const ARRAY_PROPERTIES = new Set([

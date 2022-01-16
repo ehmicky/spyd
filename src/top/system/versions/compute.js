@@ -2,6 +2,7 @@ import mapObj from 'map-obj'
 import pProps from 'p-props'
 
 import { PluginError } from '../../../error/main.js'
+import { mapValues } from '../../../utils/map.js'
 import { spawnProcess } from '../../../utils/spawn.js'
 
 import { VERSIONS_VALUE_SEPARATOR } from './merge.js'
@@ -27,10 +28,10 @@ export const computeRunnerVersions = async function ({
   const dedupedVersionsA = await pProps(dedupedVersions, ({ name, version }) =>
     computeRunnerVersion({ name, version, id, spawnOptions, cwd }),
   )
-  const versionsA = mapObj(versions, (name, version) => [
-    name,
-    dedupedVersionsA[serializeVersion(version)],
-  ])
+  const versionsA = mapValues(
+    versions,
+    (version) => dedupedVersionsA[serializeVersion(version)],
+  )
   return { ...versionsA, ...commonVersions }
 }
 

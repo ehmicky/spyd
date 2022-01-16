@@ -1,7 +1,7 @@
 import isPlainObj from 'is-plain-obj'
-import mapObj from 'map-obj'
 
 import { UserError } from '../../error/main.js'
+import { mapValues } from '../../utils/map.js'
 
 // If a configuration property uses selectors, normalization must be applied
 // recursively.
@@ -12,10 +12,9 @@ export const recurseConfigSelectors = function (value, name, callFunc) {
 
   validateConfigSelector(value, name)
 
-  return mapObj(value, (selector, childValue) => [
-    selector,
+  return mapValues(value, (childValue, selector) =>
     callFunc(childValue, `${name}.${selector}`),
-  ])
+  )
 }
 
 // We validate that at least one selector is named "default"

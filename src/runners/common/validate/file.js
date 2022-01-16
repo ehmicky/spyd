@@ -1,9 +1,9 @@
 import { inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
-import mapObj from 'map-obj'
 
 import { UserError } from '../../../error/main.js'
+import { mapValues } from '../../../utils/map.js'
 
 // Validate that the tasks file has correct shape
 export const validateTasks = function ({ tasks, validators, normalizeTask }) {
@@ -13,10 +13,9 @@ export const validateTasks = function ({ tasks, validators, normalizeTask }) {
     )
   }
 
-  return mapObj(tasks, (taskId, task) => [
-    taskId,
+  return mapValues(tasks, (task, taskId) =>
     validateTask({ taskId, task, validators, normalizeTask }),
-  ])
+  )
 }
 
 const validateTask = function ({ taskId, task, validators, normalizeTask }) {

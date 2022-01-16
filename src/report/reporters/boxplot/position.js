@@ -1,4 +1,4 @@
-import mapObj from 'map-obj'
+import { mapValues } from '../../../utils/map.js'
 
 // Compute the horizontal position on the screen of each quantile
 export const getPositions = function ({
@@ -7,10 +7,9 @@ export const getPositions = function ({
   maxAll,
   contentWidth,
 }) {
-  return mapObj(quantiles, (name, stat) => [
-    name,
+  return mapValues(quantiles, (stat) =>
     getPosition(stat, { minAll, maxAll, contentWidth }),
-  ])
+  )
 }
 
 const getPosition = function (

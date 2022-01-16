@@ -1,24 +1,21 @@
 import { promisify } from 'util'
 
-import mapObj from 'map-obj'
+import { mapValues } from '../../../../utils/map.js'
 
 // Add default values for tasks
 export const addDefaults = function (tasks) {
-  return mapObj(tasks, addDefault)
+  return mapValues(tasks, addDefault)
 }
 
-const addDefault = function (
-  taskId,
-  {
-    beforeAll,
-    beforeEach,
-    main,
-    afterEach,
-    afterAll,
-    async = isAsyncFunc(main),
-  },
-) {
-  return [taskId, { beforeAll, beforeEach, main, afterEach, afterAll, async }]
+const addDefault = function ({
+  beforeAll,
+  beforeEach,
+  main,
+  afterEach,
+  afterAll,
+  async = isAsyncFunc(main),
+}) {
+  return { beforeAll, beforeEach, main, afterEach, afterAll, async }
 }
 
 // Async functions use different measuring logic.

@@ -1,6 +1,5 @@
-import mapObj from 'map-obj'
-
 import { getCombDimensions } from '../../combination/dimensions.js'
+import { mapValues } from '../../utils/map.js'
 
 import { padTitles } from './titles_pad.js'
 
@@ -57,20 +56,13 @@ const addSystemTitles = function (system, titles) {
 }
 
 const addDimensionsTitles = function (dimensions, titles) {
-  return mapObj(dimensions, (dimensionName, dimensionValueArray) =>
-    addDimensionTitles(dimensionName, dimensionValueArray, titles),
+  return mapValues(dimensions, (dimensionValueArray) =>
+    addDimensionTitles(dimensionValueArray, titles),
   )
 }
 
-const addDimensionTitles = function (
-  dimensionName,
-  dimensionValueArray,
-  titles,
-) {
-  return [
-    dimensionName,
-    dimensionValueArray.map((id) => addTitle({ id }, titles)),
-  ]
+const addDimensionTitles = function (dimensionValueArray, titles) {
+  return dimensionValueArray.map((id) => addTitle({ id }, titles))
 }
 
 // Allow users to rename identifiers from any combination dimension: tasks,

@@ -1,6 +1,5 @@
-import mapObj from 'map-obj'
-
 import { matchCombination } from '../../select/main.js'
+import { mapValues } from '../../utils/map.js'
 
 import { isConfigSelector } from './normalize.js'
 
@@ -30,10 +29,9 @@ const useCombConfigSelectors = function (combination, config) {
 
 // Same for a single combination
 export const useConfigSelectors = function (combination, config) {
-  return mapObj(config, (propName, configValue) => [
-    propName,
+  return mapValues(config, (configValue, propName) =>
     applyConfigPropSelectors(combination, configValue, propName),
-  ])
+  )
 }
 
 const applyConfigPropSelectors = function (combination, configValue, propName) {

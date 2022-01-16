@@ -1,4 +1,4 @@
-import mapObj from 'map-obj'
+import { mapValues } from '../../../../utils/map.js'
 
 import { loopFirstDimensions } from './loop.js'
 
@@ -28,13 +28,13 @@ export const concatDimensionsValues = function (dimensionsArray) {
 
 const normalizeDimensions = function (dimensions) {
   const dimensionNames = Object.keys(dimensions)
-  const dimensionsA = mapObj(dimensions, normalizeDimension)
+  const dimensionsA = mapValues(dimensions, normalizeDimension)
   return { dimensionNames, dimensions: dimensionsA }
 }
 
 // Dimension values are now array of alternatives
-const normalizeDimension = function (dimensionName, dimensionValue) {
-  return [dimensionName, [dimensionValue]]
+const normalizeDimension = function (dimensionValue) {
+  return [dimensionValue]
 }
 
 const denormalizeDimensions = function ({ dimensions }) {

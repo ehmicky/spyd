@@ -1,4 +1,4 @@
-import mapObj from 'map-obj'
+import { mapValues } from '../../../utils/map.js'
 
 // Merge the `versions` of either:
 //  - The same result, but different runners or runnerConfig variations
@@ -8,18 +8,13 @@ import mapObj from 'map-obj'
 // and results, but are all reported in the merged result, we report all values
 // as a concatenated list.
 export const mergeVersions = function (versions, previousVersions) {
-  return mapObj({ ...versions, ...previousVersions }, (propName) =>
-    mergeVersionsProp(versions, previousVersions, propName),
+  return mapValues({ ...versions, ...previousVersions }, (_, propName) =>
+    mergeVersionsValue(
+      versions[propName],
+      previousVersions[propName],
+      propName,
+    ),
   )
-}
-
-const mergeVersionsProp = function (versions, previousVersions, propName) {
-  const value = mergeVersionsValue(
-    versions[propName],
-    previousVersions[propName],
-    propName,
-  )
-  return [propName, value]
 }
 
 const mergeVersionsValue = function (values, previousValue, propName) {

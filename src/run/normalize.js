@@ -1,5 +1,4 @@
-import mapObj from 'map-obj'
-
+import { mapValues } from '../utils/map.js'
 import { setArray } from '../utils/set.js'
 
 // Transform:
@@ -16,12 +15,12 @@ const normalizeNewCombination = function ({
   system,
   versions,
 }) {
-  const dimensionsA = mapObj(dimensions, getIdProp)
+  const dimensionsA = mapValues(dimensions, getIdProp)
   return { dimensions: dimensionsA, stats, system, versions }
 }
 
-const getIdProp = function (propName, { id }) {
-  return [propName, { id }]
+const getIdProp = function ({ id }) {
+  return { id }
 }
 
 // Update:

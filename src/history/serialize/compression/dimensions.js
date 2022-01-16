@@ -1,15 +1,19 @@
-import mapObj from 'map-obj'
+import { mapValues } from '../../../utils/map.js'
 
 // Compress `result.combinations[*].dimensions` from objects to strings
 export const compressDimensions = function (dimensions) {
-  return mapObj(dimensions, compressDimension)
+  return mapValues(dimensions, compressDimension)
 }
 
-const compressDimension = function (dimension, { id }) {
-  return [dimension, id]
+const compressDimension = function ({ id }) {
+  return id
 }
 
 // Decompress `result.combinations[*].dimensions` from strings to objects
-export const decompressDimension = function (dimension, id) {
-  return [dimension, { id }]
+export const decompressDimensions = function (dimensions) {
+  return mapValues(dimensions, decompressDimension)
+}
+
+const decompressDimension = function (id) {
+  return { id }
 }

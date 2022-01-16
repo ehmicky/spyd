@@ -1,6 +1,7 @@
 import filterObj from 'filter-obj'
 import isPlainObj from 'is-plain-obj'
-import mapObj from 'map-obj'
+
+import { mapValues } from '../../utils/map.js'
 
 // We remove `null` values so that those can be used to unset properties from
 // shared configurations.
@@ -8,11 +9,11 @@ import mapObj from 'map-obj'
 // make printing configuration nicer.
 export const removeEmptyValues = function (object) {
   const objectA = removeEmptyChildren(object)
-  return mapObj(objectA, removeEmptyPair, { deep: true })
+  return mapValues(objectA, removeEmptyPair, { deep: true })
 }
 
-const removeEmptyPair = function (key, value) {
-  return [key, removeEmptyChildren(value)]
+const removeEmptyPair = function (value) {
+  return removeEmptyChildren(value)
 }
 
 const removeEmptyChildren = function (value) {
