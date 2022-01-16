@@ -37,6 +37,9 @@ export const isConfigSelector = function (configValue, propName) {
 //     - Since it makes combinations' results less comparable
 //     - It also removes the need to be persisted
 //     - Example: `runnnerConfig`
+// At the moment, this also does not work with configuration properties which
+// values are objects due to the current implementation.
+//  - However, this could be changed if we ever needed it.
 const SELECTABLE_PROPS = new Set([
   'limit',
   'outliers',
