@@ -15,14 +15,11 @@ export const resolveConfigPath = async function (config, base) {
     return resolveNpm(config, base)
   }
 
-  const result = RESOLVER_REGEXP.exec(config)
-
-  if (result === null) {
-    return await resolveFile(config, base)
+  if (isResolver(config)) {
+    return await useResolver(config, base)
   }
 
-  const [, resolverName, resolverArg] = result
-  return await useResolver({ config, base, resolverName, resolverArg })
+  return await resolveFile(config, base)
 }
 
 // Configs can be Node modules.
@@ -38,6 +35,33 @@ const resolveNpm = function (config, base) {
   return getPluginPath(config, CONFIG_PLUGIN_TYPE.type, base)
 }
 
+// Additional resolvers.
+// We don't have any of them yet.
+// Their name must be namespaced with "{resolver}:".
+// We do not use this type of namespaces for the other resolvers since they are
+// more commonly used.
+const isResolver = function (config) {
+  return RESOLVER_REGEXP.test(config)
+}
+
+const useResolver = async function (config, base) {
+  const {
+    groups: { name, arg },
+  } = RESOLVER_REGEXP.exec(config)
+
+  const resolverFunc = RESOLVERS[name]
+
+  if (resolverFunc === undefined) {
+    throw new UserError(`Resolver "${name}" does not exist: "${config}"`)
+  }
+
+  return await resolverFunc(arg, base)
+}
+
+const RESOLVER_REGEXP = /^(?<name>[a-z]+):(?<arg>.*)$/u
+
+const RESOLVERS = {}
+
 const resolveFile = async function (config, base) {
   const configA = resolve(base, config)
 
@@ -47,29 +71,3 @@ const resolveFile = async function (config, base) {
 
   return configA
 }
-
-// Additional resolvers.
-// We don't have any of them yet.
-// Their name must be namespaced with "{resolver}:".
-// We do not use this type of namespaces for the other resolvers since they are
-// more commonly used.
-const useResolver = async function ({
-  config,
-  base,
-  resolverName,
-  resolverArg,
-}) {
-  const resolverFunc = RESOLVERS[resolverName]
-
-  if (resolverFunc === undefined) {
-    throw new UserError(
-      `Resolver "${resolverName}" does not exist: "${config}"`,
-    )
-  }
-
-  return await resolverFunc(resolverArg, base)
-}
-
-const RESOLVER_REGEXP = /^([a-z]+):(.*)$/u
-
-const RESOLVERS = {}
