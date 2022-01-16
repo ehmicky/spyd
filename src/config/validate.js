@@ -44,8 +44,6 @@ const optionalConfigSelectors = function (valueA, valueB) {
 
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
-  colors: false,
-  cwd: '/path/to/repository',
   delta: VALID_DELTA,
   force: true,
   inputs: { inputId: 'inputValue' },

@@ -65,6 +65,8 @@ const applyNormalizer = function (value, name, normalizer) {
 }
 
 const NORMALIZERS = {
+  colors: [checkBoolean],
+  cwd: [checkString, checkDefinedString],
   inputs: [checkObjectProps.bind(undefined, [checkJson])],
   limit: [checkInteger, normalizeLimit],
   merge: [validateMerge],
