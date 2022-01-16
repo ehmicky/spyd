@@ -6,10 +6,11 @@ import mapObj from 'map-obj'
 import { UserError } from '../error/main.js'
 
 // Configuration validation helper functions
-export const checkArrayItems = function (checkers, value, name) {
+// eslint-disable-next-line max-params
+export const checkArrayItems = function (checkers, value, name, ...args) {
   checkArray(value, name)
-  return value.map((item, index) =>
-    applyCheckers(checkers, item, getIndexName(name, index, value)),
+  return value.flatMap((item, index) =>
+    applyCheckers(checkers, item, getIndexName(name, index, value), ...args),
   )
 }
 
@@ -18,23 +19,24 @@ const getIndexName = function (name, index, value) {
   return value.length === 1 ? name : `${name}[${index}]`
 }
 
-export const checkObjectProps = function (checkers, value, name) {
+// eslint-disable-next-line max-params
+export const checkObjectProps = function (checkers, value, name, ...args) {
   checkObject(value, name)
   return mapObj(value, (childName, childValue) => [
     childName,
-    applyCheckers(checkers, childValue, `${name}.${childName}`),
+    applyCheckers(checkers, childValue, `${name}.${childName}`, ...args),
   ])
 }
 
-const applyCheckers = function (checkers, value, name) {
+const applyCheckers = function (checkers, value, ...args) {
   return checkers.reduce(
-    (valueA, checker) => applyChecker(checker, valueA, name),
+    (valueA, checker) => applyChecker(checker, valueA, ...args),
     value,
   )
 }
 
-const applyChecker = function (checker, value, name) {
-  const newValue = checker(value, name)
+const applyChecker = function (checker, value, ...args) {
+  const newValue = checker(value, ...args)
   return newValue === undefined ? value : newValue
 }
 

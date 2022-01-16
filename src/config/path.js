@@ -3,103 +3,20 @@ import { resolve, basename } from 'path'
 import dotProp from 'dot-prop'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
-import pReduce from 'p-reduce'
 
-// Normalize all configuration file paths
-export const normalizeConfigPaths = async function (config, configInfos) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  const configInfosA = [...configInfos].reverse()
-  return await pReduce(
-    PATH_CONFIG_PROPS,
-    reduceConfigPath.bind(undefined, configInfosA),
-    config,
-  )
-}
-
-// List of all configuration properties that are file paths or globbing patterns
-const PATH_CONFIG_PROPS = [
-  { propName: 'cwd', globbing: false },
-  {
-    propName: 'output',
-    globbing: false,
-    isPath: (value) => !OUTPUT_SPECIAL_VALUES.has(value),
-  },
-  { propName: 'tasks', globbing: true },
-]
-
-const OUTPUT_SPECIAL_VALUES = new Set(['stdout', 'external'])
-
-const reduceConfigPath = async function (
-  configInfos,
-  config,
-  { propName, globbing, isPath },
-) {
-  const value = dotProp.get(config, propName)
-
-  if (isNotPath(value, isPath)) {
-    return config
-  }
-
-  const valueA = await normalizeConfigPath({
-    value,
-    propName,
-    globbing,
-    configInfos,
-  })
-  return dotProp.set(config, propName, valueA)
-}
-
-// Some properties like `output` are not always file paths
-const isNotPath = function (value, isPath) {
-  return value === undefined || (isPath !== undefined && !isPath(value))
-}
-
-const normalizeConfigPath = async function ({
-  value,
-  propName,
-  globbing,
-  configInfos,
-}) {
-  const base = getBase(configInfos, propName)
-
-  if (globbing) {
-    return await resolveGlobbing(value, base)
-  }
-
-  if (!Array.isArray(value)) {
-    return setAbsolutePath(base, value)
-  }
-
-  const filePaths = value.map((item) => setAbsolutePath(base, item))
-  return [...new Set(filePaths)]
-}
-
-// Properties assigned as default values do not have corresponding `configInfos`
-//  - By default, they use the top-level config file's directory as base
-//  - If none, they use process.cwd() instead
-const getBase = function (configInfos, propName) {
-  const configInfo = configInfos.find(({ configContents }) =>
-    dotProp.has(configContents, propName),
-  )
-
-  if (configInfo !== undefined) {
-    return configInfo.base
-  }
-
-  const [, topLevelConfigInfo] = configInfos
-
-  if (topLevelConfigInfo !== undefined) {
-    return topLevelConfigInfo.base
-  }
-
-  return '.'
+// Resolve configuration relative file paths to absolute paths.
+export const normalizeConfigPath = function (value, name, configInfos) {
+  const base = getBase(configInfos, name)
+  return resolve(base, value)
 }
 
 // Resolve configuration properties that are globbing patterns.
 // Also resolve to absolute file paths.
 // Remove duplicates and temporary files.
-const resolveGlobbing = async function (pattern, base) {
-  const filePaths = await fastGlob(pattern, {
+// TODO: use asynchronous code instead.
+export const normalizeConfigGlob = function (value, name, configInfos) {
+  const base = getBase(configInfos, name)
+  const filePaths = fastGlob.sync(value, {
     cwd: base,
     absolute: true,
     unique: true,
@@ -107,7 +24,6 @@ const resolveGlobbing = async function (pattern, base) {
   return filePaths.filter((filePath) => isNotJunk(basename(filePath)))
 }
 
-// Resolve configuration relative file paths to absolute paths.
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.
 //      - This includes flags' default values, including `config` and `tasks`
@@ -132,6 +48,23 @@ const resolveGlobbing = async function (pattern, base) {
 //           repository could be re-used for different cwd
 //   - user can opt-out of that behavior by using absolute file paths, for
 //     example using the current file's path (e.g. `import.meta.url`)
-const setAbsolutePath = function (base, filePath) {
-  return resolve(base, filePath)
+// Properties assigned as default values do not have corresponding `configInfos`
+//  - By default, they use the top-level config file's directory as base
+//  - If none, they use process.cwd() instead
+const getBase = function (configInfos, propName) {
+  const configInfo = configInfos.find(({ configContents }) =>
+    dotProp.has(configContents, propName),
+  )
+
+  if (configInfo !== undefined) {
+    return configInfo.base
+  }
+
+  const [, topLevelConfigInfo] = configInfos
+
+  if (topLevelConfigInfo !== undefined) {
+    return topLevelConfigInfo.base
+  }
+
+  return '.'
 }
