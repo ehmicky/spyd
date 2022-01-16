@@ -1,8 +1,6 @@
 /* eslint-disable max-lines */
 import { cwd as getCwd } from 'process'
 
-import isPlainObj from 'is-plain-obj'
-
 import { normalizeLimit } from '../history/compare/normalize.js'
 import { normalizeDelta } from '../history/delta/normalize.js'
 import { getDefaultId, validateMerge } from '../history/merge/id.js'
@@ -22,7 +20,6 @@ import {
   checkJson,
 } from './check.js'
 import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
-// eslint-disable-next-line import/max-dependencies
 import { recurseConfigSelectors } from './select/normalize.js'
 
 const METADATA_COMMANDS = new Set(['show', 'remove'])
@@ -207,9 +204,6 @@ export const CONFIG_PROPS = {
   },
   showSystem: {
     commands: 'report',
-    default(name, { config: { system } }) {
-      return isPlainObj(system) && Object.keys(system).length !== 0
-    },
     normalize(value, name) {
       checkBoolean(value, name)
     },

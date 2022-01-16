@@ -61,7 +61,7 @@ Default: false`,
   showSystem: {
     group: REPORT,
     describe: `Show hardware and software information.
-Default: true when the "system" configuration property is set, false otherwise`,
+Default: true when the result has a "system", false otherwise`,
   },
   showMetadata: {
     group: REPORT,

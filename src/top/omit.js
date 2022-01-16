@@ -40,11 +40,24 @@ export const omitMetadataFooterProps = function (result) {
 // This only impacts the footer, not the properties of the target result nor
 // history results.
 export const omitFooterProps = function (footer, showMetadata, showSystem) {
+  const showSystemA = addShowSystemDefault(footer.systems, showSystem)
   const footerA = maybeOmit(footer, showMetadata, METADATA_FOOTER_PROPS)
   const systems = footerA.systems.map((system) =>
-    omitFooterSystemProps(system, showMetadata, showSystem),
+    omitFooterSystemProps(system, showMetadata, showSystemA),
   )
   return { ...footerA, systems }
+}
+
+// By default, we show systems only if the result was created with the `system`
+// configuration property, i.e. there are some system dimensions
+const addShowSystemDefault = function (systems, showSystem) {
+  return showSystem === undefined
+    ? systems.some(hasSystemDimensions)
+    : showSystem
+}
+
+const hasSystemDimensions = function ({ dimensions }) {
+  return Object.keys(dimensions).length !== 0
 }
 
 const omitFooterSystemProps = function (system, showMetadata, showSystem) {
