@@ -24,5 +24,4 @@ const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   reporterConfig: { debug: { property: true } },
   runnerConfig: { node: { version: '8' } },
-  titles: { taskId: 'taskTitle' },
 }
