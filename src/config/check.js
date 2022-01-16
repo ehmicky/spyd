@@ -4,6 +4,7 @@ import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
 import { UserError } from '../error/main.js'
+import { curry } from '../utils/functional.js'
 
 // Configuration validation helper functions
 // eslint-disable-next-line max-params
@@ -13,6 +14,8 @@ export const checkArrayItems = function (checkers, value, name, ...args) {
     applyCheckers(checkers, item, getIndexName(name, index, value), ...args),
   )
 }
+
+export const cCheckArrayItems = curry(checkArrayItems)
 
 // When array has a single item, it is possible that the value was arrified
 const getIndexName = function (name, index, value) {
@@ -27,6 +30,8 @@ export const checkObjectProps = function (checkers, value, name, ...args) {
     applyCheckers(checkers, childValue, `${name}.${childName}`, ...args),
   ])
 }
+
+export const cCheckObjectProps = curry(checkObjectProps)
 
 const applyCheckers = function (checkers, value, ...args) {
   return checkers.reduce(
