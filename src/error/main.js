@@ -10,11 +10,11 @@ export class StopError extends Error {
 }
 
 // eslint-disable-next-line fp/no-class
-export class UserError extends Error {
+export class CoreError extends Error {
   constructor(...args) {
     super(...args)
     // eslint-disable-next-line fp/no-this, fp/no-mutation
-    this.name = 'UserError'
+    this.name = 'CoreError'
   }
 }
 
@@ -28,20 +28,20 @@ export class PluginError extends Error {
 }
 
 // eslint-disable-next-line fp/no-class
-export class CoreError extends Error {
+export class UserError extends Error {
   constructor(...args) {
     super(...args)
     // eslint-disable-next-line fp/no-this, fp/no-mutation
-    this.name = 'CoreError'
+    this.name = 'UserError'
   }
 }
 
 // Error type-specific behavior
 const ERROR_PROPS = {
   StopError: { exitCode: 0, printStack: false, indented: true },
-  UserError: { exitCode: 1, printStack: false, indented: false },
+  CoreError: { exitCode: 1, printStack: true, indented: false },
   PluginError: { exitCode: 2, printStack: true, indented: false },
-  CoreError: { exitCode: 3, printStack: true, indented: false },
+  UserError: { exitCode: 3, printStack: false, indented: false },
 }
 
 const CORE_ERROR_NAME = 'CoreError'
