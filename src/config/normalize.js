@@ -35,7 +35,7 @@ const normalizePropValue = function (value, name) {
   return newValue === undefined ? value : newValue
 }
 
-const normalizeSystem = function (system) {
+const validateSystem = function (system) {
   checkStringsObject(system, 'system')
 }
 
@@ -64,25 +64,25 @@ const normalizeSelect = function (value, propName) {
   return valueA
 }
 
-const checkTitles = function (value, propName) {
+const validateTitles = function (value, propName) {
   Object.entries(value).forEach(([childName, propValue]) => {
     checkDefinedString(propValue, `${propName}.${childName}`)
   })
 }
 
-const checkInputs = function (value, propName) {
+const validateInputs = function (value, propName) {
   checkJsonObject(value, propName)
 }
 
 const NORMALIZERS = {
   precision: normalizePrecision,
-  system: normalizeSystem,
+  system: validateSystem,
   runner: normalizeRunner,
   tasks: normalizeTasks,
   reporter: normalizeReporter,
   select: normalizeSelect,
   limit: normalizeLimit,
   merge: validateMerge,
-  titles: checkTitles,
-  inputs: checkInputs,
+  titles: validateTitles,
+  inputs: validateInputs,
 }
