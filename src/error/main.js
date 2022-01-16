@@ -36,12 +36,22 @@ export class UserError extends Error {
   }
 }
 
+// eslint-disable-next-line fp/no-class
+export class LimitError extends Error {
+  constructor(...args) {
+    super(...args)
+    // eslint-disable-next-line fp/no-this, fp/no-mutation
+    this.name = 'LimitError'
+  }
+}
+
 // Error type-specific behavior
 const ERROR_PROPS = {
   StopError: { exitCode: 0, printStack: false, indented: true },
   CoreError: { exitCode: 1, printStack: true, indented: false },
   PluginError: { exitCode: 2, printStack: true, indented: false },
   UserError: { exitCode: 3, printStack: false, indented: false },
+  LimitError: { exitCode: 4, printStack: false, indented: false },
 }
 
 const CORE_ERROR_NAME = 'CoreError'

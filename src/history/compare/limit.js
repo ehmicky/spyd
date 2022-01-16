@@ -1,5 +1,5 @@
 import { getCombinationName } from '../../combination/ids/name.js'
-import { UserError } from '../../error/main.js'
+import { LimitError } from '../../error/main.js'
 import { groupBy } from '../../utils/group.js'
 
 import { isNegativeLimit } from './parse.js'
@@ -36,7 +36,7 @@ export const checkLimits = function ({ combinations }) {
   }
 
   const limitErrors = getLimitErrors(limitedCombinations)
-  throw new UserError(limitErrors)
+  throw new LimitError(limitErrors)
 }
 
 const isOverLimit = function (combination) {
