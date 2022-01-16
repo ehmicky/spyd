@@ -57,6 +57,8 @@ export const checkString = function (value, name) {
 }
 
 export const checkDefinedString = function (value, name) {
+  checkString(value, name)
+
   if (value.trim() === '') {
     throw new UserError(`'${name}' must not be empty.`)
   }

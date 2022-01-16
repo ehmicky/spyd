@@ -67,24 +67,24 @@ const applyNormalizer = function (value, name, normalizer) {
 
 const NORMALIZERS = {
   colors: [checkBoolean],
-  cwd: [checkString, checkDefinedString],
+  cwd: [checkDefinedString],
   delta: [normalizeDelta],
   force: [checkBoolean],
   inputs: [checkObjectProps.bind(undefined, [checkJson])],
   limit: [checkInteger, normalizeLimit],
-  merge: [checkString, checkDefinedString, validateMerge],
-  output: [checkString, checkDefinedString],
+  merge: [checkDefinedString, validateMerge],
+  output: [checkDefinedString],
   outliers: [checkBoolean],
   precision: [checkInteger, normalizePrecision],
   quiet: [checkBoolean],
   reporter: [
     normalizeOptionalArray,
-    checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
+    checkArrayItems.bind(undefined, [checkDefinedString]),
   ],
   runner: [
     normalizeOptionalArray,
     checkArrayLength,
-    checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
+    checkArrayItems.bind(undefined, [checkDefinedString]),
   ],
   select: [
     normalizeOptionalArray,
@@ -96,10 +96,10 @@ const NORMALIZERS = {
   showSystem: [checkBoolean],
   showTitles: [checkBoolean],
   since: [normalizeDelta],
-  system: [checkObjectProps.bind(undefined, [checkString, checkDefinedString])],
+  system: [checkObjectProps.bind(undefined, [checkDefinedString])],
   tasks: [
     normalizeOptionalArray,
-    checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
+    checkArrayItems.bind(undefined, [checkDefinedString]),
   ],
-  titles: [checkObjectProps.bind(undefined, [checkString, checkDefinedString])],
+  titles: [checkObjectProps.bind(undefined, [checkDefinedString])],
 }
