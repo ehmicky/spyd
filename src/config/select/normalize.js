@@ -1,6 +1,8 @@
 import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
+import { UserError } from '../../error/main.js'
+
 // If a configuration property uses selectors, normalization must be applied
 // recursively.
 export const normalizeConfigSelectors = function (
@@ -12,6 +14,8 @@ export const normalizeConfigSelectors = function (
     return normalizer(configValue, propName, propName)
   }
 
+  validateConfigSelector(configValue, propName)
+
   return mapObj(configValue, (selector, value) => [
     selector,
     normalizer(value, propName, `${propName}.${selector}`),
@@ -21,6 +25,14 @@ export const normalizeConfigSelectors = function (
 // Check if a configuration property uses selectors
 export const isConfigSelector = function (configValue, propName) {
   return SELECTABLE_PROPS.has(propName) && isPlainObj(configValue)
+}
+
+const validateConfigSelector = function (configValue, propName) {
+  if (Object.keys(configValue).length === 0) {
+    throw new UserError(
+      `'${propName}' must have at least one property when using configuration selectors.`,
+    )
+  }
 }
 
 // List of properties which can use configuration selectors
