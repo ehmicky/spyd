@@ -1,41 +1,44 @@
-import { getPropResults } from './results.js'
+import { listEntries } from './entries.js'
 
-export const getEntries = function (object, propPathStr) {
-  const propResults = getPropResults(object, propPathStr)
-  return propResults.map(getEntry)
+// Retrieve all entries (values + paths) matching a query string in `target`
+export const getEntries = function (target, query) {
+  const entries = listEntries(target, query)
+  return entries.map(normalizeEntry)
 }
 
-const getEntry = function ({ value, path }) {
-  const key = getKey({ path })
-  return { key, value }
+const normalizeEntry = function ({ value, path }) {
+  const pathStr = serializePath({ path })
+  return { path: pathStr, value }
 }
 
-export const getValues = function (object, propPathStr) {
-  const propResults = getPropResults(object, propPathStr)
-  return propResults.map(getValue)
+// Same but only retrieving the values
+export const getValues = function (target, query) {
+  const entris = listEntries(target, query)
+  return entris.map(getEntryValue)
 }
 
-const getValue = function ({ value }) {
+const getEntryValue = function ({ value }) {
   return value
 }
 
-export const getKeys = function (object, propPathStr) {
-  const propResults = getPropResults(object, propPathStr)
-  return propResults.map(getKey)
+// Same but only retrieving the paths
+export const getPaths = function (target, query) {
+  const entries = listEntries(target, query)
+  return entries.map(serializePath)
 }
 
-const getKey = function ({ path }) {
-  return path.map(getPathName).reduce(serializePathName, '')
+const serializePath = function ({ path }) {
+  return path.map(getPathKey).reduce(appendKey, '')
 }
 
-const getPathName = function ({ name }) {
-  return name
+const getPathKey = function ({ key }) {
+  return key
 }
 
-const serializePathName = function (names, name) {
-  if (typeof name !== 'string') {
-    return `${names}[${name}]`
+const appendKey = function (pathStr, key) {
+  if (typeof key !== 'string') {
+    return `${pathStr}[${key}]`
   }
 
-  return names === '' ? `${names}${name}` : `${names}.${name}`
+  return pathStr === '' ? `${pathStr}${key}` : `${pathStr}.${key}`
 }

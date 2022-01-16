@@ -1,26 +1,27 @@
 import { setArray } from '../../../utils/set.js'
 
-import { getPropResults } from './results.js'
+import { listEntries } from './entries.js'
 
-export const set = function (object, propPathStr, setValue) {
-  const propResults = getPropResults(object, propPathStr)
-  return propResults.reduce(
-    (objectA, { path }) => setResult(objectA, path, setValue),
-    object,
+// Set a value to one or multiple properties in `target` using a query string
+export const set = function (target, query, setValue) {
+  const entries = listEntries(target, query)
+  return entries.reduce(
+    (targetA, { path }) => setResult(targetA, path, setValue),
+    target,
   )
 }
 
-const setResult = function (value, [{ name, missing }, ...path], setValue) {
-  if (typeof name === 'string') {
+const setResult = function (value, [{ key, missing }, ...path], setValue) {
+  if (typeof key === 'string') {
     const setValueA =
       path.length === 0
         ? setValue
-        : setResult(missing ? {} : value[name], path, setValue)
-    return { ...value, [name]: setValueA }
+        : setResult(missing ? {} : value[key], path, setValue)
+    return { ...value, [key]: setValueA }
   }
 
   const valueA = missing ? [value] : value
   const setValueB =
-    path.length === 0 ? setValue : setResult(valueA[name], path, setValue)
-  return setArray(valueA, name, setValueB)
+    path.length === 0 ? setValue : setResult(valueA[key], path, setValue)
+  return setArray(valueA, key, setValueB)
 }
