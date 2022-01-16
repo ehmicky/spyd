@@ -37,6 +37,13 @@ const optionalArray = function (value) {
   return multipleValidOptions(value, [value])
 }
 
+// Configuration properties which can use selectors.
+// `jest-validate` does not validate types recursively, so we need to do it
+// later.
+const optionalConfigSelectors = function (valueA, valueB) {
+  return multipleValidOptions(valueA, { taskId: valueA, default: valueB })
+}
+
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   colors: false,
@@ -44,9 +51,11 @@ const EXAMPLE_CONFIG = {
   delta: VALID_DELTA,
   force: true,
   inputs: { inputId: 'inputValue' },
-  limit: 10,
+  limit: optionalConfigSelectors(3, 10),
   merge: 'f0f13513-5267-43a9-a02a-60fdde0332d0',
+  outliers: optionalConfigSelectors(true, false),
   output: './file.js',
+  precision: optionalConfigSelectors(3, 10),
   quiet: true,
   reporter: optionalArray('debug'),
   reporterConfig: { debug: { property: true } },

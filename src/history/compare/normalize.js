@@ -2,10 +2,10 @@ import { UserError } from '../../error/main.js'
 
 // Parse the `limit` configuration property.
 // It is an integer representing a percentage.
-export const normalizeLimit = function (limit) {
+export const normalizeLimit = function (limit, name) {
   if (!Number.isInteger(limit)) {
     throw new UserError(
-      `The 'limit' configuration property's percentage must be an integer: ${limit}`,
+      `'${name}' must be an integer (representing a percentage): ${limit}`,
     )
   }
 

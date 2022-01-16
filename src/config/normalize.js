@@ -5,6 +5,7 @@ import { validateMerge } from '../history/merge/id.js'
 import { normalizePrecision } from '../run/precision.js'
 
 import {
+  checkBoolean,
   checkStringsObject,
   normalizeOptionalArray,
   checkArrayLength,
@@ -13,19 +14,20 @@ import {
   checkDefinedString,
   checkJsonObject,
 } from './check.js'
+import { normalizeConfigSelectors } from './select/normalize.js'
 
 // Normalize configuration shape and do custom validation
 export const normalizeConfig = function (config) {
   return mapObj(config, normalizePropEntry)
 }
 
-const normalizePropEntry = function (name, value) {
-  const valueA = normalizePropValue(value, name)
-  return [name, valueA]
+const normalizePropEntry = function (propName, value) {
+  const valueA = normalizeConfigSelectors(value, propName, normalizePropValue)
+  return [propName, valueA]
 }
 
-const normalizePropValue = function (value, name) {
-  const normalizer = NORMALIZERS[name]
+const normalizePropValue = function (value, propName, name) {
+  const normalizer = NORMALIZERS[propName]
 
   if (normalizer === undefined) {
     return value
@@ -37,6 +39,10 @@ const normalizePropValue = function (value, name) {
 
 const validateInputs = function (value, name) {
   checkJsonObject(value, name)
+}
+
+const validateOutliers = function (value, name) {
+  checkBoolean(value, name)
 }
 
 const normalizeReporter = function (value, name) {
@@ -78,6 +84,7 @@ const NORMALIZERS = {
   inputs: validateInputs,
   limit: normalizeLimit,
   merge: validateMerge,
+  outliers: validateOutliers,
   precision: normalizePrecision,
   reporter: normalizeReporter,
   runner: normalizeRunner,

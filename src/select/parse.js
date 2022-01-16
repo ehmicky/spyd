@@ -18,13 +18,13 @@ import { throwValidationError } from './validate.js'
 //        - Making intersections implicit might be confusing for users.
 //  - "not" can be prepend to the whole selector in order to exclude instead of
 //    include.
-export const parseSelectors = function (rawSelectors, propName) {
-  return rawSelectors.map((rawSelector) => parseSelector(rawSelector, propName))
+export const parseSelectors = function (rawSelectors, name) {
+  return rawSelectors.map((rawSelector) => parseSelector(rawSelector, name))
 }
 
-const parseSelector = function (rawSelector, propName) {
+const parseSelector = function (rawSelector, name) {
   const tokens = tokenizeSelector(rawSelector)
-  const { intersect, negation } = parseTokens(tokens, rawSelector, propName)
+  const { intersect, negation } = parseTokens(tokens, rawSelector, name)
   return { intersect, negation }
 }
 
@@ -47,10 +47,10 @@ const removeTokenCase = function (token) {
 }
 
 // Parse token strings into an object format
-const parseTokens = function (tokens, rawSelector, propName) {
+const parseTokens = function (tokens, rawSelector, name) {
   const { intersect, negation } = tokens.reduce(
     (memo, token, index) =>
-      parseToken(memo, { token, index, rawSelector, propName }),
+      parseToken(memo, { token, index, rawSelector, name }),
     { intersect: [[]], negation: false },
   )
   return { intersect, negation }
@@ -58,10 +58,10 @@ const parseTokens = function (tokens, rawSelector, propName) {
 
 const parseToken = function (
   { intersect, negation },
-  { token, index, rawSelector, propName },
+  { token, index, rawSelector, name },
 ) {
   if (token === NEGATION_TOKEN) {
-    validateNegation(index, rawSelector, propName)
+    validateNegation(index, rawSelector, name)
     return { intersect, negation: true }
   }
 
@@ -82,12 +82,12 @@ const parseToken = function (
 // However, we explicitly forbid it elsewhere to avoid confusion, in case users
 // think it can be prepended to any id instead. This provides with a clearer
 // error message.
-const validateNegation = function (index, rawSelector, propName) {
+const validateNegation = function (index, rawSelector, name) {
   if (index !== 0) {
     throwValidationError(
       `"${NEGATION_TOKEN}" can only be used at the start.`,
       [rawSelector],
-      propName,
+      name,
     )
   }
 }
