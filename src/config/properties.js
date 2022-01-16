@@ -234,7 +234,7 @@ export const CONFIG_PROPS = {
       const valueA = normalizeOptionalArray(value)
       return checkArrayItems(valueA, name, (childValue, childName) => {
         checkDefinedString(childValue, childName)
-        return normalizeConfigGlob(value, name, configInfos)
+        return normalizeConfigGlob(childValue, childName, configInfos)
       })
     },
   },
