@@ -6,22 +6,28 @@ import { listEntries } from './entries.js'
 export const set = function (target, query, setValue) {
   const entries = listEntries(target, query)
   return entries.reduce(
-    (targetA, { path }) => setResult(targetA, path, setValue),
+    (targetA, { path }) => setProp(targetA, path, setValue),
     target,
   )
 }
 
-const setResult = function (value, [{ key, missing }, ...path], setValue) {
-  if (typeof key === 'string') {
-    const setValueA =
-      path.length === 0
-        ? setValue
-        : setResult(missing ? {} : value[key], path, setValue)
-    return { ...value, [key]: setValueA }
-  }
+const setProp = function (value, [{ key, missing }, ...path], setValue) {
+  return typeof key === 'string'
+    ? setObjectProp({ value, key, missing, path, setValue })
+    : setArrayItem({ value, key, missing, path, setValue })
+}
 
+const setObjectProp = function ({ value, key, missing, path, setValue }) {
+  const newValue =
+    path.length === 0
+      ? setValue
+      : setProp(missing ? {} : value[key], path, setValue)
+  return { ...value, [key]: newValue }
+}
+
+const setArrayItem = function ({ value, key, missing, path, setValue }) {
   const valueA = missing ? [value] : value
-  const setValueB =
-    path.length === 0 ? setValue : setResult(valueA[key], path, setValue)
-  return setArray(valueA, key, setValueB)
+  const newValue =
+    path.length === 0 ? setValue : setProp(valueA[key], path, setValue)
+  return setArray(valueA, key, newValue)
 }
