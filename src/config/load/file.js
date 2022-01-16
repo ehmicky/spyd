@@ -2,7 +2,6 @@ import { dirname, basename } from 'path'
 
 import {
   checkArrayItems,
-  checkString,
   checkDefinedString,
   normalizeOptionalArray,
 } from '../check.js'
@@ -48,7 +47,7 @@ const resolveDefaultConfig = async function (base) {
 //    the `config` top-level flag programmatically.
 const getConfigsInfos = async function (config, base) {
   const configs = normalizeOptionalArray(config)
-  checkArrayItems([checkString, checkDefinedString], configs, 'config')
+  checkArrayItems([checkDefinedString], configs, 'config')
   const configInfos = await Promise.all(
     configs.map((configA) => getConfigInfos(configA, base)),
   )
