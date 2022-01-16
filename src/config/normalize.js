@@ -39,39 +39,39 @@ const validateSystem = function (system) {
   checkStringsObject(system, 'system')
 }
 
-const normalizeRunner = function (value, propName) {
+const normalizeRunner = function (value, name) {
   const valueA = normalizeOptionalArray(value)
-  checkDefinedStringArray(valueA, propName)
-  checkArrayLength(valueA, propName)
+  checkDefinedStringArray(valueA, name)
+  checkArrayLength(valueA, name)
   return valueA
 }
 
-const normalizeTasks = function (value, propName) {
+const normalizeTasks = function (value, name) {
   const valueA = normalizeOptionalArray(value)
-  checkDefinedStringArray(valueA, propName)
+  checkDefinedStringArray(valueA, name)
   return valueA
 }
 
-const normalizeReporter = function (value, propName) {
+const normalizeReporter = function (value, name) {
   const valueA = normalizeOptionalArray(value)
-  checkDefinedStringArray(valueA, propName)
+  checkDefinedStringArray(valueA, name)
   return valueA
 }
 
-const normalizeSelect = function (value, propName) {
+const normalizeSelect = function (value, name) {
   const valueA = normalizeOptionalArray(value)
-  checkStringArray(valueA, propName)
+  checkStringArray(valueA, name)
   return valueA
 }
 
-const validateTitles = function (value, propName) {
+const validateTitles = function (value, name) {
   Object.entries(value).forEach(([childName, propValue]) => {
-    checkDefinedString(propValue, `${propName}.${childName}`)
+    checkDefinedString(propValue, `${name}.${childName}`)
   })
 }
 
-const validateInputs = function (value, propName) {
-  checkJsonObject(value, propName)
+const validateInputs = function (value, name) {
+  checkJsonObject(value, name)
 }
 
 const NORMALIZERS = {
