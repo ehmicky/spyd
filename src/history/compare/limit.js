@@ -49,23 +49,35 @@ const getLimitErrors = function (combinations) {
 }
 
 const getLimitError = function (combinations) {
-  const diffLimit = getDiffLimit(combinations[0])
-  const diffLimitStr = Math.abs(diffLimit) * PERCENTAGE_RATIO
-  const signStr = isPositiveLimit(diffLimit) ? 'slower' : 'faster'
-  const combinationLimits = combinations.map(getCombinationLimit).join(', ')
-  return `The following must be at most ${diffLimitStr}% ${signStr}: ${combinationLimits}`
+  const limitErrorBody = getLimitErrorBody(combinations)
+  const limitInfos = combinations.map(getLimitInfo)
+
+  if (!hasCombinationNames(limitInfos)) {
+    return `The task ${limitInfos[0].diffSuffix} ${limitErrorBody}.`
+  }
+
+  const combinationLimits = limitInfos.map(getCombinationLimit).join(', ')
+  return `The following ${limitErrorBody}: ${combinationLimits}`
 }
 
-const getDiffLimit = function ({ stats: { diffLimit } }) {
+const getLimitErrorBody = function ([firstCombination]) {
+  const diffLimit = getDiffLimit(firstCombination)
+  const diffLimitStr = Math.abs(diffLimit) * PERCENTAGE_RATIO
+  const signStr = isPositiveLimit(diffLimit) ? 'slower' : 'faster'
+  return `must be at most ${diffLimitStr}% ${signStr}`
+}
+
+const getDiffLimit = function ({ stats: { diffLimit = {} } }) {
   return diffLimit.raw
 }
 
 // `getCombinationName` passes an empty `noDimensions` since `dimensions` are
 // already filtered out in `programmaticResult`.
-const getCombinationLimit = function (combination) {
-  const combinationName = getCombinationName(combination, [])
+const getLimitInfo = function (combination) {
+  const name = getCombinationName(combination, [])
   const diffStr = serializeDiff(combination.stats.diff.raw)
-  return `${combinationName} (${diffStr}%)`
+  const diffSuffix = `(${diffStr}%)`
+  return { name, diffSuffix }
 }
 
 const serializeDiff = function (diff) {
@@ -75,3 +87,12 @@ const serializeDiff = function (diff) {
 
 const PERCENTAGE_RATIO = 1e2
 const PERCENTAGE_PRECISION = 1
+
+// Combination names can be empty when `result.combinations.length` is only 1
+const hasCombinationNames = function (limitInfos) {
+  return limitInfos.length !== 1 || limitInfos[0].name !== ''
+}
+
+const getCombinationLimit = function ({ name, diffSuffix }) {
+  return `${name} ${diffSuffix}`
+}
