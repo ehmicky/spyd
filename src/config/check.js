@@ -74,8 +74,6 @@ export const checkString = function (value, name) {
   }
 }
 
-export const checkStringArray = checkArrayItems.bind(undefined, [checkString])
-
 export const checkDefinedString = function (value, name) {
   if (value.trim() === '') {
     throw new UserError(`'${name}' must not be empty.`)
