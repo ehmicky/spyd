@@ -3,7 +3,7 @@ import { removePrefix } from './prefix.js'
 
 // The target result defines which combinations are reported.
 // A history result might miss one of them:
-//  - This only happens for dynamic dimensions (like systems)
+//  - This only happens for dynamic dimensions (like systems and variations)
 //  - And a new dimension was added between the history result and the target
 //    result
 // In that case, we add that dimension to the history result using a
