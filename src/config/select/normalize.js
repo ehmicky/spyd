@@ -27,6 +27,14 @@ export const isConfigSelector = function (configValue, propName) {
   return SELECTABLE_PROPS.has(propName) && isPlainObj(configValue)
 }
 
+// We validate that at least one selector is named "default"
+//  - This ensures users understand that this selector is used as a fallback
+// We recommend and document making it the last key
+//  - So it follows the object key order and also matches how `switch` works in
+//    many programming languages
+//  - However, we do not validate its order, since it might be hard in some
+//    situations to order, e.g. when merging shared configs.
+//  - Regardless, it is always checked last, even if it is not the last key
 const validateConfigSelector = function (configValue, propName) {
   if (Object.keys(configValue).length === 0) {
     throw new UserError(
