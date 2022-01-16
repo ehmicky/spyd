@@ -16,13 +16,15 @@ import {
 
 // Normalize configuration shape and do custom validation
 export const normalizeConfig = function (config) {
-  return mapObj(config, (name, value) => [
-    name,
-    normalizeProp(value, name, config),
-  ])
+  return mapObj(config, normalizePropEntry)
 }
 
-const normalizeProp = function (value, name, config) {
+const normalizePropEntry = function (name, value) {
+  const valueA = normalizePropValue(value)
+  return [name, valueA]
+}
+
+const normalizePropValue = function (value, name, config) {
   const normalizer = NORMALIZERS[name]
 
   if (normalizer === undefined) {
@@ -50,11 +52,7 @@ const normalizeTasks = function (value, propName) {
   return valueA
 }
 
-const normalizeReporter = function (value, propName, { force }) {
-  if (force) {
-    return []
-  }
-
+const normalizeReporter = function (value, propName) {
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
   return valueA
