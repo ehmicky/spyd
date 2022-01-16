@@ -8,7 +8,7 @@ export const pickCommandConfig = function (config, command) {
 }
 
 const shouldKeepProp = function (name, command) {
-  return COMMANDS[CONFIG_PROPS[name]].includes(command)
+  return COMMAND_GROUPS[CONFIG_PROPS[name]].includes(command)
 }
 
 // Every configuration property and which command can use it
@@ -43,7 +43,7 @@ const CONFIG_PROPS = {
 }
 
 // Every group of commands
-const COMMANDS = {
+const COMMAND_GROUPS = {
   // All commands
   all: ['dev', 'remove', 'run', 'show'],
   // Commands that can run combinations
