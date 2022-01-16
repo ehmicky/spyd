@@ -1,6 +1,26 @@
 import isPlainObj from 'is-plain-obj'
+import mapObj from 'map-obj'
 
 import { UserError } from '../../error/main.js'
+import { curry } from '../../utils/functional.js'
+
+// If a configuration property uses selectors, normalization must be applied
+// recursively.
+// eslint-disable-next-line max-params
+const recurseConfigSelectors = function (callFunc, value, name, ...args) {
+  if (!isConfigSelectorShape(value)) {
+    return callFunc(value, name, ...args)
+  }
+
+  validateConfigSelector(value, name)
+
+  return mapObj(value, (selector, childValue) => [
+    selector,
+    callFunc(childValue, `${name}.${selector}`, ...args),
+  ])
+}
+
+export const cRecurseConfigSelectors = curry(recurseConfigSelectors)
 
 // We validate that at least one selector is named "default"
 //  - This ensures users understand that this selector is used as a fallback
@@ -30,7 +50,11 @@ export const validateConfigSelector = function (configValue, propName) {
 
 // Check if a configuration property uses selectors
 export const isConfigSelector = function (configValue, propName) {
-  return SELECTABLE_PROPS.has(propName) && isPlainObj(configValue)
+  return SELECTABLE_PROPS.has(propName) && isConfigSelectorShape(configValue)
+}
+
+const isConfigSelectorShape = function (configValue) {
+  return isPlainObj(configValue)
 }
 
 // List of properties which can use configuration selectors
