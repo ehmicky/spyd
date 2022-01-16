@@ -5,8 +5,9 @@ import { getScale } from './scale.js'
 import { addSign } from './sign.js'
 import { getUnit } from './unit.js'
 
-// Create `stat.pretty` which stringifies, scales, rounds, adds decimals and
-// adds a unit.
+// Create:
+//  - `stat.simple`: stringifies, scales, rounds, adds decimals and adds a unit.
+//  - `stats.pretty`: also adds informative prefixes/suffixes
 export const addStatsPretty = function ({
   combinations,
   allCombinations,
@@ -61,7 +62,7 @@ const addStatPretty = function ({
 const addItemPretty = function ({ raw, signed, scale, unit, decimals, stats }) {
   const scaledRaw = raw / scale
   const roundedRaw = scaledRaw.toFixed(decimals)
-  const pretty = `${roundedRaw}${unit}`
-  const prettyA = addSign(pretty, signed, stats)
-  return { raw, pretty: prettyA }
+  const simple = `${roundedRaw}${unit}`
+  const pretty = addSign(simple, signed, stats)
+  return { raw, simple, pretty }
 }

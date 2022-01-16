@@ -62,31 +62,27 @@ const getLimitError = function (combinations) {
 
 const getLimitErrorBody = function ([firstCombination]) {
   const diffLimit = getDiffLimit(firstCombination)
-  const diffLimitStr = Math.abs(diffLimit) * PERCENTAGE_RATIO
+  const diffLimitStr = serializeDiff(diffLimit)
   const signStr = isPositiveLimit(diffLimit) ? 'slower' : 'faster'
-  return `must be at most ${diffLimitStr}% ${signStr}`
+  return `must be at most ${diffLimitStr} ${signStr}`
 }
 
-const getDiffLimit = function ({ stats: { diffLimit = {} } }) {
-  return diffLimit.raw
+const getDiffLimit = function ({ stats: { diffLimit } }) {
+  return diffLimit
 }
 
 // `getCombinationName` passes an empty `noDimensions` since `dimensions` are
 // already filtered out in `programmaticResult`.
 const getLimitInfo = function (combination) {
   const name = getCombinationName(combination, [])
-  const diffStr = serializeDiff(combination.stats.diff.raw)
-  const diffSuffix = `(${diffStr}%)`
+  const diffStr = serializeDiff(combination.stats.diff)
+  const diffSuffix = `(${diffStr})`
   return { name, diffSuffix }
 }
 
 const serializeDiff = function (diff) {
-  const percentage = Math.abs(diff) * PERCENTAGE_RATIO
-  return percentage.toFixed(PERCENTAGE_PRECISION)
+  return diff.simple.replace(/^-/u, '')
 }
-
-const PERCENTAGE_RATIO = 1e2
-const PERCENTAGE_PRECISION = 1
 
 // Combination names can be empty when `result.combinations.length` is only 1
 const hasCombinationNames = function (limitInfos) {
