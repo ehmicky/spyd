@@ -1,6 +1,7 @@
 import { isDeepStrictEqual, inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
+import mapObj from 'map-obj'
 
 import { UserError } from '../error/main.js'
 
@@ -38,34 +39,41 @@ export const checkArrayLength = function (value, name) {
   }
 }
 
-export const checkArrayItems = function (checkers, value, name) {
-  checkArray(value, name)
-  return value.map((item, index) => {
-    const newItem = checkArrayItem({
-      value: item,
-      index,
-      length: value.length,
-      name,
-      checkers,
-    })
-    return newItem === undefined ? item : newItem
-  })
-}
-
 const checkArray = function (value, name) {
   if (!Array.isArray(value)) {
     throw new UserError(`'${name}' must be an array: ${inspect(value)}`)
   }
 }
 
-// When `index` is `0`, it is possible that the value was arrified
-const checkArrayItem = function ({ value, index, length, name, checkers }) {
-  const indexName = length === 1 ? name : `${name}[${index}]`
+export const checkArrayItems = function (checkers, value, name) {
+  checkArray(value, name)
+  return value.map((item, index) =>
+    applyCheckers(checkers, item, getIndexName(name, index, value)),
+  )
+}
 
-  // eslint-disable-next-line fp/no-loops
-  for (const checker of checkers) {
-    checker(value, indexName)
-  }
+// When array has a single item, it is possible that the value was arrified
+const getIndexName = function (name, index, value) {
+  return value.length === 1 ? name : `${name}[${index}]`
+}
+
+export const checkObjectProps = function (checkers, value, name) {
+  checkObject(value, name)
+  return mapObj(value, (childName, childValue) =>
+    applyCheckers(checkers, childValue, `${name}.${childName}`),
+  )
+}
+
+const applyCheckers = function (checkers, value, name) {
+  return checkers.reduce(
+    (valueA, checker) => applyChecker(checker, valueA, name),
+    value,
+  )
+}
+
+const applyChecker = function (checker, value, name) {
+  const newValue = checker(value, name)
+  return newValue === undefined ? value : newValue
 }
 
 export const checkString = function (value, name) {

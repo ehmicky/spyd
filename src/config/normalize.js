@@ -79,7 +79,7 @@ const NORMALIZERS = {
   outliers: [checkBoolean],
   precision: [checkInteger, normalizePrecision],
   reporter: [
-    // normalizeOptionalArray,
+    normalizeOptionalArray,
     checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
   ],
   runner: [
