@@ -1,7 +1,6 @@
 import omit from 'omit.js'
 
-import { runNormalizer } from '../utils/functional.js'
-
+import { runNormalizer } from './check.js'
 import { CONFIG_PROPS } from './properties.js'
 
 // Normalize configuration shape and do custom validation
