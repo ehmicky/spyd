@@ -1,6 +1,7 @@
 import mapObj from 'map-obj'
 
 import { normalizeLimit } from '../history/compare/normalize.js'
+import { normalizeDelta } from '../history/delta/normalize.js'
 import { validateMerge } from '../history/merge/id.js'
 import { normalizePrecision } from '../run/precision.js'
 
@@ -67,6 +68,7 @@ const applyNormalizer = function (value, name, normalizer) {
 const NORMALIZERS = {
   colors: [checkBoolean],
   cwd: [checkString, checkDefinedString],
+  delta: [normalizeDelta],
   inputs: [checkObjectProps.bind(undefined, [checkJson])],
   limit: [checkInteger, normalizeLimit],
   merge: [validateMerge],
@@ -88,6 +90,7 @@ const NORMALIZERS = {
   showDiff: [checkBoolean],
   showPrecision: [checkBoolean],
   showTitles: [checkBoolean],
+  since: [normalizeDelta],
   system: [checkObjectProps.bind(undefined, [checkString])],
   tasks: [
     normalizeOptionalArray,

@@ -22,15 +22,6 @@ const DYNAMIC_OBJECT_PROPS = [
   'inputs',
 ]
 
-const VALID_TIMESTAMPS = [
-  'yyyy-mm-dd',
-  'yyyymmdd',
-  'yyyy-mm-dd hh:mm:ss',
-  'yyyy-mm-dd hh:mm:ssZ',
-]
-
-const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
-
 const optionalArray = function (value) {
   return multipleValidOptions(value, [value])
 }
@@ -44,7 +35,6 @@ const optionalConfigSelectors = function (valueA, valueB) {
 
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
-  delta: VALID_DELTA,
   force: true,
   inputs: { inputId: 'inputValue' },
   limit: optionalConfigSelectors(3, 10),
@@ -63,7 +53,6 @@ const EXAMPLE_CONFIG = {
   showPrecision: optionalConfigSelectors(true, false),
   showSystem: true,
   showTitles: optionalConfigSelectors(true, false),
-  since: VALID_DELTA,
   system: { os: 'linux', node_version: 'node_8' },
   tasks: optionalArray('./benchmark/tasks.js'),
   titles: { taskId: 'taskTitle' },

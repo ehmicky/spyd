@@ -7,7 +7,7 @@ export const findValue = function (iterable, func) {
 
     // eslint-disable-next-line max-depth
     if (returnValue !== undefined) {
-      return [returnValue, value]
+      return returnValue
     }
   }
 }
