@@ -4,8 +4,8 @@ import { mapValues } from '../../utils/map.js'
 
 import { createDag, addDagEdge } from './structure.js'
 
-// Run several async tasks in parallel while still allowing them to use each
-// other's return values.
+// Run several async or async tasks in parallel while still allowing them to
+// use each other's return values.
 // This creates a DAG.
 //  - Unlike traditional DAGs which require each task to declaring its
 //    dependencies as a static array, tasks declare those in an imperative

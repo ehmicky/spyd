@@ -1,50 +1,43 @@
-import omit from 'omit.js'
-import pReduce from 'p-reduce'
+import { mapValues } from '../utils/map.js'
 
 import { runNormalizer } from './check.js'
+import { runDag } from './dag/run.js'
 import { CONFIG_PROPS } from './properties.js'
 
 // Normalize configuration shape and do custom validation
 export const normalizeConfig = async function (config, command, configInfos) {
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
-  return await pReduce(
-    Object.entries(CONFIG_PROPS),
-    (configA, [name, configProp]) =>
-      normalizePropConfig(
-        { config: configA, name, command, configInfos: configInfosA },
-        configProp,
-      ),
-    config,
+  const configPropsFuncs = mapValues(CONFIG_PROPS, (configProp, name) =>
+    normalizePropValue.bind(undefined, {
+      configProp,
+      name,
+      config,
+      command,
+      configInfos: configInfosA,
+    }),
   )
-}
-
-const normalizePropConfig = async function (
-  { config, name, command, configInfos },
-  configProp,
-) {
-  const value = await normalizePropValue(
-    { config, name, command, configInfos },
-    configProp,
-  )
-
-  if (value === undefined) {
-    return name in config ? omit.default(config, [name]) : config
-  }
-
-  return { ...config, [name]: value }
+  const configProps = await runDag(configPropsFuncs)
+  const configA = mergeConfigProps(configProps)
+  return configA
 }
 
 const normalizePropValue = async function (
-  { config, name, command, configInfos },
-  { commands, default: defaultValue, normalize },
+  {
+    configProp: { commands, default: defaultValue, normalize },
+    name,
+    config,
+    command,
+    configInfos,
+  },
+  configPromises,
 ) {
   if (!commandHasProp(commands, command)) {
     return
   }
 
   const value = config[name]
-  const args = [name, { configInfos, config, command }]
+  const args = [name, { configInfos, config: configPromises, command }]
 
   const valueA = await addDefaultValue(value, defaultValue, args)
 
@@ -90,4 +83,12 @@ const addDefaultValue = async function (value, defaultValue, args) {
   }
 
   return await defaultValue(...args)
+}
+
+const mergeConfigProps = function (configProps) {
+  return Object.entries(configProps).reduce(setConfigProp, {})
+}
+
+const setConfigProp = function (config, [name, value]) {
+  return value === undefined ? config : { ...config, [name]: value }
 }

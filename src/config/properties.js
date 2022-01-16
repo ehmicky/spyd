@@ -131,8 +131,8 @@ export const CONFIG_PROPS = {
   reporter: {
     commands: 'report',
     default: ['debug'],
-    normalize(value, name, { config: { force } }) {
-      if (force) {
+    async normalize(value, name, { config: { force } }) {
+      if (await force) {
         return []
       }
 
