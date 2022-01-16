@@ -76,8 +76,8 @@ const NORMALIZERS = {
   ],
   runner: [
     normalizeOptionalArray,
-    checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
     checkArrayLength,
+    checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
   ],
   select: [
     normalizeOptionalArray,
