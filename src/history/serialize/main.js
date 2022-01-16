@@ -1,6 +1,6 @@
-import { compressRawResult } from './compress.js'
+import { compressRawResult } from './compression/compress.js'
+import { decompressRawResult } from './compression/decompress.js'
 import { parseRawResult, serializeRawResult } from './contents.js'
-import { decompressRawResult } from './decompress.js'
 import { migrateRawResult } from './migrate.js'
 
 // Serialize a rawResult to a rawResultStr used by stores
