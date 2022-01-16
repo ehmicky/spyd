@@ -57,7 +57,7 @@ const getLimitError = function (combinations) {
 }
 
 const getDiffLimit = function ({ stats: { diffLimit } }) {
-  return diffLimit
+  return diffLimit.raw
 }
 
 // `getCombinationName` passes an empty `noDimensions` since `dimensions` are

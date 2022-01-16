@@ -8,6 +8,7 @@ export const STAT_KINDS = [
   { name: 'min', kind: 'duration' },
   { name: 'max', kind: 'duration' },
   { name: 'diff', kind: 'percentage', signed: 'diff' },
+  { name: 'diffLimit', kind: 'percentage' },
   { name: 'stdev', kind: 'duration', signed: 'never' },
   { name: 'rstdev', kind: 'percentage', signed: 'never' },
   { name: 'moe', kind: 'duration', signed: 'never' },
