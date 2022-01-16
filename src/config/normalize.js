@@ -5,7 +5,11 @@ import { normalizeDelta } from '../history/delta/normalize.js'
 import { validateMerge } from '../history/merge/id.js'
 import { isOutputPath } from '../report/output.js'
 import { normalizePrecision } from '../run/precision.js'
-import { condition } from '../utils/functional.js'
+import {
+  condition,
+  composeNormalizers,
+  runNormalizer,
+} from '../utils/functional.js'
 
 import {
   checkBoolean,
@@ -56,55 +60,52 @@ const isDeepProp = function (configValue, propName) {
 }
 
 const normalizePropValue = function ({ value, propName, name, configInfos }) {
-  const normalizers = NORMALIZERS[propName]
-
-  if (normalizers === undefined) {
-    return value
-  }
-
-  return normalizers.reduce(
-    (valueA, normalizer) =>
-      applyNormalizer({ value: valueA, name, normalizer, configInfos }),
-    value,
-  )
-}
-
-const applyNormalizer = function ({ value, name, normalizer, configInfos }) {
-  const newValue = normalizer(value, name, configInfos)
-  return newValue === undefined ? value : newValue
+  const normalizer = NORMALIZERS[propName]
+  return normalizer === undefined
+    ? value
+    : runNormalizer(normalizer, value, name, configInfos)
 }
 
 // TODO: missing `reporterConfig`, `runnerConfig`
 const NORMALIZERS = {
-  colors: [checkBoolean],
-  cwd: [checkDefinedString, normalizeConfigPath],
-  delta: [normalizeDelta],
-  force: [checkBoolean],
-  inputs: [cCheckObjectProps([checkJson])],
-  limit: [checkInteger, normalizeLimit],
-  merge: [checkDefinedString, validateMerge],
-  output: [checkDefinedString, condition(normalizeConfigPath, isOutputPath)],
-  outliers: [checkBoolean],
-  precision: [checkInteger, normalizePrecision],
-  quiet: [checkBoolean],
-  reporter: [normalizeOptionalArray, cCheckArrayItems([checkDefinedString])],
-  runner: [
+  colors: checkBoolean,
+  cwd: composeNormalizers(checkDefinedString, normalizeConfigPath),
+  delta: normalizeDelta,
+  force: checkBoolean,
+  inputs: cCheckObjectProps([checkJson]),
+  limit: composeNormalizers(checkInteger, normalizeLimit),
+  merge: composeNormalizers(checkDefinedString, validateMerge),
+  output: composeNormalizers(
+    checkDefinedString,
+    condition(normalizeConfigPath, isOutputPath),
+  ),
+  outliers: checkBoolean,
+  precision: composeNormalizers(checkInteger, normalizePrecision),
+  quiet: checkBoolean,
+  reporter: composeNormalizers(
+    normalizeOptionalArray,
+    cCheckArrayItems([checkDefinedString]),
+  ),
+  runner: composeNormalizers(
     normalizeOptionalArray,
     checkArrayLength,
     cCheckArrayItems([checkDefinedString]),
-  ],
-  save: [checkBoolean],
-  select: [normalizeOptionalArray, cCheckArrayItems([checkString])],
-  showDiff: [checkBoolean],
-  showMetadata: [checkBoolean],
-  showPrecision: [checkBoolean],
-  showSystem: [checkBoolean],
-  showTitles: [checkBoolean],
-  since: [normalizeDelta],
-  system: [cCheckObjectProps([checkDefinedString])],
-  tasks: [
+  ),
+  save: checkBoolean,
+  select: composeNormalizers(
+    normalizeOptionalArray,
+    cCheckArrayItems([checkString]),
+  ),
+  showDiff: checkBoolean,
+  showMetadata: checkBoolean,
+  showPrecision: checkBoolean,
+  showSystem: checkBoolean,
+  showTitles: checkBoolean,
+  since: normalizeDelta,
+  system: cCheckObjectProps([checkDefinedString]),
+  tasks: composeNormalizers(
     normalizeOptionalArray,
     cCheckArrayItems([checkDefinedString, normalizeConfigGlob]),
-  ],
-  titles: [cCheckObjectProps([checkDefinedString])],
+  ),
+  titles: cCheckObjectProps([checkDefinedString]),
 }
