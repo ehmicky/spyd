@@ -85,7 +85,9 @@ const NORMALIZERS = {
   system: cCheckObjectProps([checkDefinedString]),
   tasks: composeNormalizers(
     normalizeOptionalArray,
-    cCheckArrayItems([checkDefinedString, normalizeConfigGlob]),
+    cCheckArrayItems([
+      composeNormalizers(checkDefinedString, normalizeConfigGlob),
+    ]),
   ),
   titles: cCheckObjectProps([checkDefinedString]),
 }
