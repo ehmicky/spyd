@@ -19,8 +19,8 @@ const getDefaultConfig = function (config, command) {
     cwd: getCwd(),
     force: !isTtyInput(),
     merge: getDefaultId(),
-    showSystem: getDefaultShowSystem(config),
     showMetadata: METADATA_COMMANDS.has(command),
+    showSystem: getDefaultShowSystem(config),
   }
 }
 
@@ -35,21 +35,21 @@ const METADATA_COMMANDS = new Set(['show', 'remove'])
 // file, instead of to an optional one. This makes behavior easier to understand
 // for users and provides with better error messages.
 export const DEFAULT_CONFIG = {
-  precision: 5,
-  system: {},
-  save: false,
-  outliers: false,
-  runnerConfig: {},
-  reporterConfig: {},
   delta: 1,
-  since: 1,
-  titles: {},
-  showTitles: false,
-  showPrecision: false,
-  select: [],
-  runner: ['node'],
-  reporter: ['debug'],
   inputs: {},
+  outliers: false,
+  precision: 5,
+  reporter: ['debug'],
+  reporterConfig: {},
+  runner: ['node'],
+  runnerConfig: {},
+  save: false,
+  select: [],
+  showPrecision: false,
+  showTitles: false,
+  since: 1,
+  system: {},
+  titles: {},
 }
 
 // Configuration properties which cannot be overridden

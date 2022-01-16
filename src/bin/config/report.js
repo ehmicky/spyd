@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { REPORT, HISTORY } from './groups.js'
 
-// Configuration shared by reporting commands: `run`, `show`, `remove`
+// Configuration shared by commands that report results: `run`, `show`, `remove`
 export const REPORT_CONFIG = {
   reporter: {
     group: REPORT,

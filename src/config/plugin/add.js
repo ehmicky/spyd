@@ -42,6 +42,11 @@ const getPluginsByType = async function (
   config,
 ) {
   const ids = config[selectProp]
+
+  if (ids === undefined) {
+    return [varName, []]
+  }
+
   const plugins = await loadPlugins({
     ids,
     type,

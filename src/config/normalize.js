@@ -35,8 +35,14 @@ const normalizePropValue = function (value, name) {
   return newValue === undefined ? value : newValue
 }
 
-const validateSystem = function (system) {
-  checkStringsObject(system, 'system')
+const validateInputs = function (value, name) {
+  checkJsonObject(value, name)
+}
+
+const normalizeReporter = function (value, name) {
+  const valueA = normalizeOptionalArray(value)
+  checkDefinedStringArray(valueA, name)
+  return valueA
 }
 
 const normalizeRunner = function (value, name) {
@@ -46,21 +52,19 @@ const normalizeRunner = function (value, name) {
   return valueA
 }
 
-const normalizeTasks = function (value, name) {
-  const valueA = normalizeOptionalArray(value)
-  checkDefinedStringArray(valueA, name)
-  return valueA
-}
-
-const normalizeReporter = function (value, name) {
-  const valueA = normalizeOptionalArray(value)
-  checkDefinedStringArray(valueA, name)
-  return valueA
-}
-
 const normalizeSelect = function (value, name) {
   const valueA = normalizeOptionalArray(value)
   checkStringArray(valueA, name)
+  return valueA
+}
+
+const validateSystem = function (system) {
+  checkStringsObject(system, 'system')
+}
+
+const normalizeTasks = function (value, name) {
+  const valueA = normalizeOptionalArray(value)
+  checkDefinedStringArray(valueA, name)
   return valueA
 }
 
@@ -70,19 +74,15 @@ const validateTitles = function (value, name) {
   })
 }
 
-const validateInputs = function (value, name) {
-  checkJsonObject(value, name)
-}
-
 const NORMALIZERS = {
-  precision: normalizePrecision,
-  system: validateSystem,
-  runner: normalizeRunner,
-  tasks: normalizeTasks,
-  reporter: normalizeReporter,
-  select: normalizeSelect,
+  inputs: validateInputs,
   limit: normalizeLimit,
   merge: validateMerge,
+  precision: normalizePrecision,
+  reporter: normalizeReporter,
+  runner: normalizeRunner,
+  select: normalizeSelect,
+  system: validateSystem,
+  tasks: normalizeTasks,
   titles: validateTitles,
-  inputs: validateInputs,
 }
