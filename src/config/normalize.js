@@ -65,7 +65,7 @@ const applyNormalizer = function (value, name, normalizer) {
   return newValue === undefined ? value : newValue
 }
 
-// TODO: missing `config`, `reporterConfig`, `runnerConfig`
+// TODO: missing `reporterConfig`, `runnerConfig`
 const NORMALIZERS = {
   colors: [checkBoolean],
   cwd: [checkDefinedString],
