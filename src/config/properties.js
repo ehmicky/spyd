@@ -28,7 +28,7 @@ export const CONFIG_PROPS = {
   },
   cwd: {
     commands: 'all',
-    normalize(value, name, configInfos) {
+    normalize(value, name, { configInfos }) {
       checkDefinedString(value, name)
       return normalizeConfigPath(value, name, configInfos)
     },
@@ -71,7 +71,7 @@ export const CONFIG_PROPS = {
   },
   output: {
     commands: 'report',
-    normalize(value, name, configInfos) {
+    normalize(value, name, { configInfos }) {
       checkDefinedString(value, name)
       return isOutputPath(value)
         ? normalizeConfigPath(value, name, configInfos)
@@ -196,7 +196,7 @@ export const CONFIG_PROPS = {
   },
   tasks: {
     commands: 'combinations',
-    normalize(value, name, configInfos) {
+    normalize(value, name, { configInfos }) {
       const valueA = normalizeOptionalArray(value)
       return checkArrayItems(valueA, name, (childValue, childName) => {
         checkDefinedString(childValue, childName)
