@@ -80,11 +80,6 @@ export const checkDefinedString = function (value, name) {
   }
 }
 
-export const checkDefinedStringArray = checkArrayItems.bind(undefined, [
-  checkString,
-  checkDefinedString,
-])
-
 export const checkStringsObject = function (value, name) {
   Object.entries(value).forEach(([childName, propValue]) => {
     checkString(propValue, `${name}.${childName}`)

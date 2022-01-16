@@ -11,7 +11,6 @@ import {
   normalizeOptionalArray,
   checkArrayItems,
   checkArrayLength,
-  checkDefinedStringArray,
   checkDefinedString,
   checkObject,
   checkStringsObject,
@@ -79,8 +78,15 @@ const NORMALIZERS = {
   merge: [validateMerge],
   outliers: [checkBoolean],
   precision: [checkInteger, normalizePrecision],
-  reporter: [normalizeOptionalArray, checkDefinedStringArray],
-  runner: [normalizeOptionalArray, checkDefinedStringArray, checkArrayLength],
+  reporter: [
+    // normalizeOptionalArray,
+    checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
+  ],
+  runner: [
+    normalizeOptionalArray,
+    checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
+    checkArrayLength,
+  ],
   select: [
     normalizeOptionalArray,
     checkArrayItems.bind(undefined, [checkString]),
@@ -89,6 +95,9 @@ const NORMALIZERS = {
   showPrecision: [checkBoolean],
   showTitles: [checkBoolean],
   system: [checkObject, checkStringsObject],
-  tasks: [normalizeOptionalArray, checkDefinedStringArray],
+  tasks: [
+    normalizeOptionalArray,
+    checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
+  ],
   titles: [validateTitles],
 }
