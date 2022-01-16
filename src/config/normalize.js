@@ -28,23 +28,19 @@ export const normalizeConfig = function (config, configInfos) {
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
   return Object.entries(CONFIG_PROPS).reduce(
-    (configA, [name, normalizer]) =>
-      normalizePropConfig({
-        config: configA,
-        name,
-        normalizer,
-        configInfos: configInfosA,
-      }),
+    (configA, [name, configProp]) =>
+      normalizePropConfig(
+        { config: configA, name, configInfos: configInfosA },
+        configProp,
+      ),
     config,
   )
 }
 
-const normalizePropConfig = function ({
-  config,
-  name,
-  normalizer,
-  configInfos,
-}) {
+const normalizePropConfig = function (
+  { config, name, configInfos },
+  { normalize },
+) {
   const value = config[name]
 
   if (value === undefined) {
@@ -52,57 +48,105 @@ const normalizePropConfig = function ({
   }
 
   const newValue =
-    normalizer === undefined
+    normalize === undefined
       ? value
-      : runNormalizer(normalizer, value, name, configInfos)
+      : runNormalizer(normalize, value, name, configInfos)
   return { ...config, [name]: newValue }
 }
 
 const CONFIG_PROPS = {
-  colors: checkBoolean,
-  cwd: composeNormalizers(checkDefinedString, normalizeConfigPath),
-  delta: normalizeDelta,
-  force: checkBoolean,
-  inputs: cCheckObjectProps(checkJson),
-  limit: cRecurseConfigSelectors(
-    composeNormalizers(checkInteger, normalizeLimit),
-  ),
-  merge: composeNormalizers(checkDefinedString, validateMerge),
-  output: composeNormalizers(
-    checkDefinedString,
-    condition(normalizeConfigPath, isOutputPath),
-  ),
-  outliers: cRecurseConfigSelectors(checkBoolean),
-  precision: cRecurseConfigSelectors(
-    composeNormalizers(checkInteger, normalizePrecision),
-  ),
-  quiet: checkBoolean,
-  reporter: composeNormalizers(
-    normalizeOptionalArray,
-    cCheckArrayItems(checkDefinedString),
-  ),
-  runner: composeNormalizers(
-    normalizeOptionalArray,
-    checkArrayLength,
-    cCheckArrayItems(checkDefinedString),
-  ),
-  save: checkBoolean,
-  select: composeNormalizers(
-    normalizeOptionalArray,
-    cCheckArrayItems(checkString),
-  ),
-  showDiff: cRecurseConfigSelectors(checkBoolean),
-  showMetadata: checkBoolean,
-  showPrecision: cRecurseConfigSelectors(checkBoolean),
-  showSystem: checkBoolean,
-  showTitles: cRecurseConfigSelectors(checkBoolean),
-  since: normalizeDelta,
-  system: cCheckObjectProps(checkDefinedString),
-  tasks: composeNormalizers(
-    normalizeOptionalArray,
-    cCheckArrayItems(
-      composeNormalizers(checkDefinedString, normalizeConfigGlob),
+  colors: {
+    normalize: checkBoolean,
+  },
+  cwd: {
+    normalize: composeNormalizers(checkDefinedString, normalizeConfigPath),
+  },
+  delta: {
+    normalize: normalizeDelta,
+  },
+  force: {
+    normalize: checkBoolean,
+  },
+  inputs: {
+    normalize: cCheckObjectProps(checkJson),
+  },
+  limit: {
+    normalize: cRecurseConfigSelectors(
+      composeNormalizers(checkInteger, normalizeLimit),
     ),
-  ),
-  titles: cCheckObjectProps(checkDefinedString),
+  },
+  merge: {
+    normalize: composeNormalizers(checkDefinedString, validateMerge),
+  },
+  output: {
+    normalize: composeNormalizers(
+      checkDefinedString,
+      condition(normalizeConfigPath, isOutputPath),
+    ),
+  },
+  outliers: {
+    normalize: cRecurseConfigSelectors(checkBoolean),
+  },
+  precision: {
+    normalize: cRecurseConfigSelectors(
+      composeNormalizers(checkInteger, normalizePrecision),
+    ),
+  },
+  quiet: {
+    normalize: checkBoolean,
+  },
+  reporter: {
+    normalize: composeNormalizers(
+      normalizeOptionalArray,
+      cCheckArrayItems(checkDefinedString),
+    ),
+  },
+  runner: {
+    normalize: composeNormalizers(
+      normalizeOptionalArray,
+      checkArrayLength,
+      cCheckArrayItems(checkDefinedString),
+    ),
+  },
+  save: {
+    normalize: checkBoolean,
+  },
+  select: {
+    normalize: composeNormalizers(
+      normalizeOptionalArray,
+      cCheckArrayItems(checkString),
+    ),
+  },
+  showDiff: {
+    normalize: cRecurseConfigSelectors(checkBoolean),
+  },
+  showMetadata: {
+    normalize: checkBoolean,
+  },
+  showPrecision: {
+    normalize: cRecurseConfigSelectors(checkBoolean),
+  },
+  showSystem: {
+    normalize: checkBoolean,
+  },
+  showTitles: {
+    normalize: cRecurseConfigSelectors(checkBoolean),
+  },
+  since: {
+    normalize: normalizeDelta,
+  },
+  system: {
+    normalize: cCheckObjectProps(checkDefinedString),
+  },
+  tasks: {
+    normalize: composeNormalizers(
+      normalizeOptionalArray,
+      cCheckArrayItems(
+        composeNormalizers(checkDefinedString, normalizeConfigGlob),
+      ),
+    ),
+  },
+  titles: {
+    normalize: cCheckObjectProps(checkDefinedString),
+  },
 }
