@@ -11,7 +11,8 @@ import { isConfigSelector } from './normalize.js'
 //  - The value is applied for the combinations matching that selector
 // Key order:
 //  - Selectors are searched in the object keys order.
-//  - The last key must be "default" and is used as a fallback.
+//  - One key must be "default" and is used as a fallback (even when it is not
+//    the last key)
 // This method transforms each of those configuration selectors to single values
 // based on each given combination.
 //  - Each resolved configuration is set to `combinations[*].config`.
@@ -40,22 +41,11 @@ const applyConfigPropSelectors = function (combination, configValue, propName) {
     return configValue
   }
 
-  const [, value] = Object.entries(configValue).find(
-    ([selector], index, values) =>
-      matchConfigSelectors({ combination, selector, index, values, propName }),
+  const { default: defaultValue, ...configValueA } = configValue
+  const matchingSelector = Object.keys(configValueA).find((selector) =>
+    matchCombination(combination, [selector], `${propName}.${selector}`),
   )
-  return value
-}
-
-const matchConfigSelectors = function ({
-  combination,
-  selector,
-  index,
-  values,
-  propName,
-}) {
-  return (
-    index === values.length - 1 ||
-    matchCombination(combination, [selector], `${propName}.${selector}`)
-  )
+  return matchingSelector === undefined
+    ? defaultValue
+    : configValue[matchingSelector]
 }
