@@ -36,9 +36,5 @@ const CORE_ERROR_NAME = 'CoreError'
 
 // Ensure we are using an Error instance
 export const normalizeError = function (error) {
-  if (error instanceof Error) {
-    return error
-  }
-
-  return new Error(error)
+  return error instanceof Error ? error : new Error(error)
 }
