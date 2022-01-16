@@ -1,7 +1,7 @@
 import { getMatchingCombination } from '../../combination/result.js'
 import { haveSimilarMeans } from '../../stats/similar.js'
 
-import { isNegativeLimit } from './parse.js'
+import { isNegativeLimit } from './normalize.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
