@@ -1,6 +1,7 @@
 import { omitNoDimensions } from '../../combination/filter.js'
 import { sortCombinations } from '../../combination/sort_combinations.js'
 import { sortDimensions } from '../../combination/sort_dimensions.js'
+import { useResultConfigSelectors } from '../../config/select/use.js'
 import { addCombinationsDiff } from '../../history/compare/diff.js'
 import { pickCombProps, pickTopProps } from '../../top/omit.js'
 import { normalizeTimestamp } from '../../top/timestamp.js'
@@ -20,12 +21,13 @@ export const normalizeCombAll = function (
   result,
   { sinceResult, noDimensions, config },
 ) {
-  const resultA = addCombinationsDiff(result, sinceResult, config)
-  const resultB = omitNoDimensions(resultA, noDimensions)
-  const resultC = sortDimensions(resultB)
-  const resultD = sortCombinations(resultC)
-  const resultE = pickCombProps(resultD)
-  return resultE
+  const resultA = useResultConfigSelectors(result, config)
+  const resultB = addCombinationsDiff(resultA, sinceResult)
+  const resultC = omitNoDimensions(resultB, noDimensions)
+  const resultD = sortDimensions(resultC)
+  const resultE = sortCombinations(resultD)
+  const resultF = pickCombProps(resultE)
+  return resultF
 }
 
 // Add report-specific properties to a result that are not in `combinations` but

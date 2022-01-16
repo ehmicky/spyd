@@ -21,13 +21,13 @@ import { isNegativeLimit } from './normalize.js'
 //  - The difference might not be due to the current commit but to the previous
 //    one, making it less meaningful
 //  - This would require additional visualization in reporters
-export const addCombinationsDiff = function (result, sinceResult, { limit }) {
+export const addCombinationsDiff = function (result, sinceResult) {
   if (sinceResult === undefined || result.id === sinceResult.id) {
     return result
   }
 
   const combinations = result.combinations.map((combination) =>
-    addCombinationDiff(combination, sinceResult, limit),
+    addCombinationDiff(combination, sinceResult),
   )
   return { ...result, combinations }
 }
@@ -37,7 +37,6 @@ export const addCombinationsDiff = function (result, sinceResult, { limit }) {
 const addCombinationDiff = function (
   combination,
   { combinations: previousCombinations },
-  limit,
 ) {
   if (combination.stats.mean === undefined) {
     return combination
@@ -55,7 +54,7 @@ const addCombinationDiff = function (
     return combination
   }
 
-  return addDiff({ combination, previousCombination, limit })
+  return addDiff({ combination, previousCombination })
 }
 
 // `diffPrecise` is whether `diff` is statistically significant.
@@ -69,6 +68,7 @@ const addCombinationDiff = function (
 const addDiff = function ({
   combination,
   combination: {
+    config: { limit },
     stats,
     stats: { mean },
   },
@@ -76,7 +76,6 @@ const addDiff = function ({
     stats: previousStats,
     stats: { mean: previousMean },
   },
-  limit,
 }) {
   const diff = mean / previousMean - 1
   const diffPrecise = haveSimilarMeans(stats, previousStats) === false
