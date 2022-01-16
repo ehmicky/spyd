@@ -18,12 +18,12 @@ export const PluginError = getErrorType('PluginError')
 export const UserError = getErrorType('UserError')
 export const LimitError = getErrorType('LimitError')
 
+// Retrieve error type-specific behavior
 export const getErrorProps = function ({ name }) {
   const nameA = ERROR_PROPS[name] === undefined ? CORE_ERROR_NAME : name
   return ERROR_PROPS[nameA]
 }
 
-// Error type-specific behavior
 const ERROR_PROPS = {
   StopError: { exitCode: 0, printStack: false, indented: true },
   CoreError: { exitCode: 1, printStack: true, indented: false },
