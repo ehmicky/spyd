@@ -44,13 +44,13 @@ export const runDag = async function (tasks) {
 const createTaskPromise = function () {
   const taskPromise = createPromise()
   // eslint-disable-next-line promise/prefer-await-to-then
-  taskPromise.catch(noop)
+  taskPromise.promise.catch(noop)
   return taskPromise
 }
 
 // Create a promise which state can be manually manipulated
 /* eslint-disable fp/no-let, init-declarations, fp/no-mutation,
-   fp/no-mutating-assign, promise/avoid-new */
+   promise/avoid-new */
 const createPromise = function () {
   let resolveFunc
   let rejectFunc
@@ -58,11 +58,10 @@ const createPromise = function () {
     resolveFunc = resolve
     rejectFunc = reject
   })
-  Object.assign(promise, { resolve: resolveFunc, reject: rejectFunc })
-  return promise
+  return { promise, resolve: resolveFunc, reject: rejectFunc }
 }
 /* eslint-enable fp/no-let, init-declarations, fp/no-mutation,
-   fp/no-mutating-assign, promise/avoid-new */
+   promise/avoid-new */
 
 // eslint-disable-next-line no-empty-function
 const noop = function () {}
@@ -85,7 +84,7 @@ const getTaskArg = function (
   childTaskName,
 ) {
   // eslint-disable-next-line fp/no-proxy
-  return new Proxy(taskPromise, {
+  return new Proxy(taskPromise.promise, {
     get: proxyTaskArgMethod.bind(undefined, {
       dag,
       parentTaskName,
@@ -121,13 +120,13 @@ const isPromiseFollowMethod = function (propName, propValue) {
 const PROMISE_FOLLOW_METHODS = new Set(['then', 'catch', 'finally'])
 
 // Run a single task function and resolve|reject its associated promise
-const runTask = async function (taskFunc, taskPromise, tasksArgs) {
+const runTask = async function (taskFunc, { resolve, reject }, tasksArgs) {
   try {
     const taskReturn = await taskFunc(tasksArgs)
-    taskPromise.resolve(taskReturn)
+    resolve(taskReturn)
     return taskReturn
   } catch (error) {
-    taskPromise.reject(error)
+    reject(error)
     throw error
   }
 }
