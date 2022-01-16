@@ -37,15 +37,15 @@ const getMissingArrayEntries = function ({
   isStrict,
   missing,
 }) {
-  if (isStrict) {
-    if (isAny || key === 0) {
-      return [{ value, path: [...path, { key: 0, missing }] }]
-    }
-
-    return [{ value: undefined, path: [...path, { key, missing }] }]
+  if (!isStrict) {
+    return []
   }
 
-  return []
+  if (isAny || key === 0) {
+    return [{ value, path: [...path, { key: 0, missing }] }]
+  }
+
+  return [{ value: undefined, path: [...path, { key, missing }] }]
 }
 
 const getNormalArrayEntries = function ({ value, path, key, isAny, missing }) {
@@ -73,11 +73,11 @@ const getMissingObjectEntries = function ({
   isStrict,
   missing,
 }) {
-  if (isStrict && !isAny) {
-    return [{ value: undefined, path: [...path, { key, missing }] }]
+  if (!isStrict || isAny) {
+    return []
   }
 
-  return []
+  return [{ value: undefined, path: [...path, { key, missing }] }]
 }
 
 const getNormalObjectEntries = function ({ value, path, key, isAny, missing }) {
