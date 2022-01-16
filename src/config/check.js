@@ -4,34 +4,28 @@ import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
 import { UserError } from '../error/main.js'
-import { curry, runNormalizer } from '../utils/functional.js'
+import { runNormalizer } from '../utils/functional.js'
 
 // Configuration validation helper functions
-// eslint-disable-next-line max-params
-export const checkArrayItems = function (checker, value, name, ...args) {
+export const checkArrayItems = function (value, name, checker) {
   checkArray(value, name)
   return value.flatMap((item, index) =>
-    runNormalizer(checker, item, getIndexName(name, index, value), ...args),
+    runNormalizer(checker, item, getIndexName(name, index, value)),
   )
 }
-
-export const cCheckArrayItems = curry(checkArrayItems)
 
 // When array has a single item, it is possible that the value was arrified
 const getIndexName = function (name, index, value) {
   return value.length === 1 ? name : `${name}[${index}]`
 }
 
-// eslint-disable-next-line max-params
-export const checkObjectProps = function (checker, value, name, ...args) {
+export const checkObjectProps = function (value, name, checker) {
   checkObject(value, name)
   return mapObj(value, (childName, childValue) => [
     childName,
-    runNormalizer(checker, childValue, `${name}.${childName}`, ...args),
+    runNormalizer(checker, childValue, `${name}.${childName}`),
   ])
 }
-
-export const cCheckObjectProps = curry(checkObjectProps)
 
 export const checkBoolean = function (value, name) {
   if (typeof value !== 'boolean') {

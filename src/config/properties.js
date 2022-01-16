@@ -4,146 +4,213 @@ import { normalizeDelta } from '../history/delta/normalize.js'
 import { validateMerge } from '../history/merge/id.js'
 import { isOutputPath } from '../report/output.js'
 import { normalizePrecision } from '../run/precision.js'
-import { condition, composeNormalizers } from '../utils/functional.js'
 
 import {
   checkBoolean,
   checkInteger,
   checkString,
   normalizeOptionalArray,
-  cCheckArrayItems,
+  checkArrayItems,
   checkArrayLength,
-  cCheckObjectProps,
+  checkObjectProps,
   checkDefinedString,
   checkJson,
 } from './check.js'
 import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
-import { cRecurseConfigSelectors } from './select/normalize.js'
+import { recurseConfigSelectors } from './select/normalize.js'
 
 export const CONFIG_PROPS = {
   colors: {
     commands: 'report',
-    normalize: checkBoolean,
+    normalize(value, name) {
+      checkBoolean(value, name)
+    },
   },
   cwd: {
     commands: 'all',
-    normalize: composeNormalizers(checkDefinedString, normalizeConfigPath),
+    normalize(value, name, configInfos) {
+      checkDefinedString(value, name)
+      return normalizeConfigPath(value, name, configInfos)
+    },
   },
   delta: {
     commands: 'delta',
-    normalize: normalizeDelta,
+    normalize(value, name) {
+      return normalizeDelta(value, name)
+    },
   },
   force: {
     commands: 'remove',
-    normalize: checkBoolean,
+    normalize(value, name) {
+      checkBoolean(value, name)
+    },
   },
   inputs: {
     commands: 'combinations',
-    normalize: cCheckObjectProps(checkJson),
+    normalize(value, name) {
+      checkObjectProps(value, name, (childValue, childName) => {
+        checkJson(childValue, childName)
+      })
+    },
   },
   limit: {
     commands: 'report',
-    normalize: cRecurseConfigSelectors(
-      composeNormalizers(checkInteger, normalizeLimit),
-    ),
+    normalize(value, name) {
+      return recurseConfigSelectors(value, name, (childValue, childName) => {
+        checkInteger(childValue, childName)
+        return normalizeLimit(childValue, childName)
+      })
+    },
   },
   merge: {
     commands: 'run',
-    normalize: composeNormalizers(checkDefinedString, validateMerge),
+    normalize(value, name) {
+      checkDefinedString(value, name)
+      validateMerge(value, name)
+    },
   },
   output: {
     commands: 'report',
-    normalize: composeNormalizers(
-      checkDefinedString,
-      condition(normalizeConfigPath, isOutputPath),
-    ),
+    normalize(value, name, configInfos) {
+      checkDefinedString(value, name)
+      return isOutputPath(value)
+        ? normalizeConfigPath(value, name, configInfos)
+        : value
+    },
   },
   outliers: {
     commands: 'run',
-    normalize: cRecurseConfigSelectors(checkBoolean),
+    normalize(value, name) {
+      recurseConfigSelectors(value, name, (childValue, childName) => {
+        checkBoolean(childValue, childName)
+      })
+    },
   },
   precision: {
     commands: 'run',
-    normalize: cRecurseConfigSelectors(
-      composeNormalizers(checkInteger, normalizePrecision),
-    ),
+    normalize(value, name) {
+      return recurseConfigSelectors(value, name, (childValue, childName) => {
+        checkInteger(childValue, childName)
+        return normalizePrecision(childValue, childName)
+      })
+    },
   },
   quiet: {
     commands: 'run',
-    normalize: checkBoolean,
+    normalize(value, name) {
+      checkBoolean(value, name)
+    },
   },
   reporter: {
     commands: 'report',
-    normalize: composeNormalizers(
-      normalizeOptionalArray,
-      cCheckArrayItems(checkDefinedString),
-    ),
+    normalize(value, name) {
+      const valueA = normalizeOptionalArray(value)
+      checkArrayItems(valueA, name, (childValue, childName) => {
+        checkDefinedString(childValue, childName)
+      })
+      return valueA
+    },
   },
   reporterConfig: {
     commands: 'report',
   },
   runner: {
     commands: 'combinations',
-    normalize: composeNormalizers(
-      normalizeOptionalArray,
-      checkArrayLength,
-      cCheckArrayItems(checkDefinedString),
-    ),
+    normalize(value, name) {
+      const valueA = normalizeOptionalArray(value)
+      checkArrayLength(valueA, name)
+      checkArrayItems(valueA, name, (childValue, childName) => {
+        checkDefinedString(childValue, childName)
+      })
+      return valueA
+    },
   },
   runnerConfig: {
     commands: 'combinations',
   },
   save: {
     commands: 'run',
-    normalize: checkBoolean,
+    normalize(value, name) {
+      checkBoolean(value, name)
+    },
   },
   select: {
     commands: 'select',
-    normalize: composeNormalizers(
-      normalizeOptionalArray,
-      cCheckArrayItems(checkString),
-    ),
+    normalize(value, name) {
+      const valueA = normalizeOptionalArray(value)
+      checkArrayItems(valueA, name, (childValue, childName) => {
+        checkString(childValue, childName)
+      })
+      return valueA
+    },
   },
   showDiff: {
     commands: 'report',
-    normalize: cRecurseConfigSelectors(checkBoolean),
+    normalize(value, name) {
+      recurseConfigSelectors(value, name, (childValue, childName) => {
+        checkBoolean(childValue, childName)
+      })
+    },
   },
   showMetadata: {
     commands: 'report',
-    normalize: checkBoolean,
+    normalize(value, name) {
+      checkBoolean(value, name)
+    },
   },
   showPrecision: {
     commands: 'report',
-    normalize: cRecurseConfigSelectors(checkBoolean),
+    normalize(value, name) {
+      recurseConfigSelectors(value, name, (childValue, childName) => {
+        checkBoolean(childValue, childName)
+      })
+    },
   },
   showSystem: {
     commands: 'report',
-    normalize: checkBoolean,
+    normalize(value, name) {
+      checkBoolean(value, name)
+    },
   },
   showTitles: {
     commands: 'report',
-    normalize: cRecurseConfigSelectors(checkBoolean),
+    normalize(value, name) {
+      recurseConfigSelectors(value, name, (childValue, childName) => {
+        checkBoolean(childValue, childName)
+      })
+    },
   },
   since: {
     commands: 'history',
-    normalize: normalizeDelta,
+    normalize(value, name) {
+      return normalizeDelta(value, name)
+    },
   },
   system: {
     commands: 'combinations',
-    normalize: cCheckObjectProps(checkDefinedString),
+    normalize(value, name) {
+      checkObjectProps(value, name, (childValue, childName) => {
+        checkDefinedString(childValue, childName)
+      })
+    },
   },
   tasks: {
     commands: 'combinations',
-    normalize: composeNormalizers(
-      normalizeOptionalArray,
-      cCheckArrayItems(
-        composeNormalizers(checkDefinedString, normalizeConfigGlob),
-      ),
-    ),
+    normalize(value, name, configInfos) {
+      const valueA = normalizeOptionalArray(value)
+      return checkArrayItems(valueA, name, (childValue, childName) => {
+        checkDefinedString(childValue, childName)
+        return normalizeConfigGlob(value, name, configInfos)
+      })
+    },
   },
   titles: {
     commands: 'report',
-    normalize: cCheckObjectProps(checkDefinedString),
+    normalize(value, name) {
+      checkObjectProps(value, name, (childValue, childName) => {
+        checkDefinedString(childValue, childName)
+      })
+    },
   },
 }
 /* eslint-enable max-lines */

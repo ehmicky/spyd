@@ -2,25 +2,21 @@ import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
 import { UserError } from '../../error/main.js'
-import { curry } from '../../utils/functional.js'
 
 // If a configuration property uses selectors, normalization must be applied
 // recursively.
-// eslint-disable-next-line max-params
-const recurseConfigSelectors = function (callFunc, value, name, ...args) {
+export const recurseConfigSelectors = function (value, name, callFunc) {
   if (!isConfigSelectorShape(value)) {
-    return callFunc(value, name, ...args)
+    return callFunc(value, name)
   }
 
   validateConfigSelector(value, name)
 
   return mapObj(value, (selector, childValue) => [
     selector,
-    callFunc(childValue, `${name}.${selector}`, ...args),
+    callFunc(childValue, `${name}.${selector}`),
   ])
 }
-
-export const cRecurseConfigSelectors = curry(recurseConfigSelectors)
 
 // We validate that at least one selector is named "default"
 //  - This ensures users understand that this selector is used as a fallback

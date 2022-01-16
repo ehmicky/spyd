@@ -1,6 +1,6 @@
 import { cleanObject } from '../../utils/clean.js'
 import { pick } from '../../utils/pick.js'
-import { checkObjectProps, cCheckObjectProps, checkJson } from '../check.js'
+import { checkObjectProps, checkJson } from '../check.js'
 import { mergeConfigs } from '../merge/main.js'
 
 // Retrieve plugin configuration object.
@@ -47,10 +47,14 @@ export const addPluginsConfig = function ({
   topProps,
 }) {
   const pluginsConfig = config[configProp]
-  checkObjectProps(cCheckObjectProps(checkJson), pluginsConfig, configProp)
+  checkObjectProps(pluginsConfig, configProp, checkPluginConfig)
   return plugins.map((plugin) =>
     addPluginConfig({ plugin, pluginsConfig, config, topProps }),
   )
+}
+
+const checkPluginConfig = function (pluginConfig, configPropFull) {
+  checkObjectProps(pluginConfig, configPropFull, checkJson)
 }
 
 const addPluginConfig = function ({

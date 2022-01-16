@@ -15,9 +15,9 @@ import { resolveConfigPath } from './resolve.js'
 //    the `config` top-level flag programmatically.
 export const getConfigsInfos = async function (config, base) {
   const configs = normalizeOptionalArray(config)
-  checkArrayItems(checkDefinedString, configs, 'config')
+  checkArrayItems(configs, 'config', checkDefinedString)
   const configInfos = await Promise.all(
-    configs.map((configA) => getConfigInfos(configA, base)),
+    configs.map((configB) => getConfigInfos(configB, base)),
   )
   return configInfos.flat()
 }
