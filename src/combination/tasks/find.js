@@ -22,10 +22,8 @@ export const findTasks = async function ({
     const [{ taskIds: ids }] = await measureCombinations(
       [{ dimensions: { runner }, taskPath, inputsList: [] }],
       {
-        precision: 0,
-        cwd,
+        config: { precision: 0, cwd, outliers: true },
         previewState: { quiet: true },
-        outliers: true,
         stage: 'init',
         noDimensions,
       },

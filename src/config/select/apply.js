@@ -12,12 +12,12 @@ import { SELECTABLE_PROPS } from './normalize.js'
 export const applyConfigSelectors = function (combination, config) {
   return mapObj(config, (name, configValue) => [
     name,
-    applyConfigPropSelectors(combination, configValue),
+    applyConfigPropSelectors(combination, configValue, name),
   ])
 }
 
-const applyConfigPropSelectors = function (combination, configValue) {
-  if (!isParsedConfigSelector(configValue)) {
+const applyConfigPropSelectors = function (combination, configValue, name) {
+  if (!isParsedConfigSelector(configValue, name)) {
     return configValue
   }
 
@@ -28,7 +28,7 @@ const applyConfigPropSelectors = function (combination, configValue) {
 }
 
 // Make the logic a noop if the configuration property does not use selectors
-const isParsedConfigSelector = function (name, configValue) {
+const isParsedConfigSelector = function (configValue, name) {
   return (
     SELECTABLE_PROPS.has(name) &&
     Array.isArray(configValue) &&

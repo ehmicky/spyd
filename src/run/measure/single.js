@@ -1,4 +1,5 @@
 import { getCombinationPrefix } from '../../combination/ids/name.js'
+import { applyConfigSelectors } from '../../config/select/apply.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
@@ -16,8 +17,9 @@ import { throwIfStopped } from '../stop/error.js'
 import { runEvents } from './events.js'
 
 // Measure a single combination
-export const measureCombination = async function ({ index, ...args }) {
+export const measureCombination = async function ({ index, config, ...args }) {
   const { previewState, combination, noDimensions } = args
+  const configA = applyConfigSelectors(combination, config)
 
   try {
     await startCombinationPreview({
@@ -26,7 +28,7 @@ export const measureCombination = async function ({ index, ...args }) {
       index,
       noDimensions,
     })
-    const { stats, taskIds } = await logAndMeasure(args)
+    const { stats, taskIds } = await logAndMeasure({ ...args, config: configA })
     await endCombinationPreview(previewState)
     return { ...combination, stats, taskIds }
   } finally {
@@ -62,15 +64,9 @@ const logStreamAndMeasure = async function (args) {
 }
 
 // Spawn combination processes, then measure them
-const spawnAndMeasure = async function ({
-  cwd,
-  serverUrl,
-  logsStream,
-  ...args
-}) {
+const spawnAndMeasure = async function ({ serverUrl, logsStream, ...args }) {
   const { childProcess, onTaskExit } = await spawnRunnerProcess({
     ...args,
-    cwd,
     serverUrl,
     logsStream,
   })

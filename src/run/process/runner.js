@@ -40,7 +40,7 @@ export const spawnRunnerProcess = async function ({
       },
     },
   },
-  cwd,
+  config: { cwd },
   server,
   serverUrl,
   logsStream,

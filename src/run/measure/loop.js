@@ -28,11 +28,10 @@ import { isRemainingCombination } from './remaining.js'
 // In that case, the task complexity should be increased, for example by using
 // bigger `inputs`.
 export const performMeasureLoop = async function ({
-  precision,
+  config: { precision, outliers },
   previewState,
   stopState,
   stage,
-  outliers,
   server,
   logsFd,
   minLoopDuration,

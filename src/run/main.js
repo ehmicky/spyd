@@ -55,7 +55,6 @@ const previewAndMeasure = async function ({
   noDimensions,
   previewState,
   config,
-  config: { cwd, precision, outliers },
 }) {
   const previewStateA = await startPreview({
     newResult,
@@ -68,10 +67,8 @@ const previewAndMeasure = async function ({
 
   try {
     const combinations = await measureCombinations(newResult.combinations, {
-      precision,
-      cwd,
+      config,
       previewState: previewStateA,
-      outliers,
       stage: 'main',
       noDimensions,
     })
