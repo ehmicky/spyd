@@ -53,8 +53,8 @@ const getName = function (propName, propIndex) {
   return propIndex === '*' ? propIndex : Number(propIndex)
 }
 
-export const getByPropPath = function (object, propPath) {
-  return propPath.reduce(getValuesByProp, [{ value: object, path: [] }])
+export const getByPropPath = function (value, propPath) {
+  return propPath.reduce(getValuesByProp, [{ value, path: [] }])
 }
 
 const getValuesByProp = function (results, propElem) {
