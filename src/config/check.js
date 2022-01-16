@@ -4,7 +4,7 @@ import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
 import { UserError } from '../error/main.js'
-import { curry } from '../utils/functional.js'
+import { curry, runNormalizer } from '../utils/functional.js'
 
 // Configuration validation helper functions
 // eslint-disable-next-line max-params
@@ -35,14 +35,9 @@ export const cCheckObjectProps = curry(checkObjectProps)
 
 const applyCheckers = function (checkers, value, ...args) {
   return checkers.reduce(
-    (valueA, checker) => applyChecker(checker, valueA, ...args),
+    (valueA, checker) => runNormalizer(checker, valueA, ...args),
     value,
   )
-}
-
-const applyChecker = function (checker, value, ...args) {
-  const newValue = checker(value, ...args)
-  return newValue === undefined ? value : newValue
 }
 
 export const checkBoolean = function (value, name) {
