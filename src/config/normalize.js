@@ -19,10 +19,26 @@ export const normalizeConfig = function (config, command, configInfos) {
 
 const normalizePropConfig = function (
   { config, name, command, configInfos },
+  configProp,
+) {
+  const value = normalizePropValue(
+    { config, name, command, configInfos },
+    configProp,
+  )
+
+  if (value === undefined) {
+    return name in config ? omit.default(config, [name]) : config
+  }
+
+  return { ...config, [name]: value }
+}
+
+const normalizePropValue = function (
+  { config, name, command, configInfos },
   { commands, default: defaultValue, normalize },
 ) {
   if (!commandHasProp(commands, command)) {
-    return omit.default(config, [name])
+    return
   }
 
   const value = config[name]
@@ -30,13 +46,9 @@ const normalizePropConfig = function (
 
   const valueA = addDefaultValue(value, defaultValue, args)
 
-  if (valueA === undefined) {
-    return config
-  }
-
-  const valueB =
-    normalize === undefined ? valueA : runNormalizer(normalize, valueA, ...args)
-  return { ...config, [name]: valueB }
+  return valueA === undefined || normalize === undefined
+    ? valueA
+    : runNormalizer(normalize, valueA, ...args)
 }
 
 // All config properties can be specified in `spyd.yml` (unlike CLI flags), for
