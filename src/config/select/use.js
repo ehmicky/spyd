@@ -22,7 +22,7 @@ const useCombConfigSelectors = function (combination, config) {
   return { ...combination, config: configA }
 }
 
-// Same for a single configuration property
+// Same for a single combination
 export const useConfigSelectors = function (combination, config) {
   return mapObj(config, (name, configValue) => [
     name,
