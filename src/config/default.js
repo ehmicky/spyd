@@ -8,15 +8,19 @@ import { cleanObject } from '../utils/clean.js'
 
 // Add default configuration properties
 export const addDefaultConfig = function (config, command) {
-  return cleanObject({
+  const defaultConfig = getDefaultConfig(config, command)
+  return cleanObject({ ...defaultConfig, ...config })
+}
+
+const getDefaultConfig = function (config, command) {
+  return {
     ...DEFAULT_CONFIG,
     cwd: getCwd(),
     force: !isTtyInput(),
     merge: getDefaultId(),
     showSystem: getDefaultShowSystem(config),
     showMetadata: METADATA_COMMANDS.has(command),
-    ...config,
-  })
+  }
 }
 
 const getDefaultShowSystem = function ({ system = {} }) {
