@@ -1,8 +1,8 @@
 import mapObj from 'map-obj'
 
 import { cleanObject } from '../../../utils/clean.js'
-import { groupBy } from '../../../utils/group.js'
 
+import { compressRunners } from './runners.js'
 import { compressStats } from './stats.js'
 
 // Reduce size of rawResults before saving.
@@ -59,24 +59,6 @@ const compressSystem = function ([
     ci,
     versions,
   }
-}
-
-const compressRunners = function (combinations) {
-  const combinationsGroups = Object.values(groupBy(combinations, getRunnerKey))
-  return combinationsGroups.map(compressRunner)
-}
-
-const getRunnerKey = function ({ dimensions: { runner } }) {
-  return runner
-}
-
-const compressRunner = function ([
-  {
-    dimensions: { runner },
-    versions,
-  },
-]) {
-  return { dimensions: { runner }, versions }
 }
 
 const compressCombination = function ({ dimensions, stats }) {

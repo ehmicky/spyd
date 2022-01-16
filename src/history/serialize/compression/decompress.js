@@ -1,5 +1,6 @@
 import mapObj from 'map-obj'
 
+import { decompressRunners } from './runners.js'
 import { decompressStats } from './stats.js'
 
 // Restore original rawResults after loading
@@ -26,19 +27,6 @@ const decompressCombination = function (
   const dimensionsA = mapObj(dimensions, decompressDimension)
   const statsA = decompressStats(stats)
   return { dimensions: dimensionsA, stats: statsA, system, versions }
-}
-
-const decompressRunners = function (runners, dimensions) {
-  const { versions } = runners.find((runner) =>
-    isCombinationRunner(runner, dimensions),
-  )
-  return versions
-}
-
-const isCombinationRunner = function (runner, dimensions) {
-  return Object.entries(runner.dimensions).every(
-    ([dimensionName, id]) => dimensions[dimensionName] === id,
-  )
 }
 
 const decompressDimension = function (dimension, id) {
