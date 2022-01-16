@@ -1,19 +1,25 @@
 import decamelize from 'decamelize'
-import mapObj from 'map-obj'
+
+import { mapValues, mapKeys } from '../../../../utils/map.js'
 
 // Inputs are passed as environment variables.
 // For example, input `thisExample` would be `SPYD_INPUTS_THIS_EXAMPLE`.
 // Any non-string JSON value is serialized.
 export const getEnv = function (inputs) {
-  return mapObj(inputs, getEnvVar)
+  const inputsA = mapValues(inputs, serializeEnvVar)
+  const inputsB = mapKeys(inputsA, normalizeEnvVarName)
+  return inputsB
 }
 
-const getEnvVar = function (inputId, inputValue) {
+const serializeEnvVar = function (inputValue) {
+  return typeof inputValue === 'string'
+    ? inputValue
+    : JSON.stringify(inputValue)
+}
+
+const normalizeEnvVarName = function (inputId) {
   const inputIdA = decamelize(inputId).toUpperCase()
-  const name = `${ENV_PREFIX}${inputIdA}`
-  const value =
-    typeof inputValue === 'string' ? inputValue : JSON.stringify(inputValue)
-  return [name, value]
+  return `${ENV_PREFIX}${inputIdA}`
 }
 
 const ENV_PREFIX = 'SPYD_INPUTS_'
