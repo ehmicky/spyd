@@ -4,7 +4,15 @@ import { runNormalizer } from './check.js'
 import { runDag } from './dag/run.js'
 import { CONFIG_PROPS } from './properties.js'
 
-// Normalize configuration shape and do custom validation
+// Normalize configuration shape and do custom validation.
+// Configuration normalizers can reference other configuration properties.
+//  - We use a DAG to run those in the right order, while still trying to run
+//    every async normalizer in parallel as much as possible
+//  - This also allows definitions to be unordered, which is simpler
+//     - For example, they can use named exports and be imported with a
+//       wildcard import
+//  - This also enables aggregating errors when multiple configuration
+//    properties are invalid, as opposed to only the first one
 export const normalizeConfig = async function (config, command, configInfos) {
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
