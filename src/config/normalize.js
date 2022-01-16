@@ -26,7 +26,7 @@ const normalizePropConfig = function (
   }
 
   const value = config[name]
-  const args = [name, { configInfos, config }]
+  const args = [name, { configInfos, config, command }]
 
   const valueA = addDefaultValue(value, defaultValue, args)
 

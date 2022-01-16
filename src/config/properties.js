@@ -1,8 +1,13 @@
 /* eslint-disable max-lines */
+import { cwd as getCwd } from 'process'
+
+import isPlainObj from 'is-plain-obj'
+
 import { normalizeLimit } from '../history/compare/normalize.js'
 import { normalizeDelta } from '../history/delta/normalize.js'
-import { validateMerge } from '../history/merge/id.js'
+import { getDefaultId, validateMerge } from '../history/merge/id.js'
 import { isOutputPath } from '../report/output.js'
+import { isTtyInput } from '../report/tty.js'
 import { normalizePrecision } from '../run/precision.js'
 
 import {
@@ -17,7 +22,10 @@ import {
   checkJson,
 } from './check.js'
 import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
+// eslint-disable-next-line import/max-dependencies
 import { recurseConfigSelectors } from './select/normalize.js'
+
+const METADATA_COMMANDS = new Set(['show', 'remove'])
 
 export const CONFIG_PROPS = {
   colors: {
@@ -28,6 +36,9 @@ export const CONFIG_PROPS = {
   },
   cwd: {
     commands: 'all',
+    default() {
+      return getCwd()
+    },
     normalize(value, name, { configInfos }) {
       checkDefinedString(value, name)
       return normalizeConfigPath(value, name, configInfos)
@@ -42,6 +53,9 @@ export const CONFIG_PROPS = {
   },
   force: {
     commands: 'remove',
+    default() {
+      return !isTtyInput()
+    },
     normalize(value, name) {
       checkBoolean(value, name)
     },
@@ -66,6 +80,9 @@ export const CONFIG_PROPS = {
   },
   merge: {
     commands: 'run',
+    default() {
+      return getDefaultId()
+    },
     normalize(value, name) {
       checkDefinedString(value, name)
       validateMerge(value, name)
@@ -172,6 +189,9 @@ export const CONFIG_PROPS = {
   },
   showMetadata: {
     commands: 'report',
+    default(name, { command }) {
+      return METADATA_COMMANDS.has(command)
+    },
     normalize(value, name) {
       checkBoolean(value, name)
     },
@@ -187,6 +207,9 @@ export const CONFIG_PROPS = {
   },
   showSystem: {
     commands: 'report',
+    default(name, { config: { system } }) {
+      return isPlainObj(system) && Object.keys(system).length !== 0
+    },
     normalize(value, name) {
       checkBoolean(value, name)
     },
