@@ -1,7 +1,7 @@
 import { getMatchingCombination } from '../../combination/result.js'
 import { haveSimilarMeans } from '../../stats/similar.js'
 
-import { isPositiveLimit } from './parse.js'
+import { isNegativeLimit } from './parse.js'
 
 // Add `combination.stats.diff` which compares each combination with another
 // result.
@@ -92,5 +92,5 @@ const getDiffLimit = function (diff, diffPrecise, limit) {
 }
 
 const isOverLimit = function (diff, limit) {
-  return isPositiveLimit(limit) ? diff > limit : diff < limit
+  return isNegativeLimit(limit) ? diff < limit : diff > limit
 }

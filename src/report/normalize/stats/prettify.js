@@ -61,8 +61,15 @@ const addStatPretty = function ({
 
 const addItemPretty = function ({ raw, signed, scale, unit, decimals, stats }) {
   const scaledRaw = raw / scale
-  const roundedRaw = scaledRaw.toFixed(decimals)
+  const roundedRaw = roundItem(scaledRaw, decimals)
   const simple = `${roundedRaw}${unit}`
   const pretty = addSign(simple, signed, stats)
   return { raw, simple, pretty }
+}
+
+// `toFixed()` removes the minus sign of -0, which we want to keep, since
+// `diffLimit` distinguishes +0 and -0
+const roundItem = function (scaledRaw, decimals) {
+  const roundedRaw = scaledRaw.toFixed(decimals)
+  return Object.is(scaledRaw, -0) ? `-${roundedRaw}` : roundedRaw
 }

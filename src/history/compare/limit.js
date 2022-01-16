@@ -2,7 +2,7 @@ import { getCombinationName } from '../../combination/ids/name.js'
 import { UserError } from '../../error/main.js'
 import { groupBy } from '../../utils/group.js'
 
-import { isPositiveLimit } from './parse.js'
+import { isNegativeLimit } from './parse.js'
 
 // If any `combination.stats.diff` is too slow compared to the `limit`
 // configuration property, we fail.
@@ -49,8 +49,12 @@ const getLimitErrors = function (combinations) {
 }
 
 const getLimitError = function (combinations) {
-  const limitErrorBody = getLimitErrorBody(combinations)
-  const limitInfos = combinations.map(getLimitInfo)
+  const diffLimit = getDiffLimit(combinations[0])
+  const isNegative = isNegativeLimit(diffLimit.raw)
+  const limitErrorBody = getLimitErrorBody(diffLimit, isNegative)
+  const limitInfos = combinations.map((combination) =>
+    getLimitInfo(combination, isNegative),
+  )
 
   if (!hasCombinationNames(limitInfos)) {
     return `The task ${limitInfos[0].diffSuffix} ${limitErrorBody}.`
@@ -60,29 +64,31 @@ const getLimitError = function (combinations) {
   return `The following ${limitErrorBody}: ${combinationLimits}`
 }
 
-const getLimitErrorBody = function ([firstCombination]) {
-  const diffLimit = getDiffLimit(firstCombination)
-  const diffLimitStr = serializeDiff(diffLimit)
-  const signStr = isPositiveLimit(diffLimit) ? 'slower' : 'faster'
-  return `must be at most ${diffLimitStr} ${signStr}`
-}
-
 const getDiffLimit = function ({ stats: { diffLimit } }) {
   return diffLimit
 }
 
+const getLimitErrorBody = function (diffLimit, isNegative) {
+  const diffLimitStr = stripStatSign(diffLimit, isNegative)
+  const signStr = isNegative ? 'faster' : 'slower'
+  return `must be at most ${diffLimitStr} ${signStr}`
+}
+
 // `getCombinationName` passes an empty `noDimensions` since `dimensions` are
 // already filtered out in `programmaticResult`.
-const getLimitInfo = function (combination) {
+const getLimitInfo = function (combination, isNegative) {
   const name = getCombinationName(combination, [])
-  const diffStr = serializeDiff(combination.stats.diff)
+  const diffStr = stripStatSign(combination.stats.diff, isNegative)
   const diffSuffix = `(${diffStr})`
   return { name, diffSuffix }
 }
 
-const serializeDiff = function (diff) {
-  return diff.simple.replace(/^-/u, '')
+// Instead of a minus sign, we change the word "slower" to "faster"
+const stripStatSign = function (stat, isNegative) {
+  return isNegative ? stat.simple.replace(MINUS_SIGN_REGEXP, '') : stat.simple
 }
+
+const MINUS_SIGN_REGEXP = /-(?=\d)/u
 
 // Combination names can be empty when `result.combinations.length` is only 1
 const hasCombinationNames = function (limitInfos) {

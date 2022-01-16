@@ -15,6 +15,6 @@ export const parseLimit = function (limit) {
 const PERCENTAGE_RATIO = 1e2
 
 // Negative values can be used, including -0, to invert the direction.
-export const isPositiveLimit = function (limit) {
-  return limit > 0 || Object.is(limit, 0)
+export const isNegativeLimit = function (limit) {
+  return limit < 0 || Object.is(limit, -0)
 }
