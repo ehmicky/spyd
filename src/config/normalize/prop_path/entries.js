@@ -45,7 +45,7 @@ const getTokenEntries = function (
   const missing = !isPlainObj(value)
 
   if (missing) {
-    if (isStrict) {
+    if (isStrict && !isAny) {
       return [{ value: undefined, path: [...path, { key, missing }] }]
     }
 
