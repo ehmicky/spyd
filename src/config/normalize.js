@@ -11,10 +11,9 @@ import {
   normalizeOptionalArray,
   checkArrayItems,
   checkArrayLength,
+  checkObjectProps,
   checkDefinedString,
-  checkObject,
-  checkStringsObject,
-  checkJsonObject,
+  checkJson,
 } from './check.js'
 import { validateConfigSelector, isConfigSelector } from './select/normalize.js'
 
@@ -65,15 +64,8 @@ const applyNormalizer = function (value, name, normalizer) {
   return newValue === undefined ? value : newValue
 }
 
-const validateTitles = function (value, name) {
-  Object.entries(value).forEach(([childName, propValue]) => {
-    checkString(propValue, `${name}.${childName}`)
-    checkDefinedString(propValue, `${name}.${childName}`)
-  })
-}
-
 const NORMALIZERS = {
-  inputs: [checkObject, checkJsonObject],
+  inputs: [checkObjectProps.bind(undefined, [checkJson])],
   limit: [checkInteger, normalizeLimit],
   merge: [validateMerge],
   outliers: [checkBoolean],
@@ -94,10 +86,10 @@ const NORMALIZERS = {
   showDiff: [checkBoolean],
   showPrecision: [checkBoolean],
   showTitles: [checkBoolean],
-  system: [checkObject, checkStringsObject],
+  system: [checkObjectProps.bind(undefined, [checkString])],
   tasks: [
     normalizeOptionalArray,
     checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
   ],
-  titles: [validateTitles],
+  titles: [checkObjectProps.bind(undefined, [checkString, checkDefinedString])],
 }

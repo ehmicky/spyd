@@ -6,12 +6,36 @@ import mapObj from 'map-obj'
 import { UserError } from '../error/main.js'
 
 // Configuration validation helper functions
-export const checkObject = function (value, name) {
-  if (!isPlainObj(value)) {
-    throw new UserError(
-      `'${name}' value must be a plain object: ${inspect(value)}`,
-    )
-  }
+export const checkArrayItems = function (checkers, value, name) {
+  checkArray(value, name)
+  return value.map((item, index) =>
+    applyCheckers(checkers, item, getIndexName(name, index, value)),
+  )
+}
+
+// When array has a single item, it is possible that the value was arrified
+const getIndexName = function (name, index, value) {
+  return value.length === 1 ? name : `${name}[${index}]`
+}
+
+export const checkObjectProps = function (checkers, value, name) {
+  checkObject(value, name)
+  return mapObj(value, (childName, childValue) => [
+    childName,
+    applyCheckers(checkers, childValue, `${name}.${childName}`),
+  ])
+}
+
+const applyCheckers = function (checkers, value, name) {
+  return checkers.reduce(
+    (valueA, checker) => applyChecker(checker, valueA, name),
+    value,
+  )
+}
+
+const applyChecker = function (checker, value, name) {
+  const newValue = checker(value, name)
+  return newValue === undefined ? value : newValue
 }
 
 export const checkBoolean = function (value, name) {
@@ -23,6 +47,24 @@ export const checkBoolean = function (value, name) {
 export const checkInteger = function (value, name) {
   if (!Number.isInteger(value)) {
     throw new UserError(`'${name}' must be an integer: ${inspect(value)}`)
+  }
+}
+
+export const checkString = function (value, name) {
+  if (typeof value !== 'string') {
+    throw new UserError(`'${name}' must be a string: ${inspect(value)}`)
+  }
+}
+
+export const checkDefinedString = function (value, name) {
+  if (value.trim() === '') {
+    throw new UserError(`'${name}' must not be empty.`)
+  }
+}
+
+const checkArray = function (value, name) {
+  if (!Array.isArray(value)) {
+    throw new UserError(`'${name}' must be an array: ${inspect(value)}`)
   }
 }
 
@@ -39,74 +81,15 @@ export const checkArrayLength = function (value, name) {
   }
 }
 
-const checkArray = function (value, name) {
-  if (!Array.isArray(value)) {
-    throw new UserError(`'${name}' must be an array: ${inspect(value)}`)
+export const checkObject = function (value, name) {
+  if (!isPlainObj(value)) {
+    throw new UserError(
+      `'${name}' value must be a plain object: ${inspect(value)}`,
+    )
   }
 }
 
-export const checkArrayItems = function (checkers, value, name) {
-  checkArray(value, name)
-  return value.map((item, index) =>
-    applyCheckers(checkers, item, getIndexName(name, index, value)),
-  )
-}
-
-// When array has a single item, it is possible that the value was arrified
-const getIndexName = function (name, index, value) {
-  return value.length === 1 ? name : `${name}[${index}]`
-}
-
-export const checkObjectProps = function (checkers, value, name) {
-  checkObject(value, name)
-  return mapObj(value, (childName, childValue) =>
-    applyCheckers(checkers, childValue, `${name}.${childName}`),
-  )
-}
-
-const applyCheckers = function (checkers, value, name) {
-  return checkers.reduce(
-    (valueA, checker) => applyChecker(checker, valueA, name),
-    value,
-  )
-}
-
-const applyChecker = function (checker, value, name) {
-  const newValue = checker(value, name)
-  return newValue === undefined ? value : newValue
-}
-
-export const checkString = function (value, name) {
-  if (typeof value !== 'string') {
-    throw new UserError(`'${name}' must be a string: ${inspect(value)}`)
-  }
-}
-
-export const checkDefinedString = function (value, name) {
-  if (value.trim() === '') {
-    throw new UserError(`'${name}' must not be empty.`)
-  }
-}
-
-export const checkStringsObject = function (value, name) {
-  Object.entries(value).forEach(([childName, propValue]) => {
-    checkString(propValue, `${name}.${childName}`)
-  })
-}
-
-export const checkJsonDeepObject = function (value, name) {
-  Object.entries(value).forEach(([childName, propValue]) => {
-    checkJsonObject(propValue, `${name}.${childName}`)
-  })
-}
-
-export const checkJsonObject = function (value, name) {
-  Object.entries(value).forEach(([childName, propValue]) => {
-    checkJson(propValue, `${name}.${childName}`)
-  })
-}
-
-const checkJson = function (value, name) {
+export const checkJson = function (value, name) {
   if (!isJson(value)) {
     throw new UserError(
       `'${name}' must only contain strings, numbers, booleans, nulls, arrays or plain objects: ${inspect(
