@@ -1,5 +1,3 @@
-import mapObj from 'map-obj'
-
 import { normalizeLimit } from '../history/compare/normalize.js'
 import { normalizeDelta } from '../history/delta/normalize.js'
 import { validateMerge } from '../history/merge/id.js'
@@ -29,17 +27,35 @@ import { cRecurseConfigSelectors } from './select/normalize.js'
 export const normalizeConfig = function (config, configInfos) {
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
-  return mapObj(config, (name, value) => [
-    name,
-    normalizePropValue(value, name, configInfosA),
-  ])
+  return Object.entries(CONFIG_PROPS).reduce(
+    (configA, [name, normalizer]) =>
+      normalizePropConfig({
+        config: configA,
+        name,
+        normalizer,
+        configInfos: configInfosA,
+      }),
+    config,
+  )
 }
 
-const normalizePropValue = function (value, name, configInfos) {
-  const normalizer = CONFIG_PROPS[name]
-  return normalizer === undefined
-    ? value
-    : runNormalizer(normalizer, value, name, configInfos)
+const normalizePropConfig = function ({
+  config,
+  name,
+  normalizer,
+  configInfos,
+}) {
+  const value = config[name]
+
+  if (value === undefined) {
+    return config
+  }
+
+  const newValue =
+    normalizer === undefined
+      ? value
+      : runNormalizer(normalizer, value, name, configInfos)
+  return { ...config, [name]: newValue }
 }
 
 const CONFIG_PROPS = {
