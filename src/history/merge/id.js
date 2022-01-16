@@ -5,10 +5,10 @@ import { v4 as uuidv4, validate as isUuid } from 'uuid'
 import { UserError } from '../../error/main.js'
 
 // Validate `merge` property
-export const validateMerge = function (value, propName) {
+export const validateMerge = function (value, name) {
   if (!isValidId(value) && value !== LAST_ID) {
     throw new UserError(
-      `'${propName}' must be "${LAST_ID}" or a UUID: ${inspect(value)}`,
+      `'${name}' must be "${LAST_ID}" or a UUID: ${inspect(value)}`,
     )
   }
 }

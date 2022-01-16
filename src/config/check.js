@@ -19,6 +19,12 @@ export const checkBoolean = function (value, name) {
   }
 }
 
+export const checkInteger = function (value, name) {
+  if (!Number.isInteger(value)) {
+    throw new UserError(`'${name}' must be an integer: ${inspect(value)}`)
+  }
+}
+
 // Many array configuration properties can optionally a single element, for
 // simplicity providing it is the most common use case.
 // We also allow duplicate values but remove them.

@@ -6,6 +6,7 @@ import { normalizePrecision } from '../run/precision.js'
 
 import {
   checkBoolean,
+  checkInteger,
   checkStringsObject,
   normalizeOptionalArray,
   checkArrayLength,
@@ -52,36 +53,15 @@ const normalizePropValue = function (value, propName, name) {
     return value
   }
 
-  const newValue = normalizers.reduce(
-    (valueA, normalizer) => normalizer(valueA, name),
+  return normalizers.reduce(
+    (valueA, normalizer) => applyNormalizer(valueA, name, normalizer),
     value,
   )
+}
+
+const applyNormalizer = function (value, name, normalizer) {
+  const newValue = normalizer(value, name)
   return newValue === undefined ? value : newValue
-}
-
-const normalizeReporter = function (value, name) {
-  const valueA = normalizeOptionalArray(value)
-  checkDefinedStringArray(valueA, name)
-  return valueA
-}
-
-const normalizeRunner = function (value, name) {
-  const valueA = normalizeOptionalArray(value)
-  checkDefinedStringArray(valueA, name)
-  checkArrayLength(valueA, name)
-  return valueA
-}
-
-const normalizeSelect = function (value, name) {
-  const valueA = normalizeOptionalArray(value)
-  checkStringArray(valueA, name)
-  return valueA
-}
-
-const normalizeTasks = function (value, name) {
-  const valueA = normalizeOptionalArray(value)
-  checkDefinedStringArray(valueA, name)
-  return valueA
 }
 
 const validateTitles = function (value, name) {
@@ -92,17 +72,17 @@ const validateTitles = function (value, name) {
 
 const NORMALIZERS = {
   inputs: [checkJsonObject],
-  limit: [normalizeLimit],
+  limit: [checkInteger, normalizeLimit],
   merge: [validateMerge],
   outliers: [checkBoolean],
-  precision: [normalizePrecision],
-  reporter: [normalizeReporter],
-  runner: [normalizeRunner],
-  select: [normalizeSelect],
+  precision: [checkInteger, normalizePrecision],
+  reporter: [normalizeOptionalArray, checkDefinedStringArray],
+  runner: [normalizeOptionalArray, checkDefinedStringArray, checkArrayLength],
+  select: [normalizeOptionalArray, checkStringArray],
   showDiff: [checkBoolean],
   showPrecision: [checkBoolean],
   showTitles: [checkBoolean],
   system: [checkStringsObject],
-  tasks: [normalizeTasks],
+  tasks: [normalizeOptionalArray, checkDefinedStringArray],
   titles: [validateTitles],
 }

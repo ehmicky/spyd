@@ -75,12 +75,6 @@ import { UserError } from '../error/main.js'
 //        - this can happen inside the same run (due to previous runs being
 //          merged to current one)
 export const normalizePrecision = function (precision, propName) {
-  if (!Number.isInteger(precision)) {
-    throw new UserError(
-      `'${propName}' must be a positive integer: ${precision}`,
-    )
-  }
-
   const precisionA = PRECISION_TARGETS[precision]
 
   if (precisionA === undefined) {
