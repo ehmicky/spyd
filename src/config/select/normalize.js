@@ -1,31 +1,6 @@
 import isPlainObj from 'is-plain-obj'
-import mapObj from 'map-obj'
 
 import { UserError } from '../../error/main.js'
-
-// If a configuration property uses selectors, normalization must be applied
-// recursively.
-export const normalizeConfigSelectors = function (
-  configValue,
-  propName,
-  normalizer,
-) {
-  if (!isConfigSelector(configValue, propName)) {
-    return normalizer(configValue, propName, propName)
-  }
-
-  validateConfigSelector(configValue, propName)
-
-  return mapObj(configValue, (selector, value) => [
-    selector,
-    normalizer(value, propName, `${propName}.${selector}`),
-  ])
-}
-
-// Check if a configuration property uses selectors
-export const isConfigSelector = function (configValue, propName) {
-  return SELECTABLE_PROPS.has(propName) && isPlainObj(configValue)
-}
 
 // We validate that at least one selector is named "default"
 //  - This ensures users understand that this selector is used as a fallback
@@ -35,7 +10,11 @@ export const isConfigSelector = function (configValue, propName) {
 //  - However, we do not validate its order, since it might be hard in some
 //    situations to order, e.g. when merging shared configs.
 //  - Regardless, it is always checked last, even if it is not the last key
-const validateConfigSelector = function (configValue, propName) {
+export const validateConfigSelector = function (configValue, propName) {
+  if (!isConfigSelector(configValue, propName)) {
+    return
+  }
+
   if (Object.keys(configValue).length === 0) {
     throw new UserError(
       `'${propName}' must have at least one property when using configuration selectors.`,
@@ -47,6 +26,11 @@ const validateConfigSelector = function (configValue, propName) {
       `'${propName}' last property must be named "default" when using configuration selectors.`,
     )
   }
+}
+
+// Check if a configuration property uses selectors
+export const isConfigSelector = function (configValue, propName) {
+  return SELECTABLE_PROPS.has(propName) && isPlainObj(configValue)
 }
 
 // List of properties which can use configuration selectors

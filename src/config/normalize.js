@@ -14,7 +14,7 @@ import {
   checkDefinedString,
   checkJsonObject,
 } from './check.js'
-import { normalizeConfigSelectors } from './select/normalize.js'
+import { validateConfigSelector, isConfigSelector } from './select/normalize.js'
 
 // Normalize configuration shape and do custom validation
 export const normalizeConfig = function (config) {
@@ -22,8 +22,27 @@ export const normalizeConfig = function (config) {
 }
 
 const normalizePropEntry = function (propName, value) {
-  const valueA = normalizeConfigSelectors(value, propName, normalizePropValue)
+  const valueA = normalizePropDeep(value, propName)
   return [propName, valueA]
+}
+
+// If a configuration property uses selectors or variations, normalization must
+// be applied recursively.
+const normalizePropDeep = function (value, propName) {
+  if (!isDeepProp(value, propName)) {
+    return normalizePropValue(value, propName, propName)
+  }
+
+  validateConfigSelector(value, propName)
+
+  return mapObj(value, (selector, childValue) => [
+    selector,
+    normalizePropValue(childValue, propName, `${propName}.${selector}`),
+  ])
+}
+
+const isDeepProp = function (configValue, propName) {
+  return isConfigSelector(configValue, propName)
 }
 
 const normalizePropValue = function (value, propName, name) {
