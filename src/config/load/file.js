@@ -11,9 +11,9 @@ import { loadConfigContents, getConfigFilenames } from './contents.js'
 import { addNpxShortcut } from './npx.js'
 import { resolveConfigPath } from './resolve.js'
 
-// Load `spyd.*` and any parent configuration files.
-// `spyd.*` is optional, so this can return an empty array. This allows
-// benchmarking on-the-fly in a terminal without having to create a
+// Load the main configuration file `spyd.*` and any parents.
+// The configuration file is optional, so this can return an empty array.
+// This allows benchmarking on-the-fly in a terminal without having to create a
 // configuration file.
 export const loadConfigFile = async function (config) {
   const topConfig = await getTopConfig(config, TOP_LEVEL_BASE)
