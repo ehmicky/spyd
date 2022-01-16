@@ -29,7 +29,6 @@ const optionalArray = function (value) {
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   inputs: { inputId: 'inputValue' },
-  output: './file.js',
   reporter: optionalArray('debug'),
   reporterConfig: { debug: { property: true } },
   runner: optionalArray('node'),
