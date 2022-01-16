@@ -1,14 +1,16 @@
 import { listEntries } from './entries.js'
 
-// Retrieve all entries (values + paths) matching a query string in `target`
+// Retrieve all entries (value + query + path) matching a query string
+// in `target`
 export const getEntries = function (target, query) {
   const entries = listEntries(target, query)
   return entries.map(normalizeEntry)
 }
 
 const normalizeEntry = function ({ value, path }) {
-  const pathStr = serializePath({ path })
-  return { path: pathStr, value }
+  const entryPath = getEntryPath({ path })
+  const query = serializeQuery(entryPath)
+  return { value, query, path: entryPath }
 }
 
 // Same but only retrieving the values
@@ -21,18 +23,19 @@ const getEntryValue = function ({ value }) {
   return value
 }
 
-// Same but only retrieving the paths
-export const getPaths = function (target, query) {
+// Same but only retrieving the queries
+export const getQueries = function (target, query) {
   const entries = listEntries(target, query)
-  return entries.map(serializePath)
+  return entries.map(getEntryQuery)
 }
 
-const serializePath = function ({ path }) {
-  return path.map(getPathKey).reduce(appendKey, '')
+const getEntryQuery = function ({ path }) {
+  const entryPath = getEntryPath({ path })
+  return serializeQuery(entryPath)
 }
 
-const getPathKey = function ({ key }) {
-  return key
+const serializeQuery = function (entryPath) {
+  return entryPath.reduce(appendKey, '')
 }
 
 const appendKey = function (pathStr, key) {
@@ -41,4 +44,18 @@ const appendKey = function (pathStr, key) {
   }
 
   return pathStr === '' ? `${pathStr}${key}` : `${pathStr}.${key}`
+}
+
+// Same but only retrieving the paths
+export const getPaths = function (target, query) {
+  const entries = listEntries(target, query)
+  return entries.map(getEntryPath)
+}
+
+const getEntryPath = function ({ path }) {
+  return path.map(getPathKey)
+}
+
+const getPathKey = function ({ key }) {
+  return key
 }
