@@ -5,11 +5,17 @@ import { matchSelectors } from '../../select/match.js'
 
 import { SELECTABLE_PROPS } from './normalize.js'
 
-// Transform each configuration property using multiple selectors to a single
-// value, based on which selector matches a given combination.
-// Add each resolved configuration to `combinations[*].config`.
-// We iterate by object key order.
-//  - If no selector matches, we use the last one as a fallback
+// Some configuration properties can have different values per combination
+// using "configuration selectors".
+// The configuration property uses then an object where:
+//  - The key is the selector (same syntax as `select`)
+//  - The value is applied for the combinations matching that selector
+// Key order:
+//  - Selectors are searched in the object keys order.
+//  - The last key must be "default" and is used as a fallback.
+// This method transforms each of those configuration selectors to single values
+// based on each given combination.
+//  - Each resolved configuration is set to `combinations[*].config`.
 export const useResultConfigSelectors = function (result, config) {
   const combinations = result.combinations.map((combination) =>
     useCombConfigSelectors(combination, config),
@@ -31,18 +37,18 @@ export const useConfigSelectors = function (combination, config) {
 }
 
 const applyConfigPropSelectors = function (combination, configValue, name) {
-  if (!isParsedConfigSelector(configValue, name)) {
+  if (!isParsedConfigSelectors(configValue, name)) {
     return configValue
   }
 
   const { value } = configValue.find(({ selectors }, index, values) =>
-    matchConfigSelector({ combination, selectors, index, values }),
+    matchConfigSelectors({ combination, selectors, index, values }),
   )
   return value
 }
 
-// Make the logic a noop if the configuration property does not use selectors
-const isParsedConfigSelector = function (configValue, name) {
+// The logic is a noop if the configuration property does not use selectors
+const isParsedConfigSelectors = function (configValue, name) {
   return (
     SELECTABLE_PROPS.has(name) &&
     Array.isArray(configValue) &&
@@ -50,7 +56,7 @@ const isParsedConfigSelector = function (configValue, name) {
   )
 }
 
-const matchConfigSelector = function ({
+const matchConfigSelectors = function ({
   combination,
   selectors,
   index,
