@@ -1,5 +1,4 @@
-import { compressRawResult } from './compression/compress.js'
-import { decompressRawResult } from './compression/decompress.js'
+import { compressRawResult, decompressRawResult } from './compression/main.js'
 import { parseRawResult, serializeRawResult } from './contents.js'
 import { migrateRawResult } from './migrate.js'
 

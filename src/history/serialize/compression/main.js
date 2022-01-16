@@ -1,8 +1,10 @@
+import mapObj from 'map-obj'
+
 import { cleanObject } from '../../../utils/clean.js'
 
-import { compressDimensions } from './dimensions.js'
-import { compressRunners } from './runners.js'
-import { compressStats } from './stats.js'
+import { decompressDimension, compressDimensions } from './dimensions.js'
+import { decompressRunners, compressRunners } from './runners.js'
+import { decompressStats, compressStats } from './stats.js'
 
 // Reduce size of rawResults before saving.
 // We persist everything so that:
@@ -64,4 +66,30 @@ const compressSystem = function ([
 const compressCombination = function ({ dimensions, stats }) {
   const statsA = compressStats(stats)
   return { dimensions, stats: statsA }
+}
+
+// Restore original rawResults after loading
+export const decompressRawResult = function ({
+  id,
+  subId,
+  timestamp,
+  system,
+  runners,
+  combinations,
+}) {
+  const combinationsA = combinations.map((combination) =>
+    decompressCombination(combination, system, runners),
+  )
+  return { id, subId, timestamp, combinations: combinationsA }
+}
+
+const decompressCombination = function (
+  { dimensions, stats },
+  system,
+  runners,
+) {
+  const versions = decompressRunners(runners, dimensions)
+  const dimensionsA = mapObj(dimensions, decompressDimension)
+  const statsA = decompressStats(stats)
+  return { dimensions: dimensionsA, stats: statsA, system, versions }
 }
