@@ -27,8 +27,6 @@ const VALID_TIMESTAMPS = [
   'yyyymmdd',
   'yyyy-mm-dd hh:mm:ss',
   'yyyy-mm-dd hh:mm:ssZ',
-  'yyyy-mm-ddThh:mm:ss.sss',
-  'yyyy-mm-ddThh:mm:ss.sssZ',
 ]
 
 const VALID_DELTA = multipleValidOptions(true, 3, ...VALID_TIMESTAMPS)
