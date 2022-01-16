@@ -18,6 +18,11 @@ export const PluginError = getErrorType('PluginError')
 export const UserError = getErrorType('UserError')
 export const LimitError = getErrorType('LimitError')
 
+export const getErrorProps = function ({ name }) {
+  const nameA = ERROR_PROPS[name] === undefined ? CORE_ERROR_NAME : name
+  return ERROR_PROPS[nameA]
+}
+
 // Error type-specific behavior
 const ERROR_PROPS = {
   StopError: { exitCode: 0, printStack: false, indented: true },
@@ -28,11 +33,6 @@ const ERROR_PROPS = {
 }
 
 const CORE_ERROR_NAME = 'CoreError'
-
-export const getErrorProps = function ({ name }) {
-  const nameA = ERROR_PROPS[name] === undefined ? CORE_ERROR_NAME : name
-  return ERROR_PROPS[nameA]
-}
 
 // Ensure we are using an Error instance
 export const normalizeError = function (error) {
