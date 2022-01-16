@@ -1,8 +1,7 @@
-import mapObj from 'map-obj'
 import pProps from 'p-props'
 
 import { PluginError } from '../../../error/main.js'
-import { mapValues } from '../../../utils/map.js'
+import { mapValues, mapKeys } from '../../../utils/map.js'
 import { spawnProcess } from '../../../utils/spawn.js'
 
 import { VERSIONS_VALUE_SEPARATOR } from './merge.js'
@@ -24,13 +23,14 @@ export const computeRunnerVersions = async function ({
   spawnOptions,
   cwd,
 }) {
-  const dedupedVersions = mapObj(versions, dedupeVersion)
-  const dedupedVersionsA = await pProps(dedupedVersions, ({ name, version }) =>
+  const dedupedVersions = mapValues(versions, keepOriginalName)
+  const dedupedVersionsA = mapKeys(dedupedVersions, dedupeVersion)
+  const dedupedVersionsB = await pProps(dedupedVersionsA, ({ name, version }) =>
     computeRunnerVersion({ name, version, id, spawnOptions, cwd }),
   )
   const versionsA = mapValues(
     versions,
-    (version) => dedupedVersionsA[serializeVersion(version)],
+    (version) => dedupedVersionsB[serializeVersion(version)],
   )
   return { ...versionsA, ...commonVersions }
 }
@@ -43,8 +43,12 @@ export const computeRunnerVersions = async function ({
 //  - The performance benefit is minimal, since it would reduce the
 //    parallelization of retrieving task paths, which is much slower
 //  - Runners have different `id` to report in the error message
-const dedupeVersion = function (name, version) {
-  return [serializeVersion(version), { name, version }]
+const keepOriginalName = function (version, name) {
+  return { version, name }
+}
+
+const dedupeVersion = function (name, { version }) {
+  return serializeVersion(version)
 }
 
 const serializeVersion = function (version) {
