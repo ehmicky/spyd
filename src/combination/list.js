@@ -34,7 +34,7 @@ const getCombinationsProduct = function (tasks, inputsList, system) {
     throw new UserError(`Please specify some "tasks".`)
   }
 
-  const systemDimensions = mapObj(system, getSystemDimension)
+  const systemDimensions = getSystemDimensions(system)
   return tasks.map(({ id, taskPath, runner: { versions, ...runner } }) => ({
     dimensions: { task: { id }, runner, ...systemDimensions },
     taskPath,
@@ -42,6 +42,10 @@ const getCombinationsProduct = function (tasks, inputsList, system) {
     stats: {},
     versions,
   }))
+}
+
+const getSystemDimensions = function (system) {
+  return mapObj(system, getSystemDimension)
 }
 
 const getSystemDimension = function (propName, id) {
