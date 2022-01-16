@@ -22,14 +22,26 @@ Can be specified several times.
 A configuration file can include another one by using this property.
 This can be used to share configurations and/or benchmarks.
 
-You can define different values per combination for some configuration
-properties ("limit", "outliers", "precision", "showDiff", "showPrecision",
-"showTitles").
+You can define selectors, i.e. different values per combination for some
+configuration properties ("limit", "outliers", "precision", "showDiff",
+"showPrecision", "showTitles").
 The configuration property must then be an object where:
   - The key selects the combinations, using the same syntax as the "select"
     configuration property. The last key must be "default" and is used as a
     fallback when no other key matches.
-  - The value is the configuration value to apply for those combinations.`,
+  - The value is the configuration value to apply for those combinations.
+
+You can also define variations, i.e. separate combinations for multiple values of
+some configuration properties ("inputs", "runnerConfig").
+The configuration property must then be an object where:
+  - The key is any identifier for that variation
+  - The value is the configuration value to apply
+
+The syntax of those two features is similar but:
+  - Selectors pick existing combinations and apply separate configuration values
+    to them
+  - While variations run new combinations for each possible value of a
+    configuration property`,
   },
   cwd: {
     group: CONFIG,
