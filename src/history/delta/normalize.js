@@ -4,10 +4,8 @@ import { findValue } from '../../utils/find.js'
 import { getDeltaProp, addDeltaError } from './error.js'
 import { FORMATS } from './formats/main.js'
 
-// Several configuration properties targets a previous rawResults using a delta,
-// which can an integer, date/time, rawResult.id or git commit.
-// Previous rawResults are always first filtered by `select`.
-// This validates and normalizes it to a `deltaQuery` object.
+// Several configuration properties targets a previous rawResult using a delta,
+// which can an integer, date/time/duration, rawResult.id or git reference.
 export const normalizeDeltas = function (config) {
   return DELTA_PROPS.reduce(normalizeDelta, config)
 }
