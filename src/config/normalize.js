@@ -1,6 +1,6 @@
 import mapObj from 'map-obj'
 
-import { parseLimit } from '../history/compare/parse.js'
+import { normalizeLimit } from '../history/compare/normalize.js'
 import { validateMerge } from '../history/merge/id.js'
 import { normalizePrecision } from '../run/precision.js'
 
@@ -62,10 +62,6 @@ const normalizeSelect = function (value, propName) {
   const valueA = normalizeOptionalArray(value)
   checkStringArray(valueA, propName)
   return valueA
-}
-
-const normalizeLimit = function (value) {
-  return parseLimit(value)
 }
 
 const checkTitles = function (value, propName) {
