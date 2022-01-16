@@ -10,16 +10,16 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 //  - a file path
 //  - a Node module name starting with "spyd-config-"
 //  - a "resolver:arg" string which applies resolver-specific logic
-export const resolveConfigPath = async function (config, base) {
-  if (isNpmResolver(config)) {
-    return resolveNpm(config, base)
+export const resolveConfigPath = async function (configOpt, base) {
+  if (isNpmResolver(configOpt)) {
+    return resolveNpm(configOpt, base)
   }
 
-  if (isResolver(config)) {
-    return await useResolver(config, base)
+  if (isResolver(configOpt)) {
+    return await useResolver(configOpt, base)
   }
 
-  return await resolveFile(config, base)
+  return await resolveFile(configOpt, base)
 }
 
 // Configs can be Node modules.
@@ -27,12 +27,12 @@ export const resolveConfigPath = async function (config, base) {
 // allow distinguishing them from file paths.
 // We do not use a shorter id like "npm:{name}" so users do not need two
 // different ids: one for `npm install` and one for the `config` property.
-const isNpmResolver = function (config) {
-  return config.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
+const isNpmResolver = function (configOpt) {
+  return configOpt.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
 }
 
-const resolveNpm = function (config, base) {
-  return getPluginPath(config, CONFIG_PLUGIN_TYPE.type, base)
+const resolveNpm = function (configOpt, base) {
+  return getPluginPath(configOpt, CONFIG_PLUGIN_TYPE.type, base)
 }
 
 // Additional resolvers.
@@ -40,19 +40,19 @@ const resolveNpm = function (config, base) {
 // Their name must be namespaced with "{resolver}:".
 // We do not use this type of namespaces for the other resolvers since they are
 // more commonly used.
-const isResolver = function (config) {
-  return RESOLVER_REGEXP.test(config)
+const isResolver = function (configOpt) {
+  return RESOLVER_REGEXP.test(configOpt)
 }
 
-const useResolver = async function (config, base) {
+const useResolver = async function (configOpt, base) {
   const {
     groups: { name, arg },
-  } = RESOLVER_REGEXP.exec(config)
+  } = RESOLVER_REGEXP.exec(configOpt)
 
   const resolverFunc = RESOLVERS[name]
 
   if (resolverFunc === undefined) {
-    throw new UserError(`Resolver "${name}" does not exist: "${config}"`)
+    throw new UserError(`Resolver "${name}" does not exist: "${configOpt}"`)
   }
 
   return await resolverFunc(arg, base)
@@ -62,12 +62,12 @@ const RESOLVER_REGEXP = /^(?<name>[a-z]+):(?<arg>.*)$/u
 
 const RESOLVERS = {}
 
-const resolveFile = async function (config, base) {
-  const configA = resolve(base, config)
+const resolveFile = async function (configOpt, base) {
+  const configPath = resolve(base, configOpt)
 
-  if (!(await isFile(configA))) {
-    throw new UserError(`"config" file does not exist: ${configA}`)
+  if (!(await isFile(configPath))) {
+    throw new UserError(`"config" file does not exist: ${configPath}`)
   }
 
-  return configA
+  return configPath
 }

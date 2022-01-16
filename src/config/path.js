@@ -66,5 +66,16 @@ const getBase = function (configInfos, propName) {
     return topLevelConfigInfo.base
   }
 
-  return '.'
+  return DEFAULT_VALUES_BASE
 }
+
+// Base used to resolve file paths in default values when there is no config
+// file
+const DEFAULT_VALUES_BASE = '.'
+// Base used to resolve file paths in CLI flags
+export const CLI_FLAGS_BASE = '.'
+// Base used to resolve file paths for the `tasks` default value lookup
+// TODO: remove and use same logic as other configuration properties instead
+export const DEFAULT_TASKS_BASE = '.'
+// Base used to resolve plugin modules
+export const PLUGINS_IMPORT_BASE = '.'

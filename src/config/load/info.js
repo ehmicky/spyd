@@ -1,29 +1,25 @@
 import { dirname } from 'path'
 
-import {
-  checkArrayItems,
-  checkDefinedString,
-  normalizeOptionalArray,
-} from '../check.js'
-
 import { loadConfigContents } from './contents.js'
 import { resolveConfigPath } from './resolve.js'
 
+// Load the main configuration file `spyd.*` and any parents.
+// The configuration file is optional, so this can return an empty array.
+// This allows benchmarking on-the-fly in a terminal without having to create a
+// configuration file.
 // The `config` property can optionally be an array.
 //  - This allow merging a shared configuration with a non-shared one
 //  - It can be an empty array. This is useful to remove the default value for
 //    the `config` top-level flag programmatically.
-export const getConfigsInfos = async function (config, base) {
-  const configs = normalizeOptionalArray(config)
-  checkArrayItems(configs, 'config', checkDefinedString)
+export const getConfigsInfos = async function (configOpts, base) {
   const configInfos = await Promise.all(
-    configs.map((configB) => getConfigInfos(configB, base)),
+    configOpts.map((configOpt) => getConfigInfos(configOpt, base)),
   )
   return configInfos.flat()
 }
 
-const getConfigInfos = async function (config, base) {
-  const configPath = await resolveConfigPath(config, base)
+const getConfigInfos = async function (configOpt, base) {
+  const configPath = await resolveConfigPath(configOpt, base)
 
   if (configPath === undefined) {
     return []

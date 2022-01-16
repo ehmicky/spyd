@@ -1,6 +1,8 @@
 import { mergeConfigs } from '../merge/main.js'
+import { CLI_FLAGS_BASE } from '../path.js'
 
-import { loadConfigFile } from './file.js'
+import { getConfigsInfos } from './info.js'
+import { addNpxShortcut } from './npx.js'
 
 // Load the configuration, shallow merged in priority order:
 //  - any CLI or programmatic flags
@@ -11,15 +13,16 @@ import { loadConfigFile } from './file.js'
 //    case-sensitiveness (due to Windows) and fewer allowed delimiters (due
 //    to underscores only being allowed in Unix)
 // We purposely remove the `config` property during this step.
-export const loadConfig = async function ({ config, ...configFlags }) {
-  const configInfos = await loadConfigFile(config)
+export const loadConfig = async function (configOpts, configFlags) {
+  const configOptsA = addNpxShortcut(configOpts)
+  const configInfos = await getConfigsInfos(configOptsA, CLI_FLAGS_BASE)
   const configInfosA = [
     ...configInfos,
-    { configContents: configFlags, base: '.' },
+    { configContents: configFlags, base: CLI_FLAGS_BASE },
   ]
-  const configs = configInfosA.map(getConfigContents)
-  const configA = mergeConfigs(configs)
-  return { config: configA, configInfos: configInfosA }
+  const configsB = configInfosA.map(getConfigContents)
+  const configB = mergeConfigs(configsB)
+  return { config: configB, configInfos: configInfosA }
 }
 
 const getConfigContents = function ({ configContents }) {

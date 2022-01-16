@@ -1,13 +1,15 @@
 import omit from 'omit.js'
+import pReduce from 'p-reduce'
 
 import { runNormalizer } from './check.js'
 import { CONFIG_PROPS } from './properties.js'
 
 // Normalize configuration shape and do custom validation
-export const normalizeConfig = function (config, command, configInfos) {
+export const normalizeConfig = async function (config, command, configInfos) {
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
-  return Object.entries(CONFIG_PROPS).reduce(
+  return await pReduce(
+    Object.entries(CONFIG_PROPS),
     (configA, [name, configProp]) =>
       normalizePropConfig(
         { config: configA, name, command, configInfos: configInfosA },
@@ -17,11 +19,11 @@ export const normalizeConfig = function (config, command, configInfos) {
   )
 }
 
-const normalizePropConfig = function (
+const normalizePropConfig = async function (
   { config, name, command, configInfos },
   configProp,
 ) {
-  const value = normalizePropValue(
+  const value = await normalizePropValue(
     { config, name, command, configInfos },
     configProp,
   )
@@ -33,7 +35,7 @@ const normalizePropConfig = function (
   return { ...config, [name]: value }
 }
 
-const normalizePropValue = function (
+const normalizePropValue = async function (
   { config, name, command, configInfos },
   { commands, default: defaultValue, normalize },
 ) {
@@ -44,7 +46,7 @@ const normalizePropValue = function (
   const value = config[name]
   const args = [name, { configInfos, config, command }]
 
-  const valueA = addDefaultValue(value, defaultValue, args)
+  const valueA = await addDefaultValue(value, defaultValue, args)
 
   return valueA === undefined || normalize === undefined
     ? valueA
@@ -78,12 +80,14 @@ const COMMAND_GROUPS = {
   select: ['dev', 'remove', 'run', 'show'],
 }
 
-const addDefaultValue = function (value, defaultValue, args) {
+const addDefaultValue = async function (value, defaultValue, args) {
   if (value !== undefined) {
     return value
   }
 
-  return typeof defaultValue === 'function'
-    ? defaultValue(...args)
-    : defaultValue
+  if (typeof defaultValue !== 'function') {
+    return defaultValue
+  }
+
+  return await defaultValue(...args)
 }

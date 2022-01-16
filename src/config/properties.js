@@ -19,12 +19,25 @@ import {
   checkDefinedString,
   checkJson,
 } from './check.js'
+import { getDefaultConfig } from './load/default.js'
 import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
+// eslint-disable-next-line import/max-dependencies
 import { recurseConfigSelectors } from './select/normalize.js'
 
 const METADATA_COMMANDS = new Set(['show', 'remove'])
 
 export const CONFIG_PROPS = {
+  config: {
+    commands: 'all',
+    async default() {
+      return await getDefaultConfig()
+    },
+    normalize(value, name) {
+      const valueA = normalizeOptionalArray(value)
+      checkArrayItems(valueA, name, checkDefinedString)
+      return valueA
+    },
+  },
   colors: {
     commands: 'report',
     normalize(value, name) {
@@ -61,9 +74,7 @@ export const CONFIG_PROPS = {
     commands: 'combinations',
     default: {},
     normalize(value, name) {
-      checkObjectProps(value, name, (childValue, childName) => {
-        checkJson(childValue, childName)
-      })
+      checkObjectProps(value, name, checkJson)
     },
   },
   limit: {
@@ -98,9 +109,7 @@ export const CONFIG_PROPS = {
     commands: 'run',
     default: false,
     normalize(value, name) {
-      recurseConfigSelectors(value, name, (childValue, childName) => {
-        checkBoolean(childValue, childName)
-      })
+      recurseConfigSelectors(value, name, checkBoolean)
     },
   },
   precision: {
@@ -128,9 +137,7 @@ export const CONFIG_PROPS = {
       }
 
       const valueA = normalizeOptionalArray(value)
-      checkArrayItems(valueA, name, (childValue, childName) => {
-        checkDefinedString(childValue, childName)
-      })
+      checkArrayItems(valueA, name, checkDefinedString)
       return valueA
     },
   },
@@ -148,9 +155,7 @@ export const CONFIG_PROPS = {
     normalize(value, name) {
       const valueA = normalizeOptionalArray(value)
       checkArrayLength(valueA, name)
-      checkArrayItems(valueA, name, (childValue, childName) => {
-        checkDefinedString(childValue, childName)
-      })
+      checkArrayItems(valueA, name, checkDefinedString)
       return valueA
     },
   },
@@ -170,18 +175,14 @@ export const CONFIG_PROPS = {
     default: [],
     normalize(value, name) {
       const valueA = normalizeOptionalArray(value)
-      checkArrayItems(valueA, name, (childValue, childName) => {
-        checkString(childValue, childName)
-      })
+      checkArrayItems(valueA, name, checkString)
       return valueA
     },
   },
   showDiff: {
     commands: 'report',
     normalize(value, name) {
-      recurseConfigSelectors(value, name, (childValue, childName) => {
-        checkBoolean(childValue, childName)
-      })
+      recurseConfigSelectors(value, name, checkBoolean)
     },
   },
   showMetadata: {
@@ -197,9 +198,7 @@ export const CONFIG_PROPS = {
     commands: 'report',
     default: false,
     normalize(value, name) {
-      recurseConfigSelectors(value, name, (childValue, childName) => {
-        checkBoolean(childValue, childName)
-      })
+      recurseConfigSelectors(value, name, checkBoolean)
     },
   },
   showSystem: {
@@ -212,9 +211,7 @@ export const CONFIG_PROPS = {
     commands: 'report',
     default: false,
     normalize(value, name) {
-      recurseConfigSelectors(value, name, (childValue, childName) => {
-        checkBoolean(childValue, childName)
-      })
+      recurseConfigSelectors(value, name, checkBoolean)
     },
   },
   since: {
@@ -228,9 +225,7 @@ export const CONFIG_PROPS = {
     commands: 'combinations',
     default: {},
     normalize(value, name) {
-      checkObjectProps(value, name, (childValue, childName) => {
-        checkDefinedString(childValue, childName)
-      })
+      checkObjectProps(value, name, checkDefinedString)
     },
   },
   tasks: {
@@ -247,9 +242,7 @@ export const CONFIG_PROPS = {
     commands: 'report',
     default: {},
     normalize(value, name) {
-      checkObjectProps(value, name, (childValue, childName) => {
-        checkDefinedString(childValue, childName)
-      })
+      checkObjectProps(value, name, checkDefinedString)
     },
   },
 }

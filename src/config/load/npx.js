@@ -1,6 +1,5 @@
 import { env } from 'process'
 
-import { normalizeOptionalArray } from '../check.js'
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
 // In principle, users can use `npx` with the "npm" resolver by doing:
@@ -15,21 +14,20 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 // This behaves as if `--config=spyd-config-{name}` has been specified:
 //  - Additional `--config` flags are kept
 //  - The `--config` flag does not use its default value
-export const addNpxShortcut = function (config) {
-  if (!isNpxCall()) {
-    return config
-  }
-
-  const npxConfigs = env.npm_config_package.split('\n').filter(isSharedConfig)
-  return [...npxConfigs, ...normalizeOptionalArray(config)]
+export const addNpxShortcut = function (configOpts) {
+  return isNpxCall() ? [...getNpxConfigs(), ...configOpts] : configOpts
 }
 
-const isNpxCall = function () {
+export const isNpxCall = function () {
   return (
     env.npm_command === 'exec' &&
     env.npm_config_package !== undefined &&
     env.npm_config_package !== ''
   )
+}
+
+const getNpxConfigs = function () {
+  return env.npm_config_package.split('\n').filter(isSharedConfig)
 }
 
 const isSharedConfig = function (npxPackage) {

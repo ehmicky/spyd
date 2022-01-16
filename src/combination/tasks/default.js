@@ -3,6 +3,7 @@ import { basename } from 'path'
 import { isNotJunk } from 'junk'
 
 import { lookupFiles } from '../../config/lookup.js'
+import { DEFAULT_TASKS_BASE } from '../../config/path.js'
 
 // Apply default value for `tasks`. Applied on each runner.
 // This only applies when `tasks` is `undefined`
@@ -16,7 +17,7 @@ export const applyDefaultTasks = async function ({ config }) {
 }
 
 const resolveDefaultTasks = async function () {
-  return await lookupFiles(isTaskPath, TOP_LEVEL_BASE)
+  return await lookupFiles(isTaskPath, DEFAULT_TASKS_BASE)
 }
 
 const isTaskPath = function (filePath) {
@@ -25,4 +26,3 @@ const isTaskPath = function (filePath) {
 }
 
 const TASKS_BASENAME = 'tasks.'
-const TOP_LEVEL_BASE = '.'
