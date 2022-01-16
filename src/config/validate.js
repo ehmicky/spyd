@@ -29,7 +29,6 @@ const optionalArray = function (value) {
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
   inputs: { inputId: 'inputValue' },
-  merge: 'f0f13513-5267-43a9-a02a-60fdde0332d0',
   output: './file.js',
   reporter: optionalArray('debug'),
   reporterConfig: { debug: { property: true } },

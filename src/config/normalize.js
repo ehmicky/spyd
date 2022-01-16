@@ -72,7 +72,7 @@ const NORMALIZERS = {
   force: [checkBoolean],
   inputs: [checkObjectProps.bind(undefined, [checkJson])],
   limit: [checkInteger, normalizeLimit],
-  merge: [validateMerge],
+  merge: [checkString, checkDefinedString, validateMerge],
   outliers: [checkBoolean],
   precision: [checkInteger, normalizePrecision],
   quiet: [checkBoolean],
