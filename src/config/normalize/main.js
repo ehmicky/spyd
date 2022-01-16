@@ -45,10 +45,10 @@ const normalizePropValue = async function (
   }
 
   const value = config[name]
-  const args = [name, { configInfos, config: configPromises, command }]
+  const opts = { name, configInfos, config: configPromises, command }
 
-  const valueA = await addDefaultValue(value, defaultValue, args)
-  return await runPropNormalizer(valueA, normalize, args)
+  const valueA = await addDefaultValue(value, defaultValue, opts)
+  return await runPropNormalizer(valueA, normalize, opts)
 }
 
 // All config properties can be specified in `spyd.yml` (unlike CLI flags), for
@@ -78,7 +78,7 @@ const COMMAND_GROUPS = {
   select: ['dev', 'remove', 'run', 'show'],
 }
 
-const addDefaultValue = async function (value, defaultValue, args) {
+const addDefaultValue = async function (value, defaultValue, opts) {
   if (value !== undefined) {
     return value
   }
@@ -87,13 +87,13 @@ const addDefaultValue = async function (value, defaultValue, args) {
     return defaultValue
   }
 
-  return await defaultValue(...args)
+  return await defaultValue(opts)
 }
 
-const runPropNormalizer = async function (value, normalize, args) {
+const runPropNormalizer = async function (value, normalize, opts) {
   return value === undefined || normalize === undefined
     ? value
-    : await runNormalizer(normalize, value, ...args)
+    : await runNormalizer(normalize, value, opts)
 }
 
 const mergeConfigProps = function (configProps) {

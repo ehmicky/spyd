@@ -32,7 +32,7 @@ export const CONFIG_PROPS = {
     async default() {
       return await getDefaultConfig()
     },
-    normalize(value, name) {
+    normalize(value, { name }) {
       const valueA = normalizeOptionalArray(value)
       checkArrayItems(valueA, name, checkDefinedString)
       return valueA
@@ -40,7 +40,7 @@ export const CONFIG_PROPS = {
   },
   colors: {
     commands: 'report',
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkBoolean(value, name)
     },
   },
@@ -49,7 +49,7 @@ export const CONFIG_PROPS = {
     default() {
       return getCwd()
     },
-    normalize(value, name, { configInfos }) {
+    normalize(value, { name, configInfos }) {
       checkDefinedString(value, name)
       return normalizeConfigPath(value, name, configInfos)
     },
@@ -57,7 +57,7 @@ export const CONFIG_PROPS = {
   delta: {
     commands: 'delta',
     default: 1,
-    normalize(value, name) {
+    normalize(value, { name }) {
       return normalizeDelta(value, name)
     },
   },
@@ -66,20 +66,20 @@ export const CONFIG_PROPS = {
     default() {
       return !isTtyInput()
     },
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkBoolean(value, name)
     },
   },
   inputs: {
     commands: 'combinations',
     default: {},
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkObjectProps(value, name, checkJson)
     },
   },
   limit: {
     commands: 'report',
-    normalize(value, name) {
+    normalize(value, { name }) {
       return recurseConfigSelectors(value, name, (childValue, childName) => {
         checkInteger(childValue, childName)
         return normalizeLimit(childValue, childName)
@@ -91,14 +91,14 @@ export const CONFIG_PROPS = {
     default() {
       return getDefaultId()
     },
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkDefinedString(value, name)
       validateMerge(value, name)
     },
   },
   output: {
     commands: 'report',
-    normalize(value, name, { configInfos }) {
+    normalize(value, { name, configInfos }) {
       checkDefinedString(value, name)
       return isOutputPath(value)
         ? normalizeConfigPath(value, name, configInfos)
@@ -108,14 +108,14 @@ export const CONFIG_PROPS = {
   outliers: {
     commands: 'run',
     default: false,
-    normalize(value, name) {
+    normalize(value, { name }) {
       recurseConfigSelectors(value, name, checkBoolean)
     },
   },
   precision: {
     commands: 'run',
     default: 5,
-    normalize(value, name) {
+    normalize(value, { name }) {
       return recurseConfigSelectors(value, name, (childValue, childName) => {
         checkInteger(childValue, childName)
         return normalizePrecision(childValue, childName)
@@ -124,14 +124,14 @@ export const CONFIG_PROPS = {
   },
   quiet: {
     commands: 'run',
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkBoolean(value, name)
     },
   },
   reporter: {
     commands: 'report',
     default: ['debug'],
-    async normalize(value, name, { config: { force } }) {
+    async normalize(value, { name, config: { force } }) {
       if (await force) {
         return []
       }
@@ -152,7 +152,7 @@ export const CONFIG_PROPS = {
   runner: {
     commands: 'combinations',
     default: ['node'],
-    normalize(value, name) {
+    normalize(value, { name }) {
       const valueA = normalizeOptionalArray(value)
       checkArrayLength(valueA, name)
       checkArrayItems(valueA, name, checkDefinedString)
@@ -166,14 +166,14 @@ export const CONFIG_PROPS = {
   save: {
     commands: 'run',
     default: false,
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkBoolean(value, name)
     },
   },
   select: {
     commands: 'select',
     default: [],
-    normalize(value, name) {
+    normalize(value, { name }) {
       const valueA = normalizeOptionalArray(value)
       checkArrayItems(valueA, name, checkString)
       return valueA
@@ -181,56 +181,56 @@ export const CONFIG_PROPS = {
   },
   showDiff: {
     commands: 'report',
-    normalize(value, name) {
+    normalize(value, { name }) {
       recurseConfigSelectors(value, name, checkBoolean)
     },
   },
   showMetadata: {
     commands: 'report',
-    default(name, { command }) {
+    default({ command }) {
       return METADATA_COMMANDS.has(command)
     },
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkBoolean(value, name)
     },
   },
   showPrecision: {
     commands: 'report',
     default: false,
-    normalize(value, name) {
+    normalize(value, { name }) {
       recurseConfigSelectors(value, name, checkBoolean)
     },
   },
   showSystem: {
     commands: 'report',
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkBoolean(value, name)
     },
   },
   showTitles: {
     commands: 'report',
     default: false,
-    normalize(value, name) {
+    normalize(value, { name }) {
       recurseConfigSelectors(value, name, checkBoolean)
     },
   },
   since: {
     commands: 'history',
     default: 1,
-    normalize(value, name) {
+    normalize(value, { name }) {
       return normalizeDelta(value, name)
     },
   },
   system: {
     commands: 'combinations',
     default: {},
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkObjectProps(value, name, checkDefinedString)
     },
   },
   tasks: {
     commands: 'combinations',
-    normalize(value, name, { configInfos }) {
+    normalize(value, { name, configInfos }) {
       const valueA = normalizeOptionalArray(value)
       return checkArrayItems(valueA, name, (childValue, childName) => {
         checkDefinedString(childValue, childName)
@@ -241,7 +241,7 @@ export const CONFIG_PROPS = {
   titles: {
     commands: 'report',
     default: {},
-    normalize(value, name) {
+    normalize(value, { name }) {
       checkObjectProps(value, name, checkDefinedString)
     },
   },
