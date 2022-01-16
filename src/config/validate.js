@@ -1,7 +1,5 @@
 import { validateConfigProps } from '../utils/validate.js'
 
-import { DEFAULT_CONFIG } from './default.js'
-
 // Validate configuration against user typos.
 // We need to validate twice: for the CLI flags then for the configuration file.
 export const validateConfig = function (config) {
@@ -21,7 +19,6 @@ const DYNAMIC_OBJECT_PROPS = [
 ]
 
 const EXAMPLE_CONFIG = {
-  ...DEFAULT_CONFIG,
   reporterConfig: { debug: { property: true } },
   runnerConfig: { node: { version: '8' } },
 }

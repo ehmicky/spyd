@@ -86,6 +86,7 @@ const NORMALIZERS = {
     checkArrayLength,
     checkArrayItems.bind(undefined, [checkDefinedString]),
   ],
+  save: [checkBoolean],
   select: [
     normalizeOptionalArray,
     checkArrayItems.bind(undefined, [checkString]),
