@@ -96,7 +96,7 @@ const NORMALIZERS = {
   showSystem: [checkBoolean],
   showTitles: [checkBoolean],
   since: [normalizeDelta],
-  system: [checkObjectProps.bind(undefined, [checkString])],
+  system: [checkObjectProps.bind(undefined, [checkString, checkDefinedString])],
   tasks: [
     normalizeOptionalArray,
     checkArrayItems.bind(undefined, [checkString, checkDefinedString]),
