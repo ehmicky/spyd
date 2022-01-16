@@ -1,3 +1,5 @@
+import mapObj from 'map-obj'
+
 import { parseLimit } from '../history/compare/parse.js'
 import { validateMerge } from '../history/merge/id.js'
 import { normalizePrecision } from '../run/precision.js'
@@ -14,12 +16,21 @@ import {
 
 // Normalize configuration shape and do custom validation
 export const normalizeConfig = function (config) {
-  return Object.entries(NORMALIZERS).reduce(normalizeProp, config)
+  return mapObj(config, (name, value) => [
+    name,
+    normalizeProp(value, name, config),
+  ])
 }
 
-const normalizeProp = function (config, [propName, normalizer]) {
-  const value = normalizer(config[propName], propName, config)
-  return value === undefined ? config : { ...config, [propName]: value }
+const normalizeProp = function (value, name, config) {
+  const normalizer = NORMALIZERS[name]
+
+  if (normalizer === undefined) {
+    return value
+  }
+
+  const newValue = normalizer(value, name, config)
+  return newValue === undefined ? value : newValue
 }
 
 const normalizeSystem = function (system) {
@@ -34,10 +45,6 @@ const normalizeRunner = function (value, propName) {
 }
 
 const normalizeTasks = function (value, propName) {
-  if (value === undefined) {
-    return
-  }
-
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, propName)
   return valueA
@@ -60,10 +67,6 @@ const normalizeSelect = function (value, propName) {
 }
 
 const normalizeLimit = function (value) {
-  if (value === undefined) {
-    return
-  }
-
   return parseLimit(value)
 }
 
