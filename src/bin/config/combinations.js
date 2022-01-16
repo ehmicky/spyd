@@ -5,7 +5,6 @@ export const COMBINATIONS_CONFIG = {
   tasks: {
     group: TASKS,
     alias: 't',
-    string: true,
     requiresArg: true,
     describe: `Path to the tasks files.
 This should only specify their main files.
@@ -20,7 +19,6 @@ Can be a globbing pattern.`,
   },
   runner: {
     group: TASKS,
-    string: true,
     describe: `Tasks' programming language or platform.
 Can be specified several times.
 

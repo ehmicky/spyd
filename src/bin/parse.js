@@ -1,6 +1,13 @@
 import filterObj from 'filter-obj'
 import mapObj from 'map-obj'
 
+// We do not use yargs types as it conflicts with our own validation and
+// normalization logic, e.g.:
+//  - `number` parses invalid numbers as NaN
+//  - `boolean` parses strings as boolean
+//  - many configuration properties are objects or are polymorphic
+// One downside is that typing then relies on yargs' guess, which is fine:
+//  - string configuration properties cannot be "true", "false" or "1"
 export const parseCliFlags = function (yargs) {
   const {
     _: [command = DEFAULT_COMMAND],

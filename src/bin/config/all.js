@@ -5,7 +5,6 @@ export const ALL_CONFIG = {
   config: {
     group: CONFIG,
     alias: 'c',
-    string: true,
     describe: `Configuration file location.
 
 This can be:
@@ -34,7 +33,6 @@ The configuration property must then be an object where:
   },
   cwd: {
     group: CONFIG,
-    string: true,
     requiresArg: true,
     describe: `Customize the current directory used:
   - In task files

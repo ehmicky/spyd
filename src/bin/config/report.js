@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { REPORT, HISTORY } from './groups.js'
 
 // Configuration shared by commands that report results: `run`, `show`, `remove`
@@ -6,7 +5,6 @@ export const REPORT_CONFIG = {
   reporter: {
     group: REPORT,
     alias: 'r',
-    string: true,
     describe: `Modules to report the result.
 
 Can be empty, if no reporters should be used.
@@ -33,7 +31,6 @@ reporter.`,
   output: {
     group: REPORT,
     alias: 'o',
-    string: true,
     requiresArg: true,
     describe: `Output the result to "stdout" or to a file path.
 
@@ -46,7 +43,6 @@ The default value depends on the reporter`,
   },
   colors: {
     group: REPORT,
-    boolean: true,
     describe: `Use colors in output.
 Default: true if the output is an interactive terminal.`,
   },
@@ -59,35 +55,29 @@ The id can be any identifier: task, runner, system, variation.`,
   },
   showTitles: {
     group: REPORT,
-    boolean: true,
     describe: `Show titles instead of identifiers.
 Default: false`,
   },
   showSystem: {
     group: REPORT,
-    boolean: true,
     describe: `Show hardware and software information.
 Default: true when the "system" configuration property is set, false otherwise`,
   },
   showMetadata: {
     group: REPORT,
-    boolean: true,
     describe: `Show metadata such as id, timestamp, commit/branch or CI build.
 Default: true for command "show" and "remove", false otherwise`,
   },
   showPrecision: {
     group: REPORT,
-    boolean: true,
     describe: `Show the results confidence interval.
 Default: false.`,
   },
   showDiff: {
     group: HISTORY,
-    boolean: true,
     describe: `Show the difference with previous results.
 Default: true if the output is an interactive terminal.`,
   },
-  // We do not use `number: true` to avoid parsing invalid numbers as NaN
   limit: {
     group: HISTORY,
     alias: 'l',
@@ -102,4 +92,3 @@ Negative numbers like "-50" can be used for decreases instead.
 Default: none`,
   },
 }
-/* eslint-enable max-lines */

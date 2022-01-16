@@ -2,7 +2,6 @@ import { TASKS, REPORT, HISTORY } from './groups.js'
 
 // Configuration specific to `run`
 export const RUN_CONFIG = {
-  // We do not use `number: true` to avoid parsing invalid numbers as NaN
   precision: {
     group: TASKS,
     alias: 'p',
@@ -14,20 +13,17 @@ A higher level increases precision but makes the benchmark last longer.`,
   quiet: {
     group: REPORT,
     alias: 'q',
-    boolean: true,
     describe: `Preview the results and display a progress bar.
 Reporters are still used.
 Default: false if the output is an interactive terminal.`,
   },
   save: {
     group: HISTORY,
-    boolean: true,
     describe: `Save the results.
 Default: false`,
   },
   merge: {
     group: HISTORY,
-    string: true,
     requiresArg: true,
     describe: `Merge this result with a previous one.
 The value is the previous result's identifier.
@@ -38,7 +34,6 @@ Default: none`,
   },
   outliers: {
     group: TASKS,
-    boolean: true,
     describe: `Some measures can be extremely slower than others.
 Most of the times, those outliers are due to concurrent logic unrelated to
 your tasks such as garbage collection or OS background processes.

@@ -37,14 +37,6 @@ const normalizePropValue = function (value, propName, name) {
   return newValue === undefined ? value : newValue
 }
 
-const validateInputs = function (value, name) {
-  checkJsonObject(value, name)
-}
-
-const validateOutliers = function (value, name) {
-  checkBoolean(value, name)
-}
-
 const normalizeReporter = function (value, name) {
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, name)
@@ -64,10 +56,6 @@ const normalizeSelect = function (value, name) {
   return valueA
 }
 
-const validateSystem = function (system) {
-  checkStringsObject(system, 'system')
-}
-
 const normalizeTasks = function (value, name) {
   const valueA = normalizeOptionalArray(value)
   checkDefinedStringArray(valueA, name)
@@ -81,15 +69,18 @@ const validateTitles = function (value, name) {
 }
 
 const NORMALIZERS = {
-  inputs: validateInputs,
+  inputs: checkJsonObject,
   limit: normalizeLimit,
   merge: validateMerge,
-  outliers: validateOutliers,
+  outliers: checkBoolean,
   precision: normalizePrecision,
   reporter: normalizeReporter,
   runner: normalizeRunner,
   select: normalizeSelect,
-  system: validateSystem,
+  showDiff: checkBoolean,
+  showPrecision: checkBoolean,
+  showTitles: checkBoolean,
+  system: checkStringsObject,
   tasks: normalizeTasks,
   titles: validateTitles,
 }
