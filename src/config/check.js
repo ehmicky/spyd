@@ -40,6 +40,7 @@ export const checkArrayLength = function (value, name) {
 
 export const checkDefinedStringArray = function (value, name) {
   value.forEach((item, index) => {
+    checkString(value, name)
     checkDefinedString(item, getIndexName(index, name))
   })
 }
@@ -56,14 +57,12 @@ const getIndexName = function (index, name) {
 }
 
 export const checkDefinedString = function (value, name) {
-  checkString(value, name)
-
   if (value.trim() === '') {
     throw new UserError(`'${name}' must not be empty.`)
   }
 }
 
-const checkString = function (value, name) {
+export const checkString = function (value, name) {
   if (typeof value !== 'string') {
     throw new UserError(`'${name}' must be a string: ${inspect(value)}`)
   }

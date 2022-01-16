@@ -7,6 +7,7 @@ import { normalizePrecision } from '../run/precision.js'
 import {
   checkBoolean,
   checkInteger,
+  checkString,
   normalizeOptionalArray,
   checkArrayLength,
   checkStringArray,
@@ -67,6 +68,7 @@ const applyNormalizer = function (value, name, normalizer) {
 
 const validateTitles = function (value, name) {
   Object.entries(value).forEach(([childName, propValue]) => {
+    checkString(propValue, `${name}.${childName}`)
     checkDefinedString(propValue, `${name}.${childName}`)
   })
 }
