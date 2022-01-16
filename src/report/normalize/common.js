@@ -20,11 +20,11 @@ export const normalizeCombAll = function (
   result,
   { sinceResult, noDimensions, config },
 ) {
-  const resultA = pickCombProps(result)
-  const resultB = addCombinationsDiff(resultA, sinceResult, config)
-  const resultC = omitNoDimensions(resultB, noDimensions)
-  const resultD = sortDimensions(resultC)
-  const resultE = sortCombinations(resultD)
+  const resultA = addCombinationsDiff(result, sinceResult, config)
+  const resultB = omitNoDimensions(resultA, noDimensions)
+  const resultC = sortDimensions(resultB)
+  const resultD = sortCombinations(resultC)
+  const resultE = pickCombProps(resultD)
   return resultE
 }
 
