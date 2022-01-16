@@ -30,7 +30,7 @@ const normalizePropConfig = function (
   const newValue =
     normalize === undefined
       ? value
-      : runNormalizer(normalize, value, name, { configInfos })
+      : runNormalizer(normalize, value, name, { configInfos, config })
   return { ...config, [name]: newValue }
 }
 

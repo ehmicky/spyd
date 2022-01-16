@@ -9,8 +9,7 @@ import { cleanObject } from '../utils/clean.js'
 // Add default configuration properties
 export const addDefaultConfig = function (config, command) {
   const defaultConfig = getDefaultConfig(config, command)
-  const forcedConfig = getForcedConfig(config)
-  return cleanObject({ ...defaultConfig, ...config, ...forcedConfig })
+  return cleanObject({ ...defaultConfig, ...config })
 }
 
 const getDefaultConfig = function (config, command) {
@@ -50,11 +49,4 @@ export const DEFAULT_CONFIG = {
   since: 1,
   system: {},
   titles: {},
-}
-
-// Configuration properties which cannot be overridden
-const getForcedConfig = function ({ force, reporter }) {
-  return {
-    reporter: force ? [] : reporter,
-  }
 }

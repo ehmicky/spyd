@@ -103,7 +103,11 @@ export const CONFIG_PROPS = {
   },
   reporter: {
     commands: 'report',
-    normalize(value, name) {
+    normalize(value, name, { config: { force } }) {
+      if (force) {
+        return []
+      }
+
       const valueA = normalizeOptionalArray(value)
       checkArrayItems(valueA, name, (childValue, childName) => {
         checkDefinedString(childValue, childName)
