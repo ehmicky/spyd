@@ -70,21 +70,18 @@ const checkString = function (value, name) {
 }
 
 export const checkStringsObject = function (value, name) {
-  checkObject(value, name)
   Object.entries(value).forEach(([childName, propValue]) => {
     checkString(propValue, `${name}.${childName}`)
   })
 }
 
 export const checkJsonDeepObject = function (value, name) {
-  checkObject(value, name)
   Object.entries(value).forEach(([childName, propValue]) => {
     checkJsonObject(propValue, `${name}.${childName}`)
   })
 }
 
 export const checkJsonObject = function (value, name) {
-  checkObject(value, name)
   Object.entries(value).forEach(([childName, propValue]) => {
     checkJson(propValue, `${name}.${childName}`)
   })

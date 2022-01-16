@@ -7,12 +7,13 @@ import { normalizePrecision } from '../run/precision.js'
 import {
   checkBoolean,
   checkInteger,
-  checkStringsObject,
   normalizeOptionalArray,
   checkArrayLength,
   checkStringArray,
   checkDefinedStringArray,
   checkDefinedString,
+  checkObject,
+  checkStringsObject,
   checkJsonObject,
 } from './check.js'
 import { validateConfigSelector, isConfigSelector } from './select/normalize.js'
@@ -71,7 +72,7 @@ const validateTitles = function (value, name) {
 }
 
 const NORMALIZERS = {
-  inputs: [checkJsonObject],
+  inputs: [checkObject, checkJsonObject],
   limit: [checkInteger, normalizeLimit],
   merge: [validateMerge],
   outliers: [checkBoolean],
@@ -82,7 +83,7 @@ const NORMALIZERS = {
   showDiff: [checkBoolean],
   showPrecision: [checkBoolean],
   showTitles: [checkBoolean],
-  system: [checkStringsObject],
+  system: [checkObject, checkStringsObject],
   tasks: [normalizeOptionalArray, checkDefinedStringArray],
   titles: [validateTitles],
 }
