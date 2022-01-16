@@ -1,7 +1,6 @@
-import mapObj from 'map-obj'
-
 import { UserError } from '../error/main.js'
 import { selectCombinations } from '../select/main.js'
+import { mapValues, mapKeys } from '../utils/map.js'
 
 import { validateCombinationsIds } from './ids/validate.js'
 import { toInputsList } from './inputs.js'
@@ -45,9 +44,14 @@ const getCombinationsProduct = function (tasks, inputsList, system) {
 }
 
 const getSystemDimensions = function (system) {
-  return mapObj(system, getSystemDimension)
+  const systemDimensions = mapValues(system, getSystemDimension)
+  return mapKeys(systemDimensions, prefixSystemDimension)
 }
 
-const getSystemDimension = function (propName, id) {
-  return [addPrefix(propName, 'system'), { id }]
+const getSystemDimension = function (id) {
+  return { id }
+}
+
+const prefixSystemDimension = function (propName) {
+  return addPrefix(propName, 'system')
 }
