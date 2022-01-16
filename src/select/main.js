@@ -42,3 +42,9 @@ export const selectCombinations = function (combinations, select) {
   validateSelectMatches(combinationsA, select)
   return combinationsA
 }
+
+// Same for a single combination
+export const matchCombination = function (combination, select, name) {
+  const selectors = parseSelectors(select, name)
+  return matchSelectors(combination, selectors)
+}

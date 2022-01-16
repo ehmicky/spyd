@@ -1,11 +1,8 @@
 import isPlainObj from 'is-plain-obj'
-
-import { parseSelectors } from '../../select/parse.js'
+import mapObj from 'map-obj'
 
 // If a configuration property uses selectors, normalization must be applied
 // recursively.
-// We also parse the selectors as early as possible, for performance and to
-// validate them.
 export const normalizeConfigSelectors = function (
   configValue,
   propName,
@@ -15,21 +12,36 @@ export const normalizeConfigSelectors = function (
     return normalizer(configValue, propName, propName)
   }
 
-  return Object.entries(configValue).map(([selector, value]) =>
-    parseSelector({ selector, value, propName, normalizer }),
-  )
+  return mapObj(configValue, (selector, value) => [
+    selector,
+    normalizer(value, propName, `${propName}.${selector}`),
+  ])
 }
 
-const isConfigSelector = function (configValue, propName) {
+// Check if a configuration property uses selectors
+export const isConfigSelector = function (configValue, propName) {
   return SELECTABLE_PROPS.has(propName) && isPlainObj(configValue)
 }
 
 // List of properties which can use configuration selectors
-export const SELECTABLE_PROPS = new Set(['limit', 'outliers', 'precision'])
-
-const parseSelector = function ({ selector, value, propName, normalizer }) {
-  const name = `${propName}.${selector}`
-  const selectors = parseSelectors([selector], name)
-  const valueA = normalizer(value, propName, name)
-  return { selectors, value: valueA }
-}
+// We should avoid any properties which:
+//  - Are not combination-specific
+//     - Example: `showSystem`
+//  - Can use variations
+//     - Since `select` can be used instead
+//     - This also avoids confusion since they use very similar syntax
+//     - Example: `inputs`
+//  - Can use the task files' logic to vary
+//     - Since `inputs` can be used instead
+//  - Can change results
+//     - Since it makes combinations' results less comparable
+//     - It also removes the need to be persisted
+//     - Example: `runnnerConfig`
+const SELECTABLE_PROPS = new Set([
+  'limit',
+  'outliers',
+  'precision',
+  'showDiff',
+  'showPrecision',
+  'showTitles',
+])

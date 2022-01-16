@@ -5,25 +5,26 @@ import omit from 'omit.js'
 // We use one boolean configuration property for each instead of a single array
 // configuration property because it makes it easier to enable/disable each
 // property both in CLI flags and in `reporterConfig.{reporterId}.*` properties.
-export const omitCombinationsProps = function (
-  result,
-  { showPrecision, showDiff, debugStats },
-) {
+export const omitCombinationsProps = function (result, debugStats) {
   const combinations = result.combinations.map((combination) =>
-    omitCombinationProps(combination, { showDiff, showPrecision, debugStats }),
+    omitCombinationProps({ combination, debugStats }),
   )
   return { ...result, combinations }
 }
 
-const omitCombinationProps = function (
+const omitCombinationProps = function ({
   combination,
-  { showPrecision, showDiff, debugStats },
-) {
-  const stats = omitMeanProps(combination.stats, showPrecision)
-  const statsA = maybeOmit(stats, showPrecision, PRECISION_STATS_PROPS)
-  const statsB = maybeOmit(statsA, showDiff, DIFF_STAT_PROPS)
-  const statsC = maybeOmit(statsB, debugStats, DEBUG_STATS_PROPS)
-  return { ...combination, stats: statsC }
+  combination: {
+    config: { showPrecision, showDiff },
+    stats,
+  },
+  debugStats,
+}) {
+  const statsA = omitMeanProps(stats, showPrecision)
+  const statsB = maybeOmit(statsA, showPrecision, PRECISION_STATS_PROPS)
+  const statsC = maybeOmit(statsB, showDiff, DIFF_STAT_PROPS)
+  const statsD = maybeOmit(statsC, debugStats, DEBUG_STATS_PROPS)
+  return { ...combination, stats: statsD }
 }
 
 // When `showPrecision` is `true`, we show `meanMin|meanMax` instead of `mean`.

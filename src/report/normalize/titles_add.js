@@ -5,20 +5,24 @@ import { getCombDimensions } from '../../combination/dimensions.js'
 import { padTitles } from './titles_pad.js'
 
 // Add `result.combinations[*].dimensions[*].title`
-export const addCombinationsTitles = function (result, titles, showTitles) {
-  const titlesA = showTitles ? titles : {}
+export const addCombinationsTitles = function (result, titles) {
   const combinations = result.combinations.map((combination) =>
-    addCombinationTitles(combination, titlesA),
+    addCombinationTitles(combination, titles),
   )
   const combinationsA = padTitles(combinations)
   return { ...result, combinations: combinationsA }
 }
 
 const addCombinationTitles = function (combination, titles) {
+  const titlesA = combination.config.showTitles ? titles : {}
   const dimensions = getCombDimensions(combination)
   return dimensions.reduce(
     (combinationA, dimension) =>
-      addCombinationTitle({ combination: combinationA, dimension, titles }),
+      addCombinationTitle({
+        combination: combinationA,
+        dimension,
+        titles: titlesA,
+      }),
     combination,
   )
 }

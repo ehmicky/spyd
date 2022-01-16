@@ -1,9 +1,8 @@
-import isPlainObj from 'is-plain-obj'
 import mapObj from 'map-obj'
 
-import { matchSelectors } from '../../select/match.js'
+import { matchCombination } from '../../select/main.js'
 
-import { SELECTABLE_PROPS } from './normalize.js'
+import { isConfigSelector } from './normalize.js'
 
 // Some configuration properties can have different values per combination
 // using "configuration selectors".
@@ -30,37 +29,33 @@ const useCombConfigSelectors = function (combination, config) {
 
 // Same for a single combination
 export const useConfigSelectors = function (combination, config) {
-  return mapObj(config, (name, configValue) => [
-    name,
-    applyConfigPropSelectors(combination, configValue, name),
+  return mapObj(config, (propName, configValue) => [
+    propName,
+    applyConfigPropSelectors(combination, configValue, propName),
   ])
 }
 
-const applyConfigPropSelectors = function (combination, configValue, name) {
-  if (!isParsedConfigSelectors(configValue, name)) {
+const applyConfigPropSelectors = function (combination, configValue, propName) {
+  if (!isConfigSelector(configValue, propName)) {
     return configValue
   }
 
-  const { value } = configValue.find(({ selectors }, index, values) =>
-    matchConfigSelectors({ combination, selectors, index, values }),
+  const [, value] = Object.entries(configValue).find(
+    ([selector], index, values) =>
+      matchConfigSelectors({ combination, selector, index, values, propName }),
   )
   return value
 }
 
-// The logic is a noop if the configuration property does not use selectors
-const isParsedConfigSelectors = function (configValue, name) {
-  return (
-    SELECTABLE_PROPS.has(name) &&
-    Array.isArray(configValue) &&
-    configValue.every(isPlainObj)
-  )
-}
-
 const matchConfigSelectors = function ({
   combination,
-  selectors,
+  selector,
   index,
   values,
+  propName,
 }) {
-  return index === values.length - 1 || matchSelectors(combination, selectors)
+  return (
+    index === values.length - 1 ||
+    matchCombination(combination, [selector], `${propName}.${selector}`)
+  )
 }

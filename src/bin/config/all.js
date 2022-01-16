@@ -24,7 +24,8 @@ A configuration file can include another one by using this property.
 This can be used to share configurations and/or benchmarks.
 
 You can define different values per combination for some configuration
-properties ("limit", "outliers", "precision").
+properties ("limit", "outliers", "precision", "showDiff", "showPrecision",
+"showTitles").
 The configuration property must then be an object where:
   - The key selects the combinations, using the same syntax as the "select"
     configuration property. The last key must be "default" and is used as a
