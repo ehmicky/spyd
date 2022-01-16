@@ -22,7 +22,6 @@ const DYNAMIC_OBJECT_PROPS = [
 
 const EXAMPLE_CONFIG = {
   ...DEFAULT_CONFIG,
-  inputs: { inputId: 'inputValue' },
   reporterConfig: { debug: { property: true } },
   runnerConfig: { node: { version: '8' } },
   system: { os: 'linux', node_version: 'node_8' },
