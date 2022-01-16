@@ -1,49 +1,22 @@
 // We distinguish between user, plugin and core errors.
 // We also define abort errors, which are user-driven but are not failures.
-// eslint-disable-next-line fp/no-class
-export class StopError extends Error {
-  constructor(...args) {
-    super(...args)
-    // eslint-disable-next-line fp/no-this, fp/no-mutation
-    this.name = 'StopError'
+// Limit errors are also special as they are user-driven but are a different
+// kind of failure.
+const getErrorType = function (name) {
+  return class extends Error {
+    constructor(...args) {
+      super(...args)
+      // eslint-disable-next-line fp/no-this, fp/no-mutation
+      this.name = name
+    }
   }
 }
 
-// eslint-disable-next-line fp/no-class
-export class CoreError extends Error {
-  constructor(...args) {
-    super(...args)
-    // eslint-disable-next-line fp/no-this, fp/no-mutation
-    this.name = 'CoreError'
-  }
-}
-
-// eslint-disable-next-line fp/no-class
-export class PluginError extends Error {
-  constructor(...args) {
-    super(...args)
-    // eslint-disable-next-line fp/no-this, fp/no-mutation
-    this.name = 'PluginError'
-  }
-}
-
-// eslint-disable-next-line fp/no-class
-export class UserError extends Error {
-  constructor(...args) {
-    super(...args)
-    // eslint-disable-next-line fp/no-this, fp/no-mutation
-    this.name = 'UserError'
-  }
-}
-
-// eslint-disable-next-line fp/no-class
-export class LimitError extends Error {
-  constructor(...args) {
-    super(...args)
-    // eslint-disable-next-line fp/no-this, fp/no-mutation
-    this.name = 'LimitError'
-  }
-}
+export const StopError = getErrorType('StopError')
+export const CoreError = getErrorType('CoreError')
+export const PluginError = getErrorType('PluginError')
+export const UserError = getErrorType('UserError')
+export const LimitError = getErrorType('LimitError')
 
 // Error type-specific behavior
 const ERROR_PROPS = {
