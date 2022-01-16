@@ -33,6 +33,12 @@ const validateConfigSelector = function (configValue, propName) {
       `'${propName}' must have at least one property when using configuration selectors.`,
     )
   }
+
+  if (configValue.default === undefined) {
+    throw new UserError(
+      `'${propName}' last property must be named "default" when using configuration selectors.`,
+    )
+  }
 }
 
 // List of properties which can use configuration selectors
