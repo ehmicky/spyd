@@ -46,13 +46,16 @@ const isDeepProp = function (configValue, propName) {
 }
 
 const normalizePropValue = function (value, propName, name) {
-  const normalizer = NORMALIZERS[propName]
+  const normalizers = NORMALIZERS[propName]
 
-  if (normalizer === undefined) {
+  if (normalizers === undefined) {
     return value
   }
 
-  const newValue = normalizer(value, name)
+  const newValue = normalizers.reduce(
+    (valueA, normalizer) => normalizer(valueA, name),
+    value,
+  )
   return newValue === undefined ? value : newValue
 }
 
@@ -88,18 +91,18 @@ const validateTitles = function (value, name) {
 }
 
 const NORMALIZERS = {
-  inputs: checkJsonObject,
-  limit: normalizeLimit,
-  merge: validateMerge,
-  outliers: checkBoolean,
-  precision: normalizePrecision,
-  reporter: normalizeReporter,
-  runner: normalizeRunner,
-  select: normalizeSelect,
-  showDiff: checkBoolean,
-  showPrecision: checkBoolean,
-  showTitles: checkBoolean,
-  system: checkStringsObject,
-  tasks: normalizeTasks,
-  titles: validateTitles,
+  inputs: [checkJsonObject],
+  limit: [normalizeLimit],
+  merge: [validateMerge],
+  outliers: [checkBoolean],
+  precision: [normalizePrecision],
+  reporter: [normalizeReporter],
+  runner: [normalizeRunner],
+  select: [normalizeSelect],
+  showDiff: [checkBoolean],
+  showPrecision: [checkBoolean],
+  showTitles: [checkBoolean],
+  system: [checkStringsObject],
+  tasks: [normalizeTasks],
+  titles: [validateTitles],
 }
