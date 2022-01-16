@@ -1,7 +1,6 @@
-import mapObj from 'map-obj'
-
 import { cleanObject } from '../../../utils/clean.js'
 
+import { compressDimensions } from './dimensions.js'
 import { compressRunners } from './runners.js'
 import { compressStats } from './stats.js'
 
@@ -20,7 +19,7 @@ export const compressRawResult = function ({
   timestamp,
   combinations,
 }) {
-  const combinationsA = combinations.map(compressDimensions)
+  const combinationsA = combinations.map(compressCombDimensions)
   const system = compressSystem(combinationsA)
   const runners = compressRunners(combinationsA)
   const combinationsB = combinationsA.map(compressCombination)
@@ -34,13 +33,14 @@ export const compressRawResult = function ({
   })
 }
 
-const compressDimensions = function ({ dimensions, stats, system, versions }) {
-  const dimensionsA = mapObj(dimensions, compressDimension)
+const compressCombDimensions = function ({
+  dimensions,
+  stats,
+  system,
+  versions,
+}) {
+  const dimensionsA = compressDimensions(dimensions)
   return { dimensions: dimensionsA, stats, system, versions }
-}
-
-const compressDimension = function (dimension, { id }) {
-  return [dimension, id]
 }
 
 const compressSystem = function ([

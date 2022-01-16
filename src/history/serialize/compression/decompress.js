@@ -1,5 +1,6 @@
 import mapObj from 'map-obj'
 
+import { decompressDimension } from './dimensions.js'
 import { decompressRunners } from './runners.js'
 import { decompressStats } from './stats.js'
 
@@ -27,8 +28,4 @@ const decompressCombination = function (
   const dimensionsA = mapObj(dimensions, decompressDimension)
   const statsA = decompressStats(stats)
   return { dimensions: dimensionsA, stats: statsA, system, versions }
-}
-
-const decompressDimension = function (dimension, id) {
-  return [dimension, { id }]
 }
