@@ -1,7 +1,7 @@
 import { mapValues } from '../../utils/map.js'
 
 import { runNormalizer } from './check.js'
-import { runDag } from './dag/run.js'
+import { runDagAsync } from './dag/run.js'
 import { CONFIG_PROPS } from './properties.js'
 
 // Normalize configuration shape and do custom validation.
@@ -25,7 +25,7 @@ export const normalizeConfig = async function (config, command, configInfos) {
       configInfos: configInfosA,
     }),
   )
-  const configProps = await runDag(configPropsFuncs)
+  const configProps = await runDagAsync(configPropsFuncs)
   const configA = mergeConfigProps(configProps)
   return configA
 }
