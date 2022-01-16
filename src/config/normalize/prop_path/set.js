@@ -11,23 +11,26 @@ export const set = function (target, query, setValue) {
   )
 }
 
-const setProp = function (value, [{ key, missing }, ...path], setValue) {
+const setProp = function (value, path, setValue) {
+  if (path.length === 0) {
+    return setValue
+  }
+
+  const [{ key, missing }, ...pathA] = path
   return typeof key === 'string'
-    ? setObjectProp({ value, key, missing, path, setValue })
-    : setArrayItem({ value, key, missing, path, setValue })
+    ? setObjectProp({ value, key, missing, path: pathA, setValue })
+    : setArrayItem({ value, key, missing, path: pathA, setValue })
 }
 
 const setObjectProp = function ({ value, key, missing, path, setValue }) {
-  const newValue =
-    path.length === 0
-      ? setValue
-      : setProp(missing ? {} : value[key], path, setValue)
-  return { ...value, [key]: newValue }
+  const childValue = missing ? {} : value[key]
+  const newChildValue = setProp(childValue, path, setValue)
+  return { ...value, [key]: newChildValue }
 }
 
 const setArrayItem = function ({ value, key, missing, path, setValue }) {
-  const valueA = missing ? [value] : value
-  const newValue =
-    path.length === 0 ? setValue : setProp(valueA[key], path, setValue)
-  return setArray(valueA, key, newValue)
+  const newValue = missing ? [value] : value
+  const childValue = newValue[key]
+  const newChildValue = setProp(childValue, path, setValue)
+  return setArray(newValue, key, newChildValue)
 }
