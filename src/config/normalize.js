@@ -36,14 +36,13 @@ export const normalizeConfig = function (config, configInfos) {
 }
 
 const normalizePropValue = function (value, name, configInfos) {
-  const normalizer = NORMALIZERS[name]
+  const normalizer = CONFIG_PROPS[name]
   return normalizer === undefined
     ? value
     : runNormalizer(normalizer, value, name, configInfos)
 }
 
-// TODO: missing `reporterConfig`, `runnerConfig`
-const NORMALIZERS = {
+const CONFIG_PROPS = {
   colors: checkBoolean,
   cwd: composeNormalizers(checkDefinedString, normalizeConfigPath),
   delta: normalizeDelta,
