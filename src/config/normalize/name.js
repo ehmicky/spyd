@@ -54,41 +54,54 @@ const getName = function (propName, propIndex) {
 }
 
 export const getByPropPath = function (object, propPath) {
-  return propPath.reduce(getValuesByProp, [object])
+  return propPath.reduce(getValuesByProp, [{ value: object, path: [] }])
 }
 
-const getValuesByProp = function (values, propElem) {
-  return values.flatMap((value) => getValueByProp(value, propElem))
+const getValuesByProp = function (results, propElem) {
+  return results.flatMap((result) => getValueByProp(result, propElem))
 }
 
-const getValueByProp = function (value, { name, isArray, isAny, isStrict }) {
+const getValueByProp = function (
+  { value, path },
+  { name, isArray, isAny, isStrict },
+) {
   if (isArray) {
     if (!Array.isArray(value)) {
       if (isStrict) {
-        return [value]
+        if (isAny || name === 0) {
+          return [{ value, path: [...path, 0] }]
+        }
+
+        return [{ value: undefined, path: [...path, name] }]
       }
 
       return []
     }
 
     if (isAny) {
-      return value
+      return value.map((childValue, index) => ({
+        value: childValue,
+        path: [...path, index],
+      }))
     }
 
-    return [value[name]]
+    return [{ value: value[name], path: [...path, name] }]
   }
 
   if (!isPlainObj(value)) {
     if (isStrict) {
-      return [undefined]
+      return [{ value: undefined, path: [...path, name] }]
     }
 
     return []
   }
 
   if (isAny) {
-    return Object.values(value)
+    return Object.entries(value).map(([childName, childValue]) => ({
+      value: childValue,
+      path: [...path, childName],
+    }))
   }
 
-  return value[name]
+  return [{ value: value[name], path: [...path, name] }]
 }
