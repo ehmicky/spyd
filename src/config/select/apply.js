@@ -7,6 +7,8 @@ import { SELECTABLE_PROPS } from './normalize.js'
 
 // Transform a configuration property using multiple selectors to a single
 // value, based on which selector matches a given combination.
+// We iterate by object key order.
+//  - If no selector matches, we use the last one as a fallback
 export const applyConfigSelectors = function (combination, config) {
   return mapObj(config, (name, configValue) => [
     name,
@@ -34,7 +36,6 @@ const isParsedConfigSelector = function (name, configValue) {
   )
 }
 
-// If no selector matches, we use the last one as a fallback
 const matchConfigSelector = function ({
   combination,
   selectors,
