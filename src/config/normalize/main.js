@@ -25,20 +25,20 @@ import { COMMANDS_PROPS } from './properties.js'
 //  - This also enables aggregating errors when multiple configuration
 //    properties are invalid, as opposed to only the first one
 export const normalizeConfig = async function (config, command, configInfos) {
-  const configProps = COMMANDS_PROPS[command]
-  const queries = Object.keys(configProps)
+  const definitions = COMMANDS_PROPS[command]
+  const queries = Object.keys(definitions)
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
-  const configPropsFuncs = mapValues(configProps, (configProp, query) =>
+  const definitionsFuncs = mapValues(definitions, (definitionList, query) =>
     normalizePropDeep.bind(undefined, {
       queries,
-      configProp,
+      definitionList,
       query,
       config,
       configInfos: configInfosA,
     }),
   )
-  const allConfigValues = await runDagAsync(configPropsFuncs)
+  const allConfigValues = await runDagAsync(definitionsFuncs)
   const configA = mergeConfigProps(allConfigValues)
   const configB = postNormalizeConfig(configA)
   const configC = cleanObject(configB)
@@ -46,14 +46,14 @@ export const normalizeConfig = async function (config, command, configInfos) {
 }
 
 const normalizePropDeep = async function (
-  { queries, configProp, query, config, configInfos },
+  { queries, definitionList, query, config, configInfos },
   get,
 ) {
   const configA = await setParentProps({ config, queries, query, get })
   const getA = boundGet.bind(undefined, get)
   const props = list(configA, query)
   return await pProps(props, (value, name) =>
-    normalizePropValue({ value, name, configProp, configInfos, get: getA }),
+    normalizePropValue({ value, name, definitionList, configInfos, get: getA }),
   )
 }
 
@@ -90,7 +90,7 @@ const handleGetUserError = function (message) {
 const normalizePropValue = async function ({
   value,
   name,
-  configProp: { default: defaultValue, transform, compute },
+  definitionList: { default: defaultValue, transform, compute },
   configInfos,
   get,
 }) {
