@@ -235,14 +235,18 @@ const system = {
 }
 
 const tasks = {
-  normalize(value, { name, configInfos }) {
-    const valueA = normalizeOptionalArray(value)
-    return checkArrayItems(valueA, name, (childValue, childName) => {
-      checkDefinedString(childValue, childName)
-      return normalizeConfigGlob(childValue, childName, configInfos)
-    })
+  normalize(value) {
+    return normalizeOptionalArray(value)
   },
 }
+
+const tasksAny = {
+  normalize(value, { name, configInfos }) {
+    checkDefinedString(value, name)
+    return normalizeConfigGlob(value, name, configInfos)
+  },
+}
+
 const titles = {
   default: {},
   normalize(value, { name }) {
@@ -263,6 +267,7 @@ export const COMMANDS_PROPS = {
     select,
     system,
     tasks,
+    'tasks[*]': tasksAny,
   },
   remove: {
     colors,
@@ -308,6 +313,7 @@ export const COMMANDS_PROPS = {
     since,
     system,
     tasks,
+    'tasks[*]': tasksAny,
     titles,
   },
   show: {

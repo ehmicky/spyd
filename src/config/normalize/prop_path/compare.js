@@ -9,7 +9,7 @@ export const isParent = function (childQuery, parentQuery) {
   return (
     parentTokens.length < childTokens.length &&
     parentTokens.every((parentToken, index) =>
-      isSameToken(parentTokens, childTokens[index]),
+      isSameToken(parentToken, childTokens[index]),
     )
   )
 }

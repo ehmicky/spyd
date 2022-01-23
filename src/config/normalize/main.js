@@ -8,6 +8,7 @@ import { then } from '../../utils/then.js'
 
 import { runNormalizer } from './check.js'
 import { runDagAsync } from './dag/run.js'
+import { isParent } from './prop_path/compare.js'
 import { list } from './prop_path/get.js'
 import { parse } from './prop_path/parse.js'
 import { set } from './prop_path/set.js'
@@ -25,31 +26,42 @@ import { COMMANDS_PROPS } from './properties.js'
 //    properties are invalid, as opposed to only the first one
 export const normalizeConfig = async function (config, command, configInfos) {
   const configProps = COMMANDS_PROPS[command]
+  const queries = Object.keys(configProps)
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
   const configPropsFuncs = mapValues(configProps, (configProp, query) =>
     normalizePropDeep.bind(undefined, {
+      queries,
       configProp,
       query,
       config,
       configInfos: configInfosA,
     }),
   )
-  const configPropsA = await runDagAsync(configPropsFuncs)
-  const configA = mergeConfigProps(configPropsA)
+  const allConfigValues = await runDagAsync(configPropsFuncs)
+  const configA = mergeConfigProps(allConfigValues)
   const configB = cleanObject(configA)
   return configB
 }
 
 const normalizePropDeep = async function (
-  { configProp, query, config, configInfos },
+  { queries, configProp, query, config, configInfos },
   get,
 ) {
+  const configA = await setParentProps({ config, queries, query, get })
   const getA = boundGet.bind(undefined, get)
-  const props = list(config, query)
+  const props = list(configA, query)
   return await pProps(props, (value, name) =>
     normalizePropValue({ value, name, configProp, configInfos, get: getA }),
   )
+}
+
+// Children properties await their parent, and use their parent normalized
+// values
+const setParentProps = async function ({ config, queries, query, get }) {
+  const parentQueries = queries.filter((queryB) => isParent(query, queryB))
+  const configValues = await Promise.all(parentQueries.map(get))
+  return setConfigValues(configValues, config)
 }
 
 const boundGet = function (get, query) {
@@ -117,13 +129,16 @@ const runPropNormalizer = async function (value, normalize, opts) {
 // We start from an empty object to:
 //  - ensure only allowed properties are set
 //  - there are no `undefined` values
-const mergeConfigProps = function (configProps) {
-  return Object.values(configProps)
-    .flatMap(Object.entries)
-    .reduce(setConfigProp, {})
+const mergeConfigProps = function (allConfigValues) {
+  const configValues = Object.values(allConfigValues)
+  return setConfigValues(configValues, {})
 }
 
-const setConfigProp = function (config, [name, value]) {
+const setConfigValues = function (configValues, config) {
+  return configValues.flatMap(Object.entries).reduce(setConfigValue, config)
+}
+
+const setConfigValue = function (config, [name, value]) {
   return set(config, name, value)
 }
 /* eslint-enable max-lines */
