@@ -78,8 +78,22 @@ const runOtherTask = function (
   { dag, boundTasks, parentTaskName },
   childTaskName,
 ) {
+  validateTaskName(boundTasks, childTaskName)
   addDagEdge(dag, parentTaskName, childTaskName)
   return boundTasks[childTaskName]()
+}
+
+const validateTaskName = function (boundTasks, childTaskName) {
+  if (childTaskName in boundTasks) {
+    return
+  }
+
+  // eslint-disable-next-line fp/no-mutating-methods
+  const tasksNames = Object.keys(boundTasks).sort().join(', ')
+  throw new Error(
+    `Invalid name "${childTaskName}".
+Available names: ${tasksNames}.`,
+  )
 }
 
 const runBoundTaskFunc = function (boundTaskFunc) {

@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+import { UserError } from '../../error/main.js'
 import { cleanObject } from '../../utils/clean.js'
 import { mapValues } from '../../utils/map.js'
 
@@ -42,12 +44,34 @@ const normalizePropDeep = async function (
     return []
   }
 
+  const getA = boundGet.bind(undefined, get)
   const entries = getEntries(config, query)
   return await Promise.all(
     entries.map((entry) =>
-      normalizePropValue({ entry, configProp, configInfos, get, command }),
+      normalizePropValue({
+        entry,
+        configProp,
+        configInfos,
+        get: getA,
+        command,
+      }),
     ),
   )
+}
+
+const boundGet = function (get, query) {
+  try {
+    return get(query)
+  } catch (error) {
+    handleGetUserError(error.message)
+    throw error
+  }
+}
+
+const handleGetUserError = function (message) {
+  if (message.includes('Invalid name')) {
+    throw new UserError(message)
+  }
 }
 
 const normalizePropValue = async function ({
@@ -115,3 +139,4 @@ const mergeConfigProps = function (configProps) {
 const setConfigProp = function (config, [query, value]) {
   return set(config, query, value[0])
 }
+/* eslint-enable max-lines */
