@@ -74,7 +74,7 @@ import { UserError } from '../error/main.js'
 //       machines
 //        - this can happen inside the same run (due to previous runs being
 //          merged to current one)
-export const normalizePrecision = function (precision, propName) {
+export const transformPrecision = function (precision, propName) {
   const precisionA = PRECISION_TARGETS[precision]
 
   if (precisionA === undefined) {

@@ -2,7 +2,7 @@ import { getCombinationName } from '../../combination/ids/name.js'
 import { LimitError } from '../../error/main.js'
 import { groupBy } from '../../utils/group.js'
 
-import { isNegativeLimit } from './normalize.js'
+import { isNegativeLimit } from './transform.js'
 
 // If any `combination.stats.diff` is too slow compared to the `limit`
 // configuration property, we fail.

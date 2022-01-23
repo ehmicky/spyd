@@ -1,12 +1,12 @@
 /* eslint-disable max-lines */
 import { cwd as getCwd } from 'process'
 
-import { normalizeLimit } from '../../history/compare/normalize.js'
-import { normalizeDelta } from '../../history/delta/normalize.js'
+import { transformLimit } from '../../history/compare/transform.js'
+import { transformDelta } from '../../history/delta/transform.js'
 import { getDefaultId, validateMerge } from '../../history/merge/id.js'
 import { isOutputPath } from '../../report/output.js'
 import { isTtyInput } from '../../report/tty.js'
-import { normalizePrecision } from '../../run/precision.js'
+import { transformPrecision } from '../../run/precision.js'
 import { getDefaultConfig } from '../load/default.js'
 import { recurseConfigSelectors } from '../select/normalize.js'
 
@@ -27,19 +27,19 @@ const config = {
   async default() {
     return await getDefaultConfig()
   },
-  normalize(value) {
+  transform(value) {
     return normalizeOptionalArray(value)
   },
 }
 
 const configAny = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }
 
 const colors = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkBoolean(value, name)
   },
 }
@@ -48,7 +48,7 @@ const cwd = {
   default() {
     return getCwd()
   },
-  normalize(value, { name, configInfos }) {
+  transform(value, { name, configInfos }) {
     checkDefinedString(value, name)
     return normalizeConfigPath(value, name, configInfos)
   },
@@ -56,8 +56,8 @@ const cwd = {
 
 const delta = {
   default: 1,
-  normalize(value, { name }) {
-    return normalizeDelta(value, name)
+  transform(value, { name }) {
+    return transformDelta(value, name)
   },
 }
 
@@ -65,29 +65,29 @@ const force = {
   default() {
     return !isTtyInput()
   },
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkBoolean(value, name)
   },
 }
 
 const inputs = {
   default: {},
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkObject(value, name)
   },
 }
 
 const inputsAny = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkJson(value, name)
   },
 }
 
 const limit = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     return recurseConfigSelectors(value, name, (childValue, childName) => {
       checkInteger(childValue, childName)
-      return normalizeLimit(childValue, childName)
+      return transformLimit(childValue, childName)
     })
   },
 }
@@ -96,14 +96,14 @@ const merge = {
   default() {
     return getDefaultId()
   },
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkDefinedString(value, name)
     validateMerge(value, name)
   },
 }
 
 const output = {
-  normalize(value, { name, configInfos }) {
+  transform(value, { name, configInfos }) {
     checkDefinedString(value, name)
     return isOutputPath(value)
       ? normalizeConfigPath(value, name, configInfos)
@@ -113,30 +113,30 @@ const output = {
 
 const outliers = {
   default: false,
-  normalize(value, { name }) {
+  transform(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
   },
 }
 
 const precision = {
   default: 5,
-  normalize(value, { name }) {
+  transform(value, { name }) {
     return recurseConfigSelectors(value, name, (childValue, childName) => {
       checkInteger(childValue, childName)
-      return normalizePrecision(childValue, childName)
+      return transformPrecision(childValue, childName)
     })
   },
 }
 
 const quiet = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkBoolean(value, name)
   },
 }
 
 const reporter = {
   default: ['debug'],
-  normalize(value) {
+  transform(value) {
     return normalizeOptionalArray(value)
   },
 }
@@ -144,21 +144,21 @@ const reporter = {
 // `reporter` configuration property specific logic for the `remove` command
 const reporterRemove = {
   ...reporter,
-  async normalize(value, { name, get }) {
+  async transform(value, { name, get }) {
     const forceValue = await get('force')
-    return forceValue ? [] : reporter.normalize(value, { name })
+    return forceValue ? [] : reporter.transform(value, { name })
   },
 }
 
 const reporterAny = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }
 
 const reporterConfig = {
   default: {},
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkObject(value, name)
   },
 }
@@ -169,7 +169,7 @@ const runner = {
   // file, instead of to an optional one. This makes behavior easier to
   // understand for users and provides with better error messages.
   default: ['node'],
-  normalize(value, { name }) {
+  transform(value, { name }) {
     const valueA = normalizeOptionalArray(value)
     checkArrayLength(valueA, name)
     return valueA
@@ -177,47 +177,47 @@ const runner = {
 }
 
 const runnerAny = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }
 
 const runnerConfig = {
   default: {},
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkObject(value, name)
   },
 }
 
 const save = {
   default: false,
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkBoolean(value, name)
   },
 }
 
 const select = {
   default: [],
-  normalize(value) {
+  transform(value) {
     return normalizeOptionalArray(value)
   },
 }
 
 const selectAny = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkString(value, name)
   },
 }
 
 const showDiff = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
   },
 }
 
 const showMetadata = {
   default: true,
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkBoolean(value, name)
   },
 }
@@ -230,53 +230,53 @@ const showMetadataRun = {
 
 const showPrecision = {
   default: false,
-  normalize(value, { name }) {
+  transform(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
   },
 }
 
 const showSystem = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkBoolean(value, name)
   },
 }
 
 const showTitles = {
   default: false,
-  normalize(value, { name }) {
+  transform(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
   },
 }
 
 const since = {
   default: 1,
-  normalize(value, { name }) {
-    return normalizeDelta(value, name)
+  transform(value, { name }) {
+    return transformDelta(value, name)
   },
 }
 
 const system = {
   default: {},
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkObject(value, name)
   },
 }
 
 const systemAny = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }
 
 const tasks = {
   default: [],
-  normalize(value) {
+  transform(value) {
     return normalizeOptionalArray(value)
   },
 }
 
 const tasksAny = {
-  async normalize(value, { name, configInfos }) {
+  async transform(value, { name, configInfos }) {
     checkDefinedString(value, name)
     return await normalizeConfigGlob(value, name, configInfos)
   },
@@ -284,13 +284,13 @@ const tasksAny = {
 
 const titles = {
   default: {},
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkObject(value, name)
   },
 }
 
 const titlesAny = {
-  normalize(value, { name }) {
+  transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }

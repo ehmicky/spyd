@@ -3,6 +3,7 @@ import pProps from 'p-props'
 
 import { UserError } from '../../error/main.js'
 import { cleanObject } from '../../utils/clean.js'
+import { maybeFunction } from '../../utils/function.js'
 import { mapValues } from '../../utils/map.js'
 import { then } from '../../utils/then.js'
 
@@ -89,7 +90,7 @@ const handleGetUserError = function (message) {
 const normalizePropValue = async function ({
   value,
   name,
-  configProp: { default: defaultValue, normalize },
+  configProp: { default: defaultValue, transform },
   configInfos,
   get,
 }) {
@@ -97,7 +98,7 @@ const normalizePropValue = async function ({
   const opts = { name, path, configInfos, get }
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
-  return await runPropNormalizer(valueA, normalize, opts)
+  return await transformProp(valueA, transform, opts)
 }
 
 const getPath = function (name) {
@@ -109,24 +110,16 @@ const getPathKey = function ({ key }) {
 }
 
 const addDefaultValue = async function (value, defaultValue, opts) {
-  if (value !== undefined) {
-    return value
-  }
-
-  if (typeof defaultValue !== 'function') {
-    return defaultValue
-  }
-
-  return await defaultValue(opts)
+  return value === undefined ? await maybeFunction(defaultValue, opts) : value
 }
 
-// Calls `normalize(value)` which transforms the value.
-const runPropNormalizer = async function (value, normalize, opts) {
-  if (value === undefined || normalize === undefined) {
+// Calls `transform(value)`
+const transformProp = async function (value, transform, opts) {
+  if (value === undefined || transform === undefined) {
     return value
   }
 
-  const newValue = await normalize(value, opts)
+  const newValue = await transform(value, opts)
   return newValue === undefined ? value : newValue
 }
 

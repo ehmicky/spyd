@@ -1,6 +1,6 @@
 // Parse the `limit` configuration property.
 // It is an integer representing a percentage.
-export const normalizeLimit = function (limit) {
+export const transformLimit = function (limit) {
   return limit / PERCENTAGE_RATIO
 }
 
