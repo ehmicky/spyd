@@ -35,8 +35,11 @@ export const normalizeOptionalArray = function (value = []) {
   return Array.isArray(value) ? [...new Set(value)] : [value]
 }
 
-export const checkArrayLength = function (value) {
-  assert(value.length !== 0, 'must not be an empty array')
+export const checkEmptyArray = function (value) {
+  assert(
+    !Array.isArray(value) || value.length !== 0,
+    'must not be an empty array',
+  )
 }
 
 export const checkObject = function (value) {

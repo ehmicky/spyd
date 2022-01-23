@@ -7,7 +7,7 @@ import { FORMATS } from './formats/main.js'
 // Several configuration properties targets a previous rawResult using a delta,
 // which can an integer, "first", date/time/duration, rawResult.id or git
 // reference.
-export const transformDelta = function (delta, name) {
+export const transformDelta = function (delta, { name }) {
   if (delta === '') {
     const deltaProp = getDeltaProp(delta, name)
     throw new UserError(`${deltaProp} must not be an empty string`)

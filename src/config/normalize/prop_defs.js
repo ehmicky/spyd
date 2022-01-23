@@ -15,7 +15,7 @@ import {
   checkInteger,
   checkString,
   normalizeOptionalArray,
-  checkArrayLength,
+  checkEmptyArray,
   checkDefinedString,
   checkJson,
   checkObject,
@@ -41,31 +41,25 @@ const boundAmongCommands = function (
 
 const config = {
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
-  async default() {
-    return await getDefaultConfig()
-  },
-  transform(value) {
-    return normalizeOptionalArray(value)
-  },
+  default: getDefaultConfig,
+  transform: normalizeOptionalArray,
 }
 
 const configAny = {
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
-  transform: checkDefinedString,
+  validate: checkDefinedString,
 }
 
 const colors = {
   condition: amongCommands(['remove', 'run', 'show']),
-  transform: checkBoolean,
+  validate: checkBoolean,
 }
 
 const cwd = {
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
-  default() {
-    return getCwd()
-  },
+  default: getCwd,
+  validate: checkDefinedString,
   transform(value, { name, context: { configInfos } }) {
-    checkDefinedString(value)
     return normalizeConfigPath(value, name, configInfos)
   },
 }
@@ -73,9 +67,7 @@ const cwd = {
 const delta = {
   condition: amongCommands(['remove', 'show']),
   default: 1,
-  transform(value, { name }) {
-    return transformDelta(value, name)
-  },
+  transform: transformDelta,
 }
 
 const force = {
@@ -83,45 +75,45 @@ const force = {
   default() {
     return !isTtyInput()
   },
-  transform: checkBoolean,
+  validate: checkBoolean,
 }
 
 const inputs = {
   condition: amongCommands(['dev', 'run']),
   default: {},
-  transform: checkObject,
+  validate: checkObject,
 }
 
 const inputsAny = {
   condition: amongCommands(['dev', 'run']),
-  transform: checkJson,
+  validate: checkJson,
 }
 
 const limit = {
   condition: amongCommands(['remove', 'run', 'show']),
+  validate(value, { name }) {
+    recurseConfigSelectors(value, name, checkInteger)
+  },
   transform(value, { name }) {
-    return recurseConfigSelectors(value, name, (childValue, childName) => {
-      checkInteger(childValue)
-      return transformLimit(childValue, childName)
-    })
+    return recurseConfigSelectors(value, name, (childValue, childName) =>
+      transformLimit(childValue, childName),
+    )
   },
 }
 
 const merge = {
   condition: amongCommands(['run']),
-  default() {
-    return getDefaultId()
-  },
-  transform(value, { name }) {
+  default: getDefaultId,
+  validate(value) {
     checkDefinedString(value)
-    validateMerge(value, name)
+    validateMerge(value)
   },
 }
 
 const output = {
   condition: amongCommands(['remove', 'run', 'show']),
+  validate: checkDefinedString,
   transform(value, { name, context: { configInfos } }) {
-    checkDefinedString(value)
     return isOutputPath(value)
       ? normalizeConfigPath(value, name, configInfos)
       : value
@@ -131,7 +123,7 @@ const output = {
 const outliers = {
   condition: amongCommands(['run']),
   default: false,
-  transform(value, { name }) {
+  validate(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
   },
 }
@@ -139,17 +131,19 @@ const outliers = {
 const precision = {
   condition: amongCommands(['run']),
   default: 5,
+  validate(value, { name }) {
+    recurseConfigSelectors(value, name, checkInteger)
+  },
   transform(value, { name }) {
-    return recurseConfigSelectors(value, name, (childValue, childName) => {
-      checkInteger(childValue)
-      return transformPrecision(childValue, childName)
-    })
+    return recurseConfigSelectors(value, name, (childValue, childName) =>
+      transformPrecision(childValue, childName),
+    )
   },
 }
 
 const quiet = {
   condition: amongCommands(['run']),
-  transform: checkBoolean,
+  validate: checkBoolean,
 }
 
 const reporter = [
@@ -170,13 +164,13 @@ const reporter = [
 
 const reporterAny = {
   condition: amongCommands(['remove', 'run', 'show']),
-  transform: checkDefinedString,
+  validate: checkDefinedString,
 }
 
 const reporterConfig = {
   condition: amongCommands(['remove', 'run', 'show']),
   default: {},
-  transform: checkObject,
+  validate: checkObject,
 }
 
 const runner = {
@@ -186,46 +180,41 @@ const runner = {
   // file, instead of to an optional one. This makes behavior easier to
   // understand for users and provides with better error messages.
   default: ['node'],
-  transform(value) {
-    const valueA = normalizeOptionalArray(value)
-    checkArrayLength(valueA)
-    return valueA
-  },
+  validate: checkEmptyArray,
+  transform: normalizeOptionalArray,
 }
 
 const runnerAny = {
   condition: amongCommands(['dev', 'run']),
-  transform: checkDefinedString,
+  validate: checkDefinedString,
 }
 
 const runnerConfig = {
   condition: amongCommands(['dev', 'run']),
   default: {},
-  transform: checkObject,
+  validate: checkObject,
 }
 
 const save = {
   condition: amongCommands(['run']),
   default: false,
-  transform: checkBoolean,
+  validate: checkBoolean,
 }
 
 const select = {
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
   default: [],
-  transform(value) {
-    return normalizeOptionalArray(value)
-  },
+  transform: normalizeOptionalArray,
 }
 
 const selectAny = {
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
-  transform: checkString,
+  validate: checkString,
 }
 
 const showDiff = {
   condition: amongCommands(['remove', 'run', 'show']),
-  transform(value, { name }) {
+  validate(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
   },
 }
@@ -235,26 +224,26 @@ const showMetadata = {
   default({ context: { command } }) {
     return command !== 'run'
   },
-  transform: checkBoolean,
+  validate: checkBoolean,
 }
 
 const showPrecision = {
   condition: amongCommands(['remove', 'run', 'show']),
   default: false,
-  transform(value, { name }) {
+  validate(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
   },
 }
 
 const showSystem = {
   condition: amongCommands(['remove', 'run', 'show']),
-  transform: checkBoolean,
+  validate: checkBoolean,
 }
 
 const showTitles = {
   condition: amongCommands(['remove', 'run', 'show']),
   default: false,
-  transform(value, { name }) {
+  validate(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
   },
 }
@@ -262,34 +251,30 @@ const showTitles = {
 const since = {
   condition: amongCommands(['remove', 'run', 'show']),
   default: 1,
-  transform(value, { name }) {
-    return transformDelta(value, name)
-  },
+  transform: transformDelta,
 }
 
 const system = {
   condition: amongCommands(['dev', 'run']),
   default: {},
-  transform: checkObject,
+  validate: checkObject,
 }
 
 const systemAny = {
   condition: amongCommands(['dev', 'run']),
-  transform: checkDefinedString,
+  validate: checkDefinedString,
 }
 
 const tasks = {
   condition: amongCommands(['dev', 'run']),
   default: [],
-  transform(value) {
-    return normalizeOptionalArray(value)
-  },
+  transform: normalizeOptionalArray,
 }
 
 const tasksAny = {
   condition: amongCommands(['dev', 'run']),
+  validate: checkDefinedString,
   async transform(value, { name, context: { configInfos } }) {
-    checkDefinedString(value)
     return await normalizeConfigGlob(value, name, configInfos)
   },
 }
@@ -297,12 +282,12 @@ const tasksAny = {
 const titles = {
   condition: amongCommands(['remove', 'run', 'show']),
   default: {},
-  transform: checkObject,
+  validate: checkObject,
 }
 
 const titlesAny = {
   condition: amongCommands(['remove', 'run', 'show']),
-  transform: checkDefinedString,
+  validate: checkDefinedString,
 }
 
 export const DEFINITIONS = {

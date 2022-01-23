@@ -38,7 +38,7 @@ const getPathKey = function ({ key }) {
 
 const applyDefinition = async function (
   { value, skipped },
-  { condition, default: defaultValue, compute, transform },
+  { condition, default: defaultValue, compute, validate, transform },
   opts,
 ) {
   if (await againstCondition(value, condition, opts)) {
@@ -47,6 +47,7 @@ const applyDefinition = async function (
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   const valueB = await computeValue(valueA, compute, opts)
+  await validateValue(valueB, validate, opts)
   const valueC = await transformValue(valueB, transform, opts)
   return { value: valueC, skipped: false }
 }
@@ -68,6 +69,15 @@ const addDefaultValue = async function (value, defaultValue, opts) {
 // Apply `compute(opts)` which sets a value from the system, instead of the user
 const computeValue = async function (value, compute, opts) {
   return compute === undefined ? value : await callUserFunc(compute, opts)
+}
+
+// Apply `validate(opts)` which throws on validation errors
+const validateValue = async function (value, validate, opts) {
+  if (value === undefined || validate === undefined) {
+    return
+  }
+
+  await callValueFunc(validate, value, opts)
 }
 
 // Apply `transform(value)` which transforms the value set by the user
