@@ -1,4 +1,4 @@
-import { normalizeConfigProps } from './lib.js'
+import { normalizeConfigProps } from './lib/main.js'
 import { COMMANDS_PROPS } from './properties.js'
 
 // Normalize the configuration properties, including default values and
