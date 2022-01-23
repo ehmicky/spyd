@@ -51,8 +51,15 @@ export const wrapErrorMessage = function (error, message) {
 // `error.name` and `error.message` are prepended to `error.stack`.
 // However, if `error.stack` has already been retrieved, it is cached.
 // Therefore modifying `error.message` would not reflect in `error.stack`.
+// Works with multiline error messages.
 const fixErrorStack = function (error) {
-  const firstLine = `${error.name}: ${error.message}`
-  const stackLines = error.stack.split('\n').slice(1)
-  error.stack = [firstLine, ...stackLines].join('\n')
+  if (!error.stack.includes(STACK_TRACE_START)) {
+    Error.captureStackTrace(error, wrapErrorMessage)
+  }
+
+  const stackStart = error.stack.indexOf(STACK_TRACE_START)
+  const stackLines = stackStart === -1 ? '' : error.stack.slice(stackStart)
+  error.stack = `${error.name}: ${error.message}${stackLines}`
 }
+
+const STACK_TRACE_START = '\n    at '
