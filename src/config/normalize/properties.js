@@ -229,9 +229,7 @@ const showDiff = {
 
 const showMetadata = [
   {
-    condition(value, { context: { command } }) {
-      return command === 'run'
-    },
+    condition: amongCommands(['run']),
     default: false,
   },
   {
