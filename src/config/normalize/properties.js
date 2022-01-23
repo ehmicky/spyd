@@ -156,8 +156,13 @@ const runner = {
   normalize(value, { name }) {
     const valueA = normalizeOptionalArray(value)
     checkArrayLength(valueA, name)
-    checkArrayItems(valueA, name, checkDefinedString)
     return valueA
+  },
+}
+
+const runnerAny = {
+  normalize(value, { name }) {
+    checkDefinedString(value, name)
   },
 }
 
@@ -273,6 +278,7 @@ export const COMMANDS_PROPS = {
     cwd,
     inputs,
     runner,
+    'runner[*]': runnerAny,
     runnerConfig,
     select,
     'select[*]': selectAny,
@@ -316,6 +322,7 @@ export const COMMANDS_PROPS = {
     reporter,
     reporterConfig,
     runner,
+    'runner[*]': runnerAny,
     runnerConfig,
     save,
     select,
