@@ -1,4 +1,5 @@
 import { UserError } from '../../../error/main.js'
+import { wrapError } from '../../../error/wrap.js'
 import { then } from '../../../utils/then.js'
 
 // Definition methods can call `get('query')` to retrieve the normalized value
@@ -13,8 +14,7 @@ const boundGet = function (getProp, query) {
     const value = getProp(query)
     return then(value, (valueA) => unwrapValue(valueA, query))
   } catch (error) {
-    handleGetUserError(error.message)
-    throw error
+    throw handleGetUserError(error)
   }
 }
 
@@ -24,8 +24,8 @@ const unwrapValue = function (value, query) {
   return query in value ? value[query] : value
 }
 
-const handleGetUserError = function (message) {
-  if (message.includes('Invalid name')) {
-    throw new UserError(message)
-  }
+const handleGetUserError = function (error) {
+  return error.message.includes('Invalid name')
+    ? wrapError(error, '', UserError)
+    : error
 }

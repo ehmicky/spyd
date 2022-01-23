@@ -18,7 +18,7 @@ export const callValueFunc = async function (userFunc, value, opts) {
 const handleValueError = function (error, value) {
   const valueStr = inspect(value)
   const separator = valueStr.includes('\n') ? '\n' : ' '
-  const message = `$1.${separator}Its value is:${separator}${valueStr}`
+  const message = `\nIts value is:${separator}${valueStr}`
   return wrapError(error, message)
 }
 
@@ -28,6 +28,6 @@ export const callUserFunc = async function (userFunc, opts) {
   try {
     return await maybeFunction(userFunc, opts)
   } catch (error) {
-    throw wrapError(error, `Configuration property "${opts.name}"`)
+    throw wrapError(error, `Configuration property "${opts.name}":`)
   }
 }

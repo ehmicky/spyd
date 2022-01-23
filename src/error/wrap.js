@@ -30,8 +30,14 @@ const changeErrorType = function (error, ErrorType) {
 
 // Prepend a prefix to an error message
 const wrapErrorMessage = function (error, message) {
+  if (message === '') {
+    return error
+  }
+
   const space = WHITESPACE_END_REGEXP.test(message) ? '' : ' '
-  error.message = `${message}${space}${error.message.trim()}`
+  error.message = message.startsWith('\n')
+    ? `${error.message}${message}`
+    : `${message}${space}${error.message.trim()}`
   fixErrorStack(error)
   return error
 }
