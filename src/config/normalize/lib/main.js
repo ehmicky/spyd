@@ -1,18 +1,13 @@
-/* eslint-disable max-lines */
 import pProps from 'p-props'
-import pReduce from 'p-reduce'
 
-import { UserError } from '../../../error/main.js'
 import { cleanObject } from '../../../utils/clean.js'
-import { maybeFunction } from '../../../utils/function.js'
 import { mapValues } from '../../../utils/map.js'
-import { then } from '../../../utils/then.js'
 
 import { runDagAsync } from './dag/run.js'
+import { applyDefinitionList } from './definitions.js'
+import { retrieveGet } from './get.js'
 import { isParent } from './prop_path/compare.js'
 import { list } from './prop_path/get.js'
-import { parse } from './prop_path/parse.js'
-// eslint-disable-next-line import/max-dependencies
 import { set } from './prop_path/set.js'
 
 // Normalize configuration shape and do custom validation.
@@ -50,119 +45,22 @@ export const normalizeConfigProps = async function (
 
 const normalizePropDeep = async function (
   { queries, definitionList, query, config, context },
-  get,
+  getProp,
 ) {
-  const configA = await setParentProps({ config, queries, query, get })
-  const getA = boundGet.bind(undefined, get)
+  const configA = await setParentProps({ config, queries, query, getProp })
+  const get = retrieveGet(getProp)
   const props = list(configA, query)
   return await pProps(props, (value, name) =>
-    applyDefinitionList({ value, name, definitionList, context, get: getA }),
+    applyDefinitionList({ value, name, definitionList, context, get }),
   )
 }
 
 // Children properties await their parent, and use their parent normalized
 // values
-const setParentProps = async function ({ config, queries, query, get }) {
+const setParentProps = async function ({ config, queries, query, getProp }) {
   const parentQueries = queries.filter((queryB) => isParent(query, queryB))
-  const configValues = await Promise.all(parentQueries.map(get))
+  const configValues = await Promise.all(parentQueries.map(getProp))
   return setConfigValues(configValues, config)
-}
-
-const boundGet = function (get, query) {
-  try {
-    const value = get(query)
-    return then(value, (valueA) => unwrapValue(valueA, query))
-  } catch (error) {
-    handleGetUserError(error.message)
-    throw error
-  }
-}
-
-// When the query has a wildcard, `get()` returns an object with multiple values
-// Otherwise, it returns the only value as is.
-const unwrapValue = function (value, query) {
-  return query in value ? value[query] : value
-}
-
-const handleGetUserError = function (message) {
-  if (message.includes('Invalid name')) {
-    throw new UserError(message)
-  }
-}
-
-// Properties definitions can optionally be an array.
-// This is useful either:
-//  - when combined with `condition()`
-//  - when the default order is not convenient, e.g. when `validate()` must be
-//    run after `normalize()`
-const applyDefinitionList = async function ({
-  value,
-  name,
-  definitionList,
-  context,
-  get,
-}) {
-  const path = getPath(name)
-  const opts = { name, path, context, get }
-  const definitionListA = Array.isArray(definitionList)
-    ? definitionList
-    : [definitionList]
-  const { value: valueA, skipped } = await pReduce(
-    definitionListA,
-    (memo, definition) => applyDefinition(memo, definition, opts),
-    { value, skipped: true },
-  )
-  return skipped ? undefined : valueA
-}
-
-const getPath = function (name) {
-  return parse(name).map(getPathKey)
-}
-
-const getPathKey = function ({ key }) {
-  return key
-}
-
-const applyDefinition = async function (
-  { value, skipped },
-  { condition, default: defaultValue, compute, transform },
-  opts,
-) {
-  if (await againstCondition(value, condition, opts)) {
-    return { value, skipped }
-  }
-
-  const valueA = await addDefaultValue(value, defaultValue, opts)
-  const valueB = await computeValue(valueA, compute, opts)
-  const valueC = await transformValue(valueB, transform, opts)
-  return { value: valueC, skipped: false }
-}
-
-// Apply `condition(opts)` which skips the current definition if `false` is
-// returned.
-// If all definitions for a given property are skipped, the property is omitted.
-const againstCondition = async function (value, condition, opts) {
-  return condition !== undefined && !(await condition(value, opts))
-}
-
-// Apply `default(opts)` which assigns a default value
-const addDefaultValue = async function (value, defaultValue, opts) {
-  return value === undefined ? await maybeFunction(defaultValue, opts) : value
-}
-
-// Apply `compute(opts)` which sets a value from the system, instead of the user
-const computeValue = async function (value, compute, opts) {
-  return compute === undefined ? value : await maybeFunction(compute, opts)
-}
-
-// Apply `transform(value)` which transforms the value set by the user
-const transformValue = async function (value, transform, opts) {
-  if (value === undefined || transform === undefined) {
-    return value
-  }
-
-  const newValue = await transform(value, opts)
-  return newValue === undefined ? value : newValue
 }
 
 // We start from an empty object to:
@@ -180,4 +78,3 @@ const setConfigValues = function (configValues, config) {
 const setConfigValue = function (config, [name, value]) {
   return set(config, name, value)
 }
-/* eslint-enable max-lines */
