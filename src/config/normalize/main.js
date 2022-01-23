@@ -39,8 +39,9 @@ export const normalizeConfig = async function (config, command, configInfos) {
   )
   const allConfigValues = await runDagAsync(configPropsFuncs)
   const configA = mergeConfigProps(allConfigValues)
-  const configB = cleanObject(configA)
-  return configB
+  const configB = postNormalizeConfig(configA)
+  const configC = cleanObject(configB)
+  return configC
 }
 
 const normalizePropDeep = async function (
@@ -143,5 +144,18 @@ const setConfigValues = function (configValues, config) {
 
 const setConfigValue = function (config, [name, value]) {
   return set(config, name, value)
+}
+
+// Perform normalization that is difficult to do with the main configuration
+// logic
+const postNormalizeConfig = function (config) {
+  const configA = flattenTasks(config)
+  return configA
+}
+
+const flattenTasks = function (config) {
+  return config.tasks === undefined
+    ? config
+    : { ...config, tasks: config.tasks.flat() }
 }
 /* eslint-enable max-lines */
