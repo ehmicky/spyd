@@ -26,226 +26,305 @@ import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
 
 const METADATA_COMMANDS = new Set(['show', 'remove'])
 
-export const CONFIG_PROPS = {
-  config: {
-    commands: 'all',
-    async default() {
-      return await getDefaultConfig()
-    },
-    normalize(value, { name }) {
-      const valueA = normalizeOptionalArray(value)
-      checkArrayItems(valueA, name, checkDefinedString)
-      return valueA
-    },
+const config = {
+  async default() {
+    return await getDefaultConfig()
   },
-  colors: {
-    commands: 'report',
-    normalize(value, { name }) {
-      checkBoolean(value, name)
-    },
+  normalize(value, { name }) {
+    const valueA = normalizeOptionalArray(value)
+    checkArrayItems(valueA, name, checkDefinedString)
+    return valueA
   },
-  cwd: {
-    commands: 'all',
-    default() {
-      return getCwd()
-    },
-    normalize(value, { name, configInfos }) {
-      checkDefinedString(value, name)
-      return normalizeConfigPath(value, name, configInfos)
-    },
-  },
-  delta: {
-    commands: 'delta',
-    default: 1,
-    normalize(value, { name }) {
-      return normalizeDelta(value, name)
-    },
-  },
-  force: {
-    commands: 'remove',
-    default() {
-      return !isTtyInput()
-    },
-    normalize(value, { name }) {
-      checkBoolean(value, name)
-    },
-  },
-  inputs: {
-    commands: 'combinations',
-    default: {},
-    normalize(value, { name }) {
-      checkObjectProps(value, name, checkJson)
-    },
-  },
-  limit: {
-    commands: 'report',
-    normalize(value, { name }) {
-      return recurseConfigSelectors(value, name, (childValue, childName) => {
-        checkInteger(childValue, childName)
-        return normalizeLimit(childValue, childName)
-      })
-    },
-  },
-  merge: {
-    commands: 'run',
-    default() {
-      return getDefaultId()
-    },
-    normalize(value, { name }) {
-      checkDefinedString(value, name)
-      validateMerge(value, name)
-    },
-  },
-  output: {
-    commands: 'report',
-    normalize(value, { name, configInfos }) {
-      checkDefinedString(value, name)
-      return isOutputPath(value)
-        ? normalizeConfigPath(value, name, configInfos)
-        : value
-    },
-  },
-  outliers: {
-    commands: 'run',
-    default: false,
-    normalize(value, { name }) {
-      recurseConfigSelectors(value, name, checkBoolean)
-    },
-  },
-  precision: {
-    commands: 'run',
-    default: 5,
-    normalize(value, { name }) {
-      return recurseConfigSelectors(value, name, (childValue, childName) => {
-        checkInteger(childValue, childName)
-        return normalizePrecision(childValue, childName)
-      })
-    },
-  },
-  quiet: {
-    commands: 'run',
-    normalize(value, { name }) {
-      checkBoolean(value, name)
-    },
-  },
-  reporter: {
-    commands: 'report',
-    default: ['debug'],
-    async normalize(value, { name, get }) {
-      const [force] = await get('force')
+}
 
-      if (force) {
-        return []
-      }
+const colors = {
+  normalize(value, { name }) {
+    checkBoolean(value, name)
+  },
+}
 
-      const valueA = normalizeOptionalArray(value)
-      checkArrayItems(valueA, name, checkDefinedString)
-      return valueA
-    },
+const cwd = {
+  default() {
+    return getCwd()
   },
-  reporterConfig: {
-    commands: 'report',
-    default: {},
+  normalize(value, { name, configInfos }) {
+    checkDefinedString(value, name)
+    return normalizeConfigPath(value, name, configInfos)
   },
+}
+
+const delta = {
+  default: 1,
+  normalize(value, { name }) {
+    return normalizeDelta(value, name)
+  },
+}
+
+const force = {
+  default() {
+    return !isTtyInput()
+  },
+  normalize(value, { name }) {
+    checkBoolean(value, name)
+  },
+}
+
+const inputs = {
+  default: {},
+  normalize(value, { name }) {
+    checkObjectProps(value, name, checkJson)
+  },
+}
+
+const limit = {
+  normalize(value, { name }) {
+    return recurseConfigSelectors(value, name, (childValue, childName) => {
+      checkInteger(childValue, childName)
+      return normalizeLimit(childValue, childName)
+    })
+  },
+}
+
+const merge = {
+  default() {
+    return getDefaultId()
+  },
+  normalize(value, { name }) {
+    checkDefinedString(value, name)
+    validateMerge(value, name)
+  },
+}
+
+const output = {
+  normalize(value, { name, configInfos }) {
+    checkDefinedString(value, name)
+    return isOutputPath(value)
+      ? normalizeConfigPath(value, name, configInfos)
+      : value
+  },
+}
+
+const outliers = {
+  default: false,
+  normalize(value, { name }) {
+    recurseConfigSelectors(value, name, checkBoolean)
+  },
+}
+
+const precision = {
+  default: 5,
+  normalize(value, { name }) {
+    return recurseConfigSelectors(value, name, (childValue, childName) => {
+      checkInteger(childValue, childName)
+      return normalizePrecision(childValue, childName)
+    })
+  },
+}
+
+const quiet = {
+  normalize(value, { name }) {
+    checkBoolean(value, name)
+  },
+}
+
+const reporter = {
+  default: ['debug'],
+  normalize(value, { name }) {
+    const valueA = normalizeOptionalArray(value)
+    checkArrayItems(valueA, name, checkDefinedString)
+    return valueA
+  },
+}
+
+// `reporter` configuration property specific logic for the `remove` command
+const reporterRemove = {
+  ...reporter,
+  async normalize(value, { name, get }) {
+    const [forceValue] = await get('force')
+    return forceValue ? [] : reporter.normalize(value, { name })
+  },
+}
+
+const reporterConfig = {
+  default: {},
+}
+
+const runner = {
   // We default `runner` to `node` only instead of several ones (e.g. `cli`)
   // because this enforces that the `runner` property points to a required tasks
   // file, instead of to an optional one. This makes behavior easier to
   // understand for users and provides with better error messages.
-  runner: {
-    commands: 'combinations',
-    default: ['node'],
-    normalize(value, { name }) {
-      const valueA = normalizeOptionalArray(value)
-      checkArrayLength(valueA, name)
-      checkArrayItems(valueA, name, checkDefinedString)
-      return valueA
-    },
+  default: ['node'],
+  normalize(value, { name }) {
+    const valueA = normalizeOptionalArray(value)
+    checkArrayLength(valueA, name)
+    checkArrayItems(valueA, name, checkDefinedString)
+    return valueA
   },
-  runnerConfig: {
-    commands: 'combinations',
-    default: {},
+}
+
+const runnerConfig = {
+  default: {},
+}
+
+const save = {
+  default: false,
+  normalize(value, { name }) {
+    checkBoolean(value, name)
   },
-  save: {
-    commands: 'run',
-    default: false,
-    normalize(value, { name }) {
-      checkBoolean(value, name)
-    },
+}
+
+const select = {
+  default: [],
+  normalize(value, { name }) {
+    const valueA = normalizeOptionalArray(value)
+    checkArrayItems(valueA, name, checkString)
+    return valueA
   },
-  select: {
-    commands: 'select',
-    default: [],
-    normalize(value, { name }) {
-      const valueA = normalizeOptionalArray(value)
-      checkArrayItems(valueA, name, checkString)
-      return valueA
-    },
+}
+
+const showDiff = {
+  normalize(value, { name }) {
+    recurseConfigSelectors(value, name, checkBoolean)
   },
-  showDiff: {
-    commands: 'report',
-    normalize(value, { name }) {
-      recurseConfigSelectors(value, name, checkBoolean)
-    },
+}
+
+const showMetadata = {
+  default({ command }) {
+    return METADATA_COMMANDS.has(command)
   },
-  showMetadata: {
-    commands: 'report',
-    default({ command }) {
-      return METADATA_COMMANDS.has(command)
-    },
-    normalize(value, { name }) {
-      checkBoolean(value, name)
-    },
+  normalize(value, { name }) {
+    checkBoolean(value, name)
   },
-  showPrecision: {
-    commands: 'report',
-    default: false,
-    normalize(value, { name }) {
-      recurseConfigSelectors(value, name, checkBoolean)
-    },
+}
+
+const showPrecision = {
+  default: false,
+  normalize(value, { name }) {
+    recurseConfigSelectors(value, name, checkBoolean)
   },
-  showSystem: {
-    commands: 'report',
-    normalize(value, { name }) {
-      checkBoolean(value, name)
-    },
+}
+
+const showSystem = {
+  normalize(value, { name }) {
+    checkBoolean(value, name)
   },
-  showTitles: {
-    commands: 'report',
-    default: false,
-    normalize(value, { name }) {
-      recurseConfigSelectors(value, name, checkBoolean)
-    },
+}
+
+const showTitles = {
+  default: false,
+  normalize(value, { name }) {
+    recurseConfigSelectors(value, name, checkBoolean)
   },
-  since: {
-    commands: 'history',
-    default: 1,
-    normalize(value, { name }) {
-      return normalizeDelta(value, name)
-    },
+}
+
+const since = {
+  default: 1,
+  normalize(value, { name }) {
+    return normalizeDelta(value, name)
   },
-  system: {
-    commands: 'combinations',
-    default: {},
-    normalize(value, { name }) {
-      checkObjectProps(value, name, checkDefinedString)
-    },
+}
+
+const system = {
+  default: {},
+  normalize(value, { name }) {
+    checkObjectProps(value, name, checkDefinedString)
   },
-  tasks: {
-    commands: 'combinations',
-    normalize(value, { name, configInfos }) {
-      const valueA = normalizeOptionalArray(value)
-      return checkArrayItems(valueA, name, (childValue, childName) => {
-        checkDefinedString(childValue, childName)
-        return normalizeConfigGlob(childValue, childName, configInfos)
-      })
-    },
+}
+
+const tasks = {
+  normalize(value, { name, configInfos }) {
+    const valueA = normalizeOptionalArray(value)
+    return checkArrayItems(valueA, name, (childValue, childName) => {
+      checkDefinedString(childValue, childName)
+      return normalizeConfigGlob(childValue, childName, configInfos)
+    })
   },
-  titles: {
-    commands: 'report',
-    default: {},
-    normalize(value, { name }) {
-      checkObjectProps(value, name, checkDefinedString)
-    },
+}
+const titles = {
+  default: {},
+  normalize(value, { name }) {
+    checkObjectProps(value, name, checkDefinedString)
+  },
+}
+
+// All config properties can be specified in `spyd.yml` (unlike CLI flags), for
+// any commands.
+// Therefore, we need to filter them out depending on the current command.
+export const COMMANDS_PROPS = {
+  dev: {
+    config,
+    cwd,
+    inputs,
+    runner,
+    runnerConfig,
+    select,
+    system,
+    tasks,
+  },
+  remove: {
+    colors,
+    config,
+    cwd,
+    delta,
+    force,
+    limit,
+    output,
+    reporter: reporterRemove,
+    reporterConfig,
+    select,
+    showDiff,
+    showMetadata,
+    showPrecision,
+    showSystem,
+    showTitles,
+    since,
+    titles,
+  },
+  run: {
+    colors,
+    config,
+    cwd,
+    inputs,
+    limit,
+    merge,
+    output,
+    outliers,
+    precision,
+    quiet,
+    reporter,
+    reporterConfig,
+    runner,
+    runnerConfig,
+    save,
+    select,
+    showDiff,
+    showMetadata,
+    showPrecision,
+    showSystem,
+    showTitles,
+    since,
+    system,
+    tasks,
+    titles,
+  },
+  show: {
+    colors,
+    config,
+    cwd,
+    delta,
+    limit,
+    output,
+    reporter,
+    reporterConfig,
+    select,
+    showDiff,
+    showMetadata,
+    showPrecision,
+    showSystem,
+    showTitles,
+    since,
+    titles,
   },
 }
 /* eslint-enable max-lines */
