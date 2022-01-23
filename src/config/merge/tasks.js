@@ -1,4 +1,3 @@
-import { normalizeOptionalArray } from '../normalize/check.js'
 import { PLUGIN_TYPES } from '../plugin/types.js'
 
 // Custom merging logic for tasks.
@@ -26,4 +25,8 @@ export const mergeTasks = function (tasksA, tasksB) {
   const tasksArrA = normalizeOptionalArray(tasksA)
   const tasksArrB = normalizeOptionalArray(tasksB)
   return [...tasksArrA, ...tasksArrB]
+}
+
+const normalizeOptionalArray = function (value = []) {
+  return Array.isArray(value) ? value : [value]
 }
