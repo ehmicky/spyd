@@ -30,7 +30,7 @@ import { set } from './prop_path/set.js'
 export const normalizeConfigProps = async function (
   config,
   definitions,
-  configInfos,
+  { context },
 ) {
   const queries = Object.keys(definitions)
   const definitionsFuncs = mapValues(definitions, (definitionList, query) =>
@@ -39,7 +39,7 @@ export const normalizeConfigProps = async function (
       definitionList,
       query,
       config,
-      configInfos,
+      context,
     }),
   )
   const allConfigValues = await runDagAsync(definitionsFuncs)
@@ -49,20 +49,14 @@ export const normalizeConfigProps = async function (
 }
 
 const normalizePropDeep = async function (
-  { queries, definitionList, query, config, configInfos },
+  { queries, definitionList, query, config, context },
   get,
 ) {
   const configA = await setParentProps({ config, queries, query, get })
   const getA = boundGet.bind(undefined, get)
   const props = list(configA, query)
   return await pProps(props, (value, name) =>
-    applyDefinitionList({
-      value,
-      name,
-      definitionList,
-      configInfos,
-      get: getA,
-    }),
+    applyDefinitionList({ value, name, definitionList, context, get: getA }),
   )
 }
 
@@ -105,11 +99,11 @@ const applyDefinitionList = async function ({
   value,
   name,
   definitionList,
-  configInfos,
+  context,
   get,
 }) {
   const path = getPath(name)
-  const opts = { name, path, configInfos, get }
+  const opts = { name, path, context, get }
   const definitionListA = Array.isArray(definitionList)
     ? definitionList
     : [definitionList]

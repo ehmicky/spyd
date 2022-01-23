@@ -48,7 +48,7 @@ const cwd = {
   default() {
     return getCwd()
   },
-  transform(value, { name, configInfos }) {
+  transform(value, { name, context: { configInfos } }) {
     checkDefinedString(value, name)
     return normalizeConfigPath(value, name, configInfos)
   },
@@ -103,7 +103,7 @@ const merge = {
 }
 
 const output = {
-  transform(value, { name, configInfos }) {
+  transform(value, { name, context: { configInfos } }) {
     checkDefinedString(value, name)
     return isOutputPath(value)
       ? normalizeConfigPath(value, name, configInfos)
@@ -276,7 +276,7 @@ const tasks = {
 }
 
 const tasksAny = {
-  async transform(value, { name, configInfos }) {
+  async transform(value, { name, context: { configInfos } }) {
     checkDefinedString(value, name)
     return await normalizeConfigGlob(value, name, configInfos)
   },
