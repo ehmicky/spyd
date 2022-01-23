@@ -69,8 +69,11 @@ const force = {
 
 const inputs = {
   default: {},
+}
+
+const inputsAny = {
   normalize(value, { name }) {
-    checkObjectProps(value, name, checkJson)
+    checkJson(value, name)
   },
 }
 
@@ -281,6 +284,7 @@ export const COMMANDS_PROPS = {
     config,
     cwd,
     inputs,
+    'inputs.*': inputsAny,
     runner,
     'runner[*]': runnerAny,
     runnerConfig,
@@ -318,6 +322,7 @@ export const COMMANDS_PROPS = {
     config,
     cwd,
     inputs,
+    'inputs.*': inputsAny,
     limit,
     merge,
     output,
