@@ -16,7 +16,6 @@ import {
   checkString,
   normalizeOptionalArray,
   checkArrayLength,
-  checkObjectProps,
   checkDefinedString,
   checkJson,
 } from './check.js'

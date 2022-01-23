@@ -14,9 +14,9 @@ export const runNormalizer = function (normalizer, value, ...args) {
 
 export const checkObjectProps = function (value, name, checker) {
   checkObject(value, name)
-  return mapValues(value, (childValue, childName) =>
-    runNormalizer(checker, childValue, `${name}.${childName}`),
-  )
+  return mapValues(value, (childValue, childName) => {
+    checker(childValue, `${name}.${childName}`)
+  })
 }
 
 export const checkBoolean = function (value, name) {
