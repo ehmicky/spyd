@@ -38,14 +38,14 @@ const normalizePropValue = async function (
     command,
     configInfos,
   },
-  getConfig,
+  get,
 ) {
   if (!commandHasProp(commands, command)) {
     return
   }
 
   const value = config[name]
-  const opts = { name, configInfos, config: getConfig, command }
+  const opts = { name, configInfos, get, command }
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   return await runPropNormalizer(valueA, normalize, opts)
