@@ -5,6 +5,7 @@ import { promisify } from 'util'
 import getStream from 'get-stream'
 
 import { PluginError, UserError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 
 import { throwOnStreamError } from './error.js'
 
@@ -40,7 +41,7 @@ const sendPayload = async function (payload, { res }) {
       promisify(res.end.bind(res))(payloadString),
     ])
   } catch (error) {
-    throw new PluginError(`Could not send HTTP response: ${error.stack}`)
+    throw wrapError(error, 'Could not send HTTP response:', PluginError)
   }
 }
 
@@ -70,7 +71,7 @@ const parseReturnValue = async function (req) {
     const returnValue = JSON.parse(returnValueString)
     return returnValue
   } catch (error) {
-    throw new PluginError(`Could not receive HTTP request: ${error.stack}`)
+    throw wrapError(error, 'Could not receive HTTP request:', PluginError)
   }
 }
 
