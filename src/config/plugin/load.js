@@ -1,6 +1,7 @@
 import { createRequire } from 'module'
 
 import { PluginError, UserError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 import { PLUGINS_IMPORT_BASE } from '../normalize/path.js'
 
 // Import plugin's code
@@ -62,8 +63,10 @@ const importPlugin = async function ({
   try {
     return await import(pluginPath)
   } catch (error) {
-    throw new PluginError(
-      `Could not load "${type}" module "${moduleId}"\n\n${error.stack}`,
+    throw wrapError(
+      error,
+      `Could not load "${type}" module "${moduleId}"\n\n`,
+      PluginError,
     )
   }
 }
@@ -82,9 +85,11 @@ export const getPluginPath = function (moduleName, type, base) {
   try {
     return resolve(moduleName)
   } catch (error) {
-    throw new UserError(`Cannot find ${type} "${moduleName}".
-This Node module was not found, please ensure it is installed.
-
-${error.stack}`)
+    throw wrapError(
+      error,
+      `Cannot find ${type} "${moduleName}".
+This Node module was not found, please ensure it is installed.\n\n`,
+      UserError,
+    )
   }
 }
