@@ -90,7 +90,7 @@ const handleGetUserError = function (message) {
 const normalizePropValue = async function ({
   value,
   name,
-  configProp: { default: defaultValue, transform },
+  configProp: { default: defaultValue, transform, compute },
   configInfos,
   get,
 }) {
@@ -98,7 +98,8 @@ const normalizePropValue = async function ({
   const opts = { name, path, configInfos, get }
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
-  return await transformProp(valueA, transform, opts)
+  const valueB = await computeValue(valueA, compute, opts)
+  return await transformValue(valueB, transform, opts)
 }
 
 const getPath = function (name) {
@@ -109,12 +110,18 @@ const getPathKey = function ({ key }) {
   return key
 }
 
+// Apply `default(opts)` which assigns a default value
 const addDefaultValue = async function (value, defaultValue, opts) {
   return value === undefined ? await maybeFunction(defaultValue, opts) : value
 }
 
-// Calls `transform(value)`
-const transformProp = async function (value, transform, opts) {
+// Apply `compute(opts)` which sets a value from the system, instead of the user
+const computeValue = async function (value, compute, opts) {
+  return compute === undefined ? value : await maybeFunction(compute, opts)
+}
+
+// Apply `transform(value)` which transforms the value set by the user
+const transformValue = async function (value, transform, opts) {
   if (value === undefined || transform === undefined) {
     return value
   }
