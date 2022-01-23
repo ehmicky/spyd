@@ -23,6 +23,19 @@ import {
 // eslint-disable-next-line import/max-dependencies
 import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
 
+// Used a `condition()` to filter a configuration property for specific commands
+const amongCommands = function (commands) {
+  return boundAmongCommands.bind(undefined, new Set(commands))
+}
+
+const boundAmongCommands = function (
+  commands,
+  value,
+  { context: { command } },
+) {
+  return commands.has(command)
+}
+
 const config = {
   async default() {
     return await getDefaultConfig()
@@ -136,9 +149,7 @@ const quiet = {
 
 const reporter = [
   {
-    condition(value, { context: { command } }) {
-      return command === 'remove'
-    },
+    condition: amongCommands(['remove']),
     async transform(value, { get }) {
       return (await get('force')) ? [] : value
     },
