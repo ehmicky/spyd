@@ -51,8 +51,12 @@ const changeErrorType = function (error, ErrorType) {
   }
 
   const errorB = new ErrorType(errorA.message)
-  // eslint-disable-next-line fp/no-mutation
-  errorB.stack = errorA.stack.replace(errorA.name, errorB.name)
+
+  if (errorA.stack.startsWith(`${errorA.name}:`)) {
+    // eslint-disable-next-line fp/no-mutation
+    errorB.stack = errorA.stack.replace(errorA.name, errorB.name)
+  }
+
   return errorB
 }
 
