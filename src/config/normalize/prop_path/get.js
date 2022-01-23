@@ -1,21 +1,21 @@
 import { listEntries } from './entries.js'
 
-// Retrieve all entries (value + query + path) matching a query string
-// in `target`
-export const getEntries = function (target, query) {
+// Retrieve all properties in `target` matching a query string.
+// The return value is an object where the key is the path to each value.
+export const list = function (target, query) {
   const entries = listEntries(target, query)
-  return entries.map(normalizeEntry)
+  return Object.fromEntries(entries.map(normalizeEntry))
 }
 
 const normalizeEntry = function ({ value, path }) {
   const query = getEntryQuery({ path })
-  return { value, query }
+  return [query, value]
 }
 
 // Same but only retrieving the values
 export const getValues = function (target, query) {
-  const entris = listEntries(target, query)
-  return entris.map(getEntryValue)
+  const entries = listEntries(target, query)
+  return entries.map(getEntryValue)
 }
 
 const getEntryValue = function ({ value }) {

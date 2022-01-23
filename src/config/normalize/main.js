@@ -1,12 +1,17 @@
+/* eslint-disable max-lines */
+import pProps from 'p-props'
+
 import { UserError } from '../../error/main.js'
 import { cleanObject } from '../../utils/clean.js'
 import { mapValues } from '../../utils/map.js'
+import { then } from '../../utils/then.js'
 
 import { runNormalizer } from './check.js'
 import { runDagAsync } from './dag/run.js'
-import { getEntries } from './prop_path/get.js'
+import { list } from './prop_path/get.js'
 import { parse } from './prop_path/parse.js'
 import { set } from './prop_path/set.js'
+// eslint-disable-next-line import/max-dependencies
 import { COMMANDS_PROPS } from './properties.js'
 
 // Normalize configuration shape and do custom validation.
@@ -41,21 +46,26 @@ const normalizePropDeep = async function (
   get,
 ) {
   const getA = boundGet.bind(undefined, get)
-  const entries = getEntries(config, query)
-  return await Promise.all(
-    entries.map((entry) =>
-      normalizePropValue({ entry, configProp, configInfos, get: getA }),
-    ),
+  const props = list(config, query)
+  return await pProps(props, (value, name) =>
+    normalizePropValue({ value, name, configProp, configInfos, get: getA }),
   )
 }
 
 const boundGet = function (get, query) {
   try {
-    return get(query)
+    const value = get(query)
+    return then(value, (valueA) => unwrapValue(valueA, query))
   } catch (error) {
     handleGetUserError(error.message)
     throw error
   }
+}
+
+// When the query has a wildcard, `get()` returns an object with multiple values
+// Otherwise, it returns the only value as is.
+const unwrapValue = function (value, query) {
+  return query in value ? value[query] : value
 }
 
 const handleGetUserError = function (message) {
@@ -65,20 +75,21 @@ const handleGetUserError = function (message) {
 }
 
 const normalizePropValue = async function ({
-  entry: { value, query },
+  value,
+  name,
   configProp: { default: defaultValue, normalize },
   configInfos,
   get,
 }) {
-  const path = getPath(query)
-  const opts = { name: query, path, configInfos, get }
+  const path = getPath(name)
+  const opts = { name, path, configInfos, get }
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   return await runPropNormalizer(valueA, normalize, opts)
 }
 
-const getPath = function (query) {
-  return parse(query).map(getPathKey)
+const getPath = function (name) {
+  return parse(name).map(getPathKey)
 }
 
 const getPathKey = function ({ key }) {
@@ -103,10 +114,16 @@ const runPropNormalizer = async function (value, normalize, opts) {
     : await runNormalizer(normalize, value, opts)
 }
 
+// We start from an empty object to:
+//  - ensure only allowed properties are set
+//  - there are no `undefined` values
 const mergeConfigProps = function (configProps) {
-  return Object.entries(configProps).reduce(setConfigProp, {})
+  return Object.values(configProps)
+    .flatMap(Object.entries)
+    .reduce(setConfigProp, {})
 }
 
-const setConfigProp = function (config, [query, value]) {
-  return set(config, query, value[0])
+const setConfigProp = function (config, [name, value]) {
+  return set(config, name, value)
 }
+/* eslint-enable max-lines */

@@ -138,7 +138,7 @@ const reporter = {
 const reporterRemove = {
   ...reporter,
   async normalize(value, { name, get }) {
-    const [forceValue] = await get('force')
+    const forceValue = await get('force')
     return forceValue ? [] : reporter.normalize(value, { name })
   },
 }
