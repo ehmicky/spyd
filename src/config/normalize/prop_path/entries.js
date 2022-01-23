@@ -1,11 +1,8 @@
 import isPlainObj from 'is-plain-obj'
 
-import { parse } from './parse.js'
-
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
-export const listEntries = function (target, query) {
-  const tokens = parse(query)
+export const listEntries = function (target, tokens) {
   return tokens.reduce(listTokenEntries, [{ value: target, path: [] }])
 }
 

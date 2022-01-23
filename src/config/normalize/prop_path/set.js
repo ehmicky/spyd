@@ -1,10 +1,12 @@
 import { setArray } from '../../../utils/set.js'
 
 import { listEntries } from './entries.js'
+import { parse } from './parse.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, query, setValue) {
-  const entries = listEntries(target, query)
+  const tokens = parse(query)
+  const entries = listEntries(target, tokens)
   return entries.reduce(
     (targetA, { path }) => setProp(targetA, path, setValue),
     target,
