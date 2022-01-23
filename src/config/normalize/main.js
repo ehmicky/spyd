@@ -6,7 +6,6 @@ import { cleanObject } from '../../utils/clean.js'
 import { mapValues } from '../../utils/map.js'
 import { then } from '../../utils/then.js'
 
-import { runNormalizer } from './check.js'
 import { runDagAsync } from './dag/run.js'
 import { isParent } from './prop_path/compare.js'
 import { list } from './prop_path/get.js'
@@ -120,10 +119,14 @@ const addDefaultValue = async function (value, defaultValue, opts) {
   return await defaultValue(opts)
 }
 
+// Calls `normalize(value)` which transforms the value.
 const runPropNormalizer = async function (value, normalize, opts) {
-  return value === undefined || normalize === undefined
-    ? value
-    : await runNormalizer(normalize, value, opts)
+  if (value === undefined || normalize === undefined) {
+    return value
+  }
+
+  const newValue = await normalize(value, opts)
+  return newValue === undefined ? value : newValue
 }
 
 // We start from an empty object to:

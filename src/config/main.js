@@ -12,7 +12,7 @@ export const getConfig = async function (
     configFlags,
     command,
   )
-  const configa = await normalizeConfig(config, command, configInfos)
-  const configB = await addPlugins(configa, command)
+  const configA = await normalizeConfig(config, command, configInfos)
+  const configB = await addPlugins(configA, command)
   return configB
 }

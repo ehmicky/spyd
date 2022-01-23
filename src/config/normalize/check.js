@@ -5,13 +5,6 @@ import isPlainObj from 'is-plain-obj'
 import { UserError } from '../../error/main.js'
 import { mapValues } from '../../utils/map.js'
 
-// A normalizing function transforms a value by returning.
-// It can return `undefined` to leave the value as is.
-export const runNormalizer = function (normalizer, value, ...args) {
-  const newValue = normalizer(value, ...args)
-  return newValue === undefined ? value : newValue
-}
-
 export const checkObjectProps = function (value, name, checker) {
   checkObject(value, name)
   return mapValues(value, (childValue, childName) => {
