@@ -13,10 +13,9 @@ export const normalizeConfigPath = function (value, name, configInfos) {
 // Resolve configuration properties that are globbing patterns.
 // Also resolve to absolute file paths.
 // Remove duplicates and temporary files.
-// TODO: use asynchronous code instead.
-export const normalizeConfigGlob = function (value, name, configInfos) {
+export const normalizeConfigGlob = async function (value, name, configInfos) {
   const base = getBase(configInfos, name)
-  const filePaths = fastGlob.sync(value, {
+  const filePaths = await fastGlob(value, {
     cwd: base,
     absolute: true,
     unique: true,

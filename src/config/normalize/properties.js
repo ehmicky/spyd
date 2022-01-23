@@ -241,9 +241,9 @@ const tasks = {
 }
 
 const tasksAny = {
-  normalize(value, { name, configInfos }) {
+  async normalize(value, { name, configInfos }) {
     checkDefinedString(value, name)
-    return normalizeConfigGlob(value, name, configInfos)
+    return await normalizeConfigGlob(value, name, configInfos)
   },
 }
 
