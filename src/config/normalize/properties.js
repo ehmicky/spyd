@@ -174,10 +174,14 @@ const save = {
 
 const select = {
   default: [],
+  normalize(value) {
+    return normalizeOptionalArray(value)
+  },
+}
+
+const selectAny = {
   normalize(value, { name }) {
-    const valueA = normalizeOptionalArray(value)
-    checkArrayItems(valueA, name, checkString)
-    return valueA
+    checkString(value, name)
   },
 }
 
@@ -271,6 +275,7 @@ export const COMMANDS_PROPS = {
     runner,
     runnerConfig,
     select,
+    'select[*]': selectAny,
     system,
     'system.*': systemAny,
     tasks,
@@ -287,6 +292,7 @@ export const COMMANDS_PROPS = {
     reporter: reporterRemove,
     reporterConfig,
     select,
+    'select[*]': selectAny,
     showDiff,
     showMetadata,
     showPrecision,
@@ -313,6 +319,7 @@ export const COMMANDS_PROPS = {
     runnerConfig,
     save,
     select,
+    'select[*]': selectAny,
     showDiff,
     showMetadata: showMetadataRun,
     showPrecision,
@@ -336,6 +343,7 @@ export const COMMANDS_PROPS = {
     reporter,
     reporterConfig,
     select,
+    'select[*]': selectAny,
     showDiff,
     showMetadata,
     showPrecision,
