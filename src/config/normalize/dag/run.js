@@ -11,32 +11,38 @@ export const runDagAsync = async function (tasks) {
   return await pProps(tasksReturns)
 }
 
-// Run several tasks in parallel while still allowing them to use each other's
-// return values.
+// Same as `bindDag()` but runs each task in parallel too.
+// I.e. each task function is replaced by its return value instead.
+export const runDag = function (tasks) {
+  const boundTasks = bindDag(tasks)
+  const tasksReturns = mapValues(boundTasks, runBoundTaskFunc)
+  return tasksReturns
+}
+
+// Bind several tasks to allow them to use each other's return value.
 // This creates a DAG.
 //  - Unlike traditional DAGs which require each task to declaring its
 //    dependencies as a static array, tasks declare those in an imperative
 //    fashion, by referencing the other task's return value
 //  - This is simpler and more intuitive.
 //  - This is done by passing to each task a function to retrieve other tasks'
-//    return values
-// Cycles are validated and throw exceptions.
-// The `tasks` object:
-//  - Is unordered
+//    return value
+// The `tasks` argument is an object:
+//  - Unordered
 //  - Keys are used by tasks to reference each other
-//  - Values are functions which receive an object as single function argument
-//     - Its parameter is the other task's key
-//     - The return value is the other task's return value
-//     - To use functions with more arguments, those must be bound or use
-//       lexical scoping
-// The return value is a similar `tasks` object but with the functions replaced
-// by their return values instead.
-export const runDag = function (tasks) {
+//  - Values are functions
+// Each task function receives a single argument that is a function:
+//  - Its parameter is the other task's key
+//  - The return value is the other task's return value
+//  - To use functions with more arguments, those must be bound or use lexical
+//    scoping
+// The return value is a similar `tasks` object but with the functions bound.
+// Cycles are validated and throw exceptions.
+export const bindDag = function (tasks) {
   const tasksNames = Object.keys(tasks)
   const dag = createDag(tasksNames)
   const boundTasks = getBoundTasks(tasks, dag)
-  const tasksReturns = mapValues(boundTasks, runBoundTaskFunc)
-  return tasksReturns
+  return boundTasks
 }
 
 // Since each boundTask references each other, we need to create a `boundTasks`
