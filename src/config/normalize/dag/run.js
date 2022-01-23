@@ -41,21 +41,16 @@ export const runDag = function (tasks) {
 export const bindDag = function (tasks) {
   const tasksNames = Object.keys(tasks)
   const dag = createDag(tasksNames)
-  const boundTasks = getBoundTasks(tasks, dag)
+  const boundTasks = bindTasks(tasks, dag)
   return boundTasks
 }
 
 // Since each boundTask references each other, we need to create a `boundTasks`
 // reference first, bind each `taskFunc`, then update that reference.
-const getBoundTasks = function (tasks, dag) {
+const bindTasks = function (tasks, dag) {
   const boundTasks = mapValues(tasks, noop)
   const boundTasksValues = mapValues(tasks, (taskFunc, parentTaskName) =>
-    bindTaskFunc({
-      dag,
-      boundTasks,
-      parentTaskName,
-      taskFunc,
-    }),
+    bindTask({ dag, boundTasks, parentTaskName, taskFunc }),
   )
   // eslint-disable-next-line fp/no-mutating-assign
   return Object.assign(boundTasks, boundTasksValues)
@@ -66,7 +61,7 @@ const noop = function () {}
 
 // We need to memoize each function since references mean they would be called
 // several times.
-const bindTaskFunc = function ({ dag, boundTasks, parentTaskName, taskFunc }) {
+const bindTask = function ({ dag, boundTasks, parentTaskName, taskFunc }) {
   const memoizedTask = memoizeOne(taskFunc)
   const boundRunOtherTask = runOtherTask.bind(undefined, {
     dag,
