@@ -249,8 +249,11 @@ const tasksAny = {
 
 const titles = {
   default: {},
+}
+
+const titlesAny = {
   normalize(value, { name }) {
-    checkObjectProps(value, name, checkDefinedString)
+    checkDefinedString(value, name)
   },
 }
 
@@ -287,6 +290,7 @@ export const COMMANDS_PROPS = {
     showTitles,
     since,
     titles,
+    'titles.*': titlesAny,
   },
   run: {
     colors,
@@ -315,6 +319,7 @@ export const COMMANDS_PROPS = {
     tasks,
     'tasks[*]': tasksAny,
     titles,
+    'titles.*': titlesAny,
   },
   show: {
     colors,
@@ -333,6 +338,7 @@ export const COMMANDS_PROPS = {
     showTitles,
     since,
     titles,
+    'titles.*': titlesAny,
   },
 }
 /* eslint-enable max-lines */
