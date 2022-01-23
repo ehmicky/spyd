@@ -111,11 +111,12 @@ const applyDefinitionList = async function ({
   const definitionListA = Array.isArray(definitionList)
     ? definitionList
     : [definitionList]
-  return await pReduce(
+  const { value: valueA, skipped } = await pReduce(
     definitionListA,
-    (valueA, definition) => applyDefinition(valueA, definition, opts),
-    value,
+    (memo, definition) => applyDefinition(memo, definition, opts),
+    { value, skipped: true },
   )
+  return skipped ? undefined : valueA
 }
 
 const getPath = function (name) {
@@ -127,14 +128,25 @@ const getPathKey = function ({ key }) {
 }
 
 const applyDefinition = async function (
-  value,
-  { default: defaultValue, transform, compute },
+  { value, skipped },
+  { condition, default: defaultValue, compute, transform },
   opts,
 ) {
+  if (await againstCondition(value, condition, opts)) {
+    return { value, skipped }
+  }
+
   const valueA = await addDefaultValue(value, defaultValue, opts)
   const valueB = await computeValue(valueA, compute, opts)
   const valueC = await transformValue(valueB, transform, opts)
-  return valueC
+  return { value: valueC, skipped: false }
+}
+
+// Apply `condition(opts)` which skips the current definition if `false` is
+// returned.
+// If all definitions for a given property are skipped, the property is omitted.
+const againstCondition = async function (value, condition, opts) {
+  return condition !== undefined && !(await condition(value, opts))
 }
 
 // Apply `default(opts)` which assigns a default value
