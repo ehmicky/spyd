@@ -23,7 +23,7 @@ const prependDot = function (query) {
 }
 
 const QUERY_REGEXP =
-  /(?<loose>\?)?((\.(?<name>([^.?[\]*\d][^.?[\]*]*|(?<nameWildcard>\*))))|(\[(?<index>([\d]+|(?<indexWildcard>\*)))\]))/guy
+  /(?<looseChar>\?)?((\.(?<name>([^.?[\]*\d][^.?[\]*]*|(?<nameWildcard>\*))))|(\[(?<index>([\d]+|(?<indexWildcard>\*)))\]))/guy
 
 // Validate against syntax errors in the query
 // TODO: add more error messages for common mistakes
@@ -42,13 +42,13 @@ const getMatch = function ([match]) {
 }
 
 const getToken = function ({
-  groups: { name, nameWildcard, index, indexWildcard, loose },
+  groups: { name, nameWildcard, index, indexWildcard, looseChar },
 }) {
   const key = getKey(name, index)
   const array = index !== undefined
   const wildcard = nameWildcard !== undefined || indexWildcard !== undefined
-  const isStrict = loose === undefined
-  return { key, array, wildcard, isStrict }
+  const loose = looseChar !== undefined
+  return { key, array, wildcard, loose }
 }
 
 const getKey = function (name, index) {
