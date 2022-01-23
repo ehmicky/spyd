@@ -1,4 +1,4 @@
-import { UserError, PluginError } from '../../error/main.js'
+import { UserError, PluginError, wrapError } from '../../error/main.js'
 import { computeRunnerVersions } from '../../top/system/versions/compute.js'
 
 // Select the runners and retrieve their related spawn options using
@@ -33,9 +33,7 @@ const launchRunner = async function ({ id, config, launch }) {
 }
 
 const getLaunchError = function (error, id) {
-  if (error instanceof UserError) {
-    return new UserError(`In runner '${id}': ${error.message}`)
-  }
-
-  return new PluginError(`In runner '${id}', internal error: ${error.stack}`)
+  return error instanceof UserError
+    ? wrapError(error, UserError, `In runner '${id}': $1`)
+    : wrapError(error, PluginError, `In runner '${id}', internal error: $1`)
 }
