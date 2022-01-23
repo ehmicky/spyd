@@ -216,18 +216,20 @@ const showDiff = {
   },
 }
 
-const showMetadata = {
-  default: true,
-  transform(value, { name }) {
-    checkBoolean(value, name)
+const showMetadata = [
+  {
+    condition(value, { context: { command } }) {
+      return command === 'run'
+    },
+    default: false,
   },
-}
-
-// `showMetadata` configuration property specific logic for the `run` command
-const showMetadataRun = {
-  ...showMetadata,
-  default: false,
-}
+  {
+    default: true,
+    transform(value, { name }) {
+      checkBoolean(value, name)
+    },
+  },
+]
 
 const showPrecision = {
   default: false,
@@ -362,7 +364,7 @@ export const COMMANDS_PROPS = {
     select,
     'select[*]': selectAny,
     showDiff,
-    showMetadata: showMetadataRun,
+    showMetadata,
     showPrecision,
     showSystem,
     showTitles,
