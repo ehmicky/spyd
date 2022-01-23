@@ -24,8 +24,6 @@ import {
 // eslint-disable-next-line import/max-dependencies
 import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
 
-const METADATA_COMMANDS = new Set(['show', 'remove'])
-
 const config = {
   async default() {
     return await getDefaultConfig()
@@ -190,12 +188,16 @@ const showDiff = {
 }
 
 const showMetadata = {
-  default({ command }) {
-    return METADATA_COMMANDS.has(command)
-  },
+  default: true,
   normalize(value, { name }) {
     checkBoolean(value, name)
   },
+}
+
+// `showMetadata` configuration property specific logic for the `run` command
+const showMetadataRun = {
+  ...showMetadata,
+  default: false,
 }
 
 const showPrecision = {
@@ -299,7 +301,7 @@ export const COMMANDS_PROPS = {
     save,
     select,
     showDiff,
-    showMetadata,
+    showMetadata: showMetadataRun,
     showPrecision,
     showSystem,
     showTitles,
