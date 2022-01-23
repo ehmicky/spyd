@@ -13,8 +13,8 @@ export const isParent = function (childQuery, parentQuery) {
   const childTokens = parse(childQuery)
   const parentTokens = parse(parentQuery)
   return (
-    childTokens.length >= parentTokens.length &&
     areSameTokens(parentTokens, childTokens) &&
+    childTokens.length >= parentTokens.length &&
     (childTokens.length !== parentTokens.length ||
       compareSameSizeQueries(parentTokens, childTokens))
   )
