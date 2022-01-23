@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-restricted-imports, node/no-restricted-import
 import { AssertionError } from 'assert'
 
+import { wrapError } from '../../error/wrap.js'
+
 import { normalizeConfigProps } from './lib/main.js'
 import { DEFINITIONS } from './prop_defs.js'
 
@@ -32,7 +34,9 @@ const safeNormalizeConfig = async function (config, context, ErrorType) {
 
 // `AssertionErrors` are user-validation errors. Others are system errors.
 const handleConfigError = function (error, ErrorType) {
-  return error instanceof AssertionError ? new ErrorType(error.message) : error
+  return error instanceof AssertionError
+    ? wrapError(error, '', ErrorType)
+    : error
 }
 
 // Perform normalization that is difficult to do with the main configuration

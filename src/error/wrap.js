@@ -28,7 +28,7 @@ const changeErrorType = function (error, ErrorType) {
   return newError
 }
 
-// Prepend a prefix to an error message
+// Prepend|append a prefix|suffix to an error message
 const wrapErrorMessage = function (error, message) {
   if (message === '') {
     return error
