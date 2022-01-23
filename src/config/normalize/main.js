@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import pProps from 'p-props'
+import pReduce from 'p-reduce'
 
 import { UserError } from '../../error/main.js'
 import { cleanObject } from '../../utils/clean.js'
@@ -93,6 +94,11 @@ const handleGetUserError = function (message) {
   }
 }
 
+// Properties definitions can optionally be an array.
+// This is useful either:
+//  - when combined with `condition()`
+//  - when the default order is not convenient, e.g. when `validate()` must be
+//    run after `normalize()`
 const applyDefinitionList = async function ({
   value,
   name,
@@ -102,8 +108,14 @@ const applyDefinitionList = async function ({
 }) {
   const path = getPath(name)
   const opts = { name, path, configInfos, get }
-  const valueA = await applyDefinition(value, definitionList, opts)
-  return valueA
+  const definitionListA = Array.isArray(definitionList)
+    ? definitionList
+    : [definitionList]
+  return await pReduce(
+    definitionListA,
+    (valueA, definition) => applyDefinition(valueA, definition, opts),
+    value,
+  )
 }
 
 const getPath = function (name) {
@@ -121,7 +133,8 @@ const applyDefinition = async function (
 ) {
   const valueA = await addDefaultValue(value, defaultValue, opts)
   const valueB = await computeValue(valueA, compute, opts)
-  return await transformValue(valueB, transform, opts)
+  const valueC = await transformValue(valueB, transform, opts)
+  return valueC
 }
 
 // Apply `default(opts)` which assigns a default value
