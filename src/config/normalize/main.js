@@ -1,8 +1,10 @@
+import { cleanObject } from '../../utils/clean.js'
 import { mapValues } from '../../utils/map.js'
 
 import { runNormalizer } from './check.js'
 import { runDagAsync } from './dag/run.js'
 import { getEntries } from './prop_path/get.js'
+import { set } from './prop_path/set.js'
 import { CONFIG_PROPS } from './properties.js'
 
 // Normalize configuration shape and do custom validation.
@@ -28,7 +30,8 @@ export const normalizeConfig = async function (config, command, configInfos) {
   )
   const configProps = await runDagAsync(configPropsFuncs)
   const configA = mergeConfigProps(configProps)
-  return configA
+  const configB = cleanObject(configA)
+  return configB
 }
 
 const normalizePropDeep = async function (
@@ -109,6 +112,6 @@ const mergeConfigProps = function (configProps) {
   return Object.entries(configProps).reduce(setConfigProp, {})
 }
 
-const setConfigProp = function (config, [name, value]) {
-  return value === undefined ? config : { ...config, [name]: value[0] }
+const setConfigProp = function (config, [query, value]) {
+  return set(config, query, value[0])
 }
