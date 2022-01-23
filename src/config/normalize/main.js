@@ -96,16 +96,14 @@ const handleGetUserError = function (message) {
 const applyDefinitionList = async function ({
   value,
   name,
-  definitionList: { default: defaultValue, transform, compute },
+  definitionList,
   configInfos,
   get,
 }) {
   const path = getPath(name)
   const opts = { name, path, configInfos, get }
-
-  const valueA = await addDefaultValue(value, defaultValue, opts)
-  const valueB = await computeValue(valueA, compute, opts)
-  return await transformValue(valueB, transform, opts)
+  const valueA = await applyDefinition(value, definitionList, opts)
+  return valueA
 }
 
 const getPath = function (name) {
@@ -114,6 +112,16 @@ const getPath = function (name) {
 
 const getPathKey = function ({ key }) {
   return key
+}
+
+const applyDefinition = async function (
+  value,
+  { default: defaultValue, transform, compute },
+  opts,
+) {
+  const valueA = await addDefaultValue(value, defaultValue, opts)
+  const valueB = await computeValue(valueA, compute, opts)
+  return await transformValue(valueB, transform, opts)
 }
 
 // Apply `default(opts)` which assigns a default value
