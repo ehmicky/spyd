@@ -21,6 +21,8 @@ import { set } from './prop_path/set.js'
 //       wildcard import
 //  - This also enables aggregating errors when multiple configuration
 //    properties are invalid, as opposed to only the first one
+//  - This is used instead of allowing properties to set each others, which
+//    would be more complicated and lead to ambiguous order
 // TODO: abstract this function to its own library
 export const normalizeConfigProps = async function (
   config,
