@@ -5,16 +5,16 @@ import { COMMANDS_PROPS } from './properties.js'
 // validation.
 export const normalizeConfig = async function (config, command, configInfos) {
   const definitions = COMMANDS_PROPS[command]
-  const context = getContext(configInfos)
+  const context = getContext(command, configInfos)
   const configA = await normalizeConfigProps(config, definitions, { context })
   const configB = postNormalizeConfig(configA)
   return configB
 }
 
-const getContext = function (configInfos) {
+const getContext = function (command, configInfos) {
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
-  return { configInfos: configInfosA }
+  return { command, configInfos: configInfosA }
 }
 
 // Perform normalization that is difficult to do with the main configuration
