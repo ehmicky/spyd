@@ -60,7 +60,7 @@ const getAllowedVersions = async function () {
 const validateVersion = function ({ versionRange, version }, allowedVersions) {
   if (!semver.satisfies(version, allowedVersions)) {
     throw new UserError(
-      `In the configuration property "runnerNode.version"
+      `Configuration property "runnerConfig.node.version":
 Version ${versionRange} is invalid: it must be ${allowedVersions}`,
     )
   }

@@ -9,7 +9,8 @@ const HANDLER_MAIN_PATH = fileURLToPath(
 )
 
 // Retrieve Node commands. By default it uses the current Node.js.
-// But `runnerNode.version` can be used to spawn a different Node.js version.
+// But `runnerConfig.node.version` can be used to spawn a different Node.js
+// version.
 export const launch = async function (runnerConfig) {
   validateConfig(runnerConfig)
 
