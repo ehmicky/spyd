@@ -26,7 +26,6 @@ export const normalizeConfig = async function (config, command, configInfos) {
       configProp,
       query,
       config,
-      command,
       configInfos: configInfosA,
     }),
   )
@@ -37,20 +36,14 @@ export const normalizeConfig = async function (config, command, configInfos) {
 }
 
 const normalizePropDeep = async function (
-  { configProp, query, config, command, configInfos },
+  { configProp, query, config, configInfos },
   get,
 ) {
   const getA = boundGet.bind(undefined, get)
   const entries = getEntries(config, query)
   return await Promise.all(
     entries.map((entry) =>
-      normalizePropValue({
-        entry,
-        configProp,
-        configInfos,
-        get: getA,
-        command,
-      }),
+      normalizePropValue({ entry, configProp, configInfos, get: getA }),
     ),
   )
 }
@@ -75,9 +68,8 @@ const normalizePropValue = async function ({
   configProp: { default: defaultValue, normalize },
   configInfos,
   get,
-  command,
 }) {
-  const opts = { name: query, path, configInfos, get, command }
+  const opts = { name: query, path, configInfos, get }
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   return await runPropNormalizer(valueA, normalize, opts)
