@@ -10,28 +10,15 @@ export const list = function (target, query) {
 }
 
 const normalizeEntry = function ({ value, path }) {
-  const query = getEntryQuery(path)
+  const query = serializeQuery(path)
   return [query, value]
 }
 
-const getEntryQuery = function (path) {
-  const entryPath = getEntryPath(path)
-  return serializeQuery(entryPath)
+const serializeQuery = function (path) {
+  return path.reduce(appendKey, '')
 }
 
-const getEntryPath = function (path) {
-  return path.map(getPathKey)
-}
-
-const getPathKey = function ({ key }) {
-  return key
-}
-
-const serializeQuery = function (entryPath) {
-  return entryPath.reduce(appendKey, '')
-}
-
-const appendKey = function (pathStr, key) {
+const appendKey = function (pathStr, { key }) {
   if (typeof key !== 'string') {
     return `${pathStr}[${key}]`
   }
