@@ -18,7 +18,7 @@ const serializeQuery = function (path) {
   return path.reduce(appendKey, '')
 }
 
-const appendKey = function (pathStr, { key }) {
+const appendKey = function (pathStr, key) {
   if (typeof key !== 'string') {
     return `${pathStr}[${key}]`
   }

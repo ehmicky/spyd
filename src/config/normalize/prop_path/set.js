@@ -8,31 +8,19 @@ export const set = function (target, query, setValue) {
   const tokens = parse(query)
   const entries = listEntries(target, tokens)
   return entries.reduce(
-    (targetA, { path }) => setProp(targetA, path, setValue),
+    (targetA, { path }) => setProp(targetA, 0, { path, setValue }),
     target,
   )
 }
 
-const setProp = function (value, path, setValue) {
-  if (path.length === 0) {
+const setProp = function (value, index, { path, setValue }) {
+  if (index === path.length) {
     return setValue
   }
 
-  const [{ key, missing }, ...pathA] = path
+  const key = path[index]
+  const newChildValue = setProp(value[key], index + 1, { path, setValue })
   return typeof key === 'string'
-    ? setObjectProp({ value, key, missing, path: pathA, setValue })
-    : setArrayItem({ value, key, missing, path: pathA, setValue })
-}
-
-const setObjectProp = function ({ value, key, missing, path, setValue }) {
-  const childValue = missing ? {} : value[key]
-  const newChildValue = setProp(childValue, path, setValue)
-  return { ...value, [key]: newChildValue }
-}
-
-const setArrayItem = function ({ value, key, missing, path, setValue }) {
-  const newValue = missing ? [value] : value
-  const childValue = newValue[key]
-  const newChildValue = setProp(childValue, path, setValue)
-  return setArray(newValue, key, newChildValue)
+    ? { ...value, [key]: newChildValue }
+    : setArray(value, key, newChildValue)
 }

@@ -10,92 +10,38 @@ const listTokenEntries = function (entries, token) {
   return entries.flatMap((entry) => getTokenEntries(entry, token))
 }
 
-const getTokenEntries = function (
-  { value, path },
-  { key, array, wildcard, loose },
-) {
+const getTokenEntries = function ({ value, path }, { key, array, wildcard }) {
   return array
-    ? getArrayEntries({ value, path, key, wildcard, loose })
-    : getObjectEntries({ value, path, key, wildcard, loose })
+    ? getArrayEntries({ value, path, key, wildcard })
+    : getObjectEntries({ value, path, key, wildcard })
 }
 
-const getArrayEntries = function ({ value, path, key, wildcard, loose }) {
-  const missing = !Array.isArray(value)
-  return missing
-    ? getMissingArrayEntries({ value, path, key, wildcard, loose, missing })
-    : getNormalArrayEntries({ value, path, key, wildcard, missing })
-}
-
-const getMissingArrayEntries = function ({
-  value,
-  path,
-  key,
-  wildcard,
-  loose,
-  missing,
-}) {
-  if (loose) {
+const getArrayEntries = function ({ value, path, key, wildcard }) {
+  if (!Array.isArray(value)) {
     return []
   }
 
-  if (wildcard || key === 0) {
-    return [{ value, path: [...path, { key: 0, missing }] }]
+  if (!wildcard) {
+    return [{ value: value[key], path: [...path, key] }]
   }
 
-  return [{ value: undefined, path: [...path, { key, missing }] }]
+  return value.map((childValue, index) => ({
+    value: childValue,
+    path: [...path, index],
+  }))
 }
 
-const getNormalArrayEntries = function ({
-  value,
-  path,
-  key,
-  wildcard,
-  missing,
-}) {
-  if (wildcard) {
-    return value.map((childValue, index) => ({
-      value: childValue,
-      path: [...path, { key: index, missing }],
-    }))
-  }
-
-  return [{ value: value[key], path: [...path, { key, missing }] }]
-}
-
-const getObjectEntries = function ({ value, path, key, wildcard, loose }) {
-  const missing = !isPlainObj(value)
-  return missing
-    ? getMissingObjectEntries({ path, key, wildcard, loose, missing })
-    : getNormalObjectEntries({ value, path, key, wildcard, missing })
-}
-
-const getMissingObjectEntries = function ({
-  path,
-  key,
-  wildcard,
-  loose,
-  missing,
-}) {
-  if (loose || wildcard) {
+const getObjectEntries = function ({ value, path, key, wildcard }) {
+  if (!isPlainObj(value)) {
     return []
   }
 
-  return [{ value: undefined, path: [...path, { key, missing }] }]
-}
-
-const getNormalObjectEntries = function ({
-  value,
-  path,
-  key,
-  wildcard,
-  missing,
-}) {
-  if (wildcard) {
-    return Object.entries(value).map(([childKey, childValue]) => ({
-      value: childValue,
-      path: [...path, { key: childKey, missing }],
-    }))
+  if (!wildcard) {
+    return [{ value: value[key], path: [...path, key] }]
   }
 
-  return [{ value: value[key], path: [...path, { key, missing }] }]
+  return Object.entries(value).map(([childKey, childValue]) => ({
+    value: childValue,
+    path: [...path, childKey],
+  }))
 }

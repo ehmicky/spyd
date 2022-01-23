@@ -4,8 +4,6 @@
 // Dots and brackets can be used deeply, e.g. `one.two[5]`
 // Wildcards are used with both objects and arrays to recurse over their
 // children, e.g. `one.*` or `one[*]`.
-// Unless question marks are appended to dots and brackets, the parent objects
-// or arrays will be created if undefined.
 // TODO: allow special characters (like dots), if escaped with backslash
 // TODO: do not recurse over `__proto__`, `prototype` or `constructor`
 export const parse = function (query) {
@@ -23,7 +21,7 @@ const prependDot = function (query) {
 }
 
 const QUERY_REGEXP =
-  /(?<looseChar>\?)?((\.(?<name>([^.?[\]*\d][^.?[\]*]*|(?<nameWildcard>\*))))|(\[(?<index>([\d]+|(?<indexWildcard>\*)))\]))/guy
+  /((\.(?<name>([^.?[\]*\d][^.?[\]*]*|(?<nameWildcard>\*))))|(\[(?<index>([\d]+|(?<indexWildcard>\*)))\]))/guy
 
 // Validate against syntax errors in the query
 // TODO: add more error messages for common mistakes
@@ -42,13 +40,12 @@ const getMatch = function ([match]) {
 }
 
 const getToken = function ({
-  groups: { name, nameWildcard, index, indexWildcard, looseChar },
+  groups: { name, nameWildcard, index, indexWildcard },
 }) {
   const key = getKey(name, index)
   const array = index !== undefined
   const wildcard = nameWildcard !== undefined || indexWildcard !== undefined
-  const loose = looseChar !== undefined
-  return { key, array, wildcard, loose }
+  return { key, array, wildcard }
 }
 
 const getKey = function (name, index) {
