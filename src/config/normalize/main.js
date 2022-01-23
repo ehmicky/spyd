@@ -16,6 +16,17 @@ import { set } from './prop_path/set.js'
 // eslint-disable-next-line import/max-dependencies
 import { COMMANDS_PROPS } from './properties.js'
 
+// Normalize the configuration properties, including default values and
+// validation.
+export const normalizeConfig = async function (config, command, configInfos) {
+  const definitions = COMMANDS_PROPS[command]
+  // eslint-disable-next-line fp/no-mutating-methods
+  const configInfosA = [...configInfos].reverse()
+  const configA = await normalizeConfigProps(config, definitions, configInfosA)
+  const configB = postNormalizeConfig(configA)
+  return configB
+}
+
 // Normalize configuration shape and do custom validation.
 // Configuration normalizers can reference other configuration properties.
 //  - We use a DAG to run those in the right order, while still trying to run
@@ -25,25 +36,22 @@ import { COMMANDS_PROPS } from './properties.js'
 //       wildcard import
 //  - This also enables aggregating errors when multiple configuration
 //    properties are invalid, as opposed to only the first one
-export const normalizeConfig = async function (config, command, configInfos) {
-  const definitions = COMMANDS_PROPS[command]
+// TODO: abstract this function to its own library
+const normalizeConfigProps = async function (config, definitions, configInfos) {
   const queries = Object.keys(definitions)
-  // eslint-disable-next-line fp/no-mutating-methods
-  const configInfosA = [...configInfos].reverse()
   const definitionsFuncs = mapValues(definitions, (definitionList, query) =>
     normalizePropDeep.bind(undefined, {
       queries,
       definitionList,
       query,
       config,
-      configInfos: configInfosA,
+      configInfos,
     }),
   )
   const allConfigValues = await runDagAsync(definitionsFuncs)
   const configA = mergeConfigProps(allConfigValues)
   const configB = cleanObject(configA)
-  const configC = postNormalizeConfig(configB)
-  return configC
+  return configB
 }
 
 const normalizePropDeep = async function (
