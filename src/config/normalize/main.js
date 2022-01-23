@@ -53,7 +53,13 @@ const normalizePropDeep = async function (
   const getA = boundGet.bind(undefined, get)
   const props = list(configA, query)
   return await pProps(props, (value, name) =>
-    normalizePropValue({ value, name, definitionList, configInfos, get: getA }),
+    applyDefinitionList({
+      value,
+      name,
+      definitionList,
+      configInfos,
+      get: getA,
+    }),
   )
 }
 
@@ -87,7 +93,7 @@ const handleGetUserError = function (message) {
   }
 }
 
-const normalizePropValue = async function ({
+const applyDefinitionList = async function ({
   value,
   name,
   definitionList: { default: defaultValue, transform, compute },
