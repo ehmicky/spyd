@@ -8,9 +8,8 @@ export const getEntries = function (target, query) {
 }
 
 const normalizeEntry = function ({ value, path }) {
-  const entryPath = getEntryPath({ path })
-  const query = serializeQuery(entryPath)
-  return { value, query, path: entryPath }
+  const query = getEntryQuery({ path })
+  return { value, query }
 }
 
 // Same but only retrieving the values

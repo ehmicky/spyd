@@ -5,6 +5,7 @@ import { mapValues } from '../../utils/map.js'
 import { runNormalizer } from './check.js'
 import { runDagAsync } from './dag/run.js'
 import { getEntries } from './prop_path/get.js'
+import { parse } from './prop_path/parse.js'
 import { set } from './prop_path/set.js'
 import { COMMANDS_PROPS } from './properties.js'
 
@@ -64,15 +65,24 @@ const handleGetUserError = function (message) {
 }
 
 const normalizePropValue = async function ({
-  entry: { value, query, path },
+  entry: { value, query },
   configProp: { default: defaultValue, normalize },
   configInfos,
   get,
 }) {
+  const path = getPath(query)
   const opts = { name: query, path, configInfos, get }
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   return await runPropNormalizer(valueA, normalize, opts)
+}
+
+const getPath = function (query) {
+  return parse(query).map(getPathKey)
+}
+
+const getPathKey = function ({ key }) {
+  return key
 }
 
 const addDefaultValue = async function (value, defaultValue, opts) {
