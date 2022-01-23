@@ -134,21 +134,22 @@ const quiet = {
   },
 }
 
-const reporter = {
-  default: ['debug'],
-  transform(value) {
-    return normalizeOptionalArray(value)
+const reporter = [
+  {
+    condition(value, { context: { command } }) {
+      return command === 'remove'
+    },
+    async transform(value, { get }) {
+      return (await get('force')) ? [] : value
+    },
   },
-}
-
-// `reporter` configuration property specific logic for the `remove` command
-const reporterRemove = {
-  ...reporter,
-  async transform(value, { name, get }) {
-    const forceValue = await get('force')
-    return forceValue ? [] : reporter.transform(value, { name })
+  {
+    default: ['debug'],
+    transform(value) {
+      return normalizeOptionalArray(value)
+    },
   },
-}
+]
 
 const reporterAny = {
   transform(value, { name }) {
@@ -324,7 +325,7 @@ export const COMMANDS_PROPS = {
     force,
     limit,
     output,
-    reporter: reporterRemove,
+    reporter,
     'reporter[*]': reporterAny,
     reporterConfig,
     select,
