@@ -7,12 +7,13 @@ import { cleanObject } from '../../../utils/clean.js'
 import { maybeFunction } from '../../../utils/function.js'
 import { mapValues } from '../../../utils/map.js'
 import { then } from '../../../utils/then.js'
-import { runDagAsync } from '../dag/run.js'
-import { isParent } from '../prop_path/compare.js'
-import { list } from '../prop_path/get.js'
-import { parse } from '../prop_path/parse.js'
+
+import { runDagAsync } from './dag/run.js'
+import { isParent } from './prop_path/compare.js'
+import { list } from './prop_path/get.js'
+import { parse } from './prop_path/parse.js'
 // eslint-disable-next-line import/max-dependencies
-import { set } from '../prop_path/set.js'
+import { set } from './prop_path/set.js'
 
 // Normalize configuration shape and do custom validation.
 // Each configuration property declares a definition object with the sets of

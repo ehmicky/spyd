@@ -1,4 +1,4 @@
-import { setArray } from '../../../utils/set.js'
+import { setArray } from '../../../../utils/set.js'
 
 import { listEntries } from './entries.js'
 import { parse } from './parse.js'

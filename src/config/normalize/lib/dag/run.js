@@ -1,7 +1,7 @@
 import memoizeOne from 'memoize-one'
 import pProps from 'p-props'
 
-import { mapValues } from '../../../utils/map.js'
+import { mapValues } from '../../../../utils/map.js'
 
 import { createDag, addDagEdge } from './structure.js'
 
