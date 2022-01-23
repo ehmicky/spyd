@@ -15,5 +15,5 @@ export const isParent = function (childQuery, parentQuery) {
 }
 
 const isSameToken = function (tokenA, tokenB) {
-  return tokenA.isAny || tokenB.isAny || tokenA.key === tokenB.key
+  return tokenA.wildcard || tokenB.wildcard || tokenA.key === tokenB.key
 }

@@ -46,9 +46,9 @@ const getToken = function ({
 }) {
   const key = getKey(name, index)
   const isArray = index !== undefined
-  const isAny = nameAny !== undefined || indexAny !== undefined
+  const wildcard = nameAny !== undefined || indexAny !== undefined
   const isStrict = loose === undefined
-  return { key, isArray, isAny, isStrict }
+  return { key, isArray, wildcard, isStrict }
 }
 
 const getKey = function (name, index) {

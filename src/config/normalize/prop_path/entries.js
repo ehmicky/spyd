@@ -15,25 +15,25 @@ const listTokenEntries = function (entries, token) {
 
 const getTokenEntries = function (
   { value, path },
-  { key, isArray, isAny, isStrict },
+  { key, isArray, wildcard, isStrict },
 ) {
   return isArray
-    ? getArrayEntries({ value, path, key, isAny, isStrict })
-    : getObjectEntries({ value, path, key, isAny, isStrict })
+    ? getArrayEntries({ value, path, key, wildcard, isStrict })
+    : getObjectEntries({ value, path, key, wildcard, isStrict })
 }
 
-const getArrayEntries = function ({ value, path, key, isAny, isStrict }) {
+const getArrayEntries = function ({ value, path, key, wildcard, isStrict }) {
   const missing = !Array.isArray(value)
   return missing
-    ? getMissingArrayEntries({ value, path, key, isAny, isStrict, missing })
-    : getNormalArrayEntries({ value, path, key, isAny, missing })
+    ? getMissingArrayEntries({ value, path, key, wildcard, isStrict, missing })
+    : getNormalArrayEntries({ value, path, key, wildcard, missing })
 }
 
 const getMissingArrayEntries = function ({
   value,
   path,
   key,
-  isAny,
+  wildcard,
   isStrict,
   missing,
 }) {
@@ -41,15 +41,21 @@ const getMissingArrayEntries = function ({
     return []
   }
 
-  if (isAny || key === 0) {
+  if (wildcard || key === 0) {
     return [{ value, path: [...path, { key: 0, missing }] }]
   }
 
   return [{ value: undefined, path: [...path, { key, missing }] }]
 }
 
-const getNormalArrayEntries = function ({ value, path, key, isAny, missing }) {
-  if (isAny) {
+const getNormalArrayEntries = function ({
+  value,
+  path,
+  key,
+  wildcard,
+  missing,
+}) {
+  if (wildcard) {
     return value.map((childValue, index) => ({
       value: childValue,
       path: [...path, { key: index, missing }],
@@ -59,29 +65,35 @@ const getNormalArrayEntries = function ({ value, path, key, isAny, missing }) {
   return [{ value: value[key], path: [...path, { key, missing }] }]
 }
 
-const getObjectEntries = function ({ value, path, key, isAny, isStrict }) {
+const getObjectEntries = function ({ value, path, key, wildcard, isStrict }) {
   const missing = !isPlainObj(value)
   return missing
-    ? getMissingObjectEntries({ path, key, isAny, isStrict, missing })
-    : getNormalObjectEntries({ value, path, key, isAny, missing })
+    ? getMissingObjectEntries({ path, key, wildcard, isStrict, missing })
+    : getNormalObjectEntries({ value, path, key, wildcard, missing })
 }
 
 const getMissingObjectEntries = function ({
   path,
   key,
-  isAny,
+  wildcard,
   isStrict,
   missing,
 }) {
-  if (!isStrict || isAny) {
+  if (!isStrict || wildcard) {
     return []
   }
 
   return [{ value: undefined, path: [...path, { key, missing }] }]
 }
 
-const getNormalObjectEntries = function ({ value, path, key, isAny, missing }) {
-  if (isAny) {
+const getNormalObjectEntries = function ({
+  value,
+  path,
+  key,
+  wildcard,
+  missing,
+}) {
+  if (wildcard) {
     return Object.entries(value).map(([childKey, childValue]) => ({
       value: childValue,
       path: [...path, { key: childKey, missing }],
