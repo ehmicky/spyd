@@ -15,9 +15,9 @@ const listTokenEntries = function (entries, token) {
 
 const getTokenEntries = function (
   { value, path },
-  { key, isArray, wildcard, isStrict },
+  { key, array, wildcard, isStrict },
 ) {
-  return isArray
+  return array
     ? getArrayEntries({ value, path, key, wildcard, isStrict })
     : getObjectEntries({ value, path, key, wildcard, isStrict })
 }

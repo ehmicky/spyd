@@ -45,10 +45,10 @@ const getToken = function ({
   groups: { name, nameWildcard, index, indexWildcard, loose },
 }) {
   const key = getKey(name, index)
-  const isArray = index !== undefined
+  const array = index !== undefined
   const wildcard = nameWildcard !== undefined || indexWildcard !== undefined
   const isStrict = loose === undefined
-  return { key, isArray, wildcard, isStrict }
+  return { key, array, wildcard, isStrict }
 }
 
 const getKey = function (name, index) {
