@@ -34,6 +34,6 @@ const launchRunner = async function ({ id, config, launch }) {
 
 const getLaunchError = function (error, id) {
   return error instanceof UserError
-    ? wrapError(error, UserError, `In runner '${id}': $1`)
-    : wrapError(error, PluginError, `In runner '${id}', internal error: $1`)
+    ? wrapError(error, UserError, `In runner '${id}':`)
+    : wrapError(error, PluginError, `In runner '${id}', internal error:`)
 }

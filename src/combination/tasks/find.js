@@ -31,7 +31,7 @@ export const findTasks = async function ({
     validateDuplicateTaskIds(ids)
     return ids.map((id) => ({ id, taskPath, runner }))
   } catch (error) {
-    throw wrapErrorMessage(error, `In tasks file "${taskPath}":\n$1`)
+    throw wrapErrorMessage(error, `In tasks file "${taskPath}":\n`)
   }
 }
 

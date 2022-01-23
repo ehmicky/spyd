@@ -56,14 +56,17 @@ const changeErrorType = function (error, ErrorType) {
   return errorB
 }
 
-// Append a suffix or prefix to an error message
+// Prepend a prefix to an error message
 export const wrapErrorMessage = function (error, message) {
   const errorA = normalizeError(error)
+  const space = WHITESPACE_END_REGEXP.test(message) ? '' : ' '
   // eslint-disable-next-line fp/no-mutation
-  errorA.message = message.trim().replace('$1', errorA.message.trim())
+  errorA.message = `${message}${space}${errorA.message.trim()}`
   fixErrorStack(errorA)
   return errorA
 }
+
+const WHITESPACE_END_REGEXP = /\s$/u
 
 // `error.name` and `error.message` are prepended to `error.stack`.
 // However, if `error.stack` has already been retrieved, it is cached.

@@ -28,6 +28,6 @@ export const callUserFunc = async function (userFunc, opts) {
   try {
     return await maybeFunction(userFunc, opts)
   } catch (error) {
-    throw wrapErrorMessage(error, `Configuration property "${opts.name}" $1`)
+    throw wrapErrorMessage(error, `Configuration property "${opts.name}"`)
   }
 }
