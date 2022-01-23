@@ -127,10 +127,8 @@ const quiet = {
 
 const reporter = {
   default: ['debug'],
-  normalize(value, { name }) {
-    const valueA = normalizeOptionalArray(value)
-    checkArrayItems(valueA, name, checkDefinedString)
-    return valueA
+  normalize(value) {
+    return normalizeOptionalArray(value)
   },
 }
 
@@ -140,6 +138,12 @@ const reporterRemove = {
   async normalize(value, { name, get }) {
     const forceValue = await get('force')
     return forceValue ? [] : reporter.normalize(value, { name })
+  },
+}
+
+const reporterAny = {
+  normalize(value, { name }) {
+    checkDefinedString(value, name)
   },
 }
 
@@ -296,6 +300,7 @@ export const COMMANDS_PROPS = {
     limit,
     output,
     reporter: reporterRemove,
+    'reporter[*]': reporterAny,
     reporterConfig,
     select,
     'select[*]': selectAny,
@@ -320,6 +325,7 @@ export const COMMANDS_PROPS = {
     precision,
     quiet,
     reporter,
+    'reporter[*]': reporterAny,
     reporterConfig,
     runner,
     'runner[*]': runnerAny,
@@ -348,6 +354,7 @@ export const COMMANDS_PROPS = {
     limit,
     output,
     reporter,
+    'reporter[*]': reporterAny,
     reporterConfig,
     select,
     'select[*]': selectAny,
