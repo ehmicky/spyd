@@ -80,12 +80,10 @@ const validateValue = async function (value, validate, opts) {
   await callValueFunc(validate, value, opts)
 }
 
-// Apply `transform(value)` which transforms the value set by the user
+// Apply `transform(value)` which transforms the value set by the user.
+// If can also delete it by returning `undefined`.
 const transformValue = async function (value, transform, opts) {
-  if (value === undefined || transform === undefined) {
-    return value
-  }
-
-  const newValue = await callValueFunc(transform, value, opts)
-  return newValue === undefined ? value : newValue
+  return value === undefined || transform === undefined
+    ? value
+    : await callValueFunc(transform, value, opts)
 }
