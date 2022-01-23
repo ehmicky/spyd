@@ -1,28 +1,27 @@
 import { Buffer } from 'buffer'
 import { promises as fs } from 'fs'
 
+import { wrapError } from '../../error/wrap.js'
+
 import { getAdditionalMessage } from './additional.js'
 import { normalizeLogs } from './normalize.js'
 
 // When an exception is thrown, add the runner's last log lines to the error
 // message.
-export const addErrorTaskLogs = async function (logsPath, error) {
+export const addErrorTaskLogs = async function (error, logsPath) {
   if (error.name === 'StopError') {
-    return
+    return error
   }
 
   const { taskLogs, truncated } = await readLogs(logsPath)
   const taskLogsA = normalizeLogs(taskLogs, truncated)
 
   if (taskLogsA === '') {
-    return
+    return error
   }
 
   const additionalMessage = getAdditionalMessage(taskLogsA)
-  error.message = `${error.message}
-${additionalMessage}
-Task logs:
-${taskLogsA}`
+  return wrapError(error, `\n${additionalMessage}\nTask logs:\n${taskLogsA}`)
 }
 
 // Read the last lines from the logs file

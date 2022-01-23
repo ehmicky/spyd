@@ -46,8 +46,7 @@ const logAndMeasure = async function (args) {
   try {
     return await logStreamAndMeasure({ ...args, logsFd })
   } catch (error) {
-    await addErrorTaskLogs(logsPath, error)
-    throw error
+    throw await addErrorTaskLogs(error, logsPath)
   } finally {
     await stopLogs(logsPath, logsFd)
   }
