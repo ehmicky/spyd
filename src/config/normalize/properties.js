@@ -229,8 +229,11 @@ const since = {
 
 const system = {
   default: {},
+}
+
+const systemAny = {
   normalize(value, { name }) {
-    checkObjectProps(value, name, checkDefinedString)
+    checkDefinedString(value, name)
   },
 }
 
@@ -269,6 +272,7 @@ export const COMMANDS_PROPS = {
     runnerConfig,
     select,
     system,
+    'system.*': systemAny,
     tasks,
     'tasks[*]': tasksAny,
   },
@@ -316,6 +320,7 @@ export const COMMANDS_PROPS = {
     showTitles,
     since,
     system,
+    'system.*': systemAny,
     tasks,
     'tasks[*]': tasksAny,
     titles,
