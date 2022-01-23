@@ -24,6 +24,9 @@ import {
 import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
 
 // Used a `condition()` to filter a configuration property for specific commands
+// All config properties can be specified in `spyd.yml` (unlike CLI flags), for
+// any commands.
+// Therefore, we need to filter them out depending on the current command.
 const amongCommands = function (commands) {
   return boundAmongCommands.bind(undefined, new Set(commands))
 }
@@ -37,6 +40,7 @@ const boundAmongCommands = function (
 }
 
 const config = {
+  condition: amongCommands(['dev', 'remove', 'run', 'show']),
   async default() {
     return await getDefaultConfig()
   },
@@ -46,18 +50,21 @@ const config = {
 }
 
 const configAny = {
+  condition: amongCommands(['dev', 'remove', 'run', 'show']),
   transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }
 
 const colors = {
+  condition: amongCommands(['remove', 'run', 'show']),
   transform(value, { name }) {
     checkBoolean(value, name)
   },
 }
 
 const cwd = {
+  condition: amongCommands(['dev', 'remove', 'run', 'show']),
   default() {
     return getCwd()
   },
@@ -68,6 +75,7 @@ const cwd = {
 }
 
 const delta = {
+  condition: amongCommands(['remove', 'show']),
   default: 1,
   transform(value, { name }) {
     return transformDelta(value, name)
@@ -75,6 +83,7 @@ const delta = {
 }
 
 const force = {
+  condition: amongCommands(['remove']),
   default() {
     return !isTtyInput()
   },
@@ -84,6 +93,7 @@ const force = {
 }
 
 const inputs = {
+  condition: amongCommands(['dev', 'run']),
   default: {},
   transform(value, { name }) {
     checkObject(value, name)
@@ -91,12 +101,14 @@ const inputs = {
 }
 
 const inputsAny = {
+  condition: amongCommands(['dev', 'run']),
   transform(value, { name }) {
     checkJson(value, name)
   },
 }
 
 const limit = {
+  condition: amongCommands(['remove', 'run', 'show']),
   transform(value, { name }) {
     return recurseConfigSelectors(value, name, (childValue, childName) => {
       checkInteger(childValue, childName)
@@ -106,6 +118,7 @@ const limit = {
 }
 
 const merge = {
+  condition: amongCommands(['run']),
   default() {
     return getDefaultId()
   },
@@ -116,6 +129,7 @@ const merge = {
 }
 
 const output = {
+  condition: amongCommands(['remove', 'run', 'show']),
   transform(value, { name, context: { configInfos } }) {
     checkDefinedString(value, name)
     return isOutputPath(value)
@@ -125,6 +139,7 @@ const output = {
 }
 
 const outliers = {
+  condition: amongCommands(['run']),
   default: false,
   transform(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
@@ -132,6 +147,7 @@ const outliers = {
 }
 
 const precision = {
+  condition: amongCommands(['run']),
   default: 5,
   transform(value, { name }) {
     return recurseConfigSelectors(value, name, (childValue, childName) => {
@@ -142,6 +158,7 @@ const precision = {
 }
 
 const quiet = {
+  condition: amongCommands(['run']),
   transform(value, { name }) {
     checkBoolean(value, name)
   },
@@ -155,6 +172,7 @@ const reporter = [
     },
   },
   {
+    condition: amongCommands(['remove', 'run', 'show']),
     default: ['debug'],
     transform(value) {
       return normalizeOptionalArray(value)
@@ -163,12 +181,14 @@ const reporter = [
 ]
 
 const reporterAny = {
+  condition: amongCommands(['remove', 'run', 'show']),
   transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }
 
 const reporterConfig = {
+  condition: amongCommands(['remove', 'run', 'show']),
   default: {},
   transform(value, { name }) {
     checkObject(value, name)
@@ -176,6 +196,7 @@ const reporterConfig = {
 }
 
 const runner = {
+  condition: amongCommands(['dev', 'run']),
   // We default `runner` to `node` only instead of several ones (e.g. `cli`)
   // because this enforces that the `runner` property points to a required tasks
   // file, instead of to an optional one. This makes behavior easier to
@@ -189,12 +210,14 @@ const runner = {
 }
 
 const runnerAny = {
+  condition: amongCommands(['dev', 'run']),
   transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }
 
 const runnerConfig = {
+  condition: amongCommands(['dev', 'run']),
   default: {},
   transform(value, { name }) {
     checkObject(value, name)
@@ -202,6 +225,7 @@ const runnerConfig = {
 }
 
 const save = {
+  condition: amongCommands(['run']),
   default: false,
   transform(value, { name }) {
     checkBoolean(value, name)
@@ -209,6 +233,7 @@ const save = {
 }
 
 const select = {
+  condition: amongCommands(['dev', 'remove', 'run', 'show']),
   default: [],
   transform(value) {
     return normalizeOptionalArray(value)
@@ -216,31 +241,31 @@ const select = {
 }
 
 const selectAny = {
+  condition: amongCommands(['dev', 'remove', 'run', 'show']),
   transform(value, { name }) {
     checkString(value, name)
   },
 }
 
 const showDiff = {
+  condition: amongCommands(['remove', 'run', 'show']),
   transform(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
   },
 }
 
-const showMetadata = [
-  {
-    condition: amongCommands(['run']),
-    default: false,
+const showMetadata = {
+  condition: amongCommands(['remove', 'run', 'show']),
+  default({ context: { command } }) {
+    return command !== 'run'
   },
-  {
-    default: true,
-    transform(value, { name }) {
-      checkBoolean(value, name)
-    },
+  transform(value, { name }) {
+    checkBoolean(value, name)
   },
-]
+}
 
 const showPrecision = {
+  condition: amongCommands(['remove', 'run', 'show']),
   default: false,
   transform(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
@@ -248,12 +273,14 @@ const showPrecision = {
 }
 
 const showSystem = {
+  condition: amongCommands(['remove', 'run', 'show']),
   transform(value, { name }) {
     checkBoolean(value, name)
   },
 }
 
 const showTitles = {
+  condition: amongCommands(['remove', 'run', 'show']),
   default: false,
   transform(value, { name }) {
     recurseConfigSelectors(value, name, checkBoolean)
@@ -261,6 +288,7 @@ const showTitles = {
 }
 
 const since = {
+  condition: amongCommands(['remove', 'run', 'show']),
   default: 1,
   transform(value, { name }) {
     return transformDelta(value, name)
@@ -268,6 +296,7 @@ const since = {
 }
 
 const system = {
+  condition: amongCommands(['dev', 'run']),
   default: {},
   transform(value, { name }) {
     checkObject(value, name)
@@ -275,12 +304,14 @@ const system = {
 }
 
 const systemAny = {
+  condition: amongCommands(['dev', 'run']),
   transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }
 
 const tasks = {
+  condition: amongCommands(['dev', 'run']),
   default: [],
   transform(value) {
     return normalizeOptionalArray(value)
@@ -288,6 +319,7 @@ const tasks = {
 }
 
 const tasksAny = {
+  condition: amongCommands(['dev', 'run']),
   async transform(value, { name, context: { configInfos } }) {
     checkDefinedString(value, name)
     return await normalizeConfigGlob(value, name, configInfos)
@@ -295,6 +327,7 @@ const tasksAny = {
 }
 
 const titles = {
+  condition: amongCommands(['remove', 'run', 'show']),
   default: {},
   transform(value, { name }) {
     checkObject(value, name)
@@ -302,110 +335,47 @@ const titles = {
 }
 
 const titlesAny = {
+  condition: amongCommands(['remove', 'run', 'show']),
   transform(value, { name }) {
     checkDefinedString(value, name)
   },
 }
 
-// All config properties can be specified in `spyd.yml` (unlike CLI flags), for
-// any commands.
-// Therefore, we need to filter them out depending on the current command.
-export const COMMANDS_PROPS = {
-  dev: {
-    config,
-    'config[*]': configAny,
-    cwd,
-    inputs,
-    'inputs.*': inputsAny,
-    runner,
-    'runner[*]': runnerAny,
-    runnerConfig,
-    select,
-    'select[*]': selectAny,
-    system,
-    'system.*': systemAny,
-    tasks,
-    'tasks[*]': tasksAny,
-  },
-  remove: {
-    colors,
-    config,
-    'config[*]': configAny,
-    cwd,
-    delta,
-    force,
-    limit,
-    output,
-    reporter,
-    'reporter[*]': reporterAny,
-    reporterConfig,
-    select,
-    'select[*]': selectAny,
-    showDiff,
-    showMetadata,
-    showPrecision,
-    showSystem,
-    showTitles,
-    since,
-    titles,
-    'titles.*': titlesAny,
-  },
-  run: {
-    colors,
-    config,
-    'config[*]': configAny,
-    cwd,
-    inputs,
-    'inputs.*': inputsAny,
-    limit,
-    merge,
-    output,
-    outliers,
-    precision,
-    quiet,
-    reporter,
-    'reporter[*]': reporterAny,
-    reporterConfig,
-    runner,
-    'runner[*]': runnerAny,
-    runnerConfig,
-    save,
-    select,
-    'select[*]': selectAny,
-    showDiff,
-    showMetadata,
-    showPrecision,
-    showSystem,
-    showTitles,
-    since,
-    system,
-    'system.*': systemAny,
-    tasks,
-    'tasks[*]': tasksAny,
-    titles,
-    'titles.*': titlesAny,
-  },
-  show: {
-    colors,
-    config,
-    'config[*]': configAny,
-    cwd,
-    delta,
-    limit,
-    output,
-    reporter,
-    'reporter[*]': reporterAny,
-    reporterConfig,
-    select,
-    'select[*]': selectAny,
-    showDiff,
-    showMetadata,
-    showPrecision,
-    showSystem,
-    showTitles,
-    since,
-    titles,
-    'titles.*': titlesAny,
-  },
+export const DEFINITIONS = {
+  colors,
+  config,
+  'config[*]': configAny,
+  cwd,
+  delta,
+  force,
+  inputs,
+  'inputs.*': inputsAny,
+  limit,
+  merge,
+  output,
+  outliers,
+  precision,
+  quiet,
+  reporter,
+  'reporter[*]': reporterAny,
+  reporterConfig,
+  runner,
+  'runner[*]': runnerAny,
+  runnerConfig,
+  save,
+  select,
+  'select[*]': selectAny,
+  showDiff,
+  showMetadata,
+  showPrecision,
+  showSystem,
+  showTitles,
+  since,
+  system,
+  'system.*': systemAny,
+  tasks,
+  'tasks[*]': tasksAny,
+  titles,
+  'titles.*': titlesAny,
 }
 /* eslint-enable max-lines */

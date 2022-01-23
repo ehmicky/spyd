@@ -1,12 +1,11 @@
 import { normalizeConfigProps } from './lib/main.js'
-import { COMMANDS_PROPS } from './properties.js'
+import { DEFINITIONS } from './prop_defs.js'
 
 // Normalize the configuration properties, including default values and
 // validation.
 export const normalizeConfig = async function (config, command, configInfos) {
-  const definitions = COMMANDS_PROPS[command]
   const context = getContext(command, configInfos)
-  const configA = await normalizeConfigProps(config, definitions, { context })
+  const configA = await normalizeConfigProps(config, DEFINITIONS, { context })
   const configB = postNormalizeConfig(configA)
   return configB
 }
