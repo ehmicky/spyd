@@ -1,4 +1,5 @@
-import { UserError, PluginError, wrapError } from '../../error/main.js'
+import { UserError, PluginError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 import { computeRunnerVersions } from '../../top/system/versions/compute.js'
 
 // Select the runners and retrieve their related spawn options using

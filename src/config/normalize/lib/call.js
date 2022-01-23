@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 
-import { wrapError } from '../../../error/main.js'
+import { wrapError } from '../../../error/wrap.js'
 import { maybeFunction } from '../../../utils/function.js'
 
 // Most definition methods follow the same patterns:

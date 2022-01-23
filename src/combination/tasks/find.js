@@ -1,6 +1,7 @@
 import { isFile } from 'path-type'
 
-import { PluginError, UserError, wrapError } from '../../error/main.js'
+import { PluginError, UserError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 import { measureCombinations } from '../../run/measure/main.js'
 
 // Each combination has its own process, in order to prevent them from
