@@ -8,7 +8,7 @@
 // or arrays will be created if undefined.
 // TODO: allow special characters (like dots), if escaped with backslash
 // TODO: do not recurse over `__proto__`, `prototype` or `constructor`
-export const parseQuery = function (query) {
+export const parse = function (query) {
   const normalizedQuery = prependDot(query)
   const matchResults = [...normalizedQuery.matchAll(QUERY_REGEXP)]
   validateQuery(matchResults, query, normalizedQuery)
