@@ -132,7 +132,9 @@ export const CONFIG_PROPS = {
     commands: 'report',
     default: ['debug'],
     async normalize(value, { name, get }) {
-      if (await get('force')) {
+      const [force] = await get('force')
+
+      if (force) {
         return []
       }
 

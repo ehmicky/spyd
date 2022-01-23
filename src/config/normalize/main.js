@@ -2,6 +2,7 @@ import { mapValues } from '../../utils/map.js'
 
 import { runNormalizer } from './check.js'
 import { runDagAsync } from './dag/run.js'
+import { getEntries } from './prop_path/get.js'
 import { CONFIG_PROPS } from './properties.js'
 
 // Normalize configuration shape and do custom validation.
@@ -16,10 +17,10 @@ import { CONFIG_PROPS } from './properties.js'
 export const normalizeConfig = async function (config, command, configInfos) {
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosA = [...configInfos].reverse()
-  const configPropsFuncs = mapValues(CONFIG_PROPS, (configProp, name) =>
-    normalizePropValue.bind(undefined, {
+  const configPropsFuncs = mapValues(CONFIG_PROPS, (configProp, query) =>
+    normalizePropDeep.bind(undefined, {
       configProp,
-      name,
+      query,
       config,
       command,
       configInfos: configInfosA,
@@ -30,22 +31,30 @@ export const normalizeConfig = async function (config, command, configInfos) {
   return configA
 }
 
-const normalizePropValue = async function (
-  {
-    configProp: { commands, default: defaultValue, normalize },
-    name,
-    config,
-    command,
-    configInfos,
-  },
+const normalizePropDeep = async function (
+  { configProp, configProp: { commands }, query, config, command, configInfos },
   get,
 ) {
   if (!commandHasProp(commands, command)) {
-    return
+    return []
   }
 
-  const value = config[name]
-  const opts = { name, configInfos, get, command }
+  const entries = getEntries(config, query)
+  return await Promise.all(
+    entries.map((entry) =>
+      normalizePropValue({ entry, configProp, configInfos, get, command }),
+    ),
+  )
+}
+
+const normalizePropValue = async function ({
+  entry: { value, query, path },
+  configProp: { default: defaultValue, normalize },
+  configInfos,
+  get,
+  command,
+}) {
+  const opts = { name: query, path, configInfos, get, command }
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   return await runPropNormalizer(valueA, normalize, opts)
@@ -101,5 +110,5 @@ const mergeConfigProps = function (configProps) {
 }
 
 const setConfigProp = function (config, [name, value]) {
-  return value === undefined ? config : { ...config, [name]: value }
+  return value === undefined ? config : { ...config, [name]: value[0] }
 }
