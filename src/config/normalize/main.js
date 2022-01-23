@@ -41,8 +41,8 @@ export const normalizeConfig = async function (config, command, configInfos) {
   )
   const allConfigValues = await runDagAsync(definitionsFuncs)
   const configA = mergeConfigProps(allConfigValues)
-  const configB = postNormalizeConfig(configA)
-  const configC = cleanObject(configB)
+  const configB = cleanObject(configA)
+  const configC = postNormalizeConfig(configB)
   return configC
 }
 
