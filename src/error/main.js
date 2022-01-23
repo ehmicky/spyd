@@ -44,5 +44,15 @@ export const wrapErrorMessage = function (error, message) {
   const errorA = normalizeError(error)
   // eslint-disable-next-line fp/no-mutation
   errorA.message = message.trim().replace('$1', errorA.message.trim())
+  fixErrorStack(errorA)
   return errorA
+}
+
+// `error.name` and `error.message` are prepended to `error.stack`.
+// However, if `error.stack` has already been retrieved, it is cached.
+// Therefore modifying `error.message` would not reflect in `error.stack`.
+const fixErrorStack = function (error) {
+  const firstLine = `${error.name}: ${error.message}`
+  const stackLines = error.stack.split('\n').slice(1)
+  error.stack = [firstLine, ...stackLines].join('\n')
 }
