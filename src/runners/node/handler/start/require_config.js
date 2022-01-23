@@ -1,6 +1,7 @@
 import { inspect } from 'util'
 
 import { UserError } from '../../../../error/main.js'
+import { wrapError } from '../../../../error/wrap.js'
 
 // Use the `require` config
 export const useRequireConfig = async function (requireConfig) {
@@ -15,7 +16,7 @@ const normalizeRequireConfig = function (requireConfig = []) {
 
   if (!Array.isArray(requireConfig) || !requireConfig.every(isString)) {
     throw new UserError(
-      `'runnerNode.require' configuration property must be an array of strings: ${inspect(
+      `Configuration property "runnerConfig.node.require" must be an array of strings: ${inspect(
         requireConfig,
       )}`,
     )
@@ -32,8 +33,10 @@ const useRequiredModule = async function (requiredModule) {
   try {
     await import(requiredModule)
   } catch (error) {
-    throw new UserError(
-      `Could not require 'runnerNode.require' configuration property '${requiredModule}'\n\n${error.stack}`,
+    throw wrapError(
+      error,
+      `Configuration property "runnerConfig.node.require" with value "${requiredModule}" could not be imported\n\n`,
+      UserError,
     )
   }
 }
