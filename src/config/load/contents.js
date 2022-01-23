@@ -1,9 +1,11 @@
 import { extname } from 'path'
+import { inspect } from 'util'
+
+import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../error/main.js'
 import { importJsDefault } from '../../utils/import.js'
 import { loadYamlFile } from '../../utils/yaml.js'
-import { checkObject } from '../normalize/check.js'
 
 // Load and parse `spyd.*` file contents
 export const loadConfigContents = async function (configPath) {
@@ -16,10 +18,22 @@ Please use .yml, .js, .mjs or .cjs`,
     )
   }
 
+  const configContents = await loadContents(loadFunc, configPath)
+
+  if (!isPlainObj(configContents)) {
+    throw new UserError(
+      `Configuration file at "${configPath}" must be a plain object, not: ${inspect(
+        configContents,
+      )}`,
+    )
+  }
+
+  return configContents
+}
+
+const loadContents = async function (loadFunc, configPath) {
   try {
-    const configContents = await loadFunc(configPath)
-    checkObject(configContents, 'config')
-    return configContents
+    return await loadFunc(configPath)
   } catch (error) {
     throw new UserError(
       `Could not load configuration file '${configPath}': ${error.message}`,

@@ -47,14 +47,14 @@ export const addPluginsConfig = function ({
   topProps,
 }) {
   const pluginsConfig = config[configProp]
-  checkObjectProps(pluginsConfig, configProp, checkPluginConfig)
+  checkObjectProps(pluginsConfig, checkPluginConfig)
   return plugins.map((plugin) =>
     addPluginConfig({ plugin, pluginsConfig, config, topProps }),
   )
 }
 
-const checkPluginConfig = function (pluginConfig, configPropFull) {
-  checkObjectProps(pluginConfig, configPropFull, checkJson)
+const checkPluginConfig = function (pluginConfig) {
+  checkObjectProps(pluginConfig, checkJson)
 }
 
 const addPluginConfig = function ({

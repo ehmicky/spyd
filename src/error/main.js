@@ -38,3 +38,11 @@ const CORE_ERROR_NAME = 'CoreError'
 export const normalizeError = function (error) {
   return error instanceof Error ? error : new Error(error)
 }
+
+// Append a suffix or prefix to an error message
+export const wrapErrorMessage = function (error, message) {
+  const errorA = normalizeError(error)
+  // eslint-disable-next-line fp/no-mutation
+  errorA.message = message.trim().replace('$1', errorA.message.trim())
+  return errorA
+}

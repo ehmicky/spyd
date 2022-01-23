@@ -1,7 +1,6 @@
 import pReduce from 'p-reduce'
 
-import { maybeFunction } from '../../../utils/function.js'
-
+import { callValueFunc, callUserFunc } from './call.js'
 import { parse } from './prop_path/parse.js'
 
 // Properties definitions can optionally be an array.
@@ -56,17 +55,19 @@ const applyDefinition = async function (
 // returned.
 // If all definitions for a given property are skipped, the property is omitted.
 const againstCondition = async function (value, condition, opts) {
-  return condition !== undefined && !(await condition(value, opts))
+  return (
+    condition !== undefined && !(await callValueFunc(condition, value, opts))
+  )
 }
 
 // Apply `default(opts)` which assigns a default value
 const addDefaultValue = async function (value, defaultValue, opts) {
-  return value === undefined ? await maybeFunction(defaultValue, opts) : value
+  return value === undefined ? await callUserFunc(defaultValue, opts) : value
 }
 
 // Apply `compute(opts)` which sets a value from the system, instead of the user
 const computeValue = async function (value, compute, opts) {
-  return compute === undefined ? value : await maybeFunction(compute, opts)
+  return compute === undefined ? value : await callUserFunc(compute, opts)
 }
 
 // Apply `transform(value)` which transforms the value set by the user
@@ -75,6 +76,6 @@ const transformValue = async function (value, transform, opts) {
     return value
   }
 
-  const newValue = await transform(value, opts)
+  const newValue = await callValueFunc(transform, value, opts)
   return newValue === undefined ? value : newValue
 }

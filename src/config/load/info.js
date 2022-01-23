@@ -1,5 +1,6 @@
 import { dirname } from 'path'
 
+import { UserError } from '../../error/main.js'
 import { normalizeConfig } from '../normalize/main.js'
 
 import { loadConfigContents } from './contents.js'
@@ -16,8 +17,7 @@ import { resolveConfigPath } from './resolve.js'
 export const getConfigsInfos = async function (configOpt, base, command) {
   const { config: configOpts } = await normalizeConfig(
     { config: configOpt },
-    command,
-    [],
+    { command, configInfos: [], ErrorType: UserError },
   )
   const configInfos = await Promise.all(
     configOpts.map((configOptA) => getConfigInfos(configOptA, base, command)),
