@@ -8,29 +8,21 @@ export const list = function (target, query) {
 }
 
 const normalizeEntry = function ({ value, path }) {
-  const query = getEntryQuery({ path })
+  const query = getEntryQuery(path)
   return [query, value]
 }
 
-// Same but only retrieving the values
-export const getValues = function (target, query) {
-  const entries = listEntries(target, query)
-  return entries.map(getEntryValue)
-}
-
-const getEntryValue = function ({ value }) {
-  return value
-}
-
-// Same but only retrieving the queries
-export const getQueries = function (target, query) {
-  const entries = listEntries(target, query)
-  return entries.map(getEntryQuery)
-}
-
-const getEntryQuery = function ({ path }) {
-  const entryPath = getEntryPath({ path })
+const getEntryQuery = function (path) {
+  const entryPath = getEntryPath(path)
   return serializeQuery(entryPath)
+}
+
+const getEntryPath = function (path) {
+  return path.map(getPathKey)
+}
+
+const getPathKey = function ({ key }) {
+  return key
 }
 
 const serializeQuery = function (entryPath) {
@@ -43,18 +35,4 @@ const appendKey = function (pathStr, key) {
   }
 
   return pathStr === '' ? `${pathStr}${key}` : `${pathStr}.${key}`
-}
-
-// Same but only retrieving the paths
-export const getPaths = function (target, query) {
-  const entries = listEntries(target, query)
-  return entries.map(getEntryPath)
-}
-
-const getEntryPath = function ({ path }) {
-  return path.map(getPathKey)
-}
-
-const getPathKey = function ({ key }) {
-  return key
 }
