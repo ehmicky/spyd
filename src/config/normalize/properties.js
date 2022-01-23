@@ -28,10 +28,14 @@ const config = {
   async default() {
     return await getDefaultConfig()
   },
+  normalize(value) {
+    return normalizeOptionalArray(value)
+  },
+}
+
+const configAny = {
   normalize(value, { name }) {
-    const valueA = normalizeOptionalArray(value)
-    checkArrayItems(valueA, name, checkDefinedString)
-    return valueA
+    checkDefinedString(value, name)
   },
 }
 
@@ -282,6 +286,7 @@ const titlesAny = {
 export const COMMANDS_PROPS = {
   dev: {
     config,
+    'config[*]': configAny,
     cwd,
     inputs,
     'inputs.*': inputsAny,
@@ -298,6 +303,7 @@ export const COMMANDS_PROPS = {
   remove: {
     colors,
     config,
+    'config[*]': configAny,
     cwd,
     delta,
     force,
@@ -320,6 +326,7 @@ export const COMMANDS_PROPS = {
   run: {
     colors,
     config,
+    'config[*]': configAny,
     cwd,
     inputs,
     'inputs.*': inputsAny,
@@ -354,6 +361,7 @@ export const COMMANDS_PROPS = {
   show: {
     colors,
     config,
+    'config[*]': configAny,
     cwd,
     delta,
     limit,

@@ -1,5 +1,7 @@
 import { dirname } from 'path'
 
+import { normalizeConfig } from '../normalize/main.js'
+
 import { loadConfigContents } from './contents.js'
 import { resolveConfigPath } from './resolve.js'
 
@@ -11,14 +13,19 @@ import { resolveConfigPath } from './resolve.js'
 //  - This allow merging a shared configuration with a non-shared one
 //  - It can be an empty array. This is useful to remove the default value for
 //    the `config` top-level flag programmatically.
-export const getConfigsInfos = async function (configOpts, base) {
+export const getConfigsInfos = async function (configOpt, base, command) {
+  const { config: configOpts } = await normalizeConfig(
+    { config: configOpt },
+    command,
+    [],
+  )
   const configInfos = await Promise.all(
-    configOpts.map((configOpt) => getConfigInfos(configOpt, base)),
+    configOpts.map((configOptA) => getConfigInfos(configOptA, base, command)),
   )
   return configInfos.flat()
 }
 
-const getConfigInfos = async function (configOpt, base) {
+const getConfigInfos = async function (configOpt, base, command) {
   const configPath = await resolveConfigPath(configOpt, base)
 
   if (configPath === undefined) {
@@ -29,7 +36,11 @@ const getConfigInfos = async function (configOpt, base) {
     configPath,
   )
   const parentBase = dirname(configPath)
-  const parentConfigInfos = await getParentConfigInfos(parentConfig, parentBase)
+  const parentConfigInfos = await getParentConfigInfos(
+    parentConfig,
+    parentBase,
+    command,
+  )
   return [...parentConfigInfos, { configContents, base: parentBase }]
 }
 
@@ -104,8 +115,12 @@ const getConfigInfos = async function (configOpt, base) {
 //  - For most containers (e.g. docker):
 //     - This only runs on Linux
 //     - The consumer might need to set some flags, e.g. for networking
-const getParentConfigInfos = async function (parentConfig, parentBase) {
+const getParentConfigInfos = async function (
+  parentConfig,
+  parentBase,
+  command,
+) {
   return parentConfig === undefined
     ? []
-    : await getConfigsInfos(parentConfig, parentBase)
+    : await getConfigsInfos(parentConfig, parentBase, command)
 }

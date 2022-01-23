@@ -13,9 +13,9 @@ import { addNpxShortcut } from './npx.js'
 //    case-sensitiveness (due to Windows) and fewer allowed delimiters (due
 //    to underscores only being allowed in Unix)
 // We purposely remove the `config` property during this step.
-export const loadConfig = async function (configOpts, configFlags) {
-  const configOptsA = addNpxShortcut(configOpts)
-  const configInfos = await getConfigsInfos(configOptsA, CLI_FLAGS_BASE)
+export const loadConfig = async function (configOpt, configFlags, command) {
+  const configOptA = addNpxShortcut(configOpt)
+  const configInfos = await getConfigsInfos(configOptA, CLI_FLAGS_BASE, command)
   const configInfosA = [
     ...configInfos,
     { configContents: configFlags, base: CLI_FLAGS_BASE },

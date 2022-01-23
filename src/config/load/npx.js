@@ -14,11 +14,23 @@ import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 // This behaves as if `--config=spyd-config-{name}` has been specified:
 //  - Additional `--config` flags are kept
 //  - The `--config` flag does not use its default value
-export const addNpxShortcut = function (configOpts) {
-  return isNpxCall() ? [...getNpxConfigs(), ...configOpts] : configOpts
+export const addNpxShortcut = function (configOpt) {
+  if (!isNpxCall()) {
+    return configOpt
+  }
+
+  const npxConfigs = getNpxConfigs()
+
+  if (configOpt === undefined) {
+    return npxConfigs
+  }
+
+  return Array.isArray(configOpt)
+    ? [...npxConfigs, ...configOpt]
+    : [...npxConfigs, configOpt]
 }
 
-export const isNpxCall = function () {
+const isNpxCall = function () {
   return (
     env.npm_command === 'exec' &&
     env.npm_config_package !== undefined &&
