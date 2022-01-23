@@ -5,7 +5,8 @@ export const wrapError = function (error, message, ErrorType) {
   const errorA = normalizeError(error)
   const errorB = changeErrorType(errorA, ErrorType)
   const errorC = wrapErrorMessage(errorB, message)
-  return errorC
+  const errorD = copyStaticProps(errorC, error)
+  return errorD
 }
 
 // Modify error class and `name` while keeping its other properties:
@@ -52,3 +53,16 @@ const fixErrorStack = function (error) {
 }
 
 const STACK_TRACE_START = '\n    at '
+
+// Copy error static properties.
+// This excludes non-enumerable properties, especially `name`, `message` and
+// `stack`
+const copyStaticProps = function (newError, error) {
+  if (newError === error) {
+    return newError
+  }
+
+  // eslint-disable-next-line fp/no-mutating-assign
+  Object.assign(newError, error)
+  return newError
+}
