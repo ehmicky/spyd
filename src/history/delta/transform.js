@@ -1,7 +1,8 @@
 import { UserError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 import { findValue } from '../../utils/find.js'
 
-import { getDeltaProp, addDeltaError } from './error.js'
+import { getDeltaTypeMessage } from './error.js'
 import { FORMATS } from './formats/main.js'
 
 // Several configuration properties targets a previous rawResult using a delta,
@@ -9,18 +10,14 @@ import { FORMATS } from './formats/main.js'
 // reference.
 export const transformDelta = function (delta, { name }) {
   if (delta === '') {
-    const deltaProp = getDeltaProp(delta, name)
-    throw new UserError(`${deltaProp} must not be an empty string`)
+    throw new UserError('must not be an empty string.')
   }
 
-  const deltaReturn = findValue(FORMATS, (format) =>
-    parseDelta({ format, delta, name }),
-  )
+  const deltaReturn = findValue(FORMATS, (format) => parseDelta(format, delta))
 
   if (deltaReturn === undefined) {
-    const deltaProp = getDeltaProp(delta, name)
     throw new UserError(
-      `${deltaProp} must be an integer, "first", a date/time/duration, a result id or a git commit/tag/branch.`,
+      'must be an integer, "first", a date/time/duration, a result id or a git commit/tag/branch.',
     )
   }
 
@@ -28,11 +25,11 @@ export const transformDelta = function (delta, { name }) {
   return { type, value, delta, name }
 }
 
-const parseDelta = function ({ format: { parse, type }, delta, name }) {
+const parseDelta = function ({ parse, type }, delta) {
   try {
     const value = parse(delta)
     return value === undefined ? undefined : { type, value }
   } catch (error) {
-    throw addDeltaError(error, { type, delta, name })
+    throw wrapError(error, getDeltaTypeMessage(type))
   }
 }

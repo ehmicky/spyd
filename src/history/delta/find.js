@@ -1,6 +1,7 @@
 import { UserError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 
-import { getDeltaError, addDeltaError } from './error.js'
+import { getDeltaError } from './error.js'
 import { findFormat } from './formats/main.js'
 
 // We use deltas to locate specific rawResults in the history for either:
@@ -105,6 +106,6 @@ const findByDelta = async function (
   try {
     return await format.find(metadataGroups, value, cwd)
   } catch (error) {
-    throw addDeltaError(error, { type, delta, name })
+    throw wrapError(error, getDeltaError({ type, delta, name }))
   }
 }
