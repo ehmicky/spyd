@@ -38,7 +38,7 @@ const loadContents = async function (loadFunc, configPath) {
   } catch (error) {
     throw wrapError(
       error,
-      `Could not load configuration file '${configPath}':`,
+      `Could not load configuration file '${configPath}':\n`,
       UserError,
     )
   }
