@@ -34,9 +34,26 @@ const ERROR_PROPS = {
 
 const CORE_ERROR_NAME = 'CoreError'
 
-// Ensure we are using an Error instance
-export const normalizeError = function (error) {
-  return error instanceof Error ? error : new Error(error)
+// Wrap a child error with a new message and type
+export const wrapError = function (error, ErrorType, message) {
+  const errorA = changeErrorType(error, ErrorType)
+  const errorB = wrapErrorMessage(errorA, message)
+  return errorB
+}
+
+// Modify error class and `name` while keeping its other properties:
+// `message`, `stack` and static properties.
+const changeErrorType = function (error, ErrorType) {
+  const errorA = normalizeError(error)
+
+  if (errorA instanceof ErrorType) {
+    return errorA
+  }
+
+  const errorB = new ErrorType(errorA.message)
+  // eslint-disable-next-line fp/no-mutation
+  errorB.stack = errorA.stack.replace(errorA.name, errorB.name)
+  return errorB
 }
 
 // Append a suffix or prefix to an error message
@@ -63,3 +80,8 @@ const fixErrorStack = function (error) {
 }
 
 const STACK_TRACE_START = '\n    at '
+
+// Ensure we are using an Error instance
+export const normalizeError = function (error) {
+  return error instanceof Error ? error : new Error(error)
+}
