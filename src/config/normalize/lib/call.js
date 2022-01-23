@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 
-import { wrapErrorMessage } from '../../../error/main.js'
+import { wrapError } from '../../../error/main.js'
 import { maybeFunction } from '../../../utils/function.js'
 
 // Most definition methods follow the same patterns:
@@ -19,7 +19,7 @@ const handleValueError = function (error, value) {
   const valueStr = inspect(value)
   const separator = valueStr.includes('\n') ? '\n' : ' '
   const message = `$1.${separator}Its value is:${separator}${valueStr}`
-  return wrapErrorMessage(error, message)
+  return wrapError(error, message)
 }
 
 // Some methods do not pass any `value` as first argument.
@@ -28,6 +28,6 @@ export const callUserFunc = async function (userFunc, opts) {
   try {
     return await maybeFunction(userFunc, opts)
   } catch (error) {
-    throw wrapErrorMessage(error, `Configuration property "${opts.name}"`)
+    throw wrapError(error, `Configuration property "${opts.name}"`)
   }
 }

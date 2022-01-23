@@ -35,39 +35,38 @@ const ERROR_PROPS = {
 const CORE_ERROR_NAME = 'CoreError'
 
 // Wrap a child error with a new message and type
-export const wrapError = function (error, ErrorType, message) {
-  const errorA = changeErrorType(error, ErrorType)
-  const errorB = wrapErrorMessage(errorA, message)
-  return errorB
+export const wrapError = function (error, message, ErrorType) {
+  const errorA = normalizeError(error)
+  const errorB = changeErrorType(errorA, ErrorType)
+  const errorC = wrapErrorMessage(errorB, message)
+  return errorC
 }
 
 // Modify error class and `name` while keeping its other properties:
 // `message`, `stack` and static properties.
 const changeErrorType = function (error, ErrorType) {
-  const errorA = normalizeError(error)
-
-  if (errorA instanceof ErrorType) {
-    return errorA
+  if (ErrorType === undefined || error instanceof ErrorType) {
+    return error
   }
 
-  const errorB = new ErrorType(errorA.message)
+  const newError = new ErrorType(error.message)
+  // eslint-disable-next-line fp/no-mutation
+  newError.stack = error.stack
 
-  if (errorA.stack.startsWith(`${errorA.name}:`)) {
+  if (newError.stack.startsWith(`${error.name}:`)) {
     // eslint-disable-next-line fp/no-mutation
-    errorB.stack = errorA.stack.replace(errorA.name, errorB.name)
+    newError.stack = newError.stack.replace(error.name, newError.name)
   }
 
-  return errorB
+  return newError
 }
 
 // Prepend a prefix to an error message
-export const wrapErrorMessage = function (error, message) {
-  const errorA = normalizeError(error)
+const wrapErrorMessage = function (error, message) {
   const space = WHITESPACE_END_REGEXP.test(message) ? '' : ' '
-  // eslint-disable-next-line fp/no-mutation
-  errorA.message = `${message}${space}${errorA.message.trim()}`
-  fixErrorStack(errorA)
-  return errorA
+  error.message = `${message}${space}${error.message.trim()}`
+  fixErrorStack(error)
+  return error
 }
 
 const WHITESPACE_END_REGEXP = /\s$/u
