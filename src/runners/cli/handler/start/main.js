@@ -1,4 +1,5 @@
 import { UserError } from '../../../../error/main.js'
+import { wrapError } from '../../../../error/wrap.js'
 import { loadYamlFile } from '../../../../utils/yaml.js'
 
 import { getEnv } from './env.js'
@@ -27,8 +28,10 @@ const importFile = async function (taskPath) {
   try {
     return await loadYamlFile(taskPath)
   } catch (error) {
-    throw new UserError(
-      `Could not import the tasks file '${taskPath}\n${error.message}`,
+    throw wrapError(
+      error,
+      `Could not import the tasks file '${taskPath}\n`,
+      UserError,
     )
   }
 }

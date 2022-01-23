@@ -6,6 +6,7 @@ import { readPackageUp } from 'read-pkg-up'
 import semver from 'semver'
 
 import { UserError } from '../../../error/main.js'
+import { wrapError } from '../../../error/wrap.js'
 
 // Normalize the node `version` config
 export const getNodeVersion = async function ({ version }) {
@@ -35,8 +36,10 @@ const getFullVersion = async function (version) {
   try {
     return await nvexeca(version, 'node', { progress: true, dry: true })
   } catch (error) {
-    throw new UserError(
-      `In the configuration property "runnerNode.version"\n${error.message}`,
+    throw wrapError(
+      error,
+      `Configuration property "runnerConfig.node.version":`,
+      UserError,
     )
   }
 }

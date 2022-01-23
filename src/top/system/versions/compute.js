@@ -1,6 +1,7 @@
 import pProps from 'p-props'
 
 import { PluginError } from '../../../error/main.js'
+import { wrapError } from '../../../error/wrap.js'
 import { mapValues, mapKeys } from '../../../utils/map.js'
 import { spawnProcess } from '../../../utils/spawn.js'
 
@@ -80,10 +81,11 @@ const getRunnerVersion = async function ({ version, id, spawnOptions, cwd }) {
     )
     return stdout
   } catch (error) {
-    throw new PluginError(
+    throw wrapError(
+      error,
       `Could not start runner "${id}".
-Retrieving runner versions failed: ${version.join(' ')}
-${error.message}`,
+Retrieving runner versions failed: ${version.join(' ')}\n`,
+      PluginError,
     )
   }
 }

@@ -3,6 +3,7 @@ import { inspect } from 'util'
 import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../../error/main.js'
+import { wrapError } from '../../../error/wrap.js'
 import { mapValues } from '../../../utils/map.js'
 
 // Validate that the tasks file has correct shape
@@ -22,8 +23,7 @@ const validateTask = function ({ taskId, task, validators, normalizeTask }) {
   try {
     return eValidateTask({ task, validators, normalizeTask })
   } catch (error) {
-    error.message = `Task "${taskId}" ${error.message}`
-    throw error
+    throw wrapError(error, `Task "${taskId}"`)
   }
 }
 
