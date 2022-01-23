@@ -18,6 +18,7 @@ import {
   checkArrayLength,
   checkDefinedString,
   checkJson,
+  checkObject,
 } from './check.js'
 // eslint-disable-next-line import/max-dependencies
 import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
@@ -71,6 +72,9 @@ const force = {
 
 const inputs = {
   default: {},
+  normalize(value, { name }) {
+    checkObject(value, name)
+  },
 }
 
 const inputsAny = {
@@ -154,6 +158,9 @@ const reporterAny = {
 
 const reporterConfig = {
   default: {},
+  normalize(value, { name }) {
+    checkObject(value, name)
+  },
 }
 
 const runner = {
@@ -177,6 +184,9 @@ const runnerAny = {
 
 const runnerConfig = {
   default: {},
+  normalize(value, { name }) {
+    checkObject(value, name)
+  },
 }
 
 const save = {
@@ -247,6 +257,9 @@ const since = {
 
 const system = {
   default: {},
+  normalize(value, { name }) {
+    checkObject(value, name)
+  },
 }
 
 const systemAny = {
@@ -256,6 +269,7 @@ const systemAny = {
 }
 
 const tasks = {
+  default: [],
   normalize(value) {
     return normalizeOptionalArray(value)
   },
@@ -270,6 +284,9 @@ const tasksAny = {
 
 const titles = {
   default: {},
+  normalize(value, { name }) {
+    checkObject(value, name)
+  },
 }
 
 const titlesAny = {
