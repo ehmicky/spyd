@@ -15,7 +15,6 @@ import {
   checkInteger,
   checkString,
   normalizeOptionalArray,
-  checkArrayItems,
   checkArrayLength,
   checkObjectProps,
   checkDefinedString,

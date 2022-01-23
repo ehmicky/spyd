@@ -12,19 +12,6 @@ export const runNormalizer = function (normalizer, value, ...args) {
   return newValue === undefined ? value : newValue
 }
 
-// Configuration validation helper functions
-export const checkArrayItems = function (value, name, checker) {
-  checkArray(value, name)
-  return value.flatMap((item, index) =>
-    runNormalizer(checker, item, getIndexName(name, index, value)),
-  )
-}
-
-// When array has a single item, it is possible that the value was arrified
-const getIndexName = function (name, index, value) {
-  return value.length === 1 ? name : `${name}[${index}]`
-}
-
 export const checkObjectProps = function (value, name, checker) {
   checkObject(value, name)
   return mapValues(value, (childValue, childName) =>
@@ -55,12 +42,6 @@ export const checkDefinedString = function (value, name) {
 
   if (value.trim() === '') {
     throw new UserError(`'${name}' must not be empty.`)
-  }
-}
-
-const checkArray = function (value, name) {
-  if (!Array.isArray(value)) {
-    throw new UserError(`'${name}' must be an array: ${inspect(value)}`)
   }
 }
 
