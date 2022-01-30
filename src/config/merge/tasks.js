@@ -1,4 +1,4 @@
-import { PLUGIN_TYPES } from '../plugin/types.js'
+import { PLUGIN_TYPES } from '../plugin/types/main.js'
 
 // Custom merging logic for tasks.
 // `tasks` or `runnnerConfig.{runnerId}.tasks` are concatenated, not overridden

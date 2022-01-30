@@ -1,18 +1,18 @@
-import { DEFAULT_REPORTER_OUTPUT } from '../../report/contents/output.js'
-import { getReportMethods } from '../../report/formats/list.js'
+import { DEFAULT_REPORTER_OUTPUT } from '../../../report/contents/output.js'
+import { getReportMethods } from '../../../report/formats/list.js'
 import {
   BUILTIN_REPORTERS,
   DEFAULT_REPORTERS,
-} from '../../report/reporters/main.js'
-import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from '../../runners/main.js'
-import { normalizeOptionalArray } from '../normalize/transform.js'
+} from '../../../report/reporters/main.js'
+import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from '../../../runners/main.js'
+import { normalizeOptionalArray } from '../../normalize/transform.js'
 import {
   validateBoolean,
   validateDefinedString,
   validateObject,
   validateEmptyArray,
   validateFunction,
-} from '../normalize/validate.js'
+} from '../../normalize/validate.js'
 
 // All plugin types
 export const PLUGIN_TYPES = {
@@ -105,10 +105,3 @@ export const PLUGIN_TYPES = {
 }
 
 export const PLUGIN_TYPES_ARRAY = Object.values(PLUGIN_TYPES)
-
-// Shared configurations are plugins when using the npm resolver.
-// They are handled differently, i.e. require a separate type.
-export const CONFIG_PLUGIN_TYPE = {
-  type: 'config',
-  modulePrefix: 'spyd-config-',
-}

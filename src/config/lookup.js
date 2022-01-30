@@ -5,7 +5,7 @@ import { findUp } from 'find-up'
 import pLocate from 'p-locate'
 import { pathExists } from 'path-exists'
 
-import { CONFIG_PLUGIN_TYPE } from './plugin/types.js'
+import { CONFIG_PLUGIN_TYPE } from './plugin/types/config.js'
 
 // The default values for `config` and `tasks` look for `spyd.*` and `tasks.*`
 // in the current or parent directories.
