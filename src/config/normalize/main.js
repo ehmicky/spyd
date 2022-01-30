@@ -8,7 +8,7 @@ import { normalizeConfigProps } from './lib/main.js'
 export const normalizeConfig = async function (
   config,
   definitions,
-  { context, ErrorType = UserError },
+  { context = {}, ErrorType = UserError },
 ) {
   try {
     return await normalizeConfigProps(config, definitions, { context })

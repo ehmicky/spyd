@@ -14,7 +14,9 @@ export const RUNNER_PLUGIN_TYPE = {
   selectProp: 'runner',
   // Configuration property configuring the plugin
   configProp: 'runnerConfig',
-  // Configuration properties which can be overridden by each plugin
+  // Configuration properties which can be overridden by each plugin.
+  // Note: the current implementation only allows top-level properties, but this
+  // could be changed.
   topProps: ['tasks'],
   // Prefix of the npm package
   modulePrefix: 'spyd-runner-',

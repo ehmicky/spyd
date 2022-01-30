@@ -2,7 +2,6 @@ import omit from 'omit.js'
 
 import { normalizeReporters } from '../../report/config/main.js'
 
-import { addPluginsConfig } from './config.js'
 import { loadPlugins } from './load.js'
 import { PLUGIN_TYPES_ARRAY } from './types.js'
 
@@ -14,10 +13,10 @@ import { PLUGIN_TYPES_ARRAY } from './types.js'
 // plugin, selecting plugins:
 //  - can be either a string or an array of strings
 //  - uses a singular property name
-export const addPlugins = async function (config, command) {
+export const addPlugins = async function (config, command, context) {
   const pluginsConfigs = await Promise.all(
-    PLUGIN_TYPES_ARRAY.map((pluginTypeInfo) =>
-      getPluginsByType(pluginTypeInfo, config),
+    PLUGIN_TYPES_ARRAY.map((pluginType) =>
+      getPluginsByType(pluginType, config, context),
     ),
   )
   const pluginsConfigA = Object.fromEntries(pluginsConfigs)
@@ -27,36 +26,9 @@ export const addPlugins = async function (config, command) {
   return configC
 }
 
-const getPluginsByType = async function (
-  {
-    type,
-    varName,
-    selectProp,
-    configProp,
-    modulePrefix,
-    builtins,
-    topProps,
-    isCombinationDimension,
-    mainDefinitions,
-  },
-  config,
-) {
-  const ids = config[selectProp]
-
-  if (ids === undefined) {
-    return [varName, []]
-  }
-
-  const plugins = await loadPlugins({
-    ids,
-    type,
-    modulePrefix,
-    builtins,
-    isCombinationDimension,
-    mainDefinitions,
-  })
-  const pluginsA = addPluginsConfig({ plugins, config, configProp, topProps })
-  return [varName, pluginsA]
+const getPluginsByType = async function (pluginType, config, context) {
+  const plugins = await loadPlugins(pluginType, config, context)
+  return [pluginType.varName, plugins]
 }
 
 // Remove plugin properties, so only the normalized ones are available

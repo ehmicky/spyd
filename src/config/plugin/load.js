@@ -5,44 +5,43 @@ import { wrapError } from '../../error/wrap.js'
 import { PLUGINS_IMPORT_BASE } from '../normalize/cwd.js'
 import { normalizeConfig } from '../normalize/main.js'
 
+import { getPluginConfig } from './config.js'
 import { getModuleId } from './id.js'
 
 // Import plugin's code
-export const loadPlugins = async function ({
-  ids,
-  type,
-  modulePrefix,
-  builtins,
-  isCombinationDimension,
-  mainDefinitions,
-}) {
-  return await Promise.all(
-    ids.map((id) =>
-      loadPlugin({
-        id,
-        type,
-        modulePrefix,
-        builtins,
-        isCombinationDimension,
-        mainDefinitions,
-      }),
-    ),
-  )
+export const loadPlugins = async function (pluginType, config, context) {
+  const ids = config[pluginType.selectProp]
+  return ids === undefined
+    ? []
+    : await Promise.all(
+        ids.map((id) => loadPlugin({ id, config, context }, pluginType)),
+      )
 }
 
-const loadPlugin = async function ({
-  id,
-  type,
-  modulePrefix,
-  builtins,
-  isCombinationDimension,
-  mainDefinitions,
-}) {
+const loadPlugin = async function (
+  { id, config, context },
+  {
+    type,
+    configProp,
+    modulePrefix,
+    builtins,
+    topProps,
+    isCombinationDimension,
+    mainDefinitions,
+  },
+) {
   const moduleId = getModuleId(id, type, isCombinationDimension)
   const plugin = await importPlugin({ moduleId, type, modulePrefix, builtins })
   const pluginA = { ...plugin }
   const pluginB = await normalizePlugin(pluginA, mainDefinitions)
-  return { ...pluginB, id }
+  const pluginConfig = await getPluginConfig({
+    id,
+    config,
+    context,
+    configProp,
+    topProps,
+  })
+  return { ...pluginB, id, config: pluginConfig }
 }
 
 // Builtin modules are lazy loaded for performance reasons
@@ -98,7 +97,6 @@ This Node module was not found, please ensure it is installed.\n\n`,
 // Validate a plugin has the correct shape and normalize it
 const normalizePlugin = async function (plugin, mainDefinitions) {
   return await normalizeConfig(plugin, mainDefinitions, {
-    context: {},
     ErrorType: PluginError,
   })
 }

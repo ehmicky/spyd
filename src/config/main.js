@@ -9,9 +9,8 @@ export const getConfig = async function (
   { config: configOpt, ...configFlags } = {},
 ) {
   const { config, configInfos } = await loadConfig(configOpt, configFlags)
-  const configA = await normalizeConfig(config, DEFINITIONS, {
-    context: { command, configInfos },
-  })
-  const configB = await addPlugins(configA, command)
+  const context = { command, configInfos }
+  const configA = await normalizeConfig(config, DEFINITIONS, { context })
+  const configB = await addPlugins(configA, command, context)
   return configB
 }

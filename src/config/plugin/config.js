@@ -1,6 +1,7 @@
-import { cleanObject } from '../../utils/clean.js'
 import { pick } from '../../utils/pick.js'
 import { mergeConfigs } from '../merge/main.js'
+import { DEFINITIONS } from '../normalize/definitions.js'
+import { normalizeConfig } from '../normalize/main.js'
 
 // Retrieve plugin configuration object.
 // Plugins use both:
@@ -39,31 +40,43 @@ import { mergeConfigs } from '../merge/main.js'
 //  - Does not rely on case or delimiters
 //     - Which enables using - and _ in user-defined identifiers
 //  - Works unescaped with YAML, JSON and JavaScript
-export const addPluginsConfig = function ({
-  plugins,
+export const getPluginConfig = async function ({
+  id,
   config,
+  context,
   configProp,
   topProps,
 }) {
-  const pluginsConfig = config[configProp]
-  return plugins.map((plugin) =>
-    addPluginConfig({ plugin, pluginsConfig, config, topProps }),
-  )
+  const pluginConfig = config[configProp][id]
+  const pluginConfigA = await normalizePluginConfig({
+    pluginConfig,
+    context,
+    topProps,
+  })
+  const pluginConfigB = mergeTopProps(config, pluginConfigA, topProps)
+  return pluginConfigB
 }
 
-const addPluginConfig = function ({
-  plugin,
-  plugin: { id },
-  pluginsConfig: { [id]: pluginConfig = {} },
-  config,
+const normalizePluginConfig = async function ({
+  pluginConfig = {},
+  context,
   topProps,
 }) {
-  const pluginConfigA = cleanObject(pluginConfig)
-  const pluginConfigB = mergeTopProps(config, pluginConfigA, topProps)
-  return { ...plugin, config: pluginConfigB }
+  const topDefinitions = getTopDefinitions(topProps)
+  return await normalizeConfig(pluginConfig, topDefinitions, { context })
 }
 
-// Merge `*Config.*` with `*Config.{id}.*` with lower priority
+// Retrieve definitions for properties which can be set both at the top-level
+// and inside `*Config.{id}.*`
+const getTopDefinitions = function (topProps) {
+  return DEFINITIONS.filter(({ name }) => isTopDefinition(name, topProps))
+}
+
+const isTopDefinition = function (name, topProps) {
+  return topProps.some((topProp) => name.startsWith(topProp))
+}
+
+// Merge top-level properties with `*Config.{id}.*` with lower priority
 const mergeTopProps = function (config, pluginConfig, topProps) {
   const topConfig = pick(config, topProps)
   return mergeConfigs([topConfig, pluginConfig])
