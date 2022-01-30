@@ -163,12 +163,17 @@ const quiet = {
   validate: validateBoolean,
 }
 
+// Definition shared by all plugin selection props: `runner`, `reporter`, etc.
+const pluginSelectProp = {
+  transform: normalizeOptionalArray,
+}
+
 const reporter = {
   name: 'reporter',
   pick: amongCommands(['remove', 'run', 'show']),
   default: DEFAULT_REPORTERS,
-  transform(value, { config }) {
-    return config.force ? [] : normalizeOptionalArray(value)
+  transform(value, opts) {
+    return opts.config.force ? [] : pluginSelectProp.transform(value, opts)
   },
 }
 
@@ -199,6 +204,7 @@ const reporterConfigProp = {
 }
 
 const runner = {
+  ...pluginSelectProp,
   name: 'runner',
   pick: amongCommands(['dev', 'run']),
   // We default `runner` to `node` only instead of several ones (e.g. `cli`)
@@ -207,7 +213,6 @@ const runner = {
   // understand for users and provides with better error messages.
   default: DEFAULT_RUNNERS,
   validate: validateEmptyArray,
-  transform: normalizeOptionalArray,
 }
 
 const runnerAny = {
