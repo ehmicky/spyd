@@ -62,6 +62,7 @@ export const PLUGIN_TYPES = {
     },
   },
 }
+
 export const PLUGIN_TYPES_ARRAY = Object.values(PLUGIN_TYPES)
 
 // Shared configurations are plugins when using the npm resolver.
