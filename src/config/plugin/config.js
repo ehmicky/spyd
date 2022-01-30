@@ -1,3 +1,5 @@
+import omit from 'omit.js'
+
 import { pick } from '../../utils/pick.js'
 import { mergeConfigs } from '../merge/main.js'
 import { DEFINITIONS } from '../normalize/definitions.js'
@@ -77,11 +79,20 @@ const normalizePluginConfig = async function ({
 // Retrieve definitions for properties which can be set both at the top-level
 // and inside `*Config.{id}.*`
 const getTopDefinitions = function (topProps) {
-  return DEFINITIONS.filter(({ name }) => isTopDefinition(name, topProps))
+  return DEFINITIONS.filter(({ name }) => isTopDefinition(name, topProps)).map(
+    omitDefault,
+  )
 }
 
 const isTopDefinition = function (name, topProps) {
   return topProps.some((topProp) => name.startsWith(topProp))
+}
+
+// The `default` value is already applied to the top-level property, which is
+// merged afterwards. Applying it again on `*Config.{id}.*` would mean the
+// top-level property would always be overridden by it, so we omit it.
+const omitDefault = function (definition) {
+  return omit.default(definition, ['default'])
 }
 
 // Merge top-level properties with `*Config.{id}.*` with lower priority
