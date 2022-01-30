@@ -45,7 +45,7 @@ export const transformVersion = async function (version) {
   }
 }
 
-export const versionDefinitions = [
+export const config = [
   {
     name: 'version',
     validate: validateNumberString,
