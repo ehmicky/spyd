@@ -1,6 +1,3 @@
-// eslint-disable-next-line no-restricted-imports, node/no-restricted-import
-import assert from 'assert'
-
 // Normalize `precision` configuration property value.
 // Also validates it.
 // For each of those `precision` original value, each combination stops once
@@ -76,10 +73,9 @@ import assert from 'assert'
 //        - this can happen inside the same run (due to previous runs being
 //          merged to current one)
 export const validatePrecision = function (precision) {
-  assert(
-    PRECISION_TARGETS[precision] !== undefined,
-    `must be between ${MIN_PRECISION} and ${MAX_PRECISION}`,
-  )
+  if (PRECISION_TARGETS[precision] === undefined) {
+    throw new Error(`must be between ${MIN_PRECISION} and ${MAX_PRECISION}.`)
+  }
 }
 
 export const transformPrecision = function (precision) {

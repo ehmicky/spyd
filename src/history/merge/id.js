@@ -1,14 +1,10 @@
-// eslint-disable-next-line no-restricted-imports, node/no-restricted-import
-import assert from 'assert'
-
 import { v4 as uuidv4, validate as isUuid } from 'uuid'
 
 // Validate `merge` property
 export const validateMerge = function (value) {
-  assert(
-    isValidId(value) || value === LAST_ID,
-    `must be "${LAST_ID}" or a UUID`,
-  )
+  if (value !== LAST_ID && !isValidId(value)) {
+    throw new Error(`must be "${LAST_ID}" or a UUID.`)
+  }
 }
 
 // Validate `result.id`.

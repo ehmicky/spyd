@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-restricted-imports, node/no-restricted-import
-import assert from 'assert'
 import { isDeepStrictEqual } from 'util'
 
 import isPlainObj from 'is-plain-obj'
@@ -12,38 +10,49 @@ export const validateObjectProps = function (value, checker) {
 }
 
 export const validateBoolean = function (value) {
-  assert(typeof value === 'boolean', 'must be true or false')
+  if (typeof value !== 'boolean') {
+    throw new TypeError('must be true or false.')
+  }
 }
 
 export const validateInteger = function (value) {
-  assert(Number.isInteger(value), 'must be an integer')
-}
-
-export const validateString = function (value) {
-  assert(typeof value === 'string', 'must be a string')
+  if (!Number.isInteger(value)) {
+    throw new TypeError('must be an integer.')
+  }
 }
 
 export const validateDefinedString = function (value) {
   validateString(value)
-  assert(value.trim() !== '', 'must not be empty')
+
+  if (value.trim() === '') {
+    throw new Error('must not be empty.')
+  }
+}
+
+export const validateString = function (value) {
+  if (typeof value !== 'string') {
+    throw new TypeError('must be a string.')
+  }
 }
 
 export const validateEmptyArray = function (value) {
-  assert(
-    !Array.isArray(value) || value.length !== 0,
-    'must not be an empty array',
-  )
+  if (Array.isArray(value) && value.length === 0) {
+    throw new Error('must not be an empty array.')
+  }
 }
 
 export const validateObject = function (value) {
-  assert(isPlainObj(value), 'must be a plain object')
+  if (!isPlainObj(value)) {
+    throw new Error('must be a plain object.')
+  }
 }
 
 export const validateJson = function (value) {
-  assert(
-    isJson(value),
-    'must only contain strings, numbers, booleans, nulls, arrays or plain objects',
-  )
+  if (!isJson(value)) {
+    throw new Error(
+      'must only contain strings, numbers, booleans, nulls, arrays or plain objects.',
+    )
+  }
 }
 
 const isJson = function (value) {

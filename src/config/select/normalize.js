@@ -1,6 +1,3 @@
-// eslint-disable-next-line no-restricted-imports, node/no-restricted-import
-import assert from 'assert'
-
 import isPlainObj from 'is-plain-obj'
 
 // Some configuration properties can have different values per combination
@@ -66,14 +63,17 @@ export const isConfigSelectorShape = function (value) {
 //    situations to order, e.g. when merging shared configs.
 //  - Regardless, it is always checked last, even if it is not the last key
 const validateConfigSelector = function (value) {
-  assert(
-    Object.keys(value).length !== 0,
-    'must have at least one property when using configuration selectors.',
-  )
-  assert(
-    'default' in value,
-    'last property must be named "default" when using configuration selectors.',
-  )
+  if (Object.keys(value).length === 0) {
+    throw new Error(
+      'must have at least one property when using configuration selectors.',
+    )
+  }
+
+  if (!('default' in value)) {
+    throw new Error(
+      'must have a last property named "default" when using configuration selectors.',
+    )
+  }
 }
 
 // List of properties which can use configuration selectors
