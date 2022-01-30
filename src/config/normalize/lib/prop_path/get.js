@@ -42,3 +42,14 @@ const validateWildcards = function (tokens) {
 const hasWildcard = function ({ wildcard }) {
   return wildcard
 }
+
+// TODO: optimize performance by stopping at soon as one entry is found
+export const has = function (target, queryOrTokens) {
+  const tokens = maybeParse(queryOrTokens)
+  const entries = listEntries(target, tokens)
+  return entries.some(hasValue)
+}
+
+const hasValue = function ({ value }) {
+  return value !== undefined
+}
