@@ -2,7 +2,7 @@ import { createRequire } from 'module'
 
 import { PluginError, UserError } from '../../error/main.js'
 import { wrapError } from '../../error/wrap.js'
-import { PLUGINS_IMPORT_BASE } from '../normalize/path.js'
+import { PLUGINS_IMPORT_BASE } from '../normalize/cwd.js'
 
 // Import plugin's code
 export const loadPlugins = async function ({

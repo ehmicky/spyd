@@ -30,7 +30,7 @@ import { getShowMetadataDefault } from '../../top/omit.js'
 import { getDefaultConfig } from '../load/default.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 
-import { getPropCwd } from './path.js'
+import { getPropCwd } from './cwd.js'
 import { normalizeOptionalArray } from './transform.js'
 import {
   validateBoolean,

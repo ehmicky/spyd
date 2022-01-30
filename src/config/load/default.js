@@ -1,7 +1,7 @@
 import { basename } from 'path'
 
 import { lookupFiles } from '../lookup.js'
-import { CLI_FLAGS_BASE } from '../normalize/path.js'
+import { CLI_FLAGS_BASE } from '../normalize/cwd.js'
 
 import { getConfigFilenames } from './contents.js'
 
