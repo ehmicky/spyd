@@ -3,10 +3,10 @@ import { createRequire } from 'module'
 import { PluginError, UserError } from '../../error/main.js'
 import { wrapError } from '../../error/wrap.js'
 import { PLUGINS_IMPORT_BASE } from '../normalize/cwd.js'
-import { normalizeConfig } from '../normalize/main.js'
 
 import { getPluginConfig } from './config.js'
 import { getModuleId } from './id.js'
+import { normalizePlugin } from './normalize.js'
 
 // Import plugin's code
 export const loadPlugins = async function (pluginType, config, context) {
@@ -92,11 +92,4 @@ This Node module was not found, please ensure it is installed.\n\n`,
       UserError,
     )
   }
-}
-
-// Validate a plugin has the correct shape and normalize it
-const normalizePlugin = async function (plugin, mainDefinitions) {
-  return await normalizeConfig(plugin, mainDefinitions, {
-    ErrorType: PluginError,
-  })
 }
