@@ -1,6 +1,6 @@
 import { loadConfig } from './load/main.js'
+import { DEFINITIONS } from './normalize/definitions.js'
 import { normalizeConfig } from './normalize/main.js'
-import { DEFINITIONS } from './normalize/prop_defs.js'
 import { addPlugins } from './plugin/add.js'
 
 // Retrieve configuration
