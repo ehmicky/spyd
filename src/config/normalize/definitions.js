@@ -168,7 +168,34 @@ const pluginSelectProp = {
   transform: normalizeOptionalArray,
 }
 
+// Definition shared by all plugin selection prop items: `runner.*`,
+// `reporter.*`, etc.
+const pluginSelectPropItem = {
+  validate: validateDefinedString,
+}
+
+// Definition shared by all sets of plugin configs: `runnerConfig`,
+// `reporterConfig`, etc.
+const pluginConfigs = {
+  default: {},
+  validate: validateObject,
+}
+
+// Definition shared by each plugin config: `runnerConfig.*`,
+// `reporterConfig.*`, etc.
+const pluginConfig = {
+  default: {},
+  validate: validateObject,
+}
+
+// Definition shared by each plugin config property: `runnerConfig.*.*`,
+// `reporterConfig.*.*`, etc.
+const pluginConfigProp = {
+  validate: validateJson,
+}
+
 const reporter = {
+  ...pluginSelectProp,
   name: 'reporter',
   pick: amongCommands(['remove', 'run', 'show']),
   default: DEFAULT_REPORTERS,
@@ -178,29 +205,27 @@ const reporter = {
 }
 
 const reporterAny = {
+  ...pluginSelectPropItem,
   name: 'reporter.*',
   pick: amongCommands(['remove', 'run', 'show']),
-  validate: validateDefinedString,
 }
 
 const reporterConfigs = {
+  ...pluginConfigs,
   name: 'reporterConfig',
   pick: amongCommands(['remove', 'run', 'show']),
-  default: {},
-  validate: validateObject,
 }
 
 const reporterConfig = {
+  ...pluginConfig,
   name: 'reporterConfig.*',
   pick: amongCommands(['remove', 'run', 'show']),
-  default: {},
-  validate: validateObject,
 }
 
 const reporterConfigProp = {
+  ...pluginConfigProp,
   name: 'reporterConfig.*.*',
   pick: amongCommands(['remove', 'run', 'show']),
-  validate: validateJson,
 }
 
 const runner = {
@@ -216,29 +241,27 @@ const runner = {
 }
 
 const runnerAny = {
+  ...pluginSelectPropItem,
   name: 'runner.*',
   pick: amongCommands(['dev', 'run']),
-  validate: validateDefinedString,
 }
 
 const runnerConfigs = {
+  ...pluginConfigs,
   name: 'runnerConfig',
   pick: amongCommands(['dev', 'run']),
-  default: {},
-  validate: validateObject,
 }
 
 const runnerConfig = {
+  ...pluginConfig,
   name: 'runnerConfig.*',
   pick: amongCommands(['remove', 'run', 'show']),
-  default: {},
-  validate: validateObject,
 }
 
 const runnerConfigProp = {
+  ...pluginConfigProp,
   name: 'runnerConfig.*.*',
   pick: amongCommands(['remove', 'run', 'show']),
-  validate: validateJson,
 }
 
 const save = {
