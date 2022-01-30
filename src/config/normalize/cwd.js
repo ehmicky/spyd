@@ -28,10 +28,12 @@ export const getPropCwd = function (value, { path, context: { configInfos } }) {
   const configInfo = configInfos.find(({ configContents }) =>
     has(configContents, path),
   )
-  return configInfo === undefined ? getTopPropCwd(configInfos) : configInfo.base
-}
 
-const getTopPropCwd = function ([, topLevelConfigInfo]) {
+  if (configInfo !== undefined) {
+    return configInfo.base
+  }
+
+  const [, topLevelConfigInfo] = configInfos
   return topLevelConfigInfo === undefined
     ? DEFAULT_VALUES_BASE
     : topLevelConfigInfo.base
