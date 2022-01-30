@@ -8,13 +8,13 @@ const SHELL_VALUES = new Set(['none', 'sh', 'bash'])
 // Shells have a performance impact and are less portable, so they are opt-in
 const DEFAULT_SHELL = 'none'
 
-const shellDefinition = {
-  name: 'shell',
-  default: DEFAULT_SHELL,
-  validate(value) {
-    validateDefinedString(value)
-    validateEnum(value, SHELL_VALUES)
+export const config = [
+  {
+    name: 'shell',
+    default: DEFAULT_SHELL,
+    validate(value) {
+      validateDefinedString(value)
+      validateEnum(value, SHELL_VALUES)
+    },
   },
-}
-
-export const config = [shellDefinition]
+]
