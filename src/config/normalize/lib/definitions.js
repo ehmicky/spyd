@@ -1,7 +1,17 @@
-import { callValueFunc, callUserFunc } from './call.js'
+import { callValueFunc, callUserFunc, callValidateFunc } from './call.js'
+import { resolvePath } from './path.js'
 
 export const applyDefinition = async function (
-  { pick, condition, default: defaultValue, compute, validate, transform },
+  {
+    pick,
+    condition,
+    default: defaultValue,
+    compute,
+    path = false,
+    cwd = '.',
+    validate,
+    transform,
+  },
   value,
   opts,
 ) {
@@ -15,9 +25,10 @@ export const applyDefinition = async function (
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   const valueB = await computeValue(valueA, compute, opts)
-  await validateValue(valueB, validate, opts)
-  const valueC = await transformValue(valueB, transform, opts)
-  return valueC
+  const valueC = await resolvePath(valueB, { path, cwd, opts })
+  await validateValue(valueC, validate, opts)
+  const valueD = await transformValue(valueC, transform, opts)
+  return valueD
 }
 
 // Apply `pick(value, opts)` which omits the current value if `false` is
@@ -46,14 +57,14 @@ const computeValue = async function (value, compute, opts) {
   return compute === undefined ? value : await callUserFunc(compute, opts)
 }
 
-// Apply `validate(opts)` which throws on validation errors
+// Apply `validate(value, opts)` which throws on validation errors
 const validateValue = async function (value, validate, opts) {
   if (value !== undefined && validate !== undefined) {
-    await callValueFunc(validate, value, { ...opts, validate: true })
+    await callValidateFunc(validate, value, opts)
   }
 }
 
-// Apply `transform(value)` which transforms the value set by the user.
+// Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.
 const transformValue = async function (value, transform, opts) {
   return value !== undefined && transform !== undefined

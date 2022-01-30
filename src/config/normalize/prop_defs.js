@@ -30,7 +30,7 @@ import { getShowMetadataDefault } from '../../top/omit.js'
 import { getDefaultConfig } from '../load/default.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 
-import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
+import { normalizeConfigGlob, getPropCwd } from './path.js'
 import { normalizeOptionalArray } from './transform.js'
 import {
   validateBoolean,
@@ -82,10 +82,9 @@ const cwd = {
   name: 'cwd',
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   default: getCwd,
+  path: true,
+  cwd: getPropCwd,
   validate: validateDefinedString,
-  transform(value, { name, context: { configInfos } }) {
-    return normalizeConfigPath(value, name, configInfos)
-  },
 }
 
 const delta = {
@@ -137,12 +136,9 @@ const merge = {
 const output = {
   name: 'output',
   pick: amongCommands(['remove', 'run', 'show']),
+  path: isOutputPath,
+  cwd: getPropCwd,
   validate: validateDefinedString,
-  transform(value, { name, context: { configInfos } }) {
-    return isOutputPath(value)
-      ? normalizeConfigPath(value, name, configInfos)
-      : value
-  },
 }
 
 const outliers = {

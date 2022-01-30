@@ -4,6 +4,8 @@ import dotProp from 'dot-prop'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
+import { has } from './lib/prop_path/get.js'
+
 // Resolve configuration relative file paths to absolute paths.
 export const normalizeConfigPath = function (value, name, configInfos) {
   const base = getBase(configInfos, name)
@@ -53,6 +55,24 @@ export const normalizeConfigGlob = async function (value, name, configInfos) {
 const getBase = function (configInfos, propName) {
   const configInfo = configInfos.find(({ configContents }) =>
     dotProp.has(configContents, propName),
+  )
+
+  if (configInfo !== undefined) {
+    return configInfo.base
+  }
+
+  const [, topLevelConfigInfo] = configInfos
+
+  if (topLevelConfigInfo !== undefined) {
+    return topLevelConfigInfo.base
+  }
+
+  return DEFAULT_VALUES_BASE
+}
+
+export const getPropCwd = function (value, { path, context: { configInfos } }) {
+  const configInfo = configInfos.find(({ configContents }) =>
+    has(configContents, path),
   )
 
   if (configInfo !== undefined) {
