@@ -23,11 +23,11 @@ export const PLUGIN_TYPES = {
     modulePrefix: 'spyd-runner-',
     // Commands which use the plugin
     commands: ['dev', 'run'],
-    // Builtin plugins
-    builtins: BUILTIN_RUNNERS,
     // Whether this is a combination's dimension.
     // When false, this allows using custom prefixes.
     isCombinationDimension: true,
+    // Builtin plugins
+    builtins: BUILTIN_RUNNERS,
     // Default value for the `selectProp`
     selectPropDefault: DEFAULT_RUNNERS,
     // Additional configuration definition for `selectProp`
@@ -52,8 +52,8 @@ export const PLUGIN_TYPES = {
     ],
     modulePrefix: 'spyd-reporter-',
     commands: ['remove', 'run', 'show'],
-    builtins: BUILTIN_REPORTERS,
     isCombinationDimension: false,
+    builtins: BUILTIN_REPORTERS,
     selectPropDefault: DEFAULT_REPORTERS,
     selectPropDefinition: {
       transform(value, { config }) {
