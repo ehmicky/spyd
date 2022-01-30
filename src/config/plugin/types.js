@@ -1,5 +1,10 @@
-import { BUILTIN_REPORTERS } from '../../report/reporters/main.js'
-import { BUILTIN_RUNNERS } from '../../runners/main.js'
+import {
+  BUILTIN_REPORTERS,
+  DEFAULT_REPORTERS,
+} from '../../report/reporters/main.js'
+import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from '../../runners/main.js'
+import { normalizeOptionalArray } from '../normalize/transform.js'
+import { validateEmptyArray } from '../normalize/validate.js'
 
 // All plugin types
 export const PLUGIN_TYPES = {
@@ -16,11 +21,19 @@ export const PLUGIN_TYPES = {
     topProps: ['tasks'],
     // Prefix of the npm package
     modulePrefix: 'spyd-runner-',
+    // Commands which use the plugin
+    commands: ['dev', 'run'],
     // Builtin plugins
     builtins: BUILTIN_RUNNERS,
     // Whether this is a combination's dimension.
     // When false, this allows using custom prefixes.
     isCombinationDimension: true,
+    // Default value for the `selectProp`
+    selectPropDefault: DEFAULT_RUNNERS,
+    // Additional configuration definition for `selectProp`
+    selectPropDefinition: {
+      validate: validateEmptyArray,
+    },
   },
   reporter: {
     type: 'reporter',
@@ -38,8 +51,15 @@ export const PLUGIN_TYPES = {
       'showDiff',
     ],
     modulePrefix: 'spyd-reporter-',
+    commands: ['remove', 'run', 'show'],
     builtins: BUILTIN_REPORTERS,
     isCombinationDimension: false,
+    selectPropDefault: DEFAULT_REPORTERS,
+    selectPropDefinition: {
+      transform(value, { config }) {
+        return config.force ? [] : normalizeOptionalArray(value)
+      },
+    },
   },
 }
 export const PLUGIN_TYPES_ARRAY = Object.values(PLUGIN_TYPES)

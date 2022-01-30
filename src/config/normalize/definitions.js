@@ -16,26 +16,25 @@ import {
   DEFAULT_TITLES,
   DEFAULT_SHOW_TITLES,
 } from '../../report/normalize/titles_add.js'
-import { DEFAULT_REPORTERS } from '../../report/reporters/main.js'
 import { isTtyInput } from '../../report/tty.js'
 import {
   validatePrecision,
   transformPrecision,
   DEFAULT_PRECISION,
 } from '../../run/precision.js'
-import { DEFAULT_RUNNERS } from '../../runners/main.js'
 import { DEFAULT_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { getShowMetadataDefault } from '../../top/omit.js'
+import { getPluginsDefinitions } from '../plugin/definitions.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 
 import { getPropCwd } from './cwd.js'
+import { amongCommands } from './pick.js'
 import { normalizeOptionalArray } from './transform.js'
 import {
   validateBoolean,
   validateInteger,
   validateString,
-  validateEmptyArray,
   validateDefinedString,
   validateJson,
   validateObject,
@@ -45,27 +44,14 @@ import {
   // eslint-disable-next-line import/max-dependencies
 } from './validate.js'
 
-// Use `pick()` to filter a configuration property for specific commands.
-// All config properties can be specified in `spyd.yml` (unlike CLI flags), for
-// any commands.
-// Therefore, we need to filter them out depending on the current command.
-const amongCommands = function (commands) {
-  return boundAmongCommands.bind(undefined, new Set(commands))
-}
-
-const boundAmongCommands = function (
-  commands,
-  value,
-  { context: { command } },
-) {
-  return commands.has(command)
-}
-
 // `config` has already been processed before, but it specified so it is shown
 // in the valid list of known properties
 const configProp = {
   name: 'config',
 }
+
+// All plugins definitions: `reporter`, `repoterConfig`, `runner`, etc.
+const plugins = getPluginsDefinitions()
 
 const colors = {
   name: 'colors',
@@ -162,71 +148,6 @@ const quiet = {
   pick: amongCommands(['run']),
   validate: validateBoolean,
 }
-
-// Retrieve the definition for plugins, both the selection property
-// (like `reporter`) and the configuration one (like `reporterConfig`).
-// This enforces consistency across plugins for selection and configuration.
-const getPluginDefinitions = function ({
-  name,
-  commands,
-  defaultIds,
-  idsDefinition,
-}) {
-  const pick = amongCommands(commands)
-  const configName = `${name}Config`
-  return [
-    {
-      name,
-      pick,
-      default: defaultIds,
-      transform: normalizeOptionalArray,
-      ...idsDefinition,
-    },
-    {
-      name: `${name}.*`,
-      pick,
-      validate: validateDefinedString,
-    },
-    {
-      name: configName,
-      pick,
-      default: {},
-      validate: validateObject,
-    },
-    {
-      name: `${configName}.*`,
-      pick,
-      default: {},
-      validate: validateObject,
-    },
-    {
-      name: `${configName}.*.*`,
-      pick,
-      validate: validateJson,
-    },
-  ]
-}
-
-const plugins = [
-  {
-    name: 'reporter',
-    commands: ['remove', 'run', 'show'],
-    defaultIds: DEFAULT_REPORTERS,
-    idsDefinition: {
-      transform(value, { config }) {
-        return config.force ? [] : normalizeOptionalArray(value)
-      },
-    },
-  },
-  {
-    name: 'runner',
-    commands: ['dev', 'run'],
-    defaultIds: DEFAULT_RUNNERS,
-    idsDefinition: {
-      validate: validateEmptyArray,
-    },
-  },
-].flatMap(getPluginDefinitions)
 
 const save = {
   name: 'save',
