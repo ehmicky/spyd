@@ -18,7 +18,7 @@ import { getWidths } from './width.js'
 //  - `smooth` (default: true): smooth the histogram values
 //     - This is especially useful when there are only a few measures that are
 //       all integers
-const reportTerminal = function (
+export const reportTerminal = function (
   { combinations, screenWidth },
   { mini = false, smooth = true },
 ) {
@@ -100,5 +100,3 @@ const getMedianIndex = function ({ median, min, max, contentWidth }) {
     max.raw === min.raw ? 0 : (median.raw - min.raw) / (max.raw - min.raw)
   return Math.min(Math.floor(percentage * contentWidth), contentWidth - 1)
 }
-
-export const histogramReporter = { reportTerminal }

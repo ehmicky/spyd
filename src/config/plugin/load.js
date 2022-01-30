@@ -45,6 +45,7 @@ const getModuleId = function (id, isCombinationDimension) {
 
 const CUSTOM_ID_DELIMITER = '_'
 
+// Builtin modules are lazy loaded for performance reasons
 const importPlugin = async function ({
   moduleId,
   type,
@@ -54,7 +55,7 @@ const importPlugin = async function ({
   const builtin = builtins[moduleId]
 
   if (builtin !== undefined) {
-    return builtin
+    return await builtin()
   }
 
   const moduleName = `${modulePrefix}${moduleId}`

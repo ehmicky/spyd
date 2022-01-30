@@ -1,7 +1,6 @@
-// eslint-disable-next-line import/no-namespace
-import * as cli from './cli/main.js'
-// eslint-disable-next-line import/no-namespace
-import * as node from './node/main.js'
+export const BUILTIN_RUNNERS = {
+  node: () => import('./node/main.js'),
+  cli: () => import('./cli/main.js'),
+}
 
-export const RUNNERS = { node, cli }
 export const DEFAULT_RUNNERS = ['node']

@@ -4,7 +4,7 @@ import { STAT_TITLES } from '../utils/stat_titles.js'
 import { getTables } from '../utils/table/main.js'
 
 // Debugging reporter only meant for development purpose
-const reportTerminal = function (
+export const reportTerminal = function (
   { combinations, screenWidth },
   {
     mini = false,
@@ -89,4 +89,4 @@ const getCell = function (
   return prettyColor
 }
 
-export const debug = { reportTerminal, capabilities: { debugStats: true } }
+export const capabilities = { debugStats: true }

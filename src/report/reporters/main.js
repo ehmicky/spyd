@@ -1,7 +1,8 @@
-import { boxplot } from './boxplot/main.js'
-import { debug } from './debug.js'
-import { histogramReporter as histogram } from './histogram/main.js'
-import { historyReporter as history } from './history.js'
+export const BUILTIN_REPORTERS = {
+  boxplot: () => import('./boxplot/main.js'),
+  debug: () => import('./debug.js'),
+  histogram: () => import('./histogram/main.js'),
+  history: () => import('./history.js'),
+}
 
-export const REPORTERS = { debug, boxplot, histogram, history }
 export const DEFAULT_REPORTERS = ['debug']

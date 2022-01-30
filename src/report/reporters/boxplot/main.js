@@ -10,7 +10,7 @@ import { getWidths } from './width.js'
 // Reporter showing boxplot of measures (min, q1, median, q3, max)
 // Configuration properties:
 //  - `mini` (default: false): hide `min`, `median` and `max` labels
-const reportTerminal = function (
+export const reportTerminal = function (
   { combinations, screenWidth },
   { mini = false },
 ) {
@@ -66,5 +66,3 @@ const getEmptyCombination = function (combinationTitles, mini) {
   const labelsLine = mini ? '' : '\n'
   return `${combinationTitles}\n${labelsLine}`
 }
-
-export const boxplot = { reportTerminal }

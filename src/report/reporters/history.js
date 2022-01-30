@@ -5,7 +5,11 @@ import { STATS_SEPARATOR_COLORED } from '../utils/separator.js'
 import { getTables } from '../utils/table/main.js'
 
 // Show `result.history` as a table
-const reportTerminal = function ({ combinations, history, screenWidth }) {
+export const reportTerminal = function ({
+  combinations,
+  history,
+  screenWidth,
+}) {
   const headerRows = getHeaderRows(history)
   const bodyRows = getBodyRows(combinations, history)
   return getTables([...headerRows, ...bodyRows], screenWidth)
@@ -69,7 +73,4 @@ const getCell = function (historyResult, combination) {
   return ''
 }
 
-export const historyReporter = {
-  reportTerminal,
-  capabilities: { history: true },
-}
+export const capabilities = { history: true }

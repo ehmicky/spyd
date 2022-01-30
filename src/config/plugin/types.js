@@ -1,5 +1,5 @@
-import { REPORTERS } from '../../report/reporters/main.js'
-import { RUNNERS } from '../../runners/main.js'
+import { BUILTIN_REPORTERS } from '../../report/reporters/main.js'
+import { BUILTIN_RUNNERS } from '../../runners/main.js'
 
 // All plugin types
 export const PLUGIN_TYPES = {
@@ -17,7 +17,7 @@ export const PLUGIN_TYPES = {
     // Prefix of the npm package
     modulePrefix: 'spyd-runner-',
     // Builtin plugins
-    builtins: RUNNERS,
+    builtins: BUILTIN_RUNNERS,
     // Whether this is a combination's dimension.
     // When false, this allows using custom prefixes.
     isCombinationDimension: true,
@@ -38,7 +38,7 @@ export const PLUGIN_TYPES = {
       'showDiff',
     ],
     modulePrefix: 'spyd-reporter-',
-    builtins: REPORTERS,
+    builtins: BUILTIN_REPORTERS,
     isCombinationDimension: false,
   },
 }
