@@ -10,9 +10,9 @@ const listTokenEntries = function (entries, token) {
   return entries.flatMap((entry) => getTokenEntries(entry, token))
 }
 
-const getTokenEntries = function ({ value, path }, { key, wildcard }) {
-  if (!wildcard) {
-    return [{ value: value[key], path: [...path, key] }]
+const getTokenEntries = function ({ value, path }, token) {
+  if (token !== '*') {
+    return [{ value: value[token], path: [...path, token] }]
   }
 
   if (Array.isArray(value)) {

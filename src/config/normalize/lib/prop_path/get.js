@@ -1,5 +1,5 @@
 import { listEntries } from './entries.js'
-import { maybeParse } from './parse.js'
+import { maybeParse, SEPARATOR } from './parse.js'
 
 // Retrieve all properties in `target` matching a query string.
 // The return value is an object where the key is the path to each value.
@@ -15,15 +15,11 @@ const normalizeEntry = function ({ value, path }) {
 }
 
 const serializeQuery = function (path) {
-  return path.reduce(appendKey, '')
+  return path.reduce(appendKey, '').slice(1)
 }
 
 const appendKey = function (pathStr, key) {
-  if (typeof key !== 'string') {
-    return `${pathStr}[${key}]`
-  }
-
-  return pathStr === '' ? `${pathStr}${key}` : `${pathStr}.${key}`
+  return `${pathStr}${SEPARATOR}${key}`
 }
 
 // Retrieve a single property's value in `target` matching a query string.

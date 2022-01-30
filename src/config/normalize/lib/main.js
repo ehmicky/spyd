@@ -74,16 +74,8 @@ const applyPropDefinition = async function ({
 
 // Retrieve `opts` passed to most methods
 const getOpts = function (name, config, context) {
-  const path = getPath(name)
+  const path = parse(name)
   return { name, path, config, context }
-}
-
-const getPath = function (name) {
-  return parse(name).map(getPathKey)
-}
-
-const getPathKey = function ({ key }) {
-  return key
 }
 
 // When in `loose` mode, user errors are returned instead of being thrown.

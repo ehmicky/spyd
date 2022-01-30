@@ -5,12 +5,13 @@
 //  - this works better when setting multiple elements at once
 // Syntax:
 //  - Dots are used for object properties, e.g. `one.two`
-//  - Brackets are used for array elements, e.g. `one[5]`
-//  - Dots and brackets can be used deeply, e.g. `one.two[5]`
+//  - Dots are also used for array elements, e.g. `one.5`
+//  - This can be used deeply, e.g. `one.two.5`
 //  - Wildcards are used with both objects and arrays to recurse over their
-//    children, e.g. `one.*` or `one[*]`.
+//    children, e.g. `one.*`
 //  - Empty keys are supported, e.g. `one.` for `{ one: { "": value } }`
 //    or `one..two` for `{ one: { "": { two: value } } }`
+//  - An empty string matches the root value
 // We allow passing an array of tokens instead of a string with the above syntax
 //  - This is sometimes more convenient
 //  - Also, this allows property names to include special characters (dots,
@@ -25,54 +26,13 @@ export const maybeParse = function (queryOrTokens) {
 }
 
 export const parse = function (query) {
-  if (query === '') {
-    return []
-  }
-
-  const normalizedQuery = prependDot(query)
-  const matchResults = [...normalizedQuery.matchAll(QUERY_REGEXP)]
-  validateQuery(matchResults, query, normalizedQuery)
-  const tokens = matchResults.map(getToken)
-  return tokens
+  return query === '' ? [] : query.split(SEPARATOR).map(getToken)
 }
 
-// Queries can start with an optional dot.
-const prependDot = function (query) {
-  const [firstChar] = query
-  return firstChar !== '.' && firstChar !== '[' ? `.${query}` : query
+export const SEPARATOR = '.'
+
+const getToken = function (token) {
+  return POSITIVE_INTEGER_REGEXP.test(token) ? Number(token) : token
 }
 
-const QUERY_REGEXP =
-  /((\.(?<name>([^.[\]*\d][^.[\]*]*|(?<nameWildcard>\*)|((?=[.[]|$)))))|(\[(?<index>([\d]+|(?<indexWildcard>\*)))\]))/guy
-
-// Validate against syntax errors in the query
-// TODO: add more error messages for common mistakes
-const validateQuery = function (matchResults, query, normalizedQuery) {
-  const matchedQuery = matchResults.map(getMatch).join('')
-
-  if (matchedQuery !== normalizedQuery) {
-    throw new Error(
-      `Syntax error in path "${query}" (starting at index ${matchedQuery.length})`,
-    )
-  }
-}
-
-const getMatch = function ([match]) {
-  return match
-}
-
-const getToken = function ({
-  groups: { name, nameWildcard, index, indexWildcard },
-}) {
-  const key = getKey(name, index)
-  const wildcard = nameWildcard !== undefined || indexWildcard !== undefined
-  return { key, wildcard }
-}
-
-const getKey = function (name, index) {
-  if (name !== undefined) {
-    return name
-  }
-
-  return index === '*' ? index : Number(index)
-}
+const POSITIVE_INTEGER_REGEXP = /^\d+$/u

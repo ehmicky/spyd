@@ -67,7 +67,7 @@ const configProp = {
 }
 
 const configAny = {
-  name: 'config[*]',
+  name: 'config.*',
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   validate: validateDefinedString,
 }
@@ -179,7 +179,7 @@ const reporter = {
 }
 
 const reporterAny = {
-  name: 'reporter[*]',
+  name: 'reporter.*',
   pick: amongCommands(['remove', 'run', 'show']),
   validate: validateDefinedString,
 }
@@ -204,7 +204,7 @@ const runner = {
 }
 
 const runnerAny = {
-  name: 'runner[*]',
+  name: 'runner.*',
   pick: amongCommands(['dev', 'run']),
   validate: validateDefinedString,
 }
@@ -231,7 +231,7 @@ const select = {
 }
 
 const selectAny = {
-  name: 'select[*]',
+  name: 'select.*',
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   validate: validateString,
 }
@@ -297,7 +297,7 @@ const tasks = {
 }
 
 const tasksAny = {
-  name: 'tasks[*]',
+  name: 'tasks.*',
   pick: amongCommands(['dev', 'run']),
   validate: validateDefinedString,
   async transform(value, { name, context: { configInfos } }) {
