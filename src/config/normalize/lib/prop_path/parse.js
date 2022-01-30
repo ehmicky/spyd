@@ -65,9 +65,8 @@ const getToken = function ({
   groups: { name, nameWildcard, index, indexWildcard },
 }) {
   const key = getKey(name, index)
-  const array = index !== undefined
   const wildcard = nameWildcard !== undefined || indexWildcard !== undefined
-  return { key, array, wildcard }
+  return { key, wildcard }
 }
 
 const getKey = function (name, index) {

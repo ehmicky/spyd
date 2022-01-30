@@ -10,38 +10,24 @@ const listTokenEntries = function (entries, token) {
   return entries.flatMap((entry) => getTokenEntries(entry, token))
 }
 
-const getTokenEntries = function ({ value, path }, { key, array, wildcard }) {
-  return array
-    ? getArrayEntries({ value, path, key, wildcard })
-    : getObjectEntries({ value, path, key, wildcard })
-}
-
-const getArrayEntries = function ({ value, path, key, wildcard }) {
-  if (!Array.isArray(value)) {
-    return []
-  }
-
+const getTokenEntries = function ({ value, path }, { key, wildcard }) {
   if (!wildcard) {
     return [{ value: value[key], path: [...path, key] }]
   }
 
-  return value.map((childValue, index) => ({
-    value: childValue,
-    path: [...path, index],
-  }))
-}
-
-const getObjectEntries = function ({ value, path, key, wildcard }) {
-  if (!isPlainObj(value)) {
-    return []
+  if (Array.isArray(value)) {
+    return value.map((childValue, index) => ({
+      value: childValue,
+      path: [...path, index],
+    }))
   }
 
-  if (!wildcard) {
-    return [{ value: value[key], path: [...path, key] }]
+  if (isPlainObj(value)) {
+    return Object.entries(value).map(([childKey, childValue]) => ({
+      value: childValue,
+      path: [...path, childKey],
+    }))
   }
 
-  return Object.entries(value).map(([childKey, childValue]) => ({
-    value: childValue,
-    path: [...path, childKey],
-  }))
+  return []
 }
