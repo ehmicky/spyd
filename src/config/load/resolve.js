@@ -58,7 +58,9 @@ const useResolver = async function (configOpt, base) {
   return await resolverFunc(arg, base)
 }
 
-const RESOLVER_REGEXP = /^(?<name>[a-z]+):(?<arg>.*)$/u
+// We require at least two characters to differentiate from absolute file paths
+// on Windows with drive letters. Enforcing lowercase also helps with this.
+const RESOLVER_REGEXP = /^(?<name>[a-z]{2,}):(?<arg>.*)$/u
 
 const RESOLVERS = {}
 
