@@ -8,14 +8,16 @@ import isPlainObj from 'is-plain-obj'
 // The configuration property uses then an object where:
 //  - The key is the selector (same syntax as `select`)
 //  - The value is applied for the combinations matching that selector
-// If a configuration property can use selectors but does not, normalize it to
-// its full shape using a default selector.
-// Also applies configuration definition regardless of whether selectors were
+// This applies configuration definition regardless of whether selectors were
 // used or not, and applies them recursively when selectors are used.
 // We duplicate `definition` for both `name` and `name.*` so that validation
 // error messages on `name` do not show `name.*`
+// We do not normalize all properties to the full syntax
+//  - For example, using a "default" selector when no selectors are used
+//  - Because configuration properties get added later on by some internal logic
+//     - It is simpler to specify those without selectors
 export const normalizeConfigSelectors = function (definition) {
-  const { name, condition, transform } = definition
+  const { name, condition } = definition
 
   if (!SELECTABLE_PROPS.includes(name)) {
     return [definition]
@@ -37,7 +39,6 @@ export const normalizeConfigSelectors = function (definition) {
         condition,
         isSelector: false,
       }),
-      transform: normalizeDefaultSelector.bind(undefined, transform),
     },
   ]
 }
@@ -52,7 +53,7 @@ const selectorCondition = function ({ condition, isSelector }, value, opts) {
 
 // We distinguish selectors by the usage of a plain object.
 // This means selectable properties' value cannot currently be plain objects.
-const isConfigSelectorShape = function (value) {
+export const isConfigSelectorShape = function (value) {
   return isPlainObj(value)
 }
 
@@ -73,13 +74,6 @@ const validateConfigSelector = function (value) {
     'default' in value,
     'last property must be named "default" when using configuration selectors.',
   )
-}
-
-// When a selectable configuration property does not specify selectors, we
-// use "default" which catches everything
-const normalizeDefaultSelector = function (transform, value, opts) {
-  const valueA = transform === undefined ? value : transform(value, opts)
-  return { default: valueA }
 }
 
 // List of properties which can use configuration selectors

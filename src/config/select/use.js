@@ -1,7 +1,7 @@
 import { matchCombination } from '../../select/main.js'
 import { normalizeConfigProps } from '../normalize/lib/main.js'
 
-import { SELECTABLE_PROPS } from './normalize.js'
+import { SELECTABLE_PROPS, isConfigSelectorShape } from './normalize.js'
 
 // Selectors are searched in the object keys order.
 // One key must be "default" and is used as a fallback (even when it is not the
@@ -30,8 +30,9 @@ export const useConfigSelectors = async function (combination, config) {
   })
 }
 
+// Some values might not be using selectors. Those do not need to be transformed
 const getDefinition = function (name) {
-  return { name, transform }
+  return { name, condition: isConfigSelectorShape, transform }
 }
 
 const transform = function (
