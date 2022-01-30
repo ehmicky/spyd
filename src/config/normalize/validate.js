@@ -25,7 +25,7 @@ export const validateDefinedString = function (value) {
   validateString(value)
 
   if (value.trim() === '') {
-    throw new Error('must not be empty.')
+    throw new Error('must not be an empty string.')
   }
 }
 

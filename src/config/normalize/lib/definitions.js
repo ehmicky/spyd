@@ -9,6 +9,7 @@ export const applyDefinition = async function (
     compute,
     path = false,
     cwd = '.',
+    glob = false,
     validate,
     transform,
   },
@@ -25,7 +26,7 @@ export const applyDefinition = async function (
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   const valueB = await computeValue(valueA, compute, opts)
-  const valueC = await resolvePath(valueB, { path, cwd, opts })
+  const valueC = await resolvePath(valueB, { path, cwd, glob, opts })
   await validateValue(valueC, validate, opts)
   const valueD = await transformValue(valueC, transform, opts)
   return valueD

@@ -11,10 +11,12 @@ const listTokenEntries = function (entries, token) {
 }
 
 const getTokenEntries = function ({ value, path }, token) {
-  if (token !== '*') {
-    return [{ value: value[token], path: [...path, token] }]
-  }
+  return token === '*'
+    ? getWildcardEntries(value, path)
+    : getKeyEntries(value, path, token)
+}
 
+const getWildcardEntries = function (value, path) {
   if (Array.isArray(value)) {
     return value.map((childValue, index) => ({
       value: childValue,
@@ -30,4 +32,10 @@ const getTokenEntries = function ({ value, path }, token) {
   }
 
   return []
+}
+
+const getKeyEntries = function (value, path, token) {
+  return Array.isArray(value) || isPlainObj(value)
+    ? [{ value: value[token], path: [...path, token] }]
+    : []
 }

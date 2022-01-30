@@ -30,7 +30,7 @@ import { getShowMetadataDefault } from '../../top/omit.js'
 import { getDefaultConfig } from '../load/default.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 
-import { normalizeConfigGlob, getPropCwd } from './path.js'
+import { getPropCwd } from './path.js'
 import { normalizeOptionalArray } from './transform.js'
 import {
   validateBoolean,
@@ -84,7 +84,6 @@ const cwd = {
   default: getCwd,
   path: true,
   cwd: getPropCwd,
-  validate: validateDefinedString,
 }
 
 const delta = {
@@ -138,7 +137,6 @@ const output = {
   pick: amongCommands(['remove', 'run', 'show']),
   path: isOutputPath,
   cwd: getPropCwd,
-  validate: validateDefinedString,
 }
 
 const outliers = {
@@ -295,10 +293,9 @@ const tasks = {
 const tasksAny = {
   name: 'tasks.*',
   pick: amongCommands(['dev', 'run']),
-  validate: validateDefinedString,
-  async transform(value, { name, context: { configInfos } }) {
-    return await normalizeConfigGlob(value, name, configInfos)
-  },
+  path: true,
+  glob: true,
+  cwd: getPropCwd,
 }
 
 const tasksFlatten = {
