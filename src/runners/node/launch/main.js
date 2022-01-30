@@ -1,7 +1,6 @@
 import { version as currentVersion } from 'process'
 import { fileURLToPath } from 'url'
 
-import { validateConfig } from './validate.js'
 import { getNodeVersion } from './version.js'
 
 const HANDLER_MAIN_PATH = fileURLToPath(
@@ -12,8 +11,6 @@ const HANDLER_MAIN_PATH = fileURLToPath(
 // But `runnerConfig.node.version` can be used to spawn a different Node.js
 // version.
 export const launch = async function (runnerConfig) {
-  validateConfig(runnerConfig)
-
   const versionInfo = await getNodeVersion(runnerConfig)
 
   if (versionInfo === undefined) {

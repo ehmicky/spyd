@@ -13,18 +13,12 @@ export const getNodeVersion = async function ({ version }) {
     return
   }
 
-  const versionA = normalizeVersion(version)
   const [versionInfo, allowedVersions] = await Promise.all([
-    getFullVersion(versionA),
+    getFullVersion(version),
     getAllowedVersions(),
   ])
   validateVersion(versionInfo, allowedVersions)
   return versionInfo
-}
-
-// If `version` is `MAJOR` or `MAJOR.MINOR`, yargs will parse it as a number
-const normalizeVersion = function (version) {
-  return typeof version === 'number' ? String(version) : version
 }
 
 // We retrieve the full Node version for validation purpose and for
