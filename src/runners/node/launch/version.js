@@ -1,7 +1,6 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
-import nvexeca from 'nvexeca'
 import { readPackageUp } from 'read-pkg-up'
 import semver from 'semver'
 
@@ -33,6 +32,9 @@ const normalizeVersion = function (version) {
 // This both downloads Node.js binary and normalize its `version`.
 // This also retrieves the `command` and `spawnOptions`.
 const getFullVersion = async function (version) {
+  // Lazy loading for performance reasons
+  const { default: nvexeca } = await import('nvexeca')
+
   try {
     return await nvexeca(version, 'node', { progress: true, dry: true })
   } catch (error) {
