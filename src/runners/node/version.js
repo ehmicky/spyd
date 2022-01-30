@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url'
 import { readPackageUp } from 'read-pkg-up'
 import semver from 'semver'
 
+import { normalizeNumberString } from '../../config/normalize/transform.js'
+import { validateNumberString } from '../../config/normalize/validate.js'
 import { wrapError } from '../../error/wrap.js'
 
 // Validate the Node.js version
@@ -42,3 +44,16 @@ export const transformVersion = async function (version) {
     throw wrapError(error, 'must be a valid Node.js version:')
   }
 }
+
+export const versionDefinitions = [
+  {
+    name: 'version',
+    validate: validateNumberString,
+    transform: normalizeNumberString,
+  },
+  {
+    name: 'version',
+    validate: validateVersion,
+    transform: transformVersion,
+  },
+]
