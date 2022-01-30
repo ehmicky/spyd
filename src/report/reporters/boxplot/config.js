@@ -1,0 +1,10 @@
+import { validateBoolean } from '../../../config/normalize/validate.js'
+
+export const config = [
+  // Hide `min`, `median` and `max` labels
+  {
+    name: 'mini',
+    default: false,
+    validate: validateBoolean,
+  },
+]

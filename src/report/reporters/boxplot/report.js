@@ -8,11 +8,9 @@ import { getPositions } from './position.js'
 import { getWidths } from './width.js'
 
 // Reporter showing boxplot of measures (min, q1, median, q3, max)
-// Configuration properties:
-//  - `mini` (default: false): hide `min`, `median` and `max` labels
 export const reportTerminal = function (
   { combinations, screenWidth },
-  { mini = false },
+  { mini },
 ) {
   const combinationsA = combinations.map(normalizeQuantiles)
   const { minAll, maxAll } = getMinMaxAll(combinationsA)

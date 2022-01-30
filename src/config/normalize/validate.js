@@ -56,6 +56,12 @@ export const validateString = function (value) {
   }
 }
 
+export const validateArray = function (value) {
+  if (!Array.isArray(value)) {
+    throw new TypeError('must be an array.')
+  }
+}
+
 export const validateEmptyArray = function (value) {
   if (Array.isArray(value) && value.length === 0) {
     throw new Error('must not be an empty array.')

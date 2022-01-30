@@ -14,13 +14,9 @@ import { getWidths } from './width.js'
 //  - This shows consistent results with other distribution-based reporters
 //    such as `boxplot`
 // Configuration properties:
-//  - `mini` (default: false): hide `min`, `median` and `max` labels
-//  - `smooth` (default: true): smooth the histogram values
-//     - This is especially useful when there are only a few measures that are
-//       all integers
 export const reportTerminal = function (
   { combinations, screenWidth },
-  { mini = false, smooth = true },
+  { mini, smooth },
 ) {
   const height = 2 * EXTRA_HEIGHT
   const { titlesWidth, minBlockWidth, contentWidth } = getWidths(
