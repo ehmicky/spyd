@@ -1,7 +1,7 @@
-import { fieldColor } from '../utils/colors.js'
-import { getCombinationTitleColor } from '../utils/combination_title.js'
-import { STAT_TITLES } from '../utils/stat_titles.js'
-import { getTables } from '../utils/table/main.js'
+import { fieldColor } from '../../utils/colors.js'
+import { getCombinationTitleColor } from '../../utils/combination_title.js'
+import { STAT_TITLES } from '../../utils/stat_titles.js'
+import { getTables } from '../../utils/table/main.js'
 
 // Debugging reporter only meant for development purpose
 export const reportTerminal = function (
@@ -88,5 +88,3 @@ const getCell = function (
 ) {
   return prettyColor
 }
-
-export const capabilities = { debugStats: true }

@@ -1,8 +1,8 @@
-import { hasSameCombinationIds } from '../../combination/result.js'
-import { fieldColor } from '../utils/colors.js'
-import { getCombinationTitleColor } from '../utils/combination_title.js'
-import { STATS_SEPARATOR_COLORED } from '../utils/separator.js'
-import { getTables } from '../utils/table/main.js'
+import { hasSameCombinationIds } from '../../../combination/result.js'
+import { fieldColor } from '../../utils/colors.js'
+import { getCombinationTitleColor } from '../../utils/combination_title.js'
+import { STATS_SEPARATOR_COLORED } from '../../utils/separator.js'
+import { getTables } from '../../utils/table/main.js'
 
 // Show `result.history` as a table
 export const reportTerminal = function ({
@@ -72,5 +72,3 @@ const getCell = function (historyResult, combination) {
 
   return ''
 }
-
-export const capabilities = { history: true }
