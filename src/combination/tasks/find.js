@@ -1,6 +1,4 @@
-import { isFile } from 'path-type'
-
-import { PluginError, UserError } from '../../error/main.js'
+import { PluginError } from '../../error/main.js'
 import { wrapError } from '../../error/wrap.js'
 import { measureCombinations } from '../../run/measure/main.js'
 
@@ -17,8 +15,6 @@ export const findTasks = async function ({
   noDimensions,
   cwd,
 }) {
-  await validateTask(taskPath)
-
   try {
     const [{ taskIds: ids }] = await measureCombinations(
       [{ dimensions: { runner }, taskPath, inputsList: [] }],
@@ -33,12 +29,6 @@ export const findTasks = async function ({
     return ids.map((id) => ({ id, taskPath, runner }))
   } catch (error) {
     throw wrapError(error, `In tasks file "${taskPath}":\n`)
-  }
-}
-
-const validateTask = async function (taskPath) {
-  if (!(await isFile(taskPath))) {
-    throw new UserError(`Tasks file does not exist: ${taskPath}`)
   }
 }
 

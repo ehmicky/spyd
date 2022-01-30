@@ -1,11 +1,13 @@
 import { basename } from 'path'
 
-import { isFile } from 'path-type'
-
 import { lookupFiles } from '../lookup.js'
 import { DEFAULT_VALUES_BASE } from '../normalize/cwd.js'
 import { normalizeConfig } from '../normalize/main.js'
 import { normalizeOptionalArray } from '../normalize/transform.js'
+import {
+  validateFileExists,
+  validateRegularFile,
+} from '../normalize/validate.js'
 
 import { getConfigFilenames } from './contents.js'
 import { isConfigFilePath, useResolvers } from './resolvers.js'
@@ -34,10 +36,9 @@ const getConfigCwd = function (value, { context: { base } }) {
   return base
 }
 
-const validate = async function (configPath) {
-  if (!(await isFile(configPath))) {
-    throw new Error('must be an existing file.')
-  }
+const validate = async function (value) {
+  await validateFileExists(value)
+  await validateRegularFile(value)
 }
 
 const configProp = {

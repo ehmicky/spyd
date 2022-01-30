@@ -1,7 +1,6 @@
 import { promises as fs } from 'fs'
 import { dirname } from 'path'
 
-import { isDirectory } from 'path-type'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../error/main.js'
@@ -29,12 +28,6 @@ const outputContent = async function ({ content, output }) {
   if (output === 'stdout') {
     await printToStdout(content)
     return
-  }
-
-  if (await isDirectory(output)) {
-    throw new UserError(
-      `Invalid configuration property "output" "${output}": it must be a regular file, not a directory.`,
-    )
   }
 
   const fileContent = await detectInsert(output)

@@ -39,6 +39,9 @@ import {
   validateDefinedString,
   validateJson,
   validateObject,
+  validateFileExists,
+  validateRegularFile,
+  validateDirectory,
   // eslint-disable-next-line import/max-dependencies
 } from './validate.js'
 
@@ -76,6 +79,10 @@ const cwd = {
   default: getCwd,
   path: true,
   cwd: getPropCwd,
+  async validate(value) {
+    await validateFileExists(value)
+    await validateDirectory(value)
+  },
 }
 
 const delta = {
@@ -129,6 +136,7 @@ const output = {
   pick: amongCommands(['remove', 'run', 'show']),
   path: isOutputPath,
   cwd: getPropCwd,
+  validate: validateRegularFile,
 }
 
 const outliers = {
@@ -288,6 +296,7 @@ const tasksAny = {
   path: true,
   glob: true,
   cwd: getPropCwd,
+  validate: validateRegularFile,
 }
 
 const tasksFlatten = {

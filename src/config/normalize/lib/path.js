@@ -47,6 +47,7 @@ const resolveCwd = async function (cwd, value, opts) {
 
 // When `glob(value, opts)` is `true` (default: `false`), resolves globbing.
 // Remove duplicates and temporary files.
+// Only returns regular files, not directories.
 const resolveGlob = async function (cwd, value) {
   const filePaths = await fastGlob(value, { cwd, absolute: true, unique: true })
   return filePaths.filter((filePath) => isNotJunk(basename(filePath)))
