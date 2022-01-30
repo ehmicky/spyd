@@ -251,13 +251,13 @@ const runnerConfigs = {
 const runnerConfig = {
   ...pluginConfig,
   name: 'runnerConfig.*',
-  pick: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['dev', 'run']),
 }
 
 const runnerConfigProp = {
   ...pluginConfigProp,
   name: 'runnerConfig.*.*',
-  pick: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['dev', 'run']),
 }
 
 const save = {
