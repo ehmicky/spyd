@@ -2,7 +2,6 @@ import pReduce from 'p-reduce'
 
 import { cleanObject } from '../../../utils/clean.js'
 
-import { getSkipCounts, applySkipCounts } from './condition.js'
 import { applyDefinition } from './definitions.js'
 import { list } from './prop_path/get.js'
 import { parse } from './prop_path/parse.js'
@@ -24,54 +23,51 @@ export const normalizeConfigProps = async function (
   definitions,
   { context = {}, loose = false } = {},
 ) {
-  const skipCounts = getSkipCounts(definitions)
-
   try {
-    const { config: configA } = await pReduce(
+    const configB = await pReduce(
       definitions,
-      (memo, definition) => applyDefinitionDeep(memo, { definition, context }),
-      { config, skipCounts },
+      (configA, definition) =>
+        applyDefinitionDeep({ config: configA, definition, context }),
+      config,
     )
-    const configB = cleanObject(configA)
-    return configB
+    const configC = cleanObject(configB)
+    return configC
   } catch (error) {
     return handleError(error, loose)
   }
 }
 
-const applyDefinitionDeep = async function (
-  { config, skipCounts },
-  { definition, definition: { name: query }, context },
-) {
+const applyDefinitionDeep = async function ({
+  config,
+  definition,
+  definition: { name: query },
+  context,
+}) {
   const props = Object.entries(list(config, query))
-  const { config: configA, allSkipped } = await pReduce(
+  return await pReduce(
     props,
-    (memo, [name, value]) =>
-      applyPropDefinition(memo, { value, name, definition, context }),
-    { config, allSkipped: true },
+    (configA, [name, value]) =>
+      applyPropDefinition({
+        config: configA,
+        value,
+        name,
+        definition,
+        context,
+      }),
+    config,
   )
-  const { config: configB, skipCounts: skipCountsA } = applySkipCounts({
-    config: configA,
-    allSkipped,
-    skipCounts,
-    query,
-  })
-  return { config: configB, skipCounts: skipCountsA }
 }
 
-const applyPropDefinition = async function (
-  { config, allSkipped },
-  { value, name, definition, context },
-) {
+const applyPropDefinition = async function ({
+  config,
+  value,
+  name,
+  definition,
+  context,
+}) {
   const opts = getOpts(name, config, context)
-  const { value: newValue, skipped } = await applyDefinition(
-    definition,
-    value,
-    opts,
-  )
-  const configA = set(config, name, newValue)
-  const allSkippedA = allSkipped && skipped
-  return { config: configA, allSkipped: allSkippedA }
+  const newValue = await applyDefinition(definition, value, opts)
+  return set(config, name, newValue)
 }
 
 // Retrieve `opts` passed to most methods

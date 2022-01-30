@@ -36,7 +36,7 @@ import {
   // eslint-disable-next-line import/max-dependencies
 } from './validate.js'
 
-// Used a `condition()` to filter a configuration property for specific commands
+// Use `pick()` to filter a configuration property for specific commands.
 // All config properties can be specified in `spyd.yml` (unlike CLI flags), for
 // any commands.
 // Therefore, we need to filter them out depending on the current command.
@@ -54,26 +54,26 @@ const boundAmongCommands = function (
 
 const configProp = {
   name: 'config',
-  condition: amongCommands(['dev', 'remove', 'run', 'show']),
+  pick: amongCommands(['dev', 'remove', 'run', 'show']),
   default: getDefaultConfig,
   transform: normalizeOptionalArray,
 }
 
 const configAny = {
   name: 'config[*]',
-  condition: amongCommands(['dev', 'remove', 'run', 'show']),
+  pick: amongCommands(['dev', 'remove', 'run', 'show']),
   validate: validateDefinedString,
 }
 
 const colors = {
   name: 'colors',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   validate: validateBoolean,
 }
 
 const cwd = {
   name: 'cwd',
-  condition: amongCommands(['dev', 'remove', 'run', 'show']),
+  pick: amongCommands(['dev', 'remove', 'run', 'show']),
   default: getCwd,
   validate: validateDefinedString,
   transform(value, { name, context: { configInfos } }) {
@@ -83,14 +83,14 @@ const cwd = {
 
 const delta = {
   name: 'delta',
-  condition: amongCommands(['remove', 'show']),
+  pick: amongCommands(['remove', 'show']),
   default: DEFAULT_MAIN_DELTA,
   transform: transformDelta,
 }
 
 const force = {
   name: 'force',
-  condition: amongCommands(['remove']),
+  pick: amongCommands(['remove']),
   default() {
     return !isTtyInput()
   },
@@ -99,27 +99,27 @@ const force = {
 
 const inputs = {
   name: 'inputs',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   default: {},
   validate: validateObject,
 }
 
 const inputsAny = {
   name: 'inputs.*',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   validate: validateJson,
 }
 
 const limit = {
   name: 'limit',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   validate: validateInteger,
   transform: transformLimit,
 }
 
 const merge = {
   name: 'merge',
-  condition: amongCommands(['run']),
+  pick: amongCommands(['run']),
   default: getDefaultId,
   validate(value) {
     validateDefinedString(value)
@@ -129,7 +129,7 @@ const merge = {
 
 const output = {
   name: 'output',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   validate: validateDefinedString,
   transform(value, { name, context: { configInfos } }) {
     return isOutputPath(value)
@@ -140,14 +140,14 @@ const output = {
 
 const outliers = {
   name: 'outliers',
-  condition: amongCommands(['run']),
+  pick: amongCommands(['run']),
   default: DEFAULT_OUTLIERS,
   validate: validateBoolean,
 }
 
 const precision = {
   name: 'precision',
-  condition: amongCommands(['run']),
+  pick: amongCommands(['run']),
   default: DEFAULT_PRECISION,
   validate(value) {
     validateInteger(value)
@@ -158,13 +158,13 @@ const precision = {
 
 const quiet = {
   name: 'quiet',
-  condition: amongCommands(['run']),
+  pick: amongCommands(['run']),
   validate: validateBoolean,
 }
 
 const reporter = {
   name: 'reporter',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   default: DEFAULT_REPORTERS,
   transform(value, { config }) {
     return config.force ? [] : normalizeOptionalArray(value)
@@ -173,20 +173,20 @@ const reporter = {
 
 const reporterAny = {
   name: 'reporter[*]',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   validate: validateDefinedString,
 }
 
 const reporterConfig = {
   name: 'reporterConfig',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   default: {},
   validate: validateObject,
 }
 
 const runner = {
   name: 'runner',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   // We default `runner` to `node` only instead of several ones (e.g. `cli`)
   // because this enforces that the `runner` property points to a required tasks
   // file, instead of to an optional one. This makes behavior easier to
@@ -198,46 +198,46 @@ const runner = {
 
 const runnerAny = {
   name: 'runner[*]',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   validate: validateDefinedString,
 }
 
 const runnerConfig = {
   name: 'runnerConfig',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   default: {},
   validate: validateObject,
 }
 
 const save = {
   name: 'save',
-  condition: amongCommands(['run']),
+  pick: amongCommands(['run']),
   default: DEFAULT_SAVE,
   validate: validateBoolean,
 }
 
 const select = {
   name: 'select',
-  condition: amongCommands(['dev', 'remove', 'run', 'show']),
+  pick: amongCommands(['dev', 'remove', 'run', 'show']),
   default: DEFAULT_SELECT,
   transform: normalizeOptionalArray,
 }
 
 const selectAny = {
   name: 'select[*]',
-  condition: amongCommands(['dev', 'remove', 'run', 'show']),
+  pick: amongCommands(['dev', 'remove', 'run', 'show']),
   validate: validateString,
 }
 
 const showDiff = {
   name: 'showDiff',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   validate: validateBoolean,
 }
 
 const showMetadata = {
   name: 'showMetadata',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   default({ context: { command } }) {
     return command !== 'run'
   },
@@ -246,54 +246,54 @@ const showMetadata = {
 
 const showPrecision = {
   name: 'showPrecision',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   default: false,
   validate: validateBoolean,
 }
 
 const showSystem = {
   name: 'showSystem',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   validate: validateBoolean,
 }
 
 const showTitles = {
   name: 'showTitles',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   default: false,
   validate: validateBoolean,
 }
 
 const since = {
   name: 'since',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   default: DEFAULT_SINCE_DELTA,
   transform: transformDelta,
 }
 
 const system = {
   name: 'system',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   default: {},
   validate: validateObject,
 }
 
 const systemAny = {
   name: 'system.*',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   validate: validateDefinedString,
 }
 
 const tasks = {
   name: 'tasks',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   default: [],
   transform: normalizeOptionalArray,
 }
 
 const tasksAny = {
   name: 'tasks[*]',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   validate: validateDefinedString,
   async transform(value, { name, context: { configInfos } }) {
     return await normalizeConfigGlob(value, name, configInfos)
@@ -302,7 +302,7 @@ const tasksAny = {
 
 const tasksFlatten = {
   name: 'tasks',
-  condition: amongCommands(['dev', 'run']),
+  pick: amongCommands(['dev', 'run']),
   transform(value) {
     return value.flat()
   },
@@ -310,14 +310,14 @@ const tasksFlatten = {
 
 const titles = {
   name: 'titles',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   default: {},
   validate: validateObject,
 }
 
 const titlesAny = {
   name: 'titles.*',
-  condition: amongCommands(['remove', 'run', 'show']),
+  pick: amongCommands(['remove', 'run', 'show']),
   validate: validateDefinedString,
 }
 
