@@ -80,3 +80,5 @@ const DEBUG_STATS_PROPS = [
 const maybeOmit = function (obj, showProp, propNames) {
   return showProp ? obj : omit.default(obj, propNames)
 }
+
+export const DEFAULT_SHOW_PRECISION = false

@@ -73,3 +73,7 @@ const MAIN_SYSTEM_PROPS = ['machine', 'versions']
 const maybeOmit = function (obj, showProp, propNames) {
   return showProp ? obj : omit.default(obj, propNames)
 }
+
+export const getShowMetadataDefault = function ({ context: { command } }) {
+  return command !== 'run'
+}

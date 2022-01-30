@@ -86,3 +86,6 @@ const addTitle = function (obj, titles) {
   const { [id]: title = id } = titles
   return title === undefined ? obj : { ...obj, title }
 }
+
+export const DEFAULT_TITLES = {}
+export const DEFAULT_SHOW_TITLES = false

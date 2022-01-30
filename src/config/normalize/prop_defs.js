@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { cwd as getCwd } from 'process'
 
+import { DEFAULT_INPUTS } from '../../combination/inputs.js'
 import { transformLimit } from '../../history/compare/transform.js'
 import { DEFAULT_SAVE } from '../../history/data/main.js'
 import {
@@ -9,6 +10,11 @@ import {
   DEFAULT_SINCE_DELTA,
 } from '../../history/delta/transform.js'
 import { getDefaultId, validateMerge } from '../../history/merge/id.js'
+import { DEFAULT_SHOW_PRECISION } from '../../report/normalize/omit.js'
+import {
+  DEFAULT_TITLES,
+  DEFAULT_SHOW_TITLES,
+} from '../../report/normalize/titles_add.js'
 import { isOutputPath } from '../../report/output.js'
 import { DEFAULT_REPORTERS } from '../../report/reporters/main.js'
 import { isTtyInput } from '../../report/tty.js'
@@ -20,6 +26,7 @@ import {
 import { DEFAULT_RUNNERS } from '../../runners/main.js'
 import { DEFAULT_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
+import { getShowMetadataDefault } from '../../top/omit.js'
 import { getDefaultConfig } from '../load/default.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 
@@ -100,7 +107,7 @@ const force = {
 const inputs = {
   name: 'inputs',
   pick: amongCommands(['dev', 'run']),
-  default: {},
+  default: DEFAULT_INPUTS,
   validate: validateObject,
 }
 
@@ -238,16 +245,14 @@ const showDiff = {
 const showMetadata = {
   name: 'showMetadata',
   pick: amongCommands(['remove', 'run', 'show']),
-  default({ context: { command } }) {
-    return command !== 'run'
-  },
+  default: getShowMetadataDefault,
   validate: validateBoolean,
 }
 
 const showPrecision = {
   name: 'showPrecision',
   pick: amongCommands(['remove', 'run', 'show']),
-  default: false,
+  default: DEFAULT_SHOW_PRECISION,
   validate: validateBoolean,
 }
 
@@ -260,7 +265,7 @@ const showSystem = {
 const showTitles = {
   name: 'showTitles',
   pick: amongCommands(['remove', 'run', 'show']),
-  default: false,
+  default: DEFAULT_SHOW_TITLES,
   validate: validateBoolean,
 }
 
@@ -311,7 +316,7 @@ const tasksFlatten = {
 const titles = {
   name: 'titles',
   pick: amongCommands(['remove', 'run', 'show']),
-  default: {},
+  default: DEFAULT_TITLES,
   validate: validateObject,
 }
 

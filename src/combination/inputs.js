@@ -28,3 +28,5 @@ export const getInputIds = function (inputsList) {
 const getInputId = function ({ inputId }) {
   return inputId
 }
+
+export const DEFAULT_INPUTS = {}
