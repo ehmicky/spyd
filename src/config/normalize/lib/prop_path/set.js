@@ -3,11 +3,11 @@ import omit from 'omit.js'
 import { setArray } from '../../../../utils/set.js'
 
 import { listEntries } from './entries.js'
-import { parse } from './parse.js'
+import { maybeParse } from './parse.js'
 
 // Set a value to one or multiple properties in `target` using a query string
-export const set = function (target, query, setValue) {
-  const tokens = parse(query)
+export const set = function (target, queryOrTokens, setValue) {
+  const tokens = maybeParse(queryOrTokens)
   const entries = listEntries(target, tokens)
   return entries.reduce(
     (targetA, { path }) => setProp(targetA, 0, { path, setValue }),
@@ -28,8 +28,8 @@ const setProp = function (value, index, { path, setValue }) {
 }
 
 // Delete one or multiple properties in `target` using a query string
-export const remove = function (target, query) {
-  const tokens = parse(query)
+export const remove = function (target, queryOrTokens) {
+  const tokens = maybeParse(queryOrTokens)
   const entries = listEntries(target, tokens)
   return entries.reduce(
     (targetA, { path }) => removeProp(targetA, 0, path),
