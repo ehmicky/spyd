@@ -1,10 +1,18 @@
+import { DEFAULT_REPORTER_OUTPUT } from '../../report/contents/output.js'
+import { getReportMethods } from '../../report/formats/list.js'
 import {
   BUILTIN_REPORTERS,
   DEFAULT_REPORTERS,
 } from '../../report/reporters/main.js'
 import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from '../../runners/main.js'
 import { normalizeOptionalArray } from '../normalize/transform.js'
-import { validateEmptyArray } from '../normalize/validate.js'
+import {
+  validateBoolean,
+  validateDefinedString,
+  validateObject,
+  validateEmptyArray,
+  validateFunction,
+} from '../normalize/validate.js'
 
 // All plugin types
 export const PLUGIN_TYPES = {
@@ -34,6 +42,13 @@ export const PLUGIN_TYPES = {
     selectPropDefinition: {
       validate: validateEmptyArray,
     },
+    mainDefinitions: [
+      {
+        name: 'launch',
+        required: true,
+        validate: validateFunction,
+      },
+    ],
   },
   reporter: {
     type: 'reporter',
@@ -60,6 +75,32 @@ export const PLUGIN_TYPES = {
         return config.force ? [] : normalizeOptionalArray(value)
       },
     },
+    mainDefinitions: [
+      ...getReportMethods().map((name) => ({
+        name,
+        validate: validateFunction,
+      })),
+      {
+        name: 'capabilities',
+        default: {},
+        validate: validateObject,
+      },
+      {
+        name: 'capabilities.debugStats',
+        default: false,
+        validate: validateBoolean,
+      },
+      {
+        name: 'capabilities.history',
+        default: false,
+        validate: validateBoolean,
+      },
+      {
+        name: 'defaultOutput',
+        default: DEFAULT_REPORTER_OUTPUT,
+        validate: validateDefinedString,
+      },
+    ],
   },
 }
 

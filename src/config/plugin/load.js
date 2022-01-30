@@ -3,6 +3,7 @@ import { createRequire } from 'module'
 import { PluginError, UserError } from '../../error/main.js'
 import { wrapError } from '../../error/wrap.js'
 import { PLUGINS_IMPORT_BASE } from '../normalize/cwd.js'
+import { normalizeConfig } from '../normalize/main.js'
 
 import { getModuleId } from './id.js'
 
@@ -13,10 +14,18 @@ export const loadPlugins = async function ({
   modulePrefix,
   builtins,
   isCombinationDimension,
+  mainDefinitions,
 }) {
   return await Promise.all(
     ids.map((id) =>
-      loadPlugin({ id, type, modulePrefix, builtins, isCombinationDimension }),
+      loadPlugin({
+        id,
+        type,
+        modulePrefix,
+        builtins,
+        isCombinationDimension,
+        mainDefinitions,
+      }),
     ),
   )
 }
@@ -27,10 +36,13 @@ const loadPlugin = async function ({
   modulePrefix,
   builtins,
   isCombinationDimension,
+  mainDefinitions,
 }) {
   const moduleId = getModuleId(id, type, isCombinationDimension)
   const plugin = await importPlugin({ moduleId, type, modulePrefix, builtins })
-  return { ...plugin, id }
+  const pluginA = { ...plugin }
+  const pluginB = await normalizePlugin(pluginA, mainDefinitions)
+  return { ...pluginB, id }
 }
 
 // Builtin modules are lazy loaded for performance reasons
@@ -81,4 +93,12 @@ This Node module was not found, please ensure it is installed.\n\n`,
       UserError,
     )
   }
+}
+
+// Validate a plugin has the correct shape and normalize it
+const normalizePlugin = async function (plugin, mainDefinitions) {
+  return await normalizeConfig(plugin, mainDefinitions, {
+    context: {},
+    ErrorType: PluginError,
+  })
 }

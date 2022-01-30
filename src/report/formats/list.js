@@ -11,3 +11,12 @@ const getFormatPair = function (format) {
 }
 
 export const FORMATS = getFormats()
+
+// Return all possible `report*()` methods
+export const getReportMethods = function () {
+  return [...new Set(FORMATS_ARRAY.flatMap(getFormatReportMethods))]
+}
+
+const getFormatReportMethods = function ({ methods }) {
+  return methods
+}

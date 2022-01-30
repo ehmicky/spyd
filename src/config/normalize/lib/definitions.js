@@ -10,6 +10,7 @@ export const applyDefinition = async function (
     path = false,
     cwd = '.',
     glob = false,
+    required = false,
     validate,
     transform,
   },
@@ -26,10 +27,17 @@ export const applyDefinition = async function (
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   const valueB = await computeValue(valueA, compute, opts)
-  const valueC = await resolvePath(valueB, { path, cwd, glob, opts })
-  await validateValue(valueC, validate, opts)
-  const valueD = await transformValue(valueC, transform, opts)
-  return valueD
+  const valueC = await applyValidateTransform({
+    value: valueB,
+    path,
+    cwd,
+    glob,
+    required,
+    validate,
+    transform,
+    opts,
+  })
+  return valueC
 }
 
 // Apply `pick(value, opts)` which omits the current value if `false` is
@@ -56,6 +64,34 @@ const addDefaultValue = async function (value, defaultValue, opts) {
 // Apply `compute(opts)` which sets a value from the system, instead of the user
 const computeValue = async function (value, compute, opts) {
   return compute === undefined ? value : await callUserFunc(compute, opts)
+}
+
+const applyValidateTransform = async function ({
+  value,
+  path,
+  cwd,
+  glob,
+  required,
+  validate,
+  transform,
+  opts,
+}) {
+  const valueA = await resolvePath(value, { path, cwd, glob, opts })
+  await validateRequired(valueA, required, opts)
+  await validateValue(valueA, validate, opts)
+  const valueB = await transformValue(valueA, transform, opts)
+  return valueB
+}
+
+// Apply `required(value, opts)` which throws if `true` and value is `undefined`
+const validateRequired = async function (value, required, opts) {
+  if (value === undefined && (await callValueFunc(required, value, opts))) {
+    await callValidateFunc(throwRequired, value, opts)
+  }
+}
+
+const throwRequired = function () {
+  throw new Error('must be defined.')
 }
 
 // Apply `validate(value, opts)` which throws on validation errors

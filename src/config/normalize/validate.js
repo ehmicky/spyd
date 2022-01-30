@@ -58,6 +58,12 @@ const isJson = function (value) {
   }
 }
 
+export const validateFunction = function (value) {
+  if (typeof value !== 'function') {
+    throw new TypeError('must be a function.')
+  }
+}
+
 export const validateFileExists = async function (value) {
   if (!(await pathExists(value))) {
     throw new Error('must be an existing file.')

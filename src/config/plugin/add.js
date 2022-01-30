@@ -37,6 +37,7 @@ const getPluginsByType = async function (
     builtins,
     topProps,
     isCombinationDimension,
+    mainDefinitions,
   },
   config,
 ) {
@@ -52,6 +53,7 @@ const getPluginsByType = async function (
     modulePrefix,
     builtins,
     isCombinationDimension,
+    mainDefinitions,
   })
   const pluginsA = addPluginsConfig({ plugins, config, configProp, topProps })
   return [varName, pluginsA]

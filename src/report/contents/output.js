@@ -15,6 +15,7 @@ export const isOutputPath = function (output) {
 }
 
 const OUTPUT_SPECIAL_VALUES = new Set(['stdout', 'external'])
+export const DEFAULT_REPORTER_OUTPUT = 'stdout'
 
 // Print result to file or to terminal based on the `output` configuration
 // property.

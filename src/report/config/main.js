@@ -31,13 +31,11 @@ const addOutput = function (reporter) {
 // `reporter.defaultOutput` is meant for reporters to define the default format
 // and filename
 const getOutput = function ({
-  defaultOutput = DEFAULT_OUTPUT,
+  defaultOutput,
   config: { output = defaultOutput },
 }) {
   return output
 }
-
-const DEFAULT_OUTPUT = 'stdout'
 
 // `reporter.tty` is `true` when output is interactive terminal
 const getTty = function (output) {
@@ -57,13 +55,11 @@ const shouldUseReporter = function ({ tty }, command) {
 const addDefaultReporterConfig = function ({
   tty,
   config: { quiet = !tty, showDiff = tty, colors = tty, ...config },
-  capabilities: { debugStats = false, history = false } = {},
   ...reporter
 }) {
   return {
     ...reporter,
     tty,
     config: { ...config, quiet, showDiff, colors },
-    capabilities: { debugStats, history },
   }
 }
