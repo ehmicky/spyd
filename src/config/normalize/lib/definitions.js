@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-restricted-imports, node/no-restricted-import
+import { AssertionError } from 'assert'
+
 import { callValueFunc, callUserFunc } from './call.js'
 
 export const applyDefinition = async function (
@@ -40,7 +43,26 @@ const validateValue = async function (value, validate, opts) {
     return
   }
 
-  await callValueFunc(validate, value, opts)
+  try {
+    await callValueFunc(validate, value, opts)
+  } catch (error) {
+    handleValidateError(error)
+    throw error
+  }
+}
+
+// Consumers can distinguish users errors from system bugs by checking
+// the `error.validation` boolean property.
+// User errors require both:
+//  - Using `validate()`, not other definition methods
+//  - Throwing an `AssertionError`, e.g. with `assert()`
+// We fail on the first error, as opposed to aggregating all errors
+//  - Otherwise, a failed property might be used by another property, which
+//    would also appear as failed, even if it has no issues
+const handleValidateError = function (error) {
+  if (error instanceof AssertionError) {
+    error.validation = true
+  }
 }
 
 // Apply `transform(value)` which transforms the value set by the user.
