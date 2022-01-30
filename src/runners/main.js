@@ -4,3 +4,4 @@ import * as cli from './cli/main.js'
 import * as node from './node/main.js'
 
 export const RUNNERS = { node, cli }
+export const DEFAULT_RUNNERS = ['node']

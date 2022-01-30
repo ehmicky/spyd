@@ -1,20 +1,59 @@
+// eslint-disable-next-line no-restricted-imports, node/no-restricted-import
+import assert from 'assert'
+
 import isPlainObj from 'is-plain-obj'
 
-import { UserError } from '../../error/main.js'
-import { mapValues } from '../../utils/map.js'
+// Some configuration properties can have different values per combination
+// using "configuration selectors".
+// The configuration property uses then an object where:
+//  - The key is the selector (same syntax as `select`)
+//  - The value is applied for the combinations matching that selector
+// If a configuration property can use selectors but does not, normalize it to
+// its full shape using a default selector.
+// Also applies configuration definition regardless of whether selectors were
+// used or not, and applies them recursively when selectors are used.
+// We duplicate `definition` for both `name` and `name.*` so that validation
+// error messages on `name` do not show `name.*`
+export const normalizeConfigSelectors = function (definition) {
+  const { name, condition, transform } = definition
 
-// If a configuration property uses selectors, normalization must be applied
-// recursively.
-export const recurseConfigSelectors = function (value, name, callFunc) {
-  if (!isConfigSelectorShape(value)) {
-    return callFunc(value, name)
+  if (!SELECTABLE_PROPS.includes(name)) {
+    return [definition]
   }
 
-  validateConfigSelector(value, name)
+  return [
+    {
+      name,
+      condition: selectorCondition.bind(undefined, {
+        condition,
+        isSelector: true,
+      }),
+      validate: validateConfigSelector,
+    },
+    { ...definition, name: `${name}.*` },
+    {
+      ...definition,
+      condition: selectorCondition.bind(undefined, {
+        condition,
+        isSelector: false,
+      }),
+      transform: normalizeDefaultSelector.bind(undefined, transform),
+    },
+  ]
+}
 
-  return mapValues(value, (childValue, selector) =>
-    callFunc(childValue, `${name}.${selector}`),
+// When selectors are used, validate them
+const selectorCondition = function ({ condition, isSelector }, value, opts) {
+  return (
+    (condition === undefined || condition(value, opts)) &&
+    isConfigSelectorShape(value) === isSelector
   )
+}
+
+// We distinguish selectors by the usage of a plain object.
+// This means selectable properties' value cannot currently be plain objects.
+const isConfigSelectorShape = function (value) {
+  return isPlainObj(value)
 }
 
 // We validate that at least one selector is named "default"
@@ -25,31 +64,22 @@ export const recurseConfigSelectors = function (value, name, callFunc) {
 //  - However, we do not validate its order, since it might be hard in some
 //    situations to order, e.g. when merging shared configs.
 //  - Regardless, it is always checked last, even if it is not the last key
-export const validateConfigSelector = function (configValue, propName) {
-  if (!isConfigSelector(configValue, propName)) {
-    return
-  }
-
-  if (Object.keys(configValue).length === 0) {
-    throw new UserError(
-      `'${propName}' must have at least one property when using configuration selectors.`,
-    )
-  }
-
-  if (configValue.default === undefined) {
-    throw new UserError(
-      `'${propName}' last property must be named "default" when using configuration selectors.`,
-    )
-  }
+const validateConfigSelector = function (value) {
+  assert(
+    Object.keys(value).length !== 0,
+    'must have at least one property when using configuration selectors.',
+  )
+  assert(
+    'default' in value,
+    'last property must be named "default" when using configuration selectors.',
+  )
 }
 
-// Check if a configuration property uses selectors
-export const isConfigSelector = function (configValue, propName) {
-  return SELECTABLE_PROPS.has(propName) && isConfigSelectorShape(configValue)
-}
-
-const isConfigSelectorShape = function (configValue) {
-  return isPlainObj(configValue)
+// When a selectable configuration property does not specify selectors, we
+// use "default" which catches everything
+const normalizeDefaultSelector = function (transform, value, opts) {
+  const valueA = transform === undefined ? value : transform(value, opts)
+  return { default: valueA }
 }
 
 // List of properties which can use configuration selectors
@@ -69,11 +99,11 @@ const isConfigSelectorShape = function (configValue) {
 // At the moment, this also does not work with configuration properties which
 // values are objects due to the current implementation.
 //  - However, this could be changed if we ever needed it.
-const SELECTABLE_PROPS = new Set([
+export const SELECTABLE_PROPS = [
   'limit',
   'outliers',
   'precision',
   'showDiff',
   'showPrecision',
   'showTitles',
-])
+]

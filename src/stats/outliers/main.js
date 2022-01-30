@@ -119,3 +119,5 @@ const computePercentage = function (indexSum, quantilesCount) {
   const indexMean = indexSum / THRESHOLDS.length
   return indexMean / quantilesCount
 }
+
+export const DEFAULT_OUTLIERS = false

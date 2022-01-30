@@ -33,3 +33,6 @@ const parseDelta = function ({ parse, type }, delta) {
     throw wrapError(error, getDeltaTypeMessage(type))
   }
 }
+
+export const DEFAULT_MAIN_DELTA = 1
+export const DEFAULT_SINCE_DELTA = 1

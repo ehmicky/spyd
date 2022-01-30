@@ -10,14 +10,18 @@ import { normalizeTargetResult } from './target.js'
 
 // Normalize as many properties as possible at the beginning of the reporting
 // (once) as opposed to later on (repeatedly)
-export const normalizeEarlyResult = function (rawResult, history, config) {
+export const normalizeEarlyResult = async function (
+  rawResult,
+  history,
+  config,
+) {
   const {
     result,
     history: historyA,
     history: [sinceResult],
     noDimensions,
   } = normalizeReportedResults(rawResult, history, config)
-  const configA = normalizeHistory({
+  const configA = await normalizeHistory({
     history: historyA,
     result,
     sinceResult,
@@ -33,7 +37,7 @@ export const normalizeEarlyResult = function (rawResult, history, config) {
 
 // Add report-specific properties to each `history` result.
 // This is only computed once at the beginning of the command.
-const normalizeHistory = function ({
+const normalizeHistory = async function ({
   history,
   result,
   sinceResult,
@@ -47,11 +51,15 @@ const normalizeHistory = function ({
   const historyA = [...history, result]
     .map(normalizeHistoryAll)
     .map(normalizeNonCombAll)
-    .map((historyResult) =>
+  const historyB = await Promise.all(
+    historyA.map((historyResult) =>
       normalizeCombAll(historyResult, { sinceResult, noDimensions, config }),
-    )
-  const reporters = config.reporters.map((reporter) =>
-    normalizeHistoryEach(historyA, reporter, config),
+    ),
+  )
+  const reporters = await Promise.all(
+    config.reporters.map((reporter) =>
+      normalizeHistoryEach(historyB, reporter, config),
+    ),
   )
   return { ...config, reporters }
 }
@@ -66,17 +74,18 @@ const normalizeHistoryAll = function (result) {
 // Add report-specific properties to each `history` result that are
 // reporter-specific.
 // Those are saved in `reporter.history` and merged later.
-const normalizeHistoryEach = function (history, reporter, config) {
+const normalizeHistoryEach = async function (history, reporter, config) {
   if (!reporterHasHistory(reporter)) {
     return reporter
   }
 
-  const historyA = history
-    .map((result) =>
-      mergeResultProps(result, normalizeNonCombEach(result, reporter)),
-    )
-    .map((result) => normalizeCombEach(result, reporter, config))
-  return { ...reporter, history: historyA }
+  const historyA = history.map((result) =>
+    mergeResultProps(result, normalizeNonCombEach(result, reporter)),
+  )
+  const historyB = await Promise.all(
+    historyA.map((result) => normalizeCombEach(result, reporter, config)),
+  )
+  return { ...reporter, history: historyB }
 }
 
 // As a performance optimization, reporters which do not use `history` do not

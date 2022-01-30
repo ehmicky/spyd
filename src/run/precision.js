@@ -1,4 +1,5 @@
-import { UserError } from '../error/main.js'
+// eslint-disable-next-line no-restricted-imports, node/no-restricted-import
+import assert from 'assert'
 
 // Normalize `precision` configuration property value.
 // Also validates it.
@@ -74,16 +75,15 @@ import { UserError } from '../error/main.js'
 //       machines
 //        - this can happen inside the same run (due to previous runs being
 //          merged to current one)
-export const transformPrecision = function (precision, propName) {
-  const precisionA = PRECISION_TARGETS[precision]
+export const validatePrecision = function (precision) {
+  assert(
+    PRECISION_TARGETS[precision] !== undefined,
+    `must be between ${MIN_PRECISION} and ${MAX_PRECISION}`,
+  )
+}
 
-  if (precisionA === undefined) {
-    throw new UserError(
-      `'${propName}' must be between ${MIN_PRECISION} and ${MAX_PRECISION}, not ${precision}`,
-    )
-  }
-
-  return precisionA
+export const transformPrecision = function (precision) {
+  return PRECISION_TARGETS[precision]
 }
 
 // Associates `precision` (using array index) to the minimum `rmoe` each
@@ -99,6 +99,7 @@ const PRECISION_TARGETS = [
 ]
 const MIN_PRECISION = 0
 const MAX_PRECISION = PRECISION_TARGETS.length - 1
+export const DEFAULT_PRECISION = 5
 
 // When there are not enough loops, the `stdev` is too imprecise so we leave it
 // `undefined`.

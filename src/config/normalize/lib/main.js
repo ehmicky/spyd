@@ -22,7 +22,7 @@ import { set } from './prop_path/set.js'
 export const normalizeConfigProps = async function (
   config,
   definitions,
-  { context, loose = false },
+  { context = {}, loose = false } = {},
 ) {
   const skipCounts = getSkipCounts(definitions)
 

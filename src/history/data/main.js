@@ -29,6 +29,8 @@ export const addToHistory = async function (rawResult, { save, cwd }) {
   await addRawResult(metadatum, rawResultStr, cwd)
 }
 
+export const DEFAULT_SAVE = false
+
 // Remove a rawResult
 export const removeFromHistory = async function (rawResults, { cwd, force }) {
   if (!(await shouldRemoveFromHistory(force))) {

@@ -17,11 +17,11 @@ export const normalizeNonCombAll = function (result) {
 
 // Add report-specific properties to a result that are in `combinations`, are
 // not reporter-specific
-export const normalizeCombAll = function (
+export const normalizeCombAll = async function (
   result,
   { sinceResult, noDimensions, config },
 ) {
-  const resultA = useResultConfigSelectors(result, config)
+  const resultA = await useResultConfigSelectors(result, config)
   const resultB = addCombinationsDiff(resultA, sinceResult)
   const resultC = omitNoDimensions(resultB, noDimensions)
   const resultD = sortDimensions(resultC)
@@ -42,12 +42,12 @@ export const mergeResultProps = function (result, resultProps) {
 
 // Add report-specific properties to a result that are in `combinations` and
 // reporter-specific
-export const normalizeCombEach = function (
+export const normalizeCombEach = async function (
   result,
   { capabilities: { debugStats }, config: reporterConfig },
   { titles },
 ) {
-  const resultA = useResultConfigSelectors(result, reporterConfig)
+  const resultA = await useResultConfigSelectors(result, reporterConfig)
   const resultB = addCombinationsTitles(resultA, titles)
   const resultC = omitCombinationsProps(resultB, debugStats)
   const resultD = pickCombProps(resultC)

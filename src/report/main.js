@@ -33,7 +33,7 @@ export const reportStart = async function (rawResult, history, config) {
     sinceResult,
     noDimensions,
     config: configB,
-  } = normalizeEarlyResult(rawResult, history, configA)
+  } = await normalizeEarlyResult(rawResult, history, configA)
   return { result, sinceResult, noDimensions, config: configB }
 }
 
@@ -57,7 +57,7 @@ export const reportCompute = async function (startProps) {
 }
 
 const computeContents = async function (startProps) {
-  const config = normalizeComputedResult(startProps)
+  const config = await normalizeComputedResult(startProps)
   const contents = await getContents(config)
   return contents
 }

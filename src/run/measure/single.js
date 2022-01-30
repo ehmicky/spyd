@@ -21,7 +21,7 @@ import { runEvents } from './events.js'
 // Measure a single combination
 export const measureCombination = async function ({ index, config, ...args }) {
   const { previewState, combination, noDimensions } = args
-  const configA = useConfigSelectors(combination, config)
+  const configA = await useConfigSelectors(combination, config)
 
   try {
     await startCombinationPreview({

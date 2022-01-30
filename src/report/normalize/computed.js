@@ -15,35 +15,37 @@ import { prettifyStats, prettifyHistoryStats } from './stats/main.js'
 // performing anything which can be initially computing only once at the
 // beginning of the command in `normalizeHistory()` and
 // `normalizeTargetResult()`
-export const normalizeComputedResult = function ({
+export const normalizeComputedResult = async function ({
   result: initialResult,
   sinceResult,
   noDimensions,
   config,
 }) {
-  const result = normalizeCombAll(initialResult, {
+  const result = await normalizeCombAll(initialResult, {
     sinceResult,
     noDimensions,
     config,
   })
   const resultA = prettifyStats(result, result.combinations)
   const resultB = addScreenInfo(resultA)
-  const reporters = config.reporters.map((reporter) =>
-    normalizeComputedEach({
-      result: resultB,
-      initialResult,
-      sinceResult,
-      noDimensions,
-      reporter,
-      config,
-    }),
+  const reporters = await Promise.all(
+    config.reporters.map((reporter) =>
+      normalizeComputedEach({
+        result: resultB,
+        initialResult,
+        sinceResult,
+        noDimensions,
+        reporter,
+        config,
+      }),
+    ),
   )
   return { ...config, reporters }
 }
 
 // Add report-specific properties to the target result that are `combinations`
 // related and reporter-specific.
-const normalizeComputedEach = function ({
+const normalizeComputedEach = async function ({
   result,
   initialResult,
   sinceResult,
@@ -51,7 +53,7 @@ const normalizeComputedEach = function ({
   reporter: { history, resultProps, footerParams, ...reporter },
   config,
 }) {
-  const resultA = addLastResult({
+  const resultA = await addLastResult({
     result,
     initialResult,
     sinceResult,
@@ -60,7 +62,7 @@ const normalizeComputedEach = function ({
     reporter,
     config,
   })
-  const resultB = normalizeCombEach(resultA, reporter, config)
+  const resultB = await normalizeCombEach(resultA, reporter, config)
   const resultC = mergeResultProps(resultB, resultProps)
   const resultD = { ...resultC, ...footerParams }
   return { ...reporter, result: resultD }
@@ -69,7 +71,7 @@ const normalizeComputedEach = function ({
 // The last history result is identical to the target result except it uses
 // history result's normalization, not target result.
 // Therefore, we need to merge the combinations of the target result.
-const addLastResult = function ({
+const addLastResult = async function ({
   result,
   initialResult: { combinations },
   sinceResult,
@@ -85,12 +87,12 @@ const addLastResult = function ({
 
   const lastResult = history[history.length - 1]
   const lastResultA = { ...lastResult, combinations }
-  const lastResultB = normalizeCombAll(lastResultA, {
+  const lastResultB = await normalizeCombAll(lastResultA, {
     sinceResult,
     noDimensions,
     config,
   })
-  const lastResultC = normalizeCombEach(lastResultB, reporter, config)
+  const lastResultC = await normalizeCombEach(lastResultB, reporter, config)
   const historyA = setArray(history, history.length - 1, lastResultC)
   const historyB = prettifyHistoryStats(historyA)
   return { ...result, history: historyB }

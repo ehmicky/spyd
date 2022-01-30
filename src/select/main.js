@@ -48,3 +48,5 @@ export const matchCombination = function (combination, select, name) {
   const selectors = parseSelectors(select, name)
   return matchSelectors(combination, selectors)
 }
+
+export const DEFAULT_SELECT = []

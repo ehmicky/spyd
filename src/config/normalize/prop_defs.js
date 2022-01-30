@@ -2,13 +2,26 @@
 import { cwd as getCwd } from 'process'
 
 import { transformLimit } from '../../history/compare/transform.js'
-import { transformDelta } from '../../history/delta/transform.js'
+import { DEFAULT_SAVE } from '../../history/data/main.js'
+import {
+  transformDelta,
+  DEFAULT_MAIN_DELTA,
+  DEFAULT_SINCE_DELTA,
+} from '../../history/delta/transform.js'
 import { getDefaultId, validateMerge } from '../../history/merge/id.js'
 import { isOutputPath } from '../../report/output.js'
+import { DEFAULT_REPORTERS } from '../../report/reporters/main.js'
 import { isTtyInput } from '../../report/tty.js'
-import { transformPrecision } from '../../run/precision.js'
+import {
+  validatePrecision,
+  transformPrecision,
+  DEFAULT_PRECISION,
+} from '../../run/precision.js'
+import { DEFAULT_RUNNERS } from '../../runners/main.js'
+import { DEFAULT_SELECT } from '../../select/main.js'
+import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { getDefaultConfig } from '../load/default.js'
-import { recurseConfigSelectors } from '../select/normalize.js'
+import { normalizeConfigSelectors } from '../select/normalize.js'
 
 import { normalizeConfigPath, normalizeConfigGlob } from './path.js'
 import { normalizeOptionalArray } from './transform.js'
@@ -71,7 +84,7 @@ const cwd = {
 const delta = {
   name: 'delta',
   condition: amongCommands(['remove', 'show']),
-  default: 1,
+  default: DEFAULT_MAIN_DELTA,
   transform: transformDelta,
 }
 
@@ -100,14 +113,8 @@ const inputsAny = {
 const limit = {
   name: 'limit',
   condition: amongCommands(['remove', 'run', 'show']),
-  validate(value, { name }) {
-    recurseConfigSelectors(value, name, validateInteger)
-  },
-  transform(value, { name }) {
-    return recurseConfigSelectors(value, name, (childValue, childName) =>
-      transformLimit(childValue, childName),
-    )
-  },
+  validate: validateInteger,
+  transform: transformLimit,
 }
 
 const merge = {
@@ -134,24 +141,19 @@ const output = {
 const outliers = {
   name: 'outliers',
   condition: amongCommands(['run']),
-  default: false,
-  validate(value, { name }) {
-    recurseConfigSelectors(value, name, validateBoolean)
-  },
+  default: DEFAULT_OUTLIERS,
+  validate: validateBoolean,
 }
 
 const precision = {
   name: 'precision',
   condition: amongCommands(['run']),
-  default: 5,
-  validate(value, { name }) {
-    recurseConfigSelectors(value, name, validateInteger)
+  default: DEFAULT_PRECISION,
+  validate(value) {
+    validateInteger(value)
+    validatePrecision(value)
   },
-  transform(value, { name }) {
-    return recurseConfigSelectors(value, name, (childValue, childName) =>
-      transformPrecision(childValue, childName),
-    )
-  },
+  transform: transformPrecision,
 }
 
 const quiet = {
@@ -163,7 +165,7 @@ const quiet = {
 const reporter = {
   name: 'reporter',
   condition: amongCommands(['remove', 'run', 'show']),
-  default: ['debug'],
+  default: DEFAULT_REPORTERS,
   transform(value, { config }) {
     return config.force ? [] : normalizeOptionalArray(value)
   },
@@ -189,7 +191,7 @@ const runner = {
   // because this enforces that the `runner` property points to a required tasks
   // file, instead of to an optional one. This makes behavior easier to
   // understand for users and provides with better error messages.
-  default: ['node'],
+  default: DEFAULT_RUNNERS,
   validate: validateEmptyArray,
   transform: normalizeOptionalArray,
 }
@@ -210,14 +212,14 @@ const runnerConfig = {
 const save = {
   name: 'save',
   condition: amongCommands(['run']),
-  default: false,
+  default: DEFAULT_SAVE,
   validate: validateBoolean,
 }
 
 const select = {
   name: 'select',
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
-  default: [],
+  default: DEFAULT_SELECT,
   transform: normalizeOptionalArray,
 }
 
@@ -230,9 +232,7 @@ const selectAny = {
 const showDiff = {
   name: 'showDiff',
   condition: amongCommands(['remove', 'run', 'show']),
-  validate(value, { name }) {
-    recurseConfigSelectors(value, name, validateBoolean)
-  },
+  validate: validateBoolean,
 }
 
 const showMetadata = {
@@ -248,9 +248,7 @@ const showPrecision = {
   name: 'showPrecision',
   condition: amongCommands(['remove', 'run', 'show']),
   default: false,
-  validate(value, { name }) {
-    recurseConfigSelectors(value, name, validateBoolean)
-  },
+  validate: validateBoolean,
 }
 
 const showSystem = {
@@ -263,15 +261,13 @@ const showTitles = {
   name: 'showTitles',
   condition: amongCommands(['remove', 'run', 'show']),
   default: false,
-  validate(value, { name }) {
-    recurseConfigSelectors(value, name, validateBoolean)
-  },
+  validate: validateBoolean,
 }
 
 const since = {
   name: 'since',
   condition: amongCommands(['remove', 'run', 'show']),
-  default: 1,
+  default: DEFAULT_SINCE_DELTA,
   transform: transformDelta,
 }
 
@@ -362,5 +358,5 @@ export const DEFINITIONS = [
   tasksFlatten,
   titles,
   titlesAny,
-]
+].flatMap(normalizeConfigSelectors)
 /* eslint-enable max-lines */

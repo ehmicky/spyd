@@ -18,7 +18,7 @@ export const callValueFunc = async function (userFunc, value, opts) {
 const handleValueError = function (error, value) {
   const valueStr = inspect(value)
   const separator = valueStr.includes('\n') ? '\n' : ' '
-  const message = `\nIts value is:${separator}${valueStr}`
+  const message = `\nCurrent value:${separator}${valueStr}`
   return wrapError(error, message)
 }
 
