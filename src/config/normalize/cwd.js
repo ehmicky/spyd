@@ -31,7 +31,7 @@ export const getPropCwd = function (value, { path, context: { configInfos } }) {
   return configInfo === undefined ? getTopPropCwd(configInfos) : configInfo.base
 }
 
-export const getTopPropCwd = function ([, topLevelConfigInfo]) {
+const getTopPropCwd = function ([, topLevelConfigInfo]) {
   return topLevelConfigInfo === undefined
     ? DEFAULT_VALUES_BASE
     : topLevelConfigInfo.base

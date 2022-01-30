@@ -7,8 +7,8 @@ import { pathExists } from 'path-exists'
 
 import { CONFIG_PLUGIN_TYPE } from './plugin/types.js'
 
-// The default values for `config` and `tasks` look for `spyd.*` and `tasks.*`
-// in the current or parent directories.
+// The default values for `config` looks for `spyd.*` in the current or parent
+// directories.
 // They can be located in:
 //  - A `packages/spyd-config-*` directory: for shared configurations using a
 //    monorepo

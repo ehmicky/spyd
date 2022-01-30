@@ -2,7 +2,7 @@
 import { cwd as getCwd } from 'process'
 
 import { DEFAULT_INPUTS } from '../../combination/inputs.js'
-import { getDefaultTasks } from '../../combination/tasks/default.js'
+import { DEFAULT_TASKS } from '../../combination/tasks/find.js'
 import { transformLimit } from '../../history/compare/transform.js'
 import { DEFAULT_SAVE } from '../../history/data/main.js'
 import {
@@ -227,7 +227,7 @@ const systemAny = {
 const tasks = {
   name: 'tasks',
   pick: amongCommands(['dev', 'run']),
-  default: getDefaultTasks,
+  default: DEFAULT_TASKS,
   transform: normalizeOptionalArray,
 }
 

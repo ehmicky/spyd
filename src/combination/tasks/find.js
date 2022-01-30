@@ -51,3 +51,11 @@ const validateDuplicateTaskIds = function (ids) {
 const isDuplicateId = function (id, index, ids) {
   return ids.slice(index + 1).includes(id)
 }
+
+// Default value for `tasks`. Applied on each runner.
+// This only applies when `tasks` is `undefined`: an empty array resolves to no
+// files instead
+//  - This can be useful in programmatic usage
+//  - This is only useful when using several runners. If all runners have no
+//    tasks, the run will fail.
+export const DEFAULT_TASKS = 'tasks.*'
