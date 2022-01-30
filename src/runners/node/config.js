@@ -5,7 +5,7 @@ import { readPackageUp } from 'read-pkg-up'
 import semver from 'semver'
 
 import { normalizeNumberString } from '../../config/normalize/transform.js'
-import { validateNumberString } from '../../config/normalize/validate.js'
+import { validateNumberString } from '../../config/normalize/validate/simple.js'
 import { wrapError } from '../../error/wrap.js'
 
 // Validate the Node.js version

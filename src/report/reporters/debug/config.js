@@ -1,9 +1,9 @@
+import { validateArray } from '../../../config/normalize/validate/complex.js'
+import { validateEnum } from '../../../config/normalize/validate/enum.js'
 import {
   validateBoolean,
   validateDefinedString,
-  validateEnum,
-  validateArray,
-} from '../../../config/normalize/validate.js'
+} from '../../../config/normalize/validate/simple.js'
 
 import { ALL_STAT_NAMES, ALL_STAT_NAMES_SET } from './stats.js'
 

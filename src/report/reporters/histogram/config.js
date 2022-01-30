@@ -1,4 +1,4 @@
-import { validateBoolean } from '../../../config/normalize/validate.js'
+import { validateBoolean } from '../../../config/normalize/validate/simple.js'
 
 export const config = [
   // Hide the abscissa with the `min`, `median` and `max` labels

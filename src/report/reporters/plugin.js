@@ -1,10 +1,12 @@
 import { normalizeOptionalArray } from '../../config/normalize/transform.js'
 import {
-  validateBoolean,
-  validateDefinedString,
   validateObject,
   validateFunction,
-} from '../../config/normalize/validate.js'
+} from '../../config/normalize/validate/complex.js'
+import {
+  validateBoolean,
+  validateDefinedString,
+} from '../../config/normalize/validate/simple.js'
 import { DEFAULT_REPORTER_OUTPUT } from '../contents/output.js'
 import { getReportMethods } from '../formats/list.js'
 

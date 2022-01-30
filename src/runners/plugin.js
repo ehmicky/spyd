@@ -1,7 +1,7 @@
 import {
   validateEmptyArray,
   validateFunction,
-} from '../config/normalize/validate.js'
+} from '../config/normalize/validate/complex.js'
 
 import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from './main.js'
 

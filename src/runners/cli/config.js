@@ -1,7 +1,5 @@
-import {
-  validateDefinedString,
-  validateEnum,
-} from '../../config/normalize/validate.js'
+import { validateEnum } from '../../config/normalize/validate/enum.js'
+import { validateDefinedString } from '../../config/normalize/validate/simple.js'
 
 // We only allow shells that are cross-platform
 const SHELL_VALUES = new Set(['none', 'sh', 'bash'])

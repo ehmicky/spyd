@@ -7,7 +7,7 @@ import { normalizeOptionalArray } from '../normalize/transform.js'
 import {
   validateFileExists,
   validateRegularFile,
-} from '../normalize/validate.js'
+} from '../normalize/validate/fs.js'
 
 import { getConfigFilenames } from './contents.js'
 import { isConfigFilePath, useResolvers } from './resolvers.js'

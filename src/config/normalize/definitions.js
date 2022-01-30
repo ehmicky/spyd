@@ -31,18 +31,19 @@ import { normalizeConfigSelectors } from '../select/normalize.js'
 import { getPropCwd } from './cwd.js'
 import { amongCommands } from './pick.js'
 import { normalizeOptionalArray } from './transform.js'
+import { validateJson, validateObject } from './validate/complex.js'
+import {
+  validateFileExists,
+  validateRegularFile,
+  validateDirectory,
+} from './validate/fs.js'
 import {
   validateBoolean,
   validateInteger,
   validateString,
   validateDefinedString,
-  validateJson,
-  validateObject,
-  validateFileExists,
-  validateRegularFile,
-  validateDirectory,
   // eslint-disable-next-line import/max-dependencies
-} from './validate.js'
+} from './validate/simple.js'
 
 // `config` has already been processed before, but it specified so it is shown
 // in the valid list of known properties

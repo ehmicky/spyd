@@ -1,10 +1,7 @@
 import { amongCommands } from '../normalize/pick.js'
 import { normalizeOptionalArray } from '../normalize/transform.js'
-import {
-  validateDefinedString,
-  validateObject,
-  validateJson,
-} from '../normalize/validate.js'
+import { validateObject, validateJson } from '../normalize/validate/complex.js'
+import { validateDefinedString } from '../normalize/validate/simple.js'
 
 import { PLUGIN_TYPES_ARRAY } from './types.js'
 
