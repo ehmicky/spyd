@@ -14,8 +14,7 @@ export const normalizeConfig = async function (
 ) {
   const context = getContext(command, configInfos)
   const configA = await safeNormalizeConfig(config, context, ErrorType)
-  const configB = postNormalizeConfig(configA)
-  return configB
+  return configA
 }
 
 const getContext = function (command, configInfos) {
@@ -37,17 +36,4 @@ const handleConfigError = function (error, ErrorType) {
   return error instanceof AssertionError
     ? wrapError(error, '', ErrorType)
     : error
-}
-
-// Perform normalization that is difficult to do with the main configuration
-// logic
-const postNormalizeConfig = function (config) {
-  const configA = flattenTasks(config)
-  return configA
-}
-
-const flattenTasks = function (config) {
-  return config.tasks === undefined
-    ? config
-    : { ...config, tasks: config.tasks.flat() }
 }

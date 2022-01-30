@@ -39,23 +39,27 @@ const boundAmongCommands = function (
   return commands.has(command)
 }
 
-const config = {
+const configProp = {
+  name: 'config',
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
   default: getDefaultConfig,
   transform: normalizeOptionalArray,
 }
 
 const configAny = {
+  name: 'config[*]',
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
   validate: validateDefinedString,
 }
 
 const colors = {
+  name: 'colors',
   condition: amongCommands(['remove', 'run', 'show']),
   validate: validateBoolean,
 }
 
 const cwd = {
+  name: 'cwd',
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
   default: getCwd,
   validate: validateDefinedString,
@@ -65,12 +69,14 @@ const cwd = {
 }
 
 const delta = {
+  name: 'delta',
   condition: amongCommands(['remove', 'show']),
   default: 1,
   transform: transformDelta,
 }
 
 const force = {
+  name: 'force',
   condition: amongCommands(['remove']),
   default() {
     return !isTtyInput()
@@ -79,17 +85,20 @@ const force = {
 }
 
 const inputs = {
+  name: 'inputs',
   condition: amongCommands(['dev', 'run']),
   default: {},
   validate: validateObject,
 }
 
 const inputsAny = {
+  name: 'inputs.*',
   condition: amongCommands(['dev', 'run']),
   validate: validateJson,
 }
 
 const limit = {
+  name: 'limit',
   condition: amongCommands(['remove', 'run', 'show']),
   validate(value, { name }) {
     recurseConfigSelectors(value, name, validateInteger)
@@ -102,6 +111,7 @@ const limit = {
 }
 
 const merge = {
+  name: 'merge',
   condition: amongCommands(['run']),
   default: getDefaultId,
   validate(value) {
@@ -111,6 +121,7 @@ const merge = {
 }
 
 const output = {
+  name: 'output',
   condition: amongCommands(['remove', 'run', 'show']),
   validate: validateDefinedString,
   transform(value, { name, context: { configInfos } }) {
@@ -121,6 +132,7 @@ const output = {
 }
 
 const outliers = {
+  name: 'outliers',
   condition: amongCommands(['run']),
   default: false,
   validate(value, { name }) {
@@ -129,6 +141,7 @@ const outliers = {
 }
 
 const precision = {
+  name: 'precision',
   condition: amongCommands(['run']),
   default: 5,
   validate(value, { name }) {
@@ -142,38 +155,35 @@ const precision = {
 }
 
 const quiet = {
+  name: 'quiet',
   condition: amongCommands(['run']),
   validate: validateBoolean,
 }
 
-const reporter = [
-  {
-    condition: amongCommands(['remove']),
-    async transform(value, { get }) {
-      return (await get('force')) ? [] : value
-    },
+const reporter = {
+  name: 'reporter',
+  condition: amongCommands(['remove', 'run', 'show']),
+  default: ['debug'],
+  transform(value, { config }) {
+    return config.force ? [] : normalizeOptionalArray(value)
   },
-  {
-    condition: amongCommands(['remove', 'run', 'show']),
-    default: ['debug'],
-    transform(value) {
-      return normalizeOptionalArray(value)
-    },
-  },
-]
+}
 
 const reporterAny = {
+  name: 'reporter[*]',
   condition: amongCommands(['remove', 'run', 'show']),
   validate: validateDefinedString,
 }
 
 const reporterConfig = {
+  name: 'reporterConfig',
   condition: amongCommands(['remove', 'run', 'show']),
   default: {},
   validate: validateObject,
 }
 
 const runner = {
+  name: 'runner',
   condition: amongCommands(['dev', 'run']),
   // We default `runner` to `node` only instead of several ones (e.g. `cli`)
   // because this enforces that the `runner` property points to a required tasks
@@ -185,34 +195,40 @@ const runner = {
 }
 
 const runnerAny = {
+  name: 'runner[*]',
   condition: amongCommands(['dev', 'run']),
   validate: validateDefinedString,
 }
 
 const runnerConfig = {
+  name: 'runnerConfig',
   condition: amongCommands(['dev', 'run']),
   default: {},
   validate: validateObject,
 }
 
 const save = {
+  name: 'save',
   condition: amongCommands(['run']),
   default: false,
   validate: validateBoolean,
 }
 
 const select = {
+  name: 'select',
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
   default: [],
   transform: normalizeOptionalArray,
 }
 
 const selectAny = {
+  name: 'select[*]',
   condition: amongCommands(['dev', 'remove', 'run', 'show']),
   validate: validateString,
 }
 
 const showDiff = {
+  name: 'showDiff',
   condition: amongCommands(['remove', 'run', 'show']),
   validate(value, { name }) {
     recurseConfigSelectors(value, name, validateBoolean)
@@ -220,6 +236,7 @@ const showDiff = {
 }
 
 const showMetadata = {
+  name: 'showMetadata',
   condition: amongCommands(['remove', 'run', 'show']),
   default({ context: { command } }) {
     return command !== 'run'
@@ -228,6 +245,7 @@ const showMetadata = {
 }
 
 const showPrecision = {
+  name: 'showPrecision',
   condition: amongCommands(['remove', 'run', 'show']),
   default: false,
   validate(value, { name }) {
@@ -236,11 +254,13 @@ const showPrecision = {
 }
 
 const showSystem = {
+  name: 'showSystem',
   condition: amongCommands(['remove', 'run', 'show']),
   validate: validateBoolean,
 }
 
 const showTitles = {
+  name: 'showTitles',
   condition: amongCommands(['remove', 'run', 'show']),
   default: false,
   validate(value, { name }) {
@@ -249,29 +269,34 @@ const showTitles = {
 }
 
 const since = {
+  name: 'since',
   condition: amongCommands(['remove', 'run', 'show']),
   default: 1,
   transform: transformDelta,
 }
 
 const system = {
+  name: 'system',
   condition: amongCommands(['dev', 'run']),
   default: {},
   validate: validateObject,
 }
 
 const systemAny = {
+  name: 'system.*',
   condition: amongCommands(['dev', 'run']),
   validate: validateDefinedString,
 }
 
 const tasks = {
+  name: 'tasks',
   condition: amongCommands(['dev', 'run']),
   default: [],
   transform: normalizeOptionalArray,
 }
 
 const tasksAny = {
+  name: 'tasks[*]',
   condition: amongCommands(['dev', 'run']),
   validate: validateDefinedString,
   async transform(value, { name, context: { configInfos } }) {
@@ -279,26 +304,36 @@ const tasksAny = {
   },
 }
 
+const tasksFlatten = {
+  name: 'tasks',
+  condition: amongCommands(['dev', 'run']),
+  transform(value) {
+    return value.flat()
+  },
+}
+
 const titles = {
+  name: 'titles',
   condition: amongCommands(['remove', 'run', 'show']),
   default: {},
   validate: validateObject,
 }
 
 const titlesAny = {
+  name: 'titles.*',
   condition: amongCommands(['remove', 'run', 'show']),
   validate: validateDefinedString,
 }
 
-export const DEFINITIONS = {
+export const DEFINITIONS = [
   colors,
-  config,
-  'config[*]': configAny,
+  configProp,
+  configAny,
   cwd,
   delta,
   force,
   inputs,
-  'inputs.*': inputsAny,
+  inputsAny,
   limit,
   merge,
   output,
@@ -306,14 +341,14 @@ export const DEFINITIONS = {
   precision,
   quiet,
   reporter,
-  'reporter[*]': reporterAny,
+  reporterAny,
   reporterConfig,
   runner,
-  'runner[*]': runnerAny,
+  runnerAny,
   runnerConfig,
   save,
   select,
-  'select[*]': selectAny,
+  selectAny,
   showDiff,
   showMetadata,
   showPrecision,
@@ -321,10 +356,11 @@ export const DEFINITIONS = {
   showTitles,
   since,
   system,
-  'system.*': systemAny,
+  systemAny,
   tasks,
-  'tasks[*]': tasksAny,
+  tasksAny,
+  tasksFlatten,
   titles,
-  'titles.*': titlesAny,
-}
+  titlesAny,
+]
 /* eslint-enable max-lines */
