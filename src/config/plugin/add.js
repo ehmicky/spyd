@@ -5,7 +5,6 @@ import { normalizeReporters } from '../../report/config/main.js'
 import { addPluginsConfig } from './config.js'
 import { loadPlugins } from './load.js'
 import { PLUGIN_TYPES_ARRAY } from './types.js'
-import { validatePlugins } from './validate.js'
 
 // Several configuration properties (`runner`, `reporter`)
 // can be customized with custom modules. This loads them. Each type can specify
@@ -55,7 +54,6 @@ const getPluginsByType = async function (
     isCombinationDimension,
   })
   const pluginsA = addPluginsConfig({ plugins, config, configProp, topProps })
-  validatePlugins(pluginsA, type)
   return [varName, pluginsA]
 }
 

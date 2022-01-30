@@ -7,7 +7,7 @@ import { getUserIds } from './user.js'
 // Validate combination identifiers.
 export const validateCombinationsIds = function (combinations, inputsList) {
   const userIds = getUserIds(combinations, inputsList)
-  userIds.forEach(validateUserIds)
+  userIds.forEach(validateUserId)
 
   const dimensionsIds = getCombsDimensionsIds(combinations)
   dimensionsIds.forEach(validateDimensionId)
@@ -16,7 +16,7 @@ export const validateCombinationsIds = function (combinations, inputsList) {
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.
 // Only for user-defined identifiers, not plugin-defined.
-const validateUserIds = function ({ messageName, id }) {
+export const validateUserId = function ({ id, messageName }) {
   if (id.trim() === '') {
     throw new UserError(
       `Invalid ${messageName} "${id}": the identifier must not be empty.`,

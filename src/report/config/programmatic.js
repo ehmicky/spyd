@@ -19,7 +19,6 @@ export const addProgrammaticReporter = function (reporters) {
 
 const PROGRAMMATIC_REPORTER = {
   id: 'programmatic',
-  moduleId: 'programmatic',
   format: 'programmatic',
   capabilities: {
     debugStats: false,

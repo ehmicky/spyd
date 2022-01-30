@@ -4,6 +4,8 @@ import { PluginError, UserError } from '../../error/main.js'
 import { wrapError } from '../../error/wrap.js'
 import { PLUGINS_IMPORT_BASE } from '../normalize/cwd.js'
 
+import { getModuleId } from './id.js'
+
 // Import plugin's code
 export const loadPlugins = async function ({
   ids,
@@ -26,24 +28,10 @@ const loadPlugin = async function ({
   builtins,
   isCombinationDimension,
 }) {
-  const moduleId = getModuleId(id, isCombinationDimension)
+  const moduleId = getModuleId(id, type, isCombinationDimension)
   const plugin = await importPlugin({ moduleId, type, modulePrefix, builtins })
-  return { ...plugin, id, moduleId }
+  return { ...plugin, id }
 }
-
-// We allow plugin identifiers to be prefixed with an arbitrary string.
-//  - This allows using the same plugin twice but with different configs.
-//  - This is especially useful for using the same reporter but with different
-//    `output`
-// This does not apply to plugins which do not create combinations
-// (e.g. runners) because those should use variations instead.
-// Since the list of plugin module names is unknown, users must indicate using
-// this by the usage of a delimiter character.
-const getModuleId = function (id, isCombinationDimension) {
-  return isCombinationDimension ? id : id.split(CUSTOM_ID_DELIMITER)[0]
-}
-
-const CUSTOM_ID_DELIMITER = '_'
 
 // Builtin modules are lazy loaded for performance reasons
 const importPlugin = async function ({
