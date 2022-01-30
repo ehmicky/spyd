@@ -25,8 +25,8 @@ export const applyDefinition = async function (
     return value
   }
 
-  const valueA = await addDefaultValue(value, defaultValue, opts)
-  const valueB = await computeValue(valueA, compute, opts)
+  const valueA = await computeValue(value, compute, opts)
+  const valueB = await addDefaultValue(valueA, defaultValue, opts)
   const valueC = await applyValidateTransform({
     value: valueB,
     path,
