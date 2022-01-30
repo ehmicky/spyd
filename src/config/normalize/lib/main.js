@@ -5,7 +5,7 @@ import { cleanObject } from '../../../utils/clean.js'
 import { applyDefinition } from './definitions.js'
 import { list } from './prop_path/get.js'
 import { parse } from './prop_path/parse.js'
-import { set } from './prop_path/set.js'
+import { set, remove } from './prop_path/set.js'
 
 // Normalize configuration shape and do custom validation.
 // An array of definition objects is passed.
@@ -67,7 +67,9 @@ const applyPropDefinition = async function ({
 }) {
   const opts = getOpts(name, config, context)
   const newValue = await applyDefinition(definition, value, opts)
-  return set(config, name, newValue)
+  return newValue === undefined
+    ? remove(config, name)
+    : set(config, name, newValue)
 }
 
 // Retrieve `opts` passed to most methods
