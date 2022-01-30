@@ -47,7 +47,7 @@ export const getPropCwd = function (value, { path, context: { configInfos } }) {
 
 // Base used to resolve file paths in default values when there is no config
 // file
-const DEFAULT_VALUES_BASE = '.'
+export const DEFAULT_VALUES_BASE = '.'
 // Base used to resolve file paths in CLI flags
 export const CLI_FLAGS_BASE = '.'
 // Base used to resolve file paths for the `tasks` default value lookup

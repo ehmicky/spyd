@@ -1,16 +1,16 @@
-import { resolve } from 'path'
-
-import { isFile } from 'path-type'
-
 import { UserError } from '../../error/main.js'
 import { getPluginPath } from '../plugin/load.js'
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
-// Resolve the `config` property to a file path. It can be:
+// The `config` can be:
 //  - a file path
 //  - a Node module name starting with "spyd-config-"
 //  - a "resolver:arg" string which applies resolver-specific logic
-export const resolveConfigPath = async function (configOpt, base) {
+export const isConfigFilePath = function (configOpt) {
+  return !isNpmResolver(configOpt) && !isResolver(configOpt)
+}
+
+export const useResolvers = async function (configOpt, base) {
   if (isNpmResolver(configOpt)) {
     return resolveNpm(configOpt, base)
   }
@@ -19,7 +19,7 @@ export const resolveConfigPath = async function (configOpt, base) {
     return await useResolver(configOpt, base)
   }
 
-  return await resolveFile(configOpt, base)
+  return configOpt
 }
 
 // Configs can be Node modules.
@@ -63,13 +63,3 @@ const useResolver = async function (configOpt, base) {
 const RESOLVER_REGEXP = /^(?<name>[a-z]{2,}):(?<arg>.*)$/u
 
 const RESOLVERS = {}
-
-const resolveFile = async function (configOpt, base) {
-  const configPath = resolve(base, configOpt)
-
-  if (!(await isFile(configPath))) {
-    throw new UserError(`"config" file does not exist: ${configPath}`)
-  }
-
-  return configPath
-}

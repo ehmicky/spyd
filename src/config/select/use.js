@@ -1,5 +1,5 @@
 import { matchCombination } from '../../select/main.js'
-import { normalizeConfigProps } from '../normalize/lib/main.js'
+import { normalizeConfig } from '../normalize/main.js'
 
 import { SELECTABLE_PROPS, isConfigSelectorShape } from './normalize.js'
 
@@ -25,7 +25,7 @@ const useCombConfigSelectors = async function (combination, config) {
 
 // Same for a single combination
 export const useConfigSelectors = async function (combination, config) {
-  return await normalizeConfigProps(config, DEFINITIONS, {
+  return await normalizeConfig(config, DEFINITIONS, {
     context: { combination },
   })
 }

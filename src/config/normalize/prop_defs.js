@@ -27,7 +27,6 @@ import { DEFAULT_RUNNERS } from '../../runners/main.js'
 import { DEFAULT_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { getShowMetadataDefault } from '../../top/omit.js'
-import { getDefaultConfig } from '../load/default.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 
 import { getPropCwd } from './cwd.js'
@@ -59,11 +58,10 @@ const boundAmongCommands = function (
   return commands.has(command)
 }
 
+// `config` has already been processed before, but it specified so it is shown
+// in the valid list of known properties
 const configProp = {
   name: 'config',
-  pick: amongCommands(['dev', 'remove', 'run', 'show']),
-  default: getDefaultConfig,
-  transform: normalizeOptionalArray,
 }
 
 const configAny = {

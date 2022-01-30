@@ -1,4 +1,5 @@
 import { resolve, basename } from 'path'
+import { inspect } from 'util'
 
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
@@ -20,7 +21,7 @@ export const resolvePath = async function (value, { path, cwd, glob, opts }) {
   }
 
   await callValidateFunc(validatePath, value, opts)
-  const cwdA = await callValueFunc(cwd, value, opts)
+  const cwdA = await resolveCwd(cwd, value, opts)
   return glob ? await resolveGlob(cwdA, value) : resolve(cwdA, value)
 }
 
@@ -32,6 +33,16 @@ const validatePath = function (value) {
   if (value.trim() === '') {
     throw new TypeError('must not be an empty string.')
   }
+}
+
+const resolveCwd = async function (cwd, value, opts) {
+  const cwdA = await callValueFunc(cwd, value, opts)
+
+  if (typeof cwdA !== 'string') {
+    throw new TypeError(`"cwd" property is not a string: ${inspect(cwdA)}`)
+  }
+
+  return cwdA
 }
 
 // When `glob(value, opts)` is `true` (default: `false`), resolves globbing.
