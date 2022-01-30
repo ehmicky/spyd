@@ -37,7 +37,7 @@ const validateConcatGroup = function (output, reporters) {
   )
 }
 
-const reporterCannotConcat = function ({ format }) {
+const reporterCannotConcat = function ({ config: { format } }) {
   return !FORMATS[format].concat
 }
 

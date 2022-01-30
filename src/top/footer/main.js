@@ -14,8 +14,7 @@ export const computeFooter = function ({
   timestamp,
   reporter,
   reporter: {
-    format,
-    config: { showTitles, showMetadata, showSystem },
+    config: { format, showTitles, showMetadata, showSystem },
   },
   config: { titles },
 }) {

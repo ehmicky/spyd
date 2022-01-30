@@ -19,7 +19,7 @@ const addOutput = function (reporter) {
   const output = getOutput(reporter)
   const format = detectFormat(reporter, output)
   const tty = getTty(output)
-  return { ...reporter, config: { ...reporter.config, output }, format, tty }
+  return { ...reporter, config: { ...reporter.config, output, format }, tty }
 }
 
 // The reporter's output is decided by (in priority order):

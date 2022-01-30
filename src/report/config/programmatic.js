@@ -19,15 +19,15 @@ export const addProgrammaticReporter = function (reporters) {
 
 const PROGRAMMATIC_REPORTER = {
   id: 'programmatic',
-  format: 'programmatic',
   capabilities: {
     debugStats: false,
     history: true,
   },
   tty: false,
   config: {
-    quiet: true,
+    format: 'programmatic',
     output: '',
+    quiet: true,
     showSystem: true,
     showMetadata: true,
     showTitles: true,

@@ -19,11 +19,10 @@ const callReportFunc = async function ({
   reporter,
   reporter: {
     result,
-    format,
     footerString,
     startData,
     config: reporterConfig,
-    config: { output, colors },
+    config: { format, output, colors },
   },
 }) {
   const reporterSpecificConfig = omit.default(
@@ -40,6 +39,7 @@ const callReportFunc = async function ({
 
 // We only pass reporter-specific properties, not core ones
 const CORE_REPORTER_PROPS = [
+  'format',
   'output',
   'colors',
   'showTitles',
