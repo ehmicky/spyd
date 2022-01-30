@@ -1,7 +1,6 @@
 import { getCommonVersions } from '../../top/system/versions/common.js'
 import { getCombsNoDimensions } from '../filter.js'
 
-import { applyDefaultTasks } from './default.js'
 import { findTasks } from './find.js'
 import { loadRunner } from './load.js'
 
@@ -103,9 +102,8 @@ const getDimensionsTasks = async function ({
   commonVersions,
 }) {
   const runnerA = await loadRunner(runner, cwd, commonVersions)
-  const taskPaths = await applyDefaultTasks(runnerA)
   const tasks = await Promise.all(
-    taskPaths.map((taskPath) =>
+    runnerA.tasks.map((taskPath) =>
       findTasks({ taskPath, runner: runnerA, noDimensions, cwd }),
     ),
   )
