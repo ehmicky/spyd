@@ -48,6 +48,7 @@ export const getPluginConfig = async function ({
   context,
   configProp,
   topProps,
+  pluginConfigDefinitions,
 }) {
   const pluginConfig = config[configProp][id]
   const pluginConfigA = await normalizePluginConfig({
@@ -56,6 +57,7 @@ export const getPluginConfig = async function ({
     id,
     context,
     topProps,
+    pluginConfigDefinitions,
   })
   const pluginConfigB = mergeTopProps(config, pluginConfigA, topProps)
   return pluginConfigB
@@ -67,13 +69,15 @@ const normalizePluginConfig = async function ({
   id,
   context,
   topProps,
+  pluginConfigDefinitions = [],
 }) {
   const topDefinitions = getTopDefinitions(topProps)
   const prefix = `${configProp}.${id}`
-  return await normalizeConfig(pluginConfig, topDefinitions, {
-    context,
-    prefix,
-  })
+  return await normalizeConfig(
+    pluginConfig,
+    [...topDefinitions, ...pluginConfigDefinitions],
+    { context, prefix },
+  )
 }
 
 // Retrieve definitions for properties which can be set both at the top-level
