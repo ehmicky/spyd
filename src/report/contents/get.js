@@ -40,6 +40,7 @@ const callReportFunc = async function ({
 // We only pass reporter-specific properties, not core ones
 const CORE_REPORTER_PROPS = [
   'format',
+  'tty',
   'output',
   'colors',
   'showTitles',

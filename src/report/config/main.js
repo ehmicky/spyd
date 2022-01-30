@@ -19,7 +19,7 @@ const addOutput = function (reporter) {
   const output = getOutput(reporter)
   const format = detectFormat(reporter, output)
   const tty = getTty(output)
-  return { ...reporter, config: { ...reporter.config, output, format }, tty }
+  return { ...reporter, config: { ...reporter.config, format, tty, output } }
 }
 
 // The reporter's output is decided by (in priority order):
@@ -37,7 +37,7 @@ const getOutput = function ({
   return output
 }
 
-// `reporter.tty` is `true` when output is interactive terminal
+// `reporter.config.tty` is `true` when output is interactive terminal
 const getTty = function (output) {
   return output === 'stdout' && isTtyOutput()
 }
@@ -45,7 +45,7 @@ const getTty = function (output) {
 // Reporting in the `remove` command is shown so the user can be clear about
 // which result was removed, and provide with confirmation.
 // So we only need to print in the terminal, not output|insert files.
-const shouldUseReporter = function ({ tty }, command) {
+const shouldUseReporter = function ({ config: { tty } }, command) {
   return command !== 'remove' || tty
 }
 
@@ -53,13 +53,11 @@ const shouldUseReporter = function ({ tty }, command) {
 // Several reporter's configuration properties default to `true` only when the
 // output is an interactive terminal.
 const addDefaultReporterConfig = function ({
-  tty,
-  config: { quiet = !tty, showDiff = tty, colors = tty, ...config },
+  config: { tty, quiet = !tty, showDiff = tty, colors = tty, ...config },
   ...reporter
 }) {
   return {
     ...reporter,
-    tty,
-    config: { ...config, quiet, showDiff, colors },
+    config: { ...config, tty, quiet, showDiff, colors },
   }
 }

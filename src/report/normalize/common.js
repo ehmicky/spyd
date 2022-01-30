@@ -31,7 +31,7 @@ export const normalizeCombAll = async function (
 
 // Add report-specific properties to a result that are not in `combinations` but
 // are reporter-specific
-export const normalizeNonCombEach = function (result, { tty }) {
+export const normalizeNonCombEach = function (result, { config: { tty } }) {
   const timestamp = normalizeTimestamp(result, tty)
   return { timestamp }
 }

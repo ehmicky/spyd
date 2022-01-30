@@ -23,9 +23,9 @@ const PROGRAMMATIC_REPORTER = {
     debugStats: false,
     history: true,
   },
-  tty: false,
   config: {
     format: 'programmatic',
+    tty: false,
     output: '',
     quiet: true,
     showSystem: true,
