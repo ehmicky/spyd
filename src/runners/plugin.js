@@ -41,4 +41,6 @@ export const RUNNER_PLUGIN_TYPE = {
       validate: validateFunction,
     },
   ],
+  // Plugin-specific definitions for top-properties
+  topDefinitions: [],
 }

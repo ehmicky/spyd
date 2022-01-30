@@ -1,5 +1,3 @@
-import { UserError } from '../../error/main.js'
-
 import { FORMATS } from './list.js'
 
 // Retrieve the reporter's format, based on its `output`.
@@ -21,28 +19,31 @@ import { FORMATS } from './list.js'
 //    `spyd-reporter-{reporter}-{format}` because this:
 //     - Requires uninstalling/installing to change format
 //     - Is harder for publisher
-export const detectFormat = function (reporter, output) {
+export const computeFormat = function ({ config: { output } }) {
   const { name: format } = Object.values(FORMATS).find(({ detect }) =>
     detect(output),
   )
-  validateFormat({ format, reporter, output })
   return format
 }
 
 // Validate that a reporter supports the format specified by a given `output`
-const validateFormat = function ({
+export const validateFormat = function (
   format,
-  reporter,
-  reporter: { id },
-  output,
-}) {
+  {
+    config: { output },
+    context: {
+      plugin,
+      plugin: { id },
+    },
+  },
+) {
   const hasMethod = FORMATS[format].methods.some(
-    (method) => reporter[method] !== undefined,
+    (method) => plugin[method] !== undefined,
   )
 
   if (!hasMethod) {
-    throw new UserError(
-      `The reporter "${id}" does not support "output": "${output}"`,
+    throw new Error(
+      `must not use unsupported "output: ${output}" with reporter "${id}".`,
     )
   }
 }

@@ -28,6 +28,7 @@ const loadPlugin = async function (
     topProps,
     isCombinationDimension,
     mainDefinitions,
+    topDefinitions,
   },
 ) {
   const moduleId = getModuleId(id, type, isCombinationDimension)
@@ -38,15 +39,17 @@ const loadPlugin = async function (
     mainDefinitions,
     topProps,
   )
+  const pluginC = { ...pluginB, id }
   const pluginConfig = await getPluginConfig({
-    id,
     config,
     context,
     configProp,
     topProps,
     pluginConfigDefinitions,
+    plugin: pluginC,
+    topDefinitions,
   })
-  return { ...pluginB, id, config: pluginConfig }
+  return { ...pluginC, config: pluginConfig }
 }
 
 // Builtin modules are lazy loaded for performance reasons

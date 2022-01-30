@@ -11,6 +11,7 @@ import { DEFAULT_REPORTER_OUTPUT } from '../contents/output.js'
 import { getReportMethods } from '../formats/list.js'
 
 import { BUILTIN_REPORTERS, DEFAULT_REPORTERS } from './main.js'
+import { reportersTopDefinitions } from './top_definitions.js'
 
 export const REPORTER_PLUGIN_TYPE = {
   type: 'reporter',
@@ -63,4 +64,5 @@ export const REPORTER_PLUGIN_TYPE = {
       validate: validateDefinedString,
     },
   ],
+  topDefinitions: reportersTopDefinitions,
 }
