@@ -163,102 +163,70 @@ const quiet = {
   validate: validateBoolean,
 }
 
-// Definition shared by all plugin selection props: `runner`, `reporter`, etc.
-const pluginSelectProp = {
-  transform: normalizeOptionalArray,
+// Retrieve the definition for plugins, both the selection property
+// (like `reporter`) and the configuration one (like `reporterConfig`).
+// This enforces consistency across plugins for selection and configuration.
+const getPluginDefinitions = function ({
+  name,
+  commands,
+  defaultIds,
+  idsDefinition,
+}) {
+  const pick = amongCommands(commands)
+  const configName = `${name}Config`
+  return [
+    {
+      name,
+      pick,
+      default: defaultIds,
+      transform: normalizeOptionalArray,
+      ...idsDefinition,
+    },
+    {
+      name: `${name}.*`,
+      pick,
+      validate: validateDefinedString,
+    },
+    {
+      name: configName,
+      pick,
+      default: {},
+      validate: validateObject,
+    },
+    {
+      name: `${configName}.*`,
+      pick,
+      default: {},
+      validate: validateObject,
+    },
+    {
+      name: `${configName}.*.*`,
+      pick,
+      validate: validateJson,
+    },
+  ]
 }
 
-// Definition shared by all plugin selection prop items: `runner.*`,
-// `reporter.*`, etc.
-const pluginSelectPropItem = {
-  validate: validateDefinedString,
-}
-
-// Definition shared by all sets of plugin configs: `runnerConfig`,
-// `reporterConfig`, etc.
-const pluginConfigs = {
-  default: {},
-  validate: validateObject,
-}
-
-// Definition shared by each plugin config: `runnerConfig.*`,
-// `reporterConfig.*`, etc.
-const pluginConfig = {
-  default: {},
-  validate: validateObject,
-}
-
-// Definition shared by each plugin config property: `runnerConfig.*.*`,
-// `reporterConfig.*.*`, etc.
-const pluginConfigProp = {
-  validate: validateJson,
-}
-
-const reporter = {
-  ...pluginSelectProp,
-  name: 'reporter',
-  pick: amongCommands(['remove', 'run', 'show']),
-  default: DEFAULT_REPORTERS,
-  transform(value, opts) {
-    return opts.config.force ? [] : pluginSelectProp.transform(value, opts)
+const plugins = [
+  {
+    name: 'reporter',
+    commands: ['remove', 'run', 'show'],
+    defaultIds: DEFAULT_REPORTERS,
+    idsDefinition: {
+      transform(value, { config }) {
+        return config.force ? [] : normalizeOptionalArray(value)
+      },
+    },
   },
-}
-
-const reporterAny = {
-  ...pluginSelectPropItem,
-  name: 'reporter.*',
-  pick: amongCommands(['remove', 'run', 'show']),
-}
-
-const reporterConfigs = {
-  ...pluginConfigs,
-  name: 'reporterConfig',
-  pick: amongCommands(['remove', 'run', 'show']),
-}
-
-const reporterConfig = {
-  ...pluginConfig,
-  name: 'reporterConfig.*',
-  pick: amongCommands(['remove', 'run', 'show']),
-}
-
-const reporterConfigProp = {
-  ...pluginConfigProp,
-  name: 'reporterConfig.*.*',
-  pick: amongCommands(['remove', 'run', 'show']),
-}
-
-const runner = {
-  ...pluginSelectProp,
-  name: 'runner',
-  pick: amongCommands(['dev', 'run']),
-  default: DEFAULT_RUNNERS,
-  validate: validateEmptyArray,
-}
-
-const runnerAny = {
-  ...pluginSelectPropItem,
-  name: 'runner.*',
-  pick: amongCommands(['dev', 'run']),
-}
-
-const runnerConfigs = {
-  ...pluginConfigs,
-  name: 'runnerConfig',
-  pick: amongCommands(['dev', 'run']),
-}
-
-const runnerConfig = {
-  ...pluginConfig,
-  name: 'runnerConfig.*',
-  pick: amongCommands(['dev', 'run']),
-}
-
-const runnerConfigProp = {
-  ...pluginConfigProp,
-  name: 'runnerConfig.*.*',
-  pick: amongCommands(['dev', 'run']),
-}
+  {
+    name: 'runner',
+    commands: ['dev', 'run'],
+    defaultIds: DEFAULT_RUNNERS,
+    idsDefinition: {
+      validate: validateEmptyArray,
+    },
+  },
+].flatMap(getPluginDefinitions)
 
 const save = {
   name: 'save',
@@ -371,6 +339,7 @@ const titlesAny = {
 }
 
 export const DEFINITIONS = [
+  ...plugins,
   colors,
   configProp,
   cwd,
@@ -384,16 +353,6 @@ export const DEFINITIONS = [
   outliers,
   precision,
   quiet,
-  reporter,
-  reporterAny,
-  reporterConfigs,
-  reporterConfig,
-  reporterConfigProp,
-  runner,
-  runnerAny,
-  runnerConfigs,
-  runnerConfig,
-  runnerConfigProp,
   save,
   select,
   selectAny,
