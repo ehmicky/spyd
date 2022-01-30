@@ -29,25 +29,13 @@ const handleValueError = function (error, value) {
 // Errors add the property `name` as prefix.
 export const callUserFunc = async function (
   userFunc,
-  { validate = false, prefix, ...opts },
+  { validate, prefix, ...opts },
 ) {
   try {
     return await maybeFunction(userFunc, opts)
   } catch (error) {
-    handleValidateError(error, validate)
-    throw wrapError(
-      error,
-      `Configuration property "${getPrefix(prefix, opts.name)}" `,
-    )
+    throw handleValidateError(error, { ...opts, validate, prefix })
   }
-}
-
-const getPrefix = function (prefix, name) {
-  if (prefix === '') {
-    return name
-  }
-
-  return prefix.endsWith('.') ? `${prefix}${name}` : `${prefix}.${name}`
 }
 
 // Consumers can distinguish users errors from system bugs by checking
@@ -66,12 +54,38 @@ export const callValidateFunc = async function (validate, value, opts) {
   await callValueFunc(validate, value, { ...opts, validate: true })
 }
 
-const handleValidateError = function (error, validate) {
-  if (validate && isValidateError(error)) {
-    error.validation = true
+// Throw a user validation error
+export const throwValidateError = function (message, opts) {
+  const error = new Error(message)
+  setValidationProp(error)
+  throw addPropPrefix(error, opts)
+}
+
+const handleValidateError = function (error, opts) {
+  if (opts.validate && isValidateError(error)) {
+    setValidationProp(error)
   }
+
+  return addPropPrefix(error, opts)
 }
 
 const isValidateError = function (error) {
   return error instanceof Error && error.message.startsWith('must')
+}
+
+const setValidationProp = function (error) {
+  error.validation = true
+}
+
+const addPropPrefix = function (error, opts) {
+  const propName = getPropName(opts)
+  return wrapError(error, `Configuration property "${propName}" `)
+}
+
+const getPropName = function ({ prefix, name }) {
+  if (prefix === '') {
+    return name
+  }
+
+  return prefix.endsWith('.') ? `${prefix}${name}` : `${prefix}.${name}`
 }

@@ -16,7 +16,7 @@ import { callValueFunc, callValidateFunc } from './call.js'
 //    to ensure it is evaluated at runtime.
 // An empty `cwd` is same as `.`
 export const resolvePath = async function (value, { path, cwd, glob, opts }) {
-  if (value === undefined || !(await callValueFunc(path, value, opts))) {
+  if (!(await callValueFunc(path, value, opts))) {
     return value
   }
 

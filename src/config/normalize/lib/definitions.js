@@ -1,4 +1,9 @@
-import { callValueFunc, callUserFunc, callValidateFunc } from './call.js'
+import {
+  callValueFunc,
+  callUserFunc,
+  callValidateFunc,
+  throwValidateError,
+} from './call.js'
 import { resolvePath } from './path.js'
 
 export const applyDefinition = async function (
@@ -76,27 +81,27 @@ const applyValidateTransform = async function ({
   transform,
   opts,
 }) {
+  if (value === undefined) {
+    await validateRequired(required, opts)
+    return value
+  }
+
   const valueA = await resolvePath(value, { path, cwd, glob, opts })
-  await validateRequired(valueA, required, opts)
   await validateValue(valueA, validate, opts)
   const valueB = await transformValue(valueA, transform, opts)
   return valueB
 }
 
-// Apply `required(value, opts)` which throws if `true` and value is `undefined`
-const validateRequired = async function (value, required, opts) {
-  if (value === undefined && (await callValueFunc(required, value, opts))) {
-    await callValidateFunc(throwRequired, value, opts)
+// Apply `required(opts)` which throws if `true` and value is `undefined`
+const validateRequired = async function (required, opts) {
+  if (await callUserFunc(required, opts)) {
+    throwValidateError('must be defined.', opts)
   }
-}
-
-const throwRequired = function () {
-  throw new Error('must be defined.')
 }
 
 // Apply `validate(value, opts)` which throws on validation errors
 const validateValue = async function (value, validate, opts) {
-  if (value !== undefined && validate !== undefined) {
+  if (validate !== undefined) {
     await callValidateFunc(validate, value, opts)
   }
 }
@@ -104,7 +109,7 @@ const validateValue = async function (value, validate, opts) {
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.
 const transformValue = async function (value, transform, opts) {
-  return value !== undefined && transform !== undefined
-    ? await callValueFunc(transform, value, opts)
-    : value
+  return transform === undefined
+    ? value
+    : await callValueFunc(transform, value, opts)
 }
