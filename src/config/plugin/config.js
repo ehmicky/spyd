@@ -1,7 +1,6 @@
 import { cleanObject } from '../../utils/clean.js'
 import { pick } from '../../utils/pick.js'
 import { mergeConfigs } from '../merge/main.js'
-import { validateObjectProps, validateJson } from '../normalize/validate.js'
 
 // Retrieve plugin configuration object.
 // Plugins use both:
@@ -47,14 +46,9 @@ export const addPluginsConfig = function ({
   topProps,
 }) {
   const pluginsConfig = config[configProp]
-  validateObjectProps(pluginsConfig, checkPluginConfig)
   return plugins.map((plugin) =>
     addPluginConfig({ plugin, pluginsConfig, config, topProps }),
   )
-}
-
-const checkPluginConfig = function (pluginConfig) {
-  validateObjectProps(pluginConfig, validateJson)
 }
 
 const addPluginConfig = function ({

@@ -178,11 +178,24 @@ const reporterAny = {
   validate: validateDefinedString,
 }
 
-const reporterConfig = {
+const reporterConfigs = {
   name: 'reporterConfig',
   pick: amongCommands(['remove', 'run', 'show']),
   default: {},
   validate: validateObject,
+}
+
+const reporterConfig = {
+  name: 'reporterConfig.*',
+  pick: amongCommands(['remove', 'run', 'show']),
+  default: {},
+  validate: validateObject,
+}
+
+const reporterConfigProp = {
+  name: 'reporterConfig.*.*',
+  pick: amongCommands(['remove', 'run', 'show']),
+  validate: validateJson,
 }
 
 const runner = {
@@ -203,11 +216,24 @@ const runnerAny = {
   validate: validateDefinedString,
 }
 
-const runnerConfig = {
+const runnerConfigs = {
   name: 'runnerConfig',
   pick: amongCommands(['dev', 'run']),
   default: {},
   validate: validateObject,
+}
+
+const runnerConfig = {
+  name: 'runnerConfig.*',
+  pick: amongCommands(['remove', 'run', 'show']),
+  default: {},
+  validate: validateObject,
+}
+
+const runnerConfigProp = {
+  name: 'runnerConfig.*.*',
+  pick: amongCommands(['remove', 'run', 'show']),
+  validate: validateJson,
 }
 
 const save = {
@@ -336,10 +362,14 @@ export const DEFINITIONS = [
   quiet,
   reporter,
   reporterAny,
+  reporterConfigs,
   reporterConfig,
+  reporterConfigProp,
   runner,
   runnerAny,
+  runnerConfigs,
   runnerConfig,
+  runnerConfigProp,
   save,
   select,
   selectAny,

@@ -4,13 +4,6 @@ import isPlainObj from 'is-plain-obj'
 import { pathExists } from 'path-exists'
 import { isFile, isDirectory } from 'path-type'
 
-import { mapValues } from '../../utils/map.js'
-
-export const validateObjectProps = function (value, checker) {
-  validateObject(value)
-  return mapValues(value, checker)
-}
-
 export const validateBoolean = function (value) {
   if (typeof value !== 'boolean') {
     throw new TypeError('must be true or false.')
