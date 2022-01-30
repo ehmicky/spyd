@@ -2,6 +2,8 @@ import { has } from './lib/prop_path/get.js'
 
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.
+//      - Except the `config` flag which looks also in some specific
+//        directories
 //   - The files in `spyd.*` use the configuration file's directory instead.
 //      - This is what most users would expect.
 //   - Default values use `spyd.*` if there is one, or the current directory
