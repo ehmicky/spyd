@@ -1,8 +1,8 @@
-import { getContents } from './contents.js'
-import { finalizeContents } from './finalize.js'
+import { finalizeContents } from './contents/finalize.js'
+import { getContents } from './contents/get.js'
+import { outputContents } from './contents/output.js'
 import { normalizeComputedResult } from './normalize/computed.js'
 import { normalizeEarlyResult } from './normalize/early.js'
-import { outputContents } from './output.js'
 import { startReporters, endReporters } from './start_end.js'
 
 // Report final results in `show` and `remove` commands.

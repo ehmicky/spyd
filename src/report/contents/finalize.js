@@ -1,10 +1,10 @@
 import stripFinalNewline from 'strip-final-newline'
 
-import { groupBy } from '../utils/group.js'
+import { groupBy } from '../../utils/group.js'
+import { FORMATS } from '../formats/list.js'
+import { getLineSeparator } from '../utils/line.js'
 
-import { FORMATS } from './formats/list.js'
 import { handleContent } from './handle.js'
-import { getLineSeparator } from './utils/line.js'
 
 // Remove empty contents, join them by output, fix colors and whitespaces
 export const finalizeContents = function (contents) {

@@ -3,11 +3,11 @@ import { dirname } from 'path'
 
 import writeFileAtomic from 'write-file-atomic'
 
-import { UserError } from '../error/main.js'
-import { wrapError } from '../error/wrap.js'
+import { UserError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
+import { printToStdout } from '../tty.js'
 
 import { detectInsert, insertContents } from './insert.js'
-import { printToStdout } from './tty.js'
 
 // `output` path is normalized, but some of its values are not file paths
 export const isOutputPath = function (output) {

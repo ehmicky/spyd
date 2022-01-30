@@ -2,8 +2,8 @@
 // Node <16.11.0
 import stripAnsi from 'strip-ansi'
 
-import { addPadding } from './utils/indent.js'
-import { wrapRows } from './utils/wrap.js'
+import { addPadding } from '../utils/indent.js'
+import { wrapRows } from '../utils/wrap.js'
 
 // Handle content returned by `reporter.report()`.
 // Also used on the preview bottom bar.

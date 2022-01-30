@@ -1,4 +1,4 @@
-import { handleContent } from '../../../report/handle.js'
+import { handleContent } from '../../../report/contents/handle.js'
 import { getFullLineSeparator } from '../../../report/utils/line.js'
 
 import { getActions, ACTIONS_LABEL } from './actions.js'

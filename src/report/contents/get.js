@@ -1,6 +1,6 @@
 import omit from 'omit.js'
 
-import { FORMATS } from './formats/list.js'
+import { FORMATS } from '../formats/list.js'
 
 // Retrieve reporter's contents by calling all `reporter.report()` then
 // normalizing their return value and grouping it by `output`.

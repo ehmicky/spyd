@@ -10,12 +10,12 @@ import {
   DEFAULT_SINCE_DELTA,
 } from '../../history/delta/transform.js'
 import { getDefaultId, validateMerge } from '../../history/merge/id.js'
+import { isOutputPath } from '../../report/contents/output.js'
 import { DEFAULT_SHOW_PRECISION } from '../../report/normalize/omit.js'
 import {
   DEFAULT_TITLES,
   DEFAULT_SHOW_TITLES,
 } from '../../report/normalize/titles_add.js'
-import { isOutputPath } from '../../report/output.js'
 import { DEFAULT_REPORTERS } from '../../report/reporters/main.js'
 import { isTtyInput } from '../../report/tty.js'
 import {

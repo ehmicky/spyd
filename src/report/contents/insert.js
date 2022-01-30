@@ -5,8 +5,8 @@ import { pathExists } from 'path-exists'
 import stripFinalNewline from 'strip-final-newline'
 import writeFileAtomic from 'write-file-atomic'
 
-import { UserError } from '../error/main.js'
-import { wrapError } from '../error/wrap.js'
+import { UserError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 
 // By default, the `output` configuration property overwrites the file.
 // However, contents can be inserted instead between any two lines with the
