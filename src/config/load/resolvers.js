@@ -1,6 +1,6 @@
 import { UserError } from '../../error/main.js'
 import { getPluginPath } from '../plugin/load.js'
-import { CONFIG_PLUGIN_TYPE } from '../plugin/types/config.js'
+import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
 // The `config` can be:
 //  - a file path

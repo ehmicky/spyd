@@ -6,7 +6,7 @@ import {
   validateJson,
 } from '../normalize/validate.js'
 
-import { PLUGIN_TYPES_ARRAY } from './types/main.js'
+import { PLUGIN_TYPES_ARRAY } from './types.js'
 
 // Retrieve the definition for plugins, both the selection property
 // (like `reporter`) and the configuration one (like `reporterConfig`).

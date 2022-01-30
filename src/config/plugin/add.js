@@ -4,7 +4,7 @@ import { normalizeReporters } from '../../report/config/main.js'
 
 import { addPluginsConfig } from './config.js'
 import { loadPlugins } from './load.js'
-import { PLUGIN_TYPES_ARRAY } from './types/main.js'
+import { PLUGIN_TYPES_ARRAY } from './types.js'
 
 // Several configuration properties (`runner`, `reporter`)
 // can be customized with custom modules. This loads them. Each type can specify
