@@ -29,13 +29,13 @@ const handleValueError = function (error, value) {
 // Errors add the property `name` as prefix.
 export const callUserFunc = async function (
   userFunc,
-  { validate = false, ...opts },
+  { validate = false, prefix, ...opts },
 ) {
   try {
     return await maybeFunction(userFunc, opts)
   } catch (error) {
     handleValidateError(error, validate)
-    throw wrapError(error, `Configuration property "${opts.name}" `)
+    throw wrapError(error, `${prefix(opts.name).trim()} `)
   }
 }
 

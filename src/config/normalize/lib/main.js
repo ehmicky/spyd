@@ -21,13 +21,13 @@ import { set, remove } from './prop_path/set.js'
 export const normalizeConfigProps = async function (
   config,
   definitions,
-  { context = {}, loose = false } = {},
+  { context = {}, loose = false, prefix = defaultPrefix } = {},
 ) {
   try {
     const configB = await pReduce(
       definitions,
       (configA, definition) =>
-        applyDefinitionDeep({ config: configA, definition, context }),
+        applyDefinitionDeep({ config: configA, definition, context, prefix }),
       config,
     )
     const configC = cleanObject(configB)
@@ -37,11 +37,16 @@ export const normalizeConfigProps = async function (
   }
 }
 
+const defaultPrefix = function (name) {
+  return `Configuration property "${name}"`
+}
+
 const applyDefinitionDeep = async function ({
   config,
   definition,
   definition: { name: query },
   context,
+  prefix,
 }) {
   const props = Object.entries(list(config, query))
   return await pReduce(
@@ -53,6 +58,7 @@ const applyDefinitionDeep = async function ({
         name,
         definition,
         context,
+        prefix,
       }),
     config,
   )
@@ -64,9 +70,10 @@ const applyPropDefinition = async function ({
   name,
   definition,
   context,
+  prefix,
 }) {
   const opts = getOpts(name, config, context)
-  const newValue = await applyDefinition(definition, value, opts)
+  const newValue = await applyDefinition(definition, value, { ...opts, prefix })
   return newValue === undefined
     ? remove(config, name)
     : set(config, name, newValue)
