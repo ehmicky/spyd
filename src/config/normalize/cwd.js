@@ -41,10 +41,10 @@ export const getPropCwd = function (value, { path, context: { configInfos } }) {
     : topLevelConfigInfo.base
 }
 
-// Base used to resolve file paths in CLI flags
-export const CLI_FLAGS_BASE = '.'
 // Base used to resolve file paths in default values when there is no config
 // file
-export const DEFAULT_VALUES_BASE = '.'
+const DEFAULT_VALUES_BASE = '.'
+// Base used to resolve file paths in CLI flags
+export const CLI_FLAGS_BASE = '.'
 // Base used to resolve plugin modules
 export const PLUGINS_IMPORT_BASE = '.'

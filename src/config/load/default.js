@@ -1,11 +1,13 @@
 import { promises as fs } from 'fs'
-import { relative, normalize } from 'path'
+import { basename, relative, normalize } from 'path'
 
 import { findUp } from 'find-up'
 import pLocate from 'p-locate'
 import { pathExists } from 'path-exists'
 
-import { CONFIG_PLUGIN_TYPE } from './plugin/types.js'
+import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
+
+import { getConfigFilenames } from './contents.js'
 
 // The default values for `config` looks for `spyd.*` in the current or parent
 // directories.
@@ -32,7 +34,16 @@ import { CONFIG_PLUGIN_TYPE } from './plugin/types.js'
 // For `config`:
 //  - We only allow this for the top-level flags not inside configuration files
 //    to keep those self-contained.
-export const lookupFiles = async function (isMatchingPath, base) {
+// Retrieve the default value for the `config` CLI flag
+export const getDefaultConfig = async function ({ context: { base } }) {
+  const defaultConfigFilenames = getConfigFilenames()
+  return await lookupFiles(
+    (filePath) => defaultConfigFilenames.includes(basename(filePath)),
+    base,
+  )
+}
+
+const lookupFiles = async function (isMatchingPath, base) {
   const lookupDirs = await getLookupDirs(base)
   const matchedDir = await findUp(
     (baseA) => findMatchingDir(baseA, lookupDirs, isMatchingPath),

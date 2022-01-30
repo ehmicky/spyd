@@ -1,7 +1,3 @@
-import { basename } from 'path'
-
-import { lookupFiles } from '../lookup.js'
-import { DEFAULT_VALUES_BASE } from '../normalize/cwd.js'
 import { normalizeConfig } from '../normalize/main.js'
 import { normalizeOptionalArray } from '../normalize/transform.js'
 import {
@@ -9,7 +5,7 @@ import {
   validateRegularFile,
 } from '../normalize/validate/fs.js'
 
-import { getConfigFilenames } from './contents.js'
+import { getDefaultConfig } from './default.js'
 import { isConfigFilePath, useResolvers } from './resolvers.js'
 
 // The `config` property is normalized and validated before all other properties
@@ -20,15 +16,6 @@ export const normalizeConfigProp = async function (configOpt, base) {
     { context: { base } },
   )
   return configPaths
-}
-
-// Retrieve the default value for the `config` CLI flag
-const getDefaultConfig = async function () {
-  const defaultConfigFilenames = getConfigFilenames()
-  return await lookupFiles(
-    (filePath) => defaultConfigFilenames.includes(basename(filePath)),
-    DEFAULT_VALUES_BASE,
-  )
 }
 
 // Retrieve the `base` used to resolve the `config` property
