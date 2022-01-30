@@ -103,7 +103,7 @@ const getDimensionsTasks = async function ({
 }) {
   const runnerA = await loadRunner(runner, cwd, commonVersions)
   const tasks = await Promise.all(
-    runnerA.tasks.map((taskPath) =>
+    runnerA.config.tasks.map((taskPath) =>
       findTasks({ taskPath, runner: runnerA, noDimensions, cwd }),
     ),
   )
