@@ -1,5 +1,2 @@
-import { shellDefinition } from './shell.js'
-
+export { config } from './config.js'
 export { launch } from './launch.js'
-
-export const config = [shellDefinition]

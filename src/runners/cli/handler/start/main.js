@@ -30,7 +30,7 @@ const importFile = async function (taskPath) {
   } catch (error) {
     throw wrapError(
       error,
-      `Could not import the tasks file '${taskPath}\n`,
+      `Could not import the tasks file: ${taskPath}\n`,
       UserError,
     )
   }
