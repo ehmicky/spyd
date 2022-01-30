@@ -1,6 +1,7 @@
 import filterObj from 'filter-obj'
 
 import { mapValues } from '../utils/map.js'
+import { recurseValues } from '../utils/recurse.js'
 
 // We do not use yargs types as it conflicts with our own validation and
 // normalization logic, e.g.:
@@ -16,7 +17,8 @@ export const parseCliFlags = function (yargs) {
   } = yargs.parse()
   const configFlagsA = filterObj(configFlags, isUserProp)
   const configFlagsB = mapValues(configFlagsA, handleEmptyArr)
-  return { command, configFlags: configFlagsB }
+  const configFlagsC = recurseValues(configFlagsB, transtypeBoolean)
+  return { command, configFlags: configFlagsC }
 }
 
 const DEFAULT_COMMAND = 'run'
@@ -48,3 +50,23 @@ const ARRAY_PROPERTIES = new Set([
   'limit',
   'config',
 ])
+
+// Yargs interprets `--flag` and `--no-flag` with no arguments as booleans.
+// Additionally, it interprets `--flag=true|false` as booleans instead of
+// as strings when specifying the `boolean: true` option.
+// However, we minimize Yargs parsing and validation since it is imperfect and
+// does not well with:
+//  - Object with dynamic property names
+//  - Polymorphic types, such as "either boolean or array of booleans"
+// Therefore, we perform this transformation manually.
+const transtypeBoolean = function (value) {
+  if (value === 'true') {
+    return true
+  }
+
+  if (value === 'false') {
+    return false
+  }
+
+  return value
+}
