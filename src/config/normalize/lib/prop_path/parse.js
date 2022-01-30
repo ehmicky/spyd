@@ -1,4 +1,8 @@
 // Parse a query string into an array of tokens.
+// This is similar to JSON paths but:
+//  - simpler, with fewer features
+//  - faster
+//  - this works better when setting multiple elements at once
 // Syntax:
 //  - Dots are used for object properties, e.g. `one.two`
 //  - Brackets are used for array elements, e.g. `one[5]`
@@ -13,6 +17,8 @@
 //    brackets, star)
 //  - This removes the need for an escape character with the string syntax
 //    (array of tokens should be used instead)
+// TODO: add support for `**`, which should behave like: `` or `*` or `*/*` or
+// `*/*/*` and so on.
 // TODO: do not recurse over `__proto__`, `prototype` or `constructor`
 export const maybeParse = function (queryOrTokens) {
   return Array.isArray(queryOrTokens) ? queryOrTokens : parse(queryOrTokens)
