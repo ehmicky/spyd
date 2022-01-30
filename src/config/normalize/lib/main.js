@@ -21,15 +21,20 @@ import { set } from './prop_path/set.js'
 export const normalizeConfigProps = async function (
   config,
   definitions,
-  { context },
+  { context, loose = false },
 ) {
-  const configB = await pReduce(
-    definitions,
-    (configA, definition) => applyDefinitionDeep(configA, definition, context),
-    config,
-  )
-  const configC = cleanObject(configB)
-  return configC
+  try {
+    const configB = await pReduce(
+      definitions,
+      (configA, definition) =>
+        applyDefinitionDeep(configA, definition, context),
+      config,
+    )
+    const configC = cleanObject(configB)
+    return configC
+  } catch (error) {
+    return handleError(error, loose)
+  }
 }
 
 const applyDefinitionDeep = async function (config, definition, context) {
@@ -72,4 +77,14 @@ const getPath = function (name) {
 
 const getPathKey = function ({ key }) {
   return key
+}
+
+// When in `loose` mode, user errors are returned instead of being thrown.
+// System errors are always propagated.
+const handleError = function (error, loose) {
+  if (!loose || !error.validation) {
+    throw error
+  }
+
+  return error
 }
