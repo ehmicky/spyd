@@ -2,29 +2,24 @@
 import { AssertionError } from 'assert'
 
 import { callValueFunc, callUserFunc } from './call.js'
+import { againstCondition } from './condition.js'
 
 export const applyDefinition = async function (
   { condition, default: defaultValue, compute, validate, transform },
   value,
   opts,
 ) {
-  if (await againstCondition(value, condition, opts)) {
-    return value
+  const skipped = await againstCondition(value, condition, opts)
+
+  if (skipped) {
+    return { value, skipped }
   }
 
   const valueA = await addDefaultValue(value, defaultValue, opts)
   const valueB = await computeValue(valueA, compute, opts)
   await validateValue(valueB, validate, opts)
   const valueC = await transformValue(valueB, transform, opts)
-  return valueC
-}
-
-// Apply `condition(opts)` which skips the current definition if `false` is
-// returned.
-const againstCondition = async function (value, condition, opts) {
-  return (
-    condition !== undefined && !(await callValueFunc(condition, value, opts))
-  )
+  return { value: valueC, skipped }
 }
 
 // Apply `default(opts)` which assigns a default value

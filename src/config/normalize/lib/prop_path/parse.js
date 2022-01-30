@@ -7,6 +7,10 @@
 // TODO: allow special characters (like dots), if escaped with backslash
 // TODO: do not recurse over `__proto__`, `prototype` or `constructor`
 export const parse = function (query) {
+  if (query === '') {
+    return []
+  }
+
   const normalizedQuery = prependDot(query)
   const matchResults = [...normalizedQuery.matchAll(QUERY_REGEXP)]
   validateQuery(matchResults, query, normalizedQuery)
