@@ -63,10 +63,13 @@ const EXTENSIONS = {
 }
 
 // Return filenames looked up by the default value of the `config` flag
-export const getConfigFilenames = function () {
-  return Object.keys(EXTENSIONS).map(
+const getConfigFilenames = function () {
+  const configFilenames = Object.keys(EXTENSIONS).map(
     (extName) => `${DEFAULT_CONFIG_BASENAME}${extName}`,
   )
+  return new Set(configFilenames)
 }
 
 const DEFAULT_CONFIG_BASENAME = 'spyd'
+
+export const CONFIG_FILENAMES = getConfigFilenames()
