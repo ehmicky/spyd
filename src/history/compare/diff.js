@@ -87,7 +87,9 @@ const addDiff = function ({
 }
 
 const getDiffLimit = function (diff, diffPrecise, limit) {
-  return diffPrecise && isOverLimit(diff, limit) ? { diffLimit: limit } : {}
+  return diffPrecise && limit !== undefined && isOverLimit(diff, limit)
+    ? { diffLimit: limit }
+    : {}
 }
 
 const isOverLimit = function (diff, limit) {
