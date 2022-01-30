@@ -4,6 +4,8 @@
 // Dots and brackets can be used deeply, e.g. `one.two[5]`
 // Wildcards are used with both objects and arrays to recurse over their
 // children, e.g. `one.*` or `one[*]`.
+// Empty keys are supported, e.g. `one.` for `{ one: { "": value } }`
+// or `one..two` for `{ one: { "": { two: value } } }`
 // TODO: allow special characters (like dots), if escaped with backslash
 // TODO: do not recurse over `__proto__`, `prototype` or `constructor`
 export const parse = function (query) {
@@ -25,7 +27,7 @@ const prependDot = function (query) {
 }
 
 const QUERY_REGEXP =
-  /((\.(?<name>([^.?[\]*\d][^.?[\]*]*|(?<nameWildcard>\*))))|(\[(?<index>([\d]+|(?<indexWildcard>\*)))\]))/guy
+  /((\.(?<name>([^.?[\]*\d][^.?[\]*]*|(?<nameWildcard>\*)|((?=[.[]|$)))))|(\[(?<index>([\d]+|(?<indexWildcard>\*)))\]))/guy
 
 // Validate against syntax errors in the query
 // TODO: add more error messages for common mistakes
