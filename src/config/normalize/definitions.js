@@ -64,12 +64,6 @@ const configProp = {
   name: 'config',
 }
 
-const configAny = {
-  name: 'config.*',
-  pick: amongCommands(['dev', 'remove', 'run', 'show']),
-  validate: validateDefinedString,
-}
-
 const colors = {
   name: 'colors',
   pick: amongCommands(['remove', 'run', 'show']),
@@ -320,7 +314,6 @@ const titlesAny = {
 export const DEFINITIONS = [
   colors,
   configProp,
-  configAny,
   cwd,
   delta,
   force,
