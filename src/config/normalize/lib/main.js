@@ -21,7 +21,7 @@ import { set, remove } from './prop_path/set.js'
 export const normalizeConfigProps = async function (
   config,
   definitions,
-  { context = {}, loose = false, prefix = defaultPrefix } = {},
+  { context = {}, loose = false, prefix = '' } = {},
 ) {
   try {
     const configB = await pReduce(
@@ -35,10 +35,6 @@ export const normalizeConfigProps = async function (
   } catch (error) {
     return handleError(error, loose)
   }
-}
-
-const defaultPrefix = function (name) {
-  return `Configuration property "${name}"`
 }
 
 const applyDefinitionDeep = async function ({

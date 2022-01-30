@@ -67,15 +67,11 @@ const normalizePluginConfig = async function ({
   topProps,
 }) {
   const topDefinitions = getTopDefinitions(topProps)
-  const prefix = getErrorPrefix.bind(undefined, configProp, id)
+  const prefix = `${configProp}.${id}`
   return await normalizeConfig(pluginConfig, topDefinitions, {
     context,
     prefix,
   })
-}
-
-const getErrorPrefix = function (configProp, id, name) {
-  return `Configuration property "${configProp}.${id}.${name}"`
 }
 
 // Retrieve definitions for properties which can be set both at the top-level

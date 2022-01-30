@@ -35,8 +35,19 @@ export const callUserFunc = async function (
     return await maybeFunction(userFunc, opts)
   } catch (error) {
     handleValidateError(error, validate)
-    throw wrapError(error, `${prefix(opts.name).trim()} `)
+    throw wrapError(
+      error,
+      `Configuration property "${getPrefix(prefix, opts.name)}" `,
+    )
   }
+}
+
+const getPrefix = function (prefix, name) {
+  if (prefix === '') {
+    return name
+  }
+
+  return prefix.endsWith('.') ? `${prefix}${name}` : `${prefix}.${name}`
 }
 
 // Consumers can distinguish users errors from system bugs by checking
