@@ -33,7 +33,7 @@ const loadPlugin = async function (
   const moduleId = getModuleId(id, type, isCombinationDimension)
   const plugin = await importPlugin({ moduleId, type, modulePrefix, builtins })
   const pluginA = { ...plugin }
-  const pluginB = await normalizePlugin(pluginA, mainDefinitions)
+  const pluginB = await normalizePlugin(pluginA, mainDefinitions, topProps)
   const pluginConfig = await getPluginConfig({
     id,
     config,

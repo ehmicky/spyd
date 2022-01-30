@@ -84,7 +84,7 @@ const getTopDefinitions = function (topProps) {
   )
 }
 
-const isTopDefinition = function (name, topProps) {
+export const isTopDefinition = function (name, topProps) {
   return topProps.some((topProp) => name.startsWith(topProp))
 }
 
