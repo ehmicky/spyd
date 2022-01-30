@@ -1,16 +1,10 @@
-import { resolve, basename } from 'path'
+import { basename } from 'path'
 
 import dotProp from 'dot-prop'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
 import { has } from './lib/prop_path/get.js'
-
-// Resolve configuration relative file paths to absolute paths.
-export const normalizeConfigPath = function (value, name, configInfos) {
-  const base = getBase(configInfos, name)
-  return resolve(base, value)
-}
 
 // Resolve configuration properties that are globbing patterns.
 // Also resolve to absolute file paths.
