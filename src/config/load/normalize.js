@@ -29,18 +29,22 @@ const getConfigCwd = function (value, { context: { base } }) {
   return base
 }
 
-const transformConfig = async function (value) {
-  const valueA = await useResolvers(value)
-  await validateFileExists(valueA)
-  await validateRegularFile(valueA)
-  return valueA
+const validateConfig = async function (value) {
+  await validateFileExists(value)
+  await validateRegularFile(value)
 }
 
-const configPropAny = {
-  name: 'config.*',
-  path: isConfigFilePath,
-  cwd: getConfigCwd,
-  transform: transformConfig,
-}
+const configPropAny = [
+  {
+    name: 'config.*',
+    path: isConfigFilePath,
+    cwd: getConfigCwd,
+    transform: useResolvers,
+  },
+  {
+    name: 'config.*',
+    validate: validateConfig,
+  },
+]
 
-export const CONFIG_DEFINITIONS = [configProp, configPropAny]
+export const CONFIG_DEFINITIONS = [configProp, ...configPropAny]
