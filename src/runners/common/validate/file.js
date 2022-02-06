@@ -2,14 +2,14 @@ import { inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
 
-import { UserError } from '../../../error/main.js'
 import { wrapError } from '../../../error/wrap.js'
 import { mapValues } from '../../../utils/map.js'
+import { TasksSyntaxError } from '../error.js'
 
 // Validate that the tasks file has correct shape
 export const validateTasks = function ({ tasks, validators, normalizeTask }) {
   if (!isPlainObj(tasks)) {
-    throw new UserError(
+    throw new TasksSyntaxError(
       `Tasks file should export an object not: ${inspect(tasks)}`,
     )
   }
@@ -41,7 +41,7 @@ const eValidateTask = function ({ task, validators, normalizeTask }) {
 
 const validateRequiredMain = function ({ main }) {
   if (main === undefined) {
-    throw new UserError(`must have a "main" property`)
+    throw new TasksSyntaxError(`must have a "main" property`)
   }
 }
 
@@ -50,12 +50,14 @@ const validateProp = function ({ validators, propName, prop }) {
 
   if (validator === undefined) {
     const validProps = Object.keys(validators).join(', ')
-    throw new UserError(`property "${propName}" must be one of: ${validProps}`)
+    throw new TasksSyntaxError(
+      `property "${propName}" must be one of: ${validProps}`,
+    )
   }
 
   const message = validator(prop)
 
   if (message !== undefined) {
-    throw new UserError(`property "${propName}" ${message}`)
+    throw new TasksSyntaxError(`property "${propName}" ${message}`)
   }
 }
