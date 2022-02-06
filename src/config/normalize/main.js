@@ -1,7 +1,18 @@
 import { UserError } from '../../error/main.js'
 import { wrapError } from '../../error/wrap.js'
+import { normalizeConfigSelectors } from '../select/normalize.js'
 
 import { normalizeConfigProps } from './lib/main.js'
+
+// Normalize the configuration and allow properties to use config selectors
+export const normalizeVariableConfig = async function (
+  config,
+  definitions,
+  opts,
+) {
+  const variableDefinitions = definitions.flatMap(normalizeConfigSelectors)
+  return await normalizeConfig(config, variableDefinitions, opts)
+}
 
 // Normalize the configuration properties, including default values and
 // validation.

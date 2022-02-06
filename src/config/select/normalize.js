@@ -22,6 +22,13 @@ export const normalizeConfigSelectors = function (definition) {
 
   return [
     {
+      ...definition,
+      condition: selectorCondition.bind(undefined, {
+        condition,
+        isSelector: false,
+      }),
+    },
+    {
       name,
       condition: selectorCondition.bind(undefined, {
         condition,
@@ -30,13 +37,6 @@ export const normalizeConfigSelectors = function (definition) {
       validate: validateConfigSelector,
     },
     { ...definition, name: `${name}.*` },
-    {
-      ...definition,
-      condition: selectorCondition.bind(undefined, {
-        condition,
-        isSelector: false,
-      }),
-    },
   ]
 }
 

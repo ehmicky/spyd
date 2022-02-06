@@ -17,7 +17,6 @@ import { DEFAULT_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { CONFIG_DEFINITIONS } from '../load/normalize.js'
 import { getPluginsDefinitions } from '../plugin/definitions.js'
-import { normalizeConfigSelectors } from '../select/normalize.js'
 
 import { getPropCwd } from './cwd.js'
 import { getDummyDefinitions } from './dummy.js'
@@ -184,5 +183,5 @@ export const DEFINITIONS = [
   systemAny,
   titles,
   titlesAny,
-].flatMap(normalizeConfigSelectors)
+]
 /* eslint-enable max-lines */
