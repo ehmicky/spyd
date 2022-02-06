@@ -6,18 +6,18 @@ import { normalizeConfig } from '../normalize/main.js'
 export const normalizePlugin = async function (
   plugin,
   shape,
-  topConfigPropNames,
+  sharedConfigPropNames,
 ) {
   return await normalizeConfig(plugin, [...COMMON_SHAPE, ...shape], {
-    context: { topConfigPropNames },
+    context: { sharedConfigPropNames },
     ErrorType: PluginError,
   })
 }
 
 const configPropName = {
   name: 'config.*.name',
-  validate(name, { context: { topConfigPropNames } }) {
-    if (isTopConfigProp(name, topConfigPropNames)) {
+  validate(name, { context: { sharedConfigPropNames } }) {
+    if (isSharedConfigProp(name, sharedConfigPropNames)) {
       throw new Error(
         `must not redefine core configuration property "${name}".`,
       )
@@ -25,11 +25,11 @@ const configPropName = {
   },
 }
 
-const isTopConfigProp = function (name, topConfigPropNames) {
+const isSharedConfigProp = function (name, sharedConfigPropNames) {
   return (
-    topConfigPropNames.includes(name) ||
-    topConfigPropNames.some((topConfigPropName) =>
-      isParent(name, topConfigPropName),
+    sharedConfigPropNames.includes(name) ||
+    sharedConfigPropNames.some((sharedConfigPropName) =>
+      isParent(name, sharedConfigPropName),
     )
   )
 }

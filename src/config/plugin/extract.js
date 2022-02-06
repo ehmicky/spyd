@@ -6,16 +6,17 @@ import { PLUGIN_TYPES_ARRAY } from './types.js'
 
 // Retrieve all plugin types, normalized
 export const getPluginTypes = function () {
-  return PLUGIN_TYPES_ARRAY.map(addTopConfigPropNames)
+  return PLUGIN_TYPES_ARRAY.map(addSharedConfigPropNames)
 }
 
-// Retrieve all unique property `name`, excluding their children
-const addTopConfigPropNames = function (pluginType) {
-  const topConfigPropNames = pluginType.sharedConfig.map(getDefinitionName)
-  const topConfigPropNamesA = [...new Set(topConfigPropNames)].filter(
+// Retrieve all unique `name` of shared config properties, excluding their
+// children
+const addSharedConfigPropNames = function (pluginType) {
+  const sharedConfigPropNames = pluginType.sharedConfig.map(getDefinitionName)
+  const sharedConfigPropNamesA = [...new Set(sharedConfigPropNames)].filter(
     hasNoParent,
   )
-  return { ...pluginType, topConfigPropNames: topConfigPropNamesA }
+  return { ...pluginType, sharedConfigPropNames: sharedConfigPropNamesA }
 }
 
 const getDefinitionName = function ({ name }) {
@@ -30,9 +31,9 @@ const hasNoParent = function (nameA, indexA, names) {
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
-export const getTopConfig = function (config, { topConfigPropNames }) {
-  const topConfigProps = topConfigPropNames.flatMap((topConfigPropName) =>
-    Object.entries(list(config, topConfigPropName)),
+export const getTopConfig = function (config, { sharedConfigPropNames }) {
+  const topConfigProps = sharedConfigPropNames.flatMap((sharedConfigPropName) =>
+    Object.entries(list(config, sharedConfigPropName)),
   )
   return topConfigProps.reduce(addTopConfigProp, {})
 }
@@ -50,9 +51,9 @@ export const removePluginsProps = function (config, pluginTypes) {
 const getPluginProps = function ({
   selectProp,
   configProp,
-  topConfigPropNames,
+  sharedConfigPropNames,
 }) {
-  return [selectProp, configProp, ...topConfigPropNames]
+  return [selectProp, configProp, ...sharedConfigPropNames]
 }
 
 const removePluginProp = function (config, name) {
