@@ -33,7 +33,7 @@ const loadPlugin = async function (
     builtins,
     isCombinationDimension,
     mainShape,
-    sharedConfig,
+    sharedProps,
     sharedConfigPropNames,
   },
 ) {
@@ -60,7 +60,7 @@ const loadPlugin = async function (
     configProp,
     pluginConfigDefinitions,
     plugin: pluginC,
-    sharedConfig,
+    sharedProps,
   })
   return { ...pluginC, config: pluginConfig }
 }

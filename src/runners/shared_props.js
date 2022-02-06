@@ -29,4 +29,4 @@ const tasksFlatten = {
 }
 
 // Runner-specific shared configuration properties
-export const sharedConfig = [tasks, tasksAny, tasksFlatten]
+export const sharedProps = [tasks, tasksAny, tasksFlatten]

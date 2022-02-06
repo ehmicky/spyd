@@ -53,7 +53,7 @@ export const getPluginConfig = async function ({
   context,
   configInfos,
   pluginConfigDefinitions = [],
-  sharedConfig,
+  sharedProps,
 }) {
   const pluginConfig = mergeConfigs([topConfig, unmergedPluginConfig])
   const prefix = getPrefix.bind(undefined, {
@@ -63,7 +63,7 @@ export const getPluginConfig = async function ({
   })
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
-    sharedConfig,
+    sharedProps,
     pluginConfigDefinitions,
     context,
     configInfos,
@@ -72,7 +72,7 @@ export const getPluginConfig = async function ({
   })
   const pluginConfigB = await normalizeSpecificConfig({
     pluginConfig: pluginConfigA,
-    sharedConfig,
+    sharedProps,
     pluginConfigDefinitions,
     context,
     configInfos,
@@ -91,7 +91,7 @@ const getPrefix = function (
 
 const normalizeSharedConfig = async function ({
   pluginConfig,
-  sharedConfig,
+  sharedProps,
   pluginConfigDefinitions,
   context,
   configInfos,
@@ -101,7 +101,7 @@ const normalizeSharedConfig = async function ({
   const dummyDefinitions = getDummyDefinitions(pluginConfigDefinitions)
   return await normalizeUserConfig({
     config: pluginConfig,
-    definitions: [...sharedConfig, ...dummyDefinitions],
+    definitions: [...sharedProps, ...dummyDefinitions],
     opts: { context: { ...context, plugin }, prefix },
     configInfos,
   })
@@ -109,13 +109,13 @@ const normalizeSharedConfig = async function ({
 
 const normalizeSpecificConfig = async function ({
   pluginConfig,
-  sharedConfig,
+  sharedProps,
   pluginConfigDefinitions,
   context,
   configInfos,
   prefix,
 }) {
-  const dummyDefinitions = getDummyDefinitions(sharedConfig)
+  const dummyDefinitions = getDummyDefinitions(sharedProps)
 
   try {
     return await normalizeUserConfig({

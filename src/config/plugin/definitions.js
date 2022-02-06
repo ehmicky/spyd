@@ -17,11 +17,11 @@ const getPluginDefinitions = function ({
   configProp,
   commands,
   selectProp: { name: selectName, default: defaultValue = [], ...selectProp },
-  sharedConfig,
+  sharedProps,
 }) {
   const pick = amongCommands(commands)
   return [
-    ...getDummyDefinitions(sharedConfig),
+    ...getDummyDefinitions(sharedProps),
     {
       name: selectName,
       pick,

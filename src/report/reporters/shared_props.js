@@ -112,7 +112,7 @@ const showTitles = {
 }
 
 // Reporter-specific shared configuration properties
-export const sharedConfig = [
+export const sharedProps = [
   output,
   format,
   outputFormat,

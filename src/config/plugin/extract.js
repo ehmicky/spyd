@@ -12,7 +12,7 @@ export const getPluginTypes = function () {
 // Retrieve all unique `name` of shared config properties, excluding their
 // children
 const addSharedConfigPropNames = function (pluginType) {
-  const sharedConfigPropNames = pluginType.sharedConfig.map(getDefinitionName)
+  const sharedConfigPropNames = pluginType.sharedProps.map(getDefinitionName)
   const sharedConfigPropNamesA = [...new Set(sharedConfigPropNames)].filter(
     hasNoParent,
   )

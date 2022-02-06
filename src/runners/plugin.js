@@ -4,7 +4,7 @@ import {
 } from '../config/normalize/validate/complex.js'
 
 import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from './main.js'
-import { sharedConfig } from './shared_config.js'
+import { sharedProps } from './shared_props.js'
 
 export const RUNNER_PLUGIN_TYPE = {
   // Shown in error message
@@ -37,5 +37,5 @@ export const RUNNER_PLUGIN_TYPE = {
     },
   ],
   // Plugin properties shared by all plugins
-  sharedConfig,
+  sharedProps,
 }
