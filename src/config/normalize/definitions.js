@@ -12,11 +12,7 @@ import {
 import { getDefaultId, validateMerge } from '../../history/merge/id.js'
 import { DEFAULT_TITLES } from '../../report/normalize/titles_add.js'
 import { isTtyInput } from '../../report/tty.js'
-import {
-  validatePrecision,
-  transformPrecision,
-  DEFAULT_PRECISION,
-} from '../../run/precision.js'
+import { transformPrecision, DEFAULT_PRECISION } from '../../run/precision.js'
 import { DEFAULT_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { CONFIG_DEFINITIONS } from '../load/normalize.js'
@@ -111,10 +107,7 @@ const precision = {
   name: 'precision',
   pick: amongCommands(['run']),
   default: DEFAULT_PRECISION,
-  validate(value) {
-    validateInteger(value)
-    validatePrecision(value)
-  },
+  validate: validateInteger,
   transform: transformPrecision,
 }
 

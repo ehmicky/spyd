@@ -72,14 +72,14 @@
 //       machines
 //        - this can happen inside the same run (due to previous runs being
 //          merged to current one)
-export const validatePrecision = function (precision) {
-  if (PRECISION_TARGETS[precision] === undefined) {
+export const transformPrecision = function (precision) {
+  const precisionA = PRECISION_TARGETS[precision]
+
+  if (precisionA === undefined) {
     throw new Error(`must be between ${MIN_PRECISION} and ${MAX_PRECISION}.`)
   }
-}
 
-export const transformPrecision = function (precision) {
-  return PRECISION_TARGETS[precision]
+  return precisionA
 }
 
 // Associates `precision` (using array index) to the minimum `rmoe` each
