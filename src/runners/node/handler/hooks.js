@@ -1,10 +1,17 @@
+import { wrapError } from '../../../error/wrap.js'
+import { TasksRunError } from '../../common/error.js'
+
 // Perform `beforeAll`, if defined
 export const before = async function ({ task: { beforeAll }, inputs }) {
   if (beforeAll === undefined) {
     return
   }
 
-  await beforeAll(inputs)
+  try {
+    await beforeAll(inputs)
+  } catch (error) {
+    throw wrapError(error, '', TasksRunError)
+  }
 }
 
 // Perform `afterAll`, if defined
@@ -13,5 +20,9 @@ export const after = async function ({ task: { afterAll }, inputs }) {
     return
   }
 
-  await afterAll(inputs)
+  try {
+    await afterAll(inputs)
+  } catch (error) {
+    throw wrapError(error, '', TasksRunError)
+  }
 }
