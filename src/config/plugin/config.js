@@ -43,11 +43,11 @@ import { normalizeUserConfig } from '../normalize/main.js'
 //     - Which enables using - and _ in user-defined identifiers
 //  - Works unescaped with YAML, JSON and JavaScript
 export const getPluginConfig = async function ({
-  configProp,
+  configPropName,
   plugin,
   plugin: { id },
   config: {
-    [configProp]: { [id]: unmergedPluginConfig = {} },
+    [configPropName]: { [id]: unmergedPluginConfig = {} },
   },
   topConfig,
   context,
@@ -58,7 +58,7 @@ export const getPluginConfig = async function ({
   const pluginConfig = mergeConfigs([topConfig, unmergedPluginConfig])
   const prefix = getPrefix.bind(undefined, {
     unmergedPluginConfig,
-    configProp,
+    configPropName,
     id,
   })
   const pluginConfigA = await normalizeSharedConfig({
@@ -82,10 +82,12 @@ export const getPluginConfig = async function ({
 }
 
 const getPrefix = function (
-  { unmergedPluginConfig, configProp, id },
+  { unmergedPluginConfig, configPropName, id },
   { path },
 ) {
-  const prefix = has(unmergedPluginConfig, path) ? `${configProp}.${id}.` : ''
+  const prefix = has(unmergedPluginConfig, path)
+    ? `${configPropName}.${id}.`
+    : ''
   return `Configuration property ${prefix}`
 }
 

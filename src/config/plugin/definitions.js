@@ -14,38 +14,42 @@ export const getPluginsDefinitions = function () {
 }
 
 const getPluginDefinitions = function ({
-  configProp,
+  configProp: { name: configPropName },
   commands,
-  selectProp: { name: selectName, default: defaultValue = [], ...selectProp },
+  selectProp: {
+    name: selectPropName,
+    default: defaultValue = [],
+    ...selectProp
+  },
   sharedProps,
 }) {
   const pick = amongCommands(commands)
   return [
     ...getDummyDefinitions(sharedProps),
     {
-      name: selectName,
+      name: selectPropName,
       pick,
       default: defaultValue,
       transform: normalizeOptionalArray,
       ...selectProp,
     },
     {
-      name: `${selectName}.*`,
+      name: `${selectPropName}.*`,
       validate: validateDefinedString,
     },
     {
-      name: configProp,
+      name: configPropName,
       pick,
       default: {},
       validate: validateObject,
     },
     {
-      name: `${configProp}.*`,
+      name: `${configPropName}.*`,
       default: {},
       validate: validateObject,
     },
     {
-      name: `${configProp}.*.*`,
+      name: `${configPropName}.*.*`,
       validate: validateJson,
     },
   ]

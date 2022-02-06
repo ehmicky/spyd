@@ -11,8 +11,6 @@ export const RUNNER_PLUGIN_TYPE = {
   type: 'runner',
   // Internal variable name
   varName: 'runners',
-  // Configuration property configuring the plugin
-  configProp: 'runnerConfig',
   // Prefix of the npm package
   modulePrefix: 'spyd-runner-',
   // Commands which use the plugin
@@ -35,6 +33,10 @@ export const RUNNER_PLUGIN_TYPE = {
     name: 'runner',
     default: DEFAULT_RUNNERS,
     validate: validateEmptyArray,
+  },
+  // Configuration property configuring the plugin
+  configProp: {
+    name: 'runnerConfig',
   },
   // Plugin properties shared by all plugins
   sharedProps,

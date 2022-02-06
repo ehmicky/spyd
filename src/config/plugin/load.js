@@ -27,8 +27,8 @@ const loadPlugin = async function (
   { id, config, topConfig, context, configInfos },
   {
     type,
-    selectProp: { name: selectName },
-    configProp,
+    selectProp: { name: selectPropName },
+    configProp: { name: configPropName },
     modulePrefix,
     builtins,
     isCombinationDimension,
@@ -40,7 +40,7 @@ const loadPlugin = async function (
   const plugin = await importPlugin({
     id,
     type,
-    selectName,
+    selectPropName,
     modulePrefix,
     builtins,
     isCombinationDimension,
@@ -57,7 +57,7 @@ const loadPlugin = async function (
     topConfig,
     context,
     configInfos,
-    configProp,
+    configPropName,
     pluginConfigDefinitions,
     plugin: pluginC,
     sharedProps,

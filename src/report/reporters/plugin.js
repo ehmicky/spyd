@@ -16,7 +16,6 @@ import { sharedProps } from './shared_props.js'
 export const REPORTER_PLUGIN_TYPE = {
   type: 'reporter',
   varName: 'reporters',
-  configProp: 'reporterConfig',
   modulePrefix: 'spyd-reporter-',
   commands: ['remove', 'run', 'show'],
   isCombinationDimension: false,
@@ -53,6 +52,9 @@ export const REPORTER_PLUGIN_TYPE = {
     transform(value, { config }) {
       return config.force ? [] : normalizeOptionalArray(value)
     },
+  },
+  configProp: {
+    name: 'reporterConfig',
   },
   sharedProps,
 }
