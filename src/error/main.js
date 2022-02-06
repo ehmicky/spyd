@@ -8,11 +8,12 @@ export const StopError = createErrorType('StopError')
 export const CoreError = createErrorType('CoreError')
 export const PluginError = createErrorType('PluginError')
 export const UserError = createErrorType('UserError')
+export const UserCodeError = createErrorType('UserCodeError')
 export const LimitError = createErrorType('LimitError')
 
 // Retrieve error type-specific behavior
 export const getErrorProps = function (error) {
-  return getErrorTypeProps(error, ERROR_PROPS, CORE_ERROR_NAME)
+  return getErrorTypeProps(error.name, ERROR_PROPS, DEFAULT_ERROR_NAME)
 }
 
 const ERROR_PROPS = {
@@ -20,7 +21,8 @@ const ERROR_PROPS = {
   CoreError: { exitCode: 1, printStack: true, indented: false },
   PluginError: { exitCode: 2, printStack: true, indented: false },
   UserError: { exitCode: 3, printStack: false, indented: false },
+  UserCodeError: { exitCode: 3, printStack: true, indented: false },
   LimitError: { exitCode: 4, printStack: false, indented: false },
 }
 
-const CORE_ERROR_NAME = 'CoreError'
+const DEFAULT_ERROR_NAME = 'CoreError'

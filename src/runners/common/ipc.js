@@ -2,6 +2,8 @@ import { argv } from 'process'
 
 import got from 'got'
 
+import { serializeError } from './error.js'
+
 // Handles IPC communication with the parent process
 export const handleEvents = async function (handlers) {
   const state = {}
@@ -35,6 +37,6 @@ const handlePayload = async function (payload, handlers, state) {
   try {
     return await handlers[payload.event](state, payload)
   } catch (error) {
-    return { error: error instanceof Error ? error.stack : String(error) }
+    return { error: serializeError(error) }
   }
 }

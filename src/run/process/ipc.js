@@ -4,10 +4,11 @@ import { promisify } from 'util'
 
 import getStream from 'get-stream'
 
-import { PluginError, UserError } from '../../error/main.js'
+import { PluginError } from '../../error/main.js'
 import { wrapError } from '../../error/wrap.js'
 
 import { throwOnStreamError } from './error.js'
+import { throwOnTaskError } from './task_error.js'
 
 // Send the next sample's payload by responding to the HTTP long poll request.
 // Runners use long polling:
@@ -57,7 +58,7 @@ export const receiveReturnValue = async function (server) {
   server.res = res
 
   const returnValue = await parseReturnValue(req)
-  throwIfTaskError(returnValue)
+  throwOnTaskError(returnValue)
   return returnValue
 }
 
@@ -73,15 +74,4 @@ const parseReturnValue = async function (req) {
   } catch (error) {
     throw wrapError(error, 'Could not receive HTTP request:', PluginError)
   }
-}
-
-// When a task throws during any stage, we propagate the error and fail the
-// benchmark. Tasks that throw are unstable and might yield invalid benchmarks,
-// so we fail hard.
-const throwIfTaskError = function ({ error }) {
-  if (error === undefined) {
-    return
-  }
-
-  throw new UserError(error)
 }

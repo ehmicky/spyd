@@ -1,3 +1,6 @@
+import { wrapError } from '../../../../error/wrap.js'
+import { TasksRunError } from '../../../common/error.js'
+
 import { performLoopsAsync } from './async.js'
 import { performLoopsSync } from './sync.js'
 
@@ -10,22 +13,26 @@ export const measure = async function (
   { task: { main, beforeEach, afterEach, async }, inputs },
   { repeat, maxLoops },
 ) {
-  const measures = async
-    ? await performLoopsAsync({
-        main,
-        beforeEach,
-        afterEach,
-        inputs,
-        repeat,
-        maxLoops,
-      })
-    : performLoopsSync({
-        main,
-        beforeEach,
-        afterEach,
-        inputs,
-        repeat,
-        maxLoops,
-      })
-  return { measures }
+  try {
+    const measures = async
+      ? await performLoopsAsync({
+          main,
+          beforeEach,
+          afterEach,
+          inputs,
+          repeat,
+          maxLoops,
+        })
+      : performLoopsSync({
+          main,
+          beforeEach,
+          afterEach,
+          inputs,
+          repeat,
+          maxLoops,
+        })
+    return { measures }
+  } catch (error) {
+    throw wrapError(error, '', TasksRunError)
+  }
 }
