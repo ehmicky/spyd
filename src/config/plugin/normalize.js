@@ -5,14 +5,13 @@ import { normalizeConfig } from '../normalize/main.js'
 // Validate a plugin has the correct shape and normalize it
 export const normalizePlugin = async function (
   plugin,
-  mainDefinitions,
+  shape,
   topConfigPropNames,
 ) {
-  return await normalizeConfig(
-    plugin,
-    [...COMMON_DEFINITIONS, ...mainDefinitions],
-    { context: { topConfigPropNames }, ErrorType: PluginError },
-  )
+  return await normalizeConfig(plugin, [...COMMON_SHAPE, ...shape], {
+    context: { topConfigPropNames },
+    ErrorType: PluginError,
+  })
 }
 
 const configPropName = {
@@ -36,4 +35,4 @@ const isTopConfigProp = function (name, topConfigPropNames) {
 }
 
 // Definitions shared by all plugins
-const COMMON_DEFINITIONS = [configPropName]
+const COMMON_SHAPE = [configPropName]

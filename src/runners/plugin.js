@@ -31,7 +31,7 @@ export const RUNNER_PLUGIN_TYPE = {
     validate: validateEmptyArray,
   },
   // Configuration definition for the plugin itself
-  mainDefinitions: [
+  shape: [
     {
       name: 'launch',
       required: true,
