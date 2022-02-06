@@ -13,39 +13,33 @@ export const getPluginsDefinitions = function () {
 }
 
 const getPluginDefinitions = function ({
-  configProp: { name: configPropName, ...configProp },
-  selectProp: {
-    name: selectPropName,
-    default: defaultValue = [],
-    ...selectProp
-  },
+  configProp,
+  selectProp: { default: defaultValue = [], ...selectProp },
   sharedProps,
 }) {
   return [
     ...getDummyDefinitions(sharedProps),
     {
-      name: selectPropName,
       default: defaultValue,
       transform: normalizeOptionalArray,
       ...selectProp,
     },
     {
-      name: `${selectPropName}.*`,
+      name: `${selectProp.name}.*`,
       validate: validateDefinedString,
     },
     {
-      name: configPropName,
       default: {},
       validate: validateObject,
       ...configProp,
     },
     {
-      name: `${configPropName}.*`,
+      name: `${configProp.name}.*`,
       default: {},
       validate: validateObject,
     },
     {
-      name: `${configPropName}.*.*`,
+      name: `${configProp.name}.*.*`,
       validate: validateJson,
     },
   ]
