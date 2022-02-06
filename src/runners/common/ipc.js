@@ -2,29 +2,31 @@ import { argv } from 'process'
 
 import got from 'got'
 
-import { serializeError } from './error.js'
+import { wrapError } from '../../error/wrap.js'
+
+import { serializeError, IpcSerializationError } from './error.js'
 
 // Handles IPC communication with the parent process
 export const handleEvents = async function (handlers) {
   const state = {}
   // eslint-disable-next-line fp/no-let
-  let returnValue = {}
+  let body = JSON.stringify({})
 
   // eslint-disable-next-line fp/no-loops
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const payload = await sendReturnValue(returnValue)
+    const payload = await sendReturnValue(body)
     // eslint-disable-next-line no-await-in-loop, fp/no-mutation
-    returnValue = await handlePayload(payload, handlers, state)
+    body = await handlePayload(payload, handlers, state)
   }
 }
 
 // Send HTTP request to parent
-const sendReturnValue = async function (returnValue = {}) {
+const sendReturnValue = async function (body) {
   return await got({
     url: argv[argv.length - 1],
     method: 'POST',
-    json: returnValue,
+    body,
     responseType: 'json',
     resolveBodyOnly: true,
   })
@@ -35,8 +37,22 @@ const sendReturnValue = async function (returnValue = {}) {
 // sent back to the main process.
 const handlePayload = async function (payload, handlers, state) {
   try {
-    return await handlers[payload.event](state, payload)
+    const returnValue = await handlers[payload.event](state, payload)
+    return safeSerializeBody(returnValue)
   } catch (error) {
-    return { error: serializeError(error) }
+    return serializeBody({ error: serializeError(error) })
   }
+}
+
+// Serialize payload but also handle invalid JSON errors
+const safeSerializeBody = function (returnValue = {}) {
+  try {
+    return serializeBody(returnValue)
+  } catch (error) {
+    throw wrapError(error, '', IpcSerializationError)
+  }
+}
+
+const serializeBody = function (returnValue) {
+  return JSON.stringify(returnValue)
 }
