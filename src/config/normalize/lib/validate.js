@@ -37,7 +37,8 @@ const setValidationProp = function (error) {
 
 const addPropPrefix = async function (error, opts) {
   const propName = await getPropName(opts)
-  return wrapError(error, propName)
+  const propNameA = quotePropName(propName)
+  return wrapError(error, propNameA)
 }
 
 export const DEFAULT_PREFIX = 'Configuration property'
@@ -46,7 +47,14 @@ const getPropName = async function (opts) {
   const prefix = await callPrefix(opts)
   const space =
     prefix === '' || prefix.endsWith(' ') || prefix.endsWith('.') ? '' : ' '
-  return `${prefix}${space}${opts.name} `
+  return `${prefix}${space}${opts.name}`
+}
+
+const quotePropName = function (propName) {
+  const words = propName.split(' ')
+  const firstWords = words.slice(0, -1).join(' ')
+  const lastWord = words[words.length - 1]
+  return `${firstWords} "${lastWord}" `
 }
 
 const callPrefix = async function ({ prefix, ...opts }) {
