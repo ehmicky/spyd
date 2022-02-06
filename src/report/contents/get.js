@@ -1,5 +1,7 @@
 import omit from 'omit.js'
 
+import { PluginError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 import { FORMATS } from '../formats/list.js'
 
 // Retrieve reporter's contents by calling all `reporter.report()` then
@@ -29,12 +31,17 @@ const callReportFunc = async function ({
     reporterConfig,
     CORE_REPORTER_PROPS,
   )
-  const content = await FORMATS[format].report(reporter, [
-    result,
-    reporterSpecificConfig,
-    startData,
-  ])
-  return { content, result, format, footerString, output, colors }
+
+  try {
+    const content = await FORMATS[format].report(reporter, [
+      result,
+      reporterSpecificConfig,
+      startData,
+    ])
+    return { content, result, format, footerString, output, colors }
+  } catch (error) {
+    throw wrapError(error, '', PluginError)
+  }
 }
 
 // We only pass reporter-specific properties, not core ones
