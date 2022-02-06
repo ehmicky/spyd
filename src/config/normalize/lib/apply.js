@@ -1,10 +1,6 @@
-import {
-  callValueFunc,
-  callUserFunc,
-  callValidateFunc,
-  throwValidateError,
-} from './call.js'
+import { callValueFunc, callUserFunc } from './call.js'
 import { resolvePath } from './path.js'
+import { throwValidateError } from './validate.js'
 
 // Once the initial value has been computed, apply validation and transforms,
 // unless the value is `undefined`.
@@ -39,7 +35,7 @@ const validateRequired = async function (required, opts) {
 // Apply `validate(value, opts)` which throws on validation errors
 const validateValue = async function (value, validate, opts) {
   if (validate !== undefined) {
-    await callValidateFunc(validate, value, opts)
+    await callValueFunc(validate, value, opts)
   }
 }
 

@@ -1,10 +1,9 @@
 import { resolve, basename } from 'path'
-import { inspect } from 'util'
 
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
-import { callValueFunc, callValidateFunc } from './call.js'
+import { callValueFunc } from './call.js'
 
 // Apply `path(value, opts) => boolean` which resolves the value as an absolute
 // file path when `true` (default: `false`).
@@ -14,18 +13,23 @@ import { callValueFunc, callValidateFunc } from './call.js'
 // A `cwd(value, opts)` can be specified to customize the `cwd`.
 //  - The default value is `.`, not some `process.cwd()` evaluated at load time,
 //    to ensure it is evaluated at runtime.
-// An empty `cwd` is same as `.`
 export const resolvePath = async function (value, { path, cwd, glob, opts }) {
   if (!(await callValueFunc(path, value, opts))) {
     return value
   }
 
-  await callValidateFunc(validatePath, value, opts)
-  const cwdA = await resolveCwd(cwd, value, opts)
+  await validatePath(value, opts)
+  const cwdA = await callValueFunc(cwd, value, opts)
+  await validatePath(cwdA, opts)
+
   return glob ? await resolveGlob(cwdA, value) : resolve(cwdA, value)
 }
 
-const validatePath = function (value) {
+const validatePath = async function (value, opts) {
+  await callValueFunc(checkPath, value, opts)
+}
+
+const checkPath = function (value) {
   if (typeof value !== 'string') {
     throw new TypeError('must be a string.')
   }
@@ -33,16 +37,6 @@ const validatePath = function (value) {
   if (value.trim() === '') {
     throw new TypeError('must not be an empty string.')
   }
-}
-
-const resolveCwd = async function (cwd, value, opts) {
-  const cwdA = await callValueFunc(cwd, value, opts)
-
-  if (typeof cwdA !== 'string') {
-    throw new TypeError(`"cwd" property is not a string: ${inspect(cwdA)}`)
-  }
-
-  return cwdA
 }
 
 // When `glob(value, opts)` is `true` (default: `false`), resolves globbing.

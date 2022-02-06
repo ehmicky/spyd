@@ -2,11 +2,11 @@ import pReduce from 'p-reduce'
 
 import { cleanObject } from '../../../utils/clean.js'
 
-import { DEFAULT_PREFIX } from './call.js'
 import { applyDefinition } from './definition.js'
 import { list } from './prop_path/get.js'
 import { parse } from './prop_path/parse.js'
 import { set, remove } from './prop_path/set.js'
+import { DEFAULT_PREFIX } from './validate.js'
 
 // Normalize configuration shape and do custom validation.
 // An array of definition objects is passed.
