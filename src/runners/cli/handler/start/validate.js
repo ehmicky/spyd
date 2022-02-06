@@ -2,7 +2,7 @@ import { inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
 
-import { UserError } from '../../../../error/main.js'
+import { TasksSyntaxError } from '../../../common/error.js'
 import { validateTasks } from '../../../common/validate/file.js'
 import { validateString } from '../../../common/validate/type.js'
 
@@ -26,7 +26,9 @@ const normalizeTask = function (task) {
   }
 
   if (!isPlainObj(task)) {
-    throw new UserError(`should be a string or an object not: ${inspect(task)}`)
+    throw new TasksSyntaxError(
+      `should be a string or an object not: ${inspect(task)}`,
+    )
   }
 
   return task
