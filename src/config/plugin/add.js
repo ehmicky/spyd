@@ -1,6 +1,6 @@
 import { normalizeReporters } from '../../report/config/main.js'
 
-import { getPluginTypes, getTopConfig, removePluginsProps } from './extract.js'
+import { getPluginTypes, getTopConfig, removeTopProps } from './extract.js'
 import { loadPlugins } from './load.js'
 import { normalizeMainProps } from './main_props.js'
 
@@ -19,13 +19,14 @@ export const addPlugins = async function ({
   configInfos,
 }) {
   const pluginTypes = getPluginTypes()
-  const configA = await addPluginsProps({
+  const pluginsConfigs = await addPluginsProps({
     config,
     pluginTypes,
     context,
     configInfos,
   })
-  const configB = removePluginsProps(configA, pluginTypes)
+  const configA = removeTopProps(config, pluginTypes)
+  const configB = { ...configA, ...pluginsConfigs }
   const configC = normalizeReporters(configB, command)
   return configC
 }
@@ -41,8 +42,7 @@ const addPluginsProps = async function ({
       getPluginsByType({ pluginType, config, context, configInfos }),
     ),
   )
-  const pluginsConfigA = Object.fromEntries(pluginsConfigs)
-  return { ...config, ...pluginsConfigA }
+  return Object.fromEntries(pluginsConfigs)
 }
 
 const getPluginsByType = async function ({
@@ -65,5 +65,5 @@ const getPluginsByType = async function ({
     context,
     configInfos,
   })
-  return [pluginType.selectProp.name, plugins]
+  return [pluginType.name, plugins]
 }

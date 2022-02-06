@@ -24,7 +24,7 @@ export const normalizeUserConfig = async function ({
 export const normalizeConfig = async function (
   config,
   definitions,
-  { context = {}, prefix, ErrorType = UserError, cwd },
+  { context = {}, prefix, SystemErrorType, UserErrorType = UserError, cwd },
 ) {
   try {
     return await normalizeConfigProps(config, definitions, {
@@ -33,11 +33,17 @@ export const normalizeConfig = async function (
       cwd,
     })
   } catch (error) {
-    throw handleConfigError(error, ErrorType)
+    throw handleConfigError(error, SystemErrorType, UserErrorType)
   }
 }
 
 // Distinguish user validation errors from system errors
-const handleConfigError = function (error, ErrorType) {
-  return error.validation ? wrapError(error, '', ErrorType) : error
+const handleConfigError = function (error, SystemErrorType, UserErrorType) {
+  if (error.validation) {
+    return wrapError(error, '', UserErrorType)
+  }
+
+  return SystemErrorType === undefined
+    ? error
+    : wrapError(error, '', SystemErrorType)
 }

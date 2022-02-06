@@ -8,10 +8,10 @@ import { PLUGIN_TYPES_ARRAY } from './types.js'
 
 // Ensure selection and configuration properties are not marked as unknown
 export const getPluginsProps = function () {
-  return PLUGIN_TYPES_ARRAY.map(addPluginTypeDefault).flatMap(getPluginProps)
+  return PLUGIN_TYPES_ARRAY.map(addPluginTypeDefault).flatMap(getMainProps)
 }
 
-const getPluginProps = function ({ configProp, selectProp }) {
+export const getMainProps = function ({ configProp, selectProp }) {
   return [configProp.name, selectProp.name]
 }
 

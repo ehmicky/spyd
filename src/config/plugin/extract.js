@@ -3,6 +3,7 @@ import { isParent } from '../normalize/lib/prop_path/parse.js'
 import { set, remove } from '../normalize/lib/prop_path/set.js'
 
 import { addPluginTypeDefault } from './default.js'
+import { getMainProps } from './main_props.js'
 import { PLUGIN_TYPES_ARRAY } from './types.js'
 
 // Retrieve all plugin types, normalized
@@ -15,9 +16,11 @@ export const getPluginTypes = function () {
 // Retrieve all unique `name` of shared config properties, excluding their
 // children
 const addSharedConfigPropNames = function (pluginType) {
+  const mainPropNames = getMainProps(pluginType)
   const sharedPropNames = pluginType.sharedProps.map(getDefinitionName)
   const sharedPropNamesA = [...new Set(sharedPropNames)].filter(hasNoParent)
-  return { ...pluginType, sharedPropNames: sharedPropNamesA }
+  const topPropNames = [...mainPropNames, ...sharedPropNamesA]
+  return { ...pluginType, sharedPropNames: sharedPropNamesA, topPropNames }
 }
 
 const getDefinitionName = function ({ name }) {
@@ -44,18 +47,15 @@ const addTopConfigProp = function (topConfig, [path, value]) {
 }
 
 // Remove all plugin-related properties
-export const removePluginsProps = function (config, pluginTypes) {
-  const pluginProps = pluginTypes.flatMap(getPluginProps)
-  return pluginProps.reduce(removePluginProp, config)
+export const removeTopProps = function (config, pluginTypes) {
+  const topProps = pluginTypes.flatMap(getTopProps)
+  return topProps.reduce(removeTopProp, config)
 }
 
-const getPluginProps = function ({
-  configProp: { name: configPropName },
-  sharedPropNames,
-}) {
-  return [configPropName, ...sharedPropNames]
+const getTopProps = function ({ topPropNames }) {
+  return topPropNames
 }
 
-const removePluginProp = function (config, name) {
+const removeTopProp = function (config, name) {
   return remove(config, name)
 }

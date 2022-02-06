@@ -1,5 +1,4 @@
 import { PluginError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 import { mergeConfigs } from '../merge/main.js'
 import { getDummyDefinitions } from '../normalize/dummy.js'
 import { has } from '../normalize/lib/prop_path/get.js'
@@ -118,15 +117,10 @@ const normalizeSpecificConfig = async function ({
   prefix,
 }) {
   const dummyDefinitions = getDummyDefinitions(sharedProps)
-
-  try {
-    return await normalizeUserConfig({
-      config: pluginConfig,
-      definitions: [...dummyDefinitions, ...pluginConfigDefinitions],
-      opts: { context, prefix },
-      configInfos,
-    })
-  } catch (error) {
-    throw wrapError(error, '', PluginError)
-  }
+  return await normalizeUserConfig({
+    config: pluginConfig,
+    definitions: [...dummyDefinitions, ...pluginConfigDefinitions],
+    opts: { context, prefix, SystemErrorType: PluginError },
+    configInfos,
+  })
 }

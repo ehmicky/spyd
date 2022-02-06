@@ -33,7 +33,7 @@ const loadPlugin = async function (
     multiple,
     shape,
     sharedProps,
-    sharedPropNames,
+    topPropNames,
   },
 ) {
   const plugin = await importPlugin({
@@ -47,7 +47,7 @@ const loadPlugin = async function (
   const { config: pluginConfigDefinitions, ...pluginB } = await normalizePlugin(
     pluginA,
     shape,
-    sharedPropNames,
+    topPropNames,
   )
   const pluginC = { ...pluginB, id }
   const pluginConfig = await getPluginConfig({

@@ -3,17 +3,17 @@ import { isParent } from '../normalize/lib/prop_path/parse.js'
 import { normalizeConfig } from '../normalize/main.js'
 
 // Validate a plugin has the correct shape and normalize it
-export const normalizePlugin = async function (plugin, shape, sharedPropNames) {
+export const normalizePlugin = async function (plugin, shape, topPropNames) {
   return await normalizeConfig(plugin, [...COMMON_SHAPE, ...shape], {
-    context: { sharedPropNames },
-    ErrorType: PluginError,
+    context: { topPropNames },
+    UserErrorType: PluginError,
   })
 }
 
 const configPropName = {
   name: 'config.*.name',
-  validate(name, { context: { sharedPropNames } }) {
-    if (isSharedProp(name, sharedPropNames)) {
+  validate(name, { context: { topPropNames } }) {
+    if (isTopProp(name, topPropNames)) {
       throw new Error(
         `must not redefine core configuration property "${name}".`,
       )
@@ -21,10 +21,10 @@ const configPropName = {
   },
 }
 
-const isSharedProp = function (name, sharedPropNames) {
+const isTopProp = function (name, topPropNames) {
   return (
-    sharedPropNames.includes(name) ||
-    sharedPropNames.some((sharedPropName) => isParent(name, sharedPropName))
+    topPropNames.includes(name) ||
+    topPropNames.some((topPropName) => isParent(name, topPropName))
   )
 }
 
