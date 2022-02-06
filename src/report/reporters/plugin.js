@@ -17,6 +17,7 @@ import { sharedProps } from './shared_props.js'
 const pick = amongCommands(['remove', 'run', 'show'])
 
 export const REPORTER_PLUGIN_TYPE = {
+  name: 'reporter',
   modulePrefix: 'spyd-reporter-',
   multiple: true,
   shape: [
@@ -47,7 +48,6 @@ export const REPORTER_PLUGIN_TYPE = {
   ],
   builtins: BUILTIN_REPORTERS,
   selectProp: {
-    name: 'reporter',
     pick,
     default: DEFAULT_REPORTERS,
     transform(value, { config }) {
@@ -55,7 +55,6 @@ export const REPORTER_PLUGIN_TYPE = {
     },
   },
   configProp: {
-    name: 'reporterConfig',
     pick,
   },
   sharedProps,

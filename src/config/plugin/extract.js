@@ -2,11 +2,14 @@ import { list } from '../normalize/lib/prop_path/get.js'
 import { isParent } from '../normalize/lib/prop_path/parse.js'
 import { set, remove } from '../normalize/lib/prop_path/set.js'
 
+import { addPluginTypeDefault } from './default.js'
 import { PLUGIN_TYPES_ARRAY } from './types.js'
 
 // Retrieve all plugin types, normalized
 export const getPluginTypes = function () {
-  return PLUGIN_TYPES_ARRAY.map(addSharedConfigPropNames)
+  return PLUGIN_TYPES_ARRAY.map(addPluginTypeDefault).map(
+    addSharedConfigPropNames,
+  )
 }
 
 // Retrieve all unique `name` of shared config properties, excluding their
