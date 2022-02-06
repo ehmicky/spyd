@@ -32,7 +32,7 @@ export const applyValidateTransform = async function ({
 // Apply `required(opts)` which throws if `true` and value is `undefined`
 const validateRequired = async function (required, opts) {
   if (await callUserFunc(required, opts)) {
-    throwValidateError('must be defined.', opts)
+    await throwValidateError('must be defined.', opts)
   }
 }
 

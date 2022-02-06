@@ -1,5 +1,6 @@
 import { inspect } from 'util'
 
+import { normalizeError } from '../../../error/main.js'
 import { wrapError } from '../../../error/wrap.js'
 import { maybeFunction } from '../../../utils/function.js'
 
@@ -34,7 +35,7 @@ export const callUserFunc = async function (
   try {
     return await maybeFunction(userFunc, opts)
   } catch (error) {
-    throw handleValidateError(error, { ...opts, validate, prefix })
+    throw await handleValidateError(error, { ...opts, validate, prefix })
   }
 }
 
@@ -55,18 +56,18 @@ export const callValidateFunc = async function (validate, value, opts) {
 }
 
 // Throw a user validation error
-export const throwValidateError = function (message, opts) {
+export const throwValidateError = async function (message, opts) {
   const error = new Error(message)
   setValidationProp(error)
-  throw addPropPrefix(error, opts)
+  throw await addPropPrefix(error, opts)
 }
 
-const handleValidateError = function (error, opts) {
+const handleValidateError = async function (error, opts) {
   if (opts.validate && isValidateError(error)) {
     setValidationProp(error)
   }
 
-  return addPropPrefix(error, opts)
+  return await addPropPrefix(error, opts)
 }
 
 const isValidateError = function (error) {
@@ -77,13 +78,30 @@ const setValidationProp = function (error) {
   error.validation = true
 }
 
-const addPropPrefix = function (error, opts) {
-  return wrapError(error, getPropName(opts))
+const addPropPrefix = async function (error, opts) {
+  const propName = await getPropName(opts)
+  return wrapError(error, propName)
 }
 
 export const DEFAULT_PREFIX = 'Configuration property'
 
-const getPropName = function ({ prefix, name }) {
-  const space = prefix.endsWith(' ') || prefix.endsWith('.') ? '' : ' '
-  return `${prefix}${space}${name} `
+const getPropName = async function (opts) {
+  const prefix = await callPrefix(opts)
+  const space =
+    prefix === '' || prefix.endsWith(' ') || prefix.endsWith('.') ? '' : ' '
+  return `${prefix}${space}${opts.name} `
+}
+
+const callPrefix = async function (opts) {
+  try {
+    const prefix = await callUserFunc(opts.prefix, {
+      ...opts,
+      validate: false,
+      prefix: '',
+    })
+    return String(prefix)
+  } catch (error) {
+    const { message } = normalizeError(error)
+    return `${message}\n`
+  }
 }
