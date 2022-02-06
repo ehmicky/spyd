@@ -1,4 +1,4 @@
-import { normalizeUserConfig } from '../../normalize/main.js'
+import { normalizeConfig } from '../../normalize/main.js'
 import { normalizeOptionalArray } from '../../normalize/transform.js'
 import {
   validateObject,
@@ -22,15 +22,10 @@ export const normalizeMainProps = async function ({
   config,
   pluginType,
   context,
-  configInfos,
+  cwd,
 }) {
   const definitions = getMainPropsDefinitions(pluginType)
-  return await normalizeUserConfig({
-    config,
-    definitions,
-    opts: { context },
-    configInfos,
-  })
+  return await normalizeConfig(config, definitions, { context, cwd })
 }
 
 const getMainPropsDefinitions = function ({ configProp, selectProp }) {

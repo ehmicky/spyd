@@ -2,6 +2,7 @@
 import { amongCommands } from '../../config/normalize/pick.js'
 import { validateRegularFile } from '../../config/normalize/validate/fs.js'
 import { validateBoolean } from '../../config/normalize/validate/simple.js'
+import { normalizeConfigSelectors } from '../../config/select/normalize.js'
 import { getShowMetadataDefault } from '../../top/omit.js'
 import { isOutputPath } from '../contents/output.js'
 import { computeFormat, validateOutputFormat } from '../formats/detect.js'
@@ -124,5 +125,5 @@ export const sharedProps = [
   showPrecision,
   showSystem,
   showTitles,
-]
+].flatMap(normalizeConfigSelectors)
 /* eslint-enable max-lines */

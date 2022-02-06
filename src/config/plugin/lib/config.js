@@ -2,7 +2,7 @@ import { PluginError } from '../../../error/main.js'
 import { mergeConfigs } from '../../merge/main.js'
 import { getDummyDefinitions } from '../../normalize/dummy.js'
 import { has } from '../../normalize/lib/prop_path/get.js'
-import { normalizeUserConfig } from '../../normalize/main.js'
+import { normalizeConfig } from '../../normalize/main.js'
 
 // Retrieve plugin configuration object.
 // Plugins use both:
@@ -50,7 +50,7 @@ export const getPluginConfig = async function ({
   },
   topConfig,
   context,
-  configInfos,
+  cwd,
   pluginConfigDefinitions = [],
   sharedProps,
 }) {
@@ -65,7 +65,7 @@ export const getPluginConfig = async function ({
     sharedProps,
     pluginConfigDefinitions,
     context,
-    configInfos,
+    cwd,
     plugin,
     prefix,
   })
@@ -74,7 +74,7 @@ export const getPluginConfig = async function ({
     sharedProps,
     pluginConfigDefinitions,
     context,
-    configInfos,
+    cwd,
     prefix,
   })
   return pluginConfigB
@@ -95,17 +95,16 @@ const normalizeSharedConfig = async function ({
   sharedProps,
   pluginConfigDefinitions,
   context,
-  configInfos,
+  cwd,
   plugin,
   prefix,
 }) {
   const dummyDefinitions = getDummyDefinitions(pluginConfigDefinitions)
-  return await normalizeUserConfig({
-    config: pluginConfig,
-    definitions: [...sharedProps, ...dummyDefinitions],
-    opts: { context: { ...context, plugin }, prefix },
-    configInfos,
-  })
+  return await normalizeConfig(
+    pluginConfig,
+    [...sharedProps, ...dummyDefinitions],
+    { context: { ...context, plugin }, prefix, cwd },
+  )
 }
 
 const normalizeSpecificConfig = async function ({
@@ -113,14 +112,13 @@ const normalizeSpecificConfig = async function ({
   sharedProps,
   pluginConfigDefinitions,
   context,
-  configInfos,
+  cwd,
   prefix,
 }) {
   const dummyDefinitions = getDummyDefinitions(sharedProps)
-  return await normalizeUserConfig({
-    config: pluginConfig,
-    definitions: [...dummyDefinitions, ...pluginConfigDefinitions],
-    opts: { context, prefix, SystemErrorType: PluginError },
-    configInfos,
-  })
+  return await normalizeConfig(
+    pluginConfig,
+    [...dummyDefinitions, ...pluginConfigDefinitions],
+    { context, prefix, SystemErrorType: PluginError, cwd },
+  )
 }

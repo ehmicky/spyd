@@ -15,52 +15,42 @@ export const addPlugins = async function ({
   config,
   pluginTypes,
   context,
-  configInfos,
+  cwd,
 }) {
   const pluginTypesA = normalizePluginTypes(pluginTypes)
   const pluginsConfigs = await addPluginsProps({
     config,
     pluginTypes: pluginTypesA,
     context,
-    configInfos,
+    cwd,
   })
   const configA = removeTopProps(config, pluginTypesA)
   return { ...configA, ...pluginsConfigs }
 }
 
-const addPluginsProps = async function ({
-  config,
-  pluginTypes,
-  context,
-  configInfos,
-}) {
+const addPluginsProps = async function ({ config, pluginTypes, context, cwd }) {
   const pluginsConfigs = await Promise.all(
     pluginTypes.map((pluginType) =>
-      getPluginsByType({ pluginType, config, context, configInfos }),
+      getPluginsByType({ pluginType, config, context, cwd }),
     ),
   )
   return Object.fromEntries(pluginsConfigs)
 }
 
-const getPluginsByType = async function ({
-  pluginType,
-  config,
-  context,
-  configInfos,
-}) {
+const getPluginsByType = async function ({ pluginType, config, context, cwd }) {
   const topConfig = getTopConfig(config, pluginType)
   const configA = await normalizeMainProps({
     config,
     pluginType,
     context,
-    configInfos,
+    cwd,
   })
   const plugins = await loadPlugins({
     pluginType,
     config: configA,
     topConfig,
     context,
-    configInfos,
+    cwd,
   })
   return [pluginType.name, plugins]
 }

@@ -8,23 +8,20 @@ export const loadPlugins = async function ({
   config,
   topConfig,
   context,
-  configInfos,
+  cwd,
 }) {
   const ids = config[pluginType.selectProp.name]
   return ids === undefined
     ? []
     : await Promise.all(
         ids.map((id) =>
-          loadPlugin(
-            { id, config, topConfig, context, configInfos },
-            pluginType,
-          ),
+          loadPlugin({ id, config, topConfig, context, cwd }, pluginType),
         ),
       )
 }
 
 const loadPlugin = async function (
-  { id, config, topConfig, context, configInfos },
+  { id, config, topConfig, context, cwd },
   {
     name,
     configProp: { name: configPropName },
@@ -54,7 +51,7 @@ const loadPlugin = async function (
     config,
     topConfig,
     context,
-    configInfos,
+    cwd,
     configPropName,
     pluginConfigDefinitions,
     plugin: pluginC,
