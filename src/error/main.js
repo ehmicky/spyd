@@ -1,22 +1,14 @@
+import { createErrorType } from './utils.js'
+
 // We distinguish between user, plugin and core errors.
 // We also define abort errors, which are user-driven but are not failures.
 // Limit errors are also special as they are user-driven but are a different
 // kind of failure.
-const getErrorType = function (name) {
-  return class extends Error {
-    constructor(message, opts) {
-      super(message, opts)
-      // eslint-disable-next-line fp/no-this, fp/no-mutation
-      this.name = name
-    }
-  }
-}
-
-export const StopError = getErrorType('StopError')
-export const CoreError = getErrorType('CoreError')
-export const PluginError = getErrorType('PluginError')
-export const UserError = getErrorType('UserError')
-export const LimitError = getErrorType('LimitError')
+export const StopError = createErrorType('StopError')
+export const CoreError = createErrorType('CoreError')
+export const PluginError = createErrorType('PluginError')
+export const UserError = createErrorType('UserError')
+export const LimitError = createErrorType('LimitError')
 
 // Retrieve error type-specific behavior
 export const getErrorProps = function ({ name }) {
