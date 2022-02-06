@@ -1,4 +1,4 @@
-import { getPluginPath } from '../plugin/load.js'
+import { getPluginPath } from '../plugin/import.js'
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
 // The `config` can be:
