@@ -4,8 +4,8 @@
 // kind of failure.
 const getErrorType = function (name) {
   return class extends Error {
-    constructor(...args) {
-      super(...args)
+    constructor(message, opts) {
+      super(message, opts)
       // eslint-disable-next-line fp/no-this, fp/no-mutation
       this.name = name
     }
