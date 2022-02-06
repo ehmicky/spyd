@@ -78,14 +78,12 @@ const setValidationProp = function (error) {
 }
 
 const addPropPrefix = function (error, opts) {
-  const propName = getPropName(opts)
-  return wrapError(error, `Configuration property "${propName}" `)
+  return wrapError(error, getPropName(opts))
 }
 
-const getPropName = function ({ prefix, name }) {
-  if (prefix === '') {
-    return name
-  }
+export const DEFAULT_PREFIX = 'Configuration property'
 
-  return prefix.endsWith('.') ? `${prefix}${name}` : `${prefix}.${name}`
+const getPropName = function ({ prefix, name }) {
+  const space = prefix.endsWith(' ') || prefix.endsWith('.') ? '' : ' '
+  return `${prefix}${space}${name} `
 }

@@ -2,6 +2,7 @@ import pReduce from 'p-reduce'
 
 import { cleanObject } from '../../../utils/clean.js'
 
+import { DEFAULT_PREFIX } from './call.js'
 import { applyDefinition } from './definition.js'
 import { list } from './prop_path/get.js'
 import { parse } from './prop_path/parse.js'
@@ -21,7 +22,7 @@ import { set, remove } from './prop_path/set.js'
 export const normalizeConfigProps = async function (
   config,
   definitions,
-  { context = {}, loose = false, prefix = '' } = {},
+  { context = {}, loose = false, prefix = DEFAULT_PREFIX } = {},
 ) {
   try {
     const configB = await pReduce(
