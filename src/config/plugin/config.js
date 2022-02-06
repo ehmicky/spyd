@@ -3,7 +3,7 @@ import { wrapError } from '../../error/wrap.js'
 import { mergeConfigs } from '../merge/main.js'
 import { getDummyDefinitions } from '../normalize/dummy.js'
 import { has } from '../normalize/lib/prop_path/get.js'
-import { normalizeConfig, normalizeUserConfig } from '../normalize/main.js'
+import { normalizeUserConfig } from '../normalize/main.js'
 
 // Retrieve plugin configuration object.
 // Plugins use both:
@@ -98,12 +98,10 @@ const normalizeSharedConfig = async function ({
   plugin,
   prefix,
 }) {
+  const dummyDefinitions = getDummyDefinitions(pluginConfigDefinitions)
   return await normalizeUserConfig({
     config: pluginConfig,
-    definitions: [
-      ...topDefinitions,
-      ...getDummyDefinitions(pluginConfigDefinitions),
-    ],
+    definitions: [...topDefinitions, ...dummyDefinitions],
     opts: { context: { ...context, plugin }, prefix },
     configInfos,
   })
@@ -117,13 +115,12 @@ const normalizeSpecificConfig = async function ({
   configInfos,
   prefix,
 }) {
+  const dummyDefinitions = getDummyDefinitions(topDefinitions)
+
   try {
     return await normalizeUserConfig({
       config: pluginConfig,
-      definitions: [
-        ...getDummyDefinitions(topDefinitions),
-        ...pluginConfigDefinitions,
-      ],
+      definitions: [...dummyDefinitions, ...pluginConfigDefinitions],
       opts: { context, prefix },
       configInfos,
     })
