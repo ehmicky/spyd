@@ -3,6 +3,7 @@ import pReduce from 'p-reduce'
 import { cleanObject } from '../../../utils/clean.js'
 
 import { applyDefinition } from './definition.js'
+import { addCwd } from './path.js'
 import { list } from './prop_path/get.js'
 import { parse } from './prop_path/parse.js'
 import { set, remove } from './prop_path/set.js'
@@ -22,13 +23,19 @@ import { DEFAULT_PREFIX } from './validate.js'
 export const normalizeConfigProps = async function (
   config,
   definitions,
-  { context = {}, loose = false, prefix = DEFAULT_PREFIX } = {},
+  { context = {}, loose = false, cwd, prefix = DEFAULT_PREFIX } = {},
 ) {
   try {
     const configB = await pReduce(
       definitions,
       (configA, definition) =>
-        applyDefinitionDeep({ config: configA, definition, context, prefix }),
+        applyDefinitionDeep({
+          config: configA,
+          definition,
+          context,
+          cwd,
+          prefix,
+        }),
       config,
     )
     const configC = cleanObject(configB)
@@ -43,6 +50,7 @@ const applyDefinitionDeep = async function ({
   definition,
   definition: { name: query },
   context,
+  cwd,
   prefix,
 }) {
   const props = Object.entries(list(config, query))
@@ -55,6 +63,7 @@ const applyDefinitionDeep = async function ({
         name,
         definition,
         context,
+        cwd,
         prefix,
       }),
     config,
@@ -67,19 +76,22 @@ const applyPropDefinition = async function ({
   name,
   definition,
   context,
+  cwd,
   prefix,
 }) {
-  const opts = getOpts(name, config, context)
-  const newValue = await applyDefinition(definition, value, { ...opts, prefix })
+  const opts = await getOpts({ name, config, context, cwd, prefix })
+  const newValue = await applyDefinition(definition, value, opts)
   return newValue === undefined
     ? remove(config, name)
     : set(config, name, newValue)
 }
 
 // Retrieve `opts` passed to most methods
-const getOpts = function (name, config, context) {
+const getOpts = async function ({ name, config, context, cwd, prefix }) {
   const path = parse(name)
-  return { name, path, config, context }
+  const opts = { name, path, config, context, prefix }
+  const optsA = await addCwd({ cwd, opts })
+  return optsA
 }
 
 // When in `loose` mode, user errors are returned instead of being thrown.

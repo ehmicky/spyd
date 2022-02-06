@@ -3,7 +3,7 @@ import { wrapError } from '../../error/wrap.js'
 import { mergeConfigs } from '../merge/main.js'
 import { getDummyDefinitions } from '../normalize/dummy.js'
 import { has } from '../normalize/lib/prop_path/get.js'
-import { normalizeConfig, normalizeVariableConfig } from '../normalize/main.js'
+import { normalizeConfig, normalizeUserConfig } from '../normalize/main.js'
 
 // Retrieve plugin configuration object.
 // Plugins use both:
@@ -51,6 +51,7 @@ export const getPluginConfig = async function ({
   },
   topConfig,
   context,
+  configInfos,
   pluginConfigDefinitions = [],
   topDefinitions,
 }) {
@@ -65,6 +66,7 @@ export const getPluginConfig = async function ({
     topDefinitions,
     pluginConfigDefinitions,
     context,
+    configInfos,
     plugin,
     prefix,
   })
@@ -73,6 +75,7 @@ export const getPluginConfig = async function ({
     topDefinitions,
     pluginConfigDefinitions,
     context,
+    configInfos,
     prefix,
   })
   return pluginConfigB
@@ -91,14 +94,19 @@ const normalizeSharedConfig = async function ({
   topDefinitions,
   pluginConfigDefinitions,
   context,
+  configInfos,
   plugin,
   prefix,
 }) {
-  return await normalizeVariableConfig(
-    pluginConfig,
-    [...topDefinitions, ...getDummyDefinitions(pluginConfigDefinitions)],
-    { context: { ...context, plugin }, prefix },
-  )
+  return await normalizeUserConfig({
+    config: pluginConfig,
+    definitions: [
+      ...topDefinitions,
+      ...getDummyDefinitions(pluginConfigDefinitions),
+    ],
+    opts: { context: { ...context, plugin }, prefix },
+    configInfos,
+  })
 }
 
 const normalizeSpecificConfig = async function ({
@@ -106,14 +114,19 @@ const normalizeSpecificConfig = async function ({
   topDefinitions,
   pluginConfigDefinitions,
   context,
+  configInfos,
   prefix,
 }) {
   try {
-    return await normalizeConfig(
-      pluginConfig,
-      [...getDummyDefinitions(topDefinitions), ...pluginConfigDefinitions],
-      { context, prefix },
-    )
+    return await normalizeUserConfig({
+      config: pluginConfig,
+      definitions: [
+        ...getDummyDefinitions(topDefinitions),
+        ...pluginConfigDefinitions,
+      ],
+      opts: { context, prefix },
+      configInfos,
+    })
   } catch (error) {
     throw wrapError(error, '', PluginError)
   }

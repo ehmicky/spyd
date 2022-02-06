@@ -7,7 +7,6 @@ import { throwValidateError } from './validate.js'
 export const applyValidateTransform = async function ({
   value,
   path,
-  cwd,
   glob,
   required,
   validate,
@@ -19,7 +18,7 @@ export const applyValidateTransform = async function ({
     return value
   }
 
-  const valueA = await resolvePath(value, { path, cwd, glob, opts })
+  const valueA = await resolvePath(value, { path, glob, opts })
   await validateValue(valueA, validate, opts)
   const valueB = await transformValue(valueA, transform, opts)
   return valueB

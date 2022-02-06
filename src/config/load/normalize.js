@@ -13,7 +13,7 @@ export const normalizeConfigProp = async function (configOpt, base) {
   const { config: configPaths } = await normalizeConfig(
     { config: configOpt },
     CONFIG_DEFINITIONS,
-    { context: { base } },
+    { cwd: base },
   )
   return configPaths
 }
@@ -22,11 +22,6 @@ const configProp = {
   name: 'config',
   default: getDefaultConfig,
   transform: normalizeOptionalArray,
-}
-
-// Retrieve the `base` used to resolve the `config` property
-const getConfigCwd = function (value, { context: { base } }) {
-  return base
 }
 
 const validateConfig = async function (value) {
@@ -38,7 +33,6 @@ const configPropAny = [
   {
     name: 'config.*',
     path: isConfigFilePath,
-    cwd: getConfigCwd,
     transform: useResolvers,
   },
   {

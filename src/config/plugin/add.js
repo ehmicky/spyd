@@ -11,26 +11,52 @@ import { loadPlugins } from './load.js'
 // plugin, selecting plugins:
 //  - can be either a string or an array of strings
 //  - uses a singular property name
-export const addPlugins = async function (config, command, context) {
+export const addPlugins = async function ({
+  config,
+  command,
+  context,
+  configInfos,
+}) {
   const pluginTypes = getPluginTypes()
-  const configA = await addPluginsProps(config, pluginTypes, context)
+  const configA = await addPluginsProps({
+    config,
+    pluginTypes,
+    context,
+    configInfos,
+  })
   const configB = removePluginsProps(configA, pluginTypes)
   const configC = normalizeReporters(configB, command)
   return configC
 }
 
-const addPluginsProps = async function (config, pluginTypes, context) {
+const addPluginsProps = async function ({
+  config,
+  pluginTypes,
+  context,
+  configInfos,
+}) {
   const pluginsConfigs = await Promise.all(
     pluginTypes.map((pluginType) =>
-      getPluginsByType(pluginType, config, context),
+      getPluginsByType({ pluginType, config, context, configInfos }),
     ),
   )
   const pluginsConfigA = Object.fromEntries(pluginsConfigs)
   return { ...config, ...pluginsConfigA }
 }
 
-const getPluginsByType = async function (pluginType, config, context) {
+const getPluginsByType = async function ({
+  pluginType,
+  config,
+  context,
+  configInfos,
+}) {
   const topConfig = getTopConfig(config, pluginType)
-  const plugins = await loadPlugins({ pluginType, config, topConfig, context })
+  const plugins = await loadPlugins({
+    pluginType,
+    config,
+    topConfig,
+    context,
+    configInfos,
+  })
   return [pluginType.varName, plugins]
 }

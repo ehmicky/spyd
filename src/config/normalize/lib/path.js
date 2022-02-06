@@ -3,29 +3,38 @@ import { resolve, basename } from 'path'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
-import { callValueFunc } from './call.js'
+import { callValueFunc, callUserFunc } from './call.js'
+
+// A `cwd(opts)` option can be specified to customize the `cwd`.
+//  - The default value is `.`, not some `process.cwd()` evaluated at load time,
+//    to ensure it is evaluated at runtime.
+export const addCwd = async function ({ cwd = DEFAULT_CWD, opts }) {
+  const cwdA = await callUserFunc(cwd, opts)
+  await validatePath(cwdA, opts)
+  return { ...opts, cwd: cwdA }
+}
+
+const DEFAULT_CWD = '.'
 
 // Apply `path(value, opts) => boolean` which resolves the value as an absolute
 // file path when `true` (default: `false`).
 // This is performed before `transform()` and `validate()`.
 //  - This allows using `validate()` to validate file existence, parent
 //    directories, timestamps, file types, etc.
-// A `cwd(value, opts)` can be specified to customize the `cwd`.
-//  - The default value is `.`, not some `process.cwd()` evaluated at load time,
-//    to ensure it is evaluated at runtime.
-export const resolvePath = async function (value, { path, cwd, glob, opts }) {
+export const resolvePath = async function (
+  value,
+  { path, glob, opts, opts: { cwd } },
+) {
   if (!(await callValueFunc(path, value, opts))) {
     return value
   }
 
   await validatePath(value, opts)
-  const cwdA = await callValueFunc(cwd, value, opts)
-  await validatePath(cwdA, opts)
 
-  return glob ? await resolveGlob(cwdA, value) : resolve(cwdA, value)
+  return glob ? await resolveGlob(cwd, value) : resolve(cwd, value)
 }
 
-const validatePath = async function (value, opts) {
+export const validatePath = async function (value, opts) {
   await callValueFunc(checkPath, value, opts)
 }
 

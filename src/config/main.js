@@ -1,6 +1,6 @@
 import { loadConfig } from './load/main.js'
 import { DEFINITIONS } from './normalize/definitions.js'
-import { normalizeVariableConfig } from './normalize/main.js'
+import { normalizeUserConfig } from './normalize/main.js'
 import { addPlugins } from './plugin/add.js'
 
 // Retrieve configuration
@@ -9,10 +9,18 @@ export const getConfig = async function (
   { config: configOpt, ...configFlags } = {},
 ) {
   const { config, configInfos } = await loadConfig(configOpt, configFlags)
-  const context = { command, configInfos }
-  const configA = await normalizeVariableConfig(config, DEFINITIONS, {
-    context,
+  const context = { command }
+  const configA = await normalizeUserConfig({
+    config,
+    definitions: DEFINITIONS,
+    opts: { context },
+    configInfos,
   })
-  const configB = await addPlugins(configA, command, context)
+  const configB = await addPlugins({
+    config: configA,
+    command,
+    context,
+    configInfos,
+  })
   return configB
 }

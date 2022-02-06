@@ -9,7 +9,6 @@ export const applyDefinition = async function (
     default: defaultValue,
     compute,
     path = false,
-    cwd = '.',
     glob = false,
     required = false,
     validate,
@@ -31,7 +30,6 @@ export const applyDefinition = async function (
   const valueC = await applyValidateTransform({
     value: valueB,
     path,
-    cwd,
     glob,
     required,
     validate,

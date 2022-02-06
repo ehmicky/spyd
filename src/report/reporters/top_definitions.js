@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-import { getPropCwd } from '../../config/normalize/cwd.js'
 import { amongCommands } from '../../config/normalize/pick.js'
 import { validateRegularFile } from '../../config/normalize/validate/fs.js'
 import { validateBoolean } from '../../config/normalize/validate/simple.js'
@@ -32,7 +31,6 @@ const output = {
     return defaultOutput
   },
   path: isOutputPath,
-  cwd: getPropCwd,
   validate: validateRegularFile,
 }
 

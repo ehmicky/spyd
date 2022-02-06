@@ -1,5 +1,4 @@
 import { DEFAULT_TASKS } from '../combination/tasks/find.js'
-import { getPropCwd } from '../config/normalize/cwd.js'
 import { amongCommands } from '../config/normalize/pick.js'
 import { normalizeOptionalArray } from '../config/normalize/transform.js'
 import { validateRegularFile } from '../config/normalize/validate/fs.js'
@@ -18,7 +17,6 @@ const tasksAny = {
   pick,
   path: true,
   glob: true,
-  cwd: getPropCwd,
   validate: validateRegularFile,
 }
 

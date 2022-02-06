@@ -26,7 +26,7 @@ import { has } from './lib/prop_path/get.js'
 //           repository could be re-used for different cwd
 //   - user can opt-out of that behavior by using absolute file paths, for
 //     example using the current file's path (e.g. `import.meta.url`)
-export const getPropCwd = function (value, { path, context: { configInfos } }) {
+export const getPropCwd = function (configInfos, { path }) {
   const configInfo = configInfos.find(({ configContents }) =>
     has(configContents, path),
   )

@@ -18,7 +18,6 @@ import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { CONFIG_DEFINITIONS } from '../load/normalize.js'
 import { getPluginsDefinitions } from '../plugin/definitions.js'
 
-import { getPropCwd } from './cwd.js'
 import { getDummyDefinitions } from './dummy.js'
 import { amongCommands } from './pick.js'
 import { normalizeOptionalArray } from './transform.js'
@@ -42,7 +41,6 @@ const cwd = {
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   default: getCwd,
   path: true,
-  cwd: getPropCwd,
   async validate(value) {
     await validateFileExists(value)
     await validateDirectory(value)
