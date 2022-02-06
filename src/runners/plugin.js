@@ -1,3 +1,4 @@
+import { amongCommands } from '../config/normalize/pick.js'
 import {
   validateEmptyArray,
   validateFunction,
@@ -6,6 +7,8 @@ import {
 import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from './main.js'
 import { sharedProps } from './shared_props.js'
 
+const pick = amongCommands(['dev', 'run'])
+
 export const RUNNER_PLUGIN_TYPE = {
   // Shown in error message
   type: 'runner',
@@ -13,8 +16,6 @@ export const RUNNER_PLUGIN_TYPE = {
   varName: 'runners',
   // Prefix of the npm package
   modulePrefix: 'spyd-runner-',
-  // Commands which use the plugin
-  commands: ['dev', 'run'],
   // Whether this is a combination's dimension.
   // When false, this allows using custom prefixes.
   isCombinationDimension: true,
@@ -31,12 +32,14 @@ export const RUNNER_PLUGIN_TYPE = {
   // Configuration property selecting the plugin
   selectProp: {
     name: 'runner',
+    pick,
     default: DEFAULT_RUNNERS,
     validate: validateEmptyArray,
   },
   // Configuration property configuring the plugin
   configProp: {
     name: 'runnerConfig',
+    pick,
   },
   // Plugin properties shared by all plugins
   sharedProps,

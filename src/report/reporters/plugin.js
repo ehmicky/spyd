@@ -1,3 +1,4 @@
+import { amongCommands } from '../../config/normalize/pick.js'
 import { normalizeOptionalArray } from '../../config/normalize/transform.js'
 import {
   validateObject,
@@ -13,11 +14,12 @@ import { getReportMethods } from '../formats/list.js'
 import { BUILTIN_REPORTERS, DEFAULT_REPORTERS } from './main.js'
 import { sharedProps } from './shared_props.js'
 
+const pick = amongCommands(['remove', 'run', 'show'])
+
 export const REPORTER_PLUGIN_TYPE = {
   type: 'reporter',
   varName: 'reporters',
   modulePrefix: 'spyd-reporter-',
-  commands: ['remove', 'run', 'show'],
   isCombinationDimension: false,
   shape: [
     ...getReportMethods().map((name) => ({
@@ -48,6 +50,7 @@ export const REPORTER_PLUGIN_TYPE = {
   builtins: BUILTIN_REPORTERS,
   selectProp: {
     name: 'reporter',
+    pick,
     default: DEFAULT_REPORTERS,
     transform(value, { config }) {
       return config.force ? [] : normalizeOptionalArray(value)
@@ -55,6 +58,7 @@ export const REPORTER_PLUGIN_TYPE = {
   },
   configProp: {
     name: 'reporterConfig',
+    pick,
   },
   sharedProps,
 }

@@ -1,5 +1,4 @@
 import { getDummyDefinitions } from '../normalize/dummy.js'
-import { amongCommands } from '../normalize/pick.js'
 import { normalizeOptionalArray } from '../normalize/transform.js'
 import { validateObject, validateJson } from '../normalize/validate/complex.js'
 import { validateDefinedString } from '../normalize/validate/simple.js'
@@ -14,8 +13,7 @@ export const getPluginsDefinitions = function () {
 }
 
 const getPluginDefinitions = function ({
-  configProp: { name: configPropName },
-  commands,
+  configProp: { name: configPropName, ...configProp },
   selectProp: {
     name: selectPropName,
     default: defaultValue = [],
@@ -23,12 +21,10 @@ const getPluginDefinitions = function ({
   },
   sharedProps,
 }) {
-  const pick = amongCommands(commands)
   return [
     ...getDummyDefinitions(sharedProps),
     {
       name: selectPropName,
-      pick,
       default: defaultValue,
       transform: normalizeOptionalArray,
       ...selectProp,
@@ -39,9 +35,9 @@ const getPluginDefinitions = function ({
     },
     {
       name: configPropName,
-      pick,
       default: {},
       validate: validateObject,
+      ...configProp,
     },
     {
       name: `${configPropName}.*`,
