@@ -21,7 +21,7 @@ export const RUNNER_PLUGIN_TYPE = {
   // When false, this allows using custom prefixes.
   isCombinationDimension: true,
   // Configuration definition for the plugin itself
-  mainShape: [
+  shape: [
     {
       name: 'launch',
       required: true,

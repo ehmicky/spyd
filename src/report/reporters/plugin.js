@@ -20,7 +20,7 @@ export const REPORTER_PLUGIN_TYPE = {
   modulePrefix: 'spyd-reporter-',
   commands: ['remove', 'run', 'show'],
   isCombinationDimension: false,
-  mainShape: [
+  shape: [
     ...getReportMethods().map((name) => ({
       name,
       validate: validateFunction,

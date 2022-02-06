@@ -3,12 +3,8 @@ import { isParent } from '../normalize/lib/prop_path/parse.js'
 import { normalizeConfig } from '../normalize/main.js'
 
 // Validate a plugin has the correct shape and normalize it
-export const normalizePlugin = async function (
-  plugin,
-  mainShape,
-  sharedPropNames,
-) {
-  return await normalizeConfig(plugin, [...COMMON_MAIN_SHAPE, ...mainShape], {
+export const normalizePlugin = async function (plugin, shape, sharedPropNames) {
+  return await normalizeConfig(plugin, [...COMMON_SHAPE, ...shape], {
     context: { sharedPropNames },
     ErrorType: PluginError,
   })
@@ -33,4 +29,4 @@ const isSharedProp = function (name, sharedPropNames) {
 }
 
 // Definitions shared by all plugins
-const COMMON_MAIN_SHAPE = [configPropName]
+const COMMON_SHAPE = [configPropName]
