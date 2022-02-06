@@ -7,9 +7,18 @@
 // To avoid each sets of properties to be marked as unknown, we need to add
 // dummy definitions for them.
 export const getDummyDefinitions = function (definitions) {
-  return definitions.map(getDummyDefinition)
+  const names = definitions.map(getDefinitionName)
+  return getDummyDefinitionsNames(names)
 }
 
-const getDummyDefinition = function ({ name }) {
+const getDefinitionName = function ({ name }) {
+  return name
+}
+
+export const getDummyDefinitionsNames = function (names) {
+  return names.map(getDummyDefinitionNames)
+}
+
+const getDummyDefinitionNames = function (name) {
   return { name }
 }

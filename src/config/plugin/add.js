@@ -2,6 +2,7 @@ import { normalizeReporters } from '../../report/config/main.js'
 
 import { getPluginTypes, getTopConfig, removePluginsProps } from './extract.js'
 import { loadPlugins } from './load.js'
+import { normalizeMainProps } from './main_props.js'
 
 // Several configuration properties (`runner`, `reporter`)
 // can be customized with custom modules. This loads them. Each type can specify
@@ -51,12 +52,18 @@ const getPluginsByType = async function ({
   configInfos,
 }) {
   const topConfig = getTopConfig(config, pluginType)
+  const configA = await normalizeMainProps({
+    config,
+    pluginType,
+    context,
+    configInfos,
+  })
   const plugins = await loadPlugins({
     pluginType,
-    config,
+    config: configA,
     topConfig,
     context,
     configInfos,
   })
-  return [pluginType.name, plugins]
+  return [pluginType.selectProp.name, plugins]
 }
