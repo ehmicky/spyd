@@ -11,8 +11,6 @@ export const RUNNER_PLUGIN_TYPE = {
   type: 'runner',
   // Internal variable name
   varName: 'runners',
-  // Configuration property selecting the plugin
-  selectProp: 'runner',
   // Configuration property configuring the plugin
   configProp: 'runnerConfig',
   // Prefix of the npm package
@@ -24,8 +22,9 @@ export const RUNNER_PLUGIN_TYPE = {
   isCombinationDimension: true,
   // Builtin plugins
   builtins: BUILTIN_RUNNERS,
-  // Configuration definition for `selectProp`
+  // Configuration property selecting the plugin
   selectShape: {
+    name: 'runner',
     default: DEFAULT_RUNNERS,
     validate: validateEmptyArray,
   },

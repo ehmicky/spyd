@@ -14,10 +14,9 @@ export const getPluginsDefinitions = function () {
 }
 
 const getPluginDefinitions = function ({
-  selectProp,
   configProp,
   commands,
-  selectShape: { default: defaultValue = [], ...selectShape },
+  selectShape: { name: selectProp, default: defaultValue = [], ...selectShape },
   sharedConfig,
 }) {
   const pick = amongCommands(commands)

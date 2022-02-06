@@ -10,7 +10,7 @@ export const loadPlugins = async function ({
   context,
   configInfos,
 }) {
-  const ids = config[pluginType.selectProp]
+  const ids = config[pluginType.selectShape.name]
   return ids === undefined
     ? []
     : await Promise.all(
@@ -27,7 +27,7 @@ const loadPlugin = async function (
   { id, config, topConfig, context, configInfos },
   {
     type,
-    selectProp,
+    selectShape: { name: selectProp },
     configProp,
     modulePrefix,
     builtins,
