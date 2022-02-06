@@ -1,5 +1,3 @@
-import { normalizeReporters } from '../../../report/config/main.js'
-
 import { getPluginTypes, getTopConfig, removeTopProps } from './extract.js'
 import { loadPlugins } from './load.js'
 import { normalizeMainProps } from './main_props.js'
@@ -9,12 +7,7 @@ import { normalizeMainProps } from './main_props.js'
 //  - Plugins without configuration
 //  - Single plugin per type, as opposed to multiple
 //  - Single configuration per plugin
-export const addPlugins = async function ({
-  config,
-  command,
-  context,
-  configInfos,
-}) {
+export const addPlugins = async function (config, context, configInfos) {
   const pluginTypes = getPluginTypes()
   const pluginsConfigs = await addPluginsProps({
     config,
@@ -23,9 +16,7 @@ export const addPlugins = async function ({
     configInfos,
   })
   const configA = removeTopProps(config, pluginTypes)
-  const configB = { ...configA, ...pluginsConfigs }
-  const configC = normalizeReporters(configB, command)
-  return configC
+  return { ...configA, ...pluginsConfigs }
 }
 
 const addPluginsProps = async function ({
