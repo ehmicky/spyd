@@ -12,11 +12,9 @@ export const getPluginTypes = function () {
 // Retrieve all unique `name` of shared config properties, excluding their
 // children
 const addSharedConfigPropNames = function (pluginType) {
-  const sharedConfigPropNames = pluginType.sharedProps.map(getDefinitionName)
-  const sharedConfigPropNamesA = [...new Set(sharedConfigPropNames)].filter(
-    hasNoParent,
-  )
-  return { ...pluginType, sharedConfigPropNames: sharedConfigPropNamesA }
+  const sharedPropNames = pluginType.sharedProps.map(getDefinitionName)
+  const sharedPropNamesA = [...new Set(sharedPropNames)].filter(hasNoParent)
+  return { ...pluginType, sharedPropNames: sharedPropNamesA }
 }
 
 const getDefinitionName = function ({ name }) {
@@ -31,9 +29,9 @@ const hasNoParent = function (nameA, indexA, names) {
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
-export const getTopConfig = function (config, { sharedConfigPropNames }) {
-  const topConfigProps = sharedConfigPropNames.flatMap((sharedConfigPropName) =>
-    Object.entries(list(config, sharedConfigPropName)),
+export const getTopConfig = function (config, { sharedPropNames }) {
+  const topConfigProps = sharedPropNames.flatMap((sharedPropName) =>
+    Object.entries(list(config, sharedPropName)),
   )
   return topConfigProps.reduce(addTopConfigProp, {})
 }
@@ -51,9 +49,9 @@ export const removePluginsProps = function (config, pluginTypes) {
 const getPluginProps = function ({
   selectProp: { name: selectName },
   configProp,
-  sharedConfigPropNames,
+  sharedPropNames,
 }) {
-  return [selectName, configProp, ...sharedConfigPropNames]
+  return [selectName, configProp, ...sharedPropNames]
 }
 
 const removePluginProp = function (config, name) {
