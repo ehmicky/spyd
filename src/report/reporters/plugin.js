@@ -18,7 +18,6 @@ const pick = amongCommands(['remove', 'run', 'show'])
 
 export const REPORTER_PLUGIN_TYPE = {
   type: 'reporter',
-  varName: 'reporters',
   modulePrefix: 'spyd-reporter-',
   multiple: true,
   shape: [

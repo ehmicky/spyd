@@ -10,7 +10,7 @@ import { listTasks } from './tasks/main.js'
 // Retrieve each combination, i.e. combination of each combination dimension
 // of a new `run` or `dev`.
 export const listCombinations = async function ({
-  runners,
+  runner: runners,
   inputs,
   system,
   cwd,

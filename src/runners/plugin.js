@@ -12,8 +12,6 @@ const pick = amongCommands(['dev', 'run'])
 export const RUNNER_PLUGIN_TYPE = {
   // Shown in error message
   type: 'runner',
-  // Internal variable name
-  varName: 'runners',
   // Prefix of the npm package
   modulePrefix: 'spyd-runner-',
   // When `true`, the plugin can be selected twice but with different configs

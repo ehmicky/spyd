@@ -2,13 +2,16 @@ import { addProgrammaticReporter } from './programmatic.js'
 import { validateOutputGroups } from './validate.js'
 
 // Normalize reporters configuration
-export const normalizeReporters = function (config, command) {
-  const reporters = config.reporters.filter((reporter) =>
+export const normalizeReporters = function (
+  { reporter: reporters, ...config },
+  command,
+) {
+  const reportersA = reporters.filter((reporter) =>
     shouldUseReporter(reporter, command),
   )
-  validateOutputGroups(reporters)
-  const reportersA = addProgrammaticReporter(reporters)
-  return { ...config, reporters: reportersA }
+  validateOutputGroups(reportersA)
+  const reportersB = addProgrammaticReporter(reportersA)
+  return { ...config, reporters: reportersB }
 }
 
 // Reporting in the `remove` command is shown so the user can be clear about
