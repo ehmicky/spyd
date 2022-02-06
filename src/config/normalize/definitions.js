@@ -16,7 +16,7 @@ import { transformPrecision, DEFAULT_PRECISION } from '../../run/precision.js'
 import { DEFAULT_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { CONFIG_DEFINITIONS } from '../load/normalize.js'
-import { getPluginsProps } from '../plugin/main_props.js'
+import { getPluginsProps } from '../plugin/lib/main_props.js'
 
 import { getDummyDefinitions, getDummyDefinitionsNames } from './dummy.js'
 import { amongCommands } from './pick.js'

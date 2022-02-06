@@ -1,6 +1,6 @@
-import { list } from '../normalize/lib/prop_path/get.js'
-import { isParent } from '../normalize/lib/prop_path/parse.js'
-import { set, remove } from '../normalize/lib/prop_path/set.js'
+import { list } from '../../normalize/lib/prop_path/get.js'
+import { isParent } from '../../normalize/lib/prop_path/parse.js'
+import { set, remove } from '../../normalize/lib/prop_path/set.js'
 
 import { addPluginTypeDefault } from './default.js'
 import { getMainProps } from './main_props.js'

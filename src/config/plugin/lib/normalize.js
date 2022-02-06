@@ -1,6 +1,6 @@
-import { PluginError } from '../../error/main.js'
-import { isParent } from '../normalize/lib/prop_path/parse.js'
-import { normalizeConfig } from '../normalize/main.js'
+import { PluginError } from '../../../error/main.js'
+import { isParent } from '../../normalize/lib/prop_path/parse.js'
+import { normalizeConfig } from '../../normalize/main.js'
 
 // Validate a plugin has the correct shape and normalize it
 export const normalizePlugin = async function (plugin, shape, topPropNames) {

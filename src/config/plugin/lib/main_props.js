@@ -1,7 +1,10 @@
-import { normalizeUserConfig } from '../normalize/main.js'
-import { normalizeOptionalArray } from '../normalize/transform.js'
-import { validateObject, validateJson } from '../normalize/validate/complex.js'
-import { validateDefinedString } from '../normalize/validate/simple.js'
+import { normalizeUserConfig } from '../../normalize/main.js'
+import { normalizeOptionalArray } from '../../normalize/transform.js'
+import {
+  validateObject,
+  validateJson,
+} from '../../normalize/validate/complex.js'
+import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { addPluginTypeDefault } from './default.js'
 import { PLUGIN_TYPES_ARRAY } from './types.js'

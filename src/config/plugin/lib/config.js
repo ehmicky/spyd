@@ -1,8 +1,8 @@
-import { PluginError } from '../../error/main.js'
-import { mergeConfigs } from '../merge/main.js'
-import { getDummyDefinitions } from '../normalize/dummy.js'
-import { has } from '../normalize/lib/prop_path/get.js'
-import { normalizeUserConfig } from '../normalize/main.js'
+import { PluginError } from '../../../error/main.js'
+import { mergeConfigs } from '../../merge/main.js'
+import { getDummyDefinitions } from '../../normalize/dummy.js'
+import { has } from '../../normalize/lib/prop_path/get.js'
+import { normalizeUserConfig } from '../../normalize/main.js'
 
 // Retrieve plugin configuration object.
 // Plugins use both:

@@ -1,4 +1,4 @@
-import { getPluginPath } from '../plugin/import.js'
+import { getPluginPath } from '../plugin/lib/import.js'
 
 // The `config` can be:
 //  - a file path

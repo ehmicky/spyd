@@ -1,8 +1,8 @@
 import { createRequire } from 'module'
 
-import { PluginError, UserError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
-import { PLUGINS_IMPORT_BASE } from '../normalize/cwd.js'
+import { PluginError, UserError } from '../../../error/main.js'
+import { wrapError } from '../../../error/wrap.js'
+import { PLUGINS_IMPORT_BASE } from '../../normalize/cwd.js'
 
 import { getModuleId } from './id.js'
 

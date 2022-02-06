@@ -1,4 +1,4 @@
-import { normalizeReporters } from '../../report/config/main.js'
+import { normalizeReporters } from '../../../report/config/main.js'
 
 import { getPluginTypes, getTopConfig, removeTopProps } from './extract.js'
 import { loadPlugins } from './load.js'

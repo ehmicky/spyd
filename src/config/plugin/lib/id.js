@@ -1,5 +1,5 @@
-import { validateUserId } from '../../combination/ids/validate.js'
-import { PluginError } from '../../error/main.js'
+import { validateUserId } from '../../../combination/ids/validate.js'
+import { PluginError } from '../../../error/main.js'
 
 // We allow plugin identifiers to be prefixed with an arbitrary string.
 //  - This allows using the same plugin twice but with different configs.
