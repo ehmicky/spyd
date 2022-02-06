@@ -80,10 +80,15 @@ const applyPropDefinition = async function ({
   prefix,
 }) {
   const opts = await getOpts({ name, config, context, cwd, prefix })
-  const newValue = await applyDefinition(definition, value, opts)
+  const { value: newValue, name: newName = name } = await applyDefinition(
+    definition,
+    value,
+    opts,
+  )
+  const configA = name === newName ? config : remove(config, name)
   return newValue === undefined
-    ? remove(config, name)
-    : set(config, name, newValue)
+    ? remove(configA, newName)
+    : set(configA, newName, newValue)
 }
 
 // Retrieve `opts` passed to most methods

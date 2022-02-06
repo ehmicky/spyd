@@ -13,30 +13,32 @@ export const applyDefinition = async function (
     required = false,
     validate,
     transform,
+    rename,
   },
   value,
   opts,
 ) {
   if (await againstPick(value, pick, opts)) {
-    return
+    return { value: undefined }
   }
 
   if (await againstCondition(value, condition, opts)) {
-    return value
+    return { value }
   }
 
   const valueA = await computeValue(value, compute, opts)
   const valueB = await addDefaultValue(valueA, defaultValue, opts)
-  const valueC = await applyValidateTransform({
+  const { value: valueC, name } = await applyValidateTransform({
     value: valueB,
     path,
     glob,
     required,
     validate,
     transform,
+    rename,
     opts,
   })
-  return valueC
+  return { value: valueC, name }
 }
 
 // Apply `pick(value, opts)` which omits the current value if `false` is

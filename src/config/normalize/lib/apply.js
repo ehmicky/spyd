@@ -11,17 +11,19 @@ export const applyValidateTransform = async function ({
   required,
   validate,
   transform,
+  rename,
   opts,
 }) {
   if (value === undefined) {
     await validateRequired(required, opts)
-    return value
+    return { value }
   }
 
   const valueA = await resolvePath(value, { path, glob, opts })
   await validateValue(valueA, validate, opts)
   const valueB = await transformValue(valueA, transform, opts)
-  return valueB
+  const name = await renameProp(valueB, rename, opts)
+  return { value: valueB, name }
 }
 
 // Apply `required(opts)` which throws if `true` and value is `undefined`
@@ -44,4 +46,12 @@ const transformValue = async function (value, transform, opts) {
   return transform === undefined
     ? value
     : await callValueFunc(transform, value, opts)
+}
+
+// Apply `rename(value, opts)` which transforms the property's name.
+// This can be used for aliasing and deprecation.
+const renameProp = async function (value, rename, opts) {
+  return rename === undefined
+    ? undefined
+    : String(await callValueFunc(rename, value, opts))
 }
