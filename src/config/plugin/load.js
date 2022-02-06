@@ -10,7 +10,7 @@ export const loadPlugins = async function ({
   context,
   configInfos,
 }) {
-  const ids = config[pluginType.selectShape.name]
+  const ids = config[pluginType.selectProp.name]
   return ids === undefined
     ? []
     : await Promise.all(
@@ -27,7 +27,7 @@ const loadPlugin = async function (
   { id, config, topConfig, context, configInfos },
   {
     type,
-    selectShape: { name: selectProp },
+    selectProp: { name: selectName },
     configProp,
     modulePrefix,
     builtins,
@@ -40,7 +40,7 @@ const loadPlugin = async function (
   const plugin = await importPlugin({
     id,
     type,
-    selectProp,
+    selectName,
     modulePrefix,
     builtins,
     isCombinationDimension,

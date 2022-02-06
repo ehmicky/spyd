@@ -12,7 +12,7 @@ import { getModuleId } from './id.js'
 export const importPlugin = async function ({
   id,
   type,
-  selectProp,
+  selectName,
   modulePrefix,
   builtins,
   isCombinationDimension,
@@ -28,7 +28,7 @@ export const importPlugin = async function ({
   const pluginPath = safeGetPluginPath({
     moduleName,
     type,
-    selectProp,
+    selectName,
     base: PLUGINS_IMPORT_BASE,
   })
 
@@ -51,11 +51,11 @@ export const importPlugin = async function ({
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
 // TODO: use import.meta.resolve() when available
-const safeGetPluginPath = function ({ moduleName, type, selectProp, base }) {
+const safeGetPluginPath = function ({ moduleName, type, selectName, base }) {
   try {
     return getPluginPath(moduleName, type, base)
   } catch (error) {
-    throw wrapError(error, `Configuration property "${selectProp}"`, UserError)
+    throw wrapError(error, `Configuration property "${selectName}"`, UserError)
   }
 }
 

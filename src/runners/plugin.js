@@ -23,7 +23,7 @@ export const RUNNER_PLUGIN_TYPE = {
   // Builtin plugins
   builtins: BUILTIN_RUNNERS,
   // Configuration property selecting the plugin
-  selectShape: {
+  selectProp: {
     name: 'runner',
     default: DEFAULT_RUNNERS,
     validate: validateEmptyArray,

@@ -49,11 +49,11 @@ export const removePluginsProps = function (config, pluginTypes) {
 }
 
 const getPluginProps = function ({
-  selectShape: { name: selectProp },
+  selectProp: { name: selectName },
   configProp,
   sharedConfigPropNames,
 }) {
-  return [selectProp, configProp, ...sharedConfigPropNames]
+  return [selectName, configProp, ...sharedConfigPropNames]
 }
 
 const removePluginProp = function (config, name) {

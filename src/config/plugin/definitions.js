@@ -16,21 +16,21 @@ export const getPluginsDefinitions = function () {
 const getPluginDefinitions = function ({
   configProp,
   commands,
-  selectShape: { name: selectProp, default: defaultValue = [], ...selectShape },
+  selectProp: { name: selectName, default: defaultValue = [], ...selectProp },
   sharedConfig,
 }) {
   const pick = amongCommands(commands)
   return [
     ...getDummyDefinitions(sharedConfig),
     {
-      name: selectProp,
+      name: selectName,
       pick,
       default: defaultValue,
       transform: normalizeOptionalArray,
-      ...selectShape,
+      ...selectProp,
     },
     {
-      name: `${selectProp}.*`,
+      name: `${selectName}.*`,
       validate: validateDefinedString,
     },
     {
