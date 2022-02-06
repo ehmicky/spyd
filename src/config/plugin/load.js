@@ -26,7 +26,6 @@ export const loadPlugins = async function ({
 const loadPlugin = async function (
   { id, config, topConfig, context, configInfos },
   {
-    type,
     selectProp: { name: selectPropName },
     configProp: { name: configPropName },
     modulePrefix,
@@ -39,7 +38,6 @@ const loadPlugin = async function (
 ) {
   const plugin = await importPlugin({
     id,
-    type,
     selectPropName,
     modulePrefix,
     builtins,

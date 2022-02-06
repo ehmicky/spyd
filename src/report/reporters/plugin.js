@@ -17,7 +17,6 @@ import { sharedProps } from './shared_props.js'
 const pick = amongCommands(['remove', 'run', 'show'])
 
 export const REPORTER_PLUGIN_TYPE = {
-  type: 'reporter',
   modulePrefix: 'spyd-reporter-',
   multiple: true,
   shape: [

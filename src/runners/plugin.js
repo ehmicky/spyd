@@ -10,7 +10,6 @@ import { sharedProps } from './shared_props.js'
 const pick = amongCommands(['dev', 'run'])
 
 export const RUNNER_PLUGIN_TYPE = {
-  type: 'runner',
   // Prefix of the npm package
   modulePrefix: 'spyd-runner-',
   // When `true`, the plugin can be selected twice but with different configs

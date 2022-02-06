@@ -11,13 +11,12 @@ import { getModuleId } from './id.js'
 // a dynamic `Module` instance.
 export const importPlugin = async function ({
   id,
-  type,
   selectPropName,
   modulePrefix,
   builtins,
   multiple,
 }) {
-  const moduleId = getModuleId(id, type, multiple)
+  const moduleId = getModuleId(id, multiple, selectPropName)
   const builtin = builtins[moduleId]
 
   if (builtin !== undefined) {
@@ -36,7 +35,7 @@ export const importPlugin = async function ({
   } catch (error) {
     throw wrapError(
       error,
-      `Could not load "${type}" module "${moduleId}"\n\n`,
+      `Could not load "${selectPropName}" module "${moduleId}"\n\n`,
       PluginError,
     )
   }
