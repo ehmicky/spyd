@@ -51,10 +51,15 @@ const getPropName = async function (opts) {
 }
 
 const quotePropName = function (propName) {
-  const words = propName.split(' ')
-  const firstWords = words.slice(0, -1).join(' ')
-  const lastWord = words[words.length - 1]
-  return `${firstWords} "${lastWord}" `
+  const lastSpaceIndex = propName.lastIndexOf(' ')
+  const [firstWords, lastWord] =
+    lastSpaceIndex === -1
+      ? ['', propName]
+      : [
+          propName.slice(0, lastSpaceIndex + 1),
+          propName.slice(lastSpaceIndex + 1),
+        ]
+  return `${firstWords}"${lastWord}" `
 }
 
 const callPrefix = async function ({ prefix, ...opts }) {
