@@ -20,14 +20,6 @@ export const RUNNER_PLUGIN_TYPE = {
   // Whether this is a combination's dimension.
   // When false, this allows using custom prefixes.
   isCombinationDimension: true,
-  // Builtin plugins
-  builtins: BUILTIN_RUNNERS,
-  // Configuration property selecting the plugin
-  selectProp: {
-    name: 'runner',
-    default: DEFAULT_RUNNERS,
-    validate: validateEmptyArray,
-  },
   // Configuration definition for the plugin itself
   mainShape: [
     {
@@ -36,6 +28,14 @@ export const RUNNER_PLUGIN_TYPE = {
       validate: validateFunction,
     },
   ],
+  // Builtin plugins
+  builtins: BUILTIN_RUNNERS,
+  // Configuration property selecting the plugin
+  selectProp: {
+    name: 'runner',
+    default: DEFAULT_RUNNERS,
+    validate: validateEmptyArray,
+  },
   // Plugin properties shared by all plugins
   sharedProps,
 }
