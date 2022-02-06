@@ -8,18 +8,33 @@ import { normalizeNumberString } from '../../config/normalize/transform.js'
 import { validateNumberString } from '../../config/normalize/validate/simple.js'
 import { wrapError } from '../../error/wrap.js'
 
-// Validate the Node.js version
-// We apply `transformVersion` twice (during `validate` and `transform`) so that
-// error messages show the non-transformed value, and because `nvexeca()` return
-// value is memoized.
-export const validateVersion = async function (version) {
-  const [allowedVersions, { version: versionA }] = await Promise.all([
+// Normalize and validate the Node.js version
+const transformVersion = async function (version) {
+  const [versionInfo, allowedVersions] = await Promise.all([
+    normalizeVersion(version),
     getAllowedVersions(),
-    transformVersion(version),
   ])
 
-  if (!semver.satisfies(versionA, allowedVersions)) {
+  if (!semver.satisfies(versionInfo.version, allowedVersions)) {
     throw new Error(`must be ${allowedVersions}`)
+  }
+
+  return versionInfo.version
+}
+
+// Resolve the Node.js version to a full version.
+// This also:
+//  - Downloads the Node.js binary
+//  - Exposes running it as a `command` with `spawnOptions`
+const normalizeVersion = async function (version) {
+  const versionA = normalizeNumberString(version)
+  // Lazy loading for performance reasons
+  const { default: nvexeca } = await import('nvexeca')
+
+  try {
+    return await nvexeca(versionA, 'node', { progress: true, dry: true })
+  } catch (error) {
+    throw wrapError(error, 'must be a valid Node.js version:')
   }
 }
 
@@ -30,30 +45,10 @@ const getAllowedVersions = async function () {
   return packageJson.engines.node
 }
 
-// Resolve the Node.js version to a full version.
-// This also:
-//  - Downloads the Node.js binary
-//  - Exposes running it as a `command` with `spawnOptions`
-export const transformVersion = async function (version) {
-  // Lazy loading for performance reasons
-  const { default: nvexeca } = await import('nvexeca')
-
-  try {
-    return await nvexeca(version, 'node', { progress: true, dry: true })
-  } catch (error) {
-    throw wrapError(error, 'must be a valid Node.js version:')
-  }
-}
-
 export const config = [
   {
     name: 'version',
     validate: validateNumberString,
-    transform: normalizeNumberString,
-  },
-  {
-    name: 'version',
-    validate: validateVersion,
     transform: transformVersion,
   },
 ]
