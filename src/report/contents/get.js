@@ -20,6 +20,7 @@ export const getContents = async function ({ reporters }) {
 const callReportFunc = async function ({
   reporter,
   reporter: {
+    id,
     result,
     footerString,
     startData,
@@ -40,7 +41,7 @@ const callReportFunc = async function ({
     ])
     return { content, result, format, footerString, output, colors }
   } catch (error) {
-    throw wrapError(error, '', PluginError)
+    throw wrapError(error, `When calling reporter "${id}":`, PluginError)
   }
 }
 
