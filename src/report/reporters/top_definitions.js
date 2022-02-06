@@ -1,4 +1,4 @@
-import { computeFormat, validateFormat } from '../formats/detect.js'
+import { computeFormat, validateOutputFormat } from '../formats/detect.js'
 import { isTtyOutput } from '../tty.js'
 
 // Reporter-specific definitions of top-level properties
@@ -25,7 +25,10 @@ export const reportersTopDefinitions = [
   {
     name: 'format',
     compute: computeFormat,
-    validate: validateFormat,
+  },
+  {
+    name: 'output',
+    validate: validateOutputFormat,
   },
   // `reporter.config.tty` is `true` when output is interactive terminal.
   // Several reporter's configuration properties default to `true` only when

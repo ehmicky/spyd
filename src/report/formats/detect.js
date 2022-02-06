@@ -26,11 +26,11 @@ export const computeFormat = function ({ config: { output } }) {
   return format
 }
 
-// Validate that a reporter supports the format specified by a given `output`
-export const validateFormat = function (
-  format,
+// Validate that a reporter supports the `format` specified by a given `output`
+export const validateOutputFormat = function (
+  output,
   {
-    config: { output },
+    config: { format },
     context: {
       plugin,
       plugin: { id },
@@ -43,7 +43,7 @@ export const validateFormat = function (
 
   if (!hasMethod) {
     throw new Error(
-      `must not use unsupported "output: ${output}" with reporter "${id}".`,
+      `uses a file extension or format not supported by the reporter "${id}".`,
     )
   }
 }
