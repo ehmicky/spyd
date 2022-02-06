@@ -1,6 +1,6 @@
 import { env } from 'process'
 
-import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
+import { CONFIG_NPM_PREFIX } from './resolvers.js'
 
 // In principle, users can use `npx` with the "npm" resolver by doing:
 //   npx --package=spyd-config-{name} spyd --config=spyd-config-{name} ...
@@ -43,5 +43,5 @@ const getNpxConfigs = function () {
 }
 
 const isSharedConfig = function (npxPackage) {
-  return npxPackage.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
+  return npxPackage.startsWith(CONFIG_NPM_PREFIX)
 }

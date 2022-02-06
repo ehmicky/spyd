@@ -1,5 +1,4 @@
 import { getPluginPath } from '../plugin/import.js'
-import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
 // The `config` can be:
 //  - a file path
@@ -27,11 +26,13 @@ export const useResolvers = async function (configOpt, base) {
 // We do not use a shorter id like "npm:{name}" so users do not need two
 // different ids: one for `npm install` and one for the `config` property.
 const isNpmResolver = function (configOpt) {
-  return configOpt.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
+  return configOpt.startsWith(CONFIG_NPM_PREFIX)
 }
 
+export const CONFIG_NPM_PREFIX = 'spyd-config-'
+
 const resolveNpm = function (configOpt, base) {
-  return getPluginPath(configOpt, CONFIG_PLUGIN_TYPE.type, base)
+  return getPluginPath(configOpt, base)
 }
 
 // Additional resolvers.

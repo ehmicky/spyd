@@ -5,9 +5,8 @@ import { findUp } from 'find-up'
 import pLocate from 'p-locate'
 import { pathExists } from 'path-exists'
 
-import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
-
 import { CONFIG_FILENAMES } from './contents.js'
+import { CONFIG_NPM_PREFIX } from './resolvers.js'
 
 // The default values for `config` looks for `spyd.*` in the current or parent
 // directories.
@@ -77,7 +76,7 @@ const testConfigPackageDir = async function (dir) {
 }
 
 const isConfigPackageDir = function (filename) {
-  return filename.startsWith(CONFIG_PLUGIN_TYPE.modulePrefix)
+  return filename.startsWith(CONFIG_NPM_PREFIX)
 }
 
 const findMatchingDir = async function (base, lookupDirs) {

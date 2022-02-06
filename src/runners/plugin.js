@@ -10,7 +10,6 @@ import { sharedProps } from './shared_props.js'
 const pick = amongCommands(['dev', 'run'])
 
 export const RUNNER_PLUGIN_TYPE = {
-  // Shown in error message
   type: 'runner',
   // Prefix of the npm package
   modulePrefix: 'spyd-runner-',
@@ -28,6 +27,7 @@ export const RUNNER_PLUGIN_TYPE = {
   builtins: BUILTIN_RUNNERS,
   // Configuration property selecting the plugin
   selectProp: {
+    // This `name` is also shown in error messages
     name: 'runner',
     pick,
     default: DEFAULT_RUNNERS,

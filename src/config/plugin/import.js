@@ -27,7 +27,6 @@ export const importPlugin = async function ({
   const moduleName = `${modulePrefix}${moduleId}`
   const pluginPath = safeGetPluginPath({
     moduleName,
-    type,
     selectPropName,
     base: PLUGINS_IMPORT_BASE,
   })
@@ -51,14 +50,9 @@ export const importPlugin = async function ({
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
 // TODO: use import.meta.resolve() when available
-const safeGetPluginPath = function ({
-  moduleName,
-  type,
-  selectPropName,
-  base,
-}) {
+const safeGetPluginPath = function ({ moduleName, selectPropName, base }) {
   try {
-    return getPluginPath(moduleName, type, base)
+    return getPluginPath(moduleName, base)
   } catch (error) {
     throw wrapError(
       error,
@@ -68,7 +62,7 @@ const safeGetPluginPath = function ({
   }
 }
 
-export const getPluginPath = function (moduleName, type, base) {
+export const getPluginPath = function (moduleName, base) {
   const { resolve } = createRequire(new URL(base, import.meta.url))
 
   try {
