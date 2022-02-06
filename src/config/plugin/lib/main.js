@@ -11,12 +11,11 @@ import { normalizeMainProps } from './main_props.js'
 //  - Plugins without configuration
 //  - Single plugin per type, as opposed to multiple
 //  - Single configuration per plugin
-export const addPlugins = async function ({
+export const addPlugins = async function (
   config,
   pluginTypes,
-  context,
-  cwd,
-}) {
+  { context, cwd } = {},
+) {
   const pluginTypesA = normalizePluginTypes(pluginTypes)
   const pluginsConfigs = await addPluginsProps({
     config,

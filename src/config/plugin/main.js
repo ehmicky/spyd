@@ -12,12 +12,7 @@ export const normalizePluginsConfig = async function ({
   context,
   cwd,
 }) {
-  const configA = await addPlugins({
-    config,
-    pluginTypes: PLUGIN_TYPES,
-    context,
-    cwd,
-  })
+  const configA = await addPlugins(config, PLUGIN_TYPES, { context, cwd })
   const configB = normalizeReporters(configA, command)
   return configB
 }
