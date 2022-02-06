@@ -17,8 +17,7 @@ const getPluginDefinitions = function ({
   selectProp,
   configProp,
   commands,
-  selectPropDefault,
-  selectPropDefinition,
+  selectShape: { default: defaultValue = [], ...selectShape },
   sharedConfig,
 }) {
   const pick = amongCommands(commands)
@@ -27,9 +26,9 @@ const getPluginDefinitions = function ({
     {
       name: selectProp,
       pick,
-      default: selectPropDefault,
+      default: defaultValue,
       transform: normalizeOptionalArray,
-      ...selectPropDefinition,
+      ...selectShape,
     },
     {
       name: `${selectProp}.*`,

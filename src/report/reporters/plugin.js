@@ -22,8 +22,8 @@ export const REPORTER_PLUGIN_TYPE = {
   commands: ['remove', 'run', 'show'],
   isCombinationDimension: false,
   builtins: BUILTIN_REPORTERS,
-  selectPropDefault: DEFAULT_REPORTERS,
-  selectPropDefinition: {
+  selectShape: {
+    default: DEFAULT_REPORTERS,
     transform(value, { config }) {
       return config.force ? [] : normalizeOptionalArray(value)
     },

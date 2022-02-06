@@ -24,10 +24,9 @@ export const RUNNER_PLUGIN_TYPE = {
   isCombinationDimension: true,
   // Builtin plugins
   builtins: BUILTIN_RUNNERS,
-  // Default value for the `selectProp`
-  selectPropDefault: DEFAULT_RUNNERS,
-  // Additional configuration definition for `selectProp`
-  selectPropDefinition: {
+  // Configuration definition for `selectProp`
+  selectShape: {
+    default: DEFAULT_RUNNERS,
     validate: validateEmptyArray,
   },
   // Configuration definition for the plugin itself
