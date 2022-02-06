@@ -1,6 +1,6 @@
-import { UserError } from '../../../../error/main.js'
 import { wrapError } from '../../../../error/wrap.js'
 import { importJsNamed } from '../../../../utils/import.js'
+import { TasksLoadError } from '../../../common/error.js'
 
 import { addDefaults } from './default.js'
 import { useRequireConfig } from './require_config.js'
@@ -31,7 +31,7 @@ const importFile = async function (taskPath) {
     throw wrapError(
       error,
       `Could not import the tasks file ${taskPath}\n`,
-      UserError,
+      TasksLoadError,
     )
   }
 }

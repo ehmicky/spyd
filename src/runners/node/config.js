@@ -59,6 +59,7 @@ export const config = [
   },
   {
     name: 'require',
+    default: [],
     transform: normalizeOptionalArray,
   },
   {
