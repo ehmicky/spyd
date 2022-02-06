@@ -58,5 +58,5 @@ const getPluginsByType = async function ({
     context,
     configInfos,
   })
-  return [pluginType.selectProp.name, plugins]
+  return [pluginType.name, plugins]
 }

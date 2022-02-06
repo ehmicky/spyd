@@ -11,12 +11,12 @@ import { getModuleId } from './id.js'
 // a dynamic `Module` instance.
 export const importPlugin = async function ({
   id,
-  selectPropName,
+  name,
   modulePrefix,
   builtins,
   multiple,
 }) {
-  const moduleId = getModuleId(id, multiple, selectPropName)
+  const moduleId = getModuleId(id, multiple, name)
   const builtin = builtins[moduleId]
 
   if (builtin !== undefined) {
@@ -26,7 +26,7 @@ export const importPlugin = async function ({
   const moduleName = `${modulePrefix}${moduleId}`
   const pluginPath = safeGetPluginPath({
     moduleName,
-    selectPropName,
+    name,
     base: PLUGINS_IMPORT_BASE,
   })
 
@@ -35,7 +35,7 @@ export const importPlugin = async function ({
   } catch (error) {
     throw wrapError(
       error,
-      `Could not load "${selectPropName}" module "${moduleId}"\n\n`,
+      `Could not load "${name}" module "${moduleId}"\n\n`,
       PluginError,
     )
   }
@@ -49,15 +49,11 @@ export const importPlugin = async function ({
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
 // TODO: use import.meta.resolve() when available
-const safeGetPluginPath = function ({ moduleName, selectPropName, base }) {
+const safeGetPluginPath = function ({ moduleName, name, base }) {
   try {
     return getPluginPath(moduleName, base)
   } catch (error) {
-    throw wrapError(
-      error,
-      `Configuration property "${selectPropName}"`,
-      UserError,
-    )
+    throw wrapError(error, `The ${name}`, UserError)
   }
 }
 

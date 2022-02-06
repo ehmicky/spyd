@@ -13,6 +13,7 @@ export const RUNNER_PLUGIN_TYPE = {
   // Name used:
   //  - As a default value for the selection property
   //  - As a default value for the configuration property appended with `Config`
+  //  - In the return value
   //  - In error messages
   name: 'runner',
   // Prefix of the npm package

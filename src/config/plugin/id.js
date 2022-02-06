@@ -9,10 +9,10 @@ import { PluginError } from '../../error/main.js'
 // (e.g. runners) because those should use variations instead.
 // Since the list of plugin module names is unknown, users must indicate using
 // this by the usage of a delimiter character.
-export const getModuleId = function (id, multiple, selectPropName) {
+export const getModuleId = function (id, multiple, name) {
   const [moduleId, customId] = splitId(id, multiple)
-  validateModuleId(moduleId, selectPropName)
-  validateCustomId(customId, selectPropName)
+  validateModuleId(moduleId, name)
+  validateCustomId(customId, name)
   return moduleId
 }
 
@@ -34,9 +34,9 @@ const splitId = function (id, multiple) {
 
 const CUSTOM_ID_DELIMITER = '_'
 
-const validateModuleId = function (moduleId, selectPropName) {
+const validateModuleId = function (moduleId, name) {
   if (!MODULE_ID_REGEXP.test(moduleId)) {
-    throw new PluginError(`The identifier of the ${selectPropName} "${moduleId}" is invalid.
+    throw new PluginError(`The identifier of the ${name} "${moduleId}" is invalid.
 It should only contain lowercase letters and digits.`)
   }
 }
@@ -52,11 +52,11 @@ It should only contain lowercase letters and digits.`)
 // This is purposely not applied to shared configs.
 const MODULE_ID_REGEXP = /^[a-z][a-z\d]*$/u
 
-const validateCustomId = function (customId, selectPropName) {
+const validateCustomId = function (customId, name) {
   if (customId !== undefined) {
     validateUserId({
       id: customId,
-      messageName: `${selectPropName} identifier suffix`,
+      messageName: `${name} identifier suffix`,
     })
   }
 }

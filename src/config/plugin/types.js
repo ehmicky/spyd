@@ -3,8 +3,8 @@ import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin.js'
 
 // All plugin types
 export const PLUGIN_TYPES = {
-  [RUNNER_PLUGIN_TYPE.selectProp.name]: RUNNER_PLUGIN_TYPE,
-  [REPORTER_PLUGIN_TYPE.selectProp.name]: REPORTER_PLUGIN_TYPE,
+  [RUNNER_PLUGIN_TYPE.name]: RUNNER_PLUGIN_TYPE,
+  [REPORTER_PLUGIN_TYPE.name]: REPORTER_PLUGIN_TYPE,
 }
 
 export const PLUGIN_TYPES_ARRAY = Object.values(PLUGIN_TYPES)
