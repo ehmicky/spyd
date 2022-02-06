@@ -1,4 +1,3 @@
-import { UserError } from '../../error/main.js'
 import { wrapError } from '../../error/wrap.js'
 import { findValue } from '../../utils/find.js'
 
@@ -10,13 +9,13 @@ import { FORMATS } from './formats/main.js'
 // reference.
 export const transformDelta = function (delta, { name }) {
   if (delta === '') {
-    throw new UserError('must not be an empty string.')
+    throw new Error('must not be an empty string.')
   }
 
   const deltaReturn = findValue(FORMATS, (format) => parseDelta(format, delta))
 
   if (deltaReturn === undefined) {
-    throw new UserError(
+    throw new Error(
       'must be an integer, "first", a date/time/duration, a result id or a git commit/tag/branch.',
     )
   }
