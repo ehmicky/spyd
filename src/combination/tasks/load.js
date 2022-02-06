@@ -1,4 +1,4 @@
-import { UserError, PluginError } from '../../error/main.js'
+import { PluginError } from '../../error/main.js'
 import { wrapError } from '../../error/wrap.js'
 import { computeRunnerVersions } from '../../top/system/versions/compute.js'
 
@@ -24,17 +24,13 @@ export const loadRunner = async function (
   return { id, spawn, spawnOptions, versions: versionsA, config }
 }
 
-// Fire `runner.launch()`
+// Fire `runner.launch()`.
+// Errors are always considered plugin errors.
+// User errors should be captured in `plugin.config` instead.
 const launchRunner = async function ({ id, config, launch }) {
   try {
     return await launch(config)
   } catch (error) {
-    throw getLaunchError(error, id)
+    throw wrapError(error, `In runner '${id}':`, PluginError)
   }
-}
-
-const getLaunchError = function (error, id) {
-  return error instanceof UserError
-    ? wrapError(error, `In runner '${id}':`, UserError)
-    : wrapError(error, `In runner '${id}', internal error:`, PluginError)
 }
