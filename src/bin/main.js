@@ -6,11 +6,13 @@ import { fileURLToPath } from 'url'
 import { readPackageUp } from 'read-pkg-up'
 import UpdateNotifier from 'update-notifier'
 
-import { normalizeError, getErrorProps } from '../error/main.js'
+import { getErrorProps } from '../error/main.js'
+import { normalizeError } from '../error/utils.js'
 import { run, show, remove, dev } from '../main.js'
 import { addPadding } from '../report/utils/indent.js'
 
 import { parseCliFlags } from './parse.js'
+// eslint-disable-next-line import/max-dependencies
 import { defineCli } from './top.js'
 
 // Parse CLI flags then execute commands.

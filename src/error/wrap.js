@@ -1,4 +1,4 @@
-import { normalizeError } from './main.js'
+import { normalizeError } from './utils.js'
 
 // Wrap a child error with a new message and type
 export const wrapError = function (error, message, ErrorType) {
