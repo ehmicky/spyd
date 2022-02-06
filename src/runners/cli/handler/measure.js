@@ -1,6 +1,9 @@
 import { execa, execaCommand } from 'execa'
 import now from 'precise-now'
 
+import { wrapError } from '../../../error/wrap.js'
+import { TasksRunError } from '../../common/error.js'
+
 // `beforeAll` and `afterAll`
 export const before = async function ({ task: { beforeAll }, env, shell }) {
   await performHook(beforeAll, { env, shell })
@@ -80,11 +83,13 @@ const spawnProcesses = async function (command, { repeat, env, shell }) {
 //  - Using shell features (subshells, variables, etc.)
 //  - Adding the logic to the command internal logic
 const spawnProcess = async function (command, { env, shell }) {
-  if (shell === 'none') {
-    return await execaCommand(command, { ...EXECA_OPTIONS, env })
+  try {
+    return shell === 'none'
+      ? await execaCommand(command, { ...EXECA_OPTIONS, env })
+      : await execa(command, { ...EXECA_OPTIONS, env, shell })
+  } catch (error) {
+    throw wrapError(error, '', TasksRunError)
   }
-
-  await execa(command, { ...EXECA_OPTIONS, env, shell })
 }
 
 const EXECA_OPTIONS = {
