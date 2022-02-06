@@ -19,6 +19,9 @@ export const RUNNER_PLUGIN_TYPE = {
   // When `true`, the plugin can be selected twice but with different configs
   // Default: `false`
   multiple: false,
+  // Builtin plugins
+  // Default: empty object
+  builtins: BUILTIN_RUNNERS,
   // Configuration definition for the plugin itself
   // Default: empty array
   shape: [
@@ -28,9 +31,6 @@ export const RUNNER_PLUGIN_TYPE = {
       validate: validateFunction,
     },
   ],
-  // Builtin plugins
-  // Default: empty object
-  builtins: BUILTIN_RUNNERS,
   // Configuration property selecting the plugin
   // Default: empty object
   selectProp: {
