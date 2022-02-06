@@ -4,8 +4,14 @@ import { fileURLToPath } from 'url'
 import { readPackageUp } from 'read-pkg-up'
 import semver from 'semver'
 
-import { normalizeNumberString } from '../../config/normalize/transform.js'
-import { validateNumberString } from '../../config/normalize/validate/simple.js'
+import {
+  normalizeNumberString,
+  normalizeOptionalArray,
+} from '../../config/normalize/transform.js'
+import {
+  validateNumberString,
+  validateDefinedString,
+} from '../../config/normalize/validate/simple.js'
 import { wrapError } from '../../error/wrap.js'
 
 // Normalize and validate the Node.js version
@@ -50,5 +56,13 @@ export const config = [
     name: 'version',
     validate: validateNumberString,
     transform: transformVersion,
+  },
+  {
+    name: 'require',
+    transform: normalizeOptionalArray,
+  },
+  {
+    name: 'require.*',
+    validate: validateDefinedString,
   },
 ]
