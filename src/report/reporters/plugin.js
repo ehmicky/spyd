@@ -28,7 +28,7 @@ export const REPORTER_PLUGIN_TYPE = {
       return config.force ? [] : normalizeOptionalArray(value)
     },
   },
-  shape: [
+  mainShape: [
     ...getReportMethods().map((name) => ({
       name,
       validate: validateFunction,

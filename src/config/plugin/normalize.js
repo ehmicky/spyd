@@ -5,10 +5,10 @@ import { normalizeConfig } from '../normalize/main.js'
 // Validate a plugin has the correct shape and normalize it
 export const normalizePlugin = async function (
   plugin,
-  shape,
+  mainShape,
   sharedConfigPropNames,
 ) {
-  return await normalizeConfig(plugin, [...COMMON_SHAPE, ...shape], {
+  return await normalizeConfig(plugin, [...COMMON_MAIN_SHAPE, ...mainShape], {
     context: { sharedConfigPropNames },
     ErrorType: PluginError,
   })
@@ -35,4 +35,4 @@ const isSharedConfigProp = function (name, sharedConfigPropNames) {
 }
 
 // Definitions shared by all plugins
-const COMMON_SHAPE = [configPropName]
+const COMMON_MAIN_SHAPE = [configPropName]
