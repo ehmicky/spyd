@@ -1,4 +1,3 @@
-import { UserError } from '../../error/main.js'
 import { getPluginPath } from '../plugin/load.js'
 import { CONFIG_PLUGIN_TYPE } from '../plugin/types.js'
 
@@ -52,7 +51,8 @@ const useResolver = async function (configOpt, base) {
   const resolverFunc = RESOLVERS[name]
 
   if (resolverFunc === undefined) {
-    throw new UserError(`Resolver "${name}" does not exist: "${configOpt}"`)
+    const resolvers = Object.keys(RESOLVERS).join(', ')
+    throw new Error(`must use an existing resolver among ${resolvers}`)
   }
 
   return await resolverFunc(arg, base)

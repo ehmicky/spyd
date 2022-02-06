@@ -29,6 +29,7 @@ const loadPlugin = async function (
   { id, config, topConfig, context },
   {
     type,
+    selectProp,
     configProp,
     modulePrefix,
     builtins,
@@ -38,8 +39,14 @@ const loadPlugin = async function (
     topConfigPropNames,
   },
 ) {
-  const moduleId = getModuleId(id, type, isCombinationDimension)
-  const plugin = await importPlugin({ moduleId, type, modulePrefix, builtins })
+  const plugin = await importPlugin({
+    id,
+    type,
+    selectProp,
+    modulePrefix,
+    builtins,
+    isCombinationDimension,
+  })
   const pluginA = { ...plugin }
   const { config: pluginConfigDefinitions, ...pluginB } = await normalizePlugin(
     pluginA,
@@ -63,11 +70,14 @@ const loadPlugin = async function (
 // The return value is shallow merged to make it a plain object instead of
 // a dynamic `Module` instance.
 const importPlugin = async function ({
-  moduleId,
+  id,
   type,
+  selectProp,
   modulePrefix,
   builtins,
+  isCombinationDimension,
 }) {
+  const moduleId = getModuleId(id, type, isCombinationDimension)
   const builtin = builtins[moduleId]
 
   if (builtin !== undefined) {
@@ -75,7 +85,12 @@ const importPlugin = async function ({
   }
 
   const moduleName = `${modulePrefix}${moduleId}`
-  const pluginPath = getPluginPath(moduleName, type, PLUGINS_IMPORT_BASE)
+  const pluginPath = safeGetPluginPath({
+    moduleName,
+    type,
+    selectProp,
+    base: PLUGINS_IMPORT_BASE,
+  })
 
   try {
     return await import(pluginPath)
@@ -96,6 +111,14 @@ const importPlugin = async function ({
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
 // TODO: use import.meta.resolve() when available
+const safeGetPluginPath = function ({ moduleName, type, selectProp, base }) {
+  try {
+    return getPluginPath(moduleName, type, base)
+  } catch (error) {
+    throw wrapError(error, `Configuration property "${selectProp}"`, UserError)
+  }
+}
+
 export const getPluginPath = function (moduleName, type, base) {
   const { resolve } = createRequire(new URL(base, import.meta.url))
 
@@ -104,9 +127,8 @@ export const getPluginPath = function (moduleName, type, base) {
   } catch (error) {
     throw wrapError(
       error,
-      `Cannot find ${type} "${moduleName}".
+      `must be a valid package name: "${moduleName}".
 This Node module was not found, please ensure it is installed.\n\n`,
-      UserError,
     )
   }
 }
