@@ -1,3 +1,5 @@
+import omit from 'omit.js'
+
 import { normalizeError } from './utils.js'
 
 // Wrap a child error with a new message and type
@@ -61,14 +63,16 @@ const fixErrorStack = function (error) {
 const STACK_TRACE_START = '\n    at '
 
 // Copy error static properties.
-// This excludes non-enumerable properties, especially `name`, `message` and
-// `stack`
+// This excludes special properties, like `name`, `message` and `stack`, without
+// assuming they are non enumerable, because this is not always the case.
 const copyStaticProps = function (newError, error) {
   if (newError === error) {
     return newError
   }
 
   // eslint-disable-next-line fp/no-mutating-assign
-  Object.assign(newError, error)
+  Object.assign(newError, omit.default(error, ERROR_CORE_PROPERTIES))
   return newError
 }
+
+const ERROR_CORE_PROPERTIES = ['name', 'message', 'stack', 'cause', 'errors']
