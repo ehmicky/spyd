@@ -29,10 +29,14 @@ export const parse = function (query) {
   return query === '' ? [] : query.split(SEPARATOR).map(getToken)
 }
 
-export const SEPARATOR = '.'
-
 const getToken = function (token) {
   return POSITIVE_INTEGER_REGEXP.test(token) ? Number(token) : token
 }
 
 const POSITIVE_INTEGER_REGEXP = /^\d+$/u
+
+export const isParent = function (parentQuery, childQuery) {
+  return childQuery.startsWith(`${parentQuery}${SEPARATOR}`)
+}
+
+export const SEPARATOR = '.'

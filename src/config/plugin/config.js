@@ -1,8 +1,8 @@
-import omit from 'omit.js'
-
-import { pick } from '../../utils/pick.js'
+import { PluginError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 import { mergeConfigs } from '../merge/main.js'
-import { DEFINITIONS } from '../normalize/definitions.js'
+import { getDummyDefinitions } from '../normalize/dummy.js'
+import { has } from '../normalize/lib/prop_path/get.js'
 import { normalizeConfig } from '../normalize/main.js'
 
 // Retrieve plugin configuration object.
@@ -43,69 +43,78 @@ import { normalizeConfig } from '../normalize/main.js'
 //     - Which enables using - and _ in user-defined identifiers
 //  - Works unescaped with YAML, JSON and JavaScript
 export const getPluginConfig = async function ({
-  config,
-  context,
   configProp,
-  topProps,
-  pluginConfigDefinitions,
   plugin,
   plugin: { id },
+  config: {
+    [configProp]: { [id]: unmergedPluginConfig = {} },
+  },
+  topConfig,
+  context,
+  pluginConfigDefinitions = [],
   topDefinitions,
 }) {
-  const pluginConfig = config[configProp][id]
-  const pluginConfigA = await normalizePluginConfig({
-    pluginConfig,
+  const pluginConfig = mergeConfigs([topConfig, unmergedPluginConfig])
+  const prefix = getPrefix.bind(undefined, {
+    unmergedPluginConfig,
     configProp,
-    context,
-    topProps,
-    pluginConfigDefinitions,
-    plugin,
-    topDefinitions,
+    id,
   })
-  const pluginConfigB = mergeTopProps(config, pluginConfigA, topProps)
+  const pluginConfigA = await normalizeSharedConfig({
+    pluginConfig,
+    topDefinitions,
+    pluginConfigDefinitions,
+    context,
+    plugin,
+    prefix,
+  })
+  const pluginConfigB = await normalizeSpecificConfig({
+    pluginConfig: pluginConfigA,
+    topDefinitions,
+    pluginConfigDefinitions,
+    context,
+    prefix,
+  })
   return pluginConfigB
 }
 
-const normalizePluginConfig = async function ({
-  pluginConfig = {},
-  configProp,
+const getPrefix = function (
+  { unmergedPluginConfig, configProp, id },
+  { path },
+) {
+  const prefix = has(unmergedPluginConfig, path) ? `${configProp}.${id}.` : ''
+  return `Configuration property ${prefix}`
+}
+
+const normalizeSharedConfig = async function ({
+  pluginConfig,
+  topDefinitions,
+  pluginConfigDefinitions,
   context,
-  topProps,
-  pluginConfigDefinitions = [],
   plugin,
-  plugin: { id },
-  topDefinitions: pluginTopDefinitions,
+  prefix,
 }) {
-  const topDefinitions = getTopDefinitions(topProps)
-  const prefix = `${configProp}.${id}`
   return await normalizeConfig(
     pluginConfig,
-    [...topDefinitions, ...pluginTopDefinitions, ...pluginConfigDefinitions],
+    [...topDefinitions, ...getDummyDefinitions(pluginConfigDefinitions)],
     { context: { ...context, plugin }, prefix },
   )
 }
 
-// Retrieve definitions for properties which can be set both at the top-level
-// and inside `*Config.{id}.*`
-const getTopDefinitions = function (topProps) {
-  return DEFINITIONS.filter(({ name }) => isTopDefinition(name, topProps)).map(
-    omitDefault,
-  )
-}
-
-export const isTopDefinition = function (name, topProps) {
-  return topProps.some((topProp) => name.startsWith(topProp))
-}
-
-// The `default` value is already applied to the top-level property, which is
-// merged afterwards. Applying it again on `*Config.{id}.*` would mean the
-// top-level property would always be overridden by it, so we omit it.
-const omitDefault = function (definition) {
-  return omit.default(definition, ['default'])
-}
-
-// Merge top-level properties with `*Config.{id}.*` with lower priority
-const mergeTopProps = function (config, pluginConfig, topProps) {
-  const topConfig = pick(config, topProps)
-  return mergeConfigs([topConfig, pluginConfig])
+const normalizeSpecificConfig = async function ({
+  pluginConfig,
+  topDefinitions,
+  pluginConfigDefinitions,
+  context,
+  prefix,
+}) {
+  try {
+    return await normalizeConfig(
+      pluginConfig,
+      [...getDummyDefinitions(topDefinitions), ...pluginConfigDefinitions],
+      { context, prefix },
+    )
+  } catch (error) {
+    throw wrapError(error, '', PluginError)
+  }
 }

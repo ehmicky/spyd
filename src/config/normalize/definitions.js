@@ -2,7 +2,6 @@
 import { cwd as getCwd } from 'process'
 
 import { DEFAULT_INPUTS } from '../../combination/inputs.js'
-import { DEFAULT_TASKS } from '../../combination/tasks/find.js'
 import { transformLimit } from '../../history/compare/transform.js'
 import { DEFAULT_SAVE } from '../../history/data/main.js'
 import {
@@ -11,12 +10,7 @@ import {
   DEFAULT_SINCE_DELTA,
 } from '../../history/delta/transform.js'
 import { getDefaultId, validateMerge } from '../../history/merge/id.js'
-import { isOutputPath } from '../../report/contents/output.js'
-import { DEFAULT_SHOW_PRECISION } from '../../report/normalize/omit.js'
-import {
-  DEFAULT_TITLES,
-  DEFAULT_SHOW_TITLES,
-} from '../../report/normalize/titles_add.js'
+import { DEFAULT_TITLES } from '../../report/normalize/titles_add.js'
 import { isTtyInput } from '../../report/tty.js'
 import {
   validatePrecision,
@@ -25,19 +19,16 @@ import {
 } from '../../run/precision.js'
 import { DEFAULT_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
-import { getShowMetadataDefault } from '../../top/omit.js'
+import { CONFIG_DEFINITIONS } from '../load/normalize.js'
 import { getPluginsDefinitions } from '../plugin/definitions.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 
 import { getPropCwd } from './cwd.js'
+import { getDummyDefinitions } from './dummy.js'
 import { amongCommands } from './pick.js'
 import { normalizeOptionalArray } from './transform.js'
 import { validateJson, validateObject } from './validate/complex.js'
-import {
-  validateFileExists,
-  validateRegularFile,
-  validateDirectory,
-} from './validate/fs.js'
+import { validateFileExists, validateDirectory } from './validate/fs.js'
 import {
   validateBoolean,
   validateInteger,
@@ -46,20 +37,10 @@ import {
   // eslint-disable-next-line import/max-dependencies
 } from './validate/simple.js'
 
-// `config` has already been processed before, but it specified so it is shown
-// in the valid list of known properties
-const configProp = {
-  name: 'config',
-}
+const configProps = getDummyDefinitions(CONFIG_DEFINITIONS)
 
-// All plugins definitions: `reporter`, `repoterConfig`, `runner`, etc.
+// All plugins definitions: `reporter`, `reporterConfig`, `runner`, etc.
 const plugins = getPluginsDefinitions()
-
-const colors = {
-  name: 'colors',
-  pick: amongCommands(['remove', 'run', 'show']),
-  validate: validateBoolean,
-}
 
 const cwd = {
   name: 'cwd',
@@ -119,14 +100,6 @@ const merge = {
   },
 }
 
-const output = {
-  name: 'output',
-  pick: amongCommands(['remove', 'run', 'show']),
-  path: isOutputPath,
-  cwd: getPropCwd,
-  validate: validateRegularFile,
-}
-
 const outliers = {
   name: 'outliers',
   pick: amongCommands(['run']),
@@ -143,12 +116,6 @@ const precision = {
     validatePrecision(value)
   },
   transform: transformPrecision,
-}
-
-const quiet = {
-  name: 'quiet',
-  pick: amongCommands(['run']),
-  validate: validateBoolean,
 }
 
 const save = {
@@ -171,39 +138,6 @@ const selectAny = {
   validate: validateString,
 }
 
-const showDiff = {
-  name: 'showDiff',
-  pick: amongCommands(['remove', 'run', 'show']),
-  validate: validateBoolean,
-}
-
-const showMetadata = {
-  name: 'showMetadata',
-  pick: amongCommands(['remove', 'run', 'show']),
-  default: getShowMetadataDefault,
-  validate: validateBoolean,
-}
-
-const showPrecision = {
-  name: 'showPrecision',
-  pick: amongCommands(['remove', 'run', 'show']),
-  default: DEFAULT_SHOW_PRECISION,
-  validate: validateBoolean,
-}
-
-const showSystem = {
-  name: 'showSystem',
-  pick: amongCommands(['remove', 'run', 'show']),
-  validate: validateBoolean,
-}
-
-const showTitles = {
-  name: 'showTitles',
-  pick: amongCommands(['remove', 'run', 'show']),
-  default: DEFAULT_SHOW_TITLES,
-  validate: validateBoolean,
-}
-
 const since = {
   name: 'since',
   pick: amongCommands(['remove', 'run', 'show']),
@@ -224,30 +158,6 @@ const systemAny = {
   validate: validateDefinedString,
 }
 
-const tasks = {
-  name: 'tasks',
-  pick: amongCommands(['dev', 'run']),
-  default: DEFAULT_TASKS,
-  transform: normalizeOptionalArray,
-}
-
-const tasksAny = {
-  name: 'tasks.*',
-  pick: amongCommands(['dev', 'run']),
-  path: true,
-  glob: true,
-  cwd: getPropCwd,
-  validate: validateRegularFile,
-}
-
-const tasksFlatten = {
-  name: 'tasks',
-  pick: amongCommands(['dev', 'run']),
-  transform(value) {
-    return value.flat()
-  },
-}
-
 const titles = {
   name: 'titles',
   pick: amongCommands(['remove', 'run', 'show']),
@@ -262,9 +172,8 @@ const titlesAny = {
 }
 
 export const DEFINITIONS = [
+  ...configProps,
   ...plugins,
-  colors,
-  configProp,
   cwd,
   delta,
   force,
@@ -272,24 +181,14 @@ export const DEFINITIONS = [
   inputsAny,
   limit,
   merge,
-  output,
   outliers,
   precision,
-  quiet,
   save,
   select,
   selectAny,
-  showDiff,
-  showMetadata,
-  showPrecision,
-  showSystem,
-  showTitles,
   since,
   system,
   systemAny,
-  tasks,
-  tasksAny,
-  tasksFlatten,
   titles,
   titlesAny,
 ].flatMap(normalizeConfigSelectors)

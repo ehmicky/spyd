@@ -1,3 +1,4 @@
+import { getDummyDefinitions } from '../normalize/dummy.js'
 import { amongCommands } from '../normalize/pick.js'
 import { normalizeOptionalArray } from '../normalize/transform.js'
 import { validateObject, validateJson } from '../normalize/validate/complex.js'
@@ -18,9 +19,11 @@ const getPluginDefinitions = function ({
   commands,
   selectPropDefault,
   selectPropDefinition,
+  topDefinitions,
 }) {
   const pick = amongCommands(commands)
   return [
+    ...getDummyDefinitions(topDefinitions),
     {
       name: selectProp,
       pick,

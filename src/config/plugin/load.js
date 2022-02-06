@@ -9,26 +9,33 @@ import { getModuleId } from './id.js'
 import { normalizePlugin } from './normalize.js'
 
 // Import plugin's code
-export const loadPlugins = async function (pluginType, config, context) {
+export const loadPlugins = async function ({
+  pluginType,
+  config,
+  topConfig,
+  context,
+}) {
   const ids = config[pluginType.selectProp]
   return ids === undefined
     ? []
     : await Promise.all(
-        ids.map((id) => loadPlugin({ id, config, context }, pluginType)),
+        ids.map((id) =>
+          loadPlugin({ id, config, topConfig, context }, pluginType),
+        ),
       )
 }
 
 const loadPlugin = async function (
-  { id, config, context },
+  { id, config, topConfig, context },
   {
     type,
     configProp,
     modulePrefix,
     builtins,
-    topProps,
     isCombinationDimension,
     mainDefinitions,
     topDefinitions,
+    topConfigPropNames,
   },
 ) {
   const moduleId = getModuleId(id, type, isCombinationDimension)
@@ -37,14 +44,14 @@ const loadPlugin = async function (
   const { config: pluginConfigDefinitions, ...pluginB } = await normalizePlugin(
     pluginA,
     mainDefinitions,
-    topProps,
+    topConfigPropNames,
   )
   const pluginC = { ...pluginB, id }
   const pluginConfig = await getPluginConfig({
     config,
+    topConfig,
     context,
     configProp,
-    topProps,
     pluginConfigDefinitions,
     plugin: pluginC,
     topDefinitions,
@@ -52,7 +59,9 @@ const loadPlugin = async function (
   return { ...pluginC, config: pluginConfig }
 }
 
-// Builtin modules are lazy loaded for performance reasons
+// Builtin modules are lazy loaded for performance reasons.
+// The return value is shallow merged to make it a plain object instead of
+// a dynamic `Module` instance.
 const importPlugin = async function ({
   moduleId,
   type,

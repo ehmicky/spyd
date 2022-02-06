@@ -42,4 +42,4 @@ const configPropAny = {
   validate,
 }
 
-const CONFIG_DEFINITIONS = [configProp, configPropAny]
+export const CONFIG_DEFINITIONS = [configProp, configPropAny]

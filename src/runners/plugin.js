@@ -4,6 +4,7 @@ import {
 } from '../config/normalize/validate/complex.js'
 
 import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from './main.js'
+import { runnersTopDefinitions } from './top_definitions.js'
 
 export const RUNNER_PLUGIN_TYPE = {
   // Shown in error message
@@ -14,10 +15,6 @@ export const RUNNER_PLUGIN_TYPE = {
   selectProp: 'runner',
   // Configuration property configuring the plugin
   configProp: 'runnerConfig',
-  // Configuration properties which can be overridden by each plugin.
-  // Note: the current implementation only allows top-level properties, but this
-  // could be changed.
-  topProps: ['tasks'],
   // Prefix of the npm package
   modulePrefix: 'spyd-runner-',
   // Commands which use the plugin
@@ -41,6 +38,6 @@ export const RUNNER_PLUGIN_TYPE = {
       validate: validateFunction,
     },
   ],
-  // Plugin-specific definitions for top-properties
-  topDefinitions: [],
+  // Plugin properties shared by all plugins
+  topDefinitions: runnersTopDefinitions,
 }
