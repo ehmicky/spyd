@@ -7,8 +7,6 @@ import {
 import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from './main.js'
 import { sharedProps } from './shared_props.js'
 
-const pick = amongCommands(['dev', 'run'])
-
 export const RUNNER_PLUGIN_TYPE = {
   // Name used:
   //  - As a default value for the selection property
@@ -36,15 +34,13 @@ export const RUNNER_PLUGIN_TYPE = {
   // Configuration property selecting the plugin
   // Default: empty object
   selectProp: {
-    pick,
+    pick: amongCommands(['dev', 'run']),
     default: DEFAULT_RUNNERS,
     validate: validateEmptyArray,
   },
   // Configuration property configuring the plugin
   // Default: empty object
-  configProp: {
-    pick,
-  },
+  configProp: {},
   // Plugin properties shared by all plugins
   // Default: empty array
   sharedProps,

@@ -14,8 +14,6 @@ import { getReportMethods } from '../formats/list.js'
 import { BUILTIN_REPORTERS, DEFAULT_REPORTERS } from './main.js'
 import { sharedProps } from './shared_props.js'
 
-const pick = amongCommands(['remove', 'run', 'show'])
-
 export const REPORTER_PLUGIN_TYPE = {
   name: 'reporter',
   modulePrefix: 'spyd-reporter-',
@@ -48,14 +46,12 @@ export const REPORTER_PLUGIN_TYPE = {
   ],
   builtins: BUILTIN_REPORTERS,
   selectProp: {
-    pick,
+    pick: amongCommands(['remove', 'run', 'show']),
     default: DEFAULT_REPORTERS,
     transform(value, { config }) {
       return config.force ? [] : normalizeOptionalArray(value)
     },
   },
-  configProp: {
-    pick,
-  },
+  configProp: {},
   sharedProps,
 }
