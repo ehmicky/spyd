@@ -28,4 +28,5 @@ const tasksFlatten = {
   },
 }
 
-export const runnersTopDefinitions = [tasks, tasksAny, tasksFlatten]
+// Runner-specific shared configuration properties
+export const sharedConfig = [tasks, tasksAny, tasksFlatten]

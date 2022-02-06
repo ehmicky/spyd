@@ -4,7 +4,7 @@ import {
 } from '../config/normalize/validate/complex.js'
 
 import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from './main.js'
-import { runnersTopDefinitions } from './top_definitions.js'
+import { sharedConfig } from './shared_config.js'
 
 export const RUNNER_PLUGIN_TYPE = {
   // Shown in error message
@@ -39,5 +39,5 @@ export const RUNNER_PLUGIN_TYPE = {
     },
   ],
   // Plugin properties shared by all plugins
-  topDefinitions: runnersTopDefinitions,
+  sharedConfig,
 }

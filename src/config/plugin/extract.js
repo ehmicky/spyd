@@ -11,7 +11,7 @@ export const getPluginTypes = function () {
 
 // Retrieve all unique property `name`, excluding their children
 const addTopConfigPropNames = function (pluginType) {
-  const topConfigPropNames = pluginType.topDefinitions.map(getDefinitionName)
+  const topConfigPropNames = pluginType.sharedConfig.map(getDefinitionName)
   const topConfigPropNamesA = [...new Set(topConfigPropNames)].filter(
     hasNoParent,
   )

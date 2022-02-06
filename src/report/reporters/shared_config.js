@@ -111,8 +111,8 @@ const showTitles = {
   validate: validateBoolean,
 }
 
-// Reporter-specific definitions of top-level properties
-export const reportersTopDefinitions = [
+// Reporter-specific shared configuration properties
+export const sharedConfig = [
   output,
   format,
   outputFormat,
