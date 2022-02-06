@@ -2,7 +2,7 @@ import { version as currentVersion } from 'process'
 import { fileURLToPath } from 'url'
 
 const HANDLER_MAIN_PATH = fileURLToPath(
-  new URL('./handler/main.js', import.meta.url),
+  new URL('handler/main.js', import.meta.url),
 )
 
 // `runnerConfig.node.version` can be used to spawn a different Node.js version
