@@ -1,5 +1,3 @@
-import { PLUGIN_TYPES } from '../plugin/lib/types.js'
-
 // Custom merging logic for tasks.
 // `tasks` or `runnnerConfig.{runnerId}.tasks` are concatenated, not overridden
 // so that shared configurations consumers can add tasks.
@@ -12,11 +10,7 @@ const isTopTasks = function (keys) {
 }
 
 const isRunnerTasks = function (keys) {
-  return (
-    keys.length === 3 &&
-    keys[0] === PLUGIN_TYPES.runner.configProp &&
-    keys[2] === 'tasks'
-  )
+  return keys.length === 3 && keys[0] === 'runnerConfig' && keys[2] === 'tasks'
 }
 
 // Order matters since later `tasks` have priority when merging two task files

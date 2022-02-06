@@ -7,11 +7,10 @@ import {
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { addPluginTypeDefault } from './default.js'
-import { PLUGIN_TYPES_ARRAY } from './types.js'
 
 // Ensure selection and configuration properties are not marked as unknown
-export const getPluginsProps = function () {
-  return PLUGIN_TYPES_ARRAY.map(addPluginTypeDefault).flatMap(getMainProps)
+export const getPluginsProps = function (pluginTypes) {
+  return pluginTypes.map(addPluginTypeDefault).flatMap(getMainProps)
 }
 
 export const getMainProps = function ({ configProp, selectProp }) {

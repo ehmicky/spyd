@@ -16,7 +16,7 @@ import { transformPrecision, DEFAULT_PRECISION } from '../../run/precision.js'
 import { DEFAULT_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { CONFIG_DEFINITIONS } from '../load/normalize.js'
-import { getPluginsProps } from '../plugin/lib/main_props.js'
+import { getPluginsConfigProps } from '../plugin/main.js'
 
 import { getDummyDefinitions, getDummyDefinitionsNames } from './dummy.js'
 import { amongCommands } from './pick.js'
@@ -34,7 +34,7 @@ import {
 const configProps = getDummyDefinitions(CONFIG_DEFINITIONS)
 
 // All plugins definitions: `reporter`, `reporterConfig`, `runner`, etc.
-const plugins = getDummyDefinitionsNames(getPluginsProps())
+const plugins = getDummyDefinitionsNames(getPluginsConfigProps())
 
 const cwd = {
   name: 'cwd',

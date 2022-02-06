@@ -1,4 +1,8 @@
-import { getPluginTypes, getTopConfig, removeTopProps } from './extract.js'
+import {
+  normalizePluginTypes,
+  getTopConfig,
+  removeTopProps,
+} from './extract.js'
 import { loadPlugins } from './load.js'
 import { normalizeMainProps } from './main_props.js'
 
@@ -7,15 +11,20 @@ import { normalizeMainProps } from './main_props.js'
 //  - Plugins without configuration
 //  - Single plugin per type, as opposed to multiple
 //  - Single configuration per plugin
-export const addPlugins = async function (config, context, configInfos) {
-  const pluginTypes = getPluginTypes()
+export const addPlugins = async function ({
+  config,
+  pluginTypes,
+  context,
+  configInfos,
+}) {
+  const pluginTypesA = normalizePluginTypes(pluginTypes)
   const pluginsConfigs = await addPluginsProps({
     config,
-    pluginTypes,
+    pluginTypes: pluginTypesA,
     context,
     configInfos,
   })
-  const configA = removeTopProps(config, pluginTypes)
+  const configA = removeTopProps(config, pluginTypesA)
   return { ...configA, ...pluginsConfigs }
 }
 
