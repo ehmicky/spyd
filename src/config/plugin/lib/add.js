@@ -4,14 +4,11 @@ import { getPluginTypes, getTopConfig, removeTopProps } from './extract.js'
 import { loadPlugins } from './load.js'
 import { normalizeMainProps } from './main_props.js'
 
-// Several configuration properties (`runner`, `reporter`)
-// can be customized with custom modules. This loads them. Each type can specify
-// builtin modules too.
-// Most plugin types need only a single plugin per benchmark, but they still
-// allow several for some use cases. Since the most common case is a single
-// plugin, selecting plugins:
-//  - can be either a string or an array of strings
-//  - uses a singular property name
+// Generic utility to add plugins which can be selected and configured by users.
+// This is optimized for the common use cases, while still allowing complex ones
+//  - Plugins without configuration
+//  - Single plugin per type, as opposed to multiple
+//  - Single configuration per plugin
 export const addPlugins = async function ({
   config,
   command,

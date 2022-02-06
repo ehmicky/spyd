@@ -1,7 +1,7 @@
 import { loadConfig } from './load/main.js'
 import { DEFINITIONS } from './normalize/definitions.js'
 import { normalizeUserConfig } from './normalize/main.js'
-import { addPlugins } from './plugin/lib/add.js'
+import { normalizePluginsConfig } from './plugin/main.js'
 
 // Retrieve configuration
 export const getConfig = async function (
@@ -16,7 +16,7 @@ export const getConfig = async function (
     opts: { context },
     configInfos,
   })
-  const configB = await addPlugins({
+  const configB = await normalizePluginsConfig({
     config: configA,
     command,
     context,
