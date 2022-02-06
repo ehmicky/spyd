@@ -32,7 +32,6 @@ const getPluginDefinitions = function ({
     },
     {
       name: `${selectProp}.*`,
-      pick,
       validate: validateDefinedString,
     },
     {
@@ -43,13 +42,11 @@ const getPluginDefinitions = function ({
     },
     {
       name: `${configProp}.*`,
-      pick,
       default: {},
       validate: validateObject,
     },
     {
       name: `${configProp}.*.*`,
-      pick,
       validate: validateJson,
     },
   ]
