@@ -9,15 +9,15 @@ import { PluginError } from '../../error/main.js'
 // (e.g. runners) because those should use variations instead.
 // Since the list of plugin module names is unknown, users must indicate using
 // this by the usage of a delimiter character.
-export const getModuleId = function (id, type, isCombinationDimension) {
-  const [moduleId, customId] = splitId(id, isCombinationDimension)
+export const getModuleId = function (id, type, multiple) {
+  const [moduleId, customId] = splitId(id, multiple)
   validateModuleId(moduleId, type)
   validateCustomId(customId, type)
   return moduleId
 }
 
-const splitId = function (id, isCombinationDimension) {
-  if (isCombinationDimension) {
+const splitId = function (id, multiple) {
+  if (!multiple) {
     return [id]
   }
 

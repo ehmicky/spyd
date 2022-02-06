@@ -20,7 +20,7 @@ export const REPORTER_PLUGIN_TYPE = {
   type: 'reporter',
   varName: 'reporters',
   modulePrefix: 'spyd-reporter-',
-  isCombinationDimension: false,
+  multiple: true,
   shape: [
     ...getReportMethods().map((name) => ({
       name,

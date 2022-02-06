@@ -31,7 +31,7 @@ const loadPlugin = async function (
     configProp: { name: configPropName },
     modulePrefix,
     builtins,
-    isCombinationDimension,
+    multiple,
     shape,
     sharedProps,
     sharedPropNames,
@@ -43,7 +43,7 @@ const loadPlugin = async function (
     selectPropName,
     modulePrefix,
     builtins,
-    isCombinationDimension,
+    multiple,
   })
   const pluginA = { ...plugin }
   const { config: pluginConfigDefinitions, ...pluginB } = await normalizePlugin(

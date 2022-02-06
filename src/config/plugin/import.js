@@ -15,9 +15,9 @@ export const importPlugin = async function ({
   selectPropName,
   modulePrefix,
   builtins,
-  isCombinationDimension,
+  multiple,
 }) {
-  const moduleId = getModuleId(id, type, isCombinationDimension)
+  const moduleId = getModuleId(id, type, multiple)
   const builtin = builtins[moduleId]
 
   if (builtin !== undefined) {

@@ -16,9 +16,8 @@ export const RUNNER_PLUGIN_TYPE = {
   varName: 'runners',
   // Prefix of the npm package
   modulePrefix: 'spyd-runner-',
-  // Whether this is a combination's dimension.
-  // When false, this allows using custom prefixes.
-  isCombinationDimension: true,
+  // When `true`, the plugin can be selected twice but with different configs
+  multiple: false,
   // Configuration definition for the plugin itself
   shape: [
     {
