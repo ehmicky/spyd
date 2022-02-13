@@ -1,7 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
 import { removeEmptyValues } from './empty.js'
-import { isTasks, mergeTasks } from './tasks.js'
 
 // Merge two configuration objects. Used to merge:
 //  - shared `config`
@@ -27,17 +26,9 @@ const mergeObjects = function (objectA, objectB, keys) {
 
 // Arrays do not merge, they override instead.
 const mergeValues = function (valueA, valueB, keys) {
-  const customMerge = CUSTOM_MERGES.find(({ condition }) => condition(keys))
-
-  if (customMerge !== undefined) {
-    return customMerge.applyFunc(valueA, valueB)
-  }
-
   if (isPlainObj(valueA) && isPlainObj(valueB)) {
     return mergeObjects(valueA, valueB, keys)
   }
 
   return valueB
 }
-
-const CUSTOM_MERGES = [{ condition: isTasks, applyFunc: mergeTasks }]
