@@ -1,5 +1,4 @@
 import { amongCommands } from '../../../config/normalize/pick.js'
-import { normalizeOptionalArray } from '../../../config/normalize/transform.js'
 import {
   validateObject,
   validateFunction,
@@ -51,7 +50,7 @@ export const REPORTER_PLUGIN_TYPE = {
     pick: amongCommands(['remove', 'run', 'show']),
     default: DEFAULT_REPORTERS,
     transform(value, { config }) {
-      return config.force ? [] : normalizeOptionalArray(value)
+      return config.force ? [] : value
     },
   },
   item,

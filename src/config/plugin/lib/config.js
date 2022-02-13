@@ -1,8 +1,9 @@
-import { PluginError } from '../../../error/main.js'
 import { deepMerge } from '../../merge.js'
 import { getDummyDefinitions } from '../../normalize/dummy.js'
 import { has } from '../../normalize/lib/prop_path/get.js'
-import { normalizeConfig } from '../../normalize/main.js'
+
+import { UserError, PluginError, ConsumerError } from './error.js'
+import { safeNormalizeConfig } from './normalize.js'
 
 // Plugins use an array of objects for both selection and configuration.
 // This normalizes it.
@@ -70,11 +71,17 @@ const normalizeSharedConfig = async function ({
   prefix,
 }) {
   const dummyDefinitions = getDummyDefinitions(pluginConfigDefinitions)
-  return await normalizeConfig(pluginConfig, [...item, ...dummyDefinitions], {
-    context: { ...context, plugin },
-    prefix,
-    cwd,
-  })
+  return await safeNormalizeConfig(
+    pluginConfig,
+    [...item, ...dummyDefinitions],
+    {
+      context: { ...context, plugin },
+      prefix,
+      cwd,
+      UserErrorType: ConsumerError,
+      SystemErrorType: UserError,
+    },
+  )
 }
 
 const normalizeSpecificConfig = async function ({
@@ -86,9 +93,15 @@ const normalizeSpecificConfig = async function ({
   prefix,
 }) {
   const dummyDefinitions = getDummyDefinitions(item)
-  return await normalizeConfig(
+  return await safeNormalizeConfig(
     pluginConfig,
     [...dummyDefinitions, ...pluginConfigDefinitions],
-    { context, prefix, SystemErrorType: PluginError, cwd },
+    {
+      context,
+      prefix,
+      cwd,
+      UserErrorType: ConsumerError,
+      SystemErrorType: PluginError,
+    },
   )
 }

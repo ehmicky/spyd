@@ -15,7 +15,11 @@ export const createErrorType = function (name) {
 }
 
 // Retrieve error type-specific behavior
-export const getErrorTypeProps = function (name, errorProps, defaultName) {
+export const getErrorTypeProps = function (name, defaultName, errorProps) {
+  if (errorProps === undefined) {
+    return {}
+  }
+
   return typeof name === 'string' && name in errorProps
     ? errorProps[name]
     : errorProps[defaultName]

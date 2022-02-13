@@ -25,6 +25,7 @@ export const addPlugin = async function (
     plugin,
     shape,
     sharedPropNames,
+    context,
     moduleId,
   })
   const pluginConfigA = await normalizePluginConfig({

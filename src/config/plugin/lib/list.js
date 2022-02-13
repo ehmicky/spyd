@@ -1,92 +1,44 @@
-import { normalizeConfig } from '../../normalize/main.js'
-import {
-  normalizeOptionalArray,
-  normalizeObjectOrString,
-} from '../../normalize/transform.js'
-import {
-  validateObjectOrString,
-  validateJson,
-} from '../../normalize/validate/complex.js'
-import {
-  validateFileExists,
-  validateRegularFile,
-} from '../../normalize/validate/fs.js'
-import { validateDefinedString } from '../../normalize/validate/simple.js'
+import { normalizeOptionalArray } from '../../normalize/transform.js'
 
-import { isModuleId, isPathId, isInlineId, resolveModuleId } from './id.js'
+import { CoreError, UserError, ConsumerError } from './error.js'
+import { getListItemsDefinitions } from './item.js'
+import { safeNormalizeConfig } from './normalize.js'
 
 // Normalize the main property, i.e. the list of `pluginsConfigs`
 export const normalizeList = async function ({
   pluginConfigs,
-  pluginType: { name, list, builtins, pluginProp, modulePrefix },
+  pluginType: { list, name, builtins, pluginProp, modulePrefix },
   context,
   cwd,
 }) {
-  const definitions = getListDefinitions(list, pluginProp)
-  const pluginConfigsA = await normalizeConfig(pluginConfigs, definitions, {
-    context: { ...context, builtins, pluginProp, modulePrefix },
-    cwd,
-    prefix: `${name}.`,
-  })
-  return pluginConfigsA
-}
-
-const getListDefinitions = function (list, pluginProp) {
-  return [
-    { ...list, name: '', ...normalizeListProp },
-    { name: '*', ...normalizeItem },
-    { name: '*.moduleId', ...normalizeItemModuleId },
-    { name: `*.${pluginProp}`, ...normalizeItemId },
-  ]
-}
-
-const normalizeListProp = {
-  transform: normalizeOptionalArray,
-}
-
-const normalizeItem = {
-  validate(value) {
-    validateObjectOrString(value)
-    validateJson(value)
-  },
-  transform(value, { context: { pluginProp } }) {
-    return normalizeObjectOrString(value, pluginProp)
-  },
-}
-
-const normalizeItemModuleId = {
-  compute({
-    context: { builtins, modulePrefix },
-    path: [index],
-    config: {
-      [index]: { id },
+  const pluginConfigsA =
+    pluginConfigs === undefined
+      ? undefined
+      : normalizeOptionalArray(pluginConfigs)
+  const pluginConfigsB = await safeNormalizeConfig(
+    pluginConfigsA,
+    getListDefinitions(list),
+    {
+      context,
+      cwd,
+      prefix: `${name}.`,
+      UserErrorType: ConsumerError,
+      SystemErrorType: UserError,
     },
-  }) {
-    return isModuleId(id, modulePrefix, builtins) ? id : undefined
-  },
+  )
+  return await safeNormalizeConfig(
+    pluginConfigsB,
+    getListItemsDefinitions(pluginProp),
+    {
+      context: { builtins, pluginProp, modulePrefix },
+      cwd,
+      prefix: `${name}.`,
+      UserErrorType: ConsumerError,
+      SystemErrorType: CoreError,
+    },
+  )
 }
 
-const normalizeItemId = {
-  required: true,
-  path(id, { context: { builtins } }) {
-    return isPathId(id, builtins)
-  },
-  async validate(id, { context: { builtins } }) {
-    if (isInlineId(id)) {
-      validateObjectOrString(id)
-      return
-    }
-
-    validateDefinedString(id)
-
-    if (isPathId(id, builtins)) {
-      await validateFileExists(id)
-      await validateRegularFile(id)
-    }
-  },
-  transform(id, { context: { builtins, modulePrefix }, cwd }) {
-    return isModuleId(id, modulePrefix, builtins)
-      ? resolveModuleId({ id, modulePrefix, builtins, cwd })
-      : id
-  },
+const getListDefinitions = function (list) {
+  return [{ ...list, name: '' }]
 }

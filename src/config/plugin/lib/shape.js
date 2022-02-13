@@ -1,18 +1,26 @@
-import { PluginError } from '../../../error/main.js'
 import { isParent } from '../../normalize/lib/prop_path/parse.js'
-import { normalizeConfig } from '../../normalize/main.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
+
+import { PluginError, UserError, CoreError } from './error.js'
+import { safeNormalizeConfig } from './normalize.js'
 
 // Validate a plugin has the correct shape and normalize it
 export const normalizeShape = async function ({
   plugin,
   shape,
   sharedPropNames,
+  context,
   moduleId,
 }) {
-  return await normalizeConfig(plugin, [...COMMON_SHAPE, ...shape], {
+  const pluginA = await safeNormalizeConfig(plugin, COMMON_SHAPE, {
     context: { sharedPropNames, moduleId },
     UserErrorType: PluginError,
+    SystemErrorType: CoreError,
+  })
+  return await safeNormalizeConfig(pluginA, shape, {
+    context,
+    UserErrorType: PluginError,
+    SystemErrorType: UserError,
   })
 }
 

@@ -4,6 +4,7 @@ import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin/main.js'
 import { removeEmptyValues } from '../empty.js'
 import { isAmongCommands } from '../normalize/pick.js'
 
+import { handlePluginsError } from './error.js'
 import { addPlugins } from './lib/main.js'
 
 // Retrieve the name of all plugin top properties
@@ -48,8 +49,10 @@ const normalizeConfigProp = async function (
     return
   }
 
-  const plugins = await addPlugins(propValue, pluginTypeA, {
-    sharedConfig: config,
+  const plugins = await addConfigPlugins({
+    propValue,
+    pluginType: pluginTypeA,
+    config,
     context,
     cwd,
   })
@@ -58,6 +61,24 @@ const normalizeConfigProp = async function (
 }
 
 const PLUGIN_TYPES = [RUNNER_PLUGIN_TYPE, REPORTER_PLUGIN_TYPE]
+
+const addConfigPlugins = async function ({
+  propValue,
+  pluginType,
+  config,
+  context,
+  cwd,
+}) {
+  try {
+    return await addPlugins(propValue, pluginType, {
+      sharedConfig: config,
+      context,
+      cwd,
+    })
+  } catch (error) {
+    throw handlePluginsError(error)
+  }
+}
 
 const normalizePlugin = function ({ plugin, config }) {
   return removeEmptyValues({ ...plugin, config })

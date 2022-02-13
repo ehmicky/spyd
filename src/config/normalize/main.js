@@ -8,26 +8,16 @@ import { normalizeConfigProps } from './lib/main.js'
 export const normalizeConfig = async function (
   config,
   definitions,
-  { context = {}, prefix, SystemErrorType, UserErrorType = UserError, cwd },
+  { UserErrorType = UserError, ...opts },
 ) {
   try {
-    return await normalizeConfigProps(config, definitions, {
-      context,
-      prefix,
-      cwd,
-    })
+    return await normalizeConfigProps(config, definitions, opts)
   } catch (error) {
-    throw handleConfigError(error, SystemErrorType, UserErrorType)
+    throw handleConfigError(error, UserErrorType)
   }
 }
 
 // Distinguish user validation errors from system errors
-const handleConfigError = function (error, SystemErrorType, UserErrorType) {
-  if (error.validation) {
-    return wrapError(error, '', UserErrorType)
-  }
-
-  return SystemErrorType === undefined
-    ? error
-    : wrapError(error, '', SystemErrorType)
+const handleConfigError = function (error, UserErrorType) {
+  return error.validation ? wrapError(error, '', UserErrorType) : error
 }

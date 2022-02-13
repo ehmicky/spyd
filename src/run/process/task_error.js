@@ -24,8 +24,8 @@ export const throwOnTaskError = function ({ error }) {
 const applyErrorProps = function (name, message) {
   const { ErrorType, prefix } = getErrorTypeProps(
     name,
-    ERROR_PROPS,
     DEFAULT_ERROR_NAME,
+    ERROR_PROPS,
   )
   return new ErrorType(`${prefix}: ${message}`)
 }

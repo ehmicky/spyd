@@ -1,8 +1,8 @@
 import { pathToFileURL } from 'url'
 
-import { PluginError } from '../../../error/main.js'
 import { wrapError } from '../../../error/wrap.js'
 
+import { PluginError } from './error.js'
 import { isBuiltinId, isInlineId } from './id.js'
 
 // Builtin modules are lazy loaded for performance reasons.
@@ -12,18 +12,8 @@ import { isBuiltinId, isInlineId } from './id.js'
 //    share the same top-level properties. However, they will share deep
 //    properties by reference.
 export const importPlugin = async function (id, propName, builtins) {
-  if (isInlineId(id)) {
-    return { plugin: id }
-  }
-
-  if (isBuiltinId(id, builtins)) {
-    const plugin = await builtins[id]()
-    return { plugin: { ...plugin } }
-  }
-
   try {
-    const plugin = await import(pathToFileURL(id))
-    return { plugin: { ...plugin }, path: id }
+    return await importPluginById(id, builtins)
   } catch (error) {
     throw wrapError(
       error,
@@ -31,4 +21,18 @@ export const importPlugin = async function (id, propName, builtins) {
       PluginError,
     )
   }
+}
+
+const importPluginById = async function (id, builtins) {
+  if (isInlineId(id)) {
+    return { plugin: id }
+  }
+
+  if (isBuiltinId(id, builtins)) {
+    const builtinPlugin = await builtins[id]()
+    return { plugin: { ...builtinPlugin } }
+  }
+
+  const plugin = await import(pathToFileURL(id))
+  return { plugin: { ...plugin }, path: id }
 }
