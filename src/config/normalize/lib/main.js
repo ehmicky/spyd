@@ -38,10 +38,10 @@ export const normalizeConfigProps = async function (
         }),
       config,
     )
-    const configC = cleanObject(configB)
-    return configC
+    return cleanObject(configB)
   } catch (error) {
-    return handleError(error, loose)
+    handleError(error, loose)
+    return error
   }
 }
 
@@ -75,11 +75,12 @@ const applyPropDefinition = async function ({
   value,
   name,
   definition,
+  definition: { example },
   context,
   cwd,
   prefix,
 }) {
-  const opts = await getOpts({ name, config, context, cwd, prefix })
+  const opts = await getOpts({ name, config, context, cwd, prefix, example })
   const { value: newValue, name: newName = name } = await applyDefinition(
     definition,
     value,
@@ -92,9 +93,16 @@ const applyPropDefinition = async function ({
 }
 
 // Retrieve `opts` passed to most methods
-const getOpts = async function ({ name, config, context, cwd, prefix }) {
+const getOpts = async function ({
+  name,
+  config,
+  context,
+  cwd,
+  prefix,
+  example,
+}) {
   const path = parse(name)
-  const opts = { name, path, config, context, prefix }
+  const opts = { name, path, config, context, prefix, example }
   const optsA = await addCwd({ cwd, opts })
   return optsA
 }
@@ -105,6 +113,4 @@ const handleError = function (error, loose) {
   if (!loose || !error.validation) {
     throw error
   }
-
-  return error
 }
