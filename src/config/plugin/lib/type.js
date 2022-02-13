@@ -2,7 +2,7 @@
 export const normalizePluginType = function ({
   name = 'plugins',
   modulePrefix,
-  pluginProp = 'id',
+  pluginProp = 'plugin',
   multiple = false,
   builtins = {},
   default: defaultValue = [],
