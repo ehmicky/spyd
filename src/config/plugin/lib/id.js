@@ -58,21 +58,22 @@ This Node module was not found, please ensure it is installed.\n`,
 //  -        id ->        {modulePrefix}-{id}
 //  - @scope/id -> @scope/{modulePrefix}-{id}
 const getModuleName = function (id, modulePrefix) {
-  const modulePrefixA = `${modulePrefix}-`
+  const [scope, scopedName] = getModuleScope(id)
+  return `${scope}${modulePrefix}-${scopedName}`
+}
 
+const getModuleScope = function (id) {
   if (!id.startsWith('@')) {
-    return `${modulePrefixA}${id}`
+    return ['', id]
   }
 
   const slashIndex = id.indexOf('/')
 
   if (slashIndex === -1) {
-    return `${modulePrefixA}${id}`
+    return ['', id]
   }
 
-  const scope = id.slice(0, slashIndex + 1)
-  const scopedName = id.slice(slashIndex + 1)
-  return `${scope}${modulePrefixA}${scopedName}`
+  return [id.slice(0, slashIndex + 1), id.slice(slashIndex + 1)]
 }
 
 const getBuiltinsError = function (builtins) {
