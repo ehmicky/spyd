@@ -9,7 +9,8 @@ export const deepMerge = function (objects) {
   return deepmerge.all(objects, { arrayMerge })
 }
 
-// Override arrays instead of concatenating
+// Override arrays instead of concatenating.
+// This includes array of objects as this is simpler for users.
 const arrayMerge = function (arrayA, arrayB) {
   return arrayB
 }
