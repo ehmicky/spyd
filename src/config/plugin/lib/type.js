@@ -16,7 +16,7 @@ export const normalizePluginType = function ({
     multiple,
     builtins,
     shape,
-    list: { ...list, name, default: listDefault },
+    list: { ...list, default: listDefault },
     item,
   }
 }
