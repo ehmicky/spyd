@@ -5,8 +5,9 @@ export const normalizePluginType = function ({
   pluginProp = 'id',
   multiple = false,
   builtins = {},
+  default: defaultValue = [],
   shape = [],
-  list: { default: listDefault = [], ...list } = {},
+  list = {},
   item = [],
 }) {
   return {
@@ -15,8 +16,9 @@ export const normalizePluginType = function ({
     pluginProp,
     multiple,
     builtins,
+    default: defaultValue,
     shape,
-    list: { ...list, default: listDefault },
+    list,
     item,
   }
 }

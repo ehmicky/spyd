@@ -25,6 +25,9 @@ export const RUNNER_PLUGIN_TYPE = {
   // Builtin plugins
   // Default: empty object
   builtins: BUILTIN_RUNNERS,
+  // Default ids
+  // Default: empty array
+  default: DEFAULT_RUNNERS,
   // Configuration definition for the plugin itself
   // Default: empty array
   shape: [
@@ -38,7 +41,6 @@ export const RUNNER_PLUGIN_TYPE = {
   // Default: empty object
   list: {
     pick: amongCommands(['dev', 'run']),
-    default: DEFAULT_RUNNERS,
     validate: validateEmptyArray,
   },
   // Properties of the `list` item shared by all plugins

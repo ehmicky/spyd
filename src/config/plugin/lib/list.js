@@ -7,7 +7,14 @@ import { safeNormalizeConfig } from './normalize.js'
 // Normalize the main property, i.e. the list of `pluginsConfigs`
 export const normalizeList = async function ({
   pluginConfigs,
-  pluginType: { list, name, builtins, pluginProp, modulePrefix },
+  pluginType: {
+    list,
+    default: defaultValue,
+    name,
+    builtins,
+    pluginProp,
+    modulePrefix,
+  },
   context,
   cwd,
 }) {
@@ -17,7 +24,7 @@ export const normalizeList = async function ({
       : normalizeOptionalArray(pluginConfigs)
   const pluginConfigsB = await safeNormalizeConfig(
     pluginConfigsA,
-    getListDefinitions(list),
+    getListDefinitions(list, defaultValue),
     {
       context,
       cwd,
@@ -39,6 +46,6 @@ export const normalizeList = async function ({
   )
 }
 
-const getListDefinitions = function (list) {
-  return [{ ...list, name: '' }]
+const getListDefinitions = function (list, defaultValue) {
+  return [{ ...list, default: defaultValue, name: '' }]
 }

@@ -20,6 +20,7 @@ export const REPORTER_PLUGIN_TYPE = {
   modulePrefix: 'spyd-reporter',
   multiple: true,
   builtins: BUILTIN_REPORTERS,
+  default: DEFAULT_REPORTERS,
   shape: [
     ...getReportMethods().map((name) => ({
       name,
@@ -48,7 +49,6 @@ export const REPORTER_PLUGIN_TYPE = {
   ],
   list: {
     pick: amongCommands(['remove', 'run', 'show']),
-    default: DEFAULT_REPORTERS,
     transform(value, { config }) {
       return config.force ? [] : value
     },
