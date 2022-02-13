@@ -73,9 +73,9 @@ const normalizeItemId = {
   path(id, { context: { builtins } }) {
     return isPathId(id, builtins)
   },
-  async validate(id, { context: { builtins, pluginProp } }) {
+  async validate(id, { context: { builtins } }) {
     if (isInlineId(id)) {
-      validateObjectOrString(id, pluginProp)
+      validateObjectOrString(id)
       return
     }
 
