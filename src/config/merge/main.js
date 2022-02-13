@@ -1,28 +1,13 @@
-import isPlainObj from 'is-plain-obj'
+import deepmerge from 'deepmerge'
 
 // Merge two configuration objects. Used to merge:
 //  - shared `config`
 //  - `spyd.*` with CLI flags
+//  - top-level `config` with plugin-specific one
 export const mergeConfigs = function (configs) {
-  return configs.reduce(
-    (configA, configB) => mergeObjects(configA, configB, []),
-    {},
-  )
+  return deepmerge.all(configs, { arrayMerge })
 }
 
-const mergeObjects = function (objectA, objectB, keys) {
-  return Object.entries(objectB).reduce(
-    (object, [key, value]) => ({
-      ...object,
-      [key]: mergeValues(object[key], value, [...keys, key]),
-    }),
-    objectA,
-  )
-}
-
-// Arrays do not merge, they override instead.
-const mergeValues = function (valueA, valueB, keys) {
-  return isPlainObj(valueA) && isPlainObj(valueB)
-    ? mergeObjects(valueA, valueB, keys)
-    : valueB
+const arrayMerge = function (arrayA, arrayB) {
+  return arrayB
 }
