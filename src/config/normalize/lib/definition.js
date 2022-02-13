@@ -9,7 +9,7 @@ export const normalizeDefinition = function (
     path = false,
     glob = false,
     required = false,
-    example,
+    example = defaultValue,
     validate,
     transform,
     rename,
@@ -43,7 +43,15 @@ const addDefaultExample = function (example, name, definitions) {
 
   const definitionA = definitions.find(
     (definition) =>
-      definition.name === name && definition.example !== undefined,
+      definition.name === name &&
+      (definition.example !== undefined || definition.default !== undefined),
   )
-  return definitionA === undefined ? undefined : definitionA.example
+
+  if (definitionA === undefined) {
+    return
+  }
+
+  return definitionA.example === undefined
+    ? definitionA.default
+    : definitionA.example
 }
