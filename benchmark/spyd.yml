@@ -13,8 +13,8 @@ system:
   machine: one
   cluster: purple
 reporter:
-  - debug
-  - history
+  - id: debug
+  - id: history
   - id: histogram
     mini: true
   - id: boxplot

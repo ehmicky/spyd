@@ -1,3 +1,5 @@
+import { isAbsolute } from 'path'
+
 import { normalizeConfig } from '../../normalize/main.js'
 import {
   normalizeOptionalArray,
@@ -49,5 +51,8 @@ const normalizeItem = {
 
 const normalizeItemId = {
   required: true,
+  path(value) {
+    return value.startsWith('.') || isAbsolute(value)
+  },
   validate: validateDefinedString,
 }

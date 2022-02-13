@@ -1,4 +1,5 @@
 import { createRequire } from 'module'
+import { isAbsolute } from 'path'
 import { pathToFileURL } from 'url'
 
 import { PluginError, UserError } from '../../../error/main.js'
@@ -14,7 +15,6 @@ export const importPlugin = async function ({
   modulePrefix,
   builtins,
 }) {
-  validateId(id, propName)
   const plugin = await importPluginById({
     id,
     propName,
@@ -23,24 +23,6 @@ export const importPlugin = async function ({
   })
   return { ...plugin }
 }
-
-const validateId = function (id, propName) {
-  if (!PLUGIN_ID_REGEXP.test(id)) {
-    throw new PluginError(`The configuration property "${propName}.id" "${id}" is invalid.
-It must only contain lowercase letters and digits.`)
-  }
-}
-
-// We do not allow any delimiter characters such as . _ - nor uppercase letters
-// because:
-//  - the id is part of the npm package, which has strict validation rules
-//  - we use dots in CLI flags for nested configuration properties
-//  - we want to allow user-defined ids to use _ or -
-//  - avoid mixing delimiters, so it's easier to remember for users
-//  - consistent option name across spyd.yml, CLI flags, programmatic
-// This does not apply to the optional user-defined prefix.
-// This is purposely not applied to shared configs.
-const PLUGIN_ID_REGEXP = /^[a-z][a-z\d]*$/u
 
 const importPluginById = async function ({
   id,
@@ -54,12 +36,7 @@ const importPluginById = async function ({
     return await builtin()
   }
 
-  const moduleName = `${modulePrefix}${id}`
-  const pluginPath = safeGetPluginPath(
-    moduleName,
-    propName,
-    PLUGINS_IMPORT_BASE,
-  )
+  const pluginPath = safeGetPluginPath(id, propName, modulePrefix)
 
   try {
     return await import(pathToFileURL(pluginPath))
@@ -79,10 +56,15 @@ const importPluginById = async function ({
 //  - This is simpler for users
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
-// TODO: use import.meta.resolve() when available
-const safeGetPluginPath = function (moduleName, propName, base) {
+const safeGetPluginPath = function (id, propName, modulePrefix) {
+  if (isAbsolute(id)) {
+    return id
+  }
+
+  const moduleName = `${modulePrefix}${id}`
+
   try {
-    return getPluginPath(moduleName, base)
+    return getPluginPath(moduleName, PLUGINS_IMPORT_BASE)
   } catch (error) {
     throw wrapError(
       error,
@@ -92,6 +74,7 @@ const safeGetPluginPath = function (moduleName, propName, base) {
   }
 }
 
+// TODO: use import.meta.resolve() when available
 export const getPluginPath = function (moduleName, base) {
   const { resolve } = createRequire(new URL(base, import.meta.url))
 
