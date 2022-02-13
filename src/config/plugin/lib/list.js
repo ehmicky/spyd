@@ -35,6 +35,7 @@ const getListDefinitions = function (name, list, pluginProp) {
   return [
     { ...list, name, ...normalizeListProp },
     { name: `${name}.*`, ...normalizeItem },
+    { name: `${name}.*.moduleId`, ...normalizeItemModuleId },
     { name: `${name}.*.${pluginProp}`, ...normalizeItemId },
   ]
 }
@@ -50,6 +51,20 @@ const normalizeItem = {
   },
   transform(value, { context: { pluginProp } }) {
     return normalizeObjectOrString(value, pluginProp)
+  },
+}
+
+const normalizeItemModuleId = {
+  compute({
+    context: { builtins, modulePrefix },
+    path: [name, index],
+    config: {
+      [name]: {
+        [index]: { id },
+      },
+    },
+  }) {
+    return isModuleId(id, modulePrefix, builtins) ? id : undefined
   },
 }
 

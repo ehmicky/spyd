@@ -6,7 +6,7 @@ import { normalizeShape } from './shape.js'
 export const addPlugin = async function (
   { name, builtins, pluginProp, shape, item },
   {
-    pluginConfig: { [pluginProp]: id, ...pluginConfig },
+    pluginConfig: { [pluginProp]: id, moduleId, ...pluginConfig },
     index,
     pluginsCount,
     sharedPropNames,
@@ -17,11 +17,12 @@ export const addPlugin = async function (
 ) {
   const propName = getPropName(name, index, pluginsCount)
   const { plugin, path } = await importPlugin(id, propName, builtins)
-  const { config: pluginConfigDefinitions, ...pluginA } = await normalizeShape(
+  const { config: pluginConfigDefinitions, ...pluginA } = await normalizeShape({
     plugin,
     shape,
     sharedPropNames,
-  )
+    moduleId,
+  })
   const pluginConfigA = await normalizePluginConfig({
     propName,
     sharedConfig,

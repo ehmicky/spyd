@@ -4,9 +4,14 @@ import { normalizeConfig } from '../../normalize/main.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 // Validate a plugin has the correct shape and normalize it
-export const normalizeShape = async function (plugin, shape, sharedPropNames) {
+export const normalizeShape = async function ({
+  plugin,
+  shape,
+  sharedPropNames,
+  moduleId,
+}) {
   return await normalizeConfig(plugin, [...COMMON_SHAPE, ...shape], {
-    context: { sharedPropNames },
+    context: { sharedPropNames, moduleId },
     UserErrorType: PluginError,
   })
 }
@@ -14,9 +19,10 @@ export const normalizeShape = async function (plugin, shape, sharedPropNames) {
 const idProp = {
   name: 'id',
   required: true,
-  validate(id) {
+  validate(id, { context: { moduleId } }) {
     validateDefinedString(id)
     validateIdCharacters(id)
+    validateModuleId(id, moduleId)
   },
 }
 
@@ -36,6 +42,14 @@ const validateIdCharacters = function (id) {
 }
 
 const PLUGIN_ID_REGEXP = /^[a-z][a-z\d]*$/u
+
+// When using a Node module, the exported `id` must match the `id` specified by
+// the user
+const validateModuleId = function (id, moduleId) {
+  if (moduleId !== undefined && moduleId !== id) {
+    throw new Error(`must be "${moduleId}" to match the package name.`)
+  }
+}
 
 const configPropName = {
   name: 'config.*.name',
