@@ -1,7 +1,7 @@
-import { createRequire } from 'module'
 import { isAbsolute } from 'path'
 
 import { wrapError } from '../../../error/wrap.js'
+import { resolveModuleName } from '../../module.js'
 
 // `pluginConfig.id` can be:
 //  - The direct value
@@ -37,14 +37,9 @@ export const isInlineId = function (id) {
   return typeof id !== 'string'
 }
 
-// Resolve Node module ids to absolute file paths.
-// We enforce a npm package naming convention for all plugins.
-// TODO: use import.meta.resolve() when available
 export const resolveModuleId = function ({ id, modulePrefix, builtins, cwd }) {
-  const moduleName = getModuleName(id, modulePrefix)
-
   try {
-    return createRequire(cwd).resolve(moduleName)
+    return resolveModuleName(id, modulePrefix, cwd)
   } catch (error) {
     throw wrapError(
       error,
@@ -52,28 +47,6 @@ export const resolveModuleId = function ({ id, modulePrefix, builtins, cwd }) {
 This Node module was not found, please ensure it is installed.\n`,
     )
   }
-}
-
-// We allow module names to be either:
-//  -        id ->        {modulePrefix}-{id}
-//  - @scope/id -> @scope/{modulePrefix}-{id}
-const getModuleName = function (id, modulePrefix) {
-  const [scope, scopedName] = getModuleScope(id)
-  return `${scope}${modulePrefix}-${scopedName}`
-}
-
-const getModuleScope = function (id) {
-  if (!id.startsWith('@')) {
-    return ['', id]
-  }
-
-  const slashIndex = id.indexOf('/')
-
-  if (slashIndex === -1) {
-    return ['', id]
-  }
-
-  return [id.slice(0, slashIndex + 1), id.slice(slashIndex + 1)]
 }
 
 const getBuiltinsError = function (builtins) {
