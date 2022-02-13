@@ -1,6 +1,6 @@
 // Add default values and normalize plugin types
 export const normalizePluginType = function ({
-  name,
+  name = 'plugins',
   modulePrefix,
   pluginProp = 'id',
   multiple = false,

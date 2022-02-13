@@ -11,10 +11,13 @@ export const RUNNER_PLUGIN_TYPE = {
   // Commands which can use this plugin type
   commands: ['dev', 'run'],
   // Top-level property name, used in error messages
+  // Default: 'plugins'
   name: 'runner',
   // Configuration property to select the plugin
+  // Default: 'plugin'
   pluginProp: 'id',
   // Prefix of the npm package
+  // Default: none
   modulePrefix: 'spyd-runner',
   // When `true`, the plugin can be selected twice but with different configs
   // Default: `false`
