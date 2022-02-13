@@ -1,4 +1,4 @@
-import deepmerge from 'deepmerge'
+import deepMergeLib from 'deepmerge'
 
 // Deeply merge several objects.
 // Used to merge:
@@ -6,7 +6,7 @@ import deepmerge from 'deepmerge'
 //  - `spyd.*` with CLI flags
 //  - top-level `config` with plugin-specific one
 export const deepMerge = function (objects) {
-  return deepmerge.all(objects, { arrayMerge })
+  return deepMergeLib.all(objects, { arrayMerge })
 }
 
 // Override arrays instead of concatenating.

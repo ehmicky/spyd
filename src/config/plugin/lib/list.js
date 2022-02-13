@@ -27,23 +27,27 @@ export const normalizeList = async function ({
 
 const getListDefinitions = function (name, list) {
   return [
-    {
-      ...list,
-      name,
-      transform: normalizeOptionalArray,
-    },
-    {
-      name: `${name}.*`,
-      validate(value) {
-        validateObjectOrString(value)
-        validateJson(value)
-      },
-      transform: normalizeObjectOrString.bind(undefined, 'id'),
-    },
-    {
-      name: `${name}.*.id`,
-      required: true,
-      validate: validateDefinedString,
-    },
+    { ...list, name, ...normalizeListProp },
+    { name: `${name}.*`, ...normalizeItem },
+    { name: `${name}.*.id`, ...normalizeItemId },
   ]
+}
+
+const normalizeListProp = {
+  transform: normalizeOptionalArray,
+}
+
+const normalizeItem = {
+  validate(value) {
+    validateObjectOrString(value)
+    validateJson(value)
+  },
+  transform(value) {
+    return normalizeObjectOrString(value, 'id')
+  },
+}
+
+const normalizeItemId = {
+  required: true,
+  validate: validateDefinedString,
 }

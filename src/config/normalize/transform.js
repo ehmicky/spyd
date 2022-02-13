@@ -15,6 +15,6 @@ export const normalizeNumberString = function (value) {
 
 // Some object properties are have a string shortcut property.
 // This normalizes them.
-export const normalizeObjectOrString = function (propName, value) {
+export const normalizeObjectOrString = function (value, propName) {
   return typeof value === 'string' ? { [propName]: value } : value
 }
