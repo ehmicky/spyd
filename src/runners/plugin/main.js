@@ -10,7 +10,7 @@ import { item } from './item.js'
 export const RUNNER_PLUGIN_TYPE = {
   // Commands which can use this plugin type
   commands: ['dev', 'run'],
-  // Name used in error messages
+  // Top-level property name, used in error messages
   name: 'runner',
   // Configuration property to select the plugin
   pluginProp: 'id',
