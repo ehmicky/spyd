@@ -41,8 +41,10 @@ export const isInlineId = function (id) {
 // We enforce a npm package naming convention for all plugins.
 // TODO: use import.meta.resolve() when available
 export const resolveModuleId = function ({ id, modulePrefix, builtins, cwd }) {
+  const moduleName = getModuleName(id, modulePrefix)
+
   try {
-    return createRequire(cwd).resolve(`${modulePrefix}${id}`)
+    return createRequire(cwd).resolve(moduleName)
   } catch (error) {
     throw wrapError(
       error,
@@ -50,6 +52,10 @@ export const resolveModuleId = function ({ id, modulePrefix, builtins, cwd }) {
 This Node module was not found, please ensure it is installed.\n`,
     )
   }
+}
+
+const getModuleName = function (id, modulePrefix) {
+  return `${modulePrefix}${id}`
 }
 
 const getBuiltinsError = function (builtins) {
