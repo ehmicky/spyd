@@ -14,20 +14,22 @@ import { CONFIG_NPM_PREFIX } from './resolvers.js'
 // This behaves as if `--config=spyd-config-{name}` has been specified:
 //  - Additional `--config` flags are kept
 //  - The `--config` flag does not use its default value
-export const addNpxShortcut = function (configOpt) {
+export const addNpxShortcut = function (configFlags) {
   if (!isNpxCall()) {
-    return configOpt
+    return configFlags
   }
 
+  const { config: configOpt } = configFlags
   const npxConfigs = getNpxConfigs()
 
   if (configOpt === undefined) {
-    return npxConfigs
+    return { ...configFlags, config: npxConfigs }
   }
 
-  return Array.isArray(configOpt)
+  const configOptA = Array.isArray(configOpt)
     ? [...npxConfigs, ...configOpt]
     : [...npxConfigs, configOpt]
+  return { ...configFlags, config: configOptA }
 }
 
 const isNpxCall = function () {

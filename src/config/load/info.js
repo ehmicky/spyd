@@ -82,23 +82,31 @@ import { normalizeConfigProp } from './normalize.js'
 //  - For most containers (e.g. docker):
 //     - This only runs on Linux
 //     - The consumer might need to set some flags, e.g. for networking
-export const getConfigsInfos = async function (configOpt, base) {
-  const configPaths = await normalizeConfigProp(configOpt, base)
-  const configInfos = await Promise.all(configPaths.map(getConfigInfos))
-  return configInfos.flat()
+export const getConfigInfos = async function (
+  { config: configOpt, ...configContents },
+  base,
+) {
+  const parentConfigInfos = await getParentConfigInfos(configOpt, base)
+  return [...parentConfigInfos.flat(), { configContents, base }]
 }
 
-const getConfigInfos = async function (configPath) {
-  const { config: parentConfig, ...configContents } = await loadConfigContents(
-    configPath,
-  )
-  const parentBase = dirname(configPath)
-  const configInfo = { configContents, base: parentBase }
+const getParentConfigInfos = async function (configOpt, base) {
+  const configPaths = await normalizeConfigProp(configOpt, base)
+  return await Promise.all(configPaths.map(loadConfigPath))
+}
 
-  if (parentConfig === undefined) {
-    return [configInfo]
-  }
+const loadConfigPath = async function (configPath) {
+  const configContents = await loadConfigContents(configPath)
+  const configContentsA = addDefaultConfig(configContents)
+  const base = dirname(configPath)
+  return await getConfigInfos(configContentsA, base)
+}
 
-  const parentConfigInfos = await getConfigsInfos(parentConfig, parentBase)
-  return [...parentConfigInfos, configInfo]
+// The default `config` is only applied to the top-level CLI flag.
+// Therefore, we default it to an empty array when set from a config file.
+const addDefaultConfig = function ({
+  config: configOpt = [],
+  ...configContents
+}) {
+  return { ...configContents, config: configOpt }
 }
