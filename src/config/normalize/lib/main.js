@@ -3,6 +3,7 @@ import pReduce from 'p-reduce'
 import { cleanObject } from '../../../utils/clean.js'
 
 import { applyDefinition } from './apply.js'
+import { normalizeDefinition } from './definition.js'
 import { getOpts } from './opts.js'
 import { DEFAULT_PREFIX } from './prefix.js'
 import { list } from './prop_path/get.js'
@@ -24,9 +25,11 @@ export const normalizeConfigProps = async function (
   definitions,
   { context = {}, loose = false, cwd, prefix = DEFAULT_PREFIX } = {},
 ) {
+  const definitionsA = definitions.map(normalizeDefinition)
+
   try {
     const configB = await pReduce(
-      definitions,
+      definitionsA,
       (configA, definition) =>
         applyDefinitionDeep({
           config: configA,
