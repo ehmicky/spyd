@@ -12,7 +12,8 @@ export const addPropPrefix = async function (error, opts) {
   const prefix = await getPrefix(opts)
   const propName = `${prefix}${opts.name}`
   const propNameA = quotePropName(propName)
-  return wrapError(error, propNameA)
+  const propNameB = appendColon(propNameA, error)
+  return wrapError(error, propNameB)
 }
 
 const getPrefix = async function (opts) {
@@ -57,4 +58,8 @@ const quotePropName = function (propName) {
           propName.slice(lastSpaceIndex + 1),
         ]
   return `${firstWords}"${lastWord}"`
+}
+
+const appendColon = function (propName, error) {
+  return error.validation ? propName : `${propName}:`
 }
