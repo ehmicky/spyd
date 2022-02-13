@@ -2,8 +2,8 @@ import pReduce from 'p-reduce'
 
 import { cleanObject } from '../../../utils/clean.js'
 
+import { addCwd } from './cwd.js'
 import { applyDefinition } from './definition.js'
-import { addCwd } from './path.js'
 import { DEFAULT_PREFIX } from './prefix.js'
 import { list } from './prop_path/get.js'
 import { parse } from './prop_path/parse.js'
