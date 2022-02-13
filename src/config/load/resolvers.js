@@ -42,8 +42,8 @@ const resolveNpm = function (configOpt, base) {
   } catch (error) {
     throw wrapError(
       error,
-      `must be a valid package name: "${configOpt}".
-This Node module was not found, please ensure it is installed.\n\n`,
+      `must be a valid package name.
+This Node module was not found, please ensure it is installed.\n`,
     )
   }
 }
