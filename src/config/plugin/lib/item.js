@@ -12,12 +12,29 @@ import { validateDefinedString } from '../../normalize/validate/simple.js'
 import { isModuleId, isPathId, isInlineId, resolveModuleId } from './id.js'
 
 // Retrieve normalization definition for `plugins[*]` strings or objects
-export const getListItemsDefinitions = function (pluginProp) {
+export const getListItemsDefinitions = function (
+  pluginProp,
+  defaultValue,
+  builtins,
+) {
+  const exampleId = getExampleId(defaultValue, builtins)
   return [
-    { name: '*', ...normalizeItem },
+    { name: '*', example: exampleId, ...normalizeItem },
     { name: '*.moduleId', ...normalizeItemModuleId },
-    { name: `*.${pluginProp}`, ...normalizeItemId },
+    { name: `*.${pluginProp}`, example: exampleId, ...normalizeItemId },
   ]
+}
+
+const getExampleId = function (defaultValue, builtins) {
+  return getFirstItem(defaultValue) || getFirstItem(Object.keys(builtins))
+}
+
+const getFirstItem = function (stringArray) {
+  return stringArray !== undefined &&
+    stringArray.length !== 0 &&
+    stringArray[0].trim() !== ''
+    ? stringArray[0]
+    : undefined
 }
 
 const normalizeItem = {

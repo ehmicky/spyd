@@ -35,7 +35,7 @@ export const normalizeList = async function ({
   )
   return await safeNormalizeConfig(
     pluginConfigsB,
-    getListItemsDefinitions(pluginProp),
+    getListItemsDefinitions(pluginProp, defaultValue, builtins),
     {
       context: { builtins, pluginProp, modulePrefix },
       cwd,
