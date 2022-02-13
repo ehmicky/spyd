@@ -1,6 +1,4 @@
-import { normalizeError } from '../../../error/utils.js'
-import { wrapError } from '../../../error/wrap.js'
-import { maybeFunction } from '../../../utils/function.js'
+import { addPropPrefix } from './prefix.js'
 
 // Consumers can distinguish users errors from system bugs by checking
 // the `error.validation` boolean property.
@@ -33,41 +31,4 @@ export const throwValidateError = async function (message, opts) {
 
 const setValidationProp = function (error) {
   error.validation = true
-}
-
-const addPropPrefix = async function (error, opts) {
-  const propName = await getPropName(opts)
-  const propNameA = quotePropName(propName)
-  return wrapError(error, propNameA)
-}
-
-export const DEFAULT_PREFIX = 'Configuration property'
-
-const getPropName = async function (opts) {
-  const prefix = await callPrefix(opts)
-  const space =
-    prefix === '' || prefix.endsWith(' ') || prefix.endsWith('.') ? '' : ' '
-  return `${prefix}${space}${opts.name}`
-}
-
-const quotePropName = function (propName) {
-  const lastSpaceIndex = propName.lastIndexOf(' ')
-  const [firstWords, lastWord] =
-    lastSpaceIndex === -1
-      ? ['', propName]
-      : [
-          propName.slice(0, lastSpaceIndex + 1),
-          propName.slice(lastSpaceIndex + 1),
-        ]
-  return `${firstWords}"${lastWord}"`
-}
-
-const callPrefix = async function ({ prefix, ...opts }) {
-  try {
-    const prefixA = await maybeFunction(prefix, opts)
-    return String(prefixA)
-  } catch (error) {
-    const { message } = normalizeError(error)
-    return `${message}\n`
-  }
 }

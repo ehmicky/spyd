@@ -4,10 +4,10 @@ import { cleanObject } from '../../../utils/clean.js'
 
 import { applyDefinition } from './definition.js'
 import { addCwd } from './path.js'
+import { DEFAULT_PREFIX } from './prefix.js'
 import { list } from './prop_path/get.js'
 import { parse } from './prop_path/parse.js'
 import { set, remove } from './prop_path/set.js'
-import { DEFAULT_PREFIX } from './validate.js'
 
 // Normalize configuration shape and do custom validation.
 // An array of definition objects is passed.

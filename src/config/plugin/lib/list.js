@@ -22,21 +22,21 @@ export const normalizeList = async function ({
   context,
   cwd,
 }) {
-  const definitions = getListDefinitions(name, list, pluginProp)
-  const { [name]: pluginConfigsA } = await normalizeConfig(
-    { [name]: pluginConfigs },
-    definitions,
-    { context: { ...context, builtins, pluginProp, modulePrefix }, cwd },
-  )
+  const definitions = getListDefinitions(list, pluginProp)
+  const pluginConfigsA = await normalizeConfig(pluginConfigs, definitions, {
+    context: { ...context, builtins, pluginProp, modulePrefix },
+    cwd,
+    prefix: `${name}.`,
+  })
   return pluginConfigsA
 }
 
-const getListDefinitions = function (name, list, pluginProp) {
+const getListDefinitions = function (list, pluginProp) {
   return [
-    { ...list, name, ...normalizeListProp },
-    { name: `${name}.*`, ...normalizeItem },
-    { name: `${name}.*.moduleId`, ...normalizeItemModuleId },
-    { name: `${name}.*.${pluginProp}`, ...normalizeItemId },
+    { ...list, name: '', ...normalizeListProp },
+    { name: '*', ...normalizeItem },
+    { name: '*.moduleId', ...normalizeItemModuleId },
+    { name: `*.${pluginProp}`, ...normalizeItemId },
   ]
 }
 
@@ -57,11 +57,9 @@ const normalizeItem = {
 const normalizeItemModuleId = {
   compute({
     context: { builtins, modulePrefix },
-    path: [name, index],
+    path: [index],
     config: {
-      [name]: {
-        [index]: { id },
-      },
+      [index]: { id },
     },
   }) {
     return isModuleId(id, modulePrefix, builtins) ? id : undefined

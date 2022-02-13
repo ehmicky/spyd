@@ -57,8 +57,7 @@ export const normalizePluginConfig = async function ({
 }
 
 const getPrefix = function (unmergedConfig, propName, { path }) {
-  const prefix = has(unmergedConfig, path) ? `${propName}.` : ''
-  return `Configuration property ${prefix}`
+  return has(unmergedConfig, path) ? `${propName}.` : undefined
 }
 
 const normalizeSharedConfig = async function ({
