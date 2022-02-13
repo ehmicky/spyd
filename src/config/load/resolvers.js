@@ -1,6 +1,5 @@
-import { createRequire } from 'module'
-
 import { wrapError } from '../../error/wrap.js'
+import { resolveModuleName } from '../module.js'
 
 // The `config` can be:
 //  - a file path
@@ -35,10 +34,10 @@ export const CONFIG_NPM_PREFIX = 'spyd-config-'
 
 // TODO: use import.meta.resolve() when available
 const resolveNpm = function (configOpt, base) {
-  const { resolve } = createRequire(new URL(base, import.meta.url))
+  const baseUrl = new URL(base, import.meta.url)
 
   try {
-    return resolve(configOpt)
+    return resolveModuleName(configOpt, CONFIG_NPM_PREFIX, baseUrl)
   } catch (error) {
     throw wrapError(
       error,

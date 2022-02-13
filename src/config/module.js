@@ -3,9 +3,9 @@ import { createRequire } from 'module'
 // Resolve Node module ids to absolute file paths.
 // We enforce a npm package naming convention for all plugins.
 // TODO: use import.meta.resolve() when available
-export const resolveModuleName = function (id, modulePrefix, cwd) {
+export const resolveModuleName = function (id, modulePrefix, base) {
   const moduleName = getModuleName(id, modulePrefix)
-  return createRequire(cwd).resolve(moduleName)
+  return createRequire(base).resolve(moduleName)
 }
 
 // We allow module names to be either:
