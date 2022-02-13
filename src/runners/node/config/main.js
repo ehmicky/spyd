@@ -8,14 +8,13 @@ import semver from 'semver'
 import {
   normalizeNumberString,
   normalizeOptionalArray,
-} from '../../config/normalize/transform.js'
+} from '../../../config/normalize/transform.js'
 import {
   validateNumberString,
   validateDefinedString,
-} from '../../config/normalize/validate/simple.js'
-import { wrapError } from '../../error/wrap.js'
-
-import { EXAMPLE_REQUIRE } from './handler/start/require_config.js'
+} from '../../../config/normalize/validate/simple.js'
+import { wrapError } from '../../../error/wrap.js'
+import { EXAMPLE_REQUIRE } from '../handler/start/require_config.js'
 
 // Normalize and validate the Node.js version
 const transformVersion = async function (version) {
