@@ -7,6 +7,10 @@ import {
   validateObjectOrString,
   validateJson,
 } from '../../normalize/validate/complex.js'
+import {
+  validateFileExists,
+  validateRegularFile,
+} from '../../normalize/validate/fs.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { isModuleId, isPathId, resolveModuleId } from './id.js'
@@ -54,7 +58,14 @@ const normalizeItemId = {
   path(id, { context: { builtins } }) {
     return isPathId(id, builtins)
   },
-  validate: validateDefinedString,
+  async validate(id, { context: { builtins } }) {
+    validateDefinedString(id)
+
+    if (isPathId(id, builtins)) {
+      await validateFileExists(id)
+      await validateRegularFile(id)
+    }
+  },
   transform(id, { context: { builtins, modulePrefix }, cwd }) {
     return isModuleId(id, modulePrefix, builtins)
       ? resolveModuleId(id, modulePrefix, cwd)
