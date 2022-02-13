@@ -15,9 +15,6 @@ export const addPropPrefix = async function (error, opts) {
   return wrapError(error, propNameA)
 }
 
-// Default value for the `prefix` option
-export const DEFAULT_PREFIX = 'Configuration property'
-
 const getPrefix = async function (opts) {
   const prefix = await callPrefix(opts)
 
@@ -42,6 +39,9 @@ const callPrefix = async function ({ prefix, ...opts }) {
     return `${message}\n`
   }
 }
+
+// Default value for the `prefix` option
+export const DEFAULT_PREFIX = 'Configuration property'
 
 const shouldAppendSpace = function (prefix) {
   return prefix !== '' && !prefix.endsWith(' ')
