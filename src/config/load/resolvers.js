@@ -1,4 +1,6 @@
-import { getPluginPath } from '../plugin/lib/import.js'
+import { createRequire } from 'module'
+
+import { wrapError } from '../../error/wrap.js'
 
 // The `config` can be:
 //  - a file path
@@ -31,8 +33,19 @@ const isNpmResolver = function (configOpt) {
 
 export const CONFIG_NPM_PREFIX = 'spyd-config-'
 
+// TODO: use import.meta.resolve() when available
 const resolveNpm = function (configOpt, base) {
-  return getPluginPath(configOpt, base)
+  const { resolve } = createRequire(new URL(base, import.meta.url))
+
+  try {
+    return resolve(configOpt)
+  } catch (error) {
+    throw wrapError(
+      error,
+      `must be a valid package name: "${configOpt}".
+This Node module was not found, please ensure it is installed.\n\n`,
+    )
+  }
 }
 
 // Additional resolvers.

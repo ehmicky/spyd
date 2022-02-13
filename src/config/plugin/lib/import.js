@@ -75,7 +75,7 @@ const safeGetPluginPath = function (id, propName, modulePrefix) {
 }
 
 // TODO: use import.meta.resolve() when available
-export const getPluginPath = function (moduleName, base) {
+const getPluginPath = function (moduleName, base) {
   const { resolve } = createRequire(new URL(base, import.meta.url))
 
   try {
