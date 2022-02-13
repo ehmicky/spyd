@@ -12,7 +12,7 @@ const useRequiredModule = async function (requiredModule) {
   } catch (error) {
     throw wrapError(
       error,
-      `Configuration property "runnerConfig.node.require" with value "${requiredModule}" could not be imported.\n`,
+      `Configuration property "runner.require" with value "${requiredModule}" could not be imported.\n`,
       ConfigError,
     )
   }

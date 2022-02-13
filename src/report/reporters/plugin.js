@@ -12,9 +12,10 @@ import { DEFAULT_REPORTER_OUTPUT } from '../contents/output.js'
 import { getReportMethods } from '../formats/list.js'
 
 import { BUILTIN_REPORTERS, DEFAULT_REPORTERS } from './main.js'
-import { sharedProps } from './shared_props.js'
+import { item } from './plugin_item.js'
 
 export const REPORTER_PLUGIN_TYPE = {
+  commands: ['remove', 'run', 'show'],
   name: 'reporter',
   modulePrefix: 'spyd-reporter-',
   multiple: true,
@@ -45,13 +46,12 @@ export const REPORTER_PLUGIN_TYPE = {
       validate: validateDefinedString,
     },
   ],
-  selectProp: {
+  list: {
     pick: amongCommands(['remove', 'run', 'show']),
     default: DEFAULT_REPORTERS,
     transform(value, { config }) {
       return config.force ? [] : normalizeOptionalArray(value)
     },
   },
-  configProp: {},
-  sharedProps,
+  item,
 }

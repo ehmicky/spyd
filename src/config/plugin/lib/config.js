@@ -4,65 +4,41 @@ import { getDummyDefinitions } from '../../normalize/dummy.js'
 import { has } from '../../normalize/lib/prop_path/get.js'
 import { normalizeConfig } from '../../normalize/main.js'
 
-// Retrieve plugin configuration object.
-// Plugins use both:
-//  - An array of strings property for selection, for example `reporter`.
-//     - The name is singular to optimize for the common case.
-//     - This is useful for including|excluding specific plugins on-the-fly.
-//  - A `*Config` object property where each key is the plugin id, for
-//    configuration, for example `reporterConfig.debug.*`.
-// The configuration property is also used by steps and tasks, for consistency.
-// Some configuration properties can be overridden by plugins, depending on the
-// plugin types.
-//  - For example `output` can be overridden for a specific reporter using
-//    `reporterConfig.{reporterId}.output`.
-// Reasons for this format:
-//  - Works with all of: CLI flags, programmatic and config file
-//  - Optimized for patching configuration properties as opposed to replacing,
-//    which makes more sense
-//  - Works both for:
-//     - Selection + configuration (reporter|runner)
-//     - Configuration-only (steps|tasks)
-//  - Simple to enable|disable plugins
-//  - Optimized for the common use cases:
-//     - Only one plugin
-//     - No configuration
-//  - Simple merging of those configuration properties:
-//     - Deep merging of objects
-//     - For all of:
-//        - Array of `config`
-//        - Parent and child config files
-//        - CLI|programmatic flags with config file
-//  - Allows properties to target both:
-//     - All instances, for example `tasks`
-//     - Specific instances, for example `runnerConfig.{runnerId}.tasks`
-//  - Does not rely on top-level configuration properties which name is dynamic
-//    since those make flags parsing and manipulation harder
-//  - Does not rely on case or delimiters
-//     - Which enables using - and _ in user-defined identifiers
-//  - Works unescaped with YAML, JSON and JavaScript
-export const getPluginConfig = async function ({
-  configPropName,
+// Plugins use an array of objects for both selection and configuration.
+// This normalizes it.
+// Most of the times, a single plugin per type is used. Therefore:
+//  - A single item can be used instead of an array of items
+//  - The property name is not pluralized
+// This is optimized for configuration-less plugins by providing with a shortcut
+// syntax: only the plugin `id` instead of a plugin object.
+// Some configuration properties are shared by all plugins of a given type:
+//  - Top-level properties can be used to configure them for all plugins
+// When merging multiple configurations (CLI flags, programmatic, child and
+// parent config files):
+//  - This is optimized for replacing a whole list of plugins of a given type,
+//    as opposed to patching specific parts of it
+//     - This is simpler for the majority of cases
+// It is possible to use the same plugin twice with different configurations:
+//  - This is especially useful for using the same reporter but with different
+//    `output`
+//  - This is optional, since this might not be wanted for some plugins
+//     - For example plugins which create combinations (like runners) since
+//       should use variations instead
+export const normalizePluginConfig = async function ({
+  propName,
+  sharedConfig,
+  pluginConfig: unmergedConfig,
   plugin,
-  plugin: { id },
-  config: {
-    [configPropName]: { [id]: unmergedPluginConfig = {} },
-  },
-  topConfig,
   context,
   cwd,
   pluginConfigDefinitions = [],
-  sharedProps,
+  item,
 }) {
-  const pluginConfig = mergeConfigs([topConfig, unmergedPluginConfig])
-  const prefix = getPrefix.bind(undefined, {
-    unmergedPluginConfig,
-    configPropName,
-    id,
-  })
+  const pluginConfig = mergeConfigs([sharedConfig, unmergedConfig])
+  const prefix = getPrefix.bind(undefined, unmergedConfig, propName)
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
-    sharedProps,
+    item,
     pluginConfigDefinitions,
     context,
     cwd,
@@ -71,7 +47,7 @@ export const getPluginConfig = async function ({
   })
   const pluginConfigB = await normalizeSpecificConfig({
     pluginConfig: pluginConfigA,
-    sharedProps,
+    item,
     pluginConfigDefinitions,
     context,
     cwd,
@@ -80,19 +56,14 @@ export const getPluginConfig = async function ({
   return pluginConfigB
 }
 
-const getPrefix = function (
-  { unmergedPluginConfig, configPropName, id },
-  { path },
-) {
-  const prefix = has(unmergedPluginConfig, path)
-    ? `${configPropName}.${id}.`
-    : ''
+const getPrefix = function (unmergedConfig, propName, { path }) {
+  const prefix = has(unmergedConfig, path) ? `${propName}.` : ''
   return `Configuration property ${prefix}`
 }
 
 const normalizeSharedConfig = async function ({
   pluginConfig,
-  sharedProps,
+  item,
   pluginConfigDefinitions,
   context,
   cwd,
@@ -100,22 +71,22 @@ const normalizeSharedConfig = async function ({
   prefix,
 }) {
   const dummyDefinitions = getDummyDefinitions(pluginConfigDefinitions)
-  return await normalizeConfig(
-    pluginConfig,
-    [...sharedProps, ...dummyDefinitions],
-    { context: { ...context, plugin }, prefix, cwd },
-  )
+  return await normalizeConfig(pluginConfig, [...item, ...dummyDefinitions], {
+    context: { ...context, plugin },
+    prefix,
+    cwd,
+  })
 }
 
 const normalizeSpecificConfig = async function ({
   pluginConfig,
-  sharedProps,
+  item,
   pluginConfigDefinitions,
   context,
   cwd,
   prefix,
 }) {
-  const dummyDefinitions = getDummyDefinitions(sharedProps)
+  const dummyDefinitions = getDummyDefinitions(item)
   return await normalizeConfig(
     pluginConfig,
     [...dummyDefinitions, ...pluginConfigDefinitions],

@@ -13,10 +13,8 @@ import { isTtyOutput } from '../tty.js'
 const pick = amongCommands(['remove', 'run', 'show'])
 
 // The reporter's output is decided by (in priority order):
-//  - `config.reporterConfig.{reporterId}.output`
-//    (user-defined, reporter-specific)
-//  - `config.output` (user-defined, any reporters): merged in a previous
-//    step
+//  - `config.reporter.output` (user-defined, reporter-specific)
+//  - `config.output` (user-defined, any reporters): merged in a previous step
 //  - `reporter.defaultOutput` (reporter-defined, reporter-specific)
 //  - "stdout" (system-defined, any reporters)
 // `reporter.defaultOutput` is meant for reporters to define the default
@@ -113,7 +111,7 @@ const showTitles = {
 }
 
 // Reporter-specific shared configuration properties
-export const sharedProps = [
+export const item = [
   output,
   format,
   outputFormat,

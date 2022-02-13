@@ -8,25 +8,22 @@ export const REPORT_CONFIG = {
     describe: `Modules to report the result.
 
 Can be empty, if no reporters should be used.
-Can be specified several times.
-To use the same reporter several times but with different configurations, append
-an underscore followed by any characters to the identifier.
-For example: --reporter=debug_tty --runner=debug_ci
+Can be specified several times. The same reporter can be used several times but
+with different configurations.
 
-Built-in reporters: histogram
+This is an object with:
+  - An "id" property with the reporter's id, such as "histogram"
+  - Any configuration property passed to that reporter, such as "mini: true"
+  - The "quiet", "output", "colors", "showTitles", "showSystem", "showMetadata",
+    "showPrecision" and "showDiff" configuration properties can be specified to
+    apply them only to that reporter
+
+A string can be used instead as a shortcut if the object has a single "id"
+property.
+
+Built-in reporters: "debug", "histogram", "boxplot", "history"
 Custom reporters can also be installed from npm.
 Default: "debug"`,
-  },
-  reporterConfig: {
-    group: REPORT,
-    describe: `Reporters' configuration.
-Each reporter has its own configuration namespaced by its identifier.
-For example: --reporterConfig.json.output=8
-
-The following configuration properties can be set for any reporter: quiet,
-output, colors, showTitles, showSystem, showMetadata, showPrecision, showDiff.
-For example --reporterConfig.json.output is like --output but only for the json
-reporter.`,
   },
   output: {
     group: REPORT,

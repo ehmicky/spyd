@@ -12,3 +12,9 @@ export const normalizeOptionalArray = function (value = []) {
 export const normalizeNumberString = function (value) {
   return typeof value === 'number' ? String(value) : value
 }
+
+// Some object properties are have a string shortcut property.
+// This normalizes them.
+export const normalizeObjectOrString = function (propName, value) {
+  return typeof value === 'string' ? { [propName]: value } : value
+}

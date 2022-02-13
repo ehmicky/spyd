@@ -32,7 +32,7 @@ The configuration property must then be an object where:
   - The value is the configuration value to apply for those combinations.
 
 You can also define variations, i.e. separate combinations for multiple values of
-some configuration properties ("inputs", "runnerConfig").
+some configuration properties ("inputs", "runner.*").
 The configuration property must then be an object where:
   - The key is any identifier for that variation
   - The value is the configuration value to apply

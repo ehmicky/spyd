@@ -3,7 +3,7 @@
 // any commands.
 // Therefore, we need to filter them out depending on the current command.
 export const amongCommands = function (commands) {
-  return boundAmongCommands.bind(undefined, new Set(commands))
+  return boundAmongCommands.bind(undefined, commands)
 }
 
 const boundAmongCommands = function (
@@ -11,5 +11,9 @@ const boundAmongCommands = function (
   value,
   { context: { command } },
 ) {
-  return commands.has(command)
+  return isAmongCommands(commands, command)
+}
+
+export const isAmongCommands = function (commands, command) {
+  return commands.includes(command)
 }

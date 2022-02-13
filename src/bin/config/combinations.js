@@ -22,15 +22,18 @@ Can be a globbing pattern.`,
     describe: `Tasks' programming language or platform.
 Can be specified several times.
 
-Built-in runners: node, cli
+This is an object with:
+  - An "id" property with the runner's id, such as "node"
+  - Any configuration property passed to that runner, such as "version: 8"
+  - The "tasks" configuration property can be specified to apply it only to
+    that runner
+
+A string can be used instead as a shortcut if the object has a single "id"
+property.
+
+Built-in runners: "node", "cli"
 Custom runners can be installed from npm.
 Default: "node"`,
-  },
-  runnerConfig: {
-    group: TASKS,
-    describe: `Runners' configuration.
-Each runner has its own configuration namespaced by its identifier.
-For example: --runnerConfig.node.version=8`,
   },
   inputs: {
     group: TASKS,

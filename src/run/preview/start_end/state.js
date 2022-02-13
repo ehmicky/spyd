@@ -46,7 +46,7 @@ export const addResultPreviewState = function ({
 }
 
 // Each reporter can be set to use previews or not
-//  - using `config.reporterConfig.{reporterId}.quiet`
+//  - using `config.reporter.quiet`
 //     - which defaults to `config.quiet`
 //  - only if `output` is `stdout`
 // The general preview features (including the progress bar) are only available

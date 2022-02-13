@@ -2,19 +2,20 @@ inputs:
   one: 1
   two: 2
 select: not network slow uniform exponential ushaped growing
-runnerConfig:
-  cli:
-    tasks: tasks.yml
-  node:
+runner:
+  - id: node
     tasks: tasks.js
+  # - id: cli
+  #   tasks: tasks.yml
 showPrecision: true
 showSystem: false
 system:
   machine: one
   cluster: purple
-reporter: [debug, history, histogram, boxplot]
-reporterConfig:
-  histogram:
+reporter:
+  - debug
+  - history
+  - id: histogram
     mini: true
-  boxplot:
+  - id: boxplot
     mini: true

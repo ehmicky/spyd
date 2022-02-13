@@ -34,7 +34,7 @@ import {
 
 const configProps = getDummyDefinitions(CONFIG_DEFINITIONS)
 
-// All plugins definitions: `reporter`, `reporterConfig`, `runner`, etc.
+// All plugins definitions: `reporter`, `runner`
 const plugins = getDummyDefinitionsNames(getPluginsConfigProps())
 
 const cwd = {

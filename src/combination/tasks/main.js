@@ -5,7 +5,7 @@ import { findTasks } from './find.js'
 import { loadRunner } from './load.js'
 
 // The tasks file for each runner is selected using either the `tasks` or
-// `runnerConfig.{runnerId}.tasks` configuration properties.
+// `runner.tasks` configuration properties.
 // We allow it as a positional CLI flag:
 //  - This is what many users would expect
 //  - This allows users to do on-the-fly benchmarks without pre-existing setup
@@ -48,7 +48,7 @@ import { loadRunner } from './load.js'
 //     - runner might handle different file extensions differently
 //       (e.g. *.ts transpiling)
 //  - We do not provide inline
-//    `conf.[runnerConfig.{runnerId}.]inline[.{taskId}[.{stepId}]]` "BODY"
+//    `config.[runner.]inline[.{taskId}[.{stepId}]]` "BODY"
 //    since this would:
 //     - Not allow defining content outside function body (e.g. imports) nor
 //       function declaration (e.g. async keyword)
@@ -112,7 +112,7 @@ const getDimensionsTasks = async function ({
 
 // When two task files export the same task id, we only keep one based on the
 // following priority:
-//  - `config.runnerConfig.{runnerId}.tasks` over `config.tasks`
+//  - `config.runner.tasks` over `config.tasks`
 //  - `tasks` array order (last has priority)
 // This allows overridding tasks when using shared configurations.
 // This only applies when the task files are using the same runner.

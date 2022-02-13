@@ -5,9 +5,11 @@ import {
 } from '../config/normalize/validate/complex.js'
 
 import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from './main.js'
-import { sharedProps } from './shared_props.js'
+import { item } from './plugin_item.js'
 
 export const RUNNER_PLUGIN_TYPE = {
+  // Commands which can use this plugin type
+  commands: ['dev', 'run'],
   // Name used:
   //  - As a default value for the selection property
   //  - As a default value for the configuration property appended with `Config`
@@ -31,17 +33,14 @@ export const RUNNER_PLUGIN_TYPE = {
       validate: validateFunction,
     },
   ],
-  // Configuration property selecting the plugin
+  // Configuration property selecting and configuring the plugin
   // Default: empty object
-  selectProp: {
+  list: {
     pick: amongCommands(['dev', 'run']),
     default: DEFAULT_RUNNERS,
     validate: validateEmptyArray,
   },
-  // Configuration property configuring the plugin
-  // Default: empty object
-  configProp: {},
-  // Plugin properties shared by all plugins
+  // Properties of the `list` item shared by all plugins
   // Default: empty array
-  sharedProps,
+  item,
 }

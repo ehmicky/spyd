@@ -1,6 +1,6 @@
 // Custom merging logic for tasks.
-// `tasks` or `runnnerConfig.{runnerId}.tasks` are concatenated, not overridden
-// so that shared configurations consumers can add tasks.
+// `tasks` or `runner.tasks` are concatenated, not overridden so that shared
+// configurations consumers can add tasks.
 export const isTasks = function (keys) {
   return isTopTasks(keys) || isRunnerTasks(keys)
 }
@@ -10,7 +10,11 @@ const isTopTasks = function (keys) {
 }
 
 const isRunnerTasks = function (keys) {
-  return keys.length === 3 && keys[0] === 'runnerConfig' && keys[2] === 'tasks'
+  return (
+    keys[0] === 'runner' &&
+    keys[keys.length - 1] === 'tasks' &&
+    (keys.length === 2 || keys.length === 3)
+  )
 }
 
 // Order matters since later `tasks` have priority when merging two task files

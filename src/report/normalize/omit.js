@@ -4,7 +4,7 @@ import omit from 'omit.js'
 // `showDiff`.
 // We use one boolean configuration property for each instead of a single array
 // configuration property because it makes it easier to enable/disable each
-// property both in CLI flags and in `reporterConfig.{reporterId}.*` properties.
+// property both in CLI flags and in `reporter.*` properties.
 export const omitCombinationsProps = function (result, debugStats) {
   const combinations = result.combinations.map((combination) =>
     omitCombinationProps({ combination, debugStats }),

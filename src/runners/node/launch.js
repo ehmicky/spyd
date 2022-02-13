@@ -5,7 +5,7 @@ const HANDLER_MAIN_PATH = fileURLToPath(
   new URL('handler/main.js', import.meta.url),
 )
 
-// `runnerConfig.node.version` can be used to spawn a different Node.js version
+// `runner.version` can be used to spawn a different Node.js version
 // than the current one.
 export const launch = function ({ version }) {
   return version === undefined
