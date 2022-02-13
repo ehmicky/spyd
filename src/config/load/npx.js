@@ -1,17 +1,15 @@
 import { env } from 'process'
 
-import { CONFIG_NPM_PREFIX } from './resolvers.js'
+import { isConfigFileModule } from './resolvers.js'
 
 // In principle, users can use `npx` with the "npm" resolver by doing:
-//   npx --package=spyd-config-{name} spyd --config=spyd-config-{name} ...
-// As a convenience, we allow this shortcut syntax:
-//   npx --package=spyd-config-{name} spyd ...
-// We do this by:
-//  - Detecting whether `npx --package=spyd-config-{name}` is used
-//     - This detection is based on `npm_*` environment variables injected by
-//       `npx`
-//  - Adding it as `--config=spyd-config-{name}`
-// This behaves as if `--config=spyd-config-{name}` has been specified:
+//   npx --package={spydConfig} spyd --config={spydConfig} ...
+// Where {spydConfig} is [@scope/]spyd-config-{name}
+// As a convenience, we allow skipping the `--config` flag. We do this by:
+//  - Detecting whether `npx --package={spydConfig}` is used
+//     - Based on `npm_*` environment variables injected by `npx`
+//  - Adding it as `--config={spydConfig}`
+// This behaves as if `--config={spydConfig}` had been specified:
 //  - Additional `--config` flags are kept
 //  - The `--config` flag does not use its default value
 export const addNpxShortcut = function (configFlags) {
@@ -41,9 +39,5 @@ const isNpxCall = function () {
 }
 
 const getNpxConfigs = function () {
-  return env.npm_config_package.split('\n').filter(isSharedConfig)
-}
-
-const isSharedConfig = function (npxPackage) {
-  return npxPackage.startsWith(`${CONFIG_NPM_PREFIX}-`)
+  return env.npm_config_package.split('\n').filter(isConfigFileModule)
 }

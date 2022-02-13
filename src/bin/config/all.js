@@ -9,8 +9,8 @@ export const ALL_CONFIG = {
 
 This can be:
   - A file path
-  - A Node module exporting a configuration file.
-    The module name must start with "spyd-config-".
+  - A Node module name starting with "spyd-config-", optionally prefixed with
+    any npm "@scope/"
 
 By default, any "spyd.*" file in the current or parent directories is used.
 It can also be inside a "benchmark" or "packages/spyd-config-*" sub-directory.

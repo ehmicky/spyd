@@ -59,7 +59,7 @@ const quotePropName = function (propName) {
           propName.slice(0, lastSpaceIndex + 1),
           propName.slice(lastSpaceIndex + 1),
         ]
-  return `${firstWords}"${lastWord}" `
+  return `${firstWords}"${lastWord}"`
 }
 
 const callPrefix = async function ({ prefix, ...opts }) {

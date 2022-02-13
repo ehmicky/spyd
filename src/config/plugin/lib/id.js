@@ -1,7 +1,8 @@
 import { isAbsolute } from 'path'
 
 import { wrapError } from '../../../error/wrap.js'
-import { resolveModuleName } from '../../module.js'
+
+import { resolveModuleName } from './module.js'
 
 // `pluginConfig.id` can be:
 //  - The direct value

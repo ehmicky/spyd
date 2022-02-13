@@ -2,6 +2,10 @@ import { resolve, basename } from 'path'
 
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
+import { pathExists } from 'path-exists'
+import { isDirectory } from 'path-type'
+
+import { wrapError } from '../../../error/wrap.js'
 
 import { callValueFunc, callUserFunc } from './call.js'
 
@@ -10,8 +14,9 @@ import { callValueFunc, callUserFunc } from './call.js'
 //    to ensure it is evaluated at runtime.
 export const addCwd = async function ({ cwd = DEFAULT_CWD, opts }) {
   const cwdA = await callUserFunc(cwd, opts)
-  await validatePath(cwdA, opts)
-  return { ...opts, cwd: cwdA }
+  await callValueFunc(checkCwd, cwdA, opts)
+  const cwdB = resolve(cwdA)
+  return { ...opts, cwd: cwdB }
 }
 
 const DEFAULT_CWD = '.'
@@ -29,13 +34,30 @@ export const resolvePath = async function (
     return value
   }
 
-  await validatePath(value, opts)
+  await callValueFunc(checkPath, value, opts)
 
   return glob ? await resolveGlob(cwd, value) : resolve(cwd, value)
 }
 
-export const validatePath = async function (value, opts) {
-  await callValueFunc(checkPath, value, opts)
+const checkCwd = async function (value) {
+  try {
+    await checkDir(value)
+  } catch (error) {
+    // Errors in `cwd` are not user errors, i.e. should not start with `must`
+    throw wrapError(error, "'s current directory")
+  }
+}
+
+const checkDir = async function (value) {
+  checkPath(value)
+
+  if (!(await pathExists(value))) {
+    throw new Error('must be an existing file.')
+  }
+
+  if (!(await isDirectory(value))) {
+    throw new Error('must be a directory.')
+  }
 }
 
 const checkPath = function (value) {

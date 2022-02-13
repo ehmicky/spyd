@@ -3,10 +3,10 @@ import omit from 'omit.js'
 import { normalizeError } from './utils.js'
 
 // Wrap a child error with a new message and type
-export const wrapError = function (error, message, ErrorType) {
+export const wrapError = function (error, prefix, ErrorType) {
   const errorA = normalizeError(error)
   const errorB = changeErrorType(errorA, ErrorType)
-  const errorC = wrapErrorMessage(errorB, message)
+  const errorC = wrapErrorMessage(errorB, prefix)
   const errorD = copyStaticProps(errorC, error)
   return errorD
 }
@@ -31,17 +31,23 @@ const changeErrorType = function (error, ErrorType) {
 }
 
 // Prepend|append a prefix|suffix to an error message
-const wrapErrorMessage = function (error, message) {
-  if (message === '') {
+const wrapErrorMessage = function (error, prefix) {
+  if (prefix === '') {
     return error
   }
 
-  const space = WHITESPACE_END_REGEXP.test(message) ? '' : ' '
-  error.message = message.startsWith('\n')
-    ? `${error.message}${message}`
-    : `${message}${space}${error.message.trim()}`
+  const { message } = error
+  error.message = prefix.startsWith('\n')
+    ? `${message}${prefix}`
+    : `${prefix}${getSpaceDelimiter(message, prefix)}${message.trim()}`
   fixErrorStack(error)
   return error
+}
+
+const getSpaceDelimiter = function (message, prefix) {
+  return WHITESPACE_END_REGEXP.test(prefix) || message.startsWith("'")
+    ? ''
+    : ' '
 }
 
 const WHITESPACE_END_REGEXP = /\s$/u
