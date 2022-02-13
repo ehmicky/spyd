@@ -15,11 +15,7 @@ export const importPlugin = async function (id, propName, builtins) {
   try {
     return await importPluginById(id, builtins)
   } catch (error) {
-    throw wrapError(
-      error,
-      `Could not load "${propName}.id" "${id}"\n`,
-      PluginError,
-    )
+    throw wrapError(error, `Could not load "${propName}.id"\n`, PluginError)
   }
 }
 
