@@ -2,6 +2,7 @@
 export const normalizePluginType = function ({
   name,
   modulePrefix,
+  pluginProp = 'id',
   multiple = false,
   builtins = {},
   shape = [],
@@ -11,6 +12,7 @@ export const normalizePluginType = function ({
   return {
     name,
     modulePrefix,
+    pluginProp,
     multiple,
     builtins,
     shape,

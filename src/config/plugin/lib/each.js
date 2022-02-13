@@ -4,9 +4,9 @@ import { normalizeShape } from './shape.js'
 
 // Handle each individual `pluginConfig`
 export const addPlugin = async function (
-  { name, builtins, shape, item },
+  { name, builtins, pluginProp, shape, item },
   {
-    pluginConfig: { id, ...pluginConfig },
+    pluginConfig: { [pluginProp]: id, ...pluginConfig },
     index,
     pluginsCount,
     sharedPropNames,

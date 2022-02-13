@@ -17,6 +17,7 @@ import { item } from './plugin_item.js'
 export const REPORTER_PLUGIN_TYPE = {
   commands: ['remove', 'run', 'show'],
   name: 'reporter',
+  pluginProp: 'id',
   modulePrefix: 'spyd-reporter-',
   multiple: true,
   builtins: BUILTIN_REPORTERS,

@@ -18,24 +18,24 @@ import { isModuleId, isPathId, isInlineId, resolveModuleId } from './id.js'
 // Normalize the main property, i.e. the list of `pluginsConfigs`
 export const normalizeList = async function ({
   pluginConfigs,
-  pluginType: { name, list, builtins, modulePrefix },
+  pluginType: { name, list, builtins, pluginProp, modulePrefix },
   context,
   cwd,
 }) {
-  const definitions = getListDefinitions(name, list)
+  const definitions = getListDefinitions(name, list, pluginProp)
   const { [name]: pluginConfigsA } = await normalizeConfig(
     { [name]: pluginConfigs },
     definitions,
-    { context: { ...context, builtins, modulePrefix }, cwd },
+    { context: { ...context, builtins, pluginProp, modulePrefix }, cwd },
   )
   return pluginConfigsA
 }
 
-const getListDefinitions = function (name, list) {
+const getListDefinitions = function (name, list, pluginProp) {
   return [
     { ...list, name, ...normalizeListProp },
     { name: `${name}.*`, ...normalizeItem },
-    { name: `${name}.*.id`, ...normalizeItemId },
+    { name: `${name}.*.${pluginProp}`, ...normalizeItemId },
   ]
 }
 
@@ -48,8 +48,8 @@ const normalizeItem = {
     validateObjectOrString(value)
     validateJson(value)
   },
-  transform(value) {
-    return normalizeObjectOrString(value, 'id')
+  transform(value, { context: { pluginProp } }) {
+    return normalizeObjectOrString(value, pluginProp)
   },
 }
 
@@ -58,9 +58,9 @@ const normalizeItemId = {
   path(id, { context: { builtins } }) {
     return isPathId(id, builtins)
   },
-  async validate(id, { context: { builtins } }) {
+  async validate(id, { context: { builtins, pluginProp } }) {
     if (isInlineId(id)) {
-      validateObjectOrString(id)
+      validateObjectOrString(id, pluginProp)
       return
     }
 
@@ -73,7 +73,7 @@ const normalizeItemId = {
   },
   transform(id, { context: { builtins, modulePrefix }, cwd }) {
     return isModuleId(id, modulePrefix, builtins)
-      ? resolveModuleId(id, modulePrefix, cwd)
+      ? resolveModuleId({ id, modulePrefix, builtins, cwd })
       : id
   },
 }

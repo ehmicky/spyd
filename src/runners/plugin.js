@@ -16,6 +16,8 @@ export const RUNNER_PLUGIN_TYPE = {
   //  - In the return value
   //  - In error messages
   name: 'runner',
+  // Configuration property to select the plugin
+  pluginProp: 'id',
   // Prefix of the npm package
   modulePrefix: 'spyd-runner-',
   // When `true`, the plugin can be selected twice but with different configs
