@@ -1,3 +1,4 @@
+import { removeEmptyValues } from './empty.js'
 import { loadConfig } from './load/main.js'
 import { getPropCwd } from './normalize/cwd.js'
 import { DEFINITIONS } from './normalize/definitions.js'
@@ -10,14 +11,15 @@ export const getConfig = async function (
   { config: configOpt, ...configFlags } = {},
 ) {
   const { config, configInfos } = await loadConfig(configOpt, configFlags)
+  const configA = removeEmptyValues(config)
   const context = { command }
   const cwd = getPropCwd.bind(undefined, configInfos)
-  const configA = await normalizeConfig(config, DEFINITIONS, { context, cwd })
-  const configB = await normalizePluginsConfig({
-    config: configA,
+  const configB = await normalizeConfig(configA, DEFINITIONS, { context, cwd })
+  const configC = await normalizePluginsConfig({
+    config: configB,
     command,
     context,
     cwd,
   })
-  return configB
+  return configC
 }

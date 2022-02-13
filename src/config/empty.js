@@ -1,7 +1,7 @@
 import filterObj from 'filter-obj'
 import isPlainObj from 'is-plain-obj'
 
-import { mapValues } from '../../utils/map.js'
+import { mapValues } from '../utils/map.js'
 
 // We remove `null` values so that those can be used to unset properties from
 // shared configurations.
