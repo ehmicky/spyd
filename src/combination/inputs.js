@@ -30,3 +30,5 @@ const getInputId = function ({ inputId }) {
 }
 
 export const DEFAULT_INPUTS = {}
+export const EXAMPLE_INPUTS = { inputNameOne: 1, inputNameTwo: 2 }
+export const EXAMPLE_INPUT_VALUE = 'inputValue'

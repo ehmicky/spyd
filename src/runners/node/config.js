@@ -1,4 +1,5 @@
 import { dirname } from 'path'
+import { version as currentNodeVersion } from 'process'
 import { fileURLToPath } from 'url'
 
 import { readPackageUp } from 'read-pkg-up'
@@ -13,6 +14,8 @@ import {
   validateDefinedString,
 } from '../../config/normalize/validate/simple.js'
 import { wrapError } from '../../error/wrap.js'
+
+import { EXAMPLE_REQUIRE } from './handler/start/require_config.js'
 
 // Normalize and validate the Node.js version
 const transformVersion = async function (version) {
@@ -56,6 +59,7 @@ export const config = [
     name: 'version',
     validate: validateNumberString,
     transform: transformVersion,
+    example: currentNodeVersion.slice(1),
   },
   {
     name: 'require',
@@ -65,5 +69,6 @@ export const config = [
   {
     name: 'require.*',
     validate: validateDefinedString,
+    example: EXAMPLE_REQUIRE,
   },
 ]

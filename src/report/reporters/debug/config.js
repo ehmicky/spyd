@@ -5,7 +5,12 @@ import {
   validateDefinedString,
 } from '../../../config/normalize/validate/simple.js'
 
-import { ALL_STAT_NAMES, ALL_STAT_NAMES_SET } from './stats.js'
+import {
+  ALL_STAT_NAMES,
+  ALL_STAT_NAMES_SET,
+  EXAMPLE_STAT_NAMES,
+  EXAMPLE_STAT_NAME,
+} from './stats.js'
 
 export const config = [
   // Make table more compact, hiding columns separators
@@ -33,6 +38,7 @@ export const config = [
     name: 'stats',
     default: ALL_STAT_NAMES,
     validate: validateArray,
+    example: EXAMPLE_STAT_NAMES,
   },
   {
     name: 'stats.*',
@@ -40,5 +46,6 @@ export const config = [
       validateDefinedString(value)
       validateEnum(value, ALL_STAT_NAMES_SET)
     },
+    example: EXAMPLE_STAT_NAME,
   },
 ]

@@ -88,4 +88,7 @@ const addTitle = function (obj, titles) {
 }
 
 export const DEFAULT_TITLES = {}
+export const EXAMPLE_TITLES = { taskId: 'Task title', runnerId: 'Runner title' }
+export const EXAMPLE_TITLE = 'Task title'
+
 export const DEFAULT_SHOW_TITLES = false

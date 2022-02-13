@@ -44,5 +44,6 @@ export const ALL_STAT_NAMES = [
   'minLoopDuration',
   'runDuration',
 ]
-
 export const ALL_STAT_NAMES_SET = new Set(ALL_STAT_NAMES)
+export const EXAMPLE_STAT_NAMES = ['mean', 'median']
+export const EXAMPLE_STAT_NAME = 'median'

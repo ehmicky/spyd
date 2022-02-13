@@ -10,3 +10,5 @@ const PERCENTAGE_RATIO = 1e2
 export const isNegativeLimit = function (limit) {
   return limit < 0 || Object.is(limit, -0)
 }
+
+export const EXAMPLE_LIMIT = 10

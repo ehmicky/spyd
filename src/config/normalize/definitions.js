@@ -1,8 +1,15 @@
 /* eslint-disable max-lines */
 import { cwd as getCwd } from 'process'
 
-import { DEFAULT_INPUTS } from '../../combination/inputs.js'
-import { transformLimit } from '../../history/compare/transform.js'
+import {
+  DEFAULT_INPUTS,
+  EXAMPLE_INPUTS,
+  EXAMPLE_INPUT_VALUE,
+} from '../../combination/inputs.js'
+import {
+  transformLimit,
+  EXAMPLE_LIMIT,
+} from '../../history/compare/transform.js'
 import { DEFAULT_SAVE } from '../../history/data/main.js'
 import {
   transformDelta,
@@ -10,11 +17,16 @@ import {
   DEFAULT_SINCE_DELTA,
 } from '../../history/delta/transform.js'
 import { getDefaultId, validateMerge } from '../../history/merge/id.js'
-import { DEFAULT_TITLES } from '../../report/normalize/titles_add.js'
+import {
+  DEFAULT_TITLES,
+  EXAMPLE_TITLES,
+  EXAMPLE_TITLE,
+} from '../../report/normalize/titles_add.js'
 import { isTtyInput } from '../../report/tty.js'
 import { transformPrecision, DEFAULT_PRECISION } from '../../run/precision.js'
-import { DEFAULT_SELECT } from '../../select/main.js'
+import { DEFAULT_SELECT, EXAMPLE_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
+import { EXAMPLE_SYSTEMS, EXAMPLE_SYSTEM } from '../../top/system/example.js'
 import { CONFIG_DEFINITIONS } from '../load/normalize.js'
 import { getPluginsConfigProps } from '../plugin/main.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
@@ -69,12 +81,14 @@ const inputs = {
   pick: amongCommands(['dev', 'run']),
   default: DEFAULT_INPUTS,
   validate: validateObject,
+  example: EXAMPLE_INPUTS,
 }
 
 const inputsAny = {
   name: 'inputs.*',
   pick: amongCommands(['dev', 'run']),
   validate: validateJson,
+  example: EXAMPLE_INPUT_VALUE,
 }
 
 const limit = {
@@ -82,6 +96,7 @@ const limit = {
   pick: amongCommands(['remove', 'run', 'show']),
   validate: validateInteger,
   transform: transformLimit,
+  example: EXAMPLE_LIMIT,
 }
 
 const merge = {
@@ -121,12 +136,14 @@ const select = {
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   default: DEFAULT_SELECT,
   transform: normalizeOptionalArray,
+  example: EXAMPLE_SELECT,
 }
 
 const selectAny = {
   name: 'select.*',
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   validate: validateString,
+  example: EXAMPLE_SELECT,
 }
 
 const since = {
@@ -141,12 +158,14 @@ const system = {
   pick: amongCommands(['dev', 'run']),
   default: {},
   validate: validateObject,
+  example: EXAMPLE_SYSTEMS,
 }
 
 const systemAny = {
   name: 'system.*',
   pick: amongCommands(['dev', 'run']),
   validate: validateDefinedString,
+  example: EXAMPLE_SYSTEM,
 }
 
 const titles = {
@@ -154,12 +173,14 @@ const titles = {
   pick: amongCommands(['remove', 'run', 'show']),
   default: DEFAULT_TITLES,
   validate: validateObject,
+  example: EXAMPLE_TITLES,
 }
 
 const titlesAny = {
   name: 'titles.*',
   pick: amongCommands(['remove', 'run', 'show']),
   validate: validateDefinedString,
+  example: EXAMPLE_TITLE,
 }
 
 export const DEFINITIONS = [

@@ -50,3 +50,4 @@ export const matchCombination = function (combination, select, name) {
 }
 
 export const DEFAULT_SELECT = []
+export const EXAMPLE_SELECT = 'taskOne taskTwo'

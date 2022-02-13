@@ -19,3 +19,5 @@ const useRequiredModule = async function (requiredModule) {
     )
   }
 }
+
+export const EXAMPLE_REQUIRE = 'ts-node/register'

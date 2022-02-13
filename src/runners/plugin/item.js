@@ -19,6 +19,7 @@ const tasksAny = {
   path: true,
   glob: true,
   validate: validateRegularFile,
+  example: DEFAULT_TASKS,
 }
 
 const tasksFlatten = {
