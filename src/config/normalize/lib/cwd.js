@@ -11,11 +11,10 @@ import { checkPath } from './path.js'
 // A `cwd(opts)` option can be specified to customize the `cwd`.
 //  - The default value is `.`, not some `process.cwd()` evaluated at load time,
 //    to ensure it is evaluated at runtime.
-export const addCwd = async function ({ cwd = DEFAULT_CWD, opts }) {
+export const getCwd = async function ({ cwd = DEFAULT_CWD, opts }) {
   const cwdA = await callUserFunc(cwd, opts)
   await callValueFunc(checkCwd, cwdA, opts)
-  const cwdB = resolve(cwdA)
-  return { ...opts, cwd: cwdB }
+  return resolve(cwdA)
 }
 
 const DEFAULT_CWD = '.'

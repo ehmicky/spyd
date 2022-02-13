@@ -2,11 +2,10 @@ import pReduce from 'p-reduce'
 
 import { cleanObject } from '../../../utils/clean.js'
 
-import { addCwd } from './cwd.js'
 import { applyDefinition } from './definition.js'
+import { getOpts } from './opts.js'
 import { DEFAULT_PREFIX } from './prefix.js'
 import { list } from './prop_path/get.js'
-import { parse } from './prop_path/parse.js'
 import { set, remove } from './prop_path/set.js'
 
 // Normalize configuration shape and do custom validation.
@@ -90,21 +89,6 @@ const applyPropDefinition = async function ({
   return newValue === undefined
     ? remove(configA, newName)
     : set(configA, newName, newValue)
-}
-
-// Retrieve `opts` passed to most methods
-const getOpts = async function ({
-  name,
-  config,
-  context,
-  cwd,
-  prefix,
-  example,
-}) {
-  const path = parse(name)
-  const opts = { name, path, config, context, prefix, example }
-  const optsA = await addCwd({ cwd, opts })
-  return optsA
 }
 
 // When in `loose` mode, user errors are returned instead of being thrown.

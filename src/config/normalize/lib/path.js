@@ -10,10 +10,15 @@ import { callValueFunc } from './call.js'
 // This is performed before `transform()` and `validate()`.
 //  - This allows using `validate()` to validate file existence, parent
 //    directories, timestamps, file types, etc.
-export const resolvePath = async function (
+export const resolvePath = async function ({
   value,
-  { path, glob, opts, opts: { cwd } },
-) {
+  path,
+  glob,
+  opts,
+  opts: {
+    funcOpts: { cwd },
+  },
+}) {
   if (!(await callValueFunc(path, value, opts))) {
     return value
   }

@@ -8,33 +8,36 @@ import { maybeFunction } from '../../../utils/function.js'
 //  - The default prefix is prepended.
 //  - No space is appended.
 // Also surround property name with quotes.
-export const addPropPrefix = async function (error, opts) {
-  const prefix = await getPrefix(opts)
-  const propName = `${prefix}${opts.name}`
+export const addPropPrefix = async function (
+  error,
+  { prefix, funcOpts, funcOpts: { name } },
+) {
+  const prefixA = await getPrefix(prefix, funcOpts)
+  const propName = `${prefixA}${name}`
   const propNameA = quotePropName(propName)
   const propNameB = appendColon(propNameA, error)
   return wrapError(error, propNameB)
 }
 
-const getPrefix = async function (opts) {
-  const prefix = await callPrefix(opts)
+const getPrefix = async function (prefix, funcOpts) {
+  const prefixA = await callPrefix(prefix, funcOpts)
 
-  if (prefix === undefined) {
+  if (prefixA === undefined) {
     return `${DEFAULT_PREFIX} `
   }
 
-  const prefixA = String(prefix)
+  const prefixB = String(prefixA)
 
-  if (prefixA.endsWith('.')) {
-    return `${DEFAULT_PREFIX} ${prefixA}`
+  if (prefixB.endsWith('.')) {
+    return `${DEFAULT_PREFIX} ${prefixB}`
   }
 
-  return shouldAppendSpace(prefixA) ? `${prefixA} ` : prefixA
+  return shouldAppendSpace(prefixB) ? `${prefixB} ` : prefixB
 }
 
-const callPrefix = async function ({ prefix, ...opts }) {
+const callPrefix = async function (prefix, funcOpts) {
   try {
-    return await maybeFunction(prefix, opts)
+    return await maybeFunction(prefix, funcOpts)
   } catch (error) {
     const { message } = normalizeError(error)
     return `${message}\n`

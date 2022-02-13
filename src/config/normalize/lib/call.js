@@ -55,10 +55,10 @@ const callWithValueFunc = async function (userFunc, value, opts) {
 
 // Some methods do not pass any `value` as first argument.
 // Errors add the property `name` as prefix.
-export const callUserFunc = async function (userFunc, { prefix, ...opts }) {
+export const callUserFunc = async function (userFunc, opts) {
   try {
-    return await maybeFunction(userFunc, opts)
+    return await maybeFunction(userFunc, opts.funcOpts)
   } catch (error) {
-    throw await handleValidateError(error, { ...opts, prefix })
+    throw await handleValidateError(error, opts)
   }
 }

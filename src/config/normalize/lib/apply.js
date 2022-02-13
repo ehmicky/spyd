@@ -19,7 +19,7 @@ export const applyValidateTransform = async function ({
     return { value }
   }
 
-  const valueA = await resolvePath(value, { path, glob, opts })
+  const valueA = await resolvePath({ value, path, glob, opts })
   await validateValue(valueA, validate, opts)
   const valueB = await transformValue(valueA, transform, opts)
   const name = await renameProp(valueB, rename, opts)
