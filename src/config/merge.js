@@ -1,13 +1,15 @@
 import deepmerge from 'deepmerge'
 
-// Merge two configuration objects. Used to merge:
+// Deeply merge several objects.
+// Used to merge:
 //  - shared `config`
 //  - `spyd.*` with CLI flags
 //  - top-level `config` with plugin-specific one
-export const mergeConfigs = function (configs) {
-  return deepmerge.all(configs, { arrayMerge })
+export const deepMerge = function (objects) {
+  return deepmerge.all(objects, { arrayMerge })
 }
 
+// Override arrays instead of concatenating
 const arrayMerge = function (arrayA, arrayB) {
   return arrayB
 }

@@ -1,4 +1,4 @@
-import { mergeConfigs } from '../merge/main.js'
+import { deepMerge } from '../merge.js'
 import { CLI_FLAGS_BASE } from '../normalize/cwd.js'
 
 import { getConfigsInfos } from './info.js'
@@ -21,7 +21,7 @@ export const loadConfig = async function (configOpt, configFlags) {
     { configContents: configFlags, base: CLI_FLAGS_BASE },
   ]
   const configsB = configInfosA.map(getConfigContents)
-  const configB = mergeConfigs(configsB)
+  const configB = deepMerge(configsB)
   // eslint-disable-next-line fp/no-mutating-methods
   const configInfosB = [...configInfosA].reverse()
   return { config: configB, configInfos: configInfosB }
