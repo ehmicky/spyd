@@ -45,5 +45,7 @@ const handleDuplicatePlugin = function (
     return pluginConfig
   }
 
-  return duplicatePlugins[0] === pluginConfig ? deepMerge(duplicatePlugins) : {}
+  return duplicatePlugins[duplicatePlugins.length - 1] === pluginConfig
+    ? deepMerge(duplicatePlugins)
+    : {}
 }

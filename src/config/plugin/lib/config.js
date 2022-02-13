@@ -65,7 +65,7 @@ const normalizeSharedConfig = async function ({
     [...item, ...dummyDefinitions],
     {
       context: { ...context, plugin },
-      prefix: propName,
+      prefix: `${propName}.`,
       cwd,
       UserErrorType: ConsumerError,
       SystemErrorType: UserError,
@@ -87,7 +87,7 @@ const normalizeSpecificConfig = async function ({
     [...dummyDefinitions, ...pluginConfigDefinitions],
     {
       context,
-      prefix: propName,
+      prefix: `${propName}.`,
       cwd,
       UserErrorType: ConsumerError,
       SystemErrorType: PluginError,
