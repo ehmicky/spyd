@@ -26,9 +26,7 @@ const mergeObjects = function (objectA, objectB, keys) {
 
 // Arrays do not merge, they override instead.
 const mergeValues = function (valueA, valueB, keys) {
-  if (isPlainObj(valueA) && isPlainObj(valueB)) {
-    return mergeObjects(valueA, valueB, keys)
-  }
-
-  return valueB
+  return isPlainObj(valueA) && isPlainObj(valueB)
+    ? mergeObjects(valueA, valueB, keys)
+    : valueB
 }
