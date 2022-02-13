@@ -1,80 +1,33 @@
-import { createRequire } from 'module'
-import { isAbsolute } from 'path'
 import { pathToFileURL } from 'url'
 
-import { PluginError, UserError } from '../../../error/main.js'
+import { PluginError } from '../../../error/main.js'
 import { wrapError } from '../../../error/wrap.js'
-import { PLUGINS_IMPORT_BASE } from '../../normalize/cwd.js'
+
+import { isBuiltinId } from './id.js'
 
 // Builtin modules are lazy loaded for performance reasons.
-// The return value is shallow merged to make it a plain object instead of
+// The return value is shallow cloned to make it a plain object instead of
 // a dynamic `Module` instance.
-export const importPlugin = async function ({
-  id,
-  propName,
-  modulePrefix,
-  builtins,
-}) {
-  const plugin = await importPluginById({
-    id,
-    propName,
-    modulePrefix,
-    builtins,
-  })
+//  - It also ensure plugins of same id and type but different configs do not
+//    share the same top-level properties. However, they will share deep
+//    properties by reference.
+export const importPlugin = async function (id, propName, builtins) {
+  const plugin = await importPluginById(id, propName, builtins)
   return { ...plugin }
 }
 
-const importPluginById = async function ({
-  id,
-  propName,
-  modulePrefix,
-  builtins,
-}) {
-  const builtin = builtins[id]
-
-  if (builtin !== undefined) {
-    return await builtin()
+const importPluginById = async function (id, propName, builtins) {
+  if (isBuiltinId(id, builtins)) {
+    return await builtins[id]()
   }
 
-  const pluginPath = safeGetPluginPath(id, propName, modulePrefix)
-
   try {
-    return await import(pathToFileURL(pluginPath))
+    return await import(pathToFileURL(id))
   } catch (error) {
     throw wrapError(
       error,
-      `Could not load "${propName}.id" "${id}"\n\n`,
+      `Could not load "${propName}.id" "${id}"\n`,
       PluginError,
-    )
-  }
-}
-
-// Find the local file path of a plugin.
-// We enforce a naming convention for all plugins.
-// All plugins are Node modules.
-// We do not allow npm @scope because:
-//  - This is simpler for users
-//  - This prevent the confusion (which could be malicious) created by the
-//    ambiguity
-// TODO: use import.meta.resolve() when available
-const safeGetPluginPath = function (id, propName, modulePrefix) {
-  if (isAbsolute(id)) {
-    return id
-  }
-
-  const moduleName = `${modulePrefix}${id}`
-  const { resolve } = createRequire(
-    new URL(PLUGINS_IMPORT_BASE, import.meta.url),
-  )
-
-  try {
-    return resolve(moduleName)
-  } catch (error) {
-    throw wrapError(
-      error,
-      `The configuration property "${propName}.id" must be a valid package name: "${moduleName}".
-This Node module was not found, please ensure it is installed.\n\n`,
-      UserError,
     )
   }
 }

@@ -46,5 +46,3 @@ export const getPropCwd = function (configInfos, { path }) {
 const DEFAULT_VALUES_BASE = '.'
 // Base used to resolve file paths in CLI flags
 export const CLI_FLAGS_BASE = '.'
-// Base used to resolve plugin modules
-export const PLUGINS_IMPORT_BASE = '.'

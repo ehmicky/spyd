@@ -1,5 +1,3 @@
-import { isAbsolute } from 'path'
-
 import { normalizeConfig } from '../../normalize/main.js'
 import {
   normalizeOptionalArray,
@@ -11,10 +9,12 @@ import {
 } from '../../normalize/validate/complex.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
+import { isModuleId, isPathId, resolveModuleId } from './id.js'
+
 // Normalize the main property, i.e. the list of `pluginsConfigs`
 export const normalizeList = async function ({
   pluginConfigs,
-  pluginType: { name, list },
+  pluginType: { name, list, builtins, modulePrefix },
   context,
   cwd,
 }) {
@@ -22,7 +22,7 @@ export const normalizeList = async function ({
   const { [name]: pluginConfigsA } = await normalizeConfig(
     { [name]: pluginConfigs },
     definitions,
-    { context, cwd },
+    { context: { ...context, builtins, modulePrefix }, cwd },
   )
   return pluginConfigsA
 }
@@ -51,8 +51,13 @@ const normalizeItem = {
 
 const normalizeItemId = {
   required: true,
-  path(value) {
-    return value.startsWith('.') || isAbsolute(value)
+  path(id, { context: { builtins } }) {
+    return isPathId(id, builtins)
   },
   validate: validateDefinedString,
+  transform(id, { context: { builtins, modulePrefix }, cwd }) {
+    return isModuleId(id, modulePrefix, builtins)
+      ? resolveModuleId(id, modulePrefix, cwd)
+      : id
+  },
 }
