@@ -32,6 +32,9 @@ const idProp = {
     validateIdCharacters(id)
     validateModuleId(id, moduleId)
   },
+  example(id, { context: { moduleId = 'module-id' } }) {
+    return moduleId
+  },
 }
 
 // We do not allow any delimiter characters such as . _ - nor uppercase letters
@@ -68,6 +71,7 @@ const configPropName = {
       )
     }
   },
+  example: 'propertyName',
 }
 
 const isSharedProp = function (name, sharedPropNames) {
