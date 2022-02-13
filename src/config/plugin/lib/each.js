@@ -13,7 +13,6 @@ export const addPlugin = async function (
     index,
     pluginsCount,
     sharedPropNames,
-    sharedConfig,
     context,
     cwd,
   },
@@ -37,7 +36,6 @@ export const addPlugin = async function (
       })
     const pluginConfigA = await normalizePluginConfig({
       propName,
-      sharedConfig,
       pluginConfig,
       plugin: pluginA,
       context,

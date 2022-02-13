@@ -33,6 +33,10 @@ const handleDuplicatePlugin = function (
   pluginConfigs,
   pluginConfig,
 ) {
+  if (pluginConfig[pluginProp] === undefined) {
+    return pluginConfig
+  }
+
   const duplicatePlugins = pluginConfigs.filter(
     (pluginConfigB) => pluginConfig[pluginProp] === pluginConfigB[pluginProp],
   )

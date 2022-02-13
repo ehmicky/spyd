@@ -10,7 +10,7 @@ export const RUN_CONFIG = {
 The default is 5.
 A higher level increases precision but makes the benchmark last longer.`,
   },
-  quiet: {
+  'reporter.quiet': {
     group: REPORT,
     alias: 'q',
     describe: `Preview the results and display a progress bar.

@@ -1,7 +1,8 @@
 import { addPlugin } from './each.js'
 import { normalizeList } from './list.js'
 import { handleMultiple } from './multiple.js'
-import { getSharedConfig } from './shared.js'
+import { applySharedConfigs } from './shared_config.js'
+import { getSharedConfigPropNames } from './shared_names.js'
 import { normalizePluginType } from './type.js'
 
 // Generic utility to add plugins which can be selected and configured by users.
@@ -12,29 +13,26 @@ import { normalizePluginType } from './type.js'
 export const addPlugins = async function (
   pluginConfigs,
   pluginType,
-  { sharedConfig = {}, context, cwd } = {},
+  { context, cwd } = {},
 ) {
   const pluginTypeA = normalizePluginType(pluginType)
-  const { sharedConfig: sharedConfigA, sharedPropNames } = getSharedConfig(
-    sharedConfig,
-    pluginTypeA,
-  )
   const pluginConfigsA = await normalizeList({
     pluginConfigs,
     pluginType: pluginTypeA,
     context,
     cwd,
   })
-  const pluginConfigsB = handleMultiple(pluginConfigsA, pluginTypeA)
-  const pluginsCount = pluginConfigsB.length
+  const sharedPropNames = getSharedConfigPropNames(pluginTypeA)
+  const pluginConfigsB = applySharedConfigs(pluginConfigsA, pluginTypeA)
+  const pluginConfigsC = handleMultiple(pluginConfigsB, pluginTypeA)
+  const pluginsCount = pluginConfigsC.length
   const plugins = await Promise.all(
-    pluginConfigsB.map((pluginConfig, index) =>
+    pluginConfigsC.map((pluginConfig, index) =>
       addPlugin(pluginTypeA, {
         pluginConfig,
         index,
         pluginsCount,
         sharedPropNames,
-        sharedConfig: sharedConfigA,
         context,
         cwd,
       }),

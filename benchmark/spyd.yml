@@ -1,21 +1,22 @@
-inputs:
-  one: 1
-  two: 2
 select: not network slow uniform exponential ushaped growing
 runner:
   - id: node
     tasks: tasks.js
   # - id: cli
   #   tasks: tasks.yml
-showPrecision: true
-showSystem: false
-system:
-  machine: one
-  cluster: purple
+inputs:
+  one: 1
+  two: 2
 reporter:
+  - id: any
+    showPrecision: true
+    showSystem: false
   - id: debug
   - id: history
   - id: histogram
     mini: true
   - id: boxplot
     mini: true
+system:
+  machine: one
+  cluster: purple

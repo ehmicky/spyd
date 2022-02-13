@@ -6,7 +6,7 @@ import { RUN_CONFIG } from '../config/run.js'
 import { SELECT_CONFIG } from '../config/select.js'
 
 export const RUN_COMMAND = {
-  command: ['run [tasks]', '* [tasks]'],
+  command: ['run [runner.tasks]', '* [runner.tasks]'],
   describe: 'Measure tasks',
 
   config: {
@@ -18,7 +18,7 @@ export const RUN_COMMAND = {
     ...HISTORY_CONFIG,
   },
 
-  usage: `$0 [flags...] [tasks]
+  usage: `$0 [flags...] [runner.tasks]
 
 Measure tasks.`,
 

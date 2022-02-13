@@ -25,7 +25,7 @@ export const normalizePluginsConfig = async function ({
 }) {
   const configEntries = await Promise.all(
     Object.entries(config).map(
-      normalizeConfigProp.bind(undefined, { command, config, context, cwd }),
+      normalizeConfigProp.bind(undefined, { command, context, cwd }),
     ),
   )
   const configA = Object.fromEntries(configEntries.filter(Boolean))
@@ -34,7 +34,7 @@ export const normalizePluginsConfig = async function ({
 }
 
 const normalizeConfigProp = async function (
-  { command, config, context, cwd },
+  { command, context, cwd },
   [propName, propValue],
 ) {
   const pluginType = PLUGIN_TYPES.find(({ name }) => name === propName)
@@ -52,7 +52,6 @@ const normalizeConfigProp = async function (
   const plugins = await addConfigPlugins({
     propValue,
     pluginType: pluginTypeA,
-    config,
     context,
     cwd,
   })
@@ -65,16 +64,11 @@ const PLUGIN_TYPES = [RUNNER_PLUGIN_TYPE, REPORTER_PLUGIN_TYPE]
 const addConfigPlugins = async function ({
   propValue,
   pluginType,
-  config,
   context,
   cwd,
 }) {
   try {
-    return await addPlugins(propValue, pluginType, {
-      sharedConfig: config,
-      context,
-      cwd,
-    })
+    return await addPlugins(propValue, pluginType, { context, cwd })
   } catch (error) {
     throw handlePluginsError(error)
   }
