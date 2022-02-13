@@ -13,7 +13,7 @@ import {
 } from '../../normalize/validate/fs.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
-import { isModuleId, isPathId, resolveModuleId } from './id.js'
+import { isModuleId, isPathId, isInlineId, resolveModuleId } from './id.js'
 
 // Normalize the main property, i.e. the list of `pluginsConfigs`
 export const normalizeList = async function ({
@@ -59,6 +59,11 @@ const normalizeItemId = {
     return isPathId(id, builtins)
   },
   async validate(id, { context: { builtins } }) {
+    if (isInlineId(id)) {
+      validateObjectOrString(id)
+      return
+    }
+
     validateDefinedString(id)
 
     if (isPathId(id, builtins)) {
