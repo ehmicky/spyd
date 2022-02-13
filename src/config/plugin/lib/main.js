@@ -1,5 +1,6 @@
 import { addPlugin } from './each.js'
 import { normalizeList } from './list.js'
+import { handleMultiple } from './multiple.js'
 import { getSharedConfig } from './shared.js'
 import { normalizePluginType } from './type.js'
 
@@ -24,9 +25,10 @@ export const addPlugins = async function (
     context,
     cwd,
   })
-  const pluginsCount = pluginConfigsA.length
-  return await Promise.all(
-    pluginConfigsA.map((pluginConfig, index) =>
+  const pluginConfigsB = handleMultiple(pluginConfigsA, pluginTypeA)
+  const pluginsCount = pluginConfigsB.length
+  const plugins = await Promise.all(
+    pluginConfigsB.map((pluginConfig, index) =>
       addPlugin(pluginTypeA, {
         pluginConfig,
         index,
@@ -38,4 +40,5 @@ export const addPlugins = async function (
       }),
     ),
   )
+  return plugins.filter(Boolean)
 }

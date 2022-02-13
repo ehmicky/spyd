@@ -15,6 +15,10 @@ export const addPlugin = async function (
     cwd,
   },
 ) {
+  if (id === undefined) {
+    return
+  }
+
   const propName = getPropName(name, index, pluginsCount)
   const { plugin, path } = await importPlugin(id, propName, builtins)
   const { config: pluginConfigDefinitions, ...pluginA } = await normalizeShape({
