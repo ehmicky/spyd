@@ -56,35 +56,25 @@ const importPluginById = async function ({
 //  - This is simpler for users
 //  - This prevent the confusion (which could be malicious) created by the
 //    ambiguity
+// TODO: use import.meta.resolve() when available
 const safeGetPluginPath = function (id, propName, modulePrefix) {
   if (isAbsolute(id)) {
     return id
   }
 
   const moduleName = `${modulePrefix}${id}`
-
-  try {
-    return getPluginPath(moduleName, PLUGINS_IMPORT_BASE)
-  } catch (error) {
-    throw wrapError(
-      error,
-      `The configuration property "${propName}.id"`,
-      UserError,
-    )
-  }
-}
-
-// TODO: use import.meta.resolve() when available
-const getPluginPath = function (moduleName, base) {
-  const { resolve } = createRequire(new URL(base, import.meta.url))
+  const { resolve } = createRequire(
+    new URL(PLUGINS_IMPORT_BASE, import.meta.url),
+  )
 
   try {
     return resolve(moduleName)
   } catch (error) {
     throw wrapError(
       error,
-      `must be a valid package name: "${moduleName}".
+      `The configuration property "${propName}.id" must be a valid package name: "${moduleName}".
 This Node module was not found, please ensure it is installed.\n\n`,
+      UserError,
     )
   }
 }
