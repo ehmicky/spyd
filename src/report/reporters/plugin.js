@@ -18,7 +18,7 @@ export const REPORTER_PLUGIN_TYPE = {
   commands: ['remove', 'run', 'show'],
   name: 'reporter',
   pluginProp: 'id',
-  modulePrefix: 'spyd-reporter-',
+  modulePrefix: 'spyd-reporter',
   multiple: true,
   builtins: BUILTIN_REPORTERS,
   shape: [

@@ -54,8 +54,25 @@ This Node module was not found, please ensure it is installed.\n`,
   }
 }
 
+// We allow module names to be either:
+//  -        id ->        {modulePrefix}-{id}
+//  - @scope/id -> @scope/{modulePrefix}-{id}
 const getModuleName = function (id, modulePrefix) {
-  return `${modulePrefix}${id}`
+  const modulePrefixA = `${modulePrefix}-`
+
+  if (!id.startsWith('@')) {
+    return `${modulePrefixA}${id}`
+  }
+
+  const slashIndex = id.indexOf('/')
+
+  if (slashIndex === -1) {
+    return `${modulePrefixA}${id}`
+  }
+
+  const scope = id.slice(0, slashIndex + 1)
+  const scopedName = id.slice(slashIndex + 1)
+  return `${scope}${modulePrefixA}${scopedName}`
 }
 
 const getBuiltinsError = function (builtins) {
