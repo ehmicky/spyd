@@ -6,6 +6,10 @@ export const normalizeReporters = function (
   { reporter: reporters, ...config },
   command,
 ) {
+  if (reporters === undefined) {
+    return config
+  }
+
   const reportersA = reporters.filter((reporter) =>
     shouldUseReporter(reporter, command),
   )
