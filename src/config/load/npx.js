@@ -45,5 +45,5 @@ const getNpxConfigs = function () {
 }
 
 const isSharedConfig = function (npxPackage) {
-  return npxPackage.startsWith(CONFIG_NPM_PREFIX)
+  return npxPackage.startsWith(`${CONFIG_NPM_PREFIX}-`)
 }

@@ -27,10 +27,10 @@ export const useResolvers = async function (configOpt, base) {
 // We do not use a shorter id like "npm:{name}" so users do not need two
 // different ids: one for `npm install` and one for the `config` property.
 const isNpmResolver = function (configOpt) {
-  return configOpt.startsWith(CONFIG_NPM_PREFIX)
+  return configOpt.startsWith(`${CONFIG_NPM_PREFIX}-`)
 }
 
-export const CONFIG_NPM_PREFIX = 'spyd-config-'
+export const CONFIG_NPM_PREFIX = 'spyd-config'
 
 // TODO: use import.meta.resolve() when available
 const resolveNpm = function (configOpt, base) {
