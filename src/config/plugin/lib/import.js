@@ -12,17 +12,14 @@ import { isBuiltinId } from './id.js'
 //    share the same top-level properties. However, they will share deep
 //    properties by reference.
 export const importPlugin = async function (id, propName, builtins) {
-  const plugin = await importPluginById(id, propName, builtins)
-  return { ...plugin }
-}
-
-const importPluginById = async function (id, propName, builtins) {
   if (isBuiltinId(id, builtins)) {
-    return await builtins[id]()
+    const plugin = await builtins[id]()
+    return { plugin: { ...plugin } }
   }
 
   try {
-    return await import(pathToFileURL(id))
+    const plugin = await import(pathToFileURL(id))
+    return { plugin: { ...plugin }, path: id }
   } catch (error) {
     throw wrapError(
       error,

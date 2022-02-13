@@ -48,13 +48,17 @@ const normalizeConfigProp = async function (
     return
   }
 
-  const propValueA = await addPlugins(propValue, pluginTypeA, {
+  const plugins = await addPlugins(propValue, pluginTypeA, {
     sharedConfig: config,
     context,
     cwd,
   })
-  const propValueB = propValueA.map(removeEmptyValues)
-  return [propName, propValueB]
+  const pluginsA = plugins.map(normalizePlugin)
+  return [propName, pluginsA]
 }
 
 const PLUGIN_TYPES = [RUNNER_PLUGIN_TYPE, REPORTER_PLUGIN_TYPE]
+
+const normalizePlugin = function ({ plugin, config }) {
+  return removeEmptyValues({ ...plugin, config })
+}

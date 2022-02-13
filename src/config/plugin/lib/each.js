@@ -16,7 +16,7 @@ export const addPlugin = async function (
   },
 ) {
   const propName = getPropName(name, index, pluginsCount)
-  const plugin = await importPlugin(id, propName, builtins)
+  const { plugin, path } = await importPlugin(id, propName, builtins)
   const { config: pluginConfigDefinitions, ...pluginA } = await normalizeShape(
     plugin,
     shape,
@@ -32,7 +32,7 @@ export const addPlugin = async function (
     pluginConfigDefinitions,
     item,
   })
-  return { ...pluginA, config: pluginConfigA }
+  return { plugin: pluginA, path, config: pluginConfigA }
 }
 
 const getPropName = function (name, index, pluginsCount) {
