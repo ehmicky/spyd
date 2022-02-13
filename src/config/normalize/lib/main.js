@@ -2,7 +2,7 @@ import pReduce from 'p-reduce'
 
 import { cleanObject } from '../../../utils/clean.js'
 
-import { applyDefinition } from './definition.js'
+import { applyDefinition } from './apply.js'
 import { getOpts } from './opts.js'
 import { DEFAULT_PREFIX } from './prefix.js'
 import { list } from './prop_path/get.js'
