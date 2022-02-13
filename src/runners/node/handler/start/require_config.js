@@ -3,7 +3,7 @@ import { pathToFileURL } from 'url'
 import { wrapError } from '../../../../error/wrap.js'
 import { ConfigError } from '../../../common/error.js'
 
-// Use the `require` config
+// Use the `require` configuration property
 export const useRequireConfig = async function (requireConfig) {
   await Promise.all(requireConfig.map(useRequiredModule))
 }
