@@ -1,3 +1,5 @@
+import { pathToFileURL } from 'url'
+
 import { wrapError } from '../../../../error/wrap.js'
 import { ConfigError } from '../../../common/error.js'
 
@@ -8,7 +10,7 @@ export const useRequireConfig = async function (requireConfig) {
 
 const useRequiredModule = async function (requiredModule) {
   try {
-    await import(requiredModule)
+    await import(pathToFileURL(requiredModule))
   } catch (error) {
     throw wrapError(
       error,

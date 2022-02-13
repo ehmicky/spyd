@@ -1,4 +1,5 @@
 import { extname } from 'path'
+import { pathToFileURL } from 'url'
 
 import { UserError } from '../error/main.js'
 
@@ -36,7 +37,7 @@ const importJsFile = async function (filePath) {
 }
 
 const importJavaScript = async function (filePath) {
-  return await import(filePath)
+  return await import(pathToFileURL(filePath))
 }
 
 const EXTENSIONS = {

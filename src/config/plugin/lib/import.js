@@ -1,4 +1,5 @@
 import { createRequire } from 'module'
+import { pathToFileURL } from 'url'
 
 import { PluginError, UserError } from '../../../error/main.js'
 import { wrapError } from '../../../error/wrap.js'
@@ -61,7 +62,7 @@ const importPluginById = async function ({
   )
 
   try {
-    return await import(pluginPath)
+    return await import(pathToFileURL(pluginPath))
   } catch (error) {
     throw wrapError(
       error,
