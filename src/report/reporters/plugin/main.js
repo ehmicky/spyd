@@ -1,18 +1,18 @@
-import { amongCommands } from '../../config/normalize/pick.js'
-import { normalizeOptionalArray } from '../../config/normalize/transform.js'
+import { amongCommands } from '../../../config/normalize/pick.js'
+import { normalizeOptionalArray } from '../../../config/normalize/transform.js'
 import {
   validateObject,
   validateFunction,
-} from '../../config/normalize/validate/complex.js'
+} from '../../../config/normalize/validate/complex.js'
 import {
   validateBoolean,
   validateDefinedString,
-} from '../../config/normalize/validate/simple.js'
-import { DEFAULT_REPORTER_OUTPUT } from '../contents/output.js'
-import { getReportMethods } from '../formats/list.js'
+} from '../../../config/normalize/validate/simple.js'
+import { DEFAULT_REPORTER_OUTPUT } from '../../contents/output.js'
+import { getReportMethods } from '../../formats/list.js'
+import { BUILTIN_REPORTERS, DEFAULT_REPORTERS } from '../main.js'
 
-import { BUILTIN_REPORTERS, DEFAULT_REPORTERS } from './main.js'
-import { item } from './plugin_item.js'
+import { item } from './item.js'
 
 export const REPORTER_PLUGIN_TYPE = {
   commands: ['remove', 'run', 'show'],

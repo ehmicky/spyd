@@ -1,11 +1,11 @@
-import { amongCommands } from '../config/normalize/pick.js'
+import { amongCommands } from '../../config/normalize/pick.js'
 import {
   validateEmptyArray,
   validateFunction,
-} from '../config/normalize/validate/complex.js'
+} from '../../config/normalize/validate/complex.js'
+import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from '../main.js'
 
-import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from './main.js'
-import { item } from './plugin_item.js'
+import { item } from './item.js'
 
 export const RUNNER_PLUGIN_TYPE = {
   // Commands which can use this plugin type

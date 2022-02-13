@@ -1,6 +1,6 @@
 import { normalizeReporters } from '../../report/config/main.js'
-import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin.js'
-import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin.js'
+import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin/main.js'
+import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin/main.js'
 import { removeEmptyValues } from '../empty.js'
 import { isAmongCommands } from '../normalize/pick.js'
 
