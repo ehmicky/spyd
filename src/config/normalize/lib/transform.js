@@ -36,18 +36,16 @@ const getTransformMove = function ({ newPath, value }, { funcOpts: { name } }) {
   return { newPath: `${name}.${newPath}`, value }
 }
 
-const applyCommonMoves = function (transformReturn, value, opts) {
-  const commonMove = COMMON_MOVES.find(({ test }) =>
-    test(transformReturn, value),
-  )
+const applyCommonMoves = function (newValue, oldValue, opts) {
+  const commonMove = COMMON_MOVES.find(({ test }) => test(newValue, oldValue))
 
   if (commonMove === undefined) {
     return
   }
 
-  const newPath = commonMove.getNewPath(transformReturn)
+  const newPath = commonMove.getNewPath(newValue)
   const newPathA = `${opts.funcOpts.name}.${newPath}`
-  return { value: transformReturn, newPath: newPathA }
+  return { value: newValue, newPath: newPathA }
 }
 
 const COMMON_MOVES = [
