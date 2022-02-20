@@ -28,8 +28,8 @@ export const addPlugins = async function (
   })
   const plugins = await Promise.all(
     pluginConfigsA.map((pluginConfig) =>
-      addPlugin(pluginTypeA, {
-        pluginConfig,
+      addPlugin(pluginConfig, {
+        pluginType: pluginTypeA,
         sharedPropNames,
         sharedConfig: sharedConfigA,
         context,

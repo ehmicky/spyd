@@ -7,63 +7,41 @@ import { normalizeShape } from './shape.js'
 
 // Handle each individual `pluginConfig`
 export const addPlugin = async function (
-  { builtins, pluginProp, shape, item },
+  pluginConfig,
   {
-    pluginConfig: { [pluginProp]: id, ...pluginConfig },
+    pluginType: { builtins, pluginProp, shape, item },
     sharedPropNames,
     sharedConfig,
     context,
     cwd,
   },
 ) {
+  const { [pluginProp]: id, moduleId, parents, ...pluginConfigA } = pluginConfig
+
   try {
-    return await getPlugin({
-      pluginConfig,
-      id,
-      builtins,
-      shape,
-      item,
-      sharedPropNames,
+    const { plugin, path } = await importPlugin(id, parents, builtins)
+    const { config: pluginConfigDefinitions, ...pluginA } =
+      await normalizeShape({
+        plugin,
+        shape,
+        sharedPropNames,
+        context,
+        moduleId,
+      })
+    const pluginConfigB = await normalizePluginConfig({
+      parents,
       sharedConfig,
+      pluginConfig: pluginConfigA,
+      plugin: pluginA,
       context,
       cwd,
+      pluginConfigDefinitions,
+      item,
     })
+    return { plugin: pluginA, path, config: pluginConfigB }
   } catch (error) {
     throw handlePluginError(error, id)
   }
-}
-
-const getPlugin = async function ({
-  pluginConfig: { moduleId, parents, ...pluginConfig },
-  id,
-  builtins,
-  shape,
-  item,
-  sharedPropNames,
-  sharedConfig,
-  context,
-  cwd,
-}) {
-  const { plugin, path } = await importPlugin(id, parents, builtins)
-
-  const { config: pluginConfigDefinitions, ...pluginA } = await normalizeShape({
-    plugin,
-    shape,
-    sharedPropNames,
-    context,
-    moduleId,
-  })
-  const pluginConfigA = await normalizePluginConfig({
-    parents,
-    sharedConfig,
-    pluginConfig,
-    plugin: pluginA,
-    context,
-    cwd,
-    pluginConfigDefinitions,
-    item,
-  })
-  return { plugin: pluginA, path, config: pluginConfigA }
 }
 
 const handlePluginError = function (error, id) {
