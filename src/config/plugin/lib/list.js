@@ -19,7 +19,7 @@ export const normalizeList = async function (
 
 const getListDefinitions = function (list) {
   return [
-    { name: '', transform: normalizeOptionalArray },
+    { name: '', required: true, transform: normalizeOptionalArray },
     { ...list, name: '' },
   ]
 }

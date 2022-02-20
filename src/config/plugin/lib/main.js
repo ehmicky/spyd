@@ -8,6 +8,9 @@ import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 //  - Plugins without configuration
 //  - Single plugin per type, as opposed to multiple
 //  - Single configuration per plugin
+// We purposely leave the responsibility to the consumer to:
+//  - Check for requiredness, i.e. the main argument is assumed to be defined
+//  - Assign default values
 export const getPlugins = async function (pluginConfigs, opts) {
   const optsA = normalizeMultipleOpts(opts)
   const isArray = Array.isArray(pluginConfigs)

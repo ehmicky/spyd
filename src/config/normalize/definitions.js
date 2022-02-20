@@ -22,16 +22,17 @@ import {
   EXAMPLE_TITLES,
   EXAMPLE_TITLE,
 } from '../../report/normalize/titles_add.js'
+import { DEFAULT_REPORTERS } from '../../report/reporters/main.js'
 import { isTtyInput } from '../../report/tty.js'
 import { transformPrecision, DEFAULT_PRECISION } from '../../run/precision.js'
+import { DEFAULT_RUNNERS } from '../../runners/main.js'
 import { DEFAULT_SELECT, EXAMPLE_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { EXAMPLE_SYSTEMS, EXAMPLE_SYSTEM } from '../../top/system/example.js'
 import { CONFIG_DEFINITIONS } from '../load/normalize.js'
-import { getPluginsConfigProps } from '../plugin/main.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 
-import { getDummyDefinitions, getDummyDefinitionsNames } from './dummy.js'
+import { getDummyDefinitions } from './dummy.js'
 import { amongCommands } from './pick.js'
 import { normalizeArray } from './transform.js'
 import { validateJson, validateObject } from './validate/complex.js'
@@ -46,8 +47,17 @@ import {
 
 const configProps = getDummyDefinitions(CONFIG_DEFINITIONS)
 
-// All plugins definitions: `reporter`, `runner`
-const plugins = getDummyDefinitionsNames(getPluginsConfigProps())
+const runner = {
+  name: 'runner',
+  pick: amongCommands(['dev', 'run']),
+  default: DEFAULT_RUNNERS,
+}
+
+const reporter = {
+  name: 'reporter',
+  pick: amongCommands(['remove', 'run', 'show']),
+  default: DEFAULT_REPORTERS,
+}
 
 const cwd = {
   name: 'cwd',
@@ -185,7 +195,8 @@ const titlesAny = {
 
 export const DEFINITIONS = [
   ...configProps,
-  ...plugins,
+  runner,
+  reporter,
   cwd,
   delta,
   force,

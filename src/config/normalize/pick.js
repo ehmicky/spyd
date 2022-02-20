@@ -11,9 +11,5 @@ const boundAmongCommands = function (
   value,
   { context: { command } },
 ) {
-  return isAmongCommands(commands, command)
-}
-
-export const isAmongCommands = function (commands, command) {
   return commands.includes(command)
 }

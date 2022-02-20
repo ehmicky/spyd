@@ -46,6 +46,7 @@ const getExampleId = function (builtins) {
 
 const normalizeItemTop = {
   name: '',
+  required: true,
   validate(value) {
     validateObjectOrString(value)
     validateJson(value)

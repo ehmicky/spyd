@@ -2,13 +2,11 @@ import {
   validateEmptyArray,
   validateFunction,
 } from '../../config/normalize/validate/complex.js'
-import { BUILTIN_RUNNERS, DEFAULT_RUNNERS } from '../main.js'
+import { BUILTIN_RUNNERS } from '../main.js'
 
 import { item } from './item.js'
 
 export const RUNNER_PLUGIN_TYPE = {
-  // Commands which can use this plugin type
-  commands: ['dev', 'run'],
   // Top-level property name, used in error messages
   // Default: 'plugins'
   name: 'runner',
@@ -24,9 +22,6 @@ export const RUNNER_PLUGIN_TYPE = {
   // Builtin plugins
   // Default: empty object
   builtins: BUILTIN_RUNNERS,
-  // Default ids
-  // Default: empty array
-  default: DEFAULT_RUNNERS,
   // Configuration definition for the plugin itself
   // Default: empty array
   shape: [
