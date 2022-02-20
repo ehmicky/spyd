@@ -1,4 +1,4 @@
-import { addPropPrefix } from './prefix.js'
+import { wrapError } from '../../../error/wrap.js'
 
 // Consumers can distinguish users errors from system bugs by checking
 // the `error.validation` boolean property.
@@ -15,7 +15,7 @@ export const handleValidateError = function (error, opts) {
     setValidationProp(error)
   }
 
-  return addPropPrefix(error, opts)
+  return addValidatePrefix(error, opts)
 }
 
 const isValidateError = function (error) {
@@ -26,9 +26,15 @@ const isValidateError = function (error) {
 export const getValidateError = function (message, opts) {
   const error = new Error(message)
   setValidationProp(error)
-  return addPropPrefix(error, opts)
+  return addValidatePrefix(error, opts)
 }
 
 const setValidationProp = function (error) {
   error.validation = true
+}
+
+const addValidatePrefix = function (error, { prefix, funcOpts: { name } }) {
+  const colon = error.validation ? '' : ':'
+  const propName = `${prefix} "${name}"${colon}`
+  return wrapError(error, propName)
 }

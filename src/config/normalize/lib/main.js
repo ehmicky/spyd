@@ -4,6 +4,7 @@ import { cleanObject } from '../../../utils/clean.js'
 
 import { applyDefinition } from './apply.js'
 import { normalizeDefinition } from './definition.js'
+import { handleError } from './loose.js'
 import { getOpts } from './opts.js'
 import { list } from './prop_path/get.js'
 import { set, remove } from './prop_path/set.js'
@@ -22,7 +23,7 @@ import { set, remove } from './prop_path/set.js'
 export const normalizeConfigProps = async function (
   config,
   definitions,
-  { context = {}, loose = false, cwd, prefix, parents } = {},
+  { context = {}, loose = false, cwd, prefix, parents = '' } = {},
 ) {
   const definitionsA = definitions.map(normalizeDefinition)
 
@@ -103,12 +104,4 @@ const applyPropDefinition = async function ({
   return newValue === undefined
     ? remove(configA, newName)
     : set(configA, newName, newValue)
-}
-
-// When in `loose` mode, user errors are returned instead of being thrown.
-// System errors are always propagated.
-const handleError = function (error, loose) {
-  if (!loose || !error.validation) {
-    throw error
-  }
 }
