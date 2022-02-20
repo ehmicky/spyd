@@ -1,5 +1,5 @@
 import { callValueFunc, callUserFunc } from './call.js'
-import { applyValidateTransform } from './transform.js'
+import { validateAndModify } from './modify.js'
 
 // Apply a rule on a specific property
 export const applyRule = async function (
@@ -32,7 +32,7 @@ export const applyRule = async function (
     value: valueC,
     name,
     newPaths,
-  } = await applyValidateTransform({
+  } = await validateAndModify({
     value: valueB,
     path,
     glob,

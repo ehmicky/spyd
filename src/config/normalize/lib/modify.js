@@ -5,7 +5,7 @@ import { resolvePath } from './path.js'
 
 // Once the initial value has been computed, apply validation and transforms,
 // unless the value is `undefined`.
-export const applyValidateTransform = async function ({
+export const validateAndModify = async function ({
   value,
   path,
   glob,
