@@ -8,9 +8,6 @@ import { handleValidateError } from './validate.js'
 // Most definition methods follow the same patterns:
 //  - Called with `value` and `opts`
 //  - Optionally async
-// Errors add as suffix:
-//  - The current `value`
-//  - `definition.example`, if provided
 export const callValueFunc = async function (userFunc, value, opts) {
   try {
     return await callWithValueFunc(userFunc, value, opts)
@@ -20,11 +17,13 @@ export const callValueFunc = async function (userFunc, value, opts) {
   }
 }
 
+// Add the current value as error suffix
 const addCurrentValue = function (error, value) {
   const valueStr = serializeValue(value)
   return wrapError(error, `\nCurrent value:${valueStr}`)
 }
 
+// Add an example value as error suffix, as provided by `example(value, opts)`
 const addExampleValue = async function (error, value, opts) {
   if (opts.example === undefined || !error.validation) {
     return error
