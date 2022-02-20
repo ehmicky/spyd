@@ -39,20 +39,20 @@ const normalizePluginConfigs = async function ({
   }
 
   try {
-    const plugins = await getPlugins(pluginConfigs, {
+    const pluginInfos = await getPlugins(pluginConfigs, {
       ...pluginType,
       pluginProp: 'id',
       sharedConfig: config,
       context,
       cwd,
     })
-    const pluginsA = plugins.map(normalizePlugin)
-    return { [name]: pluginsA }
+    const pluginInfosA = pluginInfos.map(normalizePluginInfo)
+    return { [name]: pluginInfosA }
   } catch (error) {
     throw handlePluginsError(error)
   }
 }
 
-const normalizePlugin = function ({ plugin, config }) {
+const normalizePluginInfo = function ({ plugin, config }) {
   return removeEmptyValues({ ...plugin, config })
 }

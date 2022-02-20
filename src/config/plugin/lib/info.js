@@ -6,8 +6,8 @@ import { importPlugin } from './import.js'
 import { normalizeItem } from './item.js'
 import { normalizeShape } from './shape.js'
 
-// Normalize each individual `pluginConfig`
-export const normalizePlugin = async function (
+// Get each `pluginInfo`, i.e. normalized `plugin` + `pluginConfig`
+export const getPluginInfo = async function (
   pluginConfig,
   {
     name,

@@ -11,14 +11,14 @@ import { ConsumerError } from './error.js'
 //  - Inline ids
 //  - The same module or file being referenced in different ways
 export const validateDuplicatePlugins = function (
-  plugins,
+  pluginInfos,
   { name, duplicates },
 ) {
   if (duplicates) {
     return
   }
 
-  const duplicateId = plugins.map(getPluginId).find(isDuplicateId)
+  const duplicateId = pluginInfos.map(getPluginId).find(isDuplicateId)
 
   if (duplicateId !== undefined) {
     throw new ConsumerError(
