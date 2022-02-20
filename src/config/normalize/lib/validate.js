@@ -22,11 +22,11 @@ const isValidateError = function (error) {
   return error instanceof Error && error.message.startsWith('must')
 }
 
-// Throw a user validation error
-export const throwValidateError = async function (message, opts) {
+// Get a user validation error
+export const getValidateError = async function (message, opts) {
   const error = new Error(message)
   setValidationProp(error)
-  throw await addPropPrefix(error, opts)
+  return await addPropPrefix(error, opts)
 }
 
 const setValidationProp = function (error) {
