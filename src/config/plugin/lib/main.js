@@ -1,7 +1,8 @@
+import { normalizeOptionalArray } from '../../normalize/transform.js'
+
 import { validateDuplicatePlugins } from './duplicates.js'
 import { UserError } from './error.js'
 import { getPluginInfo } from './info.js'
-import { normalizeList } from './list.js'
 import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 
 // Generic utility to add plugins which can be selected and configured by users.
@@ -20,7 +21,7 @@ export const getPlugins = async function (pluginConfigs, opts) {
   const optsA = normalizeMultipleOpts(opts)
   validateDefined(pluginConfigs, optsA)
   const isArray = Array.isArray(pluginConfigs)
-  const pluginConfigsA = await normalizeList(pluginConfigs, optsA)
+  const pluginConfigsA = normalizeOptionalArray(pluginConfigs)
   const pluginInfos = await Promise.all(
     pluginConfigsA.map((pluginConfig, index) =>
       getEachPluginInfo(pluginConfig, optsA, { isArray, index }),
