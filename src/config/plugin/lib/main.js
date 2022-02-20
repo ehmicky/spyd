@@ -1,5 +1,3 @@
-import { normalizeOptionalArray } from '../../normalize/transform.js'
-
 import { validateDuplicatePlugins } from './duplicates.js'
 import { UserError } from './error.js'
 import { getPluginInfo } from './info.js'
@@ -20,23 +18,21 @@ import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 export const getPlugins = async function (pluginConfigs, opts) {
   const optsA = normalizeMultipleOpts(opts)
   validateDefined(pluginConfigs, optsA)
-  const isArray = Array.isArray(pluginConfigs)
-  const pluginConfigsA = normalizeOptionalArray(pluginConfigs)
-  const pluginInfos = await Promise.all(
-    pluginConfigsA.map((pluginConfig, index) =>
-      getEachPluginInfo(pluginConfig, optsA, { isArray, index }),
-    ),
-  )
+  const pluginInfos = await getPluginInfos(pluginConfigs, optsA)
   validateDuplicatePlugins(pluginInfos, optsA)
   return pluginInfos
 }
 
-const getEachPluginInfo = async function (
-  pluginConfig,
-  opts,
-  { isArray, index },
-) {
-  const name = isArray ? `${opts.name}.${index}` : opts.name
+const getPluginInfos = async function (pluginConfigs, opts) {
+  return Array.isArray(pluginConfigs)
+    ? await Promise.all(
+        pluginConfigs.map(getEachPluginInfo.bind(undefined, opts)),
+      )
+    : [await getPluginInfo(pluginConfigs, opts)]
+}
+
+const getEachPluginInfo = async function (opts, pluginConfig, index) {
+  const name = `${opts.name}.${index}`
   return await getPluginInfo(pluginConfig, { ...opts, name })
 }
 
