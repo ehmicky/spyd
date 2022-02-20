@@ -9,7 +9,7 @@ import { CoreError, ConsumerError } from './error.js'
 import { resolveModuleLocation } from './module.js'
 import { safeNormalizeConfig } from './normalize.js'
 
-// Normalize a single `pluginConfig`
+// Normalize `pluginConfig[pluginProp]`
 export const normalizeLocation = async function (
   pluginConfig,
   locationType,
