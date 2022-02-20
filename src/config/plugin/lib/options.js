@@ -4,11 +4,10 @@ import { getSharedConfig } from './shared.js'
 export const normalizeMultipleOpts = function ({
   name = 'plugins',
   duplicates = false,
-  list = {},
   ...opts
 }) {
   const optsA = normalizeSingleOpts({ ...opts, name })
-  return { ...optsA, duplicates, list }
+  return { ...optsA, duplicates }
 }
 
 // Normalize options for `addPlugin()`

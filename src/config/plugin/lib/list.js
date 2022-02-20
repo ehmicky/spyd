@@ -1,25 +1,22 @@
 import { normalizeOptionalArray } from '../../normalize/transform.js'
 
-import { UserError, ConsumerError } from './error.js'
+import { CoreError, ConsumerError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
 
 // Normalize a list of `pluginConfigs`
 export const normalizeList = async function (
   pluginConfigs,
-  { list, name, context, cwd },
+  { name, context, cwd },
 ) {
-  return await safeNormalizeConfig(pluginConfigs, getListDefinitions(list), {
+  return await safeNormalizeConfig(pluginConfigs, LIST_DEFINITIONS, {
     context,
     cwd,
     prefix: `${name}.`,
     UserErrorType: ConsumerError,
-    SystemErrorType: UserError,
+    SystemErrorType: CoreError,
   })
 }
 
-const getListDefinitions = function (list) {
-  return [
-    { name: '', required: true, transform: normalizeOptionalArray },
-    { ...list, name: '' },
-  ]
-}
+const LIST_DEFINITIONS = [
+  { name: '', required: true, transform: normalizeOptionalArray },
+]
