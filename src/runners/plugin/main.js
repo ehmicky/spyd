@@ -19,6 +19,10 @@ export const RUNNER_PLUGIN_TYPE = {
   // Prefix of the npm package
   // Default: none
   modulePrefix: 'spyd-runner',
+  // When `true`, several plugins for this type can be selected, by using an
+  // array
+  // Default: `false`
+  multiple: true,
   // When `true`, the plugin can be selected twice but with different configs
   // Default: `false`
   duplicates: false,
