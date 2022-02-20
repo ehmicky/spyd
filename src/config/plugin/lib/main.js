@@ -1,6 +1,6 @@
+import { handleDuplicatePlugins } from './duplicates.js'
 import { addPlugin } from './each.js'
 import { normalizeList } from './list.js'
-import { handleMultiple } from './multiple.js'
 import { getSharedConfig } from './shared.js'
 import { normalizePluginType } from './type.js'
 
@@ -25,7 +25,7 @@ export const addPlugins = async function (
     sharedConfig,
     pluginTypeA,
   )
-  const pluginConfigsB = handleMultiple(pluginConfigsA, pluginTypeA)
+  const pluginConfigsB = handleDuplicatePlugins(pluginConfigsA, pluginTypeA)
   const pluginsCount = pluginConfigsB.length
   const plugins = await Promise.all(
     pluginConfigsB.map((pluginConfig, index) =>

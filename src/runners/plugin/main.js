@@ -21,7 +21,7 @@ export const RUNNER_PLUGIN_TYPE = {
   modulePrefix: 'spyd-runner',
   // When `true`, the plugin can be selected twice but with different configs
   // Default: `false`
-  multiple: false,
+  duplicates: false,
   // Builtin plugins
   // Default: empty object
   builtins: BUILTIN_RUNNERS,

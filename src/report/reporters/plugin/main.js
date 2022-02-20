@@ -18,7 +18,7 @@ export const REPORTER_PLUGIN_TYPE = {
   name: 'reporter',
   pluginProp: 'id',
   modulePrefix: 'spyd-reporter',
-  multiple: true,
+  duplicates: true,
   builtins: BUILTIN_REPORTERS,
   default: DEFAULT_REPORTERS,
   shape: [
