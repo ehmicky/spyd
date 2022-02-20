@@ -20,7 +20,7 @@ export const addPlugin = async function (
   },
 ) {
   const {
-    pluginConfig: { [pluginProp]: id, moduleId, parents, ...pluginConfigA },
+    pluginConfig: { [pluginProp]: id, ...pluginConfigA },
     duplicateConfigs,
   } = handleDuplicatePlugins({
     pluginConfig,
@@ -35,31 +35,56 @@ export const addPlugin = async function (
   }
 
   try {
-    const { plugin, path } = await importPlugin(id, parents, builtins)
-
-    const { config: pluginConfigDefinitions, ...pluginA } =
-      await normalizeShape({
-        plugin,
-        shape,
-        sharedPropNames,
-        context,
-        moduleId,
-      })
-    const pluginConfigB = await normalizePluginConfig({
-      parents,
-      duplicateConfigs,
-      sharedConfig,
+    return await getPlugin({
       pluginConfig: pluginConfigA,
-      plugin: pluginA,
+      id,
+      duplicateConfigs,
+      builtins,
+      shape,
+      item,
+      sharedPropNames,
+      sharedConfig,
       context,
       cwd,
-      pluginConfigDefinitions,
-      item,
     })
-    return { plugin: pluginA, path, config: pluginConfigB }
   } catch (error) {
     throw handlePluginError(error, id)
   }
+}
+
+const getPlugin = async function ({
+  pluginConfig: { moduleId, parents, ...pluginConfig },
+  id,
+  duplicateConfigs,
+  builtins,
+  shape,
+  item,
+  sharedPropNames,
+  sharedConfig,
+  context,
+  cwd,
+}) {
+  const { plugin, path } = await importPlugin(id, parents, builtins)
+
+  const { config: pluginConfigDefinitions, ...pluginA } = await normalizeShape({
+    plugin,
+    shape,
+    sharedPropNames,
+    context,
+    moduleId,
+  })
+  const pluginConfigA = await normalizePluginConfig({
+    parents,
+    duplicateConfigs,
+    sharedConfig,
+    pluginConfig,
+    plugin: pluginA,
+    context,
+    cwd,
+    pluginConfigDefinitions,
+    item,
+  })
+  return { plugin: pluginA, path, config: pluginConfigA }
 }
 
 const handlePluginError = function (error, id) {
