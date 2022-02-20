@@ -15,17 +15,10 @@ export const transformValue = async function (value, transform, opts) {
     return getTransformMove(transformReturn, opts)
   }
 
-  const commonMove = COMMON_MOVES.find(({ test }) =>
-    test(transformReturn, value),
-  )
-
-  if (commonMove === undefined) {
-    return { value: transformReturn }
-  }
-
-  const newPath = commonMove.getNewPath(transformReturn)
-  const newPathA = `${opts.funcOpts.name}.${newPath}`
-  return { value: transformReturn, newPath: newPathA }
+  const commonMoveReturn = applyCommonMoves(transformReturn, value, opts)
+  return commonMoveReturn === undefined
+    ? { value: transformReturn }
+    : commonMoveReturn
 }
 
 // `transform()` can return a `{ newPath, value }` object to indicate the
@@ -41,6 +34,20 @@ const isTransformMove = function (transformReturn) {
 
 const getTransformMove = function ({ newPath, value }, { funcOpts: { name } }) {
   return { newPath: `${name}.${newPath}`, value }
+}
+
+const applyCommonMoves = function (transformReturn, value, opts) {
+  const commonMove = COMMON_MOVES.find(({ test }) =>
+    test(transformReturn, value),
+  )
+
+  if (commonMove === undefined) {
+    return
+  }
+
+  const newPath = commonMove.getNewPath(transformReturn)
+  const newPathA = `${opts.funcOpts.name}.${newPath}`
+  return { value: transformReturn, newPath: newPathA }
 }
 
 const COMMON_MOVES = [
