@@ -12,21 +12,23 @@ import { ConsumerError } from './error.js'
 //  - The same module or file being referenced in different ways
 export const validateDuplicatePlugins = function (
   plugins,
-  { name, duplicates, pluginProp },
+  { name, duplicates },
 ) {
   if (duplicates) {
     return
   }
 
-  const duplicateId = plugins
-    .map(({ plugin }) => plugin[pluginProp])
-    .find(isDuplicateId)
+  const duplicateId = plugins.map(getPluginId).find(isDuplicateId)
 
   if (duplicateId !== undefined) {
     throw new ConsumerError(
-      `Configuration property "${name}" must not contain the same "${pluginProp}" "${duplicateId}" multiple times`,
+      `Configuration property "${name}" must not contain the same "id" "${duplicateId}" multiple times`,
     )
   }
+}
+
+const getPluginId = function ({ plugin: { id } }) {
+  return id
 }
 
 const isDuplicateId = function (id, index, ids) {
