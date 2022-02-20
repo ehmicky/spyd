@@ -5,7 +5,7 @@ export const normalizeArray = function (value) {
   return [...new Set(normalizeOptionalArray(value))]
 }
 
-export const normalizeOptionalArray = function (value) {
+const normalizeOptionalArray = function (value) {
   return Array.isArray(value) ? value : [value]
 }
 
