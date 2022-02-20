@@ -5,7 +5,6 @@ import { cleanObject } from '../../../utils/clean.js'
 import { applyDefinition } from './apply.js'
 import { normalizeDefinition } from './definition.js'
 import { getOpts } from './opts.js'
-import { DEFAULT_PREFIX } from './prefix.js'
 import { list } from './prop_path/get.js'
 import { set, remove } from './prop_path/set.js'
 
@@ -23,7 +22,7 @@ import { set, remove } from './prop_path/set.js'
 export const normalizeConfigProps = async function (
   config,
   definitions,
-  { context = {}, loose = false, cwd, prefix = DEFAULT_PREFIX } = {},
+  { context = {}, loose = false, cwd, prefix, parents } = {},
 ) {
   const definitionsA = definitions.map(normalizeDefinition)
 
@@ -37,6 +36,7 @@ export const normalizeConfigProps = async function (
           context,
           cwd,
           prefix,
+          parents,
         }),
       config,
     )
@@ -54,6 +54,7 @@ const applyDefinitionDeep = async function ({
   context,
   cwd,
   prefix,
+  parents,
 }) {
   const props = Object.entries(list(config, query))
   return await pReduce(
@@ -67,6 +68,7 @@ const applyDefinitionDeep = async function ({
         context,
         cwd,
         prefix,
+        parents,
       }),
     config,
   )
@@ -81,8 +83,17 @@ const applyPropDefinition = async function ({
   context,
   cwd,
   prefix,
+  parents,
 }) {
-  const opts = await getOpts({ name, config, context, cwd, prefix, example })
+  const opts = await getOpts({
+    name,
+    config,
+    context,
+    cwd,
+    prefix,
+    parents,
+    example,
+  })
   const { value: newValue, name: newName = name } = await applyDefinition(
     definition,
     value,

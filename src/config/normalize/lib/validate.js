@@ -10,12 +10,12 @@ import { addPropPrefix } from './prefix.js'
 //  - It is simpler for users
 //  - It works both on browsers and in Node.js
 //  - It ensures the error message looks good
-export const handleValidateError = async function (error, opts) {
+export const handleValidateError = function (error, opts) {
   if (isValidateError(error)) {
     setValidationProp(error)
   }
 
-  return await addPropPrefix(error, opts)
+  return addPropPrefix(error, opts)
 }
 
 const isValidateError = function (error) {
@@ -23,10 +23,10 @@ const isValidateError = function (error) {
 }
 
 // Get a user validation error
-export const getValidateError = async function (message, opts) {
+export const getValidateError = function (message, opts) {
   const error = new Error(message)
   setValidationProp(error)
-  return await addPropPrefix(error, opts)
+  return addPropPrefix(error, opts)
 }
 
 const setValidationProp = function (error) {

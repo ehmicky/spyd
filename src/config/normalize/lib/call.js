@@ -25,7 +25,7 @@ const addCurrentValue = function (error, value) {
 
 // Retrieve a validation error including the example suffix
 export const getValidateExampleError = async function (message, value, opts) {
-  const error = await getValidateError(message, opts)
+  const error = getValidateError(message, opts)
   return await addExampleValue(error, value, opts)
 }
 
@@ -58,6 +58,6 @@ export const callUserFunc = async function (userFunc, opts) {
   try {
     return await maybeFunction(userFunc, opts.funcOpts)
   } catch (error) {
-    throw await handleValidateError(error, opts)
+    throw handleValidateError(error, opts)
   }
 }

@@ -37,7 +37,7 @@ export const normalizePluginConfig = async function ({
     return pluginConfig
   }
 
-  const prefix = getPrefix.bind(undefined, unmergedConfig, name)
+  const parents = getParents.bind(undefined, unmergedConfig, name)
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
     item,
@@ -45,7 +45,7 @@ export const normalizePluginConfig = async function ({
     context,
     cwd,
     plugin,
-    prefix,
+    parents,
   })
   const pluginConfigB = await normalizeSpecificConfig({
     pluginConfig: pluginConfigA,
@@ -53,15 +53,15 @@ export const normalizePluginConfig = async function ({
     pluginConfigDefinitions,
     context,
     cwd,
-    prefix,
+    parents,
   })
   return pluginConfigB
 }
 
 // When the value was merged due to `duplicates` or to `sharedConfig`, ensure
-// the prefix is correct
-const getPrefix = function (unmergedConfig, name, { path }) {
-  return has(unmergedConfig, path) ? `${name}.` : undefined
+// `parents` is correct
+const getParents = function (unmergedConfig, name, { path }) {
+  return has(unmergedConfig, path) ? name : ''
 }
 
 const normalizeSharedConfig = async function ({
@@ -71,7 +71,7 @@ const normalizeSharedConfig = async function ({
   context,
   cwd,
   plugin,
-  prefix,
+  parents,
 }) {
   const dummyDefinitions = getDummyDefinitions(pluginConfigDefinitions)
   return await safeNormalizeConfig(
@@ -79,7 +79,7 @@ const normalizeSharedConfig = async function ({
     [...item, ...dummyDefinitions],
     {
       context: { ...context, plugin },
-      prefix,
+      parents,
       cwd,
       UserErrorType: ConsumerError,
       SystemErrorType: UserError,
@@ -93,7 +93,7 @@ const normalizeSpecificConfig = async function ({
   pluginConfigDefinitions = [],
   context,
   cwd,
-  prefix,
+  parents,
 }) {
   const dummyDefinitions = getDummyDefinitions(item)
   return await safeNormalizeConfig(
@@ -101,7 +101,7 @@ const normalizeSpecificConfig = async function ({
     [...dummyDefinitions, ...pluginConfigDefinitions],
     {
       context,
-      prefix,
+      parents,
       cwd,
       UserErrorType: ConsumerError,
       SystemErrorType: PluginError,

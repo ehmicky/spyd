@@ -1,68 +1,44 @@
-import { normalizeError } from '../../../error/utils.js'
 import { wrapError } from '../../../error/wrap.js'
-import { maybeFunction } from '../../../utils/function.js'
 
-// Append `prefix` option to error message.
-// The space at the end of `prefix` is optional.
-// If `prefix` ends with `.`:
-//  - The default prefix is prepended.
-//  - No space is appended.
+// Prepend `prefix` and `parents` options to error message.
 // Also surround property name with quotes.
-export const addPropPrefix = async function (
+export const addPropPrefix = function (
   error,
-  { prefix, funcOpts, funcOpts: { name } },
+  { prefix, parents, funcOpts: { name } },
 ) {
-  const prefixA = await getPrefix(prefix, funcOpts)
-  const propName = `${prefixA}${name}`
-  const propNameA = quotePropName(propName)
-  const propNameB = appendColon(propNameA, error)
-  return wrapError(error, propNameB)
+  const prefixA = getPrefix(prefix)
+  const parentsA = getParents(parents)
+  const dot = getDot(parentsA, name)
+  const colon = getColon(error)
+  const propName = `${prefixA} "${parentsA}${dot}${name}"${colon}`
+  return wrapError(error, propName)
 }
 
-const getPrefix = async function (prefix, funcOpts) {
-  const prefixA = await callPrefix(prefix, funcOpts)
-
-  if (prefixA === undefined) {
-    return `${DEFAULT_PREFIX} `
-  }
-
-  const prefixB = String(prefixA)
-
-  if (prefixB.endsWith('.')) {
-    return `${DEFAULT_PREFIX} ${prefixB}`
-  }
-
-  return shouldAppendSpace(prefixB) ? `${prefixB} ` : prefixB
+// The `prefix` option is the name of the type of property to show in error
+// message such as "Option".
+// It can be `undefined` when an error was thrown inside `prefix()` itself.
+const getPrefix = function (prefix = DEFAULT_PREFIX) {
+  return prefix.trim()
 }
 
-const callPrefix = async function (prefix, funcOpts) {
-  try {
-    return await maybeFunction(prefix, funcOpts)
-  } catch (error) {
-    const { message } = normalizeError(error)
-    return `${message}\n`
-  }
+const DEFAULT_PREFIX = 'Option'
+
+// The `parents` option are the names of the parent properties, to show in
+// error messages.
+// It is a dot-delimited string optionally ending with `.`
+// By default, there are none.
+// It can be `undefined` when an error was thrown inside `parents()` itself.
+const getParents = function (parents = DEFAULT_PARENTS) {
+  const parentsB = String(parents)
+  return parentsB.endsWith('.') ? parentsB.slice(0, -1) : parentsB
 }
 
-// Default value for the `prefix` option
-export const DEFAULT_PREFIX = 'Configuration property'
+const DEFAULT_PARENTS = ''
 
-const shouldAppendSpace = function (prefix) {
-  return prefix !== '' && !prefix.endsWith(' ')
+const getDot = function (parents, name) {
+  return name !== '' && parents !== '' ? '.' : ''
 }
 
-const quotePropName = function (propName) {
-  const lastSpaceIndex = propName.lastIndexOf(' ')
-  const [firstWords, lastWord] =
-    lastSpaceIndex === -1
-      ? ['', propName]
-      : [
-          propName.slice(0, lastSpaceIndex + 1),
-          propName.slice(lastSpaceIndex + 1),
-        ]
-  return `${firstWords}"${lastWord}"`
-}
-
-const appendColon = function (propName, error) {
-  return error.validation ? propName : `${propName}:`
+const getColon = function (error) {
+  return error.validation ? '' : ':'
 }

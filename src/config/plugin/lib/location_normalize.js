@@ -22,7 +22,7 @@ export const normalizeLocation = async function (
     await safeNormalizeConfig(pluginConfig, locationDefinitions, {
       context: { locationType, builtins, modulePrefix },
       cwd,
-      prefix: `${name}.`,
+      parents: name,
       UserErrorType: ConsumerError,
       SystemErrorType: CoreError,
     })
