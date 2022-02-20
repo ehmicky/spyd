@@ -1,4 +1,4 @@
-import { normalizeOptionalArrayTwo } from '../../normalize/transform.js'
+import { normalizeOptionalArray } from '../../normalize/transform.js'
 
 import { CoreError, UserError, ConsumerError } from './error.js'
 import { getListItemsDefinitions } from './item.js'
@@ -49,7 +49,7 @@ const getListDefinitions = function (list, multiple) {
     {
       name: '',
       validate: validateMultiple.bind(undefined, multiple),
-      transform: normalizeOptionalArrayTwo,
+      transform: normalizeOptionalArray,
     },
     { ...list, name: '' },
   ]

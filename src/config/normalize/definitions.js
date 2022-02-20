@@ -33,7 +33,7 @@ import { normalizeConfigSelectors } from '../select/normalize.js'
 
 import { getDummyDefinitions, getDummyDefinitionsNames } from './dummy.js'
 import { amongCommands } from './pick.js'
-import { normalizeOptionalArray } from './transform.js'
+import { normalizeArray } from './transform.js'
 import { validateJson, validateObject } from './validate/complex.js'
 import { validateFileExists, validateDirectory } from './validate/fs.js'
 import {
@@ -135,7 +135,7 @@ const select = {
   name: 'select',
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   default: DEFAULT_SELECT,
-  transform: normalizeOptionalArray,
+  transform: normalizeArray,
   example: EXAMPLE_SELECT,
 }
 

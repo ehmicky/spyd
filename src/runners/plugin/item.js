@@ -1,6 +1,6 @@
 import { DEFAULT_TASKS } from '../../combination/tasks/find.js'
 import { amongCommands } from '../../config/normalize/pick.js'
-import { normalizeOptionalArray } from '../../config/normalize/transform.js'
+import { normalizeArray } from '../../config/normalize/transform.js'
 import { validateRegularFile } from '../../config/normalize/validate/fs.js'
 import { normalizeConfigSelectors } from '../../config/select/normalize.js'
 
@@ -10,7 +10,7 @@ const tasks = {
   name: 'tasks',
   pick,
   default: DEFAULT_TASKS,
-  transform: normalizeOptionalArray,
+  transform: normalizeArray,
 }
 
 const tasksAny = {

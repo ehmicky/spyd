@@ -1,4 +1,4 @@
-import { normalizeOptionalArray } from '../../../config/normalize/transform.js'
+import { normalizeArray } from '../../../config/normalize/transform.js'
 import { validateDefinedString } from '../../../config/normalize/validate/simple.js'
 import { EXAMPLE_REQUIRE } from '../handler/start/require_config.js'
 
@@ -9,7 +9,7 @@ export const config = [
   {
     name: 'require',
     default: [],
-    transform: normalizeOptionalArray,
+    transform: normalizeArray,
   },
   {
     name: 'require.*',

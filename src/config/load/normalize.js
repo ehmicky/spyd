@@ -1,5 +1,5 @@
 import { normalizeConfig } from '../normalize/main.js'
-import { normalizeOptionalArray } from '../normalize/transform.js'
+import { normalizeArray } from '../normalize/transform.js'
 import {
   validateFileExists,
   validateRegularFile,
@@ -21,7 +21,7 @@ export const normalizeConfigProp = async function (configOpt, base) {
 const configProp = {
   name: 'config',
   default: getDefaultConfig,
-  transform: normalizeOptionalArray,
+  transform: normalizeArray,
 }
 
 const validateConfig = async function (value) {
