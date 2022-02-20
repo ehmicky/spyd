@@ -100,6 +100,18 @@ const COMMON_MOVES = [
       return '0'
     },
   },
+  {
+    test(newValue, oldValue) {
+      return (
+        isPlainObj(newValue) &&
+        Object.keys(newValue).length === 1 &&
+        newValue[Object.keys(newValue)[0]] === oldValue
+      )
+    },
+    getNewPath(newValue) {
+      return Object.keys(newValue)[0]
+    },
+  },
 ]
 
 // Apply `rename(value, opts)` which transforms the property's name.
