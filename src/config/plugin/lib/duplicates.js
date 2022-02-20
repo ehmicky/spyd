@@ -18,31 +18,32 @@ import { deepMerge } from '../../merge.js'
 //  - The next ones are replaced with an empty object and filtered out later
 //     - This ensures the error message reports the same index as specified by
 //       users in the input
-export const handleDuplicatePlugins = function (
-  pluginConfigs,
-  { duplicates, pluginProp },
-) {
-  return duplicates
-    ? pluginConfigs
-    : pluginConfigs
-        .map(handleDuplicatePlugin.bind(undefined, pluginProp, pluginConfigs))
-        .filter(Boolean)
-}
-
-const handleDuplicatePlugin = function (
-  pluginProp,
-  pluginConfigs,
+export const handleDuplicatePlugins = function ({
   pluginConfig,
-) {
-  const duplicatePlugins = pluginConfigs.filter(
-    (pluginConfigB) => pluginConfig[pluginProp] === pluginConfigB[pluginProp],
-  )
-
-  if (duplicatePlugins.length === 1) {
-    return pluginConfig
+  index,
+  pluginConfigs,
+  duplicates,
+  pluginProp,
+}) {
+  if (duplicates) {
+    return { pluginConfig }
   }
 
-  return duplicatePlugins[0] === pluginConfig
-    ? deepMerge(duplicatePlugins)
-    : undefined
+  const duplicateConfigs = pluginConfigs.map((pluginConfigA) =>
+    pluginConfig[pluginProp] === pluginConfigA[pluginProp]
+      ? pluginConfigA
+      : undefined,
+  )
+  const cleanConfigs = duplicateConfigs.filter(Boolean)
+
+  if (cleanConfigs.length === 1) {
+    return { pluginConfig }
+  }
+
+  if (index !== 0) {
+    return { pluginConfig: {} }
+  }
+
+  const pluginConfigB = deepMerge(cleanConfigs)
+  return { pluginConfig: pluginConfigB, duplicateConfigs }
 }

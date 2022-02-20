@@ -1,3 +1,4 @@
+import { findLastIndex } from '../../../utils/find.js'
 import { deepMerge } from '../../merge.js'
 import { getDummyDefinitions } from '../../normalize/dummy.js'
 import { has } from '../../normalize/lib/prop_path/get.js'
@@ -27,6 +28,7 @@ import { safeNormalizeConfig } from './normalize.js'
 //       should use variations instead
 export const normalizePluginConfig = async function ({
   parents,
+  duplicateConfigs,
   sharedConfig,
   pluginConfig: unmergedConfig,
   plugin,
@@ -36,7 +38,11 @@ export const normalizePluginConfig = async function ({
   item,
 }) {
   const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
-  const prefix = getPrefix.bind(undefined, unmergedConfig, parents)
+  const prefix = getPrefix.bind(undefined, {
+    unmergedConfig,
+    parents,
+    duplicateConfigs,
+  })
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
     item,
@@ -57,7 +63,21 @@ export const normalizePluginConfig = async function ({
   return pluginConfigB
 }
 
-const getPrefix = function (unmergedConfig, parents, { path }) {
+// When the value was merged due to `duplicates` or to `sharedConfig`, ensure
+// the prefix is correct
+const getPrefix = function (
+  { unmergedConfig, parents, duplicateConfigs = [] },
+  { path },
+) {
+  const index = findLastIndex(duplicateConfigs, (duplicateConfig) =>
+    has(duplicateConfig, path),
+  )
+
+  if (index !== -1) {
+    const parentsA = [...parents.split('.').slice(0, -1), index].join('.')
+    return `${parentsA}.`
+  }
+
   return has(unmergedConfig, path) ? `${parents}.` : undefined
 }
 
