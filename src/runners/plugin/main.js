@@ -1,4 +1,3 @@
-import { amongCommands } from '../../config/normalize/pick.js'
 import {
   validateEmptyArray,
   validateFunction,
@@ -19,10 +18,6 @@ export const RUNNER_PLUGIN_TYPE = {
   // Prefix of the npm package
   // Default: none
   modulePrefix: 'spyd-runner',
-  // When `true`, several plugins for this type can be selected, by using an
-  // array
-  // Default: `false`
-  multiple: true,
   // When `true`, the plugin can be selected twice but with different configs
   // Default: `false`
   duplicates: false,
@@ -44,7 +39,6 @@ export const RUNNER_PLUGIN_TYPE = {
   // Configuration property selecting and configuring the plugin
   // Default: empty object
   list: {
-    pick: amongCommands(['dev', 'run']),
     validate: validateEmptyArray,
   },
   // Properties of the `list` item shared by all plugins

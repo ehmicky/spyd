@@ -9,37 +9,43 @@ import {
 } from '../../normalize/validate/fs.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
+import { CoreError, ConsumerError } from './error.js'
 import { isModuleId, isPathId, isInlineId, resolveModuleId } from './id.js'
+import { safeNormalizeConfig } from './normalize.js'
 
-// Retrieve normalization definition for `plugins[*]` strings or objects
-export const getListItemsDefinitions = function (
-  pluginProp,
-  defaultValue,
-  builtins,
+// Normalize a single `pluginConfig`
+export const normalizeItem = async function (
+  pluginConfig,
+  { name, builtins, pluginProp, modulePrefix, cwd },
 ) {
-  const exampleId = getExampleId(defaultValue, builtins)
+  const itemDefinitions = getListItemsDefinitions(pluginProp, builtins)
+  return await safeNormalizeConfig(pluginConfig, itemDefinitions, {
+    context: { builtins, pluginProp, modulePrefix },
+    cwd,
+    prefix: `${name}.`,
+    UserErrorType: ConsumerError,
+    SystemErrorType: CoreError,
+  })
+}
+
+const getListItemsDefinitions = function (pluginProp, builtins) {
+  const exampleId = getExampleId(builtins)
   return [
-    { ...normalizeItem, example: exampleId },
-    normalizeItemParents,
+    { ...normalizeItemTop, example: exampleId },
     normalizeItemModuleId,
-    { ...normalizeItemId, name: `*.${pluginProp}`, example: exampleId },
+    { ...normalizeItemId, name: pluginProp, example: exampleId },
   ]
 }
 
-const getExampleId = function (defaultValue, builtins) {
-  return getFirstItem(defaultValue) || getFirstItem(Object.keys(builtins))
-}
-
-const getFirstItem = function (stringArray) {
-  return stringArray !== undefined &&
-    stringArray.length !== 0 &&
-    stringArray[0].trim() !== ''
-    ? stringArray[0]
+const getExampleId = function (builtins) {
+  const builtinIds = Object.keys(builtins)
+  return builtinIds.length !== 0 && builtinIds[0].trim() !== ''
+    ? builtinIds[0]
     : undefined
 }
 
-const normalizeItem = {
-  name: '*',
+const normalizeItemTop = {
+  name: '',
   validate(value) {
     validateObjectOrString(value)
     validateJson(value)
@@ -49,23 +55,9 @@ const normalizeItem = {
   },
 }
 
-// `parents` are added before any `pluginConfig` is filtered out as duplicates
-const normalizeItemParents = {
-  name: '*.parents',
-  compute({ context: { name, isArray }, path: [index] }) {
-    return isArray ? `${name}.${index}` : name
-  },
-}
-
 const normalizeItemModuleId = {
-  name: '*.moduleId',
-  compute({
-    context: { builtins, modulePrefix },
-    path: [index],
-    config: {
-      [index]: { id },
-    },
-  }) {
+  name: 'moduleId',
+  compute({ context: { builtins, modulePrefix }, config: { id } }) {
     return isModuleId(id, modulePrefix, builtins) ? id : undefined
   },
 }

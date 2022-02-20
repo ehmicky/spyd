@@ -7,7 +7,7 @@ import { removeEmptyValues } from '../empty.js'
 import { isAmongCommands } from '../normalize/pick.js'
 
 import { handlePluginsError } from './error.js'
-import { addPlugins } from './lib/main.js'
+import { getPlugins } from './lib/main.js'
 
 // Retrieve the name of all plugin top properties
 export const getPluginsConfigProps = function () {
@@ -86,7 +86,7 @@ const addConfigPlugins = async function ({
   cwd,
 }) {
   try {
-    return await addPlugins(pluginConfigs, {
+    return await getPlugins(pluginConfigs, {
       ...pluginType,
       sharedConfig: config,
       context,

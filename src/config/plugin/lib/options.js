@@ -1,16 +1,23 @@
 import { getSharedConfig } from './shared.js'
 
-// Add default values and normalize plugin types
-export const normalizePluginType = function ({
+// Normalize options for `addPlugins()`
+export const normalizeMultipleOpts = function ({
   name = 'plugins',
+  duplicates = false,
+  list = {},
+  ...opts
+}) {
+  const optsA = normalizeSingleOpts({ ...opts, name })
+  return { ...optsA, duplicates, list }
+}
+
+// Normalize options for `addPlugin()`
+export const normalizeSingleOpts = function ({
+  name = 'plugin',
   modulePrefix,
   pluginProp = 'plugin',
-  multiple = false,
-  duplicates = false,
   builtins = {},
-  default: defaultValue = [],
   shape = [],
-  list = {},
   item = [],
   sharedConfig = {},
   context,
@@ -24,12 +31,8 @@ export const normalizePluginType = function ({
     name,
     modulePrefix,
     pluginProp,
-    multiple,
-    duplicates,
     builtins,
-    default: defaultValue,
     shape,
-    list,
     item,
     sharedConfig: sharedConfigA,
     sharedPropNames,

@@ -3,15 +3,18 @@ import { wrapError } from '../../../error/wrap.js'
 import { normalizePluginConfig } from './config.js'
 import { PluginError } from './error.js'
 import { importPlugin } from './import.js'
+import { normalizeItem } from './item.js'
 import { normalizeShape } from './shape.js'
 
-// Handle each individual `pluginConfig`
-export const addPlugin = async function (
+// Normalize each individual `pluginConfig`
+export const normalizePlugin = async function (
   pluginConfig,
   {
+    name,
     builtins,
     pluginProp,
     shape,
+    modulePrefix,
     item,
     context,
     cwd,
@@ -19,10 +22,20 @@ export const addPlugin = async function (
     sharedPropNames,
   },
 ) {
-  const { [pluginProp]: id, moduleId, parents, ...pluginConfigA } = pluginConfig
+  const {
+    [pluginProp]: id,
+    moduleId,
+    ...pluginConfigA
+  } = await normalizeItem(pluginConfig, {
+    name,
+    builtins,
+    pluginProp,
+    modulePrefix,
+    cwd,
+  })
 
   try {
-    const { plugin, path } = await importPlugin(id, parents, builtins)
+    const { plugin, path } = await importPlugin(id, name, builtins)
     const { config: pluginConfigDefinitions, ...pluginA } =
       await normalizeShape({
         plugin,
@@ -32,7 +45,7 @@ export const addPlugin = async function (
         moduleId,
       })
     const pluginConfigB = await normalizePluginConfig({
-      parents,
+      name,
       sharedConfig,
       pluginConfig: pluginConfigA,
       plugin: pluginA,

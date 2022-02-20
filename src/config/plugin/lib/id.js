@@ -10,7 +10,7 @@ import { resolveModuleName } from './module.js'
 //     - For example, by exposing to plugin consumers a function like:
 //         (pluginConfig) => ({ plugin, pluginConfig })
 //       which is passed as argument to this library
-//  - A builtin identifier among `pluginType.builtins`
+//  - A builtin identifier among `opts.builtins`
 //  - A file path starting with . or /
 //  - A Node module prefixed with `modulePrefix` (which is optional)
 export const isModuleId = function (id, modulePrefix, builtins) {

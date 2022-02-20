@@ -1,4 +1,3 @@
-import { amongCommands } from '../../../config/normalize/pick.js'
 import {
   validateObject,
   validateFunction,
@@ -18,7 +17,6 @@ export const REPORTER_PLUGIN_TYPE = {
   name: 'reporter',
   pluginProp: 'id',
   modulePrefix: 'spyd-reporter',
-  multiple: true,
   duplicates: true,
   builtins: BUILTIN_REPORTERS,
   default: DEFAULT_REPORTERS,
@@ -49,7 +47,6 @@ export const REPORTER_PLUGIN_TYPE = {
     },
   ],
   list: {
-    pick: amongCommands(['remove', 'run', 'show']),
     transform(value, { config }) {
       return config.force ? [] : value
     },
