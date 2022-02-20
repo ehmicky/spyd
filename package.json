@@ -70,7 +70,7 @@
     "read-pkg-up": "^9.1.0",
     "semver": "^7.3.5",
     "sort-on": "^5.0.0",
-    "string-width": "^5.0.1",
+    "string-width": "^5.1.0",
     "strip-ansi": "^7.0.1",
     "strip-final-newline": "^3.0.0",
     "time-resolution": "^0.5.1",
