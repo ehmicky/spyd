@@ -1,3 +1,5 @@
+import { get } from './prop_path/get.js'
+
 // Validate and normalize definitions
 export const normalizeDefinition = function (
   {
@@ -8,7 +10,7 @@ export const normalizeDefinition = function (
     compute,
     path = false,
     glob = false,
-    required = false,
+    required = defaultRequired,
     example,
     validate,
     transform,
@@ -32,6 +34,13 @@ export const normalizeDefinition = function (
     transform,
     rename,
   }
+}
+
+// `required` defaults to `false` except for array items.
+// This validates against sparse arrays by default, since they are usually
+// unwanted.
+const defaultRequired = function ({ path, config }) {
+  return path.length !== 0 && Array.isArray(get(config, path.slice(0, -1)))
 }
 
 // `definition.example` only needs to be defined once per `definition.name`,
