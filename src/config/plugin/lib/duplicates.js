@@ -18,19 +18,25 @@ export const validateDuplicatePlugins = function (
     return
   }
 
-  const duplicateId = pluginInfos.map(getPluginId).find(isDuplicateId)
+  const duplicatePluginInfo = pluginInfos.find(isDuplicateId)
 
-  if (duplicateId !== undefined) {
-    throw new ConsumerError(
-      `Configuration property "${name}" must not contain the same "id" "${duplicateId}" multiple times`,
-    )
+  if (duplicatePluginInfo === undefined) {
+    return
   }
+
+  const duplicateId = getPluginId(duplicatePluginInfo)
+  throw new ConsumerError(
+    `Configuration property "${name}" must not contain the same "id" "${duplicateId}" multiple times`,
+  )
+}
+
+const isDuplicateId = function (pluginInfo, index, pluginInfos) {
+  const id = getPluginId(pluginInfo)
+  return pluginInfos.some(
+    (pluginInfoA, indexA) => index > indexA && id === getPluginId(pluginInfoA),
+  )
 }
 
 const getPluginId = function ({ plugin: { id } }) {
   return id
-}
-
-const isDuplicateId = function (id, index, ids) {
-  return ids.some((idA, indexA) => index > indexA && id === idA)
 }
