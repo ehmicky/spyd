@@ -10,6 +10,7 @@ export const normalizeList = async function ({
     list,
     default: defaultValue,
     name,
+    multiple,
     builtins,
     pluginProp,
     modulePrefix,
@@ -21,7 +22,7 @@ export const normalizeList = async function ({
   const isArray = Array.isArray(pluginConfigs)
   const pluginConfigsA = await safeNormalizeConfig(
     pluginConfigs,
-    getListDefinitions(list),
+    getListDefinitions(list, multiple),
     {
       context,
       cwd,
@@ -43,9 +44,19 @@ export const normalizeList = async function ({
   )
 }
 
-const getListDefinitions = function (list) {
+const getListDefinitions = function (list, multiple) {
   return [
-    { name: '', transform: normalizeOptionalArray },
+    {
+      name: '',
+      validate: validateMultiple.bind(undefined, multiple),
+      transform: normalizeOptionalArray,
+    },
     { ...list, name: '' },
   ]
+}
+
+const validateMultiple = function (multiple, value) {
+  if (!multiple && Array.isArray(value)) {
+    throw new Error('must not be an array.')
+  }
 }
