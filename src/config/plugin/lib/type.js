@@ -10,6 +10,9 @@ export const normalizePluginType = function ({
   shape = [],
   list = {},
   item = [],
+  sharedConfig = {},
+  context,
+  cwd,
 }) {
   return {
     name,
@@ -22,5 +25,8 @@ export const normalizePluginType = function ({
     shape,
     list,
     item,
+    sharedConfig,
+    context,
+    cwd,
   }
 }

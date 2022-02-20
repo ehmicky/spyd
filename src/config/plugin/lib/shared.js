@@ -4,7 +4,7 @@ import { set } from '../../normalize/lib/prop_path/set.js'
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
-export const getSharedConfig = function (sharedConfig, { item }) {
+export const getSharedConfig = function ({ item, sharedConfig }) {
   const sharedPropNames = getSharedConfigPropNames(item)
   const sharedConfigProps = sharedPropNames.flatMap((sharedPropName) =>
     Object.entries(list(sharedConfig, sharedPropName)),

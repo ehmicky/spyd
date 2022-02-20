@@ -9,31 +9,16 @@ import { normalizePluginType } from './type.js'
 //  - Plugins without configuration
 //  - Single plugin per type, as opposed to multiple
 //  - Single configuration per plugin
-export const addPlugins = async function (
-  pluginConfigs,
-  pluginType,
-  { sharedConfig = {}, context, cwd } = {},
-) {
+export const addPlugins = async function (pluginConfigs, pluginType) {
   const pluginTypeA = normalizePluginType(pluginType)
-  const { sharedConfig: sharedConfigA, sharedPropNames } = getSharedConfig(
-    sharedConfig,
-    pluginTypeA,
-  )
-
-  const pluginConfigsA = await normalizeList({
-    pluginConfigs,
-    pluginType: pluginTypeA,
-    context,
-    cwd,
-  })
+  const { sharedConfig, sharedPropNames } = getSharedConfig(pluginTypeA)
+  const pluginConfigsA = await normalizeList(pluginTypeA, pluginConfigs)
   const plugins = await Promise.all(
     pluginConfigsA.map((pluginConfig) =>
       addPlugin(pluginConfig, {
-        pluginType: pluginTypeA,
+        ...pluginTypeA,
         sharedPropNames,
-        sharedConfig: sharedConfigA,
-        context,
-        cwd,
+        sharedConfig,
       }),
     ),
   )

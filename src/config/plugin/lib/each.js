@@ -9,11 +9,14 @@ import { normalizeShape } from './shape.js'
 export const addPlugin = async function (
   pluginConfig,
   {
-    pluginType: { builtins, pluginProp, shape, item },
-    sharedPropNames,
-    sharedConfig,
+    builtins,
+    pluginProp,
+    shape,
+    item,
     context,
     cwd,
+    sharedConfig,
+    sharedPropNames,
   },
 ) {
   const { [pluginProp]: id, moduleId, parents, ...pluginConfigA } = pluginConfig

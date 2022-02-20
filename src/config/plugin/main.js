@@ -86,7 +86,8 @@ const addConfigPlugins = async function ({
   cwd,
 }) {
   try {
-    return await addPlugins(pluginConfigs, pluginType, {
+    return await addPlugins(pluginConfigs, {
+      ...pluginType,
       sharedConfig: config,
       context,
       cwd,
