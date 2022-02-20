@@ -16,7 +16,7 @@ export const RUNNER_PLUGIN_TYPE = {
   // Builtin plugins
   // Default: empty object
   builtins: BUILTIN_RUNNERS,
-  // Configuration definition for the plugin itself
+  // Configuration rule for the plugin itself
   // Default: empty array
   shape: [
     {

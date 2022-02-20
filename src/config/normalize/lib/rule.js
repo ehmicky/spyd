@@ -1,7 +1,7 @@
 import { get } from './prop_path/get.js'
 
-// Validate and normalize definitions
-export const normalizeDefinition = function (
+// Validate and normalize rules
+export const normalizeRule = function (
   {
     name,
     pick,
@@ -17,9 +17,9 @@ export const normalizeDefinition = function (
     rename,
   },
   index,
-  definitions,
+  rules,
 ) {
-  const exampleA = addDefaultExample(example, name, definitions)
+  const exampleA = addDefaultExample(example, name, rules)
   return {
     name,
     pick,
@@ -43,30 +43,26 @@ const defaultRequired = function ({ path, config }) {
   return path.length !== 0 && Array.isArray(get(config, path.slice(0, -1)))
 }
 
-// `definition.example` only needs to be defined once per `definition.name`,
-// defaulting to the first value from other definitions.
-// It can also default to any `definition.default`.
-const addDefaultExample = function (example, name, definitions) {
+// `rule.example` only needs to be defined once per `rule.name`,
+// defaulting to the first value from other rules.
+// It can also default to any `rule.default`.
+const addDefaultExample = function (example, name, rules) {
   if (example !== undefined) {
     return example
   }
 
-  const definitionA = definitions.find(
-    (definition) =>
-      definition.name === name && definition.example !== undefined,
+  const ruleA = rules.find(
+    (rule) => rule.name === name && rule.example !== undefined,
   )
 
-  if (definitionA !== undefined) {
-    return definitionA.example
+  if (ruleA !== undefined) {
+    return ruleA.example
   }
 
-  const definitionB = definitions.find(
-    (definition) =>
-      definition.name === name && definition.default !== undefined,
+  const ruleB = rules.find(
+    (rule) => rule.name === name && rule.default !== undefined,
   )
-  return definitionB === undefined
-    ? undefined
-    : useDefaultAsExample(definitionB.default)
+  return ruleB === undefined ? undefined : useDefaultAsExample(ruleB.default)
 }
 
 const useDefaultAsExample = function (defaultValue) {

@@ -46,7 +46,7 @@ const getAllowedVersions = async function () {
   return packageJson.engines.node
 }
 
-export const versionDefinition = {
+export const versionRule = {
   name: 'version',
   validate: validateNumberString,
   transform: transformVersion,

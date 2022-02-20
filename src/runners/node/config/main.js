@@ -2,10 +2,10 @@ import { normalizeArray } from '../../../config/normalize/transform.js'
 import { validateDefinedString } from '../../../config/normalize/validate/simple.js'
 import { EXAMPLE_REQUIRE } from '../handler/start/require_config.js'
 
-import { versionDefinition } from './version.js'
+import { versionRule } from './version.js'
 
 export const config = [
-  versionDefinition,
+  versionRule,
   {
     name: 'require',
     default: [],

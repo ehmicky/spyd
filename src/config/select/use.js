@@ -25,13 +25,13 @@ const useCombConfigSelectors = async function (combination, config) {
 
 // Same for a single combination
 export const useConfigSelectors = async function (combination, config) {
-  return await normalizeConfig(config, DEFINITIONS, {
+  return await normalizeConfig(config, RULES, {
     context: { combination },
   })
 }
 
 // Some values might not be using selectors. Those do not need to be transformed
-const getDefinition = function (name) {
+const getRule = function (name) {
   return { name, condition: isConfigSelectorShape, transform }
 }
 
@@ -47,4 +47,4 @@ const transform = function (
     : values[matchingSelector]
 }
 
-const DEFINITIONS = SELECTABLE_PROPS.map(getDefinition)
+const RULES = SELECTABLE_PROPS.map(getRule)

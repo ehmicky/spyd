@@ -1,5 +1,5 @@
 import { deepMerge } from '../../merge.js'
-import { getDummyDefinitions } from '../../normalize/dummy.js'
+import { getDummyRules } from '../../normalize/dummy.js'
 import { has } from '../../normalize/lib/prop_path/get.js'
 
 import { UserError, PluginError, ConsumerError } from './error.js'
@@ -28,12 +28,12 @@ import { safeNormalizeConfig } from './normalize.js'
 export const normalizePluginConfig = async function ({
   pluginConfig: unmergedConfig,
   plugin,
-  pluginConfigDefinitions,
+  pluginConfigRules,
   opts: { name, sharedConfig, context, cwd, item },
 }) {
   const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
 
-  if (pluginConfigDefinitions === undefined && item === undefined) {
+  if (pluginConfigRules === undefined && item === undefined) {
     return pluginConfig
   }
 
@@ -41,7 +41,7 @@ export const normalizePluginConfig = async function ({
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
     item,
-    pluginConfigDefinitions,
+    pluginConfigRules,
     context,
     cwd,
     plugin,
@@ -50,7 +50,7 @@ export const normalizePluginConfig = async function ({
   const pluginConfigB = await normalizeSpecificConfig({
     pluginConfig: pluginConfigA,
     item,
-    pluginConfigDefinitions,
+    pluginConfigRules,
     context,
     cwd,
     parents,
@@ -67,38 +67,34 @@ const getParents = function (unmergedConfig, name, { path }) {
 const normalizeSharedConfig = async function ({
   pluginConfig,
   item = [],
-  pluginConfigDefinitions = [],
+  pluginConfigRules = [],
   context,
   cwd,
   plugin,
   parents,
 }) {
-  const dummyDefinitions = getDummyDefinitions(pluginConfigDefinitions)
-  return await safeNormalizeConfig(
-    pluginConfig,
-    [...item, ...dummyDefinitions],
-    {
-      context: { ...context, plugin },
-      parents,
-      cwd,
-      UserErrorType: ConsumerError,
-      SystemErrorType: UserError,
-    },
-  )
+  const dummyRules = getDummyRules(pluginConfigRules)
+  return await safeNormalizeConfig(pluginConfig, [...item, ...dummyRules], {
+    context: { ...context, plugin },
+    parents,
+    cwd,
+    UserErrorType: ConsumerError,
+    SystemErrorType: UserError,
+  })
 }
 
 const normalizeSpecificConfig = async function ({
   pluginConfig,
   item = [],
-  pluginConfigDefinitions = [],
+  pluginConfigRules = [],
   context,
   cwd,
   parents,
 }) {
-  const dummyDefinitions = getDummyDefinitions(item)
+  const dummyRules = getDummyRules(item)
   return await safeNormalizeConfig(
     pluginConfig,
-    [...dummyDefinitions, ...pluginConfigDefinitions],
+    [...dummyRules, ...pluginConfigRules],
     {
       context,
       parents,

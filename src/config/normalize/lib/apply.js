@@ -1,8 +1,8 @@
 import { callValueFunc, callUserFunc } from './call.js'
 import { applyValidateTransform } from './transform.js'
 
-// Apply a definition on a specific property
-export const applyDefinition = async function (
+// Apply a rule on a specific property
+export const applyRule = async function (
   {
     pick,
     condition,
@@ -42,14 +42,14 @@ export const applyDefinition = async function (
 }
 
 // Apply `pick(value, opts)` which omits the current value if `false` is
-// returned. It also skips the current definition.
+// returned. It also skips the current rule.
 // For example, this is useful when several commands share some properties but
 // not all.
 const againstPick = async function (value, pick, opts) {
   return pick !== undefined && !(await callValueFunc(pick, value, opts))
 }
 
-// Apply `condition(value, opts)` which skips the current definition if `false`
+// Apply `condition(value, opts)` which skips the current rule if `false`
 // is returned.
 const againstCondition = async function (value, condition, opts) {
   return (

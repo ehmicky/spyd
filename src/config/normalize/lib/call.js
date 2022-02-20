@@ -5,7 +5,7 @@ import { maybeFunction } from '../../../utils/function.js'
 
 import { handleValidateError, getValidateError } from './validate.js'
 
-// Most definition methods follow the same patterns:
+// Most rule methods follow the same patterns:
 //  - Called with `value` and `opts`
 //  - Optionally async
 export const callValueFunc = async function (userFunc, value, opts) {

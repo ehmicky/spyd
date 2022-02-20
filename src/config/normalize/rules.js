@@ -29,10 +29,10 @@ import { DEFAULT_RUNNERS } from '../../runners/main.js'
 import { DEFAULT_SELECT, EXAMPLE_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
 import { EXAMPLE_SYSTEMS, EXAMPLE_SYSTEM } from '../../top/system/example.js'
-import { CONFIG_DEFINITIONS } from '../load/normalize.js'
+import { CONFIG_RULES } from '../load/normalize.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 
-import { getDummyDefinitions } from './dummy.js'
+import { getDummyRules } from './dummy.js'
 import { amongCommands } from './pick.js'
 import { normalizeArray } from './transform.js'
 import {
@@ -49,7 +49,7 @@ import {
   // eslint-disable-next-line import/max-dependencies
 } from './validate/simple.js'
 
-const configProps = getDummyDefinitions(CONFIG_DEFINITIONS)
+const configProps = getDummyRules(CONFIG_RULES)
 
 const cwd = {
   name: 'cwd',
@@ -201,7 +201,7 @@ const reporter = {
   },
 }
 
-export const DEFINITIONS = [
+export const RULES = [
   ...configProps,
   cwd,
   delta,

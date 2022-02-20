@@ -1,4 +1,4 @@
-import { getDummyDefinitions } from '../../normalize/dummy.js'
+import { getDummyRules } from '../../normalize/dummy.js'
 import { isParent } from '../../normalize/lib/prop_path/parse.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
@@ -12,7 +12,7 @@ export const normalizeShape = async function ({
   originalLocation,
   opts: { shape, sharedPropNames, context },
 }) {
-  const pluginA = await safeNormalizeConfig(plugin, COMMON_SHAPE, {
+  const pluginA = await safeNormalizeConfig(plugin, COMMON_SHAPE_RULES, {
     context: { sharedPropNames, locationType, originalLocation },
     UserErrorType: PluginError,
     SystemErrorType: CoreError,
@@ -24,7 +24,7 @@ export const normalizeShape = async function ({
 
   return await safeNormalizeConfig(
     pluginA,
-    [...getDummyDefinitions(COMMON_SHAPE), ...shape],
+    [...getDummyRules(COMMON_SHAPE_RULES), ...shape],
     { context, UserErrorType: PluginError, SystemErrorType: UserError },
   )
 }
@@ -90,5 +90,5 @@ const isSharedProp = function (name, sharedPropNames) {
   )
 }
 
-// Definitions shared by all plugins
-const COMMON_SHAPE = [idProp, configPropName]
+// Rules shared by all plugins
+const COMMON_SHAPE_RULES = [idProp, configPropName]

@@ -5,24 +5,24 @@ import isPlainObj from 'is-plain-obj'
 // The configuration property uses then an object where:
 //  - The key is the selector (same syntax as `select`)
 //  - The value is applied for the combinations matching that selector
-// This applies configuration definition regardless of whether selectors were
+// This applies configuration rules regardless of whether selectors were
 // used or not, and applies them recursively when selectors are used.
-// We duplicate `definition` for both `name` and `name.*` so that validation
+// We duplicate `rule` for both `name` and `name.*` so that validation
 // error messages on `name` do not show `name.*`
 // We do not normalize all properties to the full syntax
 //  - For example, using a "default" selector when no selectors are used
 //  - Because configuration properties get added later on by some internal logic
 //     - It is simpler to specify those without selectors
-export const normalizeConfigSelectors = function (definition) {
-  const { name, condition } = definition
+export const normalizeConfigSelectors = function (rule) {
+  const { name, condition } = rule
 
   if (!SELECTABLE_PROPS.includes(name)) {
-    return [definition]
+    return [rule]
   }
 
   return [
     {
-      ...definition,
+      ...rule,
       condition: selectorCondition.bind(undefined, {
         condition,
         isSelector: false,
@@ -36,7 +36,7 @@ export const normalizeConfigSelectors = function (definition) {
       }),
       validate: validateConfigSelector,
     },
-    { ...definition, name: `${name}.*` },
+    { ...rule, name: `${name}.*` },
   ]
 }
 

@@ -12,7 +12,7 @@ import { isConfigFilePath, useResolvers } from './resolvers.js'
 export const normalizeConfigProp = async function (configOpt, base) {
   const { config: configPaths } = await normalizeConfig(
     { config: configOpt },
-    CONFIG_DEFINITIONS,
+    CONFIG_RULES,
     { cwd: base },
   )
   return configPaths
@@ -41,4 +41,4 @@ const configPropAny = [
   },
 ]
 
-export const CONFIG_DEFINITIONS = [configProp, ...configPropAny]
+export const CONFIG_RULES = [configProp, ...configPropAny]

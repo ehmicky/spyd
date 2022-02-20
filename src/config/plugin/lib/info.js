@@ -23,12 +23,16 @@ export const getPluginInfo = async function (pluginConfig, opts) {
       opts,
     )
     const { plugin, path } = await importPlugin(location, locationType, opts)
-    const { config: pluginConfigDefinitions, ...pluginA } =
-      await normalizeShape({ plugin, locationType, originalLocation, opts })
+    const { config: pluginConfigRules, ...pluginA } = await normalizeShape({
+      plugin,
+      locationType,
+      originalLocation,
+      opts,
+    })
     const pluginConfigC = await normalizePluginConfig({
       pluginConfig: pluginConfigB,
       plugin: pluginA,
-      pluginConfigDefinitions,
+      pluginConfigRules,
       opts,
     })
     return { plugin: pluginA, path, config: pluginConfigC }

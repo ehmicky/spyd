@@ -4,11 +4,11 @@ import { normalizeConfigProps } from '../../normalize/lib/main.js'
 // Call `normalizeConfig` while assigning the right error types
 export const safeNormalizeConfig = async function (
   config,
-  definitions,
+  rules,
   { UserErrorType, SystemErrorType, ...opts },
 ) {
   try {
-    return await normalizeConfigProps(config, definitions, {
+    return await normalizeConfigProps(config, rules, {
       ...opts,
       prefix: PREFIX,
     })

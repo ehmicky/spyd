@@ -7,11 +7,11 @@ import { normalizeConfigProps } from './lib/main.js'
 // validation.
 export const normalizeConfig = async function (
   config,
-  definitions,
+  rules,
   { UserErrorType = UserError, ...opts },
 ) {
   try {
-    return await normalizeConfigProps(config, definitions, {
+    return await normalizeConfigProps(config, rules, {
       ...opts,
       prefix: PREFIX,
     })

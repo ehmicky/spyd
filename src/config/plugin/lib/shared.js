@@ -16,11 +16,11 @@ export const getSharedConfig = function (sharedConfig, item = []) {
 // Retrieve all unique `name` of shared config properties, excluding their
 // children
 const getSharedConfigPropNames = function (item) {
-  const sharedPropNames = item.map(getDefinitionName)
+  const sharedPropNames = item.map(getRuleName)
   return [...new Set(sharedPropNames)].filter(hasNoParent)
 }
 
-const getDefinitionName = function ({ name }) {
+const getRuleName = function ({ name }) {
   return name
 }
 

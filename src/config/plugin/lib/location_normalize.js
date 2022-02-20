@@ -17,9 +17,9 @@ export const normalizeLocation = async function (
   locationType,
   { name, cwd, pluginProp, builtins, modulePrefix },
 ) {
-  const locationDefinitions = getLocationDefinitions(locationType, pluginProp)
+  const locationRules = getLocationRules(locationType, pluginProp)
   const { [pluginProp]: location, ...pluginConfigA } =
-    await safeNormalizeConfig(pluginConfig, locationDefinitions, {
+    await safeNormalizeConfig(pluginConfig, locationRules, {
       context: { locationType, builtins, modulePrefix },
       cwd,
       parents: name,
@@ -29,7 +29,7 @@ export const normalizeLocation = async function (
   return { pluginConfig: pluginConfigA, location }
 }
 
-const getLocationDefinitions = function (locationType, pluginProp) {
+const getLocationRules = function (locationType, pluginProp) {
   return [
     { name: pluginProp, ...normalizeLocationProp },
     { name: pluginProp, ...NORMALIZE_LOCATIONS[locationType] },
