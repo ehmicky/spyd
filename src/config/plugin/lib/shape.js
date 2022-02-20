@@ -5,13 +5,11 @@ import { PluginError, UserError, CoreError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
 
 // Validate a plugin has the correct shape and normalize it
-export const normalizeShape = async function ({
+export const normalizeShape = async function (
   plugin,
-  shape,
-  sharedPropNames,
-  context,
   moduleId,
-}) {
+  { shape, sharedPropNames, context },
+) {
   const pluginA = await safeNormalizeConfig(plugin, COMMON_SHAPE, {
     context: { sharedPropNames, moduleId },
     UserErrorType: PluginError,

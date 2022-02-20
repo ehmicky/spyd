@@ -26,14 +26,10 @@ import { safeNormalizeConfig } from './normalize.js'
 //     - For example plugins which create combinations (like runners) since
 //       should use variations instead
 export const normalizePluginConfig = async function ({
-  name,
-  sharedConfig,
   pluginConfig: unmergedConfig,
   plugin,
-  context,
-  cwd,
   pluginConfigDefinitions = [],
-  item,
+  opts: { name, sharedConfig, context, cwd, item },
 }) {
   const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
   const prefix = getPrefix.bind(undefined, unmergedConfig, name)

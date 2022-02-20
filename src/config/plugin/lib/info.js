@@ -7,52 +7,22 @@ import { normalizeItem } from './item.js'
 import { normalizeShape } from './shape.js'
 
 // Get each `pluginInfo`, i.e. normalized `plugin` + `pluginConfig`
-export const getPluginInfo = async function (
-  pluginConfig,
-  {
-    name,
-    builtins,
-    pluginProp,
-    shape,
-    modulePrefix,
-    item,
-    context,
-    cwd,
-    sharedConfig,
-    sharedPropNames,
-  },
-) {
+export const getPluginInfo = async function (pluginConfig, opts) {
   const {
-    [pluginProp]: id,
+    [opts.pluginProp]: id,
     moduleId,
     ...pluginConfigA
-  } = await normalizeItem(pluginConfig, {
-    name,
-    builtins,
-    pluginProp,
-    modulePrefix,
-    cwd,
-  })
+  } = await normalizeItem(pluginConfig, opts)
 
   try {
-    const { plugin, path } = await importPlugin(id, name, builtins)
+    const { plugin, path } = await importPlugin(id, opts)
     const { config: pluginConfigDefinitions, ...pluginA } =
-      await normalizeShape({
-        plugin,
-        shape,
-        sharedPropNames,
-        context,
-        moduleId,
-      })
+      await normalizeShape(plugin, moduleId, opts)
     const pluginConfigB = await normalizePluginConfig({
-      name,
-      sharedConfig,
       pluginConfig: pluginConfigA,
       plugin: pluginA,
-      context,
-      cwd,
       pluginConfigDefinitions,
-      item,
+      opts,
     })
     return { plugin: pluginA, path, config: pluginConfigB }
   } catch (error) {
