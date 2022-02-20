@@ -1,10 +1,9 @@
-import stringWidth from 'string-width'
-
 import {
   TITLE_SEPARATOR,
   getColSeparator,
   getColSeparatorColored,
 } from '../separator.js'
+import { getStringWidth } from '../string_width.js'
 
 import { getTablesRows } from './rows.js'
 import { getSingleTable } from './single.js'
@@ -22,8 +21,8 @@ import { getSingleTable } from './single.js'
 export const getTables = function (rows, screenWidth, mini = false) {
   const rowsLeft = rows.map(getRowLeft)
   const rowsRight = rows.map(getRowRight)
-  const leftWidth = Math.max(...rowsLeft.map(stringWidth))
-  const columnsWidth = Math.max(...rowsRight.flat().map(stringWidth))
+  const leftWidth = Math.max(...rowsLeft.map(getStringWidth))
+  const columnsWidth = Math.max(...rowsRight.flat().map(getStringWidth))
   const availableWidth = getAvailableWidth(screenWidth, leftWidth)
   const columnSeparator = getColSeparator(mini)
   const columnSeparatorColored = getColSeparatorColored(mini)
