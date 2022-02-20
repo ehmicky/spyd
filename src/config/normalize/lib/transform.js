@@ -38,6 +38,7 @@ const getTransformMove = function ({ newPath, value }, name) {
   return { newPath: `${name}.${newPath}`, value }
 }
 
+// Automatically detect some common type of moves
 const applyCommonMoves = function (newValue, oldValue, name) {
   const commonMove = COMMON_MOVES.find(({ test }) => test(newValue, oldValue))
 
@@ -51,6 +52,7 @@ const applyCommonMoves = function (newValue, oldValue, name) {
 }
 
 const COMMON_MOVES = [
+  // When normalizing `value` to `[value]` with a single element
   {
     test(newValue, oldValue) {
       return (
@@ -63,6 +65,7 @@ const COMMON_MOVES = [
       return '0'
     },
   },
+  // When normalizing `value` to `{ [propName]: value }` with a single property
   {
     test(newValue, oldValue) {
       return (
