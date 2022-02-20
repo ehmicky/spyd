@@ -19,7 +19,7 @@ export const validateDuplicatePlugins = function (
   }
 
   const duplicateId = plugins
-    .map((plugin) => getPluginId(plugin, pluginProp))
+    .map(({ plugin }) => plugin[pluginProp])
     .find(isDuplicateId)
 
   if (duplicateId !== undefined) {
@@ -27,10 +27,6 @@ export const validateDuplicatePlugins = function (
       `Configuration property "${name}" must not contain the same "${pluginProp}" "${duplicateId}" multiple times`,
     )
   }
-}
-
-const getPluginId = function ({ plugin }, pluginProp) {
-  return plugin[pluginProp]
 }
 
 const isDuplicateId = function (id, index, ids) {
