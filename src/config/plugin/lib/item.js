@@ -10,7 +10,12 @@ import {
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { CoreError, ConsumerError } from './error.js'
-import { isModuleId, isPathId, isInlineId, resolveModuleId } from './id.js'
+import {
+  isModuleLocation,
+  isPathLocation,
+  isInlineLocation,
+  resolveModuleLocation,
+} from './location.js'
 import { safeNormalizeConfig } from './normalize.js'
 
 // Normalize a single `pluginConfig`
@@ -29,18 +34,18 @@ export const normalizeItem = async function (
 }
 
 const getItemDefinition = function (pluginProp, builtins) {
-  const exampleId = getExampleId(builtins)
+  const exampleLocation = getExampleLocation(builtins)
   return [
-    { ...normalizeItemTop, example: exampleId },
-    normalizeItemModuleId,
-    { ...normalizeItemId, name: pluginProp, example: exampleId },
+    { ...normalizeItemTop, example: exampleLocation },
+    normalizeItemModuleLoc,
+    { ...normalizeItemLocation, name: pluginProp, example: exampleLocation },
   ]
 }
 
-const getExampleId = function (builtins) {
-  const builtinIds = Object.keys(builtins)
-  return builtinIds.length !== 0 && builtinIds[0].trim() !== ''
-    ? builtinIds[0]
+const getExampleLocation = function (builtins) {
+  const builtinNames = Object.keys(builtins)
+  return builtinNames.length !== 0 && builtinNames[0].trim() !== ''
+    ? builtinNames[0]
     : undefined
 }
 
@@ -56,34 +61,39 @@ const normalizeItemTop = {
   },
 }
 
-const normalizeItemModuleId = {
-  name: 'moduleId',
-  compute({ context: { builtins, modulePrefix }, config: { id } }) {
-    return isModuleId(id, modulePrefix, builtins) ? id : undefined
+const normalizeItemModuleLoc = {
+  name: 'moduleLocation',
+  compute({
+    context: { builtins, modulePrefix, pluginProp },
+    config: { [pluginProp]: location },
+  }) {
+    return isModuleLocation(location, modulePrefix, builtins)
+      ? location
+      : undefined
   },
 }
 
-const normalizeItemId = {
+const normalizeItemLocation = {
   required: true,
-  path(id, { context: { builtins } }) {
-    return isPathId(id, builtins)
+  path(location, { context: { builtins } }) {
+    return isPathLocation(location, builtins)
   },
-  async validate(id, { context: { builtins } }) {
-    if (isInlineId(id)) {
-      validateObjectOrString(id)
+  async validate(location, { context: { builtins } }) {
+    if (isInlineLocation(location)) {
+      validateObjectOrString(location)
       return
     }
 
-    validateDefinedString(id)
+    validateDefinedString(location)
 
-    if (isPathId(id, builtins)) {
-      await validateFileExists(id)
-      await validateRegularFile(id)
+    if (isPathLocation(location, builtins)) {
+      await validateFileExists(location)
+      await validateRegularFile(location)
     }
   },
-  transform(id, { context: { builtins, modulePrefix }, cwd }) {
-    return isModuleId(id, modulePrefix, builtins)
-      ? resolveModuleId({ id, modulePrefix, builtins, cwd })
-      : id
+  transform(location, { context: { builtins, modulePrefix }, cwd }) {
+    return isModuleLocation(location, modulePrefix, builtins)
+      ? resolveModuleLocation({ location, modulePrefix, builtins, cwd })
+      : location
   },
 }

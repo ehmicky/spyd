@@ -11,7 +11,7 @@ import { safeNormalizeConfig } from './normalize.js'
 //  - A single item can be used instead of an array of items
 //  - The property name is not pluralized
 // This is optimized for configuration-less plugins by providing with a shortcut
-// syntax: only the plugin `id` instead of a plugin object.
+// syntax: only the plugin `location` instead of a plugin object.
 // Some configuration properties are shared by all plugins of a given type:
 //  - Top-level properties can be used to configure them for all plugins
 // When merging multiple configurations (CLI flags, programmatic, child and

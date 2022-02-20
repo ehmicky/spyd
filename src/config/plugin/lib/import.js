@@ -3,32 +3,39 @@ import { pathToFileURL } from 'url'
 import { wrapError } from '../../../error/wrap.js'
 
 import { PluginError } from './error.js'
-import { isBuiltinId, isInlineId } from './id.js'
+import { isBuiltinLocation, isInlineLocation } from './location.js'
 
 // Builtin modules are lazy loaded for performance reasons.
 // The return value is shallow cloned to make it a plain object instead of
 // a dynamic `Module` instance.
-//  - It also ensure plugins of same id and type but different configs do not
-//    share the same top-level properties. However, they will share deep
+//  - It also ensure plugins of same location and type but different configs do
+//    not share the same top-level properties. However, they will share deep
 //    properties by reference.
-export const importPlugin = async function (id, { name, builtins }) {
+export const importPlugin = async function (
+  location,
+  { name, builtins, pluginProp },
+) {
   try {
-    return await importPluginById(id, builtins)
+    return await importPluginByLocation(location, builtins)
   } catch (error) {
-    throw wrapError(error, `Could not load "${name}.id"\n`, PluginError)
+    throw wrapError(
+      error,
+      `Could not load "${name}.${pluginProp}"\n`,
+      PluginError,
+    )
   }
 }
 
-const importPluginById = async function (id, builtins) {
-  if (isInlineId(id)) {
-    return { plugin: id }
+const importPluginByLocation = async function (location, builtins) {
+  if (isInlineLocation(location)) {
+    return { plugin: location }
   }
 
-  if (isBuiltinId(id, builtins)) {
-    const builtinPlugin = await builtins[id]()
+  if (isBuiltinLocation(location, builtins)) {
+    const builtinPlugin = await builtins[location]()
     return { plugin: { ...builtinPlugin } }
   }
 
-  const plugin = await import(pathToFileURL(id))
-  return { plugin: { ...plugin }, path: id }
+  const plugin = await import(pathToFileURL(location))
+  return { plugin: { ...plugin }, path: location }
 }

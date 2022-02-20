@@ -9,13 +9,13 @@ import { normalizeShape } from './shape.js'
 // Get each `pluginInfo`, i.e. normalized `plugin` + `pluginConfig`
 export const getPluginInfo = async function (pluginConfig, opts) {
   const {
-    [opts.pluginProp]: id,
+    [opts.pluginProp]: location,
     moduleId,
     ...pluginConfigA
   } = await normalizeItem(pluginConfig, opts)
 
   try {
-    const { plugin, path } = await importPlugin(id, opts)
+    const { plugin, path } = await importPlugin(location, opts)
     const { config: pluginConfigDefinitions, ...pluginA } =
       await normalizeShape(plugin, moduleId, opts)
     const pluginConfigB = await normalizePluginConfig({
@@ -26,12 +26,12 @@ export const getPluginInfo = async function (pluginConfig, opts) {
     })
     return { plugin: pluginA, path, config: pluginConfigB }
   } catch (error) {
-    throw handlePluginError(error, id)
+    throw handlePluginError(error, location)
   }
 }
 
-const handlePluginError = function (error, id) {
+const handlePluginError = function (error, location) {
   return error instanceof PluginError
-    ? wrapError(error, `Invalid plugin "${id}":`)
+    ? wrapError(error, `Invalid plugin "${location}":`)
     : error
 }
