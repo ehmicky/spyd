@@ -18,7 +18,7 @@ export const normalizeItem = async function (
   pluginConfig,
   { name, builtins, pluginProp, modulePrefix, cwd },
 ) {
-  const itemDefinitions = getListItemsDefinitions(pluginProp, builtins)
+  const itemDefinitions = getItemDefinition(pluginProp, builtins)
   return await safeNormalizeConfig(pluginConfig, itemDefinitions, {
     context: { builtins, pluginProp, modulePrefix },
     cwd,
@@ -28,7 +28,7 @@ export const normalizeItem = async function (
   })
 }
 
-const getListItemsDefinitions = function (pluginProp, builtins) {
+const getItemDefinition = function (pluginProp, builtins) {
   const exampleId = getExampleId(builtins)
   return [
     { ...normalizeItemTop, example: exampleId },
