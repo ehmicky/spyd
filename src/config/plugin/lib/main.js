@@ -43,10 +43,8 @@ export const getPlugin = async function (pluginConfig, opts) {
   return plugin
 }
 
-const validateDefined = function (value, opts) {
+const validateDefined = function (value, { name }) {
   if (value === undefined) {
-    throw new UserError(
-      `Configuration property "${opts.name}" must be defined.`,
-    )
+    throw new UserError(`Configuration property "${name}" must be defined.`)
   }
 }
