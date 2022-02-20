@@ -11,11 +11,13 @@ export const transformValue = async function (value, transform, opts) {
 
   const transformReturn = await callValueFunc(transform, value, opts)
 
+  const { name } = opts.funcOpts
+
   if (isTransformMove(transformReturn)) {
-    return getTransformMove(transformReturn, opts)
+    return getTransformMove(transformReturn, name)
   }
 
-  const commonMoveReturn = applyCommonMoves(transformReturn, value, opts)
+  const commonMoveReturn = applyCommonMoves(transformReturn, value, name)
   return commonMoveReturn === undefined
     ? { value: transformReturn }
     : commonMoveReturn
@@ -32,11 +34,11 @@ const isTransformMove = function (transformReturn) {
   )
 }
 
-const getTransformMove = function ({ newPath, value }, { funcOpts: { name } }) {
+const getTransformMove = function ({ newPath, value }, name) {
   return { newPath: `${name}.${newPath}`, value }
 }
 
-const applyCommonMoves = function (newValue, oldValue, opts) {
+const applyCommonMoves = function (newValue, oldValue, name) {
   const commonMove = COMMON_MOVES.find(({ test }) => test(newValue, oldValue))
 
   if (commonMove === undefined) {
@@ -44,7 +46,7 @@ const applyCommonMoves = function (newValue, oldValue, opts) {
   }
 
   const newPath = commonMove.getNewPath(newValue)
-  const newPathA = `${opts.funcOpts.name}.${newPath}`
+  const newPathA = `${name}.${newPath}`
   return { value: newValue, newPath: newPathA }
 }
 
