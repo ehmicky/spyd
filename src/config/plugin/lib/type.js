@@ -1,3 +1,5 @@
+import { getSharedConfig } from './shared.js'
+
 // Add default values and normalize plugin types
 export const normalizePluginType = function ({
   name = 'plugins',
@@ -14,6 +16,10 @@ export const normalizePluginType = function ({
   context,
   cwd,
 }) {
+  const { sharedConfig: sharedConfigA, sharedPropNames } = getSharedConfig(
+    sharedConfig,
+    item,
+  )
   return {
     name,
     modulePrefix,
@@ -25,7 +31,8 @@ export const normalizePluginType = function ({
     shape,
     list,
     item,
-    sharedConfig,
+    sharedConfig: sharedConfigA,
+    sharedPropNames,
     context,
     cwd,
   }
