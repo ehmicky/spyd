@@ -1,4 +1,5 @@
 import { findLastIndex } from '../../../utils/find.js'
+import { setArray } from '../../../utils/set.js'
 import { deepMerge } from '../../merge.js'
 import { getDummyDefinitions } from '../../normalize/dummy.js'
 import { has } from '../../normalize/lib/prop_path/get.js'
@@ -69,16 +70,26 @@ const getPrefix = function (
   { unmergedConfig, parents, duplicateConfigs = [] },
   { path },
 ) {
+  if (!has(unmergedConfig, path)) {
+    return
+  }
+
+  const parentsA = fixDuplicateIndex(parents, duplicateConfigs, path)
+  return `${parentsA}.`
+}
+
+const fixDuplicateIndex = function (parents, duplicateConfigs, path) {
   const index = findLastIndex(duplicateConfigs, (duplicateConfig) =>
     has(duplicateConfig, path),
   )
 
-  if (index !== -1) {
-    const parentsA = [...parents.split('.').slice(0, -1), index].join('.')
-    return `${parentsA}.`
+  if (index === -1) {
+    return parents
   }
 
-  return has(unmergedConfig, path) ? `${parents}.` : undefined
+  const parentsA = parents.split('.')
+  const parentsB = setArray(parentsA, parentsA.length - 1, index)
+  return parentsB.join('.')
 }
 
 const normalizeSharedConfig = async function ({
