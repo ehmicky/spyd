@@ -15,30 +15,24 @@ export const callValueFunc = async function (userFunc, value, opts) {
   try {
     return await callWithValueFunc(userFunc, value, opts)
   } catch (error) {
-    throw await handleValueError(error, value, opts)
+    const errorA = addCurrentValue(error, value)
+    throw await addExampleValue(errorA, value, opts)
   }
 }
 
-const handleValueError = async function (error, value, opts) {
-  const currentValueStr = getCurrentValue(value)
-  const exampleValueStr = await getExampleValue(error, value, opts)
-  const message = `${currentValueStr}${exampleValueStr}`
-  return wrapError(error, message)
-}
-
-const getCurrentValue = function (value) {
+const addCurrentValue = function (error, value) {
   const valueStr = serializeValue(value)
-  return `\nCurrent value:${valueStr}`
+  return wrapError(error, `\nCurrent value:${valueStr}`)
 }
 
-const getExampleValue = async function (error, value, opts) {
+const addExampleValue = async function (error, value, opts) {
   if (opts.example === undefined || !error.validation) {
-    return ''
+    return error
   }
 
   const exampleValue = await callWithValueFunc(opts.example, value, opts)
   const exampleValueStr = serializeValue(exampleValue)
-  return `\nExample value:${exampleValueStr}`
+  return wrapError(error, `\nExample value:${exampleValueStr}`)
 }
 
 const serializeValue = function (value) {
