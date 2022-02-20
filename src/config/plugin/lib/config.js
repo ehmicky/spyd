@@ -28,10 +28,15 @@ import { safeNormalizeConfig } from './normalize.js'
 export const normalizePluginConfig = async function ({
   pluginConfig: unmergedConfig,
   plugin,
-  pluginConfigDefinitions = [],
+  pluginConfigDefinitions,
   opts: { name, sharedConfig, context, cwd, item },
 }) {
   const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
+
+  if (pluginConfigDefinitions === undefined && item === undefined) {
+    return pluginConfig
+  }
+
   const prefix = getPrefix.bind(undefined, unmergedConfig, name)
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
@@ -61,8 +66,8 @@ const getPrefix = function (unmergedConfig, name, { path }) {
 
 const normalizeSharedConfig = async function ({
   pluginConfig,
-  item,
-  pluginConfigDefinitions,
+  item = [],
+  pluginConfigDefinitions = [],
   context,
   cwd,
   plugin,
@@ -84,8 +89,8 @@ const normalizeSharedConfig = async function ({
 
 const normalizeSpecificConfig = async function ({
   pluginConfig,
-  item,
-  pluginConfigDefinitions,
+  item = [],
+  pluginConfigDefinitions = [],
   context,
   cwd,
   prefix,

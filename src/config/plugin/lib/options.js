@@ -10,14 +10,18 @@ export const normalizeMultipleOpts = function ({
   return { ...optsA, duplicates }
 }
 
-// Normalize options for `addPlugin()`
+// Normalize options for `addPlugin()`.
+// We purposely do not assign default values to `shape` and `item` since:
+//  - `undefined` means no validation is performed, including unknown properties
+//    check
+//  - While an empty array means we validate that no properties exist
 export const normalizeSingleOpts = function ({
   name = 'plugin',
   modulePrefix,
   pluginProp = 'plugin',
   builtins = {},
-  shape = [],
-  item = [],
+  shape,
+  item,
   sharedConfig = {},
   context,
   cwd,

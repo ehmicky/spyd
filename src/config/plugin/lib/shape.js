@@ -1,3 +1,4 @@
+import { getDummyDefinitions } from '../../normalize/dummy.js'
 import { isParent } from '../../normalize/lib/prop_path/parse.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
@@ -16,11 +17,16 @@ export const normalizeShape = async function ({
     UserErrorType: PluginError,
     SystemErrorType: CoreError,
   })
-  return await safeNormalizeConfig(pluginA, shape, {
-    context,
-    UserErrorType: PluginError,
-    SystemErrorType: UserError,
-  })
+
+  if (shape === undefined) {
+    return pluginA
+  }
+
+  return await safeNormalizeConfig(
+    pluginA,
+    [...getDummyDefinitions(COMMON_SHAPE), ...shape],
+    { context, UserErrorType: PluginError, SystemErrorType: UserError },
+  )
 }
 
 const idProp = {
