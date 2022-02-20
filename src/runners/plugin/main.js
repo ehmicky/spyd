@@ -1,7 +1,4 @@
-import {
-  validateEmptyArray,
-  validateFunction,
-} from '../../config/normalize/validate/complex.js'
+import { validateFunction } from '../../config/normalize/validate/complex.js'
 import { BUILTIN_RUNNERS } from '../main.js'
 
 import { item } from './item.js'
@@ -31,11 +28,6 @@ export const RUNNER_PLUGIN_TYPE = {
       validate: validateFunction,
     },
   ],
-  // Configuration property selecting and configuring the plugin
-  // Default: empty object
-  list: {
-    validate: validateEmptyArray,
-  },
   // Properties of the `list` item shared by all plugins
   // Default: empty array
   item,

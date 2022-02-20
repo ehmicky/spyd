@@ -35,7 +35,11 @@ import { normalizeConfigSelectors } from '../select/normalize.js'
 import { getDummyDefinitions } from './dummy.js'
 import { amongCommands } from './pick.js'
 import { normalizeArray } from './transform.js'
-import { validateJson, validateObject } from './validate/complex.js'
+import {
+  validateJson,
+  validateObject,
+  validateEmptyArray,
+} from './validate/complex.js'
 import { validateFileExists, validateDirectory } from './validate/fs.js'
 import {
   validateBoolean,
@@ -46,18 +50,6 @@ import {
 } from './validate/simple.js'
 
 const configProps = getDummyDefinitions(CONFIG_DEFINITIONS)
-
-const runner = {
-  name: 'runner',
-  pick: amongCommands(['dev', 'run']),
-  default: DEFAULT_RUNNERS,
-}
-
-const reporter = {
-  name: 'reporter',
-  pick: amongCommands(['remove', 'run', 'show']),
-  default: DEFAULT_REPORTERS,
-}
 
 const cwd = {
   name: 'cwd',
@@ -193,10 +185,24 @@ const titlesAny = {
   example: EXAMPLE_TITLE,
 }
 
+const runner = {
+  name: 'runner',
+  pick: amongCommands(['dev', 'run']),
+  default: DEFAULT_RUNNERS,
+  validate: validateEmptyArray,
+}
+
+const reporter = {
+  name: 'reporter',
+  pick: amongCommands(['remove', 'run', 'show']),
+  default: DEFAULT_REPORTERS,
+  transform(value, { config }) {
+    return config.force ? [] : value
+  },
+}
+
 export const DEFINITIONS = [
   ...configProps,
-  runner,
-  reporter,
   cwd,
   delta,
   force,
@@ -214,5 +220,7 @@ export const DEFINITIONS = [
   systemAny,
   titles,
   titlesAny,
+  runner,
+  reporter,
 ].flatMap(normalizeConfigSelectors)
 /* eslint-enable max-lines */

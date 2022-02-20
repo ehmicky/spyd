@@ -44,10 +44,5 @@ export const REPORTER_PLUGIN_TYPE = {
       validate: validateDefinedString,
     },
   ],
-  list: {
-    transform(value, { config }) {
-      return config.force ? [] : value
-    },
-  },
   item,
 }
