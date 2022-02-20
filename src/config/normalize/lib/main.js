@@ -4,6 +4,7 @@ import { cleanObject } from '../../../utils/clean.js'
 
 import { applyRule } from './apply.js'
 import { handleError } from './loose.js'
+import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
 import { list } from './prop_path/get.js'
 import { set, remove } from './prop_path/set.js'
@@ -28,18 +29,11 @@ export const normalizeConfigProps = async function (
   const rulesA = rules.map(normalizeRule)
 
   try {
-    const configB = await pReduce(
+    const { config: configB } = await pReduce(
       rulesA,
-      (configA, rule) =>
-        applyRuleDeep({
-          config: configA,
-          rule,
-          context,
-          cwd,
-          prefix,
-          parents,
-        }),
-      config,
+      (memo, rule) =>
+        applyRuleDeep(memo, { rule, context, cwd, prefix, parents }),
+      { config, moves: [] },
     )
     return cleanObject(configB)
   } catch (error) {
@@ -48,44 +42,23 @@ export const normalizeConfigProps = async function (
   }
 }
 
-const applyRuleDeep = async function ({
-  config,
-  rule,
-  rule: { name: query },
-  context,
-  cwd,
-  prefix,
-  parents,
-}) {
+const applyRuleDeep = async function (
+  { config, moves },
+  { rule, rule: { name: query }, context, cwd, prefix, parents },
+) {
   const props = Object.entries(list(config, query))
   return await pReduce(
     props,
-    (configA, [name, value]) =>
-      applyPropRule({
-        config: configA,
-        value,
-        name,
-        rule,
-        context,
-        cwd,
-        prefix,
-        parents,
-      }),
-    config,
+    (memo, [name, value]) =>
+      applyPropRule(memo, { value, name, rule, context, cwd, prefix, parents }),
+    { config, moves },
   )
 }
 
-const applyPropRule = async function ({
-  config,
-  value,
-  name,
-  rule,
-  rule: { example },
-  context,
-  cwd,
-  prefix,
-  parents,
-}) {
+const applyPropRule = async function (
+  { config, moves },
+  { value, name, rule, rule: { example }, context, cwd, prefix, parents },
+) {
   const opts = await getOpts({
     name,
     config,
@@ -94,14 +67,18 @@ const applyPropRule = async function ({
     prefix,
     parents,
     example,
+    moves,
   })
-  const { value: newValue, name: newName = name } = await applyRule(
-    rule,
-    value,
-    opts,
-  )
+  const {
+    value: newValue,
+    name: newName = name,
+    newPaths = [],
+  } = await applyRule(rule, value, opts)
   const configA = name === newName ? config : remove(config, name)
-  return newValue === undefined
-    ? remove(configA, newName)
-    : set(configA, newName, newValue)
+  const configB =
+    newValue === undefined
+      ? remove(configA, newName)
+      : set(configA, newName, newValue)
+  const movesA = addMoves(moves, newPaths, opts.funcOpts.name)
+  return { config: configB, moves: movesA }
 }

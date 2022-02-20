@@ -28,7 +28,11 @@ export const applyRule = async function (
 
   const valueA = await computeValue(value, compute, opts)
   const valueB = await addDefaultValue(valueA, defaultValue, opts)
-  const { value: valueC, name } = await applyValidateTransform({
+  const {
+    value: valueC,
+    name,
+    newPaths,
+  } = await applyValidateTransform({
     value: valueB,
     path,
     glob,
@@ -38,7 +42,7 @@ export const applyRule = async function (
     rename,
     opts,
   })
-  return { value: valueC, name }
+  return { value: valueC, name, newPaths }
 }
 
 // Apply `pick(value, opts)` which omits the current value if `false` is

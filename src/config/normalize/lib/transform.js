@@ -22,7 +22,8 @@ export const applyValidateTransform = async function ({
   await validateValue(valueA, validate, opts)
   const valueB = await transformValue(valueA, transform, opts)
   const name = await renameProp(valueB, rename, opts)
-  return { value: valueB, name }
+  const newPaths = [name].filter(Boolean)
+  return { value: valueB, name, newPaths }
 }
 
 // Apply `required(opts)` which throws if `true` and value is `undefined`
