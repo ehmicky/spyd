@@ -2,11 +2,7 @@
 // simplicity providing it is the most common use case.
 // We also allow duplicate values but remove them.
 export const normalizeArray = function (value) {
-  return [...new Set(normalizeOptionalArray(value))]
-}
-
-const normalizeOptionalArray = function (value) {
-  return Array.isArray(value) ? value : [value]
+  return Array.isArray(value) ? [...new Set(value)] : [value]
 }
 
 // Version strings are sometimes input as numbers (`major` or `major.minor`):
