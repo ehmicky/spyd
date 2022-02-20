@@ -1,11 +1,9 @@
-import { findLastIndex } from '../../../utils/find.js'
-import { setArray } from '../../../utils/set.js'
 import { deepMerge } from '../../merge.js'
 import { getDummyDefinitions } from '../../normalize/dummy.js'
-import { has } from '../../normalize/lib/prop_path/get.js'
 
 import { UserError, PluginError, ConsumerError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
+import { getPrefix } from './prefix.js'
 
 // Plugins use an array of objects for both selection and configuration.
 // This normalizes it.
@@ -62,34 +60,6 @@ export const normalizePluginConfig = async function ({
     prefix,
   })
   return pluginConfigB
-}
-
-// When the value was merged due to `duplicates` or to `sharedConfig`, ensure
-// the prefix is correct
-const getPrefix = function (
-  { unmergedConfig, parents, duplicateConfigs = [] },
-  { path },
-) {
-  if (!has(unmergedConfig, path)) {
-    return
-  }
-
-  const parentsA = fixDuplicateIndex(parents, duplicateConfigs, path)
-  return `${parentsA}.`
-}
-
-const fixDuplicateIndex = function (parents, duplicateConfigs, path) {
-  const index = findLastIndex(duplicateConfigs, (duplicateConfig) =>
-    has(duplicateConfig, path),
-  )
-
-  if (index === -1) {
-    return parents
-  }
-
-  const parentsA = parents.split('.')
-  const parentsB = setArray(parentsA, parentsA.length - 1, index)
-  return parentsB.join('.')
 }
 
 const normalizeSharedConfig = async function ({
