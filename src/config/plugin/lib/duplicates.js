@@ -24,9 +24,9 @@ export const handleDuplicatePlugins = function (
 ) {
   return duplicates
     ? pluginConfigs
-    : pluginConfigs.map(
-        handleDuplicatePlugin.bind(undefined, pluginProp, pluginConfigs),
-      )
+    : pluginConfigs
+        .map(handleDuplicatePlugin.bind(undefined, pluginProp, pluginConfigs))
+        .filter(Boolean)
 }
 
 const handleDuplicatePlugin = function (
@@ -42,5 +42,7 @@ const handleDuplicatePlugin = function (
     return pluginConfig
   }
 
-  return duplicatePlugins[0] === pluginConfig ? deepMerge(duplicatePlugins) : {}
+  return duplicatePlugins[0] === pluginConfig
+    ? deepMerge(duplicatePlugins)
+    : undefined
 }

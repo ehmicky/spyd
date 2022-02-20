@@ -11,11 +11,11 @@ import { isBuiltinId, isInlineId } from './id.js'
 //  - It also ensure plugins of same id and type but different configs do not
 //    share the same top-level properties. However, they will share deep
 //    properties by reference.
-export const importPlugin = async function (id, propName, builtins) {
+export const importPlugin = async function (id, parents, builtins) {
   try {
     return await importPluginById(id, builtins)
   } catch (error) {
-    throw wrapError(error, `Could not load "${propName}.id"\n`, PluginError)
+    throw wrapError(error, `Could not load "${parents}.id"\n`, PluginError)
   }
 }
 

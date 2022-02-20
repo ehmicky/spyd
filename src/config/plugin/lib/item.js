@@ -19,9 +19,10 @@ export const getListItemsDefinitions = function (
 ) {
   const exampleId = getExampleId(defaultValue, builtins)
   return [
-    { name: '*', example: exampleId, ...normalizeItem },
-    { name: '*.moduleId', ...normalizeItemModuleId },
-    { name: `*.${pluginProp}`, example: exampleId, ...normalizeItemId },
+    { ...normalizeItem, example: exampleId },
+    normalizeItemParents,
+    normalizeItemModuleId,
+    { ...normalizeItemId, name: `*.${pluginProp}`, example: exampleId },
   ]
 }
 
@@ -38,6 +39,7 @@ const getFirstItem = function (stringArray) {
 }
 
 const normalizeItem = {
+  name: '*',
   validate(value) {
     validateObjectOrString(value)
     validateJson(value)
@@ -47,7 +49,16 @@ const normalizeItem = {
   },
 }
 
+// `parents` are added before any `pluginConfig` is filtered out as duplicates
+const normalizeItemParents = {
+  name: '*.parents',
+  compute({ context: { name, isArray }, path: [index] }) {
+    return isArray ? `${name}.${index}` : name
+  },
+}
+
 const normalizeItemModuleId = {
+  name: '*.moduleId',
   compute({
     context: { builtins, modulePrefix },
     path: [index],

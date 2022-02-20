@@ -7,25 +7,17 @@ import { normalizeShape } from './shape.js'
 
 // Handle each individual `pluginConfig`
 export const addPlugin = async function (
-  { name, builtins, pluginProp, shape, item },
+  { builtins, pluginProp, shape, item },
   {
-    pluginConfig: { [pluginProp]: id, moduleId, ...pluginConfig },
-    index,
-    pluginsCount,
+    pluginConfig: { [pluginProp]: id, moduleId, parents, ...pluginConfig },
     sharedPropNames,
     sharedConfig,
     context,
     cwd,
   },
 ) {
-  if (id === undefined) {
-    return
-  }
-
-  const propName = getPropName(name, index, pluginsCount)
-
   try {
-    const { plugin, path } = await importPlugin(id, propName, builtins)
+    const { plugin, path } = await importPlugin(id, parents, builtins)
 
     const { config: pluginConfigDefinitions, ...pluginA } =
       await normalizeShape({
@@ -36,7 +28,7 @@ export const addPlugin = async function (
         moduleId,
       })
     const pluginConfigA = await normalizePluginConfig({
-      propName,
+      parents,
       sharedConfig,
       pluginConfig,
       plugin: pluginA,
@@ -49,10 +41,6 @@ export const addPlugin = async function (
   } catch (error) {
     throw handlePluginError(error, id)
   }
-}
-
-const getPropName = function (name, index, pluginsCount) {
-  return pluginsCount === 1 ? name : `${name}[${index}]`
 }
 
 const handlePluginError = function (error, id) {

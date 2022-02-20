@@ -15,24 +15,22 @@ export const addPlugins = async function (
   { sharedConfig = {}, context, cwd } = {},
 ) {
   const pluginTypeA = normalizePluginType(pluginType)
+  const { sharedConfig: sharedConfigA, sharedPropNames } = getSharedConfig(
+    sharedConfig,
+    pluginTypeA,
+  )
+
   const pluginConfigsA = await normalizeList({
     pluginConfigs,
     pluginType: pluginTypeA,
     context,
     cwd,
   })
-  const { sharedConfig: sharedConfigA, sharedPropNames } = getSharedConfig(
-    sharedConfig,
-    pluginTypeA,
-  )
   const pluginConfigsB = handleDuplicatePlugins(pluginConfigsA, pluginTypeA)
-  const pluginsCount = pluginConfigsB.length
-  const plugins = await Promise.all(
-    pluginConfigsB.map((pluginConfig, index) =>
+  return await Promise.all(
+    pluginConfigsB.map((pluginConfig) =>
       addPlugin(pluginTypeA, {
         pluginConfig,
-        index,
-        pluginsCount,
         sharedPropNames,
         sharedConfig: sharedConfigA,
         context,
@@ -40,5 +38,4 @@ export const addPlugins = async function (
       }),
     ),
   )
-  return plugins.filter(Boolean)
 }

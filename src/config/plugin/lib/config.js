@@ -26,7 +26,7 @@ import { safeNormalizeConfig } from './normalize.js'
 //     - For example plugins which create combinations (like runners) since
 //       should use variations instead
 export const normalizePluginConfig = async function ({
-  propName,
+  parents,
   sharedConfig,
   pluginConfig: unmergedConfig,
   plugin,
@@ -36,7 +36,7 @@ export const normalizePluginConfig = async function ({
   item,
 }) {
   const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
-  const prefix = getPrefix.bind(undefined, unmergedConfig, propName)
+  const prefix = getPrefix.bind(undefined, unmergedConfig, parents)
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
     item,
@@ -57,8 +57,8 @@ export const normalizePluginConfig = async function ({
   return pluginConfigB
 }
 
-const getPrefix = function (unmergedConfig, propName, { path }) {
-  return has(unmergedConfig, path) ? `${propName}.` : undefined
+const getPrefix = function (unmergedConfig, parents, { path }) {
+  return has(unmergedConfig, path) ? `${parents}.` : undefined
 }
 
 const normalizeSharedConfig = async function ({

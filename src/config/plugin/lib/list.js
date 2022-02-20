@@ -18,6 +18,7 @@ export const normalizeList = async function ({
   context,
   cwd,
 }) {
+  const isArray = Array.isArray(pluginConfigs)
   const pluginConfigsA = await safeNormalizeConfig(
     pluginConfigs,
     getListDefinitions(list),
@@ -33,7 +34,7 @@ export const normalizeList = async function ({
     pluginConfigsA,
     getListItemsDefinitions(pluginProp, defaultValue, builtins),
     {
-      context: { builtins, pluginProp, modulePrefix },
+      context: { builtins, pluginProp, modulePrefix, isArray, name },
       cwd,
       prefix: `${name}.`,
       UserErrorType: ConsumerError,
