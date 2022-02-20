@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'url'
+
 import { validateObjectOrString } from '../../normalize/validate/complex.js'
 import {
   validateFileExists,
@@ -46,6 +48,25 @@ const normalizeLocationProp = {
   example: getExampleLocation,
 }
 
+// URL instances are always absolute, so `cwd` resolution is not needed
+const normalizeFileUrlLocation = {
+  validate(location) {
+    validateFileUrlScheme(location)
+  },
+  async transform(location) {
+    const path = fileURLToPath(location)
+    await validateFileExists(path)
+    await validateRegularFile(path)
+    return path
+  },
+}
+
+const validateFileUrlScheme = function (location) {
+  if (location.protocol !== 'file:') {
+    throw new Error('must use "file:" as a URL protocol.')
+  }
+}
+
 const normalizeInlineLocation = {
   validate: validateObjectOrString,
 }
@@ -75,6 +96,7 @@ const validateHasModulePrefix = function (modulePrefix) {
 }
 
 const NORMALIZE_LOCATIONS = {
+  fileUrl: normalizeFileUrlLocation,
   inline: normalizeInlineLocation,
   builtin: normalizeBuiltinLocation,
   path: normalizePathLocation,

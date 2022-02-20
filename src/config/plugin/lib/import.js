@@ -41,6 +41,7 @@ const importPath = async function (location) {
 }
 
 const IMPORTERS = {
+  fileUrl: importPath,
   inline: importInline,
   builtin: importBuiltin,
   path: importPath,

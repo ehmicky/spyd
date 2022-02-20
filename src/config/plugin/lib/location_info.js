@@ -21,6 +21,7 @@ import { isAbsolute } from 'path'
 //          this file)
 //        - Nor from the library's consumers (`opts.cwd`)
 //  - A file path starting with . or /
+//  - A `file:` URL
 //  - A Node module prefixed with `modulePrefix` (which is optional)
 export const getLocationInfo = function (
   pluginConfig,
@@ -31,7 +32,12 @@ export const getLocationInfo = function (
   return { originalLocation, locationType }
 }
 
+// eslint-disable-next-line complexity
 const getLocationType = function (originalLocation, builtins) {
+  if (originalLocation instanceof URL) {
+    return 'fileUrl'
+  }
+
   if (typeof originalLocation !== 'string') {
     return 'inline'
   }
