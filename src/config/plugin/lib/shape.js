@@ -5,13 +5,14 @@ import { PluginError, UserError, CoreError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
 
 // Validate a plugin has the correct shape and normalize it
-export const normalizeShape = async function (
+export const normalizeShape = async function ({
   plugin,
-  moduleId,
-  { shape, sharedPropNames, context },
-) {
+  locationType,
+  originalLocation,
+  opts: { shape, sharedPropNames, context },
+}) {
   const pluginA = await safeNormalizeConfig(plugin, COMMON_SHAPE, {
-    context: { sharedPropNames, moduleId },
+    context: { sharedPropNames, locationType, originalLocation },
     UserErrorType: PluginError,
     SystemErrorType: CoreError,
   })
@@ -25,13 +26,15 @@ export const normalizeShape = async function (
 const idProp = {
   name: 'id',
   required: true,
-  validate(id, { context: { moduleId } }) {
+  validate(id, { context: { locationType, originalLocation } }) {
     validateDefinedString(id)
     validateIdCharacters(id)
-    validateModuleId(id, moduleId)
+    validateModuleLocation(id, locationType, originalLocation)
   },
-  example(id, { context: { moduleId = 'module-id' } }) {
-    return moduleId
+  example(id, { context: { locationType, originalLocation } }) {
+    return MODULE_LOCATION_TYPES.has(locationType)
+      ? originalLocation
+      : 'module-name'
   },
 }
 
@@ -52,13 +55,16 @@ const validateIdCharacters = function (id) {
 
 const PLUGIN_ID_REGEXP = /^[a-z][a-z\d]*$/u
 
-// When using a Node module, the exported `id` must match the `id` specified by
-// the user
-const validateModuleId = function (id, moduleId) {
-  if (moduleId !== undefined && moduleId !== id) {
-    throw new Error(`must be "${moduleId}" to match the package name.`)
+// When using a Node module, the exported `id` must match the `location`
+// specified by the user
+const validateModuleLocation = function (id, locationType, originalLocation) {
+  if (MODULE_LOCATION_TYPES.has(locationType) && originalLocation !== id) {
+    throw new Error(`must be "${originalLocation}" to match the package name.`)
   }
 }
+
+// Those types must have the same `plugin.id` as the user-specified `location`
+const MODULE_LOCATION_TYPES = new Set(['builtin', 'module'])
 
 const configPropName = {
   name: 'config.*.name',

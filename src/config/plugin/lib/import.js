@@ -3,7 +3,6 @@ import { pathToFileURL } from 'url'
 import { wrapError } from '../../../error/wrap.js'
 
 import { PluginError } from './error.js'
-import { isBuiltinLocation, isInlineLocation } from './location.js'
 
 // Builtin modules are lazy loaded for performance reasons.
 // The return value is shallow cloned to make it a plain object instead of
@@ -13,10 +12,11 @@ import { isBuiltinLocation, isInlineLocation } from './location.js'
 //    properties by reference.
 export const importPlugin = async function (
   location,
+  locationType,
   { name, builtins, pluginProp },
 ) {
   try {
-    return await importPluginByLocation(location, builtins)
+    return await IMPORTERS[locationType](location, builtins)
   } catch (error) {
     throw wrapError(
       error,
@@ -26,16 +26,23 @@ export const importPlugin = async function (
   }
 }
 
-const importPluginByLocation = async function (location, builtins) {
-  if (isInlineLocation(location)) {
-    return { plugin: location }
-  }
+const importInline = function (location) {
+  return { plugin: location }
+}
 
-  if (isBuiltinLocation(location, builtins)) {
-    const builtinPlugin = await builtins[location]()
-    return { plugin: { ...builtinPlugin } }
-  }
+const importBuiltin = async function (location, builtins) {
+  const builtinPlugin = await builtins[location]()
+  return { plugin: { ...builtinPlugin } }
+}
 
+const importPath = async function (location) {
   const plugin = await import(pathToFileURL(location))
   return { plugin: { ...plugin }, path: location }
+}
+
+const IMPORTERS = {
+  inline: importInline,
+  builtin: importBuiltin,
+  path: importPath,
+  module: importPath,
 }
