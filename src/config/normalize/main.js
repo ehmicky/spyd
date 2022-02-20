@@ -11,11 +11,16 @@ export const normalizeConfig = async function (
   { UserErrorType = UserError, ...opts },
 ) {
   try {
-    return await normalizeConfigProps(config, definitions, opts)
+    return await normalizeConfigProps(config, definitions, {
+      ...opts,
+      prefix: PREFIX,
+    })
   } catch (error) {
     throw handleConfigError(error, UserErrorType)
   }
 }
+
+const PREFIX = 'Configuration property'
 
 // Distinguish user validation errors from system errors
 const handleConfigError = function (error, UserErrorType) {
