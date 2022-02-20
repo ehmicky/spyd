@@ -59,7 +59,17 @@ const transformValue = async function (value, transform, opts) {
     return getTransformMove(transformReturn, opts)
   }
 
-  return { value: transformReturn }
+  const commonMove = COMMON_MOVES.find(({ test }) =>
+    test(transformReturn, value),
+  )
+
+  if (commonMove === undefined) {
+    return { value: transformReturn }
+  }
+
+  const newPath = commonMove.getNewPath(transformReturn)
+  const newPathA = `${opts.funcOpts.name}.${newPath}`
+  return { value: transformReturn, newPath: newPathA }
 }
 
 // `transform()` can return a `{ newPath, value }` object to indicate the
@@ -76,6 +86,21 @@ const isTransformMove = function (transformReturn) {
 const getTransformMove = function ({ newPath, value }, { funcOpts: { name } }) {
   return { newPath: `${name}.${newPath}`, value }
 }
+
+const COMMON_MOVES = [
+  {
+    test(newValue, oldValue) {
+      return (
+        Array.isArray(newValue) &&
+        newValue.length === 1 &&
+        newValue[0] === oldValue
+      )
+    },
+    getNewPath() {
+      return '0'
+    },
+  },
+]
 
 // Apply `rename(value, opts)` which transforms the property's name.
 // This can be used for aliasing and deprecation.
