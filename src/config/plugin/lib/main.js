@@ -1,3 +1,4 @@
+import { validateDuplicatePlugins } from './duplicates.js'
 import { addPlugin } from './each.js'
 import { normalizeList } from './list.js'
 import { getSharedConfig } from './shared.js'
@@ -25,12 +26,10 @@ export const addPlugins = async function (
     context,
     cwd,
   })
-  const pluginConfigsB = await Promise.all(
-    pluginConfigsA.map((pluginConfig, index) =>
+  const plugins = await Promise.all(
+    pluginConfigsA.map((pluginConfig) =>
       addPlugin(pluginTypeA, {
         pluginConfig,
-        index,
-        pluginConfigs: pluginConfigsA,
         sharedPropNames,
         sharedConfig: sharedConfigA,
         context,
@@ -38,6 +37,6 @@ export const addPlugins = async function (
       }),
     ),
   )
-  const pluginConfigsC = pluginConfigsB.filter(Boolean)
-  return pluginType.multiple ? pluginConfigsC : pluginConfigsC[0]
+  validateDuplicatePlugins(plugins, pluginTypeA)
+  return pluginType.multiple ? plugins : plugins[0]
 }

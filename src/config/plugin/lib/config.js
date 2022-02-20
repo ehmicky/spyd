@@ -1,9 +1,9 @@
 import { deepMerge } from '../../merge.js'
 import { getDummyDefinitions } from '../../normalize/dummy.js'
+import { has } from '../../normalize/lib/prop_path/get.js'
 
 import { UserError, PluginError, ConsumerError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
-import { getPrefix } from './prefix.js'
 
 // Plugins use an array of objects for both selection and configuration.
 // This normalizes it.
@@ -27,7 +27,6 @@ import { getPrefix } from './prefix.js'
 //       should use variations instead
 export const normalizePluginConfig = async function ({
   parents,
-  duplicateConfigs,
   sharedConfig,
   pluginConfig: unmergedConfig,
   plugin,
@@ -37,11 +36,7 @@ export const normalizePluginConfig = async function ({
   item,
 }) {
   const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
-  const prefix = getPrefix.bind(undefined, {
-    unmergedConfig,
-    parents,
-    duplicateConfigs,
-  })
+  const prefix = getPrefix.bind(undefined, unmergedConfig, parents)
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
     item,
@@ -60,6 +55,12 @@ export const normalizePluginConfig = async function ({
     prefix,
   })
   return pluginConfigB
+}
+
+// When the value was merged due to `duplicates` or to `sharedConfig`, ensure
+// the prefix is correct
+const getPrefix = function (unmergedConfig, parents, { path }) {
+  return has(unmergedConfig, path) ? `${parents}.` : undefined
 }
 
 const normalizeSharedConfig = async function ({

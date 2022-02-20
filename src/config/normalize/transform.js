@@ -5,6 +5,10 @@ export const normalizeOptionalArray = function (value = []) {
   return Array.isArray(value) ? [...new Set(value)] : [value]
 }
 
+export const normalizeOptionalArrayTwo = function (value) {
+  return Array.isArray(value) ? value : [value]
+}
+
 // Version strings are sometimes input as numbers (`major` or `major.minor`):
 //  - Yargs coerce number-looking strings
 //  - YAML requires quotes around numbers to interpret them as strings, which

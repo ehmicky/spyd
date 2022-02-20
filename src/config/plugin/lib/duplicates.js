@@ -1,49 +1,38 @@
-import { deepMerge } from '../../merge.js'
+import { ConsumerError } from './error.js'
 
-// When the same plugin is specified twice but with different configurations
-// objects (which might be identical or not), those configurations are deeply
-// merged, unless the `duplicates` option is true.
-// `duplicates` default to `false` because:
-//  - The consumer's logic might not work with duplicate instances of the same
-//    plugin
-//  - The configuration objects are shallowly cloned, but not deeply, which
-//    might be unexpected by the consumer if those are modified
-// Plugin's identity is checked by using `===` on the `pluginConfig.id`:
-//  - For inline ids, this allows them to use this feature by shallowly cloning
-//    or not
-//  - For file path and module ids, this is done after full resolution and
-//    normalization to ensure uniqueness
-// The `pluginConfigs` are merged to the first one, which has the least
-// priority:
-//  - The next ones are replaced with an empty object and filtered out later
-//     - This ensures the error message reports the same index as specified by
-//       users in the input
-export const handleDuplicatePlugins = function ({
-  pluginConfig,
-  index,
-  pluginConfigs,
-  duplicates,
-  pluginProp,
-}) {
+// Specifying the same plugin id twice:
+//  - Might be a user error
+//  - Might not work with the user's logic if it does not handle duplicate
+//    instances of the same plugin properly
+//     - Also, the configuration objects are shallowly cloned, but not deeply,
+//       which might be unexpected by the consumer if those are modified
+// Therefore, it must be explicitely allowed using `duplicates: true`.
+// Plugin's identity is checked using `plugin.id`, which works with:
+//  - Inline ids
+//  - The same module or file being referenced in different ways
+export const validateDuplicatePlugins = function (
+  plugins,
+  { name, duplicates, pluginProp },
+) {
   if (duplicates) {
-    return { pluginConfig }
+    return
   }
 
-  const duplicateConfigs = pluginConfigs.map((pluginConfigA) =>
-    pluginConfig[pluginProp] === pluginConfigA[pluginProp]
-      ? pluginConfigA
-      : undefined,
-  )
-  const cleanConfigs = duplicateConfigs.filter(Boolean)
+  const duplicateId = plugins
+    .map((plugin) => getPluginId(plugin, pluginProp))
+    .find(isDuplicateId)
 
-  if (cleanConfigs.length === 1) {
-    return { pluginConfig }
+  if (duplicateId !== undefined) {
+    throw new ConsumerError(
+      `Configuration property "${name}" must not contain the same "${pluginProp}" "${duplicateId}" multiple times`,
+    )
   }
+}
 
-  if (index !== 0) {
-    return { pluginConfig: {} }
-  }
+const getPluginId = function ({ plugin }, pluginProp) {
+  return plugin[pluginProp]
+}
 
-  const pluginConfigB = deepMerge(cleanConfigs)
-  return { pluginConfig: pluginConfigB, duplicateConfigs }
+const isDuplicateId = function (id, index, ids) {
+  return ids.some((idA, indexA) => index > indexA && id === idA)
 }
