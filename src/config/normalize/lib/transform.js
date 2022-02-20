@@ -1,3 +1,5 @@
+import isPlainObj from 'is-plain-obj'
+
 import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolvePath } from './path.js'
 
@@ -20,9 +22,13 @@ export const applyValidateTransform = async function ({
 
   const valueA = await resolvePath({ value, path, glob, opts })
   await validateValue(valueA, validate, opts)
-  const valueB = await transformValue(valueA, transform, opts)
+  const { value: valueB, newPath } = await transformValue(
+    valueA,
+    transform,
+    opts,
+  )
   const name = await renameProp(valueB, rename, opts)
-  const newPaths = [name].filter(Boolean)
+  const newPaths = [newPath, name].filter(Boolean)
   return { value: valueB, name, newPaths }
 }
 
@@ -43,9 +49,32 @@ const validateValue = async function (value, validate, opts) {
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.
 const transformValue = async function (value, transform, opts) {
-  return transform === undefined
-    ? value
-    : await callValueFunc(transform, value, opts)
+  if (transform === undefined) {
+    return { value }
+  }
+
+  const transformReturn = await callValueFunc(transform, value, opts)
+
+  if (isTransformMove(transformReturn)) {
+    return getTransformMove(transformReturn, opts)
+  }
+
+  return { value: transformReturn }
+}
+
+// `transform()` can return a `{ newPath, value }` object to indicate the
+// property name has been moved
+const isTransformMove = function (transformReturn) {
+  return (
+    isPlainObj(transformReturn) &&
+    typeof transformReturn.newPath === 'string' &&
+    transformReturn.newPath !== '' &&
+    'value' in transformReturn
+  )
+}
+
+const getTransformMove = function ({ newPath, value }, { funcOpts: { name } }) {
+  return { newPath: `${name}.${newPath}`, value }
 }
 
 // Apply `rename(value, opts)` which transforms the property's name.
