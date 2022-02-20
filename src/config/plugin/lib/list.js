@@ -17,6 +17,4 @@ export const normalizeList = async function (
   })
 }
 
-const LIST_DEFINITIONS = [
-  { name: '', required: true, transform: normalizeOptionalArray },
-]
+const LIST_DEFINITIONS = [{ name: '', transform: normalizeOptionalArray }]

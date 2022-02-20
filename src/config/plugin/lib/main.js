@@ -1,4 +1,5 @@
 import { validateDuplicatePlugins } from './duplicates.js'
+import { UserError } from './error.js'
 import { getPluginInfo } from './info.js'
 import { normalizeList } from './list.js'
 import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
@@ -10,9 +11,14 @@ import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 //  - Single configuration per plugin
 // We purposely leave the responsibility to the consumer to:
 //  - Check for requiredness, i.e. the main argument is assumed to be defined
+//     - I.e. it being undefined is a user error, not consumer
+//     - However, undefined values inside an array of `pluginConfigs` is a
+//       consumer error since users are not expected to know about the shape
+//       of `pluginConfigs` elements (due to its polymorphic syntax)
 //  - Assign default values
 export const getPlugins = async function (pluginConfigs, opts) {
   const optsA = normalizeMultipleOpts(opts)
+  validateDefined(pluginConfigs, optsA)
   const isArray = Array.isArray(pluginConfigs)
   const pluginConfigsA = await normalizeList(pluginConfigs, optsA)
   const pluginInfos = await Promise.all(
@@ -35,6 +41,15 @@ const getEachPluginInfo = async function (
 
 export const getPlugin = async function (pluginConfig, opts) {
   const optsA = normalizeSingleOpts(opts)
+  validateDefined(pluginConfig, optsA)
   const plugin = await getPluginInfo(pluginConfig, optsA)
   return plugin
+}
+
+const validateDefined = function (value, opts) {
+  if (value === undefined) {
+    throw new UserError(
+      `Configuration property "${opts.name}" must be defined.`,
+    )
+  }
 }
