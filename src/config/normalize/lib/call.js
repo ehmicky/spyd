@@ -3,7 +3,7 @@ import { inspect } from 'util'
 import { wrapError } from '../../../error/wrap.js'
 import { maybeFunction } from '../../../utils/function.js'
 
-import { handleValidateError } from './validate.js'
+import { handleValidateError, getValidateError } from './validate.js'
 
 // Most definition methods follow the same patterns:
 //  - Called with `value` and `opts`
@@ -21,6 +21,12 @@ export const callValueFunc = async function (userFunc, value, opts) {
 const addCurrentValue = function (error, value) {
   const valueStr = serializeValue(value)
   return wrapError(error, `\nCurrent value:${valueStr}`)
+}
+
+// Retrieve a validation error including the example suffix
+export const getValidateExampleError = async function (message, value, opts) {
+  const error = await getValidateError(message, opts)
+  return await addExampleValue(error, value, opts)
 }
 
 // Add an example value as error suffix, as provided by `example(value, opts)`

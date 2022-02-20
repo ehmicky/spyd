@@ -1,6 +1,5 @@
-import { callValueFunc, callUserFunc } from './call.js'
+import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolvePath } from './path.js'
-import { getValidateError } from './validate.js'
 
 // Once the initial value has been computed, apply validation and transforms,
 // unless the value is `undefined`.
@@ -15,7 +14,7 @@ export const applyValidateTransform = async function ({
   opts,
 }) {
   if (value === undefined) {
-    await validateRequired(required, opts)
+    await validateRequired(required, value, opts)
     return { value }
   }
 
@@ -27,9 +26,9 @@ export const applyValidateTransform = async function ({
 }
 
 // Apply `required(opts)` which throws if `true` and value is `undefined`
-const validateRequired = async function (required, opts) {
+const validateRequired = async function (required, value, opts) {
   if (await callUserFunc(required, opts)) {
-    throw await getValidateError('must be defined.', opts)
+    throw await getValidateExampleError('must be defined.', value, opts)
   }
 }
 
