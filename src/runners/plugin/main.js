@@ -7,9 +7,6 @@ export const RUNNER_PLUGIN_TYPE = {
   // Top-level property name, used in error messages
   // Default: 'plugins'
   name: 'runner',
-  // Configuration property to select the plugin
-  // Default: 'plugin'
-  pluginProp: 'id',
   // Prefix of the npm package
   // Default: none
   modulePrefix: 'spyd-runner',

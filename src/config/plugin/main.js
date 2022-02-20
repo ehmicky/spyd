@@ -41,6 +41,7 @@ const normalizePluginConfigs = async function ({
   try {
     const plugins = await getPlugins(pluginConfigs, {
       ...pluginType,
+      pluginProp: 'id',
       sharedConfig: config,
       context,
       cwd,

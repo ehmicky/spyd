@@ -14,7 +14,6 @@ import { item } from './item.js'
 
 export const REPORTER_PLUGIN_TYPE = {
   name: 'reporter',
-  pluginProp: 'id',
   modulePrefix: 'spyd-reporter',
   duplicates: true,
   builtins: BUILTIN_REPORTERS,
