@@ -1,4 +1,6 @@
+import { deepMerge } from '../../merge.js'
 import { getDummyDefinitions } from '../../normalize/dummy.js'
+import { has } from '../../normalize/lib/prop_path/get.js'
 
 import { UserError, PluginError, ConsumerError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
@@ -10,6 +12,8 @@ import { safeNormalizeConfig } from './normalize.js'
 //  - The property name is not pluralized
 // This is optimized for configuration-less plugins by providing with a shortcut
 // syntax: only the plugin `id` instead of a plugin object.
+// Some configuration properties are shared by all plugins of a given type:
+//  - Top-level properties can be used to configure them for all plugins
 // When merging multiple configurations (CLI flags, programmatic, child and
 // parent config files):
 //  - This is optimized for replacing a whole list of plugins of a given type,
@@ -23,13 +27,16 @@ import { safeNormalizeConfig } from './normalize.js'
 //       should use variations instead
 export const normalizePluginConfig = async function ({
   propName,
-  pluginConfig,
+  sharedConfig,
+  pluginConfig: unmergedConfig,
   plugin,
   context,
   cwd,
   pluginConfigDefinitions = [],
   item,
 }) {
+  const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
+  const prefix = getPrefix.bind(undefined, unmergedConfig, propName)
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
     item,
@@ -37,7 +44,7 @@ export const normalizePluginConfig = async function ({
     context,
     cwd,
     plugin,
-    propName,
+    prefix,
   })
   const pluginConfigB = await normalizeSpecificConfig({
     pluginConfig: pluginConfigA,
@@ -45,9 +52,13 @@ export const normalizePluginConfig = async function ({
     pluginConfigDefinitions,
     context,
     cwd,
-    propName,
+    prefix,
   })
   return pluginConfigB
+}
+
+const getPrefix = function (unmergedConfig, propName, { path }) {
+  return has(unmergedConfig, path) ? `${propName}.` : undefined
 }
 
 const normalizeSharedConfig = async function ({
@@ -57,7 +68,7 @@ const normalizeSharedConfig = async function ({
   context,
   cwd,
   plugin,
-  propName,
+  prefix,
 }) {
   const dummyDefinitions = getDummyDefinitions(pluginConfigDefinitions)
   return await safeNormalizeConfig(
@@ -65,7 +76,7 @@ const normalizeSharedConfig = async function ({
     [...item, ...dummyDefinitions],
     {
       context: { ...context, plugin },
-      prefix: propName,
+      prefix,
       cwd,
       UserErrorType: ConsumerError,
       SystemErrorType: UserError,
@@ -79,7 +90,7 @@ const normalizeSpecificConfig = async function ({
   pluginConfigDefinitions,
   context,
   cwd,
-  propName,
+  prefix,
 }) {
   const dummyDefinitions = getDummyDefinitions(item)
   return await safeNormalizeConfig(
@@ -87,7 +98,7 @@ const normalizeSpecificConfig = async function ({
     [...dummyDefinitions, ...pluginConfigDefinitions],
     {
       context,
-      prefix: propName,
+      prefix,
       cwd,
       UserErrorType: ConsumerError,
       SystemErrorType: PluginError,

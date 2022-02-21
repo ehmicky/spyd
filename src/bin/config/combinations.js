@@ -2,22 +2,7 @@ import { TASKS, HISTORY } from './groups.js'
 
 // Configuration shared by commands that can run combinations: `run`, `dev`
 export const COMBINATIONS_CONFIG = {
-  runner: {
-    group: TASKS,
-    describe: `Runner-related configuration.
-Can be specified several times to use several runners.`,
-  },
-  'runner.id': {
-    group: TASKS,
-    requiresArg: true,
-    describe: `Tasks' programming language or platform.
-When using multiple runners, this can be "any" to apply some configuration to
-all other reporters.
-Built-in runners: "node", "cli"
-Custom runners can be installed from npm.
-Default: "node"`,
-  },
-  'runner.tasks': {
+  tasks: {
     group: TASKS,
     alias: 't',
     requiresArg: true,
@@ -31,6 +16,24 @@ When using multiple runners, each runner can have its own tasks file by using
 --runnerId.tasks=path
 Can be specified several times.
 Can be a globbing pattern.`,
+  },
+  runner: {
+    group: TASKS,
+    describe: `Tasks' programming language or platform.
+Can be specified several times.
+
+This is an object with:
+  - An "id" property with the runner's id, such as "node"
+  - Any configuration property passed to that runner, such as "version: 8"
+  - The "tasks" configuration property can be specified to apply it only to
+    that runner
+
+A string can be used instead as a shortcut if the object has a single "id"
+property.
+
+Built-in runners: "node", "cli"
+Custom runners can be installed from npm.
+Default: "node"`,
   },
   inputs: {
     group: TASKS,
