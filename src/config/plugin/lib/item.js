@@ -1,5 +1,5 @@
+import { normalizeObjectOrString } from '../../normalize/transform.js'
 import {
-  validateObject,
   validateObjectOrString,
   validateJson,
 } from '../../normalize/validate/complex.js'
@@ -39,8 +39,11 @@ const getFirstItem = function (stringArray) {
 
 const normalizeItem = {
   validate(value) {
-    validateObject(value)
+    validateObjectOrString(value)
     validateJson(value)
+  },
+  transform(value, { context: { pluginProp } }) {
+    return normalizeObjectOrString(value, pluginProp)
   },
 }
 

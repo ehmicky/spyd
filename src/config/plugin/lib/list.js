@@ -37,7 +37,7 @@ export const normalizeList = async function ({
     pluginConfigsB,
     getListItemsDefinitions(pluginProp, defaultValue, builtins),
     {
-      context: { builtins, modulePrefix },
+      context: { builtins, pluginProp, modulePrefix },
       cwd,
       prefix: `${name}.`,
       UserErrorType: ConsumerError,
