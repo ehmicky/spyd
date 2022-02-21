@@ -17,7 +17,6 @@ export const isModuleId = function (id, modulePrefix, builtins) {
   return (
     modulePrefix !== undefined &&
     !isInlineId(id) &&
-    !isSharedId(id) &&
     !isBuiltinId(id, builtins) &&
     !isPathId(id, builtins)
   )
@@ -26,21 +25,14 @@ export const isModuleId = function (id, modulePrefix, builtins) {
 export const isPathId = function (id, builtins) {
   return (
     !isInlineId(id) &&
-    !isSharedId(id) &&
     !isBuiltinId(id, builtins) &&
     (id.startsWith('.') || isAbsolute(id))
   )
 }
 
 export const isBuiltinId = function (id, builtins) {
-  return !isSharedId(id) && builtins[id] !== undefined
+  return builtins[id] !== undefined
 }
-
-export const isSharedId = function (id) {
-  return id === SHARED_ID
-}
-
-const SHARED_ID = 'any'
 
 export const isInlineId = function (id) {
   return typeof id !== 'string'
