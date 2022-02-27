@@ -23,7 +23,6 @@ import { isAbsolute } from 'path'
 //  - A file path starting with . or /
 //  - A `file:` URL
 //  - A Node module prefixed with `modulePrefix` (which is optional)
-// eslint-disable-next-line complexity
 export const getLocationType = function (originalLocation, { builtins }) {
   if (originalLocation instanceof URL) {
     return 'fileUrl'
@@ -37,13 +36,13 @@ export const getLocationType = function (originalLocation, { builtins }) {
     return 'builtin'
   }
 
-  if (isPathLocation(originalLocation)) {
+  return getPathLocationType(originalLocation)
+}
+
+const getPathLocationType = function (originalLocation) {
+  if (originalLocation.startsWith('.') || isAbsolute(originalLocation)) {
     return 'path'
   }
 
   return 'module'
-}
-
-const isPathLocation = function (originalLocation) {
-  return originalLocation.startsWith('.') || isAbsolute(originalLocation)
 }
