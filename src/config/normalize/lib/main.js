@@ -9,6 +9,7 @@ import { getOpts } from './opts.js'
 import { list } from './prop_path/get.js'
 import { set, remove } from './prop_path/set.js'
 import { normalizeRule } from './rule.js'
+import { addWarning, logWarnings } from './warn.js'
 
 // Normalize configuration shape and do custom validation.
 // An array of rule objects is passed.
@@ -29,21 +30,23 @@ export const normalizeConfigProps = async function (
   const rulesA = rules.map(normalizeRule)
 
   try {
-    const { config: configB } = await pReduce(
+    const { config: configB, warnings } = await pReduce(
       rulesA,
       (memo, rule) =>
         applyRuleDeep(memo, { rule, context, cwd, prefix, parent }),
-      { config, moves: [] },
+      { config, moves: [], warnings: [] },
     )
-    return cleanObject(configB)
+    const value = cleanObject(configB)
+    logWarnings(warnings, loose)
+    return { value, warnings }
   } catch (error) {
     handleError(error, loose)
-    return error
+    return { error, warnings: [] }
   }
 }
 
 const applyRuleDeep = async function (
-  { config, moves },
+  { config, moves, warnings },
   { rule, rule: { name: query }, context, cwd, prefix, parent },
 ) {
   const props = Object.entries(list(config, query))
@@ -51,12 +54,12 @@ const applyRuleDeep = async function (
     props,
     (memo, [name, value]) =>
       applyPropRule(memo, { value, name, rule, context, cwd, prefix, parent }),
-    { config, moves },
+    { config, moves, warnings },
   )
 }
 
 const applyPropRule = async function (
-  { config, moves },
+  { config, moves, warnings },
   { value, name, rule, rule: { example }, context, cwd, prefix, parent },
 ) {
   const opts = await getOpts({
@@ -73,10 +76,12 @@ const applyPropRule = async function (
     value: newValue,
     name: newName = name,
     newNames = [],
+    warning,
   } = await applyRule(rule, value, opts)
   const configA = setConfigValue({ config, name, newName, newValue })
   const movesA = addMoves(moves, newNames, name)
-  return { config: configA, moves: movesA }
+  const warningsA = addWarning(warnings, warning)
+  return { config: configA, moves: movesA, warnings: warningsA }
 }
 
 const setConfigValue = function ({ config, name, newName, newValue }) {

@@ -13,6 +13,7 @@ export const normalizeRule = function (
     required = defaultRequired,
     example,
     validate,
+    warn,
     transform,
     rename,
   },
@@ -31,6 +32,7 @@ export const normalizeRule = function (
     required,
     example: exampleA,
     validate,
+    warn,
     transform,
     rename,
   }

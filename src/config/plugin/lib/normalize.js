@@ -8,10 +8,11 @@ export const safeNormalizeConfig = async function (
   { UserErrorType, SystemErrorType, ...opts },
 ) {
   try {
-    return await normalizeConfigProps(config, rules, {
+    const { value } = await normalizeConfigProps(config, rules, {
       ...opts,
       prefix: PREFIX,
     })
+    return value
   } catch (error) {
     const ErrorType = error.validation ? UserErrorType : SystemErrorType
     throw wrapError(error, '', ErrorType)

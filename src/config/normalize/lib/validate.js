@@ -33,11 +33,13 @@ const setValidationProp = function (error) {
   error.validation = true
 }
 
-const addValidatePrefix = function (
-  error,
-  { prefix, funcOpts: { originalName } },
-) {
+const addValidatePrefix = function (error, opts) {
+  const prefixA = getPrefix(opts)
   const colon = error.validation ? '' : ':'
-  const propName = `${prefix} "${originalName}"${colon}`
+  const propName = `${prefixA}${colon}`
   return wrapError(error, propName)
+}
+
+export const getPrefix = function ({ prefix, funcOpts: { originalName } }) {
+  return `${prefix} "${originalName}"`
 }
