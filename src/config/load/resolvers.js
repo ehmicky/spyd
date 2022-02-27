@@ -10,7 +10,7 @@ import { wrapError } from '../../error/wrap.js'
 //  - We should then a "resolver:arg" syntax
 //     - `resolver should be lowercase and at least 2 characters long, to avoid
 //       confusion with Windows drive letters
-export const useResolvers = function (configOpt, { cwd }) {
+export const resolveConfig = function (configOpt, { cwd }) {
   return isConfigFileModule(configOpt) ? resolveNpm(configOpt, cwd) : configOpt
 }
 
