@@ -2,7 +2,7 @@ import { getCwd } from './cwd.js'
 import { applyMoves } from './move.js'
 import { appendParentToName } from './parent.js'
 import { getPrefix, DEFAULT_PREFIX } from './prefix.js'
-import { parse } from './star_dot_path/parse.js'
+import { parse, tokensToPath } from './star_dot_path/parse.js'
 
 // Retrieve `opts` passed to most methods.
 // `funcOpts` are passed to user-provided functions.
@@ -16,9 +16,9 @@ export const getOpts = async function ({
   example,
   moves,
 }) {
-  const path = parse(name)
+  const path = parsePath(name)
   const originalName = applyMoves(moves, name)
-  const originalPath = parse(originalName)
+  const originalPath = parsePath(originalName)
   const funcOpts = { name, path, originalName, originalPath, config, context }
   const opts = { funcOpts, example, prefix: DEFAULT_PREFIX }
   const optsA = await computeParent(opts, moves, parent)
@@ -36,8 +36,12 @@ export const getOpts = async function ({
 // `funcOpts.config`.
 const computeParent = async function (opts, moves, parent) {
   const originalName = await appendParentToName({ parent, opts })
-  const originalPath = parse(originalName)
+  const originalPath = parsePath(originalName)
   return { ...opts, funcOpts: { ...opts.funcOpts, originalName, originalPath } }
+}
+
+const parsePath = function (name) {
+  return tokensToPath(parse(name))
 }
 
 const computePrefix = async function (opts, prefix) {

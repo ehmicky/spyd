@@ -24,8 +24,10 @@ import isPlainObj from 'is-plain-obj'
 // TODO: add support for `**`, which should behave like: `` or `*` or `*/*` or
 // `*/*/*` and so on.
 // TODO: do not recurse over `__proto__`, `prototype` or `constructor`
-export const maybeParse = function (queryOrTokens) {
-  return Array.isArray(queryOrTokens) ? queryOrTokens : parse(queryOrTokens)
+export const maybeParse = function (queryOrPropNames) {
+  return Array.isArray(queryOrPropNames)
+    ? pathToTokens(queryOrPropNames)
+    : parse(queryOrPropNames)
 }
 
 // Use imperative logic for performance
@@ -118,11 +120,15 @@ const serializePart = function (part) {
     return String(part)
   }
 
-  if (isPlainObj(part)) {
+  if (isAnyPart(part)) {
     return ANY
   }
 
   return part.replace(UNESCAPED_CHARS_REGEXP, '\\$&')
+}
+
+export const isAnyPart = function (part) {
+  return isPlainObj(part) && part.type === ANY_TYPE
 }
 
 export const isParent = function (parentQuery, childQuery) {
@@ -130,7 +136,29 @@ export const isParent = function (parentQuery, childQuery) {
 }
 
 const ESCAPE = '\\'
-export const SEPARATOR = '.'
+const SEPARATOR = '.'
 export const ANY = '*'
 const ANY_TYPE = 'any'
 const UNESCAPED_CHARS_REGEXP = /[\\.*]/gu
+
+// From an array of property names to an array to tokens
+export const pathToTokens = function (path) {
+  return path.map(getPropNameToken)
+}
+
+const getPropNameToken = function (propName) {
+  return [propName]
+}
+
+// Inverse of `pathToTokens()`
+export const tokensToPath = function (tokens) {
+  return tokens.map(getTokenPropName)
+}
+
+const getTokenPropName = function (token) {
+  if (token.some(isAnyPart)) {
+    throw new Error(`Cannot use wildcard "${ANY}" when using tokensToPath().`)
+  }
+
+  return token[0]
+}

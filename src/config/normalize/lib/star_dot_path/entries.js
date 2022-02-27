@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { ANY } from './parse.js'
+import { isAnyPart } from './parse.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
@@ -13,12 +13,79 @@ const listTokenEntries = function (entries, token) {
 }
 
 const getTokenEntries = function ({ value, path }, token) {
-  return token === ANY
-    ? getWildcardEntries(value, path)
-    : getKeyEntries(value, path, token)
+  if (token.length > 1) {
+    return getComplexEntries(value, path, token)
+  }
+
+  const [part] = token
+  return isAnyPart(part)
+    ? getAnyEntries(value, path)
+    : getKeyEntries(value, path, part)
 }
 
-const getWildcardEntries = function (value, path) {
+// For queries which use * combined with other characters, e.g. `a.b*c`
+const getComplexEntries = function (value, path, token) {
+  if (!isPlainObj(value)) {
+    return []
+  }
+
+  return Object.entries(value)
+    .filter(([childKey]) => matchesToken(childKey, token))
+    .map(([childKey, childValue]) => ({
+      value: childValue,
+      path: [...path, childKey],
+    }))
+}
+
+// Use imperative code for performance
+/* eslint-disable complexity, max-depth, fp/no-loops, fp/no-let, max-params,
+   fp/no-mutation */
+const matchesToken = function (
+  childKey,
+  token,
+  childKeyIndex = 0,
+  tokenIndex = 0,
+) {
+  if (tokenIndex === token.length) {
+    return childKeyIndex === childKey.length
+  }
+
+  const part = token[tokenIndex]
+
+  if (typeof part === 'string') {
+    return (
+      startsWith(childKey, part, childKeyIndex) &&
+      matchesToken(childKey, token, childKeyIndex + part.length, tokenIndex + 1)
+    )
+  }
+
+  for (let index = childKeyIndex; index <= childKey.length; index += 1) {
+    if (matchesToken(childKey, token, index, tokenIndex + 1)) {
+      return true
+    }
+  }
+
+  return false
+}
+
+const startsWith = function (string, prefix, startIndex) {
+  let index = startIndex
+
+  for (const character of prefix) {
+    if (string[index] !== character) {
+      return false
+    }
+
+    index += 1
+  }
+
+  return true
+}
+/* eslint-enable complexity, max-depth, fp/no-loops, fp/no-let, max-params,
+   fp/no-mutation */
+
+// For queries which use * on its own, e.g. `a.*`
+const getAnyEntries = function (value, path) {
   if (Array.isArray(value)) {
     return value.map((childValue, index) => ({
       value: childValue,
@@ -36,8 +103,9 @@ const getWildcardEntries = function (value, path) {
   return []
 }
 
-const getKeyEntries = function (value, path, token) {
+// For queries which do not use *, e.g. `a.b` or `a.1`
+const getKeyEntries = function (value, path, part) {
   return Array.isArray(value) || isPlainObj(value)
-    ? [{ value: value[token], path: [...path, token] }]
+    ? [{ value: value[part], path: [...path, part] }]
     : []
 }
