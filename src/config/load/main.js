@@ -1,6 +1,6 @@
 import { removeEmptyValues } from '../empty.js'
 import { deepMerge } from '../merge.js'
-import { CLI_FLAGS_BASE, getDefaultBase } from '../normalize/cwd.js'
+import { CLI_FLAGS_BASE, getDefaultBase, getPropCwd } from '../normalize/cwd.js'
 
 import { getConfigInfos } from './info.js'
 import { addNpxShortcut } from './npx.js'
@@ -21,7 +21,8 @@ export const loadConfig = async function (configFlags) {
   const configA = removeEmptyValues(config)
   const bases = deepMerge(configInfos.map(getBases))
   const defaultBase = getDefaultBase(configInfos)
-  return { config: configA, bases, defaultBase }
+  const cwd = getPropCwd.bind(undefined, { bases, defaultBase })
+  return { config: configA, cwd }
 }
 
 const getConfigContents = function ({ configContents }) {
