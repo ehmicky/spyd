@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isAnyToken } from '../parsing/node.js'
+import { ANY_TOKEN } from '../parsing/special.js'
 
 import { getComplexEntries } from './complex.js'
 
@@ -15,14 +15,18 @@ const listNodeEntries = function (entries, node) {
 }
 
 const getNodeEntries = function ({ value, path }, node) {
-  if (node.length > 1) {
+  if (isComplexNode(node)) {
     return getComplexEntries(value, path, node)
   }
 
-  const [token] = node
-  return isAnyToken(token)
+  const token = Array.isArray(node) ? node[0] : node
+  return token === ANY_TOKEN
     ? getAnyEntries(value, path)
     : getKeyEntries(value, path, token)
+}
+
+const isComplexNode = function (node) {
+  return Array.isArray(node) && node.length > 1
 }
 
 // For queries which use * on its own, e.g. `a.*`

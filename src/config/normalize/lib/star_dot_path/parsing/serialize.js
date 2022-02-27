@@ -1,5 +1,4 @@
-import { isAnyToken } from './node.js'
-import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP } from './special.js'
+import { SEPARATOR, ANY, ANY_TOKEN, SPECIAL_CHARS_REGEXP } from './special.js'
 
 // Inverse of `parse()`
 export const serialize = function (nodes) {
@@ -7,22 +6,28 @@ export const serialize = function (nodes) {
 }
 
 const serializeNode = function (node, index) {
-  return node.map((token) => serializeToken(token, index)).join('')
+  return Array.isArray(node)
+    ? node.map((token) => serializeToken(token, index)).join('')
+    : serializeToken(node, 0)
 }
 
 const serializeToken = function (token, index) {
-  if (isAnyToken(token)) {
+  if (token === ANY_TOKEN) {
     return ANY
   }
 
-  return serializePropToken(token, index)
-}
-
-const serializePropToken = function (token, index) {
   if (Number.isInteger(token)) {
     return String(token)
   }
 
+  if (typeof token === 'symbol') {
+    throw new TypeError(`Cannot serialize ${String(token)}`)
+  }
+
+  return serializeTokenString(token, index)
+}
+
+const serializeTokenString = function (token, index) {
   if (token === '' && index === 0) {
     return SEPARATOR
   }
