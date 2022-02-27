@@ -1,32 +1,8 @@
+import filterObj from 'filter-obj'
 import isMergeableObject from 'is-mergeable-object'
 
 import { recurseValues } from '../../utils/recurse.js'
 import { get } from '../normalize/lib/prop_path/get.js'
-
-// Since several configuration objects are deeply merged, and each property
-// should use the `base` of its configuration file, we need to keep track of
-// each configuration property's file, in order to determine which `base` to
-// use when the property is a file path.
-// We do this by producing a `bases` object for each configuration file, which
-// is a mirror of its contents but with all leaf values replaced with the
-// file's base.
-// Those `bases` objects are deeply merged using the same logic as the
-// configuration contents, to ensure they reflect the same merging logic.
-// We use `is-mergeable-object` instead of `is-plain-obj` to mimick the
-// merging logic.
-// We recurse on arrays even though though are not recursively merged, since
-// users might use `config#path` references as individual array elements.
-export const getBases = function (configContents, base) {
-  return recurseValues(
-    configContents,
-    (value) => getBase(value, base),
-    isMergeableObject,
-  )
-}
-
-const getBase = function (value, base) {
-  return Array.isArray(value) || isMergeableObject(value) ? value : base
-}
 
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.
@@ -62,14 +38,98 @@ export const getDefaultBase = function (configInfos) {
     : configInfos[configInfos.length - 2].base
 }
 
-// Used as `cwd` for all configuration properties
-export const getPropCwd = function ({ bases, defaultBase }, { originalPath }) {
-  const base = get(bases, originalPath)
-  return typeof base === 'string' ? base : defaultBase
-}
-
 // Base used to resolve file paths in default values when there is no config
 // file
 const DEFAULT_VALUES_BASE = '.'
 // Base used to resolve file paths in CLI flags
 export const CLI_FLAGS_BASE = '.'
+
+// Since several configuration objects are deeply merged, and each property
+// should use the `base` of its configuration file, we need to keep track of
+// each configuration property's file, in order to determine which `base` to
+// use when the property is a file path.
+// We do this by creating a sibling next to each property with this information.
+// This ensures those properties work with deep merging:
+//  - As properties are deep merged, they base property will too, using the same
+//    merging logic
+//  - We use `is-mergeable-object` instead of `is-plain-obj` to mimick the
+//    merging logic.
+// Array properties:
+//  - Are recursed even though those are not recursively merged, since users
+//    might use `config#path` references as individual array elements.
+//  - Items bases are kept in a separate base property on the parent object,
+//    since using sibling properties on an array is not possible.
+export const addBases = function (configContents, base) {
+  return recurseValues(
+    configContents,
+    (value) => addBaseProps(value, base),
+    isMergeableObject,
+  )
+}
+
+const addBaseProps = function (value, base) {
+  return isMergeableObject(value) && !Array.isArray(value)
+    ? Object.fromEntries(
+        Object.entries(value).flatMap(addBaseProp.bind(undefined, base)),
+      )
+    : value
+}
+
+const addBaseProp = function (base, [key, value]) {
+  const currentEntry = [key, value]
+  const baseEntry = [`${key}${BASE_KEY_SUFFIX}`, base]
+  return Array.isArray(value)
+    ? [
+        currentEntry,
+        baseEntry,
+        [`${key}${BASE_ITEMS_SUFFIX}`, value.map(() => base)],
+      ]
+    : [currentEntry, baseEntry]
+}
+
+// Remove the base properties after they've been used
+export const removeBases = function (configWithBases) {
+  return recurseValues(configWithBases, removeBaseProps, isMergeableObject)
+}
+
+const removeBaseProps = function (value) {
+  return isMergeableObject(value) && !Array.isArray(value)
+    ? filterObj(value, isNotBaseProp)
+    : value
+}
+
+const isNotBaseProp = function (key) {
+  return !key.endsWith(BASE_KEY_SUFFIX) && !key.endsWith(BASE_ITEMS_SUFFIX)
+}
+
+const BASE_KEY_SUFFIX = 'CwdBase'
+const BASE_ITEMS_SUFFIX = 'ItemsCwdBase'
+
+// Used as `cwd` for all configuration properties
+export const getPropCwd = function (
+  { configWithBases, defaultBase },
+  { originalPath },
+) {
+  if (originalPath.length === 0) {
+    return defaultBase
+  }
+
+  const basePath = getBasePath(originalPath)
+  const base = get(configWithBases, basePath)
+  return typeof base === 'string' ? base : defaultBase
+}
+
+const getBasePath = function (originalPath) {
+  const lastKey = originalPath[originalPath.length - 1]
+
+  if (!Number.isInteger(lastKey)) {
+    return [...originalPath.slice(0, -1), `${lastKey}${BASE_KEY_SUFFIX}`]
+  }
+
+  const secondLastKey = originalPath[originalPath.length - 2]
+  return [
+    ...originalPath.slice(0, -2),
+    `${secondLastKey}${BASE_ITEMS_SUFFIX}`,
+    lastKey,
+  ]
+}

@@ -1,7 +1,7 @@
 import { dirname } from 'path'
 
 import { loadConfigContents } from './contents.js'
-import { getBases } from './cwd.js'
+import { addBases } from './cwd.js'
 import { normalizeConfigProp } from './normalize.js'
 
 // Load the main configuration file `spyd.*` and any parents.
@@ -87,9 +87,9 @@ export const getConfigInfos = async function (
   { config: configOpt, ...configContents },
   base,
 ) {
-  const bases = getBases(configContents, base)
+  const configWithBases = addBases(configContents, base)
   const parentConfigInfos = await getParentConfigInfos(configOpt, base)
-  return [...parentConfigInfos.flat(), { configContents, bases, base }]
+  return [...parentConfigInfos.flat(), { configWithBases, base }]
 }
 
 const getParentConfigInfos = async function (configOpt, base) {

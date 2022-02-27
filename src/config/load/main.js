@@ -1,7 +1,12 @@
 import { removeEmptyValues } from '../empty.js'
 import { deepMerge } from '../merge.js'
 
-import { CLI_FLAGS_BASE, getDefaultBase, getPropCwd } from './cwd.js'
+import {
+  CLI_FLAGS_BASE,
+  getDefaultBase,
+  getPropCwd,
+  removeBases,
+} from './cwd.js'
 import { getConfigInfos } from './info.js'
 import { addNpxShortcut } from './npx.js'
 
@@ -17,18 +22,14 @@ import { addNpxShortcut } from './npx.js'
 export const loadConfig = async function (configFlags) {
   const configFlagsA = addNpxShortcut(configFlags)
   const configInfos = await getConfigInfos(configFlagsA, CLI_FLAGS_BASE)
-  const config = deepMerge(configInfos.map(getConfigContents))
-  const configA = removeEmptyValues(config)
-  const bases = deepMerge(configInfos.map(getBases))
+  const configWithBases = deepMerge(configInfos.map(getConfigWithBases))
   const defaultBase = getDefaultBase(configInfos)
-  const cwd = getPropCwd.bind(undefined, { bases, defaultBase })
+  const cwd = getPropCwd.bind(undefined, { configWithBases, defaultBase })
+  const config = removeBases(configWithBases)
+  const configA = removeEmptyValues(config)
   return { config: configA, cwd }
 }
 
-const getConfigContents = function ({ configContents }) {
-  return configContents
-}
-
-const getBases = function ({ bases }) {
-  return bases
+const getConfigWithBases = function ({ configWithBases }) {
+  return configWithBases
 }
