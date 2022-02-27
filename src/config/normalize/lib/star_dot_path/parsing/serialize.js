@@ -1,4 +1,4 @@
-import { isAnyToken, getPropTokenValue } from './node.js'
+import { isAnyToken } from './node.js'
 import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP } from './special.js'
 
 // Inverse of `parse()`
@@ -19,15 +19,13 @@ const serializeToken = function (token, index) {
 }
 
 const serializePropToken = function (token, index) {
-  const value = getPropTokenValue(token)
-
-  if (Number.isInteger(value)) {
-    return String(value)
+  if (Number.isInteger(token)) {
+    return String(token)
   }
 
-  if (value === '' && index === 0) {
+  if (token === '' && index === 0) {
     return SEPARATOR
   }
 
-  return value.replace(SPECIAL_CHARS_REGEXP, '\\$&')
+  return token.replace(SPECIAL_CHARS_REGEXP, '\\$&')
 }

@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isAnyToken, getPropTokenValue } from '../parsing/node.js'
+import { isAnyToken } from '../parsing/node.js'
 
 import { getComplexEntries } from './complex.js'
 
@@ -46,8 +46,7 @@ const getAnyEntries = function (value, path) {
 
 // For queries which do not use *, e.g. `a.b` or `a.1`
 const getKeyEntries = function (value, path, token) {
-  const tokenValue = getPropTokenValue(token)
   return Array.isArray(value) || isPlainObj(value)
-    ? [{ value: value[tokenValue], path: [...path, tokenValue] }]
+    ? [{ value: value[token], path: [...path, token] }]
     : []
 }

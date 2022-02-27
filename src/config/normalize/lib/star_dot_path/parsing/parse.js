@@ -1,4 +1,4 @@
-import { createAnyToken, createPropToken } from './node.js'
+import { createAnyToken } from './node.js'
 import { pathToNodes } from './path.js'
 import { ESCAPE, SEPARATOR, ANY } from './special.js'
 
@@ -59,7 +59,7 @@ export const parse = function (query) {
 
     if (character === SEPARATOR || index === query.length) {
       if (chars !== '' || node.length === 0) {
-        node.push(createPropToken(parseIndex(chars, node)))
+        node.push(parseIndex(chars, node))
         chars = ''
       }
 
@@ -70,7 +70,7 @@ export const parse = function (query) {
 
     if (character === ANY) {
       if (chars !== '') {
-        node.push(createPropToken(chars))
+        node.push(chars)
         chars = ''
       }
 
