@@ -1,6 +1,6 @@
 import { env } from 'process'
 
-import { isConfigFileModule } from './resolvers.js'
+import { isConfigFileModule } from './load/resolvers.js'
 
 // In principle, users can use `npx` with the "npm" resolver by doing:
 //   npx --package={spydConfig} spyd --config={spydConfig} ...

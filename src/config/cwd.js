@@ -1,8 +1,9 @@
 import filterObj from 'filter-obj'
 
-import { recurseValues } from '../../utils/recurse.js'
-import { canRecurse } from '../merge.js'
-import { get } from '../normalize/lib/prop_path/get.js'
+import { recurseValues } from '../utils/recurse.js'
+
+import { canRecurse } from './merge.js'
+import { get } from './normalize/lib/prop_path/get.js'
 
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.
