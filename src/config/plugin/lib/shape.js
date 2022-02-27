@@ -1,5 +1,5 @@
 import { getDummyRules } from '../../normalize/dummy.js'
-import { isParent } from '../../normalize/lib/prop_path/parse.js'
+import { isParent } from '../../normalize/lib/star_dot_path/parse.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { PluginError, UserError, CoreError } from './error.js'

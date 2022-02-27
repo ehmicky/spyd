@@ -2,7 +2,7 @@ import { getCwd } from './cwd.js'
 import { applyMoves } from './move.js'
 import { appendParentToName } from './parent.js'
 import { getPrefix, DEFAULT_PREFIX } from './prefix.js'
-import { parse } from './prop_path/parse.js'
+import { parse } from './star_dot_path/parse.js'
 
 // Retrieve `opts` passed to most methods.
 // `funcOpts` are passed to user-provided functions.

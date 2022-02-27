@@ -1,6 +1,6 @@
-import { list } from '../../normalize/lib/prop_path/get.js'
-import { isParent } from '../../normalize/lib/prop_path/parse.js'
-import { set } from '../../normalize/lib/prop_path/set.js'
+import { list } from '../../normalize/lib/star_dot_path/get.js'
+import { isParent } from '../../normalize/lib/star_dot_path/parse.js'
+import { set } from '../../normalize/lib/star_dot_path/set.js'
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
