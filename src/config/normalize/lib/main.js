@@ -24,7 +24,7 @@ import { addWarnings, logWarnings } from './warn.js'
 export const normalizeConfigProps = async function (
   config,
   rules,
-  { context = {}, loose = false, cwd, prefix, parent = '' } = {},
+  { context = {}, soft = false, cwd, prefix, parent = '' } = {},
 ) {
   const rulesA = rules.map(normalizeRule)
 
@@ -36,10 +36,10 @@ export const normalizeConfigProps = async function (
       { config, moves: [], warnings: [] },
     )
     const value = cleanObject(configB)
-    logWarnings(warnings, loose)
+    logWarnings(warnings, soft)
     return { value, warnings }
   } catch (error) {
-    handleError(error, loose)
+    handleError(error, soft)
     return { error, warnings: [] }
   }
 }
@@ -90,10 +90,10 @@ const setConfigValue = function ({ config, name, newName, newValue }) {
     : set(configA, newName, newValue)
 }
 
-// When in `loose` mode, user errors are returned instead of being thrown.
+// When in `sort` mode, user errors are returned instead of being thrown.
 // System errors are always propagated.
-const handleError = function (error, loose) {
-  if (!loose || !error.validation) {
+const handleError = function (error, soft) {
+  if (!soft || !error.validation) {
     throw error
   }
 }
