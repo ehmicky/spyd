@@ -1,4 +1,4 @@
-import { isAnyPart, getPropPartValue } from './node.js'
+import { isAnyToken, getPropTokenValue } from './node.js'
 import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP } from './special.js'
 
 // Inverse of `parse()`
@@ -7,19 +7,19 @@ export const serialize = function (nodes) {
 }
 
 const serializeNode = function (node, index) {
-  return node.map((part) => serializePart(part, index)).join('')
+  return node.map((token) => serializeToken(token, index)).join('')
 }
 
-const serializePart = function (part, index) {
-  if (isAnyPart(part)) {
+const serializeToken = function (token, index) {
+  if (isAnyToken(token)) {
     return ANY
   }
 
-  return serializePropPart(part, index)
+  return serializePropToken(token, index)
 }
 
-const serializePropPart = function (part, index) {
-  const value = getPropPartValue(part)
+const serializePropToken = function (token, index) {
+  const value = getPropTokenValue(token)
 
   if (Number.isInteger(value)) {
     return String(value)

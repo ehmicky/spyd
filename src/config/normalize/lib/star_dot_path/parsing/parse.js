@@ -1,4 +1,4 @@
-import { createAnyPart, createPropPart } from './node.js'
+import { createAnyToken, createPropToken } from './node.js'
 import { pathToNodes } from './path.js'
 import { ESCAPE, SEPARATOR, ANY } from './special.js'
 
@@ -43,7 +43,7 @@ export const parse = function (query) {
 
   const nodes = []
   let node = []
-  let part = ''
+  let chars = ''
   let index = query[0] === SEPARATOR ? 1 : 0
 
   for (; index <= query.length; index += 1) {
@@ -53,14 +53,14 @@ export const parse = function (query) {
       index += 1
       const escapedCharacter = query[index]
       validateEscape(escapedCharacter, query, character, index)
-      part += escapedCharacter
+      chars += escapedCharacter
       continue
     }
 
     if (character === SEPARATOR || index === query.length) {
-      if (part !== '' || node.length === 0) {
-        node.push(createPropPart(parseIndex(part, node)))
-        part = ''
+      if (chars !== '' || node.length === 0) {
+        node.push(createPropToken(parseIndex(chars, node)))
+        chars = ''
       }
 
       nodes.push(node)
@@ -69,16 +69,16 @@ export const parse = function (query) {
     }
 
     if (character === ANY) {
-      if (part !== '') {
-        node.push(createPropPart(part))
-        part = ''
+      if (chars !== '') {
+        node.push(createPropToken(chars))
+        chars = ''
       }
 
-      node.push(createAnyPart())
+      node.push(createAnyToken())
       continue
     }
 
-    part += character
+    chars += character
   }
 
   return nodes
@@ -86,10 +86,10 @@ export const parse = function (query) {
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
    fp/no-mutation, fp/no-let, no-continue, fp/no-mutating-methods */
 
-const parseIndex = function (part, node) {
-  return node.length === 0 && POSITIVE_INTEGER_REGEXP.test(part)
-    ? Number(part)
-    : part
+const parseIndex = function (chars, node) {
+  return node.length === 0 && POSITIVE_INTEGER_REGEXP.test(chars)
+    ? Number(chars)
+    : chars
 }
 
 // eslint-disable-next-line max-params

@@ -27,12 +27,12 @@ const matchesNode = function (
     return childKeyIndex === childKey.length
   }
 
-  const part = node[nodeIndex]
+  const token = node[nodeIndex]
 
-  if (typeof part === 'string') {
+  if (typeof token === 'string') {
     return (
-      startsWith(childKey, part, childKeyIndex) &&
-      matchesNode(childKey, node, childKeyIndex + part.length, nodeIndex + 1)
+      startsWith(childKey, token, childKeyIndex) &&
+      matchesNode(childKey, node, childKeyIndex + token.length, nodeIndex + 1)
     )
   }
 

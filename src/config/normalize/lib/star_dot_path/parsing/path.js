@@ -1,4 +1,4 @@
-import { isAnyNode, createPropPart, getPropPartValue } from './node.js'
+import { isAnyNode, createPropToken, getPropTokenValue } from './node.js'
 import { ANY } from './special.js'
 
 // From an array of property names to an array to nodes
@@ -7,7 +7,7 @@ export const pathToNodes = function (path) {
 }
 
 const getPropNameNode = function (propName) {
-  return [createPropPart(propName)]
+  return [createPropToken(propName)]
 }
 
 // Inverse of `pathToNodes()`
@@ -20,5 +20,5 @@ const getNodePropName = function (node) {
     throw new Error(`Cannot use wildcard "${ANY}" when using nodesToPath().`)
   }
 
-  return getPropPartValue(node[0])
+  return getPropTokenValue(node[0])
 }
