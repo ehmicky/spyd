@@ -2,7 +2,7 @@
 export const addMoves = function (moves, newProps, name) {
   return newProps.length === 0
     ? moves
-    : [...moves, ...newProps.map((newProp) => ({ oldPath: name, newProp }))]
+    : [...moves, ...newProps.map((newProp) => ({ oldName: name, newProp }))]
 }
 
 // Rewind previous moves to retrieve the `originalName` behind a `name`.
@@ -16,13 +16,13 @@ export const applyMoves = function (moves, name) {
   return moves.reduceRight(applyMove, name)
 }
 
-const applyMove = function (name, { oldPath, newProp }) {
+const applyMove = function (name, { oldName, newProp }) {
   if (name === newProp) {
-    return oldPath
+    return oldName
   }
 
   if (name.startsWith(`${newProp}.`)) {
-    return name.replace(newProp, oldPath)
+    return name.replace(newProp, oldName)
   }
 
   return name

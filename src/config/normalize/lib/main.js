@@ -74,11 +74,14 @@ const applyPropRule = async function (
     name: newName = name,
     newProps = [],
   } = await applyRule(rule, value, opts)
+  const configA = setConfigValue({ config, name, newName, newValue })
+  const movesA = addMoves(moves, newProps, name)
+  return { config: configA, moves: movesA }
+}
+
+const setConfigValue = function ({ config, name, newName, newValue }) {
   const configA = name === newName ? config : remove(config, name)
-  const configB =
-    newValue === undefined
-      ? remove(configA, newName)
-      : set(configA, newName, newValue)
-  const movesA = addMoves(moves, newProps, opts.funcOpts.name)
-  return { config: configB, moves: movesA }
+  return newValue === undefined
+    ? remove(configA, newName)
+    : set(configA, newName, newValue)
 }
