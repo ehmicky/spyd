@@ -56,7 +56,7 @@ const removeProp = function (value, index, path) {
 }
 
 const removeValue = function (value, key) {
-  if (typeof key === 'string') {
+  if (!Number.isInteger(key)) {
     return omit.default(value, [key])
   }
 
@@ -73,7 +73,7 @@ const setNewChildValue = function (value, key, newChildValue) {
     return value
   }
 
-  return typeof key === 'string'
-    ? { ...value, [key]: newChildValue }
-    : setArray(value, key, newChildValue)
+  return Number.isInteger(key)
+    ? setArray(value, key, newChildValue)
+    : { ...value, [key]: newChildValue }
 }

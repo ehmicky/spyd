@@ -15,7 +15,7 @@
 // We allow passing an array of tokens instead of a string with the above syntax
 //  - This is sometimes more convenient
 //  - Also, this allows property names to include special characters (dots,
-//    brackets, star)
+//    brackets, star) or to be symbols
 //  - This removes the need for an escape character with the string syntax
 //    (array of tokens should be used instead)
 // TODO: add support for `**`, which should behave like: `` or `*` or `*/*` or
