@@ -26,16 +26,55 @@ export const maybeParse = function (queryOrTokens) {
   return Array.isArray(queryOrTokens) ? queryOrTokens : parse(queryOrTokens)
 }
 
+// Use imperative logic for performance
+/* eslint-disable complexity, max-depth, max-statements, fp/no-loops,
+   fp/no-mutation, fp/no-let, no-continue, fp/no-mutating-methods */
 export const parse = function (query) {
-  return query === '' ? [] : query.split(UNESCAPED_SEP_REGEXP).map(parseToken)
-}
-
-const parseToken = function (token) {
-  if (POSITIVE_INTEGER_REGEXP.test(token)) {
-    return Number(token)
+  if (query === '') {
+    return []
   }
 
-  return token.replace(ESCAPED_SEP_REGEXP, SEPARATOR)
+  const tokens = []
+  let token = ''
+  let index = query[0] === SEPARATOR ? 1 : 0
+
+  for (; index < query.length; index += 1) {
+    const character = query[index]
+
+    if (character === ESCAPE) {
+      index += 1
+      const escapedCharacter = query[index]
+      validateEscape(escapedCharacter, query, character, index)
+      token += escapedCharacter
+      continue
+    }
+
+    if (character === SEPARATOR) {
+      tokens.push(parseIndex(token))
+      token = ''
+      continue
+    }
+
+    token += character
+  }
+
+  tokens.push(parseIndex(token))
+  return tokens
+}
+/* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
+   fp/no-mutation, fp/no-let, no-continue, fp/no-mutating-methods */
+
+// eslint-disable-next-line max-params
+const validateEscape = function (escapedCharacter, query, character, index) {
+  if (escapedCharacter !== ESCAPE && escapedCharacter !== SEPARATOR) {
+    throw new Error(
+      `Invalid query "${query}": character ${character} at index ${index} must be followed by ${SEPARATOR} or ${ESCAPE}`,
+    )
+  }
+}
+
+const parseIndex = function (token) {
+  return POSITIVE_INTEGER_REGEXP.test(token) ? Number(token) : token
 }
 
 const POSITIVE_INTEGER_REGEXP = /^\d+$/u
@@ -45,22 +84,22 @@ export const serialize = function (tokens) {
   return tokens.map(serializeToken).join(SEPARATOR)
 }
 
-const serializeToken = function (token) {
+const serializeToken = function (token, index) {
   if (typeof token !== 'string') {
     return String(token)
   }
 
-  return token.replace(SEP_REGEXP, ESCAPED_SEPARATOR)
+  if (index === 0 && token === '') {
+    return SEPARATOR
+  }
+
+  return token.replace(UNESCAPED_CHARS_REGEXP, '\\$&')
 }
 
 export const isParent = function (parentQuery, childQuery) {
   return childQuery.startsWith(`${parentQuery}${SEPARATOR}`)
 }
 
+const ESCAPE = '\\'
 export const SEPARATOR = '.'
-const ESCAPED_SEPARATOR = '\\.'
-const SEP_REGEXP = /\./gu
-// Matches dots not escaped with a backslash
-const UNESCAPED_SEP_REGEXP = /(?<!\\)\./gu
-// Matches dots escaped with a backslash
-const ESCAPED_SEP_REGEXP = /\\\./gu
+const UNESCAPED_CHARS_REGEXP = /[\\.]/gu
