@@ -12,6 +12,7 @@
 //  - Empty keys are supported, e.g. `one.` for `{ one: { "": value } }`
 //    or `one..two` for `{ one: { "": { two: value } } }`
 //  - An empty string matches the root value
+//  - Backslashes can escape dots
 // We allow passing an array of tokens instead of a string with the above syntax
 //  - This is sometimes more convenient
 //  - Also, this allows property names to include special characters (dots,
@@ -26,18 +27,30 @@ export const maybeParse = function (queryOrTokens) {
 }
 
 export const parse = function (query) {
-  return query === '' ? [] : query.split(SEPARATOR).map(parseToken)
+  return query === '' ? [] : query.split(UNESCAPED_SEP_REGEXP).map(parseToken)
 }
 
 const parseToken = function (token) {
-  return POSITIVE_INTEGER_REGEXP.test(token) ? Number(token) : token
+  if (POSITIVE_INTEGER_REGEXP.test(token)) {
+    return Number(token)
+  }
+
+  return token.replace(ESCAPED_SEP_REGEXP, SEPARATOR)
 }
 
 const POSITIVE_INTEGER_REGEXP = /^\d+$/u
 
 // Inverse of `parse()`
 export const serialize = function (tokens) {
-  return tokens.map(String).join(SEPARATOR)
+  return tokens.map(serializeToken).join(SEPARATOR)
+}
+
+const serializeToken = function (token) {
+  if (typeof token !== 'string') {
+    return String(token)
+  }
+
+  return token.replace(SEP_REGEXP, ESCAPED_SEPARATOR)
 }
 
 export const isParent = function (parentQuery, childQuery) {
@@ -45,3 +58,9 @@ export const isParent = function (parentQuery, childQuery) {
 }
 
 export const SEPARATOR = '.'
+const ESCAPED_SEPARATOR = '\\.'
+const SEP_REGEXP = /\./gu
+// Matches dots not escaped with a backslash
+const UNESCAPED_SEP_REGEXP = /(?<!\\)\./gu
+// Matches dots escaped with a backslash
+const ESCAPED_SEP_REGEXP = /\\\./gu
