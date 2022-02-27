@@ -90,7 +90,7 @@ export const getConfigInfos = async function (
 ) {
   const bases = getBases(configContents, base)
   const parentConfigInfos = await getParentConfigInfos(configOpt, base)
-  return [...parentConfigInfos.flat(), { configContents, base, bases }]
+  return [...parentConfigInfos.flat(), { configContents, bases, base }]
 }
 
 const getParentConfigInfos = async function (configOpt, base) {

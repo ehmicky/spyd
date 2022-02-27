@@ -1,6 +1,6 @@
 import { removeEmptyValues } from '../empty.js'
 import { deepMerge } from '../merge.js'
-import { CLI_FLAGS_BASE } from '../normalize/cwd.js'
+import { CLI_FLAGS_BASE, getDefaultBase } from '../normalize/cwd.js'
 
 import { getConfigInfos } from './info.js'
 import { addNpxShortcut } from './npx.js'
@@ -17,14 +17,17 @@ import { addNpxShortcut } from './npx.js'
 export const loadConfig = async function (configFlags) {
   const configFlagsA = addNpxShortcut(configFlags)
   const configInfos = await getConfigInfos(configFlagsA, CLI_FLAGS_BASE)
-  const configs = configInfos.map(getConfigContents)
-  const config = deepMerge(configs)
+  const config = deepMerge(configInfos.map(getConfigContents))
   const configA = removeEmptyValues(config)
-  // eslint-disable-next-line fp/no-mutating-methods
-  const configInfosA = [...configInfos].reverse()
-  return { config: configA, configInfos: configInfosA }
+  const bases = deepMerge(configInfos.map(getBases))
+  const defaultBase = getDefaultBase(configInfos)
+  return { config: configA, bases, defaultBase }
 }
 
 const getConfigContents = function ({ configContents }) {
   return configContents
+}
+
+const getBases = function ({ bases }) {
+  return bases
 }

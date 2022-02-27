@@ -6,9 +6,9 @@ import { normalizePluginsConfig } from './plugin/main.js'
 
 // Retrieve configuration
 export const getConfig = async function (command, configFlags = {}) {
-  const { config, configInfos } = await loadConfig(configFlags)
+  const { config, bases, defaultBase } = await loadConfig(configFlags)
   const context = { command }
-  const cwd = getPropCwd.bind(undefined, configInfos)
+  const cwd = getPropCwd.bind(undefined, { bases, defaultBase })
   const configA = await normalizeConfig(config, RULES, { context, cwd })
   const configB = await normalizePluginsConfig({
     config: configA,

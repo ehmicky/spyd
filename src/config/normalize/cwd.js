@@ -2,7 +2,7 @@ import isMergeableObject from 'is-mergeable-object'
 
 import { recurseValues } from '../../utils/recurse.js'
 
-import { has } from './lib/prop_path/get.js'
+import { get } from './lib/prop_path/get.js'
 
 // Since several configuration objects are deeply merged, and each property
 // should use the `base` of its configuration file, we need to keep track of
@@ -57,19 +57,16 @@ const getBase = function (value, base) {
 //     example using the current file's path (e.g. `import.meta.url`)
 // We purposely use `originalPath` instead of `path` to ensure this works even
 // if the property is normalized.
-export const getPropCwd = function (configInfos, { originalPath }) {
-  const configInfo = configInfos.find(({ configContents }) =>
-    has(configContents, originalPath),
-  )
-
-  if (configInfo !== undefined) {
-    return configInfo.base
-  }
-
-  const [, topLevelConfigInfo] = configInfos
-  return topLevelConfigInfo === undefined
+export const getDefaultBase = function (configInfos) {
+  return configInfos.length === 1
     ? DEFAULT_VALUES_BASE
-    : topLevelConfigInfo.base
+    : configInfos[configInfos.length - 2].base
+}
+
+// Used as `cwd` for all configuration properties
+export const getPropCwd = function ({ bases, defaultBase }, { originalPath }) {
+  const base = get(bases, originalPath)
+  return typeof base === 'string' ? base : defaultBase
 }
 
 // Base used to resolve file paths in default values when there is no config
