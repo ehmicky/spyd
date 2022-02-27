@@ -6,7 +6,7 @@ import {
 } from '../normalize/validate/fs.js'
 
 import { getDefaultConfig } from './default.js'
-import { isConfigFilePath, resolveConfig } from './resolvers.js'
+import { isConfigFilePath, resolveConfig } from './resolve.js'
 
 // The `config` property is normalized and validated before all other properties
 export const normalizeConfigProp = async function (configOpt, base) {

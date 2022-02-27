@@ -6,7 +6,7 @@ import pLocate from 'p-locate'
 import { pathExists } from 'path-exists'
 
 import { CONFIG_FILENAMES } from './contents.js'
-import { CONFIG_NPM_PREFIX } from './resolvers.js'
+import { CONFIG_NPM_PREFIX } from './resolve.js'
 
 // The default values for `config` looks for `spyd.*` in the current or parent
 // directories.
