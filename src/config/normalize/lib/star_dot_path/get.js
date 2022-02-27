@@ -35,6 +35,8 @@ const validateAny = function (tokens) {
 }
 
 // TODO: optimize performance by stopping at soon as one entry is found
+// TODO: check if a property key exists instead of checking if its value is
+// `undefined`
 export const has = function (target, queryOrPropNames) {
   const tokens = maybeParse(queryOrPropNames)
   const entries = listEntries(target, tokens)
