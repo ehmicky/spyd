@@ -68,7 +68,7 @@ export const addBases = function (configContents, base) {
 }
 
 const addBaseProps = function (value, base) {
-  return canRecurse(value) && !Array.isArray(value)
+  return shouldAddBaseProps(value)
     ? Object.fromEntries(
         Object.entries(value).flatMap(addBaseProp.bind(undefined, base)),
       )
@@ -93,13 +93,15 @@ export const removeBases = function (configWithBases) {
 }
 
 const removeBaseProps = function (value) {
-  return canRecurse(value) && !Array.isArray(value)
-    ? filterObj(value, isNotBaseProp)
-    : value
+  return shouldAddBaseProps(value) ? filterObj(value, isNotBaseProp) : value
 }
 
 const isNotBaseProp = function (key) {
   return !key.endsWith(BASE_KEY_SUFFIX) && !key.endsWith(BASE_ITEMS_SUFFIX)
+}
+
+const shouldAddBaseProps = function (value) {
+  return canRecurse(value) && !Array.isArray(value)
 }
 
 const BASE_KEY_SUFFIX = 'CwdBase'
