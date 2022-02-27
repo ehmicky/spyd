@@ -4,10 +4,14 @@ import { mapValues } from './map.js'
 
 // Apply a mapping function over all values of an object or array.
 // Only recurse over arrays and plain objects.
-export const recurseValues = function (value, mapper) {
+export const recurseValues = function (
+  value,
+  mapper,
+  canRecurseObj = isPlainObj,
+) {
   const valueA = mapper(value)
 
-  if (isPlainObj(valueA)) {
+  if (canRecurseObj(valueA)) {
     return mapValues(valueA, (child) => recurseValues(child, mapper))
   }
 
