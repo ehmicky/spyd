@@ -22,6 +22,12 @@ Can be specified several times.
 A configuration file can include another one by using this property.
 This can be used to share configurations and/or benchmarks.
 
+If you want to merge a specific property of a configuration file instead, any
+configuration property can be a "config##path" string:
+  - "config" is the file path or Node module name of the configuration file.
+    The syntax is the same as described above.
+  - "path" is the property dot-delimited path
+
 You can define selectors, i.e. different values per combination for some
 configuration properties ("limit", "outliers", "precision", "showDiff",
 "showPrecision", "showTitles").
