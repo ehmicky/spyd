@@ -1,5 +1,7 @@
 import { dirname } from 'path'
 
+import { getBases } from '../normalize/cwd.js'
+
 import { loadConfigContents } from './contents.js'
 import { normalizeConfigProp } from './normalize.js'
 
@@ -86,8 +88,9 @@ export const getConfigInfos = async function (
   { config: configOpt, ...configContents },
   base,
 ) {
+  const bases = getBases(configContents, base)
   const parentConfigInfos = await getParentConfigInfos(configOpt, base)
-  return [...parentConfigInfos.flat(), { configContents, base }]
+  return [...parentConfigInfos.flat(), { configContents, base, bases }]
 }
 
 const getParentConfigInfos = async function (configOpt, base) {

@@ -1,4 +1,33 @@
+import isMergeableObject from 'is-mergeable-object'
+
+import { recurseValues } from '../../utils/recurse.js'
+
 import { has } from './lib/prop_path/get.js'
+
+// Since several configuration objects are deeply merged, and each property
+// should use the `base` of its configuration file, we need to keep track of
+// each configuration property's file, in order to determine which `base` to
+// use when the property is a file path.
+// We do this by producing a `bases` object for each configuration file, which
+// is a mirror of its contents but with all leaf values replaced with the
+// file's base.
+// Those `bases` objects are deeply merged using the same logic as the
+// configuration contents, to ensure they reflect the same merging logic.
+// We use `is-mergeable-object` instead of `is-plain-obj` to mimick the
+// merging logic.
+// We recurse on arrays even though though are not recursively merged, since
+// users might use `config#path` references as individual array elements.
+export const getBases = function (configContents, base) {
+  return recurseValues(
+    configContents,
+    (value) => getBase(value, base),
+    isMergeableObject,
+  )
+}
+
+const getBase = function (value, base) {
+  return Array.isArray(value) || isMergeableObject(value) ? value : base
+}
 
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.
