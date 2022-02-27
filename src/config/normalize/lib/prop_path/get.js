@@ -32,15 +32,15 @@ export const get = function (target, queryOrTokens) {
 }
 
 const validateWildcards = function (tokens) {
-  if (tokens.some(hasWildcard)) {
+  if (tokens.some(isWildcard)) {
     throw new Error(
       `Cannot use wildcard "*" when using get(): please use list() instead.`,
     )
   }
 }
 
-const hasWildcard = function ({ wildcard }) {
-  return wildcard
+const isWildcard = function (token) {
+  return token === '*'
 }
 
 // TODO: optimize performance by stopping at soon as one entry is found
