@@ -3,7 +3,6 @@ import pReduce from 'p-reduce'
 import { cleanObject } from '../../../utils/clean.js'
 
 import { applyRule } from './apply.js'
-import { handleError } from './loose.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
 import { list } from './prop_path/get.js'
@@ -89,4 +88,12 @@ const setConfigValue = function ({ config, name, newName, newValue }) {
   return newValue === undefined
     ? remove(configA, newName)
     : set(configA, newName, newValue)
+}
+
+// When in `loose` mode, user errors are returned instead of being thrown.
+// System errors are always propagated.
+const handleError = function (error, loose) {
+  if (!loose || !error.validation) {
+    throw error
+  }
 }
