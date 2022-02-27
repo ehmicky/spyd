@@ -1,5 +1,7 @@
 import { dirname } from 'path'
 
+import { deepMerge } from '../merge.js'
+
 import { loadConfigContents } from './contents.js'
 import { addBases } from './cwd.js'
 import { normalizeConfigProp } from './normalize.js'
@@ -89,12 +91,12 @@ export const getConfigInfos = async function (
 ) {
   const configWithBases = addBases(configContents, base)
   const parentConfigInfos = await getParentConfigInfos(configOpt, base)
-  const configsWithBases = [
-    ...parentConfigInfos.flatMap(({ configsWithBases }) => configsWithBases),
+  const configWithBasesA = deepMerge([
+    ...parentConfigInfos.map(({ configWithBases }) => configWithBases),
     configWithBases,
-  ]
+  ])
   const bases = [...parentConfigInfos.flatMap(({ bases }) => bases), base]
-  return { configsWithBases, bases }
+  return { configWithBases: configWithBasesA, bases }
 }
 
 const getParentConfigInfos = async function (configOpt, base) {

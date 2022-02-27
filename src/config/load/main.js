@@ -1,5 +1,4 @@
 import { removeEmptyValues } from '../empty.js'
-import { deepMerge } from '../merge.js'
 
 import {
   CLI_FLAGS_BASE,
@@ -21,11 +20,10 @@ import { addNpxShortcut } from './npx.js'
 // We purposely remove the `config` property during this step.
 export const loadConfig = async function (configFlags) {
   const configFlagsA = addNpxShortcut(configFlags)
-  const { configsWithBases, bases } = await getConfigInfos(
+  const { configWithBases, bases } = await getConfigInfos(
     configFlagsA,
     CLI_FLAGS_BASE,
   )
-  const configWithBases = deepMerge(configsWithBases)
   const defaultBase = getDefaultBase(bases)
   const cwd = getPropCwd.bind(undefined, { configWithBases, defaultBase })
   const config = removeBases(configWithBases)
