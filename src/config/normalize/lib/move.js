@@ -1,8 +1,8 @@
 // When a property is moved to another, record it.
-export const addMoves = function (moves, newNames, name) {
+export const addMoves = function (moves, newNames, oldName) {
   return newNames.length === 0
     ? moves
-    : [...moves, ...newNames.map((newName) => ({ oldName: name, newName }))]
+    : [...moves, ...newNames.map((newName) => ({ oldName, newName }))]
 }
 
 // Rewind previous moves to retrieve the `originalName` behind a `name`.
