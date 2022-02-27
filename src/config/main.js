@@ -1,10 +1,10 @@
-import { removeEmptyValues } from './empty.js'
 import {
   CLI_FLAGS_BASE,
   getDefaultBase,
   getPropCwd,
   removeBases,
 } from './cwd.js'
+import { removeEmptyValues } from './empty.js'
 import { loadConfig } from './load/main.js'
 import { normalizeConfig } from './normalize/main.js'
 import { RULES } from './normalize/rules.js'
