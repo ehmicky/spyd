@@ -1,7 +1,7 @@
 import filterObj from 'filter-obj'
-import isMergeableObject from 'is-mergeable-object'
 
 import { recurseValues } from '../../utils/recurse.js'
+import { canRecurse } from '../merge.js'
 import { get } from '../normalize/lib/prop_path/get.js'
 
 // When resolving configuration relative file paths:
@@ -63,12 +63,12 @@ export const addBases = function (configContents, base) {
   return recurseValues(
     configContents,
     (value) => addBaseProps(value, base),
-    isMergeableObject,
+    canRecurse,
   )
 }
 
 const addBaseProps = function (value, base) {
-  return isMergeableObject(value) && !Array.isArray(value)
+  return canRecurse(value) && !Array.isArray(value)
     ? Object.fromEntries(
         Object.entries(value).flatMap(addBaseProp.bind(undefined, base)),
       )
@@ -89,11 +89,11 @@ const addBaseProp = function (base, [key, value]) {
 
 // Remove the base properties after they've been used
 export const removeBases = function (configWithBases) {
-  return recurseValues(configWithBases, removeBaseProps, isMergeableObject)
+  return recurseValues(configWithBases, removeBaseProps, canRecurse)
 }
 
 const removeBaseProps = function (value) {
-  return isMergeableObject(value) && !Array.isArray(value)
+  return canRecurse(value) && !Array.isArray(value)
     ? filterObj(value, isNotBaseProp)
     : value
 }
