@@ -1,5 +1,5 @@
 import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP } from './special.js'
-import { isAnyPart } from './token.js'
+import { isAnyPart, getPropPartValue } from './token.js'
 
 // Inverse of `parse()`
 export const serialize = function (tokens) {
@@ -7,21 +7,27 @@ export const serialize = function (tokens) {
 }
 
 const serializeToken = function (token, index) {
-  if (index === 0 && token[0] === '') {
-    return SEPARATOR
-  }
-
-  return token.map(serializePart).join('')
+  return token.map((part) => serializePart(part, index)).join('')
 }
 
-const serializePart = function (part) {
-  if (Number.isInteger(part)) {
-    return String(part)
-  }
-
+const serializePart = function (part, index) {
   if (isAnyPart(part)) {
     return ANY
   }
 
-  return part.replace(SPECIAL_CHARS_REGEXP, '\\$&')
+  return serializePropPart(part, index)
+}
+
+const serializePropPart = function (part, index) {
+  const value = getPropPartValue(part)
+
+  if (Number.isInteger(value)) {
+    return String(value)
+  }
+
+  if (value === '' && index === 0) {
+    return SEPARATOR
+  }
+
+  return value.replace(SPECIAL_CHARS_REGEXP, '\\$&')
 }

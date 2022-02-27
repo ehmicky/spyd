@@ -1,5 +1,5 @@
 import { ANY } from './special.js'
-import { isAnyToken } from './token.js'
+import { isAnyToken, createPropPart, getPropPartValue } from './token.js'
 
 // From an array of property names to an array to tokens
 export const pathToTokens = function (path) {
@@ -7,7 +7,7 @@ export const pathToTokens = function (path) {
 }
 
 const getPropNameToken = function (propName) {
-  return [propName]
+  return [createPropPart(propName)]
 }
 
 // Inverse of `pathToTokens()`
@@ -20,5 +20,5 @@ const getTokenPropName = function (token) {
     throw new Error(`Cannot use wildcard "${ANY}" when using tokensToPath().`)
   }
 
-  return token[0]
+  return getPropPartValue(token[0])
 }

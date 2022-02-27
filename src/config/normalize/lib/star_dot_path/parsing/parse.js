@@ -1,6 +1,6 @@
 import { pathToTokens } from './path.js'
 import { ESCAPE, SEPARATOR, ANY } from './special.js'
-import { createAnyPart } from './token.js'
+import { createAnyPart, createPropPart } from './token.js'
 
 // Parse a query string into an array of tokens.
 // This is similar to JSON paths but:
@@ -58,7 +58,7 @@ export const parse = function (query) {
 
     if (character === SEPARATOR || index === query.length) {
       if (part !== '' || token.length === 0) {
-        token.push(parseIndex(part, token))
+        token.push(createPropPart(parseIndex(part, token)))
         part = ''
       }
 
@@ -69,7 +69,7 @@ export const parse = function (query) {
 
     if (character === ANY) {
       if (part !== '') {
-        token.push(part)
+        token.push(createPropPart(part))
         part = ''
       }
 

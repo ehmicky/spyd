@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isAnyPart } from '../parsing/token.js'
+import { isAnyPart, getPropPartValue } from '../parsing/token.js'
 
 import { getComplexEntries } from './complex.js'
 
@@ -46,7 +46,8 @@ const getAnyEntries = function (value, path) {
 
 // For queries which do not use *, e.g. `a.b` or `a.1`
 const getKeyEntries = function (value, path, part) {
+  const partValue = getPropPartValue(part)
   return Array.isArray(value) || isPlainObj(value)
-    ? [{ value: value[part], path: [...path, part] }]
+    ? [{ value: value[partValue], path: [...path, partValue] }]
     : []
 }
