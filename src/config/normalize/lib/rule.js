@@ -21,6 +21,9 @@ export const normalizeRule = function (
   rules,
 ) {
   const exampleA = addDefaultExample(example, name, rules)
+  const validateA = normalizeOptionalArray(validate)
+  const warnA = normalizeOptionalArray(warn)
+  const transformA = normalizeOptionalArray(transform)
   return {
     name,
     pick,
@@ -31,11 +34,19 @@ export const normalizeRule = function (
     glob,
     required,
     example: exampleA,
-    validate,
-    warn,
-    transform,
+    validate: validateA,
+    warn: warnA,
+    transform: transformA,
     rename,
   }
+}
+
+// For convenience, some rule methods which are functions can be array of
+// functions too.
+// We do not do this on functions returning booleans since it would be ambiguous
+// whether they should use a union or an intersection.
+const normalizeOptionalArray = function (value) {
+  return value === undefined || Array.isArray(value) ? value : [value]
 }
 
 // `required` defaults to `false` except for array items.

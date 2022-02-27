@@ -1,4 +1,5 @@
 import isPlainObj from 'is-plain-obj'
+import pReduce from 'p-reduce'
 
 import { callValueFunc } from './call.js'
 
@@ -9,18 +10,37 @@ export const transformValue = async function (value, transform, opts) {
     return { value }
   }
 
-  const transformReturn = await callValueFunc(transform, value, opts)
+  const { value: valueA, newProps } = await pReduce(
+    transform,
+    (memo, transformFunc) => transformSingleValue(memo, transformFunc, opts),
+    { value, newProps: [] },
+  )
+  const newName = getNewName(newProps, opts)
+  return { value: valueA, newName }
+}
 
-  const { name } = opts.funcOpts
+const transformSingleValue = async function (
+  { value, newProps },
+  transformFunc,
+  opts,
+) {
+  const { value: valueA, newProp } = await getTransformedValue(
+    value,
+    transformFunc,
+    opts,
+  )
+  const newPropsA = newProp === undefined ? newProps : [newProp, ...newProps]
+  return { value: valueA, newProps: newPropsA }
+}
 
-  if (isTransformMove(transformReturn)) {
-    return getTransformMove(transformReturn, name)
-  }
-
-  const commonMoveReturn = applyCommonMoves(transformReturn, value, name)
-  return commonMoveReturn === undefined
-    ? { value: transformReturn }
-    : commonMoveReturn
+const getTransformedValue = async function (value, transformFunc, opts) {
+  const transformReturn = await callValueFunc(transformFunc, value, opts)
+  return isTransformMove(transformReturn)
+    ? transformReturn
+    : {
+        value: transformReturn,
+        newProp: findCommonMove(transformReturn, value),
+      }
 }
 
 // `transform()` can return a `{ newProp, value }` object to indicate the
@@ -37,20 +57,10 @@ const isTransformMove = function (transformReturn) {
   )
 }
 
-const getTransformMove = function ({ newProp, value }, name) {
-  return { newName: `${name}.${newProp}`, value }
-}
-
 // Automatically detect some common type of moves
-const applyCommonMoves = function (newValue, oldValue, name) {
+const findCommonMove = function (newValue, oldValue) {
   const commonMove = COMMON_MOVES.find(({ test }) => test(newValue, oldValue))
-
-  if (commonMove === undefined) {
-    return
-  }
-
-  const newProp = commonMove.getNewProp(newValue)
-  return { newName: `${name}.${newProp}`, value: newValue }
+  return commonMove === undefined ? undefined : commonMove.getNewProp(newValue)
 }
 
 const COMMON_MOVES = [
@@ -81,3 +91,7 @@ const COMMON_MOVES = [
     },
   },
 ]
+
+const getNewName = function (newProps, { funcOpts: { name } }) {
+  return newProps.length === 0 ? undefined : [name, ...newProps].join('.')
+}

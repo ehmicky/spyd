@@ -2,7 +2,7 @@ import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolvePath } from './path.js'
 import { has } from './prop_path/get.js'
 import { transformValue } from './transform.js'
-import { getWarning } from './warn.js'
+import { getWarnings } from './warn.js'
 
 // Once the initial value has been computed, apply validation and transforms,
 // unless the value is `undefined`.
@@ -24,7 +24,7 @@ export const validateAndModify = async function ({
 
   const valueA = await resolvePath({ value, path, glob, opts })
   await validateValue(valueA, validate, opts)
-  const warning = await getWarning(valueA, warn, opts)
+  const warnings = await getWarnings(valueA, warn, opts)
   const { value: valueB, newName } = await transformValue(
     valueA,
     transform,
@@ -32,7 +32,7 @@ export const validateAndModify = async function ({
   )
   const name = await renameProp(valueB, rename, opts)
   const newNames = [newName, name].filter(Boolean)
-  return { value: valueB, name, newNames, warning }
+  return { value: valueB, name, newNames, warnings }
 }
 
 // Apply `required(opts)` which throws if `true` and value is `undefined`
@@ -44,9 +44,13 @@ const validateRequired = async function (required, value, opts) {
 
 // Apply `validate(value, opts)` which throws on validation errors
 const validateValue = async function (value, validate, opts) {
-  if (validate !== undefined) {
-    await callValueFunc(validate, value, opts)
+  if (validate === undefined) {
+    return
   }
+
+  await Promise.all(
+    validate.map((validateFunc) => callValueFunc(validateFunc, value, opts)),
+  )
 }
 
 // Apply `rename(value, opts)` which transforms the property's name.

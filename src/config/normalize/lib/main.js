@@ -9,7 +9,7 @@ import { getOpts } from './opts.js'
 import { list } from './prop_path/get.js'
 import { set, remove } from './prop_path/set.js'
 import { normalizeRule } from './rule.js'
-import { addWarning, logWarnings } from './warn.js'
+import { addWarnings, logWarnings } from './warn.js'
 
 // Normalize configuration shape and do custom validation.
 // An array of rule objects is passed.
@@ -76,11 +76,11 @@ const applyPropRule = async function (
     value: newValue,
     name: newName = name,
     newNames = [],
-    warning,
+    warnings: newWarnings,
   } = await applyRule(rule, value, opts)
   const configA = setConfigValue({ config, name, newName, newValue })
   const movesA = addMoves(moves, newNames, name)
-  const warningsA = addWarning(warnings, warning)
+  const warningsA = addWarnings(warnings, newWarnings)
   return { config: configA, moves: movesA, warnings: warningsA }
 }
 

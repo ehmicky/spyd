@@ -56,10 +56,7 @@ const cwd = {
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   default: getCwd,
   path: true,
-  async validate(value) {
-    await validateFileExists(value)
-    await validateDirectory(value)
-  },
+  validate: [validateFileExists, validateDirectory],
 }
 
 const delta = {

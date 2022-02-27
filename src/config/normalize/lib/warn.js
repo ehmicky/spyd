@@ -2,24 +2,27 @@ import { callValueFunc } from './call.js'
 import { getPrefix } from './validate.js'
 
 // Apply `warn(value, opts)` which can return a string to print as warning
-export const getWarning = async function (value, warn, opts) {
+export const getWarnings = async function (value, warn, opts) {
   if (warn === undefined) {
     return
   }
 
-  const warningSuffix = await callValueFunc(warn, value, opts)
+  const warningSuffixes = await Promise.all(
+    warn.map((warnFunc) => callValueFunc(warnFunc, value, opts)),
+  )
+  const warningSuffixesA = warningSuffixes.filter(Boolean)
 
-  if (warningSuffix === undefined) {
+  if (warningSuffixesA.length === 0) {
     return
   }
 
   const prefix = getPrefix(opts)
-  return `${prefix} ${warningSuffix}`
+  return warningSuffixesA.map((warningSuffix) => `${prefix} ${warningSuffix}`)
 }
 
-// When a new warning was returned, add it to the list
-export const addWarning = function (warnings, warning) {
-  return warning === undefined ? warnings : [...warnings, warning]
+// When new warnings are returned, add them to the list
+export const addWarnings = function (warnings, newWarnings) {
+  return newWarnings === undefined ? warnings : [...warnings, ...newWarnings]
 }
 
 // Log all warnings at the end.
