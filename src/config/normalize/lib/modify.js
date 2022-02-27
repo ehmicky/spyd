@@ -1,5 +1,6 @@
 import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolvePath } from './path.js'
+import { has } from './prop_path/get.js'
 import { transformValue } from './transform.js'
 
 // Once the initial value has been computed, apply validation and transforms,
@@ -47,8 +48,14 @@ const validateValue = async function (value, validate, opts) {
 
 // Apply `rename(value, opts)` which transforms the property's name.
 // This can be used for aliasing and deprecation.
+//  - Therefore, this is only applied if the destination value is `undefined`.
+//    Like this, if both an old alias and a new one are specified, the new one
+//    has priority.
 const renameProp = async function (value, rename, opts) {
-  return rename === undefined
-    ? undefined
-    : String(await callValueFunc(rename, value, opts))
+  if (rename === undefined) {
+    return
+  }
+
+  const name = String(await callValueFunc(rename, value, opts))
+  return has(opts.funcOpts.config, name) ? undefined : name
 }
