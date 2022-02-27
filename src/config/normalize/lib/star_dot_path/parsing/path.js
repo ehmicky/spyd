@@ -1,4 +1,5 @@
-import { ANY, isAnyToken } from './special.js'
+import { ANY } from './special.js'
+import { isAnyToken } from './token.js'
 
 // From an array of property names to an array to tokens
 export const pathToTokens = function (path) {

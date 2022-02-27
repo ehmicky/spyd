@@ -1,4 +1,5 @@
-import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP, isAnyPart } from './special.js'
+import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP } from './special.js'
+import { isAnyPart } from './token.js'
 
 // Inverse of `parse()`
 export const serialize = function (tokens) {

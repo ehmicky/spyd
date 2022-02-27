@@ -2,7 +2,8 @@ import { listEntries } from './entries/main.js'
 import { maybeParse } from './parsing/parse.js'
 import { pathToTokens } from './parsing/path.js'
 import { serialize } from './parsing/serialize.js'
-import { ANY, isAnyTokens } from './parsing/special.js'
+import { ANY } from './parsing/special.js'
+import { isAnyTokens } from './parsing/token.js'
 
 // Retrieve all properties in `target` matching a query string.
 // The return value is an object where the key is the path to each value.

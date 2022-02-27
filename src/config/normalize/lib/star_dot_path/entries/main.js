@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isAnyPart } from '../parsing/special.js'
+import { isAnyPart } from '../parsing/token.js'
 
 import { getComplexEntries } from './complex.js'
 

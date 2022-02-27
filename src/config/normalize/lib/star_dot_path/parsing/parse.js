@@ -1,5 +1,6 @@
 import { pathToTokens } from './path.js'
-import { ESCAPE, SEPARATOR, ANY, createAnyPart } from './special.js'
+import { ESCAPE, SEPARATOR, ANY } from './special.js'
+import { createAnyPart } from './token.js'
 
 // Parse a query string into an array of tokens.
 // This is similar to JSON paths but:
