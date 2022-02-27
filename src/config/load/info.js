@@ -96,7 +96,7 @@ export const getConfigInfos = async function (
     configWithBases,
   ])
   const bases = parentConfigInfos.flatMap(({ base }) => base)
-  return { configWithBases: configWithBasesA, base, bases }
+  return { configWithBases: configWithBasesA, bases }
 }
 
 const getParentConfigInfos = async function (configOpt, base) {
@@ -108,7 +108,8 @@ const loadConfigPath = async function (configPath) {
   const base = dirname(configPath)
   const configContents = await loadConfigContents(configPath)
   const configContentsA = addDefaultConfig(configContents)
-  return await getConfigInfos(configContentsA, base)
+  const { configWithBases } = await getConfigInfos(configContentsA, base)
+  return { configWithBases, base }
 }
 
 // The default `config` is only applied to the top-level CLI flag.
