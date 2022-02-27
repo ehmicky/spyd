@@ -57,11 +57,7 @@ export const parse = function (query) {
 
     if (character === SEPARATOR || index === query.length) {
       if (part !== '' || token.length === 0) {
-        const partA =
-          token.length === 0 && POSITIVE_INTEGER_REGEXP.test(part)
-            ? Number(part)
-            : part
-        token.push(partA)
+        token.push(parseIndex(part, token))
         part = ''
       }
 
@@ -87,6 +83,12 @@ export const parse = function (query) {
 }
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
    fp/no-mutation, fp/no-let, no-continue, fp/no-mutating-methods */
+
+const parseIndex = function (part, token) {
+  return token.length === 0 && POSITIVE_INTEGER_REGEXP.test(part)
+    ? Number(part)
+    : part
+}
 
 // eslint-disable-next-line max-params
 const validateEscape = function (escapedCharacter, query, character, index) {
