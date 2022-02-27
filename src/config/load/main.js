@@ -1,7 +1,7 @@
 import { removeEmptyValues } from '../empty.js'
 import { deepMerge } from '../merge.js'
-import { CLI_FLAGS_BASE, getDefaultBase, getPropCwd } from '../normalize/cwd.js'
 
+import { CLI_FLAGS_BASE, getDefaultBase, getPropCwd } from './cwd.js'
 import { getConfigInfos } from './info.js'
 import { addNpxShortcut } from './npx.js'
 

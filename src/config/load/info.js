@@ -1,8 +1,7 @@
 import { dirname } from 'path'
 
-import { getBases } from '../normalize/cwd.js'
-
 import { loadConfigContents } from './contents.js'
+import { getBases } from './cwd.js'
 import { normalizeConfigProp } from './normalize.js'
 
 // Load the main configuration file `spyd.*` and any parents.

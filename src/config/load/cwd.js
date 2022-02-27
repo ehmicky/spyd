@@ -1,8 +1,7 @@
 import isMergeableObject from 'is-mergeable-object'
 
 import { recurseValues } from '../../utils/recurse.js'
-
-import { get } from './lib/prop_path/get.js'
+import { get } from '../normalize/lib/prop_path/get.js'
 
 // Since several configuration objects are deeply merged, and each property
 // should use the `base` of its configuration file, we need to keep track of
