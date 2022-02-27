@@ -21,15 +21,14 @@ import { addNpxShortcut } from './npx.js'
 // We purposely remove the `config` property during this step.
 export const loadConfig = async function (configFlags) {
   const configFlagsA = addNpxShortcut(configFlags)
-  const configInfos = await getConfigInfos(configFlagsA, CLI_FLAGS_BASE)
-  const configWithBases = deepMerge(configInfos.map(getConfigWithBases))
-  const defaultBase = getDefaultBase(configInfos)
+  const { configsWithBases, bases } = await getConfigInfos(
+    configFlagsA,
+    CLI_FLAGS_BASE,
+  )
+  const configWithBases = deepMerge(configsWithBases)
+  const defaultBase = getDefaultBase(bases)
   const cwd = getPropCwd.bind(undefined, { configWithBases, defaultBase })
   const config = removeBases(configWithBases)
   const configA = removeEmptyValues(config)
   return { config: configA, cwd }
-}
-
-const getConfigWithBases = function ({ configWithBases }) {
-  return configWithBases
 }

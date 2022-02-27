@@ -32,10 +32,8 @@ import { get } from '../normalize/lib/prop_path/get.js'
 //     example using the current file's path (e.g. `import.meta.url`)
 // We purposely use `originalPath` instead of `path` to ensure this works even
 // if the property is normalized.
-export const getDefaultBase = function (configInfos) {
-  return configInfos.length === 1
-    ? DEFAULT_VALUES_BASE
-    : configInfos[configInfos.length - 2].base
+export const getDefaultBase = function (bases) {
+  return bases.length === 1 ? DEFAULT_VALUES_BASE : bases[bases.length - 2]
 }
 
 // Base used to resolve file paths in default values when there is no config
