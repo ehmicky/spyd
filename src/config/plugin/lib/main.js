@@ -15,6 +15,13 @@ import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 //       consumer error since users are not expected to know about the shape
 //       of `pluginConfigs` elements (due to its polymorphic syntax)
 //  - Assign default values
+// The logic tries its best to pass the right `parents` to configuration rules,
+// despite the syntax being polymorphic due to:
+//  - The top-level array being optional
+//  - The shortcut syntax allowing passing the identifier string instead of a
+//    pluginConfig object
+//  - pluginConfig coming both from each pluginConfig object and from
+//    `opts.sharedConfig`
 export const getPlugins = async function (pluginConfigs, opts) {
   const optsA = normalizeMultipleOpts(opts)
   validateDefined(pluginConfigs, optsA)
