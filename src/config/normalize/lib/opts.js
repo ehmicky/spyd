@@ -25,6 +25,13 @@ export const getOpts = async function ({
   return optsC
 }
 
+// `originalName|Path` are like `name|path` except:
+//  - They are prepended with `opts.parent`
+//  - If a property was moved, they show the previous name
+// They are intended for error messages.
+// This is in contrast to `name|path` which are the main properties, intended to
+// work with everything else, including `rule.name`, `rule.rename` and
+// `funcOpts.config`.
 const computeOriginalName = async function (opts, moves, parent) {
   const originalName = applyMoves(moves, opts.funcOpts.name)
   const originalNameA = await appendParentToName(parent, originalName, opts)

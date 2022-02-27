@@ -1,10 +1,7 @@
 import { callUserFunc } from './call.js'
 
 // The `parent` option are the names of the parent properties.
-// It is exposed as `originalName` and `originalPath`:
-//  - Those are meant for error messages
-//  - This is as opposed to `name` and `path` which are meant to be used with
-//    `funcOpts.config` and `rule.rename`
+// It is exposed as `originalName` and `originalPath`.
 // It is a dot-delimited string optionally ending with `.`
 // By default, there are none.
 export const appendParentToName = async function (parent, originalName, opts) {
