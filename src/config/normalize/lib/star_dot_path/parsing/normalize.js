@@ -7,7 +7,13 @@ export const normalizePath = function (path) {
 // we encourage the latter since it is simpler
 const normalizeNode = function (node) {
   const nodeA = node.length === 1 ? node[0] : node
-  return Array.isArray(nodeA) ? nodeA : parseIndex(nodeA)
+
+  if (!Array.isArray(nodeA)) {
+    return parseIndex(nodeA)
+  }
+
+  nodeA.forEach(validateComplexToken)
+  return nodeA
 }
 
 // Indices can be both strings and numbers, but we encourage numbers since they
@@ -19,3 +25,9 @@ const parseIndex = function (token) {
 }
 
 const POSITIVE_INTEGER_REGEXP = /^\d+$/u
+
+const validateComplexToken = function (token) {
+  if (typeof token === 'symbol') {
+    throw new TypeError(`${String(token)} must not be in a nested array.`)
+  }
+}
