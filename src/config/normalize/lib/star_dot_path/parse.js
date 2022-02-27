@@ -1,3 +1,5 @@
+import isPlainObj from 'is-plain-obj'
+
 // Parse a query string into an array of tokens.
 // This is similar to JSON paths but:
 //  - simpler, with fewer features
@@ -12,7 +14,7 @@
 //  - Empty keys are supported, e.g. `one.` for `{ one: { "": value } }`
 //    or `one..two` for `{ one: { "": { two: value } } }`
 //  - An empty string matches the root value
-//  - Backslashes can escape dots
+//  - Backslashes can escape special characters: . * \
 // We allow passing an array of tokens instead of a string with the above syntax
 //  - This is sometimes more convenient
 //  - Also, this allows property names to include special characters (dots,
@@ -35,30 +37,49 @@ export const parse = function (query) {
   }
 
   const tokens = []
-  let token = ''
+  let token = []
+  let tokenPart = ''
   let index = query[0] === SEPARATOR ? 1 : 0
 
-  for (; index < query.length; index += 1) {
+  for (; index <= query.length; index += 1) {
     const character = query[index]
 
     if (character === ESCAPE) {
       index += 1
       const escapedCharacter = query[index]
       validateEscape(escapedCharacter, query, character, index)
-      token += escapedCharacter
+      tokenPart += escapedCharacter
       continue
     }
 
-    if (character === SEPARATOR) {
-      tokens.push(parseIndex(token))
-      token = ''
+    if (character === SEPARATOR || index === query.length) {
+      if (tokenPart !== '' || token.length === 0) {
+        const tokenPartA =
+          token.length === 0 && POSITIVE_INTEGER_REGEXP.test(tokenPart)
+            ? Number(tokenPart)
+            : tokenPart
+        token.push(tokenPartA)
+        tokenPart = ''
+      }
+
+      tokens.push(token)
+      token = []
       continue
     }
 
-    token += character
+    if (character === ANY) {
+      if (tokenPart !== '') {
+        token.push(tokenPart)
+        tokenPart = ''
+      }
+
+      token.push({ type: ANY_TYPE })
+      continue
+    }
+
+    tokenPart += character
   }
 
-  tokens.push(parseIndex(token))
   return tokens
 }
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
@@ -66,15 +87,15 @@ export const parse = function (query) {
 
 // eslint-disable-next-line max-params
 const validateEscape = function (escapedCharacter, query, character, index) {
-  if (escapedCharacter !== ESCAPE && escapedCharacter !== SEPARATOR) {
+  if (
+    escapedCharacter !== ESCAPE &&
+    escapedCharacter !== SEPARATOR &&
+    escapedCharacter !== ANY
+  ) {
     throw new Error(
-      `Invalid query "${query}": character ${character} at index ${index} must be followed by ${SEPARATOR} or ${ESCAPE}`,
+      `Invalid query "${query}": character ${character} at index ${index} must be followed by ${SEPARATOR}, ${ANY} or ${ESCAPE}`,
     )
   }
-}
-
-const parseIndex = function (token) {
-  return POSITIVE_INTEGER_REGEXP.test(token) ? Number(token) : token
 }
 
 const POSITIVE_INTEGER_REGEXP = /^\d+$/u
@@ -85,15 +106,23 @@ export const serialize = function (tokens) {
 }
 
 const serializeToken = function (token, index) {
-  if (typeof token !== 'string') {
-    return String(token)
-  }
-
-  if (index === 0 && token === '') {
+  if (index === 0 && token[0] === '') {
     return SEPARATOR
   }
 
-  return token.replace(UNESCAPED_CHARS_REGEXP, '\\$&')
+  return token.map(serializeTokenPart).join('')
+}
+
+const serializeTokenPart = function (tokenPart) {
+  if (Number.isInteger(tokenPart)) {
+    return String(tokenPart)
+  }
+
+  if (isPlainObj(tokenPart)) {
+    return ANY
+  }
+
+  return tokenPart.replace(UNESCAPED_CHARS_REGEXP, '\\$&')
 }
 
 export const isParent = function (parentQuery, childQuery) {
@@ -101,6 +130,7 @@ export const isParent = function (parentQuery, childQuery) {
 }
 
 const ESCAPE = '\\'
-export const ANY = '*'
 export const SEPARATOR = '.'
-const UNESCAPED_CHARS_REGEXP = /[\\.]/gu
+export const ANY = '*'
+const ANY_TYPE = 'any'
+const UNESCAPED_CHARS_REGEXP = /[\\.*]/gu
