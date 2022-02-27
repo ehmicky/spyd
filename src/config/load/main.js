@@ -89,9 +89,8 @@ export const loadConfig = async function (
   { config: configOpt, ...configContents },
   base,
 ) {
-  const configPaths = await normalizeConfigProp(configOpt, base)
-  const parentConfigInfos = await Promise.all(configPaths.map(loadConfigPath))
   const configWithBases = addBases(configContents, base)
+  const parentConfigInfos = await getParentConfigInfos(configOpt, base)
   const configWithBasesA = deepMerge([
     ...parentConfigInfos.map(getConfigWithBases),
     configWithBases,
@@ -100,7 +99,12 @@ export const loadConfig = async function (
   return { configWithBases: configWithBasesA, bases }
 }
 
-const loadConfigPath = async function (configPath) {
+const getParentConfigInfos = async function (configOpt, base) {
+  const configPaths = await normalizeConfigProp(configOpt, base)
+  return await Promise.all(configPaths.map(getParentConfigInfo))
+}
+
+const getParentConfigInfo = async function (configPath) {
   const base = dirname(configPath)
   const configContents = await loadConfigContents(configPath)
   const configContentsA = addDefaultConfig(configContents)
