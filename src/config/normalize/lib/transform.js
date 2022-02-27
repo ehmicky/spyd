@@ -49,7 +49,7 @@ const applyCommonMoves = function (newValue, oldValue, name) {
     return
   }
 
-  const newProp = commonMove.getNewPath(newValue)
+  const newProp = commonMove.getNewProp(newValue)
   return { newProp: `${name}.${newProp}`, value: newValue }
 }
 
@@ -63,7 +63,7 @@ const COMMON_MOVES = [
         newValue[0] === oldValue
       )
     },
-    getNewPath() {
+    getNewProp() {
       return '0'
     },
   },
@@ -76,7 +76,7 @@ const COMMON_MOVES = [
         newValue[Object.keys(newValue)[0]] === oldValue
       )
     },
-    getNewPath(newValue) {
+    getNewProp(newValue) {
       return Object.keys(newValue)[0]
     },
   },
