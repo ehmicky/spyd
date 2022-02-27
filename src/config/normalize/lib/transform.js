@@ -38,7 +38,7 @@ const isTransformMove = function (transformReturn) {
 }
 
 const getTransformMove = function ({ newProp, value }, name) {
-  return { newProp: `${name}.${newProp}`, value }
+  return { newName: `${name}.${newProp}`, value }
 }
 
 // Automatically detect some common type of moves
@@ -50,7 +50,7 @@ const applyCommonMoves = function (newValue, oldValue, name) {
   }
 
   const newProp = commonMove.getNewProp(newValue)
-  return { newProp: `${name}.${newProp}`, value: newValue }
+  return { newName: `${name}.${newProp}`, value: newValue }
 }
 
 const COMMON_MOVES = [

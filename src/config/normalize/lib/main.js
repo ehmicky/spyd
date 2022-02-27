@@ -72,10 +72,10 @@ const applyPropRule = async function (
   const {
     value: newValue,
     name: newName = name,
-    newProps = [],
+    newNames = [],
   } = await applyRule(rule, value, opts)
   const configA = setConfigValue({ config, name, newName, newValue })
-  const movesA = addMoves(moves, newProps, name)
+  const movesA = addMoves(moves, newNames, name)
   return { config: configA, moves: movesA }
 }
 
