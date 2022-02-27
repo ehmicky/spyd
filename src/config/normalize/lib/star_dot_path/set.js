@@ -7,23 +7,28 @@ import { maybeParse } from './parsing/parse.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPath, setValue) {
+  return transform(target, queryOrPath, () => setValue)
+}
+
+// Same but using a function returning the value to set
+export const transform = function (target, queryOrPath, transformFunc) {
   const nodes = maybeParse(queryOrPath)
   const entries = listEntries(target, nodes)
   return entries.reduce(
-    (targetA, { path }) => setProp(targetA, 0, { path, setValue }),
+    (targetA, { path }) => setProp(targetA, 0, { path, transformFunc }),
     target,
   )
 }
 
-const setProp = function (value, index, { path, setValue }) {
+const setProp = function (value, index, { path, transformFunc }) {
   if (index === path.length) {
-    return setValue
+    return transformFunc()
   }
 
   const key = path[index]
   const childValue = value[key]
   const newIndex = index + 1
-  const newChildValue = setProp(childValue, newIndex, { path, setValue })
+  const newChildValue = setProp(childValue, newIndex, { path, transformFunc })
   return setNewChildValue(value, key, newChildValue)
 }
 
