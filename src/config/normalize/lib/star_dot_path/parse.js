@@ -38,7 +38,7 @@ export const parse = function (query) {
 
   const tokens = []
   let token = []
-  let tokenPart = ''
+  let part = ''
   let index = query[0] === SEPARATOR ? 1 : 0
 
   for (; index <= query.length; index += 1) {
@@ -48,18 +48,18 @@ export const parse = function (query) {
       index += 1
       const escapedCharacter = query[index]
       validateEscape(escapedCharacter, query, character, index)
-      tokenPart += escapedCharacter
+      part += escapedCharacter
       continue
     }
 
     if (character === SEPARATOR || index === query.length) {
-      if (tokenPart !== '' || token.length === 0) {
-        const tokenPartA =
-          token.length === 0 && POSITIVE_INTEGER_REGEXP.test(tokenPart)
-            ? Number(tokenPart)
-            : tokenPart
-        token.push(tokenPartA)
-        tokenPart = ''
+      if (part !== '' || token.length === 0) {
+        const partA =
+          token.length === 0 && POSITIVE_INTEGER_REGEXP.test(part)
+            ? Number(part)
+            : part
+        token.push(partA)
+        part = ''
       }
 
       tokens.push(token)
@@ -68,16 +68,16 @@ export const parse = function (query) {
     }
 
     if (character === ANY) {
-      if (tokenPart !== '') {
-        token.push(tokenPart)
-        tokenPart = ''
+      if (part !== '') {
+        token.push(part)
+        part = ''
       }
 
       token.push({ type: ANY_TYPE })
       continue
     }
 
-    tokenPart += character
+    part += character
   }
 
   return tokens
@@ -110,19 +110,19 @@ const serializeToken = function (token, index) {
     return SEPARATOR
   }
 
-  return token.map(serializeTokenPart).join('')
+  return token.map(serializePart).join('')
 }
 
-const serializeTokenPart = function (tokenPart) {
-  if (Number.isInteger(tokenPart)) {
-    return String(tokenPart)
+const serializePart = function (part) {
+  if (Number.isInteger(part)) {
+    return String(part)
   }
 
-  if (isPlainObj(tokenPart)) {
+  if (isPlainObj(part)) {
     return ANY
   }
 
-  return tokenPart.replace(UNESCAPED_CHARS_REGEXP, '\\$&')
+  return part.replace(UNESCAPED_CHARS_REGEXP, '\\$&')
 }
 
 export const isParent = function (parentQuery, childQuery) {
