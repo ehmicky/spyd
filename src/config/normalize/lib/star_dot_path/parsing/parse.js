@@ -18,13 +18,14 @@ import { ESCAPE, SEPARATOR, ANY, ANY_TOKEN } from './special.js'
 //  - Object property as a string or symbol
 //  - Array index as a number or string
 //  - `Symbol.for('*')` for wildcards
+//     - We use symbols as it allows using dynamic strings without injection
+//       risk
 //  - An array of the above
 // We allow passing an array of tokens instead of a query string:
 //  - This is sometimes more convenient
 //  - Also, this allows property names to include special characters (dots,
 //    brackets, star) or to be symbols
-//  - This removes the need for an escape character with the string syntax
-//    (array of property names should be used instead)
+//  - This removes the need for escaping
 // TODO: do not recurse over `__proto__`, `prototype` or `constructor`
 export const maybeParse = function (queryOrPath) {
   return Array.isArray(queryOrPath)
