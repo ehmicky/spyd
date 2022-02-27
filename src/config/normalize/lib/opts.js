@@ -1,6 +1,6 @@
 import { getCwd } from './cwd.js'
 import { applyMoves } from './move.js'
-import { appendParentsToName } from './parents.js'
+import { appendParentToName } from './parent.js'
 import { getPrefix, DEFAULT_PREFIX } from './prefix.js'
 import { parse } from './prop_path/parse.js'
 
@@ -12,22 +12,22 @@ export const getOpts = async function ({
   context,
   cwd,
   prefix,
-  parents,
+  parent,
   example,
   moves,
 }) {
   const path = parse(name)
   const funcOpts = { name, path, config, context }
   const opts = { funcOpts, example, prefix: DEFAULT_PREFIX }
-  const optsA = await computeOriginalName(opts, moves, parents)
+  const optsA = await computeOriginalName(opts, moves, parent)
   const optsB = await computePrefix(optsA, prefix)
   const optsC = await computeCwd(optsB, cwd)
   return optsC
 }
 
-const computeOriginalName = async function (opts, moves, parents) {
+const computeOriginalName = async function (opts, moves, parent) {
   const originalName = applyMoves(moves, opts.funcOpts.name)
-  const originalNameA = await appendParentsToName(parents, originalName, opts)
+  const originalNameA = await appendParentToName(parent, originalName, opts)
   const originalPath = parse(originalNameA)
   return {
     ...opts,

@@ -37,7 +37,7 @@ export const normalizePluginConfig = async function ({
     return pluginConfig
   }
 
-  const parents = getParents.bind(undefined, unmergedConfig, name)
+  const parent = getParent.bind(undefined, unmergedConfig, name)
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
     item,
@@ -45,7 +45,7 @@ export const normalizePluginConfig = async function ({
     context,
     cwd,
     plugin,
-    parents,
+    parent,
   })
   const pluginConfigB = await normalizeSpecificConfig({
     pluginConfig: pluginConfigA,
@@ -53,13 +53,13 @@ export const normalizePluginConfig = async function ({
     pluginConfigRules,
     context,
     cwd,
-    parents,
+    parent,
   })
   return pluginConfigB
 }
 
-// When the value was merged due to `sharedConfig`, ensure `parents` is correct
-const getParents = function (unmergedConfig, name, { path }) {
+// When the value was merged due to `sharedConfig`, ensure `parent` is correct
+const getParent = function (unmergedConfig, name, { path }) {
   return has(unmergedConfig, path) ? name : ''
 }
 
@@ -70,12 +70,12 @@ const normalizeSharedConfig = async function ({
   context,
   cwd,
   plugin,
-  parents,
+  parent,
 }) {
   const dummyRules = getDummyRules(pluginConfigRules)
   return await safeNormalizeConfig(pluginConfig, [...item, ...dummyRules], {
     context: { ...context, plugin },
-    parents,
+    parent,
     cwd,
     UserErrorType: ConsumerError,
     SystemErrorType: UserError,
@@ -88,7 +88,7 @@ const normalizeSpecificConfig = async function ({
   pluginConfigRules = [],
   context,
   cwd,
-  parents,
+  parent,
 }) {
   const dummyRules = getDummyRules(item)
   return await safeNormalizeConfig(
@@ -96,7 +96,7 @@ const normalizeSpecificConfig = async function ({
     [...dummyRules, ...pluginConfigRules],
     {
       context,
-      parents,
+      parent,
       cwd,
       UserErrorType: ConsumerError,
       SystemErrorType: PluginError,

@@ -21,14 +21,14 @@ export const validateAndModify = async function ({
 
   const valueA = await resolvePath({ value, path, glob, opts })
   await validateValue(valueA, validate, opts)
-  const { value: valueB, newPath } = await transformValue(
+  const { value: valueB, newProp } = await transformValue(
     valueA,
     transform,
     opts,
   )
   const name = await renameProp(valueB, rename, opts)
-  const newPaths = [newPath, name].filter(Boolean)
-  return { value: valueB, name, newPaths }
+  const newProps = [newProp, name].filter(Boolean)
+  return { value: valueB, name, newProps }
 }
 
 // Apply `required(opts)` which throws if `true` and value is `undefined`

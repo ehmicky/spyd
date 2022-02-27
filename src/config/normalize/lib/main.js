@@ -24,7 +24,7 @@ import { normalizeRule } from './rule.js'
 export const normalizeConfigProps = async function (
   config,
   rules,
-  { context = {}, loose = false, cwd, prefix, parents = '' } = {},
+  { context = {}, loose = false, cwd, prefix, parent = '' } = {},
 ) {
   const rulesA = rules.map(normalizeRule)
 
@@ -32,7 +32,7 @@ export const normalizeConfigProps = async function (
     const { config: configB } = await pReduce(
       rulesA,
       (memo, rule) =>
-        applyRuleDeep(memo, { rule, context, cwd, prefix, parents }),
+        applyRuleDeep(memo, { rule, context, cwd, prefix, parent }),
       { config, moves: [] },
     )
     return cleanObject(configB)
@@ -44,20 +44,20 @@ export const normalizeConfigProps = async function (
 
 const applyRuleDeep = async function (
   { config, moves },
-  { rule, rule: { name: query }, context, cwd, prefix, parents },
+  { rule, rule: { name: query }, context, cwd, prefix, parent },
 ) {
   const props = Object.entries(list(config, query))
   return await pReduce(
     props,
     (memo, [name, value]) =>
-      applyPropRule(memo, { value, name, rule, context, cwd, prefix, parents }),
+      applyPropRule(memo, { value, name, rule, context, cwd, prefix, parent }),
     { config, moves },
   )
 }
 
 const applyPropRule = async function (
   { config, moves },
-  { value, name, rule, rule: { example }, context, cwd, prefix, parents },
+  { value, name, rule, rule: { example }, context, cwd, prefix, parent },
 ) {
   const opts = await getOpts({
     name,
@@ -65,20 +65,20 @@ const applyPropRule = async function (
     context,
     cwd,
     prefix,
-    parents,
+    parent,
     example,
     moves,
   })
   const {
     value: newValue,
     name: newName = name,
-    newPaths = [],
+    newProps = [],
   } = await applyRule(rule, value, opts)
   const configA = name === newName ? config : remove(config, name)
   const configB =
     newValue === undefined
       ? remove(configA, newName)
       : set(configA, newName, newValue)
-  const movesA = addMoves(moves, newPaths, opts.funcOpts.name)
+  const movesA = addMoves(moves, newProps, opts.funcOpts.name)
   return { config: configB, moves: movesA }
 }

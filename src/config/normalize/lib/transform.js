@@ -23,19 +23,22 @@ export const transformValue = async function (value, transform, opts) {
     : commonMoveReturn
 }
 
-// `transform()` can return a `{ newPath, value }` object to indicate the
-// property name has been moved
+// `transform()` can return a `{ newProp, value }` object to indicate the
+// property name has been moved.
+//  - It does not move the property.
+//  - Instead, it indicates it's been moved so error messages show the name
+//    of the property before being moved
 const isTransformMove = function (transformReturn) {
   return (
     isPlainObj(transformReturn) &&
-    typeof transformReturn.newPath === 'string' &&
-    transformReturn.newPath !== '' &&
+    typeof transformReturn.newProp === 'string' &&
+    transformReturn.newProp !== '' &&
     'value' in transformReturn
   )
 }
 
-const getTransformMove = function ({ newPath, value }, name) {
-  return { newPath: `${name}.${newPath}`, value }
+const getTransformMove = function ({ newProp, value }, name) {
+  return { newProp: `${name}.${newProp}`, value }
 }
 
 // Automatically detect some common type of moves
@@ -46,9 +49,8 @@ const applyCommonMoves = function (newValue, oldValue, name) {
     return
   }
 
-  const newPath = commonMove.getNewPath(newValue)
-  const newPathA = `${name}.${newPath}`
-  return { value: newValue, newPath: newPathA }
+  const newProp = commonMove.getNewPath(newValue)
+  return { newProp: `${name}.${newProp}`, value: newValue }
 }
 
 const COMMON_MOVES = [

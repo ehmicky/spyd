@@ -31,7 +31,7 @@ export const applyRule = async function (
   const {
     value: valueC,
     name,
-    newPaths,
+    newProps,
   } = await validateAndModify({
     value: valueB,
     path,
@@ -42,7 +42,7 @@ export const applyRule = async function (
     rename,
     opts,
   })
-  return { value: valueC, name, newPaths }
+  return { value: valueC, name, newProps }
 }
 
 // Apply `pick(value, opts)` which omits the current value if `false` is
