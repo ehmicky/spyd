@@ -29,7 +29,7 @@ export const normalizePluginConfig = async function ({
   pluginConfig: unmergedConfig,
   plugin,
   pluginConfigRules,
-  opts: { name, sharedConfig, context, cwd, item },
+  opts: { name, sharedConfig, sharedConfigName, context, cwd, item },
 }) {
   const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
 
@@ -37,7 +37,11 @@ export const normalizePluginConfig = async function ({
     return pluginConfig
   }
 
-  const parent = getParent.bind(undefined, unmergedConfig, name)
+  const parent = getParent.bind(undefined, {
+    unmergedConfig,
+    name,
+    sharedConfigName,
+  })
   const pluginConfigA = await normalizeSharedConfig({
     pluginConfig,
     item,
@@ -59,8 +63,11 @@ export const normalizePluginConfig = async function ({
 }
 
 // When the value was merged due to `sharedConfig`, ensure `parent` is correct
-const getParent = function (unmergedConfig, name, { originalPath }) {
-  return has(unmergedConfig, originalPath) ? name : ''
+const getParent = function (
+  { unmergedConfig, name, sharedConfigName },
+  { originalPath },
+) {
+  return has(unmergedConfig, originalPath) ? name : sharedConfigName
 }
 
 const normalizeSharedConfig = async function ({

@@ -23,6 +23,7 @@ export const normalizeSingleOpts = function ({
   shape,
   item,
   sharedConfig = {},
+  sharedConfigName = 'sharedConfig',
   context,
   cwd,
 }) {
@@ -38,6 +39,7 @@ export const normalizeSingleOpts = function ({
     shape,
     item,
     sharedConfig: sharedConfigA,
+    sharedConfigName,
     sharedPropNames,
     context,
     cwd,
