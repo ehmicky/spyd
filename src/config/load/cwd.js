@@ -33,7 +33,7 @@ import { get } from '../normalize/lib/prop_path/get.js'
 // We purposely use `originalPath` instead of `path` to ensure this works even
 // if the property is normalized.
 export const getDefaultBase = function (bases) {
-  return bases.length === 1 ? DEFAULT_VALUES_BASE : bases[bases.length - 2]
+  return bases.length === 1 ? DEFAULT_VALUES_BASE : bases[1]
 }
 
 // Base used to resolve file paths in default values when there is no config
