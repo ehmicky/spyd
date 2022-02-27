@@ -122,7 +122,8 @@ export const getPropCwd = function (
   return typeof base === 'string' ? base : defaultBase
 }
 
-const getBasePath = function (originalPath) {
+// Retrieve the path to the `*[Items]CwdBase` property
+export const getBasePath = function (originalPath) {
   const lastKey = originalPath[originalPath.length - 1]
 
   if (!Number.isInteger(lastKey)) {

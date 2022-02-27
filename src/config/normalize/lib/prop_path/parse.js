@@ -26,14 +26,19 @@ export const maybeParse = function (queryOrTokens) {
 }
 
 export const parse = function (query) {
-  return query === '' ? [] : query.split(SEPARATOR).map(getToken)
+  return query === '' ? [] : query.split(SEPARATOR).map(parseToken)
 }
 
-const getToken = function (token) {
+const parseToken = function (token) {
   return POSITIVE_INTEGER_REGEXP.test(token) ? Number(token) : token
 }
 
 const POSITIVE_INTEGER_REGEXP = /^\d+$/u
+
+// Inverse of `parse()`
+export const serialize = function (tokens) {
+  return tokens.map(String).join(SEPARATOR)
+}
 
 export const isParent = function (parentQuery, childQuery) {
   return childQuery.startsWith(`${parentQuery}${SEPARATOR}`)
