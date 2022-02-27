@@ -1,5 +1,8 @@
-import { listEntries } from './entries.js'
-import { maybeParse, ANY, isAnyPart, serialize, pathToTokens } from './parse.js'
+import { listEntries } from './entries/main.js'
+import { maybeParse } from './parsing/parse.js'
+import { pathToTokens } from './parsing/path.js'
+import { serialize } from './parsing/serialize.js'
+import { ANY, isAnyTokens } from './parsing/special.js'
 
 // Retrieve all properties in `target` matching a query string.
 // The return value is an object where the key is the path to each value.
@@ -18,13 +21,13 @@ const normalizeEntry = function ({ value, path }) {
 // Wildcards cannot be used.
 export const get = function (target, queryOrPropNames) {
   const tokens = maybeParse(queryOrPropNames)
-  validateWildcards(tokens)
+  validateAny(tokens)
   const [entry] = listEntries(target, tokens)
   return entry === undefined ? undefined : entry.value
 }
 
-const validateWildcards = function (tokens) {
-  if (tokens.some((token) => token.some(isAnyPart))) {
+const validateAny = function (tokens) {
+  if (isAnyTokens(tokens)) {
     throw new Error(
       `Cannot use wildcard "${ANY}" when using get(): please use list() instead.`,
     )

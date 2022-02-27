@@ -1,4 +1,5 @@
-import isPlainObj from 'is-plain-obj'
+import { pathToTokens } from './path.js'
+import { ESCAPE, SEPARATOR, ANY, createAnyPart } from './special.js'
 
 // Parse a query string into an array of tokens.
 // This is similar to JSON paths but:
@@ -75,7 +76,7 @@ export const parse = function (query) {
         part = ''
       }
 
-      token.push({ type: ANY_TYPE })
+      token.push(createAnyPart())
       continue
     }
 
@@ -101,64 +102,3 @@ const validateEscape = function (escapedCharacter, query, character, index) {
 }
 
 const POSITIVE_INTEGER_REGEXP = /^\d+$/u
-
-// Inverse of `parse()`
-export const serialize = function (tokens) {
-  return tokens.map(serializeToken).join(SEPARATOR)
-}
-
-const serializeToken = function (token, index) {
-  if (index === 0 && token[0] === '') {
-    return SEPARATOR
-  }
-
-  return token.map(serializePart).join('')
-}
-
-const serializePart = function (part) {
-  if (Number.isInteger(part)) {
-    return String(part)
-  }
-
-  if (isAnyPart(part)) {
-    return ANY
-  }
-
-  return part.replace(UNESCAPED_CHARS_REGEXP, '\\$&')
-}
-
-export const isAnyPart = function (part) {
-  return isPlainObj(part) && part.type === ANY_TYPE
-}
-
-export const isParent = function (parentQuery, childQuery) {
-  return childQuery.startsWith(`${parentQuery}${SEPARATOR}`)
-}
-
-const ESCAPE = '\\'
-const SEPARATOR = '.'
-export const ANY = '*'
-const ANY_TYPE = 'any'
-const UNESCAPED_CHARS_REGEXP = /[\\.*]/gu
-
-// From an array of property names to an array to tokens
-export const pathToTokens = function (path) {
-  return path.map(getPropNameToken)
-}
-
-const getPropNameToken = function (propName) {
-  return [propName]
-}
-
-// Inverse of `pathToTokens()`
-export const tokensToPath = function (tokens) {
-  return tokens.map(getTokenPropName)
-}
-
-const getTokenPropName = function (token) {
-  if (token.some(isAnyPart)) {
-    throw new Error(`Cannot use wildcard "${ANY}" when using tokensToPath().`)
-  }
-
-  return token[0]
-}

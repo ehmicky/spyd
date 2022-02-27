@@ -5,9 +5,12 @@ import { UserError } from '../../error/main.js'
 import { findValues } from '../../utils/recurse.js'
 import { addBases, getBasePath } from '../cwd.js'
 import { deepMerge, canRecurse } from '../merge.js'
-import { get, has } from '../normalize/lib/star_dot_path/get.js'
-import { serialize } from '../normalize/lib/star_dot_path/parse.js'
-import { set } from '../normalize/lib/star_dot_path/set.js'
+import {
+  get,
+  has,
+  serialize,
+  set,
+} from '../normalize/lib/star_dot_path/main.js'
 
 import { loadConfigContents } from './contents.js'
 import { normalizeConfigProp } from './normalize.js'

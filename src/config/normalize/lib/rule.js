@@ -1,4 +1,4 @@
-import { get } from './star_dot_path/get.js'
+import { get } from './star_dot_path/main.js'
 
 // Validate and normalize rules
 export const normalizeRule = function (

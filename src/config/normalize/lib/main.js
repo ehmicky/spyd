@@ -5,9 +5,8 @@ import { cleanObject } from '../../../utils/clean.js'
 import { applyRule } from './apply.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
-import { list } from './star_dot_path/get.js'
-import { set, remove } from './star_dot_path/set.js'
 import { normalizeRule } from './rule.js'
+import { list, set, remove } from './star_dot_path/main.js'
 import { addWarnings, logWarnings } from './warn.js'
 
 // Normalize configuration shape and do custom validation.

@@ -2,8 +2,8 @@ import omit from 'omit.js'
 
 import { setArray } from '../../../../utils/set.js'
 
-import { listEntries } from './entries.js'
-import { maybeParse } from './parse.js'
+import { listEntries } from './entries/main.js'
+import { maybeParse } from './parsing/parse.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPropNames, setValue) {
