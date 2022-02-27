@@ -101,5 +101,6 @@ export const isParent = function (parentQuery, childQuery) {
 }
 
 const ESCAPE = '\\'
+export const ANY = '*'
 export const SEPARATOR = '.'
 const UNESCAPED_CHARS_REGEXP = /[\\.]/gu

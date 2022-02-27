@@ -1,5 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
+import { ANY } from './parse.js'
+
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
 export const listEntries = function (target, tokens) {
@@ -11,7 +13,7 @@ const listTokenEntries = function (entries, token) {
 }
 
 const getTokenEntries = function ({ value, path }, token) {
-  return token === '*'
+  return token === ANY
     ? getWildcardEntries(value, path)
     : getKeyEntries(value, path, token)
 }

@@ -1,5 +1,5 @@
 import { listEntries } from './entries.js'
-import { maybeParse, SEPARATOR } from './parse.js'
+import { maybeParse, SEPARATOR, ANY } from './parse.js'
 
 // Retrieve all properties in `target` matching a query string.
 // The return value is an object where the key is the path to each value.
@@ -32,15 +32,15 @@ export const get = function (target, queryOrTokens) {
 }
 
 const validateWildcards = function (tokens) {
-  if (tokens.some(isWildcard)) {
+  if (tokens.some(isAny)) {
     throw new Error(
-      `Cannot use wildcard "*" when using get(): please use list() instead.`,
+      `Cannot use wildcard "${ANY}" when using get(): please use list() instead.`,
     )
   }
 }
 
-const isWildcard = function (token) {
-  return token === '*'
+const isAny = function (token) {
+  return token === ANY
 }
 
 // TODO: optimize performance by stopping at soon as one entry is found
