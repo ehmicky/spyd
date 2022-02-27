@@ -51,7 +51,9 @@ const normalizeLocationProp = {
 // URL instances are always absolute, so `cwd` resolution is not needed
 const normalizeFileUrlLocation = {
   validate(location) {
-    validateFileUrlScheme(location)
+    if (location.protocol !== 'file:') {
+      throw new Error('must use "file:" as a URL protocol.')
+    }
   },
   async transform(location) {
     const path = fileURLToPath(location)
@@ -59,12 +61,6 @@ const normalizeFileUrlLocation = {
     await validateRegularFile(path)
     return path
   },
-}
-
-const validateFileUrlScheme = function (location) {
-  if (location.protocol !== 'file:') {
-    throw new Error('must use "file:" as a URL protocol.')
-  }
 }
 
 const normalizeInlineLocation = {
@@ -75,24 +71,21 @@ const normalizeBuiltinLocation = {}
 
 const normalizePathLocation = {
   path: true,
-  async validate(location) {
-    await validateFileExists(location)
-    await validateRegularFile(location)
-  },
+  validate: [validateFileExists, validateRegularFile],
 }
 
-const normalizeModuleLocation = {
-  validate(value, { context: { modulePrefix } }) {
-    validateDefinedString(value)
-    validateHasModulePrefix(modulePrefix)
-  },
-  transform: resolveModuleLocation,
-}
-
-const validateHasModulePrefix = function (modulePrefix) {
+const validateHasModulePrefix = function (
+  value,
+  { context: { modulePrefix } },
+) {
   if (modulePrefix === undefined) {
     throw new Error('must start with . or / when it is a file path.')
   }
+}
+
+const normalizeModuleLocation = {
+  validate: [validateDefinedString, validateHasModulePrefix],
+  transform: resolveModuleLocation,
 }
 
 const NORMALIZE_LOCATIONS = {

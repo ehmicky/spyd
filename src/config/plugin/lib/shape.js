@@ -29,21 +29,6 @@ export const normalizeShape = async function ({
   )
 }
 
-const idProp = {
-  name: 'id',
-  required: true,
-  validate(id, { context: { locationType, originalLocation } }) {
-    validateDefinedString(id)
-    validateIdCharacters(id)
-    validateModuleLocation(id, locationType, originalLocation)
-  },
-  example(id, { context: { locationType, originalLocation } }) {
-    return MODULE_LOCATION_TYPES.has(locationType)
-      ? originalLocation
-      : 'module-name'
-  },
-}
-
 // We do not allow any delimiter characters such as . _ - nor uppercase letters
 // because:
 //  - the id is part of the npm package, which has strict validation rules
@@ -62,7 +47,10 @@ const PLUGIN_ID_REGEXP = /^[a-z][a-z\d]*$/u
 
 // When using a Node module, the exported `id` must match the `location`
 // specified by the user
-const validateModuleLocation = function (id, locationType, originalLocation) {
+const validateModuleLocation = function (
+  id,
+  { context: { locationType, originalLocation } },
+) {
   if (MODULE_LOCATION_TYPES.has(locationType) && originalLocation !== id) {
     throw new Error(`must be "${originalLocation}" to match the package name.`)
   }
@@ -70,6 +58,21 @@ const validateModuleLocation = function (id, locationType, originalLocation) {
 
 // Those types must have the same `plugin.id` as the user-specified `location`
 const MODULE_LOCATION_TYPES = new Set(['builtin', 'module'])
+
+const idProp = {
+  name: 'id',
+  required: true,
+  validate: [
+    validateDefinedString,
+    validateIdCharacters,
+    validateModuleLocation,
+  ],
+  example(id, { context: { locationType, originalLocation } }) {
+    return MODULE_LOCATION_TYPES.has(locationType)
+      ? originalLocation
+      : 'module-name'
+  },
+}
 
 const configPropName = {
   name: 'config.*.name',

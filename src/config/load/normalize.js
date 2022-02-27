@@ -24,11 +24,6 @@ const configProp = {
   transform: normalizeArray,
 }
 
-const validateConfig = async function (value) {
-  await validateFileExists(value)
-  await validateRegularFile(value)
-}
-
 const configPropAny = [
   {
     name: 'config.*',
@@ -37,7 +32,7 @@ const configPropAny = [
   },
   {
     name: 'config.*',
-    validate: validateConfig,
+    validate: [validateFileExists, validateRegularFile],
   },
 ]
 

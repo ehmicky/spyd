@@ -26,10 +26,7 @@ export const normalizePluginConfigTop = async function (
 const normalizeTop = {
   name: '',
   required: true,
-  validate(value) {
-    validateObjectOrString(value)
-    validateJson(value)
-  },
+  validate: [validateObjectOrString, validateJson],
   example: getExampleLocation,
   transform(value, { context: { pluginProp } }) {
     return normalizeObjectOrString(value, pluginProp)
