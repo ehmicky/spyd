@@ -13,7 +13,7 @@ import { safeNormalizeConfig } from './normalize.js'
 
 // Normalize `pluginConfig[pluginProp]`
 export const normalizeLocation = async function ({
-  opts: { cwd, builtins, modulePrefix },
+  opts: { cwd, builtins, modulePrefix, prefix },
   originalLocation,
   locationName,
   locationType,
@@ -22,6 +22,7 @@ export const normalizeLocation = async function ({
   return await safeNormalizeConfig(originalLocation, locationRules, {
     context: { locationType, builtins, modulePrefix },
     cwd,
+    prefix,
     parent: locationName,
     UserErrorType: ConsumerError,
     SystemErrorType: CoreError,

@@ -2,6 +2,7 @@ import { normalizeReporters } from '../../report/config/main.js'
 import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin/main.js'
 import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin/main.js'
 import { removeEmptyValues } from '../empty.js'
+import { PREFIX } from '../normalize/main.js'
 
 import { handlePluginsError } from './error.js'
 import { getPlugins } from './lib/main.js'
@@ -46,6 +47,7 @@ const normalizePluginConfigs = async function ({
       sharedConfigName: '',
       context,
       cwd,
+      prefix: PREFIX,
     })
     const pluginInfosA = pluginInfos.map(normalizePluginInfo)
     return { [name]: pluginInfosA }

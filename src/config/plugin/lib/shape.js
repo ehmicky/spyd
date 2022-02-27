@@ -14,6 +14,7 @@ export const normalizeShape = async function ({
 }) {
   const pluginA = await safeNormalizeConfig(plugin, COMMON_SHAPE_RULES, {
     context: { sharedPropNames, locationType, originalLocation },
+    prefix: PLUGIN_PREFIX,
     UserErrorType: PluginError,
     SystemErrorType: CoreError,
   })
@@ -25,9 +26,16 @@ export const normalizeShape = async function ({
   return await safeNormalizeConfig(
     pluginA,
     [...getDummyRules(COMMON_SHAPE_RULES), ...shape],
-    { context, UserErrorType: PluginError, SystemErrorType: UserError },
+    {
+      context,
+      prefix: PLUGIN_PREFIX,
+      UserErrorType: PluginError,
+      SystemErrorType: UserError,
+    },
   )
 }
+
+const PLUGIN_PREFIX = 'Plugin property'
 
 // We do not allow any delimiter characters such as . _ - nor uppercase letters
 // because:

@@ -12,7 +12,7 @@ import { safeNormalizeConfig } from './normalize.js'
 // one if it uses the string shortcut syntax.
 export const normalizePluginConfigTop = async function (
   pluginConfig,
-  { name, cwd, pluginProp, builtins },
+  { name, cwd, pluginProp, builtins, prefix },
 ) {
   const locationName =
     typeof pluginConfig === 'string' ? name : `${name}.${pluginProp}`
@@ -20,6 +20,7 @@ export const normalizePluginConfigTop = async function (
     await safeNormalizeConfig(pluginConfig, [normalizeTop], {
       context: { pluginProp, builtins },
       cwd,
+      prefix,
       parent: name,
       UserErrorType: ConsumerError,
       SystemErrorType: CoreError,

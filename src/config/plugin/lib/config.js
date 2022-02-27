@@ -29,7 +29,7 @@ export const normalizePluginConfig = async function ({
   pluginConfig: unmergedConfig,
   plugin,
   pluginConfigRules,
-  opts: { name, sharedConfig, sharedConfigName, context, cwd, item },
+  opts: { name, sharedConfig, sharedConfigName, context, cwd, item, prefix },
 }) {
   const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
 
@@ -49,6 +49,7 @@ export const normalizePluginConfig = async function ({
     context,
     cwd,
     plugin,
+    prefix,
     parent,
   })
   const pluginConfigB = await normalizeSpecificConfig({
@@ -57,6 +58,7 @@ export const normalizePluginConfig = async function ({
     pluginConfigRules,
     context,
     cwd,
+    prefix,
     parent,
   })
   return pluginConfigB
@@ -77,11 +79,13 @@ const normalizeSharedConfig = async function ({
   context,
   cwd,
   plugin,
+  prefix,
   parent,
 }) {
   const dummyRules = getDummyRules(pluginConfigRules)
   return await safeNormalizeConfig(pluginConfig, [...item, ...dummyRules], {
     context: { ...context, plugin },
+    prefix,
     parent,
     cwd,
     UserErrorType: ConsumerError,
@@ -95,6 +99,7 @@ const normalizeSpecificConfig = async function ({
   pluginConfigRules = [],
   context,
   cwd,
+  prefix,
   parent,
 }) {
   const dummyRules = getDummyRules(item)
@@ -103,6 +108,7 @@ const normalizeSpecificConfig = async function ({
     [...dummyRules, ...pluginConfigRules],
     {
       context,
+      prefix,
       parent,
       cwd,
       UserErrorType: ConsumerError,
