@@ -92,10 +92,10 @@ export const getConfigInfos = async function (
   const configWithBases = addBases(configContents, base)
   const parentConfigInfos = await getParentConfigInfos(configOpt, base)
   const configWithBasesA = deepMerge([
-    ...parentConfigInfos.map(({ configWithBases }) => configWithBases),
+    ...parentConfigInfos.map(getConfigWithBases),
     configWithBases,
   ])
-  const bases = parentConfigInfos.flatMap(({ base }) => base)
+  const bases = parentConfigInfos.map(getBase)
   return { configWithBases: configWithBasesA, bases }
 }
 
@@ -119,4 +119,12 @@ const addDefaultConfig = function ({
   ...configContents
 }) {
   return { ...configContents, config: configOpt }
+}
+
+const getConfigWithBases = function ({ configWithBases }) {
+  return configWithBases
+}
+
+const getBase = function ({ base }) {
+  return base
 }
