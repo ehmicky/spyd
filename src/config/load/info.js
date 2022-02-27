@@ -98,9 +98,9 @@ const getParentConfigInfos = async function (configOpt, base) {
 }
 
 const loadConfigPath = async function (configPath) {
+  const base = dirname(configPath)
   const configContents = await loadConfigContents(configPath)
   const configContentsA = addDefaultConfig(configContents)
-  const base = dirname(configPath)
   return await getConfigInfos(configContentsA, base)
 }
 
