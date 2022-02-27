@@ -60,19 +60,13 @@ export const CLI_FLAGS_BASE = '.'
 //  - Items bases are kept in a separate base property on the parent object,
 //    since using sibling properties on an array is not possible.
 export const addBases = function (configContents, base) {
-  return recurseValues(
-    configContents,
-    (value) => addBaseProps(value, base),
-    canRecurse,
-  )
+  return recurseBaseProps(configContents, (value) => addBaseProps(value, base))
 }
 
 const addBaseProps = function (value, base) {
-  return shouldAddBaseProps(value)
-    ? Object.fromEntries(
-        Object.entries(value).flatMap(addBaseProp.bind(undefined, base)),
-      )
-    : value
+  return Object.fromEntries(
+    Object.entries(value).flatMap(addBaseProp.bind(undefined, base)),
+  )
 }
 
 const addBaseProp = function (base, [key, value]) {
@@ -89,19 +83,27 @@ const addBaseProp = function (base, [key, value]) {
 
 // Remove the base properties after they've been used
 export const removeBases = function (configWithBases) {
-  return recurseValues(configWithBases, removeBaseProps, canRecurse)
+  return recurseBaseProps(configWithBases, removeBaseProps)
 }
 
 const removeBaseProps = function (value) {
-  return shouldAddBaseProps(value) ? filterObj(value, isNotBaseProp) : value
+  return filterObj(value, isNotBaseProp)
 }
 
 const isNotBaseProp = function (key) {
   return !key.endsWith(BASE_KEY_SUFFIX) && !key.endsWith(BASE_ITEMS_SUFFIX)
 }
 
-const shouldAddBaseProps = function (value) {
-  return canRecurse(value) && !Array.isArray(value)
+const recurseBaseProps = function (configObject, mapper) {
+  return recurseValues(
+    configObject,
+    (value) => mapBaseProps(value, mapper),
+    canRecurse,
+  )
+}
+
+const mapBaseProps = function (value, mapper) {
+  return canRecurse(value) && !Array.isArray(value) ? mapper(value) : value
 }
 
 const BASE_KEY_SUFFIX = 'CwdBase'
