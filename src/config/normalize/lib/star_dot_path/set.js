@@ -2,7 +2,7 @@ import omit from 'omit.js'
 
 import { setArray } from '../../../../utils/set.js'
 
-import { listEntries } from './entries/main.js'
+import { listFullEntries } from './entries/main.js'
 import { maybeParse } from './parsing/parse.js'
 
 // Set a value to one or multiple properties in `target` using a query string
@@ -13,29 +13,33 @@ export const set = function (target, queryOrPath, setValue) {
 // Same but using a function returning the value to set
 export const transform = function (target, queryOrPath, transformFunc) {
   const nodes = maybeParse(queryOrPath)
-  const entries = listEntries(target, nodes)
+  const entries = listFullEntries(target, nodes)
   return entries.reduce(
-    (targetA, { path }) => setProp(targetA, 0, { path, transformFunc }),
+    (targetA, entry) => setProp(targetA, 0, { entry, transformFunc }),
     target,
   )
 }
 
-const setProp = function (value, index, { path, transformFunc }) {
+const setProp = function (
+  target,
+  index,
+  { entry, entry: { path }, transformFunc },
+) {
   if (index === path.length) {
-    return transformFunc()
+    return transformFunc({ value: entry.value, path, query: entry.query })
   }
 
   const key = path[index]
-  const childValue = value[key]
+  const childValue = target[key]
   const newIndex = index + 1
-  const newChildValue = setProp(childValue, newIndex, { path, transformFunc })
-  return setNewChildValue(value, key, newChildValue)
+  const newChildValue = setProp(childValue, newIndex, { entry, transformFunc })
+  return setNewChildValue(target, key, newChildValue)
 }
 
 // Delete one or multiple properties in `target` using a query string
 export const remove = function (target, queryOrPath) {
   const nodes = maybeParse(queryOrPath)
-  const entries = listEntries(target, nodes)
+  const entries = listFullEntries(target, nodes)
   return entries.reduce(
     (targetA, { path }) => removeProp(targetA, 0, path),
     target,

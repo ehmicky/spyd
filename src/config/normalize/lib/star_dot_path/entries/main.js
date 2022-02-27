@@ -1,11 +1,16 @@
 import isPlainObj from 'is-plain-obj'
 
+import { serialize } from '../parsing/serialize.js'
 import { ANY_TOKEN } from '../parsing/special.js'
 
 import { getComplexEntries } from './complex.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
+export const listFullEntries = function (target, nodes) {
+  return listEntries(target, nodes).map(normalizeEntry)
+}
+
 export const listEntries = function (target, nodes) {
   return nodes.reduce(listNodeEntries, [{ value: target, path: [] }])
 }
@@ -53,4 +58,9 @@ const getKeyEntries = function (value, path, token) {
   return Array.isArray(value) || isPlainObj(value)
     ? [{ value: value[token], path: [...path, token] }]
     : []
+}
+
+const normalizeEntry = function ({ value, path }) {
+  const query = serialize(path)
+  return { value, path, query }
 }

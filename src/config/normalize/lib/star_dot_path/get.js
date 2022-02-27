@@ -1,17 +1,11 @@
-import { listEntries } from './entries/main.js'
+import { listFullEntries, listEntries } from './entries/main.js'
 import { maybeParse } from './parsing/parse.js'
-import { serialize } from './parsing/serialize.js'
 
 // Retrieve all properties in `target` matching a query string.
 export const list = function (target, queryOrPath) {
   const nodes = maybeParse(queryOrPath)
-  const entries = listEntries(target, nodes)
-  return entries.map(normalizeEntry)
-}
-
-const normalizeEntry = function ({ value, path }) {
-  const query = serialize(path)
-  return { value, path, query }
+  const entries = listFullEntries(target, nodes)
+  return entries
 }
 
 // Retrieve a single property's value in `target` matching a query string.
