@@ -5,7 +5,7 @@ import { list, isParent, set } from '../../normalize/lib/star_dot_path/main.js'
 export const getSharedConfig = function (sharedConfig, item = []) {
   const sharedPropNames = getSharedConfigPropNames(item)
   const sharedConfigProps = sharedPropNames.flatMap((sharedPropName) =>
-    Object.entries(list(sharedConfig, sharedPropName)),
+    list(sharedConfig, sharedPropName),
   )
   const sharedConfigA = sharedConfigProps.reduce(addSharedConfigProp, {})
   return { sharedConfig: sharedConfigA, sharedPropNames }
@@ -28,6 +28,6 @@ const hasNoParent = function (nameA, indexA, names) {
   )
 }
 
-const addSharedConfigProp = function (sharedConfig, [path, value]) {
+const addSharedConfigProp = function (sharedConfig, { path, value }) {
   return set(sharedConfig, path, value)
 }

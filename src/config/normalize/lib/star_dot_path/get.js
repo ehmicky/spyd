@@ -3,16 +3,15 @@ import { maybeParse } from './parsing/parse.js'
 import { serialize } from './parsing/serialize.js'
 
 // Retrieve all properties in `target` matching a query string.
-// The return value is an object where the key is the path to each value.
 export const list = function (target, queryOrPath) {
   const nodes = maybeParse(queryOrPath)
   const entries = listEntries(target, nodes)
-  return Object.fromEntries(entries.map(normalizeEntry))
+  return entries.map(normalizeEntry)
 }
 
 const normalizeEntry = function ({ value, path }) {
   const query = serialize(path)
-  return [query, value]
+  return { value, path, query }
 }
 
 // Retrieve a single property's value in `target` matching a query string.

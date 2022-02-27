@@ -47,10 +47,10 @@ const applyRuleDeep = async function (
   { config, moves, warnings },
   { rule, rule: { name: query }, context, cwd, prefix, parent },
 ) {
-  const props = Object.entries(list(config, query))
+  const props = list(config, query)
   return await pReduce(
     props,
-    (memo, [name, value]) =>
+    (memo, { value, query: name }) =>
       applyPropRule(memo, { value, name, rule, context, cwd, prefix, parent }),
     { config, moves, warnings },
   )
