@@ -12,27 +12,26 @@ import { resolveModuleLocation } from './module.js'
 import { safeNormalizeConfig } from './normalize.js'
 
 // Normalize `pluginConfig[pluginProp]`
-export const normalizeLocation = async function (
-  pluginConfig,
+export const normalizeLocation = async function ({
+  opts: { cwd, builtins, modulePrefix },
+  originalLocation,
+  locationName,
   locationType,
-  { name, cwd, pluginProp, builtins, modulePrefix },
-) {
-  const locationRules = getLocationRules(locationType, pluginProp)
-  const { [pluginProp]: location, ...pluginConfigA } =
-    await safeNormalizeConfig(pluginConfig, locationRules, {
-      context: { locationType, builtins, modulePrefix },
-      cwd,
-      parent: name,
-      UserErrorType: ConsumerError,
-      SystemErrorType: CoreError,
-    })
-  return { pluginConfig: pluginConfigA, location }
+}) {
+  const locationRules = getLocationRules(locationType)
+  return await safeNormalizeConfig(originalLocation, locationRules, {
+    context: { locationType, builtins, modulePrefix },
+    cwd,
+    parent: locationName,
+    UserErrorType: ConsumerError,
+    SystemErrorType: CoreError,
+  })
 }
 
-const getLocationRules = function (locationType, pluginProp) {
+const getLocationRules = function (locationType) {
   return [
-    { name: pluginProp, ...normalizeLocationProp },
-    { name: pluginProp, ...NORMALIZE_LOCATIONS[locationType] },
+    normalizeLocationProp,
+    { name: '', ...NORMALIZE_LOCATIONS[locationType] },
   ]
 }
 
@@ -44,6 +43,7 @@ export const getExampleLocation = function (value, { context: { builtins } }) {
 }
 
 const normalizeLocationProp = {
+  name: '',
   required: true,
   example: getExampleLocation,
 }

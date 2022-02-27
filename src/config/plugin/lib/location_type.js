@@ -23,17 +23,8 @@ import { isAbsolute } from 'path'
 //  - A file path starting with . or /
 //  - A `file:` URL
 //  - A Node module prefixed with `modulePrefix` (which is optional)
-export const getLocationInfo = function (
-  pluginConfig,
-  { pluginProp, builtins },
-) {
-  const originalLocation = pluginConfig[pluginProp]
-  const locationType = getLocationType(originalLocation, builtins)
-  return { originalLocation, locationType }
-}
-
 // eslint-disable-next-line complexity
-const getLocationType = function (originalLocation, builtins) {
+export const getLocationType = function (originalLocation, { builtins }) {
   if (originalLocation instanceof URL) {
     return 'fileUrl'
   }
