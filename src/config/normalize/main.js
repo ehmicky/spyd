@@ -11,10 +11,8 @@ export const normalizeConfig = async function (
   { UserErrorType = UserError, ...opts },
 ) {
   try {
-    const { value } = await normalizeConfigProps(config, rules, {
-      ...opts,
-      prefix: PREFIX,
-    })
+    const optsA = { ...opts, prefix: PREFIX }
+    const { value } = await normalizeConfigProps(config, rules, optsA)
     return value
   } catch (error) {
     throw handleConfigError(error, UserErrorType)
