@@ -4,7 +4,13 @@ import { callUserFunc } from './call.js'
 // It is exposed as `originalName` and `originalPath`.
 // It is a dot-delimited string optionally ending with `.`
 // By default, there are none.
-export const appendParentToName = async function (parent, originalName, opts) {
+export const appendParentToName = async function ({
+  parent,
+  opts,
+  opts: {
+    funcOpts: { originalName },
+  },
+}) {
   const parentA = await getParent(parent, opts)
   const dot = getDot(parentA, originalName)
   return `${parentA}${dot}${originalName}`

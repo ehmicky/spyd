@@ -17,9 +17,11 @@ export const getOpts = async function ({
   moves,
 }) {
   const path = parse(name)
-  const funcOpts = { name, path, config, context }
+  const originalName = applyMoves(moves, name)
+  const originalPath = parse(originalName)
+  const funcOpts = { name, path, originalName, originalPath, config, context }
   const opts = { funcOpts, example, prefix: DEFAULT_PREFIX }
-  const optsA = await computeOriginalName(opts, moves, parent)
+  const optsA = await computeParent(opts, moves, parent)
   const optsB = await computePrefix(optsA, prefix)
   const optsC = await computeCwd(optsB, cwd)
   return optsC
@@ -32,14 +34,10 @@ export const getOpts = async function ({
 // This is in contrast to `name|path` which are the main properties, intended to
 // work with everything else, including `rule.name`, `rule.rename` and
 // `funcOpts.config`.
-const computeOriginalName = async function (opts, moves, parent) {
-  const originalName = applyMoves(moves, opts.funcOpts.name)
-  const originalNameA = await appendParentToName(parent, originalName, opts)
-  const originalPath = parse(originalNameA)
-  return {
-    ...opts,
-    funcOpts: { ...opts.funcOpts, originalName: originalNameA, originalPath },
-  }
+const computeParent = async function (opts, moves, parent) {
+  const originalName = await appendParentToName({ parent, opts })
+  const originalPath = parse(originalName)
+  return { ...opts, funcOpts: { ...opts.funcOpts, originalName, originalPath } }
 }
 
 const computePrefix = async function (opts, prefix) {

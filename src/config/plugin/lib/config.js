@@ -59,8 +59,8 @@ export const normalizePluginConfig = async function ({
 }
 
 // When the value was merged due to `sharedConfig`, ensure `parent` is correct
-const getParent = function (unmergedConfig, name, { path }) {
-  return has(unmergedConfig, path) ? name : ''
+const getParent = function (unmergedConfig, name, { originalPath }) {
+  return has(unmergedConfig, originalPath) ? name : ''
 }
 
 const normalizeSharedConfig = async function ({
