@@ -1,4 +1,4 @@
-import omit from 'omit.js'
+import omitLib from 'omit.js'
 
 import { setArray } from '../../../../utils/set.js'
 
@@ -38,15 +38,23 @@ const setProp = function (
 
 // Delete one or multiple properties in `target` using a query string
 export const remove = function (target, queryOrPath) {
+  return omit(target, queryOrPath, () => true)
+}
+
+export const omit = function (target, queryOrPath, condition) {
   const nodes = maybeParse(queryOrPath)
   const entries = listFullEntries(target, nodes)
   return entries.reduce(
-    (targetA, { path }) => removeProp(targetA, 0, path),
+    (targetA, entry) => removeProp(targetA, 0, { entry, condition }),
     target,
   )
 }
 
-const removeProp = function (value, index, path) {
+const removeProp = function (
+  value,
+  index,
+  { entry, entry: { path }, condition },
+) {
   const key = path[index]
   const childValue = value[key]
 
@@ -57,16 +65,16 @@ const removeProp = function (value, index, path) {
   const newIndex = index + 1
 
   if (newIndex === path.length) {
-    return removeValue(value, key)
+    return condition(entry) ? removeValue(value, key) : value
   }
 
-  const newChildValue = removeProp(childValue, newIndex, path)
+  const newChildValue = removeProp(childValue, newIndex, { entry, condition })
   return setNewChildValue(value, key, newChildValue)
 }
 
 const removeValue = function (value, key) {
   if (!Number.isInteger(key)) {
-    return omit.default(value, [key])
+    return omitLib.default(value, [key])
   }
 
   const newArray = setArray(value, key)
