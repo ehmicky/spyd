@@ -1,8 +1,8 @@
-import { pathToTokens } from './path.js'
+import { createAnyPart, createPropPart } from './node.js'
+import { pathToNodes } from './path.js'
 import { ESCAPE, SEPARATOR, ANY } from './special.js'
-import { createAnyPart, createPropPart } from './token.js'
 
-// Parse a query string into an array of tokens.
+// Parse a query string into an array of nodes.
 // This is similar to JSON paths but:
 //  - simpler, with fewer features
 //  - faster
@@ -17,18 +17,19 @@ import { createAnyPart, createPropPart } from './token.js'
 //    or `one..two` for `{ one: { "": { two: value } } }`
 //  - An empty string matches the root value
 //  - Backslashes can escape special characters: . * \
-// We allow passing an array of tokens instead of a string with the above syntax
+// We allow passing an array of property names instead of a string with the
+// above syntax
 //  - This is sometimes more convenient
 //  - Also, this allows property names to include special characters (dots,
 //    brackets, star) or to be symbols
 //  - This removes the need for an escape character with the string syntax
-//    (array of tokens should be used instead)
+//    (array of property names should be used instead)
 // TODO: add support for `**`, which should behave like: `` or `*` or `*/*` or
 // `*/*/*` and so on.
 // TODO: do not recurse over `__proto__`, `prototype` or `constructor`
 export const maybeParse = function (queryOrPropNames) {
   return Array.isArray(queryOrPropNames)
-    ? pathToTokens(queryOrPropNames)
+    ? pathToNodes(queryOrPropNames)
     : parse(queryOrPropNames)
 }
 
@@ -40,8 +41,8 @@ export const parse = function (query) {
     return []
   }
 
-  const tokens = []
-  let token = []
+  const nodes = []
+  let node = []
   let part = ''
   let index = query[0] === SEPARATOR ? 1 : 0
 
@@ -57,36 +58,36 @@ export const parse = function (query) {
     }
 
     if (character === SEPARATOR || index === query.length) {
-      if (part !== '' || token.length === 0) {
-        token.push(createPropPart(parseIndex(part, token)))
+      if (part !== '' || node.length === 0) {
+        node.push(createPropPart(parseIndex(part, node)))
         part = ''
       }
 
-      tokens.push(token)
-      token = []
+      nodes.push(node)
+      node = []
       continue
     }
 
     if (character === ANY) {
       if (part !== '') {
-        token.push(createPropPart(part))
+        node.push(createPropPart(part))
         part = ''
       }
 
-      token.push(createAnyPart())
+      node.push(createAnyPart())
       continue
     }
 
     part += character
   }
 
-  return tokens
+  return nodes
 }
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
    fp/no-mutation, fp/no-let, no-continue, fp/no-mutating-methods */
 
-const parseIndex = function (part, token) {
-  return token.length === 0 && POSITIVE_INTEGER_REGEXP.test(part)
+const parseIndex = function (part, node) {
+  return node.length === 0 && POSITIVE_INTEGER_REGEXP.test(part)
     ? Number(part)
     : part
 }

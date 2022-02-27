@@ -1,13 +1,13 @@
+import { isAnyPart, getPropPartValue } from './node.js'
 import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP } from './special.js'
-import { isAnyPart, getPropPartValue } from './token.js'
 
 // Inverse of `parse()`
-export const serialize = function (tokens) {
-  return tokens.map(serializeToken).join(SEPARATOR)
+export const serialize = function (nodes) {
+  return nodes.map(serializeNode).join(SEPARATOR)
 }
 
-const serializeToken = function (token, index) {
-  return token.map((part) => serializePart(part, index)).join('')
+const serializeNode = function (node, index) {
+  return node.map((part) => serializePart(part, index)).join('')
 }
 
 const serializePart = function (part, index) {

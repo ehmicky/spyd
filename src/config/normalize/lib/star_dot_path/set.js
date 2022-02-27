@@ -7,8 +7,8 @@ import { maybeParse } from './parsing/parse.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPropNames, setValue) {
-  const tokens = maybeParse(queryOrPropNames)
-  const entries = listEntries(target, tokens)
+  const nodes = maybeParse(queryOrPropNames)
+  const entries = listEntries(target, nodes)
   return entries.reduce(
     (targetA, { path }) => setProp(targetA, 0, { path, setValue }),
     target,
@@ -29,8 +29,8 @@ const setProp = function (value, index, { path, setValue }) {
 
 // Delete one or multiple properties in `target` using a query string
 export const remove = function (target, queryOrPropNames) {
-  const tokens = maybeParse(queryOrPropNames)
-  const entries = listEntries(target, tokens)
+  const nodes = maybeParse(queryOrPropNames)
+  const entries = listEntries(target, nodes)
   return entries.reduce(
     (targetA, { path }) => removeProp(targetA, 0, path),
     target,

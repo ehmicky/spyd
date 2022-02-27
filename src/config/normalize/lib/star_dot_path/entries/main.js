@@ -1,25 +1,25 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isAnyPart, getPropPartValue } from '../parsing/token.js'
+import { isAnyPart, getPropPartValue } from '../parsing/node.js'
 
 import { getComplexEntries } from './complex.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
-export const listEntries = function (target, tokens) {
-  return tokens.reduce(listTokenEntries, [{ value: target, path: [] }])
+export const listEntries = function (target, nodes) {
+  return nodes.reduce(listNodeEntries, [{ value: target, path: [] }])
 }
 
-const listTokenEntries = function (entries, token) {
-  return entries.flatMap((entry) => getTokenEntries(entry, token))
+const listNodeEntries = function (entries, node) {
+  return entries.flatMap((entry) => getNodeEntries(entry, node))
 }
 
-const getTokenEntries = function ({ value, path }, token) {
-  if (token.length > 1) {
-    return getComplexEntries(value, path, token)
+const getNodeEntries = function ({ value, path }, node) {
+  if (node.length > 1) {
+    return getComplexEntries(value, path, node)
   }
 
-  const [part] = token
+  const [part] = node
   return isAnyPart(part)
     ? getAnyEntries(value, path)
     : getKeyEntries(value, path, part)

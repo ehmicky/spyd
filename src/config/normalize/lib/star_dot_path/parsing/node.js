@@ -12,14 +12,14 @@ export const getPropPartValue = function ({ value }) {
 
 const PROP_TYPE = 'prop'
 
-// Check if at least one token has some ANY parts
-export const isAnyTokens = function (tokens) {
-  return tokens.some(isAnyToken)
+// Check if at least one node has some ANY parts
+export const isAnyNodes = function (nodes) {
+  return nodes.some(isAnyNode)
 }
 
-// Check if a token has some ANY parts
-export const isAnyToken = function (token) {
-  return token.some(isAnyPart)
+// Check if a node has some ANY parts
+export const isAnyNode = function (node) {
+  return node.some(isAnyPart)
 }
 
 // Check if a token part is ANY

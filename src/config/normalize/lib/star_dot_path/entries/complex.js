@@ -1,13 +1,13 @@
 import isPlainObj from 'is-plain-obj'
 
 // For queries which use * combined with other characters, e.g. `a.b*c`
-export const getComplexEntries = function (value, path, token) {
+export const getComplexEntries = function (value, path, node) {
   if (!isPlainObj(value)) {
     return []
   }
 
   return Object.entries(value)
-    .filter(([childKey]) => matchesToken(childKey, token))
+    .filter(([childKey]) => matchesNode(childKey, node))
     .map(([childKey, childValue]) => ({
       value: childValue,
       path: [...path, childKey],
@@ -17,27 +17,27 @@ export const getComplexEntries = function (value, path, token) {
 // Use imperative code for performance
 /* eslint-disable complexity, max-depth, fp/no-loops, fp/no-let, max-params,
    fp/no-mutation */
-const matchesToken = function (
+const matchesNode = function (
   childKey,
-  token,
+  node,
   childKeyIndex = 0,
-  tokenIndex = 0,
+  nodeIndex = 0,
 ) {
-  if (tokenIndex === token.length) {
+  if (nodeIndex === node.length) {
     return childKeyIndex === childKey.length
   }
 
-  const part = token[tokenIndex]
+  const part = node[nodeIndex]
 
   if (typeof part === 'string') {
     return (
       startsWith(childKey, part, childKeyIndex) &&
-      matchesToken(childKey, token, childKeyIndex + part.length, tokenIndex + 1)
+      matchesNode(childKey, node, childKeyIndex + part.length, nodeIndex + 1)
     )
   }
 
   for (let index = childKeyIndex; index <= childKey.length; index += 1) {
-    if (matchesToken(childKey, token, index, tokenIndex + 1)) {
+    if (matchesNode(childKey, node, index, nodeIndex + 1)) {
       return true
     }
   }

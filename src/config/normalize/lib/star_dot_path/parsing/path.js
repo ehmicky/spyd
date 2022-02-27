@@ -1,24 +1,24 @@
+import { isAnyNode, createPropPart, getPropPartValue } from './node.js'
 import { ANY } from './special.js'
-import { isAnyToken, createPropPart, getPropPartValue } from './token.js'
 
-// From an array of property names to an array to tokens
-export const pathToTokens = function (path) {
-  return path.map(getPropNameToken)
+// From an array of property names to an array to nodes
+export const pathToNodes = function (path) {
+  return path.map(getPropNameNode)
 }
 
-const getPropNameToken = function (propName) {
+const getPropNameNode = function (propName) {
   return [createPropPart(propName)]
 }
 
-// Inverse of `pathToTokens()`
-export const tokensToPath = function (tokens) {
-  return tokens.map(getTokenPropName)
+// Inverse of `pathToNodes()`
+export const nodesToPath = function (nodes) {
+  return nodes.map(getNodePropName)
 }
 
-const getTokenPropName = function (token) {
-  if (isAnyToken(token)) {
-    throw new Error(`Cannot use wildcard "${ANY}" when using tokensToPath().`)
+const getNodePropName = function (node) {
+  if (isAnyNode(node)) {
+    throw new Error(`Cannot use wildcard "${ANY}" when using nodesToPath().`)
   }
 
-  return getPropPartValue(token[0])
+  return getPropPartValue(node[0])
 }

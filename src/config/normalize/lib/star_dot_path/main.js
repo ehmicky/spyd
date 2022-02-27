@@ -1,6 +1,6 @@
 export { set, remove } from './set.js'
 export { list, get, has } from './get.js'
-export { pathToTokens, tokensToPath } from './parsing/path.js'
+export { pathToNodes, nodesToPath } from './parsing/path.js'
 export { isParent } from './parsing/parent.js'
 export { serialize } from './parsing/serialize.js'
 export { parse } from './parsing/parse.js'
