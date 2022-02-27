@@ -13,16 +13,12 @@ import { PluginError } from './error.js'
 export const importPlugin = async function (
   location,
   locationType,
-  { name, builtins, pluginProp },
+  { name, builtins },
 ) {
   try {
     return await IMPORTERS[locationType](location, builtins)
   } catch (error) {
-    throw wrapError(
-      error,
-      `Could not load "${name}.${pluginProp}"\n`,
-      PluginError,
-    )
+    throw wrapError(error, `Could not load "${name}"\n`, PluginError)
   }
 }
 
