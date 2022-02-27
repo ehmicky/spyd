@@ -1,6 +1,5 @@
-import { createAnyToken } from './node.js'
 import { pathToNodes } from './path.js'
-import { ESCAPE, SEPARATOR, ANY } from './special.js'
+import { ESCAPE, SEPARATOR, ANY, ANY_TOKEN } from './special.js'
 
 // Parse a query string into an array of nodes.
 // This is similar to JSON paths but:
@@ -74,7 +73,7 @@ export const parse = function (query) {
         chars = ''
       }
 
-      node.push(createAnyToken())
+      node.push(ANY_TOKEN)
       continue
     }
 

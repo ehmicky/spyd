@@ -1,3 +1,5 @@
+import { ANY_TOKEN } from './special.js'
+
 // Check if at least one node has some ANY tokens
 export const isAnyNodes = function (nodes) {
   return nodes.some(isAnyNode)
@@ -10,12 +12,5 @@ export const isAnyNode = function (node) {
 
 // Check if a token is ANY
 export const isAnyToken = function (token) {
-  return token.type === ANY_TYPE
+  return token === ANY_TOKEN
 }
-
-// Create an ANY token
-export const createAnyToken = function () {
-  return { type: ANY_TYPE }
-}
-
-const ANY_TYPE = 'any'
