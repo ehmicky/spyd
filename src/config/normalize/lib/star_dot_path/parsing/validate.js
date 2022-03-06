@@ -2,6 +2,7 @@ import { inspect } from 'util'
 
 import { isAnyToken } from './tokens/any.js'
 import { isIndexToken } from './tokens/array.js'
+import { isPropToken } from './tokens/prop.js'
 import { isRegExpToken } from './tokens/regexp.js'
 
 // Most methods accept both query and path syntaxes.
@@ -39,7 +40,7 @@ const validateToken = function (token, path) {
 
 const isValidToken = function (token) {
   return (
-    typeof token === 'string' ||
+    isPropToken(token) ||
     isIndexToken(token) ||
     isAnyToken(token) ||
     isRegExpToken(token)

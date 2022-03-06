@@ -1,8 +1,9 @@
 import { parse } from './parse.js'
 import { isAnyToken } from './tokens/any.js'
 import { isIndexToken, serializeIndexToken } from './tokens/array.js'
+import { serializePropToken } from './tokens/prop.js'
 import { isRegExpToken, serializeRegExpToken } from './tokens/regexp.js'
-import { SEPARATOR, ANY, escapeSpecialChars } from './tokens/special.js'
+import { SEPARATOR, ANY } from './tokens/special.js'
 
 // Inverse of `parse()`
 // When passing a query string, it is parsed and re-serialized to validate and
@@ -29,13 +30,5 @@ const serializeToken = function (token, index) {
     return serializeRegExpToken(token)
   }
 
-  return serializeStringToken(token, index)
-}
-
-const serializeStringToken = function (token, index) {
-  if (token === '' && index === 0) {
-    return SEPARATOR
-  }
-
-  return escapeSpecialChars(token)
+  return serializePropToken(token, index)
 }
