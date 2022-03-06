@@ -8,13 +8,13 @@ export const set = function (target, queryOrPath, value) {
   const path = parse(queryOrPath)
   const entries = listEntries(target, path)
   return entries.reduce(
-    (targetA, entry) =>
-      setEntry({ target: targetA, path: entry.path, value, index: 0 }),
+    (targetA, entry) => setEntry(targetA, entry.path, value, 0),
     target,
   )
 }
 
-const setEntry = function ({ target, path, value, index }) {
+// eslint-disable-next-line max-params
+const setEntry = function (target, path, value, index) {
   if (index === path.length) {
     return value
   }
@@ -22,12 +22,7 @@ const setEntry = function ({ target, path, value, index }) {
   const key = path[index]
   const { value: defaultedTarget } = handleMissingValue(target, key)
   const childTarget = defaultedTarget[key]
-  const childValue = setEntry({
-    target: childTarget,
-    path,
-    value,
-    index: index + 1,
-  })
+  const childValue = setEntry(childTarget, path, value, index + 1)
   return setValue(defaultedTarget, key, childValue)
 }
 
