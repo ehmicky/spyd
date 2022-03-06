@@ -66,7 +66,7 @@ const safeParseQuery = function (query) {
 
 // Use imperative logic for performance
 /* eslint-disable complexity, max-depth, max-statements, fp/no-loops,
-   fp/no-mutation, fp/no-mutating-methods, fp/no-let */
+   fp/no-mutation, fp/no-let */
 const parseQuery = function (query) {
   if (query === '') {
     return []
@@ -80,31 +80,41 @@ const parseQuery = function (query) {
     const char = query[index]
 
     if (char === ESCAPE) {
-      index += 1
-      state.chars += parseEscapedChar(query[index])
+      index = addEscapedChar(query, index, state)
     } else if (char === SEPARATOR || index === query.length) {
-      path.push(parseToken(state))
-      state.hasAny = false
-      state.hasMinus = false
-      state.hasRegExp = false
-      state.chars = ''
+      addToken(path, state)
     } else {
-      if (state.chars.length === 0) {
-        state.hasAny = state.hasAny || char === ANY
-        state.hasMinus = state.hasMinus || char === MINUS
-        state.hasRegExp = state.hasRegExp || char === REGEXP_DELIM
-      }
-
-      state.chars += char
+      addChar(char, state)
     }
   }
 
   return path
 }
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
-   fp/no-mutation, fp/no-mutating-methods, fp/no-let */
+   fp/no-mutation, fp/no-let */
 
-const parseToken = function (state) {
+const addEscapedChar = function (query, index, state) {
+  const indexA = index + 1
+  state.chars += parseEscapedChar(query[indexA])
+  return indexA
+}
+
+const addToken = function (path, state) {
   const tokenType = getStringTokenType(state)
-  return tokenType.parse(state.chars)
+  const token = tokenType.parse(state.chars)
+  path.push(token)
+  state.hasAny = false
+  state.hasMinus = false
+  state.hasRegExp = false
+  state.chars = ''
+}
+
+const addChar = function (char, state) {
+  if (state.chars.length === 0) {
+    state.hasAny = state.hasAny || char === ANY
+    state.hasMinus = state.hasMinus || char === MINUS
+    state.hasRegExp = state.hasRegExp || char === REGEXP_DELIM
+  }
+
+  state.chars += char
 }
