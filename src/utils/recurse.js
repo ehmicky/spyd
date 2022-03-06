@@ -8,20 +8,20 @@ import { mapValues } from './map.js'
 export const recurseValues = function (
   value,
   mapper,
-  canRecurseObj = isPlainObj,
+  isRecurseObject = isPlainObj,
   path = [],
 ) {
   const valueA = mapper(value, path)
 
   if (Array.isArray(valueA)) {
     return valueA.map((child, index) =>
-      recurseValues(child, mapper, canRecurseObj, [...path, index]),
+      recurseValues(child, mapper, isRecurseObject, [...path, index]),
     )
   }
 
-  if (canRecurseObj(valueA)) {
+  if (isRecurseObject(valueA)) {
     return mapValues(valueA, (child, key) =>
-      recurseValues(child, mapper, canRecurseObj, [...path, key]),
+      recurseValues(child, mapper, isRecurseObject, [...path, key]),
     )
   }
 
@@ -29,12 +29,12 @@ export const recurseValues = function (
 }
 
 // Find properties matching a specific condition
-export const findValues = function (value, condition, canRecurseObj) {
+export const findValues = function (value, condition, isRecurseObject) {
   const paths = []
   recurseValues(
     value,
     addPath.bind(undefined, { paths, condition }),
-    canRecurseObj,
+    isRecurseObject,
   )
   return paths
 }

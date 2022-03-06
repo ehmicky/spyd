@@ -48,7 +48,6 @@
     "indent-string": "^5.0.0",
     "inquirer": "^8.2.0",
     "is-interactive": "^2.0.0",
-    "is-mergeable-object": "^1.1.1",
     "is-plain-obj": "^4.0.0",
     "is-unicode-supported": "^1.1.0",
     "js-yaml": "^4.0.0",

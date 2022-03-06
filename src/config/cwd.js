@@ -2,7 +2,7 @@ import filterObj from 'filter-obj'
 
 import { recurseValues } from '../utils/recurse.js'
 
-import { canRecurse } from './merge.js'
+import { isRecurseObject } from './merge.js'
 import { get } from './normalize/lib/star_dot_path/main.js'
 
 // When resolving configuration relative file paths:
@@ -51,8 +51,6 @@ export const CLI_FLAGS_BASE = '.'
 // This ensures those properties work with deep merging:
 //  - As properties are deep merged, they base property will too, using the same
 //    merging logic
-//  - We use `is-mergeable-object` instead of `is-plain-obj` to mimick the
-//    merging logic.
 // Array properties:
 //  - Are recursed even though those are not recursively merged, since users
 //    might use `config#path` references as individual array elements.
@@ -97,12 +95,12 @@ const recurseBaseProps = function (configObject, mapper) {
   return recurseValues(
     configObject,
     (value) => mapBaseProps(value, mapper),
-    canRecurse,
+    isRecurseObject,
   )
 }
 
 const mapBaseProps = function (value, mapper) {
-  return canRecurse(value) && !Array.isArray(value) ? mapper(value) : value
+  return isRecurseObject(value) ? mapper(value) : value
 }
 
 const BASE_KEY_SUFFIX = 'CwdBase'

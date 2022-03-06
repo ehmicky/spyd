@@ -1,5 +1,5 @@
 import deepMergeLib from 'deepmerge'
-import isMergeableObject from 'is-mergeable-object'
+import isPlainObj from 'is-plain-obj'
 
 // Deeply merge several objects.
 // Used to merge:
@@ -7,21 +7,15 @@ import isMergeableObject from 'is-mergeable-object'
 //  - `spyd.*` with CLI flags
 //  - top-level `config` with plugin-specific one
 export const deepMerge = function (objects) {
-  return deepMergeLib.all(objects, {
-    arrayMerge,
-    isMergeableObject: canRecurse,
-  })
+  return deepMergeLib.all(objects, { isMergeableObject: isRecurseObject })
 }
 
-// Override arrays instead of concatenating.
+// This is the default value for `deepmerge@v5`.
+// Except we do not recurse on arrays, so that arrays are overridden instead of
+// being concatenated.
 // This includes array of objects as this is simpler for users.
-const arrayMerge = function (arrayA, arrayB) {
-  return arrayB
-}
-
-// This is the default value for `deepmerge`.
 // We expose it so other pieces of logic which need to work alongside the
 // merging logic can mimic it.
-export const canRecurse = function (value) {
-  return isMergeableObject(value)
+export const isRecurseObject = function (value) {
+  return isPlainObj(value)
 }

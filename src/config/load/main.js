@@ -4,7 +4,7 @@ import { dirname } from 'path'
 import { UserError } from '../../error/main.js'
 import { findValues } from '../../utils/recurse.js'
 import { addBases, getBasePath } from '../cwd.js'
-import { deepMerge, canRecurse } from '../merge.js'
+import { deepMerge, isRecurseObject } from '../merge.js'
 import {
   get,
   has,
@@ -151,7 +151,7 @@ const getBase = function ({ base }) {
 //  - Adding tasks to a shared configuration, to compare them
 //  - Changing a reporter's pluginConfig while keeping other reporters
 const replaceReferences = async function (configWithBases, base) {
-  const references = findValues(configWithBases, isReference, canRecurse)
+  const references = findValues(configWithBases, isReference, isRecurseObject)
   const referencesA = await Promise.all(
     references.map((reference) => resolveReference(reference, base)),
   )
