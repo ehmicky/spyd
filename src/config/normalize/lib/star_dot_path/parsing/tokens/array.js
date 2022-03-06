@@ -13,6 +13,16 @@
 // We allow negative indexes which query from the end
 //  - Including -0 which can be used to append values
 // At evaluation time, with a target value, we transtype correctly.
+// Check if token is an array index integer
+export const isIndexToken = function (token) {
+  return Number.isInteger(token)
+}
+
+// Serialize an array index token into a string
+export const serializeIndexToken = function (token) {
+  return Object.is(token, -0) ? '-0' : String(token)
+}
+
 export const convertIndexInteger = function (token) {
   return typeof token === 'string' && INTEGER_REGEXP.test(token)
     ? Number(token)
@@ -31,14 +41,4 @@ export const getArrayIndex = function (array, token) {
   return token > 0 || Object.is(token, +0)
     ? token
     : Math.max(array.length + token, 0)
-}
-
-// Check if token is an array index integer
-export const isIndexToken = function (token) {
-  return Number.isInteger(token)
-}
-
-// Serialize an array index token into a string
-export const serializeIndexToken = function (token) {
-  return Object.is(token, -0) ? '-0' : String(token)
 }
