@@ -1,5 +1,6 @@
 import { inspect } from 'util'
 
+import { isIndexToken } from './array.js'
 import { ANY_TOKEN } from './special.js'
 
 // Validate a path argument against syntax errors
@@ -25,11 +26,6 @@ const validateToken = function (token, path) {
 
 const isValidToken = function (token) {
   return typeof token === 'string' || isIndexToken(token) || token === ANY_TOKEN
-}
-
-// Check if token is an array index integer
-export const isIndexToken = function (token) {
-  return Number.isInteger(token)
 }
 
 const throwPathError = function (path, message) {

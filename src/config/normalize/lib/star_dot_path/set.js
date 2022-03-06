@@ -4,9 +4,9 @@ import { setArray } from '../../../../utils/set.js'
 
 import { listEntries } from './entries/main.js'
 import { isRecurseObject } from './entries/recurse.js'
+import { isIndexToken } from './parsing/array.js'
 import { parse } from './parsing/parse.js'
 import { pathHasAny } from './parsing/path.js'
-import { isIndexToken } from './parsing/validate.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPath, value) {

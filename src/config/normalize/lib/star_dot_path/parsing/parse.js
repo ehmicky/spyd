@@ -1,5 +1,6 @@
+import { convertIndexInteger } from './array.js'
 import { normalizePath } from './normalize.js'
-import { isQueryString, convertIndexInteger } from './path.js'
+import { isQueryString } from './path.js'
 import {
   ESCAPE,
   SEPARATOR,

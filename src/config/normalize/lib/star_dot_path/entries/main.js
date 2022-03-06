@@ -2,7 +2,7 @@ import {
   convertIndexInteger,
   convertIndexString,
   getArrayIndex,
-} from '../parsing/path.js'
+} from '../parsing/array.js'
 import { serialize } from '../parsing/serialize.js'
 import { ANY_TOKEN } from '../parsing/special.js'
 

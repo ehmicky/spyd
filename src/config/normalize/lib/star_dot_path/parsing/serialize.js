@@ -1,6 +1,6 @@
+import { isIndexToken } from './array.js'
 import { parse } from './parse.js'
 import { SEPARATOR, ANY, ANY_TOKEN, SPECIAL_CHARS_REGEXP } from './special.js'
-import { isIndexToken } from './validate.js'
 
 // Inverse of `parse()`
 // When passing a query string, it is parsed and re-serialized to validate and
