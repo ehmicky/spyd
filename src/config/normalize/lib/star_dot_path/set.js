@@ -1,9 +1,9 @@
-import isPlainObj from 'is-plain-obj'
 import omitLib from 'omit.js'
 
 import { setArray } from '../../../../utils/set.js'
 
 import { listEntries, normalizeEntry } from './entries/main.js'
+import { isObject } from './entries/recurse.js'
 import { maybeParse } from './parsing/parse.js'
 import { pathHasAny } from './parsing/path.js'
 
@@ -50,7 +50,7 @@ const setEntry = function (
 }
 
 const addDefaultTarget = function (target, key) {
-  if (isPlainObj(target) || Array.isArray(target)) {
+  if (isObject(target) || Array.isArray(target)) {
     return target
   }
 

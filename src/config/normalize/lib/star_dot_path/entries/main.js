@@ -1,9 +1,8 @@
-import isPlainObj from 'is-plain-obj'
-
 import { serialize } from '../parsing/serialize.js'
 import { ANY_TOKEN } from '../parsing/special.js'
 
 import { getComplexEntries } from './complex.js'
+import { isObject } from './recurse.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
@@ -39,7 +38,7 @@ const getAnyEntries = function (value, path) {
     }))
   }
 
-  if (isPlainObj(value)) {
+  if (isObject(value)) {
     return Object.entries(value).map(([childKey, childValue]) => ({
       value: childValue,
       path: [...path, childKey],
@@ -51,7 +50,7 @@ const getAnyEntries = function (value, path) {
 
 // For queries which do not use *, e.g. `a.b` or `a.1`
 const getKeyEntries = function (value, path, token) {
-  return Array.isArray(value) || isPlainObj(value)
+  return isObject(value) || Array.isArray(value)
     ? [{ value: value[token], path: [...path, token] }]
     : []
 }

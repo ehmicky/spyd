@@ -1,8 +1,8 @@
-import isPlainObj from 'is-plain-obj'
+import { isObject } from './recurse.js'
 
 // For queries which use * combined with other characters, e.g. `a.b*c`
 export const getComplexEntries = function (value, path, node) {
-  if (!isPlainObj(value)) {
+  if (!isObject(value)) {
     return []
   }
 
