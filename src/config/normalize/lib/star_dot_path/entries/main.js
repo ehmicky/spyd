@@ -2,7 +2,6 @@ import { convertIndexInteger, convertIndexString } from '../parsing/path.js'
 import { serialize } from '../parsing/serialize.js'
 import { ANY_TOKEN } from '../parsing/special.js'
 
-import { getComplexEntries } from './complex.js'
 import { isRecurseObject } from './recurse.js'
 
 // List all values (and their associated path) matching a specific query for
@@ -16,18 +15,10 @@ const listNodeEntries = function (entries, node) {
 }
 
 const getNodeEntries = function ({ value, path }, node) {
-  if (isComplexNode(node)) {
-    return getComplexEntries(value, path, node)
-  }
-
   const token = Array.isArray(node) ? node[0] : node
   return token === ANY_TOKEN
     ? getAnyEntries(value, path)
     : getKeyEntries(value, path, token)
-}
-
-const isComplexNode = function (node) {
-  return Array.isArray(node) && node.length > 1
 }
 
 // For queries which use * on its own, e.g. `a.*`
