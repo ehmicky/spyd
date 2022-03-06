@@ -76,10 +76,7 @@ const parseQuery = function (query) {
   }
 
   const path = []
-  let chars = ''
-  let hasAny = false
-  let hasMinus = false
-  let hasRegExp = false
+  const state = { hasAny: false, hasMinus: false, hasRegExp: false, chars: '' }
   let index = query[0] === SEPARATOR ? 1 : 0
 
   for (; index <= query.length; index += 1) {
@@ -87,18 +84,21 @@ const parseQuery = function (query) {
 
     if (char === ESCAPE) {
       index += 1
-      chars += parseEscapedChar(query[index])
+      state.chars += parseEscapedChar(query[index])
     } else if (char === SEPARATOR || index === query.length) {
-      path.push(parseToken(chars, hasAny, hasMinus, hasRegExp))
-      chars = ''
-      hasAny = false
-      hasMinus = false
-      hasRegExp = false
+      path.push(parseToken(state))
+      state.hasAny = false
+      state.hasMinus = false
+      state.hasRegExp = false
+      state.chars = ''
     } else {
-      chars += char
-      hasAny = hasAny || char === ANY
-      hasMinus = hasMinus || char === MINUS
-      hasRegExp = hasRegExp || char === REGEXP_DELIM
+      if (state.chars.length === 0) {
+        state.hasAny = state.hasAny || char === ANY
+        state.hasMinus = state.hasMinus || char === MINUS
+        state.hasRegExp = state.hasRegExp || char === REGEXP_DELIM
+      }
+
+      state.chars += char
     }
   }
 
@@ -107,21 +107,20 @@ const parseQuery = function (query) {
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
    fp/no-mutation, fp/no-mutating-methods, fp/no-let */
 
-// eslint-disable-next-line max-params
-const parseToken = function (chars, hasAny, hasMinus, hasRegExp) {
-  if (hasAny) {
-    return parseAnyToken(chars)
+const parseToken = function (state) {
+  if (state.hasAny) {
+    return parseAnyToken(state.chars)
   }
 
-  if (hasRegExp) {
-    return parseRegExpToken(chars)
+  if (state.hasRegExp) {
+    return parseRegExpToken(state.chars)
   }
 
-  if (areIndexTokenChars(chars, hasMinus)) {
-    return parseIndexToken(chars)
+  if (areIndexTokenChars(state.chars, state.hasMinus)) {
+    return parseIndexToken(state.chars)
   }
 
-  return parsePropToken(chars)
+  return parsePropToken(state.chars)
 }
 
 const areIndexTokenChars = function (chars, hasMinus) {
