@@ -34,6 +34,11 @@ const getEntries = function (value, path, token) {
   return [{ value: value[token], path: [...path, token] }]
 }
 
+// Check if two tokens are the same
+const equals = function (tokenA, tokenB) {
+  return tokenA === tokenB
+}
+
 export const PROP_TOKEN = {
   testObject,
   serialize,
@@ -41,4 +46,5 @@ export const PROP_TOKEN = {
   parse,
   handleMissingValue,
   getEntries,
+  equals,
 }

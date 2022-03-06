@@ -46,6 +46,11 @@ const getArrayIndex = function (array, token) {
     : Math.max(array.length + token, 0)
 }
 
+// Check if two tokens are the same
+const equals = function (tokenA, tokenB) {
+  return Object.is(tokenA, tokenB)
+}
+
 export const ARRAY_TOKEN = {
   testObject,
   serialize,
@@ -53,4 +58,5 @@ export const ARRAY_TOKEN = {
   parse,
   handleMissingValue,
   getEntries,
+  equals,
 }

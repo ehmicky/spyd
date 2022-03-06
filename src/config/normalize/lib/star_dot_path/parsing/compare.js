@@ -1,3 +1,5 @@
+import { getObjectTokenType } from '../tokens/main.js'
+
 import { parse } from './parse.js'
 
 // Check if two queries are equal, after normalization
@@ -33,5 +35,7 @@ export const parent = function (parentQueryOrPath, childQueryOrPath) {
 }
 
 const isSameToken = function (tokenA, tokenB) {
-  return Object.is(tokenA, tokenB)
+  const tokenTypeA = getObjectTokenType(tokenA)
+  const tokenTypeB = getObjectTokenType(tokenB)
+  return tokenTypeA === tokenTypeB && tokenTypeA.equals(tokenA, tokenB)
 }

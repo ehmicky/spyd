@@ -55,6 +55,11 @@ const getEntries = function (value, path, token) {
     }))
 }
 
+// Check if two tokens are the same
+const equals = function (tokenA, tokenB) {
+  return tokenA.source === tokenB.source && tokenA.flags === tokenB.flags
+}
+
 export const REGEXP_TOKEN = {
   testObject,
   serialize,
@@ -62,4 +67,5 @@ export const REGEXP_TOKEN = {
   parse,
   handleMissingValue,
   getEntries,
+  equals,
 }
