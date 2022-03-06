@@ -1,23 +1,18 @@
 import { MINUS } from './special.js'
 
-// Users can specify integers either:
-//  - stringified for object properties
-//  - left as is for array indices
-// At query string parsing time, without any target value, we assume the intent
-// was for arrays.
-// We allow negative indexes which query from the end
-//  - Including -0 which can be used to append values
-// Check if token is an array index integer
+// Check the type of a parsed token.
+// Integers specified as string tokens are assumed to be property names, not
+// array indices.
 const testObject = function (token) {
   return Number.isInteger(token)
 }
 
-// Serialize an array index token into a string
+// Serialize a token to a string
 const serialize = function (token) {
   return Object.is(token, -0) ? '-0' : String(token)
 }
 
-// Check if a string should be parsed as an index token
+// Check the type of a serialized token
 const testString = function ({ chars, hasMinus }) {
   const hasEscapedMinus = chars[0] === MINUS && !hasMinus
   return !hasEscapedMinus && INTEGER_REGEXP.test(chars)
@@ -25,19 +20,19 @@ const testString = function ({ chars, hasMinus }) {
 
 const INTEGER_REGEXP = /^-?\d+$/u
 
-// Parse an array index string into a token
+// Parse a string into a token
 const parse = function (chars) {
   return Number(chars)
 }
 
-// Default array when missing
+// When the token is missing a target value, add a default one.
 const handleMissingValue = function (value) {
   const missing = !Array.isArray(value)
   const valueA = missing ? [] : value
   return { value: valueA, missing }
 }
 
-// List entries when using indices, e.g. `a.1`
+// Use the token to list entries against a target value.
 const getEntries = function (value, path, token) {
   const index = getArrayIndex(value, token)
   return [{ value: value[index], path: [...path, index] }]
