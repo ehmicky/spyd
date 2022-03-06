@@ -2,7 +2,7 @@ import omit from 'omit.js'
 
 import { setArray } from '../../../../utils/set.js'
 
-import { listEntries, normalizeEntry } from './entries/main.js'
+import { listEntries } from './entries/main.js'
 import { isRecurseObject } from './entries/recurse.js'
 import { parse } from './parsing/parse.js'
 import { pathHasAny } from './parsing/path.js'
@@ -10,16 +10,11 @@ import { isIndexToken } from './parsing/validate.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPath, newValue) {
-  return transform(target, queryOrPath, () => newValue)
-}
-
-// Same but using a function returning the value to set
-const transform = function (target, queryOrPath, transformFunc) {
   const path = parse(queryOrPath)
   const entries = listEntries(target, path)
   const entriesA = addDefaultEntries(entries, path)
   return entriesA.reduce(
-    (targetA, entry) => setEntry(targetA, entry, transformFunc),
+    (targetA, entry) => setEntry(targetA, entry.path, newValue),
     target,
   )
 }
@@ -39,29 +34,26 @@ export const pick = function (target, queryOrPath) {
 }
 
 const pickEntry = function (newTarget, { value, path }) {
-  return setEntry(newTarget, { path }, () => value)
+  return setEntry(newTarget, path, value)
 }
 
-const setEntry = function (value, entry, transformFunc) {
-  const entryA = normalizeEntry(entry)
-  return setEntryPart(value, 0, { entry: entryA, transformFunc })
+const setEntry = function (value, path, newValue) {
+  return setEntryPart({ value, path, newValue, index: 0 })
 }
 
-const setEntryPart = function (
-  value,
-  index,
-  { entry, entry: { path, query }, transformFunc },
-) {
+const setEntryPart = function ({ value, path, newValue, index }) {
   if (index === path.length) {
-    return transformFunc({ value, path, query })
+    return newValue
   }
 
   const key = path[index]
   const defaultedValue = addDefaultTarget(value, key)
   const childValue = defaultedValue[key]
-  const newChildValue = setEntryPart(childValue, index + 1, {
-    entry,
-    transformFunc,
+  const newChildValue = setEntryPart({
+    value: childValue,
+    path,
+    newValue,
+    index: index + 1,
   })
   return setValue(defaultedValue, key, newChildValue)
 }
