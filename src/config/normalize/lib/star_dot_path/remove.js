@@ -3,13 +3,11 @@ import omit from 'omit.js'
 import { setArray } from '../../../../utils/set.js'
 
 import { listEntries, handleMissingValue } from './entries.js'
-import { parse } from './parsing/parse.js'
 import { setValue } from './set.js'
 
 // Same as `set()` but removing a value
 export const remove = function (target, queryOrPath) {
-  const path = parse(queryOrPath)
-  const entries = listEntries(target, path)
+  const entries = listEntries(target, queryOrPath)
   return entries.some(hasRootPath)
     ? undefined
     : entries.reduce(

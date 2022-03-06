@@ -1,5 +1,4 @@
 import { listEntries, normalizeEntry } from './entries.js'
-import { parse } from './parsing/parse.js'
 
 // Retrieve all properties in `target` matching a query string.
 export const list = function (target, queryOrPath) {
@@ -21,8 +20,7 @@ export const has = function (target, queryOrPath) {
 }
 
 const listExistingEntries = function (target, queryOrPath) {
-  const path = parse(queryOrPath)
-  return listEntries(target, path).filter(isDefined)
+  return listEntries(target, queryOrPath).filter(isDefined)
 }
 
 const isDefined = function ({ defined }) {
