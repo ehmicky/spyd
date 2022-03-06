@@ -1,5 +1,6 @@
 import { parseAnyToken } from '../tokens/any.js'
 import { hasIndex, parseIndexToken } from '../tokens/array.js'
+import { SPECIAL_CHARS } from '../tokens/escape.js'
 import { parsePropToken } from '../tokens/prop.js'
 import { parseRegExpToken } from '../tokens/regexp.js'
 import {
@@ -8,7 +9,6 @@ import {
   ANY,
   MINUS,
   REGEXP_DELIM,
-  SPECIAL_CHARS,
 } from '../tokens/special.js'
 
 import { normalizePath } from './normalize.js'

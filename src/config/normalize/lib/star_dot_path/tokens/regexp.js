@@ -1,5 +1,6 @@
+import { escapeSpecialChars } from './escape.js'
 import { isRecurseObject } from './recurse.js'
-import { REGEXP_DELIM, escapeSpecialChars } from './special.js'
+import { REGEXP_DELIM } from './special.js'
 
 // Check if a token is a /.../ RegExp
 export const isRegExpToken = function (token) {

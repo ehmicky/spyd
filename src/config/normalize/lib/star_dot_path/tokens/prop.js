@@ -1,5 +1,6 @@
+import { escapeSpecialChars } from './escape.js'
 import { isRecurseObject } from './recurse.js'
-import { SEPARATOR, escapeSpecialChars } from './special.js'
+import { SEPARATOR } from './special.js'
 
 // Check if a token is a property name string
 export const isPropToken = function (token) {
