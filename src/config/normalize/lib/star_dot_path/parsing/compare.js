@@ -13,7 +13,8 @@ export const equals = function (queryOrPathA, queryOrPathB) {
 }
 
 // Check if a query is a parent of another.
-// The comparison is currently token type-wise, i.e.:
+// The comparison is currently token type-wise.
+// Also it does not check whether a token is a subset of another, i.e.:
 //  - * does not match other token types
 //  - RegExps does not match prop tokens
 //  - Unions are not resolved
