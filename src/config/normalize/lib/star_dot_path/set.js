@@ -9,13 +9,13 @@ import { pathHasAny } from './parsing/path.js'
 import { isIndexToken } from './parsing/validate.js'
 
 // Set a value to one or multiple properties in `target` using a query string
-export const set = function (target, queryOrPath, newValue) {
+export const set = function (target, queryOrPath, value) {
   const path = parse(queryOrPath)
   const entries = listEntries(target, path)
   const entriesA = addDefaultEntries(entries, path)
   return entriesA.reduce(
     (targetA, entry) =>
-      setEntryPart({ value: targetA, path: entry.path, newValue, index: 0 }),
+      setEntryPart({ target: targetA, path: entry.path, value, index: 0 }),
     target,
   )
 }
@@ -27,39 +27,39 @@ const addDefaultEntries = function (entries, path) {
   return entries.length === 0 && !pathHasAny(path) ? [{ path }] : entries
 }
 
-const setEntryPart = function ({ value, path, newValue, index }) {
+const setEntryPart = function ({ target, path, value, index }) {
   if (index === path.length) {
-    return newValue
+    return value
   }
 
   const key = path[index]
-  const defaultedValue = addDefaultTarget(value, key)
-  const childValue = defaultedValue[key]
-  const newChildValue = setEntryPart({
-    value: childValue,
+  const defaultedTarget = addDefaultTarget(target, key)
+  const childTarget = defaultedTarget[key]
+  const childValue = setEntryPart({
+    target: childTarget,
     path,
-    newValue,
+    value,
     index: index + 1,
   })
-  return setValue(defaultedValue, key, newChildValue)
+  return setValue(defaultedTarget, key, childValue)
 }
 
-const addDefaultTarget = function (value, key) {
-  if (Array.isArray(value) || isRecurseObject(value)) {
-    return value
+const addDefaultTarget = function (target, key) {
+  if (Array.isArray(target) || isRecurseObject(target)) {
+    return target
   }
 
   return isIndexToken(key) ? [] : {}
 }
 
-const setValue = function (value, key, newChildValue) {
-  if (value[key] === newChildValue) {
-    return value
+const setValue = function (target, key, childValue) {
+  if (target[key] === childValue) {
+    return target
   }
 
-  return newChildValue === undefined
-    ? removeValue(value, key)
-    : setDefinedValue(value, key, newChildValue)
+  return childValue === undefined
+    ? removeValue(target, key)
+    : setDefinedValue(target, key, childValue)
 }
 
 // We purposely do not distinguish between a missing property and a property set
@@ -68,12 +68,12 @@ const setValue = function (value, key, newChildValue) {
 //  - This removes the need for a separate `remove()` method
 //  - Deleting `undefined` properties by default leads to cleaner return values
 // If the value was already `undefined`, we keep it as is though.
-const removeValue = function (value, key) {
-  if (!Array.isArray(value, key)) {
-    return omit.default(value, [key])
+const removeValue = function (target, key) {
+  if (!Array.isArray(target, key)) {
+    return omit.default(target, [key])
   }
 
-  const newArray = setArray(value, key)
+  const newArray = setArray(target, key)
   return newArray.every(isUndefined) ? [] : newArray
 }
 
@@ -81,8 +81,8 @@ const isUndefined = function (item) {
   return item === undefined
 }
 
-const setDefinedValue = function (value, key, newChildValue) {
-  return Array.isArray(value)
-    ? setArray(value, key, newChildValue)
-    : { ...value, [key]: newChildValue }
+const setDefinedValue = function (target, key, childValue) {
+  return Array.isArray(target)
+    ? setArray(target, key, childValue)
+    : { ...target, [key]: childValue }
 }
