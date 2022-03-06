@@ -14,7 +14,7 @@ export const set = function (target, queryOrPath, newValue) {
 }
 
 // Same but using a function returning the value to set
-export const transform = function (target, queryOrPath, transformFunc) {
+const transform = function (target, queryOrPath, transformFunc) {
   const path = parse(queryOrPath)
   const entries = listEntries(target, path)
   const entriesA = addDefaultEntries(entries, path)
