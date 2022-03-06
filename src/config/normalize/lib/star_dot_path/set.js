@@ -44,8 +44,14 @@ const setValue = function (target, key, childValue) {
 }
 
 const removeValue = function (target, key) {
-  if (!Array.isArray(target, key)) {
-    return omit.default(target, [key])
+  return Array.isArray(target, key)
+    ? removeArrayValue(target, key)
+    : removeObjectValue(target, key)
+}
+
+const removeArrayValue = function (target, key) {
+  if (target[key] === undefined) {
+    return target
   }
 
   const newArray = setArray(target, key)
@@ -54,4 +60,12 @@ const removeValue = function (target, key) {
 
 const isUndefined = function (item) {
   return item === undefined
+}
+
+const removeObjectValue = function (target, key) {
+  if (!(key in target)) {
+    return target
+  }
+
+  return omit.default(target, [key])
 }
