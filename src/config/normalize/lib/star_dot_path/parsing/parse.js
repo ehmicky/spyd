@@ -1,7 +1,15 @@
 import { createAnyToken } from './any.js'
 import { convertIndexInteger } from './array.js'
 import { normalizePath } from './normalize.js'
-import { ESCAPE, SEPARATOR, ANY, MINUS, SPECIAL_CHARS } from './special.js'
+import { parseRegExpToken } from './regexp.js'
+import {
+  ESCAPE,
+  SEPARATOR,
+  ANY,
+  MINUS,
+  REGEXP_DELIM,
+  SPECIAL_CHARS,
+} from './special.js'
 import { isQueryString } from './validate.js'
 
 // Parse a query string into an array of tokens.
@@ -15,14 +23,17 @@ import { isQueryString } from './validate.js'
 //  - This can be used deeply, e.g. `one.two.5`
 //  - Wildcards are used with both objects and arrays to recurse over their
 //    children, e.g. `one.*`
+//  - Regular expressions can used with objects to select property with matching
+//    names, e.g. `one./^(two|three)$/i`
 //  - Empty keys are supported, e.g. `one.` for `{ one: { "": value } }`
 //    or `one..two` for `{ one: { "": { two: value } } }`
 //  - A leading dot can be optionally used, e.g. `.one`. It is ignored.
 //  - An empty string matches the root value
-//  - Backslashes can escape special characters: . * \
+//  - Backslashes can escape special characters: . * \ /
 // Tokens are an array of one of:
 //  - Object property as a string or symbol
 //  - Array index as a positive|negative integer|string
+//  - RegExp instances
 //  - Wildcards: { type: "any" }
 //     - We use objects instead of strings or symbols as both are valid as
 //       object properties which creates a risk for injections
@@ -58,6 +69,7 @@ const parseQuery = function (query) {
   let chars = ''
   let hasAny = false
   let hasMinus = false
+  let hasRegExp = false
   let index = query[0] === SEPARATOR ? 1 : 0
 
   for (; index <= query.length; index += 1) {
@@ -67,12 +79,15 @@ const parseQuery = function (query) {
       chars += getEscapedChar(query, index)
       index += 1
     } else if (char === SEPARATOR || index === query.length) {
-      path.push(getToken(chars, query, hasAny, hasMinus))
+      path.push(parseToken(chars, query, hasAny, hasMinus, hasRegExp))
       chars = ''
       hasAny = false
+      hasMinus = false
+      hasRegExp = false
     } else {
       hasAny = hasAny || char === ANY
       hasMinus = hasMinus || char === MINUS
+      hasRegExp = hasRegExp || char === REGEXP_DELIM
       chars += char
     }
   }
@@ -91,15 +106,19 @@ const getEscapedChar = function (query, index) {
 const validateEscape = function (escapedChar, query, index) {
   if (!SPECIAL_CHARS.has(escapedChar)) {
     throw new Error(
-      `Invalid query "${query}": character ${ESCAPE} at index ${index} must be followed by ${SEPARATOR} ${ANY} ${MINUS} or ${ESCAPE}`,
+      `Invalid query "${query}": character ${ESCAPE} at index ${index} must be followed by ${SEPARATOR} ${ANY} ${MINUS} ${REGEXP_DELIM} or ${ESCAPE}`,
     )
   }
 }
 
 // eslint-disable-next-line max-params
-const getToken = function (chars, query, hasAny, hasMinus) {
+const parseToken = function (chars, query, hasAny, hasMinus, hasRegExp) {
   if (hasAny) {
-    return getAnyToken(chars, query)
+    return parseAnyToken(chars, query)
+  }
+
+  if (hasRegExp) {
+    return parseRegExpToken(chars, query)
   }
 
   if (chars[0] === MINUS && !hasMinus) {
@@ -109,7 +128,7 @@ const getToken = function (chars, query, hasAny, hasMinus) {
   return convertIndexInteger(chars)
 }
 
-const getAnyToken = function (chars, query) {
+const parseAnyToken = function (chars, query) {
   if (chars !== ANY) {
     throw new Error(
       `Invalid query "${query}": character ${ANY} must not be preceded or followed by other characters except "${SEPARATOR}"

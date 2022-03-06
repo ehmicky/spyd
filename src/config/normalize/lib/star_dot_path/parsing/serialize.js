@@ -1,6 +1,7 @@
 import { isAnyToken } from './any.js'
-import { isIndexToken } from './array.js'
+import { isIndexToken, serializeIndexToken } from './array.js'
 import { parse } from './parse.js'
+import { isRegExpToken, serializeRegExpToken } from './regexp.js'
 import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP } from './special.js'
 
 // Inverse of `parse()`
@@ -20,18 +21,18 @@ const serializeToken = function (token, index) {
     return ANY
   }
 
-  if (Object.is(token, -0)) {
-    return '-0'
-  }
-
   if (isIndexToken(token)) {
-    return String(token)
+    return serializeIndexToken(token)
   }
 
-  return serializeTokenString(token, index)
+  if (isRegExpToken(token)) {
+    return serializeRegExpToken(token)
+  }
+
+  return serializeStringToken(token, index)
 }
 
-const serializeTokenString = function (token, index) {
+const serializeStringToken = function (token, index) {
   if (token === '' && index === 0) {
     return SEPARATOR
   }

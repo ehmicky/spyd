@@ -37,3 +37,8 @@ export const getArrayIndex = function (array, token) {
 export const isIndexToken = function (token) {
   return Number.isInteger(token)
 }
+
+// Serialize an array index token into a string
+export const serializeIndexToken = function (token) {
+  return Object.is(token, -0) ? '-0' : String(token)
+}

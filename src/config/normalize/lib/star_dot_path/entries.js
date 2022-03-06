@@ -7,6 +7,7 @@ import {
   getArrayIndex,
   isIndexToken,
 } from './parsing/array.js'
+import { isRegExpToken } from './parsing/regexp.js'
 import { serialize } from './parsing/serialize.js'
 
 // List all values (and their associated path) matching a specific query for
@@ -28,13 +29,19 @@ const listTokenEntries = function (entries, token) {
 }
 
 const getTokenEntries = function ({ value, path }, token) {
-  return isAnyToken(token)
-    ? getAnyEntries(value, path)
-    : getKeyEntries(value, path, token)
+  if (isAnyToken(token)) {
+    return getAnyEntries(value, path)
+  }
+
+  if (isRegExpToken(token)) {
+    return getRegExpEntries(value, path, token)
+  }
+
+  return getKeyEntries(value, path, token)
 }
 
 // For queries which use * on its own, e.g. `a.*`
-// We purposely ignore symbol properties by using `Object.entries()`.
+// We purposely ignore symbol properties by using `Object.keys()`.
 const getAnyEntries = function (value, path) {
   if (Array.isArray(value)) {
     return value.map((childValue, index) => ({
@@ -45,14 +52,29 @@ const getAnyEntries = function (value, path) {
   }
 
   if (isRecurseObject(value)) {
-    return Object.entries(value).map(([childKey, childValue]) => ({
-      value: childValue,
+    return Object.keys(value).map((childKey) => ({
+      value: value[childKey],
       path: [...path, childKey],
       missing: false,
     }))
   }
 
   return []
+}
+
+// For queries which use RegExps, e.g. `a./[bc]/`
+const getRegExpEntries = function (value, path, token) {
+  if (!isRecurseObject(value)) {
+    return []
+  }
+
+  return Object.keys(value)
+    .filter((childKey) => token.test(childKey))
+    .map((childKey) => ({
+      value: value[childKey],
+      path: [...path, childKey],
+      missing: false,
+    }))
 }
 
 // For queries which do not use *, e.g. `a.b` or `a.1`
