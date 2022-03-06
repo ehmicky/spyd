@@ -142,7 +142,7 @@ const parseEscape = function (state, query) {
 }
 
 const addPath = function (state) {
-  if (state.firstToken && state.chars.length === 0 && state.path.length === 0) {
+  if (hasNoPath(state)) {
     return
   }
 
@@ -153,6 +153,11 @@ const addPath = function (state) {
   // eslint-disable-next-line fp/no-mutating-methods
   state.paths.push(state.path)
   resetPathState(state)
+}
+
+// When the query is an empty string or when two spaces are consecutive
+const hasNoPath = function (state) {
+  return state.firstToken && state.chars.length === 0 && state.path.length === 0
 }
 
 const resetPathState = function (state) {
