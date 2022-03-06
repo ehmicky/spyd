@@ -1,7 +1,7 @@
 import { applyRule } from './apply.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
-import { set, equals } from './star_dot_path/main.js'
+import { set, remove, equals } from './star_dot_path/main.js'
 import { addWarnings } from './warn.js'
 
 // Apply rule for a specific entry
@@ -45,6 +45,8 @@ export const applyEntryRule = async function (
 const setConfigValue = function ({ config, namePath, renamedPath, newValue }) {
   const configA = equals(namePath, renamedPath)
     ? config
-    : set(config, namePath, undefined)
-  return set(configA, renamedPath, newValue)
+    : remove(config, namePath)
+  return newValue === undefined
+    ? remove(configA, renamedPath)
+    : set(configA, renamedPath, newValue)
 }
