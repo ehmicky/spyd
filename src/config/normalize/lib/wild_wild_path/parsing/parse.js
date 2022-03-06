@@ -23,9 +23,15 @@ import { isQueryString } from './validate.js'
 //     - If a token is meant as a property name but could be interpreted as a
 //       different type, it must be start with \
 //     - A leading dot can be optionally used, e.g. `.one`. It is ignored.
+//     - An empty string targets nothing.
+//     - A lone dot targets the root.
+//     - Property names that are empty strings can be specified, e.g. `..a..b.`
+//       parses as `["", "a", "", "b", ""]`
 //  - "Tokens": an array of values of diverse types
 //     - Tokens are elements of the inner arrays
 //     - Path alternatives use optional outer arrays
+//     - An empty outer array targets nothing.
+//     - An empty inner array targets the root.
 //     - This is sometimes convenient
 //     - This does not need any escaping, making it better with dynamic input
 //     - This is faster as it does not perform any parsing
@@ -61,7 +67,6 @@ import { isQueryString } from './validate.js'
 //     - Matches any object property with a matching name
 //     - ^ and $ must be used if the RegExp needs to match from the beginning
 //       or until the end
-// An empty string (query format) or array (tokens format) matches the root.
 // Symbols are always ignored:
 //  - Both in the query string|path and in the target value
 //  - This is because symbols cannot be serialized in a query string
@@ -80,10 +85,6 @@ export const parse = function (queryOrPaths) {
 }
 
 const safeParseQuery = function (query) {
-  if (query === '') {
-    return [[]]
-  }
-
   try {
     return parseQuery(query)
   } catch (error) {
@@ -94,7 +95,7 @@ const safeParseQuery = function (query) {
 // Use imperative logic for performance
 // eslint-disable-next-line complexity
 const parseQuery = function (query) {
-  const state = getInitialState(query)
+  const state = getInitialState()
 
   // eslint-disable-next-line fp/no-loops
   for (; state.index <= query.length; state.index += 1) {
@@ -115,9 +116,8 @@ const parseQuery = function (query) {
   return state.paths
 }
 
-const getInitialState = function (query) {
-  const index = query[0] === TOKEN_SEPARATOR ? 1 : 0
-  const state = { paths: [], index }
+const getInitialState = function () {
+  const state = { paths: [], index: 0 }
   resetPathState(state)
   resetTokenState(state)
   return state
@@ -142,11 +142,14 @@ const parseEscape = function (state, query) {
 }
 
 const addPath = function (state) {
-  if (state.path.length === 0) {
+  if (state.firstToken && state.chars.length === 0 && state.path.length === 0) {
     return
   }
 
-  addToken(state)
+  if (!hasOnlyDots(state)) {
+    addToken(state)
+  }
+
   // eslint-disable-next-line fp/no-mutating-methods
   state.paths.push(state.path)
   resetPathState(state)
@@ -154,14 +157,43 @@ const addPath = function (state) {
 
 const resetPathState = function (state) {
   state.path = []
+  state.firstToken = true
+  state.onlyDots = true
 }
 
 const addToken = function (state) {
+  if (handleLeadingDot(state)) {
+    return
+  }
+
+  state.onlyDots = hasOnlyDots(state)
   const tokenType = getStringTokenType(state.chars, state.isProp)
   const token = tokenType.parse(state.chars)
   // eslint-disable-next-line fp/no-mutating-methods
   state.path.push(token)
   resetTokenState(state)
+}
+
+// In principle, the root query should be an empty string.
+// But we use a lone dot instead because:
+//  - It distinguishes it from an absence of query
+//  - It allows parsing it in the middle of a space-separated list of queries
+//    (as opposed to an empty string)
+// However, we create ambiguities for queries with only dots (including a
+// lone dot), where the last dot should not create an additional token.
+const hasOnlyDots = function (state) {
+  return state.onlyDots && state.chars.length === 0
+}
+
+// We ignore leading dots, because they are used to represent the root.
+// We do not require them for simplicity.
+const handleLeadingDot = function (state) {
+  if (!state.firstToken) {
+    return false
+  }
+
+  state.firstToken = false
+  return state.chars.length === 0
 }
 
 const resetTokenState = function (state) {

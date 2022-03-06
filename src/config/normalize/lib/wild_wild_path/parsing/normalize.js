@@ -4,8 +4,8 @@ import { getObjectTokenType } from '../tokens/main.js'
 // Alternative of paths are optional: we normalize to use the simpler optional
 // syntax.
 export const normalizePaths = function (paths) {
-  const pathsA = paths.map(normalizePath)
-  return pathsA.length === 1 ? pathsA[0] : pathsA
+  const pathsA = paths.every(Array.isArray) ? paths : [paths]
+  return pathsA.map(normalizePath)
 }
 
 const normalizePath = function (path) {
