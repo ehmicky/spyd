@@ -56,13 +56,20 @@ const normalize = function ({ type, from = 0, to }) {
 // Use the token to list entries against a target value.
 // eslint-disable-next-line max-params
 const list = function (value, path, { from, to }, missing) {
-  const fromIndex = getArrayIndex(value, from)
-  const toIndex = Math.max(getArrayIndex(value, to), fromIndex)
+  const fromIndex = getBoundedIndex(value, from)
+  const toIndex = Math.max(getBoundedIndex(value, to), fromIndex)
   return new Array(toIndex - fromIndex).fill().map((_, index) => ({
     value: value[index + fromIndex],
     path: [...path, index + fromIndex],
     missing,
   }))
+}
+
+// Unlike the array token, indices are max-bounded to the end of the array:
+//  - This prevents maliciously creating big arrays to crash the process
+//  - Appending values is less useful in the context of a slice
+const getBoundedIndex = function (value, edge) {
+  return Math.min(getArrayIndex(value, edge), value.length)
 }
 
 // Check if two tokens are the same

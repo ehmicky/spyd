@@ -33,17 +33,26 @@ const normalize = function (token) {
 // eslint-disable-next-line max-params
 const list = function (value, path, token, missing) {
   const index = getArrayIndex(value, token)
-  return [{ value: value[index], path: [...path, index], missing }]
+  return [
+    {
+      value: value[index],
+      path: [...path, index],
+      missing: missing || index >= value.length,
+    },
+  ]
 }
 
-// Retrieve an array using a positive or negative index.
-// Array indices that are:
-//  - Positive are kept
-//  - Negative are converted to index 0
+// Negative array indices start from the end.
 // Indices that are out-of-bound:
 //  - Do not error
-//  - Return an entry with an `undefined` value
-//     - This allows appending to arrays, e.g. with -0
+//  - Are min-bounded to 0
+//  - Are not max-bounded:
+//     - Those return a missing entry instead
+//     - Reasons:
+//        - This is more consistent with how missing entries with property names
+//          are handled
+//        - This allows appending with -0
+//        - This is better when setting values on arrays with varying sizes
 export const getArrayIndex = function (value, token) {
   return token > 0 || Object.is(token, +0)
     ? token
