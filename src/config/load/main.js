@@ -10,7 +10,7 @@ import {
   has,
   serialize,
   set,
-} from '../normalize/lib/star_dot_path/main.js'
+} from '../normalize/lib/wild_wild_path/main.js'
 
 import { loadConfigContents } from './contents.js'
 import { normalizeConfigProp } from './normalize.js'

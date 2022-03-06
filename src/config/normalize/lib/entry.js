@@ -1,7 +1,7 @@
 import { applyRule } from './apply.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
-import { set, remove, equals } from './star_dot_path/main.js'
+import { set, remove, equals } from './wild_wild_path/main.js'
 import { addWarnings } from './warn.js'
 
 // Apply rule for a specific entry

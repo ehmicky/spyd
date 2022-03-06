@@ -1,4 +1,4 @@
-import { parent, equals } from './star_dot_path/main.js'
+import { parent, equals } from './wild_wild_path/main.js'
 
 // When a property is moved to another, record it.
 export const addMoves = function (moves, newPaths, oldNamePath) {

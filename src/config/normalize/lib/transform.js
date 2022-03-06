@@ -2,7 +2,7 @@ import isPlainObj from 'is-plain-obj'
 import pReduce from 'p-reduce'
 
 import { callValueFunc } from './call.js'
-import { parse } from './star_dot_path/main.js'
+import { parse } from './wild_wild_path/main.js'
 
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.

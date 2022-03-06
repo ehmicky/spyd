@@ -1,4 +1,4 @@
-import { list } from '../star_dot_path/main.js'
+import { list } from '../wild_wild_path/main.js'
 
 // `list()` but without missing entries
 export const listExisting = function (target, queryOrPath) {

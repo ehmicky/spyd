@@ -1,4 +1,4 @@
-import { set } from '../star_dot_path/main.js'
+import { set } from '../wild_wild_path/main.js'
 
 import { listExisting } from './common.js'
 

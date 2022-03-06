@@ -1,4 +1,4 @@
-import { get, remove } from '../star_dot_path/main.js'
+import { get, remove } from '../wild_wild_path/main.js'
 
 import { listExisting } from './common.js'
 

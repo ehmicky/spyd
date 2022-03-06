@@ -1,4 +1,4 @@
-import { get, parse, serialize } from './star_dot_path/main.js'
+import { get, parse, serialize } from './wild_wild_path/main.js'
 
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the

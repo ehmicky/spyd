@@ -1,6 +1,6 @@
-// We split the core methods of `star_dot_path` to keep it small, and provide
+// We split the core methods of `wild_wild_path` to keep it small, and provide
 // additional utilities built on top of it.
-import { list, get, set } from '../star_dot_path/main.js'
+import { list, get, set } from '../wild_wild_path/main.js'
 
 // Map values matching a query.
 // Missing entries are mapped too

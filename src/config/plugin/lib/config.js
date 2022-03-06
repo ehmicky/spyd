@@ -1,6 +1,6 @@
 import { deepMerge } from '../../merge.js'
 import { getDummyRules } from '../../normalize/dummy.js'
-import { has } from '../../normalize/lib/star_dot_path/main.js'
+import { has } from '../../normalize/lib/wild_wild_path/main.js'
 
 import { UserError, PluginError, ConsumerError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'

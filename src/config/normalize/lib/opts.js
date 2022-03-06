@@ -2,7 +2,7 @@ import { callUserFunc } from './call.js'
 import { getCwd } from './cwd.js'
 import { applyMoves } from './move.js'
 import { getPrefix, DEFAULT_PREFIX } from './prefix.js'
-import { parse, serialize } from './star_dot_path/main.js'
+import { parse, serialize } from './wild_wild_path/main.js'
 
 // Retrieve `opts` passed to most methods.
 // `funcOpts` are passed to user-provided functions.

@@ -1,6 +1,6 @@
 import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolvePath } from './path.js'
-import { has, parse } from './star_dot_path/main.js'
+import { has, parse } from './wild_wild_path/main.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
 

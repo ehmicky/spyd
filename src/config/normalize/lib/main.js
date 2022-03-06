@@ -4,7 +4,7 @@ import { cleanObject } from '../../../utils/clean.js'
 
 import { applyEntryRule } from './entry.js'
 import { normalizeRules } from './rule.js'
-import { list } from './star_dot_path/main.js'
+import { list } from './wild_wild_path/main.js'
 import { logWarnings } from './warn.js'
 
 // Normalize configuration shape and do custom validation.

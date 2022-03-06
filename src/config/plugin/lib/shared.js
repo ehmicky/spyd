@@ -1,4 +1,4 @@
-import { list, set } from '../../normalize/lib/star_dot_path/main.js'
+import { list, set } from '../../normalize/lib/wild_wild_path/main.js'
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
