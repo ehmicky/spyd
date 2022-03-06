@@ -57,6 +57,10 @@ export const parse = function (queryOrPath) {
 }
 
 const safeParseQuery = function (query) {
+  if (query === '') {
+    return []
+  }
+
   try {
     return parseQuery(query)
   } catch (error) {
@@ -65,21 +69,9 @@ const safeParseQuery = function (query) {
 }
 
 // Use imperative logic for performance
-// eslint-disable-next-line complexity, max-statements
+// eslint-disable-next-line complexity
 const parseQuery = function (query) {
-  if (query === '') {
-    return []
-  }
-
-  const path = []
-  const index = query[0] === SEPARATOR ? 1 : 0
-  const state = {
-    chars: '',
-    index,
-    hasAny: false,
-    hasMinus: false,
-    hasRegExp: false,
-  }
+  const state = getInitialState(query)
 
   // eslint-disable-next-line fp/no-loops
   for (; state.index <= query.length; state.index += 1) {
@@ -87,27 +79,39 @@ const parseQuery = function (query) {
 
     // eslint-disable-next-line max-depth
     if (char === ESCAPE) {
-      addEscapedChar(query, state)
+      addEscapedChar(state, query)
     } else if (char === SEPARATOR || state.index === query.length) {
-      addToken(path, state)
+      addToken(state)
     } else {
-      addChar(char, state)
+      addChar(state, char)
     }
   }
 
-  return path
+  return state.path
 }
 
-const addEscapedChar = function (query, state) {
+const getInitialState = function (query) {
+  const index = query[0] === SEPARATOR ? 1 : 0
+  return {
+    path: [],
+    chars: '',
+    index,
+    hasAny: false,
+    hasMinus: false,
+    hasRegExp: false,
+  }
+}
+
+const addEscapedChar = function (state, query) {
   state.index += 1
   state.chars += parseEscapedChar(query[state.index])
 }
 
-const addToken = function (path, state) {
+const addToken = function (state) {
   const tokenType = getStringTokenType(state)
   const token = tokenType.parse(state.chars)
   // eslint-disable-next-line fp/no-mutating-methods
-  path.push(token)
+  state.path.push(token)
   state.hasAny = false
   state.hasMinus = false
   state.hasRegExp = false
@@ -115,7 +119,7 @@ const addToken = function (path, state) {
 }
 
 // eslint-disable-next-line complexity
-const addChar = function (char, state) {
+const addChar = function (state, char) {
   if (state.chars.length === 0) {
     state.hasAny = state.hasAny || char === ANY
     state.hasMinus = state.hasMinus || char === MINUS
