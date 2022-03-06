@@ -23,10 +23,6 @@ const serializeToken = function (token, index) {
     return String(token)
   }
 
-  if (typeof token === 'symbol') {
-    throw new TypeError(`Cannot serialize ${String(token)}.`)
-  }
-
   return serializeTokenString(token, index)
 }
 

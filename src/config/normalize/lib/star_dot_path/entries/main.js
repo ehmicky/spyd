@@ -21,6 +21,7 @@ const getTokenEntries = function ({ value, path }, token) {
 }
 
 // For queries which use * on its own, e.g. `a.*`
+// We purposely ignore symbol properties by using `Object.entries()`.
 const getAnyEntries = function (value, path) {
   if (Array.isArray(value)) {
     return value.map((childValue, index) => ({

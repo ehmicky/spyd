@@ -18,18 +18,13 @@ const validateToken = function (token, path) {
     throwTokenError(
       path,
       token,
-      'It must be a string, integer, symbol or Symbol.for("*").',
+      'It must be a string, integer or Symbol.for("*").',
     )
   }
 }
 
 const isValidToken = function (token) {
-  return (
-    typeof token === 'string' ||
-    typeof token === 'symbol' ||
-    isIndexToken(token) ||
-    token === ANY_TOKEN
-  )
+  return typeof token === 'string' || isIndexToken(token) || token === ANY_TOKEN
 }
 
 // Check if token is an array index integer
