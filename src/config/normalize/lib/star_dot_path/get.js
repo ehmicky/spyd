@@ -10,7 +10,6 @@ export const list = function (target, queryOrPath) {
 
 // Retrieve a single property's value in `target` matching a query string.
 // Wildcards can be used, but only the first value is returned.
-// TODO: optimize performance by stopping at soon as one entry is found
 export const get = function (target, queryOrPath) {
   const path = maybeParse(queryOrPath)
   const [entry] = listEntries(target, path)

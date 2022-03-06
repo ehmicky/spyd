@@ -27,7 +27,6 @@ import { ESCAPE, SEPARATOR, ANY, ANY_TOKEN } from './special.js'
 //  - Also, this allows property names to include special characters (dots,
 //    brackets, star) or to be symbols
 //  - This removes the need for escaping
-// TODO: do not recurse over `__proto__`, `prototype` or `constructor`
 export const maybeParse = function (queryOrPath) {
   return Array.isArray(queryOrPath)
     ? normalizePath(queryOrPath)
