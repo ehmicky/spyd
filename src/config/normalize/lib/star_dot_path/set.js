@@ -1,9 +1,11 @@
+import isPlainObj from 'is-plain-obj'
 import omitLib from 'omit.js'
 
 import { setArray } from '../../../../utils/set.js'
 
-import { listFullEntries } from './entries/main.js'
+import { listEntries, normalizeEntry } from './entries/main.js'
 import { maybeParse } from './parsing/parse.js'
+import { pathHasAny } from './parsing/path.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPath, setValue) {
@@ -12,15 +14,25 @@ export const set = function (target, queryOrPath, setValue) {
 
 // Same but using a function returning the value to set
 export const transform = function (target, queryOrPath, transformFunc) {
-  const nodes = maybeParse(queryOrPath)
-  const entries = listFullEntries(target, nodes)
-  return entries.reduce(
-    (targetA, entry) => setProp(targetA, 0, { entry, transformFunc }),
-    target,
-  )
+  const path = maybeParse(queryOrPath)
+  const entries = listTransformEntries(target, path)
+  return entries
+    .map(normalizeEntry)
+    .reduce(
+      (targetA, entry) => setEntry(targetA, 0, { entry, transformFunc }),
+      target,
+    )
 }
 
-const setProp = function (
+// When the value does not exist, we set it deeply.
+// However, we cannot do this when the query has at least one wildcard which
+// does not match anything.
+const listTransformEntries = function (target, path) {
+  const entries = listEntries(target, path)
+  return entries.length === 0 && !pathHasAny(path) ? [{ path }] : entries
+}
+
+const setEntry = function (
   target,
   index,
   { entry, entry: { path }, transformFunc },
@@ -30,10 +42,19 @@ const setProp = function (
   }
 
   const key = path[index]
-  const childValue = target[key]
+  const targetA = addDefaultTarget(target, key)
+  const childValue = targetA[key]
   const newIndex = index + 1
-  const newChildValue = setProp(childValue, newIndex, { entry, transformFunc })
-  return setNewChildValue(target, key, newChildValue)
+  const newChildValue = setEntry(childValue, newIndex, { entry, transformFunc })
+  return setNewChildValue(targetA, key, newChildValue)
+}
+
+const addDefaultTarget = function (target, key) {
+  if (isPlainObj(target) || Array.isArray(target)) {
+    return target
+  }
+
+  return Number.isInteger(key) ? [] : {}
 }
 
 // Delete one or multiple properties in `target` using a query string
@@ -43,14 +64,16 @@ export const omit = function (target, queryOrPath) {
 
 export const exclude = function (target, queryOrPath, condition) {
   const nodes = maybeParse(queryOrPath)
-  const entries = listFullEntries(target, nodes)
-  return entries.reduce(
-    (targetA, entry) => removeProp(targetA, 0, { entry, condition }),
-    target,
-  )
+  const entries = listEntries(target, nodes)
+  return entries
+    .map(normalizeEntry)
+    .reduce(
+      (targetA, entry) => excludeEntry(targetA, 0, { entry, condition }),
+      target,
+    )
 }
 
-const removeProp = function (
+const excludeEntry = function (
   value,
   index,
   { entry, entry: { path }, condition },
@@ -68,7 +91,7 @@ const removeProp = function (
     return condition(entry) ? removeValue(value, key) : value
   }
 
-  const newChildValue = removeProp(childValue, newIndex, { entry, condition })
+  const newChildValue = excludeEntry(childValue, newIndex, { entry, condition })
   return setNewChildValue(value, key, newChildValue)
 }
 
