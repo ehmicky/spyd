@@ -46,6 +46,9 @@ const getEntries = function (value, path, token, missing) {
 }
 
 // Retrieve an array using a positive or negative index.
+// Array indices that are:
+//  - Positive are kept
+//  - Negative are converted to index 0
 // Indices that are out-of-bound:
 //  - Do not error
 //  - Return an entry with an `undefined` value

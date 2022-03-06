@@ -24,9 +24,6 @@ const getTokenEntries = function ({ value, path }, token) {
 // `list|get|has()`.
 // We filter out between those two cases using a `missing` property.
 // Tokens like wildcards cannot do this since there is known property to add.
-// Array indices that are:
-//  - Positive are kept
-//  - Negative are converted to index 0
 export const handleMissingValue = function (value, token) {
   const tokenType = getObjectTokenType(token)
   const missing = tokenType.isMissing(value)
