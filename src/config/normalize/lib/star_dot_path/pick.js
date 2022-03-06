@@ -11,7 +11,7 @@ const returnTrue = function () {
 }
 
 // Same but using a function returning the value to set
-export const include = function (target, queryOrPath, condition) {
+const include = function (target, queryOrPath, condition) {
   const entries = list(target, queryOrPath)
   return entries.filter(condition).reduce(includeEntry, {})
 }
