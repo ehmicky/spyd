@@ -34,9 +34,10 @@ const isDefined = function (value) {
 const defaultValue = []
 
 // Use the token to list entries against a target value.
-const getEntries = function (value, path, token) {
+// eslint-disable-next-line max-params
+const getEntries = function (value, path, token, defined) {
   const index = getArrayIndex(value, token)
-  return [{ value: value[index], path: [...path, index] }]
+  return [{ value: value[index], path: [...path, index], defined }]
 }
 
 // Retrieve an array using a positive or negative index.

@@ -34,8 +34,15 @@ const defaultValue = {}
 // We distinguish between:
 //  - Missing property name: return no entries
 //  - Property exists but has `undefined` value: return an entry
-const getEntries = function (value, path, token) {
-  return token in value ? [{ value: value[token], path: [...path, token] }] : []
+// eslint-disable-next-line max-params
+const getEntries = function (value, path, token, defined) {
+  return [
+    {
+      value: value[token],
+      path: [...path, token],
+      defined: defined && token in value,
+    },
+  ]
 }
 
 // Check if two tokens are the same

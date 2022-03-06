@@ -17,12 +17,8 @@ const getTokenEntries = function ({ value, path }, token) {
   const tokenType = getObjectTokenType(token)
   const defined = tokenType.isDefined(value)
   const valueA = defined ? value : tokenType.defaultValue
-  const entries = tokenType.getEntries(valueA, path, token)
-  return entries.map((entry) => ({
-    value: entry.value,
-    path: entry.path,
-    defined,
-  }))
+  const entries = tokenType.getEntries(valueA, path, token, defined)
+  return entries
 }
 
 // When the value does not exist, we set it deeply with `set()` but not with

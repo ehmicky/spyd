@@ -38,17 +38,11 @@ const setValue = function (target, key, childValue) {
     return target
   }
 
-  return childValue === undefined
-    ? removeValue(target, key)
-    : setDefinedValue(target, key, childValue)
+  return Array.isArray(target)
+    ? setArray(target, key, childValue)
+    : { ...target, [key]: childValue }
 }
 
-// We purposely do not distinguish between a missing property and a property set
-// to `undefined` since:
-//  - This is a bad pattern for consumer logic to make that distinction
-//  - This removes the need for a separate `remove()` method
-//  - Deleting `undefined` properties by default leads to cleaner return values
-// If the value was already `undefined`, we keep it as is though.
 const removeValue = function (target, key) {
   if (!Array.isArray(target, key)) {
     return omit.default(target, [key])
@@ -60,10 +54,4 @@ const removeValue = function (target, key) {
 
 const isUndefined = function (item) {
   return item === undefined
-}
-
-const setDefinedValue = function (target, key, childValue) {
-  return Array.isArray(target)
-    ? setArray(target, key, childValue)
-    : { ...target, [key]: childValue }
 }

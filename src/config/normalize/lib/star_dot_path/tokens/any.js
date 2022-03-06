@@ -43,17 +43,20 @@ const defaultValue = {}
 
 // Use the token to list entries against a target value.
 // We purposely ignore symbol properties by using `Object.keys()`.
-const getEntries = function (value, path) {
+// eslint-disable-next-line max-params
+const getEntries = function (value, path, token, defined) {
   if (Array.isArray(value)) {
     return value.map((childValue, index) => ({
       value: childValue,
       path: [...path, index],
+      defined,
     }))
   }
 
   return Object.keys(value).map((childKey) => ({
     value: value[childKey],
     path: [...path, childKey],
+    defined,
   }))
 }
 

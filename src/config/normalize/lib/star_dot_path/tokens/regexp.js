@@ -43,10 +43,15 @@ const isDefined = function (value) {
 const defaultValue = {}
 
 // Use the token to list entries against a target value.
-const getEntries = function (value, path, token) {
+// eslint-disable-next-line max-params
+const getEntries = function (value, path, token, defined) {
   return Object.keys(value)
     .filter((childKey) => token.test(childKey))
-    .map((childKey) => ({ value: value[childKey], path: [...path, childKey] }))
+    .map((childKey) => ({
+      value: value[childKey],
+      path: [...path, childKey],
+      defined,
+    }))
 }
 
 // Check if two tokens are the same
