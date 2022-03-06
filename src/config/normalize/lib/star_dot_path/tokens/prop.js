@@ -27,6 +27,7 @@ const isDefined = function (value) {
   return isRecurseObject(value)
 }
 
+// Default value when token is missing
 const defaultValue = {}
 
 // Use the token to list entries against a target value.

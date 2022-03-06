@@ -30,6 +30,7 @@ const isDefined = function (value) {
   return Array.isArray(value)
 }
 
+// Default value when token is missing
 const defaultValue = []
 
 // Use the token to list entries against a target value.
