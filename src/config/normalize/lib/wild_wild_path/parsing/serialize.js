@@ -8,10 +8,6 @@ import { parse } from './parse.js'
 // normalize it.
 export const serialize = function (queryOrPath) {
   const path = parse(queryOrPath)
-  return serializePath(path)
-}
-
-const serializePath = function (path) {
   return path.map(serializeToken).join(TOKEN_SEPARATOR)
 }
 
