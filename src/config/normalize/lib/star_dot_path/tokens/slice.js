@@ -1,6 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
 import { ARRAY_TOKEN, getArrayIndex, isIndexString } from './array.js'
+import { arrayProps } from './common.js'
 import { SLICE } from './special.js'
 
 // Check the type of a parsed token.
@@ -54,14 +55,6 @@ const normalize = function ({ type, from = 0, to }) {
   return { type, from, to: toA }
 }
 
-// When the token is missing a target value, add a default one.
-const isDefined = function (value) {
-  return Array.isArray(value)
-}
-
-// Default value when token is missing
-const defaultValue = []
-
 // Use the token to list entries against a target value.
 // eslint-disable-next-line max-params
 const getEntries = function (value, path, { from, to }, defined) {
@@ -85,8 +78,7 @@ export const SLICE_TOKEN = {
   testString,
   parse,
   normalize,
-  isDefined,
-  defaultValue,
+  ...arrayProps,
   getEntries,
   equals,
 }

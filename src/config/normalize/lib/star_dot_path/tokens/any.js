@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isRecurseObject } from './recurse.js'
+import { objectProps } from './common.js'
 import { ANY, ESCAPE, SEPARATOR } from './special.js'
 
 // Check the type of a parsed token
@@ -38,14 +38,6 @@ const normalize = function ({ type }) {
   return { type }
 }
 
-// When the token is missing a target value, add a default one.
-const isDefined = function (value) {
-  return isRecurseObject(value)
-}
-
-// Default value when token is missing
-const defaultValue = {}
-
 // Use the token to list entries against a target value.
 // We purposely ignore symbol properties by using `Object.keys()`.
 // eslint-disable-next-line max-params
@@ -76,8 +68,7 @@ export const ANY_TOKEN = {
   testString,
   parse,
   normalize,
-  isDefined,
-  defaultValue,
+  ...objectProps,
   getEntries,
   equals,
 }

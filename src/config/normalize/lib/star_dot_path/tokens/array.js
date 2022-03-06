@@ -1,3 +1,4 @@
+import { arrayProps } from './common.js'
 import { MINUS } from './special.js'
 
 // Check the type of a parsed token.
@@ -34,14 +35,6 @@ const normalize = function (token) {
   return token
 }
 
-// When the token is missing a target value, add a default one.
-const isDefined = function (value) {
-  return Array.isArray(value)
-}
-
-// Default value when token is missing
-const defaultValue = []
-
 // Use the token to list entries against a target value.
 // eslint-disable-next-line max-params
 const getEntries = function (value, path, token, defined) {
@@ -71,8 +64,7 @@ export const ARRAY_TOKEN = {
   testString,
   parse,
   normalize,
-  isDefined,
-  defaultValue,
+  ...arrayProps,
   getEntries,
   equals,
 }
