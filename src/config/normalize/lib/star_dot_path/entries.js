@@ -1,9 +1,15 @@
-import isPlainObj from 'is-plain-obj'
-
 import { serialize } from './parsing/serialize.js'
-import { isAnyToken } from './parsing/tokens/any.js'
-import { getArrayIndex, isIndexToken } from './parsing/tokens/array.js'
-import { isRegExpToken } from './parsing/tokens/regexp.js'
+import { isAnyToken, getAnyEntries } from './parsing/tokens/any.js'
+import {
+  isIndexToken,
+  getIndexEntries,
+  handleIndexMissingValue,
+} from './parsing/tokens/array.js'
+import {
+  getPropEntries,
+  handlePropMissingValue,
+} from './parsing/tokens/prop.js'
+import { isRegExpToken, getRegExpEntries } from './parsing/tokens/regexp.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
@@ -39,68 +45,6 @@ const getTokenEntries = function ({ value, path }, token) {
   return getPropEntries(value, path, token)
 }
 
-// List entries when using *, e.g. `a.*`
-// We purposely ignore symbol properties by using `Object.keys()`.
-const getAnyEntries = function (value, path) {
-  if (Array.isArray(value)) {
-    return value.map((childValue, index) => ({
-      value: childValue,
-      path: [...path, index],
-      missing: false,
-    }))
-  }
-
-  if (isRecurseObject(value)) {
-    return Object.keys(value).map((childKey) => ({
-      value: value[childKey],
-      path: [...path, childKey],
-      missing: false,
-    }))
-  }
-
-  return []
-}
-
-// List entries when using RegExps, e.g. `a./[bc]/`
-const getRegExpEntries = function (value, path, token) {
-  if (!isRecurseObject(value)) {
-    return []
-  }
-
-  return Object.keys(value)
-    .filter((childKey) => token.test(childKey))
-    .map((childKey) => ({
-      value: value[childKey],
-      path: [...path, childKey],
-      missing: false,
-    }))
-}
-
-// List entries when using indices, e.g. `a.1`
-const getIndexEntries = function (value, path, token) {
-  const { value: valueA, missing } = handleIndexMissingValue(value)
-  const index = getArrayIndex(valueA, token)
-  return [{ value: valueA[index], path: [...path, index], missing }]
-}
-
-const handleIndexMissingValue = function (value) {
-  const missing = !Array.isArray(value)
-  const valueA = missing ? [] : value
-  return { value: valueA, missing }
-}
-
-// List entries when using property names, e.g. `a.b`
-const getPropEntries = function (value, path, token) {
-  const { value: valueA, missing } = handlePropMissingValue(value, token)
-  return [{ value: valueA[token], path: [...path, token], missing }]
-}
-
-const handlePropMissingValue = function (value) {
-  const missing = !isRecurseObject(value)
-  const valueA = missing ? {} : value
-  return { value: valueA, missing }
-}
-
 // When the value does not exist, we set it deeply with `set()` but not with
 // `list|get|has()`.
 // We filter out between those two cases using a `missing` property.
@@ -112,15 +56,6 @@ export const handleMissingValue = function (value, token) {
   return isIndexToken(token)
     ? handleIndexMissingValue(value)
     : handlePropMissingValue(value)
-}
-
-// Whether a property is considered an object that can:
-//  - Be recursed over
-//  - Be cloned with `{...}`
-//     - Therefore we do not allow class instances
-// This must return `false` for arrays.
-const isRecurseObject = function (value) {
-  return isPlainObj(value)
 }
 
 // Compute all entries properties from the basic ones

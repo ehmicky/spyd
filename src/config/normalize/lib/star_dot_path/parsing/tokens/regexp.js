@@ -1,3 +1,4 @@
+import { isRecurseObject } from './recurse.js'
 import { REGEXP_DELIM, escapeSpecialChars } from './special.js'
 
 // Check if a token is a /.../ RegExp
@@ -31,4 +32,19 @@ export const parseRegExpToken = function (chars, query) {
       `Invalid query "${query}": regular expression "${chars}" is invalid.\n${error.message}`,
     )
   }
+}
+
+// List entries when using RegExps, e.g. `a./[bc]/`
+export const getRegExpEntries = function (value, path, token) {
+  if (!isRecurseObject(value)) {
+    return []
+  }
+
+  return Object.keys(value)
+    .filter((childKey) => token.test(childKey))
+    .map((childKey) => ({
+      value: value[childKey],
+      path: [...path, childKey],
+      missing: false,
+    }))
 }

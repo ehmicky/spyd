@@ -27,9 +27,23 @@ export const parseIndexToken = function (chars) {
   return Number(chars)
 }
 
+// List entries when using indices, e.g. `a.1`
+export const getIndexEntries = function (value, path, token) {
+  const { value: valueA, missing } = handleIndexMissingValue(value)
+  const index = getArrayIndex(valueA, token)
+  return [{ value: valueA[index], path: [...path, index], missing }]
+}
+
+// Default array when missing
+export const handleIndexMissingValue = function (value) {
+  const missing = !Array.isArray(value)
+  const valueA = missing ? [] : value
+  return { value: valueA, missing }
+}
+
 // Retrieve an array using a positive or negative index.
 // Indices that are out-of-bound return no entries but do not error.
-export const getArrayIndex = function (array, token) {
+const getArrayIndex = function (array, token) {
   return token > 0 || Object.is(token, +0)
     ? token
     : Math.max(array.length + token, 0)
