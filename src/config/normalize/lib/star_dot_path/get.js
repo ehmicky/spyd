@@ -17,8 +17,7 @@ export const get = function (target, queryOrPath) {
 
 // Check if a property is not missing according to a query
 export const has = function (target, queryOrPath) {
-  const entries = listExistingEntries(target, queryOrPath)
-  return entries.length !== 0
+  return listEntries(target, queryOrPath).some(isExisting)
 }
 
 const listExistingEntries = function (target, queryOrPath) {
