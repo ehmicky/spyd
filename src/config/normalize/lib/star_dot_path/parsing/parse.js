@@ -13,32 +13,40 @@ import { isQueryString } from './validate.js'
 
 // Parse a query string into an array of tokens.
 // Also validate and normalize it.
-// This is inspired by JSON paths and JSON pointers.
-// Syntax:
-//  - Dots are used for object properties, e.g. `one.two`
-//  - Dots are also used for array elements, e.g. `one.5`
-//  - Negatives indices can be used to get elements at the end, e.g. `one.-2`
-//     - Including -0 which can be used to append elements, e.g. `one.-0`
-//  - This can be used deeply, e.g. `one.two.5`
-//  - Wildcards are used with both objects and arrays to recurse over their
-//    children, e.g. `one.*`
-//  - Regular expressions can used with objects to select property with matching
-//    names, e.g. `one./^(two|three)$/i`
-//  - Empty keys are supported, e.g. `one.` for `{ one: { "": value } }`
-//    or `one..two` for `{ one: { "": { two: value } } }`
-//  - A leading dot can be optionally used, e.g. `.one`. It is ignored.
-//  - An empty string matches the root value
-//  - Backslashes can escape special characters: . * \ /
-// Tokens are an array of one of:
-//  - Object property name string
-//  - Array index as a positive|negative integer
-//  - RegExp instances
-//  - Wildcard: { type: "any" }
-//     - We use objects instead of strings or symbols as both are valid as
-//       object properties which creates a risk for injections
-// We allow passing an array of tokens instead of a query string which:
-//  - Removes the need for escaping
-//  - Is sometimes more convenient
+// This is inspired by JSON paths.
+// There are two formats:
+//  - "Query": a dot-separated string
+//     - This is more convenient wherever a string is better, including in CLI
+//       flags, in URLs, in files, etc.
+//     - Special characters must be escaped with \: . * \ /
+//     - A leading dot can be optionally used, e.g. `.one`. It is ignored.
+//  - "Tokens": an array of values of diverse types
+//     - This is sometimes convenient
+//     - This does not need any escaping, making it better with dynamic input
+//     - This is faster as it does not perform any parsing
+// Each object property is matched by a token among the following types:
+//  - Property name
+//     - Query format: "propName"
+//     - Tokens format: "propName"
+//     - Empty keys are supported with empty strings
+//  - Array index
+//     - Query format: "1"
+//     - Tokens format: 1 (must be an integer, not a string)
+//     - Negatives indices can be used to get elements at the end, e.g. -2
+//        - Including -0 which can be used to append elements
+//  - Wildcard
+//     - Query format: "*"
+//     - Tokens format: { type: "any" }
+//        - We use objects instead of strings or symbols as both are valid as
+//          object properties which creates a risk for injections
+//     - Matches any object property or array item
+//  - Regular expression
+//     - Query format: "/regexp/" or "/regexp/flags"
+//     - Tokens format: RegExp instance
+//     - Matches any object property with a matching name
+//     - ^ and $ must be used if the RegExp needs to match from the beginning
+//       or until the end
+// An empty string (query format) or array (tokens format) matches the root.
 // Symbols are always ignored
 //  - Both in the query string|path and in the target value
 //  - This is because symbols cannot be serialized in a query string
