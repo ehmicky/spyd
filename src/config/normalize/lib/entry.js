@@ -1,8 +1,8 @@
 import { applyRule } from './apply.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
-import { set, remove, equals } from './wild_wild_path/main.js'
 import { addWarnings } from './warn.js'
+import { set, remove, equals } from './wild_wild_path/main.js'
 
 // Apply rule for a specific entry
 export const applyEntryRule = async function (
