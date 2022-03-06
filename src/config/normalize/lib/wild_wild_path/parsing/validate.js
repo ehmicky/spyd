@@ -30,7 +30,7 @@ const validateToken = function (token, path) {
     throwTokenError(
       path,
       token,
-      'It must be a string, an integer, a regular expression, or { type: "any" }',
+      'It must be a string, an integer, a slice, a regular expression, or { type: "any" }',
     )
   }
 }
