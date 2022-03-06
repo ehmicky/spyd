@@ -87,7 +87,7 @@ const parseQuery = function (query) {
 
     if (char === ESCAPE) {
       index += 1
-      chars += parseEscapedChar(query, index)
+      chars += parseEscapedChar(query[index])
     } else if (char === SEPARATOR || index === query.length) {
       path.push(parseToken(chars, hasAny, hasMinus, hasRegExp))
       chars = ''

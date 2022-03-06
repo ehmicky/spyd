@@ -1,8 +1,7 @@
 import { ESCAPE, SEPARATOR, ANY, MINUS, REGEXP_DELIM } from './special.js'
 
 // Parse an escaped character in a query string
-export const parseEscapedChar = function (query, index) {
-  const escapedChar = query[index]
+export const parseEscapedChar = function (escapedChar) {
   validateEscape(escapedChar)
   return escapedChar
 }
