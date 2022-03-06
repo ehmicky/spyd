@@ -1,13 +1,7 @@
+import { createAnyToken } from './any.js'
 import { convertIndexInteger } from './array.js'
 import { normalizePath } from './normalize.js'
-import {
-  ESCAPE,
-  SEPARATOR,
-  ANY,
-  MINUS,
-  SPECIAL_CHARS,
-  ANY_TOKEN,
-} from './special.js'
+import { ESCAPE, SEPARATOR, ANY, MINUS, SPECIAL_CHARS } from './special.js'
 import { isQueryString } from './validate.js'
 
 // Parse a query string into an array of tokens.
@@ -29,9 +23,9 @@ import { isQueryString } from './validate.js'
 // Tokens are an array of one of:
 //  - Object property as a string or symbol
 //  - Array index as a positive|negative integer|string
-//  - `Symbol.for('*')` for wildcards
-//     - We use symbols as it allows using dynamic strings without injection
-//       risk
+//  - Wildcards: { type: "any" }
+//     - We use objects instead of strings or symbols as both are valid as
+//       object properties which creates a risk for injections
 // We allow passing an array of tokens instead of a query string which:
 //  - Removes the need for escaping
 //  - Is sometimes more convenient
@@ -123,5 +117,5 @@ Regular expressions can be used instead.`,
     )
   }
 
-  return ANY_TOKEN
+  return createAnyToken()
 }

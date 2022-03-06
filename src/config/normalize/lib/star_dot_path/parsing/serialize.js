@@ -1,6 +1,7 @@
+import { isAnyToken } from './any.js'
 import { isIndexToken } from './array.js'
 import { parse } from './parse.js'
-import { SEPARATOR, ANY, ANY_TOKEN, SPECIAL_CHARS_REGEXP } from './special.js'
+import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP } from './special.js'
 
 // Inverse of `parse()`
 // When passing a query string, it is parsed and re-serialized to validate and
@@ -15,7 +16,7 @@ const serializePath = function (path) {
 }
 
 const serializeToken = function (token, index) {
-  if (token === ANY_TOKEN) {
+  if (isAnyToken(token)) {
     return ANY
   }
 

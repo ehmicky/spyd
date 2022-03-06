@@ -1,5 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
+import { isAnyToken } from './parsing/any.js'
 import {
   convertIndexInteger,
   convertIndexString,
@@ -7,7 +8,6 @@ import {
   isIndexToken,
 } from './parsing/array.js'
 import { serialize } from './parsing/serialize.js'
-import { ANY_TOKEN } from './parsing/special.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
@@ -28,7 +28,7 @@ const listTokenEntries = function (entries, token) {
 }
 
 const getTokenEntries = function ({ value, path }, token) {
-  return token === ANY_TOKEN
+  return isAnyToken(token)
     ? getAnyEntries(value, path)
     : getKeyEntries(value, path, token)
 }

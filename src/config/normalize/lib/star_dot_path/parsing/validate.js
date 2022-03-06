@@ -1,7 +1,7 @@
 import { inspect } from 'util'
 
+import { isAnyToken } from './any.js'
 import { isIndexToken } from './array.js'
-import { ANY_TOKEN } from './special.js'
 
 // Most methods accept both query and path syntaxes.
 // This checks which one is used.
@@ -31,13 +31,13 @@ const validateToken = function (token, path) {
     throwTokenError(
       path,
       token,
-      'It must be a string, integer or Symbol.for("*").',
+      'It must be a string, an integer or { type: "any" }',
     )
   }
 }
 
 const isValidToken = function (token) {
-  return typeof token === 'string' || isIndexToken(token) || token === ANY_TOKEN
+  return typeof token === 'string' || isIndexToken(token) || isAnyToken(token)
 }
 
 const throwPathError = function (path, message) {
