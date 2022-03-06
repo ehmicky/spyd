@@ -14,7 +14,8 @@ export const set = function (target, queryOrPath, newValue) {
   const entries = listEntries(target, path)
   const entriesA = addDefaultEntries(entries, path)
   return entriesA.reduce(
-    (targetA, entry) => setEntry(targetA, entry.path, newValue),
+    (targetA, entry) =>
+      setEntryPart({ value: targetA, path: entry.path, newValue, index: 0 }),
     target,
   )
 }
@@ -24,21 +25,6 @@ export const set = function (target, queryOrPath, newValue) {
 // does not match anything.
 const addDefaultEntries = function (entries, path) {
   return entries.length === 0 && !pathHasAny(path) ? [{ path }] : entries
-}
-
-// Returns an object with only the properties being queried.
-export const pick = function (target, queryOrPath) {
-  const path = parse(queryOrPath)
-  const entries = listEntries(target, path)
-  return entries.reduce(pickEntry, {})
-}
-
-const pickEntry = function (newTarget, { value, path }) {
-  return setEntry(newTarget, path, value)
-}
-
-const setEntry = function (value, path, newValue) {
-  return setEntryPart({ value, path, newValue, index: 0 })
 }
 
 const setEntryPart = function ({ value, path, newValue, index }) {
