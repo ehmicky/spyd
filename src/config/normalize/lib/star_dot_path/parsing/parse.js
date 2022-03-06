@@ -30,9 +30,9 @@ import { ESCAPE, SEPARATOR, ANY, SPECIAL_CHARS, ANY_TOKEN } from './special.js'
 //  - I.e. query or path syntax errors, or wrong arguments
 //  - But queries matching nothing do not throw: instead they return nothing
 export const maybeParse = function (queryOrPath) {
-  return Array.isArray(queryOrPath)
-    ? normalizePath(queryOrPath)
-    : parse(queryOrPath)
+  return typeof queryOrPath === 'string'
+    ? parse(queryOrPath)
+    : normalizePath(queryOrPath)
 }
 
 export const parse = function (query) {
