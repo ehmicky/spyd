@@ -5,6 +5,6 @@ import isPlainObj from 'is-plain-obj'
 //  - Be cloned with `{...}`
 //     - Therefore we do not allow class instances
 // This must return `false` for arrays.
-export const isObject = function (value) {
+export const isRecurseObject = function (value) {
   return isPlainObj(value)
 }

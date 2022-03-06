@@ -3,7 +3,7 @@ import omitLib from 'omit.js'
 import { setArray } from '../../../../utils/set.js'
 
 import { listEntries, normalizeEntry } from './entries/main.js'
-import { isObject } from './entries/recurse.js'
+import { isRecurseObject } from './entries/recurse.js'
 import { maybeParse } from './parsing/parse.js'
 import { pathHasAny, isIndexNode } from './parsing/path.js'
 
@@ -50,7 +50,7 @@ const setEntry = function (
 }
 
 const addDefaultTarget = function (value, key) {
-  if (Array.isArray(value) || isObject(value)) {
+  if (Array.isArray(value) || isRecurseObject(value)) {
     return value
   }
 

@@ -3,7 +3,7 @@ import { serialize } from '../parsing/serialize.js'
 import { ANY_TOKEN } from '../parsing/special.js'
 
 import { getComplexEntries } from './complex.js'
-import { isObject } from './recurse.js'
+import { isRecurseObject } from './recurse.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
@@ -39,7 +39,7 @@ const getAnyEntries = function (value, path) {
     }))
   }
 
-  if (isObject(value)) {
+  if (isRecurseObject(value)) {
     return Object.entries(value).map(([childKey, childValue]) => ({
       value: childValue,
       path: [...path, childKey],
@@ -56,7 +56,7 @@ const getKeyEntries = function (value, path, token) {
     return [{ value: value[tokenA], path: [...path, tokenA] }]
   }
 
-  if (isObject(value)) {
+  if (isRecurseObject(value)) {
     const tokenA = convertIndexString(token)
     return [{ value: value[tokenA], path: [...path, tokenA] }]
   }
