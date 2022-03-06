@@ -1,7 +1,8 @@
-import { SEPARATOR } from './special.js'
-
 // Escaping character
 export const ESCAPE = '\\'
+
+// Tokens separator
+export const SEPARATOR = '.'
 
 // Special characters to escape
 export const SPECIAL_CHARS = new Set([ESCAPE, SEPARATOR])

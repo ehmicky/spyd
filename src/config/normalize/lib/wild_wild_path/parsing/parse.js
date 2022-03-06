@@ -1,6 +1,5 @@
-import { ESCAPE, SPECIAL_CHARS } from '../tokens/escape.js'
+import { ESCAPE, SEPARATOR, SPECIAL_CHARS } from '../tokens/escape.js'
 import { getStringTokenType } from '../tokens/main.js'
-import { SEPARATOR } from '../tokens/special.js'
 
 import { normalizePath } from './normalize.js'
 import { isQueryString } from './validate.js'

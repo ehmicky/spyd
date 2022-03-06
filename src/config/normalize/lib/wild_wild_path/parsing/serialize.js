@@ -1,5 +1,5 @@
+import { SEPARATOR } from '../tokens/escape.js'
 import { getObjectTokenType } from '../tokens/main.js'
-import { SEPARATOR } from '../tokens/special.js'
 
 import { parse } from './parse.js'
 
