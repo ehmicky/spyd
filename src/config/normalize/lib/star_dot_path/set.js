@@ -37,11 +37,11 @@ const setProp = function (
 }
 
 // Delete one or multiple properties in `target` using a query string
-export const remove = function (target, queryOrPath) {
-  return omit(target, queryOrPath, () => true)
+export const omit = function (target, queryOrPath) {
+  return exclude(target, queryOrPath, () => true)
 }
 
-export const omit = function (target, queryOrPath, condition) {
+export const exclude = function (target, queryOrPath, condition) {
   const nodes = maybeParse(queryOrPath)
   const entries = listFullEntries(target, nodes)
   return entries.reduce(

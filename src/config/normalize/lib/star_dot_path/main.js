@@ -1,4 +1,4 @@
-export { set, transform, remove, omit } from './set.js'
+export { set, transform, omit, exclude } from './set.js'
 export { list, get, has } from './get.js'
 export { isParent } from './parsing/parent.js'
 export { serialize } from './parsing/serialize.js'
