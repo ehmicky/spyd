@@ -15,7 +15,7 @@ export const set = function (target, queryOrPath, value) {
   const entriesA = addDefaultEntries(entries, path)
   return entriesA.reduce(
     (targetA, entry) =>
-      setEntryPart({ target: targetA, path: entry.path, value, index: 0 }),
+      setEntry({ target: targetA, path: entry.path, value, index: 0 }),
     target,
   )
 }
@@ -27,7 +27,7 @@ const addDefaultEntries = function (entries, path) {
   return entries.length === 0 && !pathHasAny(path) ? [{ path }] : entries
 }
 
-const setEntryPart = function ({ target, path, value, index }) {
+const setEntry = function ({ target, path, value, index }) {
   if (index === path.length) {
     return value
   }
@@ -35,7 +35,7 @@ const setEntryPart = function ({ target, path, value, index }) {
   const key = path[index]
   const defaultedTarget = addDefaultTarget(target, key)
   const childTarget = defaultedTarget[key]
-  const childValue = setEntryPart({
+  const childValue = setEntry({
     target: childTarget,
     path,
     value,
