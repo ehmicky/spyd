@@ -15,8 +15,9 @@ export const set = function (target, queryOrPath, setValue) {
 // Same but using a function returning the value to set
 export const transform = function (target, queryOrPath, transformFunc) {
   const path = maybeParse(queryOrPath)
-  const entries = listTransformEntries(target, path)
-  return entries
+  const entries = listEntries(target, path)
+  const entriesA = addDefaultEntries(entries, path)
+  return entriesA
     .map(normalizeEntry)
     .reduce(
       (targetA, entry) => setEntry(targetA, 0, { entry, transformFunc }),
@@ -27,8 +28,7 @@ export const transform = function (target, queryOrPath, transformFunc) {
 // When the value does not exist, we set it deeply.
 // However, we cannot do this when the query has at least one wildcard which
 // does not match anything.
-const listTransformEntries = function (target, path) {
-  const entries = listEntries(target, path)
+const addDefaultEntries = function (entries, path) {
   return entries.length === 0 && !pathHasAny(path) ? [{ path }] : entries
 }
 
