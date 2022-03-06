@@ -2,12 +2,10 @@ import pReduce from 'p-reduce'
 
 import { cleanObject } from '../../../utils/clean.js'
 
-import { applyRule } from './apply.js'
-import { addMoves } from './move.js'
-import { getOpts } from './opts.js'
+import { applyEntryRule } from './entry.js'
 import { normalizeRules } from './rule.js'
-import { list, set, equals } from './star_dot_path/main.js'
-import { addWarnings, logWarnings } from './warn.js'
+import { list } from './star_dot_path/main.js'
+import { logWarnings } from './warn.js'
 
 // Normalize configuration shape and do custom validation.
 // An array of rule objects is passed.
@@ -47,11 +45,11 @@ const applyRuleDeep = async function (
   { config, moves, warnings },
   { rule, rule: { namePath }, context, cwd, prefix, parent },
 ) {
-  const props = list(config, namePath)
+  const entries = list(config, namePath)
   return await pReduce(
-    props,
+    entries,
     (memo, { value, query: nameQuery, path: namePathA }) =>
-      applyPropRule(memo, {
+      applyEntryRule(memo, {
         value,
         nameQuery,
         namePath: namePathA,
@@ -63,50 +61,6 @@ const applyRuleDeep = async function (
       }),
     { config, moves, warnings },
   )
-}
-
-const applyPropRule = async function (
-  { config, moves, warnings },
-  {
-    value,
-    nameQuery,
-    namePath,
-    rule,
-    rule: { example },
-    context,
-    cwd,
-    prefix,
-    parent,
-  },
-) {
-  const opts = await getOpts({
-    nameQuery,
-    namePath,
-    config,
-    context,
-    cwd,
-    prefix,
-    parent,
-    example,
-    moves,
-  })
-  const {
-    value: newValue,
-    renamedPath = namePath,
-    newPaths = [],
-    warnings: newWarnings,
-  } = await applyRule(rule, value, opts)
-  const configA = setConfigValue({ config, namePath, renamedPath, newValue })
-  const movesA = addMoves(moves, newPaths, namePath)
-  const warningsA = addWarnings(warnings, newWarnings)
-  return { config: configA, moves: movesA, warnings: warningsA }
-}
-
-const setConfigValue = function ({ config, namePath, renamedPath, newValue }) {
-  const configA = equals(namePath, renamedPath)
-    ? config
-    : set(config, namePath, undefined)
-  return set(configA, renamedPath, newValue)
 }
 
 // When in `sort` mode, user errors are returned instead of being thrown.
