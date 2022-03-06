@@ -9,3 +9,8 @@ export const isPropToken = function (token) {
 export const serializePropToken = function (token, index) {
   return token === '' && index === 0 ? SEPARATOR : escapeSpecialChars(token)
 }
+
+// Parse a property string into a token
+export const parsePropToken = function (chars) {
+  return chars
+}

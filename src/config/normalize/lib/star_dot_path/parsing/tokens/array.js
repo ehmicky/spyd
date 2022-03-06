@@ -1,18 +1,10 @@
 // Users can specify integers either:
 //  - stringified for object properties
-//     - those should also work for array indices for convenience, but this is
-//       not documented
 //  - left as is for array indices
-// For convenience, we also support, but do not document, stringified integers
-// as array indices.
-// At query parsing time, without any target value, we do not know yet which
-// intent it is:
-//  - When a path was passed, we leave it as is
-//  - When a query string was used instead, we assume it was meant as an array
-//    index since those are much more common.
+// At query string parsing time, without any target value, we assume the intent
+// was for arrays.
 // We allow negative indexes which query from the end
 //  - Including -0 which can be used to append values
-// At evaluation time, with a target value, we transtype correctly.
 // Check if token is an array index integer
 export const isIndexToken = function (token) {
   return Number.isInteger(token)
@@ -23,16 +15,16 @@ export const serializeIndexToken = function (token) {
   return Object.is(token, -0) ? '-0' : String(token)
 }
 
-export const convertIndexInteger = function (token) {
-  return typeof token === 'string' && INTEGER_REGEXP.test(token)
-    ? Number(token)
-    : token
+// Check if a string should be parsed as an index token
+export const hasIndex = function (chars, hasEscapedMinus) {
+  return !hasEscapedMinus && INTEGER_REGEXP.test(chars)
 }
 
 const INTEGER_REGEXP = /^-?\d+$/u
 
-export const convertIndexString = function (token) {
-  return isIndexToken(token) ? String(token) : token
+// Parse an array index string into a token
+export const parseIndexToken = function (chars) {
+  return Number(chars)
 }
 
 // Retrieve an array using a positive or negative index.

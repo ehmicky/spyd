@@ -1,6 +1,7 @@
 import { normalizePath } from './normalize.js'
-import { createAnyToken } from './tokens/any.js'
-import { convertIndexInteger } from './tokens/array.js'
+import { parseAnyToken } from './tokens/any.js'
+import { hasIndex, parseIndexToken } from './tokens/array.js'
+import { parsePropToken } from './tokens/prop.js'
 import { parseRegExpToken } from './tokens/regexp.js'
 import {
   ESCAPE,
@@ -31,10 +32,10 @@ import { isQueryString } from './validate.js'
 //  - An empty string matches the root value
 //  - Backslashes can escape special characters: . * \ /
 // Tokens are an array of one of:
-//  - Object property as a string or symbol
-//  - Array index as a positive|negative integer|string
+//  - Object property name string
+//  - Array index as a positive|negative integer
 //  - RegExp instances
-//  - Wildcards: { type: "any" }
+//  - Wildcard: { type: "any" }
 //     - We use objects instead of strings or symbols as both are valid as
 //       object properties which creates a risk for injections
 // We allow passing an array of tokens instead of a query string which:
@@ -121,20 +122,11 @@ const parseToken = function (chars, query, hasAny, hasMinus, hasRegExp) {
     return parseRegExpToken(chars, query)
   }
 
-  if (chars[0] === MINUS && !hasMinus) {
-    return chars
+  const hasEscapedMinus = chars[0] === MINUS && !hasMinus
+
+  if (hasIndex(chars, hasEscapedMinus)) {
+    return parseIndexToken(chars)
   }
 
-  return convertIndexInteger(chars)
-}
-
-const parseAnyToken = function (chars, query) {
-  if (chars !== ANY) {
-    throw new Error(
-      `Invalid query "${query}": character ${ANY} must not be preceded or followed by other characters except "${SEPARATOR}"
-Regular expressions can be used instead.`,
-    )
-  }
-
-  return createAnyToken()
+  return parsePropToken(chars)
 }

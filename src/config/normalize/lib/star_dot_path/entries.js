@@ -2,12 +2,7 @@ import isPlainObj from 'is-plain-obj'
 
 import { serialize } from './parsing/serialize.js'
 import { isAnyToken } from './parsing/tokens/any.js'
-import {
-  convertIndexInteger,
-  convertIndexString,
-  getArrayIndex,
-  isIndexToken,
-} from './parsing/tokens/array.js'
+import { getArrayIndex, isIndexToken } from './parsing/tokens/array.js'
 import { isRegExpToken } from './parsing/tokens/regexp.js'
 
 // List all values (and their associated path) matching a specific query for
@@ -37,7 +32,13 @@ const getTokenEntries = function ({ value, path }, token) {
     return getRegExpEntries(value, path, token)
   }
 
-  return getKeyEntries(value, path, token)
+  const { value: valueA, missing } = handleMissingValue(value, token)
+
+  if (isIndexToken(token)) {
+    return getIndexEntries(valueA, path, token, missing)
+  }
+
+  return getPropEntries(valueA, path, token, missing)
 }
 
 // For queries which use * on its own, e.g. `a.*`
@@ -77,18 +78,17 @@ const getRegExpEntries = function (value, path, token) {
     }))
 }
 
-// For queries which do not use *, e.g. `a.b` or `a.1`
-const getKeyEntries = function (value, path, token) {
-  const { value: valueA, missing } = handleMissingValue(value, token)
+// For index queries, e.g. `a.1`
+// eslint-disable-next-line max-params
+const getIndexEntries = function (value, path, token, missing) {
+  const index = getArrayIndex(value, token)
+  return [{ value: value[index], path: [...path, index], missing }]
+}
 
-  if (Array.isArray(valueA)) {
-    const index = convertIndexInteger(token)
-    const indexA = getArrayIndex(valueA, index)
-    return [{ value: valueA[indexA], path: [...path, indexA], missing }]
-  }
-
-  const propName = convertIndexString(token)
-  return [{ value: valueA[propName], path: [...path, propName], missing }]
+// For property name queries, e.g. `a.b`
+// eslint-disable-next-line max-params
+const getPropEntries = function (value, path, token, missing) {
+  return [{ value: value[token], path: [...path, token], missing }]
 }
 
 // When the value does not exist, we set it deeply with `set()` but not with
@@ -99,13 +99,21 @@ const getKeyEntries = function (value, path, token) {
 //  - Positive are kept
 //  - Negative are converted to index 0
 export const handleMissingValue = function (value, token) {
-  const missing = !Array.isArray(value) && !isRecurseObject(value)
-  const valueA = missing ? getMissingValue(token) : value
+  return isIndexToken(token)
+    ? handleIndexMissingValue(value)
+    : handlePropMissingValue(value)
+}
+
+const handleIndexMissingValue = function (value) {
+  const missing = !Array.isArray(value)
+  const valueA = missing ? [] : value
   return { value: valueA, missing }
 }
 
-const getMissingValue = function (token) {
-  return isIndexToken(token) ? [] : {}
+const handlePropMissingValue = function (value) {
+  const missing = !isRecurseObject(value)
+  const valueA = missing ? {} : value
+  return { value: valueA, missing }
 }
 
 // Whether a property is considered an object that can:
