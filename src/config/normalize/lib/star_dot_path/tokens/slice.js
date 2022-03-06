@@ -1,6 +1,11 @@
 import isPlainObj from 'is-plain-obj'
 
-import { ARRAY_TOKEN, getArrayIndex, isIndexString } from './array.js'
+import {
+  ARRAY_TOKEN,
+  getArrayIndex,
+  hasEscapedMinus,
+  isIndexString,
+} from './array.js'
 import { arrayProps } from './common.js'
 import { SLICE } from './special.js'
 
@@ -28,8 +33,12 @@ const serializeEdge = function (edge) {
 }
 
 // Check the type of a serialized token
-const testString = function ({ chars, hasSlice }) {
-  return hasSlice && chars.split(SLICE).every(isEdgeString)
+const testString = function ({ chars, hasSlice, hasMinus }) {
+  return (
+    hasSlice &&
+    !hasEscapedMinus(chars, hasMinus) &&
+    chars.split(SLICE).every(isEdgeString)
+  )
 }
 
 const isEdgeString = function (chars) {

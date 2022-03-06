@@ -15,8 +15,11 @@ const serialize = function (token) {
 
 // Check the type of a serialized token
 const testString = function ({ chars, hasMinus }) {
-  const hasEscapedMinus = chars[0] === MINUS && !hasMinus
-  return !hasEscapedMinus && isIndexString(chars)
+  return !hasEscapedMinus(chars, hasMinus) && isIndexString(chars)
+}
+
+export const hasEscapedMinus = function (chars, hasMinus) {
+  return chars[0] === MINUS && !hasMinus
 }
 
 export const isIndexString = function (chars) {
