@@ -1,6 +1,7 @@
 import { objectProps } from './common.js'
 import { escapeSpecialChars } from './escape.js'
-import { SEPARATOR } from './special.js'
+import { getOtherStringTokenType } from './other.js'
+import { SEPARATOR, ESCAPE } from './special.js'
 
 // Check the type of a parsed token
 const testObject = function (token) {
@@ -9,7 +10,14 @@ const testObject = function (token) {
 
 // Serialize a token to a string
 const serialize = function (token, index) {
-  return token === '' && index === 0 ? SEPARATOR : escapeSpecialChars(token)
+  if (token === '' && index === 0) {
+    return SEPARATOR
+  }
+
+  const chars = escapeSpecialChars(token)
+  return getOtherStringTokenType(chars) === undefined
+    ? chars
+    : `${ESCAPE}${chars}`
 }
 
 // Check the type of a serialized token
