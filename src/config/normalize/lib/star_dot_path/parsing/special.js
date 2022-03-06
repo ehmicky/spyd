@@ -11,5 +11,10 @@ export const SPECIAL_CHARS = new Set([
   MINUS,
   REGEXP_DELIM,
 ])
-// Special characters which should always be escaped
-export const SPECIAL_CHARS_REGEXP = /[\\.*]|^[/-]/gu
+
+// Escape special characters
+export const escapeSpecialChars = function (string) {
+  return string.replace(SPECIAL_CHARS_REGEXP, '\\$&')
+}
+
+const SPECIAL_CHARS_REGEXP = /[\\.*]|^[/-]/gu

@@ -1,4 +1,4 @@
-import { REGEXP_DELIM, SPECIAL_CHARS_REGEXP } from './special.js'
+import { REGEXP_DELIM, escapeSpecialChars } from './special.js'
 
 // Check if a token is a /.../ RegExp
 export const isRegExpToken = function (token) {
@@ -7,7 +7,7 @@ export const isRegExpToken = function (token) {
 
 // Serialize a RegExp token into a string
 export const serializeRegExpToken = function (token) {
-  const source = token.source.replace(SPECIAL_CHARS_REGEXP, '\\$&')
+  const source = escapeSpecialChars(token.source)
   return `${REGEXP_DELIM}${source}${REGEXP_DELIM}${token.flags}`
 }
 

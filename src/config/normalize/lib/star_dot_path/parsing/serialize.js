@@ -2,7 +2,7 @@ import { isAnyToken } from './any.js'
 import { isIndexToken, serializeIndexToken } from './array.js'
 import { parse } from './parse.js'
 import { isRegExpToken, serializeRegExpToken } from './regexp.js'
-import { SEPARATOR, ANY, SPECIAL_CHARS_REGEXP } from './special.js'
+import { SEPARATOR, ANY, escapeSpecialChars } from './special.js'
 
 // Inverse of `parse()`
 // When passing a query string, it is parsed and re-serialized to validate and
@@ -37,5 +37,5 @@ const serializeStringToken = function (token, index) {
     return SEPARATOR
   }
 
-  return token.replace(SPECIAL_CHARS_REGEXP, '\\$&')
+  return escapeSpecialChars(token)
 }
