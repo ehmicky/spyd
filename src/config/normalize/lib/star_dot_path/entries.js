@@ -39,7 +39,7 @@ const getTokenEntries = function ({ value, path }, token) {
   return getPropEntries(value, path, token)
 }
 
-// For queries which use * on its own, e.g. `a.*`
+// List entries when using *, e.g. `a.*`
 // We purposely ignore symbol properties by using `Object.keys()`.
 const getAnyEntries = function (value, path) {
   if (Array.isArray(value)) {
@@ -61,7 +61,7 @@ const getAnyEntries = function (value, path) {
   return []
 }
 
-// For queries which use RegExps, e.g. `a./[bc]/`
+// List entries when using RegExps, e.g. `a./[bc]/`
 const getRegExpEntries = function (value, path, token) {
   if (!isRecurseObject(value)) {
     return []
@@ -76,7 +76,7 @@ const getRegExpEntries = function (value, path, token) {
     }))
 }
 
-// For index queries, e.g. `a.1`
+// List entries when using indices, e.g. `a.1`
 const getIndexEntries = function (value, path, token) {
   const { value: valueA, missing } = handleIndexMissingValue(value)
   const index = getArrayIndex(valueA, token)
@@ -89,7 +89,7 @@ const handleIndexMissingValue = function (value) {
   return { value: valueA, missing }
 }
 
-// For property name queries, e.g. `a.b`
+// List entries when using property names, e.g. `a.b`
 const getPropEntries = function (value, path, token) {
   const { value: valueA, missing } = handlePropMissingValue(value, token)
   return [{ value: valueA[token], path: [...path, token], missing }]
