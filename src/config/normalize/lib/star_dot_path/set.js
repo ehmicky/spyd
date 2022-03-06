@@ -5,7 +5,7 @@ import { setArray } from '../../../../utils/set.js'
 import { listEntries, normalizeEntry } from './entries/main.js'
 import { isObject } from './entries/recurse.js'
 import { maybeParse } from './parsing/parse.js'
-import { pathHasAny } from './parsing/path.js'
+import { pathHasAny, isIndexNode } from './parsing/path.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPath, setValue) {
@@ -54,7 +54,7 @@ const addDefaultTarget = function (target, key) {
     return target
   }
 
-  return Number.isInteger(key) ? [] : {}
+  return isIndexNode(key) ? [] : {}
 }
 
 // Delete one or multiple properties in `target` using a query string
@@ -96,7 +96,7 @@ const excludeEntry = function (
 }
 
 const removeValue = function (value, key) {
-  if (!Number.isInteger(key)) {
+  if (!isIndexNode(key)) {
     return omitLib.default(value, [key])
   }
 
@@ -113,7 +113,7 @@ const setNewChildValue = function (value, key, newChildValue) {
     return value
   }
 
-  return Number.isInteger(key)
+  return isIndexNode(key)
     ? setArray(value, key, newChildValue)
     : { ...value, [key]: newChildValue }
 }

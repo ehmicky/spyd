@@ -1,3 +1,4 @@
+import { isIndexNode } from './path.js'
 import { SEPARATOR, ANY, ANY_TOKEN, SPECIAL_CHARS_REGEXP } from './special.js'
 
 // Inverse of `parse()`
@@ -16,7 +17,7 @@ const serializeToken = function (token, index) {
     return ANY
   }
 
-  if (Number.isInteger(token)) {
+  if (isIndexNode(token)) {
     return String(token)
   }
 
