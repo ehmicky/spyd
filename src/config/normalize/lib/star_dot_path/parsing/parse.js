@@ -86,10 +86,10 @@ const parseQuery = function (query) {
       hasMinus = false
       hasRegExp = false
     } else {
+      chars += char
       hasAny = hasAny || char === ANY
       hasMinus = hasMinus || char === MINUS
       hasRegExp = hasRegExp || char === REGEXP_DELIM
-      chars += char
     }
   }
 
