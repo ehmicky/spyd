@@ -1,7 +1,7 @@
 import { objectProps } from './common.js'
-import { escapeSpecialChars } from './escape.js'
+import { ESCAPE, escapeSpecialChars } from './escape.js'
 import { getOtherStringTokenType } from './other.js'
-import { SEPARATOR, ESCAPE } from './special.js'
+import { SEPARATOR } from './special.js'
 
 // Check the type of a parsed token
 const testObject = function (token) {

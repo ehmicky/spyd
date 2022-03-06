@@ -1,6 +1,9 @@
-import { ESCAPE, SEPARATOR } from './special.js'
+import { SEPARATOR } from './special.js'
 
-// Sepcial characters to escape
+// Escaping character
+export const ESCAPE = '\\'
+
+// Special characters to escape
 export const SPECIAL_CHARS = new Set([ESCAPE, SEPARATOR])
 
 // Escape special characters
