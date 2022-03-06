@@ -63,6 +63,11 @@ const renameProp = async function (value, rename, opts) {
     return
   }
 
-  const name = String(await callValueFunc(rename, value, opts))
+  const name = await callValueFunc(rename, value, opts)
+
+  if (typeof name !== 'string') {
+    return
+  }
+
   return has(opts.funcOpts.config, name) ? undefined : name
 }
