@@ -108,22 +108,36 @@ const parseQuery = function (query) {
    fp/no-mutation, fp/no-mutating-methods, fp/no-let */
 
 const parseToken = function (state) {
-  if (state.hasAny) {
+  if (testAnyChars(state)) {
     return parseAnyToken(state.chars)
   }
 
-  if (state.hasRegExp) {
+  if (testRegExpChars(state)) {
     return parseRegExpToken(state.chars)
   }
 
-  if (areIndexTokenChars(state.chars, state.hasMinus)) {
+  if (testIndexChars(state)) {
     return parseIndexToken(state.chars)
   }
 
-  return parsePropToken(state.chars)
+  if (testPropChars(state)) {
+    return parsePropToken(state.chars)
+  }
 }
 
-const areIndexTokenChars = function (chars, hasMinus) {
+const testAnyChars = function ({ hasAny }) {
+  return hasAny
+}
+
+const testRegExpChars = function ({ hasRegExp }) {
+  return hasRegExp
+}
+
+const testIndexChars = function ({ chars, hasMinus }) {
   const hasEscapedMinus = chars[0] === MINUS && !hasMinus
   return hasIndex(chars, hasEscapedMinus)
+}
+
+const testPropChars = function () {
+  return true
 }
