@@ -1,6 +1,6 @@
 import { parseAnyToken } from '../tokens/any.js'
 import { hasIndex, parseIndexToken } from '../tokens/array.js'
-import { SPECIAL_CHARS } from '../tokens/escape.js'
+import { parseEscapedChar } from '../tokens/escape.js'
 import { parsePropToken } from '../tokens/prop.js'
 import { parseRegExpToken } from '../tokens/regexp.js'
 import {
@@ -106,20 +106,6 @@ const parseQuery = function (query) {
 }
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
    fp/no-mutation, fp/no-mutating-methods, fp/no-let */
-
-const parseEscapedChar = function (query, index) {
-  const escapedChar = query[index]
-  validateEscape(escapedChar)
-  return escapedChar
-}
-
-const validateEscape = function (escapedChar) {
-  if (!SPECIAL_CHARS.has(escapedChar)) {
-    throw new Error(
-      `character "${ESCAPE}" must only be followed by ${SEPARATOR} ${ANY} ${MINUS} ${REGEXP_DELIM} or ${ESCAPE}`,
-    )
-  }
-}
 
 // eslint-disable-next-line max-params
 const parseToken = function (chars, hasAny, hasMinus, hasRegExp) {

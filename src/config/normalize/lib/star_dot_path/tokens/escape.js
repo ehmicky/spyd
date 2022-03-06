@@ -1,12 +1,21 @@
 import { ESCAPE, SEPARATOR, ANY, MINUS, REGEXP_DELIM } from './special.js'
 
-export const SPECIAL_CHARS = new Set([
-  ESCAPE,
-  SEPARATOR,
-  ANY,
-  MINUS,
-  REGEXP_DELIM,
-])
+// Parse an escaped character in a query string
+export const parseEscapedChar = function (query, index) {
+  const escapedChar = query[index]
+  validateEscape(escapedChar)
+  return escapedChar
+}
+
+const validateEscape = function (escapedChar) {
+  if (!SPECIAL_CHARS.has(escapedChar)) {
+    throw new Error(
+      `character "${ESCAPE}" must only be followed by ${SEPARATOR} ${ANY} ${MINUS} ${REGEXP_DELIM} or ${ESCAPE}`,
+    )
+  }
+}
+
+const SPECIAL_CHARS = new Set([ESCAPE, SEPARATOR, ANY, MINUS, REGEXP_DELIM])
 
 // Escape special characters
 export const escapeSpecialChars = function (string) {
