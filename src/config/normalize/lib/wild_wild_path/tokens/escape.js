@@ -2,10 +2,10 @@
 export const ESCAPE = '\\'
 
 // Tokens separator
-export const SEPARATOR = '.'
+export const TOKEN_SEPARATOR = '.'
 
 // Special characters to escape
-export const SPECIAL_CHARS = new Set([ESCAPE, SEPARATOR])
+export const SPECIAL_CHARS = new Set([ESCAPE, TOKEN_SEPARATOR])
 
 // Escape special characters
 export const escapeSpecialChars = function (string) {

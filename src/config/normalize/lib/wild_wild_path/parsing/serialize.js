@@ -1,4 +1,4 @@
-import { SEPARATOR } from '../tokens/escape.js'
+import { TOKEN_SEPARATOR } from '../tokens/escape.js'
 import { getObjectTokenType } from '../tokens/main.js'
 
 import { parse } from './parse.js'
@@ -12,7 +12,7 @@ export const serialize = function (queryOrPath) {
 }
 
 const serializePath = function (path) {
-  return path.map(serializeToken).join(SEPARATOR)
+  return path.map(serializeToken).join(TOKEN_SEPARATOR)
 }
 
 const serializeToken = function (token, index) {

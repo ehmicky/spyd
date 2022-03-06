@@ -1,4 +1,4 @@
-import { ESCAPE, SEPARATOR, SPECIAL_CHARS } from '../tokens/escape.js'
+import { ESCAPE, TOKEN_SEPARATOR, SPECIAL_CHARS } from '../tokens/escape.js'
 import { getStringTokenType } from '../tokens/main.js'
 
 import { normalizePath } from './normalize.js'
@@ -92,7 +92,7 @@ const parseQuery = function (query) {
     // eslint-disable-next-line max-depth
     if (char === ESCAPE) {
       parseEscape(state, query)
-    } else if (char === SEPARATOR || state.index === query.length) {
+    } else if (char === TOKEN_SEPARATOR || state.index === query.length) {
       addToken(state)
     } else {
       state.chars += char
@@ -103,7 +103,7 @@ const parseQuery = function (query) {
 }
 
 const getInitialState = function (query) {
-  const index = query[0] === SEPARATOR ? 1 : 0
+  const index = query[0] === TOKEN_SEPARATOR ? 1 : 0
   const state = { path: [], index }
   resetState(state)
   return state
@@ -120,7 +120,7 @@ const parseEscape = function (state, query) {
 
   if (state.chars.length !== 0) {
     throw new Error(
-      `character "${ESCAPE}" must either be at the start of a token, or be followed by ${SEPARATOR} or ${ESCAPE}`,
+      `character "${ESCAPE}" must either be at the start of a token, or be followed by ${TOKEN_SEPARATOR} or ${ESCAPE}`,
     )
   }
 
