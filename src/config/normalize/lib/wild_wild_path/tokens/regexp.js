@@ -14,21 +14,14 @@ const serialize = function (token) {
 }
 
 // Check the type of a serialized token
-const testString = function ({ hasRegExp }) {
-  return hasRegExp
+const testString = function (chars) {
+  return chars[0] === REGEXP_DELIM && chars.lastIndexOf(REGEXP_DELIM) > 1
 }
 
 // Parse a string into a token
 // This might throw if the RegExp is invalid.
 const parse = function (chars) {
   const endIndex = chars.lastIndexOf(REGEXP_DELIM)
-
-  if (endIndex === 0) {
-    throw new Error(
-      `regular expression "${chars}" is missing a "${REGEXP_DELIM}" at the end.`,
-    )
-  }
-
   const regExpString = chars.slice(1, endIndex)
   const regExpFlags = chars.slice(endIndex + 1)
   return new RegExp(regExpString, regExpFlags)

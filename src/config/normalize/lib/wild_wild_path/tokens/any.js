@@ -1,7 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
 import { objectProps } from './common.js'
-import { ANY, ESCAPE, SEPARATOR } from './special.js'
+import { ANY } from './special.js'
 
 // Check the type of a parsed token
 const testObject = function (token) {
@@ -16,20 +16,12 @@ const serialize = function () {
 }
 
 // Check the type of a serialized token
-const testString = function ({ hasAny }) {
-  return hasAny
+const testString = function (chars) {
+  return chars === ANY
 }
 
 // Parse a string into a token
-const parse = function (chars) {
-  if (chars !== ANY) {
-    throw new Error(
-      `character "${ANY}" must not be preceded or followed by other characters except "${SEPARATOR}"
-If you intend "${ANY}" as a wildcard character, please use a regular expression instead.
-Otherwise, please escape it with a "${ESCAPE}".`,
-    )
-  }
-
+const parse = function () {
   return { type: ANY_TYPE }
 }
 

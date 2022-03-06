@@ -1,5 +1,4 @@
 import { arrayProps } from './common.js'
-import { MINUS } from './special.js'
 
 // Check the type of a parsed token.
 // Integers specified as string tokens are assumed to be property names, not
@@ -14,15 +13,7 @@ const serialize = function (token) {
 }
 
 // Check the type of a serialized token
-const testString = function ({ chars, hasMinus }) {
-  return !hasEscapedMinus(chars, hasMinus) && isIndexString(chars)
-}
-
-export const hasEscapedMinus = function (chars, hasMinus) {
-  return chars[0] === MINUS && !hasMinus
-}
-
-export const isIndexString = function (chars) {
+const testString = function (chars) {
   return INTEGER_REGEXP.test(chars)
 }
 

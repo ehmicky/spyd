@@ -1,13 +1,6 @@
-import { parseEscapedChar } from '../tokens/escape.js'
+import { SPECIAL_CHARS } from '../tokens/escape.js'
 import { getStringTokenType } from '../tokens/main.js'
-import {
-  ESCAPE,
-  SEPARATOR,
-  ANY,
-  MINUS,
-  REGEXP_DELIM,
-  SLICE,
-} from '../tokens/special.js'
+import { ESCAPE, SEPARATOR } from '../tokens/special.js'
 
 import { normalizePath } from './normalize.js'
 import { isQueryString } from './validate.js'
@@ -19,7 +12,9 @@ import { isQueryString } from './validate.js'
 //  - "Query": a dot-separated string
 //     - This is more convenient wherever a string is better, including in CLI
 //       flags, in URLs, in files, etc.
-//     - Special characters must be escaped with \: . * \ /
+//     - \ must escape the following characters: . \
+//     - If a token is meant as a property name but could be interpreted as a
+//       different type, it must be start with \
 //     - A leading dot can be optionally used, e.g. `.one`. It is ignored.
 //  - "Tokens": an array of values of diverse types
 //     - This is sometimes convenient
@@ -32,7 +27,9 @@ import { isQueryString } from './validate.js'
 //     - Empty keys are supported with empty strings
 //  - Array index
 //     - Query format: "1"
-//     - Tokens format: 1 (must be an integer, not a string)
+//     - Tokens format: 1
+//     - We distinguish between property names and array indices that are
+//       integers
 //     - Negatives indices can be used to get elements at the end, e.g. -2
 //        - Including -0 which can be used to append elements
 //  - Array slices
@@ -95,11 +92,11 @@ const parseQuery = function (query) {
 
     // eslint-disable-next-line max-depth
     if (char === ESCAPE) {
-      addEscapedChar(state, query)
+      parseEscape(state, query)
     } else if (char === SEPARATOR || state.index === query.length) {
       addToken(state)
     } else {
-      addChar(state, char)
+      state.chars += char
     }
   }
 
@@ -113,13 +110,26 @@ const getInitialState = function (query) {
   return state
 }
 
-const addEscapedChar = function (state, query) {
-  state.index += 1
-  state.chars += parseEscapedChar(query[state.index])
+const parseEscape = function (state, query) {
+  const nextChar = query[state.index + 1]
+
+  if (SPECIAL_CHARS.has(nextChar)) {
+    state.index += 1
+    state.chars += nextChar
+    return
+  }
+
+  if (state.chars.length !== 0) {
+    throw new Error(
+      `character "${ESCAPE}" must either be at the start of a token, or be followed by ${SEPARATOR} or ${ESCAPE}`,
+    )
+  }
+
+  state.isProp = true
 }
 
 const addToken = function (state) {
-  const tokenType = getStringTokenType(state)
+  const tokenType = getStringTokenType(state.chars, state.isProp)
   const token = tokenType.parse(state.chars)
   // eslint-disable-next-line fp/no-mutating-methods
   state.path.push(token)
@@ -127,21 +137,6 @@ const addToken = function (state) {
 }
 
 const resetState = function (state) {
-  state.hasAny = false
-  state.hasMinus = false
-  state.hasRegExp = false
-  state.hasSlice = false
+  state.isProp = false
   state.chars = ''
-}
-
-// eslint-disable-next-line complexity
-const addChar = function (state, char) {
-  if (state.chars.length === 0) {
-    state.hasAny = state.hasAny || char === ANY
-    state.hasMinus = state.hasMinus || char === MINUS
-    state.hasRegExp = state.hasRegExp || char === REGEXP_DELIM
-  }
-
-  state.hasSlice = state.hasSlice || char === SLICE
-  state.chars += char
 }

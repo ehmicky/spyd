@@ -19,6 +19,8 @@ export const getObjectTokenType = function (token) {
 }
 
 // Retrieve the type of a given token serialized string
-export const getStringTokenType = function (token) {
-  return TOKEN_TYPES.find((tokenType) => tokenType.testString(token))
+export const getStringTokenType = function (chars, isProp) {
+  return isProp
+    ? PROP_TOKEN
+    : TOKEN_TYPES.find((tokenType) => tokenType.testString(chars))
 }
