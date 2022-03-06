@@ -20,7 +20,8 @@ export const equals = function (queryOrPathA, queryOrPathB) {
 //  - Unions are not resolved
 // Also, this is only for the query without any target, i.e.:
 //  - Negative indices do not match positive indices
-// But this works perfectly when only prop and positive indices are used.
+// This makes it more useful for queries with only prop and positive indices
+// tokens:
 //  - E.g. on the entries returned by `list()`
 export const parent = function (parentQueryOrPath, childQueryOrPath) {
   const parentPath = parse(parentQueryOrPath)
