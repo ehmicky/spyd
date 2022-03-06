@@ -17,12 +17,7 @@ export const transform = function (target, queryOrPath, transformFunc) {
   const path = maybeParse(queryOrPath)
   const entries = listEntries(target, path)
   const entriesA = addDefaultEntries(entries, path)
-  return entriesA
-    .map(normalizeEntry)
-    .reduce(
-      (targetA, entry) => setEntry(targetA, 0, { entry, transformFunc }),
-      target,
-    )
+  return setEntries(target, entriesA, transformFunc)
 }
 
 // When the value does not exist, we set it deeply.
@@ -30,6 +25,15 @@ export const transform = function (target, queryOrPath, transformFunc) {
 // does not match anything.
 const addDefaultEntries = function (entries, path) {
   return entries.length === 0 && !pathHasAny(path) ? [{ path }] : entries
+}
+
+const setEntries = function (target, entries, transformFunc) {
+  return entries
+    .map(normalizeEntry)
+    .reduce(
+      (targetA, entry) => setEntry(targetA, 0, { entry, transformFunc }),
+      target,
+    )
 }
 
 const setEntry = function (
