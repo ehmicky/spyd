@@ -1,14 +1,14 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isAnyToken } from './parsing/any.js'
+import { serialize } from './parsing/serialize.js'
+import { isAnyToken } from './parsing/tokens/any.js'
 import {
   convertIndexInteger,
   convertIndexString,
   getArrayIndex,
   isIndexToken,
-} from './parsing/array.js'
-import { isRegExpToken } from './parsing/regexp.js'
-import { serialize } from './parsing/serialize.js'
+} from './parsing/tokens/array.js'
+import { isRegExpToken } from './parsing/tokens/regexp.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.

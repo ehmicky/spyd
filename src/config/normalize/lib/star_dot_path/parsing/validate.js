@@ -1,8 +1,8 @@
 import { inspect } from 'util'
 
-import { isAnyToken } from './any.js'
-import { isIndexToken } from './array.js'
-import { isRegExpToken } from './regexp.js'
+import { isAnyToken } from './tokens/any.js'
+import { isIndexToken } from './tokens/array.js'
+import { isRegExpToken } from './tokens/regexp.js'
 
 // Most methods accept both query and path syntaxes.
 // This checks which one is used.
