@@ -112,6 +112,7 @@ const addToken = function (state) {
   const token = tokenType.parse(state.chars)
   // eslint-disable-next-line fp/no-mutating-methods
   state.path.push(token)
+
   state.hasAny = false
   state.hasMinus = false
   state.hasRegExp = false
