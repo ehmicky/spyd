@@ -46,11 +46,11 @@ const setEntry = function (
   }
 
   const key = path[index]
-  const valueA = addDefaultTarget(value, key)
-  const childValue = valueA[key]
+  const defaultedValue = addDefaultTarget(value, key)
+  const childValue = defaultedValue[key]
   const newIndex = index + 1
   const newChildValue = setEntry(childValue, newIndex, { entry, transformFunc })
-  return setNewChildValue(valueA, key, newChildValue)
+  return setNewChildValue(defaultedValue, key, newChildValue)
 }
 
 const addDefaultTarget = function (value, key) {
@@ -66,9 +66,10 @@ export const omit = function (target, queryOrPath) {
   return exclude(target, queryOrPath, () => true)
 }
 
+// Same but using a function returning the value to set
 export const exclude = function (target, queryOrPath, condition) {
-  const nodes = maybeParse(queryOrPath)
-  const entries = listEntries(target, nodes)
+  const path = maybeParse(queryOrPath)
+  const entries = listEntries(target, path)
   return entries
     .map(normalizeEntry)
     .reduce(

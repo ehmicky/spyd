@@ -2,8 +2,8 @@ import { isIndexNode } from './path.js'
 import { SEPARATOR, ANY, ANY_TOKEN, SPECIAL_CHARS_REGEXP } from './special.js'
 
 // Inverse of `parse()`
-export const serialize = function (nodes) {
-  return nodes.map(serializeNode).join(SEPARATOR)
+export const serialize = function (path) {
+  return path.map(serializeNode).join(SEPARATOR)
 }
 
 const serializeNode = function (node, index) {

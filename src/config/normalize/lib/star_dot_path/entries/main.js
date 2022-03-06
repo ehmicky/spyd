@@ -7,8 +7,8 @@ import { isRecurseObject } from './recurse.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
-export const listEntries = function (target, nodes) {
-  return nodes.reduce(listNodeEntries, [{ value: target, path: [] }])
+export const listEntries = function (target, path) {
+  return path.reduce(listNodeEntries, [{ value: target, path: [] }])
 }
 
 const listNodeEntries = function (entries, node) {

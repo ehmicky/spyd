@@ -3,8 +3,8 @@ import { maybeParse } from './parsing/parse.js'
 
 // Retrieve all properties in `target` matching a query string.
 export const list = function (target, queryOrPath) {
-  const nodes = maybeParse(queryOrPath)
-  const entries = listEntries(target, nodes)
+  const path = maybeParse(queryOrPath)
+  const entries = listEntries(target, path)
   return entries.map(normalizeEntry)
 }
 
@@ -12,8 +12,8 @@ export const list = function (target, queryOrPath) {
 // Wildcards can be used, but only the first value is returned.
 // TODO: optimize performance by stopping at soon as one entry is found
 export const get = function (target, queryOrPath) {
-  const nodes = maybeParse(queryOrPath)
-  const [entry] = listEntries(target, nodes)
+  const path = maybeParse(queryOrPath)
+  const [entry] = listEntries(target, path)
   return entry === undefined ? undefined : entry.value
 }
 
@@ -21,8 +21,8 @@ export const get = function (target, queryOrPath) {
 // TODO: check if a property key exists instead of checking if its value is
 // `undefined`
 export const has = function (target, queryOrPath) {
-  const nodes = maybeParse(queryOrPath)
-  const entries = listEntries(target, nodes)
+  const path = maybeParse(queryOrPath)
+  const entries = listEntries(target, path)
   return entries.some(hasValue)
 }
 
