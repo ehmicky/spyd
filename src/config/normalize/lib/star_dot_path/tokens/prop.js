@@ -12,8 +12,12 @@ const serialize = function (token, index) {
   return token === '' && index === 0 ? SEPARATOR : escapeSpecialChars(token)
 }
 
+const testChars = function () {
+  return true
+}
+
 // Parse a property string into a token
-export const parsePropToken = function (chars) {
+const parse = function (chars) {
   return chars
 }
 
@@ -32,6 +36,8 @@ const getEntries = function (value, path, token) {
 export const PROP_TOKEN = {
   test,
   serialize,
+  testChars,
+  parse,
   handleMissingValue,
   getEntries,
 }

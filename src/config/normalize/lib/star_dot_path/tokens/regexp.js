@@ -13,9 +13,13 @@ const serialize = function (token) {
   return `${REGEXP_DELIM}${source}${REGEXP_DELIM}${token.flags}`
 }
 
+const testChars = function ({ hasRegExp }) {
+  return hasRegExp
+}
+
 // Parse a RegExp string into a token.
 // This might throw if the RegExp is invalid.
-export const parseRegExpToken = function (chars) {
+const parse = function (chars) {
   const endIndex = chars.lastIndexOf(REGEXP_DELIM)
 
   if (endIndex === 0) {
@@ -52,6 +56,8 @@ const getEntries = function (value, path, token) {
 export const REGEXP_TOKEN = {
   test,
   serialize,
+  testChars,
+  parse,
   handleMissingValue,
   getEntries,
 }

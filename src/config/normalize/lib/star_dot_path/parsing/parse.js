@@ -1,8 +1,5 @@
-import { parseAnyToken } from '../tokens/any.js'
-import { hasIndex, parseIndexToken } from '../tokens/array.js'
 import { parseEscapedChar } from '../tokens/escape.js'
-import { parsePropToken } from '../tokens/prop.js'
-import { parseRegExpToken } from '../tokens/regexp.js'
+import { getCharsTokenType } from '../tokens/main.js'
 import {
   ESCAPE,
   SEPARATOR,
@@ -108,36 +105,6 @@ const parseQuery = function (query) {
    fp/no-mutation, fp/no-mutating-methods, fp/no-let */
 
 const parseToken = function (state) {
-  if (testAnyChars(state)) {
-    return parseAnyToken(state.chars)
-  }
-
-  if (testRegExpChars(state)) {
-    return parseRegExpToken(state.chars)
-  }
-
-  if (testIndexChars(state)) {
-    return parseIndexToken(state.chars)
-  }
-
-  if (testPropChars(state)) {
-    return parsePropToken(state.chars)
-  }
-}
-
-const testAnyChars = function ({ hasAny }) {
-  return hasAny
-}
-
-const testRegExpChars = function ({ hasRegExp }) {
-  return hasRegExp
-}
-
-const testIndexChars = function ({ chars, hasMinus }) {
-  const hasEscapedMinus = chars[0] === MINUS && !hasMinus
-  return hasIndex(chars, hasEscapedMinus)
-}
-
-const testPropChars = function () {
-  return true
+  const tokenType = getCharsTokenType(state)
+  return tokenType.parse(state.chars)
 }

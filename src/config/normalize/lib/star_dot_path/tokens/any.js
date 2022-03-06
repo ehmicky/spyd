@@ -14,8 +14,12 @@ const serialize = function () {
   return ANY
 }
 
+const testChars = function ({ hasAny }) {
+  return hasAny
+}
+
 // Parse a * string into a token
-export const parseAnyToken = function (chars) {
+const parse = function (chars) {
   if (chars !== ANY) {
     throw new Error(
       `character "${ANY}" must not be preceded or followed by other characters except "${SEPARATOR}"
@@ -57,6 +61,8 @@ const getEntries = function (value, path) {
 export const ANY_TOKEN = {
   test,
   serialize,
+  testChars,
+  parse,
   handleMissingValue,
   getEntries,
 }

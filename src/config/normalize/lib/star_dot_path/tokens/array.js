@@ -1,3 +1,5 @@
+import { MINUS } from './special.js'
+
 // Users can specify integers either:
 //  - stringified for object properties
 //  - left as is for array indices
@@ -16,14 +18,15 @@ const serialize = function (token) {
 }
 
 // Check if a string should be parsed as an index token
-export const hasIndex = function (chars, hasEscapedMinus) {
+const testChars = function ({ chars, hasMinus }) {
+  const hasEscapedMinus = chars[0] === MINUS && !hasMinus
   return !hasEscapedMinus && INTEGER_REGEXP.test(chars)
 }
 
 const INTEGER_REGEXP = /^-?\d+$/u
 
 // Parse an array index string into a token
-export const parseIndexToken = function (chars) {
+const parse = function (chars) {
   return Number(chars)
 }
 
@@ -51,6 +54,8 @@ const getArrayIndex = function (array, token) {
 export const ARRAY_TOKEN = {
   test,
   serialize,
+  testChars,
+  parse,
   handleMissingValue,
   getEntries,
 }

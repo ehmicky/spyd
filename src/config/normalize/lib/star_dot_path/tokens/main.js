@@ -6,7 +6,12 @@ import { REGEXP_TOKEN } from './regexp.js'
 // Order is significant as they are tested serially
 const TOKEN_TYPES = [ANY_TOKEN, REGEXP_TOKEN, ARRAY_TOKEN, PROP_TOKEN]
 
-// Retrieve the type of a given token
+// Retrieve the type of a given token object
 export const getTokenType = function (token) {
   return TOKEN_TYPES.find((tokenType) => tokenType.test(token))
+}
+
+// Retrieve the type of a given token string of characters
+export const getCharsTokenType = function (token) {
+  return TOKEN_TYPES.find((tokenType) => tokenType.testChars(token))
 }
