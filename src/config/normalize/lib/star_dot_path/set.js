@@ -33,25 +33,25 @@ const listTransformEntries = function (target, path) {
 }
 
 const setEntry = function (
-  target,
+  value,
   index,
-  { entry, entry: { path }, transformFunc },
+  { entry, entry: { path, query }, transformFunc },
 ) {
   if (index === path.length) {
-    return transformFunc({ value: entry.value, path, query: entry.query })
+    return transformFunc({ value, path, query })
   }
 
   const key = path[index]
-  const targetA = addDefaultTarget(target, key)
-  const childValue = targetA[key]
+  const valueA = addDefaultTarget(value, key)
+  const childValue = valueA[key]
   const newIndex = index + 1
   const newChildValue = setEntry(childValue, newIndex, { entry, transformFunc })
-  return setNewChildValue(targetA, key, newChildValue)
+  return setNewChildValue(valueA, key, newChildValue)
 }
 
-const addDefaultTarget = function (target, key) {
-  if (Array.isArray(target) || isObject(target)) {
-    return target
+const addDefaultTarget = function (value, key) {
+  if (Array.isArray(value) || isObject(value)) {
+    return value
   }
 
   return isIndexNode(key) ? [] : {}
@@ -76,7 +76,7 @@ export const exclude = function (target, queryOrPath, condition) {
 const excludeEntry = function (
   value,
   index,
-  { entry, entry: { path }, condition },
+  { entry, entry: { path, query }, condition },
 ) {
   const key = path[index]
   const childValue = value[key]
@@ -88,7 +88,9 @@ const excludeEntry = function (
   const newIndex = index + 1
 
   if (newIndex === path.length) {
-    return condition(entry) ? removeValue(value, key) : value
+    return condition({ value: childValue, path, query })
+      ? removeValue(value, key)
+      : value
   }
 
   const newChildValue = excludeEntry(childValue, newIndex, { entry, condition })
