@@ -7,6 +7,7 @@ import {
   getArrayIndex,
   isIndexToken,
 } from './parsing/array.js'
+import { parse } from './parsing/parse.js'
 import { isRegExpToken } from './parsing/regexp.js'
 import { serialize } from './parsing/serialize.js'
 
