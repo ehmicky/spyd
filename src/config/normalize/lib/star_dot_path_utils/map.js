@@ -1,5 +1,6 @@
-import { list, get } from './get.js'
-import { set } from './set.js'
+// We split the core methods of `star_dot_path` to keep it small, and provide
+// additional utilities built on top of it.
+import { list, get, set } from '../star_dot_path/main.js'
 
 // Map values matching a query
 export const map = function (target, queryOrPath, mapFunc) {
