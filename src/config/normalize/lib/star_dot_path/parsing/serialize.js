@@ -1,9 +1,10 @@
+import { isAnyToken, serializeAnyToken } from '../tokens/any.js'
+import { isIndexToken, serializeIndexToken } from '../tokens/array.js'
+import { serializePropToken } from '../tokens/prop.js'
+import { isRegExpToken, serializeRegExpToken } from '../tokens/regexp.js'
+import { SEPARATOR } from '../tokens/special.js'
+
 import { parse } from './parse.js'
-import { isAnyToken, serializeAnyToken } from './tokens/any.js'
-import { isIndexToken, serializeIndexToken } from './tokens/array.js'
-import { serializePropToken } from './tokens/prop.js'
-import { isRegExpToken, serializeRegExpToken } from './tokens/regexp.js'
-import { SEPARATOR } from './tokens/special.js'
 
 // Inverse of `parse()`
 // When passing a query string, it is parsed and re-serialized to validate and

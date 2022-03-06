@@ -1,15 +1,12 @@
 import { serialize } from './parsing/serialize.js'
-import { isAnyToken, getAnyEntries } from './parsing/tokens/any.js'
+import { isAnyToken, getAnyEntries } from './tokens/any.js'
 import {
   isIndexToken,
   getIndexEntries,
   handleIndexMissingValue,
-} from './parsing/tokens/array.js'
-import {
-  getPropEntries,
-  handlePropMissingValue,
-} from './parsing/tokens/prop.js'
-import { isRegExpToken, getRegExpEntries } from './parsing/tokens/regexp.js'
+} from './tokens/array.js'
+import { getPropEntries, handlePropMissingValue } from './tokens/prop.js'
+import { isRegExpToken, getRegExpEntries } from './tokens/regexp.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.

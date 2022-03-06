@@ -1,8 +1,7 @@
-import { normalizePath } from './normalize.js'
-import { parseAnyToken } from './tokens/any.js'
-import { hasIndex, parseIndexToken } from './tokens/array.js'
-import { parsePropToken } from './tokens/prop.js'
-import { parseRegExpToken } from './tokens/regexp.js'
+import { parseAnyToken } from '../tokens/any.js'
+import { hasIndex, parseIndexToken } from '../tokens/array.js'
+import { parsePropToken } from '../tokens/prop.js'
+import { parseRegExpToken } from '../tokens/regexp.js'
 import {
   ESCAPE,
   SEPARATOR,
@@ -10,7 +9,9 @@ import {
   MINUS,
   REGEXP_DELIM,
   SPECIAL_CHARS,
-} from './tokens/special.js'
+} from '../tokens/special.js'
+
+import { normalizePath } from './normalize.js'
 import { isQueryString } from './validate.js'
 
 // Parse a query string into an array of tokens.
