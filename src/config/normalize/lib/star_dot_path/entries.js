@@ -23,6 +23,9 @@ const getTokenEntries = function ({ value, path }, token) {
 // When the value does not exist, we set it deeply with `set()` but not with
 // `list|get|has()`.
 // We filter out between those two cases using a `missing` property.
+// We distinguish between missing properties that are:
+//  - known, i.e. returned: prop|index|slice tokens
+//  - unknown, i.e. not returned: any|regexp tokens
 // Tokens like wildcards cannot do this since there is known property to add.
 export const handleMissingValue = function (value, token) {
   const tokenType = getObjectTokenType(token)
