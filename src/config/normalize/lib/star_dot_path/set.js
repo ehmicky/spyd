@@ -2,29 +2,18 @@ import omit from 'omit.js'
 
 import { setArray } from '../../../../utils/set.js'
 
-import { listEntries } from './entries/main.js'
-import { isRecurseObject } from './entries/recurse.js'
-import { isIndexToken } from './parsing/array.js'
+import { listEntries, handleMissingValue } from './entries.js'
 import { parse } from './parsing/parse.js'
-import { pathHasAny } from './parsing/path.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPath, value) {
   const path = parse(queryOrPath)
   const entries = listEntries(target, path)
-  const entriesA = addDefaultEntries(entries, path)
-  return entriesA.reduce(
+  return entries.reduce(
     (targetA, entry) =>
       setEntry({ target: targetA, path: entry.path, value, index: 0 }),
     target,
   )
-}
-
-// When the value does not exist, we set it deeply.
-// However, we cannot do this when the query has at least one wildcard which
-// does not match anything.
-const addDefaultEntries = function (entries, path) {
-  return entries.length === 0 && !pathHasAny(path) ? [{ path }] : entries
 }
 
 const setEntry = function ({ target, path, value, index }) {
@@ -33,7 +22,7 @@ const setEntry = function ({ target, path, value, index }) {
   }
 
   const key = path[index]
-  const defaultedTarget = addDefaultTarget(target, key)
+  const { value: defaultedTarget } = handleMissingValue(target, key)
   const childTarget = defaultedTarget[key]
   const childValue = setEntry({
     target: childTarget,
@@ -42,14 +31,6 @@ const setEntry = function ({ target, path, value, index }) {
     index: index + 1,
   })
   return setValue(defaultedTarget, key, childValue)
-}
-
-const addDefaultTarget = function (target, key) {
-  if (Array.isArray(target) || isRecurseObject(target)) {
-    return target
-  }
-
-  return isIndexToken(key) ? [] : {}
 }
 
 const setValue = function (target, key, childValue) {

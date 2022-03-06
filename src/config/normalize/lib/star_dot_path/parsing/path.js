@@ -1,4 +1,3 @@
-import { ANY_TOKEN } from './special.js'
 import { validatePath } from './validate.js'
 
 // Most methods accept both query and path syntaxes.
@@ -11,13 +10,4 @@ export const isQueryString = function (queryOrPath) {
 
   validatePath(queryOrPath)
   return false
-}
-
-// Check if * is used
-export const pathHasAny = function (path) {
-  return path.some(isAnyToken)
-}
-
-const isAnyToken = function (token) {
-  return token === ANY_TOKEN
 }

@@ -1,10 +1,10 @@
-import { listEntries, normalizeEntry } from './entries/main.js'
+import { listExistingEntries, normalizeEntry } from './entries.js'
 import { parse } from './parsing/parse.js'
 
 // Retrieve all properties in `target` matching a query string.
 export const list = function (target, queryOrPath) {
   const path = parse(queryOrPath)
-  const entries = listEntries(target, path)
+  const entries = listExistingEntries(target, path)
   return entries.map(normalizeEntry)
 }
 
@@ -12,6 +12,6 @@ export const list = function (target, queryOrPath) {
 // Wildcards can be used, but only the first value is returned.
 export const get = function (target, queryOrPath) {
   const path = parse(queryOrPath)
-  const [entry] = listEntries(target, path)
+  const [entry] = listExistingEntries(target, path)
   return entry === undefined ? undefined : entry.value
 }

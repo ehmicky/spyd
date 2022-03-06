@@ -1,10 +1,10 @@
-import { listEntries } from './entries/main.js'
+import { listExistingEntries } from './entries.js'
 import { parse } from './parsing/parse.js'
 
 // Check if a property is defined according to a query
 export const has = function (target, queryOrPath) {
   const path = parse(queryOrPath)
-  const entries = listEntries(target, path)
+  const entries = listExistingEntries(target, path)
   return entries.some(hasValue)
 }
 
