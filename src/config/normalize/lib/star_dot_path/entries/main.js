@@ -50,7 +50,7 @@ const getAnyEntries = function (value, path) {
 
 // For queries which do not use *, e.g. `a.b` or `a.1`
 const getKeyEntries = function (value, path, token) {
-  return isObject(value) || Array.isArray(value)
+  return Array.isArray(value) || isObject(value)
     ? [{ value: value[token], path: [...path, token] }]
     : []
 }

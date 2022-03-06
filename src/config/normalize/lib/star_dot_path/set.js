@@ -50,7 +50,7 @@ const setEntry = function (
 }
 
 const addDefaultTarget = function (target, key) {
-  if (isObject(target) || Array.isArray(target)) {
+  if (Array.isArray(target) || isObject(target)) {
     return target
   }
 
