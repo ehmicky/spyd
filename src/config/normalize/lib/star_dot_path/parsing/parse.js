@@ -66,22 +66,28 @@ const safeParseQuery = function (query) {
 
 // Use imperative logic for performance
 /* eslint-disable complexity, max-depth, max-statements, fp/no-loops,
-   fp/no-mutation, fp/no-let */
+   fp/no-mutation */
 const parseQuery = function (query) {
   if (query === '') {
     return []
   }
 
   const path = []
-  const state = { hasAny: false, hasMinus: false, hasRegExp: false, chars: '' }
-  let index = query[0] === SEPARATOR ? 1 : 0
+  const index = query[0] === SEPARATOR ? 1 : 0
+  const state = {
+    chars: '',
+    index,
+    hasAny: false,
+    hasMinus: false,
+    hasRegExp: false,
+  }
 
-  for (; index <= query.length; index += 1) {
-    const char = query[index]
+  for (; state.index <= query.length; state.index += 1) {
+    const char = query[state.index]
 
     if (char === ESCAPE) {
-      index = addEscapedChar(query, index, state)
-    } else if (char === SEPARATOR || index === query.length) {
+      addEscapedChar(query, state)
+    } else if (char === SEPARATOR || state.index === query.length) {
       addToken(path, state)
     } else {
       addChar(char, state)
@@ -91,12 +97,11 @@ const parseQuery = function (query) {
   return path
 }
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
-   fp/no-mutation, fp/no-let */
+   fp/no-mutation */
 
-const addEscapedChar = function (query, index, state) {
-  const indexA = index + 1
-  state.chars += parseEscapedChar(query[indexA])
-  return indexA
+const addEscapedChar = function (query, state) {
+  state.index += 1
+  state.chars += parseEscapedChar(query[state.index])
 }
 
 const addToken = function (path, state) {
