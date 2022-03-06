@@ -4,7 +4,7 @@ import { setArray } from '../../../../utils/set.js'
 
 import { listEntries, normalizeEntry } from './entries/main.js'
 import { isRecurseObject } from './entries/recurse.js'
-import { maybeParse } from './parsing/parse.js'
+import { parse } from './parsing/parse.js'
 import { pathHasAny, isIndexToken } from './parsing/path.js'
 
 // Set a value to one or multiple properties in `target` using a query string
@@ -14,7 +14,7 @@ export const set = function (target, queryOrPath, newValue) {
 
 // Same but using a function returning the value to set
 export const transform = function (target, queryOrPath, transformFunc) {
-  const path = maybeParse(queryOrPath)
+  const path = parse(queryOrPath)
   const entries = listEntries(target, path)
   const entriesA = addDefaultEntries(entries, path)
   return entriesA.reduce(
@@ -32,7 +32,7 @@ const addDefaultEntries = function (entries, path) {
 
 // Returns an object with only the properties being queried.
 export const pick = function (target, queryOrPath) {
-  const path = maybeParse(queryOrPath)
+  const path = parse(queryOrPath)
   const entries = listEntries(target, path)
   return entries.reduce(pickEntry, {})
 }

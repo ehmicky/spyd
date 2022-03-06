@@ -29,14 +29,10 @@ import { ESCAPE, SEPARATOR, ANY, SPECIAL_CHARS, ANY_TOKEN } from './special.js'
 // Exceptions are thrown on syntax errors:
 //  - I.e. query or path syntax errors, or wrong arguments
 //  - But queries matching nothing do not throw: instead they return nothing
-export const maybeParse = function (queryOrPath) {
-  return typeof queryOrPath === 'string'
-    ? parse(queryOrPath)
-    : normalizePath(queryOrPath)
-}
-
-export const parse = function (query) {
-  return normalizePath(parseQuery(query))
+export const parse = function (queryOrPath) {
+  const path =
+    typeof queryOrPath === 'string' ? parseQuery(queryOrPath) : queryOrPath
+  return normalizePath(path)
 }
 
 // Use imperative logic for performance
