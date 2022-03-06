@@ -122,11 +122,14 @@ const parseToken = function (chars, query, hasAny, hasMinus, hasRegExp) {
     return parseRegExpToken(chars, query)
   }
 
-  const hasEscapedMinus = chars[0] === MINUS && !hasMinus
-
-  if (hasIndex(chars, hasEscapedMinus)) {
+  if (areIndexTokenChars(chars, hasMinus)) {
     return parseIndexToken(chars)
   }
 
   return parsePropToken(chars)
+}
+
+const areIndexTokenChars = function (chars, hasMinus) {
+  const hasEscapedMinus = chars[0] === MINUS && !hasMinus
+  return hasIndex(chars, hasEscapedMinus)
 }
