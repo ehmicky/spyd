@@ -96,7 +96,7 @@ const excludeEntry = function (
 }
 
 const removeValue = function (value, key) {
-  if (!isIndexNode(key)) {
+  if (!Array.isArray(value, key)) {
     return omitLib.default(value, [key])
   }
 
@@ -113,7 +113,7 @@ const setNewChildValue = function (value, key, newChildValue) {
     return value
   }
 
-  return isIndexNode(key)
+  return Array.isArray(value)
     ? setArray(value, key, newChildValue)
     : { ...value, [key]: newChildValue }
 }

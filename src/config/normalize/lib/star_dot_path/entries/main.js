@@ -1,3 +1,4 @@
+import { convertIndexInteger, convertIndexString } from '../parsing/path.js'
 import { serialize } from '../parsing/serialize.js'
 import { ANY_TOKEN } from '../parsing/special.js'
 
@@ -50,9 +51,17 @@ const getAnyEntries = function (value, path) {
 
 // For queries which do not use *, e.g. `a.b` or `a.1`
 const getKeyEntries = function (value, path, token) {
-  return Array.isArray(value) || isObject(value)
-    ? [{ value: value[token], path: [...path, token] }]
-    : []
+  if (Array.isArray(value)) {
+    const tokenA = convertIndexInteger(token)
+    return [{ value: value[tokenA], path: [...path, tokenA] }]
+  }
+
+  if (isObject(value)) {
+    const tokenA = convertIndexString(token)
+    return [{ value: value[tokenA], path: [...path, tokenA] }]
+  }
+
+  return []
 }
 
 // Compute all entries properties from the basic ones

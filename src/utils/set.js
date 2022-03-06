@@ -1,7 +1,7 @@
 // Set an array's element in a functional way
-export const setArray = function (array, index, element) {
+export const setArray = function (array, indexOrProp, element) {
   const arrayCopy = [...array]
   // eslint-disable-next-line fp/no-mutation
-  arrayCopy[index] = element
+  arrayCopy[indexOrProp] = element
   return arrayCopy
 }

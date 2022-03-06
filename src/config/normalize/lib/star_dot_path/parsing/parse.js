@@ -1,4 +1,5 @@
 import { normalizePath } from './normalize.js'
+import { convertIndexInteger } from './path.js'
 import { ESCAPE, SEPARATOR, ANY, ANY_TOKEN } from './special.js'
 
 // Parse a query string into an array of nodes.
@@ -63,7 +64,7 @@ const parseQuery = function (query) {
 
     if (character === SEPARATOR || index === query.length) {
       if (token !== '' || node.length === 0) {
-        node.push(token)
+        node.push(convertIndexInteger(token))
         token = ''
       }
 

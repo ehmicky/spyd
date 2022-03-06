@@ -1,3 +1,5 @@
+import { ANY_TOKEN } from './special.js'
+
 // Normalize a path of tokens
 export const normalizePath = function (path) {
   return path.map(normalizeNode)
@@ -7,29 +9,18 @@ export const normalizePath = function (path) {
 // we encourage the latter since it is simpler
 const normalizeNode = function (node) {
   const nodeA = node.length === 1 ? node[0] : node
-
-  if (!Array.isArray(nodeA)) {
-    return parseIndex(nodeA)
-  }
-
-  nodeA.forEach(validateComplexToken)
+  validateComplexNode(nodeA)
   return nodeA
 }
 
-// Indices can be both strings and numbers, but we encourage numbers since they
-// are more useful and match how they are usually represented in JavaScript.
-// However, we make sure the logic still works for objects with a property
-// name that's a number.
-const parseIndex = function (token) {
-  return typeof token === 'string' && POSITIVE_INTEGER_REGEXP.test(token)
-    ? Number(token)
-    : token
+const validateComplexNode = function (node) {
+  if (Array.isArray(node)) {
+    node.forEach(validateComplexToken)
+  }
 }
 
-const POSITIVE_INTEGER_REGEXP = /^\d+$/u
-
 const validateComplexToken = function (token) {
-  if (typeof token === 'symbol') {
+  if (typeof token === 'symbol' && token !== ANY_TOKEN) {
     throw new TypeError(`${String(token)} must not be in a nested array.`)
   }
 }
