@@ -7,8 +7,7 @@ import {
 } from '../tokens/escape.js'
 import { getStringTokenType } from '../tokens/main.js'
 
-import { normalizePaths } from './normalize.js'
-import { isQueryString } from './validate.js'
+import { normalizePaths, isQueryString } from './normalize.js'
 
 // Parse a query string into an array of tokens.
 // Also validate and normalize it.
@@ -78,10 +77,9 @@ import { isQueryString } from './validate.js'
 //  - I.e. query or path syntax errors, or wrong arguments
 //  - But queries matching nothing do not throw: instead they return nothing
 export const parse = function (queryOrPaths) {
-  const paths = isQueryString(queryOrPaths)
+  return isQueryString(queryOrPaths)
     ? safeParseQuery(queryOrPaths)
-    : queryOrPaths
-  return normalizePaths(paths)
+    : normalizePaths(queryOrPaths)
 }
 
 const safeParseQuery = function (query) {
@@ -173,7 +171,7 @@ const addToken = function (state) {
 
   state.onlyDots = hasOnlyDots(state)
   const tokenType = getStringTokenType(state.chars, state.isProp)
-  const token = tokenType.parse(state.chars)
+  const token = tokenType.normalize(tokenType.parse(state.chars))
   // eslint-disable-next-line fp/no-mutating-methods
   state.path.push(token)
   resetTokenState(state)
