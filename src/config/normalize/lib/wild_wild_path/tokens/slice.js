@@ -2,7 +2,6 @@ import isPlainObj from 'is-plain-obj'
 
 import { ARRAY_TOKEN, getArrayIndex } from './array.js'
 import { arrayProps } from './common.js'
-import { SLICE } from './special.js'
 
 // Check the type of a parsed token.
 const testObject = function (token) {
@@ -20,7 +19,7 @@ const isEdge = function (edge) {
 
 // Serialize a token to a string
 const serialize = function ({ from, to }) {
-  return `${serializeEdge(from)}${SLICE}${serializeEdge(to)}`
+  return `${serializeEdge(from)}${SLICE_DELIM}${serializeEdge(to)}`
 }
 
 const serializeEdge = function (edge) {
@@ -36,7 +35,7 @@ const SLICE_REGEXP = /^(-?\d+)?:(-?\d+)?$/u
 
 // Parse a string into a token
 const parse = function (chars) {
-  const [from, to] = chars.split(SLICE).map(parseEdge)
+  const [from, to] = chars.split(SLICE_DELIM).map(parseEdge)
   return { type: SLICE_TYPE, from, to }
 }
 
@@ -45,6 +44,7 @@ const parseEdge = function (chars) {
 }
 
 const DEFAULT_EDGE_STRING = ''
+const SLICE_DELIM = ':'
 const SLICE_TYPE = 'slice'
 
 // Normalize value after parsing or serializing

@@ -1,7 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
 import { objectProps } from './common.js'
-import { ANY } from './special.js'
 
 // Check the type of a parsed token
 const testObject = function (token) {
@@ -24,6 +23,8 @@ const testString = function (chars) {
 const parse = function () {
   return { type: ANY_TYPE }
 }
+
+const ANY = '*'
 
 // Normalize value after parsing or serializing
 const normalize = function ({ type }) {

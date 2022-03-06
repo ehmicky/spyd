@@ -1,6 +1,5 @@
 import { objectProps } from './common.js'
 import { escapeSpecialChars } from './escape.js'
-import { REGEXP_DELIM } from './special.js'
 
 // Check the type of a parsed token
 const testObject = function (token) {
@@ -26,6 +25,8 @@ const parse = function (chars) {
   const regExpFlags = chars.slice(endIndex + 1)
   return new RegExp(regExpString, regExpFlags)
 }
+
+const REGEXP_DELIM = '/'
 
 // Normalize value after parsing or serializing
 const normalize = function (token) {
