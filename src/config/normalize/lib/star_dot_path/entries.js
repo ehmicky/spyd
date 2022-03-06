@@ -14,9 +14,7 @@ const listTokenEntries = function (entries, token) {
 }
 
 const getTokenEntries = function ({ value, path }, token) {
-  const tokenType = getObjectTokenType(token)
-  const defined = tokenType.isDefined(value)
-  const valueA = defined ? value : tokenType.defaultValue
+  const { tokenType, defined, value: valueA } = handleMissingValue(value, token)
   const entries = tokenType.getEntries(valueA, path, token, defined)
   return entries
 }
@@ -32,12 +30,7 @@ export const handleMissingValue = function (value, token) {
   const tokenType = getObjectTokenType(token)
   const defined = tokenType.isDefined(value)
   const valueA = defined ? value : tokenType.defaultValue
-  return valueA
-}
-
-export const isDefined = function (value, token) {
-  const tokenType = getObjectTokenType(token)
-  return tokenType.isDefined(value)
+  return { tokenType, defined, value: valueA }
 }
 
 // Compute all entries properties from the basic ones

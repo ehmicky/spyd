@@ -2,7 +2,7 @@ import omit from 'omit.js'
 
 import { setArray } from '../../../../utils/set.js'
 
-import { listEntries, isDefined } from './entries.js'
+import { listEntries, handleMissingValue } from './entries.js'
 import { parse } from './parsing/parse.js'
 import { setValue } from './set.js'
 
@@ -25,7 +25,7 @@ const hasRootPath = function ({ path }) {
 const removeEntry = function (target, path, index) {
   const key = path[index]
 
-  if (!isDefined(target, key)) {
+  if (!handleMissingValue(target, key).defined) {
     return target
   }
 
