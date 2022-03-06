@@ -1,8 +1,8 @@
 import { normalizePath } from './normalize.js'
 import { convertIndexInteger } from './path.js'
-import { ESCAPE, SEPARATOR, ANY, ANY_TOKEN } from './special.js'
+import { ESCAPE, SEPARATOR, ANY, SPECIAL_CHARS, ANY_TOKEN } from './special.js'
 
-// Parse a query string into an array of nodes.
+// Parse a query string into an array of tokens.
 // This is inspired by JSON paths and JSON pointers.
 // Syntax:
 //  - Dots are used for object properties, e.g. `one.two`
@@ -42,66 +42,67 @@ export const parse = function (query) {
 
 // Use imperative logic for performance
 /* eslint-disable complexity, max-depth, max-statements, fp/no-loops,
-   fp/no-mutation, fp/no-let, no-continue, fp/no-mutating-methods */
+   fp/no-mutation, fp/no-mutating-methods, fp/no-let */
 const parseQuery = function (query) {
   if (query === '') {
     return []
   }
 
   const path = []
-  let node = []
-  let token = ''
+  let chars = ''
+  let hasAny = false
   let index = query[0] === SEPARATOR ? 1 : 0
 
   for (; index <= query.length; index += 1) {
-    const character = query[index]
+    const char = query[index]
 
-    if (character === ESCAPE) {
+    if (char === ESCAPE) {
+      chars += getEscapedChar(query, index)
       index += 1
-      const escapedCharacter = query[index]
-      validateEscape(escapedCharacter, query, character, index)
-      token += escapedCharacter
-      continue
+    } else if (char === SEPARATOR || index === query.length) {
+      path.push(getToken(chars, query, hasAny))
+      chars = ''
+      hasAny = false
+    } else {
+      hasAny = hasAny || char === ANY
+      chars += char
     }
-
-    if (character === SEPARATOR || index === query.length) {
-      if (token !== '' || node.length === 0) {
-        node.push(convertIndexInteger(token))
-        token = ''
-      }
-
-      path.push(node)
-      node = []
-      continue
-    }
-
-    if (character === ANY) {
-      if (token !== '') {
-        node.push(token)
-        token = ''
-      }
-
-      node.push(ANY_TOKEN)
-      continue
-    }
-
-    token += character
   }
 
   return path
 }
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
-   fp/no-mutation, fp/no-let, no-continue, fp/no-mutating-methods */
+   fp/no-mutation, fp/no-mutating-methods, fp/no-let */
 
-// eslint-disable-next-line max-params
-const validateEscape = function (escapedCharacter, query, character, index) {
-  if (
-    escapedCharacter !== ESCAPE &&
-    escapedCharacter !== SEPARATOR &&
-    escapedCharacter !== ANY
-  ) {
+const getEscapedChar = function (query, index) {
+  const escapedChar = query[index + 1]
+  validateEscape(escapedChar, query, index)
+  return escapedChar
+}
+
+const validateEscape = function (escapedChar, query, index) {
+  if (!SPECIAL_CHARS.has(escapedChar)) {
     throw new Error(
-      `Invalid query "${query}": character ${character} at index ${index} must be followed by ${SEPARATOR}, ${ANY} or ${ESCAPE}`,
+      `Invalid query "${query}": character ${ESCAPE} at index ${index} must be followed by ${SEPARATOR} ${ANY} or ${ESCAPE}`,
     )
   }
+}
+
+const getToken = function (chars, query, hasAny) {
+  if (hasAny) {
+    return getAnyToken(chars, query)
+  }
+
+  return convertIndexInteger(chars)
+}
+
+const getAnyToken = function (chars, query) {
+  if (chars !== ANY) {
+    throw new Error(
+      `Invalid query "${query}": character ${ANY} must not be preceded or followed by other characters except "${SEPARATOR}"
+Regular expressions can be used instead.`,
+    )
+  }
+
+  return ANY_TOKEN
 }
