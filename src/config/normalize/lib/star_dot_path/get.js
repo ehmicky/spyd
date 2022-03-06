@@ -1,8 +1,10 @@
 import { listEntries, normalizeEntry } from './entries.js'
 
 // Retrieve all properties in `target` matching a query string.
+// Unlike `get|has()` it also return missing entries, letting consumers filter
+// them or not.
 export const list = function (target, queryOrPath) {
-  const entries = listExistingEntries(target, queryOrPath)
+  const entries = listEntries(target, queryOrPath)
   return entries.map(normalizeEntry)
 }
 
