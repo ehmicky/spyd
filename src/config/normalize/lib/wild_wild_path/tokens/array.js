@@ -31,7 +31,7 @@ const normalize = function (token) {
 
 // Use the token to list entries against a target value.
 // eslint-disable-next-line max-params
-const getEntries = function (value, path, token, missing) {
+const list = function (value, path, token, missing) {
   const index = getArrayIndex(value, token)
   return [{ value: value[index], path: [...path, index], missing }]
 }
@@ -62,6 +62,6 @@ export const ARRAY_TOKEN = {
   parse,
   normalize,
   ...arrayProps,
-  getEntries,
+  list,
   equals,
 }
