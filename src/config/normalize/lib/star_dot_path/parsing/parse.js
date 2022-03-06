@@ -40,6 +40,7 @@ import { isQueryString } from './validate.js'
 //     - Tokens format: { type: "slice", from: 0, end: 2 }
 //     - Matches multiple indices of an array
 //     - Negatives indices like the array indices format
+//     - `from` is included, `to` is excluded (like `Array.slice()`)
 //     - `from` defaults to 0 and `to` to -0
 //  - Wildcard
 //     - Query format: "*"
