@@ -1,6 +1,5 @@
 import { convertIndexInteger } from './array.js'
 import { normalizePath } from './normalize.js'
-import { isQueryString } from './path.js'
 import {
   ESCAPE,
   SEPARATOR,
@@ -9,6 +8,7 @@ import {
   SPECIAL_CHARS,
   ANY_TOKEN,
 } from './special.js'
+import { isQueryString } from './validate.js'
 
 // Parse a query string into an array of tokens.
 // Also validate and normalize it.

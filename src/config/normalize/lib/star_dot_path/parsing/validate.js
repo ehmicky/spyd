@@ -3,8 +3,20 @@ import { inspect } from 'util'
 import { isIndexToken } from './array.js'
 import { ANY_TOKEN } from './special.js'
 
+// Most methods accept both query and path syntaxes.
+// This checks which one is used.
+// This also validates the query or path.
+export const isQueryString = function (queryOrPath) {
+  if (typeof queryOrPath === 'string') {
+    return true
+  }
+
+  validatePath(queryOrPath)
+  return false
+}
+
 // Validate a path argument against syntax errors
-export const validatePath = function (path) {
+const validatePath = function (path) {
   if (!Array.isArray(path)) {
     throwPathError(path, 'It must be an array.')
   }
