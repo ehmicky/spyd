@@ -15,8 +15,7 @@ const listTokenEntries = function (entries, token) {
 
 const getTokenEntries = function ({ value, path }, token) {
   const { tokenType, defined, value: valueA } = handleMissingValue(value, token)
-  const entries = tokenType.getEntries(valueA, path, token, defined)
-  return entries
+  return tokenType.getEntries(valueA, path, token, defined)
 }
 
 // When the value does not exist, we set it deeply with `set()` but not with
