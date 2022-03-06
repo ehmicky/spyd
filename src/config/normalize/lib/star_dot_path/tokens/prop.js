@@ -3,7 +3,7 @@ import { isRecurseObject } from './recurse.js'
 import { SEPARATOR } from './special.js'
 
 // Check if a token is a property name string
-const test = function (token) {
+const testObject = function (token) {
   return typeof token === 'string'
 }
 
@@ -12,7 +12,7 @@ const serialize = function (token, index) {
   return token === '' && index === 0 ? SEPARATOR : escapeSpecialChars(token)
 }
 
-const testChars = function () {
+const testString = function () {
   return true
 }
 
@@ -34,9 +34,9 @@ const getEntries = function (value, path, token) {
 }
 
 export const PROP_TOKEN = {
-  test,
+  testObject,
   serialize,
-  testChars,
+  testString,
   parse,
   handleMissingValue,
   getEntries,

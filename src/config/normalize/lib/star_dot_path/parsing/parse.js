@@ -1,5 +1,5 @@
 import { parseEscapedChar } from '../tokens/escape.js'
-import { getCharsTokenType } from '../tokens/main.js'
+import { getStringTokenType } from '../tokens/main.js'
 import {
   ESCAPE,
   SEPARATOR,
@@ -105,6 +105,6 @@ const parseQuery = function (query) {
    fp/no-mutation, fp/no-mutating-methods, fp/no-let */
 
 const parseToken = function (state) {
-  const tokenType = getCharsTokenType(state)
+  const tokenType = getStringTokenType(state)
   return tokenType.parse(state.chars)
 }

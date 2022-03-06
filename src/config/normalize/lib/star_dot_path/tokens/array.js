@@ -8,7 +8,7 @@ import { MINUS } from './special.js'
 // We allow negative indexes which query from the end
 //  - Including -0 which can be used to append values
 // Check if token is an array index integer
-const test = function (token) {
+const testObject = function (token) {
   return Number.isInteger(token)
 }
 
@@ -18,7 +18,7 @@ const serialize = function (token) {
 }
 
 // Check if a string should be parsed as an index token
-const testChars = function ({ chars, hasMinus }) {
+const testString = function ({ chars, hasMinus }) {
   const hasEscapedMinus = chars[0] === MINUS && !hasMinus
   return !hasEscapedMinus && INTEGER_REGEXP.test(chars)
 }
@@ -52,9 +52,9 @@ const getArrayIndex = function (array, token) {
 }
 
 export const ARRAY_TOKEN = {
-  test,
+  testObject,
   serialize,
-  testChars,
+  testString,
   parse,
   handleMissingValue,
   getEntries,

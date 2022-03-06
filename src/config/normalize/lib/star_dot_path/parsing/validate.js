@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 
-import { getTokenType } from '../tokens/main.js'
+import { getObjectTokenType } from '../tokens/main.js'
 
 // Most methods accept both query and path syntaxes.
 // This checks which one is used.
@@ -36,7 +36,7 @@ const validateToken = function (token, path) {
 }
 
 const isValidToken = function (token) {
-  return getTokenType(token) !== undefined
+  return getObjectTokenType(token) !== undefined
 }
 
 const throwPathError = function (path, message) {

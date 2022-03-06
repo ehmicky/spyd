@@ -1,5 +1,5 @@
 import { serialize } from './parsing/serialize.js'
-import { getTokenType } from './tokens/main.js'
+import { getObjectTokenType } from './tokens/main.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
@@ -20,7 +20,7 @@ const listTokenEntries = function (entries, token) {
 }
 
 const getTokenEntries = function ({ value, path }, token) {
-  const tokenType = getTokenType(token)
+  const tokenType = getObjectTokenType(token)
   const { value: valueA, missing } = tokenType.handleMissingValue(value)
   const entries = tokenType.getEntries(valueA, path, token)
   return entries.map((entry) => ({
@@ -38,7 +38,7 @@ const getTokenEntries = function ({ value, path }, token) {
 //  - Positive are kept
 //  - Negative are converted to index 0
 export const handleMissingValue = function (value, token) {
-  const tokenType = getTokenType(token)
+  const tokenType = getObjectTokenType(token)
   const { value: valueA } = tokenType.handleMissingValue(value)
   return valueA
 }

@@ -3,7 +3,7 @@ import { isRecurseObject } from './recurse.js'
 import { REGEXP_DELIM } from './special.js'
 
 // Check if a token is a /.../ RegExp
-const test = function (token) {
+const testObject = function (token) {
   return token instanceof RegExp
 }
 
@@ -13,7 +13,7 @@ const serialize = function (token) {
   return `${REGEXP_DELIM}${source}${REGEXP_DELIM}${token.flags}`
 }
 
-const testChars = function ({ hasRegExp }) {
+const testString = function ({ hasRegExp }) {
   return hasRegExp
 }
 
@@ -54,9 +54,9 @@ const getEntries = function (value, path, token) {
 }
 
 export const REGEXP_TOKEN = {
-  test,
+  testObject,
   serialize,
-  testChars,
+  testString,
   parse,
   handleMissingValue,
   getEntries,

@@ -1,4 +1,4 @@
-import { getTokenType } from '../tokens/main.js'
+import { getObjectTokenType } from '../tokens/main.js'
 import { SEPARATOR } from '../tokens/special.js'
 
 import { parse } from './parse.js'
@@ -16,6 +16,6 @@ const serializePath = function (path) {
 }
 
 const serializeToken = function (token, index) {
-  const tokenType = getTokenType(token)
+  const tokenType = getObjectTokenType(token)
   return tokenType.serialize(token, index)
 }

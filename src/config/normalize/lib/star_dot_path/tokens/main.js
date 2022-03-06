@@ -7,11 +7,11 @@ import { REGEXP_TOKEN } from './regexp.js'
 const TOKEN_TYPES = [ANY_TOKEN, REGEXP_TOKEN, ARRAY_TOKEN, PROP_TOKEN]
 
 // Retrieve the type of a given token object
-export const getTokenType = function (token) {
-  return TOKEN_TYPES.find((tokenType) => tokenType.test(token))
+export const getObjectTokenType = function (token) {
+  return TOKEN_TYPES.find((tokenType) => tokenType.testObject(token))
 }
 
-// Retrieve the type of a given token string of characters
-export const getCharsTokenType = function (token) {
-  return TOKEN_TYPES.find((tokenType) => tokenType.testChars(token))
+// Retrieve the type of a given token string
+export const getStringTokenType = function (token) {
+  return TOKEN_TYPES.find((tokenType) => tokenType.testString(token))
 }

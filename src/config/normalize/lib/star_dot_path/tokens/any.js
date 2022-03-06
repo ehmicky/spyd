@@ -4,7 +4,7 @@ import { isRecurseObject } from './recurse.js'
 import { ANY, ESCAPE, SEPARATOR } from './special.js'
 
 // Check if a token is *
-const test = function (token) {
+const testObject = function (token) {
   return isPlainObj(token) && token.type === ANY_TYPE
 }
 
@@ -14,7 +14,7 @@ const serialize = function () {
   return ANY
 }
 
-const testChars = function ({ hasAny }) {
+const testString = function ({ hasAny }) {
   return hasAny
 }
 
@@ -59,9 +59,9 @@ const getEntries = function (value, path) {
 }
 
 export const ANY_TOKEN = {
-  test,
+  testObject,
   serialize,
-  testChars,
+  testString,
   parse,
   handleMissingValue,
   getEntries,
