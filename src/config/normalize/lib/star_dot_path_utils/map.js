@@ -8,9 +8,9 @@ export const map = function (target, queryOrPath, mapFunc) {
   return entries.reduceRight(mapEntry.bind(undefined, mapFunc), target)
 }
 
-const mapEntry = function (mapFunc, target, { path, query }) {
+const mapEntry = function (mapFunc, target, { path, query, missing }) {
   const value = get(target, path)
-  const mappedValue = mapFunc({ path, query, value })
+  const mappedValue = mapFunc({ path, query, value, missing })
   return set(target, path, mappedValue)
 }
 
@@ -20,7 +20,9 @@ export const exclude = function (target, queryOrPath, condition) {
   return entries.reduceRight(excludeEntry.bind(undefined, condition), target)
 }
 
-const excludeEntry = function (condition, target, { path, query }) {
+const excludeEntry = function (condition, target, { path, query, missing }) {
   const value = get(target, path)
-  return condition({ path, query, value }) ? remove(target, path) : target
+  return condition({ path, query, value, missing })
+    ? remove(target, path)
+    : target
 }
