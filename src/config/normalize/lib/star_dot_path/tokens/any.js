@@ -33,6 +33,11 @@ Otherwise, please escape it with a "${ESCAPE}".`,
   return { type: ANY_TYPE }
 }
 
+// Normalize value after parsing or serializing
+const normalize = function ({ type }) {
+  return { type }
+}
+
 // When the token is missing a target value, add a default one.
 const isDefined = function (value) {
   return isRecurseObject(value)
@@ -70,6 +75,7 @@ export const ANY_TOKEN = {
   serialize,
   testString,
   parse,
+  normalize,
   isDefined,
   defaultValue,
   getEntries,

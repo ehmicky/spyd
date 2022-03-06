@@ -6,6 +6,7 @@ import {
   ANY,
   MINUS,
   REGEXP_DELIM,
+  SLICE,
 } from '../tokens/special.js'
 
 import { normalizePath } from './normalize.js'
@@ -34,6 +35,12 @@ import { isQueryString } from './validate.js'
 //     - Tokens format: 1 (must be an integer, not a string)
 //     - Negatives indices can be used to get elements at the end, e.g. -2
 //        - Including -0 which can be used to append elements
+//  - Array slices
+//     - Query format: "0:2"
+//     - Tokens format: { type: "slice", from: 0, end: 2 }
+//     - Matches multiple indices of an array
+//     - Negatives indices like the array indices format
+//     - `from` defaults to 0 and `to` to -0
 //  - Wildcard
 //     - Query format: "*"
 //     - Tokens format: { type: "any" }
@@ -100,14 +107,9 @@ const parseQuery = function (query) {
 
 const getInitialState = function (query) {
   const index = query[0] === SEPARATOR ? 1 : 0
-  return {
-    path: [],
-    chars: '',
-    index,
-    hasAny: false,
-    hasMinus: false,
-    hasRegExp: false,
-  }
+  const state = { path: [], index }
+  resetState(state)
+  return state
 }
 
 const addEscapedChar = function (state, query) {
@@ -120,10 +122,14 @@ const addToken = function (state) {
   const token = tokenType.parse(state.chars)
   // eslint-disable-next-line fp/no-mutating-methods
   state.path.push(token)
+  resetState(state)
+}
 
+const resetState = function (state) {
   state.hasAny = false
   state.hasMinus = false
   state.hasRegExp = false
+  state.hasSlice = false
   state.chars = ''
 }
 
@@ -135,5 +141,6 @@ const addChar = function (state, char) {
     state.hasRegExp = state.hasRegExp || char === REGEXP_DELIM
   }
 
+  state.hasSlice = state.hasSlice || char === SLICE
   state.chars += char
 }

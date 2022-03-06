@@ -44,6 +44,7 @@ const removeValue = function (target, key) {
     : removeObjectValue(target, key)
 }
 
+// We make sure removing out-of-bound does not increase its length
 const removeArrayValue = function (target, key) {
   if (target[key] === undefined) {
     return target

@@ -3,7 +3,7 @@ import { MINUS } from './special.js'
 // Check the type of a parsed token.
 // Integers specified as string tokens are assumed to be property names, not
 // array indices.
-const testObject = function (token) {
+export const testObject = function (token) {
   return Number.isInteger(token)
 }
 
@@ -15,7 +15,11 @@ const serialize = function (token) {
 // Check the type of a serialized token
 const testString = function ({ chars, hasMinus }) {
   const hasEscapedMinus = chars[0] === MINUS && !hasMinus
-  return !hasEscapedMinus && INTEGER_REGEXP.test(chars)
+  return !hasEscapedMinus && isIndexString(chars)
+}
+
+export const isIndexString = function (chars) {
+  return INTEGER_REGEXP.test(chars)
 }
 
 const INTEGER_REGEXP = /^-?\d+$/u
@@ -23,6 +27,11 @@ const INTEGER_REGEXP = /^-?\d+$/u
 // Parse a string into a token
 const parse = function (chars) {
   return Number(chars)
+}
+
+// Normalize value after parsing or serializing
+const normalize = function (token) {
+  return token
 }
 
 // When the token is missing a target value, add a default one.
@@ -45,7 +54,7 @@ const getEntries = function (value, path, token, defined) {
 //  - Do not error
 //  - Return an entry with an `undefined` value
 //     - This allows appending to arrays, e.g. with -0
-const getArrayIndex = function (value, token) {
+export const getArrayIndex = function (value, token) {
   return token > 0 || Object.is(token, +0)
     ? token
     : Math.max(value.length + token, 0)
@@ -61,6 +70,7 @@ export const ARRAY_TOKEN = {
   serialize,
   testString,
   parse,
+  normalize,
   isDefined,
   defaultValue,
   getEntries,

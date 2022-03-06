@@ -22,6 +22,11 @@ const parse = function (chars) {
   return chars
 }
 
+// Normalize value after parsing or serializing
+const normalize = function (token) {
+  return token
+}
+
 // When the token is missing a target value, add a default one.
 const isDefined = function (value) {
   return isRecurseObject(value)
@@ -55,6 +60,7 @@ export const PROP_TOKEN = {
   serialize,
   testString,
   parse,
+  normalize,
   isDefined,
   defaultValue,
   getEntries,
