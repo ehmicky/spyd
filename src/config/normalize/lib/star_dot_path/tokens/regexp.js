@@ -39,6 +39,11 @@ const normalize = function (token) {
   return token
 }
 
+// Check if two tokens are the same
+const equals = function (tokenA, tokenB) {
+  return tokenA.source === tokenB.source && tokenA.flags === tokenB.flags
+}
+
 // Use the token to list entries against a target value.
 // eslint-disable-next-line max-params
 const getEntries = function (value, path, token, defined) {
@@ -49,11 +54,6 @@ const getEntries = function (value, path, token, defined) {
       path: [...path, childKey],
       defined,
     }))
-}
-
-// Check if two tokens are the same
-const equals = function (tokenA, tokenB) {
-  return tokenA.source === tokenB.source && tokenA.flags === tokenB.flags
 }
 
 export const REGEXP_TOKEN = {
