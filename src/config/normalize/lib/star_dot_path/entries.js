@@ -4,15 +4,17 @@ import { getObjectTokenType } from './tokens/main.js'
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
 export const listExistingEntries = function (target, path) {
-  return listEntries(target, path).filter(isNotMissing)
+  return listEntries(target, path).filter(isDefined)
 }
 
-const isNotMissing = function ({ missing }) {
-  return !missing
+const isDefined = function ({ defined }) {
+  return defined
 }
 
 export const listEntries = function (target, path) {
-  return path.reduce(listTokenEntries, [{ value: target, path: [] }])
+  return path.reduce(listTokenEntries, [
+    { value: target, path: [], defined: true },
+  ])
 }
 
 const listTokenEntries = function (entries, token) {
@@ -21,27 +23,27 @@ const listTokenEntries = function (entries, token) {
 
 const getTokenEntries = function ({ value, path }, token) {
   const tokenType = getObjectTokenType(token)
-  const missing = !tokenType.isDefined(value)
-  const valueA = missing ? tokenType.defaultValue : value
+  const defined = tokenType.isDefined(value)
+  const valueA = defined ? value : tokenType.defaultValue
   const entries = tokenType.getEntries(valueA, path, token)
   return entries.map((entry) => ({
     value: entry.value,
     path: entry.path,
-    missing,
+    defined,
   }))
 }
 
 // When the value does not exist, we set it deeply with `set()` but not with
 // `list|get|has()`.
-// We filter out between those two cases using a `missing` property.
+// We filter out between those two cases using a `defined` property.
 // Tokens like wildcards cannot do this since there is known property to add.
 // Array indices that are:
 //  - Positive are kept
 //  - Negative are converted to index 0
 export const handleMissingValue = function (value, token) {
   const tokenType = getObjectTokenType(token)
-  const missing = !tokenType.isDefined(value)
-  const valueA = missing ? tokenType.defaultValue : value
+  const defined = tokenType.isDefined(value)
+  const valueA = defined ? value : tokenType.defaultValue
   return valueA
 }
 
