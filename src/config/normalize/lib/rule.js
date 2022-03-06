@@ -1,9 +1,22 @@
-import { get } from './star_dot_path/main.js'
+import { get, parse, serialize } from './star_dot_path/main.js'
 
-// Validate and normalize rules
-export const normalizeRule = function (
+// Validate and normalize rules.
+// All methods and properties that use queries can use either the string or the
+// path syntax.
+export const normalizeRules = function (rules) {
+  return rules.map(parseName).map(normalizeRule)
+}
+
+const parseName = function ({ name, ...rule }) {
+  const nameQuery = serialize(name)
+  const namePath = parse(name)
+  return { ...rule, nameQuery, namePath }
+}
+
+const normalizeRule = function (
   {
-    name,
+    nameQuery,
+    namePath,
     pick,
     condition,
     default: defaultValue,
@@ -20,12 +33,13 @@ export const normalizeRule = function (
   index,
   rules,
 ) {
-  const exampleA = addDefaultExample(example, name, rules)
+  const exampleA = addDefaultExample(example, nameQuery, rules)
   const validateA = normalizeOptionalArray(validate)
   const warnA = normalizeOptionalArray(warn)
   const transformA = normalizeOptionalArray(transform)
   return {
-    name,
+    nameQuery,
+    namePath,
     pick,
     condition,
     default: defaultValue,
@@ -59,13 +73,13 @@ const defaultRequired = function ({ path, config }) {
 // `rule.example` only needs to be defined once per `rule.name`,
 // defaulting to the first value from other rules.
 // It can also default to any `rule.default`.
-const addDefaultExample = function (example, name, rules) {
+const addDefaultExample = function (example, nameQuery, rules) {
   if (example !== undefined) {
     return example
   }
 
   const ruleA = rules.find(
-    (rule) => rule.name === name && rule.example !== undefined,
+    (rule) => rule.nameQuery === nameQuery && rule.example !== undefined,
   )
 
   if (ruleA !== undefined) {
@@ -73,7 +87,7 @@ const addDefaultExample = function (example, name, rules) {
   }
 
   const ruleB = rules.find(
-    (rule) => rule.name === name && rule.default !== undefined,
+    (rule) => rule.nameQuery === nameQuery && rule.default !== undefined,
   )
   return ruleB === undefined ? undefined : useDefaultAsExample(ruleB.default)
 }

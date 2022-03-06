@@ -2,6 +2,7 @@ import isPlainObj from 'is-plain-obj'
 import pReduce from 'p-reduce'
 
 import { callValueFunc } from './call.js'
+import { parse } from './star_dot_path/main.js'
 
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.
@@ -15,8 +16,8 @@ export const transformValue = async function (value, transform, opts) {
     (memo, transformFunc) => transformSingleValue(memo, transformFunc, opts),
     { value, newProps: [] },
   )
-  const newName = getNewName(newProps, opts)
-  return { value: valueA, newName }
+  const newPath = getNewPath(newProps, opts)
+  return { value: valueA, newPath }
 }
 
 const transformSingleValue = async function (
@@ -29,14 +30,14 @@ const transformSingleValue = async function (
     transformFunc,
     opts,
   )
-  const newPropsA = newProp === undefined ? newProps : [newProp, ...newProps]
+  const newPropsA = newProp === undefined ? newProps : [...newProp, ...newProps]
   return { value: valueA, newProps: newPropsA }
 }
 
 const getTransformedValue = async function (value, transformFunc, opts) {
   const transformReturn = await callValueFunc(transformFunc, value, opts)
   return isTransformMove(transformReturn)
-    ? transformReturn
+    ? getTransformMove(transformReturn)
     : {
         value: transformReturn,
         newProp: findCommonMove(transformReturn, value),
@@ -51,10 +52,14 @@ const getTransformedValue = async function (value, transformFunc, opts) {
 const isTransformMove = function (transformReturn) {
   return (
     isPlainObj(transformReturn) &&
-    typeof transformReturn.newProp === 'string' &&
-    transformReturn.newProp !== '' &&
-    'value' in transformReturn
+    'value' in transformReturn &&
+    'newProp' in transformReturn
   )
+}
+
+const getTransformMove = function ({ value, newProp }) {
+  const newPropA = parse(newProp)
+  return newPropA.length === 0 ? {} : { value, newProp: newPropA }
 }
 
 // Automatically detect some common type of moves
@@ -74,7 +79,7 @@ const COMMON_MOVES = [
       )
     },
     getNewProp() {
-      return '0'
+      return [0]
     },
   },
   // When normalizing `value` to `{ [propName]: value }` with a single property
@@ -87,11 +92,11 @@ const COMMON_MOVES = [
       )
     },
     getNewProp(newValue) {
-      return Object.keys(newValue)[0]
+      return [Object.keys(newValue)[0]]
     },
   },
 ]
 
-const getNewName = function (newProps, { funcOpts: { name } }) {
-  return newProps.length === 0 ? undefined : [name, ...newProps].join('.')
+const getNewPath = function (newProps, { funcOpts: { path } }) {
+  return newProps.length === 0 ? undefined : [...path, ...newProps]
 }

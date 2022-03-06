@@ -1,10 +1,13 @@
-import { parent } from './star_dot_path/parsing/parent.js'
+import { parent, equals } from './star_dot_path/main.js'
 
 // When a property is moved to another, record it.
-export const addMoves = function (moves, newNames, oldName) {
-  return newNames.length === 0
+export const addMoves = function (moves, newPaths, oldNamePath) {
+  return newPaths.length === 0
     ? moves
-    : [...moves, ...newNames.map((newName) => ({ oldName, newName }))]
+    : [
+        ...moves,
+        ...newPaths.map((newNamePath) => ({ oldNamePath, newNamePath })),
+      ]
 }
 
 // Rewind previous moves to retrieve the `originalName` behind a `name`.
@@ -14,18 +17,18 @@ export const addMoves = function (moves, newNames, oldName) {
 // a `newName` and `value` properties.
 // We automatically record those when we can: `rule.rename`, array
 // normalization, etc.
-export const applyMoves = function (moves, name) {
-  return moves.reduceRight(applyMove, name)
+export const applyMoves = function (moves, namePath) {
+  return moves.reduceRight(applyMove, namePath)
 }
 
-const applyMove = function (name, { oldName, newName }) {
-  if (newName === name) {
-    return oldName
+const applyMove = function (namePath, { oldNamePath, newNamePath }) {
+  if (equals(newNamePath, namePath)) {
+    return oldNamePath
   }
 
-  if (parent(newName, name)) {
-    return name.replace(newName, oldName)
+  if (parent(newNamePath, namePath)) {
+    return [...oldNamePath, namePath.slice(0, newNamePath.length)]
   }
 
-  return name
+  return namePath
 }

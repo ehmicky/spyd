@@ -5,8 +5,8 @@ import { cleanObject } from '../../../utils/clean.js'
 import { applyRule } from './apply.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
-import { normalizeRule } from './rule.js'
-import { list, set } from './star_dot_path/main.js'
+import { normalizeRules } from './rule.js'
+import { list, set, equals } from './star_dot_path/main.js'
 import { addWarnings, logWarnings } from './warn.js'
 
 // Normalize configuration shape and do custom validation.
@@ -25,7 +25,7 @@ export const normalizeConfigProps = async function (
   rules,
   { context = {}, soft = false, cwd, prefix, parent = '' } = {},
 ) {
-  const rulesA = rules.map(normalizeRule)
+  const rulesA = normalizeRules(rules)
 
   try {
     const { config: configB, warnings } = await pReduce(
@@ -45,23 +45,43 @@ export const normalizeConfigProps = async function (
 
 const applyRuleDeep = async function (
   { config, moves, warnings },
-  { rule, rule: { name: query }, context, cwd, prefix, parent },
+  { rule, rule: { namePath }, context, cwd, prefix, parent },
 ) {
-  const props = list(config, query)
+  const props = list(config, namePath)
   return await pReduce(
     props,
-    (memo, { value, query: name }) =>
-      applyPropRule(memo, { value, name, rule, context, cwd, prefix, parent }),
+    (memo, { value, query: nameQuery, path: namePathA }) =>
+      applyPropRule(memo, {
+        value,
+        nameQuery,
+        namePath: namePathA,
+        rule,
+        context,
+        cwd,
+        prefix,
+        parent,
+      }),
     { config, moves, warnings },
   )
 }
 
 const applyPropRule = async function (
   { config, moves, warnings },
-  { value, name, rule, rule: { example }, context, cwd, prefix, parent },
+  {
+    value,
+    nameQuery,
+    namePath,
+    rule,
+    rule: { example },
+    context,
+    cwd,
+    prefix,
+    parent,
+  },
 ) {
   const opts = await getOpts({
-    name,
+    nameQuery,
+    namePath,
     config,
     context,
     cwd,
@@ -72,19 +92,21 @@ const applyPropRule = async function (
   })
   const {
     value: newValue,
-    name: newName = name,
-    newNames = [],
+    renamedPath = namePath,
+    newPaths = [],
     warnings: newWarnings,
   } = await applyRule(rule, value, opts)
-  const configA = setConfigValue({ config, name, newName, newValue })
-  const movesA = addMoves(moves, newNames, name)
+  const configA = setConfigValue({ config, namePath, renamedPath, newValue })
+  const movesA = addMoves(moves, newPaths, namePath)
   const warningsA = addWarnings(warnings, newWarnings)
   return { config: configA, moves: movesA, warnings: warningsA }
 }
 
-const setConfigValue = function ({ config, name, newName, newValue }) {
-  const configA = name === newName ? config : set(config, name, undefined)
-  return set(configA, newName, newValue)
+const setConfigValue = function ({ config, namePath, renamedPath, newValue }) {
+  const configA = equals(namePath, renamedPath)
+    ? config
+    : set(config, namePath, undefined)
+  return set(configA, renamedPath, newValue)
 }
 
 // When in `sort` mode, user errors are returned instead of being thrown.

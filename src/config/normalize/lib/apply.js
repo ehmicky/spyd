@@ -31,8 +31,8 @@ export const applyRule = async function (
   const valueB = await addDefaultValue(valueA, defaultValue, opts)
   const {
     value: valueC,
-    name,
-    newNames,
+    renamedPath,
+    newPaths,
     warnings,
   } = await validateAndModify({
     value: valueB,
@@ -45,7 +45,7 @@ export const applyRule = async function (
     rename,
     opts,
   })
-  return { value: valueC, name, newNames, warnings }
+  return { value: valueC, renamedPath, newPaths, warnings }
 }
 
 // Apply `pick(value, opts)` which omits the current value if `false` is

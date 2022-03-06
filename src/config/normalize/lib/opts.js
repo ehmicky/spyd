@@ -1,13 +1,14 @@
+import { callUserFunc } from './call.js'
 import { getCwd } from './cwd.js'
 import { applyMoves } from './move.js'
-import { appendParentToName } from './parent.js'
 import { getPrefix, DEFAULT_PREFIX } from './prefix.js'
-import { parse } from './star_dot_path/main.js'
+import { parse, serialize } from './star_dot_path/main.js'
 
 // Retrieve `opts` passed to most methods.
 // `funcOpts` are passed to user-provided functions.
 export const getOpts = async function ({
-  name,
+  nameQuery,
+  namePath,
   config,
   context,
   cwd,
@@ -16,10 +17,16 @@ export const getOpts = async function ({
   example,
   moves,
 }) {
-  const path = parse(name)
-  const originalName = applyMoves(moves, name)
-  const originalPath = parse(originalName)
-  const funcOpts = { name, path, originalName, originalPath, config, context }
+  const originalPath = applyMoves(moves, namePath)
+  const originalName = serialize(originalPath)
+  const funcOpts = {
+    name: nameQuery,
+    path: namePath,
+    originalName,
+    originalPath,
+    config,
+    context,
+  }
   const opts = { funcOpts, example, prefix: DEFAULT_PREFIX }
   const optsA = await computeParent(opts, moves, parent)
   const optsB = await computePrefix(optsA, prefix)
@@ -35,9 +42,19 @@ export const getOpts = async function ({
 // work with everything else, including `rule.name`, `rule.rename` and
 // `funcOpts.config`.
 const computeParent = async function (opts, moves, parent) {
-  const originalName = await appendParentToName({ parent, opts })
-  const originalPath = parse(originalName)
+  const originalPath = await appendParentToName(parent, opts)
+  const originalName = serialize(originalPath)
   return { ...opts, funcOpts: { ...opts.funcOpts, originalName, originalPath } }
+}
+
+// The `parent` option are the names of the parent properties.
+// It is exposed as `originalName` and `originalPath`.
+// It is a dot-delimited string.
+// By default, there are none.
+const appendParentToName = async function (parent, opts) {
+  const parentA = await callUserFunc(parent, opts)
+  const parentPath = parse(parentA)
+  return [...parentPath, ...opts.funcOpts.originalPath]
 }
 
 const computePrefix = async function (opts, prefix) {

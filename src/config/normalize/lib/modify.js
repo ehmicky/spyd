@@ -1,6 +1,6 @@
 import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolvePath } from './path.js'
-import { has } from './star_dot_path/main.js'
+import { has, parse } from './star_dot_path/main.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
 
@@ -25,14 +25,14 @@ export const validateAndModify = async function ({
   const valueA = await resolvePath({ value, path, glob, opts })
   await validateValue(valueA, validate, opts)
   const warnings = await getWarnings(valueA, warn, opts)
-  const { value: valueB, newName } = await transformValue(
+  const { value: valueB, newPath } = await transformValue(
     valueA,
     transform,
     opts,
   )
-  const name = await renameProp(valueB, rename, opts)
-  const newNames = [newName, name].filter(Boolean)
-  return { value: valueB, name, newNames, warnings }
+  const renamedPath = await renameProp(valueB, rename, opts)
+  const newPaths = [newPath, renamedPath].filter(Boolean)
+  return { value: valueB, renamedPath, newPaths, warnings }
 }
 
 // Apply `required(opts)` which throws if `true` and value is `undefined`
@@ -63,11 +63,12 @@ const renameProp = async function (value, rename, opts) {
     return
   }
 
-  const name = await callValueFunc(rename, value, opts)
+  const renameReturn = await callValueFunc(rename, value, opts)
 
-  if (typeof name !== 'string') {
+  if (renameReturn === undefined) {
     return
   }
 
-  return has(opts.funcOpts.config, name) ? undefined : name
+  const renamedPath = parse(renameReturn)
+  return has(opts.funcOpts.config, renamedPath) ? undefined : renamedPath
 }
