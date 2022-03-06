@@ -35,6 +35,11 @@ export const handleMissingValue = function (value, token) {
   return valueA
 }
 
+export const isDefined = function (value, token) {
+  const tokenType = getObjectTokenType(token)
+  return tokenType.isDefined(value)
+}
+
 // Compute all entries properties from the basic ones
 export const normalizeEntry = function ({ value, path }) {
   const query = serialize(path)
