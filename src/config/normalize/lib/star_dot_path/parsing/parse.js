@@ -28,7 +28,7 @@ import { isQueryString } from './validate.js'
 //  - Backslashes can escape special characters: . * \
 // Tokens are an array of one of:
 //  - Object property as a string or symbol
-//  - Array index as a number or string
+//  - Array index as a positive|negative integer|string
 //  - `Symbol.for('*')` for wildcards
 //     - We use symbols as it allows using dynamic strings without injection
 //       risk
