@@ -48,7 +48,7 @@ const isValidToken = function (token) {
 }
 
 const throwPathError = function (path, message) {
-  throw new Error(`Invalid query path: ${inspect(path)}\n${message}`)
+  throw new Error(`Invalid path: ${inspect(path)}\n${message}`)
 }
 
 const throwTokenError = function (path, token, message) {

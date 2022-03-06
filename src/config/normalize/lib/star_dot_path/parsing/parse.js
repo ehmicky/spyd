@@ -54,9 +54,17 @@ import { isQueryString } from './validate.js'
 //  - But queries matching nothing do not throw: instead they return nothing
 export const parse = function (queryOrPath) {
   const path = isQueryString(queryOrPath)
-    ? parseQuery(queryOrPath)
+    ? safeParseQuery(queryOrPath)
     : queryOrPath
   return normalizePath(path)
+}
+
+const safeParseQuery = function (query) {
+  try {
+    return parseQuery(query)
+  } catch (error) {
+    throw new Error(`Invalid query "${query}": ${error.message}`)
+  }
 }
 
 // Use imperative logic for performance
@@ -78,10 +86,10 @@ const parseQuery = function (query) {
     const char = query[index]
 
     if (char === ESCAPE) {
-      chars += getEscapedChar(query, index)
       index += 1
+      chars += parseEscapedChar(query, index)
     } else if (char === SEPARATOR || index === query.length) {
-      path.push(parseToken(chars, query, hasAny, hasMinus, hasRegExp))
+      path.push(parseToken(chars, hasAny, hasMinus, hasRegExp))
       chars = ''
       hasAny = false
       hasMinus = false
@@ -99,28 +107,28 @@ const parseQuery = function (query) {
 /* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
    fp/no-mutation, fp/no-mutating-methods, fp/no-let */
 
-const getEscapedChar = function (query, index) {
-  const escapedChar = query[index + 1]
-  validateEscape(escapedChar, query, index)
+const parseEscapedChar = function (query, index) {
+  const escapedChar = query[index]
+  validateEscape(escapedChar)
   return escapedChar
 }
 
-const validateEscape = function (escapedChar, query, index) {
+const validateEscape = function (escapedChar) {
   if (!SPECIAL_CHARS.has(escapedChar)) {
     throw new Error(
-      `Invalid query "${query}": character ${ESCAPE} at index ${index} must be followed by ${SEPARATOR} ${ANY} ${MINUS} ${REGEXP_DELIM} or ${ESCAPE}`,
+      `character "${ESCAPE}" must only be followed by ${SEPARATOR} ${ANY} ${MINUS} ${REGEXP_DELIM} or ${ESCAPE}`,
     )
   }
 }
 
 // eslint-disable-next-line max-params
-const parseToken = function (chars, query, hasAny, hasMinus, hasRegExp) {
+const parseToken = function (chars, hasAny, hasMinus, hasRegExp) {
   if (hasAny) {
-    return parseAnyToken(chars, query)
+    return parseAnyToken(chars)
   }
 
   if (hasRegExp) {
-    return parseRegExpToken(chars, query)
+    return parseRegExpToken(chars)
   }
 
   if (areIndexTokenChars(chars, hasMinus)) {

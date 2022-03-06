@@ -12,26 +12,20 @@ export const serializeRegExpToken = function (token) {
   return `${REGEXP_DELIM}${source}${REGEXP_DELIM}${token.flags}`
 }
 
-// Parse a RegExp string into a token
-export const parseRegExpToken = function (chars, query) {
+// Parse a RegExp string into a token.
+// This might throw if the RegExp is invalid.
+export const parseRegExpToken = function (chars) {
   const endIndex = chars.lastIndexOf(REGEXP_DELIM)
 
   if (endIndex === 0) {
     throw new Error(
-      `Invalid query "${query}": regular expression "${chars}" is missing a ${REGEXP_DELIM} at the end.`,
+      `regular expression "${chars}" is missing a "${REGEXP_DELIM}" at the end.`,
     )
   }
 
   const regExpString = chars.slice(1, endIndex)
   const regExpFlags = chars.slice(endIndex + 1)
-
-  try {
-    return new RegExp(regExpString, regExpFlags)
-  } catch (error) {
-    throw new Error(
-      `Invalid query "${query}": regular expression "${chars}" is invalid.\n${error.message}`,
-    )
-  }
+  return new RegExp(regExpString, regExpFlags)
 }
 
 // List entries when using RegExps, e.g. `a./[bc]/`

@@ -1,7 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
 import { isRecurseObject } from './recurse.js'
-import { ANY, SEPARATOR } from './special.js'
+import { ANY, ESCAPE, SEPARATOR } from './special.js'
 
 // Check if a token is *
 export const isAnyToken = function (token) {
@@ -15,11 +15,12 @@ export const serializeAnyToken = function () {
 }
 
 // Parse a * string into a token
-export const parseAnyToken = function (chars, query) {
+export const parseAnyToken = function (chars) {
   if (chars !== ANY) {
     throw new Error(
-      `Invalid query "${query}": character ${ANY} must not be preceded or followed by other characters except "${SEPARATOR}"
-Regular expressions can be used instead.`,
+      `character "${ANY}" must not be preceded or followed by other characters except "${SEPARATOR}"
+If you intend "${ANY}" as a wildcard character, please use a regular expression instead.
+Otherwise, please escape it with a "${ESCAPE}".`,
     )
   }
 
