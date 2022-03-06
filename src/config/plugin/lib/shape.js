@@ -1,5 +1,5 @@
 import { getDummyRules } from '../../normalize/dummy.js'
-import { parent } from '../../normalize/lib/star_dot_path/main.js'
+import { equals, parent } from '../../normalize/lib/star_dot_path/main.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { PluginError, UserError, CoreError } from './error.js'
@@ -95,9 +95,9 @@ const configPropName = {
 }
 
 const isSharedProp = function (name, sharedPropNames) {
-  return (
-    sharedPropNames.includes(name) ||
-    sharedPropNames.some((sharedPropName) => parent(name, sharedPropName))
+  return sharedPropNames.some(
+    (sharedPropName) =>
+      equals(name, sharedPropName) || parent(name, sharedPropName),
   )
 }
 
