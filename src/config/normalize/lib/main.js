@@ -6,7 +6,7 @@ import { applyRule } from './apply.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
 import { normalizeRule } from './rule.js'
-import { list, set, omit } from './star_dot_path/main.js'
+import { list, set } from './star_dot_path/main.js'
 import { addWarnings, logWarnings } from './warn.js'
 
 // Normalize configuration shape and do custom validation.
@@ -83,10 +83,8 @@ const applyPropRule = async function (
 }
 
 const setConfigValue = function ({ config, name, newName, newValue }) {
-  const configA = name === newName ? config : omit(config, name)
-  return newValue === undefined
-    ? omit(configA, newName)
-    : set(configA, newName, newValue)
+  const configA = name === newName ? config : set(config, name, undefined)
+  return set(configA, newName, newValue)
 }
 
 // When in `sort` mode, user errors are returned instead of being thrown.

@@ -1,3 +1,5 @@
+import omit from 'omit.js'
+
 import { setArray } from '../../../../utils/set.js'
 
 import { listEntries, normalizeEntry } from './entries/main.js'
@@ -6,8 +8,8 @@ import { maybeParse } from './parsing/parse.js'
 import { pathHasAny, isIndexNode } from './parsing/path.js'
 
 // Set a value to one or multiple properties in `target` using a query string
-export const set = function (target, queryOrPath, setValue) {
-  return transform(target, queryOrPath, () => setValue)
+export const set = function (target, queryOrPath, newValue) {
+  return transform(target, queryOrPath, () => newValue)
 }
 
 // Same but using a function returning the value to set
@@ -48,7 +50,7 @@ const setEntry = function (
   const childValue = defaultedValue[key]
   const newIndex = index + 1
   const newChildValue = setEntry(childValue, newIndex, { entry, transformFunc })
-  return setNewChildValue(defaultedValue, key, newChildValue)
+  return setValue(defaultedValue, key, newChildValue)
 }
 
 const addDefaultTarget = function (value, key) {
@@ -59,11 +61,36 @@ const addDefaultTarget = function (value, key) {
   return isIndexNode(key) ? [] : {}
 }
 
-export const setNewChildValue = function (value, key, newChildValue) {
+const setValue = function (value, key, newChildValue) {
   if (value[key] === newChildValue) {
     return value
   }
 
+  return newChildValue === undefined
+    ? removeValue(value, key)
+    : setDefinedValue(value, key, newChildValue)
+}
+
+// We purposely do not distinguish between a missing property and a property set
+// to `undefined` since:
+//  - This is a bad pattern for consumer logic to make that distinction
+//  - This removes the need for a separate `remove()` method
+//  - Deleting `undefined` properties by default leads to cleaner return values
+// If the value was already `undefined`, we keep it as is though.
+const removeValue = function (value, key) {
+  if (!Array.isArray(value, key)) {
+    return omit.default(value, [key])
+  }
+
+  const newArray = setArray(value, key)
+  return newArray.every(isUndefined) ? [] : newArray
+}
+
+const isUndefined = function (item) {
+  return item === undefined
+}
+
+const setDefinedValue = function (value, key, newChildValue) {
   return Array.isArray(value)
     ? setArray(value, key, newChildValue)
     : { ...value, [key]: newChildValue }
