@@ -17,7 +17,10 @@ export const transform = function (target, queryOrPath, transformFunc) {
   const path = maybeParse(queryOrPath)
   const entries = listEntries(target, path)
   const entriesA = addDefaultEntries(entries, path)
-  return setEntries(target, entriesA, transformFunc)
+  return entriesA.reduce(
+    (targetA, entry) => setEntry(targetA, entry, transformFunc),
+    target,
+  )
 }
 
 // When the value does not exist, we set it deeply.
@@ -27,16 +30,23 @@ const addDefaultEntries = function (entries, path) {
   return entries.length === 0 && !pathHasAny(path) ? [{ path }] : entries
 }
 
-const setEntries = function (target, entries, transformFunc) {
-  return entries
-    .map(normalizeEntry)
-    .reduce(
-      (targetA, entry) => setEntry(targetA, 0, { entry, transformFunc }),
-      target,
-    )
+// Returns an object with only the properties being queried.
+export const pick = function (target, queryOrPath) {
+  const path = maybeParse(queryOrPath)
+  const entries = listEntries(target, path)
+  return entries.reduce(pickEntry, {})
 }
 
-const setEntry = function (
+const pickEntry = function (newTarget, { value, path }) {
+  return setEntry(newTarget, { path }, () => value)
+}
+
+const setEntry = function (value, entry, transformFunc) {
+  const entryA = normalizeEntry(entry)
+  return setEntryPart(value, 0, { entry: entryA, transformFunc })
+}
+
+const setEntryPart = function (
   value,
   index,
   { entry, entry: { path, query }, transformFunc },
@@ -48,8 +58,10 @@ const setEntry = function (
   const key = path[index]
   const defaultedValue = addDefaultTarget(value, key)
   const childValue = defaultedValue[key]
-  const newIndex = index + 1
-  const newChildValue = setEntry(childValue, newIndex, { entry, transformFunc })
+  const newChildValue = setEntryPart(childValue, index + 1, {
+    entry,
+    transformFunc,
+  })
   return setValue(defaultedValue, key, newChildValue)
 }
 
