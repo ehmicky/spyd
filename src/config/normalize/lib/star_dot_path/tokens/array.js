@@ -6,12 +6,12 @@
 // We allow negative indexes which query from the end
 //  - Including -0 which can be used to append values
 // Check if token is an array index integer
-export const isIndexToken = function (token) {
+const test = function (token) {
   return Number.isInteger(token)
 }
 
 // Serialize an array index token into a string
-export const serializeIndexToken = function (token) {
+const serialize = function (token) {
   return Object.is(token, -0) ? '-0' : String(token)
 }
 
@@ -27,18 +27,17 @@ export const parseIndexToken = function (chars) {
   return Number(chars)
 }
 
-// List entries when using indices, e.g. `a.1`
-export const getIndexEntries = function (value, path, token) {
-  const { value: valueA, missing } = handleIndexMissingValue(value)
-  const index = getArrayIndex(valueA, token)
-  return [{ value: valueA[index], path: [...path, index], missing }]
-}
-
 // Default array when missing
-export const handleIndexMissingValue = function (value) {
+const handleMissingValue = function (value) {
   const missing = !Array.isArray(value)
   const valueA = missing ? [] : value
   return { value: valueA, missing }
+}
+
+// List entries when using indices, e.g. `a.1`
+const getEntries = function (value, path, token) {
+  const index = getArrayIndex(value, token)
+  return [{ value: value[index], path: [...path, index] }]
 }
 
 // Retrieve an array using a positive or negative index.
@@ -47,4 +46,11 @@ const getArrayIndex = function (array, token) {
   return token > 0 || Object.is(token, +0)
     ? token
     : Math.max(array.length + token, 0)
+}
+
+export const ARRAY_TOKEN = {
+  test,
+  serialize,
+  handleMissingValue,
+  getEntries,
 }

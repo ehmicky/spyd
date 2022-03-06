@@ -3,12 +3,12 @@ import { isRecurseObject } from './recurse.js'
 import { SEPARATOR } from './special.js'
 
 // Check if a token is a property name string
-export const isPropToken = function (token) {
+const test = function (token) {
   return typeof token === 'string'
 }
 
 // Serialize a property token into a string
-export const serializePropToken = function (token, index) {
+const serialize = function (token, index) {
   return token === '' && index === 0 ? SEPARATOR : escapeSpecialChars(token)
 }
 
@@ -17,15 +17,21 @@ export const parsePropToken = function (chars) {
   return chars
 }
 
-// List entries when using property names, e.g. `a.b`
-export const getPropEntries = function (value, path, token) {
-  const { value: valueA, missing } = handlePropMissingValue(value, token)
-  return [{ value: valueA[token], path: [...path, token], missing }]
-}
-
 // Default object when missing
-export const handlePropMissingValue = function (value) {
+const handleMissingValue = function (value) {
   const missing = !isRecurseObject(value)
   const valueA = missing ? {} : value
   return { value: valueA, missing }
+}
+
+// List entries when using property names, e.g. `a.b`
+const getEntries = function (value, path, token) {
+  return [{ value: value[token], path: [...path, token] }]
+}
+
+export const PROP_TOKEN = {
+  test,
+  serialize,
+  handleMissingValue,
+  getEntries,
 }

@@ -3,12 +3,12 @@ import { isRecurseObject } from './recurse.js'
 import { REGEXP_DELIM } from './special.js'
 
 // Check if a token is a /.../ RegExp
-export const isRegExpToken = function (token) {
+const test = function (token) {
   return token instanceof RegExp
 }
 
 // Serialize a RegExp token into a string
-export const serializeRegExpToken = function (token) {
+const serialize = function (token) {
   const source = escapeSpecialChars(token.source)
   return `${REGEXP_DELIM}${source}${REGEXP_DELIM}${token.flags}`
 }
@@ -29,8 +29,13 @@ export const parseRegExpToken = function (chars) {
   return new RegExp(regExpString, regExpFlags)
 }
 
+// When missing, there are no entries, so no need to add missing entries.
+const handleMissingValue = function (value) {
+  return { value, missing: false }
+}
+
 // List entries when using RegExps, e.g. `a./[bc]/`
-export const getRegExpEntries = function (value, path, token) {
+const getEntries = function (value, path, token) {
   if (!isRecurseObject(value)) {
     return []
   }
@@ -42,4 +47,11 @@ export const getRegExpEntries = function (value, path, token) {
       path: [...path, childKey],
       missing: false,
     }))
+}
+
+export const REGEXP_TOKEN = {
+  test,
+  serialize,
+  handleMissingValue,
+  getEntries,
 }

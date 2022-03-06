@@ -1,7 +1,4 @@
-import { isAnyToken, serializeAnyToken } from '../tokens/any.js'
-import { isIndexToken, serializeIndexToken } from '../tokens/array.js'
-import { serializePropToken } from '../tokens/prop.js'
-import { isRegExpToken, serializeRegExpToken } from '../tokens/regexp.js'
+import { getTokenType } from '../tokens/main.js'
 import { SEPARATOR } from '../tokens/special.js'
 
 import { parse } from './parse.js'
@@ -19,17 +16,6 @@ const serializePath = function (path) {
 }
 
 const serializeToken = function (token, index) {
-  if (isAnyToken(token)) {
-    return serializeAnyToken()
-  }
-
-  if (isIndexToken(token)) {
-    return serializeIndexToken(token)
-  }
-
-  if (isRegExpToken(token)) {
-    return serializeRegExpToken(token)
-  }
-
-  return serializePropToken(token, index)
+  const tokenType = getTokenType(token)
+  return tokenType.serialize(token, index)
 }

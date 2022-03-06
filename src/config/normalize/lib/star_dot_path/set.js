@@ -22,7 +22,7 @@ const setEntry = function ({ target, path, value, index }) {
   }
 
   const key = path[index]
-  const { value: defaultedTarget } = handleMissingValue(target, key)
+  const defaultedTarget = handleMissingValue(target, key)
   const childTarget = defaultedTarget[key]
   const childValue = setEntry({
     target: childTarget,

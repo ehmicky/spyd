@@ -4,13 +4,13 @@ import { isRecurseObject } from './recurse.js'
 import { ANY, ESCAPE, SEPARATOR } from './special.js'
 
 // Check if a token is *
-export const isAnyToken = function (token) {
+const test = function (token) {
   return isPlainObj(token) && token.type === ANY_TYPE
 }
 
 const ANY_TYPE = 'any'
 
-export const serializeAnyToken = function () {
+const serialize = function () {
   return ANY
 }
 
@@ -27,9 +27,14 @@ Otherwise, please escape it with a "${ESCAPE}".`,
   return { type: ANY_TYPE }
 }
 
+// When missing, there are no entries, so no need to add missing entries.
+const handleMissingValue = function (value) {
+  return { value, missing: false }
+}
+
 // List entries when using *, e.g. `a.*`
 // We purposely ignore symbol properties by using `Object.keys()`.
-export const getAnyEntries = function (value, path) {
+const getEntries = function (value, path) {
   if (Array.isArray(value)) {
     return value.map((childValue, index) => ({
       value: childValue,
@@ -47,4 +52,11 @@ export const getAnyEntries = function (value, path) {
   }
 
   return []
+}
+
+export const ANY_TOKEN = {
+  test,
+  serialize,
+  handleMissingValue,
+  getEntries,
 }
