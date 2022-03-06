@@ -64,12 +64,12 @@ const againstCondition = async function (value, condition, opts) {
   )
 }
 
-// Apply `default(opts)` which assigns a default value
-const addDefaultValue = async function (value, defaultValue, opts) {
-  return value === undefined ? await callUserFunc(defaultValue, opts) : value
-}
-
 // Apply `compute(opts)` which sets a value from the system, instead of the user
 const computeValue = async function (value, compute, opts) {
   return compute === undefined ? value : await callUserFunc(compute, opts)
+}
+
+// Apply `default(opts)` which assigns a default value
+const addDefaultValue = async function (value, defaultValue, opts) {
+  return value === undefined ? await callUserFunc(defaultValue, opts) : value
 }
