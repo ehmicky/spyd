@@ -41,19 +41,19 @@ const normalize = function ({ type }) {
 // Use the token to list entries against a target value.
 // We purposely ignore symbol properties by using `Object.keys()`.
 // eslint-disable-next-line max-params
-const getEntries = function (value, path, token, defined) {
+const getEntries = function (value, path, token, missing) {
   if (Array.isArray(value)) {
     return value.map((childValue, index) => ({
       value: childValue,
       path: [...path, index],
-      defined,
+      missing,
     }))
   }
 
   return Object.keys(value).map((childKey) => ({
     value: value[childKey],
     path: [...path, childKey],
-    defined,
+    missing,
   }))
 }
 

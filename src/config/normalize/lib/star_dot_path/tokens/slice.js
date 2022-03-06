@@ -66,13 +66,13 @@ const normalize = function ({ type, from = 0, to }) {
 
 // Use the token to list entries against a target value.
 // eslint-disable-next-line max-params
-const getEntries = function (value, path, { from, to }, defined) {
+const getEntries = function (value, path, { from, to }, missing) {
   const fromIndex = getArrayIndex(value, from)
   const toIndex = Math.max(getArrayIndex(value, to), fromIndex)
   return new Array(toIndex - fromIndex).fill().map((_, index) => ({
     value: value[index + fromIndex],
     path: [...path, index + fromIndex],
-    defined,
+    missing,
   }))
 }
 

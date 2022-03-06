@@ -7,7 +7,7 @@ import { getObjectTokenType } from './tokens/main.js'
 export const listEntries = function (target, queryOrPath) {
   const path = parse(queryOrPath)
   return path.reduce(listTokenEntries, [
-    { value: target, path: [], defined: true },
+    { value: target, path: [], missing: false },
   ])
 }
 
@@ -16,22 +16,22 @@ const listTokenEntries = function (entries, token) {
 }
 
 const getTokenEntries = function ({ value, path }, token) {
-  const { tokenType, defined, value: valueA } = handleMissingValue(value, token)
-  return tokenType.getEntries(valueA, path, token, defined)
+  const { tokenType, missing, value: valueA } = handleMissingValue(value, token)
+  return tokenType.getEntries(valueA, path, token, missing)
 }
 
 // When the value does not exist, we set it deeply with `set()` but not with
 // `list|get|has()`.
-// We filter out between those two cases using a `defined` property.
+// We filter out between those two cases using a `missing` property.
 // Tokens like wildcards cannot do this since there is known property to add.
 // Array indices that are:
 //  - Positive are kept
 //  - Negative are converted to index 0
 export const handleMissingValue = function (value, token) {
   const tokenType = getObjectTokenType(token)
-  const defined = tokenType.isDefined(value)
-  const valueA = defined ? value : tokenType.defaultValue
-  return { tokenType, defined, value: valueA }
+  const missing = tokenType.isMissing(value)
+  const valueA = missing ? tokenType.defaultValue : value
+  return { tokenType, missing, value: valueA }
 }
 
 // Compute all entries properties from the basic ones

@@ -13,16 +13,16 @@ export const get = function (target, queryOrPath) {
   return entries.length === 0 ? undefined : entries[0].value
 }
 
-// Check if a property is defined according to a query
+// Check if a property is not missing according to a query
 export const has = function (target, queryOrPath) {
   const entries = listExistingEntries(target, queryOrPath)
   return entries.length !== 0
 }
 
 const listExistingEntries = function (target, queryOrPath) {
-  return listEntries(target, queryOrPath).filter(isDefined)
+  return listEntries(target, queryOrPath).filter(isExisting)
 }
 
-const isDefined = function ({ defined }) {
-  return defined
+const isExisting = function ({ missing }) {
+  return !missing
 }

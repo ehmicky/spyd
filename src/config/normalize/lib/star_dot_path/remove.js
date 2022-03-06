@@ -23,7 +23,7 @@ const hasRootPath = function ({ path }) {
 const removeEntry = function (target, path, index) {
   const key = path[index]
 
-  if (!handleMissingValue(target, key).defined) {
+  if (handleMissingValue(target, key).missing) {
     return target
   }
 

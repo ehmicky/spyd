@@ -32,12 +32,12 @@ const normalize = function (token) {
 //  - Missing property name: return no entries
 //  - Property exists but has `undefined` value: return an entry
 // eslint-disable-next-line max-params
-const getEntries = function (value, path, token, defined) {
+const getEntries = function (value, path, token, missing) {
   return [
     {
       value: value[token],
       path: [...path, token],
-      defined: defined && token in value,
+      missing: missing || !(token in value),
     },
   ]
 }
