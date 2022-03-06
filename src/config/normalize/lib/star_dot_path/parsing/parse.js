@@ -27,6 +27,9 @@ import { ESCAPE, SEPARATOR, ANY, ANY_TOKEN } from './special.js'
 //  - Also, this allows property names to include special characters (dots,
 //    brackets, star) or to be symbols
 //  - This removes the need for escaping
+// Exceptions are thrown on syntax errors:
+//  - I.e. query or path syntax errors, or wrong arguments
+//  - But queries matching nothing do not throw: instead they return nothing
 export const maybeParse = function (queryOrPath) {
   return Array.isArray(queryOrPath)
     ? normalizePath(queryOrPath)
