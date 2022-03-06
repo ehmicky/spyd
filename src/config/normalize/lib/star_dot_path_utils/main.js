@@ -1,2 +1,2 @@
-export { map } from './map.js'
+export { map, exclude } from './map.js'
 export { pick } from './pick.js'
