@@ -23,11 +23,11 @@ const parse = function (chars) {
 }
 
 // When the token is missing a target value, add a default one.
-const handleMissingValue = function (value) {
-  const missing = !isRecurseObject(value)
-  const valueA = missing ? {} : value
-  return { value: valueA, missing }
+const isDefined = function (value) {
+  return isRecurseObject(value)
 }
+
+const defaultValue = {}
 
 // Use the token to list entries against a target value.
 const getEntries = function (value, path, token) {
@@ -44,7 +44,8 @@ export const PROP_TOKEN = {
   serialize,
   testString,
   parse,
-  handleMissingValue,
+  isDefined,
+  defaultValue,
   getEntries,
   equals,
 }

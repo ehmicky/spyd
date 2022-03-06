@@ -21,7 +21,8 @@ const listTokenEntries = function (entries, token) {
 
 const getTokenEntries = function ({ value, path }, token) {
   const tokenType = getObjectTokenType(token)
-  const { value: valueA, missing } = tokenType.handleMissingValue(value)
+  const missing = !tokenType.isDefined(value)
+  const valueA = missing ? tokenType.defaultValue : value
   const entries = tokenType.getEntries(valueA, path, token)
   return entries.map((entry) => ({
     value: entry.value,
@@ -39,7 +40,8 @@ const getTokenEntries = function ({ value, path }, token) {
 //  - Negative are converted to index 0
 export const handleMissingValue = function (value, token) {
   const tokenType = getObjectTokenType(token)
-  const { value: valueA } = tokenType.handleMissingValue(value)
+  const missing = !tokenType.isDefined(value)
+  const valueA = missing ? tokenType.defaultValue : value
   return valueA
 }
 

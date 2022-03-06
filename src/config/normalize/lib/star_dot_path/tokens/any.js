@@ -34,10 +34,11 @@ Otherwise, please escape it with a "${ESCAPE}".`,
 }
 
 // When the token is missing a target value, add a default one.
-// When missing, there are no entries, so no need to add missing entries.
-const handleMissingValue = function (value) {
-  return { value, missing: false }
+const isDefined = function (value) {
+  return isRecurseObject(value)
 }
+
+const defaultValue = {}
 
 // Use the token to list entries against a target value.
 // We purposely ignore symbol properties by using `Object.keys()`.
@@ -46,19 +47,13 @@ const getEntries = function (value, path) {
     return value.map((childValue, index) => ({
       value: childValue,
       path: [...path, index],
-      missing: false,
     }))
   }
 
-  if (isRecurseObject(value)) {
-    return Object.keys(value).map((childKey) => ({
-      value: value[childKey],
-      path: [...path, childKey],
-      missing: false,
-    }))
-  }
-
-  return []
+  return Object.keys(value).map((childKey) => ({
+    value: value[childKey],
+    path: [...path, childKey],
+  }))
 }
 
 // Check if two tokens are the same
@@ -71,7 +66,8 @@ export const ANY_TOKEN = {
   serialize,
   testString,
   parse,
-  handleMissingValue,
+  isDefined,
+  defaultValue,
   getEntries,
   equals,
 }

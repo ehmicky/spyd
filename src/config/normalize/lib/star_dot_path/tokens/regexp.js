@@ -35,24 +35,17 @@ const parse = function (chars) {
 }
 
 // When the token is missing a target value, add a default one.
-// When missing, there are no entries, so no need to add missing entries.
-const handleMissingValue = function (value) {
-  return { value, missing: false }
+const isDefined = function (value) {
+  return isRecurseObject(value)
 }
+
+const defaultValue = {}
 
 // Use the token to list entries against a target value.
 const getEntries = function (value, path, token) {
-  if (!isRecurseObject(value)) {
-    return []
-  }
-
   return Object.keys(value)
     .filter((childKey) => token.test(childKey))
-    .map((childKey) => ({
-      value: value[childKey],
-      path: [...path, childKey],
-      missing: false,
-    }))
+    .map((childKey) => ({ value: value[childKey], path: [...path, childKey] }))
 }
 
 // Check if two tokens are the same
@@ -65,7 +58,8 @@ export const REGEXP_TOKEN = {
   serialize,
   testString,
   parse,
-  handleMissingValue,
+  isDefined,
+  defaultValue,
   getEntries,
   equals,
 }
