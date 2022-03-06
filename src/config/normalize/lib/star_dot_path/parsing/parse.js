@@ -1,6 +1,13 @@
 import { normalizePath } from './normalize.js'
 import { isQueryString, convertIndexInteger } from './path.js'
-import { ESCAPE, SEPARATOR, ANY, SPECIAL_CHARS, ANY_TOKEN } from './special.js'
+import {
+  ESCAPE,
+  SEPARATOR,
+  ANY,
+  MINUS,
+  SPECIAL_CHARS,
+  ANY_TOKEN,
+} from './special.js'
 
 // Parse a query string into an array of tokens.
 // Also validate and normalize it.
@@ -8,6 +15,8 @@ import { ESCAPE, SEPARATOR, ANY, SPECIAL_CHARS, ANY_TOKEN } from './special.js'
 // Syntax:
 //  - Dots are used for object properties, e.g. `one.two`
 //  - Dots are also used for array elements, e.g. `one.5`
+//  - Negatives indices can be used to get elements at the end, e.g. `one.-2`
+//     - Including -0 which can be used to append elements, e.g. `one.-0`
 //  - This can be used deeply, e.g. `one.two.5`
 //  - Wildcards are used with both objects and arrays to recurse over their
 //    children, e.g. `one.*`
@@ -53,6 +62,7 @@ const parseQuery = function (query) {
   const path = []
   let chars = ''
   let hasAny = false
+  let hasMinus = false
   let index = query[0] === SEPARATOR ? 1 : 0
 
   for (; index <= query.length; index += 1) {
@@ -62,11 +72,12 @@ const parseQuery = function (query) {
       chars += getEscapedChar(query, index)
       index += 1
     } else if (char === SEPARATOR || index === query.length) {
-      path.push(getToken(chars, query, hasAny))
+      path.push(getToken(chars, query, hasAny, hasMinus))
       chars = ''
       hasAny = false
     } else {
       hasAny = hasAny || char === ANY
+      hasMinus = hasMinus || char === MINUS
       chars += char
     }
   }
@@ -85,14 +96,19 @@ const getEscapedChar = function (query, index) {
 const validateEscape = function (escapedChar, query, index) {
   if (!SPECIAL_CHARS.has(escapedChar)) {
     throw new Error(
-      `Invalid query "${query}": character ${ESCAPE} at index ${index} must be followed by ${SEPARATOR} ${ANY} or ${ESCAPE}`,
+      `Invalid query "${query}": character ${ESCAPE} at index ${index} must be followed by ${SEPARATOR} ${ANY} ${MINUS} or ${ESCAPE}`,
     )
   }
 }
 
-const getToken = function (chars, query, hasAny) {
+// eslint-disable-next-line max-params
+const getToken = function (chars, query, hasAny, hasMinus) {
   if (hasAny) {
     return getAnyToken(chars, query)
+  }
+
+  if (chars[0] === MINUS && !hasMinus) {
+    return chars
   }
 
   return convertIndexInteger(chars)

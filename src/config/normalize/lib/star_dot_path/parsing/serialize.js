@@ -19,6 +19,10 @@ const serializeToken = function (token, index) {
     return ANY
   }
 
+  if (Object.is(token, -0)) {
+    return '-0'
+  }
+
   if (isIndexToken(token)) {
     return String(token)
   }

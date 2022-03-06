@@ -1,4 +1,8 @@
-import { convertIndexInteger, convertIndexString } from '../parsing/path.js'
+import {
+  convertIndexInteger,
+  convertIndexString,
+  getArrayIndex,
+} from '../parsing/path.js'
 import { serialize } from '../parsing/serialize.js'
 import { ANY_TOKEN } from '../parsing/special.js'
 
@@ -44,7 +48,8 @@ const getAnyEntries = function (value, path) {
 const getKeyEntries = function (value, path, token) {
   if (Array.isArray(value)) {
     const tokenA = convertIndexInteger(token)
-    return [{ value: value[tokenA], path: [...path, tokenA] }]
+    const index = getArrayIndex(value, tokenA)
+    return [{ value: value[index], path: [...path, index] }]
   }
 
   if (isRecurseObject(value)) {
