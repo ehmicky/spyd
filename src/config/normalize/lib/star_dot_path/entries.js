@@ -32,13 +32,11 @@ const getTokenEntries = function ({ value, path }, token) {
     return getRegExpEntries(value, path, token)
   }
 
-  const { value: valueA, missing } = handleMissingValue(value, token)
-
   if (isIndexToken(token)) {
-    return getIndexEntries(valueA, path, token, missing)
+    return getIndexEntries(value, path, token)
   }
 
-  return getPropEntries(valueA, path, token, missing)
+  return getPropEntries(value, path, token)
 }
 
 // For queries which use * on its own, e.g. `a.*`
@@ -79,16 +77,28 @@ const getRegExpEntries = function (value, path, token) {
 }
 
 // For index queries, e.g. `a.1`
-// eslint-disable-next-line max-params
-const getIndexEntries = function (value, path, token, missing) {
-  const index = getArrayIndex(value, token)
-  return [{ value: value[index], path: [...path, index], missing }]
+const getIndexEntries = function (value, path, token) {
+  const { value: valueA, missing } = handleIndexMissingValue(value)
+  const index = getArrayIndex(valueA, token)
+  return [{ value: valueA[index], path: [...path, index], missing }]
+}
+
+const handleIndexMissingValue = function (value) {
+  const missing = !Array.isArray(value)
+  const valueA = missing ? [] : value
+  return { value: valueA, missing }
 }
 
 // For property name queries, e.g. `a.b`
-// eslint-disable-next-line max-params
-const getPropEntries = function (value, path, token, missing) {
-  return [{ value: value[token], path: [...path, token], missing }]
+const getPropEntries = function (value, path, token) {
+  const { value: valueA, missing } = handlePropMissingValue(value, token)
+  return [{ value: valueA[token], path: [...path, token], missing }]
+}
+
+const handlePropMissingValue = function (value) {
+  const missing = !isRecurseObject(value)
+  const valueA = missing ? {} : value
+  return { value: valueA, missing }
 }
 
 // When the value does not exist, we set it deeply with `set()` but not with
@@ -102,18 +112,6 @@ export const handleMissingValue = function (value, token) {
   return isIndexToken(token)
     ? handleIndexMissingValue(value)
     : handlePropMissingValue(value)
-}
-
-const handleIndexMissingValue = function (value) {
-  const missing = !Array.isArray(value)
-  const valueA = missing ? [] : value
-  return { value: valueA, missing }
-}
-
-const handlePropMissingValue = function (value) {
-  const missing = !isRecurseObject(value)
-  const valueA = missing ? {} : value
-  return { value: valueA, missing }
 }
 
 // Whether a property is considered an object that can:
