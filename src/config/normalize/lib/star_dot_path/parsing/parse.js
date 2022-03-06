@@ -1,8 +1,9 @@
 import { normalizePath } from './normalize.js'
-import { convertIndexInteger } from './path.js'
+import { isQueryString, convertIndexInteger } from './path.js'
 import { ESCAPE, SEPARATOR, ANY, SPECIAL_CHARS, ANY_TOKEN } from './special.js'
 
 // Parse a query string into an array of tokens.
+// Also validate and normalize it.
 // This is inspired by JSON paths and JSON pointers.
 // Syntax:
 //  - Dots are used for object properties, e.g. `one.two`
@@ -30,8 +31,9 @@ import { ESCAPE, SEPARATOR, ANY, SPECIAL_CHARS, ANY_TOKEN } from './special.js'
 //  - I.e. query or path syntax errors, or wrong arguments
 //  - But queries matching nothing do not throw: instead they return nothing
 export const parse = function (queryOrPath) {
-  const path =
-    typeof queryOrPath === 'string' ? parseQuery(queryOrPath) : queryOrPath
+  const path = isQueryString(queryOrPath)
+    ? parseQuery(queryOrPath)
+    : queryOrPath
   return normalizePath(path)
 }
 

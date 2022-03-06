@@ -1,9 +1,13 @@
-import { isIndexToken } from './path.js'
+import { parse } from './parse.js'
 import { SEPARATOR, ANY, ANY_TOKEN, SPECIAL_CHARS_REGEXP } from './special.js'
+import { isIndexToken } from './validate.js'
 
 // Inverse of `parse()`
-export const serialize = function (path) {
-  return typeof path === 'string' ? path : serializePath(path)
+// When passing a query string, it is parsed and re-serialized to validate and
+// normalize it.
+export const serialize = function (queryOrPath) {
+  const path = parse(queryOrPath)
+  return serializePath(path)
 }
 
 const serializePath = function (path) {

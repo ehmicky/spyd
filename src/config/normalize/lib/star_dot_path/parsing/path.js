@@ -1,4 +1,17 @@
 import { ANY_TOKEN } from './special.js'
+import { validatePath, isIndexToken } from './validate.js'
+
+// Most methods accept both query and path syntaxes.
+// This checks which one is used.
+// This also validates the query or path.
+export const isQueryString = function (queryOrPath) {
+  if (typeof queryOrPath === 'string') {
+    return true
+  }
+
+  validatePath(queryOrPath)
+  return false
+}
 
 // Check if * is used
 export const pathHasAny = function (path) {
@@ -32,9 +45,4 @@ const POSITIVE_INTEGER_REGEXP = /^\d+$/u
 
 export const convertIndexString = function (token) {
   return isIndexToken(token) ? String(token) : token
-}
-
-// Check if token is an array index integer
-export const isIndexToken = function (token) {
-  return Number.isInteger(token)
 }
