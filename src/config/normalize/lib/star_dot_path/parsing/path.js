@@ -2,11 +2,11 @@ import { ANY_TOKEN } from './special.js'
 
 // Check if * is used
 export const pathHasAny = function (path) {
-  return path.some(nodeHasAny)
+  return path.some(isAnyToken)
 }
 
-const nodeHasAny = function (node) {
-  return node === ANY_TOKEN || (Array.isArray(node) && node.includes(ANY_TOKEN))
+const isAnyToken = function (token) {
+  return token === ANY_TOKEN
 }
 
 // Users can specify integers either:
@@ -21,7 +21,6 @@ const nodeHasAny = function (node) {
 //  - When a path was passed, we leave it as is
 //  - When a query string was used instead, we assume it was meant as an array
 //    index since those are much more common.
-//     - Providing no * is used in the same node
 // At evaluation time, with a target value, we transtype correctly.
 export const convertIndexInteger = function (token) {
   return typeof token === 'string' && POSITIVE_INTEGER_REGEXP.test(token)
@@ -32,10 +31,10 @@ export const convertIndexInteger = function (token) {
 const POSITIVE_INTEGER_REGEXP = /^\d+$/u
 
 export const convertIndexString = function (token) {
-  return isIndexNode(token) ? String(token) : token
+  return isIndexToken(token) ? String(token) : token
 }
 
-// Check if node is an array index integer
-export const isIndexNode = function (node) {
-  return Number.isInteger(node)
+// Check if token is an array index integer
+export const isIndexToken = function (token) {
+  return Number.isInteger(token)
 }

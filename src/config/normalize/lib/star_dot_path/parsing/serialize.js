@@ -1,4 +1,4 @@
-import { isIndexNode } from './path.js'
+import { isIndexToken } from './path.js'
 import { SEPARATOR, ANY, ANY_TOKEN, SPECIAL_CHARS_REGEXP } from './special.js'
 
 // Inverse of `parse()`
@@ -11,7 +11,7 @@ const serializeToken = function (token, index) {
     return ANY
   }
 
-  if (isIndexNode(token)) {
+  if (isIndexToken(token)) {
     return String(token)
   }
 

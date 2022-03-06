@@ -5,7 +5,7 @@ import { setArray } from '../../../../utils/set.js'
 import { listEntries, normalizeEntry } from './entries/main.js'
 import { isRecurseObject } from './entries/recurse.js'
 import { maybeParse } from './parsing/parse.js'
-import { pathHasAny, isIndexNode } from './parsing/path.js'
+import { pathHasAny, isIndexToken } from './parsing/path.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPath, newValue) {
@@ -70,7 +70,7 @@ const addDefaultTarget = function (value, key) {
     return value
   }
 
-  return isIndexNode(key) ? [] : {}
+  return isIndexToken(key) ? [] : {}
 }
 
 const setValue = function (value, key, newChildValue) {
