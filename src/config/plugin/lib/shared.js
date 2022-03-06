@@ -1,4 +1,4 @@
-import { list, isParent, set } from '../../normalize/lib/star_dot_path/main.js'
+import { list, parent, set } from '../../normalize/lib/star_dot_path/main.js'
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
@@ -24,7 +24,7 @@ const getRuleName = function ({ name }) {
 
 const hasNoParent = function (nameA, indexA, names) {
   return names.every(
-    (nameB, indexB) => indexB === indexA || !isParent(nameB, nameA),
+    (nameB, indexB) => indexB === indexA || !parent(nameB, nameA),
   )
 }
 
