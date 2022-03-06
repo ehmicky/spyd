@@ -1,6 +1,7 @@
 export { list, get, has } from './get.js'
 export { pick, include } from './include.js'
+export { omit, exclude } from './omit.js'
 export { isParent } from './parsing/parent.js'
 export { serialize } from './parsing/serialize.js'
 export { parse } from './parsing/parse.js'
-export { set, transform, omit, exclude } from './set.js'
+export { set, transform } from './set.js'
