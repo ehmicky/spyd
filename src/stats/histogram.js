@@ -83,7 +83,6 @@ const getBucket = function ({
   const endIndex = binarySearch(array, end, startIndex, maxIndex)
   const frequency = (endIndex - startIndex) / length
 
-  // eslint-disable-next-line fp/no-mutation, no-param-reassign
   state.startIndex = endIndex
 
   return { start, end, frequency }

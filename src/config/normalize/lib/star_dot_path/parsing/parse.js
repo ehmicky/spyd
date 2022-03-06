@@ -65,8 +65,7 @@ const safeParseQuery = function (query) {
 }
 
 // Use imperative logic for performance
-/* eslint-disable complexity, max-depth, max-statements, fp/no-loops,
-   fp/no-mutation */
+// eslint-disable-next-line complexity, max-statements
 const parseQuery = function (query) {
   if (query === '') {
     return []
@@ -82,9 +81,11 @@ const parseQuery = function (query) {
     hasRegExp: false,
   }
 
+  // eslint-disable-next-line fp/no-loops
   for (; state.index <= query.length; state.index += 1) {
     const char = query[state.index]
 
+    // eslint-disable-next-line max-depth
     if (char === ESCAPE) {
       addEscapedChar(query, state)
     } else if (char === SEPARATOR || state.index === query.length) {
@@ -96,8 +97,6 @@ const parseQuery = function (query) {
 
   return path
 }
-/* eslint-enable complexity, max-depth, max-statements, fp/no-loops,
-   fp/no-mutation */
 
 const addEscapedChar = function (query, state) {
   state.index += 1
@@ -107,6 +106,7 @@ const addEscapedChar = function (query, state) {
 const addToken = function (path, state) {
   const tokenType = getStringTokenType(state)
   const token = tokenType.parse(state.chars)
+  // eslint-disable-next-line fp/no-mutating-methods
   path.push(token)
   state.hasAny = false
   state.hasMinus = false
@@ -114,6 +114,7 @@ const addToken = function (path, state) {
   state.chars = ''
 }
 
+// eslint-disable-next-line complexity
 const addChar = function (char, state) {
   if (state.chars.length === 0) {
     state.hasAny = state.hasAny || char === ANY
