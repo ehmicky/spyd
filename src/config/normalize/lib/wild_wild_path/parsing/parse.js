@@ -1,24 +1,35 @@
-import { ESCAPE, TOKEN_SEPARATOR, SPECIAL_CHARS } from '../tokens/escape.js'
+import {
+  ESCAPE,
+  PATH_SEPARATOR,
+  PATH_SEPARATOR_NAME,
+  TOKEN_SEPARATOR,
+  SPECIAL_CHARS,
+} from '../tokens/escape.js'
 import { getStringTokenType } from '../tokens/main.js'
 
-import { normalizePath } from './normalize.js'
+import { normalizePaths } from './normalize.js'
 import { isQueryString } from './validate.js'
 
 // Parse a query string into an array of tokens.
 // Also validate and normalize it.
 // This is inspired by JSON paths.
 // There are two formats:
-//  - "Query": a dot-separated string
+//  - "Query": a string
+//     - Tokens are dot-separated
+//     - Path alternatives are space-separated
 //     - This is more convenient wherever a string is better, including in CLI
 //       flags, in URLs, in files, etc.
-//     - \ must escape the following characters: . \
+//     - \ must escape the following characters: . \ space
 //     - If a token is meant as a property name but could be interpreted as a
 //       different type, it must be start with \
 //     - A leading dot can be optionally used, e.g. `.one`. It is ignored.
 //  - "Tokens": an array of values of diverse types
+//     - Tokens are elements of the inner arrays
+//     - Path alternatives use optional outer arrays
 //     - This is sometimes convenient
 //     - This does not need any escaping, making it better with dynamic input
 //     - This is faster as it does not perform any parsing
+// Path alternatives of queries are logical unions.
 // Each object property is matched by a token among the following types:
 //  - Property name
 //     - Query format: "propName"
@@ -51,7 +62,7 @@ import { isQueryString } from './validate.js'
 //     - ^ and $ must be used if the RegExp needs to match from the beginning
 //       or until the end
 // An empty string (query format) or array (tokens format) matches the root.
-// Symbols are always ignored
+// Symbols are always ignored:
 //  - Both in the query string|path and in the target value
 //  - This is because symbols cannot be serialized in a query string
 //     - This would remove the guarantee that both query and path syntaxes are
@@ -61,16 +72,16 @@ import { isQueryString } from './validate.js'
 // Exceptions are thrown on syntax errors:
 //  - I.e. query or path syntax errors, or wrong arguments
 //  - But queries matching nothing do not throw: instead they return nothing
-export const parse = function (queryOrPath) {
-  const path = isQueryString(queryOrPath)
-    ? safeParseQuery(queryOrPath)
-    : queryOrPath
-  return normalizePath(path)
+export const parse = function (queryOrPaths) {
+  const paths = isQueryString(queryOrPaths)
+    ? safeParseQuery(queryOrPaths)
+    : queryOrPaths
+  return normalizePaths(paths)
 }
 
 const safeParseQuery = function (query) {
   if (query === '') {
-    return []
+    return [[]]
   }
 
   try {
@@ -92,20 +103,23 @@ const parseQuery = function (query) {
     // eslint-disable-next-line max-depth
     if (char === ESCAPE) {
       parseEscape(state, query)
-    } else if (char === TOKEN_SEPARATOR || state.index === query.length) {
+    } else if (char === TOKEN_SEPARATOR) {
       addToken(state)
+    } else if (char === PATH_SEPARATOR || state.index === query.length) {
+      addPath(state)
     } else {
       state.chars += char
     }
   }
 
-  return state.path
+  return state.paths
 }
 
 const getInitialState = function (query) {
   const index = query[0] === TOKEN_SEPARATOR ? 1 : 0
-  const state = { path: [], index }
-  resetState(state)
+  const state = { paths: [], index }
+  resetPathState(state)
+  resetTokenState(state)
   return state
 }
 
@@ -120,11 +134,26 @@ const parseEscape = function (state, query) {
 
   if (state.chars.length !== 0) {
     throw new Error(
-      `character "${ESCAPE}" must either be at the start of a token, or be followed by ${TOKEN_SEPARATOR} or ${ESCAPE}`,
+      `character "${ESCAPE}" must either be at the start of a token, or be followed by ${PATH_SEPARATOR_NAME} or ${TOKEN_SEPARATOR} or ${ESCAPE}`,
     )
   }
 
   state.isProp = true
+}
+
+const addPath = function (state) {
+  if (state.path.length === 0) {
+    return
+  }
+
+  addToken(state)
+  // eslint-disable-next-line fp/no-mutating-methods
+  state.paths.push(state.path)
+  resetPathState(state)
+}
+
+const resetPathState = function (state) {
+  state.path = []
 }
 
 const addToken = function (state) {
@@ -132,10 +161,10 @@ const addToken = function (state) {
   const token = tokenType.parse(state.chars)
   // eslint-disable-next-line fp/no-mutating-methods
   state.path.push(token)
-  resetState(state)
+  resetTokenState(state)
 }
 
-const resetState = function (state) {
+const resetTokenState = function (state) {
   state.isProp = false
   state.chars = ''
 }
