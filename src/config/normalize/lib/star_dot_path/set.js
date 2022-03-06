@@ -13,6 +13,7 @@ export const set = function (target, queryOrPath, value) {
   )
 }
 
+// Use positional arguments for performance
 // eslint-disable-next-line max-params
 const setEntry = function (target, path, value, index) {
   if (index === path.length) {
