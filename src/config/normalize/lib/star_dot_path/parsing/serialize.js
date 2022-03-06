@@ -3,13 +3,7 @@ import { SEPARATOR, ANY, ANY_TOKEN, SPECIAL_CHARS_REGEXP } from './special.js'
 
 // Inverse of `parse()`
 export const serialize = function (path) {
-  return path.map(serializeNode).join(SEPARATOR)
-}
-
-const serializeNode = function (node, index) {
-  return Array.isArray(node)
-    ? node.map((token) => serializeToken(token, index)).join('')
-    : serializeToken(node, 0)
+  return path.map(serializeToken).join(SEPARATOR)
 }
 
 const serializeToken = function (token, index) {

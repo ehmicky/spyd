@@ -21,11 +21,10 @@ import { ESCAPE, SEPARATOR, ANY, SPECIAL_CHARS, ANY_TOKEN } from './special.js'
 //  - `Symbol.for('*')` for wildcards
 //     - We use symbols as it allows using dynamic strings without injection
 //       risk
-//  - An array of the above
 // We allow passing an array of tokens instead of a query string:
 //  - This is sometimes more convenient
-//  - Also, this allows property names to include special characters (dots,
-//    brackets, star) or to be symbols
+//  - Also, this allows property names to include special characters or to be
+//    symbols
 //  - This removes the need for escaping
 // Exceptions are thrown on syntax errors:
 //  - I.e. query or path syntax errors, or wrong arguments
