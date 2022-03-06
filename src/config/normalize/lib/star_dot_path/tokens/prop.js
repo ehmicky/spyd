@@ -31,8 +31,11 @@ const isDefined = function (value) {
 const defaultValue = {}
 
 // Use the token to list entries against a target value.
+// We distinguish between:
+//  - Missing property name: return no entries
+//  - Property exists but has `undefined` value: return an entry
 const getEntries = function (value, path, token) {
-  return [{ value: value[token], path: [...path, token] }]
+  return token in value ? [{ value: value[token], path: [...path, token] }] : []
 }
 
 // Check if two tokens are the same

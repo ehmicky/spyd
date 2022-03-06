@@ -3,14 +3,6 @@ import { getObjectTokenType } from './tokens/main.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
-export const listExistingEntries = function (target, path) {
-  return listEntries(target, path).filter(isDefined)
-}
-
-const isDefined = function ({ defined }) {
-  return defined
-}
-
 export const listEntries = function (target, path) {
   return path.reduce(listTokenEntries, [
     { value: target, path: [], defined: true },

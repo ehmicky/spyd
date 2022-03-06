@@ -40,11 +40,14 @@ const getEntries = function (value, path, token) {
 }
 
 // Retrieve an array using a positive or negative index.
-// Indices that are out-of-bound return no entries but do not error.
-const getArrayIndex = function (array, token) {
+// Indices that are out-of-bound:
+//  - Do not error
+//  - Return an entry with an `undefined` value
+//     - This allows appending to arrays, e.g. with -0
+const getArrayIndex = function (value, token) {
   return token > 0 || Object.is(token, +0)
     ? token
-    : Math.max(array.length + token, 0)
+    : Math.max(value.length + token, 0)
 }
 
 // Check if two tokens are the same
