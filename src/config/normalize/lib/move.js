@@ -1,3 +1,5 @@
+import { isParent } from './star_dot_path/parsing/parent.js'
+
 // When a property is moved to another, record it.
 export const addMoves = function (moves, newNames, oldName) {
   return newNames.length === 0
@@ -17,11 +19,11 @@ export const applyMoves = function (moves, name) {
 }
 
 const applyMove = function (name, { oldName, newName }) {
-  if (name === newName) {
+  if (newName === name) {
     return oldName
   }
 
-  if (name.startsWith(`${newName}.`)) {
+  if (isParent(newName, name)) {
     return name.replace(newName, oldName)
   }
 
