@@ -26,11 +26,19 @@ const setEntry = function (target, path, value, index) {
 }
 
 export const setValue = function (target, key, childValue) {
-  if (target[key] === childValue) {
+  if (isNoopSet(target, key, childValue)) {
     return target
   }
 
   return Array.isArray(target)
     ? setArray(target, key, childValue)
     : { ...target, [key]: childValue }
+}
+
+// Do not set value if it has not changed.
+// We distinguish between `undefined` values with the property set and unset.
+const isNoopSet = function (target, key, childValue) {
+  return (
+    target[key] === childValue && (childValue !== undefined || key in target)
+  )
 }
