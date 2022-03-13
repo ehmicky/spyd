@@ -5,9 +5,12 @@ import { parse } from './parsing/parse.js'
 import { serialize } from './parsing/serialize.js'
 import { getObjectTokenType } from './tokens/main.js'
 
-// List all values (and their associated path) matching a specific query for
-// on specific target value.
-export const iterate = function (
+// Iterate over all values (and their associated path) matching a specific
+// query for on specific target value.
+// Uses an iterator:
+//  - To allow consumers to return only the first matching entry quickly
+//  - To keep memory consumption low even on big queries
+export const iterate = function* (
   target,
   queryOrPaths,
   { childFirst = false } = {},
@@ -19,17 +22,25 @@ export const iterate = function (
     simplePath: [],
     missing: false,
   }))
-  const entriesA = iterateLevel(entries, childFirst, 0)
-  const entriesB = entriesA.map(normalizeEntry)
-  return entriesB
+  yield* iterateLevel(entries, childFirst, 0)
 }
 
-const iterateLevel = function (entries, childFirst, index) {
+const iterateLevel = function* (entries, childFirst, index) {
   const entriesA = removeDuplicates(entries)
-  const parentEntries = entriesA.filter(({ path }) => path.length === index)
+  const parentEntries = entriesA
+    .filter(({ path }) => path.length === index)
+    .map(normalizeEntry)
+
+  if (!childFirst) {
+    yield* parentEntries
+  }
 
   if (parentEntries.length === entriesA.length) {
-    return parentEntries
+    if (childFirst) {
+      yield* parentEntries
+    }
+
+    return
   }
 
   const levelEntries = entriesA
@@ -37,13 +48,18 @@ const iterateLevel = function (entries, childFirst, index) {
     .flatMap((entry) => iteratePath(entry, index))
 
   if (levelEntries.length === 0) {
-    return parentEntries
+    if (childFirst) {
+      yield* parentEntries
+    }
+
+    return
   }
 
-  const childEntries = iterateChildren(levelEntries, childFirst, index)
-  return childFirst
-    ? [...childEntries, ...parentEntries]
-    : [...parentEntries, ...childEntries]
+  yield* iterateChildren(levelEntries, childFirst, index)
+
+  if (childFirst) {
+    yield* parentEntries
+  }
 }
 
 const removeDuplicates = function (entries) {
@@ -107,17 +123,19 @@ export const handleMissingValue = function (value, token) {
   return { tokenType, missing, value: valueA }
 }
 
-const iterateChildren = function (levelEntries, childFirst, index) {
+const iterateChildren = function* (levelEntries, childFirst, index) {
   const nextIndex = index + 1
 
   if (levelEntries.length === 1) {
-    return iterateLevel(levelEntries, childFirst, nextIndex)
+    yield* iterateLevel(levelEntries, childFirst, nextIndex)
+    return
   }
 
   const levelEntriesGroups = Object.values(groupBy(levelEntries, getLastProp))
-  return levelEntriesGroups.flatMap((levelEntriesA) =>
-    iterateLevel(levelEntriesA, childFirst, nextIndex),
-  )
+
+  for (const levelEntriesA of levelEntriesGroups) {
+    yield* iterateLevel(levelEntriesA, childFirst, nextIndex)
+  }
 }
 
 const getLastProp = function ({ simplePath }) {
