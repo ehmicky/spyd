@@ -72,6 +72,7 @@ const reduceParents = function (
 ) {
   const entries = list(target, query, {
     childFirst: false,
+    roots: false,
     sort,
     missing: false,
     classes,
@@ -83,7 +84,8 @@ const reduceParents = function (
     .reduce((newTargetA, entry) => setFunc(newTargetA, entry, 0), newTarget)
 }
 
-// If both a parent and a child property are set, the parent prevails
+// This is like the `roots` option. However, we cannot use that option since we
+// need to apply `condition()` first.
 const hasNoParentSet = function ({ path: pathA }, indexA, entries) {
   return entries.every(
     (entryB, indexB) => indexA <= indexB || !isParentPath(entryB.path, pathA),
