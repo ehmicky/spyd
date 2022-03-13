@@ -18,6 +18,7 @@ export const equals = function (queryOrPathsA, queryOrPathsB) {
 }
 
 // Check if a query is a parent of another.
+// With unions, it checks if any query is a parent of any of the other one.
 // The comparison is currently token type-wise.
 // Also it does not check whether a token is a subset of another, i.e.:
 //  - * does not match other token types
@@ -28,9 +29,17 @@ export const equals = function (queryOrPathsA, queryOrPathsB) {
 // This makes it more useful for queries with only prop and positive indices
 // tokens:
 //  - E.g. on the entries returned by `list()`
-export const parent = function (parentQueryOrPath, childQueryOrPath) {
-  const parentPath = parse(parentQueryOrPath)
-  const childPath = parse(childQueryOrPath)
+export const parent = function (parentQueryOrPaths, childQueryOrPaths) {
+  const parentPaths = parse(parentQueryOrPaths)
+  const childPaths = parse(childQueryOrPaths)
+  return parentPaths.some((parentPath) => hasParentPath(parentPath, childPaths))
+}
+
+const hasParentPath = function (parentPath, childPaths) {
+  return childPaths.some((childPath) => isParentPath(parentPath, childPath))
+}
+
+const isParentPath = function (parentPath, childPath) {
   return (
     childPath.length > parentPath.length &&
     childPath.every(
