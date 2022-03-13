@@ -16,7 +16,7 @@ export const iterate = function (
   const entries = paths.map((path) => ({
     path,
     value: target,
-    props: [],
+    simplePath: [],
     missing: false,
   }))
   const entriesA = iterateLevel(entries, childFirst, 0)
@@ -57,15 +57,15 @@ const isNotDuplicate = function (entryA, index, entries) {
 }
 
 const isDuplicate = function (
-  { props: propsA, path: pathA },
-  { props: propsB, path: pathB },
+  { simplePath: simplePathA, path: pathA },
+  { simplePath: simplePathB, path: pathB },
 ) {
   return (
-    equalsSimple(propsA, propsB) &&
+    equalsSimple(simplePathA, simplePathB) &&
     pathA.length === pathB.length &&
     pathA.every(
       (tokenA, index) =>
-        index < propsA.length || isSameToken(tokenA, pathB[index]),
+        index < simplePathA.length || isSameToken(tokenA, pathB[index]),
     )
   )
 }
@@ -75,7 +75,7 @@ const isDuplicate = function (
 // However, iteration is guaranteed to return child entries before parent ones.
 //  - This is useful for recursive logic which must often be applied in a
 //    specific parent-child order
-const iteratePath = function ({ path, value, props }, index) {
+const iteratePath = function ({ path, value, simplePath }, index) {
   const token = path[index]
   const {
     tokenType,
@@ -87,7 +87,7 @@ const iteratePath = function ({ path, value, props }, index) {
     ({ value: childValue, prop, missing: missingEntry }) => ({
       path,
       value: childValue,
-      props: [...props, prop],
+      simplePath: [...simplePath, prop],
       missing: missingParent || missingEntry,
     }),
   )
@@ -120,11 +120,11 @@ const iterateChildren = function (levelEntries, childFirst, index) {
   )
 }
 
-const getLastProp = function ({ props }) {
-  return props[props.length - 1]
+const getLastProp = function ({ simplePath }) {
+  return simplePath[simplePath.length - 1]
 }
 
-const normalizeEntry = function ({ value, props: path, missing }) {
+const normalizeEntry = function ({ value, simplePath: path, missing }) {
   const query = serialize(path)
   return { value, path, query, missing }
 }
