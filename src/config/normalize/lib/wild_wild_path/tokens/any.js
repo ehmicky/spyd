@@ -32,7 +32,7 @@ const normalize = function ({ type }) {
 }
 
 // Use the token to list entries against a target value.
-// We purposely ignore symbol properties by using `Object.keys()`.
+// By using `for in`, we purposely exclude both symbols and inherited properties
 const iterate = function (value) {
   return Array.isArray(value)
     ? value.map((childValue, index) => ({

@@ -34,6 +34,9 @@ export const expandToken = function (
 //  - known, i.e. returned: prop|index|slice tokens
 //  - unknown, i.e. not returned: any|regexp tokens
 // Tokens like wildcards cannot do this since there is known property to add.
+// Both non-enumerable and inherited properties:
+//  - Are not listed by token types returning multiple entries like *
+//  - But are handled by the other ones
 export const handleMissingValue = function (value, token, classes) {
   const tokenType = getObjectTokenType(token)
   const missing = tokenType.isMissing(value, classes)
