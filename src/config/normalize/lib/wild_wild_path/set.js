@@ -41,27 +41,27 @@ const setEntry = function (value, target, path, index) {
     return value
   }
 
-  const key = path[index]
-  const { value: defaultedTarget } = handleMissingValue(target, key)
-  const childTarget = defaultedTarget[key]
+  const prop = path[index]
+  const { value: defaultedTarget } = handleMissingValue(target, prop)
+  const childTarget = defaultedTarget[prop]
   const childValue = setEntry(value, childTarget, path, index + 1)
-  return setValue(defaultedTarget, key, childValue)
+  return setValue(defaultedTarget, prop, childValue)
 }
 
-export const setValue = function (target, key, childValue) {
-  if (isNoopSet(target, key, childValue)) {
+export const setValue = function (target, prop, childValue) {
+  if (isNoopSet(target, prop, childValue)) {
     return target
   }
 
   return Array.isArray(target)
-    ? setArray(target, key, childValue)
-    : { ...target, [key]: childValue }
+    ? setArray(target, prop, childValue)
+    : { ...target, [prop]: childValue }
 }
 
 // Do not set value if it has not changed.
 // We distinguish between `undefined` values with the property set and unset.
-const isNoopSet = function (target, key, childValue) {
+const isNoopSet = function (target, prop, childValue) {
   return (
-    target[key] === childValue && (childValue !== undefined || key in target)
+    target[prop] === childValue && (childValue !== undefined || prop in target)
   )
 }
