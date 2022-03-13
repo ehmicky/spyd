@@ -7,6 +7,11 @@ export const expandRecursiveTokens = function (entries, index) {
 
 const expandRecursiveToken = function (entry, index) {
   const token = entry.queryArray[index]
+
+  if (token === undefined) {
+    return entry
+  }
+
   const tokenType = getTokenType(token)
 
   if (tokenType.recurse === undefined) {
