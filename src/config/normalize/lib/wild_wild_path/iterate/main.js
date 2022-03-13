@@ -95,13 +95,8 @@ const iterateChildren = function* ({ childEntries, childFirst, sort, index }) {
   const childEntriesGroups = Object.values(groupBy(childEntries, getLastProp))
 
   // eslint-disable-next-line fp/no-loops
-  for (const childEntriesA of childEntriesGroups) {
-    yield* iterateLevel({
-      entries: childEntriesA,
-      childFirst,
-      sort,
-      index: nextIndex,
-    })
+  for (const entries of childEntriesGroups) {
+    yield* iterateLevel({ entries, childFirst, sort, index: nextIndex })
   }
 }
 
