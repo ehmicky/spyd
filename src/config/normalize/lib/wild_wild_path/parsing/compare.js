@@ -1,7 +1,7 @@
 import { getObjectTokenType } from '../tokens/main.js'
 
 import { validatePath } from './normalize.js'
-import { parse } from './parse.js'
+import { parseQuery } from './parse.js'
 
 // Check if two queries are equal.
 // Works with:
@@ -9,8 +9,8 @@ import { parse } from './parse.js'
 //  - Unions, e.g. `a b` === `b a`
 //  - Duplicates, e.g. `a a` === `a`
 export const isSameQuery = function (queryA, queryB) {
-  const queryArraysA = parse(queryA)
-  const queryArraysB = parse(queryB)
+  const queryArraysA = parseQuery(queryA)
+  const queryArraysB = parseQuery(queryB)
   return (
     queryArraysA.length === queryArraysB.length &&
     queryArraysA.every((queryArrayA) =>

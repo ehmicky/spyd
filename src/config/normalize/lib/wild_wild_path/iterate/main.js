@@ -1,6 +1,6 @@
 import { groupBy } from '../../../../../utils/group.js'
-import { parse } from '../parsing/parse.js'
-import { serialize } from '../parsing/serialize.js'
+import { parseQuery } from '../parsing/parse.js'
+import { serializePath } from '../parsing/serialize.js'
 
 import { removeDuplicates } from './duplicate.js'
 import { expandToken } from './expand.js'
@@ -11,7 +11,7 @@ import { expandToken } from './expand.js'
 //  - To allow consumers to return only the first matching entry quickly
 //  - To keep memory consumption low even on big queries
 export const iterate = function* (target, query, { childFirst = false } = {}) {
-  const queryArrays = parse(query)
+  const queryArrays = parseQuery(query)
   const entries = queryArrays.map((queryArray) => ({
     queryArray,
     value: target,
@@ -43,7 +43,7 @@ const getParentEntries = function (entries, index) {
 }
 
 const normalizeEntry = function ({ value, path, missing }) {
-  const query = serialize(path)
+  const query = serializePath(path)
   return { value, path, query, missing }
 }
 

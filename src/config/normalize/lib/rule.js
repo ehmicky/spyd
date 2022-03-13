@@ -1,4 +1,4 @@
-import { get, parse, serialize } from './wild_wild_path/main.js'
+import { get, parseQuery, serializeQuery } from './wild_wild_path/main.js'
 
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the
@@ -8,8 +8,8 @@ export const normalizeRules = function (rules) {
 }
 
 const parseName = function ({ name, ...rule }) {
-  const nameQuery = serialize(name)
-  const namePath = parse(name)
+  const nameQuery = serializeQuery(name)
+  const namePath = parseQuery(name)
   return { ...rule, nameQuery, namePath }
 }
 

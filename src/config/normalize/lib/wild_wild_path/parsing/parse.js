@@ -81,12 +81,14 @@ import { parseQueryString } from './query.js'
 // Exceptions are thrown on syntax errors:
 //  - I.e. query or path syntax errors, or wrong arguments
 //  - But queries matching nothing do not throw: instead they return nothing
+// Parse a path
 export const parsePath = function (query) {
-  const queryArrays = parse(query)
+  const queryArrays = parseQuery(query)
   return normalizePath(queryArrays)
 }
 
-export const parse = function (query) {
+// Parse a query string or array
+export const parseQuery = function (query) {
   return isQueryString(query)
     ? safeParseQueryString(query)
     : normalizeQueryArrays(query)

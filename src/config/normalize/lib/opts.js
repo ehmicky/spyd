@@ -2,7 +2,7 @@ import { callUserFunc } from './call.js'
 import { getCwd } from './cwd.js'
 import { applyMoves } from './move.js'
 import { getPrefix, DEFAULT_PREFIX } from './prefix.js'
-import { parse, serialize } from './wild_wild_path/main.js'
+import { parsePath, serializePath } from './wild_wild_path/main.js'
 
 // Retrieve `opts` passed to most methods.
 // `funcOpts` are passed to user-provided functions.
@@ -18,7 +18,7 @@ export const getOpts = async function ({
   moves,
 }) {
   const originalPath = applyMoves(moves, namePath)
-  const originalName = serialize(originalPath)
+  const originalName = serializePath(originalPath)
   const funcOpts = {
     name: nameQuery,
     path: namePath,
@@ -43,7 +43,7 @@ export const getOpts = async function ({
 // `funcOpts.config`.
 const computeParent = async function (opts, moves, parent) {
   const originalPath = await appendParentToName(parent, opts)
-  const originalName = serialize(originalPath)
+  const originalName = serializePath(originalPath)
   return { ...opts, funcOpts: { ...opts.funcOpts, originalName, originalPath } }
 }
 
@@ -53,7 +53,7 @@ const computeParent = async function (opts, moves, parent) {
 // By default, there are none.
 const appendParentToName = async function (parent, opts) {
   const parentA = await callUserFunc(parent, opts)
-  const parentPath = parse(parentA)
+  const parentPath = parsePath(parentA)
   return [...parentPath, ...opts.funcOpts.originalPath]
 }
 
