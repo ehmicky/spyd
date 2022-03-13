@@ -1,6 +1,6 @@
 // We split the core methods of `wild_wild_path` to keep it small, and provide
 // additional utilities built on top of it.
-import { iterate, get, set } from '../wild_wild_path/main.js'
+import { list, get, set } from '../wild_wild_path/main.js'
 
 // Map values matching a query.
 // Missing entries are mapped too
@@ -13,19 +13,11 @@ import { iterate, get, set } from '../wild_wild_path/main.js'
 //        - When needed, this can also be done by the consumer logic
 //     - This also avoids infinite recursion
 export const map = function (target, query, mapFunc) {
-  // eslint-disable-next-line fp/no-let
-  let newTarget = target
-
-  // eslint-disable-next-line fp/no-loops
-  for (const entry of iterate(target, query, {
-    childFirst: true,
-    sort: false,
-  })) {
-    // eslint-disable-next-line fp/no-mutation
-    newTarget = mapEntry(mapFunc, newTarget, entry)
-  }
-
-  return newTarget
+  const entries = list(target, query, { childFirst: true, sort: false })
+  return entries.reduce(
+    (targetA, entry) => mapEntry(mapFunc, targetA, entry),
+    target,
+  )
 }
 
 const mapEntry = function (mapFunc, target, { path, query, missing }) {
