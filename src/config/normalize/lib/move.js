@@ -1,4 +1,4 @@
-import { parent, equals } from './wild_wild_path/main.js'
+import { parent, equalsSimple } from './wild_wild_path/main.js'
 
 // When a property is moved to another, record it.
 export const addMoves = function (moves, newPaths, oldNamePath) {
@@ -22,7 +22,7 @@ export const applyMoves = function (moves, namePath) {
 }
 
 const applyMove = function (namePath, { oldNamePath, newNamePath }) {
-  if (equals(newNamePath, namePath)) {
+  if (equalsSimple(newNamePath, namePath)) {
     return oldNamePath
   }
 
