@@ -17,11 +17,12 @@ export const map = function (
   target,
   query,
   mapFunc,
-  { mutate, roots, missing, classes, inherited } = {},
+  { mutate, roots, leaves, missing, classes, inherited } = {},
 ) {
   const entries = list(target, query, {
     childFirst: true,
     roots,
+    leaves,
     sort: false,
     missing,
     classes,
