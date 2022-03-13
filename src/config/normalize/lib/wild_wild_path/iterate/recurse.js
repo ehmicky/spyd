@@ -6,8 +6,7 @@ export const expandRecursiveTokens = function (entries, index) {
 }
 
 const expandRecursiveToken = function (entry, index) {
-  const { queryArray } = entry
-  const token = queryArray[index]
+  const token = entry.queryArray[index]
   const tokenTypeName = getTokenType(token)
   const recursor = RECURSORS[tokenTypeName]
 
@@ -15,11 +14,8 @@ const expandRecursiveToken = function (entry, index) {
     return entry
   }
 
-  const queryArrays = recursor(queryArray, index)
-  return queryArrays.map((queryArrayA) => ({
-    ...entry,
-    queryArray: queryArrayA,
-  }))
+  const queryArrays = recursor(entry.queryArray, index)
+  return queryArrays.map((queryArray) => ({ ...entry, queryArray }))
 }
 
 // Handle ** recursion.
