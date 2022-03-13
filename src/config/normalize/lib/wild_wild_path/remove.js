@@ -1,4 +1,4 @@
-import { handleMissingValue } from './iterate/expand.js'
+import { handleMissingValue } from './iterate/missing.js'
 import { validateClasses, reduceParents, setValue } from './set.js'
 
 // Same as `set()` but removing a value

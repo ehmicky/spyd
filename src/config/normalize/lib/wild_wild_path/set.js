@@ -1,5 +1,5 @@
 import { list } from './get.js'
-import { handleMissingValue } from './iterate/expand.js'
+import { handleMissingValue } from './iterate/missing.js'
 import { isParentPath } from './parsing/compare.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
