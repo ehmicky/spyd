@@ -17,6 +17,14 @@ export const equals = function (queryOrPathsA, queryOrPathsB) {
   )
 }
 
+// Check if two simple paths are equal
+export const equalsSimple = function (simplePathA, simplePathB) {
+  return (
+    simplePathA.length === simplePathB.length &&
+    simplePathA.every((prop, index) => simplePathB[index] === prop)
+  )
+}
+
 // Check if a query is a parent of another.
 // With unions, it checks if any query is a parent of any of the other one.
 // The comparison is currently token type-wise.
@@ -61,7 +69,7 @@ const isSamePath = function (pathA, pathB) {
   )
 }
 
-const isSameToken = function (tokenA, tokenB) {
+export const isSameToken = function (tokenA, tokenB) {
   const tokenTypeA = getObjectTokenType(tokenA)
   const tokenTypeB = getObjectTokenType(tokenB)
   return tokenTypeA === tokenTypeB && tokenTypeA.equals(tokenA, tokenB)

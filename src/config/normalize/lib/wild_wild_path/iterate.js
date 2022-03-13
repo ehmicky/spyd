@@ -1,5 +1,6 @@
 import { groupBy } from '../../../../utils/group.js'
 
+import { equalsSimple, isSameToken } from './parsing/compare.js'
 import { parse } from './parsing/parse.js'
 import { serialize } from './parsing/serialize.js'
 import { getObjectTokenType } from './tokens/main.js'
@@ -20,13 +21,14 @@ export const iterate = function (target, queryOrPaths) {
 }
 
 const iterateLevel = function (entries, index) {
-  const parentEntries = entries.filter(({ path }) => path.length === index)
+  const entriesA = removeDuplicates(entries)
+  const parentEntries = entriesA.filter(({ path }) => path.length === index)
 
-  if (parentEntries.length === entries.length) {
+  if (parentEntries.length === entriesA.length) {
     return parentEntries
   }
 
-  const levelEntries = entries
+  const levelEntries = entriesA
     .filter(({ path }) => path.length !== index)
     .flatMap((entry) => iteratePath(entry, index))
 
@@ -42,6 +44,30 @@ const iterateLevel = function (entries, index) {
           (groupedLevelEntries) => iterateLevel(groupedLevelEntries, nextIndex),
         )
   return [...childEntries, ...parentEntries]
+}
+
+const removeDuplicates = function (entries) {
+  return entries.length === 1 ? entries : entries.filter(isNotDuplicate)
+}
+
+const isNotDuplicate = function (entryA, index, entries) {
+  return entries.every(
+    (entryB, indexB) => index <= indexB || !isDuplicate(entryA, entryB),
+  )
+}
+
+const isDuplicate = function (
+  { props: propsA, path: pathA },
+  { props: propsB, path: pathB },
+) {
+  return (
+    equalsSimple(propsA, propsB) &&
+    pathA.length === pathB.length &&
+    pathA.every(
+      (tokenA, index) =>
+        index < propsA.length || isSameToken(tokenA, pathB[index]),
+    )
+  )
 }
 
 // Iteration among siglings is not sorted, for performance reasons.
