@@ -29,7 +29,7 @@ export const normalizePluginConfigTop = async function (
 }
 
 const normalizeTop = {
-  name: '',
+  name: '.',
   required: true,
   validate: [validateObjectOrString, validateJson],
   example: getExampleLocation,
