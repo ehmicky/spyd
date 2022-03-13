@@ -21,9 +21,13 @@ export const get = function (target, queryOrPath) {
 
 // Check if a property is not missing according to a query
 export const has = function (target, queryOrPath) {
-  return iterate(target, queryOrPath).some(isExisting)
-}
+  // eslint-disable-next-line fp/no-loops
+  for (const { missing } of iterate(target, queryOrPath)) {
+    // eslint-disable-next-line max-depth
+    if (!missing) {
+      return true
+    }
+  }
 
-const isExisting = function ({ missing }) {
-  return !missing
+  return false
 }
