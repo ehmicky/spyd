@@ -20,6 +20,11 @@ export const iterate = function (target, queryOrPaths) {
 
 const iterateLevel = function (entries, index) {
   const parentEntries = entries.filter(({ path }) => path.length === index)
+
+  if (parentEntries.length === entries.length) {
+    return parentEntries
+  }
+
   const levelEntries = entries
     .filter(({ path }) => path.length !== index)
     .flatMap((entry) => iteratePath(entry, index))
