@@ -81,7 +81,6 @@ const shouldUseEntry = function (entry, target, condition) {
 // If both a parent and a child property are set, the parent prevails
 const hasNoParentSet = function ({ path: pathA }, indexA, entries) {
   return entries.every(
-    ({ path: pathB }, indexB) =>
-      indexA <= indexB || !isParentPath(pathB, pathA),
+    (entryB, indexB) => indexA <= indexB || !isParentPath(entryB.path, pathA),
   )
 }
