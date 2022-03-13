@@ -6,9 +6,9 @@ import { iterate } from './iterate/main.js'
 export const list = function (
   target,
   query,
-  { childFirst, sort, classes } = {},
+  { childFirst, sort, classes, inherited } = {},
 ) {
-  return [...iterate(target, query, { childFirst, sort, classes })]
+  return [...iterate(target, query, { childFirst, sort, classes, inherited })]
 }
 
 // Retrieve a single property's value in `target` matching a query string.

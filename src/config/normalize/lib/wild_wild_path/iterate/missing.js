@@ -9,9 +9,11 @@ import { getTokenType } from '../tokens/main.js'
 //  - known, i.e. returned: prop|index|slice tokens
 //  - unknown, i.e. not returned: any|regexp tokens
 // Tokens like wildcards cannot do this since there is known property to add.
-// Both non-enumerable and inherited properties:
+// Non-enumerable properties:
 //  - Are not listed by token types returning multiple entries like *
 //  - But are handled by the other ones
+// Inherited properties are ignored by all token types if `inherited` is `false`
+//  - This avoids potentially mutating deep properties shared by other instances
 export const handleMissingValue = function (value, token, classes) {
   const tokenType = getTokenType(token)
   const { missing, value: valueA } = tokenType.array

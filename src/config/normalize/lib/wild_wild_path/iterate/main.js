@@ -3,6 +3,7 @@ import { parseQuery, serializePath } from '../../wild_wild_path_parser/main.js'
 import { removeDuplicates } from './duplicate.js'
 import { expandTokens } from './expand.js'
 import { groupSortChildEntries } from './group.js'
+import { getOpts } from './options.js'
 import { expandRecursiveTokens } from './recurse.js'
 
 // Iterate over all values (and their associated path) matching a specific
@@ -10,12 +11,8 @@ import { expandRecursiveTokens } from './recurse.js'
 // Uses an iterator:
 //  - To allow consumers to return only the first matching entry quickly
 //  - To keep memory consumption low even on big queries
-export const iterate = function* (
-  target,
-  query,
-  { childFirst = false, sort = false, classes = false } = {},
-) {
-  const opts = { childFirst, sort, classes }
+export const iterate = function* (target, query, opts) {
+  const optsA = getOpts(opts)
   const parents = new Set([])
   const queryArrays = parseQuery(query)
   const entries = queryArrays.map((queryArray) => ({
@@ -24,7 +21,7 @@ export const iterate = function* (
     path: [],
     missing: false,
   }))
-  yield* iterateLevel({ entries, index: 0, parents, opts })
+  yield* iterateLevel({ entries, index: 0, parents, opts: optsA })
 }
 
 // `parents` is used to prevent infinite recursions when using ** together with
@@ -74,7 +71,7 @@ const normalizeEntry = function ({ value, path, missing }) {
 }
 
 const iterateChildren = function* ({ entries, index, parents, opts }) {
-  const childEntries = expandTokens(entries, index, opts.classes)
+  const childEntries = expandTokens(entries, index, opts)
 
   if (childEntries.length === 0) {
     return
