@@ -12,34 +12,35 @@ export const expandTokens = function (entries, index, opts) {
 }
 
 // Use the token to list entries against a target value.
-const expandToken = function (
-  { queryArray, value, path },
-  index,
-  { missing: includeMissing, classes, inherited },
-) {
+const expandToken = function ({ queryArray, value, path }, index, opts) {
   const token = queryArray[index]
-  const {
-    tokenType,
-    missing: missingParent,
-    value: valueA,
-  } = handleMissingValue(value, token, classes)
-
-  if (missingParent && !includeMissing) {
-    return []
-  }
-
-  const childEntries = tokenType.iterate(valueA, token, inherited)
-  const childEntriesA = includeMissing
-    ? childEntries
-    : childEntries.filter(isNotMissing)
+  const missingReturn = handleMissingValue(value, token, opts.classes)
+  const childEntriesA = iterateToken(token, missingReturn, opts)
   return childEntriesA.map(
     ({ value: childValue, prop, missing: missingEntry }) => ({
       queryArray,
       value: childValue,
       path: [...path, prop],
-      missing: missingParent || missingEntry,
+      missing: missingReturn.missing || missingEntry,
     }),
   )
+}
+
+const iterateToken = function (
+  token,
+  { tokenType, missing: missingParent, value },
+  { inherited, missing: includeMissing },
+) {
+  if (includeMissing) {
+    return tokenType.iterate(value, token, inherited)
+  }
+
+  if (missingParent) {
+    return []
+  }
+
+  const childEntries = tokenType.iterate(value, token, inherited)
+  return childEntries.filter(isNotMissing)
 }
 
 const isNotMissing = function ({ missing }) {
