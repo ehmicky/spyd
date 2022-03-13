@@ -1,7 +1,6 @@
-import { TOKEN_SEPARATOR, ARRAY_SEPARATOR } from '../tokens/escape.js'
-import { getObjectTokenType } from '../tokens/main.js'
-
 import { parseQuery, parsePath } from './parse.js'
+import { TOKEN_SEPARATOR, ARRAY_SEPARATOR } from './tokens/escape.js'
+import { getObjectTokenType } from './tokens/main.js'
 
 // Inverse of `parseQuery()`
 // When passing a query string, it is parsed and re-serialized to validate and

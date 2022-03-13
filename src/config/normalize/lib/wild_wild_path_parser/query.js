@@ -1,13 +1,12 @@
+import { validateEmptyQuery } from './normalize.js'
 import {
   ESCAPE,
   ARRAY_SEPARATOR,
   ARRAY_SEPARATOR_NAME,
   TOKEN_SEPARATOR,
   SPECIAL_CHARS,
-} from '../tokens/escape.js'
-import { getStringTokenType } from '../tokens/main.js'
-
-import { validateEmptyQuery } from './normalize.js'
+} from './tokens/escape.js'
+import { getStringTokenType } from './tokens/main.js'
 
 // Parse a query string to query arrays of tokens
 // Use imperative logic for performance

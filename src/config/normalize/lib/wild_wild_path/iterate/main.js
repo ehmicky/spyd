@@ -1,5 +1,4 @@
-import { parseQuery } from '../parsing/parse.js'
-import { serializePath } from '../parsing/serialize.js'
+import { parseQuery, serializePath } from '../../wild_wild_path_parser/main.js'
 
 import { removeDuplicates } from './duplicate.js'
 import { expandToken } from './expand.js'

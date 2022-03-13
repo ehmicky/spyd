@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 
-import { getObjectTokenType, getPathObjectTokenType } from '../tokens/main.js'
+import { getObjectTokenType, getPathObjectTokenType } from './tokens/main.js'
 
 // Most methods accept both query and array syntaxes.
 // This checks which one is used.

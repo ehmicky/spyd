@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { getTokenType } from '../tokens/main.js'
+import { getTokenType } from '../../wild_wild_path_parser/main.js'
 
 // When the value does not exist, we set it deeply with `set()` but not with
 // `list|get|has()`.

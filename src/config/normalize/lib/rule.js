@@ -1,4 +1,5 @@
-import { get, parseQuery, serializeQuery } from './wild_wild_path/main.js'
+import { get } from './wild_wild_path/main.js'
+import { parseQuery, serializeQuery } from './wild_wild_path_parser/main.js'
 
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the

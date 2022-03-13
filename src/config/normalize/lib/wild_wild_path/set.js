@@ -1,6 +1,7 @@
+import { isParentPath } from '../wild_wild_path_parser/main.js'
+
 import { list } from './get.js'
 import { handleMissingValue } from './iterate/missing.js'
-import { isParentPath } from './parsing/compare.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
 // Unless `mutate` is `true`, this returns a new copy

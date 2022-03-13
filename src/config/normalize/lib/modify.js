@@ -2,7 +2,8 @@ import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolvePath } from './path.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
-import { has, parsePath } from './wild_wild_path/main.js'
+import { has } from './wild_wild_path/main.js'
+import { parsePath } from './wild_wild_path_parser/main.js'
 
 // Once the initial value has been computed, apply validation and transforms,
 // unless the value is `undefined`.

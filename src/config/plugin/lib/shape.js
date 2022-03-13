@@ -1,5 +1,5 @@
 import { getDummyRules } from '../../normalize/dummy.js'
-import { isSameQuery } from '../../normalize/lib/wild_wild_path/main.js'
+import { isSameQuery } from '../../normalize/lib/wild_wild_path_parser/main.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { PluginError, UserError, CoreError } from './error.js'

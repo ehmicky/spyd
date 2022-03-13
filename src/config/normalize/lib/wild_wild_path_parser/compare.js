@@ -1,7 +1,6 @@
-import { getObjectTokenType } from '../tokens/main.js'
-
 import { validatePath } from './normalize.js'
 import { parseQuery } from './parse.js'
+import { getObjectTokenType } from './tokens/main.js'
 
 // Check if two queries are equal.
 // Works with:

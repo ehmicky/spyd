@@ -5,12 +5,8 @@ import { UserError } from '../../error/main.js'
 import { findValues } from '../../utils/recurse.js'
 import { addBases, getBasePath } from '../cwd.js'
 import { deepMerge, isRecurseObject } from '../merge.js'
-import {
-  get,
-  has,
-  serializePath,
-  set,
-} from '../normalize/lib/wild_wild_path/main.js'
+import { get, has, set } from '../normalize/lib/wild_wild_path/main.js'
+import { serializePath } from '../normalize/lib/wild_wild_path_parser/main.js'
 
 import { loadConfigContents } from './contents.js'
 import { normalizeConfigProp } from './normalize.js'
