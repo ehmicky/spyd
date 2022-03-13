@@ -23,7 +23,9 @@ const iterateLevel = function (entries, index) {
   const levelEntries = entries
     .filter(({ path }) => path.length !== index)
     .flatMap((entry) => iteratePath(entry, index))
-  const entriesGroups = Object.values(groupBy(levelEntries, 'prop'))
+  const entriesGroups = Object.values(
+    groupBy(levelEntries, ({ props }) => props[props.length - 1]),
+  )
   const nextIndex = index + 1
   const childEntries = entriesGroups.flatMap((levelEntriesA) =>
     iterateLevel(levelEntriesA, nextIndex),
