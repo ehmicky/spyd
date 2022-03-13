@@ -41,11 +41,6 @@ const isSameQueryArray = function (queryArrayA, queryArrayB) {
 export const isSamePath = function (pathA, pathB) {
   validatePath(pathA)
   validatePath(pathB)
-  return isSamePathFast(pathA, pathB)
-}
-
-// Same as `equalsSimple()` but without validation
-export const isSamePathFast = function (pathA, pathB) {
   return (
     pathA.length === pathB.length &&
     pathA.every((prop, index) => isSameToken(pathB[index], prop))
