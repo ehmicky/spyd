@@ -32,8 +32,8 @@ export const include = function (
   })
 }
 
-const pickEntry = function (classes, target, { path, value }) {
-  return set(target, path, value, { classes, mutate: false })
+const pickEntry = function (classes, newTarget, { path, value }) {
+  return set(newTarget, path, value, { classes, mutate: false })
 }
 
 // Remove values matching a query
@@ -57,8 +57,8 @@ export const exclude = function (
   )
 }
 
-const excludeEntry = function ({ classes, mutate }, target, { path }) {
-  return remove(target, path, { classes, mutate })
+const excludeEntry = function ({ classes, mutate }, newTarget, { path }) {
+  return remove(newTarget, path, { classes, mutate })
 }
 
 // Modify a target object multiple times for each matched property.
@@ -71,7 +71,7 @@ const reduceParents = function (
   return entries
     .filter((entry) => shouldUseEntry(entry, target, condition))
     .filter(hasNoParentSet)
-    .reduce((targetA, entry) => setFunc(targetA, entry, 0), newTarget)
+    .reduce((newTargetA, entry) => setFunc(newTargetA, entry, 0), newTarget)
 }
 
 const shouldUseEntry = function (entry, target, condition) {
