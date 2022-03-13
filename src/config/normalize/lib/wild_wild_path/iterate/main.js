@@ -1,7 +1,7 @@
 import { parseQuery, serializePath } from '../../wild_wild_path_parser/main.js'
 
 import { removeDuplicates } from './duplicate.js'
-import { expandToken } from './expand.js'
+import { expandTokens } from './expand.js'
 import { groupSortChildEntries } from './group.js'
 
 // Iterate over all values (and their associated path) matching a specific
@@ -57,9 +57,7 @@ const iterateChildEntries = function* ({ entries, parentEntry, index, opts }) {
     return
   }
 
-  const childEntries = entries
-    .filter(({ queryArray }) => queryArray.length !== index)
-    .flatMap((entry) => expandToken(entry, index, opts.classes))
+  const childEntries = expandTokens(entries, index, opts.classes)
 
   if (childEntries.length === 0) {
     return
