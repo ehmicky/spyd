@@ -2,7 +2,7 @@ import { setArray } from '../../../../utils/set.js'
 
 import { handleMissingValue } from './iterate/expand.js'
 import { iterate } from './iterate/main.js'
-import { parent } from './parsing/compare.js'
+import { isParentPath } from './parsing/compare.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
 export const set = function (target, query, value) {
@@ -31,7 +31,7 @@ export const reduceParents = function (target, query, setFunc) {
 
 // If both a parent and a child property are set, the parent prevails
 const parentIsSet = function (paths, path) {
-  return paths.some((previousPath) => parent(previousPath, path))
+  return paths.some((previousPath) => isParentPath(previousPath, path))
 }
 
 // Use positional arguments for performance

@@ -8,7 +8,7 @@ import { parse } from './parse.js'
 //  - Normalization, e.g. `:` === `0:`
 //  - Unions, e.g. `a b` === `b a`
 //  - Duplicates, e.g. `a a` === `a`
-export const equals = function (queryA, queryB) {
+export const isSameQuery = function (queryA, queryB) {
   const queryArraysA = parse(queryA)
   const queryArraysB = parse(queryB)
   return (
@@ -38,14 +38,14 @@ const isSameQueryArray = function (queryArrayA, queryArrayB) {
 }
 
 // Check if two paths are equal
-export const equalsSimple = function (pathA, pathB) {
+export const isSamePath = function (pathA, pathB) {
   validatePath(pathA)
   validatePath(pathB)
-  return fastEqualsSimple(pathA, pathB)
+  return isSamePathFast(pathA, pathB)
 }
 
 // Same as `equalsSimple()` but without validation
-export const fastEqualsSimple = function (pathA, pathB) {
+export const isSamePathFast = function (pathA, pathB) {
   return (
     pathA.length === pathB.length &&
     pathA.every((prop, index) => isSameProp(pathB[index], prop))
@@ -53,7 +53,7 @@ export const fastEqualsSimple = function (pathA, pathB) {
 }
 
 // Check if a path is a parent to another
-export const parent = function (parentPath, childPath) {
+export const isParentPath = function (parentPath, childPath) {
   return (
     childPath.length > parentPath.length &&
     childPath.every(

@@ -1,4 +1,10 @@
-import { set, get, remove, iterate, parent } from '../wild_wild_path/main.js'
+import {
+  set,
+  get,
+  remove,
+  iterate,
+  isParentPath,
+} from '../wild_wild_path/main.js'
 
 // Returns an object with only the properties being queried.
 export const pick = function (target, query) {
@@ -71,5 +77,5 @@ const shouldUseEntry = function ({ entry, paths, newTarget, condition }) {
 
 // If both a parent and a child property are set, the parent prevails
 const parentIsSet = function (paths, path) {
-  return paths.some((previousPath) => parent(previousPath, path))
+  return paths.some((previousPath) => isParentPath(previousPath, path))
 }

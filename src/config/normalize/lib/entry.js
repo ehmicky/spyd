@@ -2,7 +2,7 @@ import { applyRule } from './apply.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
 import { addWarnings } from './warn.js'
-import { set, remove, equalsSimple } from './wild_wild_path/main.js'
+import { set, remove, isSamePath } from './wild_wild_path/main.js'
 
 // Apply rule for a specific entry
 export const applyEntryRule = async function (
@@ -43,7 +43,7 @@ export const applyEntryRule = async function (
 }
 
 const setConfigValue = function ({ config, namePath, renamedPath, newValue }) {
-  const configA = equalsSimple(namePath, renamedPath)
+  const configA = isSamePath(namePath, renamedPath)
     ? config
     : remove(config, namePath)
   return newValue === undefined

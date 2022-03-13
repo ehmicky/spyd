@@ -1,5 +1,5 @@
 import { getDummyRules } from '../../normalize/dummy.js'
-import { equals } from '../../normalize/lib/wild_wild_path/main.js'
+import { isSameQuery } from '../../normalize/lib/wild_wild_path/main.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { PluginError, UserError, CoreError } from './error.js'
@@ -95,7 +95,9 @@ const configPropName = {
 }
 
 const isSharedProp = function (name, sharedPropNames) {
-  return sharedPropNames.some((sharedPropName) => equals(name, sharedPropName))
+  return sharedPropNames.some((sharedPropName) =>
+    isSameQuery(name, sharedPropName),
+  )
 }
 
 // Rules shared by all plugins

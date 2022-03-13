@@ -1,4 +1,4 @@
-import { fastEqualsSimple, isSameToken } from '../parsing/compare.js'
+import { isSamePathFast, isSameToken } from '../parsing/compare.js'
 
 // Remove duplicate entries
 export const removeDuplicates = function (entries) {
@@ -16,7 +16,7 @@ const isDuplicate = function (
   { path: pathB, queryArray: queryArrayB },
 ) {
   return (
-    fastEqualsSimple(pathA, pathB) &&
+    isSamePathFast(pathA, pathB) &&
     queryArrayA.length === queryArrayB.length &&
     queryArrayA.every(
       (tokenA, index) =>

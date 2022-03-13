@@ -1,6 +1,6 @@
 export { list, get, has } from './get.js'
 export { iterate } from './iterate/main.js'
-export { equals, equalsSimple, parent } from './parsing/compare.js'
+export { isSameQuery, isSamePath, isParentPath } from './parsing/compare.js'
 export { serialize } from './parsing/serialize.js'
 export { parse } from './parsing/parse.js'
 export { remove } from './remove.js'
