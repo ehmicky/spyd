@@ -2,12 +2,10 @@ import { set, get, remove, iterate, parent } from '../wild_wild_path/main.js'
 
 // Returns an object with only the properties being queried.
 export const pick = function (target, queryOrPaths) {
-  return reduceParents({
+  return reduceParents(pickEntry, returnTrue, {
     target,
     newTarget: {},
     queryOrPaths,
-    setFunc: pickEntry,
-    condition: returnTrue,
   })
 }
 
@@ -21,23 +19,19 @@ const returnTrue = function () {
 
 // Remove values matching a query
 export const include = function (target, queryOrPaths, condition) {
-  return reduceParents({
+  return reduceParents(pickEntry, condition, {
     target,
     newTarget: {},
     queryOrPaths,
-    setFunc: pickEntry,
-    condition,
   })
 }
 
 // Remove values matching a query
 export const exclude = function (target, queryOrPaths, condition) {
-  return reduceParents({
+  return reduceParents(excludeEntry, shouldExclude.bind(undefined, condition), {
     target,
     newTarget: target,
     queryOrPaths,
-    setFunc: excludeEntry,
-    condition: shouldExclude.bind(undefined, condition),
   })
 }
 
@@ -53,13 +47,11 @@ const shouldExclude = function (condition, { path, query, missing }, target) {
 // Modify a target object multiple times for each matched property.
 // Ignore properties when one of their ancestors was matched too.
 // Uses `iterate()` to keep memory consumption low.
-const reduceParents = function ({
-  target,
-  newTarget,
-  queryOrPaths,
+const reduceParents = function (
   setFunc,
   condition,
-}) {
+  { target, newTarget, queryOrPaths },
+) {
   const paths = []
 
   // eslint-disable-next-line fp/no-loops
