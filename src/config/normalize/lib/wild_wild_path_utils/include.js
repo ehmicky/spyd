@@ -7,11 +7,16 @@ export const pick = function (target, queryOrPaths) {
     newTarget: {},
     queryOrPaths,
     setFunc: pickEntry,
+    condition: returnTrue,
   })
 }
 
 const pickEntry = function (target, { path, value }) {
   return set(target, path, value)
+}
+
+const returnTrue = function () {
+  return true
 }
 
 // Remove values matching a query
@@ -53,7 +58,7 @@ const reduceParents = function ({
   newTarget,
   queryOrPaths,
   setFunc,
-  condition = returnTrue,
+  condition,
 }) {
   const paths = []
 
@@ -69,10 +74,6 @@ const reduceParents = function ({
   }
 
   return newTarget
-}
-
-const returnTrue = function () {
-  return true
 }
 
 const shouldUseEntry = function ({ entry, paths, newTarget, condition }) {
