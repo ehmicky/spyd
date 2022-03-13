@@ -29,6 +29,7 @@ export const parseQueryString = function (queryString) {
     }
   }
 
+  validateEmptyQuery(state)
   return state.arrays
 }
 
@@ -122,4 +123,10 @@ const handleLeadingDot = function (state) {
 const resetTokenState = function (state) {
   state.isProp = false
   state.chars = ''
+}
+
+const validateEmptyQuery = function ({ arrays }) {
+  if (arrays.length === 0) {
+    throw new Error('it must not be an empty string.')
+  }
 }
