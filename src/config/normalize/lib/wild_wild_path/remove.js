@@ -1,4 +1,3 @@
-import { handleMissingValue } from './iterate/missing.js'
 import { validateClasses, reduceParents, setValue } from './set.js'
 
 // Same as `set()` but removing a value
@@ -9,7 +8,14 @@ export const remove = function (
 ) {
   validateClasses(classes, mutate)
   const setFunc = removeAnyEntry.bind(undefined, { mutate, classes })
-  return reduceParents({ target, query, setFunc, classes, inherited })
+  return reduceParents({
+    target,
+    query,
+    setFunc,
+    missing: false,
+    classes,
+    inherited,
+  })
 }
 
 // eslint-disable-next-line max-params
@@ -21,10 +27,6 @@ const removeAnyEntry = function ({ mutate, classes }, target, path, index) {
 
 const removeEntry = function ({ mutate, classes, target, path, index }) {
   const prop = path[index]
-
-  if (handleMissingValue(target, prop, classes).missing) {
-    return target
-  }
 
   if (index === path.length - 1) {
     return removeValue(target, prop, mutate)

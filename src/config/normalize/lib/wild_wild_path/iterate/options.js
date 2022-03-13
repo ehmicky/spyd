@@ -2,10 +2,11 @@
 export const getOpts = function ({
   childFirst = false,
   sort = false,
+  missing = false,
   classes = false,
   inherited = false,
 } = {}) {
-  const opts = { childFirst, sort, classes, inherited }
+  const opts = { childFirst, sort, missing, classes, inherited }
   validateOpts(opts)
   return opts
 }

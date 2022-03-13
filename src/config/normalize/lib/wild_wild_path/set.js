@@ -1,7 +1,7 @@
 import { isParentPath } from '../wild_wild_path_parser/main.js'
 
 import { list } from './get.js'
-import { handleMissingValue } from './iterate/missing.js'
+import { getMissingValue } from './iterate/missing.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
 // Unless `mutate` is `true`, this returns a new copy
@@ -12,11 +12,11 @@ export const set = function (
   target,
   query,
   value,
-  { mutate = false, classes, inherited } = {},
+  { mutate = false, missing = true, classes, inherited } = {},
 ) {
   validateClasses(classes, mutate)
-  const setFunc = setEntry.bind(undefined, { value, mutate, classes })
-  return reduceParents({ target, query, setFunc, classes, inherited })
+  const setFunc = setEntry.bind(undefined, { value, mutate, missing, classes })
+  return reduceParents({ target, query, setFunc, missing, classes, inherited })
 }
 
 // Class instances are not clonable. Therefore, they require `mutate`.
@@ -33,12 +33,14 @@ export const reduceParents = function ({
   target,
   query,
   setFunc,
+  missing,
   classes,
   inherited,
 }) {
   const entries = list(target, query, {
     childFirst: false,
     sort: false,
+    missing,
     classes,
     inherited,
   })
@@ -57,16 +59,21 @@ const hasNoParentSet = function ({ path: pathA }, indexA, entries) {
 
 // Use positional arguments for performance
 // eslint-disable-next-line max-params
-const setEntry = function ({ value, mutate, classes }, target, path, index) {
+const setEntry = function (
+  { value, mutate, missing, classes },
+  target,
+  path,
+  index,
+) {
   if (index === path.length) {
     return value
   }
 
   const prop = path[index]
-  const { value: defaultedTarget } = handleMissingValue(target, prop, classes)
+  const defaultedTarget = getMissingValue(target, prop, { missing, classes })
   const childTarget = defaultedTarget[prop]
   const childValue = setEntry(
-    { value, mutate, classes },
+    { value, mutate, missing, classes },
     childTarget,
     path,
     index + 1,

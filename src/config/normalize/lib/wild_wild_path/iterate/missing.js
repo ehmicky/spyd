@@ -14,6 +14,10 @@ import { getTokenType } from '../tokens/main.js'
 //  - But are handled by the other ones
 // Inherited properties are ignored by all token types if `inherited` is `false`
 //  - This avoids potentially mutating deep properties shared by other instances
+export const getMissingValue = function (value, prop, { missing, classes }) {
+  return missing ? handleMissingValue(value, prop, classes).value : value
+}
+
 export const handleMissingValue = function (value, token, classes) {
   const tokenType = getTokenType(token)
   const { missing, value: valueA } = tokenType.array

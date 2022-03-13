@@ -28,11 +28,16 @@ export const iterate = function* (target, query, opts) {
 // a value that includes references to itself
 const iterateLevel = function* ({
   entries,
-  entries: [{ value }],
+  entries: [{ value, missing }],
   index,
   parents,
   opts,
 }) {
+  if (missing) {
+    yield* iterateToken({ entries, index, parents, opts })
+    return
+  }
+
   if (parents.has(value)) {
     return
   }

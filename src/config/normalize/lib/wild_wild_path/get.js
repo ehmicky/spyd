@@ -6,9 +6,17 @@ import { iterate } from './iterate/main.js'
 export const list = function (
   target,
   query,
-  { childFirst, sort, classes, inherited } = {},
+  { childFirst, sort, missing, classes, inherited } = {},
 ) {
-  return [...iterate(target, query, { childFirst, sort, classes, inherited })]
+  return [
+    ...iterate(target, query, {
+      childFirst,
+      sort,
+      missing,
+      classes,
+      inherited,
+    }),
+  ]
 }
 
 // Retrieve a single property's value in `target` matching a query string.
@@ -18,14 +26,19 @@ export const get = function (
   query,
   { childFirst, sort, classes, inherited } = {},
 ) {
-  const entry = find(target, query, { childFirst, sort, classes, inherited })
+  const entry = getEntry(target, query, {
+    childFirst,
+    sort,
+    classes,
+    inherited,
+  })
   return entry === undefined ? undefined : entry.value
 }
 
 // Check if a property is not missing according to a query
 export const has = function (target, query, { classes, inherited } = {}) {
   return (
-    find(target, query, {
+    getEntry(target, query, {
       childFirst: false,
       sort: false,
       classes,
@@ -35,12 +48,16 @@ export const has = function (target, query, { classes, inherited } = {}) {
 }
 
 // Find the first non-missing entry
-const find = function (target, query, opts) {
-  // eslint-disable-next-line fp/no-loops
-  for (const { value, missing } of iterate(target, query, opts)) {
-    // eslint-disable-next-line max-depth
-    if (!missing) {
-      return { value }
-    }
-  }
+const getEntry = function (
+  target,
+  query,
+  { childFirst, sort, classes, inherited },
+) {
+  return iterate(target, query, {
+    childFirst,
+    sort,
+    missing: false,
+    classes,
+    inherited,
+  }).next().value
 }
