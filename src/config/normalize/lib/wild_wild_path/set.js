@@ -1,6 +1,6 @@
 import { setArray } from '../../../../utils/set.js'
 
-import { iterate, handleMissingValue } from './iterate.js'
+import { iterate, handleMissingValue } from './iterate/main.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPath, value) {

@@ -1,4 +1,4 @@
-import { iterate } from './iterate.js'
+import { iterate } from './iterate/main.js'
 
 // Retrieve all properties in `target` matching a query string.
 // Unlike `get|has()` it also return missing entries, letting consumers filter

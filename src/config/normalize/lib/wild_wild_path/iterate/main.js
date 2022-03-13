@@ -1,9 +1,8 @@
-import { groupBy } from '../../../../utils/group.js'
-
-import { fastEqualsSimple, isSameToken } from './parsing/compare.js'
-import { parse } from './parsing/parse.js'
-import { serialize } from './parsing/serialize.js'
-import { getObjectTokenType } from './tokens/main.js'
+import { groupBy } from '../../../../../utils/group.js'
+import { fastEqualsSimple, isSameToken } from '../parsing/compare.js'
+import { parse } from '../parsing/parse.js'
+import { serialize } from '../parsing/serialize.js'
+import { getObjectTokenType } from '../tokens/main.js'
 
 // Iterate over all values (and their associated path) matching a specific
 // query for on specific target value.

@@ -2,7 +2,7 @@ import omit from 'omit.js'
 
 import { setArray } from '../../../../utils/set.js'
 
-import { iterate, handleMissingValue } from './iterate.js'
+import { iterate, handleMissingValue } from './iterate/main.js'
 import { setValue } from './set.js'
 
 // Same as `set()` but removing a value
