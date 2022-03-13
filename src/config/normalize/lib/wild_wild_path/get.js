@@ -26,11 +26,12 @@ export const list = function (
 export const get = function (
   target,
   query,
-  { childFirst, roots, sort, classes, inherited } = {},
+  { childFirst, roots, leaves, sort, classes, inherited } = {},
 ) {
   const entry = getEntry(target, query, {
     childFirst,
     roots,
+    leaves,
     sort,
     classes,
     inherited,
@@ -44,6 +45,7 @@ export const has = function (target, query, { classes, inherited } = {}) {
     getEntry(target, query, {
       childFirst: false,
       roots: false,
+      leaves: false,
       sort: false,
       classes,
       inherited,
@@ -55,11 +57,12 @@ export const has = function (target, query, { classes, inherited } = {}) {
 const getEntry = function (
   target,
   query,
-  { childFirst, roots, sort, classes, inherited },
+  { childFirst, roots, leaves, sort, classes, inherited },
 ) {
   return iterate(target, query, {
     childFirst,
     roots,
+    leaves,
     sort,
     missing: false,
     classes,
