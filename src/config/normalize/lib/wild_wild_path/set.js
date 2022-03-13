@@ -1,7 +1,7 @@
 import { setArray } from '../../../../utils/set.js'
 
+import { list } from './get.js'
 import { handleMissingValue } from './iterate/expand.js'
-import { iterate } from './iterate/main.js'
 import { isParentPath } from './parsing/compare.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
@@ -11,30 +11,19 @@ export const set = function (target, query, value) {
 
 // Modify a target object multiple times for each matched property.
 // Ignore properties when one of their ancestors was matched too.
-// Uses `iterate()` to keep memory consumption low.
 export const reduceParents = function (target, query, setFunc) {
-  const paths = []
-
-  // eslint-disable-next-line fp/no-loops
-  for (const { path } of iterate(target, query, {
-    childFirst: false,
-    sort: false,
-  })) {
-    // eslint-disable-next-line max-depth
-    if (!parentIsSet(paths, path)) {
-      // eslint-disable-next-line fp/no-mutating-methods
-      paths.push(path)
-      // eslint-disable-next-line fp/no-mutation, no-param-reassign
-      target = setFunc(target, path, 0)
-    }
-  }
-
-  return target
+  const entries = list(target, query, { childFirst: false, sort: false })
+  return entries
+    .filter(hasNoParentSet)
+    .reduce((targetA, { path }) => setFunc(targetA, path, 0), target)
 }
 
 // If both a parent and a child property are set, the parent prevails
-const parentIsSet = function (paths, path) {
-  return paths.some((previousPath) => isParentPath(previousPath, path))
+const hasNoParentSet = function ({ path: pathA }, indexA, entries) {
+  return entries.every(
+    ({ path: pathB }, indexB) =>
+      indexA <= indexB || !isParentPath(pathB, pathA),
+  )
 }
 
 // Use positional arguments for performance
