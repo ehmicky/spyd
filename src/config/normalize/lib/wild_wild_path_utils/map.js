@@ -26,7 +26,7 @@ export const map = function (target, query, mapFunc) {
 }
 
 const mapEntry = function (mapFunc, target, { path, query, missing }) {
-  const value = get(target, [path])
+  const value = get(target, path)
   const mappedValue = mapFunc({ path, query, value, missing })
-  return value === mappedValue ? target : set(target, [path], mappedValue)
+  return value === mappedValue ? target : set(target, path, mappedValue)
 }

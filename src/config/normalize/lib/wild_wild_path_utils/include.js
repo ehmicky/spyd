@@ -12,7 +12,7 @@ export const pick = function (target, query) {
 }
 
 const pickEntry = function (target, { path, value }) {
-  return set(target, [path], value)
+  return set(target, path, value)
 }
 
 const returnTrue = function () {
@@ -35,11 +35,11 @@ export const exclude = function (target, query, condition) {
 }
 
 const excludeEntry = function (target, { path }) {
-  return remove(target, [path])
+  return remove(target, path)
 }
 
 const shouldExclude = function (condition, { path, query, missing }, target) {
-  const value = get(target, [path])
+  const value = get(target, path)
   return condition({ path, query, value, missing })
 }
 
