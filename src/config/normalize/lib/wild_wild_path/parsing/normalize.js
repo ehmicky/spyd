@@ -1,65 +1,67 @@
 import { inspect } from 'util'
 
-import { getObjectTokenType, getSObjectTokenType } from '../tokens/main.js'
+import { getObjectTokenType, getPathObjectTokenType } from '../tokens/main.js'
 
-// Most methods accept both query and path syntaxes.
+// Most methods accept both query and array syntaxes.
 // This checks which one is used.
-export const isQueryString = function (queryOrPaths) {
-  return typeof queryOrPaths === 'string'
+export const isQueryString = function (query) {
+  return typeof query === 'string'
 }
 
-// Simple paths are a subset of paths which uses:
+// Paths are a subset of query arrays which use:
 //  - No unions
 //  - Only prop tokens, and array tokens (positive only)
-// Those are the ones exposed in output, as opposed to normal paths which are
+// Those are the ones exposed in output, as opposed to query arrays which are
 // exposed in input.
-export const validateSimplePath = function (simplePath) {
-  if (!Array.isArray(simplePath)) {
-    throwPathError(simplePath, 'It must be an array.')
+export const validatePath = function (path) {
+  if (!Array.isArray(path)) {
+    throwQueryArraysError(path, 'It must be an array.')
   }
 
-  simplePath.forEach((prop) => {
-    validateProp(prop, simplePath)
+  path.forEach((prop) => {
+    validateProp(prop, path)
   })
 }
 
-const validateProp = function (prop, simplePath) {
-  if (getSObjectTokenType(prop) === undefined) {
+const validateProp = function (prop, path) {
+  if (getPathObjectTokenType(prop) === undefined) {
     throwTokenError(
-      simplePath,
+      path,
       prop,
       'It must be a property name (string) or an array index (positive integer).',
     )
   }
 }
 
-// Normalize paths of tokens
-export const normalizePaths = function (paths) {
-  validatePaths(paths)
-  const pathsA = paths.every(Array.isArray) ? paths : [paths]
-  return pathsA.map(normalizePath)
+// Normalize query arrays
+export const normalizeQueryArrays = function (queryArrays) {
+  validateQueryArrays(queryArrays)
+  const queryArraysA = queryArrays.every(Array.isArray)
+    ? queryArrays
+    : [queryArrays]
+  return queryArraysA.map(normalizeQueryArray)
 }
 
-const validatePaths = function (paths) {
-  if (!Array.isArray(paths)) {
-    throwPathError(paths, 'It must be an array.')
+const validateQueryArrays = function (queryArrays) {
+  if (!Array.isArray(queryArrays)) {
+    throwQueryArraysError(queryArrays, 'It must be an array.')
   }
 }
 
-const normalizePath = function (path) {
-  return path.map((token) => normalizeToken(token, path))
+const normalizeQueryArray = function (queryArray) {
+  return queryArray.map((token) => normalizeToken(token, queryArray))
 }
 
-const normalizeToken = function (token, path) {
+const normalizeToken = function (token, queryArray) {
   const tokenType = getObjectTokenType(token)
-  validateToken(tokenType, token, path)
+  validateToken(tokenType, token, queryArray)
   return tokenType.normalize(token)
 }
 
-const validateToken = function (tokenType, token, path) {
+const validateToken = function (tokenType, token, queryArray) {
   if (tokenType === undefined) {
     throwTokenError(
-      path,
+      queryArray,
       token,
       `It must be one of the following:
  - a property name string
@@ -71,10 +73,13 @@ const validateToken = function (tokenType, token, path) {
   }
 }
 
-const throwPathError = function (path, message) {
-  throw new Error(`Invalid path: ${inspect(path)}\n${message}`)
+const throwQueryArraysError = function (queryArray, message) {
+  throw new Error(`Invalid query: ${inspect(queryArray)}\n${message}`)
 }
 
-const throwTokenError = function (path, token, message) {
-  throwPathError(path, `Invalid token: ${inspect(token)}\n${message}`)
+const throwTokenError = function (queryArray, token, message) {
+  throwQueryArraysError(
+    queryArray,
+    `Invalid token: ${inspect(token)}\n${message}`,
+  )
 }

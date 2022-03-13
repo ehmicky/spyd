@@ -5,8 +5,8 @@ import { getObjectTokenType } from '../tokens/main.js'
 // However, iteration is guaranteed to return child entries before parent ones.
 //  - This is useful for recursive logic which must often be applied in a
 //    specific parent-child order
-export const expandPath = function ({ path, value, simplePath }, index) {
-  const token = path[index]
+export const expandToken = function ({ queryArray, value, path }, index) {
+  const token = queryArray[index]
   const {
     tokenType,
     missing: missingParent,
@@ -15,9 +15,9 @@ export const expandPath = function ({ path, value, simplePath }, index) {
   const childEntries = tokenType.iterate(valueA, token)
   return childEntries.map(
     ({ value: childValue, prop, missing: missingEntry }) => ({
-      path,
+      queryArray,
       value: childValue,
-      simplePath: [...simplePath, prop],
+      path: [...path, prop],
       missing: missingParent || missingEntry,
     }),
   )

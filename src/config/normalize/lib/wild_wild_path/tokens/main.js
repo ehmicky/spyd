@@ -17,9 +17,9 @@ export const getStringTokenType = function (chars, isProp) {
 // Order is significant as they are tested serially
 const TOKEN_TYPES = [...OTHER_TOKEN_TYPES, PROP_TOKEN]
 
-// Like `getObjectTokenType()` but for simple paths
-export const getSObjectTokenType = function (token) {
-  return SIMPLE_TOKEN_TYPES.find((tokenType) => tokenType.testObject(token))
+// Like `getObjectTokenType()` but for paths
+export const getPathObjectTokenType = function (token) {
+  return PATH_TOKEN_TYPES.find((tokenType) => tokenType.testObject(token))
 }
 
-const SIMPLE_TOKEN_TYPES = [ARRAY_TOKEN, PROP_TOKEN]
+const PATH_TOKEN_TYPES = [ARRAY_TOKEN, PROP_TOKEN]

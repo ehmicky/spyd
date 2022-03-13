@@ -1,12 +1,8 @@
 import { set, get, remove, iterate, parent } from '../wild_wild_path/main.js'
 
 // Returns an object with only the properties being queried.
-export const pick = function (target, queryOrPaths) {
-  return reduceParents(pickEntry, returnTrue, {
-    target,
-    newTarget: {},
-    queryOrPaths,
-  })
+export const pick = function (target, query) {
+  return reduceParents(pickEntry, returnTrue, { target, newTarget: {}, query })
 }
 
 const pickEntry = function (target, { path, value }) {
@@ -18,20 +14,17 @@ const returnTrue = function () {
 }
 
 // Remove values not matching a query
-export const include = function (target, queryOrPaths, condition) {
-  return reduceParents(pickEntry, condition, {
-    target,
-    newTarget: {},
-    queryOrPaths,
-  })
+export const include = function (target, query, condition) {
+  return reduceParents(pickEntry, condition, { target, newTarget: {}, query })
 }
 
 // Remove values matching a query
-export const exclude = function (target, queryOrPaths, condition) {
-  return reduceParents(excludeEntry, shouldExclude.bind(undefined, condition), {
+export const exclude = function (target, query, condition) {
+  const conditionA = shouldExclude.bind(undefined, condition)
+  return reduceParents(excludeEntry, conditionA, {
     target,
     newTarget: target,
-    queryOrPaths,
+    query,
   })
 }
 
@@ -50,12 +43,12 @@ const shouldExclude = function (condition, { path, query, missing }, target) {
 const reduceParents = function (
   setFunc,
   condition,
-  { target, newTarget, queryOrPaths },
+  { target, newTarget, query },
 ) {
   const paths = []
 
   // eslint-disable-next-line fp/no-loops
-  for (const entry of iterate(target, queryOrPaths)) {
+  for (const entry of iterate(target, query)) {
     // eslint-disable-next-line max-depth
     if (shouldUseEntry({ entry, paths, newTarget, condition })) {
       // eslint-disable-next-line fp/no-mutating-methods

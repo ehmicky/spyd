@@ -12,12 +12,12 @@ import { iterate, get, set } from '../wild_wild_path/main.js'
 //     - There are not many use cases for it
 //        - When needed, this can also be done by the consumer logic
 //     - This also avoids infinite recursion
-export const map = function (target, queryOrPaths, mapFunc) {
+export const map = function (target, query, mapFunc) {
   // eslint-disable-next-line fp/no-let
   let newTarget = target
 
   // eslint-disable-next-line fp/no-loops
-  for (const entry of iterate(target, queryOrPaths, { childFirst: true })) {
+  for (const entry of iterate(target, query, { childFirst: true })) {
     // eslint-disable-next-line fp/no-mutation
     newTarget = mapEntry(mapFunc, newTarget, entry)
   }

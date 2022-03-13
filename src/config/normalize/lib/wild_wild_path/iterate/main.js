@@ -3,23 +3,19 @@ import { parse } from '../parsing/parse.js'
 import { serialize } from '../parsing/serialize.js'
 
 import { removeDuplicates } from './duplicate.js'
-import { expandPath } from './expand.js'
+import { expandToken } from './expand.js'
 
 // Iterate over all values (and their associated path) matching a specific
 // query for on specific target value.
 // Uses an iterator:
 //  - To allow consumers to return only the first matching entry quickly
 //  - To keep memory consumption low even on big queries
-export const iterate = function* (
-  target,
-  queryOrPaths,
-  { childFirst = false } = {},
-) {
-  const paths = parse(queryOrPaths)
-  const entries = paths.map((path) => ({
-    path,
+export const iterate = function* (target, query, { childFirst = false } = {}) {
+  const queryArrays = parse(query)
+  const entries = queryArrays.map((queryArray) => ({
+    queryArray,
     value: target,
-    simplePath: [],
+    path: [],
     missing: false,
   }))
   yield* iterateLevel(entries, childFirst, 0)
@@ -41,10 +37,12 @@ const iterateLevel = function* (entries, childFirst, index) {
 }
 
 const getParentEntries = function (entries, index) {
-  return entries.filter(({ path }) => path.length === index).map(normalizeEntry)
+  return entries
+    .filter(({ queryArray }) => queryArray.length === index)
+    .map(normalizeEntry)
 }
 
-const normalizeEntry = function ({ value, simplePath: path, missing }) {
+const normalizeEntry = function ({ value, path, missing }) {
   const query = serialize(path)
   return { value, path, query, missing }
 }
@@ -61,8 +59,8 @@ const iterateChildEntries = function* (
   }
 
   const childEntries = entries
-    .filter(({ path }) => path.length !== index)
-    .flatMap((entry) => expandPath(entry, index))
+    .filter(({ queryArray }) => queryArray.length !== index)
+    .flatMap((entry) => expandToken(entry, index))
 
   if (childEntries.length === 0) {
     return
@@ -87,6 +85,6 @@ const iterateChildren = function* (childEntries, childFirst, index) {
   }
 }
 
-const getLastProp = function ({ simplePath }) {
-  return simplePath[simplePath.length - 1]
+const getLastProp = function ({ path }) {
+  return path[path.length - 1]
 }

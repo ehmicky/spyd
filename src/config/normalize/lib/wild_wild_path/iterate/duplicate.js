@@ -12,15 +12,15 @@ const isNotDuplicate = function (entryA, index, entries) {
 }
 
 const isDuplicate = function (
-  { simplePath: simplePathA, path: pathA },
-  { simplePath: simplePathB, path: pathB },
+  { path: pathA, queryArray: queryArrayA },
+  { path: pathB, queryArray: queryArrayB },
 ) {
   return (
-    fastEqualsSimple(simplePathA, simplePathB) &&
-    pathA.length === pathB.length &&
-    pathA.every(
+    fastEqualsSimple(pathA, pathB) &&
+    queryArrayA.length === queryArrayB.length &&
+    queryArrayA.every(
       (tokenA, index) =>
-        index < simplePathA.length || isSameToken(tokenA, pathB[index]),
+        index < pathA.length || isSameToken(tokenA, queryArrayB[index]),
     )
   )
 }
