@@ -42,7 +42,7 @@ const equals = function (tokenA, tokenB) {
 }
 
 export const REGEXP_TOKEN = {
-  name: 'regexp',
+  name: 'regExp',
   testObject,
   serialize,
   testString,

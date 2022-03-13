@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { getTokenType } from '../../wild_wild_path_parser/main.js'
+import { getTokenType } from '../tokens/main.js'
 
 // When the value does not exist, we set it deeply with `set()` but not with
 // `list|get|has()`.
@@ -13,14 +13,12 @@ import { getTokenType } from '../../wild_wild_path_parser/main.js'
 //  - Are not listed by token types returning multiple entries like *
 //  - But are handled by the other ones
 export const handleMissingValue = function (value, token, classes) {
-  const tokenTypeName = getTokenType(token)
-  const { missing, value: valueA } = ARRAY_TOKEN_TYPES.has(tokenTypeName)
+  const tokenType = getTokenType(token)
+  const { missing, value: valueA } = tokenType.array
     ? handleMissingArrayValue(value)
     : handleMissingObjectValue(value, classes)
-  return { tokenTypeName, missing, value: valueA }
+  return { tokenType, missing, value: valueA }
 }
-
-const ARRAY_TOKEN_TYPES = new Set(['array', 'slice'])
 
 const handleMissingArrayValue = function (value) {
   return Array.isArray(value)

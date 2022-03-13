@@ -1,4 +1,4 @@
-import { getTokenType } from '../../wild_wild_path_parser/main.js'
+import { getTokenType } from '../tokens/main.js'
 
 // Some tokens are recursive. Those are expanded iteratively at each level.
 export const expandRecursiveTokens = function (entries, index) {
@@ -7,28 +7,12 @@ export const expandRecursiveTokens = function (entries, index) {
 
 const expandRecursiveToken = function (entry, index) {
   const token = entry.queryArray[index]
-  const tokenTypeName = getTokenType(token)
-  const recursor = RECURSORS[tokenTypeName]
+  const tokenType = getTokenType(token)
 
-  if (recursor === undefined) {
+  if (tokenType.recurse === undefined) {
     return entry
   }
 
-  const queryArrays = recursor(entry.queryArray, index)
+  const queryArrays = tokenType.recurse(entry.queryArray, index)
   return queryArrays.map((queryArray) => ({ ...entry, queryArray }))
-}
-
-// Handle ** recursion.
-// It matches 0, 1 or more levels.
-//  - It can match 0 levels, i.e. the current object
-// It is the same as the union of . * *.* *.*.* and so on.
-// Using both * and ** can express minimum depth, e.g. *.** or *.*.**
-const recurseAnyDeep = function (queryArray, index) {
-  const parentQuery = queryArray.slice(0, index)
-  const childQuery = queryArray.slice(index)
-  return [parentQuery, [...parentQuery, { type: 'any' }, ...childQuery]]
-}
-
-const RECURSORS = {
-  anyDeep: recurseAnyDeep,
 }
