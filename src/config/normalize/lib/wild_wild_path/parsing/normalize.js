@@ -8,8 +8,9 @@ export const isQueryString = function (queryOrPaths) {
   return typeof queryOrPaths === 'string'
 }
 
-// Simple paths are a subset of paths which uses no unions and only array|prop
-// tokens.
+// Simple paths are a subset of paths which uses:
+//  - No unions
+//  - Only prop tokens, and array tokens (positive only)
 // Those are the ones exposed in output, as opposed to normal paths which are
 // exposed in input.
 export const validateSimplePath = function (simplePath) {
