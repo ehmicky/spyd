@@ -93,15 +93,10 @@ const iterateChildren = function* ({ entries, index, parents, opts }) {
     return
   }
 
-  const nextIndex = index + 1
+  const indexA = index + 1
 
   if (childEntries.length === 1) {
-    yield* iterateLevel({
-      entries: childEntries,
-      index: nextIndex,
-      parents,
-      opts,
-    })
+    yield* iterateLevel({ entries: childEntries, index: indexA, parents, opts })
     return
   }
 
@@ -111,7 +106,7 @@ const iterateChildren = function* ({ entries, index, parents, opts }) {
   for (const childEntriesA of childEntriesGroups) {
     yield* iterateLevel({
       entries: childEntriesA,
-      index: nextIndex,
+      index: indexA,
       parents,
       opts,
     })
