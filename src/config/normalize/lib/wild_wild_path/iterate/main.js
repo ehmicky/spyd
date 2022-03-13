@@ -1,8 +1,7 @@
 import { parseQuery, serializePath } from '../../wild_wild_parser/main.js'
 
+import { iterateChildEntries } from './children.js'
 import { removeDuplicates } from './duplicate.js'
-import { expandTokens } from './expand.js'
-import { groupSortChildEntries } from './group.js'
 import { getOptions } from './options.js'
 import { expandRecursiveTokens } from './recurse.js'
 
@@ -69,6 +68,7 @@ const iterateToken = function* ({ entries, index, parents, opts }) {
     index,
     parents,
     opts,
+    iterateLevel,
   })
 
   if (shouldYieldParentLast(parentEntry, hasChildren, opts)) {
@@ -95,59 +95,4 @@ const shouldYieldParentLast = function (
 const normalizeEntry = function ({ value, path, missing }) {
   const query = serializePath(path)
   return { value, path, query, missing }
-}
-
-const iterateChildEntries = function* ({
-  entries,
-  parentEntry,
-  index,
-  parents,
-  opts,
-}) {
-  if (!shouldIterateChildren(entries, parentEntry, opts)) {
-    return false
-  }
-
-  // eslint-disable-next-line fp/no-let
-  let hasChildren = false
-
-  // eslint-disable-next-line fp/no-loops
-  for (const childEntry of iterateChildren({ entries, index, parents, opts })) {
-    // eslint-disable-next-line fp/no-mutation
-    hasChildren = true
-    yield childEntry
-  }
-
-  return hasChildren
-}
-
-const shouldIterateChildren = function (entries, parentEntry, { roots }) {
-  return parentEntry === undefined || (entries.length !== 1 && !roots)
-}
-
-const iterateChildren = function* ({ entries, index, parents, opts }) {
-  const childEntries = expandTokens(entries, index, opts)
-
-  if (childEntries.length === 0) {
-    return
-  }
-
-  const indexA = index + 1
-
-  if (childEntries.length === 1) {
-    yield* iterateLevel({ entries: childEntries, index: indexA, parents, opts })
-    return
-  }
-
-  const childEntriesGroups = groupSortChildEntries(childEntries, opts.sort)
-
-  // eslint-disable-next-line fp/no-loops
-  for (const childEntriesA of childEntriesGroups) {
-    yield* iterateLevel({
-      entries: childEntriesA,
-      index: indexA,
-      parents,
-      opts,
-    })
-  }
 }
