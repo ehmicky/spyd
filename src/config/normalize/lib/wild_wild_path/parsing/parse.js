@@ -14,17 +14,28 @@ import { parseQueryString } from './query.js'
 //     - If a token is meant as a property name but could be interpreted as a
 //       different type, it must be start with \
 //     - A leading dot can be optionally used, e.g. `.one`. It is ignored.
-//     - An empty string targets nothing.
 //     - A lone dot targets the root.
 //     - Property names that are empty strings can be specified, e.g. `..a..b.`
 //       parses as `["", "a", "", "b", ""]`
 //  - Array[s] of tokens
 //     - Tokens are elements of the inner arrays
 //     - Unions use optional outer arrays
-//     - An empty outer array targets nothing.
 //     - An empty inner array targets the root.
 //     - This does not need any escaping, making it better with dynamic input
 //     - This is faster as it does not perform any parsing
+// Unions must not have 0 elements:
+//  - Empty arrays are interpreted as a single array of tokens targetting the
+//    root
+//  - Empty query strings throw an error
+//  - This is because:
+//     - Empty unions semantics might be confusing
+//     - Empty arrays are ambiguous with root queries
+//        - Which are a much more common use case
+//        - Also, this allows paths to be a strict subset of query arrays
+//           - Otherwise, root queries would need to be wrapped in an outer
+//             array
+//  - Downside: if a union of query arrays is computed dynamically by the
+//    consumer logic, it might need to test whether the array is empty
 // Each object property is matched by a token among the following types:
 //  - Property name
 //     - String format: "propName"
