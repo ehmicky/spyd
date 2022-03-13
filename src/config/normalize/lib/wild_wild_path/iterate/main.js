@@ -16,13 +16,14 @@ export const iterate = function* (
   query,
   {
     childFirst = false,
+    roots = false,
     sort = false,
     missing = false,
     classes = false,
     inherited = false,
   } = {},
 ) {
-  const opts = { childFirst, sort, missing, classes, inherited }
+  const opts = { childFirst, roots, sort, missing, classes, inherited }
   validateInherited(opts)
   const parents = new Set([])
   const queryArrays = parseQuery(query)
@@ -58,6 +59,7 @@ const iterateLevel = function* ({
   parents.delete(value)
 }
 
+// The `roots` option can be used to only include the highest ancestors
 // eslint-disable-next-line complexity
 const iterateToken = function* ({ entries, index, parents, opts }) {
   const entriesA = expandRecursiveTokens(entries, index)
@@ -68,7 +70,7 @@ const iterateToken = function* ({ entries, index, parents, opts }) {
     yield normalizeEntry(parentEntry)
   }
 
-  if (parentEntry === undefined || entriesB.length !== 1) {
+  if (parentEntry === undefined || (entriesB.length !== 1 && !opts.roots)) {
     yield* iterateChildren({ entries: entriesB, index, parents, opts })
   }
 
