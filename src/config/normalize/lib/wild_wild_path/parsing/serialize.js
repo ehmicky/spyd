@@ -18,8 +18,10 @@ const serializePath = function (path) {
 }
 
 const isEmptyToken = function (token) {
-  return token === ''
+  return token === EMPTY_TOKEN
 }
+
+const EMPTY_TOKEN = ''
 
 const serializeToken = function (token, index) {
   const tokenType = getObjectTokenType(token)
