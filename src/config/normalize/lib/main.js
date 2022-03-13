@@ -21,7 +21,7 @@ import { list } from './wild_wild_path/main.js'
 export const normalizeConfigProps = async function (
   config,
   rules,
-  { context = {}, soft = false, cwd, prefix, parent = '' } = {},
+  { context = {}, soft = false, cwd, prefix, parent = [] } = {},
 ) {
   const rulesA = normalizeRules(rules)
 
