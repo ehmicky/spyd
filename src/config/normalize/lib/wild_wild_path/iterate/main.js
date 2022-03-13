@@ -14,14 +14,18 @@ import { expandRecursiveTokens } from './recurse.js'
 export const iterate = function* (target, query, opts) {
   const optsA = getOptions(opts)
   const parents = new Set([])
+  const entries = getRootEntries(target, query)
+  yield* iterateLevel({ entries, index: 0, parents, opts: optsA })
+}
+
+const getRootEntries = function (target, query) {
   const queryArrays = parseQuery(query)
-  const entries = queryArrays.map((queryArray) => ({
+  return queryArrays.map((queryArray) => ({
     queryArray,
     value: target,
     path: [],
     missing: false,
   }))
-  yield* iterateLevel({ entries, index: 0, parents, opts: optsA })
 }
 
 // `parents` is used to prevent infinite recursions when using ** together with
