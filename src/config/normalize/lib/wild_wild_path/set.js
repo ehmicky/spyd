@@ -2,6 +2,7 @@ import { isParentPath } from '../wild_wild_path_parser/main.js'
 
 import { list } from './get.js'
 import { getMissingValue } from './iterate/missing.js'
+import { validateClasses } from './validate.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
 // Unless `mutate` is `true`, this returns a new copy
@@ -17,15 +18,6 @@ export const set = function (
   validateClasses(classes, mutate)
   const setFunc = setEntry.bind(undefined, { value, mutate, missing, classes })
   return reduceParents({ target, query, setFunc, missing, classes, inherited })
-}
-
-// Class instances are not clonable. Therefore, they require `mutate`.
-export const validateClasses = function (classes, mutate) {
-  if (classes && !mutate) {
-    throw new Error(
-      'The "mutate" option must be true when the "classes" option is true.',
-    )
-  }
 }
 
 // Modify a target object multiple times for each matched property.
