@@ -32,7 +32,7 @@ export const normalizeLocation = async function ({
 const getLocationRules = function (locationType) {
   return [
     normalizeLocationProp,
-    { name: '', ...NORMALIZE_LOCATIONS[locationType] },
+    { name: '.', ...NORMALIZE_LOCATIONS[locationType] },
   ]
 }
 
@@ -44,7 +44,7 @@ export const getExampleLocation = function (value, { context: { builtins } }) {
 }
 
 const normalizeLocationProp = {
-  name: '',
+  name: '.',
   required: true,
   example: getExampleLocation,
 }
