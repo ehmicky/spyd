@@ -41,7 +41,11 @@ const iterateLevel = function* ({
   }
 
   parents.add(value)
+  yield* iterateToken({ entries, index, parents, opts })
+  parents.delete(value)
+}
 
+const iterateToken = function* ({ entries, index, parents, opts }) {
   const entriesA = expandRecursiveTokens(entries, index)
   const entriesB = removeDuplicates(entriesA)
   const parentEntry = getParentEntry(entriesB, index)
@@ -61,8 +65,6 @@ const iterateLevel = function* ({
   if (parentEntry !== undefined && opts.childFirst) {
     yield parentEntry
   }
-
-  parents.delete(value)
 }
 
 const getParentEntry = function (entries, index) {
