@@ -40,9 +40,14 @@ const iterateLevel = function (entries, index) {
       : Object.values(groupBy(levelEntries, getLastProp)).flatMap(
           (groupedLevelEntries) => iterateLevel(groupedLevelEntries, nextIndex),
         )
-  return [...parentEntries, ...childEntries]
+  return [...childEntries, ...parentEntries]
 }
 
+// Iteration among siglings is not sorted, for performance reasons.
+//  - Consumers can sort it through using the `query` property
+// However, iteration is guaranteed to return child entries before parent ones.
+//  - This is useful for recursive logic which must often be applied in a
+//    specific parent-child order
 const iteratePath = function ({ path, value, props }, index) {
   const token = path[index]
   const {
