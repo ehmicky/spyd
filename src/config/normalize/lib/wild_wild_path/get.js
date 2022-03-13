@@ -19,6 +19,7 @@ export const has = function (target, queryOrPath) {
   return find(target, queryOrPath) !== undefined
 }
 
+// Find the first non-missing entry
 const find = function (target, queryOrPath) {
   // eslint-disable-next-line fp/no-loops
   for (const { value, missing } of iterate(target, queryOrPath)) {
