@@ -73,6 +73,7 @@ const reduceParents = function (
   const entries = list(target, query, {
     childFirst: false,
     roots: false,
+    leaves: false,
     sort,
     missing: false,
     classes,
