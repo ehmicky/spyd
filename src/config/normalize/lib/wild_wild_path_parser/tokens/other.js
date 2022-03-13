@@ -1,4 +1,4 @@
-import { ANY_TOKEN } from './any.js'
+import { ANY_TOKEN, ANY_DEEP_TOKEN } from './any.js'
 import { ARRAY_TOKEN } from './array.js'
 import { REGEXP_TOKEN } from './regexp.js'
 import { SLICE_TOKEN } from './slice.js'
@@ -11,6 +11,7 @@ export const getOtherStringTokenType = function (chars) {
 
 // Order is significant as they are tested serially
 export const OTHER_TOKEN_TYPES = [
+  ANY_DEEP_TOKEN,
   ANY_TOKEN,
   REGEXP_TOKEN,
   SLICE_TOKEN,

@@ -46,3 +46,4 @@ const equals = function () {
 }
 
 export const ANY_TOKEN = createSimpleTokenType('any', '*')
+export const ANY_DEEP_TOKEN = createSimpleTokenType('anyDeep', '**')
