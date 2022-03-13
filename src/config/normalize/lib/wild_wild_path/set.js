@@ -1,10 +1,10 @@
 import { setArray } from '../../../../utils/set.js'
 
-import { listEntries, handleMissingValue } from './entries.js'
+import { iterate, handleMissingValue } from './iterate.js'
 
 // Set a value to one or multiple properties in `target` using a query string
 export const set = function (target, queryOrPath, value) {
-  const entries = listEntries(target, queryOrPath)
+  const entries = iterate(target, queryOrPath)
   return entries.reduce(
     (targetA, entry) => setEntry(targetA, entry.path, value, 0),
     target,

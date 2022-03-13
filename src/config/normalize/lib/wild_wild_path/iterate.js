@@ -4,7 +4,7 @@ import { getObjectTokenType } from './tokens/main.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
-export const listEntries = function (target, queryOrPath) {
+export const iterate = function (target, queryOrPath) {
   const path = parse(queryOrPath)
   return path.reduce(listTokenEntries, [
     { value: target, path: [], missing: false },
