@@ -33,7 +33,7 @@ export const include = function (
 }
 
 const pickEntry = function (classes, newTarget, { path, value }) {
-  return set(newTarget, path, value, { classes, mutate: false })
+  return set(newTarget, path, value, { classes, mutate: true })
 }
 
 // Remove values matching a query
