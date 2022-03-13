@@ -44,7 +44,7 @@ const normalizePluginConfigs = async function ({
       ...pluginType,
       pluginProp: 'id',
       sharedConfig: config,
-      sharedConfigName: '',
+      sharedConfigName: '.',
       context,
       cwd,
       prefix: PREFIX,
