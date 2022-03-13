@@ -33,23 +33,32 @@ export const include = function (
 }
 
 const pickEntry = function (classes, target, { path, value }) {
-  return set(target, path, value, { classes })
+  return set(target, path, value, { classes, mutate: false })
 }
 
 // Remove values matching a query
 // eslint-disable-next-line max-params
-export const exclude = function (target, query, condition, { classes } = {}) {
-  return reduceParents(excludeEntry.bind(undefined, classes), condition, {
-    target,
-    newTarget: target,
-    query,
-    sort: false,
-    classes,
-  })
+export const exclude = function (
+  target,
+  query,
+  condition,
+  { classes, mutate } = {},
+) {
+  return reduceParents(
+    excludeEntry.bind(undefined, { classes, mutate }),
+    condition,
+    {
+      target,
+      newTarget: target,
+      query,
+      sort: false,
+      classes,
+    },
+  )
 }
 
-const excludeEntry = function (classes, target, { path }) {
-  return remove(target, path, { classes })
+const excludeEntry = function ({ classes, mutate }, target, { path }) {
+  return remove(target, path, { classes, mutate })
 }
 
 // Modify a target object multiple times for each matched property.
