@@ -10,7 +10,6 @@ export const set = function (target, query, value) {
 }
 
 // Modify a target object multiple times for each matched property.
-// Ignore properties when one of their ancestors was matched too.
 export const reduceParents = function (target, query, setFunc) {
   const entries = list(target, query, { childFirst: false, sort: false })
   return entries
