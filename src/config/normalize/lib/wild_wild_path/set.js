@@ -1,5 +1,3 @@
-import { setArray } from '../../../../utils/set.js'
-
 import { list } from './get.js'
 import { handleMissingValue } from './iterate/expand.js'
 import { isParentPath } from './parsing/compare.js'
@@ -66,7 +64,10 @@ const setArrayValue = function ({ target, prop, childValue, mutate }) {
     return target
   }
 
-  return setArray(target, prop, childValue)
+  const targetA = mutate ? target : [...target]
+  // eslint-disable-next-line fp/no-mutation
+  targetA[prop] = childValue
+  return targetA
 }
 
 const setObjectValue = function ({ target, prop, childValue, mutate }) {
@@ -74,7 +75,10 @@ const setObjectValue = function ({ target, prop, childValue, mutate }) {
     return target
   }
 
-  return { ...target, [prop]: childValue }
+  const targetA = mutate ? target : { ...target }
+  // eslint-disable-next-line fp/no-mutation
+  targetA[prop] = childValue
+  return targetA
 }
 
 // Do not set value if it has not changed.

@@ -1,7 +1,3 @@
-import omit from 'omit.js'
-
-import { setArray } from '../../../../utils/set.js'
-
 import { handleMissingValue } from './iterate/expand.js'
 import { reduceParents, setValue } from './set.js'
 
@@ -56,8 +52,10 @@ const removeArrayValue = function (target, prop, mutate) {
     return target
   }
 
-  const newArray = setArray(target, prop)
-  return newArray.every(isUndefined) ? [] : newArray
+  const targetA = mutate ? target : [...target]
+  // eslint-disable-next-line fp/no-mutation
+  targetA[prop] = undefined
+  return targetA.every(isUndefined) ? [] : targetA
 }
 
 const isUndefined = function (item) {
@@ -69,5 +67,8 @@ const removeObjectValue = function (target, prop, mutate) {
     return target
   }
 
-  return omit.default(target, [prop])
+  const targetA = mutate ? target : { ...target }
+  // eslint-disable-next-line fp/no-delete
+  delete targetA[prop]
+  return targetA
 }
