@@ -19,7 +19,7 @@ export const normalizePath = function (queryArrays) {
   return queryArray
 }
 
-// Paths are a subset of query arrays which use:
+// Paths are a subset of query strings|arrays which use:
 //  - No unions
 //  - Only prop tokens, and array tokens (positive only)
 // Those are the ones exposed in output, as opposed to query arrays which are
