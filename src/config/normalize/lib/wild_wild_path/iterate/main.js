@@ -1,9 +1,9 @@
 import { parseQuery, serializePath } from '../../wild_wild_parser/main.js'
-import { validateInherited } from '../validate.js'
 
 import { removeDuplicates } from './duplicate.js'
 import { expandTokens } from './expand.js'
 import { groupSortChildEntries } from './group.js'
+import { getOptions } from './options.js'
 import { expandRecursiveTokens } from './recurse.js'
 
 // Iterate over all values (and their associated path) matching a specific
@@ -11,29 +11,8 @@ import { expandRecursiveTokens } from './recurse.js'
 // Uses an iterator:
 //  - To allow consumers to return only the first matching entry quickly
 //  - To keep memory consumption low even on big queries
-export const iterate = function* (
-  target,
-  query,
-  {
-    childFirst = false,
-    roots = false,
-    leaves = false,
-    sort = false,
-    missing = false,
-    classes = false,
-    inherited = false,
-  } = {},
-) {
-  const opts = {
-    childFirst: childFirst || leaves,
-    roots,
-    leaves,
-    sort,
-    missing,
-    classes,
-    inherited,
-  }
-  validateInherited(opts)
+export const iterate = function* (target, query, opts) {
+  const optsA = getOptions(opts)
   const parents = new Set([])
   const queryArrays = parseQuery(query)
   const entries = queryArrays.map((queryArray) => ({
@@ -42,7 +21,7 @@ export const iterate = function* (
     path: [],
     missing: false,
   }))
-  yield* iterateLevel({ entries, index: 0, parents, opts })
+  yield* iterateLevel({ entries, index: 0, parents, opts: optsA })
 }
 
 // `parents` is used to prevent infinite recursions when using ** together with

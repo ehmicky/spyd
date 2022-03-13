@@ -15,3 +15,12 @@ export const validateInherited = function ({ classes, inherited }) {
     )
   }
 }
+
+// `roots` and `leaves` do opposite things, so are incompatible
+export const validateLeaves = function ({ roots, leaves }) {
+  if (roots && leaves) {
+    throw new Error(
+      'The "roots" and "leaves" options must not be true at the same time.',
+    )
+  }
+}
