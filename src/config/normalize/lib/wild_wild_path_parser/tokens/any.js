@@ -1,28 +1,39 @@
 import isPlainObj from 'is-plain-obj'
 
-// Check the type of a parsed token
-const testObject = function (token) {
-  return isPlainObj(token) && token.type === ANY_TYPE
+// Create a token type with:
+//  - The string format being a specific string
+//  - The array format being a plain object with a single `type` property
+const createSimpleTokenType = function (name, tokenString) {
+  return {
+    name,
+    testObject: testObject.bind(undefined, name),
+    serialize: serialize.bind(undefined, tokenString),
+    testString: testString.bind(undefined, tokenString),
+    parse: parse.bind(undefined, name),
+    normalize,
+    equals,
+  }
 }
 
-const ANY_TYPE = 'any'
+// Check the type of a parsed token
+const testObject = function (type, token) {
+  return isPlainObj(token) && token.type === type
+}
 
 // Serialize a token to a string
-const serialize = function () {
-  return ANY
+const serialize = function (tokenString) {
+  return tokenString
 }
 
 // Check the type of a serialized token
-const testString = function (chars) {
-  return chars === ANY
+const testString = function (tokenString, chars) {
+  return chars === tokenString
 }
 
 // Parse a string into a token
-const parse = function () {
-  return { type: ANY_TYPE }
+const parse = function (type) {
+  return { type }
 }
-
-const ANY = '*'
 
 // Normalize value after parsing or serializing
 const normalize = function ({ type }) {
@@ -34,12 +45,4 @@ const equals = function () {
   return true
 }
 
-export const ANY_TOKEN = {
-  name: 'any',
-  testObject,
-  serialize,
-  testString,
-  parse,
-  normalize,
-  equals,
-}
+export const ANY_TOKEN = createSimpleTokenType('any', '*')
