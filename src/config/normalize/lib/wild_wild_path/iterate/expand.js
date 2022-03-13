@@ -7,11 +7,9 @@ import { handleMissingValue } from './missing.js'
 //  - This is useful for recursive logic which must often be applied in a
 //    specific parent-child order
 export const expandTokens = function (entries, index, classes) {
-  const results = entries
+  return entries
     .filter(({ queryArray }) => queryArray.length !== index)
-    .map((entry) => expandToken(entry, index, classes))
-  const childEntriesA = results.flatMap(({ childEntries }) => childEntries)
-  return childEntriesA
+    .flatMap((entry) => expandToken(entry, index, classes))
 }
 
 const expandToken = function ({ queryArray, value, path }, index, classes) {
@@ -22,7 +20,7 @@ const expandToken = function ({ queryArray, value, path }, index, classes) {
     value: valueA,
   } = handleMissingValue(value, token, classes)
   const childEntries = iterateToken(valueA, token, tokenTypeName)
-  const childEntriesA = childEntries.map(
+  return childEntries.map(
     ({ value: childValue, prop, missing: missingEntry }) => ({
       queryArray,
       value: childValue,
@@ -30,5 +28,4 @@ const expandToken = function ({ queryArray, value, path }, index, classes) {
       missing: missingParent || missingEntry,
     }),
   )
-  return { childEntries: childEntriesA }
 }
