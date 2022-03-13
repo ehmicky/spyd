@@ -27,23 +27,24 @@ export const iterate = function* (
 
 const iterateLevel = function* (entries, index, opts) {
   const entriesA = removeDuplicates(entries)
-  const parentEntries = getParentEntries(entriesA, index)
+  const parentEntry = getParentEntry(entriesA, index)
 
-  if (!opts.childFirst) {
-    yield* parentEntries
+  if (parentEntry !== undefined && !opts.childFirst) {
+    yield parentEntry
   }
 
-  yield* iterateChildEntries({ entries, parentEntries, index, opts })
+  yield* iterateChildEntries({ entries: entriesA, parentEntry, index, opts })
 
-  if (opts.childFirst) {
-    yield* parentEntries
+  if (parentEntry !== undefined && opts.childFirst) {
+    yield parentEntry
   }
 }
 
-const getParentEntries = function (entries, index) {
-  return entries
-    .filter(({ queryArray }) => queryArray.length === index)
-    .map(normalizeEntry)
+const getParentEntry = function (entries, index) {
+  const parentEntry = entries.find(
+    ({ queryArray }) => queryArray.length === index,
+  )
+  return parentEntry === undefined ? undefined : normalizeEntry(parentEntry)
 }
 
 const normalizeEntry = function ({ value, path, missing }) {
@@ -51,13 +52,8 @@ const normalizeEntry = function ({ value, path, missing }) {
   return { value, path, query, missing }
 }
 
-const iterateChildEntries = function* ({
-  entries,
-  parentEntries,
-  index,
-  opts,
-}) {
-  if (parentEntries.length === entries.length) {
+const iterateChildEntries = function* ({ entries, parentEntry, index, opts }) {
+  if (parentEntry !== undefined && entries.length === 1) {
     return
   }
 
