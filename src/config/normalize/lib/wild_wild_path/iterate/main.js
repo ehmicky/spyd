@@ -3,6 +3,7 @@ import { parseQuery, serializePath } from '../../wild_wild_path_parser/main.js'
 import { removeDuplicates } from './duplicate.js'
 import { expandTokens } from './expand.js'
 import { groupSortChildEntries } from './group.js'
+import { expandRecursiveTokens } from './recurse.js'
 
 // Iterate over all values (and their associated path) matching a specific
 // query for on specific target value.
@@ -26,14 +27,15 @@ export const iterate = function* (
 }
 
 const iterateLevel = function* (entries, index, opts) {
-  const entriesA = removeDuplicates(entries)
-  const parentEntry = getParentEntry(entriesA, index)
+  const entriesA = expandRecursiveTokens(entries, index)
+  const entriesB = removeDuplicates(entriesA)
+  const parentEntry = getParentEntry(entriesB, index)
 
   if (parentEntry !== undefined && !opts.childFirst) {
     yield parentEntry
   }
 
-  yield* iterateChildEntries({ entries: entriesA, parentEntry, index, opts })
+  yield* iterateChildEntries({ entries: entriesB, parentEntry, index, opts })
 
   if (parentEntry !== undefined && opts.childFirst) {
     yield parentEntry
