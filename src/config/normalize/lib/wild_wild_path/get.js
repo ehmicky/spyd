@@ -4,7 +4,7 @@ import { iterate } from './iterate/main.js'
 // Unlike `get|has()` it also return missing entries, letting consumers filter
 // them or not.
 export const list = function (target, queryOrPath) {
-  return iterate(target, queryOrPath)
+  return [...iterate(target, queryOrPath)]
 }
 
 // Retrieve a single property's value in `target` matching a query string.
