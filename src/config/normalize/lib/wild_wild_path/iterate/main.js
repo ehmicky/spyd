@@ -17,13 +17,22 @@ export const iterate = function* (
   {
     childFirst = false,
     roots = false,
+    leaves = false,
     sort = false,
     missing = false,
     classes = false,
     inherited = false,
   } = {},
 ) {
-  const opts = { childFirst, roots, sort, missing, classes, inherited }
+  const opts = {
+    childFirst: childFirst || leaves,
+    roots,
+    leaves,
+    sort,
+    missing,
+    classes,
+    inherited,
+  }
   validateInherited(opts)
   const parents = new Set([])
   const queryArrays = parseQuery(query)
@@ -59,22 +68,27 @@ const iterateLevel = function* ({
   parents.delete(value)
 }
 
-// The `roots` option can be used to only include the highest ancestors
-// eslint-disable-next-line complexity
+// The `roots` option can be used to only include the highest ancestors.
+// The `leaves` option can be used to only include the lowest descendants.
+// Neither option includes the values in-between.
 const iterateToken = function* ({ entries, index, parents, opts }) {
   const entriesA = expandRecursiveTokens(entries, index)
   const entriesB = removeDuplicates(entriesA)
   const parentEntry = getParentEntry(entriesB, index)
 
-  if (parentEntry !== undefined && !opts.childFirst) {
+  if (shouldYieldParentFirst(parentEntry, opts)) {
     yield normalizeEntry(parentEntry)
   }
 
-  if (parentEntry === undefined || (entriesB.length !== 1 && !opts.roots)) {
-    yield* iterateChildren({ entries: entriesB, index, parents, opts })
-  }
+  const hasChildren = yield* iterateChildEntries({
+    entries: entriesB,
+    parentEntry,
+    index,
+    parents,
+    opts,
+  })
 
-  if (parentEntry !== undefined && opts.childFirst) {
+  if (shouldYieldParentLast(parentEntry, hasChildren, opts)) {
     yield normalizeEntry(parentEntry)
   }
 }
@@ -83,9 +97,49 @@ const getParentEntry = function (entries, index) {
   return entries.find(({ queryArray }) => queryArray.length === index)
 }
 
+const shouldYieldParentFirst = function (parentEntry, { childFirst }) {
+  return parentEntry !== undefined && !childFirst
+}
+
+const shouldYieldParentLast = function (
+  parentEntry,
+  hasChildren,
+  { childFirst, leaves },
+) {
+  return parentEntry !== undefined && childFirst && !(leaves && hasChildren)
+}
+
 const normalizeEntry = function ({ value, path, missing }) {
   const query = serializePath(path)
   return { value, path, query, missing }
+}
+
+const iterateChildEntries = function* ({
+  entries,
+  parentEntry,
+  index,
+  parents,
+  opts,
+}) {
+  if (!shouldIterateChildren(entries, parentEntry, opts)) {
+    return false
+  }
+
+  // eslint-disable-next-line fp/no-let
+  let hasChildren = false
+
+  // eslint-disable-next-line fp/no-loops
+  for (const childEntry of iterateChildren({ entries, index, parents, opts })) {
+    // eslint-disable-next-line fp/no-mutation
+    hasChildren = true
+    yield childEntry
+  }
+
+  return hasChildren
+}
+
+const shouldIterateChildren = function (entries, parentEntry, { roots }) {
+  return parentEntry === undefined || (entries.length !== 1 && !roots)
 }
 
 const iterateChildren = function* ({ entries, index, parents, opts }) {
