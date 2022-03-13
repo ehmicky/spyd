@@ -92,12 +92,18 @@ const iterateChildren = function* ({ childEntries, childFirst, sort, index }) {
     return
   }
 
-  const childEntriesGroups = Object.values(groupBy(childEntries, getLastProp))
+  const childEntriesGroups = groupSortChildEntries(childEntries)
 
   // eslint-disable-next-line fp/no-loops
   for (const entries of childEntriesGroups) {
     yield* iterateLevel({ entries, childFirst, sort, index: nextIndex })
   }
+}
+
+// We need to group entries by the last property to ensure `childFirst` order.
+// We also sort when `sort` is true`
+const groupSortChildEntries = function (childEntries) {
+  return Object.values(groupBy(childEntries, getLastProp))
 }
 
 const getLastProp = function ({ path }) {
