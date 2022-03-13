@@ -73,17 +73,14 @@ const reduceParents = function (
   const entries = list(target, query, {
     childFirst: false,
     sort,
+    missing: false,
     classes,
     inherited,
   })
   return entries
-    .filter((entry) => shouldUseEntry(entry, target, condition))
+    .filter((entry) => condition(entry, target))
     .filter(hasNoParentSet)
     .reduce((newTargetA, entry) => setFunc(newTargetA, entry, 0), newTarget)
-}
-
-const shouldUseEntry = function (entry, target, condition) {
-  return !entry.missing && condition(entry, target)
 }
 
 // If both a parent and a child property are set, the parent prevails
