@@ -3,13 +3,19 @@ import { setArray } from '../../../../utils/set.js'
 import { handleMissingValue } from './iterate/expand.js'
 import { iterate } from './iterate/main.js'
 
-// Set a value to one or multiple properties in `target` using a query string
+// Set a value to one or multiple properties in `target` using a query string.
+// Uses `iterate()` to keep memory consumption low.
 export const set = function (target, queryOrPath, value) {
-  const entries = iterate(target, queryOrPath)
-  return entries.reduce(
-    (targetA, entry) => setEntry(targetA, entry.path, value, 0),
-    target,
-  )
+  // eslint-disable-next-line fp/no-let
+  let newTarget = target
+
+  // eslint-disable-next-line fp/no-loops
+  for (const { path } of iterate(target, queryOrPath)) {
+    // eslint-disable-next-line fp/no-mutation
+    newTarget = setEntry(newTarget, path, value, 0)
+  }
+
+  return newTarget
 }
 
 // Use positional arguments for performance
