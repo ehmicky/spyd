@@ -1,16 +1,23 @@
 import { get, remove } from '../wild_wild_path/main.js'
 
-import { listExisting } from './common.js'
+import { reduceParents } from './common.js'
 
 // Remove values matching a query
-export const exclude = function (target, queryOrPath, condition) {
-  const entries = listExisting(target, queryOrPath)
-  return entries.reduceRight(excludeEntry.bind(undefined, condition), target)
+export const exclude = function (target, queryOrPaths, condition) {
+  return reduceParents({
+    target,
+    newTarget: target,
+    queryOrPaths,
+    setFunc: excludeEntry,
+    condition: shouldExclude.bind(undefined, condition),
+  })
 }
 
-const excludeEntry = function (condition, target, { path, query, missing }) {
+const excludeEntry = function (target, { path }) {
+  return remove(target, path)
+}
+
+const shouldExclude = function (condition, { path, query, missing }, target) {
   const value = get(target, path)
   return condition({ path, query, value, missing })
-    ? remove(target, path)
-    : target
 }
