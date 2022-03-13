@@ -36,9 +36,10 @@ const validateProp = function (prop, path) {
 // Normalize query arrays
 export const normalizeQueryArrays = function (queryArrays) {
   validateQueryArrays(queryArrays)
-  const queryArraysA = queryArrays.every(Array.isArray)
-    ? queryArrays
-    : [queryArrays]
+  const queryArraysA =
+    queryArrays.every(Array.isArray) && queryArrays.length !== 0
+      ? queryArrays
+      : [queryArrays]
   return queryArraysA.map(normalizeQueryArray)
 }
 
