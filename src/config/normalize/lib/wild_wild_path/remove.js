@@ -6,18 +6,23 @@ import { handleMissingValue } from './iterate/expand.js'
 import { reduceParents, setValue } from './set.js'
 
 // Same as `set()` but removing a value
-export const remove = function (target, query) {
-  return reduceParents(target, query, removeAnyEntry)
+export const remove = function (target, query, { classes = false } = {}) {
+  const setFunc = removeAnyEntry.bind(undefined, classes)
+  return reduceParents({ target, query, setFunc, classes })
 }
 
-const removeAnyEntry = function (target, path, index) {
-  return path.length === 0 ? undefined : removeEntry(target, path, index)
+// eslint-disable-next-line max-params
+const removeAnyEntry = function (classes, target, path, index) {
+  return path.length === 0
+    ? undefined
+    : removeEntry(classes, target, path, index)
 }
 
-const removeEntry = function (target, path, index) {
+// eslint-disable-next-line max-params
+const removeEntry = function (classes, target, path, index) {
   const key = path[index]
 
-  if (handleMissingValue(target, key).missing) {
+  if (handleMissingValue(target, key, classes).missing) {
     return target
   }
 
@@ -26,7 +31,7 @@ const removeEntry = function (target, path, index) {
   }
 
   const childTarget = target[key]
-  const childValue = removeEntry(childTarget, path, index + 1)
+  const childValue = removeEntry(classes, childTarget, path, index + 1)
   return setValue(target, key, childValue)
 }
 

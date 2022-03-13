@@ -13,7 +13,7 @@ import { groupSortChildEntries } from './group.js'
 export const iterate = function* (
   target,
   query,
-  { childFirst = false, sort = false } = {},
+  { childFirst = false, sort = false, classes = false } = {},
 ) {
   const queryArrays = parseQuery(query)
   const entries = queryArrays.map((queryArray) => ({
@@ -22,10 +22,10 @@ export const iterate = function* (
     path: [],
     missing: false,
   }))
-  yield* iterateLevel({ entries, childFirst, sort, index: 0 })
+  yield* iterateLevel({ entries, childFirst, sort, classes, index: 0 })
 }
 
-const iterateLevel = function* ({ entries, childFirst, sort, index }) {
+const iterateLevel = function* ({ entries, childFirst, sort, classes, index }) {
   const entriesA = removeDuplicates(entries)
   const parentEntries = getParentEntries(entriesA, index)
 
@@ -38,6 +38,7 @@ const iterateLevel = function* ({ entries, childFirst, sort, index }) {
     parentEntries,
     childFirst,
     sort,
+    classes,
     index,
   })
 
@@ -62,6 +63,7 @@ const iterateChildEntries = function* ({
   parentEntries,
   childFirst,
   sort,
+  classes,
   index,
 }) {
   if (parentEntries.length === entries.length) {
@@ -70,16 +72,22 @@ const iterateChildEntries = function* ({
 
   const childEntries = entries
     .filter(({ queryArray }) => queryArray.length !== index)
-    .flatMap((entry) => expandToken(entry, index))
+    .flatMap((entry) => expandToken(entry, index, classes))
 
   if (childEntries.length === 0) {
     return
   }
 
-  yield* iterateChildren({ childEntries, childFirst, sort, index })
+  yield* iterateChildren({ childEntries, childFirst, sort, classes, index })
 }
 
-const iterateChildren = function* ({ childEntries, childFirst, sort, index }) {
+const iterateChildren = function* ({
+  childEntries,
+  childFirst,
+  sort,
+  classes,
+  index,
+}) {
   const nextIndex = index + 1
 
   if (childEntries.length === 1) {
@@ -87,6 +95,7 @@ const iterateChildren = function* ({ childEntries, childFirst, sort, index }) {
       entries: childEntries,
       childFirst,
       sort,
+      classes,
       index: nextIndex,
     })
     return
@@ -96,6 +105,12 @@ const iterateChildren = function* ({ childEntries, childFirst, sort, index }) {
 
   // eslint-disable-next-line fp/no-loops
   for (const entries of childEntriesGroups) {
-    yield* iterateLevel({ entries, childFirst, sort, index: nextIndex })
+    yield* iterateLevel({
+      entries,
+      childFirst,
+      sort,
+      classes,
+      index: nextIndex,
+    })
   }
 }

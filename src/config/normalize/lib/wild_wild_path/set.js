@@ -5,13 +5,19 @@ import { handleMissingValue } from './iterate/expand.js'
 import { isParentPath } from './parsing/compare.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
-export const set = function (target, query, value) {
-  return reduceParents(target, query, setEntry.bind(undefined, value))
+// eslint-disable-next-line max-params
+export const set = function (target, query, value, { classes = false } = {}) {
+  const setFunc = setEntry.bind(undefined, { value, classes })
+  return reduceParents({ target, query, setFunc, classes })
 }
 
 // Modify a target object multiple times for each matched property.
-export const reduceParents = function (target, query, setFunc) {
-  const entries = list(target, query, { childFirst: false, sort: false })
+export const reduceParents = function ({ target, query, setFunc, classes }) {
+  const entries = list(target, query, {
+    childFirst: false,
+    sort: false,
+    classes,
+  })
   return entries
     .filter(hasNoParentSet)
     .reduce((targetA, { path }) => setFunc(targetA, path, 0), target)
@@ -27,15 +33,15 @@ const hasNoParentSet = function ({ path: pathA }, indexA, entries) {
 
 // Use positional arguments for performance
 // eslint-disable-next-line max-params
-const setEntry = function (value, target, path, index) {
+const setEntry = function ({ value, classes }, target, path, index) {
   if (index === path.length) {
     return value
   }
 
   const prop = path[index]
-  const { value: defaultedTarget } = handleMissingValue(target, prop)
+  const { value: defaultedTarget } = handleMissingValue(target, prop, classes)
   const childTarget = defaultedTarget[prop]
-  const childValue = setEntry(value, childTarget, path, index + 1)
+  const childValue = setEntry({ value, classes }, childTarget, path, index + 1)
   return setValue(defaultedTarget, prop, childValue)
 }
 

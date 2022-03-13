@@ -2,8 +2,8 @@ import { isRecurseObject } from './recurse.js'
 
 // Properties shared by all token types which apply on objects
 export const objectProps = {
-  isMissing(value) {
-    return !isRecurseObject(value)
+  isMissing(value, classes) {
+    return !isRecurseObject(value, classes)
   },
   defaultValue: {},
 }

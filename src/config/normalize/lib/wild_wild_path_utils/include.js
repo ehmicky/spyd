@@ -1,12 +1,13 @@
 import { set, remove, list, isParentPath } from '../wild_wild_path/main.js'
 
 // Returns an object with only the properties being queried.
-export const pick = function (target, query, { sort } = {}) {
-  return reduceParents(pickEntry, returnTrue, {
+export const pick = function (target, query, { sort, classes } = {}) {
+  return reduceParents(pickEntry.bind(undefined, classes), returnTrue, {
     target,
     newTarget: {},
     query,
     sort,
+    classes,
   })
 }
 
@@ -16,40 +17,48 @@ const returnTrue = function () {
 
 // Remove values not matching a query
 // eslint-disable-next-line max-params
-export const include = function (target, query, condition, { sort } = {}) {
-  return reduceParents(pickEntry, condition, {
+export const include = function (
+  target,
+  query,
+  condition,
+  { sort, classes } = {},
+) {
+  return reduceParents(pickEntry.bind(undefined, classes), condition, {
     target,
     newTarget: {},
     query,
     sort,
+    classes,
   })
 }
 
-const pickEntry = function (target, { path, value }) {
-  return set(target, path, value)
+const pickEntry = function (classes, target, { path, value }) {
+  return set(target, path, value, { classes })
 }
 
 // Remove values matching a query
-export const exclude = function (target, query, condition) {
-  return reduceParents(excludeEntry, condition, {
+// eslint-disable-next-line max-params
+export const exclude = function (target, query, condition, { classes } = {}) {
+  return reduceParents(excludeEntry.bind(undefined, classes), condition, {
     target,
     newTarget: target,
     query,
     sort: false,
+    classes,
   })
 }
 
-const excludeEntry = function (target, { path }) {
-  return remove(target, path)
+const excludeEntry = function (classes, target, { path }) {
+  return remove(target, path, { classes })
 }
 
 // Modify a target object multiple times for each matched property.
 const reduceParents = function (
   setFunc,
   condition,
-  { target, newTarget, query, sort },
+  { target, newTarget, query, sort, classes },
 ) {
-  const entries = list(target, query, { childFirst: false, sort })
+  const entries = list(target, query, { childFirst: false, sort, classes })
   return entries
     .filter((entry) => shouldUseEntry(entry, target, condition))
     .filter(hasNoParentSet)

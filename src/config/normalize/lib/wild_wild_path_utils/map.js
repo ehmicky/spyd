@@ -12,16 +12,28 @@ import { list, get, set } from '../wild_wild_path/main.js'
 //     - There are not many use cases for it
 //        - When needed, this can also be done by the consumer logic
 //     - This also avoids infinite recursion
-export const map = function (target, query, mapFunc) {
-  const entries = list(target, query, { childFirst: true, sort: false })
+// eslint-disable-next-line max-params
+export const map = function (target, query, mapFunc, { classes } = {}) {
+  const entries = list(target, query, {
+    childFirst: true,
+    sort: false,
+    classes,
+  })
   return entries.reduce(
-    (targetA, entry) => mapEntry(mapFunc, targetA, entry),
+    (targetA, entry) => mapEntry({ mapFunc, target: targetA, entry, classes }),
     target,
   )
 }
 
-const mapEntry = function (mapFunc, target, { path, query, missing }) {
-  const value = get(target, path)
+const mapEntry = function ({
+  mapFunc,
+  target,
+  entry: { path, query, missing },
+  classes,
+}) {
+  const value = get(target, path, { classes })
   const mappedValue = mapFunc({ path, query, value, missing })
-  return value === mappedValue ? target : set(target, path, mappedValue)
+  return value === mappedValue
+    ? target
+    : set(target, path, mappedValue, { classes })
 }

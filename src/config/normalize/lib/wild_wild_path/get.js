@@ -3,20 +3,31 @@ import { iterate } from './iterate/main.js'
 // Retrieve all properties in `target` matching a query string.
 // Unlike `get|has()` it also return missing entries, letting consumers filter
 // them or not.
-export const list = function (target, query, { childFirst, sort } = {}) {
-  return [...iterate(target, query, { childFirst, sort })]
+export const list = function (
+  target,
+  query,
+  { childFirst, sort, classes } = {},
+) {
+  return [...iterate(target, query, { childFirst, sort, classes })]
 }
 
 // Retrieve a single property's value in `target` matching a query string.
 // Wildcards can be used, but only the first value is returned.
-export const get = function (target, query, { childFirst, sort } = {}) {
-  const entry = find(target, query, { childFirst, sort })
+export const get = function (
+  target,
+  query,
+  { childFirst, sort, classes } = {},
+) {
+  const entry = find(target, query, { childFirst, sort, classes })
   return entry === undefined ? undefined : entry.value
 }
 
 // Check if a property is not missing according to a query
-export const has = function (target, query) {
-  return find(target, query, { childFirst: false, sort: false }) !== undefined
+export const has = function (target, query, { classes } = {}) {
+  return (
+    find(target, query, { childFirst: false, sort: false, classes }) !==
+    undefined
+  )
 }
 
 // Find the first non-missing entry
