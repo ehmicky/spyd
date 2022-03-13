@@ -12,11 +12,12 @@ export const find = function (
   for (const entry of iterate(target, query, {
     childFirst,
     sort,
+    missing: false,
     classes,
     inherited,
   })) {
     // eslint-disable-next-line max-depth
-    if (!entry.missing && condition(entry)) {
+    if (condition(entry)) {
       return entry
     }
   }
