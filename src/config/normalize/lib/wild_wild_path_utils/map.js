@@ -17,17 +17,26 @@ export const map = function (
   target,
   query,
   mapFunc,
-  { mutate, classes, inherited } = {},
+  { mutate, missing, classes, inherited } = {},
 ) {
   const entries = list(target, query, {
     childFirst: true,
     sort: false,
+    missing,
     classes,
     inherited,
   })
   return entries.reduce(
     (targetA, entry) =>
-      mapEntry({ mapFunc, target: targetA, entry, mutate, classes, inherited }),
+      mapEntry({
+        mapFunc,
+        target: targetA,
+        entry,
+        mutate,
+        missing,
+        classes,
+        inherited,
+      }),
     target,
   )
 }
@@ -35,14 +44,16 @@ export const map = function (
 const mapEntry = function ({
   mapFunc,
   target,
-  entry: { path, query, missing },
+  entry,
+  entry: { path },
   mutate,
+  missing,
   classes,
   inherited,
 }) {
-  const value = get(target, path, { classes, inherited })
-  const mappedValue = mapFunc({ path, query, value, missing })
+  const value = get(target, path, { missing, classes, inherited })
+  const mappedValue = mapFunc({ ...entry, value })
   return value === mappedValue
     ? target
-    : set(target, path, mappedValue, { mutate, classes, inherited })
+    : set(target, path, mappedValue, { mutate, missing, classes, inherited })
 }
