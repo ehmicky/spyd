@@ -1,5 +1,3 @@
-import { isParentPath } from '../wild_wild_path_parser/main.js'
-
 import { list } from './get.js'
 import { getMissingValue } from './iterate/missing.js'
 import { validateClasses } from './validate.js'
@@ -31,21 +29,15 @@ export const reduceParents = function ({
 }) {
   const entries = list(target, query, {
     childFirst: false,
+    roots: true,
     sort: false,
     missing,
     classes,
     inherited,
   })
-  return entries
-    .filter(hasNoParentSet)
-    .reduce((targetA, { path }) => setFunc(targetA, path, 0), target)
-}
-
-// If both a parent and a child property are set, the parent prevails
-const hasNoParentSet = function ({ path: pathA }, indexA, entries) {
-  return entries.every(
-    ({ path: pathB }, indexB) =>
-      indexA <= indexB || !isParentPath(pathB, pathA),
+  return entries.reduce(
+    (targetA, { path }) => setFunc(targetA, path, 0),
+    target,
   )
 }
 
