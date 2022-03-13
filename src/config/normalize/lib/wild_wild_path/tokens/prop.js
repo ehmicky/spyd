@@ -1,4 +1,3 @@
-import { objectProps } from './common.js'
 import { ESCAPE, TOKEN_SEPARATOR, escapeSpecialChars } from './escape.js'
 import { getOtherStringTokenType } from './other.js'
 
@@ -48,12 +47,12 @@ const equals = function (tokenA, tokenB) {
 }
 
 export const PROP_TOKEN = {
+  array: false,
   testObject,
   serialize,
   testString,
   parse,
   normalize,
-  ...objectProps,
   iterate,
   equals,
 }

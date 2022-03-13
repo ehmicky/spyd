@@ -1,7 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
 import { ARRAY_TOKEN, getArrayIndex } from './array.js'
-import { arrayProps } from './common.js'
 
 // Check the type of a parsed token.
 const testObject = function (token) {
@@ -77,12 +76,12 @@ const equals = function (tokenA, tokenB) {
 }
 
 export const SLICE_TOKEN = {
+  array: true,
   testObject,
   serialize,
   testString,
   parse,
   normalize,
-  ...arrayProps,
   iterate,
   equals,
 }

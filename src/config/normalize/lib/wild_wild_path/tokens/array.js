@@ -1,5 +1,3 @@
-import { arrayProps } from './common.js'
-
 // Check the type of a parsed token.
 // Integers specified as string tokens are assumed to be property names, not
 // array indices.
@@ -58,12 +56,12 @@ const equals = function (tokenA, tokenB) {
 }
 
 export const ARRAY_TOKEN = {
+  array: true,
   testObject,
   serialize,
   testString,
   parse,
   normalize,
-  ...arrayProps,
   iterate,
   equals,
 }

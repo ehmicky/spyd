@@ -1,4 +1,3 @@
-import { objectProps } from './common.js'
 import { escapeSpecialChars } from './escape.js'
 
 // Check the type of a parsed token
@@ -54,12 +53,12 @@ const iterate = function (value, token) {
 }
 
 export const REGEXP_TOKEN = {
+  array: false,
   testObject,
   serialize,
   testString,
   parse,
   normalize,
-  ...objectProps,
   iterate,
   equals,
 }

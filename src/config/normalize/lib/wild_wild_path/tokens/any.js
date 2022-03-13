@@ -1,7 +1,5 @@
 import isPlainObj from 'is-plain-obj'
 
-import { objectProps } from './common.js'
-
 // Check the type of a parsed token
 const testObject = function (token) {
   return isPlainObj(token) && token.type === ANY_TYPE
@@ -53,12 +51,12 @@ const equals = function () {
 }
 
 export const ANY_TOKEN = {
+  array: false,
   testObject,
   serialize,
   testString,
   parse,
   normalize,
-  ...objectProps,
   iterate,
   equals,
 }
