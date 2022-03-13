@@ -23,11 +23,7 @@ const iterateLevel = function (entries, index) {
   const levelEntries = entries
     .filter(({ path }) => path.length !== index)
     .flatMap((entry) => iteratePath(entry, index))
-  const entriesGroups = Object.values(groupBy(levelEntries, getLastProp))
-  const nextIndex = index + 1
-  const childEntries = entriesGroups.flatMap((levelEntriesA) =>
-    iterateLevel(levelEntriesA, nextIndex),
-  )
+  const childEntries = iterateLevelEntries(levelEntries, index)
   return [...parentEntries, ...childEntries]
 }
 
@@ -61,6 +57,14 @@ export const handleMissingValue = function (value, token) {
   const missing = tokenType.isMissing(value)
   const valueA = missing ? tokenType.defaultValue : value
   return { tokenType, missing, value: valueA }
+}
+
+const iterateLevelEntries = function (levelEntries, index) {
+  const entriesGroups = Object.values(groupBy(levelEntries, getLastProp))
+  const nextIndex = index + 1
+  return entriesGroups.flatMap((levelEntriesA) =>
+    iterateLevel(levelEntriesA, nextIndex),
+  )
 }
 
 const getLastProp = function ({ props }) {
