@@ -1,20 +1,14 @@
-import { list, set } from '../../normalize/lib/wild_wild_path/main.js'
+import { parseQuery } from '../../normalize/lib/wild_wild_path/main.js'
+import { pick } from '../../normalize/lib/wild_wild_path_utils/main.js'
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
 export const getSharedConfig = function (sharedConfig, item = []) {
   const sharedPropNames = [...new Set(item.map(getRuleName))]
-  const sharedConfigProps = sharedPropNames.flatMap((sharedPropName) =>
-    list(sharedConfig, sharedPropName),
-  )
-  const sharedConfigA = sharedConfigProps.reduce(addSharedConfigProp, {})
+  const sharedConfigA = pick(sharedConfig, sharedPropNames.flatMap(parseQuery))
   return { sharedConfig: sharedConfigA, sharedPropNames }
 }
 
 const getRuleName = function ({ name }) {
   return name
-}
-
-const addSharedConfigProp = function (sharedConfig, { path, value }) {
-  return set(sharedConfig, path, value)
 }
