@@ -6,10 +6,15 @@ export const find = function (
   target,
   query,
   condition,
-  { childFirst, sort, classes } = {},
+  { childFirst, sort, classes, inherited } = {},
 ) {
   // eslint-disable-next-line fp/no-loops
-  for (const entry of iterate(target, query, { childFirst, sort, classes })) {
+  for (const entry of iterate(target, query, {
+    childFirst,
+    sort,
+    classes,
+    inherited,
+  })) {
     // eslint-disable-next-line max-depth
     if (!entry.missing && condition(entry)) {
       return entry

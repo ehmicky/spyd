@@ -5,21 +5,21 @@ import { validateClasses, reduceParents, setValue } from './set.js'
 export const remove = function (
   target,
   query,
-  { classes = false, mutate = false } = {},
+  { mutate = false, classes, inherited } = {},
 ) {
   validateClasses(classes, mutate)
-  const setFunc = removeAnyEntry.bind(undefined, { classes, mutate })
-  return reduceParents({ target, query, setFunc, classes })
+  const setFunc = removeAnyEntry.bind(undefined, { mutate, classes })
+  return reduceParents({ target, query, setFunc, classes, inherited })
 }
 
 // eslint-disable-next-line max-params
-const removeAnyEntry = function ({ classes, mutate }, target, path, index) {
+const removeAnyEntry = function ({ mutate, classes }, target, path, index) {
   return path.length === 0
     ? undefined
-    : removeEntry({ classes, mutate, target, path, index })
+    : removeEntry({ mutate, classes, target, path, index })
 }
 
-const removeEntry = function ({ classes, mutate, target, path, index }) {
+const removeEntry = function ({ mutate, classes, target, path, index }) {
   const prop = path[index]
 
   if (handleMissingValue(target, prop, classes).missing) {

@@ -12,11 +12,11 @@ export const set = function (
   target,
   query,
   value,
-  { classes = false, mutate = false } = {},
+  { mutate = false, classes, inherited } = {},
 ) {
   validateClasses(classes, mutate)
-  const setFunc = setEntry.bind(undefined, { value, classes, mutate })
-  return reduceParents({ target, query, setFunc, classes })
+  const setFunc = setEntry.bind(undefined, { value, mutate, classes })
+  return reduceParents({ target, query, setFunc, classes, inherited })
 }
 
 // Class instances are not clonable. Therefore, they require `mutate`.
@@ -29,11 +29,18 @@ export const validateClasses = function (classes, mutate) {
 }
 
 // Modify a target object multiple times for each matched property.
-export const reduceParents = function ({ target, query, setFunc, classes }) {
+export const reduceParents = function ({
+  target,
+  query,
+  setFunc,
+  classes,
+  inherited,
+}) {
   const entries = list(target, query, {
     childFirst: false,
     sort: false,
     classes,
+    inherited,
   })
   return entries
     .filter(hasNoParentSet)
@@ -50,7 +57,7 @@ const hasNoParentSet = function ({ path: pathA }, indexA, entries) {
 
 // Use positional arguments for performance
 // eslint-disable-next-line max-params
-const setEntry = function ({ value, classes, mutate }, target, path, index) {
+const setEntry = function ({ value, mutate, classes }, target, path, index) {
   if (index === path.length) {
     return value
   }
@@ -59,7 +66,7 @@ const setEntry = function ({ value, classes, mutate }, target, path, index) {
   const { value: defaultedTarget } = handleMissingValue(target, prop, classes)
   const childTarget = defaultedTarget[prop]
   const childValue = setEntry(
-    { value, classes, mutate },
+    { value, mutate, classes },
     childTarget,
     path,
     index + 1,

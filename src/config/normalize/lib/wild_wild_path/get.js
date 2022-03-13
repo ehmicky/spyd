@@ -16,17 +16,21 @@ export const list = function (
 export const get = function (
   target,
   query,
-  { childFirst, sort, classes } = {},
+  { childFirst, sort, classes, inherited } = {},
 ) {
-  const entry = find(target, query, { childFirst, sort, classes })
+  const entry = find(target, query, { childFirst, sort, classes, inherited })
   return entry === undefined ? undefined : entry.value
 }
 
 // Check if a property is not missing according to a query
-export const has = function (target, query, { classes } = {}) {
+export const has = function (target, query, { classes, inherited } = {}) {
   return (
-    find(target, query, { childFirst: false, sort: false, classes }) !==
-    undefined
+    find(target, query, {
+      childFirst: false,
+      sort: false,
+      classes,
+      inherited,
+    }) !== undefined
   )
 }
 

@@ -2,14 +2,16 @@ import { set, remove, list } from '../wild_wild_path/main.js'
 import { isParentPath } from '../wild_wild_path_parser/main.js'
 
 // Returns an object with only the properties being queried.
-export const pick = function (target, query, { sort, classes } = {}) {
-  return reduceParents(pickEntry.bind(undefined, classes), returnTrue, {
-    target,
-    newTarget: {},
-    query,
-    sort,
-    classes,
-  })
+export const pick = function (
+  target,
+  query,
+  { sort, classes, inherited } = {},
+) {
+  return reduceParents(
+    pickEntry.bind(undefined, { classes, inherited }),
+    returnTrue,
+    { target, newTarget: {}, query, sort, classes, inherited },
+  )
 }
 
 const returnTrue = function () {
@@ -22,19 +24,21 @@ export const include = function (
   target,
   query,
   condition,
-  { sort, classes } = {},
+  { sort, classes, inherited } = {},
 ) {
-  return reduceParents(pickEntry.bind(undefined, classes), condition, {
-    target,
-    newTarget: {},
-    query,
-    sort,
-    classes,
-  })
+  return reduceParents(
+    pickEntry.bind(undefined, { classes, inherited }),
+    condition,
+    { target, newTarget: {}, query, sort, classes, inherited },
+  )
 }
 
-const pickEntry = function (classes, newTarget, { path, value }) {
-  return set(newTarget, path, value, { classes, mutate: true })
+const pickEntry = function (
+  { classes, inherited },
+  newTarget,
+  { path, value },
+) {
+  return set(newTarget, path, value, { mutate: true, classes, inherited })
 }
 
 // Remove values matching a query
@@ -43,32 +47,35 @@ export const exclude = function (
   target,
   query,
   condition,
-  { classes, mutate } = {},
+  { mutate, classes, inherited } = {},
 ) {
   return reduceParents(
-    excludeEntry.bind(undefined, { classes, mutate }),
+    excludeEntry.bind(undefined, { mutate, classes, inherited }),
     condition,
-    {
-      target,
-      newTarget: target,
-      query,
-      sort: false,
-      classes,
-    },
+    { target, newTarget: target, query, sort: false, classes, inherited },
   )
 }
 
-const excludeEntry = function ({ classes, mutate }, newTarget, { path }) {
-  return remove(newTarget, path, { classes, mutate })
+const excludeEntry = function (
+  { mutate, classes, inherited },
+  newTarget,
+  { path },
+) {
+  return remove(newTarget, path, { mutate, classes, inherited })
 }
 
 // Modify a target object multiple times for each matched property.
 const reduceParents = function (
   setFunc,
   condition,
-  { target, newTarget, query, sort, classes },
+  { target, newTarget, query, sort, classes, inherited },
 ) {
-  const entries = list(target, query, { childFirst: false, sort, classes })
+  const entries = list(target, query, {
+    childFirst: false,
+    sort,
+    classes,
+    inherited,
+  })
   return entries
     .filter((entry) => shouldUseEntry(entry, target, condition))
     .filter(hasNoParentSet)
