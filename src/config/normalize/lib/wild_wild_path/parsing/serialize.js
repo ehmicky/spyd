@@ -1,7 +1,7 @@
 import { TOKEN_SEPARATOR, ARRAY_SEPARATOR } from '../tokens/escape.js'
 import { getObjectTokenType } from '../tokens/main.js'
 
-import { parse } from './parse.js'
+import { parse, parsePath } from './parse.js'
 
 // Inverse of `parse()`
 // When passing a query string, it is parsed and re-serialized to validate and
@@ -9,6 +9,12 @@ import { parse } from './parse.js'
 export const serialize = function (query) {
   const queryArrays = parse(query)
   return queryArrays.map(serializeQueryArray).join(ARRAY_SEPARATOR)
+}
+
+// Inverse of `parsePath()`
+export const serializePath = function (query) {
+  const path = parsePath(query)
+  return serializeQueryArray(path)
 }
 
 const serializeQueryArray = function (queryArray) {

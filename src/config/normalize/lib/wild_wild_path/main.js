@@ -6,7 +6,7 @@ export {
   isSameToken,
   isParentPath,
 } from './parsing/compare.js'
-export { serialize } from './parsing/serialize.js'
+export { serialize, serializePath } from './parsing/serialize.js'
 export { parse, parsePath } from './parsing/parse.js'
 export { remove } from './remove.js'
 export { set } from './set.js'
