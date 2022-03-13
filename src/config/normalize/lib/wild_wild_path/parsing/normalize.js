@@ -1,11 +1,35 @@
 import { inspect } from 'util'
 
-import { getObjectTokenType } from '../tokens/main.js'
+import { getObjectTokenType, getSObjectTokenType } from '../tokens/main.js'
 
 // Most methods accept both query and path syntaxes.
 // This checks which one is used.
 export const isQueryString = function (queryOrPaths) {
   return typeof queryOrPaths === 'string'
+}
+
+// Simple paths are a subset of paths which uses no unions and only array|prop
+// tokens.
+// Those are the ones exposed in output, as opposed to normal paths which are
+// exposed in input.
+export const validateSimplePath = function (simplePath) {
+  if (!Array.isArray(simplePath)) {
+    throwPathError(simplePath, 'It must be an array.')
+  }
+
+  simplePath.forEach((prop) => {
+    validateProp(prop, simplePath)
+  })
+}
+
+const validateProp = function (prop, simplePath) {
+  if (getSObjectTokenType(prop) === undefined) {
+    throwTokenError(
+      simplePath,
+      prop,
+      'It must be a property name (string) or an array index (positive integer).',
+    )
+  }
 }
 
 // Normalize paths of tokens

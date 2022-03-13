@@ -1,5 +1,6 @@
 import { getObjectTokenType } from '../tokens/main.js'
 
+import { validateSimplePath } from './normalize.js'
 import { parse } from './parse.js'
 
 // Check if two queries are equal.
@@ -19,6 +20,13 @@ export const equals = function (queryOrPathsA, queryOrPathsB) {
 
 // Check if two simple paths are equal
 export const equalsSimple = function (simplePathA, simplePathB) {
+  validateSimplePath(simplePathA)
+  validateSimplePath(simplePathB)
+  return fastEqualsSimple(simplePathA, simplePathB)
+}
+
+// Same as `equalsSimple()` but without validation
+export const fastEqualsSimple = function (simplePathA, simplePathB) {
   return (
     simplePathA.length === simplePathB.length &&
     simplePathA.every((prop, index) => simplePathB[index] === prop)

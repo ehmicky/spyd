@@ -1,6 +1,6 @@
 import { groupBy } from '../../../../utils/group.js'
 
-import { equalsSimple, isSameToken } from './parsing/compare.js'
+import { fastEqualsSimple, isSameToken } from './parsing/compare.js'
 import { parse } from './parsing/parse.js'
 import { serialize } from './parsing/serialize.js'
 import { getObjectTokenType } from './tokens/main.js'
@@ -61,7 +61,7 @@ const isDuplicate = function (
   { simplePath: simplePathB, path: pathB },
 ) {
   return (
-    equalsSimple(simplePathA, simplePathB) &&
+    fastEqualsSimple(simplePathA, simplePathB) &&
     pathA.length === pathB.length &&
     pathA.every(
       (tokenA, index) =>
