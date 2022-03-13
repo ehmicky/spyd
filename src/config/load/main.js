@@ -8,7 +8,7 @@ import { deepMerge, isRecurseObject } from '../merge.js'
 import {
   get,
   has,
-  serialize,
+  serializePath,
   set,
 } from '../normalize/lib/wild_wild_path/main.js'
 
@@ -189,7 +189,7 @@ const validateReferencePath = function ({
     return
   }
 
-  const name = serialize(path)
+  const name = serializePath(path)
   throw new UserError(
     `Configuration property "${name}" must be valid: "${referenceName}" property does not exist in "${configOpt}"`,
   )
