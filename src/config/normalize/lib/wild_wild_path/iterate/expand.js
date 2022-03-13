@@ -29,7 +29,10 @@ const expandToken = function (
   }
 
   const childEntries = tokenType.iterate(valueA, token, inherited)
-  const childEntriesA = childEntries.map(
+  const childEntriesA = includeMissing
+    ? childEntries
+    : childEntries.filter(isNotMissing)
+  return childEntriesA.map(
     ({ value: childValue, prop, missing: missingEntry }) => ({
       queryArray,
       value: childValue,
@@ -37,7 +40,6 @@ const expandToken = function (
       missing: missingParent || missingEntry,
     }),
   )
-  return includeMissing ? childEntriesA : childEntriesA.filter(isNotMissing)
 }
 
 const isNotMissing = function ({ missing }) {
