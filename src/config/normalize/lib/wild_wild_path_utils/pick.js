@@ -1,11 +1,15 @@
 import { set } from '../wild_wild_path/main.js'
 
-import { listExisting } from './common.js'
+import { listExisting, reduceParents } from './common.js'
 
 // Returns an object with only the properties being queried.
-export const pick = function (target, queryOrPath) {
-  const entries = listExisting(target, queryOrPath)
-  return entries.reduce(pickEntry, {})
+export const pick = function (target, queryOrPaths) {
+  return reduceParents({
+    target,
+    newTarget: {},
+    queryOrPaths,
+    setFunc: pickEntry,
+  })
 }
 
 const pickEntry = function (target, { path, value }) {

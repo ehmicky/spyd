@@ -13,9 +13,6 @@ export const set = function (target, queryOrPaths, value) {
 // Ignore properties when one of their ancestors was matched too.
 // Uses `iterate()` to keep memory consumption low.
 export const reduceParents = function (target, queryOrPaths, setFunc) {
-  // eslint-disable-next-line fp/no-let
-  let newTarget = target
-
   const paths = []
 
   // eslint-disable-next-line fp/no-loops
@@ -24,12 +21,12 @@ export const reduceParents = function (target, queryOrPaths, setFunc) {
     if (!parentIsSet(paths, path)) {
       // eslint-disable-next-line fp/no-mutating-methods
       paths.push(path)
-      // eslint-disable-next-line fp/no-mutation
-      newTarget = setFunc(newTarget, path, 0)
+      // eslint-disable-next-line fp/no-mutation, no-param-reassign
+      target = setFunc(target, path, 0)
     }
   }
 
-  return newTarget
+  return target
 }
 
 // If both a parent and a child property are set, the parent prevails
