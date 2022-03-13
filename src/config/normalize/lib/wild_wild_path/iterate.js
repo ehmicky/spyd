@@ -73,6 +73,28 @@ const normalizeEntry = function ({ value, simplePath: path, missing }) {
   return { value, path, query, missing }
 }
 
+// eslint-disable-next-line max-params
+const iterateChildEntries = function* (
+  entries,
+  parentEntries,
+  childFirst,
+  index,
+) {
+  if (parentEntries.length === entries.length) {
+    return
+  }
+
+  const levelEntries = entries
+    .filter(({ path }) => path.length !== index)
+    .flatMap((entry) => iteratePath(entry, index))
+
+  if (levelEntries.length === 0) {
+    return
+  }
+
+  yield* iterateChildren(levelEntries, childFirst, index)
+}
+
 // Iteration among siglings is not sorted, for performance reasons.
 //  - Consumers can sort it through using the `query` property
 // However, iteration is guaranteed to return child entries before parent ones.
@@ -108,28 +130,6 @@ export const handleMissingValue = function (value, token) {
   const missing = tokenType.isMissing(value)
   const valueA = missing ? tokenType.defaultValue : value
   return { tokenType, missing, value: valueA }
-}
-
-// eslint-disable-next-line max-params
-const iterateChildEntries = function* (
-  entries,
-  parentEntries,
-  childFirst,
-  index,
-) {
-  if (parentEntries.length === entries.length) {
-    return
-  }
-
-  const levelEntries = entries
-    .filter(({ path }) => path.length !== index)
-    .flatMap((entry) => iteratePath(entry, index))
-
-  if (levelEntries.length === 0) {
-    return
-  }
-
-  yield* iterateChildren(levelEntries, childFirst, index)
 }
 
 const iterateChildren = function* (levelEntries, childFirst, index) {
