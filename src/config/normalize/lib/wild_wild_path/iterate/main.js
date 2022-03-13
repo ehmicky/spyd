@@ -56,7 +56,7 @@ const iterateToken = function* ({ entries, index, parents, opts }) {
   }
 
   if (parentEntry === undefined || entriesB.length !== 1) {
-    yield* iterateChildEntries({ entries: entriesB, index, parents, opts })
+    yield* iterateChildren({ entries: entriesB, index, parents, opts })
   }
 
   if (parentEntry !== undefined && opts.childFirst) {
@@ -73,17 +73,13 @@ const normalizeEntry = function ({ value, path, missing }) {
   return { value, path, query, missing }
 }
 
-const iterateChildEntries = function* ({ entries, index, parents, opts }) {
+const iterateChildren = function* ({ entries, index, parents, opts }) {
   const childEntries = expandTokens(entries, index, opts.classes)
 
   if (childEntries.length === 0) {
     return
   }
 
-  yield* iterateChildren({ childEntries, index, parents, opts })
-}
-
-const iterateChildren = function* ({ childEntries, index, parents, opts }) {
   const nextIndex = index + 1
 
   if (childEntries.length === 1) {
@@ -99,7 +95,12 @@ const iterateChildren = function* ({ childEntries, index, parents, opts }) {
   const childEntriesGroups = groupSortChildEntries(childEntries, opts.sort)
 
   // eslint-disable-next-line fp/no-loops
-  for (const entries of childEntriesGroups) {
-    yield* iterateLevel({ entries, index: nextIndex, parents, opts })
+  for (const childEntriesA of childEntriesGroups) {
+    yield* iterateLevel({
+      entries: childEntriesA,
+      index: nextIndex,
+      parents,
+      opts,
+    })
   }
 }
