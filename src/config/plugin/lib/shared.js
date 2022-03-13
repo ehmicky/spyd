@@ -1,4 +1,4 @@
-import { parseQuery } from '../../normalize/lib/wild_wild_path_parser/main.js'
+import { parseQuery } from '../../normalize/lib/wild_wild_parser/main.js'
 import { pick } from '../../normalize/lib/wild_wild_utils/main.js'
 
 // Retrieve top-level properties that are shared with all plugins of a specific

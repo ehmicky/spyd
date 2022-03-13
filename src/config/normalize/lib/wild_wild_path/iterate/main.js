@@ -1,4 +1,4 @@
-import { parseQuery, serializePath } from '../../wild_wild_path_parser/main.js'
+import { parseQuery, serializePath } from '../../wild_wild_parser/main.js'
 import { validateInherited } from '../validate.js'
 
 import { removeDuplicates } from './duplicate.js'

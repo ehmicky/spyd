@@ -1,4 +1,4 @@
-import { getTokenType as getTokenTypeName } from '../../wild_wild_path_parser/main.js'
+import { getTokenType as getTokenTypeName } from '../../wild_wild_parser/main.js'
 
 import { ANY_TOKEN } from './any.js'
 import { ANY_DEEP_TOKEN } from './any_deep.js'
