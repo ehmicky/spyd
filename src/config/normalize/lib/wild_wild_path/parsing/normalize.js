@@ -8,6 +8,17 @@ export const isQueryString = function (query) {
   return typeof query === 'string'
 }
 
+// Transform a queryArrays into a path, if possible
+export const normalizePath = function (queryArrays) {
+  if (queryArrays.length !== 1) {
+    throwQueryArraysError(queryArrays, 'It must not be a union.')
+  }
+
+  const [queryArray] = queryArrays
+  validatePath(queryArray)
+  return queryArray
+}
+
 // Paths are a subset of query arrays which use:
 //  - No unions
 //  - Only prop tokens, and array tokens (positive only)

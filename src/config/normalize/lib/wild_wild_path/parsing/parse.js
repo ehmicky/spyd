@@ -1,4 +1,8 @@
-import { normalizeQueryArrays, isQueryString } from './normalize.js'
+import {
+  normalizeQueryArrays,
+  isQueryString,
+  normalizePath,
+} from './normalize.js'
 import { parseQueryString } from './query.js'
 
 // Parse a query string into an array of tokens.
@@ -77,6 +81,11 @@ import { parseQueryString } from './query.js'
 // Exceptions are thrown on syntax errors:
 //  - I.e. query or path syntax errors, or wrong arguments
 //  - But queries matching nothing do not throw: instead they return nothing
+export const parsePath = function (query) {
+  const queryArrays = parse(query)
+  return normalizePath(queryArrays)
+}
+
 export const parse = function (query) {
   return isQueryString(query)
     ? safeParseQueryString(query)
