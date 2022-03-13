@@ -43,19 +43,7 @@ const iterateLevel = function* (entries, childFirst, index) {
     return
   }
 
-  const levelEntries = entriesA
-    .filter(({ path }) => path.length !== index)
-    .flatMap((entry) => iteratePath(entry, index))
-
-  if (levelEntries.length === 0) {
-    if (childFirst) {
-      yield* parentEntries
-    }
-
-    return
-  }
-
-  yield* iterateChildren(levelEntries, childFirst, index)
+  yield* iterateChildEntries(entries, childFirst, index)
 
   if (childFirst) {
     yield* parentEntries
@@ -121,6 +109,18 @@ export const handleMissingValue = function (value, token) {
   const missing = tokenType.isMissing(value)
   const valueA = missing ? tokenType.defaultValue : value
   return { tokenType, missing, value: valueA }
+}
+
+const iterateChildEntries = function* (entries, childFirst, index) {
+  const levelEntries = entries
+    .filter(({ path }) => path.length !== index)
+    .flatMap((entry) => iteratePath(entry, index))
+
+  if (levelEntries.length === 0) {
+    return
+  }
+
+  yield* iterateChildren(levelEntries, childFirst, index)
 }
 
 const iterateChildren = function* (levelEntries, childFirst, index) {
