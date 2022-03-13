@@ -2,6 +2,7 @@ import { setArray } from '../../../../utils/set.js'
 
 import { handleMissingValue } from './iterate/expand.js'
 import { iterate } from './iterate/main.js'
+import { parent } from './parsing/compare.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
 // Uses `iterate()` to keep memory consumption low.
@@ -9,13 +10,25 @@ export const set = function (target, queryOrPath, value) {
   // eslint-disable-next-line fp/no-let
   let newTarget = target
 
+  const paths = []
+
   // eslint-disable-next-line fp/no-loops
   for (const { path } of iterate(target, queryOrPath)) {
-    // eslint-disable-next-line fp/no-mutation
-    newTarget = setEntry(newTarget, path, value, 0)
+    // eslint-disable-next-line max-depth
+    if (!parentIsSet(paths, path)) {
+      // eslint-disable-next-line fp/no-mutating-methods
+      paths.push(path)
+      // eslint-disable-next-line fp/no-mutation
+      newTarget = setEntry(newTarget, path, value, 0)
+    }
   }
 
   return newTarget
+}
+
+// If both a parent and a child property are set, the parent prevails
+const parentIsSet = function (paths, path) {
+  return paths.some((previousPath) => parent(previousPath, path))
 }
 
 // Use positional arguments for performance
