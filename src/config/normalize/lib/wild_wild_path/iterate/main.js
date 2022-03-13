@@ -45,6 +45,7 @@ const iterateLevel = function* ({
   parents.delete(value)
 }
 
+// eslint-disable-next-line complexity
 const iterateToken = function* ({ entries, index, parents, opts }) {
   const entriesA = expandRecursiveTokens(entries, index)
   const entriesB = removeDuplicates(entriesA)
@@ -54,13 +55,9 @@ const iterateToken = function* ({ entries, index, parents, opts }) {
     yield parentEntry
   }
 
-  yield* iterateChildEntries({
-    entries: entriesB,
-    parentEntry,
-    index,
-    parents,
-    opts,
-  })
+  if (parentEntry === undefined || entriesB.length !== 1) {
+    yield* iterateChildEntries({ entries: entriesB, index, parents, opts })
+  }
 
   if (parentEntry !== undefined && opts.childFirst) {
     yield parentEntry
@@ -79,17 +76,7 @@ const normalizeEntry = function ({ value, path, missing }) {
   return { value, path, query, missing }
 }
 
-const iterateChildEntries = function* ({
-  entries,
-  parentEntry,
-  index,
-  parents,
-  opts,
-}) {
-  if (parentEntry !== undefined && entries.length === 1) {
-    return
-  }
-
+const iterateChildEntries = function* ({ entries, index, parents, opts }) {
   const childEntries = expandTokens(entries, index, opts.classes)
 
   if (childEntries.length === 0) {
