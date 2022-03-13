@@ -39,15 +39,10 @@ const equals = function (tokenA, tokenB) {
 }
 
 // Use the token to list entries against a target value.
-// eslint-disable-next-line max-params
-const iterate = function (value, path, token, missing) {
+const iterate = function (value, token, missing) {
   return Object.keys(value)
     .filter((childKey) => token.test(childKey))
-    .map((childKey) => ({
-      value: value[childKey],
-      path: [...path, childKey],
-      missing,
-    }))
+    .map((childKey) => ({ value: value[childKey], prop: childKey, missing }))
 }
 
 export const REGEXP_TOKEN = {

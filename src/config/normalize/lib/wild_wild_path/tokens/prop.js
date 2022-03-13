@@ -38,14 +38,9 @@ const normalize = function (token) {
 // We distinguish between:
 //  - Missing property name: return no entries
 //  - Property exists but has `undefined` value: return an entry
-// eslint-disable-next-line max-params
-const iterate = function (value, path, token, missing) {
+const iterate = function (value, token, missing) {
   return [
-    {
-      value: value[token],
-      path: [...path, token],
-      missing: missing || !(token in value),
-    },
+    { value: value[token], prop: token, missing: missing || !(token in value) },
   ]
 }
 

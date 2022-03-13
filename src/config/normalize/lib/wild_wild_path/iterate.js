@@ -1,23 +1,46 @@
+import { groupBy } from '../../../../utils/group.js'
+
 import { parse } from './parsing/parse.js'
 import { serialize } from './parsing/serialize.js'
 import { getObjectTokenType } from './tokens/main.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
-export const iterate = function (target, queryOrPath) {
-  const path = parse(queryOrPath)
-  return path.reduce(listTokenEntries, [
-    { value: target, path: [], missing: false },
-  ])
+export const iterate = function (target, queryOrPaths) {
+  const paths = parse(queryOrPaths)
+  const entries = paths.map((path) => ({
+    path,
+    value: target,
+    props: [],
+    missing: false,
+  }))
+  const entriesA = iterateLevel(entries, 0)
+  return entriesA
 }
 
-const listTokenEntries = function (entries, token) {
-  return entries.flatMap((entry) => getTokenEntries(entry, token))
+const iterateLevel = function (entries, index) {
+  const parentEntries = entries.filter(({ path }) => path.length === index)
+  const levelEntries = entries
+    .filter(({ path }) => path.length !== index)
+    .flatMap((entry) => iteratePath(entry, index))
+  const entriesGroups = Object.values(groupBy(levelEntries, 'prop'))
+  const nextIndex = index + 1
+  const childEntries = entriesGroups.flatMap((levelEntriesA) =>
+    iterateLevel(levelEntriesA, nextIndex),
+  )
+  return [...parentEntries, ...childEntries]
 }
 
-const getTokenEntries = function ({ value, path }, token) {
+const iteratePath = function ({ path, value, props }, index) {
+  const token = path[index]
   const { tokenType, missing, value: valueA } = handleMissingValue(value, token)
-  return tokenType.iterate(valueA, path, token, missing)
+  const levelEntries = tokenType.iterate(valueA, token, missing)
+  return levelEntries.map(({ value: childValue, prop, missing: missingA }) => ({
+    path,
+    value: childValue,
+    props: [...props, prop],
+    missing: missingA,
+  }))
 }
 
 // When the value does not exist, we set it deeply with `set()` but not with

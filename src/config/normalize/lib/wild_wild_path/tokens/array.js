@@ -30,13 +30,12 @@ const normalize = function (token) {
 }
 
 // Use the token to list entries against a target value.
-// eslint-disable-next-line max-params
-const iterate = function (value, path, token, missing) {
+const iterate = function (value, token, missing) {
   const index = getArrayIndex(value, token)
   return [
     {
       value: value[index],
-      path: [...path, index],
+      prop: index,
       missing: missing || index >= value.length,
     },
   ]
