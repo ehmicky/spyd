@@ -7,7 +7,11 @@ import { getObjectTokenType } from './tokens/main.js'
 
 // List all values (and their associated path) matching a specific query for
 // on specific target value.
-export const iterate = function (target, queryOrPaths) {
+export const iterate = function (
+  target,
+  queryOrPaths,
+  { childFirst = false } = {},
+) {
   const paths = parse(queryOrPaths)
   const entries = paths.map((path) => ({
     path,
@@ -15,12 +19,12 @@ export const iterate = function (target, queryOrPaths) {
     props: [],
     missing: false,
   }))
-  const entriesA = iterateLevel(entries, 0)
+  const entriesA = iterateLevel(entries, childFirst, 0)
   const entriesB = entriesA.map(normalizeEntry)
   return entriesB
 }
 
-const iterateLevel = function (entries, index) {
+const iterateLevel = function (entries, childFirst, index) {
   const entriesA = removeDuplicates(entries)
   const parentEntries = entriesA.filter(({ path }) => path.length === index)
 
@@ -39,11 +43,14 @@ const iterateLevel = function (entries, index) {
   const nextIndex = index + 1
   const childEntries =
     levelEntries.length === 1
-      ? iterateLevel(levelEntries, nextIndex)
+      ? iterateLevel(levelEntries, childFirst, nextIndex)
       : Object.values(groupBy(levelEntries, getLastProp)).flatMap(
-          (groupedLevelEntries) => iterateLevel(groupedLevelEntries, nextIndex),
+          (groupedLevelEntries) =>
+            iterateLevel(groupedLevelEntries, childFirst, nextIndex),
         )
-  return [...childEntries, ...parentEntries]
+  return childFirst
+    ? [...childEntries, ...parentEntries]
+    : [...parentEntries, ...childEntries]
 }
 
 const removeDuplicates = function (entries) {
