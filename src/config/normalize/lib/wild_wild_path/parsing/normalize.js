@@ -84,3 +84,10 @@ const throwTokenError = function (queryArray, token, message) {
     `Invalid token: ${inspect(token)}\n${message}`,
   )
 }
+
+// Empty query strings are ambiguous and not allowed
+export const validateEmptyQuery = function ({ arrays }) {
+  if (arrays.length === 0) {
+    throw new Error('it must not be an empty string.')
+  }
+}

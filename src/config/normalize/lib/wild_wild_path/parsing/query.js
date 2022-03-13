@@ -7,6 +7,8 @@ import {
 } from '../tokens/escape.js'
 import { getStringTokenType } from '../tokens/main.js'
 
+import { validateEmptyQuery } from './normalize.js'
+
 // Parse a query string to query arrays of tokens
 // Use imperative logic for performance
 // eslint-disable-next-line complexity
@@ -123,10 +125,4 @@ const handleLeadingDot = function (state) {
 const resetTokenState = function (state) {
   state.isProp = false
   state.chars = ''
-}
-
-const validateEmptyQuery = function ({ arrays }) {
-  if (arrays.length === 0) {
-    throw new Error('it must not be an empty string.')
-  }
 }
