@@ -1,9 +1,10 @@
 import { iterate } from '../wild_wild_path/main.js'
 
 // Find the first non-missing property that matches a condition
-export const find = function (target, query, condition) {
+// eslint-disable-next-line max-params
+export const find = function (target, query, condition, { childFirst } = {}) {
   // eslint-disable-next-line fp/no-loops
-  for (const entry of iterate(target, query)) {
+  for (const entry of iterate(target, query, { childFirst })) {
     // eslint-disable-next-line max-depth
     if (!entry.missing && condition(entry)) {
       return entry

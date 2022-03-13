@@ -54,7 +54,7 @@ const reduceParents = function (
   const paths = []
 
   // eslint-disable-next-line fp/no-loops
-  for (const entry of iterate(target, query)) {
+  for (const entry of iterate(target, query, { childFirst: false })) {
     // eslint-disable-next-line max-depth
     if (shouldUseEntry({ entry, paths, newTarget, condition })) {
       // eslint-disable-next-line fp/no-mutating-methods
