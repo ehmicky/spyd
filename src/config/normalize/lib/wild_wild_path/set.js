@@ -5,8 +5,14 @@ import { iterate } from './iterate/main.js'
 import { parent } from './parsing/compare.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
-// Uses `iterate()` to keep memory consumption low.
 export const set = function (target, queryOrPath, value) {
+  return reduceParents(target, queryOrPath, setEntry.bind(undefined, value))
+}
+
+// Modify a target object multiple times for each matched property.
+// Ignore properties when one of their ancestors was matched too.
+// Uses `iterate()` to keep memory consumption low.
+export const reduceParents = function (target, queryOrPath, setFunc) {
   // eslint-disable-next-line fp/no-let
   let newTarget = target
 
@@ -19,7 +25,7 @@ export const set = function (target, queryOrPath, value) {
       // eslint-disable-next-line fp/no-mutating-methods
       paths.push(path)
       // eslint-disable-next-line fp/no-mutation
-      newTarget = setEntry(newTarget, path, value, 0)
+      newTarget = setFunc(newTarget, path, 0)
     }
   }
 
@@ -33,7 +39,7 @@ const parentIsSet = function (paths, path) {
 
 // Use positional arguments for performance
 // eslint-disable-next-line max-params
-const setEntry = function (target, path, value, index) {
+const setEntry = function (value, target, path, index) {
   if (index === path.length) {
     return value
   }
@@ -41,7 +47,7 @@ const setEntry = function (target, path, value, index) {
   const key = path[index]
   const { value: defaultedTarget } = handleMissingValue(target, key)
   const childTarget = defaultedTarget[key]
-  const childValue = setEntry(childTarget, path, value, index + 1)
+  const childValue = setEntry(value, childTarget, path, index + 1)
   return setValue(defaultedTarget, key, childValue)
 }
 
