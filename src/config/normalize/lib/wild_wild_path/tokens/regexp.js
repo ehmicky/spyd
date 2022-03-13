@@ -35,7 +35,11 @@ const normalize = function (token) {
 
 // Check if two tokens are the same
 const equals = function (tokenA, tokenB) {
-  return tokenA.source === tokenB.source && tokenA.flags === tokenB.flags
+  return (
+    tokenA.source === tokenB.source &&
+    tokenA.flags === tokenB.flags &&
+    tokenA.lastIndex === tokenB.lastIndex
+  )
 }
 
 // Use the token to list entries against a target value.
