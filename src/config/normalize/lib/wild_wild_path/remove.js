@@ -4,21 +4,37 @@ import { setArray } from '../../../../utils/set.js'
 
 import { handleMissingValue } from './iterate/expand.js'
 import { iterate } from './iterate/main.js'
+import { parent } from './parsing/compare.js'
 import { setValue } from './set.js'
 
 // Same as `set()` but removing a value
 export const remove = function (target, queryOrPath) {
-  const entries = iterate(target, queryOrPath)
-  return entries.some(hasRootPath)
-    ? undefined
-    : entries.reduce(
-        (targetA, entry) => removeEntry(targetA, entry.path, 0),
-        target,
-      )
+  // eslint-disable-next-line fp/no-let
+  let newTarget = target
+
+  const paths = []
+
+  // eslint-disable-next-line fp/no-loops
+  for (const { path } of iterate(target, queryOrPath)) {
+    // eslint-disable-next-line max-depth
+    if (!parentIsRemoved(paths, path)) {
+      // eslint-disable-next-line fp/no-mutating-methods
+      paths.push(path)
+      // eslint-disable-next-line fp/no-mutation
+      newTarget = removeAnyEntry(newTarget, path, 0)
+    }
+  }
+
+  return newTarget
 }
 
-const hasRootPath = function ({ path }) {
-  return path.length === 0
+// If both a parent and a child property are removed, the parent prevails
+const parentIsRemoved = function (paths, path) {
+  return paths.some((previousPath) => parent(previousPath, path))
+}
+
+const removeAnyEntry = function (target, path, index) {
+  return path.length === 0 ? undefined : removeEntry(target, path, index)
 }
 
 const removeEntry = function (target, path, index) {
