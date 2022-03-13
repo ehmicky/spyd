@@ -13,8 +13,18 @@ export const set = function (
   value,
   { classes = false, mutate = false } = {},
 ) {
+  validateClasses(classes, mutate)
   const setFunc = setEntry.bind(undefined, { value, classes, mutate })
   return reduceParents({ target, query, setFunc, classes })
+}
+
+// Class instances are not clonable. Therefore, they require `mutate`.
+export const validateClasses = function (classes, mutate) {
+  if (classes && !mutate) {
+    throw new Error(
+      'The "mutate" option must be true when the "classes" option is true.',
+    )
+  }
 }
 
 // Modify a target object multiple times for each matched property.
