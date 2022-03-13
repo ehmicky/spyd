@@ -3,6 +3,9 @@ import { handleMissingValue } from './iterate/expand.js'
 import { isParentPath } from './parsing/compare.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
+// Unless `mutate` is `true`, this returns a new copy
+//  - The value is returned in both cases so consumers can forward the `mutate`
+//    option without inspecting it
 // eslint-disable-next-line max-params
 export const set = function (
   target,
