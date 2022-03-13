@@ -11,11 +11,19 @@ export const set = function (
   target,
   query,
   value,
-  { mutate = false, missing = true, classes, inherited } = {},
+  { mutate = false, missing = true, leaves = false, classes, inherited } = {},
 ) {
   validateClasses(classes, mutate)
   const setFunc = setEntry.bind(undefined, { value, mutate, missing, classes })
-  return reduceParents({ target, query, setFunc, missing, classes, inherited })
+  return reduceParents({
+    target,
+    query,
+    setFunc,
+    missing,
+    leaves,
+    classes,
+    inherited,
+  })
 }
 
 // Modify a target object multiple times for each matched property.
@@ -24,12 +32,14 @@ export const reduceParents = function ({
   query,
   setFunc,
   missing,
+  leaves,
   classes,
   inherited,
 }) {
   const entries = list(target, query, {
     childFirst: false,
-    roots: true,
+    roots: !leaves,
+    leaves,
     sort: false,
     missing,
     classes,

@@ -5,7 +5,7 @@ import { validateClasses } from './validate.js'
 export const remove = function (
   target,
   query,
-  { mutate = false, classes, inherited } = {},
+  { mutate = false, leaves = false, classes, inherited } = {},
 ) {
   validateClasses(classes, mutate)
   const setFunc = removeAnyEntry.bind(undefined, { mutate, classes })
@@ -14,6 +14,7 @@ export const remove = function (
     query,
     setFunc,
     missing: false,
+    leaves,
     classes,
     inherited,
   })
