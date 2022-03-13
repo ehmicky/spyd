@@ -60,11 +60,16 @@ export const handleMissingValue = function (value, token) {
 }
 
 const iterateLevelEntries = function (levelEntries, index) {
-  const entriesGroups = Object.values(groupBy(levelEntries, getLastProp))
+  if (levelEntries.length === 0) {
+    return []
+  }
+
   const nextIndex = index + 1
-  return entriesGroups.flatMap((levelEntriesA) =>
-    iterateLevel(levelEntriesA, nextIndex),
-  )
+  return levelEntries.length === 1
+    ? iterateLevel(levelEntries, nextIndex)
+    : Object.values(groupBy(levelEntries, getLastProp)).flatMap(
+        (groupedLevelEntries) => iterateLevel(groupedLevelEntries, nextIndex),
+      )
 }
 
 const getLastProp = function ({ props }) {
