@@ -15,8 +15,8 @@ export const iterate = function* (
   query,
   { childFirst = false, sort = false, classes = false } = {},
 ) {
-  const parents = new Set([])
   const opts = { childFirst, sort, classes }
+  const parents = new Set([])
   const queryArrays = parseQuery(query)
   const entries = queryArrays.map((queryArray) => ({
     queryArray,
