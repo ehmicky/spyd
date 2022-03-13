@@ -6,8 +6,8 @@ import { parse } from './parse.js'
 // Inverse of `parse()`
 // When passing a query string, it is parsed and re-serialized to validate and
 // normalize it.
-export const serialize = function (queryOrPath) {
-  const paths = parse(queryOrPath)
+export const serialize = function (queryOrPaths) {
+  const paths = parse(queryOrPaths)
   return paths.map(serializePath).join(PATH_SEPARATOR)
 }
 

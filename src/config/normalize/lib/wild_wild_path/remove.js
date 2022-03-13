@@ -6,8 +6,8 @@ import { handleMissingValue } from './iterate/expand.js'
 import { reduceParents, setValue } from './set.js'
 
 // Same as `set()` but removing a value
-export const remove = function (target, queryOrPath) {
-  return reduceParents(target, queryOrPath, removeAnyEntry)
+export const remove = function (target, queryOrPaths) {
+  return reduceParents(target, queryOrPaths, removeAnyEntry)
 }
 
 const removeAnyEntry = function (target, path, index) {
