@@ -2,13 +2,18 @@ import { getObjectTokenType } from '../tokens/main.js'
 
 import { parse } from './parse.js'
 
-// Check if two queries are equal, after normalization
-export const equals = function (queryOrPathA, queryOrPathB) {
-  const pathA = parse(queryOrPathA)
-  const pathB = parse(queryOrPathB)
+// Check if two queries are equal.
+// Works with:
+//  - Normalization, e.g. `:` === `0:`
+//  - Unions, e.g. `a b` === `b a`
+//  - Duplicates, e.g. `a a` === `a`
+export const equals = function (queryOrPathsA, queryOrPathsB) {
+  const pathsA = parse(queryOrPathsA)
+  const pathsB = parse(queryOrPathsB)
   return (
-    pathA.length === pathB.length &&
-    pathA.every((tokenA, index) => isSameToken(tokenA, pathB[index]))
+    pathsA.length === pathsB.length &&
+    pathsA.every((pathA) => hasSamePath(pathsB, pathA)) &&
+    pathsB.every((pathB) => hasSamePath(pathsA, pathB))
   )
 }
 
@@ -33,6 +38,17 @@ export const parent = function (parentQueryOrPath, childQueryOrPath) {
         index >= parentPath.length ||
         isSameToken(childToken, parentPath[index]),
     )
+  )
+}
+
+const hasSamePath = function (paths, pathA) {
+  return paths.some((pathB) => isSamePath(pathA, pathB))
+}
+
+const isSamePath = function (pathA, pathB) {
+  return (
+    pathA.length === pathB.length &&
+    pathA.every((tokenA, index) => isSameToken(tokenA, pathB[index]))
   )
 }
 
