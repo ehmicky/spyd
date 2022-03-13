@@ -1,11 +1,10 @@
-import { iterate, normalizeEntry } from './iterate.js'
+import { iterate } from './iterate.js'
 
 // Retrieve all properties in `target` matching a query string.
 // Unlike `get|has()` it also return missing entries, letting consumers filter
 // them or not.
 export const list = function (target, queryOrPath) {
-  const entries = iterate(target, queryOrPath)
-  return entries.map(normalizeEntry)
+  return iterate(target, queryOrPath)
 }
 
 // Retrieve a single property's value in `target` matching a query string.

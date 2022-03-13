@@ -15,7 +15,8 @@ export const iterate = function (target, queryOrPaths) {
     missing: false,
   }))
   const entriesA = iterateLevel(entries, 0)
-  return entriesA
+  const entriesB = entriesA.map(normalizeEntry)
+  return entriesB
 }
 
 const iterateLevel = function (entries, index) {
@@ -84,8 +85,7 @@ const getLastProp = function ({ props }) {
   return props[props.length - 1]
 }
 
-// Compute all entries properties from the basic ones
-export const normalizeEntry = function ({ value, path, missing }) {
+const normalizeEntry = function ({ value, props: path, missing }) {
   const query = serialize(path)
   return { value, path, query, missing }
 }
