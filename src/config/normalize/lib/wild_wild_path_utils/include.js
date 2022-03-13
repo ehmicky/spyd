@@ -17,7 +17,7 @@ const returnTrue = function () {
   return true
 }
 
-// Remove values matching a query
+// Remove values not matching a query
 export const include = function (target, queryOrPaths, condition) {
   return reduceParents(pickEntry, condition, {
     target,
