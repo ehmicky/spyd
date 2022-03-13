@@ -39,7 +39,7 @@ const normalize = function (token) {
 //  - Missing property name: return no entries
 //  - Property exists but has `undefined` value: return an entry
 // eslint-disable-next-line max-params
-const list = function (value, path, token, missing) {
+const iterate = function (value, path, token, missing) {
   return [
     {
       value: value[token],
@@ -61,6 +61,6 @@ export const PROP_TOKEN = {
   parse,
   normalize,
   ...objectProps,
-  list,
+  iterate,
   equals,
 }

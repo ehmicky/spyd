@@ -34,7 +34,7 @@ const normalize = function ({ type }) {
 // Use the token to list entries against a target value.
 // We purposely ignore symbol properties by using `Object.keys()`.
 // eslint-disable-next-line max-params
-const list = function (value, path, token, missing) {
+const iterate = function (value, path, token, missing) {
   if (Array.isArray(value)) {
     return value.map((childValue, index) => ({
       value: childValue,
@@ -62,6 +62,6 @@ export const ANY_TOKEN = {
   parse,
   normalize,
   ...objectProps,
-  list,
+  iterate,
   equals,
 }

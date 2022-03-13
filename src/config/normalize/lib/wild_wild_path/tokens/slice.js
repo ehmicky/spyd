@@ -55,7 +55,7 @@ const normalize = function ({ type, from = 0, to }) {
 
 // Use the token to list entries against a target value.
 // eslint-disable-next-line max-params
-const list = function (value, path, { from, to }, missing) {
+const iterate = function (value, path, { from, to }, missing) {
   const fromIndex = getBoundedIndex(value, from)
   const toIndex = Math.max(getBoundedIndex(value, to), fromIndex)
   return new Array(toIndex - fromIndex).fill().map((_, index) => ({
@@ -84,6 +84,6 @@ export const SLICE_TOKEN = {
   parse,
   normalize,
   ...arrayProps,
-  list,
+  iterate,
   equals,
 }
