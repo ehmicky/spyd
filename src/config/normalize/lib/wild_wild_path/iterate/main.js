@@ -52,7 +52,7 @@ const iterateToken = function* ({ entries, index, parents, opts }) {
   const parentEntry = getParentEntry(entriesB, index)
 
   if (parentEntry !== undefined && !opts.childFirst) {
-    yield parentEntry
+    yield normalizeEntry(parentEntry)
   }
 
   if (parentEntry === undefined || entriesB.length !== 1) {
@@ -60,15 +60,12 @@ const iterateToken = function* ({ entries, index, parents, opts }) {
   }
 
   if (parentEntry !== undefined && opts.childFirst) {
-    yield parentEntry
+    yield normalizeEntry(parentEntry)
   }
 }
 
 const getParentEntry = function (entries, index) {
-  const parentEntry = entries.find(
-    ({ queryArray }) => queryArray.length === index,
-  )
-  return parentEntry === undefined ? undefined : normalizeEntry(parentEntry)
+  return entries.find(({ queryArray }) => queryArray.length === index)
 }
 
 const normalizeEntry = function ({ value, path, missing }) {
