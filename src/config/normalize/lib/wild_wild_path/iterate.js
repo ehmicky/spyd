@@ -27,23 +27,13 @@ export const iterate = function* (
 
 const iterateLevel = function* (entries, childFirst, index) {
   const entriesA = removeDuplicates(entries)
-  const parentEntries = entriesA
-    .filter(({ path }) => path.length === index)
-    .map(normalizeEntry)
+  const parentEntries = getParentEntries(entriesA, index)
 
   if (!childFirst) {
     yield* parentEntries
   }
 
-  if (parentEntries.length === entriesA.length) {
-    if (childFirst) {
-      yield* parentEntries
-    }
-
-    return
-  }
-
-  yield* iterateChildEntries(entries, childFirst, index)
+  yield* iterateChildEntries(entries, parentEntries, childFirst, index)
 
   if (childFirst) {
     yield* parentEntries
@@ -72,6 +62,15 @@ const isDuplicate = function (
         index < simplePathA.length || isSameToken(tokenA, pathB[index]),
     )
   )
+}
+
+const getParentEntries = function (entries, index) {
+  return entries.filter(({ path }) => path.length === index).map(normalizeEntry)
+}
+
+const normalizeEntry = function ({ value, simplePath: path, missing }) {
+  const query = serialize(path)
+  return { value, path, query, missing }
 }
 
 // Iteration among siglings is not sorted, for performance reasons.
@@ -111,7 +110,17 @@ export const handleMissingValue = function (value, token) {
   return { tokenType, missing, value: valueA }
 }
 
-const iterateChildEntries = function* (entries, childFirst, index) {
+// eslint-disable-next-line max-params
+const iterateChildEntries = function* (
+  entries,
+  parentEntries,
+  childFirst,
+  index,
+) {
+  if (parentEntries.length === entries.length) {
+    return
+  }
+
   const levelEntries = entries
     .filter(({ path }) => path.length !== index)
     .flatMap((entry) => iteratePath(entry, index))
@@ -140,9 +149,4 @@ const iterateChildren = function* (levelEntries, childFirst, index) {
 
 const getLastProp = function ({ simplePath }) {
   return simplePath[simplePath.length - 1]
-}
-
-const normalizeEntry = function ({ value, simplePath: path, missing }) {
-  const query = serialize(path)
-  return { value, path, query, missing }
 }
