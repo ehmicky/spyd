@@ -45,7 +45,7 @@ const applyRuleDeep = async function (
   { config, moves, warnings },
   { rule, rule: { namePath }, context, cwd, prefix, parent },
 ) {
-  const entries = list(config, namePath, { childFirst: true })
+  const entries = list(config, namePath, { childFirst: true, sort: true })
   return await pReduce(
     entries,
     (memo, { value, query: nameQuery, path: namePathA }) =>

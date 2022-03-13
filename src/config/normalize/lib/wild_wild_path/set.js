@@ -16,7 +16,10 @@ export const reduceParents = function (target, query, setFunc) {
   const paths = []
 
   // eslint-disable-next-line fp/no-loops
-  for (const { path } of iterate(target, query, { childFirst: false })) {
+  for (const { path } of iterate(target, query, {
+    childFirst: false,
+    sort: false,
+  })) {
     // eslint-disable-next-line max-depth
     if (!parentIsSet(paths, path)) {
       // eslint-disable-next-line fp/no-mutating-methods

@@ -1,9 +1,9 @@
-import { groupBy } from '../../../../../utils/group.js'
 import { parseQuery } from '../parsing/parse.js'
 import { serializePath } from '../parsing/serialize.js'
 
 import { removeDuplicates } from './duplicate.js'
 import { expandToken } from './expand.js'
+import { groupSortChildEntries } from './group.js'
 
 // Iterate over all values (and their associated path) matching a specific
 // query for on specific target value.
@@ -92,20 +92,10 @@ const iterateChildren = function* ({ childEntries, childFirst, sort, index }) {
     return
   }
 
-  const childEntriesGroups = groupSortChildEntries(childEntries)
+  const childEntriesGroups = groupSortChildEntries(childEntries, sort)
 
   // eslint-disable-next-line fp/no-loops
   for (const entries of childEntriesGroups) {
     yield* iterateLevel({ entries, childFirst, sort, index: nextIndex })
   }
-}
-
-// We need to group entries by the last property to ensure `childFirst` order.
-// We also sort when `sort` is true`
-const groupSortChildEntries = function (childEntries) {
-  return Object.values(groupBy(childEntries, getLastProp))
-}
-
-const getLastProp = function ({ path }) {
-  return path[path.length - 1]
 }

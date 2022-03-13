@@ -17,7 +17,10 @@ export const map = function (target, query, mapFunc) {
   let newTarget = target
 
   // eslint-disable-next-line fp/no-loops
-  for (const entry of iterate(target, query, { childFirst: true })) {
+  for (const entry of iterate(target, query, {
+    childFirst: true,
+    sort: false,
+  })) {
     // eslint-disable-next-line fp/no-mutation
     newTarget = mapEntry(mapFunc, newTarget, entry)
   }
