@@ -10,7 +10,11 @@ import { expandToken } from './expand.js'
 // Uses an iterator:
 //  - To allow consumers to return only the first matching entry quickly
 //  - To keep memory consumption low even on big queries
-export const iterate = function* (target, query, { childFirst = false } = {}) {
+export const iterate = function* (
+  target,
+  query,
+  { childFirst = false, sort = false } = {},
+) {
   const queryArrays = parseQuery(query)
   const entries = queryArrays.map((queryArray) => ({
     queryArray,
@@ -18,10 +22,10 @@ export const iterate = function* (target, query, { childFirst = false } = {}) {
     path: [],
     missing: false,
   }))
-  yield* iterateLevel(entries, childFirst, 0)
+  yield* iterateLevel({ entries, childFirst, sort, index: 0 })
 }
 
-const iterateLevel = function* (entries, childFirst, index) {
+const iterateLevel = function* ({ entries, childFirst, sort, index }) {
   const entriesA = removeDuplicates(entries)
   const parentEntries = getParentEntries(entriesA, index)
 
@@ -29,7 +33,13 @@ const iterateLevel = function* (entries, childFirst, index) {
     yield* parentEntries
   }
 
-  yield* iterateChildEntries(entries, parentEntries, childFirst, index)
+  yield* iterateChildEntries({
+    entries,
+    parentEntries,
+    childFirst,
+    sort,
+    index,
+  })
 
   if (childFirst) {
     yield* parentEntries
@@ -47,13 +57,13 @@ const normalizeEntry = function ({ value, path, missing }) {
   return { value, path, query, missing }
 }
 
-// eslint-disable-next-line max-params
-const iterateChildEntries = function* (
+const iterateChildEntries = function* ({
   entries,
   parentEntries,
   childFirst,
+  sort,
   index,
-) {
+}) {
   if (parentEntries.length === entries.length) {
     return
   }
@@ -66,14 +76,19 @@ const iterateChildEntries = function* (
     return
   }
 
-  yield* iterateChildren(childEntries, childFirst, index)
+  yield* iterateChildren({ childEntries, childFirst, sort, index })
 }
 
-const iterateChildren = function* (childEntries, childFirst, index) {
+const iterateChildren = function* ({ childEntries, childFirst, sort, index }) {
   const nextIndex = index + 1
 
   if (childEntries.length === 1) {
-    yield* iterateLevel(childEntries, childFirst, nextIndex)
+    yield* iterateLevel({
+      entries: childEntries,
+      childFirst,
+      sort,
+      index: nextIndex,
+    })
     return
   }
 
@@ -81,7 +96,12 @@ const iterateChildren = function* (childEntries, childFirst, index) {
 
   // eslint-disable-next-line fp/no-loops
   for (const childEntriesA of childEntriesGroups) {
-    yield* iterateLevel(childEntriesA, childFirst, nextIndex)
+    yield* iterateLevel({
+      entries: childEntriesA,
+      childFirst,
+      sort,
+      index: nextIndex,
+    })
   }
 }
 
