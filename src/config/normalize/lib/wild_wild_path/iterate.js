@@ -35,14 +35,20 @@ const iterateLevel = function (entries, index) {
 
 const iteratePath = function ({ path, value, props }, index) {
   const token = path[index]
-  const { tokenType, missing, value: valueA } = handleMissingValue(value, token)
+  const {
+    tokenType,
+    missing: missingParent,
+    value: valueA,
+  } = handleMissingValue(value, token)
   const levelEntries = tokenType.iterate(valueA, token)
-  return levelEntries.map(({ value: childValue, prop, missing: missingA }) => ({
-    path,
-    value: childValue,
-    props: [...props, prop],
-    missing: missing || missingA,
-  }))
+  return levelEntries.map(
+    ({ value: childValue, prop, missing: missingEntry }) => ({
+      path,
+      value: childValue,
+      props: [...props, prop],
+      missing: missingParent || missingEntry,
+    }),
+  )
 }
 
 // When the value does not exist, we set it deeply with `set()` but not with
