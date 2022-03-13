@@ -84,15 +84,15 @@ const iterateChildEntries = function* (
     return
   }
 
-  const levelEntries = entries
+  const childEntries = entries
     .filter(({ path }) => path.length !== index)
-    .flatMap((entry) => iteratePath(entry, index))
+    .flatMap((entry) => expandPath(entry, index))
 
-  if (levelEntries.length === 0) {
+  if (childEntries.length === 0) {
     return
   }
 
-  yield* iterateChildren(levelEntries, childFirst, index)
+  yield* iterateChildren(childEntries, childFirst, index)
 }
 
 // Iteration among siglings is not sorted, for performance reasons.
@@ -100,15 +100,15 @@ const iterateChildEntries = function* (
 // However, iteration is guaranteed to return child entries before parent ones.
 //  - This is useful for recursive logic which must often be applied in a
 //    specific parent-child order
-const iteratePath = function ({ path, value, simplePath }, index) {
+const expandPath = function ({ path, value, simplePath }, index) {
   const token = path[index]
   const {
     tokenType,
     missing: missingParent,
     value: valueA,
   } = handleMissingValue(value, token)
-  const levelEntries = tokenType.iterate(valueA, token)
-  return levelEntries.map(
+  const childEntries = tokenType.iterate(valueA, token)
+  return childEntries.map(
     ({ value: childValue, prop, missing: missingEntry }) => ({
       path,
       value: childValue,
@@ -132,18 +132,19 @@ export const handleMissingValue = function (value, token) {
   return { tokenType, missing, value: valueA }
 }
 
-const iterateChildren = function* (levelEntries, childFirst, index) {
+const iterateChildren = function* (childEntries, childFirst, index) {
   const nextIndex = index + 1
 
-  if (levelEntries.length === 1) {
-    yield* iterateLevel(levelEntries, childFirst, nextIndex)
+  if (childEntries.length === 1) {
+    yield* iterateLevel(childEntries, childFirst, nextIndex)
     return
   }
 
-  const levelEntriesGroups = Object.values(groupBy(levelEntries, getLastProp))
+  const childEntriesGroups = Object.values(groupBy(childEntries, getLastProp))
 
-  for (const levelEntriesA of levelEntriesGroups) {
-    yield* iterateLevel(levelEntriesA, childFirst, nextIndex)
+  // eslint-disable-next-line fp/no-loops
+  for (const childEntriesA of childEntriesGroups) {
+    yield* iterateLevel(childEntriesA, childFirst, nextIndex)
   }
 }
 
