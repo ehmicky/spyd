@@ -54,13 +54,13 @@ const normalize = function ({ type, from = 0, to }) {
 }
 
 // Use the token to list entries against a target value.
-const iterate = function (value, { from, to }, missing) {
+const iterate = function (value, { from, to }) {
   const fromIndex = getBoundedIndex(value, from)
   const toIndex = Math.max(getBoundedIndex(value, to), fromIndex)
   return new Array(toIndex - fromIndex).fill().map((_, index) => ({
     value: value[index + fromIndex],
     prop: index + fromIndex,
-    missing,
+    missing: false,
   }))
 }
 

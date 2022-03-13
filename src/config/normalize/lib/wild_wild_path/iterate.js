@@ -36,12 +36,12 @@ const iterateLevel = function (entries, index) {
 const iteratePath = function ({ path, value, props }, index) {
   const token = path[index]
   const { tokenType, missing, value: valueA } = handleMissingValue(value, token)
-  const levelEntries = tokenType.iterate(valueA, token, missing)
+  const levelEntries = tokenType.iterate(valueA, token)
   return levelEntries.map(({ value: childValue, prop, missing: missingA }) => ({
     path,
     value: childValue,
     props: [...props, prop],
-    missing: missingA,
+    missing: missing || missingA,
   }))
 }
 

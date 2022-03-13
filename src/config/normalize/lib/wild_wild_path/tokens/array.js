@@ -30,15 +30,9 @@ const normalize = function (token) {
 }
 
 // Use the token to list entries against a target value.
-const iterate = function (value, token, missing) {
+const iterate = function (value, token) {
   const index = getArrayIndex(value, token)
-  return [
-    {
-      value: value[index],
-      prop: index,
-      missing: missing || index >= value.length,
-    },
-  ]
+  return [{ value: value[index], prop: index, missing: index >= value.length }]
 }
 
 // Negative array indices start from the end.

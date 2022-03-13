@@ -33,19 +33,19 @@ const normalize = function ({ type }) {
 
 // Use the token to list entries against a target value.
 // We purposely ignore symbol properties by using `Object.keys()`.
-const iterate = function (value, token, missing) {
+const iterate = function (value) {
   if (Array.isArray(value)) {
     return value.map((childValue, index) => ({
       value: childValue,
       prop: index,
-      missing,
+      missing: false,
     }))
   }
 
   return Object.keys(value).map((childKey) => ({
     value: value[childKey],
     prop: childKey,
-    missing,
+    missing: false,
   }))
 }
 
