@@ -76,6 +76,7 @@ const iterateChildren = function* (childEntries, childFirst, index) {
 
   if (childEntries.length === 1) {
     yield* iterateLevel(childEntries, childFirst, nextIndex)
+    return
   }
 
   const childEntriesGroups = Object.values(groupBy(childEntries, getLastProp))
