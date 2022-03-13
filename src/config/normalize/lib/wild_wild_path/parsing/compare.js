@@ -48,7 +48,7 @@ export const isSamePath = function (pathA, pathB) {
 export const isSamePathFast = function (pathA, pathB) {
   return (
     pathA.length === pathB.length &&
-    pathA.every((prop, index) => isSameProp(pathB[index], prop))
+    pathA.every((prop, index) => isSameToken(pathB[index], prop))
   )
 }
 
@@ -58,17 +58,19 @@ export const isParentPath = function (parentPath, childPath) {
     childPath.length > parentPath.length &&
     childPath.every(
       (childToken, index) =>
-        index >= parentPath.length || isSameProp(childToken, parentPath[index]),
+        index >= parentPath.length ||
+        isSameToken(childToken, parentPath[index]),
     )
   )
 }
 
+// Check if two tokens are equal
 export const isSameToken = function (tokenA, tokenB) {
+  if (tokenA === tokenB) {
+    return true
+  }
+
   const tokenTypeA = getObjectTokenType(tokenA)
   const tokenTypeB = getObjectTokenType(tokenB)
   return tokenTypeA === tokenTypeB && tokenTypeA.equals(tokenA, tokenB)
-}
-
-const isSameProp = function (propA, propB) {
-  return propA === propB
 }
