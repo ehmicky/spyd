@@ -2,6 +2,14 @@ import { ARRAY_TOKEN } from './array.js'
 import { OTHER_TOKEN_TYPES } from './other.js'
 import { PROP_TOKEN } from './prop.js'
 
+// Retrieve the type name of a given token parsed object
+export const getTokenType = function (token) {
+  const tokenType = getObjectTokenType(token)
+  return tokenType === undefined ? UNKNOWN_TYPE : tokenType.name
+}
+
+const UNKNOWN_TYPE = 'unknown'
+
 // Retrieve the type of a given token parsed object
 export const getObjectTokenType = function (token) {
   return TOKEN_TYPES.find((tokenType) => tokenType.testObject(token))

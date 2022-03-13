@@ -41,24 +41,12 @@ const equals = function (tokenA, tokenB) {
   )
 }
 
-// Use the token to list entries against a target value.
-const iterate = function (value, token) {
-  return Object.keys(value)
-    .filter((childKey) => token.test(childKey))
-    .map((childKey) => ({
-      value: value[childKey],
-      prop: childKey,
-      missing: false,
-    }))
-}
-
 export const REGEXP_TOKEN = {
-  array: false,
+  name: 'regexp',
   testObject,
   serialize,
   testString,
   parse,
   normalize,
-  iterate,
   equals,
 }

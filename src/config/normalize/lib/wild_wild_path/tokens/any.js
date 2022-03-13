@@ -29,34 +29,17 @@ const normalize = function ({ type }) {
   return { type }
 }
 
-// Use the token to list entries against a target value.
-// By using `for in`, we purposely exclude both symbols and inherited properties
-const iterate = function (value) {
-  return Array.isArray(value)
-    ? value.map((childValue, index) => ({
-        value: childValue,
-        prop: index,
-        missing: false,
-      }))
-    : Object.keys(value).map((childKey) => ({
-        value: value[childKey],
-        prop: childKey,
-        missing: false,
-      }))
-}
-
 // Check if two tokens are the same
 const equals = function () {
   return true
 }
 
 export const ANY_TOKEN = {
-  array: false,
+  name: 'any',
   testObject,
   serialize,
   testString,
   parse,
   normalize,
-  iterate,
   equals,
 }

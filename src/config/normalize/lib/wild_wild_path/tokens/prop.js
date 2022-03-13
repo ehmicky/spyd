@@ -33,26 +33,17 @@ const normalize = function (token) {
   return token
 }
 
-// Use the token to list entries against a target value.
-// We distinguish between:
-//  - Missing property name: return no entries
-//  - Property exists but has `undefined` value: return an entry
-const iterate = function (value, token) {
-  return [{ value: value[token], prop: token, missing: !(token in value) }]
-}
-
 // Check if two tokens are the same
 const equals = function (tokenA, tokenB) {
   return tokenA === tokenB
 }
 
 export const PROP_TOKEN = {
-  array: false,
+  name: 'prop',
   testObject,
   serialize,
   testString,
   parse,
   normalize,
-  iterate,
   equals,
 }

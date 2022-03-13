@@ -1,6 +1,8 @@
 import isPlainObj from 'is-plain-obj'
 
-import { getObjectTokenType } from '../tokens/main.js'
+import { getTokenType } from '../tokens/main.js'
+
+import { iterateToken } from './iterate.js'
 
 // Iteration among siglings is not sorted, for performance reasons.
 //  - Consumers can sort it through using the `query` property
@@ -14,11 +16,11 @@ export const expandToken = function (
 ) {
   const token = queryArray[index]
   const {
-    tokenType,
+    tokenTypeName,
     missing: missingParent,
     value: valueA,
   } = handleMissingValue(value, token, classes)
-  const childEntries = tokenType.iterate(valueA, token)
+  const childEntries = iterateToken(valueA, token, tokenTypeName)
   return childEntries.map(
     ({ value: childValue, prop, missing: missingEntry }) => ({
       queryArray,
@@ -40,20 +42,22 @@ export const expandToken = function (
 //  - Are not listed by token types returning multiple entries like *
 //  - But are handled by the other ones
 export const handleMissingValue = function (value, token, classes) {
-  const tokenType = getObjectTokenType(token)
-  const { missing, value: valueA } = tokenType.array
-    ? handleMissingArrayValue(tokenType, value)
-    : handleMissingObjectValue(tokenType, value, classes)
-  return { tokenType, missing, value: valueA }
+  const tokenTypeName = getTokenType(token)
+  const { missing, value: valueA } = ARRAY_TOKEN_TYPES.has(tokenTypeName)
+    ? handleMissingArrayValue(value)
+    : handleMissingObjectValue(value, classes)
+  return { tokenTypeName, missing, value: valueA }
 }
 
-const handleMissingArrayValue = function (tokenType, value) {
+const ARRAY_TOKEN_TYPES = new Set(['array', 'slice'])
+
+const handleMissingArrayValue = function (value) {
   return Array.isArray(value)
     ? { missing: false, value }
     : { missing: true, value: [] }
 }
 
-const handleMissingObjectValue = function (tokenType, value, classes) {
+const handleMissingObjectValue = function (value, classes) {
   return isRecurseObject(value, classes)
     ? { missing: false, value }
     : { missing: true, value: {} }
