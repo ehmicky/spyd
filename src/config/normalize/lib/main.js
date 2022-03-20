@@ -49,6 +49,7 @@ const applyRuleDeep = async function (
     childFirst: true,
     sort: true,
     missing: true,
+    entries: true,
   })
   return await pReduce(
     entries,
