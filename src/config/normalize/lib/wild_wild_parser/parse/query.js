@@ -16,10 +16,10 @@ export const parseQueryString = function (queryString) {
     // eslint-disable-next-line max-depth
     if (char === ESCAPE) {
       parseEscape(state, queryString)
-    } else if (char === TOKEN_SEPARATOR) {
-      addToken(state)
     } else if (char === ARRAY_SEPARATOR || state.index === queryString.length) {
       addQueryArray(state)
+    } else if (char === TOKEN_SEPARATOR) {
+      addToken(state)
     } else {
       state.chars += char
     }
