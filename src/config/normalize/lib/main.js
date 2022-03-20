@@ -26,13 +26,13 @@ export const normalizeConfigProps = async function (
   const rulesA = normalizeRules(rules)
 
   try {
-    const { config: configB, warnings } = await pReduce(
+    const { config: configA, warnings } = await pReduce(
       rulesA,
       (memo, rule) =>
         applyRuleDeep(memo, { rule, context, cwd, prefix, parent }),
       { config, moves: [], warnings: [] },
     )
-    const value = cleanObject(configB)
+    const value = cleanObject(configA)
     logWarnings(warnings, soft)
     return { value, warnings }
   } catch (error) {
