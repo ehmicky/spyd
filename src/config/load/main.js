@@ -5,7 +5,7 @@ import { UserError } from '../../error/main.js'
 import { addBases, getBasePath } from '../cwd.js'
 import { deepMerge } from '../merge.js'
 import { serializePath } from '../normalize/lib/wild_wild_parser/main.js'
-import { get, has, set, list } from '../normalize/lib/wild_wild_path/main.js'
+import { get, set, list } from '../normalize/lib/wild_wild_path/main.js'
 
 import { loadConfigContents } from './contents.js'
 import { normalizeConfigProp } from './normalize.js'
@@ -170,27 +170,25 @@ const resolveReference = async function ({ path, value }, base) {
     configOpt,
     base,
   )
-  validateReferencePath({ configWithBases, referenceName, configOpt, path })
-  const newValue = get(configWithBases, referenceName)
-  return { path, parentBase, newValue }
+  const entry = get(configWithBases, referenceName, { entries: true })
+  validateReferencePath({ entry, referenceName, configOpt, path })
+  return { path, parentBase, newValue: entry.value }
 }
 
 const REFERENCE_SEPARATOR = '##'
 
 const validateReferencePath = function ({
-  configWithBases,
+  entry,
   referenceName,
   configOpt,
   path,
 }) {
-  if (has(configWithBases, referenceName)) {
-    return
+  if (entry === undefined) {
+    const name = serializePath(path)
+    throw new UserError(
+      `Configuration property "${name}" must be valid: "${referenceName}" property does not exist in "${configOpt}"`,
+    )
   }
-
-  const name = serializePath(path)
-  throw new UserError(
-    `Configuration property "${name}" must be valid: "${referenceName}" property does not exist in "${configOpt}"`,
-  )
 }
 
 // When the new value is an array and the parent is also an array, those are
