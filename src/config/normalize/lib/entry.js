@@ -8,20 +8,9 @@ import { set, remove } from './wild_wild_path/main.js'
 // Apply rule for a specific entry
 export const applyEntryRule = async function (
   { config, moves, warnings },
-  {
-    value,
-    nameQuery,
-    namePath,
-    rule,
-    rule: { example },
-    context,
-    cwd,
-    prefix,
-    parent,
-  },
+  { value, namePath, rule, rule: { example }, context, cwd, prefix, parent },
 ) {
   const opts = await getOpts({
-    nameQuery,
     namePath,
     config,
     context,

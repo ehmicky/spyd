@@ -7,7 +7,6 @@ import { parsePath, serializePath } from './wild_wild_parser/main.js'
 // Retrieve `opts` passed to most methods.
 // `funcOpts` are passed to user-provided functions.
 export const getOpts = async function ({
-  nameQuery,
   namePath,
   config,
   context,
@@ -17,10 +16,11 @@ export const getOpts = async function ({
   example,
   moves,
 }) {
+  const name = serializePath(namePath)
   const originalPath = applyMoves(moves, namePath)
   const originalName = serializePath(originalPath)
   const funcOpts = {
-    name: nameQuery,
+    name,
     path: namePath,
     originalName,
     originalPath,

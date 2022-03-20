@@ -52,10 +52,9 @@ const applyRuleDeep = async function (
   })
   return await pReduce(
     entries,
-    (memo, { value, query: nameQuery, path: namePathA }) =>
+    (memo, { value, path: namePathA }) =>
       applyEntryRule(memo, {
         value,
-        nameQuery,
         namePath: namePathA,
         rule,
         context,

@@ -1,10 +1,7 @@
 import { handleMissingValue } from './missing.js'
 
-// Iteration among siblings is not sorted, for performance reasons.
-//  - Consumers can sort it through using the `query` property
-// However, iteration is guaranteed to return child entries before parent ones.
-//  - This is useful for recursive logic which must often be applied in a
-//    specific parent-child order
+// Expand special tokens like *, **, regexps, slices into property names or
+// indices for a given value
 export const expandTokens = function (entries, index, opts) {
   return entries
     .filter(({ queryArray }) => queryArray.length !== index)

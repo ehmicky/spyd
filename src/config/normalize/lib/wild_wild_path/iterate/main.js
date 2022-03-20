@@ -1,4 +1,4 @@
-import { parseQuery, serializePath } from '../../wild_wild_parser/main.js'
+import { parseQuery } from '../../wild_wild_parser/main.js'
 
 import { iterateChildEntries } from './children.js'
 import { removeDuplicates } from './duplicate.js'
@@ -93,6 +93,5 @@ const shouldYieldParentLast = function (
 }
 
 const normalizeEntry = function ({ value, path, missing }) {
-  const query = serializePath(path)
-  return { value, path, query, missing }
+  return { value, path, missing }
 }
