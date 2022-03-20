@@ -1,7 +1,7 @@
 import {
   normalizeQueryArrays,
   isQueryString,
-  normalizePath,
+  normalizePathShape,
 } from './normalize.js'
 import { parseQueryString } from './query.js'
 
@@ -84,7 +84,7 @@ import { parseQueryString } from './query.js'
 // Parse a path
 export const parsePath = function (query) {
   const queryArrays = parseQuery(query)
-  return normalizePath(queryArrays)
+  return normalizePathShape(queryArrays)
 }
 
 // Parse a query string or array

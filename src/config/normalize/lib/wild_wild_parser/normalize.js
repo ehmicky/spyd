@@ -9,7 +9,7 @@ export const isQueryString = function (query) {
 }
 
 // Transform a queryArrays into a path, if possible
-export const normalizePath = function (queryArrays) {
+export const normalizePathShape = function (queryArrays) {
   if (queryArrays.length !== 1) {
     throwQueryArraysError(queryArrays, 'It must not be a union.')
   }
