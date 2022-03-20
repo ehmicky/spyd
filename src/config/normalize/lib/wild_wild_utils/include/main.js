@@ -1,5 +1,5 @@
-import { isParentPath } from '../wild_wild_parser/main.js'
-import { set, remove, list } from '../wild_wild_path/main.js'
+import { isParentPath } from '../../wild_wild_parser/main.js'
+import { set, remove, list } from '../../wild_wild_path/main.js'
 
 // Returns an object with only the properties being queried.
 export const pick = function (
