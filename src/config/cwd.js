@@ -1,9 +1,8 @@
 import filterObj from 'filter-obj'
 
-import { recurseValues } from '../utils/recurse.js'
-
 import { isRecurseObject } from './merge.js'
 import { get } from './normalize/lib/wild_wild_path/main.js'
+import { map } from './normalize/lib/wild_wild_utils/main.js'
 
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.
@@ -91,12 +90,9 @@ const isNotBaseProp = function (key) {
   return !key.endsWith(BASE_KEY_SUFFIX) && !key.endsWith(BASE_ITEMS_SUFFIX)
 }
 
+// We ensure this recurse the same way as the merging logic
 const recurseBaseProps = function (configObject, mapper) {
-  return recurseValues(
-    configObject,
-    (value) => mapBaseProps(value, mapper),
-    isRecurseObject,
-  )
+  return map(configObject, '**', (value) => mapBaseProps(value, mapper))
 }
 
 const mapBaseProps = function (value, mapper) {

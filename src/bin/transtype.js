@@ -1,10 +1,10 @@
 import isPlainObj from 'is-plain-obj'
 
-import { recurseValues } from '../utils/recurse.js'
+import { map } from '../config/normalize/lib/wild_wild_utils/main.js'
 
 // Transtype CLI flags after parsing
 export const transtypeCliFlags = function (configFlags) {
-  return recurseValues(configFlags, transtypeCliFlag)
+  return map(configFlags, '**', transtypeCliFlag, { leaves: true })
 }
 
 const transtypeCliFlag = function (value) {
