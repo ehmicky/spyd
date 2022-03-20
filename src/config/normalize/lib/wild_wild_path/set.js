@@ -42,6 +42,7 @@ export const reduceParents = function ({
     leaves,
     sort: false,
     missing,
+    entries: true,
     classes,
     inherited,
   })
