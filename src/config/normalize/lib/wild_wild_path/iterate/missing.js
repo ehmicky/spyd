@@ -20,29 +20,29 @@ export const getMissingValue = function (value, prop, { missing, classes }) {
 
 export const handleMissingValue = function (value, token, classes) {
   const tokenType = getTokenType(token)
-  const { missing, value: valueA } = MISSING_HANDLERS[tokenType.valueType](
-    value,
-    classes,
-  )
+  const { isPresent, defaultValue } = MISSING_HANDLERS[tokenType.valueType]
+  const missing = !isPresent(value, classes)
+  const valueA = missing ? defaultValue : value
   return { tokenType, missing, value: valueA }
 }
 
-const handleMissingAnyValue = function (value, classes) {
-  return isRecurseObject(value, classes) || Array.isArray(value)
-    ? { missing: false, value }
-    : { missing: true, value: {} }
-}
-
-const handleMissingArrayValue = function (value) {
-  return Array.isArray(value)
-    ? { missing: false, value }
-    : { missing: true, value: [] }
-}
-
-const handleMissingObjectValue = function (value, classes) {
-  return isRecurseObject(value, classes)
-    ? { missing: false, value }
-    : { missing: true, value: {} }
+const MISSING_HANDLERS = {
+  any: {
+    isPresent(value, classes) {
+      return isRecurseObject(value, classes) || Array.isArray(value)
+    },
+    defaultValue: {},
+  },
+  array: {
+    isPresent: Array.isArray,
+    defaultValue: [],
+  },
+  object: {
+    isPresent(value, classes) {
+      return isRecurseObject(value, classes)
+    },
+    defaultValue: {},
+  },
 }
 
 // Whether a property is considered an object that can:
@@ -65,10 +65,4 @@ const isRecurseObject = function (value, classes) {
   return classes
     ? typeof value === 'object' && value !== null
     : isPlainObj(value)
-}
-
-const MISSING_HANDLERS = {
-  any: handleMissingAnyValue,
-  array: handleMissingArrayValue,
-  object: handleMissingObjectValue,
 }
