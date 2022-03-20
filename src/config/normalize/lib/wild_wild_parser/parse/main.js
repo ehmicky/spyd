@@ -4,11 +4,11 @@ import {
   ARRAY_SEPARATOR_NAME,
   TOKEN_SEPARATOR,
   SPECIAL_CHARS,
-} from './tokens/escape.js'
-import { getStringTokenType } from './tokens/main.js'
-import { normalizeArraysPath } from './validate/path.js'
-import { validateEmptyQuery, validateQueryString } from './validate/string.js'
-import { throwQueryError } from './validate/throw.js'
+} from '../tokens/escape.js'
+import { getStringTokenType } from '../tokens/main.js'
+import { normalizeArraysPath } from '../validate/path.js'
+import { validateEmptyQuery, validateQueryString } from '../validate/string.js'
+import { throwQueryError } from '../validate/throw.js'
 
 // Parse a query string into an array of tokens.
 // Also validate and normalize it.
