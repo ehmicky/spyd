@@ -1,14 +1,9 @@
-import {
-  ESCAPE,
-  ARRAY_SEPARATOR,
-  ARRAY_SEPARATOR_NAME,
-  TOKEN_SEPARATOR,
-  SPECIAL_CHARS,
-} from '../tokens/escape.js'
+import { ESCAPE, ARRAY_SEPARATOR, TOKEN_SEPARATOR } from '../tokens/escape.js'
 import { getStringTokenType } from '../tokens/main.js'
 import { normalizeArraysPath } from '../validate/path.js'
 import { validateEmptyQuery, validateQueryString } from '../validate/string.js'
-import { throwQueryError } from '../validate/throw.js'
+
+import { parseEscape } from './escape.js'
 
 // Parse a query string into an array of tokens.
 // Also validate and normalize it.
@@ -54,25 +49,6 @@ const getInitialState = function () {
   resetQueryArrayState(state)
   resetTokenState(state)
   return state
-}
-
-const parseEscape = function (state, queryString) {
-  const nextChar = queryString[state.index + 1]
-
-  if (SPECIAL_CHARS.has(nextChar)) {
-    state.index += 1
-    state.chars += nextChar
-    return
-  }
-
-  if (state.chars.length !== 0) {
-    throwQueryError(
-      queryString,
-      `Character "${ESCAPE}" must either be at the start of a token, or be followed by ${ARRAY_SEPARATOR_NAME} or ${TOKEN_SEPARATOR} or ${ESCAPE}`,
-    )
-  }
-
-  state.isProp = true
 }
 
 const addQueryArray = function (state) {
