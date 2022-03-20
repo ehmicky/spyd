@@ -7,11 +7,12 @@ export const pick = function (
   query,
   { sort, classes, inherited } = {},
 ) {
-  return reduceParents(
-    pickEntry.bind(undefined, { classes, inherited }),
-    returnTrue,
-    { target, newTarget: {}, query, sort, entries: false, classes, inherited },
-  )
+  return include(target, query, returnTrue, {
+    sort,
+    entries: false,
+    classes,
+    inherited,
+  })
 }
 
 const returnTrue = function () {
