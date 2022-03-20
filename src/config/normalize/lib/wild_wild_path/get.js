@@ -6,7 +6,16 @@ import { iterate } from './iterate/main.js'
 export const list = function (
   target,
   query,
-  { childFirst, roots, leaves, sort, missing, classes, inherited } = {},
+  {
+    childFirst,
+    roots,
+    leaves,
+    sort,
+    missing,
+    entries,
+    classes,
+    inherited,
+  } = {},
 ) {
   return [
     ...iterate(target, query, {
@@ -15,6 +24,7 @@ export const list = function (
       leaves,
       sort,
       missing,
+      entries,
       classes,
       inherited,
     }),

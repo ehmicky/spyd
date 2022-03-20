@@ -16,6 +16,17 @@ export const validateInherited = function ({ classes, inherited }) {
   }
 }
 
+// `missing` entries would be just `undefined` if `entries` is `false`, without
+// the consumer knowing their `path` or whether the `undefined` value is missing
+// or not.
+export const validateMissing = function ({ missing, entries }) {
+  if (missing && !entries) {
+    throw new Error(
+      'The "entries" option must be true when the "missing" option is true.',
+    )
+  }
+}
+
 // `roots` and `leaves` do opposite things, so are incompatible
 export const validateLeaves = function ({ roots, leaves }) {
   if (roots && leaves) {
