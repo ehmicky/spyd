@@ -7,13 +7,13 @@ export const pick = function (
   query,
   { sort, classes, inherited } = {},
 ) {
+  const setFunc = pickEntry.bind(undefined, { classes, inherited })
   const entries = listEntries(target, query, {
     roots: true,
     sort,
     classes,
     inherited,
   })
-  const setFunc = pickEntry.bind(undefined, { classes, inherited })
   return entries.reduce(setFunc, {})
 }
 
