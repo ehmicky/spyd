@@ -33,7 +33,7 @@ const equals = function (tokenA, tokenB) {
 }
 
 export const ARRAY_TOKEN = {
-  name: 'array',
+  name: 'index',
   testObject,
   serialize,
   testString,

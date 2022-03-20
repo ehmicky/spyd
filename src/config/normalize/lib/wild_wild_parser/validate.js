@@ -25,7 +25,7 @@ export const validateEmptyQuery = function (queryArrays, queryString) {
 // Transform a queryArrays into a path, if possible
 // Paths are a subset of query strings|arrays which use:
 //  - No unions
-//  - Only prop tokens, and array tokens (positive only)
+//  - Only prop and index tokens (positive only)
 // Those are the ones exposed in output, as opposed to query arrays which are
 // exposed in input.
 export const normalizeArraysPath = function (queryArrays, query) {
@@ -71,7 +71,7 @@ const validateProp = function (prop, query) {
 
 // Negative indices are not allowed in paths
 const isNegativeIndex = function (tokenType, prop) {
-  return tokenType.name === 'array' && (Object.is(prop, -0) || prop < 0)
+  return tokenType.name === 'index' && (Object.is(prop, -0) || prop < 0)
 }
 
 // Normalize query arrays
