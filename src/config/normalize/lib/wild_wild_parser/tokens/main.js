@@ -1,4 +1,4 @@
-import { ARRAY_TOKEN } from './array.js'
+import { INDEX_TOKEN } from './array.js'
 import { OTHER_TOKEN_TYPES } from './other.js'
 import { PROP_TOKEN } from './prop.js'
 
@@ -30,4 +30,4 @@ export const getPathObjectTokenType = function (token) {
   return PATH_TOKEN_TYPES.find((tokenType) => tokenType.testObject(token))
 }
 
-const PATH_TOKEN_TYPES = [ARRAY_TOKEN, PROP_TOKEN]
+const PATH_TOKEN_TYPES = [INDEX_TOKEN, PROP_TOKEN]

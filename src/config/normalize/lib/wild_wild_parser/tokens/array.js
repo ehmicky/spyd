@@ -32,7 +32,7 @@ const equals = function (tokenA, tokenB) {
   return Object.is(tokenA, tokenB)
 }
 
-export const ARRAY_TOKEN = {
+export const INDEX_TOKEN = {
   name: 'index',
   testObject,
   serialize,

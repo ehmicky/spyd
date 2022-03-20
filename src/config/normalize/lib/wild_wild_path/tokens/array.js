@@ -20,7 +20,7 @@ export const getArrayIndex = function (value, token) {
     : Math.max(value.length + token, 0)
 }
 
-export const ARRAY_TOKEN = {
+export const INDEX_TOKEN = {
   name: 'index',
   array: true,
   iterate,

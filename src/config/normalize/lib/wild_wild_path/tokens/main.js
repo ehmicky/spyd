@@ -2,7 +2,7 @@ import { getTokenType as getTokenTypeName } from '../../wild_wild_parser/main.js
 
 import { ANY_TOKEN } from './any.js'
 import { ANY_DEEP_TOKEN } from './any_deep.js'
-import { ARRAY_TOKEN } from './array.js'
+import { INDEX_TOKEN } from './array.js'
 import { PROP_TOKEN } from './prop.js'
 import { REGEXP_TOKEN } from './regexp.js'
 import { SLICE_TOKEN } from './slice.js'
@@ -16,7 +16,7 @@ export const getTokenType = function (token) {
 const TOKEN_TYPES = {
   [ANY_TOKEN.name]: ANY_TOKEN,
   [ANY_DEEP_TOKEN.name]: ANY_DEEP_TOKEN,
-  [ARRAY_TOKEN.name]: ARRAY_TOKEN,
+  [INDEX_TOKEN.name]: INDEX_TOKEN,
   [PROP_TOKEN.name]: PROP_TOKEN,
   [REGEXP_TOKEN.name]: REGEXP_TOKEN,
   [SLICE_TOKEN.name]: SLICE_TOKEN,

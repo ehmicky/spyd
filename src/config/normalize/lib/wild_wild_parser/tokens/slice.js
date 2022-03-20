@@ -1,6 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { ARRAY_TOKEN } from './array.js'
+import { INDEX_TOKEN } from './array.js'
 
 // Check the type of a parsed token.
 const testObject = function (token) {
@@ -13,7 +13,7 @@ const testObject = function (token) {
 }
 
 const isEdge = function (edge) {
-  return edge === undefined || ARRAY_TOKEN.testObject(edge)
+  return edge === undefined || INDEX_TOKEN.testObject(edge)
 }
 
 // Serialize a token to a string
@@ -22,7 +22,7 @@ const serialize = function ({ from, to }) {
 }
 
 const serializeEdge = function (edge) {
-  return edge === undefined ? DEFAULT_EDGE_STRING : ARRAY_TOKEN.serialize(edge)
+  return edge === undefined ? DEFAULT_EDGE_STRING : INDEX_TOKEN.serialize(edge)
 }
 
 // Check the type of a serialized token
@@ -39,7 +39,7 @@ const parse = function (chars) {
 }
 
 const parseEdge = function (chars) {
-  return chars === DEFAULT_EDGE_STRING ? undefined : ARRAY_TOKEN.parse(chars)
+  return chars === DEFAULT_EDGE_STRING ? undefined : INDEX_TOKEN.parse(chars)
 }
 
 const DEFAULT_EDGE_STRING = ''

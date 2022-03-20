@@ -1,5 +1,5 @@
 import { ANY_TOKEN, ANY_DEEP_TOKEN } from './any.js'
-import { ARRAY_TOKEN } from './array.js'
+import { INDEX_TOKEN } from './array.js'
 import { REGEXP_TOKEN } from './regexp.js'
 import { SLICE_TOKEN } from './slice.js'
 
@@ -15,5 +15,5 @@ export const OTHER_TOKEN_TYPES = [
   ANY_TOKEN,
   REGEXP_TOKEN,
   SLICE_TOKEN,
-  ARRAY_TOKEN,
+  INDEX_TOKEN,
 ]
