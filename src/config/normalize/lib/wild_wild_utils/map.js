@@ -17,7 +17,15 @@ export const map = function (
   target,
   query,
   mapFunc,
-  { mutate, roots, leaves, missing, classes, inherited } = {},
+  {
+    mutate,
+    roots,
+    leaves,
+    missing,
+    entries: entriesOpt,
+    classes,
+    inherited,
+  } = {},
 ) {
   const entries = list(target, query, {
     childFirst: true,
@@ -25,6 +33,7 @@ export const map = function (
     leaves,
     sort: false,
     missing,
+    entries: true,
     classes,
     inherited,
   })
@@ -36,6 +45,7 @@ export const map = function (
         entry,
         mutate,
         missing,
+        entriesOpt,
         classes,
         inherited,
       }),
@@ -50,11 +60,13 @@ const mapEntry = function ({
   entry: { path },
   mutate,
   missing,
+  entriesOpt,
   classes,
   inherited,
 }) {
   const value = get(target, path, { missing, classes, inherited })
-  const mappedValue = mapFunc({ ...entry, value })
+  const entryA = entriesOpt ? { ...entry, value } : value
+  const mappedValue = mapFunc(entryA)
   return value === mappedValue
     ? target
     : set(target, path, mappedValue, { mutate, missing, classes, inherited })
