@@ -9,11 +9,7 @@ import { mapValues } from '../utils/map.js'
 // make printing configuration nicer.
 export const removeEmptyValues = function (object) {
   const objectA = removeEmptyChildren(object)
-  return mapValues(objectA, removeEmptyPair, { deep: true })
-}
-
-const removeEmptyPair = function (value) {
-  return removeEmptyChildren(value)
+  return mapValues(objectA, removeEmptyChildren, { deep: true })
 }
 
 const removeEmptyChildren = function (value) {
