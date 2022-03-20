@@ -36,46 +36,31 @@ export const list = function (
 export const get = function (
   target,
   query,
-  { childFirst, roots, leaves, sort, classes, inherited } = {},
-) {
-  const entry = getEntry(target, query, {
-    childFirst,
-    roots,
-    leaves,
-    sort,
-    classes,
-    inherited,
-  })
-  return entry === undefined ? undefined : entry.value
-}
-
-// Check if a property is not missing according to a query
-export const has = function (target, query, { classes, inherited } = {}) {
-  return (
-    getEntry(target, query, {
-      childFirst: false,
-      roots: false,
-      leaves: false,
-      sort: false,
-      classes,
-      inherited,
-    }) !== undefined
-  )
-}
-
-// Find the first non-missing entry
-const getEntry = function (
-  target,
-  query,
-  { childFirst, roots, leaves, sort, classes, inherited },
+  { childFirst, roots, leaves, sort, entries, classes, inherited } = {},
 ) {
   return iterate(target, query, {
     childFirst,
     roots,
     leaves,
     sort,
+    entries,
     missing: false,
     classes,
     inherited,
   }).next().value
+}
+
+// Check if a property is not missing according to a query
+export const has = function (target, query, { classes, inherited } = {}) {
+  return (
+    get(target, query, {
+      childFirst: false,
+      roots: false,
+      leaves: false,
+      sort: false,
+      entries: true,
+      classes,
+      inherited,
+    }) !== undefined
+  )
 }
