@@ -1,9 +1,9 @@
 import { getDummyRules } from '../../normalize/dummy.js'
-import { isSameQuery } from '../../normalize/lib/wild_wild_parser/main.js'
 import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { PluginError, UserError, CoreError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
+import { normalizeRuleName, validateSharedProp } from './shared.js'
 
 // Validate a plugin has the correct shape and normalize it
 export const normalizeShape = async function ({
@@ -84,20 +84,20 @@ const idProp = {
 
 const configPropName = {
   name: 'config.*.name',
-  validate(name, { context: { sharedPropNames } }) {
-    if (isSharedProp(name, sharedPropNames)) {
-      throw new Error(
-        `must not redefine core configuration property "${name}".`,
-      )
-    }
+  transform(name, { context: { sharedPropNames } }) {
+    const nameA = transformConfigPropName(name)
+    validateSharedProp(nameA, sharedPropNames)
+    return nameA
   },
   example: 'propertyName',
 }
 
-const isSharedProp = function (name, sharedPropNames) {
-  return sharedPropNames.some((sharedPropName) =>
-    isSameQuery(name, sharedPropName),
-  )
+const transformConfigPropName = function (name) {
+  try {
+    return normalizeRuleName(name)
+  } catch (error) {
+    throw new Error(`must be valid: ${error.message}`)
+  }
 }
 
 // Rules shared by all plugins
