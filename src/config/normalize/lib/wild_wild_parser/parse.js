@@ -82,13 +82,13 @@ import { parseQueryString } from './query.js'
 //  - I.e. query or path syntax errors, or wrong arguments
 //  - But queries matching nothing do not throw: instead they return nothing
 // Parse a path
-export const parsePath = function (query) {
-  const queryArrays = parseQuery(query)
+export const normalizePath = function (query) {
+  const queryArrays = normalizeQuery(query)
   return normalizePathShape(queryArrays)
 }
 
 // Parse a query string or array
-export const parseQuery = function (query) {
+export const normalizeQuery = function (query) {
   return isQueryString(query)
     ? safeParseQueryString(query)
     : normalizeQueryArrays(query)

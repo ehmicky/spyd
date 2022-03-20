@@ -2,7 +2,7 @@ import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolvePath } from './path.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
-import { parsePath } from './wild_wild_parser/main.js'
+import { normalizePath } from './wild_wild_parser/main.js'
 import { has } from './wild_wild_path/main.js'
 
 // Once the initial value has been computed, apply validation and transforms,
@@ -70,6 +70,6 @@ const renameProp = async function (value, rename, opts) {
     return
   }
 
-  const renamedPath = parsePath(renameReturn)
+  const renamedPath = normalizePath(renameReturn)
   return has(opts.funcOpts.config, renamedPath) ? undefined : renamedPath
 }

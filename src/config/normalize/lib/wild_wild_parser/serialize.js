@@ -1,4 +1,4 @@
-import { parseQuery, parsePath } from './parse.js'
+import { normalizeQuery, normalizePath } from './parse.js'
 import { TOKEN_SEPARATOR, ARRAY_SEPARATOR } from './tokens/escape.js'
 import { getObjectTokenType } from './tokens/main.js'
 
@@ -6,13 +6,13 @@ import { getObjectTokenType } from './tokens/main.js'
 // When passing a query string, it is parsed and re-serialized to validate and
 // normalize it.
 export const serializeQuery = function (query) {
-  const queryArrays = parseQuery(query)
+  const queryArrays = normalizeQuery(query)
   return queryArrays.map(serializeQueryArray).join(ARRAY_SEPARATOR)
 }
 
 // Inverse of `parsePath()`
 export const serializePath = function (query) {
-  const path = parsePath(query)
+  const path = normalizePath(query)
   return serializeQueryArray(path)
 }
 

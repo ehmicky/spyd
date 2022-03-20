@@ -4,6 +4,6 @@ export {
   isSameToken,
   isParentPath,
 } from './compare.js'
-export { parseQuery, parsePath } from './parse.js'
+export { normalizeQuery, normalizePath } from './parse.js'
 export { serializeQuery, serializePath } from './serialize.js'
 export { getTokenType } from './tokens/main.js'

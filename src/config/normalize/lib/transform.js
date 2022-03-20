@@ -2,7 +2,7 @@ import isPlainObj from 'is-plain-obj'
 import pReduce from 'p-reduce'
 
 import { callValueFunc } from './call.js'
-import { parsePath } from './wild_wild_parser/main.js'
+import { normalizePath } from './wild_wild_parser/main.js'
 
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.
@@ -58,7 +58,7 @@ const isTransformMove = function (transformReturn) {
 }
 
 const getTransformMove = function ({ value, newProp }) {
-  const newPropA = parsePath(newProp)
+  const newPropA = normalizePath(newProp)
   return newPropA.length === 0 ? {} : { value, newProp: newPropA }
 }
 

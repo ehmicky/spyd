@@ -1,4 +1,4 @@
-import { parseQuery, serializeQuery } from './wild_wild_parser/main.js'
+import { normalizeQuery, serializeQuery } from './wild_wild_parser/main.js'
 import { get } from './wild_wild_path/main.js'
 
 // Validate and normalize rules.
@@ -10,7 +10,7 @@ export const normalizeRules = function (rules) {
 
 const parseName = function ({ name, ...rule }) {
   const nameQuery = serializeQuery(name)
-  const namePath = parseQuery(name)
+  const namePath = normalizeQuery(name)
   return { ...rule, nameQuery, namePath }
 }
 

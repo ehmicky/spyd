@@ -1,4 +1,4 @@
-import { parseQuery } from '../../wild_wild_parser/main.js'
+import { normalizeQuery } from '../../wild_wild_parser/main.js'
 
 import { iterateChildEntries } from './children.js'
 import { removeDuplicates } from './duplicate.js'
@@ -18,7 +18,7 @@ export const iterate = function* (target, query, opts) {
 }
 
 const getRootEntries = function (target, query) {
-  const queryArrays = parseQuery(query)
+  const queryArrays = normalizeQuery(query)
   return queryArrays.map((queryArray) => ({
     queryArray,
     value: target,
