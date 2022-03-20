@@ -1,8 +1,9 @@
+import { normalizePath } from 'wild-wild-parser'
+
 import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolvePath } from './path.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
-import { normalizePath } from './wild_wild_parser/main.js'
 import { has } from './wild_wild_path/main.js'
 
 // Once the initial value has been computed, apply validation and transforms,

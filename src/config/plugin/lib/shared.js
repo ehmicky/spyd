@@ -1,10 +1,7 @@
 import { inspect } from 'util'
 
-import {
-  serializeQuery,
-  normalizeQuery,
-  getTokenType,
-} from '../../normalize/lib/wild_wild_parser/main.js'
+import { serializeQuery, normalizeQuery, getTokenType } from 'wild-wild-parser'
+
 import { pick } from '../../normalize/lib/wild_wild_utils/main.js'
 
 import { UserError } from './error.js'

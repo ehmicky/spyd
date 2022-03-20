@@ -1,4 +1,5 @@
-import { isParentPath } from '../../wild_wild_parser/main.js'
+import { isParentPath } from 'wild-wild-parser'
+
 import { list } from '../../wild_wild_path/main.js'
 
 // Modify a target object multiple times for each matched property.

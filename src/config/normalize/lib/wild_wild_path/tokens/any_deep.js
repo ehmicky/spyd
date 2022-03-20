@@ -1,4 +1,4 @@
-import { getTokenType as getTokenTypeName } from '../../wild_wild_parser/main.js'
+import { getTokenType as getTokenTypeName } from 'wild-wild-parser'
 
 // Handle ** recursion.
 // It matches 0, 1 or more levels.

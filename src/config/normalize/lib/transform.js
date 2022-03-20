@@ -1,8 +1,8 @@
 import isPlainObj from 'is-plain-obj'
 import pReduce from 'p-reduce'
+import { normalizePath } from 'wild-wild-parser'
 
 import { callValueFunc } from './call.js'
-import { normalizePath } from './wild_wild_parser/main.js'
 
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.

@@ -1,4 +1,5 @@
-import { normalizeQuery, serializeQuery } from './wild_wild_parser/main.js'
+import { normalizeQuery, serializeQuery } from 'wild-wild-parser'
+
 import { get } from './wild_wild_path/main.js'
 
 // Validate and normalize rules.

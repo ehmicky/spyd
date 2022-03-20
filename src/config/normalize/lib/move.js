@@ -1,4 +1,4 @@
-import { isParentPath, isSamePath } from './wild_wild_parser/main.js'
+import { isParentPath, isSamePath } from 'wild-wild-parser'
 
 // When a property is moved to another, record it.
 export const addMoves = function (moves, newPaths, oldNamePath) {

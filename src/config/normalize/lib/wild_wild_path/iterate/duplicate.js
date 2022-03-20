@@ -1,4 +1,4 @@
-import { isSamePath, isSameToken } from '../../wild_wild_parser/main.js'
+import { isSamePath, isSameToken } from 'wild-wild-parser'
 
 // Remove duplicate entries
 export const removeDuplicates = function (entries) {

@@ -1,8 +1,9 @@
+import { isSamePath } from 'wild-wild-parser'
+
 import { applyRule } from './apply.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
 import { addWarnings } from './warn.js'
-import { isSamePath } from './wild_wild_parser/main.js'
 import { set, remove } from './wild_wild_path/main.js'
 
 // Apply rule for a specific entry

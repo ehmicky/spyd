@@ -1,10 +1,11 @@
 /* eslint-disable max-lines */
 import { dirname } from 'path'
 
+import { serializePath } from 'wild-wild-parser'
+
 import { UserError } from '../../error/main.js'
 import { addBases, getBasePath } from '../cwd.js'
 import { deepMerge } from '../merge.js'
-import { serializePath } from '../normalize/lib/wild_wild_parser/main.js'
 import { get, set, list } from '../normalize/lib/wild_wild_path/main.js'
 
 import { loadConfigContents } from './contents.js'

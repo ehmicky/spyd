@@ -1,4 +1,4 @@
-import { normalizeQuery } from '../../wild_wild_parser/main.js'
+import { normalizeQuery } from 'wild-wild-parser'
 
 import { iterateChildEntries } from './children.js'
 import { removeDuplicates } from './duplicate.js'

@@ -1,8 +1,9 @@
+import { normalizePath, serializePath } from 'wild-wild-parser'
+
 import { callUserFunc } from './call.js'
 import { getCwd } from './cwd.js'
 import { applyMoves } from './move.js'
 import { getPrefix, DEFAULT_PREFIX } from './prefix.js'
-import { normalizePath, serializePath } from './wild_wild_parser/main.js'
 
 // Retrieve `opts` passed to most methods.
 // `funcOpts` are passed to user-provided functions.
