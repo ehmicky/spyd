@@ -1,5 +1,5 @@
-import { list } from './get.js'
 import { getMissingValue } from './iterate/missing.js'
+import { reduceParents } from './reduce.js'
 import { validateClasses } from './validate.js'
 
 // Set a value to one or multiple properties in `target` using a query string.
@@ -24,32 +24,6 @@ export const set = function (
     classes,
     inherited,
   })
-}
-
-// Modify a target object multiple times for each matched property.
-export const reduceParents = function ({
-  target,
-  query,
-  setFunc,
-  missing,
-  leaves,
-  classes,
-  inherited,
-}) {
-  const entries = list(target, query, {
-    childFirst: false,
-    roots: !leaves,
-    leaves,
-    sort: false,
-    missing,
-    entries: true,
-    classes,
-    inherited,
-  })
-  return entries.reduce(
-    (targetA, { path }) => setFunc(targetA, path, 0),
-    target,
-  )
 }
 
 // Use positional arguments for performance

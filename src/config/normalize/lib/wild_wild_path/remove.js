@@ -1,4 +1,5 @@
-import { reduceParents, setValue } from './set.js'
+import { reduceParents } from './reduce.js'
+import { setValue } from './set.js'
 import { validateClasses } from './validate.js'
 
 // Same as `set()` but removing a value
