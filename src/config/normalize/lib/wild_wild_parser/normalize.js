@@ -96,6 +96,13 @@ const throwTokenError = function (queryArray, token, message) {
   )
 }
 
+// Validate query string is a string
+export const validateQueryString = function (queryString) {
+  if (!isQueryString(queryString)) {
+    throw new Error('it must be a string.')
+  }
+}
+
 // Empty query strings are ambiguous and not allowed
 export const validateEmptyQuery = function ({ arrays }) {
   if (arrays.length === 0) {

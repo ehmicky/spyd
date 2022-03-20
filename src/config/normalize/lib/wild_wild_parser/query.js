@@ -1,4 +1,4 @@
-import { validateEmptyQuery } from './normalize.js'
+import { validateEmptyQuery, validateQueryString } from './normalize.js'
 import {
   ESCAPE,
   ARRAY_SEPARATOR,
@@ -12,6 +12,8 @@ import { getStringTokenType } from './tokens/main.js'
 // Use imperative logic for performance
 // eslint-disable-next-line complexity
 export const parseQueryString = function (queryString) {
+  validateQueryString(queryString)
+
   const state = getInitialState()
 
   // eslint-disable-next-line fp/no-loops
