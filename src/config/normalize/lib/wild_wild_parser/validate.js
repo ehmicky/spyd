@@ -54,13 +54,24 @@ export const normalizeArrayPath = function (path, query) {
 }
 
 const validateProp = function (prop, query) {
-  if (getPathObjectTokenType(prop) === undefined) {
+  const tokenType = getPathObjectTokenType(prop)
+
+  if (tokenType === undefined) {
     throwTokenError(
       query,
       prop,
-      'It must be a property name (string) or an array index (positive integer).',
+      'It must be a property name or an array index.',
     )
   }
+
+  if (isNegativeIndex(tokenType, prop)) {
+    throwTokenError(query, prop, 'It must not be a negative index.')
+  }
+}
+
+// Negative indices are not allowed in paths
+const isNegativeIndex = function (tokenType, prop) {
+  return tokenType.name === 'array' && (Object.is(prop, -0) || prop < 0)
 }
 
 // Normalize query arrays
