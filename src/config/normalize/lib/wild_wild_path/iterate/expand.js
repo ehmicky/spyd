@@ -13,15 +13,22 @@ const expandToken = function ({ queryArray, value, path }, index, opts) {
   const token = queryArray[index]
   const missingReturn = handleMissingValue(value, token, opts.classes)
   const childEntriesA = iterateToken(token, missingReturn, opts)
-  return childEntriesA.map(
-    ({ value: childValue, prop, missing: missingEntry }) => ({
+  return childEntriesA
+    .filter(isAllowedProp)
+    .map(({ value: childValue, prop, missing: missingEntry }) => ({
       queryArray,
       value: childValue,
       path: [...path, prop],
       missing: missingReturn.missing || missingEntry,
-    }),
-  )
+    }))
 }
+
+const isAllowedProp = function ({ prop }) {
+  return !FORBIDDEN_PROPS.has(prop)
+}
+
+// Forbidden to avoid prototype pollution attacks
+const FORBIDDEN_PROPS = new Set(['__proto__', 'prototype', 'constructor'])
 
 const iterateToken = function (
   token,
