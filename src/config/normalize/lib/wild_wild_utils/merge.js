@@ -11,12 +11,12 @@ const pushUnshift = function (mapFunc, target, query, newValues, opts = {}) {
   })
 }
 
-const pushValue = function (value, newValues, { mutate }) {
+const pushValue = function (value, newValues, opts) {
   if (!Array.isArray(value)) {
     return newValues
   }
 
-  if (!mutate) {
+  if (!opts.mutate) {
     return [...value, ...newValues]
   }
 
