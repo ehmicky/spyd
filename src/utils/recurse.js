@@ -1,5 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
+import { list } from '../config/normalize/lib/wild_wild_path/main.js'
+
 import { mapValues } from './map.js'
 
 // Apply a mapping function over all values of an object or array.
@@ -28,22 +30,9 @@ export const recurseValues = function (
   return valueA
 }
 
-// Find properties matching a specific condition
-export const findValues = function (value, condition, isRecurseObject) {
-  const paths = []
-  recurseValues(
-    value,
-    addPath.bind(undefined, { paths, condition }),
-    isRecurseObject,
-  )
-  return paths
-}
-
-const addPath = function ({ paths, condition }, value, path) {
-  if (condition(value)) {
-    // eslint-disable-next-line fp/no-mutating-methods
-    paths.push({ path, value })
-  }
-
-  return value
+// Find leaf properties matching a specific condition.
+// We make sure to use options which match which object gets recursed or not by
+// the deep merging logic.
+export const findValues = function (value, condition) {
+  return list(value, '**', { leaves: true, entries: true }).filter(condition)
 }
