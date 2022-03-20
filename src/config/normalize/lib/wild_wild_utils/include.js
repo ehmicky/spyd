@@ -10,7 +10,7 @@ export const pick = function (
   return reduceParents(
     pickEntry.bind(undefined, { classes, inherited }),
     returnTrue,
-    { target, newTarget: {}, query, sort, classes, inherited },
+    { target, newTarget: {}, query, sort, entries: false, classes, inherited },
   )
 }
 
@@ -24,12 +24,12 @@ export const include = function (
   target,
   query,
   condition,
-  { sort, classes, inherited } = {},
+  { sort, entries, classes, inherited } = {},
 ) {
   return reduceParents(
     pickEntry.bind(undefined, { classes, inherited }),
     condition,
-    { target, newTarget: {}, query, sort, classes, inherited },
+    { target, newTarget: {}, query, sort, entries, classes, inherited },
   )
 }
 
@@ -47,12 +47,20 @@ export const exclude = function (
   target,
   query,
   condition,
-  { mutate, classes, inherited } = {},
+  { mutate, entries, classes, inherited } = {},
 ) {
   return reduceParents(
     excludeEntry.bind(undefined, { mutate, classes, inherited }),
     condition,
-    { target, newTarget: target, query, sort: false, classes, inherited },
+    {
+      target,
+      newTarget: target,
+      query,
+      sort: false,
+      entries,
+      classes,
+      inherited,
+    },
   )
 }
 
@@ -68,7 +76,7 @@ const excludeEntry = function (
 const reduceParents = function (
   setFunc,
   condition,
-  { target, newTarget, query, sort, classes, inherited },
+  { target, newTarget, query, sort, entries: entriesOpt, classes, inherited },
 ) {
   const entries = list(target, query, {
     childFirst: false,
@@ -76,13 +84,19 @@ const reduceParents = function (
     leaves: false,
     sort,
     missing: false,
+    entries: true,
     classes,
     inherited,
   })
   return entries
-    .filter((entry) => condition(entry, target))
+    .filter((entry) => meetsCondition({ condition, entry, target, entriesOpt }))
     .filter(hasNoParentSet)
     .reduce((newTargetA, entry) => setFunc(newTargetA, entry, 0), newTarget)
+}
+
+const meetsCondition = function ({ condition, entry, target, entriesOpt }) {
+  const entryA = entriesOpt ? entry : entry.value
+  return condition(entryA, target)
 }
 
 // This is like the `roots` option. However, we cannot use that option since we
