@@ -1,5 +1,4 @@
-import { validatePath } from './normalize.js'
-import { normalizeQuery } from './parse.js'
+import { normalizeQuery, normalizePath } from './normalize.js'
 import { getObjectTokenType } from './tokens/main.js'
 
 // Check if two queries are equal.
@@ -38,22 +37,24 @@ const isSameQueryArray = function (queryArrayA, queryArrayB) {
 
 // Check if two paths are equal
 export const isSamePath = function (pathA, pathB) {
-  validatePath(pathA)
-  validatePath(pathB)
+  const pathC = normalizePath(pathA)
+  const pathD = normalizePath(pathB)
   return (
-    pathA.length === pathB.length &&
-    pathA.every((prop, index) => isSameToken(pathB[index], prop))
+    pathC.length === pathD.length &&
+    pathC.every((prop, index) => isSameToken(pathD[index], prop))
   )
 }
 
 // Check if a path is a parent to another
 export const isParentPath = function (parentPath, childPath) {
+  const parentPathA = normalizePath(parentPath)
+  const childPathA = normalizePath(childPath)
   return (
-    childPath.length > parentPath.length &&
-    childPath.every(
+    childPathA.length > parentPathA.length &&
+    childPathA.every(
       (childToken, index) =>
-        index >= parentPath.length ||
-        isSameToken(childToken, parentPath[index]),
+        index >= parentPathA.length ||
+        isSameToken(childToken, parentPathA[index]),
     )
   )
 }

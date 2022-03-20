@@ -1,4 +1,4 @@
-import { normalizeQuery, normalizePath } from './parse.js'
+import { normalizeQuery, normalizePath } from './normalize.js'
 import { TOKEN_SEPARATOR, ARRAY_SEPARATOR } from './tokens/escape.js'
 import { getObjectTokenType } from './tokens/main.js'
 

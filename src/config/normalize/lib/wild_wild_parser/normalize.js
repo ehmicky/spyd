@@ -1,111 +1,95 @@
-import { inspect } from 'util'
+import { parsePath, parseQuery } from './parse.js'
+import {
+  normalizeQueryArrays,
+  isQueryString,
+  normalizeArrayPath,
+} from './validate.js'
 
-import { getObjectTokenType, getPathObjectTokenType } from './tokens/main.js'
+// There are two formats:
+//  - Query string
+//     - Tokens are dot-separated
+//     - Unions are space-separated
+//     - This is more convenient wherever a string is better, including in CLI
+//       flags, in URLs, in files, etc.
+//     - \ must escape the following characters: . \ space
+//     - If a token is meant as a property name but could be interpreted as a
+//       different type, it must be start with \
+//     - A leading dot can be optionally used, e.g. `.one`. It is ignored.
+//     - A lone dot targets the root.
+//     - Property names that are empty strings can be specified, e.g. `..a..b.`
+//       parses as `["", "a", "", "b", ""]`
+//  - Array[s] of tokens
+//     - Tokens are elements of the inner arrays
+//     - Unions use optional outer arrays
+//     - An empty inner array targets the root.
+//     - This does not need any escaping, making it better with dynamic input
+//     - This is faster as it does not perform any parsing
+// Unions must not have 0 elements:
+//  - Empty arrays are interpreted as a single array of tokens targetting the
+//    root
+//  - Empty query strings throw an error
+//  - This is because:
+//     - Empty unions semantics might be confusing
+//     - Empty arrays are ambiguous with root queries
+//        - Which are a much more common use case
+//        - Also, this allows paths to be a strict subset of query arrays
+//           - Otherwise, root queries would need to be wrapped in an outer
+//             array
+//  - Downside: if a union of query arrays is computed dynamically by the
+//    consumer logic, it might need to test whether the array is empty
+// Each object property is matched by a token among the following types:
+//  - Property name
+//     - String format: "propName"
+//     - Array format: "propName"
+//     - Empty keys are supported with empty strings
+//  - Array index
+//     - String format: "1"
+//     - Array format: 1
+//     - We distinguish between property names and array indices that are
+//       integers
+//     - Negatives indices can be used to get elements at the end, e.g. -2
+//        - Including -0 which can be used to append elements
+//  - Array slices
+//     - String format: "0:2"
+//     - Array format: { type: "slice", from: 0, end: 2 }
+//     - Matches multiple indices of an array
+//     - Negatives indices like the array indices format
+//     - `from` is included, `to` is excluded (like `Array.slice()`)
+//     - `from` defaults to 0 and `to` to -0
+//  - Wildcard
+//     - String format: "*"
+//     - Array format: { type: "any" }
+//        - We use objects instead of strings or symbols as both are valid as
+//          object properties which creates a risk for injections
+//     - Matches any object property or array item
+//  - Regular expression
+//     - String format: "/regexp/" or "/regexp/flags"
+//     - Array format: RegExp instance
+//     - Matches any object property with a matching name
+//     - ^ and $ must be used if the RegExp needs to match from the beginning
+//       or until the end
+// Symbols are always ignored:
+//  - Both in the query string|array and in the target value
+//  - This is because symbols cannot be serialized in a query string
+//     - This would remove the guarantee that both string|array syntaxes are
+//       equivalent and interchangeable
+//     - We do not use `symbol.description` as this should not be used for
+//       identity purpose
+// Exceptions are thrown on syntax errors:
+//  - I.e. query or path syntax errors, or wrong arguments
+//  - But queries matching nothing do not throw: instead they return nothing
 
-// Most methods accept both query and array syntaxes.
-// This checks which one is used.
-export const isQueryString = function (query) {
-  return typeof query === 'string'
+// Parse a path string into an array of tokens.
+// If the query is already an array of tokens, only validate and normalize it.
+export const normalizePath = function (query) {
+  return isQueryString(query)
+    ? parsePath(query)
+    : normalizeArrayPath(query, query)
 }
 
-// Transform a queryArrays into a path, if possible
-export const normalizePathShape = function (queryArrays) {
-  if (queryArrays.length !== 1) {
-    throwQueryArraysError(queryArrays, 'It must not be a union.')
-  }
-
-  const [queryArray] = queryArrays
-  validatePath(queryArray)
-  return queryArray
-}
-
-// Paths are a subset of query strings|arrays which use:
-//  - No unions
-//  - Only prop tokens, and array tokens (positive only)
-// Those are the ones exposed in output, as opposed to query arrays which are
-// exposed in input.
-export const validatePath = function (path) {
-  if (!Array.isArray(path)) {
-    throwQueryArraysError(path, 'It must be an array.')
-  }
-
-  path.forEach((prop) => {
-    validateProp(prop, path)
-  })
-}
-
-const validateProp = function (prop, path) {
-  if (getPathObjectTokenType(prop) === undefined) {
-    throwTokenError(
-      path,
-      prop,
-      'It must be a property name (string) or an array index (positive integer).',
-    )
-  }
-}
-
-// Normalize query arrays
-export const normalizeQueryArrays = function (queryArrays) {
-  validateQueryArrays(queryArrays)
-  const queryArraysA =
-    queryArrays.every(Array.isArray) && queryArrays.length !== 0
-      ? queryArrays
-      : [queryArrays]
-  return queryArraysA.map(normalizeQueryArray)
-}
-
-const validateQueryArrays = function (queryArrays) {
-  if (!Array.isArray(queryArrays)) {
-    throwQueryArraysError(queryArrays, 'It must be an array.')
-  }
-}
-
-const normalizeQueryArray = function (queryArray) {
-  return queryArray.map((token) => normalizeToken(token, queryArray))
-}
-
-const normalizeToken = function (token, queryArray) {
-  const tokenType = getObjectTokenType(token)
-  validateToken(tokenType, token, queryArray)
-  return tokenType.normalize(token)
-}
-
-const validateToken = function (tokenType, token, queryArray) {
-  if (tokenType === undefined) {
-    throwTokenError(
-      queryArray,
-      token,
-      `It must be one of the following:
- - a property name string
- - an array index integer, positive or negative
- - a property name regular expression
- - { type: "any" }
- - { type: "slice", from: integer, to: integer }`,
-    )
-  }
-}
-
-const throwQueryArraysError = function (queryArray, message) {
-  throw new Error(`Invalid query: ${inspect(queryArray)}\n${message}`)
-}
-
-const throwTokenError = function (queryArray, token, message) {
-  throwQueryArraysError(
-    queryArray,
-    `Invalid token: ${inspect(token)}\n${message}`,
-  )
-}
-
-// Validate query string is a string
-export const validateQueryString = function (queryString) {
-  if (!isQueryString(queryString)) {
-    throw new Error('it must be a string.')
-  }
-}
-
-// Empty query strings are ambiguous and not allowed
-export const validateEmptyQuery = function ({ arrays }) {
-  if (arrays.length === 0) {
-    throw new Error('it must not be an empty string.')
-  }
+// Same as `normalizePath()` but for any query
+export const normalizeQuery = function (query) {
+  return isQueryString(query)
+    ? parseQuery(query)
+    : normalizeQueryArrays(query, query)
 }
