@@ -2,20 +2,20 @@ import { map } from './map.js'
 
 // eslint-disable-next-line max-params
 const pushUnshift = function (mapFunc, target, query, newValue, opts = {}) {
-  return map(target, query, mapFunc.bind(undefined, newValue), {
+  return map(target, query, (value) => mapFunc(value, newValue, opts), {
     ...opts,
     entries: false,
   })
 }
 
-const pushValue = function (newValue, value) {
+const pushValue = function (value, newValue) {
   return Array.isArray(value) ? [...value, ...newValue] : newValue
 }
 
 // Like `set()` but push an array of values to the target array instead
 export const push = pushUnshift.bind(undefined, pushValue)
 
-const unshiftValue = function (newValue, value) {
+const unshiftValue = function (value, newValue) {
   return Array.isArray(value) ? [...newValue, ...value] : newValue
 }
 
