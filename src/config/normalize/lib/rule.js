@@ -10,7 +10,7 @@ export const normalizeRules = function (rules) {
 
 const parseName = function ({ name, ...rule }) {
   const namePath = normalizeQuery(name)
-  const nameQuery = serializeQuery(name)
+  const nameQuery = serializeQuery(namePath)
   return { ...rule, namePath, nameQuery }
 }
 
