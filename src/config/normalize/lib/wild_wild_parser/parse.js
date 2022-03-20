@@ -10,8 +10,8 @@ import {
   normalizeArraysPath,
   validateEmptyQuery,
   validateQueryString,
-  throwQueryError,
-} from './validate.js'
+} from './validate/main.js'
+import { throwQueryError } from './validate/throw.js'
 
 // Parse a query string into an array of tokens.
 // Also validate and normalize it.

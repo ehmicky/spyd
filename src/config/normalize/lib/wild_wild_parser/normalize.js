@@ -3,7 +3,7 @@ import {
   normalizeQueryArrays,
   isQueryString,
   normalizeArrayPath,
-} from './validate.js'
+} from './validate/main.js'
 
 // There are two formats:
 //  - Query string

@@ -1,6 +1,6 @@
-import { inspect } from 'util'
+import { getObjectTokenType, getPathObjectTokenType } from '../tokens/main.js'
 
-import { getObjectTokenType, getPathObjectTokenType } from './tokens/main.js'
+import { throwQueryError, throwTokenError } from './throw.js'
 
 // Validate query string is a string
 export const validateQueryString = function (queryString) {
@@ -115,13 +115,4 @@ const validateToken = function (tokenType, token, query) {
  - { type: "slice", from: integer, to: integer }`,
     )
   }
-}
-
-const throwTokenError = function (queryArray, token, message) {
-  throwQueryError(queryArray, `Invalid token: ${inspect(token)}\n${message}`)
-}
-
-// Throw an error when the query is invalid
-export const throwQueryError = function (query, message) {
-  throw new Error(`Invalid query: ${inspect(query)}\n${message}`)
 }

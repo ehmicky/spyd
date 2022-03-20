@@ -1,6 +1,6 @@
 import { TOKEN_SEPARATOR, ARRAY_SEPARATOR } from './tokens/escape.js'
 import { getObjectTokenType } from './tokens/main.js'
-import { normalizeQueryArrays, normalizeArrayPath } from './validate.js'
+import { normalizeQueryArrays, normalizeArrayPath } from './validate/main.js'
 
 // Inverse of `parseQuery()`
 export const serializeQuery = function (queryArrays) {
