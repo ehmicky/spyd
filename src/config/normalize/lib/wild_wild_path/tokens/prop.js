@@ -14,6 +14,6 @@ const iterate = function (value, token, inherited) {
 
 export const PROP_TOKEN = {
   name: 'prop',
-  array: false,
+  valueType: 'object',
   iterate,
 }

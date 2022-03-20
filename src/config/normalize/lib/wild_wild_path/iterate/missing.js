@@ -20,10 +20,17 @@ export const getMissingValue = function (value, prop, { missing, classes }) {
 
 export const handleMissingValue = function (value, token, classes) {
   const tokenType = getTokenType(token)
-  const { missing, value: valueA } = tokenType.array
-    ? handleMissingArrayValue(value)
-    : handleMissingObjectValue(value, classes)
+  const { missing, value: valueA } = MISSING_HANDLERS[tokenType.valueType](
+    value,
+    classes,
+  )
   return { tokenType, missing, value: valueA }
+}
+
+const handleMissingAnyValue = function (value, classes) {
+  return isRecurseObject(value, classes) || Array.isArray(value)
+    ? { missing: false, value }
+    : { missing: true, value: {} }
 }
 
 const handleMissingArrayValue = function (value) {
@@ -58,4 +65,10 @@ const isRecurseObject = function (value, classes) {
   return classes
     ? typeof value === 'object' && value !== null
     : isPlainObj(value)
+}
+
+const MISSING_HANDLERS = {
+  any: handleMissingAnyValue,
+  array: handleMissingArrayValue,
+  object: handleMissingObjectValue,
 }

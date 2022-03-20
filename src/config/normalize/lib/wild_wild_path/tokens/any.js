@@ -31,6 +31,6 @@ export const getKeys = function (value, inherited) {
 
 export const ANY_TOKEN = {
   name: 'any',
-  array: false,
+  valueType: 'any',
   iterate,
 }

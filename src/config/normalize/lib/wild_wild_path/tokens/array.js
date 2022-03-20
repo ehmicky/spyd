@@ -22,6 +22,6 @@ export const getArrayIndex = function (value, token) {
 
 export const INDEX_TOKEN = {
   name: 'index',
-  array: true,
+  valueType: 'array',
   iterate,
 }

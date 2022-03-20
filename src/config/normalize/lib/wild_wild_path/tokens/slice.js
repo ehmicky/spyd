@@ -21,6 +21,6 @@ const getBoundedIndex = function (value, edge) {
 
 export const SLICE_TOKEN = {
   name: 'slice',
-  array: true,
+  valueType: 'array',
   iterate,
 }
