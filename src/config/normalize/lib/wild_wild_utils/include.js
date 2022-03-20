@@ -8,13 +8,16 @@ export const pick = function (
   { sort, classes, inherited } = {},
 ) {
   const setFunc = pickEntry.bind(undefined, { classes, inherited })
-  const entries = listEntries(target, query, {
+  return reduceParents({
+    setFunc,
+    target,
+    newTarget: {},
+    query,
     roots: true,
     sort,
     classes,
     inherited,
   })
-  return entries.reduce(setFunc, {})
 }
 
 // Remove values not matching a query
@@ -26,10 +29,13 @@ export const include = function (
   { sort, entries, classes, inherited } = {},
 ) {
   const setFunc = pickEntry.bind(undefined, { classes, inherited })
-  return reduceParents(setFunc, condition, {
+  return reduceParents({
+    setFunc,
+    condition,
     target,
     newTarget: {},
     query,
+    roots: false,
     sort,
     entries,
     classes,
@@ -54,10 +60,13 @@ export const exclude = function (
   { mutate, entries, classes, inherited } = {},
 ) {
   const setFunc = excludeEntry.bind(undefined, { mutate, classes, inherited })
-  return reduceParents(setFunc, condition, {
+  return reduceParents({
+    setFunc,
+    condition,
     target,
     newTarget: target,
     query,
+    roots: false,
     sort: false,
     entries,
     classes,
@@ -74,29 +83,19 @@ const excludeEntry = function (
 }
 
 // Modify a target object multiple times for each matched property.
-const reduceParents = function (
+const reduceParents = function ({
   setFunc,
   condition,
-  { target, newTarget, query, sort, entries: entriesOpt, classes, inherited },
-) {
-  const entries = listEntries(target, query, {
-    roots: false,
-    sort,
-    classes,
-    inherited,
-  })
-  return entries
-    .filter((entry) => meetsCondition({ condition, entry, target, entriesOpt }))
-    .filter(hasNoParentSet)
-    .reduce(setFunc, newTarget)
-}
-
-const listEntries = function (
   target,
+  newTarget,
   query,
-  { roots, sort, classes, inherited },
-) {
-  return list(target, query, {
+  sort,
+  roots,
+  entries: entriesOpt,
+  classes,
+  inherited,
+}) {
+  const entries = list(target, query, {
     childFirst: false,
     roots,
     leaves: false,
@@ -106,6 +105,18 @@ const listEntries = function (
     classes,
     inherited,
   })
+  const entriesA = filterEntries({ entries, condition, target, entriesOpt })
+  return entriesA.reduce(setFunc, newTarget)
+}
+
+const filterEntries = function ({ entries, condition, target, entriesOpt }) {
+  return condition === undefined
+    ? entries
+    : entries
+        .filter((entry) =>
+          meetsCondition({ condition, entry, target, entriesOpt }),
+        )
+        .filter(hasNoParentSet)
 }
 
 const meetsCondition = function ({ condition, entry, target, entriesOpt }) {
