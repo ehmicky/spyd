@@ -1,4 +1,4 @@
-import { exclude } from './normalize/lib/wild_wild_utils/main.js'
+import { exclude } from 'wild-wild-utils'
 
 // We remove `null` values so that those can be used to unset properties from
 // shared configurations.

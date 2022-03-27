@@ -1,8 +1,8 @@
 import filterObj from 'filter-obj'
 import { get } from 'wild-wild-path'
+import { map } from 'wild-wild-utils'
 
 import { isRecurseObject } from './merge.js'
-import { map } from './normalize/lib/wild_wild_utils/main.js'
 
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.

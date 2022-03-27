@@ -1,6 +1,5 @@
 import isPlainObj from 'is-plain-obj'
-
-import { map } from '../config/normalize/lib/wild_wild_utils/main.js'
+import { map } from 'wild-wild-utils'
 
 // Transtype CLI flags after parsing
 export const transtypeCliFlags = function (configFlags) {
