@@ -52,7 +52,7 @@
     "is-unicode-supported": "^1.1.0",
     "js-yaml": "^4.0.0",
     "junk": "^4.0.0",
-    "map-obj": "^5.0.0",
+    "map-obj": "^5.0.1",
     "memoize-one": "^6.0.0",
     "moize": "^6.1.0",
     "nvexeca": "^7.0.0",
