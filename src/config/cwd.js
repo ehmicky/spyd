@@ -1,7 +1,7 @@
 import filterObj from 'filter-obj'
+import { get } from 'wild-wild-path'
 
 import { isRecurseObject } from './merge.js'
-import { get } from './normalize/lib/wild_wild_path/main.js'
 import { map } from './normalize/lib/wild_wild_utils/main.js'
 
 // When resolving configuration relative file paths:

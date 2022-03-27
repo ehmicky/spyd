@@ -1,6 +1,5 @@
 import { normalizeQuery, serializeQuery } from 'wild-wild-parser'
-
-import { get } from './wild_wild_path/main.js'
+import { get } from 'wild-wild-path'
 
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the

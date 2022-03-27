@@ -2,11 +2,11 @@
 import { dirname } from 'path'
 
 import { serializePath } from 'wild-wild-parser'
+import { get, set, list } from 'wild-wild-path'
 
 import { UserError } from '../../error/main.js'
 import { addBases, getBasePath } from '../cwd.js'
 import { deepMerge } from '../merge.js'
-import { get, set, list } from '../normalize/lib/wild_wild_path/main.js'
 
 import { loadConfigContents } from './contents.js'
 import { normalizeConfigProp } from './normalize.js'

@@ -1,6 +1,5 @@
 import { isParentPath } from 'wild-wild-parser'
-
-import { list } from '../../wild_wild_path/main.js'
+import { list } from 'wild-wild-path'
 
 // Modify a target object multiple times for each matched property.
 export const reduceParents = function ({

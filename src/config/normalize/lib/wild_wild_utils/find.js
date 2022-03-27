@@ -1,4 +1,4 @@
-import { iterate } from '../wild_wild_path/main.js'
+import { iterate } from 'wild-wild-path'
 
 // Find the first non-missing property that matches a condition
 // eslint-disable-next-line max-params

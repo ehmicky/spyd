@@ -1,4 +1,4 @@
-import { set, remove } from '../../wild_wild_path/main.js'
+import { set, remove } from 'wild-wild-path'
 
 import { reduceParents } from './reduce.js'
 
