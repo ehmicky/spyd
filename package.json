@@ -68,7 +68,7 @@
     "path-type": "^5.0.0",
     "precise-now": "^0.3.1",
     "read-pkg-up": "^9.1.0",
-    "semver": "^7.3.5",
+    "semver": "^7.3.6",
     "sort-on": "^5.0.0",
     "string-width": "^5.1.1",
     "strip-ansi": "^7.0.1",
