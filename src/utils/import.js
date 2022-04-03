@@ -37,6 +37,7 @@ const importJsFile = async function (filePath) {
 }
 
 const importJavaScript = async function (filePath) {
+  // eslint-disable-next-line import/no-dynamic-require
   return await import(pathToFileURL(filePath))
 }
 

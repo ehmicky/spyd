@@ -32,6 +32,7 @@ const importBuiltin = async function (location, builtins) {
 }
 
 const importPath = async function (location) {
+  // eslint-disable-next-line import/no-dynamic-require
   const plugin = await import(pathToFileURL(location))
   return { plugin: { ...plugin }, path: location }
 }

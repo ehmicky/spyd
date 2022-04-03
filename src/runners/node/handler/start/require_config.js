@@ -10,6 +10,7 @@ export const useRequireConfig = async function (requireConfig) {
 
 const useRequiredModule = async function (requiredModule) {
   try {
+    // eslint-disable-next-line import/no-dynamic-require
     await import(pathToFileURL(requiredModule))
   } catch (error) {
     throw wrapError(
