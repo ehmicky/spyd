@@ -46,7 +46,7 @@
     "get-stream": "^6.0.0",
     "got": "^11.8.3",
     "indent-string": "^5.0.0",
-    "inquirer": "^8.2.0",
+    "inquirer": "^8.2.2",
     "is-interactive": "^2.0.0",
     "is-plain-obj": "^4.0.0",
     "is-unicode-supported": "^1.1.0",
