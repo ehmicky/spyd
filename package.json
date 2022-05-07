@@ -88,6 +88,6 @@
     "@ehmicky/dev-tasks": "^1.0.70"
   },
   "engines": {
-    "node": ">=12.20.0"
+    "node": ">=14.18.0"
   }
 }
