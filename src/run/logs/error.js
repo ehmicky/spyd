@@ -1,5 +1,5 @@
 import { Buffer } from 'buffer'
-import { promises as fs } from 'fs'
+import { open } from 'fs/promises'
 
 import { wrapError } from '../../error/wrap.js'
 
@@ -26,7 +26,7 @@ export const addErrorTaskLogs = async function (error, logsPath) {
 
 // Read the last lines from the logs file
 const readLogs = async function (logsPath) {
-  const logsReadFd = await fs.open(logsPath, 'r')
+  const logsReadFd = await open(logsPath, 'r')
 
   try {
     const { size } = await logsReadFd.stat()

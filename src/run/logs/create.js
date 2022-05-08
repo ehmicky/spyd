@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs'
+import { open, mkdir, unlink } from 'fs/promises'
 import { dirname } from 'path'
 
 import { tmpName } from 'tmp-promise'
@@ -26,13 +26,13 @@ import { tmpName } from 'tmp-promise'
 //  - Ignoring those streams would lead to inaccurate I/O results
 export const startLogs = async function () {
   const logsPath = await getLogsPath()
-  const logsFd = await fs.open(logsPath, LOGS_FILE_FLAGS)
+  const logsFd = await open(logsPath, LOGS_FILE_FLAGS)
   return { logsPath, logsFd }
 }
 
 const getLogsPath = async function () {
   const logsPath = await tmpName({ dir: LOGS_DIR })
-  await fs.mkdir(dirname(logsPath), { recursive: true })
+  await mkdir(dirname(logsPath), { recursive: true })
   return logsPath
 }
 
@@ -51,7 +51,7 @@ const LOGS_FILE_FLAGS = 'ax'
 
 // Delete logs file after each combination
 export const stopLogs = async function (logsPath, logsFd) {
-  await Promise.all([logsFd.close(), fs.unlink(logsPath)])
+  await Promise.all([logsFd.close(), unlink(logsPath)])
 }
 
 // The `dev` command does not need logs because it directly streams

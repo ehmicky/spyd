@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs'
+import { readFile } from 'fs/promises'
 
 import { detectNewlineGraceful } from 'detect-newline'
 import { pathExists } from 'path-exists'
@@ -33,7 +33,7 @@ export const detectInsert = async function (output) {
 
 const getFileContent = async function (output) {
   try {
-    return await fs.readFile(output, 'utf8')
+    return await readFile(output, 'utf8')
   } catch (error) {
     throw wrapError(error, `Could not read "output" "${output}"\n`, UserError)
   }

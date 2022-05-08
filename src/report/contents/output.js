@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs'
+import { mkdir } from 'fs/promises'
 import { dirname } from 'path'
 
 import writeFileAtomic from 'write-file-atomic'
@@ -43,7 +43,7 @@ const outputContent = async function ({ content, output }) {
 
 const overwriteContents = async function (output, content) {
   const outputDir = dirname(output)
-  await fs.mkdir(outputDir, { recursive: true })
+  await mkdir(outputDir, { recursive: true })
 
   try {
     await writeFileAtomic(output, content)

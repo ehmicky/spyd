@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs'
+import { readdir } from 'fs/promises'
 import { relative, normalize } from 'path'
 
 import { findUp } from 'find-up'
@@ -65,7 +65,7 @@ const testConfigPackageDir = async function (dir) {
     return
   }
 
-  const filenames = await fs.readdir(packagesDir)
+  const filenames = await readdir(packagesDir)
   const filename = filenames.find(isConfigPackageDir)
 
   if (filename === undefined) {
@@ -94,7 +94,7 @@ const hasMatchingPath = async function (lookupDir) {
 }
 
 const findMatchingPaths = async function (lookupDir) {
-  const filenames = await fs.readdir(lookupDir)
+  const filenames = await readdir(lookupDir)
   return filenames
     .filter(isMatchingFilename)
     .map((filename) => normalize(`${lookupDir}/${filename}`))
