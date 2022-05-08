@@ -1,4 +1,6 @@
-import { v4 as uuidv4, validate as isUuid } from 'uuid'
+import { randomUUID } from 'crypto'
+
+import { validate as isUuid } from 'uuid'
 
 // Validate `merge` property
 export const validateMerge = function (value) {
@@ -28,7 +30,7 @@ export const normalizeId = function (newResult, history) {
 const LAST_ID = 'last'
 
 export const getDefaultId = function () {
-  return uuidv4()
+  return randomUUID()
 }
 
 // We only keep the first characters of the `result.id` in the filename.
@@ -48,7 +50,7 @@ const ID_LENGTH = 12
 // history results filenames are unique even when their `id` and `timestamp`
 // are the same (which is fairly unlikely).
 export const createSubId = function () {
-  return getUuidFirstChars(uuidv4(), SUBID_LENGTH)
+  return getUuidFirstChars(randomUUID(), SUBID_LENGTH)
 }
 
 // This must be low enough to keep filenames short, but high enough to prevent
