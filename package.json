@@ -55,7 +55,7 @@
     "map-obj": "^5.0.1",
     "memoize-one": "^6.0.0",
     "moize": "^6.1.0",
-    "nvexeca": "^7.0.0",
+    "nvexeca": "^8.0.0",
     "omit.js": "^2.0.2",
     "os-name": "^5.0.1",
     "p-event": "^5.0.1",
