@@ -10,7 +10,7 @@ import { tmpName } from 'tmp-promise'
 //    except stop errors.
 //  - This works with errors:
 //     - In both the parent and child process
-//     - Due to the child process exiting, including suddently due to a signal.
+//     - Due to the child process exiting, including suddenly due to a signal.
 // This is unique for each combination.
 // We avoid out-of-memory crashes:
 //  - The child process' output is potentially huge due to the task being looped
