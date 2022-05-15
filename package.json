@@ -82,7 +82,7 @@
     "wild-wild-utils": "^3.0.0",
     "wrap-ansi": "^8.0.1",
     "write-file-atomic": "^4.0.1",
-    "yargs": "^17.5.0"
+    "yargs": "^17.5.1"
   },
   "devDependencies": {
     "@ehmicky/dev-tasks": "^1.0.73"
