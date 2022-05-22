@@ -6,7 +6,6 @@ import { readPackageUp } from 'read-pkg-up'
 import semver from 'semver'
 
 import { normalizeNumberString } from '../../../config/normalize/transform.js'
-import { validateNumberString } from '../../../config/normalize/validate/type.js'
 import { wrapError } from '../../../error/wrap.js'
 
 // Normalize and validate the Node.js version
@@ -48,7 +47,14 @@ const getAllowedVersions = async function () {
 
 export const versionRule = {
   name: 'version',
-  validate: validateNumberString,
+  schema: {
+    type: ['string', 'number'],
+    minLength: 1,
+    errorMessage: {
+      type: 'must be a version string',
+      minLength: 'must not be an empty string',
+    },
+  },
   transform: transformVersion,
   example: currentNodeVersion.slice(1),
 }
