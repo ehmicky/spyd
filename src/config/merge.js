@@ -1,5 +1,6 @@
 import declarativeMerge from 'declarative-merge'
 import isPlainObj from 'is-plain-obj'
+import { test as isUpdatesObject } from 'set-array'
 
 // Deeply merge several objects.
 // Used to merge:
@@ -25,6 +26,10 @@ import isPlainObj from 'is-plain-obj'
 //    shared configuration or a parent `config`
 //  - We prevent this by resolving those properties when the configuration is
 //    first loaded, by merging it to an empty object
+// Deep merging also allows CLI flags:
+//  - To be deep, e.g. `--a.b.c=true`
+//  - To set non-existing properties, even if deep
+//  - To set arrays of objects, e.g. `--0.a.1.b=true`
 export const deepMerge = function ([firstObject, ...objects]) {
   return objects.reduce(deepMergePair, firstObject)
 }
@@ -39,3 +44,14 @@ export const deepMergePair = function (firstObject, secondObject) {
 export const isRecurseObject = function (value) {
   return isPlainObj(value)
 }
+
+// This is the value for `declarative-merge`.
+export const isArrayUpdatesObject = function (value) {
+  return isUpdatesObject(value) && Object.keys(value).length !== 0
+}
+
+export const isMergeProp = function (key) {
+  return key === MERGE_PROP
+}
+
+const MERGE_PROP = '_merge'

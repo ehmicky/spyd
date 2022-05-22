@@ -1,7 +1,9 @@
 import { get } from 'wild-wild-path'
 import { map, exclude } from 'wild-wild-utils'
 
-import { isRecurseObject } from './merge.js'
+import { mapValues } from '../utils/map.js'
+
+import { isRecurseObject, isArrayUpdatesObject, isMergeProp } from './merge.js'
 
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.
@@ -53,12 +55,13 @@ export const CLI_FLAGS_BASE = '.'
 //  - Are recursed too since those might be recursively merged
 //  - Items bases are kept in a separate base property on the parent object,
 //    since using sibling properties on an array is not possible.
+// The logic works with `_merge` and array updates objects.
 export const addBases = function (configContents, base) {
   return map(configContents, '**', (value) => addBaseProps(value, base))
 }
 
 const addBaseProps = function (value, base) {
-  return isRecurseObject(value)
+  return isRecurseObject(value) && !isArrayUpdatesObject(value)
     ? Object.fromEntries(
         Object.entries(value).flatMap(addBaseProp.bind(undefined, base)),
       )
@@ -68,13 +71,36 @@ const addBaseProps = function (value, base) {
 const addBaseProp = function (base, [key, value]) {
   const currentEntry = [key, value]
   const baseEntry = [`${key}${BASE_KEY_SUFFIX}`, base]
-  return Array.isArray(value)
-    ? [
-        currentEntry,
-        baseEntry,
-        [`${key}${BASE_ITEMS_SUFFIX}`, value.map(() => base)],
-      ]
-    : [currentEntry, baseEntry]
+
+  if (isMergeProp(key)) {
+    return [currentEntry]
+  }
+
+  if (isArrayUpdatesObject(value)) {
+    return [
+      currentEntry,
+      baseEntry,
+      [`${key}${BASE_ITEMS_SUFFIX}`, addUpdatesBases(value, base)],
+    ]
+  }
+
+  if (Array.isArray(value)) {
+    return [
+      currentEntry,
+      baseEntry,
+      [`${key}${BASE_ITEMS_SUFFIX}`, value.map(() => base)],
+    ]
+  }
+
+  return [currentEntry, baseEntry]
+}
+
+const addUpdatesBases = function (updatesObject, base) {
+  return mapValues(updatesObject, (value) => addUpdatesBase(value, base))
+}
+
+const addUpdatesBase = function (value, base) {
+  return Array.isArray(value) ? value.map(() => base) : base
 }
 
 // Remove the base properties after they've been used
