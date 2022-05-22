@@ -8,12 +8,12 @@ import { normalizeConfigProps } from './lib/main.js'
 export const normalizeConfig = async function (
   config,
   rules,
-  { UserErrorType = UserError, ...opts },
+  { UserErrorType = UserError, prefix = PREFIX, ...opts },
 ) {
   try {
     const { value } = await normalizeConfigProps(config, rules, {
-      prefix: PREFIX,
       ...opts,
+      prefix,
     })
     return value
   } catch (error) {

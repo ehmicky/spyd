@@ -9,14 +9,21 @@ import { getDefaultConfig } from './default.js'
 import { isConfigFilePath, resolveConfig } from './resolve.js'
 
 // The `config` property is normalized and validated before all other properties
-export const normalizeConfigProp = async function (configOpt, base) {
+export const normalizeConfigProp = async function (
+  configOpt,
+  base,
+  childConfigPaths,
+) {
+  const prefix = childConfigPaths.length === 0 ? CLI_FLAGS_PREFIX : undefined
   const { config: configPaths } = await normalizeConfig(
     { config: configOpt },
     CONFIG_RULES,
-    { cwd: base },
+    { cwd: base, prefix },
   )
   return configPaths
 }
+
+const CLI_FLAGS_PREFIX = 'CLI flag'
 
 const configProp = {
   name: 'config',
