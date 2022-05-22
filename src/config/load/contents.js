@@ -14,8 +14,7 @@ export const loadConfigContents = async function (configPath) {
 
   if (loadFunc === undefined) {
     throw new UserError(
-      `The configuration file format is not supported: ${configPath}
-Please use .yml, .js, .mjs or .cjs`,
+      'File format is not supported. Please use .yml, .js, .mjs or .cjs',
     )
   }
 
@@ -23,9 +22,7 @@ Please use .yml, .js, .mjs or .cjs`,
 
   if (!isPlainObj(configContents)) {
     throw new UserError(
-      `Configuration file at "${configPath}" must be a plain object, not: ${inspect(
-        configContents,
-      )}`,
+      `File must be a plain object, not: ${inspect(configContents)}`,
     )
   }
 
@@ -36,11 +33,7 @@ const loadContents = async function (loadFunc, configPath) {
   try {
     return await loadFunc(configPath)
   } catch (error) {
-    throw wrapError(
-      error,
-      `Could not load configuration file '${configPath}':\n`,
-      UserError,
-    )
+    throw wrapError(error, 'File cannot be loaded:', UserError)
   }
 }
 

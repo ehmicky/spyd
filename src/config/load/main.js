@@ -1,6 +1,7 @@
 import { dirname } from 'path'
 
 import { UserError } from '../../error/main.js'
+import { wrapError } from '../../error/wrap.js'
 import { addBases } from '../cwd.js'
 import { deepMerge } from '../merge.js'
 
@@ -108,16 +109,24 @@ export const loadConfig = async function (
 }
 
 const getParentConfigWithBases = async function (configPath, childConfigPaths) {
-  const base = getBase(configPath)
-  const childConfigPathsA = checkRecursivePath(configPath, childConfigPaths)
-  const configContents = await loadConfigContents(configPath)
-  const configContentsA = addDefaultConfig(configContents)
-  const { configWithBases } = await loadConfig(
-    configContentsA,
-    base,
-    childConfigPathsA,
-  )
-  return configWithBases
+  try {
+    const base = getBase(configPath)
+    const childConfigPathsA = checkRecursivePath(configPath, childConfigPaths)
+    const configContents = await loadConfigContents(configPath)
+    const configContentsA = addDefaultConfig(configContents)
+    const { configWithBases } = await loadConfig(
+      configContentsA,
+      base,
+      childConfigPathsA,
+    )
+    return configWithBases
+  } catch (error) {
+    throw wrapError(
+      error,
+      `Invalid configuration file '${configPath}':\n`,
+      UserError,
+    )
+  }
 }
 
 const getBase = function (configPath) {
@@ -136,9 +145,7 @@ const checkRecursivePath = function (configPath, childConfigPaths) {
     ...childConfigPaths.slice(childConfigPathIndex),
     configPath,
   ].join(' -> ')
-  throw new UserError(
-    `Configuration file must not include itself: ${recursivePath}`,
-  )
+  throw new UserError(`File must not include itself: ${recursivePath}`)
 }
 
 // The default `config` is only applied to the top-level CLI flag.
