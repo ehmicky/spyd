@@ -5,13 +5,25 @@ import { normalizeConfigProps } from '../../normalize/lib/main.js'
 export const safeNormalizeConfig = async function (
   config,
   rules,
-  { UserErrorType, SystemErrorType, ...opts },
+  { UserErrorType, ...opts },
+) {
+  const { value, error } = await callNormalizeConfig(config, rules, opts)
+
+  if (error) {
+    throw wrapError(error, '', UserErrorType)
+  }
+
+  return value
+}
+
+const callNormalizeConfig = async function (
+  config,
+  rules,
+  { SystemErrorType, ...opts },
 ) {
   try {
-    const { value } = await normalizeConfigProps(config, rules, opts)
-    return value
+    return await normalizeConfigProps(config, rules, { ...opts, soft: true })
   } catch (error) {
-    const ErrorType = error.validation ? UserErrorType : SystemErrorType
-    throw wrapError(error, '', ErrorType)
+    throw wrapError(error, '', SystemErrorType)
   }
 }
