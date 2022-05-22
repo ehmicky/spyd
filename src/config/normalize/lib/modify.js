@@ -18,7 +18,6 @@ import { getWarning } from './warn.js'
 export const validateAndModify = async function ({
   value,
   required,
-  validate,
   warn,
   transform,
   rename,
@@ -31,7 +30,6 @@ export const validateAndModify = async function ({
   }
 
   const valueA = await performPlugins(rule, value, opts)
-  await validateValue(valueA, validate, opts)
   const warning = await getWarning(valueA, warn, opts)
   const { value: valueB, newPath } = await transformValue(
     valueA,
@@ -52,15 +50,6 @@ const validateRequired = async function (required, opts) {
 
 const throwRequired = function () {
   throw new Error('must be defined.')
-}
-
-// Apply `validate(value, opts)` which throws on validation errors
-const validateValue = async function (value, validate, opts) {
-  if (validate === undefined) {
-    return
-  }
-
-  await callValueFunc(validate, value, opts)
 }
 
 // Apply `rename[(value, opts)]` which transforms the property's name.
