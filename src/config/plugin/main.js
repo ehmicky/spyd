@@ -1,8 +1,8 @@
 import { normalizeReporters } from '../../report/config/main.js'
 import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin/main.js'
 import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin/main.js'
+import { cleanObject } from '../../utils/clean.js'
 import { PREFIX } from '../normalize/main.js'
-import { removeUndefined } from '../undefined.js'
 
 import { handlePluginsError } from './error.js'
 import { getPlugins } from './lib/main.js'
@@ -57,5 +57,5 @@ const normalizePluginConfigs = async function ({
 }
 
 const normalizePluginInfo = function ({ plugin, config }) {
-  return removeUndefined({ ...plugin, config })
+  return cleanObject({ ...plugin, config })
 }

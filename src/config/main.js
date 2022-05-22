@@ -1,3 +1,5 @@
+import { cleanObject } from '../utils/clean.js'
+
 import {
   CLI_FLAGS_BASE,
   getDefaultBase,
@@ -9,7 +11,6 @@ import { normalizeConfig } from './normalize/main.js'
 import { RULES } from './normalize/rules.js'
 import { addNpxShortcut } from './npx.js'
 import { normalizePluginsConfig } from './plugin/main.js'
-import { removeUndefined } from './undefined.js'
 
 // Retrieve configuration
 export const getConfig = async function (command, configFlags = {}) {
@@ -44,6 +45,6 @@ const resolveConfig = async function (configFlags) {
   const defaultBase = getDefaultBase(bases)
   const cwd = getPropCwd.bind(undefined, { configWithBases, defaultBase })
   const config = removeBases(configWithBases)
-  const configA = removeUndefined(config)
+  const configA = cleanObject(config)
   return { config: configA, cwd }
 }
