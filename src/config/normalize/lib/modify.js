@@ -60,9 +60,7 @@ const validateValue = async function (value, validate, opts) {
     return
   }
 
-  await Promise.all(
-    validate.map((validateFunc) => callValueFunc(validateFunc, value, opts)),
-  )
+  await callValueFunc(validate, value, opts)
 }
 
 // Apply `rename[(value, opts)]` which transforms the property's name.

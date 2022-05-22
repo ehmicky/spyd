@@ -28,7 +28,6 @@ const normalizeRule = function ({
 }) {
   const namePath = getNamePath(name)
   const nameQuery = serializeQuery(namePath)
-  const validateA = normalizeOptionalArray(validate)
   const warnA = normalizeOptionalArray(warn)
   const transformA = normalizeOptionalArray(transform)
   return {
@@ -43,7 +42,7 @@ const normalizeRule = function ({
     required,
     example,
     schema,
-    validate: validateA,
+    validate,
     warn: warnA,
     transform: transformA,
     rename,
