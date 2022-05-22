@@ -1,41 +1,59 @@
 import { inspect } from 'util'
 
-import { serializeQuery, normalizeQuery, getTokenType } from 'wild-wild-parser'
+import {
+  serializeQuery,
+  parseQuery,
+  normalizeQuery,
+  getTokenType,
+} from 'wild-wild-parser'
 import { pick } from 'wild-wild-utils'
 
 import { UserError } from './error.js'
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
-export const getSharedConfig = function (sharedConfig, shared = []) {
-  const sharedPropNames = [...new Set(shared.flatMap(getRuleName))]
+export const getSharedConfig = function (sharedConfig, shared) {
+  const sharedPropNames = getSharedPropNames(shared)
   const sharedConfigA = pick(sharedConfig, sharedPropNames)
   return { sharedConfig: sharedConfigA, sharedPropNames }
+}
+
+const getSharedPropNames = function (shared = []) {
+  const sharedPropNames = shared.map(getRuleName)
+  const sharedPropNamesA = [
+    ...new Set(sharedPropNames.map(serializeQuery)),
+  ].flatMap(parseQuery)
+  return sharedPropNamesA.filter(isPropRuleName)
 }
 
 // Parse and validate all `shared.*.name`
 const getRuleName = function ({ name }, index) {
   try {
-    return normalizeRuleName(name)
+    return normalizeQuery(name)
   } catch (error) {
     throw new UserError(`Invalid "shared[${index}].name": ${error.message}`)
   }
 }
 
+// Normalize plugin-specific configuration property `name`
 export const normalizeRuleName = function (name) {
   const queryArrays = normalizeQuery(name)
   queryArrays.forEach(validateRuleName)
   return queryArrays
 }
 
-const validateRuleName = function ([firstToken]) {
-  if (getTokenType(firstToken) !== 'prop') {
+const validateRuleName = function (queryArray) {
+  if (!isPropRuleName(queryArray)) {
     throw new UserError(
       `the first token must be a property name instead of: ${inspect(
-        firstToken,
+        queryArray[0],
       )}`,
     )
   }
+}
+
+const isPropRuleName = function ([firstToken]) {
+  return getTokenType(firstToken) === 'prop'
 }
 
 // Validate that plugin configuration properties do not overwrite shared ones

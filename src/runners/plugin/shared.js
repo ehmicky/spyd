@@ -1,10 +1,17 @@
 import { DEFAULT_TASKS } from '../../combination/tasks/find.js'
 import { amongCommands } from '../../config/normalize/pick.js'
 import { normalizeArray } from '../../config/normalize/transform.js'
+import { validateJson } from '../../config/normalize/validate/complex.js'
 import { validateRegularFile } from '../../config/normalize/validate/fs.js'
 import { normalizeConfigSelectors } from '../../config/select/normalize.js'
 
 const pick = amongCommands(['dev', 'run'])
+
+const any = {
+  name: '*',
+  pick,
+  validate: validateJson,
+}
 
 const tasks = {
   name: 'tasks',
@@ -31,6 +38,6 @@ const tasksFlatten = {
 }
 
 // Runner-specific shared configuration properties
-export const shared = [tasks, tasksAny, tasksFlatten].flatMap(
+export const shared = [any, tasks, tasksAny, tasksFlatten].flatMap(
   normalizeConfigSelectors,
 )

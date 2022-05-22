@@ -1,8 +1,5 @@
 import { normalizeObjectOrString } from '../../normalize/transform.js'
-import {
-  validateObjectOrString,
-  validateJson,
-} from '../../normalize/validate/complex.js'
+import { validateObjectOrString } from '../../normalize/validate/complex.js'
 
 import { CoreError, ConsumerError } from './error.js'
 import { getExampleLocation } from './location_normalize.js'
@@ -31,7 +28,7 @@ export const normalizePluginConfigTop = async function (
 const normalizeTop = {
   name: '.',
   required: true,
-  validate: [validateObjectOrString, validateJson],
+  validate: [validateObjectOrString],
   example: getExampleLocation,
   transform(value, { context: { pluginProp } }) {
     return normalizeObjectOrString(value, pluginProp)

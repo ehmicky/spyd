@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import { amongCommands } from '../../../config/normalize/pick.js'
+import { validateJson } from '../../../config/normalize/validate/complex.js'
 import { validateRegularFile } from '../../../config/normalize/validate/fs.js'
 import { validateBoolean } from '../../../config/normalize/validate/simple.js'
 import { normalizeConfigSelectors } from '../../../config/select/normalize.js'
@@ -8,9 +9,16 @@ import { isOutputPath } from '../../contents/output.js'
 import { computeFormat, validateOutputFormat } from '../../formats/detect.js'
 import { DEFAULT_SHOW_PRECISION } from '../../normalize/omit.js'
 import { DEFAULT_SHOW_TITLES } from '../../normalize/titles_add.js'
+// eslint-disable-next-line import/max-dependencies
 import { isTtyOutput } from '../../tty.js'
 
 const pick = amongCommands(['remove', 'run', 'show'])
+
+const any = {
+  name: '*',
+  pick,
+  validate: validateJson,
+}
 
 // The reporter's output is decided by (in priority order):
 //  - `config.reporter.output` (user-defined, reporter-specific)
@@ -111,6 +119,7 @@ const showTitles = {
 
 // Reporter-specific shared configuration properties
 export const shared = [
+  any,
   output,
   format,
   outputFormat,
