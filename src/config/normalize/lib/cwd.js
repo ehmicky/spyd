@@ -2,7 +2,7 @@ import { resolve } from 'path'
 
 import { wrapError } from '../../../error/wrap.js'
 import { validateFileExists, validateDirectory } from '../validate/fs.js'
-import { validateDefinedString } from '../validate/simple.js'
+import { validateDefinedString } from '../validate/type.js'
 
 import { callNoValueFunc } from './call.js'
 

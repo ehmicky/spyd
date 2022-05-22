@@ -40,7 +40,7 @@ import { normalizeConfigSelectors } from '../select/normalize.js'
 import { getDummyRules } from './dummy.js'
 import { amongCommands } from './pick.js'
 import { normalizeArray } from './transform.js'
-import { validateJson } from './validate/complex.js'
+import { validateJson } from './validate/type.js'
 // eslint-disable-next-line import/max-dependencies
 import { validateFileExists, validateDirectory } from './validate/fs.js'
 

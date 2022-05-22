@@ -1,7 +1,7 @@
 import { DEFAULT_TASKS } from '../../combination/tasks/find.js'
 import { amongCommands } from '../../config/normalize/pick.js'
 import { normalizeArray } from '../../config/normalize/transform.js'
-import { validateJson } from '../../config/normalize/validate/complex.js'
+import { validateJson } from '../../config/normalize/validate/type.js'
 import { validateRegularFile } from '../../config/normalize/validate/fs.js'
 import { normalizeConfigSelectors } from '../../config/select/normalize.js'
 

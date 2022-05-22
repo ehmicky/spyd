@@ -3,7 +3,7 @@ import { basename } from 'path'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
-import { validateDefinedString } from '../validate/simple.js'
+import { validateDefinedString } from '../validate/type.js'
 
 import { callValueFunc } from './call.js'
 

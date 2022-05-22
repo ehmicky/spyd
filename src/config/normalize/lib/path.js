@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 
-import { validateDefinedString } from '../validate/simple.js'
+import { validateDefinedString } from '../validate/type.js'
 
 import { callValueFunc } from './call.js'
 
