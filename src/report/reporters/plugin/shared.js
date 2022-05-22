@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { amongCommands } from '../../../config/normalize/pick.js'
 import { validateRegularFile } from '../../../config/normalize/validate/fs.js'
-import { validateJson } from '../../../config/normalize/validate/type.js'
+import { validateJson } from '../../../config/normalize/validate/json.js'
 import { normalizeConfigSelectors } from '../../../config/select/normalize.js'
 import { getShowMetadataDefault } from '../../../top/omit.js'
 import { isOutputPath } from '../../contents/output.js'

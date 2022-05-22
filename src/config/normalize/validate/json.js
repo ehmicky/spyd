@@ -1,5 +1,6 @@
 import { isDeepStrictEqual } from 'util'
 
+// Validate that a value is JSON-compatible
 export const validateJson = function (value) {
   if (!isJson(value)) {
     throw new Error(

@@ -42,7 +42,7 @@ import { amongCommands } from './pick.js'
 import { normalizeArray } from './transform.js'
 import { validateFileExists, validateDirectory } from './validate/fs.js'
 // eslint-disable-next-line import/max-dependencies
-import { validateJson } from './validate/type.js'
+import { validateJson } from './validate/json.js'
 
 const configProps = getDummyRules(CONFIG_RULES)
 
