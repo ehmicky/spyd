@@ -17,8 +17,7 @@ export const callValueFunc = async function (userFunc, value, opts) {
   try {
     return await callUserFunc(userFunc.bind(undefined, value), opts)
   } catch (error) {
-    handleValidateError(error)
-    const errorA = addPrefix(error, opts)
+    const errorA = handleError(error, opts)
     const errorB = addCurrentValue(errorA, value)
     throw await addExampleValue(errorB, opts)
   }
@@ -33,8 +32,7 @@ export const callUndefinedValueFunc = async function (userFunc, opts) {
   try {
     return await callUserFunc(userFunc, opts)
   } catch (error) {
-    handleValidateError(error)
-    const errorA = addPrefix(error, opts)
+    const errorA = handleError(error, opts)
     throw await addExampleValue(errorA, opts)
   }
 }
@@ -48,9 +46,13 @@ export const callNoValueFunc = async function (userFunc, opts) {
   try {
     return await callUserFunc(userFunc, opts)
   } catch (error) {
-    handleValidateError(error)
-    throw addPrefix(error, opts)
+    throw handleError(error, opts)
   }
+}
+
+const handleError = function (error, opts) {
+  handleValidateError(error)
+  return addPrefix(error, opts)
 }
 
 // Add the current value as error suffix
