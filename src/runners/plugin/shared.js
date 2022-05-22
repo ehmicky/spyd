@@ -8,7 +8,7 @@ import { normalizeConfigSelectors } from '../../config/select/normalize.js'
 const pick = amongCommands(['dev', 'run'])
 
 const any = {
-  name: '*',
+  name: '**',
   pick,
   validate: validateJson,
 }

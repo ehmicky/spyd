@@ -15,7 +15,7 @@ import { isTtyOutput } from '../../tty.js'
 const pick = amongCommands(['remove', 'run', 'show'])
 
 const any = {
-  name: '*',
+  name: '**',
   pick,
   validate: validateJson,
 }
