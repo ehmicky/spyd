@@ -4,12 +4,7 @@ import { callUserFunc } from './call.js'
 // message such as "Option".
 export const getPrefix = async function (prefix, opts) {
   const prefixA = await callUserFunc(prefix, opts)
-
-  if (prefixA === undefined) {
-    return DEFAULT_PREFIX
-  }
-
-  return String(prefixA).trim()
+  return prefixA === undefined ? DEFAULT_PREFIX : String(prefixA).trim()
 }
 
 // Used only when `prefix()` itself throws
