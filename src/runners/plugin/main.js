@@ -25,7 +25,7 @@ export const RUNNER_PLUGIN_TYPE = {
       validate: validateFunction,
     },
   ],
-  // Properties of the `list` item shared by all plugins
+  // Plugin configuration properties shared by all plugins
   // Default: empty array
   item,
 }

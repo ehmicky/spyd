@@ -17,8 +17,7 @@ const pick = amongCommands(['remove', 'run', 'show'])
 //  - `config.output` (user-defined, any reporters): merged in a previous step
 //  - `reporter.defaultOutput` (reporter-defined, reporter-specific)
 //  - "stdout" (system-defined, any reporters)
-// `reporter.defaultOutput` is meant for reporters to define the default
-// format and filename
+// The reporter's output also determines the format.
 const output = {
   name: 'output',
   pick,
