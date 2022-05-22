@@ -1,11 +1,9 @@
-import { validateBoolean } from '../../../config/normalize/validate/simple.js'
-
 export const config = [
   // Hide the abscissa with the `min`, `median` and `max` labels
   {
     name: 'mini',
     default: false,
-    validate: validateBoolean,
+    schema: { type: 'boolean' },
   },
   // Smooth the histogram values.
   // This is especially useful when there are only a few measures that are all
@@ -13,6 +11,6 @@ export const config = [
   {
     name: 'smooth',
     default: true,
-    validate: validateBoolean,
+    schema: { type: 'boolean' },
   },
 ]

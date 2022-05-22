@@ -1,9 +1,6 @@
 import { validateArray } from '../../../config/normalize/validate/complex.js'
 import { validateEnum } from '../../../config/normalize/validate/enum.js'
-import {
-  validateBoolean,
-  validateDefinedString,
-} from '../../../config/normalize/validate/simple.js'
+import { validateDefinedString } from '../../../config/normalize/validate/simple.js'
 
 import {
   ALL_STAT_NAMES,
@@ -17,19 +14,19 @@ export const config = [
   {
     name: 'mini',
     default: false,
-    validate: validateBoolean,
+    schema: { type: 'boolean' },
   },
   // Show header row
   {
     name: 'header',
     default: true,
-    validate: validateBoolean,
+    schema: { type: 'boolean' },
   },
   // Show empty columns
   {
     name: 'sparse',
     default: false,
-    validate: validateBoolean,
+    schema: { type: 'boolean' },
   },
   // List of stats to show.
   // By default, all stats are shown.

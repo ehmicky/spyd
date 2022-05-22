@@ -1,9 +1,3 @@
-export const validateBoolean = function (value) {
-  if (typeof value !== 'boolean') {
-    throw new TypeError('must be true or false.')
-  }
-}
-
 export const validateNumberString = function (value) {
   if (typeof value !== 'string' && !Number.isFinite(value)) {
     throw new TypeError('must be a string or a number.')

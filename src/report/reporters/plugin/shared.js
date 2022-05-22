@@ -2,14 +2,12 @@
 import { amongCommands } from '../../../config/normalize/pick.js'
 import { validateJson } from '../../../config/normalize/validate/complex.js'
 import { validateRegularFile } from '../../../config/normalize/validate/fs.js'
-import { validateBoolean } from '../../../config/normalize/validate/simple.js'
 import { normalizeConfigSelectors } from '../../../config/select/normalize.js'
 import { getShowMetadataDefault } from '../../../top/omit.js'
 import { isOutputPath } from '../../contents/output.js'
 import { computeFormat, validateOutputFormat } from '../../formats/detect.js'
 import { DEFAULT_SHOW_PRECISION } from '../../normalize/omit.js'
 import { DEFAULT_SHOW_TITLES } from '../../normalize/titles_add.js'
-// eslint-disable-next-line import/max-dependencies
 import { isTtyOutput } from '../../tty.js'
 
 const pick = amongCommands(['remove', 'run', 'show'])
@@ -69,7 +67,7 @@ const colors = {
   default({ config }) {
     return config.tty
   },
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 const quiet = {
@@ -78,7 +76,7 @@ const quiet = {
   default({ config }) {
     return !config.tty
   },
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 const showDiff = {
@@ -87,34 +85,34 @@ const showDiff = {
   default({ config }) {
     return config.tty
   },
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 const showMetadata = {
   name: 'showMetadata',
   pick,
   default: getShowMetadataDefault,
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 const showPrecision = {
   name: 'showPrecision',
   pick,
   default: DEFAULT_SHOW_PRECISION,
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 const showSystem = {
   name: 'showSystem',
   pick,
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 const showTitles = {
   name: 'showTitles',
   pick,
   default: DEFAULT_SHOW_TITLES,
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 // Reporter-specific shared configuration properties
