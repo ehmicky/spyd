@@ -1,7 +1,7 @@
 import { validateFunction } from '../../config/normalize/validate/complex.js'
 import { BUILTIN_RUNNERS } from '../main.js'
 
-import { item } from './item.js'
+import { item } from './shared.js'
 
 export const RUNNER_PLUGIN_TYPE = {
   // Top-level property name, used in error messages

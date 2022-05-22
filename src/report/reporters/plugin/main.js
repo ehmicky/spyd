@@ -10,7 +10,7 @@ import { DEFAULT_REPORTER_OUTPUT } from '../../contents/output.js'
 import { getReportMethods } from '../../formats/list.js'
 import { BUILTIN_REPORTERS } from '../main.js'
 
-import { item } from './item.js'
+import { item } from './shared.js'
 
 export const REPORTER_PLUGIN_TYPE = {
   name: 'reporter',
