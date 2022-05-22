@@ -36,6 +36,7 @@ const AJV_OPTIONS = {
   strict: true,
   logger: false,
   $data: true,
+  allowUnionTypes: true,
 }
 
 const AJV = getAjv()
@@ -51,14 +52,17 @@ const compileSchema = function (schema) {
   }
 }
 
-const throwValidationError = function ({
-  errors: [{ instancePath, message }],
-}) {
+const throwValidationError = function ({ errors }) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  const message = [...errors].reverse().map(serializeAjvError).join(', ')
+  const messageA = message.startsWith('must')
+    ? `${message}.`
+    : `must be valid: ${message}.`
+  throw new Error(messageA)
+}
+
+const serializeAjvError = function ({ instancePath, message }) {
   const propPath = decodePointer(instancePath).join('.')
   const propPathA = propPath === '' ? propPath : `${propPath} `
-  const messageA = `${propPathA}${message}.`
-  const messageB = messageA.startsWith('must')
-    ? messageA
-    : `must be valid: ${messageA}`
-  throw new Error(messageB)
+  return `${propPathA}${message}`
 }
