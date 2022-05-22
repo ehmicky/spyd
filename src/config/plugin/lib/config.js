@@ -20,6 +20,7 @@ import { safeNormalizeConfig } from './normalize.js'
 //  - This is optimized for replacing a whole list of plugins of a given type,
 //    as opposed to patching specific parts of it
 //     - This is simpler for the majority of cases
+//  - However patching is possible using array updates objects
 // It is possible to use the same plugin twice with different configurations:
 //  - This is especially useful for using the same reporter but with different
 //    `output`
