@@ -1,5 +1,4 @@
 import { getDummyRules } from '../../normalize/dummy.js'
-import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { PluginError, UserError, CoreError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
@@ -45,13 +44,7 @@ const PLUGIN_PREFIX = 'Plugin property'
 //  - avoid mixing delimiters, so it's easier to remember for users
 //  - consistent option name across spyd.yml, CLI flags, programmatic
 // This is purposely not applied to shared configs.
-const validateIdCharacters = function (id) {
-  if (!PLUGIN_ID_REGEXP.test(id)) {
-    throw new Error(`must only contain lowercase letters and digits.`)
-  }
-}
-
-const PLUGIN_ID_REGEXP = /^[a-z][a-z\d]*$/u
+const PLUGIN_ID_REGEXP = /^[a-z]?[a-z\d]*$/u
 
 // When using a Node module, the exported `id` must match the `location`
 // specified by the user
@@ -70,11 +63,16 @@ const MODULE_LOCATION_TYPES = new Set(['builtin', 'module'])
 const idProp = {
   name: 'id',
   required: true,
-  validate: [
-    validateDefinedString,
-    validateIdCharacters,
-    validateModuleLocation,
-  ],
+  schema: {
+    type: 'string',
+    minLength: 1,
+    regexp: String(PLUGIN_ID_REGEXP),
+    errorMessage: {
+      minLength: 'must not be an empty string',
+      regexp: 'must only contain lowercase letters and digits',
+    },
+  },
+  validate: validateModuleLocation,
   example({ context: { locationType, originalLocation } }) {
     return MODULE_LOCATION_TYPES.has(locationType)
       ? originalLocation
