@@ -7,5 +7,4 @@ export const getPrefix = async function (prefix, opts) {
   return prefixA === undefined ? DEFAULT_PREFIX : String(prefixA).trim()
 }
 
-// Used only when `prefix()` itself throws
 export const DEFAULT_PREFIX = 'Option'
