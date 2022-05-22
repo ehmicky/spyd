@@ -2,7 +2,9 @@ import isPlainObj from 'is-plain-obj'
 import pReduce from 'p-reduce'
 import { normalizePath } from 'wild-wild-parser'
 
-import { callValueFunc } from './call.js'
+import { wrapError } from '../../../error/wrap.js'
+
+import { callValueFunc, callNoValueFunc } from './call.js'
 
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.
@@ -37,7 +39,7 @@ const transformSingleValue = async function (
 const getTransformedValue = async function (value, transformFunc, opts) {
   const transformReturn = await callValueFunc(transformFunc, value, opts)
   return isTransformMove(transformReturn)
-    ? getTransformMove(transformReturn)
+    ? callNoValueFunc(getTransformMove.bind(undefined, transformReturn), opts)
     : {
         value: transformReturn,
         newProp: findCommonMove(transformReturn, value),
@@ -58,8 +60,12 @@ const isTransformMove = function (transformReturn) {
 }
 
 const getTransformMove = function ({ value, newProp }) {
-  const newPropA = normalizePath(newProp)
-  return newPropA.length === 0 ? {} : { value, newProp: newPropA }
+  try {
+    const newPropA = normalizePath(newProp)
+    return newPropA.length === 0 ? {} : { value, newProp: newPropA }
+  } catch (error) {
+    throw wrapError(error, 'The returned "newProp" is invalid:')
+  }
 }
 
 // Automatically detect some common type of moves
