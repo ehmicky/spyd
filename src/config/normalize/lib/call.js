@@ -23,8 +23,7 @@ export const callValueFunc = async function (userFunc, value, opts) {
 
 // Add the current value as error suffix
 const addCurrentValue = function (error, value) {
-  const valueStr = serializeValue(value)
-  return wrapError(error, `\nCurrent value:${valueStr}`)
+  return wrapErrorValue(error, 'Current value', value)
 }
 
 // Retrieve a validation error including the example suffix
@@ -40,8 +39,11 @@ const addExampleValue = async function (error, opts) {
   }
 
   const exampleValue = await callUserFunc(opts.example, opts)
-  const exampleValueStr = serializeValue(exampleValue)
-  return wrapError(error, `\nExample value:${exampleValueStr}`)
+  return wrapErrorValue(error, 'Example value', exampleValue)
+}
+
+const wrapErrorValue = function (error, name, value) {
+  return wrapError(error, `\n${name}:${serializeValue(value)}`)
 }
 
 const serializeValue = function (value) {
