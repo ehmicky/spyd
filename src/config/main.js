@@ -4,12 +4,12 @@ import {
   getPropCwd,
   removeBases,
 } from './cwd.js'
-import { removeEmptyValues } from './empty.js'
 import { loadConfig } from './load/main.js'
 import { normalizeConfig } from './normalize/main.js'
 import { RULES } from './normalize/rules.js'
 import { addNpxShortcut } from './npx.js'
 import { normalizePluginsConfig } from './plugin/main.js'
+import { removeUndefined } from './undefined.js'
 
 // Retrieve configuration
 export const getConfig = async function (command, configFlags = {}) {
@@ -43,6 +43,6 @@ const resolveConfig = async function (configFlags) {
   const defaultBase = getDefaultBase(bases)
   const cwd = getPropCwd.bind(undefined, { configWithBases, defaultBase })
   const config = removeBases(configWithBases)
-  const configA = removeEmptyValues(config)
+  const configA = removeUndefined(config)
   return { config: configA, cwd }
 }

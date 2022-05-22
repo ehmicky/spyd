@@ -51,8 +51,7 @@ export const CLI_FLAGS_BASE = '.'
 //  - As properties are deep merged, they base property will too, using the same
 //    merging logic
 // Array properties:
-//  - Are recursed even though those are not recursively merged, since users
-//    might use `config#path` references as individual array elements.
+//  - Are recursed too since those might be recursively merged
 //  - Items bases are kept in a separate base property on the parent object,
 //    since using sibling properties on an array is not possible.
 export const addBases = function (configContents, base) {
@@ -117,7 +116,7 @@ export const getPropCwd = function (
 }
 
 // Retrieve the path to the `*[Items]CwdBase` property
-export const getBasePath = function (originalPath) {
+const getBasePath = function (originalPath) {
   const lastKey = originalPath[originalPath.length - 1]
 
   if (!Number.isInteger(lastKey)) {

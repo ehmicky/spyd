@@ -1,4 +1,4 @@
-import deepMergeLib from 'deepmerge'
+import declarativeMerge from 'declarative-merge'
 import isPlainObj from 'is-plain-obj'
 
 // Deeply merge several objects.
@@ -6,11 +6,22 @@ import isPlainObj from 'is-plain-obj'
 //  - shared `config`
 //  - `spyd.*` with CLI flags
 //  - top-level `config` with plugin-specific one
-export const deepMerge = function (objects) {
-  return deepMergeLib.all(objects, { isMergeableObject: isRecurseObject })
+// Arrays can be merged using updates objects.
+//  - A common use case is to append a parent configuration's array instead of
+//    overriding it, for example:
+//     - Adding tasks to a shared configuration, to compare them
+//     - Changing a reporter's pluginConfig while keeping other reporters
+// Objects are merged deeply, but can change this using a `_merge` property
+// set to "deep|shallow|set|delete".
+export const deepMerge = function ([firstObject, ...objects]) {
+  return objects.reduce(deepMergePair, firstObject)
 }
 
-// This is the default value for `deepmerge@v5`.
+export const deepMergePair = function (firstObject, secondObject) {
+  return declarativeMerge(firstObject, secondObject)
+}
+
+// This is the value for `declarative-merge`.
 // Except we do not recurse on arrays, so that arrays are overridden instead of
 // being concatenated.
 // This includes array of objects as this is simpler for users.

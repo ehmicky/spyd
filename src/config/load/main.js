@@ -1,11 +1,6 @@
-/* eslint-disable max-lines */
 import { dirname } from 'path'
 
-import { serializePath } from 'wild-wild-parser'
-import { get, set, list } from 'wild-wild-path'
-
-import { UserError } from '../../error/main.js'
-import { addBases, getBasePath } from '../cwd.js'
+import { addBases } from '../cwd.js'
 import { deepMerge } from '../merge.js'
 
 import { loadConfigContents } from './contents.js'
@@ -95,29 +90,27 @@ export const loadConfig = async function (
   base,
 ) {
   const configWithBases = addBases(configContents, base)
-  const [parentConfigInfos, configWithBasesA] = await Promise.all([
-    getParentConfigInfos(configOpt, base),
-    replaceReferences(configWithBases, base),
-  ])
-  const configWithBasesB = deepMerge([
-    ...parentConfigInfos.map(getConfigWithBases),
-    configWithBasesA,
-  ])
-  const bases = parentConfigInfos.map(getBase)
-  return { configWithBases: configWithBasesB, bases }
-}
-
-const getParentConfigInfos = async function (configOpt, base) {
   const configPaths = await normalizeConfigProp(configOpt, base)
-  return await Promise.all(configPaths.map(getParentConfigInfo))
+  const bases = configPaths.map(getBase)
+  const parentConfigWithBases = await Promise.all(
+    configPaths.map(getParentConfigWithBases),
+  )
+  const configWithBasesA = deepMerge([
+    ...parentConfigWithBases,
+    configWithBases,
+  ])
+  return { configWithBases: configWithBasesA, bases }
 }
 
-const getParentConfigInfo = async function (configPath) {
-  const base = dirname(configPath)
+const getParentConfigWithBases = async function (configPath) {
+  const base = getBase(configPath)
   const configContents = await loadConfigContents(configPath)
   const configContentsA = addDefaultConfig(configContents)
-  const { configWithBases } = await loadConfig(configContentsA, base)
-  return { configWithBases, base }
+  return await loadConfig(configContentsA, base)
+}
+
+const getBase = function (configPath) {
+  return dirname(configPath)
 }
 
 // The default `config` is only applied to the top-level CLI flag.
@@ -128,133 +121,3 @@ const addDefaultConfig = function ({
 }) {
   return { ...configContents, config: configOpt }
 }
-
-const getConfigWithBases = function ({ configWithBases }) {
-  return configWithBases
-}
-
-const getBase = function ({ base }) {
-  return base
-}
-
-// Specific properties of a parent configuration can be merged to by using a
-// string `{config}##{propertyPath}`:
-//  - `config` has the same syntax as the `config` property
-//  - `propertyPath` is a dot-delimited path
-// The string is replaced by the reference's value.
-// A common use case is to append a parent configuration's array instead of
-// overriding it, for example:
-//  - Adding tasks to a shared configuration, to compare them
-//  - Changing a reporter's pluginConfig while keeping other reporters
-const replaceReferences = async function (configWithBases, base) {
-  const references = list(configWithBases, '**', {
-    leaves: true,
-    entries: true,
-  }).filter(isReference)
-  const referencesA = await Promise.all(
-    references.map((reference) => resolveReference(reference, base)),
-  )
-  return referencesA.reduce(replaceReference, configWithBases)
-}
-
-const isReference = function ({ value }) {
-  return (
-    typeof value === 'string' &&
-    value.includes(REFERENCE_SEPARATOR) &&
-    !value.startsWith(REFERENCE_SEPARATOR)
-  )
-}
-
-const resolveReference = async function ({ path, value }, base) {
-  const [configOpt, referenceName] = value.split(REFERENCE_SEPARATOR)
-  const [{ configWithBases, base: parentBase }] = await getParentConfigInfos(
-    configOpt,
-    base,
-  )
-  const entry = get(configWithBases, referenceName, { entries: true })
-  validateReferencePath({ entry, referenceName, configOpt, path })
-  return { path, parentBase, newValue: entry.value }
-}
-
-const REFERENCE_SEPARATOR = '##'
-
-const validateReferencePath = function ({
-  entry,
-  referenceName,
-  configOpt,
-  path,
-}) {
-  if (entry === undefined) {
-    const name = serializePath(path)
-    throw new UserError(
-      `Configuration property "${name}" must be valid: "${referenceName}" property does not exist in "${configOpt}"`,
-    )
-  }
-}
-
-// When the new value is an array and the parent is also an array, those are
-// flattened. This allows:
-//  - Both array spreads and individual array updates
-//  - Parent configurations to switch from using the array and non-array
-//    syntaxes of polymorphic properties without breaking child configurations
-const replaceReference = function (
-  configWithBases,
-  { path, parentBase, newValue },
-) {
-  return isArrayReference(newValue, path)
-    ? replaceSpreadReference({ path, parentBase, newValue, configWithBases })
-    : replaceFlatReference({ path, parentBase, newValue, configWithBases })
-}
-
-const isArrayReference = function (newValue, path) {
-  return Array.isArray(newValue) && Number.isInteger(path[path.length - 1])
-}
-
-const replaceSpreadReference = function ({
-  path,
-  parentBase,
-  newValue,
-  configWithBases,
-}) {
-  const lastKey = path[path.length - 1]
-
-  const newPath = path.slice(0, -1)
-  const configWithBasesA = spreadArray({
-    newPath,
-    newValue,
-    configWithBases,
-    lastKey,
-  })
-
-  const newBasePath = getBasePath(path).slice(0, -1)
-  const newBaseValue = newValue.map(() => parentBase)
-  const configWithBasesB = spreadArray({
-    newPath: newBasePath,
-    newValue: newBaseValue,
-    configWithBases: configWithBasesA,
-    lastKey,
-  })
-  return configWithBasesB
-}
-
-const spreadArray = function ({ newPath, newValue, configWithBases, lastKey }) {
-  const currentParentValue = get(configWithBases, newPath)
-  const newParentValue = [
-    ...currentParentValue.slice(0, lastKey),
-    ...newValue,
-    ...currentParentValue.slice(lastKey + 1),
-  ]
-  return set(configWithBases, newPath, newParentValue)
-}
-
-const replaceFlatReference = function ({
-  path,
-  parentBase,
-  newValue,
-  configWithBases,
-}) {
-  const configWithBasesA = set(configWithBases, path, newValue)
-  const configWithBasesB = set(configWithBasesA, getBasePath(path), parentBase)
-  return configWithBasesB
-}
-/* eslint-enable max-lines */

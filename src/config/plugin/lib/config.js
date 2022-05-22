@@ -1,6 +1,6 @@
 import { has } from 'wild-wild-path'
 
-import { deepMerge } from '../../merge.js'
+import { deepMergePair } from '../../merge.js'
 import { getDummyRules } from '../../normalize/dummy.js'
 
 import { UserError, PluginError, ConsumerError } from './error.js'
@@ -32,7 +32,7 @@ export const normalizePluginConfig = async function ({
   pluginConfigRules,
   opts: { name, sharedConfig, sharedConfigName, context, cwd, item, prefix },
 }) {
-  const pluginConfig = deepMerge([sharedConfig, unmergedConfig])
+  const pluginConfig = deepMergePair(sharedConfig, unmergedConfig)
 
   if (pluginConfigRules === undefined && item === undefined) {
     return pluginConfig

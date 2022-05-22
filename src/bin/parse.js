@@ -1,8 +1,7 @@
 import filterObj from 'filter-obj'
+import { map } from 'wild-wild-utils'
 
 import { mapValues } from '../utils/map.js'
-
-import { transtypeCliFlags } from './transtype.js'
 
 // We do not use yargs types as it conflicts with our own validation and
 // normalization logic, e.g.:
@@ -51,3 +50,28 @@ const ARRAY_PROPERTIES = new Set([
   'limit',
   'config',
 ])
+
+// Transtype CLI flags after parsing
+const transtypeCliFlags = function (configFlags) {
+  return map(configFlags, '**', transtypeBoolean, { leaves: true })
+}
+
+// Yargs interprets `--flag` and `--no-flag` with no arguments as booleans.
+// Additionally, it interprets `--flag=true|false` as booleans instead of
+// as strings when specifying the `boolean: true` option.
+// However, we minimize Yargs parsing and validation since it is imperfect and
+// does not well with:
+//  - Object with dynamic property names
+//  - Polymorphic types, such as "either boolean or array of booleans"
+// Therefore, we perform this transformation manually.
+const transtypeBoolean = function (value) {
+  if (value === 'true') {
+    return true
+  }
+
+  if (value === 'false') {
+    return false
+  }
+
+  return value
+}
