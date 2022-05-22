@@ -1,6 +1,7 @@
 import ajvFormats from 'ajv-formats'
 import ajvKeywords from 'ajv-keywords'
 import Ajv from 'ajv/dist/2020.js'
+import { decodePointer } from 'json-ptr'
 
 import { wrapError } from '../../../error/wrap.js'
 
@@ -51,6 +52,8 @@ const throwValidationError = function (
   { errors: [{ instancePath, message }] },
   opts,
 ) {
-  const error = new Error(`must be valid: ${instancePath} ${message}.`)
+  const propPath = decodePointer(instancePath).join('.')
+  const propPathA = propPath === '' ? propPath : `${propPath} `
+  const error = new Error(`must be valid: ${propPathA}${message}.`)
   throw handleValidateError(error, opts)
 }

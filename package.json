@@ -54,6 +54,7 @@
     "is-plain-obj": "^4.0.0",
     "is-unicode-supported": "^1.2.0",
     "js-yaml": "^4.0.0",
+    "json-ptr": "^3.1.0",
     "junk": "^4.0.0",
     "map-obj": "^5.0.1",
     "memoize-one": "^6.0.0",
