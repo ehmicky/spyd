@@ -98,9 +98,6 @@ const mapBaseProps = function (value, mapper) {
   return isRecurseObject(value) ? mapper(value) : value
 }
 
-const BASE_KEY_SUFFIX = 'CwdBase'
-const BASE_ITEMS_SUFFIX = 'ItemsCwdBase'
-
 // Used as `cwd` for all configuration properties
 export const getPropCwd = function (
   { configWithBases, defaultBase },
@@ -130,3 +127,6 @@ const getBasePath = function (originalPath) {
     lastKey,
   ]
 }
+
+const BASE_KEY_SUFFIX = 'CwdBase'
+const BASE_ITEMS_SUFFIX = 'ItemsCwdBase'

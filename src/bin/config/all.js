@@ -20,7 +20,10 @@ The following file formats are supported: .yml, .js, .mjs or .cjs
 
 Can be specified several times.
 A configuration file can include another one by using this property.
-This can be used to share configurations and/or benchmarks.
+  - This can be used to share configurations and/or benchmarks.
+  - Objects are deeply merged unless they define a "_merge" property with value
+    "shallow", "set" or "delete".
+  - Arrays can be updated using objects with indices as keys.
 
 You can define selectors, i.e. different values per combination for some
 configuration properties ("limit", "outliers", "precision", "showDiff",

@@ -106,7 +106,8 @@ const getParentConfigWithBases = async function (configPath) {
   const base = getBase(configPath)
   const configContents = await loadConfigContents(configPath)
   const configContentsA = addDefaultConfig(configContents)
-  return await loadConfig(configContentsA, base)
+  const { configWithBases } = await loadConfig(configContentsA, base)
+  return configWithBases
 }
 
 const getBase = function (configPath) {
