@@ -58,7 +58,7 @@ const WHITESPACE_END_REGEXP = /\s$/u
 // Works with multiline error messages.
 const fixErrorStack = function (error) {
   if (!error.stack.includes(STACK_TRACE_START)) {
-    Error.captureStackTrace(error, wrapErrorMessage)
+    Error.captureStackTrace(error, wrapError)
   }
 
   const stackStart = error.stack.indexOf(STACK_TRACE_START)
