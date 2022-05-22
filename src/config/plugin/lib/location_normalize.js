@@ -65,6 +65,8 @@ const normalizeFileUrlLocation = {
 }
 
 const normalizeInlineLocation = {
+  // Strings are not allowed for inline plugins, but for other plugin types,
+  // which should be shown in error messages
   validate: validateObjectOrString,
 }
 
