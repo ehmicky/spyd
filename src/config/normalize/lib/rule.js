@@ -1,6 +1,8 @@
 import { normalizeQuery, serializeQuery } from 'wild-wild-parser'
 import { get } from 'wild-wild-path'
 
+import { addDefaultExample } from './example.js'
+
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the
 // path syntax.
@@ -69,32 +71,4 @@ const normalizeOptionalArray = function (value) {
 // unwanted.
 const defaultRequired = function ({ path, config }) {
   return path.length !== 0 && Array.isArray(get(config, path.slice(0, -1)))
-}
-
-// `rule.example` only needs to be defined once per `rule.name`,
-// defaulting to the first value from other rules.
-// It can also default to any `rule.default`.
-const addDefaultExample = function (example, nameQuery, rules) {
-  if (example !== undefined) {
-    return example
-  }
-
-  const ruleA = rules.find(
-    (rule) => rule.nameQuery === nameQuery && rule.example !== undefined,
-  )
-
-  if (ruleA !== undefined) {
-    return ruleA.example
-  }
-
-  const ruleB = rules.find(
-    (rule) => rule.nameQuery === nameQuery && rule.default !== undefined,
-  )
-  return ruleB === undefined ? undefined : useDefaultAsExample(ruleB.default)
-}
-
-const useDefaultAsExample = function (defaultValue) {
-  return typeof defaultValue === 'function'
-    ? (value, opts) => defaultValue(opts)
-    : defaultValue
 }
