@@ -1,9 +1,9 @@
 import { findFormat } from './formats/main.js'
 
 // Enhances delta error messages
-export const getDeltaError = function ({ type, delta, name }) {
+export const getDeltaError = function ({ type, original }, name) {
   const typeMessage = getDeltaTypeMessage(type)
-  return `Configuration property "${name}" with value "${delta}" (${typeMessage})`
+  return `Configuration property "${name}" with value "${original}" (${typeMessage})`
 }
 
 export const getDeltaTypeMessage = function (type) {

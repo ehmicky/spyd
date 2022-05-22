@@ -18,7 +18,7 @@ import { findFormat } from './formats/main.js'
 // The metadata and history are:
 //  - Sorted from most to least recent
 //  - Grouped by `id`
-// When a delta is approximative, the first rawResult after (not before) the
+// When a delta is approximate, the first rawResult after (not before) the
 // delta is usually used
 //  - This allows users to specify loose deltas without errors, such as
 //    "100" even if there are only 3 rawResults.
@@ -39,10 +39,11 @@ export const applyMainDelta = async function (metadataGroups, { delta, cwd }) {
     throw new UserError('No previous results.')
   }
 
-  const index = await findByDelta(metadataGroups, delta, cwd)
+  const name = 'delta'
+  const index = await findByDelta({ metadataGroups, delta, cwd, name })
 
   if (index === -1) {
-    const deltaError = getDeltaError(delta)
+    const deltaError = getDeltaError(delta, name)
     throw new UserError(`${deltaError} matches no results.`)
   }
 
@@ -87,7 +88,12 @@ export const applySinceDelta = async function (metadataGroups, { since, cwd }) {
     return []
   }
 
-  const index = await findByDelta(metadataGroups, since, cwd)
+  const index = await findByDelta({
+    metadataGroups,
+    delta: since,
+    cwd,
+    name: 'since',
+  })
 
   if (index === -1) {
     return []
@@ -96,16 +102,12 @@ export const applySinceDelta = async function (metadataGroups, { since, cwd }) {
   return metadataGroups.slice(index)
 }
 
-const findByDelta = async function (
-  metadataGroups,
-  { type, value, delta, name },
-  cwd,
-) {
-  const format = findFormat(type)
+const findByDelta = async function ({ metadataGroups, delta, cwd, name }) {
+  const format = findFormat(delta.type)
 
   try {
-    return await format.find(metadataGroups, value, cwd)
+    return await format.find(metadataGroups, delta.value, cwd)
   } catch (error) {
-    throw wrapError(error, getDeltaError({ type, delta, name }))
+    throw wrapError(error, getDeltaError(delta, name))
   }
 }
