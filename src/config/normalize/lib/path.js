@@ -5,8 +5,8 @@ import { isNotJunk } from 'junk'
 
 import { callValueFunc } from './call.js'
 
-// Apply `path(value, opts) => boolean` which resolves the value as an absolute
-// file path when `true` (default: `false`).
+// Apply `path[(value, opts)]` which resolves the value as an absolute file path
+// when `true` (default: `false`).
 // This is performed before `transform()` and `validate()`.
 //  - This allows using `validate()` to validate file existence, parent
 //    directories, timestamps, file types, etc.
@@ -38,7 +38,7 @@ export const checkPath = function (value) {
   }
 }
 
-// When `glob(value, opts)` is `true` (default: `false`), resolves globbing.
+// When `glob[(value, opts)]` is `true` (default: `false`), resolves globbing.
 // Remove duplicates and temporary files.
 // Only returns regular files, not directories.
 const resolveGlob = async function (cwd, value) {

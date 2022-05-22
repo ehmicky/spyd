@@ -37,7 +37,7 @@ export const validateAndModify = async function ({
   return { value: valueB, renamedPath, newPaths, warnings }
 }
 
-// Apply `required(opts)` which throws if `true` and value is `undefined`
+// Apply `required[(opts)]` which throws if `true` and value is `undefined`
 const validateRequired = async function (required, value, opts) {
   if (await callUserFunc(required, opts)) {
     throw await getValidateExampleError('must be defined.', value, opts)
