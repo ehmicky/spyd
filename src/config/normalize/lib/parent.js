@@ -32,6 +32,7 @@ const getParent = async function (parent, opts) {
 // It is exposed as `originalName` and `originalPath`.
 // It is a dot-delimited string.
 // By default, there are none.
+// `normalizePath()` might throw if `parent` contains syntax errors.
 const appendParentToName = async function (parent, opts) {
   const parentA = await callNoValueFunc(parent, opts)
   const parentPath = normalizePath(parentA)

@@ -15,12 +15,20 @@ export const computeCwd = async function (cwd, opts) {
 }
 
 const getCwd = async function ({ cwd = DEFAULT_CWD, opts }) {
-  const cwdA = await callNoValueFunc(cwd, opts)
+  const cwdA = await callCwdFunc(cwd, opts)
   await callNoValueFunc(checkCwd.bind(undefined, cwdA), opts)
   return resolve(cwdA)
 }
 
 const DEFAULT_CWD = '.'
+
+const callCwdFunc = async function (func, opts) {
+  try {
+    return await callNoValueFunc(func, opts)
+  } catch (error) {
+    throw wrapError(error, 'Invalid "cwd" function:')
+  }
+}
 
 const checkCwd = async function (cwd) {
   try {
@@ -29,6 +37,6 @@ const checkCwd = async function (cwd) {
     await validateDirectory(cwd)
   } catch (error) {
     // Errors in `cwd` are not user errors, i.e. should not start with `must`
-    throw wrapError(error, `"cwd" value ${cwd}`)
+    throw wrapError(error, `Invalid "cwd" value "${cwd}":\n"cwd"`)
   }
 }
