@@ -55,7 +55,7 @@ const validateValue = async function (value, validate, opts) {
   )
 }
 
-// Apply `rename(value, opts)` which transforms the property's name.
+// Apply `rename[(value, opts)]` which transforms the property's name.
 // This can be used for aliasing and deprecation.
 //  - Therefore, this is only applied if the destination value is `undefined`.
 //    Like this, if both an old alias and a new one are specified, the new one
