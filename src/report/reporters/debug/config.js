@@ -1,4 +1,3 @@
-import { validateArray } from '../../../config/normalize/validate/complex.js'
 import { validateEnum } from '../../../config/normalize/validate/enum.js'
 import { validateDefinedString } from '../../../config/normalize/validate/simple.js'
 
@@ -34,7 +33,7 @@ export const config = [
   {
     name: 'stats',
     default: ALL_STAT_NAMES,
-    validate: validateArray,
+    schema: { type: 'array' },
     example: EXAMPLE_STAT_NAMES,
   },
   {
