@@ -10,7 +10,7 @@ import {
 } from './call.js'
 import { performPlugins } from './plugin.js'
 import { transformValue } from './transform.js'
-import { getWarnings } from './warn.js'
+import { getWarning } from './warn.js'
 
 // Once the initial value has been computed, apply validation and transforms,
 // unless the value is `undefined`.
@@ -32,7 +32,7 @@ export const validateAndModify = async function ({
 
   const valueA = await performPlugins(rule, value, opts)
   await validateValue(valueA, validate, opts)
-  const warnings = await getWarnings(valueA, warn, opts)
+  const warning = await getWarning(valueA, warn, opts)
   const { value: valueB, newPath } = await transformValue(
     valueA,
     transform,
@@ -40,7 +40,7 @@ export const validateAndModify = async function ({
   )
   const renamedPath = await renameProp(valueB, rename, opts)
   const newPaths = [newPath, renamedPath].filter(Boolean)
-  return { value: valueB, renamedPath, newPaths, warnings }
+  return { value: valueB, renamedPath, newPaths, warning }
 }
 
 // Apply `required[(opts)]` which throws if `true` and value is `undefined`

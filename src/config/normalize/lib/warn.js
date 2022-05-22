@@ -1,28 +1,21 @@
 import { callValueFunc } from './call.js'
 import { getPrefix } from './prefix.js'
 
-// Apply `warn(value, opts)` which can return a string to print as warning
-export const getWarnings = async function (value, warn, opts) {
+// Apply `warn[(value, opts)]` which can return a string to print as warning
+export const getWarning = async function (value, warn, opts) {
   if (warn === undefined) {
     return
   }
 
-  const warningSuffixes = await Promise.all(
-    warn.map((warnFunc) => callValueFunc(warnFunc, value, opts)),
-  )
-  const warningSuffixesA = warningSuffixes.filter(Boolean)
-
-  if (warningSuffixesA.length === 0) {
-    return
-  }
-
-  const prefix = getPrefix(opts)
-  return warningSuffixesA.map((warningSuffix) => `${prefix} ${warningSuffix}`)
+  const warningSuffix = await callValueFunc(warn, value, opts)
+  return warningSuffix === undefined
+    ? undefined
+    : `${getPrefix(opts)} ${warningSuffix}`
 }
 
-// When new warnings are returned, add them to the list
-export const addWarnings = function (warnings, newWarnings) {
-  return newWarnings === undefined ? warnings : [...warnings, ...newWarnings]
+// When a new warning is returned, add it to the list
+export const addWarning = function (warnings, warning) {
+  return warning === undefined ? warnings : [...warnings, warning]
 }
 
 // Log all warnings at the end.
