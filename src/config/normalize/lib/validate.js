@@ -11,22 +11,16 @@ import { wrapError } from '../../../error/wrap.js'
 //  - It works both on browsers and in Node.js
 //  - It ensures the error message looks good
 export const handleValidateError = function (error, opts) {
-  if (isValidateError(error)) {
-    error.validation = true
+  if (!isValidateError(error)) {
+    return error
   }
 
-  return addValidatePrefix(error, opts)
+  error.validation = true
+  return wrapError(error, getPrefix(opts))
 }
 
 const isValidateError = function (error) {
   return error instanceof Error && error.message.startsWith('must')
-}
-
-const addValidatePrefix = function (error, opts) {
-  const prefixA = getPrefix(opts)
-  const colon = error.validation ? '' : ':'
-  const propName = `${prefixA}${colon}`
-  return wrapError(error, propName)
 }
 
 export const getPrefix = function ({ prefix, funcOpts: { originalName } }) {
