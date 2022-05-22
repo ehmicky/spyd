@@ -7,8 +7,6 @@ import isPlainObj from 'is-plain-obj'
 //  - The value is applied for the combinations matching that selector
 // This applies configuration rules regardless of whether selectors were
 // used or not, and applies them recursively when selectors are used.
-// We duplicate `rule` for both `name` and `name.*` so that validation
-// error messages on `name` do not show `name.*`
 // We do not normalize all properties to the full syntax
 //  - For example, using a "default" selector when no selectors are used
 //  - Because configuration properties get added later on by some internal logic
