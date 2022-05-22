@@ -2,10 +2,6 @@ import { callUserFunc } from './call.js'
 
 // The `prefix` option is the name of the type of property to show in error
 // message such as "Option".
-// It is prepended to:
-//  - Error messages
-//  - `funcOpts.name`
-//  - `funcOpts.path`
 export const getPrefix = async function (prefix, opts) {
   const prefixA = await callUserFunc(prefix, opts)
 
