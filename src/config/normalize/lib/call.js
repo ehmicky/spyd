@@ -3,7 +3,7 @@ import { inspect } from 'util'
 import { wrapError } from '../../../error/wrap.js'
 import { maybeFunction } from '../../../utils/function.js'
 
-import { handleValidateError, getValidateError } from './validate.js'
+import { handleValidateError } from './validate.js'
 
 // Most rule methods follow the same patterns:
 //  - Called with `value` and `opts`
@@ -24,9 +24,9 @@ const addCurrentValue = function (error, value) {
 }
 
 // Retrieve a validation error including the example suffix
-export const getValidateExampleError = async function (message, value, opts) {
-  const error = getValidateError(message, opts)
-  return await addExampleValue(error, value, opts)
+export const getValidateExampleError = async function (error, value, opts) {
+  const errorA = handleValidateError(error, opts)
+  return await addExampleValue(errorA, value, opts)
 }
 
 // Add an example value as error suffix, as provided by `example(value, opts)`

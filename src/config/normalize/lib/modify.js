@@ -4,6 +4,7 @@ import { has } from 'wild-wild-path'
 import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
 import { resolveGlob } from './glob.js'
 import { resolvePath } from './path.js'
+import { validateSchema } from './schema.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
 
@@ -15,6 +16,7 @@ export const validateAndModify = async function ({
   path,
   glob,
   required,
+  schema,
   validate,
   warn,
   transform,
@@ -28,6 +30,7 @@ export const validateAndModify = async function ({
 
   const valueA = await resolveGlob(value, glob, opts)
   const valueB = await resolvePath(valueA, path, opts)
+  await validateSchema(valueB, schema, opts)
   await validateValue(valueB, validate, opts)
   const warnings = await getWarnings(valueB, warn, opts)
   const { value: valueC, newPath } = await transformValue(
@@ -43,7 +46,11 @@ export const validateAndModify = async function ({
 // Apply `required[(opts)]` which throws if `true` and value is `undefined`
 const validateRequired = async function (required, value, opts) {
   if (await callUserFunc(required, opts)) {
-    throw await getValidateExampleError('must be defined.', value, opts)
+    throw await getValidateExampleError(
+      new Error('must be defined.'),
+      value,
+      opts,
+    )
   }
 }
 

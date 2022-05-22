@@ -12,7 +12,7 @@ import { wrapError } from '../../../error/wrap.js'
 //  - It ensures the error message looks good
 export const handleValidateError = function (error, opts) {
   if (isValidateError(error)) {
-    setValidationProp(error)
+    error.validation = true
   }
 
   return addValidatePrefix(error, opts)
@@ -20,17 +20,6 @@ export const handleValidateError = function (error, opts) {
 
 const isValidateError = function (error) {
   return error instanceof Error && error.message.startsWith('must')
-}
-
-// Get a user validation error
-export const getValidateError = function (message, opts) {
-  const error = new Error(message)
-  setValidationProp(error)
-  return addValidatePrefix(error, opts)
-}
-
-const setValidationProp = function (error) {
-  error.validation = true
 }
 
 const addValidatePrefix = function (error, opts) {
