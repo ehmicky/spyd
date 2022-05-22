@@ -17,11 +17,5 @@ export const addDefaultExample = function (example, nameQuery, rules) {
   const ruleB = rules.find(
     (rule) => rule.nameQuery === nameQuery && rule.default !== undefined,
   )
-  return ruleB === undefined ? undefined : useDefaultAsExample(ruleB.default)
-}
-
-const useDefaultAsExample = function (defaultValue) {
-  return typeof defaultValue === 'function'
-    ? (value, opts) => defaultValue(opts)
-    : defaultValue
+  return ruleB === undefined ? undefined : ruleB.default
 }

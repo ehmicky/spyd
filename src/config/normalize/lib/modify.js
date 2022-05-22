@@ -24,7 +24,7 @@ export const validateAndModify = async function ({
   opts,
 }) {
   if (value === undefined) {
-    await validateRequired(required, value, opts)
+    await validateRequired(required, opts)
     return { value }
   }
 
@@ -44,13 +44,9 @@ export const validateAndModify = async function ({
 }
 
 // Apply `required[(opts)]` which throws if `true` and value is `undefined`
-const validateRequired = async function (required, value, opts) {
+const validateRequired = async function (required, opts) {
   if (await callUserFunc(required, opts)) {
-    throw await getValidateExampleError(
-      new Error('must be defined.'),
-      value,
-      opts,
-    )
+    throw await getValidateExampleError(new Error('must be defined.'), opts)
   }
 }
 

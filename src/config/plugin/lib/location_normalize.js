@@ -36,7 +36,7 @@ const getLocationRules = function (locationType) {
   ]
 }
 
-export const getExampleLocation = function (value, { context: { builtins } }) {
+export const getExampleLocation = function ({ context: { builtins } }) {
   const builtinNames = Object.keys(builtins)
   return builtinNames.length !== 0 && builtinNames[0].trim() !== ''
     ? builtinNames[0]

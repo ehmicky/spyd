@@ -75,7 +75,7 @@ const idProp = {
     validateIdCharacters,
     validateModuleLocation,
   ],
-  example(id, { context: { locationType, originalLocation } }) {
+  example({ context: { locationType, originalLocation } }) {
     return MODULE_LOCATION_TYPES.has(locationType)
       ? originalLocation
       : 'module-name'

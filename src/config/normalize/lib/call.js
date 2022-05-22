@@ -10,7 +10,11 @@ import { handleValidateError } from './validate.js'
 //  - Optionally async
 export const callValueFunc = async function (userFunc, value, opts) {
   try {
-    return await callWithValueFunc(userFunc, value, opts)
+    const boundUserFunc =
+      typeof userFunc === 'function'
+        ? userFunc.bind(undefined, value)
+        : userFunc
+    return await callUserFunc(boundUserFunc, opts)
   } catch (error) {
     const errorA = addCurrentValue(error, value)
     throw await addExampleValue(errorA, value, opts)
@@ -24,18 +28,18 @@ const addCurrentValue = function (error, value) {
 }
 
 // Retrieve a validation error including the example suffix
-export const getValidateExampleError = async function (error, value, opts) {
+export const getValidateExampleError = async function (error, opts) {
   const errorA = handleValidateError(error, opts)
-  return await addExampleValue(errorA, value, opts)
+  return await addExampleValue(errorA, opts)
 }
 
-// Add an example value as error suffix, as provided by `example(value, opts)`
-const addExampleValue = async function (error, value, opts) {
+// Add an example value as error suffix, as provided by `example[(opts)]`
+const addExampleValue = async function (error, opts) {
   if (opts.example === undefined || !error.validation) {
     return error
   }
 
-  const exampleValue = await callWithValueFunc(opts.example, value, opts)
+  const exampleValue = await callUserFunc(opts.example, opts)
   const exampleValueStr = serializeValue(exampleValue)
   return wrapError(error, `\nExample value:${exampleValueStr}`)
 }
@@ -44,12 +48,6 @@ const serializeValue = function (value) {
   const valueStr = inspect(value)
   const separator = valueStr.includes('\n') ? '\n' : ' '
   return `${separator}${valueStr}`
-}
-
-const callWithValueFunc = async function (userFunc, value, opts) {
-  const boundUserFunc =
-    typeof userFunc === 'function' ? userFunc.bind(undefined, value) : userFunc
-  return await callUserFunc(boundUserFunc, opts)
 }
 
 // Some methods do not pass any `value` as first argument.
