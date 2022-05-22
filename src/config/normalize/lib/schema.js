@@ -1,3 +1,4 @@
+import ajvErrors from 'ajv-errors'
 import ajvFormats from 'ajv-formats'
 import ajvKeywords from 'ajv-keywords'
 import Ajv from 'ajv/dist/2020.js'
@@ -29,6 +30,7 @@ const getAjv = function () {
   const ajvInstance = new Ajv(AJV_OPTIONS)
   ajvFormats(ajvInstance)
   ajvKeywords(ajvInstance)
+  ajvErrors(ajvInstance)
   return ajvInstance
 }
 
@@ -37,6 +39,7 @@ const AJV_OPTIONS = {
   logger: false,
   $data: true,
   allowUnionTypes: true,
+  allErrors: true,
 }
 
 const AJV = getAjv()
