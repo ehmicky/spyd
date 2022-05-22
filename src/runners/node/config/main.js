@@ -1,5 +1,4 @@
 import { normalizeArray } from '../../../config/normalize/transform.js'
-import { validateDefinedString } from '../../../config/normalize/validate/simple.js'
 import { EXAMPLE_REQUIRE } from '../handler/start/require_config.js'
 
 import { versionRule } from './version.js'
@@ -13,7 +12,11 @@ export const config = [
   },
   {
     name: 'require.*',
-    validate: validateDefinedString,
+    schema: {
+      type: 'string',
+      minLength: 1,
+      errorMessage: { minLength: 'must not be an empty string' },
+    },
     example: EXAMPLE_REQUIRE,
   },
 ]
