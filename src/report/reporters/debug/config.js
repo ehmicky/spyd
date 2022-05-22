@@ -1,9 +1,5 @@
-import { validateEnum } from '../../../config/normalize/validate/enum.js'
-import { validateDefinedString } from '../../../config/normalize/validate/simple.js'
-
 import {
   ALL_STAT_NAMES,
-  ALL_STAT_NAMES_SET,
   EXAMPLE_STAT_NAMES,
   EXAMPLE_STAT_NAME,
 } from './stats.js'
@@ -38,9 +34,10 @@ export const config = [
   },
   {
     name: 'stats.*',
-    validate(value) {
-      validateDefinedString(value)
-      validateEnum(value, ALL_STAT_NAMES_SET)
+    schema: {
+      type: 'string',
+      enum: ALL_STAT_NAMES,
+      errorMessage: { enum: `must be one of: ${ALL_STAT_NAMES.join(', ')}` },
     },
     example: EXAMPLE_STAT_NAME,
   },

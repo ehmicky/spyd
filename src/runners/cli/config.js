@@ -1,8 +1,5 @@
-import { validateEnum } from '../../config/normalize/validate/enum.js'
-import { validateDefinedString } from '../../config/normalize/validate/simple.js'
-
 // We only allow shells that are cross-platform
-const SHELL_VALUES = new Set(['none', 'sh', 'bash'])
+const SHELL_VALUES = ['none', 'sh', 'bash']
 // Shells have a performance impact and are less portable, so they are opt-in
 const DEFAULT_SHELL = 'none'
 
@@ -10,9 +7,10 @@ export const config = [
   {
     name: 'shell',
     default: DEFAULT_SHELL,
-    validate(value) {
-      validateDefinedString(value)
-      validateEnum(value, SHELL_VALUES)
+    schema: {
+      type: 'string',
+      enum: SHELL_VALUES,
+      errorMessage: { enum: `must be one of: ${SHELL_VALUES.join(', ')}` },
     },
   },
 ]
