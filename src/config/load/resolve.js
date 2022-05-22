@@ -32,7 +32,7 @@ export const isConfigFilePath = function (configOpt) {
 }
 
 export const isConfigFileModule = function (configOpt) {
-  return configOpt.includes(CONFIG_NPM_PREFIX)
+  return typeof configOpt === 'string' && configOpt.includes(CONFIG_NPM_PREFIX)
 }
 
 export const CONFIG_NPM_PREFIX = 'spyd-config-'
