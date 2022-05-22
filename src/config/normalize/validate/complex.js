@@ -8,12 +8,6 @@ export const validateArray = function (value) {
   }
 }
 
-export const validateEmptyArray = function (value) {
-  if (Array.isArray(value) && value.length === 0) {
-    throw new Error('must not be an empty array.')
-  }
-}
-
 export const validateObject = function (value) {
   if (!isPlainObj(value)) {
     throw new Error('must be a plain object.')

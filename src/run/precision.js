@@ -4,7 +4,7 @@
 // its `rmoe` reached the corresponding `precision` normalized value.
 // There are several advantages in using `precision` instead of a `duration`:
 //  - A `duration` makes the precision (`rmoe`) machine-dependent or
-//    hardward load-dependent
+//    hardware load-dependent
 //     - This problem would be lessened (but not removed) by slower tasks
 //       tending to have lower stdev
 //  - Two combinations with same `rmoe` (than with same `duration`) are more
@@ -73,13 +73,7 @@
 //        - this can happen inside the same run (due to previous runs being
 //          merged to current one)
 export const transformPrecision = function (precision) {
-  const precisionA = PRECISION_TARGETS[precision]
-
-  if (precisionA === undefined) {
-    throw new Error(`must be between ${MIN_PRECISION} and ${MAX_PRECISION}.`)
-  }
-
-  return precisionA
+  return PRECISION_TARGETS[precision]
 }
 
 // Associates `precision` (using array index) to the minimum `rmoe` each
@@ -93,8 +87,8 @@ const PRECISION_TARGETS = [
   // eslint-disable-next-line no-magic-numbers
   0, 1, 2e-1, 5e-2, 2e-2, 1e-2, 3e-3, 1e-3, 3e-4, 1e-4, 1e-5,
 ]
-const MIN_PRECISION = 0
-const MAX_PRECISION = PRECISION_TARGETS.length - 1
+export const MIN_PRECISION = 0
+export const MAX_PRECISION = PRECISION_TARGETS.length - 1
 export const DEFAULT_PRECISION = 5
 
 // When there are not enough loops, the `stdev` is too imprecise so we leave it

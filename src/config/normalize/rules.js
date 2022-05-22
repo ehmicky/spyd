@@ -24,7 +24,12 @@ import {
 } from '../../report/normalize/titles_add.js'
 import { DEFAULT_REPORTERS } from '../../report/reporters/main.js'
 import { isTtyInput } from '../../report/tty.js'
-import { transformPrecision, DEFAULT_PRECISION } from '../../run/precision.js'
+import {
+  transformPrecision,
+  DEFAULT_PRECISION,
+  MIN_PRECISION,
+  MAX_PRECISION,
+} from '../../run/precision.js'
 import { DEFAULT_RUNNERS } from '../../runners/main.js'
 import { DEFAULT_SELECT, EXAMPLE_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
@@ -35,19 +40,9 @@ import { normalizeConfigSelectors } from '../select/normalize.js'
 import { getDummyRules } from './dummy.js'
 import { amongCommands } from './pick.js'
 import { normalizeArray } from './transform.js'
-import {
-  validateJson,
-  validateObject,
-  validateEmptyArray,
-} from './validate/complex.js'
+import { validateJson } from './validate/complex.js'
+// eslint-disable-next-line import/max-dependencies
 import { validateFileExists, validateDirectory } from './validate/fs.js'
-import {
-  validateBoolean,
-  validateInteger,
-  validateString,
-  validateDefinedString,
-  // eslint-disable-next-line import/max-dependencies
-} from './validate/simple.js'
 
 const configProps = getDummyRules(CONFIG_RULES)
 
@@ -72,14 +67,14 @@ const force = {
   default() {
     return !isTtyInput()
   },
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 const inputs = {
   name: 'inputs',
   pick: amongCommands(['dev', 'run']),
   default: DEFAULT_INPUTS,
-  validate: validateObject,
+  schema: { type: 'object' },
   example: EXAMPLE_INPUTS,
 }
 
@@ -93,7 +88,7 @@ const inputsAny = {
 const limit = {
   name: 'limit',
   pick: amongCommands(['remove', 'run', 'show']),
-  validate: validateInteger,
+  schema: { type: 'integer' },
   transform: transformLimit,
   example: EXAMPLE_LIMIT,
 }
@@ -102,24 +97,22 @@ const id = {
   name: 'id',
   pick: amongCommands(['run']),
   default: getDefaultId,
-  validate(value) {
-    validateDefinedString(value)
-    validateId(value)
-  },
+  schema: { type: 'string', minLength: 1 },
+  validate: validateId,
 }
 
 const outliers = {
   name: 'outliers',
   pick: amongCommands(['run']),
   default: DEFAULT_OUTLIERS,
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 const precision = {
   name: 'precision',
   pick: amongCommands(['run']),
   default: DEFAULT_PRECISION,
-  validate: validateInteger,
+  schema: { type: 'integer', minimum: MIN_PRECISION, maximum: MAX_PRECISION },
   transform: transformPrecision,
 }
 
@@ -127,7 +120,7 @@ const save = {
   name: 'save',
   pick: amongCommands(['run']),
   default: DEFAULT_SAVE,
-  validate: validateBoolean,
+  schema: { type: 'boolean' },
 }
 
 const select = {
@@ -141,7 +134,7 @@ const select = {
 const selectAny = {
   name: 'select.*',
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
-  validate: validateString,
+  schema: { type: 'string' },
   example: EXAMPLE_SELECT,
 }
 
@@ -156,14 +149,14 @@ const system = {
   name: 'system',
   pick: amongCommands(['dev', 'run']),
   default: {},
-  validate: validateObject,
+  schema: { type: 'object' },
   example: EXAMPLE_SYSTEMS,
 }
 
 const systemAny = {
   name: 'system.*',
   pick: amongCommands(['dev', 'run']),
-  validate: validateDefinedString,
+  schema: { type: 'string', minLength: 1 },
   example: EXAMPLE_SYSTEM,
 }
 
@@ -171,14 +164,14 @@ const titles = {
   name: 'titles',
   pick: amongCommands(['remove', 'run', 'show']),
   default: DEFAULT_TITLES,
-  validate: validateObject,
+  schema: { type: 'object' },
   example: EXAMPLE_TITLES,
 }
 
 const titlesAny = {
   name: 'titles.*',
   pick: amongCommands(['remove', 'run', 'show']),
-  validate: validateDefinedString,
+  schema: { type: 'string', minLength: 1 },
   example: EXAMPLE_TITLE,
 }
 
@@ -186,7 +179,8 @@ const runner = {
   name: 'runner',
   pick: amongCommands(['dev', 'run']),
   default: DEFAULT_RUNNERS,
-  validate: validateEmptyArray,
+  // eslint-disable-next-line unicorn/no-thenable
+  schema: { if: { type: 'array' }, then: { type: 'array', minItems: 1 } },
 }
 
 const reporter = {
