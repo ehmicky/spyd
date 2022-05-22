@@ -1,7 +1,13 @@
 import { normalizePath } from 'wild-wild-parser'
 import { has } from 'wild-wild-path'
 
-import { callValueFunc, callUndefinedValueFunc } from './call.js'
+import { wrapError } from '../../../error/wrap.js'
+
+import {
+  callValueFunc,
+  callUndefinedValueFunc,
+  callNoValueFunc,
+} from './call.js'
 import { resolveGlob } from './glob.js'
 import { resolvePath } from './path.js'
 import { validateSchema } from './schema.js'
@@ -81,6 +87,17 @@ const renameProp = async function (value, rename, opts) {
     return
   }
 
-  const renamedPath = normalizePath(renameReturn)
+  const renamedPath = await callNoValueFunc(
+    getRenamedPath.bind(undefined, renameReturn),
+    opts,
+  )
   return has(opts.funcOpts.config, renamedPath) ? undefined : renamedPath
+}
+
+const getRenamedPath = function (renameReturn) {
+  try {
+    return normalizePath(renameReturn)
+  } catch (error) {
+    throw wrapError(error, 'The return value is invalid:')
+  }
 }
