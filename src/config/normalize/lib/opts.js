@@ -1,9 +1,12 @@
-import { normalizePath, serializePath } from 'wild-wild-parser'
+import { serializePath } from 'wild-wild-parser'
 
-import { callUserFunc } from './call.js'
-import { getCwd } from './cwd.js'
+import { wrapError } from '../../../error/wrap.js'
+
+import { callNoValueFunc } from './call.js'
+import { computeCwd } from './cwd.js'
 import { applyMoves } from './move.js'
-import { getPrefix, DEFAULT_PREFIX } from './prefix.js'
+import { computeParent } from './parent.js'
+import { DEFAULT_PREFIX } from './prefix.js'
 
 // Retrieve `opts` passed to most methods.
 // `funcOpts` are passed to user-provided functions.
@@ -29,41 +32,27 @@ export const getOpts = async function ({
     context,
   }
   const opts = { funcOpts, example, prefix: DEFAULT_PREFIX }
-  const optsA = await computeParent(opts, moves, parent)
-  const optsB = await computePrefix(optsA, prefix)
-  const optsC = await computeCwd(optsB, cwd)
+  const optsA = await computeParent(parent, opts)
+  const optsB = await computePrefix(prefix, optsA)
+  const optsC = await computeCwd(cwd, optsB)
   return optsC
 }
 
-// `originalName|Path` are like `name|path` except:
-//  - They are prepended with `opts.parent`
-//  - If a property was moved, they show the previous name
-// They are intended for error messages.
-// This is in contrast to `name|path` which are the main properties, intended to
-// work with everything else, including `rule.name`, `rule.rename` and
-// `funcOpts.config`.
-const computeParent = async function (opts, moves, parent) {
-  const originalPath = await appendParentToName(parent, opts)
-  const originalName = serializePath(originalPath)
-  return { ...opts, funcOpts: { ...opts.funcOpts, originalName, originalPath } }
+const computePrefix = async function (prefix, opts) {
+  try {
+    return await addPrefix(prefix, opts)
+  } catch (error) {
+    throw wrapError(error, 'Invalid "prefix":')
+  }
 }
 
-// The `parent` option are the names of the parent properties.
-// It is exposed as `originalName` and `originalPath`.
-// It is a dot-delimited string.
-// By default, there are none.
-const appendParentToName = async function (parent, opts) {
-  const parentA = await callUserFunc(parent, opts)
-  const parentPath = normalizePath(parentA)
-  return [...parentPath, ...opts.funcOpts.originalPath]
-}
+const addPrefix = async function (prefix, opts) {
+  const prefixA = await callNoValueFunc(prefix, opts)
 
-const computePrefix = async function (opts, prefix) {
-  const prefixA = await getPrefix(prefix, opts)
-  return { ...opts, prefix: prefixA }
-}
+  if (prefixA === undefined) {
+    return opts
+  }
 
-const computeCwd = async function (opts, cwd) {
-  const cwdA = await getCwd({ cwd, opts })
-  return { ...opts, funcOpts: { ...opts.funcOpts, cwd: cwdA } }
+  const prefixB = String(prefixA).trim()
+  return { ...opts, prefix: prefixB }
 }

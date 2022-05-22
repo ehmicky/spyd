@@ -1,5 +1,5 @@
 import { callValueFunc } from './call.js'
-import { getPrefix } from './validate.js'
+import { getPrefix } from './prefix.js'
 
 // Apply `warn(value, opts)` which can return a string to print as warning
 export const getWarnings = async function (value, warn, opts) {

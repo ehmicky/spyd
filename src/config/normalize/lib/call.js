@@ -3,33 +3,61 @@ import { inspect } from 'util'
 import { wrapError } from '../../../error/wrap.js'
 import { maybeFunction } from '../../../utils/function.js'
 
+import { addPrefix } from './prefix.js'
 import { handleValidateError } from './validate.js'
 
 // Most rule methods follow the same patterns:
 //  - Called with `value` and `opts`
 //  - Optionally async
 export const callValueFunc = async function (userFunc, value, opts) {
+  if (typeof userFunc !== 'function') {
+    return userFunc
+  }
+
   try {
-    const boundUserFunc =
-      typeof userFunc === 'function'
-        ? userFunc.bind(undefined, value)
-        : userFunc
-    return await callUserFunc(boundUserFunc, opts)
+    return await callUserFunc(userFunc.bind(undefined, value), opts)
   } catch (error) {
-    const errorA = addCurrentValue(error, value)
+    handleValidateError(error)
+    const errorA = addPrefix(error, opts)
+    const errorB = addCurrentValue(errorA, value)
+    throw await addExampleValue(errorB, opts)
+  }
+}
+
+// Some methods are called with a `value` but it is always undefined
+export const callUndefinedValueFunc = async function (userFunc, opts) {
+  if (typeof userFunc !== 'function') {
+    return userFunc
+  }
+
+  try {
+    return await callUserFunc(userFunc, opts)
+  } catch (error) {
+    handleValidateError(error)
+    const errorA = addPrefix(error, opts)
     throw await addExampleValue(errorA, opts)
+  }
+}
+
+// Some methods are not called with any value
+export const callNoValueFunc = async function (userFunc, opts) {
+  if (typeof userFunc !== 'function') {
+    return userFunc
+  }
+
+  try {
+    return await callUserFunc(userFunc, opts)
+  } catch (error) {
+    handleValidateError(error)
+    throw addPrefix(error, opts)
   }
 }
 
 // Add the current value as error suffix
 const addCurrentValue = function (error, value) {
-  return wrapErrorValue(error, 'Current value', value)
-}
-
-// Retrieve a validation error including the example suffix
-export const getValidateExampleError = async function (error, opts) {
-  const errorA = handleValidateError(error, opts)
-  return await addExampleValue(errorA, opts)
+  return error.validation
+    ? wrapErrorValue(error, 'Current value', value)
+    : error
 }
 
 // Add an example value as error suffix, as provided by `example[(opts)]`
@@ -38,8 +66,12 @@ const addExampleValue = async function (error, opts) {
     return error
   }
 
-  const exampleValue = await callUserFunc(opts.example, opts)
-  return wrapErrorValue(error, 'Example value', exampleValue)
+  try {
+    const exampleValue = await callNoValueFunc(opts.example, opts)
+    return wrapErrorValue(error, 'Example value', exampleValue)
+  } catch (error_) {
+    return wrapError(error_, 'Invalid "example":')
+  }
 }
 
 const wrapErrorValue = function (error, name, value) {
@@ -52,12 +84,6 @@ const serializeValue = function (value) {
   return `${separator}${valueStr}`
 }
 
-// Some methods do not pass any `value` as first argument.
-// Errors add the property `name` as prefix.
-export const callUserFunc = async function (userFunc, opts) {
-  try {
-    return await maybeFunction(userFunc, opts.funcOpts)
-  } catch (error) {
-    throw handleValidateError(error, opts)
-  }
+const callUserFunc = async function (userFunc, { funcOpts }) {
+  return await maybeFunction(userFunc, funcOpts)
 }

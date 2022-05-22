@@ -6,7 +6,6 @@ import { decodePointer } from 'json-ptr'
 import { wrapError } from '../../../error/wrap.js'
 
 import { callValueFunc } from './call.js'
-import { handleValidateError } from './validate.js'
 
 // Apply `schema[(value, opts)]` which throws on JSON schema validation errors
 export const validateSchema = async function (value, schema, opts) {
@@ -18,7 +17,11 @@ export const validateSchema = async function (value, schema, opts) {
   const validate = compileSchema(schemaA)
 
   if (!validate(value)) {
-    throwValidationError(validate, opts)
+    await callValueFunc(
+      throwValidationError.bind(undefined, validate),
+      value,
+      opts,
+    )
   }
 }
 
@@ -48,16 +51,14 @@ const compileSchema = function (schema) {
   }
 }
 
-const throwValidationError = function (
-  { errors: [{ instancePath, message }] },
-  opts,
-) {
+const throwValidationError = function ({
+  errors: [{ instancePath, message }],
+}) {
   const propPath = decodePointer(instancePath).join('.')
   const propPathA = propPath === '' ? propPath : `${propPath} `
   const messageA = `${propPathA}${message}.`
   const messageB = messageA.startsWith('must')
     ? messageA
     : `must be valid: ${messageA}`
-  const error = new Error(messageB)
-  throw handleValidateError(error, opts)
+  throw new Error(messageB)
 }

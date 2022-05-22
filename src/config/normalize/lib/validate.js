@@ -1,5 +1,3 @@
-import { wrapError } from '../../../error/wrap.js'
-
 // Consumers can distinguish users errors from system bugs by checking
 // the `error.validation` boolean property.
 // User errors are distinguished by having error message starting with "must".
@@ -10,19 +8,12 @@ import { wrapError } from '../../../error/wrap.js'
 //  - It is simpler for users
 //  - It works both on browsers and in Node.js
 //  - It ensures the error message looks good
-export const handleValidateError = function (error, opts) {
-  if (!isValidateError(error)) {
-    return error
+export const handleValidateError = function (error) {
+  if (isValidateError(error)) {
+    error.validation = true
   }
-
-  error.validation = true
-  return wrapError(error, getPrefix(opts))
 }
 
 const isValidateError = function (error) {
   return error instanceof Error && error.message.startsWith('must')
-}
-
-export const getPrefix = function ({ prefix, funcOpts: { originalName } }) {
-  return `${prefix} "${originalName}"`
 }

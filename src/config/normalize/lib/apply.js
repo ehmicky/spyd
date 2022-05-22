@@ -1,4 +1,4 @@
-import { callValueFunc, callUserFunc } from './call.js'
+import { callValueFunc, callNoValueFunc } from './call.js'
 import { validateAndModify } from './modify.js'
 
 // Apply a rule on a specific property
@@ -69,10 +69,10 @@ const againstCondition = async function (value, condition, opts) {
 // Apply `compute[(opts)]` which sets a value from the system, instead of the
 // user
 const computeValue = async function (value, compute, opts) {
-  return compute === undefined ? value : await callUserFunc(compute, opts)
+  return compute === undefined ? value : await callNoValueFunc(compute, opts)
 }
 
 // Apply `default[(opts)]` which assigns a default value
 const addDefaultValue = async function (value, defaultValue, opts) {
-  return value === undefined ? await callUserFunc(defaultValue, opts) : value
+  return value === undefined ? await callNoValueFunc(defaultValue, opts) : value
 }

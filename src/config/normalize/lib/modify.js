@@ -1,7 +1,7 @@
 import { normalizePath } from 'wild-wild-parser'
 import { has } from 'wild-wild-path'
 
-import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
+import { callValueFunc, callUndefinedValueFunc } from './call.js'
 import { resolveGlob } from './glob.js'
 import { resolvePath } from './path.js'
 import { validateSchema } from './schema.js'
@@ -45,9 +45,13 @@ export const validateAndModify = async function ({
 
 // Apply `required[(opts)]` which throws if `true` and value is `undefined`
 const validateRequired = async function (required, opts) {
-  if (await callUserFunc(required, opts)) {
-    throw await getValidateExampleError(new Error('must be defined.'), opts)
+  if (await callUndefinedValueFunc(required, opts)) {
+    await callUndefinedValueFunc(throwRequired, opts)
   }
+}
+
+const throwRequired = function () {
+  throw new Error('must be defined.')
 }
 
 // Apply `validate(value, opts)` which throws on validation errors
