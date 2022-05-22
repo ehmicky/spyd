@@ -26,27 +26,23 @@ const getNamePath = function (name) {
   }
 }
 
-const normalizeRule = function (
-  {
-    nameQuery,
-    namePath,
-    pick,
-    condition,
-    default: defaultValue,
-    compute,
-    path = false,
-    glob = false,
-    required = defaultRequired,
-    example = defaultValue,
-    schema,
-    validate,
-    warn,
-    transform,
-    rename,
-  },
-  index,
-  rules,
-) {
+const normalizeRule = function ({
+  nameQuery,
+  namePath,
+  pick,
+  condition,
+  default: defaultValue,
+  compute,
+  path = false,
+  glob = false,
+  required = defaultRequired,
+  example = defaultValue,
+  schema,
+  validate,
+  warn,
+  transform,
+  rename,
+}) {
   const validateA = normalizeOptionalArray(validate)
   const warnA = normalizeOptionalArray(warn)
   const transformA = normalizeOptionalArray(transform)
