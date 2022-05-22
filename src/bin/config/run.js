@@ -22,15 +22,13 @@ Default: false if the output is an interactive terminal.`,
     describe: `Save the results.
 Default: false`,
   },
-  merge: {
+  id: {
     group: HISTORY,
     requiresArg: true,
-    describe: `Merge this result with a previous one.
-The value is the previous result's identifier.
-It can be "last" to refer to merge to the last result.
-It no previous result with the identifier is found, this sets the new result's
-identifier instead. This allows merging several benchmarks running in parallel.
-Default: none`,
+    describe: `Result's identifier (UUID).
+If a result with the same identifier exists, it is merged.
+The value can be "last" to merge to the last result.
+Default: random identifier`,
   },
   outliers: {
     group: TASKS,

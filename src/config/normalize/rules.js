@@ -16,7 +16,7 @@ import {
   DEFAULT_MAIN_DELTA,
   DEFAULT_SINCE_DELTA,
 } from '../../history/delta/transform.js'
-import { getDefaultId, validateMerge } from '../../history/merge/id.js'
+import { getDefaultId, validateId } from '../../history/merge/id.js'
 import {
   DEFAULT_TITLES,
   EXAMPLE_TITLES,
@@ -98,13 +98,13 @@ const limit = {
   example: EXAMPLE_LIMIT,
 }
 
-const merge = {
-  name: 'merge',
+const id = {
+  name: 'id',
   pick: amongCommands(['run']),
   default: getDefaultId,
   validate(value) {
     validateDefinedString(value)
-    validateMerge(value)
+    validateId(value)
   },
 }
 
@@ -206,7 +206,7 @@ export const RULES = [
   inputs,
   inputsAny,
   limit,
-  merge,
+  id,
   outliers,
   precision,
   save,

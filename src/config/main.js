@@ -25,7 +25,7 @@ export const getConfig = async function (command, configFlags = {}) {
   return configB
 }
 
-// Load the configuration, shallow merged in priority order:
+// Load the configuration, deeply merged in priority order:
 //  - any CLI or programmatic flags
 //  - `spyd.*`
 // We do not allow configuring using environment variables because they:

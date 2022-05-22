@@ -2,8 +2,8 @@ import { randomUUID } from 'crypto'
 
 import { validate as isUuid } from 'uuid'
 
-// Validate `merge` property
-export const validateMerge = function (value) {
+// Validate `id` property
+export const validateId = function (value) {
   if (value !== LAST_ID && !isValidId(value)) {
     throw new Error(`must be "${LAST_ID}" or a UUID.`)
   }
@@ -15,7 +15,7 @@ export const isValidId = function (value) {
   return isUuid(value)
 }
 
-// `merge` can be "last", which refers to the previous result's id.
+// `id` can be "last", which refers to the previous result's id.
 // If there are no previous results, a new UUIDv4 is generated.
 export const normalizeId = function (newResult, history) {
   if (newResult.id !== LAST_ID) {

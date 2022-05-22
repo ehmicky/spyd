@@ -56,7 +56,7 @@ import { normalizeConfigProp } from './normalize.js'
 //           - On npm, this is the "main" file
 //              - This can be "spyd.yml", since we use `import.meta.resolve()`,
 //                not `import`
-//     - Should specify peer pependencies requirements:
+//     - Should specify peer dependencies requirements:
 //        - For both `spyd` and runners used by config
 //        - It should do so by using package manager-specific features to
 //          require consumers to install specific version ranges of those
@@ -143,7 +143,7 @@ const getBase = function ({ base }) {
 //  - `propertyPath` is a dot-delimited path
 // The string is replaced by the reference's value.
 // A common use case is to append a parent configuration's array instead of
-// overridding it, for example:
+// overriding it, for example:
 //  - Adding tasks to a shared configuration, to compare them
 //  - Changing a reporter's pluginConfig while keeping other reporters
 const replaceReferences = async function (configWithBases, base) {

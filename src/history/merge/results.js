@@ -10,7 +10,7 @@ import { groupBy } from '../../utils/group.js'
 import { pickLast } from '../../utils/last.js'
 
 // Merge all rawResults with the same `id`.
-// The `merge` configuration property sets the result's `id`, which can be used
+// The `id` configuration property sets the result's `id`, which can be used
 // to merge several results.
 // This allows incremental benchmarks which is useful:
 //  - When the benchmark uses different machines, e.g. in CI
