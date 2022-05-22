@@ -1,5 +1,6 @@
 import { dirname } from 'path'
 
+import { UserError } from '../../error/main.js'
 import { addBases } from '../cwd.js'
 import { deepMerge } from '../merge.js'
 
@@ -88,12 +89,15 @@ import { normalizeConfigProp } from './normalize.js'
 export const loadConfig = async function (
   { config: configOpt, ...configContents },
   base,
+  childConfigPaths = [],
 ) {
   const configWithBases = addBases(configContents, base)
   const configPaths = await normalizeConfigProp(configOpt, base)
   const bases = configPaths.map(getBase)
   const parentConfigWithBases = await Promise.all(
-    configPaths.map(getParentConfigWithBases),
+    configPaths.map((configPath) =>
+      getParentConfigWithBases(configPath, childConfigPaths),
+    ),
   )
   const configWithBasesA = deepMerge([
     {},
@@ -103,16 +107,38 @@ export const loadConfig = async function (
   return { configWithBases: configWithBasesA, bases }
 }
 
-const getParentConfigWithBases = async function (configPath) {
+const getParentConfigWithBases = async function (configPath, childConfigPaths) {
   const base = getBase(configPath)
+  const childConfigPathsA = checkRecursivePath(configPath, childConfigPaths)
   const configContents = await loadConfigContents(configPath)
   const configContentsA = addDefaultConfig(configContents)
-  const { configWithBases } = await loadConfig(configContentsA, base)
+  const { configWithBases } = await loadConfig(
+    configContentsA,
+    base,
+    childConfigPathsA,
+  )
   return configWithBases
 }
 
 const getBase = function (configPath) {
   return dirname(configPath)
+}
+
+// Prevent infinite recursion of configuration files
+const checkRecursivePath = function (configPath, childConfigPaths) {
+  const childConfigPathIndex = childConfigPaths.indexOf(configPath)
+
+  if (childConfigPathIndex === -1) {
+    return [...childConfigPaths, configPath]
+  }
+
+  const recursivePath = [
+    ...childConfigPaths.slice(childConfigPathIndex),
+    configPath,
+  ].join(' -> ')
+  throw new UserError(
+    `Configuration file must not include itself: ${recursivePath}`,
+  )
 }
 
 // The default `config` is only applied to the top-level CLI flag.
