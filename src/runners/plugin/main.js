@@ -1,4 +1,3 @@
-import { validateFunction } from '../../config/normalize/validate/complex.js'
 import { BUILTIN_RUNNERS } from '../main.js'
 
 import { shared } from './shared.js'
@@ -22,7 +21,7 @@ export const RUNNER_PLUGIN_TYPE = {
     {
       name: 'launch',
       required: true,
-      validate: validateFunction,
+      schema: { typeof: 'function', errorMessage: 'must be a function' },
     },
   ],
   // Plugin configuration properties shared by all plugins
