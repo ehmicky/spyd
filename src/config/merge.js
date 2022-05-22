@@ -22,9 +22,6 @@ export const deepMergePair = function (firstObject, secondObject) {
 }
 
 // This is the value for `declarative-merge`.
-// Except we do not recurse on arrays, so that arrays are overridden instead of
-// being concatenated.
-// This includes array of objects as this is simpler for users.
 // We expose it so other pieces of logic which need to work alongside the
 // merging logic can mimic it.
 export const isRecurseObject = function (value) {
