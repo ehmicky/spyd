@@ -1,9 +1,11 @@
 import { resolve } from 'path'
 
+import { pathExists } from 'path-exists'
+import { isDirectory } from 'path-type'
+
 import { wrapError } from '../../../error/wrap.js'
 
 import { callNoValueFunc } from './call.js'
-import { validateFileExists, validateDirectory } from './fs.js'
 import { validateDefinedString } from './type.js'
 
 // A `cwd[(opts)]` option can be specified to customize the `cwd`.
@@ -38,5 +40,17 @@ const checkCwd = async function (cwd) {
   } catch (error) {
     // Errors in `cwd` are not user errors, i.e. should not start with `must`
     throw wrapError(error, `Invalid "cwd" value "${cwd}":\n"cwd"`)
+  }
+}
+
+const validateFileExists = async function (value) {
+  if (!(await pathExists(value))) {
+    throw new Error('must be an existing file.')
+  }
+}
+
+const validateDirectory = async function (value) {
+  if (!(await isDirectory(value))) {
+    throw new Error('must be a directory.')
   }
 }
