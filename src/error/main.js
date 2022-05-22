@@ -13,7 +13,7 @@ export const LimitError = createErrorType('LimitError')
 
 // Retrieve error type-specific behavior
 export const getErrorProps = function (error) {
-  return getErrorTypeProps(error.name, DEFAULT_ERROR_NAME, ERROR_PROPS)
+  return getErrorTypeProps(error.name, ERROR_PROPS, DEFAULT_ERROR_NAME)
 }
 
 const ERROR_PROPS = {
