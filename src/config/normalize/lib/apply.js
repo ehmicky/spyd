@@ -37,10 +37,10 @@ export const applyRule = async function (
     warnings,
   } = await validateAndModify({
     value: valueB,
-    path,
-    glob,
     required,
     schema,
+    path,
+    glob,
     validate,
     warn,
     transform,

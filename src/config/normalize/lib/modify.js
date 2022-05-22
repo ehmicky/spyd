@@ -13,10 +13,10 @@ import { getWarnings } from './warn.js'
 // eslint-disable-next-line max-statements
 export const validateAndModify = async function ({
   value,
-  path,
-  glob,
   required,
   schema,
+  path,
+  glob,
   validate,
   warn,
   transform,
@@ -28,9 +28,9 @@ export const validateAndModify = async function ({
     return { value }
   }
 
+  await validateSchema(value, schema, opts)
   const valueA = await resolveGlob(value, glob, opts)
   const valueB = await resolvePath(valueA, path, opts)
-  await validateSchema(valueB, schema, opts)
   await validateValue(valueB, validate, opts)
   const warnings = await getWarnings(valueB, warn, opts)
   const { value: valueC, newPath } = await transformValue(
