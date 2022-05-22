@@ -16,7 +16,7 @@ import {
   DEFAULT_MAIN_DELTA,
   DEFAULT_SINCE_DELTA,
 } from '../../history/delta/transform.js'
-import { getDefaultId, validateId } from '../../history/merge/id.js'
+import { getDefaultId, LAST_ID } from '../../history/merge/id.js'
 import {
   DEFAULT_TITLES,
   EXAMPLE_TITLES,
@@ -97,8 +97,15 @@ const id = {
   name: 'id',
   pick: amongCommands(['run']),
   default: getDefaultId,
-  schema: { type: 'string', minLength: 1 },
-  validate: validateId,
+  schema: {
+    type: 'string',
+    minLength: 1,
+    oneOf: [{ format: 'uuid' }, { const: LAST_ID }],
+    errorMessage: {
+      minLength: 'must not be an empty string',
+      _: `must be "${LAST_ID}" or a UUID`,
+    },
+  },
 }
 
 const outliers = {
@@ -156,7 +163,11 @@ const system = {
 const systemAny = {
   name: 'system.*',
   pick: amongCommands(['dev', 'run']),
-  schema: { type: 'string', minLength: 1 },
+  schema: {
+    type: 'string',
+    minLength: 1,
+    errorMessage: { minLength: 'must not be an empty string' },
+  },
   example: EXAMPLE_SYSTEM,
 }
 
@@ -171,7 +182,11 @@ const titles = {
 const titlesAny = {
   name: 'titles.*',
   pick: amongCommands(['remove', 'run', 'show']),
-  schema: { type: 'string', minLength: 1 },
+  schema: {
+    type: 'string',
+    minLength: 1,
+    errorMessage: { minLength: 'must not be an empty string' },
+  },
   example: EXAMPLE_TITLE,
 }
 
@@ -179,8 +194,12 @@ const runner = {
   name: 'runner',
   pick: amongCommands(['dev', 'run']),
   default: DEFAULT_RUNNERS,
-  // eslint-disable-next-line unicorn/no-thenable
-  schema: { if: { type: 'array' }, then: { type: 'array', minItems: 1 } },
+  schema: {
+    if: { type: 'array' },
+    // eslint-disable-next-line unicorn/no-thenable
+    then: { type: 'array', minItems: 1 },
+    errorMessage: 'must not be an empty array',
+  },
 }
 
 const reporter = {

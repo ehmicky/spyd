@@ -2,13 +2,6 @@ import { randomUUID } from 'crypto'
 
 import { validate as isUuid } from 'uuid'
 
-// Validate `id` property
-export const validateId = function (value) {
-  if (value !== LAST_ID && !isValidId(value)) {
-    throw new Error(`must be "${LAST_ID}" or a UUID.`)
-  }
-}
-
 // Validate `result.id`.
 // "last" is not persisted since it is normalized first.
 export const isValidId = function (value) {
@@ -27,7 +20,7 @@ export const normalizeId = function (newResult, history) {
   return { ...newResult, id }
 }
 
-const LAST_ID = 'last'
+export const LAST_ID = 'last'
 
 export const getDefaultId = function () {
   return randomUUID()

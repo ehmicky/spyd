@@ -86,7 +86,7 @@ const normalizeModuleLocation = {
   schema: {
     type: 'string',
     minLength: 1,
-    errorMessage: 'must be a non-empty string',
+    errorMessage: { minLength: 'must not be an empty string' },
   },
   validate(value, { context: { modulePrefix } }) {
     if (modulePrefix === undefined) {
