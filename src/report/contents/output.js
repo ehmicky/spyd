@@ -10,8 +10,8 @@ import { printToStdout } from '../tty.js'
 import { detectInsert, insertContents } from './insert.js'
 
 // `output` path is normalized, but some of its values are not file paths
-export const isOutputPath = function (output) {
-  return !OUTPUT_SPECIAL_VALUES.has(output)
+export const normalizeOutputPath = function (output) {
+  return OUTPUT_SPECIAL_VALUES.has(output) ? undefined : ['file', 'write']
 }
 
 const OUTPUT_SPECIAL_VALUES = new Set(['stdout', 'external'])

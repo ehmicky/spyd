@@ -27,8 +27,8 @@ This Node module was not found, please ensure it is installed.\n`,
   }
 }
 
-export const isConfigFilePath = function (configOpt) {
-  return !isConfigFileModule(configOpt)
+export const normalizeConfigFilePath = function (configOpt) {
+  return isConfigFileModule(configOpt) ? undefined : ['exist', 'file', 'read']
 }
 
 export const isConfigFileModule = function (configOpt) {

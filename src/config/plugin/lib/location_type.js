@@ -1,4 +1,7 @@
 import { isAbsolute } from 'path'
+import { fileURLToPath } from 'url'
+
+import { resolveModuleLocation } from './module.js'
 
 // `pluginConfig[pluginProp]` can be:
 //  - The direct value
@@ -45,4 +48,66 @@ const getPathLocationType = function (originalLocation) {
   }
 
   return 'module'
+}
+
+// URL instances are always absolute, so `cwd` resolution is not needed
+const normalizeFileUrlLocation = [
+  {
+    schema: {
+      type: 'object',
+      properties: {
+        protocol: {
+          const: 'file:',
+        },
+      },
+      errorMessage: 'must use "file:" as a URL protocol',
+    },
+    transform: fileURLToPath,
+  },
+  {
+    path: ['exist', 'file', 'read'],
+  },
+]
+
+const normalizeInlineLocation = [
+  {
+    // Strings are not allowed for inline plugins, but for other plugin types,
+    // which should be shown in error messages
+    schema: {
+      type: ['string', 'object'],
+      errorMessage: 'must be a string or a plain object',
+    },
+  },
+]
+
+const normalizeBuiltinLocation = []
+
+const normalizePathLocation = [
+  {
+    path: ['exist', 'file', 'read'],
+  },
+]
+
+const normalizeModuleLocation = [
+  {
+    schema: {
+      type: 'string',
+      minLength: 1,
+      errorMessage: { minLength: 'must not be an empty string' },
+    },
+    validate(value, { context: { modulePrefix } }) {
+      if (modulePrefix === undefined) {
+        throw new Error('must start with . or / when it is a file path.')
+      }
+    },
+    transform: resolveModuleLocation,
+  },
+]
+
+export const NORMALIZE_LOCATIONS = {
+  fileUrl: normalizeFileUrlLocation,
+  inline: normalizeInlineLocation,
+  builtin: normalizeBuiltinLocation,
+  path: normalizePathLocation,
+  module: normalizeModuleLocation,
 }

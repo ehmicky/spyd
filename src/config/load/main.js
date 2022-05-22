@@ -93,11 +93,7 @@ export const loadConfig = async function (
   childConfigPaths,
 ) {
   const configWithBases = addBases(configContents, base)
-  const configPaths = await normalizeConfigProp(
-    configOpt,
-    base,
-    childConfigPaths,
-  )
+  const configPaths = await normalizeConfigProp(configOpt, base)
   const bases = configPaths.map(getBase)
   const parentConfigWithBases = await Promise.all(
     configPaths.map((configPath) =>

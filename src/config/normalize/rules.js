@@ -40,7 +40,6 @@ import { normalizeConfigSelectors } from '../select/normalize.js'
 import { getDummyRules } from './dummy.js'
 import { amongCommands } from './pick.js'
 import { normalizeArray } from './transform.js'
-import { validateFileExists, validateDirectory } from './validate/fs.js'
 // eslint-disable-next-line import/max-dependencies
 import { validateJson } from './validate/json.js'
 
@@ -50,8 +49,7 @@ const cwd = {
   name: 'cwd',
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   default: getCwd,
-  path: true,
-  validate: [validateFileExists, validateDirectory],
+  path: ['exist', 'directory'],
 }
 
 const delta = {

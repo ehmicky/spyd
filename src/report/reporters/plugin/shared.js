@@ -1,10 +1,9 @@
 /* eslint-disable max-lines */
 import { amongCommands } from '../../../config/normalize/pick.js'
-import { validateRegularFile } from '../../../config/normalize/validate/fs.js'
 import { validateJson } from '../../../config/normalize/validate/json.js'
 import { normalizeConfigSelectors } from '../../../config/select/normalize.js'
 import { getShowMetadataDefault } from '../../../top/omit.js'
-import { isOutputPath } from '../../contents/output.js'
+import { normalizeOutputPath } from '../../contents/output.js'
 import { computeFormat, validateOutputFormat } from '../../formats/detect.js'
 import { DEFAULT_SHOW_PRECISION } from '../../normalize/omit.js'
 import { DEFAULT_SHOW_TITLES } from '../../normalize/titles_add.js'
@@ -34,8 +33,7 @@ const output = {
   }) {
     return defaultOutput
   },
-  path: isOutputPath,
-  validate: validateRegularFile,
+  path: normalizeOutputPath,
 }
 
 const format = {

@@ -24,6 +24,7 @@ export const resolveGlob = async function (value, glob, opts) {
     cwd: opts.funcOpts.cwd,
     absolute: true,
     unique: true,
+    onlyFiles: true,
   })
   return filePaths.filter((filePath) => isNotJunk(basename(filePath)))
 }

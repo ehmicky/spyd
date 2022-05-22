@@ -1,9 +1,9 @@
 import { resolve } from 'path'
 
 import { wrapError } from '../../../error/wrap.js'
-import { validateFileExists, validateDirectory } from '../validate/fs.js'
 
 import { callNoValueFunc } from './call.js'
+import { validateFileExists, validateDirectory } from './fs.js'
 import { validateDefinedString } from './type.js'
 
 // A `cwd[(opts)]` option can be specified to customize the `cwd`.

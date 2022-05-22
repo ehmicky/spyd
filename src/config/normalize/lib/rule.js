@@ -16,7 +16,7 @@ const normalizeRule = function ({
   condition,
   default: defaultValue,
   compute,
-  path = false,
+  path,
   glob = false,
   required = defaultRequired,
   example = defaultValue,
