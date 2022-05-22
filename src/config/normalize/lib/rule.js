@@ -28,7 +28,6 @@ const normalizeRule = function ({
 }) {
   const namePath = getNamePath(name)
   const nameQuery = serializeQuery(namePath)
-  const transformA = normalizeOptionalArray(transform)
   return {
     nameQuery,
     namePath,
@@ -43,7 +42,7 @@ const normalizeRule = function ({
     schema,
     validate,
     warn,
-    transform: transformA,
+    transform,
     rename,
   }
 }
@@ -61,12 +60,4 @@ const getNamePath = function (name) {
   } catch (error) {
     throw wrapError(error, 'Invalid "name":')
   }
-}
-
-// For convenience, some rule methods which are functions can be array of
-// functions too.
-// We do not do this on functions returning booleans since it would be ambiguous
-// whether they should use a union or an intersection.
-const normalizeOptionalArray = function (value) {
-  return value === undefined || Array.isArray(value) ? value : [value]
 }

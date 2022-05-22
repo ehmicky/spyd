@@ -1,10 +1,9 @@
 import isPlainObj from 'is-plain-obj'
-import pReduce from 'p-reduce'
 import { normalizePath } from 'wild-wild-parser'
 
 import { wrapError } from '../../../error/wrap.js'
 
-import { callValueFunc, callNoValueFunc } from './call.js'
+import { callValueFunc } from './call.js'
 
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.
@@ -13,33 +12,15 @@ export const transformValue = async function (value, transform, opts) {
     return { value }
   }
 
-  const { value: valueA, newProps } = await pReduce(
-    transform,
-    (memo, transformFunc) => transformSingleValue(memo, transformFunc, opts),
-    { value, newProps: [] },
-  )
-  const newPath = getNewPath(newProps, opts)
+  const transformReturn = await callValueFunc(transform, value, opts)
+  const { value: valueA, newProp } = normalizeReturn(value, transformReturn)
+  const newPath = getNewPath(newProp, opts)
   return { value: valueA, newPath }
 }
 
-const transformSingleValue = async function (
-  { value, newProps },
-  transformFunc,
-  opts,
-) {
-  const { value: valueA, newProp } = await getTransformedValue(
-    value,
-    transformFunc,
-    opts,
-  )
-  const newPropsA = newProp === undefined ? newProps : [...newProp, ...newProps]
-  return { value: valueA, newProps: newPropsA }
-}
-
-const getTransformedValue = async function (value, transformFunc, opts) {
-  const transformReturn = await callValueFunc(transformFunc, value, opts)
+const normalizeReturn = function (value, transformReturn) {
   return isTransformMove(transformReturn)
-    ? callNoValueFunc(getTransformMove.bind(undefined, transformReturn), opts)
+    ? transformReturn
     : {
         value: transformReturn,
         newProp: findCommonMove(transformReturn, value),
@@ -57,15 +38,6 @@ const isTransformMove = function (transformReturn) {
     'value' in transformReturn &&
     'newProp' in transformReturn
   )
-}
-
-const getTransformMove = function ({ value, newProp }) {
-  try {
-    const newPropA = normalizePath(newProp)
-    return newPropA.length === 0 ? {} : { value, newProp: newPropA }
-  } catch (error) {
-    throw wrapError(error, 'The returned "newProp" is invalid:')
-  }
 }
 
 // Automatically detect some common type of moves
@@ -103,6 +75,14 @@ const COMMON_MOVES = [
   },
 ]
 
-const getNewPath = function (newProps, { funcOpts: { path } }) {
-  return newProps.length === 0 ? undefined : [...path, ...newProps]
+const getNewPath = function (newProp, { funcOpts: { path } }) {
+  if (newProp === undefined) {
+    return
+  }
+
+  try {
+    return [...path, ...normalizePath(newProp)]
+  } catch (error) {
+    throw wrapError(error, 'The returned "newProp" is invalid:')
+  }
 }
