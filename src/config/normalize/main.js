@@ -12,8 +12,8 @@ export const normalizeConfig = async function (
 ) {
   try {
     const { value } = await normalizeConfigProps(config, rules, {
-      ...opts,
       prefix: PREFIX,
+      ...opts,
     })
     return value
   } catch (error) {
