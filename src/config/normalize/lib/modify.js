@@ -9,7 +9,7 @@ import {
   callNoValueFunc,
 } from './call.js'
 import { resolveGlob } from './glob.js'
-import { resolvePath } from './path.js'
+import { resolvePath } from './path/main.js'
 import { validateSchema } from './schema.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
