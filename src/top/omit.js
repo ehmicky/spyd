@@ -75,5 +75,7 @@ const maybeOmit = function (obj, showProp, propNames) {
 }
 
 export const getShowMetadataDefault = function ({ context: { command } }) {
-  return command !== 'run'
+  return SHOW_METADATA_COMMANDS.has(command)
 }
+
+const SHOW_METADATA_COMMANDS = new Set(['show', 'remove'])
