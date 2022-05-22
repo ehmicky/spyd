@@ -7,18 +7,18 @@ import { UserError } from './error.js'
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
-export const getSharedConfig = function (sharedConfig, item = []) {
-  const sharedPropNames = [...new Set(item.flatMap(getRuleName))]
+export const getSharedConfig = function (sharedConfig, shared = []) {
+  const sharedPropNames = [...new Set(shared.flatMap(getRuleName))]
   const sharedConfigA = pick(sharedConfig, sharedPropNames)
   return { sharedConfig: sharedConfigA, sharedPropNames }
 }
 
-// Parse and validate all `item.*.name`
+// Parse and validate all `shared.*.name`
 const getRuleName = function ({ name }, index) {
   try {
     return normalizeRuleName(name)
   } catch (error) {
-    throw new UserError(`Invalid "item[${index}].name": ${error.message}`)
+    throw new UserError(`Invalid "shared[${index}].name": ${error.message}`)
   }
 }
 

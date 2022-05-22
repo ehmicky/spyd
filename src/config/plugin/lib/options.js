@@ -11,7 +11,7 @@ export const normalizeMultipleOpts = function ({
 }
 
 // Normalize options for `addPlugin()`.
-// We purposely do not assign default values to `shape` and `item` since:
+// We purposely do not assign default values to `shape` and `shared` since:
 //  - `undefined` means no validation is performed, including unknown properties
 //    check
 //  - While an empty array means we validate that no properties exist
@@ -21,7 +21,7 @@ export const normalizeSingleOpts = function ({
   pluginProp = 'plugin',
   builtins = {},
   shape,
-  item,
+  shared,
   sharedConfig = {},
   sharedConfigName = 'sharedConfig',
   prefix,
@@ -30,7 +30,7 @@ export const normalizeSingleOpts = function ({
 }) {
   const { sharedConfig: sharedConfigA, sharedPropNames } = getSharedConfig(
     sharedConfig,
-    item,
+    shared,
   )
   return {
     name,
@@ -38,7 +38,7 @@ export const normalizeSingleOpts = function ({
     pluginProp,
     builtins,
     shape,
-    item,
+    shared,
     sharedConfig: sharedConfigA,
     sharedConfigName,
     sharedPropNames,
