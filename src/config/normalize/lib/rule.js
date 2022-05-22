@@ -3,32 +3,15 @@ import { get } from 'wild-wild-path'
 
 import { wrapError } from '../../../error/wrap.js'
 
-import { addDefaultExample } from './example.js'
-
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the
 // path syntax.
 export const normalizeRules = function (rules) {
-  return rules.map(parseName).map(normalizeRule)
-}
-
-const parseName = function ({ name, ...rule }) {
-  const namePath = getNamePath(name)
-  const nameQuery = serializeQuery(namePath)
-  return { ...rule, namePath, nameQuery }
-}
-
-const getNamePath = function (name) {
-  try {
-    return normalizeQuery(name)
-  } catch (error) {
-    throw wrapError(error, 'Invalid "name":')
-  }
+  return rules.map(normalizeRule)
 }
 
 const normalizeRule = function ({
-  nameQuery,
-  namePath,
+  name,
   pick,
   condition,
   default: defaultValue,
@@ -43,6 +26,8 @@ const normalizeRule = function ({
   transform,
   rename,
 }) {
+  const namePath = getNamePath(name)
+  const nameQuery = serializeQuery(namePath)
   const validateA = normalizeOptionalArray(validate)
   const warnA = normalizeOptionalArray(warn)
   const transformA = normalizeOptionalArray(transform)
@@ -62,6 +47,14 @@ const normalizeRule = function ({
     warn: warnA,
     transform: transformA,
     rename,
+  }
+}
+
+const getNamePath = function (name) {
+  try {
+    return normalizeQuery(name)
+  } catch (error) {
+    throw wrapError(error, 'Invalid "name":')
   }
 }
 
