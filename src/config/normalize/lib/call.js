@@ -10,12 +10,10 @@ import { handleValidateError } from './validate.js'
 //  - Called with `value` and `opts`
 //  - Optionally async
 export const callValueFunc = async function (userFunc, value, opts) {
-  if (typeof userFunc !== 'function') {
-    return userFunc
-  }
-
   try {
-    return await callUserFunc(userFunc.bind(undefined, value), opts)
+    return typeof userFunc === 'function'
+      ? await callUserFunc(userFunc.bind(undefined, value), opts)
+      : userFunc
   } catch (error) {
     const errorA = handleError(error, opts)
     const errorB = addCurrentValue(errorA, value)
@@ -25,12 +23,10 @@ export const callValueFunc = async function (userFunc, value, opts) {
 
 // Some methods are called with a `value` but it is always undefined
 export const callUndefinedValueFunc = async function (userFunc, opts) {
-  if (typeof userFunc !== 'function') {
-    return userFunc
-  }
-
   try {
-    return await callUserFunc(userFunc, opts)
+    return typeof userFunc === 'function'
+      ? await callUserFunc(userFunc, opts)
+      : userFunc
   } catch (error) {
     const errorA = handleError(error, opts)
     throw await addExampleValue(errorA, opts)
@@ -39,12 +35,10 @@ export const callUndefinedValueFunc = async function (userFunc, opts) {
 
 // Some methods are not called with any value
 export const callNoValueFunc = async function (userFunc, opts) {
-  if (typeof userFunc !== 'function') {
-    return userFunc
-  }
-
   try {
-    return await callUserFunc(userFunc, opts)
+    return typeof userFunc === 'function'
+      ? await callUserFunc(userFunc, opts)
+      : userFunc
   } catch (error) {
     throw handleError(error, opts)
   }
