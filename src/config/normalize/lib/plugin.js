@@ -5,39 +5,32 @@ import {
 } from './call.js'
 import { PLUGINS } from './plugins/main.js'
 
-// eslint-disable-next-line complexity, max-statements
+/* eslint-disable complexity, max-statements, fp/no-let, fp/no-loops, max-depth,
+   no-continue, no-await-in-loop, fp/no-mutation */
 export const performPlugins = async function (rule, value, opts) {
-  // eslint-disable-next-line fp/no-let
   let valueA = value
 
-  // eslint-disable-next-line fp/no-loops
   for (const plugin of PLUGINS) {
     const { name, main, defined = true, input = false } = plugin
     const ruleArg = rule[name]
 
-    // eslint-disable-next-line max-depth
     if (
       ruleArg === undefined ||
       (defined === true && value === undefined) ||
       (defined === false && value !== undefined)
     ) {
-      // eslint-disable-next-line no-continue
       continue
     }
 
     const ruleArgA =
       typeof ruleArg === 'function'
-        ? // eslint-disable-next-line no-await-in-loop
-          await callFunc({ func: ruleArg, value, opts, input, defined })
+        ? await callFunc({ func: ruleArg, value, opts, input, defined })
         : ruleArg
 
-    // eslint-disable-next-line max-depth
     if (ruleArgA === undefined) {
-      // eslint-disable-next-line no-continue
       continue
     }
 
-    // eslint-disable-next-line no-await-in-loop
     const returnValue = await callFunc({
       func: main.bind(undefined, ruleArgA),
       value,
@@ -46,23 +39,19 @@ export const performPlugins = async function (rule, value, opts) {
       defined,
     })
 
-    // eslint-disable-next-line max-depth
     if (returnValue === undefined) {
-      // eslint-disable-next-line no-continue
       continue
     }
 
     // We allow transforming to `undefined`, i.e. returning
     // `{ value: undefined }` is different from returning `{}`
-    // eslint-disable-next-line max-depth
+
     if ('value' in returnValue) {
-      // eslint-disable-next-line fp/no-mutation
       valueA = returnValue.value
     }
 
     const { skip } = returnValue
 
-    // eslint-disable-next-line max-depth
     if (skip) {
       break
     }
@@ -70,6 +59,8 @@ export const performPlugins = async function (rule, value, opts) {
 
   return valueA
 }
+/* eslint-enable complexity, max-statements, fp/no-let, fp/no-loops, max-depth,
+   no-continue, no-await-in-loop, fp/no-mutation */
 
 // TODO: call logic should not check `typeof function` anymore
 const callFunc = async function ({ func, value, opts, input, defined }) {
