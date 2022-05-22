@@ -23,7 +23,6 @@ const tasks = {
 const tasksAny = {
   name: 'tasks.*',
   pick,
-  path: true,
   glob: true,
   validate: validateRegularFile,
   example: DEFAULT_TASKS,

@@ -2,12 +2,14 @@ import { normalizePath } from 'wild-wild-parser'
 import { has } from 'wild-wild-path'
 
 import { callValueFunc, callUserFunc, getValidateExampleError } from './call.js'
+import { resolveGlob } from './glob.js'
 import { resolvePath } from './path.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
 
 // Once the initial value has been computed, apply validation and transforms,
 // unless the value is `undefined`.
+// eslint-disable-next-line max-statements
 export const validateAndModify = async function ({
   value,
   path,
@@ -24,17 +26,18 @@ export const validateAndModify = async function ({
     return { value }
   }
 
-  const valueA = await resolvePath({ value, path, glob, opts })
-  await validateValue(valueA, validate, opts)
-  const warnings = await getWarnings(valueA, warn, opts)
-  const { value: valueB, newPath } = await transformValue(
-    valueA,
+  const valueA = await resolveGlob(value, glob, opts)
+  const valueB = await resolvePath(valueA, path, opts)
+  await validateValue(valueB, validate, opts)
+  const warnings = await getWarnings(valueB, warn, opts)
+  const { value: valueC, newPath } = await transformValue(
+    valueB,
     transform,
     opts,
   )
-  const renamedPath = await renameProp(valueB, rename, opts)
+  const renamedPath = await renameProp(valueC, rename, opts)
   const newPaths = [newPath, renamedPath].filter(Boolean)
-  return { value: valueB, renamedPath, newPaths, warnings }
+  return { value: valueC, renamedPath, newPaths, warnings }
 }
 
 // Apply `required[(opts)]` which throws if `true` and value is `undefined`
