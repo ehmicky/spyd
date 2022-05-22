@@ -24,6 +24,7 @@ A configuration file can include another one by using this property.
   - Objects are deeply merged unless they define a "_merge" property with value
     "shallow", "set" or "delete".
   - Arrays can be updated using objects with indices as keys.
+  - Merging objects/arrays can also used in CLI flags
 
 You can define selectors, i.e. different values per combination for some
 configuration properties ("limit", "outliers", "precision", "showDiff",
