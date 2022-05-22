@@ -50,6 +50,13 @@ const normalizeRule = function ({
   }
 }
 
+// `required` defaults to `false` except for array items.
+// This validates against sparse arrays by default, since they are usually
+// unwanted.
+const defaultRequired = function ({ path, config }) {
+  return path.length !== 0 && Array.isArray(get(config, path.slice(0, -1)))
+}
+
 const getNamePath = function (name) {
   try {
     return normalizeQuery(name)
@@ -64,11 +71,4 @@ const getNamePath = function (name) {
 // whether they should use a union or an intersection.
 const normalizeOptionalArray = function (value) {
   return value === undefined || Array.isArray(value) ? value : [value]
-}
-
-// `required` defaults to `false` except for array items.
-// This validates against sparse arrays by default, since they are usually
-// unwanted.
-const defaultRequired = function ({ path, config }) {
-  return path.length !== 0 && Array.isArray(get(config, path.slice(0, -1)))
 }
