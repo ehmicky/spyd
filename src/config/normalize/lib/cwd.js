@@ -2,9 +2,9 @@ import { resolve } from 'path'
 
 import { wrapError } from '../../../error/wrap.js'
 import { validateFileExists, validateDirectory } from '../validate/fs.js'
-import { validateDefinedString } from '../validate/type.js'
 
 import { callNoValueFunc } from './call.js'
+import { validateDefinedString } from './type.js'
 
 // A `cwd[(opts)]` option can be specified to customize the `cwd`.
 //  - The default value is `.`, not `process.cwd()`, to ensure it is evaluated

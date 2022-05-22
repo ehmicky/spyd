@@ -3,9 +3,8 @@ import { basename } from 'path'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
-import { validateDefinedString } from '../validate/type.js'
-
 import { callValueFunc } from './call.js'
+import { validateDefinedString } from './type.js'
 
 // Apply `glob[(value, opts)]` which resolves the value as a globbing pattern
 // when `true` (default: `false`).

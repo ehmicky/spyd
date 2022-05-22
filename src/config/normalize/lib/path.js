@@ -1,8 +1,7 @@
 import { resolve } from 'path'
 
-import { validateDefinedString } from '../validate/type.js'
-
 import { callValueFunc } from './call.js'
+import { validateDefinedString } from './type.js'
 
 // Apply `path[(value, opts)]` which resolves the value as an absolute file path
 // when `true` (default: `false`).
