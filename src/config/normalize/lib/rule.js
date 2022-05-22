@@ -37,7 +37,7 @@ const normalizeRule = function (
     path = false,
     glob = false,
     required = defaultRequired,
-    example,
+    example = defaultValue,
     schema,
     validate,
     warn,
@@ -47,7 +47,6 @@ const normalizeRule = function (
   index,
   rules,
 ) {
-  const exampleA = addDefaultExample(example, nameQuery, rules)
   const validateA = normalizeOptionalArray(validate)
   const warnA = normalizeOptionalArray(warn)
   const transformA = normalizeOptionalArray(transform)
@@ -61,7 +60,7 @@ const normalizeRule = function (
     path,
     glob,
     required,
-    example: exampleA,
+    example,
     schema,
     validate: validateA,
     warn: warnA,
