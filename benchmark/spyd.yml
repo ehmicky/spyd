@@ -13,8 +13,7 @@ system:
   machine: one
   cluster: purple
 reporter:
-  - id: debug
-    stats: [oh]
+  - debug
   - history
   - id: histogram
     mini: true
