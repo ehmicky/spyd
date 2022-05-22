@@ -3,8 +3,11 @@ import { basename } from 'path'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
-import { callValueFunc } from './call.js'
 import { validateDefinedString } from './type.js'
+
+export const name = 'glob'
+
+export const input = true
 
 // Apply `glob[(value, opts)]` which resolves the value as a globbing pattern
 // when `true` (default: `false`).
@@ -14,17 +17,20 @@ import { validateDefinedString } from './type.js'
 //  - This allows using `validate()` to validate parent directories, timestamps,
 //    file types, etc.
 // This is performed before `path` in cases both are `true`.
-export const resolveGlob = async function (value, glob, opts) {
-  if (!(await callValueFunc(glob, value, opts))) {
-    return value
+export const main = async function (glob, value, { cwd }) {
+  if (!glob) {
+    return
   }
 
-  await callValueFunc(validateDefinedString, value, opts)
+  validateDefinedString(value)
   const filePaths = await fastGlob(value, {
-    cwd: opts.funcOpts.cwd,
+    cwd,
     absolute: true,
     unique: true,
     onlyFiles: true,
   })
-  return filePaths.filter((filePath) => isNotJunk(basename(filePath)))
+  const filePathsA = filePaths.filter((filePath) =>
+    isNotJunk(basename(filePath)),
+  )
+  return { value: filePathsA }
 }

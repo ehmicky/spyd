@@ -64,9 +64,7 @@ export const performPlugins = async function (rule, value, opts) {
   return valueA
 }
 
-// TODO: call logic should:
-//  - not check `typeof function` anymore
-//  - not call the function with `opts` anymore
+// TODO: call logic should not check `typeof function` anymore
 const callFunc = async function ({ func, value, opts, input, defined }) {
   if (input) {
     return await callValueFunc(func, value, opts)

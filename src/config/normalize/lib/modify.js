@@ -8,7 +8,6 @@ import {
   callUndefinedValueFunc,
   callNoValueFunc,
 } from './call.js'
-import { resolveGlob } from './glob.js'
 import { resolvePath } from './path/main.js'
 import { performPlugins } from './plugin.js'
 import { transformValue } from './transform.js'
@@ -21,7 +20,6 @@ export const validateAndModify = async function ({
   value,
   required,
   path,
-  glob,
   validate,
   warn,
   transform,
@@ -35,18 +33,17 @@ export const validateAndModify = async function ({
   }
 
   const valueA = await performPlugins(rule, value, opts)
-  const valueB = await resolveGlob(valueA, glob, opts)
-  const valueC = await resolvePath(valueB, path, opts)
-  await validateValue(valueC, validate, opts)
-  const warnings = await getWarnings(valueC, warn, opts)
-  const { value: valueD, newPath } = await transformValue(
-    valueC,
+  const valueB = await resolvePath(valueA, path, opts)
+  await validateValue(valueB, validate, opts)
+  const warnings = await getWarnings(valueB, warn, opts)
+  const { value: valueC, newPath } = await transformValue(
+    valueB,
     transform,
     opts,
   )
-  const renamedPath = await renameProp(valueD, rename, opts)
+  const renamedPath = await renameProp(valueC, rename, opts)
   const newPaths = [newPath, renamedPath].filter(Boolean)
-  return { value: valueD, renamedPath, newPaths, warnings }
+  return { value: valueC, renamedPath, newPaths, warnings }
 }
 
 // Apply `required[(opts)]` which throws if `true` and value is `undefined`
