@@ -54,6 +54,10 @@ const throwValidationError = function (
 ) {
   const propPath = decodePointer(instancePath).join('.')
   const propPathA = propPath === '' ? propPath : `${propPath} `
-  const error = new Error(`must be valid: ${propPathA}${message}.`)
+  const messageA = `${propPathA}${message}.`
+  const messageB = messageA.startsWith('must')
+    ? messageA
+    : `must be valid: ${messageA}`
+  const error = new Error(messageB)
   throw handleValidateError(error, opts)
 }
