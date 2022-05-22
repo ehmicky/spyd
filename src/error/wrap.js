@@ -39,7 +39,7 @@ const wrapErrorMessage = function (error, prefix) {
   const { message } = error
   error.message = prefix.startsWith('\n')
     ? `${message}${prefix}`
-    : `${prefix}${getSpaceDelimiter(message, prefix)}${message.trim()}`
+    : `${prefix}${getSpaceDelimiter(message, prefix)}${message.trimStart()}`
   fixErrorStack(error)
   return error
 }
