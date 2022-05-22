@@ -8,18 +8,16 @@ import {
   callUndefinedValueFunc,
   callNoValueFunc,
 } from './call.js'
-import { resolvePath } from './path/main.js'
 import { performPlugins } from './plugin.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
 
 // Once the initial value has been computed, apply validation and transforms,
 // unless the value is `undefined`.
-// eslint-disable-next-line max-statements
+
 export const validateAndModify = async function ({
   value,
   required,
-  path,
   validate,
   warn,
   transform,
@@ -33,17 +31,16 @@ export const validateAndModify = async function ({
   }
 
   const valueA = await performPlugins(rule, value, opts)
-  const valueB = await resolvePath(valueA, path, opts)
-  await validateValue(valueB, validate, opts)
-  const warnings = await getWarnings(valueB, warn, opts)
-  const { value: valueC, newPath } = await transformValue(
-    valueB,
+  await validateValue(valueA, validate, opts)
+  const warnings = await getWarnings(valueA, warn, opts)
+  const { value: valueB, newPath } = await transformValue(
+    valueA,
     transform,
     opts,
   )
-  const renamedPath = await renameProp(valueC, rename, opts)
+  const renamedPath = await renameProp(valueB, rename, opts)
   const newPaths = [newPath, renamedPath].filter(Boolean)
-  return { value: valueC, renamedPath, newPaths, warnings }
+  return { value: valueB, renamedPath, newPaths, warnings }
 }
 
 // Apply `required[(opts)]` which throws if `true` and value is `undefined`

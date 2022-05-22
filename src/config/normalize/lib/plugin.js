@@ -30,6 +30,13 @@ export const performPlugins = async function (rule, value, opts) {
         ? // eslint-disable-next-line no-await-in-loop
           await callFunc({ func: ruleArg, value, opts, input, defined })
         : ruleArg
+
+    // eslint-disable-next-line max-depth
+    if (ruleArgA === undefined) {
+      // eslint-disable-next-line no-continue
+      continue
+    }
+
     // eslint-disable-next-line no-await-in-loop
     const returnValue = await callFunc({
       func: main.bind(undefined, ruleArgA),
