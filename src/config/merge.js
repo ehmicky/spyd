@@ -13,6 +13,18 @@ import isPlainObj from 'is-plain-obj'
 //     - Changing a reporter's pluginConfig while keeping other reporters
 // Objects are merged deeply, but can change this using a `_merge` property
 // set to "deep|shallow|set|delete".
+// When merging configuration files:
+//  - If `config` is an array, we ensure each item is merged to the previous one
+//    in order
+//  - If there is no parent `config`, we merge to an empty object to ensure that
+//    `_merge` properties and array updates objects are resolved
+// Plugin-specific configurations are merged to the top-level shared
+// configuration using the same logic
+//  - However, `_merge` properties and array updates objects cannot be used
+//    since it would be ambiguous to know whether the target is the top-level
+//    shared configuration or a parent `config`
+//  - We prevent this by resolving those properties when the configuration is
+//    first loaded, by merging it to an empty object
 export const deepMerge = function ([firstObject, ...objects]) {
   return objects.reduce(deepMergePair, firstObject)
 }

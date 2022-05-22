@@ -96,6 +96,7 @@ export const loadConfig = async function (
     configPaths.map(getParentConfigWithBases),
   )
   const configWithBasesA = deepMerge([
+    {},
     ...parentConfigWithBases,
     configWithBases,
   ])
