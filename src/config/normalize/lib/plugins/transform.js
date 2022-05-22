@@ -1,30 +1,17 @@
-import isPlainObj from 'is-plain-obj'
-import { normalizePath } from 'wild-wild-parser'
+export const name = 'transform'
 
-import { wrapError } from '../../../error/wrap.js'
-
-import { callValueFunc } from './call.js'
+export const input = true
 
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.
-export const transformValue = async function (value, transform, opts) {
-  if (transform === undefined) {
-    return { value }
-  }
-
-  const transformReturn = await callValueFunc(transform, value, opts)
-  const { value: valueA, newProp } = normalizeReturn(value, transformReturn)
-  const newPath = getNewPath(newProp, opts)
-  return { value: valueA, newPath }
-}
-
-const normalizeReturn = function (value, transformReturn) {
-  return isTransformMove(transformReturn)
-    ? transformReturn
+export const main = function (transform, value) {
+  const { value: valueA, newProp } = isTransformMove(transform)
+    ? transform
     : {
-        value: transformReturn,
-        newProp: findCommonMove(transformReturn, value),
+        value: transform,
+        newProp: findCommonMove(transform, value),
       }
+  return { value: valueA, path: newProp }
 }
 
 // `transform()` can return a `{ newProp, value }` object to indicate the
@@ -32,11 +19,12 @@ const normalizeReturn = function (value, transformReturn) {
 //  - It does not move the property.
 //  - Instead, it indicates it's been moved so error messages show the name
 //    of the property before being moved
-const isTransformMove = function (transformReturn) {
+const isTransformMove = function (transform) {
   return (
-    isPlainObj(transformReturn) &&
-    'value' in transformReturn &&
-    'newProp' in transformReturn
+    typeof transform === 'object' &&
+    transform !== null &&
+    'value' in transform &&
+    'newProp' in transform
   )
 }
 
@@ -64,7 +52,8 @@ const COMMON_MOVES = [
   {
     test(newValue, oldValue) {
       return (
-        isPlainObj(newValue) &&
+        typeof newValue === 'object' &&
+        newValue !== null &&
         Object.keys(newValue).length === 1 &&
         newValue[Object.keys(newValue)[0]] === oldValue
       )
@@ -74,15 +63,3 @@ const COMMON_MOVES = [
     },
   },
 ]
-
-const getNewPath = function (newProp, { funcOpts: { path } }) {
-  if (newProp === undefined) {
-    return
-  }
-
-  try {
-    return [...path, ...normalizePath(newProp)]
-  } catch (error) {
-    throw wrapError(error, 'The returned "newProp" is invalid:')
-  }
-}

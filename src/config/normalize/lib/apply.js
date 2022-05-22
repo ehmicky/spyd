@@ -6,6 +6,7 @@ import {
 import { validateAndModify } from './modify.js'
 
 // Apply a rule on a specific property
+
 export const applyRule = async function ({
   rule: {
     pick,
@@ -22,24 +23,25 @@ export const applyRule = async function ({
     rename,
   },
   value,
+  config,
+  moves,
   warnings,
   opts,
 }) {
   if (await againstPick(value, pick, opts)) {
-    return { value: undefined }
+    return { value: undefined, warnings, moves }
   }
 
   if (await againstCondition(value, condition, opts)) {
-    return { value }
+    return { value, warnings, moves }
   }
 
   const valueA = await computeValue(value, compute, opts)
   const valueB = await addDefaultValue(valueA, defaultValue, opts)
   const {
-    value: valueC,
-    renamedPath,
-    newPaths,
+    config: configA,
     warnings: warningsA,
+    moves: movesA,
   } = await validateAndModify({
     value: valueB,
     required,
@@ -50,10 +52,12 @@ export const applyRule = async function ({
     warn,
     transform,
     rename,
+    config,
+    moves,
     warnings,
     opts,
   })
-  return { value: valueC, renamedPath, newPaths, warnings: warningsA }
+  return { config: configA, warnings: warningsA, moves: movesA }
 }
 
 // Apply `pick[(value, opts)]` which omits the current value if `false` is
