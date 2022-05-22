@@ -1,16 +1,8 @@
 import { isDeepStrictEqual } from 'util'
 
-import isPlainObj from 'is-plain-obj'
-
 export const validateArray = function (value) {
   if (!Array.isArray(value)) {
     throw new TypeError('must be an array.')
-  }
-}
-
-export const validateObject = function (value) {
-  if (!isPlainObj(value)) {
-    throw new Error('must be a plain object.')
   }
 }
 

@@ -1,11 +1,3 @@
-import {
-  validateObject,
-  validateFunction,
-} from '../../../config/normalize/validate/complex.js'
-import {
-  validateBoolean,
-  validateDefinedString,
-} from '../../../config/normalize/validate/simple.js'
 import { DEFAULT_REPORTER_OUTPUT } from '../../contents/output.js'
 import { getReportMethods } from '../../formats/list.js'
 import { BUILTIN_REPORTERS } from '../main.js'
@@ -20,27 +12,31 @@ export const REPORTER_PLUGIN_TYPE = {
   shape: [
     ...getReportMethods().map((name) => ({
       name,
-      validate: validateFunction,
+      schema: { typeof: 'function', errorMessage: 'must be a function' },
     })),
     {
       name: 'capabilities',
       default: {},
-      validate: validateObject,
+      schema: { type: 'object' },
     },
     {
       name: 'capabilities.debugStats',
       default: false,
-      validate: validateBoolean,
+      schema: { type: 'boolean' },
     },
     {
       name: 'capabilities.history',
       default: false,
-      validate: validateBoolean,
+      schema: { type: 'boolean' },
     },
     {
       name: 'defaultOutput',
       default: DEFAULT_REPORTER_OUTPUT,
-      validate: validateDefinedString,
+      schema: {
+        type: 'string',
+        minLength: 1,
+        errorMessage: { minLength: 'must not be an empty string' },
+      },
     },
   ],
   shared,
