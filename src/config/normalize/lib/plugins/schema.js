@@ -4,7 +4,7 @@ import ajvKeywords from 'ajv-keywords'
 import Ajv from 'ajv/dist/2020.js'
 import { decodePointer } from 'json-ptr'
 
-import { wrapError } from '../../../error/wrap.js'
+import { wrapError } from '../../../../error/wrap.js'
 
 export const name = 'schema'
 

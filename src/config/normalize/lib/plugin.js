@@ -3,7 +3,7 @@ import {
   callUndefinedValueFunc,
   callNoValueFunc,
 } from './call.js'
-import { PLUGINS } from './plugins.js'
+import { PLUGINS } from './plugins/main.js'
 
 // eslint-disable-next-line complexity, max-statements
 export const performPlugins = async function (rule, value, opts) {
