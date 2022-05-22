@@ -17,7 +17,7 @@ export const callValueFunc = async function (userFunc, value, opts) {
     return await callUserFunc(boundUserFunc, opts)
   } catch (error) {
     const errorA = addCurrentValue(error, value)
-    throw await addExampleValue(errorA, value, opts)
+    throw await addExampleValue(errorA, opts)
   }
 }
 
