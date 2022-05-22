@@ -1,4 +1,8 @@
-import { callValueFunc, callNoValueFunc } from './call.js'
+import {
+  callValueFunc,
+  callNoValueFunc,
+  callUndefinedValueFunc,
+} from './call.js'
 import { validateAndModify } from './modify.js'
 
 // Apply a rule on a specific property
@@ -74,5 +78,7 @@ const computeValue = async function (value, compute, opts) {
 
 // Apply `default[(opts)]` which assigns a default value
 const addDefaultValue = async function (value, defaultValue, opts) {
-  return value === undefined ? await callNoValueFunc(defaultValue, opts) : value
+  return value === undefined
+    ? await callUndefinedValueFunc(defaultValue, opts)
+    : value
 }

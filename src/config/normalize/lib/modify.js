@@ -10,7 +10,7 @@ import {
 } from './call.js'
 import { resolveGlob } from './glob.js'
 import { resolvePath } from './path/main.js'
-import { validateSchema } from './schema.js'
+import { performPlugins } from './plugin.js'
 import { transformValue } from './transform.js'
 import { getWarnings } from './warn.js'
 
@@ -20,7 +20,6 @@ import { getWarnings } from './warn.js'
 export const validateAndModify = async function ({
   value,
   required,
-  schema,
   path,
   glob,
   validate,
@@ -28,25 +27,26 @@ export const validateAndModify = async function ({
   transform,
   rename,
   opts,
+  ...rule
 }) {
   if (value === undefined) {
     await validateRequired(required, opts)
     return { value }
   }
 
-  await validateSchema(value, schema, opts)
-  const valueA = await resolveGlob(value, glob, opts)
-  const valueB = await resolvePath(valueA, path, opts)
-  await validateValue(valueB, validate, opts)
-  const warnings = await getWarnings(valueB, warn, opts)
-  const { value: valueC, newPath } = await transformValue(
-    valueB,
+  const valueA = await performPlugins(rule, value, opts)
+  const valueB = await resolveGlob(valueA, glob, opts)
+  const valueC = await resolvePath(valueB, path, opts)
+  await validateValue(valueC, validate, opts)
+  const warnings = await getWarnings(valueC, warn, opts)
+  const { value: valueD, newPath } = await transformValue(
+    valueC,
     transform,
     opts,
   )
-  const renamedPath = await renameProp(valueC, rename, opts)
+  const renamedPath = await renameProp(valueD, rename, opts)
   const newPaths = [newPath, renamedPath].filter(Boolean)
-  return { value: valueC, renamedPath, newPaths, warnings }
+  return { value: valueD, renamedPath, newPaths, warnings }
 }
 
 // Apply `required[(opts)]` which throws if `true` and value is `undefined`

@@ -6,23 +6,16 @@ import { decodePointer } from 'json-ptr'
 
 import { wrapError } from '../../../error/wrap.js'
 
-import { callValueFunc } from './call.js'
+export const name = 'schema'
+
+export const input = true
 
 // Apply `schema[(value, opts)]` which throws on JSON schema validation errors
-export const validateSchema = async function (value, schema, opts) {
-  if (schema === undefined) {
-    return
-  }
-
-  const schemaA = await callValueFunc(schema, value, opts)
-  const validate = compileSchema(schemaA)
+export const main = async function (schema, value) {
+  const validate = compileSchema(schema)
 
   if (!validate(value)) {
-    await callValueFunc(
-      throwValidationError.bind(undefined, validate),
-      value,
-      opts,
-    )
+    await throwValidationError(validate.errors)
   }
 }
 
@@ -55,7 +48,7 @@ const compileSchema = function (schema) {
   }
 }
 
-const throwValidationError = function ({ errors }) {
+const throwValidationError = function (errors) {
   // eslint-disable-next-line fp/no-mutating-methods
   const message = [...errors].reverse().map(serializeAjvError).join(', ')
   const messageA = message.startsWith('must')

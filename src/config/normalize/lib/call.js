@@ -21,7 +21,8 @@ export const callValueFunc = async function (userFunc, value, opts) {
   }
 }
 
-// Some methods are called with a `value` but it is always undefined
+// Some methods are not called with any `value` but their logic requires knowing
+// whether it is undefined
 export const callUndefinedValueFunc = async function (userFunc, opts) {
   try {
     return typeof userFunc === 'function'
