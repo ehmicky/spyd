@@ -6,7 +6,7 @@ import { ConsumerError } from './error.js'
 //    instances of the same plugin properly
 //     - Also, the configuration objects are shallowly cloned, but not deeply,
 //       which might be unexpected by the consumer if those are modified
-// Therefore, it must be explicitely allowed using `duplicates: true`.
+// Therefore, it must be explicitly allowed using `duplicates: true`.
 // Plugin's identity is checked using `plugin.id`, which works with:
 //  - Inline ids
 //  - The same module or file being referenced in different ways

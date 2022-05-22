@@ -43,6 +43,7 @@ const getEachPluginInfo = async function (opts, pluginConfig, index) {
   return await getPluginInfo(pluginConfig, { ...opts, name })
 }
 
+// Retrieve a single plugin instead of an optional array of them
 export const getPlugin = async function (pluginConfig, opts) {
   const optsA = normalizeSingleOpts(opts)
   validateDefined(pluginConfig, optsA)
