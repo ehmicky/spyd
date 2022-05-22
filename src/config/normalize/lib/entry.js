@@ -4,7 +4,6 @@ import { set, remove } from 'wild-wild-path'
 import { applyRule } from './apply.js'
 import { addMoves } from './move.js'
 import { getOpts } from './opts.js'
-import { addWarning } from './warn.js'
 
 // Apply rule for a specific entry
 export const applyEntryRule = async function (
@@ -25,11 +24,10 @@ export const applyEntryRule = async function (
     value: newValue,
     renamedPath = namePath,
     newPaths = [],
-    warning,
-  } = await applyRule(rule, value, opts)
+    warnings: warningsA,
+  } = await applyRule({ rule, value, warnings, opts })
   const configA = setConfigValue({ config, namePath, renamedPath, newValue })
   const movesA = addMoves(moves, newPaths, namePath)
-  const warningsA = addWarning(warnings, warning, opts)
   return { config: configA, moves: movesA, warnings: warningsA }
 }
 

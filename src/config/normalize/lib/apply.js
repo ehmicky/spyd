@@ -6,8 +6,8 @@ import {
 import { validateAndModify } from './modify.js'
 
 // Apply a rule on a specific property
-export const applyRule = async function (
-  {
+export const applyRule = async function ({
+  rule: {
     pick,
     condition,
     default: defaultValue,
@@ -22,8 +22,9 @@ export const applyRule = async function (
     rename,
   },
   value,
+  warnings,
   opts,
-) {
+}) {
   if (await againstPick(value, pick, opts)) {
     return { value: undefined }
   }
@@ -38,7 +39,7 @@ export const applyRule = async function (
     value: valueC,
     renamedPath,
     newPaths,
-    warning,
+    warnings: warningsA,
   } = await validateAndModify({
     value: valueB,
     required,
@@ -49,9 +50,10 @@ export const applyRule = async function (
     warn,
     transform,
     rename,
+    warnings,
     opts,
   })
-  return { value: valueC, renamedPath, newPaths, warning }
+  return { value: valueC, renamedPath, newPaths, warnings: warningsA }
 }
 
 // Apply `pick[(value, opts)]` which omits the current value if `false` is

@@ -1,21 +1,7 @@
-import { callValueFunc } from './call.js'
 import { getPrefix } from './prefix.js'
-
-// Apply `warn[(value, opts)]` which can return a string to print as warning
-export const getWarning = async function (value, warn, opts) {
-  if (warn === undefined) {
-    return
-  }
-
-  return await callValueFunc(warn, value, opts)
-}
 
 // When a new warning is returned, add it to the list
 export const addWarning = function (warnings, warning, opts) {
-  if (warning === undefined) {
-    return warnings
-  }
-
   const warningA = `${getPrefix(opts)} ${warning}`
   return [...warnings, warningA]
 }

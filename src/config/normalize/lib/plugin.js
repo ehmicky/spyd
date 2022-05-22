@@ -4,11 +4,13 @@ import {
   callNoValueFunc,
 } from './call.js'
 import { PLUGINS } from './plugins/main.js'
+import { addWarning } from './warn.js'
 
 /* eslint-disable complexity, max-statements, fp/no-let, fp/no-loops, max-depth,
    no-continue, no-await-in-loop, fp/no-mutation */
-export const performPlugins = async function (rule, value, opts) {
+export const performPlugins = async function ({ rule, value, opts, warnings }) {
   let valueA = value
+  let warningsA = warnings
 
   for (const plugin of PLUGINS) {
     const { name, main, defined = true, input = false } = plugin
@@ -45,19 +47,22 @@ export const performPlugins = async function (rule, value, opts) {
 
     // We allow transforming to `undefined`, i.e. returning
     // `{ value: undefined }` is different from returning `{}`
-
     if ('value' in returnValue) {
       valueA = returnValue.value
     }
 
-    const { skip } = returnValue
+    const { warning, skip } = returnValue
+
+    if (warning !== undefined) {
+      warningsA = addWarning(warnings, warning, opts)
+    }
 
     if (skip) {
       break
     }
   }
 
-  return valueA
+  return { value: valueA, warnings: warningsA }
 }
 /* eslint-enable complexity, max-statements, fp/no-let, fp/no-loops, max-depth,
    no-continue, no-await-in-loop, fp/no-mutation */
