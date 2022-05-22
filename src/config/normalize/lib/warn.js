@@ -7,15 +7,17 @@ export const getWarning = async function (value, warn, opts) {
     return
   }
 
-  const warningSuffix = await callValueFunc(warn, value, opts)
-  return warningSuffix === undefined
-    ? undefined
-    : `${getPrefix(opts)} ${warningSuffix}`
+  return await callValueFunc(warn, value, opts)
 }
 
 // When a new warning is returned, add it to the list
-export const addWarning = function (warnings, warning) {
-  return warning === undefined ? warnings : [...warnings, warning]
+export const addWarning = function (warnings, warning, opts) {
+  if (warning === undefined) {
+    return warnings
+  }
+
+  const warningA = `${getPrefix(opts)} ${warning}`
+  return [...warnings, warningA]
 }
 
 // Log all warnings at the end.

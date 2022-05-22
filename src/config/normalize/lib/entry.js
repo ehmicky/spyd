@@ -29,7 +29,7 @@ export const applyEntryRule = async function (
   } = await applyRule(rule, value, opts)
   const configA = setConfigValue({ config, namePath, renamedPath, newValue })
   const movesA = addMoves(moves, newPaths, namePath)
-  const warningsA = addWarning(warnings, warning)
+  const warningsA = addWarning(warnings, warning, opts)
   return { config: configA, moves: movesA, warnings: warningsA }
 }
 
