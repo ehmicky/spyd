@@ -89,7 +89,7 @@ import { normalizeConfigProp } from './normalize.js'
 export const loadConfig = async function (
   { config: configOpt, ...configContents },
   base,
-  childConfigPaths = [],
+  childConfigPaths,
 ) {
   const configWithBases = addBases(configContents, base)
   const configPaths = await normalizeConfigProp(configOpt, base)

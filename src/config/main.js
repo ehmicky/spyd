@@ -39,6 +39,7 @@ const resolveConfig = async function (configFlags) {
   const { configWithBases, bases } = await loadConfig(
     configFlagsA,
     CLI_FLAGS_BASE,
+    [],
   )
   const defaultBase = getDefaultBase(bases)
   const cwd = getPropCwd.bind(undefined, { configWithBases, defaultBase })
