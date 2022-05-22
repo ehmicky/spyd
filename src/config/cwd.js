@@ -1,6 +1,5 @@
-import filterObj from 'filter-obj'
 import { get } from 'wild-wild-path'
-import { map } from 'wild-wild-utils'
+import { map, exclude } from 'wild-wild-utils'
 
 import { isRecurseObject } from './merge.js'
 
@@ -55,13 +54,15 @@ export const CLI_FLAGS_BASE = '.'
 //  - Items bases are kept in a separate base property on the parent object,
 //    since using sibling properties on an array is not possible.
 export const addBases = function (configContents, base) {
-  return recurseBaseProps(configContents, (value) => addBaseProps(value, base))
+  return map(configContents, '**', (value) => addBaseProps(value, base))
 }
 
 const addBaseProps = function (value, base) {
-  return Object.fromEntries(
-    Object.entries(value).flatMap(addBaseProp.bind(undefined, base)),
-  )
+  return isRecurseObject(value)
+    ? Object.fromEntries(
+        Object.entries(value).flatMap(addBaseProp.bind(undefined, base)),
+      )
+    : value
 }
 
 const addBaseProp = function (base, [key, value]) {
@@ -78,24 +79,15 @@ const addBaseProp = function (base, [key, value]) {
 
 // Remove the base properties after they've been used
 export const removeBases = function (configWithBases) {
-  return recurseBaseProps(configWithBases, removeBaseProps)
+  return exclude(configWithBases, '**', isBaseProp, { entries: true })
 }
 
-const removeBaseProps = function (value) {
-  return filterObj(value, isNotBaseProp)
-}
-
-const isNotBaseProp = function (key) {
-  return !key.endsWith(BASE_KEY_SUFFIX) && !key.endsWith(BASE_ITEMS_SUFFIX)
-}
-
-// We ensure this recurse the same way as the merging logic
-const recurseBaseProps = function (configObject, mapper) {
-  return map(configObject, '**', (value) => mapBaseProps(value, mapper))
-}
-
-const mapBaseProps = function (value, mapper) {
-  return isRecurseObject(value) ? mapper(value) : value
+const isBaseProp = function ({ path }) {
+  const key = path[path.length - 1]
+  return (
+    typeof key === 'string' &&
+    (key.endsWith(BASE_KEY_SUFFIX) || key.endsWith(BASE_ITEMS_SUFFIX))
+  )
 }
 
 // Used as `cwd` for all configuration properties
