@@ -1,11 +1,9 @@
 import { fileURLToPath } from 'url'
 
-import { validateObjectOrString } from '../../normalize/validate/complex.js'
 import {
   validateFileExists,
   validateRegularFile,
 } from '../../normalize/validate/fs.js'
-import { validateDefinedString } from '../../normalize/validate/simple.js'
 
 import { CoreError, ConsumerError } from './error.js'
 import { resolveModuleLocation } from './module.js'
@@ -51,10 +49,14 @@ const normalizeLocationProp = {
 
 // URL instances are always absolute, so `cwd` resolution is not needed
 const normalizeFileUrlLocation = {
-  validate(location) {
-    if (location.protocol !== 'file:') {
-      throw new Error('must use "file:" as a URL protocol.')
-    }
+  schema: {
+    type: 'object',
+    properties: {
+      protocol: {
+        const: 'file:',
+      },
+    },
+    errorMessage: 'must use "file:" as a URL protocol',
   },
   async transform(location) {
     const path = fileURLToPath(location)
@@ -67,7 +69,10 @@ const normalizeFileUrlLocation = {
 const normalizeInlineLocation = {
   // Strings are not allowed for inline plugins, but for other plugin types,
   // which should be shown in error messages
-  validate: validateObjectOrString,
+  schema: {
+    type: ['string', 'object'],
+    errorMessage: 'must be a string or a plain object',
+  },
 }
 
 const normalizeBuiltinLocation = {}
@@ -77,17 +82,17 @@ const normalizePathLocation = {
   validate: [validateFileExists, validateRegularFile],
 }
 
-const validateHasModulePrefix = function (
-  value,
-  { context: { modulePrefix } },
-) {
-  if (modulePrefix === undefined) {
-    throw new Error('must start with . or / when it is a file path.')
-  }
-}
-
 const normalizeModuleLocation = {
-  validate: [validateDefinedString, validateHasModulePrefix],
+  schema: {
+    type: 'string',
+    minLength: 1,
+    errorMessage: 'must be a non-empty string',
+  },
+  validate(value, { context: { modulePrefix } }) {
+    if (modulePrefix === undefined) {
+      throw new Error('must start with . or / when it is a file path.')
+    }
+  },
   transform: resolveModuleLocation,
 }
 

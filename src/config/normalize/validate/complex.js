@@ -14,12 +14,6 @@ export const validateObject = function (value) {
   }
 }
 
-export const validateObjectOrString = function (value) {
-  if (typeof value !== 'string' && !isPlainObj(value)) {
-    throw new Error('must be a string or a plain object.')
-  }
-}
-
 export const validateJson = function (value) {
   if (!isJson(value)) {
     throw new Error(
