@@ -1,5 +1,7 @@
 import { inspect } from 'util'
 
+import { DefinitionError } from './error.js'
+
 // Retrieve the list of possible rule properties
 export const getRuleProps = function (keywords) {
   return new Set([...CORE_PROPS, ...keywords.map(getKeywordName)])
@@ -34,7 +36,7 @@ const validateRuleProp = function ({
 
   // eslint-disable-next-line fp/no-mutating-methods
   const rulePropsA = [...ruleProps].sort().join(', ')
-  throw new Error(
+  throw new DefinitionError(
     `${message}'s "${ruleProp}" property must be valid: ${inspect(definitions)}
 It must be one of the following values instead:
 ${rulePropsA}

@@ -3,13 +3,16 @@ import { inspect } from 'util'
 import filterObj from 'filter-obj'
 import isPlainObj from 'is-plain-obj'
 
+import { DefinitionError } from './error.js'
 import { normalizeKeywords } from './keywords/normalize/main.js'
 import { getRuleProps, validateRuleProps } from './rule.js'
 
 // Normalize `options`
 export const normalizeOpts = function (options = {}) {
   if (!isPlainObj(options)) {
-    throw new TypeError(`Options must be a plain object: ${inspect(options)}`)
+    throw new DefinitionError(
+      `Options must be a plain object: ${inspect(options)}`,
+    )
   }
 
   const { soft = false, all, keywords } = options
@@ -22,7 +25,9 @@ export const normalizeOpts = function (options = {}) {
 
 const validateSoft = function (soft) {
   if (typeof soft !== 'boolean') {
-    throw new TypeError(`Option "soft" must be a boolean: ${inspect(soft)}`)
+    throw new DefinitionError(
+      `Option "soft" must be a boolean: ${inspect(soft)}`,
+    )
   }
 }
 
@@ -32,7 +37,9 @@ const normalizeAll = function (all, ruleProps) {
   }
 
   if (!isPlainObj(all)) {
-    throw new TypeError(`Option "all" must be a plain object: ${inspect(all)}`)
+    throw new DefinitionError(
+      `Option "all" must be a plain object: ${inspect(all)}`,
+    )
   }
 
   const allA = filterObj(all, isDefined)

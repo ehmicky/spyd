@@ -3,8 +3,7 @@ import { basename } from 'path'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
-import { validateDefinedString } from '../../type.js'
-import { normalizeBoolean } from '../normalize/common.js'
+import { validateDefinedString, normalizeBoolean } from '../normalize/common.js'
 
 const main = async function (definition, input, { cwd }) {
   if (!definition) {

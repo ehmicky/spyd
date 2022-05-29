@@ -1,6 +1,7 @@
 import { normalizePath } from 'wild-wild-parser'
 
 import { wrapError } from '../../../../error/wrap.js'
+import { KeywordError } from '../error.js'
 import { addMove } from '../move.js'
 
 // Keywords can give a hint on where a value has moved by returning a `path`
@@ -23,6 +24,6 @@ const safeNormalizePath = function (path) {
   try {
     return normalizePath(path)
   } catch (error) {
-    throw wrapError(error, 'The "path" is invalid:')
+    throw wrapError(error, 'The "path" is invalid:', KeywordError)
   }
 }

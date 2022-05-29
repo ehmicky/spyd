@@ -5,6 +5,7 @@ import { normalizeQuery } from 'wild-wild-parser'
 
 import { wrapError } from '../../../error/wrap.js'
 
+import { DefinitionError } from './error.js'
 import { validateRuleProps } from './rule.js'
 
 // Validate and normalize rules.
@@ -17,13 +18,13 @@ export const normalizeRules = function (rules, all, ruleProps) {
 
 const validateRules = function (rules) {
   if (!Array.isArray(rules)) {
-    throw new TypeError(`Rules must be an array: ${inspect(rules)}`)
+    throw new DefinitionError(`Rules must be an array: ${inspect(rules)}`)
   }
 }
 
 const normalizeRule = function (rule, all, ruleProps) {
   if (!isPlainObj(rule)) {
-    throw new TypeError(`Rule must be a plain object: ${inspect(rule)}`)
+    throw new DefinitionError(`Rule must be a plain object: ${inspect(rule)}`)
   }
 
   validateRuleProps(rule, ruleProps, 'Rule')
@@ -33,12 +34,14 @@ const normalizeRule = function (rule, all, ruleProps) {
 
 const normalizeName = function (rule) {
   if (rule.name === undefined) {
-    throw new Error(`Rule must have a "name" property: ${inspect(rule)}`)
+    throw new DefinitionError(
+      `Rule must have a "name" property: ${inspect(rule)}`,
+    )
   }
 
   try {
     return normalizeQuery(rule.name)
   } catch (error) {
-    throw wrapError(error, 'Invalid "name":')
+    throw wrapError(error, 'Invalid "name":', DefinitionError)
   }
 }

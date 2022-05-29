@@ -1,5 +1,7 @@
 import { inspect } from 'util'
 
+import { KeywordError } from '../../error.js'
+
 import {
   validateName,
   validateNotBuiltin,
@@ -27,7 +29,7 @@ const REQUIRED_PROPS = ['main']
 
 const validateKeywordProp = function (keyword, propName) {
   if (keyword[propName] === undefined) {
-    throw new TypeError(`"${propName}" must be defined.`)
+    throw new KeywordError(`"${propName}" must be defined.`)
   }
 }
 
@@ -37,7 +39,7 @@ const validateAliases = function ({ aliases }) {
   }
 
   if (!Array.isArray(aliases)) {
-    throw new TypeError('"aliases" property must be an array.')
+    throw new KeywordError('"aliases" property must be an array.')
   }
 
   aliases.forEach((alias) => {
@@ -66,7 +68,7 @@ const validateOptionalProp = function (keyword, propName, typeName) {
 
   // eslint-disable-next-line valid-typeof
   if (value !== undefined && typeof value !== typeName) {
-    throw new TypeError(
+    throw new KeywordError(
       `"${propName}" property must be a ${typeName}: ${inspect(value)}`,
     )
   }
@@ -79,7 +81,7 @@ const validateProps = function (keywords) {
 const validateProp = function (propName) {
   if (!VALID_PROPS.has(propName)) {
     const propNames = [...VALID_PROPS].join(', ')
-    throw new TypeError(
+    throw new KeywordError(
       `"${propName}" property must be one of the following instead:\n${propNames}`,
     )
   }

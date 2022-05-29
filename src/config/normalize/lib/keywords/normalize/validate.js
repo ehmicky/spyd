@@ -3,6 +3,7 @@ import { inspect } from 'util'
 import isPlainObj from 'is-plain-obj'
 
 import { wrapError } from '../../../../../error/wrap.js'
+import { DefinitionError } from '../../error.js'
 
 import { validateName } from './name.js'
 import { validateKeywordProps } from './props.js'
@@ -14,7 +15,9 @@ export const validateKeywords = function (keywords) {
 
 const validateKeyword = function (keyword, index, keywords) {
   if (!isPlainObj(keyword)) {
-    throw new TypeError(`Keyword must be a plain object: ${inspect(keyword)}`)
+    throw new DefinitionError(
+      `Keyword must be a plain object: ${inspect(keyword)}`,
+    )
   }
 
   validateName(keyword.name, keyword, 'Keyword "name" property')

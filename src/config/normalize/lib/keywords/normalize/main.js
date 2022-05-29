@@ -2,6 +2,7 @@ import { inspect } from 'util'
 
 import moize from 'moize'
 
+import { DefinitionError } from '../../error.js'
 import { BUILTIN_KEYWORDS } from '../list/main.js'
 
 import { validateKeywords } from './validate.js'
@@ -17,7 +18,7 @@ const addCustomKeywords = function (keywords) {
   }
 
   if (!Array.isArray(keywords)) {
-    throw new TypeError(
+    throw new DefinitionError(
       `Option "keywords" must be an array: ${inspect(keywords)}`,
     )
   }

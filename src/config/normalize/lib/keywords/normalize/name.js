@@ -2,21 +2,22 @@ import { inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
 
+import { KeywordError, DefinitionError } from '../../error.js'
 import { CORE_PROPS_SET } from '../../rule.js'
 import { BUILTIN_KEYWORDS } from '../list/main.js'
 
 // Validate `keyword.name` and `keyword.aliases[*]`
 export const validateName = function (name, parent, prefix) {
   if (name === undefined) {
-    throw new TypeError(`${prefix} must be defined: ${inspect(parent)}`)
+    throw new KeywordError(`${prefix} must be defined: ${inspect(parent)}`)
   }
 
   if (!isValidName(name)) {
-    throw new TypeError(`${prefix} must be a non-empty string: ${name}`)
+    throw new KeywordError(`${prefix} must be a non-empty string: ${name}`)
   }
 
   if (!NAME_REGEXP.test(name)) {
-    throw new TypeError(
+    throw new KeywordError(
       `${prefix} must only contain lowercase letters: "${name}"`,
     )
   }
@@ -33,11 +34,11 @@ const NAME_REGEXP = /^[a-z]+$/u
 // Do not allow redefining builtin keywords
 export const validateNotBuiltin = function ({ name }) {
   if (BUILTIN_NAMES.has(name)) {
-    throw new TypeError('must not be a builtin keyword.')
+    throw new DefinitionError('must not be a builtin keyword.')
   }
 
   if (CORE_PROPS_SET.has(name)) {
-    throw new TypeError('must not be a core property.')
+    throw new KeywordError('must not be a core property.')
   }
 }
 
@@ -64,6 +65,6 @@ export const validateDuplicateKeyword = function (keywordA, indexA, keywords) {
   )
 
   if (isDuplicate) {
-    throw new TypeError('must not be passed twice.')
+    throw new DefinitionError('must not be passed twice.')
   }
 }
