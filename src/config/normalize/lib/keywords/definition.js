@@ -4,8 +4,8 @@ import { callDefinition, callNormalize } from '../call.js'
 // `aliases` can be defined to either:
 //   - Augment the behavior of another keyword
 //   - Rename a keyword
-export const getDefinition = function (rule, name, aliases) {
-  const definition = rule[name]
+export const getDefinition = function (rule, keyword, aliases) {
+  const definition = rule[keyword]
 
   if (definition !== undefined || aliases === undefined) {
     return definition
@@ -22,19 +22,37 @@ export const callDefinitionFunc = async function ({
   info,
   hasInput,
   test,
+  keyword,
+  exampleDefinition,
 }) {
   return typeof definition === 'function'
-    ? await callDefinition({ definition, input, info, hasInput, test })
+    ? await callDefinition({
+        definition,
+        input,
+        info,
+        hasInput,
+        test,
+        keyword,
+        exampleDefinition,
+      })
     : definition
 }
 
 // Apply `keyword.normalize(definition)`
-export const normalizeDefinition = async function (
+export const normalizeDefinition = async function ({
   definition,
   normalize,
   info,
-) {
+  keyword,
+  exampleDefinition,
+}) {
   return normalize === undefined
     ? definition
-    : await callNormalize(normalize, definition, info)
+    : await callNormalize({
+        normalize,
+        definition,
+        info,
+        keyword,
+        exampleDefinition,
+      })
 }

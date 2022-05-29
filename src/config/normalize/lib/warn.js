@@ -1,5 +1,3 @@
-import { getPrefix } from './call.js'
-
 // When a new warning is returned, add it to the list
 export const addWarning = function (
   { warning },
@@ -8,7 +6,7 @@ export const addWarning = function (
 ) {
   return warning === undefined
     ? warnings
-    : [...warnings, `${getPrefix(prefix, originalName)} ${warning}`]
+    : [...warnings, `${prefix} "${originalName}" ${warning}`]
 }
 
 // Log all warnings at the end.

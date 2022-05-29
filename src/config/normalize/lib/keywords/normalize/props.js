@@ -73,6 +73,7 @@ const validateProp = function (propName) {
 const VALID_PROPS = new Set([
   'name',
   'aliases',
+  'exampleDefinition',
   ...FUNCTION_PROPS,
   ...BOOLEAN_PROPS,
 ])

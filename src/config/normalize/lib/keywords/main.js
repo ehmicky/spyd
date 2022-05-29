@@ -76,14 +76,17 @@ export const applyKeywords = async function ({
   return { inputs: state.inputs, warnings: state.warnings, moves: state.moves }
 }
 
+// TODO: fix linting
+// eslint-disable-next-line max-lines-per-function
 const applyKeyword = async function ({
   keyword: {
-    name,
+    name: keyword,
     aliases,
     test,
     hasInput = false,
     undefinedInput = false,
     undefinedDefinition = false,
+    exampleDefinition,
     normalize,
     main,
   },
@@ -91,10 +94,17 @@ const applyKeyword = async function ({
   state: { input, info },
   rule,
 }) {
-  const definition = getDefinition(rule, name, aliases)
+  const definition = getDefinition(rule, keyword, aliases)
 
   if (
-    await shouldSkipKeyword({ definition, input, undefinedInput, test, info })
+    await shouldSkipKeyword({
+      definition,
+      input,
+      undefinedInput,
+      test,
+      info,
+      keyword,
+    })
   ) {
     return state
   }
@@ -105,13 +115,21 @@ const applyKeyword = async function ({
     info,
     hasInput,
     test,
+    keyword,
+    exampleDefinition,
   })
 
   if (shouldSkipMain(main, definitionA, undefinedDefinition)) {
     return state
   }
 
-  const definitionB = await normalizeDefinition(definitionA, normalize, info)
+  const definitionB = await normalizeDefinition({
+    definition: definitionA,
+    normalize,
+    info,
+    keyword,
+    exampleDefinition,
+  })
   const returnValue = await callMain({
     main,
     definition: definitionB,
@@ -119,6 +137,7 @@ const applyKeyword = async function ({
     info,
     hasInput,
     test,
+    keyword,
   })
   const stateA = applyReturnValue({ returnValue, state })
   return stateA

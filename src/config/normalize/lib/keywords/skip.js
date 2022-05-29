@@ -16,11 +16,12 @@ export const shouldSkipKeyword = async function ({
   undefinedInput,
   test,
   info,
+  keyword,
 }) {
   return (
     definition === undefined ||
     (!undefinedInput && input === undefined) ||
-    (await hasSkippedTest(test, input, info))
+    (await hasSkippedTest({ test, input, info, keyword }))
   )
 }
 
@@ -34,8 +35,8 @@ export const shouldSkipKeyword = async function ({
 //    specific value (e.g. `undefined` for `required|default` keywords), i.e.
 //    need to check the input during `test()` but should not pass it during
 //    `main()` nor the definition function
-const hasSkippedTest = async function (test, input, info) {
-  return test !== undefined && !(await callTest(test, input, info))
+const hasSkippedTest = async function ({ test, input, info, keyword }) {
+  return test !== undefined && !(await callTest({ test, input, info, keyword }))
 }
 
 // Function definitions returning `undefined` are skipped, unless
