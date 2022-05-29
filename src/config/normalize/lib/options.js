@@ -20,7 +20,7 @@ export const normalizeOpts = function (options = {}) {
   validateSoft(soft)
   const keywordsA = normalizeKeywords(keywords, sync)
   const ruleProps = getRuleProps(keywordsA)
-  const allA = normalizeAll(all, ruleProps)
+  const allA = normalizeAll(all, ruleProps, sync)
   return { soft, all: allA, keywords: keywordsA, ruleProps, sync }
 }
 
@@ -32,7 +32,7 @@ const validateSoft = function (soft) {
   }
 }
 
-const normalizeAll = function (all, ruleProps) {
+const normalizeAll = function (all, ruleProps, sync) {
   if (all === undefined) {
     return
   }
@@ -44,7 +44,12 @@ const normalizeAll = function (all, ruleProps) {
   }
 
   const allA = filterObj(all, isDefined)
-  validateRuleProps({ definitions: allA, ruleProps, message: 'Option "all"' })
+  validateRuleProps({
+    definitions: allA,
+    ruleProps,
+    message: 'Option "all"',
+    sync,
+  })
   return allA
 }
 

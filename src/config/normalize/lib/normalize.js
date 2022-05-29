@@ -11,9 +11,9 @@ import { validateRuleProps } from './rule.js'
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the
 // path syntax.
-export const normalizeRules = function (rules, all, ruleProps) {
+export const normalizeRules = function ({ rules, all, ruleProps, sync }) {
   validateRules(rules)
-  return rules.map((rule) => normalizeRule(rule, all, ruleProps))
+  return rules.map((rule) => normalizeRule({ rule, all, ruleProps, sync }))
 }
 
 const validateRules = function (rules) {
@@ -22,12 +22,12 @@ const validateRules = function (rules) {
   }
 }
 
-const normalizeRule = function (rule, all, ruleProps) {
+const normalizeRule = function ({ rule, all, ruleProps, sync }) {
   if (!isPlainObj(rule)) {
     throw new DefinitionError(`Rule must be a plain object: ${inspect(rule)}`)
   }
 
-  validateRuleProps({ definitions: rule, ruleProps, message: 'Rule' })
+  validateRuleProps({ definitions: rule, ruleProps, message: 'Rule', sync })
   const ruleA = all === undefined ? rule : { ...all, ...rule }
   return { ...ruleA, name: normalizeName(ruleA) }
 }

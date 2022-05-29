@@ -24,7 +24,7 @@ import { logWarnings } from './warn.js'
 // TODO: abstract this function to its own library
 export const normalizeInputs = async function (inputs, rules, opts) {
   const { soft, all, keywords, ruleProps, sync } = normalizeOpts(opts)
-  const rulesA = normalizeRules(rules, all, ruleProps)
+  const rulesA = normalizeRules({ rules, all, ruleProps, sync })
 
   try {
     const { inputs: inputsA, warnings } = await pReduce(
