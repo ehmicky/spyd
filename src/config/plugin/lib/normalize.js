@@ -1,29 +1,22 @@
 import { wrapError } from '../../../error/wrap.js'
 import { normalizeInputs } from '../../normalize/lib/main.js'
 
+import { CoreError } from './error.js'
+
 // Call `normalizeConfig` while assigning the right error types
-export const safeNormalizeConfig = async function (
-  config,
-  rules,
-  { UserErrorType, ...opts },
-) {
-  const { inputs, error } = await callNormalizeConfig(config, rules, opts)
-
-  if (error) {
-    throw wrapError(error, '', UserErrorType)
+export const safeNormalizeConfig = async function (config, rules, opts) {
+  try {
+    const { inputs } = await normalizeInputs(config, rules, opts)
+    return inputs
+  } catch (error) {
+    throw wrapError(error, '', getErrorType(error, opts))
   }
-
-  return inputs
 }
 
-const callNormalizeConfig = async function (
-  config,
-  rules,
-  { SystemErrorType, ...opts },
-) {
-  try {
-    return await normalizeInputs(config, rules, { ...opts, soft: true })
-  } catch (error) {
-    throw wrapError(error, '', SystemErrorType)
+const getErrorType = function (error, { InputErrorType, DefinitionErrorType }) {
+  if (error.name === 'InputError') {
+    return InputErrorType
   }
+
+  return error.name === 'DefinitionError' ? DefinitionErrorType : CoreError
 }

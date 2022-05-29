@@ -17,8 +17,8 @@ export const normalizeShape = async function ({
       context: { sharedPropNames, locationType, originalLocation },
     },
     keywords,
-    UserErrorType: PluginError,
-    SystemErrorType: CoreError,
+    InputErrorType: PluginError,
+    DefinitionErrorType: CoreError,
   })
 
   if (shape === undefined) {
@@ -31,8 +31,8 @@ export const normalizeShape = async function ({
     {
       all: { prefix: PLUGIN_PREFIX, context },
       keywords,
-      UserErrorType: PluginError,
-      SystemErrorType: UserError,
+      InputErrorType: PluginError,
+      DefinitionErrorType: UserError,
     },
   )
 }
