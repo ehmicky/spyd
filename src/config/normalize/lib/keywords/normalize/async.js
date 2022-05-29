@@ -5,6 +5,7 @@ import { DefinitionError } from '../../error.js'
 // but async are preferred for performance reasons.
 // Keywords can define the same method both sync|async to allow using it in
 // sync mode, while still getting performance benefits in async mode.
+//  - All builtin keywords work both sync|async
 export const normalizeAsyncMethods = function (keyword, sync) {
   return METHOD_NAMES.reduce(
     (keywordA, methodName) => normalizeAsyncMethod(sync, methodName, keywordA),
