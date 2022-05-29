@@ -6,7 +6,6 @@ import { maybeFunction } from '../../../utils/function.js'
 import { addPrefix } from './prefix.js'
 import { handleValidateError } from './validate.js'
 
-// TODO: call logic should not check `typeof function` anymore
 export const callFunc = async function ({ func, input, info, hasInput, test }) {
   if (hasInput) {
     return await callInputFunc(func, input, info)
@@ -24,9 +23,7 @@ export const callFunc = async function ({ func, input, info, hasInput, test }) {
 //  - Optionally async
 const callInputFunc = async function (userFunc, input, info) {
   try {
-    return typeof userFunc === 'function'
-      ? await callUserFunc(userFunc.bind(undefined, input), info)
-      : userFunc
+    return await callUserFunc(userFunc.bind(undefined, input), info)
   } catch (error) {
     const errorA = handleError(error, info)
     const errorB = addCurrentValue(errorA, input)
@@ -38,9 +35,7 @@ const callInputFunc = async function (userFunc, input, info) {
 // whether it is undefined
 const callConstraintFunc = async function (userFunc, info) {
   try {
-    return typeof userFunc === 'function'
-      ? await callUserFunc(userFunc, info)
-      : userFunc
+    return await callUserFunc(userFunc, info)
   } catch (error) {
     const errorA = handleError(error, info)
     throw addExampleValue(errorA, info)
@@ -50,9 +45,7 @@ const callConstraintFunc = async function (userFunc, info) {
 // Some methods are not called with any input
 const callNoInputFunc = async function (userFunc, info) {
   try {
-    return typeof userFunc === 'function'
-      ? await callUserFunc(userFunc, info)
-      : userFunc
+    return await callUserFunc(userFunc, info)
   } catch (error) {
     throw handleError(error, info)
   }
