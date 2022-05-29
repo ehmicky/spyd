@@ -139,7 +139,7 @@ const applyReturnValue = function ({
     return state
   }
 
-  const warningsA = applyWarnings(returnValue, warnings, opts)
+  const warningsA = addWarning(returnValue, warnings, opts)
   const { input: inputA, config: configA } = applyInput({
     returnValue,
     input,
@@ -166,10 +166,6 @@ const applyReturnValue = function ({
     opts: optsA,
     skip: returnValue.skip,
   }
-}
-
-const applyWarnings = function ({ warning }, warnings, opts) {
-  return warning === undefined ? warnings : addWarning(warnings, warning, opts)
 }
 
 const applyInput = function ({

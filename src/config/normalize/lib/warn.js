@@ -1,7 +1,11 @@
 import { getPrefix } from './prefix.js'
 
 // When a new warning is returned, add it to the list
-export const addWarning = function (warnings, warning, opts) {
+export const addWarning = function ({ warning }, warnings, opts) {
+  if (warning === undefined) {
+    return warnings
+  }
+
   const warningA = `${getPrefix(opts)} ${warning}`
   return [...warnings, warningA]
 }
