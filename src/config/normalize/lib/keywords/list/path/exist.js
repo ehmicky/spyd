@@ -1,7 +1,7 @@
 import { constants } from 'fs'
 
 import { checkAccess } from './access.js'
-import { EXIST_KEYWORD } from './check.js'
+import { EXIST_KEYWORD } from './normalize.js'
 
 // Check if a file exists
 export const fileExists = async function (input) {

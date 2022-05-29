@@ -1,6 +1,6 @@
 import { stat } from 'fs/promises'
 
-import { FILE_KEYWORD, DIR_KEYWORD } from './check.js'
+import { FILE_KEYWORD, DIR_KEYWORD } from './normalize.js'
 
 // Check the "file|directory" keywords
 export const validateType = async function (input, keywords) {
