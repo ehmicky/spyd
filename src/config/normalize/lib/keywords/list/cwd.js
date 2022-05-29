@@ -1,7 +1,5 @@
+import { stat } from 'fs/promises'
 import { resolve } from 'path'
-
-import { pathExists } from 'path-exists'
-import { isDirectory } from 'path-type'
 
 const main = async function (cwd) {
   await validateCwd(cwd)
@@ -15,12 +13,20 @@ const validateCwd = async function (cwd) {
     throw new TypeError('It must be a string.')
   }
 
-  if (!(await pathExists(cwd))) {
-    throw new Error('It must be an existing file.')
-  }
+  const cwdStat = await getStat(cwd)
 
-  if (!(await isDirectory(cwd))) {
+  if (!cwdStat.isDirectory()) {
     throw new Error('It must be a directory.')
+  }
+}
+
+const getStat = async function (cwd) {
+  try {
+    return await stat(cwd)
+  } catch (error) {
+    throw error.code === 'ENOENT'
+      ? new Error('It must be an existing file')
+      : error
   }
 }
 
