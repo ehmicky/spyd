@@ -16,10 +16,5 @@ export const applyEntryRule = async function (
     example,
     moves,
   })
-  const {
-    config: configA,
-    moves: movesA,
-    warnings: warningsA,
-  } = await applyRule({ rule, input, config, moves, warnings, opts })
-  return { config: configA, moves: movesA, warnings: warningsA }
+  return await applyRule({ rule, input, config, moves, warnings, opts })
 }
