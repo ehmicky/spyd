@@ -1,28 +1,26 @@
 import { stat } from 'fs/promises'
 import { resolve } from 'path'
 
-const main = async function (definition) {
+const normalize = async function (definition) {
   await validateCwd(definition)
-  const cwd = resolve(definition)
-  return { info: { cwd } }
+  return resolve(definition)
 }
 
-// Errors in `cwd` are not user errors, i.e. should not start with `must`
-const validateCwd = async function (cwd) {
-  if (typeof cwd !== 'string') {
+const validateCwd = async function (definition) {
+  if (typeof definition !== 'string') {
     throw new TypeError('It must be a string.')
   }
 
-  const cwdStat = await getStat(cwd)
+  const cwdStat = await getStat(definition)
 
   if (!cwdStat.isDirectory()) {
     throw new Error('It must be a directory.')
   }
 }
 
-const getStat = async function (cwd) {
+const getStat = async function (definition) {
   try {
-    return await stat(cwd)
+    return await stat(definition)
   } catch (error) {
     throw error.code === 'ENOENT'
       ? new Error('It must be an existing file')
@@ -30,10 +28,15 @@ const getStat = async function (cwd) {
   }
 }
 
+const main = function (definition) {
+  return { info: { cwd: definition } }
+}
+
 // A `cwd[(info)]` rule can be specified to customize `info.cwd`.
 // eslint-disable-next-line import/no-default-export
 export default {
   name: 'cwd',
   undefinedInput: true,
+  normalize,
   main,
 }

@@ -11,6 +11,8 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 //  - `name` `{string}` (required): property name in rules
 //  - `aliases` `{string[]}`: alias property names
 //  - `main` `function`: main function
+//  - `normalize` `(definition) => definition`: normalize and validate the
+//    `definition`
 //  - `test` `(value, info) => boolean`: skip the keyword when returning `false`
 //  - `hasInput` `boolean` (default: false): pass `input` to `main()`
 //    as a second argument
@@ -76,6 +78,7 @@ const applyKeyword = async function ({
     hasInput = false,
     undefinedInput = false,
     undefinedDefinition = false,
+    normalize,
     main,
   },
   state,
@@ -99,8 +102,9 @@ const applyKeyword = async function ({
     return state
   }
 
+  const definitionB = await normalizeDefinition(definitionA, normalize, info)
   const returnValue = await callFunc({
-    func: main.bind(undefined, definitionA),
+    func: main.bind(undefined, definitionB),
     input,
     info,
     hasInput,
@@ -122,4 +126,15 @@ const getDefinition = function (rule, name, aliases) {
 
   const aliasA = aliases.find((alias) => rule[alias] !== undefined)
   return aliasA === undefined ? undefined : rule[aliasA]
+}
+
+// Apply `keyword.normalize()`
+const normalizeDefinition = async function (definition, normalize, info) {
+  return normalize === undefined
+    ? definition
+    : await callFunc({
+        func: () => normalize(definition),
+        info,
+        hasInput: false,
+      })
 }
