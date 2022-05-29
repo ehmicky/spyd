@@ -46,7 +46,7 @@ const applyRuleDeep = async function (
   { config, moves, warnings },
   { rule, context, cwd, prefix, parent },
 ) {
-  const entries = list(config, rule.path, {
+  const entries = list(config, rule.name, {
     childFirst: true,
     sort: true,
     missing: true,

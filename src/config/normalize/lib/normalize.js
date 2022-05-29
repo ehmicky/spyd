@@ -10,11 +10,11 @@ export const normalizeRules = function (rules, all) {
 }
 
 const normalizeRule = function ({ name, ...rule }, all) {
-  const path = getPath(name)
-  return { example: rule.default, ...all, ...rule, path }
+  const nameA = normalizeName(name)
+  return { example: rule.default, ...all, ...rule, name: nameA }
 }
 
-const getPath = function (name) {
+const normalizeName = function (name) {
   try {
     return normalizeQuery(name)
   } catch (error) {

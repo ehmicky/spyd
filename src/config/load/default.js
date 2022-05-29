@@ -34,25 +34,25 @@ import { CONFIG_NPM_PREFIX } from './resolve.js'
 //  - We only allow this for the top-level flags not inside configuration files
 //    to keep those self-contained.
 // Retrieve the default value for the `config` CLI flag
-export const getDefaultConfig = async function ({ context: { base } }) {
-  const lookupDirs = await getLookupDirs(base)
-  const matchedDir = await findUp(
-    (baseA) => findMatchingDir(baseA, lookupDirs),
-    { cwd: base, type: 'directory' },
-  )
+export const getDefaultConfig = async function ({ cwd }) {
+  const lookupDirs = await getLookupDirs(cwd)
+  const matchedDir = await findUp((cwdA) => findMatchingDir(cwdA, lookupDirs), {
+    cwd,
+    type: 'directory',
+  })
   return matchedDir === undefined ? [] : await findMatchingPaths(matchedDir)
 }
 
 // `find-up` does not support looking up for multiple files while also looking
 // for patterns like `./packages/spyd-config-*`, so we need to call it twice.
-const getLookupDirs = async function (base) {
+const getLookupDirs = async function (cwd) {
   const configPackageDir = await findUp(testConfigPackageDir, {
-    cwd: base,
+    cwd,
     type: 'directory',
   })
   return configPackageDir === undefined
     ? DEFAULT_LOOKUP_DIRS
-    : [...DEFAULT_LOOKUP_DIRS, relative(base, configPackageDir)]
+    : [...DEFAULT_LOOKUP_DIRS, relative(cwd, configPackageDir)]
 }
 
 // Order matters here
@@ -79,8 +79,8 @@ const isConfigPackageDir = function (filename) {
   return filename.startsWith(CONFIG_NPM_PREFIX)
 }
 
-const findMatchingDir = async function (base, lookupDirs) {
-  const lookupDirsA = lookupDirs.map((lookupDir) => `${base}/${lookupDir}`)
+const findMatchingDir = async function (cwd, lookupDirs) {
+  const lookupDirsA = lookupDirs.map((lookupDir) => `${cwd}/${lookupDir}`)
   return await pLocate(lookupDirsA, hasMatchingPath)
 }
 
