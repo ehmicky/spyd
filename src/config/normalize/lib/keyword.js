@@ -6,6 +6,31 @@ import { KEYWORDS } from './keywords/main.js'
 import { addMove, getRenamedPath, getMovedPath } from './move.js'
 import { addWarning } from './warn.js'
 
+// The library features is provided through plugins called "keywords".
+// Keywords perform logic based on the consumer's `input`.
+// Users pass `definition` values to configure each keyword.
+// Those provide the following named exports:
+//  - `name` `{string}` (required): property name in rules
+//  - `main` `function`: main function
+//  - `hasInput` `boolean` (default: false): pass `input` to `main()`
+//    as a second argument
+//  - `undefinedInput` `boolean`: skip the keyword if:
+//     - `false` (default): `input` is `undefined`
+//     - `null`: `input` is not `undefined`
+//     - `true`: never skip
+//  - `undefinedDefinition` `boolean` (default: false):
+//     - Skip the keyword if the `definition` is a function returning
+//       `undefined`
+//     - The keyword is always skipped if the `definition` is not a function and
+//       is `undefined` because:
+//        - It allows any keyword to be disabled by setting `definition` to
+//          `undefined`
+//        - Usually `undefinedDefinition` is only useful when `definition` is
+//          a function (e.g. in `compute|transform`)
+//        - The consumer might accidentally set `definition` to `undefined`,
+//          e.g. when mapping the `definition` object, and not expect any
+//          behavior change
+//        - This allows any keyword to have default values
 export const applyKeywords = async function ({
   rule,
   input,
