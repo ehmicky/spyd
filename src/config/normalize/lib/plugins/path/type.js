@@ -3,25 +3,25 @@ import { stat } from 'fs/promises'
 import { FILE_KEYWORD, DIR_KEYWORD } from './check.js'
 
 // Check the "file|directory" keywords
-export const validateType = async function (value, keywords) {
+export const validateType = async function (input, keywords) {
   const types = TYPE_METHODS.filter(({ keyword }) => keywords.has(keyword))
 
-  if (types.length !== 0 && !(await hasValidType(value, types))) {
+  if (types.length !== 0 && !(await hasValidType(input, types))) {
     const message = types.map(({ name }) => name).join(' or ')
     throw new Error(`must be ${message}.`)
   }
 }
 
-const hasValidType = async function (value, types) {
-  const fileStat = await getFileStat(value)
+const hasValidType = async function (input, types) {
+  const fileStat = await getFileStat(input)
   return (
     fileStat !== undefined && types.some(({ method }) => fileStat[method]())
   )
 }
 
-const getFileStat = async function (value) {
+const getFileStat = async function (input) {
   try {
-    return await stat(value)
+    return await stat(input)
   } catch {}
 }
 

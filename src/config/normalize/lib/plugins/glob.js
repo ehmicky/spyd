@@ -9,7 +9,7 @@ export const name = 'glob'
 
 export const hasInput = true
 
-// Apply `glob[(value, opts)]` which resolves the value as a globbing pattern
+// Apply `glob[(input, opts)]` which resolves the input as a globbing pattern
 // when `true` (default: `false`).
 // Duplicates and temporary files are also removed.
 // Only returns regular files, not directories.
@@ -17,13 +17,13 @@ export const hasInput = true
 //  - This allows using `validate()` to validate parent directories, timestamps,
 //    file types, etc.
 // This is performed before `path` in cases both are `true`.
-export const main = async function (definition, value, { cwd }) {
+export const main = async function (definition, input, { cwd }) {
   if (!definition) {
     return
   }
 
-  validateDefinedString(value)
-  const filePaths = await fastGlob(value, {
+  validateDefinedString(input)
+  const filePaths = await fastGlob(input, {
     cwd,
     absolute: true,
     unique: true,
@@ -32,5 +32,5 @@ export const main = async function (definition, value, { cwd }) {
   const filePathsA = filePaths.filter((filePath) =>
     isNotJunk(basename(filePath)),
   )
-  return { value: filePathsA }
+  return { input: filePathsA }
 }

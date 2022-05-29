@@ -4,7 +4,7 @@ import { getOpts } from './opts.js'
 // Apply rule for a specific entry
 export const applyEntryRule = async function (
   { config, moves, warnings },
-  { value, namePath, rule, rule: { example }, context, cwd, prefix, parent },
+  { input, namePath, rule, rule: { example }, context, cwd, prefix, parent },
 ) {
   const opts = await getOpts({
     namePath,
@@ -20,6 +20,6 @@ export const applyEntryRule = async function (
     config: configA,
     moves: movesA,
     warnings: warningsA,
-  } = await applyRule({ rule, value, config, moves, warnings, opts })
+  } = await applyRule({ rule, input, config, moves, warnings, opts })
   return { config: configA, moves: movesA, warnings: warningsA }
 }

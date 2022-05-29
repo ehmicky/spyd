@@ -2,7 +2,7 @@ import { serializePath } from 'wild-wild-parser'
 
 import { wrapError } from '../../../error/wrap.js'
 
-import { callNoValueFunc } from './call.js'
+import { callNoInputFunc } from './call.js'
 import { computeCwd } from './cwd.js'
 import { applyMoves } from './move.js'
 import { computeParent } from './parent.js'
@@ -47,7 +47,7 @@ const computePrefix = async function (prefix, opts) {
 }
 
 const addPrefix = async function (prefix, opts) {
-  const prefixA = await callNoValueFunc(prefix, opts)
+  const prefixA = await callNoInputFunc(prefix, opts)
 
   if (prefixA === undefined) {
     return opts

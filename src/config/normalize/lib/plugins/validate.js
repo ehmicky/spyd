@@ -1,4 +1,4 @@
-// Apply `validate(value, opts)` which throws on validation errors
+// Apply `validate(input, opts)` which throws on validation errors
 export const name = 'validate'
 
 export const hasInput = true

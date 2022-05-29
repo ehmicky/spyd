@@ -2,7 +2,7 @@ import { normalizePath, serializePath } from 'wild-wild-parser'
 
 import { wrapError } from '../../../error/wrap.js'
 
-import { callNoValueFunc } from './call.js'
+import { callNoInputFunc } from './call.js'
 
 // `originalName|Path` are like `name|path` except:
 //  - They are prepended with `opts.parent`
@@ -34,7 +34,7 @@ const getParent = async function (parent, opts) {
 // By default, there are none.
 // `normalizePath()` might throw if `parent` contains syntax errors.
 const appendParentToName = async function (parent, opts) {
-  const parentA = await callNoValueFunc(parent, opts)
+  const parentA = await callNoInputFunc(parent, opts)
   const parentPath = normalizePath(parentA)
   return [...parentPath, ...opts.funcOpts.originalPath]
 }

@@ -7,23 +7,23 @@ import { addPrefix } from './prefix.js'
 import { handleValidateError } from './validate.js'
 
 // Most rule methods follow the same patterns:
-//  - Called with `value` and `opts`
+//  - Called with `input` and `opts`
 //  - Optionally async
-export const callValueFunc = async function (userFunc, value, opts) {
+export const callInputFunc = async function (userFunc, input, opts) {
   try {
     return typeof userFunc === 'function'
-      ? await callUserFunc(userFunc.bind(undefined, value), opts)
+      ? await callUserFunc(userFunc.bind(undefined, input), opts)
       : userFunc
   } catch (error) {
     const errorA = handleError(error, opts)
-    const errorB = addCurrentValue(errorA, value)
+    const errorB = addCurrentValue(errorA, input)
     throw await addExampleValue(errorB, opts)
   }
 }
 
-// Some methods are not called with any `value` but their logic requires knowing
+// Some methods are not called with any `input` but their logic requires knowing
 // whether it is undefined
-export const callUndefinedValueFunc = async function (userFunc, opts) {
+export const callConstraintFunc = async function (userFunc, opts) {
   try {
     return typeof userFunc === 'function'
       ? await callUserFunc(userFunc, opts)
@@ -34,8 +34,8 @@ export const callUndefinedValueFunc = async function (userFunc, opts) {
   }
 }
 
-// Some methods are not called with any value
-export const callNoValueFunc = async function (userFunc, opts) {
+// Some methods are not called with any input
+export const callNoInputFunc = async function (userFunc, opts) {
   try {
     return typeof userFunc === 'function'
       ? await callUserFunc(userFunc, opts)
@@ -50,21 +50,21 @@ const handleError = function (error, opts) {
   return addPrefix(error, opts)
 }
 
-// Add the current value as error suffix
-const addCurrentValue = function (error, value) {
+// Add the current input value as error suffix
+const addCurrentValue = function (error, input) {
   return error.validation
-    ? wrapErrorValue(error, 'Current value', value)
+    ? wrapErrorValue(error, 'Current value', input)
     : error
 }
 
-// Add an example value as error suffix, as provided by `example[(opts)]`
+// Add an example input value as error suffix, as provided by `example[(opts)]`
 const addExampleValue = async function (error, opts) {
   if (opts.example === undefined || !error.validation) {
     return error
   }
 
   try {
-    const exampleValue = await callNoValueFunc(opts.example, opts)
+    const exampleValue = await callNoInputFunc(opts.example, opts)
     return wrapErrorValue(error, 'Example value', exampleValue)
   } catch (error_) {
     return wrapError(error_, 'Invalid "example":')

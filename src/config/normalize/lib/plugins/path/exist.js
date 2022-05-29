@@ -4,8 +4,8 @@ import { checkAccess } from './access.js'
 import { EXIST_KEYWORD } from './check.js'
 
 // Check if a file exists
-export const fileExists = async function (value) {
-  return await checkAccess(value, constants.F_OK)
+export const fileExists = async function (input) {
+  return await checkAccess(input, constants.F_OK)
 }
 
 // Fail if a file does not exist and the "exist" keyword was used

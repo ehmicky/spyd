@@ -11,8 +11,7 @@ export const name = 'path'
 
 export const hasInput = true
 
-// Apply `path[(value, opts)]` which resolves the value as an absolute file
-// path.
+// Apply `path[(input, opts)]` which resolves the input as an absolute file path
 // It is an array of strings performing additional validation:
 //  - "exist": file exists
 //  - "file", "directory": regular file, directory, or both
@@ -20,20 +19,20 @@ export const hasInput = true
 // This is performed before `transform()` and `validate()`.
 //  - This allows using `validate()` to validate file existence, parent
 //    directories, timestamps, file types, etc.
-export const main = async function (definition, value, { cwd }) {
-  validateDefinedString(value)
-  const valueA = resolve(cwd, value)
+export const main = async function (definition, input, { cwd }) {
+  validateDefinedString(input)
+  const inputA = resolve(cwd, input)
   const keywords = checkKeywords(definition)
-  await validateFile(valueA, keywords)
-  return { value: valueA }
+  await validateFile(inputA, keywords)
+  return { input: inputA }
 }
 
-const validateFile = async function (value, keywords) {
-  if (!(await fileExists(value))) {
+const validateFile = async function (input, keywords) {
+  if (!(await fileExists(input))) {
     validateExists(keywords)
     return
   }
 
-  await validateType(value, keywords)
-  await validateAccess(value, keywords)
+  await validateType(input, keywords)
+  await validateAccess(input, keywords)
 }

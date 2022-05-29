@@ -1,10 +1,6 @@
 import { remove, set, get } from 'wild-wild-path'
 
-import {
-  callValueFunc,
-  callNoValueFunc,
-  callUndefinedValueFunc,
-} from './call.js'
+import { callInputFunc, callNoInputFunc, callConstraintFunc } from './call.js'
 import { validateAndModify } from './modify.js'
 
 // Apply a rule on a specific property
@@ -24,30 +20,30 @@ export const applyRule = async function ({
     transform,
     rename,
   },
-  value,
+  input,
   config,
   moves,
   warnings,
   opts,
 }) {
-  if (await againstPick(value, pick, opts)) {
+  if (await againstPick(input, pick, opts)) {
     const configA = remove(config, opts.funcOpts.path)
     return { config: configA, warnings, moves }
   }
 
-  if (await againstCondition(value, condition, opts)) {
+  if (await againstCondition(input, condition, opts)) {
     return { config, warnings, moves }
   }
 
-  const configB = await computeValue(config, compute, opts)
-  const configC = await addDefaultValue(configB, defaultValue, opts)
-  const valueA = get(configC, opts.funcOpts.path)
+  const configB = await computeInput(config, compute, opts)
+  const configC = await addDefault(configB, defaultValue, opts)
+  const inputA = get(configC, opts.funcOpts.path)
   const {
     config: configD,
     warnings: warningsA,
     moves: movesA,
   } = await validateAndModify({
-    value: valueA,
+    input: inputA,
     config: configC,
     required,
     schema,
@@ -64,41 +60,41 @@ export const applyRule = async function ({
   return { config: configD, warnings: warningsA, moves: movesA }
 }
 
-// Apply `pick[(value, opts)]` which omits the current value if `false` is
+// Apply `pick[(input, opts)]` which omits the current input if `false` is
 // returned. It also skips the current rule.
 // For example, this is useful when several commands share some properties but
 // not all.
-const againstPick = async function (value, pick, opts) {
-  return pick !== undefined && !(await callValueFunc(pick, value, opts))
+const againstPick = async function (input, pick, opts) {
+  return pick !== undefined && !(await callInputFunc(pick, input, opts))
 }
 
-// Apply `condition[(value, opts)]` which skips the current rule if `false`
+// Apply `condition[(input, opts)]` which skips the current rule if `false`
 // is returned.
-const againstCondition = async function (value, condition, opts) {
+const againstCondition = async function (input, condition, opts) {
   return (
-    condition !== undefined && !(await callValueFunc(condition, value, opts))
+    condition !== undefined && !(await callInputFunc(condition, input, opts))
   )
 }
 
-// Apply `compute[(opts)]` which sets a value from the system, instead of the
+// Apply `compute[(opts)]` which sets an input from the system, instead of the
 // user
-const computeValue = async function (config, compute, opts) {
+const computeInput = async function (config, compute, opts) {
   if (compute === undefined) {
     return config
   }
 
-  const value = await callNoValueFunc(compute, opts)
-  return set(config, opts.funcOpts.path, value)
+  const input = await callNoInputFunc(compute, opts)
+  return set(config, opts.funcOpts.path, input)
 }
 
 // Apply `default[(opts)]` which assigns a default value
-const addDefaultValue = async function (config, defaultValue, opts) {
-  const value = get(config, opts.funcOpts.path)
+const addDefault = async function (config, defaultValue, opts) {
+  const input = get(config, opts.funcOpts.path)
 
-  if (value !== undefined) {
+  if (input !== undefined) {
     return config
   }
 
-  const valueA = await callUndefinedValueFunc(defaultValue, opts)
-  return set(config, opts.funcOpts.path, valueA)
+  const inputA = await callConstraintFunc(defaultValue, opts)
+  return set(config, opts.funcOpts.path, inputA)
 }

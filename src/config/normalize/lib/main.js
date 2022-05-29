@@ -32,9 +32,9 @@ export const normalizeConfigProps = async function (
         applyRuleDeep(memo, { rule, context, cwd, prefix, parent }),
       { config, moves: [], warnings: [] },
     )
-    const value = cleanObject(configA)
+    const configB = cleanObject(configA)
     logWarnings(warnings, soft)
-    return { value, warnings }
+    return { value: configB, warnings }
   } catch (error) {
     handleError(error, soft)
     return { error, warnings: [] }
@@ -55,7 +55,7 @@ const applyRuleDeep = async function (
     entries,
     (memo, { value, path: namePathA }) =>
       applyEntryRule(memo, {
-        value,
+        input: value,
         namePath: namePathA,
         rule,
         context,

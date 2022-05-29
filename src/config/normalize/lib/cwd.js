@@ -5,7 +5,7 @@ import { isDirectory } from 'path-type'
 
 import { wrapError } from '../../../error/wrap.js'
 
-import { callNoValueFunc } from './call.js'
+import { callNoInputFunc } from './call.js'
 import { validateDefinedString } from './type.js'
 
 // A `cwd[(opts)]` option can be specified to customize the `cwd`.
@@ -18,7 +18,7 @@ export const computeCwd = async function (cwd, opts) {
 
 const getCwd = async function ({ cwd = DEFAULT_CWD, opts }) {
   const cwdA = await callCwdFunc(cwd, opts)
-  await callNoValueFunc(checkCwd.bind(undefined, cwdA), opts)
+  await callNoInputFunc(checkCwd.bind(undefined, cwdA), opts)
   return resolve(cwdA)
 }
 
@@ -26,7 +26,7 @@ const DEFAULT_CWD = '.'
 
 const callCwdFunc = async function (func, opts) {
   try {
-    return await callNoValueFunc(func, opts)
+    return await callNoInputFunc(func, opts)
   } catch (error) {
     throw wrapError(error, 'Invalid "cwd" function:')
   }
@@ -43,14 +43,14 @@ const checkCwd = async function (cwd) {
   }
 }
 
-const validateFileExists = async function (value) {
-  if (!(await pathExists(value))) {
+const validateFileExists = async function (cwd) {
+  if (!(await pathExists(cwd))) {
     throw new Error('must be an existing file.')
   }
 }
 
-const validateDirectory = async function (value) {
-  if (!(await isDirectory(value))) {
+const validateDirectory = async function (cwd) {
+  if (!(await isDirectory(cwd))) {
     throw new Error('must be a directory.')
   }
 }

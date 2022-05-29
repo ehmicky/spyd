@@ -2,16 +2,16 @@ export const name = 'transform'
 
 export const hasInput = true
 
-// Apply `transform(value, opts)` which transforms the value set by the user.
+// Apply `transform(input, opts)` which transforms the input.
 // If can also delete it by returning `undefined`.
-export const main = function (definition, value) {
-  const { value: valueA, newProp } = isTransformMove(definition)
+export const main = function (definition, input) {
+  const { value, newProp } = isTransformMove(definition)
     ? definition
     : {
         value: definition,
-        newProp: findCommonMove(definition, value),
+        newProp: findCommonMove(definition, input),
       }
-  return { value: valueA, path: newProp }
+  return { input: value, path: newProp }
 }
 
 // `transform()` can return a `{ newProp, value }` object to indicate the
@@ -29,37 +29,37 @@ const isTransformMove = function (definition) {
 }
 
 // Automatically detect some common type of moves
-const findCommonMove = function (newValue, oldValue) {
-  const commonMove = COMMON_MOVES.find(({ test }) => test(newValue, oldValue))
-  return commonMove === undefined ? undefined : commonMove.getNewProp(newValue)
+const findCommonMove = function (newInput, oldInput) {
+  const commonMove = COMMON_MOVES.find(({ test }) => test(newInput, oldInput))
+  return commonMove === undefined ? undefined : commonMove.getNewProp(newInput)
 }
 
 const COMMON_MOVES = [
-  // When normalizing `value` to `[value]` with a single element
+  // When normalizing `input` to `[input]` with a single element
   {
-    test(newValue, oldValue) {
+    test(newInput, oldInput) {
       return (
-        Array.isArray(newValue) &&
-        newValue.length === 1 &&
-        newValue[0] === oldValue
+        Array.isArray(newInput) &&
+        newInput.length === 1 &&
+        newInput[0] === oldInput
       )
     },
     getNewProp() {
       return [0]
     },
   },
-  // When normalizing `value` to `{ [propName]: value }` with a single property
+  // When normalizing `input` to `{ [propName]: input }` with a single property
   {
-    test(newValue, oldValue) {
+    test(newInput, oldInput) {
       return (
-        typeof newValue === 'object' &&
-        newValue !== null &&
-        Object.keys(newValue).length === 1 &&
-        newValue[Object.keys(newValue)[0]] === oldValue
+        typeof newInput === 'object' &&
+        newInput !== null &&
+        Object.keys(newInput).length === 1 &&
+        newInput[Object.keys(newInput)[0]] === oldInput
       )
     },
-    getNewProp(newValue) {
-      return [Object.keys(newValue)[0]]
+    getNewProp(newInput) {
+      return [Object.keys(newInput)[0]]
     },
   },
 ]

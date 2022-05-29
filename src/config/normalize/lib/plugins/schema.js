@@ -10,11 +10,11 @@ export const name = 'schema'
 
 export const hasInput = true
 
-// Apply `schema[(value, opts)]` which throws on JSON schema validation errors
-export const main = async function (definition, value) {
+// Apply `schema[(input, opts)]` which throws on JSON schema validation errors
+export const main = async function (definition, input) {
   const validate = compileSchema(definition)
 
-  if (!validate(value)) {
+  if (!validate(input)) {
     await throwValidationError(validate.errors)
   }
 }

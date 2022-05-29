@@ -1,25 +1,21 @@
 /* eslint-disable max-lines */
 import { set, remove } from 'wild-wild-path'
 
-import {
-  callValueFunc,
-  callUndefinedValueFunc,
-  callNoValueFunc,
-} from './call.js'
+import { callInputFunc, callConstraintFunc, callNoInputFunc } from './call.js'
 import { addMove, getRenamedPath, getMovedPath } from './move.js'
 import { PLUGINS } from './plugins/main.js'
 import { addWarning } from './warn.js'
 
 export const performPlugins = async function ({
   rule,
-  value,
+  input,
   config,
   moves,
   warnings,
   opts,
 }) {
   // eslint-disable-next-line fp/no-let
-  let state = { value, config, moves, warnings, opts }
+  let state = { input, config, moves, warnings, opts }
 
   // eslint-disable-next-line fp/no-loops
   for (const plugin of PLUGINS) {
@@ -39,15 +35,15 @@ export const performPlugins = async function ({
 const applyPlugin = async function ({
   plugin: { name, main, undefinedInput = false, hasInput = false },
   state,
-  state: { value, config, moves, opts, warnings },
+  state: { input, config, moves, opts, warnings },
   rule,
 }) {
   const definition = rule[name]
 
   if (
     definition === undefined ||
-    (undefinedInput === false && value === undefined) ||
-    (undefinedInput === null && value !== undefined)
+    (undefinedInput === false && input === undefined) ||
+    (undefinedInput === null && input !== undefined)
   ) {
     return state
   }
@@ -56,7 +52,7 @@ const applyPlugin = async function ({
     typeof definition === 'function'
       ? await callFunc({
           func: definition,
-          value,
+          input,
           opts,
           hasInput,
           undefinedInput,
@@ -69,7 +65,7 @@ const applyPlugin = async function ({
 
   const returnValue = await callFunc({
     func: main.bind(undefined, definitionA),
-    value,
+    input,
     opts,
     hasInput,
     undefinedInput,
@@ -80,9 +76,9 @@ const applyPlugin = async function ({
   }
 
   const warningsA = applyWarnings(returnValue, warnings, opts)
-  const { value: valueA, config: configA } = applyValue({
+  const { input: inputA, config: configA } = applyInput({
     returnValue,
-    value,
+    input,
     config,
     opts,
   })
@@ -95,11 +91,11 @@ const applyPlugin = async function ({
     returnValue,
     config: configA,
     moves: movesA,
-    value: valueA,
+    input: inputA,
     opts,
   })
   return {
-    value: valueA,
+    input: inputA,
     config: configB,
     moves: movesB,
     warnings: warningsA,
@@ -112,43 +108,43 @@ const applyPlugin = async function ({
 // TODO: call logic should not check `typeof function` anymore
 const callFunc = async function ({
   func,
-  value,
+  input,
   opts,
   hasInput,
   undefinedInput,
 }) {
   if (hasInput) {
-    return await callValueFunc(func, value, opts)
+    return await callInputFunc(func, input, opts)
   }
 
   if (undefinedInput === true) {
-    return await callNoValueFunc(func, opts)
+    return await callNoInputFunc(func, opts)
   }
 
-  return await callUndefinedValueFunc(func, opts)
+  return await callConstraintFunc(func, opts)
 }
 
 const applyWarnings = function ({ warning }, warnings, opts) {
   return warning === undefined ? warnings : addWarning(warnings, warning, opts)
 }
 
-const applyValue = function ({
+const applyInput = function ({
   returnValue,
-  value,
+  input,
   config,
   opts: {
     funcOpts: { path },
   },
 }) {
   // We allow transforming to `undefined`, i.e. returning
-  // `{ value: undefined }` is different from returning `{}`
-  if (!('value' in returnValue) || returnValue.value === value) {
-    return { value, config }
+  // `{ input: undefined }` is different from returning `{}`
+  if (!('input' in returnValue) || returnValue.input === input) {
+    return { input, config }
   }
 
-  const { value: valueA } = returnValue
-  const configA = setValue(config, path, valueA)
-  return { value: valueA, config: configA }
+  const { input: inputA } = returnValue
+  const configA = setConfig(config, path, inputA)
+  return { input: inputA, config: configA }
 }
 
 const applyPath = function (
@@ -170,7 +166,7 @@ const applyRename = function ({
   returnValue: { rename },
   config,
   moves,
-  value,
+  input,
   opts,
   opts: {
     funcOpts,
@@ -188,7 +184,7 @@ const applyRename = function ({
   }
 
   const configA = remove(config, oldNamePath)
-  const configB = setValue(configA, newNamePath, value)
+  const configB = setConfig(configA, newNamePath, input)
   const movesA = addMove(moves, oldNamePath, newNamePath)
   return {
     config: configB,
@@ -200,7 +196,7 @@ const applyRename = function ({
   }
 }
 
-const setValue = function (config, path, value) {
-  return value === undefined ? remove(config, path) : set(config, path, value)
+const setConfig = function (config, path, input) {
+  return input === undefined ? remove(config, path) : set(config, path, input)
 }
 /* eslint-enable max-lines */
