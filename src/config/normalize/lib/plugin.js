@@ -184,5 +184,4 @@ const applyRename = function ({
 const setValue = function (config, path, value) {
   return value === undefined ? remove(config, path) : set(config, path, value)
 }
-
 /* eslint-enable max-lines */
