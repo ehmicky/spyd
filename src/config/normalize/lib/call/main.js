@@ -88,33 +88,15 @@ export const callMain = async function ({
 //  - Error handled
 const callFunc = async function ({
   func,
-  input,
   info: { originalName },
   info: { example, prefix, ...info },
-  hasInput,
-  test,
-  keyword,
-  definition,
-  exampleDefinition,
-  errorType,
-  bugType,
+  ...params
 }) {
+  const { input, hasInput } = params
+
   try {
     return hasInput ? await func(input, info) : await func(info)
   } catch (error) {
-    throw handleError({
-      error,
-      input,
-      example,
-      prefix,
-      originalName,
-      hasInput,
-      test,
-      keyword,
-      definition,
-      exampleDefinition,
-      errorType,
-      bugType,
-    })
+    throw handleError({ ...params, error, example, prefix, originalName })
   }
 }
