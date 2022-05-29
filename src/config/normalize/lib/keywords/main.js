@@ -1,8 +1,8 @@
-import { callFunc } from '../call.js'
+import { callMain } from '../call.js'
 
 import {
   getDefinition,
-  callDefinition,
+  callDefinitionFunc,
   normalizeDefinition,
 } from './definition.js'
 import { applyReturnValue } from './return.js'
@@ -99,7 +99,7 @@ const applyKeyword = async function ({
     return state
   }
 
-  const definitionA = await callDefinition({
+  const definitionA = await callDefinitionFunc({
     definition,
     input,
     info,
@@ -112,8 +112,9 @@ const applyKeyword = async function ({
   }
 
   const definitionB = await normalizeDefinition(definitionA, normalize, info)
-  const returnValue = await callFunc({
-    func: main.bind(undefined, definitionB),
+  const returnValue = await callMain({
+    main,
+    definition: definitionB,
     input,
     info,
     hasInput,

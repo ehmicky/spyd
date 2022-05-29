@@ -1,4 +1,4 @@
-import { callFunc } from '../call.js'
+import { callDefinition, callNormalize } from '../call.js'
 
 // The property name is defined by `name`.
 // `aliases` can be defined to either:
@@ -16,7 +16,7 @@ export const getDefinition = function (rule, name, aliases) {
 }
 
 // Call definition when it is a function
-export const callDefinition = async function ({
+export const callDefinitionFunc = async function ({
   definition,
   input,
   info,
@@ -24,7 +24,7 @@ export const callDefinition = async function ({
   test,
 }) {
   return typeof definition === 'function'
-    ? await callFunc({ func: definition, input, info, hasInput, test })
+    ? await callDefinition({ definition, input, info, hasInput, test })
     : definition
 }
 
@@ -36,9 +36,5 @@ export const normalizeDefinition = async function (
 ) {
   return normalize === undefined
     ? definition
-    : await callFunc({
-        func: () => normalize(definition),
-        info,
-        hasInput: false,
-      })
+    : await callNormalize(normalize, definition, info)
 }

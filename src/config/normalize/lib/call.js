@@ -2,12 +2,47 @@ import { inspect } from 'util'
 
 import { wrapError } from '../../../error/wrap.js'
 
+// Call `keyword.test()`
+export const callTest = async function (test, input, info) {
+  return await callFunc({ func: test, input, info, hasInput: true, test })
+}
+
+// Call `keyword.normalize()`
+export const callNormalize = async function (normalize, definition, info) {
+  const func = () => normalize(definition)
+  return await callFunc({ func, info, hasInput: false })
+}
+
+// Call definition function
+export const callDefinition = async function ({
+  definition,
+  input,
+  info,
+  hasInput,
+  test,
+}) {
+  return await callFunc({ func: definition, input, info, hasInput, test })
+}
+
+// Call `keyword.main()`
+export const callMain = async function ({
+  main,
+  definition,
+  input,
+  info,
+  hasInput,
+  test,
+}) {
+  const func = main.bind(undefined, definition)
+  return await callFunc({ func, input, info, hasInput, test })
+}
+
 // Call a function from `test()`, `main()` or a definition.
 // They are all:
 //  - Optionally async
 //  - Called with same arguments
 //  - Error handled
-export const callFunc = async function ({
+const callFunc = async function ({
   func,
   input,
   info: { originalName },
