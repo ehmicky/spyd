@@ -2,26 +2,46 @@ import { resolve } from 'path'
 
 import { validateDefinedString } from '../../normalize/common.js'
 
-import { validateAccess } from './access.js'
-import { fileExists, validateExists } from './exist.js'
+import { validateAccess, validateAccessAsync } from './access.js'
+import { fileExists, fileExistsAsync, validateExists } from './exist.js'
 import { normalize, EXAMPLE_KEYWORDS } from './normalize.js'
-import { validateType } from './type.js'
+import { validateType, validateTypeAsync } from './type.js'
 
-const mainAsync = async function (keywords, input, { cwd }) {
-  validateDefinedString(input)
-  const inputA = resolve(cwd, input)
-  await validateFile(inputA, keywords)
+const main = function (keywords, input, { cwd }) {
+  const inputA = normalizeInput(input, cwd)
+  validateFile(inputA, keywords)
   return { input: inputA }
 }
 
-const validateFile = async function (input, keywords) {
-  if (!(await fileExists(input))) {
+const mainAsync = async function (keywords, input, { cwd }) {
+  const inputA = normalizeInput(input, cwd)
+  await validateFileAsync(inputA, keywords)
+  return { input: inputA }
+}
+
+const normalizeInput = function (input, cwd) {
+  validateDefinedString(input)
+  return resolve(cwd, input)
+}
+
+const validateFile = function (input, keywords) {
+  if (!fileExists(input)) {
     validateExists(keywords)
     return
   }
 
-  await validateType(input, keywords)
-  await validateAccess(input, keywords)
+  validateType(input, keywords)
+  validateAccess(input, keywords)
+}
+
+const validateFileAsync = async function (input, keywords) {
+  if (!(await fileExistsAsync(input))) {
+    validateExists(keywords)
+    return
+  }
+
+  await validateTypeAsync(input, keywords)
+  await validateAccessAsync(input, keywords)
 }
 
 // Apply `path[(input, info)]` which resolves the input as an absolute file path
@@ -38,5 +58,6 @@ export default {
   hasInput: true,
   exampleDefinition: EXAMPLE_KEYWORDS,
   normalize,
+  main,
   mainAsync,
 }
