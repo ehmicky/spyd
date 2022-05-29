@@ -2,8 +2,8 @@
 import { set, remove } from 'wild-wild-path'
 
 import { callInputFunc, callConstraintFunc, callNoInputFunc } from './call.js'
+import { PLUGINS } from './keywords/main.js'
 import { addMove, getRenamedPath, getMovedPath } from './move.js'
-import { PLUGINS } from './plugins/main.js'
 import { addWarning } from './warn.js'
 
 export const performPlugins = async function ({
