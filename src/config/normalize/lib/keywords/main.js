@@ -10,10 +10,11 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 // Those provide the following named exports:
 //  - `name` `{string}` (required): property name in rules
 //  - `main` `function`: main function
+//  - `test` `(value, opts) => boolean`: skip the keyword when returning `false`
 //  - `hasInput` `boolean` (default: false): pass `input` to `main()`
 //    as a second argument
-//  - `undefinedInput` `boolean | null`: whether to skip the keyword if the
-//    `input` is `undefined` or not
+//  - `undefinedInput` `boolean`: if false (def), the keyword is skipped if the
+//    `input` is `undefined`
 //  - `undefinedDefinition` `boolean` (default: false): skip the keyword if the
 //    `definition` is a function returning `undefined`
 // `main(definition[, input], opts)` arguments are:
@@ -70,10 +71,11 @@ export const applyKeywords = async function ({
 const applyKeyword = async function ({
   keyword: {
     name,
-    main,
+    test,
     hasInput = false,
     undefinedInput = false,
     undefinedDefinition = false,
+    main,
   },
   state,
   state: { input, opts },
@@ -81,7 +83,9 @@ const applyKeyword = async function ({
 }) {
   const definition = rule[name]
 
-  if (shouldSkipKeyword(definition, input, undefinedInput)) {
+  if (
+    await shouldSkipKeyword({ definition, input, undefinedInput, test, opts })
+  ) {
     return state
   }
 

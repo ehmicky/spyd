@@ -1,3 +1,5 @@
+import { callFunc } from '../call.js'
+
 // `undefined` definitions are always skipped because:
 //  - It allows any keyword to be disabled by setting `definition` to
 //    `undefined`
@@ -6,18 +8,42 @@
 //  - The consumer might accidentally set `definition` to `undefined`, e.g. when
 //    mapping the `definition` object, and not expect any behavior change
 //  - This allows any keyword to have default values
-export const shouldSkipKeyword = function (definition, input, undefinedInput) {
-  return definition === undefined || shouldSkipInput(input, undefinedInput)
+// Also skip the keyword if `undefinedInput` is `false` (default) and input is
+// `undefined`.
+export const shouldSkipKeyword = async function ({
+  definition,
+  input,
+  undefinedInput,
+  test,
+  opts,
+}) {
+  return (
+    definition === undefined ||
+    (!undefinedInput && input === undefined) ||
+    (await hasSkippedTest({ test, input, opts, undefinedInput }))
+  )
 }
 
-// Based on `undefinedInput`, skip the keyword if:
-//  - `false` (default): `input` is `undefined`
-//  - `null`: `input` is not `undefined`
-//  - `true`: never skip
-const shouldSkipInput = function (input, undefinedInput) {
+// If `test(value, opts) => boolean` is defined and returns `false`, the keyword
+// is skipped.
+// To avoid calling unnecessary functions, this is performed:
+//  - Before the definition function
+//  - After `undefinedInput` is checked
+// `input` is passed even if `hasInput` is `false`
+//  - This is because some keywords might only apply when the input has a
+//    specific value (e.g. `undefined` for `required|default` keywords), i.e.
+//    need to check the input during `test()` but should not pass it during
+//    `main()` nor the definition function
+const hasSkippedTest = async function ({ test, input, opts, undefinedInput }) {
   return (
-    (undefinedInput === false && input === undefined) ||
-    (undefinedInput === null && input !== undefined)
+    test === undefined ||
+    !(await callFunc({
+      func: test,
+      input,
+      opts,
+      hasInput: true,
+      undefinedInput,
+    }))
   )
 }
 
