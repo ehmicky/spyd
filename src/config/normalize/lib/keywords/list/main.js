@@ -6,6 +6,7 @@ import example from './example.js'
 import glob from './glob.js'
 import path from './path/main.js'
 import pick from './pick.js'
+import prefix from './prefix.js'
 import rename from './rename.js'
 import required from './required.js'
 import schema from './schema.js'
@@ -15,6 +16,7 @@ import validate from './validate.js'
 import warn from './warn.js'
 
 export const KEYWORDS = [
+  prefix,
   example,
   cwd,
   pick,

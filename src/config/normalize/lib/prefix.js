@@ -11,5 +11,3 @@ export const addPrefix = function (error, info) {
 export const getPrefix = function ({ prefix, originalName }) {
   return `${prefix} "${originalName}"`
 }
-
-export const DEFAULT_PREFIX = 'Option'

@@ -19,10 +19,14 @@ export const safeNormalizeConfig = async function (
 const callNormalizeConfig = async function (
   config,
   rules,
-  { SystemErrorType, ...opts },
+  { SystemErrorType, prefix, ...opts },
 ) {
   try {
-    return await normalizeInputs(config, rules, { ...opts, soft: true })
+    return await normalizeInputs(config, rules, {
+      ...opts,
+      all: prefix === undefined ? {} : { prefix },
+      soft: true,
+    })
   } catch (error) {
     throw wrapError(error, '', SystemErrorType)
   }
