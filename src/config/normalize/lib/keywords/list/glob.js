@@ -8,7 +8,7 @@ import { validateDefinedString } from '../../type.js'
 export const name = 'glob'
 export const hasInput = true
 
-// Apply `glob[(input, opts)]` which resolves the input as a globbing pattern
+// Apply `glob[(input, info)]` which resolves the input as a globbing pattern
 // when `true` (default: `false`).
 // Duplicates and temporary files are also removed.
 // Only returns regular files, not directories.

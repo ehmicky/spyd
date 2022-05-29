@@ -1,10 +1,9 @@
 import { wrapError } from '../../../error/wrap.js'
 
-// The `prefix` option is the name of the type of property to show in error
+// The `prefix` is the name of the type of property to show in error
 // message and warnings such as "Option".
-// Add the `prefix`
-export const addPrefix = function (error, opts) {
-  const prefix = getPrefix(opts)
+export const addPrefix = function (error, info) {
+  const prefix = getPrefix(info)
   const prefixA = error.validation ? prefix : `${prefix}: `
   return wrapError(error, prefixA)
 }

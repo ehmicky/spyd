@@ -10,17 +10,17 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 // Those provide the following named exports:
 //  - `name` `{string}` (required): property name in rules
 //  - `main` `function`: main function
-//  - `test` `(value, opts) => boolean`: skip the keyword when returning `false`
+//  - `test` `(value, info) => boolean`: skip the keyword when returning `false`
 //  - `hasInput` `boolean` (default: false): pass `input` to `main()`
 //    as a second argument
 //  - `undefinedInput` `boolean`: if false (def), the keyword is skipped if the
 //    `input` is `undefined`
 //  - `undefinedDefinition` `boolean` (default: false): skip the keyword if the
 //    `definition` is a function returning `undefined`
-// `main(definition[, input], opts)` arguments are:
+// `main(definition[, input], info)` arguments are:
 //  - `definition`
 //  - `input`: only if `keyword.hasInput` is `true`
-//  - `opts`:
+//  - `info`:
 //      - `name`, `path`, `originalName`, `originalPath`
 //      - `inputs`
 //      - `context`
@@ -28,9 +28,8 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 // `main()` return value is optional. It is an object with optional properties:
 //  - `value` `{any}`: modifies the input value.
 //     - If `undefined`, the property is deleted
-//  - `options` `{object}`:
-//     - modifies the `options` passed to definitions functions and
-//       `keyword.main()`.
+//  - `info` `{object}`:
+//     - modifies the `info` passed to definitions functions and keyword.main()
 //     - Merged shallowly
 //     - This can be used for cross-keywords information passing
 //  - `skip` `{boolean}`: if true, next keywords in the current rule are skipped
@@ -49,10 +48,10 @@ export const applyKeywords = async function ({
   inputs,
   moves,
   warnings,
-  opts,
+  info,
 }) {
   // eslint-disable-next-line fp/no-let
-  let state = { input, inputs, moves, warnings, opts }
+  let state = { input, inputs, moves, warnings, info }
 
   // eslint-disable-next-line fp/no-loops
   for (const keyword of KEYWORDS) {
@@ -78,20 +77,20 @@ const applyKeyword = async function ({
     main,
   },
   state,
-  state: { input, opts },
+  state: { input, info },
   rule,
 }) {
   const definition = rule[name]
 
   if (
-    await shouldSkipKeyword({ definition, input, undefinedInput, test, opts })
+    await shouldSkipKeyword({ definition, input, undefinedInput, test, info })
   ) {
     return state
   }
 
   const definitionA =
     typeof definition === 'function'
-      ? await callFunc({ func: definition, input, opts, hasInput, test })
+      ? await callFunc({ func: definition, input, info, hasInput, test })
       : definition
 
   if (shouldSkipMain(definitionA, undefinedDefinition)) {
@@ -101,7 +100,7 @@ const applyKeyword = async function ({
   const returnValue = await callFunc({
     func: main.bind(undefined, definitionA),
     input,
-    opts,
+    info,
     hasInput,
     test,
   })

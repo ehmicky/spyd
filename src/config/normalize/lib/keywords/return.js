@@ -8,51 +8,52 @@ import { transformInput } from './transform.js'
 export const applyReturnValue = function ({
   returnValue,
   state,
-  state: { input, inputs, moves, warnings, opts },
+  state: { input, inputs, moves, warnings, info },
 }) {
   if (returnValue === undefined) {
     return state
   }
 
-  const warningsA = addWarning(returnValue, warnings, opts)
+  const warningsA = addWarning(returnValue, warnings, info)
   const { input: inputA, inputs: inputsA } = transformInput({
     returnValue,
     input,
     inputs,
-    opts,
+    info,
   })
-  const movesA = applyPath(returnValue, moves, opts)
+  const movesA = applyPath(returnValue, moves, info)
   const {
     inputs: inputsB,
     moves: movesB,
-    opts: optsA,
+    info: infoA,
   } = applyRename({
     returnValue,
     inputs: inputsA,
     moves: movesA,
     input: inputA,
-    opts,
+    info,
   })
-  const optsB = applyOptions(returnValue, optsA)
+  const infoB = applyInfo(returnValue, infoA)
   return {
     input: inputA,
     inputs: inputsB,
     moves: movesB,
     warnings: warningsA,
-    opts: optsB,
+    info: infoB,
     skip: returnValue.skip,
   }
 }
 
-// Keywords can change the options by returning an `options` property.
-// Some `options` cannot be changed since they are too internal and might create
-// issues.
-const applyOptions = function (returnValue, opts) {
-  if (returnValue.options === undefined) {
-    return opts
+// Keywords can change the `info` by returning an `info` property.
+// Some `info` properties cannot be changed since they are too internal and
+// might create issues.
+const applyInfo = function (returnValue, info) {
+  if (returnValue.info === undefined) {
+    return info
   }
 
   // eslint-disable-next-line no-unused-vars
-  const { name, path, originalName, originalPath, inputs, ...newOpts } = opts
-  return { ...opts, ...newOpts }
+  const { name, path, originalName, originalPath, inputs, ...newInfo } =
+    returnValue.info
+  return { ...info, ...newInfo }
 }

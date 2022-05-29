@@ -2,7 +2,7 @@ export const name = 'transform'
 export const hasInput = true
 export const undefinedDefinition = true
 
-// Apply `transform(input, opts)` which transforms the input.
+// Apply `transform(input, info)` which transforms the input.
 // If can also delete it by returning `undefined`.
 export const main = function (definition, input) {
   const { value, newProp } = isTransformMove(definition)

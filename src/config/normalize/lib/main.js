@@ -73,7 +73,7 @@ const applyEntryRule = async function (
   { inputs, moves, warnings },
   { input, path, rule, context, cwd, prefix, parent },
 ) {
-  const opts = await getInfo({
+  const info = await getInfo({
     path,
     inputs,
     context,
@@ -83,7 +83,7 @@ const applyEntryRule = async function (
     rule,
     moves,
   })
-  return await applyKeywords({ rule, input, inputs, moves, warnings, opts })
+  return await applyKeywords({ rule, input, inputs, moves, warnings, info })
 }
 
 // When in `sort` mode, user errors are returned instead of being thrown.

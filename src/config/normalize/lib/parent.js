@@ -5,27 +5,27 @@ import { wrapError } from '../../../error/wrap.js'
 import { callNoInputFunc } from './call.js'
 
 // `originalName|Path` are like `name|path` except:
-//  - They are prepended with `opts.parent`
+//  - They are prepended with `info.parent`
 //  - If a property was moved, they show the previous name
 // They are intended for error messages.
 // This is in contrast to `name|path` which are the main properties, intended to
-// work with everything else, including `opts.inputs`.
-export const computeParent = async function (parent, opts) {
+// work with everything else, including `info.inputs`.
+export const computeParent = async function (parent, info) {
   if (parent === undefined) {
-    return opts
+    return info
   }
 
   try {
-    return await getParent(parent, opts)
+    return await getParent(parent, info)
   } catch (error) {
     throw wrapError(error, 'Invalid "parent":')
   }
 }
 
-const getParent = async function (parent, opts) {
-  const originalPath = await appendParentToName(parent, opts)
+const getParent = async function (parent, info) {
+  const originalPath = await appendParentToName(parent, info)
   const originalName = serializePath(originalPath)
-  return { ...opts, originalName, originalPath }
+  return { ...info, originalName, originalPath }
 }
 
 // The `parent` option are the names of the parent properties.
@@ -33,8 +33,8 @@ const getParent = async function (parent, opts) {
 // It is a dot-delimited string.
 // By default, there are none.
 // `normalizePath()` might throw if `parent` contains syntax errors.
-const appendParentToName = async function (parent, opts) {
-  const parentA = await callNoInputFunc(parent, opts)
+const appendParentToName = async function (parent, info) {
+  const parentA = await callNoInputFunc(parent, info)
   const parentPath = normalizePath(parentA)
-  return [...parentPath, ...opts.originalPath]
+  return [...parentPath, ...info.originalPath]
 }

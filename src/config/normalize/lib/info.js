@@ -8,7 +8,7 @@ import { applyMoves } from './move.js'
 import { computeParent } from './parent.js'
 import { DEFAULT_PREFIX } from './prefix.js'
 
-// Retrieve `opts` passed to:
+// Retrieve `info` passed to:
 //  - Definitions functions
 //  - Keyword `main()`
 export const getInfo = async function ({
@@ -24,7 +24,7 @@ export const getInfo = async function ({
   const name = serializePath(path)
   const originalPath = applyMoves(moves, path)
   const originalName = serializePath(originalPath)
-  const opts = {
+  const info = {
     name,
     path,
     originalName,
@@ -33,48 +33,48 @@ export const getInfo = async function ({
     prefix: DEFAULT_PREFIX,
     cwd: DEFAULT_CWD,
   }
-  const optsA = await computeContext(context, opts)
-  const optsB = await computeParent(parent, optsA)
-  const optsC = await computePrefix(prefix, optsB)
-  const optsD = await computeExample(example, optsC)
-  const optsE = await computeCwd(cwd, optsD)
-  return optsE
+  const infoA = await computeContext(context, info)
+  const infoB = await computeParent(parent, infoA)
+  const infoC = await computePrefix(prefix, infoB)
+  const infoD = await computeExample(example, infoC)
+  const infoE = await computeCwd(cwd, infoD)
+  return infoE
 }
 
-const computeContext = async function (context, opts) {
+const computeContext = async function (context, info) {
   if (context === undefined) {
-    return opts
+    return info
   }
 
-  const contextA = await callNoInputFunc(context, opts)
-  return contextA === undefined ? opts : { ...opts, context: contextA }
+  const contextA = await callNoInputFunc(context, info)
+  return contextA === undefined ? info : { ...info, context: contextA }
 }
 
-const computePrefix = async function (prefix, opts) {
+const computePrefix = async function (prefix, info) {
   try {
-    return await addPrefix(prefix, opts)
+    return await addPrefix(prefix, info)
   } catch (error) {
     throw wrapError(error, 'Invalid "prefix":')
   }
 }
 
-const addPrefix = async function (prefix, opts) {
-  const prefixA = await callNoInputFunc(prefix, opts)
+const addPrefix = async function (prefix, info) {
+  const prefixA = await callNoInputFunc(prefix, info)
 
   if (prefixA === undefined) {
-    return opts
+    return info
   }
 
   const prefixB = String(prefixA).trim()
-  return { ...opts, prefix: prefixB }
+  return { ...info, prefix: prefixB }
 }
 
-// Add an example input value as error suffix, as provided by `example[(opts)]`
-const computeExample = async function (example, opts) {
+// Add an example input value as error suffix, as provided by `example[(info)]`
+const computeExample = async function (example, info) {
   if (example === undefined) {
-    return opts
+    return info
   }
 
-  const exampleA = await callNoInputFunc(example, opts)
-  return exampleA === undefined ? opts : { ...opts, example: exampleA }
+  const exampleA = await callNoInputFunc(example, info)
+  return exampleA === undefined ? info : { ...info, example: exampleA }
 }

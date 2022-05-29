@@ -12,21 +12,21 @@ import { validateDefinedString } from './type.js'
 // at runtime, not load time.
 export const DEFAULT_CWD = '.'
 
-// A `cwd[(opts)]` option can be specified to customize the `cwd`.
-export const computeCwd = async function (cwd, opts) {
+// A `cwd[(info)]` rule can be specified to customize the `cwd`.
+export const computeCwd = async function (cwd, info) {
   if (cwd === undefined) {
-    return opts
+    return info
   }
 
-  const cwdA = await callCwdFunc(cwd, opts)
-  await callNoInputFunc(checkCwd.bind(undefined, cwdA), opts)
+  const cwdA = await callCwdFunc(cwd, info)
+  await callNoInputFunc(checkCwd.bind(undefined, cwdA), info)
   const cwdB = resolve(cwdA)
-  return { ...opts, cwd: cwdB }
+  return { ...info, cwd: cwdB }
 }
 
-const callCwdFunc = async function (cwd, opts) {
+const callCwdFunc = async function (cwd, info) {
   try {
-    return await callNoInputFunc(cwd, opts)
+    return await callNoInputFunc(cwd, info)
   } catch (error) {
     throw wrapError(error, 'Invalid "cwd" function:')
   }

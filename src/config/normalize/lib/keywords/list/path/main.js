@@ -10,7 +10,7 @@ import { validateType } from './type.js'
 export const name = 'path'
 export const hasInput = true
 
-// Apply `path[(input, opts)]` which resolves the input as an absolute file path
+// Apply `path[(input, info)]` which resolves the input as an absolute file path
 // It is an array of strings performing additional validation:
 //  - "exist": file exists
 //  - "file", "directory": regular file, directory, or both

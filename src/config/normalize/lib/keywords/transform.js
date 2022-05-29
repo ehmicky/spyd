@@ -7,7 +7,7 @@ export const transformInput = function ({
   returnValue,
   input,
   inputs,
-  opts: { path },
+  info: { path },
 }) {
   if (!('input' in returnValue) || returnValue.input === input) {
     return { input, inputs }

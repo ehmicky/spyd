@@ -12,18 +12,18 @@ export const applyRename = function ({
   inputs,
   moves,
   input,
-  opts,
-  opts: { name: oldName, path: oldPath },
+  info,
+  info: { name: oldName, path: oldPath },
 }) {
   if (rename === undefined) {
-    return { inputs, moves, opts }
+    return { inputs, moves, info }
   }
 
   const newPath = safeNormalizePath(rename)
   const newName = serializePath(newPath)
 
   if (newName === oldName) {
-    return { inputs, moves, opts }
+    return { inputs, moves, info }
   }
 
   const inputsA = remove(inputs, oldPath)
@@ -32,7 +32,7 @@ export const applyRename = function ({
   return {
     inputs: inputsB,
     moves: movesA,
-    opts: { ...opts, path: newPath, name: newName },
+    info: { ...info, path: newPath, name: newName },
   }
 }
 
