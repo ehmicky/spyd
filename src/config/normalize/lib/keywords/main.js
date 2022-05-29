@@ -27,6 +27,11 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 // `main()` return value is optional. It is an object with optional properties:
 //  - `value` `{any}`: modifies the input value.
 //     - If `undefined`, the property is deleted
+//  - `options` `{object}`:
+//     - modifies the `options` passed to definitions functions and
+//       `keyword.main()`.
+//     - Merged shallowly
+//     - Undocumented as this is mostly meant for builtin keywords
 //  - `skip` `{boolean}`: if true, next keywords in the current rule are skipped
 //  - `warning` `{string}`: print on the console
 //  - `rename` `{string|array}`: move the input value to another property

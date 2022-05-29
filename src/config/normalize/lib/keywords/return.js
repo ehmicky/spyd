@@ -33,12 +33,20 @@ export const applyReturnValue = function ({
     input: inputA,
     opts,
   })
+  const optsB = applyOptions(returnValue, optsA)
   return {
     input: inputA,
     config: configB,
     moves: movesB,
     warnings: warningsA,
-    opts: optsA,
+    opts: optsB,
     skip: returnValue.skip,
   }
+}
+
+// Keywords can change the options by returning an `options` property
+const applyOptions = function (returnValue, opts) {
+  return returnValue.options === undefined
+    ? opts
+    : { ...opts, ...returnValue.options }
 }
