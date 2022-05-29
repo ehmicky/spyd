@@ -1,4 +1,4 @@
-import { callTest } from '../call.js'
+import { callTest } from '../call/main.js'
 
 // `undefined` definitions are always skipped because:
 //  - It allows any keyword to be disabled by setting `definition` to

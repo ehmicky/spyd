@@ -2,7 +2,7 @@
 // TODO: fix max-lines linting
 import { inspect } from 'util'
 
-import { wrapError } from '../../../error/wrap.js'
+import { wrapError } from '../../../../error/wrap.js'
 
 // Call `keyword.test()`
 export const callTest = async function ({ test, input, info, keyword }) {

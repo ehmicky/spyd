@@ -1,4 +1,4 @@
-import { callMain } from '../call.js'
+import { callMain } from '../call/main.js'
 
 import {
   getDefinition,

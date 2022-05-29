@@ -1,4 +1,4 @@
-import { callDefinition, callNormalize } from '../call.js'
+import { callDefinition, callNormalize } from '../call/main.js'
 
 // The property name is defined by `name`.
 // `aliases` can be defined to either:
