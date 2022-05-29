@@ -15,8 +15,7 @@ export const normalizePluginConfigTop = async function (
   const { [pluginProp]: originalLocation, ...pluginConfigA } =
     await safeNormalizeConfig(pluginConfig, [normalizeTop], {
       context: { pluginProp, builtins },
-      parent: name,
-      all: { cwd, prefix },
+      all: { cwd, prefix, parent: name },
       UserErrorType: ConsumerError,
       SystemErrorType: CoreError,
     })

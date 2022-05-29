@@ -2,18 +2,17 @@ import { serializePath } from 'wild-wild-parser'
 
 import { callNoInputFunc } from './call.js'
 import { applyMoves } from './move.js'
-import { computeParent } from './parent.js'
 
 // Retrieve `info` passed to:
 //  - Definitions functions
 //  - Keyword `main()`
-export const getInfo = async function ({
-  path,
-  inputs,
-  context,
-  parent,
-  moves,
-}) {
+// `originalName|Path` are like `name|path` except:
+//  - They are prepended with `info.parent`
+//  - If a property was moved, they show the previous name
+// They are intended for error messages.
+// This is in contrast to `name|path` which are the main properties, intended to
+// work with everything else, including `info.inputs`.
+export const getInfo = async function ({ path, inputs, context, moves }) {
   const name = serializePath(path)
   const originalPath = applyMoves(moves, path)
   const originalName = serializePath(originalPath)
@@ -27,8 +26,7 @@ export const getInfo = async function ({
     cwd: DEFAULT_CWD,
   }
   const infoA = await computeContext(context, info)
-  const infoB = await computeParent(parent, infoA)
-  return infoB
+  return infoA
 }
 
 const DEFAULT_PREFIX = 'Option'

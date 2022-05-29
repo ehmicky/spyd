@@ -53,7 +53,6 @@ const applyInfo = function (returnValue, info) {
   }
 
   // eslint-disable-next-line no-unused-vars
-  const { name, path, originalName, originalPath, inputs, ...newInfo } =
-    returnValue.info
+  const { name, path, inputs, ...newInfo } = returnValue.info
   return { ...info, ...newInfo }
 }

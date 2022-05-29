@@ -20,13 +20,13 @@ import { logWarnings } from './warn.js'
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
 export const normalizeInputs = async function (inputs, rules, opts) {
-  const { soft, all, context, parent } = normalizeOpts(opts)
+  const { soft, all, context } = normalizeOpts(opts)
   const rulesA = normalizeRules(rules, all)
 
   try {
     const { inputs: inputsA, warnings } = await pReduce(
       rulesA,
-      (memo, rule) => applyRuleDeep(memo, { rule, context, parent }),
+      (memo, rule) => applyRuleDeep(memo, { rule, context }),
       { inputs, moves: [], warnings: [] },
     )
     const inputsB = cleanObject(inputsA)
@@ -38,13 +38,13 @@ export const normalizeInputs = async function (inputs, rules, opts) {
   }
 }
 
-const normalizeOpts = function ({ soft = false, all, context, parent } = {}) {
-  return { soft, all, context, parent }
+const normalizeOpts = function ({ soft = false, all, context } = {}) {
+  return { soft, all, context }
 }
 
 const applyRuleDeep = async function (
   { inputs, moves, warnings },
-  { rule, context, parent },
+  { rule, context },
 ) {
   const entries = list(inputs, rule.name, {
     childFirst: true,
@@ -55,7 +55,7 @@ const applyRuleDeep = async function (
   return await pReduce(
     entries,
     (memo, { value, path }) =>
-      applyEntryRule(memo, { input: value, path, rule, context, parent }),
+      applyEntryRule(memo, { input: value, path, rule, context }),
     { inputs, moves, warnings },
   )
 }
@@ -63,9 +63,9 @@ const applyRuleDeep = async function (
 // Apply rule for a specific entry
 const applyEntryRule = async function (
   { inputs, moves, warnings },
-  { input, path, rule, context, parent },
+  { input, path, rule, context },
 ) {
-  const info = await getInfo({ path, inputs, context, parent, moves })
+  const info = await getInfo({ path, inputs, context, moves })
   return await applyKeywords({ rule, input, inputs, moves, warnings, info })
 }
 

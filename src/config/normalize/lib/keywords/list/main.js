@@ -4,6 +4,7 @@ import cwd from './cwd.js'
 import defaultKeyword from './default.js'
 import example from './example.js'
 import glob from './glob.js'
+import parent from './parent.js'
 import path from './path/main.js'
 import pick from './pick.js'
 import prefix from './prefix.js'
@@ -16,6 +17,7 @@ import validate from './validate.js'
 import warn from './warn.js'
 
 export const KEYWORDS = [
+  parent,
   prefix,
   example,
   cwd,
