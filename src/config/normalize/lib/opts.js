@@ -12,7 +12,7 @@ import { DEFAULT_PREFIX } from './prefix.js'
 //  - Definitions functions
 //  - Keyword `main()`
 export const getOpts = async function ({
-  namePath,
+  path,
   config,
   context,
   cwd,
@@ -21,12 +21,12 @@ export const getOpts = async function ({
   rule: { example },
   moves,
 }) {
-  const name = serializePath(namePath)
-  const originalPath = applyMoves(moves, namePath)
+  const name = serializePath(path)
+  const originalPath = applyMoves(moves, path)
   const originalName = serializePath(originalPath)
   const opts = {
     name,
-    path: namePath,
+    path,
     originalName,
     originalPath,
     config,

@@ -4,8 +4,8 @@ import { list } from 'wild-wild-path'
 import { cleanObject } from '../../../utils/clean.js'
 
 import { applyKeywords } from './keywords/main.js'
+import { normalizeRules } from './normalize.js'
 import { getOpts } from './opts.js'
-import { normalizeRules } from './rule.js'
 import { logWarnings } from './warn.js'
 
 // Normalize configuration shape and do custom validation.
@@ -44,9 +44,9 @@ export const normalizeConfigProps = async function (
 
 const applyRuleDeep = async function (
   { config, moves, warnings },
-  { rule, rule: { namePath }, context, cwd, prefix, parent },
+  { rule, context, cwd, prefix, parent },
 ) {
-  const entries = list(config, namePath, {
+  const entries = list(config, rule.path, {
     childFirst: true,
     sort: true,
     missing: true,
@@ -54,10 +54,10 @@ const applyRuleDeep = async function (
   })
   return await pReduce(
     entries,
-    (memo, { value, path: namePathA }) =>
+    (memo, { value, path }) =>
       applyEntryRule(memo, {
         input: value,
-        namePath: namePathA,
+        path,
         rule,
         context,
         cwd,
@@ -71,10 +71,10 @@ const applyRuleDeep = async function (
 // Apply rule for a specific entry
 const applyEntryRule = async function (
   { config, moves, warnings },
-  { input, namePath, rule, context, cwd, prefix, parent },
+  { input, path, rule, context, cwd, prefix, parent },
 ) {
   const opts = await getOpts({
-    namePath,
+    path,
     config,
     context,
     cwd,

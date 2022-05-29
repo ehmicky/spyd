@@ -1,4 +1,4 @@
-import { normalizeQuery, serializeQuery } from 'wild-wild-parser'
+import { normalizeQuery } from 'wild-wild-parser'
 
 import { wrapError } from '../../../error/wrap.js'
 
@@ -10,12 +10,11 @@ export const normalizeRules = function (rules, all) {
 }
 
 const normalizeRule = function ({ name, ...rule }, all) {
-  const namePath = getNamePath(name)
-  const nameQuery = serializeQuery(namePath)
-  return { example: rule.default, ...all, ...rule, nameQuery, namePath }
+  const path = getPath(name)
+  return { example: rule.default, ...all, ...rule, path }
 }
 
-const getNamePath = function (name) {
+const getPath = function (name) {
   try {
     return normalizeQuery(name)
   } catch (error) {
