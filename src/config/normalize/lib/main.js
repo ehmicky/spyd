@@ -3,7 +3,8 @@ import { list } from 'wild-wild-path'
 
 import { cleanObject } from '../../../utils/clean.js'
 
-import { applyEntryRule } from './entry.js'
+import { applyRule } from './apply.js'
+import { getOpts } from './opts.js'
 import { normalizeRules } from './rule.js'
 import { logWarnings } from './warn.js'
 
@@ -65,6 +66,24 @@ const applyRuleDeep = async function (
       }),
     { config, moves, warnings },
   )
+}
+
+// Apply rule for a specific entry
+const applyEntryRule = async function (
+  { config, moves, warnings },
+  { input, namePath, rule, rule: { example }, context, cwd, prefix, parent },
+) {
+  const opts = await getOpts({
+    namePath,
+    config,
+    context,
+    cwd,
+    prefix,
+    parent,
+    example,
+    moves,
+  })
+  return await applyRule({ rule, input, config, moves, warnings, opts })
 }
 
 // When in `sort` mode, user errors are returned instead of being thrown.
