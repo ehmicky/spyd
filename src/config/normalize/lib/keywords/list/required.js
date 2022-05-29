@@ -2,6 +2,14 @@ const test = function (input) {
   return input === undefined
 }
 
+const normalize = function (definition) {
+  if (typeof definition !== 'boolean') {
+    throw new TypeError('Definition must be a boolean.')
+  }
+
+  return definition
+}
+
 const main = function (definition) {
   if (definition) {
     throw new Error('must be defined.')
@@ -15,5 +23,6 @@ export default {
   name: 'required',
   undefinedInput: true,
   test,
+  normalize,
   main,
 }

@@ -5,6 +5,14 @@ import { isNotJunk } from 'junk'
 
 import { validateDefinedString } from '../../type.js'
 
+const normalize = function (definition) {
+  if (typeof definition !== 'boolean') {
+    throw new TypeError('Definition must be a boolean.')
+  }
+
+  return definition
+}
+
 const main = async function (definition, input, { cwd }) {
   if (!definition) {
     return
@@ -35,5 +43,6 @@ const main = async function (definition, input, { cwd }) {
 export default {
   name: 'glob',
   hasInput: true,
+  normalize,
   main,
 }

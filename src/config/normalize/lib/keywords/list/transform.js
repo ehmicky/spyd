@@ -1,13 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
-const main = function (definition, input) {
-  const { value, newProp } = isTransformMove(definition)
-    ? definition
-    : {
-        value: definition,
-        newProp: findCommonMove(definition, input),
-      }
-  return { input: value, path: newProp }
+const normalize = function (definition) {
+  return isTransformMove(definition) ? definition : { value: definition }
 }
 
 // `transform()` can return a `{ newProp, value }` object to indicate the
@@ -19,6 +13,12 @@ const isTransformMove = function (definition) {
   return (
     isPlainObj(definition) && 'value' in definition && 'newProp' in definition
   )
+}
+
+const main = function (definition, input) {
+  const { value } = definition
+  const { path = findCommonMove(value, input) } = definition
+  return { input: value, path }
 }
 
 // Automatically detect some common type of moves
@@ -63,5 +63,6 @@ export default {
   name: 'transform',
   hasInput: true,
   undefinedDefinition: true,
+  normalize,
   main,
 }

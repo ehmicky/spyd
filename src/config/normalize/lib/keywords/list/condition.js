@@ -1,3 +1,11 @@
+const normalize = function (definition) {
+  if (typeof definition !== 'boolean') {
+    throw new TypeError('Definition must be a boolean.')
+  }
+
+  return definition
+}
+
 const main = function (definition) {
   return definition ? undefined : { skip: true }
 }
@@ -9,5 +17,6 @@ export default {
   name: 'condition',
   hasInput: true,
   undefinedInput: true,
+  normalize,
   main,
 }

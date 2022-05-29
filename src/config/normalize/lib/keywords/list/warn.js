@@ -1,3 +1,11 @@
+const normalize = function (definition) {
+  if (typeof definition !== 'string') {
+    throw new TypeError('Definition must be a string.')
+  }
+
+  return definition.trim()
+}
+
 const main = function (definition) {
   return { warning: definition }
 }
@@ -7,5 +15,6 @@ const main = function (definition) {
 export default {
   name: 'warn',
   hasInput: true,
+  normalize,
   main,
 }

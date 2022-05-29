@@ -1,8 +1,12 @@
 import { normalizePath, serializePath } from 'wild-wild-parser'
 
+const normalize = function (definition) {
+  return normalizePath(definition)
+}
+
 // `normalizePath()` might throw if `parent` contains syntax errors.
 const main = function (definition, { originalPath }) {
-  const originalPathA = [...normalizePath(definition), ...originalPath]
+  const originalPathA = [...definition, ...originalPath]
   const originalName = serializePath(originalPathA)
   return { info: { originalPath: originalPathA, originalName } }
 }
@@ -15,5 +19,6 @@ const main = function (definition, { originalPath }) {
 export default {
   name: 'parent',
   undefinedInput: true,
+  normalize,
   main,
 }
