@@ -11,35 +11,10 @@ import {
 } from './suffix.js'
 
 // Handle errors in `keyword.test|normalize|main()` or in keyword functions
-export const handleError = function ({
-  error,
-  input,
-  example,
-  prefix,
-  originalName,
-  hasInput,
-  test,
-  keyword,
-  definition,
-  exampleDefinition,
-  errorType,
-  bugType,
-}) {
+export const handleError = function ({ error, errorType, bugType, ...opts }) {
   const isValidation = isValidateError(error)
   const type = isValidation ? errorType : bugType
-  return ERROR_HANDLERS[type]({
-    error,
-    input,
-    example,
-    prefix,
-    originalName,
-    hasInput,
-    test,
-    keyword,
-    definition,
-    exampleDefinition,
-    isValidation,
-  })
+  return ERROR_HANDLERS[type]({ ...opts, error, isValidation })
 }
 
 // Consumers can distinguish users errors from system bugs by checking
