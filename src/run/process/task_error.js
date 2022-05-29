@@ -34,9 +34,9 @@ const applyErrorProps = function (name, message) {
 //  - Whether the error should be reported as caused by the user or the plugin
 //  - Prefixing the error message
 const ERROR_PROPS = {
-  UnknownError: {
+  CoreError: {
     ErrorType: PluginError,
-    prefix: 'Unknown error',
+    prefix: 'Runner internal bug',
   },
   IpcSerializationError: {
     ErrorType: PluginError,
@@ -60,7 +60,7 @@ const ERROR_PROPS = {
   },
 }
 
-const DEFAULT_ERROR_NAME = 'UnknownError'
+const DEFAULT_ERROR_NAME = 'CoreError'
 
 // Keep the stack trace from the runner's process, but update it with the new
 // `name` and `message`

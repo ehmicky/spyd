@@ -1,5 +1,8 @@
-import { createErrorType, normalizeError } from '../../error/utils.js'
+import { allowErrorTypes } from '../../error/types.js'
+import { createErrorType } from '../../error/utils.js'
 
+// Error from the library itself
+export const CoreError = createErrorType('CoreError')
 // Could not JSON-stringify IPC payload
 export const IpcSerializationError = createErrorType('IpcSerializationError')
 // Tasks file throws when loading
@@ -11,8 +14,18 @@ export const TasksRunError = createErrorType('TasksRunError')
 // Invalid runner config
 export const ConfigError = createErrorType('ConfigError')
 
+// All error types, with first being default type
+const ErrorTypes = [
+  CoreError,
+  IpcSerializationError,
+  TasksLoadError,
+  TasksSyntaxError,
+  TasksRunError,
+  ConfigError,
+]
+
 // Serialize an error to send to parent
 export const serializeError = function (error) {
-  const { name, message, stack } = normalizeError(error)
+  const { name, message, stack } = allowErrorTypes(error, ErrorTypes)
   return { name, message, stack }
 }
