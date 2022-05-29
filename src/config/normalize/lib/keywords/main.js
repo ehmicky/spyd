@@ -58,6 +58,7 @@ export const applyKeywords = async function ({
   warnings,
   info,
   keywords,
+  sync,
 }) {
   // eslint-disable-next-line fp/no-let
   let state = { input, inputs, moves, warnings, info }
@@ -65,7 +66,7 @@ export const applyKeywords = async function ({
   // eslint-disable-next-line fp/no-loops
   for (const keyword of keywords) {
     // eslint-disable-next-line fp/no-mutation, no-await-in-loop
-    state = await applyKeyword({ keyword, state, rule })
+    state = await applyKeyword({ keyword, state, rule, sync })
 
     // eslint-disable-next-line max-depth
     if (state.skip) {
@@ -93,6 +94,7 @@ const applyKeyword = async function ({
   state,
   state: { input, info },
   rule,
+  sync,
 }) {
   const definition = getDefinition(rule, keyword, aliases)
 
@@ -117,6 +119,7 @@ const applyKeyword = async function ({
     test,
     keyword,
     exampleDefinition,
+    sync,
   })
 
   if (shouldSkipMain(definitionA, undefinedDefinition)) {

@@ -20,7 +20,7 @@ export const normalizeOpts = function (options = {}) {
   const keywordsA = normalizeKeywords(keywords)
   const ruleProps = getRuleProps(keywordsA)
   const allA = normalizeAll(all, ruleProps)
-  return { soft, all: allA, keywords: keywordsA, ruleProps }
+  return { soft, all: allA, keywords: keywordsA, ruleProps, sync: false }
 }
 
 const validateSoft = function (soft) {

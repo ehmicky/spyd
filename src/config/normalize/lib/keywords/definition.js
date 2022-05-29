@@ -15,7 +15,13 @@ export const getDefinition = function (rule, keyword, aliases) {
   return aliasA === undefined ? undefined : rule[aliasA]
 }
 
-// Call definition when it is a function
+// Call definition when it is a function.
+// Definition functions are considered async or not based on whether the user
+// used the main async method or not
+//  - We cannot know for sure whether a user-defined function is async, since it
+//    might return a Promise
+//  - Requiring user to declare sync|async would be poorer developer experience
+//    and error-prone
 export const callDefinitionFunc = async function ({
   definition,
   input,
@@ -24,6 +30,7 @@ export const callDefinitionFunc = async function ({
   test,
   keyword,
   exampleDefinition,
+  sync,
 }) {
   return typeof definition === 'function'
     ? await callDefinition({
@@ -34,6 +41,7 @@ export const callDefinitionFunc = async function ({
         test,
         keyword,
         exampleDefinition,
+        sync,
       })
     : definition
 }

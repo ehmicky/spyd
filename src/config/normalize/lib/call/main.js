@@ -13,6 +13,7 @@ export const callTest = async function ({ test, input, info, keyword }) {
     info,
     hasInput: true,
     keyword,
+    sync: false,
     errorType: 'keyword',
     bugType: 'keyword',
   })
@@ -29,6 +30,7 @@ export const callDefinition = async function ({
   test,
   keyword,
   exampleDefinition,
+  sync,
 }) {
   return await callFunc({
     func: definition,
@@ -38,6 +40,7 @@ export const callDefinition = async function ({
     test,
     keyword,
     exampleDefinition,
+    sync,
     errorType: 'input',
     bugType: 'definition',
   })
@@ -60,6 +63,7 @@ export const callNormalize = async function ({
     keyword,
     definition,
     exampleDefinition,
+    sync: false,
     hasInput: false,
     errorType: 'definition',
     bugType: 'keyword',
@@ -88,6 +92,7 @@ export const callMain = async function ({
     test,
     keyword,
     definition,
+    sync: false,
     errorType: 'input',
     bugType: 'keyword',
   })
@@ -98,16 +103,19 @@ export const callMain = async function ({
 //  - Optionally async
 //  - Called with similar arguments
 //  - Error handled
+// Synchronous functions do not use `await`, for performance
 const callFunc = async function ({
   func,
   info: { originalName },
   info: { example, prefix, ...info },
+  sync,
   ...params
 }) {
   const { input, hasInput } = params
 
   try {
-    return hasInput ? await func(input, info) : await func(info)
+    const returnValue = hasInput ? func(input, info) : func(info)
+    return sync ? returnValue : await returnValue
   } catch (error) {
     throw handleError({ ...params, error, example, prefix, originalName })
   }
