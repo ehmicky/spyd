@@ -1,6 +1,7 @@
 import { callFunc } from './call.js'
 import { KEYWORDS } from './keywords/main.js'
 import { applyReturnValue } from './return.js'
+import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 
 // The library features is provided through plugins called "keywords".
 // Keywords perform logic based on the consumer's `input`.
@@ -109,19 +110,4 @@ const applyKeyword = async function ({
     undefinedInput,
   })
   return applyReturnValue({ returnValue, state })
-}
-
-const shouldSkipKeyword = function (definition, input, undefinedInput) {
-  return definition === undefined || shouldSkipInput(input, undefinedInput)
-}
-
-const shouldSkipInput = function (input, undefinedInput) {
-  return (
-    (undefinedInput === false && input === undefined) ||
-    (undefinedInput === null && input !== undefined)
-  )
-}
-
-const shouldSkipMain = function (definition, undefinedDefinition) {
-  return definition === undefined && !undefinedDefinition
 }
