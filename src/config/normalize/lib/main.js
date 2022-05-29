@@ -38,12 +38,7 @@ export const normalizeInputs = async function (inputs, rules, opts) {
   }
 }
 
-const normalizeOpts = function ({
-  soft = false,
-  all = {},
-  context,
-  parent,
-} = {}) {
+const normalizeOpts = function ({ soft = false, all, context, parent } = {}) {
   return { soft, all, context, parent }
 }
 

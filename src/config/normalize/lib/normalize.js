@@ -6,7 +6,21 @@ import { wrapError } from '../../../error/wrap.js'
 // All methods and properties that use queries can use either the string or the
 // path syntax.
 export const normalizeRules = function (rules, all) {
-  return rules.map((rule) => ({ ...all, ...rule })).map(normalizeRule)
+  const rulesA = mergeRulesAll(rules, all)
+  return rulesA.map(normalizeRule)
+}
+
+const mergeRulesAll = function (rules, all) {
+  if (all === undefined) {
+    return rules
+  }
+
+  const allA = Object.fromEntries(Object.entries(all).filter(isDefined))
+  return rules.map((rule) => ({ ...allA, ...rule }))
+}
+
+const isDefined = function ([, value]) {
+  return value !== undefined
 }
 
 const normalizeRule = function (rule) {
