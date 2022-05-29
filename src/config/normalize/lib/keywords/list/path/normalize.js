@@ -1,22 +1,22 @@
-// Ensure the `path` value is correct
-export const checkKeywords = function (keywords) {
-  if (!Array.isArray(keywords)) {
-    throw new TypeError(`The "path" must be an array.`)
+// Ensure the `path` definition is correct
+export const normalize = function (definition) {
+  if (!Array.isArray(definition)) {
+    throw new TypeError(`The definition must be an array.`)
   }
 
-  keywords.forEach(checkKeyword)
-  return new Set(keywords)
+  definition.forEach(checkKeyword)
+  return new Set(definition)
 }
 
 const checkKeyword = function (keyword) {
   if (typeof keyword !== 'string') {
-    throw new TypeError(`The "path" value ${keyword} must be a string.`)
+    throw new TypeError(`The definition value ${keyword} must be a string.`)
   }
 
   if (!KEYWORDS_SET.has(keyword)) {
     const availableKeywords = KEYWORDS.map(quoteWord).join(', ')
     throw new TypeError(
-      `The "path" value "${keyword}" must be one of: ${availableKeywords}`,
+      `The definition value "${keyword}" must be one of: ${availableKeywords}`,
     )
   }
 }

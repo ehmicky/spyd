@@ -3,14 +3,13 @@ import { resolve } from 'path'
 import { validateDefinedString } from '../../../type.js'
 
 import { validateAccess } from './access.js'
-import { checkKeywords } from './check.js'
+import { normalize } from './normalize.js'
 import { fileExists, validateExists } from './exist.js'
 import { validateType } from './type.js'
 
-const main = async function (definition, input, { cwd }) {
+const main = async function (keywords, input, { cwd }) {
   validateDefinedString(input)
   const inputA = resolve(cwd, input)
-  const keywords = checkKeywords(definition)
   await validateFile(inputA, keywords)
   return { input: inputA }
 }
@@ -37,5 +36,6 @@ const validateFile = async function (input, keywords) {
 export default {
   name: 'path',
   hasInput: true,
+  normalize,
   main,
 }
