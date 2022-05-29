@@ -1,8 +1,4 @@
-/* eslint-disable max-lines */
-// TODO: fix max-lines linting
-import { inspect } from 'util'
-
-import { wrapError } from '../../../../error/wrap.js'
+import { handleError } from './error.js'
 
 // Call `keyword.test()`
 export const callTest = async function ({ test, input, info, keyword }) {
@@ -106,9 +102,7 @@ const callFunc = async function ({
   try {
     return hasInput ? await func(input, info) : await func(info)
   } catch (error) {
-    const isValidation = isValidateError(error)
-    const type = isValidation ? errorType : bugType
-    throw ERROR_HANDLERS[type]({
+    throw handleError({
       error,
       input,
       example,
@@ -119,143 +113,8 @@ const callFunc = async function ({
       keyword,
       definition,
       exampleDefinition,
-      isValidation,
+      errorType,
+      bugType,
     })
   }
 }
-
-// Consumers can distinguish users errors from system bugs by checking
-// the `error.validation` boolean property.
-// User errors are distinguished by having error message starting with "must".
-// We fail on the first error, as opposed to aggregating all errors
-//  - Otherwise, a failed property might be used by another property, which
-//    would also appear as failed, even if it has no issues
-// We detect this using the error message instead of the error class because:
-//  - It is simpler for users
-//  - It works both on browsers and in Node.js
-//  - It ensures the error message looks good
-const isValidateError = function (error) {
-  return error instanceof Error && error.message.startsWith('must')
-}
-
-const handleInputError = function ({
-  error,
-  input,
-  example,
-  prefix,
-  originalName,
-  hasInput,
-  test,
-}) {
-  error.validation = true
-  const errorA = addInputPrefix(error, prefix, originalName)
-  const errorB = addCurrentInput(errorA, input, hasInput)
-  const errorC = addExampleInput({ error: errorB, example, hasInput, test })
-  return errorC
-}
-
-const handleDefinitionError = function ({
-  error,
-  prefix,
-  originalName,
-  keyword,
-  definition,
-  exampleDefinition,
-  isValidation,
-}) {
-  const errorA = addDefinitionPrefix({
-    error,
-    prefix,
-    originalName,
-    keyword,
-    isValidation,
-  })
-  const errorB = addCurrentDefinition(errorA, definition)
-  const errorC = addExampleDefinition(errorB, exampleDefinition)
-  return errorC
-}
-
-const handleKeywordError = function ({
-  error,
-  input,
-  prefix,
-  originalName,
-  hasInput,
-  keyword,
-  definition,
-}) {
-  const errorA = addKeywordPrefix({ error, prefix, originalName, keyword })
-  const errorB = addCurrentDefinition(errorA, definition)
-  const errorC = addCurrentInput(errorB, input, hasInput)
-  return errorC
-}
-
-const ERROR_HANDLERS = {
-  input: handleInputError,
-  definition: handleDefinitionError,
-  keyword: handleKeywordError,
-}
-
-// The `prefix` is the name of the type of property to show in error
-// message and warnings such as "Option".
-const addInputPrefix = function (error, prefix, originalName) {
-  return wrapError(error, `${prefix} "${originalName}"`)
-}
-
-const addDefinitionPrefix = function ({
-  error,
-  prefix,
-  originalName,
-  keyword,
-  isValidation,
-}) {
-  const suffix = isValidation ? 'definition' : 'must have a valid definition:\n'
-  return wrapError(
-    error,
-    `${prefix} "${originalName}"'s keyword "${keyword}" ${suffix}`,
-  )
-}
-
-const addKeywordPrefix = function ({ error, prefix, originalName, keyword }) {
-  return wrapError(
-    error,
-    `${prefix} "${originalName}"'s keyword "${keyword}" bug:`,
-  )
-}
-
-// Add the current definition as error suffix
-const addCurrentDefinition = function (error, definition) {
-  return definition === undefined
-    ? error
-    : wrapErrorValue(error, 'Current definition', definition)
-}
-
-// Add the example definition as error suffix
-const addExampleDefinition = function (error, exampleDefinition) {
-  return exampleDefinition === undefined
-    ? error
-    : wrapErrorValue(error, 'Example definition', exampleDefinition)
-}
-
-// Add the current input as error suffix
-const addCurrentInput = function (error, input, hasInput) {
-  return hasInput ? wrapErrorValue(error, 'Current input', input) : error
-}
-
-// Add the example input as error suffix
-const addExampleInput = function ({ error, example, hasInput, test }) {
-  return example !== undefined && (hasInput || test !== undefined)
-    ? wrapErrorValue(error, 'Example input', example)
-    : error
-}
-
-const wrapErrorValue = function (error, name, value) {
-  return wrapError(error, `\n${name}:${serializeValue(value)}`)
-}
-
-const serializeValue = function (value) {
-  const valueStr = inspect(value)
-  const separator = valueStr.includes('\n') ? '\n' : ' '
-  return `${separator}${valueStr}`
-}
-/* eslint-enable max-lines */
