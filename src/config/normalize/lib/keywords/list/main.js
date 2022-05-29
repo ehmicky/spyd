@@ -17,7 +17,7 @@ import validate from './validate.js'
 // eslint-disable-next-line import/max-dependencies
 import warn from './warn.js'
 
-export const KEYWORDS = [
+export const BUILTIN_KEYWORDS = [
   context,
   parent,
   prefix,
