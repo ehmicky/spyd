@@ -84,12 +84,15 @@ const applyKeyword = async function ({
     name: keyword,
     aliases,
     test,
+    testSync,
     hasInput = false,
     undefinedInput = false,
     undefinedDefinition = false,
     exampleDefinition,
     normalize,
+    normalizeSync,
     main,
+    mainSync,
   },
   state,
   state: { input, info },
@@ -104,6 +107,7 @@ const applyKeyword = async function ({
       input,
       undefinedInput,
       test,
+      testSync,
       info,
       keyword,
     })
@@ -129,12 +133,14 @@ const applyKeyword = async function ({
   const normalizedDefinition = await normalizeDefinition({
     definition: definitionA,
     normalize,
+    normalizeSync,
     info,
     keyword,
     exampleDefinition,
   })
   const returnValue = await callMain({
     main,
+    mainSync,
     normalizedDefinition,
     definition: definitionA,
     input,

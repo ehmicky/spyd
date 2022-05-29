@@ -5,7 +5,7 @@ import { isNotJunk } from 'junk'
 
 import { validateDefinedString, normalizeBoolean } from '../normalize/common.js'
 
-const main = async function (definition, input, { cwd }) {
+const mainAsync = async function (definition, input, { cwd }) {
   if (!definition) {
     return
   }
@@ -37,5 +37,5 @@ export default {
   hasInput: true,
   exampleDefinition: true,
   normalize: normalizeBoolean,
-  main,
+  mainAsync,
 }

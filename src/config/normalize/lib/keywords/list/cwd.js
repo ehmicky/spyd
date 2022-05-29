@@ -2,7 +2,7 @@ import { stat } from 'fs/promises'
 import { resolve } from 'path'
 import { cwd as getCwd } from 'process'
 
-const normalize = async function (definition) {
+const normalizeAsync = async function (definition) {
   await validateCwd(definition)
   return resolve(definition)
 }
@@ -39,6 +39,6 @@ export default {
   name: 'cwd',
   undefinedInput: true,
   exampleDefinition: getCwd(),
-  normalize,
+  normalizeAsync,
   main,
 }

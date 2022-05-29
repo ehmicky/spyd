@@ -7,7 +7,7 @@ import { fileExists, validateExists } from './exist.js'
 import { normalize, EXAMPLE_KEYWORDS } from './normalize.js'
 import { validateType } from './type.js'
 
-const main = async function (keywords, input, { cwd }) {
+const mainAsync = async function (keywords, input, { cwd }) {
   validateDefinedString(input)
   const inputA = resolve(cwd, input)
   await validateFile(inputA, keywords)
@@ -38,5 +38,5 @@ export default {
   hasInput: true,
   exampleDefinition: EXAMPLE_KEYWORDS,
   normalize,
-  main,
+  mainAsync,
 }

@@ -53,7 +53,14 @@ const validateFunctions = function (keyword) {
   })
 }
 
-const FUNCTION_PROPS = ['test', 'normalize', 'main']
+const FUNCTION_PROPS = [
+  'test',
+  'testAsync',
+  'normalize',
+  'normalizeAsync',
+  'main',
+  'mainAsync',
+]
 
 const validateBooleans = function (keyword) {
   BOOLEAN_PROPS.forEach((propName) => {

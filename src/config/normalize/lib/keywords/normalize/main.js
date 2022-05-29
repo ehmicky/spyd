@@ -5,11 +5,14 @@ import moize from 'moize'
 import { DefinitionError } from '../../error.js'
 import { BUILTIN_KEYWORDS } from '../list/main.js'
 
+import { normalizeAsyncMethods } from './async.js'
 import { validateKeywords } from './validate.js'
 
 // Normalize and validate `options.keywords`
-export const normalizeKeywords = function (keywords) {
-  return addCustomKeywords(keywords).map(normalizeKeyword)
+export const normalizeKeywords = function (keywords, sync) {
+  return addCustomKeywords(keywords).map((keyword) =>
+    normalizeKeyword(keyword, sync),
+  )
 }
 
 const addCustomKeywords = function (keywords) {
@@ -27,11 +30,12 @@ const addCustomKeywords = function (keywords) {
   return [...BUILTIN_KEYWORDS, ...keywords]
 }
 
-const normalizeKeyword = function (keyword) {
+const normalizeKeyword = function (keyword, sync) {
+  const keywordA = normalizeAsyncMethods(keyword, sync)
   return {
     ...DEFAULT_VALUES,
-    ...keyword,
-    normalize: memoizeNormalize(keyword.normalize),
+    ...keywordA,
+    normalize: memoizeNormalize(keywordA),
   }
 }
 
@@ -43,8 +47,10 @@ const DEFAULT_VALUES = {
 
 // `keyword.normalize()` must be a pure function, because it is memoized for
 // performance reasons.
-const memoizeNormalize = function (normalize) {
-  return normalize === undefined ? normalize : moize(normalize, MOIZE_OPTS)
+const memoizeNormalize = function ({ normalize, normalizeSync }) {
+  return normalize === undefined
+    ? normalize
+    : moize(normalize, { ...MOIZE_OPTS, isPromise: !normalizeSync })
 }
 
 const MOIZE_OPTS = { isSerialized: true, maxSize: 1 }

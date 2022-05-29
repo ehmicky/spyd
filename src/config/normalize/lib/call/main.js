@@ -6,14 +6,20 @@ import { handleError } from './error.js'
 //  - This is because `test()` is called before definition function, which might
 //    return `undefined`, i.e. might skip the keyword
 //  - Inputs must be validated in `main()` instead
-export const callTest = async function ({ test, input, info, keyword }) {
+export const callTest = async function ({
+  test,
+  testSync,
+  input,
+  info,
+  keyword,
+}) {
   return await callFunc({
     func: test,
     input,
     info,
     hasInput: true,
     keyword,
-    sync: false,
+    sync: testSync,
     errorType: 'keyword',
     bugType: 'keyword',
   })
@@ -51,19 +57,19 @@ export const callDefinition = async function ({
 // Other exceptions are considered keyword bugs.
 export const callNormalize = async function ({
   normalize,
+  normalizeSync,
   definition,
   info,
   keyword,
   exampleDefinition,
 }) {
-  const func = () => normalize(definition)
   return await callFunc({
-    func,
+    func: () => normalize(definition),
     info,
     keyword,
     definition,
     exampleDefinition,
-    sync: false,
+    sync: normalizeSync,
     hasInput: false,
     errorType: 'definition',
     bugType: 'keyword',
@@ -75,6 +81,7 @@ export const callNormalize = async function ({
 // Other exceptions are considered keyword bugs.
 export const callMain = async function ({
   main,
+  mainSync,
   normalizedDefinition,
   definition,
   input,
@@ -83,16 +90,15 @@ export const callMain = async function ({
   test,
   keyword,
 }) {
-  const func = main.bind(undefined, normalizedDefinition)
   return await callFunc({
-    func,
+    func: main.bind(undefined, normalizedDefinition),
     input,
     info,
     hasInput,
     test,
     keyword,
     definition,
-    sync: false,
+    sync: mainSync,
     errorType: 'input',
     bugType: 'keyword',
   })

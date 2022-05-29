@@ -50,6 +50,7 @@ export const callDefinitionFunc = async function ({
 export const normalizeDefinition = async function ({
   definition,
   normalize,
+  normalizeSync,
   info,
   keyword,
   exampleDefinition,
@@ -58,6 +59,7 @@ export const normalizeDefinition = async function ({
     ? definition
     : await callNormalize({
         normalize,
+        normalizeSync,
         definition,
         info,
         keyword,
