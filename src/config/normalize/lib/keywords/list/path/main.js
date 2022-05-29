@@ -3,8 +3,8 @@ import { resolve } from 'path'
 import { validateDefinedString } from '../../../type.js'
 
 import { validateAccess } from './access.js'
-import { normalize } from './normalize.js'
 import { fileExists, validateExists } from './exist.js'
+import { normalize } from './normalize.js'
 import { validateType } from './type.js'
 
 const main = async function (keywords, input, { cwd }) {

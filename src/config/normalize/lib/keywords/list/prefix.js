@@ -1,10 +1,4 @@
-const normalize = function (definition) {
-  if (typeof definition !== 'string') {
-    throw new TypeError('Definition must be a string.')
-  }
-
-  return definition.trim()
-}
+import { normalizeString } from '../normalize/common.js'
 
 const main = function (definition) {
   return { info: { prefix: definition } }
@@ -14,6 +8,6 @@ const main = function (definition) {
 export default {
   name: 'prefix',
   undefinedInput: true,
-  normalize,
+  normalize: normalizeString,
   main,
 }

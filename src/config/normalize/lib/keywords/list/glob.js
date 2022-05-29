@@ -4,14 +4,7 @@ import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
 import { validateDefinedString } from '../../type.js'
-
-const normalize = function (definition) {
-  if (typeof definition !== 'boolean') {
-    throw new TypeError('Definition must be a boolean.')
-  }
-
-  return definition
-}
+import { normalizeBoolean } from '../normalize/common.js'
 
 const main = async function (definition, input, { cwd }) {
   if (!definition) {
@@ -43,6 +36,6 @@ const main = async function (definition, input, { cwd }) {
 export default {
   name: 'glob',
   hasInput: true,
-  normalize,
+  normalize: normalizeBoolean,
   main,
 }

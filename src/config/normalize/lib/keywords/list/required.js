@@ -1,13 +1,7 @@
+import { normalizeBoolean } from '../normalize/common.js'
+
 const test = function (input) {
   return input === undefined
-}
-
-const normalize = function (definition) {
-  if (typeof definition !== 'boolean') {
-    throw new TypeError('Definition must be a boolean.')
-  }
-
-  return definition
 }
 
 const main = function (definition) {
@@ -23,6 +17,6 @@ export default {
   name: 'required',
   undefinedInput: true,
   test,
-  normalize,
+  normalize: normalizeBoolean,
   main,
 }
