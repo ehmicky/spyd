@@ -6,14 +6,16 @@ import { normalizeQuery } from 'wild-wild-parser'
 import { wrapError } from '../../../../error/wrap.js'
 import { DefinitionError } from '../error.js'
 
+import { normalizeParallelRules } from './parallel.js'
 import { validateRuleProps } from './validate.js'
 
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the
 // path syntax.
 export const normalizeRules = function ({ rules, all, ruleProps, sync }) {
-  validateRules(rules)
-  return rules.map((rule) => normalizeRule({ rule, all, ruleProps, sync }))
+  const rulesA = normalizeParallelRules(rules)
+  validateRules(rulesA)
+  return rulesA.map((rule) => normalizeRule({ rule, all, ruleProps, sync }))
 }
 
 const validateRules = function (rules) {
