@@ -6,7 +6,7 @@ import { applyKeywords } from './keywords/main.js'
 // Apply a rule on a specific property
 export const applyRule = async function ({
   rule,
-  rule: { pick, condition },
+  rule: { pick },
   input,
   config,
   moves,
@@ -18,10 +18,6 @@ export const applyRule = async function ({
     return { config: configA, warnings, moves }
   }
 
-  if (await againstCondition(input, condition, opts)) {
-    return { config, warnings, moves }
-  }
-
   return await applyKeywords({ rule, input, config, moves, warnings, opts })
 }
 
@@ -31,12 +27,4 @@ export const applyRule = async function ({
 // not all.
 const againstPick = async function (input, pick, opts) {
   return pick !== undefined && !(await callInputFunc(pick, input, opts))
-}
-
-// Apply `condition[(input, opts)]` which skips the current rule if `false`
-// is returned.
-const againstCondition = async function (input, condition, opts) {
-  return (
-    condition !== undefined && !(await callInputFunc(condition, input, opts))
-  )
 }
