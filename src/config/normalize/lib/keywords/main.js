@@ -71,7 +71,7 @@ const applyKeyword = async function ({
 }) {
   const definition = rule[name]
 
-  if (shouldSkipKeyword(definition, input, undefinedDefinition)) {
+  if (shouldSkipKeyword(definition, input, undefinedInput)) {
     return state
   }
 
