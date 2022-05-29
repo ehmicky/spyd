@@ -21,15 +21,15 @@ import { logWarnings } from './warn.js'
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
 export const normalizeInputs = async function (inputs, rules, opts) {
-  const { soft, all } = normalizeOpts(opts)
+  const { soft, all, keywords } = normalizeOpts(opts)
   const rulesA = normalizeRules(rules, all)
 
   try {
-    const { inputs: inputsA, warnings } = await pReduce(rulesA, applyRuleDeep, {
-      inputs,
-      moves: [],
-      warnings: [],
-    })
+    const { inputs: inputsA, warnings } = await pReduce(
+      rulesA,
+      (memo, rule) => applyRuleDeep(memo, rule, keywords),
+      { inputs, moves: [], warnings: [] },
+    )
     const inputsB = cleanObject(inputsA)
     logWarnings(warnings, soft)
     return { inputs: inputsB, warnings }
@@ -39,7 +39,11 @@ export const normalizeInputs = async function (inputs, rules, opts) {
   }
 }
 
-const applyRuleDeep = async function ({ inputs, moves, warnings }, rule) {
+const applyRuleDeep = async function (
+  { inputs, moves, warnings },
+  rule,
+  keywords,
+) {
   const entries = list(inputs, rule.name, {
     childFirst: true,
     sort: true,
@@ -49,7 +53,7 @@ const applyRuleDeep = async function ({ inputs, moves, warnings }, rule) {
   return await pReduce(
     entries,
     (memo, { value, path }) =>
-      applyEntryRule(memo, { input: value, path, rule }),
+      applyEntryRule(memo, { input: value, path, rule, keywords }),
     { inputs, moves, warnings },
   )
 }
@@ -57,10 +61,18 @@ const applyRuleDeep = async function ({ inputs, moves, warnings }, rule) {
 // Apply rule for a specific entry
 const applyEntryRule = async function (
   { inputs, moves, warnings },
-  { input, path, rule },
+  { input, path, rule, keywords },
 ) {
   const info = getInfo(path, inputs, moves)
-  return await applyKeywords({ rule, input, inputs, moves, warnings, info })
+  return await applyKeywords({
+    rule,
+    input,
+    inputs,
+    moves,
+    warnings,
+    info,
+    keywords,
+  })
 }
 
 // When in `sort` mode, user errors are returned instead of being thrown.

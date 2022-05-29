@@ -5,7 +5,6 @@ import {
   callDefinition,
   normalizeDefinition,
 } from './definition.js'
-import { KEYWORDS } from './list/main.js'
 import { applyReturnValue } from './return.js'
 import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 
@@ -57,12 +56,13 @@ export const applyKeywords = async function ({
   moves,
   warnings,
   info,
+  keywords,
 }) {
   // eslint-disable-next-line fp/no-let
   let state = { input, inputs, moves, warnings, info }
 
   // eslint-disable-next-line fp/no-loops
-  for (const keyword of KEYWORDS) {
+  for (const keyword of keywords) {
     // eslint-disable-next-line fp/no-mutation, no-await-in-loop
     state = await applyKeyword({ keyword, state, rule })
 

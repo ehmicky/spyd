@@ -3,6 +3,8 @@ import { inspect } from 'util'
 import filterObj from 'filter-obj'
 import isPlainObj from 'is-plain-obj'
 
+import { KEYWORDS } from './keywords/list/main.js'
+
 // Normalize `options`
 export const normalizeOpts = function (options = {}) {
   if (!isPlainObj(options)) {
@@ -12,7 +14,7 @@ export const normalizeOpts = function (options = {}) {
   const { soft = false, all } = options
   validateSoft(soft)
   const allA = normalizeAll(all)
-  return { soft, all: allA }
+  return { soft, all: allA, keywords: KEYWORDS }
 }
 
 const validateSoft = function (soft) {
