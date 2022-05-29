@@ -15,7 +15,7 @@ export const validateAndModify = async function ({
 }) {
   if (value === undefined) {
     await validateRequired(required, opts)
-    return { value }
+    return { config, warnings, moves }
   }
 
   const {
