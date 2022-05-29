@@ -9,6 +9,7 @@ const main = function (definition) {
 export default {
   name: 'warn',
   hasInput: true,
+  exampleDefinition: 'is deprecated. Please use "otherProperty" instead.',
   normalize: normalizeString,
   main,
 }
