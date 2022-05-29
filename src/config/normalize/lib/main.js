@@ -3,6 +3,7 @@ import { list } from 'wild-wild-path'
 
 import { cleanObject } from '../../../utils/clean.js'
 
+import { InputError } from './error.js'
 import { getInfo } from './info.js'
 import { applyKeywords } from './keywords/main.js'
 import { normalizeRules } from './normalize.js'
@@ -78,7 +79,7 @@ const applyEntryRule = async function (
 // When in `sort` mode, user errors are returned instead of being thrown.
 // System errors are always propagated.
 const handleError = function (error, soft) {
-  if (!soft || !error.validation) {
+  if (!soft || !(error instanceof InputError)) {
     throw error
   }
 }

@@ -1,3 +1,7 @@
+import { normalizeError } from '../../../../error/utils.js'
+import { wrapError } from '../../../../error/wrap.js'
+import { InputError, DefinitionError, KeywordError } from '../error.js'
+
 import {
   addInputPrefix,
   addDefinitionPrefix,
@@ -10,25 +14,24 @@ import {
   addExampleInput,
 } from './suffix.js'
 
-// Handle errors in `keyword.test|normalize|main()` or in keyword functions
-export const handleError = function ({ error, errorType, bugType, ...params }) {
-  const isValidation = isValidateError(error)
-  const type = isValidation ? errorType : bugType
-  return ERROR_HANDLERS[type]({ ...params, error, isValidation })
-}
-
-// Consumers can distinguish users errors from system bugs by checking
-// the `error.validation` boolean property.
-// User errors are distinguished by having error message starting with "must".
+// Handle errors in `keyword.test|normalize|main()` or in keyword functions.
 // We fail on the first error, as opposed to aggregating all errors
 //  - Otherwise, a failed property might be used by another property, which
 //    would also appear as failed, even if it has no issues
+export const handleError = function ({ error, errorType, bugType, ...params }) {
+  const errorA = normalizeError(error)
+  const isValidation = isValidateError(errorA)
+  const type = isValidation ? errorType : bugType
+  return ERROR_HANDLERS[type]({ ...params, error: errorA, isValidation })
+}
+
+// We distinguish intentional errors from bugs by requiring messages to start
+// with "must".
 // We detect this using the error message instead of the error class because:
 //  - It is simpler for users
-//  - It works both on browsers and in Node.js
 //  - It ensures the error message looks good
 const isValidateError = function (error) {
-  return error instanceof Error && error.message.startsWith('must')
+  return error.message.startsWith('must')
 }
 
 const handleInputError = function ({
@@ -40,11 +43,10 @@ const handleInputError = function ({
   hasInput,
   test,
 }) {
-  error.validation = true
   const errorA = addInputPrefix(error, prefix, originalName)
   const errorB = addCurrentInput(errorA, input, hasInput)
   const errorC = addExampleInput({ error: errorB, example, hasInput, test })
-  return errorC
+  return wrapError(errorC, '', InputError)
 }
 
 const handleDefinitionError = function ({
@@ -65,7 +67,7 @@ const handleDefinitionError = function ({
   })
   const errorB = addCurrentDefinition(errorA, definition)
   const errorC = addExampleDefinition(errorB, exampleDefinition)
-  return errorC
+  return wrapError(errorC, '', DefinitionError)
 }
 
 const handleKeywordError = function ({
@@ -80,7 +82,7 @@ const handleKeywordError = function ({
   const errorA = addKeywordPrefix({ error, prefix, originalName, keyword })
   const errorB = addCurrentDefinition(errorA, definition)
   const errorC = addCurrentInput(errorB, input, hasInput)
-  return errorC
+  return wrapError(errorC, '', KeywordError)
 }
 
 const ERROR_HANDLERS = {
