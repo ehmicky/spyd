@@ -1,4 +1,4 @@
-import { createErrorType, getErrorTypeProps } from './utils.js'
+import { createErrorType } from './utils.js'
 
 // User aborting the benchmark
 export const StopError = createErrorType('StopError')
@@ -15,7 +15,10 @@ export const LimitError = createErrorType('LimitError')
 
 // Retrieve error type-specific behavior
 export const getErrorProps = function (error) {
-  return getErrorTypeProps(error.name, ERROR_PROPS, DEFAULT_ERROR_NAME)
+  const { name } = error
+  const nameA =
+    typeof name === 'string' && name in ERROR_PROPS ? name : DEFAULT_ERROR_NAME
+  return ERROR_PROPS[nameA]
 }
 
 const ERROR_PROPS = {

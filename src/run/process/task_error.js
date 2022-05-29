@@ -1,7 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
 import { PluginError, UserError, UserCodeError } from '../../error/main.js'
-import { getErrorTypeProps } from '../../error/utils.js'
 
 // When a task throws during any stage, we propagate the error and fail the
 // benchmark. Tasks that throw are unstable and might yield invalid benchmarks,
@@ -22,11 +21,9 @@ export const throwOnTaskError = function ({ error }) {
 }
 
 const applyErrorProps = function (name, message) {
-  const { ErrorType, prefix } = getErrorTypeProps(
-    name,
-    ERROR_PROPS,
-    DEFAULT_ERROR_NAME,
-  )
+  const nameA =
+    typeof name === 'string' && name in ERROR_PROPS ? name : DEFAULT_ERROR_NAME
+  const { ErrorType, prefix } = ERROR_PROPS[nameA]
   return new ErrorType(`${prefix}: ${message}`)
 }
 
