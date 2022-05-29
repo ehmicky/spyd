@@ -3,7 +3,6 @@ import { serializePath } from 'wild-wild-parser'
 import { wrapError } from '../../../error/wrap.js'
 
 import { callNoInputFunc } from './call.js'
-import { computeCwd, DEFAULT_CWD } from './cwd.js'
 import { applyMoves } from './move.js'
 import { computeParent } from './parent.js'
 import { DEFAULT_PREFIX } from './prefix.js'
@@ -15,7 +14,6 @@ export const getInfo = async function ({
   path,
   inputs,
   context,
-  cwd,
   prefix,
   parent,
   rule: { example },
@@ -37,9 +35,12 @@ export const getInfo = async function ({
   const infoB = await computeParent(parent, infoA)
   const infoC = await computePrefix(prefix, infoB)
   const infoD = await computeExample(example, infoC)
-  const infoE = await computeCwd(cwd, infoD)
-  return infoE
+  return infoD
 }
+
+// The default value is `.`, not `process.cwd()`, to ensure it is evaluated
+// at runtime, not load time.
+const DEFAULT_CWD = '.'
 
 const computeContext = async function (context, info) {
   if (context === undefined) {

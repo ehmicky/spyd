@@ -89,7 +89,7 @@ const normalizeSharedConfig = async function ({
     context: { ...context, plugin },
     prefix,
     parent,
-    cwd,
+    all: { cwd },
     UserErrorType: ConsumerError,
     SystemErrorType: UserError,
   })
@@ -112,7 +112,7 @@ const normalizeSpecificConfig = async function ({
       context,
       prefix,
       parent,
-      cwd,
+      all: { cwd },
       UserErrorType: ConsumerError,
       SystemErrorType: PluginError,
     },

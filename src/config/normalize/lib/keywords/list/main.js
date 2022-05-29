@@ -1,5 +1,6 @@
 import compute from './compute.js'
 import condition from './condition.js'
+import cwd from './cwd.js'
 import defaultKeyword from './default.js'
 import glob from './glob.js'
 import path from './path/main.js'
@@ -13,6 +14,7 @@ import validate from './validate.js'
 import warn from './warn.js'
 
 export const KEYWORDS = [
+  cwd,
   pick,
   condition,
   compute,

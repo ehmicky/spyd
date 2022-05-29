@@ -16,7 +16,10 @@ import { normalizePluginsConfig } from './plugin/main.js'
 export const getConfig = async function (command, configFlags = {}) {
   const { config, cwd } = await resolveConfig(configFlags)
   const context = { command }
-  const configA = await normalizeConfig(config, RULES, { context, cwd })
+  const configA = await normalizeConfig(config, RULES, {
+    context,
+    all: { cwd },
+  })
   const configB = await normalizePluginsConfig({
     config: configA,
     command,

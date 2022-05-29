@@ -20,14 +20,13 @@ import { logWarnings } from './warn.js'
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
 export const normalizeInputs = async function (inputs, rules, opts) {
-  const { soft, all, context, cwd, prefix, parent } = normalizeOpts(opts)
+  const { soft, all, context, prefix, parent } = normalizeOpts(opts)
   const rulesA = normalizeRules(rules, all)
 
   try {
     const { inputs: inputsA, warnings } = await pReduce(
       rulesA,
-      (memo, rule) =>
-        applyRuleDeep(memo, { rule, context, cwd, prefix, parent }),
+      (memo, rule) => applyRuleDeep(memo, { rule, context, prefix, parent }),
       { inputs, moves: [], warnings: [] },
     )
     const inputsB = cleanObject(inputsA)
@@ -43,16 +42,15 @@ const normalizeOpts = function ({
   soft = false,
   all = {},
   context,
-  cwd,
   prefix,
   parent,
 } = {}) {
-  return { soft, all, context, cwd, prefix, parent }
+  return { soft, all, context, prefix, parent }
 }
 
 const applyRuleDeep = async function (
   { inputs, moves, warnings },
-  { rule, context, cwd, prefix, parent },
+  { rule, context, prefix, parent },
 ) {
   const entries = list(inputs, rule.name, {
     childFirst: true,
@@ -68,7 +66,6 @@ const applyRuleDeep = async function (
         path,
         rule,
         context,
-        cwd,
         prefix,
         parent,
       }),
@@ -79,13 +76,12 @@ const applyRuleDeep = async function (
 // Apply rule for a specific entry
 const applyEntryRule = async function (
   { inputs, moves, warnings },
-  { input, path, rule, context, cwd, prefix, parent },
+  { input, path, rule, context, prefix, parent },
 ) {
   const info = await getInfo({
     path,
     inputs,
     context,
-    cwd,
     prefix,
     parent,
     rule,

@@ -12,9 +12,9 @@ export const normalizeLocation = async function ({
   const locationRules = getLocationRules(locationType)
   return await safeNormalizeConfig(originalLocation, locationRules, {
     context: { locationType, builtins, modulePrefix },
-    cwd,
     prefix,
     parent: locationName,
+    all: { cwd },
     UserErrorType: ConsumerError,
     SystemErrorType: CoreError,
   })

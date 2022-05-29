@@ -9,7 +9,7 @@ export const normalizeConfigProp = async function (configOpt, base) {
   const { config: configPaths } = await normalizeConfig(
     { config: configOpt },
     CONFIG_RULES,
-    { cwd: base },
+    { all: { cwd: base } },
   )
   return configPaths
 }
