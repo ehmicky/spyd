@@ -6,6 +6,7 @@ import { addMove } from '../move.js'
 
 import { setConfig } from './set.js'
 
+// Keywords can move the input by returning a `rename` property
 export const applyRename = function ({
   returnValue: { rename },
   config,

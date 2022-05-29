@@ -1,5 +1,8 @@
 import { setConfig } from './set.js'
 
+// Keywords can transform the input by returning a `value` property
+// We allow transforming to `undefined`, i.e. returning `{ value: undefined }`
+// is different from returning `{}`.
 export const transformInput = function ({
   returnValue,
   input,
@@ -8,8 +11,6 @@ export const transformInput = function ({
     funcOpts: { path },
   },
 }) {
-  // We allow transforming to `undefined`, i.e. returning
-  // `{ input: undefined }` is different from returning `{}`
   if (!('input' in returnValue) || returnValue.input === input) {
     return { input, config }
   }

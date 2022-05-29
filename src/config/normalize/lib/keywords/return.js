@@ -4,6 +4,7 @@ import { applyPath } from './path.js'
 import { applyRename } from './rename.js'
 import { transformInput } from './transform.js'
 
+// Apply a keyword's return value, if any
 export const applyReturnValue = function ({
   returnValue,
   state,
