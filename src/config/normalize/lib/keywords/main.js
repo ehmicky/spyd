@@ -33,10 +33,10 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 //      - `context`
 //      - `cwd`
 // `main()` return value is optional. It is an object with optional properties:
-//  - `value` `{any}`: modifies the input value.
+//  - `input` `{any}`: modifies the input value.
 //     - If `undefined`, the property is deleted
 //  - `info` `{object}`:
-//     - modifies the `info` passed to definitions functions and keyword.main()
+//     - Modifies the `info` passed to definitions functions and keyword.main()
 //     - Merged shallowly
 //     - This can be used for cross-keywords information passing
 //  - `skip` `{boolean}`: if true, next keywords in the current rule are skipped
