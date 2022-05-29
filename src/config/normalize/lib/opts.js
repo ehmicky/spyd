@@ -30,19 +30,16 @@ export const getOpts = async function ({
     originalName,
     originalPath,
     config,
-    context: DEFAULT_CONTEXT,
-    example,
     prefix: DEFAULT_PREFIX,
     cwd: DEFAULT_CWD,
   }
   const optsA = await computeContext(context, opts)
   const optsB = await computeParent(parent, optsA)
   const optsC = await computePrefix(prefix, optsB)
-  const optsD = await computeCwd(cwd, optsC)
-  return optsD
+  const optsD = await computeExample(example, optsC)
+  const optsE = await computeCwd(cwd, optsD)
+  return optsE
 }
-
-const DEFAULT_CONTEXT = {}
 
 const computeContext = async function (context, opts) {
   if (context === undefined) {
@@ -50,7 +47,7 @@ const computeContext = async function (context, opts) {
   }
 
   const contextA = await callNoInputFunc(context, opts)
-  return contextA === undefined ? opts : { ...opts, context }
+  return contextA === undefined ? opts : { ...opts, context: contextA }
 }
 
 const computePrefix = async function (prefix, opts) {
@@ -70,4 +67,14 @@ const addPrefix = async function (prefix, opts) {
 
   const prefixB = String(prefixA).trim()
   return { ...opts, prefix: prefixB }
+}
+
+// Add an example input value as error suffix, as provided by `example[(opts)]`
+const computeExample = async function (example, opts) {
+  if (example === undefined) {
+    return opts
+  }
+
+  const exampleA = await callNoInputFunc(example, opts)
+  return exampleA === undefined ? opts : { ...opts, example: exampleA }
 }

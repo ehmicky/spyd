@@ -30,7 +30,7 @@ const callInputFunc = async function (userFunc, input, opts) {
   } catch (error) {
     const errorA = handleError(error, opts)
     const errorB = addCurrentValue(errorA, input)
-    throw await addExampleValue(errorB, opts)
+    throw addExampleValue(errorB, opts)
   }
 }
 
@@ -43,7 +43,7 @@ const callConstraintFunc = async function (userFunc, opts) {
       : userFunc
   } catch (error) {
     const errorA = handleError(error, opts)
-    throw await addExampleValue(errorA, opts)
+    throw addExampleValue(errorA, opts)
   }
 }
 
@@ -70,18 +70,10 @@ const addCurrentValue = function (error, input) {
     : error
 }
 
-// Add an example input value as error suffix, as provided by `example[(opts)]`
-const addExampleValue = async function (error, opts) {
-  if (opts.example === undefined || !error.validation) {
-    return error
-  }
-
-  try {
-    const exampleValue = await callNoInputFunc(opts.example, opts)
-    return wrapErrorValue(error, 'Example value', exampleValue)
-  } catch (error_) {
-    return wrapError(error_, 'Invalid "example":')
-  }
+const addExampleValue = function (error, { example }) {
+  return error.validation && example !== undefined
+    ? wrapErrorValue(error, 'Example value', example)
+    : error
 }
 
 const wrapErrorValue = function (error, name, value) {
