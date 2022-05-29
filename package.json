@@ -58,7 +58,6 @@
     "json-ptr": "^3.1.0",
     "junk": "^4.0.0",
     "map-obj": "^5.0.1",
-    "memoize-one": "^6.0.0",
     "moize": "^6.1.1",
     "nvexeca": "^8.0.0",
     "omit.js": "^2.0.2",
