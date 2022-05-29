@@ -6,6 +6,7 @@ import { cleanObject } from '../../../utils/clean.js'
 import { getInfo } from './info.js'
 import { applyKeywords } from './keywords/main.js'
 import { normalizeRules } from './normalize.js'
+import { normalizeOpts } from './options.js'
 import { logWarnings } from './warn.js'
 
 // Validate and normalize a library's inputs.
@@ -20,7 +21,7 @@ import { logWarnings } from './warn.js'
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
 export const normalizeInputs = async function (inputs, rules, opts) {
-  const { soft, all } = normalizeOpts(opts)
+  const { soft, all } = normalizeOpts(rules, opts)
   const rulesA = normalizeRules(rules, all)
 
   try {
@@ -36,10 +37,6 @@ export const normalizeInputs = async function (inputs, rules, opts) {
     handleError(error, soft)
     return { error, warnings: [] }
   }
-}
-
-const normalizeOpts = function ({ soft = false, all } = {}) {
-  return { soft, all }
 }
 
 const applyRuleDeep = async function ({ inputs, moves, warnings }, rule) {
