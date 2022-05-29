@@ -3,10 +3,10 @@ import { inspect } from 'util'
 import isPlainObj from 'is-plain-obj'
 import { normalizeQuery } from 'wild-wild-parser'
 
-import { wrapError } from '../../../error/wrap.js'
+import { wrapError } from '../../../../error/wrap.js'
+import { DefinitionError } from '../error.js'
 
-import { DefinitionError } from './error.js'
-import { validateRuleProps } from './rule.js'
+import { validateRuleProps } from './validate.js'
 
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the

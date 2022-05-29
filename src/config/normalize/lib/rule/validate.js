@@ -1,15 +1,6 @@
-import { inspect } from 'util'
+import { DefinitionError } from '../error.js'
 
-import { DefinitionError } from './error.js'
-
-// Retrieve the list of possible rule properties
-export const getRuleProps = function (keywords) {
-  return new Set([...CORE_PROPS, ...keywords.map(getKeywordName)])
-}
-
-const getKeywordName = function ({ name }) {
-  return name
-}
+import { CORE_PROPS_SET, validateRuleKey } from './props.js'
 
 // Validate that a `definitions` object has only allowed properties
 export const validateRuleProps = function ({
@@ -36,27 +27,6 @@ const validateRuleProp = function ({
   validateRuleSync({ ruleProp, message, definitions, sync })
 }
 
-const validateRuleKey = function ({
-  ruleProp,
-  ruleProps,
-  message,
-  definitions,
-}) {
-  if (ruleProps.has(ruleProp)) {
-    return
-  }
-
-  // eslint-disable-next-line fp/no-mutating-methods
-  const rulePropsA = [...ruleProps].sort().join(', ')
-  throw new DefinitionError(
-    `${message}'s "${ruleProp}" property must be valid: ${inspect(definitions)}
-It must be one of the following values instead:
-${rulePropsA}
-Did you misspell "${ruleProp}"?
-If "${ruleProp}" is not misspelled, its keyword must be passed to the "keywords" option.`,
-  )
-}
-
 // If in sync mode, definition functions should not be async.
 // However, we cannot know this for sure since:
 //  - Functions might return `Promise` instead of using `async`/`await`
@@ -81,7 +51,3 @@ const isAsyncFunction = function (definition) {
     definition.constructor.name === 'AsyncFunction'
   )
 }
-
-// Rule properties that are not keywords
-const CORE_PROPS = ['name']
-export const CORE_PROPS_SET = new Set(CORE_PROPS)

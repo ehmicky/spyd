@@ -7,8 +7,8 @@ import { cleanObject } from '../../../utils/clean.js'
 import { InputError, ErrorTypes } from './error.js'
 import { getInfo } from './info.js'
 import { applyKeywords } from './keywords/main.js'
-import { normalizeRules } from './normalize.js'
 import { normalizeOpts } from './options.js'
+import { normalizeRules } from './rule/main.js'
 import { logWarnings } from './warn.js'
 
 // Validate and normalize a library's inputs.

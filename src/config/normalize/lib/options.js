@@ -5,7 +5,8 @@ import isPlainObj from 'is-plain-obj'
 
 import { DefinitionError } from './error.js'
 import { normalizeKeywords } from './keywords/normalize/main.js'
-import { getRuleProps, validateRuleProps } from './rule.js'
+import { getRuleProps } from './rule/props.js'
+import { validateRuleProps } from './rule/validate.js'
 
 // Normalize `options`
 export const normalizeOpts = function (options = {}) {
