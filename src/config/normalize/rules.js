@@ -205,8 +205,8 @@ const reporter = {
   name: 'reporter',
   pick: amongCommands(['remove', 'run', 'show']),
   default: DEFAULT_REPORTERS,
-  transform(value, { config }) {
-    return config.force ? [] : value
+  transform(value, { inputs: { force: forceProp } }) {
+    return forceProp ? [] : value
   },
 }
 

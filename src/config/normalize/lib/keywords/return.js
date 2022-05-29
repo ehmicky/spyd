@@ -8,27 +8,27 @@ import { transformInput } from './transform.js'
 export const applyReturnValue = function ({
   returnValue,
   state,
-  state: { input, config, moves, warnings, opts },
+  state: { input, inputs, moves, warnings, opts },
 }) {
   if (returnValue === undefined) {
     return state
   }
 
   const warningsA = addWarning(returnValue, warnings, opts)
-  const { input: inputA, config: configA } = transformInput({
+  const { input: inputA, inputs: inputsA } = transformInput({
     returnValue,
     input,
-    config,
+    inputs,
     opts,
   })
   const movesA = applyPath(returnValue, moves, opts)
   const {
-    config: configB,
+    inputs: inputsB,
     moves: movesB,
     opts: optsA,
   } = applyRename({
     returnValue,
-    config: configA,
+    inputs: inputsA,
     moves: movesA,
     input: inputA,
     opts,
@@ -36,7 +36,7 @@ export const applyReturnValue = function ({
   const optsB = applyOptions(returnValue, optsA)
   return {
     input: inputA,
-    config: configB,
+    inputs: inputsB,
     moves: movesB,
     warnings: warningsA,
     opts: optsB,
@@ -53,6 +53,6 @@ const applyOptions = function (returnValue, opts) {
   }
 
   // eslint-disable-next-line no-unused-vars
-  const { name, path, originalName, originalPath, config, ...newOpts } = opts
+  const { name, path, originalName, originalPath, inputs, ...newOpts } = opts
   return { ...opts, ...newOpts }
 }

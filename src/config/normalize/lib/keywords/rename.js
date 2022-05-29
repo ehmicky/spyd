@@ -4,33 +4,33 @@ import { remove } from 'wild-wild-path'
 import { wrapError } from '../../../../error/wrap.js'
 import { addMove } from '../move.js'
 
-import { setConfig } from './set.js'
+import { setInputs } from './set.js'
 
 // Keywords can move the input by returning a `rename` property
 export const applyRename = function ({
   returnValue: { rename },
-  config,
+  inputs,
   moves,
   input,
   opts,
   opts: { name: oldName, path: oldPath },
 }) {
   if (rename === undefined) {
-    return { config, moves, opts }
+    return { inputs, moves, opts }
   }
 
   const newPath = safeNormalizePath(rename)
   const newName = serializePath(newPath)
 
   if (newName === oldName) {
-    return { config, moves, opts }
+    return { inputs, moves, opts }
   }
 
-  const configA = remove(config, oldPath)
-  const configB = setConfig(configA, newPath, input)
+  const inputsA = remove(inputs, oldPath)
+  const inputsB = setInputs(inputsA, newPath, input)
   const movesA = addMove(moves, oldPath, newPath)
   return {
-    config: configB,
+    inputs: inputsB,
     moves: movesA,
     opts: { ...opts, path: newPath, name: newName },
   }

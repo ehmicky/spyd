@@ -13,7 +13,7 @@ import { DEFAULT_PREFIX } from './prefix.js'
 //  - Keyword `main()`
 export const getOpts = async function ({
   path,
-  config,
+  inputs,
   context,
   cwd,
   prefix,
@@ -29,7 +29,7 @@ export const getOpts = async function ({
     path,
     originalName,
     originalPath,
-    config,
+    inputs,
     prefix: DEFAULT_PREFIX,
     cwd: DEFAULT_CWD,
   }

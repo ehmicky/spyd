@@ -9,8 +9,7 @@ import { callNoInputFunc } from './call.js'
 //  - If a property was moved, they show the previous name
 // They are intended for error messages.
 // This is in contrast to `name|path` which are the main properties, intended to
-// work with everything else, including `rule.name`, `rule.rename` and
-// `opts.config`.
+// work with everything else, including `opts.inputs`.
 export const computeParent = async function (parent, opts) {
   if (parent === undefined) {
     return opts

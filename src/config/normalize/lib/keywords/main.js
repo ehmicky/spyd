@@ -22,7 +22,7 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 //  - `input`: only if `keyword.hasInput` is `true`
 //  - `opts`:
 //      - `name`, `path`, `originalName`, `originalPath`
-//      - `config`
+//      - `inputs`
 //      - `context`
 //      - `cwd`
 // `main()` return value is optional. It is an object with optional properties:
@@ -46,13 +46,13 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 export const applyKeywords = async function ({
   rule,
   input,
-  config,
+  inputs,
   moves,
   warnings,
   opts,
 }) {
   // eslint-disable-next-line fp/no-let
-  let state = { input, config, moves, warnings, opts }
+  let state = { input, inputs, moves, warnings, opts }
 
   // eslint-disable-next-line fp/no-loops
   for (const keyword of KEYWORDS) {
@@ -65,7 +65,7 @@ export const applyKeywords = async function ({
     }
   }
 
-  return { config: state.config, warnings: state.warnings, moves: state.moves }
+  return { inputs: state.inputs, warnings: state.warnings, moves: state.moves }
 }
 
 const applyKeyword = async function ({

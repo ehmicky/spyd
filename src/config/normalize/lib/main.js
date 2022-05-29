@@ -8,10 +8,10 @@ import { normalizeRules } from './normalize.js'
 import { getOpts } from './opts.js'
 import { logWarnings } from './warn.js'
 
-// Normalize configuration shape and do custom validation.
+// Validate and normalize a library's inputs.
 // An array of rule objects is passed.
-// Each rule object applies validation and normalization on a specific
-// configuration property.
+// Each rule object applies validation and normalization on a specific inputs
+// property.
 // Users specify the operations order using the array order, as opposed to the
 // library guessing the best order as this is simpler and more flexible. This:
 //  - Allows going from child to parent or vice versa
@@ -19,23 +19,23 @@ import { logWarnings } from './warn.js'
 //  - Removes the possibility of cycles
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
-export const normalizeConfigProps = async function (
-  config,
+export const normalizeInputs = async function (
+  inputs,
   rules,
   { soft = false, all = {}, context, cwd, prefix, parent } = {},
 ) {
   const rulesA = normalizeRules(rules, all)
 
   try {
-    const { config: configA, warnings } = await pReduce(
+    const { inputs: inputsA, warnings } = await pReduce(
       rulesA,
       (memo, rule) =>
         applyRuleDeep(memo, { rule, context, cwd, prefix, parent }),
-      { config, moves: [], warnings: [] },
+      { inputs, moves: [], warnings: [] },
     )
-    const configB = cleanObject(configA)
+    const inputsB = cleanObject(inputsA)
     logWarnings(warnings, soft)
-    return { value: configB, warnings }
+    return { inputs: inputsB, warnings }
   } catch (error) {
     handleError(error, soft)
     return { error, warnings: [] }
@@ -43,10 +43,10 @@ export const normalizeConfigProps = async function (
 }
 
 const applyRuleDeep = async function (
-  { config, moves, warnings },
+  { inputs, moves, warnings },
   { rule, context, cwd, prefix, parent },
 ) {
-  const entries = list(config, rule.name, {
+  const entries = list(inputs, rule.name, {
     childFirst: true,
     sort: true,
     missing: true,
@@ -64,18 +64,18 @@ const applyRuleDeep = async function (
         prefix,
         parent,
       }),
-    { config, moves, warnings },
+    { inputs, moves, warnings },
   )
 }
 
 // Apply rule for a specific entry
 const applyEntryRule = async function (
-  { config, moves, warnings },
+  { inputs, moves, warnings },
   { input, path, rule, context, cwd, prefix, parent },
 ) {
   const opts = await getOpts({
     path,
-    config,
+    inputs,
     context,
     cwd,
     prefix,
@@ -83,7 +83,7 @@ const applyEntryRule = async function (
     rule,
     moves,
   })
-  return await applyKeywords({ rule, input, config, moves, warnings, opts })
+  return await applyKeywords({ rule, input, inputs, moves, warnings, opts })
 }
 
 // When in `sort` mode, user errors are returned instead of being thrown.

@@ -54,16 +54,16 @@ const outputFormat = {
 const tty = {
   name: 'tty',
   pick,
-  compute({ config }) {
-    return config.output === 'stdout' && isTtyOutput()
+  compute({ inputs }) {
+    return inputs.output === 'stdout' && isTtyOutput()
   },
 }
 
 const colors = {
   name: 'colors',
   pick,
-  default({ config }) {
-    return config.tty
+  default({ inputs }) {
+    return inputs.tty
   },
   schema: { type: 'boolean' },
 }
@@ -71,8 +71,8 @@ const colors = {
 const quiet = {
   name: 'quiet',
   pick: amongCommands(['run']),
-  default({ config }) {
-    return !config.tty
+  default({ inputs }) {
+    return !inputs.tty
   },
   schema: { type: 'boolean' },
 }
@@ -80,8 +80,8 @@ const quiet = {
 const showDiff = {
   name: 'showDiff',
   pick,
-  default({ config }) {
-    return config.tty
+  default({ inputs }) {
+    return inputs.tty
   },
   schema: { type: 'boolean' },
 }

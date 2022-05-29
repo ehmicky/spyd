@@ -1,5 +1,5 @@
 import { wrapError } from '../../../error/wrap.js'
-import { normalizeConfigProps } from '../../normalize/lib/main.js'
+import { normalizeInputs } from '../../normalize/lib/main.js'
 
 // Call `normalizeConfig` while assigning the right error types
 export const safeNormalizeConfig = async function (
@@ -7,13 +7,13 @@ export const safeNormalizeConfig = async function (
   rules,
   { UserErrorType, ...opts },
 ) {
-  const { value, error } = await callNormalizeConfig(config, rules, opts)
+  const { inputs, error } = await callNormalizeConfig(config, rules, opts)
 
   if (error) {
     throw wrapError(error, '', UserErrorType)
   }
 
-  return value
+  return inputs
 }
 
 const callNormalizeConfig = async function (
@@ -22,7 +22,7 @@ const callNormalizeConfig = async function (
   { SystemErrorType, ...opts },
 ) {
   try {
-    return await normalizeConfigProps(config, rules, { ...opts, soft: true })
+    return await normalizeInputs(config, rules, { ...opts, soft: true })
   } catch (error) {
     throw wrapError(error, '', SystemErrorType)
   }
