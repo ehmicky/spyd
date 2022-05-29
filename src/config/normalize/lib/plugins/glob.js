@@ -7,7 +7,7 @@ import { validateDefinedString } from '../type.js'
 
 export const name = 'glob'
 
-export const input = true
+export const hasInput = true
 
 // Apply `glob[(value, opts)]` which resolves the value as a globbing pattern
 // when `true` (default: `false`).

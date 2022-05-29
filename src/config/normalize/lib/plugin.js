@@ -37,7 +37,7 @@ export const performPlugins = async function ({
 
 /* eslint-disable complexity, max-statements, max-lines-per-function */
 const applyPlugin = async function ({
-  plugin: { name, main, defined = true, input = false },
+  plugin: { name, main, defined = true, hasInput = false },
   state,
   state: { value, config, moves, opts, warnings },
   rule,
@@ -54,7 +54,7 @@ const applyPlugin = async function ({
 
   const definitionA =
     typeof definition === 'function'
-      ? await callFunc({ func: definition, value, opts, input, defined })
+      ? await callFunc({ func: definition, value, opts, hasInput, defined })
       : definition
 
   if (definitionA === undefined) {
@@ -65,7 +65,7 @@ const applyPlugin = async function ({
     func: main.bind(undefined, definitionA),
     value,
     opts,
-    input,
+    hasInput,
     defined,
   })
 
@@ -104,8 +104,8 @@ const applyPlugin = async function ({
 /* eslint-enable complexity, max-statements, max-lines-per-function */
 
 // TODO: call logic should not check `typeof function` anymore
-const callFunc = async function ({ func, value, opts, input, defined }) {
-  if (input) {
+const callFunc = async function ({ func, value, opts, hasInput, defined }) {
+  if (hasInput) {
     return await callValueFunc(func, value, opts)
   }
 

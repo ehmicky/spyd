@@ -8,7 +8,7 @@ import { wrapError } from '../../../../error/wrap.js'
 
 export const name = 'schema'
 
-export const input = true
+export const hasInput = true
 
 // Apply `schema[(value, opts)]` which throws on JSON schema validation errors
 export const main = async function (definition, value) {

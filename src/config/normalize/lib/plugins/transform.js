@@ -1,6 +1,6 @@
 export const name = 'transform'
 
-export const input = true
+export const hasInput = true
 
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.

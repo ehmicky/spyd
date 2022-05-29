@@ -9,7 +9,7 @@ import { validateType } from './type.js'
 
 export const name = 'path'
 
-export const input = true
+export const hasInput = true
 
 // Apply `path[(value, opts)]` which resolves the value as an absolute file
 // path.
