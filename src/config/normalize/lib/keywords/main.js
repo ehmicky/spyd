@@ -15,8 +15,9 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 //  - `name` `{string}` (required): property name in rules
 //  - `aliases` `{string[]}`: alias property names
 //  - `main` `function`: main function
-//  - `normalize` `(definition) => definition`: normalize and validate the
-//    `definition`
+//  - `normalize` `(definition) => definition`:
+//      - Normalize and validate the `definition`
+//      - Must be a pure function, because it is memoized
 //  - `test` `(value, info) => boolean`: skip the keyword when returning `false`
 //  - `hasInput` `boolean` (default: false): pass `input` to `main()`
 //    as a second argument

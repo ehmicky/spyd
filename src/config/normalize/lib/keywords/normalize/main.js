@@ -1,5 +1,7 @@
 import { inspect } from 'util'
 
+import moize from 'moize'
+
 import { BUILTIN_KEYWORDS } from '../list/main.js'
 
 import { validateKeywords } from './validate.js'
@@ -25,7 +27,11 @@ const addCustomKeywords = function (keywords) {
 }
 
 const normalizeKeyword = function (keyword) {
-  return { ...DEFAULT_VALUES, ...keyword }
+  return {
+    ...DEFAULT_VALUES,
+    ...keyword,
+    normalize: memoizeNormalize(keyword.normalize),
+  }
 }
 
 const DEFAULT_VALUES = {
@@ -33,3 +39,11 @@ const DEFAULT_VALUES = {
   undefinedInput: false,
   undefinedDefinition: false,
 }
+
+// `keyword.normalize()` must be a pure function, because it is memoized for
+// performance reasons.
+const memoizeNormalize = function (normalize) {
+  return normalize === undefined ? normalize : moize(normalize, MOIZE_OPTS)
+}
+
+const MOIZE_OPTS = { isSerialized: true, maxSize: 1 }
