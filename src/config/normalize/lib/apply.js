@@ -1,4 +1,4 @@
-import { remove } from 'wild-wild-path'
+import { remove, set, get } from 'wild-wild-path'
 
 import {
   callValueFunc,
@@ -39,14 +39,16 @@ export const applyRule = async function ({
     return { config, warnings, moves }
   }
 
-  const valueA = await computeValue(value, compute, opts)
-  const valueB = await addDefaultValue(valueA, defaultValue, opts)
+  const configB = await computeValue(config, compute, opts)
+  const configC = await addDefaultValue(configB, defaultValue, opts)
+  const valueA = get(configC, opts.funcOpts.path)
   const {
-    config: configB,
+    config: configD,
     warnings: warningsA,
     moves: movesA,
   } = await validateAndModify({
-    value: valueB,
+    value: valueA,
+    config: configC,
     required,
     schema,
     path,
@@ -55,12 +57,11 @@ export const applyRule = async function ({
     warn,
     transform,
     rename,
-    config,
     moves,
     warnings,
     opts,
   })
-  return { config: configB, warnings: warningsA, moves: movesA }
+  return { config: configD, warnings: warningsA, moves: movesA }
 }
 
 // Apply `pick[(value, opts)]` which omits the current value if `false` is
@@ -81,13 +82,23 @@ const againstCondition = async function (value, condition, opts) {
 
 // Apply `compute[(opts)]` which sets a value from the system, instead of the
 // user
-const computeValue = async function (value, compute, opts) {
-  return compute === undefined ? value : await callNoValueFunc(compute, opts)
+const computeValue = async function (config, compute, opts) {
+  if (compute === undefined) {
+    return config
+  }
+
+  const value = await callNoValueFunc(compute, opts)
+  return set(config, opts.funcOpts.path, value)
 }
 
 // Apply `default[(opts)]` which assigns a default value
-const addDefaultValue = async function (value, defaultValue, opts) {
-  return value === undefined
-    ? await callUndefinedValueFunc(defaultValue, opts)
-    : value
+const addDefaultValue = async function (config, defaultValue, opts) {
+  const value = get(config, opts.funcOpts.path)
+
+  if (value !== undefined) {
+    return config
+  }
+
+  const valueA = await callUndefinedValueFunc(defaultValue, opts)
+  return set(config, opts.funcOpts.path, valueA)
 }
