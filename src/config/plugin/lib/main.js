@@ -1,5 +1,7 @@
+import { allowErrorTypes } from '../../../error/types.js'
+
 import { validateDuplicatePlugins } from './duplicates.js'
-import { UserError } from './error.js'
+import { UserError, ErrorTypes } from './error.js'
 import { getPluginInfo } from './info.js'
 import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 
@@ -23,11 +25,15 @@ import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 //  - pluginConfig coming both from each pluginConfig object and from
 //    `opts.sharedConfig`
 export const getPlugins = async function (pluginConfigs, opts) {
-  const optsA = normalizeMultipleOpts(opts)
-  validateDefined(pluginConfigs, optsA)
-  const pluginInfos = await getPluginInfos(pluginConfigs, optsA)
-  validateDuplicatePlugins(pluginInfos, optsA)
-  return pluginInfos
+  try {
+    const optsA = normalizeMultipleOpts(opts)
+    validateDefined(pluginConfigs, optsA)
+    const pluginInfos = await getPluginInfos(pluginConfigs, optsA)
+    validateDuplicatePlugins(pluginInfos, optsA)
+    return pluginInfos
+  } catch (error) {
+    throw allowErrorTypes(error, ErrorTypes)
+  }
 }
 
 const getPluginInfos = async function (pluginConfigs, opts) {
@@ -45,10 +51,14 @@ const getEachPluginInfo = async function (opts, pluginConfig, index) {
 
 // Retrieve a single plugin instead of an optional array of them
 export const getPlugin = async function (pluginConfig, opts) {
-  const optsA = normalizeSingleOpts(opts)
-  validateDefined(pluginConfig, optsA)
-  const plugin = await getPluginInfo(pluginConfig, optsA)
-  return plugin
+  try {
+    const optsA = normalizeSingleOpts(opts)
+    validateDefined(pluginConfig, optsA)
+    const plugin = await getPluginInfo(pluginConfig, optsA)
+    return plugin
+  } catch (error) {
+    throw allowErrorTypes(error, ErrorTypes)
+  }
 }
 
 const validateDefined = function (value, { name }) {

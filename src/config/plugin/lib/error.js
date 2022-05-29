@@ -8,3 +8,6 @@ export const UserError = createErrorType('UserError')
 export const PluginError = createErrorType('PluginError')
 // Error from a plugin user
 export const ConsumerError = createErrorType('ConsumerError')
+
+// All error types, with first being default type
+export const ErrorTypes = [CoreError, UserError, PluginError, ConsumerError]
