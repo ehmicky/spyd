@@ -4,7 +4,7 @@ import { safeNormalizeConfig } from './normalize.js'
 
 // Normalize `pluginConfig[pluginProp]`
 export const normalizeLocation = async function ({
-  opts: { cwd, builtins, modulePrefix, prefix },
+  opts: { cwd, builtins, modulePrefix, prefix, keywords },
   originalLocation,
   locationName,
   locationType,
@@ -17,6 +17,7 @@ export const normalizeLocation = async function ({
       parent: locationName,
       context: { locationType, builtins, modulePrefix },
     },
+    keywords,
     UserErrorType: ConsumerError,
     SystemErrorType: CoreError,
   })

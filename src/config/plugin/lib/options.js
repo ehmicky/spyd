@@ -27,6 +27,7 @@ export const normalizeSingleOpts = function ({
   prefix,
   context,
   cwd,
+  keywords,
 }) {
   const { sharedConfig: sharedConfigA, sharedPropNames } = getSharedConfig(
     sharedConfig,
@@ -45,5 +46,6 @@ export const normalizeSingleOpts = function ({
     prefix,
     context,
     cwd,
+    keywords,
   }
 }
