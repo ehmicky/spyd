@@ -22,7 +22,7 @@ import { logWarnings } from './warn.js'
 export const normalizeConfigProps = async function (
   config,
   rules,
-  { context = {}, soft = false, cwd, prefix, parent = [], all = {} } = {},
+  { soft = false, context, cwd, prefix, parent = [], all = {} } = {},
 ) {
   const rulesA = normalizeRules(rules, all)
 

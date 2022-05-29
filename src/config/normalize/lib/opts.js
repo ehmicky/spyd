@@ -30,15 +30,27 @@ export const getOpts = async function ({
     originalName,
     originalPath,
     config,
-    context,
+    context: DEFAULT_CONTEXT,
     example,
     prefix: DEFAULT_PREFIX,
     cwd: DEFAULT_CWD,
   }
-  const optsA = await computeParent(parent, opts)
-  const optsB = await computePrefix(prefix, optsA)
-  const optsC = await computeCwd(cwd, optsB)
-  return optsC
+  const optsA = await computeContext(context, opts)
+  const optsB = await computeParent(parent, optsA)
+  const optsC = await computePrefix(prefix, optsB)
+  const optsD = await computeCwd(cwd, optsC)
+  return optsD
+}
+
+const DEFAULT_CONTEXT = {}
+
+const computeContext = async function (context, opts) {
+  if (context === undefined) {
+    return opts
+  }
+
+  const contextA = await callNoInputFunc(context, opts)
+  return contextA === undefined ? opts : { ...opts, context }
 }
 
 const computePrefix = async function (prefix, opts) {
