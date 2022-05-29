@@ -1,9 +1,9 @@
 /* eslint-disable max-lines */
-import { set, remove } from 'wild-wild-path'
-
 import { callFunc } from './call.js'
 import { KEYWORDS } from './keywords/main.js'
-import { addMove, getRenamedPath, getMovedPath } from './move.js'
+import { applyPath } from './path.js'
+import { applyRename } from './rename.js'
+import { setConfig } from './set.js'
 import { addWarning } from './warn.js'
 
 // The library features is provided through plugins called "keywords".
@@ -44,7 +44,7 @@ import { addWarning } from './warn.js'
 //     - If `undefined`, the property is deleted
 //  - `skip` `{boolean}`: if true, next keywords in the current rule are skipped
 //  - `warning` `{string}`: print on the console
-//  - `move` `{string|array}`: move the input value to another property
+//  - `rename` `{string|array}`: move the input value to another property
 //  - `path` `{string|array}`: hint when the input value has been moved to a
 //    new path
 export const applyKeywords = async function ({
@@ -185,58 +185,5 @@ const applyInput = function ({
   const { input: inputA } = returnValue
   const configA = setConfig(config, path, inputA)
   return { input: inputA, config: configA }
-}
-
-const applyPath = function (
-  { path },
-  moves,
-  { funcOpts: { path: oldNamePath } },
-) {
-  if (path === undefined) {
-    return moves
-  }
-
-  const newNamePath = getMovedPath(path, oldNamePath)
-  return newNamePath.length === oldNamePath.length
-    ? moves
-    : addMove(moves, oldNamePath, newNamePath)
-}
-
-const applyRename = function ({
-  returnValue: { rename },
-  config,
-  moves,
-  input,
-  opts,
-  opts: {
-    funcOpts,
-    funcOpts: { name: oldNameString, path: oldNamePath },
-  },
-}) {
-  if (rename === undefined) {
-    return { config, moves, opts }
-  }
-
-  const { newNamePath, newNameString } = getRenamedPath(rename)
-
-  if (newNameString === oldNameString) {
-    return { config, moves, opts }
-  }
-
-  const configA = remove(config, oldNamePath)
-  const configB = setConfig(configA, newNamePath, input)
-  const movesA = addMove(moves, oldNamePath, newNamePath)
-  return {
-    config: configB,
-    moves: movesA,
-    opts: {
-      ...opts,
-      funcOpts: { ...funcOpts, path: newNamePath, name: newNameString },
-    },
-  }
-}
-
-const setConfig = function (config, path, input) {
-  return input === undefined ? remove(config, path) : set(config, path, input)
 }
 /* eslint-enable max-lines */
