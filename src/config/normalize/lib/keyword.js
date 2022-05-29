@@ -1,10 +1,6 @@
-/* eslint-disable max-lines */
 import { callFunc } from './call.js'
 import { KEYWORDS } from './keywords/main.js'
-import { applyPath } from './path.js'
-import { applyRename } from './rename.js'
-import { transformInput } from './transform.js'
-import { addWarning } from './warn.js'
+import { applyReturnValue } from './return.js'
 
 // The library features is provided through plugins called "keywords".
 // Keywords perform logic based on the consumer's `input`.
@@ -129,42 +125,3 @@ const shouldSkipInput = function (input, undefinedInput) {
 const shouldSkipMain = function (definition, undefinedDefinition) {
   return definition === undefined && !undefinedDefinition
 }
-
-const applyReturnValue = function ({
-  returnValue,
-  state,
-  state: { input, config, moves, warnings, opts },
-}) {
-  if (returnValue === undefined) {
-    return state
-  }
-
-  const warningsA = addWarning(returnValue, warnings, opts)
-  const { input: inputA, config: configA } = transformInput({
-    returnValue,
-    input,
-    config,
-    opts,
-  })
-  const movesA = applyPath(returnValue, moves, opts)
-  const {
-    config: configB,
-    moves: movesB,
-    opts: optsA,
-  } = applyRename({
-    returnValue,
-    config: configA,
-    moves: movesA,
-    input: inputA,
-    opts,
-  })
-  return {
-    input: inputA,
-    config: configB,
-    moves: movesB,
-    warnings: warningsA,
-    opts: optsA,
-    skip: returnValue.skip,
-  }
-}
-/* eslint-enable max-lines */
