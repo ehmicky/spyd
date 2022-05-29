@@ -1,14 +1,16 @@
 import { createErrorType, getErrorTypeProps } from './utils.js'
 
-// We distinguish between user, plugin and core errors.
-// We also define abort errors, which are user-driven but are not failures.
-// Limit errors are also special as they are user-driven but are a different
-// kind of failure.
+// User aborting the benchmark
 export const StopError = createErrorType('StopError')
+// Bug in the library itself
 export const CoreError = createErrorType('CoreError')
+// Bug in a plugin (reporter|runner)
 export const PluginError = createErrorType('PluginError')
+// Invalid options
 export const UserError = createErrorType('UserError')
+// Invalid tasks or tasks file
 export const UserCodeError = createErrorType('UserCodeError')
+// `limit` option threshold was reached
 export const LimitError = createErrorType('LimitError')
 
 // Retrieve error type-specific behavior
