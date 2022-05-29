@@ -1,6 +1,10 @@
 import { callFunc } from '../call.js'
 
-import { getDefinition, normalizeDefinition } from './definition.js'
+import {
+  getDefinition,
+  callDefinition,
+  normalizeDefinition,
+} from './definition.js'
 import { KEYWORDS } from './list/main.js'
 import { applyReturnValue } from './return.js'
 import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
@@ -94,10 +98,13 @@ const applyKeyword = async function ({
     return state
   }
 
-  const definitionA =
-    typeof definition === 'function'
-      ? await callFunc({ func: definition, input, info, hasInput, test })
-      : definition
+  const definitionA = await callDefinition({
+    definition,
+    input,
+    info,
+    hasInput,
+    test,
+  })
 
   if (shouldSkipMain(main, definitionA, undefinedDefinition)) {
     return state
@@ -111,5 +118,6 @@ const applyKeyword = async function ({
     hasInput,
     test,
   })
-  return applyReturnValue({ returnValue, state })
+  const stateA = applyReturnValue({ returnValue, state })
+  return stateA
 }

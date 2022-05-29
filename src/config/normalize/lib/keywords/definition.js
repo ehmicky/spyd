@@ -15,7 +15,20 @@ export const getDefinition = function (rule, name, aliases) {
   return aliasA === undefined ? undefined : rule[aliasA]
 }
 
-// Apply `keyword.normalize()`
+// Call definition when it is a function
+export const callDefinition = async function ({
+  definition,
+  input,
+  info,
+  hasInput,
+  test,
+}) {
+  return typeof definition === 'function'
+    ? await callFunc({ func: definition, input, info, hasInput, test })
+    : definition
+}
+
+// Apply `keyword.normalize(definition)`
 export const normalizeDefinition = async function (
   definition,
   normalize,
