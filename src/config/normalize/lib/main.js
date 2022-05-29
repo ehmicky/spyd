@@ -78,15 +78,7 @@ const applyEntryRule = async function (
   { inputs, moves, warnings },
   { input, path, rule, context, prefix, parent },
 ) {
-  const info = await getInfo({
-    path,
-    inputs,
-    context,
-    prefix,
-    parent,
-    rule,
-    moves,
-  })
+  const info = await getInfo({ path, inputs, context, prefix, parent, moves })
   return await applyKeywords({ rule, input, inputs, moves, warnings, info })
 }
 

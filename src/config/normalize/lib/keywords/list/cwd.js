@@ -1,10 +1,10 @@
 import { stat } from 'fs/promises'
 import { resolve } from 'path'
 
-const main = async function (cwd) {
-  await validateCwd(cwd)
-  const cwdA = resolve(cwd)
-  return { info: { cwd: cwdA } }
+const main = async function (definition) {
+  await validateCwd(definition)
+  const cwd = resolve(definition)
+  return { info: { cwd } }
 }
 
 // Errors in `cwd` are not user errors, i.e. should not start with `must`

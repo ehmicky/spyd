@@ -16,7 +16,6 @@ export const getInfo = async function ({
   context,
   prefix,
   parent,
-  rule: { example },
   moves,
 }) {
   const name = serializePath(path)
@@ -34,8 +33,7 @@ export const getInfo = async function ({
   const infoA = await computeContext(context, info)
   const infoB = await computeParent(parent, infoA)
   const infoC = await computePrefix(prefix, infoB)
-  const infoD = await computeExample(example, infoC)
-  return infoD
+  return infoC
 }
 
 // The default value is `.`, not `process.cwd()`, to ensure it is evaluated
@@ -68,14 +66,4 @@ const addPrefix = async function (prefix, info) {
 
   const prefixB = String(prefixA).trim()
   return { ...info, prefix: prefixB }
-}
-
-// Add an example input value as error suffix, as provided by `example[(info)]`
-const computeExample = async function (example, info) {
-  if (example === undefined) {
-    return info
-  }
-
-  const exampleA = await callNoInputFunc(example, info)
-  return exampleA === undefined ? info : { ...info, example: exampleA }
 }
