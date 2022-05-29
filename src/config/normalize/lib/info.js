@@ -11,7 +11,7 @@ import { DEFAULT_PREFIX } from './prefix.js'
 // Retrieve `opts` passed to:
 //  - Definitions functions
 //  - Keyword `main()`
-export const getOpts = async function ({
+export const getInfo = async function ({
   path,
   inputs,
   context,

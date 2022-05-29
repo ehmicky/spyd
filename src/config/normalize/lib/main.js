@@ -3,9 +3,9 @@ import { list } from 'wild-wild-path'
 
 import { cleanObject } from '../../../utils/clean.js'
 
+import { getInfo } from './info.js'
 import { applyKeywords } from './keywords/main.js'
 import { normalizeRules } from './normalize.js'
-import { getOpts } from './opts.js'
 import { logWarnings } from './warn.js'
 
 // Validate and normalize a library's inputs.
@@ -73,7 +73,7 @@ const applyEntryRule = async function (
   { inputs, moves, warnings },
   { input, path, rule, context, cwd, prefix, parent },
 ) {
-  const opts = await getOpts({
+  const opts = await getInfo({
     path,
     inputs,
     context,
