@@ -44,9 +44,15 @@ export const applyReturnValue = function ({
   }
 }
 
-// Keywords can change the options by returning an `options` property
+// Keywords can change the options by returning an `options` property.
+// Some `options` cannot be changed since they are too internal and might create
+// issues.
 const applyOptions = function (returnValue, opts) {
-  return returnValue.options === undefined
-    ? opts
-    : { ...opts, ...returnValue.options }
+  if (returnValue.options === undefined) {
+    return opts
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  const { name, path, originalName, originalPath, config, ...newOpts } = opts
+  return { ...opts, ...newOpts }
 }
