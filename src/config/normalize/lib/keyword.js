@@ -72,7 +72,6 @@ export const applyKeywords = async function ({
   return { config: state.config, warnings: state.warnings, moves: state.moves }
 }
 
-/* eslint-disable complexity, max-statements, max-lines-per-function */
 const applyKeyword = async function ({
   keyword: {
     name,
@@ -82,16 +81,12 @@ const applyKeyword = async function ({
     undefinedDefinition = false,
   },
   state,
-  state: { input, config, moves, opts, warnings },
+  state: { input, opts },
   rule,
 }) {
   const definition = rule[name]
 
-  if (
-    definition === undefined ||
-    (undefinedInput === false && input === undefined) ||
-    (undefinedInput === null && input !== undefined)
-  ) {
+  if (shouldSkipKeyword(definition, input, undefinedDefinition)) {
     return state
   }
 
@@ -106,7 +101,7 @@ const applyKeyword = async function ({
         })
       : definition
 
-  if (definitionA === undefined && !undefinedDefinition) {
+  if (shouldSkipMain(definitionA, undefinedDefinition)) {
     return state
   }
 
@@ -117,7 +112,48 @@ const applyKeyword = async function ({
     hasInput,
     undefinedInput,
   })
+  return applyReturnValue({ returnValue, state })
+}
 
+const shouldSkipKeyword = function (definition, input, undefinedInput) {
+  return definition === undefined || shouldSkipInput(input, undefinedInput)
+}
+
+const shouldSkipInput = function (input, undefinedInput) {
+  return (
+    (undefinedInput === false && input === undefined) ||
+    (undefinedInput === null && input !== undefined)
+  )
+}
+
+const shouldSkipMain = function (definition, undefinedDefinition) {
+  return definition === undefined && !undefinedDefinition
+}
+
+// TODO: call logic should not check `typeof function` anymore
+const callFunc = async function ({
+  func,
+  input,
+  opts,
+  hasInput,
+  undefinedInput,
+}) {
+  if (hasInput) {
+    return await callInputFunc(func, input, opts)
+  }
+
+  if (undefinedInput === true) {
+    return await callNoInputFunc(func, opts)
+  }
+
+  return await callConstraintFunc(func, opts)
+}
+
+const applyReturnValue = function ({
+  returnValue,
+  state,
+  state: { input, config, moves, warnings, opts },
+}) {
   if (returnValue === undefined) {
     return state
   }
@@ -149,26 +185,6 @@ const applyKeyword = async function ({
     opts: optsA,
     skip: returnValue.skip,
   }
-}
-/* eslint-enable complexity, max-statements, max-lines-per-function */
-
-// TODO: call logic should not check `typeof function` anymore
-const callFunc = async function ({
-  func,
-  input,
-  opts,
-  hasInput,
-  undefinedInput,
-}) {
-  if (hasInput) {
-    return await callInputFunc(func, input, opts)
-  }
-
-  if (undefinedInput === true) {
-    return await callNoInputFunc(func, opts)
-  }
-
-  return await callConstraintFunc(func, opts)
 }
 
 const applyWarnings = function ({ warning }, warnings, opts) {
