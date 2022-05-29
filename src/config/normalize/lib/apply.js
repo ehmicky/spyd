@@ -1,12 +1,12 @@
-import { remove, set, get } from 'wild-wild-path'
+import { remove, set } from 'wild-wild-path'
 
-import { callInputFunc, callNoInputFunc, callConstraintFunc } from './call.js'
+import { callInputFunc, callNoInputFunc } from './call.js'
 import { applyKeywords } from './keywords/main.js'
 
 // Apply a rule on a specific property
 export const applyRule = async function ({
   rule,
-  rule: { pick, condition, default: defaultValue, compute },
+  rule: { pick, condition, compute },
   input,
   config,
   moves,
@@ -23,12 +23,10 @@ export const applyRule = async function ({
   }
 
   const configB = await computeInput(config, compute, opts)
-  const configC = await addDefault(configB, defaultValue, opts)
-  const inputA = get(configC, opts.funcOpts.path)
   return await applyKeywords({
     rule,
-    input: inputA,
-    config: configC,
+    input,
+    config: configB,
     moves,
     warnings,
     opts,
@@ -60,16 +58,4 @@ const computeInput = async function (config, compute, opts) {
 
   const input = await callNoInputFunc(compute, opts)
   return set(config, opts.funcOpts.path, input)
-}
-
-// Apply `default[(opts)]` which assigns a default value
-const addDefault = async function (config, defaultValue, opts) {
-  const input = get(config, opts.funcOpts.path)
-
-  if (input !== undefined) {
-    return config
-  }
-
-  const inputA = await callConstraintFunc(defaultValue, opts)
-  return set(config, opts.funcOpts.path, inputA)
 }

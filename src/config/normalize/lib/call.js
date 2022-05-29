@@ -42,7 +42,7 @@ export const callInputFunc = async function (userFunc, input, opts) {
 
 // Some methods are not called with any `input` but their logic requires knowing
 // whether it is undefined
-export const callConstraintFunc = async function (userFunc, opts) {
+const callConstraintFunc = async function (userFunc, opts) {
   try {
     return typeof userFunc === 'function'
       ? await callUserFunc(userFunc, opts)
