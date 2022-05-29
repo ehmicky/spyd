@@ -8,25 +8,25 @@ import { wrapError } from '../../../error/wrap.js'
 import { callNoInputFunc } from './call.js'
 import { validateDefinedString } from './type.js'
 
-// A `cwd[(opts)]` option can be specified to customize the `cwd`.
-//  - The default value is `.`, not `process.cwd()`, to ensure it is evaluated
-//    at runtime, not load time.
-export const computeCwd = async function (cwd, opts) {
-  const cwdA = await getCwd({ cwd, opts })
-  return { ...opts, cwd: cwdA }
-}
+// The default value is `.`, not `process.cwd()`, to ensure it is evaluated
+// at runtime, not load time.
+export const DEFAULT_CWD = '.'
 
-const getCwd = async function ({ cwd = DEFAULT_CWD, opts }) {
+// A `cwd[(opts)]` option can be specified to customize the `cwd`.
+export const computeCwd = async function (cwd, opts) {
+  if (cwd === undefined) {
+    return opts
+  }
+
   const cwdA = await callCwdFunc(cwd, opts)
   await callNoInputFunc(checkCwd.bind(undefined, cwdA), opts)
-  return resolve(cwdA)
+  const cwdB = resolve(cwdA)
+  return { ...opts, cwd: cwdB }
 }
 
-const DEFAULT_CWD = '.'
-
-const callCwdFunc = async function (func, opts) {
+const callCwdFunc = async function (cwd, opts) {
   try {
-    return await callNoInputFunc(func, opts)
+    return await callNoInputFunc(cwd, opts)
   } catch (error) {
     throw wrapError(error, 'Invalid "cwd" function:')
   }

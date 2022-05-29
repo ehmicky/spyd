@@ -3,7 +3,7 @@ import { serializePath } from 'wild-wild-parser'
 import { wrapError } from '../../../error/wrap.js'
 
 import { callNoInputFunc } from './call.js'
-import { computeCwd } from './cwd.js'
+import { computeCwd, DEFAULT_CWD } from './cwd.js'
 import { applyMoves } from './move.js'
 import { computeParent } from './parent.js'
 import { DEFAULT_PREFIX } from './prefix.js'
@@ -33,6 +33,7 @@ export const getOpts = async function ({
     context,
     example,
     prefix: DEFAULT_PREFIX,
+    cwd: DEFAULT_CWD,
   }
   const optsA = await computeParent(parent, opts)
   const optsB = await computePrefix(prefix, optsA)
