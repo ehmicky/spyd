@@ -44,7 +44,7 @@ const normalizeAll = function (all, ruleProps) {
   }
 
   const allA = filterObj(all, isDefined)
-  validateRuleProps(allA, ruleProps, 'Option "all"')
+  validateRuleProps({ definitions: allA, ruleProps, message: 'Option "all"' })
   return allA
 }
 

@@ -16,7 +16,11 @@ const CORE_PROPS = ['name']
 export const CORE_PROPS_SET = new Set(CORE_PROPS)
 
 // Validate that a `definitions` object has only allowed properties
-export const validateRuleProps = function (definitions, ruleProps, message) {
+export const validateRuleProps = function ({
+  definitions,
+  ruleProps,
+  message,
+}) {
   // `definitions` is a plain object, i.e. does not have inherited properties
   // eslint-disable-next-line fp/no-loops, guard-for-in
   for (const ruleProp in definitions) {

@@ -27,7 +27,7 @@ const normalizeRule = function (rule, all, ruleProps) {
     throw new DefinitionError(`Rule must be a plain object: ${inspect(rule)}`)
   }
 
-  validateRuleProps(rule, ruleProps, 'Rule')
+  validateRuleProps({ definitions: rule, ruleProps, message: 'Rule' })
   const ruleA = all === undefined ? rule : { ...all, ...rule }
   return { ...ruleA, name: normalizeName(ruleA) }
 }
