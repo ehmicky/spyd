@@ -23,7 +23,7 @@ const safeNormalizePath = function (path) {
   try {
     return normalizePath(path)
   } catch (error) {
-    throw wrapError(error, 'The returned "path" is invalid:')
+    throw wrapError(error, 'The path is invalid:')
   }
 }
 

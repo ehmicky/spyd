@@ -10,7 +10,6 @@ import { addMove, getRenamedPath, getMovedPath } from './move.js'
 import { PLUGINS } from './plugins/main.js'
 import { addWarning } from './warn.js'
 
-/* eslint-disable fp/no-loops, max-depth */
 export const performPlugins = async function ({
   rule,
   value,
@@ -22,10 +21,12 @@ export const performPlugins = async function ({
   // eslint-disable-next-line fp/no-let
   let state = { value, config, moves, warnings, opts }
 
+  // eslint-disable-next-line fp/no-loops
   for (const plugin of PLUGINS) {
     // eslint-disable-next-line fp/no-mutation, no-await-in-loop
     state = await applyPlugin({ plugin, state, rule })
 
+    // eslint-disable-next-line max-depth
     if (state.skip) {
       break
     }
@@ -33,7 +34,6 @@ export const performPlugins = async function ({
 
   return { config: state.config, warnings: state.warnings, moves: state.moves }
 }
-/* eslint-enable fp/no-loops, max-depth */
 
 /* eslint-disable complexity, max-statements, max-lines-per-function */
 const applyPlugin = async function ({
@@ -54,13 +54,7 @@ const applyPlugin = async function ({
 
   const ruleArgA =
     typeof ruleArg === 'function'
-      ? await callFunc({
-          func: ruleArg,
-          value,
-          opts,
-          input,
-          defined,
-        })
+      ? await callFunc({ func: ruleArg, value, opts, input, defined })
       : ruleArg
 
   if (ruleArgA === undefined) {
@@ -84,13 +78,13 @@ const applyPlugin = async function ({
     config: configA,
     moves: movesA,
     opts: optsA,
-  } = applyRename(returnValue, config, moves, value, opts)
-  const { value: valueA, config: configB } = applyValue(
+  } = applyRename({ returnValue, config, moves, value, opts })
+  const { value: valueA, config: configB } = applyValue({
     returnValue,
     value,
-    configA,
-    optsA,
-  )
+    config: configA,
+    opts: optsA,
+  })
   const movesB = applyPath(returnValue, movesA, optsA)
   return {
     value: valueA,
@@ -117,29 +111,30 @@ const callFunc = async function ({ func, value, opts, input, defined }) {
 }
 
 const applyWarnings = function ({ warning }, warnings, opts) {
-  if (warning === undefined) {
-    return warnings
-  }
-
-  return addWarning(warnings, warning, opts)
+  return warning === undefined ? warnings : addWarning(warnings, warning, opts)
 }
 
-// eslint-disable-next-line max-params
-const applyRename = function ({ rename }, config, moves, value, opts) {
-  const {
+const applyRename = function ({
+  returnValue: { rename },
+  config,
+  moves,
+  value,
+  opts,
+  opts: {
     funcOpts,
     funcOpts: { path: oldNamePath },
-  } = opts
-
+  },
+}) {
   if (rename === undefined) {
     return { config, moves, opts }
   }
 
   const { newNamePath, newNameString } = getRenamedPath(rename)
-  const configA = renameValue(oldNamePath, newNamePath, config, value)
+  const configA = remove(config, oldNamePath)
+  const configB = setValue(configA, newNamePath, value)
   const movesA = addMove(moves, oldNamePath, newNamePath)
   return {
-    config: configA,
+    config: configB,
     moves: movesA,
     opts: {
       ...opts,
@@ -148,13 +143,14 @@ const applyRename = function ({ rename }, config, moves, value, opts) {
   }
 }
 
-// eslint-disable-next-line max-params
-const applyValue = function (
+const applyValue = function ({
   returnValue,
   value,
   config,
-  { funcOpts: { path } },
-) {
+  opts: {
+    funcOpts: { path },
+  },
+}) {
   // We allow transforming to `undefined`, i.e. returning
   // `{ value: undefined }` is different from returning `{}`
   if (!('value' in returnValue) || returnValue.value === value) {
@@ -164,6 +160,10 @@ const applyValue = function (
   const { value: valueA } = returnValue
   const configA = setValue(config, path, valueA)
   return { value: valueA, config: configA }
+}
+
+const setValue = function (config, path, value) {
+  return value === undefined ? remove(config, path) : set(config, path, value)
 }
 
 const applyPath = function (
@@ -177,15 +177,5 @@ const applyPath = function (
 
   const newNamePath = getMovedPath(path, oldNamePath)
   return addMove(moves, oldNamePath, newNamePath)
-}
-
-// eslint-disable-next-line max-params
-const renameValue = function (oldNamePath, newNamePath, config, value) {
-  const configA = remove(config, oldNamePath)
-  return setValue(configA, newNamePath, value)
-}
-
-const setValue = function (config, path, value) {
-  return value === undefined ? remove(config, path) : set(config, path, value)
 }
 /* eslint-enable max-lines */
