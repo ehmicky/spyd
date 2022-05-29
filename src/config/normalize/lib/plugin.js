@@ -37,7 +37,7 @@ export const performPlugins = async function ({
 
 /* eslint-disable complexity, max-statements, max-lines-per-function */
 const applyPlugin = async function ({
-  plugin: { name, main, defined = true, hasInput = false },
+  plugin: { name, main, undefinedInput = false, hasInput = false },
   state,
   state: { value, config, moves, opts, warnings },
   rule,
@@ -46,15 +46,21 @@ const applyPlugin = async function ({
 
   if (
     definition === undefined ||
-    (defined === true && value === undefined) ||
-    (defined === false && value !== undefined)
+    (undefinedInput === false && value === undefined) ||
+    (undefinedInput === null && value !== undefined)
   ) {
     return state
   }
 
   const definitionA =
     typeof definition === 'function'
-      ? await callFunc({ func: definition, value, opts, hasInput, defined })
+      ? await callFunc({
+          func: definition,
+          value,
+          opts,
+          hasInput,
+          undefinedInput,
+        })
       : definition
 
   if (definitionA === undefined) {
@@ -66,7 +72,7 @@ const applyPlugin = async function ({
     value,
     opts,
     hasInput,
-    defined,
+    undefinedInput,
   })
 
   if (returnValue === undefined) {
@@ -104,12 +110,18 @@ const applyPlugin = async function ({
 /* eslint-enable complexity, max-statements, max-lines-per-function */
 
 // TODO: call logic should not check `typeof function` anymore
-const callFunc = async function ({ func, value, opts, hasInput, defined }) {
+const callFunc = async function ({
+  func,
+  value,
+  opts,
+  hasInput,
+  undefinedInput,
+}) {
   if (hasInput) {
     return await callValueFunc(func, value, opts)
   }
 
-  if (defined === null) {
+  if (undefinedInput === true) {
     return await callNoValueFunc(func, opts)
   }
 
