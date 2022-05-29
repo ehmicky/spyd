@@ -1,11 +1,5 @@
-import { callMain } from '../call/main.js'
-
-import {
-  getDefinition,
-  callDefinitionFunc,
-  normalizeDefinition,
-} from './definition.js'
-import { applyReturnValue } from './return.js'
+import { applyKeywordMain } from './apply.js'
+import { getDefinition, callDefinitionFunc } from './definition.js'
 import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 
 // The library features is provided through plugins called "keywords".
@@ -130,25 +124,18 @@ const applyKeyword = async function ({
     return state
   }
 
-  const normalizedDefinition = await normalizeDefinition({
+  return await applyKeywordMain({
     definition: definitionA,
     normalize,
     normalizeSync,
     info,
     keyword,
     exampleDefinition,
-  })
-  const returnValue = await callMain({
     main,
     mainSync,
-    normalizedDefinition,
-    definition: definitionA,
     input,
-    info,
     hasInput,
     test,
-    keyword,
+    state,
   })
-  const stateA = applyReturnValue({ returnValue, state })
-  return stateA
 }
