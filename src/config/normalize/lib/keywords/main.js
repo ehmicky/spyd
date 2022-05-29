@@ -8,4 +8,4 @@ import * as validate from './validate.js'
 import * as warn from './warn.js'
 /* eslint-enable import/no-namespace */
 
-export const PLUGINS = [schema, glob, path, validate, warn, transform, rename]
+export const KEYWORDS = [schema, glob, path, validate, warn, transform, rename]

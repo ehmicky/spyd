@@ -2,11 +2,11 @@
 import { set, remove } from 'wild-wild-path'
 
 import { callInputFunc, callConstraintFunc, callNoInputFunc } from './call.js'
-import { PLUGINS } from './keywords/main.js'
+import { KEYWORDS } from './keywords/main.js'
 import { addMove, getRenamedPath, getMovedPath } from './move.js'
 import { addWarning } from './warn.js'
 
-export const performPlugins = async function ({
+export const applyKeywords = async function ({
   rule,
   input,
   config,
@@ -18,9 +18,9 @@ export const performPlugins = async function ({
   let state = { input, config, moves, warnings, opts }
 
   // eslint-disable-next-line fp/no-loops
-  for (const plugin of PLUGINS) {
+  for (const keyword of KEYWORDS) {
     // eslint-disable-next-line fp/no-mutation, no-await-in-loop
-    state = await applyPlugin({ plugin, state, rule })
+    state = await applyKeyword({ keyword, state, rule })
 
     // eslint-disable-next-line max-depth
     if (state.skip) {
@@ -32,8 +32,8 @@ export const performPlugins = async function ({
 }
 
 /* eslint-disable complexity, max-statements, max-lines-per-function */
-const applyPlugin = async function ({
-  plugin: { name, main, undefinedInput = false, hasInput = false },
+const applyKeyword = async function ({
+  keyword: { name, main, undefinedInput = false, hasInput = false },
   state,
   state: { input, config, moves, opts, warnings },
   rule,

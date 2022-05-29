@@ -1,5 +1,5 @@
 import { callConstraintFunc } from './call.js'
-import { performPlugins } from './plugin.js'
+import { applyKeywords } from './plugin.js'
 
 // Once the initial input has been computed, apply validation and transforms,
 // unless the input is `undefined`.
@@ -21,7 +21,7 @@ export const validateAndModify = async function ({
     config: configA,
     warnings: warningsA,
     moves: movesA,
-  } = await performPlugins({ rule, input, config, moves, warnings, opts })
+  } = await applyKeywords({ rule, input, config, moves, warnings, opts })
   return { config: configA, warnings: warningsA, moves: movesA }
 }
 
