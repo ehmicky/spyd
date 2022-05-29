@@ -6,45 +6,19 @@ import { wrapError } from '../../../error/wrap.js'
 // Validate and normalize rules.
 // All methods and properties that use queries can use either the string or the
 // path syntax.
-export const normalizeRules = function (rules) {
-  return rules.map(normalizeRule)
+export const normalizeRules = function (rules, all) {
+  return rules.map((rule) => normalizeRule(rule, all))
 }
 
-const normalizeRule = function ({
-  name,
-  pick,
-  condition,
-  default: defaultValue,
-  compute,
-  path,
-  glob = false,
-  required = defaultRequired,
-  example = defaultValue,
-  schema,
-  validate,
-  warn,
-  transform,
-  rename,
-}) {
+const normalizeRule = function ({ name, ...rule }, all) {
   const namePath = getNamePath(name)
   const nameQuery = serializeQuery(namePath)
-  return {
-    nameQuery,
-    namePath,
-    pick,
-    condition,
-    default: defaultValue,
-    compute,
-    path,
-    glob,
-    required,
-    example,
-    schema,
-    validate,
-    warn,
-    transform,
-    rename,
+  const defaultRule = {
+    required: defaultRequired,
+    example: rule.default,
+    ...all,
   }
+  return { ...defaultRule, ...rule, nameQuery, namePath }
 }
 
 // `required` defaults to `false` except for array items.

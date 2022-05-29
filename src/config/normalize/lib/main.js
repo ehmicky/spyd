@@ -22,9 +22,9 @@ import { logWarnings } from './warn.js'
 export const normalizeConfigProps = async function (
   config,
   rules,
-  { context = {}, soft = false, cwd, prefix, parent = [] } = {},
+  { context = {}, soft = false, cwd, prefix, parent = [], all = {} } = {},
 ) {
-  const rulesA = normalizeRules(rules)
+  const rulesA = normalizeRules(rules, all)
 
   try {
     const { config: configA, warnings } = await pReduce(
