@@ -31,6 +31,7 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 //     - modifies the `options` passed to definitions functions and
 //       `keyword.main()`.
 //     - Merged shallowly
+//     - This can be used for cross-keywords information passing
 //  - `skip` `{boolean}`: if true, next keywords in the current rule are skipped
 //  - `warning` `{string}`: print on the console
 //  - `rename` `{string|array}`: move the input value to another property
