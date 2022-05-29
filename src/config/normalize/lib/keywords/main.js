@@ -95,7 +95,7 @@ const applyKeyword = async function ({
       ? await callFunc({ func: definition, input, info, hasInput, test })
       : definition
 
-  if (shouldSkipMain(definitionA, undefinedDefinition)) {
+  if (shouldSkipMain(main, definitionA, undefinedDefinition)) {
     return state
   }
 

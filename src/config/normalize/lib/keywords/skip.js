@@ -43,6 +43,8 @@ const hasSkippedTest = async function ({ test, input, info }) {
 
 // Function definitions returning `undefined` are skipped, unless
 // `undefinedDefinition` is `true`.
-export const shouldSkipMain = function (definition, undefinedDefinition) {
-  return definition === undefined && !undefinedDefinition
+export const shouldSkipMain = function (main, definition, undefinedDefinition) {
+  return (
+    main === undefined || (definition === undefined && !undefinedDefinition)
+  )
 }
