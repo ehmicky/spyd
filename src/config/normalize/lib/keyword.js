@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { set, remove } from 'wild-wild-path'
 
-import { callInputFunc, callConstraintFunc, callNoInputFunc } from './call.js'
+import { callFunc } from './call.js'
 import { KEYWORDS } from './keywords/main.js'
 import { addMove, getRenamedPath, getMovedPath } from './move.js'
 import { addWarning } from './warn.js'
@@ -128,25 +128,6 @@ const shouldSkipInput = function (input, undefinedInput) {
 
 const shouldSkipMain = function (definition, undefinedDefinition) {
   return definition === undefined && !undefinedDefinition
-}
-
-// TODO: call logic should not check `typeof function` anymore
-const callFunc = async function ({
-  func,
-  input,
-  opts,
-  hasInput,
-  undefinedInput,
-}) {
-  if (hasInput) {
-    return await callInputFunc(func, input, opts)
-  }
-
-  if (undefinedInput === true) {
-    return await callNoInputFunc(func, opts)
-  }
-
-  return await callConstraintFunc(func, opts)
 }
 
 const applyReturnValue = function ({

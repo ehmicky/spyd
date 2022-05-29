@@ -6,6 +6,25 @@ import { maybeFunction } from '../../../utils/function.js'
 import { addPrefix } from './prefix.js'
 import { handleValidateError } from './validate.js'
 
+// TODO: call logic should not check `typeof function` anymore
+export const callFunc = async function ({
+  func,
+  input,
+  opts,
+  hasInput,
+  undefinedInput,
+}) {
+  if (hasInput) {
+    return await callInputFunc(func, input, opts)
+  }
+
+  if (undefinedInput === true) {
+    return await callNoInputFunc(func, opts)
+  }
+
+  return await callConstraintFunc(func, opts)
+}
+
 // Most rule methods follow the same patterns:
 //  - Called with `input` and `opts`
 //  - Optionally async
