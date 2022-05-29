@@ -18,29 +18,6 @@ export const callTest = async function ({ test, input, info, keyword }) {
   })
 }
 
-// Call `keyword.normalize()`.
-// Exceptions starting with "must" can be thrown for invalid definitions.
-// Other exceptions are considered keyword bugs.
-export const callNormalize = async function ({
-  normalize,
-  definition,
-  info,
-  keyword,
-  exampleDefinition,
-}) {
-  const func = () => normalize(definition)
-  return await callFunc({
-    func,
-    info,
-    keyword,
-    definition,
-    exampleDefinition,
-    hasInput: false,
-    errorType: 'definition',
-    bugType: 'keyword',
-  })
-}
-
 // Call definition function.
 // Exceptions starting with "must" can be thrown for invalid input.
 // Other exceptions are considered invalid definitions.
@@ -63,6 +40,29 @@ export const callDefinition = async function ({
     exampleDefinition,
     errorType: 'input',
     bugType: 'definition',
+  })
+}
+
+// Call `keyword.normalize()`.
+// Exceptions starting with "must" can be thrown for invalid definitions.
+// Other exceptions are considered keyword bugs.
+export const callNormalize = async function ({
+  normalize,
+  definition,
+  info,
+  keyword,
+  exampleDefinition,
+}) {
+  const func = () => normalize(definition)
+  return await callFunc({
+    func,
+    info,
+    keyword,
+    definition,
+    exampleDefinition,
+    hasInput: false,
+    errorType: 'definition',
+    bugType: 'keyword',
   })
 }
 
