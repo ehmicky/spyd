@@ -74,18 +74,24 @@ const applyPlugin = async function ({
   }
 
   const warningsA = applyWarnings(returnValue, warnings, opts)
-  const {
-    config: configA,
-    moves: movesA,
-    opts: optsA,
-  } = applyRename({ returnValue, config, moves, value, opts })
-  const { value: valueA, config: configB } = applyValue({
+  const { value: valueA, config: configA } = applyValue({
     returnValue,
     value,
-    config: configA,
-    opts: optsA,
+    config,
+    opts,
   })
-  const movesB = applyPath(returnValue, movesA, optsA)
+  const movesA = applyPath(returnValue, moves, opts)
+  const {
+    config: configB,
+    moves: movesB,
+    opts: optsA,
+  } = applyRename({
+    returnValue,
+    config: configA,
+    moves: movesA,
+    value: valueA,
+    opts,
+  })
   return {
     value: valueA,
     config: configB,
@@ -112,6 +118,38 @@ const callFunc = async function ({ func, value, opts, input, defined }) {
 
 const applyWarnings = function ({ warning }, warnings, opts) {
   return warning === undefined ? warnings : addWarning(warnings, warning, opts)
+}
+
+const applyValue = function ({
+  returnValue,
+  value,
+  config,
+  opts: {
+    funcOpts: { path },
+  },
+}) {
+  // We allow transforming to `undefined`, i.e. returning
+  // `{ value: undefined }` is different from returning `{}`
+  if (!('value' in returnValue) || returnValue.value === value) {
+    return { value, config }
+  }
+
+  const { value: valueA } = returnValue
+  const configA = setValue(config, path, valueA)
+  return { value: valueA, config: configA }
+}
+
+const applyPath = function (
+  { path },
+  moves,
+  { funcOpts: { path: oldNamePath } },
+) {
+  if (path === undefined) {
+    return moves
+  }
+
+  const newNamePath = getMovedPath(path, oldNamePath)
+  return addMove(moves, oldNamePath, newNamePath)
 }
 
 const applyRename = function ({
@@ -143,39 +181,8 @@ const applyRename = function ({
   }
 }
 
-const applyValue = function ({
-  returnValue,
-  value,
-  config,
-  opts: {
-    funcOpts: { path },
-  },
-}) {
-  // We allow transforming to `undefined`, i.e. returning
-  // `{ value: undefined }` is different from returning `{}`
-  if (!('value' in returnValue) || returnValue.value === value) {
-    return { value, config }
-  }
-
-  const { value: valueA } = returnValue
-  const configA = setValue(config, path, valueA)
-  return { value: valueA, config: configA }
-}
-
 const setValue = function (config, path, value) {
   return value === undefined ? remove(config, path) : set(config, path, value)
 }
 
-const applyPath = function (
-  { path },
-  moves,
-  { funcOpts: { path: oldNamePath } },
-) {
-  if (path === undefined) {
-    return moves
-  }
-
-  const newNamePath = getMovedPath(path, oldNamePath)
-  return addMove(moves, oldNamePath, newNamePath)
-}
 /* eslint-enable max-lines */
