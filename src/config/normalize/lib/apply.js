@@ -1,25 +1,12 @@
 import { remove, set, get } from 'wild-wild-path'
 
 import { callInputFunc, callNoInputFunc, callConstraintFunc } from './call.js'
-import { validateAndModify } from './modify.js'
+import { applyKeywords } from './keywords/main.js'
 
 // Apply a rule on a specific property
-// eslint-disable-next-line max-lines-per-function
 export const applyRule = async function ({
-  rule: {
-    pick,
-    condition,
-    default: defaultValue,
-    compute,
-    path,
-    glob,
-    required,
-    schema,
-    validate,
-    warn,
-    transform,
-    rename,
-  },
+  rule,
+  rule: { pick, condition, default: defaultValue, compute },
   input,
   config,
   moves,
@@ -38,26 +25,14 @@ export const applyRule = async function ({
   const configB = await computeInput(config, compute, opts)
   const configC = await addDefault(configB, defaultValue, opts)
   const inputA = get(configC, opts.funcOpts.path)
-  const {
-    config: configD,
-    warnings: warningsA,
-    moves: movesA,
-  } = await validateAndModify({
+  return await applyKeywords({
+    rule,
     input: inputA,
     config: configC,
-    required,
-    schema,
-    path,
-    glob,
-    validate,
-    warn,
-    transform,
-    rename,
     moves,
     warnings,
     opts,
   })
-  return { config: configD, warnings: warningsA, moves: movesA }
 }
 
 // Apply `pick[(input, opts)]` which omits the current input if `false` is
