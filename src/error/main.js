@@ -1,33 +1,34 @@
 import { createErrorType } from './utils.js'
 
-// User aborting the benchmark
-export const StopError = createErrorType('StopError')
 // Bug in the library itself
 export const CoreError = createErrorType('CoreError')
 // Bug in a plugin (reporter|runner)
 export const PluginError = createErrorType('PluginError')
-// Invalid options
-export const UserError = createErrorType('UserError')
 // Invalid tasks or tasks file
 export const UserCodeError = createErrorType('UserCodeError')
+// Invalid options
+export const UserError = createErrorType('UserError')
 // `limit` option threshold was reached
 export const LimitError = createErrorType('LimitError')
+// User aborting the benchmark
+export const StopError = createErrorType('StopError')
 
-// Retrieve error type-specific behavior
-export const getErrorProps = function (error) {
-  const { name } = error
-  const nameA =
-    typeof name === 'string' && name in ERROR_PROPS ? name : DEFAULT_ERROR_NAME
-  return ERROR_PROPS[nameA]
-}
+// All error types, with first being default type
+export const ErrorTypes = [
+  CoreError,
+  PluginError,
+  UserCodeError,
+  UserError,
+  LimitError,
+  StopError,
+]
 
-const ERROR_PROPS = {
-  StopError: { exitCode: 0, printStack: false, indented: true },
-  CoreError: { exitCode: 1, printStack: true, indented: false },
-  PluginError: { exitCode: 2, printStack: true, indented: false },
-  UserError: { exitCode: 3, printStack: false, indented: false },
+// Error type-specific behavior
+export const ERROR_PROPS = {
+  CoreError: { exitCode: 5, printStack: true, indented: false },
+  PluginError: { exitCode: 4, printStack: true, indented: false },
   UserCodeError: { exitCode: 3, printStack: true, indented: false },
-  LimitError: { exitCode: 4, printStack: false, indented: false },
+  UserError: { exitCode: 2, printStack: false, indented: false },
+  LimitError: { exitCode: 1, printStack: false, indented: false },
+  StopError: { exitCode: 0, printStack: false, indented: true },
 }
-
-const DEFAULT_ERROR_NAME = 'CoreError'
