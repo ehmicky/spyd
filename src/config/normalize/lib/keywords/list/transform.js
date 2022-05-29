@@ -1,3 +1,5 @@
+import isPlainObj from 'is-plain-obj'
+
 const main = function (definition, input) {
   const { value, newProp } = isTransformMove(definition)
     ? definition
@@ -15,10 +17,7 @@ const main = function (definition, input) {
 //    of the property before being moved
 const isTransformMove = function (definition) {
   return (
-    typeof definition === 'object' &&
-    definition !== null &&
-    'value' in definition &&
-    'newProp' in definition
+    isPlainObj(definition) && 'value' in definition && 'newProp' in definition
   )
 }
 
@@ -46,8 +45,7 @@ const COMMON_MOVES = [
   {
     test(newInput, oldInput) {
       return (
-        typeof newInput === 'object' &&
-        newInput !== null &&
+        isPlainObj(newInput) &&
         Object.keys(newInput).length === 1 &&
         newInput[Object.keys(newInput)[0]] === oldInput
       )
