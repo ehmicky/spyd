@@ -3,7 +3,7 @@ import { callFunc } from './call.js'
 import { KEYWORDS } from './keywords/main.js'
 import { applyPath } from './path.js'
 import { applyRename } from './rename.js'
-import { setConfig } from './set.js'
+import { transformInput } from './transform.js'
 import { addWarning } from './warn.js'
 
 // The library features is provided through plugins called "keywords".
@@ -140,7 +140,7 @@ const applyReturnValue = function ({
   }
 
   const warningsA = addWarning(returnValue, warnings, opts)
-  const { input: inputA, config: configA } = applyInput({
+  const { input: inputA, config: configA } = transformInput({
     returnValue,
     input,
     config,
@@ -166,24 +166,5 @@ const applyReturnValue = function ({
     opts: optsA,
     skip: returnValue.skip,
   }
-}
-
-const applyInput = function ({
-  returnValue,
-  input,
-  config,
-  opts: {
-    funcOpts: { path },
-  },
-}) {
-  // We allow transforming to `undefined`, i.e. returning
-  // `{ input: undefined }` is different from returning `{}`
-  if (!('input' in returnValue) || returnValue.input === input) {
-    return { input, config }
-  }
-
-  const { input: inputA } = returnValue
-  const configA = setConfig(config, path, inputA)
-  return { input: inputA, config: configA }
 }
 /* eslint-enable max-lines */
