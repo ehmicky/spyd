@@ -8,12 +8,27 @@ import {
 
 // Validate each `keyword.*` property
 export const validateKeywordProps = function (keyword, index, keywords) {
+  validateRequiredProps(keyword)
   validateAliases(keyword)
   validateFunctions(keyword)
   validateBooleans(keyword)
   validateProps(keyword)
   validateNotBuiltin(keyword)
   validateDuplicateKeyword(keyword, index, keywords)
+}
+
+const validateRequiredProps = function (keyword) {
+  REQUIRED_PROPS.forEach((propName) => {
+    validateKeywordProp(keyword, propName)
+  })
+}
+
+const REQUIRED_PROPS = ['main']
+
+const validateKeywordProp = function (keyword, propName) {
+  if (keyword[propName] === undefined) {
+    throw new TypeError(`"${propName}" must be defined.`)
+  }
 }
 
 const validateAliases = function ({ aliases }) {

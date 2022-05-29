@@ -119,7 +119,7 @@ const applyKeyword = async function ({
     exampleDefinition,
   })
 
-  if (shouldSkipMain(main, definitionA, undefinedDefinition)) {
+  if (shouldSkipMain(definitionA, undefinedDefinition)) {
     return state
   }
 
