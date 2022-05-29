@@ -7,18 +7,12 @@ import { addPrefix } from './prefix.js'
 import { handleValidateError } from './validate.js'
 
 // TODO: call logic should not check `typeof function` anymore
-export const callFunc = async function ({
-  func,
-  input,
-  opts,
-  hasInput,
-  undefinedInput,
-}) {
+export const callFunc = async function ({ func, input, opts, hasInput, test }) {
   if (hasInput) {
     return await callInputFunc(func, input, opts)
   }
 
-  if (undefinedInput === true) {
+  if (test === undefined) {
     return await callNoInputFunc(func, opts)
   }
 

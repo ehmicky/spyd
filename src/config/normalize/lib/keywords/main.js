@@ -91,13 +91,7 @@ const applyKeyword = async function ({
 
   const definitionA =
     typeof definition === 'function'
-      ? await callFunc({
-          func: definition,
-          input,
-          opts,
-          hasInput,
-          undefinedInput,
-        })
+      ? await callFunc({ func: definition, input, opts, hasInput, test })
       : definition
 
   if (shouldSkipMain(definitionA, undefinedDefinition)) {
@@ -109,7 +103,7 @@ const applyKeyword = async function ({
     input,
     opts,
     hasInput,
-    undefinedInput,
+    test,
   })
   return applyReturnValue({ returnValue, state })
 }
