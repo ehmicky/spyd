@@ -37,6 +37,11 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 //  - `rename` `{string|array}`: move the input value to another property
 //  - `path` `{string|array}`: hint when the input value has been moved to a
 //    new path
+// Keywords cannot have default `definition` because this would mean:
+//  - Keyword would have some effect even without any explicit user definition
+//  - Keyword cannot be skipped by user
+//  - Keyword author might add default values like `false` which would be noop
+//    in `main()`, but would evaluate definition function even if not needed
 export const applyKeywords = async function ({
   rule,
   input,
