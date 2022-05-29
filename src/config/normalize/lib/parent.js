@@ -12,6 +12,10 @@ import { callNoInputFunc } from './call.js'
 // work with everything else, including `rule.name`, `rule.rename` and
 // `opts.config`.
 export const computeParent = async function (parent, opts) {
+  if (parent === undefined) {
+    return opts
+  }
+
   try {
     return await getParent(parent, opts)
   } catch (error) {
