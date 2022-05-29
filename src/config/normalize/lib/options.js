@@ -1,20 +1,38 @@
+import { inspect } from 'util'
+
+import filterObj from 'filter-obj'
 import isPlainObj from 'is-plain-obj'
 
-export const normalizeOpts = function (rules, { soft = false, all } = {}) {
-  validateRules(rules)
-  return { soft, all }
-}
-
-const validateRules = function (rules) {
-  if (!Array.isArray(rules)) {
-    throw new TypeError(`Rules must be an array: ${rules}`)
+// Normalize `options`
+export const normalizeOpts = function (options = {}) {
+  if (!isPlainObj(options)) {
+    throw new TypeError(`Options must be a plain object: ${inspect(options)}`)
   }
 
-  rules.forEach(validateRule)
+  const { soft = false, all } = options
+  validateSoft(soft)
+  const allA = normalizeAll(all)
+  return { soft, all: allA }
 }
 
-const validateRule = function (rule) {
-  if (!isPlainObj(rule)) {
-    throw new TypeError(`Rules must be plain objects: ${rule}`)
+const validateSoft = function (soft) {
+  if (typeof soft !== 'boolean') {
+    throw new TypeError(`Option "soft" must be a boolean: ${inspect(soft)}`)
   }
+}
+
+const normalizeAll = function (all) {
+  if (all === undefined) {
+    return
+  }
+
+  if (!isPlainObj(all)) {
+    throw new TypeError(`Option "all" must be a plain object: ${inspect(all)}`)
+  }
+
+  return filterObj(all, isDefined)
+}
+
+const isDefined = function (key, value) {
+  return value !== undefined
 }

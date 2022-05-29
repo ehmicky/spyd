@@ -21,7 +21,7 @@ import { logWarnings } from './warn.js'
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
 export const normalizeInputs = async function (inputs, rules, opts) {
-  const { soft, all } = normalizeOpts(rules, opts)
+  const { soft, all } = normalizeOpts(opts)
   const rulesA = normalizeRules(rules, all)
 
   try {
