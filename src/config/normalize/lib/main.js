@@ -3,7 +3,7 @@ import { list } from 'wild-wild-path'
 
 import { cleanObject } from '../../../utils/clean.js'
 
-import { applyRule } from './apply.js'
+import { applyKeywords } from './keywords/main.js'
 import { getOpts } from './opts.js'
 import { normalizeRules } from './rule.js'
 import { logWarnings } from './warn.js'
@@ -83,7 +83,7 @@ const applyEntryRule = async function (
     example,
     moves,
   })
-  return await applyRule({ rule, input, config, moves, warnings, opts })
+  return await applyKeywords({ rule, input, config, moves, warnings, opts })
 }
 
 // When in `sort` mode, user errors are returned instead of being thrown.
